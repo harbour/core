@@ -1,0 +1,2033 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ *   Header file for the Item API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_evalLaunch()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_evalLaunch( PEVALINFO pEvalInfo ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pEvalInfo>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_evalNew()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pEvalInfo>
+ * 
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_evalPutParam()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pEvalInfo>
+ * 
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_evalRelease()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_evalRelease( PEVALINFO pEvalInfo ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pEvalInfo>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemDo()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <uiPCount>
+ * 
+ *      <pItemArg1>
+ * 
+ *      <...>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemDoC()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <szFunc>
+ * 
+ *      <uiPCount>
+ * 
+ *      <pItemArg1>
+ * 
+ *      <...>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemArrayGet()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemArrayGet( PHB_ITEM pArray, ULONG ulIndex ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pArray>
+ * 
+ *      <ulIndex>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemArrayNew()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemArrayNew( ULONG ulLen ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemArrayPut()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pArray>
+ * 
+ *      <ulIndex>
+ * 
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemCopyC()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <szBuffer>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemFreeC()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemFreeC( char * szText ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <szText>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetC()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetC( PHB_ITEM pItem ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetCPtr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetCPtr( PHB_ITEM pItem ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetCLen()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetCLen( PHB_ITEM pItem ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetDS()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetDS( PHB_ITEM pItem, char * szDate ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <szDate>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetDL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetDL( PHB_ITEM pItem ) --> ( long )lResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetL( PHB_ITEM pItem ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetND()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetND( PHB_ITEM pItem ) --> ( double )dResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetNI()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetNI( PHB_ITEM pItem ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetNL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetNL( PHB_ITEM pItem ) --> ( long )lResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetNLen()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDec ) --> void
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <piWidth>
+ * 
+ *      <piDec>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemGetPtr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemGetPtr( PHB_ITEM pItem ) --> ( void * )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemNew()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemNew( PHB_ITEM pNull ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pNull>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemInit()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemInit( PHB_ITEM pItem ) --> void
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPCount()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPCount( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemParam()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemParam( USHORT uiParam ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <uiParam>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutC()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutC( PHB_ITEM pItem, char * szText ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <szText>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutCPtr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <szText>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutCL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <szText>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemSetCMemo()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemSetCMemo( PHB_ITEM pItem ) --> void
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutD()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutD( PHB_ITEM pItem, long lYear, long lMonth, long lDay ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <lYear>
+ * 
+ *      <lMonth>
+ * 
+ *      <lDay>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutDS()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutDS( PHB_ITEM pItem, char * szDate ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <szDate>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutDL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutDL( PHB_ITEM pItem, long lJulian ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <lJulian>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutL( PHB_ITEM pItem, BOOL bValue ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <bValue>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutND()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutND( PHB_ITEM pItem, double dNumber ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <dNumber>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutNI()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutNI( PHB_ITEM pItem, int iNumber ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <iNumber>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutNL()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutNL( PHB_ITEM pItem, long lNumber ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <lNumber>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutNLen()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <dNumber>
+ * 
+ *      <iWidth>
+ * 
+ *      <iDec>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutNDLen()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <dNumber>
+ * 
+ *      <iWidth>
+ * 
+ *      <iDec>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutNILen()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <iNumber>
+ * 
+ *      <iWidth>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutNLLen()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <lNumber>
+ * 
+ *      <iWidth>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPutPtr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPutPtr( PHB_ITEM pItem, void * pValue ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <pValue>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemRelease()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemRelease( PHB_ITEM pItem ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemReturn()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemReturn( PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemSize()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemSize( PHB_ITEM pItem ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemType()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemType( PHB_ITEM pItem ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemTypeStr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemTypeStr( PHB_ITEM pItem ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemParamPtr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemParamPtr( USHORT uiParam, int iMask ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <uiParam>
+ * 
+ *      <iMask>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemReturnPtr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemReturnPtr( void ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemStrCmp()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      Our string compare
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <pFirst>
+ * 
+ *      <pSecond>
+ * 
+ *      <bForceExact>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemCopy()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      Copies an item to one place to another respecting its containts
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource ) --> void
+ *  $ARGUMENTS$
+ *      <pDest>
+ * 
+ *      <pSource>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemClear()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemClear( PHB_ITEM pItem ) --> void
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemUnRef()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      De-references passed variable
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemUnRef( PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemStr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      Convert a number to a string
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pNumber>
+ * 
+ *      <pWidth>
+ * 
+ *      <pDec>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemString()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      Convert any scalar to a string
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <ulLen>
+ * 
+ *      <bFreeReq>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemValToStr()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      Convert any scalar to a string
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemValToStr( PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemPadConv()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <buffer>
+ * 
+ *      <pulSize>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_itemSwap()
+ *  $CATEGORY$
+ *      Item API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapiitm.h>
+ *      hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 ) --> void
+ *  $ARGUMENTS$
+ *      <pItem1>
+ * 
+ *      <pItem2>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

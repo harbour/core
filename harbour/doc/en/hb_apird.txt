@@ -1,0 +1,7901 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ *   Header file for the RDD API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddGetCurrentWorkAreaNumber()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddGetCurrentWorkAreaNumber( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddGetCurrentWorkAreaPointer()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddGetCurrentWorkAreaPointer( void ) --> ( void * )pResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddSelectWorkAreaAlias()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddSelectWorkAreaAlias( char * szAlias ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <szAlias>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddSelectWorkAreaNumber()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddSelectWorkAreaNumber( int iArea ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <iArea>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddSelectWorkAreaSymbol()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <pSymAlias>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddGetFieldValue()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <pFieldSymbol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddPutFieldValue()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <pFieldSymbol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddFieldGet()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <pFieldSymbol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddFieldPut()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <pItem>
+ * 
+ *      <pFieldSymbol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddShutDown()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddShutDown( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddInherit()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <pTable>
+ * 
+ *      <pSubTable>
+ * 
+ *      <pSuperTable>
+ * 
+ *      <szDrvName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddDisinherit()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddDisinherit( BYTE * drvName ) --> ( ERRCODE )hResult
+ *  $ARGUMENTS$
+ *      <drvName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddExtendType()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddExtendType( USHORT fieldType ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <fieldType>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_rddFieldType()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapirdd.h>
+ *      hb_rddFieldType( USHORT extendType ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <extendType>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rdd, nulsys, dbfntx, dbfcdx
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_BOF()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_BOF( w, sp ) --> <see ( ( *( w )->lprfsHost->bof )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_EOF()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_EOF( w, sp ) --> <see ( ( *( w )->lprfsHost->eof )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FOUND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FOUND( w, sp ) --> <see ( ( *( w )->lprfsHost->found )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GOTO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GOTO( w, l ) --> <see ( ( *( w )->lprfsHost->go )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GOTOID()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GOTOID( w, sp ) --> <see ( ( *( w )->lprfsHost->goToId )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GOBOTTOM()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GOBOTTOM( w ) --> <see ( ( *( w )->lprfsHost->goBottom )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GOTOP()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GOTOP( w ) --> <see ( ( *( w )->lprfsHost->goTop )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SEEK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SEEK( w, i1, v, i2 ) --> <see ( ( *( w )->lprfsHost->seek )( w, i1, v, i2 ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i1>
+ * 
+ *      <v>
+ * 
+ *      <i2>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SKIP()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SKIP( w, l ) --> <see ( ( *( w )->lprfsHost->skip )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SKIPFILTER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SKIPFILTER( w, l ) --> <see ( ( *( w )->lprfsHost->skipFilter )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SKIPRAW()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SKIPRAW( w, l ) --> <see ( ( *( w )->lprfsHost->skipRaw )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ADDFIELD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ADDFIELD( w, ip ) --> <see ( ( *( w )->lprfsHost->addField )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_APPEND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_APPEND( w, l ) --> <see ( ( *( w )->lprfsHost->append )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CREATEFIELDS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CREATEFIELDS( w, v ) --> <see ( ( *( w )->lprfsHost->createFields )( w, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_DELETE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_DELETE( w ) --> <see ( ( *( w )->lprfsHost->deleterec )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_DELETED()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_DELETED( w, sp ) --> <see ( ( *( w )->lprfsHost->deleted )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FIELDCOUNT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FIELDCOUNT( w, sp ) --> <see ( ( *( w )->lprfsHost->fieldCount )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FIELDDISPLAY()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FIELDDISPLAY( w, sp ) --> <see ( ( *( w )->lprfsHost->fieldDisplay )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FIELDINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FIELDINFO( w, s1, s2, v ) --> <see ( ( *( w )->lprfsHost->fieldInfo )( w, s1, s2, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s1>
+ * 
+ *      <s2>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FIELDNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FIELDNAME( w, i, bp ) --> <see ( ( *( w )->lprfsHost->fieldName )( w, i, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FLUSH()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FLUSH( w ) --> <see ( ( *( w )->lprfsHost->flush )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GETREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GETREC( w, bpp ) --> <see ( ( *( w )->lprfsHost->getRec )( w, bpp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bpp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GETVALUE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GETVALUE( w, i, v ) --> <see ( ( *( w )->lprfsHost->getValue )( w, i, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GETVARLEN()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GETVARLEN( w, i, lp ) --> <see ( ( *( w )->lprfsHost->getVarLen )( w, i, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GOCOLD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GOCOLD( w ) --> <see ( ( *( w )->lprfsHost->goCold )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GOHOT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GOHOT( w ) --> <see ( ( *( w )->lprfsHost->goHot )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_PUTVALUE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_PUTVALUE( w, i, v ) --> <see ( ( *( w )->lprfsHost->putValue )( w, i, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_PUTREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_PUTREC( w, bp ) --> <see ( ( *( w )->lprfsHost->putRec )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RECALL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RECALL( w ) --> <see ( ( *( w )->lprfsHost->recall )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RECCOUNT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RECCOUNT( w, sp ) --> <see ( ( *( w )->lprfsHost->reccount )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RECINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RECINFO( w, v1, i, v2 ) --> <see ( ( *( w )->lprfsHost->recInfo )( w, v1, i, v2 ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <v1>
+ * 
+ *      <i>
+ * 
+ *      <v2>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RECNO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RECNO( w, i ) --> <see ( ( *( w )->lprfsHost->recno )( w, i ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SETFIELDEXTENT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SETFIELDEXTENT( w, s ) --> <see ( ( *( w )->lprfsHost->setFieldExtent )( w, s ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ALIAS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ALIAS( w, bp ) --> <see ( ( *( w )->lprfsHost->alias )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CLOSE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CLOSE( w ) --> <see ( ( *( w )->lprfsHost->close )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CREATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CREATE( w, ip ) --> <see ( ( *( w )->lprfsHost->create )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_INFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_INFO( w, i, g ) --> <see ( ( *( w )->lprfsHost->info )( w, i, g ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <g>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_NEW()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_NEW( w ) --> <see ( ( *( w )->lprfsHost->newarea )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_OPEN()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_OPEN( w, ip ) --> <see ( ( *( w )->lprfsHost->open )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RELEASE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RELEASE( w ) --> <see ( ( *( w )->lprfsHost->release )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_STRUCTSIZE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_STRUCTSIZE( w, sp ) --> <see ( ( *( w )->lprfsHost->structSize )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SYSNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SYSNAME( w, bp ) --> <see ( ( *( w )->lprfsHost->sysName )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_DBEVAL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_DBEVAL( w, ip ) --> <see ( ( *( w )->lprfsHost->dbEval )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_PACK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_PACK( w ) --> <see ( ( *( w )->lprfsHost->pack )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_PACKREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_PACKREC( w, l, sp ) --> <see ( ( *( w )->lprfsHost->packRec )( w, l, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SORT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SORT( w, ip ) --> <see ( ( *( w )->lprfsHost->sort )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_TRANS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_TRANS( w, ip ) --> <see ( ( *( w )->lprfsHost->trans )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_TRANSREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_TRANSREC( w, ip ) --> <see ( ( *( w )->lprfsHost->transRec )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ZAP()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ZAP( w ) --> <see ( ( *( w )->lprfsHost->zap )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CHILDEND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CHILDEND( w, ip ) --> <see ( ( *( w )->lprfsHost->childEnd )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CHILDSTART()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CHILDSTART( w, ip ) --> <see ( ( *( w )->lprfsHost->childStart )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CHILDSYNC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CHILDSYNC( w, ip ) --> <see ( ( *( w )->lprfsHost->childSync )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SYNCCHILDREN()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SYNCCHILDREN( w ) --> <see ( ( *( w )->lprfsHost->syncChildren )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CLEARREL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CLEARREL( w ) --> <see ( ( *( w )->lprfsHost->clearRel )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FORCEREL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FORCEREL( w ) --> <see ( ( *( w )->lprfsHost->forceRel )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RELAREA()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RELAREA( w, s, sp ) --> <see ( ( *( w )->lprfsHost->relArea )( w, s, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RELEVAL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RELEVAL( w, ip ) --> <see ( ( *( w )->lprfsHost->relEval )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RELTEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RELTEXT( w, s, bp ) --> <see ( ( *( w )->lprfsHost->relText )( w, s, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SETREL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SETREL( w, ip ) --> <see ( ( *( w )->lprfsHost->setRel )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDLSTADD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDLSTADD( w, lp ) --> <see ( ( *( w )->lprfsHost->orderListAdd )( w, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDLSTDELETE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDLSTDELETE( w, lp ) --> <see ( ( *( w )->lprfsHost->orderListDelete )( w, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDLSTFOCUS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDLSTFOCUS( w, lp ) --> <see ( ( *( w )->lprfsHost->orderListFocus )( w, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDLSTREBUILD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDLSTREBUILD( w ) --> <see ( ( *( w )->lprfsHost->orderListRebuild )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDLSTCLEAR()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDLSTCLEAR( w ) --> <see ( ( *( w )->lprfsHost->orderListClear )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDSETCOND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDSETCOND( w, ip ) --> <see ( ( *( w )->lprfsHost->orderCondition )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDCREATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDCREATE( w, ip ) --> <see ( ( *( w )->lprfsHost->orderCreate )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDDESTROY()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDDESTROY( w, p ) --> <see ( ( *( w )->lprfsHost->orderDestroy )( w, p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDINFO( w, i, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, i, p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDEXPR()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDEXPR( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_EXPRESSION, p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDCOND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDCOND( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_CONDITION,  p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDRECNO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDRECNO( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_RECNO,      p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDPOS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDPOS( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_POSITION,   p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDNUMBER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDNUMBER( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NUMBER,     p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDNAME( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NAME,       p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDBAGNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDBAGNAME( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGNAME,    p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ORDBAGEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ORDBAGEXT( w,  p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGEXT,     p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CLEARFILTER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CLEARFILTER( w ) --> <see ( ( *( w )->lprfsHost->clearFilter )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CLEARLOCATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CLEARLOCATE( w ) --> <see ( ( *( w )->lprfsHost->clearLocate )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CLEARSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CLEARSCOPE( w ) --> <see ( ( *( w )->lprfsHost->clearScope )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_COUNTSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_COUNTSCOPE( w, ip, lp ) --> <see ( ( *( w )->lprfsHost->countScope )( w, ip, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_FILTERTEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_FILTERTEXT( w, bp ) --> <see ( ( *( w )->lprfsHost->filterText )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SCOPEINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SCOPEINFO( w, i, v ) --> <see ( ( *( w )->lprfsHost->scopeInfo )( w, i, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SETFILTER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SETFILTER( w, ip ) --> <see ( ( *( w )->lprfsHost->setFilter )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SETLOCATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SETLOCATE( w, ip ) --> <see ( ( *( w )->lprfsHost->setLocate )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SETSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SETSCOPE( w, ip ) --> <see ( ( *( w )->lprfsHost->setScope )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SKIPSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SKIPSCOPE( w, bp, l ) --> <see ( ( *( w )->lprfsHost->skipScope )( w, bp, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_COMPILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_COMPILE( w, bp ) --> <see ( ( *( w )->lprfsHost->compile )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_ERROR()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_ERROR( w, ip ) --> <see ( ( *( w )->lprfsHost->error )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_EVALBLOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_EVALBLOCK( w, v ) --> <see ( ( *( w )->lprfsHost->evalBlock )( w, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GETLOCKS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GETLOCKS( w, g ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETLOCKARRAY, g ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <g>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RAWLOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RAWLOCK( w, i, l ) --> <see ( ( *( w )->lprfsHost->rawlock )( w, i, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_LOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_LOCK( w, sp ) --> <see ( ( *( w )->lprfsHost->lock )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_UNLOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_UNLOCK( w, l ) --> <see ( ( *( w )->lprfsHost->unlock )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CLOSEMEMFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CLOSEMEMFILE( w ) --> <see ( ( *( w )->lprfsHost->closeMemFile )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_CREATEMEMFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_CREATEMEMFILE( w, bp ) --> <see ( ( *( w )->lprfsHost->createMemFile )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GETVALUEFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GETVALUEFILE( w, i, bp ) --> <see ( ( *( w )->lprfsHost->getValueFile )( w, i, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_OPENMEMFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_OPENMEMFILE( w, bp ) --> <see ( ( *( w )->lprfsHost->openMemFile )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_PUTVALUEFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_PUTVALUEFILE( w, i, bp ) --> <see ( ( *( w )->lprfsHost->putValueFile )( w, i, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_READDBHEADER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_READDBHEADER( w ) --> <see ( ( *( w )->lprfsHost->readDBHeader )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_WRITEDBHEADER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_WRITEDBHEADER( w ) --> <see ( ( *( w )->lprfsHost->writeDBHeader )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_RECSIZE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_RECSIZE( w, lp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETRECSIZE, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_HEADERSIZE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_HEADERSIZE( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETHEADERSIZE, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_LUPDATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_LUPDATE( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_LASTUPDATE, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_SETDELIM()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_SETDELIM( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_SETDELIMITER, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_GETDELIM()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_GETDELIM( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETDELIMITER, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SELF_TABLEEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SELF_TABLEEXT( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_TABLEEXT, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_BOF()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_BOF( w, sp ) --> <see ( ( *( SUPERTABLE )->bof )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_EOF()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_EOF( w, sp ) --> <see ( ( *( SUPERTABLE )->eof )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FOUND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FOUND( w, sp ) --> <see ( ( *( SUPERTABLE )->found )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GOTO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GOTO( w, l ) --> <see ( ( *( SUPERTABLE )->go )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GOTOID()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GOTOID( w, sp ) --> <see ( ( *( SUPERTABLE )->goToId )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GOBOTTOM()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GOBOTTOM( w ) --> <see ( ( *( SUPERTABLE )->goBottom )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GOTOP()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GOTOP( w ) --> <see ( ( *( SUPERTABLE )->goTop )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SEEK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SEEK( w, i1, v, i2 ) --> <see ( ( *( SUPERTABLE )->seek )( w, i1, v, i2 ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i1>
+ * 
+ *      <v>
+ * 
+ *      <i2>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SKIP()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SKIP( w, l ) --> <see ( ( *( SUPERTABLE )->skip )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SKIPFILTER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SKIPFILTER( w, l ) --> <see ( ( *( SUPERTABLE )->skipFilter )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SKIPRAW()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SKIPRAW( w, l ) --> <see ( ( *( SUPERTABLE )->skipRaw )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ADDFIELD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ADDFIELD( w, ip ) --> <see ( ( *( SUPERTABLE )->addField )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_APPEND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_APPEND( w, l ) --> <see ( ( *( SUPERTABLE )->append )( w, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CREATEFIELDS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CREATEFIELDS( w, v ) --> <see ( ( *( SUPERTABLE )->createFields )( w, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_DELETE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_DELETE( w ) --> <see ( ( *( SUPERTABLE )->deleterec )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_DELETED()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_DELETED( w, sp ) --> <see ( ( *( SUPERTABLE )->deleted )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FIELDCOUNT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FIELDCOUNT( w, sp ) --> <see ( ( *( SUPERTABLE )->fieldCount )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FIELDDISPLAY()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FIELDDISPLAY( w, sp ) --> <see ( ( *( SUPERTABLE )->fieldDisplay )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FIELDINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FIELDINFO( w, s1, s2, v ) --> <see ( ( *( SUPERTABLE )->fieldInfo )( w, s1, s2, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s1>
+ * 
+ *      <s2>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FIELDNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FIELDNAME( w, i, bp ) --> <see ( ( *( SUPERTABLE )->fieldName )( w, i, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FLUSH()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FLUSH( w ) --> <see ( ( *( SUPERTABLE )->flush )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GETREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GETREC( w, bpp ) --> <see ( ( *( SUPERTABLE )->getRec )( w, bpp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bpp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GETVALUE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GETVALUE( w, i, v ) --> <see ( ( *( SUPERTABLE )->getValue )( w, i, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GETVARLEN()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GETVARLEN( w, i, lp ) --> <see ( ( *( SUPERTABLE )->getVarLen )( w, i, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GOCOLD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GOCOLD( w ) --> <see ( ( *( SUPERTABLE )->goCold )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GOHOT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GOHOT( w ) --> <see ( ( *( SUPERTABLE )->goHot )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_PUTVALUE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_PUTVALUE( w, i, v ) --> <see ( ( *( SUPERTABLE )->putValue )( w, i, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_PUTREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_PUTREC( w, bp ) --> <see ( ( *( SUPERTABLE )->putRec )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RECALL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RECALL( w ) --> <see ( ( *( SUPERTABLE )->recall )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RECCOUNT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RECCOUNT( w, sp ) --> <see ( ( *( SUPERTABLE )->reccount )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RECINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RECINFO( w, v1, i, v2 ) --> <see ( ( *( SUPERTABLE )->recInfo )( w, v1, i, v2 ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <v1>
+ * 
+ *      <i>
+ * 
+ *      <v2>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RECNO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RECNO( w, sp ) --> <see ( ( *( SUPERTABLE )->recno )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SETFIELDEXTENT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SETFIELDEXTENT( w, s ) --> <see ( ( *( SUPERTABLE )->setFieldExtent )( w, s ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ALIAS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ALIAS( w, bp ) --> <see ( ( *( SUPERTABLE )->alias )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CLOSE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CLOSE( w ) --> <see ( ( *( SUPERTABLE )->close )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CREATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CREATE( w, ip ) --> <see ( ( *( SUPERTABLE )->create )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_INFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_INFO( w, i, g ) --> <see ( ( *( SUPERTABLE )->info )( w, i, g ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <g>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_NEW()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_NEW( w ) --> <see ( ( *( SUPERTABLE )->newarea )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_OPEN()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_OPEN( w, ip ) --> <see ( ( *( SUPERTABLE )->open )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RELEASE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RELEASE( w ) --> <see ( ( *( SUPERTABLE )->release )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_STRUCTSIZE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_STRUCTSIZE( w, sp ) --> <see ( ( *( SUPERTABLE )->structSize )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SYSNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SYSNAME( w, bp ) --> <see ( ( *( SUPERTABLE )->sysName )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_DBEVAL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_DBEVAL( w, ip ) --> <see ( ( *( SUPERTABLE )->dbEval )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_PACK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_PACK( w ) --> <see ( ( *( SUPERTABLE )->pack )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_PACKREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_PACKREC( w, l, sp ) --> <see ( ( *( SUPERTABLE )->packRec )( w, l, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <l>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SORT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SORT( w, ip ) --> <see ( ( *( SUPERTABLE )->sort )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_TRANS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_TRANS( w, ip ) --> <see ( ( *( SUPERTABLE )->trans )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_TRANSREC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_TRANSREC( w, ip ) --> <see ( ( *( SUPERTABLE )->transRec )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ZAP()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ZAP( w ) --> <see ( ( *( SUPERTABLE )->zap )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CHILDEND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CHILDEND( w, ip ) --> <see ( ( *( SUPERTABLE )->childEnd )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CHILDSTART()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CHILDSTART( w, ip ) --> <see ( ( *( SUPERTABLE )->childStart )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CHILDSYNC()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CHILDSYNC( w, ip ) --> <see ( ( *( SUPERTABLE )->childSync )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SYNCCHILDREN()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SYNCCHILDREN( w ) --> <see ( ( *( SUPERTABLE )->syncChildren )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CLEARREL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CLEARREL( w ) --> <see ( ( *( SUPERTABLE )->clearRel )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FORCEREL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FORCEREL( w ) --> <see ( ( *( SUPERTABLE )->forceRel )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RELAREA()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RELAREA( w, s, sp ) --> <see ( ( *( SUPERTABLE )->relArea )( w, s, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RELEVAL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RELEVAL( w, ip ) --> <see ( ( *( SUPERTABLE )->relEval )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RELTEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RELTEXT( w, s, bp ) --> <see ( ( *( SUPERTABLE )->relText )( w, s, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <s>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SETREL()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SETREL( w, ip ) --> <see ( ( *( SUPERTABLE )->setRel )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDLSTADD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDLSTADD( w, lp ) --> <see ( ( *( SUPERTABLE )->orderListAdd )( w, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDLSTDELETE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDLSTDELETE( w, lp ) --> <see ( ( *( SUPERTABLE )->orderListDelete )( w, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDLSTFOCUS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDLSTFOCUS( w, lp ) --> <see ( ( *( SUPERTABLE )->orderListFocus )( w, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDLSTREBUILD()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDLSTREBUILD( w ) --> <see ( ( *( SUPERTABLE )->orderListRebuild )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDLSTCLEAR()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDLSTCLEAR( w ) --> <see ( ( *( SUPERTABLE )->orderListClear )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDSETCOND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDSETCOND( w, ip ) --> <see ( ( *( SUPERTABLE )->orderCondition )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDCREATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDCREATE( w, ip ) --> <see ( ( *( SUPERTABLE )->orderCreate )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDDELETE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDDELETE( w, ip ) --> <see ( ( *( SUPERTABLE )->orderDelete )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDINFO( w, i, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, i, p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDEXPR()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDEXPR( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_EXPRESSION, p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDCOND()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDCOND( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_CONDITION,  p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDRECNO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDRECNO( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_RECNO,      p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDPOS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDPOS( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_POSITION,   p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDNUMBER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDNUMBER( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NUMBER,     p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDNAME( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NAME,       p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDBAGNAME()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDBAGNAME( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGNAME,    p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ORDBAGEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ORDBAGEXT( w,  p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGEXT,     p ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <p>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CLEARFILTER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CLEARFILTER( w ) --> <see ( ( *( SUPERTABLE )->clearFilter )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CLEARLOCATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CLEARLOCATE( w ) --> <see ( ( *( SUPERTABLE )->clearLocate )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CLEARSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CLEARSCOPE( w ) --> <see ( ( *( SUPERTABLE )->clearScope )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_COUNTSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_COUNTSCOPE( w, ip, lp ) --> <see ( ( *( SUPERTABLE )->countScope )( w, ip, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_FILTERTEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_FILTERTEXT( w, bp ) --> <see ( ( *( SUPERTABLE )->filterText )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SCOPEINFO()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SCOPEINFO( w, i, v ) --> <see ( ( *( SUPERTABLE )->scopeInfo )( w, i, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SETFILTER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SETFILTER( w, ip ) --> <see ( ( *( SUPERTABLE )->setFilter )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SETLOCATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SETLOCATE( w, ip ) --> <see ( ( *( SUPERTABLE )->setLocate )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SETSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SETSCOPE( w, ip ) --> <see ( ( *( SUPERTABLE )->setScope )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SKIPSCOPE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SKIPSCOPE( w, bp, l ) --> <see ( ( *( SUPERTABLE )->skipScope )( w, bp, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_COMPILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_COMPILE( w, bp ) --> <see ( ( *( SUPERTABLE )->compile )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_ERROR()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_ERROR( w, ip ) --> <see ( ( *( SUPERTABLE )->error )( w, ip ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <ip>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_EVALBLOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_EVALBLOCK( w, v ) --> <see ( ( *( SUPERTABLE )->evalBlock )( w, v ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <v>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GETLOCKS()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GETLOCKS( w, g ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETLOCKARRAY, g ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <g>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RAWLOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RAWLOCK( w, i, l ) --> <see ( ( *( SUPERTABLE )->rawlock )( w, i, l ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_LOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_LOCK( w, sp ) --> <see ( ( *( SUPERTABLE )->lock )( w, sp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <sp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_UNLOCK()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_UNLOCK( w ) --> <see ( ( *( SUPERTABLE )->unlock )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CLOSEMEMFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CLOSEMEMFILE( w ) --> <see ( ( *( SUPERTABLE )->closeMemFile )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_CREATEMEMFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_CREATEMEMFILE( w, bp ) --> <see ( ( *( SUPERTABLE )->createMemFile )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GETVALUEFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GETVALUEFILE( w, i, bp ) --> <see ( ( *( SUPERTABLE )->getValueFile )( w, i, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_OPENMEMFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_OPENMEMFILE( w, bp ) --> <see ( ( *( SUPERTABLE )->openMemFile )( w, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_PUTVALUEFILE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_PUTVALUEFILE( w, i, bp ) --> <see ( ( *( SUPERTABLE )->putValueFile )( w, i, bp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <i>
+ * 
+ *      <bp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_READDBHEADER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_READDBHEADER( w ) --> <see ( ( *( SUPERTABLE )->readDBHeader )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_WRITEDBHEADER()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_WRITEDBHEADER( w ) --> <see ( ( *( SUPERTABLE )->writeDBHeader )( w ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_RECSIZE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_RECSIZE( w, lp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETRECSIZE, lp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <lp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_HEADERSIZE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_HEADERSIZE( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETHEADERSIZE, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_LUPDATE()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_LUPDATE( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_LASTUPDATE, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_SETDELIM()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_SETDELIM( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_SETDELIMITER, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_GETDELIM()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_GETDELIM( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETDELIMITER, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SUPER_TABLEEXT()
+ *  $CATEGORY$
+ *      RDD API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapirdd.h>
+ *      SUPER_TABLEEXT( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_TABLEEXT, fp ) )>
+ *  $ARGUMENTS$
+ *      <w>
+ * 
+ *      <fp>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapirdd.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

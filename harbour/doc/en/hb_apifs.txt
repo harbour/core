@@ -1,0 +1,1302 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *   Header file for the Filesys API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsChDir()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Change working directory
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsChDir( BYTE * pszDirName ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pszDirName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsChDrv()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Change working drive
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsChDrv( BYTE nDrive ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <nDrive>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsClose()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Close a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsClose( FHANDLE hFileHandle ) --> void
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsCommit()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Commit updates of a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsCommit( FHANDLE hFileHandle ) --> void
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsCreate()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Create a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsCreate( BYTE * pszFileName, USHORT uiAttribute ) --> ( FHANDLE )hResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ * 
+ *      <uiAttribute>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsCreateTemp()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Create a temporary file from components
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttribute ) --> ( FHANDLE )hResult
+ *  $ARGUMENTS$
+ *      <pszDir>
+ * 
+ *      <pszPrefix>
+ * 
+ *      <uiAttribute>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsCurDir()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Retrieve a static pointer containing current directory for specified drive
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsCurDir( USHORT uiDrive ) --> ( BYTE * )pszResult
+ *  $ARGUMENTS$
+ *      <uiDrive>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsCurDirBuff()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Copy current directory for given drive into a buffer
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiDrive>
+ * 
+ *      <pbyBuffer>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsCurDrv()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Retrieve current drive number
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsCurDrv( void ) --> ( BYTE )cResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsDelete()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Delete a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsDelete( BYTE * pszFileName ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsEof()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Determine if an open file is position at end-of-file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsEof( FHANDLE hFileHandle ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsError()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Retrieve file system error
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsError( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsFile()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Determine if a file exists
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsFile( BYTE * pszFileName ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsFSize()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Determine the size of a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ * 
+ *      <bUseDirEntry>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsExtOpen()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Open a file using default extension and a list of paths
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsExtOpen( BYTE * pszFileName, BYTE * pDefExt, USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError ) --> ( FHANDLE )hResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ * 
+ *      <pDefExt>
+ * 
+ *      <uiFlags>
+ * 
+ *      <pPaths>
+ * 
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsIsDrv()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Determine if a drive number is a valid drive
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsIsDrv( BYTE nDrive ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <nDrive>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsIsDevice()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Determine if a file is attached to a device (console?)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsIsDevice( FHANDLE hFileHandle ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsLock()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Request a lock on a portion of a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsLock( FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <ulStart>
+ * 
+ *      <ulLength>
+ * 
+ *      <uiMode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsMkDir()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Create a directory
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsMkDir( BYTE * pszDirName ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pszDirName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsOpen()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Open a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsOpen( BYTE * pszFileName, USHORT uiFlags ) --> ( FHANDLE )hResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ * 
+ *      <uiFlags>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsRead()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Read contents of a file into a buffer (<=64K)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <pBuff>
+ * 
+ *      <ulCount>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsReadLarge()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Read contents of a file into a buffer (>64K)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <pBuff>
+ * 
+ *      <ulCount>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsRmDir()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Remove a directory
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsRmDir( BYTE * pszDirName ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pszDirName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsRename()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Rename a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsRename( BYTE * pszOldName, BYTE * pszNewName ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <pszOldName>
+ * 
+ *      <pszNewName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsSeek()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Reposition an open file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <lOffset>
+ * 
+ *      <uiMode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsTell()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Retrieve the current position of a file
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsTell( FHANDLE hFileHandle ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsTempName()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Create a temporary file name in a buffer
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix ) --> void
+ *  $ARGUMENTS$
+ *      <pszBuffer>
+ * 
+ *      <pszDir>
+ * 
+ *      <pszPrefix>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsSetDevMode()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Change the device mode of a file (text/binary)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode ) --> void
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <uiDevMode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsSetDevRaw()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Change the device mode of a file to raw (binary)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsSetDevRaw( FHANDLE hFileHandle ) --> void
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsSetDevText()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Change the device mode of a file to text
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsSetDevText( FHANDLE hFileHandle ) --> void
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsSetError()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Set the file system error number
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsSetError( USHORT uiError ) --> void
+ *  $ARGUMENTS$
+ *      <uiError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsWrite()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Write to an open file from a buffer (<=64K)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <pBuff>
+ * 
+ *      <ulCount>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsWriteLarge()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Write to an open file from a buffer (>64K)
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <hFileHandle>
+ * 
+ *      <pBuff>
+ * 
+ *      <ulCount>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsFNameSplit()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      Split given filename into path, name and extension
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsFNameSplit( char * pszFileName ) --> ( PHB_FNAME )hResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsFNameMerge()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      This function joins path, name and extension into a string with a filename
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pszFileName>
+ * 
+ *      <pFileName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsFLock()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsFLock( h, s, l ) --> <see hb_fsLock( h, s, l, FL_LOCK )>
+ *  $ARGUMENTS$
+ *      <h>
+ * 
+ *      <s>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapifs.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_fsFUnlock()
+ *  $CATEGORY$
+ *      FileSys API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype (macro definition)
+ *      
+ *      #include <hbapifs.h>
+ *      hb_fsFUnlock( h, s, l ) --> <see hb_fsLock( h, s, l, FL_UNLOCK )>
+ *  $ARGUMENTS$
+ *      <h>
+ * 
+ *      <s>
+ * 
+ *      <l>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Header file is hbapifs.h
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

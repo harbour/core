@@ -1,0 +1,986 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ *   Header file for the Virtual Machine API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmInit()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmInit( BOOL bStartMainProc ) --> void
+ *  $ARGUMENTS$
+ *      <bStartMainProc>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmQuit()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Immediately quits the virtual machine
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmQuit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmExecute()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Invokes the virtual machine
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols ) --> void
+ *  $ARGUMENTS$
+ *      <pCode>
+ * 
+ *      <pSymbols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmProcessSymbols()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Statics symbols initialization
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ) --> void
+ *  $ARGUMENTS$
+ *      <pSymbols>
+ * 
+ *      <uiSymbols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmSymbolInit_RT()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Initialization of runtime support symbols
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmSymbolInit_RT( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmRequestQuit()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmRequestQuit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmRequestEndProc()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmRequestEndProc( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmRequestCancel()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmRequestCancel( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmRequestBreak()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmRequestBreak( PHB_ITEM pItem ) --> void
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmRequestQuery()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmRequestQuery( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmMessage()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Sends a message to an object
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmMessage( PHB_SYMB pSymMsg ) --> void
+ *  $ARGUMENTS$
+ *      <pSymMsg>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmDo()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Invoke the virtual machine
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmDo( USHORT uiParams ) --> void
+ *  $ARGUMENTS$
+ *      <uiParams>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmFunction()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Executes a function saving its result
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmFunction( USHORT uiParams ) --> void
+ *  $ARGUMENTS$
+ *      <uiParams>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmSend()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Sends a message to an object
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmSend( USHORT uiParams ) --> void
+ *  $ARGUMENTS$
+ *      <uiParams>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmEvalBlock()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Executes passed codeblock with no arguments
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmEvalBlock( PHB_ITEM pBlockItem ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pBlockItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmEvalBlockV()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmEvalBlockV( PHB_ITEM pBlockItem, USHORT uiArgCount, ... ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pBlockItem>
+ * 
+ *      <uiArgCount>
+ * 
+ *      <...>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPush()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a generic item onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPush( PHB_ITEM pItem ) --> void
+ *  $ARGUMENTS$
+ *      <pItem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushNil()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      In this case it places nil at self
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushNil( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushNumber()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a number on to the stack and decides if it is integer, long or double
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushNumber( double dNumber, int iDec ) --> void
+ *  $ARGUMENTS$
+ *      <dNumber>
+ * 
+ *      <iDec>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushInteger()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a integer number onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushInteger( int iNumber ) --> void
+ *  $ARGUMENTS$
+ *      <iNumber>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushLong()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a long number onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushLong( long lNumber ) --> void
+ *  $ARGUMENTS$
+ *      <lNumber>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushDouble()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a double number onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushDouble( double lNumber, int iDec ) --> void
+ *  $ARGUMENTS$
+ *      <lNumber>
+ * 
+ *      <iDec>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushLogical()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a logical value onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushLogical( BOOL bValue ) --> void
+ *  $ARGUMENTS$
+ *      <bValue>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushString()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a string on to the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushString( char * szText, ULONG length ) --> void
+ *  $ARGUMENTS$
+ *      <szText>
+ * 
+ *      <length>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushDate()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a long date onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushDate( long lDate ) --> void
+ *  $ARGUMENTS$
+ *      <lDate>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushSymbol()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pushes a function pointer onto the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushSymbol( PHB_SYMB pSym ) --> void
+ *  $ARGUMENTS$
+ *      <pSym>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_vmPushPointer()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Push an item of HB_IT_POINTER type
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_vmPushPointer( void * ) --> void
+ *  $ARGUMENTS$
+ *      <void *>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_stackDispCall()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_stackDispCall( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_stackPop()
+ *  $CATEGORY$
+ *      Virtual machine API
+ *  $ONELINER$
+ *      Pops an item from the stack
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbvm.h>
+ *      hb_stackPop( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is vm
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
