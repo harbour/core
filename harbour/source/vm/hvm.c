@@ -386,7 +386,8 @@ void hb_vmQuit( void )
    hb_memvarsRelease();    /* clear all PUBLIC variables */
 
    /* release all known garbage */
-   hb_gcCollectAll();
+   hb_gcReleaseAll();
+   /* hb_gcCollectAll(); */
 
    hb_memvarsFree();    /* free memory allocated for memvars table */
    hb_stackFree();

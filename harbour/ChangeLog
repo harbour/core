@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 19:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   Revision by Ron Pinkas <Ron@Profit-Master.com>
+   * source/vm/hvm.c
+     Replaced the call to hb_gcCollectAll() in hvm.c line 389 with new
+     hb_gcReleaseAll() will increase cleanup speed (on app termination),
+     and will result in a more complete cleanup in certain situations.
+
+
 2001-12-18 10:03 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/common/hbffind.c
