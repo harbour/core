@@ -1,3 +1,7 @@
+2001-08-19 10:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *source/rdd/rddord.prg
+     *Mapped functions to 10 character for ORDLISTCLE(),ORDLISTREB(),ORDSETFOCU()
+
 2001-08-19 10:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rdd/dbfuncs.prg
      * Code for Ca-Clipper MApper DB function to 10 characters
