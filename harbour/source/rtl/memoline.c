@@ -60,6 +60,7 @@ HB_FUNC( MEMOLINE )
    ulLineBegin = ulPos;
    ulLineEnd   = 0;
 
+
    while( ulPos < ulLen && ulLines < ulLineNumber )
    {
       switch( pszString[ ulPos ] )
@@ -96,7 +97,7 @@ HB_FUNC( MEMOLINE )
       {
          if( bWordWrap )
          {
-            if( ulLastSpace == 0 )
+            if( ulLastSpace == 0 || ulLastSpace == ulCurLength )
             {
                ulCurLength = 1;
                ulLineEnd   = ulPos - 1;
@@ -147,6 +148,7 @@ HB_FUNC( MEMOLINE )
                ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 1;
             else
                * ( pszLine + ulPos + ulSpAdded ) = * ( pszString + ulLineBegin + ulPos );
+
          }
 
       }
