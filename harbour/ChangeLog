@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-16 09:50 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * Proper definition for HAVE_POSIX_IO for MSVC compiler.
+    This fixes the CurDrive() bug reported by Vicente Aranzana.
+    Please notice that neither Andi and David proposed solutions
+    have been used.
+
 2003-03-05 13:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/vm/hvm.c
   * source/vm/itemapi.c
@@ -111,7 +117,7 @@
     Missing external declaration 'hb_compLocalGetPos'
   * include/hbapirdd.h
     added function missing declaration at line 1059. 'hb_rddFieldIndex'
-      used in source\rdd\dbfcdx\dbfcdx1.c(1223) 
+      used in source\rdd\dbfcdx\dbfcdx1.c(1223)
   * rdd/dbcmd.c changed 1 type casting BYTE * to char *
     added one type casting to BYTE *
 
@@ -169,7 +175,7 @@
   * source/vm/itemapi.c
   * source/vm/hvm.c
     * hb_itemMove() function added, which is intended for use instead of
-      the 
+      the
         hb_itemCopy( pDest,pSource )
         hb_itemClear( pSource )
       This allows to speed up some internal vm functions.
