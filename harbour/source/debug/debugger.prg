@@ -132,6 +132,43 @@ CLASS TDebugger
 
 ENDCLASS
 
+static function EnableCommand( oWndCommand )
+
+   local lExit := .f.
+   local cCommand, cResult
+
+   SetKey( K_TAB, { || lExit := .t., SetKey( K_TAB, nil ),;
+                    __Keyboard( Chr( K_ESC ) + Chr( K_TAB ) ) } )
+
+   while ! lExit
+      @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 1 SAY "> " ;
+         COLOR oWndCommand:cColor
+      cCommand = Space( oWndCommand:nRight - oWndCommand:nLeft - 3 )
+      cResult = ""
+      @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 3 GET cCommand ;
+         COLOR oWndCommand:cColor + "," + oWndCommand:cColor + "," + ;
+         oWndCommand:cColor
+      READ
+
+      if LastKey() == K_ENTER
+         oWndCommand:ScrollUp( 1 )
+         if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+            cResult = &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) )
+         else
+            cResult = "Command error"
+         endif
+         @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 1 SAY ;
+            Space( oWndCommand:nRight - oWndCommand:nLeft - 1 ) ;
+            COLOR oWndCommand:cColor
+         @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 3 SAY cResult ;
+            COLOR oWndCommand:cColor
+         oWndCommand:ScrollUp( 1 )
+
+      endif
+   end
+
+return nil
+
 METHOD New() CLASS TDebugger
 
    ::aWindows       = {}
@@ -140,6 +177,9 @@ METHOD New() CLASS TDebugger
    ::oWndCode       = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
    ::oWndCommand    = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
                                        "Command", "BG+/B" )
+   ::oWndCommand:bGotFocus  = { || EnableCommand( ::oWndCommand ) }
+   ::oWndCommand:bLostFocus = { || SetCursor( 0 ) }
+
    ::lEnd           = .f.
    ::aBreakPoints   = {}
    ::aCallStack     = {}
@@ -295,6 +335,7 @@ METHOD Show() CLASS TDebugger
    ::oPullDown:Display()
    ::oWndCode:Show( .t. )
    ::oWndCommand:Show()
+   @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY ">"
 
    SET COLOR TO "N/BG"
    @ MaxRow(), 0 CLEAR TO MaxRow(), MaxCol()
@@ -572,11 +613,12 @@ CLASS TDbWindow  // Debugger windows
    DATA   nTop, nLeft, nBottom, nRight
    DATA   cCaption
    DATA   cBackImage, cColor
-   DATA   lFocused, bGotFocus
+   DATA   lFocused, bGotFocus, bLostFocus
    DATA   bKeyPressed
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
+   METHOD ScrollUp( nLines )
    METHOD SetCaption( cCaption )
    METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
@@ -596,6 +638,15 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
 
 return Self
 
+METHOD ScrollUp( nLines ) CLASS TDbWindow
+
+   DEFAULT nLines TO 1
+
+   SET COLOR TO ::cColor
+   Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
+
+return nil
+
 METHOD SetCaption( cCaption ) CLASS TDbWindow
 
    ::cCaption = cCaption
@@ -608,6 +659,10 @@ METHOD SetCaption( cCaption ) CLASS TDbWindow
 return nil
 
 METHOD SetFocus( lOnOff ) CLASS TDbWindow
+
+   if ! lOnOff .and. ::bLostFocus != nil
+      Eval( ::bLostFocus, Self )
+   endif
 
    DispBegin()
 
