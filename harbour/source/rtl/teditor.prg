@@ -1,8 +1,12 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
- * Implements a minimal editor class, could/should be used as a base for Memoedit() and, maybe, debugger.
+ * Editor Class (base for Memoedit(), debugger, etc.)
  *
- * Copyright 2000 - Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,7 +34,6 @@
  */
 
 /* TODO: Very minimal and little tested. To finish and refine */
-
 
 #include "hbclass.ch"
 #include "error.ch"
@@ -452,16 +455,3 @@ METHOD Edit() CLASS TEditor
    enddo
 
 return Self
-
-
-/* TODO: MemoEdit() is not compatible with clipper one. Needs a lot more work to become */
-function MemoEdit(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUserFunction, nLineLength, nTabSize, nTextBufferRow, nTextBufferColumn, nWindowRow, nWindowColumn)
-
-   LOCAL oEd
-
-   oEd := TEditor():New(cString, nTop, nLeft, nBottom, nRight, lEditMode)
-   oEd:RefreshWindow()
-   oEd:Edit()
-
-return cString
-

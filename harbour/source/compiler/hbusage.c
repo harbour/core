@@ -116,6 +116,7 @@ void hb_compPrintCredits( void )
            "Manuel Ruiz <mrt@joca.es>\n"
            "Matteo Baccan <baccan@isanet.it>\n"
            "Matthew Hamilton <mhamilton@bunge.com.au>\n"
+           "Maurilio Longo <maurilio.longo@libero.it>\n"
            "Nicolas del Pozo <niko@geroa.com>\n"
            "Patrick Mast <harbour@winfakt.com>\n"
            "Paul Tucker <ptucker@sympatico.ca>\n"

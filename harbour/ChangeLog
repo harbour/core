@@ -1,3 +1,28 @@
+20000501-15:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/teditor.prg
+   + source/rtl/memoedit.prg
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     ! Added missing CVS header.
+     * Separated MEMOEDIT() function from the underlying class.
+     + Added new files to makefile.vc
+     + Defaults set for the MEMOEDIT() parameters.
+     + cUserFunction logical value handled.
+     ! Fixed to compile with 10 character symbol length limit.
+
+   * source/rtl/dummy.prg
+     - Removed commented line
+
+   * source/compiler/hbusage.c
+     + Developer list updated.
+
+   * source/rtl/Makefile
+     ! Fixed back the indentation of the file list from three spaces to 
+       one tab.
+     + Added memoedit.prg
+
 20000501 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 *makefile.bc
     +added teditor.prg entry to makefile

@@ -63,7 +63,6 @@ FUNCTION dbFieldInfo()     ; RETURN NIL
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL
 
-//FUNCTION MemoEdit( str )   ; RETURN str
 FUNCTION MLCToPos()        ; RETURN 0
 FUNCTION MPosToLC()        ; RETURN 0
 

@@ -278,6 +278,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\getlist.obj \
    $(OBJ_DIR)\getsys.obj \
    $(OBJ_DIR)\input.obj \
+   $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
    $(OBJ_DIR)\objfunc.obj \
@@ -1195,6 +1196,13 @@ $(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\memoline.obj : $(RTL_DIR)\memoline.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\memoedit.c : $(RTL_DIR)\memoedit.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\memoedit.obj : $(OBJ_DIR)\memoedit.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
