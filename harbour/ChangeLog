@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-25 16:48 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * vm/classes.c
+    + functions hb_clsCreate(), hb_clsAdd() and hb_clsAssociate() added.
+      These functions are equivalents to Clipper __mdCreate(), __mdAdd()
+      and __mdAssociate(), though the parameters are different to easy
+      their use.
+
+      The purpouse of these functions is to create new classes from C level,
+      a missing feature of Harbour classes engine. Harbour classes functions
+      never considered the possibility of being used from C level.
+
+      USHORT hb_clsCreate( USHORT usSize, char * szClassName ) : Creates a
+      new class with usSize DATAs and szClassName Name. It returns the handle
+      of the new created class.
+
+      void hb_clsAdd( USHORT usClassH, char * szMethodName, void * pFunction ) :
+      Adds a new method to the class, that will execute pFunction() code.
+
+      void hb_clsAssociate( USHORT usClassH ) : Instantiates a new object of
+      the Class handle usClassH. The object is placed at the stack returned value,
+      so it may be accessed using hb_par...( -1, ... ) functions, or managing the
+      item directly.
+
 2004-07-19 21:42 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbver.h
   * doc/whatsnew.txt
@@ -66,12 +89,12 @@
    * source/vm/proc.c
       *fixed to correctly return the procedure name where
       the codeblock was created
-      
+
    * source/common/hbffind.c
       *fixed to set correctly size and modification date of
       retrieved files on Linux/Unix -used from DIRECTORY()
       function
-      
+
 
 2004-06-21 14:07 UTC-0500 Randy Portnoff <randy@palmasdev.com>
   * source/rdd/dbcmd.c
