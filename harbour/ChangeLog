@@ -1,14 +1,18 @@
+19990824-16:04 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + Added support for F5-Go. (Breakpoints are not checked yet).
+
 19990824-14:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
 	* corrected arguments type checking in Inc/Dec functions
-	
+
     *source/hbppint.h
 	* memory.h is not defined in WATCOM C/C++
-	
+
     *include/rddapi.h
 	* added forward declaration for _AREA struct
-	
+
 19990824-11:07 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
      include/rddapi.h
@@ -21,7 +25,7 @@
     + Rewritten to check more functions in more situations, displaying all
       return values, etc. (almost like RTL_TEST.PRG)
   * source/compiler/harbour.y
-    + Changed spaces to tabs in the generated code. This made the 
+    + Changed spaces to tabs in the generated code. This made the
       generated code size almost 30% smaller, and the comments better aligned.
   * source/compiler/harbour.l
     source/compiler/harbour.y
