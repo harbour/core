@@ -1,3 +1,8 @@
+19990712-19:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/files.c
+    ! hb_fsCreate now creates files that are read-write instead of write-only
+    ! hb_fsRead now returns 0 instead of 65536U after a read() error
+
 19990712-22:00 Eddie Runia <eddie@runia.com>
   * source/rtl/classes.c
     Some more test data left in

@@ -55,7 +55,7 @@
 #endif
 
 #ifndef O_BINARY
-   #define O_BINARY 0	/* O_BINARY not defined on Linux */
+   #define O_BINARY 0   /* O_BINARY not defined on Linux */
 #endif
 
 #ifndef S_IEXEC
@@ -211,8 +211,8 @@ static void convert_create_flags( int flags, int *result_flags, unsigned *result
 {
         /* by default FC_NORMAL is set */
 
-        *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_WRONLY;
-        *result_pmode = S_IWUSR;
+        *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
+        *result_pmode = S_IRWXU;
 
         if( flags & FC_READONLY )
                 *result_pmode = S_IRUSR;
@@ -284,6 +284,7 @@ USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
         errno = 0;
         bytes = read(handle,buff,count);
         last_error = errno;
+        if( bytes == 65535U ) bytes = 0;
 #else
         bytes = 0;
         last_error = FS_ERROR;
@@ -445,7 +446,7 @@ BYTEP   hb_fsCurDir ( USHORT uiDrive )
         last_error = FS_ERROR;
 #endif
 #if defined(_MSC_VER)
-   BYTEP dmm = (BYTEP)cwd_buff;      
+   BYTEP dmm = (BYTEP)cwd_buff;
 #endif
         return (BYTEP)cwd_buff;
 }
