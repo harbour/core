@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-27 11:49 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  + source/rtl/array.prg
+  + source/rtl/block.prg
+  + source/rtl/date.prg
+  + source/rtl/logical.prg
+  + source/rtl/nil.prg
+  + source/rtl/numeric.prg
+    * Harbour implementation of Class(y) Classes Array, Block, Date, Logical,
+      Nil, Numeric.
+
+  * makefile.bc
+    + Added modules array.prg, block.prg, date.prg, logical.prg, nil.prg,
+      numeric.prg.
+
+  WARNING: Other makefiles need to be updated
+
 2004-07-27 11:16 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * include/hbclass.ch
     + Added optional clause FUNCTION to class definitions,
