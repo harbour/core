@@ -81,44 +81,58 @@ METHOD SaveToText( cObjectName ) CLASS TPersistent
    DEFAULT cObjectName TO ::cName
 
    nIndent += 3
-   cObject := Space( nIndent ) + "OBJECT " + If( nIndent != 0, "::", "" ) + ;
-              cObjectName + " AS " + ::ClassName() + HB_OsNewLine() + HB_OsNewLine()
+   cObject := If( nIndent > 0, HB_OsNewLine(), "" ) + Space( nIndent ) + ;
+              "OBJECT " + If( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
+              ::ClassName() + HB_OsNewLine()
 
    aProperties = __ClsGetProperties( ::ClassH )
 
    for n = 1 to Len( aProperties )
       uValue = __objSendMsg( Self, aProperties[ n ] )
-      cType  = ValType( uValue )
-      do case
-         case cType == "A"
-              nIndent += 3
-              cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
-              nIndent -= 3
 
-         case cType == "O"
-              if __objDerivedFrom( uValue, "TPERSISTENT" )
-                 cObject += HB_OsNewLine() + uValue:SaveToText( aProperties[ n ] )
-              endif
+      if ! uValue == __objSendMsg( oNew, aProperties[ n ] )
 
-         otherwise
-            cObject += Space( nIndent ) + "   ::" + aProperties[ n ] + " = " + ;
-                       ValToText( uValue )
-      endcase
-      cObject += HB_OsNewLine()
+         cType  = ValType( uValue )
+
+         do case
+            case cType == "A"
+                 nIndent += 3
+                 cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
+                 nIndent -= 3
+                 if n < Len( aProperties )
+                    cObject += HB_OsNewLine()
+                 endif
+
+            case cType == "O"
+                 if __objDerivedFrom( uValue, "TPERSISTENT" )
+                    cObject += uValue:SaveToText( aProperties[ n ] )
+                 endif
+                 if n < Len( aProperties )
+                    cObject += HB_OsNewLine()
+                 endif
+
+            otherwise
+                 if n == 1
+                    cObject += HB_OsNewLine()
+                 endif
+                 cObject += Space( nIndent ) + "   ::" + ;
+                            aProperties[ n ] + " = " + ValToText( uValue ) + ;
+                            HB_OsNewLine()
+         endcase
+
+      endif
+
    next
 
    cObject += HB_OsNewLine() + Space( nIndent ) + "ENDOBJECT" + HB_OsNewLine()
    nIndent -= 3
-   if nIndent > 0
-      cObject += HB_OsNewLine()
-   endif
 
 return cObject
 
 static function ArrayToText( aArray, cName, nIndent )
 
-   local cArray := Space( nIndent ) + "ARRAY ::" + cName + " LEN " + ;
-                   AllTrim( Str( Len( aArray ) ) ) + HB_OsNewLine() + HB_OsNewLine()
+   local cArray := HB_OsNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
+                   " LEN " + AllTrim( Str( Len( aArray ) ) ) + HB_OsNewLine()
    local n, uValue, cType
 
    for n = 1 to Len( aArray )
@@ -128,17 +142,20 @@ static function ArrayToText( aArray, cName, nIndent )
       do case
          case cType == "A"
               nIndent += 3
-              cArray += HB_OsNewLine() + ArrayToText( uValue, cName + "[ " + ;
+              cArray += ArrayToText( uValue, cName + "[ " + ;
                         AllTrim( Str( n ) ) + " ]", nIndent ) + HB_OsNewLine()
               nIndent -= 3
 
          case cType == "O"
               if __objDerivedFrom( uValue, "TPERSISTENT" )
                  cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
-                           " ]" ) + HB_OsNewLine()
+                           " ]" )
               endif
 
          otherwise
+              if n == 1
+                 cArray += HB_OsNewLine()
+              endif
               cArray += Space( nIndent ) + "   ::" + cName + ;
                         + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
                         ValToText( uValue ) + HB_OsNewLine()
