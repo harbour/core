@@ -1,3 +1,29 @@
+19990913-15:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rdd/dbcmd.c
+        * added retry possibility for error handling in field
+        assignment/access
+        * changed BOOL to ERRCODE for hb_rddSelect*() and
+        hb_rddPutFieldValue/hb_rddGetFieldValue
+
+    *include/rddapi.h
+        * changed BOOL to ERRCODE for hb_rddSelect*() and
+        hb_rddPutFieldValue/hb_rddGetFieldValue
+
+    *source/vm/hvm.c
+        * changed BOOL to ERRCODE for hb_rddSelect*() and
+        hb_rddPutFieldValue/hb_rddGetFieldValue
+        * memvar handling functions moved directly into main VM loop
+
+    *include/ctoharb.h
+        * removed declaration of internal memvar functions used in VM
+
+    *source/rtl/memvars.c
+        * added retry possibility for error handling in variable access
+
+    *tests/working/rtl_test.prg
+        * added code to test __MVGET function (macro evaluation in Clipper)
+
 19990913-13:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/compiler/harbour.y

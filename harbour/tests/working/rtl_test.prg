@@ -493,6 +493,12 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( scString--                      , "E BASE 1087 Argument error -- F:S"       )
 
    TEST_LINE( mxNotHere                       , "E BASE 1003 Variable does not exist MXNOTHERE F:R" )
+#ifdef __HARBOUR__
+   TEST_LINE( __MVGET("MXUNDECL")             , "E BASE 1003 Variable does not exist MXUNDECL F:R" )
+#else
+   mxNotHere ="MXUNDECL"
+   TEST_LINE( &mxNotHere.                     , "E BASE 1003 Variable does not exist MXUNDECL F:R" )
+#endif
 
    TEST_LINE( saArray[ 0 ]                    , "E BASE 1132 Bound error array access "           )
    TEST_LINE( saArray[ 0 ] := 1               , "E BASE 1133 Bound error array assign "           )

@@ -411,7 +411,36 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
             hb_itemCopy( pItem, pGetItem );
       }
       else /* variable is not initialized */
-         hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      {
+         /* Generate an error with retry possibility
+          * (user created error handler can create this variable)
+          */
+         WORD wAction = E_RETRY;
+         HB_ITEM_PTR pError;
+
+         pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+
+         while( wAction == E_RETRY )
+         {
+            wAction = hb_errLaunch( pError );
+            if( wAction == E_RETRY )
+            {
+               if( pDyn->hMemvar )
+               {
+                  /* value is already created
+                  */
+                  HB_ITEM_PTR pGetItem = &s_globalTable[ pDyn->hMemvar ].item;
+                  if( IS_BYREF( pGetItem ) )
+                     hb_itemCopy( pItem, hb_itemUnRef( pGetItem ) );
+                  else
+                     hb_itemCopy( pItem, pGetItem );
+                  wAction = E_DEFAULT;
+               }
+            }
+         }
+         hb_errRelease( pError );
+      }
    }
    else
       hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
@@ -436,7 +465,35 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          ++s_globalTable[ pDyn->hMemvar ].counter;
       }
       else
-         hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
+      {
+         /* Generate an error with retry possibility
+          * (user created error handler can make this variable accessible)
+          */
+         WORD wAction = E_RETRY;
+         HB_ITEM_PTR pError;
+
+         pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
+
+         while( wAction == E_RETRY )
+         {
+            wAction = hb_errLaunch( pError );
+            if( wAction == E_RETRY )
+            {
+               if( pDyn->hMemvar )
+               {
+                  /* value is already created */
+                  pItem->type = IT_BYREF | IT_MEMVAR;
+                  pItem->item.asMemvar.offset = 0;
+                  pItem->item.asMemvar.value = pDyn->hMemvar;
+                  pItem->item.asMemvar.itemsbase = &s_globalTable;
+                  ++s_globalTable[ pDyn->hMemvar ].counter;
+                  wAction = E_DEFAULT;
+               }
+            }
+         }
+         hb_errRelease( pError );
+      }
    }
    else
       hb_errRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
@@ -1390,13 +1447,32 @@ HARBOUR HB___MVGET( void )
       }
       else
       {
-         HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_NOVAR, 1003, NULL, pName->item.asString.value );
+         /* Generate an error with retry possibility
+          * (user created error handler can create this variable)
+          */
+         WORD wAction = E_RETRY;
+         HB_ITEM_PTR pError;
 
-         if( pRetValue )
+         pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                 NULL, pName->item.asString.value, 0, EF_CANRETRY );
+
+         while( wAction == E_RETRY )
          {
-            hb_itemReturn( pRetValue );
-            hb_itemRelease( pRetValue );
+            wAction = hb_errLaunch( pError );
+            if( wAction == E_RETRY )
+            {
+               pDynVar = hb_memvarFindSymbol( pName );
+               if( pDynVar )
+               {
+                  HB_ITEM retValue;
+                  hb_memvarGetValue( &retValue, pDynVar->pSymbol );
+                  hb_itemReturn( &retValue );
+                  hb_itemClear( &retValue );
+                  wAction =E_DEFAULT;
+               }
+            }
          }
+         hb_errRelease( pError );
       }
    }
    else

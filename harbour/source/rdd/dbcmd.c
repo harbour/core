@@ -118,6 +118,9 @@ static USHORT uiCurrArea = 1;       /* Selectd area */
 static LPRDDNODE pRddList = 0;      /* Registered RDD's */
 static BOOL bNetError = FALSE;      /* Error on Networked environments */
 
+static ERRCODE hb_rddFieldPut( HB_ITEM_PTR, PHB_SYMB );
+static ERRCODE hb_rddFieldGet( HB_ITEM_PTR, PHB_SYMB );
+
 static LPAREANODE pWorkAreas = 0;   /* WorkAreas */
 static LPAREANODE pCurrArea = 0;    /* Pointer to a selectd and valid area */
 
@@ -634,12 +637,16 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    return SUCCESS;
 }
 
+/*
+ * -- FUNCTIONS ACCESSED FROM VIRTUAL MACHINE --
+ */
+
 int  hb_rddGetCurrentWorkAreaNumber( void )
 {
    return uiCurrArea;
 }
 
-BOOL hb_rddSelectWorkAreaNumber( int iArea )
+ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    LPAREANODE pAreaNode;
 
@@ -659,9 +666,9 @@ BOOL hb_rddSelectWorkAreaNumber( int iArea )
    return FAILURE;
 }
 
-BOOL hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
+ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
-   BOOL bResult;
+   ERRCODE bResult;
 
    if( pSymAlias->pDynSym->hArea )
       bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
@@ -692,11 +699,11 @@ BOOL hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
    return bResult;
 }
 
-BOOL hb_rddSelectWorkAreaAlias( char * szName )
+ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 {
    PHB_DYNS pSymArea;
    WORD wLen;
-   BOOL bResult;
+   ERRCODE bResult;
    /* NOTE: szAlias have to be allocated on the stack because hb_errLaunch
     * doesn't return control to this function if QUIT action is requested
     */
@@ -739,31 +746,67 @@ BOOL hb_rddSelectWorkAreaAlias( char * szName )
    return bResult;
 }
 
-BOOL hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
-   LPFIELD pField;
-   USHORT uiField;
+   ERRCODE bSuccess = hb_rddFieldGet( pItem, pFieldSymbol );
 
-   if( pCurrArea )
+   if( bSuccess == FAILURE )
    {
-      uiField = 1;
-      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
-      while( pField )
+      /* generate an error with retry possibility
+       * (user created error handler can make this field accessible)
+       */
+      WORD wAction = E_RETRY;
+      HB_ITEM_PTR pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                              NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+
+      while( wAction == E_RETRY )
       {
-         if( ( PHB_DYNS ) pField->sym == pFieldSymbol->pDynSym )
+         wAction = hb_errLaunch( pError );
+         if( wAction == E_RETRY )
          {
-            SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
-            return SUCCESS;
+            bSuccess = hb_rddFieldGet( pItem, pFieldSymbol );
+            if( bSuccess == SUCCESS )
+               wAction = E_DEFAULT;
          }
-         pField = pField->lpfNext;
-         uiField++;
       }
+      hb_errRelease( pError );
    }
-   hb_errRT_BASE( EG_NOVAR, 1003, 0, pFieldSymbol->szName );
-   return FAILURE;
+   return bSuccess;
 }
 
-BOOL hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+{
+   ERRCODE bSuccess = hb_rddFieldPut( pItem, pFieldSymbol );
+
+   if( bSuccess == FAILURE )
+   {
+      /* generate an error with retry possibility
+       * (user created error handler can make this field accessible)
+       */
+      WORD wAction = E_RETRY;
+      HB_ITEM_PTR pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                              NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+
+      while( wAction == E_RETRY )
+      {
+         wAction = hb_errLaunch( pError );
+         if( wAction == E_RETRY )
+         {
+            bSuccess = hb_rddFieldPut( pItem, pFieldSymbol );
+            if( bSuccess == SUCCESS )
+               wAction = E_DEFAULT;
+         }
+      }
+      hb_errRelease( pError );
+   }
+   return bSuccess;
+}
+
+static ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 {
    LPFIELD pField;
    USHORT uiField;
@@ -783,7 +826,29 @@ BOOL hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
          uiField++;
       }
    }
-   hb_errRT_BASE( EG_NOVAR, 1003, 0, pFieldSymbol->szName );
+   return FAILURE;
+}
+
+static ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+{
+   LPFIELD pField;
+   USHORT uiField;
+
+   if( pCurrArea )
+   {
+      uiField = 1;
+      pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
+      while( pField )
+      {
+         if( ( PHB_DYNS ) pField->sym == pFieldSymbol->pDynSym )
+         {
+            SELF_GETVALUE( ( AREAP ) pCurrArea->pArea, uiField, pItem );
+            return SUCCESS;
+         }
+         pField = pField->lpfNext;
+         uiField++;
+      }
+   }
    return FAILURE;
 }
 

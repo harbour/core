@@ -121,8 +121,6 @@ extern void    hb_vmPushString( char * szText, ULONG length );  /* pushes a stri
 extern void    hb_vmPushDate( LONG lDate );   /* pushes a long date onto the stack */
 extern void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
-extern void    hb_vmPushMemvar( PHB_SYMB );     /* pushes a value of memvar variable */
-extern void    hb_vmPushMemvarByRef( PHB_SYMB ); /* pushes a reference to a memvar variable */
 extern void    hb_vmPushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
 extern void    hb_vmPushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
 extern void    hb_vmPushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
@@ -133,9 +131,7 @@ extern long    hb_vmPopDate( void );         /* pops the stack latest value and 
 extern double  hb_vmPopNumber( void );          /* pops the stack latest value and returns its numeric value */
 extern double  hb_vmPopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
 extern BOOL    hb_vmPopLogical( void );           /* pops the stack latest value and returns its logical value */
-extern void    hb_vmPopParameter( PHB_SYMB, BYTE );  /* creates a PRIVATE variable and sets it with parameter's value */
 extern void    hb_vmPopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
-extern void    hb_vmPopMemvar( PHB_SYMB );      /* pops a value of memvar variable */
 extern void    hb_vmPopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
 extern void    hb_vmPopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as default init */
 

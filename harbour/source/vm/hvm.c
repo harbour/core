@@ -66,7 +66,7 @@ static void    hb_vmPushAlias( void );       /* pushes the current workarea numb
 static void    hb_vmPushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
 static void    hb_vmPushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
 static void    hb_vmSwapAlias( void );       /* swaps items on the eval stack and pops the workarea number */
-static BOOL    hb_vmSelectWorkarea( PHB_ITEM ); /* select the workarea using a given item or a substituted value */
+static ERRCODE hb_vmSelectWorkarea( PHB_ITEM ); /* select the workarea using a given item or a substituted value */
 
 static void    hb_vmDoInitStatics( void ); /* executes all _INITSTATICS functions */
 static void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
@@ -431,7 +431,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PARAMETER:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPopParameter( pSymbols + wParams, pCode[ w + 3 ] );
+              hb_memvarSetValue( pSymbols + wParams, stack.pBase + 1 + pCode[ w + 3 ] );
+              HB_DEBUG( "(hb_vmPopParameter)\n" );
               w += 4;
               break;
 
@@ -469,7 +470,10 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_POPMEMVAR:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPopMemvar( pSymbols + wParams );
+              hb_stackDec();
+              hb_memvarSetValue( pSymbols + wParams, stack.pPos );
+              hb_itemClear( stack.pPos );
+              HB_DEBUG( "(hb_vmPopMemvar)\n" );
               w += 3;
               break;
 
@@ -538,19 +542,24 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHMEMVAR:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPushMemvar( pSymbols + wParams );
+              hb_memvarGetValue( stack.pPos, pSymbols + wParams );
+              hb_stackPush();
+              HB_DEBUG( "(hb_vmPushMemvar)\n" );
               w += 3;
               break;
 
          case HB_P_PUSHMEMVARREF:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPushMemvarByRef( pSymbols + wParams );
+              hb_memvarGetRefer( stack.pPos, pSymbols + wParams );
+              hb_stackPush();
+              HB_DEBUG( "(hb_vmPushMemvarRef)\n" );
               w += 3;
               break;
 
          case HB_P_PUSHNIL:
               stack.pPos->type = IT_NIL;
               hb_stackPush();
+              HB_DEBUG( "(hb_vmPushNil)\n" );
               w++;
               break;
 
@@ -1990,6 +1999,9 @@ double hb_vmPopDouble( WORD *pwDec )
    return dNumber;
 }
 
+/* Pops a value from the eval stack and uses it to set a new value
+ * of the given field
+ */
 static void hb_vmPopField( PHB_SYMB pSym )
 {
    hb_rddPutFieldValue( stack.pPos - 1, pSym );
@@ -2039,15 +2051,6 @@ BOOL hb_vmPopLogical( void )
    }
 }
 
-void hb_vmPopMemvar( PHB_SYMB pSym )
-{
-   hb_stackDec();
-   hb_memvarSetValue( pSym, stack.pPos );
-   hb_itemClear( stack.pPos );
-
-   HB_DEBUG( "hb_vmPopMemvar\n" );
-}
-
 double hb_vmPopNumber( void )
 {
    PHB_ITEM pItem = stack.pPos - 1;
@@ -2079,13 +2082,6 @@ double hb_vmPopNumber( void )
    HB_DEBUG( "hb_vmPopNumber\n" );
 
    return dNumber;
-}
-
-void hb_vmPopParameter( PHB_SYMB pSym, BYTE bParam )
-{
-   hb_memvarSetValue( pSym, stack.pBase + 1 + bParam );
-
-   HB_DEBUG( "hb_vmPopParameter\n" );
 }
 
 void hb_vmPopStatic( WORD wStatic )
@@ -2152,6 +2148,8 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
    PHB_ITEM pAlias = stack.pPos - 1;
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
 
+   /* NOTE: hb_vmSelecWorkarea clears passed item
+    */
    if( hb_vmSelectWorkarea( pAlias ) == SUCCESS )
       hb_rddGetFieldValue( pAlias, pSym );
 
@@ -2169,6 +2167,8 @@ void hb_vmPushLogical( BOOL bValue )
    HB_DEBUG( "hb_vmPushLogical\n" );
 }
 
+/* It pushes the current value of the given field onto the eval stack
+ */
 static void hb_vmPushField( PHB_SYMB pSym )
 {
    hb_rddGetFieldValue( stack.pPos, pSym );
@@ -2211,22 +2211,6 @@ void hb_vmPushLocalByRef( SHORT iLocal )
    hb_stackPush();
 
    HB_DEBUG2( "hb_vmPushLocalByRef %i\n", iLocal );
-}
-
-void hb_vmPushMemvar( PHB_SYMB pSym )
-{
-   hb_memvarGetValue( stack.pPos, pSym );
-   hb_stackPush();
-
-   HB_DEBUG( "hb_vmPushMemvar\n" );
-}
-
-void hb_vmPushMemvarByRef( PHB_SYMB pSym )
-{
-   hb_memvarGetRefer( stack.pPos, pSym );
-   hb_stackPush();
-
-   HB_DEBUG( "hb_vmPushMemvar\n" );
 }
 
 void hb_vmPushNil( void )
@@ -2559,10 +2543,13 @@ void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or r
    HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
 }
 
-static BOOL hb_vmSelectWorkarea( PHB_ITEM pAlias )
+static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias )
 {
-   BOOL bSuccess = SUCCESS;
+   ERRCODE bSuccess = SUCCESS;
 
+   /* NOTE: Clipper doesn't generate an error if an workarea specified
+    * as numeric value cannot be selected
+    */
    switch( pAlias->type & ~IT_BYREF )
    {
       case IT_INTEGER:
@@ -2570,21 +2557,21 @@ static BOOL hb_vmSelectWorkarea( PHB_ITEM pAlias )
           * or it was saved on the stack using hb_vmPushAlias()
           * or was evaluated from an expression, (nWorkArea)->field
           */
-         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
+         hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
          pAlias->type = IT_NIL;
          break;
 
       case IT_LONG:
          /* Alias was evaluated from an expression, (nWorkArea)->field
           */
-         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asLong.value );
+         hb_rddSelectWorkAreaNumber( pAlias->item.asLong.value );
          pAlias->type = IT_NIL;
          break;
 
       case IT_DOUBLE:
          /* Alias was evaluated from an expression, (nWorkArea)->field
           */
-         bSuccess = hb_rddSelectWorkAreaNumber( pAlias->item.asDouble.value );
+         hb_rddSelectWorkAreaNumber( pAlias->item.asDouble.value );
          pAlias->type = IT_NIL;
          break;
 
