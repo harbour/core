@@ -12,6 +12,7 @@
   * config/os2/icc.cf
     ! Disabled the LONGLONG and UNLONGLONG definitions in hbdefs.h, which
       only work for GCC and Windows, by defining HB_LONG_LONG_OFF.
+  * source/common/hbstr.c
   * source/compiler/harbour.l
   * source/rtl/val.c
     ! Moved the duplicate definitions of hb_strVal to source/common/hbstr.c.
