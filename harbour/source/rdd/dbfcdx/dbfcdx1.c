@@ -37,6 +37,8 @@
 
 #include <time.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -1926,7 +1928,7 @@ static void hb_cdxIndexAddTag( LPINDEXINFO pIndex, char * szTagName, char * szKe
    pLastTag = NULL;
    while( pTag != NULL )
    {
-      if( strcmpi( pTag->TagName, szTagName ) == 0 )
+      if( stricmp( pTag->TagName, szTagName ) == 0 )
       {
          pKey->Tag = pTag->TagBlock;
          if( hb_cdxTagKeyFind( pIndex->CompoundTag, pKey ) > 0 )
@@ -2076,7 +2078,7 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value )
    SHORT v;
    LPSORTDATA wx;
 
-   ltoa( Tag, s + 1, 10 );
+   _ltoa( Tag, s + 1, 10 );
    w = strlen( Value );
    if( pSort->NodeLimit - pSort->NodeCur < w + strlen( s + 1 ) + 1 )
    {

@@ -1,3 +1,8 @@
+20000415-19:09 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! testdbf was failing with missing symbols, fixed to let testdbf compile
+
 20000415-18:37 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rdd/dbfcdx/dbfcdx1.c
