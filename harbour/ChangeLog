@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       Time consumed, previously: 11.59 secs
+                      now       :  5.06 secs
+       Environment: 1 GHz, 128 MB, BCC 5.5.1, SimpLex and -DHB_FM_STATISTICS_OFF
+   <with thanks to Ron Pinkas>
+
 2002-01-18 17:45 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     * support of EVAL and EVERY clauses of INDEX ON command implemented

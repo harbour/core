@@ -2318,7 +2318,7 @@ HB_FUNC( ORDCONDSET )
       lpdbOrdCondInfo->fCustom     = hb_parl( 15 );
       lpdbOrdCondInfo->fNoOptimize = hb_parl( 16 );
 
-      if( !lpdbOrdCondInfo->itmCobWhile )
+      if( lpdbOrdCondInfo->itmCobWhile )
          lpdbOrdCondInfo->fRest = TRUE;
       if( lpdbOrdCondInfo->lNextCount || lpdbOrdCondInfo->lRecno || lpdbOrdCondInfo->fRest )
          lpdbOrdCondInfo->fAll = FALSE;

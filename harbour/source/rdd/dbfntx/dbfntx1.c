@@ -1470,11 +1470,14 @@ static void hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
    /* printf( "\n\rhb_ntxSortKeyAdd - 0 ( %s )",szkey ); */
    pKeyNew = (LPSORTITEM) ( pSortInfo->sortBuffer +
            pSortInfo->itemLength * ( ulKeyNo - 1 ) );
-   pKeyNew->rec_no = pTag->Owner->Owner->ulRecNo;
-   pKeyNew->pNext = NULL;
-   memcpy( pKeyNew->key, szkey, pTag->KeyLength );
+   if( szkey )
+   {
+      pKeyNew->rec_no = pTag->Owner->Owner->ulRecNo;
+      pKeyNew->pNext = NULL;
+      memcpy( pKeyNew->key, szkey, pTag->KeyLength );
+   }
 
-   if( ++(pSortInfo->nItems) < 2 && pKeyNew->rec_no < pTag->Owner->Owner->ulRecCount )
+   if( szkey && ++(pSortInfo->nItems) < 2 && pKeyNew->rec_no < pTag->Owner->Owner->ulRecCount )
       return;
 
    if( pSortInfo->nItems == 2 )
@@ -1794,6 +1797,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          }
       }
    }
+   if( ulKeyNo < ulRecCount && ulKeyNo%2 )
+      hb_ntxSortKeyAdd( pTag, &sortInfo, NULL, ulKeyNo );
    pArea->pRecord = pRecordTmp;
    pArea->fValidBuffer = fValidBuffer;
    hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
@@ -2457,9 +2462,10 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderCreate(%p, %p)", pArea, pOrderInfo));
 
-   SELF_ORDLSTCLEAR( ( AREAP ) pArea );
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
+   if( !pArea->lpdbOrdCondInfo->fAll )
+      SELF_ORDLSTCLEAR( ( AREAP ) pArea );
 
    /* If we have a codeblock for the expression, use it */
    if( pOrderInfo->itmCobExpr )
@@ -2634,8 +2640,6 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    pIndex = hb_ntxIndexNew( pArea );
    pIndex->IndexName = szFileName;
-   pArea->lpNtxIndex = pIndex;
-   pArea->lpCurIndex = pIndex;
    pTag = hb_ntxTagNew( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
                         pKeyExp, bType, (USHORT) uiLen, (USHORT) uiDec, (char *) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor : NULL ),
                         pForExp, pArea->lpdbOrdCondInfo ? !pArea->lpdbOrdCondInfo->fDescending : TRUE,
@@ -2658,6 +2662,10 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       return FAILURE;
    }
+   if( pArea->lpdbOrdCondInfo->fAll )
+      SELF_ORDLSTCLEAR( ( AREAP ) pArea );
+   pArea->lpNtxIndex = pIndex;
+   pArea->lpCurIndex = pIndex;
    hb_ntxHeaderSave( pIndex );
    {
       BYTE emptyBuffer[250];
@@ -3075,7 +3083,6 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxWriteDBHeader,
                              ntxWhoCares
                            };
-
 
 HB_FUNC(_DBFNTX )
 {
