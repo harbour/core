@@ -2285,107 +2285,73 @@ HARBOUR HB___DBCONTINUE()
  *  $CATEGORY$
  *     DATA BASE
  *  $ONELINER$
- *      Create a database file from a database structure array
+ *      Creates an empty database from a array.
  *  $SYNTAX$
- *     DBCREATE(<cDatabase>, <aStruct>,[<cDriver>]) --> NIL
- *     
+ *     DBCREATE(<cDatabase>, <aStruct>,[<cDriver>],[<lOpen>],[<cAlias>]) --> NIL   
  *  $ARGUMENTS$
- *     <cDatabase> is the name of the new database file, with an optional
- *     drive and directory, specified as a character string.  If specified
- *     without an extension (.dbf) is assumed.
- *
- *     <aStruct> is an array that contains the structure of <cDatabase> as
- *     a series of subarrays, one per field.  Each subarray contains the
- *     definition of each field's attributes and has the following structure:
- *
- *     Field Definition Subarray
- *     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *     Position     Metasymbol     Dbstruct.ch
- *     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *     1            cName          DBS_NAME
- *     2            cType          DBS_TYPE
- *     3            nLength        DBS_LEN
- *     4            nDecimals      DBS_DEC
- *     컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
- *
- *     <cDriver> specifies the replaceable database driver (RDD) to use to
- *     process the current work area.  <cDriver> is name of the RDD specified
- *     as a character expression.  If you specify <cDriver> as a literal value,
- *     you must enclose it in quotes.
- *     
+ *      <cDatabase> Name of database to be create
+ *      <aStruct>   Name of a multidimensional array that contains the a database
+ *                  structure
+ *      <cDriver>   Name of the RDD
+ *      <lOpen>     Toggle to Open the create File
+ *      <cAlias>    Name of database Alias
  *  $RETURNS$
- *     DBCREATE() always returns NIL.
+ *      DBCREATE() always returns NIL.
  *  $DESCRIPTION$
- *     DBCREATE() is a database function that creates a database file from an
- *   array containing the structure of the file.  You may create the array
- *   programmatically or by using DBSTRUCT().  DBCREATE() is similar to the
- *   CREATE FROM command which creates a new database file structure from a
- *   structure extended file.  Use CREATE or COPY STRUCTURE EXTENDED commands
- *   to create a structure extended file.
+ *      This function creates the database file specified as <cDatabase> from the
+ *      multidimensional array <aStruct>.If no file extension is use with <cDatabase>
+ *      the .DBF extension is assumed.
+ *      The array specified in <aStruct> must follow a few guidelines when being
+ *      built prior to a call to DBCREATE():
  *
- *   Before using DBCREATE(), you must first create the <aStruct> array and
- *   fill it with the field definition arrays according to the structure in
- *   Field Definition Subarray table (above).  There are some specific rules
- *   for creating a field definition array, including:
+ *      - All subscripts values in the second dimension must be set to proper values
  *
- *     Specify all field attributes with a value of the proper data
- *      type for the attribute.  The decimals attribute must be
- *      specified--even for non-numeric fields.  If the field does not have a
- *      decimals attribute, specify zero.
+ *      - The fourth subscript value in the second dimension - which contains
+ *        the decimal value-must he specified. even 1kw nonnumeric fields.
+ * 
+ *      - The second subscript value in the second dimension-which contains
+ *        the field data type-must contain a proper value: C, D, L, M or N
+ *        It is possible to use additional letters (or clarity (e.g., 'Numeric'
+ *        for 'N'): however, the first letter of this array element must
+ *        be a proper value.
+ * 
+ *        The DBCREATE( ) function does not use the decimal field to
+ *        calculate the length of a character held longer than 256. Values
+ *        up to the maximum length of a character field (which is 65,519 bytes)
+ *        are stored directly in the database in the length attribute if that
+ *        database was created via this function. However, a file containing
+ *        fields longer than 256 bytes is not compatible with any interpreter.
  *
- *     Specify the type attribute using the first letter of the data
- *      type as a minimum.  Use longer and more descriptive terms for
- *      readability.  For example, both "C" and "Character" can be specified
- *      as the type attribute for character fields.
- *
- *     In CA-Clipper, character fields contain up to 64,000
- *      characters.  Unlike the CREATE FROM command, DBCREATE() does not use
- *      the decimals attribute to specify the high-order part of the field
- *      length.  Specify the field length directly, regardless of its
- *      magnitude.
- *
- *   To make references to the various elements of the field definition
- *   subarray more readable, the header file called Dbstruct.ch is supplied
- *   which contains the #defines to assign a name to the array position for
- *   each field attribute.  It is located in \CLIPPER5\INCLUDE.
- *     
+ *      The <cDriver> parameter specifies the name of the Replaceable Da-
+ *      tabase Driver to use to create the database. If it is not specified, then the
+ *      Replaceable Database Driver in the current work area is tised.
+ *      The <lOpen> parameter specifies if the already created database is to be opened,
+ *      The <cAlias> parameter specifies the alias name for the new opened database
  *  $EXAMPLES$
- *     This example creates an empty array and then adds field
- *      definition subarrays using the AADD() function before creating
- *      People.dbf.  You might use this technique to add field definitions to
- *      your structure array dynamically:
+ *      function main()
  *
- *      aDbf := {}
- *      AADD(aDbf, { "Name", "C", 25, 0 })
- *      AADD(aDbf, { "Address", "C", 1024, 0 })
- *      AADD(aDbf, { "Phone", "N", 13, 0 })
- *      //
- *      DBCREATE("People", aDbf)
+ *      local nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
+ *                          { "NUMERIC",   "N",  8, 0 }, ;
+ *                          { "DOUBLE",    "N",  8, 2 }, ;
+ *                          { "DATE",      "D",  8, 0 }, ;
+ *                          { "LOGICAL",   "L",  1, 0 }, ;
+ *                          { "MEMO1",     "M", 10, 0 }, ;
+ *                          { "MEMO2",     "M", 10, 0 } }
  *
- *     This example performs the same types of actions but declares
- *      the structure array as a two-dimensional array, and then uses
- *      subscript addressing to specify the field definitions.  It will be
- *      created using the DBFMDX RDD:
+ *      REQUEST DBFCDX
  *
- *      #include "Dbstruct.ch"
- *      //
- *      LOCAL aDbf[1][4]
- *      aDbf[1][ DBS_NAME ] := "Name"
- *      aDbf[1][ DBS_TYPE ] := "Character"
- *      aDbf[1][ DBS_LEN ]  := 25
- *      aDbf[1][ DBS_DEC ]  := 0
- *      //
- *      DBCREATE("Name", aDbf, "DBFMDX")
+ *      dbCreate( "testdbf", aStruct, "DBFCDX", .t., "MYALIAS" )
+ *
+ *      RETURN NIL
  *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     
+ *      This function is Not CA-Clipper compilant
  *  $SEEALSO$
- *     AFIELDS(),DBSTRUCT()
+ *      AFIELDS(),DBSTRUCT()
  *  $INCLUDE$
- *     "Dbstruct.ch"
+ *      "Dbstruct.ch"
  *  $END$
  */
 
@@ -3773,19 +3739,15 @@ HARBOUR HB_DBSETFILTER( void )
  *      LEN(DBSTRUCT()) is equal to the value obtained from FCOUNT().
  *      Each subscript position
  *  $EXAMPLES$
- *      This example opens two database files then creates an array
- *      containing the database structure using DBSTRUCT() within an aliased
- *      expression.  The field names are then listed using AEVAL():
- *
- *      #include "Dbstruct.ch"
- *      //
- *      LOCAL aStruct
- *      USE Customer NEW
- *      USE Invoices NEW
- *      //
- *      aStruct := Customer->(DBSTRUCT())
- *      AEVAL( aStruct, {|aField| QOUT(aField[DBS_NAME])} )
- *
+ *      FUNCTION Main()
+ *      LOCAL aStru,x
+ *      USE Tests NEW
+ *      aStru:=DBSTRUCT()
+ *      FOR x:=1 TO LEN(aStru)
+ *        ? aStru[x,1]
+ *      NEXT
+ *      USE
+ *      RETURN NIL
  *  $TESTS$
  *
  *  $STATUS$
@@ -3886,7 +3848,7 @@ HARBOUR HB_DBTABLEEXT( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Release all locks for the current work area
+ *      Unlock a record or release a file lock
  *  $SYNTAX$
  *      DBUNLOCK() --> NIL
  *  $ARGUMENTS$
@@ -3894,44 +3856,25 @@ HARBOUR HB_DBTABLEEXT( void )
  *  $RETURNS$
  *      DBUNLOCK() always returns NIL.
  *  $DESCRIPTION$
- *      DBUNLOCK() releases any record or file locks obtained by the current
- *   process for the current work area.  DBUNLOCK() is only meaningful on a
- *   shared database in a network environment.
- *
- *      DBUNLOCK() performs the same function as the standard UNLOCK command.
- *   For more information, refer to the UNLOCK command.
- *
- *   Notes
- *
- *      Network environment: Releasing locks may cause updates to the
- *      database to become visible to other processes.  
- *      
+ *      This function releases the file or record lock in the currently selected
+ *      or aliased work area.It will not unlock an associated lock in a related data-
+ *      bases.
  *  $EXAMPLES$
- *      The following example illustrates a basic use of the
- *      DBUNLOCK() function:
- *
- *      cLast := "Winston"
- *      USE Sales SHARED NEW VIA "DBFNTX"
- *      DBSETINDEX( "LASTNAME" )
- *      //
- *      IF ( Sales->(DBSEEK(cLast)) )
- *         IF Sales->( RLOCK() )
- *            Sales->( DBDELETE() )
- *            ? "Record deleted: ", Sales( DELETED() )
- *            Sales->( DBUNLOCK() )
+ *      nId:=10
+ *      USE TestId INDEX TestId NEW
+ *      IF TestId->(DBSEEK(nId))
+ *         IF TestId->(RLOCK())
+ *            DBDELETE()
  *         ELSE
- *            ? "Unable to lock record..."
+ *             DBUNLOCK()
  *         ENDIF
- *      ELSE
- *         ? "Not found"
  *      ENDIF
- *
+ *      USE
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compatible.
  *  $SEEALSO$
  *      DBUNLOCKALL(),FLOCK(),RLOCK()
  *  $INCLUDE$
@@ -3953,7 +3896,7 @@ HARBOUR HB_DBUNLOCK( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Release all locks for all work areas
+ *      Unlocks all records and releases all file locks in all work areas.
  *  $SYNTAX$
  *      DBUNLOCKALL() --> NIL
  *  $ARGUMENTS$
@@ -3961,43 +3904,21 @@ HARBOUR HB_DBUNLOCK( void )
  *  $RETURNS$
  *      DBUNLOCKALL() always returns NIL.
  *  $DESCRIPTION$
- *      DBUNLOCKALL() releases any record or file locks obtained by the current
- *   process for any work area.  DBUNLOCKALL() is only meaningful on a shared
- *   database in a network environment.  It is equivalent to calling
- *   DBUNLOCK() on every occupied work area.
- *
- *      DBUNLOCKALL() performs the same function as the UNLOCK ALL command.  For
- *   more information, refer to the UNLOCK ALL command.
- *      
+ *      This function will remove all file and record locks in all work area.
  *  $EXAMPLES$
- *      The following example marks a record for deletion if an
- *      RLOCK() attempt is successful, then clears all locks in all work
- *      areas:
- *
- *      cLast := "Winston"
- *      USE Sales SHARED NEW VIA "DBFNTX"
- *      DBSETINDEX( "SALEFNAM" )
- *      DBSETINDEX( "SALELNAM" )
- *      //
- *      USE Colls SHARED NEW VIA "DBFNTX"
- *      DBSETINDEX( "COLLFNAM" )
- *      DBSETINDEX( "COLLLNAM" )
- *      //
- *      DBSELECTAREA( "Sales" ) *   // select "Sales" work area
- *      //
- *      IF ( Colls->(DBSEEK(cLast)) )
- *         IF Colls->( DELETED() )
- *            ? "Record deleted: ", Colls->( DELETED() )
- *            IF Colls->( RLOCK() )
- *               Colls->( DBRECALL() )
- *               ? "Record recalled..."
- *            ENDIF
+ *      nId:=10
+ *      USE Tests INDEX TestId NEW
+ *      USE Tests1 INDEX Tests NEW
+ *      IF TestId->(DBSEEK(nId))
+ *         IF TestId->(RLOCK())
+ *            DBDELETE()
+ *         ELSE
+ *            DBUNLOCK()
  *         ENDIF
  *      ELSE
- *         ? "Not found"
- *         DBUNLOCKALL()            // remove all locks in
- *      ENDIF                       // all work areas
- *
+ *         DBUNLOCKALL()
+ *      ENDIF
+ *      USE
  *  $TESTS$
  *
  *  $STATUS$
@@ -4029,78 +3950,49 @@ HARBOUR HB_DBUNLOCKALL( void )
  *  $CATEGORY$
  *      Data Base
  *  $ONELINER$
- *      Use a database file in a work area
+ *      Opens a work area and uses a database file.
  *  $SYNTAX$
  *      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
  *      [<lShared>], [<lReadonly>]) --> NIL     
  *  $ARGUMENTS$
- *      <lNewArea> is an optional logical value.  A value of true (.T.)
- *   selects the lowest numbered unoccupied work area as the current work
- *   area before the use operation.  If <lNewArea> is false (.F.) or omitted,
- *   the current work area is used; if the work area is occupied, it is
- *   closed first.
- *
- *      <cDriver> is an optional character value.  If present, it specifies
- *   the name of the database driver which will service the work area.  If
- *   <cDriver> is omitted, the current default driver is used (see note
- *   below).
- *
- *      <cName> specifies the name of the database (.dbf) file to be opened.
- *
- *      <xcAlias> is an optional character value.  If present, it specifies
- *   the alias to be associated with the work area.  The alias must
- *   constitute a valid HARBOUR identifier.  A valid <xcAlias> may be any
- *   legal identifier (i.e., it must begin with an alphabetic character and
- *   may contain numeric or alphabetic characters and the underscore).
- *   Within a single application, HARBOUR will not accept duplicate
- *   aliases.  If <xcAlias> is omitted, a default alias is constructed from
- *      <cName>.
- *
- *      <lShared> is an optional logical value.  If present, it specifies
- *   whether the database (.dbf) file should be accessible to other processes
- *   on a network.  A value of true (.T.) specifies that other processes
- *   should be allowed access; a value of false (.F.) specifies that the
- *   current process is to have exclusive access.  If <lShared> is omitted,
- *   the current global _SET_EXCLUSIVE setting determines whether shared
- *   access is allowed.
- *
- *      <lReadonly> is an optional logical value that specifies whether
- *   updates to the work area are prohibited.  A value of true (.T.)
- *   prohibits updates; a value of false (.F.) permits updates.  A value of
- *   true (.T.) also permits read-only access to the specified database
- *   (.dbf) file.  If <lReadonly> is omitted, the default value is false
- *   (.F.).     
+ *     <lNewArea>  A optional logical expression for the new work area
+ *     <cDriver>   Database driver name
+ *     <cName>     File Name 
+ *     <xcAlias>   Alias name 
+ *     <lShared>   Shared/exclusive status flag
+ *     <lReadonly> Read-write status flag.
  *  $RETURNS$
  *      DBUSEAREA() always returns NIL.
  *  $DESCRIPTION$
- *      DBUSEAREA() associates the specified database (.dbf) file with the
- *   current work area.
- *
- *      DBUSEAREA() performs the same function as the standard USE command.  For
- *   more information, refer to the USE command.
- *
- *      Notes
- *
- *      Current driver: If no driver is specified in the call to
- *      DBUSEAREA() the default driver is used.  If more than one driver is
- *      available to the application, the default driver is the driver
- *      specified in the most recent call to DBSETDRIVER().  If DBSETDRIVER()
- *      has not been called, the name of the default driver is undetermined.
- *      
+ *      This function opens an existing database named <cName> in the current
+ *      work area. If <lNewArea> is set to a logical true (.T.) value, then
+ *      the database <cName> will be opened in the next available and unused
+ *      work area. The default value of <lNewArea> is a logical false (.F.).
+ *      If used, <cDriver> is the name of the database driver associated with
+ *      the file <cName> that is opened. The default for this will be the value
+ *      of DBSETDRlVER().
+ *      IF used, <xcAlias> contains the alias name for that work area, If not
+ *      specified, the root name of the database specified in <cName> will be
+ *      used.
+ *      If <lShared> is set to a logical true (.T.) value, the database that
+ *      is specified in <cName> will be opened by the user EXCLUSIVELY. Thus
+ *      locking it from all other nodes or users on the network. If <lShared> is
+ *      set to a logical false (.F.) value, then the database will be in SHARED
+ *      mode. If <lShared> is not passed, then the function will turn to the
+ *      internal setting of SET EXCLUSIVE to determine a setting.
+ *      If <lReadOnly> is specified, the file will be set to READ ONLY mode.
+ *      If it is not specified, the file will he opened in normal read-write
+ *      mode.
  *  $EXAMPLES$
- *      This example is a typical use of the DBUSEAREA() function:
- *
- *      DBUSEAREA(.T., "DBFNDX", "Employees")
- *
+ *      DBUSEAREA(.T.,,"Tests")
  *  $TESTS$
  *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is CA-Clipper compilante
  *  $SEEALSO$
- * DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
- *      
+ *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *  $INCLUDE$
  *      
  *  $END$

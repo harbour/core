@@ -52,6 +52,7 @@ CLASS THTML
    METHOD WritePar( cPar )
    METHOD WriteParBold( cPar )
    METHOD WriteLink( cLink )
+   METHOD WriteText(cText)
    METHOD CLOSE()
 
 ENDCLASS
@@ -77,6 +78,11 @@ METHOD WritePar( cPar ) CLASS THTML
 
    cPar:=STRTRAN(cPar,"<","&lt;")
    cPar:=STRTRAN(cPar,">","&gt;")
+   FWRITE( Self:nHandle, "<p>" + Alltrim(cPar) + '</p>' + CRLF )
+
+RETURN Self
+METHOD WriteText( cPar ) CLASS THTML
+
    FWRITE( Self:nHandle, "<p>" + Alltrim(cPar) + '</p>' + CRLF )
 
 RETURN Self
@@ -110,7 +116,7 @@ METHOD WriteLink( cLink ,cName ) CLASS THTML
       cLink:=cName
    ENDIF
 
-   FWRITE( Self:nHandle, "<p><a href=" + cTemp + ">" + cLink + "</a></p>" + CRLF )
+   FWRITE( Self:nHandle, "<p><a href=" + Lower(cTemp) + ">" + cLink + "</a></p>" + CRLF )
 
 
 RETURN Self
@@ -137,7 +143,8 @@ RETURN Self
  *        WriteTitle(<cTitle>) Write the file title
  *        WritePar(<cPar>)   Writes a paragrafer
  *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
- *        WriteLink(<cLink>)  Write a link to another topic
+ *        WriteLink(<cLink>,<cName>)  Write a link to another topic
+ *        WriteText(<cText>) Write any text
  *  $EXAMPLES$
  *     FUNCTION MAIN()
  *
