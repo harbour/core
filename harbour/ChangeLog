@@ -1,3 +1,8 @@
+19991105-14:07 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/codebloc.prg
+	* memory occupied by detached local variables is properly released now
+	
 19991104-23:45 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     ! hb_fsSeek() now returns 0 instead of -1 on error, just like Clipper.

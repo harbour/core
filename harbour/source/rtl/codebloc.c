@@ -185,7 +185,7 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
       if( pCBlock->pLocals )
       {
          USHORT ui = 1;
-         while( ui < pCBlock->uiLocals )
+         while( ui <= pCBlock->uiLocals )
          {
             hb_memvarValueDecRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
             ++ui;
