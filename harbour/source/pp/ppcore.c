@@ -2528,20 +2528,14 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
             case ';':
                bNewLine = TRUE;
                break;
-
-            /* JFL 2000-09-19 */
-            /* Supressed this code wich avoid the use of #command @@ => ...
-            /* I'm not sure what it was intended for ... so I let it here commented */
-/*          case '@':
-              if( bNewLine && sBuffer[ *iBuffer ] != ' ' && sBuffer[ *iBuffer ] != '\t' )
+           case '@':
+              if( bNewLine && ( sBuffer[ *iBuffer ] == '&' || sBuffer[ *iBuffer ] == '-' ) )
               {
                  buffer[readed++] = cha;
                  s_prevchar = cha;
                  cha = ' ';
               }
               break;
-*/
-
             /* Ron Pinkas end 2000-06-01 */
             }
             if( cha != ' ' && cha != ';' ) s_prevchar = cha;

@@ -1,3 +1,8 @@
+2000-09-19 10:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     ! Corrected JFL previous change, which commented a fix that solved problem with code like "@&Row,...".
+       This fix will address both the #xtranslate @@ => ... as well as the previous needed fix.
+
 2000-09-20 00:52 UTC+0200 JFL (mafact) <jfl@mafact.com>
    * source/pp/ppcore.c
      corrected #command @@ => ...
