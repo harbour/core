@@ -47,6 +47,8 @@ Function Main( )
 
         ? M->NewPublicVar
 
+   TEST_TYPE()
+   
 RETURN NIL
 
 FUNCTION TValue
@@ -94,3 +96,71 @@ Function SubFun()
         ? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
 
 RETURN NIL
+
+STATIC PROCEDURE TEST_TYPE()
+LOCAL v1, v2, v1a, v2a
+LOCAL bErr:=ERRORBLOCK({|e|BREAK(e)}), oE
+
+   ?
+   ? "=========== TYPE() function ================="
+   v1 := "UDF()"
+   ? "Test for TYPE('UDF()')        - should be 'UI': ", TYPE(v1)
+   v2 := "UDF_STATIC()"
+   ? "Test for TYPE('UDF_STATIC()') - should be 'U': ", TYPE(v2)
+   ? "Test for &"+"'UDF()'  - should print 'udf': ", &v1
+   ? "Test for &"+"'UDF_STATIC()'  - should print 'ERROR: undefined function': "
+   BEGIN SEQUENCE
+      ?? &v2
+   RECOVER USING oE
+      ? "ERROR: "+oE:Description
+   END SEQUENCE
+   ERRORBLOCK(bErr)
+
+   v1 := "UDF"
+   ? "Test for TYPE('UDF')        - should be 'U': ", TYPE(v1)
+   v2 := "UDF_STATIC"
+   ? "Test for TYPE('UDF_STATIC') - should be 'U': ", TYPE(v2)
+
+   v1a := "UDF:=1"
+   ? "Test for TYPE('UDF:=1')        - should be 'N': ", TYPE(v1a)
+   v2a := "UDF_STATIC:=1"
+   ? "Test for TYPE('UDF_STATIC:=1') - should be 'N': ", TYPE(v2a)
+
+   ? "=== after the assignment ==="
+   v1 := "UDF"
+   ? "Test for TYPE('UDF')        - should be 'N': ", TYPE(v1)
+   v2 := "UDF_STATIC"
+   ? "Test for TYPE('UDF_STATIC') - should be 'N': ", TYPE(v2)
+
+   v1 := "UDF()"
+   ? "Test for TYPE('UDF()')        - should be 'UI': ", TYPE(v1)
+   v2 := "UDF_STATIC()"
+   ? "Test for TYPE('UDF_STATIC()') - should be 'U': ", TYPE(v2)
+
+
+   ? "=== declared public variable ==="
+   PUBLIC UDF2, UDF2_STATIC
+   v1 := "UDF2()"
+   ? "Test for TYPE('UDF2()')        - should be 'UI': ", TYPE(v1)
+   v2 := "UDF2_STATIC()"
+   ? "Test for TYPE('UDF2_STATIC()') - should be 'U': ", TYPE(v2)
+
+   v1 := "UDF2"
+   ? "Test for TYPE('UDF')        - should be 'L': ", TYPE(v1)
+   v2 := "UDF2_STATIC"
+   ? "Test for TYPE('UDF_STATIC') - should be 'L': ", TYPE(v2)
+
+   ?   
+RETURN
+
+STATIC FUNCTION UDF_STATIC()
+RETURN "udf_static"
+
+FUNCTION UDF()
+RETURN "udf"
+
+STATIC FUNCTION UDF2_STATIC()
+RETURN "udf2_static"
+
+FUNCTION UDF2()
+RETURN "udf2"

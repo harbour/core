@@ -8,6 +8,32 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-17 12:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * source/rtl/empty.c
+   * source/rtl/idle.c
+   * source/vm/arrays.c
+   * source/vm/estack.c
+   * source/vm/extend.c
+   * source/vm/itemapi.c
+      * added missing code to use HB_IT_POINTER just like 
+      other value's type
+      You can use:
+      hb_retptr( void * pointer )
+      hb_parptr( ) -> void *
+      hb_storptr( void * pointer, ...... )
+      to return/manage pointers from low level functions.
+      For example:
+      p = GET_SOME_POINTER()
+      ? VALTYPE(p)   //prints: 'P'
+      ? p   //prints: 0x12345678
+      
+   * tests/onidle.prg
+      * fixed to use values of pointer type
+      
+   * tests/tstmacro.prg
+      * added code to test TYPE() function
+
 2004-04-16 17:08 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * harbour/contrib/rdd_ads/adsfunc.c
      Renamed adsGetConnectionType() as AdsGetTableConType() and added

@@ -847,6 +847,9 @@ char * HB_EXPORT hb_itemTypeStr( PHB_ITEM pItem )
 
       case HB_IT_MEMO:
          return "M";
+
+      case HB_IT_POINTER:
+         return "P";
    }
 
    return "U";
@@ -1404,6 +1407,36 @@ char * HB_EXPORT hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          * ulLen = 3;
          * bFreeReq = FALSE;
          break;
+
+      case HB_IT_POINTER:
+         {
+            int size = 11;    /* 8 bytes for address + 0x + \0 */
+            int n;
+            BOOL bFail = TRUE; 
+
+            buffer = ( char * ) hb_xgrab( size );
+            do
+            {
+               n = snprintf( buffer, size, "%p", hb_itemGetPtr( pItem ) );
+               if( (n > -1) && (n < size) )
+               {
+                  bFail = FALSE;
+               }
+               else
+               {
+                  if( n > -1 )
+                     size = n + 1;
+                  else
+                     size *= 2;
+                  buffer = hb_xrealloc( buffer, size );
+               }
+            }
+            while( bFail );
+            * ulLen = strlen( buffer );
+            * bFreeReq = TRUE;
+         }
+         break;
+
 
       default:
          buffer = "";

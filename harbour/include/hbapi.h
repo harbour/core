@@ -293,6 +293,7 @@ extern int      HB_EXPORT hb_parl( int iParam, ... ); /* retrieve a logical para
 extern double   HB_EXPORT hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
 extern int      HB_EXPORT hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 extern long     HB_EXPORT hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
+extern void     HB_EXPORT * hb_parptr( int iParam, ... ); /* retrieve a parameter as a pointer */
 extern PHB_ITEM HB_EXPORT hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
 extern PHB_ITEM HB_EXPORT hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
 extern BOOL     HB_EXPORT hb_extIsArray( int iParam );
@@ -328,6 +329,7 @@ extern BOOL     HB_EXPORT hb_extIsArray( int iParam );
 #define hb_retndlen( dNumber, iWidth, iDec ) hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec )
 #define hb_retnilen( iNumber, iWidth )       hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth )
 #define hb_retnllen( lNumber, iWidth )       hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth )
+#define hb_retptr( pointer )                 hb_itemPutPtr( &hb_stack.Return, pointer )
 
 #else
 
@@ -351,6 +353,7 @@ extern void  HB_EXPORT  hb_retndlen( double dNumber, int iWidth, int iDec ); /* 
 extern void  HB_EXPORT  hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
 extern void  HB_EXPORT  hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
 extern void  HB_EXPORT  hb_reta( ULONG ulLen );  /* returns an array with a specific length */
+extern void  HB_EXPORT  hb_retptr( void * ptr );  /* returns a pointer */
 
 #endif
 
@@ -361,6 +364,7 @@ extern int   HB_EXPORT  hb_storl( int iLogical, int iParam, ... ); /* stores a l
 extern int   HB_EXPORT  hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
 extern int   HB_EXPORT  hb_stornl( long lValue, int iParam, ... ); /* stores a long on a variable by reference */
 extern int   HB_EXPORT  hb_stornd( double dValue, int iParam, ... ); /* stores a double on a variable by reference */
+extern int   HB_EXPORT  hb_storptr( void * pointer, int iParam, ... ); /* stores a pointer on a variable by reference */
 
 extern void    HB_EXPORT hb_xinit( void );                         /* Initialize fixed memory subsystem */
 extern void    HB_EXPORT hb_xexit( void );                         /* Deinitialize fixed memory subsystem */
@@ -399,6 +403,7 @@ extern ULONG    hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, 
 extern char *   hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
 extern char *   hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
 extern ULONG    hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
+extern void *   hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the pointer contained on an array element */
 extern BOOL     hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the logical value contained on an array element */
 extern int      hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
 extern long     hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */

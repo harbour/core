@@ -400,6 +400,17 @@ ULONG hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex )
       return 0;
 }
 
+void * hb_arrayGetPtr( PHB_ITEM pArray, ULONG ulIndex )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetPtr(%p, %lu)", pArray, ulIndex));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return hb_itemGetPtr( pArray->item.asArray.value->pItems + ulIndex - 1 );
+   else
+      return NULL;
+}
+
+
 USHORT hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetType(%p, %lu)", pArray, ulIndex));

@@ -92,6 +92,10 @@ HB_FUNC( EMPTY )
          hb_retl( FALSE );
          break;
 
+      case HB_IT_POINTER:
+         hb_retl( hb_itemGetPtr( pItem ) == NULL );
+         break;
+
       default:
          hb_retl( TRUE );
          break;

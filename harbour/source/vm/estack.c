@@ -324,6 +324,10 @@ void hb_stackDispLocal( void )
             printf( HB_I_("SYMBOL = %s "), ( *pBase )->item.asSymbol.value->szName );
             break;
 
+         case HB_IT_POINTER:
+            printf( HB_I_("POINTER = %p "), ( *pBase )->item.asPointer.value );
+            break;
+
          default:
             printf( HB_I_("UNKNOWN = TYPE %i "), hb_itemType( *pBase ) );
             break;
@@ -441,7 +445,7 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
       during debugging */
    if (p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT) {
 
-      fprintf(stderr, HB_I_("\nException %lx at address %lx \n"), p1->ExceptionNum, (ULONG)p1->ExceptionAddress);
+      fprintf(stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress);
 
       do
       {

@@ -426,6 +426,35 @@ long  HB_EXPORT hb_parnl( int iParam, ... )
    return 0;
 }
 
+void HB_EXPORT * hb_parptr( int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_parptr(%d, ...)", iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_POINTER( pItem ) )
+         return pItem->item.asPointer.value;
+      else if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return hb_arrayGetPtr( pItem, ulArrayIndex );
+      }
+   }
+
+   return NULL;
+}
+
 ULONG  HB_EXPORT hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 {
    PHB_ITEM pArray;
@@ -625,6 +654,15 @@ void HB_EXPORT hb_retnllen( long lNumber, int iWidth )
 
    hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth );
 }
+
+#undef hb_retptr
+void HB_EXPORT hb_retptr( void * pointer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retptr(%p)", pointer));
+
+   hb_itemPutPtr( &hb_stack.Return, pointer );
+}
+
 
 int HB_EXPORT hb_storc( char * szText, int iParam, ... )
 {
@@ -865,3 +903,38 @@ int HB_EXPORT hb_stornd( double dNumber, int iParam, ... )
 
    return 0;
 }
+
+int HB_EXPORT hb_storptr( void * pointer, int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_storptr(%p, %d, ...)", pointer, iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam );
+      BOOL bByRef = HB_IS_BYREF( pItem );
+
+      if( bByRef  )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         PHB_ITEM pItemNew = hb_itemPutPtr( NULL, pointer );
+         va_start( va, iParam );
+         hb_arraySet( pItem, va_arg( va, ULONG ), pItemNew );
+         va_end( va );
+         hb_itemRelease( pItemNew );
+         return 1;
+      }
+      else if( bByRef || iParam == -1 )
+      {
+         hb_itemPutPtr( pItem, pointer );
+         return 1;
+      }
+
+      return 0;
+   }
+
+   return 0;
+}
+

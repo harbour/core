@@ -229,10 +229,10 @@ HB_FUNC( HB_IDLEADD )
 
       /* return a pointer as a handle to this idle task
       */
-      hb_retnl( ( ULONG ) pBlock->item.asBlock.value );    /* TODO: access to pointers from harbour code */
+      hb_retptr( ( void * ) pBlock->item.asBlock.value );    /* TODO: access to pointers from harbour code */
    }
    else
-      hb_retnl( -1 );    /* error - a codeblock is required */
+      hb_retptr( NULL );    /* error - a codeblock is required */
 }
 
 /* Delete a task with given handle and return a codeblock with this task */
@@ -240,17 +240,17 @@ HB_FUNC( HB_IDLEDEL )
 {
    BOOL bFound = FALSE;
 
-   if( s_pIdleTasks && ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) )
+   if( s_pIdleTasks && ( hb_parinfo( 1 ) & HB_IT_POINTER ) )
    {
       SHORT iTask;
-      ULONG ulID = hb_parnl( 1 );   /* TODO: access to pointers from harbour code */
+      void * pID = hb_parptr( 1 );
       HB_ITEM_PTR pItem;
 
       iTask = 0;
       while( iTask < s_uiIdleMaxTask && !bFound )
       {
          pItem = s_pIdleTasks[ iTask ];
-         if( ulID == ( ULONG ) pItem->item.asBlock.value )
+         if( pID == ( void * ) pItem->item.asBlock.value )
          {
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
              hb_itemRelease( pItem );
