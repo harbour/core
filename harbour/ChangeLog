@@ -1,3 +1,9 @@
+2000-11-05 10:00 UTC+0100 JFL (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     * work around due to the fact HB stack can move
+       from address to address when stack growth.
+       __clsinstsuper() caused GPF
+
 2000-11-04 14:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
 
    * include/hbexpra.c

@@ -1596,12 +1596,15 @@ HB_FUNC( __OBJSENDMSG )
  */
 HB_FUNC( __CLSINSTSUPER )
 {
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+   char cString[ HB_SYMBOL_NAME_LEN + 1 ] ;
+   /*PHB_ITEM pString = hb_param( 1, HB_IT_STRING ); */
    BOOL bFound = FALSE;
 
-   if( pString )
+   strcpy( &cString, hb_parc(1) );
+
+   if( /*pString*/ hb_pcount() >= 1 )
    {
-      PHB_DYNS pDynSym = hb_dynsymFind( pString->item.asString.value );
+      PHB_DYNS pDynSym = hb_dynsymFind( cString /*pString->item.asString.value*/ );
 
       if( pDynSym )                             /* Find function            */
       {
@@ -1615,7 +1618,7 @@ HB_FUNC( __CLSINSTSUPER )
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
             {                                      /* Locate the entry         */
-               if( hb_stricmp( pString->item.asString.value, s_pClasses[ uiClass ].szName ) == 0 )
+               if( hb_stricmp( /*pString->item.asString.value*/ cString , s_pClasses[ uiClass ].szName ) == 0 )
                {
                   hb_retni( uiClass + 1 );               /* Entry + 1 = hb___msgClsH    */
                   bFound = TRUE;
