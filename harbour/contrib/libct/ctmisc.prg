@@ -70,6 +70,14 @@ FUNCTION CSETCURS( l )
 FUNCTION CSETKEY( n )
    RETURN SetKey( n )
 
+FUNCTION CSETCENT( nCentury )
+   if nCentury == NIL
+      RETURN __SETCENTURY()
+   else
+      RETURN __SETCENTURY( nCentury )
+   endif
+   RETURN NIL
+
 FUNCTION ENHANCED()
 
    ColorSelect( CLR_ENHANCED )
@@ -79,6 +87,12 @@ FUNCTION ENHANCED()
 FUNCTION STANDARD()
 
    ColorSelect( CLR_STANDARD )
+
+   RETURN ""
+
+FUNCTION UNSELECTED()
+
+   ColorSelect( CLR_UNSELECTED )
 
    RETURN ""
 
