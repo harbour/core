@@ -98,6 +98,7 @@
 #define HB_OO_DATA_VALUE        2
 #define HB_OO_DATA_TYPE         3
 #define HB_OO_DATA_SCOPE        4
+#define HB_OO_DATA_PERSISTENT   5
 
 /* ClassData */
 #define HB_OO_CLSD_SYMBOL       1
@@ -109,6 +110,7 @@
 #define HB_OO_MTHD_SYMBOL       1
 #define HB_OO_MTHD_PFUNCTION    2
 #define HB_OO_MTHD_SCOPE        3
+#define HB_OO_MTHD_PERSISTENT   4
 
 /* ClassMethod */ /* for the future */
 #define HB_OO_CLSM_SYMBOL       1
@@ -116,4 +118,3 @@
 #define HB_OO_CLSM_SCOPE        3
 
 #endif /* HB_OO_CH_ */
-
