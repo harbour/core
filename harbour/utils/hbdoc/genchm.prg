@@ -53,7 +53,7 @@
 MEMVAR aDirList
 MEMVAR aDocInfo
 MEMVAR aWww
-
+MEMVAR aResult
 STATIC aAlso
 STATIC aFiTable       := {}
 STATIC aSiTable       := {}
@@ -247,6 +247,11 @@ FUNCTION ProcessChm()
                   cFuncName := "Unknown"
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, lower(cFileName) } )
+               nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCategory)})
+               if nPos==0
+                  aadd(aResult,cCategory)
+               endif
+
                //  Now close down this little piece
                IF .NOT. EMPTY( cSeeAlso )
 

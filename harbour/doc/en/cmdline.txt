@@ -91,15 +91,14 @@
  *
  *      Notes:
  *      
- *      - All occurences where a path is accepted, 
- *        Harbour should handle the quote char to specify 
- *        path containing space, negative sign, slash, or
- *        any other chars with special meaning.
+ *      - All occurences where a path is accepted, Harbour should handle the
+ *        quote char to specify path containing space, negative sign, slash,
+ *        or any other chars with special meaning.
  *      
- *        /i"c:/hello/"
- *        -i"c:/hello-n"
- *        /i"c:/program files/"
- *        -i"c:/program files/"
+ *        /i"c:/hello/"   </par>
+ *        -i"c:/hello-n"  </par>
+ *        /i"c:/program files/" </par>
+ *        -i"c:/program files/" </par>
  *      
  *      <fixed>
  *        Just some examples for the various accepted forms:

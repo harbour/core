@@ -626,100 +626,98 @@ set console off
           oHTm:AddParam('Name','HARBOUR')
           ohtm:EndObject()
           ohtm:WriteText("<ul>")
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","Harbour Read me")
-          oHtm:AddParam("Local","overview.htm")
-          oHtm:EndObject()
-          OHTM:WriteChmLink('overview.htm',"Harbour Read me")
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","Harbour License")
-          oHtm:AddParam("Local","license.htm")
-          oHtm:EndObject()
-          OHTM:WriteChmLink('license.htm',"Harbour License")
-          if Alltrim(cLinkName)=='harbour.lnk'
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","GNU License")
-          oHtm:AddParam("Local","http://www.gnu.org/copyleft/gpl.html")
-          oHtm:EndObject()
-          OHTM:WriteChmLink('http://www.gnu.org/copyleft/gpl.html',"GNU License")
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","Compiler Options")
-          oHtm:AddParam("Local","compileroptions.htm")
-          oHtm:EndObject()
-          OHTM:WriteChmLink('compileroptions.htm',"Compiler Options")
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","Harbour Extensions")
-          oHtm:AddParam("Local","harbourextensions.htm")
-          oHtm:EndObject()
-          OHTM:WriteChmLink('harbourextensions.htm',"Harbour Extensions")
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","The Garbage Collector")
-          oHtm:AddParam("Local","thegarbagecollector.htm")
-          oHtm:EndObject()
-          oHtm:WriteChmLink( "thegarbagecollector.htm", "The Garbage Collector" )
-          oHtm:ListItem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name","The Idle States")
-          oHtm:AddParam("Local","theidlestates.htm")
-          oHtm:EndObject()
-          oHtm:WriteChmLink( "theidlestates.htm", "The Idle States" )
-
-          endif
+          writeChmContentFile(aDocinfo,"Document",oHtm)
       oHtm:WriteText( "</UL>" )
-      ohtm:ListItem()
+      oHtm:WriteText( "</UL>" )
+        ohtm:WriteText("<ul>")
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name','Harbour Run Time Error')
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+          writeChmContentFile(aDocinfo,"Run Time Errors",oHtm)
+      oHtm:WriteText( "</UL>" )
+      oHtm:WriteText( "</UL>" )
+    oHtm:WriteText( "<UL>" )
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name','Harbour Runtime functions and Commands by Name')
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+          asort(aDocinfo,,,{|x,y|x[2]<y[2]})
+          for ppp:=1 to len(aDocinfo)
+          if aDocInfo[ppp,1]<>'Run Time Errors' .and. aDocInfo[ppp,1] <>"Document"  .and. aDocInfo[ppp,1] <>"The garbage collector"  .and. aDocInfo[ppp,1] <>"OOP Command" .and. aDocInfo[ppp,1] <>"Command"  .and. aDocInfo[ppp,1] <>"The idle states"
+               oHtm:Listitem()
+               oHtm:AddObject("text/sitemap")
+               oHtm:AddParam("Name",UpperLower(aDocinfo[ppp,2]))
+               oHtm:AddParam("Local",lower(aDocInfo[ppp,4]))
+               oHtm:EndObject()
+               oHtm:WriteChmlink(lower(adocinfo[ppp,4]),adocinfo[ppp,2])
+        endif
+    next
+    oHtm:WriteText( "</UL>" )
+    ohtm:WriteText("</ul>")
+    oHtm:WriteText( "<UL>" )
+    ohtm:ListItem()
     oHtm:AddObject("text/sitemap")
     ohtm:addParam("Name","Harbour Functions by Categorie")
     oHtm:Endobject()
+//    oHtm:WriteText( "<UL>" )
+      asort(aDocinfo,,,{|x,y| x[1]<y[1]})
+//        SET CONSOLE ON
+      nItem := len(aResult)
+      asort(aResult,,,{|x,y| x<y})
+      for ppp:=1 to nItem
 
-        asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
-       do while .t.
-          citem:=adocinfo[1,1]
-          oHtm:WriteText( "<UL>" )
-          oHtm:Listitem()
-          oHtm:AddObject("text/sitemap")
-          oHtm:AddParam("Name",adocinfo[1,1])
-          oHtm:EndObject()
+        cLast:=GetNextContent(ppp)
+        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
           ohtm:WriteText("<ul>")
-  
-      for ppp:=1 to len(adocinfo)
-      
-           if citem ==adocinfo[ppp,1]
-               oHtm:Listitem()
-               oHtm:AddObject("text/sitemap")
-               oHtm:AddParam("Name",UpperLower(aDocinfo[ppp,2]))
-               oHtm:AddParam("Local",lower(aDocInfo[ppp,4]))
-               oHtm:EndObject()
-               oHtm:WriteChmlink(lower(adocinfo[ppp,4]),adocinfo[ppp,2])
-           else
-              ohtm:WriteText("</ul>")
-
-              citem:=adocinfo[ppp,1]
-              if cItem <>"Document"
-             oHtm:Listitem()
-             oHtm:AddObject("text/sitemap")
-             oHtm:AddParam("Name",adocinfo[ppp,1])
-             oHtm:EndObject()
-               ohtm:WriteText("<ul>")
-               oHtm:Listitem()
-               oHtm:AddObject("text/sitemap")
-               oHtm:AddParam("Name",UpperLower(aDocinfo[ppp,2]))
-               oHtm:AddParam("Local",lower(aDocInfo[ppp,4]))
-               oHtm:EndObject()
-               oHtm:WriteChmlink(lower(adocinfo[ppp,4]),adocinfo[ppp,2])
-endif
-           endif
-       next
-        if ppp>len(adocinfo)
-        exit
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name',cLast)
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")          
         endif
-      enddo
-        ohtm:WriteText("</ul>")
+        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+        //    oHtm:WriteText( "<UL>" )
+            WriteChmContentFile(aDocinfo,cLast,oHtm)
+            oHtm:WriteText( "</UL>" )
+            oHtm:WriteText( "</UL>" )
+        endif
+//               oHtm:WriteText( "</UL>" )
+      Next
+         oHtm:WriteText( "</UL>" )
+//         oHtm:WriteText( "</UL>" )
+         oHtm:WriteText( "<UL>" )
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name','Harbour Commands')
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+        asort(aDocinfo,,,{|x,y| x[2]<y[2]})
+          writeChmContentFile(aDocinfo,"Command",oHtm)
+      oHtm:WriteText( "</UL>" )
+      oHtm:WriteText( "</UL>" )
+         oHtm:WriteText( "<UL>" )
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name','Harbour OOP Commands')
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+        asort(aDocinfo,,,{|x,y| x[2]<y[2]})
+          writeChmContentFile(aDocinfo,"OOP Command",oHtm)
+      oHtm:WriteText( "</UL>" )
+         oHtm:WriteText( "</UL>" )
+         oHtm:WriteText( "<UL>" )
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHTm:AddParam('Name','The Garbage API')
+          ohtm:EndObject()
+          ohtm:WriteText("<ul>")
+        asort(aDocinfo,,,{|x,y| x[2]<y[2]})
+          writeChmContentFile(aDocinfo,"The garbage collector",oHtm)
+      oHtm:WriteText( "</UL>" )
+      ohtm:WriteText("</ul>")
     ohtm:close()
 
 
@@ -1377,7 +1375,7 @@ Function WriteContentFile(aTop,cCat,nFile)
 Local nCount:=0
 
 Local aTemp:={}
-ascan(aWww,,,{|x,y|x[3]+x[1]<y[3]+y[1]})
+asort(aWww,,,{|x,y|x[3]+x[1]<y[3]+y[1]})
 for nCount:=1 to Len(aWww)
     if Alltrim(aTop[nCount,3])==alltrim(cCat)
         aadd(aTemp,{aTop[nCount,1],aTop[nCount,2],aTop[nCount,3]})
@@ -1397,20 +1395,26 @@ if nPos <=Len(aResult)
 cReturn := aResult[nPos]
 endif
 return cReturn
-//         fWrite( nHpj, '2 '+aWww[1,3]+CRLF)
-/*          if aWww[ppp,3] <> cLast .and. aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
-               fWrite( nHpj, '2 '+aWww[ppp,3]+CRLF)
-               lAdded:=.t.              
-          endif
-          if lAdded
-              ppp++
-            if aWww[ppp,3] == cLast .and. aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
-                fWrite( nHpj, '3 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Funca"+CRLF)
-            endif
-            lAdded:=.F.
-          Elseif aWww[ppp,3] == cLast .and. aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
-                         fWrite( nHpj, '3 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Funca"+CRLF)
-          endif
+Function WriteChmContentFile(aTop,cCat,oHtm)
+Local nCount:=0
 
-         cLast:=aWww[ppp,3]
-         */
+Local aTemp:={}
+asort(aTop,,,{|x,y|x[1]+x[2]<y[1]+y[2]})
+for nCount:=1 to Len(aWww)
+    if Alltrim(aTop[nCount,1])==alltrim(cCat)
+        aadd(aTemp,{aTop[nCount,1],aTop[nCount,2],aTop[nCount,4]})
+    endif
+Next
+asort(aTemp,,,{|x,y| x[1]<y[1]})
+
+for nCount:=1 to Len(aTemp)
+          oHtm:ListItem()
+          oHtm:AddObject("text/sitemap")
+          oHtm:AddParam("Name",aTemp[nCount,2])
+          oHtm:AddParam("Local",aTemp[nCount,3])
+          oHtm:EndObject()
+          OHTM:WriteChmLink(aTemp[nCount,3],aTemp[nCount,2])
+next
+return nil
+    
+
