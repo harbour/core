@@ -1560,7 +1560,7 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1 ); }
            ;
 
 EmptyStatements : LineStat             { $<lNumber>$ = $<lNumber>1; }
-           | EmptyStatements LineStat  { $<lNumber>$ += $<lNumber>3; }
+           | EmptyStatements LineStat  { $<lNumber>$ += $<lNumber>2; }
            ;
 
 EmptyStats : /* empty */           { $<lNumber>$ = 0; }
