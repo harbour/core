@@ -1047,6 +1047,7 @@ void Inc( void )
       pError = _errNew();
       _errPutDescription( pError, "Error BASE/1086  Argument error: ++" );
       _errLaunch( pError );
+      _errRelease( pError );
    }
 }
 
@@ -1095,6 +1096,7 @@ void Instring( void )
 
       _errPutDescription( pError, "Error BASE/1109  Argument error: $" );
       _errLaunch( pError );
+      _errRelease( pError );
    }
 }
 

@@ -1,3 +1,7 @@
+19990607-14:50 CET Eddie Runia
+  * source/vm/hvm.c
+    Unreleased error block
+
 19990607-12:50 CET Eddie Runia
   * makefile.b32, build32.bat
     changed to split the terminal driver into seperate makefile for Windows

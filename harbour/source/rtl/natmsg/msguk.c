@@ -1,5 +1,5 @@
-#include <extend.h>
-#include <ctype.h>
+/* English language module */
+/* Codepage: N/A           */
 
 char *hb_monthsname[ 12 ] = {
    "January", "February", "March",
