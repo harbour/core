@@ -58,7 +58,7 @@
  * Cursor movement handling, stabilization loop, multi-line headers and footers support
  * ::PageUp(), ::PageDown(), ::Down(), ::Up(), ::GoBottom(), ::GoTop(), ::Stabilize()
  * ::GotoXY(), ::DispCell(), ::WriteMLineText(), ::RedrawHeaders(),
- * ::SetFrozenCols(), ::SetColumnWidth()   
+ * ::SetFrozenCols(), ::SetColumnWidth()
  *
  * Copyright 2001 Manu Exposito <maex14@dipusevilla.es>
  * Activate data PICTURE DispCell(nColumn, nColor)
@@ -113,7 +113,7 @@ CLASS TBrowse
 #endif
 
    ACCESS freeze INLINE ::nFrozenCols                       // Number of columns to freeze/frozen
-   ASSIGN freeze(nHowMany) INLINE ::SetFrozenCols(nHowMany)     
+   ASSIGN freeze(nHowMany) INLINE ::SetFrozenCols(nHowMany)
 
    METHOD New(nTop, nLeft, nBottom, nRight)                 // Constructor
    METHOD Down()                                            // Moves the cursor down one row
@@ -137,7 +137,7 @@ CLASS TBrowse
           ASize( ::aColumns, ++::nColumns), AIns( ::aColumns, nPos ),;
           ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
    METHOD GetColumn( nColumn ) INLINE;                      // Gets a specific TBColumn object
-          iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL )          
+          iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL )
    // NOTE: Shouldn't I return a copy of replaced column?
    METHOD SetColumn( nColumn, oCol ) INLINE;                // Replaces one TBColumn object with another
           iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ] := oCol, NIL ),;
@@ -146,11 +146,11 @@ CLASS TBrowse
           iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ]:Width, NIL )
    METHOD ColCount() INLINE ::nColumns
 
-   METHOD ColorRect()                                       // Alters the color of a rectangular group of cells 
+   METHOD ColorRect()                                       // Alters the color of a rectangular group of cells
    METHOD Configure( nMode )                                // Reconfigures the internal settings of the TBrowse object
                                                             // nMode is an undocumented parameter in CA-Cl*pper
    METHOD DeHilite()                                        // Dehighlights the current cell
-   METHOD ForceStable()                                     // Performs a full stabilization   
+   METHOD ForceStable()                                     // Performs a full stabilization
    METHOD Hilite()                                          // Highlights the current cell
    METHOD Invalidate()                                      // Forces entire redraw during next stabilization
    METHOD RefreshAll()                                      // Causes all data to be recalculated during the next stabilize
@@ -183,7 +183,7 @@ CLASS TBrowse
    METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) // Writes a multi-line text where ";" is a line break, lHeader
                                                          // is .T. if it is a header and not a footer
    METHOD SetFrozenCols(nHowMany)         // Handles freezing of columns
-   METHOD SetColumnWidth(oCol)            // Sets ::Width property of given column                                                         
+   METHOD SetColumnWidth(oCol)            // Sets ::Width property of given column
 
    DATA aRect                             // The rectangle specified with ColorRect()
    DATA aRectColor                        // The color positions to use in the rectangle specified with ColorRect()
@@ -205,7 +205,7 @@ CLASS TBrowse
                                           // > 0 only when there are frozen columns
    DATA nFrozenCols                       // Number of frozen columns on left side of TBrowse
    DATA nColumns                          // Number of columns added to TBrowse
-   DATA lNeverDisplayed                   // .T. if TBrowse has never been stabilize()d                                          
+   DATA lNeverDisplayed                   // .T. if TBrowse has never been stabilize()d
 
 ENDCLASS
 
@@ -336,11 +336,11 @@ METHOD Configure(nMode) CLASS TBrowse
    endif
 
    ::Invalidate()
-   
+
    // Force re-evaluation of space occupied by frozen columns
    if ::freeze > 0
       ::SetFrozenCols(::freeze)
-   endif      
+   endif
 
 return Self
 
@@ -375,11 +375,11 @@ METHOD SetFrozenCols(nHowMany) CLASS TBrowse
    ::nFrozenCols := nHowMany
    // Space inside TBrowse window reserved for frozen columns
    ::nFrozenWidth := 0
-   
+
    // If I've never displayed this TBrowse before I cannot calc occupied space since
    // columns:width is not yet set, ::Stabilize() will call me later
    if ! ::lNeverDisplayed
-      
+
       if nHowMany > 0
          for nCol := 1 TO nHowMany
             ::nFrozenWidth += ::aColumns[ nCol ]:Width
@@ -390,7 +390,7 @@ METHOD SetFrozenCols(nHowMany) CLASS TBrowse
             endif
          next
       endif
-   
+
       for nCol := 1 to ::nColumns
          if nHowMany > 0
             // If there are columns which are larger than TBrowse display width minus
@@ -398,14 +398,14 @@ METHOD SetFrozenCols(nHowMany) CLASS TBrowse
             if ::nFrozenWidth + ::aColumns[ nCol ]:Width > nWidth
                ::aColumns[ nCol ]:Width := nWidth - ::nFrozenWidth
             endif
-         
+
          else
             // Reset column widths
             ::SetColumnWidth(::aColumns[ nCol ])
          endif
-      next      
+      next
    endif
-         
+
 return nHowMany
 
 
@@ -441,7 +441,7 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
             oCol:Width := nL
          endif
       enddo
-           
+
       if oCol:Width > nWidthMax
          // with values lower than -4 it SIGSEVs here and there :-(
          oCol:Width := nWidthMax - 4
@@ -451,8 +451,8 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
       // Needed !
       oCol:Width := 0
    endif
-   
-return Self   
+
+return Self
 
 
 METHOD Down() CLASS TBrowse
@@ -577,17 +577,17 @@ METHOD LeftDetermine() CLASS TBrowse
    local nCol
 
    nCol := ::rightVisible
-   while nWidth < nWidthMax .and. nCol > ::nFrozenCols  
-      
+   while nWidth < nWidthMax .and. nCol > ::nFrozenCols
+
       nWidth += ::aColumns[ nCol ]:Width +;
                 iif( ::aColumns[ nCol ]:ColSep != NIL,;
                      Len( ::aColumns[ nCol ]:ColSep ),;
                      Len( ::ColSep ) )
-              
+
       if nWidth < nWidthMax
          nCol--
       endif
-   enddo 
+   enddo
 
 return Min(nCol + 1, ::nColumns)
 
@@ -769,7 +769,7 @@ METHOD HowManyCol(nWidth) CLASS TBrowse
          ::nColsWidth += nToAdd
          ::nColsVisible++
       enddo
-      
+
 
       if ::nColsWidth > nWidth
          /* NOTE: Why do I change frozen columns here? */
@@ -908,20 +908,20 @@ METHOD Stabilize() CLASS TBrowse
 
    // I need to set columns width If TBrowse was never displayed before
    if ::lNeverDisplayed
-      AEVal(::aColumns, {|oCol| ::SetColumnWidth(oCol)} ) 
-      
+      AEVal(::aColumns, {|oCol| ::SetColumnWidth(oCol)} )
+
       // NOTE: It must be before call to ::SetFrozenCols() since this call
       //       tests this iVar value, and I set it to .F. since I'm going to display TBrowse
       //       for first time
-      ::lNeverDisplayed := .F. 
-      
-      // Force re-evaluation of frozen space since I could not calc it before 
+      ::lNeverDisplayed := .F.
+
+      // Force re-evaluation of frozen space since I could not calc it before
       // being columns width not set
       if ::freeze > 0
          ::SetFrozenCols(::freeze)
-      endif              
+      endif
    endif
-   
+
    nOldCursor := SetCursor(SC_NONE)
 
    if ::lRedrawFrame
@@ -1021,10 +1021,10 @@ METHOD Stabilize() CLASS TBrowse
                      next*/
                      ACopy(::aRedraw, ::aRedraw, 2,, 1)
                   else
-                     /*for nRow := (Len(::aRedraw) - 1) to 1 step -1
+                     // Cannot use ACopy() here
+                     for nRow := ::RowCount - 1 to 1 step -1
                         ::aRedraw[nRow + 1] := ::aRedraw[nRow]
-                     next*/
-                     ACopy(::aRedraw, ::aRedraw, 1, Len(::aRedraw) - 1, 2)
+                     next
                   endif
 
                   ::aRedraw[::nNewRowPos] := .T.
