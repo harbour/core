@@ -1,3 +1,9 @@
+19990510-10:05 Eddie Runia
+    * source/vm/hvm.c
+      Function PCount() added  /* QUESTION: Should it be there ? */
+    * tests/working/debugtst.prg
+      PCount() used
+
 19990510-09:10 Eddie Runia
     * source/rtl/itemapi.c, include/itemapi.h
       - new version installed

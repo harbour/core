@@ -2030,4 +2030,12 @@ HARBOUR ERRORLEVEL()
    _retni( bPrevValue );
 }
 
+HARBOUR PCOUNT()
+{
+   PITEM pBase = stack.pItems + stack.pBase->wBase;
+   WORD  wRet  = pBase->wParams;                /* Skip current function     */
+
+   _retni( wRet );
+}
+
 

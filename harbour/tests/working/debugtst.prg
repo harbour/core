@@ -222,7 +222,7 @@ function TForm()
       oClass:AddData( "nBottom" )
       oClass:AddData( "nRight" )
 
-      oClass:AddMethod( "aExcept", @Virtual() )
+      oClass:AddVirtual( "aExcept" )
                                           // Export exceptions
 
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
@@ -327,7 +327,7 @@ static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
 
    local self   := QSelf()
    local aParam := __aParam()
-   local nLen   := Len( aParam )                // PCount() not implemented
+   local nLen   := PCount()
    local xRet
    local xData
    local n
@@ -357,14 +357,14 @@ static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
 
 return xRet
 
-static function Virtual()               /* Not implemented ?? */
-return nil
-
 
 //
-// aData aOData( oObject )
+// <aData> aOData( <oObject>, [lDataMethod] )
 //
 // Return an array containing the names of all the data items of oObject.
+//
+// lDataMethod = .T. (default) Return all DATAs
+//               .F.           Return all METHODs
 //
 function aOData( oObject, lDataMethod )
 
@@ -402,19 +402,7 @@ return aData
 function aOMethod( oObject )
 
 return aOData( oObject, .F. )
-//   local aInfo  := aSort( oObject:ClassSel() )
-//   local aData  := {}
-//   local n      := 1
-//   local nLen   := Len( aInfo )
 
-//   do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
-//      if Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
-//         aAdd( aData, aInfo[ n ] )
-//      endif
-//      n++
-//   enddo
-
-//return aData
 
 //
 // <aData> aOGet( <oObject>, [<aExcept>] )
