@@ -52,3 +52,29 @@ by David G. Holm <Harbour@SpaceMoose.com>
    resolve those conflicts, simply remove the conflict markers. What I do
    to avoid conflicts to ChangeLog is to record my changes in changes.txt
    and then copy them into ChangeLog between the update and the commit.
+
+
+How to add CVS ID to new files
+=======================================================
+by Maurilio Longo <maurilio.longo@libero.it>
+
+When a new file is added to cvs tree it has not a CVS ID.
+CVS IDs look like this:
+
+/*
+ * $Id$
+ */
+
+
+To add one to a file lacking it simply put as first lines:
+
+/*
+ * $Id$
+ */
+
+as soon as you commit this file your added string will be expanded
+by cvs server to full length.
+
+Note that last dollar sign ($Id$) is mandatory.
+
+
