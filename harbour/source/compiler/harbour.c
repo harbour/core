@@ -68,7 +68,7 @@ static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* gener
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
-static PFUNCTION hb_compFunctionNew( char *, BYTE );  /* creates and initialises the _FUNC structure */
+static PFUNCTION hb_compFunctionNew( char *, HB_SYMBOLSCOPE );  /* creates and initialises the _FUNC structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName ); /*checks for duplicate variables definitions */
 
 //int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight );
@@ -1083,7 +1083,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
 
       hb_xfree( pBuffer );
    }
-   hb_comp_bDontGenLineNum = FALSE;	/* reset the flag */
+   hb_comp_bDontGenLineNum = FALSE; /* reset the flag */
 }
 
 /* create an ANNOUNCEd procedure

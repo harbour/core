@@ -55,6 +55,13 @@
    #include <malloc.h>
 #endif
 
+#if (defined(__EMX__) && ! defined(__RSXNT__)) || defined(OS2) || defined(__OS2__) || defined(OS_2)
+   #define INCL_BASE
+   #define INCL_DOSMISC
+   #define INCL_DOSERRORS
+   #define INCL_DOSPROCESS
+#endif
+
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbmemory.ch"
@@ -485,6 +492,18 @@ ULONG hb_xquery( USHORT uiMode )
          GlobalMemoryStatus( &memorystatus );
          ulResult = memorystatus.dwAvailPhys / 1024;
       }
+      #elif defined(HB_OS_OS2)
+      {
+         ULONG ulSysInfo = 0;
+         APIRET rc;
+
+         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
+         if (rc != NO_ERROR) {
+            ulResult = 0;
+         } else {
+            ulResult = ulSysInfo / 1024;
+         }
+      }
       #else
          ulResult = 9999;
       #endif
@@ -496,6 +515,18 @@ ULONG hb_xquery( USHORT uiMode )
          MEMORYSTATUS memorystatus;
          GlobalMemoryStatus( &memorystatus );
          ulResult = HB_MIN( memorystatus.dwAvailPhys, ULONG_MAX ) / 1024;
+      }
+      #elif defined(HB_OS_OS2)
+      {
+         ULONG ulSysInfo = 0;
+         APIRET rc;
+
+         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
+         if (rc != NO_ERROR) {
+            ulResult = 0;
+         } else {
+            ulResult = HB_MIN(ulSysInfo, ULONG_MAX) / 1024;
+         }
       }
       #else
          ulResult = 9999;
@@ -509,6 +540,18 @@ ULONG hb_xquery( USHORT uiMode )
          GlobalMemoryStatus( &memorystatus );
          ulResult = memorystatus.dwAvailPhys / 1024;
       }
+      #elif defined(HB_OS_OS2)
+      {
+         ULONG ulSysInfo = 0;
+         APIRET rc;
+
+         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
+         if (rc != NO_ERROR) {
+            ulResult = 0;
+         } else {
+            ulResult = ulSysInfo / 1024;
+         }
+      }
       #else
          ulResult = 9999;
       #endif
@@ -521,13 +564,25 @@ ULONG hb_xquery( USHORT uiMode )
          GlobalMemoryStatus( &memorystatus );
          ulResult = memorystatus.dwAvailVirtual / 1024;
       }
+      #elif defined(HB_OS_OS2)
+      {
+         ULONG ulSysInfo = 0;
+         APIRET rc;
+
+         rc = DosQuerySysInfo(QSV_TOTAVAILMEM, QSV_TOTAVAILMEM, &ulSysInfo, sizeof(ULONG));
+         if (rc != NO_ERROR) {
+            ulResult = 0;
+         } else {
+            ulResult = ulSysInfo / 1024;
+         }
+      }
       #else
          ulResult = 9999;
       #endif
       break;
 
    case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?)     */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
          ulResult = 0;
       #else
          ulResult = 9999;
@@ -541,13 +596,25 @@ ULONG hb_xquery( USHORT uiMode )
          GlobalMemoryStatus( &memorystatus );
          ulResult = memorystatus.dwTotalPhys / 1024;
       }
+      #elif defined(HB_OS_OS2)
+      {
+         ULONG ulSysInfo = 0;
+         APIRET rc;
+
+         rc = DosQuerySysInfo(QSV_MAXPRMEM, QSV_MAXPRMEM, &ulSysInfo, sizeof(ULONG));
+         if (rc != NO_ERROR) {
+            ulResult = 0;
+         } else {
+            ulResult = ulSysInfo / 1024;
+         }
+      }
       #else
          ulResult = 9999;
       #endif
       break;
 
    case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
          ulResult = 1;
       #else
          ulResult = 9999;
@@ -561,13 +628,21 @@ ULONG hb_xquery( USHORT uiMode )
          GlobalMemoryStatus( &memorystatus );
          ulResult = memorystatus.dwAvailPageFile / 1024;
       }
+      #elif defined(HB_OS_OS2)
+      {
+         /* 10/05/2000 - maurilio.longo@libero.it
+            There is no way to know how much a swap file can grow on an OS/2 system.
+            I think we should return free space on DASD media which contains swap
+            file */
+            ulResult = 0;
+      }
       #else
          ulResult = 9999;
       #endif
       break;
 
    case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB])            */
-      #if defined(HB_OS_WIN_32)
+      #if defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
          ulResult = 0;
       #else
          ulResult = 9999;

@@ -1,20 +1,27 @@
+20000510-22:01 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/vm/fm.c
+     + Added OS/2 support to Memory() function
+   * source/compiler/harbour.c
+     ! fixed hb_compFunctionNew() define conflicting with actual implementation
+
 20000510-03:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * include/hbcomp.h
     + Added new structures COMCLASS and COMMETHOD
     + Added new element pClass to structure VAR
     + Added:
-	extern PCOMCLASS hb_compClassAdd( char * );
-	extern PCOMCLASS hb_compClassFind( char * );
-	extern PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
-	extern PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
+   extern PCOMCLASS hb_compClassAdd( char * );
+   extern PCOMCLASS hb_compClassFind( char * );
+   extern PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
+   extern PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
 
   * source/compiler/harbour.c
     + Added:
-	PCOMCLASS hb_compClassAdd( char * );
-	PCOMCLASS hb_compClassFind( char * );
-	PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
-	PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
+   PCOMCLASS hb_compClassAdd( char * );
+   PCOMCLASS hb_compClassFind( char * );
+   PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
+   PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
     * Modified hb_compVariableAdd() to process params of declared class methods.
 
   * source/compiler/harbour.l
