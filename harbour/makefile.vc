@@ -20,7 +20,7 @@
 #                      Note that this will require the pdflib contrib.
 #       HB_GT_LIB    - To override the default GT driver
 #                      (search for HB_GT_LIBS for a list of values)
-#       HB_LEX       - If set to SIMPLEX, an alternate lexer will be 
+#       HB_LEX       - If set to SIMPLEX, an alternate lexer will be
 #                      used instead of the Flex based one.
 #       PRG_USR      - Extra Harbour compiler options
 #                      (GNU make compatible envvar)
@@ -1023,10 +1023,7 @@ $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 !if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-   bison -p --no-line hb_comp -d $** -o$@
-
-$(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-   $(CC) $(CLIBFLAGS) -W3 -Fo$@  $**
+   bison -p hb_comp -d --no-line $** -o$@
 
 !else
 

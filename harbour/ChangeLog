@@ -1,3 +1,7 @@
+2001-12-09 14:50 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/makefile.vc
+     * Checked and corrected when used for SIMPLEX compilation
+
 2001-12-09 12:30 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/rtl/checkbox.prg
      * Small typo corrected where nR became nT
