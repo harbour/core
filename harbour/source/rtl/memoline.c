@@ -38,11 +38,11 @@
 HARBOUR HB_MEMOLINE( void )
 {
    char * pszString    = hb_parc( 1 );
-   USHORT uiLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
+   ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
    ULONG  ulLineNumber = ISNUM( 3 ) ? hb_parni( 3 ) : 1;
-   USHORT uiTabLength  = ISNUM( 4 ) ? hb_parni( 4 ) : 4;
-   ULONG  uiLastSpace  = 0;
-   ULONG  uiCurLength  = 0;
+   ULONG  ulTabLength  = ISNUM( 4 ) ? hb_parni( 4 ) : 4;
+   ULONG  ulLastSpace  = 0;
+   ULONG  ulCurLength  = 0;
    BOOL   bWordWrap    = ISLOG( 5 ) ? hb_parl( 5 ) : TRUE;
    ULONG  ulLen        = hb_parclen( 1 );
    ULONG  ulLines      = 0;
@@ -50,11 +50,11 @@ HARBOUR HB_MEMOLINE( void )
    ULONG  ulLineBegin;
    ULONG  ulLineEnd;
 
-   if( uiLineLength < 4 || uiLineLength > 254 )
-      uiLineLength = 79;
+   if( ulLineLength < 4 || ulLineLength > 254 )
+      ulLineLength = 79;
 
-   if( uiTabLength >  uiLineLength )
-      uiTabLength = uiLineLength - 1;
+   if( ulTabLength > ulLineLength )
+      ulTabLength = ulLineLength - 1;
 
    ulLineBegin = ulPos;
    ulLineEnd   = 0;
@@ -64,12 +64,12 @@ HARBOUR HB_MEMOLINE( void )
       switch( pszString[ ulPos ] )
       {
          case HB_CHAR_HT:
-            uiCurLength += uiTabLength;
+            ulCurLength = ( ( ULONG ) ( ulCurLength / ulTabLength ) * ulTabLength ) + ulTabLength;
             break;
 
          case HB_CHAR_LF:
-            uiCurLength = 0;
-            uiLastSpace = 0;
+            ulCurLength = 0;
+            ulLastSpace = 0;
             ulLineEnd   = ulPos - 2;
             ulLines++;
             if( ulLines < ulLineNumber )
@@ -83,41 +83,41 @@ HARBOUR HB_MEMOLINE( void )
             break;
 
          case ' ':
-            uiCurLength++;
-            uiLastSpace = uiCurLength;
+            ulCurLength++;
+            ulLastSpace = ulCurLength;
             break;
 
          default:
-            uiCurLength++;
+            ulCurLength++;
       }
 
-      if( uiCurLength > uiLineLength )
+      if( ulCurLength > ulLineLength )
       {
          if( bWordWrap )
          {
-            if( uiLastSpace == 0 )
+            if( ulLastSpace == 0 )
             {
-               uiCurLength = 1;
+               ulCurLength = 1;
                ulLineEnd   = ulPos - 1;
             }
             else
             {
-               uiCurLength = uiCurLength - uiLastSpace;
-               ulLineEnd   = ulPos - uiCurLength ;
+               ulCurLength = ulCurLength - ulLastSpace;
+               ulLineEnd   = ulPos - ulCurLength ;
             }
          }
          else
          {
-            uiCurLength = 1;
+            ulCurLength = 1;
             ulLineEnd   = ulPos - 1;
          }
 
          ulLines++;
-         uiLastSpace = 0;
+         ulLastSpace = 0;
 
          if( ulLines < ulLineNumber )
          {
-            ulLineBegin = ulPos - uiCurLength + 1;
+            ulLineBegin = ulPos - ulCurLength + 1;
             ulLineEnd   = 0;
          }
       }
@@ -133,18 +133,21 @@ HARBOUR HB_MEMOLINE( void )
 
    if( ulLineNumber == ulLines )
    {
-      if( (ulLineEnd - ulLineBegin + 1 ) == uiLineLength )
+      ULONG ulSpAdded = 0;
+      char * pszLine = hb_xgrab( ulLineLength );
+
+      memset( pszLine, ' ', ulLineLength );
+
+      for( ulPos = 0; ulPos <= ( ulLineEnd - ulLineBegin ); ulPos++ )
       {
-         hb_retclen( pszString + ulLineBegin, ( ulLineEnd - ulLineBegin + 1 ) );
+         if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_HT )
+            ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 1;
+         else
+            memcpy( ( pszLine + ulPos + ulSpAdded ), ( pszString + ulLineBegin + ulPos ), 1 );
       }
-      else
-      {
-         char * pszLine = ( char * ) hb_xgrab( uiLineLength );
-         memset( pszLine, ' ', uiLineLength );
-         memcpy( pszLine, ( pszString + ulLineBegin ), ( ulLineEnd - ulLineBegin + 1 ) );
-         hb_retclen( pszLine, uiLineLength );
-         hb_xfree( pszLine );
-      }
+
+      hb_retclen( pszLine, ulLineLength );
+      hb_xfree( pszLine );
    }
    else
       hb_retc( "" );

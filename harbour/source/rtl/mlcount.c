@@ -38,32 +38,32 @@
 HARBOUR HB_MLCOUNT( void )
 {
    char * pszString    = hb_parc( 1 );
-   USHORT uiLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
-   USHORT uiTabLength  = ISNUM( 3 ) ? hb_parni( 3 ) : 4;
-   USHORT uiLastSpace  = 0;
-   USHORT uiCurLength  = 0;
+   ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
+   ULONG  ulTabLength  = ISNUM( 3 ) ? hb_parni( 3 ) : 4;
+   ULONG  ulLastSpace  = 0;
+   ULONG  ulCurLength  = 0;
    BOOL   bWordWrap    = ISLOG( 4 ) ? hb_parl( 4 ) : TRUE;
    ULONG  ulLen        = hb_parclen( 1 );
    ULONG  ulLines      = 0;
    ULONG  ulPos;
 
-   if( uiLineLength < 4 || uiLineLength > 254 )
-      uiLineLength = 79;
+   if( ulLineLength < 4 || ulLineLength > 254 )
+      ulLineLength = 79;
 
-   if( uiTabLength > uiLineLength )
-      uiTabLength = uiLineLength - 1;
+   if( ulTabLength > ulLineLength )
+      ulTabLength = ulLineLength - 1;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
    {
       switch( pszString[ ulPos ] )
       {
          case HB_CHAR_HT:
-            uiCurLength += uiTabLength;
+            ulCurLength = ( ( ULONG ) ( ulCurLength / ulTabLength ) * ulTabLength ) + ulTabLength;
             break;
 
          case HB_CHAR_LF:
-            uiCurLength = 0;
-            uiLastSpace = 0;
+            ulCurLength = 0;
+            ulLastSpace = 0;
             ulLines++;
             break;
 
@@ -71,32 +71,32 @@ HARBOUR HB_MLCOUNT( void )
             break;
 
          case ' ':
-            uiCurLength++;
-            uiLastSpace = uiCurLength;
+            ulCurLength++;
+            ulLastSpace = ulCurLength;
             break;
 
          default:
-            uiCurLength++;
+            ulCurLength++;
       }
 
-      if( uiCurLength > uiLineLength )
+      if( ulCurLength > ulLineLength )
       {
          if( bWordWrap )
          {
-            if( uiLastSpace == 0 )
-               uiCurLength = 1;
+            if( ulLastSpace == 0 )
+               ulCurLength = 1;
             else
-               uiCurLength = uiCurLength - uiLastSpace;
+               ulCurLength = ulCurLength - ulLastSpace;
          }
          else
-            uiCurLength = 1;
+            ulCurLength = 1;
 
          ulLines++;
-         uiLastSpace = 0;
+         ulLastSpace = 0;
       }
    }
 
-   if( uiCurLength > 0 )
+   if( ulCurLength > 0 )
       ulLines++;
 
    hb_retnl( ulLines );

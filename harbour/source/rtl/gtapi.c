@@ -104,9 +104,9 @@
 
 static short  s_iCurrentRow = 0;
 static short  s_iCurrentCol = 0;
-static USHORT s_uiDispCount  = 0;
-static USHORT s_uiPreCount   = 0;
-static USHORT s_uiPreCNest   = 0;
+static USHORT s_uiDispCount = 0;
+static USHORT s_uiPreCount = 0;
+static USHORT s_uiPreCNest = 0;
 static USHORT s_uiColorIndex = 0;
 static USHORT s_uiCursorShape = 0;
 
@@ -125,8 +125,9 @@ void hb_gtInit( void )
 {
 /* ptucker */
 
-   s_Color      = ( int * ) hb_xgrab( 5 * sizeof( int ) );
+   s_Color = ( int * ) hb_xgrab( 5 * sizeof( int ) );
    s_ColorCount = 5;
+
    hb_gt_Init();
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 }

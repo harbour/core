@@ -1,3 +1,27 @@
+19991006-13:19 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/memoline.c
+     source/rtl/mlcount.c
+     ! TAB handling fixes for MEMOLINE() and MLCOUNT() by
+       Ignacio Ortiz de Zúniga <ignacio@fivetech.com>
+     * All USHORTs changed to ULONG.
+
+19991006-13:05 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/tclass.prg
+     ! Reformatted (again)
+   * include/rdd.api
+     include/item.api
+     include/gt.api
+     include/error.api
+     include/extend.api
+     + Copyright added.
+   * source/rtl/gtxxx.c
+     source/rtl/mousexxx.c
+     % Simplified the include logic, got rid of #error, since it was now
+       obsolete.
+   * source/rtl/memoline.c
+     source/rtl/gtapi.c
+     ! Some minor formatting fixes.
+
 19991006-12:10 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/extend.h
      rdd/dbcmd.c
