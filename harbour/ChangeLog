@@ -8,7 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-21 20:34 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/vm/hvm.c
+    ! Fixed arrays comparison. Now it is Clipper compatible.
+      Bug reported by Randy Portnoff
+
 2003-05-21 19:50 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/vm/memvars.c
     ! default path support for __MVSave() and __MVRestore()
       implemented by Alexander Prostoserdov.
 
