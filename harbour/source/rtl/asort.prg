@@ -34,7 +34,7 @@ return aIn
 // For instructions :
 // http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
 //
-function QuickSort( aSort, nLeft, nRight, bOrder )
+static function QuickSort( aSort, nLeft, nRight, bOrder )
 
    local nUp     := nLeft
    local nDown   := nRight
