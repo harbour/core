@@ -1,3 +1,21 @@
+20000501 08:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+*contrib/libgt/doc/gendoc.bat
+ contrib/libmisc/doc/gendoc.bat
+     *Small changes
+*utils/hbdoc/hbdoc.prg
+    *fixed small bug
+*contrib/libgt/doc/en/ht_gt.txt
+    *fixed library name
+*contrib/libmisc/doc/en/ht_dbf.txt
+ contrib/libmisc/doc/en/ht_class.txt
+ contrib/libmisc/doc/en/ht_str.txt
+ contrib/libmisc/doc/en/ht_conv.txt
+    *fixed library name
+*doc/en/files.txt
+ doc/en/rdddb.txt
+ doc/en/rddmisc.txt
+    *fixed Broken see also entrie
+
 20000501-01:52 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
     * source/compiler/hbpcode.c
