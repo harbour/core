@@ -5,6 +5,8 @@
 /* English language module */
 /* Codepage: N/A           */
 
+#include <hbdefs.h>
+
 char *hb_monthsname[ 12 ] = {
    "January", "February", "March",
    "April", "May", "June", "July",
