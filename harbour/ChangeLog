@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Now works properly on linux
+      From Horacio Roldán <harbour_ar@yahoo.com.ar>
+
+2002-01-10 17:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/pptable.c
     + SET OPTIMIZE ON/OFF/expression  command added
 

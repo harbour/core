@@ -155,7 +155,7 @@ BOOL hb_printerIsReady( char * pszPrinterName )
 
 HB_FUNC( ISPRINTER )
 {
-   #if defined(HB_OS_WIN_32)
+   #if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
    {
       char DefaultPrinter[ 80 ];
       DWORD pdwBufferSize = 80;
