@@ -10,9 +10,13 @@ function Main(cFilename, cSection)
    aeval(s, {|x| qout('[' + x + ']')})
 
    qout('')
-   qout('[' + s[n] + ']')
-   s := oIni:ReadSection(s[n])
-   aeval(s, {|x| qout(x)})
+   if(len(s) >= n)
+      qout('[' + s[n] + ']')
+      s := oIni:ReadSection(s[n])
+      aeval(s, {|x| qout(x)})
+   else
+      qout('No section', n)
+   endif
 
    oIni:WriteDate('Date Test', 'Today', Date() )
    oIni:WriteBool('Bool Test', 'True', .t.)
@@ -62,6 +66,7 @@ static function New(cFileName)
    else
       ::FileName := cFilename
       ::Contents := {}
+
       CurrArray := ::Contents
 
       if File(cFileName)
@@ -246,9 +251,7 @@ return aSection
 static function ReadSections()
    local Self := QSelf()
    local i, aSections := {}
-
    for i := 1 to Len(::Contents)
-
       if ValType(::Contents[i][2]) == 'A'
          AAdd(aSections, ::Contents[i][1])
       endif

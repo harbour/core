@@ -38,7 +38,7 @@ FUNCTION Main()
    cTable  := ""
 
    // Builds dynamic table replacement
-   WHILE (nPos := fRead( hFile, @cString, IF_BUFFER )) > 0
+   WHILE hFile != -1 .AND. (nPos := fRead( hFile, @cString, IF_BUFFER )) > 0
       i := 1
       DO WHILE i <= nPos
 
