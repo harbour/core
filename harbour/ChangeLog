@@ -1,3 +1,7 @@
+19990817-21:10 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/errorsys.prg
+     * public getlist := {} uncommented.
+
 19990816-12:26 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/debug/Makefile
      + tbrwtext.prg

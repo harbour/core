@@ -33,7 +33,7 @@
 
 init procedure ClipInit
 
-   // public getlist := {}    TODO!
+   public getlist := {}
 
    ErrorSys()
 
