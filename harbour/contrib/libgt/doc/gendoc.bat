@@ -28,11 +28,11 @@ ECHO Assembling input files
 hbdoc /ngi libgt.lnk libgt.rsp
 REM Compile the sources
 Echo Compiling the sources
-Processing Input Files
+Echo Processing Input Files
 Copy ngi\funcam.txt+ngi\funcn_.txt overview.ngi
-Compiling Sources
+Echo Compiling Sources
 ngxc overview.ngi
-Linking the Guide
+Echo Linking the Guide
 ngxl libgt.lnk
 del *.ngi
 del *.ngo

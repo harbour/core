@@ -23,32 +23,32 @@ ECHO Assembling input files
     goto END
 
 :NG
-hbdoc /ngi libgt.lnk libgt.rsp
+hbdoc /ngi libmisc.lnk libmisc.rsp
 REM Compile the sources
 Echo Compiling the sources
-Processing Input Files
+Echo Processing Input Files
 Copy ngi\funcam.txt+ngi\funcn_.txt overview.ngi
-Compiling Sources
+Echo Compiling Sources
 ngxc overview.ngi
-Linking the Guide
-ngxl libgt.lnk
+Echo Linking the Guide
+ngxl libmisc.lnk
 del *.ngi
 del *.ngo
 del ngi\*.txt
 del ngi\*.ngi
 GOTO END
 :OS2
-   hbdoc /OS2 libgt.lnk libgt.rsp
+   hbdoc /OS2 libmisc.lnk libmisc.rsp
 GOTO END
 :RTF
-   hbdoc /RTF libgt.lnk libgt.rsp
+   hbdoc /RTF libmisc.lnk libmisc.rsp
    HCW HARBOUR.HPJ
 GOTO END
 :HTM
-    hbdoc /HTM libgt.lnk libgt.rsp
+    hbdoc /HTM libmisc.lnk libmisc.rsp
    GOTO END
 :END
 del ass*.bat
 
-del libgt.lnk
-ren libgt.old libgt.lnk
+del libmisc.lnk
+ren libmisc.old libmisc.lnk
