@@ -1,3 +1,10 @@
+19990630-19:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/errorapi.c
+    - Removed assignment of default severity value.
+  * source/rtl/error.prg
+    + Added default values to all member variables
+      (which is the correct permanent solution).
+
 19990630-19:25 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/errorapi.c
     * Changed the default severity value in hb_errNew() to
