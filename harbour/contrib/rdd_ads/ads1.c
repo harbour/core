@@ -2074,7 +2074,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 {
    UNSIGNED16 usDataType = ADS_STRINGKEY ;
-   BOOL bTypeError = TRUE;
+   BOOL bTypeError ;
    UNSIGNED8 *pucScope;
    HB_TRACE(HB_TR_DEBUG, ("adsSetScope(%p, %p)", pArea, sInfo));
 
@@ -2106,7 +2106,6 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
                   double dTemp;
                   bTypeError = FALSE;
                   dTemp = hb_itemGetND( sInfo->scopeValue );
-                  pucScope = (UNSIGNED8 *) &dTemp ;
                   usDataType = ADS_DOUBLEKEY ;
                   AdsSetScope( pArea->hOrdCurrent, (sInfo->nScope + 1), /*ADS top/bottom are 1,2 instead of 0,1*/
                      (UNSIGNED8*) &dTemp,
