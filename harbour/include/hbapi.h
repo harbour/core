@@ -437,7 +437,7 @@ extern void     hb_dynsymRelease( void );         /* releases the memory of the 
 extern void     hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
 
 /* Command line and environment argument management */
-extern void     hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
+extern void HB_EXPORT hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
 extern int      hb_cmdargARGC( void ); /* retrieve command line argument count */
 extern char **  hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
 extern BOOL     hb_cmdargIsInternal( const char * szArg ); /* determine if a string is an internal setting */
