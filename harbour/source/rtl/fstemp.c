@@ -113,16 +113,16 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
       }
    }
 #else
-	if( (strlen(pszDir)+strlen(pszPrefix)+6) < _POSIX_PATH_MAX )
-	{
-		FHANDLE fhnd;
-		char cTemplate[_POSIX_PATH_MAX];
+   if( ( ( pszDir ? strlen( pszDir ) : 0 ) + ( pszPrefix ? strlen( pszPrefix ) : 0 ) + 6 ) < _POSIX_PATH_MAX )
+   {
+      FHANDLE fhnd;
+      char cTemplate[_POSIX_PATH_MAX];
       pszName[0] = '\0';
-		cTemplate[0] = '\0';
+      cTemplate[0] = '\0';
       if( pszDir )
       {
          int nLen;
-		   strcpy( cTemplate, pszDir );
+         strcpy( cTemplate, pszDir );
          nLen = strlen( cTemplate );
          if( cTemplate[nLen] != hb_set.HB_SET_DIRSEPARATOR )
          {
@@ -131,18 +131,20 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
          }
       }
       if( pszPrefix )
-		   strcat( cTemplate, pszPrefix );
-		strcat( cTemplate, "XXXXXX" ); /* required by mkstemp */
-		while( --nAttemptLeft )
-		{
-			fhnd = mkstemp( cTemplate );	
-			if( fhnd >= 0 )
+      {
+         strcat( cTemplate, pszPrefix );
+      }
+      strcat( cTemplate, "XXXXXX" ); /* required by mkstemp */
+      while( --nAttemptLeft )
+      {
+         fhnd = mkstemp( cTemplate );	
+         if( fhnd >= 0 )
          {
             strcpy( pszName, cTemplate );
-				return fhnd;
+            return fhnd;
          }
-		}
-	}
+      }
+   }
 #endif
 
    hb_fsSetError( FS_ERROR );
