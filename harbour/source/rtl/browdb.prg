@@ -37,13 +37,17 @@ function TBrowseDb( nTop, nLeft, nBott, nRight )
 
    local oTb := TBrowseNew( nTop, nLeft, nBott, nRight )
 
-   oTb:SkipBlock     := { | n | TBSkip( n ) }
+   oTb:SkipBlock     := { | n | DbSkipper( n ) }
    oTb:GoTopBlock    := { || DbGoTop() }
    oTb:GoBottomBlock := { || DbGoBottom() }
 
 Return oTb
 
-static function TbSkip( nRecs )
+function _DbSkipper( nRecs )
+
+return DbSkipper( nRecs )
+
+function DbSkipper( nRecs )
 
    local nSkipped := 0
 
