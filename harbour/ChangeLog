@@ -33,6 +33,7 @@
    * source/rtl/datec.c
    * source/rtl/pad.c
    * source/rtl/transfrm.c
+   * source/rtl/seconds.c
    * source/vm/itemapi.c
    * source/tools/dates2.c
      * Date related globals all prefixed with hb_date
