@@ -669,7 +669,7 @@ HB_FUNC( TRANSFORM )
          char szPicDate[ 11 ];
          char szDate[ 9 ];
 
-         int  nFor;
+         UINT nFor;
 
          szResult = ( char * ) hb_xgrab( 13 );
 

@@ -133,8 +133,8 @@ char * hb_parc( int iParam, ... )
       else
          return ( ( EXT_PARC1 ) pParC )( iParam );
    }
-   else
-      return "";
+
+   return NULL;
 }
 
 PHB_ITEM hb_param( int iParam, int iMask ) /* retrieve a generic parameter */
@@ -302,8 +302,8 @@ ULONG hb_parclen( int iParam, ... ) /* retrieve a string parameter length */
       else
          return ( ( HB_PARCLEN ) pParC )( iParam );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 ULONG    hb_parcsiz( int iParam, ... )/* retrieve a by-reference string parameter length, including terminator */
@@ -327,8 +327,8 @@ ULONG    hb_parcsiz( int iParam, ... )/* retrieve a by-reference string paramete
       else
          return ( ( HB_PARCSIZ ) pParcSiz )( iParam );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 char * hb_pards( int iParam, ... ) /* retrieve a date as a string yyyymmdd */
@@ -352,8 +352,8 @@ char * hb_pards( int iParam, ... ) /* retrieve a date as a string yyyymmdd */
       else
          return ( ( HB_PARDS ) pParDs )( iParam );
    }
-   else
-      return "";
+
+   return "";
 }
 
 char * hb_pardsbuff( char * szDate, int iParam, ... ) /* retrieve a date as a string yyyymmdd */
@@ -377,8 +377,8 @@ char * hb_pardsbuff( char * szDate, int iParam, ... ) /* retrieve a date as a st
       else
          return ( ( HB_PARDSBUFF ) pParDsBuff )( szDate, iParam );
    }
-   else
-      return "";
+
+   return "";
 }
 
 int hb_parl( int iParam, ... ) /* retrieve a logical parameter as an int */
@@ -403,8 +403,8 @@ int hb_parl( int iParam, ... ) /* retrieve a logical parameter as an int */
       else
          return ( ( HB_PARL ) pParL )( iParam );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 double hb_parnd( int iParam, ... ) /* retrieve a numeric parameter as a double */
@@ -429,8 +429,8 @@ double hb_parnd( int iParam, ... ) /* retrieve a numeric parameter as a double *
       else
          return ( ( HB_PARND ) pParNd )( iParam );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 int hb_parni( int iParam, ... ) /* retrieve a numeric parameter as a integer */
@@ -455,8 +455,8 @@ int hb_parni( int iParam, ... ) /* retrieve a numeric parameter as a integer */
       else
          return ( ( HB_PARNI ) pParNi )( iParam );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 long hb_parnl( int iParam, ... ) /* retrieve a numeric parameter as a long */
@@ -481,8 +481,8 @@ long hb_parnl( int iParam, ... ) /* retrieve a numeric parameter as a long */
       else
          return ( ( HB_PARNL ) pParNl )( iParam );
    }
-   else
-      return 0;
+
+   return 0;
 }
 
 int hb_storc( char * szText, int iParam, ... )
@@ -509,8 +509,6 @@ int hb_storc( char * szText, int iParam, ... )
          ( ( HB_STORC ) pStorC )( szText, iParam );
          return 1;
       }
-
-      return 0;
    }
 
    return 0;
@@ -541,7 +539,6 @@ int hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
          return 1;
       }
 
-      return 0;
    }
 
    return 0;
@@ -573,7 +570,6 @@ int hb_stords( char * szDate, int iParam, ... )
          return 1;
       }
 
-      return 0;
    }
 
    return 0;
@@ -604,7 +600,6 @@ int hb_storl( int iLogical, int iParam, ... )
          return 1;
       }
 
-      return 0;
    }
 
    return 0;
@@ -635,7 +630,6 @@ int hb_storni( int iValue, int iParam, ... )
          return 1;
       }
 
-      return 0;
    }
 
    return 0;
@@ -666,7 +660,6 @@ int hb_stornl( long lValue, int iParam, ... )
          return 1;
       }
 
-      return 0;
    }
 
    return 0;
@@ -697,7 +690,6 @@ int hb_stornd( double dNumber, int iParam, ... )
          return 1;
       }
 
-      return 0;
    }
 
    return 0;

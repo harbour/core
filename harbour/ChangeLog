@@ -8,10 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-28 11:10 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtwin/gtwin.c
+    * modified by Robert Haley <rhaley@cheshire.net> to allow Tone()
+    * to work correctly under Win9x.
+  * source/vm/maindllp.c
+    * remove redundant returns.  Set parc to return NULL not ""
+  * source/rtl/transform.c
+    * changed nFor decl to UINT
+  * source/rtl/defpath.c
+    * removed unneeded assignment to size
+  * source/rdd/dbfcdx/dbfcdx1.c
+    * removed unneeded assignement to uiLen
+
 2002-10-27 21:35 UTC+0100 J-F lefebvre <jfl@mafact.com>
   * source/rdd/dbf1.c
     * added missing typecasting for msvc.
-
 
 2002-10-27 10:28 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * doc/en/lang.txt

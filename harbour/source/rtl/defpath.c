@@ -59,7 +59,7 @@ HB_FUNC( DEFPATH )
 {
    char buffer[ _POSIX_PATH_MAX +1 ];
    char delimiter[ 2 ] = ":";
-   int size = 0;
+   int size;
 
    buffer[0] = '\0';
 

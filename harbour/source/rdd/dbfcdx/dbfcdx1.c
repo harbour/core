@@ -5796,7 +5796,6 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    }
 
    uiType = hb_itemType( pResult );
-   uiLen = 0;
 
    switch( uiType )
    {
