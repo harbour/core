@@ -8,6 +8,22 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-12 13:02 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/philes.c
+  ! FRead() bug fixed, introduced cause 1 byte length strings optimization
+
+  Bug described by Guy Roussin:
+
+  function main( cFile )
+     local nH
+     local cBuf:=" "
+     local cBlock := "{|| Alert( 'test' ) }"
+     nH:=fopen(cFile,0)
+     while fread(nH,@cBuf,1)>0 ; end
+     fclose(nH)
+     eval( &( cBlock ) )
+  return(NIL)
+
 2003-07-12 10:06 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/debug/debugger.prg
   * source/rtl/philes.c
