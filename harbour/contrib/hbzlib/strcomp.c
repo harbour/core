@@ -51,18 +51,20 @@
  */
 
 
-#include <zlib.h>
-#include <hbzip2.h>
+#include "zlib.h"
+#include "hbzip2.h"
+
 #define pMaxBuffer 500000
 
 HB_FUNC(COMPRESSSTRING)
 {
-    char *szString=(const char*)hb_parc(1);
-    ULONG ulLen=strlen(szString)+1;
+    const char *szString = (const char*)hb_parc(1);
+    ULONG ulLen = strlen(szString)+1;
     ULONG ulBuffLen;
     char *szBuff;     
-    szBuff= ( char * )hb_xalloc(ulLen+1);
-    ulBuffLen=ulLen+1+pMaxBuffer;
+    szBuff = ( char * )hb_xalloc(ulLen+1);
+    ulBuffLen = ulLen+1+pMaxBuffer;
+
     compress(szBuff, &ulBuffLen,  szString, ulLen);
     
     hb_storclen(szBuff,ulBuffLen,1);
@@ -74,15 +76,17 @@ HB_FUNC(COMPRESSSTRING)
 HB_FUNC(UNCOMPRESSSTRING)
 {
 
-    char *szString=hb_parc(1);
-    ULONG ulLen=hb_parnl(2);
+    char *szString = hb_parc(1);
+    ULONG ulLen    = hb_parnl(2);
     ULONG ulBuffLen;
     char *szBuff;
-    szBuff= ( char * )hb_xalloc(pMaxBuffer+ulLen+sizeof(ULONG));
+    szBuff = ( char * )hb_xalloc(pMaxBuffer+ulLen+sizeof(ULONG));
     strcpy((char*)szBuff, "garbage");
-    ulBuffLen=pMaxBuffer+ulLen;
+    ulBuffLen = pMaxBuffer+ulLen;
+
     uncompress(szBuff, &ulBuffLen,  szString, ulLen);
-    hb_retc(szBuff);
-    hb_xfree(szBuff);
+
+    hb_retclen_buffer(szBuff,ulBuffLen);
+/*    hb_xfree(szBuff); */
     
 }
