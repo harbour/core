@@ -85,26 +85,8 @@ HARBOUR INT( void )
 {
    if( _pcount() == 1 )
    {
-      PITEM pNumber = _param(1, IT_NUMERIC);
-      double dTemp;
-
-      if( pNumber ) switch( pNumber->wType )
-      {
-         case IT_INTEGER:
-            _retni( pNumber->value.iNumber );
-            break;
-         
-         case IT_LONG:
-            _retnl( pNumber->value.lNumber );
-            break;
-         
-         case IT_DOUBLE:
-            modf( pNumber->value.dNumber, &dTemp );
-            _retnd( dTemp );           /* Return integer part of double value */
-            stack.Return.wLength = 10; /* Set return length same as int or long */
-            stack.Return.wDec    = 0;  /* Set zero decimal places */
-            /* Because _retnl( _parnd( 1 ) ); doesn't work in Borland Turbo C++ 3.1 */
-      }
+      if( _param(1, IT_NUMERIC) )
+         _retnl( _parnd( 1 ) );
       else
       {
          PITEM pError = _errNew();

@@ -3,6 +3,7 @@
  */
 
 #include <malloc.h>
+#include <set.h>
 #include <stdlib.h>
 #include <extend.h>
 
@@ -351,8 +352,9 @@ void _retnd( double dNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_DOUBLE;
-   stack.Return.wLength = 10;
-   stack.Return.wDec    = 2;
+   if( dNumber > 10000000000.0 ) stack.Return.wLength = 20;
+   else stack.Return.wLength = 10;
+   stack.Return.wDec    = hb_set.HB_SET_DECIMALS;
    stack.Return.value.dNumber = dNumber;
 }
 
@@ -598,8 +600,9 @@ void _stornd( double dValue, WORD wParam, ... )
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
          pItemRef->wType   = IT_DOUBLE;
-         pItemRef->wLength = 10;
-         pItemRef->wDec    = 2;
+         if( dValue > 10000000000.0 ) pItemRef->wLength = 20;
+         else pItemRef->wLength = 10;
+         pItemRef->wDec    = hb_set.HB_SET_DECIMALS;
          pItemRef->value.dNumber = dValue;
       }
    }

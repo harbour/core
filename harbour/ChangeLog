@@ -1,3 +1,23 @@
+19990519-23:50 EST David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/extend.c
+    - Use wDec = hb_set.HB_SET_DECIMALS instead of wDec = 2.
+    - _retnd() and _stornd() now set wLength to 20 if the value is over 10 digits.
+  * source/rtl/itemapi.c
+    - Use wDec = hb_set.HB_SET_DECIMALS instead of wDec = 2.
+    - hb_itemPutND() now sets wLength to 20 if the value is over 10 digits.
+  * source/rtl/math.c
+    - Restored HARBOUR INT() back to use _retnl( _parnd( 1 ) ), because the
+      problem was not in the Borland C++ 3.1 compiler, but in the hb_outstd()
+      case for IT_LONG in console.c (see 19990518-17:30 EDT David G. Holm for
+      the incorrect correction and 19990519-21:40 EST David G. Holm for the
+      fix to hb_outstd() in console.c).
+  * source/vm/hvm.c
+    - Div(), Modulus(), and Power() set wDec to hb_set.HB_SET_DECIMALS.
+    - Dec(), Inc(), FOR, and Negate() leave wDec unchanged.
+    - Plus() and Minus() set wDec to the larger of the two parameter wDec values.
+    - Mult() sets wDec to the sum of the two parameter wDec values.
+    - PushDouble() now sets wLength to 20 if the value is over 10 digits.
+
 19990519-22:00 EST David G. Holm <dholm@jsd-llc.com>
  * source/rtl/environ.c
    - Do Windows version check even when #if defined(_Windows).

@@ -5,6 +5,7 @@
 #include <extend.h>
 #include <itemapi.h>
 #include <ctoharb.h>
+#include <set.h>
 
 /* TODO: Remove these when the extend system has been modified */
 #define hb_xgrab _xgrab
@@ -349,8 +350,9 @@ PITEM hb_itemPutND( PITEM pItem, double dNumber )
       pItem = hb_itemNew(0);
 
    pItem->wType = IT_DOUBLE;
-   pItem->wLength = 10;
-   pItem->wDec    = 2;
+   if( dNumber > 10000000000.0 ) pItem->wLength = 20;
+   else pItem->wLength = 10;
+   pItem->wDec    = hb_set.HB_SET_DECIMALS;
    pItem->value.dNumber = dNumber;
    return pItem;
 }
@@ -364,7 +366,7 @@ PITEM hb_itemPutNL( PITEM pItem, long lNumber )
 
    pItem->wType = IT_DOUBLE;
    pItem->wLength = 10;
-   pItem->wDec    = 2;
+   pItem->wDec    = hb_set.HB_SET_DECIMALS;
    pItem->value.lNumber = lNumber;
    return pItem;
 }

@@ -75,13 +75,13 @@ void Power( void );            /* power the latest two values on the stack, remo
 void Push( PITEM pItem );     /* pushes a generic item onto the stack */
 void PushBlock( BYTE * pCode, WORD wSize, WORD wParam, PSYMBOL pSymbols ); /* creates a codeblock */
 void PushDate( LONG lDate );   /* pushes a long date onto the stack */
-void PushDouble( double lNumber ); /* pushes a double number onto the stack */
+void PushDouble( double lNumber, WORD wDec ); /* pushes a double number onto the stack */
 void PushLocal( SHORT iLocal );     /* pushes the containts of a local onto the stack */
 void PushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
 void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
 void PushLong( long lNumber ); /* pushes a long number onto the stack */
 void PushNil( void );            /* in this case it places nil at self */
-void PushNumber( double dNumber ); /* pushes a number on to the stack and decides if it is integer, long or double */
+void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
 void PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
 void PushString( char * szText, WORD wLength );  /* pushes a string on to the stack */
 void PushSymbol( PSYMBOL pSym ); /* pushes a function pointer onto the stack */
@@ -469,7 +469,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
 
          case _PUSHDOUBLE:
-              PushDouble( * ( double * ) ( &pCode[ w + 1 ] ) );
+              PushDouble( * ( double * ) ( &pCode[ w + 1 ] ), hb_set.HB_SET_DECIMALS );
               w += 1 + sizeof( double );
               break;
 
@@ -629,7 +629,7 @@ void Dec( void )
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
       dNumber = PopDouble();
-      PushNumber( --dNumber );
+      PushNumber( --dNumber, stack.pPos->wDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
    {
@@ -644,7 +644,7 @@ void Div( void )
    double d2 = PopDouble();
    double d1 = PopDouble();
 
-   PushNumber( d1 / d2 );
+   PushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
 }
 
 void Do( WORD wParams )
@@ -843,7 +843,7 @@ void ForTest( void )        /* Test to check the end point of the FOR */
            printf( "step of zero will cause endless loop" );
                                  /* Add some break code or so... */
        iEqual = PopLogical();    /* Logical should be on top of stack */
-       PushNumber( dStep );      /* Push the step expression back on the stack */
+       PushNumber( dStep, stack.pPos->wDec );   /* Push the step expression back on the stack */
        PushLogical( iEqual );
    }
    else
@@ -997,7 +997,7 @@ void Inc( void )
    if( IS_NUMERIC( stack.pPos - 1 ) )
    {
       dNumber = PopDouble();
-      PushNumber( ++dNumber );
+      PushNumber( ++dNumber, stack.pPos->wDec );
    }
    else if( IS_DATE( stack.pPos - 1 ) )
    {
@@ -1242,15 +1242,18 @@ void Minus( void )
 
    if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
    {
+      WORD wDec2, wDec1;
       dNumber2 = PopNumber();
+      wDec2 = stack.pPos->wDec;
       dNumber1 = PopNumber();
-      PushNumber( dNumber1 - dNumber2 );
+      wDec1 = stack.pPos->wDec;
+      PushNumber( dNumber1 - dNumber2, (wDec1 > wDec2) ? wDec1 : wDec2 );
    }
    else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
    {
       lDate2 = PopDate();
       lDate1 = PopDate();
-      PushNumber( lDate1 - lDate2 );
+      PushNumber( lDate1 - lDate2, hb_set.HB_SET_DECIMALS );
    }
    else if( IS_NUMERIC( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
    {
@@ -1267,15 +1270,18 @@ void Modulus( void )
    double d2 = PopDouble();
    double d1 = PopDouble();
 
-   PushNumber( ( long ) d1 % ( long ) d2 );
+   PushNumber( ( long ) d1 % ( long ) d2, hb_set.HB_SET_DECIMALS );
 }
 
 void Mult( void )
 {
-   double d2 = PopDouble();
-   double d1 = PopDouble();
+   WORD wDec2, wDec1;
+   double d1, d2 = PopDouble();
+   wDec2 = stack.pPos->wDec;
+   d1 = PopDouble();
+   wDec1 = stack.pPos->wDec;
 
-   PushNumber( d1 * d2 );
+   PushNumber( d1 * d2, wDec1 + wDec2 );
 }
 
 void OperatorCall( PITEM pItem1, PITEM pItem2, char *szSymbol )
@@ -1334,9 +1340,13 @@ void Plus( void )
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
    {
+      WORD wDec2, wDec1;
       dNumber2 = PopDouble();
+      wDec2 = stack.pPos->wDec;
       dNumber1 = PopDouble();
-      PushNumber( dNumber1 + dNumber2 );
+      wDec1 = stack.pPos->wDec;
+
+      PushNumber( dNumber1 + dNumber2, (wDec1 > wDec2) ? wDec1 : wDec2 );
    }
 
    else if( IS_DATE( pItem1 ) && IS_DATE( pItem2 ) )
@@ -1513,7 +1523,7 @@ void Power( void )
    double d2 = PopDouble();
    double d1 = PopDouble();
 
-   PushNumber( pow( d1, d2 ) );
+   PushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
 }
 
 void PushLogical( int iTrueFalse )
@@ -1560,14 +1570,13 @@ void PushNil( void )
    HBDEBUG( "PushNil\n" );
 }
 
-void PushNumber( double dNumber )
+void PushNumber( double dNumber, WORD wDec )
 {
    if( ! dNumber )
       PushInteger( 0 );
 
-   /* QUESTION: Is this a valid way to check for decimals ? */
-   else if( ( long ) dNumber < dNumber ) /* it contains decimals */
-      PushDouble( dNumber );
+   else if( wDec )
+      PushDouble( dNumber, wDec );
 
    else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
       PushInteger( dNumber );
@@ -1576,7 +1585,7 @@ void PushNumber( double dNumber )
       PushLong( dNumber );
 
    else
-      PushDouble( dNumber );
+      PushDouble( dNumber, hb_set.HB_SET_DECIMALS );
 }
 
 void PushStatic( WORD wStatic )
@@ -1644,13 +1653,14 @@ void PushDate( LONG lDate )
    HBDEBUG( "PushDate\n" );
 }
 
-void PushDouble( double dNumber )
+void PushDouble( double dNumber, WORD wDec )
 {
    ItemRelease( stack.pPos );
    stack.pPos->wType   = IT_DOUBLE;
    stack.pPos->value.dNumber = dNumber;
-   stack.pPos->wLength = 10;
-   stack.pPos->wDec    = 2;
+   if( dNumber >= 10000000000.0 ) stack.pPos->wLength = 20;
+   else stack.pPos->wLength = 10;
+   stack.pPos->wDec    = wDec;
    StackPush();
    HBDEBUG( "PushDouble\n" );
 }
