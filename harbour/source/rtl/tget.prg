@@ -125,7 +125,7 @@ CLASS Get
    METHOD SetFocus()
    METHOD Undo()
    METHOD UnTransform()
-   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask( ), ::Assign():Display(), Self
+   METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask( ), if(::lEdit, ::Assign(),), ::Display(), Self
 
    METHOD VarGet()
    METHOD VarPut(xValue, lReFormat)
