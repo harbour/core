@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-24 13:20 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tget.prg
+    ! Fix @R pictures with "-" or "(" characters
+
+    Reported by somebody in sourceforge
+
 2002-05-24 01:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/console.c
     ! Fix print in the same line when the new position is previus
