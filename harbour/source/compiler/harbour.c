@@ -2911,6 +2911,8 @@ static void hb_compOptimizeJumps( void )
                   ulOffset -= 16777216L;
                   bForward = FALSE;
                }
+               else
+                  bForward = TRUE;
             }
             break;
          }

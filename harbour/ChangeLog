@@ -1,3 +1,7 @@
+2000-11-16 02:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     ! Fixed jump optimization for HB_P_SEQBEGIN and HB_P_SEQEND
+
 2000-11-14 16:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/gtwin/gtwin.c
      ! Fix for handling of function keys with no state key modifiers.
