@@ -418,7 +418,8 @@ ERRCODE hb_waFieldName( AREAP pArea, USHORT uiIndex, void * szName )
    strncpy( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
             HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
    */
-   strncpy( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
+   ((char *) szName)[0] = '\0';
+   strncat( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
             pArea->uiMaxFieldNameLength );
    return SUCCESS;
 }
