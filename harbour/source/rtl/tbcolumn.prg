@@ -66,8 +66,10 @@ CLASS TBColumn
    DATA  FootSep              // Footing separator character
    DATA  HeadSep              // Heading separator character
    DATA  Picture              // Column picture string
-   DATA  Width                // Column display width
-
+   
+   ACCESS Width INLINE ::nWidth           // Column display width 
+   ASSIGN Width(n) INLINE ::SetWidth(n)     
+  
    // NOTE: 17/08/01 - <maurilio.longo@libero.it>
    //       It is not correct in my opinion that this instance variable be exported
    DATA  ColPos               // Temporary column position on screen needed by TBrowse class
@@ -78,11 +80,16 @@ CLASS TBColumn
    METHOD SetStyle()
 #endif
 
+   HIDDEN:     /* H I D D E N */
+   
+   DATA  nWidth
+   METHOD SetWidth(n)  
+
 ENDCLASS
 
 METHOD New( cHeading, bBlock ) CLASS TBColumn
 
-   local cType, nTokenPos := 0, nL
+   local xRes, cType, nTokenPos := 0, nL
 
    DEFAULT cHeading TO ""
 
@@ -90,44 +97,22 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
    ::FootSep  := ""
    ::ColPos   := 1
 
-   ::Width    := 0
+   ::nWidth   := nil 
    ::Heading  := cHeading
-
-   /* TOFIX: In Clipper the column widths are not determined at this point.
-          [vszakats] */
-   if ISBLOCK( bBlock )
-
-      ::block := bBlock
-
-      cType := Valtype( Eval( bBlock ) )
-
-      do case
-         case cType == "N"
-            ::Width := Len( Str( Eval( bBlock ) ) )
-
-         case cType == "L"
-            ::Width := 1
-
-         case cType == "C"
-            ::Width := Len( Eval( bBlock ) )
-
-         case cType == "D"
-            ::Width := Len( DToC( Eval( bBlock ) ) )
-
-         otherwise
-            ::Width := 0
-      endcase
-
-      cHeading += ";"
-      while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
-         if nL > ::Width
-            ::Width := nL
-         endif
-      enddo
-
-   endif
+   ::block    := bBlock
 
 return Self
+
+
+METHOD SetWidth(n) CLASS TBColumn
+
+   // From a TOFIX inside TBrowse.prg:
+   // "Also Clipper will not allow the user to assign a NIL to the :width variable." 
+   if n <> nil
+      ::nWidth := n
+   endif      
+
+return n
 
 
 #ifdef HB_COMPAT_C53
