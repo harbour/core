@@ -8,4 +8,4 @@ include $(TOP)$(ROOT)config/prg.cf
 first : dirbase descend
 
 descend :
-	$(MAKE) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(PRG_EXES)
+	@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(PRG_EXES)

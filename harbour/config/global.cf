@@ -2,27 +2,7 @@
 # $Id$
 #
 
-all : first
-
 GRANDP = ../../
 ARCH = $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
-ifeq ($(SHLVL),)
-ARCH_DIR = $(subst /,\\,$(ARCH))\\
-else  # ! Windows
-ARCH_DIR = $(ARCH)/
-endif
-
 include $(TOP)$(ROOT)config/$(ARCH).cf
-
-dirbase::
-ifeq ($(SHLVL),)
-	-$(MD) $(HB_ARCHITECTURE)
-	-$(MD) $(ARCH_DIR) >NUL
-else  # ! Windows
-	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
-	 [ -d $(ARCH) ] || $(MD) $(ARCH)
-endif
-
-clean::
-	$(RM) -r $(ARCH_DIR)

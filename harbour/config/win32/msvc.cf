@@ -2,8 +2,6 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
-
 OBJ_EXT = .obj
 EXE_EXT = .exe
 LIB_PREF =
@@ -25,4 +23,4 @@ AR = lib.exe
 ARFLAGS =
 AR_RULE = $(AR) $(ARFLAGS) /out:$@ $^ || $(RM) $@
 
-include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/rules.cf
+include $(TOP)$(ROOT)config/rules.cf

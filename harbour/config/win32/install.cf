@@ -1,0 +1,30 @@
+#
+# $Id$
+#
+
+ifeq ($(SHLVL),) # COMMAND.COM
+
+INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
+INSTALL_RULE =\
+	command.com /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(INSTALL_DIR)
+
+else  # bash
+
+INSTALL_RULE =\
+	@if [ ! -d $(INSTALL_DIR) ]; \
+	then \
+	  echo "! Can't install, path not found:" $(INSTALL_DIR); \
+	else \
+	  for i in $(INSTALL_OBJS); \
+	  do \
+	    if [ -r $$i ]; \
+	    then \
+	      echo "! Installing $$i on $(INSTALL_DIR)"; \
+	      $(CP) $$i $(INSTALL_DIR); \
+	    else \
+	      echo "! Can't install $$i, not found"; \
+	    fi \
+	  done \
+	fi
+
+endif

@@ -4,10 +4,10 @@
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
-OBJ_EXT = .o
+OBJ_EXT = .obj
 EXE_EXT = .exe
-LIB_PREF = lib
-LIB_EXT = .a
+LIB_PREF = 
+LIB_EXT = .lib
 
 CC = gcc
 CC_OUT = -o

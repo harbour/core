@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+ifeq ($(DIRS),) # Empty directory list
+DIR_RULE =\
+	@echo Done
+else
+DIR_LIST = $(subst /,\,$(DIRS))
+DIR_RULE =\
+	command.com /c FOR %d IN ($(DIR_LIST)) DO $(MK) -C %d $@
+endif

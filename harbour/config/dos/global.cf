@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+ARCH_DIR = $(subst /,\,$(ARCH)\)
+MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+
+RM = del /q
+RD = rmdir
+CP = copy
+MV = move
+MD = md
+
+dirbase::
+	-$(MD) $(HB_ARCHITECTURE) >NUL
+	-$(MD) $(ARCH_DIR) >NUL
+
+
+clean::
+	-$(RM) $(ARCH_DIR)\*.*
+	-$(RD) $(ARCH_DIR)

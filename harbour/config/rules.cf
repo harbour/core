@@ -8,7 +8,7 @@ YACC_FLAGS = -d
 
 # How to run lex.
 LEX = flex
-LEX_FLAGS = -i
+LEX_FLAGS = -i -8
 
 # How to run Harbour.
 HB = harbour$(EXE_EXT)
@@ -43,4 +43,4 @@ LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)
 
 # Generic rule to clean up.
 clean::
-	$(RM) core *~ *.o
+	-$(RM) *.bak *.obj core *~ *.o

@@ -2,15 +2,10 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
+
 all : first
 
 first clean install ::
-ifeq ($(SHLVL),)
-	@cmd /c FOR /D %d IN ($(DIRS)) DO @$(MAKE) -C %d $@
-else  # ! Windows
-	@for d in $(DIRS); do \
-	  if [ -d $$d ]; then \
-	    $(MAKE) -C $$d $@; \
-	  fi \
-	done
-endif # ! Windows     
+	$(DIR_RULE)

@@ -14,7 +14,7 @@ ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 first : dirbase descend
 
 descend :
-	$(MAKE) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(LIB_NAME)
+	@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(LIB_NAME)
 
 $(LIB_NAME) : $(ALL_OBJS)
 	$(AR_RULE)

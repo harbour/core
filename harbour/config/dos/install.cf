@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
+INSTALL_RULE =\
+	command.com /c FOR %f IN ($(INSTALL_LIST)) DO COPY %f $(INSTALL_DIR)

@@ -1,3 +1,27 @@
+Fri Jun 11 17:11:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/bin.cf: 
+	* config/dir.cf: 
+	* config/global.cf: 
+	* config/install.cf: 
+	* config/lib.cf: 
+	* config/rules.cf: 
+	* config/test.cf: 
+	* config/dos/dir.cf: 
+	* config/dos/djgpp.cf: 
+	* config/dos/global.cf: 
+	* config/dos/install.cf: 
+	* config/win32/dir.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/global.cf: 
+	* config/win32/install.cf: 
+	* config/win32/msvc.cf: 
+	* config/win32/rules.cf: 
+	Reorganized things in an attempt to make it clearer how to support
+	different platforms and compilers. Also added as much support as I
+	could for running the GNU-make build system under plain
+	COMMAND.COM (DOS and Win95), not only under bash.
+
 19990611-17:00 CET Matthew Hamiltion
   * tests/working/inifiles.prg
     new version installed

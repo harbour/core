@@ -1,0 +1,25 @@
+#
+# $Id$
+#
+
+ifeq ($(SHLVL),) # COMMAND.COM
+
+ifeq ($(DIRS),) # Empty directory list
+DIR_RULE =\
+	@echo Done
+else
+DIR_LIST = $(subst /,\,$(DIRS))
+DIR_RULE =\
+	command.com /c FOR %d IN ($(DIR_LIST)) DO $(MK) -C %d $@
+endif
+
+else  # bash
+
+DIR_RULE =\
+	@for d in $(DIRS); do \
+	  if [ -d $$d ]; then \
+	    $(MAKE) -C $$d $@; \
+	  fi \
+	done
+
+endif # ! Windows     
