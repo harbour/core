@@ -36,20 +36,28 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-USHORT hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor )
+USHORT hb_conSetCursor( BOOL bSetCursor, USHORT uiNewCursor )
 {
-   USHORT usPreviousCursor;
+   USHORT uiCursor;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conSetCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_conSetCursor(%d, %hu)", (int) bSetCursor, uiNewCursor));
 
-   hb_gtGetCursor( &usPreviousCursor );
+   hb_gtGetCursor( &uiCursor );
+
    if( bSetCursor )
-      hb_gtSetCursor( usNewCursor );
+      hb_gtSetCursor( uiNewCursor );
 
-   return usPreviousCursor;
+   return uiCursor;
 }
 
 HB_FUNC( SETCURSOR )
 {
-   hb_retni( hb_conSetCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
+   USHORT uiCursor;
+
+   hb_gtGetCursor( &uiCursor );
+
+   hb_retni( uiCursor );
+
+   if( ISNUM( 1 ) )
+      hb_gtSetCursor( hb_parni( 1 ) );
 }

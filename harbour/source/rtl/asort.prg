@@ -60,10 +60,9 @@ FUNCTION ASort( aArray, nStart, nCount, bBlock )
          /* NOTE: For speed we are checking the return type of the passed
                   codeblock here. This will result in a small incompatibility
                   since the codeblock will be called one more time for the
-                  first logical element than in Clipper.
-                  But this is block calling frequency and order differs from
-                  Clipper anyway, since they use different sorting sorting
-                  algorhythms. */
+                  first logical element than in Clipper. But block calling 
+                  frequency and order differs from CA-Clipper anyway, since 
+                  they use different sorting algorhythms. [vszakats] */
 
          IF !ISBLOCK( bBlock ) .OR. !( ISLOGICAL( Eval( bBlock, aArray[ nStart ], aArray[ nStart ] ) ) )
             bBlock := {| x, y | x < y }

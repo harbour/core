@@ -70,23 +70,24 @@
 #include "hbset.h"
 
 static BOOL   s_bInit = FALSE;
-static SHORT  s_iCurrentRow;
-static SHORT  s_iCurrentCol;
+
+static SHORT  s_iRow;
+static SHORT  s_iCol;
 static USHORT s_uiPreCount;
 static USHORT s_uiPreCNest;
+static USHORT s_uiCursorStyle;
+
 static USHORT s_uiColorIndex;
-static USHORT s_uiCursorShape;
+static USHORT s_uiColorCount;
+static int *  s_Color;
 
-/* masks: 0x0007     Foreground              
-          0x0070     Background              
-          0x0008     Bright                  
-          0x0080     Blink                   
-          0x0800     Underline foreground    
-          0x8000     Underline background    
- */                                          
-
-static int *  s_Color; 
-static int    s_ColorCount;
+/* masks: 0x0007     Foreground
+          0x0070     Background
+          0x0008     Bright
+          0x0080     Blink
+          0x0800     Underline foreground
+          0x8000     Underline background
+ */
 
 /* gt API functions */
 
@@ -95,18 +96,17 @@ void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtInit()"));
 
    s_Color = ( int * ) hb_xgrab( 5 * sizeof( int ) );
-   s_ColorCount = 5;
+   s_uiColorCount = 5;
 
    hb_gt_Init( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
+
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
    hb_gtSetCursor( SC_NORMAL );
 
-   s_iCurrentRow = hb_gt_Row();
-   s_iCurrentCol = hb_gt_Col();
+   s_iRow = hb_gt_Row();
+   s_iCol = hb_gt_Col();
    s_uiPreCount = 0;
    s_uiPreCNest = 0;
-   s_uiColorIndex = 0;
-   s_uiCursorShape = 0;
 
    s_bInit = TRUE;
 
@@ -127,6 +127,7 @@ void hb_gtExit( void )
       hb_gt_DispEnd();
 
    hb_gt_Done();
+
    hb_xfree( s_Color );
 }
 
@@ -144,124 +145,120 @@ void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
    if( isatty( iHandle ) && hb_gt_AdjustPos( ( BYTE * ) pStr, ulLen ) )
    {
       /* Adjust the console cursor position to match the device driver */
-      s_iCurrentRow = hb_gt_Row();
-      s_iCurrentCol = hb_gt_Col();
+      s_iRow = hb_gt_Row();
+      s_iCol = hb_gt_Col();
    }
 }
 
 USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
 {
-   BYTE pszBox[ 10 ];
-   BYTE cPadChar;
-
-   USHORT uiRow;
-   USHORT uiCol;
-   USHORT height, width, tmp;
-
-   USHORT uiTopBak;
-   USHORT uiLeftBak;
-
    USHORT uiMaxRow;
    USHORT uiMaxCol;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyFrame));
 
-   uiTopBak = uiTop;
-   uiLeftBak = uiLeft;
-
    uiMaxRow = hb_gtMaxRow();
    uiMaxCol = hb_gtMaxCol();
 
-   /* TODO: Would be better to support these cases, Clipper implementation */
-   /*       was quite messy for these cases, which can be considered as */
-   /*       a bug there. */
+   /* TODO: Would be better to support these cases, Clipper implementation was 
+            quite messy, which can be considered as a bug there. [vszakats] */
 
-   if( uiTop  > uiMaxRow || uiBottom > uiMaxRow ||
-       uiLeft > uiMaxCol || uiRight  > uiMaxCol )
+   if( uiTop  <= uiMaxRow && uiBottom <= uiMaxRow &&
+       uiLeft <= uiMaxCol && uiRight  <= uiMaxCol )
    {
-      return 1;
-   }
+      BYTE szBox[ 10 ];
+      BYTE cPadChar;
 
-   /* For full compatibility, pad box string with last char if too short */
+      USHORT uiRow;
+      USHORT uiCol;
+      USHORT height, width, tmp;
 
-   cPadChar = ' ';
-   for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
-      cPadChar = pszBox[ tmp ] = *pbyFrame++;
-   while( tmp < 8 )
-      pszBox[ tmp++ ] = cPadChar;
-   pszBox[ tmp ] = '\0';
-
-   /* Ensure that box is drawn from top left to bottom right. */
-   if( uiTop > uiBottom )
-   {
-      tmp = uiTop;
-      uiTop = uiBottom;
-      uiBottom = tmp;
-   }
-   if( uiLeft > uiRight )
-   {
-      tmp = uiLeft;
-      uiLeft = uiRight;
-      uiRight = tmp;
-   }
-
-   uiRow = uiTop;
-   uiCol = uiLeft;
-
-   /* Draw the box or line as specified */
-   height = uiBottom - uiTop + 1;
-   width  = uiRight - uiLeft + 1;
-
-   hb_gtDispBegin();
-
-   if( height > 1 && width > 1 )
-      hb_gtWriteAt( uiRow, uiCol, pszBox + 0, sizeof( BYTE ) ); /* Upper left corner */
-
-   uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
-
-   if( uiCol <= uiRight )
-      hb_gtRepChar( uiRow, uiCol, pszBox[ 1 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Top line */
+      USHORT uiTopBak = uiTop;
+      USHORT uiLeftBak = uiLeft;
    
-   if( height > 1 && width > 1 )
-      hb_gtWriteAt( uiRow, uiRight, pszBox + 2, sizeof( BYTE ) ); /* Upper right corner */
-
-   if( pszBox[ 8 ] && height > 2 && width > 2 )
-   {
-      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      /* For full compatibility, pad box string with last char if too short */
+      
+      cPadChar = ' ';
+      for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
+         cPadChar = szBox[ tmp ] = *pbyFrame++;
+      while( tmp < 8 )
+         szBox[ tmp++ ] = cPadChar;
+      szBox[ tmp ] = '\0';
+      
+      /* Ensure that box is drawn from top left to bottom right. */
+      if( uiTop > uiBottom )
       {
-         uiCol = uiLeft;
-         hb_gtWriteAt( uiRow, uiCol++, pszBox + 7, sizeof( BYTE ) ); /* Left side */
-         hb_gtRepChar( uiRow, uiCol  , pszBox[ 8 ], uiRight - uiLeft - 1 ); /* Fill */
-         hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) ); /* Right side */
+         tmp = uiTop;
+         uiTop = uiBottom;
+         uiBottom = tmp;
       }
+      if( uiLeft > uiRight )
+      {
+         tmp = uiLeft;
+         uiLeft = uiRight;
+         uiRight = tmp;
+      }
+      
+      uiRow = uiTop;
+      uiCol = uiLeft;
+      
+      /* Draw the box or line as specified */
+      height = uiBottom - uiTop + 1;
+      width  = uiRight - uiLeft + 1;
+      
+      hb_gtDispBegin();
+      
+      if( height > 1 && width > 1 )
+         hb_gtWriteAt( uiRow, uiCol, szBox + 0, sizeof( BYTE ) ); /* Upper left corner */
+      
+      uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
+      
+      if( uiCol <= uiRight )
+         hb_gtRepChar( uiRow, uiCol, szBox[ 1 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Top line */
+      
+      if( height > 1 && width > 1 )
+         hb_gtWriteAt( uiRow, uiRight, szBox + 2, sizeof( BYTE ) ); /* Upper right corner */
+      
+      if( szBox[ 8 ] && height > 2 && width > 2 )
+      {
+         for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+         {
+            uiCol = uiLeft;
+            hb_gtWriteAt( uiRow, uiCol++, szBox + 7, sizeof( BYTE ) ); /* Left side */
+            hb_gtRepChar( uiRow, uiCol  , szBox[ 8 ], uiRight - uiLeft - 1 ); /* Fill */
+            hb_gtWriteAt( uiRow, uiRight, szBox + 3, sizeof( BYTE ) ); /* Right side */
+         }
+      }
+      else
+      {
+         for( uiRow = ( width > 1 ? uiTop + 1 : uiTop ); uiRow < ( width > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+         {
+            hb_gtWriteAt( uiRow, uiLeft, szBox + 7, sizeof( BYTE ) ); /* Left side */
+            if( width > 1 )
+               hb_gtWriteAt( uiRow, uiRight, szBox + 3, sizeof( BYTE ) ); /* Right side */
+         }
+      }
+      
+      if( height > 1 && width > 1 )
+      {
+         hb_gtWriteAt( uiBottom, uiLeft, szBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
+      
+         uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
+      
+         if( uiCol <= uiRight && height > 1 )
+            hb_gtRepChar( uiBottom, uiCol, szBox[ 5 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Bottom line */
+      
+         hb_gtWriteAt( uiBottom, uiRight, szBox + 4, sizeof( BYTE ) ); /* Bottom right corner */
+      }
+      
+      hb_gtDispEnd();
+      
+      hb_gtSetPos( uiTopBak + 1, uiLeftBak + 1 );
+      
+      return 0;
    }
    else
-   {
-      for( uiRow = ( width > 1 ? uiTop + 1 : uiTop ); uiRow < ( width > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
-      {
-         hb_gtWriteAt( uiRow, uiLeft, pszBox + 7, sizeof( BYTE ) ); /* Left side */
-         if( width > 1 )
-            hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) ); /* Right side */
-      }
-   }
-
-   if( height > 1 && width > 1 )
-   {
-      hb_gtWriteAt( uiBottom, uiLeft, pszBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
-
-      uiCol = ( height > 1 ? uiLeft + 1 : uiLeft );
-
-      if( uiCol <= uiRight && height > 1 )
-         hb_gtRepChar( uiBottom, uiCol, pszBox[ 5 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) ); /* Bottom line */
-
-      hb_gtWriteAt( uiBottom, uiRight, pszBox + 4, sizeof( BYTE ) ); /* Bottom right corner */
-   }
-
-   hb_gtDispEnd();
-
-   hb_gtSetPos( uiTopBak + 1, uiLeftBak + 1 );
-
-   return 0;
+      return 1;
 }
 
 USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
@@ -278,12 +275,13 @@ USHORT hb_gtColorSelect( USHORT uiColorIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtColorSelect(%hu)", uiColorIndex));
 
-   if( uiColorIndex > s_ColorCount )
-      return 1;
-   else
+   if( uiColorIndex <= s_uiColorCount )
+   {
       s_uiColorIndex = uiColorIndex;
-
-   return 0;
+      return 0;
+   }
+   else
+      return 1;
 }
 
 USHORT hb_gtDispBegin( void )
@@ -293,7 +291,7 @@ USHORT hb_gtDispBegin( void )
    if( s_uiPreCount == 0 )
       hb_gt_DispBegin();
    else
-      ++s_uiPreCount;
+      s_uiPreCount++;
 
    return 0;
 }
@@ -312,7 +310,7 @@ USHORT hb_gtDispEnd( void )
    if( s_uiPreCount == 0 )
       hb_gt_DispEnd();
    else
-      --s_uiPreCount;
+      s_uiPreCount--;
 
    return 0;
 }
@@ -334,10 +332,11 @@ USHORT hb_gtPreExt( void )
          while( uidc-- )
             hb_gt_DispEnd();
       }
+
       s_uiPreCNest = 1;
    }
    else
-      ++s_uiPreCNest;
+      s_uiPreCNest++;
 
    return 0;
 
@@ -349,30 +348,29 @@ USHORT hb_gtPostExt( void )
 
    if( s_uiPreCNest == 1 )
    {
-      USHORT uidc = s_uiPreCount;
-
-      while( uidc-- )
+      while( s_uiPreCount-- )
          hb_gt_DispBegin();
 
       s_uiPreCount = 0;
       s_uiPreCNest = 0;
    }
    else
-      --s_uiPreCNest;
+      s_uiPreCNest--;
 
    return 0;
 }
 
-USHORT hb_gtGetColorStr( char * fpColorString )
+USHORT hb_gtGetColorStr( char * szColorString )
 {
    char * sColors;
-   int i, k = 0;
+   int k = 0;
+   int i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetColorStr(%s)", fpColorString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetColorStr(%s)", szColorString));
 
-   sColors = ( char * ) hb_xgrab( s_ColorCount * 8 + 1 ); /* max possible */
+   sColors = ( char * ) hb_xgrab( s_uiColorCount * 8 + 1 ); /* max possible */
 
-   for( i = 0; i < s_ColorCount; i++ )
+   for( i = 0; i < s_uiColorCount; i++ )
    {
       int j = 0;
       int nColor = s_Color[ i ] & 7;
@@ -416,19 +414,19 @@ USHORT hb_gtGetColorStr( char * fpColorString )
       }
       while( ++j < 2 );
 
-      if( i + 1 < s_ColorCount )
+      if( i + 1 < s_uiColorCount )
          sColors[ k++ ] = ',';
    }
 
    sColors[ k ] = '\0';
 
-   strcpy( fpColorString, sColors );
+   strcpy( szColorString, sColors );
    hb_xfree( sColors );
 
    return 0;
 }
 
-USHORT hb_gtSetColorStr( char * fpColorString )
+USHORT hb_gtSetColorStr( char * szColorString )
 {
    char c;
    char buff[ 6 ];
@@ -441,12 +439,12 @@ USHORT hb_gtSetColorStr( char * fpColorString )
    int nColor = 0;
    int nCount = -1, i = 0, y;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetColorStr(%s)", fpColorString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetColorStr(%s)", szColorString));
 
-   if( fpColorString == ( char * ) NULL )
+   if( szColorString == ( char * ) NULL )
       return 1;
 
-   if( *fpColorString == '\0' )
+   if( *szColorString == '\0' )
    {
       s_Color[ 0 ] = 0x07;
       s_Color[ 1 ] = 0x70;
@@ -457,7 +455,7 @@ USHORT hb_gtSetColorStr( char * fpColorString )
 
    do
    {
-      c = *fpColorString++;
+      c = *szColorString++;
       c = toupper( c );
 
       while( c <= '9' && c >= '0' && i < 6 )
@@ -466,7 +464,7 @@ USHORT hb_gtSetColorStr( char * fpColorString )
             memset( buff, '\0', 6 );
 
          buff[ i++ ] = c;
-         c = *fpColorString++;
+         c = *szColorString++;
       }
       if( i > 0 )
       {
@@ -543,10 +541,10 @@ USHORT hb_gtSetColorStr( char * fpColorString )
             if( ! nCount )
                nFore = s_Color[ nPos ];
             nCount = -1;
-            if( nPos == s_ColorCount )
+            if( nPos == s_uiColorCount )
             {
                s_Color = ( int * ) hb_xrealloc( s_Color, sizeof( int ) * ( nPos + 1 ) );
-               ++s_ColorCount;
+               s_uiColorCount++;
             }
             if( bHasX )
                nFore &= 0x88F8;
@@ -591,59 +589,55 @@ USHORT hb_gtSetColorStr( char * fpColorString )
    return 0;
 }
 
-USHORT hb_gtGetCursor( USHORT * uipCursorShape )
+USHORT hb_gtGetCursor( USHORT * uipCursorStyle )
 {
-   int i;
-   int rc = 0;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetCursor(%p)", uipCursorStyle));
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetCursor(%p)", uipCursorShape));
-
-   i = s_uiCursorShape = hb_gt_GetCursorStyle();
-
-   if( i <= SC_SPECIAL2 )
-   {
-      *uipCursorShape = i;
-   }
-   else
-   {
-      rc = i;
-   }
-
-   return rc;
-}
-
-USHORT hb_gtSetCursor( USHORT uiCursorShape )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetCursor(%hu)", uiCursorShape));
-
-   hb_gt_SetCursorStyle( uiCursorShape );
-   s_uiCursorShape = uiCursorShape;
+   *uipCursorStyle = hb_gt_GetCursorStyle();
 
    return 0;
+}
+
+USHORT hb_gtSetCursor( USHORT uiCursorStyle )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetCursor(%hu)", uiCursorStyle));
+
+   if( uiCursorStyle <= SC_SPECIAL2 )
+   {
+      /* Set the cursor only when, it's in bounds. */
+      if( s_iRow >= 0 && s_iRow <= hb_gtMaxRow() && 
+          s_iCol >= 0 && s_iCol <= hb_gtMaxCol() )
+         hb_gt_SetCursorStyle( uiCursorStyle );
+
+      s_uiCursorStyle = uiCursorStyle;
+
+      return 0;
+   }
+   else
+      return 1;
 }
 
 USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtGetPos(%p, %p)", piRow, piCol));
 
-   if( s_iCurrentRow >= 0 && s_iCurrentRow <=  hb_gtMaxRow()
-      && s_iCurrentCol >= 0 && s_iCurrentCol <= hb_gtMaxCol() )
+   if( s_iRow >= 0 && s_iRow <= hb_gtMaxRow() &&
+       s_iCol >= 0 && s_iCol <= hb_gtMaxCol() )
    {
       /* Only return the actual cursor position if the current
          cursor position was not previously set out of bounds. */
-      s_iCurrentRow = hb_gt_Row();
-      s_iCurrentCol = hb_gt_Col();
+      s_iRow = hb_gt_Row();
+      s_iCol = hb_gt_Col();
    }
-   *piRow = s_iCurrentRow;
-   *piCol = s_iCurrentCol;
+
+   *piRow = s_iRow;
+   *piCol = s_iCol;
 
    return 0;
 }
 
 USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
-   BOOL set_cursor;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd)", iRow, iCol));
 
    /* Validate the new cursor position */
@@ -651,23 +645,18 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
    {
       /* Disable cursor if out of bounds */
       hb_gt_SetCursorStyle( SC_NONE );
-      set_cursor = FALSE;
    }
    else
-      set_cursor = TRUE;
-
-   if( set_cursor ) hb_gt_SetPos( iRow, iCol );
-
-   /* Check the old cursor position */
-   if( s_iCurrentRow < 0 || s_iCurrentCol < 0 || s_iCurrentRow > hb_gtMaxRow()
-      || s_iCurrentCol > hb_gtMaxCol() )
    {
+      hb_gt_SetPos( iRow, iCol );
+
       /* If back in bounds, enable the cursor */
-      if( set_cursor) hb_gt_SetCursorStyle( s_uiCursorShape );
+      if( s_iRow < 0 || s_iCol < 0 || s_iRow > hb_gtMaxRow() || s_iCol > hb_gtMaxCol() )
+         hb_gt_SetCursorStyle( s_uiCursorStyle );
    }
 
-   s_iCurrentRow = iRow;
-   s_iCurrentCol = iCol;
+   s_iRow = iRow;
+   s_iCol = iCol;
 
    return 0;
 }
@@ -702,24 +691,39 @@ USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRig
    return 0;
 }
 
+/* NOTE: Above this buffer size the function will allocate dynamic memory and 
+         will be slower. [vszakats] */
+
+#define REPCHAR_BUFFER_SIZE 255
+
 USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {
-   int rc;
-   BYTE buff[ 255 ];
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%hu, %hu, %d, %hu)", uiRow, uiCol, (int) byChar, uiCount));
 
-   if( uiCount > sizeof( buff ) )
-      return 1;
+   hb_gtSetPos( uiRow, uiCol );
 
-   memset( buff, byChar, uiCount );
-   buff[ uiCount ] = '\0';
-   rc = hb_gtSetPos( uiRow, uiCol );
-   if( rc != 0 )
-      return rc;
-   rc = hb_gtWrite( buff, uiCount );
+   if( uiCount < REPCHAR_BUFFER_SIZE )
+   {
+      BYTE buffer[ REPCHAR_BUFFER_SIZE ];
 
-   return rc;
+      memset( buffer, byChar, uiCount );
+      buffer[ uiCount ] = '\0';
+      
+      hb_gtWrite( buffer, uiCount );
+   }
+   else
+   {
+      BYTE * buffer = ( BYTE * ) hb_xgrab( uiCount + 1 );
+
+      memset( buffer, byChar, uiCount );
+      buffer[ uiCount ] = '\0';
+      
+      hb_gtWrite( buffer, uiCount );
+
+      hb_xfree( buffer );
+   }
+
+   return 0;
 }
 
 USHORT hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
@@ -780,77 +784,84 @@ USHORT hb_gtSetSnowFlag( BOOL bNoSnow )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetSnowFlag(%d)", (int) bNoSnow));
 
    /* NOTE: This is a compatibility function.
-      If you're running on a CGA and snow is a problem
-      speak up!
-   */
+            If you're running on a CGA and snow is a problem
+            speak up! */
+
    HB_SYMBOL_UNUSED( bNoSnow );
 
    return 0;
 }
 
-USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
+USHORT hb_gtWrite( BYTE * pStr, ULONG ulLength )
 {
-   SHORT iMaxCol, iMaxRow;
-   ULONG size = length;
-   BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
+   SHORT iMaxCol;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWrite(%p, %lu)", fpStr, length));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWrite(%p, %lu)", pStr, ulLength));
 
-   /* Optimize access to max row and col positions */
-   iMaxRow = hb_gtMaxRow();
+   /* Optimize access to max col position */
    iMaxCol = hb_gtMaxCol();
 
    /* Display the text if the cursor is on screen */
-   if( s_iCurrentCol >= 0 && s_iCurrentCol <= iMaxCol
-      && s_iCurrentRow >= 0 && s_iCurrentRow <= iMaxRow )
+   if( s_iCol >= 0 && s_iCol <= iMaxCol &&
+       s_iRow >= 0 && s_iRow <= hb_gtMaxRow() )
    {
+      ULONG ulSize;
+
       /* Truncate the text if the cursor will end up off the right edge */
-      if( s_iCurrentCol + ( SHORT ) size > iMaxCol + 1 ) size = iMaxCol - s_iCurrentCol + 1;
-      hb_gt_Puts( s_iCurrentRow, s_iCurrentCol, attr, fpStr, size );
+      if( s_iCol + ( SHORT ) ulLength > iMaxCol + 1 )
+         ulSize = ( ULONG ) ( iMaxCol - s_iCol + 1 );
+      else
+         ulSize = ulLength;
+
+      hb_gt_Puts( s_iRow, s_iCol, ( BYTE ) s_Color[ s_uiColorIndex ], pStr, ulSize );
    }
+
    /* Finally, save the new cursor position, even if off-screen */
-   hb_gtSetPos( s_iCurrentRow, s_iCurrentCol + (SHORT) length );
+   hb_gtSetPos( s_iRow, s_iCol + ( SHORT ) ulLength );
 
    return 0;
 }
 
-USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * fpStr, ULONG length )
+USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteAt(%hu, %hu, %p, %lu)", uiRow, uiCol, fpStr, length));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteAt(%hu, %hu, %p, %lu)", uiRow, uiCol, pStr, ulLength));
 
    hb_gtSetPos( uiRow, uiCol );
-   return hb_gtWrite( fpStr, length );
+
+   return hb_gtWrite( pStr, ulLength );
 }
 
-USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
+#define WRITECON_BUFFER_SIZE 500
+
+USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
 {
-   int rc = 0, nLen = 0;
-   BOOL ldisp = FALSE;
-   BOOL lnewline = FALSE;
-   SHORT iRow, iCol;
-   SHORT iMaxRow, iMaxCol;
-   BYTE ch;
-   BYTE * fpPtr = fpStr;
-   #define STRNG_SIZE 500
-   BYTE strng[ STRNG_SIZE ];
+   int iLen = 0;
+   BOOL bDisp = FALSE;
+   BOOL bNewLine = FALSE;
+   SHORT iRow;
+   SHORT iCol;
+   SHORT iMaxRow;
+   SHORT iMaxCol;
+   BYTE szString[ WRITECON_BUFFER_SIZE ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteCon(%p, %lu)", fpStr, length));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtWriteCon(%p, %lu)", pStr, ulLength));
 
-   iRow = s_iCurrentRow;
-   iCol = s_iCurrentCol;
    iMaxRow = hb_gtMaxRow();
    iMaxCol = hb_gtMaxCol();
 
    /* Limit the starting cursor position to maxrow(),maxcol()
       on the high end, but don't limit it on the low end. */
-   if( iRow > iMaxRow ) iRow = iMaxRow;
-   if( iCol > iMaxCol ) iCol = iMaxCol;
-   if( iRow != s_iCurrentRow || iCol != s_iCurrentCol)
+
+   iRow = ( s_iRow <= iMaxRow ) ? s_iRow : iMaxRow;
+   iCol = ( s_iCol <= iMaxCol ) ? s_iCol : iMaxCol;
+
+   if( iRow != s_iRow || iCol != s_iCol )
       hb_gtSetPos( iRow, iCol );
 
-   while( length-- )
+   while( ulLength-- )
    {
-      ch = *fpPtr++;
+      BYTE ch = *pStr++;
+
       switch( ch )
       {
          case HB_CHAR_BEL:
@@ -860,35 +871,35 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
             if( iCol > 0 )
             {
                --iCol;
-               ldisp = TRUE;
+               bDisp = TRUE;
             }
             else if( iCol == 0 && iRow > 0 )
             {
                iCol = iMaxCol;
                --iRow;
-               ldisp = TRUE;
+               bDisp = TRUE;
             }
 
             break;
 
          case HB_CHAR_LF:
             iCol = 0;
-	    if( iRow >= 0 ) ++iRow;
-            ldisp = TRUE;
-            lnewline = TRUE;
+            if( iRow >= 0 ) ++iRow;
+            bDisp = TRUE;
+            bNewLine = TRUE;
             break;
 
          case HB_CHAR_CR:
             iCol = 0;
-            if( *fpPtr != HB_CHAR_LF ) 
-	       ldisp = TRUE;
-	    else
-	    {
+            if( *pStr != HB_CHAR_LF )
+               bDisp = TRUE;
+            else
+            {
                if( iRow >= 0 ) ++iRow;
-               ldisp = TRUE;
-               lnewline = TRUE;
-	       ++fpPtr;
-	    }
+               bDisp = TRUE;
+               bNewLine = TRUE;
+               ++pStr;
+            }
             break;
 
          default:
@@ -897,26 +908,29 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
             {
                /* If the cursor position started off the left edge,
                   don't display the first character of the string */
-               if( iCol > 0 ) strng[ nLen++ ] = ch;
+               if( iCol > 0 ) szString[ iLen++ ] = ch;
                /* Always advance to the first column of the next row
                   when the right edge is reached or when the cursor
                   started off the left edge, unless the cursor is off
                   the top edge, in which case only change the column */
                iCol = 0;
                if( iRow >= 0 ) ++iRow;
-               ldisp = TRUE;
-               lnewline = TRUE;
+               bDisp = TRUE;
+               bNewLine = TRUE;
             }
-            else strng[ nLen++ ] = ch;
+            else
+               szString[ iLen++ ] = ch;
 
             /* Special handling for a really wide screen or device */
-            if( nLen >= STRNG_SIZE ) ldisp = TRUE;
+            if( iLen >= WRITECON_BUFFER_SIZE ) bDisp = TRUE;
       }
-      if( ldisp || ! length )
+
+      if( bDisp || ulLength == 0 )
       {
-         if( nLen && s_iCurrentRow >= 0 )
-            rc = hb_gtWrite( strng, nLen );
-         nLen = 0;
+         if( iLen && s_iRow >= 0 )
+            hb_gtWrite( szString, iLen );
+
+         iLen = 0;
          if( iRow > iMaxRow )
          {
             /* Normal scroll */
@@ -924,21 +938,19 @@ USHORT hb_gtWriteCon( BYTE * fpStr, ULONG length )
             iRow = iMaxRow;
             iCol = 0;
          }
-         else if( iRow < 0 && lnewline )
+         else if( iRow < 0 && bNewLine )
          {
             /* Special case scroll when newline
                and cursor off top edge of display */
             hb_gtScroll( 0, 0, iMaxRow, iMaxCol, 1, 0 );
          }
          hb_gtSetPos( iRow, iCol );
-         ldisp = FALSE;
-         lnewline = FALSE;
+         bDisp = FALSE;
+         bNewLine = FALSE;
       }
-      if( rc )
-         break;
    }
 
-   return rc;
+   return 0;
 }
 
 USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols )
@@ -946,6 +958,7 @@ USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
    HB_TRACE(HB_TR_DEBUG, ("hb_gtScroll(%hu, %hu, %hu, %hu, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, iRows, iCols));
 
    hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, s_Color[ s_uiColorIndex ], iRows, iCols );
+
    return 0;
 }
 
@@ -993,76 +1006,4 @@ char * hb_gtVersion( void )
 
    return hb_gt_Version();
 }
- 
-#ifdef TEST
-void main( void )
-{
-   BYTE * test = "Testing GT API Functions";
-   BYTE * test2 = "This message wraps!";
-   int iRow, iCol;
 
-   /* NOTE: always have to initialze video subsystem */
-   hb_gtInit();
-
-   /* save screen (doesn't work under DOS) */
-   /*
-   BYTE * scr;
-   USHORT size;
-
-   hb_gtRectSize( 1, 1, hb_gtMaxRow(), hb_gtMaxCol(), &size );
-   scr = ( BYTE * ) hb_xgrab( size );
-   hb_gtSave( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
-   */
-
-   /* writing text */
-   hb_gtSetPos( 3, 3 );
-   hb_gtWrite( test, strlen( test ) );
-   hb_gtSetPos( 12, 42 );
-   hb_gtWrite( test, strlen( test ) );
-
-   /* wrapping text */
-   hb_gtSetPos( 7, 70 );
-   hb_gtWrite( test2, strlen( test2 ) );
-
-   /* writing color text */
-   hb_gtSetColorStr( "W+/B, B/W" );
-   hb_gtColorSelect( _CLR_STANDARD );
-   hb_gtWrite( "Enhanced color (B/W)", 20 );
-   hb_gtSetPos( 22, 62 );
-   hb_gtColorSelect( _CLR_ENHANCED );
-   hb_gtWrite( "Standard Color (W+/B)", 21 );
-
-   /* boxes */
-   hb_gtBoxS( 10, 10, 20, 20 );
-   hb_gtBoxD( 10, 40, 15, 45 );
-
-   /* cursor functions */
-   hb_gtSetPos( 12, 1 );
-
-   /* none */
-   hb_gtSetCursor( _SC_NONE );
-   getch();
-
-   /* underline */
-   hb_gtSetCursor( _SC_NORMAL );
-   getch();
-
-   /* lower half block */
-   hb_gtSetCursor( _SC_INSERT );
-   getch();
-
-   /* full block */
-   hb_gtSetCursor( _SC_SPECIAL1 );
-   getch();
-
-   /* upper half block */
-   hb_gtSetCursor( _SC_SPECIAL2 );
-   getch();
-
-   /* restore screen (doesn't work under DOS) */
-   /*
-   hb_gtRest( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
-   hb_xfree( scr );
-   */
-}
-#endif

@@ -1,3 +1,40 @@
+20000411-20:45 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtapi.c
+   + tests/tstgtapi.c
+     ! hb_gtGetCursor() optimized and fixed for bad values.
+     % hb_gtGetCursor() removed the check of the value returned by
+       hb_gt_GetCursorStyle().
+     * Tabs removed.
+     % hb_gtSetPos() optimized, variables removed.
+     ! s_uiCursorStyle initialization fixed.
+     - hb_gtGetCursor() removed the s_uiCursorStyle update on cursor *get*.
+     ! hb_gtSetCursor() fixed when setting the cursor style while it is out
+       of the screen.
+     ! hb_gtSetCursor() fixed to check it's parameter.
+     * Test program moved to the test dir.
+     % hb_gtWriteCon() One variable removed. Some variable names and scops
+       adjusted. Some variable write access optimization.
+     ! hb_gtRepChar() fixed possible one byte buffer overflow.
+     % hb_gtRepChar() optimized.
+     + hb_gtRepChar() now supports values larger than 255, so that it will
+       never report an error now.
+     * Some optimizations made given that hb_gtWrite() and some other GT
+       function will never report an error.
+     % hb_gtWrite() Some variables removed, scope adjusted.
+       Some variable write access optimization.
+     % hb_gtPostExt() One variable removed.
+     % hb_gtBox() return from inside removed. Variable scopes adjusted.
+
+   * source/rtl/setcurs.c
+     % SETCURSOR() optimized.
+
+   * source/rtl/asort.prg
+     ! Typo
+
+   * include/inkey.ch
+     * Tabs removed.
+
 2000-04-11 14:30 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * config/w32/gcc.cf
