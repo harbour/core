@@ -1,3 +1,24 @@
+2000-01-10 15:50 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * ngdoc/ft_helpc.prg
+     ! Renamed to lower case for Linux compatibility.
+     + Added CVS $Id$ header.
+
+   * ngdoc/ha.lnk
+     ! Renamed to lower case for Linux compatibility.
+     ! Changed first menu from 'A-F' to 'A-D'
+
+   * source/compiler/hbusage.c
+     ! Corrected description of -10 command line option to refer to the
+       number of significant digits (per Dave Pearson).
+
+   * source/rtl/inkey.c
+     + Added blank line between documentation for INKEY() parameters
+
+   * source/tools/rtf.prg
+     ! Renamed to lower case for Linux compatibility.
+     + Added CVS $Id$ header.
+
 20000109-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
@@ -9,31 +30,31 @@
      * gt.b32
           ! Added RTF.prg
      * source/rdd/dbcmd.c
-     * source/rtl/achoice.prg  
-     * source/rtl/adir.prg      
-     * source/rtl/alert.prg     
-     * source/rtl/asort.prg     
-     * source/rtl/browdb.prg    
-     * source/rtl/browse.prg    
-     * source/rtl/dbstrux.prg   
-     * source/rtl/debugger.prg  
-     * source/rtl/devoutp.prg   
-     * source/rtl/dircmd.prg    
-     * source/rtl/errorsys.prg  
-     * source/rtl/fieldbl.prg   
-     * source/rtl/fileread.prg  
-     * source/rtl/harbinit.prg  
-     * source/rtl/input.prg     
-     * source/rtl/memvarbl.prg  
-     * source/rtl/menuto.prg    
-     * source/rtl/objfunc.prg   
-     * source/rtl/readvar.prg   
-     * source/rtl/readkey.prg   
-     * source/rtl/setkey.prg    
-     * source/rtl/setta.prg     
-     * source/rtl/stringp.prg   
-     * source/rtl/wait.prg      
-     * source/rtl/xsavescr.prg  
+     * source/rtl/achoice.prg
+     * source/rtl/adir.prg
+     * source/rtl/alert.prg
+     * source/rtl/asort.prg
+     * source/rtl/browdb.prg
+     * source/rtl/browse.prg
+     * source/rtl/dbstrux.prg
+     * source/rtl/debugger.prg
+     * source/rtl/devoutp.prg
+     * source/rtl/dircmd.prg
+     * source/rtl/errorsys.prg
+     * source/rtl/fieldbl.prg
+     * source/rtl/fileread.prg
+     * source/rtl/harbinit.prg
+     * source/rtl/input.prg
+     * source/rtl/memvarbl.prg
+     * source/rtl/menuto.prg
+     * source/rtl/objfunc.prg
+     * source/rtl/readvar.prg
+     * source/rtl/readkey.prg
+     * source/rtl/setkey.prg
+     * source/rtl/setta.prg
+     * source/rtl/stringp.prg
+     * source/rtl/wait.prg
+     * source/rtl/xsavescr.prg
      * source/rtl/arrays.c
      * source/rtl/word.c
      * source/rtl/type.c
@@ -1417,7 +1438,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 19991120-17:28 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
-   - hbfsapi for 
+   - hbfsapi for
 
 19991120-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 

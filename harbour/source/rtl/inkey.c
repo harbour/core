@@ -891,6 +891,7 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
  *      and it is not numeric, it will be treated as if it were 0. But if both
  *      parameters are specified and this parameter is not numeric, it will be
  *      treated as if it were not present.
+ *
  *      <nEvents> is an optional mask of input events that are to be enabled.
  *      If omitted, defaults to hb_set.HB_SET_EVENTMASK. Valid input maks are
  *      in inkey.ch and are explained below. It is recommended that the mask
