@@ -25,14 +25,14 @@ libs\b32\terminal.lib : console.obj gtapi.obj gtdos.obj
 libs\win32\terminal.lib : console.obj gtapi.obj gtwin.obj
 
 console.obj  : console.c  extend.h types.h
-  bcc32 -c -O2 -I.\include -o$@ source\rtl\console.c
+gtapi.obj    : gtapi.c    extend.h types.h
+gtdos.obj    : gtdos.c    extend.h types.h
+gtwin.obj    : gtwin.c    extend.h types.h
+  bcc32 -c -O2 -I.\include -o$@ source\rtl\console.c source\rtl\gtapi.c source\rtl\gt\gtdos.c
   tlib .\libs\b32\terminal.lib -+$@,,
-  bcc32 -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c
+  bcc32 -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c source\rtl\gtapi.c source\rtl\gt\gtwin.c
   tlib .\libs\win32\terminal.lib -+$@,,
 
-gtapi.obj    : extend.c   extend.h types.h
-gtdos.obj    : extend.c   extend.h types.h
-gtwin.obj    : extend.c   extend.h types.h
 
 symbols.obj  : symbols.asm
 
