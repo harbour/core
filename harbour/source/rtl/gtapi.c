@@ -6,7 +6,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
- * 1.32   19990721   ptucker   Improved Clipper color compatibility
+ * 1.33   19990721   ptucker   Improved Clipper color compatibility
  * 1.31   19990720   ptucker   Implimented color selection in gtWrite and
  *                             gtScroll
  * 1.30   19990719   ptucker   Removed temp init hack
@@ -275,7 +275,7 @@ int hb_gtSetColorStr(char * fpColorString)
                 {
                    nHasU  = 0;
                    nFore |= 0x800;
-//                   if( !nColor )
+//                   if( !nColor & ! (nFore & 0x77 ) )
 //                       nColor = 1;
                 }
                 else if( nHasX )
@@ -307,11 +307,7 @@ int hb_gtSetColorStr(char * fpColorString)
                     nFore &= 0x88F8;
 
                 if( nHasU )
-                {
                     nFore |= ( nSlash ? 0x8000 : 0x800 );
-                    if( nFore &0xff00 && ! ( nFore | nColor ) & 0x77 )
-                       nColor = 1;
-                }
 
                 if( nHasI )
                 {
@@ -326,6 +322,9 @@ int hb_gtSetColorStr(char * fpColorString)
                        nFore &= 0x888F;
                     }
                 }
+                if( (nFore &0x8800 ) != 0 && ( ( nFore | nColor ) & 0x77 ) == 0)
+                    nFore |= 1;
+
                 _Color[nPos++] = ( nColor << (nSlash? 4:0) ) | nFore;
                 nColor=nFore=nSlash=nHasX=nHasU=nHasI=0;
         }
