@@ -17,7 +17,7 @@ HARBOUR STRDUMP( void )
    printf("\n");
 }
 
-char *StrToken(char *szText, long lText, long lIndex, char cDelimiter, long *lLen)
+char *hb_strtoken(char *szText, long lText, long lIndex, char cDelimiter, long *lLen)
 {
    long wStart, wEnd = 0, wCounter = 0;
 
@@ -70,7 +70,7 @@ HARBOUR STRTOKEN( void )
    if( !cDelimiter )
      cDelimiter = ' ';
 
-   szText = StrToken(_parc(1), _parclen(1), lIndex, cDelimiter, &lLen);
+   szText = hb_strtoken(_parc(1), _parclen(1), lIndex, cDelimiter, &lLen);
 
    _stornl(lLen, 4);
    _retclen(szText, lLen);

@@ -14,7 +14,6 @@
 
 extern STACK stack;
 
-void julian2greg(long, long*, long*, long*);    /* TOFIX: Should go away    */
 void StackPop( void );                          /* TOFIX: Should go away    */
 
 /* Function flags                                                           */
@@ -382,7 +381,7 @@ char *DatePicture( long lDate, int iPicFlags, long *lRetSize )
    else
    {
       iPicFlags |= PF_ZERO;                     /* Pad with zeros           */
-      julian2greg( lDate, &lDay, &lMonth, &lYear );
+      hb_julian2greg( lDate, &lDay, &lMonth, &lYear );
                                                 /* Calculate d/m/y          */
    }
    iLenPic = strlen( szDateFormat );

@@ -25,8 +25,6 @@
 #include <pcode.h>
 #include <set.h>
 
-BOOL strempty( char * szText, long lLen );
-
 HARBOUR ERRORSYS( void );
 HARBOUR ERRORNEW( void );
 HARBOUR EVAL( void );         /* Evaluates a codeblock from Harbour */
@@ -751,7 +749,7 @@ void Equal( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = OurStrCmp( pItem1, pItem2 );
+      i = hb_itemStrCmp( pItem1, pItem2 );
       StackPop();
       StackPop();
       PushLogical( i == 0 );
@@ -859,7 +857,7 @@ void Greater( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = OurStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i > 0 );
@@ -894,7 +892,7 @@ void GreaterEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = OurStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i >= 0 );
@@ -1004,7 +1002,7 @@ void Less( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = OurStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i < 0 );
@@ -1039,7 +1037,7 @@ void LessEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = OurStrCmp( stack.pPos - 2, stack.pPos - 1 );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1 );
       StackPop();
       StackPop();
       PushLogical( i <= 0 );
@@ -1127,7 +1125,7 @@ void NotEqual( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = OurStrCmp( pItem1, pItem2 );
+      i = hb_itemStrCmp( pItem1, pItem2 );
       StackPop();
       StackPop();
       PushLogical( i != 0 );
@@ -1853,7 +1851,7 @@ HARBOUR EMPTY()
               break;
 
          case IT_STRING:
-              _retl( strempty( _parc( 1 ), _parclen( 1 ) ) );
+              _retl( hb_strempty( _parc( 1 ), _parclen( 1 ) ) );
               break;
 
          case IT_NUMERIC:

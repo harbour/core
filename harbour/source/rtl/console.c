@@ -32,7 +32,7 @@ HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
    _xfree( szResult );
 }
 
-static void _outstd( WORD wParam )
+static void hb_outstd( WORD wParam )
 {
    char * szText;
    ULONG ulLenText;
@@ -89,7 +89,7 @@ HARBOUR OUTSTD( void ) /* writes a list of values to the standard output device 
 
    for( w = 0; w < _pcount(); w++ )
    {
-      _outstd( w + 1 );
+      hb_outstd( w + 1 );
       if( w < _pcount() - 1) printf( " " );
    }
 }
@@ -100,7 +100,7 @@ HARBOUR QQOUT( void )
 
    for( w = 0; w < _pcount(); w++ )
    {
-      _outstd( w + 1 );
+      hb_outstd( w + 1 );
       if( w < _pcount() - 1) printf( " " );
    }
 }

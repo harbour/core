@@ -4,9 +4,9 @@
 
 #include <extend.h>
 
-int OurStrCmp( PITEM pFirst, PITEM pSecond ) /* Check whether two strings
-                                                are equal (0), smaller (-1),
-                                                or greater (1) */
+int hb_itemStrCmp( PITEM pFirst, PITEM pSecond ) /* Check whether two strings
+                                                    are equal (0), smaller (-1),
+                                                    or greater (1) */
 {
    char *szFirst   = pFirst->value.szText;
    char *szSecond  = pSecond->value.szText;

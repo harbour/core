@@ -9,18 +9,22 @@
 
 #define HB_ISSPACE(c) ((c) == 9 || (c) == 10 || (c) == 13 || (c) == 32)
 
-BOOL strempty( char * szText, long lLen )
+BOOL hb_strempty( char * szText, ULONG ulLen )
 {
-   BOOL bStillEmpty = TRUE;
-   char c;
+   BOOL bRetVal = TRUE;
 
-   while( bStillEmpty && lLen-- )               /* Still blanks ?           */
+   while( ulLen-- )
    {
-      c = *szText++;
-      if( !HB_ISSPACE(c) )
-         bStillEmpty = FALSE;
+      char c = szText[ulLen];
+
+      if( !HB_ISSPACE( c ) )
+      {
+         bRetVal = FALSE;
+         break;
+      }
    }
-   return bStillEmpty;
+
+   return bRetVal;
 }
 
 /* determines if first char of string is letter */
@@ -57,7 +61,7 @@ HARBOUR ISLOWER( void )
 
 /* trims from the left, and returns a new pointer to szText */
 /* also returns the new length in lLen */
-char *LTrim( char *szText, long *lLen )
+char *hb_LTrim( char *szText, long *lLen )
 {
    while( *lLen && HB_ISSPACE(*szText) )
    {
@@ -78,7 +82,7 @@ HARBOUR LTRIM( void )
       if( pText )
       {
          long lLen = pText->wLength;
-         char *szText = LTrim(pText->value.szText, &lLen);
+         char *szText = hb_LTrim(pText->value.szText, &lLen);
 
          _retclen(szText, lLen);
       }
@@ -101,7 +105,7 @@ HARBOUR LTRIM( void )
 }
 
 /* returns szText and the new length in lLen */
-long RTrimLen( char *szText, long lLen )
+long hb_RTrimLen( char *szText, long lLen )
 {
    while( lLen && szText[lLen - 1] == ' ' )
       lLen--;
@@ -116,7 +120,7 @@ HARBOUR RTRIM( void )
    {
       PITEM pText = _param(1, IT_STRING);
       if( pText )
-         _retclen(pText->value.szText, RTrimLen(pText->value.szText, pText->wLength));
+         _retclen(pText->value.szText, hb_RTrimLen(pText->value.szText, pText->wLength));
       else
          /* Clipper doesn't error */
          _retc("");
@@ -144,9 +148,9 @@ HARBOUR ALLTRIM( void )
    if( _pcount() > 0 )
    {
       char *szText = _parc(1);
-      long lLen = RTrimLen(szText, _parclen(1));
+      long lLen = hb_RTrimLen(szText, _parclen(1));
 
-      szText = LTrim(szText, &lLen);
+      szText = hb_LTrim(szText, &lLen);
 
       _retclen(szText, lLen);
    }
@@ -272,7 +276,7 @@ HARBOUR PADC( void )
       _retc("");
 }
 
-ULONG At(char *szSub, long lSubLen, char *szText, long lLen)
+ULONG hb_At(char *szSub, long lSubLen, char *szText, long lLen)
 {
    if( lSubLen )
    {
@@ -312,7 +316,7 @@ HARBOUR AT( void )
    {
       if( pText->wType == IT_STRING && pSub->wType == IT_STRING )
       {
-         _retnl( At(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
+         _retnl( hb_At(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
       }
       else
       {
@@ -592,7 +596,7 @@ HARBOUR SUBSTR( void )
 }
 
 /* converts szText to lower case. Does not create a new string! */
-char *Lower(char *szText, long lLen)
+char *hb_Lower(char *szText, long lLen)
 {
    long i;
    for( i = 0; i < lLen; i++ )
@@ -611,7 +615,7 @@ HARBOUR LOWER( void )
       {
          long lLen = pText->wLength;
 
-         _retclen(Lower(pText->value.szText, lLen), lLen);
+         _retclen(hb_Lower(pText->value.szText, lLen), lLen);
       }
       else
       {
@@ -632,7 +636,7 @@ HARBOUR LOWER( void )
 }
 
 /* converts szText to upper case. Does not create a new string! */
-char *Upper(char *szText, long lLen)
+char *hb_Upper(char *szText, long lLen)
 {
    long i;
    for( i = 0; i < lLen; i++ )
@@ -651,7 +655,7 @@ HARBOUR UPPER( void )
       {
          long lLen = pText->wLength;
 
-         _retclen(Upper(pText->value.szText, lLen), lLen);
+         _retclen(hb_Upper(pText->value.szText, lLen), lLen);
       }
       else
       {
@@ -956,7 +960,7 @@ HARBOUR STRTRAN( void )
 }
 
 /* returns an integer value of "numerical string"   */
-double Val( char *szText )
+double hb_Val( char *szText )
 {
    return atof(szText);
 }
@@ -969,7 +973,7 @@ HARBOUR VAL( void )
       PITEM pText = _param(1, IT_STRING);
 
       if( pText )
-         _retnd(Val(pText->value.szText));
+         _retnd(hb_Val(pText->value.szText));
       else
       {
          PITEM pError = _errNew();

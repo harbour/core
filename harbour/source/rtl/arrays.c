@@ -316,7 +316,7 @@ int ArrayScan( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
 					break;
 
 				 case IT_STRING :
-					iRet = ( OurStrCmp( pValue, pItem ) == 0 );
+					iRet = ( hb_itemStrCmp( pValue, pItem ) == 0 );
 					break;
 			  }
 		   }

@@ -7,7 +7,11 @@
 #include <ctype.h>
 #include <time.h>
 
-long greg2julian( long lDay, long lMonth, long lYear )
+#ifndef _STRICT_CLIPPER_COMPATIBILITY
+   #define _OPTIMIZE_DTOS
+#endif
+
+long hb_greg2julian( long lDay, long lMonth, long lYear )
 {
    long lFactor = ( lMonth < 3 ) ? -1: 0;
 
@@ -17,7 +21,7 @@ long greg2julian( long lDay, long lMonth, long lYear )
           lDay - 32075;
 }
 
-void julian2greg( long julian, long * plDay, long * plMonth, long * plYear )
+void hb_julian2greg( long julian, long * plDay, long * plMonth, long * plYear )
 {
   long U, V, W, X;
 
@@ -249,14 +253,43 @@ HARBOUR DTOC( void )
    _retc( hb_dtoc (szDate, szDateFormat) );
 }
 
+/* QUESTION: Should we drop error checkings to make it faster ? */
+/*           This function may be called many times in a real world */
+/*           application, for example in index creation. */
+/*           Clipper does these checks, anyway. */
 HARBOUR DTOS( void )
 {
-   _retc( _pards( 1 ) );
+#ifndef _OPTIMIZE_DTOS
+   if( _pcount() == 1 )
+   {
+      if( ISDATE( 1 ) )
+      {
+#endif
+         _retc( _pards( 1 ) );
+#ifndef _OPTIMIZE_DTOS
+      }
+      else
+      {
+         PITEM pError = _errNew();
+         _errPutDescription(pError, "Argument error: DTOS");
+         _errLaunch(pError);
+         _errRelease(pError);
+      }
+   }
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      PITEM pError = _errNew();
+      _errPutDescription(pError, "Incorrect number of arguments: DTOS");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+#endif
 }
 
 HARBOUR STOD( void )
 {
-   _retds( _parc( 1 ) );
+   _retds((ISCHAR(1) && _parclen(1) == 8) ? _parc(1) : "        ");
 }
 
 HARBOUR DAY( void )
@@ -266,7 +299,7 @@ HARBOUR DAY( void )
 
    if( pDate )
    {
-      julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      hb_julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lDay );
    }
    else
@@ -284,7 +317,7 @@ HARBOUR MONTH( void )
 
    if( pDate )
    {
-      julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      hb_julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lMonth );
    }
    else
@@ -302,7 +335,7 @@ HARBOUR YEAR( void )
 
    if( pDate )
    {
-      julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
+      hb_julian2greg( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lYear );
    }
    else

@@ -6,13 +6,12 @@
 #include <stdlib.h>
 #include <extend.h>
 
-long greg2julian( long lDay, long lMonth, long lYear );
-void julian2greg( long julian, long * plDay, long * plMonth, long * plYear );
-
 extern STACK stack;
 
-ULONG ulMemoryBlocks = 0, ulMemoryMaxBlocks = 0, ulMemoryMaxConsumed = 0,
-      ulMemoryConsumed = 0;
+ULONG ulMemoryBlocks = 0;
+ULONG ulMemoryMaxBlocks = 0;
+ULONG ulMemoryMaxConsumed = 0;
+ULONG ulMemoryConsumed = 0;
 
 PITEM _param( WORD wParam, WORD wMask )
 {
@@ -109,7 +108,7 @@ char * _pards( WORD wParam, ... )
 
       else if( IS_DATE( pItem ) )
       {
-         julian2greg( pItem->value.lDate, &lDay, &lMonth, &lYear );
+         hb_julian2greg( pItem->value.lDate, &lDay, &lMonth, &lYear );
 
          stack.szDate[ 0 ] = ( lYear / 1000 ) + '0';
          stack.szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
@@ -322,7 +321,7 @@ void _retds( char * szDate ) /* szDate must have yyyymmdd format */
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
-   stack.Return.value.lDate = greg2julian( lDay, lMonth, lYear );
+   stack.Return.value.lDate = hb_greg2julian( lDay, lMonth, lYear );
 }
 
 void _retnd( double dNumber )
@@ -449,7 +448,7 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
          pItemRef->wType = IT_DATE;
-         pItemRef->value.lDate = greg2julian( lDay, lMonth, lYear );
+         pItemRef->value.lDate = hb_greg2julian( lDay, lMonth, lYear );
       }
    }
 }

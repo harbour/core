@@ -9,10 +9,6 @@
 extern STACK stack;
 extern PSYMBOL symEval;
 
-/* TODO: Someone make a dates.h so this isn't necessary! */
-long greg2julian( long lDay, long lMonth, long lYear );
-extern void julian2greg( long julian, long * plDay, long * plMonth, long * plYear );
-
 BOOL _evalNew( PEVALINFO pEvalInfo, PITEM pItem )
 {
    BOOL bResult = FALSE;
@@ -228,7 +224,7 @@ char *_itemGetDS( PITEM pItem, char *szDate )
    if( pItem && IS_DATE(pItem) )
    {
       long lDay, lMonth, lYear;
-      julian2greg(pItem->value.lDate, &lDay, &lMonth, &lYear);
+      hb_julian2greg(pItem->value.lDate, &lDay, &lMonth, &lYear);
 
       szDate[ 0 ] = ( lYear / 1000 ) + '0';
       szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
@@ -318,7 +314,7 @@ PITEM _itemPutDS( PITEM pItem, char *szDate )
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
-   pItem->value.lDate = greg2julian(lDay, lMonth, lYear);
+   pItem->value.lDate = hb_greg2julian(lDay, lMonth, lYear);
 
    return pItem;
 }

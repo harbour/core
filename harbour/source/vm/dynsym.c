@@ -36,7 +36,7 @@ void LogSymbols( void )
 #define LEFT_GREATER  1
 #define SYM_EQUAL     0
 
-static WORD _strgreater( char * sz1, char * sz2 )
+static WORD hb_strgreater( char * sz1, char * sz2 )
 {
    /* Values returned : SYM_EQUAL, LEFT_GREATER, RIGHT_GREATER */
 
@@ -112,7 +112,7 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
    return pDynSym;
 }
 
-static void OurStrUpr( char * szText )
+static void hb_strupr( char * szText )
 {
    char *p;
 
@@ -126,7 +126,7 @@ PDYNSYM GetDynSym( char * szName )  /* finds and creates a symbol if not found *
    char * szUprName = ( char * ) _xgrab( strlen( szName ) + 1 );
 
    strcpy( szUprName, szName ); /* make a copy as we may get a const string */
-   OurStrUpr( szUprName );      /* turn it uppercase */
+   hb_strupr( szUprName );      /* turn it uppercase */
 
    /* if( strlen( szUprName ) > 10 )
       szUprName[ 10 ] = 0; keeps this here for 10 chars /c compatibility mode */
@@ -176,7 +176,7 @@ PDYNSYM FindDynSym( char * szName )
 
       while( wFirst < wLast )
       {
-         switch( _strgreater( pDynItems[ wMiddle ].pDynSym->pSymbol->szName, szName ) )
+         switch( hb_strgreater( pDynItems[ wMiddle ].pDynSym->pSymbol->szName, szName ) )
          {
             case SYM_EQUAL:  /* they are equals */
                  return pDynItems[ wMiddle ].pDynSym;

@@ -1,3 +1,34 @@
+Thu May 06 22:45:00 1999  Victor Szel <info@szelvesz.hu>
+
+        ! source/rtl/dates.c:
+          Fix to STOD(), added error checking to DTOS(), the later can be 
+          disabled to make it faster.
+        * source/vm/hvm.c, include/extend.h:
+          strempty() -> hb_strempty(), declaration moved to .h
+        % source/rtl/strings.c:
+          hb_strempty() speed optimalization, cleanup.
+        * source/vm/dynsym.c:
+          OurStrUpr() -> hb_strupr()
+          _strgreater -> hb_strgreater()
+        * source/rtl/console.c:
+          _outstd() -> hb_outstd()
+        * source/tools/stringsx.c:
+          StrToken() -> hb_strtoken()
+        * source/rtl/strings.c:
+          LTrim() -> hb_LTrim()
+          RTrimLen() -> hb_RTrimLen()
+          Lower() -> hb_Lower()
+          Upper() -> hb_Upper()
+          At() -> hb_At()
+          Val() -> hb_Val()
+        * source/vm/hvm.c, source/rtl/array.c, source/rtl/strcmp.c,
+          include/extend.h
+          OurStrCmp() -> hb_itemStrCmp()
+        * source/rtl/*.c, source/include/extend.h
+          julian2greg() -> hb_julian2greg()
+          greg2julian() -> hb_greg2julian()
+          Declaration moved to extend.h
+
 Thu May 06 13:58:48 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/vm/hvm.c: 
