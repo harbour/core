@@ -197,6 +197,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\run.obj \
   $(OBJ_DIR)\samples.obj \
   $(OBJ_DIR)\saverest.obj \
+  $(OBJ_DIR)\scalar.obj \
   $(OBJ_DIR)\scroll.obj \
   $(OBJ_DIR)\scrollbr.obj \
   $(OBJ_DIR)\seconds.obj \
@@ -630,6 +631,7 @@ $(HARBOUR_DLL)  : \
   echo. $(OBJ_DIR)\run.obj               + >> hdll.tmp
   echo. $(OBJ_DIR)\samples.obj           + >> hdll.tmp
   echo. $(OBJ_DIR)\saverest.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\scalar.obj            + >> hdll.tmp
   echo. $(OBJ_DIR)\scroll.obj            + >> hdll.tmp
   echo. $(OBJ_DIR)\scrollbr.obj          + >> hdll.tmp
   echo. $(OBJ_DIR)\seconds.obj           + >> hdll.tmp
@@ -1581,6 +1583,12 @@ $(OBJ_DIR)\samples.obj : $(RTL_DIR)\samples.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\saverest.obj : $(RTL_DIR)\saverest.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\scalar.c : $(RTL_DIR)\scalar.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\scalar.obj : $(OBJ_DIR)\scalar.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\scroll.obj : $(RTL_DIR)\scroll.c

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-12 17:19 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * hrbdll.bc
+    + Added module scalar.prg
+
 2004-07-26 10:50 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/compiler/cmdcheck.c
