@@ -1,3 +1,14 @@
+2000-11-07 16:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpra.c
+    *source/compiler/expropta.c
+    *source/macro/macroa.c
+        *fixed internal _GET_ optimization for macro variables
+        
+    *source/rtl/tgetint.prg
+        *__GET uses macro operator if no initial value is passed and
+         there is no set/get block
+
 2000-11-06 22:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
    * utils/hbpp/hbpp.c

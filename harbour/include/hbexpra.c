@@ -392,6 +392,73 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
                   }
             }
          }
+         else if( pArg->ExprType == HB_ET_MACRO )
+         {
+            /* @ 0,0 GET &var    => __GET( NIL, var,... )
+             * @ 0,0 GET var&var => __GET( NIL, "var&var",... )
+             */
+#ifdef HB_MACRO_SUPPORT
+            HB_XFREE( pName->value.asSymbol );
+            pName->value.asSymbol = hb_strdup( "__GET" );
+#else
+            pName->value.asSymbol = hb_compIdentifierNew( "__GET", TRUE );
+#endif
+            if( pArg->value.asMacro.pExprList == NULL )
+            {
+               /* Simple macro expansion (not a parenthesized expressions)
+                */
+               HB_EXPR_PTR pFirst, pNext;
+
+               pFirst = pArg;                /* first argument  */
+               pNext  = pFirst->pNext;       /* second argument */
+               if( pNext )
+                  pNext = pNext->pNext;      /* third argument */
+
+               pArg = hb_compExprNewNil();   /* replace 1st with NIL */
+               pParms->value.asList.pExprList = pArg;
+               pArg->pNext = pFirst->pNext;
+               if( pFirst->value.asMacro.cMacroOp == '&' )
+               {
+                  /* simple &variable - replace the second argument with
+                   * a variable name
+                   */
+#ifdef HB_MACRO_SUPPORT
+                  char *szName = hb_strdup( pFirst->value.asMacro.szMacro );
+#else
+                  char *szName = hb_compIdentifierNew( pFirst->value.asMacro.szMacro, FALSE );
+#endif
+                  if( pFirst->pNext )
+                     HB_EXPR_PCODE1( hb_compExprDelete, pFirst->pNext );  /* delete a second argument */
+                  pArg->pNext = hb_compExprNewVar( szName );
+                  pArg->pNext->pNext = pNext;    /* restore third argument */
+                  HB_EXPR_PCODE1( hb_compExprDelete, pFirst );
+               }
+               else
+               {
+                  /* text substitution text&variable - replace the second 
+                   * argument with a string
+                   */
+                  if( pArg->pNext == NULL )
+                  {
+                      /* no second argument */
+#ifdef HB_MACRO_SUPPORT
+                     char *szText = hb_strdup( pFirst->value.asMacro.szMacro );
+#else
+                     char *szText = hb_compIdentifierNew( pFirst->value.asMacro.szMacro, FALSE );
+#endif
+                     pArg->pNext = hb_compExprNewString( szText );
+                     pArg->pNext->pNext = pNext;
+                  }
+                  HB_EXPR_PCODE1( hb_compExprDelete, pFirst );  /* delete first argument */
+               }
+            }
+            else
+            {   /* @ 0,0 GET &(var)
+                 * TODO: generate a compilation time error - 
+                 * invalid GET expression
+                 */
+            }
+         }
          else
 #ifdef HB_MACRO_SUPPORT
             HB_XFREE( pName->value.asSymbol );
