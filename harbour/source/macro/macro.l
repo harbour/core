@@ -82,7 +82,6 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 #define LOOKUP          0       /* scan from the begining of line */
 #define OPERATOR        -1
 #define SEPARATOR       -2
-static int hb_comp_iState = LOOKUP;
 static int _iOpenBracket = 0;
 
 /* Support for Array Index */
@@ -227,7 +226,7 @@ Separator     {SpaceTab}
 
 "fiel"|"field"   {
                     if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                   hb_comp_iState =FIELD;
+                   return FIELD;
                  }
 
 "iif"        {
@@ -282,12 +281,12 @@ Separator     {SpaceTab}
 [\)]           --_iOpenBracket; return yytext[ 0 ];
 
 [\x00-\x1F]	return yytext[ 0 ]; /* see below */
-[\x80-\xFF]	{ 
-	    /* This have to be the last rule - any nonstandard and unhandled 
+[\x80-\xFF]	{
+	    /* This have to be the last rule - any nonstandard and unhandled
 	     * characters should go to grammar analyser instead of printing it
 	     * on stdout.
- 	     */ 
-	    return yytext[ 0 ]; 
+ 	     */
+	    return yytext[ 0 ];
 	}
 
 %{
@@ -391,7 +390,6 @@ Separator     {SpaceTab}
                if( yytext[ yyleng-1 ] == '.' )
                   yytext[ yyleng-1 ] = '\0';
                yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
-               hb_comp_iState = MACROVAR;
                return MACROVAR;
             }
 
@@ -411,7 +409,6 @@ Separator     {SpaceTab}
 
                yytext[yyleng] = 0;
                yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-               hb_comp_iState = MACROTEXT;
                return MACROTEXT;
             }
 
@@ -460,28 +457,24 @@ Separator     {SpaceTab}
                   if( yytext[ yyleng-1 ] == '.' )
                      yytext[ yyleng-1 ] = '\0';
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
-                  hb_comp_iState = MACROVAR;
                   return MACROVAR;
                }
 
 {MacroEnd}     {
                    HB_TRACE(HB_TR_DEBUG, ("{MacroEnd}(%s)", yytext));
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroId}      {
                    HB_TRACE(HB_TR_DEBUG, ("{MacroId}(%s)", yytext));
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
                    HB_TRACE(HB_TR_DEBUG, ("{MacroTxt}(%s)", yytext));
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 

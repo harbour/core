@@ -193,7 +193,7 @@ Main : Expression '\n' {
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
 
-     | Expression      { 
+     | Expression      {
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            else
@@ -289,7 +289,7 @@ MacroExprAlias : MacroExpr ALIASOP     { $$ = $1; }
  */
 /* special case: _FIELD-> and FIELD-> can be nested
  */
-FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( "FIELD" ); }
+FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( hb_strdup( "FIELD") ); }
             | FIELD ALIASOP FieldAlias    { $$ = $3; }
             ;
 
