@@ -1,3 +1,24 @@
+2001-06-07 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libmisc/hb_f.c
+  * source/debug/dbgwa.prg
+  * source/lang/msgid.c
+  * source/lang/msgko.c
+  * source/rtl/copyfile.c
+  * source/rtl/memoline.c
+  * source/rtl/mlcount.c
+  * source/rtl/mlpos.c
+  * source/rtl/setkey.c
+  * source/rtl/tget.prg
+  * source/rtl/tgetint.prg
+    * Replaced the old Harbour License and Exception with the
+      new Harbour License and Exception with permission from
+      Andi Jahja <andijahja@cbn.net.id>,
+      April White <awhite@mail.rosecom.ca>,
+      Ignacio_Ortiz_de_Zúñiga <ignacio@ozs.com>, and
+      Kwon,OJun (Charles Kwon) <charles@fivetech.net>
+
+
 2001-06-07 17:06 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    + contrib/tprepro/tprepro.prg
      + Added TPreProcessor class
