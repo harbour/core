@@ -1,3 +1,25 @@
+20000314-07:11 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.vc
+     makefile.bc
+     make_*.bat
+     * Other parts synchronized between the two make systems.
+     + makefile.vc will also compile mainwin.c, maindll.c and mainstd.c
+       instead of main.c.
+     ! MSVC makefile fixed to create objects for .EXE in the obj dir.
+       This way the exact same files are generated in the obj dir in Borland
+       and MSVC.
+     - Removed the generation of bison .output file.
+   * source/macro/macro.l
+     ! Fixed two warnings introduced yesterday.
+   * source/vm/maindll.c
+     ! _export changed to __declspec(dllexport) to avoid a warning in MSVC.
+   - contrib/rdd_ads/make_rdd.bat
+   - contrib/rdd_ads/rddads.b32
+   + contrib/rdd_ads/make_b32.bat
+   + contrib/rdd_ads/makefile.bc
+   * contrib/rdd_ads/readme.txt
+     + Standardized Borland make for RDDADS.
+
 20000314-01:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * make_*.bat
      contrib/rdd_ads/make_vc.bat

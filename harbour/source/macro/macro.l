@@ -362,7 +362,7 @@ Separator     {SpaceTab}
                yytext[yyleng] = 0;
 
                {
-                  if( strlen( yytext ) > YYLEX_PARAM->uiNameLen )
+                  if( ( USHORT ) strlen( yytext ) > YYLEX_PARAM->uiNameLen )
                   {
                      yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
                      yyleng = YYLEX_PARAM->uiNameLen;
@@ -480,7 +480,7 @@ Separator     {SpaceTab}
 
 {Identifier}    {
                    HB_TRACE(HB_TR_DEBUG, ("{Identifier}(%s)", yytext));
-                   if( strlen( yytext ) > YYLEX_PARAM->uiNameLen )
+                   if( ( USHORT ) strlen( yytext ) > YYLEX_PARAM->uiNameLen )
                    {
                         yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
                         yyleng = YYLEX_PARAM->uiNameLen;

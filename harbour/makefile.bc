@@ -14,7 +14,7 @@ CFLAGS = $(CFLAGS) -d
 
 # Borland C/C++ (DOS 16 bits)
 CC = bcc
-CFLAGS = $(CFLAGS) -DHB_GT_DOS -mh -O2
+CFLAGS = $(CFLAGS) -DHB_GT_DOS -mh
 AS = tasm
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
@@ -30,286 +30,391 @@ BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
 LIB_DIR = lib\b32
 
+!endif
+
 !if !$d(BCC_NOOPTIM)
 CFLAGS = $(CFLAGS) -O2
 !endif
 
-!endif
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = include
+COMMON_DIR   = source\common
+COMPILER_DIR = source\compiler
+DEBUG_DIR    = source\debug
+MACRO_DIR    = source\macro
+PP_DIR       = source\pp
+RDD_DIR      = source\rdd
+RTL_DIR      = source\rtl
+RUNNER_DIR   = source\runner
+TOOLS_DIR    = source\tools
+VM_DIR       = source\vm
+HBTEST_DIR   = utils\hbtest
+HBDOC_DIR    = utils\hbdoc
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
 
 CFLAGS = $(CFLAGS) -I$(INCLUDE_DIR)
 CLIBFLAGS = $(CFLAGS) -c
 
-INCLUDE_DIR       = include
-COMPILER_DIR      = source\compiler
-COMMON_DIR        = source\common
-PP_DIR            = source\pp
-VM_DIR            = source\vm
-RTL_DIR           = source\rtl
-TOOLS_DIR         = source\tools
-MACRO_DIR         = source\macro
-RDD_DIR           = source\rdd
-RUNNER_DIR        = source\runner
-DEBUG_DIR         = source\debug
-HBTEST_DIR        = utils\hbtest
-HBDOC_DIR         = utils\hbdoc
-
 HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 
-COMMON_LIB        = $(LIB_DIR)\common.lib
-COMMON_LIB_OBJS   = $(OBJ_DIR)\hbfsapi.obj \
-                    $(OBJ_DIR)\hbstr.obj \
-                    $(OBJ_DIR)\reserved.obj \
-                    $(OBJ_DIR)\hbtrace.obj
+#
+# Macros to access our library names
+#
 
-PP_LIB            = $(LIB_DIR)\pp.lib
-PP_LIB_OBJS       = $(OBJ_DIR)\ppcore.obj \
-                    $(OBJ_DIR)\ppcomp.obj \
-                    $(OBJ_DIR)\pplib.obj \
-                    $(OBJ_DIR)\pptable.obj
+COMMON_LIB   = $(LIB_DIR)\common.lib
+DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
+DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
+DEBUG_LIB    = $(LIB_DIR)\debug.lib
+MACRO_LIB    = $(LIB_DIR)\macro.lib
+NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
+PP_LIB       = $(LIB_DIR)\pp.lib
+RDD_LIB      = $(LIB_DIR)\rdd.lib
+RTL_LIB      = $(LIB_DIR)\rtl.lib
+RUNNER_LIB   = $(LIB_DIR)\runner.lib
+TOOLS_LIB    = $(LIB_DIR)\tools.lib
+VM_LIB       = $(LIB_DIR)\vm.lib
 
-HARBOUR_EXE       = $(BIN_DIR)\harbour.exe
-HARBOUR_EXE_OBJS  = $(OBJ_DIR)\harbour.obj \
-                    $(OBJ_DIR)\harboury.obj \
-                    $(OBJ_DIR)\harbourl.obj \
-                    $(OBJ_DIR)\cmdcheck.obj \
-                    $(OBJ_DIR)\hbusage.obj \
-                    $(OBJ_DIR)\hbgenerr.obj \
-                    $(OBJ_DIR)\hbpcode.obj \
-                    $(OBJ_DIR)\genc.obj \
-                    $(OBJ_DIR)\genobj32.obj \
-                    $(OBJ_DIR)\genjava.obj \
-                    $(OBJ_DIR)\genpas.obj \
-                    $(OBJ_DIR)\genrc.obj \
-                    $(OBJ_DIR)\genhrb.obj \
-                    $(OBJ_DIR)\expropt.obj \
-                    $(OBJ_DIR)\hbfunchk.obj
-
-PP_EXE            = $(BIN_DIR)\hbpp.exe
-
-RDD_LIB           = $(LIB_DIR)\rdd.lib
-RDD_LIB_OBJS      = $(OBJ_DIR)\dbcmd.obj \
-                    $(OBJ_DIR)\dbf0.obj \
-                    $(OBJ_DIR)\dbf1.obj \
-                    $(OBJ_DIR)\dbnubs.obj \
-                    $(OBJ_DIR)\dbstrux.obj \
-                    $(OBJ_DIR)\sdf0.obj \
-                    $(OBJ_DIR)\sdf1.obj \
-                    $(OBJ_DIR)\delim0.obj \
-                    $(OBJ_DIR)\delim1.obj \
-                    $(OBJ_DIR)\rddord.obj \
-                    $(OBJ_DIR)\rddsys.obj
-
-VM_LIB            = $(LIB_DIR)\vm.lib
-VM_LIB_OBJS       = $(OBJ_DIR)\arrays.obj \
-                    $(OBJ_DIR)\break.obj \
-                    $(OBJ_DIR)\classes.obj \
-                    $(OBJ_DIR)\cmdarg.obj \
-                    $(OBJ_DIR)\codebloc.obj \
-                    $(OBJ_DIR)\debug.obj \
-                    $(OBJ_DIR)\dynsym.obj \
-                    $(OBJ_DIR)\extend.obj \
-                    $(OBJ_DIR)\fm.obj \
-                    $(OBJ_DIR)\harbinit.obj \
-                    $(OBJ_DIR)\hvm.obj \
-                    $(OBJ_DIR)\initexit.obj \
-                    $(OBJ_DIR)\initsymb.obj \
-                    $(OBJ_DIR)\itemapi.obj \
-                    $(OBJ_DIR)\maindll.obj \
-                    $(OBJ_DIR)\mainstd.obj \
-                    $(OBJ_DIR)\mainwin.obj \
-                    $(OBJ_DIR)\memvars.obj \
-                    $(OBJ_DIR)\pcount.obj \
-                    $(OBJ_DIR)\proc.obj \
-                    $(OBJ_DIR)\pvalue.obj \
-                    $(OBJ_DIR)\symbols.obj
-
-RTL_LIB           = $(LIB_DIR)\rtl.lib
-RTL_LIB_OBJS      = $(OBJ_DIR)\achoice.obj \
-                    $(OBJ_DIR)\adir.obj \
-                    $(OBJ_DIR)\alert.obj \
-                    $(OBJ_DIR)\asort.obj \
-                    $(OBJ_DIR)\binnum.obj \
-                    $(OBJ_DIR)\browdb.obj \
-                    $(OBJ_DIR)\browse.obj \
-                    $(OBJ_DIR)\console.obj \
-                    $(OBJ_DIR)\copyfile.obj \
-                    $(OBJ_DIR)\dates.obj \
-                    $(OBJ_DIR)\dbedit.obj \
-                    $(OBJ_DIR)\descend.obj \
-                    $(OBJ_DIR)\devoutp.obj \
-                    $(OBJ_DIR)\dir.obj \
-                    $(OBJ_DIR)\dircmd.obj \
-                    $(OBJ_DIR)\do.obj \
-                    $(OBJ_DIR)\dummy.obj \
-                    $(OBJ_DIR)\empty.obj \
-                    $(OBJ_DIR)\environ.obj \
-                    $(OBJ_DIR)\errorapi.obj \
-                    $(OBJ_DIR)\errorsys.obj \
-                    $(OBJ_DIR)\fieldbl.obj \
-                    $(OBJ_DIR)\filesys.obj \
-                    $(OBJ_DIR)\gtapi.obj \
-                    $(OBJ_DIR)\gtxxx.obj \
-                    $(OBJ_DIR)\hardcr.obj \
-                    $(OBJ_DIR)\inkey.obj \
-                    $(OBJ_DIR)\input.obj \
-                    $(OBJ_DIR)\isprint.obj \
-                    $(OBJ_DIR)\langapi.obj \
-                    $(OBJ_DIR)\len.obj \
-                    $(OBJ_DIR)\math.obj \
-                    $(OBJ_DIR)\memofile.obj \
-                    $(OBJ_DIR)\memoline.obj \
-                    $(OBJ_DIR)\memvarbl.obj \
-                    $(OBJ_DIR)\menuto.obj \
-                    $(OBJ_DIR)\mlcount.obj \
-                    $(OBJ_DIR)\mlpos.obj \
-                    $(OBJ_DIR)\mouseapi.obj \
-                    $(OBJ_DIR)\mousexxx.obj \
-                    $(OBJ_DIR)\msgxxx.obj \
-                    $(OBJ_DIR)\mtran.obj \
-                    $(OBJ_DIR)\natmsg.obj \
-                    $(OBJ_DIR)\net.obj \
-                    $(OBJ_DIR)\objfunc.obj \
-                    $(OBJ_DIR)\oemansi.obj \
-                    $(OBJ_DIR)\oldbox.obj \
-                    $(OBJ_DIR)\oldclear.obj \
-                    $(OBJ_DIR)\readkey.obj \
-                    $(OBJ_DIR)\samples.obj \
-                    $(OBJ_DIR)\set.obj \
-                    $(OBJ_DIR)\setcolor.obj \
-                    $(OBJ_DIR)\setfunc.obj \
-                    $(OBJ_DIR)\setkey.obj \
-                    $(OBJ_DIR)\setta.obj \
-                    $(OBJ_DIR)\soundex.obj \
-                    $(OBJ_DIR)\strings.obj \
-                    $(OBJ_DIR)\tbcolumn.obj \
-                    $(OBJ_DIR)\tbrowse.obj \
-                    $(OBJ_DIR)\tclass.obj \
-                    $(OBJ_DIR)\terror.obj \
-                    $(OBJ_DIR)\text.obj \
-                    $(OBJ_DIR)\tget.obj \
-                    $(OBJ_DIR)\tgetlist.obj \
-                    $(OBJ_DIR)\tlabel.obj \
-                    $(OBJ_DIR)\tone.obj \
-                    $(OBJ_DIR)\trace.obj \
-                    $(OBJ_DIR)\transfrm.obj \
-                    $(OBJ_DIR)\treport.obj \
-                    $(OBJ_DIR)\type.obj \
-                    $(OBJ_DIR)\typefile.obj \
-                    $(OBJ_DIR)\valtype.obj \
-                    $(OBJ_DIR)\wait.obj \
-                    $(OBJ_DIR)\word.obj \
-                    $(OBJ_DIR)\xhelp.obj \
-                    $(OBJ_DIR)\xsavescr.obj
-
-TOOLS_LIB         = $(LIB_DIR)\tools.lib
-TOOLS_LIB_OBJS    = $(OBJ_DIR)\asciisum.obj \
-                    $(OBJ_DIR)\ascpos.obj \
-                    $(OBJ_DIR)\atdiff.obj \
-                    $(OBJ_DIR)\chareven.obj \
-                    $(OBJ_DIR)\charmix.obj \
-                    $(OBJ_DIR)\charodd.obj \
-                    $(OBJ_DIR)\chrcount.obj \
-                    $(OBJ_DIR)\chrfirst.obj \
-                    $(OBJ_DIR)\chrtotal.obj \
-                    $(OBJ_DIR)\ctchksum.obj \
-                    $(OBJ_DIR)\ctchrmix.obj \
-                    $(OBJ_DIR)\ctcrypt.obj \
-                    $(OBJ_DIR)\dates2.obj \
-                    $(OBJ_DIR)\datesx.obj \
-                    $(OBJ_DIR)\dbftools.obj \
-                    $(OBJ_DIR)\fileread.obj \
-                    $(OBJ_DIR)\hb_f.obj \
-                    $(OBJ_DIR)\html.obj \
-                    $(OBJ_DIR)\io.obj \
-                    $(OBJ_DIR)\mathx.obj \
-                    $(OBJ_DIR)\nconvert.obj \
-                    $(OBJ_DIR)\ng.obj \
-                    $(OBJ_DIR)\numtxten.obj \
-                    $(OBJ_DIR)\numtxthu.obj \
-                    $(OBJ_DIR)\os2.obj \
-                    $(OBJ_DIR)\rtf.obj \
-                    $(OBJ_DIR)\strasint.obj \
-                    $(OBJ_DIR)\strcount.obj \
-                    $(OBJ_DIR)\strcspn.obj \
-                    $(OBJ_DIR)\strdiff.obj \
-                    $(OBJ_DIR)\strexpan.obj \
-                    $(OBJ_DIR)\strfmt.obj \
-                    $(OBJ_DIR)\stringp.obj \
-                    $(OBJ_DIR)\stringsx.obj \
-                    $(OBJ_DIR)\strleft.obj \
-                    $(OBJ_DIR)\strpbrk.obj \
-                    $(OBJ_DIR)\strright.obj \
-                    $(OBJ_DIR)\troff.obj
-
-MACRO_LIB         = $(LIB_DIR)\macro.lib
-MACRO_LIB_OBJS    = $(OBJ_DIR)\macroy.obj \
-                    $(OBJ_DIR)\macrol.obj \
-                    $(OBJ_DIR)\macro.obj
-
-NULSYS_LIB        = $(LIB_DIR)\nulsys.lib
-NULSYS_LIB_OBJS   = $(OBJ_DIR)\nulsys.obj
-
-DBFNTX_LIB        = $(LIB_DIR)\dbfntx.lib
-DBFNTX_LIB_OBJS   = $(OBJ_DIR)\dbfntx0.obj \
-                    $(OBJ_DIR)\dbfntx1.obj
-
-DBFCDX_LIB        = $(LIB_DIR)\dbfcdx.lib
-DBFCDX_LIB_OBJS   = $(OBJ_DIR)\dbfcdx0.obj \
-                    $(OBJ_DIR)\dbfcdx1.obj
-
-RUNNER_LIB        = $(LIB_DIR)\runner.lib
-RUNNER_LIB_OBJS   = $(OBJ_DIR)\runlib.obj
-
-RUNNER_EXE        = $(BIN_DIR)\hbrun.exe
-
-DEBUG_LIB         = $(LIB_DIR)\debug.lib
-DEBUG_LIB_OBJS    = $(OBJ_DIR)\dbgmenu.obj \
-                    $(OBJ_DIR)\debugger.obj \
-                    $(OBJ_DIR)\tbrwtext.obj
-
-HBTEST_EXE        = $(BIN_DIR)\hbtest.exe
-HBTEST_EXE_OBJS   = $(OBJ_DIR)\hbtest.obj \
-                    $(OBJ_DIR)\rt_hvm.obj \
-                    $(OBJ_DIR)\rt_math.obj \
-                    $(OBJ_DIR)\rt_date.obj \
-                    $(OBJ_DIR)\rt_str.obj \
-                    $(OBJ_DIR)\rt_trans.obj \
-                    $(OBJ_DIR)\rt_array.obj \
-                    $(OBJ_DIR)\rt_file.obj \
-                    $(OBJ_DIR)\rt_misc.obj
-
-HBDOC_EXE         = $(BIN_DIR)\hbdoc.exe
-HBDOC_EXE_OBJS    = $(OBJ_DIR)\hbdoc.obj \
-                    $(OBJ_DIR)\genasc.obj \
-                    $(OBJ_DIR)\genhpc.obj \
-                    $(OBJ_DIR)\genhtm.obj \
-                    $(OBJ_DIR)\genng.obj \
-                    $(OBJ_DIR)\genos2.obj \
-                    $(OBJ_DIR)\genrtf.obj \
-                    $(OBJ_DIR)\gentrf.obj
-
-PROJECT: $(COMMON_LIB) \
-         $(PP_LIB) \
-         $(HARBOUR_EXE) \
-         $(VM_LIB) \
-         $(RTL_LIB) \
-         $(PP_EXE) \
-         $(RDD_LIB) \
-         $(TOOLS_LIB) \
-         $(MACRO_LIB) \
-         $(NULSYS_LIB) \
-         $(DBFNTX_LIB) \
-         $(DBFCDX_LIB) \
-         $(RUNNER_LIB) \
-         $(RUNNER_EXE) \
-         $(DEBUG_LIB) \
-         $(HBTEST_EXE) \
-         $(HBDOC_EXE)
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+PP_EXE       = $(BIN_DIR)\hbpp.exe
+RUNNER_EXE   = $(BIN_DIR)\hbrun.exe
+HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
+HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 
 #
-# common.lib
+# Rules
 #
+
+#
+# RTL.LIB rules
+#
+
+RTL_LIB_OBJS = \
+   $(OBJ_DIR)\binnum.obj \
+   $(OBJ_DIR)\console.obj \
+   $(OBJ_DIR)\copyfile.obj \
+   $(OBJ_DIR)\dates.obj \
+   $(OBJ_DIR)\descend.obj \
+   $(OBJ_DIR)\dir.obj \
+   $(OBJ_DIR)\do.obj \
+   $(OBJ_DIR)\empty.obj \
+   $(OBJ_DIR)\environ.obj \
+   $(OBJ_DIR)\errorapi.obj \
+   $(OBJ_DIR)\filesys.obj \
+   $(OBJ_DIR)\gtapi.obj \
+   $(OBJ_DIR)\hardcr.obj \
+   $(OBJ_DIR)\inkey.obj \
+   $(OBJ_DIR)\isprint.obj \
+   $(OBJ_DIR)\langapi.obj \
+   $(OBJ_DIR)\len.obj \
+   $(OBJ_DIR)\math.obj \
+   $(OBJ_DIR)\memofile.obj \
+   $(OBJ_DIR)\memoline.obj \
+   $(OBJ_DIR)\mlcount.obj \
+   $(OBJ_DIR)\mlpos.obj \
+   $(OBJ_DIR)\mouseapi.obj \
+   $(OBJ_DIR)\mtran.obj \
+   $(OBJ_DIR)\natmsg.obj \
+   $(OBJ_DIR)\net.obj \
+   $(OBJ_DIR)\oemansi.obj \
+   $(OBJ_DIR)\oldbox.obj \
+   $(OBJ_DIR)\oldclear.obj \
+   $(OBJ_DIR)\samples.obj \
+   $(OBJ_DIR)\set.obj \
+   $(OBJ_DIR)\setcolor.obj \
+   $(OBJ_DIR)\soundex.obj \
+   $(OBJ_DIR)\strings.obj \
+   $(OBJ_DIR)\tone.obj \
+   $(OBJ_DIR)\trace.obj \
+   $(OBJ_DIR)\transfrm.obj \
+   $(OBJ_DIR)\type.obj \
+   $(OBJ_DIR)\valtype.obj \
+   $(OBJ_DIR)\word.obj \
+   $(OBJ_DIR)\xhelp.obj \
+   \
+   $(OBJ_DIR)\gtxxx.obj \
+   $(OBJ_DIR)\mousexxx.obj \
+   $(OBJ_DIR)\msgxxx.obj \
+   \
+   $(OBJ_DIR)\achoice.obj \
+   $(OBJ_DIR)\adir.obj \
+   $(OBJ_DIR)\alert.obj \
+   $(OBJ_DIR)\asort.obj \
+   $(OBJ_DIR)\browdb.obj \
+   $(OBJ_DIR)\browse.obj \
+   $(OBJ_DIR)\dbedit.obj \
+   $(OBJ_DIR)\devoutp.obj \
+   $(OBJ_DIR)\dircmd.obj \
+   $(OBJ_DIR)\dummy.obj \
+   $(OBJ_DIR)\errorsys.obj \
+   $(OBJ_DIR)\fieldbl.obj \
+   $(OBJ_DIR)\input.obj \
+   $(OBJ_DIR)\memvarbl.obj \
+   $(OBJ_DIR)\menuto.obj \
+   $(OBJ_DIR)\objfunc.obj \
+   $(OBJ_DIR)\readkey.obj \
+   $(OBJ_DIR)\setfunc.obj \
+   $(OBJ_DIR)\setkey.obj \
+   $(OBJ_DIR)\setta.obj \
+   $(OBJ_DIR)\tbcolumn.obj \
+   $(OBJ_DIR)\tbrowse.obj \
+   $(OBJ_DIR)\tclass.obj \
+   $(OBJ_DIR)\terror.obj \
+   $(OBJ_DIR)\text.obj \
+   $(OBJ_DIR)\tget.obj \
+   $(OBJ_DIR)\tgetlist.obj \
+   $(OBJ_DIR)\tlabel.obj \
+   $(OBJ_DIR)\treport.obj \
+   $(OBJ_DIR)\typefile.obj \
+   $(OBJ_DIR)\wait.obj \
+   $(OBJ_DIR)\xsavescr.obj
+
+#
+# TOOLS.LIB rules
+#
+
+TOOLS_LIB_OBJS = \
+   $(OBJ_DIR)\asciisum.obj \
+   $(OBJ_DIR)\ascpos.obj \
+   $(OBJ_DIR)\atdiff.obj \
+   $(OBJ_DIR)\chareven.obj \
+   $(OBJ_DIR)\charmix.obj \
+   $(OBJ_DIR)\charodd.obj \
+   $(OBJ_DIR)\chrcount.obj \
+   $(OBJ_DIR)\chrfirst.obj \
+   $(OBJ_DIR)\chrtotal.obj \
+   $(OBJ_DIR)\ctchksum.obj \
+   $(OBJ_DIR)\ctchrmix.obj \
+   $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\dates2.obj \
+   $(OBJ_DIR)\datesx.obj \
+   $(OBJ_DIR)\dbftools.obj \
+   $(OBJ_DIR)\hb_f.obj \
+   $(OBJ_DIR)\io.obj \
+   $(OBJ_DIR)\mathx.obj \
+   $(OBJ_DIR)\strasint.obj \
+   $(OBJ_DIR)\strcount.obj \
+   $(OBJ_DIR)\strcspn.obj \
+   $(OBJ_DIR)\strdiff.obj \
+   $(OBJ_DIR)\strexpan.obj \
+   $(OBJ_DIR)\strfmt.obj \
+   $(OBJ_DIR)\stringsx.obj \
+   $(OBJ_DIR)\strleft.obj \
+   $(OBJ_DIR)\strpbrk.obj \
+   $(OBJ_DIR)\strright.obj \
+   \
+   $(OBJ_DIR)\fileread.obj \
+   $(OBJ_DIR)\html.obj \
+   $(OBJ_DIR)\nconvert.obj \
+   $(OBJ_DIR)\ng.obj \
+   $(OBJ_DIR)\numtxten.obj \
+   $(OBJ_DIR)\numtxthu.obj \
+   $(OBJ_DIR)\os2.obj \
+   $(OBJ_DIR)\rtf.obj \
+   $(OBJ_DIR)\stringp.obj \
+   $(OBJ_DIR)\troff.obj
+
+#
+# MACRO.LIB rules
+#
+
+MACRO_LIB_OBJS = \
+   $(OBJ_DIR)\macroy.obj \
+   $(OBJ_DIR)\macrol.obj \
+   $(OBJ_DIR)\macro.obj
+
+#
+# RDD.LIB rules
+#
+
+RDD_LIB_OBJS = \
+   $(OBJ_DIR)\dbcmd.obj \
+   $(OBJ_DIR)\dbf0.obj \
+   $(OBJ_DIR)\dbf1.obj \
+   $(OBJ_DIR)\dbnubs.obj \
+   $(OBJ_DIR)\dbstrux.obj \
+   $(OBJ_DIR)\sdf0.obj \
+   $(OBJ_DIR)\sdf1.obj \
+   $(OBJ_DIR)\delim0.obj \
+   $(OBJ_DIR)\delim1.obj \
+   $(OBJ_DIR)\rddord.obj \
+   $(OBJ_DIR)\rddsys.obj
+
+NULSYS_LIB_OBJS = \
+   $(OBJ_DIR)\nulsys.obj
+
+DBFNTX_LIB_OBJS = \
+   $(OBJ_DIR)\dbfntx0.obj \
+   $(OBJ_DIR)\dbfntx1.obj
+
+DBFCDX_LIB_OBJS = \
+   $(OBJ_DIR)\dbfcdx0.obj \
+   $(OBJ_DIR)\dbfcdx1.obj
+
+#
+# RUNNER.LIB rules
+#
+
+RUNNER_LIB_OBJS = \
+   $(OBJ_DIR)\runlib.obj
+
+#
+# PP.LIB rules
+#
+
+PP_LIB_OBJS = \
+   $(OBJ_DIR)\ppcore.obj \
+   $(OBJ_DIR)\ppcomp.obj \
+   $(OBJ_DIR)\pplib.obj \
+   $(OBJ_DIR)\pptable.obj
+
+#
+# DEBUG.LIB rules
+#
+
+DEBUG_LIB_OBJS = \
+   $(OBJ_DIR)\dbgmenu.obj \
+   $(OBJ_DIR)\debugger.obj \
+   $(OBJ_DIR)\tbrwtext.obj
+
+#
+# COMMON.LIB rules
+#
+
+COMMON_LIB_OBJS = \
+   $(OBJ_DIR)\hbfsapi.obj \
+   $(OBJ_DIR)\hbstr.obj \
+   $(OBJ_DIR)\hbtrace.obj \
+   $(OBJ_DIR)\reserved.obj
+
+#
+# VM.LIB rules
+#
+
+VM_LIB_OBJS = \
+   $(OBJ_DIR)\arrays.obj \
+   $(OBJ_DIR)\break.obj \
+   $(OBJ_DIR)\classes.obj \
+   $(OBJ_DIR)\cmdarg.obj \
+   $(OBJ_DIR)\codebloc.obj \
+   $(OBJ_DIR)\debug.obj \
+   $(OBJ_DIR)\dynsym.obj \
+   $(OBJ_DIR)\extend.obj \
+   $(OBJ_DIR)\fm.obj \
+   $(OBJ_DIR)\hvm.obj \
+   $(OBJ_DIR)\initexit.obj \
+   $(OBJ_DIR)\initsymb.obj \
+   $(OBJ_DIR)\itemapi.obj \
+   $(OBJ_DIR)\maindll.obj \
+   $(OBJ_DIR)\mainstd.obj \
+   $(OBJ_DIR)\mainwin.obj \
+   $(OBJ_DIR)\memvars.obj \
+   $(OBJ_DIR)\pcount.obj \
+   $(OBJ_DIR)\proc.obj \
+   $(OBJ_DIR)\pvalue.obj \
+   \
+   $(OBJ_DIR)\symbols.obj \
+   \
+   $(OBJ_DIR)\harbinit.obj
+
+#
+# HARBOUR.EXE rules
+#
+
+HARBOUR_EXE_OBJS = \
+   $(OBJ_DIR)\harbour.obj \
+   $(OBJ_DIR)\harboury.obj \
+   $(OBJ_DIR)\harbourl.obj \
+   $(OBJ_DIR)\cmdcheck.obj \
+   $(OBJ_DIR)\hbusage.obj \
+   $(OBJ_DIR)\hbgenerr.obj \
+   $(OBJ_DIR)\hbpcode.obj \
+   $(OBJ_DIR)\genc.obj \
+   $(OBJ_DIR)\genobj32.obj \
+   $(OBJ_DIR)\genjava.obj \
+   $(OBJ_DIR)\genpas.obj \
+   $(OBJ_DIR)\genrc.obj \
+   $(OBJ_DIR)\genhrb.obj \
+   $(OBJ_DIR)\expropt.obj \
+   $(OBJ_DIR)\hbfunchk.obj
+
+#
+# HBTEST.EXE rules
+#
+
+HBTEST_EXE_OBJS = \
+   $(OBJ_DIR)\hbtest.obj \
+   $(OBJ_DIR)\rt_hvm.obj \
+   $(OBJ_DIR)\rt_math.obj \
+   $(OBJ_DIR)\rt_date.obj \
+   $(OBJ_DIR)\rt_str.obj \
+   $(OBJ_DIR)\rt_trans.obj \
+   $(OBJ_DIR)\rt_array.obj \
+   $(OBJ_DIR)\rt_file.obj \
+   $(OBJ_DIR)\rt_misc.obj
+
+#
+# HBDOC.EXE rules
+#
+
+HBDOC_EXE_OBJS = \
+   $(OBJ_DIR)\hbdoc.obj \
+   $(OBJ_DIR)\genasc.obj \
+   $(OBJ_DIR)\genhpc.obj \
+   $(OBJ_DIR)\genhtm.obj \
+   $(OBJ_DIR)\genng.obj \
+   $(OBJ_DIR)\genos2.obj \
+   $(OBJ_DIR)\genrtf.obj \
+   $(OBJ_DIR)\gentrf.obj
+
+#
+# Our default target
+#
+
+all: \
+   $(COMMON_LIB) \
+   $(PP_LIB) \
+   $(HARBOUR_EXE) \
+   $(VM_LIB) \
+   $(RTL_LIB) \
+   $(TOOLS_LIB) \
+   $(MACRO_LIB) \
+   $(DEBUG_LIB) \
+   $(RDD_LIB) \
+   $(NULSYS_LIB) \
+   $(DBFNTX_LIB) \
+   $(DBFCDX_LIB) \
+   $(RUNNER_LIB) \
+   $(RUNNER_EXE) \
+   $(PP_EXE) \
+   $(HBTEST_EXE) \
+   $(HBDOC_EXE)
+
+#
+# Library dependencies and build rules
+#
+
 $(COMMON_LIB) : $(COMMON_LIB_OBJS)
+$(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
+$(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
+$(DEBUG_LIB)  : $(DEBUG_LIB_OBJS)
+$(MACRO_LIB)  : $(MACRO_LIB_OBJS)
+$(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
+$(PP_LIB)     : $(PP_LIB_OBJS)
+$(RDD_LIB)    : $(RDD_LIB_OBJS)
+$(RTL_LIB)    : $(RTL_LIB_OBJS)
+$(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
+$(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
+$(VM_LIB)     : $(VM_LIB_OBJS)
+
+#
+# COMMON.LIB dependencies
+#
 
 $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -328,9 +433,8 @@ $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
    tlib $(COMMON_LIB) -+$@,,
 
 #
-# pp.lib
+# PP.LIB dependencies
 #
-$(PP_LIB) : $(PP_LIB_OBJS)
 
 $(OBJ_DIR)\ppcore.obj : $(PP_DIR)\ppcore.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -349,7 +453,7 @@ $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
    tlib $(PP_LIB) -+$@,,
 
 #
-# harbour.exe
+# HARBOUR.EXE dependencies
 #
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 
@@ -379,7 +483,7 @@ $(OBJ_DIR)\harbour.obj : $(COMPILER_DIR)\harbour.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
-   bison -d -v -y $** -o$@
+   bison -d $** -o$@
 
 $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -427,23 +531,8 @@ $(OBJ_DIR)\hbfunchk.obj : $(COMPILER_DIR)\hbfunchk.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 #
-# hbpp.exe
+# RDD.LIB dependencies
 #
-$(PP_EXE) : $(PP_LIB_OBJS) $(COMMON_LIB_OBJS)
-
-   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(PP_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
-   echo. $(OBJ_DIR)\hbpp.obj >> make.tmp
-   echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
-   $(CC) @make.tmp
-   del make.tmp
-
-#
-# rdd.lib
-#
-$(RDD_LIB) : $(RDD_LIB_OBJS)
 
 $(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -508,9 +597,8 @@ $(OBJ_DIR)\rddsys.obj : $(OBJ_DIR)\rddsys.c
    tlib $(RDD_LIB) -+$@,,
 
 #
-# vm.lib
+# VM.LIB dependencies
 #
-$(VM_LIB) : $(VM_LIB_OBJS)
 
 $(OBJ_DIR)\arrays.obj : $(VM_DIR)\arrays.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -604,9 +692,8 @@ $(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
    tlib $(VM_LIB) -+$@,,
 
 #
-# rtl.lib
+# RTL.LIB dependencies
 #
-$(RTL_LIB) : $(RTL_LIB_OBJS)
 
 $(OBJ_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -1009,9 +1096,8 @@ $(OBJ_DIR)\xsavescr.obj : $(OBJ_DIR)\xsavescr.c
    tlib $(RTL_LIB) -+$@,,
 
 #
-# tools.lib
+# TOOLS.LIB dependencies
 #
-$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
 
 $(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1196,12 +1282,11 @@ $(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
    tlib $(TOOLS_LIB) -+$@,,
 
 #
-# macro.lib
+# MACRO.LIB dependencies
 #
-$(MACRO_LIB) : $(MACRO_LIB_OBJS)
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-   bison -d -v -y $** -o$@
+   bison -d $** -o$@
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1219,9 +1304,8 @@ $(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
    tlib $(MACRO_LIB) -+$@,,
 
 #
-# nulsys.lib
+# NULSYS.LIB dependencies
 #
-$(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
 
 $(OBJ_DIR)\nulsys.c : $(RDD_DIR)\nulsys\nulsys.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -1231,9 +1315,8 @@ $(OBJ_DIR)\nulsys.obj : $(OBJ_DIR)\nulsys.c
    tlib $(NULSYS_LIB) -+$@,,
 
 #
-# dbfntx.lib
+# DBFNTX.LIB dependencies
 #
-$(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
 
 $(OBJ_DIR)\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -1247,9 +1330,8 @@ $(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
    tlib $(DBFNTX_LIB) -+$@,,
 
 #
-# dbfcdx.lib
+# DBFCDX.LIB dependencies
 #
-$(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
 
 $(OBJ_DIR)\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -1263,43 +1345,16 @@ $(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
    tlib $(DBFCDX_LIB) -+$@,,
 
 #
-# runner.lib
+# RUNNER.LIB dependencies
 #
-$(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
 
 $(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RUNNER_LIB) -+$@,,
 
 #
-# hbrun.exe
+# DEBUG.LIB dependencies
 #
-$(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\hbrun.prg
-
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -i$(RUNNER_DIR)\stdalone -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
-   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
-
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(RUNNER_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
-   echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
-   echo. $(PP_LIB) >> make.tmp
-   echo. $(COMMON_LIB) >> make.tmp
-   echo. $(VM_LIB) >> make.tmp
-   echo. $(RTL_LIB) >> make.tmp
-   echo. $(RDD_LIB) >> make.tmp
-   echo. $(MACRO_LIB) >> make.tmp
-   echo. $(TOOLS_LIB) >> make.tmp
-   echo. $(RUNNER_LIB) >> make.tmp
-   echo. $(DBFNTX_LIB) >> make.tmp
-   echo. $(DBFCDX_LIB) >> make.tmp
-   $(CC) @make.tmp
-   del make.tmp
-
-#
-# debug.lib
-#
-$(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
 
 $(OBJ_DIR)\dbgmenu.c : $(DEBUG_DIR)\dbgmenu.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -1323,7 +1378,51 @@ $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
    tlib $(DEBUG_LIB) -+$@,,
 
 #
-# hbtest.exe
+# HBPP.EXE dependencies
+#
+$(PP_EXE) : \
+   $(PP_DIR)\stdalone\hbpp.c \
+   $(PP_LIB_OBJS) \
+   $(COMMON_LIB_OBJS)
+
+   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
+   echo. $(CFLAGS) > make.tmp
+   echo. -e$(PP_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\hbpp.obj >> make.tmp
+   echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
+   $(CC) @make.tmp
+   del make.tmp
+
+#
+# HBRUN.EXE dependencies
+#
+$(RUNNER_EXE) : \
+   $(RUNNER_DIR)\stdalone\hbrun.prg \
+   $(RUNNER_LIB)
+
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(RUNNER_DIR)\stdalone\hbrun.prg
+   $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
+
+   echo. $(CFLAGS) > make.tmp
+   echo. -e$(RUNNER_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(TOOLS_LIB) >> make.tmp
+   echo. $(RUNNER_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
+   $(CC) @make.tmp
+   del make.tmp
+
+#
+# HBTEST.EXE dependencies
 #
 $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
 
@@ -1406,7 +1505,7 @@ $(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 #
-# hbdoc.exe
+# HBDOC.EXE dependencies
 #
 $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 

@@ -41,9 +41,9 @@ HBDOC_DIR    = utils\hbdoc
 
 AS = masm
 CC = cl
-CFLAGS = -W1 -nologo -I$(INCLUDE_DIR) -D_Windows -DHB_GT_WIN
-CLIBFLAGS = $(CFLAGS) -c /TP
-CLIBFLAGSDEBUG = $(CFLAGS) -c -Zi /TP
+CFLAGS = -TP -W1 -nologo -I$(INCLUDE_DIR) -D_Windows -DHB_GT_WIN
+CLIBFLAGS = $(CFLAGS) -c
+CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 
 HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 
@@ -131,9 +131,6 @@ LIBS2 = \
 {$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
-
-{$(RTL_DIR)}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 RTL_LIB_OBJS = \
    $(OBJ_DIR)\binnum.obj \
@@ -226,9 +223,6 @@ RTL_LIB_OBJS = \
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
 
-{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
 TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\asciisum.obj \
    $(OBJ_DIR)\ascpos.obj \
@@ -278,8 +272,8 @@ TOOLS_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 MACRO_LIB_OBJS = \
-   $(OBJ_DIR)\macrol.obj \
    $(OBJ_DIR)\macroy.obj \
+   $(OBJ_DIR)\macrol.obj \
    $(OBJ_DIR)\macro.obj
 
 #
@@ -292,9 +286,6 @@ MACRO_LIB_OBJS = \
 {$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
-
-{$(RDD_DIR)}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
@@ -317,9 +308,6 @@ RDD_LIB_OBJS = \
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
 
-{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 
@@ -330,9 +318,6 @@ NULSYS_LIB_OBJS = \
 {$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
-
-{$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 DBFNTX_LIB_OBJS = \
    $(OBJ_DIR)\dbfntx0.obj \
@@ -345,9 +330,6 @@ DBFNTX_LIB_OBJS = \
 {$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
-
-{$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 DBFCDX_LIB_OBJS = \
    $(OBJ_DIR)\dbfcdx0.obj \
@@ -387,9 +369,6 @@ PP_LIB_OBJS = \
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
 
-{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
 DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgmenu.obj \
    $(OBJ_DIR)\debugger.obj \
@@ -422,9 +401,6 @@ COMMON_LIB_OBJS = \
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
    $(CC) $(CLIBFLAGS) -Fo$@ $*.c
 
-{$(VM_DIR)}.prg{$(OBJ_DIR)}.c:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
 VM_LIB_OBJS = \
    $(OBJ_DIR)\arrays.obj \
    $(OBJ_DIR)\break.obj \
@@ -439,7 +415,9 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\initexit.obj \
    $(OBJ_DIR)\initsymb.obj \
    $(OBJ_DIR)\itemapi.obj \
-   $(OBJ_DIR)\main.obj \
+   $(OBJ_DIR)\maindll.obj \
+   $(OBJ_DIR)\mainstd.obj \
+   $(OBJ_DIR)\mainwin.obj \
    $(OBJ_DIR)\memvars.obj \
    $(OBJ_DIR)\pcount.obj \
    $(OBJ_DIR)\proc.obj \
@@ -453,7 +431,8 @@ VM_LIB_OBJS = \
 # Our default target
 #
 
-all: $(HARBOUR_EXE) \
+all: \
+   $(HARBOUR_EXE) \
    $(LIBLIST) \
    $(PP_EXE) \
    $(RUNNER_EXE) \
@@ -465,29 +444,28 @@ $(PP_EXE) : \
    $(PP_DIR)\stdalone\hbpp.c \
    $(COMMON_DIR)\hbfsapi.c \
    $(COMMON_DIR)\hbstr.c
-   $(CC) -TP $(CFLAGS) $** -o $(PP_EXE) /link $(PP_LIB)
-   -del hbpp.obj
-   -del hbfsapi.obj
-   -del hbstr.obj
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(PP_EXE) /link $(PP_LIB)
 
 #
-# Runner
+# HBRUN.EXE rules
 #
 
 $(RUNNER_EXE) : \
    $(RUNNER_DIR)\stdalone\hbrun.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link $(LIBS2)
-   -del hbrun.obj
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link $(LIBS2)
 
 #
 # To compile this you must have a JDK installed
 #
 #$(RUNNER_DLL) : $(RUNNER_DIR)\runjava.c
-#   $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
-#    -del runjava.obj
+#   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(RUNNER_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
 #    -del $(BIN_DIR)\runjava.exp
 #    -del $(BIN_DIR)\runjava.lib
+
+#
+# HBTEST.EXE rules
+#
 
 $(HBTEST_EXE) : \
    $(HBTEST_DIR)\hbtest.prg \
@@ -500,16 +478,11 @@ $(HBTEST_EXE) : \
    $(HBTEST_DIR)\rt_str.prg \
    $(HBTEST_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
-   -del hbtest.obj
-   -del rt_array.obj
-   -del rt_date.obj
-   -del rt_file.obj
-   -del rt_hvm.obj
-   -del rt_math.obj
-   -del rt_misc.obj
-   -del rt_str.obj
-   -del rt_trans.obj
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
+
+#
+# HBDOC.EXE rules
+#
 
 $(HBDOC_EXE) : \
    $(HBDOC_DIR)\hbdoc.prg \
@@ -521,15 +494,11 @@ $(HBDOC_EXE) : \
    $(HBDOC_DIR)\genhpc.prg \
    $(HBDOC_DIR)\genasc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c -o $(HBDOC_EXE) /link $(LIBS2)
-   -del hbdoc.obj
-   -del genos2.obj
-   -del gentrf.obj
-   -del genng.obj
-   -del genhtm.obj
-   -del genrtf.obj
-   -del genhpc.obj
-   -del genasc.obj
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c -o $(HBDOC_EXE) /link $(LIBS2)
+
+#
+# HARBOUR.EXE rules
+#
 
 $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\harbour.c \
@@ -554,29 +523,8 @@ $(HARBOUR_EXE) : \
    $(PP_DIR)\ppcomp.c \
    $(PP_DIR)\pptable.c
    command /c echo. > include\unistd.h
-   $(CC) $(CFLAGS) -w $** -o $(HARBOUR_EXE)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE)
    command /c del include\unistd.h
-   -del harbour.obj
-   -del harboury.obj
-   -del harbourl.obj
-   -del hbgenerr.obj
-   -del cmdcheck.obj
-   -del hbfunchk.obj
-   -del hbpcode.obj
-   -del hbusage.obj
-   -del reserved.obj
-   -del genobj32.obj
-   -del genc.obj
-   -del genhrb.obj
-   -del genrc.obj
-   -del genjava.obj
-   -del genpas.obj
-   -del expropt.obj
-   -del hbfsapi.obj
-   -del hbstr.obj
-   -del ppcore.obj
-   -del ppcomp.obj
-   -del pptable.obj
 
 #
 # Library dependencies and build rules
@@ -619,24 +567,24 @@ $(VM_LIB)     : $(VM_LIB_OBJS)
    lib /out:$@ $**
 
 #
-# Compiler dependencies
+# HARBOUR.EXE dependencies
 #
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
-   bison -d -v $(COMPILER_DIR)\harbour.y -o$(OBJ_DIR)\harboury.c
+   bison -d $(COMPILER_DIR)\harbour.y -o$(OBJ_DIR)\harboury.c
 
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
-   flex -iB8 -o$(OBJ_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
+   flex -i -8 -o$(OBJ_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
 # MACRO.LIB dependencies
 #
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-   bison -d -v -p hb_comp -o$(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.y
+   bison -d -p hb_comp -o$(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.y
 
 $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
-   flex -iB8 -Phb_comp -o$(OBJ_DIR)\macrol.c $(MACRO_DIR)\macro.l
+   flex -i -8 -Phb_comp -o$(OBJ_DIR)\macrol.c $(MACRO_DIR)\macro.l
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
@@ -770,7 +718,9 @@ $(OBJ_DIR)\hvm.obj      : $(VM_DIR)\hvm.c
 $(OBJ_DIR)\initexit.obj : $(VM_DIR)\initexit.c
 $(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
 $(OBJ_DIR)\itemapi.obj  : $(VM_DIR)\itemapi.c
-$(OBJ_DIR)\main.obj     : $(VM_DIR)\main.c
+$(OBJ_DIR)\maindll.obj  : $(VM_DIR)\maindll.c
+$(OBJ_DIR)\mainstd.obj  : $(VM_DIR)\mainstd.c
+$(OBJ_DIR)\mainwin.obj  : $(VM_DIR)\mainwin.c
 $(OBJ_DIR)\memvars.obj  : $(VM_DIR)\memvars.c
 $(OBJ_DIR)\pcount.obj   : $(VM_DIR)\pcount.c
 $(OBJ_DIR)\proc.obj     : $(VM_DIR)\proc.c

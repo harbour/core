@@ -28,7 +28,6 @@ if "%1" == "CLEAN" goto CLEAN
    if exist bin\b32\*.tds del bin\b32\*.tds
    if exist lib\b32\*.lib del lib\b32\*.lib
    if exist lib\b32\*.bak del lib\b32\*.bak
-   if exist obj\b32\*.out del obj\b32\*.out
    if exist obj\b32\*.obj del obj\b32\*.obj
    if exist obj\b32\*.c   del obj\b32\*.c
    if exist obj\b32\*.h   del obj\b32\*.h

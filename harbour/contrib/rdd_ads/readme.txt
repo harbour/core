@@ -10,7 +10,7 @@
    You need also to create ace32.lib with the help of implib.exe:
      implib ace32.lib ace32.dll
 
-   Then build rddads.lib using make_rdd.bat .
+   Then build rddads.lib using make_b32.bat or make_vc.bat.
 
    For building executables don't forget to include the ace32.lib and
    rddads.lib to the make file or link script.

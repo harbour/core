@@ -26,7 +26,6 @@ if "%1" == "CLEAN" goto CLEAN
 
    if exist bin\vc\*.exe del bin\vc\*.exe
    if exist lib\vc\*.lib del lib\vc\*.lib
-   if exist obj\vc\*.out del obj\vc\*.out
    if exist obj\vc\*.obj del obj\vc\*.obj
    if exist obj\vc\*.c   del obj\vc\*.c
    if exist obj\vc\*.h   del obj\vc\*.h
