@@ -1,3 +1,19 @@
+2000-06-19 23:05 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   * utils/hbdoc/genhtm.prg
+     utils/hbdoc/genchm.prg
+     utils/hbdoc/html.pg
+     utils/hbdoc/genng.prg  
+   * utils/hbdoc/genos2.prg
+     utils/hbdoc/os2.prg
+     * Small Fixes
+   *doc/en/string.txt
+        + Transform() function documentation
+   *doc/en/array.txt
+    doc/en/browse.txt
+    doc/en/lang.txt
+    doc/en/nation.txt
+       *Changed the case of Category section t
+
 20000619-23:08 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/lang/msgit.c
