@@ -526,10 +526,10 @@ void hb_arrayCopy( PITEM pSrcArray, PITEM pDstArray, ULONG ulStart,
 
 PITEM hb_arrayClone( PITEM pSrcArray )
 {
-  PITEM pDstArray = hb_itemNew( 0 );
+   PITEM pDstArray = hb_itemNew( 0 );
 
-  if ( IS_ARRAY( pSrcArray ) )
-    {
+   if ( IS_ARRAY( pSrcArray ) )
+   {
       PBASEARRAY pSrcBaseArray, pDstBaseArray;
       ULONG      ulCount, ulSrcLen  = hb_arrayLen( pSrcArray );
 
@@ -540,24 +540,29 @@ PITEM hb_arrayClone( PITEM pSrcArray )
       pDstBaseArray->wClass = pSrcBaseArray->wClass;
 
       for ( ulCount = 0; ulCount < ulSrcLen; ulCount ++ )
-	{
-      PITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
+      {
+         PITEM pSrcItem = pSrcBaseArray->pItems + ulCount;
 
-	  if ( pSrcItem->wType == IT_ARRAY )
-            hb_itemArrayPut( pDstArray, ulCount + 1, hb_arrayClone( pSrcItem ) );
-	  else
+         if ( pSrcItem->wType == IT_ARRAY )
+         {
+            PITEM pClone = hb_arrayClone( pSrcItem );
+
+            hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
+            hb_itemRelease( pClone );
+         }
+         else
             hb_itemArrayPut( pDstArray, ulCount + 1, pSrcItem );
-    }
+      }
       return pDstArray;
-    }
-  else
-    {
+   }
+   else
+   {
       PITEM pError = _errNew();
       _errPutDescription( pError, szArgumentError );
       _errLaunch( pError );
       _errRelease( pError );
-    }
-  return pDstArray;
+   }
+   return pDstArray;
 }
 
 /*
