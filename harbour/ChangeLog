@@ -1,3 +1,7 @@
+19990603-15:25 CET Eddie Runia
+  * source/compiler/harbour.y
+    <func>()[<index>] syntax added
+
 19990603-13:10 CET Eddie Runia
   * source/rtl/classes.c
     small optimalization
@@ -5,7 +9,7 @@
 19990603-11:40 CET Eddie Runia
   * source/compiler/harbour.y
     <obj>:<meth>[<index>] := <value> syntax added
-  * build32
+  * build32.bat
     runner build from batch file
 
 19990603-00:00 PST Ron Pinkas

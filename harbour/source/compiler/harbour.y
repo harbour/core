@@ -493,7 +493,7 @@ Statement  : ExecFlow Crlf                             {}
 
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
-           | FunCall ArrayIndex '=' Expression Crlf    { Do( $1 ); GenPCode1( _ARRAYPUT ); }
+           | FunArrayCall '=' Expression Crlf          { GenPCode1( _ARRAYPUT ); }
            | IdSend IDENTIFIER '=' { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
            | IdSend IDENTIFIER INASSIGN { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
            | ObjectData ArrayIndex '=' Expression Crlf    {}
@@ -543,7 +543,7 @@ MethParams : /* empty */                       { $$ = 0; }
 ObjectData : IdSend IDENTIFIER                     { Message( $2 ); Function( 0 ); }
            | VarId ArrayIndex ':' IDENTIFIER       { Message( $4 ); Function( 0 ); }
            | ObjFunCall IDENTIFIER                 { Message( $2 ); Function( 0 ); }
-           | FunCall ArrayIndex ':' IDENTIFIER     { Function( $1 ); Message( $4 ); Function( 0 ); }
+           | ObjFunArray  ':' IDENTIFIER           { Message( $3 ); Function( 0 ); }
            | ObjectMethod ':' IDENTIFIER           { Message( $3 ); Function( 0 ); }
            | ObjectData   ':' IDENTIFIER           { Message( $3 ); Function( 0 ); }
            | ObjectData ArrayIndex ':' IDENTIFIER  { Message( $4 ); Function( 0 ); }
@@ -552,7 +552,7 @@ ObjectData : IdSend IDENTIFIER                     { Message( $2 ); Function( 0 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
            | VarId ArrayIndex ':' MethCall         { Function( $4 ); }
            | ObjFunCall MethCall                   { Function( $2 ); }
-           | FunCall ArrayIndex ':' MethCall       { Function( $4 ); }
+           | ObjFunArray  ':' MethCall             { Function( $3 ); }
            | ObjectData   ':' MethCall             { Function( $3 ); }
            | ObjectData ArrayIndex ':' MethCall    { Function( $4 ); }
            | ObjectMethod ':' MethCall             { Function( $3 ); }
@@ -562,6 +562,12 @@ IdSend     : IDENTIFIER ':'                       { PushId( $1 ); $$ = $1; }
            ;
 
 ObjFunCall : FunCall ':'                      { Function( $1 ); $$ = $1; }
+           ;
+
+FunArrayCall : FunCall { Function( $1 ); } ArrayIndex
+           ;
+
+ObjFunArray : FunArrayCall ':' { GenPCode1( _ARRAYAT ); }
            ;
 
 Expression : NIL                              { PushNil(); }
@@ -611,8 +617,8 @@ VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? I
            | IncDec IDENTIFIER %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); }
            | VarId ArrayIndex IncDec %prec POST { DupPCode( $1 ); GenPCode1( _ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $3 ? Dec(): Inc(); }
            | IncDec VarId ArrayIndex %prec PRE  { DupPCode( $2 ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
-           | FunCall ArrayIndex IncDec %prec POST {}
-           | IncDec FunCall ArrayIndex %prec PRE  {}
+           | FunArrayCall IncDec %prec POST {}
+           | IncDec FunArrayCall %prec PRE  {}
            | ObjectData IncDec %prec POST         {}
            | IncDec ObjectData %prec PRE          {}
            | ObjectData ArrayIndex IncDec %prec POST {}
@@ -627,7 +633,7 @@ IncDec     : INC                             { $$ = 1; }
 
 Variable   : VarId                     {}
            | VarId ArrayIndex          { GenPCode1( _ARRAYAT ); }
-           | FunCall ArrayIndex        { GenPCode1( _ARRAYAT ); }
+           | FunArrayCall              { GenPCode1( _ARRAYAT ); }
            | ObjectData                {}
            | ObjectData ArrayIndex     { GenPCode1( _ARRAYAT ); }
            | ObjectMethod ArrayIndex   { GenPCode1( _ARRAYAT ); }
@@ -658,13 +664,13 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | VarId ArrayIndex DIVEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
            | VarId ArrayIndex EXPEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
            | VarId ArrayIndex MODEQ    { DupPCode( $1 ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
-           | FunCall    ArrayIndex INASSIGN Expression      {}
-           | FunCall    ArrayIndex PLUSEQ   Expression      {}
-           | FunCall    ArrayIndex MINUSEQ  Expression      {}
-           | FunCall    ArrayIndex MULTEQ   Expression      {}
-           | FunCall    ArrayIndex DIVEQ    Expression      {}
-           | FunCall    ArrayIndex EXPEQ    Expression      {}
-           | FunCall    ArrayIndex MODEQ    Expression      {}
+           | FunArrayCall  INASSIGN Expression      {}
+           | FunArrayCall  PLUSEQ   Expression      {}
+           | FunArrayCall  MINUSEQ  Expression      {}
+           | FunArrayCall  MULTEQ   Expression      {}
+           | FunArrayCall  DIVEQ    Expression      {}
+           | FunArrayCall  EXPEQ    Expression      {}
+           | FunArrayCall  MODEQ    Expression      {}
            | ObjectData PLUSEQ   Expression                 {}
            | ObjectData MINUSEQ  Expression                 {}
            | ObjectData MULTEQ   Expression                 {}
