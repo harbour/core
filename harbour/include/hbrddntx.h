@@ -108,6 +108,13 @@ typedef struct _KEYINFO
 
 typedef KEYINFO * LPKEYINFO;
 
+typedef struct _TREE_STACK
+{
+   LONG     page;
+   SHORT    ikey;
+}  TREE_STACK;
+
+typedef TREE_STACK * LPTREESTACK;
 
 typedef struct HB_PAGEINFO_STRU
 {
@@ -150,10 +157,13 @@ typedef struct _TAGINFO
    USHORT     KeyLength;
    USHORT     KeyDec;
    USHORT     MaxKeys;
-   LONG       blockPrev;
-   LONG       blockNext;
-   USHORT     keyPrev;
-   USHORT     keyNext;
+   // LONG       blockPrev;
+   // LONG       blockNext;
+   // USHORT     keyPrev;
+   // USHORT     keyNext;
+   LPTREESTACK stack;
+   USHORT     stackDepth;
+   USHORT     stackLevel;
    ULONG      keyCount;
    LPKEYINFO  CurKeyInfo;
    LPPAGEINFO RootPage;
