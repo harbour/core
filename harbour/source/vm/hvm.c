@@ -3254,7 +3254,11 @@ void hb_vmSend( USHORT uiParams )
 
       if( HB_IS_BLOCK( pSelf ) )
       {
-         if( strncmp( pSym->szName, "EVAL", 4 ) == 0 )
+         if( pSym == &( hb_symEval ) )
+         {
+            pFunc = pSym->pFunPtr;                 /* __EVAL method = function   */
+         }
+         else if( strncmp( pSym->szName, "EVAL", 4 ) == 0 )
          {
             pSym = &hb_symEval;
             pFunc = pSym->pFunPtr;                 /* __EVAL method = function */

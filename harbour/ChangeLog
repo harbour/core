@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-01-28 20:43 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/mysql
+     + Added CLEAN to make_b32.bat
+
+2002-01-28 17:00 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/vm/hvm.c
     * New define (HB_GUI) to avoid the call to hb_InkeyPoll() on GUI apps.
 
 2002-01-28 12:36 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
