@@ -69,37 +69,20 @@ BOOL hb_strEmpty( const char * szText, ULONG ulLen )
    return TRUE;
 }
 
+/* warning: It is not case sensitive */
+
 int hb_strnicmp( const char * s1, const char * s2, ULONG count )
 {
-   int rc = 0;
-   ULONG l1;
-   ULONG l2;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
 
-   l1 = strlen( s1 );
-   l2 = strlen( s2 );
-   if( l1 > count )
-      l1 = count;
-   count = ( l1 < l2 ? l1 : l2 );
-
-   while( rc == 0 && count > 0 )
+   while( count > 0 &&
+          *s1 != '\0' &&
+          toupper( *s1 ) == toupper( *s2 ) )
    {
-      char c1 = toupper( *s1 );
-      char c2 = toupper( *s2 );
-
       s1++;
       s2++;
-
-      if( c1 != c2 )
-         rc = ( c1 < c2 ? -1 : 1 );
-
       count--;
    }
 
-   if( rc == 0 && l1 != l2 )
-      rc = ( l1 < l2 ? -1 : 1 );
-
-   return rc;
+   return ( count == 0 ) ? 0 : toupper( *s1 ) - toupper( *s2 );
 }
-
