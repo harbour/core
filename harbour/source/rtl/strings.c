@@ -265,7 +265,12 @@ HARBOUR HB_PADR( void )
          hb_xfree(szResult);
       }
       else
-         hb_retclen(szText, (long)hb_parclen(1) );
+      {
+         if( lLen < 0 )
+            lLen = 0;
+
+         hb_retclen(szText, lLen);
+      }
    }
    else
       hb_retc("");
@@ -306,7 +311,12 @@ HARBOUR HB_PADL( void )
          hb_xfree(szResult);
       }
       else
-         hb_retclen(szText, (long)hb_parclen(1) );
+      {
+         if( lLen < 0 )
+            lLen = 0;
+
+         hb_retclen(szText, lLen);
+      }
    }
    else
       hb_retc("");
@@ -344,7 +354,12 @@ HARBOUR HB_PADC( void )
          hb_xfree(szResult);
       }
       else
-         hb_retclen(szText, (long)hb_parclen(1) );
+      {
+         if( lLen < 0 )
+            lLen = 0;
+
+         hb_retclen(szText, lLen);
+      }
    }
    else
       hb_retc("");

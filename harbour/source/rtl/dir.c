@@ -143,7 +143,7 @@ HARBOUR HB_DIRECTORY( void )
 
    if( arg1_it )
    {
-      strcpy(string, _parc(1));
+      strcpy(string, hb_parc(1));
       pos = strrchr(string,OS_PATH_DELIMITER);
       if( pos )
       {

@@ -2627,7 +2627,9 @@ PFUNCTION KillFunction( PFUNCTION pFunc )
 
     OurFree( pVar->szName );
     if( pVar->szAlias )
+    {
       OurFree( pVar->szAlias );
+    }
     OurFree( pVar );
   }
 
@@ -3099,15 +3101,23 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
          pFree = pStackValType;
 
          if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
+         {
       	    GenWarning( WARN_ASSIGN_SUSPECTED, szVarName, NULL );
+         }
          else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
+         {
       	    GenWarning( WARN_ASSIGN_TYPE, szVarName, NULL );
+         }
 
          if( pVarType )
+         {
             OurFree( pVarType );
+         }
 
          if( pFree )
+         {
             OurFree( pFree );
+         }
       }
    }
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
@@ -3124,15 +3134,23 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
          pFree = pStackValType;
 
          if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
+         {
       	    GenWarning( WARN_ASSIGN_SUSPECTED, szVarName, NULL );
+         }
          else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
+         {
       	    GenWarning( WARN_ASSIGN_TYPE, szVarName, NULL );
+         }
 
          if( pVarType )
+         {
             OurFree( pVarType );
+         }
 
          if( pFree )
+         {
             OurFree( pFree );
+         }
       }
    }
    else

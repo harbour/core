@@ -1,17 +1,13 @@
-19990618-04:35 PST Ron Pinkas <Ron@Profit-Master.com>
-  * hberrors.h
-    +added define WARN_ASSIGN_TYPE and WARN_ASSIGN_SUSPECTED
-
-  * compiler.h
-    +added struct STACK_VAL_TYPE *PSTAC_VAL_TYPE
-
-  * harbour.l
-    +added support for tokens AS NUMERIC, AS CHARACTER, AS LOGICAL, AS DATE, AS ARRAY, AS OBJECT
-    *modified iLine to initialize to 0 rather than 1
-
-  * harbour.y
-    +added support for extended variable declaration with strong typing
-    +added logic to support warnings on incompatible and suspecious variable assignments
+19990618-17:00 CET Victor Szel <info@szelvesz.hu>
+  * Fixed some GCC warnings in:
+    source/compiler/harbour.y
+  * Some left _parc()/_parni()/_parnl() prefixed with hb_
+    source/rtl/dir.c
+    source/rtl/files.c
+  * Fixed PADR(), PADL(), PADC() when called with a width
+    less than the length of the string.
+    Submitted by Matthew Hamilton <MHamilton@bunge.com.au>
+    source/rtl/strings.c
 
 19990618-13:40 Alexander Kresin
  updated:
