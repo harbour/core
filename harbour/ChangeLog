@@ -1,3 +1,15 @@
+2001-06-20 14:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * include/hbvm.h
+  * source/debug/debugger.prg
+  * source/rtl/inkey.c
+  * source/rtl/set.c
+  * source/vm/hvm.c
+  * tests/inkeytst.prg
+    * Integrate the ALTD() function with SET( _SET_DEBUG ).
+      Start at integrating the debugger with the Alt+D key.
+      Cleanup for dealing with the Alt+C key.
+
 2001-06-20 12:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc\license.txt

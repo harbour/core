@@ -75,20 +75,18 @@ static s_lExit := .F.
 memvar __DbgStatics
 
 procedure AltD( nAction )
-   static s_lEnabled := .t.
-
    do case
       case nAction == nil
-           if s_lEnabled
+           if SET( _SET_DEBUG )
               s_lExit := .f.
               __dbgEntry( ProcLine( 2 ) )
            endif
 
       case nAction == ALTD_DISABLE
-           s_lEnabled := .f.
+           SET( _SET_DEBUG, .F. )
 
       case nAction == ALTD_ENABLE
-           s_lEnabled := .t.
+           SET( _SET_DEBUG, .T. )
    endcase
 
 return

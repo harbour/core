@@ -15,6 +15,8 @@
 
 PROCEDURE main( cSkip, cRaw )
 
+ALTD(0)
+
 IF EMPTY( cSkip )
 
    TEST1()
@@ -213,9 +215,13 @@ LOCAL nKey, nMask, cText
 
    IF ! EMPTY( cSkip )
       IF UPPER( cSkip ) == "BREAK"
-         SETCANCEL( .T. )
+         SETCANCEL(.T.)
+         ALTD(1)
+         tone( 440, 6 )
       ELSE
-         SETCANCEL( .F. )
+         SETCANCEL(.F.)
+         ALTD(0)
+         tone( 660, 6 )
       END IF
    END IF
 

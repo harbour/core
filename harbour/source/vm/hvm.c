@@ -4321,6 +4321,12 @@ void hb_vmRequestCancel( void )
    }
 }
 
+void hb_vmRequestDebug( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestCancel()"));
+   /* TODO: Cause the debugger to be invoked */
+}
+
 /* $Doc$
  * $FuncName$     <aStat> __vmVarSList()
  * $Description$  Return the statics array. Please aClone before assignments

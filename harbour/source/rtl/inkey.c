@@ -208,11 +208,22 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       switch( ch )
       {
          case HB_BREAK_FLAG:        /* Check for Ctrl+Break */
-            if( ! hb_set.HB_SET_CANCEL ) /* If cancel is disabled, */
-               ch = 0;                   /* then ignore the keystroke */
-                                    /* In either case, handle like Alt+C */
-         case K_ALT_C:              /* Alt+C was pressed */
-            hb_vmRequestCancel();
+            if( !hb_set.HB_SET_CANCEL ) ch = 0; /* Ignore if cancel disabled */
+         case HB_K_ALT_C:           /* Check for extended Alt+C */
+         case K_ALT_C:              /* Check for normal Alt+C */
+            if( hb_set.HB_SET_CANCEL )
+            {
+               ch = 3;              /* Pretend it's a Ctrl+C */
+               hb_vmRequestCancel();/* Request cancellation */
+            }
+            break;
+         case HB_K_ALT_D:           /* Check for extended Alt+D */
+         case K_ALT_D:              /* Check for normal Alt+D */
+            if( hb_set.HB_SET_DEBUG )
+            {
+               ch = 0;              /* Make the keystroke disappear */
+               hb_vmRequestDebug(); /* Request the debugger */
+            }
       }
 
       hb_inkeyPut( ch );

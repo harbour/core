@@ -69,11 +69,12 @@ extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* st
 extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 
 /* Harbour virtual machine escaping API */
-extern void    hb_vmRequestQuit( void );
-extern void    hb_vmRequestEndProc( void );
-extern void    hb_vmRequestCancel( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
+extern void    hb_vmRequestCancel( void );
+extern void    hb_vmRequestDebug( void );
+extern void    hb_vmRequestEndProc( void );
 extern USHORT  hb_vmRequestQuery( void );
+extern void    hb_vmRequestQuit( void );
 
 /* Return values of hb_vmRequestQuery() */
 #define HB_QUIT_REQUESTED       1   /* immediately quit the application */
