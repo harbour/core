@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Harbour simple hash table implementation
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999-2002 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -5,11 +5,12 @@
 ROOT = ../../
 
 C_SOURCES=\
+	hbfhnd.c \
 	hbfsapi.c \
+	hbhash.c \
 	hbstr.c \
 	hbtrace.c \
 	hbver.c \
-	hash.c \
 	reserved.c \
 	expropt1.c \
 	expropt2.c \

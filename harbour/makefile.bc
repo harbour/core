@@ -6,6 +6,12 @@
 # Makefile for Harbour Project for Borland C/C++ 3.x, 4.x, 5.x compilers
 #
 
+# ---------------------------------------------------------------
+# If you need to set additional compiler/linker options use the 
+# environment variables below, but please DON'T MODIFY THIS FILE 
+# for this purpose.
+# ---------------------------------------------------------------
+
 #
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
@@ -59,7 +65,7 @@ CC = bcc
 AS = tasm
 
 # Borland C/C++ (DOS 16 bits)
-CFLAGS = -mh $(CFLAGS) -v -y
+CFLAGS = -mh $(CFLAGS)
 
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
@@ -497,12 +503,13 @@ DEBUG_LIB_OBJS = \
 #
 
 COMMON_LIB_OBJS = \
+   $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbgete.obj \
+   $(OBJ_DIR)\hbhash.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
-   $(OBJ_DIR)\hash.obj \
    $(OBJ_DIR)\expropt1.obj \
    $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\reserved.obj
@@ -737,11 +744,19 @@ $(GTWIN_LIB)  : $(GTWIN_LIB_OBJS)
 # COMMON.LIB dependencies
 #
 
+$(OBJ_DIR)\hbfhnd.obj : $(COMMON_DIR)\hbfhnd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hbgete.obj : $(COMMON_DIR)\hbgete.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hbhash.obj : $(COMMON_DIR)\hbhash.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
@@ -754,10 +769,6 @@ $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\hbver.obj : $(COMMON_DIR)\hbver.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\hash.obj : $(COMMON_DIR)\hash.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(COMMON_LIB) $(ARFLAGS) -+$@,,
 
@@ -1137,22 +1148,6 @@ $(OBJ_DIR)\pvalue.obj : $(VM_DIR)\pvalue.c
 
 $(OBJ_DIR)\runner.obj : $(VM_DIR)\runner.c
    $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\borinit.obj : $(VM_DIR)\borinit.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\borsym.obj : $(VM_DIR)\borsym.asm
-   $(AS) -ml $**, $@
-   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\startup.obj : $(VM_DIR)\startup.asm
-   $(AS) -ml $**, $@
-   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
-   $(AS) -ml $**, $@
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
 #
@@ -2610,7 +2605,7 @@ $(OBJ_DIR)\genpdf1.obj : $(OBJ_DIR)\genpdf1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\pdfhbdoc.obj : $(HBPDF_DIR)\pdfhbdoc.c
-   $(CC) $(CLIBFLAGS) -v -y -I$(HBPDF_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -I$(HBPDF_DIR) -o$@ $**
 !endif
 
 $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)

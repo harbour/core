@@ -1,3 +1,63 @@
+/*
+ * $Id$
+ */
+
+/* Use this format for the entry headers:
+   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
+   For example:
+   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
+*/
+
+2001-12-11 00:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   + ChangeLog
+     + Added CVS ID
+     + Added comment about the standard entry header.
+
+   - source/vm/borinit.c
+   - source/vm/borsym.asm
+   - source/vm/startup.asm
+   - source/vm/symbols.asm
+   * source/vm/hvm.c
+   * makefile.bc
+   * makefile.vc
+     ! Removed assembler parts. TASM is no longer required to 
+       build Harbour.
+
+   - source/common/hash.c
+   + source/common/hbhash.c
+   * source/common/Makefile
+   * makefile.vc
+   * makefile.bc
+     * File hash.c renamed to hbhash.c.
+
+   + source/common/hbfhnd.c
+   * source/common/hbfsapi.c
+   * source/common/Makefile
+   * makefile.vc
+   * makefile.bc
+     ! File handle tweaking functions moved to a separate 
+       source file.
+
+   * source/common/hbgete.c
+     * Some tweaks.
+
+   * source/vm/hvm.c
+     - Removed some line not needed anymore, related to 
+       Windows exception handler.
+
+   * source/vm/estack.c
+     - Removed a faulty #define.
+
+   * makefile.bc
+   * makefile.vc
+     + Added note to not modify these files to add 
+       optional command line switches.
+
+   * makefile.bc
+     - Removed explicit debug switches from on PDF 
+       related file and from the 16 bit branch.
+
 2001-12-10 19:55 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/common/hbgete.c
      * some fixes

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * environment variables access
  *
- * Copyright 2001 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001-2002 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,9 +50,8 @@
  *
  */
 
-/* Notice that this code is needed as ANSI C getenv() crashes
- * so badly when used from a Windows DLL
- */
+/* NOTE: Notice that this code is needed as ANSI C getenv() crashes
+         so badly when used from a Windows DLL. */
 
 #define HB_OS_WIN_32_USED
 
@@ -61,21 +60,30 @@
 char * hb_getenv( const char * name )
 {
    char * pszBuffer = ( char * ) hb_xgrab( 255 );
-   char * pszTemp;
 
-   #ifdef HB_OS_WIN_32
-      DWORD nSize;
-      GetEnvironmentVariable( name, pszBuffer,
-                            ( nSize = GetEnvironmentVariable( name, pszBuffer, 0 ) ) );
+#ifdef HB_OS_WIN_32
+
+   {
+      DWORD nSize = GetEnvironmentVariable( name, pszBuffer, 0 );
+
       if( nSize == 0 )
          pszBuffer[ 0 ] = '\0';
-   #else
-      pszTemp = getenv( name );
-      if( pszTemp != NULL )
-         strcpy( pszBuffer, pszTemp );
       else
+         GetEnvironmentVariable( name, pszBuffer, nSize );
+   }
+
+#else
+
+   {
+      char * pszTemp = getenv( name );
+
+      if( pszTemp == NULL )
          pszBuffer[ 0 ] = '\0';
-   #endif
+      else
+         strcpy( pszBuffer, pszTemp );
+   }
+
+#endif
 
    return pszBuffer;
 }

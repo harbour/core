@@ -51,7 +51,6 @@
  */
 
 #if defined(HARBOUR_OBJ_GENERATION) || defined(HB_INCLUDE_WINEXCHANDLER)
-   #define HB_OS_WIN_32
    #define HB_OS_WIN_32_USED
 #endif
 
@@ -62,14 +61,16 @@
 #include "hbapierr.h"
 
 /* ------------------------------- */
+
 #if !defined( STACK_INITHB_ITEMS )
-#define STACK_INITHB_ITEMS      200
+   #define STACK_INITHB_ITEMS      200
 #endif
 #if !defined( STACK_EXPANDHB_ITEMS )
-#define STACK_EXPANDHB_ITEMS    20
+   #define STACK_EXPANDHB_ITEMS    20
 #endif
 
 HB_STACK hb_stack;
+
 /* ------------------------------- */
 
 void hb_stackPop( void )

@@ -6,6 +6,12 @@
 # Makefile for Harbour Project for Microsoft Visual C (32 bit)
 #
 
+# ---------------------------------------------------------------
+# If you need to set additional compiler/linker options use the 
+# environment variables below, but please DON'T MODIFY THIS FILE 
+# for this purpose.
+# ---------------------------------------------------------------
+
 #
 # NOTE: You can use these envvars to configure the make process:
 #       (note that these are all optional)
@@ -599,11 +605,12 @@ DEBUG_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 COMMON_LIB_OBJS = \
+   $(OBJ_DIR)\hbhash.obj \
+   $(OBJ_DIR)\hbfhnd.obj \
    $(OBJ_DIR)\hbfsapi.obj \
    $(OBJ_DIR)\hbstr.obj \
    $(OBJ_DIR)\hbtrace.obj \
    $(OBJ_DIR)\hbver.obj \
-   $(OBJ_DIR)\hash.obj \
    $(OBJ_DIR)\expropt1.obj \
    $(OBJ_DIR)\expropt2.obj \
    $(OBJ_DIR)\reserved.obj
@@ -611,11 +618,6 @@ COMMON_LIB_OBJS = \
 #
 # VM.LIB rules
 #
-
-{$(VM_DIR)}.asm{$(OBJ_DIR)}.obj:
-   rem lib /extract:$(OBJ_DIR)\symbols.obj /out:$(OBJ_DIR)\symbols.obj \harb35\lib\vm.lib
-   rem $(AS) $< $@ nul nul
-   $(AS) /c /Fo$@ $<
 
 {$(VM_DIR)}.c{$(OBJ_DIR)}.obj:
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<

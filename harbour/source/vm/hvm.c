@@ -66,10 +66,6 @@
  *
  */
 
-#if defined(HARBOUR_OBJ_GENERATION) || defined(HB_INCLUDE_WINEXCHANDLER)
-   #define HB_OS_WIN_32_USED
-#endif
-
 #ifndef __MPW__
    #include <malloc.h>
 #endif
@@ -198,36 +194,6 @@ static void    hb_vmDoInitFunctions( void );      /* executes all defined PRGs I
 static void    hb_vmDoExitFunctions( void );      /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
-#ifdef HARBOUR_OBJ_GENERATION
-
-/* TODO: Remove these (WORD/DWORD) when the compiler is cleaned up from them. */
-#if defined(__IBMCPP__)
-   #undef WORD                            /* 2 bytes unsigned */
-   typedef unsigned short int WORD;
-#else
-   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
-      #undef WORD                            /* 2 bytes unsigned */
-      typedef unsigned short int WORD;
-   #endif
-#endif
-
-static void hb_vmProcessObjSymbols( void ); /* process Harbour generated OBJ symbols */
-extern void hb_vmProcessBorlandInitSegment( void ); /* process Borland _INIT_ segment functions when not using Borland startup */
-extern void hb_startup( void );  /* Harbour startup when not using a C compiler startup */
-
-typedef struct
-{
-   WORD     wSymbols;             /* module local symbol table symbols amount */
-   PHB_SYMB pSymbols;             /* module local symbol table address */
-} OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
-
-#ifdef __cplusplus
-extern "C" POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
-#else
-extern POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
-#endif
-#endif
-
 extern void * hb_mthRequested( void ); /* profiler from classes.c */
 extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
 
@@ -310,10 +276,6 @@ void hb_vmInit( BOOL bStartMainProc )
    hb_setInitialize();        /* initialize Sets */
    hb_conInit();    /* initialize Console */
    hb_memvarsInit();
-#ifdef HARBOUR_OBJ_GENERATION
-   hb_vmProcessObjSymbols();  /* initialize Harbour generated OBJs symbols */
-   hb_vmProcessBorlandInitSegment(); /* initialize Borland _INIT_ segment if Borland OBJs linked */
-#endif
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
    /* Set the language to the default */
@@ -4315,19 +4277,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
    PSYMBOLS pNewSymbols;
    USHORT ui;
 
-#ifdef HARBOUR_OBJ_GENERATION
-   static BOOL s_bObjChecked = FALSE;
-#endif
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessSymbols(%p, %hu)", pModuleSymbols, uiModuleSymbols));
-
-#ifdef HARBOUR_OBJ_GENERATION
-   if( ! s_bObjChecked )
-   {
-      s_bObjChecked = TRUE;
-      hb_vmProcessObjSymbols();   /* to asure Harbour OBJ symbols are processed first */
-   }
-#endif
 
    pNewSymbols = ( PSYMBOLS ) hb_xgrab( sizeof( SYMBOLS ) );
    pNewSymbols->pModuleSymbols = pModuleSymbols;
@@ -4361,28 +4311,6 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
          hb_dynsymNew( pModuleSymbols + ui );
    }
 }
-
-#ifdef HARBOUR_OBJ_GENERATION
-static void hb_vmProcessObjSymbols( void )
-{
-   static BOOL s_bDone = FALSE;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessObjSymbols()"));
-
-   if( ! s_bDone )
-   {
-      POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &hb_firstsymbol;
-
-      while( pObjSymbols < ( POBJSYMBOLS ) ( &hb_lastsymbol - 1 ) )
-      {
-         hb_vmProcessSymbols( pObjSymbols->pSymbols, pObjSymbols->wSymbols );
-         pObjSymbols++;
-      }
-
-      s_bDone = TRUE;
-   }
-}
-#endif
 
 static void hb_vmReleaseLocalSymbols( void )
 {
@@ -4516,16 +4444,13 @@ static void hb_vmDoInitFunctions( void )
 
 /* NOTE: We should make sure that these get linked.
          Don't make this function static, because it's not called from
-         this file. */
+         this file. [vszakats] */
+
 void hb_vmForceLink( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForceLink()"));
 
    HB_FUNCNAME( SYSINIT )();
-
-   #ifdef HARBOUR_OBJ_GENERATION
-      hb_startup();
-   #endif
 }
 
 /* ----------------------------- */
