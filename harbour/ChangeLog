@@ -1,3 +1,8 @@
+20000514-19:17 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.y
+    ! Additional Correction so '@' handled correctly on any var in a Function Declaration.
+
 20000514-18:57 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.c

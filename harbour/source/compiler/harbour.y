@@ -316,7 +316,7 @@ DecList    :                  {}
 FormalList : IdentName AsType                    { hb_compVariableAdd( $1, hb_comp_cVarType ); }
 	   | '@' IdentName AsType                { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            | FormalList ',' IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType ); }
-           | FormalList ',' '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType ); }
+           | FormalList ',' '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_BYREF ); }
            ;
 
 OptList    : ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
