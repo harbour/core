@@ -137,7 +137,7 @@ int hb_arrayGetType( PITEM pArray, ULONG ulIndex )
 {
   if( IS_ARRAY( pArray ) )
     {
-      if( ulIndex <= ( unsigned ) ArrayLen( pArray ) )
+      if( ulIndex <= ( unsigned ) hb_arrayLen( pArray ) )
 	{
 	  PITEM pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
 	  return pItem->wType;
@@ -399,7 +399,7 @@ int hb_arrayScan( PITEM pArray, PITEM pValue, ULONG ulStart, ULONG ulCount )
 		      break;
 
 		    case IT_STRING :
-		      iRet = ( hb_itemStrCmp( pValue, pItem ) == 0 );
+              iRet = ( hb_itemStrCmp( pValue, pItem, FALSE ) == 0 );
 		      break;
 		    }
 		}
@@ -524,7 +524,7 @@ void hb_arrayCopy( PITEM pSrcArray, PITEM pDstArray, ULONG ulStart,
 
 PITEM hb_arrayClone( PITEM pSrcArray )
 {
-  PITEM pDstArray = hb_newItem( 0 );
+  PITEM pDstArray = hb_itemNew( 0 );
 
   if ( IS_ARRAY( pSrcArray ) )
     {
