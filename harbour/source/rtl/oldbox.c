@@ -64,11 +64,11 @@ HB_FUNC( __BOX )
    PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
 
    if( pTop && pLeft && pBottom && pRight )
-         hb_gtBox( hb_itemGetNI( pTop ),
-                   hb_itemGetNI( pLeft), 
-                   hb_itemGetNI( pBottom ), 
-                   hb_itemGetNI( pRight ),
-                   ( BYTE * ) ( ISCHAR( 5 ) ? hb_parc( 5 ) : " " ) );
+      hb_gtBox( hb_itemGetNI( pTop ),
+                hb_itemGetNI( pLeft), 
+                hb_itemGetNI( pBottom ), 
+                hb_itemGetNI( pRight ),
+                ( BYTE * ) ( ISCHAR( 5 ) ? hb_parc( 5 ) : " " ) );
 }
 
 HB_FUNC( __BOXD )
@@ -79,10 +79,10 @@ HB_FUNC( __BOXD )
    PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
 
    if( pTop && pLeft && pBottom && pRight )
-         hb_gtBoxD( hb_itemGetNI( pTop ),
-                   hb_itemGetNI( pLeft), 
-                   hb_itemGetNI( pBottom ), 
-                   hb_itemGetNI( pRight ) );
+      hb_gtBoxD( hb_itemGetNI( pTop ),
+                 hb_itemGetNI( pLeft), 
+                 hb_itemGetNI( pBottom ), 
+                 hb_itemGetNI( pRight ) );
 }
 
 HB_FUNC( __BOXS )
@@ -92,11 +92,11 @@ HB_FUNC( __BOXS )
    PHB_ITEM pBottom = hb_param( 3, HB_IT_NUMERIC );
    PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
 
-  if( pTop && pLeft && pBottom && pRight )
-         hb_gtBoxS( hb_itemGetNI( pTop ),
-                   hb_itemGetNI( pLeft), 
-                   hb_itemGetNI( pBottom ), 
-                   hb_itemGetNI( pRight ) );
+   if( pTop && pLeft && pBottom && pRight )
+      hb_gtBoxS( hb_itemGetNI( pTop ),
+                 hb_itemGetNI( pLeft), 
+                 hb_itemGetNI( pBottom ), 
+                 hb_itemGetNI( pRight ) );
 }
 
 #endif

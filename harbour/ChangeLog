@@ -1,3 +1,19 @@
+2001-11-07 14:55 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/lang/Makefile
+   * makefile.bc
+   * makefile.vc
+     * Updated with new lang modules.
+       Now only Chinese and Dutch modules are not converted, if anyone 
+       feel like doing, please do.
+
+   * make_vc.bat
+     - Removed the call to create libmisc. If you need this, please 
+       make a batch file and set it locally.
+
+   * source/rtl/oldbox.c
+     * Some indentation.
+
 2001-11-07 16:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/lang/msgru866.c
   * source/lang/msgruwin.c

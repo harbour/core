@@ -447,6 +447,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgplmaz.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
+   $(OBJ_DIR)\msgru866.obj \
+   $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgsr852.obj \
    $(OBJ_DIR)\msgsriso.obj
 

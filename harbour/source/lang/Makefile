@@ -33,6 +33,8 @@ C_SOURCES=\
 	msgplmaz.c   \
 	msgpt.c      \
 	msgro.c      \
+	msgru866.c   \
+	msgruwin.c   \
 	msgsr852.c   \
 	msgsriso.c   \
 	
