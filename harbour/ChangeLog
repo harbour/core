@@ -1,3 +1,56 @@
+19991202-00:54 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/Makefile
+    + New files added to the GNU make system.
+  * source/rtl/pvalue.c
+    tests/multiarg.prg
+    * HB_ prefix added to the PVALUE() function name.
+
+19991202-00:54 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/rdd/dbnubs.c
+    ! Warnings fixed.
+  * source/vm/hvm.c
+    - Removed all of this functions.
+  + source/rtl/break.c
+    + HARBOUR HB_BREAK( void )
+  + source/rtl/empty.c
+    + HARBOUR HB_EMPTY( void )
+    % Added support for MEMO type.
+  + source/rtl/initexit.c
+    + HARBOUR HB___QUIT( void )
+  + source/rtl/len.c
+    + HARBOUR HB_LEN( void )
+    % Added support for MEMO type.
+  + source/rtl/pcount.c
+    + HARBOUR HB_PCOUNT( void )
+  + source/rtl/proc.c
+    + HARBOUR HB_PROCNAME( void )
+    + HARBOUR HB_PROCLINE( void )
+    + HARBOUR HB_PROCFILE( void )
+  + source/rtl/pvalue.c
+    + HARBOUR HB_PVALUE( void )
+  + source/rtl/type.c
+    + HARBOUR HB_TYPE( void )
+  + source/rtl/valtype.c
+    + HARBOUR HB_VALTYPE( void )
+    % Added support for MEMO type.
+  + source/rtl/word.c
+    + HARBOUR HB_WORD( void )
+  + source/rtl/xhelp.c (it should go to harbinit.prg)
+    + HARBOUR HB___XHELP( void )
+  * All of them:
+    + Added License agreement.
+    + Added documentation.
+    + Formatting
+  * makefile.b32
+    + Updated with this new modules.
+    ! WARNING ! Remember to update other makefiles.
+  * rdd.b32
+    + Added dbeval.prg
+  * doc/pragma.txt
+    ! Some typos fixed.
+    ! Formatting.
+    (Uploaded by Victor Szel)
+
 19991130-04:30 EST Paul Tucker <ptucker@sympatico.ca>
   * source/pp/hbpp.c
     * added a cast on xgrab call.

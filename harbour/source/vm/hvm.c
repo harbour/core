@@ -37,11 +37,6 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
- *    HB_WORD()
- *    HB___XHELP()
- *    HB_PROCFILE()
- *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    HB___VMVARSGET()
  *    HB___VMVARSLIST()
@@ -3413,191 +3408,6 @@ void hb_vmForceLink( void )
 /* ----------------------------- */
 /* TODO: Put these to /source/rtl/?.c */
 
-HARBOUR HB_LEN( void )
-{
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   /* NOTE: pItem cannot be NULL here */
-
-   switch( pItem->type )
-   {
-      case IT_ARRAY:
-         hb_retnl( hb_arrayLen( pItem ) );
-         break;
-
-      case IT_STRING:
-         hb_retnl( hb_itemGetCLen( pItem ) );
-         break;
-
-      default:
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1111, NULL, "LEN" );
-
-         if( pResult )
-         {
-            hb_itemReturn( pResult );
-            hb_itemRelease( pResult );
-         }
-      }
-   }
-}
-
-HARBOUR HB_EMPTY( void )
-{
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   /* NOTE: pItem cannot be NULL here */
-
-   switch( pItem->type & ~IT_BYREF )
-   {
-      case IT_ARRAY:
-         hb_retl( hb_arrayLen( pItem ) == 0 );
-         break;
-
-      case IT_STRING:
-         hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
-         break;
-
-      case IT_INTEGER:
-         hb_retl( hb_itemGetNI( pItem ) == 0 );
-         break;
-
-      case IT_LONG:
-         hb_retl( hb_itemGetNL( pItem ) == 0 );
-         break;
-
-      case IT_DOUBLE:
-         hb_retl( hb_itemGetND( pItem ) == 0.0 );
-         break;
-
-      case IT_DATE:
-         /* NOTE: This is correct ! Get the date as long value. */
-         hb_retl( hb_itemGetNL( pItem ) == 0 );
-         break;
-
-      case IT_LOGICAL:
-         hb_retl( ! hb_itemGetL( pItem ) );
-         break;
-
-      case IT_BLOCK:
-         hb_retl( FALSE );
-         break;
-
-      default:
-         hb_retl( TRUE );
-         break;
-   }
-}
-
-HARBOUR HB_VALTYPE( void )
-{
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   /* NOTE: pItem cannot be NULL here */
-
-   switch( pItem->type & ~IT_BYREF )
-   {
-      case IT_ARRAY:
-         hb_retc( hb_arrayIsObject( pItem ) ? "O" : "A" );
-         break;
-
-      case IT_BLOCK:
-         hb_retc( "B" );
-         break;
-
-      case IT_DATE:
-         hb_retc( "D" );
-         break;
-
-      case IT_LOGICAL:
-         hb_retc( "L" );
-         break;
-
-      case IT_INTEGER:
-      case IT_LONG:
-      case IT_DOUBLE:
-         hb_retc( "N" );
-         break;
-
-      case IT_STRING:
-         hb_retc( "C" );
-         break;
-
-      case IT_NIL:
-      default:
-         hb_retc( "U" );
-         break;
-   }
-}
-
-HARBOUR HB_TYPE( void )
-{
-   /* TODO: Implement this. */
-}
-
-/* INCOMPATIBILITY: The Clipper NG states that WORD() will only work when used
-                    in CALL commands parameter list, otherwise it will return
-                    NIL, in Harbour it will work anywhere. */
-
-HARBOUR HB_WORD( void )
-{
-   if( ISNUM( 1 ) )
-      hb_retni( hb_parni( 1 ) );
-   else
-      hb_errRT_BASE( EG_ARG, 1091, NULL, "WORD" );
-}
-
-HARBOUR HB_PROCNAME( void )
-{
-   int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PHB_ITEM pBase = hb_stack.pBase;
-
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
-
-   if( ( iLevel == -1 ) )
-   {
-      if( ( pBase + 1 )->type == IT_ARRAY )  /* it is a method name */
-      {
-         char * szProcName;
-
-         szProcName = ( char * ) hb_xgrab( strlen( hb_objGetClsName( pBase + 1 ) ) + 1 +
-                                strlen( pBase->item.asSymbol.value->szName ) + 1 );
-         strcpy( szProcName, hb_objGetClsName( pBase + 1 ) );
-         strcat( szProcName, ":" );
-         strcat( szProcName, pBase->item.asSymbol.value->szName );
-         hb_retc( szProcName );
-         hb_xfree( ( void * ) szProcName );
-      }
-      else
-         hb_retc( pBase->item.asSymbol.value->szName );
-   }
-   else
-      hb_retc( "" );
-}
-
-HARBOUR HB_PROCLINE( void )
-{
-   int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PHB_ITEM pBase = hb_stack.pBase;
-
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
-
-   if( iLevel == -1 )
-      hb_retni( pBase->item.asSymbol.lineno );
-   else
-      hb_retni( 0 );
-}
-
-/* NOTE: Clipper undocumented function, which always returns an empty
-         string. */
-
-HARBOUR HB_PROCFILE( void )
-{
-   hb_retc( "" );
-}
-
 HARBOUR HB_ERRORLEVEL( void )
 {
    hb_retni( s_byErrorLevel );
@@ -3608,31 +3418,6 @@ HARBOUR HB_ERRORLEVEL( void )
    if( hb_pcount() >= 1 )
       /* Only replace the error level if a parameter was passed */
       s_byErrorLevel = hb_parni( 1 );
-}
-
-HARBOUR HB_PCOUNT( void )
-{
-   /* Skip current function */
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
-
-   hb_retni( pBase->item.asSymbol.paramcnt );
-}
-
-HARBOUR HB_PVALUE( void )                               /* PValue( <nArg> )         */
-{
-   USHORT uiParam = hb_parni( 1 );                  /* Get parameter            */
-   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
-                                                /* Skip function + self     */
-
-   if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt )     /* Valid number             */
-      hb_itemReturn( pBase + 1 + uiParam );
-   else
-      hb_errRT_BASE( EG_ARG, 3011, NULL, "PVALUE" );
-}
-
-HARBOUR HB___QUIT( void )
-{
-   hb_vmRequestQuit();
 }
 
 void hb_vmRequestQuit( void )
@@ -3662,16 +3447,6 @@ USHORT hb_vmRequestQuery( void )
    return s_uiActionRequest;
 }
 
-/* NOTE: This function should normally have a parameter count check. But
-         since in Harbour we cannot distinguish between BREAK() function and
-         the BREAK statement, because both generate a BREAK() function
-         call on the pcode level, we should drop the checking. */
-
-HARBOUR HB_BREAK( void )
-{
-   hb_vmRequestBreak( hb_param( 1, IT_ANY ) );
-}
-
 void hb_vmRequestCancel( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestCancel()"));
@@ -3686,24 +3461,6 @@ void hb_vmRequestCancel( void )
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       s_uiActionRequest = HB_QUIT_REQUESTED;
-   }
-}
-
-/* NOTE: This is an internal undocumented Clipper function, which will try
-         to call the function HELP() if it's defined. This is the default
-         SetKey() handler for the F1 key. */
-
-HARBOUR HB___XHELP( void )
-{
-   PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
-
-   if( pDynSym )
-   {
-      hb_vmPushSymbol( pDynSym->pSymbol );
-      hb_vmPushNil();
-      hb_vmDo( 0 );
-
-      /* NOTE: Leave the return value as it is. */
    }
 }
 
@@ -3730,4 +3487,3 @@ HARBOUR HB___VMVARSGET( void )
    hb_itemReturn( s_aStatics.item.asArray.value->pItems +
                   hb_stack.iStatics + hb_parni( 1 ) - 1 );
 }
-
