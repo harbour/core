@@ -1,3 +1,9 @@
+19990511-19:20 Eddie Runia
+  * source/rtl/classes.c
+    (Default) parameter self added to INLINE methods
+  * tests/working/inline.prg
+    Test of INLINE method.
+
 19990511-09:55 Eddie Runia
   * source/rtl/objfunc.prg, source/tools/stringp.prg
     created from tests/working/debugtst.prg

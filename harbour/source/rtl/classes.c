@@ -170,9 +170,10 @@ static HARBOUR EvalInline( void )
 
    PushSymbol( &symEval );
    Push( &block );
+   Push( stack.pBase + 1 );                     /* Push self                */
    for( w = 1; w <= _pcount(); w++ )
       Push( _param( w, IT_ANY ) );
-   Do( _pcount() );
+   Do( _pcount() + 1 );                         /* Self is also an argument */
 }
 
 static HARBOUR Virtual( void )
