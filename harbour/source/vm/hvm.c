@@ -84,6 +84,8 @@
 #include "hbpcode.h"
 #include "hbset.h"
 
+BOOL hb_StartApp( void ); /* placed at source/vm/dynlibhb.c */
+
 #ifdef HB_MACRO_STATEMENTS
    #include "hbpp.h"
 #endif
@@ -4305,7 +4307,8 @@ void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymb
       hSymScope = ( pModuleSymbols + ui )->cScope;
       pNewSymbols->hScope |= hSymScope;
       if( ( ! s_pSymStart ) && ( hSymScope & HB_FS_FIRST && ! (  hSymScope & HB_FS_INITEXIT ) ) )
-         s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
+         if( hb_StartApp() ) /* Are we calling this from the main application ? */
+            s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
 
       if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR | HB_FS_FIRST ) ) )
          hb_dynsymNew( pModuleSymbols + ui );
