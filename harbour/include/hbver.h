@@ -67,8 +67,8 @@
 
 /* NOTE: The next two fields are automatically updated by the hbverfix program */
 
-#define HB_VER_LENTRY   "2003-09-29 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>"
-#define HB_VER_CHLCVS   "ChangeLog,v 1.4490 2003/09/29 18:07:24 alkresin"
+#define HB_VER_LENTRY   "2004-07-19 21:42 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>"
+#define HB_VER_CHLCVS   "ChangeLog,v 1.4670 2004/07/19 17:42:22 alkresin"
 
 /* TOFIX: The next three fields need to get updated automatically */
 
