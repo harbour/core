@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-20 16:18 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! removed unused pLastPages
+
 2002-10-20 15:16 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbcmd.c
     ! Just a few changes for efficiency... 

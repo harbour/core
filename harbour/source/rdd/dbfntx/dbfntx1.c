@@ -1240,7 +1240,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, ULONG ulOffset )
 
    if( !bReplace )
    {
-      LPPAGEINFO pLastPage;
+      /* LPPAGEINFO pLastPage; ? */
 
       if( pTag->ulPages == pTag->ulPagesDepth )
       {
@@ -1325,7 +1325,7 @@ static void hb_ntxPageFree( LPTAGINFO pTag, BOOL lFull )
 
 static LPPAGEINFO hb_ntxPageNew( LPTAGINFO pTag )
 {
-   LPPAGEINFO pPage, pLastPage;
+   LPPAGEINFO pPage;
 
    if( pTag->Owner->NextAvail > 0 )
    {
@@ -2068,7 +2068,8 @@ static void hb_ntxWritePage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* buff
 
 static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, ULONG* lpArray, USHORT level )
 {
-   USHORT i, maxKeys = lpArray[level+1];
+   USHORT i;
+   ULONG maxKeys = lpArray[level+1];
    LPNTXBUFFER itemlist;
    LPNTXITEM item;
 
