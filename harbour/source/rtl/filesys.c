@@ -699,8 +699,6 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
 #else
 
-#else
-
    hFileHandle = FS_ERROR;
    s_uiErrorLast = FS_ERROR;
 
