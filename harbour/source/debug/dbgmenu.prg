@@ -73,7 +73,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENUITEM " ~View "
       MENU
          MENUITEM " ~Sets"            ACTION oDebugger:ViewSets()
-         MENUITEM " ~WorkAreas   F6"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " ~WorkAreas   F6"  ACTION oDebugger:ShowWorkAreas()
          MENUITEM " ~App Screen  F4 " ACTION oDebugger:ShowAppScreen()
          SEPARATOR
          MENUITEM " ~CallStack"       ACTION oDebugger:ShowCallStack()
