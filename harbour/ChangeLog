@@ -8,6 +8,28 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-28 01:55 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbapirdd.h
+   * include/hbrdddbf.h
+   * include/hbrddcdx.h
+   * include/hbrddntx.h
+   * source/rdd/dbcmd.c
+   * source/rdd/workarea.c
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/rddads.h
+        + Changed fieldname max length handling,
+          it is now a workarea property. (set by the RDD)
+          (in ADS, this is just a patch)
+
+2002-09-28 01:50 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+        ! changed key in-memory management.
+          this fixes trimmed key problems, reported by Lorenzo Fiorini.
+        ! fixed error reported by Gianni Santamarina.
+   * source/rdd/dbf1.c
+        ! fixed some typos
+
 2002-09-26 12:30 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * include/hbapi.h
         - removed filecase() definition from Extend API
