@@ -1,3 +1,7 @@
+2001-09-05 07:37 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/rtl/persist.prg
+     HB_STOD() and HB_DTOS() use for dates management
+
 2001-09-05 07:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/contrib/hgf/win32/tform.prg
      Property OnClick added and WM_LBUTTONDOWN msgs properly routed
