@@ -223,7 +223,7 @@ METHOD ParsePict( cPicture ) CLASS Get
          ::cPicMask := ""
       else
          ::cPicFunc := SubStr( cPicture, 1, nAt - 1 )
-         ::cPicMask := SubStr( cPicture, nAt + 1 )
+         ::cPicMask := Trim( SubStr( cPicture, nAt + 1 ) )
       endif
 
       if ( nAt := At( "S", ::cPicFunc ) ) > 0
@@ -245,7 +245,7 @@ METHOD ParsePict( cPicture ) CLASS Get
       endif
    else
       ::cPicFunc := ""
-      ::cPicMask := cPicture
+      ::cPicMask := LTrim( cPicture )
    endif
 
    // Comprobar si tiene la , y el . cambiado (Solo en Xbase++)
@@ -501,15 +501,16 @@ METHOD Untransform( cBuffer ) CLASS Get
       xValue := cBuffer
 
    case ::type == "N"
+
       if "E" $ ::cPicFunc .or. ::lDecRev
-         cBuffer := StrTran( cBuffer, ".", "" )
+         cBuffer := StrTran( cBuffer, ".", " " )
          cBuffer := StrTran( cBuffer, ",", "." )
       else
-         cBuffer := StrTran( cBuffer, ",", "" )
+         cBuffer := StrTran( cBuffer, ",", " " )
       endif
 
       for nFor := 1 to ::nMaxLen
-         if !::IsEditable( nFor )
+         if !::IsEditable( nFor ) .and. SubStr( cBuffer, nFor, 1 ) != "."
             cBuffer = Left( cBuffer, nFor-1 ) + " " + SubStr( cBuffer, nFor+1 )
          endif
       next
