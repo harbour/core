@@ -1,3 +1,8 @@
+19990828-22:20 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     * modified FO_ flags handling slightly to correctly reflect their state.
+     * modified handling of O_BINARY for msvc (was being discarded)
+
 19990828-14:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/filesys.c

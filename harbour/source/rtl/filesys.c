@@ -111,6 +111,22 @@
 #ifndef SH_DENYNO
    #define SH_DENYNO    0x40    /* Deny nothing */
 #endif
+/*
+ * These are all the msc flags
+#define _O_RDONLY       0x0000  /* open for reading only */
+#define _O_WRONLY       0x0001  /* open for writing only */
+#define _O_RDWR         0x0002  /* open for reading and writing */
+#define _O_APPEND       0x0008  /* writes done at eof */
+#define _O_RANDOM       0x0010  /* file access is primarily random */
+#define _O_SEQUENTIAL   0x0020  /* file access is primarily sequential */
+#define _O_TEMPORARY    0x0040  /* temporary file bit */
+#define _O_NOINHERIT    0x0080  /* child process doesn't inherit file */
+#define _O_CREAT        0x0100  /* create and open file */
+#define _O_TRUNC        0x0200  /* open and truncate */
+#define _O_EXCL         0x0400  /* open only if file doesn't already exist */
+#define _O_SHORT_LIVED  0x1000  /* temporary storage file, try not to flush */
+#define _O_TEXT         0x4000  /* file mode is text (translated) */
+#define _O_BINARY       0x8000  /* file mode is binary (untranslated) */
 
 static USHORT s_uiErrorLast = 0;
 
@@ -135,12 +151,13 @@ static int convert_open_flags( USHORT uiFlags )
 
    result_flags |= O_BINARY;
 
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
    if( uiFlags == 0 )
-      result_flags = O_RDONLY;
+      result_flags |= O_RDONLY;
 #else
+
    if( uiFlags == 0 )
-      result_flags |= O_RDONLY | SH_COMPAT;
+      result_flags |= ( O_RDONLY | SH_COMPAT );
 #endif
 
    /* read & write flags */
@@ -152,14 +169,14 @@ static int convert_open_flags( USHORT uiFlags )
 
 #if ! defined(_MSC_VER)
    /* shared flags */
-   if( uiFlags & FO_EXCLUSIVE )
+   if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
+      result_flags |= SH_DENYRD;
+
+   else if( uiFlags & FO_EXCLUSIVE )
       result_flags |= SH_DENYRW;
 
-   if( uiFlags & FO_DENYWRITE )
+   else if( uiFlags & FO_DENYWRITE )
       result_flags |= SH_DENYWR;
-
-   if( uiFlags & FO_DENYREAD )
-      result_flags |= SH_DENYRD;
 
    if( uiFlags & FO_DENYNONE )
       result_flags |= SH_DENYNO;
@@ -225,22 +242,16 @@ FHANDLE hb_fsOpen   ( BYTE * pFilename, USHORT uiFlags )
 
    #if defined(_MSC_VER)
 
-      int iShare = -1;
+      int iShare = _SH_DENYNO;
 
-      if( uiFlags & FO_EXCLUSIVE )
-         iShare = _SH_DENYRW;
-
-      if( uiFlags & FO_DENYWRITE )
-         iShare = _SH_DENYWR;
-
-      if( uiFlags & FO_DENYREAD )
+      if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
          iShare = _SH_DENYRD;
 
-      if( uiFlags & FO_DENYNONE )
-         iShare = _SH_DENYNO;
+      else if( uiFlags & FO_EXCLUSIVE )
+         iShare = _SH_DENYRW;
 
-      if( uiFlags & FO_SHARED )
-         iShare = _SH_DENYNO;
+      else if( uiFlags & FO_DENYWRITE )
+         iShare = _SH_DENYWR;
 
       errno = 0;
       if( iShare )
