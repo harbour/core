@@ -1,0 +1,470 @@
+// Harbour Class TGetList
+
+#include "classes.ch"
+#include "inkey.ch"
+#include "set.ch"
+
+#define GE_NOEXIT       0
+#define GE_UP           1
+#define GE_DOWN         2
+#define GE_TOP          3
+#define GE_BOTTOM       4
+#define GE_ENTER        5
+#define GE_WRITE        6
+#define GE_ESCAPE       7
+#define GE_WHEN         8
+
+#define SCORE_ROW       0
+#define SCORE_COL      60
+
+#define K_UNDO   K_CTRL_U
+
+function ReadModal( GetList, nPos )
+
+   local oGetList
+
+   if Empty( GetList )
+      SetPos( MaxRow() - 1, 0 )
+      return .f.
+   endif
+
+   oGetList = TGetList():New( GetList )
+   oGetList:cReadProcName = ProcName( 1 )
+   oGetList:nReadProcLine = ProcLine( 1 )
+
+   if ! ( ValType( nPos ) == "N" .and. nPos > 0 )
+      oGetList:nPos = oGetList:Settle( 0 )
+   endif
+
+   while oGetList:nPos != 0
+      oGetList:oGet = oGetList:aGetList[ oGetList:nPos ]
+      oGetList:PostActiveGet()
+
+      if ValType( oGetList:oGet:Reader ) == "B"
+         Eval( oGet:Reader, oGetList:oGet )
+      else
+         oGetList:Reader()
+      endif
+
+      oGetList:nPos = oGetList:Settle()
+   end
+   SetPos( MaxRow() - 1, 0 )
+
+return oGetList:lUpdated
+
+CLASS TGetList
+
+   DATA aGetList
+   DATA oGet, nPos
+   DATA bFormat
+   DATA lUpdated
+   DATA lKillRead
+   DATA lBumpTop, lBumpBot
+   DATA nLastExitState
+   DATA nLastPos
+   DATA oActiveGet
+   DATA cReadProcName, nReadProcLine
+   DATA cVarName
+
+   METHOD New( GetList )
+   METHOD Settle( nPos )
+   METHOD Reader()
+   METHOD GetApplyKey( nKey )
+   METHOD GetPreValidate()
+   METHOD GetPostValidate()
+   METHOD GetDoSetKey( bKeyBlock )
+   METHOD PostActiveGet()
+   METHOD GetReadVar()
+   METHOD SetFormat( bFormat )
+   METHOD KillRead()
+   METHOD GetActive( oGet )
+   METHOD ShowScoreBoard()
+   METHOD ReadVar( cNewVarName )
+   METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
+
+ENDCLASS
+
+METHOD New( GetList ) CLASS TGetList
+
+   ::aGetList  = GetList
+   ::lKillRead = .f.
+   ::lBumpTop  = .f.
+   ::lBumpBot  = .f.
+   ::nLastExitState = 0
+   ::nLastPos  = 0
+   ::cReadProcName = ""
+   ::lUpdated  = .f.
+
+return Self
+
+METHOD Reader() CLASS TGetList
+
+   local oGet := ::oGet
+
+   if ::GetPreValidate()
+
+      oGet:SetFocus()
+
+      while oGet:ExitState == GE_NOEXIT
+         if oGet:typeOut
+            oGet:ExitState = GE_ENTER
+         endif
+
+         while oGet:exitState == GE_NOEXIT
+            ::GetApplyKey( Inkey( 0 ) )
+         end
+
+         if ! ::GetPostValidate()
+            oGet:ExitState = GE_NOEXIT
+         endif
+      end
+
+      oGet:killFocus()
+   endif
+
+return nil
+
+METHOD GetApplyKey( nKey ) CLASS TGetList
+
+   local cKey, bKeyBlock, oGet := ::oGet
+
+   if ! ( ( bKeyBlock := Setkey( nKey ) ) == nil )
+      ::GetDoSetKey( bKeyBlock )
+      return
+   endif
+
+   do case
+      case nKey == K_UP
+         oGet:ExitState = GE_UP
+
+      case nKey == K_SH_TAB
+         oGet:ExitState = GE_UP
+
+      case nKey == K_DOWN
+         oGet:ExitState = GE_DOWN
+
+      case nKey == K_TAB
+         oGet:ExitState = GE_DOWN
+
+      case nKey == K_ENTER
+         oGet:ExitState = GE_ENTER
+
+      case nKey == K_ESC
+         if Set( _SET_ESCAPE )
+            oGet:UnDo()
+            oGet:ExitState = GE_ESCAPE
+         endif
+
+      case nKey == K_PGUP
+         oGet:ExitState = GE_WRITE
+
+      case nKey == K_PGDN
+         oGet:ExitState = GE_WRITE
+
+      case nKey == K_CTRL_HOME
+         oGet:ExitState = GE_TOP
+
+   #ifdef CTRL_END_SPECIAL
+      case nKey == K_CTRL_END
+         oGet:ExitState = GE_BOTTOM
+   #else
+      case nKey == K_CTRL_W
+         oGet:ExitState = GE_WRITE
+   #endif
+
+      case nKey == K_INS
+         Set( _SET_INSERT, ! Set( _SET_INSERT ) )
+         ::ShowScoreboard()
+
+      case nKey == K_UNDO
+         oGet:UnDo()
+
+      case nKey == K_HOME
+         oGet:Home()
+
+      case nKey == K_END
+         oGet:End()
+
+      case nKey == K_RIGHT
+         oGet:Right()
+
+      case nKey == K_LEFT
+         oGet:Left()
+
+      case nKey == K_CTRL_RIGHT
+         oGet:WordRight()
+
+      case nKey == K_CTRL_LEFT
+         oGet:WordLeft()
+
+      case nKey == K_BS
+         oGet:BackSpace()
+
+      case nKey == K_DEL
+         oGet:Delete()
+
+      case nKey == K_CTRL_T
+         oGet:DelWordRight()
+
+      case nKey == K_CTRL_Y
+         oGet:DelEnd()
+
+      case nKey == K_CTRL_BS
+         oGet:DelWordLeft()
+
+      otherwise
+
+         if nKey >= 32 .and. nKey <= 255
+            cKey := Chr( nKey )
+
+            if oGet:type == "N" .and. ( cKey == "." .or. cKey == "," )
+               oGet:ToDecPos()
+            else
+               if Set( _SET_INSERT )
+                  oGet:Insert( cKey )
+               else
+                  oGet:OverStrike( cKey )
+               endif
+
+               if oGet:TypeOut
+                  if Set( _SET_BELL )
+                     ?? Chr( 7 )
+                  endif
+                  if ! Set( _SET_CONFIRM )
+                     oGet:ExitState = GE_ENTER
+                  endif
+               endif
+            endif
+         endif
+      endcase
+
+return nil
+
+METHOD GetPreValidate() CLASS TGetList
+
+   local oGet := ::oGet
+   local lUpdated, lWhen := .t.
+
+   if oGet:PreBlock != nil
+      lUpdated = ::lUpdated
+      lWhen = Eval( oGet:PreBlock, oGet )
+      oGet:Display()
+      ::ShowScoreBoard()
+      ::lUpdated := lUpdated
+   endif
+
+   if ::lKillRead
+      lWhen = .f.
+      oGet:ExitState = GE_ESCAPE
+   elseif ! lWhen
+      oGet:ExitState = GE_WHEN
+   else
+      oGet:ExitState = GE_NOEXIT
+   end
+
+return lWhen
+
+METHOD GetPostValidate() CLASS TGetList
+
+   local oGet := ::oGet
+   local lUpdated, lValid := .t.
+
+   if oGet:ExitState == GE_ESCAPE
+      return .t.
+   endif
+
+   if oGet:BadDate()
+      oGet:Home()
+      ::DateMsg()
+      ::ShowScoreboard()
+      return .f.
+   endif
+
+   if oGet:Changed
+      oGet:Assign()
+      ::lUpdated = .t.
+   endif
+
+   oGet:Reset()
+
+   if oGet:PostBlock != nil
+
+      lUpdated = ::lUpdated
+      SetPos( oGet:Row, oGet:Col + Len( oGet:Buffer ) )
+      lValid = Eval( oGet:PostBlock, oGet )
+      SetPos( oGet:Row, oGet:Col )
+      ::ShowScoreBoard()
+      oGet:UpdateBuffer()
+      ::lUpdated = lUpdated
+
+      if ::lKillRead
+         oGet:ExitState = GE_ESCAPE
+         lValid = .t.
+      endif
+   endif
+
+return lValid
+
+METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
+
+   local oGet := ::oGet, lUpdated
+
+   if oGet:Changed
+      oGet:Assign()
+      ::lUpdated := .t.
+   endif
+
+   lUpdated = ::lUpdated
+
+   Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
+
+   ::ShowScoreboard()
+   oGet:UpdateBuffer()
+
+   ::lUpdated = lUpdated
+
+   if ::lKillRead
+      oGet:ExitState = GE_ESCAPE
+   endif
+
+return nil
+
+METHOD Settle( nPos ) CLASS TGetList
+
+   local nExitState
+
+   if nPos == nil
+      nPos = ::nPos
+   endif
+
+   if nPos == 0
+      nExitState = GE_DOWN
+   else
+      nExitState := ::aGetList[ nPos ]:ExitState
+   endif
+
+   if nExitState == GE_ESCAPE .or. nExitState == GE_WRITE
+      return 0
+   endif
+
+   if nExitState != GE_WHEN
+      ::nLastPos = nPos
+      ::lBumpTop = .f.
+      ::lBumpBot = .f.
+   else
+      nExitState := ::nLastExitState
+   endif
+
+   do case
+      case nExitState == GE_UP
+         nPos--
+
+      case nExitState == GE_DOWN
+         nPos++
+
+      case nExitState == GE_TOP
+         nPos = 1
+         ::lBumpTop = .T.
+         nExitState = GE_DOWN
+
+      case nExitState == GE_BOTTOM
+         nPos = Len( ::aGetList )
+         ::lBumpBot = .t.
+         nExitState = GE_UP
+
+      case nExitState == GE_ENTER
+         nPos++
+   endcase
+
+   if nPos == 0
+      if ! ::ReadExit() .and. ! ::lBumpBot
+         ::lBumpTop = .t.
+         nPos       = ::nLastPos
+         nExitState = GE_DOWN
+      endif
+
+   elseif nPos == Len( ::aGetList ) + 1
+      if ! ::ReadExit() .and. nExitState != GE_ENTER .and. ! ::lBumpTop
+         ::lBumpBot = .t.
+         nPos       = ::nLastPos
+         nExitState = GE_UP
+      else
+         nPos = 0
+      endif
+   endif
+
+   ::nLastExitState = nExitState
+
+   if nPos != 0
+      ::aGetList[ nPos ]:ExitState := nExitState
+   endif
+
+return nPos
+
+METHOD PostActiveGet() CLASS TGetList
+
+   ::GetActive( ::oGet )
+   ::ReadVar( ::GetReadVar() )
+   ::ShowScoreBoard()
+
+return nil
+
+METHOD GetReadVar() CLASS TGetList
+
+   local oGet := ::oGet
+   local cName := Upper( oGet:Name )
+   local n
+
+   if oGet:Subscript != nil
+      for n := 1 TO Len( oGet:Subscript )
+         cName += "[" + LTrim( Str( oGet:Subscript[ n ] ) ) + "]"
+      next
+   end
+
+return cName
+
+METHOD SetFormat( bFormat ) CLASS TGetList
+
+   ::bFormat = If( ValType( bFormat ) == "B", bFormat, nil )
+
+return nil
+
+METHOD KillRead() CLASS TGetList
+
+   ::lKillRead := .t.
+
+return nil
+
+METHOD GetActive( oGet ) CLASS TGetList
+
+   local oOldGet := ::oActiveGet
+
+   if PCount() > 0
+      ::oActiveGet := oGet
+   endif
+
+return oOldGet
+
+METHOD ShowScoreboard() CLASS TGetList
+
+   local nRow, nCol
+
+   if Set( _SET_SCOREBOARD )
+      nRow = Row()
+      nCol = Col()
+      SetPos( SCORE_ROW, SCORE_COL )
+      DispOut( If( Set( _SET_INSERT ), "Ins", "   " ) )
+      SetPos( nRow, nCol )
+   endif
+
+return nil
+
+METHOD ReadVar( cNewVarName ) CLASS TGetList
+
+   local cOldName := ::cVarName
+
+   if ValType( cNewVarName ) == "C"
+      ::cVarName = cNewVarName
+   endif
+
+return cOldName
