@@ -47,6 +47,7 @@ export HB_ARCHITECTURE=linux
 #  - When HB_ARCHITECTURE=win32
 #    - bcc32
 #    - gcc
+#    - mingw32
 #    - icc
 #    - msvc
 #  - When HB_ARCHITECTURE=linux

@@ -225,7 +225,7 @@ function __MenuTo( bBlock, cVariable )
    eval( bBlock, n )
 
    if lDeclared
-      release ( cVariable )
+      __mvXRELEASE( cVariable )
    endif
 
    SetPos( MaxRow() - 1, 0)

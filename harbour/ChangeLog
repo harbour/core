@@ -1,3 +1,20 @@
+19990916-03:57 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rdd/*
+    source/tools/dates2.c
+    source/tools/stringp.prg
+    source/tools/nconvert.prg
+    source/tools/fileread.prg
+    source/tools/numtxthu.prg
+    source/tools/strfmt.c
+    + All copyright header changed to the new one.
+  * source/rtl/menuto.prg
+    ! RELEASE (cVariable) changed to __MVRELEASE( cVariable ) since now
+      to former is not preprocessed, which is fine BTW, since Clipper 
+      is doing the same.
+  * make_tpl.*
+    + mingw32 added as a new option.
+
 19990916-03:17 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/debug/*.*

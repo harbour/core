@@ -47,6 +47,7 @@ rem    - watcom
 rem  - When HB_ARCHITECTURE=win32
 rem    - bcc32
 rem    - gcc
+rem    - mingw32
 rem    - icc
 rem    - msvc
 rem  - When HB_ARCHITECTURE=linux
