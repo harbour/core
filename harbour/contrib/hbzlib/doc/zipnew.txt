@@ -8,7 +8,7 @@
  *      Create a zip file
  * $SYNTAX$
  *      HB_ZIPFILE( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>,<pFileProgress>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -29,6 +29,8 @@
  *      <lWithPath> Toggle to store the path or not
  *
  *      <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
@@ -56,6 +58,10 @@
  *
  *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored 
  *      with the file name. Default is false.
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has beeing processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  *
  * $EXAMPLES$
  *      FUNCTION MAIN()
@@ -100,7 +106,7 @@
  *      Unzip a compressed file
  * $SYNTAX$
  *      HB_UNZIPFILE( <cFile> , <bBlock> , <lWithPath>) ,<cPassWord>,<cPath>,
- *      [<cFile>|<aFile>]  <---> lCompress
+ *      [<cFile>|<aFile>] ,<pFileProgress>) <---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -113,6 +119,8 @@
  *      <cPath>    Path to extract the files.
  *
  *      <cFile>|<aFiles> An file or an Array of files to extract
+ *
+ *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if all file was successfuly restored, otherwise .f.
  * $DESCRIPTION$
@@ -125,6 +133,10 @@
  *
  *      The <cPath> is an obrogatory parameter. Set to ".\" to extract to the
  *      current dir
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has beeing processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -212,7 +224,7 @@
  *      Create a zip file
  * $SYNTAX$
  *      HB_ZIPFILEBYTDSPAN()( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<iSize>,<lWithPath>,<lWithDrive>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<iSize>,<lWithPath>,<lWithDrive>,<pFileProgress>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -235,6 +247,8 @@
  *      <lWithPath> Toggle to store the path or not
  *
  *      <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
@@ -260,6 +274,9 @@
  *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored 
  *      with the file name. Default is false.
  *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has beeing processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
@@ -304,7 +321,7 @@
  *      Create a zip file on removable media
  * $SYNTAX$
  *      HB_ZIPFILEBYPKSPAN( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>,<pFileProgress>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -325,6 +342,8 @@
  *      <lWithPath> Toggle to store the path or not
  *
  *      <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *      <pFileProgress> Code block for File Progress
  * $RETURNS$
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
@@ -353,6 +372,10 @@
  *
  *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored 
  *      with the file name. Default is false.
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has beeing processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
  *
  *      Before calling this function, Set an Changedisk codeblock by calling
  *      the HB_SETDISKZIP().

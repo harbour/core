@@ -53,6 +53,7 @@
 
 #ifndef HB_APIZLIB_H_
 #define HB_APIZLIB_H_
+#define HB_OS_WIN_32_USED
 #include <hbsetup.h>
 #include <hbapi.h>
 #include <hbapiitm.h>
@@ -67,6 +68,7 @@
 #include <ZipArchive.h>
 extern "C" {
 #endif
+
 
 #define filePos 1
 #define Lenght 2
@@ -86,22 +88,26 @@ int iRead;
 char * szComment;
 PHB_ITEM pItem;
 } HB_ZIP_INTERNAL,* PHB_ZIP_INTERNAL,* HB_ZIP_INTERNAL_PTR;
+#ifndef LPCTSTR
+typedef const char *LPCSTR;
+typedef LPCSTR LPCTSTR;
+#endif
 extern char     *hb___CheckFile( char * szFile);
 extern PHB_ITEM hb___GetFilesNamesFromZip(char *szFile,BOOL iMode);
 extern void     hb_____GetTime(struct tm *tz);
-extern int      hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive);       
-extern int      hb_CmpPkSpanStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive);
+extern int      hb_CmpPkSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
+extern int      hb_CmpPkSpanStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
 extern char     *hb_getPassWord(char *szName);
 extern int      hb___GetNumbersofFilestoUnzip(char *szFile);
 extern int      hb___SetCallbackFunc(PHB_ITEM pFunc);
-extern int      hb_CmpTdSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize ,BOOL bPath ,BOOL bDrive);
+extern int      hb_CmpTdSpan(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize ,BOOL bPath ,BOOL bDrive,PHB_ITEM pProgress);
 
-extern int      hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive);
-extern int      hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive);
-extern int      hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive);
-extern int      hb_UnzipAll(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pDiskBlock);
-extern int      hb_UnzipOne(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,char *szFiletoExtract);
-extern int      hb_UnzipSel(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pArray);
+extern int      hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
+extern int      hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
+extern int      hb_CmpTdSpanStd(char *szFile,char * szFiletoCompress,int iCompLevel,PHB_ITEM pBlock,BOOL bOverWrite,char *szPassWord,PHB_ITEM pDiskBlock,int iSpanSize,BOOL bPath,BOOL bDrive,PHB_ITEM pProgress);
+extern int      hb_UnzipAll(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pDiskBlock,PHB_ITEM pProgress);
+extern int      hb_UnzipOne(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,char *szFiletoExtract,PHB_ITEM pProgress);
+extern int      hb_UnzipSel(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *szPath,PHB_ITEM pArray,PHB_ITEM pProgress);
 
 extern int      hb_DeleteOne(char *szFile,char *szFiletoDelete);
 extern int      hb_DeleteSel(char *szFile,PHB_ITEM pArray,BOOL bCase);
@@ -109,6 +115,7 @@ extern int      hb_TestForPKS(char *szFile);
 extern void     hb_SetZipBuff(int a,int b,int c);
 extern void     hb_SetZipComment(char *szComment);
 extern char     *hb_GetZipComment(char *szFile);
+extern unsigned long    GetCurrentFileSize(   LPCTSTR szFile);
 #ifdef __cplusplus
 }
 #endif
