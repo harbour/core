@@ -1,9 +1,14 @@
+20000501-20:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/harbour.l
+     + Added "as char" and "as string" as acceptable alternative to "as character"
+     + Added "as num" as acceptable alternative to "as numeric"
+
 20000502-02:13 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.l
    * source/macro/macro.l
      + The widths of the double values are calculated at compile time.
-       The widths of the doubles generated in the expression 
+       The widths of the doubles generated in the expression
        optimizer are still forced to be calculated at runtime.
        Please test this!
 
@@ -14,31 +19,31 @@
 20000502-01:43 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapi.h
-   * include/hbexprb.c 
+   * include/hbexprb.c
    * include/hbexprop.h
-   * source/common/expropt1.c 
-   * source/common/expropt2.c 
-   * source/compiler/harbour.l 
+   * source/common/expropt1.c
+   * source/common/expropt2.c
+   * source/compiler/harbour.l
    * source/compiler/harbour.y
-   * source/macro/macro.l 
+   * source/macro/macro.l
    * source/macro/macro.y
-   * source/vm/hvm.c 
+   * source/vm/hvm.c
      + The compiler enhanced to internally handle the double width info.
        It's not set to default at a lower level.
        Note that it still isn't calculated.
 
 20000502-01:14 GMT+1 Victor Szakats <info@szelvesz.hu>
 
-   * include/hbcomp.h 
-   * include/hbexprb.c 
-   * include/hbmacro.h 
-   * source/compiler/genc.c 
-   * source/compiler/harbour.c 
+   * include/hbcomp.h
+   * include/hbexprb.c
+   * include/hbmacro.h
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
    * source/compiler/hbpcode.c
-   * source/vm/hvm.c 
-   * source/vm/macro.c 
+   * source/vm/hvm.c
+   * source/vm/macro.c
      + Added width info to the PUSHDOUBLE pcode, to be Clipper compatible.
-       Note that the width is not yet calculated at compiled time, but the 
+       Note that the width is not yet calculated at compiled time, but the
        possibility is already there.
 
 20000501-23:25 GMT+1 Victor Szakats <info@szelvesz.hu>

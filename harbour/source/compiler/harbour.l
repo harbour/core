@@ -1122,7 +1122,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-2 ] );
                return RETURN;
              }
-<RETURN_>{Separator}*[\n\;\(\[\{\"\'\.\-\+\!]   { 
+<RETURN_>{Separator}*[\n\;\(\[\{\"\'\.\-\+\!]   {
                  /* EOL or '()', '[]', '{}', '""', "''" , '.T.', '-', '+', '!' */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -1267,7 +1267,7 @@ Separator     {SpaceTab}
                     hb_comp_iState == DO ||
                     hb_comp_iState == MACROVAR ||
                     hb_comp_iState == MACROTEXT ||
-                    hb_comp_iState == IDENTIFIER || 
+                    hb_comp_iState == IDENTIFIER ||
                     hb_comp_iState == SEPARATOR )
                 { /* DO <ident> WITH <arg> */
                   hb_comp_iState =WITH;
@@ -1282,7 +1282,10 @@ Separator     {SpaceTab}
               }
 
 "as numeric"       { return AS_NUMERIC; }
+"as num"           { return AS_NUMERIC; }
 "as character"     { return AS_CHARACTER; }
+"as char"          { return AS_CHARACTER; }
+"as string"        { return AS_CHARACTER; }
 "as logical"       { return AS_LOGICAL; }
 "as date"          { return AS_DATE; }
 "as array"         { return AS_ARRAY; }
