@@ -840,6 +840,7 @@ HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR pExpr )
 }
 #endif
 
+#ifndef SIMPLEX
 /* Creates a set/get codeblock for passed expression used in __GET
  *
  * {|| IIF( PCOUNT()==0, <pExpr>, <pExpr>:=HB_PARAM(1) )}
@@ -890,3 +891,5 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    */
    return hb_compExprAddListExpr( hb_compExprNewCodeBlock(), pIIF );
 }
+
+#endif

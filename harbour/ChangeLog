@@ -1,3 +1,13 @@
+2001-07-20 22:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+  * include/hbexpra.c
+    % Wrapped hb_compExprSetGetBlock() unneeded with simplex build, with #ifndef SIMPLEX
+
+  * include/hbexprb.c
+    * Disabled support for HB_PUSHMACROARG within hb_compExprUseAssign()
+
+  * include/hbexprc.c
+    * Disabled support for HB_PUSHMACROARG within hb_compExprPushOperEq()
+
 2001-07-20 15:10 GMT+2 Martin Vopgel <vogel@inttec.de>
   * source/rtl/math.c
   * include/hbmath.h
@@ -17,7 +27,6 @@
 
   * contrib/libct/makefile.bc
     ! typo fixed
-
 
 2001-07-20 13:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/memofile.c

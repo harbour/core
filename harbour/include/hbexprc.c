@@ -88,6 +88,10 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq, HB_MACRO_DECL )
 void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
 #endif
 {
+   extern BOOL hb_exp_bArgList;
+   /* Temporarily disable HB_P_MACROPUSHARG support. */
+   BOOL bArg = hb_exp_bArgList; hb_exp_bArgList = FALSE;
+
    /* NOTE: an object instance variable needs special handling
     */
    if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
@@ -161,6 +165,10 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       /* pop the new value into variable and leave the copy on the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
+
+   /* Restore HB_P_MACROPUSHARG support. */
+   hb_exp_bArgList = bArg;
+
 }
 
 /* Generates pcodes for <operator>= syntax

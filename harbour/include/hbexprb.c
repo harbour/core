@@ -1723,11 +1723,18 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
             else
             {
                /* it assigns a value and leaves it on the stack */
+
+               /* Temporarily disable HB_P_MACROPUSHARG support. */
+               BOOL bArg = hb_exp_bArgList; hb_exp_bArgList = FALSE;
+
                HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
                /* QUESTION: Can  we replace DUPLICATE+POP with a single PUT opcode
                */
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
+
+               /* Restore HB_P_MACROPUSHARG support. */
+               hb_exp_bArgList = bArg;
             }
          }
          break;
