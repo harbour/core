@@ -37,8 +37,10 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
  *    hb_compChkCompilerSwitch()
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_compChkEnvironVar()
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
@@ -53,6 +55,8 @@
 #include <time.h>
 
 #include "hbcomp.h"
+
+extern int hb_pp_ParseDefine( char * );
 
 /* TODO: Add support for this compiler switches
    -r -t || getenv( "TMP" )
@@ -766,7 +770,7 @@ static void hb_compChkDefineSwitch( char * pszSwitch )
    if( pszSwitch && HB_ISOPTSEP( pszSwitch[ 0 ] ) &&
       ( pszSwitch[ 1 ] == 'd' || pszSwitch[ 1 ] == 'D' ) )
    {
-      char * szDefText = hb_strdup( pszSwitch + 2 );
+      char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign, *sDefLine;
       unsigned int i = 0;
 
       while( i < strlen( szDefText ) && ! HB_ISOPTSEP( szDefText[ i ] ) )
@@ -774,9 +778,24 @@ static void hb_compChkDefineSwitch( char * pszSwitch )
 
       szDefText[ i ] = '\0';
       if( szDefText )
-         hb_pp_AddDefine( szDefText, 0 );
+      {
+         if( ( pAssign = strchr( szDefText, '=' ) ) == NULL )
+         {
+            hb_pp_AddDefine( szDefText, 0 );
+         }
+         else
+         {
+            szDefText[ pAssign - szDefText ] = '\0';
 
-      free( szDefText );
+            //hb_pp_AddDefine( szDefText,  pAssign + 1 );
+            sDefLine = hb_xgrab( strlen( szDefText ) + 1 + strlen( pAssign + 1 ) + 1 );
+            sprintf( sDefLine, "%s %s", szDefText, pAssign + 1 );
+            hb_pp_ParseDefine( sDefLine );
+            hb_xfree( sDefLine );
+         }
+      }
+
+      hb_xfree( szDefText );
    }
 }
 

@@ -74,13 +74,14 @@
    #include <sys\timeb.h>
 #endif
 
+int hb_pp_ParseDefine( char * );                         /* Process #define directive */
+
 static COMMANDS * AddCommand( char * );                  /* Add new #command to an array  */
 static COMMANDS * AddTranslate( char * );                /* Add new #translate to an array  */
 static DEFINES *  DefSearch( char *, BOOL * );
 static COMMANDS * ComSearch( char *, COMMANDS * );
 static COMMANDS * TraSearch( char *, COMMANDS * );
 
-static int    ParseDefine( char * );                       /* Process #define directive */
 static int    ParseUndef( char * );                        /* Process #undef directive */
 static int    ParseIfdef( char *, int );                   /* Process #ifdef directive */
 static void   ParseCommand( char *, BOOL, BOOL );          /* Process #command or #translate directive */
@@ -454,7 +455,7 @@ int hb_pp_ParseDirective( char * sLine )
         }
 
       else if( i >= 4 && i <= 6 && memcmp( sDirective, "DEFINE", i ) == 0 )
-        ParseDefine( sLine );   /* --- #define  --- */
+        hb_pp_ParseDefine( sLine );   /* --- #define  --- */
 
       else if( i >= 4 && i <= 5 && memcmp( sDirective, "UNDEF", i ) == 0 )
         ParseUndef( sLine );    /* --- #undef  --- */
@@ -488,13 +489,13 @@ int hb_pp_ParseDirective( char * sLine )
   return 0;
 }
 
-static int ParseDefine( char * sLine )
+int hb_pp_ParseDefine( char * sLine )
 {
   char defname[ MAX_NAME ], pars[ MAX_NAME ];
   int i, npars = -1;
   DEFINES * lastdef;
 
-  HB_TRACE(HB_TR_DEBUG, ("ParseDefine(%s)", sLine));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseDefine(%s)", sLine));
 
   HB_SKIPTABSPACES( sLine );
   if( ISNAME( *sLine ) )

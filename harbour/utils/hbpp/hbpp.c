@@ -51,6 +51,8 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
+extern int hb_pp_ParseDefine( char * );
+
 static int hb_pp_Parse( FILE * handl_o );
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
@@ -109,18 +111,32 @@ int main( int argc, char * argv[] )
             case 'd':
             case 'D':   /* defines a #define from the command line */
               {
-                i = 0;
-                szDefText = hb_strdup( argv[ iArg ] + 2 );
-                while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
-                  i++;
-                if( szDefText[ i ] != '=' )
-                  hb_pp_AddDefine( szDefText, 0 );
-                else
-                  {
-                    szDefText[ i ] = 0;
-                    hb_pp_AddDefine( szDefText, szDefText + i + 1 );
-                  }
-                free( szDefText );
+                 char *szDefText = hb_strdup( argv[iArg] + 2 ), *pAssign, *sDefLine;
+                 unsigned int i = 0;
+
+                 while( i < strlen( szDefText ) && ! HB_ISOPTSEP( szDefText[ i ] ) )
+                    i++;
+
+                 szDefText[ i ] = '\0';
+                 if( szDefText )
+                 {
+                    if( ( pAssign = strchr( szDefText, '=' ) ) == NULL )
+                    {
+                       hb_pp_AddDefine( szDefText, 0 );
+                    }
+                    else
+                    {
+                       szDefText[ pAssign - szDefText ] = '\0';
+
+                       //hb_pp_AddDefine( szDefText,  pAssign + 1 );
+                       sDefLine = hb_xgrab( strlen( szDefText ) + 1 + strlen( pAssign + 1 ) + 1 );
+                       sprintf( sDefLine, "%s %s", szDefText, pAssign + 1 );
+                       hb_pp_ParseDefine( sDefLine );
+                       hb_xfree( sDefLine );
+                    }
+                 }
+
+                 hb_xfree( szDefText );
               }
               break;
             case 'i':
