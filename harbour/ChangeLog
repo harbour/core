@@ -70,6 +70,12 @@
     ! aStatics made static now for sure.
   * source/rtl/strings.c
     ! Typo fixed.
+  * source/rtl/memoline.c
+    ! Formatting fix.
+
+19991005-20:35 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/memoline.c
+    * add a cast on xgrab call.
 
 19991006-02:26 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/set.h
@@ -124,6 +130,16 @@
     source/vm/hvm.c
     * symEval -> hb_g_symEval
       Global variable prefixed with "hb_g_".
+
+19991005-17:30 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/mlcount
+    + source/rtl/memoline
+    + source/vm/mainstd (for now)
+    + source/rtl/rddord
+    * gtapi.obj moved to terminal.lib
+    * duplicate console.obj removed from terminal.lib
+      (as reported by Gerrit Jan Doornink <gjd@casema.net>)
 
 Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
