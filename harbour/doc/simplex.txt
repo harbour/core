@@ -39,25 +39,26 @@ Definitions are divided into 6 main sections:
 
 4. Keywords. These are specific set of reserved words, which have lexical
    significance in the defined language, when appearing as the FIRST token
-   in a given source line. Keywords may be contrcuted of multiple words with
-   sperarting white space (ignorable delimiters), when using the predefined
+   in a given source line. Keywords may be constructed of multiple words with
+   separating white space (ignorable delimiters), when using the predefined
    match pattern {WS}.
 
 5. Words. These are specific set of reserved words, which have lexical
    significance in the defined language, when appearing ANYWHERE in a given
-   source line. Words may be contrcuted of multiple words with sperarting white
+   source line. Words may be constructed of multiple words with separating white
    space (ignorable delimiters), when using the predefined match pattern {WS}.
 
 6. Rules. There are 2 kinds of rules:
 
    a. Reduction Rules. These kind of rules defines the translation of a 1 or
       more tokens into 1 or more other tokens (or custom actions). Reductions
-      are infinitley recursive, which means that the Reduction Results, are
-      pushed back, incase they me in turn be part of yet another rule. To
-      eliminate such recursive cycle, Reduction Result may be in the form of
-      n + DONT_REDUCE, thus passing through the resulted token, without
-      further checks.
+      are infinitely recursive, which means that the Reduction Results, are
+      pushed back onto the evaluation stack, incase they might in turn be part
+      of yet another rule. To eliminate such recursive cycle, Reduction Result
+      may be in the form of N + DONT_REDUCE, thus passing through the resulted
+      token, without further evaluation.
 
    b. Pass Through (Left Associate). This kind of rules directs the Lexer to
       accept such token[s] as a valid form.
 
+For a real-life language definition example, please refer to harbour.slx.
