@@ -406,7 +406,7 @@ METHOD GetPostValidate() CLASS HBGetList
    if oGet:PostBlock != NIL
 
       lUpdated := ::lUpdated
-      SetPos( oGet:Row, oGet:Col + Len( oGet:Buffer ) )
+      SetPos( oGet:Row, oGet:Col + IIF( oGet:Buffer == NIL, 0, Len( oGet:Buffer ) ) )
       lValid := Eval( oGet:PostBlock, oGet )
       SetPos( oGet:Row, oGet:Col )
       ::ShowScoreBoard()
