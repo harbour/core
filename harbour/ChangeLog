@@ -1,3 +1,16 @@
+19991020-22:58 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bugs, reported by Antonio Linares, Victor Szel and Guy Roussin
+  - contrib/odbc/bld32exe.bat
+  - contrib/odbc/hb32.bat
+  + contrib/odbc/bld_b32.bat
+  + contrib/odbc/odbccall.prg
+  + contrib/odbc/odbcdemo.prg
+  * contrib/odbc/odbc.c
+  * contrib/odbc/harbour.mdb
+    * These files I got from Felipe Coury
+
+
 19991020-20:23 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/alert.prg
      source/rtl/browdb.prg
@@ -6,29 +19,29 @@
    + include/hbsetup.ch
      include/hbsetup.h
      include/Makefile
-     + New header file added to setup things which are common to both 
-       .PRG and .C source files, currently HARBOUR_STRICT_CLIPPER_COMPATIBILITY 
+     + New header file added to setup things which are common to both
+       .PRG and .C source files, currently HARBOUR_STRICT_CLIPPER_COMPATIBILITY
        was moved from hbsetup.h
      + HB_COMPAT_C53
-       HB_COMPAT_XPP 
+       HB_COMPAT_XPP
        HB_COMPAT_VO
-       #defines added to be able to toggle inclusion of the new features 
+       #defines added to be able to toggle inclusion of the new features
        of these compilers. All these are turned on by default.
    * source/rtl/browdb.prg
-     + dbSkipper() function added, it's now guarded with 
-       HARBOUR_COMPAT_XPP, so there is a possibility to switch to the 
+     + dbSkipper() function added, it's now guarded with
+       HARBOUR_COMPAT_XPP, so there is a possibility to switch to the
        fully Clipper compliant, or the XBase++ compliant method.
      + NOTE added about dbSkipper.
    * source/rtl/filesys.c
    + source/rtl/binnum.c (added)
-     * BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN() functions moved to 
+     * BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN() functions moved to
        a separate source file. Since these were not FileSys APi functions.
        WARNING ! Please update non-GNU make systems.
    - include/caundoc.api renamed to
    + include/hbundoc.api
      include/Makefile
      tests/extend2.c
-     * Include file name standardized, now the HBUNDOC.API file should 
+     * Include file name standardized, now the HBUNDOC.API file should
        contain all undocumented API calls (not only for CA-Cl*pper).
    - include/harbour.ch renamed to
    + include/hbclip.ch
@@ -67,7 +80,7 @@
        modules and standard OS makefiles.
        MAX()      -> HB_MAX_()
        MIN()      -> HB_MIN_()
-       (the additional underscore is need to avoid name collisions with 
+       (the additional underscore is need to avoid name collisions with
         Harbour functions HB_MIN() and HB_MAX())
        LOBYTE()   -> HB_LOBYTE()
        HIBYTE()   -> HB_HIBYTE()
@@ -90,7 +103,7 @@
      include/hbextern.ch
      source/runner/stdalone/external.prg
      + Public dbSkipper() function made STATIC, renamed to Skipped() to be
-       Clipper compatible. Clipper doesn't have any public dbSkipper(), 
+       Clipper compatible. Clipper doesn't have any public dbSkipper(),
        _dbSkipper() or Skipped() functions.
      - Non-Clipper compatible function _dbSkipper() removed.
      * Formatted.

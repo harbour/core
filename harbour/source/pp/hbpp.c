@@ -65,7 +65,7 @@ int WorkCommand ( char*, char*, COMMANDS* );
 int WorkTranslate ( char*, char*, COMMANDS*, int* );
 int CommandStuff ( char *, char *, char *, int*, int, int );
 int RemoveSlash( char * );
-int WorkMarkers( char**, char**, char*, int* );
+int WorkMarkers( char**, char**, char*, int*, int );
 int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
 int TestOptional( char*, char* );
@@ -88,7 +88,7 @@ int strocpy (char*, char* );
 int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
 int truncmp (char**, char**, int);
-int strincmp (char*, char**);
+int strincmp (char*, char**, int);
 int strolen ( char* );
 void stroupper ( char* );
 int strotrim ( char* );
@@ -865,7 +865,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
             aIsRepeate[ Repeate ] = 0;
             lastopti[Repeate++] = ptrmp;
             ptrmp++;
-            if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_xcom, com_or_xcom ) )
+            if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                SkipOptional( &ptrmp );
             break;
          case ']':
@@ -914,7 +914,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
             break;
          case '\1':  /*  Match marker */
             if( !numBrackets ) strtopti = NULL;
-            if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres ) )
+            if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_xcom ) )
             {
                if ( numBrackets )
                {
@@ -1016,7 +1016,7 @@ int RemoveSlash( char *stroka )
   return lenres;
 }
 
-int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
+int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int com_or_xcom )
 {
  char expreal[MAX_NAME], exppatt[MAX_NAME];
  int lenreal = 0, maxlenreal = STR_SIZE, lenpatt;
@@ -1123,7 +1123,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
        SKIPTABSPACES( ptr );
            /* Comparing real parameter and restriction value */
        ptrtemp = ptr;
-       if ( !strincmp ( *ptri, &ptr ) )
+       if ( !strincmp ( *ptri, &ptr, !com_or_xcom ) )
        {
          lenreal = stroncpy( expreal, *ptri, (ptr-ptrtemp) );
          *ptri += lenreal;
@@ -1355,7 +1355,7 @@ int CheckOptional( char* ptrmp, char* ptri, char* ptro, int* lenres, int com_or_
          }
          break;
       case '\1':  /*  Match marker */
-         if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres ) )
+         if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_xcom ) )
          {
             if ( numBrackets - save_numBr > 0 )
             {
@@ -1382,10 +1382,30 @@ int CheckOptional( char* ptrmp, char* ptri, char* ptro, int* lenres, int com_or_
       }
       SKIPTABSPACES( ptri );
    };
+   if ( *ptri == '\0' )
+   {
+      do
+      {
+         SKIPTABSPACES( ptrmp );
+         if( *ptrmp == '[' )
+         {
+            ptrmp++;
+            SkipOptional( &ptrmp );
+         }
+         else if( *ptrmp == ']' )
+            break;
+         else
+         {
+            result = 0;
+            break;
+         }
+      }
+      while ( 1 );
+   }
    Repeate = save_Repeate;
    numBrackets = save_numBr;
    lReplacePat = TRUE;
-   return result;
+   return result ;
 }
 
 void SkipOptional( char** ptri )
@@ -1930,9 +1950,9 @@ int truncmp (char** ptro, char** ptri, int lTrunc )
    }
    return 1;
 }
-int strincmp (char* ptro, char** ptri )
+int strincmp (char* ptro, char** ptri, int lTrunc )
 {
-   char co, ci;
+   char *ptrb = ptro, co, ci;
 
    for ( ; **ptri != ',' && **ptri != '[' && **ptri != ']' &&
        **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
@@ -1944,6 +1964,11 @@ int strincmp (char* ptro, char** ptri )
        ( ( !ISNAME(*ptro) && ISNAME(co) ) ||
        ( !ISNAME(co) ) ) ) )
       return 0;
+   else if ( lTrunc && ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(*ptro) && ISNAME(co) )
+   {
+//      while( ISNAME(**ptri) ) (*ptri)++;
+      return 0;
+   }
    return 1;
 }
 

@@ -31,7 +31,22 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
+
+
 */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Felipe G. Coury <fcoury@flexsys-ci.com>
+ *    HB_SQLNUMRES()
+ *    HB_SQLDESCRIB()
+ *    HB_SQLEXTENDE()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include <windows.h>
 #include <limits.h>
@@ -41,9 +56,10 @@
 #include <ctype.h>
 #include "extend.h"
 #include "itemapi.h"
-#include "harb.h"
+#include "hbdefs.h"
 #include <sql.h>
 #include <sqlext.h>
+#include <sqltypes.h>
 
 HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
 {
@@ -128,3 +144,88 @@ HARBOUR HB_SQLGETDATA( void ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBu
    hb_xfree( ( PTR ) bBuffer );
    hb_retni( wResult );
 }
+
+/* HB_NUMRESULTCOLS( hStmt, @nColCount ) */
+HARBOUR HB_SQLNUMRES( void )
+{
+    SQLSMALLINT nCols;
+    WORD wResult = SQLNumResultCols( ( HSTMT ) hb_parnl( 1 ), &nCols );
+
+    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
+       hb_stornl( ( LONG ) nCols, 2 );
+
+    hb_retni( wResult );
+}
+
+/* HB_SQLDESCRIBECOL( hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType, @nColSize, @nDec, @nNull ) --> nRetCode */
+HARBOUR HB_SQLDESCRIB( void )
+{
+    SDWORD      lLen      = ( SDWORD ) hb_parnl( 4 );
+    PTR         bBuffer   = hb_xgrab( lLen );
+    SQLSMALLINT wBufLen   = hb_parni( 5 );
+    SQLSMALLINT wDataType = hb_parni( 6 );
+    SQLUINTEGER wColSize  = hb_parni( 7 );
+    SQLSMALLINT wDecimals = hb_parni( 8 );
+    SQLSMALLINT wNullable = hb_parni( 9 );
+    WORD        wResult   = SQLDescribeCol( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ),
+                                            ( PTR ) bBuffer, hb_parni( 4 ), &wBufLen,
+                                            &wDataType, &wColSize, &wDecimals,
+                                            &wNullable );
+
+    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
+    {
+       hb_storclen( ( LPSTR ) bBuffer,
+                    ( WORD ) wBufLen, 3 );
+       hb_stornl( ( LONG ) wBufLen, 5 );
+       hb_stornl( ( LONG ) wDataType, 6 );
+       hb_stornl( ( LONG ) wColSize, 7 );
+       hb_stornl( ( LONG ) wDecimals, 8 );
+       hb_stornl( ( LONG ) wNullable, 9 );
+    }
+
+    hb_xfree( ( PTR ) bBuffer );
+    hb_retni( wResult );
+}
+
+/* HB_SQLEXTENDEDFETCH( hStmt, nOrientation, nOffset, @nRows, @nRowStatus ) */
+HARBOUR HB_SQLEXTENDE( void )
+{
+    SQLUINTEGER  uiRowCountPtr = hb_parni( 4 );
+    SQLUSMALLINT siRowStatus   = hb_parni( 5 );
+    WORD         wResult       = SQLExtendedFetch( ( HSTMT ) hb_parnl( 1 ),
+                                                   hb_parnl( 2 ),
+                                                   hb_parnl( 3 ),
+                                                   &uiRowCountPtr,
+                                                   &siRowStatus );
+
+    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
+    {
+       hb_stornl( ( LONG ) uiRowCountPtr, 4 );
+       hb_stornl( ( LONG ) siRowStatus, 5 );
+    }
+
+    hb_retni( wResult );
+}
+
+HARBOUR HB_SQLFETCHSC( void )
+{
+    hb_retni( SQLFetchScroll( ( HSTMT ) hb_parnl( 1 ),
+                              hb_parnl( 2 ), hb_parnl( 3 ) ) );
+}
+
+HARBOUR HB_SQLERROR() //  hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg
+{
+   BYTE bBuffer1[ 256 ], szErrorMsg[ 256 ];
+   UDWORD lError;
+   SWORD wLen;
+
+   hb_retni( SQLError( ( HENV ) hb_parnl( 1 ), ( HDBC ) hb_parnl( 2 ),
+                       ( HSTMT ) hb_parnl( 3 ), bBuffer1, &lError,
+                       szErrorMsg, 256, &wLen ) );
+
+   hb_storc( bBuffer1, 4 );
+   hb_stornl( lError, 5 );
+   hb_storc( szErrorMsg, 6 );
+}
+
+

@@ -92,4 +92,11 @@ nullablity of a column in a table. */
 #define SQL_NULL_HDBC                   0
 #define SQL_NULL_HSTMT                  0
 
+#define SQL_FETCH_NEXT                   1
+#define SQL_FETCH_FIRST                  2
+#define SQL_FETCH_LAST                   3
+#define SQL_FETCH_PRIOR                  4
+#define SQL_FETCH_ABSOLUTE               5
+#define SQL_FETCH_RELATIVE               6
+#define SQL_FETCH_BOOKMARK               8
 

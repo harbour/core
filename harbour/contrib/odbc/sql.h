@@ -1250,6 +1250,11 @@ SQLRETURN SQL_API SQLSetScrollOptions(    /*      Use SQLSetStmtOptions */
     SQLINTEGER         crowKeyset,
     SQLUSMALLINT       crowRowset);
 
+SQLRETURN SQL_API SQLFetchScroll(
+        SQLHSTMT        hstmt,
+        SQLSMALLINT     fOrientation,
+        SQLINTEGER      fOffset);
+
 #endif /* RC_INVOKED */
 
 #ifdef __cplusplus
