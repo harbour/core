@@ -1,3 +1,9 @@
+19990911-20:25 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/tone.c
+    ! Added '|| defined(__CYGWIN__)' to the #if block for HARBOUR_GCC_OS2
+      and _Windows for calculating the value for temp for each pass of the
+      tone duration timing loop.
+  
 19990911-07:42 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     added new files for compiler to exe generation section

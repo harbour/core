@@ -158,7 +158,7 @@ void hb_tone( double frequency, double duration )
 #endif
    while( duration > 0.0 )
    {
-#if defined(HARBOUR_GCC_OS2) || defined(_Windows)
+#if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(__CYGWIN__)
       temp = MIN( MAX ( 0, duration ), ULONG_MAX );
 #elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__)
       temp = MIN( MAX ( 0, duration ), USHRT_MAX );
