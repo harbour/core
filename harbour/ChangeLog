@@ -7,6 +7,16 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2001-12-31 13:22 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/compiler/genc.c
+   * include/hbdefs.h
+     * Cleaned up the INIT/EXIT code generation
+     ! Fixed function header generation for INLINE C.
+     % Optimized a bit of code related to the generation of
+       INLINE C declarations.
+
    * include/hbtypes.h
      ! Fixed CVS header and self guard.
 
