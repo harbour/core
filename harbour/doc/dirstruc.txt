@@ -170,6 +170,8 @@ in order to remove empty directories)
 |
 +---source             - All source files reside underneath.
 |   |
+|   +---codepage       - National codepage collection.
+|   |
 |   +---common         - Common function and Expression Optimizer.
 |   |
 |   +---compiler       - Harbour compiler module.
