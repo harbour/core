@@ -54,11 +54,7 @@
 
 /* *********************************************************************** */
 
-#ifdef __linux__
-   #include <slang/slang.h>
-#else
-   #include <slang.h>
-#endif
+#include <slang.h>
 
 /* missing defines in previous versions of Slang - this can not work ! */
 #if SLANG_VERSION < 10400

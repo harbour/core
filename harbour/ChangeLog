@@ -1,3 +1,11 @@
+2001-11-20 08:18 GMT Dave Pearson <davep@davep.org>
+   * source/rtl/gtsln/Makefile
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtsln/kbsln.c
+     * Applied fixes from Marek Paliwoda <paliwoda@inetia.pl> that lets
+       the slang GT driver code build on different GNU/Linux distributions
+       (and possibly other flavours of Un*x).
+	
 2001-11-20 05:20 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/harbour.y
      ! declare function prototype __yy_memcpy() to satisfy Borland

@@ -54,12 +54,7 @@
 
 /* *********************************************************************** */
 
-#ifdef __linux__
-   #include <slang/slang.h>
-#else
-   #include <slang.h>
-#endif
-
+#include <slang.h>
 #include <sys/ioctl.h>
 
 #ifdef M_UNIX
