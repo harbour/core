@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.2  1999/06/09 18:06:05  dholm
+ * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.1  1999/06/02 06:49:40  ajahja
  * Adding GT Library
  *
@@ -57,8 +60,7 @@
 #include <extend.h>
 
 
-HARBOUR
-GT_StrLeft()
+HARBOUR GT_STRLEFT( void )
 {
   char *string;
   char *cset;

@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.2  1999/06/09 18:06:03  dholm
+ * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.1  1999/06/02 06:49:38  ajahja
  * Adding GT Library
  *
@@ -45,8 +48,7 @@
 
 #include <extend.h>
 
-HARBOUR
-GT_asciisum()
+HARBOUR GT_ASCIISUM( void )
 {
 	char *str;
    int  len, i;

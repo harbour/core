@@ -1,3 +1,65 @@
+19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/files.c
+    - Set _fmode to O_BINARY before using creat(),
+      then restore to previous value afterwards
+  * source/tools/asciisum.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/ascpos.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/atdiff.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/chareven.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/charmix.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/charodd.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/chrcount.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/chrfirst.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/chrtotal.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/hb_f.c
+    - HARBOUR function names must be in upper case
+  * source/tools/strcount.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/strcspn.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/strdiff.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/strexpan.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/strleft.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/strpbrk.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * source/tools/strright.c
+    - HARBOUR function names must be in upper case
+    - HARBOUR functions must have a void argument list
+  * tests/working/spawn2.prg
+    - Added //NOTEST
+  * tests/working/test_all.prg
+    - Made compiler independent
+    - Added restart capability
+    - Renamed created batch file to TESTALL.BAT, so that it can be run
+      without having to include the .BAT extenstion.
+
 19990609-11:25 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/set.c
     - Removed "+ 1" in setting y_stop to default stop point, because it

@@ -207,7 +207,10 @@ int _fsOpen( char * name, int flags )
 int _fsCreate( char * name, int flags )
 {
 #if defined(HAVE_POSIX_IO)
+        int old_fmode = _fmode;
+        _fmode = O_BINARY;
         return creat(name,convert_create_flags(flags));
+        _fmode = old_fmode;
 #else
        return 0;
 #endif

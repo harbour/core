@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.3  1999/06/09 18:06:04  dholm
+ * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.2  1999/06/02 19:53:28  dholm
  * See ChangeLog entry 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
  *
@@ -54,8 +57,7 @@
 
 #include <extend.h>
 
-HARBOUR
-GT_charOdd()
+HARBOUR GT_CHARODD( void )
 {
   char *s1, *s2;
   int len, i;

@@ -16,6 +16,9 @@
  * ---------------------
  *
  * $Log$
+ * Revision 1.2  1999/06/09 18:06:04  dholm
+ * See ChangeLog entry 19990609-12:55 EDT David G. Holm <dholm@jsd-llc.com>
+ *
  * Revision 1.1  1999/06/02 06:49:39  ajahja
  * Adding GT Library
  *
@@ -56,8 +59,7 @@
 
 #include <extend.h>
 
-HARBOUR
-gt_chrtotal()
+HARBOUR GT_CHRTOTAL( void )
 {
   char *s1, *s2;
   int count, p1, p2, l2, l1;
