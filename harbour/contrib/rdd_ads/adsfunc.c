@@ -1222,23 +1222,45 @@ HB_FUNC( ADSREFRESHRECORD )
 
 HB_FUNC( ADSCOPYTABLE )
 {
+   // lSuccess := AdsCopyTable( cTargetFile [, nAdsFilterOption ] )
+
    ADSAREAP pArea;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 usFilterOption;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+
    if( pArea )
    {
       if( ISCHAR( 1 ) )
       {
-         AdsCopyTable( pArea->hTable, ADS_RESPECTFILTERS, (UNSIGNED8 *) hb_parc( 1 ) );
+         if( ISNUM( 2 ) )
+            usFilterOption = hb_parni( 2 );
+         else
+            usFilterOption = ADS_RESPECTFILTERS;  // Default
+
+         if( pArea->hOrdCurrent != 0 )  // An index is active so copy table in indexed order
+             ulRetVal = AdsCopyTable( pArea->hOrdCurrent, usFilterOption, (UNSIGNED8 *) hb_parc( 1 ) );
+         else
+             ulRetVal = AdsCopyTable( pArea->hTable, usFilterOption, (UNSIGNED8 *) hb_parc( 1 ) );
+
+         if( ulRetVal == AE_SUCCESS )
+         {
+            hb_retl( 1 );
+            return;
+         }
       }
       else
       {
          hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSCOPYTABLE" );
-         return;
       }
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSCOPYTABLE" );
+   {
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLE" );
+   }
+
+   hb_retl( 0 );
 
 }
 
@@ -1827,33 +1849,65 @@ HB_FUNC( ADSRESTRUCTURETABLE )
 
 HB_FUNC( ADSCOPYTABLECONTENTS )
 {
-   ADSAREAP pArea;
-   ADSAREAP pDest;
-   UNSIGNED32 ulRetVal;
-   char * szAlias = hb_parc(1);
+   // lSuccess := AdsCopyTableContents( cSourceAlias [, nAdsFilterOption ] )
+   // Current work area is assumed as the target (same as APPEND FROM)
 
-   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer(); // Source
-   if( pArea )
+   ADSAREAP pSource, pTarget;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 usFilterOption;
+
+   if( ISCHAR( 1 ) )
    {
-      if( hb_rddSelectWorkAreaAlias(szAlias) == SUCCESS )
+      pTarget = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();  // Append/copy into current work area
+
+      if( pTarget )
       {
-         pDest = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer(); // Destination
-         if (pDest)
+         if( hb_rddSelectWorkAreaAlias( (char *) hb_parc( 1 ) ) == SUCCESS )
          {
-            ulRetVal = AdsCopyTableContents( pArea->hTable,
-                                             pDest->hTable,
-                                             ADS_IGNOREFILTERS );
-            if ( ulRetVal == AE_SUCCESS )
-               hb_retl(1);
+            pSource = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+
+            hb_rddSelectWorkAreaNumber( pTarget->uiArea );  // Restore current/target work area
+
+            if( pSource )
+            {
+               if( ISNUM( 2 ) )
+                  usFilterOption = hb_parni( 2 );
+               else
+                  usFilterOption = ADS_RESPECTFILTERS;  // Default
+
+               if( pSource->hOrdCurrent != 0 )  // An index is active so copy table in indexed order
+                  ulRetVal = AdsCopyTableContents( pSource->hOrdCurrent, pTarget->hTable, usFilterOption );
+               else
+                  ulRetVal = AdsCopyTableContents( pSource->hTable, pTarget->hTable, usFilterOption );
+
+               if( ulRetVal == AE_SUCCESS )
+               {
+                  hb_retl( 1 );
+                  return;
+               }
+            }
             else
-               hb_retl(0);
+            {
+               hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
+            }
+         }
+         else
+         {
+            hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
          }
       }
       else
+      {
          hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
+      }
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, " ADSCOPYTABLECONTENTS" );
+   {
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSCOPYTABLECONTENTS" );
+   }
+
+   hb_retl( 0 );
+
 }
 
 #endif   /* ADS_REQUIRE_VERSION6  */
