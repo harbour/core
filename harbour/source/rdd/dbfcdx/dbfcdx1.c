@@ -3312,9 +3312,9 @@ HB_FUNC( DBFCDX_GETFUNCTABLE )
    RDDFUNCS * pTable;
    USHORT * uiCount;
 
-   uiCount = ( USHORT * ) hb_parnl( 1 );
+   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
-   pTable = ( RDDFUNCS * ) hb_parnl( 2 );
+   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &cdxTable, &cdxSuper, ( BYTE * ) "DBF" ) );
    else

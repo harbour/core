@@ -1,3 +1,20 @@
+20000504-17:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+   *include/hbvm.h
+   *source/vm/hvm.c
+      * added hb_vmPushPointer( void * pPointer ) function to push
+      an item of type HB_IT_POINTER onto the eval stack
+      
+   *source/rdd/dbcmd.c
+   *source/rdd/dbf1.c
+   *source/rdd/delim1.c
+   *source/rdd/sdf1.c
+   *source/rdd/dbfcdx/dbfcdx1.c
+   *source/rdd/dbfntx/dbfntx1.c
+      * changed to access pointers via hb_vmPushPointer/hb_itemGetPtr 
+      instead of passing them using values of long type
+ 
+
 20000504-04:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbpcode.c

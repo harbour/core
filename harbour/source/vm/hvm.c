@@ -3283,6 +3283,15 @@ void hb_vmPushDate( long lDate )
    hb_stackPush();
 }
 
+void hb_vmPushPointer( void * pPointer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushPointer(%ld)", pPointer));
+
+   hb_stack.pPos->type = HB_IT_POINTER;
+   hb_stack.pPos->item.asPointer.value = pPointer;
+   hb_stackPush();
+}
+
 void hb_vmPushString( char * szText, ULONG length )
 {
    char * szTemp;

@@ -2113,9 +2113,12 @@ HB_FUNC( DBF_GETFUNCTABLE )
    RDDFUNCS * pTable;
    USHORT * uiCount;
 
-   uiCount = ( USHORT * ) hb_parnl( 1 );
+   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
-   pTable = ( RDDFUNCS * ) hb_parnl( 2 );
+   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   
+   HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &dbfTable, &dbfSuper, 0 ) );
    else

@@ -939,8 +939,8 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    /* Call <szDriver>_GETFUNCTABLE() */
    hb_vmPushSymbol( pGetFuncTable->pSymbol );
    hb_vmPushNil();
-   hb_vmPushLong( ( long ) &uiFunctions );
-   hb_vmPushLong( ( long ) &pRddNewNode->pTable );
+   hb_vmPushPointer( ( void * ) &uiFunctions );
+   hb_vmPushPointer( ( void * ) &pRddNewNode->pTable );
    hb_vmDo( 2 );
    if ( hb_parni( -1 ) != SUCCESS )
    {
@@ -992,6 +992,12 @@ static void hb_rddSelectFirstAvailable( void )
    s_pCurrArea = NULL;   /* Selected WorkArea must be created */
 }
 
+/* 
+ * pTable - a table in new RDDNODE that will be filled
+ * pSubTable - a table with a list of supported functions
+ * pSuperTable - a current table in a RDDNODE
+ * szDrvName - a driver name that will be inherited
+*/
 ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName )
 {
    LPRDDNODE pRddNode;
@@ -1006,6 +1012,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    /* Copy the pSuperTable into pTable */
    if( !szDrvName || ( uiCount = strlen( ( const char * ) szDrvName ) )==0 )
    {
+      /* no name for inherited driver - use the default one */
       memcpy( pTable, &defTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &defTable, sizeof( RDDFUNCS ) );
    }

@@ -88,6 +88,7 @@ extern void    hb_vmPushLogical( BOOL bValue );    /* pushes a logical value ont
 extern void    hb_vmPushString( char * szText, ULONG length );  /* pushes a string on to the stack */
 extern void    hb_vmPushDate( long lDate );   /* pushes a long date onto the stack */
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
+extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
 
 /* stack management functions */
 extern void    hb_stackDispCall( void );
