@@ -525,10 +525,10 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
         {
           ulFunctionOffset = ( hb_compFunctionGetPos( pSymbol->szName ) - 1 ) *
             sizeof( prgFunction );
-          * ( ( ULONG * ) &symbol[ 5 ] ) = ulFunctionOffset;
+          * ( ( ULONG * ) &symbol[ 8 ] ) = ulFunctionOffset; /* 8 offset of function pointer into symbol */
         }
       else
-        * ( ( ULONG * ) &symbol[ 5 ] ) = 0;
+        * ( ( ULONG * ) &symbol[ 8 ] ) = 0; /* 8 offset of function pointer into symbol */
 
       if( pSymbol->cScope == HB_FS_MESSAGE )
         symbol[ 4 ] = HB_FS_PUBLIC;
