@@ -45,6 +45,7 @@ dirbase::
 
 clean::
 	-for %f in ($(ARCH_DOS)\*.*) do $(RM) %f
+	-for %%f in ($(ARCH_DOS)\*.*) do $(RM) %%f
 	-if exist *.bak $(RM) *.bak
 	-if exist *.obj $(RM) *.obj
 	-if exist core $(RM) core

@@ -7,6 +7,7 @@ ROOT = ../
 ifeq ($(HB_ARCHITECTURE),w32)
 
 DIRS=\
+	btree \
 	htmllib \
 	libct \
 	libgt \
@@ -17,7 +18,7 @@ DIRS=\
 
 
 else
-ifeq ($(HB_ARCHITECTURE),os2)
+ifeq ($(HB_COMPILER),icc)
 
 DIRS=\
 	hgf/os2pm \
@@ -29,8 +30,11 @@ DIRS=\
 	samples \
 
 else
+ifeq ($(HB_ARCHITECTURE),os2)
 
 DIRS=\
+	btree \
+	hgf/os2pm \
 	htmllib \
 	libct \
 	libgt \
@@ -38,6 +42,18 @@ DIRS=\
 	libnf \
 	samples \
 
+else
+
+DIRS=\
+	btree \
+	htmllib \
+	libct \
+	libgt \
+	libmisc \
+	libnf \
+	samples \
+
+endif
 endif
 endif
 

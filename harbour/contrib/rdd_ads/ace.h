@@ -35,15 +35,16 @@
 #endif  // ADS_LINUX && ACE
 
 
-#ifdef ADS_LINUX
+#if defined(ADS_LINUX) || defined(__GNUC__)
    #pragma pack( 1 )
 #else
    #pragma pack( push, 1 )
 #endif
 
 /* This forces a warning for single equals in if statements */
-#ifdef WIN32
-   // 16-bit compiler doesn't seem to like this
+#if defined( WIN32 ) && !defined( ADS_LINUX )
+   /* 16-bit compiler doesn't seem to like this */
+   /* MingWin reports "warning: ignoring pragma: )" */
    #pragma warning( error : 4706 )
 
    #define ADS_PATH_DELIMITER    '\\'
@@ -78,7 +79,7 @@
 
 #if defined( ASANLM ) || defined( ADS_LINUX ) || defined( ASANT ) || defined( NLM ) || defined( ADS_NT ) || defined( ADS_WIN9X ) || defined( STAND_ALONE_EXE )
    #define ENTRYPOINT
-#elif defined( WIN32 ) && !defined( __BORLANDC__ )
+#elif defined( WIN32 ) && !defined( __BORLANDC__ ) && ! defined( __GNUC__ )
    #define ENTRYPOINT _declspec( dllexport ) WINAPI
 #else
    #define ENTRYPOINT _export WINAPI
@@ -2264,7 +2265,7 @@ UNSIGNED32 ENTRYPOINT AdsDDDeployDatabase( UNSIGNED8 *pucDestination,
 #endif
 
 
-#ifdef ADS_LINUX
+#if defined(ADS_LINUX) || defined(__GNUC__)
    #pragma pack()
 #else
    #pragma pack( pop )

@@ -55,6 +55,10 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#ifdef PI
+/* DJGPP defines PI in math.h */
+#undef PI
+#endif
 #define PI  ( 3.1415926535897932384626433 )
 
 /* Ceiling( <nNumber> ) --> nInteger

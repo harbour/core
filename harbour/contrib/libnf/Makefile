@@ -96,7 +96,6 @@ PRG_SOURCES= \
 	miltime.prg \
 	min2dhm.prg \
 	month.prg \
-	mouse1.prg \
 	mouse2.prg \
 	netpv.prg \
 	nooccur.prg \
@@ -138,6 +137,9 @@ PRG_SOURCES= \
 	woy.prg \
 	xbox.prg \
 	year.prg \
+
+BAD_PRG_SOURCES= \
+	mouse1.prg \
 
 LIBNAME=nf
 
