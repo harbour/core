@@ -62,7 +62,7 @@
  * 'V'olume label.
  *
  * For a given file request, it is implied that the attribute mask includes
- * all attributes except 'H'idden, 'S'ystem and 'D'irectory and 'V'olume.
+ * all attributes except 'H'idden, 'S'ystem, 'D'irectory and 'V'olume.
  * The returned file list will always include (for instance) 'R'eadOnly files
  * unless they also happen to be 'H'idden and that attribute was not requested.
  *
