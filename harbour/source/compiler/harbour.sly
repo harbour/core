@@ -521,7 +521,7 @@ Variable    : IdentName         {
                                   $$ = hb_compExprNewVar( $1 );
                                   if( s_bBlock )
 				  {
-                                     s_bBlockDeclared = ( s_bBlockDeclared || hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast ) );
+                                     s_bBlockDeclared = ( s_bBlockDeclared || hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast ) || ( hb_comp_bStartProc == FALSE && hb_compStaticGetPos( $1, hb_comp_functions.pFirst ) ) );
 				  }
                                 }
 ;
@@ -534,7 +534,7 @@ VarAlias    : IdentName ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
 MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
                                 if( s_bBlock )
 				{
-				   s_bBlockDeclared = s_bBlockDeclared || hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast );
+                                   s_bBlockDeclared = ( s_bBlockDeclared || hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast ) || ( hb_comp_bStartProc == FALSE && hb_compStaticGetPos( $1, hb_comp_functions.pFirst ) ) );
                                    s_bBlockMacro = TRUE;
 				}
                               }
@@ -1088,6 +1088,7 @@ GetVar     : Variable
              {
 		s_bSetGet = ( hb_compLocalGetPos( $1->value.asSymbol ) ||
                               hb_compStaticGetPos( $1->value.asSymbol, hb_comp_functions.pLast ) ||
+                              ( hb_comp_bStartProc == FALSE && hb_compStaticGetPos( $1->value.asSymbol, hb_comp_functions.pFirst ) ) ||
 		              hb_compMemvarGetPos( $1->value.asSymbol, hb_comp_functions.pLast ) ||
 		              hb_compFieldGetPos( $1->value.asSymbol, hb_comp_functions.pLast ) );
 	        $$ = $1;

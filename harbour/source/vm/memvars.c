@@ -1152,10 +1152,11 @@ HB_FUNC( __MVDBGINFO )
 HB_FUNC( __ISMV )
 {
    HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
+   PHB_DYNS pDyn = NULL ;
 
    if( pName )
    {
-      hb_retl( hb_memvarFindSymbol( pName ) ? 1 : 0 );
+      hb_retl( ( ( pDyn = hb_memvarFindSymbol( pName ) ) && pDyn->hMemvar ) ? 1 : 0 );
    }
    else
    {
@@ -1586,7 +1587,7 @@ HB_HANDLE hb_memvarGetVarHandle( char *szName )
       return  pDyn->hMemvar;
    else
       return 0; /* invalid handle */
-}  
+}
 
 PHB_ITEM hb_memvarGetValueByHandle( HB_HANDLE hMemvar )
 {
