@@ -82,12 +82,10 @@
  *  $END$
  */
 Function BOM( date)
- local yyyy
  date := If( ValType( date) == 'D', date, Date())
  if (empty(date))
    return (date)
  endif
- yyyy := Str( Year( date), 4, 0)
  Return StoD( SubStr( DtoS( date), 1, 6) + '01')
 
 
@@ -119,7 +117,7 @@ Function BOM( date)
  *  $END$
  */
 Function EOM( date)
- Local m 
+ Local m
  date := If( ValType( date) == 'D', date, Date())
  if (empty(date))
    return (date)
@@ -158,7 +156,7 @@ Function EOM( date)
  *  $END$
  */
 Function BOQ( date)
- Local boq, m, yyyy 
+ Local boq AS DATE, m AS NUMERIC, yyyy AS STRING
  date := If( ValType( date) == 'D', date, Date())
  if (empty(date))
    return (date)
@@ -167,11 +165,11 @@ Function BOQ( date)
  If     ( m := Month( date)) <= 3
   boq := StoD( yyyy + '0101')
  ElseIf m <= 6
-  boq := StoD( yyyy + '0301')
+  boq := StoD( yyyy + '0401')
  ElseIf m <= 9
-  boq := StoD( yyyy + '0901')
+  boq := StoD( yyyy + '0701')
  Else
-  boq := StoD( yyyy + '1201')
+  boq := StoD( yyyy + '1001')
  End
 Return boq
 
@@ -204,19 +202,20 @@ Return boq
  *  $END$
  */
 Function EOQ( date)
- Local m, eoq, yyyy
+ Local m AS NUMERIC, eoq AS DATE, yyyy AS STRING
  date := If( ValType( date) == 'D', date, Date())
  if (empty(date))
   return (date)
  endif
- If     ( m := Month( date)) <= 12
-  eoq := StoD( yyyy + '1231')
- ElseIf m <= 9
-  eoq := StoD( yyyy + '0930')
+ yyyy := NtoS( Year( date))
+ If ( m := Month( date)) <= 3
+  eoq := StoD( yyyy + '0331')
  ElseIf m <= 6
   eoq := StoD( yyyy + '0630')
+ ElseIf m <= 9
+  eoq := StoD( yyyy + '0930')
  Else
-  eoq := StoD( yyyy + '0331')
+  eoq := StoD( yyyy + '1231')
  End
  Return eoq
 
@@ -318,12 +317,8 @@ Function EOY( date)
  *  $END$
  */
 Function StoD( cdate)
- Local ofd := Set( _SET_DATEFORMAT, 'dd.mm.yyyy'), rvd 
+ Local ofd := Set( _SET_DATEFORMAT, 'dd.mm.yyyy'), rvd
  cdate := If( ValType( cdate) == 'C', cdate, DtoS( Date()))
  rvd := CtoD( SubStr( cDate, 7, 2) + '.' + SubStr( cDate, 5, 2)  + '.' + SubStr( cDate, 1, 4))
  Set( _SET_DATEFORMAT, ofd)
  Return rvd
-
-
-
-
