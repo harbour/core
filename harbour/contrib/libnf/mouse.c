@@ -51,6 +51,9 @@
  *
 */
 
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
 #include "extend.h"
 #if defined(HB_OS_DOS)
 #include "dos.h"
@@ -101,7 +104,7 @@ HB_FUNC(_MGET_MVERSION)
 #if defined(HB_OS_DOS)
    {
       union REGS regs;
-      
+
       regs.HB_XREGS.ax = 0x24;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
@@ -119,12 +122,12 @@ HB_FUNC(_MGET_MVERSION)
    }
 #endif
 
-   {   
+   {
       PHB_ITEM pArray = hb_itemArrayNew( 4 );
-      
+
       PHB_ITEM pMinor = hb_itemPutNI( NULL, iMinor );
       PHB_ITEM pType = hb_itemPutNI( NULL, iType );
-      PHB_ITEM pIRQ = hb_itemPutNI( NULL, iIRQ ); 
+      PHB_ITEM pIRQ = hb_itemPutNI( NULL, iIRQ );
       PHB_ITEM pMajor = hb_itemPutNI( NULL, iMajor );
 
       hb_itemArrayPut( pArray, 1, pMinor );
@@ -167,7 +170,7 @@ HB_FUNC(_MGET_VERSPEED)
 {
    int iSpeed;
 #if defined(HB_OS_DOS)
-   {  
+   {
       union REGS regs;
       regs.HB_XREGS.ax=0x1B;
       HB_DOS_INT86(0x33,&regs,&regs);
@@ -186,7 +189,7 @@ HB_FUNC(_MGET_DOUBLESPEED)
 {
    int iSpeed;
 #if defined(HB_OS_DOS)
-   {  
+   {
       union REGS regs;
       regs.HB_XREGS.ax=0x1B;
       HB_DOS_INT86(0x33,&regs,&regs);
@@ -410,7 +413,7 @@ HB_FUNC( _M_MSETCOORD)
       regs.HB_XREGS.dx=hb_parni(2);
       HB_DOS_INT86(0x33,&regs,&regs);
    }
-#endif   
+#endif
 }
 
 HB_FUNC( _M_MXLIMIT)
@@ -488,13 +491,13 @@ HB_FUNC( _M_MBUTPRS)
       hb_itemArrayPut( pArray, 3, pY );
       hb_itemArrayPut( pArray, 4, pStatus ); /* NOTE: I've changed 1 to 3 */
       hb_itemReturn(pArray);
-   
+
       hb_itemRelease(pArray);
       hb_itemRelease(pX);
       hb_itemRelease(pY);
       hb_itemRelease(pStatus);
       hb_itemRelease(pButton);
-   }   
+   }
 }
 
 HB_FUNC( _M_MDEFCRS)
@@ -523,8 +526,8 @@ int inButton;
 #if defined(HB_OS_DOS)
    {
       union REGS regs;
-      regs.HB_XREGS.ax=3; 
-      HB_DOS_INT86(0x33,&regs,&regs); 
+      regs.HB_XREGS.ax=3;
+      HB_DOS_INT86(0x33,&regs,&regs);
 
       inButton=regs.HB_XREGS.bx;
       inY=regs.HB_XREGS.cx;
@@ -550,7 +553,7 @@ int inButton;
 
       hb_itemArrayPut( pArray, 1, pnX );
       hb_itemArrayPut( pArray, 2, pnY );
-      hb_itemArrayPut( pArray, 3, pnButton ); 
+      hb_itemArrayPut( pArray, 3, pnButton );
 
       hb_itemReturn(pArray);
 

@@ -76,7 +76,12 @@ Ends     _NanFor
 End
 */
 /* This is the New one Rewriten in C*/
- 
+
+
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
+
 #include "extend.h"
 #if defined(HB_OS_DOS)
 #include "dos.h"

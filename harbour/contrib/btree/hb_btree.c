@@ -183,6 +183,9 @@ extern "C" {
 #else
 #endif
 
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
 #include "extend.api"
 #include "item.api"
 #include "hbapifs.h"
@@ -638,7 +641,7 @@ static LONG StackSkip( struct hb_BTree * pBTree, BTreeStack **pStack, LONG recor
       if ( STACKPOSITION( pStack ) > 0 )
         ulNode = BranchGet( pBTree, STACKNODE( pStack ), --STACKPOSITION( pStack ) );
       else
-        ulNode = NULL;
+        ulNode = (ULONG) NULL;
       if ( !BTREENODEISNULL( pBTree, ulNode ) )
       {
         StackPush( pStack, ulNode, CountGet( pBTree, ulNode ) );

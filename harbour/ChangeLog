@@ -8,6 +8,26 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+
+2003-11-10 13:20 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * harbour/contrib/btree/hb_btree.c
+     + added _CLIPDEFS_H define to let it compile on OS/2 GCC
+   * harbour/contrib/libct/bit1.c
+   * harbour/contrib/libct/bit3.c
+   * harbour/contrib/libct/ct.h
+     + added _CLIPDEFS_H define to let it compile on OS/2 GCC
+     * changed redefined base tipes to C ones, like WORD -> long, bit3.c was already
+       partly fixed before this one
+   * harbour/contrib/libnf/chdir.c
+   * harbour/contrib/libnf/dispc.c
+   * harbour/contrib/libnf/getenvrn.c
+   * harbour/contrib/libnf/kspeed.c
+   * harbour/contrib/libnf/mouse.c
+   * harbour/contrib/libnf/rmdir.c
+     + added _CLIPDEFS_H define to let it compile on OS/2 GCC, now it compiles, but a lot
+       of functions are DOS only
+
 2003-11-10 12:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbcomp.h
    * source/compiler/cmdcheck.c
@@ -20,6 +40,7 @@
       * fixed optimalization of far jumps
       + added a new switch -kJ to disable jump optimalization and
         NOOP pcode removal (optimalization is enabled by default)
+
 
 2003-11-09 00:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/pptable.c
@@ -144,14 +165,14 @@
      * Latest RDD changes, has been made by Przemyslaw Czerpak - synced with xHarbour.
 
 2003-10-30 19:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
-	* source/compiler/harbour.l
-	* source/compiler/harbour.y
-		*Fixed support for DO <procname> [WITH ...] command
-		The procedure name is not "uppercased"
-		For example:
-			DO MyProc
-		The compiler look for MyProc.prg file now
-		(instead of MYPROC.prg)
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+      *Fixed support for DO <procname> [WITH ...] command
+      The procedure name is not "uppercased"
+      For example:
+         DO MyProc
+      The compiler look for MyProc.prg file now
+      (instead of MYPROC.prg)
 
 2003-10-30 10:45 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
    * source/rtl/alert.prg

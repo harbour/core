@@ -143,6 +143,9 @@ _NanFor    ENDS
 
 /* This is the New one Rewriten in C*/
 
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
 #include "extend.h"
 #if defined(HB_OS_DOS)
 #include "dos.h"
@@ -156,15 +159,15 @@ HB_FUNC( FT_SETRATE)
       union REGS registers;
       int tempo = 0,nrepete = 0;
       switch( hb_pcount() ) {
-         case 0: 
+         case 0:
               tempo = 0 ;
               nrepete = 0;
               break;
-         case 1: 
+         case 1:
               tempo = hb_parni(1) ;
               nrepete = 0;
               break;
-         case 2: 
+         case 2:
               tempo = hb_parni(1);
               nrepete = hb_parni(2);
               break;
@@ -179,4 +182,4 @@ HB_FUNC( FT_SETRATE)
 }
 
 
-   
+

@@ -65,8 +65,8 @@ long static __numand( long wNum1, long wNum2 );
 long static __numor ( long wNum1, long wNum2 );
 long static __numxor( long wNum1, long wNum2 );
 long static __numnot( long wNum1, long wNum2 );
-long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOLP pbOk );
-void static sizeofbits( USHORTP pusBytes, LONGP plPattern, LONGP plTestMSB );
+long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOL * pbOk );
+void static sizeofbits( USHORT * pusBytes, LONG * plPattern, LONG * plTestMSB );
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -78,7 +78,7 @@ void static sizeofbits( USHORTP pusBytes, LONGP plPattern, LONGP plTestMSB );
  *      NUMANDX( <nSignificativeBits>, <nLONG1|cHexLONG1>, <nLONG2|cHexLONG2>
  *              [, ..<nLONGn|cHexLONGn>) -> <nLONGAND>
  *  $ARGUMENTS$
- *      <SignificativeBits> Designate a number in the range of 0 to 32, 
+ *      <SignificativeBits> Designate a number in the range of 0 to 32,
  *           indicating the LSB of nLONGx|cHexLONGx that will be used.
  *
  *      <nLONG | cHexLONG>  Designate either decimal or hexadecimal
@@ -140,7 +140,7 @@ HB_FUNC( NUMANDX )
  *      NUMORX( <nSignificativeBits>, <nLONG1|cHexLONG>1, <nLONG2|cHexLONG2>
  *             [, ..<nLONGn|cHexLONGn>) -> <nLONGOR>
  *  $ARGUMENTS$
- *      <SignificativeBits> Designate a number in the range of 0 to 32, 
+ *      <SignificativeBits> Designate a number in the range of 0 to 32,
  *           indicating the LSB of nLONGx|cHexLONGx that will be used.
  *
  *      <nLONG | cHexLONG>  Designate either decimal or hexadecimal
@@ -202,7 +202,7 @@ HB_FUNC( NUMORX )
  *      NUMXORX( <nSignificativeBits>, <nLONG1|cHexLONG1>, <nLONG2|cHexLONG2> )
  *              -> <nLONGXOR>
  *  $ARGUMENTS$
- *      <SignificativeBits> Designate a number in the range of 0 to 32, 
+ *      <SignificativeBits> Designate a number in the range of 0 to 32,
  *           indicating the LSB of nLONGx|cHexLONGx that will be used.
  *
  *      <nLONG | cHexLONG>  Designate either decimal or hexadecimal
@@ -265,7 +265,7 @@ HB_FUNC( NUMXORX )
  *  $SYNTAX$
  *      NUMNOTX( <nSignificativeBits>, <nLONG|cHexLONG> ) -> <nLONGNOT>
  *  $ARGUMENTS$
- *      <SignificativeBits> Designate a number in the range of 0 to 32, 
+ *      <SignificativeBits> Designate a number in the range of 0 to 32,
  *           indicating the LSB of nLONGx|cHexLONGx that will be used.
  *
  *      <nLONG | cHexLONG>  Designate either decimal or hexadecimal
@@ -326,10 +326,10 @@ HB_FUNC( NUMNOTX )
  *      CT3 number and bit manipulation functions
  *  $ONELINER$
  *  $SYNTAX$
- *      NUMROLX( <nSignificativeBits>, <nLONG|cHexLONG>, <nWORD|cHexWORD> ) 
+ *      NUMROLX( <nSignificativeBits>, <nLONG|cHexLONG>, <nWORD|cHexWORD> )
  *            -> <nLONGROL>
  *  $ARGUMENTS$
- *      <SignificativeBits> Designate a number in the range of 0 to 32, 
+ *      <SignificativeBits> Designate a number in the range of 0 to 32,
  *           indicating the LSB of nLONGx|cHexLONGx that will be used.
  *
  *      <nLONG | cHexLONG>  Designate either decimal or hexadecimal
@@ -378,7 +378,7 @@ HB_FUNC( NUMROLX )
 
      usNum2 = usNum2 % usBytes;          /* Set usNum2 < usBytes  */
 
-     lNumBak = lNum1 & lPattern;         /* lNumBak contain the section 
+     lNumBak = lNum1 & lPattern;         /* lNumBak contain the section
                                             to doesn't ROL               */
 
      for (usFor = 1; usFor <= usNum2; usFor++)
@@ -411,14 +411,14 @@ HB_FUNC( NUMROLX )
  *  $SYNTAX$
  *      NUMMIRRX( <nSignificativeBits>, <nNumber|cHexNum> ) -> <nResult>
  *  $ARGUMENTS$
- *      <SignificativeBits> Designate a number in the range of 0 to 32, 
+ *      <SignificativeBits> Designate a number in the range of 0 to 32,
  *           indicating the LSB of nLONGx|cHexLONGx that will be used.
  *
  *      <nLONG | cHexLONG>  Designate either decimal or hexadecimal
  *           number string.
  *
  *  $RETURNS$
- *      NUMMIRR() returns a value by which the bit opposite the first 
+ *      NUMMIRR() returns a value by which the bit opposite the first
  *           parameter is mirrored.
  *
  *  $DESCRIPTION$
@@ -453,7 +453,7 @@ HB_FUNC ( NUMMIRRX )
   if ( ISNUM(2) || ISCHAR(2) )
   {
      lNum1 = __getparam( 2 );
-  
+
      sizeofbits( &usBytes, &lPattern, &lTestMSB );
 
      lNumBak = lNum1 & lPattern;
@@ -462,7 +462,7 @@ HB_FUNC ( NUMMIRRX )
      {
        if ( lNum1 & 1 )
        {
-                                 
+
           lMirror = lMirror << 1;  /* if the LSB of lNum1 == 1 then */
           lMirror = lMirror | 1;   /* set the LSB of lMirror = 1    */
        }
@@ -499,7 +499,7 @@ long static __hex2long( char *cNum1, int iLenHex )
 
      if ((iNum < 0) || (iNum > 0x0F))
        break;
-     
+
      lHexNum += (unsigned long) iNum * (1 << (4 * ( iLenHex - i - 1 )));
      i--;
   }
@@ -543,7 +543,7 @@ long static __numnot( long lNum1, long lNum2 )
 }
 
 
-long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOLP pbOk )
+long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BOOL * pbOk )
 {
   long   lNumOp = 0;
   long   lNum1, lNum2;
@@ -589,7 +589,7 @@ long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BO
               lNum1 = lNumOp;
            }
 
-        }                 
+        }
 
      }
      else
@@ -615,10 +615,10 @@ long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2), BO
 
 }
 
-void static sizeofbits( USHORTP pusBytes, long *plPattern, long *plTestMSB )
+void static sizeofbits( USHORT * pusBytes, long *plPattern, long *plTestMSB )
 {
 
-  *pusBytes = ((ISNIL(1) || hb_parni(1) == 0) ? sizeof( int ) * 8 
+  *pusBytes = ((ISNIL(1) || hb_parni(1) == 0) ? sizeof( int ) * 8
                                              : (USHORT) hb_parni( 1 ) );
 
   if ( *pusBytes > sizeof( long ) * 8 )

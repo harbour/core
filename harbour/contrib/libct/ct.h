@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code: 
+ * Harbour Project source code:
  *   header for CT3 functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
@@ -56,6 +56,9 @@
 #ifndef _CT_H
 #define _CT_H 1
 
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -75,7 +78,7 @@ extern USHORT ct_error (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                         char * szDescription, char * szOperation, USHORT uiOsCode,
                         USHORT uiFlags, ULONG uiArgCount, ...);
 
-extern PHB_ITEM ct_error_subst (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode, 
+extern PHB_ITEM ct_error_subst (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                                 char * szDescription, char * szOperation, USHORT uiOsCode,
                                 USHORT uiFlags, ULONG uiArgCount, ...);
 

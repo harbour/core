@@ -95,6 +95,9 @@
  *  $END$
  */
 
+/* NOTE: we need this to prevent base types redefinition */
+#define _CLIPDEFS_H
+
 #include <extend.api>
 #include <fm.api>
 
@@ -114,7 +117,7 @@ HB_FUNC(FT_GETE)
     */
 #if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
    {
-   
+
     extern char **_environ;
     char *buffer = NULL;
     int x;

@@ -59,13 +59,13 @@
 #include "ct.h"
 #include "clipdefs.h"
 
-WORD static __hex2int( char *cNum1, int iLenHex );
-WORD static __getparam( int iParam );
-WORD static __numand( WORD wNum1, WORD wNum2 );
-WORD static __numor ( WORD wNum1, WORD wNum2 );
-WORD static __numxor( WORD wNum1, WORD wNum2 );
-WORD static __numnot( WORD wNum1, WORD wNum2 );
-long static __numfun( int iPCount, WORD (*operation)(WORD wNum1, WORD wNum2));
+long static __hex2int( char *cNum1, int iLenHex );
+long static __getparam( int iParam );
+long static __numand( long wNum1, long wNum2 );
+long static __numor ( long wNum1, long wNum2 );
+long static __numxor( long wNum1, long wNum2 );
+long static __numnot( long wNum1, long wNum2 );
+long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2));
 
 
 /*  $DOC$
@@ -76,7 +76,7 @@ long static __numfun( int iPCount, WORD (*operation)(WORD wNum1, WORD wNum2));
  *  $ONELINER$
  *      Bitwise logical AND operation on 16-bit numbers
  *  $SYNTAX$
- *      NUMAND( <nWORD1|cHexWORD1>, <nWORD2|cHexWORD2>[, ..<nWORDn|cHexWORDn>) 
+ *      NUMAND( <nWORD1|cHexWORD1>, <nWORD2|cHexWORD2>[, ..<nWORDn|cHexWORDn>)
  *            -> <nWordAND>
  *  $ARGUMENTS$
  *  $RETURNS$
@@ -103,7 +103,7 @@ HB_FUNC( NUMAND )
 
   iPCount = hb_pcount();
 
-  hb_retnl( __numfun( iPCount, (WORD (*)(WORD wNum1, WORD wNum2))(__numand) ) );
+  hb_retnl( __numfun( iPCount, (long (*)(long wNum1, long wNum2))(__numand) ) );
 }
 
 
@@ -115,7 +115,7 @@ HB_FUNC( NUMAND )
  *  $ONELINER$
  *      Bitwise logical OR operation on 16-bit numbers
  *  $SYNTAX$
- *      NUMOR( <nWORD1|cHexWORD>1, <nWORD2|cHexWORD2>[, ..<nWORDn|cHexWORDn>) 
+ *      NUMOR( <nWORD1|cHexWORD>1, <nWORD2|cHexWORD2>[, ..<nWORDn|cHexWORDn>)
  *           -> <nWordOR>
  *  $ARGUMENTS$
  *  $RETURNS$
@@ -142,7 +142,7 @@ HB_FUNC( NUMOR )
 
   iPCount = hb_pcount();
 
-  hb_retnl( __numfun( iPCount, (WORD (*)(WORD wNum1, WORD wNum2))(__numor) ) );
+  hb_retnl( __numfun( iPCount, (long (*)(long wNum1, long wNum2))(__numor) ) );
 }
 
 
@@ -182,7 +182,7 @@ HB_FUNC( NUMXOR )
 
   iPCount = 2;
 
-  hb_retnl( __numfun( iPCount, (WORD (*)(WORD wNum1, WORD wNum2))(__numxor) ) );
+  hb_retnl( __numfun( iPCount, (long (*)(long wNum1, long wNum2))(__numxor) ) );
 }
 
 
@@ -222,7 +222,7 @@ HB_FUNC( NUMNOT )
 
   iPCount = 1;
 
-  hb_retnl( __numfun( iPCount, (WORD (*)(WORD wNum1, WORD wNum2))(__numnot) ) );
+  hb_retnl( __numfun( iPCount, (long (*)(long wNum1, long wNum2))(__numnot) ) );
 }
 
 
@@ -234,7 +234,7 @@ HB_FUNC( NUMNOT )
  *  $ONELINER$
  *      Bitwise ROL (rotate left) operation on 16-bit numbers
  *  $SYNTAX$
- *      NUMROL( <nWORD1|cHexWORD1>, <nWORD1|cHexWORD1>[, <lLowByte>] ) 
+ *      NUMROL( <nWORD1|cHexWORD1>, <nWORD1|cHexWORD1>[, <lLowByte>] )
  *            -> <nWordROL>
  *  $ARGUMENTS$
  *  $RETURNS$
@@ -272,14 +272,14 @@ HB_FUNC( NUMROL )
   }
   else
     usBytes = 16;
-  
+
   usNum2 = usNum2 % usBytes;          /* Set usNum2 < usBytes  */
 
   usPattern = (-1) << usBytes;
 
   usTestRol = 1 << ( usBytes - 1 );   /* Pattern to test the MSB */
 
-  usNumBak = usNum1 & usPattern;      /* usNumBak contain the section 
+  usNumBak = usNum1 & usPattern;      /* usNumBak contain the section
                                          to doesn't ROL               */
 
   for (usFor = 1; usFor <= usNum2; usFor++)
@@ -332,7 +332,7 @@ HB_FUNC ( NUMMIRR )
   USHORT  usNum1, usBytes, usFor, usPattern = 0, usNumBak, usMirror = 0;
 
   usNum1 = (USHORT) __getparam( 1 );
-  
+
   if ( ISLOG( 2 ) )                   /* if 3th parameter is LOGICAL */
   {
     if ( hb_parl( 2 ) )
@@ -355,7 +355,7 @@ HB_FUNC ( NUMMIRR )
   {
     if ( usNum1 & 1 )
     {
-                                 
+
        usMirror = usMirror << 1;  /* if the LSB of usNum1 == 1 then */
        usMirror = usMirror | 1;   /* set the LSB of usMirror = 1    */
     }
@@ -381,11 +381,11 @@ HB_FUNC ( HEX2NUM )
 }
 */
 
-WORD static __hex2int( char *cNum1, int iLenHex )
+long static __hex2int( char *cNum1, int iLenHex )
 {
   int  i;
   int  iNum;
-  WORD uiHexNum = 0;
+  long uiHexNum = 0;
 
 
   i = ( iLenHex - 1 );
@@ -398,54 +398,54 @@ WORD static __hex2int( char *cNum1, int iLenHex )
 
      if ((iNum < 0) || (iNum > 0x0F))
        break;
-     
-     uiHexNum += (WORD) iNum * (1 << (4 * ( iLenHex - i - 1 )));
+
+     uiHexNum += (long) iNum * (1 << (4 * ( iLenHex - i - 1 )));
      i--;
   }
   return uiHexNum;
 }
 
 
-WORD static __getparam( int iParam )
+long static __getparam( int iParam )
 {
 
   if ( ISCHAR( iParam ) )
      return  __hex2int( hb_parc( iParam ), hb_parclen( iParam ) );
   else
-     return (WORD) hb_parnl( iParam );
+     return (long) hb_parnl( iParam );
 
 }
 
 
-WORD static __numand( WORD uiNum1, WORD uiNum2 )
+long static __numand( long uiNum1, long uiNum2 )
 {
     return uiNum1 & uiNum2;
 }
 
 
-WORD static __numor( WORD uiNum1, WORD uiNum2 )
+long static __numor( long uiNum1, long uiNum2 )
 {
     return uiNum1 | uiNum2;
 }
 
 
-WORD static __numxor( WORD uiNum1, WORD uiNum2 )
+long static __numxor( long uiNum1, long uiNum2 )
 {
     return uiNum1 ^ uiNum2;
 }
 
 
-WORD static __numnot( WORD uiNum1, WORD uiNum2 )
+long static __numnot( long uiNum1, long uiNum2 )
 {
     HB_SYMBOL_UNUSED (uiNum2);
     return ~uiNum1;
 }
 
 
-long static __numfun( int iPCount, WORD (*operation)(WORD wNum1, WORD wNum2))
+long static __numfun( int iPCount, long (*operation)(long wNum1, long wNum2))
 {
-  WORD uiNumOp = 0;
-  WORD uiNum1, uiNum2;
+  long uiNumOp = 0;
+  long uiNum1, uiNum2;
   int  iFor;
 
   if ( ISNUM(1) || ISCHAR(1) )
@@ -479,7 +479,7 @@ long static __numfun( int iPCount, WORD (*operation)(WORD wNum1, WORD wNum2))
            uiNum1 = uiNumOp;
         }
 
-     }                 
+     }
 
   }
   else
