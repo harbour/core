@@ -1105,10 +1105,10 @@ HARBOUR HB_STRTRAN( void )
             hb_retclen(szText, pText->item.asString.length);
       }
       else
-         hb_retc("");
+         hb_errorRT_BASE(EG_ARG, 1126, NULL, "STRTRAN");
    }
    else
-      hb_retc("");
+      hb_errorRT_BASE(EG_ARG, 1126, NULL, "STRTRAN");
 }
 
 /* returns the numeric value of a character string representation of a number  */

@@ -1,3 +1,12 @@
+19990730-19:51 CET Victor Szel <info@szelvesz.hu>
+   ! source/rtl/strings.c/HB_STRTRAN()
+     Fixed so that it throws an error instead of
+     returning "", when parameter 1 or 2 is of bad
+     type.
+   ! source/rtl/gtapi.c - Non-ANSI C compliant var
+     declaration fixed.
+     Posted by Dave Pearson <davep@hagbard.demon.co.uk>
+
 19990730-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gt/gtwin.c
      * simplified gtputs and gtSetAttribute
@@ -51,6 +60,7 @@
    ! source/rtl/alert.prg -
      Added left out original author info.
      Added missing #includes.
+     Added RCS id.
    ! source/rtl/Makefile - Added alert.prg
    ! source/rdd/Makefile - Added new RDD stuff.
    ! source/hbpp/preproc.c/HB_PREPROCESS()

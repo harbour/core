@@ -34,6 +34,8 @@
 
 */
 
+/* TODO: Move this to source/tools */
+
 #include <ctype.h>
 #include <stdio.h>
 #include "hbpp.h"
@@ -75,7 +77,7 @@ HARBOUR HB_PREPROCESS(void)
         // Some error here?
     }
 
-    hb_retc(pOut);
+    hb_retc(ptr);
 
     hb_xfree(pText);
     hb_xfree(pOut);

@@ -724,6 +724,8 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
       char * fpBuff = (char *)hb_xgrab (iLength * 2);
       if (fpBlank && fpBuff)
       {
+         char attr = _Color[s_uiColorIndex] & 0xff;
+
          memset( fpBlank, ' ', iLength );
 
          iColOld = iColNew = uiLeft;
@@ -740,8 +742,6 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
             iColSize += iCols;
          }
 
-
-         char attr = _Color[s_uiColorIndex] & 0xff;
          for (iCount = (iRows >= 0 ? uiTop : uiBottom);
               (iRows >= 0 ? iCount <= uiBottom : iCount >= uiTop);
               (iRows >= 0 ? iCount++ : iCount--))
