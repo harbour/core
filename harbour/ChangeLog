@@ -8,11 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-20 13:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbdefs.h
+     * HB_EXPORT definition for Borland C
+
 2001-12-20 20:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/compiler/genc.c
      ! add comments for easy reference in case this function needs
        to be revised.
-
 
 2001-12-20 12:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbvm.h
