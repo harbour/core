@@ -1005,6 +1005,10 @@ Local cDefBccLibs  := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.l
 Local cDefGccLibs  := "-lvm -lrtl -lgtdos -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
 Local cscreen      := Savescreen( 0, 0, Maxrow(), Maxcol() )
 local citem:=""
+Local cExt:=""
+Local cDrive:=""
+local cPath:=""
+Local cTest:=""
 nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
@@ -1119,7 +1123,7 @@ pickarry( 10, 15, 19, 64, aIn, aOut )
 nLenaOut := Len( aOut )
 
 For x := 1 To nLenaOut
-   aOut[ x ] := lower(Trim( Left( aOut[ x ], 12 ) ))
+   aOut[ x ] := Trim( Left( aOut[ x ], 12 ) )
 Next
 
 aOut := Asort( aOut )
@@ -1145,10 +1149,12 @@ Next
 aObjs := aClone(aout)
 For x := 1 To Len( aObjs )
       cItem:=aObjs[ x ]
+      hb_FNAMESPLIT(ciTem,@cPath ,@cTest, @cExt , @cDrive)
+      cExt:=substr(cExt,2)
    If !lGcc
-      aObjs[ x ]:=strtran( cItem, ".prg", ".obj" )
+      aObjs[ x ]:=cTest+"."+strtran( cExt, "prg", "obj" )
    Else
-      aObjs[ x ]:=strtran( cItem, ".prg", ".o" )
+      aObjs[ x ]:=cTest+"."+strtran( cExt, "prg", "o" )
    Endif
 Next
 
@@ -1163,23 +1169,33 @@ Elseif lCw
 Endif
 if lGcc
    if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
-        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + " $(PR) "+CRLF )
+
+        hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
+        cExt:=substr(cExt,2)
+/*        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + " $(PR) "+CRLF )*/
+          Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cExt),Strtran( cTopfile, "PRG", "" ),Strtran( cTopfile, "prg", "" )) + " $(PR) "+CRLF )
    else
-        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) +" $(PR) "+ CRLF )
+        hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
+        cExt:=substr(cExt,2)
+        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "EXE" ),cTest+"."+Strtran( cExt, "prg", "exe" )) +" $(PR) "+ CRLF )
    endif     
 else
-
-Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + " $(PR) "+CRLF )
+        hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
+        cExt:=substr(cExt,2)
+Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "exe" ),cTest+"."+Strtran( cExt, "prg", "exe" )) +" $(PR) "+ CRLF )
+//Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".EXE" ),Strtran( cTopfile, ".prg", ".exe" )) + " $(PR) "+CRLF )
 endif
-
-Fwrite( nLinkHandle, "OBJFILES =  " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) )
+ hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
+  cExt:=substr(cExt,2)
+//Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) )
+  Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "OBJ" ),cTest+"."+Strtran( cExt, "prg", "obj" ))  )
 if len(aObjs)<1
 
 Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
 else
 
 //Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
-
+//Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "OBJ" ),cTest+"."+Strtran( cExt, "prg", "obj" ))  )
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs ) .and. aObjs[x]<>cTopfile
       Fwrite( nLinkHandle, " " + aobjs[ x ] )
@@ -1188,7 +1204,10 @@ For x := 1 To Len( aobjs )
    Endif
 Next
 endif
-Fwrite( nLinkHandle, "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
+ hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
+ cExt:=substr(cExt,2)
+ Fwrite( nLinkHandle, "CFILES = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "c" ),cTest+"."+Strtran( cExt, "prg", "c" ))  )
+//Fwrite( nLinkHandle,  "CFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "C" ),Strtran( cTopfile, ".prg", "c" )))
 if len(aCs)<1
 Fwrite( nLinkHandle,  +" $(CF)"+ CRLF )
 //

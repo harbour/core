@@ -1,0 +1,126 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Zlib library for Borland C/C++ 3.x, 4.x, 5.x compilers
+#
+.autodepend
+
+CC = bcc32
+IL = implib
+ID = impdef
+# NOTE: Using TASM for some reason, this should be normally TASM32.
+#       I'll leave it to TASM until a better solution is found
+AS = tasm
+
+BIN_DIR = ..\..\..\bin
+OBJ_DIR = ..\..\..\obj\b32
+LIB_DIR = ..\..\..\lib\b32
+
+COMMON_LIB   = $(LIB_DIR)\common.lib
+DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
+DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
+DEBUG_LIB    = $(LIB_DIR)\debug.lib
+LANG_LIB     = $(LIB_DIR)\lang.lib
+MACRO_LIB    = $(LIB_DIR)\macro.lib
+NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
+PP_LIB       = $(LIB_DIR)\pp.lib
+RDD_LIB      = $(LIB_DIR)\rdd.lib
+RTL_LIB      = $(LIB_DIR)\rtl.lib
+VM_LIB       = $(LIB_DIR)\vm.lib
+GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
+SAMPLES_LIB  = $(LIB_DIR)\samples.lib
+HB_GT_LIB    = $(GTWIN_LIB)
+# This is needed, otherwise the libs may overflow when
+# debug info is requested with -v -y
+ARFLAGS = /P32
+
+
+#!if !$d(BCC_NOOPTIM)
+#CFLAGS = -O2- $(CFLAGS)
+#!endif
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = ..\..\..\include;.;\temp\ziparchive
+ZLIB_DIR     = .
+WINSYS_DIR   = \WINDOWS\SYSTEM
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)  -DWIN32
+CLIBFLAGS  = $(CFLAGS) 
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2  -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+#
+# Macros to access our library names
+#
+
+ZLIB_LIB   = $(LIB_DIR)\zlib1.lib
+ZLIB_EXE   = $(ZLIB_DIR)\x\test.exe
+
+
+ZLIB_BOR_LIB = $(LIB_DIR)\ziparchive.lib
+ZLIB_LIB_OBJS =  \
+    $(OBJ_DIR)\zipnew.obj \
+    $(OBJ_DIR)\zipcomp.obj \
+    $(OBJ_DIR)\zipfile.obj
+
+ZLIB_EXE_OBJS =  \
+    $(OBJ_DIR)\test.obj
+
+all: \
+   $(ZLIB_LIB) \
+   $(ZLIB_EXE_OBJS) \
+   $(ZLIB_EXE) 
+     
+
+$(ZLIB_LIB) = $(ZLIB_LIB_OBJS)
+
+$(ZLIB_EXE) = $(ZLIB_EXE_OBJS)
+
+$(ZLIB_LIB) : $(ZLIB_LIB_OBJS)
+
+
+$(OBJ_DIR)\zipnew.obj : $(ZLIB_DIR)\zipnew.cpp
+   $(CC)  -u -c $(CLIBFLAGS) -P -o$@ $**
+   tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\zipfile.obj : $(ZLIB_DIR)\zipfile.c
+   $(CC)  -c $(CLIBFLAGS) -o$@ $**
+   tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\zipcomp.obj : $(ZLIB_DIR)\zipcomp.cpp
+   $(CC) -P -u  -c $(CLIBFLAGS)  -o$@ $**
+   tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
+
+
+$(ZLIB_EXE) : $(ZLIB_EXE_OBJS)
+
+   echo. $(CFLAGS)  > make.tmp
+   echo. -M -e$(ZLIB_EXE) >> make.tmp
+   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. $(OBJ_DIR)\test.obj >> make.tmp 
+   echo. $(ZLIB_LIB) >> make.tmp
+   echo. $(ZLIB_BOR_LIB) >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(HB_GT_LIB) >> make.tmp
+   echo. $(LANG_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
+   echo. $(SAMPLES_LIB) >> make.tmp
+   $(CC) @make.tmp
+   del make.tmp
+
+$(OBJ_DIR)\test.c : $(ZLIB_DIR)\test.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\test.obj : $(OBJ_DIR)\test.c
+   $(CC) -u -c $(CLIBFLAGS) -o$@ $**

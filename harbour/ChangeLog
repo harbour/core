@@ -1,3 +1,20 @@
+2001-05-19 19:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
++contrib/hbzlib/hbzip2.h
+    *include files need by the library
++contrib/hbzlib/zip.c
+    *Harbour Level functions for hbzlib
++contrib/hbzlib/zipcomp.cpp
+    *Low level api's for hbzlib compression
++contrib/hbzlib/zipnew.cpp
+    *Low level api's for hbzlib Extraction
++contrib/hbzlib/makefile2.bc
+    *makefile to make the new hbzlib
++contrib/hbzlib/doc/zipnew.txt
+    *Docs for the new hbzlib function interface
+*utils/hbmake/hbmake.prg
+    *Fixed an small bug when generating the script(possibitity fo not find the file under linux)
+    *updated to the new license
+
 2001-05-18 13:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/dbdelim.prg
