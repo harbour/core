@@ -9,8 +9,9 @@
 */
      ! Fix: Script didn't add screen library needed by GT lib.
 
-   ! Fix, lost the reference to the current oGetList with recursive
-     execution of ReadModal.
+2002-04-26 21:56 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+     ! Little fix for VarChar data type
 
 2002-04-26 14:08 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/getlist.prg
