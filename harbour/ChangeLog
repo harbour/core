@@ -1,3 +1,8 @@
+19991130-00:13 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/browse.prg
+    + Documentation by Chen Kedem added
+    ! Unused .ch files removed.
+
 19991129-22:22 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.c
     include/compiler.h
