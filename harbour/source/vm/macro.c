@@ -653,7 +653,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
 char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pbNewString )
 {
    char *szResultString;
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%p)", pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroExpandString(%s)", szString));
 
    if( szString )
       szResultString = hb_macroTextSubst( szString, &ulLength );

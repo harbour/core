@@ -1,3 +1,7 @@
+2001-07-26 16:21 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/macro.c
+     * Corrected typo in trace message within hb_macroExpandString()
+
 2001-07-26 22:50 UTC+1 JFL (mafact) <jfl@mafact.com>
    * MAKEFILE. VC
    * HB_SLEX.VC
@@ -20,16 +24,16 @@
 2001-07-26 14:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/gtsln/gtsln.c
-    * Fixes by Marek Paliwoda <paliwoda@inetia.pl> 
+    * Fixes by Marek Paliwoda <paliwoda@inetia.pl>
 
 2001-07-26 14:30 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
       * Restored Antonio's profile reporter due to copyright concerns.
-	
+
 2001-07-26 02:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbexpra.c
      + Added logic to optimize 2nd parameter of __DBLIST().
-       Scan it if array, and optiimize elements that are codeblocks containg macros to the core value of such macro.
+       Scan it if array, and optiimize elements that are codeblocks containing macros to the core value of such macro.
 
    * source/rdd/dblist.prg
      + Added logic to scan abEval for Strings, parse and convert them to codeblocks.
@@ -38,7 +42,7 @@
    /* This should complete support for:
 
       cFields := "Field1,Field2,..."
-      LIST &cFields*/ ...
+      LIST &cFields ...
    */
 
 2001-07-24 20:45  GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
