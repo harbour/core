@@ -288,7 +288,7 @@ HARBOUR HB_LTRIM( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "LTRIM");
    }
 }
@@ -334,7 +334,7 @@ HARBOUR HB_RTRIM( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "RTRIM");
    }
 }
@@ -357,7 +357,7 @@ HARBOUR HB_TRIM( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "TRIM");
    }
 }
@@ -604,7 +604,7 @@ HARBOUR HB_AT( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "AT");
    }
 }
@@ -663,7 +663,7 @@ HARBOUR HB_CHR( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "CHR");
    }
 }
@@ -689,7 +689,7 @@ HARBOUR HB_ASC(void)
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "ASC");
    }
 }
@@ -729,7 +729,7 @@ HARBOUR HB_LEFT( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "LEFT");
    }
 }
@@ -771,7 +771,7 @@ HARBOUR HB_RIGHT( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       /* Clipper doesn't error */
       hb_retc("");
    }
@@ -830,7 +830,7 @@ HARBOUR HB_SUBSTR( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "SUBSTR");
    }
 }
@@ -864,7 +864,7 @@ HARBOUR HB_LOWER( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "LOWER");
    }
 }
@@ -906,7 +906,7 @@ HARBOUR HB_UPPER( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "UPPER");
    }
 }
@@ -954,7 +954,7 @@ HARBOUR HB_REPLICATE( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "REPLICATE");
    }
 }
@@ -994,7 +994,7 @@ HARBOUR HB_SPACE( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "SPACE");
    }
 }
@@ -1208,7 +1208,7 @@ HARBOUR HB_VAL( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "VAL");
    }
 }
@@ -1383,7 +1383,7 @@ HARBOUR HB_STR( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "STR");
    }
 }

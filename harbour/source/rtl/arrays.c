@@ -698,7 +698,7 @@ HARBOUR HB_AADD( void )
       hb_errRT_BASE( EG_ARG, 1123, NULL, "AADD" );
   }
   else
-    /* QUESTION: Clipper catches this at compile time! */
+    /* NOTE: Clipper catches this at compile time! */
     hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AADD" );
 }
 

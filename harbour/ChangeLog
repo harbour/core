@@ -1,3 +1,26 @@
+19990820-12:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/filesys.c
+    include/filesys.h
+    + hb_fsFNameSplit()
+      hb_fsFNameMerge() 
+      filename handling functions and structure added to the Harbour RTL.
+      These function were originated from MakeFilename() and SplitFileName()
+  * tests/working/rtl_test.prg
+    + rtl_test now shows the compiler version, os, date and time, other
+      improvements.
+    * All TRANSFORM() tests moved to rtl_test to allow automatic regression
+      testing.
+  * source/rtl/transfrm.c
+    * PicFlags type changed to WORD
+    * Some length and pos variable types changed to ULONG.
+    * TOFIX: added about an unreachable code segment.
+    * Some zero changed to '\0'.
+  * source/rtl/strings.c
+    source/rtl/maths.c
+    source/rtl/dates.c
+    source/rtl/arrays.c
+    * QUESTION:s changed to NOTE: regarding the parameter checking
+
 19990820-12:28 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * improved debugger functionality. F8 and F4 already operative.

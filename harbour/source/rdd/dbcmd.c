@@ -1094,7 +1094,7 @@ HARBOUR HB_DELETED( void )
    BOOL bDeleted = FALSE;
    
    if( pCurrArea && ( ( AREAP ) pCurrArea->pArea )->lprfsHost )
-      SELF_DELETE( ( AREAP ) pCurrArea->pArea, &bDeleted );
+      SELF_DELETED( ( AREAP ) pCurrArea->pArea, &bDeleted );
    hb_retl( bDeleted );
 }
 

@@ -470,7 +470,7 @@ HARBOUR HB_DTOS( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "DTOS");
    }
 #endif
@@ -599,7 +599,7 @@ HARBOUR HB_DATE( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "DATE");
    }
 }
@@ -672,7 +672,7 @@ HARBOUR HB_CMONTH( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "CMONTH");
    }
 }
@@ -696,7 +696,7 @@ HARBOUR HB_CDOW( void )
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
+      /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "CDOW");
    }
 }

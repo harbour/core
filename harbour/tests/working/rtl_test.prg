@@ -34,16 +34,27 @@
    their web site at http://www.gnu.org/).
 */
 
+/* TRANSFORM() tests written by Eddie Runia <eddie@runia.comu> */
+
+/* NOTE: Always compile with /n /w switches */
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
 /* TODO: Incorporate tests from test/working/string*.prg */
 
 #translate TEST_LINE(<x>, <result>) => TEST_CALL(<(x)>, {|| <x> }, <result>)
 
-STATIC snPass := 0
-STATIC snFail := 0
+STATIC snPass
+STATIC snFail
+STATIC scFileName
+STATIC snFhnd
+STATIC scNewLine
+STATIC snCount
 
 FUNCTION Main()
+
+     /* Initialize test */
+
+     TEST_BEGIN()
 
      /* AT() */
 
@@ -225,35 +236,213 @@ FUNCTION Main()
 
 #endif
 
+     /* TRANSFORM() */
+
+     TEST_LINE( Transform( "Hallo   ", "!!!!!"    )          , "HALLO"                       )
+     TEST_LINE( Transform( "Hallo   ", "!!A!!"    )          , "HAlLO"                       )
+     TEST_LINE( Transform( "Hallo   ", "!!A9!"    )          , "HAllO"                       )
+     TEST_LINE( Transform( "Hallo   ", "!QA9!"    )          , "HQllO"                       )
+     TEST_LINE( Transform( "Hallo   ", "ZQA9!"    )          , "ZQllO"                       )
+     TEST_LINE( Transform( "Hall"    , "ZQA9!"    )          , "ZQll"                        )
+     TEST_LINE( Transform( "Hallo   ", "!AAA"     )          , "Hall"                        )
+     TEST_LINE( Transform( "Hallo   ", "@!"       )          , "HALLO   "                    )
+     TEST_LINE( Transform( "Hallo   ", "@! AA"    )          , "HA"                          )
+     TEST_LINE( Transform( "Hallo   ", "@R"       )          , "Hallo   "                    )
+     TEST_LINE( Transform( "Hallo   ", "@Z"       )          , "        "                    )
+     TEST_LINE( Transform( "Hallo   ", "@R !!"    )          , "HA"                          )
+     TEST_LINE( Transform( "Hi"      , "@R !!!"   )          , "HI "                         )
+     TEST_LINE( Transform( "Hallo   ", ""         )          , "Hallo   "                    )
+
+     TEST_LINE( Transform( .T.       , ""         )          , "T"                           )
+     TEST_LINE( Transform( .F.       , ""         )          , "F"                           )
+     TEST_LINE( Transform( .T.       , "L"        )          , "T"                           )
+     TEST_LINE( Transform( .F.       , "L"        )          , "F"                           )
+     TEST_LINE( Transform( .T.       , "Y"        )          , "Y"                           )
+     TEST_LINE( Transform( .F.       , "Y"        )          , "N"                           )
+     TEST_LINE( Transform( .T.       , "X"        )          , "X"                           )
+     TEST_LINE( Transform( .F.       , "#"        )          , "F"                           )
+     TEST_LINE( Transform( .T.       , "X!"       )          , "X"                           )
+     TEST_LINE( Transform( .F.       , "@R Y"     )          , "N"                           )
+     TEST_LINE( Transform( .T.       , "@R X!"    )          , "X!T"                         )
+
+     SET DATE ANSI
+     SET CENTURY ON
+
+     TEST_LINE( Transform( SToD("19901214") , "99/99/9999" ) , "1990.12.14"                  )
+     TEST_LINE( Transform( SToD("19901202") , "99.99.9999" ) , "1990.12.02"                  )
+     TEST_LINE( Transform( SToD("")         , "99/99/9999" ) , "    .  .  "                  )
+     TEST_LINE( Transform( SToD("19901202") , "99/99/99"   ) , "1990.12.02"                  )
+     TEST_LINE( Transform( SToD("19901214") , "99-99-99"   ) , "1990.12.14"                  )
+     TEST_LINE( Transform( SToD("20040430") , "99.99.99"   ) , "2004.04.30"                  )
+     TEST_LINE( Transform( SToD("")         , "99/99/99"   ) , "    .  .  "                  )
+     TEST_LINE( Transform( SToD("19920101") , "THISWRNG"   ) , "1992.01.01"                  )
+     TEST_LINE( Transform( SToD("19350605") , "999/99/9"   ) , "1935.06.05"                  )
+     TEST_LINE( Transform( SToD("19101112") , "9#-9#/##"   ) , "1910.11.12"                  )
+     TEST_LINE( Transform( SToD("19920101") , ""           ) , "1992.01.01"                  )
+     TEST_LINE( Transform( SToD("19920101") , "DO THIS "   ) , "1992.01.01"                  )
+     TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "2.91901.02"                  ) /* BUG in Clipper */
+     TEST_LINE( Transform( 1234             , "@D 9999"    ) , "1234.00.0 "                  )
+     TEST_LINE( Transform( 1234             , "@BD 9999"   ) , "1234.00.0 "                  )
+
+     SET CENTURY OFF
+
+     TEST_LINE( Transform( SToD("19901214") , "99/99/9999" ) , "90.12.14"                    )
+     TEST_LINE( Transform( SToD("19901202") , "99.99.9999" ) , "90.12.02"                    )
+     TEST_LINE( Transform( SToD("")         , "99/99/9999" ) , "  .  .  "                    )
+     TEST_LINE( Transform( SToD("19901202") , "99/99/99"   ) , "90.12.02"                    )
+     TEST_LINE( Transform( SToD("19901214") , "99-99-99"   ) , "90.12.14"                    )
+     TEST_LINE( Transform( SToD("20040430") , "99.99.99"   ) , "04.04.30"                    )
+     TEST_LINE( Transform( SToD("")         , "99/99/99"   ) , "  .  .  "                    )
+     TEST_LINE( Transform( SToD("19920101") , "THISWRNG"   ) , "92.01.01"                    )
+     TEST_LINE( Transform( SToD("19350605") , "999/99/9"   ) , "35.06.05"                    )
+     TEST_LINE( Transform( SToD("19101112") , "9#-9#/##"   ) , "10.11.12"                    )
+     TEST_LINE( Transform( SToD("19920101") , ""           ) , "92.01.01"                    )
+     TEST_LINE( Transform( SToD("19920101") , "DO THIS "   ) , "92.01.01"                    )
+     TEST_LINE( Transform( SToD("19920102") , "@E"         ) , "01.92.02"                    ) /* BUG in Clipper */
+     TEST_LINE( Transform( 1234             , "@D 9999"    ) , "**.**.* "                    )
+     TEST_LINE( Transform( 1234             , "@BD 9999"   ) , "**.**.* "                    )
+
+     TEST_LINE( Transform( 15        , "9999"        )       , "  15"                        )
+     TEST_LINE( Transform( 1.5       , "99.99"       )       , " 1.50"                       )
+     TEST_LINE( Transform( 1.5       , "9999"        )       , "   2"                        )
+     TEST_LINE( Transform( 15        , "####"        )       , "  15"                        )
+     TEST_LINE( Transform( 1.5       , "##.##"       )       , " 1.50"                       )
+     TEST_LINE( Transform( 1.5       , "####"        )       , "   2"                        )
+     TEST_LINE( Transform( 15        , " AX##"       )       , " AX15"                       )
+     TEST_LINE( Transform( 1.5       , "!9XPA.9"     )       , "!1XPA.5"                     )
+     TEST_LINE( Transform( -15       , "9999"        )       , " -15"                        )
+     TEST_LINE( Transform( -1.5      , "99.99"       )       , "-1.50"                       )
+     TEST_LINE( Transform( -15       , "$999"        )       , "$-15"                        )
+     TEST_LINE( Transform( -1.5      , "*9.99"       )       , "-1.50"                       )
+     TEST_LINE( Transform( 41        , "$$$9"        )       , "$$41"                        )
+     TEST_LINE( Transform( 41        , "***9"        )       , "**41"                        )
+     TEST_LINE( Transform( 15000     , "9999"        )       , "****"                        )
+     TEST_LINE( Transform( 15000     , "99,999"      )       , "15,000"                      )
+     TEST_LINE( Transform( 1500      , "99,999"      )       , " 1,500"                      )
+     TEST_LINE( Transform( 150       , "99,999"      )       , "   150"                      )
+     TEST_LINE( Transform( 150       , "99,99"       )       , " 1,50"                       )
+     TEST_LINE( Transform( 41        , "@Z 9999"     )       , "  41"                        )
+     TEST_LINE( Transform( 0         , "@Z 9999"     )       , "    "                        )
+     TEST_LINE( Transform( 41        , "@0 9999"     )       , "  41"                        )
+     TEST_LINE( Transform( 0         , "@0 9999"     )       , "   0"                        )
+     TEST_LINE( Transform( 41        , "@B 9999"     )       , "41  "                        )
+     TEST_LINE( Transform( 41        , "@B 99.9"     )       , "41.0"                        )
+     TEST_LINE( Transform( 7         , "@B 99.9"     )       , "7.0 "                        )
+     TEST_LINE( Transform( 7         , "@C 99.9"     )       , " 7.0 CR"                     )
+     TEST_LINE( Transform( -7        , "@C 99.9"     )       , "-7.0"                        )
+     TEST_LINE( Transform( 7         , "@X 99.9"     )       , " 7.0"                        )
+     TEST_LINE( Transform( -7        , "@X 99.9"     )       , " 7.0 DB"                     )
+     TEST_LINE( Transform( 7         , "@( 99.9"     )       , " 7.0"                        )
+     TEST_LINE( Transform( -7        , "@( 99.9"     )       , "(7.0)"                       )
+     TEST_LINE( Transform( 7         , "9X9Z5.9"     )       , " X7Z5.0"                     )
+     TEST_LINE( Transform( -7        , "@R 9X9^"     )       , "-X7^"                        )
+     TEST_LINE( Transform( -7        , "9X9^"        )       , "-X7^"                        )
+     TEST_LINE( Transform( 1         , "@R 9HI!"     )       , "1HI!"                        )
+     TEST_LINE( Transform( 1         , "9HI!"        )       , "1HI!"                        )
+     TEST_LINE( Transform( -12       , "@( 99"       )       , "(2)"                         ) /* BUG Fix */
+     TEST_LINE( Transform( 12        , "@( 99"       )       , "12"                          )
+     TEST_LINE( Transform( 1         , ""            )       , "         1"                  )
+     TEST_LINE( Transform( 32768     , ""            )       , "     32768"                  )
+     TEST_LINE( Transform( -20       , ""            )       , "       -20"                  )
+     TEST_LINE( Transform( 1048576   , ""            )       , "   1048576"                  )
+     TEST_LINE( Transform( 21.65     , ""            )       , "        21.65"               )
+     TEST_LINE( Transform( -3.33     , ""            )       , "        -3.33"               )
+     TEST_LINE( Transform( -1234     , "@( 9999"     )       , "(234)"                       ) /* BUG Fix */
+     TEST_LINE( Transform( -1234     , "@B 9999"     )       , "****"                        )
+     TEST_LINE( Transform( -1234     , "@B( 9999"    )       , "(234)"                       )
+//   TEST_LINE( Transform( 1234      , "@E 9,999.99" )       , "1.234,00"                    )
+//   TEST_LINE( Transform( 12.2      , "@E 9,999.99" )       , "   12,20"                    )
+     TEST_LINE( Transform( -1234     , "@X 9999"     )       , "1234 DB"                     )
+     TEST_LINE( Transform( -1234     , "@BX 9999"    )       , "1234 DB"                     )
+     TEST_LINE( Transform( 1234      , "@B 9999"     )       , "1234"                        )
+     TEST_LINE( Transform( 1234      , "@BX 9999"    )       , "1234"                        )
+     TEST_LINE( Transform( 0         , "@Z 9999"     )       , "    "                        )
+     TEST_LINE( Transform( 0         , "@BZ 9999"    )       , "    "                        )
+
      /* Show results, return ERRORLEVEL and exit */
 
-     TEST_STAT()
+     TEST_END()
+
+     RETURN NIL
+
+STATIC FUNCTION TEST_BEGIN()
+     LOCAL cOs := OS()
+
+     IF "OS/2" $ cOs .OR. ;
+        "DOS"  $ cOs
+          scNewLine := Chr(13) + Chr(10)
+     ELSE
+          scNewLine := Chr(10)
+     ENDIF
+
+/*
+#ifdef __HARBOUR__
+     scFileName := "rtl_test.hb"
+#else
+     scFileName := "rtl_test.cl"
+#endif
+*/
+
+     snFhnd := 1 /* FHND_STDOUT */
+     scFileName := "(stdout)"
+
+     snCount := 0
+     snPass := 0
+     snFail := 0
+
+     fWrite(snFhnd, "   Version: " + Version() + scNewLine +;
+                    "        OS: " + OS() + scNewLine +;
+                    "Date, Time: " + DToS(Date()) + " " + Time() + scNewLine +;
+                    "    Output: " + scFileName + scNewLine +;
+                    "===========================================================================" + scNewLine +;
+                    scNewLine)
+
+     fWrite(snFhnd, PadL("No", 4) + ". " +;
+                    PadR("TestCall()", 35) + " -> " +;
+                    PadR("Result", 15) + " | " +;
+                    PadR("Expected", 15) +;
+                    " [! *FAIL* !]" + scNewLine)
+     fWrite(snFhnd, "---------------------------------------------------------------------------" + scNewLine)
 
      RETURN NIL
 
 STATIC FUNCTION TEST_CALL(cBlock, bBlock, xResultExpected)
      LOCAL xResult := Eval(bBlock)
 
-     fWrite(1, PadR(StrTran(cBlock, Chr(0), "."), 40) + " -> " +;
-               PadR('"' + StrTran(XToStr(xResult), Chr(0), ".") + '"', 15) + " " +;
-               PadR('"' + StrTran(XToStr(xResultExpected), Chr(0), ".") + '"', 15))
+     snCount++
+
+     fWrite(snFhnd, Str(snCount, 4) + ". " +;
+                    PadR(StrTran(cBlock, Chr(0), "."), 35) + " -> " +;
+                    PadR('"' + StrTran(XToStr(xResult), Chr(0), ".") + '"', 15) + " | " +;
+                    PadR('"' + StrTran(XToStr(xResultExpected), Chr(0), ".") + '"', 15))
 
      IF xResult == xResultExpected
           snPass++
      ELSE
-          fWrite(1, "! *FAIL* !")
+          fWrite(snFhnd, " ! *FAIL* !")
           snFail++
      ENDIF
 
-     fWrite(1, Chr(13) + Chr(10))
+     fWrite(snFhnd, scNewLine)
 
      RETURN NIL
 
-STATIC FUNCTION TEST_STAT()
+STATIC FUNCTION TEST_END()
 
-     fWrite(1, Chr(13) + Chr(10) +;
-               "Test calls passed: " + Str(snPass) + Chr(13) + Chr(10) +;
-               "Test calls failed: " + Str(snFail) + Chr(13) + Chr(10))
+     fWrite(snFhnd, scNewLine +;
+                    "===========================================================================" + scNewLine +;
+                    "Test calls passed: " + Str(snPass) + scNewLine +;
+                    "Test calls failed: " + Str(snFail) + scNewLine +;
+                    scNewLine)
+
+     IF snFail != 0
+          IF "CLIPPER" $ Upper(Version())
+               fWrite(snFhnd, "WARNING ! Failures detected using Clipper." + scNewLine +;
+                              "Please fix the expected result list, if this is not a bug in Clipper itself." + scNewLine)
+          ELSE
+               fWrite(snFhnd, "WARNING ! Failures detected" + scNewLine)
+          ENDIF
+     ENDIF
 
      ErrorLevel(iif(snFail != 0, 1, 0))
 
@@ -275,3 +464,24 @@ STATIC FUNCTION XToStr(xValue)
      ENDCASE
 
      RETURN ""
+
+#ifndef __HARBOUR__
+#ifndef __XPP__
+
+FUNCTION SToD( cDate )
+     LOCAL cOldDateFormat := Set(_SET_DATEFORMAT, "dd/mm/yyyy")
+     LOCAL dDate
+
+     Set(_SET_DATEFORMAT, "yyyy/mm/dd")
+
+     dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
+                    SubStr( cDate, 5, 2 ) + "/" +;
+                    SubStr( cDate, 7, 2 ) )
+
+     Set(_SET_DATEFORMAT, cOldDateFormat)
+
+     RETURN dDate
+
+#endif
+#endif
+
