@@ -107,7 +107,7 @@ char * hb_comp_szWarnings[] =
    "3Incompatible return type: \'%s\' expected: \'%s\'",
    "3Invalid number of parameters: %s expected: %s",
    "3Incompatible parameter # %s expected: \'%s\'",
-   "3Duplicate Declaration of Function %s",
+   "3Duplicate Declaration of %s \'%s\'",
    "3Function \'%s\' conflicting with its declaration",
    "3Variable \'%s\' used but never initialized",
    "3Value of Variable \'%s\' never used",

@@ -811,7 +811,7 @@ PCOMCLASS hb_compClassAdd( char * szClassName )
 
    if ( ( pClass = hb_compClassFind( szClassName ) ) != NULL )
    {
-      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, szClassName, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Class", szClassName );
       return pClass;
    }
 
@@ -864,7 +864,7 @@ PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
 
    if ( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {
-      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, szMethodName, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Method", szMethodName );
       return pMethod;
    }
 
@@ -914,7 +914,7 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
 
    if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) != NULL )
    {
-      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, szDeclaredName, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Function", szDeclaredName );
       return pDeclared;
    }
 

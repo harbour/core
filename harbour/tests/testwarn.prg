@@ -67,6 +67,9 @@ DECLARE CLASS MyClass                              ;
         Has Data     cMyData    ;
         Has Method   FinalMethod
 
+DECLARE CLASS MyClass                              ;
+        Has METHOD   nMyFunc( nVal As Num ) As Num
+
 FIELD a AS CHAR
 FIELD b AS CHAR
 
@@ -89,9 +92,9 @@ PROCEDURE THEMAIN( optional )
 
   PRIVATE TEST AS CHAR
 
-  DO Proc WITH
-
-  DO Optional WITH
+  DO Optional WITH Var1
+  DO Optional WITH 1
+  DO Optional WITH "something"
 
   FOR Conter := Optional TO 10
     ? "For with End"

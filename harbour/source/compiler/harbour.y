@@ -244,10 +244,12 @@ Source     : Crlf         { hb_comp_EOL = FALSE; }
            | FieldsDef    { hb_comp_EOL = FALSE; }
            | MemvarDef    { hb_comp_EOL = FALSE; }
            | Function     { hb_comp_EOL = FALSE; }
+	   | Declare      { hb_comp_EOL = FALSE; }
            | Statement    { hb_comp_EOL = FALSE; }
            | Line         { hb_comp_EOL = FALSE; }
            | Source Crlf        { hb_comp_EOL = FALSE; }
            | Source Function    { hb_comp_EOL = FALSE; }
+           | Source Declare     { hb_comp_EOL = FALSE; }
            | Source Statement   { hb_comp_EOL = FALSE; }
            | Source VarDefs     { hb_comp_EOL = FALSE; }
            | Source FieldsDef   { hb_comp_EOL = FALSE; }
@@ -262,12 +264,16 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | DECLARE_FUN IdentName { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
+           ;
+
+Declare    : DECLARE_FUN IdentName { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
                                                                                                                        hb_comp_pLastDeclared->cType = hb_comp_cVarType;
                                                                                                                      hb_comp_szDeclaredFun = NULL;
-                                                                                                                     hb_comp_cVarType = ' '; }
-           | DECLARE_CLASS IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf {}
-           ;
+                                                                                                                     hb_comp_cVarType = ' ';
+                                                                                                                     hb_comp_iVarScope = VS_NONE;
+                                                                                                                   }
+           | DECLARE_CLASS IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf { hb_comp_iVarScope = VS_NONE; }
+	   ;
 
 ClassInfo  : DecMethod
 	   | ClassInfo DecMethod
@@ -1165,7 +1171,7 @@ DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2 ); }
            ;
 
 
-FieldsDef  : FIELD { hb_comp_iVarScope = VS_FIELD; } FieldList Crlf
+FieldsDef  : FIELD { hb_comp_iVarScope = VS_FIELD; } FieldList Crlf { hb_comp_cVarType = ' '; }
            ;
 
 FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVariableAdd( $1, hb_comp_cVarType ); }
@@ -1173,7 +1179,7 @@ FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVa
            | FieldList IN IdentName { hb_compFieldSetAlias( $3, $<iNumber>1 ); }
            ;
 
-MemvarDef  : MEMVAR { hb_comp_iVarScope = VS_MEMVAR; } MemvarList Crlf
+MemvarDef  : MEMVAR { hb_comp_iVarScope = VS_MEMVAR; } MemvarList Crlf { hb_comp_cVarType = ' '; }
            ;
 
 MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_comp_cVarType ); }
