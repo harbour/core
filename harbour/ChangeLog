@@ -1,3 +1,7 @@
+19990602-18:40 CET Eddie Runia
+  * tests/working/run_exp.h
+    gt_string functions added
+
 19990602-11:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     - Added HARBOUR SCROLL()
