@@ -273,7 +273,7 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
       pTag->Owner->Locked = TRUE;
    }
    else if( pTag->keyCount )
-      return pTag->keyCount    
+      return pTag->keyCount;
 
    pPage = hb_ntxPageLoad( pTag->Owner,0 );
    ulKeyCount += pPage->uiKeys;
