@@ -1,3 +1,7 @@
+2001-07-30 14:54 GMT Dave Pearson <davep@davep.org>
+   * source/rtl/profiler.prg
+      * Restored the OO based profile reporter.
+	
 2001-07-30 16:40 UTC+0300 Chen Kedem <niki@actcom.co.il>
 
    * doc/en/memvar2.txt
