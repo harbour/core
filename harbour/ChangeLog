@@ -1,9 +1,13 @@
+20000210-14:45 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * temporarily - not defining _Windows for tone.c and oemansi.c
+
 2000-02-10 13:50 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * source/rtl/tone.c
      ! Borland C does not support Beep() under Windows.
 
-20000209-22:37 EST Paul Tucker <ptucker@sympatico.ca>
+20000210-13:30 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + /D_Windows to compiler flags
    * source/rtl/tone.c

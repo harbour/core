@@ -38,7 +38,7 @@ HBDOC_DIR=utils\hbdoc
 #
 
 CC=cl
-CFLAGS=-W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
+CFLAGS=-W1 -nologo -I$(INCLUDE_DIR) -D_Windows -DHARBOUR_USE_WIN_GTAPI
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -708,7 +708,7 @@ $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\oemansi.obj : $(RTL_DIR)\oemansi.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
+    $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
 
 $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -819,7 +819,7 @@ $(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
+    $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
