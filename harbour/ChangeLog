@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/vm/itemapi.c
+    * struct hb_struString bPcode member renamed as bStatic
+    Thanks to Ron for this name, which is more appropiate
+
 2002-02-10 12:08 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/rtl/dbedit.prg
     * Bug fixed reported by Bill Smith
