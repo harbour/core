@@ -160,7 +160,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
          if( pBaseArray->ulLen == 0 )
          {
             pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( ulLen * sizeof( HB_ITEM ) );
-         
+
             for( ulPos = 0; ulPos < ulLen; ulPos++ )
                ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
          }
@@ -169,7 +169,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
             if( pBaseArray->ulLen < ulLen )
             {
                pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
-         
+
                /* set value for new items */
                for( ulPos = pBaseArray->ulLen; ulPos < ulLen; ulPos++ )
                   ( pBaseArray->pItems + ulPos )->type = HB_IT_NIL;
@@ -179,7 +179,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
                /* release old items */
                for( ulPos = ulLen; ulPos < pBaseArray->ulLen; ulPos++ )
                   hb_itemClear( pBaseArray->pItems + ulPos );
-         
+
                if( ulLen == 0 )
                {
                   hb_xfree( pBaseArray->pItems );
@@ -189,7 +189,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
                   pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
             }
          }
-         
+
          pBaseArray->ulLen = ulLen;
       }
 
@@ -720,7 +720,11 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
 
 PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
 {
+   PHB_ITEM pDstArray;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p, %p)", pSrcArray, pClonedList));
+
+   pDstArray = hb_itemNew( NULL );
 
    if( HB_IS_ARRAY( pSrcArray ) )
    {
@@ -728,11 +732,9 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
       PHB_BASEARRAY pDstBaseArray;
       ULONG ulSrcLen = pSrcBaseArray->ulLen;
       ULONG ulCount;
-      PHB_ITEM pDstArray;
       PHB_NESTED_CLONED pCloned;
       BOOL bTop;
 
-      pDstArray = hb_itemNew( NULL );
       hb_arrayNew( pDstArray, ulSrcLen );
 
       if( pClonedList == NULL )
@@ -776,34 +778,32 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
          if( pSrcItem->type == HB_IT_ARRAY )
          {
             PHB_ITEM pClone;
+            BOOL bSkip= FALSE ;
+            BOOL bEnd=FALSE ;
 
-            /* Broken down like this to avoid redundant comparisons. */
             pCloned = pClonedList;
-            if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
-            {
-               pClone = pCloned->pDest;
-               goto DontClone;
-            }
-            while( pCloned->pNext )
-            {
-               pCloned = pCloned->pNext;
 
+            while( ! bEnd )
+            {
                if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
                {
                   pClone = pCloned->pDest;
-                  goto DontClone;
+                  bSkip = TRUE;
+                  bEnd  = TRUE;
                }
-            }
-            if( pCloned->pSrcBaseArray == pSrcItem->item.asArray.value )
-            {
-               pClone = pCloned->pDest;
-               goto DontClone;
+               else
+               {
+                pCloned = pCloned->pNext;
+                bEnd = ! (BOOL) pCloned;
+               }
+
             }
 
-            pClone = hb_arrayClone( pSrcItem, pClonedList );
+            if( !bSkip )
+             pClone = hb_arrayClone( pSrcItem, pClonedList );
 
-           DontClone :
             hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
+
          }
          else
          {
@@ -814,32 +814,25 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
       /* Top Level - Release the created list. */
       if( bTop )
       {
-         while( pClonedList->pNext )
+         pCloned = pClonedList;
+         while( pCloned )
          {
-            pCloned = pClonedList;
             pClonedList = pClonedList->pNext;
 
             if( pCloned->pDest != pDstArray )
-            {
                hb_itemRelease( pCloned->pDest );
-            }
+
             hb_xfree( pCloned );
+
+            pCloned = pClonedList;
          }
 
-         if( pClonedList->pDest != pDstArray )
-         {
-            hb_itemRelease( pClonedList->pDest );
-         }
-
-         hb_xfree( pClonedList );
       }
 
-      return pDstArray;
    }
-   else
-   {
-      return hb_itemNew( NULL );
-   }
+
+   return pDstArray;
+
 }
 
 PHB_ITEM hb_arrayFromStack( USHORT uiLen )

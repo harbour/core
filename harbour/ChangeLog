@@ -1,3 +1,9 @@
+2001-11-30 00:10 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/arrays.c
+     * simplified hb_arrayClone() while keeping logic
+       next step is to check it is working
+
+
 2001-11-30 05:30 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rtl/spfiles.c
      * Added C Casts for MsVC
