@@ -1,7 +1,7 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
@@ -13,8 +13,8 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD_OK
 
-   copy bin\b16\*.exe bin\ > nul
-   copy lib\b16\*.lib lib\ > nul
+   copy bin\b16\*.exe bin\*.* > nul
+   copy lib\b16\*.lib lib\*.* > nul
    goto EXIT
 
 :BUILD_ERR
@@ -24,10 +24,15 @@ if "%1" == "CLEAN" goto CLEAN
 
 :CLEAN
 
-   echo Y | del bin\b16\*.* > nul
-   echo Y | del obj\b16\*.* > nul
-   echo Y | del lib\b16\*.* > nul
-   echo Y | del make_b16.log > nul
+   if exist bin\b16\*.exe del bin\b16\*.exe
+   if exist bin\b16\*.tds del bin\b16\*.tds
+   if exist lib\b16\*.lib del lib\b16\*.lib
+   if exist lib\b16\*.bak del lib\b16\*.bak
+   if exist obj\b16\*.out del obj\b16\*.out
+   if exist obj\b16\*.obj del obj\b16\*.obj
+   if exist obj\b16\*.c   del obj\b16\*.c
+   if exist obj\b16\*.h   del obj\b16\*.h
+   if exist make_b16.log  del make_b16.log
    goto EXIT
 
 :EXIT

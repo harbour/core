@@ -413,7 +413,7 @@ COMMON_LIB_OBJS = \
 #
 
 {$(VM_DIR)}.asm{$(OBJ_DIR)}.obj:
-   $(AS) $< $@ $*.lst $*.crf
+   $(AS) $< $@ nul nul
 
 {$(VM_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
@@ -476,7 +476,7 @@ $(PP_EXE) : \
 
 $(RUNNER_EXE) : \
    $(RUNNER_DIR)\stdalone\hbrun.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link $(LIBS2)
    -del hbrun.obj
 
@@ -499,15 +499,7 @@ $(HBTEST_EXE) : \
    $(HBTEST_DIR)\rt_misc.prg \
    $(HBTEST_DIR)\rt_str.prg \
    $(HBTEST_DIR)\rt_trans.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\hbtest.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_array.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_date.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_file.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_hvm.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_math.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_misc.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_str.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_trans.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
    -del hbtest.obj
    -del rt_array.obj
@@ -528,14 +520,7 @@ $(HBDOC_EXE) : \
    $(HBDOC_DIR)\genrtf.prg \
    $(HBDOC_DIR)\genhpc.prg \
    $(HBDOC_DIR)\genasc.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\hbdoc.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genos2.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\gentrf.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genng.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genhtm.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genrtf.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genhpc.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBDOC_DIR)\genasc.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c -o $(HBDOC_EXE) /link $(LIBS2)
    -del hbdoc.obj
    -del genos2.obj

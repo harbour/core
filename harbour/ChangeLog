@@ -1,3 +1,17 @@
+20000314-01:30 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * make_*.bat
+     contrib/rdd_ads/make_vc.bat
+     ! copy command fixed to work on more OSs. (reported by Jose)
+     ! Get rid of the ECHO Y trick, to make it work on non-English systems.
+       (reported by Jose)
+     * Changed all DEL commands to not use plain *.* but *.ext instead, since
+       it will not wait for a questoin in the latter case. Please report it
+       if your DOS doesn't work this way.
+   * makefile.vc
+     % Makes use of the multiple .PRG file feature of Harbour.
+     - MASM doesn't create .CRF and .LST files anymore, to make the CLEAN
+       process simpler.
+
 20000313-21:00 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/harbour.c
      ! Fixed not to display a newly added message when -q is specified.

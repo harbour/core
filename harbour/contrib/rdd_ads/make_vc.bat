@@ -10,7 +10,7 @@ rem
 
 :BUILD_OK
 
-   copy ..\..\lib\vc\rddads.lib ..\..\lib >nul
+   copy ..\..\lib\vc\rddads.lib ..\..\lib\*.* >nul
    goto EXIT
 
 :BUILD_ERR
