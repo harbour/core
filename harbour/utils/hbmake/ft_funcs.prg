@@ -35,7 +35,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include 'hbdocdef.ch'
+#include '..\hbdoc\hbdocdef.ch'
 #include 'common.ch'
 
 #define xReadBuffer 4096
@@ -51,7 +51,7 @@ DECLARE  GetNumberofTableItems( cBuffer AS STRING ) AS NUMERIC
 DECLARE  FREADline( nH AS NUMERIC, @cB AS STRING, nMaxLine AS NUMERIC )
 //DECLARE  FILEBASE() AS OBJECT
 DECLARE  FILEBASE ;
-    New( cname AS STRING) AS CLASS FILEBASE; 
+    New( cname AS STRING) AS CLASS FILEBASE;
     FOPEN()   AS OBJECT;
     closefile() AS OBJECT;
     fskip( OPTIONAL n  AS NUMERIC)  AS OBJECT;

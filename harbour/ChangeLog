@@ -1,3 +1,11 @@
+2000-12-11 21:45 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     - removed hidden: clause inside class definition (it doesn't work right now)
+   * source/rtl/tclass.prg
+     - commented out line 255 (gives infinite loop)
+   * utils/hbmake/*.prg
+     + hbdocdef.ch needs relative path ("..\hbdoc\") to be compiled by gcc system
+
 2000-12-10 17:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbfntx/dbfntx1.c
       * More fixes by Alexander

@@ -35,7 +35,7 @@
 
 #include "hbclass.ch"
 #include 'common.ch'
-#include 'hbdocdef.ch'
+#include '..\hbdoc\hbdocdef.ch'
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+

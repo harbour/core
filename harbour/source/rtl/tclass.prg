@@ -252,7 +252,7 @@ STATIC PROCEDURE Create(MetaClass)
 STATIC FUNCTION Instance()
  LOCAL Self := QSelf()
  Local oInstance := __clsInst( ::hClass )
- oInstance:Class := Self:Class
+ //oInstance:Class := Self:Class
 RETURN oInstance
 
 //----------------------------------------------------------------------------//

@@ -150,7 +150,7 @@ CLASS TBrowse
    METHOD TApplyKey(nKey, o)
 #endif
 
-   HIDDEN:     /* H I D D E N */
+   /*HIDDEN:     /* H I D D E N */
 
    METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
    METHOD DispCell(nColumn, nColor)       // Displays a single cell
