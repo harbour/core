@@ -3306,7 +3306,7 @@ static int hb_cdxSortSwapBuildIndex( LPSORTINFO pSort )
    USHORT nKeyLen;
    BOOL lCont;
 
-   pSort->pSwapPage = (_SORTSWAPPAGE *) hb_xgrab( pSort->nSwapPages * sizeof( SORTSWAPPAGE ) );
+   pSort->pSwapPage = (LPSORTSWAPPAGE *) hb_xgrab( pSort->nSwapPages * sizeof( SORTSWAPPAGE ) );
    if ( !pSort->pSwapPage )
       hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Not enough memory for index merging", "hb_cdxTagDoIndex", NULL );
 
@@ -6628,4 +6628,3 @@ ERRCODE hb_cdxWriteDBHeader( CDXAREAP pArea )
 // ( DBENTRYP_SVP )   hb_cdxWhoCares        : NULL
 
 /* end of cdxrdd.c */
-

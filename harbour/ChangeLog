@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-18 16:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! Replaced non-existent _SORTSWAPPAGE used in hb_xgrab() type
+      override with the existing, and correct, LPSORTSWAPPAGE.
+
 2002-09-17 21:55 UTC-01 jf lefebvre (mafact) <jfl@mafact.com>
   * source/rdd/dbfcdx\dbfcdx1.c
     ! Added needed typecasting for M$soft C
