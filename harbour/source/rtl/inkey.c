@@ -88,6 +88,8 @@ static int    s_inkeyLast;       /* Last key extracted from Harbour keyboard buf
 static BOOL   s_inkeyPoll;       /* Flag to override no polling when TYPEAHEAD is 0     */
 static int    s_inkeyForce;      /* Variable to hold keyboard input when TYPEAHEAD is 0 */
 static HB_inkey_enum s_eventmask;
+static int		s_InkeyAltC = K_ALT_C;
+static int		s_InkeyAltCEx = HB_K_ALT_C;
 
 static int hb_inkeyFetch( void ) /* Extract the next key from the keyboard buffer */
 {
@@ -212,25 +214,26 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       {
          int ch = hb_gt_ReadKey( s_eventmask );
 
-         switch( ch )
-         {
-            case HB_BREAK_FLAG:        /* Check for Ctrl+Break */
-               if( !hb_set.HB_SET_CANCEL ) ch = 0; /* Ignore if cancel disabled */
-            case HB_K_ALT_C:           /* Check for extended Alt+C */
-            case K_ALT_C:              /* Check for normal Alt+C */
-               if( hb_set.HB_SET_CANCEL )
-               {
-                  ch = 3;              /* Pretend it's a Ctrl+C */
-                  hb_vmRequestCancel();/* Request cancellation */
-               }
-               break;
-            case HB_K_ALT_D:           /* Check for extended Alt+D */
-            case K_ALT_D:              /* Check for normal Alt+D */
-               if( hb_set.HB_SET_DEBUG )
-               {
-                  ch = 0;              /* Make the keystroke disappear */
-                  hb_vmRequestDebug(); /* Request the debugger */
-               }
+			if( (ch==s_InkeyAltC) || (ch==s_InkeyAltCEx) )
+			{
+            if( hb_set.HB_SET_CANCEL )
+            {
+               ch = 3;              /* Pretend it's a Ctrl+C */
+               hb_vmRequestCancel();/* Request cancellation */
+            }
+			}
+			else if( ch == HB_BREAK_FLAG )        /* Check for Ctrl+Break */
+			{
+            if( !hb_set.HB_SET_CANCEL )
+				   ch = 0; /* Ignore if cancel disabled */
+			}
+			else if( (ch==K_ALT_D) || (ch==HB_K_ALT_D) )
+			{
+            if( hb_set.HB_SET_DEBUG )
+            {
+               ch = 0;              /* Make the keystroke disappear */
+               hb_vmRequestDebug(); /* Request the debugger */
+            }
          }
 
          hb_inkeyPut( ch );
@@ -271,6 +274,12 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
             * ( hb_set.HB_SET_TYPEAHEAD == 0 ? 16 : hb_set.HB_SET_TYPEAHEAD ) );
       }
    }
+}
+
+void hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx )
+{
+	s_InkeyAltC = CancelKey;
+	s_InkeyAltCEx = CancelKeyEx;
 }
 
 HB_FUNC( INKEY )

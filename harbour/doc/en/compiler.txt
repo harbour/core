@@ -80,6 +80,8 @@
  *
  *          /kr          use runtime settings for the macro compiler  
  *
+ *          /ks          enable support for strings as array of bytes (default)  
+ *
  *          /kx          other xbase dialects extensions (default)   
  *
  *          /k?          invoke help information     

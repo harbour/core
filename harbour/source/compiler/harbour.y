@@ -1676,6 +1676,7 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
            ;
 
 DoArgument : IdentName                            { $$ = hb_compExprNewVarRef( $1 ); }
+           | '@' IdentName                        { $$ = hb_compExprNewVarRef( $2 ); }
            | '@' IdentName '(' DummyArgList ')' { $$ = hb_compExprNewFunRef( $2 ); }
            | SimpleExpression                     { $$ = $1; }
            | PareExpList                          { $$ = $1; }

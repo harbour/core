@@ -105,6 +105,13 @@ extern void    hb_vmPushDate( long lDate );   /* pushes a long date onto the sta
 extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer onto the stack */
 extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
 
+/* various flags for supported features 
+*/
+#define  HB_VMFLAG_HARBOUR		1	/* enable Harbour extension */
+#define	HB_VMFLAG_ARRSTR		2	/* support for string as array of bytes -ks */
+
+extern ULONG hb_vmFlagEnabled( ULONG flag);
+
 #if defined(HB_EXTERN_C)
 }
 #endif

@@ -1,0 +1,31 @@
+//
+// $Id$
+//
+//Mapping of Linux console 
+//(Slackware 8.1 /usr/share/kbd/keymaps/i386/qwerty/pl2.map)
+//Ctrl-PgUp
+//31:
+//Ctrl-PgDn
+//30:
+//Alt-Esc
+257:\033\033
+//Alt-BackSpace
+270:\033\x7F
+//Alt-Space as Alt-Tab
+421:\033\x20
+//Ctrl-Up
+397:\033\033[A
+//Ctrl-Down
+401:\033\033[B
+//Ctrl-Right
+2:\033\033[C
+//Ctrl-Left
+26:\033\033[D
+//Ctrl-Home
+29:\033\033[1~
+//Ctrl-End
+23:\033\033[4~
+//Ctrl-Ins
+402:\033\033[2~
+//Ctrl-Del
+403:\033\033[3~

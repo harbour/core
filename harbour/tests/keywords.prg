@@ -574,8 +574,10 @@ FIEL fiel
 
   FIELD( FIEL(0) )
 
-  DO field
+#ifndef HB_CLIPPER_COMPATIBLE
+  DO field	//Incorrect number of arguments
   DO field WITH field     //field cannot be passed by a reference
+#endif
   WHILE field
     fiel :=field +1
   ENDDO
@@ -654,7 +656,9 @@ FIELD field IN field
   EVAL( {|in| in}, in )
 
   DO in
-  DO in WITH in       //field cannot be passed by a reference
+#ifndef HB_CLIPPER_COMPATIBLE
+  DO in WITH in       //IN cannot be passed by a reference
+#endif
 
 RETURN in
 

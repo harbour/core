@@ -51,6 +51,7 @@
  */
 
 #include "hbapi.h"
+#include "hbvm.h"
 #include "hbmemory.ch"
 
 /* Command line argument management */
@@ -283,8 +284,11 @@ HB_FUNC( HB_ARGV )
 }
 
 /* Check for command line internal arguments */
-void hb_cmdargProcessVM( void )
+ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
 {
+	char * cFlags;
+	ULONG ulFlags = (HB_VMFLAG_HARBOUR | HB_VMFLAG_ARRSTR);
+	
    if( hb_cmdargCheck( "INFO" ) )
    {
       {
@@ -312,4 +316,53 @@ void hb_cmdargProcessVM( void )
 
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
+		
+	if( (cFlags=hb_cmdargString( "FLAGS" )) != NULL ) 
+	{
+		int i = 1;
+		while( cFlags[ i ] )
+		{
+			switch( cFlags[ i++ ] )
+			{
+				case 'c':
+					/* clear all flags - minimal set of features */
+					ulFlags = 0;
+					break;
+
+				case 'h':
+					/* default Harbour mode */
+					ulFlags |= HB_VMFLAG_HARBOUR;
+					break;
+/*
+				case 'x':
+					ulFlags |= HB_VMFLAG_XBASE;
+					break;
+
+				case 'r':
+					ulFlags |= HB_VMFLAG_RT_MACRO;
+					break;
+*/
+				case 's':
+					ulFlags |= HB_VMFLAG_ARRSTR;
+					break;
+			}
+		}
+		hb_xfree( cFlags );
+	}
+
+	if( (cFlags=hb_cmdargString( "CANCEL" )) != NULL ) 
+	{
+		int iVal = atoi( cFlags );
+		if( iVal )
+			*pCancelKey = iVal;
+		hb_xfree( cFlags );
+	}
+	if( (cFlags=hb_cmdargString( "CANCELEX" )) != NULL ) 
+	{
+		int iVal = atoi( cFlags );
+		if( iVal )
+			*pCancelKeyEx = iVal;
+		hb_xfree( cFlags );
+	}
+	return ulFlags;
 }

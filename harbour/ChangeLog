@@ -8,6 +8,91 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-29 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+	* include/hbexprb.c
+	* source/compiler/exproptb.c
+	* source/macro/macrob.c
+		*fixed generation of pcode for {|| &var}
+		*see below
+
+	* include/hbcomp.h
+	* source/compiler/cmdcheck.c
+	* source/compiler/harbour.c
+	* source/compiler/harbour.y
+	* source/compiler/hbusage.c
+	* doc/en/compiler.txt
+		*added support for DO <proc> WITH @variable 
+		*a new compatibility flag -ks was added to enable support for
+		strings as array of bytes (it is enabled by default). The support
+		for strings as bytes array is disabled if you use -kc switch
+		(Clipper compatibility mode)
+		*when xbase mode is not used (-kc or -kch) then compiler doesn't
+		generate the pcode for these xbase extended features 
+		For example:
+		memv:="2,3"
+		a:={1, &memv, 4}
+		will generate a runtime 'syntax error' without -kx switch
+		or will create an array with four elements if -kx was used.
+		The above rule will apply also for:
+		var[&index]
+		func( &argument )
+		(expr1, &macro ) 
+		Notice that the xbase mode is enabled by default.
+
+	* source/rtl/gtapi.c
+		*fixed GPF in hb_gtBox() when no string was passed
+
+	* source/rtl/gtcrs/gtcrs.c
+		*improved recognition of xterm compatible terminals
+		
+	* source/rtl/gtcrs/Makefile
+	* source/rtl/gtcrs/kbdcrs.c
+	+ source/rtl/gtcrs/keymap.prg
+	+ source/rtl/gtcrs/eterm.map
+	+ source/rtl/gtcrs/linux.map
+		*the support for runtime definition of keycodes mapping was added
+		(translation from terminal key sequences into INKEY() codes)
+		+eterm.map and linux.map are example files with keycode mapping
+		+HB_GT_KEYMAP() function was added
+
+	* include/hbapi.h
+		*Changed declaration of hb_cmdargProcessVM()
+
+	* include/hbapigt.h
+	* include/hbvm.h
+	* source/rtl/inkey.c
+	* source/vm/cmdarg.c
+	* source/vm/hvm.c
+		*new function hb_vmFlagEnabled() to query compatibility
+		at runtime
+		*new internal command line arguments were added to control
+		application at runtime:
+		//FLAGS:switches
+			this flag controls compatibility issues of the virtual 
+			machine
+			Available switches:
+			c - Clipper compatibility
+			h - Harbour extensions (enabled by default)
+			s - enable support for strings as array of bytes (enabled 
+				by default)
+			For example:
+			myapp //FLAGS:ch
+			will disable support for strings as array of bytes
+					
+		//CANCEL:key
+		//CANCELEX:keyex
+			this flag allows change the keycode of application cancel
+			request (usually Alt-C) - using normal INKEY() keycodes
+			or extended keycodes (CANCELEX) 
+			For example:
+			myapp //CANCEL:304
+			will change Alt-c into Alt-b for cancelling (Alt-c is used
+			to insert polish diactric letter)
+		
+	* tests/keywords.prg
+		*fixed to suppress warnings for FIELD and IN keywords if passed
+		by reference
+		
 2003-10-25 14:45 UTC+0100 Ryszard Glab <rglab@przesiew.imid.med.pl>
 	* include/hbexprb.c
 	* source/compiler/exproptb.c

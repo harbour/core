@@ -179,8 +179,13 @@ USHORT hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFra
             short [vszakats] */
 
    cPadChar = ' ';
-   for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
-      cPadChar = szBox[ tmp ] = *pbyFrame++;
+	if( pbyFrame )
+	{
+   	for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
+      	cPadChar = szBox[ tmp ] = *pbyFrame++;
+	}
+	else
+		tmp = 0;
    while( tmp < 8 )
       szBox[ tmp++ ] = cPadChar;
    szBox[ tmp ] = '\0';

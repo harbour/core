@@ -223,6 +223,17 @@ static BOOL     s_bDebugRequest;    /* debugger invoked via the VM */
 static BOOL     s_bDebugShowLines;  /* update source code line on the debugger display */
 static BOOL     s_bDebuggerIsWorking; /* to know when __DBGENTRY is beeing invoked */
 
+/* Various compatibility flags 
+*/
+static ULONG	s_VMFlags;
+#undef hb_vmFlagEnabled
+#define hb_vmFlagEnabled(flag)	(s_VMFlags & (flag))
+
+/* Keycodes to stop virtual machine
+*/
+static int 		s_VMCancelKey = K_ALT_C;
+static int		s_VMCancelKeyEx = HB_K_ALT_C;
+
 /* Stores the position on the stack of current SEQUENCE envelope or 0 if no
  * SEQUENCE is active
  */
@@ -313,8 +324,9 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
    HB_LANG_SELECT_DEFAULT( HB_LANG_DEFAULT );
 
    /* Check for some internal switches */
-   hb_cmdargProcessVM();
-
+   s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
+	hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
+	
    /* Initialize opcodes profiler support arrays */
    {
       ULONG ul;
@@ -493,12 +505,8 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             int ch = hb_gt_ReadKey( hb_set.HB_SET_EVENTMASK );
 
-            switch( ch )
-            {
-               case HB_K_ALT_C:           /* Check for extended Alt+C */
-               case K_ALT_C:              /* Check for normal Alt+C */
+				if( (ch == s_VMCancelKey) || (ch == s_VMCancelKeyEx) )
                   hb_vmRequestCancel();/* Request cancellation */
-            }
          }
       }
       #endif
@@ -2835,8 +2843,8 @@ static void hb_vmArrayPush( void )
       return;
    }
 
-#ifndef HB_C52_STRICT
-   if( HB_IS_STRING( pArray ) )
+/* #ifndef HB_C52_STRICT */
+   if( (hb_vmFlagEnabled(HB_VMFLAG_ARRSTR)) && (HB_IS_STRING( pArray )) )
    {
       BYTE b = 0;
       HB_ITEM item;
@@ -2854,7 +2862,7 @@ static void hb_vmArrayPush( void )
       hb_itemClear( &item );
       return;
    }
-#endif
+/* #endif */
 
    if( HB_IS_OBJECT( pArray ) && hb_objHasMsg( pArray, "__OpArrayIndex" ) )
    {
@@ -2923,8 +2931,8 @@ static void hb_vmArrayPop( void )
       return;
    }
 
-#ifndef HB_C52_STRICT
-   if( HB_IS_STRING( pArray ) )
+/* #ifndef HB_C52_STRICT */
+   if( (hb_vmFlagEnabled(HB_VMFLAG_ARRSTR)) && (HB_IS_STRING( pArray )) )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
       {
@@ -2943,7 +2951,7 @@ static void hb_vmArrayPop( void )
 
       return;
    }
-#endif
+/* #endif */
 
    if( HB_IS_ARRAY( pArray ) )
    {
@@ -4976,6 +4984,12 @@ void hb_vmRequestCancel( void )
 
       s_uiActionRequest = HB_QUIT_REQUESTED;
    }
+}
+
+#undef hb_vmFlagEnabled
+ULONG hb_vmFlagEnabled( ULONG flags )
+{
+	return s_VMFlags & (flags);
 }
 
 void hb_vmRequestDebug( void )

@@ -654,6 +654,10 @@ void hb_compChkEnvironVar( char * szSwitch )
                             hb_comp_Supported |= HB_COMPFLAG_RT_MACRO;
                             break;
 
+                         case 's':
+                            hb_comp_Supported |= HB_COMPFLAG_ARRSTR;
+                            break;
+
                          default:
                             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                             break;

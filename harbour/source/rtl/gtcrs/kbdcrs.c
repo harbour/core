@@ -64,7 +64,9 @@ extern int hb_mouse_xevent( char *, HB_inkey_enum );
 extern int hb_mouse_key( void );
 
 static void hb_gt_Add_terminfo_keymap( int, char * );
-static void hb_gt_Add_keymap( int, char * );
+static void hb_gt_Add_alt_terminfo_keymap( int, char * );
+static void hb_gt_Add_keymap( int, char *, BOOL );
+static void hb_gt_ClearKeymap( void );
 
 /* max number of characters in a keymapped string */
 #define HB_MAX_KEYMAP_CHARS     16
@@ -73,6 +75,7 @@ struct key_map_struc
 {
    int inkey_code;
    int length;
+	BOOL bFreemem;
    char * key_string;
    struct key_map_struc * Next;
 };
@@ -95,7 +98,8 @@ void hb_gt_keyboard_Init( void )
 
    {
       char * tmp = hb_getenv( "TERM" );
-      s_under_xterm = tmp && tmp[ 0 ] != '\0' && ( strncmp( tmp, "xterm", 5 ) == 0 );
+		tmp = hb_strupr( tmp );
+      s_under_xterm = tmp && tmp[ 0 ] != '\0' && ( strstr( tmp, "TERM" ) != NULL );
       if( tmp )
          hb_xfree( ( void * ) tmp );
    }
@@ -119,8 +123,8 @@ void hb_gt_keyboard_Init( void )
       /* workaraound for xterm bug */
       hb_gt_Add_terminfo_keymap( K_UP, "cuu1" );
       hb_gt_Add_terminfo_keymap( K_RIGHT, "cuf1" );
-      hb_gt_Add_keymap( K_LEFT, "\033[D" );
-      hb_gt_Add_keymap( K_DOWN, "\033[B" );
+      hb_gt_Add_keymap( K_LEFT, "\033[D", FALSE );
+      hb_gt_Add_keymap( K_DOWN, "\033[B", FALSE );
    }
    else
    {
@@ -173,97 +177,103 @@ void hb_gt_keyboard_Init( void )
    hb_gt_Add_terminfo_keymap( K_PGUP, "ka3" );
    hb_gt_Add_terminfo_keymap( K_END, "kc1" );
    hb_gt_Add_terminfo_keymap( K_PGDN, "kc3" );
-   hb_gt_Add_keymap( K_ALT_A, "\033a" );
-   hb_gt_Add_keymap( K_ALT_A, "\033A" );
-   hb_gt_Add_keymap( K_ALT_B, "\033b" );
-   hb_gt_Add_keymap( K_ALT_B, "\033B" );
-   hb_gt_Add_keymap( K_ALT_C, "\033c" );
-   hb_gt_Add_keymap( K_ALT_C, "\033C" );
-   hb_gt_Add_keymap( K_ALT_D, "\033d" );
-   hb_gt_Add_keymap( K_ALT_D, "\033D" );
-   hb_gt_Add_keymap( K_ALT_E, "\033e" );
-   hb_gt_Add_keymap( K_ALT_E, "\033E" );
-   hb_gt_Add_keymap( K_ALT_F, "\033f" );
-   hb_gt_Add_keymap( K_ALT_F, "\033F" );
-   hb_gt_Add_keymap( K_ALT_G, "\033g" );
-   hb_gt_Add_keymap( K_ALT_G, "\033G" );
-   hb_gt_Add_keymap( K_ALT_H, "\033h" );
-   hb_gt_Add_keymap( K_ALT_H, "\033H" );
-   hb_gt_Add_keymap( K_ALT_I, "\033i" );
-   hb_gt_Add_keymap( K_ALT_I, "\033I" );
-   hb_gt_Add_keymap( K_ALT_J, "\033j" );
-   hb_gt_Add_keymap( K_ALT_J, "\033J" );
-   hb_gt_Add_keymap( K_ALT_K, "\033k" );
-   hb_gt_Add_keymap( K_ALT_K, "\033K" );
-   hb_gt_Add_keymap( K_ALT_L, "\033l" );
-   hb_gt_Add_keymap( K_ALT_L, "\033L" );
-   hb_gt_Add_keymap( K_ALT_M, "\033m" );
-   hb_gt_Add_keymap( K_ALT_M, "\033M" );
-   hb_gt_Add_keymap( K_ALT_N, "\033n" );
-   hb_gt_Add_keymap( K_ALT_N, "\033N" );
-   hb_gt_Add_keymap( K_ALT_O, "\033o" );
-   hb_gt_Add_keymap( K_ALT_O, "\033O" );
-   hb_gt_Add_keymap( K_ALT_P, "\033p" );
-   hb_gt_Add_keymap( K_ALT_P, "\033P" );
-   hb_gt_Add_keymap( K_ALT_Q, "\033q" );
-   hb_gt_Add_keymap( K_ALT_Q, "\033Q" );
-   hb_gt_Add_keymap( K_ALT_R, "\033r" );
-   hb_gt_Add_keymap( K_ALT_R, "\033R" );
-   hb_gt_Add_keymap( K_ALT_S, "\033s" );
-   hb_gt_Add_keymap( K_ALT_S, "\033S" );
-   hb_gt_Add_keymap( K_ALT_T, "\033t" );
-   hb_gt_Add_keymap( K_ALT_T, "\033T" );
-   hb_gt_Add_keymap( K_ALT_U, "\033u" );
-   hb_gt_Add_keymap( K_ALT_U, "\033U" );
-   hb_gt_Add_keymap( K_ALT_V, "\033v" );
-   hb_gt_Add_keymap( K_ALT_V, "\033V" );
-   hb_gt_Add_keymap( K_ALT_W, "\033w" );
-   hb_gt_Add_keymap( K_ALT_W, "\033W" );
-   hb_gt_Add_keymap( K_ALT_X, "\033x" );
-   hb_gt_Add_keymap( K_ALT_X, "\033X" );
-   hb_gt_Add_keymap( K_ALT_Y, "\033y" );
-   hb_gt_Add_keymap( K_ALT_Y, "\033Y" );
-   hb_gt_Add_keymap( K_ALT_Z, "\033z" );
-   hb_gt_Add_keymap( K_ALT_Z, "\033Z" );
-   hb_gt_Add_keymap( K_ALT_1, "\0331" );
-   hb_gt_Add_keymap( K_ALT_2, "\0332" );
-   hb_gt_Add_keymap( K_ALT_3, "\0333" );
-   hb_gt_Add_keymap( K_ALT_4, "\0334" );
-   hb_gt_Add_keymap( K_ALT_5, "\0335" );
-   hb_gt_Add_keymap( K_ALT_6, "\0336" );
-   hb_gt_Add_keymap( K_ALT_7, "\0337" );
-   hb_gt_Add_keymap( K_ALT_8, "\0338" );
-   hb_gt_Add_keymap( K_ALT_9, "\0339" );
-   hb_gt_Add_keymap( K_ALT_0, "\0330" );
-   hb_gt_Add_keymap( K_ALT_ENTER, "\033\n" );
-   hb_gt_Add_keymap( K_ALT_EQUALS, "\033=" );
+   hb_gt_Add_keymap( K_ALT_A, "\033a", FALSE );
+   hb_gt_Add_keymap( K_ALT_A, "\033A", FALSE );
+   hb_gt_Add_keymap( K_ALT_B, "\033b", FALSE );
+   hb_gt_Add_keymap( K_ALT_B, "\033B", FALSE );
+   hb_gt_Add_keymap( K_ALT_C, "\033c", FALSE );
+   hb_gt_Add_keymap( K_ALT_C, "\033C", FALSE );
+   hb_gt_Add_keymap( K_ALT_D, "\033d", FALSE );
+   hb_gt_Add_keymap( K_ALT_D, "\033D", FALSE );
+   hb_gt_Add_keymap( K_ALT_E, "\033e", FALSE );
+   hb_gt_Add_keymap( K_ALT_E, "\033E", FALSE );
+   hb_gt_Add_keymap( K_ALT_F, "\033f", FALSE );
+   hb_gt_Add_keymap( K_ALT_F, "\033F", FALSE );
+   hb_gt_Add_keymap( K_ALT_G, "\033g", FALSE );
+   hb_gt_Add_keymap( K_ALT_G, "\033G", FALSE );
+   hb_gt_Add_keymap( K_ALT_H, "\033h", FALSE );
+   hb_gt_Add_keymap( K_ALT_H, "\033H", FALSE );
+   hb_gt_Add_keymap( K_ALT_I, "\033i", FALSE );
+   hb_gt_Add_keymap( K_ALT_I, "\033I", FALSE );
+   hb_gt_Add_keymap( K_ALT_J, "\033j", FALSE );
+   hb_gt_Add_keymap( K_ALT_J, "\033J", FALSE );
+   hb_gt_Add_keymap( K_ALT_K, "\033k", FALSE );
+   hb_gt_Add_keymap( K_ALT_K, "\033K", FALSE );
+   hb_gt_Add_keymap( K_ALT_L, "\033l", FALSE );
+   hb_gt_Add_keymap( K_ALT_L, "\033L", FALSE );
+   hb_gt_Add_keymap( K_ALT_M, "\033m", FALSE );
+   hb_gt_Add_keymap( K_ALT_M, "\033M", FALSE );
+   hb_gt_Add_keymap( K_ALT_N, "\033n", FALSE );
+   hb_gt_Add_keymap( K_ALT_N, "\033N", FALSE );
+   hb_gt_Add_keymap( K_ALT_O, "\033o", FALSE );
+   hb_gt_Add_keymap( K_ALT_O, "\033O", FALSE );
+   hb_gt_Add_keymap( K_ALT_P, "\033p", FALSE );
+   hb_gt_Add_keymap( K_ALT_P, "\033P", FALSE );
+   hb_gt_Add_keymap( K_ALT_Q, "\033q", FALSE );
+   hb_gt_Add_keymap( K_ALT_Q, "\033Q", FALSE );
+   hb_gt_Add_keymap( K_ALT_R, "\033r", FALSE );
+   hb_gt_Add_keymap( K_ALT_R, "\033R", FALSE );
+   hb_gt_Add_keymap( K_ALT_S, "\033s", FALSE );
+   hb_gt_Add_keymap( K_ALT_S, "\033S", FALSE );
+   hb_gt_Add_keymap( K_ALT_T, "\033t", FALSE );
+   hb_gt_Add_keymap( K_ALT_T, "\033T", FALSE );
+   hb_gt_Add_keymap( K_ALT_U, "\033u", FALSE );
+   hb_gt_Add_keymap( K_ALT_U, "\033U", FALSE );
+   hb_gt_Add_keymap( K_ALT_V, "\033v", FALSE );
+   hb_gt_Add_keymap( K_ALT_V, "\033V", FALSE );
+   hb_gt_Add_keymap( K_ALT_W, "\033w", FALSE );
+   hb_gt_Add_keymap( K_ALT_W, "\033W", FALSE );
+   hb_gt_Add_keymap( K_ALT_X, "\033x", FALSE );
+   hb_gt_Add_keymap( K_ALT_X, "\033X", FALSE );
+   hb_gt_Add_keymap( K_ALT_Y, "\033y", FALSE );
+   hb_gt_Add_keymap( K_ALT_Y, "\033Y", FALSE );
+   hb_gt_Add_keymap( K_ALT_Z, "\033z", FALSE );
+   hb_gt_Add_keymap( K_ALT_Z, "\033Z", FALSE );
+   hb_gt_Add_keymap( K_ALT_1, "\0331", FALSE );
+   hb_gt_Add_keymap( K_ALT_2, "\0332", FALSE );
+   hb_gt_Add_keymap( K_ALT_3, "\0333", FALSE );
+   hb_gt_Add_keymap( K_ALT_4, "\0334", FALSE );
+   hb_gt_Add_keymap( K_ALT_5, "\0335", FALSE );
+   hb_gt_Add_keymap( K_ALT_6, "\0336", FALSE );
+   hb_gt_Add_keymap( K_ALT_7, "\0337", FALSE );
+   hb_gt_Add_keymap( K_ALT_8, "\0338", FALSE );
+   hb_gt_Add_keymap( K_ALT_9, "\0339", FALSE );
+   hb_gt_Add_keymap( K_ALT_0, "\0330", FALSE );
+   hb_gt_Add_keymap( K_ALT_ENTER, "\033\n", FALSE );
+   hb_gt_Add_keymap( K_ALT_EQUALS, "\033=", FALSE );
+   hb_gt_Add_keymap( KP_ALT_SLASH, "\033/", FALSE );
+   hb_gt_Add_keymap( KP_ALT_MINUS, "\033-", FALSE );
+	/* 
+	*/
+	hb_gt_Add_alt_terminfo_keymap( K_ALT_PGUP, "kpp" );
+	hb_gt_Add_alt_terminfo_keymap( K_ALT_PGDN, "knp" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F1, "kf1" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F2, "kf2" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F3, "kf3" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F4, "kf4" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F5, "kf5" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F6, "kf6" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F7, "kf7" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F8, "kf8" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F9, "kf9" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F10, "kf10" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F11, "kf11" );
+   hb_gt_Add_alt_terminfo_keymap( K_ALT_F12, "kf12" );
+	
 }
 
 void hb_gt_keyboard_Exit( void )
 {
-   int i, k;
-   struct key_map_struc *tmp;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_kbd_Exit()"));
 
-   for( i = 0; i < HB_HASH_KEY; i++ )
-   {
-      tmp = s_keymap_table[ i ];
-      k = 0;
-      while( tmp )
-      {
-         s_keymap_table[ i ] = tmp->Next;
-         hb_xfree( tmp );
-         tmp = s_keymap_table[ i ];
-         k++;
-      }
-   }
+	hb_gt_ClearKeymap();
 }
 
 int hb_gt_ExtendedKeySupport()
 {
    return 0;
 }
+
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    static char key_codes[ HB_MAX_KEYMAP_CHARS + 1 ]; /* buffer for multi-characters keycodes */
@@ -296,11 +306,13 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
          int i = 0;
          BYTE sum;
 
-         key_codes[ 0 ] = sum = ch;
+         key_codes[ 0 ] = ch;
+			sum = ch;
          while( ( ch = getch() ) != ERR && i <= HB_MAX_KEYMAP_CHARS )
          {
             key_codes[ ++i ] = ch;
-/*fprintf( stderr, "key%i=%i(%c)\n", i, ch, ch );
+/*
+fprintf( stderr, "key%i=%i(%c)\n", i, ch, ch );
 fflush( stderr );
 */
             sum += ch;
@@ -354,7 +366,7 @@ fflush( stderr );
 }
 
 
-static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
+static void hb_gt_Add_keymap( int InkeyCode, char *key_string, BOOL bxfree )
 {
    struct key_map_struc * keymap;
    int iLength = strlen( key_string );
@@ -372,6 +384,7 @@ static void hb_gt_Add_keymap( int InkeyCode, char *key_string )
       keymap->key_string = key_string;
       keymap->length = iLength;
       keymap->Next = NULL;
+		keymap->bFreemem = bxfree;
 
       if( s_keymap_table[ sum ] )
       {
@@ -391,5 +404,69 @@ static void hb_gt_Add_terminfo_keymap( int InkeyCode, char * capname )
 
    code = tigetstr( capname );
    if( ( code != NULL ) && ( code != ( char * ) -1 ) )
-      hb_gt_Add_keymap( InkeyCode, code );
+      hb_gt_Add_keymap( InkeyCode, code, FALSE );
+}
+
+static void hb_gt_Add_alt_terminfo_keymap( int InkeyCode, char * capname )
+{
+   char * code;
+
+   code = tigetstr( capname );
+   if( ( code != NULL ) && ( code != ( char * ) -1 ) )
+	{
+   	int iLen = strlen( code );
+		char *acode;
+		
+		acode = (char *)hb_xgrab( iLen+2 );
+		acode[0] = '\033';
+		memcpy( acode+1, code, iLen+1 );
+      hb_gt_Add_keymap( InkeyCode, acode, TRUE );
+	}
+}
+
+static void hb_gt_ClearKeymap( void )
+{
+   int i, k;
+   struct key_map_struc *tmp;
+
+   for( i = 0; i < HB_HASH_KEY; i++ )
+   {
+      tmp = s_keymap_table[ i ];
+      k = 0;
+      while( tmp )
+      {
+         s_keymap_table[ i ] = tmp->Next;
+			if( tmp->bFreemem )
+				hb_xfree( tmp->key_string );
+         hb_xfree( tmp );
+         tmp = s_keymap_table[ i ];
+         k++;
+      }
+		s_keymap_table[ i ] = NULL;
+   }
+}
+
+/*
+	Add definition of nonstandard keycode mapping
+	for example:
+	HB_GT_ADDKEYMAP( 0 )            //Clear all default keymaps
+	HB_GT_ADDKEYMAP( 30,"\033[6^" ) //Ctrl+PgDn
+*/
+HB_FUNC( HB_GT_ADDKEYMAP )
+{
+   if( ISNUM( 1 ) && ISCHAR( 2 ) )
+	{
+		char * code;
+		int len = hb_parclen(2);
+		
+		code = hb_xgrab( len + 1 );
+		memcpy( code, hb_parc(2), len );
+		code[ len ] = '\0';
+		hb_gt_Add_keymap( hb_parni( 1 ), code, TRUE );
+	}
+	else if( ISNUM( 1 ) )
+	{
+		if( hb_parni(1) == 0 )
+			hb_gt_ClearKeymap();
+	}
 }

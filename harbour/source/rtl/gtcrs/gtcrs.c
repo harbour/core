@@ -128,7 +128,8 @@ static void hb_gt_terminal_Init( void )
 
    {
       char * tmp = hb_getenv( "TERM" );
-      s_under_xterm = tmp && tmp[ 0 ] != '\0' && ( strncmp( tmp, "xterm", 5 ) == 0 );
+		tmp = hb_strupr( tmp );
+      s_under_xterm = tmp && tmp[ 0 ] != '\0' && ( strstr( tmp, "TERM" ) != NULL );
       if( tmp )
          hb_xfree( ( void * ) tmp );
    }
