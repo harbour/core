@@ -64,7 +64,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
-#if defined(HB_OS_WIN_32_USED)
+#if defined(HB_OS_WIN_32)
 #include <stdio.h>
 #include <alloc.h>
 #include <winspool.h>
@@ -105,7 +105,7 @@ HB_FUNC( ISPRINTER )
       /* TODO: Proper COM port checking */
       bIsPrinter = TRUE;
    }
-#elif defined(HB_OS_WIN_32_USED)
+#elif defined(HB_OS_WIN_32)
 {
    char DefaultPrinter[80];
    DWORD pdwBufferSize=80;
@@ -138,7 +138,7 @@ HB_FUNC( ISPRINTER )
    hb_retl( bIsPrinter );
 }
 /** The bellow does the check for the printer */
-#if defined(HB_OS_WIN_32_USED)
+#if defined(HB_OS_WIN_32)
 BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 {
   BOOL bFlag;
