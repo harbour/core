@@ -219,6 +219,6 @@ LOCAL oCheck
    return oCheck
 
 function IsDefColor()
-   Return (SETCOLOR() != "W/N,N/W,N/N,N/N,N/W")
+   Return (SETCOLOR() == "W/N,N/W,N/N,N/N,N/W")
 
 #endif
