@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 20:07 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/is.c
+     ! hb_parc() use made clipper compatible
+
 2002-10-19 16:20 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rdd/dbcmd.c
      ! some fixes on hb_parc() use from DbCreate()
