@@ -131,7 +131,6 @@ static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a
 static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
-static void    hb_vmSendFunc( USHORT uiParams );
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
 
@@ -552,22 +551,34 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_FUNCTION:
-            hb_vmFunction( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_itemClear( &hb_stack.Return );
+            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
+            hb_stackPush();
             w += 3;
             break;
 
          case HB_P_FUNCTIONSHORT:
-            hb_vmFunction( pCode[ w + 1 ] );
+            hb_itemClear( &hb_stack.Return );
+            hb_vmDo( pCode[ w + 1 ] );
+            hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
+            hb_stackPush();
             w += 2;
             break;
 
          case HB_P_SEND:
-            hb_vmSendFunc( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_itemClear( &hb_stack.Return );
+            hb_vmSend( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
+            hb_stackPush();
             w += 3;
             break;
 
          case HB_P_SENDSHORT:
-            hb_vmSendFunc( pCode[ w + 1 ] );
+            hb_itemClear( &hb_stack.Return );
+            hb_vmSend( pCode[ w + 1 ] );
+            hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
+            hb_stackPush();
             w += 2;
             break;
 
@@ -3001,16 +3012,6 @@ void hb_vmFunction( USHORT uiParams )
 
    hb_itemClear( &hb_stack.Return );
    hb_vmDo( uiParams );
-   hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
-   hb_stackPush();
-}
-
-static void hb_vmSendFunc( USHORT uiParams )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmSendFunc(%hu)", uiParams));
-
-   hb_itemClear( &hb_stack.Return );
-   hb_vmSend( uiParams );
    hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
    hb_stackPush();
 }

@@ -1,3 +1,10 @@
+20000502-19:28 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/hvm.c
+     % hb_vmFunction() and hb_vmSendFunc() "inlined".
+       Note that hb_vmFunction() is still there since it's used from one 
+       places in classes.c.
+
 20000502-19:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * makefile.vc
