@@ -314,7 +314,6 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
    PITEM   pInit  = _param( 5, IT_ANY );
    PCLASS pClass;
    PDYNSYM pMessage;
-   WORD wAt, wLimit;
 
    if( wClass && wClass <= wClasses )
    {
