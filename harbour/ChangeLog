@@ -1,5 +1,6 @@
 2001-06-07 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
+  * contrib\libct\alt\token1.prg
   * contrib/libmisc/hb_f.c
   * source/debug/dbgwa.prg
   * source/lang/msgid.c
@@ -15,9 +16,9 @@
       new Harbour License and Exception with permission from
       Andi Jahja <andijahja@cbn.net.id>,
       April White <awhite@mail.rosecom.ca>,
-      Ignacio_Ortiz_de_Zúñiga <ignacio@ozs.com>, and
-      Kwon,OJun (Charles Kwon) <charles@fivetech.net>
-
+      Ignacio_Ortiz_de_Zúñiga <ignacio@ozs.com>,
+      Kwon,OJun (Charles Kwon) <charles@fivetech.net>, and
+      Phil Barnett <midnight@the-oasis.net>
 
 2001-06-07 17:06 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    + contrib/tprepro/tprepro.prg
