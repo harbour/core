@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * New define (HB_GUI) to avoid the call to hb_InkeyPoll() on GUI apps.
+
+2002-01-28 12:36 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/tget.prg
+    * Bug fixed in VarPut() method, reported by Lorenzo Fiorini
+    Notice: Using -DHB_API_MACROS compiler define, results in a
+2002-01-28 14:21 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbf1.c
     * Bug fixed in dbfGetMemo(), reported by Jos© Luis Capel
 
