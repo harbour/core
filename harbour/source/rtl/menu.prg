@@ -59,7 +59,7 @@ if len(athismenu) == 0
 endif
 
 nselect := eval(bvarblock)
-if valtype(nselect) <> "n"
+if valtype(nselect) <> "N"
     nselect := 1
 elseif (nselect := int(nselect)) < 1 .or. nselect > len(athismenu)
     nselect := 1
@@ -84,13 +84,13 @@ do while ncurrent > 0
 
     do case
     case anexits != nil .and. ascan(anexits, nkey) > 0
-        nselect := ncurrent
+        nselect  := ncurrent
         ncurrent := 0
     case nkey == K_ENTER .or. nKey == K_PGUP .or. nKey == K_PGDN
-        nselect := ncurrent
+        nselect  := ncurrent
         ncurrent := 0
     case nkey == K_ESC
-        nselect := 0
+        nselect  := 0
         ncurrent := 0
     case nkey == K_UP .or. nKey == K_LEFT
         if --ncurrent < 1
@@ -135,7 +135,7 @@ if (nmarkpos := at("~", ctext)) > 0
 
     for nmarkidx := 1 to 4
         ncommapos := at(",", ccolor)
-        ccolor := if(ncommapos > 0, substr(ccolor, ncommapos + 1), "")
+        ccolor    := if(ncommapos > 0, substr(ccolor, ncommapos + 1), "")
     next
 
     if .not. ccolor == ""
