@@ -29,6 +29,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.62   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
+                                        Clipper 5.3 docs are incorrect on this.
    V 1.51   Victor Szel                 #include <x> changed to #include "x".
    V 1.49   Paul Tucker                 Changed parameter passing checks
                                         in call to hb_setColor() to account
@@ -474,10 +476,10 @@ HARBOUR HB___SETCENTURY( void )
  *                   SET CENTURY modifies the date format. SET CENTURY ON
  *                   replaces the "y"s with "YYYY". SET CENTURY OFF replaces
  *                   the "y"s with "YY".
- *              _SET_DEBUG       <nStatus>
- *                   When set to 1, pressing Alt+D activates the debugger.
- *                   When set to 0, which is the default, Alt+D can be read
- *                   by INKEY().
+ *              _SET_DEBUG       <lStatus>
+ *                   When set to .t., pressing Alt+D activates the debugger.
+ *                   When set to .f., which is the default, Alt+D can be read
+ *                   by INKEY(). (Also affected by AltD(1) and AltD(0))
  *              _SET_DECIMALS    <nNumberOfDecimals>
  *                   Sets the number of decimal digits to use when displaying
  *                   printing numeric values when SET FIXED is ON. Defaults to
@@ -706,8 +708,8 @@ HARBOUR HB_SET( void )
          if( args > 1 ) hb_set.HB_SET_DATEFORMAT = set_string( pArg2, hb_set.HB_SET_DATEFORMAT );
          break;
       case HB_SET_DEBUG      :
-         hb_retni( hb_set.HB_SET_DEBUG );
-         if( args > 1 ) hb_set.HB_SET_DEBUG = set_number( pArg2, hb_set.HB_SET_DEBUG );
+         hb_retl( hb_set.HB_SET_DEBUG );
+         if( args > 1 ) hb_set.HB_SET_DEBUG = set_logical( pArg2 );
          break;
       case HB_SET_DECIMALS   :
          hb_retni( hb_set.HB_SET_DECIMALS );
@@ -911,7 +913,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_CURSOR = SC_NORMAL;
    hb_set.HB_SET_DATEFORMAT = ( char * ) hb_xgrab( 9 );
    memcpy( hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9 );
-   hb_set.HB_SET_DEBUG = 0;
+   hb_set.HB_SET_DEBUG = FALSE;
    hb_set.HB_SET_DECIMALS = 2;
    hb_set.HB_SET_DEFAULT = ( char * ) hb_xgrab( 1 );
    hb_set.HB_SET_DEFAULT[ 0 ] = '\0';

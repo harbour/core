@@ -32,6 +32,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.25   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
+                                        Clipper 5.3 docs are incorrect on this.
    V 1.19   Victor Szel                 #include <x> changed to #include "x".
    V 1.18   David G. Holm               Added INKEY_EXTENDED to allow some
                                         platforms to select between normal
@@ -162,7 +164,7 @@ typedef struct
    BOOL   HB_SET_UNIQUE;
    BOOL   HB_SET_DELETED;
    BOOL   HB_SET_CANCEL;
-   int    HB_SET_DEBUG;
+   BOOL   HB_SET_DEBUG;
    int    HB_SET_TYPEAHEAD;
    char   HB_SET_COLOR[ 64 ];
    HB_cursor_enum HB_SET_CURSOR;

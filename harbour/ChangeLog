@@ -1,3 +1,9 @@
+19990831-22:49 EDT Paul Tucker <ptucker@sympatico.ca>
+  * include/set.h
+    source/rtl/set.c
+    Set(_SET_DEBUG) now returns Logical as in Clipper 5.2 and 5.3 operation.
+    (Clipper 5.3 docs are incorrect)
+
 19990831-23:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/itemapi.c
     include/itemapi.h
