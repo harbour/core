@@ -965,15 +965,15 @@ void hb_compDeclaredInit( void )
    _DECL s_030 = { "FOPEN"   , 'N', 2         , (BYTE*)"C\xa8\x7a"            , NULL     , NULL         , &s_029 };
    _DECL s_031 = { "FWRITE"  , 'N', 3         , (BYTE*)"NC\xa8\x7a"           , NULL     , NULL         , &s_030 };
    _DECL s_032 = { "FCLOSE"  , 'L', 1         , (BYTE*)"N"                    , NULL     , NULL         , &s_031 };
-   _DECL s_033 = { "FREAD"   , 'N', 3         , (BYTE*)"N\Cx5cN"              , NULL     , NULL         , &s_032 };
+   _DECL s_033 = { "FREAD"   , 'N', 3         , (BYTE*)"NC\x5cN"              , NULL     , NULL         , &s_032 };
    _DECL s_034 = { "FSEEK"   , 'N', 3         , (BYTE*)"NN\xa8"               , NULL     , NULL         , &s_033 };
    _DECL s_035 = { "FCREATE" , 'N', 2         , (BYTE*)"C\xa8"                , NULL     , NULL         , &s_034 };
 
-   _DECL s_037 = { "GETE"    , 'C', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_036 };
-   _DECL s_038 = { "FILE"    , 'L', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_037 };
-   _DECL s_039 = { "RAT"     , 'N', 2         , (BYTE*)"CC"                   , NULL     , NULL         , &s_038 };
-   _DECL s_040 = { "LEFT"    , 'C', 2         , (BYTE*)"CN"                   , NULL     , NULL         , &s_039 };
-   _DECL s_041 = { "RIGHT"   , 'C', 2         , (BYTE*)"CN"                   , NULL     , NULL         , &s_040 };
+   _DECL s_036 = { "GETE"    , 'C', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_035 };
+   _DECL s_037 = { "FILE"    , 'L', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_036 };
+   _DECL s_038 = { "RAT"     , 'N', 2         , (BYTE*)"CC"                   , NULL     , NULL         , &s_037 };
+   _DECL s_039 = { "LEFT"    , 'C', 2         , (BYTE*)"CN"                   , NULL     , NULL         , &s_038 };
+   _DECL s_040 = { "RIGHT"   , 'C', 2         , (BYTE*)"CN"                   , NULL     , NULL         , &s_039 };
    /* TODO: Rest of Standard Functions. */
 
    /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
