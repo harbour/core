@@ -343,7 +343,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_getMathError()
+ *      hb_mathGetLastError()
  *  $CATEGORY$
  *      Math API
  *  $ONELINER$
@@ -352,7 +352,52 @@
  *      C Prototype
  *      
  *      #include <hbmath.h>
- *      hb_getMathError (void) --> int iMathError
+ *      hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc) --> int iMathErrorType
+ *  $ARGUMENTS$
+ *      phb_exc     pointer to HB_MATH_EXCEPTION structure, if not NULL, the structure will be filled
+ *                  with information about the last math error:
+ *                  typedef struct _HB_MATH_EXCEPTION {
+ *                    int type;        /* math error type, is one of the constants HB_MATH_ERR_xxx defined in math.ch */
+ *                    char *funcname;  /* pointer to name of the math C RTL routine that caused the error */
+ *                    char *error;     /* pointer to error description */ 
+ *                    double arg1;     /* first and */
+ *                    double arg2;     /* second double argument to the math routine */
+ *                    double retval;   /* corrected return value for the math routine */
+ *                    int retvalwidth; /* width and */
+ *                    int retvaldec;   /* decimals of the corrected return value, both default to -1 */
+ *                    int handled;     /* 1, if the math error is already corrected, 0 otherwise */
+ *                 } HB_MATH_EXCEPTION;
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mathResetError()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      reset the internal math error information structure
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_mathResetError (void) --> void
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
@@ -376,16 +421,16 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_resetMathError()
+ *      hb_mathIsMathErr()
  *  $CATEGORY$
  *      Math API
  *  $ONELINER$
- *      reset the math error, i.e. set it to 0
+ *      check if harbour math error handling is available
  *  $SYNTAX$
  *      C Prototype
  *      
  *      #include <hbmath.h>
- *      hb_resetMathError (void) --> void
+ *      hb_mathIsMathErr (void) --> int iIsMathHandler
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
@@ -409,20 +454,56 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_isMathHandler()
+ *      hb_mathSetHandler()
  *  $CATEGORY$
  *      Math API
  *  $ONELINER$
- *      check if harbour math error handler is available
+ *      set the harbour math handler 
  *  $SYNTAX$
  *      C Prototype
  *      
  *      #include <hbmath.h>
- *      hb_isMathHandler (void) --> int iIsMathHandler
+ *      hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc) --> HB_MATH_HANDLERPROC previous_handerproc
  *  $ARGUMENTS$
- *      
+ *      handlerproc             custom math handler 
+ *                                typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)      
  *  $RETURNS$
+ *      previous_handlerproc    previous math handler
+ *                                typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)      
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
  *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mathGetHandler()
+ *  $CATEGORY$
+ *      Math API
+ *  $ONELINER$
+ *      get current Harbour math error handler
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmath.h>
+ *      hb_mathGetHandler (void) --> HB_MATH_HANDLERPROC handlerproc
+ *  $ARGUMENTS$
+ *      handlerproc             custom math handler 
+ *                                typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)      
+ *  $RETURNS$
+ * 
  *  $DESCRIPTION$
  *      
  *  $EXAMPLES$
@@ -442,20 +523,25 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_installMathHandler()
+ *      hb_mathSetErrMode()
  *  $CATEGORY$
  *      Math API
  *  $ONELINER$
- *      add a custom math handler to the math error handler chain
+ *      set math error handling mode
  *  $SYNTAX$
  *      C Prototype
  *      
  *      #include <hbmath.h>
- *      hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc) --> HB_MATH_HANDLERHANDLE handle
+ *      hb_mathSetErrMode (int imode) --> int ioldmode
  *  $ARGUMENTS$
- *      handlerproc   custom math handler 
+ *      imode        math error handling mode, one of the following constants, defined in math.ch
+ *                     HB_MATH_ERRMODE_DEFAULT
+ *                     HB_MATH_ERRMODE_CDEFAULT
+ *                     HB_MATH_ERRMODE_USER
+ *                     HB_MATH_ERRMODE_USERDEFAULT
+ *                     HB_MATH_ERRMODE_USERCDEFAULT
  *  $RETURNS$
- *      handle        handle to handlerproc in handle chain 
+ *      ioldmode     old math error handling mode 
  *  $DESCRIPTION$
  *      
  *  $EXAMPLES$
@@ -475,20 +561,20 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_deinstallMathHandler()
+ *      hb_mathGetErrMode()
  *  $CATEGORY$
  *      Math API
  *  $ONELINER$
- *      remove custom math handler from the math error handler chain
+ *      get math error handling mode
  *  $SYNTAX$
  *      C Prototype
  *      
  *      #include <hbmath.h>
- *      hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle) --> int iSuccess
+ *      hb_mathGetErrMode (void) --> imode
  *  $ARGUMENTS$
- *      handle        handle returned be hb_installMathHandler() 
+ *
  *  $RETURNS$
- *      iSuccess      success of operation 
+ *      imode       math error handling mode
  *  $DESCRIPTION$
  *      
  *  $EXAMPLES$
@@ -508,37 +594,31 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_setMathHandlerStatus()
+ *      MATHERRMODE()
  *  $CATEGORY$
- *      Math API
+ *      Math
  *  $ONELINER$
- *      set the status of a custom math handler in the math error handler chain
+ *      Set/Get math error handling mode
  *  $SYNTAX$
- *      C Prototype
- *      
- *      #include <hbmath.h>
- *      hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status) --> int iSuccess
+ *      MATHERRMODE ([<nNewMode>]) -> <nOldMode> 
  *  $ARGUMENTS$
- *      handle        handle returned be hb_installMathHandler() 
- *      status        new status value, can be one of:
- *                       HB_MATH_HANDLER_STATUS_INACTIVE  
- *                         --> handler is present but not active
- *                       HB_MATH_HANDLER_STATUS_ACTIVE     
- *                         --> handler is present and active
+ *      [<nNumber>]   new math error handling mode, one of the following constants, defined in math.ch
+ *                     HB_MATH_ERRMODE_DEFAULT
+ *                     HB_MATH_ERRMODE_CDEFAULT
+ *                     HB_MATH_ERRMODE_USER
+ *                     HB_MATH_ERRMODE_USERDEFAULT
+ *                     HB_MATH_ERRMODE_USERCDEFAULT
  *  $RETURNS$
- *      iSuccess      success of operation 
+ *      <nOldMode>    old math error handling mode
  *  $DESCRIPTION$
- *      
  *  $EXAMPLES$
- *      
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Library is rtl
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl
  *  $SEEALSO$
  *      
  *  $END$
@@ -546,35 +626,28 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      hb_getMathHandlerStatus()
+ *      MATHERRORBLOCK()
  *  $CATEGORY$
- *      Math API
+ *      Math
  *  $ONELINER$
- *      get the status of a custom math handler in the math error handler chain
+ *      Set/Get math error handling codeblock
  *  $SYNTAX$
- *      C Prototype
- *      
- *      #include <hbmath.h>
- *      hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle) --> int iStatus
+ *      MATHERRORBLOCK ([<bNewBlock>]) -> <bOldBlock> 
  *  $ARGUMENTS$
- *      handle        handle returned be hb_installMathHandler() 
  *  $RETURNS$
- *      iStatus       status of math handler
  *  $DESCRIPTION$
- *      
  *  $EXAMPLES$
- *      
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Library is rtl
  *  $PLATFORMS$
  *      All
+ *  $FILES$
+ *      Library is rtl
  *  $SEEALSO$
  *      
  *  $END$
  */
+
 
 

@@ -111,15 +111,6 @@
 #define CT_ERROR_GETREAD_RANGEL    8900 /* get & read functions */
 #define CT_ERROR_GETREAD_RANGEH    9099
 
-/* C math lib error sub codes */
-#define CT_ERROR_MATHLIB           100  /* unknown math lib error */
-#define CT_ERROR_MATHLIB_DOMAIN    101  /* a domain error has occured, such as sqrt( -1 ) */
-#define CT_ERROR_MATHLIB_SING      102  /* a singularity will result, such as pow( 0, -2 ) */
-#define CT_ERROR_MATHLIB_OVERFLOW  103  /* an overflow will result, such as pow( 10, 100 ) */
-#define CT_ERROR_MATHLIB_UNDERFLOW 104  /* an underflow will result, such as pow( 10, -100 ) */
-#define CT_ERROR_MATHLIB_TLOSS     105  /* total loss of significance will result, such as exp( 1000 ) */
-#define CT_ERROR_MATHLIB_PLOSS     106  /* partial loss of significance will result, such as sin( 10e70 ) */
-
 /*             
  * function error sub codes 
  * 
@@ -684,7 +675,6 @@
 #define CT_ERROR_PV              8573
 #define CT_ERROR_RATE            8583
 #define CT_ERROR_RTOD            8593
-#define CT_ERROR_SETMATHERR      8602
 #define CT_ERROR_SETPREC         8612
 #define CT_ERROR_SIGN            8622
 #define CT_ERROR_SIN             8633

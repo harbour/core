@@ -8,6 +8,33 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-07 22:40 UTC+0100 Martin Vogel <vogel@inttec.de>
+   * source/rtl/math.c
+   * include/hbmath.h
+   + include/math.ch
+   * doc/en/math.txt	
+     * math error handling redesigned
+   * tests/mathtest.prg 
+     * small test program to demonstrate new math error handling capabilities
+   * source/vm/itemapi.c
+     * bug fix: app compiled with BCC crashed if hb_itemPutNDLen was called with a "NaN" double
+     * BCC checks for infinity added in hb_itemStr 
+     * possible bug fixed: math handler has not been switched off before using log(0) in hb_itemStr
+   * contrib/libct/ctc.c
+   * contrib/libct/ctmath.c
+   * contrib/libct/ctmath.h
+   * contrib/libct/ctflist.txt
+   * contrib/libct/readme.txt
+   * contrib/libct/cterror.ch
+     * math error handling adopted to new design, function SETMATHERRMODE() removed
+   * contrib/libct/math.c
+   * contrib/libct/num1.c
+   * contrib/libct/trig.c
+   * contrib/libct/finan.c
+     * math error handling adopted to new design, compatibility with CTIII enhanced 
+   * contrib/libct/test/Makefile
+     * typo fixed
+	
 2002-07-07 11:05 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/debugger.prg
      * Changed constructor sequence

@@ -70,7 +70,6 @@
  *
  */
 
-
 #include "ct.h"
 
 
@@ -163,10 +162,27 @@ HB_FUNC( SIN )
     double dInput  = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = sin (dInput);  
-    ct_matherrend();
 
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  hb_retndlen (HUGE_VAL, -1, -1);
+	}
+	return;
+      }
+    }
     hb_retnd( dResult );
   }
   else
@@ -241,10 +257,27 @@ HB_FUNC( COS )
     double dInput = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = cos (dInput);  
-    ct_matherrend();
 
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  hb_retndlen (HUGE_VAL, -1, -1);
+	}
+	return;
+      }
+    }
     hb_retnd( dResult );
   }
   else
@@ -319,32 +352,28 @@ HB_FUNC( TAN )
     double dInput = hb_parnd(1);
     double dResult;
 
-    if (((dInput/CT_PI)-floor(dInput/CT_PI)) == 0.5)
+    hb_mathResetError();
+    dResult = tan (dInput);  
+
+    if (hb_mathIsMathErr())
     {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
       {
-        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_TAN,
-                                 NULL, "TAN", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-      }
-      if (pSubst != NULL)
-      {
-        hb_itemReturn (pSubst);
-        hb_itemRelease (pSubst);
-      }
-      else
-      {
-        hb_retnd (DBL_MAX);
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  hb_retndlen (HUGE_VAL, -1, -1);
+	}
+	return;
       }
     }
-    else
-    {
-      ct_matherrbegin();
-      dResult = tan (dInput);  
-      ct_matherrend();
-      hb_retnd( dResult );
-    }
+    hb_retnd( dResult );
   }
   else
   {
@@ -416,32 +445,27 @@ HB_FUNC( COT )
     double dInput = hb_parnd(1);
     double dResult;
   
-    if (((dInput/CT_PI)-floor(dInput/CT_PI)) == 0.0)
+    hb_mathResetError();
+    dResult = 1/tan (dInput);  
+    if (hb_mathIsMathErr())
     {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
       {
-        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_COT,
-                                 NULL, "COT", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-      }
-      if (pSubst != NULL)
-      {
-        hb_itemReturn (pSubst);
-        hb_itemRelease (pSubst);
-      }
-      else
-      {
-        hb_retnd (DBL_MAX);
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  hb_retndlen (HUGE_VAL, -1, -1);
+	}
+	return;
       }
     }
-    else
-    {
-      ct_matherrbegin();
-      dResult = 1/tan (dInput);  
-      ct_matherrend();
-      hb_retnd( dResult );
-    }
+    hb_retnd( dResult );
   }
   else
   {
@@ -516,32 +540,28 @@ HB_FUNC( ASIN )
     double dInput = hb_parnd(1);
     double dResult;
 
-    if (fabs(dInput) > 1.0)
+    hb_mathResetError();
+    dResult = asin (dInput);  
+    if (hb_mathIsMathErr())
     {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
       {
-        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ASIN,
-                                 NULL, "ASIN", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-      }
-      if (pSubst != NULL)
-      {
-        hb_itemReturn (pSubst);
-        hb_itemRelease (pSubst);
-      }
-      else
-      {
-        hb_retnd (0.0);
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  hb_retndlen (HUGE_VAL, -1, -1); /* NOTE: CTIII crashes when argument is not between -1 and 1 , but we
+					     better generate a NaN/overflow here */
+	}
+	return;
       }
     }
-    else
-    {
-      ct_matherrbegin();
-      dResult = asin (dInput);  
-      ct_matherrend();
-      hb_retnd( dResult );
-    }
+    hb_retnd( dResult );
   }
   else
   {
@@ -617,32 +637,29 @@ HB_FUNC( ACOS )
     double dInput = hb_parnd(1);
     double dResult;
 
-    if (fabs(dInput) > 1.0)
+    hb_mathResetError();
+    dResult = acos (dInput);  
+    if (hb_mathIsMathErr())
     {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
       {
-        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ACOS,
-                                 NULL, "ACOS", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-      }
-      if (pSubst != NULL)
-      {
-        hb_itemReturn (pSubst);
-        hb_itemRelease (pSubst);
-      }
-      else
-      {
-        hb_retnd (0.0);
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  hb_retndlen (HUGE_VAL, -1, -1); /* NOTE: CTIII crashes when argument is not between -1 and 1 , but we
+					     better generate a NaN/overflow here */
+	}
+	return;
       }
     }
-    else
-    {
-      ct_matherrbegin();
-      dResult = acos (dInput);  
-      ct_matherrend();
-      hb_retnd( dResult );
-    }
+
+    hb_retnd( dResult );
   }
   else
   {
@@ -714,9 +731,36 @@ HB_FUNC( ATAN )
     double dInput = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = atan (dInput);  
-    ct_matherrend();
+
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  /* atan normally don't error, but it's save to return PI()/2 or -PI()/2, respectively, as these 
+	     are the boundary result values */
+	  if (dInput < 0.0)
+	  {
+	    hb_retnd (-CT_PI/2.0);
+	  }
+	  else
+	  {
+	    hb_retnd (CT_PI/2.0);
+	  }
+	}
+	return;
+      }
+    }
     hb_retnd( dResult );
   }
   else
@@ -797,9 +841,47 @@ HB_FUNC( ATN2 )
     double dX = hb_parnd(2);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = atan2( dY, dX );  /* NOTE: parameters are swapped */
-    ct_matherrend();
+
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  /* DOMAIN error: both arguments to atan2 have been 0 */
+	  /* CTIII behaves very strange here: atn2 (0.0, 0.0) == -PI
+	                                      atn2 (0.0, -0.0) == 0.0
+                                              atn2 (-0.0, 0.0) == -PI
+                                              atn2 (-0.0, -0.0) == -2*PI */
+	  if (dX < 0.0)
+	  {
+	    if (dY < 0.0)
+	    {
+	      hb_retnd (-2.0*CT_PI);
+	    }
+	    else
+	    {
+	      hb_retnd (0.0);
+	    }
+	  }
+	  else
+	  {
+	    hb_retnd (-CT_PI);
+	  }
+	}
+	return;
+      }
+    }
+
     hb_retnd( dResult );
  
   }
@@ -875,9 +957,35 @@ HB_FUNC( SINH )
     double dInput = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = sinh (dInput);
-    ct_matherrend();
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  /* OVERFLOW error: we have no CTIII behaviour to follow, so return +INF or -INF, respectively */
+	  if (dInput < 0.0)
+	  {
+	    hb_retndlen (-HUGE_VAL, -1, -1);
+	  }
+	  else 
+	  {
+	    hb_retndlen (HUGE_VAL, -1, -1);
+	  }
+	}
+	return;
+      }
+    }
+
     hb_retnd( dResult );
   }
   else
@@ -951,9 +1059,27 @@ HB_FUNC( COSH )
     double dInput = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = cosh (dInput);
-    ct_matherrend();
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  /* OVERFLOW error: we have no CTIII behaviour to follow, so return +INF */
+	  hb_retndlen (HUGE_VAL, -1, -1);
+	}
+	return;
+      }
+    }
     hb_retnd( dResult );
   }
   else
@@ -983,7 +1109,7 @@ HB_FUNC( COSH )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      SINH()
+ *      TANH()
  *  $CATEGORY$
  *      CT3 math functions
  *  $ONELINER$
@@ -1023,9 +1149,36 @@ HB_FUNC( TANH )
     double dInput = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = tanh (dInput);
-    ct_matherrend();
+    if (hb_mathIsMathErr())
+    {
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
+      {
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  /* normally, tanh() doesn't give errors, but let's return -1 or +1, respectively, as these 
+	     are the boundary result values */
+	  if (dInput < 0.0)
+	  {
+	    hb_retnd (-1.0);
+	  }
+	  else
+	  {
+	    hb_retnd (1.0);
+	  }
+	}
+	return;
+      }
+    }
+
     hb_retnd( dResult );
   }
   else

@@ -83,7 +83,7 @@ PRG_SOURCES=\
 	tokenupp.prg \
 	trig.prg \
 	valpos.prg \
-	wordone.org \
+	wordone.prg \
 	wordonly.prg \
 	wordrepl.prg \
 	wordrem.prg \

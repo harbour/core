@@ -109,9 +109,7 @@ HB_FUNC( CELSIUS )
     double dInput = hb_parnd(1);
     double dResult;
     
-    ct_matherrbegin();
     dResult = (5.0 / 9.0) * ( dInput - 32.0 );  
-    ct_matherrend();
     hb_retnd( dResult );
   }
   else
@@ -183,9 +181,7 @@ HB_FUNC( FAHRENHEIT )
     double dInput = hb_parnd(1);
     double dResult;
 
-    ct_matherrbegin();
     dResult = (( 9.0 / 5.0) * dInput ) + 32.0 ;  
-    ct_matherrend();
     hb_retnd( dResult );
   }
   else

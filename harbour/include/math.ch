@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Harbour math functions and API
+ * Header file for MATHDEFERRMODE function
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
+ * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
  * www - http://www.harbour-project.org
  *
@@ -51,70 +51,32 @@
  *
  */
 
-#ifndef HB_MATH_H_
-#define HB_MATH_H_
+#ifndef _MATH_CH_
+#define _MATH_CH_
 
-#include "hbapi.h"
+/* map the C math lib error definitions to harbour constants */
+#define HB_MATH_ERR_UNKNOWN              -1
+#define HB_MATH_ERR_NONE                  0
+#define HB_MATH_ERR_DOMAIN                1
+#define HB_MATH_ERR_SING                  2
+#define HB_MATH_ERR_OVERFLOW              3
+#define HB_MATH_ERR_UNDERFLOW             4
+#define HB_MATH_ERR_TLOSS                 5
+#define HB_MATH_ERR_PLOSS                 6
 
-#include <math.h>
+/* working mode for hb_matherr, the basic Harbour math error handler */
+#define HB_MATH_ERRMODE_DEFAULT           0   /* no common error handling, save error data only;
+                                                 Harbour function using math routines must handle error */
+#define HB_MATH_ERRMODE_CDEFAULT          1   /* handle error by using the C RTL correction values */
+#define HB_MATH_ERRMODE_USER              2   /* throw Harbour error, user MUST correct math error within Harbour error
+                                                 handling */
+#define HB_MATH_ERRMODE_USERDEFAULT       3   /* dito, but if user does not correct math error, default 
+						 error handling, i.e. by individual function applies */
+#define HB_MATH_ERRMODE_USERCDEFAULT      4   /* as ERRMODE_USER, but if user does not correct math error, C RTL 
+                                                 correction values are used */
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+/* array element indices in aInfo parameter passed to math errorblock */
+#define HB_MATHERRORBLOCK_RETVAL  1
+#define HB_MATHERRORBLOCK_HANDLED 2
 
-#if defined(__WATCOMC__)
-   #define HB_MATH_HANDLER
-   #define exception _exception
-#elif defined(__BORLANDC__)
-   #if (__BORLANDC__ == 1328) && defined(__cplusplus)
-      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither
-               "exception" will work. [vszakats] */
-   #else
-      #define HB_MATH_HANDLER
-      #define matherr _matherr
-      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if (__BORLANDC__ >= 1360)
-         #define exception _exception
-      #endif
-   #endif
-#elif defined(__MINGW32__)
-   #define HB_MATH_HANDLER
-   #define matherr _matherr
-   #define exception _exception
-#endif
-
-typedef struct _HB_MATH_EXCEPTION
-{
-  int    type;
-  char * funcname;
-  char * error;
-  double arg1;
-  double arg2;
-  double retval;
-  int    retvalwidth;
-  int    retvaldec;
-  int    handled;
-} HB_MATH_EXCEPTION;
-
-typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err);
-
-extern void hb_mathResetError (void);
-extern int hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc);
-extern int hb_mathIsMathErr (void);
-
-extern int hb_mathSetDefErrMode (int imode);
-extern int hb_mathGetDefErrMode (void);
-extern int hb_matherr (HB_MATH_EXCEPTION * pexc);
-
-extern HB_MATH_HANDLERPROC hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc);
-extern HB_MATH_HANDLERPROC hb_mathGetHandler (void);
-
-/* include defines from math.ch */
-#include <math.ch>
-
-#if defined(HB_EXTERN_C)
-}
-#endif
-
-#endif /* HB_MATH_H_ */
+#endif /* _MATH_CH */

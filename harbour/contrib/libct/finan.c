@@ -126,8 +126,6 @@ HB_FUNC( FV )
     double dTime    = hb_parnd(3);
     double dResult;
 
-    ct_matherrbegin();
-        
     if (dRate == 0.0)
     {
       /* NOTE: CT3 crashes with dRate == 0.0 */
@@ -135,11 +133,30 @@ HB_FUNC( FV )
     }
     else
     {
+      hb_mathResetError();
       dResult = dPayment*(pow (1.0+dRate, dTime)-1.0)/dRate;
+      if (hb_mathIsMathErr())
+      {
+	/* the C-RTL provides a kind of matherr() mechanism */ 
+	HB_MATH_EXCEPTION hb_exc;
+	int iLastError = hb_mathGetLastError (&hb_exc);
+	if (iLastError != HB_MATH_ERR_NONE)
+	{
+	  if (hb_exc.handled)
+	  {
+	    hb_retnd (dPayment*(hb_exc.retval-1.0)/dRate);
+	  }
+	  else
+	  {
+	    /* math exception is up to the Harbour function, so do this as CTIII compatible as possible:
+	       replace the errorneous value of pow() with 0.0 */
+	    hb_retnd (dPayment*(-1.0)/dRate);
+	  }
+	  return;
+	}
+      }
     }
-
-    ct_matherrend();
-
+    
     hb_retnd (dResult);
 
   }
@@ -229,8 +246,6 @@ HB_FUNC( PV )
     double dTime    = hb_parnd(3);
     double dResult;
       
-    ct_matherrbegin();
-      
     if (dRate == 0.0)
     {
       /* NOTE: CT3 crashes with dRate == 0.0 */
@@ -238,10 +253,29 @@ HB_FUNC( PV )
     }
     else
     {
+      hb_mathResetError();
       dResult = dPayment*(1.0-pow (1.0+dRate, -dTime))/dRate;
+      if (hb_mathIsMathErr())
+      {
+	/* the C-RTL provides a kind of matherr() mechanism */ 
+	HB_MATH_EXCEPTION hb_exc;
+	int iLastError = hb_mathGetLastError (&hb_exc);
+	if (iLastError != HB_MATH_ERR_NONE)
+	{
+	  if (hb_exc.handled)
+	  {
+	    hb_retnd (dPayment*(1.0-hb_exc.retval)/dRate);
+	  }
+	  else
+	  {
+	    /* math exception is up to the Harbour function, so do this as CTIII compatible as possible:
+	       replace the errorneous value of pow() with 0.0 */
+	    hb_retnd (dPayment/dRate);
+	  }
+	  return;
+	}
+      }
     }
-
-    ct_matherrend();
 
     hb_retnd (dResult);
   }
@@ -332,28 +366,32 @@ HB_FUNC( PAYMENT )
     if (dRate == 0.0)
     {
       /* NOTE: CT3 crashes with dRate == 0.0 */
-      if (dTime == 0.0)
-      {
-        int iArgErrorMode = ct_getargerrormode();
-        if (iArgErrorMode != CT_ARGERR_IGNORE)
-        {
-          ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_PAYMENT,
-                    NULL, "PAYMENT", 0, EF_CANDEFAULT, 3,
-                    hb_paramError (1), hb_paramError (2),
-                    hb_paramError (3));
-        };
-        hb_retnd (0.0);
-        return;
-      }
-      ct_matherrbegin();
       dResult = dCapital/dTime;
-      ct_matherrend();
     }
     else
     {
-      ct_matherrbegin();
+      hb_mathResetError();
       dResult = dCapital*dRate/(1.0-pow (1.0+dRate, -dTime));
-      ct_matherrend();
+      if (hb_mathIsMathErr())
+      {
+	/* the C-RTL provides a kind of matherr() mechanism */ 
+	HB_MATH_EXCEPTION hb_exc;
+	int iLastError = hb_mathGetLastError (&hb_exc);
+	if (iLastError != HB_MATH_ERR_NONE)
+	{
+	  if (hb_exc.handled)
+	  {
+	    hb_retnd (dCapital*dRate/(1.0-hb_exc.retval));
+	  }
+	  else
+	  {
+	    /* math exception is up to the Harbour function, so do this as CTIII compatible as possible:
+	       replace the errorneous value of pow() with 0.0 */
+	    hb_retnd (dCapital*dRate);
+	  }
+	  return;
+	}
+      }
     }
 
     hb_retnd (dResult);
@@ -458,28 +496,35 @@ HB_FUNC( PERIODS )
     if (dRate == 0.0)
     {
       /* NOTE: CT3 crashes with dRate == 0.0 */
-      if (dPayment == 0.0)
-      {
-        int iArgErrorMode = ct_getargerrormode();
-        if (iArgErrorMode != CT_ARGERR_IGNORE)
-        {
-          ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_PERIODS,
-                    NULL, "PERIODS", 0, EF_CANDEFAULT, 3,
-                    hb_paramError (1), hb_paramError (2),
-                    hb_paramError (3));
-        };
-        hb_retnd (0.0);
-        return;
-      }
-      ct_matherrbegin();
       dResult = dCapital/dPayment;
-      ct_matherrend();
     }
     else
     {
-      ct_matherrbegin();
-      dResult = -log(1.0-(dCapital*dRate/dPayment))/log(1+dRate);
-      ct_matherrend();
+      double dResult2;
+      hb_mathResetError();
+      /* Note that this first expression will never give an error since dCapital*dRate/dPayment < 1.0, see above */
+      dResult2 = -log(1.0-(dCapital*dRate/dPayment));
+      dResult = dResult2/log(1+dRate);
+      if (hb_mathIsMathErr())
+      {
+	/* the C-RTL provides a kind of matherr() mechanism */ 
+	HB_MATH_EXCEPTION hb_exc;
+	int iLastError = hb_mathGetLastError (&hb_exc);
+	if (iLastError != HB_MATH_ERR_NONE)
+	{
+	  if (hb_exc.handled)
+	  {
+	    hb_retnd (dResult2/hb_exc.retval);
+	  }
+	  else
+	  {
+	    /* math exception is up to the Harbour function, so do this as CTIII compatible as possible:
+	       replace the errorneous value of log() with -INF */
+	    hb_retnd (-0.0);
+	  }
+	  return;
+	}
+      }
     }
 
     hb_retnd( dResult );
@@ -577,7 +622,27 @@ HB_FUNC( RATE )
        r = j * 0.000833333;    /* j * ( 0.01 / 12.0)  mensual's rate */
 
        /* replace PAYMENT() function overhead */
+       hb_mathResetError();
        dExp     = pow( (1.0 + r), dTime );
+       if (hb_mathIsMathErr())
+       {
+	 /* the C-RTL provides a kind of matherr() mechanism */ 
+	 HB_MATH_EXCEPTION hb_exc;
+	 int iLastError = hb_mathGetLastError (&hb_exc);
+	 if (iLastError != HB_MATH_ERR_NONE)
+	 {
+	   if (hb_exc.handled)
+	   {
+	     dExp = hb_exc.retval;
+	   }
+	   else
+	   {
+	     /* TODO: Check if this is a correct default correction value for pow() */
+	     dExp = 0.0;
+	   }
+	 }
+       }
+ 
        dAux  = dCapital * ( (dExp * r) / (dExp - 1.0) );
 
        if( dAux > dPayment )
@@ -620,8 +685,6 @@ HB_FUNC( RATE )
 
   return;
 }
-
-
 
 
 

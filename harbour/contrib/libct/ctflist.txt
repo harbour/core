@@ -618,7 +618,6 @@ PI            ;R;
 PV            ;R; 
 RATE          ;R;
 RTOD          ;R; 
-SETMATHERR    ;R;   !NEW!
 SETPREC       ;R;
 SIGN          ;R; 
 SIN           ;R; 

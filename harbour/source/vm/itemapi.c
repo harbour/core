@@ -84,6 +84,9 @@
  */
 
 #include <math.h> /* For log() */
+#if defined(__BORLANDC__)
+#include <float.h>  /* for _finite() and _isnan() */
+#endif
 
 #include "hbapi.h"
 #include "hbstack.h"
@@ -91,6 +94,7 @@
 #include "hbapierr.h"
 #include "hbdate.h"
 #include "hbset.h"
+#include "hbmath.h"
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320
@@ -661,7 +665,17 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
       pItem = hb_itemNew( NULL );
 
    if( iWidth <= 0 || iWidth > 99 )
-      iWidth = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10;
+   {
+#if defined (__BORLANDC__)
+     /* Borland C compiled app crashes if a "NaN" double is compared with another double [martin vogel] */
+     if (_isnan (dNumber))
+     {
+       iWidth = 20;
+     }
+     else
+#endif
+    iWidth = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10; 
+   }
 
    if( iDec < 0 )
       iDec = hb_set.HB_SET_DECIMALS;
@@ -1124,22 +1138,36 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          {
             double dNumber = hb_itemGetND( pNumber );
 
-            #if defined(__BORLANDC__) || defined(__WATCOMC__)
+            /* #if defined(__BORLANDC__) || defined(__WATCOMC__) */
+	    /* added infinity check for Borland C [martin vogel] */
+            #if defined(__WATCOMC__)
             #else
             static double s_dInfinity = 0;
             static double s_bInfinityInit = FALSE;
 
             if( ! s_bInfinityInit )
             {
+ 	       /* set math handler to NULL for evaluating log(0),
+		  to avoid error messages [martin vogel]*/
+	       HB_MATH_HANDLERPROC fOldMathHandler = hb_mathSetHandler (NULL); 
                s_dInfinity = -log( ( double ) 0 );
+	       hb_mathSetHandler (fOldMathHandler); 
                s_bInfinityInit = TRUE;
             }
             #endif
 
+	    /* TODO: look if isinf()/_isinf or finite()/_finite() does exist for your compiler and add this to the check
+	       below [martin vogel] */
             if( pNumber->item.asDouble.length == 99
-            #if defined(__BORLANDC__) || defined(__WATCOMC__)
+            /* #if defined(__BORLANDC__) || defined(__WATCOMC__) */
+            #if defined(__WATCOMC__)
+	    #elif defined(__BORLANDC__)
                /* No more checks for Borland C, which returns 0 for log( 0 ),
                   and is therefore unable to test for infinity */
+	       /* log(0) returning 0 seems to be a side effect of using a custom math error handler that
+		  always sets the return value to 0.0, switching this off, see above, yields -INF for log(0); 
+	          additionally one can use _finite() to check for infinity [martin vogel] */ 
+	       || dNumber == s_dInfinity || dNumber == -s_dInfinity || _finite(dNumber)==0
             #else
                || dNumber == s_dInfinity || dNumber == -s_dInfinity
             #endif

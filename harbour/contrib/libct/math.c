@@ -104,11 +104,10 @@ HB_FUNC( FLOOR )
     double dInput = hb_parnd(1);
     double dResult;
     
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = floor (dInput);  
-    ct_matherrend();
       
-    hb_retnd( dResult );
+    hb_retni( (int)dResult );
   }
   else
   {
@@ -177,11 +176,10 @@ HB_FUNC( CEILING )
     double dInput = hb_parnd(1);
     double dResult;
     
-    ct_matherrbegin();
+    hb_mathResetError();
     dResult = ceil (dInput);  
-    ct_matherrend();
-      
-    hb_retnd( dResult );
+     
+    hb_retni( (int)dResult );
   }
   else
   {
@@ -330,32 +328,40 @@ HB_FUNC( LOG10 )
     double dInput = hb_parnd(1);
     double dResult;
 
-    if (dInput <= 0.0)
+    hb_mathResetError();
+    dResult = log10 (dInput);  
+
+    if (hb_mathIsMathErr())
     {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      /* the C-RTL provides a kind of matherr() mechanism */ 
+      HB_MATH_EXCEPTION hb_exc;
+      int iLastError = hb_mathGetLastError (&hb_exc);
+      if (iLastError != HB_MATH_ERR_NONE)
       {
-        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_LOG10,
-                                 NULL, "LOG10", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-      }
-      if (pSubst != NULL)
-      {
-        hb_itemReturn (pSubst);
-        hb_itemRelease (pSubst);
-      }
-      else
-      {
-        hb_retnd (0.0);
+	if (hb_exc.handled)
+	{
+	  hb_retndlen (hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec);
+	}
+	else
+	{
+	  /* math exception is up to the Harbour function, so do this as CTIII compatible as possible */
+	  switch (iLastError)
+	  {
+	  case HB_MATH_ERR_SING:     /* argument to log10 was 0.0 */
+	  case HB_MATH_ERR_DOMAIN:   /* argument to log10 was < 0.0 */
+	    {
+	      hb_retndlen (-HUGE_VAL, -1, -1); /* return -infinity */
+	    }; break;
+	  default:
+	    {
+	      hb_retnd (0.0);
+	    }
+	  }
+	}
+	return;
       }
     }
-    else
-    {
-      ct_matherrbegin();
-      dResult = log10 (dInput);  
-      ct_matherrend();
-      hb_retnd( dResult );
-    }
+    hb_retnd (dResult);
   }
   else
   {
@@ -438,22 +444,7 @@ HB_FUNC( FACT )
     }
     else
     {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
-      {
-        pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_FACT,
-                                 NULL, "FACT", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-      }
-      if (pSubst != NULL)
-      {
-        hb_itemReturn (pSubst);
-        hb_itemRelease (pSubst);
-      }
-      else
-      {
-        hb_retnd (-1.0);
-      }
+      hb_retnd (-1.0);
     }
   }
   else
@@ -479,5 +470,4 @@ HB_FUNC( FACT )
 
   return;
 }
-
 

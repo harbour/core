@@ -65,8 +65,6 @@ Martin Vogel <vogel@inttec.de>
 * SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
 
-+ SETMATHERR() math error handling
-
 + SINH()       hyperbolic sine
 
 * TABPACK()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string, 
