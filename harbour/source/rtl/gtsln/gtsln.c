@@ -1027,6 +1027,7 @@ static void hb_gt_build_conv_tabs()
             case SLSMG_PLMINUS_CHAR :  s_convHighChars[  ] = SLch; break;
             case SLSMG_BULLET_CHAR  :  s_convHighChars[  ] = SLch; break;
 */
+#if SLANG_VERSION > 10400
             case SLSMG_DIAMOND_CHAR :  s_convHighChars[ 04 ] = SLch; 
                                        break;
             case SLSMG_LARROW_CHAR  :  s_convHighChars[ 17 ] = SLch;
@@ -1041,6 +1042,7 @@ static void hb_gt_build_conv_tabs()
             case SLSMG_UARROW_CHAR  :  s_convHighChars[ 24 ] = SLch;
                                        s_convHighChars[ 30 ] = SLch; 
                                        break;
+#endif
             case SLSMG_BOARD_CHAR   :  s_convHighChars[ 178 ] = SLch; 
                                        break;
             case SLSMG_BLOCK_CHAR   :  s_convHighChars[ 219 ] = SLch; 
