@@ -1,3 +1,9 @@
+19990702-00:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    * Changed -DUSE_GTAPI to -DHARBOUR_USE_GTAPI
+    + Added module hb_f
+    + Added module copyfile
+
 19990701-22:30 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.icc
     * Changed -DUSE_GTAPI to -DHARBOUR_USE_GTAPI
