@@ -9,11 +9,17 @@
 
 DECLARE FUNCTION nMyFunc( cVar AS CHARACTER, nVar AS NUMERIC ) AS NUMERIC
 
+DECLARE FUNCTION cOtherFunc( ) AS CHARACTER
+
 FUNCTION Main()
 
    LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS ARRAY
 
    n := &SomeFun( 2, 3 )
+
+   n := ExtFun()
+
+   cVar := cOtherFunc( 3 )
 
    n := nMyFunc( a, cVar ) + 3
 

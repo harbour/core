@@ -232,7 +232,7 @@ void hb_compStrongType( int iSize )
        if ( ! pFunc->pOwner )
           pSym = hb_compSymbolFind( pFunc->szName, NULL );
 
-       /* The function was declared, but return value doesn't mateche the declaration */
+       /* The function was declared, but return value doesn't match the declaration */
        if ( pSym && pSym->cType != ' ' && pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
        {
           sprintf( szType1, "%c", pSym->cType );
@@ -244,7 +244,6 @@ void hb_compStrongType( int iSize )
 
      case HB_P_DOSHORT :
      case HB_P_FUNCTIONSHORT :
-       /* TODO: Add support for Function Parameters Declaration. */
        wVar = pFunc->pCode[ ulPos + 1 ];
 
        if ( iParamCount > -1 )
@@ -256,7 +255,7 @@ void hb_compStrongType( int iSize )
             while ( iParamCount-- > 0 )
             {
                iOffset++;
-               if ( cParamTypes[ iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
+               if ( pFunc->iStackIndex - iOffset && cParamTypes[ iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
                {
                   sprintf( szType1, "%i", iParamCount + 1 );
                   sprintf( szType2, "%c", cParamTypes[ iParamCount ] );
@@ -286,14 +285,42 @@ void hb_compStrongType( int iSize )
 
      case HB_P_DO :
      case HB_P_FUNCTION :
-       /* TODO: Add support for Function Parameters Declaration. */
        wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
 
-       /* Removing all the optional parameters. */
+       if ( iParamCount > -1 )
+       {
+         if( iParamCount == wVar )
+         {
+            BYTE iOffset = 0;
+
+            while ( iParamCount-- > 0 )
+            {
+               iOffset++;
+               if ( pFunc->iStackIndex - iOffset && cParamTypes[ iParamCount ] != pFunc->pStack[ pFunc->iStackIndex - iOffset ] )
+               {
+                  sprintf( szType1, "%i", iParamCount + 1 );
+                  sprintf( szType2, "%c", cParamTypes[ iParamCount ] );
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_TYPE, szType1, szType2 );
+               }
+            }
+         }
+         else
+         {
+            sprintf( szType1, "%i", wVar );
+            sprintf( szType2, "%i", iParamCount );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_PARAM_COUNT, szType1, szType2 );
+         }
+       }
+
+       /* Removing all the optional parameters. Rteurn type already pushed just prior to parameters */
        pFunc->iStackIndex -= wVar;
 
        /* Removing the NIL */
        pFunc->iStackIndex--;
+
+       /* Resetting */
+       cParamTypes = NULL;
+       iParamCount = -1;
        break;
 
      case HB_P_DEC :
@@ -454,7 +481,7 @@ void hb_compStrongType( int iSize )
      case HB_P_OR :
        pFunc->iStackIndex--;
 
-       if ( pFunc->iStackIndex < 0 )
+       if ( pFunc->iStackIndex < 1 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
@@ -478,11 +505,19 @@ void hb_compStrongType( int iSize )
        break;
 
      case HB_P_DUPLICATE :
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
        bLast1 = pFunc->pStack[ pFunc->iStackIndex - 1 ];
        pFunc->pStack[ pFunc->iStackIndex++ ] = bLast1;
        break;
 
      case HB_P_DUPLTWO :
+       if ( pFunc->iStackIndex < 2 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
        bLast1 = pFunc->pStack[ pFunc->iStackIndex - 2 ];
        bLast2 = pFunc->pStack[ pFunc->iStackIndex - 1 ];
        pFunc->pStack[ pFunc->iStackIndex++ ] = bLast1;
@@ -568,8 +603,16 @@ void hb_compStrongType( int iSize )
 
        /* we are accesing variables within a codeblock */
        if( wVar < 0 )
-          /* TODO: Deal with Codeblock Refernced locals. */
-         ;
+       {
+          /* Finding the Function owning the block. */
+          pTmp = pFunc->pOwner;
+
+          /* Might be a nested block. */
+          while ( pTmp->pOwner )
+            pTmp = pTmp->pOwner;
+
+          pVar = hb_compVariableFind( pTmp->pLocals, -iVar );
+       }
        else
           pVar = hb_compVariableFind( pFunc->pLocals, wVar );
 
@@ -596,8 +639,16 @@ void hb_compStrongType( int iSize )
 
        /* we are accesing variables within a codeblock */
        if( iVar < 0 )
-          /* TODO: Deal with Codeblock Refernced locals. */
-          ;
+       {
+          /* Finding the Function owning the block. */
+          pTmp = pFunc->pOwner;
+
+          /* Might be a nested block. */
+          while ( pTmp->pOwner )
+             pTmp = pTmp->pOwner;
+
+          pVar = hb_compVariableFind( pTmp->pLocals, -iVar );
+       }
        else
           pVar = hb_compVariableFind( pFunc->pLocals, iVar );
 
@@ -660,6 +711,10 @@ void hb_compStrongType( int iSize )
      case HB_P_ARRAYDIM :
        wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
 
+       if ( pFunc->iStackIndex < wVar )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
        pFunc->iStackIndex -= wVar;
 
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'A';
@@ -668,6 +723,10 @@ void hb_compStrongType( int iSize )
 
      case HB_P_ARRAYGEN :
        wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+
+       if ( pFunc->iStackIndex < wVar )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
 
        pFunc->iStackIndex -= wVar;
 
@@ -689,11 +748,19 @@ void hb_compStrongType( int iSize )
      case HB_P_MPUSHVARIABLE :
      case HB_P_MACROPUSHALIASED :
      case HB_P_MACROPUSH :
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
        /* Replace the value of the macro expression with unknown result of expanded macro. */
        pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        break;
 
      case HB_P_MACROSYMBOL :
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
        /* Replace Macro Variable Symbol Name type with unknown type of expanded macro Function Call */
        pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        break;

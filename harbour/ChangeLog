@@ -1,4 +1,12 @@
-20000501-01:0 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+20000501-01:52 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+    * source/compiler/hbpcode.c
+      * Minor Enhancements to hb_compStrongType()
+
+    * tests/testwarn.prg
+      + Added code to demonstrate more warnings.
+
+20000501-01:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
     * include/hbcomp.h
       + Added to COMSYMBOL :
