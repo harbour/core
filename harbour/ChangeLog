@@ -1,3 +1,21 @@
+19990627-16:30 CET Victor Szel <info@szelvesz.hu>
+ * source/rtl/errorsys.prg
+   + Builds error message text like Clipper.
+ * source/rtl/copyfile.c
+   % Optimized var scoping, var naming
+   + Error handling enhanced, using error launcher wrapper.
+   + HB_STRICT_CLIPPER_COMPATIBILITY mode added.
+   ! BYTEP -> char* for strings
+   ! char* -> PBYTE for buffer
+   % Copy loop optimized
+   + Error handling added to copy loop
+   + Notes added about Clipper compatibility, todos, questions.
+ * source/vm/hvm.c
+   * "DUNNO" -> "UNKNOWN" 8)
+ * makedos.env
+   + HARBOUR.EXE called with -i parameter, to be able to include .CH files
+     (probably should be added to other make environments, too.)
+
 19990627-09:00 "Paul Tucker" <ptucker@sympatico.ca>
  * source/hbpp/hbpp.c
    - change lines from 1246 to 1257 

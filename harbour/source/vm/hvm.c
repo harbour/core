@@ -1914,7 +1914,7 @@ void StackInit( void )
               break;
 
          default:
-              printf( "DUNNO[%i] ", p->wType );
+              printf( "UNKNOWN[%i] ", p->wType );
               break;
       }
    }
