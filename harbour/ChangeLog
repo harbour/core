@@ -1,3 +1,18 @@
+19990731-00:05 CET Victor Szel <info@szelvesz.hu>
+   ! source/rtl/files.c - __CYGWIN__ defines changes rolled back,
+     to fix the new DOS/DJGPP errors.
+   + source/rtl/alert.prg - Made almost 100% Clipper compatible.
+     - Parameter list is now compatible.
+     - Placing of the box is now compatible.
+     - Sizing of the box is now compatible.
+     - Console mode added as in Clipper.
+     - Color handling compatible.
+     - Parameter error handling compatible. A Clipper bug fixed.
+     - Hotkey support added as in Clipper.
+     - Leaves the cursor where it was.
+     - Optional support logic for undocumented //NOALERT switch.
+     - Some small cleanups.
+
 19990730-21:05 CET Victor Szel <info@szelvesz.hu>
    * source/rtl/files.c - Two __CYGWIN__ branches joined.
 
