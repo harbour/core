@@ -870,7 +870,7 @@ METHOD Input( cChar ) CLASS Get
             cChar := ""
          endif
       case cPic == "9"
-         if ! IsDigit( cChar )
+         if ! IsDigit( cChar ) .and. cChar != "-"
             cChar := ""
          endif
       case cPic == "#"
