@@ -54,9 +54,41 @@
 #include "hbsetup.ch"
 #include "hboo.ch"
 
+/* You can actually define one or all the syntax, they do not collide each other */
+/* There is some difference with their original form and I hope I will have enough */
+/* time to document it <g> */
+/* This is work in progress ... */
+/* FWOBJECT AND CLASSY compatibility are the base of this work */
+/* VO is just here as I like it's way of */
+/* instanciating object but there is only a very few VO keywords here :-( */
+/* TOPCLASS is better implemented because I like the way some Classy command */
+/* are simplified */
+/* There is also a big common block extending in fact each of the four base syntax */
+/* it seem actually impossible to completely separate it without creating */
+/* four differents include file (what I would not see in fact ) */
+
+#ifndef HB_FWOCLASS
+#ifndef HB_CSYCLASS
+#ifndef HB_VOCLASS
+#ifndef HB_TOPCLASS
+
+ /* IF NOTHING DECIDED BY THE PROGRAMER USE ALL */
+#define HB_FWOCLASS
+#define HB_CSYCLASS
+#define HB_VOCLASS
+#define HB_TOPCLASS
+
+#Endif
+#Endif
+#Endif
+#Endif
+
 #xtranslate HBCLSCHOICE( <export>, <protect>, <hidde> ) => iif( <export>, HB_OO_CLSTP_EXPORTED , iif( <protect>, HB_OO_CLSTP_PROTECTED, iif( <hidde>, HB_OO_CLSTP_HIDDEN, nScope) ) )
 
+/* CLASSY SYNTAX */
+#IFDEF HB_CSYCLASS
 #xtranslate CREATE CLASS => CLASS
+#endif
 
 #ifndef HB_SHORTNAMES
 
@@ -94,20 +126,12 @@
 
 #endif /* HB_SHORTNAMES */
 
-/* VO compatibility */
-#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
-#xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> )
-#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
+/* CLASSY SYNTAX */
+#IFDEF HB_CSYCLASS
 
-/*#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> ) */
-
-#xtranslate    EXPORTED:       =>      nScope := HB_OO_CLSTP_EXPORTED
-#xtranslate    VISIBLE:        =>      nScope := HB_OO_CLSTP_EXPORTED
-#xtranslate    HIDDEN:         =>      nScope := HB_OO_CLSTP_HIDDEN
-#xtranslate    PROTECTED:      =>      nScope := HB_OO_CLSTP_PROTECTED
-
-#xcommand DATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
-   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+/* Classy compatibility */
+#xtranslate  :CLASS  =>
+#xtranslate  :CLASS: => :
 
 #xcommand VAR <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
    s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
@@ -131,6 +155,31 @@
    s_oClass:AddInline( <(DataName1)>, {|Self| Self:<oObject>:<DataName2> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
    s_oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<oObject>:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
+#xtranslate    EXPORTED:       =>      nScope := HB_OO_CLSTP_EXPORTED
+#xtranslate    VISIBLE:        =>      nScope := HB_OO_CLSTP_EXPORTED
+#xtranslate    HIDDEN:         =>      nScope := HB_OO_CLSTP_HIDDEN
+#xtranslate    PROTECTED:      =>      nScope := HB_OO_CLSTP_PROTECTED
+
+#xtranslate CLASS VAR => CLASSVAR
+#xtranslate CLASS METHOD => CLASSMETHOD
+
+#xcommand METHOD <MethodName> DEFERRED => ;
+   s_oClass:AddVirtual( <(MethodName)> )
+
+#xcommand METHOD <MethodName>( [<params,...>] ) DEFERRED => ;
+   s_oClass:AddVirtual( <(MethodName)> )
+
+#endif
+
+
+/* VO SYNTAX */
+#ifdef HB_VOCLASS
+
+#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
+#xtranslate  := <name>{ [<p,...>] }       => := <name>():New( <p> )
+#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
+#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
+
 #xcommand EXPORT <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<ro: READONLY, RO>] => ;
    s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_EXPORTED + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
 
@@ -149,10 +198,8 @@
 #xcommand HIDDE <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<ro: READONLY, RO>] => ;
    s_oClass:AddMultiData( <(type)>, <uValue>, HB_OO_CLSTP_HIDDEN + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
 
-#xcommand CLASSDATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
-   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + HB_OO_CLSTP_SHARED, \{<(DataNames)>\} ) ;
+#ENDIF
 
-#xtranslate CLASS VAR => CLASSVAR
 
 #xcommand CLASSVAR <DataNames,...> [ TYPE <type> ] [ ASSIGN <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
    s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ), \{<(DataNames)>\} ) ;
@@ -160,7 +207,21 @@
 #xcommand CLASSVAR <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
    s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ), \{<(DataNames)>\} ) ;
 
-#xtranslate CLASS METHOD => CLASSMETHOD
+
+/* FWOBJECT SYNTAX */
+#ifdef HB_FWOCLASS
+
+#xcommand DATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] => ;
+   s_oClass:AddMultiData( <(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ), \{<(DataNames)>\} ) ;
+
+
+#xcommand CLASSDATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] => ;
+   s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + HB_OO_CLSTP_SHARED, \{<(DataNames)>\} ) ;
+
+
+#endif
+
+
 
 #xcommand CLASSMETHOD <MethodName> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<share: SHARED>] => ;
    s_oClass:AddClsMthds( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) )
@@ -173,8 +234,7 @@
 
 #xcommand CONSTRUCTOR <Name>( [<params,...>] ) => METHOD <Name>( [<params,...>] ) CONSTRUCTOR
 
-//Oups to verify that the word new is not reserved...
-//#xcommand CONSTRUCTOR New( [<params,...>] ) => METHOD New( [<params,...>] ) CONSTRUCTOR
+#xcommand CONSTRUCTOR New( [<params,...>] ) => METHOD New( [<params,...>] ) CONSTRUCTOR
 
 #xcommand METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
    s_oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>(), HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ctor.>, HB_OO_CLSTP_CTOR, 0 ) )
@@ -203,11 +263,6 @@
 #xcommand METHOD <MethodName>( [<params,...>] ) INLINE [Local <v>,] <Code,...> [<other>] => ;
           METHOD <MethodName> BLOCK {|Self [,<params>] [,<v>] | <Code> } [<other>]
 
-#xcommand METHOD <MethodName> DEFERRED => ;
-   s_oClass:AddVirtual( <(MethodName)> )
-
-#xcommand METHOD <MethodName>( [<params,...>] ) DEFERRED => ;
-   s_oClass:AddVirtual( <(MethodName)> )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) VIRTUAL => ;
    s_oClass:AddVirtual( <(MethodName)> )
@@ -297,7 +352,7 @@
 
 #xtranslate END CLASS => ENDCLASS
 
-#xcommand ENDCLASS => ;; // Here we will add a inline message to ::Class. RaC&JfL
+#xcommand ENDCLASS => ;;
                       s_oClass:Create() ;;
                       endif ;;
                       return s_oClass:Instance()

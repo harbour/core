@@ -93,8 +93,8 @@ FUNCTION __objGetMsgList( oObject, lDataMethod )
       /* If in range and no set function found yet ( set functions */
       /* begin with a leading underscore ).                        */
 
-      // If found -> DATA    
-      //     else    METHOD  
+      // If found -> DATA
+      //     else    METHOD
 
       /* Find position of matching set function in array with all symbols */
 
@@ -159,7 +159,7 @@ FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
    IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISNUMBER( nFuncPtr )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol )
-      __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD )
+      __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD, NIL, 1 )
    ENDIF
 
    RETURN oObject
@@ -169,20 +169,21 @@ FUNCTION __objAddInline( oObject, cSymbol, bInline )
    IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol )
-      __clsAddMsg( oObject:ClassH, cSymbol, bInline, HB_OO_MSG_INLINE )
+      __clsAddMsg( oObject:ClassH, cSymbol, bInline, HB_OO_MSG_INLINE, NIL, 1 )
    ENDIF
 
    RETURN oObject
 
 FUNCTION __objAddData( oObject, cSymbol )
-   LOCAL nSeq
+   LOCAL nSeq, hClass
 
    IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. !__objHasMsg( oObject, "_" + cSymbol )
-      nSeq := __cls_IncData( oObject:ClassH )         // Allocate new Seq#
-      __clsAddMsg( oObject:ClassH, cSymbol, nSeq, HB_OO_MSG_DATA )
-      __clsAddMsg( oObject:ClassH, "_" + cSymbol, nSeq, HB_OO_MSG_DATA )
+      hClass := oObject:ClassH
+      nSeq   := __cls_IncData( hClass )         // Allocate new Seq#
+      __clsAddMsg( hClass,       cSymbol, nSeq, HB_OO_MSG_DATA, NIL, 1 )
+      __clsAddMsg( hClass, "_" + cSymbol, nSeq, HB_OO_MSG_DATA, NIL, 1 )
    ENDIF
 
    RETURN oObject

@@ -1,3 +1,25 @@
+2000-07-28 00:05 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
+   * source/vm/classes.c
+     * No more internal message :Class
+   * include\HBCLASS.CH
+     +added two define to allow the use of :Class :Class:xx
+     +added four define active by default
+      HB_FWOCLASS
+      HB_CSYCLASS
+      HB_VOCLASS
+      HB_TOPCLASS
+      If you do not do anything, the OO engine will work as yesterday
+      You can define One or more of those 'FLAG' before HBCLASS.CH
+      within your program to restrict to one or two syntax.
+      ie:  Defining HB_FWOCLASS before HBCLASS.CH will solve Bryan problem
+      as :Class and :Class: wil not exist anymore. (But also no VAR, only DATA)
+      !!! This is work in progress !!! It must be improved, I know !
+   * source/rtl/tobject.prg
+     * Some minor modifs and try
+   * source/rtl/objfunc.prg
+     * Some minor adjustement to allow adding DATAs and Methods dynamically
+      ( work now on some of my Classy program :-))) )
+
 2000-07-27 19:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpra.c

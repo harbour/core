@@ -133,6 +133,11 @@
  *    adding one function called by tObject.prg to implement :Error() message
  *    so improving class(y) compatibility (HB_FUNC( TOBJECT_ER ))
  *
+ *    1.34 07/25/2000 JFL&RAC
+ *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default TObject)
+ *    Suppression of the default :Class message ==> transfered to tObject
+ *
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -596,8 +601,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       }
    }
 
-   /*Compatibility issue (and for 'HardCoded Object') !
-     should never be used as we autoinhertit from TObject. See New __cls_param. [R‚C&JfL]*/
+   /* Default message here */
 
    if( s_msgClassName == NULL )
    {
@@ -606,7 +610,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       s_msgClassSel  = hb_dynsymGet( "CLASSSEL" );
       s_msgEval      = hb_dynsymGet( "EVAL" );
       s_msgClsParent = hb_dynsymGet( "ISDERIVEDFROM" );
-      s_msgClass     = hb_dynsymGet( "CLASS" );
+      /*s_msgClass     = hb_dynsymGet( "CLASS" );*/
    }
 
    if( pMsg == s_msgClassName )
@@ -624,8 +628,8 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    else if( pMsg == s_msgClsParent )
       return hb___msgClsParent;
 
-   else if( pMsg == s_msgClass )
-      return hb___msgClass;
+/* else if( pMsg == s_msgClass )
+      return hb___msgClass;       */
 
    if( uiClass && uiClass <= s_uiClasses )
    {
@@ -1733,44 +1737,10 @@ HB_FUNC( __GETMESSAGE )
    hb_retc( pBase->item.asSymbol.value->szName );
 }
 
-
-/* NOTE: Used by the preprocessor to implement Classy compatibility to Harbour
-         Receive an variable number of param and return an array of it.
-         No param will return a NULL array */
-
-HB_FUNC( __CLS_PARAM )
-{
-   PHB_ITEM array;
-   USHORT uiParam = ( USHORT ) hb_pcount();
-   USHORT n;
-
-   if( uiParam >= 1 )
-   {
-      array = hb_itemArrayNew( uiParam );
-      for( n = 1; n <= uiParam; n++ )
-      {
-         PHB_ITEM iTmp = hb_itemParam( n );
-         hb_itemArrayPut( array, n, iTmp );
-         hb_itemRelease( iTmp );
-      }
-   }
-   else
-   {
-      PHB_ITEM iTmp = hb_itemPutC( NULL, (char *) "TObject" );
-      array = hb_itemArrayNew( 1 );
-      hb_itemArrayPut( array, 1, iTmp );
-      hb_itemRelease( iTmp );
-   }
-
-   hb_itemRelease( hb_itemReturn( array ) );
-}
-
-
 HB_FUNC( __CLSPARENT )
 {
    hb_retl( hb_clsIsParent( s_pClasses + ( hb_parni( 1 ) - 1 ), hb_parc( 2 ) ) );
 }
-
 
 HB_FUNC( __SENDER )
 {
@@ -2133,5 +2103,57 @@ static HARBOUR hb___msgVirtual( void )
 {
    /* hb_ret(); */ /* NOTE: It's safe to comment this out */
    ;
+}
+
+
+/* NOTE: Used by the preprocessor to implement Classy compatibility to Harbour
+         Receive an variable number of param and return an array of it.
+         No param will return a NULL array */
+
+
+HB_FUNC( __CLS_PARAM )
+{
+   PHB_ITEM array;
+   USHORT uiParam = ( USHORT ) hb_pcount();
+   USHORT n;
+
+   if( uiParam >= 1 )
+   {
+      array = hb_itemArrayNew( uiParam );
+      for( n = 1; n <= uiParam; n++ )
+      {
+         PHB_ITEM iTmp = hb_itemParam( n );
+         hb_itemArrayPut( array, n, iTmp );
+         hb_itemRelease( iTmp );
+      }
+   }
+   else
+   {
+      PHB_ITEM iTmp = hb_itemPutC( NULL, (char *) "TObject" );
+      array = hb_itemArrayNew( 1 );
+      hb_itemArrayPut( array, 1, iTmp );
+      hb_itemRelease( iTmp );
+   }
+
+   hb_itemRelease( hb_itemReturn( array ) );
+}
+
+/* This one is used when HB_NOTOBJECT is defined before HBCLASS.CH */
+/* it will avoid any default object to be inherited */
+HB_FUNC( __CLS_PAR00 )
+{
+   PHB_ITEM array;
+   USHORT uiParam = ( USHORT ) hb_pcount();
+   USHORT n;
+
+   array = hb_itemArrayNew( uiParam );
+   for( n = 1; n <= uiParam; n++ )
+    {
+         PHB_ITEM iTmp = hb_itemParam( n );
+         hb_itemArrayPut( array, n, iTmp );
+         hb_itemRelease( iTmp );
+    }
+
+   hb_itemRelease( hb_itemReturn( array ) );
 }
 

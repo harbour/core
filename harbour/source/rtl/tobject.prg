@@ -65,30 +65,32 @@ FUNCTION TObject()
 
    IF s_oClass == NIL
 
-      s_oClass := TClass():New( "TObject", {} )
+      s_oClass := TClass():New( "TObject",  )
 
-      s_oClass:AddInline( "CLASSNAME"      , {| Self | __OBJGETCLSNAME( Self )     }, nScope )
-      s_oClass:AddInline( "CLASSH"         , {| Self | __CLASSH( Self )            }, nScope )
-      s_oClass:AddInline( "CLASSSEL"       , {| Self | __CLASSSEL( Self:CLASSH() ) }, nScope )
+      /* Those Five worked fine but their C version from classes.c are probably better in term of speed */
+      /*s_oClass:AddInline( "CLASSNAME"      , {| Self | __OBJGETCLSNAME( Self )     }, nScope ) */
+      /*s_oClass:AddInline( "CLASSH"         , {| Self | __CLASSH( Self )            }, nScope ) */
+      /*s_oClass:AddInline( "CLASSSEL"       , {| Self | __CLASSSEL( Self:CLASSH() ) }, nScope ) */
+      /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )             }, nScope ) */
+      /*s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope ) */
 
       s_oClass:AddMethod( "NEW"  , @TObject_New()  , nScope )
       s_oClass:AddMethod( "INIT" , @TObject_Init() , nScope )
 
-      s_oClass:AddMethod( "ERROR", @TOBJECT_ERROR() , nScope ) /* see classes.c */
+      s_oClass:AddMethod( "ERROR", @TOBJECT_ERROR() , nScope )
 
       s_oClass:SetOnError( @TObject_DftonError() )
 
       s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, iif(substr(cMsg,1,1)=="_",1005,1004) ) }, nScope )
 
-      /* For later use */
-      /*s_oClass:AddInline( "CLASS"   , {|| s_oClass }, nScope )*/
+      /*s_oClass:AddInline( "ADDMETHOD" , { | Self, cMeth, pFunc, nScopeMeth                 |  __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif(nScopeMeth==NIL,1,nScopeMeth) ) }, nScope )                                */
+      /*s_oClass:AddInline( "ADDVAR"    , { | Self, cVAR, nScopeMeth, uiData , hClass  |  __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA(hClass) , HB_OO_MSG_DATA, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) )  , ;        */
+      /*                                                                               __clsAddMsg( hClass                   , "_"+cVar , uiData                          , HB_OO_MSG_DATA, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) ) }, nScope )    */
 
-      /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )             }, nScope ) */
-      /*s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, nScope ) */
+      /*s_oClass:AddInline( "CLASS"   , {| Self | Self }, nScope )*/
+      /*s_oClass:AddInline( "CLASS"   , {|| s_oClass }, nScope ) */
 
       /* Those one exist within Class(y), so we will probably try to implement it               */
-
-      /*s_oClass:AddInline( "MSGNOTFOUND"    , {| Self |                            }, nScope ) */
 
       /*s_oClass:AddInline( "ISKINDOF"       , {| Self |                            }, nScope ) */
       /*s_oClass:AddInline( "asString"       , {| Self | ::class:name + " object"   }, nScope ) */

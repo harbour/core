@@ -119,7 +119,7 @@ STATIC FUNCTION New( cClassName, xSuper )
    IF ISARRAY( xSuper ) .AND. Len( xSuper ) >= 1
       ::acSuper := xSuper
       nSuper := Len( xSuper )
-   ELSEIF ISCHARACTER( xSuper )
+   ELSEIF ISCHARACTER( xSuper ) .AND. ! empty( xSuper )
       ::acSuper := { xSuper }
       nSuper := 1
    ELSE
@@ -231,10 +231,8 @@ STATIC PROCEDURE Create()
 //----------------------------------------------------------------------------//
 
 STATIC FUNCTION Instance()
-
-   LOCAL Self := QSelf()
-
-   RETURN __clsInst( ::hClass )
+ LOCAL Self := QSelf()
+RETURN __clsInst( ::hClass )
 
 //----------------------------------------------------------------------------//
 
