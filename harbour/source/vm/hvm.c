@@ -608,7 +608,6 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_itemClear( &hb_stack.Return );
 
             hb_vmSend( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
-
             w += 3;
 
             if( pCode[ 3 ] == HB_P_POP )
@@ -621,11 +620,19 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_SENDSHORT:
-            hb_itemClear( &hb_stack.Return );
+            if( ( &hb_stack.Return )->type )
+               hb_itemClear( &hb_stack.Return );
+
             hb_vmSend( pCode[ w + 1 ] );
-            hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
-            hb_stackPush();
             w += 2;
+
+            if( pCode[ w ] == HB_P_POP )
+               w++;
+            else
+            {
+               hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
+               hb_stackPush();
+            }
             break;
 
          case HB_P_LINE:
