@@ -1,3 +1,8 @@
+19991123-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/math.c
+    + math error handler added for __BORLANDC__ and __MINGW32__
+      I could not find a way to test these error though.
+
 19991123-00:29 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/regress/*
     + Split rt_str into rt_str + rt_trans.

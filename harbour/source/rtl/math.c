@@ -49,7 +49,18 @@
 #include "itemapi.h"
 #include "errorapi.h"
 
-#if defined( __WATCOMC__ )
+#if defined(__WATCOMC__)
+   #define HB_MATH_HANDLER
+#elif defined(__BORLANDC__)
+   #define HB_MATH_HANDLER
+   #define matherr _matherr
+#elif defined(__MINGW32__)
+   #define HB_MATH_HANDLER
+   #define matherr _matherr
+   #define exception _exception
+#endif
+
+#if defined(HB_MATH_HANDLER)
 
 static int s_internal_math_error = 0;
 
@@ -148,7 +159,7 @@ HARBOUR HB_EXP( void )
 {
    if( ISNUM( 1 ) )
    {
-#if defined( __WATCOMC__ )
+#if defined(HB_MATH_HANDLER)
       double dResult = exp( hb_parnd( 1 ) );
 
       if( s_internal_math_error )
@@ -210,7 +221,7 @@ HARBOUR HB_LOG( void )
 {
    if( ISNUM( 1 ) )
    {
-#if defined( __WATCOMC__ )
+#if defined(HB_MATH_HANDLER)
       double dResult = log( hb_parnd( 1 ) );
 
       if( s_internal_math_error )
@@ -478,7 +489,7 @@ HARBOUR HB_SQRT( void )
 {
    if( ISNUM( 1 ) )
    {
-#if defined( __WATCOMC__ )
+#if defined(HB_MATH_HANDLER)
       double dResult = sqrt( hb_parnd( 1 ) );
 
       if( s_internal_math_error )
