@@ -1,3 +1,9 @@
+19990624-15:40 EDT David G. Holm <dholm@jsd-llc.com>
+  * doc/hdr_tpl.txt
+    - Added proposed HRL/HVM license exception for executables.
+    - Added GNU web site address.
+    - Replaced "?" in copyright statement with "(list of individual authors)".
+
 19990624-15:15 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Removed genobj
