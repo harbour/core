@@ -89,11 +89,18 @@
       } \
       if( bTmp )
 
+#undef KEYWORD_ACTION
+   #define KEYWORD_ACTION() strncpy( (char*) sWordAsString, (char*) sToken, iWordLen ); sWordAsString[iWordLen] = '\0';
+
+#undef WORD_ACTION
+   #define WORD_ACTION() strncpy( (char*) sWordAsString, (char*) sToken, iWordLen ); sWordAsString[iWordLen] = '\0';
+
 static int iTexts = 0, iCloseSquare = 0;
 static char * aTexts[ NUMERALS_PER_LINE ];
 
 static unsigned char iIdentifier = 0;
 static char* sIdOnHold;
+static char sWordAsString[11];
 
 long hb_lex_Hex2L( char* sHex );
 
@@ -255,6 +262,7 @@ LANGUAGE_KEY_WORDS_ARE {
 #define _WHILE_     2022
 #define _WITH_      2023
 #define _SELF_      2024
+#define _CHARACTER_ 2025
 
 /* Words. */
 LANGUAGE_WORDS_ARE {
@@ -262,6 +270,7 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "ARRAY"     ) AS_TOKEN( _ARRAY_     ),
                      LEX_WORD( "AS"        ) AS_TOKEN( _AS_        ),
                      LEX_WORD( "CASE"      ) AS_TOKEN( _CASE_      ),
+                     LEX_WORD( "CHARACTER" ) AS_TOKEN( _CHARACTER_ ),
                      LEX_WORD( "CLASS"     ) AS_TOKEN( _CLASS_     ),
                      LEX_WORD( "CODEBLOCK" ) AS_TOKEN( _BLOCK_     ),
                      LEX_WORD( "DATE"      ) AS_TOKEN( _DATE_      ),
@@ -295,54 +304,8 @@ LANGUAGE_WORDS_ARE {
                    };
 
 /* When reservered words are used as Identifier. */
-#define HB_EXTERN_ID      -2001
-#define HB_AS_ID          -2002
-#define HB_OF_ID          -2003
-#define HB_ARRAY_ID       -2004
-#define HB_VARIANT_ID     -2005
-#define HB_BLOCK_ID       -2006
-#define HB_STRING_ID      -2007
-#define HB_CLASS_ID       -2008
-#define HB_DATE_ID        -2009
-#define HB_LOGICAL_ID     -2010
-#define HB_NUMEIC_ID      -2011
-#define HB_OBJECT_ID      -2012
-#define HB_PUBLIC_ID      -2013
-#define HB_OTHERWISE_ID   -2014
-#define HB_MEMVAR_ID      -2015
-#define HB_WHILE_ID       -2016
-#define HB_LOOP_ID        -2017
-#define HB_FOR_ID         -2018
-#define HB_NEXT_ID        -2019
-#define HB_FIELD_ID       -2020
-#define HB_PARAMETERS_ID  -2021
-#define HB_PRIVATE_ID     -2022
-#define HB_EXIT_ID        -2023
-#define HB_BEGIN_ID       -2024
-#define HB_SEQUENCE_ID    -2025
-#define HB_BREAK_ID       -2026
-#define HB_RECOVER_ID     -2027
-#define HB_USING_ID       -2028
-#define HB_CASE_ID        -2029
-#define HB_DO_ID          -2030
-#define HB_WITH_ID        -2031
-#define HB_DECLARE_ID     -2032
-#define HB_PROCREQ_ID     -2033
-#define HB_SELF_ID        -2034
-#define HB_IF_ID          -2035
-#define HB_IIF_ID         -2036
-#define HB_OPTIONAL_ID    -2037
-#define HB_IN_ID          -2038
-#define HB__FIELD_ID      -2039
-#define HB_LINE_ID        -2040
-#define HB_INIT_ID        -2041
-#define HB_PROCEDURE_ID   -2042
-#define HB_FUNCTION_ID    -2043
-#define HB_STATIC_ID      -2044
-#define HB_LOCAL_ID       -2045
-#define HB_QSELF_ID       -2046
-#define HB_RETURN_ID      -2047
-#define HB_END_ID         -2048
+#define HB_IDENTIFIER     -2001
+#define HB_SELF_ID        -2002
 
 /* Intermediate Reductions when still ambigious or need further reductions. */
 #define _WHILE_WITH       3001
@@ -370,6 +333,7 @@ LANGUAGE_RULES_ARE {
 
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , 0      , 0          ) REDUCE_TO( AS_ARRAY          , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _BLOCK_     , 0      , 0          ) REDUCE_TO( AS_BLOCK          , 0             ),
+                    IF_SEQUENCE_IS( _AS_        , _CHARACTER_ , 0      , 0          ) REDUCE_TO( AS_CHARACTER      , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _STRING_    , 0      , 0          ) REDUCE_TO( AS_CHARACTER      , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _CLASS_     , 0      , 0          ) REDUCE_TO( AS_CLASS          , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _DATE_      , 0      , 0          ) REDUCE_TO( AS_DATE           , 0             ),
@@ -382,6 +346,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _VARIANT_  ) REDUCE_TO( AS_ARRAY_ARRAY    , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _BLOCK_    ) REDUCE_TO( AS_BLOCK_ARRAY    , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _STRING_   ) REDUCE_TO( AS_CHARACTER_ARRAY, 0             ),
+                    IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _CHARACTER_) REDUCE_TO( AS_CHARACTER_ARRAY, 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _CLASS_    ) REDUCE_TO( AS_CLASS_ARRAY    , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _DATE_     ) REDUCE_TO( AS_DATE_ARRAY     , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _LOGICAL_  ) REDUCE_TO( AS_LOGICAL_ARRAY  , 0             ),
@@ -389,44 +354,45 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , _OF_   , _OBJECT_   ) REDUCE_TO( AS_OBJECT_ARRAY   , 0             ),
 
 		    /* Treat as Identifiers when not qualified with the AS qualifier. */
-                    IF_SEQUENCE_IS( _AS_        , 0           , 0      , 0          ) REDUCE_TO( HB_AS_ID          , 0             ),
-                    IF_SEQUENCE_IS( _OF_        , 0           , 0      , 0          ) REDUCE_TO( HB_OF_ID          , 0             ),
-                    IF_SEQUENCE_IS( _ARRAY_     , 0           , 0      , 0          ) REDUCE_TO( HB_ARRAY_ID       , 0             ),
-                    IF_SEQUENCE_IS( _VARIANT_   , 0           , 0      , 0          ) REDUCE_TO( HB_VARIANT_ID     , 0             ),
-                    IF_SEQUENCE_IS( _BLOCK_     , 0           , 0      , 0          ) REDUCE_TO( HB_BLOCK_ID       , 0             ),
-                    IF_SEQUENCE_IS( _STRING_    , 0           , 0      , 0          ) REDUCE_TO( HB_STRING_ID      , 0             ),
-                    IF_SEQUENCE_IS( _CLASS_     , 0           , 0      , 0          ) REDUCE_TO( HB_CLASS_ID       , 0             ),
-                    IF_SEQUENCE_IS( _DATE_      , 0           , 0      , 0          ) REDUCE_TO( HB_DATE_ID        , 0             ),
-                    IF_SEQUENCE_IS( _LOGICAL_   , 0           , 0      , 0          ) REDUCE_TO( HB_LOGICAL_ID     , 0             ),
-                    IF_SEQUENCE_IS( _NUMERIC_   , 0           , 0      , 0          ) REDUCE_TO( HB_NUMEIC_ID      , 0             ),
-                    IF_SEQUENCE_IS( _OBJECT_    , 0           , 0      , 0          ) REDUCE_TO( HB_OBJECT_ID      , 0             ),
+                    IF_SEQUENCE_IS( _AS_        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _OF_        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _ARRAY_     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _VARIANT_   , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _BLOCK_     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _STRING_    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _CHARACTER_ , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _CLASS_     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _DATE_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _LOGICAL_   , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _NUMERIC_   , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _OBJECT_    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( FUNCTION    , IDENTIFIER  , 0      , 0          ) REDUCE_TO( HB_RET_FUNID      , 0            ),
-                    IF_SEQUENCE_IS( FUNCTION    , '['         , 0      , 0          ) REDUCE_TO( HB_FUNCTION_ID    , '['          ),
-                    IF_SEQUENCE_IS( FUNCTION    , 0           , 0      , 0          ) REDUCE_TO( HB_FUNCTION_ID    , 0            ),
+                    IF_SEQUENCE_IS( FUNCTION    , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['          ),
+                    IF_SEQUENCE_IS( FUNCTION    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0            ),
 
                     IF_SEQUENCE_IS( PROCEDURE   , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( PROCEDURE   , '['         , 0      , 0          ) REDUCE_TO( HB_PROCEDURE_ID   , '['          ),
-                    IF_SEQUENCE_IS( PROCEDURE   , 0           , 0      , 0          ) REDUCE_TO( HB_PROCEDURE_ID   , 0            ),
+                    IF_SEQUENCE_IS( PROCEDURE   , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['          ),
+                    IF_SEQUENCE_IS( PROCEDURE   , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0            ),
 
                     IF_SEQUENCE_IS( EXTERN      , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( EXTERN      , '['         , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , '['          ),
-                    IF_SEQUENCE_IS( EXTERN      , 0           , 0      , 0          ) REDUCE_TO( HB_EXTERN_ID      , 0            ),
+                    IF_SEQUENCE_IS( EXTERN      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['          ),
+                    IF_SEQUENCE_IS( EXTERN      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0            ),
 
-                    IF_SEQUENCE_IS( END         , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_END_ID         , INASSIGN      ),
-                    IF_SEQUENCE_IS( END         , INC         , 0      , 0          ) REDUCE_TO( HB_END_ID         , INC           ),
-                    IF_SEQUENCE_IS( END         , DEC         , 0      , 0          ) REDUCE_TO( HB_END_ID         , DEC           ),
-                    IF_SEQUENCE_IS( END         , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_END_ID         , ALIASOP       ),
-                    IF_SEQUENCE_IS( END         , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_END_ID         , PLUSEQ        ),
-                    IF_SEQUENCE_IS( END         , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_END_ID         , MINUSEQ       ),
-                    IF_SEQUENCE_IS( END         , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_END_ID         , MULTEQ        ),
-                    IF_SEQUENCE_IS( END         , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_END_ID         , DIVEQ         ),
-                    IF_SEQUENCE_IS( END         , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_END_ID         ,  EXPEQ        ),
-                    IF_SEQUENCE_IS( END         , MODEQ       , 0      , 0          ) REDUCE_TO( HB_END_ID         ,  MODEQ        ),
-                    IF_SEQUENCE_IS( END         , '('         , 0      , 0          ) REDUCE_TO( HB_END_ID         , '('           ),
-                    IF_SEQUENCE_IS( END         , '['         , 0      , 0          ) REDUCE_TO( HB_END_ID         , '['           ),
-                    IF_SEQUENCE_IS( END         , '='         , 0      , 0          ) REDUCE_TO( HB_END_ID         , '='           ),
-                    IF_SEQUENCE_IS( END         , ':'         , 0      , 0          ) REDUCE_TO( HB_END_ID         , ':'           ),
+                    IF_SEQUENCE_IS( END         , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , INASSIGN      ),
+                    IF_SEQUENCE_IS( END         , INC         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , INC           ),
+                    IF_SEQUENCE_IS( END         , DEC         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , DEC           ),
+                    IF_SEQUENCE_IS( END         , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ALIASOP       ),
+                    IF_SEQUENCE_IS( END         , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , PLUSEQ        ),
+                    IF_SEQUENCE_IS( END         , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MINUSEQ       ),
+                    IF_SEQUENCE_IS( END         , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MULTEQ        ),
+                    IF_SEQUENCE_IS( END         , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , DIVEQ         ),
+                    IF_SEQUENCE_IS( END         , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  EXPEQ        ),
+                    IF_SEQUENCE_IS( END         , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  MODEQ        ),
+                    IF_SEQUENCE_IS( END         , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '('           ),
+                    IF_SEQUENCE_IS( END         , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( END         , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '='           ),
+                    IF_SEQUENCE_IS( END         , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ':'           ),
                     IF_SEQUENCE_IS( END         , _SEQUENCE_  , 0      , 0          ) REDUCE_TO( END               , 0             ),
                     IF_SEQUENCE_IS( END         , 0           , 0      , 0          ) PASS_THROUGH(),
 
@@ -450,8 +416,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( DECLARE     , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
 
 		    /* Anthing else, DECLARE as Identifier. */
-                    IF_SEQUENCE_IS( DECLARE     , '['         , 0      , 0          ) REDUCE_TO( HB_DECLARE_ID      , '['          ),
-                    IF_SEQUENCE_IS( DECLARE     , 0           , 0      , 0          ) REDUCE_TO( HB_DECLARE_ID      ,              ),
+                    IF_SEQUENCE_IS( DECLARE     , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '['          ),
+                    IF_SEQUENCE_IS( DECLARE     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      ,              ),
 
                     IF_SEQUENCE_IS( PUBLIC      , IDENTIFIER  , '['    , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( PUBLIC      , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
@@ -459,8 +425,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( PUBLIC      , MACROVAR    , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( PUBLIC      , MACROTEXT   , '['    , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( PUBLIC      , MACROTEXT   , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( PUBLIC      , '['         , 0      , 0          ) REDUCE_TO( HB_PUBLIC_ID      , '['           ),
-                    IF_SEQUENCE_IS( PUBLIC      , 0           , 0      , 0          ) REDUCE_TO( HB_PUBLIC_ID      , 0             ),
+                    IF_SEQUENCE_IS( PUBLIC      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( PUBLIC      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( PRIVATE_    , IDENTIFIER  , '['    , 0          ) REDUCE_TO( PRIVATE           , _ID_ARRAY     ),
                     IF_SEQUENCE_IS( PRIVATE_    , IDENTIFIER  , 0      , 0          ) REDUCE_TO( PRIVATE           , IDENTIFIER    ),
@@ -468,203 +434,203 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( PRIVATE_    , MACROVAR    , 0      , 0          ) REDUCE_TO( PRIVATE           , MACROVAR      ),
                     IF_SEQUENCE_IS( PRIVATE_    , MACROTEXT   , '['    , 0          ) REDUCE_TO( PRIVATE           , _TEXT_ARRAY   ),
                     IF_SEQUENCE_IS( PRIVATE_    , MACROTEXT   , 0      , 0          ) REDUCE_TO( PRIVATE           , MACROTEXT     ),
-                    IF_SEQUENCE_IS( PRIVATE_    , '['         , 0      , 0          ) REDUCE_TO( PRIVATE           , '['           ),
-                    IF_SEQUENCE_IS( PRIVATE_    , 0           , 0      , 0          ) REDUCE_TO( HB_PRIVATE_ID     , 0             ),
+                    IF_SEQUENCE_IS( PRIVATE_    , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( PRIVATE_    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
                     IF_SEQUENCE_IS( _VAR_ARRAY  , 0           , 0      , 0          ) REDUCE_TO( MACROVAR          , '['           ),
                     IF_SEQUENCE_IS( _TEXT_ARRAY , 0           , 0      , 0          ) REDUCE_TO( MACROTEXT         , '['           ),
 
                     IF_SEQUENCE_IS( LOCAL       , IDENTIFIER  , '['    , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( LOCAL       , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( LOCAL       , '['         , 0      , 0          ) REDUCE_TO( HB_LOCAL_ID       , '['           ),
-                    IF_SEQUENCE_IS( LOCAL       , 0           , 0      , 0          ) REDUCE_TO( HB_LOCAL_ID       , 0             ),
+                    IF_SEQUENCE_IS( LOCAL       , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( LOCAL       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 		    /* STATIC Func/Proc. */
                     IF_SEQUENCE_IS( STATIC      , _PROC_      , 0      , 0          ) REDUCE_TO( STATIC            , PROCEDURE     ),
                     IF_SEQUENCE_IS( STATIC      , _FUNC_      , 0      , 0          ) REDUCE_TO( STATIC            , FUNCTION      ),
 
 		    /* STATIC IDENTIFIER - Exclusion works best here because we may also have STATIC Func/Proc (above). */
-                    IF_SEQUENCE_IS( STATIC      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , INASSIGN      ),
-                    IF_SEQUENCE_IS( STATIC      , INC         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , INC           ),
-                    IF_SEQUENCE_IS( STATIC      , DEC         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , DEC           ),
-                    IF_SEQUENCE_IS( STATIC      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , ALIASOP       ),
-                    IF_SEQUENCE_IS( STATIC      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , PLUSEQ        ),
-                    IF_SEQUENCE_IS( STATIC      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , MINUSEQ       ),
-                    IF_SEQUENCE_IS( STATIC      , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , MULTEQ        ),
-                    IF_SEQUENCE_IS( STATIC      , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , DIVEQ         ),
-                    IF_SEQUENCE_IS( STATIC      , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      ,  EXPEQ        ),
-                    IF_SEQUENCE_IS( STATIC      , MODEQ       , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      ,  MODEQ        ),
-                    IF_SEQUENCE_IS( STATIC      , '('         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , '('           ),
-                    IF_SEQUENCE_IS( STATIC      , '['         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , '['           ),
-                    IF_SEQUENCE_IS( STATIC      , '='         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , '='           ),
-                    IF_SEQUENCE_IS( STATIC      , ':'         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , ':'           ),
-                    IF_SEQUENCE_IS( STATIC      , ';'         , 0      , 0          ) REDUCE_TO( HB_STATIC_ID      , ';'           ),
+                    IF_SEQUENCE_IS( STATIC      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , INASSIGN      ),
+                    IF_SEQUENCE_IS( STATIC      , INC         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , INC           ),
+                    IF_SEQUENCE_IS( STATIC      , DEC         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , DEC           ),
+                    IF_SEQUENCE_IS( STATIC      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ALIASOP       ),
+                    IF_SEQUENCE_IS( STATIC      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , PLUSEQ        ),
+                    IF_SEQUENCE_IS( STATIC      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MINUSEQ       ),
+                    IF_SEQUENCE_IS( STATIC      , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MULTEQ        ),
+                    IF_SEQUENCE_IS( STATIC      , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , DIVEQ         ),
+                    IF_SEQUENCE_IS( STATIC      , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  EXPEQ        ),
+                    IF_SEQUENCE_IS( STATIC      , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  MODEQ        ),
+                    IF_SEQUENCE_IS( STATIC      , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '('           ),
+                    IF_SEQUENCE_IS( STATIC      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( STATIC      , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '='           ),
+                    IF_SEQUENCE_IS( STATIC      , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ':'           ),
+                    IF_SEQUENCE_IS( STATIC      , ';'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ';'           ),
                     IF_SEQUENCE_IS( STATIC      , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( MEMVAR      , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( MEMVAR      , '['         , 0      , 0          ) REDUCE_TO( HB_MEMVAR_ID      , '['           ),
-                    IF_SEQUENCE_IS( MEMVAR      , 0           , 0      , 0          ) REDUCE_TO( HB_MEMVAR_ID      , 0             ),
+                    IF_SEQUENCE_IS( MEMVAR      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( MEMVAR      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( FIELD_      , IDENTIFIER  , 0      , 0          ) REDUCE_TO( FIELD             , IDENTIFIER    ),
-                    IF_SEQUENCE_IS( FIELD_      , '['         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '['           ),
-                    IF_SEQUENCE_IS( FIELD_      , 0           , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , 0             ),
+                    IF_SEQUENCE_IS( FIELD_      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( FIELD_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( PARAMETERS  , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( PARAMETERS  , '['         , 0      , 0          ) REDUCE_TO( HB_PARAMETERS_ID  , '['           ),
-                    IF_SEQUENCE_IS( PARAMETERS  , 0           , 0      , 0          ) REDUCE_TO( HB_PARAMETERS_ID  , 0             ),
+                    IF_SEQUENCE_IS( PARAMETERS  , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( PARAMETERS  , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 		    /* This _FIELD_ is FIELD NOT at BOL wants only ->. */
                     IF_SEQUENCE_IS( _FIELD_     , ALIASOP     , 0      , 0          ) REDUCE_TO( FIELD             , ALIASOP       ),
-                    IF_SEQUENCE_IS( _FIELD_     , '['         , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , '['           ),
-                    IF_SEQUENCE_IS( _FIELD_     , 0           , 0      , 0          ) REDUCE_TO( HB_FIELD_ID       , 0             ),
+                    IF_SEQUENCE_IS( _FIELD_     , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( _FIELD_     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 		    /* This _FIELD is _FIELD NOT at BOL wants only ->. */
                     IF_SEQUENCE_IS( _FIELD      , ALIASOP     , 0      , 0          ) REDUCE_TO( FIELD             , ALIASOP       ),
-                    IF_SEQUENCE_IS( _FIELD      , '['         , 0      , 0          ) REDUCE_TO( HB__FIELD_ID      , '['           ),
-                    IF_SEQUENCE_IS( _FIELD      , 0           , 0      , 0          ) REDUCE_TO( HB__FIELD_ID      , 0             ),
+                    IF_SEQUENCE_IS( _FIELD      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( _FIELD      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( OTHERWISE   , '\n'        , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( OTHERWISE   , ';'         , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( OTHERWISE   , '['         , 0      , 0          ) REDUCE_TO( HB_OTHERWISE_ID   , '['           ),
-                    IF_SEQUENCE_IS( OTHERWISE   , 0           , 0      , 0          ) REDUCE_TO( HB_OTHERWISE_ID   , 0             ),
+                    IF_SEQUENCE_IS( OTHERWISE   , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( OTHERWISE   , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
-                    IF_SEQUENCE_IS( RETURN      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , INASSIGN      ),
-                    IF_SEQUENCE_IS( RETURN      , INC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_CR       ),
-                    IF_SEQUENCE_IS( RETURN      , INC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _INC_SEMI     ),
-                    IF_SEQUENCE_IS( RETURN      , DEC         , '\n'   , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_CR       ),
-                    IF_SEQUENCE_IS( RETURN      , DEC         , ';'    , 0          ) REDUCE_TO( HB_RETURN_ID      , _DEC_SEMI     ),
-                    IF_SEQUENCE_IS( RETURN      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ALIASOP       ),
-                    IF_SEQUENCE_IS( RETURN      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , PLUSEQ        ),
-                    IF_SEQUENCE_IS( RETURN      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , MINUSEQ       ),
-                    IF_SEQUENCE_IS( RETURN      , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , MULTEQ        ),
-                    IF_SEQUENCE_IS( RETURN      , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , DIVEQ         ),
-                    IF_SEQUENCE_IS( RETURN      , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      ,  EXPEQ        ),
-                    IF_SEQUENCE_IS( RETURN      , MODEQ       , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      ,  MODEQ        ),
-                 /* IF_SEQUENCE_IS( RETURN      , '('         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '('           ),
-                    IF_SEQUENCE_IS( RETURN      , '['         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '['           ), */
-                    IF_SEQUENCE_IS( RETURN      , '='         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '='           ),
-                    IF_SEQUENCE_IS( RETURN      , ':'         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ':'           ),
+                    IF_SEQUENCE_IS( RETURN      , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , INASSIGN      ),
+                    IF_SEQUENCE_IS( RETURN      , INC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER     , _INC_CR       ),
+                    IF_SEQUENCE_IS( RETURN      , INC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER     , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( RETURN      , DEC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER     , _DEC_CR       ),
+                    IF_SEQUENCE_IS( RETURN      , DEC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER     , _DEC_SEMI     ),
+                    IF_SEQUENCE_IS( RETURN      , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ALIASOP       ),
+                    IF_SEQUENCE_IS( RETURN      , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , PLUSEQ        ),
+                    IF_SEQUENCE_IS( RETURN      , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MINUSEQ       ),
+                    IF_SEQUENCE_IS( RETURN      , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MULTEQ        ),
+                    IF_SEQUENCE_IS( RETURN      , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , DIVEQ         ),
+                    IF_SEQUENCE_IS( RETURN      , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  EXPEQ        ),
+                    IF_SEQUENCE_IS( RETURN      , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  MODEQ        ),
+                 /* IF_SEQUENCE_IS( RETURN      , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '('           ),
+                    IF_SEQUENCE_IS( RETURN      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ), */
+                    IF_SEQUENCE_IS( RETURN      , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '='           ),
+                    IF_SEQUENCE_IS( RETURN      , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ':'           ),
                     IF_SEQUENCE_IS( RETURN      , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( FOR         , IDENTIFIER  , '['    , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( FOR         , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( FOR         , MACROVAR    , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( FOR         , MACROTEXT   , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( FOR         , '['         , 0      , 0          ) REDUCE_TO( HB_FOR_ID         , '['           ),
-                    IF_SEQUENCE_IS( FOR         , 0           , 0      , 0          ) REDUCE_TO( HB_FOR_ID         , 0             ),
+                    IF_SEQUENCE_IS( FOR         , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( FOR         , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( NEXT        , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_NEXT       , '\n'          ),
                     IF_SEQUENCE_IS( NEXT        , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_NEXT       , ';'           ),
-                    IF_SEQUENCE_IS( NEXT        , '['         , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , '['           ),
-                    IF_SEQUENCE_IS( NEXT        , 0           , 0      , 0          ) REDUCE_TO( HB_NEXT_ID        , 0             ),
+                    IF_SEQUENCE_IS( NEXT        , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( NEXT        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( EXIT_       , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , '\n'          ),
                     IF_SEQUENCE_IS( EXIT_       , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_EXIT       , ';'           ),
 
                     IF_SEQUENCE_IS( INIT        , _PROC_      , 0      , 0          ) REDUCE_TO( HB_INIT_PROC      , 0             ),
                     IF_SEQUENCE_IS( INIT        , _FUNC_      , 0      , 0          ) REDUCE_TO( HB_INIT_FUNC      , 0             ),
-                    IF_SEQUENCE_IS( INIT        ,  '['        , 0      , 0          ) REDUCE_TO( HB_INIT_ID        , '['           ),
-                    IF_SEQUENCE_IS( INIT        ,  0          , 0      , 0          ) REDUCE_TO( HB_INIT_ID        , 0             ),
+                    IF_SEQUENCE_IS( INIT        ,  '['        , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( INIT        ,  0          , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( EXIT_       , _PROC_      , 0      , 0          ) REDUCE_TO( HB_EXIT_PROC      , 0             ),
                     IF_SEQUENCE_IS( EXIT_       , _FUNC_      , 0      , 0          ) REDUCE_TO( HB_EXIT_FUNC      , 0             ),
-                    IF_SEQUENCE_IS( EXIT_       , '['         , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , '['           ),
-                    IF_SEQUENCE_IS( EXIT_       , 0           , 0      , 0          ) REDUCE_TO( HB_EXIT_ID        , 0             ),
+                    IF_SEQUENCE_IS( EXIT_       , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( EXIT_       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     /* LOOP at BOL if followed by anything other the NEW LINE than Identifier else LOOP. */
                     IF_SEQUENCE_IS( LOOP        , '\n'        , 0      , 0          ) REDUCE_TO( HB_CHK_LOOP       , '\n'          ),
                     IF_SEQUENCE_IS( LOOP        , ';'         , 0      , 0          ) REDUCE_TO( HB_CHK_LOOP       , ';'           ),
-                    IF_SEQUENCE_IS( LOOP        , '['         , 0      , 0          ) REDUCE_TO( HB_LOOP_ID        , '['           ),
-                    IF_SEQUENCE_IS( LOOP        , 0           , 0      , 0          ) REDUCE_TO( HB_LOOP_ID        , 0             ),
+                    IF_SEQUENCE_IS( LOOP        , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( LOOP        , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 		    /* ---------------------------  BEGIN SEQUENCE ; BREAK ; RECOVER ; RECOVER USING   --------------------------- */
                     IF_SEQUENCE_IS( BEGIN_      , _SEQUENCE_  , 0      , 0          ) REDUCE_TO( BEGINSEQ          , 0             ),
-                    IF_SEQUENCE_IS( BEGIN_      , '['         , 0      , 0          ) REDUCE_TO( HB_BEGIN_ID       , '['           ),
-                    IF_SEQUENCE_IS( BEGIN_      , 0           , 0      , 0          ) REDUCE_TO( HB_BEGIN_ID       , 0             ),
-                    IF_SEQUENCE_IS( _SEQUENCE_  , 0           , 0      , 0          ) REDUCE_TO( HB_SEQUENCE_ID    , 0             ),
+                    IF_SEQUENCE_IS( BEGIN_      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( BEGIN_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _SEQUENCE_  , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
-                    IF_SEQUENCE_IS( BREAK       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , INASSIGN      ),
-                    IF_SEQUENCE_IS( BREAK       , INC         , '\n'   , 0          ) REDUCE_TO( HB_BREAK_ID       , _INC_CR       ),
-                    IF_SEQUENCE_IS( BREAK       , INC         , ';'    , 0          ) REDUCE_TO( HB_BREAK_ID       , _INC_SEMI     ),
-                    IF_SEQUENCE_IS( BREAK       , DEC         , '\n'   , 0          ) REDUCE_TO( HB_BREAK_ID       , _DEC_CR       ),
-                    IF_SEQUENCE_IS( BREAK       , DEC         , ';'    , 0          ) REDUCE_TO( HB_BREAK_ID       , _DEC_SEMI     ),
-                    IF_SEQUENCE_IS( BREAK       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ALIASOP       ),
-                    IF_SEQUENCE_IS( BREAK       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , PLUSEQ        ),
-                    IF_SEQUENCE_IS( BREAK       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , MINUSEQ       ),
-                    IF_SEQUENCE_IS( BREAK       , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , MULTEQ        ),
-                    IF_SEQUENCE_IS( BREAK       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , DIVEQ         ),
-                    IF_SEQUENCE_IS( BREAK       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       ,  EXPEQ        ),
-                    IF_SEQUENCE_IS( BREAK       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       ,  MODEQ        ),
-                /*  IF_SEQUENCE_IS( BREAK       , '('         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '('           ),
-                    IF_SEQUENCE_IS( BREAK       , '['         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '['           ), */
-                    IF_SEQUENCE_IS( BREAK       , '='         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '='           ),
-                    IF_SEQUENCE_IS( BREAK       , ':'         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ':'           ),
+                    IF_SEQUENCE_IS( BREAK       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , INASSIGN      ),
+                    IF_SEQUENCE_IS( BREAK       , INC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER     , _INC_CR       ),
+                    IF_SEQUENCE_IS( BREAK       , INC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER     , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( BREAK       , DEC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER     , _DEC_CR       ),
+                    IF_SEQUENCE_IS( BREAK       , DEC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER     , _DEC_SEMI     ),
+                    IF_SEQUENCE_IS( BREAK       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ALIASOP       ),
+                    IF_SEQUENCE_IS( BREAK       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , PLUSEQ        ),
+                    IF_SEQUENCE_IS( BREAK       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MINUSEQ       ),
+                    IF_SEQUENCE_IS( BREAK       , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , MULTEQ        ),
+                    IF_SEQUENCE_IS( BREAK       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , DIVEQ         ),
+                    IF_SEQUENCE_IS( BREAK       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  EXPEQ        ),
+                    IF_SEQUENCE_IS( BREAK       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     ,  MODEQ        ),
+                /*  IF_SEQUENCE_IS( BREAK       , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '('           ),
+                    IF_SEQUENCE_IS( BREAK       , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ), */
+                    IF_SEQUENCE_IS( BREAK       , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '='           ),
+                    IF_SEQUENCE_IS( BREAK       , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ':'           ),
                     IF_SEQUENCE_IS( BREAK       , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( RECOVER     , _USING_     , 0      , 0          ) REDUCE_TO( RECOVERUSING      , 0             ),
                     IF_SEQUENCE_IS( RECOVER     , '\n'        , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( RECOVER     , ';'         , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( RECOVER     , '['         , 0      , 0          ) REDUCE_TO( HB_RECOVER_ID     , '['           ),
-                    IF_SEQUENCE_IS( RECOVER     , 0           , 0      , 0          ) REDUCE_TO( HB_RECOVER_ID     , 0             ),
-                    IF_SEQUENCE_IS( _USING_     , '['         , 0      , 0          ) REDUCE_TO( HB_USING_ID       , '['           ),
-                    IF_SEQUENCE_IS( _USING_     , 0           , 0      , 0          ) REDUCE_TO( HB_USING_ID       , 0             ),
+                    IF_SEQUENCE_IS( RECOVER     , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( RECOVER     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+                    IF_SEQUENCE_IS( _USING_     , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( _USING_     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
 		    /* --------------------------  DO WHILE; WHILE ; DO CASE ; CASE; DO ... ; DO ... WITH  ----------------------- */
                     IF_SEQUENCE_IS( DO          , _WHILE_     , _WITH_ , 0          ) REDUCE_TO( DO                , _WHILE_WITH   ),
                     IF_SEQUENCE_IS( DO          , _CASE_      , _WITH_ , 0          ) REDUCE_TO( DO                , _CASE_WITH    ),
                     IF_SEQUENCE_IS( DO          , _WHILE_     , '\n'   , 0          ) REDUCE_TO( DO                , _WHL_ID_CR    ),
                     IF_SEQUENCE_IS( DO          , _WHILE_     , ';'    , 0          ) REDUCE_TO( DO                , _WHL_ID_SEMI  ),
-                    IF_SEQUENCE_IS( DO          , _WITH_      , 0      , 0          ) REDUCE_TO( DO                , HB_WITH_ID    ),
-                    IF_SEQUENCE_IS( DO          , OPTIONAL    , 0      , 0          ) REDUCE_TO( DO                , HB_OPTIONAL_ID),
-                    IF_SEQUENCE_IS( DO          , IN          , 0      , 0          ) REDUCE_TO( DO                , HB_IN_ID      ),
+                    IF_SEQUENCE_IS( DO          , _WITH_      , 0      , 0          ) REDUCE_TO( DO                , HB_IDENTIFIER ),
+                    IF_SEQUENCE_IS( DO          , OPTIONAL    , 0      , 0          ) REDUCE_TO( DO                , HB_IDENTIFIER ),
+                    IF_SEQUENCE_IS( DO          , IN          , 0      , 0          ) REDUCE_TO( DO                , HB_IDENTIFIER ),
                     IF_SEQUENCE_IS( DO          , _WHILE_     , 0      , 0          ) REDUCE_TO( WHILE             , 0             ),
-                    IF_SEQUENCE_IS( _WHILE_     , '['         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '['          ),
-                    IF_SEQUENCE_IS( _WHILE_     , 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , 0            ),
+                    IF_SEQUENCE_IS( _WHILE_     , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( _WHILE_     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
-                    IF_SEQUENCE_IS( _WHILE_WITH , 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , WITH          ),
-                    IF_SEQUENCE_IS( _CASE_WITH  , 0           , 0      , 0          ) REDUCE_TO( HB_CASE_ID        , WITH          ),
-                    IF_SEQUENCE_IS( _WHL_ID_CR  , 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , '\n'          ),
-                    IF_SEQUENCE_IS( _WHL_ID_SEMI, 0           , 0      , 0          ) REDUCE_TO( HB_WHILE_ID       , ';'           ),
+                    IF_SEQUENCE_IS( _WHILE_WITH , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , WITH          ),
+                    IF_SEQUENCE_IS( _CASE_WITH  , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , WITH          ),
+                    IF_SEQUENCE_IS( _WHL_ID_CR  , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '\n'          ),
+                    IF_SEQUENCE_IS( _WHL_ID_SEMI, 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , ';'           ),
 
                     /* This WHILE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
-                    IF_SEQUENCE_IS( WHILE       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , INASSIGN     ),
-                    IF_SEQUENCE_IS( WHILE       , INC         , '\n'   , 0          ) REDUCE_TO( HB_WHILE_ID       , _INC_CR       ),
-                    IF_SEQUENCE_IS( WHILE       , INC         , ';'    , 0          ) REDUCE_TO( HB_WHILE_ID       , _INC_SEMI     ),
-                    IF_SEQUENCE_IS( WHILE       , DEC         , '\n'   , 0          ) REDUCE_TO( HB_WHILE_ID       , _DEC_CR       ),
-                    IF_SEQUENCE_IS( WHILE       , DEC         , ';'    , 0          ) REDUCE_TO( HB_WHILE_ID       , _DEC_SEMI     ),
-                    IF_SEQUENCE_IS( WHILE       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , ALIASOP      ),
-                    IF_SEQUENCE_IS( WHILE       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , PLUSEQ       ),
-                    IF_SEQUENCE_IS( WHILE       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , MINUSEQ      ),
-                    IF_SEQUENCE_IS( WHILE       , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , MULTEQ       ),
-                    IF_SEQUENCE_IS( WHILE       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , DIVEQ        ),
-                    IF_SEQUENCE_IS( WHILE       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    ,  EXPEQ       ),
-                    IF_SEQUENCE_IS( WHILE       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    ,  MODEQ       ),
-                 /* IF_SEQUENCE_IS( WHILE       , '('         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '('          ),
-                    IF_SEQUENCE_IS( WHILE       , '['         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '['          ), */
-                    IF_SEQUENCE_IS( WHILE       , '='         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , '='          ),
-                    IF_SEQUENCE_IS( WHILE       , ':'         , 0      , 0          ) REDUCE_TO( HB_WHILE_ID 	    , ':'          ),
+                    IF_SEQUENCE_IS( WHILE       , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , INASSIGN      ),
+                    IF_SEQUENCE_IS( WHILE       , INC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER     , _INC_CR       ),
+                    IF_SEQUENCE_IS( WHILE       , INC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER     , _INC_SEMI     ),
+                    IF_SEQUENCE_IS( WHILE       , DEC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER     , _DEC_CR       ),
+                    IF_SEQUENCE_IS( WHILE       , DEC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER     , _DEC_SEMI     ),
+                    IF_SEQUENCE_IS( WHILE       , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , ALIASOP       ),
+                    IF_SEQUENCE_IS( WHILE       , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , PLUSEQ        ),
+                    IF_SEQUENCE_IS( WHILE       , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , MINUSEQ       ),
+                    IF_SEQUENCE_IS( WHILE       , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , MULTEQ        ),
+                    IF_SEQUENCE_IS( WHILE       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , DIVEQ         ),
+                    IF_SEQUENCE_IS( WHILE       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , EXPEQ         ),
+                    IF_SEQUENCE_IS( WHILE       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , MODEQ         ),
+                 /* IF_SEQUENCE_IS( WHILE       , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , '('           ),
+                    IF_SEQUENCE_IS( WHILE       , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , '['           ), */
+                    IF_SEQUENCE_IS( WHILE       , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , '='           ),
+                    IF_SEQUENCE_IS( WHILE       , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER 	   , ':'           ),
                     IF_SEQUENCE_IS( WHILE       , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( DO          , _CASE_      , 0      , 0          ) REDUCE_TO( DOCASE      	    , 0            ),
-                    IF_SEQUENCE_IS( _CASE_      , '['         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '['          ),
-                    IF_SEQUENCE_IS( _CASE_      , 0           , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , 0            ),
+                    IF_SEQUENCE_IS( _CASE_      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '['          ),
+                    IF_SEQUENCE_IS( _CASE_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , 0            ),
 
                     /* This CASE is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else CASE. */
-                    IF_SEQUENCE_IS( CASE        , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , INASSIGN     ),
-                    IF_SEQUENCE_IS( CASE        , INC         , '\n'   , 0          ) REDUCE_TO( HB_CASE_ID         , _INC_CR      ),
-                    IF_SEQUENCE_IS( CASE        , INC         , ';'    , 0          ) REDUCE_TO( HB_CASE_ID         , _INC_SEMI    ),
-                    IF_SEQUENCE_IS( CASE        , DEC         , '\n'   , 0          ) REDUCE_TO( HB_CASE_ID         , _DEC_CR      ),
-                    IF_SEQUENCE_IS( CASE        , DEC         , ';'    , 0          ) REDUCE_TO( HB_CASE_ID         , _DEC_SEMI    ),
-                    IF_SEQUENCE_IS( CASE        , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , ALIASOP      ),
-                    IF_SEQUENCE_IS( CASE        , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , PLUSEQ       ),
-                    IF_SEQUENCE_IS( CASE        , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , MINUSEQ      ),
-                    IF_SEQUENCE_IS( CASE        , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , MULTEQ       ),
-                    IF_SEQUENCE_IS( CASE        , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , DIVEQ        ),
-                    IF_SEQUENCE_IS( CASE        , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , EXPEQ        ),
-                    IF_SEQUENCE_IS( CASE        , MODEQ       , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , MODEQ        ),
-                 /* IF_SEQUENCE_IS( CASE        , '('         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '('          ),
-                    IF_SEQUENCE_IS( CASE        , '['         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '['          ), */
-                    IF_SEQUENCE_IS( CASE        , '='         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , '='          ),
-                    IF_SEQUENCE_IS( CASE        , ':'         , 0      , 0          ) REDUCE_TO( HB_CASE_ID  	    , ':'          ),
+                    IF_SEQUENCE_IS( CASE        , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , INASSIGN     ),
+                    IF_SEQUENCE_IS( CASE        , INC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER      , _INC_CR      ),
+                    IF_SEQUENCE_IS( CASE        , INC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER      , _INC_SEMI    ),
+                    IF_SEQUENCE_IS( CASE        , DEC         , '\n'   , 0          ) REDUCE_TO( HB_IDENTIFIER      , _DEC_CR      ),
+                    IF_SEQUENCE_IS( CASE        , DEC         , ';'    , 0          ) REDUCE_TO( HB_IDENTIFIER      , _DEC_SEMI    ),
+                    IF_SEQUENCE_IS( CASE        , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , ALIASOP      ),
+                    IF_SEQUENCE_IS( CASE        , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , PLUSEQ       ),
+                    IF_SEQUENCE_IS( CASE        , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , MINUSEQ      ),
+                    IF_SEQUENCE_IS( CASE        , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , MULTEQ       ),
+                    IF_SEQUENCE_IS( CASE        , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , DIVEQ        ),
+                    IF_SEQUENCE_IS( CASE        , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , EXPEQ        ),
+                    IF_SEQUENCE_IS( CASE        , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , MODEQ        ),
+                 /* IF_SEQUENCE_IS( CASE        , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '('          ),
+                    IF_SEQUENCE_IS( CASE        , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '['          ), */
+                    IF_SEQUENCE_IS( CASE        , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '='          ),
+                    IF_SEQUENCE_IS( CASE        , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , ':'          ),
                     IF_SEQUENCE_IS( CASE        , 0           , 0      , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( _INC_CR     , 0           , 0      , 0          ) REDUCE_TO( INC 	            , '\n'         ),
@@ -677,49 +643,49 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( MACROVAR    , _WITH_      , 0      , 0          ) REDUCE_TO( MACROVAR           , WITH         ),
                     IF_SEQUENCE_IS( MACROTEXT   , _WITH_      , 0      , 0          ) REDUCE_TO( MACROTEXT          , WITH         ),
                     IF_SEQUENCE_IS( ')'         , _WITH_      , 0      , 0          ) REDUCE_TO( ')'                , WITH         ),
-                    IF_SEQUENCE_IS( _WITH_      , '['         , 0      , 0          ) REDUCE_TO( HB_WITH_ID  	    , '['          ),
-                    IF_SEQUENCE_IS( _WITH_      , 0           , 0      , 0          ) REDUCE_TO( HB_WITH_ID  	    , 0            ),
+                    IF_SEQUENCE_IS( _WITH_      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '['          ),
+                    IF_SEQUENCE_IS( _WITH_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , 0            ),
 
-                    IF_SEQUENCE_IS( DO          , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , INASSIGN     ),
-                    IF_SEQUENCE_IS( DO          , INC         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , INC          ),
-                    IF_SEQUENCE_IS( DO          , DEC         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , DEC          ),
-                    IF_SEQUENCE_IS( DO          , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ALIASOP      ),
-                    IF_SEQUENCE_IS( DO          , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , PLUSEQ       ),
-                    IF_SEQUENCE_IS( DO          , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , MINUSEQ      ),
-                    IF_SEQUENCE_IS( DO          , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , MULTEQ       ),
-                    IF_SEQUENCE_IS( DO          , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , DIVEQ        ),
-                    IF_SEQUENCE_IS( DO          , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , EXPEQ        ),
-                    IF_SEQUENCE_IS( DO          , MODEQ       , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , MODEQ        ),
-                    IF_SEQUENCE_IS( DO          , '('         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , '('          ),
-                    IF_SEQUENCE_IS( DO          , '['         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , '['          ),
-                    IF_SEQUENCE_IS( DO          , '='         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , '='          ),
-                    IF_SEQUENCE_IS( DO          , ':'         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ':'          ),
-                    IF_SEQUENCE_IS( DO          , ';'         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ';'          ),
+                    IF_SEQUENCE_IS( DO          , INASSIGN    , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , INASSIGN     ),
+                    IF_SEQUENCE_IS( DO          , INC         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , INC          ),
+                    IF_SEQUENCE_IS( DO          , DEC         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , DEC          ),
+                    IF_SEQUENCE_IS( DO          , ALIASOP     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , ALIASOP      ),
+                    IF_SEQUENCE_IS( DO          , PLUSEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , PLUSEQ       ),
+                    IF_SEQUENCE_IS( DO          , MINUSEQ     , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , MINUSEQ      ),
+                    IF_SEQUENCE_IS( DO          , MULTEQ      , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , MULTEQ       ),
+                    IF_SEQUENCE_IS( DO          , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , DIVEQ        ),
+                    IF_SEQUENCE_IS( DO          , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , EXPEQ        ),
+                    IF_SEQUENCE_IS( DO          , MODEQ       , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , MODEQ        ),
+                    IF_SEQUENCE_IS( DO          , '('         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '('          ),
+                    IF_SEQUENCE_IS( DO          , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '['          ),
+                    IF_SEQUENCE_IS( DO          , '='         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , '='          ),
+                    IF_SEQUENCE_IS( DO          , ':'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , ':'          ),
+                    IF_SEQUENCE_IS( DO          , ';'         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER      , ';'          ),
                     IF_SEQUENCE_IS( DO          , 0           , 0      , 0          ) PASS_THROUGH(),
 		    /* ----------------------  End of: DO WHILE; WHILE ; DO CASE ; CASE; DO ... ; DO ... WITH  ------------------- */
 
                     /* This IF is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else IF. */
-                    IF_SEQUENCE_IS( IF         , INASSIGN    , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , INASSIGN     ),
-                    IF_SEQUENCE_IS( IF         , INC         , '\n'    , 0          ) REDUCE_TO( HB_IF_ID           , _INC_CR      ),
-                    IF_SEQUENCE_IS( IF         , INC         , ';'     , 0          ) REDUCE_TO( HB_IF_ID           , _INC_SEMI    ),
-                    IF_SEQUENCE_IS( IF         , DEC         , '\n'    , 0          ) REDUCE_TO( HB_IF_ID           , _DEC_CR      ),
-                    IF_SEQUENCE_IS( IF         , DEC         , ';'     , 0          ) REDUCE_TO( HB_IF_ID           , _DEC_SEMI    ),
-                    IF_SEQUENCE_IS( IF         , ALIASOP     , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , ALIASOP      ),
-                    IF_SEQUENCE_IS( IF         , PLUSEQ      , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , PLUSEQ       ),
-                    IF_SEQUENCE_IS( IF         , MINUSEQ     , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , MINUSEQ      ),
-                    IF_SEQUENCE_IS( IF         , MULTEQ      , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , MULTEQ       ),
-                    IF_SEQUENCE_IS( IF         , DIVEQ       , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , DIVEQ        ),
-                    IF_SEQUENCE_IS( IF         , EXPEQ       , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , EXPEQ        ),
-                    IF_SEQUENCE_IS( IF         , MODEQ       , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , MODEQ        ),
-                 /* IF_SEQUENCE_IS( IF         , '('         , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , '('          ),
-                    IF_SEQUENCE_IS( IF         , '['         , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , '['          ), */
-                    IF_SEQUENCE_IS( IF         , '='         , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , '='          ),
-                    IF_SEQUENCE_IS( IF         , ':'         , 0       , 0          ) REDUCE_TO( HB_IF_ID  	    , ':'          ),
+                    IF_SEQUENCE_IS( IF         , INASSIGN    , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , INASSIGN     ),
+                    IF_SEQUENCE_IS( IF         , INC         , '\n'    , 0          ) REDUCE_TO( HB_IDENTIFIER      , _INC_CR      ),
+                    IF_SEQUENCE_IS( IF         , INC         , ';'     , 0          ) REDUCE_TO( HB_IDENTIFIER      , _INC_SEMI    ),
+                    IF_SEQUENCE_IS( IF         , DEC         , '\n'    , 0          ) REDUCE_TO( HB_IDENTIFIER      , _DEC_CR      ),
+                    IF_SEQUENCE_IS( IF         , DEC         , ';'     , 0          ) REDUCE_TO( HB_IDENTIFIER      , _DEC_SEMI    ),
+                    IF_SEQUENCE_IS( IF         , ALIASOP     , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , ALIASOP      ),
+                    IF_SEQUENCE_IS( IF         , PLUSEQ      , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , PLUSEQ       ),
+                    IF_SEQUENCE_IS( IF         , MINUSEQ     , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , MINUSEQ      ),
+                    IF_SEQUENCE_IS( IF         , MULTEQ      , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , MULTEQ       ),
+                    IF_SEQUENCE_IS( IF         , DIVEQ       , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , DIVEQ        ),
+                    IF_SEQUENCE_IS( IF         , EXPEQ       , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , EXPEQ        ),
+                    IF_SEQUENCE_IS( IF         , MODEQ       , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , MODEQ        ),
+                 /* IF_SEQUENCE_IS( IF         , '('         , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , '('          ),
+                    IF_SEQUENCE_IS( IF         , '['         , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , '['          ), */
+                    IF_SEQUENCE_IS( IF         , '='         , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , '='          ),
+                    IF_SEQUENCE_IS( IF         , ':'         , 0       , 0          ) REDUCE_TO( HB_IDENTIFIER      , ':'          ),
                     IF_SEQUENCE_IS( IF         , 0           , 0       , 0          ) PASS_THROUGH(),
 
                     IF_SEQUENCE_IS( PROCREQ_    , '('         , 0      , 0          ) REDUCE_TO( PROCREQ           , 0             ),
-                    IF_SEQUENCE_IS( PROCREQ_    , '['         , 0      , 0          ) REDUCE_TO( HB_PROCREQ_ID     , '['           ),
-                    IF_SEQUENCE_IS( PROCREQ_    , 0           , 0      , 0          ) REDUCE_TO( HB_PROCREQ_ID     , 0             ),
+                    IF_SEQUENCE_IS( PROCREQ_    , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( PROCREQ_    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     /* Left Associate '[' to seperate from string delimiter. */
                     IF_SEQUENCE_IS( IDENTIFIER  , '['         , 0      , 0          ) PASS_THROUGH(),
@@ -731,36 +697,36 @@ LANGUAGE_RULES_ARE {
 
                     IF_SEQUENCE_IS( _DOT_DOT_   , 0           , 0      , 0          ) REDUCE_TO( HB_SELF_ID        , ':'           ),
 
-                    IF_SEQUENCE_IS( _SELF_      , ':'         , 0      , 0          ) REDUCE_TO( SELF         	    , ':'          ),
-                    IF_SEQUENCE_IS( _SELF_      , '['         , 0      , 0          ) REDUCE_TO( HB_SELF_ID        , '['           ),
-                    IF_SEQUENCE_IS( _SELF_      , 0           , 0      , 0          ) REDUCE_TO( HB_SELF_ID        , 0             ),
+                    IF_SEQUENCE_IS( _SELF_      , ':'         , 0      , 0          ) REDUCE_TO( SELF         	   , ':'          ),
+                    IF_SEQUENCE_IS( _SELF_      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( _SELF_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( QSELF       , '('         , ')'    , 0          ) REDUCE_TO( SELF              , 0             ),
-                    IF_SEQUENCE_IS( QSELF       , '['         , 0      , 0          ) REDUCE_TO( HB_QSELF_ID       , '['           ),
-                    IF_SEQUENCE_IS( QSELF       , 0           , 0      , 0          ) REDUCE_TO( HB_QSELF_ID       , 0             ),
+                    IF_SEQUENCE_IS( QSELF       , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( QSELF       , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( '#'         , _LINE_      , 0      , 0          ) REDUCE_TO( LINE              , 0             ),
                     IF_SEQUENCE_IS( '#'         , 0           , 0      , 0          ) REDUCE_TO( NE1               , 0             ),
-                    IF_SEQUENCE_IS( _LINE_      , '['         , 0      , 0          ) REDUCE_TO( HB_LINE_ID        , '['           ),
-                    IF_SEQUENCE_IS( _LINE_      , 0           , 0      , 0          ) REDUCE_TO( HB_LINE_ID        , 0             ),
+                    IF_SEQUENCE_IS( _LINE_      , '['         , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , '['           ),
+                    IF_SEQUENCE_IS( _LINE_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( _IF_        , '('         , 0      , 0         ) REDUCE_TO( IIF                , '('           ),
-                    IF_SEQUENCE_IS( _IF_        , '['         , 0      , 0         ) REDUCE_TO( HB_IF_ID           , '['           ),
-                    IF_SEQUENCE_IS( _IF_        , 0           , 0      , 0         ) REDUCE_TO( HB_IF_ID           , 0             ),
+                    IF_SEQUENCE_IS( _IF_        , '['         , 0      , 0         ) REDUCE_TO( HB_IDENTIFIER      , '['           ),
+                    IF_SEQUENCE_IS( _IF_        , 0           , 0      , 0         ) REDUCE_TO( HB_IDENTIFIER      , 0             ),
 
                     IF_SEQUENCE_IS( IIF         , '('         , 0      , 0         ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( IIF         , '['         , 0      , 0         ) REDUCE_TO( HB_IIF_ID          , '['           ),
-                    IF_SEQUENCE_IS( IIF         , 0           , 0      , 0         ) REDUCE_TO( HB_IIF_ID          , 0             ),
+                    IF_SEQUENCE_IS( IIF         , '['         , 0      , 0         ) REDUCE_TO( HB_IDENTIFIER      , '['           ),
+                    IF_SEQUENCE_IS( IIF         , 0           , 0      , 0         ) REDUCE_TO( HB_IDENTIFIER      , 0             ),
 
                     IF_SEQUENCE_IS( OPTIONAL    , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( OPTIONAL    , '@'         , 0      , 0          ) PASS_THROUGH(),
-                    IF_SEQUENCE_IS( OPTIONAL    , 0           , 0      , 0          ) REDUCE_TO( HB_OPTIONAL_ID    , 0             ),
+                    IF_SEQUENCE_IS( OPTIONAL    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
-                    IF_SEQUENCE_IS( '&'         , '\''        , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR       , 0            ),
-                    IF_SEQUENCE_IS( '&'         , '"'         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR       , 0            ),
-                    IF_SEQUENCE_IS( '&'         , '['         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR       , 0            ),
+                    IF_SEQUENCE_IS( '&'         , '\''        , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR      , 0            ),
+                    IF_SEQUENCE_IS( '&'         , '"'         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR      , 0            ),
+                    IF_SEQUENCE_IS( '&'         , '['         , 0      , 0          ) REDUCE_TO( HB_MACRO_ERR      , 0            ),
 
-                    IF_SEQUENCE_IS( HB_QOUT_LIT , 0           , 0      , 0          ) REDUCE_TO( HB_RET_QOUT_LIT    , 0            )
+                    IF_SEQUENCE_IS( HB_QOUT_LIT , 0           , 0      , 0          ) REDUCE_TO( HB_RET_QOUT_LIT   , 0            )
                    };
 
 /* -------------------------------------------------  End of Language Definitions. ------------------------------------------------ */
@@ -1078,11 +1044,8 @@ long hb_lex_Hex2L( char* sHex )
 int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, int aiReturn[], int *ptr_iReturn )
 {
    BOOL bRestored = FALSE;
-   static char sIdentifier[11];
 
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );
-
-   sIdentifier[0] = '\0';
 
    switch ( x )
    {
@@ -1226,7 +1189,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
 	 }
 	 else
 	 {
-            strcpy( (char*) sIdentifier, "IN" );
+            strcpy( (char*) sWordAsString, "IN" );
             x = IDENTIFIER;
 	 }
 	 break;
@@ -1262,269 +1225,16 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
          x = 0;
          break;
 
-      case HB_EXTERN_ID :
-         strncpy( (char*) sIdentifier, "EXTERNAL", iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_WHILE_ID :
-         strncpy( (char*) sIdentifier, "WHILE", iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_ARRAY_ID :
-         strncpy( (char*) sIdentifier, "ARRAY" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_AS_ID :
-         strcpy( (char*) sIdentifier, "AS" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_OF_ID :
-         strcpy( (char*) sIdentifier, "OF" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_VARIANT_ID :
-         strncpy( (char*) sIdentifier, "ANYTYPE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_BLOCK_ID :
-         strncpy( (char*) sIdentifier, "BLOCK" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_STRING_ID :
-         strncpy( (char*) sIdentifier, "STRING" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_CLASS_ID :
-         strncpy( (char*) sIdentifier, "CLASS" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_DATE_ID :
-         strncpy( (char*) sIdentifier, "DATE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_LOGICAL_ID :
-         strncpy( (char*) sIdentifier, "LOGICAL" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_NUMEIC_ID :
-         strncpy( (char*) sIdentifier, "NUMERIC" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_OBJECT_ID :
-         strncpy( (char*) sIdentifier, "OBJECT" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_PUBLIC_ID :
-         strncpy( (char*) sIdentifier, "PUBLIC" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_OTHERWISE_ID :
-         strncpy( (char*) sIdentifier, "OTHERWISE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_MEMVAR_ID :
-         strncpy( (char*) sIdentifier, "MEMVAR" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_LOOP_ID :
-         strcpy( (char*) sIdentifier, "LOOP" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_FOR_ID :
-         strcpy( (char*) sIdentifier, "FOR" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_NEXT_ID :
-         strcpy( (char*) sIdentifier, "NEXT" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_FIELD_ID :
-         strncpy( (char*) sIdentifier, "FIELD" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB__FIELD_ID :
-         strncpy( (char*) sIdentifier, "_FIELD" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_PARAMETERS_ID :
-         strncpy( (char*) sIdentifier, "PARAMETERS" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_PRIVATE_ID :
-         strncpy( (char*) sIdentifier, "PRIVATE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_EXIT_ID :
-         strcpy( (char*) sIdentifier, "EXIT" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_BEGIN_ID :
-         strncpy( (char*) sIdentifier, "BEGIN" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_SEQUENCE_ID :
-         strncpy( (char*) sIdentifier, "SEQUENCE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_BREAK_ID :
-         strncpy( (char*) sIdentifier, "BREAK" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_RECOVER_ID :
-         strncpy( (char*) sIdentifier, "RECOVER" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_USING_ID :
-         strncpy( (char*) sIdentifier, "USING" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_CASE_ID :
-         strcpy( (char*) sIdentifier, "CASE" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_DO_ID :
-         strcpy( (char*) sIdentifier, "DO" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_WITH_ID :
-         strcpy( (char*) sIdentifier, "WITH" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_DECLARE_ID :
-         strncpy( (char*) sIdentifier, "DECLARE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_PROCREQ_ID :
-         strncpy( (char*) sIdentifier, "PROCREQ" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
+      case HB_IDENTIFIER :
          x = IDENTIFIER;
          break;
 
       case HB_SELF_ID :
-         strcpy( (char*) sIdentifier, "SELF" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_IF_ID :
-         strcpy( (char*) sIdentifier, "IF" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_IIF_ID :
-         strcpy( (char*) sIdentifier, "IIF" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_OPTIONAL_ID :
-         strncpy( (char*) sIdentifier, "OPTIONAL" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_IN_ID :
-         strcpy( (char*) sIdentifier, "IN" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_LINE_ID :
-         strcpy( (char*) sIdentifier, "LINE" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_INIT_ID :
-         strcpy( (char*) sIdentifier, "INIT" );
-         x = IDENTIFIER;
-         break;
-
-      case HB_PROCEDURE_ID :
-         strncpy( (char*) sIdentifier, "PROCEDURE" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_FUNCTION_ID :
-         strncpy( (char*) sIdentifier, "FUNCTION" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_STATIC_ID :
-         strncpy( (char*) sIdentifier, "STATIC" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_LOCAL_ID :
-         strncpy( (char*) sIdentifier, "LOCAL" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_RETURN_ID :
-         strncpy( (char*) sIdentifier, "RETURN" , iWordLen );
-	 sIdentifier[iWordLen] = '\0';
-         x = IDENTIFIER;
-         break;
-
-      case HB_END_ID :
-         strcpy( (char*) sIdentifier, "END" );
+	 sWordAsString[0] = 'S';
+	 sWordAsString[1] = 'E';
+	 sWordAsString[2] = 'L';
+	 sWordAsString[3] = 'F';
+	 sWordAsString[4] = '\0';
          x = IDENTIFIER;
          break;
 
@@ -1547,9 +1257,9 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
 
    if( x == IDENTIFIER && ! bRestored )
    {
-      yylval.string = hb_compIdentifierNew( (char*) sIdentifier, TRUE );
+      yylval.string = hb_compIdentifierNew( (char*) sWordAsString, TRUE );
       iIdentifier++;
-      DEBUG_INFO( printf( "Primary Identifier %s Increased to: %i\n", sIdentifier, iIdentifier ) );
+      DEBUG_INFO( printf( "Primary Identifier %s Increased to: %i\n", (char*) sWordAsString, iIdentifier ) );
       aiHold[ (int)(*ptr_iHold)++ ] = x;
       x = 0;
    }

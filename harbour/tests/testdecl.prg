@@ -22,7 +22,7 @@ DECLARE SomeFunc( OPTIONAL SomeVar AS STRING )
 
 CLASS MyClass
    METHOD New() Constructor
-   VAR WHile AS STRING
+   VAR While AS STRING
    VAR cVar  AS STRING
 END CLASS
 
@@ -57,9 +57,15 @@ INIT Function Main()
     MyObj:cVar := 'Hello'
     ? MyObj:cVar
 
+    M->Var1 := MyClass():New()
+    ? M->Var1:While
+
 RETURN NIL
 
 METHOD New() CLASS MyClass
+
+   ::While := 2 // TODO: Should produce RT Error.
+
 RETURN Self
 
 Function nMyFun()

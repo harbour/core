@@ -1,3 +1,27 @@
+2000-09-06 12:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.l
+     + Added AS CHAR[ACTER] for compatibility with FW (FW can't use #translate AS CHAR => AS STRING, because FW also uses AS CHAR
+       in DLL calls where AS CHAR referes to *native* char type).
+     ! Correted AS ... to allow multiple space/tab, and support abbreviations.
+
+   * source/compiler/simplex.c
+     + Added KEYWORD_ACTION() and WORD_ACTION() macros.
+
+   * source/macro/macro.slx
+     ! Optimized numerous HB_*_ID to a single HB_IDENTIFIER.
+
+   * source/compiler/harbour.slx
+     + Added AS CHAR[ACTER] for compatibility with FW (FW can't use #translate AS CHAR => AS STRING, because FW also uses AS CHAR
+       in DLL calls where AS CHAR referes to *native* char type.
+     ! Optimized numerous HB_*_ID to a single HB_IDENTIFIER.
+
+   * include/hbclass.ch
+     * Changed _<AssignName> to <AssignName> in HB_MEMBER directives.
+     + Added AS CLASS <ClassName> to LOCAL Self := QSelf()
+
+   * tests/testdecl.prg
+     + Added code to demonstrate missing support for class memeber RT type protection (AS ...)
+
 2000-09-06 04:33 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/hbclass.ch
      <_MethodName> changed into _<MethodName>

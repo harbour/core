@@ -132,6 +132,8 @@ typedef struct _LEX_PAIR
 #define LEX_CASE(x)
 #define STREAM_OPEN(x)
 #define STREAM_APPEND(x) sPair[ iPairLen++ ] = x
+#define KEYWORD_ACTION()
+#define WORD_ACTION()
 
 #include SLX_RULES
 
@@ -1255,6 +1257,8 @@ YY_DECL
                      bNewLine = FALSE;
                      NEW_LINE_ACTION();
 
+                     KEYWORD_ACTION()
+
                      if( aKeys[ i - 1 ].iToken < LEX_CUSTOM_ACTION )
                      {
                         iRet = aKeys[ i - 1 ].iToken;
@@ -1311,6 +1315,8 @@ YY_DECL
                   #endif
                   {
                      DEBUG_INFO( printf(  "Reducing Word: %s\n", (char*) sToken ) );
+
+                     WORD_ACTION()
 
                      if( aWords[ i - 1 ].iToken < LEX_CUSTOM_ACTION )
                      {

@@ -404,11 +404,11 @@ DECLARE TClass ;
    s_oClass:AddVirtual( <(AccessName)> )
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) [ AS <type> ] => ;
-   _HB_MEMBER <_AssignName>([<params>]) [ AS <type> ];;
+   _HB_MEMBER <AssignName>([<params>]) [ AS <type> ];;
    s_oClass:AddMethod( "_" + <(AssignName)>, CLSMETH _CLASS_NAME_ _<AssignName>(), HB_OO_CLSTP_EXPORTED )
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) [ AS <type> ] INLINE [Local <v>,] <Code,...> => ;
-   _HB_MEMBER <_AssignName>([<params>]) [ AS <type> ];;
+   _HB_MEMBER <AssignName>([<params>]) [ AS <type> ];;
    s_oClass:AddInline( "_" + <(AssignName)>, {|Self [,<params>] [,<v>] | <Code> }, HB_OO_CLSTP_EXPORTED )
 
 #xcommand ERROR HANDLER <MethodName>( [<params,...>] ) [ AS <type> ] => ;
@@ -432,28 +432,28 @@ DECLARE TClass ;
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <ClassName>_<MethodName>( [<params>] ) ;;
-          local Self := QSelf()
+          local Self AS CLASS <ClassName> := QSelf()
 
 #xcommand ACCESS <AccessName>() CLASS <ClassName> => ;
           static function <ClassName>_<AccessName>() ;;
-          local Self := QSelf()
+          local Self AS CLASS <ClassName> := QSelf()
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <ClassName>__<AssignName>( [<params>] ) ;;
-          local Self := QSelf()
+          local Self AS CLASS <ClassName> := QSelf()
 #else
 
 #xcommand METHOD <MethodName>( [<params,...>] ) CLASS <ClassName> => ;
           static function <MethodName>( [<params>] ) ;;
-          local Self := QSelf()
+          local Self AS CLASS <ClassName> := QSelf()
 
 #xcommand ACCESS <AccessName>() CLASS <ClassName> => ;
           static function <AccessName>() ;;
-          local Self := QSelf()
+          local Self AS CLASS <ClassName> := QSelf()
 
 #xcommand ASSIGN <AssignName>( [<params,...>] ) CLASS <ClassName> => ;
           static function _<AssignName>( [<params>] ) ;;
-          local Self := QSelf()
+          local Self AS CLASS <ClassName> := QSelf()
 
 #endif /* HB_SHORTNAMES */
 

@@ -1248,27 +1248,29 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"as array"           { return AS_ARRAY; }
-"as codeblock"       { return AS_BLOCK; }
-"as string"          { return AS_CHARACTER; }
-"as class"           { return AS_CLASS; }
-"as date"            { return AS_DATE; }
-"as logical"         { return AS_LOGICAL; }
-"as numeric"         { return AS_NUMERIC; }
-"as object"          { return AS_OBJECT; }
-"as usual"           { return AS_VARIANT; }
-"as anytype"         { return AS_VARIANT; }
+"as"{Separator}+("arra"|"array")                                           { return AS_ARRAY; }
+"as"{Separator}+("code"|"codeb"|"codebl"|"codeblo"|"codebloc"|"codeblock") { return AS_BLOCK; }
+"as"{Separator}+("stri"|"strin"|"string")                                  { return AS_CHARACTER; }
+"as"{Separator}+("char"|"chara"|"charac"|"charact"|"characte"|"character") { return AS_CHARACTER; }
+"as"{Separator}+("clas"|"class")                                           { return AS_CLASS; }
+"as"{Separator}+"date"                                                     { return AS_DATE; }
+"as"{Separator}+("logi"|"logic"|"logica"|"logical")                        { return AS_LOGICAL; }
+"as"{Separator}+("nume"|"numer"|"numeri"|"numeric")                        { return AS_NUMERIC; }
+"as"{Separator}+("obje"|"objec"|"object")                                  { return AS_OBJECT; }
+"as"{Separator}+("usua"|"usual")                                           { return AS_VARIANT; }
+"as"{Separator}+("anyt"|"anytyp"|"anytype")                                { return AS_VARIANT; }
 
-"as array of usual"     { return AS_ARRAY; }
-"as array of anytype"   { return AS_ARRAY; }
-"as array of array"     { return AS_ARRAY_ARRAY; }
-"as array of codeblock" { return AS_BLOCK_ARRAY; }
-"as array of string"    { return AS_CHARACTER_ARRAY; }
-"as array of class"     { return AS_CLASS_ARRAY; }
-"as array of date"      { return AS_DATE_ARRAY; }
-"as array of logical"   { return AS_LOGICAL_ARRAY; }
-"as array of numeric"   { return AS_NUMERIC_ARRAY; }
-"as array of object"    { return AS_OBJECT_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("usua"|"usual")                                           { return AS_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("anyt"|"anytyp"|"anytype")                                { return AS_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("arra"|"array")                                           { return AS_ARRAY_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("code"|"codeb"|"codebl"|"codeblo"|"codebloc"|"codeblock") { return AS_BLOCK_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("stri"|"strin"|"string")                                  { return AS_CHARACTER_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("char"|"chara"|"charac"|"charact"|"characte"|"character") { return AS_CHARACTER_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("clas"|"class")                                           { return AS_CLASS_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+"date"                                                     { return AS_DATE_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("logi"|"logic"|"logica"|"logical")                        { return AS_LOGICAL_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("nume"|"numer"|"numeri"|"numeric")                        { return AS_NUMERIC_ARRAY; }
+"as"{Separator}+("arra"|"array"){Separator}+"of"{Separator}+("obje"|"objec"|"object")                                  { return AS_OBJECT_ARRAY; }
 
 "_hb_class"             { hb_comp_iState = OPERATOR; return DECLARE_CLASS; }
 "_hb_member"            { hb_comp_iState = OPERATOR; return DECLARE_MEMBER; }
