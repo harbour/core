@@ -165,17 +165,18 @@ ASCIISUM      ;R;
 ASCPOS        ;R; 
 ATADJUST      ;R; 
 ATNUM         ;R; 
-ATREPL        ;N; 
+ATREPL        ;R; 
 ATTOKEN       ;N; 
 BEFORATNUM    ;R; 
 CENTER        ;R; 
 CHARADD       ;R; 
 CHARAND       ;R; 
 CHAREVEN      ;R;
-CHARLIST      ;N; 
+CHARHIST      ;R;   !NEW!
+CHARLIST      ;R; 
 CHARMIRR      ;N; 
 CHARMIX       ;R;
-CHARNOLIST    ;N; 
+CHARNOLIST    ;R; 
 CHARNOT       ;R; 
 CHARODD       ;R;
 CHARONE       ;N; 
@@ -190,6 +191,7 @@ CHARRLL       ;R;   !NEW!
 CHARRLR       ;R;   !NEW!
 CHARSHL       ;R;   !NEW!
 CHARSHR       ;R;   !NEW!
+CHARSLIST     ;R;   !NEW!
 CHARSORT      ;N; 
 CHARSPREAD    ;N; 
 CHARSUB       ;R;   !NEW!

@@ -95,7 +95,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ascpos.obj \
    $(OBJ_DIR)\atadjust.obj \
    $(OBJ_DIR)\atnum.obj \
+   $(OBJ_DIR)\atrepl.obj \
    $(OBJ_DIR)\charevod.obj \
+   $(OBJ_DIR)\charlist.obj \
    $(OBJ_DIR)\charop.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
@@ -145,7 +147,15 @@ $(OBJ_DIR)\atnum.obj : $(TOOLS_DIR)\atnum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\atrepl.obj : $(TOOLS_DIR)\atrepl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\charevod.obj : $(TOOLS_DIR)\charevod.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\charlist.obj : $(TOOLS_DIR)\charlist.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

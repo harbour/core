@@ -10,7 +10,9 @@ C_SOURCES=\
 	ascpos.c \
 	atadjust.c \
 	atnum.c \
+	atrepl.c \
 	charevod.c \
+	charlist.c \
 	charop.c \
 	ctset.c \
 	ctstr.c \

@@ -1,3 +1,56 @@
+2001-04-28 23:15 CET Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/atrepl.c
+     ! ATREPL() function with !new! 6th parameter
+
+   + contrib/libct/charlist.c
+     ! CHARLIST(), CHARNOLIST() function
+     + CHARSLIST() sorted character list  !New function!
+     + CHARHIST()  character histogram    !New function!
+
+   * contrib/libct/Makefile
+     + added atrepl.c
+     + added charlist.c
+
+   * contrib/libct/makefile.bc
+     + added atrepl.c
+     + added charlist.c
+
+   * contrib/libct/makefile.vc
+     + added atrepl.c
+     + added charlist.c
+
+   * contrib/libct/readme.txt
+     ! enhancement list updated !
+
+   * contrib/libct/ctflist.txt
+     ! function status list updated !
+
+   + contrib/libct/tests/atrepl.prg
+     ! test program for the ATREPL() function
+
+   + contrib/libct/tests/charlist.prg
+     ! test program for the CHARLIST() function
+
+   + contrib/libct/tests/charnlst.prg
+     ! test program for the CHARNOLIST() function
+
+   + contrib/libct/tests/charslst.prg
+     ! test program for the new CHARSLIST() function
+
+   + contrib/libct/tests/charhist.prg
+     ! test program for new CHARHIST() function
+
+   * contrib/libct/tests/Makefile
+     + added atrepl.prg
+     + added charlist.prg
+     + added charnlst.prg
+     + added charslst.prg
+     + added charhist.prg
+
+   * contrib/libct/ctflist.txt
+     ! function status list updated !
+
 2001-04-27 22:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * doc/en/input.txt

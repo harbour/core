@@ -17,16 +17,24 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 * ADDASCII()   New 4th parameter to enable a carry over in the addition
                process
 
-* SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
-               can store the acutal wildcard character in it
+* ATREPL()     New 6th parameter to specify characters to be ignored
 
-+ CHARSUB      subtracts corresponding ASCII values
++ CHARHIST     generates a character histogram of a string
+
++ CHARRLL      bitwise roll to the left operation on characters
+
++ CHARRLR      bitwise roll to the right operation on characters
 
 + CHARSHL      bitwise shift left operation on characters
 
 + CHARSHR      bitwise shift right operation on characters
 
-+ CHARRLL      bitwise roll to the left operation on characters
++ CHARSLIST    generates a sorted character list of a string
 
-+ CHARRLR      bitwise roll to the right operation on characters
++ CHARSUB      subtracts corresponding ASCII values
+
+* SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
+               can store the acutal wildcard character in it
+
+
 
