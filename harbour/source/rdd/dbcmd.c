@@ -3256,11 +3256,25 @@ HB_FUNC( DBEXISTS )
 /*******************************************/
 /* as we are in C, the code is upside down,
    find __SBAPP & __DBCOPY at the bottom
-
-   create a new AREANODE and open it's Area
-   If the file exists it will be deteted & a new one created
 */
-static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL createIt )
+
+// check if the field is on the Fields Array
+static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
+{
+  USHORT i, uiFields = ( USHORT ) hb_arrayLen( pFields );
+  for ( i=0; i<uiFields; i++ )
+  {
+    PHB_ITEM pField = pFields->item.asArray.value->pItems + i;
+    if ( strcmp( fieldName, (char *)pField->item.asString.value ) == 0 )
+      return TRUE;
+  }
+  return FALSE;
+}
+
+/* Create a new AREANODE and open its Area.
+   If the file exists it will be deleted & a new one created
+*/
+static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL createIt, PHB_ITEM pFields )
 {
   LPAREANODE pAreaNode;
   LPRDDNODE  pRDDNode;
@@ -3314,16 +3328,19 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     pItem = hb_itemNew( NULL );
     for( uiCount = 1; uiCount <= uiFields; uiCount++ )
     {
-      hb_arrayNew( pItem, 4 );
-      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pData );
-      hb_arraySet( pItem, 1, pData );
-      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pData );
-      hb_arraySet( pItem, 2, pData );
-      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pData );
-      hb_arraySet( pItem, 3, pData );
-      SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pData );
-      hb_arraySet( pItem, 4, pData );
-      hb_arrayAdd( pFieldArray, pItem );
+      if ( !pFields || IsFieldIn( (( PHB_DYNS )((( AREAP )s_pCurrArea->pArea)->lpFields + (uiCount-1))->sym )->pSymbol->szName,  pFields ))
+      {
+        hb_arrayNew( pItem, 4 );
+        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_NAME, pData );
+        hb_arraySet( pItem, 1, pData );
+        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_TYPE, pData );
+        hb_arraySet( pItem, 2, pData );
+        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_LEN, pData );
+        hb_arraySet( pItem, 3, pData );
+        SELF_FIELDINFO( ( AREAP ) s_pCurrArea->pArea, uiCount, DBS_DEC, pData );
+        hb_arraySet( pItem, 4, pData );
+        hb_arrayAdd( pFieldArray, pItem );
+      }
     }
     hb_itemRelease( pItem );
     hb_itemRelease( pData );
@@ -3376,23 +3393,10 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
   return pAreaNode;
 }
 
-// check if the field is on the Fields Array
-static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
-{
-  USHORT i, uiFields = ( USHORT ) hb_arrayLen( pFields );
-  for ( i=0; i<uiFields; i++ )
-  {
-    PHB_ITEM pField = pFields->item.asArray.value->pItems + i;
-    if ( strcmp( fieldName, (char *)pField->item.asString.value ) == 0 )
-      return TRUE;
-  }
-  return FALSE;
-}
-
 // move the Field Data between areas by name
 static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
 {
-  USHORT   i;
+  USHORT   i, f=1;
   PHB_ITEM fieldValue;
 
   fieldValue = hb_itemNew( NULL );
@@ -3402,7 +3406,7 @@ static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
     if ( !pFields || IsFieldIn( (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName,  pFields ))
     {
       SELF_GETVALUE( pAreaFrom, i+1, fieldValue );
-      SELF_PUTVALUE( pAreaTo, i+1, fieldValue );
+      SELF_PUTVALUE( pAreaTo, f++, fieldValue );
     }
   }
   hb_itemRelease( fieldValue );
@@ -3443,9 +3447,12 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
      return EG_ARG;
   }
 
+  if ( hb_arrayLen( pFields ) == 0 ) // no field clause?
+    pFields = NULL;
+
   if ( cAreaTo ) // it's a COPY TO
   {
-    pAreaRelease = GetTheOtherArea( szDriver, cAreaTo, TRUE );
+    pAreaRelease = GetTheOtherArea( szDriver, cAreaTo, TRUE, pFields );
     pAreaTo = (AREAP) pAreaRelease->pArea;
   }
   else
@@ -3454,7 +3461,7 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
 
   if ( cAreaFrom ) // it's an APPEND FROM
   {                // make it current
-    pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom, FALSE );
+    pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom, FALSE, NULL );
     pAreaFrom =  (AREAP) pAreaRelease->pArea;
   }
   else

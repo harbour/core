@@ -1,3 +1,13 @@
+2001-04-16 11:45 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/rdd/dbcmd.c
+      Uploaded Harrier's fix for COPY TO ... FIELDS
+   * include/hbmemory.ch
+   * source/vm/fm.c
+      + added HB_MEM_STACK_TOP     1005
+      Total items currently on the stack
+      This is useful in stack debugging; shows the actual TopOffset
+      even after allocations have been made and items popped off.
+
 2001-04-15 00:05 GMT -3 Luiz Rafael Culik
     *Changelog
        *Renamed to ChangeLog.010 and started an new one

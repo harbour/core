@@ -144,7 +144,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    {
       ULONG *pSig = (ULONG *)( ( ( unsigned char * ) pMem ) + ulSize + sizeof(HB_MEMINFO) );
       *pSig = HB_MEMINFO_SIGNATURE;
-   }   
+   }
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
 
    if( hb_tr_level() >= HB_TR_DEBUG )
@@ -223,7 +223,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    {
       ULONG *pSig = (ULONG *)( ( ( unsigned char * ) pMem ) + ulSize + sizeof(HB_MEMINFO) );
       *pSig = HB_MEMINFO_SIGNATURE;
-   }   
+   }
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
 
    if( hb_tr_level() >= HB_TR_DEBUG )
@@ -309,7 +309,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    {
       ULONG *pSig = (ULONG *)( ( ( unsigned char * ) pMem ) + ulSize + sizeof(HB_MEMINFO) );
       *pSig = HB_MEMINFO_SIGNATURE;
-   }   
+   }
    if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
       ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
    if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
@@ -656,8 +656,8 @@ ULONG hb_xquery( USHORT uiMode )
       }
       #elif defined(HB_OS_OS2)
       {
-         /* NOTE: There is no way to know how much a swap file can grow on an 
-                  OS/2 system. I think we should return free space on DASD 
+         /* NOTE: There is no way to know how much a swap file can grow on an
+                  OS/2 system. I think we should return free space on DASD
                   media which contains swap file [maurilio.longo] */
          ulResult = 9999;
       }
@@ -694,12 +694,16 @@ ULONG hb_xquery( USHORT uiMode )
 #endif
       break;
 
-   case HB_MEM_STACKITEMS: /* Harbour extension (Total items on the stack)      */
+   case HB_MEM_STACKITEMS: /* Harbour extension (Total items allocated for the stack)      */
       ulResult = hb_stack.wItems;
       break;
 
    case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
       ulResult = hb_stack.wItems * sizeof( HB_ITEM );
+      break;
+
+   case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack)      */
+      ulResult = hb_stackTopOffset( );
       break;
 
    default:

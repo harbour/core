@@ -59,6 +59,7 @@
 #define HB_MEM_USEDMAX       1002   /* Maximum memory used (bytes) */
 #define HB_MEM_STACKITEMS    1003   /* Total items on the stack */
 #define HB_MEM_STACK         1004   /* Total memory size used by the stack (bytes) */
+#define HB_MEM_STACK_TOP     1005   /* Total items currently on the stack */
 
 #endif /* HB_MEMORY_CH_ */
 
