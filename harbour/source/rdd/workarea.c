@@ -204,8 +204,10 @@ ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    /* Validate the name of field */
    ulSize = strlen( ( char * ) pFieldInfo->atomName );
    hb_strLTrim( ( char * ) pFieldInfo->atomName, &ulSize );
+   ulSize = hb_strRTrimLen( ( char * ) pFieldInfo->atomName, ulSize, TRUE );
    if( !ulSize )
       return FAILURE;
+   pFieldInfo->atomName[ulSize] = '\0';
 
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )

@@ -1,3 +1,8 @@
+2000-10-10 14:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/workarea.c
+     * fixed bug, related to fields handling
+       ( there was a bug report by David Thornley in harbourusers )
+
 2000-10-10 12:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/mysql/mysql.c
      * Fix in sqlConnect() for support of versions > 3.22.00
