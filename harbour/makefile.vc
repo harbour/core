@@ -173,6 +173,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\tlabel.obj \
     $(OBJ_DIR)\tone.obj \
+    $(OBJ_DIR)\trace.obj \
     $(OBJ_DIR)\transfrm.obj \
     $(OBJ_DIR)\treport.obj \
     $(OBJ_DIR)\type.obj \
@@ -867,6 +868,9 @@ $(OBJ_DIR)\tlabel.obj : $(OBJ_DIR)\tlabel.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
+    $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
+
+$(OBJ_DIR)\trace.obj : $(RTL_DIR)\trace.c
     $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c

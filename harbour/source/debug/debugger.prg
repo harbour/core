@@ -985,7 +985,7 @@ METHOD Show( lFocused ) CLASS TDbWindow
    ::SetFocus( lFocused )
 
    If ::lShadow
-      __Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
+      hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
 return nil
@@ -1232,7 +1232,7 @@ METHOD Display() CLASS TDbMenu
    else
       ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
       @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX B_SINGLE
-      __Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
+      hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
    for n = 1 to Len( ::aItems )

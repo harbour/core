@@ -203,14 +203,14 @@ int hb_cmdargNum( const char * pszName )
 
 /* Check if an internal switch has been set */
 
-HARBOUR HB___ARGCHECK( void )
+HARBOUR HB_HB_ARGCHECK( void )
 {
    hb_retl( ISCHAR( 1 ) ? hb_cmdargCheck( hb_parc( 1 ) ) : FALSE );
 }
 
 /* Returns the value of an internal switch */
 
-HARBOUR HB___ARGSTRING( void )
+HARBOUR HB_HB_ARGSTRING( void )
 {
    if( ISCHAR( 1 ) )
    {
@@ -229,7 +229,7 @@ HARBOUR HB___ARGSTRING( void )
 /* Returns the number of command line arguments passed to the application, this
    also includes the internal arguments. */
 
-HARBOUR HB___ARGC( void )
+HARBOUR HB_HB_ARGC( void )
 {
    hb_retni( s_argc - 1 );
 }
@@ -238,7 +238,7 @@ HARBOUR HB___ARGC( void )
    the parameter zero, it will return the name of the executable, as written
    in the command line. */
 
-HARBOUR HB___ARGV( void )
+HARBOUR HB_HB_ARGV( void )
 {
    if( ISNUM( 1 ) )
    {

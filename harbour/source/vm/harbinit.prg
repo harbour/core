@@ -39,13 +39,13 @@
 ANNOUNCE SysInit
 
 /* NOTE: For complete compatibility */
-PROCEDURE CLIPPER520
+PROCEDURE CLIPPER520()
    RETURN
 
 #ifdef HB_COMPAT_C53
 
 /* NOTE: For complete compatibility */
-PROCEDURE CLIPPER530
+PROCEDURE CLIPPER530()
    RETURN
 
 #endif
@@ -64,7 +64,7 @@ INIT PROCEDURE ClipInit
 
    RETURN
 
-PROCEDURE __SetHelpK
+PROCEDURE __SetHelpK()
 
    SET KEY K_F1 TO __XHELP
 

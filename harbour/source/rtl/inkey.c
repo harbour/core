@@ -72,7 +72,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB___KEYPUT()
+ *    HB_HB_KEYPUT()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -1013,7 +1013,7 @@ void hb_inkeyPut( int ch )
    }
 }
 
-HARBOUR HB___KEYPUT( void )
+HARBOUR HB_HB_KEYPUT( void )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );

@@ -3,7 +3,7 @@
 
 FUNCTION Main()
 
-   LOCAL cExePath  := substr( __argv(0), 1, rat( "\", __argv(0) ) - 1 )
+   LOCAL cExePath  := substr( hb_argv(0), 1, rat( "\", hb_argv(0) ) - 1 )
    LOCAL cConStr   := ;
       "DBQ=" + cExePath + "\harbour.mdb;" + ;
       "Driver={Microsoft Access Driver (*.mdb)}"

@@ -1,3 +1,35 @@
+20000307-02:55 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.bc
+     makefile.vc
+     ! trace.c was missing.
+   * makefile.bc
+     ! dbftools.c was missing.
+   * include/hbextern.ch
+     ! Updated.
+   * source/vm/harbinit.prg
+     * Modified so that HBEXTERN will recognize its PROCEDURES.
+   + utils/hbextern/hbextern.prg
+   + utils/hbextern/make_c5x.bat
+   + utils/hbextern/Makefile
+     + HBEXTERN.CH generator added. (work of Ryszard Glab)
+   * include/hbclip.ch
+     + hb_Shadow() added.
+   * source/rtl/inkey.c
+     source/rtl/console.c
+     source/vm/cmdarg.c
+     contrib/odbc/odbccall.prg
+     source/rtl/alert.prg
+     doc/en/input.txt
+     source/debug/debugger.prg
+     * __ARGCHECK  -> HB_ARGCHECK
+       __ARGSTRING -> HB_ARGSTRING
+       __ARGC      -> HB_ARGC
+       __ARGV      -> HB_ARGV
+       __SHADOW    -> HB_SHADOW
+       __KEYPUT    -> HB_KEYPUT
+       Name of some Harbour internal functions changed to better reflect that 
+       they are Harbour extensions.
+
 2000-03-06 20:05 GMT-5 David G. Holm <dholm@ sd-llc.com>
    * tests/regress/Makefile
      ! Several of the supported platforms begin program execution with

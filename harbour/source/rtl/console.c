@@ -881,7 +881,7 @@ HARBOUR HB_NOSNOW( void )
       hb_gtSetSnowFlag( hb_parl( 1 ) );
 }
 
-HARBOUR HB___SHADOW( void )
+HARBOUR HB_HB_SHADOW( void )
 {
    if( hb_pcount() >= 4 )
    {
@@ -895,7 +895,7 @@ HARBOUR HB___SHADOW( void )
 
 HARBOUR HB_DBGSHADOW( void )
 {
-   HB___SHADOW();
+   HB_HB_SHADOW();
 }
 
 HARBOUR HB_SAVESCREEN( void )

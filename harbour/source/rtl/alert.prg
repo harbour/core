@@ -65,7 +65,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
              if it is not, the console mode is choosen here. [vszakats] */
    LOCAL lConsole := .F.
 
-   DEFAULT s_lNoAlert TO __argCheck( "NOALERT" )
+   DEFAULT s_lNoAlert TO hb_argCheck( "NOALERT" )
 
    IF s_lNoAlert
       RETURN NIL

@@ -120,13 +120,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __KEYPUT()
+ *      HB_KEYPUT()
  *  $CATEGORY$
  *      Console input
  *  $ONELINER$
  *      Put an inkey code to the keyboard buffer
  *  $SYNTAX$
- *      __keyPut( <nInkeyCode> )
+ *      hb_keyPut( <nInkeyCode> )
  *  $ARGUMENTS$
  *      <nInkeyCode> is the inkey code, which should be inserted into the
  *      keyboard buffer.
@@ -140,10 +140,10 @@
  *      be inserted.
  *  $EXAMPLES$
  *      // Stuff an Alt+PgDn key into the keyboard buffer
- *      __keyPut( K_ALT_PGDN )
+ *      hb_keyPut( K_ALT_PGDN )
  *  $TESTS$
- *      __keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
- *      __keyPut( K_F11 ) ; ? INKEY() ==> -40
+ *      hb_keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
+ *      hb_keyPut( K_F11 ) ; ? INKEY() ==> -40
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

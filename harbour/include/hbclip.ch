@@ -49,6 +49,7 @@
 #define HB_CLIP_CH_
 
 #xtranslate hb_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
+#xtranslate hb_Shadow( t, l, b, r, c ) => dbgShadow( t, l, b, r, c )
 
 #endif /* HB_CLIP_CH_ */
 

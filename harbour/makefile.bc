@@ -190,6 +190,7 @@ HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\tgetlist.obj \
                     $(OBJ_DIR)\tlabel.obj \
                     $(OBJ_DIR)\tone.obj \
+                    $(OBJ_DIR)\trace.obj \
                     $(OBJ_DIR)\transfrm.obj \
                     $(OBJ_DIR)\treport.obj \
                     $(OBJ_DIR)\type.obj \
@@ -213,6 +214,7 @@ TOOLS_LIB_OBJS    = $(OBJ_DIR)\asciisum.obj \
                     $(OBJ_DIR)\chrtotal.obj \
                     $(OBJ_DIR)\dates2.obj \
                     $(OBJ_DIR)\datesx.obj \
+                    $(OBJ_DIR)\dbftools.obj \
                     $(OBJ_DIR)\fileread.obj \
                     $(OBJ_DIR)\hb_f.obj \
                     $(OBJ_DIR)\html.obj \
@@ -875,6 +877,10 @@ $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
+$(OBJ_DIR)\trace.obj : $(RTL_DIR)\trace.c
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(HARBOUR_LIB) -+$@,,
+
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
@@ -1031,6 +1037,10 @@ $(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
    tlib $(TOOLS_LIB) -+$@,,
 
 $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(TOOLS_LIB) -+$@,,
+
+$(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 
