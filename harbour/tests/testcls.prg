@@ -6,20 +6,20 @@ function Main()
 
    local o := Test()
 
-   o:Any( "Hello" ) // Any message is not defined for Class Test, but
-           // it will invoke ON ERROR Any() method
+   o:Another( "Hello" ) // Any message is not defined for Class Test, but
+                        // it will invoke ON ERROR Any() method
 
-   o:Any = 5  // Notice how __GetMessage() shows a underscored message
-              // as we are setting a DATA value.
+   o:Another = 5  // Notice how __GetMessage() shows a underscored message
+                  // as we are setting a DATA value.
 return nil
 
 CLASS Test
 
-   ON ERROR Any( uParam1 )
+   ON ERROR MyErrorManager( uParam1 )
 
 ENDCLASS
 
-METHOD Any( uParam1 ) CLASS Test
+METHOD MyErrorManager( uParam1 ) CLASS Test
 
    if PCount() > 0
       Alert( uParam1 )
