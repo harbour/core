@@ -75,5 +75,37 @@ function main()
       MYALIAS->( dbSkip() )
    enddo
 
+   ? ""
+   ? "With SET DELETED ON"
+   ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
+   ? "Press any key..."
+   InKey( 0 )
+
+   MYALIAS->( dbSetFilter( { || MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
+                           "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
+   MYALIAS->( dbGoTop() )
+   do while !MYALIAS->( Eof() )
+      ? MYALIAS->NUMERIC
+      MYALIAS->( dbSkip() )
+   enddo
+
+   SET DELETED OFF
+   ? ""
+   ? "With SET DELETED OFF"
+   ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
+   ? "Press any key..."
+   InKey( 0 )
+
+   MYALIAS->( dbSetFilter( { || MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
+                           "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
+   MYALIAS->( dbGoTop() )
+   do while !MYALIAS->( Eof() )
+      ? MYALIAS->NUMERIC
+      MYALIAS->( dbSkip() )
+   enddo
+
+   ? "dbFilter() => " + dbFilter()
+   ? ""
+
 return nil
 

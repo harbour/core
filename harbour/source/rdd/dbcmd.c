@@ -77,6 +77,7 @@ HARBOUR HB_AFIELDS( void );
 HARBOUR HB_ALIAS( void );
 HARBOUR HB_BOF( void );
 HARBOUR HB_DBAPPEND( void );
+HARBOUR HB_DBCLEARFILTER( void );
 HARBOUR HB_DBCLOSEALL( void );
 HARBOUR HB_DBCLOSEAREA( void );
 HARBOUR HB_DBCOMMIT( void );
@@ -84,6 +85,7 @@ HARBOUR HB_DBCOMMITALL( void );
 HARBOUR HB_DBCREATE( void );
 HARBOUR HB_DBDELETE( void );
 HARBOUR HB_DBF( void );
+HARBOUR HB_DBFILTER( void );
 HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
@@ -93,6 +95,7 @@ HARBOUR HB_DBRLOCKLIST( void );
 HARBOUR HB_DBRUNLOCK( void );
 HARBOUR HB_DBSELECTAREA( void );
 HARBOUR HB_DBSETDRIVER( void );
+HARBOUR HB_DBSETFILTER( void );
 HARBOUR HB_DBSKIP( void );
 HARBOUR HB_DBSTRUCT( void );
 HARBOUR HB_DBTABLEEXT( void );
@@ -180,10 +183,21 @@ static ERRCODE defBof( AREAP pArea, BOOL * pBof )
    return SUCCESS;
 }
 
+static ERRCODE defClearFilter( AREAP pArea )
+{
+   if( pArea->dbfi.fFilter )
+   {
+      hb_itemRelease( pArea->dbfi.itmCobExpr );
+      hb_itemRelease( pArea->dbfi.abFilterText );
+      pArea->dbfi.fFilter = FALSE;
+   }
+   return SUCCESS;
+}
+
 static ERRCODE defClose( AREAP pArea )
 {
+   SELF_CLEARFILTER( pArea );
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
-
    return SUCCESS;
 }
 
@@ -282,6 +296,13 @@ static ERRCODE defFieldName( AREAP pArea, USHORT uiIndex, void * szName )
    return SUCCESS;
 }
 
+static ERRCODE defFilterText( AREAP pArea, PHB_ITEM pFilter )
+{
+   if( pArea->dbfi.fFilter )
+      hb_itemCopy( pFilter, pArea->dbfi.abFilterText );
+   return SUCCESS;
+}
+
 static ERRCODE defFound( AREAP pArea, BOOL * pFound )
 {
    * pFound = pArea->fFound;
@@ -353,11 +374,29 @@ static ERRCODE defSetFieldExtent( AREAP pArea, USHORT uiFieldExtent )
    return SUCCESS;
 }
 
+static ERRCODE defSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
+{
+   if( pArea->dbfi.fFilter )
+   {
+      hb_itemCopy( pArea->dbfi.itmCobExpr, pFilterInfo->itmCobExpr );
+      hb_itemCopy( pArea->dbfi.abFilterText, pFilterInfo->abFilterText );
+   }
+   else
+   {
+      pArea->dbfi.itmCobExpr = hb_itemNew( NULL );
+      hb_itemCopy( pArea->dbfi.itmCobExpr, pFilterInfo->itmCobExpr );
+      pArea->dbfi.abFilterText = hb_itemNew( NULL );
+      hb_itemCopy( pArea->dbfi.abFilterText, pFilterInfo->abFilterText );
+      pArea->dbfi.fFilter = TRUE;
+   }
+   return SUCCESS;
+}
+
 static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
 {
    BOOL bExit;
 
-   if( pArea->dbfi.fFilter || !pArea->dbsi.fIgnoreFilter || !hb_set.HB_SET_DELETED )
+   if( pArea->dbfi.fFilter || !pArea->dbsi.fIgnoreFilter || hb_set.HB_SET_DELETED )
    {
       if( lToSkip > 0 )
       {
@@ -406,43 +445,73 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
 
    if( lUpDown > 0 )
    {
-      do
+      while( 1 )
       {
          SELF_EOF( pArea, &bExit );
          if( bExit )
             return SUCCESS;
 
-         if( !hb_set.HB_SET_DELETED )                 /* Skip if deleted */
+         /* SET DELETED */
+         if( hb_set.HB_SET_DELETED )
          {
             SELF_DELETED( pArea, &bDeleted );
-            if( !bDeleted )
-               return SUCCESS;
-
-            SELF_SKIPRAW( pArea, 1 );
+            if( bDeleted )
+            {
+               SELF_SKIPRAW( pArea, 1 );
+               continue;
+            }
          }
-         else
-            return SUCCESS;
-      } while( 1 );
+
+         /* SET FILTER TO */
+         if( pArea->dbfi.fFilter )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pArea->dbfi.itmCobExpr );
+            hb_vmDo( 0 );
+            if( IS_LOGICAL( &hb_stack.Return ) &&
+                !hb_stack.Return.item.asLogical.value )
+            {
+               SELF_SKIPRAW( pArea, 1 );
+               continue;
+            }
+         }
+         return SUCCESS;
+      }
    }
    else if( lUpDown < 0 )
    {
-      do
+      while( 1 )
       {
          SELF_BOF( pArea, &bExit );
          if( bExit )
             return SELF_SKIPFILTER( pArea, 1 );
 
-         if( !hb_set.HB_SET_DELETED )                 /* Skip if deleted */
+         /* SET DELETED */
+         if( hb_set.HB_SET_DELETED )
          {
             SELF_DELETED( pArea, &bDeleted );
-            if( !bDeleted )
-               return SUCCESS;
-
-            SELF_SKIPRAW( pArea, -1 );
+            if( bDeleted )
+            {
+               SELF_SKIPRAW( pArea, -1 );
+               continue;
+            }
          }
-         else
-            return SUCCESS;
-      } while( 1 );
+
+         /* SET FILTER TO */
+         if( pArea->dbfi.fFilter )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pArea->dbfi.itmCobExpr );
+            hb_vmDo( 0 );
+            if( IS_LOGICAL( &hb_stack.Return ) &&
+                !hb_stack.Return.item.asLogical.value )
+            {
+               SELF_SKIPRAW( pArea, 1 );
+               continue;
+            }
+         }
+         return SUCCESS;
+      }
    }
    return SUCCESS;
 }
@@ -527,6 +596,9 @@ static RDDFUNCS defTable = { defBof,
                              defRelease,
                              defStructSize,
                              defSysName,
+                             defClearFilter,
+                             defFilterText,
+                             defSetFilter,
                              defError,
                              ( DBENTRYP_VSP ) defUnSupported,
                              ( DBENTRYP_VL ) defUnSupported,
@@ -1093,6 +1165,14 @@ HARBOUR HB_DBAPPEND( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBAPPEND" );
 }
 
+HARBOUR HB_DBCLEARFILTER( void )
+{
+   if( pCurrArea )
+      SELF_CLEARFILTER( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCLEARFILTER" );
+}
+
 HARBOUR HB_DBCLOSEALL( void )
 {
    hb_rddCloseAll();
@@ -1339,6 +1419,21 @@ HARBOUR HB_DBDELETE( void )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBDELETE" );
 }
 
+HARBOUR HB_DBFILTER( void )
+{
+   PHB_ITEM pFilter;
+
+   if( pCurrArea )
+   {
+      pFilter = hb_itemPutC( NULL, "" );
+      SELF_FILTERTEXT( ( AREAP ) pCurrArea->pArea, pFilter );
+      hb_retc( pFilter->item.asString.value );
+      hb_itemRelease( pFilter );
+   }
+   else
+      hb_retc( "" );
+}
+
 HARBOUR HB_DBGOBOTTOM( void )
 {
    if( pCurrArea )
@@ -1490,6 +1585,31 @@ HARBOUR HB_DBSKIP( void )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSKIP" );
+}
+
+HARBOUR HB_DBSETFILTER( void )
+{
+   PHB_ITEM pBlock, pText;
+   DBFILTERINFO pFilterInfo;
+
+   if( pCurrArea )
+   {
+      pBlock = hb_param( 1, IT_BLOCK );
+      if( pBlock )
+      {
+         pText = hb_param( 2, IT_STRING );
+         pFilterInfo.itmCobExpr = pBlock;
+         if( pText )
+            pFilterInfo.abFilterText = pText;
+         else
+            pFilterInfo.abFilterText = hb_itemPutC( NULL, "" );
+         SELF_SETFILTER( ( AREAP ) pCurrArea->pArea, &pFilterInfo );
+         if( !pText )
+            hb_itemRelease( pFilterInfo.abFilterText );
+      }
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSETFILTER" );
 }
 
 HARBOUR HB_DBSTRUCT( void )

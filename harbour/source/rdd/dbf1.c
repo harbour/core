@@ -605,6 +605,9 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfNewArea                              NULL
 #define dbfStructSize                           NULL
 #define dbfSysName                              NULL
+#define dbfClearFilter                          NULL
+#define dbfFilterText                           NULL
+#define dbfSetFilter                            NULL
 #define dbfError                                NULL
 #define dbfWhoCares                             NULL
 
@@ -1065,6 +1068,10 @@ static ERRCODE dbfInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    switch( uiIndex )
    {
+      case DBI_DBFILTER:
+         SELF_FILTERTEXT( pArea, pItem );
+         break;
+
       case DBI_ISDBF:
       case DBI_CANPUTREC:
          hb_itemPutL( pItem, TRUE );
@@ -1752,6 +1759,9 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfRelease,
                              dbfStructSize,
                              dbfSysName,
+                             dbfClearFilter,
+                             dbfFilterText,
+                             dbfSetFilter,
                              dbfError,
                              dbfRawLock,
                              dbfLock,

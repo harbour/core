@@ -51,12 +51,9 @@ FUNCTION ordSetFocus()     ; RETURN 0
 FUNCTION IndexOrd()        ; RETURN 0
 
 FUNCTION dbSeek()          ; RETURN .F.
-FUNCTION dbSetFilter()     ; RETURN NIL
-FUNCTION dbClearFilter()   ; RETURN NIL
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL
 FUNCTION dbEval()          ; RETURN NIL
-FUNCTION dbFilter()        ; RETURN ""
 
 FUNCTION MemoEdit( str )   ; RETURN str
 FUNCTION MLCToPos()        ; RETURN 0

@@ -1,3 +1,24 @@
+19991011-19:30 GMT+1 Bruno Cantero <bruno@issnet.net>
+
+   * source/rtl/dummy.prg
+     - Removed dbSetFilter(), dbClearFilter() and dbFilter() functions.
+
+   * include/rddapi.h
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+     * Fixed SET DELETED.
+     + Added dbClearFilter(), dbFilter() and dbSetFilter() functions.
+
+   * doc/funclist.txt
+     * Updated status of dbSetFilter(), dbClearFilter() and dbFilter() functions.
+
+   * tests/testrdd.prg
+     * Fixed a bug.
+
+   * tests/testdbf.prg
+     * Now test dbClearFilter(), dbFilter() and dbSetFilter() functions too.
+
 19991011-04:59 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
           + SetLastPushPos() to bookmark position of last possible redundant push.
