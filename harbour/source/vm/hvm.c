@@ -66,6 +66,7 @@ static void    hb_vmDoExitFunctions( void ); /* executes all defined PRGs EXIT f
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
 static void    hb_vmDebuggerShowLine( WORD wLine ); /* makes the debugger shows a specific source code line */
+static void    hb_vmDebuggerEndProc( void ); /* notifies the debugger for an endproc */
 
 #ifdef HARBOUR_OBJ_GENERATION
 static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
@@ -900,6 +901,15 @@ void hb_vmArrayPut( void )
    hb_stackPop();
 }
 
+static void hb_vmDebuggerEndProc( void )
+{
+   bDebugShowLines = FALSE;
+   hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
+   hb_vmPushNil();
+   hb_vmDo( 0 );
+   bDebugShowLines = TRUE;
+}
+
 static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a specific source code line */
 {
    bDebugShowLines = FALSE;
@@ -1030,6 +1040,9 @@ void hb_vmDo( WORD wParams )
 
    stack.pBase = stack.pItems + wStackBase;
    stack.iStatics = iStatics;
+
+   if( bDebugging )
+      hb_vmDebuggerEndProc();
 
    bDebugging = bDebugPrevState;
 }
