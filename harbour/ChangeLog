@@ -1,9 +1,14 @@
+20000529-00:01 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * tests/testwarn.prg
+     ! fixed missing function references (and added three more warnings :-))
+
 2000-05-28 22:57 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.l
      ! Fixed the compiler to not generate reference to the "Self"
        variable but use the native "QSelf()" instead in the "::" operator.
-       Note that HBCLASS.CH still declared Self, but this is no more 
+       Note that HBCLASS.CH still declared Self, but this is no more
        a requirement. This way :: operator is a bit faster. If the "Self"
        variable would be removed from HBCLASS.CH, it would be even faster.
 
@@ -90,12 +95,12 @@
    * source/rtl/setkey.c
      ! Some variables and symbols renamed, indented with three chars
      ! Some bugs fixed (error situations, handling of zero keycode)
-     % Some things made more simple (removed returns from inside the 
+     % Some things made more simple (removed returns from inside the
        functions for example).
      % Variable scopes adjusted.
      - Removed extension guards from C level code.
      - Removed all the runtime error generations
-     - Removed the extension when an array was accepted as the 
+     - Removed the extension when an array was accepted as the
        first parameter of SETKEY().
      + HB_SETKEYARRAY() added instead of the above feature.
 

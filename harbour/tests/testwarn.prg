@@ -265,4 +265,13 @@ Function nMyFunc( nParam )
 
 return nParam * 2
 
+function optional(one, two, three, four, five, six, seven, eight, nine, ten)
+return
+
+function cotherfunc(one, two, three, four, five, six, seven, eight, nine, ten)
+return
+
+function extfun(one, two, three, four, five, six, seven, eight, nine, ten)
+return
+
 */
