@@ -271,7 +271,7 @@ HB_FUNC (ATADJUST)
       
         /* ok -> calculate new string size */
         sRetStrLen = sStrLen-(pc-(pcString+sAdjustPosition));
-        pcRetStr = hb_xgrab (sRetStrLen);
+        pcRetStr = ( char *) hb_xgrab (sRetStrLen);
 
         /* copy first portion of string */
         if (sAdjustPosition > 0)
@@ -288,7 +288,7 @@ HB_FUNC (ATADJUST)
       {
         /* adjust to right */
         sRetStrLen = sStrLen+(pcString+sAdjustPosition)-pc;
-        pcRetStr = hb_xgrab (sRetStrLen);
+        pcRetStr = ( char *) hb_xgrab (sRetStrLen);
 
         /* copy first portion of string */
         if (pc > pcString)

@@ -130,7 +130,7 @@ static void do_list (int iSwitch)
         char *pcRet;
         size_t sRetStrLen = 0;
 
-        pcRet = hb_xgrab (256);
+        pcRet = ( char *) hb_xgrab (256);
 
         for (sCnt = 0; sCnt < 256; sCnt++)
         {
@@ -152,7 +152,7 @@ static void do_list (int iSwitch)
         char *pcRet;
         size_t sRetStrLen = 0;
     
-        pcRet = hb_xgrab (256);
+        pcRet = ( char * ) hb_xgrab (256);
 
         for (sCnt = 0; sCnt < 256; sCnt++)
         {

@@ -162,7 +162,7 @@ static void do_token1 (int iSwitch)
     /* prepare return value for TOKENUPPER/TOKENLOWER */
     if ((iSwitch == DO_TOKEN1_TOKENLOWER) || (iSwitch == DO_TOKEN1_TOKENUPPER))
     {
-      pcRet = hb_xgrab (sRetStrLen = sStrLen);
+      pcRet = ( char * ) hb_xgrab (sRetStrLen = sStrLen);
       hb_xmemcpy (pcRet, pcString, sRetStrLen);
     }
 

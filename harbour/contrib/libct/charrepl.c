@@ -154,7 +154,7 @@ HB_FUNC (CHARREPL)
       iMode = 0;
     }
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * ) hb_xgrab (sStrLen);
     hb_xmemcpy (pcRet, pcString, sStrLen);
 
     for (sIndex = 0; sIndex < sSearchLen; sIndex++)

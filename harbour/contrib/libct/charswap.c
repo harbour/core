@@ -96,7 +96,7 @@ static void do_charswap (int iSwitch)
       iShift = 2;
     }
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * ) hb_xgrab (sStrLen);
 
     for (pcSub = pcString; pcSub < pcString+sStrLen+1-iShift; pcSub += iShift)
     {

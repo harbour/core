@@ -141,7 +141,7 @@ HB_FUNC (CHARMIX)
       sLen2 = 1;
     }
 
-    pcResult = hb_xgrab (sLen1 * 2);
+    pcResult = ( char * ) hb_xgrab (sLen1 * 2);
     sPos2 = sResultPos = 0;
     for (sPos1 = 0; sPos1 < sLen1;)
     {

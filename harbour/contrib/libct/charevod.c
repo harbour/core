@@ -82,7 +82,7 @@ static void do_charevod (int iSwitch)
       return;
     }
     
-    pcResult = hb_xgrab ((sLen+1)/2);
+    pcResult = ( char * ) hb_xgrab ((sLen+1)/2);
 
     if (iSwitch == DO_CHAREVOD_CHAREVEN)
       sPos = 1;

@@ -92,7 +92,7 @@ static void do_charonly (int iSwitch)
       iShift = 1;
     }
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * ) hb_xgrab (sStrLen);
 
     for (pcSub = pcString; pcSub < pcString+sStrLen+1-iShift; pcSub += iShift)
     {

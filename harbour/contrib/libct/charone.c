@@ -103,7 +103,7 @@ static void do_charone (int iSwitch)
           char cCurrent = *pcString;
           int iDoDelete = 1;
 
-          pcRet = hb_xgrab (sStrLen);
+          pcRet = ( char * ) hb_xgrab (sStrLen);
 
           /* copy first char */
           *(pcRet+sRetStrLen) = cCurrent;
@@ -166,7 +166,7 @@ static void do_charone (int iSwitch)
           char cCurrent2 = *(pcString+1);
           int iDoDelete = 1;
 
-          pcRet = hb_xgrab (sStrLen);
+          pcRet = ( char * ) hb_xgrab (sStrLen);
           /* copy first double char */
           *(pcRet+sRetStrLen) = cCurrent1;
           *(pcRet+sRetStrLen+1) = cCurrent2;

@@ -91,8 +91,8 @@ static void do_charop (int iSwitch)
     
     size_t sStrLen = hb_parclen (1);
     size_t sPos;
-    unsigned char *pucString = hb_parc (1);
-    unsigned char *pucResult = hb_xgrab (sStrLen);
+    unsigned char *pucString = ( unsigned char * ) hb_parc (1);
+    unsigned char *pucResult = ( unsigned char * ) hb_xgrab (sStrLen);
     
     if (pucResult == NULL)
     {
@@ -281,10 +281,10 @@ static void do_charop (int iSwitch)
     }; /* endswitch (iSwitch) */
 
     if (ISBYREF (1))
-      hb_storclen (pucResult, sStrLen, 1);
+      hb_storclen (( char * ) pucResult, sStrLen, 1);
 
     if (!iNoRet)
-      hb_retclen (pucResult, sStrLen);
+      hb_retclen (( char * ) pucResult, sStrLen);
 
     hb_xfree (pucResult);
 

@@ -197,7 +197,7 @@ HB_FUNC (ATREPL)
       ULONG ulMatchCounter = 0;
 
       sRetStrLen = sStrLen;
-      pcRetStr = hb_xgrab (sRetStrLen);
+      pcRetStr = ( char * ) hb_xgrab (sRetStrLen);
       hb_xmemcpy (pcRetStr, pcString, sRetStrLen);
 
       pcRetSubStr = pcRetStr+sIgnore;
@@ -247,7 +247,7 @@ HB_FUNC (ATREPL)
             /* save pc pointer */
             size_t sPCPos = pc-pcRetStr;
 
-            pcRetStr = hb_xrealloc (pcRetStr, sRetStrLen+(sReplaceLen-sMatchStrLen));
+            pcRetStr = ( char * ) hb_xrealloc (pcRetStr, sRetStrLen+(sReplaceLen-sMatchStrLen));
             pc = pcRetStr+sPCPos;
           }
 
@@ -284,7 +284,7 @@ HB_FUNC (ATREPL)
       /* find and replace last match */
 
       sRetStrLen = sStrLen;
-      pcRetStr = hb_xgrab (sRetStrLen);
+      pcRetStr = ( char * ) hb_xgrab (sRetStrLen);
       hb_xmemcpy (pcRetStr, pcString, sRetStrLen);
 
       /* we have to find the last match and replace it */
@@ -326,7 +326,7 @@ HB_FUNC (ATREPL)
         /* save pc pointer */
         size_t sPCPos = pc-pcRetStr;
 
-        pcRetStr = hb_xrealloc (pcRetStr, sRetStrLen+(sReplaceLen-sMatchStrLen));
+        pcRetStr = ( char * ) hb_xrealloc (pcRetStr, sRetStrLen+(sReplaceLen-sMatchStrLen));
         pc = pcRetStr+sPCPos;
       }
 

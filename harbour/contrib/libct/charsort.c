@@ -222,7 +222,7 @@ HB_FUNC (CHARSORT)
       return;
     }
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * ) hb_xgrab (sStrLen);
     hb_xmemcpy (pcRet, pcString, sStrLen);
 
     qsort (pcRet+sIgnore, (sSortLen/sElementLen), sElementLen, do_charsort);

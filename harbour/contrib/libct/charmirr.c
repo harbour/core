@@ -132,7 +132,7 @@ HB_FUNC (CHARMIRR)
       return;
     }
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * ) hb_xgrab (sStrLen);
 
     pc1 = pcString+sStrLen-1;
     if (iDontMirrorSpaces)

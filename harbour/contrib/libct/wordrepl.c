@@ -157,7 +157,7 @@ HB_FUNC (WORDREPL)
       iMode =0;
     }
 
-    pcRet = hb_xgrab (sStrLen);
+    pcRet = ( char * ) hb_xgrab (sStrLen);
     hb_xmemcpy (pcRet, pcString, sStrLen);
 
     for (sIndex = 0; sIndex < (sSearchLen&0xFFFFFFFE); sIndex+=2)
