@@ -61,6 +61,10 @@
    #include <pc.h>
    #include <time.h>
 #elif defined(_Windows)
+   #if defined(_MSC_VER)
+      #define HB_OS_WIN_32_USED
+      #include "hbdefs.h"
+   #endif
 #elif defined(__MINGW32__)
    #include <stdlib.h>
 #elif defined(__BORLANDC__)
@@ -149,6 +153,11 @@ void hb_tone( double dFrequency, double dDuration )
 #elif defined(__MINGW32__)
          beep( dFrequency, temp );
 #elif defined(WINNT)
+         Beep( ( ULONG ) dFrequency, temp );
+#elif defined(_Windows) && ! defined(__BORLANDC__)
+         /* Bad news for non-NT Windows platforms: Beep() ignores
+            both parameters and either generates the default sound
+            event or the standard system beep. */
          Beep( ( ULONG ) dFrequency, temp );
 #elif defined(_Windows) && ! defined(__BORLANDC__)
          /* Bad news for non-NT Windows platforms: Beep() ignores
