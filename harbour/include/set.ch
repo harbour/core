@@ -116,6 +116,9 @@
 
 #define _SET_LANGUAGE     100 /* Harbour extension */
 #define _SET_IDLEREPEAT   101 /* Harbour extension */
+#define _SET_FILECASE     102 /* Harbour extension */
+#define _SET_DIRCASE      103 /* Harbour extension */
+#define _SET_DIRSEPARATOR 104 /* Harbour extension */
 
 #define HB_SET_BASE       100
 #define HB_SET_COUNT      2

@@ -58,13 +58,17 @@ BOOL hb_fsFile( BYTE * pFilename )
    PHB_FFIND ffind;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", (char*) pFilename));
+   
+   pFilename = hb_filecase(strdup(pFilename));
 
    if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_ALL ) ) != NULL )
    {
       hb_fsFindClose( ffind );
+      free(pFilename);
       return TRUE;
    }
    else
+      free(pFilename);
       return FALSE;
 }
 

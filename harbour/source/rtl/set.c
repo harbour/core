@@ -763,6 +763,21 @@ HB_FUNC( SET )
          hb_retl( hb_set.HB_SET_IDLEREPEAT );
          if( args > 1 ) hb_set.HB_SET_IDLEREPEAT = set_logical( pArg2 );
          break;
+      case HB_SET_FILECASE :
+         if( hb_set.HB_SET_FILECASE ) hb_retc( hb_set.HB_SET_FILECASE );
+         else hb_retc( NULL );
+	 if( args > 1 ) hb_set.HB_SET_FILECASE = set_string( pArg2, hb_set.HB_SET_FILECASE );
+         break;
+      case HB_SET_DIRCASE :
+         if( hb_set.HB_SET_DIRCASE ) hb_retc( hb_set.HB_SET_DIRCASE );
+         else hb_retc( NULL );
+	 if( args > 1 ) hb_set.HB_SET_DIRCASE = set_string( pArg2, hb_set.HB_SET_DIRCASE );
+         break;
+      case HB_SET_DIRSEPARATOR :
+         if( hb_set.HB_SET_DIRSEPARATOR ) hb_retc( hb_set.HB_SET_DIRSEPARATOR );
+         else hb_retc( NULL );
+	 if( args > 1 ) hb_set.HB_SET_DIRSEPARATOR = set_string( pArg2, hb_set.HB_SET_DIRSEPARATOR );
+         break;
       default                :
          /* Return NIL if called with invalid SET specifier */
          break;
@@ -843,6 +858,12 @@ void hb_setInitialize( void )
    hb_set.HB_SET_STRICTREAD = FALSE;
    hb_set.HB_SET_TYPEAHEAD = 50; hb_inkeyReset( TRUE ); /* Allocate keyboard typeahead buffer */
    hb_set.HB_SET_UNIQUE = FALSE;
+   hb_set.HB_SET_FILECASE = ( char * ) hb_xgrab( 6 );
+   memcpy( hb_set.HB_SET_FILECASE, "MIXED", 6 );
+   hb_set.HB_SET_DIRCASE = ( char * ) hb_xgrab( 6 );
+   memcpy( hb_set.HB_SET_DIRCASE, "MIXED", 6 );
+   hb_set.HB_SET_DIRSEPARATOR = ( char * ) hb_xgrab( 2 );
+   memcpy( hb_set.HB_SET_DIRSEPARATOR, "\\", 2 );
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
 
@@ -880,6 +901,9 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_MFILEEXT  )  hb_xfree( hb_set.HB_SET_MFILEEXT );
    if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
+   if( hb_set.HB_SET_FILECASE )   hb_xfree( hb_set.HB_SET_FILECASE );
+   if( hb_set.HB_SET_DIRCASE )    hb_xfree( hb_set.HB_SET_FILECASE );
+   if( hb_set.HB_SET_DIRSEPARATOR ) hb_xfree( hb_set.HB_SET_FILECASE );
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
 

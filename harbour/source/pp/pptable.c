@@ -121,6 +121,9 @@ void hb_pp_Table( void )
    static DEFINES sD___50 = {"_SET_AUTOSHARE",NULL,-1,"47", &sD___49 };
    static DEFINES sD___51 = {"_SET_LANGUAGE",NULL,-1,"100", &sD___50 };
    static DEFINES sD___52 = {"_SET_IDLEREPEAT",NULL,-1,"101", &sD___51 };
+   static DEFINES sD___53 = {"_SET_FILECASE",NULL,-1,"102", &sD___52 };
+   static DEFINES sD___54 = {"_SET_DIRCASE",NULL,-1,"103", &sD___53 };
+   static DEFINES sD___55 = {"_SET_DIRSEPARATOR",NULL,-1,"104", &sD___54 };
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };
@@ -423,8 +426,14 @@ void hb_pp_Table( void )
    static COMMANDS sC___242 = {0,"SET","OPTIMIZE (\1A00)","Set( _SET_OPTIMIZE, \1A00 )",&sC___241 };
    static COMMANDS sC___243 = {0,"SET","AUTOPEN \1A20 ON,OFF,&>","Set(_SET_AUTOPEN,\1A30 )",&sC___242 };
    static COMMANDS sC___244 = {0,"SET","AUTOPEN (\1A00)","Set(_SET_AUTOPEN,\1A00 )",&sC___243 };
+   static COMMANDS sC___245 = {0,"SET","FILECASE \1A30","Set(_SET_FILECASE, \1A10 )",&sC___244 };
+   static COMMANDS sC___246 = {0,"SET","FILECASE ( \1A00 )","Set(_SET_FILECASE, \1A00 )",&sC___245 };
+   static COMMANDS sC___247 = {0,"SET","DIRCASE \1A30","Set(_SET_DIRCASE, \1A10 )",&sC___246 };
+   static COMMANDS sC___248 = {0,"SET","DIRCASE ( \1A00 )","Set(_SET_DIRCASE, \1A00 )",&sC___247 };
+   static COMMANDS sC___249 = {0,"SET","DIRSEPARATOR \1A30","Set(_SET_DIRSEPARATOR, \1A10 )",&sC___248 };
+   static COMMANDS sC___250 = {0,"SET","DIRSEPARATOR ( \1A00 )","Set(_SET_DIRSEPARATOR, \1A00 )",&sC___249 };
 
-   hb_pp_topDefine = &sD___52;
-   hb_pp_topCommand = &sC___244;
+   hb_pp_topDefine = &sD___55;
+   hb_pp_topCommand = &sC___250;
    hb_pp_topTranslate = NULL;
 }

@@ -124,7 +124,10 @@ typedef enum
 
    /* Harbour SET extensions start at 100 */
    HB_SET_LANGUAGE      = 100,
-   HB_SET_IDLEREPEAT    = 101
+   HB_SET_IDLEREPEAT    = 101,
+   HB_SET_FILECASE      = 102,
+   HB_SET_DIRCASE       = 103,
+   HB_SET_DIRSEPARATOR  = 104
 
 } HB_set_enum;
 
@@ -182,6 +185,9 @@ typedef struct
    BOOL    HB_SET_STRICTREAD;
    int     HB_SET_TYPEAHEAD;
    BOOL    HB_SET_UNIQUE;
+   char *  HB_SET_FILECASE;
+   char *  HB_SET_DIRCASE;
+   char *  HB_SET_DIRSEPARATOR;
    int     HB_SET_VIDEOMODE;
    BOOL    HB_SET_WRAP;
 } HB_SET_STRUCT;

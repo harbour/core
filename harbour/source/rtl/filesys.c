@@ -96,6 +96,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbset.h"
 #include "hb_io.h"
 
 #if defined(OS_UNIX_COMPATIBLE)
@@ -389,6 +390,38 @@ static void convert_create_flags_ex( USHORT uiAttr, USHORT uiFlags, int * result
 
 #endif
 
+char *hb_filecase(char *str) {
+   // Convert file and dir case. The allowed SET options are:
+   // LOWER - Convert all caracters of file to lower
+   // UPPER - Convert all caracters of file to upper
+   // MIXED - Leave as is
+
+   // The allowed environment options are:
+   // FILECASE - define the case of file
+   // DIRCASE - define the case of path
+   // DIRSEPARATOR - define separator of path (Ex. "/")
+
+   int a;
+   char *filename;
+   char *dirname=str;
+   int dirlen;
+
+   // Look for filename (Last "\" or DIRSEPARATOR)
+   if( hb_set.HB_SET_DIRSEPARATOR[0]!='\\') {
+      for(a=0;a<strlen(str);a++) if(str[a]=='\\') str[a]=hb_set.HB_SET_DIRSEPARATOR[0];
+   }
+   if((filename=rindex( str, hb_set.HB_SET_DIRSEPARATOR[0] ))!=NULL) filename++; else filename=str;
+   dirlen=filename-str;
+
+   // FILECASE
+   if( hb_stricmp( hb_set.HB_SET_FILECASE, "LOWER" ) == 0 ) hb_strLower(filename,strlen(filename));
+   else if( hb_stricmp( hb_set.HB_SET_FILECASE, "UPPER" ) == 0 ) hb_strUpper(filename,strlen(filename));
+
+   // DIRCASE
+   if( hb_stricmp( hb_set.HB_SET_DIRCASE, "LOWER" ) == 0 ) hb_strLower(dirname,dirlen);
+   else if( hb_stricmp( hb_set.HB_SET_DIRCASE, "UPPER" ) == 0 ) hb_strUpper(dirname,dirlen);
+   return str;
+}
 
 /*
  * FILESYS.API FUNCTIONS --
@@ -458,6 +491,8 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    FHANDLE hFileHandle;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
+
+   pFilename=hb_filecase(strdup(pFilename));
 
 #if defined(X__WIN32__)
 
@@ -551,6 +586,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
 #endif
 
+   free( pFilename );
    return hFileHandle;
 }
 
@@ -562,6 +598,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiAttr));
 
+   pFilename=hb_filecase(strdup(pFilename));
    s_uiErrorLast = 0;
 
 #if defined(X__WIN32__)
@@ -610,6 +647,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
 #endif
 
+   free( pFilename );
    return hFileHandle;
 }
 
@@ -626,6 +664,8 @@ FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
    unsigned pmode;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
+
+   pFilename=hb_filecase(strdup(pFilename));
 
    s_uiErrorLast = 0;
 
@@ -649,6 +689,7 @@ FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
 
 #endif
 
+   free( pFilename );
    return hFileHandle;
 }
 
