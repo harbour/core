@@ -8,12 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-16 02:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+
+   Revision by Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/harbour.sly
+   * source/vm/mamvars.c
+     ! __ISMV() in memvars was incorrectly returning TRUE for
+       *any* dynamic symbol, instead of only MEMVARs.
+
+
 2001-12-15 16:04 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/common/hbver.c
      ! Displays Windows XP properly
      ! Displays Windows ME properly (well, hopefully because I
-       couldn't test this, if anyone has ME, please test it.) 
+       couldn't test this, if anyone has ME, please test it.)
 
 2001-12-15 15:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
