@@ -108,7 +108,6 @@ extern BOOL     hb_fsRmDir      ( BYTE * pszDirName ); /* remove a directory */
 extern int      hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* rename a file */
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
 extern ULONG    hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
-extern void     hb_fsTempName   ( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix ); /* create a temporary file name in a buffer */
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
 extern void     hb_fsSetDevRaw  ( FHANDLE hFileHandle ); /* change the device mode of a file to raw (binary) */
 extern void     hb_fsSetDevText ( FHANDLE hFileHandle ); /* change the device mode of a file to text */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_FTEMPNAME(), HB_FTEMPCREATE() functions
+ * HB_FTEMPCREATE() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
  *                     Viktor Szakats <viktor.szakats@syenar.hu>
@@ -58,7 +58,7 @@
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
-void hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )
+static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )
 {
    /* TODO: Implement these: */
    HB_SYMBOL_UNUSED( pszDir );
@@ -69,19 +69,41 @@ void hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefi
              at least this large. */
 
    pszBuffer[ 0 ] = '\0';
+
    tmpnam( ( char * ) pszBuffer );
+
+   return pszBuffer[ 0 ] != '\0';
 }
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
 FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName )
 {
-   hb_fsTempName( pszName, pszDir, pszPrefix );
+   USHORT nAttemptLeft = 999;
 
    errno = 0;
 
-   if( pszName[ 0 ] != '\0' )
-      return hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE );
+   while( --nAttemptLeft )
+   {
+      if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
+      {
+          FHANDLE fhnd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE );
+
+          /* This function may fail, if the generated filename got 
+             used between generation and the file creation. */
+
+          if( fhnd != FS_ERROR )
+          {
+             return fhnd;
+          }
+      }
+      else
+      {
+         /* Don't attempt to retry if the filename generator is 
+            failing for some reason. */
+         break;
+      }
+   }
 
    hb_fsSetError( FS_ERROR );
    return FS_ERROR;
@@ -89,23 +111,16 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
 
 #ifdef HB_EXTENSION
 
-HB_FUNC( HB_FTEMPNAME )
-{
-   BYTE szName[ _POSIX_PATH_MAX + 1 ];
-
-   hb_fsTempName( szName, NULL, NULL );
-
-   hb_retc( ( char * ) szName );
-}
-
 HB_FUNC( HB_FTEMPCREATE )
 {
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
 
    hb_retni( hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                               ( BYTE * ) hb_parc( 2 ),
-                              ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
+                              ISNUM( 3 ) ? hb_parni( 3 ) : FC_NORMAL,
                               szName ) );
+
+   hb_storc( szName, 4 );
 }
 
 #endif

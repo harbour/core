@@ -593,7 +593,6 @@ GTWIN_LIB_OBJS = \
 HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\harbour.obj \
    $(OBJ_DIR)\harboury.obj \
-   $(OBJ_DIR)\hbslex.obj \
    $(OBJ_DIR)\cmdcheck.obj \
    $(OBJ_DIR)\hbusage.obj \
    $(OBJ_DIR)\hbident.obj \

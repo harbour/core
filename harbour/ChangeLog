@@ -1,3 +1,18 @@
+2001-11-07 01:45 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbextern.ch
+   * include/hbapifs.h
+   * source/rtl/fstemp.c
+      - Removed (made static) hb_fsTempName() low-level function, 
+        since it's unsafe, and will be incorporated into hb_fsCreateTemp().
+      - Removed HB_FTEMPNAME function, since it's unsafe.
+      ! Fixed some recent HB_FTEMPCREATE bugs.
+      + HB_FTEMPCREATE() now will store the generated filename in the 
+        fourth parameter if it's passed by reference.
+
+   * makefile.bc
+     ! Fixed a bug introduced in the prev. session.
+
 2001-11-07 01:17 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    - b16_slex.bat
