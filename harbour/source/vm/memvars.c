@@ -278,15 +278,6 @@ void hb_memvarValueIncRef( HB_HANDLE hValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueIncRef(%p)", hValue));
 
-#if 0
-   /* Debug */
-   if( hValue < 1 || hValue > s_globalTableSize )
-   {
-      HB_TRACE(HB_TR_INFO, ("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
-      exit( 1 );
-   }
-#endif
-
    s_globalTable[ hValue ].counter++;
 
    HB_TRACE(HB_TR_INFO, ("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
@@ -303,20 +294,19 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%p)", hValue));
 
-#if 0
-   if( hValue < 1 || hValue > s_globalTableSize )
-   {
-      HB_TRACE(HB_TR_INFO, ("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
-      exit( 1 );
-   }
-#endif
-
    pValue = s_globalTable + hValue;
 
    HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
 
    if( pValue->counter > 0 )
    {
+      /* Notice that Counter can be equal to 0. 
+      * This can happen if for example PUBLIC variable holds a codeblock
+      * with detached variable. When hb_memvarsRelease() is called then
+      * detached variable can be released before the codeblock. So if
+      * the codeblock will be released later then it will try to release
+      * again this detached variable.
+      */
       if( --pValue->counter == 0 )
       {
          hb_itemClear( &pValue->item );
@@ -342,16 +332,6 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
          HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
       }
    }
-   /* This can happen if for example PUBLIC variable holds a codeblock
-    * with detached variable. When hb_memvarsRelease() is called then
-    * detached variable can be released before the codeblock. So if
-    * the codeblock will be released later then it will try to release
-    * again this detached variable.
-    */
-#if 0
-   else
-      HB_TRACE(HB_TR_INFO, ("Attempt to release released item"));
-#endif
 }
 
 /*

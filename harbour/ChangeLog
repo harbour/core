@@ -1,3 +1,8 @@
+2000-06-22 19:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/memvars.c
+	*removed #if 0
+
 2000-06-22 18:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/kbdcrs.c
