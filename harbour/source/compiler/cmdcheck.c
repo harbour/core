@@ -479,7 +479,7 @@ void hb_compChkCompileFileName( int iArg, char * Args[] )
             */
             if( n > 1 )
                /* GenWarning() */
-               printf( "Warning: File %s will be ignored\n", strupr( Args[ i ] ) );
+               printf( "Warning: File %s will be ignored\n", hb_strupr( Args[ i ] ) );
             else
             {
                hb_comp_pFileName = hb_fsFNameSplit( Args[ i ] );

@@ -146,7 +146,7 @@ PTR_LOOPEXIT hb_comp_pLoops = NULL;
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
-%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE
+%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF LINE MACROVAR MACROTEXT
 %token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT DECLARE_FUN
 
 /*the lowest precedence*/
@@ -175,7 +175,7 @@ PTR_LOOPEXIT hb_comp_pLoops = NULL;
 %right '\n' ';' ','
 /*the highest precedence*/
 
-%type <string>  IDENTIFIER LITERAL
+%type <string>  IDENTIFIER LITERAL SendId MACROVAR MACROTEXT
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
@@ -186,7 +186,7 @@ PTR_LOOPEXIT hb_comp_pLoops = NULL;
 %type <lNumber> WhileBegin
 %type <pVoid>   IfElseIf Cases
 %type <asExpr>  Argument ArgList ElemList BlockExpList BlockVarList BlockNoVar
-%type <asExpr>  DoProc DoArgument DoArgList
+%type <asExpr>  DoName DoProc DoArgument DoArgList
 %type <asExpr>  PareExpList1 PareExpList2 PareExpList3 PareExpListN
 %type <asExpr>  ExpList ExpList1 ExpList2 ExpList3
 %type <asExpr>  NumValue NumAlias
@@ -200,7 +200,7 @@ PTR_LOOPEXIT hb_comp_pLoops = NULL;
 %type <asExpr>  Variable VarAlias
 %type <asExpr>  MacroVar MacroVarAlias
 %type <asExpr>  MacroExpr MacroExprAlias
-%type <asExpr>  AliasVar AliasExpr
+%type <asExpr>  AliasId AliasVar AliasExpr
 %type <asExpr>  VariableAt VariableAtAlias
 %type <asExpr>  FunCall FunCallAlias
 %type <asExpr>  ObjectData ObjectDataAlias
@@ -284,7 +284,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | PareExpList CrlfStmnt  { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprPreOp CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-	   | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
+           | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
@@ -340,7 +340,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
-           | Statements LineStat       { $<lNumber>$ += $<lNumber>1; }
+           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; }
            ;
 
 ExtList    : IDENTIFIER                      { hb_compExternAdd( $1 ); }
@@ -418,24 +418,21 @@ ArrayAtAlias : ArrayAt ALIASOP      { $$ = $1; }
 Variable    : IDENTIFIER         { $$ = hb_compExprNewVar( $1 ); }
 ;
 
-VarAlias    : IDENTIFIER ALIASOP      { $$ = hb_compExprNewSymbol( $1 ); }
+VarAlias    : IDENTIFIER ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
 ;
 
 /* Macro variables
  */
-MacroVar    : '&' IDENTIFIER                 { hb_compExprNewMacro( hb_compExprNewVar( $2 ), NULL ); }
-            | '&' IDENTIFIER '.'             { hb_compExprNewMacro( hb_compExprNewVar( $2 ), NULL ); }
-            | '&' IDENTIFIER '.' IDENTIFIER  { hb_compExprNewMacro( hb_compExprNewVar( $2 ), $4 ); }
-            | '&' IDENTIFIER '.' NUM_INTEGER { hb_compExprNewMacro( hb_compExprNewVar( $2 ), $4.szValue ); }
-            | '&' IDENTIFIER '.' NUM_LONG    { hb_compExprNewMacro( hb_compExprNewVar( $2 ), $4.szValue ); }
-            ;
+MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 ); }
+            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1 ); }
+;
 
 MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
 ;
 
 /* Macro expressions
  */
-MacroExpr  : '&' PareExpList       { $$ = hb_compExprNewMacro( $2, NULL ); }
+MacroExpr  : '&' PareExpList       { $$ = hb_compExprNewMacro( $2, 0, NULL ); }
 ;
 
 MacroExprAlias : MacroExpr ALIASOP     { $$ = $1; }
@@ -445,7 +442,7 @@ MacroExprAlias : MacroExpr ALIASOP     { $$ = $1; }
  */
 /* special case: _FIELD-> and FIELD-> can be nested
  */
-FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewSymbol( "FIELD" ); }
+FieldAlias  : FIELD ALIASOP               { $$ = hb_compExprNewAlias( "FIELD" ); }
             | FIELD ALIASOP FieldAlias    { $$ = $3; }
             ;
 
@@ -466,25 +463,29 @@ FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1 ); $$ = 
                | FieldAlias IfInlineAlias       { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
                ;
 
-AliasVar   : NumAlias IDENTIFIER          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | MacroVarAlias IDENTIFIER     { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | MacroExprAlias IDENTIFIER    { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | PareExpListAlias IDENTIFIER  { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | NilAlias IDENTIFIER          { $$ = hb_compErrorAlias( $1 ); }
-           | LiteralAlias IDENTIFIER      { $$ = hb_compErrorAlias( $1 ); }
-           | LogicalAlias IDENTIFIER      { $$ = hb_compErrorAlias( $1 ); }
-           | CodeBlockAlias IDENTIFIER    { $$ = hb_compErrorAlias( $1 ); }
-           | SelfAlias IDENTIFIER         { $$ = hb_compErrorAlias( $1 ); }
-           | ArrayAlias IDENTIFIER        { $$ = hb_compErrorAlias( $1 ); }
-           | ArrayAtAlias IDENTIFIER      { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | VariableAtAlias IDENTIFIER   { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | IfInlineAlias IDENTIFIER     { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | FunCallAlias IDENTIFIER      { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | ObjectDataAlias IDENTIFIER   { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | ObjectMethodAlias IDENTIFIER { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
-           | VarAlias IDENTIFIER          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | FieldAlias IDENTIFIER        { $$ = hb_compExprNewAliasVar( $1, $2 ); }
-           | FieldVarAlias IDENTIFIER     { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+AliasId     : IDENTIFIER      { $$ = hb_compExprNewVar( $1 ); }
+            | MacroVar        { $$ = $1; }
+            ;
+
+AliasVar   : NumAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+           | MacroVarAlias AliasId     { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+           | MacroExprAlias AliasId    { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+           | PareExpListAlias AliasId  { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+           | NilAlias AliasId          { $$ = hb_compErrorAlias( $1 ); }
+           | LiteralAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }
+           | LogicalAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }
+           | CodeBlockAlias AliasId    { $$ = hb_compErrorAlias( $1 ); }
+           | SelfAlias AliasId         { $$ = hb_compErrorAlias( $1 ); }
+           | ArrayAlias AliasId        { $$ = hb_compErrorAlias( $1 ); }
+           | ArrayAtAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | VariableAtAlias AliasId   { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | IfInlineAlias AliasId     { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | FunCallAlias AliasId      { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | ObjectDataAlias AliasId   { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | ObjectMethodAlias AliasId { $$ = hb_compErrorAlias( $1 ); }  /* QUESTION: Clipper reports error here - we can handle this */
+           | VarAlias AliasId          { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+           | FieldAlias AliasId        { $$ = hb_compExprNewAliasVar( $1, $2 ); }
+           | FieldVarAlias AliasId     { $$ = hb_compExprNewAliasVar( $1, $2 ); }
            ;
 
 /* Aliased expressions
@@ -493,11 +494,11 @@ AliasVar   : NumAlias IDENTIFIER          { $$ = hb_compExprNewAliasVar( $1, $2 
  * alias->( Expression )
  * alias always selects a workarea at runtime
  */
-AliasExpr  : NumAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, hb_compExprReduce( $2 ) ); }
-           | VarAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, hb_compExprReduce( $2 ) ); }
-           | MacroVarAlias PareExpList    { $$ = hb_compExprNewAliasExpr( $1, hb_compExprReduce( $2 ) ); }
-           | MacroExprAlias PareExpList   { $$ = hb_compExprNewAliasExpr( $1, hb_compExprReduce( $2 ) ); }
-           | PareExpListAlias PareExpList { $$ = hb_compExprNewAliasExpr( $1, hb_compExprReduce( $2 ) ); }
+AliasExpr  : NumAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
+           | VarAlias PareExpList         { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
+           | MacroVarAlias PareExpList    { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
+           | MacroExprAlias PareExpList   { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
+           | PareExpListAlias PareExpList { $$ = hb_compExprNewAliasExpr( $1, $2 ); }
            | FieldAlias PareExpList       { $$ = hb_compErrorAlias( $2 ); } /* QUESTION: Clipper reports error here - we can handle it */
            ;
 
@@ -525,7 +526,8 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( $1, $3 ); }
+FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewSymbol( $1 ), $3 ); }
+           | MacroVar '(' ArgList ')'     { $$ = hb_compExprNewFunCall( $1, $3 ); }
 ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
@@ -542,25 +544,29 @@ FunCallAlias : FunCall ALIASOP        { $$ = $1; }
 
 /* Object's instance variable
  */
-ObjectData  : NumValue ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | NilValue ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | LiteralValue ':' IDENTIFIER    { $$ = hb_compExprNewSend( $1, $3 ); }
-            | CodeBlock ':' IDENTIFIER       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Logical ':' IDENTIFIER         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | SelfValue ':' IDENTIFIER       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Array ':' IDENTIFIER           { $$ = hb_compExprNewSend( $1, $3 ); }
-            | ArrayAt ':' IDENTIFIER         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | Variable ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | AliasVar ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | AliasExpr ':' IDENTIFIER       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | MacroVar ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | MacroExpr ':' IDENTIFIER       { $$ = hb_compExprNewSend( $1, $3 ); }
-            | FunCall ':' IDENTIFIER         { $$ = hb_compExprNewSend( $1, $3 ); }
-            | IfInline ':' IDENTIFIER        { $$ = hb_compExprNewSend( $1, $3 ); }
-            | PareExpList ':' IDENTIFIER     { $$ = hb_compExprNewSend( $1, $3 ); }
-            | VariableAt ':' IDENTIFIER      { $$ = hb_compExprNewSend( $1, $3 ); }
-            | ObjectMethod ':' IDENTIFIER    { $$ = hb_compExprNewSend( $1, $3 ); }
-            | ObjectData ':' IDENTIFIER      { $$ = hb_compExprNewSend( $1, $3 ); }
+SendId      : IDENTIFIER      { $$ = $1; }
+            | MacroVar        { $$ = "&"; hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_SEND, "&", NULL); }
+            ;
+
+ObjectData  : NumValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | NilValue ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | LiteralValue ':' SendId    { $$ = hb_compExprNewSend( $1, $3 ); }
+            | CodeBlock ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
+            | Logical ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
+            | SelfValue ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
+            | Array ':' SendId           { $$ = hb_compExprNewSend( $1, $3 ); }
+            | ArrayAt ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
+            | Variable ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | AliasVar ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | AliasExpr ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
+            | MacroVar ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | MacroExpr ':' SendId       { $$ = hb_compExprNewSend( $1, $3 ); }
+            | FunCall ':' SendId         { $$ = hb_compExprNewSend( $1, $3 ); }
+            | IfInline ':' SendId        { $$ = hb_compExprNewSend( $1, $3 ); }
+            | PareExpList ':' SendId     { $$ = hb_compExprNewSend( $1, $3 ); }
+            | VariableAt ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
+            | ObjectMethod ':' SendId    { $$ = hb_compExprNewSend( $1, $3 ); }
+            | ObjectData ':' SendId      { $$ = hb_compExprNewSend( $1, $3 ); }
             ;
 
 ObjectDataAlias : ObjectData ALIASOP         { $$ = $1; }
@@ -929,7 +935,7 @@ PareExpList : PareExpList1        { $$ = $1; }
             | PareExpListN        { $$ = $1; }
             ;
 
-PareExpListAlias : PareExpList ALIASOP     { $$ = hb_compExprReduce( $1 ); }
+PareExpListAlias : PareExpList ALIASOP     { $$ = $1; }
 ;
 
 ExpList1   : '(' EmptyExpression    { $$ = hb_compExprNewList( $2 ); }
@@ -1312,12 +1318,16 @@ RecoverUsing : RECOVER USING IDENTIFIER
  * DO .. WITH ++variable
  * will pass the value of variable not a reference
  */
-DoProc     : DO IDENTIFIER
+DoName     : IDENTIFIER       { $$ = hb_compExprNewSymbol( $1 ); }
+           | MacroVar         { $$ = $1; }
+           ;
+
+DoProc     : DO DoName
                { $$ = hb_compExprNewFunCall( $2, NULL ); }
-           | DO IDENTIFIER WITH DoArgList
+           | DO DoName WITH DoArgList
                { $$ = hb_compExprNewFunCall( $2, $4 ); }
            | WHILE WITH DoArgList
-               { $$ = hb_compExprNewFunCall( hb_strdup("WHILE"), $3 ); }
+               { $$ = hb_compExprNewFunCall( hb_compExprNewSymbol( hb_strdup("WHILE") ), $3 ); }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }

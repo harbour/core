@@ -4,11 +4,11 @@
 
 # How to run yacc.
 YACC = bison
-YACC_FLAGS = -d
+YACC_FLAGS := -d $(YACC_FLAGS)
 
 # How to run lex.
 LEX = flex
-LEX_FLAGS = -i -8
+LEX_FLAGS := -i -8 $(LEX_FLAGS)
 
 #
 # How to run Harbour.

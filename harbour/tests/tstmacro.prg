@@ -1,4 +1,4 @@
-#INCLUDE "HBCLASS.CH"
+#include "hbclass.ch"
 
 Function Main( )
 

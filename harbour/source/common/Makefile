@@ -8,6 +8,7 @@ C_SOURCES=\
         hbfsapi.c \
         hbstr.c \
         hbtrace.c \
+	reserved.c \
 
 PRG_SOURCES=\
 

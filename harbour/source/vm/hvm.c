@@ -135,6 +135,7 @@ static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a l
 static void    hb_vmPushLocalByRef( SHORT iLocal );    /* pushes a local by refrence onto the stack */
 static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
 static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by refrence onto the stack */
+static void    hb_vmPushVariable( PHB_SYMB pVarSymb ); /* pushes undeclared variable */
 static void    hb_vmDuplicate( void );            /* duplicates the latest value on the stack */
 static void    hb_vmDuplTwo( void );              /* duplicates the latest two value on the stack */
 
@@ -149,8 +150,8 @@ static void    hb_vmPopLocal( SHORT iLocal );     /* pops the stack latest value
 static void    hb_vmPopStatic( USHORT uiStatic ); /* pops the stack latest value onto a static */
 
 /* stack management functions */
+       void    hb_stackPop( void );        /* pops an item from the stack */
 static void    hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
-static void    hb_stackPop( void );        /* pops an item from the stack */
 static void    hb_stackFree( void );       /* releases all memory used by the stack */
 static void    hb_stackPush( void );       /* pushes an item on to the stack */
 static void    hb_stackInit( void );       /* initializes the stack */
@@ -838,39 +839,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHVARIABLE:
             /* Push a value of variable of unknown type onto the eval stack
              */
-            {
-               USHORT uiAction = E_DEFAULT;
-               PHB_SYMB pVarSymb = pSymbols + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-
-               do
-               {
-                  /* First try if passed symbol is a name of field
-                   * in a current workarea - if it is not a field (FAILURE)
-                   * then try the memvar variable
-                   */
-                  if( hb_rddFieldGet( hb_stack.pPos, pVarSymb ) == SUCCESS )
-                     hb_stackPush();
-                  else
-                  {
-                     if( hb_memvarGet( hb_stack.pPos, pVarSymb ) == SUCCESS )
-                        hb_stackPush();
-                     else
-                     {
-                        HB_ITEM_PTR pError;
-
-                        pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                                NULL, pVarSymb->szName,
-                                                0, EF_CANRETRY );
-
-                        uiAction = hb_errLaunch( pError );
-                        hb_errRelease( pError );
-                     }
-                  }
-               }
-               while( uiAction == E_RETRY );
-               HB_TRACE(HB_TR_INFO, ("(hb_vmPushVariable)"));
-               w += 3;
-            }
+            hb_vmPushVariable( pSymbols + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            w += 3;
             break;
 
          case HB_P_DUPLICATE:
@@ -948,6 +918,151 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             hb_itemClear( hb_stack.pPos );
             HB_TRACE(HB_TR_INFO, ("(hb_vmPopVariable)"));
             w += 3;
+            break;
+
+         /* macro creation */
+
+         case HB_P_MACROPOP:
+            /* compile and run - pop a value from the stack */
+            hb_macroSetValue( hb_stack.pPos - 1, pSymbols );
+            w++;
+            break;
+
+         case HB_P_MACROPOPALIASED:
+            /* compile and run - pop a field value from the stack */
+            w++;
+            break;
+         case HB_P_MACROPUSH:
+            /* compile and run - leave the result on the stack */
+            /* the topmost element on the stack contains a macro
+             * string for compilation
+             */
+            hb_macroGetValue( hb_stack.pPos - 1, pSymbols );
+            w++;
+            break;
+
+         case HB_P_MACROPUSHALIASED:
+            /* compile and run - leave the field value on the stack */
+            w++;
+            break;
+
+         case HB_P_MACROSYMBOL:
+            /* compile into a symbol name (used in function calls) */
+            w++;
+            break;
+
+         case HB_P_MACROTEXT:
+            /* macro text substitution */
+            w++;
+            break;
+
+         /* macro compiled opcodes - we are using symbol address here */
+
+         case HB_P_MMESSAGE:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmMessage( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPOPALIASEDFIELD:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPopAliasedField( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPOPFIELD:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               /* Pops a value from the eval stack and uses it to set
+               * a new value of the given field
+               */
+               hb_stackDec();
+               hb_rddPutFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_itemClear( hb_stack.pPos );
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPOPMEMVAR:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_stackDec();
+               hb_memvarSetValue( ( *pDynSym )->pSymbol, hb_stack.pPos );
+               hb_itemClear( hb_stack.pPos );
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPopMemvar)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPUSHALIASEDFIELD:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushAliasedField( ( *pDynSym )->pSymbol );
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPUSHBLOCK:
+	    {
+		/*NOTE: the pcode is stored in damically allocated memory
+		 * We need to handle it with more care than compile-time
+		 * codeblocks
+		 */
+        	w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+	    }
+	    break;
+	    
+         case HB_P_MPUSHFIELD:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               /* It pushes the current value of the given field onto the eval stack
+               */
+               hb_rddGetFieldValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_stackPush();
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushField)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPUSHMEMVAR:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_memvarGetValue( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_stackPush();
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvar)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPUSHMEMVARREF:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_memvarGetRefer( hb_stack.pPos, ( *pDynSym )->pSymbol );
+               hb_stackPush();
+               HB_TRACE(HB_TR_INFO, ("(hb_vmMPushMemvarRef)"));
+               w += sizeof( HB_DYNS_PTR ) + 1;
+            }
+            break;
+
+         case HB_P_MPUSHSYM:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushSymbol( ( *pDynSym )->pSymbol );
+            }
+            w += sizeof( HB_DYNS_PTR ) + 1;
+            break;
+
+         case HB_P_MPUSHVARIABLE:
+            {
+               HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );
+               hb_vmPushVariable( ( *pDynSym )->pSymbol );
+            }
+            w += sizeof( HB_DYNS_PTR ) + 1;
             break;
 
          /* misc */
@@ -2817,6 +2932,40 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
    hb_stackPush();
 }
 
+static void hb_vmPushVariable( PHB_SYMB pVarSymb )
+{
+   USHORT uiAction = E_DEFAULT;
+
+   do
+   {
+      /* First try if passed symbol is a name of field
+         * in a current workarea - if it is not a field (FAILURE)
+         * then try the memvar variable
+         */
+      if( hb_rddFieldGet( hb_stack.pPos, pVarSymb ) == SUCCESS )
+         hb_stackPush();
+      else
+      {
+         if( hb_memvarGet( hb_stack.pPos, pVarSymb ) == SUCCESS )
+            hb_stackPush();
+         else
+         {
+            HB_ITEM_PTR pError;
+
+            pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                    NULL, pVarSymb->szName,
+                                    0, EF_CANRETRY );
+
+            uiAction = hb_errLaunch( pError );
+            hb_errRelease( pError );
+         }
+      }
+   }
+   while( uiAction == E_RETRY );
+   HB_TRACE(HB_TR_INFO, ("(hb_vmPushVariable)"));
+}
+
+
 static void hb_vmDuplicate( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDuplicate()"));
@@ -3017,7 +3166,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
 /* stack management functions      */
 /* ------------------------------- */
 
-static void hb_stackPop( void )
+void hb_stackPop( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stackPop()"));
 

@@ -81,5 +81,6 @@ extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer on
 
 /* stack management functions */
 extern void    hb_stackDispCall( void );
+extern void    hb_stackPop( void );        /* pops an item from the stack */
 
 #endif /* HB_CTOHARB_H_ */

@@ -1,3 +1,101 @@
+19991209-17:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *config/rules.cf
+        * YACC_FLAGS and LEX_FLAGS can be set in local Makefile - this
+        local settings will be added to the global ones
+
+    * include/compiler.h
+    * include/expropt.h
+        * moved declarations related to expression optimizer into expropt.h
+        which is used also at runtime library
+        * added support for macro generation
+
+    *source/compiler/harbour.c
+        * removed some functions that were no longer used
+        * fixed recognition of static and memvar variables for which
+        function-wide declaration owerwrites file-wide declaration
+        e.g.
+        STATIC myvar
+        FUNCTION MyTest()
+        MEMVAR myvar
+
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/compiler/genjava.c
+        * updated to support new macro related opcodes
+
+    * include/hberrors.h
+    * source/compiler/hbgenerr.c
+        * added new errors
+                ERR_BAD_MACRO   (declared variable in macro)
+                ERR_INVALID_SEND    (macro operator with send operator)
+
+    *source/compiler/harbour.l
+        * '.' character is correctly passed to grammar analyzer
+        * moved here all rules for a macro variable use recognition
+
+    *source/common/Makefile
+    *source/common/reserved.c
+        * file with function and date used to check for reserved
+        functions name
+
+NOTE: All non GNU-Make scripts should be updated!
+
+    * include/ctoharb.h
+        * added declaration of hb_stackPop() function
+
+    *source/vm/hvm.c
+        * changed visibility of hb_stackPop() function (static -> global)
+        * added code related to macro generation and evaluation
+
+    *source/macro/
+    *source/macro/macro.c
+    *source/macro/macro.l
+    *source/macro/macro.y
+    *source/macro/Makefile
+    *include/macro.h
+        * new files used for macro generation and evaluation
+        * macro compiler supports now:
+            + macro variables:  &var1 := &var2
+        * not supported yet (there is a proper pcode generated only -
+        there are no actions in the virtual machine)
+            - text substitution: "text &macro"
+            - function calls: &macro()
+            - aliased macro variables: &macro->var and alias->&var
+	    - macro-compiled codeblocks
+
+NOTE: All non GNU-Make scripts should be updated!
+
+NOTE: source/macro/macro.c file includes source/compiler/expropt.c
+  I didn't found other method of reusing the expropt.c. Unfortunately
+  the code in expropt.c differs a little if used from macro compiler
+  (it uses a local variable that holds the compilation state instead
+  of global variables)
+
+    *source/compiler/expropt.c
+        * added support for macro pcode generation and macro compilation
+        NOTE: this file is included by macro.c
+
+    *include/pcode.h
+        * added pcodes used in macro generation and macro evaluation
+
+    *source/runner/stdalone/Makefile
+    *tests/Makefile
+    *tests/regress/Makefile
+    *samples/cccppc/Makefile
+    *samples/guestbk/Makefile
+    *samples/hscript/Makefile
+    *samples/misc/Makefile
+    *samples/pe/Makefile
+	* 'macro' library added
+
+    *source/compiler/cmdcheck.c
+	* replaced strupr with hb_strupr
+		
+NOTE: All PRG sources HAVE TO be recompiled!!!
+
+NOTE: Add macro.lib to all non-GNU make scripts or batch files.
+
 19991209-01:05 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/*
     include/compiler.h

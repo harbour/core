@@ -25,6 +25,7 @@ LIBS=\
         vm \
         rdd \
         rtl \
+	macro \
         pp \
 	runner \
 	common \

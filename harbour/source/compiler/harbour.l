@@ -91,10 +91,13 @@ InvalidNumber [0-9]+\.
 HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 
+MacroVar      \&{Identifier}[\.]?
+MacroEnd      \&{Identifier}\.({Identifier})|([0-9]+)
+MacroId       ({Identifier}\&(({Identifier}[\.]?)|({Identifier}\.({Identifier})|([0-9]+))))
+MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
+
 TrueValue     "."[t|y]"."
 FalseValue    "."[f|n]"."
-
-PseudoFunc    {Identifier}"("+.*")"+
 
 Array         {Identifier}[ \t]*"["
 AtArray       "}"[ \t]*"["
@@ -361,7 +364,7 @@ Separator     {SpaceTab}
                 hb_comp_iState =DO;
                 yyless( yyleng-5 );
               }
-<DO_>{Separator}+[_a-zA-Z]   { /* an identifier DO id WITH */
+<DO_>{Separator}+[_a-zA-Z\&]   { /* an identifier 'DO id WITH' or 'DO &id WITH' */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( hb_comp_iState == LOOKUP )
@@ -756,8 +759,9 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "#"{Separator}*"line"  return LINE;
-"loca"|"local"  { BEGIN LOCAL_;
+"loca"|"local"  { 
                   yylval.string = hb_strupr( hb_strdup( yytext ) );
+		  BEGIN LOCAL_;
                 }
 <LOCAL_>{Separator}+[_a-zA-Z]   { /* an identifier after LOCAL */
                  unput( yytext[ yyleng-1 ] );
@@ -1143,7 +1147,7 @@ Separator     {SpaceTab}
 ".or."         hb_comp_iState =OPERATOR; return OR;
 "!"|".not."    hb_comp_iState =OPERATOR; return NOT;
 "::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
-[,\{\}\|\#\&\:\<\>\[\]\@] hb_comp_iState =OPERATOR; return yytext[ 0 ];
+[,\{\}\|\#\&\.\:\<\>\[\]\@] hb_comp_iState =OPERATOR; return yytext[ 0 ];
 [\(]           ++_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 [\)]           --_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 
@@ -1265,16 +1269,43 @@ Separator     {SpaceTab}
                return '}';
             }
 
-{Identifier}               {
-                              if( hb_comp_bRestrictSymbolLength && strlen( yytext ) > 10 )
-                              {
-                                 yytext[ 10 ] = 0;
-                                 yyleng = 10;
-                              }
-                              yylval.string = hb_strupr( hb_strdup( yytext ) );
-                              hb_comp_iState =IDENTIFIER;
-                              return IDENTIFIER;
-                           }
+{MacroVar}     {  
+                  if( yytext[ yyleng-1 ] == '.' )
+                     yytext[ yyleng-1 ] = '\0';
+                  yylval.string = hb_strupr( hb_strdup( yytext+1 ) );
+                  hb_comp_iState = MACROVAR;
+                  return MACROVAR;
+               }
+
+{MacroEnd}     {  
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  hb_comp_iState = MACROTEXT;
+                  return MACROTEXT;
+               }
+
+{MacroId}      {  
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  hb_comp_iState = MACROTEXT;
+                  return MACROTEXT;
+               }
+
+{MacroTxt}     {  
+                  yylval.string = hb_strupr( hb_strdup( yytext ) );
+                  hb_comp_iState = MACROTEXT;
+                  return MACROTEXT;
+               }
+
+
+{Identifier}    {  
+                   if( hb_comp_bRestrictSymbolLength && strlen( yytext ) > 10 )
+                   {
+                      yytext[ 10 ] = 0;
+                      yyleng = 10;
+                   }
+                   yylval.string = hb_strupr( hb_strdup( yytext ) );
+                   hb_comp_iState = IDENTIFIER;
+                   return IDENTIFIER;
+                }
 
 %{
 #ifdef __WATCOMC__

@@ -48,6 +48,7 @@
 #include "hberrors.h"
 #include "hbpp.h"
 #include "hbver.h"
+#include "expropt.h"
 
 /* compiler related declarations */
 
@@ -138,60 +139,6 @@ typedef struct
    int        iCount;           /* number of defined symbols */
 } SYMBOLS;
 
-typedef struct HB_EXPR_
-{
-   union
-   {
-      char *asString;                   /* literal strings */
-      char *asSymbol;                   /* variable name */
-      BOOL asLogical;                   /* logical value */
-      struct
-      {
-         long lVal;                     /* long value */
-         double dVal;                   /* double value */
-         unsigned char bDec;            /* unsigned char used intentionally */
-         unsigned char NumType;         /* used to distinguish LONG and DOUBLE */
-      } asNum;
-      struct
-      {
-         struct HB_EXPR_ *pVar;         /* macro variable */
-         char * szNameExt;              /* text after the macro terminator */
-      } asMacro;
-      struct
-      {
-         struct HB_EXPR_ *pExprList;    /* list elements */
-         struct HB_EXPR_ *pIndex;       /* array index, others */
-      } asList;
-      struct
-      {
-         struct HB_EXPR_ *pAlias;       /* alias expression */
-         char * szVarName;              /* aliased variable */
-         struct HB_EXPR_ *pExpList;     /* aliased expression list */
-      } asAlias;
-      struct
-      {
-         char * szFunName;              /* function name */
-         struct HB_EXPR_ *pParms;       /* function call parameters */
-      } asFunCall;
-      struct
-      {
-         struct HB_EXPR_ *pObject;      /* object */
-         char * szMessage;              /* message */
-         struct HB_EXPR_ *pParms;       /* method parameters */
-      } asMessage;
-      struct
-      {
-         struct HB_EXPR_ *pLeft;        /* object */
-         struct HB_EXPR_ *pRight;       /* object */
-      } asOperator;
-   } value;
-   ULONG ulLength;
-   unsigned char ExprType;  /* internal expression type */
-   USHORT ValType;          /* language level value type */
-   struct HB_EXPR_ *pNext;  /* next expression in the list of expressions */
-} HB_EXPR, *HB_EXPR_PTR;
-
-
 #define VS_LOCAL      1
 #define VS_STATIC     2
 #define VS_FIELD      4
@@ -209,7 +156,6 @@ typedef struct HB_EXPR_
 #define FUN_BREAK_CODE        8   /* last statement breaks execution flow */
 #define FUN_USES_LOCAL_PARAMS 16  /* parameters are declared using () */
 #define FUN_WITH_RETURN       32  /* there was RETURN statement in previous line */
-
 
 extern void      hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern PFUNCTION hb_compFunctionFind( char * szFunName ); /* locates a previously defined function */
@@ -234,11 +180,57 @@ extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 extern void hb_compExternGen( void ); /* generates the symbols for the EXTERN names */
 extern void hb_compExternAdd( char * szExternName ); /* defines a new extern name */
 
-extern ULONG hb_compGenJump( LONG lOffset );                /* generates the pcode to jump to a specific offset */
-extern ULONG hb_compGenJumpFalse( LONG lOffset );           /* generates the pcode to jump if false */
-extern ULONG hb_compGenJumpTrue( LONG lOffset );            /* generates the pcode to jump if true */
-extern void hb_compGenJumpHere( ULONG ulOffset );             /* returns the pcode pos where to set a jump offset */
-extern void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo ); /* sets a jump offset */
+#ifdef HB_MACRO_SUPPORT
+
+extern BOOL hb_compVariableMacroCheck( char *, HB_MACRO_DECL ); /* checks if passed variable can be used in macro */
+
+extern ULONG hb_compGenJump( LONG, HB_MACRO_DECL );              /* generates the pcode to jump to a specific offset */
+extern ULONG hb_compGenJumpFalse( LONG, HB_MACRO_DECL );         /* generates the pcode to jump if false */
+extern ULONG hb_compGenJumpTrue( LONG, HB_MACRO_DECL );          /* generates the pcode to jump if true */
+extern void hb_compGenJumpHere( ULONG, HB_MACRO_DECL );          /* returns the pcode pos where to set a jump offset */
+extern void hb_compGenJumpThere( ULONG, ULONG, HB_MACRO_DECL );  /* sets a jump offset */
+
+extern void hb_compGenMessage( char *, HB_MACRO_DECL );       /* sends a message to an object */
+extern void hb_compGenMessageData( char *, HB_MACRO_DECL );     /* generates an underscore-symbol name for a data assignment */
+extern void hb_compGenPopVar( char *, HB_MACRO_DECL );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
+extern void hb_compGenPushDouble( double , BYTE, HB_MACRO_DECL ); /* Pushes a number on the virtual machine stack */
+extern void hb_compGenPushFunCall( char *, HB_MACRO_DECL );             /* generates the pcode to push function's call */
+extern void hb_compGenPushVar( char *, HB_MACRO_DECL );        /* generates the pcode to push a variable value to the virtual machine stack */
+extern void hb_compGenPushVarRef( char *, HB_MACRO_DECL );    /* generates the pcode to push a variable by reference to the virtual machine stack */
+extern void hb_compGenPushLogical( int, HB_MACRO_DECL );     /* pushes a logical value on the virtual machine stack */
+extern void hb_compGenPushLong( long, HB_MACRO_DECL );          /* Pushes a long number on the virtual machine stack */
+extern void hb_compGenPushNil( HB_MACRO_DECL );                   /* Pushes nil on the virtual machine stack */
+extern void hb_compGenPushString( char *, ULONG, HB_MACRO_DECL );       /* Pushes a string on the virtual machine stack */
+extern void hb_compGenPushSymbol( char *, int, HB_MACRO_DECL ); /* Pushes a symbol on to the Virtual machine stack */
+extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
+extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
+extern void hb_compGenPushFunRef( char *, HB_MACRO_DECL );
+extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );             /* generates 1 byte of pcode */
+extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 3 bytes of pcode */
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
+
+/* Codeblocks */
+void hb_compCodeBlockStart( HB_MACRO_DECL ); /* starts a codeblock creation */
+void hb_compCodeBlockEnd( HB_MACRO_DECL );   /* end of codeblock creation */
+
+#define hb_compErrorType( p )    hb_macroError( EG_ARG, HB_MACRO_PARAM )
+#define hb_compErrorIndex( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
+#define hb_compErrorSyntax( p )  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
+#define hb_compErrorLValue( p )  hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
+#define hb_compErrorBound( p )   hb_macroError( EG_BOUND, HB_MACRO_PARAM )
+#define hb_compErrorAlias( p )   hb_macroError( EG_NOALIAS, HB_MACRO_PARAM )
+#define hb_compErrorDuplVar( c ) hb_macroError( EG_SYNTAX, HB_MACRO_PARAM )
+#define hb_compWarnMeaningless( p )
+
+#else /* HB_MACRO_SUPPORT */
+
+extern BOOL hb_compVariableMacroCheck( char * ); /* checks if passed variable can be used in macro */
+
+extern ULONG hb_compGenJump( LONG );                /* generates the pcode to jump to a specific offset */
+extern ULONG hb_compGenJumpFalse( LONG );           /* generates the pcode to jump if false */
+extern ULONG hb_compGenJumpTrue( LONG );            /* generates the pcode to jump if true */
+extern void hb_compGenJumpHere( ULONG  );             /* returns the pcode pos where to set a jump offset */
+extern void hb_compGenJumpThere( ULONG, ULONG ); /* sets a jump offset */
 
 
 extern void hb_compLinePush( void ); /* generates the pcode with the currently compiled source code line */
@@ -265,13 +257,13 @@ extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode *
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
 
-/* Codeblocks */
-extern void hb_compCodeBlockStart( void );        /* starts a codeblock creation */
-extern void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
-
 extern ULONG hb_compSequenceBegin( void );
 extern ULONG hb_compSequenceEnd( void );
 extern void hb_compSequenceFinish( ULONG, int );
+
+/* Codeblocks */
+void hb_compCodeBlockStart( void );        /* starts a codeblock creation */
+void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
 
 /* support for FIELD declaration */
 extern void hb_compFieldSetAlias( char *, int );
@@ -291,9 +283,6 @@ HB_EXPR_PTR hb_compErrorAlias( HB_EXPR_PTR );
 extern void hb_compErrorDuplVar( char * );
 HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR );
 
-extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
-extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
-
 extern void hb_compChkCompilerSwitch( int, char * Args[] );
 extern void hb_compChkEnvironVar( char * );
 extern void hb_compChkCompileFileName( int, char * Args[] );
@@ -302,6 +291,11 @@ extern void hb_compCheckPaths( void );
 extern void hb_compPrintUsage( char * );
 extern void hb_compPrintCredits( void );
 extern void hb_compPrintLogo( void );
+
+#endif    /* HB_MACRO_SUPPORT */
+
+extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
+extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
 
 /* variable used by compiler
  */
@@ -354,76 +348,6 @@ extern char *      hb_comp_szWarnings[];
 #define HB_EXITLEVEL_DEFAULT    0
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
-
-
-HB_EXPR_PTR hb_compExprNewEmpty( void );
-HB_EXPR_PTR hb_compExprNewNil( void );
-HB_EXPR_PTR hb_compExprNewDouble( double, BYTE );
-HB_EXPR_PTR hb_compExprNewLong( LONG );
-HB_EXPR_PTR hb_compExprNewString( char * );
-HB_EXPR_PTR hb_compExprNewLogical( int );
-HB_EXPR_PTR hb_compExprNewSelf( void );
-HB_EXPR_PTR hb_compExprNewCodeBlock( void );
-HB_EXPR_PTR hb_compExprNewArray( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewVar( char * );
-HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR, char * );
-HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewSymbol( char * );
-HB_EXPR_PTR hb_compExprNewEQ( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewNE( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewLT( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewLE( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewGT( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewGE( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewIN( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPlus( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewMinus( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewMult( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewDiv( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewMod( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPower( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewAssign( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewEqual( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPlusEq( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewMinusEq( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewMultEq( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewDivEq( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewModEq( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewExpEq( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPostInc( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPostDec( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPreInc( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewPreDec( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewAnd( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewOr( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewNot( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR, char * );
-HB_EXPR_PTR hb_compExprNewVarRef( char * );
-HB_EXPR_PTR hb_compExprNewFunRef( char * );
-HB_EXPR_PTR hb_compExprNewCodeblockExpr( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewFunCall( char *, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewFunCallArg( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR, char * );
-HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprNewIIF( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprEqual( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR, HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR );
-extern ULONG hb_compExprListLen( HB_EXPR_PTR );
-extern void hb_compExprDelete( HB_EXPR_PTR );
-extern void hb_compExprClear( HB_EXPR_PTR );
-extern char * hb_compExprDescription( HB_EXPR_PTR );
-HB_EXPR_PTR hb_compExprCBVarAdd( HB_EXPR_PTR, char *, BYTE );
 
 #endif /* HB_COMPILER_H_ */
 

@@ -79,6 +79,8 @@ char * hb_comp_szErrors[] =
    "Invalid alias expression: \'%s\'",
    "Invalid array index expression: \'%s\'",
    "Bound error: \'%s\'"
+   "Macro of declared symbol: \'%s\'",
+   "Invalid selector in send: \'%s\'"
 };
 
 /* Table with parse warnings */

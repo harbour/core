@@ -14,6 +14,8 @@ LIBS=\
         rtl \
         pp \
         runner \
+	common \
+	macro \
 
 ifeq ($(PM),)
   PM := $(pm)

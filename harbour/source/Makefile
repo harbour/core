@@ -11,6 +11,7 @@ DIRS=\
 	rtl \
 	vm \
 	rdd \
+	macro \
         debug \
 	tools \
         runner \

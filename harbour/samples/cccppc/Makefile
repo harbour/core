@@ -60,5 +60,7 @@ LIBS=\
         rdd \
         rtl \
         pp \
+	common \
+	macro \
 
 include $(TOP)$(ROOT)config/bin.cf

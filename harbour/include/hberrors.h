@@ -80,6 +80,8 @@
 #define ERR_INVALID_ALIAS          39
 #define ERR_INVALID_INDEX          40
 #define ERR_INVALID_BOUND          41
+#define ERR_BAD_MACRO              42
+#define ERR_INVALID_SEND           43
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

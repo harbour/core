@@ -16,6 +16,7 @@ LIBS=\
         vm \
         rdd \
         rtl \
+	macro \
         pp \
         runner \
 	common \
@@ -180,6 +181,11 @@ BAD_C_SOURCES=\
 
 include $(TOP)$(ROOT)config/test.cf
 
+DIRS=\
+        regress \
+
+include $(TOP)$(ROOT)config/dir.cf
+
 else #PM defined = build specified file
 
 ifneq ($(findstring .prg,$(PM)),)
@@ -195,8 +201,3 @@ include $(TOP)$(ROOT)config/bin.cf
 
 endif
 
-
-DIRS=\
-        regress \
-
-include $(TOP)$(ROOT)config/dir.cf

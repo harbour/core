@@ -412,6 +412,13 @@ extern USHORT   hb_setCursor( BOOL bSetCursor, USHORT usNewCursor );
 extern void     hb_tone( double dFrequency, double dDuration );
 extern char *   hb_setColor( char * );
 
+/* compiler and macro compiler */
+extern char * hb_compReservedName( char * );
+
+/* macro compiler */
+extern void hb_macroGetValue( HB_ITEM_PTR, PHB_SYMB );
+extern void hb_macroSetValue( HB_ITEM_PTR, PHB_SYMB );
+
 /* misc */
 extern char *   hb_version( USHORT uiMode );
 

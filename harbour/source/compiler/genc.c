@@ -411,6 +411,36 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                lPCodePos++;
                break;
 
+            case HB_P_MACROPOP:
+               fprintf( yyc, "\tHB_P_MACROPOP,\n" );
+               lPCodePos++;
+               break;
+
+            case HB_P_MACROPOPALIASED:
+               fprintf( yyc, "\tHB_P_MACROPOPALIASED,\n" );
+               lPCodePos++;
+               break;
+
+            case HB_P_MACROPUSH:
+               fprintf( yyc, "\tHB_P_MACROPUSH,\n" );
+               lPCodePos++;
+               break;
+
+            case HB_P_MACROPUSHALIASED:
+               fprintf( yyc, "\tHB_P_MACROPUSHALIASED,\n" );
+               lPCodePos++;
+               break;
+
+            case HB_P_MACROSYMBOL:
+               fprintf( yyc, "\tHB_P_MACROSYMBOL,\n" );
+               lPCodePos++;
+               break;
+
+            case HB_P_MACROTEXT:
+               fprintf( yyc, "\tHB_P_MACROTEXT,\n" );
+               lPCodePos++;
+               break;
+
             case HB_P_MESSAGE:
                {
                   USHORT wFixPos;

@@ -181,6 +181,12 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
             case HB_P_INSTRING:
             case HB_P_LESS:
             case HB_P_LESSEQUAL:
+            case HB_P_MACROPOP:
+            case HB_P_MACROPOPALIASED:
+            case HB_P_MACROPUSH:
+            case HB_P_MACROPUSHALIASED:
+            case HB_P_MACROSYMBOL:
+            case HB_P_MACROTEXT:
             case HB_P_MINUS:
             case HB_P_MODULUS:
             case HB_P_MULT:
