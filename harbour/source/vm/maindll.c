@@ -1,10 +1,10 @@
 /*
- * $Id$
+ * $Id:
  */
 
 /*
  * Harbour Project source code:
- * Std applications entry point
+ * Windows DLL entry point
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -33,19 +33,20 @@
  *
  */
 
-#include "extend.h"
+#include <windows.h>
 #include "ctoharb.h"
 
-int main( int argc, char * argv[] )
+int WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
+                                  PVOID pvReserved )
 {
-   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
+   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
+             pvReserved ) );
 
-   hb_cmdargInit( argc, argv );
-   hb_vmInit( TRUE );
-   hb_vmQuit();
+   HB_SYMBOL_UNUSED( hInstance );
+   HB_SYMBOL_UNUSED( fdwReason );
+   HB_SYMBOL_UNUSED( pvReserved );
 
-   /* NOTE: The exit value is set by exit() */
-   /* NOTE: This point is never reached */
+   hb_vmInit( NULL );  /* Don't execute first linked symbol */
 
-   return 0;
+   return TRUE;
 }

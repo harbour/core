@@ -221,7 +221,7 @@ static USHORT s_uiActionRequest = 0;
 
 /* application entry point */
 
-void hb_vmInit( void )
+void hb_vmInit( BOOL bStartMainProc )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmInit()"));
 
@@ -290,7 +290,7 @@ void hb_vmInit( void )
 #endif
    }
 
-   if( s_pSymStart )
+   if( bStartMainProc && s_pSymStart )
    {
       int i;
       int iArgCount;
@@ -1016,7 +1016,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
         	w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
 	    }
 	    break;
-	    
+
          case HB_P_MPUSHFIELD:
             {
                HB_DYNS_PTR *pDynSym = ( HB_DYNS_PTR *) ( pCode + w + 1 );

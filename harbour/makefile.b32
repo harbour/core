@@ -36,7 +36,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               hbtrace.obj hb_f.obj hvm.obj initexit.obj \
               initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
               langapi.obj len.obj \
-              macro.obj macrol.obj macroy.obj mainstd.obj mainwin.obj math.obj \
+              macro.obj macrol.obj macroy.obj maindll.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
               memvarbl.obj menuto.obj mlcount.obj mtran.obj msgen.obj \
               natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj \
@@ -107,6 +107,7 @@ len.obj      : len.c      extend.h hbdefs.h
 macro.obj    : macro.c    extend.h hbdefs.h
 macrol.obj   : macrol.c   extend.h hbdefs.h
 macroy.obj   : macroy.c   extend.h hbdefs.h
+maindll.obj  : maindll.c  extend.h hbdefs.h
 mainstd.obj  : mainstd.c  extend.h hbdefs.h
 mainwin.obj  : mainwin.c  extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h

@@ -57,7 +57,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    argv[ 0 ] = NULL;  /* temporary workaround */
 
    hb_cmdargInit( 0, argv );
-   hb_vmInit();
+   hb_vmInit( TRUE );
    hb_vmQuit();
 
    /* NOTE: The exit value is set by exit() */
@@ -65,4 +65,3 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    return 0;
 }
-

@@ -39,7 +39,7 @@
 #include "extend.h"
 
 /* Harbour virtual machine init/exit functions */
-extern void    hb_vmInit( void );
+extern void    hb_vmInit( BOOL bStartMainProc );
 extern void    hb_vmQuit( void );
 
 /* Harbour virtual machine functions */
