@@ -1,0 +1,1 @@
+make -frddads.b32 > make.err

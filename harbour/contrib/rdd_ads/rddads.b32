@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+# makefile for Borland C/C++ 32 bits
+# Building of rddads.lib - RDD for Advantage Database Server
+
+.path.lib = ..\..\lib\b32
+
+lib\b32\rdd.lib : ads0.obj ads1.obj adsfunc.obj
+
+ads0.c    : ads0.prg
+
+ads1.obj : ads1.c
+ads0.obj : ads0.c
+adsfunc.obj : adsfunc.c
+
+.c.obj :
+  bcc32 -c -O2 -I..\..\include -o$@ -v $<
+  tlib ..\..\lib\b32\rddads.lib -+$@,,
+
+.prg.c:
+  ..\..\bin\harbour $< /n /i..\..\include
