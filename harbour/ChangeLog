@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * tests/testpers.prg
+
+2002-01-24 10:27 UTC+0000 Dave Pearson <davep@davep.org>
+   * source/rtl/profiler.prg
+     * HBProfileLowLevel:gatherOPCodes() wasn't making a call to
+       HBProfile:ignoreSymbol() to allow for opcode filtering in sub
+       classes. Fixed.
+     * Improved the formatting of OPCODE names so that they sort
+       properly.
 
 2002-01-24 10:03 UTC+0000 Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
