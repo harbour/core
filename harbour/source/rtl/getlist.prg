@@ -61,7 +61,10 @@ PROCEDURE __GetListSetActive( oGetList )
    ENDIF
 
    s_oGetListActive := oGetList
-   s_oGetListActive:lHasFocus := .T.
+
+   IF s_oGetListActive != NIL
+      s_oGetListActive:lHasFocus := .T.
+   ENDIF
 
    RETURN
 
