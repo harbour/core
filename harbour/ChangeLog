@@ -1,3 +1,7 @@
+19990904-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    ! hb_arrayScan() fixed. (Thanks Antonio)
+
 19990903-19:35 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     ! Added #ifdef HARBOUR_USE_GTAPI/#endif around use of GT API

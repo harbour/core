@@ -393,7 +393,7 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
 
 ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
 {
-   if( IS_ARRAY( pArray ) && IS_NIL( pValue ) )
+   if( IS_ARRAY( pArray ) && ! IS_NIL( pValue ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG      ulLen = pBaseArray->ulLen;
