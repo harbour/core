@@ -1,3 +1,6 @@
+19990731-11:40 CET Patrick Mast <harbour@PatrickMast.com>
+   * updated build40.bat and makefile.b40
+
 19990731-08:22 CET Victor Szel <info@szelvesz.hu>
    * source/rtl/natmsg/*.c
      GenericErrors renamed to hb_errorsGeneric

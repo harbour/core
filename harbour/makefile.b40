@@ -12,11 +12,11 @@
 
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
-harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj \
+harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj alert.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
-              dir.obj dynsym.obj environ.obj error.obj \
+              dir.obj dynsym.obj environ.obj error.obj menu.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
-              hardcr.obj hb_f.obj initsymb.obj itemapi.obj memvars.obj \
+              hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj memvars.obj \
               math.obj mathx.obj msguk.obj mtran.obj objfunc.obj \
               set.obj setcolor.obj symbols.obj strings.obj stringp.obj \
               stringsx.obj tclass.obj transfrm.obj copyfile.obj
@@ -46,6 +46,7 @@ fm.obj       : fm.c       extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 initsymb.obj : initsymb.c extend.h hbdefs.h
+inkey.obj    : inkey.c    extend.h hbdefs.h
 itemapi.obj  : itemapi.c  extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h
 memvars.obj  : memvars.c  extend.h hbdefs.h
@@ -60,6 +61,8 @@ strings.obj  : strings.c  extend.h hbdefs.h
 stringsx.obj : stringsx.c extend.h hbdefs.h
 tclass.obj   : tclass.c   extend.h hbdefs.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
+menu.obj     : menu.c     extend.h hbdefs.h
+alert.obj    : alert.c    extend.h hbdefs.h
 
 asort.c      : asort.prg     harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
@@ -68,6 +71,8 @@ errorsys.c   : errorsys.prg  harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 stringp.c    : stringp.prg   harbour.exe
 tclass.c     : tclass.prg    harbour.exe
+menu.c       : menu.prg      harbour.exe
+alert.c      : alert.prg     harbour.exe
 
 .asm.obj:
   tasm32 $<, $@
@@ -77,7 +82,7 @@ tclass.c     : tclass.prg    harbour.exe
   bin\harbour $< /n /osource\rtl /iinclude
 
 .c.obj:
-  bcc32 -c -I.\include -o$@ $<
+  bcc32 -c -I.\include -o$@ -DHARBOUR_USE_GTAPI $<
   tlib .\libs\b32\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c genobj32.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
