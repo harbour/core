@@ -83,6 +83,30 @@ char hb_gt_Col(void)
 }
 
 
+void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, char attribute, SHORT sVert, SHORT sHoriz )
+{
+/* Chen Kedem <niki@actcom.co.il> */
+
+    BYTE bCell[ 2 ];                            /* character/attribute pair */
+
+    bCell [ 0 ] = ' ';
+    bCell [ 1 ] = (BYTE)attribute;
+    if ( (sVert | sHoriz) == 0 )                /* both zero, clear region */
+        VioScrollUp ( usTop, usLeft, usBottom, usRight, 0xFFFF, bCell, 0 );
+    else
+    {
+        if ( sVert > 0 )                        /* scroll up */
+            VioScrollUp ( usTop, usLeft, usBottom, usRight, sVert, bCell, 0 );
+        else if ( sVert < 0 )                   /* scroll down */
+            VioScrollDn ( usTop, usLeft, usBottom, usRight, -sVert, bCell, 0 );
+
+        if ( sHoriz > 0 )                       /* scroll left */
+            VioScrollLf ( usTop, usLeft, usBottom, usRight, sHoriz, bCell, 0 );
+        else if ( sHoriz < 0 )                  /* scroll right */
+            VioScrollRt ( usTop, usLeft, usBottom, usRight, -sHoriz, bCell, 0 );
+    }
+}
+
 /* QUESTION: not been used, do we need this function ? */
 /* Answer: In the dos version, this gets called by hb_gt_GetCursorStyle()
    as that function is written below, we don't need this */

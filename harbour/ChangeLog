@@ -1,3 +1,7 @@
+19990908-03:05 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtos2.c
+    + hb_gt_scroll by Chen Kedem <niki@actcom.co.il>
+
 19990908-08:24 GMT+1 Antonio Linares <alinares@fivetech.com>
   * makefile.b32
     * strfmt.c and strfmt.obj were missing.
