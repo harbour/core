@@ -58,7 +58,8 @@ HB_FUNC(SQLCONNECT) // MYSQL *mysql_real_connect(MYSQL*, char * host, char * use
 #if MYSQL_VERSION_ID > 32200
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
-      mysql = mysql_real_connect(NULL, _parc(1), _parc(2), _parc(3), NULL, 0, NULL, 0);
+  if ( (mysql = mysql_init((MYSQL*) 0)) )
+      mysql_real_connect( mysql, _parc(1), _parc(2), _parc(3), NULL, 0, NULL, 0);
 #else
       mysql = mysql_real_connect(NULL, _parc(1), _parc(2), _parc(3), 0, NULL, 0);
 #endif
