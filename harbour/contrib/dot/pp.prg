@@ -1052,7 +1052,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
    LOCAL sToken, sWorkLine, sNextExp, sNextAnchor, nMatch, nMatches
    LOCAL sPad, asRevert := {}, bNext, sPreMatch, sTemp, nLen, nBookMark
    LOCAL sPrimaryStopper, sPreStoppers, sStopper, sMultiStopper, nStopper, nStoppers
-   LOCAL nSpaceAt, sStopLine, sNextStopper
+   LOCAL nSpaceAt, sStopLine, sNextStopper, nTemp
 
    nRules   := Len( aRules )
 
@@ -1157,20 +1157,34 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   WAIT
                ENDIF
 
+               IF nOptional <> 0 .AND. aMP[2] < 0
+                  sWorkLine := asRevert[Abs(nOptional)]
+
+                  IF bDbgMatch
+                     ? "* Reverted: " + asRevert[Abs(nOptional)]
+                     WAIT
+                  ENDIF
+               ENDIF
+
                IF aMP[2] > 0 .AND. nMatch < nMatches
                   /* Skip all same level optionals to next group. */
                   nOptional := aMP[2]
-                  WHILE nMatch < nMatches
-                     nMatch++
+                  nMatch++
+                  WHILE nMatch <= nMatches
                      aMP := aRules[nRule][2][nMatch]
                      IF ( aMP[2] >= 0 ) .AND. ( aMP[2] <= Abs( nOptional ) )
                         EXIT
                      ENDIF
+                     nMatch++
                   ENDDO
                   IF bDbgMatch
                      ? "Skipped to", nMatch, "of", nMatches, aMP[2], aMP[3], nOptional
                   ENDIF
-                  LOOP
+                  IF nMatch <= nMatches
+                     LOOP
+                  ELSE
+                     EXIT
+                  ENDIF
                ELSE
                   IF nMatch < nMatches
                      nMatch++
@@ -1393,27 +1407,6 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
                nOptional := aMP[2]
 
-               /*
-               sTemp := ''
-               IF ! ( sToken == NIL )
-                  sTemp := sToken + sPad
-               ENDIF
-               IF ! ( xMarker == NIL )
-                  IF ValType( xMarker == 'A' )
-                     nWords := Len( xMarker )
-                     FOR Counter := 1 TO nWords
-                        sTemp += xMarker[Counter]
-                        IF Counter < nWords
-                           sTemp += ','
-                        ENDIF
-                     NEXT
-                  ELSE
-                     sTemp += xMarker
-                  ENDIF
-               ENDIF
-               sTemp += sWorkLine
-               */
-
                /* Save. */
                aSize( asRevert, nOptional )
                asRevert[nOptional] := sPreMatch
@@ -1431,7 +1424,8 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                ENDIF
 
                /* We reached the end of current optional group - Rewind, to 1st optional at same level. */
-               IF nMatch == nMatches .OR. aRules[nRule][2][nMatch + 1][2] >= 0 .AND. aRules[nRule][2][nMatch + 1][2] <= Abs( aMP[2] )
+               IF nMatch == nMatches .OR. ( aRules[nRule][2][nMatch + 1][2] >= 0 .AND. aRules[nRule][2][nMatch + 1][2] <= Abs( aMP[2] ) ) .OR. ;
+                                          ( aRules[nRule][2][nMatch + 1][2] < 0 .AND. abs( aRules[nRule][2][nMatch + 1][2] ) < Abs( aMP[2] ) )
 
                   /* Current level */
                   nOptional := aMP[2]
@@ -1559,6 +1553,41 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   sLine := ( PPOut( aResults[nRule], aMarkers ) + sWorkLine )
                   RETURN nRule
                ELSE
+                  /* Nested optional, maybe last in its group. */
+                  IF aMP[2] > 1
+                     nTemp := aMP[2]
+                     /* Skip dependents ans nested optionals, if any. */
+                     nMatch++
+                     WHILE nMatch < nMatches .AND. ( ( aRules[nRule][2][nMatch][2] < 0 .AND. Abs( aRules[nRule][2][nMatch][2] ) == nTemp ).OR. aRules[nRule][2][nMatch][2] > nTemp )
+                        nMatch++
+                     ENDDO
+                     nMatch--
+
+                     IF aRules[nRule][2][nMatch + 1][2] > 0 .AND. aRules[nRule][2][nMatch + 1][2] < nTemp
+                        /* Upper level optional should be accepted - rewind to top of parent group. */
+                        nOptional--
+
+                        WHILE nMatch > 1
+                           nMatch--
+                           IF aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional
+                              EXIT
+                           ENDIF
+                        ENDDO
+                        //IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOptional )
+                           nMatch++
+                        //ENDIF
+
+                        nOptional := 0
+
+                        IF bDbgMatch
+                           ? "Nested last optional, Rewinded to:", nMatch
+                        ENDIF
+
+                        LOOP
+                     ENDIF
+
+                  ENDIF
+
                   /* Skip all same level optionals to next group. */
                   nOptional := aMP[2]
                   bPartialOk := .T. /* */
@@ -1578,6 +1607,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                   ENDDO
 
                   /* Partial match was acceptable, rewind to top of same level optionals. */
+                  /*
                   IF bPartialOk .AND. ( nOptional := Abs( nOptional ) ) > 1
                      nOptional--
 
@@ -1587,18 +1617,19 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
                            EXIT
                         ENDIF
                      ENDDO
-                     IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] < nOPtional )
+                     //IF nMatch == 0 .OR. ( aRules[nRule][2][nMatch][2] >= 0 .AND. aRules[nRule][2][nMatch][2] <= nOptional )
                         nMatch++
-                     ENDIF
+                     //ENDIF
 
                      nOptional := 0
 
                      IF bDbgMatch
-                        ? "Rewinded to:", nMatch
+                        ? "Partial Accepted - Rewinded to:", nMatch
                      ENDIF
 
                      LOOP
                   ENDIF
+                  */
 
                   IF nMatch == nMatches .AND. Abs( aMP[2] ) == nOptional /* reached EOR and still same group */
                      IF bDbgMatch
@@ -2972,7 +3003,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
          IF nOptional > 0
             nOptional--
-            nOptional := -nOptional // won't affect -0
+            nOptional := (-nOptional)
          ELSE
             nOptional++
          ENDIF
@@ -3173,6 +3204,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
             IF nOptional > 0
                nOptional--
+               nOptional := (-nOptional)
             ELSE
                nOptional++
             ENDIF

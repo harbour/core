@@ -1,3 +1,7 @@
+2000-11-11 23:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Corrected few pre-processor bugs.
+
 2000-11-10 22:40 UTC+0100 JFL (mafact) <jfl@mafact.com>
    * source/vm/classes.c
      Just a test with hb_parc() wich I recall just after vmPush()
@@ -10,7 +14,7 @@
 
 2000-11-10 11:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
-     + Added support for early macro of expansion declared symbol for simple macro expression within CodeBlock (Like Clipper).
+     + Added support for early macro expansion of declared symbol for simple macro expression within CodeBlock (Like Clipper).
 
    * source/rtl/tgetint.prg
      ! Corrected creation of bSetGet if uVar == NIL, to avoid compile error:
