@@ -296,6 +296,27 @@ void hb_memvarValueIncRef( HB_HANDLE hValue )
    HB_TRACE(HB_TR_INFO, ("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
 }
 
+static void hb_memvarRecycle( HB_HANDLE hValue )
+{
+   if( s_globalFirstFree > hValue )
+   {
+      if( ( s_globalLastFree - hValue ) == 1 )
+         s_globalFirstFree = s_globalLastFree = hValue;     /* last item */
+      else
+      {
+         s_globalFirstFree = hValue;
+         ++s_globalFreeCnt;             /* middle item */
+      }
+   }
+   else if( ( s_globalLastFree - hValue ) == 1 )
+   {
+      s_globalLastFree = hValue;         /* last item */
+      if( s_globalLastFree == s_globalFirstFree )
+         s_globalFreeCnt = 0;
+   }
+   else
+      ++s_globalFreeCnt;
+}
 /*
  * This function decreases the number of references to passed global value.
  * If it is the last reference then this value is deleted.
@@ -323,24 +344,43 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
       if( --pValue->counter == 0 )
       {
          hb_itemClear( &pValue->item );
-         if( s_globalFirstFree > hValue )
-         {
-            if( ( s_globalLastFree - hValue ) == 1 )
-               s_globalFirstFree = s_globalLastFree = hValue;     /* last item */
-            else
-            {
-               s_globalFirstFree = hValue;
-               ++s_globalFreeCnt;             /* middle item */
-            }
-         }
-         else if( ( s_globalLastFree - hValue ) == 1 )
-         {
-            s_globalLastFree = hValue;         /* last item */
-            if( s_globalLastFree == s_globalFirstFree )
-               s_globalFreeCnt = 0;
-         }
-         else
-            ++s_globalFreeCnt;
+         hb_memvarRecycle( hValue );
+
+         HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
+      }
+   }
+}
+
+/* This function is called from releasing of detached local variables
+ * referenced in a codeblock that is wiped out by the Garbage Collector.
+ * Decrement the reference counter and clear a value stored in the memvar.
+ * Don't clear arrays or codeblocks to avoid loops - these values will be
+ * released by the garbage collector.
+ */
+void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
+{
+   HB_VALUE_PTR pValue;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%lu)", hValue));
+
+   pValue = s_globalTable + hValue;
+
+   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
+
+   if( pValue->counter > 0 )
+   {
+      /* Notice that Counter can be equal to 0.
+      * This can happen if for example PUBLIC variable holds a codeblock
+      * with detached variable. When hb_memvarsRelease() is called then
+      * detached variable can be released before the codeblock. So if
+      * the codeblock will be released later then it will try to release
+      * again this detached variable.
+      */
+      if( --pValue->counter == 0 )
+      {
+         if( HB_IS_STRING( &pValue->item ) )
+             hb_itemClear( &pValue->item );
+         hb_memvarRecycle( hValue );    
 
          HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
       }

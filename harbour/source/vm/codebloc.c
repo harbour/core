@@ -248,8 +248,7 @@ HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
       USHORT ui = 1;
       while( ui <= pCBlock->uiLocals )
       {
-         pCBlock->ulCounter = 0;    /* to prevent cyclic releases */
-         hb_memvarValueDecRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
+         hb_memvarValueDecGarbageRef( pCBlock->pLocals[ ui ].item.asMemvar.value );
          ++ui;
       }
       /* decrement the table reference counter and release memory if

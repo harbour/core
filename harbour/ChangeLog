@@ -1,3 +1,15 @@
+2001-03-21 21:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+    *source/vm/codebloc.c
+    *source/vm/memvars.c
+        * fixed possible loop during a codeblock releasing called
+        by the garbage Collector
+
+    *source/rtl/errorapi.c
+        *replaced 'static HB_ITEM' to 'static HB_ITEM_PTR' to make it
+        the GC friendly
+
 2001-02-17 15:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
       * added conversion code for numeric key types to support DBOI_KEYVAL

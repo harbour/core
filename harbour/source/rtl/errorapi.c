@@ -71,7 +71,7 @@
 #define HB_ERROR_LAUNCH_MAX 8
 
 static HB_ERROR_INFO_PTR s_errorHandler = NULL;
-static HB_ITEM s_errorBlock;
+static HB_ITEM_PTR s_errorBlock;
 static int     s_iLaunchCount = 0;
 static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
@@ -105,11 +105,11 @@ HB_FUNC( ERRORBLOCK )
     * memory occupied by the item can contain garbage bits
    */
    hb_itemInit( &oldError );
-   hb_itemCopy( &oldError, &s_errorBlock );
+   hb_itemCopy( &oldError, s_errorBlock );
 
    if( pNewErrorBlock )
    {
-      hb_itemCopy( &s_errorBlock, pNewErrorBlock );
+      hb_itemCopy( s_errorBlock, pNewErrorBlock );
    }
 
    hb_itemReturn( &oldError );
@@ -148,14 +148,14 @@ void hb_errInit( void )
     * NOTE: hb_itemClear() cannot be used to initialize an item because 
     * memory occupied by the item can contain garbage bits
    */
-   hb_itemInit( &s_errorBlock );
+   s_errorBlock = hb_itemNew( NULL );
 }
 
 void hb_errExit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errExit()"));
 
-   hb_itemClear( &s_errorBlock );
+   hb_itemRelease( s_errorBlock );
 }
 
 PHB_ITEM hb_errNew( void )
@@ -188,7 +188,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
       /* Check if we have a valid error handler */
 
-      if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
+      if( hb_itemType( s_errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -206,12 +206,12 @@ USHORT hb_errLaunch( PHB_ITEM pError )
           * of normal Harbour-level one
           */
          s_errorHandler->Error = pError;
-         s_errorHandler->ErrorBlock = &s_errorBlock;
+         s_errorHandler->ErrorBlock = s_errorBlock;
          pResult = (s_errorHandler->Func)( s_errorHandler );
          s_errorHandler->Error = NULL;
       }
       else
-         pResult = hb_itemDo( &s_errorBlock, 1, pError );
+         pResult = hb_itemDo( s_errorBlock, 1, pError );
 
       s_iLaunchCount--;
 
@@ -291,7 +291,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
    {
       /* Check if we have a valid error handler */
 
-      if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
+      if( hb_itemType( s_errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -309,12 +309,12 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
           * of normal Harbour-level one
           */
          s_errorHandler->Error = pError;
-         s_errorHandler->ErrorBlock = &s_errorBlock;
+         s_errorHandler->ErrorBlock = s_errorBlock;
          pResult = ( s_errorHandler->Func )( s_errorHandler );
          s_errorHandler->Error = NULL;
       }
       else
-         pResult = hb_itemDo( &s_errorBlock, 1, pError );
+         pResult = hb_itemDo( s_errorBlock, 1, pError );
 
       s_iLaunchCount--;
 

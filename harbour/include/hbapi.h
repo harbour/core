@@ -433,6 +433,7 @@ extern void     hb_memvarsRelease( void ); /* clear all PUBLIC and PRIVATE varia
 extern void     hb_memvarsFree( void ); /* release the memvar API system */
 extern void     hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
 extern void     hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
+extern void     hb_memvarValueDecGarbageRef( HB_HANDLE hValue ); /* decrease the reference count of a detached local variable */
 extern void     hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
 extern ERRCODE  hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
 extern void     hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
