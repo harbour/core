@@ -1,3 +1,6 @@
+2001-08-28 21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   * added #include "dir.h" inside platform tags
+
 2001-08-30 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * config/os2/gcc.cf
