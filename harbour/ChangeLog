@@ -1,3 +1,9 @@
+2000-08-01 12:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/cmdcheck.c
+     + Added support for "new style" switches specs, for command line arguments.
+
+     /* Note: */ I did *not* implement same for the Environment Variables parsing.
+
 2000-08-01 21:10 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    + doc/cmdline.txt
