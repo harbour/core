@@ -250,11 +250,10 @@ static void hb_altout( char * fpStr, WORD uiLen )
    {
    #ifdef USE_GTAPI
       hb_gtWriteCon( fpStr, uiLen );
-      if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
-         hb_gtGetPos( &dev_row, &dev_col );
+      hb_gtGetPos( &dev_row, &dev_col );
    #else
       WORD uiCount;
-      for( uiCount = 0; uiCount < uiLen; uiCount++ )
+     for( uiCount = 0; uiCount < uiLen; uiCount++ )
          printf( "%c", fpStr[ uiCount ] );
       adjust_pos( fpStr, uiLen, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
    #endif
@@ -324,6 +323,7 @@ void hb_devpos( USHORT row, USHORT col )
       }
       for( count = p_row; count < row; count++ ) write( hb_set_printhan, CrLf, strlen (CrLf) );
       if( row > p_row ) p_col = 0;
+      col += hb_set.HB_SET_MARGIN;
       for( count = p_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
       p_row = row;
       p_col = col;
@@ -369,11 +369,15 @@ HARBOUR HB_QOUT( void )
    #ifdef WINDOWS
       MessageBox( 0, hb_parc( 1 ), "Harbour", 0 );
    #else
+      int count;
       hb_altout( CrLf, strlen (CrLf) );
       if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
       {
          p_row++;
-         p_col=0;
+         p_col = hb_set.HB_SET_MARGIN;
+         count = p_col;
+         while( count-- > 0 )
+            write( hb_set_printhan, " ", 1 );
       }
       HB_QQOUT();
    #endif

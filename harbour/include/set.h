@@ -87,7 +87,7 @@ typedef struct
    BOOL HB_SET_CONSOLE;     /* Logical */
    HB_cursor_enum  HB_SET_CURSOR;      /* Numeric */
    char *HB_SET_DATEFORMAT; /* Character */
-   BOOL HB_SET_DEBUG;       /* Logical */
+   int  HB_SET_DEBUG;       /* Numeric */
    int  HB_SET_DECIMALS;    /* Numeric */
    char *HB_SET_DEFAULT;    /* Character */
    BOOL HB_SET_DELETED;     /* Logical */
