@@ -1,3 +1,9 @@
+19990523-16:45 CET Eddie Runia
+  * tests/working/test_all.prg
+    Optional command line option added. If you pass HRB, it will compile
+    .HRB files. (Also it redirects the output to test_all.out, because
+    it went to quickly)
+
 19990523-16:15 CET Patrick Mast (upload by Eddie Runia)
   * tests/working/test_all.prg, tests/working/test_all.lnl
     Testbank added.

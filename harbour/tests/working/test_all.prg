@@ -5,21 +5,26 @@
 
 // Sorry, only clipper compile (I want this thing Compiled in Harbour!<g>, So give me Directory() Please)
 
-Function Main()
+Function Main( cOption )
 LOCAL aDir,f,o,cRead
 
 aDir:=Directory("*.PRG")
 o=fCreate("Test_All.Bat")
 FOR f=1 TO Len(aDir)
     IF TestIt(aDir[f][1])
-       fWrite(o,;
-              "..\..\bin\harbour "+aDir[f][1]+" /n /i..\..\include"+Chr(13)+Chr(10)+;
-              "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
-              "echo -O2 -e"+Left(aDir[f][1],Len(aDir[f][1])-4)+".EXE -I..\..\include ..\..\source\vm\hvm.c "+Left(aDir[f][1],Len(aDir[f][1])-4)+".C > b32.bc"+Chr(13)+Chr(10)+;
-              "echo ..\..\libs\b32\harbour.lib  ..\..\libs\b32\terminal.lib >> b32.bc"+Chr(13)+Chr(10)+;
-              "bcc32 @b32.bc"+Chr(13)+Chr(10)+;
-              "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
-              "del b32.bc"+Chr(13)+Chr(10)+Chr(13)+Chr(10))
+       IF !Empty( cOption ) .and. Upper( cOption ) == "HRB"
+         fWrite(o,;
+                "..\..\bin\harbour "+aDir[f][1]+" /n /gHRB /i..\..\include >> test_all.out"+Chr(13)+Chr(10) )
+       ELSE
+         fWrite(o,;
+                "..\..\bin\harbour "+aDir[f][1]+" /n /i..\..\include"+Chr(13)+Chr(10)+;
+                "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
+                "echo -O2 -e"+Left(aDir[f][1],Len(aDir[f][1])-4)+".EXE -I..\..\include ..\..\source\vm\hvm.c "+Left(aDir[f][1],Len(aDir[f][1])-4)+".C > b32.bc"+Chr(13)+Chr(10)+;
+                "echo ..\..\libs\b32\harbour.lib  ..\..\libs\b32\terminal.lib >> b32.bc"+Chr(13)+Chr(10)+;
+                "bcc32 @b32.bc"+Chr(13)+Chr(10)+;
+                "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
+                "del b32.bc"+Chr(13)+Chr(10)+Chr(13)+Chr(10))
+       ENDIF
     ENDIF
 NEXT
 
