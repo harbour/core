@@ -1,3 +1,7 @@
+19990515-01:15 CET Eddie Runia
+  * source/compiler/harbour.y
+    #include again
+
 19990513-22:20 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Put harbour.obj back into the harbour.exe build.
