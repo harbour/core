@@ -521,7 +521,8 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    void * pParseInfo;      /* data needed by the parser - it should be 'void *' to allow different implementation of macr compiler */
    USHORT uiNameLen;       /* the maximum symbol name length */
    BOOL   bShortCuts;      /* are we using logical shorcuts (in OR/AND)  */
-   int exprType;        /* type of successfully compiled expression */
+   int exprType;           /* type of successfully compiled expression */
+   int iListElements;
 } HB_MACRO, * HB_MACRO_PTR;
 
 extern void   hb_macroGetValue( HB_ITEM_PTR pItem ); /* retrieve results of a macro expansion */

@@ -1,3 +1,17 @@
+2001-07-15 20:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
+     + Added member iListElements to HB_MACRO structure.
+
+   * source/macro/macro.y
+     + Added rules to support a macro of a comma seperated list.
+
+   * source/vm/hvm.c
+     + Added: int hb_vm_iFunCalls = 0, *hb_vm_aiMacroListParameters = NULL, hb_vm_iMacroListAllocated
+       to support new logic to track number of extra parameters introduced by means of a macro expanded to a list.
+
+   * source/vm/macro.c
+     + Added logic to track number of extra parameters introduced by means of a macro expanded to a list.
+
 2001-07-15 20:15 MEST Martin Vogel <vogel@inttec.de>
    * source/rtl/math.c
      + added functions for custom math handlers

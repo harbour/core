@@ -247,6 +247,8 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
+int hb_vm_iFunCalls = 0, *hb_vm_aiMacroListParameters = NULL, hb_vm_iMacroListAllocated;
+
 /* Request for some action - stop processing of opcodes
  */
 static USHORT   s_uiActionRequest;
@@ -281,6 +283,8 @@ void hb_vmInit( BOOL bStartMainProc )
    s_bDebuggerIsWorking = FALSE;
    s_lRecoverBase = 0;
    s_uiActionRequest = 0;
+
+   hb_vm_aiMacroListParameters = (int *) hb_xgrab( sizeof( int ) * ( hb_vm_iMacroListAllocated = 16 ) );
 
    hb_stack.pItems = NULL; /* keep this here as it is used by fm.c */
    hb_stack.Return.type = HB_IT_NIL;
@@ -382,6 +386,8 @@ void hb_vmInit( BOOL bStartMainProc )
 void hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
+
+   hb_xfree( (void*) hb_vm_aiMacroListParameters );
 
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
@@ -589,18 +595,18 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          /* Execution */
 
          case HB_P_DO:
-            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] );
             w += 3;
             break;
 
          case HB_P_DOSHORT:
-            hb_vmDo( pCode[ w + 1 ] );
+            hb_vmDo( pCode[ w + 1 ] + hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] );
             w += 2;
             break;
 
          case HB_P_FUNCTION:
             hb_itemClear( &hb_stack.Return );
-            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 3;
@@ -608,7 +614,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_FUNCTIONSHORT:
             hb_itemClear( &hb_stack.Return );
-            hb_vmDo( pCode[ w + 1 ] );
+            hb_vmDo( pCode[ w + 1 ] + hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 2;
@@ -616,7 +622,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_SEND:
             hb_itemClear( &hb_stack.Return );
-            hb_vmSend( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_vmSend( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 + hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] ) );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 3;
@@ -624,7 +630,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_SENDSHORT:
             hb_itemClear( &hb_stack.Return );
-            hb_vmSend( pCode[ w + 1 ] );
+            hb_vmSend( pCode[ w + 1 ] + hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] );
             hb_itemCopy( hb_stackTopItem(), &hb_stack.Return );
             hb_stackPush();
             w += 2;
@@ -1018,11 +1024,23 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSYM:
+            if( hb_vm_iFunCalls > hb_vm_iMacroListAllocated )
+            {
+                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
+            }
+            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
+
             hb_vmPushSymbol( pSymbols + ( USHORT ) ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) ) );
             w += 3;
             break;
 
          case HB_P_PUSHSYMNEAR:
+            if( hb_vm_iFunCalls > hb_vm_iMacroListAllocated )
+            {
+                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
+            }
+            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
+
             hb_vmPushSymbol( pSymbols + ( USHORT ) pCode[ w + 1 ] );
             w += 2;
             break;
@@ -1226,6 +1244,12 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MACROSYMBOL:
             /* compile into a symbol name (used in function calls) */
+            if( hb_vm_iFunCalls > hb_vm_iMacroListAllocated )
+            {
+                hb_vm_aiMacroListParameters = (int *) hb_xrealloc( (void*) hb_vm_aiMacroListParameters, sizeof( int ) * ( hb_vm_iMacroListAllocated += 16 ) );
+            }
+            hb_vm_aiMacroListParameters[ hb_vm_iFunCalls++ ] = 0;
+
             hb_macroPushSymbol( hb_stackItemFromTop( -1 ) );
             w++;
             break;
@@ -2835,6 +2859,8 @@ void hb_vmDo( USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
+   hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ] = 0;
+
    hb_inkeyPoll();           /* Poll the console keyboard */
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );
@@ -2948,6 +2974,8 @@ void hb_vmSend( USHORT uiParams )
    void * pMethod;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
+
+   hb_vm_aiMacroListParameters[ --hb_vm_iFunCalls ] = 0;
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );   /* procedure name */
    pSym = pItem->item.asSymbol.value;

@@ -193,7 +193,7 @@ int yylex( YYSTYPE *, HB_MACRO_PTR );
 %type <asExpr>  ObjectData
 %type <asExpr>  ObjectMethod
 %type <asExpr>  IfInline
-%type <asExpr>  ExpList PareExpList PareExpListAlias
+%type <asExpr>  ExpList PareExpList PareExpListAlias AsParamList RootParamList
 %type <asExpr>  Expression SimpleExpression
 %type <asExpr>  EmptyExpression
 %type <asExpr>  ExprAssign ExprOperEq ExprPreOp ExprPostOp
@@ -215,6 +215,14 @@ Main : Expression '\n' {
                         }
 
      | Expression      {
+                           HB_MACRO_DATA->exprType = hb_compExprType( $1 );
+                           if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
+                              hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                           else
+                              hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
+                           hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
+                        }
+     | AsParamList      {
                            HB_MACRO_DATA->exprType = hb_compExprType( $1 );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
                               hb_compExprDelete( hb_compExprGenPush( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
@@ -457,8 +465,14 @@ SimpleExpression :
            | ExprRelation                     { $$ = $1; }
 ;
 
-Expression : SimpleExpression                { $$ = $1; HB_MACRO_CHECK( $$ ); }
-           | PareExpList                     { $$ = $1; HB_MACRO_CHECK( $$ ); }
+Expression : SimpleExpression                 { $$ = $1; HB_MACRO_CHECK( $$ ); }
+           | PareExpList                      { $$ = $1; HB_MACRO_CHECK( $$ ); }
+;
+
+RootParamList : EmptyExpression ',' EmptyExpression  { HB_MACRO_DATA->iListElements = 1; $$ = hb_compExprAddListExpr( hb_compExprNewArgList( $1 ), $3 ); }
+
+AsParamList  : RootParamList                    { $$ = $1; }
+             | AsParamList ',' EmptyExpression  { HB_MACRO_DATA->iListElements++; $$ = hb_compExprAddListExpr( $1, $3 ); }
 ;
 
 EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty(); }

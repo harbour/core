@@ -423,6 +423,8 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  */
 void hb_macroGetValue( HB_ITEM_PTR pItem )
 {
+   extern int *hb_vm_aiMacroListParameters, hb_vm_iFunCalls;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
 
    if( hb_macroCheckParam( pItem ) )
@@ -431,11 +433,15 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       int iStatus;
       char * szString = pItem->item.asString.value;
 
-      struMacro.Flags      = HB_MACRO_GEN_PUSH;
-      struMacro.bShortCuts = hb_comp_bShortCuts;
-      struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
-      struMacro.status     = HB_MACRO_CONT;
+      struMacro.Flags         = HB_MACRO_GEN_PUSH;
+      struMacro.bShortCuts    = hb_comp_bShortCuts;
+      struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
+      struMacro.status        = HB_MACRO_CONT;
+      struMacro.iListElements = 0;
+
       iStatus = hb_macroParse( &struMacro, szString );
+
+      hb_vm_aiMacroListParameters[ hb_vm_iFunCalls - 1 ] = struMacro.iListElements;
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
