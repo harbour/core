@@ -1,3 +1,8 @@
+2001-09-30 17:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   *source/rtl/filesys.c
+     * Some minor changes to the Win32 section(Verify the return code of the function
+       before make the call to GetLastError())
+
 2001-09-30 08:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    *contrib/hbzlib/zipnew.cpp
    contrib/hbzlib/zipcomp.cpp
