@@ -1,3 +1,9 @@
+19990724-21:20 EDT Paul Tucker (from Felipe Coury) <ptucker@sympatico.ca>
+   * rdd.b32
+   * buildrdd.bat
+   * tests/working/bld32w.bat
+     + added support for new files in rdd
+
 19990726-02:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
         *include/errorapi.h

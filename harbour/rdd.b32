@@ -6,10 +6,12 @@
 .path.lib = libs\b32
 .path.obj = obj
 
-libs\b32\rdd.lib : rddsys.obj dbcmd.obj
+libs\b32\rdd.lib : rddsys.obj dbcmd.obj dbfntx1.obj dbfntx0.obj
 
-dbcmd.obj  : dbcmd.c
-rddsys.obj : rddsys.c
+dbcmd.obj   : dbcmd.c
+rddsys.obj  : rddsys.c
+dbfntx1.obj : dbfntx1.c
+dbfntx0.obj : dbfntx0.c
 
 .c.obj :
   bcc32 -c -O2 -I.\include;.\source\hbpp -o$@ $<
