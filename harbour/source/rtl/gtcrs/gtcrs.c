@@ -775,10 +775,10 @@ USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE by
 
 USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byAttr )
 {
-   SHORT Row;
+   SHORT uRow;
 
    if( Top <= Bottom )
-      Row = Top;
+      uRow = Top;
    else
    {
       uRow = Bottom;
@@ -789,7 +789,7 @@ USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byA
       byChar = ACS_VLINE;
 
    mvvline( uRow, Col, byChar | A_ALTCHARSET | s_attribmap_table[ byAttr ],
-            Bottom - Row + 1 );
+            Bottom - uRow + 1 );
 
    return 0;
 }
