@@ -1,3 +1,7 @@
+2001-05-10 22:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/rtl/tclass.prg
+     + Added logic to dispose of posibble "(...)" suffix to Method Name in AddInline()
+
 2001-05-10 15:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      + Added logic for NO Checking of OO Syntax (#ifdef NO_OO_ERR) - Use /dNO_OO_ERR to disable OO Syntax Checking.

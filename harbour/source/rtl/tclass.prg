@@ -366,7 +366,12 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
-   LOCAL Self := QSelf()
+   LOCAL Self := QSelf(), nAt
+
+   /* Remove possible ( <x,...> )*/
+   IF ( nAt := At( "(", cMethod ) ) > 0
+      cMethod := RTrim( Left( cMethod, nAt - 1 ) )
+   ENDIF
 
    AAdd( ::aInlines, { cMethod, bCode, nScope } )
 
