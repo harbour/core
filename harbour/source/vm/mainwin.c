@@ -39,8 +39,8 @@ void hb_cmdargInit( int argc, char * argv[] );
 void hb_vmInit( void );
 void hb_vmQuit( void );
 
-HANDLE hb_g_hInstance = 0;
-HANDLE hb_g_hPrevInstance = 0;
+HANDLE hb_hInstance = 0;
+HANDLE hb_hPrevInstance = 0;
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */

@@ -199,12 +199,12 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 /* virtual machine state */
 
 STACK   stack;
-HB_SYMB hb_g_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
-HB_ITEM s_aStatics;          /* Harbour array to hold all application statics variables */
+HB_SYMB hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
 
+static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static BOOL     s_bDebugging = FALSE;
 static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
-static PHB_SYMB s_pSymStart = NULL;        /* start symbol of the application. MAIN() is not required */
+static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
 static PSYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
 static BYTE     s_byErrorLevel = 0; /* application exit errorlevel */
 
@@ -245,7 +245,7 @@ void hb_vmInit( void )
    hb_xinit();
    hb_errInit();
    hb_stackInit();
-   hb_dynsymNew( &hb_g_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
+   hb_dynsymNew( &hb_symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
    hb_consoleInitialize();    /* initialize Console */
    hb_memvarsInit();
@@ -2184,7 +2184,7 @@ void hb_vmDo( USHORT uiParams )
 
    if( ! IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-      if( pSym == &( hb_g_symEval ) && IS_BLOCK( pSelf ) )
+      if( pSym == &( hb_symEval ) && IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
          pFunc = hb_objGetMethod( pSelf, pSym );

@@ -237,7 +237,7 @@ typedef USHORT ERRCODE;
 #define FAILURE            1
 
 extern STACK   stack;
-extern HB_SYMB hb_g_symEval;
+extern HB_SYMB hb_symEval;
 
 /* Extend API */
 extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */

@@ -139,7 +139,7 @@ HARBOUR HB_MEMOLINE( void )
       }
       else
       {
-         char * pszLine = (char *)hb_xgrab( uiLineLength );
+         char * pszLine = ( char * ) hb_xgrab( uiLineLength );
          memset( pszLine, ' ', uiLineLength );
          memcpy( pszLine, ( pszString + ulLineBegin ), ( ulLineEnd - ulLineBegin + 1 ) );
          hb_retclen( pszLine, uiLineLength );

@@ -1027,7 +1027,7 @@ HARBOUR HB_STUFF( void )
          StrTran( "...", ".", Replicate( "A", 32000 ) ) */
 
 /* replaces lots of characters in a string */
-/* Note: Will not work with a search string of > 64 KB on some platforms */
+/* NOTE: Will not work with a search string of > 64 KB on some platforms */
 HARBOUR HB_STRTRAN( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );

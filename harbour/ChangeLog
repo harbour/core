@@ -1,3 +1,20 @@
+19991006-03:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/extend.h
+    source/rtl/arrays.c
+    source/rtl/classes.c
+    source/rtl/do.c
+    source/rtl/itemapi.c
+    source/vm/hvm.c
+    * hb_g_symEval -> hb_symEval
+  * source/vm/mainwin.c
+    * hb_g_* -> hb_*
+  * source/vm/hvm.c
+    ! aStatics made static now for sure.
+  * source/rtl/strings.c
+    ! Typo fixed.
+  * source/rtl/memoline.c
+    ! Formatting fix.
+
 19991005-20:35 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/memoline.c
     * add a cast on xgrab call.

@@ -954,7 +954,7 @@ static HARBOUR hb___msgEvalInline( void )
 
    hb_arrayGet( s_pClasses[ uiClass - 1 ].pInlines, s_pMethod->uiData, &block );
 
-   hb_vmPushSymbol( &hb_g_symEval );
+   hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( &block );
    hb_vmPush( stack.pBase + 1 );                     /* Push self                */
    for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
@@ -976,7 +976,7 @@ static HARBOUR hb___msgEval( void )
    {
       USHORT uiParam;
 
-      hb_vmPushSymbol( &hb_g_symEval );
+      hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( stack.pBase + 1 );                     /* Push block               */
       for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
          hb_vmPush( hb_param( uiParam, IT_ANY ) );
