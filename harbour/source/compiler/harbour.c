@@ -2332,7 +2332,7 @@ void hb_compGenPushNil( void )
 /* generates the pcode to push a double number on the virtual machine stack */
 void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec )
 {
-   BYTE pBuffer[ sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) ];
+   BYTE pBuffer[ sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ) + 1 ];
 
    pBuffer[ 0 ] = HB_P_PUSHDOUBLE;
 

@@ -1,3 +1,9 @@
+20000506-17:46 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.c
+     ! hb_compGenPushDouble() buffer overflow bug fixed.
+       Thanks for Istvan Foldi.
+
 20000505-19:26 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/genobj32.c
      * 4 bytes alignment compatible.
