@@ -29,7 +29,7 @@
 
 HARBOUR OS()
 {
-   int hb_osmajor, hb_osminor, hb_osletter;
+   int hb_osmajor = -1, hb_osminor = -1, hb_osletter = -1;
    char * hb_os = 0;
    char version [128];
 #ifdef __IBMCPP__
@@ -54,7 +54,15 @@ HARBOUR OS()
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__)
 
 #if defined(_Windows)
-   hb_os = "Windows";
+   hb_os = "Windows 95/98";
+   _AX = 0x160A;
+   geninterrupt(0x2F);
+   if(_AX == 0)
+   {
+      hb_osmajor  = _BX / 256;
+      hb_osminor  = _BX % 256;
+      hb_osletter = 0;
+   }
 #else
    /* detect OS/2 */
    if(_osmajor >= 10)
@@ -158,6 +166,7 @@ HARBOUR OS()
 #endif /* __IBMCPP__ */
 
    if (!hb_os) strcpy (version, "Unknown");
+   else if (hb_osmajor == -1) strcpy (version, hb_os);
    else sprintf (version, "%s %d.%02d%c", hb_os, hb_osmajor, hb_osminor, hb_osletter);
    _retc (version);
 }
