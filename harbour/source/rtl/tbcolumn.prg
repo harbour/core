@@ -53,6 +53,7 @@
 #include "hbclass.ch"
 #include "hbsetup.ch"
 #include "common.ch"
+#include "tbrowse.ch"
 
 CLASS TBColumn
 
@@ -77,13 +78,17 @@ CLASS TBColumn
    METHOD New(cHeading, bBlock)  // Constructor
 
 #ifdef HB_COMPAT_C53
-   METHOD SetStyle()
+   METHOD SetStyle( nMode, lSetting )
 #endif
 
    HIDDEN:     /* H I D D E N */
 
    DATA  nWidth
    METHOD SetWidth(n)
+
+#ifdef HB_COMPAT_C53
+   DATA aSetStyle
+#endif
 
 ENDCLASS
 
@@ -106,6 +111,14 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
    ::Footing  := ""
    ::block    := bBlock
 
+#ifdef HB_COMPAT_C53
+   ::aSetStyle := ARRAY( 4096 )
+
+   ::aSetStyle[ TBC_READWRITE ] := .f.
+   ::aSetStyle[ TBC_MOVE ]      := .f.
+   ::aSetStyle[ TBC_SIZE ]      := .f.
+#endif
+
 return Self
 
 
@@ -121,11 +134,20 @@ return n
 
 
 #ifdef HB_COMPAT_C53
-METHOD SetStyle() CLASS TBColumn
+METHOD SetStyle( nMode, lSetting ) CLASS TBColumn
+  LOCAL lRet := .F.
 
-   /* TODO */
+  IF nMode > LEN( ::aSetStyle )
+     RETURN .F.
+  ENDIF
 
-return Self
+  lRet := ::aSetStyle[ nMode ]
+
+  IF ISLOGICAL( lSetting )
+     ::aSetStyle[ nMode ] := lSetting
+  ENDIF
+ 
+RETURN lRet
 #endif
 
 
