@@ -1,3 +1,15 @@
+2001-05-26 21:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Fixed support for '$' in NextToken() and NextExp()
+     + Added nAtSkipStr() to exclude content of strings when searching for ';'
+     ! Fixed Multi Line logic to use nAtSkipStr() instead of At()
+     + Added infile C versions for NextToken() and NextIdentifier()
+     + Added precompiled rules for FiveWin.ch (Harbour)
+     + Added precompiled rules for RP_Run.ch.
+
+   * source/compiler/genc.c
+     + Added few #include files to generation of inline C.
+
 2001-05-25 12:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Few corrections to NextToken() and CompileRule() to match Clipper behaviour regrding decimal point, and decimal numbers.

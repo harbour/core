@@ -236,6 +236,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       if( hb_comp_cInlineID > '0' )
       {
          fprintf( yyc, "#include \"hbapi.h\"\n" );
+         fprintf( yyc, "#include \"hbstack.h\"\n" );
+         fprintf( yyc, "#include \"hbapierr.h\"\n" );
+         fprintf( yyc, "#include \"hbapiitm.h\"\n" );
+         fprintf( yyc, "#include \"hbvm.h\"\n" );
+         fprintf( yyc, "#include \"hboo.ch\"\n" );
       }
 
       pInline = hb_comp_inlines.pFirst;
