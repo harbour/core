@@ -1,3 +1,10 @@
+19990524-17:10 CET Eddie Runia
+  * tests/working/test_all
+    Fully automated the test bench.
+    If you select HRB, it also runs the program.
+    Just press <Enter> a couple of times and you should know how to loose
+    Mankala blindly.
+
 19990524-16:45 CET Les Griffith (upload Eddie Runia)
   * tests/working/iotest2.prg
     Test program fReadStr
