@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-30 16:09 UTC+0200 Ilias Lazaridis <ilias@lazaridis.com>
+   + /cvsplay.txt 
+     + Added file with tortoiseCVS to check CVS 
+       functionality without influencing rest of project
+
+   [Note: the above changelog time entry is possibly not correct]
+   
+
 2004-04-27 12:57 UTC-0500 Randy Portnoff <randy@palmasdev.com>
 
    * contrib/rdd_ads/adsfunc.c
