@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/mtran.c
+   * source/rtl/oemansi.c
+   * source/rtl/padc.c
+   * source/rtl/padl.c
+   * source/rtl/padr.c
+   * source/rtl/philes.c
+   * source/rtl/replic.c
    * source/rtl/saverest.c
    * source/rtl/space.c
    * source/rtl/strtran.c
