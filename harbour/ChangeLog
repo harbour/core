@@ -1,3 +1,8 @@
+2001-08-20 23:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/set.c
+    ! Synchronize SET CENTURY with SET DATE FORMAT.
+
 2001-08-20 20:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbmake/hbmake.prg
       *fixed some problem on library edit mode

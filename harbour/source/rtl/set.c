@@ -338,7 +338,11 @@ HB_FUNC( __SETCENTURY )
          format_len = strlen( szDateFormat );
          if( y_stop < format_len ) strcat( szNewFormat, szDateFormat + y_stop );
          hb_xfree( szDateFormat );
+         /* DATE FORMAT is under direct control of SET, so notify when it
+            it is changed indirectly via __SETCENTURY() */
+         hb_setListenerNotify( HB_SET_DATEFORMAT, HB_SET_LISTENER_BEFORE );
          hb_set.HB_SET_DATEFORMAT = szNewFormat;
+         hb_setListenerNotify( HB_SET_DATEFORMAT, HB_SET_LISTENER_AFTER );
       }
    }
 
@@ -422,7 +426,30 @@ HB_FUNC( SET )
       case HB_SET_DATEFORMAT :
          if( hb_set.HB_SET_DATEFORMAT ) hb_retc( hb_set.HB_SET_DATEFORMAT );
          else hb_retc( "" );
-         if( args > 1 ) hb_set.HB_SET_DATEFORMAT = set_string( pArg2, hb_set.HB_SET_DATEFORMAT );
+         if( args > 1 )
+         {
+            BOOL flag = FALSE;
+            int ch, i, year = 0;
+            hb_set.HB_SET_DATEFORMAT = set_string( pArg2, hb_set.HB_SET_DATEFORMAT );
+            for( i = 0; i < strlen(hb_set.HB_SET_DATEFORMAT); i++ )
+            {
+               ch = hb_set.HB_SET_DATEFORMAT[i];
+               if( !flag && ( ch == 'Y' || ch == 'y' ) )
+                  year++;   /* Only count the first set of consecutive "Y"s. */
+               else if( year )
+                  flag = TRUE; /* Indicate non-consecutive. */
+            }
+            if( year >= 4 )
+               flag = TRUE;
+            else
+               flag = FALSE;
+            if( flag != hb_set.hb_set_century )
+            {
+               /* CENTURY is not controlled directly by SET, so there is no
+                  notification for changing it indirectly via DATE FORMAT. */
+               hb_set.hb_set_century = flag;
+            }
+         }
          break;
       case HB_SET_DEBUG      :
          hb_retl( hb_set.HB_SET_DEBUG );
