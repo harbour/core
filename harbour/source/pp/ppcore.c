@@ -3374,7 +3374,7 @@ static char * PrevSquare( char * ptr, char * bound, int * kolmark )
 {
    int State = STATE_NORMAL;
 
-   HB_TRACE(HB_TR_DEBUG, ("PrevSquare(%s, %s, %d)", ptr, bound, *kolmark));
+   HB_TRACE(HB_TR_DEBUG, ("PrevSquare(%s, %s, %d)", ptr, bound, kolmark==NULL?0:*kolmark));
    while( ptr > bound )
    {
       if( State == STATE_QUOTE1 )
