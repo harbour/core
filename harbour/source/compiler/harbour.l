@@ -1,13 +1,12 @@
 %{
-
 /*
  * $Id$
  *
  * Harbour lex rules.
  * Build 21: Spring 99
- * Usage: flex -i -oyylex.c harbour.l
+ * Usage: flex -i -8 -oyylex.c harbour.l
  * You may find flex.exe at www.harbour-project.org
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,9 +51,7 @@ long lNumber = 0;
 #define LOOKUP  0
 int _iState = LOOKUP;
 
-/*
-//Separator     {SpaceTab}|("/ *".*"* /")|"//".*
-*/
+//Comment1      "/*"((.*)|(\n))"*/"
 
 %}
 
@@ -66,14 +63,15 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 String        (\"(([^\"]*)|([\!]*))\")|(\'(([^\']*)|([\!]*))\')
 PseudoFunc    {Identifier}"("+.*")"+
 
-Comment1      [\/][\*]([^\*]|[\*][^\/])*[\*][\/]
+Comment1      "/*"([^\*]|("*"[^\/]))*"*/"
 Comment2      [\/][\/].*
 Comment       ({Comment1}|{Comment2})
-Separator     {SpaceTab}|{Comment}
+LineCont      (;.*\n)
+Separator     {SpaceTab}|{Comment}|{LineCont}
 
 %x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
 %x            IFDEF IFNDEF STRING1 STRING2
-%x            _NEXT
+%x            NEXT_ BREAK_
 
 %%
 
@@ -141,9 +139,36 @@ Separator     {SpaceTab}|{Comment}
 \n.*           _iState=LOOKUP; yyless( 1 ); ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine ); return '\n';
 ;\n            _iState=LOOKUP; ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine );
 
-"begin"        return BEGINSEQ;
-"break"        _iState =BREAK; return BREAK;
-"case"         _iState =CASE; return CASE;
+"begin"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?        return BEGINSEQ;
+"break"        BEGIN BREAK_;
+<BREAK_>{Separator}*\n { /* at the end of line */
+               BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               if( _iState == LOOKUP )
+               { /* it is first item in the line */
+                 return BREAK;
+               }
+               else
+               { /* there is another item in line already */
+                 yylval.string = "BrEaK";
+                 return IDENTIFIER;
+               }
+             }
+<BREAK_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "break" */
+               BEGIN 0;
+               yylval.string = ((yytext[ yyleng-1 ] =='(')?"BREAK":"BrEaK");
+               _iState =IDENTIFIER;
+               unput( yytext[ yyleng-1 ] );
+               return IDENTIFIER;
+             }
+<BREAK_>{Separator}*. { /* an identifier follows BREAK statement */
+               BEGIN 0;
+               unput( yytext[ yyleng-1 ] );
+               _iState =BREAK;
+               return BREAK;
+             }
+<BREAK_>.    { BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+"case"         return CASE;
 "do"           return DO;
 "do"{SpaceTab}+"case" return DOCASE;
 ("do"{SpaceTab}+"while")|"while" return WHILE;
@@ -153,12 +178,13 @@ Separator     {SpaceTab}|{Comment}
 "endif"        return ENDIF;
 "endcase"      return ENDCASE;
 "enddo"        return ENDDO;
+"end"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?        return END;
 "exit"/[\n\;]  return EXITLOOP;
 "exit"         return EXIT;
 "extern"|"external" _iState =EXTERN; return EXTERN;
 "field"/[^(]   _iState =FIELD; return FIELD;
 "for"          _iState = FOR; return FOR;
-"func"|"funct"|"functi"|"functio"|"function"/[^(] return FUNCTION;
+"func"|"funct"|"functi"|"functio"|"function"/[^(] _iState=FUNCTION; return FUNCTION;
 ("if"|"iif"){SpaceTab}*/[(]  _iState =IF; return IF;
 "if"           _iState =IF; return IF;
 "in"           return IN;
@@ -167,8 +193,8 @@ Separator     {SpaceTab}|{Comment}
 "local"        _iState =LOCAL; return LOCAL;
 "loop"         return LOOP;
 "memvar"       _iState =MEMVAR; return MEMVAR;
-"next"         BEGIN _NEXT;
-<_NEXT>{Separator}*[\n\;] { /* at the end of line */
+"next"         BEGIN NEXT_;
+<NEXT_>{Separator}*[\n\;] { /* at the end of line */
                BEGIN 0;
                if( _iState == LOOKUP )
                { /* it is first item in the line */
@@ -182,20 +208,20 @@ Separator     {SpaceTab}|{Comment}
                  return IDENTIFIER;
                }
              }
-<_NEXT>{Separator}*[^_a-zA-Z\n\;] { /* there is no identifier after "next" */
+<NEXT_>{Separator}*[^_a-zA-Z\n\;] { /* there is no identifier after "next" */
                BEGIN 0;
                yylval.string = ((yytext[ yyleng-1 ] =='(')?"NEXT":"nExT");
                unput( yytext[ yyleng-1 ] );
                _iState =IDENTIFIER;
                return IDENTIFIER;
              }
-<_NEXT>{Separator}*. { /* an identifier follows NEXT statement */
+<NEXT_>{Separator}*. { /* an identifier follows NEXT statement */
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                _iState =NEXT;
                return NEXT;
              }
-<_NEXT>.     {  BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+<NEXT_>.     {  BEGIN 0; unput( yytext[ yyleng-1 ] ); }
 "nil"          return NIL;
 "otherwise"    return OTHERWISE;
 "parameters"   _iState =PARAMETERS; return PARAMETERS;
@@ -205,7 +231,6 @@ Separator     {SpaceTab}|{Comment}
 "qself"{SpaceTab}*[(]{SpaceTab}*[)] return SELF;
 "recover"      _iState =RECOVER; return RECOVER;
 "retu"|"retur"|"return"  _iState =RETURN; return RETURN;
-"sequence"     return SEQUENCE;
 "static"       _iState =STATIC; return STATIC;
 "step"/[^(]    return STEP;
 "to"           return TO;
@@ -281,6 +306,8 @@ Separator     {SpaceTab}|{Comment}
               }
 
 {String}      yylval.string = strdup( yytext + 1 ); yylval.string[ yyleng - 2 ] = 0; return LITERAL;
+
+{LineCont}     { ++iLine; }
 
 {Identifier}               {
                               PDEFINE pDef = FindDef( yytext );

@@ -1,5 +1,4 @@
 %{
-
 /*
  * $Id$
  *
@@ -335,9 +334,14 @@ static const char * _szReservedFun[] = {
 };
 #define RESERVED_FUNCTIONS  sizeof(_szReservedFun) / sizeof(char *)
 /* function compares strings upto maximum 4 characters (used in bsearch) */
-
+/* Borland C 3.1 reports error when this forward declaration is used
+ * int sz_compare4( const void *, const void * );
+ *
+ */
 /* Compare first 4 characters
  * If they are the same then compare the whole name
+ * SECO() is not allowed because of Clipper function SECONDS()
+ * however SECO32() is a valid name.
  */
 int sz_compare4( const void *pLookup, const void *pReserved )
 {
@@ -385,7 +389,7 @@ PEXTERN pExterns = 0;
 %token INC DEC ALIAS DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
-%token PRIVATE BEGINSEQ BREAK RECOVER USING SEQUENCE DO WITH SELF
+%token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -493,6 +497,8 @@ Statement  : ExecFlow Crlf                             {}
            | ObjectData ArrayIndex '=' Expression Crlf    {}
            | ObjectMethod ArrayIndex '=' Expression Crlf  {}
 
+           | BREAK Crlf
+           | BREAK Expression Crlf
            | RETURN Crlf              { GenReturn( Jump( 0 ) ); }
            | RETURN Expression Crlf   { GenPCode1( _RETVALUE ); GenReturn( Jump ( 0 ) ); }
            | PUBLIC VarList Crlf
@@ -887,22 +893,14 @@ ForStatements : ForStat NEXT
 ForStat    : Statements                          { Line(); }
            ;
 
-BeginSeq   : BEGINSEQ SEQUENCE Crlf
-                BreakSeq
+BeginSeq   : BEGINSEQ Crlf
                 RecoverSeq
-             EndSeq
+             END
 
-           | BEGINSEQ SEQUENCE Crlf Statements
-                BreakSeq
+           | BEGINSEQ Crlf
+                Statements
                 RecoverSeq
-             EndSeq
-           ;
-
-BreakSeq   : /* no break */
-           | BREAK Crlf
-           | BREAK Crlf Statements
-           | BREAK Expression Crlf
-           | BREAK Expression Crlf Statements
+             END
            ;
 
 RecoverSeq : /* no recover */
@@ -910,10 +908,6 @@ RecoverSeq : /* no recover */
            | RECOVER Crlf Statements
            | RECOVER USING IDENTIFIER Crlf
            | RECOVER USING IDENTIFIER Crlf Statements
-           ;
-
-EndSeq     : END
-           | END SEQUENCE
            ;
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
@@ -981,6 +975,8 @@ int harbour_main( int argc, char * argv[] )
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
    char *szPath ="";
    FILENAME *pFileName =NULL;
+
+   printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
 
    if( argc > 1 )
    {
@@ -1089,9 +1085,6 @@ int harbour_main( int argc, char * argv[] )
             pFileName =SplitFilename( argv[ iArg ] );
          iArg++;
       }
-
-      if( ! _iQuiet )
-         printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
 
       if( pFileName )
       {
@@ -1582,8 +1575,11 @@ void FunDef( char * szFunName, char cScope )  /* stores a Clipper defined functi
    }
 
    pFunction =(char * *)RESERVED_FUNC( szFunName );
-   if( pFunction )
+   if( pFunction && !(functions.iCount==0 && !_iStartProc) )
    {
+      /* We are ignoring it when it is the name of PRG file and we are
+       * not creating implicit starting procedure
+       */
         GenError( ERR_FUNC_RESERVED, *pFunction, szFunName );
    }
 
@@ -1621,19 +1617,19 @@ void FunDef( char * szFunName, char cScope )  /* stores a Clipper defined functi
 void GenJava( char *szFileName, char *szName )
 {
   printf( "\ngenerating Java language output...\n" );
-  printf( "%s -> not implemented yet!\n", szFileName );
+  printf( "%s -> not implemented yet! %s\n", szFileName, szName );
 }
 
 void GenPascal( char *szFileName, char *szName )
 {
   printf( "\ngenerating Pascal language output...\n" );
-  printf( "%s -> not implemented yet!\n", szFileName );
+  printf( "%s -> not implemented yet! %s\n", szFileName, szName );
 }
 
 void GenRC( char *szFileName, char *szName )
 {
   printf( "\ngenerating resources output...\n" );
-  printf( "%s -> not implemented yet!\n", szFileName );
+  printf( "%s -> not implemented yet! %s\n", szFileName, szName );
 }
 
 void GenCCode( char *szFileName, char *szName )       /* generates the C language output */
@@ -2477,7 +2473,7 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
 }
 
 /*
- * Gets position of passed static variables. 
+ * Gets position of passed static variables.
  * All static variables are hold in a single array at runtime then positions
  * are numbered for whole PRG module.
  */
@@ -3075,7 +3071,7 @@ int FieldsCount()
 
 /*
  * Start of definition of static variable
- * We are using here the special function _pInitFunc which will store 
+ * We are using here the special function _pInitFunc which will store
  * pcode needed to initialize all static variables declared in PRG module.
  * pOwner member will point to a function where the static variable is
  * declared:
@@ -3105,7 +3101,7 @@ void StaticDefStart( void )
 
 }
 
-/* 
+/*
  * End of definition of static variable
  * Return to previously pcoded function.
  */
