@@ -1,8 +1,25 @@
+19991004-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/classes.ch -> include/hbclass.ch
+    include/external.ch -> include/hbextern.ch
+    include/memvars.ch -> include/hbmemvar.ch
+    source/debug/debugger.prg
+    source/debug/tbrwtext.prg
+    source/rtl/tbcolumn.prg
+    source/rtl/tbrowse.prg
+    source/rtl/tget.prg
+    source/rtl/tgetlist.prg
+    tests/working/classch.prg
+    source/runner/stdalone/hbrun.prg
+    source/rtl/memvarbl.prg
+    source/rtl/menuto.prg
+    * Non-Clipper compatible Harbour .CH filenames prefixed with "HB" to avoid
+      possible name collisions with existing header files.
+
 19991004-18:06 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/rtl/mlcount.c
     source/rtl/Makefile
     doc/funclist.txt
-    + MLCOUNT() added 
+    + MLCOUNT() added
       (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
   - source/runner/stdalone/runner.prg
     - Removed (now for sure)
@@ -39,7 +56,7 @@
     * libs directory name changed to lib, the win16 and win32
       subdirs have been removed.
     * win32 dir is no longer needed, since now the windows terminal.lib
-      is named termwin.lib. 
+      is named termwin.lib.
     ! HARBOUR_USE_GTAPI defines changed to HARBOUR_USE_WIN_GTAPI
     ; !!! PLEASE TEST THESE WITH BORLAND AND MSVC !!! (or wait a bit more
       since more changes are coming)
@@ -233,7 +250,7 @@ NOTE: You have to recompile all PRG sources!
         * the basic documentation for harbour compiler
 
     *source/rtl/console.c
-	* hb_cursor_enum -> HB_cursor_enum
+        * hb_cursor_enum -> HB_cursor_enum
 
 19991001-00:25 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc

@@ -33,10 +33,10 @@
  *
  */
 
+#include "hbclass.ch"
+#include "hbmemvar.ch"
 #include "box.ch"
-#include "classes.ch"
 #include "inkey.ch"
-#include "memvars.ch"
 #include "common.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()

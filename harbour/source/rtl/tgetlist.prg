@@ -33,7 +33,7 @@
  *
  */
 
-#include "classes.ch"
+#include "hbclass.ch"
 #include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"

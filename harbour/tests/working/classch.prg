@@ -2,9 +2,9 @@
 // $Id$
 //
 
-// Testing Harbour classes.ch commands
+// Testing Harbour hbclass.ch commands
 
-#include "classes.ch"
+#include "hbclass.ch"
 
 //--------------------------------------------------------------------//
 

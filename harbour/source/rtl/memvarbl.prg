@@ -34,7 +34,7 @@
  */
 
 #include "common.ch"
-#include "memvars.ch"
+#include "hbmemvar.ch"
 
 /*  $DOC$
  *  $FUNCNAME$

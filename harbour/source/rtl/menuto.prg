@@ -27,7 +27,7 @@
 #include "color.ch"
 #include "common.ch"
 #include "inkey.ch"
-#include "memvars.ch"
+#include "hbmemvar.ch"
 #include "setcurs.ch"
 
 static aLevel   := {}

@@ -33,7 +33,7 @@
  *
  */
 
-#include "classes.ch"
+#include "hbclass.ch"
 #include "color.ch"
 
 CLASS TBrowse
