@@ -4,6 +4,12 @@
 
 ROOT = ../../
 
+ifeq ($(HB_ARCHITECTURE),w32)
+	C_MAIN := mainstd.c mainwin.c
+else
+	C_MAIN := main.c
+endif
+
 C_SOURCES=\
 	arrays.c     \
 	arrayshb.c   \
@@ -23,7 +29,7 @@ C_SOURCES=\
 	initsymb.c   \
 	itemapi.c    \
 	macro.c      \
-	main.c       \
+	$(C_MAIN)    \
 	memvars.c    \
 	memvclip.c   \
 	pcount.c     \
