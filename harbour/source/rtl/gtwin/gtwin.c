@@ -392,7 +392,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                   fprintf( stdout, "-" );
                #endif
             }
-            else if( ch < 0  && ch != -32 && ch != -16 && !IgnoreKeyCodes( wKey ) )
+            else if( ch < 0  && ch != -32 && ch != -16 /* Hopefully all "dead" keys generate ch = 0 when used alone... && !IgnoreKeyCodes( wKey ) */ )
             {
                /* Process international key codes */
                ch += 256;

@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-19 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/gtwin/gtwin.c
+  	! Don't test for dead keys when dealing with international characters
+  	  that have a negative character value.
+
 2002-07-17 12:34 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * include/hbmath.h
     ! Fix multiple declaration of _LIB_VERSION_TYPE if it's declared here
