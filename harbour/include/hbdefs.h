@@ -123,12 +123,28 @@
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
-#define HARBOUR void
+/* ***********************************************************************
+ * The name of starting procedure
+ * Note: You have to define it in case when Harbour cannot find the proper
+ * starting procedure (due to incorrect order of static data initialization)
+ *
+ * The list of compilers that require it:
+ * - Watcom C/C++ 10.0
+ * - GCC on Linux
+ *
+ * By default we are using automatic lookup (symbol not defined)
+*/
+#if defined(__WATCOMC__) || ( defined(__GNUC__) && !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2) )
+   #define HARBOUR_START_PROCEDURE "MAIN"
+#endif
+
+#if defined(HB_FUNC_CALLCONV)
+   #define HARBOUR void HB_FUNC_CALLCONV
+#else
+   #define HARBOUR void
+#endif
 
 #define __HARBOUR__
-
-typedef BYTE HB_CHAR;
-typedef BYTE HB_ATTR;
 
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
@@ -147,6 +163,9 @@ typedef PHB_FUNC HB_FUNC_PTR;
 
 typedef ULONG HB_HANDLE;        /* handle to memvar value */
 typedef char  HB_SYMBOLSCOPE;   /* stores symbol's scope */
+
+typedef BYTE HB_CHAR;
+typedef BYTE HB_ATTR;
 
 /* Some common character constants */
 

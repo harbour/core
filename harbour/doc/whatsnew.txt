@@ -7,9 +7,9 @@
 Build 0.32 2000-03-07
 
 - New Borland make files
-- Many make and build processes fixes, enhancments, warning fixes.
+- Many make and build processes fixes, enhancements, warning fixes.
 - Borland, MSVC and GNU-make processes don't collide anymore.
-- PP header files now support embedded code
+- PP now supports code in header files
 - Docs separated from the source
 - Docs enhanced
 - Compiler and macro fixes

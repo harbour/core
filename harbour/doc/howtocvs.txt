@@ -47,7 +47,7 @@ Here's how to upload your changes to the CVS server
 
 Important notes:
 
- 1) *Always* add a ChangeLog entry when uploading to the CVS.
+ 1) *Always* add a ChangeLog entry when committing to the CVS.
  2) When adding a new file to the CVS, always use lower case 8.3 
     filenames (*), add a CVS ID header to the file, don't use tabs 
     in the file, end the file with a newline char.
@@ -65,13 +65,14 @@ Here's how to format your ChangeLog entries
 - Always add new entries to the top of the ChangeLog file.
 
 - Add an entry header using this format:
-  YYYYMMDD HH:MM GMT-+TZ Your Full Name <your_email_address>
+  YYYYMMDD-HH:MM GMT-+TZ Your Full Name <your_email_address>
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
   macro. Describe what you've changed, the reasons, and other comments 
   and explanations you find useful. If the change needs some related work
-  to be done by someone else (documentation, makefile), make note about this.
+  to be done by someone else (documentation, makefile), make a clear note 
+  about this.
   Group the related changes into logical sections separated by empty lines.
   
   Sample:

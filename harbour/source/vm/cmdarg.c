@@ -148,13 +148,17 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
                char * pszPos = pszEnvVar + strlen( pszName );
                char * pszRetVal;
 
+               ULONG ulLen; /* NOTE: Use this variable as a workaround for MSC 8 internal error. [vszakats] */
+
                /* Skip value separator colon. */
                if( *pszPos == ':' )
                   pszPos++;
 
-               pszRetVal = ( char * ) hb_xgrab( pszEnd - pszPos + 1 );
-               strncpy( pszRetVal, pszPos, pszEnd - pszPos );
-               pszRetVal[ pszEnd - pszPos ] = '\0';
+               ulLen = pszEnd - pszPos;
+
+               pszRetVal = ( char * ) hb_xgrab( ulLen + 1 );
+               strncpy( pszRetVal, pszPos, ulLen );
+               pszRetVal[ ulLen ] = '\0';
 
                return pszRetVal;
             }

@@ -1,3 +1,29 @@
+20000328-23:04 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * config/dos/global.cf
+   * config/w32/global.cf
+     ! Small fix for 'clean' *.*.
+
+   * include/hbdefs.h
+   * include/hbsetup.h
+     + Added HB_FUNC_CALLCONV for the HARBOUR macro.
+       Borland users wishing to use pascal mode should use this command line
+       switch: -DHB_FUNC_CALLCONV=pascal
+       Note that you can use any other preferred calling conventions supported
+       by your compiler.
+     * HARBOUR_START_PROCEDURE moved to hbdefs.h since this is should not
+       be a user configurable parameter, it's "MAIN" or nothing.
+
+   * source/vm/cmdarg.c
+     ! Workaround for MSC8 compiler bug.
+
+   + ChangeLog.006
+     ! Readded with the correct case.
+
+   * doc/howtocvs.txt
+   * doc/whatsnew.txt
+     ! Minor fixes.
+
 20000328-23:10 GMT+3 Alexander Kresin
   * source/pp/ppcore.c
     * Bug fixed, reported by Luiz Rafael Culik
@@ -48,7 +74,7 @@
      + Added new functions by Jose Lalin.
    * source/compiler/harbour.c
      ! Fixed to not define isatty for __BORLANDC__
-   * config/dos/global/cf
+   * config/dos/global.cf
      ! Replaced "ECHO Y" with FOR command to make it work on non-English
        systems.
 

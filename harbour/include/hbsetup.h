@@ -61,6 +61,16 @@
 /*#define HARBOUR_STRICT_ANSI_C */
 
 /* ***********************************************************************
+ * This symbol defines the calling convention used for Harbour level
+ * functions.
+ *
+ * To use "pascal" mode, you should define this macro to "pascal".
+ *
+ * By default we are not using any special calling conventions.
+*/
+/*#define HB_FUNC_CALLCONV*/
+
+/* ***********************************************************************
  * Define this option if you want the /y YACC trace option to be available
  * in the Harbour compiler.
  *
@@ -77,23 +87,6 @@
  * By default it is disabled (symbol is not defined)
 */
 /*#define HARBOUR_GCC_OS2*/
-
-/* ***********************************************************************
- * The name of starting procedure
- * Note: You have to define it in case when Harbour cannot find the proper
- * starting procedure (due to incorrect order of static data initialization)
- *
- * The list of compilers that require it:
- * - Watcom C/C++ 10.0
- * - GCC on Linux
- *
- * By default we are using automatic lookup (symbol not defined)
-*/
-#if defined(__WATCOMC__) || defined(__GNUC__)
-   #if !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2)
-      #define HARBOUR_START_PROCEDURE "MAIN"
-   #endif
-#endif
 
 /* ***********************************************************************
  * This symbol defines which national language module should be included
