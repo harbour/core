@@ -330,7 +330,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
                     IF_SEQUENCE_IS( '!'         , 0           , 0      , 0          ) REDUCE_TO( NOT               , 0             ),
 
-		    /* Strong Types */
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , 0      , 0          ) REDUCE_TO( AS_ARRAY          , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _BLOCK_     , 0      , 0          ) REDUCE_TO( AS_BLOCK          , 0             ),
                     IF_SEQUENCE_IS( _AS_        , _STRING_    , 0      , 0          ) REDUCE_TO( AS_CHARACTER      , 0             ),
@@ -363,8 +362,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _LOGICAL_   , 0           , 0      , 0          ) REDUCE_TO( HB_LOGICAL_ID     , 0             ),
                     IF_SEQUENCE_IS( _NUMERIC_   , 0           , 0      , 0          ) REDUCE_TO( HB_NUMEIC_ID      , 0             ),
                     IF_SEQUENCE_IS( _OBJECT_    , 0           , 0      , 0          ) REDUCE_TO( HB_OBJECT_ID      , 0             ),
-
-                    /* Commands and Statements (Key Words only match at <BOL> ). */
 
                     IF_SEQUENCE_IS( FUNCTION    , IDENTIFIER  , 0      , 0          ) REDUCE_TO( HB_RET_FUNID      , 0            ),
                     IF_SEQUENCE_IS( FUNCTION    , '['         , 0      , 0          ) REDUCE_TO( HB_FUNCTION_ID    , '['          ),
@@ -504,12 +501,11 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( RETURN      , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , DIVEQ         ),
                     IF_SEQUENCE_IS( RETURN      , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      ,  EXPEQ        ),
                     IF_SEQUENCE_IS( RETURN      , MODEQ       , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      ,  MODEQ        ),
-                 /* IF_SEQUENCE_IS( RETURN      , '['         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '['           ), */
+                 /* IF_SEQUENCE_IS( RETURN      , '('         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '('           ),
+                    IF_SEQUENCE_IS( RETURN      , '['         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '['           ), */
                     IF_SEQUENCE_IS( RETURN      , '='         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , '='           ),
                     IF_SEQUENCE_IS( RETURN      , ':'         , 0      , 0          ) REDUCE_TO( HB_RETURN_ID      , ':'           ),
                     IF_SEQUENCE_IS( RETURN      , 0           , 0      , 0          ) PASS_THROUGH(),
-
-		    /* FOR ; EXIT ; NEXT LOOP */
 
                     IF_SEQUENCE_IS( FOR         , IDENTIFIER  , '['    , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( FOR         , IDENTIFIER  , 0      , 0          ) PASS_THROUGH(),
@@ -543,7 +539,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( LOOP        , 0           , 0      , 0          ) REDUCE_TO( HB_LOOP_ID        , 0             ),
 
 		    /* ---------------------------  BEGIN SEQUENCE ; BREAK ; RECOVER ; RECOVER USING   --------------------------- */
-
                     IF_SEQUENCE_IS( BEGIN_      , _SEQUENCE_  , 0      , 0          ) REDUCE_TO( BEGINSEQ          , 0             ),
                     IF_SEQUENCE_IS( BEGIN_      , '['         , 0      , 0          ) REDUCE_TO( HB_BEGIN_ID       , '['           ),
                     IF_SEQUENCE_IS( BEGIN_      , 0           , 0      , 0          ) REDUCE_TO( HB_BEGIN_ID       , 0             ),
@@ -561,8 +556,8 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( BREAK       , DIVEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , DIVEQ         ),
                     IF_SEQUENCE_IS( BREAK       , EXPEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       ,  EXPEQ        ),
                     IF_SEQUENCE_IS( BREAK       , MODEQ       , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       ,  MODEQ        ),
-                    IF_SEQUENCE_IS( BREAK       , '('         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '('           ),
-                /*  IF_SEQUENCE_IS( BREAK       , '['         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '['           ), */
+                /*  IF_SEQUENCE_IS( BREAK       , '('         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '('           ),
+                    IF_SEQUENCE_IS( BREAK       , '['         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '['           ), */
                     IF_SEQUENCE_IS( BREAK       , '='         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , '='           ),
                     IF_SEQUENCE_IS( BREAK       , ':'         , 0      , 0          ) REDUCE_TO( HB_BREAK_ID       , ':'           ),
                     IF_SEQUENCE_IS( BREAK       , 0           , 0      , 0          ) PASS_THROUGH(),
@@ -576,7 +571,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( _USING_     , 0           , 0      , 0          ) REDUCE_TO( HB_USING_ID       , 0             ),
 
 		    /* --------------------------  DO WHILE; WHILE ; DO CASE ; CASE; DO ... ; DO ... WITH  ----------------------- */
-
                     IF_SEQUENCE_IS( DO          , _WHILE_     , _WITH_ , 0          ) REDUCE_TO( DO                , _WHILE_WITH   ),
                     IF_SEQUENCE_IS( DO          , _CASE_      , _WITH_ , 0          ) REDUCE_TO( DO                , _CASE_WITH    ),
                     IF_SEQUENCE_IS( DO          , _WHILE_     , '\n'   , 0          ) REDUCE_TO( DO                , _WHL_ID_CR    ),
@@ -664,7 +658,6 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( DO          , ':'         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ':'          ),
                     IF_SEQUENCE_IS( DO          , ';'         , 0      , 0          ) REDUCE_TO( HB_DO_ID    	    , ';'          ),
                     IF_SEQUENCE_IS( DO          , 0           , 0      , 0          ) PASS_THROUGH(),
-
 		    /* ----------------------  End of: DO WHILE; WHILE ; DO CASE ; CASE; DO ... ; DO ... WITH  ------------------- */
 
                     /* This IF is only at BOL if followed by operator (other than logicals .t., .f., !) than Identifier else IF. */
@@ -1059,118 +1052,91 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
 
       case HB_FUNCTION :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = FUNCTION;
-
          x = 0;
          break;
 
       case HB_PROCEDURE :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = PROCEDURE;
-
          x = 0;
          break;
 
       case HB_EXTERN :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = EXTERN;
-
          x = 0;
          break;
 
       case HB_DECLARE :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = DECLARE;
-
          x = 0;
          break;
 
       case HB_PUBLIC :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = PUBLIC;
-
          x = 0;
          break;
 
       case HB_PRIVATE :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = PRIVATE_;
-
          x = 0;
          break;
 
       case HB_LOCAL :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = LOCAL;
-
          x = 0;
          break;
 
       case HB_MEMVAR :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = MEMVAR;
-
          x = 0;
          break;
 
       case HB_FIELD :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = FIELD_;
-
          x = 0;
          break;
 
       case HB_PARAM :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = PARAMETERS;
-
          x = 0;
          break;
 
       case HB_FOR :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = FOR;
-
          x = 0;
          break;
 
       case HB_OPTIONAL :
 	 *ptr_bIgnoreWords = TRUE;
-
          aiHold[ (*ptr_iHold)++ ] = OPTIONAL;
-
          x = 0;
          break;
 
       case HB_CHK_NEXT :
          if( hb_comp_wForCounter == 0 )
             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_NEXTFOR, NULL, NULL );
-
 	 x = NEXT;
 	 break;
 
       case HB_CHK_EXIT :
          if( hb_comp_wForCounter == 0 && hb_comp_wWhileCounter == 0 )
             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "EXIT", NULL );
-
 	 x = EXIT;
 	 break;
 
       case HB_CHK_LOOP :
          if( hb_comp_wForCounter == 0 && hb_comp_wWhileCounter == 0 )
             hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNMATCHED_EXIT, "LOOP", NULL );
-
 	 x = LOOP;
 	 break;
 
@@ -1189,28 +1155,24 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
       case HB_INIT_PROC :
          aiReturn[ (*ptr_iReturn)++ ] = PROCEDURE;
          aiReturn[ (*ptr_iReturn)++ ] = INIT;
-
          x = 0;
          break;
 
       case HB_INIT_FUNC :
          aiReturn[ (*ptr_iReturn)++ ] = FUNCTION;
          aiReturn[ (*ptr_iReturn)++ ] = INIT;
-
          x = 0;
          break;
 
       case HB_EXIT_PROC :
          aiReturn[ (*ptr_iReturn)++ ] = PROCEDURE;
          aiReturn[ (*ptr_iReturn)++ ] = EXIT;
-
          x = 0;
          break;
 
       case HB_EXIT_FUNC :
          aiReturn[ (*ptr_iReturn)++ ] = FUNCTION;
          aiReturn[ (*ptr_iReturn)++ ] = EXIT;
-
          x = 0;
          break;
 
@@ -1218,7 +1180,6 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], int *ptr_iHold, BOOL
 	 /* iIdentifier++; */
          aiReturn[ (*ptr_iReturn)++ ] = IDENTIFIER;
          aiReturn[ (*ptr_iReturn)++ ] = FUNCTION;
-
          x = 0;
          break;
 
