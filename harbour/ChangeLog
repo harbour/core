@@ -1,3 +1,19 @@
+20000430 04:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+*contrib/libgt/doc/gendoc.bat
+ contrib/libgt/doc/gendoc.cmd
+ contrib/libmisc/doc/gendoc.bat
+ contrib/libmisc/doc/gendoc.cmd
+ doc/genhtm.bat
+ doc/genhtm.cmd
+     *Small changes
+*contrib/libmisc/doc/libmisc.lnk
+ contrib/libgt/doc/libgt.lnk
+ doc/genhtm.lnk
+    *Change The forced version number with a MACRO
+    *Batch files for generating docs
+*utils/hbdoc/hbdoc.prg
+    +Docver() and ReadLinkFile() functions to process the HBDOC link file
+    macros
 20000429-23:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
     * harbour/source/compiler/harbour.c
       ! Fixed hb_compVariableAdd() to utilize parameter cValueType for Codeblock local variables, so that correct type is stored.

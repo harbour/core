@@ -681,7 +681,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET CONSOLE ON
    SET ALTERNATE OFF
    SET ALTERNATE TO
+
 */
+ReadLinkFile( cLinkName )
    @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
 
    //  Return to caller
@@ -1146,3 +1148,46 @@ FUNCTION fill_link_info( cLinkName )
 RETURN cCompiler
 
 *+ EOF: HBDOC.PRG
+
+STATIC FUNCTION ReadLinkFile( cFile )
+
+   LOCAL cBuffer   := ''
+   LOCAL NPOS      := 0
+   LOCAL nlenpos
+   Local cLine
+   Local cVer:=''
+   LOCAL aLocDoc   := {}
+   Local nH:=FT_FUSE(cFile) 
+   DO WHILE FREADline( nH, @cBuffer, 4096 )
+      cBuffer := TRIM( SUBSTR( cBuffer, 1 ) )
+      AADD( Alocdoc, CbUFFER )
+   ENDDO
+
+   FT_FUSE()
+    frename(CFILE,substr(cfile,1,at('.',cFile)-1)+'.old')
+    cVer:=docver()
+    nH:=fcreate(cfile)
+        for nPos:=1 to len(aLocdoc)
+            cLine:=alocdoc[nPos]
+            ? cLine
+            if at("%HB_VERSION%",cLine)>0
+                cLine:=strtran(cLine,'%HB_VERSION%',cVer)
+            endif
+            IF AT("%HB_BLDDATE%",cLine)>0
+                SET CENTURY ON
+                cLine:=strtran(cLine,'%HB_BLDDATE%',DTOC(date()))
+                SET CENTURY Off
+            endif
+            FWRITE(nH,cLine+HB_OSNEWLINE())
+        NEXT
+        FCLOSE(nh)
+RETURN nil
+
+
+FUNCTION DocVer()
+local cVersion:=version()
+local cReturn:=''
+cReturn:=substr(cVersion,9,4)
+
+RETURN cReturn
+
