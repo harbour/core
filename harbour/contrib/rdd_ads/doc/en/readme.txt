@@ -1,20 +1,23 @@
 /*
+ * $Id$
+ */
+/*
  * $DOC$
  * $FUNCNAME$
  *      Overview
  * $CATEGORY$
  *      Document
  * $ONELINER$
- *      Rdd ads Read me
+ *      Advantage Database Server RDD
  * $DESCRIPTION$
- *      RDD for Advantage Database Server
- *      Alexander Kresin <alex@belacy.belgorod.su>
+ *      RDD for the Advantage Database Server by Extended Systems.
+ *      RDD by Alexander Kresin <alex@belacy.belgorod.su>
  *
  *      <b>For using this RDD you need to have:   </b></par>
  *      <b>ace32.dll  ( Advantage Client Engine ),   </b></par>
  *      <b>AXCWS32.DLL ( communication layer for remote server ) or   </b></par>
  *      <b>ADSLOC32.DLL ( local server )   </b></par>
- *   
+ *
  *      You need also to create ace32.lib with the help of implib.exe:
  *      implib ace32.lib ace32.dll
  *
@@ -37,5 +40,9 @@
  *      SET FILETYPE TO NTX ( SET FILETYPE TO ADT )
  *
  *      or functions AdsSetServerType(), AdsSetFileType().
+ *
+ *      Note that the default local server (ADSLOC32.DLL) is useable for
+ *      file sharing on a small network.  The default DLL is limited to
+ *      5 users, but an unlimited version is available from Extended Systems.
  * $END$
  */

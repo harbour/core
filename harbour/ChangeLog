@@ -1,3 +1,10 @@
+2000-08-16 18:40 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * doc/en/rdd_ads\readme.txt
+     * added small fixes and a note about default ADSLOC32.DLL limit of 5 users
+       (an unlimited version is available for free)
+   * doc/en/garbage.txt
+     * minor grammar changes; added SeeAlso for hb_idlestate
+
 2000-08-16 12:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/ads1.c
      * SEEK works now for numeric indexes in RDD_ADS

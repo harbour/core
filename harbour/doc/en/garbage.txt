@@ -9,56 +9,56 @@
  *      Document
  *  $ONELINER$
  *      Readme for Harbour Garbage Collect Feature
- *  $DESCRIPTION$  
+ *  $DESCRIPTION$
  *      The garbage collector uses the following logic:
- *      - first collect all memory allocations that can cause the garbage;
+ *      - first collect all memory allocations that can cause garbage;
  *      - next scan all variables if these memory blocks are still referenced.
- *        
- *      Notice that only arrays, objects and codeblocks are collected because 
- *      these are the only datatypes that can cause self-references (a[1]:=a) 
- *      or circual references (a[1]:=b; b[1]:=c; c[1]:=a) that cannot be 
+ *
+ *      Notice that only arrays, objects and codeblocks are collected because
+ *      these are the only datatypes that can cause self-references (a[1]:=a)
+ *      or circular references (a[1]:=b; b[1]:=c; c[1]:=a) that cannot be
  *      properly deallocated by simple reference counting.
- *      
+ *
  *      Since all variables in harbour are stored inside some available tables
  *      (the eval stack, memvars table and array of static variables) then checking
- *      if the reference is still alive is quite easy and don't require any
- *      special treatment during memory allocation. Additionaly the garbage 
- *      collector is scanning some internal data used by harbour objects 
- *      implementation that stores also some values that can contain memory 
- *      references. These data are used to initialize class instance variables 
+ *      if the reference is still alive is quite easy and doesn't require any
+ *      special treatment during memory allocation. Additionaly the garbage
+ *      collector is scanning some internal data used by harbour objects
+ *      implementation that also stores some values that can contain memory
+ *      references. These data are used to initialize class instance variables
  *      and are stored in class shared variables.
- *      
- *      In special cases when the value of harbour variable is stored internally
- *      in some static area (at C or assembler level), for example SETKEY()
- *      stores codeblocks that will be evaluated when a key is pressed, 
- *      the garbage collector will be not able to scan such values since it
- *      doesn't know their location. This can cause that some memory blocks will be
- *      released prematurely. To prevent the premature deallocation of such memory 
- *      blocks they have to be locked for the garbage collector. The memory block 
- *      can be locked with hb_gcLockItem() function (recommendeed method) if 
- *      harbour item structure is used or hb_gcLock() function if direct memory 
- *      pointer is used. The memory block can be unlocked by hb_gcUnlockItem() or 
- *      hb_gcUnlock() functions.
  *
- *      Notice however that all variables passed to a low level function are 
- *      passed via the eval stack then they don't require locking during the 
- *      function call. The locking will be required if passed value is copied 
+ *      In special cases when the value of a harbour variable is stored internally
+ *      in some static area (at C or assembler level), for example SETKEY()
+ *      stores codeblocks that will be evaluated when a key is pressed,
+ *      the garbage collector will be not able to scan such values since it
+ *      doesn't know their location. This could cause some memory blocks to be
+ *      released prematurely. To prevent the premature deallocation of such memory
+ *      blocks they have to be locked for the garbage collector. The memory block
+ *      can be locked with hb_gcLockItem() (recommendeed method) if
+ *      harbour item structure is used or hb_gcLock() function if a direct memory
+ *      pointer is used. The memory block can be unlocked by hb_gcUnlockItem() or
+ *      hb_gcUnlock().
+ *
+ *      Notice however that all variables passed to a low level function are
+ *      passed via the eval stack, so they don't require locking during the
+ *      function call. The locking will be required if a passed value is copied
  *      into some static area to make it available for other low-level functions
  *      called after the exit from function that stored the value. This is required
- *      because the value is removed from the eval stack after function call and 
- *      it can be no longer referenced by other variables.
- *      
- *      However scanning of all variables can be a time consuming operation. It
- *      requires that all allocated arrays have to be traversed through all its 
+ *      because the value is removed from the eval stack after the function call and
+ *      it can be no longer be referenced by other variables.
+ *
+ *      However, scanning of all variables can be a time consuming operation. It
+ *      requires that all allocated arrays have to be traversed through all their
  *      elements to find more arrays. Also all codeblocks are scanned for detached
- *      local variables they are reffering. For this reason looking for unreferenced 
- *      memory blocks is performed during the idle states. 
- *      
+ *      local variables they are referencing. For this reason, looking for unreferenced
+ *      memory blocks is performed during the idle states.
+ *
  *      The idle state is a state when there is no real application code
- *      executed,for example, the user code is stopped for 0.1 of a second 
- *      during INKEY(0.1) call - the harbour is checking the keyboard only 
- *      during this time. It leaves however quite enough amount of time for
- *      many other background tasks. One of such background task can be looking
+ *      executed. For example, the user code is stopped for 0.1 of a second
+ *      during INKEY(0.1) - Harbour is checking the keyboard only
+ *      during this time. It leaves however quite enough time for
+ *      many other background tasks. One such background task can be looking
  *      for unreferenced memory blocks.
  *
  *      Allocating memory    </par>
@@ -67,12 +67,12 @@
  *      The garbage collector collects memory blocks allocated with hb_gcAlloc()
  *      function calls. Memory allocated by hb_gcAlloc() should be released with
  *      hb_gcFree() function.
- *      
+ *
  *      Locking memory   </par>
  *      --------------
  *
- *      The memory allocated with hb_gcAlloc() should be locked to prevent the
- *      automatic releasing if such memory pointer is not stored within a 
+ *      The memory allocated with hb_gcAlloc() should be locked to prevent
+ *      automatic releasing if such a memory pointer is not stored within a
  *      harbour level variable. All harbour values (items) stored internally
  *      in static C area have to be locked.
  *      See hb_gcLockItem() and hb_gcUnlockItem() for more information.
@@ -80,7 +80,7 @@
  *      The garbage collecting   </par>
  *      ----------------------
  *
- *      During scanning of unreferenced memory the GC is using mark & sweep
+ *      During scanning of unreferenced memory the GC is using a mark & sweep
  *      algorithm. This is done in three steps:
  *
  *      1) mark all memory blocks allocated by the GC with unused flag;
@@ -91,26 +91,26 @@
  *      3) finalize collecting by deallocation of all memory blocks that are
  *      still marked as unused and that are not locked.
  *
- *      To speed things the mark step is simplified by swapping the meaning
- *      of unused flag. After deallocation of unused blocks all still alive
+ *      To speed things up, the mark step is simplified by swapping the meaning
+ *      of the unused flag. After deallocation of unused blocks all still alive
  *      memory blocks are marked with the same 'used' flag so we can reverse
- *      the meaning of this flag to 'unused' state in the next collecting. 
- *      All new or unlocked memory blocks are automatically marked as 'unused' 
+ *      the meaning of this flag to 'unused' state in the next collecting.
+ *      All new or unlocked memory blocks are automatically marked as 'unused'
  *      using the current flag, which assures that all memory blocks are marked
  *      with the same flag before the sweep step will start.
  *      See hb_gcCollectAll()  and hb_gcItemRef()
- *      
+ *
  *      Calling the garbage collector from harbour code   </par>
  *      -----------------------------------------------
  *
  *      The garbage collector can be called directly from the harbour code.
  *      This is usefull in situations where there is no idle states available
- *      or the application is working in the loop with no user interaction 
+ *      or the application is working in the loop with no user interaction
  *      and there is many memory allocations.
  *      See HB_GCALL() for explanation of how to call this function from your
  *      harbour code.
  *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem(),hb_gcCollectAll(),hb_gcItemRef(),HB_GCALL()
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem(),hb_gcCollectAll(),hb_gcItemRef(),HB_GCALL(),HB_IDLESTATE()
  *  $END$
  */
 
@@ -129,7 +129,7 @@
  *      <ulSize> Requested size of memory block
  *
  *      <pCleanupFunc> Pointer to HB_GARBAGE_FUNC function that will be called
- *      directly before releasing the garbage memory block or NULL. This 
+ *      directly before releasing the garbage memory block or NULL. This
  *      function should release all other memory allocated and stored inside
  *      the memory block. For example, it releases all items stored inside
  *      the array. The functions receives a single parameter: the pointer
@@ -171,7 +171,7 @@
  *  $SYNTAX$
  *      void hb_gcFree( void *pMemoryPtr );
  *  $ARGUMENTS$
- *      <pMemoryPtr> The pointer to memory for release. This memory 
+ *      <pMemoryPtr> The pointer to memory for release. This memory
  *        pointer have to be allocated with hb_gcAlloc() function.
  *  $RETURNS$
  *      Nothing.
@@ -214,7 +214,7 @@
  *      the passed item structure. It suppres the memory releasing
  *      if the garbage collector will not find any reference to this
  *      pointer. The garbage collector is storing the lock counter -
- *      every call of this function increases the counter. The item is 
+ *      every call of this function increases the counter. The item is
  *      locked if this counter is greather then 0.
  *  $EXAMPLES$
  *      See source/rtl/setkey.c
@@ -249,10 +249,10 @@
  *      Nothing.
  *  $DESCRIPTION$
  *      hb_gcUnlockItem() is used to unlock the memory pointer stored in
- *      the passed item structure that was previously locked with 
+ *      the passed item structure that was previously locked with
  *      hb_gcLockItem() call. It allows to release the memory during
- *      garbage collecting if the garbage collector will not find any 
- *      reference to this pointer. The garbage collector is storing the 
+ *      garbage collecting if the garbage collector will not find any
+ *      reference to this pointer. The garbage collector is storing the
  *      lock counter - every call of this function decreases the counter.
  *      This function doesn't deallocate memory stored inside the item -
  *      the memory can be deallocated however during the closest garbage
@@ -321,9 +321,9 @@
  *  $RETURNS$
  *      Nothing.
  *  $DESCRIPTION$
- *      The garbage collector uses hb_gcItemRef() function during 
- *      scanning of referenced memory pointers. This function checks the 
- *      type of passed item and scans recursively all other memory blocks 
+ *      The garbage collector uses hb_gcItemRef() function during
+ *      scanning of referenced memory pointers. This function checks the
+ *      type of passed item and scans recursively all other memory blocks
  *      referenced by this item if it is an array, an object or a codeblock.
  *
  *      NOTE: This function is reserved for the garbage collector only. It
