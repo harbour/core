@@ -89,7 +89,6 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\fieldbl.obj \
     $(OBJ_DIR)\filesys.obj \
     $(OBJ_DIR)\fm.obj \
-    $(OBJ_DIR)\gtapi.obj \
     $(OBJ_DIR)\harbinit.obj \
     $(OBJ_DIR)\hardcr.obj \
     $(OBJ_DIR)\hvm.obj \
@@ -97,14 +96,18 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\inkey.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\langapi.obj \
+    $(OBJ_DIR)\mainstd.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memofile.obj \
+    $(OBJ_DIR)\memoline.obj \
     $(OBJ_DIR)\memvarbl.obj \
     $(OBJ_DIR)\memvars.obj \
     $(OBJ_DIR)\menuto.obj \
+    $(OBJ_DIR)\mlcount.obj \
     $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\objfunc.obj \
+    $(OBJ_DIR)\rddord.obj \
     $(OBJ_DIR)\readvar.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\setcolor.obj \
@@ -164,7 +167,7 @@ TOOLS_LIB_OBJS = \
 #
 
 TERMINAL_LIB_OBJS = \
-    $(OBJ_DIR)\console.obj \
+    $(OBJ_DIR)\gtapi.obj \
     $(OBJ_DIR)\gtxxx.obj
 
 #
@@ -476,6 +479,9 @@ $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
 $(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\memoline.obj : $(RTL_DIR)\memoline.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
@@ -491,6 +497,9 @@ $(RTL_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
 $(OBJ_DIR)\menuto.obj : $(RTL_DIR)\menuto.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\mlcount.obj : $(RTL_DIR)\mlcount.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -501,6 +510,12 @@ $(RTL_DIR)\objfunc.c : $(RTL_DIR)\objfunc.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\rddord.c : $(RTL_DIR)\rddord.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\rddord.obj : $(RTL_DIR)\rddord.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
@@ -624,6 +639,9 @@ $(OBJ_DIR)\hvm.obj : $(VM_DIR)\hvm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
