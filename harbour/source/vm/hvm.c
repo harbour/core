@@ -1666,9 +1666,8 @@ static void hb_vmPlus( void )
 
       hb_vmPushDate( lDate1 + lNumber2 );
    }
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "+" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "+" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpPlus" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPPLUS" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pItem1, pItem2 );
@@ -1742,9 +1741,8 @@ static void hb_vmMinus( void )
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-", 2, pItem1, pItem2 );
    }
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "-" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "-" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMinus" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPMINUS" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-", 2, pItem1, pItem2 );
@@ -1778,9 +1776,8 @@ static void hb_vmMult( void )
       hb_vmPushNumType( d1 * d2, iDec1 + iDec2, iType1, iType2 );
    }
 
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "*" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "*" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMult" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPMULT" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1083, NULL, "*", 2, pItem1, pItem2 );
@@ -1836,9 +1833,8 @@ static void hb_vmDivide( void )
       }
    }
 
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "/" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "/" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpDivide" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPDIVIDE" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1084, NULL, "/", 2, pItem1, pItem2 );
@@ -1885,9 +1881,8 @@ static void hb_vmModulus( void )
          hb_vmPushNumType( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS, iType1, iType2 );
    }
 
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "%" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "%" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMod" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPMOD" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1085, NULL, "%", 2, pItem1, pItem2 );
@@ -1922,12 +1917,10 @@ static void hb_vmPower( void )
       hb_vmPushDouble( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
    }
 
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "^" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "^" );
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "**" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "**" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpPower" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPPOWER" );
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpMod" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPMOD" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1088, NULL, "^", 2, pItem1, pItem2 );
@@ -1958,10 +1951,8 @@ static void hb_vmInc( void )
    }
    else if( HB_IS_DATE( pItem ) )
       hb_vmPushDate( hb_vmPopDate() + 1 );
-
-   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "++" ) )
-      hb_vmOperatorCallUnary( hb_stackItemFromTop( -1 ), "++" );
-
+   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "__OpInc" ) )
+      hb_vmOperatorCallUnary( hb_stackItemFromTop( -1 ), "__OPINC" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1086, NULL, "++", 1, pItem );
@@ -1991,10 +1982,8 @@ static void hb_vmDec( void )
    }
    else if( HB_IS_DATE( pItem) )
       hb_vmPushDate( hb_vmPopDate() - 1 );
-
-   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "--" ) )
-      hb_vmOperatorCallUnary( pItem, "--" );
-
+   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "__OpDec" ) )
+      hb_vmOperatorCallUnary( pItem, "__OPDEC" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1087, NULL, "--", 1, pItem );
@@ -2063,19 +2052,12 @@ static void hb_vmEqual( BOOL bExact )
 
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       hb_vmPushLogical( hb_vmPopNumber() == hb_vmPopNumber() );
-
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
       hb_vmPushLogical( hb_vmPopDate() == hb_vmPopDate() );
-
    else if( HB_IS_LOGICAL( pItem1 ) && HB_IS_LOGICAL( pItem2 ) )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "==" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "==" );
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "=" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "=" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpEqual" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPEQUAL" );
    else if( bExact && HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) )
    {
       BOOL bResult = pItem1->item.asArray.value->pItems && pItem2->item.asArray.value->pItems &&
@@ -2145,22 +2127,12 @@ static void hb_vmNotEqual( void )
 
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       hb_vmPushLogical( hb_vmPopNumber() != hb_vmPopNumber() );
-
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
       hb_vmPushLogical( hb_vmPopDate() != hb_vmPopDate() );
-
    else if( HB_IS_LOGICAL( pItem1 ) && HB_IS_LOGICAL( pItem2 ) )
       hb_vmPushLogical( hb_vmPopLogical() != hb_vmPopLogical() );
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "!=" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "!=" );
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "<>" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "<>" );
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "#" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "#" );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpNotEqual" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPNOTEQUAL" );
    else if( pItem1->type != pItem2->type ||
             ( HB_IS_BLOCK( pItem1 ) && HB_IS_BLOCK( pItem2 ) ) ||
             ( HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) ) )
@@ -2194,31 +2166,26 @@ static void hb_vmLess( void )
       hb_stackPop();
       hb_vmPushLogical( i < 0 );
    }
-
    else if( HB_IS_NUMERIC( hb_stackItemFromTop( - 1  ) ) && HB_IS_NUMERIC( hb_stackItemFromTop( -2 ) ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 < dNumber2 );
    }
-
    else if( HB_IS_DATE( hb_stackItemFromTop( -1 ) ) && HB_IS_DATE( hb_stackItemFromTop( -2 ) ) )
    {
       long lDate2 = hb_vmPopDate();
       long lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 < lDate2 );
    }
-
    else if( HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) && HB_IS_LOGICAL( hb_stackItemFromTop( -2 ) ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 < bLogical2 );
    }
-
-   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), "<" ) )
-      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), "<" );
-
+   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), "__OpLess" ) )
+      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), "__OPLESS" );
    else
    {
       PHB_ITEM pItem2 = hb_stackItemFromTop( -1 );
@@ -2246,31 +2213,26 @@ static void hb_vmLessEqual( void )
       hb_stackPop();
       hb_vmPushLogical( i <= 0 );
    }
-
    else if( HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) && HB_IS_NUMERIC( hb_stackItemFromTop( -2 ) ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 <= dNumber2 );
    }
-
    else if( HB_IS_DATE( hb_stackItemFromTop( -1 ) ) && HB_IS_DATE( hb_stackItemFromTop( -2 ) ) )
    {
       long lDate2 = hb_vmPopDate();
       long lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 <= lDate2 );
    }
-
    else if( HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) && HB_IS_LOGICAL( hb_stackItemFromTop( -2 ) ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 <= bLogical2 );
    }
-
-   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), "<=" ) )
-      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), "<=" );
-
+   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), "__OpLessEqual" ) )
+      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), "__OPLESSEQUAL" );
    else
    {
       PHB_ITEM pItem2 = hb_stackItemFromTop( -1 );
@@ -2298,31 +2260,26 @@ static void hb_vmGreater( void )
       hb_stackPop();
       hb_vmPushLogical( i > 0 );
    }
-
    else if( HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) && HB_IS_NUMERIC( hb_stackItemFromTop( -2 ) ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 > dNumber2 );
    }
-
    else if( HB_IS_DATE( hb_stackItemFromTop( -1 ) ) && HB_IS_DATE( hb_stackItemFromTop( -2 ) ) )
    {
       long lDate2 = hb_vmPopDate();
       long lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 > lDate2 );
    }
-
    else if( HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) && HB_IS_LOGICAL( hb_stackItemFromTop( -2 ) ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 > bLogical2 );
    }
-
-   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), ">" ) )
-      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), ">" );
-
+   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), "__OpGreater" ) )
+      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), "__OPGREATER" );
    else
    {
       PHB_ITEM pItem2 = hb_stackItemFromTop( -1 );
@@ -2350,31 +2307,26 @@ static void hb_vmGreaterEqual( void )
       hb_stackPop();
       hb_vmPushLogical( i >= 0 );
    }
-
    else if( HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) && HB_IS_NUMERIC( hb_stackItemFromTop( -2 ) ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 >= dNumber2 );
    }
-
    else if( HB_IS_DATE( hb_stackItemFromTop( -1 ) ) && HB_IS_DATE( hb_stackItemFromTop( -2 ) ) )
    {
       long lDate2 = hb_vmPopDate();
       long lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 >= lDate2 );
    }
-
    else if( HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) && HB_IS_LOGICAL( hb_stackItemFromTop( -2 ) ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 >= bLogical2 );
    }
-
-   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), ">=" ) )
-      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), ">=" );
-
+   else if( HB_IS_OBJECT( hb_stackItemFromTop( -2 ) ) && hb_objHasMsg( hb_stackItemFromTop( -2 ), "__OpGreaterEqual" ) )
+      hb_vmOperatorCall( hb_stackItemFromTop( -2 ), hb_stackItemFromTop( -1 ), "__OPGREATEREQUAL" );
    else
    {
       PHB_ITEM pItem2 = hb_stackItemFromTop( -1 );
@@ -2409,8 +2361,8 @@ static void hb_vmInstring( void )
       hb_stackPop();
       hb_vmPushLogical( bResult );
    }
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "$" ) )
-      hb_vmOperatorCall( pItem1, pItem2, "$" );
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpInstring" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPINSTRING" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1109, NULL, "$", 2, pItem1, pItem2 );
@@ -2512,13 +2464,8 @@ static void hb_vmNot( void )
 
    if( HB_IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
-
-   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "!" ) )
-      hb_vmOperatorCallUnary( pItem, "!" );
-
-   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, ".NOT." ) )
-      hb_vmOperatorCallUnary( pItem, ".NOT." );
-
+   else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "__OpNot" ) )
+      hb_vmOperatorCallUnary( pItem, "__OPNOT" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1077, NULL, ".NOT.", 1, pItem );
@@ -2549,10 +2496,8 @@ static void hb_vmAnd( void )
       hb_stackPop();
       hb_vmPushLogical( bResult );
    }
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, ".AND." ) )
-      hb_vmOperatorCall( pItem1, pItem2, ".AND." );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpAnd" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPAND" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1078, NULL, ".AND.", 2, pItem1, pItem2 );
@@ -2584,10 +2529,8 @@ static void hb_vmOr( void )
       hb_stackPop();
       hb_vmPushLogical( bResult );
    }
-
-   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, ".OR." ) )
-      hb_vmOperatorCall( pItem1, pItem2, ".OR." );
-
+   else if( HB_IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "__OpOr" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "__OPOR" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1079, NULL, ".OR.", 2, pItem1, pItem2 );

@@ -78,7 +78,7 @@
  * Copyright 1999 Janica Lubos <janica@fornax.elf.stuba.sk>
  *    hb_clsDictRealloc()
  *
- * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
+ * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <cakiral@altern.org
  *    Multiple inheritence fully implemented
  *    Forwarding, delegating
  *    Data initialisation & Autoinit for Bool and Numeric
@@ -101,8 +101,38 @@
  *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default HBObject)
  *    Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
  *    outside of Constructors /!\ Could be related to some incompatibility
- *    Added hb_objGetRealClsName to keep a full class tree
+ *    Added hb_objGetRealClsName to keep a full class tree ( for 99% cases )
  *    Fixed hb_clsIsParent
+ *
+ *
+ *    hb_objGetMthd() & __CLSADDMSG modified to translate the followings operators
+ *
+ "+"     = __OpPlus
+ "-"     = __OpMinus
+ "*"     = __OpMult
+ "/"     = __OpDivide
+ "%"     = __OpMod
+ "^"     = __OpPower
+ "**"    = __OpMod (currently it's different from "^", but this is not in sync,
+                    with Clipper syntax, where these two are synonims)
+ "++"    = __OpInc
+ "--"    = __OpDec
+ "=="    = __OpEqual
+ "="     = __OpEqual (same as "==")
+ "!="    = __OpNotEqual
+ "<>"    = __OpNotEqual (same as "!=")
+ "#"     = __OpNotEqual (same as "!=")
+ "<"     = __OpLess
+ "<="    = __OpLessEqual
+ ">"     = __OpGreater
+ ">="    = __OpGreaterEqual
+ "$"     = __OpInstring
+ "!"     = __OpNot
+ ".NOT." = __OpNot (same as "!")
+ ".AND." = __OpAnd
+ ".OR."  = __OpOr
+ ":="    = __OpAssign   ... not tested ...
+ *
  *
  * See doc/license.txt for licensing terms.
  *
@@ -762,6 +792,7 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
 
       while( uiAt != uiLimit )
       {
+
          if( pClass->pMethods[ uiAt ].pMessage == pMsg )
          {
             pMethod = pClass->pMethods + uiAt;
@@ -907,6 +938,8 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
  *             HB_OO_CLSTP_CLASS          64 : message is the name of a superclass
  *             HB_OO_CLSTP_SUPER         128 : message is herited
  */
+
+
 HB_FUNC( __CLSADDMSG )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
@@ -916,12 +949,65 @@ HB_FUNC( __CLSADDMSG )
    if( uiClass && uiClass <= s_uiClasses )
    {
       PCLASS   pClass   = s_pClasses + ( uiClass - 1 );
-      PHB_DYNS pMessage = hb_dynsymGet( hb_parc( 2 ) );
+
+      PHB_DYNS pMessage ;
+
       USHORT   uiBucket;
 
       USHORT   wType    = ( USHORT ) hb_parni( 4 );
       USHORT   uiAt;
       PMETHOD  pNewMeth;
+
+      if     (strcmp("+",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpPlus" ) ;
+      else if (strcmp("-",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpMinus") ;
+      else if (strcmp("*",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpMult" ) ;
+      else if (strcmp("/",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpDivide") ;
+      else if (strcmp("%",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpMod"  ) ;
+      else if (strcmp("^",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpPower") ;
+      else if (strcmp("**",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpMod"  ) ;
+      else if (strcmp("++",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpInc"  ) ;
+      else if (strcmp("--",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpDec"  ) ;
+      else if (strcmp("==",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpEqual") ;
+      else if (strcmp("=",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpEqual") ;
+      else if (strcmp("!=",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpNotEqual") ;
+      else if (strcmp("<>",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpNotEqual") ;
+      else if (strcmp("#",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpNotEqual") ;
+      else if (strcmp("<",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpLess" ) ;
+      else if (strcmp("<=",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpLessEqual") ;
+      else if (strcmp(">",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpGreater") ;
+      else if (strcmp(">=",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpGreaterEqual") ;
+      else if (strcmp(":=",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpAssign") ;
+      else if (strcmp("$",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpInstring") ;
+      else if (strcmp("!",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpNot"    ) ;
+      else if (strcmp(".NOT.",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpNot"    ) ;
+      else if (strcmp(".AND.",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpAnd"    ) ;
+      else if (strcmp(".OR.",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpOr"     ) ;
+      else
+         pMessage = hb_dynsymGet( hb_parc( 2 ) );
 
       if( wType == HB_OO_MSG_INLINE && hb_param( 3, HB_IT_BLOCK ) == NULL )
          hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", 0 );
@@ -964,7 +1050,7 @@ HB_FUNC( __CLSADDMSG )
       pNewMeth->ulRecurse = 0;
       pNewMeth->bIsPersistent = bPersistent;
 
-      /* in cas eof re-used message */
+      /* in case of re-used message */
       if ( pNewMeth->pInitValue )
        {
         hb_itemRelease(pNewMeth->pInitValue) ;

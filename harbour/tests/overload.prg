@@ -12,8 +12,13 @@
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://www.harbour-project.org
 //
+// Jfl 2001/11/18 command mode added
+//
 // Placed in the public domain
 //
+
+
+#include "hbclass.ch"
 
 function Main()
 
@@ -40,6 +45,28 @@ function Main()
 
 return nil
 
+
+create class tString
+
+      VAR cValue
+
+      METHOD New(cText) INLINE ::cValue := cText, self
+
+      OPERATOR "==" ARG cArg INLINE ::cValue == cArg
+      OPERATOR "!=" ARG cArg INLINE ::cValue != cArg
+      OPERATOR "<"  ARG cArg INLINE ::cValue <  cArg
+      OPERATOR "<=" ARG cArg INLINE ::cValue <= cArg
+      OPERATOR ">"  ARG cArg INLINE ::cValue >  cArg
+      OPERATOR ">=" ARG cArg INLINE ::cValue >= cArg
+      OPERATOR "+"  ARG cArg INLINE ::cValue +  cArg
+      OPERATOR "-"  ARG cArg INLINE ::cValue -  cArg
+      OPERATOR "$"  ARG cArg INLINE ::cValue $  cArg
+
+endclass
+
+
+
+/*
 function TString()
 
    static oClass
@@ -75,3 +102,5 @@ static function New( cText )
    ::cValue := cText
 
 return Self
+
+*/

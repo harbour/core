@@ -404,6 +404,12 @@ DECLARE HBClass ;
     s_oClass:AddInline( <(op)>, {|Self [,<params>] | Self:<MethodName>( [<params>] ) }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
 #endif
 
+#xcommand OPERATOR <op> ARG <cArg> INLINE <Code,...> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+s_oClass:AddInline( <(op)>, {|Self, <cArg> | <Code> }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
+
+//command OPERATOR <op> ARG <cArg> INLINE [Local lx,...] <Code,...> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+//oClass:AddInline( <(op)>, {|Self, <cArg> [,<lx>] | <Code> }, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) )
+
 #ifdef STRICT_OO
   #xcommand MESSAGE <MessageName> [ AS <type> ] METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
      _HB_MEMBER <MessageName>() [<-ctor-> AS CLASS _CLASS_NAME_] [ AS <type> ];;

@@ -1,3 +1,18 @@
+2001-11-18 22:15 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/classes.c
+     * change CLSADDMSG() to intercept Operator overloading and
+     use standardised symbol in place of operator itself
+     (like "-" => "__OpLess" )
+   * harbour/source/vm/hvm.c
+     * Modif done to send correct message to object as newly defined
+   * harbour/include/hbclass.ch
+     + added an OPERATOR command for Inline use now we can define an OPERATOR
+     using inline only like ;
+     OPERATOR "-" ARG xARg INLINE ::cValue - xArg
+     see new test overload.prg
+   * harbour/tests/overload.prg
+     adapted to command mode and use of the new OPERATOR INLINE command
+
 2001-11-17 15:40 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * source/lang/msgzhbig.c
      - remove msgzhbig.c as it was replaced by msgzhb5.c
