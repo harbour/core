@@ -1,3 +1,6 @@
+19990730-21:05 CET Victor Szel <info@szelvesz.hu>
+   * source/rtl/files.c - Two __CYGWIN__ branches joined.
+
 Fri Jul 30 14:44:00 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/bin.cf: 

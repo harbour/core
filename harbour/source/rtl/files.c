@@ -10,9 +10,6 @@
 
 #if defined(__CYGWIN__)
   #include <mingw32/share.h>
-#endif
-
-#if defined(__CYGWIN__)
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <unistd.h>
