@@ -68,6 +68,10 @@
  *
  */
 
+#ifdef HB_API_MACROS
+   #undef HB_API_MACROS
+#endif
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbset.h"
