@@ -1,3 +1,7 @@
+19990720-20:10 CET Eddie Runia <eddie@runia.com>
+  * source/vm/hvm.c
+    wsize =*( (WORD *) ... part removed.
+
 19990720-13:40 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtapi.c
     * If a color string of ("r/b,b/r" ) is used, the
