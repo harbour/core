@@ -1,3 +1,9 @@
+19990721-16:35 CET David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/harbour.y
+    ! Correct _StdFunc entty for INKEY to allow no parameters
+    - Removed _StdFunc entry for SET
+    * Display build date for include/version.h instead of a season
+
 19990721-15:10 CET Felipe Coury
   + bldodbc.bat; hbodbc.b32; source/odbc/bld32exe.bat; source/odbc/harbour.mdb;
     source/odbc/hb32.bat; source/odbc/odbc.c; source/odbc/odbc.txt;

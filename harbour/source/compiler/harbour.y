@@ -1175,7 +1175,8 @@ int harbour_main( int argc, char * argv[] )
    FILENAME *pFileName =NULL;
 
    if( !_iQuiet )
-     printf( "Harbour compiler build %i Summer 1999\n", hb_build );
+     printf( "Harbour compiler build %i (%04d.%02d.%02d)\n", hb_build,
+              hb_year, hb_month, hb_day );
 
    if( argc > 1 )
    {
@@ -4982,7 +4983,7 @@ static FUNCINFO _StdFun[] = {
 { "FILE"      , 1, 1 },
 { "FLOCK"     , 0, 0 },
 { "FOUND"     , 0, 0 },
-{ "INKEY"     , 1, 2 },
+{ "INKEY"     , 0, 2 },
 { "INT"       , 1, 1 },
 { "LASTREC"   , 0, 0 },
 { "LEN"       , 1, 1 },
@@ -5004,7 +5005,6 @@ static FUNCINFO _StdFun[] = {
 { "RTRIM"     , 1, 1 },
 { "SECONDS"   , 0, 0 },
 { "SELECT"    , 1, 1 },
-{ "SET"       , 1, 3 },
 { "SETPOS"    , 2, 2 },
 { "SPACE"     , 1, 1 },
 { "SQRT"      , 1, 1 },
