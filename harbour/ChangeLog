@@ -1,3 +1,18 @@
+19991005-07:55 GMT+1 Antonio Linares <alinares@fivetech.com>
+  + New file source/vm/mainstd.c   (entry point for std applications)
+  + New file source/vm/mainwin.c   (entry point for win appplications)
+  * source/vm/hvm.c
+    -+ main() renamed to hb_vmInit()
+    * hb_quit() removed from there and moved to mainstd.c and
+      mainwin.c respectively.
+  * makefile.b32
+    * added support for mainstd.c and mainwin.c modules.
+    (make_b32.bat tested and works ok).
+  * tests/bld_b32.bat
+    * %1 moved to the end of line
+    * del %1.c removed
+    (tested and works ok).
+
 19991005-00:13 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/genc.c
     ! Cosmetic: Some double tabs changed to single ones.
@@ -45,7 +60,7 @@
 
 Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* tests/working/Makefile: 
+	* tests/working/Makefile:
 	Added missing '\' after db_brows.ch.
 	Changed spaces to tabs.
 
