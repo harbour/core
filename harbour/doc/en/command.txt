@@ -17,7 +17,7 @@
  *  $COMMANDNAME$
  *      CLASS
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Define a Class for Object Oriented Programming
  *  $SYNTAX$
@@ -78,7 +78,7 @@
  *  $COMMANDNAME$
  *      DATA
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Define a DATA instance variable for the objects of a class
  *  $SYNTAX$
@@ -138,7 +138,7 @@
  *  $COMMANDNAME$
  *      CLASSDATA
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Define a CLASSDATA variable for a class (NOT for an Object!)
  *  $SYNTAX$
@@ -185,7 +185,7 @@
  *  $COMMANDNAME$
  *      METHOD
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Declare a METHOD for a class in the class header
  *  $SYNTAX$
@@ -289,7 +289,7 @@
  *  $COMMANDNAME$
  *      MESSAGE
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Route a method call to another Method
  *  $SYNTAX$
@@ -342,7 +342,7 @@
  *  $COMMANDNAME$
  *      ERROR HANDLER
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Designate a method as an error handler for the class
  *  $SYNTAX$
@@ -375,7 +375,7 @@
  *  $COMMANDNAME$
  *      ON ERROR
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      Designate a method as an error handler for the class
  *  $SYNTAX$
@@ -409,7 +409,7 @@
  *  $COMMANDNAME$
  *      ENDCLASS
  *  $CATEGORY$
- *      Command
+ *      Oop Command
  *  $ONELINER$
  *      End the declaration of a class.
  *  $SYNTAX$

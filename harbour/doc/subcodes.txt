@@ -18,7 +18,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1003
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Attempt to acces nonexisting or hidden variable
  *  $DESCRIPTION$
@@ -39,7 +39,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1068
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of argument
  *  $DESCRIPTION$
@@ -57,7 +57,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1068
  *  $CATEGORY$
- *      arrays
+ *      Run Time Errors
  *  $ONELINER$
  *      Bound error in array access
  *  $DESCRIPTION$
@@ -75,7 +75,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1069
  *  $CATEGORY$
- *      arrays
+ *      Run Time Errors
  *  $ONELINER$
  *      Bound error in array access
  *  $DESCRIPTION$
@@ -93,7 +93,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1078
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -111,7 +111,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1072
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -129,11 +129,11 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1073
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
- *      The type of compared arguments do not match  </par>
+ *      The type of compared argument do not match  </par>
  *  $FUNCTION$
  *      <  </par>
  *  $STATUS$
@@ -147,7 +147,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1074
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -165,7 +165,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1075
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -183,7 +183,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1076
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -201,7 +201,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1077
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -220,7 +220,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1078
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -238,7 +238,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1079
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -256,7 +256,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1076
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -274,7 +274,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1081
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -292,7 +292,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1082
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -310,7 +310,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1100
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -328,7 +328,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1101
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -346,7 +346,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1102
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -364,7 +364,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1103
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -382,7 +382,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1104
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -400,7 +400,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1105
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -418,7 +418,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1106
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -436,7 +436,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1107
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -454,7 +454,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1108
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -472,7 +472,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1076
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of arguments
  *  $DESCRIPTION$
@@ -490,7 +490,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1110
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -508,7 +508,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1110
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -526,7 +526,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1112
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -545,7 +545,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1113
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -564,7 +564,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1114
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -583,7 +583,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1115
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -602,7 +602,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1116
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -621,7 +621,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1117
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -640,7 +640,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1120
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -659,7 +659,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1122
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -678,7 +678,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1124
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect type of argument
  *  $DESCRIPTION$
@@ -695,7 +695,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1126
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -713,7 +713,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1132
  *  $CATEGORY$
- *      arrays
+ *      Run Time Errors
  *  $ONELINER$
  *      Bound error in array access
  *  $DESCRIPTION$
@@ -732,7 +732,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1133
  *  $CATEGORY$
- *      arrays
+ *      Run Time Errors
  *  $ONELINER$
  *      Bound error in array assigment
  *  $DESCRIPTION$
@@ -751,7 +751,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1068
  *  $CATEGORY$
- *      arrays
+ *      Run Time Errors
  *  $ONELINER$
  *      Bound error in array element assigment
  *  $DESCRIPTION$
@@ -769,7 +769,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1085
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -788,7 +788,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1089
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -807,7 +807,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1090
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -826,7 +826,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1092
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -845,7 +845,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1093
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -864,7 +864,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1094
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -883,7 +883,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1095
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -902,7 +902,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1096
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -921,7 +921,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1097
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -940,7 +940,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1098
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -959,7 +959,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/1099
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -980,11 +980,11 @@ start from 3000
  *  $SUBCODE$
  *      BASE/2010
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect arguments type
  *  $DESCRIPTION$
- *      Passed arguments was not strings with filenames to copy/  </par>
+ *      Passed Run Time Errors was not strings with filenames to copy/  </par>
  *  $FUNCTION$
  *      __COPYFILE  </par>
  *  $COMPLIANCE$
@@ -1017,7 +1017,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/2017
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to a function
  *  $DESCRIPTION$
@@ -1036,7 +1036,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/2020
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
@@ -1060,7 +1060,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3001
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect argument type
  *  $DESCRIPTION$
@@ -1079,7 +1079,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3002
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Super class does not return an object
  *  $DESCRIPTION$
@@ -1098,7 +1098,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3003
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Cannot find super class
  *  $DESCRIPTION$
@@ -1116,7 +1116,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3004
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Cannot modify a DATA item in a class
  *  $DESCRIPTION$
@@ -1135,7 +1135,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3005
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect arguments type
  *  $DESCRIPTION$
@@ -1155,7 +1155,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3007
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of argument
  *  $DESCRIPTION$
@@ -1174,7 +1174,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3008
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid type of argument
  *  $DESCRIPTION$
@@ -1192,7 +1192,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3009
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect argument passed to __MVGET function
  *  $DESCRIPTION$
@@ -1211,7 +1211,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3010
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Incorrect argument passed to __MVPUT function
  *  $DESCRIPTION$
@@ -1230,7 +1230,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3011
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to a function
  *  $DESCRIPTION$
@@ -1250,7 +1250,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3012
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to a function
  *  $DESCRIPTION$
@@ -1269,7 +1269,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3101
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to an object/class function
  *  $DESCRIPTION$
@@ -1287,7 +1287,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3102
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      A symbol should be modified or deleted from a class, but the symbol
  *      doesn't exist.
@@ -1307,7 +1307,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3103
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      A symbol should be added to a class, but the symbol already exists.
  *  $DESCRIPTION$
@@ -1327,7 +1327,7 @@ start from 3000
  *  $SUBCODE$
  *      TOOLS/4001
  *  $CATEGORY$
- *      arguments
+ *      Run Time Errors
  *  $ONELINER$
  *      Invalid argument passed to function
  *  $DESCRIPTION$
