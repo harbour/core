@@ -1,3 +1,10 @@
+2000-11-30 16:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/tgetint.prg
+        * restored '_1' variable because
+          {|| ..... __MVPUT( cVar, HB_PVALUE(1) )}
+          will not access a correct value
+
 2000-11-30 10:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpra.c

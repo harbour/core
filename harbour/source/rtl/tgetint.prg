@@ -53,7 +53,7 @@ FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
       //Alert( "No Block for: " + cVarName )
 
       IF __ISMV( cVarName )
-         bSetGet := {|| IIF( PCOUNT()==0,  __MVGET( cVarName ), __MVPUT( cVarName, HB_PVALUE(1) ) ) }
+         bSetGet := {|_1| IIF( PCOUNT()==0,  __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
       ELSE
          //Alert( "Not MemVar: " + cVarName )
 
