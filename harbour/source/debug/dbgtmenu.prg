@@ -145,11 +145,11 @@ METHOD Build() CLASS TDbMenu
          ::aItems[ n ]:nCol := ::nLeft + 1
          nPos := Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) ) + 1 )
       next
-      ::nRight  := nPos
+      ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
       for n := 1 to Len( ::aItems )
          if ::aItems[ n ]:cPrompt != "-"
-            ::aItems[ n ]:cPrompt := PadR( ::aItems[ n ]:cPrompt, ::nRight - ::nLeft )
+            ::aItems[ n ]:cPrompt := " " + PadR( ::aItems[ n ]:cPrompt, ::nRight - ::nLeft - 1 )
          endif
       next
       ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems ):bAction := ATail( ::aMenus )
