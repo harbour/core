@@ -1,3 +1,6 @@
+19990721-22:36 CET Patrick Mast <harbour@PatrickMast.com>
+  * Makefile.vc errorsys compiles with /iinclude now
+
 19990721-10:25 CET Eddie Runia
   * source/hbpp/hbpp.c
     Old lookup returned for '??'. Follow (ER) for the change
