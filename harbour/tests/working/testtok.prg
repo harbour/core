@@ -4,8 +4,7 @@ procedure main()
    local a
    local i
 
-   set( _SET_EXACT, .T. )               /* Stupid command !!!!
-                                           Always causing bugs !!*/
+   set( _SET_EXACT, .T. )
    a := strtoarray("this is a great big test of strtoken")
    for i := 1 to len(a)
       qout( a[i] )
