@@ -228,6 +228,10 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage, void * pMa
 #define HB_EXPR_PCODE2( action, p1, p2 ) action( (p1), (p2), pMacro )
 #define HB_EXPR_PCODE3( action, p1, p2, p3 ) action( (p1), (p2), (p3), pMacro )
 #define HB_EXPR_PCODE4( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4), pMacro )
+#define HB_EXPR_GENPCODE1( action, p1 ) action( (p1), pMacro )
+#define HB_EXPR_GENPCODE2( action, p1, p2, p3 ) action( (p1), (p2), (p3), pMacro )
+#define HB_EXPR_GENPCODE3( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4), pMacro )
+#define HB_EXPR_GENPCODE4( action, p1, p2, p3, p4, p5 ) action( (p1), (p2), (p3), (p4), (p5), pMacro )
 
 #define HB_MACRO_VARNAME pMacro
 
@@ -249,6 +253,10 @@ typedef  HB_EXPR_PTR HB_EXPR_ACTION( HB_EXPR_PTR pSelf, int iMessage );
 #define HB_EXPR_PCODE2( action, p1, p2 ) action( (p1), (p2) )
 #define HB_EXPR_PCODE3( action, p1, p2, p3 ) action( (p1), (p2), (p3) )
 #define HB_EXPR_PCODE4( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4) )
+#define HB_EXPR_GENPCODE1( action, p1 ) action( (p1) )
+#define HB_EXPR_GENPCODE2( action, p1, p2, p3 ) action( (p1), (p2), (p3) )
+#define HB_EXPR_GENPCODE3( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4) )
+#define HB_EXPR_GENPCODE4( action, p1, p2, p3, p4, p5 ) action( (p1), (p2), (p3), (p4), (p5) )
 
 /* pass NULL instead of macro structure pointer */
 #define HB_MACRO_DECL void *pMacro

@@ -91,11 +91,11 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
        * reverts items on the stack !
        * duplicate object on the stack
        */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
 #endif
       /* now send the message */
       HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
+      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0, ( BOOL ) 1 );
 
 /* NOTE: COMPATIBILITY ISSUE:
  *  The above HB_C52_STRICT setting determines
@@ -125,10 +125,10 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
       /* increase operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
 
       /* call pop message with one argument */
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
+      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1, ( BOOL ) 1 );
    }
    /* TODO: add a special code for arrays to correctly handle a[ i++ ]++
     */
@@ -139,8 +139,8 @@ void hb_compExprPushOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
       /* perform operation and duplicate the new value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
       /* pop the new value into variable and leave the copy on the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -172,21 +172,21 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
 #else
       /* duplicate object on the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
 #endif
       /* now send the message */
       HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
+      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0, ( BOOL ) 1 );
 
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
       /* increase operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
 
       /* call pop message with one argument */
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
+      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1, ( BOOL ) 1 );
       /* pop the value from the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
    }
    else
    {
@@ -195,7 +195,7 @@ void hb_compExprUseOperEq( HB_EXPR_PTR pSelf, BYTE bOpEq )
       /* push increment value */
       HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
       /* add */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOpEq );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOpEq );
       /* pop the new value into variable and remove it from the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -226,26 +226,26 @@ void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper )
       HB_EXPR_USE( pObj->value.asMessage.pObject, HB_EA_PUSH_PCODE );
 #else
       /* duplicate object on the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
 #endif
       /* now send the message */
       HB_EXPR_PCODE1( hb_compGenMessage, pObj->value.asMessage.szMessage );
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
+      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0, ( BOOL ) 1 );
 
       /* increase/decrease operation */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
 
       /* call pop message with one argument - it leaves the value on the stack */
-      HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
+      HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1, ( BOOL ) 1 );
    }
    else
    {
       /* Push current value */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* Increment */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
       /* duplicate a value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
       /* pop new value and leave the duplicated copy of it on the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -268,16 +268,16 @@ void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper )
       /* now increment the value */
       HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
       /* pop the value from the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
    }
    else
    {
       /* Push current value */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* Duplicate value */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
       /* Increment */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
       /* pop new value from the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -298,14 +298,14 @@ void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper )
    {
       HB_EXPR_PCODE2( hb_compExprPushPreOp, pSelf, bOper );
       /* pop the value from the stack */
-      HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
    }
    else
    {
       /* Push current value */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
       /* Increment */
-      HB_EXPR_PCODE1( hb_compGenPCode1, bOper );
+      HB_EXPR_GENPCODE1( hb_compGenPCode1, bOper );
       /* pop new value from the stack */
       HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
    }
@@ -339,9 +339,9 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
       HB_EXPR_PCODE2( hb_compGenPushString, pAlias->value.asSymbol, strlen(pAlias->value.asSymbol) );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
       if( bAction == HB_EA_PUSH_PCODE )
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
    else if( pVar->ExprType == HB_ET_VARIABLE )
    {
@@ -351,18 +351,18 @@ void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction )
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
       HB_EXPR_PCODE2( hb_compGenPushString, pVar->value.asSymbol, strlen(pVar->value.asSymbol) );
       if( bAction == HB_EA_PUSH_PCODE )
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
    else
    {
       HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
       HB_EXPR_USE( pVar, HB_EA_PUSH_PCODE );
       if( bAction == HB_EA_PUSH_PCODE )
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHALIASED );
       else
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOPALIASED );
    }
 
 }

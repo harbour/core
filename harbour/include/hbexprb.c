@@ -217,7 +217,7 @@ static HB_EXPR_FUNC( hb_compExprUseDummy )
          hb_compErrorLValue( pSelf );
          break;
       case HB_EA_PUSH_PCODE:
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
          break;
       case HB_EA_POP_PCODE:
       case HB_EA_PUSH_POP:
@@ -246,7 +246,7 @@ static HB_EXPR_FUNC( hb_compExprUseNil )
          hb_compErrorLValue( pSelf );
          break;
       case HB_EA_PUSH_PCODE:
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
          break;
       case HB_EA_POP_PCODE:
          break;
@@ -318,7 +318,7 @@ static HB_EXPR_FUNC( hb_compExprUseString )
                  * need to check for locals or static variables
                  */
          if( hb_compExprCheckMacroVar( pSelf->value.asString ) )
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
 #endif
          }
          break;
@@ -467,7 +467,7 @@ static HB_EXPR_FUNC( hb_compExprUseSelf )
          hb_compErrorLValue( pSelf );
          break;
       case HB_EA_PUSH_PCODE:
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHSELF );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHSELF );
          break;
       case HB_EA_POP_PCODE:
          break;
@@ -507,7 +507,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
          /* Push all elements of the array
          */
          if( ( pElem == NULL ) || ( pElem->ExprType == HB_ET_NONE && pElem->pNext == NULL ) )
-            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, 0, 0 );
+            HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, 0, 0, ( BOOL ) 1 );
          else
          {
             while( pElem )
@@ -515,7 +515,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
                HB_EXPR_USE( pElem, HB_EA_PUSH_PCODE );
                pElem = pElem->pNext;
             }
-            HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, HB_LOBYTE( pSelf->ulLength ), HB_HIBYTE( pSelf->ulLength ) );
+            HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, HB_LOBYTE( pSelf->ulLength ), HB_HIBYTE( pSelf->ulLength ), ( BOOL ) 1 );
          }
       }
       break;
@@ -608,7 +608,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunRef )
          break;
       case HB_EA_PUSH_PCODE:
          HB_EXPR_PCODE1( hb_compGenPushFunCall, pSelf->value.asSymbol );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_FUNCPTR );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_FUNCPTR );
          break;
       case HB_EA_POP_PCODE:
          break;
@@ -668,7 +668,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
       case HB_EA_STATEMENT:
          {
             HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );  /* remove a value if used in statement */
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );  /* remove a value if used in statement */
          }
          break;
 
@@ -909,7 +909,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
          }
          break;
 
@@ -917,7 +917,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_ARRAYPOP );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ARRAYPOP );
          }
          break;
 
@@ -981,9 +981,9 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             /* compile & run - leave a result on the eval stack
              */
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
             /* NOTE: pcode for alias context is generated in
              * hb_compExprUseAliasVar()
              */
@@ -1021,14 +1021,14 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
              * from the eval stack
              */
             if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MACROPOP );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPOP );
          }
          break;
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
          break;
 
       case HB_EA_DELETE:
@@ -1070,7 +1070,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             USHORT usCount;
 
             HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
 
             if( pSelf->value.asFunCall.pParms )
             {
@@ -1087,9 +1087,9 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                usCount = 0;
 
             if( usCount > 255 )
-               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), ( BOOL ) 1 );
             else
-               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) usCount );
+               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) usCount, ( BOOL ) 1 );
          }
          break;
 
@@ -1102,7 +1102,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             USHORT usCount;
 
             HB_EXPR_USE( pSelf->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHNIL );
 
             if( pSelf->value.asFunCall.pParms )
             {
@@ -1116,9 +1116,9 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                usCount = 0;
 
             if( usCount > 255 )
-               HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+               HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), ( BOOL ) 1 );
             else
-               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_DOSHORT, ( BYTE ) usCount );
+               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_DOSHORT, ( BYTE ) usCount, ( BOOL ) 1 );
          }
          break;
 
@@ -1269,7 +1269,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
          break;
 
       case HB_EA_DELETE:
@@ -1301,13 +1301,13 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
          {
             /* save currently selected workarea
              */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHALIAS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHALIAS );
             /* push the expression that will return a new workarea
              */
             HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_PUSH_PCODE );
             /* pop the value from the stack and select it as current workarea
              */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POPALIAS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POPALIAS );
             /* evaluate any expression
              */
             HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_PCODE );
@@ -1316,7 +1316,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
              * is previously selected workarea. After swaping select again
              * the restored workarea.
              */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_SWAPALIAS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_SWAPALIAS );
          }
          break;
 
@@ -1329,20 +1329,20 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
          {
             /* save currently selected workarea
              */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PUSHALIAS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PUSHALIAS );
             /* push the expression that will return a new workarea
              */
             HB_EXPR_USE( pSelf->value.asAlias.pAlias, HB_EA_PUSH_PCODE );
             /* pop the value from the stack and select it as current workarea
              */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POPALIAS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POPALIAS );
             /* evaluate any expression - it will not leave any return
              * value on the eval stack
              */
             HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_POP );
             /* Pop and select again the restored workarea.
              */
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POPALIAS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POPALIAS );
          }
          break;
       case HB_EA_DELETE:
@@ -1479,7 +1479,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          HB_EXPR_PCODE1( hb_compGenPushVar, pSelf->value.asSymbol );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
          break;
 
       case HB_EA_DELETE:
@@ -1526,16 +1526,16 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
                   HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
 
                if( iParms > 255 )
-                  HB_EXPR_PCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ) );
+                  HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_FUNCTION, HB_LOBYTE( iParms ), HB_HIBYTE( iParms ), ( BOOL ) 1 );
                else
-                  HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) iParms );
+                  HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, ( BYTE ) iParms, ( BOOL ) 1 );
             }
             else
             {
                /* acces to instance variable */
                HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
                HB_EXPR_PCODE1( hb_compGenMessage, pSelf->value.asMessage.szMessage );
-               HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0 );
+               HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 0, ( BOOL ) 1 );
             }
          }
          break;
@@ -1548,14 +1548,14 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
             HB_EXPR_USE( pSelf->value.asMessage.pObject, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenMessageData, pSelf->value.asMessage.szMessage );
             HB_EXPR_USE( pSelf->value.asMessage.pParms, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1 );
+            HB_EXPR_GENPCODE2( hb_compGenPCode2, HB_P_FUNCTIONSHORT, 1, ( BOOL ) 1 );
          }
          break;
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
          if( ! pSelf->value.asMessage.pParms )  /* Is it a method call ? */
          {
             /* instance variable */
@@ -1685,7 +1685,7 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
                HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
                /* QUESTION: Can  we replace DUPLICATE+POP with a single PUT opcode
                */
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_POP_PCODE );
             }
          }
@@ -1706,7 +1706,7 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
                HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
                pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
                /* Remove the return value */
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
             }
             else
             {
@@ -2004,17 +2004,17 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
             LONG lEndPos;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
             lEndPos = HB_EXPR_PCODE1( hb_compGenJumpTrue, 0 );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_OR );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_OR );
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_OR );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_OR );
          }
          break;
 
@@ -2025,7 +2025,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2074,17 +2074,17 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
             LONG lEndPos;
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
             lEndPos = HB_EXPR_PCODE1( hb_compGenJumpFalse, 0 );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_AND );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_AND );
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
          }
          else
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_AND );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_AND );
          }
          break;
 
@@ -2094,7 +2094,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2150,7 +2150,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
 
       case HB_EA_PUSH_PCODE:
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_NOT );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_NOT );
          break;
 
       case HB_EA_POP_PCODE:
@@ -2159,7 +2159,7 @@ static HB_EXPR_FUNC( hb_compExprUseNot )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2228,7 +2228,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
                      {
                         HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
                         HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-                        HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
+                        HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_EQUAL );
                      }
                      break;
 
@@ -2261,7 +2261,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
                      {
                         HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
                         HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-                        HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
+                        HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_EQUAL );
                      }
                }
             else
@@ -2270,7 +2270,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
                 */
                HB_EXPR_USE( pLeft, HB_EA_PUSH_PCODE );
                HB_EXPR_USE( pRight, HB_EA_PUSH_PCODE );
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EQUAL );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_EQUAL );
             }
          }
          break;
@@ -2281,7 +2281,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2305,7 +2305,7 @@ static HB_EXPR_FUNC( hb_compExprUseEqual )
                HB_EXPR_USE( pObj, HB_EA_POP_PCODE );
                pObj->value.asMessage.pParms = NULL; /* to suppress duplicated releasing */
                /* Remove the return value */
-               HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
             }
             else
             {
@@ -2348,7 +2348,7 @@ static HB_EXPR_FUNC( hb_compExprUseEQ )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_EXACTLYEQUAL );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_EXACTLYEQUAL );
          }
          break;
 
@@ -2358,7 +2358,7 @@ static HB_EXPR_FUNC( hb_compExprUseEQ )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2403,7 +2403,7 @@ static HB_EXPR_FUNC( hb_compExprUseLT )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_LESS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_LESS );
          }
          break;
 
@@ -2413,7 +2413,7 @@ static HB_EXPR_FUNC( hb_compExprUseLT )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2458,7 +2458,7 @@ static HB_EXPR_FUNC( hb_compExprUseGT )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_GREATER );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_GREATER );
          }
          break;
 
@@ -2468,7 +2468,7 @@ static HB_EXPR_FUNC( hb_compExprUseGT )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2514,7 +2514,7 @@ static HB_EXPR_FUNC( hb_compExprUseLE )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_LESSEQUAL );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_LESSEQUAL );
          }
          break;
 
@@ -2524,7 +2524,7 @@ static HB_EXPR_FUNC( hb_compExprUseLE )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2570,7 +2570,7 @@ static HB_EXPR_FUNC( hb_compExprUseGE )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_GREATEREQUAL );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_GREATEREQUAL );
          }
          break;
 
@@ -2580,7 +2580,7 @@ static HB_EXPR_FUNC( hb_compExprUseGE )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2626,7 +2626,7 @@ static HB_EXPR_FUNC( hb_compExprUseNE )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_NOTEQUAL );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_NOTEQUAL );
          }
          break;
 
@@ -2636,7 +2636,7 @@ static HB_EXPR_FUNC( hb_compExprUseNE )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2683,7 +2683,7 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_INSTRING );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_INSTRING );
          }
          break;
 
@@ -2693,7 +2693,7 @@ static HB_EXPR_FUNC( hb_compExprUseIN )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2738,7 +2738,7 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_PLUS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_PLUS );
          }
          break;
 
@@ -2748,7 +2748,7 @@ static HB_EXPR_FUNC( hb_compExprUsePlus )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2793,7 +2793,7 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MINUS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MINUS );
          }
          break;
 
@@ -2803,7 +2803,7 @@ static HB_EXPR_FUNC( hb_compExprUseMinus )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2848,7 +2848,7 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MULT );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MULT );
          }
          break;
 
@@ -2858,7 +2858,7 @@ static HB_EXPR_FUNC( hb_compExprUseMult )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2903,7 +2903,7 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DIVIDE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_DIVIDE );
          }
          break;
 
@@ -2913,7 +2913,7 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -2958,7 +2958,7 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_MODULUS );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MODULUS );
          }
          break;
 
@@ -2968,7 +2968,7 @@ static HB_EXPR_FUNC( hb_compExprUseMod )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -3010,7 +3010,7 @@ static HB_EXPR_FUNC( hb_compExprUsePower )
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POWER );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POWER );
          }
          break;
 
@@ -3020,7 +3020,7 @@ static HB_EXPR_FUNC( hb_compExprUsePower )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used
@@ -3077,7 +3077,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
       case HB_EA_PUSH_PCODE:
          {
             HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_PUSH_PCODE );
-            HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_NEGATE );
+            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_NEGATE );
          }
          break;
 
@@ -3087,7 +3087,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
       case HB_EA_PUSH_POP:
 #ifdef HB_C52_STRICT
          HB_EXPR_USE( pSelf, HB_EA_PUSH_PCODE );
-         HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_POP );
+         HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
 #else
          /* NOTE: This will not generate a runtime error if incompatible
           * data type is used

@@ -87,9 +87,10 @@ extern void hb_macroError( int, HB_MACRO_DECL );
 extern int hb_compParse( HB_MACRO_PTR );
 
 extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );
-extern void hb_compGenPCode2( BYTE, BYTE, HB_MACRO_DECL );
-extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL );
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );
+extern void hb_compGenPCode2( BYTE, BYTE, BOOL, HB_MACRO_DECL );
+extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL );
+extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL );
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );
 
 extern void hb_compGenJumpHere( ULONG, HB_MACRO_DECL );
 
@@ -131,9 +132,10 @@ extern void hb_compGenPushDouble( double dNumber, BYTE bDec, HB_MACRO_DECL );
 extern void hb_compGenPushFunCall( char * szFunName, HB_MACRO_DECL );
 extern void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_MACRO_DECL );
 extern void hb_compGenPCode1( BYTE byte, HB_MACRO_DECL );
-extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_MACRO_DECL );
-extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_MACRO_DECL );
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );
+extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected, HB_MACRO_DECL );
+extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected, HB_MACRO_DECL );
+extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected, HB_MACRO_DECL );
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );
 extern void hb_compCodeBlockStart( HB_MACRO_DECL );
 extern void hb_compCodeBlockEnd( HB_MACRO_DECL );
 

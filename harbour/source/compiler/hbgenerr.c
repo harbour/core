@@ -64,8 +64,8 @@ char * hb_comp_szErrors[] =
    "Formal parameters already declared",
    "Invalid %s from within of SEQUENCE code",
    "Unterminated array index",
-   "Memory allocation error",
-   "Memory reallocation error",
+   "Could not allocate [%s] bytes",
+   "Could not re-allocate [%s] bytes",
    "Freeing a NULL memory pointer",
    "Syntax error: \"%s at \'%s\'\"",
    "Jump offset too long",
@@ -99,13 +99,10 @@ char * hb_comp_szWarnings[] =
    "1Procedure returns value",
    "1Function \'%s\' does not end with RETURN statement",
    "3Incompatible type in assignment to: \'%s\' expected: \'%s\'",
-   "3Incompatible operand type: \'%s\' expected: \'Logical\'",
-   "3Incompatible operand type: \'%s\' expected: \'Numeric\'",
+   "3Incompatible operand type: \'%s\' expected: \'%s\'",
    "3Incompatible operand types: \'%s\' and: \'%s\'",
    "3Suspicious type in assignment to: \'%s\' expected: \'%s\'",
    "3Suspicious operand type: \'UnKnown\' expected: \'%s\'",
-   "3Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
-   "3Suspicious operand type: \'UnKnown\' expected: \'Numeric\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
    "1Redundant \'ANNOUNCE %s\' statement ignored"
@@ -114,7 +111,7 @@ char * hb_comp_szWarnings[] =
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
    int iLine = hb_comp_iLine;
-   
+
    if( hb_comp_EOL )
       --iLine;
    if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
@@ -134,14 +131,14 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
 {
    char * szText = szWarnings[ iWarning - 1 ];
    int iLine = hb_comp_iLine;
-   
+
    if( hb_comp_EOL )
       --iLine;
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
       if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
-         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine + hb_pp_nEmptyStrings ); 
+         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine + hb_pp_nEmptyStrings );
       printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( szText + 1, szWarning1, szWarning2 );
       printf( "\n" );

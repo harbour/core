@@ -116,7 +116,11 @@ typedef struct __FUNC
    ULONG  * pNOOPs;                 /* pointer to the NOOP array */
    ULONG  * pJumps;                 /* pointer to the Jumps array */
    int    iNOOPs;                   /* NOOPs Counter */
-   int    iJumps;                   /* Jumps Counter */
+   BYTE   iJumps;                   /* Jumps Counter */
+   BYTE   pStack[256];              /* Compile Time Stack */
+   SHORT  iStackIndex;              /* Compile Time Stack Index */
+   BYTE   pFunctionCalls[256];      /* Array of Function Calls Compile Time Stack Postion */
+   SHORT  iFunctionIndex;           /* Index into Array of Function Calls Compile Time Stack Postion */
    struct __FUNC * pOwner;          /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;           /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
@@ -222,10 +226,10 @@ extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL 
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
 extern void hb_compGenPushFunRef( char *, HB_MACRO_DECL );
 extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );             /* generates 1 byte of pcode */
-extern void hb_compGenPCode2( BYTE, BYTE, HB_MACRO_DECL ); /* generates 2 bytes of pcode */
-extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 3 bytes of pcode */
-extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 4 bytes of pcode */
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
+extern void hb_compGenPCode2( BYTE, BYTE, BOOL, HB_MACRO_DECL ); /* generates 2 bytes of pcode */
+extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL ); /* generates 3 bytes of pcode */
+extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL ); /* generates 4 bytes of pcode */
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
 
 /* Codeblocks */
 extern void hb_compCodeBlockStart( HB_MACRO_DECL ); /* starts a codeblock creation */
@@ -272,10 +276,10 @@ extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPushFunRef( char * );
 extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode */
-extern void hb_compGenPCode2( BYTE, BYTE );       /* generates 2 bytes of pcode */
-extern void hb_compGenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
-extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE ); /* generates 4 bytes of pcode */
-extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
+extern void hb_compGenPCode2( BYTE, BYTE, BOOL );       /* generates 2 bytes of pcode + flag for optional StrongType(). */
+extern void hb_compGenPCode3( BYTE, BYTE, BYTE, BOOL ); /* generates 3 bytes of pcode + flag for optional StrongType() */
+extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL ); /* generates 4 bytes of pcode + flag for optional StrongType() */
+extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL );  /* copy bytes to a pcode buffer + flag for optional StrongType() */
 
 extern ULONG hb_compSequenceBegin( void );
 extern ULONG hb_compSequenceEnd( void );

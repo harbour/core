@@ -33,6 +33,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
+ *    hb_compStrongType()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include <assert.h>
 
 #include "hbcomp.h"
@@ -190,6 +201,553 @@ void hb_compPCodeEval( PFUNCTION pFunc, HB_PCODE_FUNC_PTR * pFunctions, void * c
 
 }
 
+void hb_compStrongType( int iSize )
+{
+   PFUNCTION pFunc = hb_comp_functions.pLast, pTmp;
+   PVAR pVar;
+   PCOMSYMBOL pSym;
+   ULONG ulPos = pFunc->lPCodePos - iSize;
+   SHORT wVar;
+   int iVar;
+   char szType1[2], szType2[2];
+   BYTE bLast1, bLast2;
+
+   /* TODO Split under conitions for the different matching possible iSize. */
+
+   switch ( pFunc->pCode[ ulPos ] )
+   {
+     /*-----------------4/26/00 0:16AM-------------------
+      * Push values on stack.
+      * --------------------------------------------------*/
+
+     case HB_P_SWAPALIAS :
+     case HB_P_RETVALUE :
+       /* TODO Check effect on stack. */
+       break;
+
+     case HB_P_DO :
+     case HB_P_DOSHORT :
+     case HB_P_FUNCTION :
+     case HB_P_FUNCTIONSHORT :
+
+       /* TODO: Add support for Function Parameters Declaration. */
+
+       /* Removing all the optional parameters. */
+       pFunc->iStackIndex = pFunc->pFunctionCalls[ pFunc->iFunctionIndex--] ;
+       /* Function Type already on stack at this position. */
+       break;
+
+     /* Subject to Operator Overloading - Don't expect Numeric! */
+     case HB_P_DEC :
+     case HB_P_INC :
+       break;
+
+     case HB_P_JUMPFALSENEAR :
+     case HB_P_JUMPFALSE :
+     case HB_P_JUMPFALSEFAR :
+     case HB_P_JUMPTRUENEAR :
+     case HB_P_JUMPTRUE :
+     case HB_P_JUMPTRUEFAR :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'L' )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "L", NULL );
+       else
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "L" );
+
+       break;
+
+     case HB_P_INSTRING :
+
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' ) ||
+            ( pFunc->pStack[ pFunc->iStackIndex ] == 'C' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'C' ) )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "C", NULL  );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'C' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "C" );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "C", NULL );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] != 'C' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType2, "C" );
+
+       /* Override the last item with the new result type */
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+       break;
+
+     /* May be subject to Operator Overloading - don't restrict to Numeric! */
+     case HB_P_DIVIDE :
+     case HB_P_PLUS :
+     case HB_P_NEGATE :
+     case HB_P_MULT :
+     case HB_P_POWER :
+     case HB_P_EQUAL :
+     case HB_P_EXACTLYEQUAL :
+     case HB_P_NOTEQUAL :
+     case HB_P_GREATER :
+     case HB_P_GREATEREQUAL :
+     case HB_P_LESSEQUAL :
+     case HB_P_LESS :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          /* Override the last item with the new result type wich is already there */
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == pFunc->pStack[ pFunc->iStackIndex - 1 ] )
+          /* Override the last item with the new result type wich is already there */
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType2, NULL );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, szType1, NULL );
+
+          /* Override the last item with the new result type wich is already there */
+       }
+       else
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERANDS_INCOMPATBLE, szType1, szType2 );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
+       }
+
+       break;
+
+     /* Should we allow Operator Overloading here too? */
+     case HB_P_AND :
+     case HB_P_NOT :
+     case HB_P_OR :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' ) ||
+            ( pFunc->pStack[ pFunc->iStackIndex ] == 'L' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'L' ) )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "L", NULL  );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'L' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "L" );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "L", NULL );
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] != 'L' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType2, "L" );
+
+       /* Override the last item with the new result type */
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'L';
+       break;
+
+     case HB_P_DUPLICATE :
+       bLast1 = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+       pFunc->pStack[ pFunc->iStackIndex++ ] = bLast1;
+       break;
+
+     case HB_P_DUPLTWO :
+       bLast1 = pFunc->pStack[ pFunc->iStackIndex - 2 ];
+       bLast2 = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+       pFunc->pStack[ pFunc->iStackIndex++ ] = bLast1;
+       pFunc->pStack[ pFunc->iStackIndex++ ] = bLast2;
+       break;
+     /* Explicit Types. */
+
+     /* Objects */
+     case HB_P_PUSHSELF :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'O';
+       break;
+
+     /* Blcks */
+     case HB_P_MPUSHBLOCK :
+     case HB_P_PUSHBLOCK :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'B';
+       break;
+
+     /* Undefined */
+     case HB_P_PUSHNIL :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'U';
+       break;
+
+     /* Logicals */
+     case HB_P_TRUE :
+     case HB_P_FALSE :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'L';
+       break;
+
+     /* Numerics */
+     case HB_P_PUSHDOUBLE :
+     case HB_P_PUSHLONG :
+     case HB_P_PUSHINT :
+     case HB_P_PUSHBYTE :
+     case HB_P_ZERO :
+     case HB_P_ONE :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'N';
+       break;
+
+     /* Charcters */
+     case HB_P_PUSHSTRSHORT :
+     case HB_P_PUSHSTR :
+      pFunc->pStack[ pFunc->iStackIndex++ ] = 'C';
+      break;
+
+     case HB_P_PUSHSYM :
+     case HB_P_MPUSHSYM :
+       pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
+
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
+
+       if ( pVar )
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+       else
+          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+       break;
+
+     case HB_P_PUSHSYMNEAR :
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
+
+       if ( pSym )
+       {
+          /* TODO: Check this!!! */
+          if ( pSym->cScope & HB_FS_PUBLIC == HB_FS_PUBLIC ||
+               pSym->cScope & HB_FS_STATIC == HB_FS_STATIC ||
+               pSym->cScope & HB_FS_INIT   == HB_FS_INIT   ||
+               pSym->cScope & HB_FS_EXIT   == HB_FS_EXIT      )
+             /* Storing a Book Mark of the last pushed symbol so we know how many bytes to pop when encountering function call. */
+             pFunc->pFunctionCalls[ pFunc->iFunctionIndex++ ] = pFunc->iStackIndex;
+
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+       }
+       else
+          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+       break;
+
+     /* Local Variables */
+
+     case HB_P_PUSHLOCAL :
+       wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
+
+       /* we are accesing variables within a codeblock */
+       if( wVar < 0 )
+          /* TODO: Deal with Codeblock Refernced locals. */
+         ;
+       else
+          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
+
+       if ( pVar )
+       {
+          /* Review with Ryszard. */
+          if ( pVar->cType == 'U' )
+             pVar->cType = ' ';
+
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
+       }
+       else
+          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+       break;
+
+     case HB_P_PUSHLOCALREF :
+       /* QUESTION: Fall from above, or use a "REFERENCED" type. */
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
+       break;
+
+     case HB_P_PUSHLOCALNEAR :
+       iVar = pFunc->pCode[ ulPos + 1 ];
+
+       /* we are accesing variables within a codeblock */
+       if( iVar < 0 )
+          /* TODO: Deal with Codeblock Refernced locals. */
+          ;
+       else
+          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
+
+       if ( pVar )
+       {
+          /* Review with Ryszard. */
+          if ( pVar->cType == 'U' )
+             pVar->cType = ' ';
+
+          pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
+       }
+       else
+          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+       break;
+
+     /* Static Variables */
+
+     case HB_P_PUSHSTATIC :
+       pTmp = hb_comp_functions.pFirst;
+       wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+
+       while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
+          pTmp = pTmp->pNext;
+
+       pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
+
+       if ( pVar )
+       {
+          /* Review with Ryszard. */
+          if ( pVar->cType == 'U' )
+             pVar->cType = ' ';
+
+         pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
+       }
+       else
+         pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+       break;
+
+     case HB_P_PUSHSTATICREF :
+       /* Question use type "REFERENCE" or the base type of the var */
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
+
+     /* MemVars */
+
+     case HB_P_PUSHVARIABLE :
+     case HB_P_PUSHMEMVAR :
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
+       if ( pSym )
+       {
+          /* Review with Ryszard. */
+          if ( pVar->cType == 'U' )
+             pVar->cType = ' ';
+
+         pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+       }
+       else
+         pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+     case HB_P_PUSHMEMVARREF :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
+
+     /* Arrays. */
+
+     case HB_P_ARRAYPUSH :
+       /* TODO: Deal with Array Elements. */
+       pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       break;
+
+     /* Macros type unknown */
+     case HB_P_MPUSHALIASEDFIELD :
+     case HB_P_MPUSHALIASEDVAR :
+     case HB_P_MPUSHFIELD :
+     case HB_P_MPUSHMEMVAR :
+     case HB_P_MPUSHMEMVARREF :
+     case HB_P_MPUSHVARIABLE :
+     case HB_P_MACROPUSHALIASED :
+     case HB_P_MACROPUSH :
+       pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       break;
+
+     case HB_P_MACROSYMBOL :
+       /* TODO: check affect on stack. */
+     case HB_P_MACROTEXT :
+       /* TODO: check affect on stack. */
+       break;
+
+     /*-----------------4/26/00 0:15AM-------------------
+      *  Begin POP Check and Remove from Stack.
+      * --------------------------------------------------*/
+
+     case HB_P_POP :
+     case HB_P_POPALIAS :
+     case HB_P_POPFIELD :
+       /* TODO: Add support for FIELD declarations. */
+     case HB_P_POPALIASEDFIELD :
+       /* TODO: Add support for FIELD declarations. */
+       pFunc->iStackIndex--;
+       break;
+
+     case HB_P_POPMEMVAR :
+     case HB_P_POPVARIABLE :
+     case HB_P_POPALIASEDVAR :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
+
+       if ( pSym->cType != ' ' )
+       {
+         char szType[2];
+         sprintf( szType, "%c", pSym->cType );
+
+         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
+         else if ( pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+       }
+
+       break;
+
+     case HB_P_POPLOCAL :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
+
+       /* we are accesing variables within a codeblock */
+       if( wVar < 0 )
+          /* TODO: Deal with Codeblock Refernced locals. */
+          ;
+       else
+          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
+
+       if ( pVar->cType != ' ' )
+       {
+         char szType[2];
+         sprintf( szType, "%c", pVar->cType );
+
+         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+         else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+       }
+
+       break;
+
+     case HB_P_POPLOCALNEAR :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       iVar = pFunc->pCode[ ulPos + 1 ];
+
+       /* we are accesing variables within a codeblock */
+       if( iVar < 0 )
+          /* TODO: Deal with Codeblock Refernced locals. */
+         ;
+       else
+          pVar = hb_compVariableFind( pFunc->pLocals, iVar );
+
+       if ( pVar->cType != ' ' )
+       {
+         char szType[2];
+         sprintf( szType, "%c", pVar->cType );
+
+         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+         else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+       }
+
+       break;
+
+     case HB_P_POPSTATIC :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       pTmp = hb_comp_functions.pFirst;
+       wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
+
+       while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
+          pTmp = pTmp->pNext;
+
+       pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
+
+       if ( pVar->cType != ' '  )
+       {
+         char szType[2];
+         sprintf( szType, "%c", pVar->cType );
+
+         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pVar->szName, szType );
+         else if ( pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, szType );
+       }
+
+       break;
+
+     /* Macros Undefined Types */
+
+     case HB_P_MPOPALIASEDFIELD :
+     case HB_P_MPOPALIASEDVAR :
+     case HB_P_MPOPFIELD :
+     case HB_P_MPOPMEMVAR :
+     case HB_P_MACROPOP :
+     case HB_P_MACROPOPALIASED :
+        pFunc->iStackIndex--;
+        break;
+
+     case HB_P_ARRAYPOP :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       /* TODO: Deal with Array Elements. */
+       if ( pFunc->pStack[ pFunc->iStackIndex ] != ' ' )
+       {
+       }
+
+       break;
+
+     case HB_P_ARRAYDIM :
+       pFunc->iStackIndex -= 2;
+       /* TODO: Deal with Array Elements. */
+       /* Pop the values used to generate the array. */
+       break;
+
+     case HB_P_ARRAYGEN :
+       pFunc->iStackIndex -= 2;
+       /* TODO: Deal with Array Elements. */
+       /* Pop the values used to generate the array. */
+       break;
+   }
+
+   /* TODO Error or trace messages when completed. */
+   if ( pFunc->iStackIndex < 0 )
+      pFunc->iStackIndex = 0;
+   else if ( pFunc->iStackIndex > 255 )
+      pFunc->iStackIndex = 255;
+}
 
 void hb_compGenPCode1( BYTE byte )
 {
@@ -205,9 +763,12 @@ void hb_compGenPCode1( BYTE byte )
       pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += HB_PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
+
+   if ( hb_comp_iWarnings >= 3 )
+      hb_compStrongType( 1 );
 }
 
-void hb_compGenPCode2( BYTE byte1, BYTE byte2 )
+void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
 
@@ -222,9 +783,12 @@ void hb_compGenPCode2( BYTE byte1, BYTE byte2 )
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
+
+   if ( hb_comp_iWarnings >= 3 && bStackAffected )
+      hb_compStrongType( 2 );
 }
 
-void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
+void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
 
@@ -240,9 +804,12 @@ void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
+
+   if ( hb_comp_iWarnings >= 3 && bStackAffected  )
+      hb_compStrongType( 3 );
 }
 
-void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4 )
+void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
 
@@ -259,9 +826,12 @@ void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4 )
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte3;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte4;
+
+   if ( hb_comp_iWarnings >= 3 && bStackAffected  )
+      hb_compStrongType( 4 );
 }
 
-void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize )
+void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL bStackAffected )
 {
    PFUNCTION pFunc = hb_comp_functions.pLast;   /* get the currently defined Clipper function */
 
@@ -280,5 +850,7 @@ void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize )
 
    memcpy( pFunc->pCode + pFunc->lPCodePos, pBuffer, ulSize );
    pFunc->lPCodePos += ulSize;
-}
 
+   if ( hb_comp_iWarnings >= 3 && bStackAffected  )
+      hb_compStrongType( ulSize );
+}

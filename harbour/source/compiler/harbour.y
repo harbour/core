@@ -237,7 +237,7 @@ Main       : { hb_compLinePush(); } Source       { }
            | /* empty file */
            ;
 
-Source     : Crlf         { hb_comp_EOL = FALSE; }   
+Source     : Crlf         { hb_comp_EOL = FALSE; }
            | VarDefs      { hb_comp_EOL = FALSE; }
            | FieldsDef    { hb_comp_EOL = FALSE; }
            | MemvarDef    { hb_comp_EOL = FALSE; }
@@ -303,12 +303,12 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | ExprPostOp CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprOperEq CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | ExprEqual CrlfStmnt    { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); } 
+           | ExprAssign CrlfStmnt   { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
            | DoProc CrlfStmnt       { hb_compExprDelete( hb_compExprGenStatement( $1 ) ); }
-           | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode2( HB_P_DOSHORT, 0 );
+           | BREAK CrlfStmnt        { hb_compGenBreak(); hb_compGenPCode2( HB_P_DOSHORT, 0, ( BOOL ) 1 );
                                       hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | BREAK { hb_compLinePushIfInside(); } Expression Crlf  { hb_compGenBreak(); hb_compExprDelete( hb_compExprGenPush( $3 ) );
-                                           hb_compGenPCode2( HB_P_DOSHORT, 1 );
+                                           hb_compGenPCode2( HB_P_DOSHORT, 1, ( BOOL ) 1 );
                                            hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE;
                                          }
            | RETURN CrlfStmnt {
@@ -331,7 +331,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
                            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         hb_compExprGenPush( $3 );   /* TODO: check if return value agree with declared value */
-                        hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC );
+                        hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, ( BOOL ) 1 );
                         if( hb_comp_functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
                            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
@@ -1035,14 +1035,14 @@ ExtVarDef  : VarDef
                {
                   USHORT uCount = hb_compExprListLen( $2 );
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
                   hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
                }
            | MacroVar DimList AS_ARRAY
                {
                   USHORT uCount = hb_compExprListLen( $2 );
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
                   hb_compRTVariableAdd( hb_compExprNewRTVar( NULL, $1 ), TRUE );
                }
            ;
@@ -1366,7 +1366,7 @@ RecoverEmpty : RECOVER
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
                   --hb_comp_wSeqCounter;
-                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP );
+                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, ( BOOL ) 1 );
                }
            ;
 
@@ -1829,9 +1829,9 @@ static void hb_compRTVariableGen( char * szCreateFun )
 
    /* call function that will create either PUBLIC or PRIVATE variables */
    if( usCount > 255 )
-      hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
+      hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ), ( BOOL ) 1 );
    else
-      hb_compGenPCode2( HB_P_DOSHORT, ( BYTE ) usCount );
+      hb_compGenPCode2( HB_P_DOSHORT, ( BYTE ) usCount, ( BOOL ) 1 );
 
    /* pop initial values */
    while( pVar )
@@ -1854,7 +1854,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      USHORT uCount = hb_compExprListLen( pInitValue );
      hb_compVariableAdd( szName, 'A' );
      hb_compExprDelete( hb_compExprGenPush( pInitValue ) );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
      hb_compRTVariableAdd( hb_compExprNewRTVar( szName, NULL ), TRUE );
   }
   else if( hb_comp_iVarScope == VS_STATIC )
@@ -1868,7 +1868,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create an array */
      hb_compExprGenPush( pInitValue );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
      /* check if valid initializers were used but don't generate any code */
      pAssign = hb_compExprAssignStatic( pVar, pInitValue );
      /* now pop an array */
@@ -1883,7 +1883,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
 
      hb_compVariableAdd( szName, 'A' );
      hb_compExprDelete( hb_compExprGenPush( pInitValue ) );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
+     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), ( BOOL ) 1 );
      hb_compExprDelete( hb_compExprGenPop( hb_compExprNewVar( szName ) ) );
   }
 }

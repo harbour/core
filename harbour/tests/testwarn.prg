@@ -18,8 +18,9 @@ FUNCTION Main()
 FUNCTION Hex2Dec( lVar AS LOGICAL )
 
    LOCAL nVar AS NUMERIC, cVar AS CHARACTER, lVar2 AS LOGICAL, nNoType := 3
+   PRIVATE cMemVar1 AS CHARACTER
 
-   nVar := .T.
+        nVar := .T.
 
    nVar := 1
 
@@ -37,9 +38,11 @@ FUNCTION Hex2Dec( lVar AS LOGICAL )
 
         cVar := nVar
 
-     NondDeclared := 2
+   M->cMemVar1 := 2
 
-   cVar := {|x,y,z| nMyFunc( 3 ) }
+   NondDeclared := 2
+
+   cVar := {|n AS NUMERIC , c AS CHARACTER, d AS DATE| n := nMyFunc( n,c,d ), c := 2  }
 
         nVar := 8 + cVar
 
