@@ -10,7 +10,7 @@ void PushNil( void );
 void PushSymbol( PSYMBOL );
 void Message( PSYMBOL );
 void Do( WORD wParams );
-void ArrayDel( PITEM, WORD );
+void hb_arrayDel( PITEM, ULONG );
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -68,9 +68,9 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas --> hClass */
    pClasses[ wClasses ].aInlines.wType = IT_NIL;
    pClasses[ wClasses ].aInitValues.wType = IT_NIL;
 
-   Array( &pClasses[ wClasses ].aClassDatas, 0 );
-   Array( &pClasses[ wClasses ].aInlines,    0 );
-   /* Array( &pClasses[ wClasses ].aInitValues,    0 ); */
+   hb_arrayNew( &pClasses[ wClasses ].aClassDatas, 0 );
+   hb_arrayNew( &pClasses[ wClasses ].aInlines,    0 );
+   /* hb_arrayNew( &pClasses[ wClasses ].aInitValues,    0 ); */
 
    memset( pClasses[ wClasses ].pMethods, 0, 100 * sizeof( METHOD ) );
 
@@ -141,8 +141,8 @@ static HARBOUR GetData( void )
    WORD  wIndex  = pMethod->wData;
 
    if( wIndex > ArrayLen ( pObject ) )          /* Resize needed            */
-      ArraySize( pObject, wIndex );             /* Make large enough        */
-   ArrayGet( pObject, wIndex, &stack.Return );
+      hb_arraySize( pObject, wIndex );          /* Make large enough        */
+   hb_arrayGet( pObject, wIndex, &stack.Return );
 }
 
 static HARBOUR SetData( void )
@@ -150,9 +150,9 @@ static HARBOUR SetData( void )
    PITEM pObject = stack.pBase + 1;
    WORD  wIndex  = pMethod->wData;
 
-   if( wIndex > ArrayLen( pObject ) )           /* Resize needed            */
-      ArraySize( pObject, wIndex );             /* Make large enough        */
-   ArraySet( pObject, wIndex, stack.pBase + 2 );
+   if( wIndex > hb_arrayLen( pObject ) )        /* Resize needed            */
+      hb_arraySize( pObject, wIndex );          /* Make large enough        */
+   hb_arraySet( pObject, wIndex, stack.pBase + 2 );
 }
 
 static HARBOUR GetClassData( void )
@@ -160,7 +160,7 @@ static HARBOUR GetClassData( void )
    WORD wClass = ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
 
    if( wClass && wClass <= wClasses )
-      ArrayGet( &pClasses[ wClass - 1 ].aClassDatas, pMethod->wData, &stack.Return );
+      hb_arrayGet( &pClasses[ wClass - 1 ].aClassDatas, pMethod->wData, &stack.Return );
 }
 
 static HARBOUR SetClassData( void )
@@ -168,7 +168,7 @@ static HARBOUR SetClassData( void )
    WORD wClass = ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
 
    if( wClass && wClass <= wClasses )
-      ArraySet( &pClasses[ wClass - 1 ].aClassDatas, pMethod->wData, stack.pBase + 2 );
+      hb_arraySet( &pClasses[ wClass - 1 ].aClassDatas, pMethod->wData, stack.pBase + 2 );
 }
 
 static HARBOUR EvalInline( void )
@@ -177,7 +177,7 @@ static HARBOUR EvalInline( void )
    WORD wClass = ( ( PBASEARRAY ) ( stack.pBase + 1 )->value.pBaseArray )->wClass;
    WORD w;
 
-   ArrayGet( &pClasses[ wClass - 1 ].aInlines, pMethod->wData, &block );
+   hb_arrayGet( &pClasses[ wClass - 1 ].aInlines, pMethod->wData, &block );
 
    PushSymbol( &symEval );
    Push( &block );
@@ -345,8 +345,8 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType */
 
             case MET_CLASSDATA:
                  pClass->pMethods[ wAt ].wData = _parnl( 3 );
-                 if( ArrayLen( &pClass->aClassDatas ) < _parnl( 3 ) )
-                    ArraySize( &pClass->aClassDatas, _parnl( 3 ) );
+                 if( hb_arrayLen( &pClass->aClassDatas ) < _parnl( 3 ) )
+                    hb_arraySize( &pClass->aClassDatas, _parnl( 3 ) );
 
                  if( pMessage->pSymbol->szName[ 0 ] == '_' )
                     pClass->pMethods[ wAt ].pFunction = SetClassData;
@@ -355,9 +355,9 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType */
                  break;
 
             case MET_INLINE:
-                 pClass->pMethods[ wAt ].wData = ArrayLen( &pClass->aInlines ) + 1;
-                 ArraySize( &pClass->aInlines, pClass->pMethods[ wAt ].wData );
-                 ArraySet( &pClass->aInlines, pClass->pMethods[ wAt ].wData,
+                 pClass->pMethods[ wAt ].wData = hb_arrayLen( &pClass->aInlines ) + 1;
+                 hb_arraySize( &pClass->aInlines, pClass->pMethods[ wAt ].wData );
+                 hb_arraySet( &pClass->aInlines, pClass->pMethods[ wAt ].wData,
                            _param( 3, IT_BLOCK ) );
                  pClass->pMethods[ wAt ].pFunction = EvalInline;
                  break;
@@ -403,7 +403,7 @@ HARBOUR CLASSINSTANCE() /* hClass --> oNewObject */
 
    if( wClass <= wClasses )
    {
-      Array( &stack.Return, pClasses[ wClass - 1 ].wDatas );
+      hb_arrayNew( &stack.Return, pClasses[ wClass - 1 ].wDatas );
       ( ( PBASEARRAY ) stack.Return.value.pBaseArray )->wClass = wClass;
    }
    else
@@ -485,9 +485,9 @@ void ReleaseClass( PCLASS pClass )
    _xfree( pClass->szName );
    _xfree( pClass->pMethods );
 
-   ArrayRelease( &pClass->aClassDatas );
-   ArrayRelease( &pClass->aInlines );
-   /* ArrayRelease( &pClass->aInitValues ); */
+   hb_arrayRelease( &pClass->aClassDatas );
+   hb_arrayRelease( &pClass->aInlines );
+   /* hb_arrayRelease( &pClass->aInitValues ); */
 }
 
 void ReleaseClasses( void )
@@ -571,7 +571,7 @@ HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */
          pFunc = pClass->pMethods[ wAt ].pFunction;
          if( pFunc == EvalInline )              /* INLINE method changed    */
          {
-            ArraySet(  &pClass->aInlines, pClass->pMethods[ wAt ].wData,
+            hb_arraySet(  &pClass->aInlines, pClass->pMethods[ wAt ].wData,
                        _param( 3, IT_BLOCK ) );
          }
          else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
@@ -617,7 +617,7 @@ HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
          pFunc = pClass->pMethods[ wAt ].pFunction;
          if( pFunc == EvalInline )              /* INLINE method deleted    */
          {
-            ArrayDel(  &pClass->aInlines, pClass->pMethods[ wAt ].wData );
+            hb_arrayDel(  &pClass->aInlines, pClass->pMethods[ wAt ].wData );
                                                 /* Delete INLINE block      */
          }                                      /* Move messages            */
          for( ; pClass->pMethods[ wAt ].pMessage && wAt < wLimit; wAt ++ )
