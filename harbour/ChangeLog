@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-02 12:02 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * source/debug/debugger.prg
+    ! Fixed AltD() behavior
+
+  + tests/altd.prg
+    * AltD() behavior test
+
 2002-05-30 00:55 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/tbrowse.prg
     + Add two instance variables, nRow and nCol. Existing in Clipper 5.3.
