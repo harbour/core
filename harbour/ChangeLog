@@ -1,3 +1,7 @@
+20000319-01:10 EST Paul Tucker <ptucker@sympatico.ca>
+   * contrib/rdd_ads/ads1.c
+     * added cast in strlen() (forgot to post previously)
+
 20000318-21:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
