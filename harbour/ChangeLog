@@ -1,3 +1,18 @@
+2001-04-04 01:20 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * source/vm/dynsym.c
+      * added test for spaces to hb_dynsymFindName so
+        padded symbols are found now.
+        A few tests indicated NO speed loss
+        (Thanks, Ron, I used yours when the speed test
+         showed no difference)
+
+   * contrib/rdd_ads/ads1.c
+      * Fixed bug in GetValue where child areas returned blank fields
+
+   * contrib/rdd_ads/adsfunc.c
+      * rewrote adsGetKeyCount to walk the scope by hand
+
+
 2001-04-03 21:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libmisc/fileread.prg

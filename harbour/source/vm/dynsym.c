@@ -181,8 +181,22 @@ PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
       while( iLen-- )
       {
          char cChar = *szName++;
-         *pDest++ = ( cChar >= 'a' && cChar <= 'z' ) ? cChar - ( 'a' - 'A' ) : cChar;
+
+         if( cChar >= 'a' && cChar <= 'z' )
+         {
+            *pDest++ = cChar - ( 'a' - 'A' );
+         }
+         else if( cChar == ' ' || cChar == '\t' )
+         {
+            *pDest = '\0';
+            break;
+         }
+         else
+         {
+            *pDest++ = cChar;
+         }
       }
+
    }
 
    return hb_dynsymFind( szUprName );

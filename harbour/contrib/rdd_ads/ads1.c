@@ -673,53 +673,29 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
-
-   if( pArea->fEof )
-   {
-      bOnPhantom = TRUE;
-      /* -----------------12/15/00 11:43pm-----------------
-      TODO: The following seems inefficient to clear the buffer this way for every field
-       when retrieving values at eof.
-       Would some variation of memset be faster?
-       If pBuffer is initialized to pRecord above, if pRecord were always cleared
-       at EOF then this would be unnecessary here.
-       --------------------------------------------------*/
-      memset( pBuffer, ' ', pField->uiLen );
-
-      //      int i;
-      //      for( i=0; i < (int) pArea->maxFieldLen; i++ )
-      //         *( pBuffer+i ) = ' ';
-      //      *( pBuffer + ( int ) pField->uiLen ) = '\0';
-      //Children may not have eof flag set right, so have to check GetField ret val anyway
-   }
+   /* Cannot test for EOF here because related children may not have the eof flag reset yet, yielded erroneous blank results */
 
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
 
    switch( pField->uiType )
    {
       case HB_IT_STRING:
-         if( !bOnPhantom )
-         {
             pulLength = pArea->maxFieldLen;
             if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
             {
                memset( pBuffer, ' ', pField->uiLen );
                pArea->fEof = TRUE;
             }
-         }
          hb_itemPutCL( pItem, ( char * ) pBuffer, pField->uiLen );
          break;
 
       case HB_IT_LONG:
-         if( !bOnPhantom )
-         {
             pulLength = pArea->maxFieldLen;
             if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
             {
                memset( pBuffer, ' ', pField->uiLen );
                pArea->fEof = TRUE;
             }
-         }
          if( pField->uiDec )
             hb_itemPutNDLen( pItem, atof( pBuffer ),
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
@@ -734,15 +710,12 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             UNSIGNED16 pusLen = 10;
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
-            if( !bOnPhantom )
-            {
                pulLength = pArea->maxFieldLen;
                if (AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE ) == AE_NO_CURRENT_RECORD  )
                {
                   memset( pBuffer, ' ', pField->uiLen );
                   pArea->fEof = TRUE;
                }
-            }
             hb_itemPutDS( pItem, pBuffer );
             AdsSetDateFormat  ( pucFormat );
             break;
@@ -751,14 +724,11 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_LOGICAL:
          {
             UNSIGNED16 pbValue = FALSE;
-            if( !bOnPhantom )
-            {
                if (AdsGetLogical( pArea->hTable, szName, &pbValue ) == AE_NO_CURRENT_RECORD  )
                {
                   pbValue = FALSE;
                   pArea->fEof = TRUE;
                }
-            }
             hb_itemPutL( pItem, pbValue);
             break;
          }
@@ -768,8 +738,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
            UNSIGNED8 *pucBuf;
            UNSIGNED32 pulLen;
 
-           if ( bOnPhantom ||
-                AdsGetMemoLength( pArea->hTable, szName, &pulLen ) == AE_NO_CURRENT_RECORD )
+           if ( AdsGetMemoLength( pArea->hTable, szName, &pulLen ) == AE_NO_CURRENT_RECORD )
                hb_itemPutC( pItem, "" );
            else
            {

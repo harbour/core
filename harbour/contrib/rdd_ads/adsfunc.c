@@ -223,6 +223,8 @@ HB_FUNC( ADSKEYCOUNT )
    UNSIGNED32 pulKey;
    ADSHANDLE hIndex;
    UNSIGNED16 usFilterOption = ADS_IGNOREFILTERS;
+   UNSIGNED8 pucScope[ ADS_MAX_KEY_LENGTH+1 ];
+   UNSIGNED16 pusBufLen = ADS_MAX_KEY_LENGTH;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
@@ -257,7 +259,32 @@ HB_FUNC( ADSKEYCOUNT )
 
       }
 
-      AdsGetRecordCount  ( hIndex, usFilterOption, &pulKey);
+      pulKey = 0L;
+      if ( usFilterOption == ADS_IGNOREFILTERS )
+         AdsGetRecordCount  ( hIndex, usFilterOption, &pulKey);
+      else            /* ads scope handling is flawed; do our own */
+      {               /* One more optimization would be to check if there's a fully optimized AOF available so don't walk ours */
+         AdsGetScope  ( hIndex, ADS_BOTTOM, pucScope, &pusBufLen);
+         if ( pusBufLen )               /* had a scope, walk it. Skips obey filters */
+         {
+            AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+                  (UNSIGNED32 *)&(pArea->ulRecNo) );
+            AdsGotoTop  ( hIndex );
+            AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+
+            while ( AdsSkip ( hIndex, 1 ) != AE_NO_CURRENT_RECORD && !pArea->fEof )
+            {
+               AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+               pulKey++;
+            }
+            AdsGotoRecord( pArea->hTable, pArea->ulRecNo );
+            AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+         }
+         else                           /*  no scope set */
+            AdsGetRecordCount  ( hIndex, usFilterOption, &pulKey);
+
+      }
+
       hb_retnl( pulKey );
    }
    else
