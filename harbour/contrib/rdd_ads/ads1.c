@@ -65,7 +65,6 @@
 #include "hbset.h"
 #include <ctype.h>
 
-
 static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
 static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 static ERRCODE adsSetScope(  ADSAREAP pArea, LPDBORDSCOPEINFO sInfo );
@@ -1687,8 +1686,9 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       if( ulRetVal != AE_SUCCESS )
       {
-         if ( ulRetVal != 1001 && ulRetVal != 7008)     /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
+         if ( ulRetVal != 1001 ) /* && ulRetVal != 7008 ) */  /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
             commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
+
          return FAILURE;                /* just set neterr  */
       }
 
