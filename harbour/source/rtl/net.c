@@ -61,7 +61,7 @@
 #if defined(__EMX__)
    #include <emx/syscalls.h>
 #define gethostname __gethostname
-#elif defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__) && ! defined(HB_OS_OS2)
+#elif defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__) && ! defined(HB_OS_OS2) && !defined(__MINGW32__)
    #include <sys/param.h>
 #endif
 #define MAXGETHOSTNAME  256      /* should be enough for a host name */
@@ -72,7 +72,7 @@
 
 HB_FUNC( NETNAME )
 {
-#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+#if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__) && !defined(__MINGW32__)
    {
      char * pszValue = (char *) hb_xgrab(MAXGETHOSTNAME+1);
      pszValue[ 0 ] = '\0';

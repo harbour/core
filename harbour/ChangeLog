@@ -1,3 +1,14 @@
+2001-06-29 18:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/Makefile
+    + Build the ct3 and gt libraries along with the misc library.
+  * include/hbver.h
+    * Version 0.37a, dated 2001-06-29.
+  * source/rtl/Makefile
+    + Added the new profiler.prg file.
+  * source/rtl/net.c
+    ! Fix for w32.mingw32 build.
+
 2001-06-29 17:15 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.bc
      + added profiler.prg support

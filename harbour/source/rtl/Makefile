@@ -133,6 +133,7 @@ PRG_SOURCES=\
 	memvarbl.prg \
 	menuto.prg   \
 	objfunc.prg  \
+	profiler.prg \
 	readkey.prg  \
 	readvar.prg  \
 	setfunc.prg  \
