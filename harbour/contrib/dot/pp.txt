@@ -35,12 +35,10 @@ PP has 3 personalities which are tied tightly together.
        - LOCALS have scoping of locals but are implemented as privates
          so you can't have a LOCAL and a PRIVATE with the same name.
 
-       - Inline assignment is not supported in the declaration. 
-
      b. Non declared variable are not auto-created on assignment (yet).
 
      c. It does support definition and execution of prg defined
-        FUNCTIONs/PROCEDUREs but does *not* support PARAMETERs (yet).
+        FUNCTIONs/PROCEDUREs.
 
      d. It does not (yet) support WHILE and FOR loops.
 
