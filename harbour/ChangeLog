@@ -7,8 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-11-12 10:23 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * source/vm/classes.c
+  * source/vm/hvm.c
+    + Added support for "[]" operator overloading
+
 2002-11-10 19:35 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
-  *source/rtl/alert.prg  
+  *source/rtl/alert.prg
     ! fix initialization of cold Var
 
 2002-11-08 13:19 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
