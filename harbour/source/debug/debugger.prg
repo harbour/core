@@ -36,7 +36,7 @@
 /* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszel] */
-
+#pragma -es0
 #include "hbclass.ch"
 #include "hbmemvar.ch"
 #include "box.ch"
@@ -314,10 +314,14 @@ METHOD EditVar( nVar ) CLASS TDebugger
    do case
       case uVarValue == "{ ... }"
            // It is an array, don't do anything
-
+            if len(::avars[nVar][2])>0
+              __DbgArrays(::avars[nVar][2],cVarname)
+            else
+               Alert("Array is empty")
+            endif
       case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
            // It is an object, don't do anything
-
+            __DbgObject(::avars[nVar][2],cVarname)
       otherwise
          ::aVars[ nVar ][ 2 ] := &uVarValue
          &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
@@ -557,7 +561,7 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
 return nil
 
-METHOD ShowVars() CLASS TDebugger
+METHOD ShowVars(bSort,nType) CLASS TDebugger
 
    local n
    local nWidth
@@ -764,19 +768,23 @@ METHOD ViewSets() CLASS TDebugger
    local nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    local oCol
 
-   oBrwSets:ColorSpec := "N/W, W+/W, N/BG"
+   oBrwSets:ColorSpec := "N/W, R/W, N/BG"
    oBrwSets:GoTopBlock := { || n := 1 }
    oBrwSets:GoBottomBlock := { || n := Len( aSets ) }
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := n,;
                           n := iif( nSkip > 0, Min( Len( aSets ), n + nSkip ),;
                           Max( 1, n + nSkip ) ), n - nPos }
-   oBrwSets:AddColumn( TBColumnNew( "", { || PadR( aSets[ n ], 12 ) } ) )
+   oBrwSets:AddColumn( ocol := TBColumnNew( "", { || PadR( aSets[ n ], 12 ) } ) )
+   ocol:colorblock :=   { || { iif( n == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:AddColumn( oCol := TBColumnNew( "",;
                        { || PadR( ValToStr( Set( n ) ), nWidth - 13 ) } ) )
    oBrwSets:Cargo := 1 // Actual highligthed row
-   oCol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
+   oBrwSets:colPos:=2
+   oBrwSets:Freeze:=1
+   ocol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
 
-   oWndSets:bPainted    := { || oBrwSets:ForceStable() }
+
+   oWndSets:bPainted    := { || oBrwSets:ForceStable(),myColors(oBrwsets,{1,2}) }
    oWndSets:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
                             oWndSets ) }
 
@@ -817,35 +825,40 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
               oBrwSets:RefreshAll()
               oBrwSets:ForceStable()
            endif
+/*      case nKey == K_ENTER
+          ::doGet(*/
    endcase
 
    if nSet != oBrwSets:Cargo
       oWnd:SetCaption( "System Settings[" + AllTrim( Str( oBrwSets:Cargo ) ) + ;
                        "..47]" )
    endif
-
+   myColors(oBrwsets,{1,2})
 return
 
 static procedure SetsUp( oBrw )
 
    local nRow := oBrw:RowPos
    local nSetPos
-
    if oBrw:RowPos == 1
       nSetPos := oBrw:Cargo
       oBrw:Cargo := 0
-      oBrw:RefreshCurrent()
+      oBrw:Refreshall()
       oBrw:ForceStable()
       oBrw:Cargo := nSetPos
    endif
+   oBrw:colpos:=1
+   oBrw:dehilite()
+   oBrw:colpos:=2
    oBrw:Up()
-   oBrw:RefreshCurrent()
+   oBrw:Refreshall()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
-   endif
+      oBrw:Up()
+   endif 
    oBrw:ForceStable()
-
+   myColors(oBrw,{1,2})
 return
 
 static procedure SetsDown( oBrw )
@@ -856,18 +869,22 @@ static procedure SetsDown( oBrw )
    if oBrw:RowPos == oBrw:RowCount
       nSetPos := oBrw:Cargo
       oBrw:Cargo := 0
-      oBrw:RefreshCurrent()
+      oBrw:Refreshall()
       oBrw:ForceStable()
       oBrw:Cargo := nSetPos
    endif
+   oBrw:colpos:=1
+   oBrw:dehilite()
+   oBrw:colpos:=2
    oBrw:Down()
-   oBrw:RefreshCurrent()
+   oBrw:Refreshall()
 
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
+      oBrw:Down()
    endif
    oBrw:ForceStable()
-
+   myColors(oBrw,{1,2})
 return
 
 static function ValToStr( uVal )
@@ -881,6 +898,9 @@ static function ValToStr( uVal )
 
       case cType == "A"
            cResult := "{ ... }"
+
+      Case cType  =="B"
+         cResult:= "{ || ... }"
 
       case cType $ "CM"
            cResult := '"' + uVal + '"'
@@ -899,3 +919,15 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
+static function myColors( oBrowse, aColColors )
+   local i
+   local nColPos := oBrowse:colpos
+
+   for i := 1 to len( aColColors )
+      oBrowse:colpos := aColColors[i]
+      oBrowse:DeHilite()
+      oBrowse:hilite()
+   next
+
+   oBrowse:colpos := nColPos
+return Nil
