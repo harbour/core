@@ -1,3 +1,12 @@
+19990820-12:28 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * improved debugger functionality. F8 and F4 already operative.
+   * source/debug/tbrwtext.prg
+     * GotoLine() method added
+   * source/vm/hvmc.
+     * new bDebugging, bDebugShowLines variables added.
+     * new hb_vmDebuggerShowLine() function
+
 19990820-11:47 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
      include/rddapi.h
