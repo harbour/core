@@ -881,6 +881,7 @@ For nCount := 1 To Len( aOrder )
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
             cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
             cComm += " > {test}.out"
+            outstd(cComm)
             ! ( cComm )
                   cErrText := memoread( '{test}.out' )
                   lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
@@ -930,6 +931,7 @@ For nCount := 1 To Len( aOrder )
             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
             outstd( " ")
             // ? cComm
+outstd(cComm)
             ! ( cComm )
             ccomm := cold
          Endif
@@ -961,6 +963,7 @@ else /****** Extended mode *****/
                cComm := Strtran( cComm, "o$*", "o" + aobjsc[ nPos ] )
                cComm := Strtran( cComm, "$**", acs[ nFiles ] )
                cComm += " > {test}.out"
+               outstd(cComm)
                ! ( cComm )
                   cErrText := memoread( '{test}.out' )
                   lEnd := 'Error' $ cErrText 
@@ -1003,6 +1006,7 @@ endif
                cComm += " > {test}.out"
                outstd( " ")
                // ? cComm
+               outstd(cComm)
                ! ( cComm )
                 cErrText := memoread( '{test}.out' )
                lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
@@ -1649,7 +1653,7 @@ if !lextended
                aadd(aCtocompile,acs[nPos])
                cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
                cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
-
+               outstd(cComm)
                ! ( cComm )
                   cErrText := memoread( '{test}.out' )
                   lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
@@ -1694,6 +1698,7 @@ if !lextended
             cComm := Strtran( cComm, "$**", aCtocompile[ nFiles ] )
             outstd( " ")
             // ? cComm
+            outstd(cComm)
             ! ( cComm )
             ccomm := cold
          Endif
@@ -1720,6 +1725,7 @@ else /**************Extended mode ******/////
                cComm := Strtran( cComm, "o$*", "o" + aobjs[ nPos ] )
                cComm := Strtran( cComm, "$**", acs[ nFiles ] )
                cComm += " > {test}.out"
+            outstd(cComm)
                ! ( cComm )
                   cErrText := memoread( '{test}.out' )
                   lEnd := 'Error' $ cErrText 
@@ -1760,7 +1766,9 @@ else /**************Extended mode ******/////
                cComm := Strtran( cComm, "$**", aprgs[ nFiles ] )
                cComm += " > {test}.out"
                outstd( " ")
-               // ? cComm
+
+                ? cComm
+                  outstd(cComm)
                ! ( cComm )
                 cErrText := memoread( '{test}.out' )
                lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText

@@ -1,3 +1,4 @@
+
 #include "common.ch"
 #ifndef __HARBOUR__
 #include 'hbclip.ch'
@@ -18,7 +19,7 @@ Function GetSourceFiles( lSubdir )
      Local adirs AS ARRAY
      Local aRet AS ARRAY := {}
      Local lLinux    := At( 'linux', lower(Os()) ) > 0
-     Local cdir as String := If( !llinux, '\' + Curdir() + '\', '/' + Curdir() + '/' )
+     Local cdir  := If( !llinux, '\' + Curdir() + '\', '/' + Curdir() + '/' )
      Local aStru     := { cDir }
      Local aData AS ARRAY
      Local nCounter as numeric := 0
@@ -32,12 +33,20 @@ Function GetSourceFiles( lSubdir )
      Local nPos
      Local xItem
      Default lSubdir To .t.
-
+      if !llinux
      While ++ nCounter <= Len( aStru )
        If !Empty( adirs := GetDirs( astru[ nCounter ] ) )   // There are elements!
           Aeval( aDirs, { | xItem | Aadd( aStru, xItem ) } )
        Endif
      Enddo
+     else
+     While ++ nCounter <= Len( aStru )
+       If !Empty( adirs := GetDirsl( astru[ nCounter ] ) )   // There are elements!
+          Aeval( aDirs, { | xItem | Aadd( aStru, xItem ) } )
+       Endif
+     Enddo
+
+     endif
      aDirs := {}
 
      Asort( aStru )
@@ -114,11 +123,20 @@ Return ctemp
 Static Function GetDirs( cPattern )
 
      Local aDir   := {}
-     Local lLinux := At( 'linux', Os() ) > 0
      Aeval( Directory( cPattern + "*.", "D" ), ;
-            { | xItem | If( xItem[ 5 ] = "D" .and. if(!llinux , xItem[ 1 ] != "." .and. xItem[ 1 ] != ".." ,), ;
-            ( Aadd( aDir, cPattern + xItem[ 1 ] + If( !llinux, "\", '/' ) ), ;
+            { | xItem | If( xItem[ 5 ] = "D" .and. ;
+            ( xItem[ 1 ] != "." .and. xItem[ 1 ] != ".." ), ;
+            ( Aadd( aDir, cPattern + xItem[ 1 ] + "\" ), ;
             Outstd( "." ) ), "" ) } )
+
+Return ( aDir )
+
+Static Function GetDirsl( cPattern )
+
+     Local aDir   := {}
+     Aeval( Directory( cPattern + "*.", "D" ), ;
+            { | xItem | If( xItem[ 5 ] = "D" , ;
+            ( Aadd( aDir, cPattern + xItem[ 1 ] + "/" ), "" ) } )
 
 Return ( aDir )
 
@@ -205,11 +223,20 @@ Function GetSourceDirMacros()
 
      Local nCounter as numeric := 0
      Local amacros as Array := {}
+     if !lLinux
      While ++ nCounter <= Len( aStru )
        If !Empty( adirs := GetDirs( astru[ nCounter ] ) )   // There are elements!
           Aeval( aDirs, { | xItem | Aadd( aStru, xItem ) } )
        Endif
      Enddo
+     else
+     While ++ nCounter <= Len( aStru )
+       If !Empty( adirs := GetDirsl( astru[ nCounter ] ) )   // There are elements!
+          Aeval( aDirs, { | xItem | Aadd( aStru, xItem ) } )
+       Endif
+     Enddo
+
+     endif
      For nCounter := 1 To Len( aStru )
         Aadd( amacros, { "SRC" + Strzero( nCounter, 2, 0 ), Strtran( astru[ nCounter ], cDir, '' ),.f. } )
      Next
