@@ -59,8 +59,8 @@
  * V 1.21   David G. Holm               Added OS/2 DosSleep()
  * V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
  * V 1.5    Paul Tucker                 ReleaseCPU comments
- * V 1.4    Victor Szel
- * V 1.3    Victor Szel                 #include <x> changed to #include "x".
+ * V 1.4    Victor Szakats
+ * V 1.3    Victor Szakats              #include <x> changed to #include "x".
  * V 1.2    Gonzalo Diethelm            ?
  * V 1.1    David G. Holm               Committed to CVS.
  * V 1.0    David G. Holm               Initial version.
@@ -71,7 +71,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB___KEYPUT()
  *
  * See doc/license.txt for licensing terms.
@@ -1157,13 +1157,13 @@ HARBOUR HB___KEYPUT( void )
 HARBOUR HB_MCOL( void )
 {
 #if defined(_WINDOWS_) || defined(WINNT)
-  #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
-    hb_retnl( s_iMouseCol );
-  #else
-    hb_retnl( 0 );
-  #endif
+   #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
+      hb_retnl( s_iMouseCol );
+   #else
+      hb_retnl( 0 );
+   #endif
 #else
-    hb_retnl( 0 );
+   hb_retnl( 0 );
 #endif
 }
 
@@ -1201,13 +1201,13 @@ HARBOUR HB_MCOL( void )
 HARBOUR HB_MROW( void )
 {
 #if defined(_WINDOWS_) || defined(WINNT)
-  #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
-    hb_retnl( s_iMouseRow );
-  #else
-    hb_retnl( 0 );
-  #endif
+   #if ! defined(HARBOUR_USE_CRS_GTAPI) && ! defined(HARBOUR_USE_SLN_GTAPI)
+      hb_retnl( s_iMouseRow );
+   #else
+      hb_retnl( 0 );
+   #endif
 #else
-    hb_retnl( 0 );
+   hb_retnl( 0 );
 #endif
 }
 

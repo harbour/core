@@ -1135,11 +1135,12 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    }
    return SUCCESS;
 }
+
 /*
  *  Function for getting current workarea pointer
  */
 
-void* hb_rddGetCurrentWorkAreaPointer( void )
+void * hb_rddGetCurrentWorkAreaPointer( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaPointer()"));
 
@@ -1529,6 +1530,7 @@ HARBOUR HB_AFIELDS( void )
    hb_itemRelease( pItem );
    hb_retni( uiArrayLen );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     ALIAS()
@@ -1711,6 +1713,7 @@ HARBOUR HB_DBEVAL( void )
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBEVAL" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     DBF()
@@ -1771,6 +1774,7 @@ HARBOUR HB_DBF( void )
    }
    hb_retc( "" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     BOF()
@@ -2188,7 +2192,7 @@ HARBOUR HB_DBCOMMITALL( void )
  *   or end of file is encountered.  If __DBCONTINUE is successful, the matching
  *   record becomes the current record and FOUND() returns true (.T.); if
  *   unsuccessful, FOUND() returns false (.F.).
-
+ *
  *   Each work area may have an active LOCATE condition.  In CA-Clipper, a
  *   LOCATE condition remains pending until a new LOCATE condition is
  *   specified.  No other commands release the condition.
@@ -2242,7 +2246,6 @@ HARBOUR HB_DBCOMMITALL( void )
  *     
  *  $END$
  */
-
 
 HARBOUR HB___DBCONTINUE()
 {
@@ -3402,7 +3405,7 @@ HARBOUR HB_DBRUNLOCK( void )
  *      logical true (.T.) value. If <lSoftSeek> is not passed, the function will look
  *      to the internal status of SOFTSEEK before performing the operation. The default
  *      of <lSoftSeek> is a logical false (.F.)
-
+ *
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      USE Tests New INDEX Tests
@@ -7263,11 +7266,6 @@ HARBOUR HB_USED( void )
    hb_retl( pCurrArea != NULL );
 }
 
-/* NOTE: Same as dbSetDriver() and rddSetDefault(), but doesn't
- *       throw any error if the driver doesn't exist, this is
- *       required in the RDDSYS INIT function, since it's not guaranteed
- *       that the RDD is already registered at that point. */
-
 /*  $DOC$
  *  $FUNCNAME$
  *      __RDDSETDEFAULT()
@@ -7313,6 +7311,11 @@ HARBOUR HB_USED( void )
  *      
  *  $END$
  */
+
+/* NOTE: Same as dbSetDriver() and rddSetDefault(), but doesn't
+         throw any error if the driver doesn't exist, this is
+         required in the RDDSYS INIT function, since it's not guaranteed
+         that the RDD is already registered at that point. [vszakats] */
 
 HARBOUR HB___RDDSETDEFAULT( void )
 {

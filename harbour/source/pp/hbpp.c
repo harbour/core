@@ -112,25 +112,25 @@ static void   DebugPragma( char *, int, BOOL );
 static BOOL s_bTracePragma = FALSE;
 
 #define ISNAME( c )  ( isalnum( c ) || ( c ) == '_' || ( c ) > 0x7E )
-#define MAX_NAME 255
-#define MAX_EXP 1024
+#define MAX_NAME     255
+#define MAX_EXP      1024
 #define PATTERN_SIZE 2048
 
-#define STATE_INIT 0
-#define STATE_NORMAL 1
-#define STATE_COMMENT 2
-#define STATE_QUOTE1 3
-#define STATE_QUOTE2 4
-#define STATE_QUOTE3 5
-#define STATE_ID_END 6
-#define STATE_ID 7
-#define STATE_EXPRES 8
+#define STATE_INIT      0
+#define STATE_NORMAL    1
+#define STATE_COMMENT   2
+#define STATE_QUOTE1    3
+#define STATE_QUOTE2    4
+#define STATE_QUOTE3    5
+#define STATE_ID_END    6
+#define STATE_ID        7
+#define STATE_EXPRES    8
 #define STATE_EXPRES_ID 9
-#define STATE_BRACKET 10
+#define STATE_BRACKET   10
 
-#define IT_EXPR 1
-#define IT_ID 2
-#define IT_COMMA 3
+#define IT_EXPR       1
+#define IT_ID         2
+#define IT_COMMA      3
 #define IT_ID_OR_EXPR 4
 
 static int  s_kolAddDefs = 0;
@@ -150,20 +150,20 @@ int   hb_pp_nCondCompile = 0;
 /* Table with parse errors */
 char * hb_pp_szErrors[] =
 {
-  "Can\'t open #include file: \'%s\'",
-  "#else does not match #ifdef",
-  "#endif does not match #ifdef",
-  "Bad filename in #include",
-  "#define without parameters",
-  "Missing => in #translate/#command",
-  "Error in pattern definition",
-  "Cycled #define",
-  "Invalid name follows #: \'%s\'",
-  "#error: \'%s\'",
-  "Memory allocation error",
-  "Memory reallocation error",
-  "Freeing a NULL memory pointer",
-  "Value out of range in #pragma directive"
+   "Can\'t open #include file: \'%s\'",
+   "#else does not match #ifdef",
+   "#endif does not match #ifdef",
+   "Bad filename in #include",
+   "#define without parameters",
+   "Missing => in #translate/#command",
+   "Error in pattern definition",
+   "Cycled #define",
+   "Invalid name follows #: \'%s\'",
+   "#error: \'%s\'",
+   "Memory allocation error",
+   "Memory reallocation error",
+   "Freeing a NULL memory pointer",
+   "Value out of range in #pragma directive"
 };
 
 /* Table with parse warnings */
@@ -172,15 +172,15 @@ char * hb_pp_szErrors[] =
  */
 char * hb_pp_szWarnings[] =
 {
-  "3Non directive in include file %s(%s)"
+   "3Non directive in include file %s(%s)"
 };
 
 int hb_pp_ParseDirective( char * sLine )
 {
-  char sDirective[MAX_NAME];
-  char szInclude[_POSIX_PATH_MAX];
+  char sDirective[ MAX_NAME ];
+  char szInclude[ _POSIX_PATH_MAX ];
   int i;
-  FILE* handl_i;
+  FILE * handl_i;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseDirective(%s)", sLine));
 

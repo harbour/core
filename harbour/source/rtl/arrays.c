@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_arrayIsObject()
  *    hb_arrayError()
  *    hb_arrayCopyC()
@@ -297,7 +297,7 @@ char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
       hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
    else
       /* NOTE: Intentionally calling it with a bad parameter in order to get
-               the default value from hb_itemGetDS(). [vszel] */
+               the default value from hb_itemGetDS(). [vszakats] */
       hb_itemGetDS( NULL, szDate );
 
    return szDate;
@@ -528,7 +528,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
                /* NOTE: The order of the pItem and pValue parameters passed to
-                        hb_itemStrCmp() is significant, please don't change it. [vszel] */
+                        hb_itemStrCmp() is significant, please don't change it. [vszakats] */
                if( IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, FALSE ) == 0 )
                   return ulStart + 1;
             }
@@ -547,7 +547,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( IS_DATE( pValue ) )
          {
-            /* NOTE: This is correct: Get the date as a long value. [vszel] */
+            /* NOTE: This is correct: Get the date as a long value. [vszakats] */
             LONG lValue = hb_itemGetNL( pValue );
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
@@ -560,7 +560,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( IS_LOGICAL( pValue ) )
          {
-            BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszel] */
+            BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. [vszakats] */
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
@@ -656,7 +656,7 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
 }
 
 /* NOTE: CA-Cl*pper 5.3a has a fix for the case when the starting position
-         is greater than the length of the array. [vszel] */
+         is greater than the length of the array. [vszakats] */
 
 BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
                    ULONG * pulCount, ULONG * pulTarget )
@@ -786,6 +786,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
          hb_arrayNewRagged( hb_arrayGetItemPtr( pArray, ulElements-- ), iDimension );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ARRAY()
@@ -857,6 +858,7 @@ HARBOUR HB_ARRAY( void )
          hb_arrayNewRagged( &hb_stack.Return, 1 );
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      AADD()   
@@ -919,8 +921,6 @@ HARBOUR HB_AADD( void )
    }
 }
 
-/* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
-         will throw a runtime error. [vszel] */
 /*  $DOC$
  *  $FUNCNAME$
  *      ASIZE()
@@ -960,6 +960,9 @@ HARBOUR HB_AADD( void )
  *  $END$
  */
 
+/* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
+         will throw a runtime error. [vszakats] */
+
 HARBOUR HB_ASIZE( void )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
@@ -977,6 +980,7 @@ HARBOUR HB_ASIZE( void )
       hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE" );
 #endif
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ATAIL()
@@ -1015,6 +1019,7 @@ HARBOUR HB_ATAIL( void )
    if( pArray )
       hb_arrayLast( pArray, &hb_stack.Return );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      AINS()
@@ -1065,6 +1070,7 @@ HARBOUR HB_AINS( void )
       hb_itemReturn( pArray ); /* AIns() returns the array itself */
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ADEL()
@@ -1116,6 +1122,7 @@ HARBOUR HB_ADEL( void )
       hb_itemReturn( pArray ); /* ADel() returns the array itself */
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      AFILL()
@@ -1184,6 +1191,7 @@ HARBOUR HB_AFILL( void )
       hb_itemReturn( pArray ); /* AFill() returns the array itself */
    }
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ASCAN()
@@ -1257,6 +1265,7 @@ HARBOUR HB_ASCAN( void )
    else
       hb_retnl( 0 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      AEVAL()
@@ -1324,6 +1333,7 @@ HARBOUR HB_AEVAL( void )
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      ACOPY()
@@ -1408,8 +1418,6 @@ HARBOUR HB_ACOPY( void )
    }
 }
 
-/* NOTE:  [vszel] */
-
 /*  $DOC$
  *  $FUNCNAME$
  *      ACLONE()
@@ -1449,6 +1457,8 @@ HARBOUR HB_ACOPY( void )
  *     
  *  $END$
  */
+
+/* NOTE: Clipper will return NIL if the parameter is not an array. [vszakats] */
 
 HARBOUR HB_ACLONE( void )
 {
