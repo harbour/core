@@ -1617,6 +1617,15 @@ int hb_compYACCMain( char * szName )
    */
    fclose( yyin );
 
+   while( hb_comp_files.pLast )
+   {
+     PFILE pFile = hb_comp_files.pLast;
+     if( pFile->pBuffer )
+        hb_xfree( (void *) pFile->pBuffer );
+     hb_xfree( (void *) pFile->szFileName );
+     hb_comp_files.pLast = pFile->pPrev;
+     hb_xfree( pFile );
+   }
    hb_comp_files.pLast = NULL;
 
    return 0;
@@ -1672,9 +1681,10 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
    pFile->iBuffer = pFile->lenBuffer = 10;
    pFile->szFileName = szFileName;
    pFile->iLine = 0;
-   pFile->pPrev = NULL;
+   pFile->pPrev = hb_comp_files.pLast;
 
    hb_comp_files.pLast = pFile;
+   
 #ifdef __cplusplus
    yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( hb_comp_buffer = ( char * ) yy_create_buffer( yyin, 8192 * 2 ) ) );
 #else
@@ -1690,6 +1700,7 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
    if( hb_comp_files.iFiles == 1 )
    {
       hb_xfree( hb_comp_files.pLast->pBuffer );
+      hb_comp_files.pLast->pBuffer = NULL;
       return 1;      /* we have reached the main EOF */
    }
 

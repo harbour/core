@@ -38,7 +38,7 @@
 #include "hbhash.h"
 #include "hbcomp.h"
 
-#define HB_IDENT_TABLE_SIZE    523UL
+#define HB_IDENT_TABLE_SIZE    509UL
 
 static HB_HASH_TABLE_PTR s_comp_Identifiers;    /* table of identifiers for reuse */
 

@@ -2519,7 +2519,7 @@ void hb_compGenPushFunCall( char * szFunName )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_compGenPushSymbol( hb_strdup( szFunction ), 1 );
+      hb_compGenPushSymbol( hb_compIdentifierNew( szFunction, TRUE ), 1 );
    }
    else
       hb_compGenPushSymbol( szFunName, 1 );
@@ -3371,7 +3371,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                 * will be not generated. The name cannot be placed as first symbol
                 * because this symbol can be used as function call or memvar's name.
                 */
-                hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+                hb_compFunctionAdd( hb_compIdentifierNew( "", TRUE ), HB_FS_PUBLIC, FUN_PROCEDURE );
             }
 
             yyparse();
@@ -3537,7 +3537,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, szPrg, NULL );
       iStatus = EXIT_FAILURE;
    }
-
+   hb_xfree( hb_comp_pFileName );
+   
    return iStatus;
 }
 

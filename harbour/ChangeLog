@@ -1,3 +1,24 @@
+2000-08-01 18:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+        * modified HB_MACRO structure
+
+    *source/macro/macro.l
+        * optimized support for array index 
+        
+    *source/compiler/harbour.c
+    *source/compiler/harbour.y
+        *fixed some unreleased memory blocks reported by CodeGuard
+        
+    *source/compiler/hbident.c
+        *changed size of hash table to 509
+
+    *source/macro/Makefile
+        * removed CR characters
+        
+NOTE:
+  All sources HAVE TO be rebuild !!!
+
 2000-07-31 20:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
      + Added support for multiple switches, without seperator, like: -n-w

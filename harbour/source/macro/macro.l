@@ -85,13 +85,7 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 
 
 #define LOOKUP          0       /* scan from the begining of line */
-#define OPERATOR        -1
-#define SEPARATOR       -2
-static int _iOpenBracket = 0;
-
-/* Support for Array Index */
-static int iIndexSets  = 0;
-static int i_INDEX_STATE = 0;
+#define SEPARATOR       -1
 
 %}
 
@@ -113,19 +107,7 @@ MacroEnd      \&{Identifier}\.({Identifier})|([0-9]+)
 MacroId       ({Identifier}\&(({Identifier}[\.]?)|({Identifier}\.({Identifier})|([0-9]+))))
 MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 
-
-Array         {Identifier}[ \t]*"["
-MacroVarArray {MacroVar}[ \t]*"["
-MacroTxtArray ({MacroEnd}|{MacroId}|{MacroTxt})[ \t]*"["
-AtArray       "}"[ \t]*"["
-ExpArray      ")"[ \t]*"["
-SubArray      "]"[ \t]*"["
-
-Separator     {SpaceTab}
-
 %x            STRING1 STRING2 STRING3
-%x            FIELD_ IIF_ IF_
-%s            INDEX
 
 %%
 
@@ -135,155 +117,103 @@ Separator     {SpaceTab}
 '              BEGIN STRING1;
 \"             BEGIN STRING2;
 
-"="[ \t]*"["                         { BEGIN STRING3; return '=';      }
-"+"[ \t]*"["                         { BEGIN STRING3; return '+';      }
-"-"[ \t]*"["                         { BEGIN STRING3; return '-';      }
-"*"[ \t]*"["                         { BEGIN STRING3; return '*';      }
-"/"[ \t]*"["                         { BEGIN STRING3; return '/';      }
-"%"[ \t]*"["                         { BEGIN STRING3; return '%';      }
-"$"[ \t]*"["                         { BEGIN STRING3; return '$';      }
-("<>"|"!=")[ \t]*"["                 { BEGIN STRING3; return NE2;      }
-":="[ \t]*"["                        { BEGIN STRING3; return INASSIGN; }
-"=="[ \t]*"["                        { BEGIN STRING3; return EQ;       }
-"<="[ \t]*"["                        { BEGIN STRING3; return LE;       }
-">="[ \t]*"["                        { BEGIN STRING3; return GE;       }
-"+="[ \t]*"["                        { BEGIN STRING3; return PLUSEQ;   }
-"-="[ \t]*"["                        { BEGIN STRING3; return MINUSEQ;  }
-"*="[ \t]*"["                        { BEGIN STRING3; return MULTEQ;   }
-"/="[ \t]*"["                        { BEGIN STRING3; return DIVEQ;    }
-"^="[ \t]*"["                        { BEGIN STRING3; return EXPEQ;    }
-"%="[ \t]*"["                        { BEGIN STRING3; return MODEQ;    }
-("**"|"^")[ \t]*"["                  { BEGIN STRING3; return POWER;    }
-".and."[ \t]*"["                     { BEGIN STRING3; return AND;      }
-".or."[ \t]*"["                      { BEGIN STRING3; return OR;       }
-("!"|".not.")[ \t]*"["               { BEGIN STRING3; return NOT;      }
-(","|"{"|"<"|">"|"(")[ \t]*"["   { BEGIN STRING3; yyleng = 1; yytext[1] = 0; return yytext[ 0 ]; }
+\[             { 
+                   if( pMacro->FlexState == SEPARATOR )
+                      BEGIN STRING3;
+                   else
+                      return '[';
+               }
 
-<INITIAL>\[    BEGIN STRING3;
 
 <STRING1>[^'^\n]*   { hb_macroError( EG_SYNTAX, YYLEX_PARAM ); BEGIN 0; }
 <STRING2>[^\"^\n]*  { hb_macroError( EG_SYNTAX, YYLEX_PARAM ); BEGIN 0; }
 <STRING3>[^\]]*\n   { hb_macroError( EG_SYNTAX, YYLEX_PARAM ); BEGIN 0; }
 
-<STRING1>[^']*'   { if( i_INDEX_STATE )
-                       BEGIN INDEX;
-                    else
-                       BEGIN 0;
+<STRING1>[^']*'   { BEGIN 0;
+    pMacro->FlexState = LOOKUP;
+    yyleng--;
+    yytext[yyleng] = 0;
+    yylval_ptr->string = hb_strdup( yytext );
+    return LITERAL;
+}
 
-                    yyleng--;
-                    yytext[yyleng] = 0;
-                    yylval_ptr->string = hb_strdup( yytext );
-                    return LITERAL;
-                  }
+<STRING2>[^\"]*\" { BEGIN 0;
+    pMacro->FlexState = LOOKUP;
+    yyleng--;
+    yytext[yyleng] = 0;
+    yylval_ptr->string = hb_strdup( yytext );
+    return LITERAL;
+}
 
-<STRING2>[^\"]*\" { if( i_INDEX_STATE )
-                       BEGIN INDEX;
-                    else
-                       BEGIN 0;
-
-                    yyleng--;
-                    yytext[yyleng] = 0;
-                    yylval_ptr->string = hb_strdup( yytext );
-                    return LITERAL;
-                  }
-
-<STRING3>[^\]]*\] { if( i_INDEX_STATE )
-                       BEGIN INDEX;
-                    else
-                       BEGIN 0;
-
-                    yyleng--;
-                    yytext[yyleng] = 0;
-                    yylval_ptr->string = hb_strdup( yytext );
-                    return LITERAL;
-                  }
-
-<INDEX>\n    { hb_macroError( EG_SYNTAX, YYLEX_PARAM );  }
-
-<INDEX>\[    { iIndexSets++; return yytext[ 0 ]; }
-
-<INDEX>\]    {
-                iIndexSets-- ;
-                if( iIndexSets == 0 )
-                {
-                   /*printf( "\nIndex End\n" );*/
-
-                   /* No longer in this state. */
-                   i_INDEX_STATE = 0;
-                   BEGIN 0;
-                }
-                return yytext[ 0 ];
-             }
+<STRING3>[^\]]*\] { BEGIN 0;
+    pMacro->FlexState = LOOKUP;
+    yyleng--;
+    yytext[yyleng] = 0;
+    yylval_ptr->string = hb_strdup( yytext );
+    return LITERAL;
+}
 
 {SpaceTab}     ;
 
-\n.*         {
-                yyless( 1 );
-                return '\n';
-             }
+\n           { pMacro->FlexState = LOOKUP; return '\n'; }
+
 %{
 /* ************************************************************************ */
 %}
+
 "_fie"|"_fiel"|"_field" {
-                        if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                   return FIELD;
-                 }
+    pMacro->FlexState = LOOKUP;
+    return FIELD;
+}
 
 "fiel"|"field"   {
-                    if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                   return FIELD;
-                 }
+    pMacro->FlexState = LOOKUP;
+    return FIELD;
+}
 
 "iif"        {
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               return IIF;
-             }
+    pMacro->FlexState = LOOKUP;
+    return IIF;
+}
 
-"if"           {
-                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                 return IF;
-             }
+"if"         {
+    pMacro->FlexState = LOOKUP;
+    return IF;
+}
 
-"nil"          return NIL;
+"nil"        { pMacro->FlexState = LOOKUP; return NIL; }
 
-"qself"{SpaceTab}*\({SpaceTab}*\) return SELF;
+"qself"{SpaceTab}*\({SpaceTab}*\)    { pMacro->FlexState = LOOKUP; return SELF; }
 
 %{
 /* ************************************************************************ */
 %}
 
-"#"            return NE1;
-"="            return yytext[ 0 ];
-"+"            return yytext[ 0 ];
-"-"            return yytext[ 0 ];
-"*"            return yytext[ 0 ];
-[\/]           return yytext[ 0 ];
-"%"            return yytext[ 0 ];
-"$"            return yytext[ 0 ];
-"<>"|"!="      return NE2;
-":="           return INASSIGN;
-"=="           return EQ;
-"++"           return INC;
-"--"           return DEC;
-"->"           return ALIASOP;
-"<="           return LE;
-">="           return GE;
-"+="           return PLUSEQ;
-"-="           return MINUSEQ;
-"*="           return MULTEQ;
-"/="           return DIVEQ;
-"^="           return EXPEQ;
-"%="           return MODEQ;
-"**"|"^"       return POWER;
-".and."        return AND;
-".or."         return OR;
-"."[t|y]"."    return TRUEVALUE;
-"."[f|n]"."    return FALSEVALUE;
-"!"|".not."    return NOT;
-"::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
-[,\{\}\|\#\&\.\:\<\>\[\]\@] return yytext[ 0 ];
-[\(]           ++_iOpenBracket; return yytext[ 0 ];
-[\)]           --_iOpenBracket; return yytext[ 0 ];
+"#"            { pMacro->FlexState = SEPARATOR; return NE1; }
+"<>"|"!="      { pMacro->FlexState = SEPARATOR; return NE2; }
+":="           { pMacro->FlexState = SEPARATOR; return INASSIGN; }
+"=="           { pMacro->FlexState = SEPARATOR; return EQ; }
+"++"           { pMacro->FlexState = SEPARATOR; return INC; }
+"--"           { pMacro->FlexState = SEPARATOR; return DEC; }
+"->"           { pMacro->FlexState = SEPARATOR; return ALIASOP; }
+"<="           { pMacro->FlexState = SEPARATOR; return LE; }
+">="           { pMacro->FlexState = SEPARATOR; return GE; }
+"+="           { pMacro->FlexState = SEPARATOR; return PLUSEQ; }
+"-="           { pMacro->FlexState = SEPARATOR; return MINUSEQ; }
+"*="           { pMacro->FlexState = SEPARATOR; return MULTEQ; }
+"/="           { pMacro->FlexState = SEPARATOR; return DIVEQ; }
+"^="           { pMacro->FlexState = SEPARATOR; return EXPEQ; }
+"%="           { pMacro->FlexState = SEPARATOR; return MODEQ; }
+"**"|"^"       { pMacro->FlexState = SEPARATOR; return POWER; }
+".and."        { pMacro->FlexState = SEPARATOR; return AND; }
+".or."         { pMacro->FlexState = SEPARATOR; return OR; }
+"."[t|y]"."    { pMacro->FlexState = SEPARATOR; return TRUEVALUE; }
+"."[f|n]"."    { pMacro->FlexState = SEPARATOR; return FALSEVALUE; }
+"!"|".not."    { pMacro->FlexState = SEPARATOR; return NOT; }
+"::"           { pMacro->FlexState = SEPARATOR; unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' ); }
+[\{\(]         { pMacro->FlexState = SEPARATOR; return yytext[ 0 ]; }
+[\=\+\-\*\/\%\$\,\|\#\&\.\:\<\>\@] { pMacro->FlexState = SEPARATOR; return yytext[ 0 ]; }
+[\]\}\)]       { pMacro->FlexState = LOOKUP; return yytext[ 0 ]; }
 
 [\x00-\x1F]	return yytext[ 0 ]; /* see below */
 [\x80-\xFF]	{
@@ -301,6 +231,7 @@ Separator     {SpaceTab}
 {Number}       {
    char * ptr;
 
+   pMacro->FlexState = LOOKUP;
    yylval_ptr->valDouble.dNumber = atof( yytext );
    ptr = strchr( yytext, '.' );
    if( ptr )
@@ -333,171 +264,68 @@ Separator     {SpaceTab}
 
 
 {HexNumber}   {
-                long lNumber = 0;
+    long lNumber = 0;
+    pMacro->FlexState = LOOKUP;
 
-                 sscanf( yytext, "%lxI", &lNumber );
+    sscanf( yytext, "%lxI", &lNumber );
 
-                 if( ( double )LONG_MIN <= lNumber &&
-                          lNumber <= ( double )LONG_MAX )
-                 {
-                    yylval_ptr->valLong.lNumber = lNumber;
-                    yylval_ptr->valLong.szValue = yytext;
-                    return NUM_LONG;
-                 }
-                 else
-                 {
-                    yylval_ptr->valDouble.dNumber = lNumber;
-                    yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;
-                    yylval_ptr->valDouble.bDec = 0;
-                    yylval_ptr->valDouble.szValue = yytext;
-                    return NUM_DOUBLE;
-                 }
-              }
-
-{Array}     {
-               HB_TRACE(HB_TR_DEBUG, ("{Array}(%s)", yytext));
-               if( ! i_INDEX_STATE )
-               {
-                  BEGIN INDEX;
-                  i_INDEX_STATE = 1;
-               }
-
-               unput( '[' );
-               yyleng--;
-
-               /* Remove optional white space between Identifier and Index */
-               while( yytext[ yyleng - 1 ] < 48 )
-                  yyleng--;
-
-               yytext[yyleng] = 0;
-
-               {
-                  if( ( USHORT ) strlen( yytext ) > YYLEX_PARAM->uiNameLen )
-                  {
-                     yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
-                     yyleng = YYLEX_PARAM->uiNameLen;
-                  }
-                  yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  return IDENTIFIER;
-               }
-            }
-
-{MacroVarArray} {
-               if( ! i_INDEX_STATE )
-               {
-                  BEGIN INDEX;
-                  i_INDEX_STATE = 1;
-               }
-
-               unput( '[' );
-               yyleng--;
-
-               /* Remove optional white space between Identifier and Index */
-               while( yytext[ yyleng - 1 ] < 48 )
-                  yyleng--;
-
-               yytext[yyleng] = 0;
-               if( yytext[ yyleng-1 ] == '.' )
-                  yytext[ yyleng-1 ] = '\0';
-               yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
-               return MACROVAR;
-            }
-
-{MacroTxtArray} {
-               if( ! i_INDEX_STATE )
-               {
-                  BEGIN INDEX;
-                  i_INDEX_STATE = 1;
-               }
-
-               unput( '[' );
-               yyleng--;
-
-               /* Remove optional white space between Identifier and Index */
-               while( yytext[ yyleng - 1 ] < 48 )
-                  yyleng--;
-
-               yytext[yyleng] = 0;
-               yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-               return MACROTEXT;
-            }
-
-{ExpArray}  {
-               /* Must be recursive */
-               if( ! i_INDEX_STATE )
-               {
-                  BEGIN INDEX;
-                  i_INDEX_STATE = 1;
-               }
-
-               unput( '[' );
-               --_iOpenBracket;
-               return ')';
-            }
-
-{SubArray}  {
-               /* Must be recursive */
-               if( i_INDEX_STATE )
-               {
-                  BEGIN INDEX;
-                  i_INDEX_STATE = 1;
-               }
-
-               iIndexSets--;
-
-               unput( '[' );
-               return ']';
-            }
-
-{AtArray}  {
-               /* Must be recursive */
-               if( ! i_INDEX_STATE )
-               {
-                  BEGIN INDEX;
-                  i_INDEX_STATE = 1;
-               }
-
-               unput( '[' );
-               --_iOpenBracket;
-               return '}';
-            }
+    if( ( double )LONG_MIN <= lNumber && lNumber <= ( double )LONG_MAX )
+    {
+        yylval_ptr->valLong.lNumber = lNumber;
+        yylval_ptr->valLong.szValue = yytext;
+        return NUM_LONG;
+    }
+    else
+    {
+        yylval_ptr->valDouble.dNumber = lNumber;
+        yylval_ptr->valDouble.bWidth = HB_DEFAULT_WIDTH;
+        yylval_ptr->valDouble.bDec = 0;
+        yylval_ptr->valDouble.szValue = yytext;
+        return NUM_DOUBLE;
+    }
+}
 
 {MacroVar}     {
-                   HB_TRACE(HB_TR_DEBUG, ("{MacroVar}(%s)", yytext));
-                  if( yytext[ yyleng-1 ] == '.' )
-                     yytext[ yyleng-1 ] = '\0';
-                  yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
-                  return MACROVAR;
-               }
+    HB_TRACE(HB_TR_DEBUG, ("{MacroVar}(%s)", yytext));
+    if( yytext[ yyleng-1 ] == '.' )
+    yytext[ yyleng-1 ] = '\0';
+    yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
+    pMacro->FlexState = LOOKUP;
+    return MACROVAR;
+}
 
 {MacroEnd}     {
-                   HB_TRACE(HB_TR_DEBUG, ("{MacroEnd}(%s)", yytext));
-                  yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  return MACROTEXT;
-               }
+    HB_TRACE(HB_TR_DEBUG, ("{MacroEnd}(%s)", yytext));
+    yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
+    pMacro->FlexState = LOOKUP;
+    return MACROTEXT;
+}
 
 {MacroId}      {
-                   HB_TRACE(HB_TR_DEBUG, ("{MacroId}(%s)", yytext));
-                  yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  return MACROTEXT;
-               }
+    HB_TRACE(HB_TR_DEBUG, ("{MacroId}(%s)", yytext));
+    yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
+    pMacro->FlexState = LOOKUP;
+    return MACROTEXT;
+}
 
 {MacroTxt}     {
-                   HB_TRACE(HB_TR_DEBUG, ("{MacroTxt}(%s)", yytext));
-                  yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                  return MACROTEXT;
-               }
+    HB_TRACE(HB_TR_DEBUG, ("{MacroTxt}(%s)", yytext));
+    yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
+    pMacro->FlexState = LOOKUP;
+    return MACROTEXT;
+}
 
 {Identifier}    {
-                   HB_TRACE(HB_TR_DEBUG, ("{Identifier}(%s)", yytext));
-                   if( ( USHORT ) strlen( yytext ) > YYLEX_PARAM->uiNameLen )
-                   {
-                        yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
-                        yyleng = YYLEX_PARAM->uiNameLen;
-                   }
-                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
-                   return IDENTIFIER;
-                }
+    HB_TRACE(HB_TR_DEBUG, ("{Identifier}(%s)", yytext));
+    if( ( USHORT ) strlen( yytext ) > YYLEX_PARAM->uiNameLen )
+    {
+        yytext[ YYLEX_PARAM->uiNameLen ] = '\0';
+        yyleng = YYLEX_PARAM->uiNameLen;
+    }
+    yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
+    pMacro->FlexState = LOOKUP;
+    return IDENTIFIER;
+}
 
 %%
 
@@ -516,6 +344,7 @@ void * hb_compFlexNew( HB_MACRO_PTR pMacro )
     * visible in macro.y
     */
    HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
+   pMacro->FlexState = LOOKUP;
    return (void *) yy_scan_bytes( pMacro->string, pMacro->length );
 }
 
