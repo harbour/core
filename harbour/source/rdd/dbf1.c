@@ -870,11 +870,13 @@ ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll )
    if( pArea->fShared )
    {
       hb_dbfWriteRecord( pArea );
-      hb_dbfWriteDBHeader( pArea );
+      //hb_dbfWriteDBHeader( pArea );
+      SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
    else
    {
-      hb_dbfWriteDBHeader( pArea );
+      //hb_dbfWriteDBHeader( pArea );
+      SELF_WRITEDBHEADER( ( AREAP ) pArea );
       pArea->fUpdateHeader = TRUE;        /* To truncate the file later */
    }
    return SUCCESS;
@@ -947,7 +949,8 @@ ERRCODE hb_dbfFlush( DBFAREAP pArea )
          hb_fsWrite( pArea->hDataFile, ( BYTE * ) "\032", 1 );
          hb_fsWrite( pArea->hDataFile, NULL, 0 );
       }
-      hb_dbfWriteDBHeader( pArea );
+      //hb_dbfWriteDBHeader( pArea );
+      SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
 
    hb_fsCommit( pArea->hDataFile );
@@ -1086,7 +1089,8 @@ ERRCODE hb_dbfGoCold( DBFAREAP pArea )
 
       /* Update header */
       if( pArea->fShared )
-         hb_dbfWriteDBHeader( pArea );
+         SELF_WRITEDBHEADER( ( AREAP ) pArea );
+         //hb_dbfWriteDBHeader( pArea );
 
       pArea->fAppend = FALSE;
    }
@@ -1373,7 +1377,8 @@ ERRCODE hb_dbfClose( DBFAREAP pArea )
          if( pArea->fShared )
             pArea->ulRecCount = hb_dbfCalcRecCount( pArea );
 
-         hb_dbfWriteDBHeader( pArea );
+         //hb_dbfWriteDBHeader( pArea );
+         SELF_WRITEDBHEADER( ( AREAP ) pArea );
 
          /* Seek to logical eof and write eof mark */
          hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen +
