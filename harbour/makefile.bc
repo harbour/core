@@ -662,9 +662,8 @@ $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
 #
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 
-   echo. $(CFLAGS) > make.tmp
-   echo. -e$(HARBOUR_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
+   echo. -e$(HARBOUR_EXE) > make.tmp
+   echo. $(CFLAGS) >> make.tmp
    echo. $(OBJ_DIR)\harbour.obj >> make.tmp
    echo. $(OBJ_DIR)\harboury.obj >> make.tmp
    echo. $(OBJ_DIR)\harbourl.obj >> make.tmp

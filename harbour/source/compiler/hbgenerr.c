@@ -122,12 +122,9 @@ char * hb_comp_szWarnings[] =
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-   int iLine = hb_comp_iLine;
-
-   if( hb_comp_EOL )
-      --iLine;
    if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
       printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_files.pLast->iLine - 1 );
+
    printf( "Error %c%04i  ", cPrefix, iError );
    printf( szErrors[ iError - 1 ], szError1, szError2 );
    printf( "\n" );
@@ -142,10 +139,6 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
    char * szText = szWarnings[ iWarning - 1 ];
-   int iLine = hb_comp_iLine;
-
-   if( hb_comp_EOL )
-      --iLine;
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {

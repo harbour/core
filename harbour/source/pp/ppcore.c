@@ -703,7 +703,7 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 
   HB_SKIPTABSPACES( sLine );
   ipos = 0;
-  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<' && (*sLine !='(' || ipos==0) )
+  while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && *sLine != '<' && *sLine != '=' && ( *sLine != '(' || ipos == 0 ) )
   {
      *(cmdname+ipos++) = *sLine++;
   }
