@@ -50,3 +50,8 @@
 
 #command SET CHARTYPE TO <x:ANSI,OEM>                                 ;
       => AdsSetCharType( if( upper( <(x)> ) == "OEM", 2, 1 ) )
+
+#command SET DEFAULT TO <(path)>                                      ;
+      => Set( _SET_DEFAULT, <(path)> ); AdsSetDefault( <(path)> )
+#command SET DEFAULT TO                                               ;
+      => Set( _SET_DEFAULT, "" ); AdsSetDefault( "" )

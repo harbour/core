@@ -1,6 +1,14 @@
+20000202-20:33 GMT+3 Alexander Kresin
+  + contrib/rdd_ads/readme.txt
+  * contrib/rdd_ads/ads.ch
+  * contrib/rdd_ads/adsfunc.c
+    * AdsSetDefault() added and appropriate commands in ads.ch
+  * source/pp/hbpp.c
+    * Bugs fixed, noted by Antonio Linares
+
 20000202-16:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
     *include/hbver.c
-	* fixed version and revision numbers
+        * fixed version and revision numbers
 
 20000202-13:50 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * include/hbver.c
@@ -9,9 +17,9 @@
 20000202-12:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* fixed to properly compile EXTERNAL directive if placed outside
-	  of a function body
-	  
+        * fixed to properly compile EXTERNAL directive if placed outside
+          of a function body
+
 2000-02-01 20:40 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
    * bin/bld_tpl.bat
@@ -23,17 +31,17 @@
     *source/compiler/harbour.c
     *source/compiler/harbour.y
     *source/compiler/genc.c
-	* fixed GPF (core dump) if private/public variable was initialized
-	  with a codeblock with a local parameter, e.g.
-	  PRIVATE var:={ | x | expression }
-	* static variables cannot be initialized with a codeblock which
-	  uses a local variable, e.g.
-	  LOCAL locvar
-	  STATIC stavar:={ || locvar }
-	  Notice that Clipper is compiling it however it generates a runtime
-	  error if such codeblock is evaluated.
-	* fixed also a bug in warning generation when function with no
-	return value is defined
+        * fixed GPF (core dump) if private/public variable was initialized
+          with a codeblock with a local parameter, e.g.
+          PRIVATE var:={ | x | expression }
+        * static variables cannot be initialized with a codeblock which
+          uses a local variable, e.g.
+          LOCAL locvar
+          STATIC stavar:={ || locvar }
+          Notice that Clipper is compiling it however it generates a runtime
+          error if such codeblock is evaluated.
+        * fixed also a bug in warning generation when function with no
+        return value is defined
 
 20000131-21:20 GMT+1 Victor Szakats <info@szelvesz.hu>
   * include/hbextern.ch

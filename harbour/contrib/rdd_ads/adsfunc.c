@@ -108,3 +108,8 @@ HARBOUR HB_ADSSETCHARTYPE( void )
    hb_retni( oldType );
    return;
 }
+
+HARBOUR HB_ADSSETDEFAULT( void )
+{
+   AdsSetDefault  ( (UNSIGNED8*) hb_parc( 1 ) );
+}
