@@ -118,6 +118,8 @@ HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\langapi.obj \
                     $(OBJ_DIR)\len.obj \
                     $(OBJ_DIR)\main.obj \
+                    $(OBJ_DIR)\maindll.obj \
+                    $(OBJ_DIR)\mainwin.obj \
                     $(OBJ_DIR)\math.obj \
                     $(OBJ_DIR)\memofile.obj \
                     $(OBJ_DIR)\memoline.obj \
@@ -621,6 +623,14 @@ $(OBJ_DIR)\len.obj : $(RTL_DIR)\len.c
    tlib $(HARBOUR_LIB) -+$@,,
 
 $(OBJ_DIR)\main.obj : $(VM_DIR)\main.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(HARBOUR_LIB) -+$@,,
+
+$(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(HARBOUR_LIB) -+$@,,
+
+$(OBJ_DIR)\mainwin.obj : $(VM_DIR)\mainwin.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
