@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * calls of strcasecmp() replaced by hb_stricmp(), functions
+      strcasecmp() and strncasecmp() are removed,
+      printf() removed from adsCreate()
+
+2002-05-08 10:20 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   + contrib/odbc/browodbc.prg
   * contrib/odbc/Makefile
     + Added browseodbc() function for browsing ODBC data.

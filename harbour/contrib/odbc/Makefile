@@ -9,6 +9,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	todbc.prg\
+	browodbc.prg\
 
 LIBNAME=hbodbc
 
