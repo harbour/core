@@ -508,7 +508,7 @@ METHOD Stabilize() CLASS TBrowse
    else
       oCol = ::aColumns[ If( ::rightVisible != 0, ::rightVisible, 1 ) ]
       oCol2 = ::aColumns[ If( ::Freeze > 0, 1, ::leftVisible ) ]
-      nColsWidth = If( oCol != nil, oCol:ColPos, 0 ) +  ;
+      nColsWidth = If( oCol != nil, oCol:ColPos, 0 ) + ;
         If( oCol != nil, oCol:Width, 0 ) - oCol2:ColPos
       lFooters = ( ::RowCount != ::nBottom - ::nTop + 1 - If( ::lHeaders, 1, 0 ) - ;
                 - If( Empty( ::HeadSep ), 0, 1 ) - If( Empty( ::FootSep ), 0, 1 ) )
@@ -571,7 +571,7 @@ METHOD Stabilize() CLASS TBrowse
       endif
       if lFooters                // Drawing footers
          DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
-            for n = If( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
+         for n = If( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
                if ::Freeze > 0 .and. n == ::Freeze + 1
                   n = ::leftVisible
                endif

@@ -43,6 +43,10 @@ PROCEDURE __Dir( cFileMask )
 
    IF Empty( cFileMask )
 
+      /* NOTE: Although Cl*pper has this string in the national language
+               modul, it will not use it from here.
+               This is hard wired to English. */
+
       QOut( "Database Files    # Records    Last Update     Size" )
 
       aEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ),;

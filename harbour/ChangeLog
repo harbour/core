@@ -1,3 +1,19 @@
+19991018-23:04 GMT+1 Victor Szel <info@szelvesz.hu>
+   + source/rtl/natmsg.c (added)
+     source/rtl/Makefile
+     source/rtl/dummy.prg
+     tests/rtl_test.prg
+     + National message related functions added.
+       ISAFFIRM(), ISNEGATIVE(), NATIONMSG() (by Jose Lalin)
+     + _NATSORTVER(), _NATMSGVER() function added.
+     ! Fixes and cleanup for IS*() and NATIONMSG() functions.
+     + Regression tests added for these new functions.
+       WARNING ! Please update non-GNU make systems.
+   * source/rtl/dircmd.prg
+     + NOTE added about a small anomaly in Clipper.
+   * source/rtl/tbrowse.prg
+     * Small changes.
+
 19991018-14:54 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/tbrowse.prg
      ! PgUp() fixed to set HitTop instead of HitBottom, now the cursor will

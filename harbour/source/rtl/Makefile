@@ -31,6 +31,7 @@ C_SOURCES=\
         mlcount.c \
         mouseapi.c \
         mtran.c \
+        natmsg.c \
         oldbox.c \
         oldclear.c \
         samples.c \

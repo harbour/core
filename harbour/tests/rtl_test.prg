@@ -1726,6 +1726,66 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( SoundEx( "Colt" )               , "C430" )
    TEST_LINE( SoundEx( "C"+Chr(0)+"olt" )     , "C430" )
 
+   /* NATION functions */
+
+   TEST_LINE( NationMsg()                     , "Invalid argument" )
+   TEST_LINE( NationMsg("A")                  , "" )
+   TEST_LINE( NationMsg(-1)                   , "" )
+   TEST_LINE( NationMsg(0)                    , "" )
+   TEST_LINE( NationMsg(1)                    , "Database Files    # Records    Last Update     Size" )
+   TEST_LINE( NationMsg(2)                    , "Do you want more samples?"                           )
+   TEST_LINE( NationMsg(3)                    , "Page No."                                            )
+   TEST_LINE( NationMsg(4)                    , "** Subtotal **"                                      )
+   TEST_LINE( NationMsg(5)                    , "* Subsubtotal *"                                     )
+   TEST_LINE( NationMsg(6)                    , "*** Total ***"                                       )
+   TEST_LINE( NationMsg(7)                    , "Ins"                                                 )
+   TEST_LINE( NationMsg(8)                    , "   "                                                 )
+   TEST_LINE( NationMsg(9)                    , "Invalid date"                                        )
+   TEST_LINE( NationMsg(10)                   , "Range: "                                             )
+   TEST_LINE( NationMsg(11)                   , " - "                                                 )
+   TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
+   TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
+   TEST_LINE( NationMsg(14)                   , "" )
+   TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" */
+
+/* These will cause a GPF in CA-Cl*pper (5.2e) */
+#ifndef __CLIPPER__
+   TEST_LINE( IsAffirm()                      , .F.    )
+   TEST_LINE( IsAffirm(.F.)                   , .F.    )
+   TEST_LINE( IsAffirm(.T.)                   , .F.    )
+   TEST_LINE( IsAffirm(0)                     , .F.    )
+   TEST_LINE( IsAffirm(1)                     , .F.    )
+#endif
+   TEST_LINE( IsAffirm("")                    , .F.    )
+   TEST_LINE( IsAffirm("I")                   , .F.    )
+   TEST_LINE( IsAffirm("y")                   , .T.    )
+   TEST_LINE( IsAffirm("Y")                   , .T.    )
+   TEST_LINE( IsAffirm("yes")                 , .T.    )
+   TEST_LINE( IsAffirm("YES")                 , .T.    )
+   TEST_LINE( IsAffirm("n")                   , .F.    )
+   TEST_LINE( IsAffirm("N")                   , .F.    )
+   TEST_LINE( IsAffirm("no")                  , .F.    )
+   TEST_LINE( IsAffirm("NO")                  , .F.    )
+
+/* These will cause a GPF in CA-Cl*pper (5.2e) */
+#ifndef __CLIPPER__
+   TEST_LINE( IsNegative()                    , .F.    )
+   TEST_LINE( IsNegative(.F.)                 , .F.    )
+   TEST_LINE( IsNegative(.T.)                 , .F.    )
+   TEST_LINE( IsNegative(0)                   , .F.    )
+   TEST_LINE( IsNegative(1)                   , .F.    )
+#endif
+   TEST_LINE( IsNegative("")                  , .F.    )
+   TEST_LINE( IsNegative("I")                 , .F.    )
+   TEST_LINE( IsNegative("y")                 , .F.    )
+   TEST_LINE( IsNegative("Y")                 , .F.    )
+   TEST_LINE( IsNegative("yes")               , .F.    )
+   TEST_LINE( IsNegative("YES")               , .F.    )
+   TEST_LINE( IsNegative("n")                 , .T.    )
+   TEST_LINE( IsNegative("N")                 , .T.    )
+   TEST_LINE( IsNegative("no")                , .T.    )
+   TEST_LINE( IsNegative("NO")                , .T.    )
+
    /* FOR/NEXT */
 
    TEST_LINE( TFORNEXT( .F., .T., NIL )       , "E BASE 1086 Argument error ++ F:S"       )
