@@ -68,7 +68,8 @@ Important notes:
     Possibly consult other Developers about the new filename and file
     placement.
     Add the new filename to the related makefiles.
-    (*) There are two exceptions: ChangeLog.* and Makefile
+    (*) There are some exceptions: ChangeLog.*, Makefile, COPYING,
+        ERRATA and TODO for example.
  3) When adding a new directory, always consult the Developers about 
     the name and placing of it. On the CVS, there's no way to completely 
     remove a directory, that's why this is important.

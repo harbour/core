@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-20 09:43 UTC+0000 Dave Pearson <davep@davep.org>
+   * doc/howtocvs.txt
+     + Updated the footnote about the files which are an exception to the
+       "everything lowercase please" rule. Added COPYING, ERRATA and TODO.
+	
 2001-12-20 09:36 UTC+0000 Dave Pearson <davep@davep.org>
    + ERRATA
      + Added the ERRATA list.
