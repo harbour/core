@@ -4,5 +4,6 @@ rem $Id$
 rem
 
 ..\bin\harbour %1 %2 %3 /n /i..\include
-bcc32 %1.c -e%1.exe -5 -O2 -I..\include -L..\lib\b32 common.lib vm.lib rtl.lib rdd.lib macro.lib debug.lib tools.lib pp.lib dbfntx.lib dbfcdx.lib
+bcc32 -O2 -I..\include -L..\lib\b32 -e%1.exe %1.c tools.lib debug.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
 rem del %1.c
+

@@ -99,8 +99,6 @@
 #endif
 
 static BOOL   s_bInit = FALSE;
-static SHORT  s_iDevRow;
-static SHORT  s_iDevCol;
 static USHORT s_uiPRow;
 static USHORT s_uiPCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
@@ -146,7 +144,6 @@ void hb_consoleInitialize( void )
 
    hb_mouseInit();
    hb_gtInit();
-   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
    hb_gtSetCursor( SC_NORMAL );
 
    s_bInit = TRUE;
@@ -181,13 +178,19 @@ HARBOUR HB_HB_OSNEWLINE( void )
 }
 
 #ifndef HARBOUR_USE_GTAPI
-static void adjust_pos( char * pStr, ULONG ulLen, SHORT * row, SHORT * col )
+static void adjust_pos( char * pStr, ULONG ulLen )
 {
-   USHORT max_row = hb_gtMaxRow();
-   USHORT max_col = hb_gtMaxCol();
+   USHORT max_row;
+   USHORT max_col;
+   SHORT row;
+   SHORT col;
    ULONG ulCount;
 
-   HB_TRACE(HB_TR_DEBUG, ("adjust_pos(%s, %lu, %p, %p)", pStr, ulLen, row, col));
+   HB_TRACE(HB_TR_DEBUG, ("adjust_pos(%s, %lu)", pStr, ulLen ));
+
+   max_row = hb_gtMaxRow();
+   max_col = hb_gtMaxCol();
+   hb_gtGetPos( &row, &col );
 
    for( ulCount = 0; ulCount < ulLen; ulCount++ )
    {
@@ -197,31 +200,38 @@ static void adjust_pos( char * pStr, ULONG ulLen, SHORT * row, SHORT * col )
             break;
 
          case HB_CHAR_BS:
-            if( *col ) ( *col )--;
+            if( col )
+               col--;
             else
             {
-               *col = max_col;
-               if( *row ) ( *row )--;
+               col = max_col;
+               if( row )
+                  row--;
             }
             break;
 
          case HB_CHAR_LF:
-            if( *row < max_row ) ( *row )++;
+            if( row < max_row )
+               row++;
             break;
 
          case HB_CHAR_CR:
-            *col = 0;
+            col = 0;
             break;
 
          default:
-            if( *col < max_col ) ( *col )++;
+            if( col < max_col )
+               col++;
             else
             {
-               *col = 0;
-               if( *row < max_row ) ( *row )++;
+               col = 0;
+               if( row < max_row )
+                  row++;
             }
       }
    }
+
+   hb_gtSetPos( row, col );
 }
 #endif
 
@@ -269,13 +279,10 @@ void hb_outstd( char * pStr, ULONG ulLen )
       #ifndef __CYGWIN__
       if( isatty( s_iFilenoStdout ) )
       #endif
-      {
-         s_iDevRow = hb_gt_Row();
-         s_iDevCol = hb_gt_Col();
-         hb_gtSetPos( s_iDevRow, s_iDevCol );
-      }
+         /* TOFIX: Violation of API calling rules! */
+         hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
 #else
-      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+      adjust_pos( pStr, ulLen );
 #endif
       hb_gtPostExt();
    }
@@ -304,13 +311,10 @@ void hb_outerr( char * pStr, ULONG ulLen )
       #ifndef __CYGWIN__
       if( isatty( s_iFilenoStdout ) )
       #endif
-      {
-         s_iDevRow = hb_gt_Row();
-         s_iDevCol = hb_gt_Col();
-         hb_gtSetPos( s_iDevRow, s_iDevCol );
-      }
+         /* TOFIX: Violation of API calling rules! */
+         hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
 #else
-      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+      adjust_pos( pStr, ulLen );
 #endif
       hb_gtPostExt();
    }
@@ -325,12 +329,11 @@ static void hb_altout( char * pStr, ULONG ulLen )
    {
 #ifdef HARBOUR_USE_GTAPI
       hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
-      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
 #else
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+      adjust_pos( pStr, ulLen );
 #endif
    }
 
@@ -377,13 +380,13 @@ static void hb_devout( char * pStr, ULONG ulLen )
    {
 #ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
-      hb_gtWriteAt( s_iDevRow, s_iDevCol, ( BYTE * ) pStr, ulLen );
-      hb_gtGetPos( &s_iDevRow, &s_iDevCol );
+      /* TOFIX: Violation of API calling rules! */
+      hb_gtWriteAt( hb_gt_Row(), hb_gt_Col(), ( BYTE * ) pStr, ulLen );
 #else
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+      adjust_pos( pStr, ulLen );
 #endif
    }
 }
@@ -391,20 +394,18 @@ static void hb_devout( char * pStr, ULONG ulLen )
 /* Output an item to the screen */
 static void hb_dispout( char * pStr, ULONG ulLen )
 {
-   USHORT user_ferror;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_dispout(%s, %lu)", pStr, ulLen));
 
 #ifdef HARBOUR_USE_GTAPI
-   /* Display to console */
-   hb_gtWriteAt( s_iDevRow, s_iDevCol, ( BYTE * ) pStr, ulLen );
-   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
-   HB_SYMBOL_UNUSED( user_ferror );
+   /* TOFIX: Violation of API calling rules! */
+   hb_gtWriteAt( hb_gt_Row(), hb_gt_Col(), ( BYTE * ) pStr, ulLen );
 #else
-   user_ferror = hb_fsError(); /* Save current user file error code */
-   hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
-   hb_fsSetError( user_ferror ); /* Restore last user file error code */
-   adjust_pos( pStr, ulLen, &s_iDevRow, &s_iDevCol );
+   {
+      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      adjust_pos( pStr, ulLen );
+   }
 #endif
 }
 
@@ -412,29 +413,35 @@ void hb_setpos( SHORT row, SHORT col )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_setpos(%hd, %hd)", row, col));
 
-#ifdef HARBOUR_USE_GTAPI
-   hb_gtSetPos( row, col );
-#else
+#ifndef HARBOUR_USE_GTAPI
    {
       SHORT iCount;
+      /* TOFIX: Violation of API calling rules! */
+      SHORT iDevRow = hb_gt_Row();
+      SHORT iDevCol = hb_gt_Col();
 
-      if( row < s_iDevRow || col < s_iDevCol )
+      if( row < iDevRow || col < iDevCol )
       {
          fputs( s_szCrLf, stdout );
-         s_iDevCol = 0;
-         s_iDevRow++;
+         iDevCol = 0;
+         iDevRow++;
       }
-      else if( row > s_iDevRow ) s_iDevCol = 0;
-      for( iCount = s_iDevRow; iCount < row; iCount++ )
+      else if( row > iDevRow ) 
+         iDevCol = 0;
+
+      for( iCount = iDevRow; iCount < row; iCount++ )
          fputs( s_szCrLf, stdout );
-      for( iCount = s_iDevCol; iCount < col; iCount++ )
+      for( iCount = iDevCol; iCount < col; iCount++ )
          fputc( ' ', stdout );
+
       fflush( stdout );
+
+      row = iDevRow;
+      col = iDevCol;
    }
 #endif
 
-   s_iDevRow = row;
-   s_iDevCol = col;
+   hb_gtSetPos( row, col );
 }
 
 void hb_devpos( SHORT row, SHORT col )
@@ -644,7 +651,7 @@ HARBOUR HB_SETPRC( void ) /* Sets the current printer row and column positions *
    }
 }
 
-HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
+HARBOUR HB_SCROLL( void ) /* Scrolls a screen region */
 {
    USHORT top, left, bottom, right;
 
@@ -672,21 +679,7 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    else if( i_right > iMC ) right = iMC;
    else right = i_right;
 
-#ifdef HARBOUR_USE_GTAPI
    hb_gtScroll( top, left, bottom, right, v_scroll, h_scroll );
-#else
-   if( top == 0 && bottom == iMR
-   && left == 0 && right == iMC
-   && v_scroll == 0 && h_scroll == 0 )
-   {
-      USHORT uiCount;
-      s_iDevRow = iMR;
-      for( uiCount = 0; uiCount < s_iDevRow ; uiCount++ )
-         fputs( s_szCrLf, stdout );
-      fflush( stdout );
-      s_iDevRow = s_iDevCol = 0;
-   }
-#endif
 }
 
 HARBOUR HB_MAXROW( void ) /* Return the maximum screen row number (zero origin) */
@@ -701,18 +694,22 @@ HARBOUR HB_MAXCOL( void ) /* Return the maximum screen column number (zero origi
 
 HARBOUR HB_ROW( void ) /* Return the current screen row position (zero origin) */
 {
-#ifdef HARBOUR_USE_GTAPI
-   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
-#endif
-   hb_retni( s_iDevRow );
+   USHORT uiRow;
+   USHORT uiCol;
+
+   hb_gtGetPos( &uiRow, &uiCol );
+
+   hb_retni( uiRow );
 }
 
 HARBOUR HB_COL( void ) /* Return the current screen column position (zero origin) */
 {
-#ifdef HARBOUR_USE_GTAPI
-   hb_gtGetPos( &s_iDevRow, &s_iDevCol );
-#endif
-   hb_retni( s_iDevCol );
+   USHORT uiRow;
+   USHORT uiCol;
+
+   hb_gtGetPos( &uiRow, &uiCol );
+
+   hb_retni( uiCol );
 }
 
 HARBOUR HB_DISPBOX( void )
@@ -922,7 +919,7 @@ HARBOUR HB_SAVESCREEN( void )
 
 HARBOUR HB_RESTSCREEN( void )
 {
-   if( hb_pcount() == 5 )
+   if( hb_pcount() >= 5 )
    {
       USHORT uiX;
       USHORT uiCoords[ 4 ];
@@ -956,10 +953,7 @@ USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
 
 HARBOUR HB_SETCURSOR( void )
 {
-   if( hb_pcount() == 1 && ISNUM( 1 ) )
-      hb_retni( hb_setCursor( TRUE, hb_parni( 1 ) ) );
-   else
-      hb_retni( hb_setCursor( FALSE, 0 ) );
+   hb_retni( hb_setCursor( ISNUM( 1 ), hb_parni( 1 ) ) );
 }
 
 HARBOUR HB_SETBLINK( void )
@@ -979,18 +973,21 @@ HARBOUR HB_SETMODE( void )
                           ISNUM( 2 ) ? hb_parni( 2 ) : ( hb_gtMaxCol() + 1 ) ) == 0 );
 }
 
-HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
-                            /* Basically the simplest Clipper function to        */
-                            /* receive data. Parameter : cPrompt. Returns : cRet */
+/* Internal Clipper function used in ACCEPT command  */
+/* Basically the simplest Clipper function to        */
+/* receive data. Parameter : cPrompt. Returns : cRet */
+
+HARBOUR HB___ACCEPT( void )
 {
    int input;
    ULONG ulLen;
 
-   if( hb_pcount() >= 1 )          /* cPrompt passed                         */
+   if( hb_pcount() >= 1 )          /* cPrompt passed */
       HB_QOUT();
 
    ulLen = 0;
    input = 0;
+
    while( input != K_ENTER )
    {
       /* Wait forever, for keyboard events only */
@@ -1021,7 +1018,9 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
             }
       }
    }
+
    s_szAcceptResult[ ulLen ] = '\0';
+
    hb_retc( s_szAcceptResult );
 }
 
@@ -1029,10 +1028,6 @@ HARBOUR HB___ACCEPTSTR( void )
 {
    hb_retc( s_szAcceptResult );
 }
-
-/* --------------------------------------------------------- */
-/* Copyright (C) 1999-2000 Victor Szakats <info@szelvesz.hu> */
-/* --------------------------------------------------------- */
 
 HARBOUR HB_HB_COLORINDEX( void )
 {

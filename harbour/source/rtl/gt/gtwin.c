@@ -193,6 +193,8 @@ void hb_gt_Done( void )
          it with the current image before quitting.
        */
       /* easy fix ;-) */
+
+      /* TOFIX: Violation of API calling rules! */
       hb_gtDispBegin();  /* must use these versions ! */
       hb_gtDispEnd();
    }
@@ -212,6 +214,15 @@ void hb_gt_Done( void )
 
    /* Remove Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, FALSE );
+}
+
+int hb_gt_ReadKey( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
+
+   /* TODO: */
+
+   return 0;
 }
 
 BOOL hb_gt_IsColor( void )
@@ -520,6 +531,8 @@ void hb_gt_DispBegin( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
 /* ptucker */
+
+   /* TOFIX: Violation of API calling rules! */
    if( hb_gtDispCount() == 1 )
    {
       COORD coDest = { 0, 0 };
@@ -570,6 +583,7 @@ void hb_gt_DispEnd( void )
 
 /* ptucker */
 
+   /* TOFIX: Violation of API calling rules! */
    if( hb_gtDispCount() == 1 )
    {
       s_HOutput = s_HInactive;
@@ -697,6 +711,8 @@ void hb_gt_DebugScreen( BOOL bActivate )
       }
       s_HOsave = s_HOutput;
       s_HOutput = s_HActive = s_HDOutput;
+
+      /* TOFIX: Violation of API calling rules! */
       hb_gtDispBegin();
       hb_gtDispEnd();
    }

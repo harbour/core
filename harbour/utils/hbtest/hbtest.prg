@@ -53,14 +53,17 @@
 #include "error.ch"
 #include "fileio.ch"
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_vars.ch"
+
+#ifndef __HARBOUR__
+   #xtranslate HB_OSNewLine() => ( Chr( 13 ) + Chr( 10 ) )
+#endif
 
 STATIC s_nPass
 STATIC s_nFail
 STATIC s_cFileName
 STATIC s_nFhnd
-STATIC s_cNewLine
 STATIC s_nCount
 STATIC s_lShowAll
 STATIC s_lShortcut
@@ -70,7 +73,8 @@ STATIC s_nEndTime
 
 FUNCTION Main( cPar1, cPar2 )
 
-   /* Initialize test */
+   OutStd( "Harbour Regression Test Suit" + HB_OSNewLine() +;
+           "Copyright 1999-2000, http://www.harbour-project.org" + HB_OSNewLine() )
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -78,6 +82,23 @@ FUNCTION Main( cPar1, cPar2 )
    IF cPar2 == NIL
       cPar2 := ""
    ENDIF
+
+   IF "/?" $ Upper( cPar1 ) .OR. ;
+      "/H" $ Upper( cPar1 ) .OR. ;
+      "-?" $ Upper( cPar1 ) .OR. ;
+      "-H" $ Upper( cPar1 )
+
+      OutStd( HB_OSNewLine() +;
+              "Syntax:  hbtest [options]" + HB_OSNewLine() +;
+              HB_OSNewLine() +;
+              "Options:  /h, /?        Display this help." + HB_OSNewLine() +;
+              "          /all          Display all tests, not only the failures." + HB_OSNewLine() +;
+              "          /skip:<list>  Skip the listed test numbers." + HB_OSNewLine() )
+
+      RETURN NIL
+   ENDIF
+
+   /* Initialize test */
 
    TEST_BEGIN( cPar1 + " " + cPar2 )
 
@@ -128,14 +149,13 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    s_nStartTime := Seconds()
 
-#ifdef __HARBOUR__
-   s_cNewLine := HB_OSNewLine()
-#else
-   s_cNewLine := Chr( 13 ) + Chr( 10 )
-#endif
+   s_lShowAll := "/ALL" $ Upper( cParam ) .OR. ;
+                 "-ALL" $ Upper( cParam )
 
-   s_lShowAll := "/ALL" $ Upper( cParam )
    s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "/SKIP:", "" ) )
+   IF Empty( s_aSkipList )
+      s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "-SKIP:", "" ) )
+   ENDIF
 
    /* Detect presence of shortcutting optimization */
 
@@ -177,20 +197,21 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    /* NOTE: The 0 parameter of Version() will force Harbour to include the
             compiler version in the version string. */
 
-   FWrite( s_nFhnd, "      Version: " + Version( 0 ) + s_cNewLine +;
-                    "           OS: " + OS() + s_cNewLine +;
-                    "   Date, Time: " + DToS( Date() ) + " " + Time() + s_cNewLine +;
-                    "       Output: " + s_cFileName + s_cNewLine +;
-                    "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + s_cNewLine +;
-                    "     Switches: " + cParam + s_cNewLine +;
-                    "===========================================================================" + s_cNewLine )
+   FWrite( s_nFhnd, "---------------------------------------------------------------------------" + HB_OSNewLine() +;
+                    "      Version: " + Version( 0 ) + HB_OSNewLine() +;
+                    "           OS: " + OS() + HB_OSNewLine() +;
+                    "   Date, Time: " + DToS( Date() ) + " " + Time() + HB_OSNewLine() +;
+                    "       Output: " + s_cFileName + HB_OSNewLine() +;
+                    "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + HB_OSNewLine() +;
+                    "     Switches: " + cParam + HB_OSNewLine() +;
+                    "===========================================================================" + HB_OSNewLine() )
 
    FWrite( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
-                    PadR( "Line", TEST_RESULT_COL2_WIDTH ) + " " +;
+                    PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " +;
                     PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
                     PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
-                    PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + s_cNewLine +;
-                    "---------------------------------------------------------------------------" + s_cNewLine )
+                    PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + HB_OSNewLine() +;
+                    "---------------------------------------------------------------------------" + HB_OSNewLine() )
 
    /* NOTE: mxNotHere intentionally not declared */
    PUBLIC mcLongerNameThen10Chars := "Long String Name!"
@@ -301,13 +322,13 @@ FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    ENDIF
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
+
       FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                       PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+                       PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                        PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                        PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
-                       PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )
-
-      FWrite( s_nFhnd, s_cNewLine )
+                       PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) +;
+                       HB_OSNewLine() )
 
    ENDIF
 
@@ -331,20 +352,20 @@ STATIC FUNCTION TEST_END()
 
    s_nEndTime := Seconds()
 
-   FWrite( s_nFhnd, "===========================================================================" + s_cNewLine +;
-                    "Test calls passed: " + Str( s_nPass ) + s_cNewLine +;
-                    "Test calls failed: " + Str( s_nFail ) + s_cNewLine +;
-                    "                   ----------" + s_cNewLine +;
+   FWrite( s_nFhnd, "===========================================================================" + HB_OSNewLine() +;
+                    "Test calls passed: " + Str( s_nPass ) + HB_OSNewLine() +;
+                    "Test calls failed: " + Str( s_nFail ) + HB_OSNewLine() +;
+                    "                   ----------" + HB_OSNewLine() +;
                     "            Total: " + Str( s_nPass + s_nFail ) +;
-                    " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + s_cNewLine +;
-                    s_cNewLine )
+                    " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + HB_OSNewLine() +;
+                    HB_OSNewLine() )
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         FWrite( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + s_cNewLine +;
-                          "Please fix those expected results which are not bugs in CA-Clipper itself." + s_cNewLine )
+         FWrite( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + HB_OSNewLine() +;
+                          "Please fix those expected results which are not bugs in CA-Clipper itself." + HB_OSNewLine() )
       ELSE
-         FWrite( s_nFhnd, "WARNING ! Failures detected" + s_cNewLine )
+         FWrite( s_nFhnd, "WARNING ! Failures detected" + HB_OSNewLine() )
       ENDIF
    ENDIF
 
@@ -489,5 +510,6 @@ FUNCTION SToD( cDate )
 #endif
 #endif
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_init.ch"
+

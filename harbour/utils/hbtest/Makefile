@@ -9,7 +9,7 @@ endif
 ROOT = ../../
 
 PRG_SOURCES=\
-        rt_main.prg  \
+        hbtest.prg   \
         rt_array.prg \
         rt_date.prg  \
         rt_file.prg  \
@@ -19,7 +19,7 @@ PRG_SOURCES=\
         rt_str.prg   \
         rt_trans.prg \
 
-PRG_MAIN=rt_main.prg
+PRG_MAIN=hbtest.prg
 
 LIBS=\
         debug \

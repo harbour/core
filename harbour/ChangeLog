@@ -1,3 +1,65 @@
+20000307-16:36 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * bin/bld*.*
+     - "-5" options removed (again).
+     * Now none of them remove the .c file.
+     ! Borland make files fixed. Changed the order of options.
+     * Borland batch files synchronized with bld_tpl.*
+     ; Tested BCC16 and BCC32.
+   * source/rtl/gt/*
+     source/rtl/gtapi.c
+     ! hb_gt_ReadKey() made common for all GT types. OS specific branch removed.
+     + TOFIXes added to gtwin.c for all the places where the API calling
+       rules are violated, so that the upper level API is called from a 
+       lower one.
+   * source/rtl/console.c
+     ! SETCURSOR(), RESTSCREEN() fixed when called with more parameter then  
+       required.
+     % Minor optimization.
+     % Got rid of a few non-GTAPI branches.
+     % s_iDevRow and s_iDevCol removed.
+       !! WARNING !! Non-GT mode has not been tested. Also some more tests 
+       would be good for the GT mode.
+     + TOFIXes added for all places where the API calling rules are violated,
+       so that an API level is skipped and the low-level API is directly
+       called.
+   * source/rtl/mouseapi.c
+     - Removed one TODO
+     * One ULONG changed back to USHORT and a cast added.
+   - tests/strip
+   + tests/stripem.prg
+     tests/Makefile
+     * Renamed to avoid conflict with the GNU STRIP.EXE.
+   * source/runner/stdalone/hbrun.prg
+     + Year updated.
+   * tests/regress/*
+     makefile.bc
+     makefile.vc
+     + "-" switch char added.
+     + Header added
+     + -?, /? options and help screen added.
+     ! Typos fixed.
+     * Renamed to HBTEST
+   - tests/regress/* moved to
+   + utils/hbtest/*
+     tests/Makefile
+     utils/Makefile
+     makefile.bc
+     makefile.vc
+     * Regression Test Suit moved to another directory. It's a better place
+       since it was a bit problematic to handle a subdir from the tests dir
+       in the GNU-make system. (it got only build when install was specified
+       or only after all the small tests programs were built)
+   * Makefile
+     * utils moved before tests
+   - make_b40.bat
+     make_b32.bat
+     - Removed this version specific batch file.
+       The -O2 option was removed for BCC40 due to PP bugs back then, ? and ?? 
+       was not PP-ed properly. Anyone could test this now ?
+       If it still doesn't work I will add a warning to MAKE_B32.BAT about that.
+   * makefile.bc
+     * B40 option renamed to BCC_NOOPTIM to be more generic.
+
 20000307-09:20 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * create unistd.h moved to first target

@@ -67,6 +67,15 @@ void hb_gt_Done( void )
    /* TODO: */
 }
 
+int hb_gt_ReadKey( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
+
+   /* TODO: */
+
+   return 0;
+}
+
 BOOL hb_gt_IsColor( void )
 {
 /* Chen Kedem <niki@actcom.co.il> */

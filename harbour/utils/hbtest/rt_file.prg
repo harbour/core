@@ -37,7 +37,7 @@
 
 #include "fileio.ch"
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
 /* NOTE: The order of the tests is relevant here, so don't
@@ -186,5 +186,5 @@ FUNCTION Main_FILE()
 STATIC FUNCTION TESTFIER( xRetVal )
    RETURN PadR( "E: " + LTrim( Str( FError() ) ), 9 ) + " R: " + XToStr( xRetVal )
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_init.ch"

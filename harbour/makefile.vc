@@ -31,7 +31,7 @@ OBJ_DIR=obj\vc
 RUNNER_DIR=source\runner
 COMMON_DIR=source\common
 MACRO_DIR=source\macro
-REGRESS_DIR=tests\regress
+HBTEST_DIR=utils\hbtest
 HBDOC_DIR=utils\hbdoc
 
 #
@@ -63,7 +63,7 @@ HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 PP_EXE=$(BIN_DIR)\hbpp.exe
 RUNNER_EXE=$(BIN_DIR)\hbrun.exe
 RUNNER_DLL=$(BIN_DIR)\runjava.dll
-REGRESS_EXE=$(BIN_DIR)\rt_main.exe
+HBTEST_EXE=$(BIN_DIR)\hbtest.exe
 HBDOC_EXE=$(BIN_DIR)\hbdoc.exe
 HARBOURFLAGS=-iinclude -n -q0 -w -es2 -gc0
 UNISTD=include\unistd.h
@@ -329,9 +329,9 @@ all: $(UNISTD) \
      $(LIBLIST) \
      $(PP_EXE) \
      $(RUNNER_EXE) \
-     $(REGRESS_EXE) \
-     $(HBDOC_EXE)
-#     $(RUNNER_DLL)
+     $(HBTEST_EXE) \
+     $(HBDOC_EXE) \
+#    $(RUNNER_DLL)
 
 $(UNISTD):
    command /c echo. >include\unistd.h
@@ -360,27 +360,27 @@ $(RUNNER_EXE) : \
 #    -del $(BIN_DIR)\runjava.exp
 #    -del $(BIN_DIR)\runjava.lib
 
-$(REGRESS_EXE) : \
-    $(REGRESS_DIR)\rt_main.prg \
-    $(REGRESS_DIR)\rt_array.prg \
-    $(REGRESS_DIR)\rt_date.prg \
-    $(REGRESS_DIR)\rt_file.prg \
-    $(REGRESS_DIR)\rt_hvm.prg \
-    $(REGRESS_DIR)\rt_math.prg \
-    $(REGRESS_DIR)\rt_misc.prg \
-    $(REGRESS_DIR)\rt_str.prg \
-    $(REGRESS_DIR)\rt_trans.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_main.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_array.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_date.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_file.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_hvm.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_math.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_misc.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_str.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(REGRESS_DIR)\rt_trans.prg
-    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\rt_main.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_trans.c -o $(REGRESS_EXE) /link $(LIBS)
-    -del rt_main.obj
+$(HBTEST_EXE) : \
+    $(HBTEST_DIR)\hbtest.prg \
+    $(HBTEST_DIR)\rt_array.prg \
+    $(HBTEST_DIR)\rt_date.prg \
+    $(HBTEST_DIR)\rt_file.prg \
+    $(HBTEST_DIR)\rt_hvm.prg \
+    $(HBTEST_DIR)\rt_math.prg \
+    $(HBTEST_DIR)\rt_misc.prg \
+    $(HBTEST_DIR)\rt_str.prg \
+    $(HBTEST_DIR)\rt_trans.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\hbtest.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_array.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_date.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_file.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_hvm.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_math.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_misc.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_str.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $(HBTEST_DIR)\rt_trans.prg
+    $(CC) -TP $(CFLAGS) $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
+    -del hbtest.obj
     -del rt_array.obj
     -del rt_date.obj
     -del rt_file.obj

@@ -35,7 +35,7 @@
 
 #include "rt_main.ch"
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
 FUNCTION Main_STR()
@@ -1061,5 +1061,5 @@ FUNCTION Long_STRINGS()
 
 #endif
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_init.ch"

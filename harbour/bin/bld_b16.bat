@@ -4,19 +4,19 @@ rem $Id$
 rem
 
 ..\bin\harbour %1 %2 %3 /n /i..\include
-echo -O2 -I..\include -mh -L..\lib\b16 > build.tmp
-echo %1.c >> build.tmp
-echo common.lib >> build.tmp
+echo -O2 -mh -I..\include -L..\lib\b16 > build.tmp
+echo -e%1.exe %1.c >> build.tmp
+echo tools.lib >> build.tmp
+echo debug.lib >> build.tmp
 echo vm.lib >> build.tmp
 echo rtl.lib >> build.tmp
 echo rdd.lib >> build.tmp
 echo macro.lib >> build.tmp
-echo debug.lib >> build.tmp
-echo tools.lib >> build.tmp
 echo pp.lib >> build.tmp
 echo dbfntx.lib >> build.tmp
 echo dbfcdx.lib >> build.tmp
+echo common.lib >> build.tmp
 bcc @build.tmp
 del build.tmp
-del %1.c
+rem del %1.c
 

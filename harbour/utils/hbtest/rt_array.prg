@@ -35,7 +35,7 @@
 
 #include "rt_main.ch"
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
 FUNCTION Main_ARRAY()
@@ -360,5 +360,5 @@ STATIC FUNCTION TAStr( aArray )
 
    RETURN cString
 
-/* Don't change the order or place of this #include. */
+/* Don't change the position of this #include. */
 #include "rt_init.ch"

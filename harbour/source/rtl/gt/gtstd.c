@@ -67,6 +67,15 @@ void hb_gt_Done( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 }
 
+int hb_gt_ReadKey( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
+
+   /* TODO: */
+
+   return 0;
+}
+
 BOOL hb_gt_IsColor( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
@@ -178,13 +187,21 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 
    /* TODO: */
 
-   HB_SYMBOL_UNUSED( uiTop );
-   HB_SYMBOL_UNUSED( uiLeft );
-   HB_SYMBOL_UNUSED( uiBottom );
-   HB_SYMBOL_UNUSED( uiRight );
-   HB_SYMBOL_UNUSED( byAttr );
-   HB_SYMBOL_UNUSED( iRows );
-   HB_SYMBOL_UNUSED( iCols );
+   if( uiTop == 0 && 
+       uiBottom == s_uiMaxRow && 
+       uiLeft == 0 && 
+       uiRight == s_uiMaxCol && 
+       iRows == 0 && 
+       iCols == 0 )
+   {
+      for( ; uiBottom; uiBottom-- )
+         fputs( s_szCrLf, stdout );
+
+      fflush( stdout );
+
+      s_iRow = 0;
+      s_iCol = 0;
+   }
 }
 
 void hb_gt_DispBegin( void )
@@ -234,11 +251,4 @@ void hb_gt_SetBlink( BOOL bBlink )
 
    s_bBlink = bBlink;
 }
-
-#if defined(OS_UNIX_COMPATIBLE)
-int hb_gt_ReadKey( void )
-{
-   return 0;
-}
-#endif
 

@@ -8,8 +8,8 @@ DIRS=\
 	include \
 	source \
 	obj \
-	tests \
         utils \
+	tests \
 #       samples \
 
 include $(ROOT)config/dir.cf

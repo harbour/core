@@ -28,7 +28,7 @@ TASM_EXE = tasm32
 OBJ_DIR = obj\b32
 LIB_DIR = lib\b32
 
-!if !$d(B40)
+!if !$d(BCC_NOOPTIM)
 BCC_OPT = $(BCC_OPT) -O2
 !endif
 
@@ -46,7 +46,7 @@ RDD_DIR           = source\rdd
 RUNNER_DIR        = source\runner
 DEBUG_DIR         = source\debug
 BIN_DIR           = bin
-REGRESS_DIR       = tests\regress
+HBTEST_DIR        = utils\hbtest
 HBDOC_DIR         = utils\hbdoc
 
 COMMON_LIB        = $(LIB_DIR)\common.lib
@@ -261,8 +261,8 @@ DEBUG_LIB_OBJS    = $(OBJ_DIR)\dbgmenu.obj \
                     $(OBJ_DIR)\debugger.obj \
                     $(OBJ_DIR)\tbrwtext.obj
 
-REGRESS_EXE       = $(BIN_DIR)\rt_main.exe
-REGRESS_EXE_OBJS  = $(OBJ_DIR)\rt_main.obj \
+HBTEST_EXE        = $(BIN_DIR)\hbtest.exe
+HBTEST_EXE_OBJS   = $(OBJ_DIR)\hbtest.obj \
                     $(OBJ_DIR)\rt_hvm.obj \
                     $(OBJ_DIR)\rt_math.obj \
                     $(OBJ_DIR)\rt_date.obj \
@@ -297,7 +297,7 @@ PROJECT: $(COMMON_LIB) \
          $(RUNNER_LIB) \
          $(RUNNER_EXE) \
          $(DEBUG_LIB) \
-         $(REGRESS_EXE) \
+         $(HBTEST_EXE) \
          $(HBDOC_EXE)
 
 #
@@ -1317,14 +1317,14 @@ $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
    tlib $(DEBUG_LIB) -+$@,,
 
 #
-# rt_main.exe
+# hbtest.exe
 #
-$(REGRESS_EXE) : $(REGRESS_EXE_OBJS)
+$(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
 
    echo $(BCC_OPT) > make.tmp
-   echo -e$(BIN_DIR)\rt_main.exe >> make.tmp
+   echo -e$(BIN_DIR)\hbtest.exe >> make.tmp
    echo -I$(INCLUDE_DIR) >> make.tmp
-   echo $(OBJ_DIR)\rt_main.obj >> make.tmp
+   echo $(OBJ_DIR)\hbtest.obj >> make.tmp
    echo $(OBJ_DIR)\rt_hvm.obj >> make.tmp
    echo $(OBJ_DIR)\rt_math.obj >> make.tmp
    echo $(OBJ_DIR)\rt_date.obj >> make.tmp
@@ -1345,55 +1345,55 @@ $(REGRESS_EXE) : $(REGRESS_EXE_OBJS)
    $(BCC_EXE) @make.tmp
    del make.tmp
 
-$(OBJ_DIR)\rt_main.c : $(REGRESS_DIR)\rt_main.prg
+$(OBJ_DIR)\hbtest.c : $(HBTEST_DIR)\hbtest.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
-$(OBJ_DIR)\rt_main.obj : $(OBJ_DIR)\rt_main.c
+$(OBJ_DIR)\hbtest.obj : $(OBJ_DIR)\hbtest.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_hvm.c : $(REGRESS_DIR)\rt_hvm.prg
+$(OBJ_DIR)\rt_hvm.c : $(HBTEST_DIR)\rt_hvm.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_hvm.obj : $(OBJ_DIR)\rt_hvm.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_math.c : $(REGRESS_DIR)\rt_math.prg
+$(OBJ_DIR)\rt_math.c : $(HBTEST_DIR)\rt_math.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_math.obj : $(OBJ_DIR)\rt_math.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_date.c : $(REGRESS_DIR)\rt_date.prg
+$(OBJ_DIR)\rt_date.c : $(HBTEST_DIR)\rt_date.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_date.obj : $(OBJ_DIR)\rt_date.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_str.c : $(REGRESS_DIR)\rt_str.prg
+$(OBJ_DIR)\rt_str.c : $(HBTEST_DIR)\rt_str.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_str.obj : $(OBJ_DIR)\rt_str.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_trans.c : $(REGRESS_DIR)\rt_trans.prg
+$(OBJ_DIR)\rt_trans.c : $(HBTEST_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_trans.obj : $(OBJ_DIR)\rt_trans.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_array.c : $(REGRESS_DIR)\rt_array.prg
+$(OBJ_DIR)\rt_array.c : $(HBTEST_DIR)\rt_array.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_array.obj : $(OBJ_DIR)\rt_array.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_file.c : $(REGRESS_DIR)\rt_file.prg
+$(OBJ_DIR)\rt_file.c : $(HBTEST_DIR)\rt_file.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_file.obj : $(OBJ_DIR)\rt_file.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
-$(OBJ_DIR)\rt_misc.c : $(REGRESS_DIR)\rt_misc.prg
+$(OBJ_DIR)\rt_misc.c : $(HBTEST_DIR)\rt_misc.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\rt_misc.obj : $(OBJ_DIR)\rt_misc.c

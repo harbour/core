@@ -49,10 +49,6 @@
 #include "hbapimou.h"
 #include "hbapigt.h"
 
-/* TODO: This level should make sure that if there's no mouse present 
-         the functions don't call the low level function, but return some
-         default values. [vszakats] */
-
 static BOOL   s_bPresent;
 static BOOL   s_bVisible;
 static USHORT s_uiDoubleClickSpeed; /* In milliseconds */
@@ -233,9 +229,13 @@ HARBOUR HB_MSAVESTATE( void )
    int iTop, iLeft, iBottom, iRight;
 
    USHORT uiPos;
-   USHORT uiLen = sizeof( int ) * 2 + 
+   USHORT uiLen = sizeof( int ) + 
+                  sizeof( int ) + 
                   sizeof( BOOL ) +
-                  sizeof( int ) * 4;
+                  sizeof( int ) + 
+                  sizeof( int ) + 
+                  sizeof( int ) + 
+                  sizeof( int );
 
    BYTE * pBuffer = ( BYTE * ) hb_xgrab( uiLen );
   
@@ -256,18 +256,22 @@ HARBOUR HB_MSAVESTATE( void )
    uiPos += sizeof( int );
    *( pBuffer + uiPos ) = iRight;
 
-   hb_retclen( (char *) pBuffer, uiLen );
+   hb_retclen( ( char * ) pBuffer, uiLen );
 
    hb_xfree( pBuffer );
 }
 
 HARBOUR HB_MRESTSTATE( void )
 {
-   ULONG ulLen = sizeof( int ) * 2 +
-                 sizeof( BOOL ) +
-                 sizeof( int ) * 4;
+   USHORT uiLen = sizeof( int ) + 
+                  sizeof( int ) + 
+                  sizeof( BOOL ) +
+                  sizeof( int ) + 
+                  sizeof( int ) + 
+                  sizeof( int ) + 
+                  sizeof( int );
 
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ulLen )
+   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) uiLen )
    {
       int iRow, iCol;
       int iTop, iLeft, iBottom, iRight;

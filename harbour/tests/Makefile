@@ -119,7 +119,7 @@ PRG_SOURCES=\
         statfun.prg \
         statics.prg \
         strdelim.prg \
-        strip.prg \
+        stripem.prg \
         t1.prg \
         test.prg \
         test_all.prg \
@@ -179,11 +179,6 @@ BAD_C_SOURCES=\
         extend2.c \
 
 include $(TOP)$(ROOT)config/test.cf
-
-DIRS=\
-        regress \
-
-include $(TOP)$(ROOT)config/dir.cf
 
 else #PM defined = build specified file
 
