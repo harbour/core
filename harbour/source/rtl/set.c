@@ -14,6 +14,10 @@
 #include <set.h>
 #include <errno.h>
 
+#ifndef O_BINARY
+   #define O_BINARY 0	/* O_BINARY not defined on Linux */
+#endif
+
 HB_set_struct hb_set;
 
 BOOL hb_set_century;
@@ -122,13 +126,6 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
    handle = open (path,
 		  O_BINARY|O_WRONLY|O_CREAT|(bMode?O_APPEND:O_TRUNC),
 		  S_IWRITE );
-   if (handle < 0)
-     {
-       printf("\nError %d creating %s", errno, path);
-#if !defined(__GNUC__) && !defined(__DJGPP__)
-       printf(" (DOS error %02x)", _doserrno);
-#endif
-     }
    if (handle < 0)
    {
       char error_message [32];
@@ -332,7 +329,7 @@ HARBOUR HB_SET (void)
          {
             /* If the print file is not already open, open it. */
             hb_set.HB_SET_DEVICE = set_string (pArg2, hb_set.HB_SET_DEVICE);
-            if (stricmp (hb_set.HB_SET_DEVICE, "PRINTER") == 0 && hb_set_printhan < 0
+            if (hb_stricmp (hb_set.HB_SET_DEVICE, "PRINTER") == 0 && hb_set_printhan < 0
             && hb_set.HB_SET_PRINTFILE && strlen (hb_set.HB_SET_PRINTFILE) > 0)
                hb_set_printhan = open_handle (hb_set.HB_SET_PRINTFILE, bFlag, ".prn");
          }

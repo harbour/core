@@ -970,7 +970,7 @@ HARBOUR HB___INSTSUPER( void )
 
          for( w = 0; !bFound && w < wClasses; w++ )
          {                                      /* Locate the entry         */
-            if( !stricmp( pString->value.szText, pClasses[ w ].szName ) )
+            if( !hb_stricmp( pString->value.szText, pClasses[ w ].szName ) )
             {
                _retni( w + 1 );                 /* Entry + 1 = ClassH       */
                bFound = TRUE;

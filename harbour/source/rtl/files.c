@@ -56,6 +56,9 @@
   #define PATH_SEPARATOR '\\'
 #endif
 
+#ifndef O_BINARY
+   #define O_BINARY 0	/* O_BINARY not defined on Linux */
+#endif
 
 #ifndef S_IEXEC
 #define S_IEXEC  0x0040 /* owner may execute <directory search> */

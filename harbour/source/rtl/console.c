@@ -204,7 +204,7 @@ static void hb_altout( char * fpStr, WORD uiLen )
    {
    #ifdef USE_GTAPI
       _gtWriteCon( fpStr, uiLen );
-      if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
+      if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) || hb_set_printhan < 0 )
          _gtGetPos( &dev_row, &dev_col );
    #else
       WORD uiCount;
@@ -229,7 +229,7 @@ static void hb_altout( char * fpStr, WORD uiLen )
 /* Output an item to the screen and/or printer */
 static void hb_devout( char * fpStr, WORD uiLen )
 {
-   if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
@@ -260,7 +260,7 @@ void hb_devpos( USHORT row, USHORT col )
    int count;
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
-   if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
       if( row < p_row )
       {
@@ -368,7 +368,7 @@ HARBOUR HB_DEVOUT( void ) /* writes a single values to the current device (scree
 
 HARBOUR HB_EJECT( void ) /* Ejects the current page from the printer */
 {
-   if( stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
       write( hb_set_printhan, "\x0C", 1 );
       p_row = p_col = 0;

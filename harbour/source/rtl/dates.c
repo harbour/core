@@ -14,11 +14,6 @@
    #define _OPTIMIZE_DTOS
 #endif
 
-/*
-ADJ is 7 for ISO, 6 for no ISO
-*/
-#define ADJ 7
-
 extern STACK stack;
 
 /* In msgxxx.c modules */
@@ -69,20 +64,9 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
    {
       /* Month, year, and lower day limits are simple,
          but upper day limit is dependent upon month and leap year */
-      BOOL bLeapYear = FALSE;
       int aiDayLimit [12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-      if( lYear % 4 == 0 )
-      {
-         /* Check for leap year (every year that is evenly divisible by 4,
-            except for centuries, which must be evenly divisible by 400 */
-         if( lYear % 100 == 0 )
-         {
-            if( lYear % 400 == 0) bLeapYear = TRUE; /* Leap century */
-         }
-         else bLeapYear = TRUE; /* Leap year */
-
-         if( bLeapYear ) aiDayLimit[ 1 ] = 29;
-      }
+      if( (( lYear % 4 == 0 && lYear % 100 != 0 ) || lYear % 400 == 0 ) )
+         aiDayLimit[ 1 ] = 29;
       if( lDay <= (long)aiDayLimit[ (int)lMonth - 1 ] ) bValid = TRUE;
    }
    if( bValid )
@@ -97,16 +81,25 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 {
   long U, V, W, X;
 
-  julian += 68569;
-  W = ( julian * 4 ) / 146097;
-  julian -= ( ( 146097 * W ) + 3 ) / 4;
-  X = 4000 * ( julian + 1 ) / 1461001;
-  julian -= ( ( 1461 * X ) / 4 ) - 31;
-  V = 80 * julian / 2447;
-  U = V / 11;
-  if( plDay )   * plDay   = julian - ( 2447 * V / 80 );
-  if( plMonth ) * plMonth = V + 2 - ( U * 12 );
-  if( plYear )  * plYear  = X + U + ( W - 49 ) * 100;
+   if( julian > 0 )
+   {
+      julian += 68569;
+      W = ( julian * 4 ) / 146097;
+      julian -= ( ( 146097 * W ) + 3 ) / 4;
+      X = 4000 * ( julian + 1 ) / 1461001;
+      julian -= ( ( 1461 * X ) / 4 ) - 31;
+      V = 80 * julian / 2447;
+      U = V / 11;
+      if( plDay )   * plDay   = julian - ( 2447 * V / 80 );
+      if( plMonth ) * plMonth = V + 2 - ( U * 12 );
+      if( plYear )  * plYear  = X + U + ( W - 49 ) * 100;
+   }
+   else
+   {
+      * plDay = 0;
+      * plMonth = 0;
+      * plYear = 0;
+   }
 }
 
 HARBOUR HB_CTOD( void )
@@ -170,14 +163,14 @@ HARBOUR HB_CTOD( void )
                y_value = (y_value * 10) + digit - '0';
             }
          }
-         else
+         else if( digit != ' ' )
          {
             d_pos--;
             m_pos--;
             y_pos--;
          }
       }
-      if (y_value < 100)
+      if (y_value > 0 && y_value < 100)
       {
          count = hb_set.HB_SET_EPOCH % 100;
          digit = hb_set.HB_SET_EPOCH / 100;
@@ -504,7 +497,7 @@ long hb_dow( long d, long m, long y )
    else
       m++;
 
-   return ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + ADJ ) % 7;
+   return ( ( d + 26 * m / 10 + y + y / 4 - y / 100 + y / 400 + 6 ) % 7 + 1 );
 }
 
 HARBOUR HB_DOW( void )
@@ -514,8 +507,13 @@ HARBOUR HB_DOW( void )
 
    if( pDate )
    {
-      hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
-      _retni( hb_dow( lDay, lMonth, lYear ) );
+      if( pDate->value.lDate )
+      {
+         hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
+         _retni( hb_dow( lDay, lMonth, lYear ) );
+      }
+      else
+         _retni( 0 );
       stack.Return.wLength = 3;
    }
    else

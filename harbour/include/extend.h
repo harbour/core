@@ -159,6 +159,7 @@ void hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 
 int  hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 char * hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
+int  hb_stricmp( const char *s1, const char *s2 );
 BOOL hb_strempty( char * szText, ULONG ulLen );
 long hb_dateEncode( long lDay, long lMonth, long lYear );
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );

@@ -1,3 +1,29 @@
+19990614-15:40 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/extend.h
+    - Added declaration for hb_stricmp()
+  * include/version.h
+    - Changed revision code to "b"
+  * source/rtl/classes.c
+    - Now uses hb_stricmp() instead of stricmp()
+  * source/rtl/console.c
+    - Now uses hb_stricmp() instead of stricmp()
+  * source/rtl/dates.c
+    - Fixed several bugs reported by Jose Lalin, who included
+      the appropriate fix for most of them.
+  * source/rtl/files.c
+    - Removed test code that was accidentally included in CVS
+    - Added default #define for O_BINARY
+  * source/rtl/set.c
+    - Now uses hb_stricmp() instead of stricmp()
+    - Added default #define for O_BINARY
+  * source/rtl/strcmp.c
+    - Added new hb_stricmp() function, because stricmp() is not
+      an ANSI C function. If stricmp() exists, it is used, else
+      if strcasecmp exists, then it is used, otherwise use byte
+      by byte comparision.
+  * tests/working/dates3.prg
+    - Added more test cases
+
 19990614 11:50 CET Eddie Runia
   * source/compiler/harbour.y
     help text changed
