@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-14 15:22 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/transfrm.c
+    ! temporary fix waiting for users feedback
+
+  It fixes the reported bug:
+
+  function Main()
+
+     local nValue := -134.24
+
+     ? AllTrim( Transform( nValue, "@E 99,999.99" ) ) // Harbour returns "- 134,24"
+     ? AllTrim( Transform( nValue, "@E99,999.99" ) )  // and Clipper "-134.24"
+
+   return nil
+
+   Notice that a Val() of the first wrong returned value generates zero, meanwhile
+   the second one returns the original nValue, as expected.
+
 2003-06-14 09:23 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * include/hbrddcdx.h
   * source/rdd/dbfcdx/dbfcdx1.c
