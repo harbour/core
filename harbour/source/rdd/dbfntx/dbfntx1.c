@@ -2068,8 +2068,7 @@ static void hb_ntxWritePage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* buff
 
 static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, ULONG* lpArray, USHORT level )
 {
-   USHORT i;
-   ULONG maxKeys = lpArray[level+1];
+   USHORT i, maxKeys = ( USHORT ) lpArray[level+1];
    LPNTXBUFFER itemlist;
    LPNTXITEM item;
 
