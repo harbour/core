@@ -54,6 +54,7 @@ typedef struct HB_GARBAGE_
 #define HB_GC_UNLOCKED     0
 #define HB_GC_LOCKED       1  /* do not collect a memory block */
 #define HB_GC_NOTCHECKED   2  /* this item was not checked yet */
+#define HB_GC_CHECKING     4  /* this item is checked currently */
 
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
@@ -266,16 +267,23 @@ BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
          return TRUE;
       else
       {
+         HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asArray.value;
          ULONG ulSize = pItem->item.asArray.value->ulLen;
-         pItem = pItem->item.asArray.value->pItems;
 
+         --pAlloc;
+         pAlloc->status |= HB_GC_CHECKING;
+         pItem = pItem->item.asArray.value->pItems;
          while( ulSize-- )
          {
             if( hb_gcItemRef( pItem, pBlock ) )
+            {
+               pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
                return TRUE;
+            }
             else
                ++pItem;
          }
+         pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
       }
    }
    else if( HB_IS_BLOCK( pItem ) )

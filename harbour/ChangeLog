@@ -1,3 +1,8 @@
+2000-07-07 10:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/garbage.c
+        * fixed possible endless loop during the garbage collecting
+
 2000-07-06 14:10 GMT+0100 Ignacio Ortiz <ignacio@fivetech.com>
    * source/rtl/tget.prg
      * Fixed minor bugs in numbers with decimals and when clause @E was used with numbers
