@@ -103,10 +103,10 @@ static void do_list (int iSwitch)
     
     for (sCnt = 0; sCnt < sStrLen; sCnt++)
     {
-      if (asCharCnt[pcString[sCnt]] == 0)
+      if (asCharCnt[(size_t)(pcString[sCnt])] == 0)
       {
         pcRet[sRetStrLen++] = pcString[sCnt];
-        asCharCnt[pcString[sCnt]] = 1;
+        asCharCnt[(size_t)(pcString[sCnt])] = 1;
       }
     }
 
@@ -224,9 +224,9 @@ static void do_list (int iSwitch)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charlist.c, library is ct3.
+ *      Source is charlist.c, library is libct.
  *  $SEEALSO$
- *      CHARNOLIST()   CHARSLIST()   CHARHIST()
+ *      CHARNOLIST(),CHARSLIST(),CHARHIST()
  *  $END$
  */
 
@@ -272,9 +272,9 @@ HB_FUNC (CHARLIST)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charlist.c, library is ct3.
+ *      Source is charlist.c, library is libct.
  *  $SEEALSO$
- *      CHARNOLIST()   CHARLIST()   CHARHIST()
+ *      CHARNOLIST(),CHARLIST(),CHARHIST()
  *  $END$
  */
 
@@ -319,9 +319,9 @@ HB_FUNC (CHARSLIST)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charlist.c, library is ct3.
+ *      Source is charlist.c, library is libct.
  *  $SEEALSO$
- *      CHARLIST()   CHARSLIST()   CHARHIST()
+ *      CHARLIST(),CHARSLIST(),CHARHIST()
  *  $END$
  */
 
@@ -367,9 +367,9 @@ HB_FUNC (CHARNOLIST)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charlist.c, library is ct3.
+ *      Source is charlist.c, library is libct.
  *  $SEEALSO$
- *      CHARLIST()   CHARNOLIST()   CHARSLIST()
+ *      CHARLIST(),CHARNOLIST(),CHARSLIST()
  *  $END$
  */
 

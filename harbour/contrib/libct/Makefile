@@ -29,7 +29,11 @@ C_SOURCES = \
         ctcolton.c \
         ctcrypt.c \
         ctposupp.c \
+	finan.c \
+	math.c \
+	num1.c \
         token1.c \
+	trig.c \
         wordrepl.c \
 
 PRG_SOURCES= \

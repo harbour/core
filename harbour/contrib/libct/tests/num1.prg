@@ -1,12 +1,13 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
- *   CTOOLS for Harbour, Math header file
  *
- * Copyright 2001  Alejandro de garate  <alex_degarate@hotmail.com>
+ *   Test CT3 Numeric functions - PART 1
+ *
+ * - CELSIUS
+ * - FAHRENHEIT
+ * - INFINITY
+ *
+ * Copyright 2001   Alejandro de Garate  <alex_degarate@hotmail.com>
  *
  * www - http://www.harbour-project.org
  *
@@ -51,50 +52,55 @@
  *
  */
 
-#ifndef _CTMATH_H
-#define _CTMATH_H
-
-#include <math.h>
-#include <float.h>
-#include <limits.h>
-
-/* initialization */
-extern int ct_math_init (void);
-extern int ct_math_exit (void);
-
-/* set & get math error correction status */
-extern void ct_setmatherrstatus (int iStatus);
-extern int ct_getmatherrstatus (void);
-
-/* set & get math error correction mode */
-extern void ct_setmatherrmode (int iMode);
-extern int ct_getmatherrmode (void);
-
-/* functions to bracket CT3 math code */
-void ct_matherrbegin (void);
-void ct_matherrend (void);
-
-/* stati and modes for math error correction */
-#define CT_MATHERR_STATUS_NOTFOUND   HB_MATH_HANDLER_STATUS_NOTFOUND  /* math handler is not installed */
-#define CT_MATHERR_STATUS_INACTIVE   HB_MATH_HANDLER_STATUS_INACTIVE  /* math handler is installed but inactive */
-#define CT_MATHERR_STATUS_ACTIVE     HB_MATH_HANDLER_STATUS_ACTIVE    /* math handler is installed and active */
-
-#define CT_MATHERR_MODE_NONE        0   /* no correction at all, program will exit */
-#define CT_MATHERR_MODE_DEFAULT     1   /* default return value will be used, no error msgs ! */
-#define CT_MATHERR_MODE_USER        2   /* error will be thrown to user who is responsible for error correction */
-#define CT_MATHERR_MODE_USERDEFAULT 3   /* error will be thrown, but if user fails, default correction will be used */
-
-/* CT3 math error handler */
-extern int ct_matherr (HB_MATH_EXCEPTION * pexc);
-
-/* set & get precision */
-extern void ct_setprecision (int iPrecision);
-extern int ct_getprecision();
-
-#define CT_PI     3.14159265358979323846
-#define CT_PI_2   1.57079632679489661923
-#define CT_PI_RAD 0.0174532925199432957692  /* 3.14159265358979323846 / 180.0 */
-
-#endif /* CTMATH_H */
 
 
+ PROCEDURE MAIN
+
+ CTINIT()
+
+ SET DECIMAL TO 14
+ CLS
+ ?? "Test of Numeric functions - part 1"
+
+ ? "CELSIUS( 33.8 ) =   1             // CT3"
+ ?  SPACE(10),  CELSIUS( 33.8 ), " <-- CT for Harbour "
+ ?
+
+ ? "CELSIUS( 338.0 ) = 170             // CT3"
+ ?  SPACE(11),  CELSIUS( 338.0 ), " <-- CT for Harbour "
+ ?
+
+ ? "CELSIUS( 3380.0) = 1860             // CT3"
+ ?  SPACE(12),  CELSIUS( 3380.0), " <-- CT for Harbour "
+ ?
+
+ ? "CELSIUS( -33.8) = -36.5555..      // CT3"
+ ?  SPACE(10), CELSIUS( -33.8), " <-- CT for Harbour "
+ ?
+
+ ? "FAHRENHEIT( 12.5 ) = 54.5           // CT3"
+ ?  SPACE(12), FAHRENHEIT( 12.5 ), " <-- CT for Harbour "
+ ?
+
+ ? "FAHRENHEIT( 125 ) = 257             // CT3"
+ ?  SPACE(12), FAHRENHEIT( 125 ), " <-- CT for Harbour "
+ ?
+
+ ? "FAHRENHEIT( 1250 ) = 2282             // CT3"
+ ?  SPACE(14), FAHRENHEIT( 1250 ), " <-- CT for Harbour "
+ ?
+ ? "FAHRENHEIT( -155 ) = -247             // CT3"
+ ?  SPACE(14), FAHRENHEIT( -155 ), " <-- CT for Harbour "
+ ?
+ ? "   PRESS ANY KEY"
+
+ INKEY(0)
+ 
+
+ ?  "INFINITY()       // CT3"
+ ?  SPACE(8), STR( INFINITY(), 30, 15), "  <-- CT for Harbour"
+ ?
+
+ CTEXIT()
+
+RETURN

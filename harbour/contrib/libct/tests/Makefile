@@ -66,12 +66,16 @@ PRG_SOURCES=\
 	csetatmu.prg \
 	csetarge.prg \
 	csetref.prg \
+	finan.prg \
+	math.prg \
+	num1.prg \
 	numtoken.prg \
 	setatlik.prg \
 	token.prg \
 	tokenlow.prg \
 	tokensep.prg \
 	tokenupp.prg \
+	trig.prg \
 	valpos.prg \
 	wordone.org \
 	wordonly.prg \

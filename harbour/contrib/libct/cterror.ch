@@ -666,25 +666,25 @@
 #define CT_ERROR_COS             7463
 #define CT_ERROR_COT             7473
 #define CT_ERROR_DTOR            7483
-#define CT_ERROR_EXPA            7493
-#define CT_ERROR_FACT            7502
-#define CT_ERROR_FLOOR           7512
-#define CT_ERROR_FV              7523
-#define CT_ERROR_GETPREC         7532
-#define CT_ERROR_LOG10           7543
-#define CT_ERROR_LOGA            7553
-#define CT_ERROR_PAYMENT         7563
-#define CT_ERROR_PERIODS         7572
-#define CT_ERROR_PI              7583
-#define CT_ERROR_PV              7593
-#define CT_ERROR_RATE            7603
-#define CT_ERROR_ROOT            7613
-#define CT_ERROR_RTOD            7623
-#define CT_ERROR_SETMATHERR      7632
-#define CT_ERROR_SETPREC         7642
-#define CT_ERROR_SIGN            7652
-#define CT_ERROR_SIN             7663
-#define CT_ERROR_TAN             7673
+#define CT_ERROR_FACT            7492
+#define CT_ERROR_FLOOR           7502
+#define CT_ERROR_FV              7513
+#define CT_ERROR_GETPREC         7522
+#define CT_ERROR_LOG10           7533
+#define CT_ERROR_PAYMENT         7543
+#define CT_ERROR_PERIODS         7552
+#define CT_ERROR_PI              7563
+#define CT_ERROR_PV              7573
+#define CT_ERROR_RATE            7583
+#define CT_ERROR_RTOD            7593
+#define CT_ERROR_SETMATHERR      7602
+#define CT_ERROR_SETPREC         7612
+#define CT_ERROR_SIGN            7622
+#define CT_ERROR_SIN             7633
+#define CT_ERROR_TAN             7643
+#define CT_ERROR_SINH            7653
+#define CT_ERROR_COSH            7663
+#define CT_ERROR_TANH            7773
                                    
 /* peek and poke functions */
 #define CT_ERROR_INBYTE          7810  /* TODO: change last digit */

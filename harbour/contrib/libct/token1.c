@@ -83,7 +83,7 @@ static int siPostSeparator = -1;   /* TODO: make this threadsafe */
 static void do_token1 (int iSwitch)
 {
 
-  int iParamCheck;
+  int iParamCheck = 0;
   int iNoRef = ct_getref();
 
   switch (iSwitch)
@@ -110,10 +110,13 @@ static void do_token1 (int iSwitch)
     size_t sStrLen = (size_t)hb_parclen (1);
     char *pcSeparatorStr;
     size_t sSeparatorStrLen;
-    ULONG ulTokenCounter, ulSkip;
+    ULONG ulTokenCounter = 0;
+    ULONG ulSkip;
 
-    char *pcSubStr, *pcRet;
-    size_t sSubStrLen, sRetStrLen;
+    char *pcSubStr;
+    char *pcRet = NULL;
+    size_t sSubStrLen;
+    size_t sRetStrLen = 0;
 
     ULONG ulToken = 0;
     ULONG ulSkipCnt;
@@ -283,7 +286,7 @@ static void do_token1 (int iSwitch)
       /* should we find the last token, but string ends with tokenizer, i.e.
          pc points to a the last character at the moment ?
          -> break here ! */
-      if (ulTokenCounter == HB_MKULONG (255,255,255,255) &&
+      if ((ulTokenCounter == HB_MKULONG (255,255,255,255)) &&
           (pc+1==pcString+sStrLen))
       {
         break;
@@ -533,7 +536,7 @@ static void do_token1 (int iSwitch)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is ct3.
+ *      Source is token1.c, library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
@@ -610,7 +613,7 @@ HB_FUNC (ATTOKEN)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is ct3.
+ *      Source is token1.c, library is libct.
  *  $SEEALSO$
  *      NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
@@ -649,7 +652,7 @@ HB_FUNC (TOKEN)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is ct3.
+ *      Source is token1.c, library is libct.
  *  $SEEALSO$
  *      TOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
@@ -718,7 +721,7 @@ HB_FUNC (NUMTOKEN)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is ct3.
+ *      Source is token1.c, library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENUPPER(),TOKENSEP(),CSETREF()
  *  $END$
@@ -788,7 +791,7 @@ HB_FUNC (TOKENLOWER)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is ct3.
+ *      Source is token1.c, library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENSEP(),CSETREF()
  *  $END$
@@ -837,7 +840,7 @@ HB_FUNC (TOKENUPPER)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is ct3.
+ *      Source is token1.c, library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER()
  *  $END$

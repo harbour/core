@@ -269,15 +269,15 @@ WORDTOCHAR    ;N;
 ;===============================
 ;
 BITTOC        ;N; 
-CELSIUS       ;N; 
+CELSIUS       ;R; 
 CLEARBIT      ;N; 
 CTOBIT        ;N; 
 CTOF          ;N; 
 CTON          ;N; 
 EXPONENT      ;N; 
-FAHRENHEIT    ;N; 
+FAHRENHEIT    ;R; 
 FTOC          ;N; 
-INFINITY      ;N; 
+INFINITY      ;R; 
 INTNEG        ;N; 
 INTPOS        ;N; 
 ISBIT         ;N; 
@@ -590,33 +590,33 @@ XTOC          ;N;
 ;3.4 math functions
 ;==================
 ;
-ACOS          ;N; 
-ASIN          ;N; 
-ATAN          ;N; 
-ATN2          ;N; 
-CEILING       ;N; 
-COS           ;N; 
-COT           ;N; 
-DTOR          ;N;
-EXPA          ;N;   !NEW!
-FACT          ;N; 
-FLOOR         ;N; 
-FV            ;N; 
-GETPREC       ;N;
-LOGA          ;N;   !NEW!
-LOG10         ;N; 
-PAYMENT       ;N; 
-PERIODS       ;N; 
-PI            ;N; 
-PV            ;N; 
-RATE          ;N;
-ROOT          ;N;   !NEW!
-RTOD          ;N; 
+ACOS          ;R; 
+ASIN          ;R; 
+ATAN          ;R; 
+ATN2          ;R; 
+CEILING       ;R; 
+COS           ;R; 
+COSH          ;R;   !NEW!
+COT           ;R; 
+DTOR          ;R;
+FACT          ;R; 
+FLOOR         ;R; 
+FV            ;R; 
+GETPREC       ;R;
+LOG10         ;R; 
+PAYMENT       ;R; 
+PERIODS       ;R; 
+PI            ;R; 
+PV            ;R; 
+RATE          ;R;
+RTOD          ;R; 
 SETMATHERR    ;R;   !NEW!
-SETPREC       ;N;
-SIGN          ;N; 
-SIN           ;N; 
-TAN           ;N; 
+SETPREC       ;R;
+SIGN          ;R; 
+SIN           ;R; 
+SINH          ;R;   !NEW!
+TAN           ;R; 
+TANH          ;R;   !NEW!
 ;
 ;
 ;3.5 peek and poke functions

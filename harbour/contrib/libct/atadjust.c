@@ -94,7 +94,7 @@
  *  $FILES$
  *      Source is atadjust.c, library is ct3.
  *  $SEEALSO$
- *      SETATLIKE()  CSETATMUPA()
+ *      SETATLIKE(),CSETATMUPA()
  *  $END$
  */
 
@@ -116,7 +116,7 @@ HB_FUNC (ATADJUST)
     char cAtLike   = ct_getatlikechar();
     size_t sIgnore, sMatchStrLen;
     ULONG ulCounter;
-    char *pc;
+    char *pc = NULL;
 
     char cFillChar;
     char *pcRetStr, *pcCheckFill;

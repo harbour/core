@@ -114,7 +114,11 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcolton.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
+   $(OBJ_DIR)\finan.obj \
+   $(OBJ_DIR)\math.obj \
+   $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\token1.obj \
+   $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
@@ -232,7 +236,23 @@ $(OBJ_DIR)\ctposupp.obj : $(TOOLS_DIR)\ctposupp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\finan.obj : $(TOOLS_DIR)\finan.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\math.obj : $(TOOLS_DIR)\math.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\num1.obj : $(TOOLS_DIR)\num1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\token1.obj : $(TOOLS_DIR)\token1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\trig.obj : $(TOOLS_DIR)\trig.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

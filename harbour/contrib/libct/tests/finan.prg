@@ -4,9 +4,16 @@
 
 /*
  * Harbour Project source code:
- *   CTOOLS for Harbour, Math header file
+ *   CT3 Financial functions
+ *     - PV
+ *     - FV
+ *     - PAYMENT
+ *     - PERIODS
+ *     - RATE
  *
- * Copyright 2001  Alejandro de garate  <alex_degarate@hotmail.com>
+ * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
+ *
+ * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
  *
  * www - http://www.harbour-project.org
  *
@@ -51,50 +58,54 @@
  *
  */
 
-#ifndef _CTMATH_H
-#define _CTMATH_H
 
-#include <math.h>
-#include <float.h>
-#include <limits.h>
+PROCEDURE MAIN
 
-/* initialization */
-extern int ct_math_init (void);
-extern int ct_math_exit (void);
+ CTINIT()
 
-/* set & get math error correction status */
-extern void ct_setmatherrstatus (int iStatus);
-extern int ct_getmatherrstatus (void);
+ SET DECIMAL TO 3
+ CLS
+ ?? "Testing Financial functions...."
+ ?
+ ? "Calculate how loan summs if you make deposits for $175.00 for 24 months,"
+ ? "if the annual rate of the Bank for this mortage is 9.5% fixed"
+ ? "PV( 175, 0.095/12, 24 ) = 3811.433   // CT3"
+ ? SPACE(19), PV( 175, 0.095/12, 24 ), "  <-- CT for Harbour"
+ ?
+ ?
 
-/* set & get math error correction mode */
-extern void ct_setmatherrmode (int iMode);
-extern int ct_getmatherrmode (void);
+ ? "Calculate the amount in your account after 3 years, if you make deposits"
+ ? "for $150.00 per month, and the annual rate of the Bank for this is 6%"
+ ? "Capital = FV( 150, 0.06/12, 36 ) = 5900.416    // CT3"
+ ? SPACE(28), FV( 150, 0.06/12, 36 ), "  <-- CT for Harbour"
+ ?
+ ?
 
-/* functions to bracket CT3 math code */
-void ct_matherrbegin (void);
-void ct_matherrend (void);
+ ? "Calculate the monthly payment for a loan of $2000.00 at an annual rate"
+ ? "of 10%, within 24 month "
+ ? "PAYMENT( 2000.00, 0.10/12, 24 ) =  92.290    // CT3"
+ ? SPACE(26),PAYMENT( 2000.00, 0.10/12, 24 ), "  <-- CT for Harbour"
+ ?
+ ? "  PRESS ANY KEY"
 
-/* stati and modes for math error correction */
-#define CT_MATHERR_STATUS_NOTFOUND   HB_MATH_HANDLER_STATUS_NOTFOUND  /* math handler is not installed */
-#define CT_MATHERR_STATUS_INACTIVE   HB_MATH_HANDLER_STATUS_INACTIVE  /* math handler is installed but inactive */
-#define CT_MATHERR_STATUS_ACTIVE     HB_MATH_HANDLER_STATUS_ACTIVE    /* math handler is installed and active */
+ INKEY (0)
+ ? "Continue Testing Financial functions...."
+ ?
+ ? "Calculate how many month do you need to cancel a loan of $4000.00 at"
+ ? "an annual rate of 9.5% with payments of $200.00 max"
+ ? "PERIODS( 4000.00, 200.00, 0.095/12 ) =  21.859    // CT3"
+ ? SPACE(31), PERIODS( 4000.00, 200.00, 0.095/12 ), "  <-- CT for Harbour"
+ ?
+ ?
 
-#define CT_MATHERR_MODE_NONE        0   /* no correction at all, program will exit */
-#define CT_MATHERR_MODE_DEFAULT     1   /* default return value will be used, no error msgs ! */
-#define CT_MATHERR_MODE_USER        2   /* error will be thrown to user who is responsible for error correction */
-#define CT_MATHERR_MODE_USERDEFAULT 3   /* error will be thrown, but if user fails, default correction will be used */
+ ? "Calculate which is the effective anual rate of your Bank, for a loan"
+ ? "of $2500.00 if you pay $86.67 per month for 3 years"
+ ? "RATE( 2500.00, 86.67, 36 ) * 12 = 0.1501  // CT3"
+ ? SPACE(24), RATE( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
+ ?
+ ? "  PRESS ANY KEY"
+ INKEY(0)
 
-/* CT3 math error handler */
-extern int ct_matherr (HB_MATH_EXCEPTION * pexc);
+ CTEXIT()
 
-/* set & get precision */
-extern void ct_setprecision (int iPrecision);
-extern int ct_getprecision();
-
-#define CT_PI     3.14159265358979323846
-#define CT_PI_2   1.57079632679489661923
-#define CT_PI_RAD 0.0174532925199432957692  /* 3.14159265358979323846 / 180.0 */
-
-#endif /* CTMATH_H */
-
-
+RETURN

@@ -81,7 +81,7 @@ static void do_atnum (int iSwitch)
     char cAtLike   = ct_getatlikechar();
     size_t sIgnore, sMatchStrLen;
     ULONG ulCounter;
-    char *pc;
+    char *pc = NULL;
 
     /* eventually ignore some characters */
     if (ISNUM (4))
@@ -406,9 +406,9 @@ static void do_atnum (int iSwitch)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atnum.c, library is ct3.
+ *      Source is atnum.c, library is libct.
  *  $SEEALSO$
- *      ATNUM()  BEFORATNUM()  CSETATMUPA()  SETATLIKE()
+ *      ATNUM(),BEFORATNUM(),CSETATMUPA(),SETATLIKE()
  *  $END$
  */
 

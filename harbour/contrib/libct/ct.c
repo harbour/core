@@ -61,17 +61,17 @@
    - function adapted from errorapi.c */
 USHORT ct_error (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                  char * szDescription, char * szOperation, USHORT uiOsCode,
-                 USHORT uiFlags, USHORT uiArgCount, ...)
+                 USHORT uiFlags, ULONG uiArgCount, ...)
 {                                                                                                
   USHORT uiAction;
   PHB_ITEM pError;
 
-  PHB_ITEM pArray, pArg;
+  PHB_ITEM pArray;
   va_list va;
-  USHORT uiArgPos;
+  ULONG uiArgPos;
   BOOL bRelease = TRUE;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_error (%hu, %lu, %lu, %s, %s, %hu, %hu, %hu",
+  HB_TRACE(HB_TR_DEBUG, ("ct_error (%hu, %lu, %lu, %s, %s, %hu, %hu, %lu",
                           uiSeverity, ulGenCode, ulSubCode, szDescription,
                           szOperation, uiOsCode, uiFlags, uiArgCount));
 
@@ -118,16 +118,16 @@ USHORT ct_error (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
    - function adapted from errorapi.c */
 PHB_ITEM ct_error_subst (USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
                          char * szDescription, char * szOperation, USHORT uiOsCode,
-                         USHORT uiFlags, USHORT uiArgCount, ...)
+                         USHORT uiFlags, ULONG uiArgCount, ...)
 {
   PHB_ITEM pRetVal;
   PHB_ITEM pError;
 
   PHB_ITEM pArray;
   va_list va;
-  USHORT uiArgPos;
+  ULONG uiArgPos;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_error_subst (%hu, %lu, %lu, %s, %s, %hu, %hu, %hu",
+  HB_TRACE(HB_TR_DEBUG, ("ct_error_subst (%hu, %lu, %lu, %s, %s, %hu, %hu, %lu",
                           uiSeverity, ulGenCode, ulSubCode, szDescription,
                           szOperation, uiOsCode, uiFlags, uiArgCount));
 
@@ -214,7 +214,7 @@ int ct_getargerrormode (void)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ct.c, library is ct3.
+ *      Source is ct.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -288,7 +288,7 @@ static int s_initialized = 0;  /* TODO: make this thread safe */
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ct.c, library is ct3.
+ *      Source is ct.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -344,7 +344,7 @@ HB_FUNC (CTINIT)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ct.c, library is ct3.
+ *      Source is ct.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */

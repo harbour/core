@@ -81,7 +81,7 @@ static void do_charswap (int iSwitch)
     char *pcRet;
     size_t sRetIndex = 0;
     int iShift, iMod;
-    char *pcSub, *pc;
+    char *pcSub;
 
     if (iSwitch == DO_CHARSWAP_WORDSWAP)
     {
@@ -241,9 +241,9 @@ static void do_charswap (int iSwitch)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charswap.c, library is ct3.
+ *      Source is charswap.c, library is libct.
  *  $SEEALSO$
- *      WORDSWAP()   CSETREF()
+ *      WORDSWAP(),CSETREF()
  *  $END$
  */
 
@@ -294,9 +294,9 @@ HB_FUNC (CHARSWAP)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charswap.c, library is ct3.
+ *      Source is charswap.c, library is libct.
  *  $SEEALSO$
- *      CHARSWAP()  CSETREF()
+ *      CHARSWAP(),CSETREF()
  *  $END$
  */
 

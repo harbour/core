@@ -87,7 +87,7 @@ static void do_ascpos (int iSwitch)
     {
       if (iSwitch == DO_ASCPOS_VALPOS)
       {
-        if (isdigit (pcString[sPos-1]))
+        if (isdigit ((size_t)pcString[sPos-1]))
           hb_retnl (pcString[sPos-1]-48);
         else
           hb_retnl (0);
@@ -162,7 +162,7 @@ static void do_ascpos (int iSwitch)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is asciisum.c, library is ct3.
+ *      Source is asciisum.c, library is libct.
  *  $SEEALSO$
  *      VALPOS()
  *  $END$
@@ -213,7 +213,7 @@ HB_FUNC (ASCPOS)
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is asciisum.c, library is ct3.
+ *      Source is asciisum.c, library is libct.
  *  $SEEALSO$
  *      ASCPOS()
  *  $END$
