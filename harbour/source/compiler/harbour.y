@@ -613,6 +613,7 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
  */
 FunCall    : IdentName '(' ArgList ')' { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
            | MacroVar '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
+	   | MacroExpr '(' ArgList ')'  { $$ = hb_compExprNewFunCall( $1, $3 ); }
            ;
 
 ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }

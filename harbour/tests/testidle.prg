@@ -25,4 +25,10 @@ PROCEDURE MAIN()
    ?
    Inkey( 2 )
 
+   ?
+   ? "Again - Idle Block should display ONCE! while waitning for key or 10 seconds elapsed!"
+   ?
+   Inkey( 2 )
+   ?
+
 RETURN

@@ -1,3 +1,8 @@
+2000-11-24 21:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.y
+   * source/compiler/harbour.sly
+     + Added support for MacroExpr as FunCall
+
 2000-11-25 22:57 UTC+0100 jfl (mafact) <jfl@mafact.com>
    * source/rdd/rddcpy.c
         * added missing explicit cast needed by VC++
