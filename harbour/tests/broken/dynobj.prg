@@ -84,7 +84,21 @@ function Main()
    QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
 
-   QOut( "Just one left : Delete" )
+   QOut( "What methods are in the class :" )
+   HBDebug( aoMethod( oForm ) )
+
+   QOut( "Delete CalcArea" )
+   ClassDel( oForm:ClassH, "CalcArea" )
+
+   QOut( "What methods are in the class :" )
+   HBDebug( aoMethod( oForm ) )
+
+   QOut( "Delete Smile" )
+   ClassDel( oForm:ClassH, "Smile" )
+
+   QOut( "What methods are in the class :" )
+   HBDebug( aoMethod( oForm ) )
+
 return nil
 
 
