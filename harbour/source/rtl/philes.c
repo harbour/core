@@ -92,6 +92,11 @@ HB_FUNC( FREAD )
 
    if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
    {
+      PHB_ITEM pItem = hb_stackItemFromBase( 2 );
+
+      if( pItem->item.asString.bStatic == TRUE )
+         hb_itemPutC( pItem, hb_parc( 2 ) );
+
       ulRead = hb_parnl( 3 );
 
       /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz()
