@@ -229,14 +229,16 @@ STATIC PROCEDURE Create(MetaClass)
 
    FOR n := 1 TO nLenDatas
       __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ]       , n + nDataBegin, ;
-                   HB_OO_MSG_DATA, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
+                   HB_OO_MSG_DATA, ::aDatas[ n ][ HB_OO_DATA_VALUE ], ::aDatas[ n ][ HB_OO_DATA_SCOPE ],;
+                   ::aDatas[ n ][ HB_OO_DATA_PERSISTENT ] )
       __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ] , n + nDataBegin, ;
                    HB_OO_MSG_DATA,                                  , ::aDatas[ n ][ HB_OO_DATA_SCOPE ] )
    NEXT
 
    nLen := Len( ::aMethods )
    FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aMethods[ n ][ HB_OO_MTHD_SYMBOL ], ::aMethods[ n ][ HB_OO_MTHD_PFUNCTION ], HB_OO_MSG_METHOD, NIL, ::aMethods[ n ][ HB_OO_MTHD_SCOPE ] )
+      __clsAddMsg( hClass, ::aMethods[ n ][ HB_OO_MTHD_SYMBOL ], ::aMethods[ n ][ HB_OO_MTHD_PFUNCTION ], HB_OO_MSG_METHOD, NIL, ::aMethods[ n ][ HB_OO_MTHD_SCOPE ],;
+                   ::aMethods[ n ][ HB_OO_MTHD_PERSISTENT ] )
    NEXT
 
    nLen := Len( ::aClsDatas )
@@ -250,7 +252,8 @@ STATIC PROCEDURE Create(MetaClass)
    nLen := Len( ::aInlines )
    FOR n := 1 TO nLen
       __clsAddMsg( hClass, ::aInlines[ n ][ HB_OO_MTHD_SYMBOL ], ::aInlines[ n ][ HB_OO_MTHD_PFUNCTION ],;
-                   HB_OO_MSG_INLINE, NIL, ::aInlines[ n ][ HB_OO_MTHD_SCOPE ] )
+                   HB_OO_MSG_INLINE, NIL, ::aInlines[ n ][ HB_OO_MTHD_SCOPE ],;
+                   ::aInlines[ n ][ HB_OO_MTHD_PERSISTENT ] )
    NEXT
 
    nLen := Len( ::aVirtuals )
@@ -274,11 +277,12 @@ RETURN oInstance
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
+STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit, lPersistent )
 
    LOCAL Self := QSelf()
 
    if lNoInit==NIL;lNoInit:=.F.;endif
+   if lPersistent == nil; lpersistent := .f.; endif
 
    // Default Init for Logical and numeric
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
@@ -289,13 +293,13 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
       ENDIF
    ENDIF
 
-   AAdd( ::aDatas, { cData, xInit, cType, nScope } )
+   AAdd( ::aDatas, { cData, xInit, cType, nScope, lPersistent } )
 
    RETURN
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
+STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit, lPersistent )
 
    LOCAL Self := QSelf()
    LOCAL i
@@ -312,7 +316,7 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
    ENDIF
 
    FOR i := 1 TO nParam
-      ::AddData( aData[ i ], xInit, cType, nScope, lNoInit )
+      ::AddData( aData[ i ], xInit, cType, nScope, lNoInit, lPersistent )
    NEXT
 
    RETURN
@@ -364,7 +368,7 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
+STATIC PROCEDURE AddInline( cMethod, bCode, nScope, lPersistent )
 
    LOCAL Self := QSelf(), nAt
 
@@ -373,13 +377,13 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
    ENDIF
 
-   AAdd( ::aInlines, { cMethod, bCode, nScope } )
+   AAdd( ::aInlines, { cMethod, bCode, nScope, lPersistent } )
 
    RETURN
 
 //----------------------------------------------------------------------------//
 
-STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
+STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope, lPersistent )
 
    LOCAL Self := QSelf(), nAt
 
@@ -388,7 +392,7 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
       cMethod := RTrim( Left( cMethod, nAt - 1 ) )
    ENDIF
 
-   AAdd( ::aMethods, { cMethod, nFuncPtr, nScope } )
+   AAdd( ::aMethods, { cMethod, nFuncPtr, nScope, lPersistent } )
 
    RETURN
 
