@@ -9,8 +9,11 @@ C_SOURCES=\
 C_MAIN=runner.c
 
 LIBS=\
+	tools \
+        debug \
+	rdd \
 	vm \
 	rtl \
-	tools \
+	hbpp \
 
 include $(TOP)$(ROOT)config/bin.cf

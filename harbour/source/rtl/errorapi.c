@@ -41,11 +41,6 @@ PHB_ITEM hb_errNew( void )
    return pReturn;
 }
 
-/* QUESTION: When does Clipper show this: */
-/*    TODO: Change to internal error: */
-/*    printf("Error recovery failure, ???? (0)") */
-/*    exit(1); */
-
 WORD hb_errLaunch( PHB_ITEM pError )
 {
    WORD wRetVal;
@@ -55,12 +50,13 @@ WORD hb_errLaunch( PHB_ITEM pError )
       /* TODO: Determine if there was a BREAK in error handler. */
       BOOL bBreak = FALSE;
       WORD nSequenceLevel = 0;
+      USHORT uiFlags = hb_errGetFlags( pError );
 
       if ( ! IS_BLOCK( &errorBlock ) )
       {
          /* TODO: Change to internal error: */
          printf( "No ERRORBLOCK() for error at: ???? (0)" );
-         exit( 1 );
+         exit( 1 ); /* TODO: quit correctly */
       }
 
       hb_vmPushSymbol( &symEval );
@@ -68,24 +64,27 @@ WORD hb_errLaunch( PHB_ITEM pError )
       hb_vmPush( pError );
       hb_vmDo( 1 );
 
-      /* TODO: Handle the canSubstitute case somehow */
-      /*       Clipper doesn't document the case where canSubstitute is set */
-
       if ( bBreak )
       {
-         if ( nSequenceLevel )
-         {
-            wRetVal = E_BREAK;
-         }
-         else
-         {
-            exit( 1 ); /* TODO: quit correctly */
-         }
+         wRetVal = E_BREAK;
       }
       else if ( IS_LOGICAL( &stack.Return ) )
+      {
          wRetVal = stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
+      }
       else
+      {
          wRetVal = E_DEFAULT;
+      }
+
+      if ( ( wRetVal == E_BREAK   && nSequenceLevel == 0          ) ||
+           ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
+           ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
+      {
+         /* TODO: Change to internal error: */
+         printf("Error recovery failure, ???? (0)");
+         exit( 1 ); /* TODO: quit correctly */
+      }
    }
    else
       wRetVal = E_RETRY;
@@ -296,21 +295,21 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 {
    hb_vmPushSymbol( hb_dynsymGet( "_CANRETRY" )->pSymbol );
    hb_vmPush( pError );
-   hb_vmPushLogical( uiFlags & EF_CANRETRY );
+   hb_vmPushLogical( ( uiFlags & EF_CANRETRY ) ? TRUE : FALSE );
    hb_vmDo( 1 );
 
    /* ; */
 
    hb_vmPushSymbol( hb_dynsymGet( "_CANSUBSTITUTE" )->pSymbol );
    hb_vmPush( pError );
-   hb_vmPushLogical( uiFlags & EF_CANSUBSTITUTE );
+   hb_vmPushLogical( ( uiFlags & EF_CANSUBSTITUTE ) ? TRUE : FALSE );
    hb_vmDo( 1 );
 
    /* ; */
 
    hb_vmPushSymbol( hb_dynsymGet( "_CANDEFAULT" )->pSymbol );
    hb_vmPush( pError );
-   hb_vmPushLogical( uiFlags & EF_CANDEFAULT );
+   hb_vmPushLogical( ( uiFlags & EF_CANDEFAULT ) ? TRUE : FALSE );
    hb_vmDo( 1 );
 
    /* ; */

@@ -39,11 +39,11 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
                               0xC3 };
      /* push offset pcode
         push offset symbols
-        call near relative VirtualMachine
+        call near relative hb_vmExecute
         add esp, 8
         ret near                   */
 
-     /* This is the assembler output from : VirtualMachine(pcode,symbols).  */
+     /* This is the assembler output from : hb_vmExecute(pcode,symbols).  */
 
 /* #elseif INTEL16 */
 /* #elseif MOTOROLA */
@@ -196,7 +196,7 @@ HARBOUR HB_MAIN( void )
             }
          }
 
-         ProcessSymbols( pSymRead, ulSymbols );
+         hb_vmProcessSymbols( pSymRead, ulSymbols );
 
          /* Initialize static variables first
           */
@@ -446,8 +446,8 @@ static PASM_CALL CreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 
    Patch( asmRet->pAsmData,  1, pSymbols );   /* Insert pointer to testsym  */
    Patch( asmRet->pAsmData,  6, pCode);       /* Insert pointer to testcode */
-   PatchRelative( asmRet->pAsmData, 11, &VirtualMachine, 15 );
-                                      /* Insert pointer to VirtualMachine() */
+   PatchRelative( asmRet->pAsmData, 11, &hb_vmExecute, 15 );
+                                      /* Insert pointer to hb_vmExecute() */
 
 /* #elseif INTEL16 */
 /* #elseif MOTOROLA */

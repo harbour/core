@@ -1,3 +1,12 @@
+19990808-11:50 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/runner/runner.c
+     source/runner/Makefile
+     include/run_exp.h
+     ! Some missed name changes adapted.
+   * source/rtl/errorapi.c
+     ! hb_vmPushlogical() uses BOOL.
+     + Some improvement in _errLaunch().
+
 19990808-10:05 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
      * setkey and devoutp were not properly referenced
