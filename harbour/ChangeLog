@@ -1,3 +1,10 @@
+19990729-11:35 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/console.c
+     * hb_setCursor - account for optional param. #ifdef .. GTAPI
+     * hb_Save/RestScreen #ifdef .. GTAPI
+       * account for nil params ie: SaveScreen(,,,,@Buf)
+       * use hb_gtRectSize
+
 19990729-13:26 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/gt/gtwin.c
       * Fixed gtGetCursorStyle when cci.bVisible returning SC_NORMAL

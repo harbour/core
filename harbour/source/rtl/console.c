@@ -995,26 +995,50 @@ HARBOUR HB_DBGSHADOW (void)
 
 HARBOUR HB_SAVESCREEN (void)
 {
-   ULONG ulSize = ( hb_parni( 3 ) - hb_parni( 1 ) + 1 ) *
-                  ( hb_parni( 4 ) - hb_parni( 2 ) + 1 ) * 2;
-   char * pBuffer = ( char * ) hb_xgrab( ulSize );
-   hb_gtSave( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), pBuffer );
-   hb_retclen( pBuffer, ulSize );
+#ifdef HARBOUR_USE_GTAPI
+   USHORT uiX;
+   USHORT uiCoords[] = {0,0,hb_gtMaxRow(), hb_gtMaxCol()};
+
+   for( uiX = 1; uiX < 5; uiX++ )
+      if( ISNUM( uiX ) )
+         uiCoords[uiX - 1 ] = hb_parni( uiX );
+
+   hb_gtRectSize( uiCoords[0], uiCoords[1], uiCoords[2], uiCoords[3], &uiX );
+
+   char * pBuffer = ( char * ) hb_xgrab( uiX );
+   hb_gtSave( uiCoords[0], uiCoords[1], uiCoords[2], uiCoords[3], pBuffer );
+   hb_retclen( pBuffer, uiX );
    hb_xfree( ( void * ) pBuffer );
+#endif
 }
 
 HARBOUR HB_RESTSCREEN (void)
 {
+#ifdef HARBOUR_USE_GTAPI
+   USHORT uiX;
+   USHORT uiCoords[] = {0,0,hb_gtMaxRow(), hb_gtMaxCol()};
+
    if( hb_pcount() == 5 )
-      hb_gtRest( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ),
+   {
+      for( uiX = 1; uiX < 5; uiX++ )
+         if( ISNUM( uiX ) )
+            uiCoords[uiX - 1 ] = hb_parni( uiX );
+
+      hb_gtRest( uiCoords[0], uiCoords[1], uiCoords[2], uiCoords[3],
                  hb_parc( 5 ) );
+   }
+#endif
 }
 
 HARBOUR HB_SETCURSOR( void )
 {
+#ifdef HARBOUR_USE_GTAPI
    USHORT usPreviousCursor;
 
    hb_gtGetCursor( &usPreviousCursor );
-   hb_gtSetCursor( hb_parni( 1 ) );
+   if( hb_pcount() == 5 )
+      hb_gtSetCursor( hb_parni( 1 ) );
+
    hb_retni( usPreviousCursor );
+#endif
 }
