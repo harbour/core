@@ -861,25 +861,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
 
-#if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__) && !defined(HB_OS_OS2)
-
-   errno = 0;
-   switch( uiMode )
-   {
-      case FL_LOCK:
-         iResult = lock( hFileHandle, ulStart, ulLength );
-         break;
-
-      case FL_UNLOCK:
-         iResult = unlock( hFileHandle, ulStart, ulLength );
-         break;
-
-      default:
-         iResult = 0;
-   }
-   s_uiErrorLast = errno;
-
-#elif defined(HB_OS_OS2)
+#if defined(HB_OS_OS2)
 
    {
       struct _FILELOCK fl, ful;
@@ -1014,6 +996,24 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       s_uiErrorLast = errno;
    }
+
+#elif defined(HAVE_POSIX_IO) && !defined(__IBMCPP__)
+
+   errno = 0;
+   switch( uiMode )
+   {
+      case FL_LOCK:
+         iResult = lock( hFileHandle, ulStart, ulLength );
+         break;
+
+      case FL_UNLOCK:
+         iResult = unlock( hFileHandle, ulStart, ulLength );
+         break;
+
+      default:
+         iResult = 0;
+   }
+   s_uiErrorLast = errno;
 
 #else
 

@@ -84,9 +84,7 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          if( ( event_mask & ( INKEY_ALL + INKEY_RAW ) ) != 0 )
          {
             while( hb_inkeyNext() == 0 )
-            {
                hb_idleState();
-            }
          }
       }
       else
@@ -94,9 +92,7 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
 
          while( hb_inkeyNext() == 0 && clock() < end_clock )
-         {
             hb_idleState();
-         }
       }
    }
 
@@ -127,8 +123,11 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
          key = s_inkeyLast;
       }
    }
-   else key = s_inkeyLast = s_inkeyForce; /* Typeahead support is disabled */
+   else
+      key = s_inkeyLast = s_inkeyForce; /* Typeahead support is disabled */
+
    s_inkeyForce = 0;
+
    return key;
 }
 
@@ -143,8 +142,6 @@ int hb_inkeyLast( void )      /* Return the value of the last key that was extra
 
 int hb_inkeyNext( void )      /* Return the next key without extracting it */
 {
-   int key;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyNext()"));
 
    hb_inkeyPoll();
@@ -153,14 +150,12 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
    {
       /* Proper typeahead support is enabled */
       if( s_inkeyHead == s_inkeyTail )
-         key = 0;                               /* No key */
+         return 0;                               /* No key */
       else
-         key = s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
+         return s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
    }
-   else
-      key = s_inkeyForce; /* Typeahead support is disabled */
 
-   return key;
+   return s_inkeyForce; /* Typeahead support is disabled */
 }
 
 void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour buffer */
@@ -202,7 +197,8 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
    if( allocate )
    {
       /* If the buffer already exists, free it */
-      if( s_inkeyBuffer ) hb_xfree( s_inkeyBuffer );
+      if( s_inkeyBuffer )
+         hb_xfree( s_inkeyBuffer );
 
       /* Always allocate a new buffer, unless it's being freed from hb_setRelease() */
       if( hb_set.HB_SET_TYPEAHEAD > -1 )
@@ -253,7 +249,8 @@ HB_FUNC( __KEYBOARD )
          while( size-- )
          {
             int ch = *fPtr++;
-            if( ch == 59 ) ch = 13; /* Convert ";" to CR, like Clipper does */
+            if( ch == 59 )
+               ch = 13; /* Convert ";" to CR, like Clipper does */
             hb_inkeyPut( ch );
          }
       }
@@ -270,6 +267,7 @@ void hb_inkeyPut( int ch )
       {
          /* Proper typeahead support is set */
          int head = s_inkeyHead;
+
          s_inkeyBuffer[ head++ ] = ch;
          if( head >= hb_set.HB_SET_TYPEAHEAD ) head = 0;
          if( head != s_inkeyTail ) s_inkeyHead = head;

@@ -43,16 +43,14 @@
 HB_FUNC( __RUN )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
-   if( ISCHAR( 1 ) )
+   if( ISCHAR( 1 ) && hb_gtSuspend() )
    {
-      if ( hb_gtSuspend() )
+      system( hb_parc( 1 ) );
+
+      if( ! hb_gtResume() )
       {
-         system( hb_parc( 1 ) );
-         if ( !hb_gtResume() )
-         {
-            /* an error should be generated here !! Something like */
-            /* hb_errRT_BASE_Ext1( EG_GTRESUME, 9999, NULL, "__RUN", 0, EF_CANDEFAULT ); */
-         }
+         /* an error should be generated here !! Something like */
+         /* hb_errRT_BASE_Ext1( EG_GTRESUME, 9999, NULL, "__RUN", 0, EF_CANDEFAULT ); */
       }
    }
 #else

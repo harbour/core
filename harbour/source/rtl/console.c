@@ -398,7 +398,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
       hb_gtSetPos( iRow, iCol );
 }
 
-/* NOTE: This should be placed after the hb_devpos() definition. */
+/* NOTE: This should be placed after the hb_conDevPos() definition. */
 
 HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
 {

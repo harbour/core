@@ -47,7 +47,6 @@
  *    Improving class(y) compatibility
  *    adding messages :error() and ::MsgNotFound()
  *
- *
  * See doc/license.txt for licensing terms.
  *
  */

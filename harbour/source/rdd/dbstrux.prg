@@ -57,10 +57,10 @@ FUNCTION __dbCopyXStruct( cFileName )
       dbSelectArea( 0 )
       __dbCreate( cFileName, NIL, NIL, .F., NIL )
 
-      aEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
+      AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
          ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), NIL ) } )
 
-      aEval( aStruct, {| aField | dbAppend(),;
+      AEval( aStruct, {| aField | dbAppend(),;
                                   FIELD->FIELD_NAME := aField[ DBS_NAME ],;
                                   FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;
                                   FIELD->FIELD_LEN := aField[ DBS_LEN ], ;
@@ -109,7 +109,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
 
          dbUseArea( lNew,, cFileFrom ) 
 
-         dbEval( {|| aAdd( aStruct, { FIELD->FIELD_NAME ,;
+         dbEval( {|| AAdd( aStruct, { FIELD->FIELD_NAME ,;
                                       FIELD->FIELD_TYPE ,;
                                       FIELD->FIELD_LEN ,;
                                       FIELD->FIELD_DEC } ) } )
@@ -119,7 +119,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
             dbSelectArea( nOldArea )
          ENDIF
 
-         aEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_DEC ] != 0, ;
+         AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_DEC ] != 0, ;
             aField[ DBS_LEN ] := aField[ DBS_LEN ] + aField[ DBS_DEC ] * 256, NIL ) } )
 
          dbCreate( cFileName, aStruct, cRDDName )
@@ -159,8 +159,8 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    aStructFiltered := {}
    bFindName := {| aField | aField[ DBS_NAME ] == RTrim( Upper(cName ) ) }
 
-   aEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName, nIndex := aScan( aStruct, bFindName ),;
-      iif( nIndex == 0, NIL, aAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
+   AEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName, nIndex := aScan( aStruct, bFindName ),;
+      iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
 
    RETURN aStructFiltered
 

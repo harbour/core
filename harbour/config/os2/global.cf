@@ -5,6 +5,7 @@
 all : first
 
 HB_GT_LIBS=\
+        gtcgi \
         gtos2 \
         gtpca \
         gtstd \

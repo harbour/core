@@ -37,7 +37,7 @@
 
 #ifndef __HARBOUR__
    #ifndef __XPP__
-      #ifndef __FLAGSHIP__ /* QUESTION: is this the correct constant ? */
+      #ifndef FlagShip
          #ifndef __VO__ /* QUESTION: is this the correct constant ? */
             #define __CLIPPER__
          #endif

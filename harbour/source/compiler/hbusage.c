@@ -52,7 +52,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cgo              output type: Windows/DOS OBJ32 (.obj)",
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgj              output type: Java source (.java)",
-           "\n          %ci<path>         add #include file search path",
+           "\n          %ci<path>         #include file search path",
            "\n          %cl               suppress line number information",
            "\n          %cm               compile module only",
            "\n          %cn               no implicit starting procedure",

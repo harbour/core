@@ -38,7 +38,6 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL nToArea
    LOCAL aStruct
    LOCAL oError
-   LOCAL lError := .F.
 
    nArea := Select()
 
@@ -55,9 +54,6 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
       __dbArrange( nToArea, aStruct, bFor, bWhile, nNext, nRecord, lRest, aFields )
 
    RECOVER USING oError
-
-      lError := .T.
-
    END SEQUENCE
 
    IF nToArea != NIL
@@ -67,7 +63,7 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
 
    dbSelectArea( nArea )
 
-   IF lError
+   IF oError != NIL
       Break( oError )
    ENDIF
 

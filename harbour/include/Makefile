@@ -16,6 +16,7 @@ C_HEADERS=\
 	hbapirdd.h   \
 	hbcomp.h     \
 	hbdate.h     \
+	hbdbsort.h   \
 	hbdefs.h     \
 	hberrors.h   \
 	hbexprop.h   \
@@ -24,6 +25,10 @@ C_HEADERS=\
 	hbmacro.h    \
 	hbpcode.h    \
 	hbpp.h       \
+	hbrdddbf.h   \
+	hbrdddel.h   \
+	hbrddsdf.h   \
+	hbrddwrk.h   \
 	hbset.h      \
 	hbsetup.h    \
 	hbtrace.h    \
