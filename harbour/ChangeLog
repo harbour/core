@@ -1,3 +1,8 @@
+19990822-16:20 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/alert.prg
+    + PreExt() and PostExt()
+      These allow alert to display if dispbegin is in effect.
+      
 19990822-20:02 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      source/rdd/dbf1.c

@@ -13,8 +13,9 @@
 #include "box.ch"
 #include "inkey.ch"
 
-// ; TOFIX: Clipper can display an alert box even when DispBegin() is in effect.
-// ; Clipper defines a clipped window for Alert()
+Static snDcount
+
+// ; TOFIX: Clipper defines a clipped window for Alert()
 // ; Clipper will return NIL if the first parameter is not a string, but
 //   this is not documented. This implementation converts the first parameter
 //   to a string if another type was passed. You can switch back to
@@ -147,6 +148,8 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
    nCurrent := nInitCol + Int((nWidth - nOpWidth) / 2) + 2
    AEval(aOptionsOK, { |x| AAdd(aPos, nCurrent), AAdd(aHotKey, Upper(Left(x, 1))), nCurrent += Len(x) + 4 })
 
+   PreExt()
+
    IF lConsole
 
       FOR iEval := 1 TO Len(aSay)
@@ -244,4 +247,20 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
 
    ENDIF
 
+   PostExt()
+
    RETURN nChoice
+
+Proc PreExt
+   Local nCount := snDCount := DispCount()
+
+   while ncount-- != 0
+      DispEnd()
+   Enddo
+
+Proc PostExt
+   Local nCount
+
+   While snDcount-- != 0
+      DispBegin()
+   Enddo
