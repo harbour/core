@@ -19,6 +19,7 @@
 #endif
 
 HARBOUR HB___ACCEPT(void);
+HARBOUR HB_COL( void );
 HARBOUR HB_DEVOUT( void );
 HARBOUR HB_DEVPOS( void );
 HARBOUR HB___EJECT( void );
@@ -28,6 +29,7 @@ HARBOUR HB_OUTSTD( void );
 HARBOUR HB_OUTERR( void );
 HARBOUR HB_PCOL( void );
 HARBOUR HB_PROW( void );
+HARBOUR HB_ROW( void );
 HARBOUR HB_SCROLL( void );
 HARBOUR HB_SETPOS( void );
 HARBOUR HB_SETPRC( void );
@@ -37,6 +39,7 @@ HARBOUR HB_QQOUT( void );
 static SYMBOL symbols[] = {
 { "__ACCEPT", FS_PUBLIC, HB___ACCEPT, 0 },
 { "__EJECT" , FS_PUBLIC, HB___EJECT , 0 },
+{ "COL"     , FS_PUBLIC, HB_COL     , 0 },
 { "DEVOUT"  , FS_PUBLIC, HB_DEVOUT  , 0 },
 { "DEVPOS"  , FS_PUBLIC, HB_DEVPOS  , 0 },
 { "MAXCOL"  , FS_PUBLIC, HB_MAXCOL  , 0 },
@@ -45,6 +48,7 @@ static SYMBOL symbols[] = {
 { "OUTSTD"  , FS_PUBLIC, HB_OUTSTD  , 0 },
 { "PCOL"    , FS_PUBLIC, HB_PCOL    , 0 },
 { "PROW"    , FS_PUBLIC, HB_PROW    , 0 },
+{ "ROW"     , FS_PUBLIC, HB_ROW     , 0 },
 { "SCROLL"  , FS_PUBLIC, HB_SCROLL  , 0 },
 { "SETPOS"  , FS_PUBLIC, HB_SETPOS  , 0 },
 { "SETPRC"  , FS_PUBLIC, HB_SETPRC  , 0 },

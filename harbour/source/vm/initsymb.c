@@ -10,6 +10,7 @@
 extern void Arrays__InitSymbols( void );
 extern void Classes__InitSymbols( void );
 extern void Console__InitSymbols( void );
+extern void Dates__InitSymbols( void );
 extern void Descend__InitSymbols( void );
 extern void Dir__InitSymbols( void );
 extern void Environ__InitSymbols( void );
@@ -19,6 +20,7 @@ extern void Math__InitSymbols( void );
 extern void Memotran__InitSymbols( void );
 extern void Set__InitSymbols( void );
 extern void Strings__InitSymbols( void );
+extern void Transfrm__InitSymbols( void );
 
 void ProcessSymbols( SYMBOL *, WORD );
 
@@ -144,6 +146,7 @@ void InitSymbolTable( void )
   Arrays__InitSymbols();
   Classes__InitSymbols();
   Console__InitSymbols();
+  Dates__InitSymbols();
   Descend__InitSymbols();
   Dir__InitSymbols();
   Environ__InitSymbols();
@@ -153,6 +156,7 @@ void InitSymbolTable( void )
   Memotran__InitSymbols();
   Set__InitSymbols();
   Strings__InitSymbols();
+  Transfrm__InitSymbols();
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last

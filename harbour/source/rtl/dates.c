@@ -20,6 +20,41 @@ extern STACK stack;
 extern char *hb_monthsname[];
 extern char *hb_daysname[];
 
+HARBOUR HB_CDOW( void );
+HARBOUR HB_CMONTH( void );
+HARBOUR HB_CTOD( void );
+HARBOUR HB_DATE( void );
+HARBOUR HB_DAY( void );
+HARBOUR HB_DOW( void );
+HARBOUR HB_DTOC( void );
+HARBOUR HB_DTOS( void );
+HARBOUR HB_MONTH( void );
+HARBOUR HB_SECONDS( void );
+HARBOUR HB_STOD( void );
+HARBOUR HB_TIME( void );
+HARBOUR HB_YEAR( void );
+
+static SYMBOL symbols[] = {
+{ "HB_CDOW",    FS_PUBLIC, HB_CDOW,    0 },
+{ "HB_CMONTH",  FS_PUBLIC, HB_CMONTH,  0 },
+{ "HB_CTOD",    FS_PUBLIC, HB_CTOD,    0 },
+{ "HB_DATE",    FS_PUBLIC, HB_DATE,    0 },
+{ "HB_DAY",     FS_PUBLIC, HB_DAY,     0 },
+{ "HB_DOW",     FS_PUBLIC, HB_DOW,     0 },
+{ "HB_DTOC",    FS_PUBLIC, HB_DTOC,    0 },
+{ "HB_DTOS",    FS_PUBLIC, HB_DTOS,    0 },
+{ "HB_MONTH",   FS_PUBLIC, HB_MONTH,   0 },
+{ "HB_SECONDS", FS_PUBLIC, HB_SECONDS, 0 },
+{ "HB_STOD",    FS_PUBLIC, HB_STOD,    0 },
+{ "HB_TIME",    FS_PUBLIC, HB_TIME,    0 },
+{ "HB_YEAR",    FS_PUBLIC, HB_YEAR,    0 }
+};
+
+void Dates__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 double hb__seconds( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)

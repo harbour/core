@@ -13,6 +13,17 @@
 /*  Date : 29/04/1999                                                       */
 /*                                                                          */
 
+HARBOUR HB_TRANSFORM( void );
+
+static SYMBOL symbols[] = {
+{ "HB_TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
+};
+
+void Transfrm__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
+
 extern STACK stack;
 
 void StackPop( void );                          /* TOFIX: Should go away    */

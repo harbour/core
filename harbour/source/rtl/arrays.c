@@ -6,6 +6,7 @@
 #include <extend.h>
 #include <ctoharb.h>
 
+HARBOUR HB_AADD(void);
 HARBOUR HB_ACLONE(void);
 HARBOUR HB_ACOPY(void);
 HARBOUR HB_ADEL(void);
@@ -19,6 +20,7 @@ HARBOUR HB_ASORT(void);
 HARBOUR HB_ATAIL(void);
 
 static SYMBOL symbols[] = {
+{ "AADD",           FS_PUBLIC, HB_AADD          , 0 },
 { "ACLONE",         FS_PUBLIC, HB_ACLONE        , 0 },
 { "ACOPY",          FS_PUBLIC, HB_ACOPY         , 0 },
 { "ADEL",           FS_PUBLIC, HB_ADEL          , 0 },

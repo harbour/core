@@ -1,3 +1,24 @@
+19990616-22:50 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/hbpp/hbppint.c
+    - Added ParseDefine( "__HARBOUR__" ) to Hbpp_init()
+  * source/rtl/arrays.c
+    - Added missing symbols to symbol table
+  * source/rtl/console.c
+    - Added missing symbols to symbol table
+  * source/rtl/dates.c
+    - Added symbol table
+  * source/rtl/math.c
+    - Added HARBOUR HB_ROUND() function
+  * source/rtl/strings.c
+    - Added missing symbols to symbol table
+  * source/rtl/transfrm.c
+    - Added symbol table
+  * source/vm/initsymb.c
+    - Added calls to Dates__InitSymbols() and Transfrm__InitSymbols()
+  + tests/working/round.prg
+    - New function to test ROUND() function uses OUTSTD() to allow
+      easy checking of Harbour results against Clipper results
+
 19990616-21:40 CET Eddie Runia
   * tests/working/dosshell.prg
     new version added

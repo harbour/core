@@ -11,35 +11,60 @@ extern STACK stack;
 #define HB_ISSPACE(c) ((c) == 9 || (c) == 10 || (c) == 13 || (c) == 32)
 
 HARBOUR HB_ALLTRIM( void );
+HARBOUR HB_ASC( void );
+HARBOUR HB_AT( void );
+HARBOUR HB_CHR( void );
 HARBOUR HB_ISALPHA( void );
 HARBOUR HB_ISDIGIT( void );
 HARBOUR HB_ISUPPER( void );
 HARBOUR HB_ISLOWER( void );
+HARBOUR HB_LEFT( void );
+HARBOUR HB_LOWER( void );
+HARBOUR HB_LTRIM( void );
 HARBOUR HB_PAD( void );
 HARBOUR HB_PADC( void );
 HARBOUR HB_PADL( void );
 HARBOUR HB_PADR( void );
 HARBOUR HB_RAT( void );
+HARBOUR HB_REPLICATE( void );
 HARBOUR HB_RIGHT( void );
+HARBOUR HB_RTRIM( void );
+HARBOUR HB_SPACE( void );
+HARBOUR HB_STR( void );
 HARBOUR HB_STRTRAN( void );
 HARBOUR HB_STUFF( void );
+HARBOUR HB_SUBSTR( void );
 HARBOUR HB_TRIM( void );
+HARBOUR HB_UPPER( void );
+HARBOUR HB_VAL( void );
 
 static SYMBOL symbols[] = {
-{ "ALLTRIM", FS_PUBLIC, HB_ALLTRIM, 0 },
-{ "ISALPHA", FS_PUBLIC, HB_ISALPHA, 0 },
-{ "ISDIGIT", FS_PUBLIC, HB_ISDIGIT, 0 },
-{ "ISUPPER", FS_PUBLIC, HB_ISUPPER, 0 },
-{ "ISLOWER", FS_PUBLIC, HB_ISLOWER, 0 },
-{ "PAD"    , FS_PUBLIC, HB_PAD    , 0 },
-{ "PADC"   , FS_PUBLIC, HB_PADC   , 0 },
-{ "PADL"   , FS_PUBLIC, HB_PADL   , 0 },
-{ "PADR"   , FS_PUBLIC, HB_PADR   , 0 },
-{ "RAT"    , FS_PUBLIC, HB_RAT    , 0 },
-{ "RIGHT"  , FS_PUBLIC, HB_RIGHT  , 0 },
-{ "STRTRAN", FS_PUBLIC, HB_STRTRAN, 0 },
-{ "STUFF"  , FS_PUBLIC, HB_STUFF  , 0 },
-{ "TRIM"   , FS_PUBLIC, HB_TRIM   , 0 }
+{ "ALLTRIM"      , FS_PUBLIC, HB_ALLTRIM, 0 },
+{ "HB_ASC"       , FS_PUBLIC, HB_ASC    , 0 },
+{ "HB_AT"        , FS_PUBLIC, HB_AT     , 0 },
+{ "HB_CHR"       , FS_PUBLIC, HB_CHR    , 0 },
+{ "ISALPHA"      , FS_PUBLIC, HB_ISALPHA, 0 },
+{ "ISDIGIT"      , FS_PUBLIC, HB_ISDIGIT, 0 },
+{ "ISUPPER"      , FS_PUBLIC, HB_ISUPPER, 0 },
+{ "ISLOWER"      , FS_PUBLIC, HB_ISLOWER, 0 },
+{ "HB_LEFT"      , FS_PUBLIC, HB_LEFT   , 0 },
+{ "HB_LOWER"     , FS_PUBLIC, HB_LOWER  , 0 },
+{ "HB_LTRIM"     , FS_PUBLIC, HB_LTRIM  , 0 },
+{ "PAD"          , FS_PUBLIC, HB_PAD    , 0 },
+{ "PADC"         , FS_PUBLIC, HB_PADC   , 0 },
+{ "PADL"         , FS_PUBLIC, HB_PADL   , 0 },
+{ "PADR"         , FS_PUBLIC, HB_PADR   , 0 },
+{ "RAT"          , FS_PUBLIC, HB_RAT    , 0 },
+{ "HB_REPLICATE" , FS_PUBLIC, HB_REPLICATE , 0 },
+{ "RIGHT"        , FS_PUBLIC, HB_RIGHT  , 0 },
+{ "HB_RTRIM"     , FS_PUBLIC, HB_RTRIM  , 0 },
+{ "STR"          , FS_PUBLIC, HB_STR    , 0 },
+{ "STRTRAN"      , FS_PUBLIC, HB_STRTRAN, 0 },
+{ "STUFF"        , FS_PUBLIC, HB_STUFF  , 0 },
+{ "HB_SUBSTR"    , FS_PUBLIC, HB_SUBSTR , 0 },
+{ "TRIM"         , FS_PUBLIC, HB_TRIM   , 0 },
+{ "HB_UPPER"     , FS_PUBLIC, HB_UPPER  , 0 },
+{ "HB_VAL"       , FS_PUBLIC, HB_VAL    , 0 }
 };
 
 void Strings__InitSymbols( void )

@@ -14,6 +14,7 @@ HARBOUR HB_LOG( void );
 HARBOUR HB_MAX( void );
 HARBOUR HB_MIN( void );
 HARBOUR HB_MOD( void );
+HARBOUR HB_ROUND( void );
 HARBOUR HB_SQRT( void );
 
 static SYMBOL symbols[] = {
@@ -24,6 +25,7 @@ static SYMBOL symbols[] = {
 { "MAX"  , FS_PUBLIC, HB_MAX  , 0 },
 { "MIN"  , FS_PUBLIC, HB_MIN  , 0 },
 { "MOD"  , FS_PUBLIC, HB_MOD  , 0 },
+{ "ROUND", FS_PUBLIC, HB_ROUND, 0 },
 { "SQRT" , FS_PUBLIC, HB_SQRT , 0 }
 };
 
@@ -277,6 +279,51 @@ FUNCTION MOD(cl_num, cl_base)
    {
       PHB_ITEM pError = _errNew();
       _errPutDescription(pError, "Argument error: %");
+      _errLaunch(pError);
+      _errRelease(pError);
+   }
+}
+
+HARBOUR HB_ROUND( void )
+{
+   if( _pcount() == 2 )
+   {
+      if( _param(1, IT_NUMERIC) && _param( 2, IT_NUMERIC ) )
+      {
+         int iSize = 64, iDec = _parni( 2 );
+         char * szResult;
+         double dResult = _parnd( 1 );
+
+         if( iDec < 1 ) iDec = 0;
+         else if( dResult != 0.0 )
+         {
+            double dAdjust = pow( 10, iDec );
+            dResult = floor( dResult * dAdjust + 0.5 );
+            dResult = dResult / dAdjust;
+         }
+         szResult = _xgrab( iSize + iDec );
+         if( szResult )
+         {
+            sprintf( szResult, "%*.*f", iSize, iDec, dResult );
+            dResult = atof( szResult );
+            _xfree( szResult );
+         }
+         _retnd( dResult );
+         stack.Return.wDec = iDec;
+      }
+      else
+      {
+         PHB_ITEM pError = _errNew();
+         _errPutDescription(pError, "Argument error: ROUND");
+         _errLaunch(pError);
+         _errRelease(pError);
+      }
+   }
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      PHB_ITEM pError = _errNew();
+      _errPutDescription(pError, "Incorrect number of arguments: INT");
       _errLaunch(pError);
       _errRelease(pError);
    }
