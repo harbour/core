@@ -1,5 +1,15 @@
 19990711-20:25 Ryszard Glab <rglab@imid.med.pl>
 
+* include/init.h
+ * all functions and variables declared in this file have to be 'static'
+ 
+* source/vm/initsymb.c
+ * added again #ifdef HARBOUR_STRICT_ANSI_C to call functions for 
+   symbols table initialization only when strict ANSI C compiler 
+   is used. 
+   
+19990711-20:25 Ryszard Glab <rglab@imid.med.pl>
+
 * include/extend.h
  + added HB_VALUE structure for storing memvars and detached locals
  + added hb_struMemvar used in HB_ITEM structure
