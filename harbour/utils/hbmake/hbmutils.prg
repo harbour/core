@@ -17,7 +17,7 @@ Function GetSourceFiles( lSubdir )
 
      Local adirs AS ARRAY
      Local aRet AS ARRAY := {}
-     Local lLinux    := At( 'linux', Os() ) > 0
+     Local lLinux    := At( 'linux', lower(Os() )) > 0
      Local cdir as String := If( !llinux, '\' + Curdir() + '\', '/' + Curdir() + '/' )
      Local aStru     := { cDir }
      Local aData AS ARRAY
@@ -32,6 +32,7 @@ Function GetSourceFiles( lSubdir )
      Local nPos
      Local xItem
      Default lSubdir To .t.
+     
 
      While ++ nCounter <= Len( aStru )
        If !Empty( adirs := GetDirs( astru[ nCounter ] ) )   // There are elements!
@@ -65,6 +66,7 @@ Function GetSourceFiles( lSubdir )
            Next
         Endif
      Next
+     
      For nCounter := 1 To Len( aret )
 
         xItem := Substr( aret[ nCounter ], Rat( If( llinux, "/", '\' ), aret[ nCounter ] ) + 1 )
@@ -114,7 +116,7 @@ Return ctemp
 Static Function GetDirs( cPattern )
 
      Local aDir   := {}
-     Local lLinux := At( 'linux', Os() ) > 0
+     Local lLinux := At( 'linux', lower(Os()) ) > 0
      Aeval( Directory( cPattern + "*.", "D" ), ;
             { | xItem | If( xItem[ 5 ] = "D" .and. ;
             ( xItem[ 1 ] != "." .and. xItem[ 1 ] != ".." ), ;
@@ -201,7 +203,7 @@ Return cPath
 Function GetSourceDirMacros()
 
      Local adirs AS ARRAY
-     Local lLinux := At( 'linux', Os() ) > 0
+     Local lLinux := At( 'linux', lower(Os()) ) > 0
      Local cdir as String := If( llinux, '/' + Curdir() + '/', '\' + Curdir() + '\' )
      Local aStru  := { cDir }
 

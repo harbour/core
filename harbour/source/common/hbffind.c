@@ -118,6 +118,9 @@ HB_FILE_VER( "$Id$" )
    {
       DIR *           dir;
       struct dirent * entry;
+      char   pfname[ _POSIX_PATH_MAX + 1 ];
+      char   pfext[ _POSIX_PATH_MAX + 1 ];
+
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
 #else
@@ -514,7 +517,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
    /* Make sure we have this cleared */
    
    ffind->info = NULL;
-
+   
    /* Do platform dependant first search */
 
 #if defined(HB_OS_DOS)
@@ -590,21 +593,89 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
    {
       PHB_FFIND_INFO info;
+      char     string[ _POSIX_PATH_MAX + 1 ];
+      char     pattern[ _POSIX_PATH_MAX + 1 ];
+      char     dirname[ _POSIX_PATH_MAX + 1 ];
+      char     fname[ _POSIX_PATH_MAX + 1 ];
+      char     fext[ _POSIX_PATH_MAX + 1 ];
 
+
+      char *   pos;
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
 
+      dirname[ 0 ] = '\0';
+      pattern[ 0 ] = '\0';
+      if( pszFileName )
+      {
+         strcpy( string, pszFileName );
+         pos = strrchr( string, OS_PATH_DELIMITER );
+         if( pos )
+         {
+            strcpy( pattern, pos + 1 );
+            *( pos + 1 ) = '\0';
+            strcpy( dirname, string );
+         }
+         else
+         {
+            strcpy( pattern, string );
+            strcpy( dirname, ".X" );
+            dirname[ 1 ] = OS_PATH_DELIMITER;
+         }
+      }
+      if( !*pattern )
+         strcpy( pattern, "*.*" );
+
+      if( strlen( pattern ) > 0 )
+       {
+	  strcpy( string, pattern );
+          pos = strrchr( string, '.' );
+          if( pos )
+          {
+             strcpy( info->pfext, pos + 1 );
+             *pos = '\0';
+             strcpy( info->pfname, string );
+          }
+          else
+	  {
+             strcpy( info->pfname, string );
+             info->pfext[ 0 ] = '\0';
+          }
+       }
+    
+       if( strlen( info->pfname ) < 1 )
+	  strcpy( info->pfname, "*" );
       tzset();
 
-      info->dir = opendir( pszFileName );
+      info->dir = opendir( dirname );
 
-      if( info->dir )
-      {
-         info->entry = readdir( info->dir );
+      if( info->dir != NULL) 
+          
+          while( ( info->entry = readdir( info->dir ) ) != NULL ){
+               strcpy( string, info->entry->d_name );
+               pos = strrchr( string, OS_PATH_DELIMITER );
+               pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
 
+               if( pos && ! ( pos == &string[ 0 ] ) )
+               {
+                  strcpy( fext, pos + 1 );
+                  *pos = '\0';
+               }
+               else
+                  fext[ 0 ] = '\0';
+
+               pos = strrchr( string, OS_PATH_DELIMITER );
+               strcpy( fname, pos ? ( pos + 1 ) : string );
+
+               if( !*fname )
+                  strcpy( fname, "*" );
+   
          /* TOFIX: uiAttr check */
-
-         bFound = ( info->entry != NULL );
+                if( hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) ) {
+                  bFound=TRUE;
+                  break;
+            }
+         
       }
       else
          bFound = FALSE;
@@ -680,7 +751,46 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 #elif defined(HB_OS_UNIX)
 
    {
-      bFound = ( ( info->entry = readdir( info->dir ) ) != NULL );
+      char     string[ _POSIX_PATH_MAX + 1 ];
+      char *   pos;
+      char     fname[ _POSIX_PATH_MAX + 1 ];
+      char     fext[ _POSIX_PATH_MAX + 1 ];
+      BOOL bTest;
+
+      bFound=FALSE;	
+      
+       while( ( info->entry = readdir( info->dir ) ) != NULL ) 
+        {
+
+           strcpy( string, info->entry->d_name );
+           pos = strrchr( string, OS_PATH_DELIMITER );
+           pos = strrchr( pos ? ( pos + 1 ) : string, '.' );
+
+           if( pos && ! ( pos == &string[ 0 ] ) )
+           {
+              strcpy( fext, pos + 1 );
+              *pos = '\0';
+           }
+           else
+              fext[ 0 ] = '\0';
+
+           pos = strrchr( string, OS_PATH_DELIMITER );
+           strcpy( fname, pos ? ( pos + 1 ) : string );
+           if( !*fname )
+              strcpy( fname, "*" );
+   
+         /* TOFIX: uiAttr check */
+       bTest=hb_strMatchRegExp( fname, info->pfname ) && hb_strMatchRegExp( fext, info->pfext ) ;
+
+	    if 	(bTest)
+	    {
+         bFound=TRUE;
+         break;
+	    }
+	    
+	    
+         }
+
    }
 
 #elif defined(HB_OS_MAC)

@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-10-01 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+2002-01-14 10:40 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source\common\hbffind.c
+  * source\rtl\direct.c
+    * modified for correct operation under NT
+    * including addition of extended file attributes
+
+2002-01-12 19:00 UTC+0500 Phil Barnett <philb@the-oasis.net>
   * tagged cvs with build38 and lifted cvs freeze
 
 2002-01-12 14:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
