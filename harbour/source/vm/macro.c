@@ -824,6 +824,9 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_MACRO_DECL )
 */
 static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
 {
+   if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
+   {
+      /* Test if variable exist if called from TYPE() function only */
       if( !( HB_MACRO_DATA->status & (HB_MACRO_UNKN_VAR | HB_MACRO_UNKN_SYM) ) )
       {
          /* checking for variable is quite expensive than don't check it
@@ -836,6 +839,7 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL )
             HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
          }
       }
+   }
 }
 
 /*

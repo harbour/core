@@ -3420,11 +3420,11 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
          if( hb_compInclude( szFileName, NULL ) )
          {
             BOOL bSkipGen = FALSE ;
-            FILES tmpFiles ;
-
             #ifdef HB_NESTED_COMPILE
             if( bNested )
             {
+              FILES tmpFiles ;
+
                /* Complementary Save */
                hb_compSaveVars( &HarbourVars, 2 );
 

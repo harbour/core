@@ -1,3 +1,11 @@
+2000-06-12 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+	*fixed unused variable tmpFiles
+	
+    *source/vm/macro.c
+	*fixed bug when field variable was macro-compiled
+
 2000-06-11 23:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    source/compiler/harbour.c
