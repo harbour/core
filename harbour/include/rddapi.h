@@ -496,7 +496,7 @@ typedef struct _AREA
    USHORT   uiArea;              /* The number assigned to this workarea */
 // void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
 
-// USHORT   uiFieldExtent;       /* Total number of fields allocated */
+   USHORT   uiFieldExtent;       /* Total number of fields allocated */
    USHORT   uiFieldCount;        /* Total number of fields used */
    LPFIELD  lpFields;            /* Pointer to an array of fields */
 
@@ -521,7 +521,7 @@ typedef struct _AREA
 // HANDLE   heap;
 // USHORT   heapSize;
 
-// USHORT   rddID;
+   USHORT   rddID;
 
    LPFILEINFO lpFileInfo;        /* Files used by this workarea */
 
@@ -541,10 +541,12 @@ typedef USHORT ( * DBENTRYP_L    )( AREAP area, LONG param );
 typedef USHORT ( * DBENTRYP_I    )( AREAP area, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
 typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
+typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
+typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
+typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param );
 
 #if 0
-typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param);
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONGP param);
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, void ** param);
 typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param);
@@ -580,9 +582,9 @@ typedef struct _RDDFUNCS
 
    /* Data management */
 
-// DBENTRYP_VP   addField;
+   DBENTRYP_VF   addField;
 // DBENTRYP_S    append;
-// DBENTRYP_I    createFields;
+   DBENTRYP_I    createFields;
 // DBENTRYP_V    deleterec;
 // DBENTRYP_SP   deleted;
 // DBENTRYP_SP   fieldCount;
@@ -601,19 +603,19 @@ typedef struct _RDDFUNCS
 // DBENTRYP_LP   reccount;
 // DBENTRYP_ISI  recInfo;
 // DBENTRYP_I    recno;
-// DBENTRYP_S    setFieldExtent;
+   DBENTRYP_S    setFieldExtent;
 
    /* WorkArea/Database management */
 
 // DBENTRYP_VP   alias;
    DBENTRYP_V    close;
    DBENTRYP_VP   create;
-// DBENTRYP_SI   info;
-// DBENTRYP_V    newarea;
+   DBENTRYP_SI   info;
+   DBENTRYP_V    newarea;
    DBENTRYP_VP   open;
    DBENTRYP_V    release;
    DBENTRYP_SP   structSize;
-// DBENTRYP_VP   sysName;
+   DBENTRYP_P    sysName;
 // DBENTRYP_VP   dbEval;
 // DBENTRYP_V    pack;
 // DBENTRYP_LSP  packRec;

@@ -1,3 +1,17 @@
+19990807-18:40 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf0.prg
+     source/rdd/dbf1.c
+     source/rdd/delim0.prg
+     source/rdd/delim1.c
+     source/rdd/sdf0.prg
+     source/rdd/sdf1.c
+     source/rdd/dbfntx/dbfntx0.prg
+     source/rdd/dbfntx/dbfntx1.c
+     More RDD functions: addField, createFields, setFieldExtent, info,
+     newArea, release and sysName
+
 19990807-22:00 WIB Andi Jahja
   * source/rtl/asort.prg
     bug fix when sorting an empty array

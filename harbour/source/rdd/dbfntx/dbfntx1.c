@@ -24,6 +24,7 @@
 
 #include "extend.h"
 #include "init.h"
+#include "itemapi.h"
 #include "rddapi.h"
 #include "rddsys.ch"
 
@@ -86,6 +87,17 @@ static ERRCODE Close( AREAP pArea )
    return SUCCESS;
 }
 
+static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+{
+   switch( uiIndex )
+   {
+      case DBI_TABLEEXT:
+         hb_itemPutC( pItem, ".DBF" );
+         break;
+   }
+   return SUCCESS;
+}
+
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    printf( "Calling DBFNTX: Open()\n" );
@@ -101,12 +113,18 @@ static RDDFUNCS ntxTable = { Bof,
                              GoTo,
                              GoTop,
                              Skip,
+                             0,                    /* Super AddField */
+                             0,                    /* Super CreateFields */
+                             0,                    /* Super SetFieldExtent */
                              Close,
-                             0,           /* Super Create */
+                             0,                    /* Super Create */
+                             Info,
+                             0,                    /* Super NewArea */
                              Open,
-                             0,           /* Super Release */
-                             0,           /* Super StructSize */
-                             0            /* Super WriteDBHeader */
+                             0,                    /* Super Release */
+                             0,                    /* Super StructSize */
+                             0,                    /* Super SysName */
+                             0                     /* Super WriteDBHeader */
                            };
 
 HARBOUR HB__DBFNTX( void )

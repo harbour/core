@@ -86,27 +86,15 @@ static ERRCODE Close( AREAP pArea )
    return SUCCESS;
 }
 
-static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
+static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
-   printf( "Calling SDF: Create()\n" );
+   printf( "Calling SDF: Info()\n" );
    return SUCCESS;
 }
 
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    printf( "Calling SDF: Open()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE Release( AREAP pArea )
-{
-   printf( "Calling SDF: Release()\n" );
-   return SUCCESS;
-}
-
-static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
-{
-   printf( "Calling SDF: StructSize()\n" );
    return SUCCESS;
 }
 
@@ -119,18 +107,24 @@ static ERRCODE WriteDBHeader( AREAP pArea )
 static RDDFUNCS sdfSuper = { 0 };
 
 static RDDFUNCS sdfTable = { Bof,
-			     Eof,
-			     Found,
-			     GoBottom,
-			     GoTo,
-			     GoTop,
-			     Skip,
-			     Close,
-			     Create,
-			     Open,
-			     Release,
-			     StructSize,
-			     WriteDBHeader
+                             Eof,
+                             Found,
+                             GoBottom,
+                             GoTo,
+                             GoTop,
+                             Skip,
+                             0,                 /* Super AddField */
+                             0,                 /* Super CreateFields */
+                             0,                 /* Super SetFieldExtent */
+                             Close,
+                             0,                 /* Super Create */
+                             Info,
+                             0,                 /* Super NewArea */
+                             Open,
+                             0,                 /* Super Release */
+                             0,                 /* Super StructSize */
+                             0,                 /* Super SysName */
+                             WriteDBHeader
 			   };
 
 HARBOUR HB__SDF( void )

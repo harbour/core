@@ -23,7 +23,9 @@
  */
 
 #include <time.h>
+#include <ctype.h>
 #include "extend.h"
+#include "itemapi.h"
 #include "init.h"
 #include "rddapi.h"
 #include "rddsys.ch"
@@ -112,28 +114,57 @@ static ERRCODE Skip( AREAP pArea, LONG lToSkip )
    return SUCCESS;
 }
 
+static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
+{
+   USHORT uiCount;
+   PHB_ITEM pFieldDesc;
+   DBFIELDINFO pFieldInfo;
+
+   SELF_SETFIELDEXTENT( pArea, pStruct->item.asArray.value->ulLen );
+   pFieldInfo.typeExtended = 0;
+   for( uiCount = 0; uiCount < pStruct->item.asArray.value->ulLen; uiCount++ )
+   {
+      pFieldDesc = pStruct->item.asArray.value->pItems + uiCount;
+      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetString( pFieldDesc, 1 );
+      pFieldInfo.uiLen = 0;
+      pFieldInfo.uiType = toupper( hb_arrayGetString( pFieldDesc, 2 )[ 0 ] );
+      if( pFieldInfo.uiType == 'N' )
+      {
+         pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
+         pFieldInfo.uiDec = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 );
+      }
+      else
+      {
+         if( pFieldInfo.uiType == 'L' || pFieldInfo.uiType == 'D' ||
+             pFieldInfo.uiType == 'M' )
+            pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
+         else if( pFieldInfo.uiType == 'C' )
+         {
+            pFieldInfo.uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 ) +
+                               ( ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 ) << 8 );
+         }
+         pFieldInfo.uiDec = 0;
+      }
+      SELF_ADDFIELD( pArea, &pFieldInfo );
+   }
+   return SUCCESS;
+}
+
 static ERRCODE Close( AREAP pArea )
 {
    printf( "Calling DBF: Close()\n" );
    return SUCCESS;
 }
 
-static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
+static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
-   ERRCODE uiError = SUCCESS;
-
-   pArea->lpFileInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-   pArea->lpFileInfo->pNext = 0;
-   pArea->lpFileInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
-      uiError = FAILURE;
-   if( uiError == SUCCESS )
+   switch( uiIndex )
    {
-      uiError = SELF_WRITEDBHEADER( pArea );
-      hb_fsClose( pArea->lpFileInfo->hFile );
+      case DBI_TABLEEXT:
+         hb_itemPutC( pItem, ".DBF" );
+         break;
    }
-   hb_xfree( pArea->lpFileInfo );
-   return uiError;
+   return SUCCESS;
 }
 
 static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
@@ -245,11 +276,17 @@ static RDDFUNCS dbfTable = { Bof,
                              GoTo,
                              GoTop,
                              Skip,
+                             0,               /* Super AddField */
+                             CreateFields,
+                             0,               /* Super SetFieldsExtent */
                              Close,
-                             Create,
+                             0,               /* Super Create */
+                             Info,
+                             0,               /* Super NewArea */
                              Open,
-                             0,           /* Super Release */
-                             0,           /* Super StructSize */
+                             0,               /* Super Release */
+                             0,               /* Super StructSize */
+                             0,               /* Super SysName */
                              WriteDBHeader
                            };
 
