@@ -108,6 +108,7 @@ CLASS TGetList
    METHOD ShowScoreBoard()
    METHOD ReadVar( cNewVarName )
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
+   METHOD SetFocus() INLINE ::aGetList[ ::nPos ]:SetFocus()
 
 ENDCLASS
 
@@ -121,6 +122,8 @@ METHOD New( GetList ) CLASS TGetList
    ::nLastPos  = 0
    ::cReadProcName = ""
    ::lUpdated  = .f.
+   ::nPos      = 1
+   ::oGet      = GetList[ 1 ]
 
 return Self
 
