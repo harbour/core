@@ -115,12 +115,6 @@ static USHORT uiNetError = 0;       /* Error on Networked environments */
 static LPAREANODE pWorkAreas = 0;   /* WorkAreas */
 static LPAREANODE pCurrArea = 0;    /* Pointer to a selectd and valid area */
 
-static void LinkRddSys( void )      /* Never must be called */
-{
-   HB_RDDSYS();
-   LinkRddSys();                    /* Just to keep compiler silent */
-}
-
 static void hb_CheckRdd( void )
 {
    if( !szDefDriver )
@@ -132,6 +126,7 @@ static void hb_CheckRdd( void )
       HB_DBF();
       HB_SDF();
       HB_DELIM();
+      HB_RDDSYS();
    }
 }
 

@@ -1,3 +1,7 @@
+19990731-23:20 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbcmd.c
+     Forced to link rddsys.prg
+
 19990731-17:00 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     * moved contents of rdd.lib into harbour.lib
