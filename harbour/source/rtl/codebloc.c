@@ -139,7 +139,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 
          pCBlock->pLocals =pOwner->pLocals;
          pCBlock->wLocals =wLocals =pOwner->wLocals;
-	 if( pOwner->plocals )
+	 if( pOwner->pLocals )
 	 {  /* the outer codeblock have the table with local references - reuse it */
             while( wLocals )
             {
