@@ -1,3 +1,14 @@
+20000503-01:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/hbpcode.c
+     * Fixed hb_compStrongType() to difrentiate between a MEMVAR and a DECLARED FUNCTION with the same name.
+     + Added support for HB_P_ARRAYPUSH
+
+   * source/compiler/hbgenerr.c
+     * Minor correction to "Incompatibe return type"
+
+   * tests/testwarn.prg
+     + Added code to demonstrate more warnings.
+
 20000502-23:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h

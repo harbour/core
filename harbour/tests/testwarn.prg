@@ -17,6 +17,23 @@ DECLARE FUNCTION seconds() AS NUM
 
 DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
+DECLARE FUNCTION TEST AS NUMERIC
+
+PROC MAIN0()
+  PRIVATE OTHER, TEST AS CHAR
+
+  Var1 := M->TEST
+  Var2 := Test()
+
+  M->TEST := 1
+  M->TEST  := "incorrect warning"
+  test[ 1 ][ 2 ] := "incorrect warning"
+
+RETURN
+
+Function Test()
+return .t.
+
 Function Main()
   Local n As Numeric, lVar AS LOGICAL
 

@@ -584,41 +584,51 @@ void hb_compStrongType( int iSize )
 
      case HB_P_PUSHSYM :
      case HB_P_MPUSHSYM :
-       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
-
-       if ( pSym && pSym->szName )
-          pDeclared = hb_compDeclaredFind( pSym->szName );
-
-       if ( pDeclared )
-       {
-          pFunc->pStack[ pFunc->iStackIndex++ ] = pDeclared->cType;
-
-          /* Storing, will be checked by FUNCTION* */
-          hb_comp_cParamTypes = pDeclared->cParamTypes;
-          hb_comp_iParamCount = pDeclared->iParamCount;
-       }
-       else
+      /* In Private or Public statement can't be a declared function */
+      if( ( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       else
+       {
+          pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
+          if ( pSym && pSym->szName )
+            pDeclared = hb_compDeclaredFind( pSym->szName );
+
+          if ( pDeclared )
+          {
+            pFunc->pStack[ pFunc->iStackIndex++ ] = pDeclared->cType;
+
+            /* Storing, will be checked by FUNCTION* */
+            hb_comp_cParamTypes = pDeclared->cParamTypes;
+            hb_comp_iParamCount = pDeclared->iParamCount;
+          }
+          else
+            pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       }
        break;
 
      case HB_P_PUSHSYMNEAR :
-       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
-
-       if ( pSym && pSym->szName )
-          pDeclared = hb_compDeclaredFind( pSym->szName );
-
-       if ( pDeclared )
-       {
-          pFunc->pStack[ pFunc->iStackIndex++ ] = pDeclared->cType;
-
-          /* Storing, will be checked by FUNCTION* */
-          hb_comp_cParamTypes = pDeclared->cParamTypes;
-          hb_comp_iParamCount = pDeclared->iParamCount;
-       }
+      /* In Private or Public statement can't be a declared function */
+      if( ( hb_comp_iVarScope == VS_PRIVATE || hb_comp_iVarScope == VS_PUBLIC ) )
+         pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
        else
-          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       {
+          pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
 
+          if ( pSym && pSym->szName )
+            pDeclared = hb_compDeclaredFind( pSym->szName );
+
+          if ( pDeclared )
+          {
+            pFunc->pStack[ pFunc->iStackIndex++ ] = pDeclared->cType;
+
+            /* Storing, will be checked by FUNCTION* */
+            hb_comp_cParamTypes = pDeclared->cParamTypes;
+            hb_comp_iParamCount = pDeclared->iParamCount;
+          }
+          else
+            pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       }
        break;
 
      /* Local Variables */
@@ -776,8 +786,22 @@ void hb_compStrongType( int iSize )
        break;
 
      case HB_P_ARRAYPUSH :
-       /* TODO: Deal with Array Elements. */
-       pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+       /* Poping the Array Index. */
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_ARRAY, NULL, NULL );
+
+       /* TODO: allow declaration of the Array Elements Type. */
+
+       /* Now we have the array elent on the stack.*/
+       pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
        break;
 
      /* Macros type unknown */
@@ -990,7 +1014,6 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       /* TODO: Deal with Array Elements. */
        if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
           ;
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'A' )

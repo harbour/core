@@ -104,7 +104,7 @@ char * hb_comp_szWarnings[] =
    "3Suspicious type in assignment to: \'%s\' expected: \'%s\'",
    "3Suspicious operand type: \'unknown\' expected: \'%s\'",
    "3Can\'t use array index with non-array",
-   "3Incompatible return value: \'%s\' expected: \'%s\'",
+   "3Incompatible return type: \'%s\' expected: \'%s\'",
    "3Invalid number of parameters: %s expected: %s",
    "3Incompatible parameter number %s expected: \'%s\'",
    "3Duplicate Declaration of Function %s",
