@@ -9,9 +9,130 @@
  #include <alloc.h>
  #include <mem.h>
 #endif
-
 #include <stdio.h>
+#include <ctype.h>
 #include "harb.h"
+
+int Hp_Parse( FILE*, FILE* );
+extern int ParseDirective( char* );
+extern int ParseExpression( char*, char* );
+extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
+extern int WrStr(FILE*,char *);
+
+#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
+
+extern int lInclude;
+extern int *aCondCompile, nCondCompile;
+extern int nline;
+extern DEFINES *aDefnew ;
+
+#define BUFF_SIZE 2048
+#define STR_SIZE 1024
+
+#define INITIAL_ACOM_SIZE 200
+extern COMMANDS *aCommnew ;
+extern TRANSLATES *aTranslates ;
+
+int main (int argc,char* argv[])
+{
+FILE *handl_i,*handl_o;
+char szFileName[ _POSIX_PATH_MAX ];
+FILENAME *pFileName =NULL;
+
+ if(argc<2) { printf("File name absent"); return 1; }
+ pFileName =SplitFilename( argv[1] );
+ if( !pFileName->extension )
+   pFileName->extension =".prg";
+ MakeFilename( szFileName, pFileName );
+
+ if ((handl_i = fopen(szFileName, "r")) == NULL)
+ { printf("Can't open %s",szFileName); return 1; }
+
+ pFileName->extension =".ppo";
+ MakeFilename( szFileName, pFileName );
+ if ((handl_o = fopen(szFileName, "wt" )) == NULL)
+ { printf("Can't open %s",szFileName); return 1; }
+
+ aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
+ aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
+ aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
+ aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
+
+ Hp_Parse(handl_i,handl_o );
+ fclose(handl_i); fclose(handl_o);
+/*
+ for (int i=0;i<kolcommands;i++)
+ {
+  printf("\n{%d,\"%s\",",aCommnew[i].com_or_xcom, aCommands[i].name);
+  if (aCommnew[i].mpatt !=NULL)   printf("\"%s\",",aCommnew[i].mpatt);
+   else printf("NULL,");
+  if (aCommnew[i].value !=NULL)   printf("\n\"%s\"},",aCommnew[i].value);
+   else printf("\nNULL},");
+ }
+*/
+ return 0;
+}
+
+int Hp_Parse( FILE* handl_i, FILE* handl_o )
+{
+ char sBuffer[BUFF_SIZE];           /* File read buffer */
+ char sLine[STR_SIZE], sOutLine[STR_SIZE], *ptr;
+ int lContinue = 0;
+ int iBuffer = 10, lenBuffer = 10;
+ int lens=0, rdlen;
+ int rezParse;
+
+ while ( ( rdlen = RdStr(handl_i,sLine+lens, STR_SIZE-lens,lContinue,
+                                     sBuffer,&lenBuffer,&iBuffer ) ) >= 0 )
+ {
+  if ( !lInclude ) nline++;
+  lens += rdlen;
+
+  if( sLine[lens-1] == ';' )
+  {
+   lContinue = 1;
+   lens--; lens--;
+   while ( sLine[lens] == ' ' || sLine[lens] == '\t' ) lens--;
+   sLine[++lens] = '\0';
+  }
+  else { lContinue = 0; lens=0; }
+
+  if ( *sLine != '\0' && !lContinue )
+  {
+   ptr = sLine;
+   SKIPTABSPACES( ptr );
+   if ( *ptr == '#' )
+   {
+    if ( (rezParse=ParseDirective( ptr+1 )) > 0 )
+    {
+     if ( !lInclude )
+       printf ( "\nError number %u in line %u", rezParse, nline );
+     return rezParse;
+    }
+    *sLine = '\0';
+   }
+   else
+   {
+    if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
+    {
+      if ( (rezParse = ParseExpression( ptr, sOutLine)) > 0 )
+      {
+       printf ( "\nError number %u in line %u", rezParse, nline );
+       return rezParse;
+      }
+    }
+    else *sLine = '\0';
+   }
+  }
+
+  if(!lInclude)
+  {
+   if( lContinue ) WrStr(handl_o,"\0");  else WrStr(handl_o,sLine);
+  }
+ }
+ return 0;
+}
+
 /*
  * Split given filename into path, name and extension
 */

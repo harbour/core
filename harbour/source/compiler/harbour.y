@@ -38,6 +38,9 @@
 
 extern FILE * yyin;     /* currently yacc parsed file */
 extern int iLine;       /* currently parsed file line number */
+  /* Following two lines added for preprocessor */
+extern int lPpo;        /* flag indicating, is ppo output needed */
+extern FILE *yyppo;     /* output .ppo file */
 
 typedef struct          /* #include support */
 {
@@ -127,6 +130,8 @@ extern "C" int yywrap( void );
 int yywrap( void );     /* manages the EOF of current processed file */
 #endif
 void AddDefine( char * szDefine, char * szValue ); /* add a new Lex define from the command line */
+  /* Following line added for preprocessor */
+void Hbpp_init ( void );
 
 void * yy_create_buffer( FILE *, int ); /* yacc functions to manage multiple files */
 #ifdef __cplusplus
@@ -263,7 +268,7 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
                        "Unclosed control structures at line: %i",
                        "%s statement with no loop in sight",
                        "Syntax error: \'%s\' in: \'%s\'",
-		       "Incomplete statement: %s"
+                       "Incomplete statement: %s"
                      };
 
 /* Table with parse warnings */
@@ -1068,11 +1073,13 @@ int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
+   char szPpoName[ _POSIX_PATH_MAX ];
    char *szOutPath ="";
    FILENAME *pFileName =NULL;
 
    if( argc > 1 )
    {
+      Hbpp_init();  /* Initialization of preprocessor arrays */
       /* Command line options */
       while( iArg < argc )
       {
@@ -1168,6 +1175,12 @@ int harbour_main( int argc, char * argv[] )
                     szOutPath = argv[ iArg ]+2;
                     break;
 
+               /* Added for preprocessor needs */
+               case 'p':
+               case 'P':
+                    lPpo = 1;
+                    break;
+
                case 'q':
                case 'Q':
                     _iQuiet = 1;
@@ -1217,6 +1230,12 @@ int harbour_main( int argc, char * argv[] )
         if( !pFileName->extension )
           pFileName->extension =".prg";
         MakeFilename( szFileName, pFileName );
+        if ( lPpo )
+        {
+          pFileName->extension =".ppo";
+          MakeFilename( szPpoName, pFileName );
+          yyppo = fopen ( szPpoName, "wt" );
+        }
       }
       else
       {
@@ -1329,6 +1348,7 @@ int harbour_main( int argc, char * argv[] )
             GenObj32( szFileName, pFileName->name );
          }
 #endif
+         if ( lPpo ) fclose ( yyppo );
       }
       else
       {

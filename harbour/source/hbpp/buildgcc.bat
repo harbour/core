@@ -1,1 +1,1 @@
-gcc hbpp.c harb.c table.c -o hbpp.exe
+gcc hbppmain.c hbpp.c table.c -o hbpp.exe

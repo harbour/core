@@ -1,3 +1,22 @@
+19990615-10:38 Alexander Kresin
+ removed:
+ - source\hbpp\harb.c
+ added:
+ + source\hbpp\hbppmain.c
+ + source\hbpp\hbppint.c
+ updated:
+ * source\hbpp\hbpp.c
+ * source\hbpp\table.c
+ * source\hbpp\makefile
+ * source\hbpp\makefile.b32
+ * source\hbpp\makefile.b16
+ * source\hbpp\buildgcc.bat
+ * source\compiler\harbour.l
+ * source\compiler\harbour.y
+ * makefile.b32
+ This is the latest preprocessor version, it may be build now as
+ standalone or as integrated with compiler.
+
 19990615-08:30 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.y

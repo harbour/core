@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
- 
+
 #include <stdio.h>
 
 typedef struct
@@ -65,9 +65,10 @@ DEFINES aDefines[] =
  {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )"}
 };
 
-int kolcomm = 239;
+int kolcomm = 240;
 COMMANDS aCommands[] =
 {
+ {0,"NOTE","\1A30",NULL},
  {0,"DO","WHILE \1A00","while \1A00"},
  {0,"END","\1A00","end"},
  {0,"END","SEQUENCE","end"},

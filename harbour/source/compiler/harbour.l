@@ -27,6 +27,10 @@ int yywrap( void );
 #endif
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
 extern FILE * yyin;  /* currently yacc parsed file */
+  /* Following three lines added for preprocessor */
+extern FILE *yyppo;  /* output .ppo file */
+extern int lPpo;     /* flag indicating, is ppo output needed */
+extern int PreProcess( FILE*, FILE*, char *);
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
@@ -41,7 +45,6 @@ typedef struct
 PDEFINE LastDef( PDEFINE pDef );    /* searches for the latest #define */
 void Define( char * szDefine );     /* add a new #define symbol */
 void DefineKey( char * szKey );     /* add a new key to a #define expression */
-void AddDefine( char * szDefine, char * szValue ); /* add a new define from the command line */
 PDEFINE FindDef( char * szText );   /* finds a #define */
 
 /* variables defined in harbour.y */
@@ -1364,9 +1367,10 @@ PDEFINE FindDef( char * szText )
    return 0;
 }
 
-void AddDefine( char * szId, char * szValue ) /* adds a new define from command line */
+/*  Removed for preprocessor needs
+void AddDefine( char * szId, char * szValue )
 {
-   PDEFINE pDefine = FindDef( szId ); /* just incase there are several repited defines */
+   PDEFINE pDefine = FindDef( szId );
 
    if( pDefine )
    {
@@ -1389,21 +1393,27 @@ void AddDefine( char * szId, char * szValue ) /* adds a new define from command 
 int yy_lex_input( char *buffer, int iBufferSize )
 {
    int i;
-   static int _ineedLF = 1; /* we want LF as the last character */
+   static int _ineedLF = 1;
 
    if( ((i = fread(buffer, 1, iBufferSize, yyin)) == 0) && ferror(yyin) )
        YY_FATAL_ERROR( "input in flex scanner failed" );
 
    if( i == iBufferSize )
-     _ineedLF =( buffer[i-1] != '\n' ); /* check if last character is LF */
-                                        /* in case it is the last block */
+     _ineedLF =( buffer[i-1] != '\n' );
+
    else if( i < iBufferSize && _ineedLF )
    {
      if( i == 0 )
        buffer[ i++ ] ='\n';
      else if( buffer[ i-1 ] != '\n' )
        buffer[ i++ ] ='\n';
-     _ineedLF =0;              /* OK - no more LF */
+     _ineedLF =0;
    }
    return i;
+}
+*/
+
+int yy_lex_input( char *buffer, int iBufferSize )
+{
+   return PreProcess( yyin, (lPpo)? yyppo:NULL, buffer );
 }

@@ -5,9 +5,9 @@
 ROOT = ../../
 
 C_SOURCES=\
-	harb.c \
-	table.c \
+        hbpp.c \
+        table.c \
 
-C_MAIN=hbpp.c
+C_MAIN=hbppmain.c
 
 include $(TOP)$(ROOT)config/bin.cf
