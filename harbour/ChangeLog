@@ -1,3 +1,12 @@
+19990630-17:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/errorapi.c
+    + Added a default severity value of ES_ERROR in hb_errNew()
+      as a temporary workaround to the error severity problem.
+  * source/rtl/errorsys.prg
+    - Removed CHR(13)+CHR(10) from QOUT() of error message,
+      because Clipper doesn't have a blank line between the
+      error message and the error trace.
+
 19990630-02:10 EDT David G. Holm <dholm@jsd-llc.com>
   * harbour.b31
     - Removed -DHARBOUR_STRICT_ANSI_C

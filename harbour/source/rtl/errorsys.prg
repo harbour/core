@@ -32,7 +32,7 @@ static function DefError( oError )
       cMessage += " (DOS Error " + LTrim(Str(oError:osCode)) + ")"
    ENDIF
 
-   QOut( cMessage + Chr( 13 ) + Chr( 10 ))
+   QOut( cMessage)
 
    do while ! Empty( ProcName( n ) )
       QOut("Called from " + ProcName( n ) + ;
