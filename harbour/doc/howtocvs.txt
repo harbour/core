@@ -168,12 +168,15 @@ by David G. Holm <Harbour@SpaceMoose.com>
 by David G. Holm <Harbour@SpaceMoose.com>
 
 The trick was in how to set up the CVSROOT variable.
-I did this on NT4, but it should be similar for 95/98 and OS/2.
+I did this on Windows 2000, but it should be similar
+for OS/2, Windows 95, 98, ME, NT, and XP.
 
 Note: Your CVS ID is the same as your SourceForge login ID, with one
       very important difference: Any and all upper case letters are
       converted to lower case. So if your SourceForge login ID is
-      MyFullName, then your CVS ID will be myfullname.
+      MyFullName, then your CVS ID will be myfullname. To make use
+      of this procedure, be sure to replace all instances of dholm
+      with your actual CVS ID.
 
 First I set up SSH, using the following steps:
 
@@ -184,14 +187,19 @@ First I set up SSH, using the following steps:
 5) I created a batch file LOGIN.BAT, in the E:\hb-dev\ directory, with
    the following commands in it:
       @echo off
-      SET HOME=E:\hb-dev\
-    ssh -l dholm Harbour-project.sourceforge.net
+      SET HOME=D:\hb-dev\
+      ssh -l dholm cvs.Harbour-project.sourceforge.net
+      ssh -l dholm Harbour-project.sourceforge.net
 6) I ran the LOGIN batch file, which automatically created a .ssh
-   directory under E:\hb-dev\, automatically accepted the key from
-      SourceForge, and prompted me for my  password.
-7) I entered my password and got logged into a SourceForge shell,
+   directory under D:\hb-dev\, automatically added SourceForge to
+   my list of known hosts, created a random seed, and prompted me
+   for my  password.
+7) I entered my password and SourceForge told me that I was logged
+   into a restricted shell where I can't do anything and kicked me
+   off of the CVS server. A second password prompt then appeared.
+8) I entered my password and got logged into a SourceForge shell,
    thus confirming that SSH is configured properly.
-8) I entered "exit" to quit back to the DOS prompt.
+9) I entered "exit" to quit back to the DOS prompt.
 
 Next I set up CVS, using the following steps:
 
@@ -202,8 +210,9 @@ Next I set up CVS, using the following steps:
 5) I created a batch file CHECKOUT.BAT, in my E:\hb-dev\ directory,
       with the following commands in it:
       @echo off
-      SET HOMEDRIVE=E:
+      SET HOMEDRIVE=D:
       SET HOMEPATH=/hb-dev/
+      SET HOME=D:\hb-dev\
       SET CVSROOT=:ext:dholm@cvs.Harbour-project.sourceforge.net:/cvsroot/harbour-project
       SET CVS_RSH=ssh
       cvs co harbour

@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    - METHOD ::Undo() - Delete assignment to ::buffer because
+          ::VarPut( ::Original, .t. ) makes this assignment.
+
+    - METHOD ::VarPut() - Delete ::nDispLen := NIL line, because
+          ::Picture() makes this assignment.
+                      - Revert changes of Ignacio Ortiz because the
+          problem was with ::nDispLen and not with empty cPicture.
 
     - METHOD ::Block() - Delete ::nDispLen := NIL line, because
           ::Picture() makes this assignment.
