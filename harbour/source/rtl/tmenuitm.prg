@@ -66,7 +66,7 @@ function MenuItem( cCaption, boData, nShortcut, cMsg, nID )
    oClass:AddData( "message"  ,  cMsg )
    oClass:AddData( "row"      ,  0 )
    oClass:AddData( "shortcut" ,  nShortcut )
-   oClass:AddData( "style"    ,  MENU_STYLE )
+   oClass:AddData( "style"    ,  HB_TMENUITEM_STYLE )
 
    oClass:AddMethod( "isPopup",  @isPopup() )
 
