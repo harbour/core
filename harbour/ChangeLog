@@ -1,3 +1,7 @@
+19990519-18:00 CET Eddie Runia
+  * docs/hrb.faq
+    add some documentation and FAQ list for the .HRB output
+
 19990519-12:50 CET Eddie Runia
   * source/compiler/harbour.y
     Some clean up
