@@ -1524,11 +1524,11 @@ DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); }
            ;
 
 DoProc     : DO DoName
-               { $$ = hb_compExprNewFunCall( $2, NULL );  if( hb_comp_bAutoOpen ) hb_compCompile( $2->value.asSymbol, 0, NULL ); }
+               { hb_compAutoOpenAdd( $2->value.asSymbol ); $$ = hb_compExprNewFunCall( $2, NULL ); }
            | DO DoName WITH DoArgList
-               { $$ = hb_compExprNewFunCall( $2, $4 ); hb_compCompile( $2->value.asSymbol, 0, NULL ); }
+               { hb_compAutoOpenAdd( $2->value.asSymbol ); $$ = hb_compExprNewFunCall( $2, $4 ); }
            | WHILE WITH DoArgList
-               { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); hb_compCompile( "WHILE", 0, NULL );}
+               { hb_compAutoOpenAdd( "WHILE" ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("WHILE") ), $3 ); }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }
@@ -1554,10 +1554,10 @@ Crlf       : '\n'          { ++hb_comp_iLine; hb_comp_EOL = TRUE; }
  ** ------------------------------------------------------------------------ **
  */
 
+#if 0
 int hb_compYACCMain( char * szName )
 {
-   /* Generate the starting procedure frame
-      */
+   /* Generate the starting procedure frame */
    if( hb_comp_bStartProc )
       hb_compFunctionAdd( hb_strupr( hb_strdup( szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
    else
@@ -1602,7 +1602,7 @@ int hb_compYACCMain( char * szName )
 
    return 0;
 }
-
+#endif
 
 /* ------------------------------------------------------------------------ */
 
@@ -2020,6 +2020,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
   }
 }
 
+#ifdef HB_NESTED_COMPILE
 void * hb_compGet_pLoops( void )
 {
    return (void *) hb_comp_pLoops;
@@ -2039,3 +2040,4 @@ void hb_compSet_rtvars( void * rtvars )
 {
    hb_comp_rtvars = (HB_RTVAR_PTR) rtvars;
 }
+#endif

@@ -135,28 +135,30 @@ static BOOL hb_comp_bExternal   = FALSE;
  */
 static PEXTERN hb_comp_pExterns = NULL;
 static PAUTOOPEN hb_comp_pAutoOpen = NULL;
+static int hb_compAutoOpen( char * szPrg );
 
 /* -m Support */
-static void hb_compAutoOpenAdd( char * szName );
 static BOOL hb_compAutoOpenFind( char * szName );
-static void hb_compSaveVars( PHARBVARS, int );
-static void hb_compRestoreVars( PHARBVARS, int );
+#ifdef HB_NESTED_COMPILE
+   static void hb_compSaveVars( PHARBVARS, int );
+   static void hb_compRestoreVars( PHARBVARS, int );
 
-/* In Harbour.l */
-extern void * hb_compGet_YY_CURRENT_BUFFER( void );
-extern void hb_compSet_YY_CURRENT_BUFFER( void * );
-extern int hb_compGet_yy_init( void );
-extern void hb_compSet_yy_init( int i );
-extern int hb_compGet_yy_start( void );
-extern void hb_compSet_yy_start( int i );
-extern int hb_compGet_yy_did_buffer_switch_on_eof( void );
-extern void hb_compSet_yy_did_buffer_switch_on_eof( int );
+   /* In Harbour.l */
+   extern void * hb_compGet_YY_CURRENT_BUFFER( void );
+   extern void hb_compSet_YY_CURRENT_BUFFER( void * );
+   extern int hb_compGet_yy_init( void );
+   extern void hb_compSet_yy_init( int i );
+   extern int hb_compGet_yy_start( void );
+   extern void hb_compSet_yy_start( int i );
+   extern int hb_compGet_yy_did_buffer_switch_on_eof( void );
+   extern void hb_compSet_yy_did_buffer_switch_on_eof( int );
 
-/* In Harbour.y */
-extern void * hb_compGet_pLoops( void );
-extern void hb_compSet_pLoops( void * pLoops );
-extern void * hb_compGet_rtvars( void );
-extern void hb_compSet_rtvars( void * rtvars );
+   /* In Harbour.y */
+   extern void * hb_compGet_pLoops( void );
+   extern void hb_compSet_pLoops( void * pLoops );
+   extern void * hb_compGet_rtvars( void );
+   extern void hb_compSet_rtvars( void * rtvars );
+#endif
 
 extern int yyparse( void );    /* main yacc parsing function */
 
@@ -3348,25 +3350,25 @@ static void hb_compOutputFile( void )
 
 int hb_compCompile( char * szPrg, int argc, char * argv[] )
 {
-   BOOL bAutoOpen = ( argc == 0 );
    int iStatus = EXIT_SUCCESS;
-   HARBVARS HarbourVars ;
-   PHB_FNAME pFileName = NULL;
+   PHB_FNAME pFileName;
 
-   if( bAutoOpen )
+   /* Code to support nested compile excluded - other support code is #if defed out later in this file as well as in Harbour.l and Harbour.y */
+   #ifdef HB_NESTED_COMPILE
+      BOOL bNested = ( argc == 0 );
+      HARBVARS HarbourVars ;
+   #else
+      /* Note: the nested compile is almost completle, known issue when resuming compilation of main file, the immediate next line is skipped. */
+      #define hb_compSaveVars( p, i)
+      #define hb_compRestoreVars( p, i )
+   #endif
+
+   #ifdef HB_NESTED_COMPILE
+   if( bNested )
    {
-      printf( "Auto: %s\n", szPrg );
-
-      if( hb_compAutoOpenFind( szPrg ) )
-      {
-         return iStatus;
-      }
-      else
-      {
-         pFileName = hb_comp_pFileName;
-         printf( "%i\n", hb_compGet_yy_did_buffer_switch_on_eof() );
-      }
+      pFileName = hb_comp_pFileName;
    }
+   #endif
 
    hb_comp_pFileName = hb_fsFNameSplit( szPrg );
 
@@ -3394,7 +3396,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
       if( iStatus == EXIT_SUCCESS )
       {
-         if( bAutoOpen )
+         #ifdef HB_NESTED_COMPILE
+         if( bNested )
          {
             /* Minimal Save. */
             hb_compSaveVars( &HarbourVars, 1 );
@@ -3405,6 +3408,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             hb_comp_iLine        = 1              ;
          }
          else
+         #endif
          {
             /* Add /D command line or envvar defines */
             hb_compChkDefines( argc, argv );
@@ -3418,19 +3422,24 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             BOOL bSkipGen  ;
             FILES tmpFiles ;
 
-            /* Complementary Save */
-            hb_compSaveVars( &HarbourVars, 2 );
+            #ifdef HB_NESTED_COMPILE
+            if( bNested )
+            {
+               /* Complementary Save */
+               hb_compSaveVars( &HarbourVars, 2 );
 
-            tmpFiles = hb_comp_files ;
+               tmpFiles = hb_comp_files ;
 
-            /* Full init. */
-            hb_compInitVars();
+               /* Full init. */
+               hb_compInitVars();
 
-            /* Must restore the recently opened file*/
-            hb_comp_files = tmpFiles ;
+               /* Must restore the recently opened file*/
+               hb_comp_files = tmpFiles ;
 
-            hb_comp_pExterns = NULL;
-            hb_comp_bExternal = FALSE;
+               hb_comp_pExterns = NULL;
+               hb_comp_bExternal = FALSE;
+            }
+            #endif
 
             if( ! hb_comp_bQuiet )
             {
@@ -3440,14 +3449,85 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                   printf( "Compiling '%s'...\n", szFileName );
             }
 
-            if( bAutoOpen )
+            #ifdef HB_NESTED_COMPILE
+            if( bNested )
             {
-               hb_compAutoOpenAdd( hb_strdup( hb_comp_pFileName->szName ) );
                yyrestart( yyin );
             }
+            #endif
 
-            /* Start processing */
-            hb_compYACCMain( hb_comp_pFileName->szName );
+            /* Generate the starting procedure frame */
+            if( hb_comp_bStartProc )
+                hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+            else
+            {
+                /* Don't pass the name of module if the code for starting procedure
+                * will be not generated. The name cannot be placed as first symbol
+                * because this symbol can be used as function call or memvar's name.
+                */
+                hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+            }
+
+            yyparse();
+
+            /* Close processed file (it is opened in hb_compInclude() function ) */
+            fclose( yyin );
+            hb_comp_files.pLast  = NULL;
+
+            if( hb_comp_bPPO && hb_comp_yyppo )
+            {
+               fclose( hb_comp_yyppo );
+               hb_comp_yyppo = NULL;
+            }
+
+            /* Saving main file. */
+            pFileName = hb_comp_pFileName;
+
+            /* Open refernced modules. */
+            while( hb_comp_pAutoOpen )
+            {
+               PAUTOOPEN pAutoOpen = hb_comp_pAutoOpen;
+
+               hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
+
+               if( ! hb_compFunctionFind( pAutoOpen->szName ) )
+                  hb_compAutoOpen( pAutoOpen->szName );
+
+               hb_xfree( pAutoOpen->szName );
+               hb_xfree( pAutoOpen );
+            }
+
+            /* Restoring main file. */
+            hb_comp_pFileName = pFileName;
+
+         /* Begin of finalization phase. */
+
+            /* fix all previous function returns offsets */
+            hb_compFinalizeFunction();
+
+            hb_compExternGen();       /* generates EXTERN symbols names */
+
+            if( hb_comp_pInitFunc )
+            {
+                PCOMSYMBOL pSym;
+
+                /* Fix the number of static variables */
+                hb_comp_pInitFunc->pCode[ 3 ] = HB_LOBYTE( hb_comp_iStaticCnt );
+                hb_comp_pInitFunc->pCode[ 4 ] = HB_HIBYTE( hb_comp_iStaticCnt );
+                hb_comp_pInitFunc->iStaticsBase = hb_comp_iStaticCnt;
+
+                pSym = hb_compSymbolAdd( hb_comp_pInitFunc->szName, NULL );
+                pSym->cScope |= hb_comp_pInitFunc->cScope;
+                hb_comp_functions.pLast->pNext = hb_comp_pInitFunc;
+                hb_comp_functions.pLast = hb_comp_pInitFunc;
+                hb_compGenPCode1( HB_P_ENDPROC );
+                ++hb_comp_functions.iCount;
+            }
+
+            if( hb_comp_szAnnounce )
+                hb_compAnnounce( hb_comp_szAnnounce );
+
+         /* End of finalization phase. */
 
             bSkipGen = FALSE;
 
@@ -3512,10 +3592,10 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
          }
          else
          {
-            if( bAutoOpen )
+            #ifdef HB_NESTED_COMPILE
+            if( bNested )
             {
                printf( "Cannot open %s, assumed external\n", szFileName );
-               getchar();
 
                /* Minimal Restore. */
                hb_compRestoreVars( &HarbourVars, 1 );
@@ -3524,18 +3604,13 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                HarbourVars.yyin  = NULL;
             }
             else
+            #endif
             {
                printf( "Cannot open input file: %s\n", szFileName );
             }
 
             /* printf( "No code generated\n" ); */
             iStatus = EXIT_FAILURE;
-         }
-
-         if( hb_comp_bPPO && hb_comp_yyppo )
-         {
-            fclose( hb_comp_yyppo );
-            hb_comp_yyppo = NULL;
          }
 
          {
@@ -3559,7 +3634,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             hb_xfree( pExtern );
          }
 */
-
          hb_comp_bExternal = FALSE;
       }
    }
@@ -3569,7 +3643,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
       iStatus = EXIT_FAILURE;
    }
 
-   if( bAutoOpen )
+   #ifdef HB_NESTED_COMPILE
+   if( bNested )
    {
       /* Only if needed. */
       if( HarbourVars.yyin )
@@ -3578,11 +3653,6 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
          /* Full Restore */
          hb_compRestoreVars( &HarbourVars, 3 );
-
-         /*
-         hb_compSet_yy_did_buffer_switch_on_eof(1);
-         printf( "After Restore: %i\n", hb_compGet_yy_did_buffer_switch_on_eof() );
-         */
       }
 
       if( pFileName )
@@ -3591,10 +3661,149 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
          hb_comp_pFileName = pFileName;
       }
    }
+   #endif
 
    return iStatus;
 }
 
+void hb_compAutoOpenAdd( char * szName )
+{
+   if( hb_comp_bAutoOpen && ! hb_compAutoOpenFind( szName ) )
+   {
+      PAUTOOPEN pAutoOpen = ( PAUTOOPEN ) hb_xgrab( sizeof( AUTOOPEN ) ), pLast;
+
+      pAutoOpen->szName = hb_strdup( szName );
+      pAutoOpen->pNext  = NULL;
+
+      if( hb_comp_pAutoOpen == NULL )
+          hb_comp_pAutoOpen = pAutoOpen;
+      else
+      {
+          pLast = hb_comp_pAutoOpen;
+          while( pLast->pNext )
+              pLast = pLast->pNext;
+
+          pLast->pNext = pAutoOpen;
+      }
+   }
+}
+
+BOOL hb_compAutoOpenFind( char * szName )
+{
+   PAUTOOPEN pLast = hb_comp_pAutoOpen;
+
+   if( pLast == NULL )
+      return FALSE;
+
+   if( strcmp( pLast->szName, szName ) == 0 )
+      return TRUE;
+   else
+   {
+      while( pLast->pNext )
+      {
+         pLast = pLast->pNext;
+
+         if( strcmp( pLast->szName, szName ) == 0 )
+            return TRUE;
+      }
+   }
+   return FALSE;
+}
+
+int hb_compAutoOpen( char * szPrg )
+{
+   int iStatus = EXIT_SUCCESS;
+
+   hb_comp_pFileName = hb_fsFNameSplit( szPrg );
+
+   if( hb_comp_pFileName->szName )
+   {
+      char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
+      char szPpoName[ _POSIX_PATH_MAX ];
+
+      if( !hb_comp_pFileName->szExtension )
+         hb_comp_pFileName->szExtension = ".prg";
+
+      hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+
+      if( hb_comp_bPPO )
+      {
+         hb_comp_pFileName->szExtension = ".ppo";
+         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         hb_comp_yyppo = fopen( szPpoName, "w" );
+         if( ! hb_comp_yyppo )
+         {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
+            iStatus = EXIT_FAILURE;
+         }
+      }
+
+      if( iStatus == EXIT_SUCCESS )
+      {
+         /* Minimal Init. */
+         hb_comp_files.iFiles = 0;
+         hb_comp_iLine        = 1;
+
+         if( hb_compInclude( szFileName, NULL ) )
+         {
+            BOOL bSkipGen  ;
+
+            if( ! hb_comp_bQuiet )
+            {
+               if( hb_comp_bPPO )
+                  printf( "Compiling module '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+               else
+                  printf( "Compiling module '%s'...\n", szFileName );
+            }
+
+            #if defined( HB_C52_STRICT )
+               hb_pp_Init();
+            #endif
+
+            /*
+            yyrestart( yyin );
+            */
+
+            /* Generate the starting procedure frame */
+            if( hb_comp_bStartProc )
+               hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+
+            yyparse();
+
+            /* Close processed file (it is opened in hb_compInclude() function ) */
+            fclose( yyin );
+            hb_comp_files.pLast = NULL;
+
+            if( hb_comp_bAnyWarning )
+            {
+               if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+               {
+                  iStatus = EXIT_FAILURE;
+               }
+               else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
+               {
+                  iStatus = EXIT_FAILURE;
+                  bSkipGen = TRUE;
+                  printf( "\nNo code generated.\n" );
+               }
+            }
+         }
+         else
+         {
+            printf( "Cannot open %s, assumed external\n", szFileName );
+         }
+      }
+   }
+   else
+   {
+      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, szPrg, NULL );
+      iStatus = EXIT_FAILURE;
+   }
+
+   return iStatus;
+}
+
+#ifdef HB_NESTED_COMPILE
 void hb_compSaveVars( PHARBVARS pHarbourVars, int iScope )
 {
    if( iScope == 1 || iScope == 3 )
@@ -3695,46 +3904,4 @@ void hb_compRestoreVars( PHARBVARS pHarbourVars, int iScope )
       hb_compSet_rtvars( pHarbourVars->rtvars )                ;
    }
 }
-
-void hb_compAutoOpenAdd( char * szName )
-{
-   PAUTOOPEN pAutoOpen = ( PAUTOOPEN ) hb_xgrab( sizeof( AUTOOPEN ) ), pLast;
-
-   pAutoOpen->szName = szName;
-   pAutoOpen->pNext  = NULL;
-
-   if( hb_comp_pAutoOpen == NULL )
-      hb_comp_pAutoOpen = pAutoOpen;
-   else
-   {
-      pLast = hb_comp_pAutoOpen;
-      while( pLast->pNext )
-         pLast = pLast->pNext;
-
-      pLast->pNext = pAutoOpen;
-   }
-}
-
-BOOL hb_compAutoOpenFind( char * szName )
-{
-   PAUTOOPEN pLast;
-
-   if( hb_comp_pAutoOpen )
-   {
-      pLast = hb_comp_pAutoOpen;
-
-      if( strcmp( pLast->szName, szName ) == 0 )
-         return TRUE;
-      else
-      {
-         while( pLast->pNext )
-         {
-            pLast = pLast->pNext;
-
-            if( strcmp( pLast->szName, szName ) == 0 )
-               return TRUE;
-         }
-      }
-   }
-   return FALSE;
-}
+#endif

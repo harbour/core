@@ -1,3 +1,25 @@
+2000-06-11 21:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     * Enclosed declarations of functions to support in-line nested compilation within #ifdef HB_NESTED_COMPILE
+
+   source/compiler/harbour.y
+     * Enclosed functions to support in-line nested compilation within #ifdef HB_NESTED_COMPILE
+     * Changed rules for DO ... to add name of module to hb_comp_pAutoOpen linked list.
+     + Added hb_compAutoOpen() - Parses the needed externals when -m not specified
+     - Defed out hb_compYACCMAIN() (#if 0) - no longer needed, moved logic into hb_compCompile() and hb_compAutoOpen()
+
+   source/compiler/harbour.l
+     + Added #define YY_USER_ACTION ... to fix Flex problem with ^ (BOL RegExp)
+     * Enclosed functions to support in-line nested compilation within #ifdef HB_NESTED_COMPILE
+
+   source/compiler/harbour.c
+     * Enclosed functions to support in-line nested compilation within #ifdef HB_NESTED_COMPILE
+     * Modified hb_compCompile() to support future in-line nested compilation, and defed it out.
+     * Changed hb_compCompile() to call hb_compAutoOpen() for modules called in DO ... that are not defined in main prg.
+     ! Completed -m support, by default directives in external opened modules will be avialable to subsequent externals.
+       this feature is defed out if strict compatibilty ise selected.
+
 2000-06-08-07:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 
  *utils/hbdoc/genhtm.prg
@@ -36,8 +58,8 @@
      ! Added several missing type casts on hb_xgrab() calls.
      * Converted source code from double spaced to single spaced.
 
-2000-06-07 22:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
+2000-06-09 12:00 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
   * include/hbpp.h
   * source/compiler/harbour.c
   * source/pp/ppcore.c

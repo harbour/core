@@ -65,6 +65,9 @@ extern FILE * yyin;  /* currently yacc parsed file */
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
+#define YY_USER_ACTION \
+           if ( yyleng > 0 ) \
+              yy_current_buffer->yy_at_bol = ( yytext[yyleng - 1] == '\n' || yytext[0] == '\n' );
 
 #define LOOKUP          0       /* scan from the begining of line */
 #define OPERATOR        -1
@@ -117,7 +120,6 @@ Separator     {SpaceTab}
 %s            INDEX
 
 %%
-
 
 "&"("'"|\"|\[) { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL ); }
 
@@ -231,7 +233,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-;              hb_comp_iState = LOOKUP; if( ! i_INDEX_STATE ) return ';';
+;            { yy_set_bol(1); hb_comp_iState = LOOKUP; if( ! i_INDEX_STATE ) return ';'; }
 %{
 /* ************************************************************************ */
 %}
@@ -1776,6 +1778,7 @@ static int yy_ConvertNumber( char * szBuffer )
    }
 }
 
+#ifdef HB_NESTED_COMPILE
 void * hb_compGet_YY_CURRENT_BUFFER()
 {
    return YY_CURRENT_BUFFER;
@@ -1816,4 +1819,4 @@ void hb_compSet_yy_did_buffer_switch_on_eof( int i )
 {
    yy_did_buffer_switch_on_eof = i;
 }
-
+#endif

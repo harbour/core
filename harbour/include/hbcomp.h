@@ -192,6 +192,7 @@ typedef struct _AUTOOPEN
    struct _AUTOOPEN * pNext;
 } AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
 
+#ifdef HB_NESTED_COMPILE
 typedef struct _HARBVARS
 {
    FILES        Files            ;
@@ -229,6 +230,7 @@ typedef struct _HARBVARS
    void *       pLoops           ;
    void *       rtvars           ;
 } HARBVARS, * PHARBVARS;
+#endif
 
 /* definitions for hb_compPCodeEval() support */
 typedef void *HB_VOID_PTR;
@@ -297,6 +299,8 @@ extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 
 extern void hb_compExternGen( void ); /* generates the symbols for the EXTERN names */
 extern void hb_compExternAdd( char * szExternName ); /* defines a new extern name */
+
+extern void hb_compAutoOpenAdd( char * szName );
 
 #ifdef HB_MACRO_SUPPORT
 
@@ -393,7 +397,9 @@ extern void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos );
 extern void hb_compFixFuncPCode( PFUNCTION );
 
 /* Misc functions defined in harbour.y */
+#if 0
 extern int hb_compYACCMain( char * szName );
+#endif
 extern BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
 
 extern char * hb_comp_buffer; /* yacc input buffer */
