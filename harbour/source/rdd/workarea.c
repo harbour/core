@@ -574,6 +574,8 @@ ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param )
    {
       if( pArea->lpdbOrdCondInfo->abFor )
          hb_xfree( pArea->lpdbOrdCondInfo->abFor );
+      if( pArea->lpdbOrdCondInfo->abWhile )
+         hb_xfree( pArea->lpdbOrdCondInfo->abWhile );
       if( pArea->lpdbOrdCondInfo->itmCobFor )
       {
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobFor );

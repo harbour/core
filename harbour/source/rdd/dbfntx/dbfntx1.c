@@ -3401,7 +3401,7 @@ static ERRCODE ntxOrderCondition( NTXAREAP area, LPDBORDERCONDINFO pOrdCondInfo 
 {
 #ifdef HB_EXTENSION
    if( pOrdCondInfo )
-      pOrdCondInfo->fNoOptimize = hb_parl( 17 );
+      pOrdCondInfo->fNoOptimize = hb_parl( 18 );
 #endif
    return SUPER_ORDSETCOND( ( AREAP ) area, pOrdCondInfo );
 }

@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-18 14:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbrddapi.c
+  * source/rdd/dbcmd.c
+  * source/rdd/workarea.c
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/pp/pptable.c
+  * contrib/rdd_ads/ads1.c
+     * WHILE clause implemented for ADS RDD
+
 2002-11-15 14:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbcdpapi.c
   * source/rtl/cdpapi.c

@@ -1989,6 +1989,17 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       hTableOrIndex = pArea->hTable;
    }
+   if( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abWhile )
+   {
+      if( pucWhile[0] )
+      {
+         strcat( (char * ) pucWhile, ".AND.(");
+         strcat( (char * ) pucWhile, (char * ) pArea->lpdbOrdCondInfo->abWhile );
+         strcat( (char * ) pucWhile, ")");
+      }
+      else
+         strcat( (char * ) pucWhile, (char * ) pArea->lpdbOrdCondInfo->abWhile );
+   }
 
    if ( pArea->lpdbOrdCondInfo )
    {

@@ -2359,6 +2359,14 @@ HB_FUNC( ORDCONDSET )
       else
          lpdbOrdCondInfo->abFor = NULL;
 
+      if( ISCHAR( 17 ) && ( ulLen = hb_parclen( 17 ) ) > 0 )
+      {
+         lpdbOrdCondInfo->abWhile = ( BYTE * ) hb_xgrab( ulLen + 1 );
+         strcpy( ( char * ) lpdbOrdCondInfo->abWhile, hb_parc( 17 ) );
+      }
+      else
+         lpdbOrdCondInfo->abWhile = NULL;
+
       pItem = hb_param( 2, HB_IT_BLOCK );
       if( pItem )
       {

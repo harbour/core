@@ -186,6 +186,7 @@ typedef struct _DBORDERCONDINFO
 {
    BOOL     fActive;
    BYTE *   abFor;
+   BYTE *   abWhile;
    PHB_ITEM itmCobFor;
    PHB_ITEM itmCobWhile;
    PHB_ITEM itmCobEval;
