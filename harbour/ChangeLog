@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 21:40 UTC+0100 Martin Vogel <vogel@inttec.de>
+   * contrib/libct/Makefile
+   * contrib/libct/Makefile.bc
+   * contrib/libct/Makefile.vc
+   * contrib/libct/ctflist.txt
+   + contrib/libct/invertwin.prg
+     + INVERTWIN() function provided by Marek Horodyski <homar@altkom.com.pl>
+
 2002-10-19 20:52 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * debug/debugger.prg
      ! minor fix to BP (breakpoints) settings saved to file

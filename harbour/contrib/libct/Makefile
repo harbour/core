@@ -65,6 +65,7 @@ PRG_SOURCES= \
 	ct.prg \
 	ctmisc.prg \
 	datetime.prg \
+	invertwin.prg \
 	numconv.prg \
 	screen2.prg \
 

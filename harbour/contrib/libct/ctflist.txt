@@ -332,7 +332,7 @@ GETFONT       ;N;
 GETSCRSTR     ;N; 
 GETVGAPAL     ;N; 
 INVERTATTR    ;N; 
-INVERTWIN     ;N; 
+INVERTWIN     ;S; 
 ISCGA         ;N; 
 ISEGA         ;N; 
 ISHERCULES    ;N; 
