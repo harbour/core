@@ -1,3 +1,6 @@
+20000501 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+*makefile.bc
+    +added teditor.prg entry to makefile
 20000501 08:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 *contrib/libgt/doc/gendoc.bat
  contrib/libmisc/doc/gendoc.bat
