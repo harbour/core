@@ -9,6 +9,13 @@
      * Mousereg renamed to regs.
    * Makefile
      ! Formatting fix.
+   * ngdoc/Makefile
+     ! Fixed.
+   * ngdoc/bldfthe.bat
+     ngdoc/ft_helpc.prg
+     ! NANFOR is always defined if __HARBOUR__, so that it now links OK with
+       the GNU make system. Explicit /DNANFOR switch removed from the Borland
+       make .BAT file.
 
 20000206-20:35 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
     *Makefile
