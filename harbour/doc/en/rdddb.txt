@@ -155,7 +155,7 @@
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
- *      DBUNLOCK(0,DBUNLOCKALL()
+ *      DBUNLOCK(),DBUNLOCKALL()
  *  $END$
  */
 

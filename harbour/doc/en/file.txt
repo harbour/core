@@ -105,6 +105,7 @@
  *      If specified, the following table shows the value for <nAttribute>
  *      and their related meaning to the file <cFile> being created by
  *      this function.
+ *
  *  <table>
  *       <nAttribute>   fileio.ch     Attribute
  *

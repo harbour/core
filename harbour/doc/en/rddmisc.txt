@@ -670,7 +670,7 @@
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
- *      EOF(),LASTREC(),RECNO(),DBGOBOTTOM(
+ *      EOF(),LASTREC(),RECNO(),DBGOBOTTOM()
  *  $END$
  */
 
