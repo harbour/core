@@ -54,8 +54,9 @@ static unsigned char iIdentifier = 0;
 static char* sIdOnHold;
 
 long       hb_comp_SLX_Hex2L( char* sHex );
-static int hb_compElementToken( char* szToken, unsigned int iTokenLen );
+static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen );
 static int hb_comp_SLX_InterceptAction( int iRet, char *sToken );
+static int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, char *sToken );
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
@@ -131,15 +132,21 @@ SELF_CONTAINED_WORDS_ARE {
                            LEX_WORD( "%="    ) AS_TOKEN( MODEQ      )
                          };
 
-/* Intermediate Key Words when ambigious. */
+/* Intermediate KeyWords when ambigious. */
 #define DO_WHILE         701
 #define DO_WHILE_WITH    702
 
-#define WANTS_EOL        703
-#define WANTS_EXP        704
-#define WANTS_ID         705
-#define WANTS_VAR        706
+/* KeyWords are grouped based on the next token they require. */
+#define WANTS_VAR        703 /* Wants Variable (including Macros): DO, FOR, PRIVATE, PUBLIC */
+#define WANTS_ID         704 /* Wants Identifier: ANNOUNCE, EXTERN, FIELD, FUNCTION, LOCAL, MEMVAR, PARAMETERS, PROCEDURE, STATIC */
+#define WANTS_EOL        705 /* Wants EOL: ELSE, END, ENDCASE, ENDDO, ENDIF, EXIT, LOOP, NEXT, OTHERWISE, RECOVER */
+#define WANTS_EXP        706 /* Wants Expression: BREAK, CASE, ELSEIF, IF, RETURN, WHILE */
 #define REJECT_OP        707
+
+#define HB_WANTS_VAR     LEX_CUSTOM_ACTION - 512
+#define HB_WANTS_ID      LEX_CUSTOM_ACTION - 1024
+#define HB_WANTS_EOL     LEX_CUSTOM_ACTION - 1536
+#define HB_WANTS_EXP     LEX_CUSTOM_ACTION - 2048
 
 /* When 2 identifiers are correct syntax like in class declaration, we have to temporarily store the 2nd identifier. */
 #define HB_ID_ON_HOLD  LEX_CUSTOM_ACTION - 6
@@ -166,20 +173,8 @@ SELF_CONTAINED_WORDS_ARE {
 #define HB_TO            LEX_CUSTOM_ACTION - 21
 #define HB_WITH          LEX_CUSTOM_ACTION - 22
 
-#define HB_IDENTIFIER    LEX_CUSTOM_ACTION - 23 /* When reservered words are used as Identifier. */
-
-#define HB_WANTS_VAR     LEX_CUSTOM_ACTION - 512
-#define HB_WANTS_ID      LEX_CUSTOM_ACTION - 1024
-#define HB_WANTS_EOL     LEX_CUSTOM_ACTION - 1536
-#define HB_WANTS_EXP     LEX_CUSTOM_ACTION - 2048
-
-/* Wants EOL: ELSE, END, ENDCASE, ENDDO, ENDIF, EXIT, LOOP, NEXT, OTHERWISE, RECOVER */
-
-/* Wants Expression: BREAK, CASE, ELSEIF, IF, RETURN, WHILE */
-
-/* Wants Identifier: ANNOUNCE, EXTERN, FIELD, FUNCTION, LOCAL, MEMVAR, PARAMETERS, PROCEDURE, STATIC */
-
-/* Wants Variable (including Macros): DO, FOR, PRIVATE, PUBLIC */
+/* When reservered words are used as Identifier. */
+#define HB_IDENTIFIER    LEX_CUSTOM_ACTION - 23
 
 #define USE_KEYWORDS
 
@@ -431,7 +426,7 @@ LANGUAGE_RULES_ARE {
    #define INTERCEPT_ACTION(x) x = hb_comp_SLX_InterceptAction( x, (char*) sToken )
 
 #undef ELEMENT_TOKEN
-  #define ELEMENT_TOKEN(x,y) hb_compElementToken(x,y)
+  #define ELEMENT_TOKEN(x,y) hb_comp_SLX_ElementToken(x,y)
 
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
    extern FILE * yyin;  /* currently yacc parsed file */
@@ -439,7 +434,7 @@ LANGUAGE_RULES_ARE {
    #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
 #undef CUSTOM_ACTION
-   #define CUSTOM_ACTION(x) x = hb_lex_CustomAction( x, aiHold, &iHold, &bIgnoreWords, iLastToken, (char*) sToken )
+   #define CUSTOM_ACTION(x) x = hb_comp_SLX_CustomAction( x, aiHold, &iHold, &bIgnoreWords, iLastToken, (char*) sToken )
 
 #undef STREAM_EXCEPTION
    #define STREAM_EXCEPTION( sPair, cChar ) \
@@ -546,7 +541,7 @@ int hb_comp_SLX_InterceptAction( int iRet, char *sToken )
    return iRet;
 }
 
-static int hb_compElementToken( char* szToken, unsigned int iTokenLen )
+static int hb_comp_SLX_ElementToken( char* szToken, unsigned int iTokenLen )
 {
    extern char *yytext;
    extern int yyleng;
@@ -751,7 +746,7 @@ long hb_comp_SLX_Hex2L( char* sHex )
    return lSum;
 }
 
-int hb_lex_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, char *sToken )
+int hb_comp_SLX_CustomAction( int x, int aiHold[], int *ptr_iHold, BOOL *ptr_bIgnoreWords, int iLastToken, char *sToken )
 {
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );
 
@@ -952,4 +947,3 @@ int yy_lex_input( char *buffer, int iBufferSize )
 
    return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
 }
-
