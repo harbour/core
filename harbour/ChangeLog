@@ -14,12 +14,12 @@
      * Changed to include all functionality previously implemented using
        several separate make files. New makefile almost completely based on 
        the work of Bruno Cantero.
-   * ngdoc/ft_helpc.prg
+   - ngdoc/ft_helpc.prg
    + ngdoc/hbdoc.prg
      ngdoc/makewww.bat 
      * FT_HELPC renamed to HBDOC
      * FT_HELPC() main function renamed to MAIN()
-   * ngdoc/bldfthe.bat 
+   - ngdoc/bldfthe.bat 
      - Removed since it's now built in the mainstream build process.
    * ngdoc/Makefile
      * Changed to reflect new utility name.
