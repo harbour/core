@@ -1,3 +1,7 @@
+19990817-13:20 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/classes.ch
+     * extern <SuperClass> added, so now the SuperClass symbol is properly linked.
+
 19990817-07:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     source/rtl/errorapi.c
@@ -47,7 +51,7 @@
   * source/rtl/objfunc.prg
     doc/subcodes.txt
     * Got rid of the QOUT() type runtime-error messages, there's now
-      a more comprehensive, standard error checking system, which throws 
+      a more comprehensive, standard error checking system, which throws
       Harbour errors.
     ! Some small bugs fixed. (checking argument after usage, additional
       parameters passed in one place - typo)
