@@ -1,3 +1,7 @@
+19990603-00:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * makedos.env
+    - Removed HARBOURDIR definition to a batch file
+
 19990602-23:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/makefile.dos
     - bison needs -y option so that it won't replace harbour.c with y_tab.c
