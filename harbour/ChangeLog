@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 16:20 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/rdd/dbcmd.c
+     ! some fixes on hb_parc() use from DbCreate()
+
+   WARNING: Cause recent fix to hb_parc() to make it Clipper compatible,
+            hb_parc() result must be checked before using the returned value.
+
+   REQUEST: Alexander, Horacio and Brian, as the RDDs captains, please review
+            all hb_parc() use from the RDDs source code, to asure hb_parc()
+            result is properly tested.
+
 2002-10-19 13:27 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * include/hbapi.h
    * include/hbtypes.h
