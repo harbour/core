@@ -1,33 +1,33 @@
 19991126-01:11 GMT+1 Jose Lalin <dezac@corevia.com>
-  * input.prg
+  * source/rtl/input.prg
     + documented
-  * wait.prg
+  * source/rtl/wait.prg
     + documented
-  * setta.prg
+  * source/rtl/setta.prg
     + documented
 
   There is an error in $STATUS$ in the following functions. They are
   marked
   as "C" but they should be marked as "R". Some typos fixed.
 
-  * rtl\console.c
+  * source/rtl/console.c
     ! HB_Osnewline
-  * rtl\descend.c
-  * rtl\hardcr.c
-  * rtl\inkey.c
+  * source/rtl/descend.c
+  * source/rtl/hardcr.c
+  * source/rtl/inkey.c
     ! __Keyboard, also bad name in $COMPLIANCES$
     ! __Keyput
     ! Nextkey, also bad name in $COMPLIANCES$
     ! Lastkey, also bad name in $COMPLIANCES$
-  * rtl\mtran.c
-  * rtl\strings.c
+  * source/rtl/mtran.c
+  * source/rtl/strings.c
     ! HB_Valtostr
-  * rtl\natmsg.c
+  * source/rtl/natmsg.c
     ! IsAffirm
     ! IsNegative
     ! NationMsg, also bad name in $COMPLIANCES$
-  * rtl\devoutp.prg
-  * rtl\setkey.prg
+  * source/rtl/devoutp.prg
+  * source/rtl/setkey.prg
     ! SetKey
     ! SetKeyGet
     ! SetKeySave
