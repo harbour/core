@@ -334,7 +334,7 @@ HB_FUNC( NEXTKEY )
 
 HB_FUNC( LASTKEY )
 {
-   hb_retni( hb_inkeyTranslate( s_inkeyLast, hb_inkeyNext( ISNUM( 1 ) ? ( HB_inkey_enum ) hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) ) );
+   hb_retni( hb_inkeyTranslate( s_inkeyLast, ( HB_inkey_enum ) hb_inkeyNext( ISNUM( 1 ) ? ( HB_inkey_enum ) hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) ) );
 }
 
 int hb_inkeyTranslate( int key, HB_inkey_enum event_mask )

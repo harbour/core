@@ -3224,8 +3224,6 @@ HB_FUNC( DBFILEPUT )
 /* here we have the NEW Database level functions DBDROP & DBEXISTS */
 HB_FUNC( DBDROP )
 {
-  PHB_ITEM   pFileName;
-  PHB_ITEM   pDriverName;
   LPRDDNODE  pRDDNode;
   USHORT     uiRddID;
   char      *szDriver;
@@ -3249,11 +3247,9 @@ HB_FUNC( DBDROP )
 
 HB_FUNC( DBEXISTS )
 {
-  PHB_ITEM   pFileName;
-  PHB_ITEM   pDriverName;
   LPRDDNODE  pRDDNode;
   USHORT     uiRddID;
-  char * szDriver, * szFileName, * szIndexName;
+  char * szDriver;
 
   if ( ISCHAR( 3 ) ) /* we have a VIA RDD parameter */
     szDriver = hb_parc( 3 );
@@ -3439,13 +3435,12 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
                                PHB_ITEM pFor, PHB_ITEM pWhile, LONG lNext,
                                ULONG lRec, BOOL bRest, char *cDriver )
 {
-  char     * szFileName, * szDriver;
+  char     * szDriver;
   LONG       toGo=lNext;
   BOOL       bFor, bWhile;
   BOOL       keepGoing=TRUE;
   AREAP      pAreaFrom;
   AREAP      pAreaTo;
-  DBEVALINFO pEvalInfo;
   LPAREANODE pAreaRelease=NULL;
   LPAREANODE s_pCurrAreaSaved=s_pCurrArea;
 

@@ -110,7 +110,6 @@ HB_FUNC( __VMSTKGLIST )
  * $End$ */
 static USHORT hb_stackLen( int iLevel )
 {
-   PHB_ITEM * pItem;
    PHB_ITEM * pBase = hb_stack.pBase;
    USHORT uiCount = 0;
 

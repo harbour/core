@@ -812,7 +812,7 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescriptio
    USHORT uiAction;
    PHB_ITEM pError;
 
-   PHB_ITEM pArray, pArg;
+   PHB_ITEM pArray;
    va_list va;
    USHORT uiArgPos;
 
