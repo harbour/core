@@ -1,3 +1,7 @@
+2001-11-01 17:05 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * contrib/rdd_ads/ads1.c
+     type cast required for msvc
+
 2001-11-01 21:40 GMT+7 Andi Jahja <harbour@cbn.net.id>
    * include/hbdefs.h
      ! add argument to __HARBOUR__ definition => define if not defined yet
