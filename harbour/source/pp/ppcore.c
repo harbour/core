@@ -2036,6 +2036,15 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                 }
               else if( !State ) maxlen = readed = 0;
               break;
+
+            case '@':
+              if( sBuffer[ *iBuffer ] != ' ' && sBuffer[ *iBuffer ] != '\t' )
+              {
+                 buffer[readed++] = cha;
+                 s_prevchar = cha;
+                 cha = ' ';
+              }
+              break;
             }
             if( cha != ' ' && cha != ';' ) s_prevchar = cha;
           }

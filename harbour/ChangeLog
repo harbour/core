@@ -1,3 +1,8 @@
+2000-06-01 21:15 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcore.c
+     + Added case '@' to hb_pp_RdStr() to fix problem with @ not followed by a space.
+
 2000-06-02 04:00 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/filesys.c
@@ -7,7 +12,7 @@
      - hbapiext.h removed
 
    * source/compiler/harbour.c
-     ! Fixed GCC -O2 warning. 
+     ! Fixed GCC -O2 warning.
 
    * source/compiler/harbour.y
      ! Two RSXNT warnings fixed.
@@ -34,7 +39,7 @@
    * bin/bld.cmd
      ! HB_LIB_... fixed to HB_INC_...
 
-   * contrib/samples/date.c 
+   * contrib/samples/date.c
    * contrib/samples/dbf.c
      % Some optimizations.
 
@@ -54,10 +59,10 @@
     *source/rtl/dates.c
 	* OS_UNIX_COMPATIBLE is defined in file included from hbapi.h
 	then it cannot be checked before inclusion of hbapi.h
-	
+
     *source/rtl/filesys.c
 	* fixed hb_fsEof() for U*ix platforms
-    
+
 2000-06-01 12:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * doc/en/file.txt
@@ -106,7 +111,7 @@
 
 2000-05-31 23:43 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
-   * contrib/hbclip/make_clp.bat 
+   * contrib/hbclip/make_clp.bat
      * Minor enh.
 
    * source/lang/msgpt.c
