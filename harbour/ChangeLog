@@ -1,3 +1,7 @@
+2001-06-26 08:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   +utils/hbmake/Makefile
+      *Readded this file after CVS repository clean up
+
 2001-06-26 00:40 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
      - Hb_ClsScope() deleted (to avoid warning) till after 0.37
