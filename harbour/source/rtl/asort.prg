@@ -31,93 +31,98 @@
  * their web site at http://www.gnu.org/).
  */
 
-//
-// <aSorted> aSort( <aUnsorted>, [nStart], [nCount], [bBlock] )
-//
-// Sort an array
-//
-function aSort( aIn, nStart, nCount, bBlock )
+/*
+ * <aSorted> aSort( <aUnsorted>, [<nStart>], [<nCount>], [<bBlock>] )
+ *
+ * Sort an array
+ */
+FUNCTION aSort( aArray, nStart, nCount, bBlock )
 
-   IF !( ValType( aIn ) == "A" )
+   IF !( ValType( aArray ) == "A" )
       RETURN NIL
    ENDIF
 
-   IF Len( aIn ) == 0
-      RETURN aIn
+   IF Len( aArray ) >= 1
+
+      IF !( ValType( nStart ) == "N" ) .OR. nStart == 0
+         nStart := 1
+      ENDIF
+
+      IF nStart >= 1
+
+         IF nStart > Len( aArray )
+            nStart := Len( aArray )
+         ENDIF
+
+         IF !( ValType( nCount ) == "N" ) .OR. nCount < 1 .OR. nCount > ( Len( aArray ) - nStart + 1 )
+            nCount := Len( aArray ) - nStart + 1
+         ENDIF
+
+         /* NOTE: For speed we are checking the return type of the passed
+                  codeblock here. This will result in a small incompatibility
+                  since the codeblock will be called one more time for the
+                  first logical element than in Clipper. */
+
+         IF !( ValType( bBlock ) == "B" ) .OR. !( ValType( Eval( bBlock, nStart, nStart ) ) == "L" )
+            bBlock := {| x, y | x < y }
+         ENDIF
+
+         QuickSort( aArray, nStart, nStart + nCount - 1, bBlock )
+
+      ENDIF
+
    ENDIF
 
-   IF !( ValType( nStart ) == "N" )
-      nStart := 1
-   ENDIF
+   RETURN aArray
 
-   IF nStart > Len( aIn )
-      nStart := Len( aIn )
-   ENDIF
+/*
+ * QuickSort( <aArray>, <nLeft>, <nRight>, <bBlock> )
+ *
+ * Perform a QuickSort of <aArray>.
+ *
+ * For instructions :
+ * http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
+ */
+STATIC FUNCTION QuickSort( aArray, nLeft, nRight, bBlock )
 
-   IF !( ValType( nCount ) == "N" )
-      nCount := Len( aIn ) - nStart + 1
-   ELSEIF nCount > Len( aIn ) - nStart
-      nCount := Len( aIn ) - nStart
-   ENDIF
+   LOCAL nUp     := nLeft
+   LOCAL nDown   := nRight
+   LOCAL xMiddle := aArray[ Int( ( nLeft + nRight ) / 2 ) ]
+   LOCAL xTemp
 
-   IF nCount == 0
-      RETURN aIn
-   ENDIF
+   DO WHILE .T.
 
-   IF !( ValType( bBlock ) == "B" )
-      bBlock := {| x, y | x < y }
-   ENDIF
-
-   QuickSort( aIn, nStart, nCount, bBlock )
-
-return aIn
-
-
-//
-// QuickSort( <aSort>, <nLeft>, <nRight>, <bOrder> )
-//
-// Perform a QuickSort of <aSort>.
-//
-// For instructions :
-// http://monty.cnri.reston.va.us/grail/demo/quicksort/quicksort.htm
-//
-static function QuickSort( aSort, nLeft, nRight, bOrder )
-
-   local nUp     := nLeft
-   local nDown   := nRight
-   local xMiddle := aSort[ int( ( nLeft + nRight ) / 2 ) ]
-   local xTemp
-   local lOk     := .T.
-
-   do while lOk
-      do while Eval( bOrder, aSort[ nUp ], xMiddle   )
+      DO WHILE Eval( bBlock, aArray[ nUp ], xMiddle )
          nUp++
-      enddo
+      ENDDO
 
-      do while Eval( bOrder, xMiddle, aSort[ nDown ] )
+      DO WHILE Eval( bBlock, xMiddle, aArray[ nDown ] )
          nDown--
-      enddo
+      ENDDO
 
-      if nUp <= nDown
-         if nUp != nDown
-            xTemp          := aSort[ nUp ]
-            aSort[ nUp   ] := aSort[ nDown ]
-            aSort[ nDown ] := xTemp
-         endif
+      IF nUp <= nDown
+         IF nUp != nDown
+            xTemp           := aArray[ nUp ]
+            aArray[ nUp ]   := aArray[ nDown ]
+            aArray[ nDown ] := xTemp
+         ENDIF
          nUp++
          nDown--
-      endif
+      ENDIF
 
-      lOk := nUp <= nDown
-   enddo
+      IF nUp > nDown
+         EXIT
+      ENDIF
 
-   if nLeft < nDown
-      QuickSort( aSort, nLeft, nDown , bOrder )
-   endif
+   ENDDO
 
-   if nUp < nRight
-      QuickSort( aSort, nUp  , nRight, bOrder )
-   endif
+   IF nLeft < nDown
+      QuickSort( aArray, nLeft, nDown , bBlock )
+   ENDIF
 
-return nil
+   IF nUp < nRight
+      QuickSort( aArray, nUp  , nRight, bBlock )
+   ENDIF
+
+   RETURN NIL
 

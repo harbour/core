@@ -946,6 +946,7 @@ STATIC FUNCTION Main_MATH()
    RETURN NIL
 
 STATIC FUNCTION Main_STRINGS()
+   LOCAL xLocal
 
    /* CHR() */
 
@@ -966,11 +967,11 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Chr( 66.5 )                     , "B"                                    )
    TEST_LINE( Chr( 66.6 )                     , "B"                                    )
    TEST_LINE( Chr( 255 )                      , "ÿ"                                    )
-   TEST_LINE( Chr( 256 )                      , ""                                     )
+   TEST_LINE( Chr( xLocal := 256 )            , ""+Chr(0)+""                           ) /* xLocal should be used here to avoid the optimizer of the CA-Cl*pper compiler */
    TEST_LINE( Chr( 257 )                      , ""                                    )
-   TEST_LINE( Chr( 512 )                      , ""                                     )
+   TEST_LINE( Chr( xLocal := 512 )            , ""+Chr(0)+""                           ) /* xLocal should be used here to avoid the optimizer of the CA-Cl*pper compiler */
    TEST_LINE( Chr( 1023 )                     , "ÿ"                                    )
-   TEST_LINE( Chr( 1024 )                     , ""                                     )
+   TEST_LINE( Chr( xLocal := 1024 )           , ""+Chr(0)+""                           ) /* xLocal should be used here to avoid the optimizer of the CA-Cl*pper compiler */
    TEST_LINE( Chr( 1025 )                     , ""                                    )
    TEST_LINE( Chr( 1000 )                     , "è"                                    )
    TEST_LINE( Chr( 100000 )                   , " "                                    )
@@ -1697,6 +1698,10 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( aScan( {} )                     , 0                                          )
    TEST_LINE( aScan( {}, "" )                 , 0                                          )
    TEST_LINE( aScan( ErrorNew(), "NOT_FOUND") , 0                                          )
+   TEST_LINE( aSort()                         , NIL                                        )
+   TEST_LINE( aSort(10)                       , NIL                                        )
+   TEST_LINE( aSort({})                       , "{.[0].}"                                  )
+   TEST_LINE( aSort(ErrorNew())               , NIL                                        )
    TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL "        )
    TEST_LINE( aFill( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
    TEST_LINE( aFill( {} )                     , "{.[0].}"                                  )
@@ -1853,6 +1858,38 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
 
+   /* ASORT() */
+
+   TEST_LINE( TAStr(aSort(TARRv(),,,{||NIL})) , "ABCDEFGHIJ"     ) /* Bug/Feature in CA-Cl*pper, it will return: "IHGFEDCBAJ" */
+   TEST_LINE( TAStr(aSort(TARRv()))           , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),NIL,NIL))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),NIL, -2))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),NIL,  0))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),NIL,  3))   , "HIJGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(),NIL, 20))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(), -5    ))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), -5, -2))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), -5,  0))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), -5,  3))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), -5, 20))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  0    ))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  0, -2))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  0,  0))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  0,  3))   , "HIJGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  0, 20))   , "ABCDEFGHIJ"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  5    ))   , "JIHGABCDEF"     )
+#ifdef __HARBOUR__
+   TEST_LINE( TAStr(aSort(TARRv(),  5, -2))   , "JIHGABCDEF"     ) /* CA-Cl*pper will crash or GPF on that line. */
+#endif
+   TEST_LINE( TAStr(aSort(TARRv(),  5,  0))   , "JIHGABCDEF"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  5,  3))   , "JIHGDEFCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(),  5, 20))   , "JIHGABCDEF"     )
+   TEST_LINE( TAStr(aSort(TARRv(), 20    ))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), 20, -2))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), 20,  0))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), 20,  3))   , "JIHGFEDCBA"     )
+   TEST_LINE( TAStr(aSort(TARRv(), 20, 20))   , "JIHGFEDCBA"     )
+
    /* ASCAN() */
 
    TEST_LINE( aScan()                         , 0           )
@@ -1876,7 +1913,7 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( aScan( saAllTypes, snIntN     ) , 9           )
    TEST_LINE( aScan( saAllTypes, snLongN    ) , 10          )
    TEST_LINE( aScan( saAllTypes, snDoubleN  ) , 11          )
-   TEST_LINE( aScan( saAllTypes, snDoubleI  ) , 12          )
+   TEST_LINE( aScan( saAllTypes, snDoubleI  ) , 4           )
    TEST_LINE( aScan( saAllTypes, sdDateE    ) , 13          )
    TEST_LINE( aScan( saAllTypes, slFalse    ) , 14          )
    TEST_LINE( aScan( saAllTypes, slTrue     ) , 15          )
@@ -2091,7 +2128,7 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
       fWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                       PADR( PROCNAME(1) +"(" +LTRIM( STR(PROCLINE(1),5) ) +")", TEST_RESULT_COL2_WIDTH ) +;
+                       PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) +;
                        PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                        PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                        PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )
@@ -2262,6 +2299,22 @@ STATIC FUNCTION TARng( nLen )
 
    FOR tmp := 1 TO nLen
       aArray[ tmp ] := Chr( Asc( "A" ) + tmp - 1 )
+   NEXT
+
+   RETURN aArray
+
+STATIC FUNCTION TARRv( nLen )
+   LOCAL aArray
+   LOCAL tmp
+
+   IF nLen == NIL
+      nLen := 10
+   ENDIF
+
+   aArray := Array( nLen )
+
+   FOR tmp := 1 TO nLen
+      aArray[ tmp ] := Chr( Asc( "A" ) + nLen - tmp )
    NEXT
 
    RETURN aArray

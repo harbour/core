@@ -1,3 +1,19 @@
+19990913-12:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * tests/working/rtl_test.prg
+    + ASORT() tests added.
+    ! Fixed an expected result for aScan() was 12 instead of 4.
+    ! CHR() tests fixed to avoid the Clipper compiler expression optimizer.
+  * source/rtl/asort.prg
+    ! Parameter checking fixed and streamlined again.
+    ! Fixed when sorting a given range of the array.
+    ! Fixed when the codeblock is not returning a logical type. This is not
+      Clipper compatible, but Clippers behaviour is not defined for this case,
+      and seems buggy.
+    % One variable eliminated from QuickSort()
+    + Formatted.
+    ; Results checked against Clipper
+
 19990913-10:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/compiler.h
