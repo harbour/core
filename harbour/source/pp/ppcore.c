@@ -2566,7 +2566,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
 {
   int State = STATE_NORMAL;
   long lPos = 0, lSubPos = 0;
-  int kolPrth = 0;
+  int kolPrth = 0, kolSquare = 0;
   int lCase = ( *szSub == '\1' )? 0:1;
 
   HB_TRACE(HB_TR_DEBUG, ("md_strAt(%s, %d, %s, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth));
@@ -2591,9 +2591,17 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
             {
              if( *(szText+lPos) == ']' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
                {
-                State = STATE_NORMAL;
+                kolSquare--;
+                if( kolSquare == 0 )
+                   State = STATE_NORMAL;
                 lPos++;
                 continue;
+               }
+             else if( *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+               {
+                 kolSquare++;
+                 lPos++;
+                 continue;
                }
             }
           else
@@ -2604,7 +2612,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
                  lPos++;
                  continue;
                }
-             else if( *(szText+lPos) == '\'' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+             else if( ( *(szText+lPos) == '\'' || *(szText+lPos) == '\`' ) && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
                {
                  State = STATE_QUOTE1;
                  lPos++;
@@ -2613,6 +2621,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
              else if( *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
                {
                  State = STATE_QUOTE3;
+                 kolSquare++;
                  lPos++;
                  continue;
                }
