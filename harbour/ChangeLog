@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-30 00:55 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tbrowse.prg
+    + Add two instance variables, nRow and nCol. Existing in Clipper 5.3.
+      Only was modified the Hilite and SetPos method, for save in
+      this variables, the position of cursor.
+
+2002-05-30 00:55 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * contrib/libct/screen1.c
+    ! Now return correctly a numeric value.
+  * contrib/libct/color.prg
+    ! Fix, the color string was inverted.
+
 2002-05-25 21:36 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
   * contrib/rdd_ads/ads1.c
     + Added #ifdef section to support xHarbour PCODE version check.
