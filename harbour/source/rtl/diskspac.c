@@ -161,7 +161,7 @@ HB_FUNC( DISKSPACE )
                   memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
             }
 
-            #if defined(__GNUC__)
+            #if defined(__GNUC__) || defined( _MSC_VER)
 
                /* NOTE: In Cygwin/Mingw32 (egcs-2.91.57) the declaration for
                         ULARGE_INTEGER differs from the MS standard.
@@ -181,6 +181,9 @@ HB_FUNC( DISKSPACE )
                }
 
             #else
+               /* NOTE: Borland doesn't seem to deal with the un-named
+                        struct that is part of ULARGE_INTEGER
+                        [pt]  */
 
                dSpace  = ( double ) i64RetVal.u.HighPart +
                          ( double ) i64RetVal.u.HighPart *

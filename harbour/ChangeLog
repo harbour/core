@@ -1,3 +1,9 @@
+20000322-14:05 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/diskspac.c
+     * made the msc and __gnuc__ branch the same.
+     * the diff is now for borland.
+     * add a note.
+
 20000322-16:33 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    - include/hbclip.ch
