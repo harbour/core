@@ -355,7 +355,8 @@ CLASS TDebugger
    METHOD HideVars()
    METHOD InputBox( cMsg, uValue, bValid, lEditable )
    METHOD Inspect( uValue, cValueName )
-   METHOD IsBreakPoint( nLine, cPrgName)
+   METHOD IsBreakPoint( nLine, cPrgName )
+   METHOD LoadColors()
    METHOD LoadSettings()
    METHOD LoadVars()
    METHOD LoadCallStack()
@@ -369,22 +370,24 @@ CLASS TDebugger
 //   METHOD Resume() INLINE IIF( LEN(::aCallStack[1])>0, ::ShowCodeLine( ::aCallStack[1][ CSTACK_LINE ], ::aCallStack[1][ CSTACK_MODULE ] ), NIL) 
    METHOD Resume() INLINE ::ShowCodeLine( 1 )
    METHOD OSShell()
-   METHOD PathForFiles()
+   METHOD PathForFiles( cPathForFiles )
 
    METHOD PrevWindow()
    METHOD Private()
    METHOD Public()
-   METHOD Quit() INLINE ::Exit(), ::Hide(), s_lExit:=.T., s_oDebugger:=NIL, __QUIT()
+   METHOD Quit() INLINE ::Exit(), ::Hide(), s_lExit := .T., s_oDebugger := NIL, __QUIT()
+   METHOD RefreshVars()
    METHOD RestoreAppStatus()
    METHOD RestoreSettings()
-   METHOD RunAtStartup() INLINE ::lRunAtStartup:=!::lRunAtStartup
+   METHOD RunAtStartup() INLINE ::lRunAtStartup := ::oPullDown:GetItemByIdent( "ALTD" ):checked := !::lRunAtStartup
    METHOD SaveAppStatus()
    METHOD SaveSettings()
    METHOD Show()
    METHOD ShowAppScreen()
    METHOD ShowCallStack()
-   METHOD ShowCodeLine( nLine, cPrgName )
-   METHOD StackProc(cModuleName, nProcLevel)
+   //METHOD ShowCodeLine( nLine, cPrgName )
+   METHOD ShowCodeLine( nProc )
+   METHOD StackProc( cModuleName, nProcLevel )
    METHOD ShowHelp( nTopic )
    METHOD ShowVars()
    METHOD RedisplayBreakpoints()
@@ -413,17 +416,17 @@ CLASS TDebugger
 
    METHOD ToCursor()
    METHOD NextRoutine()
-   METHOD CodeblockTrace() INLINE ::lCBTrace := ! ::lCBTrace
+   METHOD CodeblockTrace() INLINE ::oPullDown:GetItemByIdent( "CODEBLOCK" ):checked := ::lCBTrace := ! ::lCBTrace
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
-   METHOD LineNumbers()          // Toggles numbering of source code lines
+   METHOD LineNumbers( lLineNumbers ) // Toggles numbering of source code lines
    METHOD Locate()
    METHOD FindNext()
    METHOD FindPrevious()
    METHOD RemoveWindow()
    METHOD SearchLine()
-   METHOD ToggleAnimate() INLINE ::lAnimate := ! ::lAnimate
-   METHOD ToggleCaseSensitive() INLINE ::lCaseSensitive := ! ::lCaseSensitive
+   METHOD ToggleAnimate() INLINE ::oPullDown:GetItemByIdent( "ANIMATE" ):checked := ::lAnimate := ! ::lAnimate
+   METHOD ToggleCaseSensitive() INLINE ::oPullDown:GetItemByIdent( "CASE" ):checked := ::lCaseSensitive := ! ::lCaseSensitive
    METHOD ShowWorkAreas() INLINE __dbgShowWorkAreas( Self )
 
    METHOD TracepointAdd( cExpr )
@@ -536,7 +539,7 @@ METHOD All() CLASS TDebugger
    ::lShowPublics := ::lShowPrivates := ::lShowStatics := ;
    ::lShowLocals := ::lAll := ! ::lAll
 
-   iif( ::lAll, (::LoadVars(),::ShowVars()), ::HideVars() )
+   ::RefreshVars()  
 
 return nil
 
@@ -747,7 +750,6 @@ METHOD Colors() CLASS TDebugger
 
    local oBrwColors := TBrowseNew( oWndColors:nTop + 1, oWndColors:nLeft + 1,;
                                  oWndColors:nBottom - 1, oWndColors:nRight - 1 )
-   local n := 1
    local nWidth := oWndColors:nRight - oWndColors:nLeft - 1
    local oCol
 
@@ -779,16 +781,10 @@ METHOD Colors() CLASS TDebugger
                                { || ::EditColor( oBrwColors:Cargo[1], oBrwColors ) } ) }
    oWndColors:ShowModal()
 
-   ::oPullDown:LoadColors()
-   ::oPullDown:Refresh()
-   ::BarDisplay()
+   ::LoadColors()
 
-   for n := 1 to Len( ::aWindows )
-      ::aWindows[ n ]:LoadColors()
-      ::aWindows[ n ]:Refresh()
-   next
+RETURN NIL
 
-return nil
 
 METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
@@ -1230,23 +1226,34 @@ METHOD Hide() CLASS TDebugger
 
 return nil
 
-METHOD MonoDisplay() CLASS TDebugger
 
-   local n
-
-   ::lMonoDisplay := ! ::lMonoDisplay
+METHOD LoadColors() CLASS TDebugger
+  
+   LOCAL n
 
    ::oPullDown:LoadColors()
-   ::oPullDown:Refresh()
-
-   ::BarDisplay()
-
+   IF ::lActive
+      ::oPullDown:Refresh()
+      ::BarDisplay()
+   ENDIF
    for n := 1 to Len( ::aWindows )
       ::aWindows[ n ]:LoadColors()
-      ::aWindows[ n ]:Refresh()
+      IF ::lActive
+         ::aWindows[ n ]:Refresh()
+      ENDIF
    next
+ 
+RETURN NIL
+
+
+METHOD MonoDisplay() CLASS TDebugger
+
+   ::lMonoDisplay := ! ::lMonoDisplay
+   ::oPullDown:GetItemByIdent( "MONO" ):checked := ::lMonoDisplay
+   ::LoadColors()
 
 return nil
+
 
 METHOD NextWindow() CLASS TDebugger
 
@@ -1548,6 +1555,24 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
 
 return nil
 
+
+METHOD RefreshVars() CLASS TDebugger
+   ::oPulldown:GetItemByIdent( "LOCAL" ):checked := ::lShowLocals
+   ::oPulldown:GetItemByIdent( "PRIVATE" ):checked := ::lShowPrivates
+   ::oPulldown:GetItemByIdent( "PUBLIC" ):checked := ::lShowPublics
+   ::oPulldown:GetItemByIdent( "STATIC" ):checked := ::lShowStatics
+   ::oPulldown:GetItemByIdent( "ALL" ):checked := ::lAll
+   IF ::lActive
+      if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
+         ::LoadVars()
+         ::ShowVars()
+      else
+         ::HideVars()
+      endif
+   ENDIF
+RETURN NIL
+
+
 METHOD ShowHelp( nTopic ) CLASS TDebugger
 
    local nCursor := SetCursor( SC_NONE )
@@ -1813,10 +1838,9 @@ METHOD Open() CLASS TDebugger
    endif
 return nil
 
-
 METHOD OpenPPO() CLASS TDebugger
-LOCAL nPos
-LOCAL lSuccess:=.F.
+   LOCAL nPos
+   LOCAL lSuccess:=.F.
 
    nPos := RAT(".PPO", UPPER(::cPrgName))
    IF( nPos == 0 )
@@ -1839,14 +1863,17 @@ LOCAL lSuccess:=.F.
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName,;
                    __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
-                   __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ] )
+        __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ], ::lLineNumbers )
       ::oWndCode:Browser := ::oBrwText
       ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
       ::oWndCode:SetCaption( ::cPrgName )
-      ::oWndCode:Refresh()			// to force the window caption to update
+      ::oWndCode:Refresh()// to force the window caption to update
    endif
    
+   ::oPullDown:GetItemByIdent( "PPO" ):checked := ::lPPO
+
 return lSuccess
+
 
 // check for breakpoints in the current file and display them
 METHOD RedisplayBreakPoints() CLASS TDebugger
@@ -2058,45 +2085,34 @@ METHOD GotoLine( nLine ) CLASS TDebugger
       SetPos( nRow, nCol )
       SetCursor( SC_SPECIAL1 )
    endif
+   SetPos( nRow, nCol )
+   
+   // Store cursor position to be restored by ::oWndCode:bGotFocus
+   ::oWndCode:cargo[ 1 ] := nRow
+   ::oWndCode:cargo[ 2 ] := nCol
 
 return nil
+
 
 METHOD Local() CLASS TDebugger
 
    ::lShowLocals := ! ::lShowLocals
-
-   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
-      ::LoadVars()
-      ::ShowVars()
-   else
-      ::HideVars()
-   endif
+   ::RefreshVars()
 
 return nil
+
 
 METHOD Private() CLASS TDebugger
 
    ::lShowPrivates := ! ::lShowPrivates
-
-   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
-      ::LoadVars()
-      ::ShowVars()
-   else
-      ::HideVars()
-   endif
+   ::RefreshVars()
 
 return nil
 
 METHOD Public() CLASS TDebugger
 
    ::lShowPublics := ! ::lShowPublics
-
-   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
-      ::LoadVars()
-      ::ShowVars()
-   else
-      ::HideVars()
-   endif
+   ::RefreshVars()
 
 return nil
 
@@ -2230,10 +2246,14 @@ return nil
 
 METHOD Stack() CLASS TDebugger
 
-   if ::lShowCallStack := ! ::lShowCallStack
-      ::ShowCallStack()
-   else
-      ::HideCallStack()
+   ::lShowCallStack := ! ::lShowCallStack  
+   ::oPulldown:GetItemByIdent( "CALLSTACK" ):checked := ::lShowCallStack
+   if ::lActive
+      if ::lShowCallStack
+         ::ShowCallStack()
+      else
+         ::HideCallStack()
+      endif
    endif
 
 return nil
@@ -2241,13 +2261,7 @@ return nil
 METHOD Static() CLASS TDebugger
 
    ::lShowStatics := ! ::lShowStatics
-
-   ::LoadVars()
-   if ::lShowPublics .or. ::lShowPrivates .or. ::lShowStatics .or. ::lShowLocals
-      ::ShowVars()
-   else
-      ::HideVars()
-   endif
+   ::RefreshVars()
 
 return nil
 
@@ -2455,16 +2469,21 @@ static function ValToStr( uVal )
 
 return cResult
 
-METHOD LineNumbers() CLASS TDebugger
+METHOD LineNumbers( lLineNumbers ) CLASS TDebugger
 
-   ::oBrwText:lLineNumbers := !::oBrwText:lLineNumbers
-   ::oBrwText:RefreshAll()
+   If( lLineNumbers == NIL, lLineNumbers := !::lLineNumbers, )
+   ::lLineNumbers := lLineNumbers
+   ::oPulldown:GetItemByIdent( "LINE" ):checked := ::lLineNumbers
+   IF ::oBrwText != NIL
+      ::oBrwText:lLineNumbers := lLineNumbers
+      ::oBrwText:RefreshAll()
+   ENDIF
 
 return Self
 
 METHOD Locate( nMode ) CLASS TDebugger
 
-   local cValue
+   local cValue, lFound
 
    DEFAULT nMode TO 0
 
@@ -2476,7 +2495,13 @@ METHOD Locate( nMode ) CLASS TDebugger
 
    ::cSearchString := cValue
 
-return ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 0 )
+   lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 0 )
+   
+   // Save cursor position to be restored by ::oWndCode:bGotFocus
+   ::oWndCode:cargo[ 1 ] := Row()
+   ::oWndCode:cargo[ 2 ] := Col()
+
+RETURN lFound
 
 METHOD FindNext() CLASS TDebugger
 
@@ -2486,6 +2511,10 @@ METHOD FindNext() CLASS TDebugger
       lFound := ::Locate( 1 )
    else
       lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 1 )
+
+      // Save cursor position to be restored by ::oWndCode:bGotFocus
+      ::oWndCode:cargo[ 1 ] := Row()
+      ::oWndCode:cargo[ 2 ] := Col()
    endif
 
 return lFound
@@ -2498,6 +2527,10 @@ METHOD FindPrevious() CLASS TDebugger
       lFound := ::Locate( 2 )
    else
       lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, 2 )
+
+      // Save cursor position to be restored by ::oWndCode:bGotFocus
+      ::oWndCode:cargo[ 1 ] := Row()
+      ::oWndCode:cargo[ 2 ] := Col()
    endif
 
 return lFound
@@ -2522,7 +2555,7 @@ METHOD SearchLine() CLASS TDebugger
    cLine := ::InputBox( "Line number", "1" )
 
    if Val( cLine ) > 0
-      ::oBrwText:GotoLine ( Val( cLine ) )
+      ::GotoLine ( Val( cLine ) )
    endif
 
 return nil

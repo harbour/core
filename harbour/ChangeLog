@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-07 18:15 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
+  * source/debug/dbgmenu.prg
+  * source/debug/debugger.prg
+    ! Fixed some problems related to menus, colors and cursor positioning.
+
 2004-06-07 14:15 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   * source/rtl/inkey.c
     + Added hb_setInkeyLast() (copyright 2002 by Walter Negro) and
