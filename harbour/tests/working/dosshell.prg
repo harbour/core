@@ -6,15 +6,18 @@
 //
 // Warning : DOS only
 //
+#command ? [<xArg,...>] => QOut( <xArg> )
+#command ! <cCommand>   => __Run( <cCommand> )
+
 function Main()
 
    local cOs := Upper( OS() )
 
-   if at( "WINDOWS", cOs ) != 0 .or. at( "DOS", cOs ) != 0
-      QOut( "About to shell to DOS.." )
-      __Run( GetEnv("COMSPEC") )
-      QOut( "Hey, I am back !" )
+   if (at( "WINDOWS", cOs ) != 0) .or. at( "DOS", cOs ) != 0
+      ? "About to shell to DOS.."
+      ! GetEnv("COMSPEC")
+      ? "Hey, I am back !"
    else
-      QOut( "Sorry this program is for Windows and DOS only" )
+      ? "Sorry this program is for Windows and DOS only"
    endif
 return nil

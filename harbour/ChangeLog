@@ -1,3 +1,9 @@
+19990616-11:30 CET Eddie Runia
+  * source/rtl/console.c
+    Eject should be __Eject of course
+  * tests/working/dosshell.prg
+    With preprocessed statements
+
 19990616-13:12 Alexander Kresin
  updated:
  * source\compiler\harbour.y

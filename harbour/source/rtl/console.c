@@ -36,9 +36,9 @@ HARBOUR HB_QQOUT( void );
 
 static SYMBOL symbols[] = {
 { "__ACCEPT", FS_PUBLIC, HB___ACCEPT, 0 },
+{ "__EJECT" , FS_PUBLIC, HB___EJECT , 0 },
 { "DEVOUT"  , FS_PUBLIC, HB_DEVOUT  , 0 },
 { "DEVPOS"  , FS_PUBLIC, HB_DEVPOS  , 0 },
-{ "EJECT"   , FS_PUBLIC, HB___EJECT , 0 },
 { "MAXCOL"  , FS_PUBLIC, HB_MAXCOL  , 0 },
 { "MAXROW"  , FS_PUBLIC, HB_MAXROW  , 0 },
 { "OUTERR"  , FS_PUBLIC, HB_OUTERR  , 0 },
