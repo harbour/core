@@ -99,6 +99,7 @@ CLASS Get
    #ifdef HB_COMPAT_C53
    DATA Control
    DATA Message
+   DATA Caption
    #endif
 
    DATA cColorSpec   HIDDEN   // Used only for METHOD ColorSpec
@@ -205,6 +206,10 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::cDelimit   := if( SET(_SET_DELIMITERS), SET(_SET_DELIMCHARS), NIL )
 
    ::Picture    := cPicture
+   #ifdef HB_COMPAT_C53
+   ::Caption    := ""
+   #endif
+
 
 return Self
 
