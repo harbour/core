@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-05 10:13 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/compiler/gencobj.c
+     ! fixed uninitialized pointer.
+
 2002-06-05 10:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rdd_ads/ads1.c
     ! bug fixed in adsOpen, reported by Jorge Mason
