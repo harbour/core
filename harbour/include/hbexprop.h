@@ -389,7 +389,6 @@ BOOL hb_compExprIsValidMacro( char *, BOOL *, HB_MACRO_DECL );
 
 #ifdef HB_MACRO_SUPPORT
 
-void hb_compExprKill( HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR, HB_EXPR_PTR, HB_MACRO_DECL );
 HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR, HB_MACRO_DECL );

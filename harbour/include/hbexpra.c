@@ -164,36 +164,29 @@ void hb_compExprClear( HB_EXPR_PTR pExpr )
 #endif
 }
 
-#if defined( HB_MACRO_SUPPORT )
-void hb_compExprKill( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprKill()"));
-   if( pExpr->ExprType != HB_ET_NONE )
-   {
-      HB_EXPR_PCODE1( hb_compExprDelete, pExpr );
-   }
-}
-#endif
-
 /* Delete all components and delete self
  */
 #if defined( HB_MACRO_SUPPORT )
 void hb_compExprDelete( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
-#else
-void hb_compExprDelete( HB_EXPR_PTR pExpr )
-#endif
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete()"));
-#if defined( HB_MACRO_SUPPORT )
-   pExpr->ExprType = HB_ET_NONE;
+   if( pExpr->ExprType != HB_ET_NONE )
+   {
+      HB_EXPR_USE( pExpr, HB_EA_DELETE );
+      pExpr->ExprType = HB_ET_NONE;
+   }
+}
 #else
+void hb_compExprDelete( HB_EXPR_PTR pExpr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprDelete()"));
    if( --pExpr->Counter == 0 )
    {
       HB_EXPR_USE( pExpr, HB_EA_DELETE );
       HB_XFREE( pExpr );
    }
-#endif
 }
+#endif
 
 /* Delete all components and delete self
  */

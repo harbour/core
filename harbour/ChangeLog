@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-09 10:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexpra.c
+   * include/hbexprop.h
+   * source/compiler/expropta.c
+   * source/macro/macroa.c
+   * source/vm/macro.c
+      * fixed my previous fix to correctly release memory in
+      the macro compiler
+
 2004-04-08 17:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexpra.c
    * source/compiler/expropta.c

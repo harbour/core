@@ -155,7 +155,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
       HB_MEXPR_PTR pMExpr = s_macroAlloc;
       do
       {
-         hb_compExprKill( &pMExpr->Expression, pMacro );
+         hb_compExprDelete( &pMExpr->Expression, pMacro );
          pMExpr = pMExpr->pPrev;
       }
       while( pMExpr );
