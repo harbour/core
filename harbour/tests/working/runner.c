@@ -110,7 +110,7 @@ HARBOUR HB_HB_RUN( void )
       if( file )
       {
          ulSymbols = ReadLong( file );
-         pSymRead = _xgrab( ulSymbols * sizeof( SYMBOL ) );
+         pSymRead = ( PSYMBOL )_xgrab( ulSymbols * sizeof( SYMBOL ) );
 
          for( ul=0; ul < ulSymbols; ul++)       /* Read symbols in .HRB     */
          {
@@ -127,7 +127,7 @@ HARBOUR HB_HB_RUN( void )
             pDynFunc[ ul ].szName = ReadId( file );
 
             ulSize = ReadLong( file ) + 1;      /* Read size of function    */
-            pDynFunc[ ul ].pCode = _xgrab( ulSize );
+            pDynFunc[ ul ].pCode = ( PBYTE )_xgrab( ulSize );
             HRB_FileRead( pDynFunc[ ul ].pCode, 1, ulSize, file );
                                                 /* Read the block           */
 
@@ -155,13 +155,13 @@ HARBOUR HB_HB_RUN( void )
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
                }
                else
-                  pSymRead[ ul ].pFunPtr = (void *) SYM_EXTERN;
+                  pSymRead[ ul ].pFunPtr = ( HARBOURFUNC ) SYM_EXTERN;
             }
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */
                pDynSym = FindDynSym( pSymRead[ ul ].szName );
                if( !pDynSym )
-               {                                
+               {
                   printf( "\nUnknown or unregistered function '%s'.",
                           pSymRead[ ul ].szName );
                   exit( 1 );
@@ -265,7 +265,7 @@ char *ReadId( FILE *file )
 
    BYTE  bCont = TRUE;
 
-   szTemp = _xgrab( 256 );
+   szTemp = ( char * )_xgrab( 256 );
    szIdx  = szTemp;
    do
    {

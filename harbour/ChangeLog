@@ -1,4 +1,10 @@
-19990615-22:55 EDT David G. Holm <dholm@jsd-llc.com>
+19990615-23:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    - Added tools\datesx, which is needed by runner
+  * tests/working/runner.c
+    - Added or corrected type overrides on 4 _xgrab() calls (for C++)
+      Compiles on OS/2, but gives "unsuported pcode opcode: 104" when used
+
   * ChangeLog
     - Added comment to entry 19990615-12:30 EDT David G. Holm
       about renaming two hb_ functions in source/rtl/console.c

@@ -56,6 +56,7 @@ $(path_lib)\hbtools.lib: \
                 $(path_obj)\chrcount.obj \
                 $(path_obj)\chrfirst.obj \
                 $(path_obj)\chrtotal.obj \
+                $(path_obj)\datesx.obj \
                 $(path_obj)\debug.obj \
                 $(path_obj)\genobj.obj \
                 $(path_obj)\hb_f.obj \
@@ -89,6 +90,7 @@ $(path_obj)\arrays.obj   : {$(path_c)}arrays.c   $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
 $(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h
+$(path_obj)\datesx.obj   : {$(path_c)}datesx.c   $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
 $(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\dir.obj      : {$(path_c)}dir.c      $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
