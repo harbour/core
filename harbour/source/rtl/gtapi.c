@@ -443,7 +443,7 @@ USHORT hb_gtColorToN( char * szColorString )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtColorToN(%s)", szColorString));
 
-   while( c = *szColorString++ )
+   while( ( c = *szColorString++ ) == TRUE )
    {
       c = toupper( c );
 

@@ -2384,7 +2384,6 @@ ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pError )
    {
       hb_errRelease( pError );
-      pError = NULL;
    }
    return ( pArea->hMemoFile == FS_ERROR ? FAILURE : SUCCESS );
 }

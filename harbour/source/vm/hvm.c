@@ -2894,9 +2894,7 @@ void hb_vmSend( USHORT uiParams )
 
    if( ! HB_IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-      if( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) )
-         pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
-      else
+      if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
       {
          if( HB_IS_OBJECT( pSelf ) )               /* Object passed            */
          {
@@ -2930,8 +2928,6 @@ void hb_vmSend( USHORT uiParams )
          else
          {
             char *sClass, sDesc[64];
-
-            pFunc = NULL;
 
             if( HB_IS_POINTER( pSelf ) )
               sClass = "POINTER";

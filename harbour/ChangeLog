@@ -1,3 +1,17 @@
+2001-04-07 13:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/hbpcode.c
+     ! Fixed some StrongType logic.
+
+   * source/compiler/genc.c
+   * source/rdd/dbf1.c
+   * source/rtl/gtapi.c
+   * source/vm/hvm.c
+     ! Corrected Compiler warnings.
+
+   * source/compiler/harbour.c
+   * include/hbcomp.h
+     * Minor formatting.
+
 2001-07-01 21:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
     Changes, provided by  Marek Paliwoda.
     *doc/en/gtslang.txt

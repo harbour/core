@@ -243,9 +243,9 @@ void hb_compStrongType( int iSize )
    else if( pFunc->iStackSize - pFunc->iStackIndex < 4 )
       pFunc->pStack = ( BYTE * ) hb_xrealloc( pFunc->pStack, pFunc->iStackSize += 16 );
 
-   /* TODO Split under conitions for the different matching possible iSize. */
+   /* TODO: Split under conitions for the different matching possible iSize. */
 
-   /* TODO Subject to Operator Overloading! */
+   /* TODO: Subject to Operator Overloading! */
 
    switch ( pFunc->pCode[ ulPos ] )
    {
@@ -1194,11 +1194,13 @@ void hb_compStrongType( int iSize )
        break;
 
      /* Blcoks */
+	 /*
+	 case HB_P_PUSHBLOCKSHORT :
+	   break;
 
-     /* Nothing to do, handled by HB_P_ENDBLOCK.
      case HB_P_PUSHBLOCK :
-     case HB_P_PUSHBLOCKSHORT :
-     */
+	   break;
+	 */
 
      case HB_P_ENDBLOCK :
        /* Override the last value of the block left on the stack. */
@@ -1302,7 +1304,7 @@ void hb_compStrongType( int iSize )
      case HB_P_PUSHLOCALREF :
      case HB_P_PUSHLOCAL :
        if( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALNEAR )
-          wVar = ( SHORT ) pFunc->pCode[ ulPos + 1 ];
+          wVar = ( signed char ) pFunc->pCode[ ulPos + 1 ];
        else
           wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
 
@@ -1314,17 +1316,35 @@ void hb_compStrongType( int iSize )
 
           /* Might be a nested block. */
           while ( pTmp->pOwner )
-            pTmp = pTmp->pOwner;
+		  {
+             pTmp = pTmp->pOwner;
+		  }
 
-          pVar = hb_compVariableFind( pTmp->pLocals, -wVar );
+		  pVar = pFunc->pStatics;
+		  while( ++wVar < 0 && pVar )
+		  {
+		     pVar = pVar->pNext;
+		  }
+
+		  if ( pVar )
+		  {
+             wVar = hb_compVariableGetPos( pTmp->pLocals, pVar->szName );
+             pVar = hb_compVariableFind( pTmp->pLocals, wVar );
+		  }
        }
        else
+	   {
           pVar = hb_compVariableFind( pFunc->pLocals, wVar );
+	   }
 
        if( pVar )
        {
           if( ! ( pVar->iUsed & VU_INITIALIZED ) )
              hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+		  /*
+		  printf( "\nUsed: %s\n", pVar->szName );
+		  */
 
           /* Mark as used */
           pVar->iUsed |= VU_USED;
@@ -1346,11 +1366,16 @@ void hb_compStrongType( int iSize )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
        }
        else
+	   {
+		  /*
+		  printf( "\nCould not find Local %i in: $s\n", wVar, pFunc->szName );
+		  */
+
           if( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = '@';
           else
              pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
-
+	   }
        break;
 
      case HB_P_PUSHSTATICREF :
@@ -1442,19 +1467,29 @@ void hb_compStrongType( int iSize )
           if( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVAR && pSym->szName )
           {
              if( pFunc->pMemvars )
+			 {
                wVar = hb_compVariableGetPos( pFunc->pMemvars, pSym->szName );
+			 }
 
              if( wVar )
+			 {
                pVar = hb_compVariableFind( pFunc->pMemvars, wVar );
+			 }
 
              if( ! pVar )
+			 {
                pVar = hb_compPrivateFind( pSym->szName );
+			 }
 
              if( ( ! pVar ) && hb_comp_functions.pFirst->pMemvars )
              {
                wVar = hb_compVariableGetPos( hb_comp_functions.pFirst->pMemvars, pSym->szName );
                if( wVar )
+			   {
                  pVar = hb_compVariableFind( hb_comp_functions.pFirst->pMemvars, wVar );
+				 /* May have been initialized in any other function - can't check. */
+                 pVar->iUsed |= VU_INITIALIZED;
+			   }
              }
           }
 
@@ -1988,17 +2023,31 @@ void hb_compStrongType( int iSize )
        /* we are accesing variables within a codeblock */
        if( wVar < 0 )
        {
-         /* Finding the Function owning the block. */
-         pTmp = pFunc->pOwner;
+          /* Finding the Function owning the block. */
+          pTmp = pFunc->pOwner;
 
-         /* Might be a nested block. */
-         while ( pTmp->pOwner )
-            pTmp = pTmp->pOwner;
+          /* Might be a nested block. */
+          while ( pTmp->pOwner )
+		  {
+             pTmp = pTmp->pOwner;
+		  }
 
-         pVar = hb_compVariableFind( pTmp->pLocals, -wVar );
+		  pVar = pFunc->pStatics;
+		  while( ++wVar < 0 && pVar )
+		  {
+		     pVar = pVar->pNext;
+		  }
+
+		  if ( pVar )
+		  {
+             wVar = hb_compVariableGetPos( pTmp->pLocals, pVar->szName );
+             pVar = hb_compVariableFind( pTmp->pLocals, wVar );
+		  }
        }
        else
+	   {
          pVar = hb_compVariableFind( pFunc->pLocals, wVar );
+	   }
 
        if( pVar )
        {

@@ -3221,12 +3221,13 @@ void hb_compStaticDefEnd( void )
 */
 void hb_compCodeBlockStart()
 {
-   PFUNCTION pFunc = hb_compFunctionNew( NULL, HB_FS_STATIC );
+   PFUNCTION pBlock;
 
-   pFunc->pOwner       = hb_comp_functions.pLast;
-   pFunc->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
+   pBlock               = hb_compFunctionNew( NULL, HB_FS_STATIC );
+   pBlock->pOwner       = hb_comp_functions.pLast;
+   pBlock->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
 
-   hb_comp_functions.pLast = pFunc;
+   hb_comp_functions.pLast = pBlock;
    hb_compLinePushIfDebugger();
 }
 
@@ -3304,7 +3305,7 @@ void hb_compCodeBlockEnd( void )
       hb_xfree( ( void * ) pFree );
    }
 
-   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 1 );
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 0 );
    hb_compGenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
 
    /* this fake-function is no longer needed */

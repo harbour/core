@@ -90,23 +90,22 @@ struct _COMCLASS;    /* forward declaration */
 /* Declared Function/Method support structure */
 typedef struct _COMDECLARED
 {
-   char * szName;               /* the name of the symbol */
-   BYTE   cType;
-   BYTE * cParamTypes;
-   USHORT iParamCount;
-   struct _COMCLASS * pClass;
-   struct _COMCLASS * ( * pParamClasses );
-   struct _COMDECLARED * pNext;   /* pointer to the next declared function */
+   char                * szName;              /* the name of the symbol */
+   BYTE                  cType;
+   BYTE                * cParamTypes;
+   USHORT                iParamCount;
+   struct _COMCLASS    * pClass;
+   struct _COMCLASS    * ( * pParamClasses );
+   struct _COMDECLARED * pNext;               /* pointer to the next declared function */
 } COMDECLARED, * PCOMDECLARED;
-
 
 /* Declared Class support structure */
 typedef struct _COMCLASS
 {
-   char * szName;
-   PCOMDECLARED pMethod;
+   char             * szName;
+   PCOMDECLARED       pMethod;
    struct _COMCLASS * pNext;
-   PCOMDECLARED pLast;
+   PCOMDECLARED       pLast;
 } COMCLASS, * PCOMCLASS;
 
 /* locals, static, public variables support */
@@ -156,7 +155,7 @@ typedef struct __FUNC
    struct __FUNC * pNext;                 /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
 
-/* structure to hold a Clipper defined function */
+/* structure to hold an INLINE block of source */
 typedef struct __INLINE
 {
    char *       szName;                   /* name of a inline function */
