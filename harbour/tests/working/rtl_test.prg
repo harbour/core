@@ -66,25 +66,25 @@ FUNCTION Main( cPar1 )
    /* NOTE: Some basic values we may need for some tests.
             ( passing by reference, avoid preprocessor bugs, etc. ) */
 
-   LOCAL lcString := "HELLO"
+   LOCAL lcString  := "HELLO"
    LOCAL lcStringE := ""
    LOCAL lcStringZ := "A" + Chr(0) + "B"
-   LOCAL lnIntZ := 0
+   LOCAL lnIntZ    := 0
    LOCAL lnDoubleZ := 0.0
-   LOCAL lnIntP := 10
-   LOCAL lnLongP := 100000
-   LOCAL lnDoubleP := 10.567
-   LOCAL lnIntN := -10
-   LOCAL lnLongN := -100000
-   LOCAL lnDoubleN := -10.567
+   LOCAL lnIntP    := 10
+   LOCAL lnLongP   := 100000
+   LOCAL lnDoubleP := 10.567 /* Use different number of decimals than the default */
+   LOCAL lnIntN    := -10
+   LOCAL lnLongN   := -100000
+   LOCAL lnDoubleN := -10.567 /* Use different number of decimals than the default */
    LOCAL lnDoubleI := Log( 0 )
-   LOCAL ldDateE := SToD("")
-   LOCAL llFalse := .F.
-   LOCAL llTrue := .T.
-   LOCAL loObject := ErrorNew()
-   LOCAL luNIL := NIL
-   LOCAL lbBlock := {|| NIL }
-   LOCAL laArray := { 9898 }
+   LOCAL ldDateE   := SToD("")
+   LOCAL llFalse   := .F.
+   LOCAL llTrue    := .T.
+   LOCAL loObject  := ErrorNew()
+   LOCAL luNIL     := NIL
+   LOCAL lbBlock   := {|| NIL }
+   LOCAL laArray   := { 9898 }
 
    MEMVAR mxNotHere
    MEMVAR mcString
@@ -108,25 +108,25 @@ FUNCTION Main( cPar1 )
    MEMVAR maArray
 
    /* NOTE: mxNotHere intentionally not declared */
-   PRIVATE mcString := "HELLO"
+   PRIVATE mcString  := "HELLO"
    PRIVATE mcStringE := ""
    PRIVATE mcStringZ := "A" + Chr(0) + "B"
-   PRIVATE mnIntZ := 0
+   PRIVATE mnIntZ    := 0
    PRIVATE mnDoubleZ := 0.0
-   PRIVATE mnIntP := 10
-   PRIVATE mnLongP := 100000
+   PRIVATE mnIntP    := 10
+   PRIVATE mnLongP   := 100000
    PRIVATE mnDoubleP := 10.567
-   PRIVATE mnDoubleI := Log( 0 )
-   PRIVATE mnIntN := -10
-   PRIVATE mnLongN := -100000
+   PRIVATE mnIntN    := -10
+   PRIVATE mnLongN   := -100000
    PRIVATE mnDoubleN := -10.567
-   PRIVATE mdDateE := SToD("")
-   PRIVATE mlFalse := .F.
-   PRIVATE mlTrue := .T.
-   PRIVATE moObject := ErrorNew()
-   PRIVATE muNIL := NIL
-   PRIVATE mbBlock := {|| NIL }
-   PRIVATE maArray := { 9898 }
+   PRIVATE mnDoubleI := Log( 0 )
+   PRIVATE mdDateE   := SToD("")
+   PRIVATE mlFalse   := .F.
+   PRIVATE mlTrue    := .T.
+   PRIVATE moObject  := ErrorNew()
+   PRIVATE muNIL     := NIL
+   PRIVATE mbBlock   := {|| NIL }
+   PRIVATE maArray   := { 9898 }
 
    /* Initialize test */
 
@@ -139,13 +139,124 @@ FUNCTION Main( cPar1 )
       cPar1 := ""
    ENDIF
 
-   TEST_BEGIN( cPar1 )
-
 /* NOTE: CA-Cl*pper PP fails on these
    TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )
    TEST_LINE( "1" .AND. .F.                   , .F.                                       )
    TEST_LINE( "A" > 1                         , "E BASE 1075 Argument error > F:S"                )
 */
+
+   TEST_BEGIN( cPar1 )
+
+   /* VALTYPE() */
+
+   TEST_LINE( ValType(  lcString  )           , "C"   )
+   TEST_LINE( ValType(  lcStringE )           , "C"   )
+   TEST_LINE( ValType(  lcStringZ )           , "C"   )
+   TEST_LINE( ValType(  lnIntZ    )           , "N"   )
+   TEST_LINE( ValType(  lnDoubleZ )           , "N"   )
+   TEST_LINE( ValType(  lnIntP    )           , "N"   )
+   TEST_LINE( ValType(  lnLongP   )           , "N"   )
+   TEST_LINE( ValType(  lnDoubleP )           , "N"   )
+   TEST_LINE( ValType(  lnIntN    )           , "N"   )
+   TEST_LINE( ValType(  lnLongN   )           , "N"   )
+   TEST_LINE( ValType(  lnDoubleN )           , "N"   )
+   TEST_LINE( ValType(  lnDoubleI )           , "N"   )
+   TEST_LINE( ValType(  ldDateE   )           , "D"   )
+   TEST_LINE( ValType(  llFalse   )           , "L"   )
+   TEST_LINE( ValType(  llTrue    )           , "L"   )
+   TEST_LINE( ValType(  loObject  )           , "O"   )
+   TEST_LINE( ValType(  luNIL     )           , "U"   )
+   TEST_LINE( ValType(  lbBlock   )           , "B"   )
+   TEST_LINE( ValType(  laArray   )           , "A"   )
+   TEST_LINE( ValType( @lcString  )           , "U"   )
+   TEST_LINE( ValType( @lcStringE )           , "U"   )
+   TEST_LINE( ValType( @lcStringZ )           , "U"   )
+   TEST_LINE( ValType( @lnIntZ    )           , "U"   )
+   TEST_LINE( ValType( @lnDoubleZ )           , "U"   )
+   TEST_LINE( ValType( @lnIntP    )           , "U"   )
+   TEST_LINE( ValType( @lnLongP   )           , "U"   )
+   TEST_LINE( ValType( @lnDoubleP )           , "U"   )
+   TEST_LINE( ValType( @lnIntN    )           , "U"   )
+   TEST_LINE( ValType( @lnLongN   )           , "U"   )
+   TEST_LINE( ValType( @lnDoubleN )           , "U"   )
+   TEST_LINE( ValType( @lnDoubleI )           , "U"   )
+   TEST_LINE( ValType( @ldDateE   )           , "U"   )
+   TEST_LINE( ValType( @llFalse   )           , "U"   )
+   TEST_LINE( ValType( @llTrue    )           , "U"   )
+   TEST_LINE( ValType( @loObject  )           , "U"   )
+   TEST_LINE( ValType( @luNIL     )           , "U"   )
+   TEST_LINE( ValType( @lbBlock   )           , "U"   )
+   TEST_LINE( ValType( @laArray   )           , "U"   )
+   TEST_LINE( ValType(  mcString  )           , "C"   )
+   TEST_LINE( ValType(  mcStringE )           , "C"   )
+   TEST_LINE( ValType(  mcStringZ )           , "C"   )
+   TEST_LINE( ValType(  mnIntZ    )           , "N"   )
+   TEST_LINE( ValType(  mnDoubleZ )           , "N"   )
+   TEST_LINE( ValType(  mnIntP    )           , "N"   )
+   TEST_LINE( ValType(  mnLongP   )           , "N"   )
+   TEST_LINE( ValType(  mnDoubleP )           , "N"   )
+   TEST_LINE( ValType(  mnIntN    )           , "N"   )
+   TEST_LINE( ValType(  mnLongN   )           , "N"   )
+   TEST_LINE( ValType(  mnDoubleN )           , "N"   )
+   TEST_LINE( ValType(  mnDoubleI )           , "N"   )
+   TEST_LINE( ValType(  mdDateE   )           , "D"   )
+   TEST_LINE( ValType(  mlFalse   )           , "L"   )
+   TEST_LINE( ValType(  mlTrue    )           , "L"   )
+   TEST_LINE( ValType(  moObject  )           , "O"   )
+   TEST_LINE( ValType(  muNIL     )           , "U"   )
+   TEST_LINE( ValType(  mbBlock   )           , "B"   )
+   TEST_LINE( ValType(  maArray   )           , "A"   )
+   TEST_LINE( ValType( @mcString  )           , "U"   )
+   TEST_LINE( ValType( @mcStringE )           , "U"   )
+   TEST_LINE( ValType( @mcStringZ )           , "U"   )
+   TEST_LINE( ValType( @mnIntZ    )           , "U"   )
+   TEST_LINE( ValType( @mnDoubleZ )           , "U"   )
+   TEST_LINE( ValType( @mnIntP    )           , "U"   )
+   TEST_LINE( ValType( @mnLongP   )           , "U"   )
+   TEST_LINE( ValType( @mnDoubleP )           , "U"   )
+   TEST_LINE( ValType( @mnIntN    )           , "U"   )
+   TEST_LINE( ValType( @mnLongN   )           , "U"   )
+   TEST_LINE( ValType( @mnDoubleN )           , "U"   )
+   TEST_LINE( ValType( @mnDoubleI )           , "U"   )
+   TEST_LINE( ValType( @mdDateE   )           , "U"   )
+   TEST_LINE( ValType( @mlFalse   )           , "U"   )
+   TEST_LINE( ValType( @mlTrue    )           , "U"   )
+   TEST_LINE( ValType( @moObject  )           , "U"   )
+   TEST_LINE( ValType( @muNIL     )           , "U"   )
+   TEST_LINE( ValType( @mbBlock   )           , "U"   )
+   TEST_LINE( ValType( @maArray   )           , "U"   )
+
+   /* DESCEND() */
+
+   TEST_LINE( Descend()                       , NIL                                                 ) /* Bug in CA-Cl*pper, it returns undefined trash */
+   TEST_LINE( Descend( NIL )                  , NIL                                                 )
+   TEST_LINE( Descend( { "A", "B" } )         , NIL                                                 )
+   TEST_LINE( Descend( @lcString )            , NIL                                                 )
+   TEST_LINE( Descend( lcString )             , "¸»´´±"                                             )
+   TEST_LINE( Descend( lcString )             , "¸»´´±"                                             )
+   TEST_LINE( Descend( Descend( lcString ) )  , "HELLO"                                             )
+   TEST_LINE( Descend( .F. )                  , .T.                                                 )
+   TEST_LINE( Descend( .T. )                  , .F.                                                 )
+   TEST_LINE( Descend( 0 )                    , 0.00                                                )
+   TEST_LINE( Descend( 1 )                    , -1.00                                               )
+   TEST_LINE( Descend( -1 )                   , 1.00                                                )
+   TEST_LINE( Descend( Descend( 256 ) )       , 256.00                                              )
+   TEST_LINE( Descend( 2.0 )                  , -2.00                                               )
+   TEST_LINE( Descend( 2.5 )                  , -2.50                                               )
+   TEST_LINE( Descend( -100.35 )              , 100.35                                              )
+   TEST_LINE( Str(Descend( -740.354 ))        , "       740.35"                                     )
+   TEST_LINE( Str(Descend( -740.359 ))        , "       740.36"                                     )
+   TEST_LINE( Str(Descend( -740.354 ), 15, 5) , "      740.35400"                                   )
+   TEST_LINE( Str(Descend( -740.359 ), 15, 5) , "      740.35900"                                   )
+   TEST_LINE( Descend( 100000 )               , -100000.00                                          )
+   TEST_LINE( Descend( -100000 )              , 100000.00                                           )
+   TEST_LINE( Descend( "" )                   , ""                                                  )
+   TEST_LINE( Descend( Chr(0) )               , ""+Chr(0)+""                                        )
+   TEST_LINE( Descend( Chr(0) + "Hello" )     , ""+Chr(0)+"¸›””‘"                                   )
+   TEST_LINE( Descend( "Hello"+Chr(0)+"wo" )  , "¸›””‘"+Chr(0)+"‰‘"                                 )
+   TEST_LINE( Descend( SToD( "" ) )           , 5231808                                             )
+   TEST_LINE( Descend( SToD( "01000101" ) )   , 3474223                                             )
+   TEST_LINE( Descend( SToD( "19801220" ) )   , 2787214                                             )
 
    /* (operators) */
 
@@ -899,8 +1010,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
                     "       Output: " + s_cFileName + s_cNewLine +;
                     "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + s_cNewLine +;
                     "     Switches: " + cParam + s_cNewLine +;
-                    "===========================================================================" + s_cNewLine +;
-                    s_cNewLine )
+                    "===========================================================================" + s_cNewLine )
 
    fWrite( s_nFhnd, PadL( "No", TEST_RESULT_COL1_WIDTH ) + ". " +;
                     PadR( "TestCall()", TEST_RESULT_COL2_WIDTH ) + " -> " +;
@@ -952,9 +1062,9 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    IF s_lShowAll .OR. lFailed
 
       fWrite( s_nFhnd, Str( s_nCount, TEST_RESULT_COL1_WIDTH ) + ". " +;
-                       PadR( StrTran( cBlock, Chr(0), "." ), TEST_RESULT_COL2_WIDTH ) + " -> " +;
-                       PadR( StrTran( XToStr( xResult ), Chr(0), "." ), TEST_RESULT_COL3_WIDTH ) + " | " +;
-                       PadR( StrTran( XToStr( xResultExpected ), Chr(0), "." ), TEST_RESULT_COL4_WIDTH ) )
+                       PadR( cBlock, TEST_RESULT_COL2_WIDTH ) + " -> " +;
+                       PadR( XToStr( xResult ), TEST_RESULT_COL3_WIDTH ) + " | " +;
+                       PadR( XToStr( xResultExpected ), TEST_RESULT_COL4_WIDTH ) )
 
       IF lFailed
          fWrite( s_nFhnd, " ! *FAIL* !" )
@@ -976,8 +1086,7 @@ STATIC FUNCTION TEST_OPT_Z()
 
 STATIC FUNCTION TEST_END()
 
-   fWrite( s_nFhnd, s_cNewLine +;
-                    "===========================================================================" + s_cNewLine +;
+   fWrite( s_nFhnd, "===========================================================================" + s_cNewLine +;
                     "Test calls passed: " + Str( s_nPass ) + s_cNewLine +;
                     "Test calls failed: " + Str( s_nFail ) + s_cNewLine +;
                     "                   ----------" + s_cNewLine +;
@@ -1001,7 +1110,7 @@ STATIC FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
-   CASE cType == "C" ; RETURN '"' + xValue + '"'
+   CASE cType == "C" ; RETURN '"' + StrTran( xValue, Chr(0), '"+Chr(0)+"' ) + '"'
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
    CASE cType == "D" ; RETURN 'SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )

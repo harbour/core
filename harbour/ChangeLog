@@ -1,3 +1,17 @@
+19990831-22:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/hvm.c
+    ! hb_vmFunction() now resets the return value to NIL, since previously
+      the default return value of the functions was not defined if there was
+      no hb_ret*() calls in them or if the called function was a PROCEDURE.
+  * source/rtl/descend.c
+    include/extend.h
+    ! It was modifying the string buffer directly, RTL_TEST failed in some
+      situations. Fixed. hb_strDescend() prototype modified.
+  * tests/working/Makefile
+    + ValType() tests added.
+    ! empty.prg, strsub.prg removed.
+    + Descend() tests added.
+
 19990831-20:55 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
      * Methods RefreshAll() and Invalidate() were not recalculating ::RowCount.

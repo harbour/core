@@ -65,17 +65,15 @@
 #include "extend.h"
 #include "itemapi.h"
 
-char * hb_strDescend( char * szText, ULONG ulLen )
+void hb_strDescend( char * szStringTo, char * szStringFrom, ULONG ulLen )
 {
-   if( ! ( ulLen == 1 && szText[ 0 ] == '\0' ) )
+   if( ulLen == 1 && szStringFrom[ 0 ] == '\0' )
+      szStringTo[ 0 ] = '\0';
+   else
    {
-      char *s;
-
-      for( s = szText; ulLen--; ++s )
-         *s = 256 - *s;
+      for(; ulLen--; ++szStringTo, ++szStringFrom )
+         *szStringTo = 256 - *szStringFrom;
    }
-
-   return szText;
 }
 
 HARBOUR HB_DESCEND( void )
@@ -85,7 +83,12 @@ HARBOUR HB_DESCEND( void )
    if( pItem )
    {
       if( IS_STRING( pItem ) )
-         hb_retclen( hb_strDescend( pItem->item.asString.value, pItem->item.asString.length ), pItem->item.asString.length );
+      {
+         char * szBuffer = ( char * ) hb_xgrab( pItem->item.asString.length );
+         hb_strDescend( szBuffer, pItem->item.asString.value, pItem->item.asString.length );
+         hb_retclen( szBuffer, pItem->item.asString.length );
+         hb_xfree( szBuffer );
+      }
       else if( IS_DATE( pItem ) )
          hb_retnl( 5231808 - pItem->item.asDate.value );
       else if( IS_NUMERIC( pItem ) )

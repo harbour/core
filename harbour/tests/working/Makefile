@@ -58,7 +58,6 @@ PRG_SOURCES=\
         dosshell.prg \
         dynobj.prg \
         dynsym.prg \
-        empty.prg \
         exittest.prg \
         fib.prg \
         fileio.prg \
@@ -120,7 +119,6 @@ PRG_SOURCES=\
         strings2.prg \
         strings3.prg \
         strip.prg \
-        strsub.prg \
         syserror.prg \
         t1.prg \
         test.prg \

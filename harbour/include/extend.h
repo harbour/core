@@ -273,11 +273,10 @@ extern int      hb_strgreater( char * sz1, char * sz2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
 extern BOOL     hb_strEmpty( char * szText, ULONG ulLen );
-extern char *   hb_strDescend( char * szText, ULONG ulLen );
+extern void     hb_strDescend( char * szStringTo, char * szStringFrom, ULONG ulLen );
 extern ULONG    hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen );
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
-extern char *   hb_strDescend( char * szText, ULONG ulLen );
 
 extern double   hb_numRound( double dResult, int iDec );
 

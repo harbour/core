@@ -1189,6 +1189,7 @@ void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes the sym
 
 void hb_vmFunction( WORD wParams )
 {
+   hb_itemClear( &stack.Return );
    hb_vmDo( wParams );
    hb_itemCopy( stack.pPos, &stack.Return );
    hb_stackPush();
