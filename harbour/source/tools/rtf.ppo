@@ -1,0 +1,136 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function TRTF() ; static oClass ; if oClass == nil ; oClass = TClass():New("TRTF" ) ; 
+
+ oClass:AddData("cFile" ) 
+ oClass:AddData("nHandle" ) 
+oClass:AddMethod("WriteHeader",@TRTF_WriteHeader() )
+oClass:AddMethod("New",@TRTF_New() )
+
+oClass:AddMethod("WritePar",@TRTF_WritePar() )
+oClass:AddMethod("WriteLink",@TRTF_WriteLink() )
+
+oClass:AddMethod("Close",@TRTF_Close() )
+oClass:AddMethod("WriteParBold",@TRTF_WriteParBold() )
+oClass:AddMethod("WriteTitle",@TRTF_WriteTitle() )
+oClass:Create() ; endif ; return oClass:Instance()
+static function TRTF_NEW(cFile ) ; local Self := QSelf()
+
+if Valtype(cFile ) <> NIL .and. Valtype(cFile )=="C"
+     self:cFile:=cFile
+     self:nHandle:=FCreate(Self:cFile)
+endif
+Return Self
+
+static function TRTF_WriteHeader() ; local Self := QSelf()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local cHeader:='{\rtf1\ansi\pard\plain\fs20'+chr(13)+chr(10)+ '\deff5{\fonttbl'+chr(13)+chr(10)+ '{\f0\froman Tms Rmn;}'+chr(13)+chr(10)+ '{\f1\fdecor Symbol;}'+chr(13)+chr(10)+ '{\f2\fswiss Helv;}'+chr(13)+chr(10)+ '{\f3\fmodern LinePrinter;}'+chr(13)+chr(10)+ '{\f4\froman Terminal;}'+chr(13)+chr(10)+ '{\f5\froman Times New Roman;}'+chr(13)+chr(10)+ '{\f6\fswiss Arial;}'+chr(13)+chr(10)+ '{\f7\froman CG Times (WN);}'+chr(13)+chr(10)+ '{\f8\fmodern Courier;}'+chr(13)+chr(10)+ '{\f9\fmodern Modern;}'+chr(13)+chr(10)+ '{\f10\fscript Script;}'+chr(13)+chr(10)+ '{\f11\fswiss Univers (WN);}'+chr(13)+chr(10)+ '{\f12\fnil Wingdings;}'+chr(13)+chr(10)+ '{\f13\fswiss MS Sans Serif;}'+chr(13)+chr(10)+ '};'+chr(13)+chr(10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Local cColortable:='{\colortbl;'+chr(13)+chr(10)+ '\red0\green0\blue0;'+chr(13)+chr(10)+ '\red0\green0\blue128;'+chr(13)+chr(10)+ '\red0\green128\blue128;'+chr(13)+chr(10)+ '\red0\green128\blue0;'+chr(13)+chr(10)+ '\red128\green0\blue0;'+chr(13)+chr(10)+ '\red128\green0\blue128;'+chr(13)+chr(10)+ '\red128\green128\blue0;'+chr(13)+chr(10)+ '\red128\green128\blue128;'+chr(13)+chr(10)+ '\red64\green64\blue64;'+chr(13)+chr(10)+ '\red0\green0\blue255;'+chr(13)+chr(10)+ '\red0\green255\blue255;'+chr(13)+chr(10)+ '\red0\green255\blue0;'+chr(13)+chr(10)+ '\red255\green0\blue0;'+chr(13)+chr(10)+ '\red192\green192\blue192;'+chr(13)+chr(10)+ '\red255\green255\blue0;'+chr(13)+chr(10)+ '\red255\green255\blue255;'+chr(13)+chr(10)+ '}'+chr(13)+chr(10)
+
+FWrite(Self:nHandle,cHeader)
+
+FWrite(Self:nHandle,cColorTable)
+Return Self
+
+static function TRTF_WritePar(cPar ) ; local Self := QSelf()
+     FWrite(Self:nHandle,'\pard{\plain\cf1\f2\fs50\i\b\qc '+cPar+' }\par'+chr(13)+chr(10))
+Return Self
+static function TRTF_WriteParBold(cPar ) ; local Self := QSelf()
+     FWrite(Self:nHandle,'\pard{\cf1\fs20 '+cPar+' }\par'+chr(13)+chr(10))
+Return Self
+
+static function TRTF_WriteTitle(cTitle,cTopic ) ; local Self := QSelf()
+
+
+
+
+local cWrite:='{\f2'+chr(13)+chr(10)+ '  #{\footnote \pard\plain \fs20 # '+cTitle +' }'+chr(13)+chr(10)+ '  ${\footnote \pard\plain \fs20 $ '+cTopic +' }'+chr(13)+chr(10)+ '  K{\footnote \pard\plain \fs20 K '+cTopic +' }'+chr(13)+chr(10)+ '}'+chr(13)+chr(10)
+     FWrite(Self:nHandle,cWrite)
+     Self:WritePar(cTopic)
+Return Self
+static function TRTF_CLOSE() ; local Self := QSelf()
+FWrite(Self:nHandle,'}'+chr(13)+chr(10))
+FClose(Self:nHandle)
+Return Self
+
+static function TRTF_WriteLink(cLink ) ; local Self := QSelf()
+Local nPos,xPos
+npos:=at("()",cLink)
+if nPos>0
+     FWrite(Self:nHandle,'\pard{\cf1\fs20 See Also {\f2\uldb '+cLink+'}{\v\f2 '+strtran(cLink,"()","xx") +'}\par'+chr(13)+chr(10))
+else
+     xPos:=At(" ",cLink)
+     if xPos>0
+          cTemp:=substr(cTop,1,npos-1)+'_'+substr(cTop,npos+1)
+          FWrite(Self:nHandle,'\pard{\cf1\fs20 See Also {\f2\uldb '+cLink+'}{\v\f2 '+cTemp+'}\par'+chr(13)+chr(10))
+     else
+          FWrite(Self:nHandle,'\pard{\cf1\fs20 See Also {\f2\uldb '+cLink+'}{\v\f2 '+cLink +'}\par'+chr(13)+chr(10))
+     endif
+endif
+return Self
+

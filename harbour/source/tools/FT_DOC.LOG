@@ -1,0 +1,32 @@
+
+CONVERSION      BINTODEC()      BINTODEC.rtf   
+CONVERSION      DECTOBIN()      DECTOBIN.rtf   
+CONVERSION      DECTOHEXA()     DECTOHEX.rtf   
+CONVERSION      DECTOOCTAL()    DECTOOCT.rtf   
+CONVERSION      HEXATODEC()     HEXATODE.rtf   
+CONVERSION      ISBIN()         ISBIN.rtf      
+CONVERSION      ISDEC()         ISDEC.rtf      
+CONVERSION      ISHEXA()        ISHEXA.rtf     
+CONVERSION      ISOCTAL()       ISOCTAL.rtf    
+CONVERSION      OCTALTODEC()    OCTALTOD.rtf   
+DOS             CD()            CD.rtf         
+DOS             MD()            MD.rtf         
+DOS             RD()            RD.rtf         
+HARBOUR TOOLS   TFILEREAD()     TFILEREA.rtf   
+STRING          GT_ASCIISUM()   GT_ASCII.rtf   
+STRING          GT_ASCPOS()     GT_ASCPO.rtf   
+STRING          GT_ATDIFF()     GT_ATDIF.rtf   
+STRING          GT_CHAREVEN()   GT_CHARE.rtf   
+STRING          GT_CHARMIX()    GT_CHARM.rtf   
+STRING          GT_CHARODD()    GT_CHARO.rtf   
+STRING          GT_CHRCOUNT()   GT_CHRCO.rtf   
+STRING          GT_CHRFIRST()   GT_CHRFI.rtf   
+STRING          GT_CHRTOTAL()   GT_CHRTO.rtf   
+STRING          GT_STRCOUNT()   GT_STRCO.rtf   
+STRING          GT_STRCSPN()    GT_STRCS.rtf   
+STRING          GT_STRDIFF()    GT_STRDI.rtf   
+STRING          GT_STREXPAND()  GT_STREX.rtf   
+STRING          GT_STRLEFT()    GT_STRLE.rtf   
+STRING          GT_STRPBRK()    GT_STRPB.rtf   
+STRING          GT_STRRIGHT()   GT_STRRI.rtf   
+STRING          STRFORMAT()     STRFORMA.rtf   
