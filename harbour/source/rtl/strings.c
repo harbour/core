@@ -4,6 +4,7 @@
 
 #include <extend.h>
 #include <ctype.h>
+#include <set.h>
 
 /* TODO: search this file for TODO and find 'em! */
 
@@ -1004,6 +1005,7 @@ char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
       int iWidth = pNumber->wLength;
       int iDec   = pNumber->wDec;
       if( iDec > 9 ) iDec = 9;
+      if( hb_set_fixed ) iDec = hb_set.HB_SET_DECIMALS;
 
       if( pWidth )
       {

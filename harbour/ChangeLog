@@ -1,3 +1,17 @@
+19990520-03:40 EST David G. Holm <dholm@jsd-llc.com>
+  * include/set.h
+    - Added hb_set_fixed and HB_SETFIXED().
+  * source/rtl/set.c
+    - Added hb_set_fixed and HB_SETFIXED().
+  * source/rtl/strings.c
+    - Added test for hb_set_fixed and set default number of decimal positions
+      to hb_set.HB_SET_DECIMALS if hb_set_fixed is TRUE instead of using the
+      number of decimal positions specified in the ITEM structure.
+  * source/vm/hvm.c
+    - Removed the special case for a return value of zero from PushNumber().
+  * tests/working/teststr.prg
+    - Added a second run of the test with SET FIXED ON.
+
 19990520-03:00 EST David G. Holm <dholm@jsd-llc.com>
   * include/extend.h
     - Added new function hb_str() for public use.

@@ -8,6 +8,7 @@
 
 HB_set_struct hb_set;
 BOOL hb_set_century;
+BOOL hb_set_fixed;
 
 static BOOL set_logical (PITEM pItem)
 {
@@ -109,6 +110,28 @@ HARBOUR HB_SETCENTURY (void)
          _xfree (szDateFormat);
          hb_set.HB_SET_DATEFORMAT = szNewFormat;
       }
+   }
+}
+
+HARBOUR HB_SETFIXED (void)
+{
+   PITEM pItem = _param (1, IT_ANY);
+
+   /* Start by returning the current setting */
+   _retl (hb_set_fixed);
+   /* 
+    * Then change the setting if the parameter is a logical value, or is
+    * either "ON" or "OFF" (regardless of case)
+    */
+   if ( pItem && IS_LOGICAL (pItem)) hb_set_fixed = pItem->value.iLogical;
+   else if ( pItem && IS_STRING (pItem))
+   {
+      if (pItem->wLength == 2 && toupper (pItem->value.szText [0]) == 'O'
+      && toupper (pItem->value.szText [1]) == 'N')
+         hb_set_fixed = TRUE;
+      else if (pItem->wLength == 3 && toupper (pItem->value.szText [0]) == 'O'
+      && toupper (pItem->value.szText [1]) == 'F' && toupper (pItem->value.szText [2]) == 'F')
+         hb_set_fixed = FALSE;
    }
 }
 
@@ -293,6 +316,7 @@ HARBOUR SET (void)
 void InitializeSets (void)
 {
    hb_set_century = FALSE;
+   hb_set_fixed   = FALSE;
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = 0;      /* NULL pointer */
    hb_set.HB_SET_BELL = FALSE;

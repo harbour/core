@@ -9,6 +9,7 @@
 
 HARBOUR SET (void);
 HARBOUR HB_SETCENTURY (void);
+HARBOUR HB_SETFIXED (void);
 void InitializeSets (void);
 void ReleaseSets (void);
 
@@ -120,5 +121,6 @@ typedef struct
 
 extern HB_set_struct hb_set;
 extern BOOL hb_set_century;
+extern BOOL hb_set_fixed;
 
 #endif

@@ -1572,10 +1572,7 @@ void PushNil( void )
 
 void PushNumber( double dNumber, WORD wDec )
 {
-   if( ! dNumber )
-      PushInteger( 0 );
-
-   else if( wDec )
+   if( wDec )
       PushDouble( dNumber, wDec );
 
    else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
@@ -1660,7 +1657,7 @@ void PushDouble( double dNumber, WORD wDec )
    stack.pPos->value.dNumber = dNumber;
    if( dNumber >= 10000000000.0 ) stack.pPos->wLength = 20;
    else stack.pPos->wLength = 10;
-   stack.pPos->wDec    = wDec;
+   stack.pPos->wDec = (wDec > 9) ? 9 : wDec;
    StackPush();
    HBDEBUG( "PushDouble\n" );
 }
