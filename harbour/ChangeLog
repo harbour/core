@@ -1,3 +1,8 @@
+2001-11-07 23:00 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
+     utils/hbmake/hbmake.prg
+      * Fix some small problem with hbmake under linux
+
 2001-11-07 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libct/files.c

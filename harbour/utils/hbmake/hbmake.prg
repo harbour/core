@@ -1,8 +1,6 @@
-
 /*
  * $Id$
  */
-
 /*
  * Harbour Project source code:
  * hbmake.Prg Harbour make utility main file
@@ -50,7 +48,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
 #include 'fileio.ch'
 #include "common.ch"
 #include "radios.ch"
@@ -560,63 +557,6 @@ endif
 
 Return nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function ListAsArray2()
-*+
-*+    Called from ( bccdir.prg   )   1 - function getbccdir()
-*+                ( hbmake.prg   )   2 - function main()
-*+                                   5 - function parsemakfi()
-*+                                   1 - function getbccdir()
-*+                                   1 - function getvccdir()
-*+                                   1 - function getgccdir()
-*+                                   1 - function checkdefine()
-*+                                   1 - function setcommands()
-*+                                   1 - function replacemacros()
-*+                                   4 - function setbuild()
-*+                                   1 - function compfiles()
-*+                                   1 - function getparadefines()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function GetBccDir()
-*+
-*+    Called from ( hbmake.prg   )   1 - function parsemakfi()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function GetVccDir()
-*+
-*+    Called from ( hbmake.prg   )   1 - function parsemakfi()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function ReadLN()
-*+
-*+    Called from ( hbmake.prg   )   2 - function parsemakfi()
-*+                                   1 - function checkdefine()
-*+                                   1 - function setcommands()
-*+                                   2 - function setbuild()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function checkDefine()
-*+
-*+    Called from ( hbmake.prg   )   1 - function parsemakfi()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
 Function checkDefine( cTemp )
 
 Local cDef
@@ -778,24 +718,12 @@ amacro := listasarray2( cRead, ":" )
 If Len( amacro ) > 1
    aTemp := listasarray2( amacro[ 2 ], " " )
    aeval(atemp,{|xItem|       Aadd( aBuildOrder, xItem )})
-/*
-   For nPos := 1 To Len( aTemp )
-      Aadd( aBuildOrder, atemp[ nPos ] )
-   Next
-*/
 Endif
 Aadd( aBuildOrder, amacro[ 1 ] )
 cRead := Strtran( cRead, "@&&!", "" )
 
 amacro := listasarray2( cRead, '\' )
 aeval(amacro,{|xMacro| if(at("$",xmacro)>0, findmacro( xMacro, @cRead ),)})
-/*
-For nPos := 1 To Len( amacro )
-   If At( "$", amacro[ nPos ] ) > 0
-      findmacro( amacro[ nPos ], @cRead )
-   Endif
-Next
-*/
 if !lLinux
    cLinkcomm   := cRead + "  @" + cLinker
    nLinkHandle := Fcreate( clinker )
@@ -880,10 +808,14 @@ For nCount := 1 To Len( aOrder )
          If nPos > 0
             cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
             cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
-            cComm += " > {test}.out"
+	    if !lLinux
+            cComm += " > test.out"
+	    else
+	    cComm += " 2>test.out"
+	    endif
             outstd(cComm)
             ! ( cComm )
-                  cErrText := memoread( '{test}.out' )
+                  cErrText := memoread( 'test.out' )
                   lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
 
             if !lIgnoreErrors .and. lEnd
@@ -962,13 +894,13 @@ else /****** Extended mode *****/
             If nPos > 0
                cComm := Strtran( cComm, "o$*", "o" + aobjsc[ nPos ] )
                cComm := Strtran( cComm, "$**", acs[ nFiles ] )
-               cComm += " > {test}.out"
+               cComm += " > test.out"
                outstd(cComm)
                ! ( cComm )
-                  cErrText := memoread( '{test}.out' )
+                  cErrText := memoread( 'test.out' )
                   lEnd := 'Error' $ cErrText 
-               /*   if file('{test}.out'  )
-                    ferase('{test}.out'  )
+               /*   if file('test.out'  )
+                    ferase('test.out'  )
                   endif*/
             if !lIgnoreErrors .and. lEnd
                 quit
@@ -1003,15 +935,15 @@ endif
             If nPos > 0
                cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
                cComm := Strtran( cComm, "$**", aprgs[ nFiles ] )
-               cComm += " > {test}.out"
+               cComm += " > test.out"
                outstd( " ")
                // ? cComm
                outstd(cComm)
                ! ( cComm )
-                cErrText := memoread( '{test}.out' )
+                cErrText := memoread( 'test.out' )
                lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
-/*               if file('{test}.out'  )
-                  ferase('{test}.out'  )
+/*               if file('test.out'  )
+                  ferase('test.out'  )
                endif*/
                if !lIgnoreErrors .and. lEnd
                   quit
@@ -1223,7 +1155,7 @@ if !empty(cobjDir)
       dirchange('..')
    endif
 endif
-amacros:=GetSourceDirMacros()
+amacros:=GetSourceDirMacros(lGcc,cos)
 if lGcc
 cObjDir:=alltrim(cObjDir)
 if !empty(cObjDir)
@@ -1307,10 +1239,10 @@ Endif
 
 attention( 'Spacebar to select, Enter to continue process', 22 )
 if !lRecurse
-   ain:=GetSourceFiles(.f.) 
+   ain:=GetSourceFiles(.f.,lGcc,cOs) 
    nLenaSrc:=Len(ain)
 else
-   ain:=GetSourceFiles() 
+   ain:=GetSourceFiles(,lGcc,cOs) 
    nLenaSrc:=Len(asrc)
 endif
    aOut := Aclone( aIn )
@@ -1655,10 +1587,10 @@ if !lextended
                cComm := Strtran( cComm, "$**", aPrgs[ nFiles ] )
                outstd(cComm)
                ! ( cComm )
-                  cErrText := memoread( '{test}.out' )
+                  cErrText := memoread( 'test.out' )
                   lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
-                  if file('{test}.out'  )
-                    ferase('{test}.out'  )
+                  if file('test.out'  )
+                    ferase('test.out'  )
                   endif
             if !lIgnoreErrors .and. lEnd
                 quit
@@ -1724,13 +1656,13 @@ else /**************Extended mode ******/////
             If nPos > 0
                cComm := Strtran( cComm, "o$*", "o" + aobjs[ nPos ] )
                cComm := Strtran( cComm, "$**", acs[ nFiles ] )
-               cComm += " > {test}.out"
+               cComm += " > test.out"
             outstd(cComm)
                ! ( cComm )
-                  cErrText := memoread( '{test}.out' )
+                  cErrText := memoread( 'test.out' )
                   lEnd := 'Error' $ cErrText 
-                  if file('{test}.out'  )
-                    ferase('{test}.out'  )
+                  if file('test.out'  )
+                    ferase('test.out'  )
                   endif
             if !lIgnoreErrors .and. lEnd
                 quit
@@ -1764,16 +1696,16 @@ else /**************Extended mode ******/////
             If nPos > 0
                cComm := Strtran( cComm, "o$*", "o" + aObjs[ nPos ] )
                cComm := Strtran( cComm, "$**", aprgs[ nFiles ] )
-               cComm += " > {test}.out"
+               cComm += " > test.out"
                outstd( " ")
 
                 ? cComm
                   outstd(cComm)
                ! ( cComm )
-                cErrText := memoread( '{test}.out' )
+                cErrText := memoread( 'test.out' )
                lEnd := 'C2006' $ cErrText .or. 'No code generated' $ cErrText
-               if file('{test}.out'  )
-                  ferase('{test}.out'  )
+               if file('test.out'  )
+                  ferase('test.out'  )
                endif
                if !lIgnoreErrors .and. lEnd
                   quit
@@ -1914,22 +1846,23 @@ if !empty(cobjDir)
    endif
 endif
 
-amacros:=GetSourceDirMacros()
+amacros:=GetSourceDirMacros(lgcc,cos)
+
 if lGcc
    cObjDir:=alltrim(cObjDir)
    if !empty(cObjDir)
       cObjDir+='/'
    endif
-   cTest:=upper(cObjDir)+'/'
+   cTest:=cObjDir+'/'
 else
    cObjDir:=alltrim(cObjDir)
    if !empty(cObjDir)
       cObjDir+='\'
    endif
-   cTest:=upper(cObjDir)+'\'
+   cTest:=cObjDir+'\'
 endif
 
-aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
+aeval(amacros,{|x,y|cItem:=substr(x[2],1,len(x[2])),qout(citem),if(at(citem,cTest)>0,(amacros[y,1]:='OBJ',amacros[y,2]:=cObjDir),)})
 
 if lAutomemvar
 cDefHarOpts+=" -a "
@@ -1997,10 +1930,10 @@ Endif
 
 attention( 'Spacebar to select, Enter to continue process', 22 )
 if !lRecurse
-   ain:=GetSourceFiles(.f.) 
+   ain:=GetSourceFiles(.f.,lGcc,cOs) 
    nLenaSrc:=Len(ain)
 else
-   ain:=GetSourceFiles() 
+   ain:=GetSourceFiles(,lGcc,cOs)
    nLenaSrc:=Len(ain)
 endif
 aOut := Aclone( aIn )
@@ -2032,7 +1965,7 @@ for x:=1 to len(amacros)
    if !empty(amacros[x,2])       
          cItem := amacros[x,2]
          
-         nPos:=ascan(aprgs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
+       nPos:=ascan(aprgs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
       AEVAL(aprgs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,aprgs[b]:=strtran(a,cpath,"$("+amacros[x,1]+')\'),)})
       if !amacros[x,3]
@@ -2146,7 +2079,7 @@ if lBcc
  Fwrite( nLinkHandle, "IFLAGS = " +CRLF)
  Fwrite( nLinkHandle, "LINKER = tlib $(LFLAGS) $(PROJECT)"+CRLF)
  Fwrite( nLinkHandle, " "+CRLF)
- Fwrite( nLinkHandle, "ALLOBJ =  $(OBJFILES)"+CRLF)
+ Fwrite( nLinkHandle, "ALLOBJ =  $(OBJFILES) $(OBJCFILES)"+CRLF)
  Fwrite( nLinkHandle, "ALLRES = $(RESFILES)"+CRLF)
  Fwrite( nLinkHandle, "ALLLIB = "+CRLF)
  Fwrite( nLinkHandle, ".autodepend"+CRLF)
@@ -2168,13 +2101,13 @@ elseif lGcc
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = "+CRLF)
- if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
-    Fwrite( nLinkHandle, "LINKER = ar -M <"+CRLF)
+ if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux" .or. at("linux",lower(os()))>0
+    Fwrite( nLinkHandle, "LINKER = ar -M "+CRLF)
  else
     Fwrite( nLinkHandle, "LINKER = $(BCB)\ar -M <"+CRLF)
  endif
  Fwrite( nLinkHandle, " "+CRLF)
- Fwrite( nLinkHandle, "ALLOBJ = $(OBJFILES) "+CRLF)
+ Fwrite( nLinkHandle, "ALLOBJ = $(OBJFILES) $(OBJCFILES) "+CRLF)
  Fwrite( nLinkHandle, "ALLRES = $(RESFILES) "+CRLF)
  Fwrite( nLinkHandle, "ALLLIB = $(LIBFILES) "+CRLF)
  Fwrite( nLinkHandle, ".autodepend"+CRLF)
@@ -2232,33 +2165,25 @@ Local nObjPos as Numeric
 
 // ? "setting link file"
 cRead  := Alltrim( readln( @leof ) )
+
 nLinkHandle := Fcreate( clinker )
+
    szProject:=cRead
 amacro := listasarray2( cRead, ":" )
 If Len( amacro ) > 1
    aTemp := listasarray2( amacro[ 2 ], " " )
    aeval(aTemp,{|xItem|      Aadd( aBuildOrder, xItem)} )
-/*
-   For nPos := 1 To Len( aTemp )
-      Aadd( aBuildOrder, atemp[ nPos ] )
-   Next
-*/
 Endif
 Aadd( aBuildOrder, amacro[ 1 ] )
 cRead := Strtran( cRead, "@&&!", "" )
 
 amacro := listasarray2( cRead, '\' )
    aeval(amacro,{|xMacro|      findmacro( xMacro, @cRead )})
-/*For nPos := 1 To Len( amacro )
-
-   If At( "$", amacro[ nPos ] ) > 0
-      findmacro( amacro[ nPos ], @cRead )
-   Endif
-Next*/
 if lbcc .or. lVcc
 cLinkcomm   := cRead + "  @" + cLinker
 else
-cLinkcomm   := cRead + " " + cLinker
+cLinkcomm   :=  cRead + " " + cLinker + " < "
+
 endif
 
 //#define CRLF hb_osnewline()
@@ -2267,7 +2192,11 @@ For nPos := 1 To 7
    amacro := listasarray2( cRead, " " )
    For ncount := 1 To Len( amacro )
       If At( "$", amacro[ nCount ] ) > 0
-         if (amacro[ nCount ] =="$(ALLOBJ)")
+             if (amacro[ nCount ] = "$(PROJECT)") .and. lGcc 
+             Findmacro(amacro[ nCount ], @cRead )
+             fwrite(nLinkHandle,"CREATE " + "lib"+cRead+CRLF)
+
+         elseif (amacro[ nCount ] =="$(ALLOBJ)")
              findmacro( amacro[ nCount ], @cRead )
              aCurObjs:=ListasArray2(cRead," ")
              for nObjPos:=1 to Len(aCurObjs)
@@ -2282,18 +2211,17 @@ For nPos := 1 To 7
                    endif
                  endif
               next
-         Elseif (amacro[ nCount] = "$(PROJECT)") .and. lGcc
-             Findmacro(amacro[ nCount ], @cRead )
-             fwrite(nLinkHandle,"CREATE " + cRead+CRLF)
          endif
       Endif
    Next
 Next
-if lGcc
+if lGcc 
 fwrite(nLinkHandle, "SAVE" +CRLF)
 fwrite(nLinkHandle, "END " +CRLF)
 endif
+
 Fclose( nLinkhandle )
+
 outstd(cLinkComm)
 
 Return nil
