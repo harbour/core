@@ -285,7 +285,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
       TODO: work with DispBegin DispEnd
    */
 
-   USHORT width, y
+   USHORT width, y;
 
    /*
       assume top level check that coordinate are all valid and fall

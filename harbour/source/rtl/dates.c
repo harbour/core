@@ -75,9 +75,11 @@
 #include <time.h>
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
    #include <dos.h>
-#endif
-#if defined(_MSC_VER)
+#elif defined(_MSC_VER) || defined(__MINGW32__)
    #include <sys\timeb.h>
+   #if defined(__MINGW32__)
+      #define _timeb timeb
+   #endif
 #endif
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    #define HB_OPTIMIZE_DTOS
@@ -85,11 +87,11 @@
 
 double hb_secondsToday( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) /* || defined(_MSC_VER) */
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
    struct time t;
    gettime( &t );
    return ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + ( double ) t.ti_hund / 100;
-#elif defined(_MSC_VER)
+#elif defined(_MSC_VER) || defined(__MINGW32__)
    struct _timeb tb;
    struct tm *oTime;
 

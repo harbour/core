@@ -33,11 +33,11 @@
  *
  */
 
-#if ( defined(__GNUC__) || defined(__WATCOMC__) ) && ! defined(__MINGW32__)
-   #include <string.h>
-   #include <stdlib.h>
-#elif ( defined(_MSC_VER) || defined(__IBMCPP__) )
+#if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINW32__) )
    #include <memory.h>
+   #include <stdlib.h>
+#elif ( defined(__GNUC__) || defined(__WATCOMC__) )
+   #include <string.h>
    #include <stdlib.h>
 #else
    #include <alloc.h>

@@ -397,7 +397,7 @@ HARBOUR HB_PADR( void )
          LONG lPos;
          char cPad;
 
-         memcpy( szResult, szText, ( LONG ) ulSize );
+         hb_xmemcpy( szResult, szText, ( LONG ) ulSize );
 
          cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
 
@@ -443,7 +443,7 @@ HARBOUR HB_PADL( void )
          LONG lPos = lLen - ( LONG ) ulSize;
          char cPad;
 
-         memcpy( szResult + lPos, szText, ( LONG ) ulSize );
+         hb_xmemcpy( szResult + lPos, szText, ( LONG ) ulSize );
 
          cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ');
 
@@ -485,7 +485,7 @@ HARBOUR HB_PADC( void )
          char cPad;
          LONG w, lPos = ( lLen - ( LONG ) ulSize ) / 2;
 
-         memcpy( szResult + lPos, szText, ( LONG ) ulSize + 1 );
+         hb_xmemcpy( szResult + lPos, szText, ( LONG ) ulSize + 1 );
 
          cPad = ( ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ' );
 
@@ -563,6 +563,7 @@ HARBOUR HB_AT( void )
 
 /* locates a substring in a string starting at the end */
 /* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
+/* NOTE: Will not work with a search string > 64 KB on some platforms */
 HARBOUR HB_RAT( void )
 {
    ULONG ulSubLen = hb_parclen( 1 );
@@ -872,7 +873,7 @@ HARBOUR HB_REPLICATE( void )
 
                for( i = 0; i < lTimes; i++ )
                {
-                  memcpy( szPtr, szText, ulLen );
+                  hb_xmemcpy( szPtr, szText, ulLen );
                   szPtr += ulLen;
                }
 
@@ -919,7 +920,7 @@ HARBOUR HB_SPACE( void )
             /*       can be specified is LONG_MAX here.                    */
             /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, "SPACE" ); */
 
-            memset( szResult, ' ', lLen );
+            hb_xmemset( szResult, ' ', lLen );
             hb_retclen( szResult, lLen );
             hb_xfree( szResult );
          }
@@ -959,9 +960,9 @@ HARBOUR HB_STUFF( void )
       {
          char * szResult = ( char * ) hb_xgrab( ulTotalLen + 1 );
 
-         memcpy( szResult, szText, ulPos );
-         memcpy( szResult + ulPos, hb_parc( 4 ), ulInsert );
-         memcpy( szResult + ulPos + ulInsert, szText + ulPos + ulDel, ulText - ( ulPos + ulDel ) );
+         hb_xmemcpy( szResult, szText, ulPos );
+         hb_xmemcpy( szResult + ulPos, hb_parc( 4 ), ulInsert );
+         hb_xmemcpy( szResult + ulPos + ulInsert, szText + ulPos + ulDel, ulText - ( ulPos + ulDel ) );
 
          szResult[ ulTotalLen ] = '\0';
          hb_retclen( szResult, ulTotalLen );
@@ -979,6 +980,7 @@ HARBOUR HB_STUFF( void )
          StrTran( "...", ".", Replicate( "A", 32000 ) ) */
 
 /* replaces lots of characters in a string */
+/* Note: Will not work with a search string of > 64 KB on some platforms */
 HARBOUR HB_STRTRAN( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );

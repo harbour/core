@@ -389,7 +389,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->type = IT_STRING;
    pItem->item.asString.length = ulLen;
    pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
-   memcpy( pItem->item.asString.value, szText, ulLen );
+   hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
    pItem->item.asString.value[ ulLen ] = '\0';
 
    return pItem;
@@ -400,7 +400,7 @@ char * hb_itemGetC( PHB_ITEM pItem )
    if( pItem && IS_STRING( pItem ) )
    {
       char * szResult = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
-      memcpy( szResult, pItem->item.asString.value, pItem->item.asString.length );
+      hb_xmemcpy( szResult, pItem->item.asString.value, pItem->item.asString.length );
       szResult[ pItem->item.asString.length ] = '\0';
 
       return szResult;
@@ -434,7 +434,7 @@ ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )
       if( ulLen == 0 )
          ulLen = pItem->item.asString.length;
 
-      memcpy( szBuffer, pItem->item.asString.value, ulLen );
+      hb_xmemcpy( szBuffer, pItem->item.asString.value, ulLen );
 
       return ulLen;
    }
@@ -823,7 +823,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    if( IS_STRING( pSource ) )
    {
       pDest->item.asString.value = ( char * ) hb_xgrab( pSource->item.asString.length + 1 );
-      memcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
+      hb_xmemcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
       pDest->item.asString.value[ pSource->item.asString.length ] = '\0';
    }
 

@@ -1,3 +1,66 @@
+19990917-18:00 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * include/extend.h
+    + Added hb_xmemcpy() and hb_xmemset()
+
+  * source/hbpp/hbpp.c
+  * source/hbpp/hbppint.c
+  * source/hbpp/table.c
+  * source/hbpp/stdalone/hbpp.c
+    % Set __MINGW32__ up to use the same #includes as _MSC_VER so
+      that a search for instances of where they are not sharing
+      won't give false hits on these files (has no effect on code)
+
+  * source/hbpp/table.c
+    % __HARBOUR__ now has the value 1 (should we set this to be
+      the same as the build number, leave it at 1, or increment
+      it with each version number change?)
+
+  * source/rtl/console.c
+    % Changed all looping hb_fsWrite() calls to hb_fsWriteLarge()
+    % Use hb_fsWriteLarge() instead of putc() and/or puts()
+    + Added s_iFilenoStdout and s_iFilenoStderr to avoid calling
+      fileno() more than once each for stdout and stderr
+
+  * source/rtl/dates.c
+    % Set __MINGW32__ up to use the same #includes as _MSC_VER,
+      so that SECONDS() also returns fractions of a second
+
+  * source/rtl/dir.c
+    ! Moved normal hb_itemReturn() and ...Release()
+      calls out of the MSC, IBM & MingW32 #if block
+
+  * source/rtl/extend.c
+    + Added hb_xmemcpy() and hb_xmemset() to allow copying and setting
+      of strings that are up to ULONG_MAX in length.
+
+  * source/rtl/filesys.c
+    ! hb_fsReadLarge() and hb_fsWriteLarge() can now read and write
+      strings up to ULONG_MAX in length instead of only USHORT_MAX
+
+  * source/rtl/itemapi.c
+    % All string copying is now done via the new hb_xmemcpy() to allow
+      string lengths up to ULONG_MAX instead of UINT_MAX
+
+  * source/rtl/strings.c
+    % All string copying is now done via the new hb_xmemcpy() to allow
+      string lengths up to ULONG_MAX instead of UINT_MAX
+    % HB_SPACE() now uses the new hb_xmemset() to allow string lengths
+      up to ULONG_MAX instead of UINT_MAX
+
+  * source/rtl/gt/gtos2.c
+    ! Added missing ';' on 'USHORT width, y' in hb_gt_SetAttribute()
+
+  * source/vm/hvm.c
+    % All string copying is now done via the new hb_xmemcpy() to allow
+      string lengths up to ULONG_MAX instead of UINT_MAX
+
+  + tests/working/longdev.prg
+    + New module tests VM and file handling of strings longer than USHRT_MAX
+
+  * tests/working/inkeytst.prg
+    % Only display the Cygwin if the program was built using Cygwin
+
 19990917-15:10 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/compiler.h

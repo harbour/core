@@ -101,6 +101,8 @@ static USHORT s_uiPRow;
 static USHORT s_uiPCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
 static char   s_szAcceptResult[ ACCEPT_BUFFER_LEN ];
+static int    s_iFilenoStdout;
+static int    s_iFilenoStderr;
 
 void hb_consoleInitialize( void )
 {
@@ -120,8 +122,10 @@ void hb_consoleInitialize( void )
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */
 
-   hb_fsSetDevMode( fileno( stdout ), FM_BINARY );
-   hb_fsSetDevMode( fileno( stderr ), FM_BINARY );
+   s_iFilenoStdout = fileno( stdout );
+   hb_fsSetDevMode( s_iFilenoStdout, FM_BINARY );
+   s_iFilenoStderr = fileno( stderr );
+   hb_fsSetDevMode( s_iFilenoStderr, FM_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();
@@ -134,8 +138,8 @@ void hb_consoleInitialize( void )
 
 void hb_consoleRelease( void )
 {
-   hb_fsSetDevMode( fileno( stdout ), FM_TEXT );
-   hb_fsSetDevMode( fileno( stderr ), FM_TEXT );
+   hb_fsSetDevMode( s_iFilenoStdout, FM_TEXT );
+   hb_fsSetDevMode( s_iFilenoStderr, FM_TEXT );
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtExit();
@@ -273,7 +277,7 @@ static void hb_outstd( BYTE * pStr, ULONG ulLen )
    fflush( stdout );
 #ifdef HARBOUR_USE_GTAPI
    #ifndef __CYGWIN__
-   if( isatty( fileno( stdout ) ) )
+   if( isatty( s_iFilenoStdout ) )
    #endif
    {
       s_uiDevRow = hb_gt_Row();
@@ -303,7 +307,7 @@ static void hb_outerr( BYTE * pStr, ULONG ulLen )
    fflush( stderr );
 #ifdef HARBOUR_USE_GTAPI
    #ifndef __CYGWIN__
-   if( isatty( fileno( stderr ) ) )
+   if( isatty( s_iFilenoStdout ) )
    #endif
    {
       s_uiDevRow = hb_gt_Row();
@@ -319,7 +323,7 @@ static void hb_outerr( BYTE * pStr, ULONG ulLen )
 /* Output an item to the screen and/or printer and/or alternate */
 static void hb_altout( BYTE * pStr, ULONG ulLen )
 {
-   BYTE * pPtr = pStr;
+//   BYTE * pPtr = pStr;
 
    if( hb_set.HB_SET_CONSOLE )
    {
@@ -327,84 +331,85 @@ static void hb_altout( BYTE * pStr, ULONG ulLen )
       hb_gtWriteCon( pStr, ulLen );
       hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
 #else
-      ULONG ulCount = ulLen;
-      if( strlen( pStr ) != ulCount )
-         while( ulCount-- ) fputc( *pPtr++, stdout );
-      else
-         fputs( ( char * ) pStr, stdout );
+//      ULONG ulCount = ulLen;
+//      if( strlen( pStr ) != ulCount )
+//         while( ulCount-- ) fputc( *pPtr++, stdout );
+//      else
+//         fputs( ( char * ) pStr, stdout );
       adjust_pos( pStr, ulLen, &s_uiDevRow, &s_uiDevCol, hb_max_row(), hb_max_col() );
+      hb_fsWriteLarge( s_iFilenoStdout, pStr, ulLen );
 #endif
    }
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      unsigned write_len;
-      ULONG ulCount = ulLen;
-      pPtr = pStr;
-      while( ulCount )
-      {
-         if( ulCount > UINT_MAX )
-         {
-            write_len = UINT_MAX;
-            ulCount -= UINT_MAX;
-         }
-         else
-         {
-            write_len = ulCount;
-            ulCount = 0;
-         }
-         hb_fsWrite( hb_set_althan, ( BYTE * ) pPtr, write_len );
-         pPtr += write_len;
-      }
+//      unsigned write_len;
+//      ULONG ulCount = ulLen;
+//      pPtr = pStr;
+//      while( ulCount )
+//      {
+//         if( ulCount > UINT_MAX )
+//         {
+//            write_len = UINT_MAX;
+//            ulCount -= UINT_MAX;
+//         }
+//         else
+//         {
+//            write_len = ulCount;
+//            ulCount = 0;
+//         }
+      hb_fsWriteLarge( hb_set_althan, ( BYTE * ) pStr, ulLen );
+//         pPtr += write_len;
+//      }
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    if( hb_set_extrahan >= 0 )
    {
       /* Print to extra file if valid alternate file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      unsigned write_len;
-      ULONG ulCount = ulLen;
-      pPtr = pStr;
-      while( ulCount )
-      {
-         if( ulCount > UINT_MAX )
-         {
-            write_len = UINT_MAX;
-            ulCount -= UINT_MAX;
-         }
-         else
-         {
-            write_len = ulCount;
-            ulCount = 0;
-         }
-         hb_fsWrite( hb_set_extrahan, ( BYTE * ) pPtr, write_len );
-         pPtr += write_len;
-      }
+//      unsigned write_len;
+//      ULONG ulCount = ulLen;
+//      pPtr = pStr;
+//      while( ulCount )
+//      {
+//         if( ulCount > UINT_MAX )
+//         {
+//            write_len = UINT_MAX;
+//            ulCount -= UINT_MAX;
+//         }
+//         else
+//         {
+//            write_len = ulCount;
+//            ulCount = 0;
+//         }
+      hb_fsWriteLarge( hb_set_extrahan, ( BYTE * ) pStr, ulLen );
+//         pPtr += write_len;
+//      }
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      unsigned write_len;
-      ULONG ulCount = ulLen;
-      pPtr = pStr;
-      while( ulCount )
-      {
-         if( ulCount > UINT_MAX )
-         {
-            write_len = UINT_MAX;
-            ulCount -= UINT_MAX;
-         }
-         else
-         {
-            write_len = ulCount;
-            ulCount = 0;
-         }
-         hb_fsWrite( hb_set_printhan, ( BYTE * ) pPtr, write_len );
-         pPtr += write_len;
-      }
+//      unsigned write_len;
+//      ULONG ulCount = ulLen;
+//      pPtr = pStr;
+//      while( ulCount )
+//      {
+//         if( ulCount > UINT_MAX )
+//         {
+//            write_len = UINT_MAX;
+//            ulCount -= UINT_MAX;
+//         }
+//         else
+//         {
+//            write_len = ulCount;
+//            ulCount = 0;
+//         }
+      hb_fsWriteLarge( hb_set_printhan, ( BYTE * ) pStr, ulLen );
+//         pPtr += write_len;
+//      }
       if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
       else s_uiPCol += ulLen;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
@@ -418,24 +423,24 @@ static void hb_devout( BYTE * pStr, ULONG ulLen )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      unsigned write_len;
-      ULONG ulCount = ulLen;
-      BYTE * pPtr = pStr;
-      while( ulCount )
-      {
-         if( ulCount > UINT_MAX )
-         {
-            write_len = UINT_MAX;
-            ulCount -= UINT_MAX;
-         }
-         else
-         {
-            write_len = ulCount;
-            ulCount = 0;
-         }
-         hb_fsWrite( hb_set_printhan, ( BYTE * ) pPtr, write_len );
-         pPtr += write_len;
-      }
+//      unsigned write_len;
+//      ULONG ulCount = ulLen;
+//      BYTE * pPtr = pStr;
+//      while( ulCount )
+//      {
+//         if( ulCount > UINT_MAX )
+//         {
+//            write_len = UINT_MAX;
+//            ulCount -= UINT_MAX;
+//         }
+//         else
+//         {
+//            write_len = ulCount;
+//            ulCount = 0;
+//         }
+      hb_fsWriteLarge( hb_set_printhan, ( BYTE * ) pStr, ulLen );
+//         pPtr += write_len;
+//      }
       if( ulLen + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
       else s_uiPCol += ulLen;
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
@@ -1038,7 +1043,7 @@ HARBOUR HB_SAVESCREEN( void )
 #ifdef HARBOUR_USE_GTAPI
    USHORT uiX;
    USHORT uiCoords[ 4 ];
-   void * pBuffer;
+   char * pBuffer;
 
    uiCoords[ 0 ] = 0;
    uiCoords[ 1 ] = 0;

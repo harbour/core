@@ -38,6 +38,8 @@
  *         by the optional file and attribute mask.
  *
  * Latest mods:
+ * 1.53   19990917   dholm     Moved normal hb_itemReturn() and ...Release()
+ *                             calls out of the MSC, IBM & MingW32 #if block.
  * 1.49   19990915   dholm     Added __MINGW32__ support
  * 1.46   19990915   ptucker   Return results are now fully compatible
  *                             particularly using MSVC - other os's need
@@ -153,11 +155,6 @@
 
 #if defined(__IBMCPP__)
    #include <sys/stat.h>
-/*   #include <share.h>  */
-/*   #include <fcntl.h>  */
-/*   #include <io.h>     */
-/*   #include <errno.h>  */
-/*   #include <direct.h> */
    #include <time.h>
 
    #if !defined(HAVE_POSIX_IO)
@@ -570,7 +567,7 @@ HARBOUR HB_DIRECTORY( void )
    printf( "\n dirname pattern %s %s ", dirname, pattern );
    printf( "\n pfname pfext %s %s ", pfname, pfext );
    while( 0 == getchar() );
- */
+*/
    /* should have drive,directory in dirname and filespec in pattern */
 
    tzset();
@@ -616,7 +613,7 @@ HARBOUR HB_DIRECTORY( void )
 /*   debug code
       printf( "\n invalid dirname %s ", dirname );
       while( 0 == getchar() );
- */
+*/
       hb_itemReturn( pDir );
       hb_itemRelease( pDir );
       return;
@@ -654,7 +651,7 @@ HARBOUR HB_DIRECTORY( void )
 /*   debug code
       printf( "\n fname: %s fext: %s ", fname, fext );
       while( 0 == getchar() );
- */
+*/
       if( hb_strMatchRegExp( fname, pfname ) && hb_strMatchRegExp( fext, pfext ) )
       {
          attrib = 0;
@@ -740,10 +737,9 @@ HARBOUR HB_DIRECTORY( void )
                ft->tm_hour, ft->tm_min, ft->tm_sec );
 
 /* debug code
-
             printf( "\n name date time    %s %s %s ", filename, ddate, ttime );
             while( 0 == getchar() );
- */
+*/
 
          }
 /* debug code
@@ -752,7 +748,7 @@ HARBOUR HB_DIRECTORY( void )
             printf( "\n invalid file %s ", fullfile );
             while( 0 == getchar() );
          }
- */
+*/
 
          if( !( ( ( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ) ||
                 ( ( ushbMask & FA_SYSTEM ) == 0 && ( attrib & FA_SYSTEM ) > 0 ) ||
@@ -795,13 +791,16 @@ HARBOUR HB_DIRECTORY( void )
    closedir( dir );
 #endif
 
+#if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__)
+   }
+#endif
+/*   debug code
+      printf( "\n normal return" );
+      while( 0 == getchar() );
+*/
    hb_itemReturn( pDir ); /* DIRECTORY() returns an array */
    hb_itemRelease( pDir );
 
-#if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__)
-
-   }
-#endif
 #endif /* HAVE_POSIX_IO */
 }
 

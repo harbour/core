@@ -193,6 +193,8 @@ static USHORT s_uiErrorLast = 0;
    #define PATH_MAX 256
 #endif
 
+#define LARGE_MAX ( USHRT_MAX - 1L )
+
 extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
@@ -514,23 +516,35 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   ULONG ulReadTotal = 0;
+   ULONG ulRead = 0L, ulLeftToRead = ulCount;
+   USHORT uiToRead, uiRead;
+   BYTE * pPtr = pBuff;
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   while( ulReadTotal < ulCount )
+   while( ulLeftToRead )
    {
-      USHORT uiRead = read( hFileHandle, pBuff, ( USHORT ) ( ulCount - ulReadTotal ) );
-
-      /* -1 for bad hFileHandle or file is WriteOnly
-          0 for EOF
+      /* Determine how much to read this time */
+      if( ulLeftToRead > ( ULONG ) LARGE_MAX )
+      {
+         uiToRead = LARGE_MAX;
+         ulLeftToRead -= ( ULONG ) uiToRead;
+      }
+      else
+      {
+         uiToRead = ( USHORT ) ulLeftToRead;
+         ulLeftToRead = 0L;
+      }
+      uiRead = read( hFileHandle, pPtr, uiToRead );
+      /* -1 on bad hFileHandle
+          0 on disk full
        */
-      if( uiRead == ( USHORT )-1  || uiRead == 0 )
+      if( uiRead == ( USHORT )-1 || uiRead == 0 )
          break;
 
-      ulReadTotal += ( ULONG ) uiRead;
-
+      ulRead += ( ULONG ) uiRead;
+      pPtr += uiRead;
    }
    s_uiErrorLast = errno;
 
@@ -540,28 +554,40 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 #endif
 
-   return ulReadTotal;
+   return ulRead;
 }
 
 ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   ULONG ulWrittenTotal = 0;
+   ULONG ulWritten = 0L, ulLeftToWrite = ulCount;
+   USHORT uiToWrite, uiWritten;
+   BYTE * pPtr = pBuff;
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
-   while( ulWrittenTotal < ulCount )
+   while( ulLeftToWrite )
    {
-      USHORT uiWritten = write( hFileHandle, pBuff, ( USHORT ) ( ulCount - ulWrittenTotal ) );
-
+      /* Determine how much to write this time */
+      if( ulLeftToWrite > ( ULONG ) LARGE_MAX )
+      {
+         uiToWrite = LARGE_MAX;
+         ulLeftToWrite -= ( ULONG ) uiToWrite;
+      }
+      else
+      {
+         uiToWrite = ( USHORT ) ulLeftToWrite;
+         ulLeftToWrite = 0L;
+      }
+      uiWritten = write( hFileHandle, pPtr, uiToWrite );
       /* -1 on bad hFileHandle
           0 on disk full
        */
       if( uiWritten == ( USHORT )-1 || uiWritten == 0 )
          break;
-
-      ulWrittenTotal += ( ULONG ) uiWritten;
-
+      
+      ulWritten += ( ULONG ) uiWritten;
+      pPtr += uiWritten;
    }
    s_uiErrorLast = errno;
 
@@ -571,7 +597,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 #endif
 
-   return ulWrittenTotal;
+   return ulWritten;
 }
 
 ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
@@ -1152,8 +1178,7 @@ HARBOUR HB_FREADSTR( void )
 
          buffer[ ulRead ] = '\0';
 
-         /* NOTE: This is valid, Clipper will not return Chr(0) from FREADSTR() */
-         hb_retc( ( char * ) buffer );
+         hb_retclen( ( char * ) buffer, ulRead );
 
          hb_xfree( buffer );
       }

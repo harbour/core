@@ -277,6 +277,8 @@ extern void *   hb_xgrab( ULONG ulSize );                 /* allocates memory, e
 extern void     hb_xfree( void * pMem );                  /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG ulSize ); /* reallocates memory */
 extern ULONG    hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
+extern void *   hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ); /* copy more than memcpy() can */
+extern void *   hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set more than memset() can */
 
 /* array management */
 extern BOOL     hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign ); /* Checks if the passed parameters are valid, launches runtim error if needed */

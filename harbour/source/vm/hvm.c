@@ -1736,9 +1736,9 @@ void hb_vmMinus( void )
          while( ulLen && pItem1->item.asString.value[ ulLen - 1 ] == ' ' )
             ulLen--;
 
-         memcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
+         hb_xmemcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
          ulLen += pItem2->item.asString.length;
-         memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen );
+         hb_xmemset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen );
          pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
 
          if( pItem2->item.asString.value )
@@ -1912,7 +1912,7 @@ void hb_vmPlus( void )
       if( ( double ) ( ( double ) pItem1->item.asString.length + ( double ) pItem2->item.asString.length ) < ( double ) ULONG_MAX )
       {
          pItem1->item.asString.value = ( char * ) hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
-         memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
+         hb_xmemcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
                  pItem2->item.asString.value, pItem2->item.asString.length );
          pItem1->item.asString.length += pItem2->item.asString.length;
          pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
@@ -2318,7 +2318,7 @@ void hb_vmPushString( char * szText, ULONG length )
 {
    char * szTemp = ( char * ) hb_xgrab( length + 1 );
 
-   memcpy( szTemp, szText, length );
+   hb_xmemcpy( szTemp, szText, length );
    szTemp[ length ] = '\0';
 
    stack.pPos->type = IT_STRING;

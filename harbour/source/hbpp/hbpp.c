@@ -34,15 +34,13 @@
  */
 
 #include <stdlib.h>
-#if defined(__GNUC__) && ! defined(__MINGW32__)
- #include <string.h>
- #include <unistd.h>
+#if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32_) )
+   #include <memory.h>
+#elif defined(__GNUC__)
+   #include <string.h>
+   #include <unistd.h>
 #else
- #if (defined(_MSC_VER) || defined(__IBMCPP__))
-  #include <memory.h>
- #else
-  #include <mem.h>
- #endif
+   #include <mem.h>
 #endif
 
 #include <stdio.h>

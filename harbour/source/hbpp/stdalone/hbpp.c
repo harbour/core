@@ -34,17 +34,14 @@
  */
 
 #include <stdlib.h>
-#if defined(__GNUC__)
+#if ( defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__) )
+   #include <memory.h>
+#elif defined(__GNUC__)
    #include <unistd.h>
+#elif ! defined(__MPW__)
+   #include <malloc.h>
 #else
-   #if ! defined(__MPW__)
-      #include <malloc.h>
-   #endif
-   #if (defined(_MSC_VER) || defined(__IBMCPP__))
-      #include <memory.h>
-   #else
-      #include <mem.h>
-   #endif
+   #include <mem.h>
 #endif
 #include <string.h>
 #include <stdio.h>

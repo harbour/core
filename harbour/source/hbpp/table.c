@@ -36,7 +36,7 @@
 #include <stdio.h>
 #include "hbpp.h"
 
-   static DEFINES sD___01 = {"__HARBOUR__",NULL,-1,"", NULL };
+   static DEFINES sD___01 = {"__HARBOUR__",NULL,-1,"1", NULL };
    static DEFINES sD___02 = {"_SET_ALTERNATE",NULL,-1,"18", &sD___01 };
    static DEFINES sD___03 = {"_SET_ALTFILE",NULL,-1,"19", &sD___02 };
    static DEFINES sD___04 = {"_SET_BELL",NULL,-1,"26", &sD___03 };

@@ -14,14 +14,17 @@
 PROCEDURE main( cSkip, cExtended )
 LOCAL nKey, nMask, cText
  IF EMPTY( cSkip )
-   /* NOTE: When non-blocking Unix-style keyboard input is implemented,
-            remove the next few lines... */
-   ?
-   ? "Note: If you are using a Cygnus CYGWIN build of Harbour, some of the"
-   ? "      keyboard tests will not give the correct results, you will have"
-   ? "      to press a key even when the prompt indicates a timeout, and you"
-   ? "      may have to press an extra key in order to get the test results."
-
+   /* NOTE: When non-blocking Unix-style keyboard input is implemented
+            for Cygnus (cygwin) remove the next few lines. */
+   IF "CYGWIN" $ UPPER( VERSION(.T.) )
+      ?
+      ? "Note: You are using a Cygnus CYGWIN build of Harbour, so some of the"
+      ? "      keyboard tests will not give the correct results, you will have"
+      ? "      to press a key even when the prompt indicates a timeout, and you"
+      ? "      may have to press extra keys in order to get the test results."
+   END IF
+   /* NOTE: End of code to remove when non-blocking Unix-style keyboard input
+            is implemented for Cygnus (cygwin) */
    ?
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
    ? "INKEY(), NEXTKEY(), and LASTKEY() functions."
