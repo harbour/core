@@ -113,6 +113,7 @@ Separator     {SpaceTab}
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_ STATIC_ RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
+%x            DECLARE_ OPTIONAL_
 %s            INDEX
 
 %%
@@ -351,53 +352,94 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 
-<INITIAL>"declare"{Separator}+"with"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
-	     					        unput( ' ' );
-	  					        unput( 'h' );
-						        unput( 't' );
-						        unput( 'i' );
-						        unput( 'w' );
-                                     		        if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                                     		        yylval.string = hb_strdup( "declare" );
-                                     		        hb_comp_iState = IDENTIFIER;
-                                     		        return IDENTIFIER;
-                                   		      }
+"decl"("are"|"ar"|"a")?           { BEGIN DECLARE_;
+                                    yylval.string = hb_strupr( hb_strdup( yytext ) );
+                                  }
 
-<INITIAL>"declare"{Separator}+"to"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
-						      unput( ' ' );
-						      unput( 'o' );
-						      unput( 't' );
-                                     		      if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                                     		      yylval.string = hb_strdup( "declare" );
-                                     		      hb_comp_iState = IDENTIFIER;
-                                     		      return IDENTIFIER;
-                                   		    }
+<DECLARE_>{Separator}+({Identifier}|{MacroVar}){Separator}*"[" { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
 
-<INITIAL>"declare"{Separator}+[_a-zA-Z\&]           { unput( yytext[ yyleng-1 ] ); BEGIN 0; return DECLARE; }
+                                     unput( '[' );
+               			     yyleng--;
 
-<INITIAL>"optional"{Separator}+"with"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
-						       unput( ' ' );
-						       unput( 'h' );
-						       unput( 't' );
-						       unput( 'i' );
-						       unput( 'w' );
-                                     		       if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                                     		       yylval.string = hb_strdup( "OPTIONAL" );
-                                     		       hb_comp_iState = IDENTIFIER;
-                                     		       return IDENTIFIER;
-                                   		     }
+               			     /* Remove possible white space between the Identifier and the Index. */
+               			     while( yytext[ yyleng - 1 ] < 48 )
+                  		       yyleng--;
 
-<INITIAL>"optional"{Separator}+"to"{Separator}+[^ .] { unput( yytext[ yyleng-1 ] );
-						       unput( ' ' );
-						       unput( 'o' );
-						       unput( 't' );
-                                     		       if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-                                     		       yylval.string = hb_strdup( "OPTIONAL" );
-                                     		       hb_comp_iState = IDENTIFIER;
-                                     		       return IDENTIFIER;
-                                   		     }
+               			     /* Pushback the Identifier */
+               			     while( yytext[ yyleng - 1 ] > 32 )
+                  		       unput( yytext[ --yyleng ] );
+				       //printf( "\nPushing: %c\n", yytext[ --yyleng ] );
 
-<INITIAL>"optional"{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] ); BEGIN 0; return OPTIONAL; }
+
+               			     yytext[ yyleng ] = 0;
+
+                 		     if( hb_comp_iState == LOOKUP )
+                 		     { /* it is first item in the line */
+                                        hb_xfree( (void *) yylval.string );
+                   	   	        hb_comp_iState = PRIVATE;
+                   		        return PRIVATE;
+                 		     }
+                 		     else
+                 		     { /* there is another item in line already */
+                   		        hb_comp_iState = IDENTIFIER;
+                   		        return IDENTIFIER;
+                 		     }
+				   }
+
+<DECLARE_>{Separator}+[_a-zA-Z\&] { /* an Identifier after DECLARE */
+                 		    unput( yytext[ yyleng-1 ] );
+                 		    if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+
+                 		    if( hb_comp_iState == LOOKUP )
+                 		    { /* it is first item in the line */
+                   		      hb_xfree( (void *) yylval.string );
+                   		      hb_comp_iState = DECLARE;
+                   		      return DECLARE;
+                 		    }
+                 		    else
+                 		    { /* there is another item in line already */
+                   		      hb_comp_iState = IDENTIFIER;
+                   		      return IDENTIFIER;
+                 		    }
+               	    		  }
+<DECLARE_>{Separator}*[^a-zA-Z]   { /* any character (not identifier) after DECLARE */
+                 		    unput( yytext[ yyleng-1 ] );
+
+                 		    if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 		      hb_comp_iState = IDENTIFIER;
+
+                 		    return IDENTIFIER;
+               			  }
+
+"opti"("onal"|"ona"|"on"|"o")?    { BEGIN OPTIONAL_;
+                                     yylval.string = hb_strupr( hb_strdup( yytext ) );
+                                  }
+<OPTIONAL_>{Separator}+[_a-zA-Z\&] { /* an Identifier after OPTIONAL */
+                 		     unput( yytext[ yyleng-1 ] );
+                 		     if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+
+                 		     if( hb_comp_iState == LOOKUP )
+                 		     { /* it is first item in the line */
+                   		       hb_xfree( (void *) yylval.string );
+                   		       hb_comp_iState = OPTIONAL;
+                   		       return OPTIONAL;
+                 		     }
+                 		     else
+                 		     { /* there is another item in line already */
+                   		       hb_comp_iState = IDENTIFIER;
+                   		       return IDENTIFIER;
+                 		     }
+               	    		   }
+<OPTIONAL_>{Separator}*[^a-zA-Z]   { /* any character (not identifier) after OPTIONAL */
+                 		    unput( yytext[ yyleng-1 ] );
+                 		    if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 		      hb_comp_iState = IDENTIFIER;
+                 		    return IDENTIFIER;
+               			  }
+
+%{
+/* ************************************************************************ */
+%}
 
 "do"            BEGIN DO_;
 <DO_>{Separator}+"case"         { /* DO CASE statement */

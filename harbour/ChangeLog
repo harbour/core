@@ -1,8 +1,15 @@
+20000515-10:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.l
+    + Added states DECLARE & OPTIONAL_
+    * Modified rules for "declare" and "optiona" to use states, and support abbreviations.
+    * Modified rules for "declare" to support backdated syntax DECLARE aVar[...]
+
 20000515-17:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
 	*fixed initialization of curses library
-	
+
 20000514-22:25 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.l
