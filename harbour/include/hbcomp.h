@@ -304,7 +304,7 @@ extern void hb_compPrintLogo( void );
 #endif    /* HB_MACRO_SUPPORT */
 
 /* Misc functions defined in harbour.c */
-extern void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
+extern void hb_compFinalizeFunction( void ); /* fixes all last defined function returns jumps offsets */
 
 /* Misc functions defined in harbour.y */
 extern int hb_compYACCMain( char * szName );

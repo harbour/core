@@ -1,3 +1,12 @@
+20000423-06:09 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.c
+   * include/hbcomp.h
+     ! Fixed static/non-static status of optimizer functions.
+     ! Fixed copyright header.
+     ! Renamed function in the header, too.
+     ! Removed duplicate declaration for hb_compFinalizeFunction()
+
 20000422-20:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
    * source/compiler/hvm.c
      - Removed pOptimized from hb_compOptimizeJumps() which now uses memmove() and thus more effective.

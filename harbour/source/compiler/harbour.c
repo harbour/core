@@ -31,6 +31,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ */
+
+/*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
@@ -38,6 +41,9 @@
  *    hb_compPrepareOptimize()
  *    hb_compOptimizeJumps()
  *    hb_compOptimizeFrames()
+ *
+ * See doc/license.txt for licensing terms.
+ *
  */
 
 #include <malloc.h>     /* required for allocating and freeing memory */
@@ -63,7 +69,6 @@ static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* gener
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
-void hb_compFinalizeFunction( void ); /* fixes and finalize the last defined function */
 static PFUNCTION hb_compFunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 
@@ -1288,7 +1293,7 @@ USHORT hb_compFunctionGetPos( char * szFunctionName ) /* return 0 if not found o
    return 0;
 }
 
-void hb_compPrepareOptimize()
+static void hb_compPrepareOptimize()
 {
    if( ! hb_comp_iJumpOptimize )
       return;
@@ -2392,7 +2397,7 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
    }
 }
 
-void hb_compOptimizeFrames( PFUNCTION pFunc )
+static void hb_compOptimizeFrames( PFUNCTION pFunc )
 {
    USHORT w;
 
@@ -2490,7 +2495,7 @@ int hb_compSort_ULONG( const void * pLeft, const void * pRight )
        return 1;
 }
 
-void hb_compOptimizeJumps( void )
+static void hb_compOptimizeJumps( void )
 {
    /* Jump Optimizer */
    BYTE * pCode      = hb_comp_functions.pLast->pCode;
