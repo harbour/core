@@ -2500,8 +2500,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
             break;
       }
 
-      pCode[ ulFrom ] = HB_LOBYTE( lOffset );
-      pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_HIBYTE( lOffset );
+      HB_PUT_LE_UINT16( &pCode[ ulFrom ], lOffset );
 
       if( ! bOptimize )
          return;
@@ -2512,9 +2511,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    }
    else if( lOffset >= ( -8388608L ) && lOffset <= 8388607L )
    {
-      pCode[ ulFrom ] = HB_LOBYTE( lOffset );
-      pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_HIBYTE( lOffset );
-      pCode[ ( ULONG ) ( ulFrom + 2 ) ] = ( BYTE ) ( (USHORT)( lOffset >> 16 ) & 0xFF );
+      HB_PUT_LE_UINT24( &pCode[ ulFrom ], lOffset );
    }
    else
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
@@ -3136,7 +3133,7 @@ void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec )
    pBuffer[ 1 + sizeof( double ) ] = bWidth;
    pBuffer[ 1 + sizeof( double ) + sizeof( BYTE ) ] = bDec;
 
-   hb_compGenPCodeN( pBuffer, 1 + sizeof( double ) + sizeof( BYTE ) + sizeof( BYTE ), 1 );
+   hb_compGenPCodeN( pBuffer, sizeof( pBuffer ), 1 );
 }
 
 void hb_compGenPushFunCall( char * szFunName )
@@ -3517,46 +3514,21 @@ static void hb_compOptimizeJumps( void )
             case HB_P_JUMPNEAR :
             case HB_P_JUMPFALSENEAR :
             case HB_P_JUMPTRUENEAR :
-            {
-               ulOffset = pCode[ pJumps[ iJump ] + 1 ];
-
-               if( ulOffset > 127 )
-               {
-                  ulOffset -= 256;
-                  bForward = FALSE;
-               }
-               else
-                  bForward = TRUE;
-            }
-            break;
+               ulOffset = ( signed char ) pCode[ pJumps[ iJump ] + 1 ];
+               bForward = ( ulOffset > 0 );
+               break;
 
             case HB_P_JUMP :
             case HB_P_JUMPFALSE :
             case HB_P_JUMPTRUE :
-            {
-               ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
-               if( ulOffset > SHRT_MAX )
-               {
-                  ulOffset -= 65536;
-                  bForward = FALSE;
-               }
-               else
-                  bForward = TRUE;
-            }
-            break;
+               ulOffset = HB_PCODE_MKSHORT( &pCode[ pJumps[ iJump ] + 1 ] );
+               bForward = ( ulOffset > 0 );
+               break;
 
             default:
-            {
-               ulOffset = ( LONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256L ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536L ) );
-               if( ulOffset > 8388607L )
-               {
-                  ulOffset -= 16777216L;
-                  bForward = FALSE;
-               }
-               else
-                  bForward = TRUE;
-            }
-            break;
+               ulOffset = HB_PCODE_MKINT24( &pCode[ pJumps[ iJump ] + 1 ] );
+               bForward = ( ulOffset > 0 );
+               break;
          }
 
          bSet = FALSE;
@@ -3599,26 +3571,18 @@ static void hb_compOptimizeJumps( void )
                case HB_P_JUMPNEAR :
                case HB_P_JUMPFALSENEAR :
                case HB_P_JUMPTRUENEAR :
-               {
                   pCode[ pJumps[ iJump ] + 1 ] = HB_LOBYTE( ulOffset );
-               }
-               break;
+                  break;
 
                case HB_P_JUMP :
                case HB_P_JUMPFALSE :
                case HB_P_JUMPTRUE :
-               {
-                  pCode[ pJumps[ iJump ] + 1 ] = HB_LOBYTE( ulOffset );
-                  pCode[ pJumps[ iJump ] + 2 ] = HB_HIBYTE( ulOffset );
-               }
-               break;
+                  HB_PUT_LE_UINT16( &pCode[ pJumps[ iJump ] + 1 ], ulOffset );
+                  break;
 
                default:
-               {
-                  pCode[ pJumps[ iJump ] + 1 ] = HB_LOBYTE( ulOffset );
-                  pCode[ pJumps[ iJump ] + 2 ] = HB_HIBYTE( ulOffset );
-                  pCode[ pJumps[ iJump ] + 3 ] = ( BYTE ) ( (USHORT)( ulOffset >> 16 ) & 0xFF );
-               }
+                  HB_PUT_LE_UINT24( &pCode[ pJumps[ iJump ] + 1 ], ulOffset );
+                  break;
             }
          }
       }
@@ -3677,6 +3641,11 @@ ULONG hb_compSequenceEnd( void )
    return hb_comp_functions.pLast->lPCodePos - 3;
 }
 
+/*
+  Commented out because we also have to "rewind" Jump Optimizations data, and that is
+  far more complex then it seems to be. :-(
+*/
+#if 0
 /* Remove unnecessary opcodes in case there were no executable statements
  * beetwen BEGIN and RECOVER sequence
  */
@@ -3691,7 +3660,7 @@ void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts )
       }
    }
 }
-
+#endif
 
 /* Set the name of an alias for the list of previously declared FIELDs
  *

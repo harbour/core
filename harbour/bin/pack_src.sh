@@ -44,9 +44,11 @@ $hb_collect bin/*.sh
 
 # CONFIG
 $hb_collect config/*.cf
-$hb_collect config/bsd/*.cf
 $hb_collect config/dos/*.cf
 $hb_collect config/linux/*.cf
+$hb_collect config/bsd/*.cf
+$hb_collect config/darwin/*.cf
+$hb_collect config/sunos/*.cf
 $hb_collect config/os2/*.cf
 $hb_collect config/w32/*.cf
 
@@ -54,7 +56,9 @@ $hb_collect config/w32/*.cf
 $hb_collect doc/Makefile
 $hb_collect doc/*.txt
 $hb_collect doc/en/*.txt
+$hb_collect doc/en/[Mm]akefile*
 $hb_collect doc/es/*.txt
+$hb_collect doc/es/[Mm]akefile*
 
 # INCLUDE
 $hb_collect include/Makefile
@@ -271,9 +275,10 @@ $hb_collect contrib/dot/*.txt
 
 # CONTRIB\ODBC
 $hb_collect contrib/odbc/Makefile
-$hb_collect contrib/odbc/*.c
+$hb_collect contrib/odbc/*.[ch]
 $hb_collect contrib/odbc/*.ch
 $hb_collect contrib/odbc/*.prg
+$hb_collect contrib/odbc/*.txt
 
 # CONTRIB\HTMLLIB
 $hb_collect contrib/htmllib/[mM]akefile*
@@ -294,10 +299,16 @@ $hb_collect contrib/libgt/doc/lib*
 $hb_collect contrib/libgt/doc/*.txt
 
 # CONTRIB\LIBMISC
-$hb_collect contrib/odbc/[mM]akefile*
-$hb_collect contrib/odbc/*.c
-$hb_collect contrib/odbc/*.ch
-$hb_collect contrib/odbc/*.prg
+$hb_collect contrib/libmisc/[mM]akefile*
+$hb_collect contrib/libmisc/*.[ch]
+$hb_collect contrib/libmisc/*.ch
+$hb_collect contrib/libmisc/*.prg
+
+# CONTRIB\SAMPLES
+$hb_collect contrib/samples/[mM]akefile*
+$hb_collect contrib/samples/*.[ch]
+$hb_collect contrib/samples/*.ch
+$hb_collect contrib/samples/*.prg
 
 }
 

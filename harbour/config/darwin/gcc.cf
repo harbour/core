@@ -9,16 +9,23 @@ EXE_EXT =
 LIB_PREF = lib
 LIB_EXT = .a
 
-CC = $(CCACHE) gcc
+# intentionally used 'cc' instead of 'gcc' - I'm not an Darwin user
+# but the system where I was testing it has GCC 2.95 named 'cc'
+CC = $(CCACHE) cc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -fsigned-char -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W -DHB_OS_DARWIN -DHB_BIG_ENDIAN
+
+# It's to avoid warning message generated when 'long double' is used
+# remove it if you have newer compiler version
+CFLAGS += -DHB_LONG_DOUBLE_OFF
+
 ifeq ($(HB_LEX),SIMPLEX)
 CFLAGS += -DSIMPLEX
 endif
 
-LD = gcc
+LD = cc
 LD_OUT = -o
 
 # Add all libraries specified in HB_USER_LIBS.
@@ -33,7 +40,6 @@ else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
 
-# LINKLIBS += -Wl,--start-group
 LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(lib))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
@@ -89,7 +95,6 @@ endif
 endif
 
 LINKLIBS += -lm
-# -Wl,--end-group
 
 LDFLAGS = $(LINKPATHS)
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $^ $(LDFLAGS) $(L_USR) $(LINKLIBS) $(LINKLIBS)

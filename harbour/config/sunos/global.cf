@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+
+all : first
+
+HB_GT_LIBS=\
+        gtcgi \
+        gtcrs \
+        gtpca \
+        gtsln \
+        gtstd \
+
+ifeq ($(HB_GT_LIB),)
+   HB_GT_LIB = gtstd
+endif
+
+ARCH_DIR = $(ARCH)/
+MK = $(MAKE)
+RM = rm -f
+RD = rm -f -r
+CP = cp -f
+MV = mv -f
+MD = mkdir
+MDP = mkdir -p
+
+dirbase::
+	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
+
+clean::
+	-$(RD) $(ARCH_DIR)
+

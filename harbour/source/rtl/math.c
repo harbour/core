@@ -70,9 +70,9 @@ _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 
 #if defined(HB_MATH_ERRNO)
 #  include <errno.h>
-#  if !defined( HB_OS_BSD )
-#    include <error.h>
-#  endif
+#endif
+#if defined(HB_OS_SUNOS)
+#  include <ieeefp.h>
 #endif
 
 /*
@@ -222,7 +222,11 @@ int hb_mathErrSet( double dResult, double arg1, double arg2, char * szFunc, int 
          {
             errCode = EDOM;
          }
+#if defined(HB_OS_SUNOS)
+         else if ( !finite( dResult ) )
+#else
          else if ( isinf( dResult ) )
+#endif
          {
             errCode = ERANGE;
          }

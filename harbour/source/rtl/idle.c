@@ -73,6 +73,7 @@
 #include "error.ch"
 #if defined(HB_OS_UNIX)
    #include <time.h>
+   #include <unistd.h>
 #endif
 
 /* list of background tasks 

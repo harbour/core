@@ -67,6 +67,8 @@
 #if defined(HB_OS_BSD)
    #include <sys/param.h>
    #include <sys/mount.h>
+#elif defined(HB_OS_SUNOS)
+   #include <sys/statvfs.h>
 #elif defined(HB_OS_UNIX)
    #include <sys/vfs.h>
 #endif
@@ -201,18 +203,22 @@ HB_FUNC( DISKSPACE )
          bError = TRUE;
    }
 
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) && !defined(HB_OS_SUNOS)
 
    {
-      struct statfs st;
       char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : "/";
-
-      HB_SYMBOL_UNUSED( uiDrive );
-
+#if defined(HB_OS_SUNOS)
+      struct statvfs sf;
+      if ( statvfs( szName, &st) == 0 )
+#else
+      struct statfs st;
       if ( statfs( szName, &st) == 0 )
+#endif
          dSpace = ( double ) st.f_blocks * ( double ) st.f_bsize;
       else
          bError = TRUE;
+
+      HB_SYMBOL_UNUSED( uiDrive );
    }
 
 #else

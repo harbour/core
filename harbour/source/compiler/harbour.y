@@ -1620,7 +1620,7 @@ BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegi
                 hb_compGenJumpThere( $<lNumber>5, hb_comp_functions.pLast->lPCodePos );
                 if( !$<lNumber>6 )   /* only if there is no RECOVER clause */
                    --hb_comp_wSeqCounter;  /* RECOVER is also considered as end of sequence */
-                hb_compSequenceFinish( $<lNumber>2, $<iNumber>4 );
+                /* hb_compSequenceFinish( $<lNumber>2, $<iNumber>4 ); */
                 hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
              }
            ;

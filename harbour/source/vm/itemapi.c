@@ -89,6 +89,9 @@
 #if defined(_MSC_VER) || defined(__IBMCPP__) || (__BORLANDC__ > 1040) || defined(__WATCOMC__) /* Use this only above Borland C++ 3.1 */
 #include <float.h>  /* for _finite() and _isnan() */
 #endif
+#if defined(HB_OS_SUNOS)
+#  include <ieeefp.h>
+#endif
 
 #include "hbapi.h"
 #include "hbstack.h"

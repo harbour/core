@@ -8,6 +8,57 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-14 21:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/bin/pack_src.sh
+  + harbour/config/sunos/dir.cf
+  + harbour/config/sunos/gcc.cf
+  + harbour/config/sunos/global.cf
+  + harbour/config/sunos/install.cf
+    + added SunOS support
+
+  * harbour/config/darwin/gcc.cf
+    * small modification for nicer work with OS-X installed
+      on SF compile farm - I'm not Darwin user and SF is the only
+      one place I can make tests - if someone may fix me and leave
+      some comments 'why?' it will be nice.
+
+  * harbour/contrib/Makefile
+    * exclude ADS RDD from Darwin build
+
+  * harbour/contrib/rdd_ads/adsfunc.c
+    * some minor modification to avoid compiler warnings.
+
+  * harbour/include/hbdefs.h
+    * fixed typo in HB_PUT_LE_DOUBLE() macro for big endian machines.
+
+  * harbour/source/compiler/genc.c
+    ! fixed endian dependend code I left by mistake
+
+  * harbour/source/compiler/harbour.c
+  * harbour/source/compiler/harbour.sly
+  * harbour/source/compiler/harbour.y
+    ! commented out hb_compSequenceFinish()
+
+  * harbour/source/pp/ppcore.c
+    + added ( void * ) size as result of __ARCH{16,32,64}BIT__ and
+      __{LITTLE,BIG,PDP}_ENDIAN__ macros
+
+  * harbour/source/pp/pragma.c
+    ! fixed possible string overflow
+
+  * harbour/source/vm/itemapi.c
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/idle.c
+  * harbour/source/rtl/math.c
+  * harbour/source/rtl/gtcrs/Makefile
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/kbdcrs.c
+  * harbour/source/rtl/gtcrs/mousecrs.c
+    * modified for SunOS and Darwin support.
+
 2004-10-12 02:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/makefile.bc
    * updated for recent changes by Jacek Kubica - thanks.

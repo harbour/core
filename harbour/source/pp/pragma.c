@@ -230,7 +230,7 @@ void hb_pp_ParsePragma( char * szLine )
             {
                pBuffer++;
             }
-            hb_strupr( strncpy( sDirective, pBuffer, 6 ) );
+            hb_strncpyUpper( sDirective, pBuffer, 6 );
             if( memcmp( sDirective, "PRAGMA", 6 ) == 0 )
             {
                pBuffer += 6;
@@ -239,7 +239,7 @@ void hb_pp_ParsePragma( char * szLine )
             {
                pBuffer++;
             }
-            hb_strupr( strncpy( sDirective, pBuffer, 7 ) );
+            hb_strncpyUpper( sDirective, pBuffer, 7 );
             if( memcmp( sDirective, "ENDDUMP", 7 ) == 0 )
             {
                hb_pp_bInline = FALSE;

@@ -1301,7 +1301,7 @@ static HB_GENC_FUNC( hb_p_pushlocal )
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose )
    {
-      SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
+      int iVar = (int) HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
       /* Variable with negative order are local variables
        * referenced in a codeblock -handle it with care
        */
@@ -1310,13 +1310,13 @@ static HB_GENC_FUNC( hb_p_pushlocal )
       {
          /* we are accesing variables within a codeblock */
          /* the names of codeblock variable are lost     */
-         if( wVar < 0 )
-            fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
+         if( iVar < 0 )
+            fprintf( cargo->yyc, "\t/* localvar%i */", -iVar );
          else
-            fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
+            fprintf( cargo->yyc, "\t/* codeblockvar%i */", iVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, iVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;
@@ -1328,7 +1328,7 @@ static HB_GENC_FUNC( hb_p_pushlocalnear )
             pFunc->pCode[ lPCodePos + 1 ] );
    if( cargo->bVerbose )
    {
-      signed char wVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
+      int iVar = ( signed char ) pFunc->pCode[ lPCodePos + 1 ];
       /* Variable with negative order are local variables
        * referenced in a codeblock -handle it with care
        */
@@ -1337,13 +1337,13 @@ static HB_GENC_FUNC( hb_p_pushlocalnear )
       {
          /* we are accesing variables within a codeblock */
          /* the names of codeblock variable are lost     */
-         if( wVar < 0 )
-            fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
+         if( iVar < 0 )
+            fprintf( cargo->yyc, "\t/* localvar%i */", -iVar );
          else
-            fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
+            fprintf( cargo->yyc, "\t/* codeblockvar%i */", iVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, iVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 2;
@@ -1356,7 +1356,7 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
             pFunc->pCode[ lPCodePos + 2 ] );
    if( cargo->bVerbose )
    {
-      SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
+      int iVar = (int) HB_PCODE_MKSHORT( &( pFunc->pCode[ lPCodePos + 1 ] ) );
       /* Variable with negative order are local variables
        * referenced in a codeblock -handle it with care
        */
@@ -1365,13 +1365,13 @@ static HB_GENC_FUNC( hb_p_pushlocalref )
       {
          /* we are accesing variables within a codeblock */
          /* the names of codeblock variable are lost     */
-         if( wVar < 0 )
-            fprintf( cargo->yyc, "\t/* localvar%i */", -wVar );
+         if( iVar < 0 )
+            fprintf( cargo->yyc, "\t/* localvar%i */", -iVar );
          else
-            fprintf( cargo->yyc, "\t/* codeblockvar%i */", wVar );
+            fprintf( cargo->yyc, "\t/* codeblockvar%i */", iVar );
       }
       else
-         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, wVar )->szName );
+         fprintf( cargo->yyc, "\t/* %s */", hb_compLocalVariableFind( pFunc, iVar )->szName );
    }
    fprintf( cargo->yyc, "\n" );
    return 3;

@@ -245,7 +245,7 @@ HB_FUNC( ADSGETSERVERTIME )
 
 HB_FUNC( ADSISTABLELOCKED )
 {
-   UNSIGNED32 ulRetVal ;
+   UNSIGNED32 ulRetVal = ~AE_SUCCESS;
    UNSIGNED16 pbLocked = FALSE;
    ADSAREAP pArea;
 
@@ -253,7 +253,7 @@ HB_FUNC( ADSISTABLELOCKED )
    if( pArea )
       ulRetVal = AdsIsTableLocked( pArea->hTable, &pbLocked );
 
-   if( !pArea || ulRetVal != AE_SUCCESS )
+   if ( ulRetVal != AE_SUCCESS )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISTABLELOCKED" );
 
    hb_retl( pbLocked );
@@ -261,7 +261,7 @@ HB_FUNC( ADSISTABLELOCKED )
 
 HB_FUNC( ADSISRECORDLOCKED )
 {
-   UNSIGNED32 ulRetVal ;
+   UNSIGNED32 ulRetVal = ~AE_SUCCESS;
    UNSIGNED32 ulRec;
    UNSIGNED16 pbLocked = FALSE;
    ADSAREAP pArea;
@@ -276,7 +276,7 @@ HB_FUNC( ADSISRECORDLOCKED )
 
       ulRetVal = AdsIsRecordLocked( pArea->hTable, ulRec, &pbLocked );
    }
-   if( !pArea || ulRetVal != AE_SUCCESS )
+   if ( ulRetVal != AE_SUCCESS )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDLOCKED" );
 
    hb_retl( pbLocked );

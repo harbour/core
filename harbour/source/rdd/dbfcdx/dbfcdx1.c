@@ -4678,6 +4678,7 @@ static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName,
 {
    PHB_FNAME pFileName;
    BOOL fName = szBagName && strlen( szBagName ) > 0;
+   char * szExt = NULL;
    
    pFileName = hb_fsFNameSplit( fName ? szBagName : pArea->szDataFileName );
 
@@ -4686,45 +4687,11 @@ static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName,
       hb_strncpyUpperTrim( szBaseName, pFileName->szName, CDX_MAXTAGNAMELEN );
    }
 
-   if ( pFileName->szPath )
+   if ( !pFileName->szPath )
    {
-      hb_strncpy( szFileName, pFileName->szPath, _POSIX_PATH_MAX );
+      pFileName->szPath = hb_set.HB_SET_DEFAULT ? hb_set.HB_SET_DEFAULT : ".";
    }
-   /*
-    * This code is disabled, IMHO such behavior is better then
-    * Clipper one but unfortunately it cause incompatibilities
-    */
-/*
-   else if ( fName )
-   {
-      PHB_FNAME pDbfFName = hb_fsFNameSplit( pArea->szDataFileName );
-
-      if ( pDbfFName->szPath )
-      {
-         hb_strncpy( szFileName, pDbfFName->szPath, _POSIX_PATH_MAX );
-      }
-      else
-      {
-         szFileName[ 0 ] = '.';
-         szFileName[ 1 ] = OS_PATH_DELIMITER;
-         szFileName[ 2 ] = '\0';
-      }
-      hb_xfree( pDbfFName );
-   }
-*/
-   else
-   {
-      szFileName[ 0 ] = '.';
-      szFileName[ 1 ] = OS_PATH_DELIMITER;
-      szFileName[ 2 ] = '\0';
-   }
-   hb_strncat( szFileName, pFileName->szName, _POSIX_PATH_MAX );
-
-   if ( fName && pFileName->szExtension )
-   {
-      hb_strncat( szFileName, pFileName->szExtension, _POSIX_PATH_MAX );
-   }
-   else
+   if ( !pFileName->szExtension || !fName )
    {
       DBORDERINFO pExtInfo;
       memset( &pExtInfo, 0, sizeof( pExtInfo ) );
@@ -4732,10 +4699,14 @@ static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName,
       if ( SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo ) == SUCCESS &&
            hb_itemGetCLen( pExtInfo.itmResult ) > 0 )
       {
-         hb_strncat( szFileName, hb_itemGetCPtr( pExtInfo.itmResult ), _POSIX_PATH_MAX );
+         pFileName->szExtension = szExt = hb_strdup( hb_itemGetCPtr( pExtInfo.itmResult ) );
       }
       hb_itemRelease( pExtInfo.itmResult );
    }
+   hb_fsFNameMerge( szFileName, pFileName );
+
+   if ( szExt )
+      hb_xfree( szExt );
    hb_xfree( pFileName );
 }
 

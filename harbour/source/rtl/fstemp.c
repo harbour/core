@@ -59,7 +59,9 @@
 
 #if defined( HB_OS_UNIX )
 #include <stdlib.h>
+#include <unistd.h>  /* We need for mkstemp() on BSD */
 #endif
+
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 

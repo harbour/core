@@ -657,7 +657,7 @@ typedef long HB_PTRDIFF;
    #define HB_GET_LE_DOUBLE( p )    \
        ( { \
             union { \
-               double d; \
+               double dbl; \
                BYTE buffer[ 8 ]; \
             } u; \
             u.buffer[ 0 ] = (( BYTE * )( p ))[ 7 ]; \
@@ -668,15 +668,15 @@ typedef long HB_PTRDIFF;
             u.buffer[ 5 ] = (( BYTE * )( p ))[ 2 ]; \
             u.buffer[ 6 ] = (( BYTE * )( p ))[ 1 ]; \
             u.buffer[ 7 ] = (( BYTE * )( p ))[ 0 ]; \
-            u.d; \
+            u.dbl; \
          } )
    #define HB_PUT_LE_DOUBLE( p, d )    \
-       ( { \
+         { \
             union { \
-               double d; \
+               double dbl; \
                BYTE buffer[ 8 ]; \
             } u; \
-            u.d = d;
+            u.dbl = ( d ); \
             (( BYTE * )( p ))[ 7 ] = u.buffer[ 0 ]; \
             (( BYTE * )( p ))[ 6 ] = u.buffer[ 1 ]; \
             (( BYTE * )( p ))[ 5 ] = u.buffer[ 2 ]; \
@@ -685,8 +685,7 @@ typedef long HB_PTRDIFF;
             (( BYTE * )( p ))[ 2 ] = u.buffer[ 5 ]; \
             (( BYTE * )( p ))[ 1 ] = u.buffer[ 6 ]; \
             (( BYTE * )( p ))[ 0 ] = u.buffer[ 7 ]; \
-            u.d; \
-         } )
+         }
 #else
    #error Little-Endian IEEE 754 double type conversion unimplemented with a non-GCC compiler
 #endif

@@ -7,7 +7,7 @@ ROOT = ../../../
 C_SOURCES=\
 	gtcrs.c \
 	mousecrs.c \
-   kbdcrs.c \
+	kbdcrs.c \
 
 PRG_SOURCES=\
 	keymap.prg \
@@ -16,7 +16,7 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	eterm.map \
 	linux.map \
-   debug.map \
+	debug.map \
 
 LIBNAME=gtcrs
 

@@ -605,6 +605,8 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
       return success;
    }
 #else
+   HB_SYMBOL_UNUSED( uiRows );
+   HB_SYMBOL_UNUSED( uiCols );
    return 0;
 #endif
 }

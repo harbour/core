@@ -51,6 +51,9 @@
  */
 
 #include <curses.h>
+#if defined( HB_OS_SUNOS )
+#  include <term.h>
+#endif
 #include <unistd.h>
 
 #include "hbapigt.h"

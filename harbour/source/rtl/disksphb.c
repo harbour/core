@@ -65,6 +65,8 @@
 #if defined( HB_OS_BSD )
    #include <sys/param.h>
    #include <sys/mount.h>
+#elif defined(HB_OS_SUNOS)
+   #include <sys/statvfs.h>
 #elif defined( HB_OS_UNIX )
    #include <sys/vfs.h>
 #endif
@@ -307,10 +309,13 @@ HB_FUNC( HB_DISKSPACE )
 #elif defined(HB_OS_UNIX)
 
    {
+#if defined(HB_OS_SUNOS)
+      struct statvfs sf;
+      statvfs( szPath, &sf );
+#else
       struct statfs sf;
-
       statfs( szPath, &sf );
-
+#endif
       switch( uiType )
       {
          case HB_DISK_AVAIL:
@@ -335,7 +340,7 @@ HB_FUNC( HB_DISKSPACE )
 #else
 
    {
-      HB_SYMBOL_UNUSED( uiDrive );
+      HB_SYMBOL_UNUSED( szPath );
       HB_SYMBOL_UNUSED( uiType );
    }
 

@@ -462,21 +462,26 @@ void hb_pp_Init( void )
       hb_pp_AddDefine( "__TIME__", szResult );
    }
 
+   {
+      char szResult[ 11 ];
+
+      sprintf( szResult, "%d", ( int ) sizeof( void * ) );
 #if defined( HB_ARCH_16BIT )
-   hb_pp_AddDefine( "__ARCH16BIT__", NULL );
+      hb_pp_AddDefine( "__ARCH16BIT__", szResult );
 #elif defined( HB_ARCH_32BIT )
-   hb_pp_AddDefine( "__ARCH32BIT__", NULL );
+      hb_pp_AddDefine( "__ARCH32BIT__", szResult );
 #elif defined( HB_ARCH_64BIT )
-   hb_pp_AddDefine( "__ARCH64BIT__", NULL );
+      hb_pp_AddDefine( "__ARCH64BIT__", szResult );
 #endif
 
 #if defined( HB_LITTLE_ENDIAN )
-   hb_pp_AddDefine( "__LITTLE_ENDIAN__", NULL );
+      hb_pp_AddDefine( "__LITTLE_ENDIAN__", szResult );
 #elif defined( HB_BIG_ENDIAN )
-   hb_pp_AddDefine( "__BIG_ENDIAN__", NULL );
+      hb_pp_AddDefine( "__BIG_ENDIAN__", szResult );
 #elif defined( HB_PDP_ENDIAN )
-   hb_pp_AddDefine( "__PDP_ENDIAN__", NULL );
+      hb_pp_AddDefine( "__PDP_ENDIAN__", szResult );
 #endif
+   }
 
 #ifdef HARBOUR_START_PROCEDURE
    hb_pp_AddDefine( "__HB_MAIN__", HARBOUR_START_PROCEDURE );

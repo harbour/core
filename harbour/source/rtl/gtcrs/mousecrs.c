@@ -51,7 +51,9 @@
  */
 
 #include <curses.h>
-
+#if defined( HB_OS_SUNOS )
+#  include <term.h>
+#endif
 #include "hbapigt.h"
 #include "inkey.ch"   /* included also in a harbour code */
 
@@ -167,6 +169,7 @@ int hb_mouse_key( void )
 
 void hb_mouse_Init( void )
 {
+#if !defined( HB_OS_SUNOS )
    mmask_t mm;
    
    mousemask( BUTTON1_PRESSED | BUTTON1_RELEASED | BUTTON1_DOUBLE_CLICKED |
@@ -174,6 +177,7 @@ void hb_mouse_Init( void )
               REPORT_MOUSE_POSITION,
               &mm );
    mouseinterval( 500 );
+#endif
    s_last_event = -1;
 }
 
@@ -194,9 +198,11 @@ void hb_mouse_Show( void )
 
 void hb_mouse_Hide( void )
 {
+#if !defined( HB_OS_SUNOS )
    mmask_t mm;
    
    mousemask( 0, &mm );
+#endif
 }
 
 int hb_mouse_Col( void )
@@ -241,7 +247,11 @@ BOOL hb_mouse_IsButtonPressed( int iButton )
 
 int hb_mouse_CountButton( void )
 {
+#if !defined( HB_OS_SUNOS )
    return tigetnum( "btns" );
+#else
+   return 0;
+#endif
 }
 
 void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )

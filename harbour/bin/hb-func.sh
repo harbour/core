@@ -99,7 +99,10 @@ mk_hbtools()
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
     else
-        if [ "${HB_NCURSES_194}" = "yes" ]; then
+        if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
+            HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
+            HB_CRS_LIB="curses"
+        elif [ "${HB_NCURSES_194}" = "yes" ]; then
             HB_CRS_LIB="ncur194"
         else
             HB_CRS_LIB="ncurses"
@@ -302,7 +305,7 @@ do
         fi
     fi
 done
-if [ "\${HB_ARCHITECTURE}" = "darwin" ]; then
+if [ "\${HB_ARCHITECTURE}" = "darwin" ] || [ "\${HB_ARCHITECTURE}" = "sunos" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} \${HARBOUR_LIBS}"
 else
     HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
