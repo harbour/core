@@ -1,3 +1,16 @@
+2001-05-30 10:49 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rdd/dbcmd.c
+      * Harrier's fix to NEXT clause in COPY TO command
+         Thanks, Harrier!
+
+   * contrib/rdd_ads/ads1.c
+      * corrected commit to only flush current workarea
+
+   * source/rtl/philes.c
+      * changed HB_FEOF() to HB_F_EOF to avoid collision with the
+         HB_FEOF() in libmisc/hb_f.c
+
 2001-05-30 14:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/odbc/odbc.c

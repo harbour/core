@@ -214,7 +214,7 @@ HB_FUNC( CURDIR )
 
 #ifdef HB_EXTENSION
 
-HB_FUNC( HB_FEOF )
+HB_FUNC( HB_F_EOF )
 {
    if( ISNUM( 1 ) )
    {

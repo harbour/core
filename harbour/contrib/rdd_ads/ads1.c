@@ -1545,7 +1545,7 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
           (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), &phIndex );
       if ( ulRetVal != AE_SUCCESS )
          return FAILURE;
-      ulRetVal = AdsCloseIndex( phIndex );
+      ulRetVal = AdsDeleteIndex( phIndex );
       if ( ulRetVal != AE_SUCCESS )
          return FAILURE;
    }
