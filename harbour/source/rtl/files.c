@@ -210,15 +210,15 @@ static int convert_seek_flags( int flags )
         return result_flags;
 }
 
-static void convert_create_flags( int flags, int *result_flags, int *result_pmode )
+static void convert_create_flags( int flags, int *result_flags, unsigned *result_pmode )
 {
         /* by default FC_NORMAL is set */
 
-        *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_RDWR;
+        *result_flags = O_BINARY | O_CREAT | O_TRUNC | O_WRONLY;
         *result_pmode = S_IWUSR;
 
         if( flags & FC_READONLY )
-                *result_pmode = S_IREAD;
+                *result_pmode = S_IRUSR;
 
         if( flags & FC_HIDDEN )
                 *result_flags |= 0;
@@ -252,13 +252,19 @@ FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
 {
         FHANDLE handle;
         int oflag;
-        int pmode;
+        unsigned pmode;
 
 #if defined(HAVE_POSIX_IO)
         errno = 0;
         convert_create_flags( flags, &oflag, &pmode );
         handle = open((char *)name,oflag,pmode);
-        last_error = errno;
+        if( handle == FS_ERROR)
+        {
+           /* This if block is required, because errno will be set
+              if the file did not exist and had to be created, even
+              when the create is successful! */
+           last_error = errno;
+        }
 #else
         handle = FS_ERROR;
         last_error = FS_ERROR;
@@ -293,7 +299,9 @@ USHORT  hb_fsWrite  ( FHANDLE handle, BYTEP buff, USHORT count )
         USHORT bytes;
 #if defined(HAVE_POSIX_IO)
         errno = 0;
+printf("\nhb_fsWrite: handle = %d", handle);
         bytes = write(handle,buff,count);
+printf(", bytes = %u", bytes);
         last_error = errno;
 #else
         bytes = 0;

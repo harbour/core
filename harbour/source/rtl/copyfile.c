@@ -10,16 +10,16 @@
 
 #define BUFFER_SIZE 8096
 
-static long _fsCopy(BYTEP ,BYTEP ) ;
+static long hb_fsCopy(BYTEP ,BYTEP ) ;
 
 HARBOUR HB___COPYFILE() {
     if ( ISCHAR(1) && ISCHAR(2) ) {
-        hb_retnl(_fsCopy((BYTEP)hb_parc(1),(BYTEP)hb_parc(2)));
+        hb_retnl(hb_fsCopy((BYTEP)hb_parc(1),(BYTEP)hb_parc(2)));
     }
     return;
 } 
 
-static long _fsCopy(BYTEP source,BYTEP dest) {
+static long hb_fsCopy(BYTEP source,BYTEP dest) {
    FHANDLE dHANDLE,sHANDLE;
    char    *buffer;
    USHORT  usCount;

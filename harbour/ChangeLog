@@ -1,3 +1,17 @@
+19990623-23:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/copyfile.c
+    - Renamed _fsCopy to hb_fsCopy(), in case we decide to make
+      it available to other internal Harbour functions later.
+  * source/rtl/files.c
+    - Solved the apparent read only problem with hb_fsCreate().
+      The problem turned out to be that errno is set to an error
+      value if open() has to create the file instead of opening
+      and truncating. And because hb_fsCreate() wasn't checking
+      the return value before saving errno for hb_fsError(), an
+      error would be indicated if the file had to be created.
+      But now test/working/testcopy works even when newprog.prg
+      (the destination for the COPY TO command) doesn't exist.
+
 19990623-22:05 EDT David G. Holm <dholm@jsd-llc.com>
   Code has been added to the following two modules to return the
   correct number of decimal places for floating point results.
