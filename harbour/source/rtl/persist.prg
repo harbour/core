@@ -71,8 +71,7 @@ ENDCLASS
 
 METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
-   local nLines := MLCount( cObjectText, 254 )
-   local nLine  := 1, cLine, cToken
+   local nFrom  := 1, cLine, cToken
    local lStart := .t., aArray
    private oSelf
 
@@ -80,11 +79,11 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       return .F.
    endif
 
-   while Empty( MemoLine( cObjectText,, nLine ) ) // We skip the first empty lines
-      nLine++
+   while Empty( ExtractLine( cObjectText, @nFrom ) ) // We skip the first empty lines
    end
-   while nLine <= nLines
-      cLine  := MemoLine( cObjectText, 254, nLine )
+
+   while nFrom <= Len( cObjectText )
+      cLine  := ExtractLine( cObjectText, @nFrom )
 
       do case
          case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "OBJECT"
@@ -109,7 +108,6 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
       endcase
 
-      nLine++
    end
 
 return .T.
@@ -236,5 +234,23 @@ static function ValToText( uValue )
       otherwise
            cText := HB_ValToStr( uValue )
    endcase
+
+return cText
+
+// Notice: nFrom must be supplied by reference
+
+static function ExtractLine( cText, nFrom )
+
+  local cLine, nAt, nTo
+
+  nAt = At( HB_OsNewLine(), cText, nFrom )
+
+  if nAt > 0
+    cText = Substr( cText, nFrom, nAt - nFrom )
+    nFrom = nAt + 2
+  else
+    cText = Substr( cText, nFrom )
+    nFrom = Len( cText ) + 1
+  endif
 
 return cText
