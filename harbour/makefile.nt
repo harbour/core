@@ -113,6 +113,7 @@ HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
+HBVER_DIR    = utils\hbver
 
 !ifdef HB_DOC_PDF
 # don't indent definitions
@@ -998,7 +999,7 @@ $(HBMAKE_EXE) : \
 
 $(HBVER_EXE) : \
    $(HBVER_DIR)\hbverfix.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(HBVER_DIR)\hverfix.c \
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(HBVER_DIR)\hbverfix.c \
                    -o $(HBVER_EXE) /link $(LDFLAGS)
 
 #

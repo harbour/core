@@ -963,7 +963,7 @@ $(HBMAKE_EXE) : \
 
 $(HBVER_EXE) : \
    $(HBVER_DIR)\hbverfix.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(HBVER_DIR)\hverfix.c \
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(HBVER_DIR)\hbverfix.c \
                    -o $(HBVER_EXE) /link $(LDFLAGS)
 
 #
