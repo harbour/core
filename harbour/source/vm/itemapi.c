@@ -919,6 +919,20 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
 
    while( HB_IS_BYREF( pItem ) )
+     pItem = hb_itemUnRefOnce( pItem );
+
+   return pItem;
+}
+
+
+/* Internal API, not standard Clipper */
+/* De-references item passed by the reference */
+
+PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefOnce(%p)", pItem));
+
+   if( HB_IS_BYREF( pItem ) )
    {
       if( HB_IS_MEMVAR( pItem ) )
       {
@@ -957,6 +971,7 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 
    return pItem;
 }
+
 
 /* Internal API, not standard Clipper */
 
