@@ -68,6 +68,7 @@ extern "C" {
 /* RDD virtual machine integration functions */
 
 extern USHORT hb_rddInsertAreaNode( char *szDriver );
+extern USHORT  hb_rddGetCurrentFieldPos( char * szName );
 extern int     hb_rddGetCurrentWorkAreaNumber( void );
 void *         hb_rddGetCurrentWorkAreaPointer( void );
 extern ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
@@ -570,146 +571,145 @@ typedef USHORT ( * DBENTRYP_I2   )( PHB_ITEM p1, PHB_ITEM p2);
 
 typedef struct _RDDFUNCS
 {
-
    /* Movement and positioning methods */
 
-   DBENTRYP_BP   bof;
-   DBENTRYP_BP   eof;
-   DBENTRYP_BP   found;
-   DBENTRYP_V    goBottom;
-   DBENTRYP_UL   go;
-   DBENTRYP_I    goToId;
-   DBENTRYP_V    goTop;
-   DBENTRYP_BIB  seek;
-   DBENTRYP_L    skip;
-   DBENTRYP_L    skipFilter;
-   DBENTRYP_L    skipRaw;
+   DBENTRYP_BP   bof;               /* Determine logical beginning of file. */
+   DBENTRYP_BP   eof;               /* Determine logical end of file. */
+   DBENTRYP_BP   found;             /* Determine outcome of the last search operation. */
+   DBENTRYP_V    goBottom;          /* Position cursor at the last record. */
+   DBENTRYP_UL   go;                /* Position cursor at a specific physical record. */
+   DBENTRYP_I    goToId;            /* Position the cursor to a specific, physical identity. */
+   DBENTRYP_V    goTop;             /* Position cursor at the first record. */
+   DBENTRYP_BIB  seek;              /*  */
+   DBENTRYP_L    skip;              /* Reposition cursor relative to current position. */
+   DBENTRYP_L    skipFilter;        /*-Reposition cursor respecting any filter setting. */
+   DBENTRYP_L    skipRaw;           /* Reposition cursor, regardless of filter. */
 
 
    /* Data management */
 
-   DBENTRYP_VF   addField;
-   DBENTRYP_B    append;
-   DBENTRYP_I    createFields;
-   DBENTRYP_V    deleterec;
-   DBENTRYP_BP   deleted;
-   DBENTRYP_SP   fieldCount;
-   DBENTRYP_VF   fieldDisplay;
-   DBENTRYP_SSI  fieldInfo;
-   DBENTRYP_SVP  fieldName;
-   DBENTRYP_V    flush;
-   DBENTRYP_PP   getRec;
-   DBENTRYP_SI   getValue;
-   DBENTRYP_SVL  getVarLen;
-   DBENTRYP_V    goCold;
-   DBENTRYP_V    goHot;
-   DBENTRYP_P    putRec;
-   DBENTRYP_SI   putValue;
-   DBENTRYP_V    recall;
-   DBENTRYP_ULP  reccount;
-   DBENTRYP_ISI  recInfo;
-   DBENTRYP_I    recno;
-   DBENTRYP_S    setFieldExtent;
+   DBENTRYP_VF   addField;          /* Add a field to the WorkArea. */
+   DBENTRYP_B    append;            /* Append a record to the WorkArea. */
+   DBENTRYP_I    createFields;      /*-Add all fields defined in an array to the WorkArea. */
+   DBENTRYP_V    deleterec;         /* Delete a record. */
+   DBENTRYP_BP   deleted;           /* Determine deleted status for a record. */
+   DBENTRYP_SP   fieldCount;        /*-Determine the number of fields in the WorkArea. */
+   DBENTRYP_VF   fieldDisplay;      /*  */
+   DBENTRYP_SSI  fieldInfo;         /*-Retrieve information about a field. */
+   DBENTRYP_SVP  fieldName;         /*-Determine the name associated with a field number. */
+   DBENTRYP_V    flush;             /* Write data buffer to the data store. */
+   DBENTRYP_PP   getRec;            /*  */
+   DBENTRYP_SI   getValue;          /* Obtain the current value of a field. */
+   DBENTRYP_SVL  getVarLen;         /* Obtain the length of a field value. */
+   DBENTRYP_V    goCold;            /* Perform a write of WorkArea memory to the data store. */
+   DBENTRYP_V    goHot;             /* Mark the WorkArea data buffer as hot. */
+   DBENTRYP_P    putRec;            /* Replace the current record. */
+   DBENTRYP_SI   putValue;          /* Assign a value to a field. */
+   DBENTRYP_V    recall;            /* Undelete the current record. */
+   DBENTRYP_ULP  reccount;          /* Obtain number of records in WorkArea. */
+   DBENTRYP_ISI  recInfo;           /*  */
+   DBENTRYP_I    recno;             /* Obtain physical row number at current WorkArea cursor position. */
+   DBENTRYP_S    setFieldExtent;    /* Establish the extent of the array of fields for a WorkArea. */
 
 
    /* WorkArea/Database management */
 
-   DBENTRYP_P    alias;
-   DBENTRYP_V    close;
-   DBENTRYP_VP   create;
-   DBENTRYP_SI   info;
-   DBENTRYP_V    newarea;
-   DBENTRYP_VP   open;
-   DBENTRYP_V    release;
-   DBENTRYP_SP   structSize;
-   DBENTRYP_P    sysName;
-   DBENTRYP_VEI  dbEval;
-   DBENTRYP_V    pack;
-   DBENTRYP_LSP  packRec;
-   DBENTRYP_VS   sort;
-   DBENTRYP_VT   trans;
-   DBENTRYP_VT   transRec;
-   DBENTRYP_V    zap;
+   DBENTRYP_P    alias;             /*-Obtain the alias of the WorkArea. */
+   DBENTRYP_V    close;             /* Close the table in the WorkArea. */
+   DBENTRYP_VP   create;            /* Create a data store in the specified WorkArea. */
+   DBENTRYP_SI   info;              /* Retrieve information about the current driver (DBI). */
+   DBENTRYP_V    newarea;           /* Clear the WorkArea for use. */
+   DBENTRYP_VP   open;              /* Open a data store in the WorkArea. */
+   DBENTRYP_V    release;           /*-Release all references to a WorkArea. */
+   DBENTRYP_SP   structSize;        /* Retrieve the size of the WorkArea structure. */
+   DBENTRYP_P    sysName;           /* Obtain the name of replaceable database driver (RDD) subsystem. */
+   DBENTRYP_VEI  dbEval;            /*-Evaluate code block for each record in WorkArea. */
+   DBENTRYP_V    pack;              /* Remove records marked for deletion from a database. */
+   DBENTRYP_LSP  packRec;           /*  */
+   DBENTRYP_VS   sort;              /* Physically reorder a database. */
+   DBENTRYP_VT   trans;             /* Copy one or more records from one WorkArea to another. */
+   DBENTRYP_VT   transRec;          /* Copy a record to another WorkArea. */
+   DBENTRYP_V    zap;               /* Physically remove all records from data store. */
 
 
    /* Relational Methods */
 
-   DBENTRYP_VR   childEnd;
-   DBENTRYP_VR   childStart;
-   DBENTRYP_VR   childSync;
-   DBENTRYP_V    syncChildren;
-   DBENTRYP_V    clearRel;
-   DBENTRYP_V    forceRel;
-   DBENTRYP_SVP  relArea;
-   DBENTRYP_VR   relEval;
-   DBENTRYP_SVP  relText;
-   DBENTRYP_VR   setRel;
+   DBENTRYP_VR   childEnd;          /* Report end of relation. */
+   DBENTRYP_VR   childStart;        /* Report initialization of a relation. */
+   DBENTRYP_VR   childSync;         /* Post a pending relational movement. */
+   DBENTRYP_V    syncChildren;      /*-Force relational movement in child WorkAreas. */
+   DBENTRYP_V    clearRel;          /* Clear all relations in the specified WorkArea. */
+   DBENTRYP_V    forceRel;          /* Force relational seeks in the specified WorkArea. */
+   DBENTRYP_SVP  relArea;           /*-Obtain the workarea number of the specified relation. */
+   DBENTRYP_VR   relEval;           /*-Evaluate a block against the relation in specified WorkArea. */
+   DBENTRYP_SVP  relText;           /*-Obtain the character expression of the specified relation. */
+   DBENTRYP_VR   setRel;            /*-Set a relation in the parent file. */
 
 
    /* Order Management */
 
-   DBENTRYP_OI   orderListAdd;
-   DBENTRYP_V    orderListClear;
-   DBENTRYP_VP   orderListDelete;
-   DBENTRYP_OI   orderListFocus;
-   DBENTRYP_V    orderListRebuild;
-   DBENTRYP_VOI  orderCondition;
-   DBENTRYP_VOC  orderCreate;
-   DBENTRYP_OI   orderDestroy;
-   DBENTRYP_OII  orderInfo;
+   DBENTRYP_OI   orderListAdd;      /*  */
+   DBENTRYP_V    orderListClear;    /*  */
+   DBENTRYP_VP   orderListDelete;   /*  */
+   DBENTRYP_OI   orderListFocus;    /*  */
+   DBENTRYP_V    orderListRebuild;  /*  */
+   DBENTRYP_VOI  orderCondition;    /*  */
+   DBENTRYP_VOC  orderCreate;       /*  */
+   DBENTRYP_OI   orderDestroy;      /*  */
+   DBENTRYP_OII  orderInfo;         /*-Retrieve information about the current order that SELF could not. */
 
 
    /* Filters and Scope Settings */
 
-   DBENTRYP_V    clearFilter;
-   DBENTRYP_V    clearLocate;
-   DBENTRYP_V    clearScope;
-   DBENTRYP_VPLP countScope;
-   DBENTRYP_I    filterText;
-   DBENTRYP_SI   scopeInfo;
-   DBENTRYP_VFI  setFilter;
-   DBENTRYP_VLO  setLocate;
-   DBENTRYP_VOS  setScope;
-   DBENTRYP_VPL  skipScope;
+   DBENTRYP_V    clearFilter;       /*-Clear the active filter expression. */
+   DBENTRYP_V    clearLocate;       /*-Clear the active locate expression. */
+   DBENTRYP_V    clearScope;        /*  */
+   DBENTRYP_VPLP countScope;        /*  */
+   DBENTRYP_I    filterText;        /*-Return filter condition of the specified WorkArea. */
+   DBENTRYP_SI   scopeInfo;         /*  */
+   DBENTRYP_VFI  setFilter;         /* Set the filter condition for the specified WorkArea. */
+   DBENTRYP_VLO  setLocate;         /*-Set the locate scope for the specified WorkArea. */
+   DBENTRYP_VOS  setScope;          /*  */
+   DBENTRYP_VPL  skipScope;         /*  */
 
 
    /* Miscellaneous */
 
-   DBENTRYP_P    compile;
-   DBENTRYP_I    error;
-   DBENTRYP_I    evalBlock;
+   DBENTRYP_P    compile;           /*-Compile a character expression. */
+   DBENTRYP_I    error;             /*-Raise a runtime error. */
+   DBENTRYP_I    evalBlock;         /*-Evaluate a code block. */
 
 
    /* Network operations */
 
-   DBENTRYP_VSP  rawlock;
-   DBENTRYP_VL   lock;
-   DBENTRYP_UL   unlock;
+   DBENTRYP_VSP  rawlock;           /* Perform a lowlevel network lock in the specified WorkArea. */
+   DBENTRYP_VL   lock;              /* Perform a network lock in the specified WorkArea. */
+   DBENTRYP_UL   unlock;            /* Release network locks in the specified WorkArea. */
 
 
    /* Memofile functions */
 
-   DBENTRYP_V    closeMemFile;
-   DBENTRYP_VP   createMemFile;
-   DBENTRYP_SVPB getValueFile;
-   DBENTRYP_VP   openMemFile;
-   DBENTRYP_SVP  putValueFile;
+   DBENTRYP_V    closeMemFile;      /* Close a memo file in the WorkArea. */
+   DBENTRYP_VP   createMemFile;     /* Create a memo file in the WorkArea. */
+   DBENTRYP_SVPB getValueFile;      /*  */
+   DBENTRYP_VP   openMemFile;       /* Open a memo file in the specified WorkArea. */
+   DBENTRYP_SVP  putValueFile;      /*  */
 
 
    /* Database file header handling */
 
-   DBENTRYP_V    readDBHeader;
-   DBENTRYP_V    writeDBHeader;
+   DBENTRYP_V    readDBHeader;      /* Read the database file header record in the WorkArea. */
+   DBENTRYP_V    writeDBHeader;     /* Write the database file header record in the WorkArea. */
 
 
    /* non WorkArea functions       */
-   DBENTRYP_I0   exit;
-   DBENTRYP_I1   drop;
-   DBENTRYP_I2   exists;
+   DBENTRYP_I0   exit;              /*  */
+   DBENTRYP_I1   drop;              /* remove table */
+   DBENTRYP_I2   exists;            /* check if table exist */
 
    /* Special and reserved methods */
 
-   DBENTRYP_SVP  whoCares;
+   DBENTRYP_SVP  whoCares;          /*  */
 
 } RDDFUNCS;
 

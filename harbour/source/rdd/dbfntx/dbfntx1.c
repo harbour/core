@@ -130,6 +130,7 @@
 #include "hbapicdp.h"
 
 extern PHB_CODEPAGE s_cdpage;
+#define __PRG_SOURCE__ __FILE__
 extern USHORT hb_rddFieldIndex( AREAP pArea, char * szName );
 
 
@@ -158,7 +159,7 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
    #pragma startup dbfntx1__InitSymbols
 #endif
 
-static RDDFUNCS ntxSuper = { 0 };
+static RDDFUNCS ntxSuper;
 
 /* Internal functions */
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen );
@@ -2526,12 +2527,23 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                USHORT nAttemptLeft = 999;
                pszTempName = (char*) hb_xgrab( _POSIX_PATH_MAX );
                // sortInfo.tempHandle = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, pszTempName );
+               #if defined( HB_OS_LINUX ) || defined( HB_OS_BSD )
+               strcpy(pszTempName, "sort-tmp.XXXXXX" );
+               #endif
                while( --nAttemptLeft )
                {
+                  #if !defined( HB_OS_LINUX ) && !defined( HB_OS_BSD )
                   tmpnam( pszTempName );
                   sortInfo.tempHandle = hb_fsCreate( (BYTE*)pszTempName,FC_NORMAL );
                   if( sortInfo.tempHandle != FS_ERROR )
                      break;
+                  #else
+                  sortInfo.tempHandle =  mkstemp( pszTempName );
+                  if( sortInfo.tempHandle > -1 )
+                  {
+                     break;
+                  }
+                  #endif
                }
                if( sortInfo.tempHandle == FS_ERROR )
                   hb_errInternal( HB_EI_ERRUNRECOV, "Cannot create temp file", "hb_ntxIndexCreate", NULL );
@@ -4281,12 +4293,13 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxPutValueFile,
                              ntxReadDBHeader,
                              ntxWriteDBHeader,
+                             ntxExit,
+                             ntxDrop,
+                             ntxExists,
                              ntxWhoCares
                            };
 
-HB_FUNC(_DBFNTX )
-{
-}
+HB_FUNC(_DBFNTX ){;}
 
 HB_FUNC( DBFNTX_GETFUNCTABLE )
 {
@@ -4294,10 +4307,22 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    USHORT * uiCount;
 
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
    if( pTable )
-      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
+   {
+      SHORT iRet;
+
+      if ( uiCount )
+         * uiCount = RDDFUNCSCOUNT;
+      iRet = hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBFDBT" );
+      if ( iRet == FAILURE )
+         iRet = hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBFFPT" );
+      if ( iRet == FAILURE )
+         iRet = hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" );
+      hb_retni( iRet );
+   }
    else
+   {
       hb_retni( FAILURE );
+   }
 }

@@ -51,19 +51,9 @@
  *
  */
 
-
 /*
-#define LOCK_START                      0x40000000L
-#define LOCK_APPEND                     0x7FFFFFFEL
-#define LOCK_FILE                       0x3FFFFFFFL
-#define MEMO_BLOCK                      64
-#define CDX_MAX_KEY                     240
-#define CDX_BLOCK_SIZE                  512
-*/
 #define CDX_MAX_TAG_NAME_LEN            10
 
-#define CDX_INTERNAL_SPACE              500
-#define CDX_EXTERNAL_SPACE              488
 #define CDX_MAX_REC_NUM                 0x7FFFFFFFL
 #define CDX_IGNORE_REC_NUM              -1
 #define PAGE_ROOT                       1
@@ -73,6 +63,11 @@
 #define BTTM_RECORD                     2
 #define PREV_RECORD                     3
 #define NEXT_RECORD                     4
+*/
+
+#define CDX_INTERNAL_SPACE              500
+#define CDX_EXTERNAL_SPACE              488
+
 #define SORT_CHUNK_LIMIT                16384
 #define SORT_ACTIVE_LIST                0
 #define SORT_END_OF_KEY                 1
@@ -80,14 +75,12 @@
 #define SORT_STACK_OF_CHAR              3
 #define SORT_NOT_KEY                    0x10
 
-#define HB_CDXMAXKEY( x )              ((USHORT) ((x) > CDX_MAXKEY ? CDX_MAXKEY : (x)))
-
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a1 /* byte alignment */
 #elif defined(__GNUC__)
    #pragma pack(1)
 #elif defined(__WATCOMC__)
-   #pragma push(pack, 1);
+   #pragma pack(push, 1);
 #elif defined(__cplusplus)
    #pragma pack(1)
 #endif
@@ -122,6 +115,7 @@ typedef struct _CDXDATA
       CDXINTERNAL Internal;
    } cdxu;
 } CDXDATA;
+typedef CDXDATA * LPCDXDATA;
 
 typedef struct _SORTSWAPPAGE
 {
@@ -154,63 +148,10 @@ typedef SORTSWAPITEM * LPSORTSWAPITEM;
 #elif defined(__GNUC__)
    #pragma pack()
 #elif defined(__WATCOMC__)
-   #pragma pop(pack);
+   #pragma pack(pop);
 #elif defined(__cplusplus)
    #pragma pack()
 #endif
-
-typedef CDXDATA * LPCDXDATA;
-
-typedef struct _CDXKEYINFO
-{
-   char   * Value;
-   USHORT   length;
-   USHORT   realLength;
-   BOOL     fString;
-   LONG     Tag;
-   LONG     Xtra;
-   struct  _CDXKEYINFO * pNext;
-} CDXKEYINFO;
-
-typedef CDXKEYINFO * LPCDXKEYINFO;
-
-struct _CDXTAG;    /* forward declaration */
-
-typedef struct HB_CDXPAGEINFO_STRU
-{
-   LONG      Page;
-   LONG      Left;
-   LONG      Right;
-   BOOL      Changed;
-   BOOL      keyAdded;
-   BYTE      bUsed;
-   BOOL      NewRoot;
-   BOOL      LastEntry;
-   BOOL      Reload;
-   BOOL      ChkBOF;
-   BOOL      ChkEOF;
-   BYTE      PageType;
-   ULONG     RNMask;
-   BYTE      ReqByte;
-   BYTE      RNBits;
-   BYTE      DCBits;
-   BYTE      TCBits;
-   BYTE      DCMask;
-   BYTE      TCMask;
-   /* USHORT     Space; */
-   SHORT     FreeSpace;
-   LPCDXKEYINFO pKeys;
-   USHORT    uiKeys;
-   SHORT     CurKey;
-   struct HB_CDXPAGEINFO_STRU * Owner;
-   struct HB_CDXPAGEINFO_STRU * Child;
-   struct _CDXTAG * TagParent;
-   struct HB_CDXPAGEINFO_STRU * pPoolPrev;
-   struct HB_CDXPAGEINFO_STRU * pPoolNext;
-} HB_CDXPAGEINFO;
-
-typedef HB_CDXPAGEINFO * LPCDXPAGEINFO;
-
 
 /*SORT stuff*/
 typedef struct
@@ -250,6 +191,18 @@ typedef struct
 } SORTDATA;
 
 typedef SORTDATA * LPSORTDATA;
+
+typedef struct _CDXKEYINFO
+{
+   BYTE *   Value;
+   USHORT   length;
+   USHORT   realLength;
+   BOOL     fString;
+   ULONG    Tag;
+   ULONG    Xtra;
+   struct _CDXKEYINFO * pNext;
+} CDXKEYINFO;
+typedef CDXKEYINFO * LPCDXKEYINFO;
 
 typedef struct
 {

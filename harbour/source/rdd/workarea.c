@@ -57,6 +57,7 @@
 
 #include <ctype.h>
 #include "hbapi.h"
+#include "hbapirdd.h"
 #include "hbinit.h"
 #include "hbvm.h"
 #include "hbapiitm.h"
@@ -448,7 +449,6 @@ ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
    HB_TRACE(HB_TR_DEBUG, ("hb_waAlias(%p, %p)", pArea, szAlias));
 
    szAlias[0] = '\0';
-
    strncat( ( char * ) szAlias, ( ( PHB_DYNS ) pArea->atomAlias )->pSymbol->szName,
             HARBOUR_MAX_RDD_ALIAS_LENGTH );
    return SUCCESS;
@@ -644,11 +644,11 @@ ERRCODE hb_waSysName( AREAP pArea, BYTE * pBuffer )
 ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 {
    BOOL bFor, bWhile;
-   ULONG ulNext;
+   LONG lNext;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waEval(%p, %p)", pArea, pEvalInfo));
 
-   ulNext = 0;
+   lNext = 0;
    if( pEvalInfo->dbsci.itmRecID )
    {
       SELF_GOTO( pArea, hb_itemGetNL( pEvalInfo->dbsci.itmRecID ) );
@@ -676,30 +676,35 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
       SELF_GOTOP( pArea );
 
    if( pEvalInfo->dbsci.lNext )
-      ulNext = hb_itemGetNL( pEvalInfo->dbsci.lNext );
+      lNext = hb_itemGetNL( pEvalInfo->dbsci.lNext );
 
-   while( !pArea->fEof )
+   if( !pEvalInfo->dbsci.lNext || lNext > 0 )
    {
-      if( pEvalInfo->dbsci.lNext && ulNext-- < 1 )
-         break;
-
-      if( pEvalInfo->dbsci.itmCobWhile )
+      while( !pArea->fEof )
       {
-         bWhile = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) );
-         if( !bWhile )
+
+        if( pEvalInfo->dbsci.itmCobWhile )
+        {
+            bWhile = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) );
+            if( !bWhile )
+               break;
+         }
+         else
+            bWhile = TRUE;
+
+         if( pEvalInfo->dbsci.itmCobFor )
+            bFor = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobFor ) );
+         else
+            bFor = TRUE;
+
+         if( bFor && bWhile )
+            hb_vmEvalBlock( pEvalInfo->itmBlock );
+
+         if( pEvalInfo->dbsci.lNext && --lNext < 1 )
             break;
+
+         SELF_SKIP( pArea, 1 );
       }
-      else
-         bWhile = TRUE;
-
-      if( pEvalInfo->dbsci.itmCobFor )
-         bFor = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobFor ) );
-      else
-         bFor = TRUE;
-
-      if( bFor && bWhile )
-         hb_vmEvalBlock( pEvalInfo->itmBlock );
-      SELF_SKIP( pArea, 1 );
    }
 
    return SUCCESS;

@@ -3,11 +3,11 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFCDX RDD
+ * DBFCDX RDD (ver.2)
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
- * www - http://www.harbour-project.org
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,244 +54,276 @@
 #define HB_RDDCDX_H_
 
 #include "hbapirdd.h"
+#include "hbdbferr.h"
+#ifndef HB_CDP_SUPPORT_OFF
 #include "hbapicdp.h"
+#endif
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
 
 
-/* DBFCDX errors */
-
-#define EDBF_OPEN_DBF                              1001
-#define EDBF_CREATE_DBF                            1004
-#define EDBF_READ                                  1010
-#define EDBF_WRITE                                 1011
-#define EDBF_CORRUPT                               1012
-#define EDBF_DATATYPE                              1020
-#define EDBF_DATAWIDTH                             1021
-#define EDBF_UNLOCKED                              1022
-#define EDBF_SHARED                                1023
-#define EDBF_APPENDLOCK                            1024
-#define EDBF_READONLY                              1025
-#define EDBF_INVALIDKEY                            1026
-
-
-
-/* DBFCDX default extensions */
-#define CDX_MEMOEXT                               ".fpt"
+/* CDX constants and defaults */
 #define CDX_INDEXEXT                              ".cdx"
-
-
-
-/* FPT's and CDX's */
-
-#define FPT_DEFBLOCKSIZE                             64
-#define SIZEOFMEMOFREEBLOCK                           6
-#define MAXFREEBLOCKS                                82
 #define CDX_MAXKEY                                  240
 #define CDX_MAXTAGNAMELEN                            10
 #define CDX_PAGELEN                                 512
-#define CDX_RIGHTTYPE                                 0
-#define CDX_ROOTTYPE                                  1
-#define CDX_LEAFTYPE                                  2
-#define CDX_LEAFFREESPACE                           488
+#define CDX_INT_FREESPACE                           500
+#define CDX_EXT_FREESPACE                           488
+#define CDX_DUMMYNODE                       0xFFFFFFFFL
+#define CDX_LOCKOFFSET                      0x7FFFFFFEL
+#define CDX_LOCKSIZE                                 1L
+#define CDX_STACKSIZE                                64
+#define CDX_PAGECACHESIZE                            16
+#define CDX_NODE_BRANCH                               0
+#define CDX_NODE_ROOT                                 1
+#define CDX_NODE_LEAF                                 2
+#define CDX_NODE_UNUSED                            0xFF
+#define CDX_IGNORE_REC_NUM                         0x0L
+#define CDX_MAX_REC_NUM                     0xFFFFFFFFL
+#define CDX_BALANCE_LEAFPAGES                         3
+#define CDX_BALANCE_INTPAGES                          3
+
+/*
+#define CDX_CURKEY_UNDEF                              1
+#define CDX_CURKEY_REC                                2
+#define CDX_CURKEY_VAL                                4
+#define CDX_CURKEY_INPAGE                             8
+#define CDX_CURKEY_INSTACK                           16
+#define CDX_CURKEY_NOTEXIST                          32
+*/
+
+#define TOP_RECORD                                    1
+#define BTTM_RECORD                                   2
+#define PREV_RECORD                                   3
+#define NEXT_RECORD                                   4
+#define PRVU_RECORD                                   6
+#define NXTU_RECORD                                   5
+
+#define NODE_NEWLASTKEY                               1
+#define NODE_SPLIT                                    2
+#define NODE_JOIN                                     4
+#define NODE_BALANCE                                  8
+#define NODE_EAT                                     16
+
+/*
+#define CURKEY_UNDEF(pTag)    (((pTag)->curKeyState & CDX_CURKEY_UNDEF) != 0)
+#define CURKEY_NOTEXIST(pTag) (((pTag)->curKeyState & CDX_CURKEY_NOTEXIST) != 0)
+#define CURKEY_ISSET(pTag)    (((pTag)->curKeyState & (CDX_CURKEY_NOTEXIST | CDX_CURKEY_UNDEF)) == 0)
+#define CURKEY_REC(pTag)      ((((pTag)->curKeyState & CDX_CURKEY_REC) != 0) ? (pTag)->curKey->rec : 0)
+#define CURKEY_VAL(pTag)      ((((pTag)->curKeyState & CDX_CURKEY_VAL) != 0) ? (pTag)->curKey->val : NULL)
+#define CURKEY_REFRESH(pTag)
+*/
+
+#define HB_CDXMAXKEY( x )     ((USHORT) ((x) > CDX_MAXKEY ? CDX_MAXKEY : (x)))
+#define HB_CDXBITMASK( x )    ((LONG) ((1L<<(x))-1))
+
+//#define FAST_GOCOLD( A )      (((CDXAREAP) (A))->fRecordChanged || ((CDXAREAP) (A))->fCdxAppend ? (SELF_GOCOLD((A))) : SUCCESS)
+#define FAST_GOCOLD( A )      SELF_GOCOLD(A)
 
 
-
-struct _CDXAREA;
-
-typedef struct _MEMOHEADER
-{
-   ULONG ulNextBlock;                 /* Next memo entry */
-   ULONG ulBlockSize;                 /* Size of block */
-} MEMOHEADER;
-
-typedef MEMOHEADER * LPMEMOHEADER;
-
-
-
-typedef struct _MEMOBLOCK
-{
-   ULONG ulType;                      /* 0 = binary, 1 = text */
-   ULONG ulSize;                      /* length of data */
-} MEMOBLOCK;
-
-typedef MEMOBLOCK * LPMEMOBLOCK;
-
-
-
-typedef struct _MEMOFREEBLOCK
-{
-   USHORT uiBlocks;                   /* Number of blocks */
-   ULONG ulBlock;                     /* Block number */
-} MEMOFREEBLOCK;
-
-typedef MEMOFREEBLOCK * LPMEMOFREEBLOCK;
-
-
-
-typedef struct _MEMOROOT
-{
-   ULONG ulNextBlock;                 /* Next block in the list */
-   ULONG ulBlockSize;                 /* Size of block */
-   BYTE szSignature[ 8 ];             /* Signature */
-   BYTE fChanged;                     /* TRUE if root block is changed */
-   USHORT uiListLen;                  /* Length of list */
-   BYTE pFreeList[ 492 ];             /* Array of free memo blocks (82 MEMOFREEBLOCK's) */
-} MEMOROOT;
-
-typedef MEMOROOT * LPMEMOROOT;
-
-
-
-/* CDX's */
-
-struct _CDXINDEX;    /* forward declaration */
-typedef struct _CDXTAG
-{
-   char * szName;        /* Name of tag */
-   PHB_ITEM pKeyItem;    /* item with a macro pcode for a tag key expression */
-   PHB_ITEM pForItem;    /* item with a macro pcode for a tag for expression */
-   char *     KeyExpr;   /* a tag key expression as text */
-   char *     ForExpr;   /* a tag for expression as text */
-   USHORT uiType;        /* a type of key expression value */
-   USHORT uiLen;         /* length of the key expression value */
-   USHORT nField;
-   struct _CDXINDEX * pIndex;    /* a parent index info */
-   // review this ...
-   struct    _CDXTAG * pNext;
-   BOOL       AscendKey;        /* ascending/descending order flag */
-   BOOL       UniqueKey;        /* unique order flag */
-   BOOL       Temporary;
-   BOOL       Custom;
-   BOOL       TagChanged;
-   BOOL       TagBOF;
-   BOOL       TagEOF;
-   //BYTE       KeyType;
-   BYTE       OptFlags;
-   LONG       TagBlock;        /* a page offset where a tag header is stored */
-   LONG       RootBlock;       /* a page offset with the root of keys tree */
-   //USHORT     KeyLength;
-   USHORT     MaxKeys;
-   LPCDXKEYINFO  CurKeyInfo;    /* current value of key expression */
-   LPCDXPAGEINFO RootPage;
-   LPCDXKEYINFO  HotKey;        /* value of hot key expression */
-   PHB_ITEM   topScope;
-   LPCDXKEYINFO  topScopeKey;
-   PHB_ITEM   bottomScope;
-   LPCDXKEYINFO  bottomScopeKey;
-   LPCDXPAGEINFO pagePool;
-   ULONG     ulVersion;
-} CDXTAG;
-typedef CDXTAG * LPCDXTAG;
-
-typedef struct _CDXINDEX
-{
-   char *    szFileName;                 /* Name of index file */
-   FHANDLE   hFile;                     /* Index file handle */
-   struct _CDXAREA * pArea;           /* Parent WorkArea */
-   LPCDXTAG  pCompound;
-   LONG      NextAvail;
-   // review this...
-   LPCDXTAG  TagList;
-   struct   _CDXINDEX * pNext;   /* The next index in the list */
-   /* USHORT    uiTag;      */        /* current tag focus          */
-   BOOL fShared;                 /* Shared file */
-   BOOL fReadonly;               /* Read only file */
-   int       lockWrite;
-   int       lockRead;
-   int       changesWritten;
-   ULONG     ulVersion;
-} CDXINDEX;
-typedef CDXINDEX * LPCDXINDEX;
-
-#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
-   #pragma option -a1 /* byte alignment */
-#elif defined(__GNUC__)
-   #pragma pack(1)
-#elif defined(__WATCOMC__)
-   #pragma push(pack, 1);
-#elif defined(__cplusplus)
-   #pragma pack(1)
-#endif
-
-/* ----
-typedef struct _CDXHEADER
-{ ...
-   LONG   Root;
-   LONG   FreePtr;
-   LONG   ChgFlag;
-   USHORT Key_Lgth;
-   BYTE   IndexOpts;
-   BYTE   IndexSig;
-   BYTE   Reserve3[ 486 ];
-   USHORT AscDesc;
-   USHORT Reserve4;
-   USHORT ForExpLen;
-   USHORT Reserve5;
-   USHORT KeyExpLen;
-   BYTE   KeyPool[ CDX_BLOCK_SIZE ];
-} CDXHEADER;
-
-typedef CDXHEADER * LPCDXHEADER;
------ */
-
-#define CDX_TYPE_UNIQUE        1       /* unique index */
+#define CDX_TYPE_UNIQUE        0x01    /* unique index */
+#define CDX_TYPE_TEMPORARY     0x02    /* temporary index */
+#define CDX_TYPE_CUSTOM        0x04    /* custom index */
 #define CDX_TYPE_FORFILTER     0x08    /* for expression present */
 #define CDX_TYPE_BITVECTOR     0x10    /* SoftC? */
 #define CDX_TYPE_COMPACT       0x20    /* FoxPro */
 #define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
+/* CDX index node strucutres */
+/* Compact Index Header Record */
 typedef struct _CDXTAGHEADER
 {
-   LONG lRoot;                /* offset of the root node */
-   LONG lFreeList;            /* offset of list of free   pages or -1 */
-   LONG lChgFlag; //lLength;  /* Version number ? MSDN: pointer to end of file */
-   USHORT uiKeySize;          /* key length */
-   BYTE bType;                /* index options see CDX_TYPE_* */
-   BYTE bSignature;           /* index signature */
-   BYTE bReserved1[ 486 ];
-   USHORT iDescending;        /* 0 = ascending  1 = descending */
-   USHORT iFilterPos;         /* offset of filter expression */
-   USHORT iFilterLen;         /* length of filter expression */
-   USHORT iExprPos;           /* offset of key expression */
-   USHORT iExprLen;           /* length of key expression */
-   BYTE   KeyPool[ CDX_PAGELEN ];
+   BYTE     rootPtr  [ 4 ];   /* offset of the root node */
+   BYTE     freePtr  [ 4 ];   /* offset of list of free pages or -1 */
+   BYTE     reserved1[ 4 ];   /* Version number ??? */
+   BYTE     keySize  [ 2 ];   /* key length */
+   BYTE     indexOpt;         /* index options see CDX_TYPE_* */
+   BYTE     indexSig;         /* index signature */
+   BYTE     reserved2[ 486 ];
+   BYTE     ascendFlg[ 2 ];   /* 0 = ascending  1 = descending */
+   BYTE     forExpPos[ 2 ];   /* offset of filter expression */
+   BYTE     forExpLen[ 2 ];   /* length of filter expression */
+   BYTE     keyExpPos[ 2 ];   /* offset of key expression */
+   BYTE     keyExpLen[ 2 ];   /* length of key expression */
+   BYTE     keyExpPool[ CDX_PAGELEN ];
 } CDXTAGHEADER;
 typedef CDXTAGHEADER * LPCDXTAGHEADER;
 
-#define CDX_NODE_BRANCH    0
-#define CDX_NODE_ROOT      1
-#define CDX_NODE_LEAF      2
-
-typedef struct _CDXLEAFHEADER
+/* Compact Index Interior Node Record */
+typedef struct _CDXINTNODE
 {
-   USHORT uiNodeType;        /* node type see CDX_NODE_* */
-   USHORT uiKeyCount;        /* number of keys */
-   LONG lLeftNode;           /* offset of left node or -1 */
-   LONG lRightNode;          /* offset of right node or -1 */
-   USHORT uiFreeSpace;       /* free space available in a page */
-   ULONG ulRecNumMask;       /* record number mask */
-   BYTE bDupByteMask;        /* duplicate bytes count mask */
-   BYTE bTrailByteMask;      /* trailing bytes count mask */
-   BYTE bRecNumLen;          /* number of bits for record number */
-   BYTE bDupCntLen;          /* number of bits for duplicate count */
-   BYTE bTrailCntLen;        /* number of bits for trailing count */
-   BYTE bInfo;               /* total number of bytes for recnn/dup/trail info */
-   BYTE bData[ CDX_LEAFFREESPACE ];
-} CDXLEAFHEADER;
-typedef CDXLEAFHEADER * LPCDXLEAFHEADER;
-#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
-   #pragma option -a /* default alignment */
-#elif defined(__GNUC__)
-   #pragma pack()
-#elif defined(__WATCOMC__)
-   #pragma pop(pack);
-#elif defined(__cplusplus)
-   #pragma pack()
-#endif
+   BYTE     attr    [ 2 ];    /* node type see CDX_NODE_* */
+   BYTE     nKeys   [ 2 ];    /* number of keys */
+   BYTE     leftPtr [ 4 ];    /* offset of left node or -1 */
+   BYTE     rightPtr[ 4 ];    /* offset of right node or -1 */
+   BYTE     keyPool [ CDX_INT_FREESPACE ];
+} CDXINTNODE;
+typedef CDXINTNODE * LPCDXINTNODE;
+typedef CDXINTNODE CDXNODE;
+typedef CDXNODE * LPCDXNODE;
+
+/* Compact Index Exterior Node Record */
+typedef struct _CDXEXTNODE
+{
+   BYTE     attr    [ 2 ];    /* node type see CDX_NODE_* */
+   BYTE     nKeys   [ 2 ];    /* number of keys */
+   BYTE     leftPtr [ 4 ];    /* offset of left node or -1 */
+   BYTE     rightPtr[ 4 ];    /* offset of right node or -1 */
+   BYTE     freeSpc [ 2 ];    /* free space available in a page */
+   BYTE     recMask [ 4 ];    /* record number mask */
+   BYTE     dupMask;          /* duplicate bytes count mask */
+   BYTE     trlMask;          /* trailing bytes count mask */
+   BYTE     recBits;          /* number of bits for record number */
+   BYTE     dupBits;          /* number of bits for duplicate count */
+   BYTE     trlBits;          /* number of bits for trailing count */
+   BYTE     keyBytes;         /* total number of bytes for recnn/dup/trail info */
+   BYTE     keyPool [ CDX_EXT_FREESPACE ];      /* rec/dup/trl */
+} CDXEXTNODE;
+typedef CDXEXTNODE * LPCDXEXTNODE;
+
+
+
+/* CDX internal memory structures */
+
+struct _CDXAREA;  /* forward declaration */
+struct _CDXINDEX; /* forward declaration */
+struct _CDXTAG;   /* forward declaration */
+
+typedef struct _CDXKEY
+{
+   BYTE *   val;
+   BYTE     len;
+   ULONG    rec;
+} CDXKEY;
+typedef CDXKEY * LPCDXKEY;
+
+typedef struct _CDXPAGE
+{
+   ULONG    Page;
+   ULONG    Left;
+   ULONG    Right;
+
+   BYTE     PageType;
+   SHORT    iKeys;
+   SHORT    iCurKey;
+
+   BOOL     fChanged;
+   BYTE     bUsed;
+
+   ULONG    RNMask;
+   BYTE     ReqByte;
+   BYTE     RNBits;
+   BYTE     DCBits;
+   BYTE     TCBits;
+   BYTE     DCMask;
+   BYTE     TCMask;
+   BOOL     fBufChanged;
+   union
+   {
+      CDXEXTNODE extNode;
+      CDXINTNODE intNode;
+   } node;
+   BYTE     bufKeyVal[ CDX_MAXKEY ];      /* buffer for leaf key val or added branch key */
+   SHORT    bufKeyNum;                    /* do not change these vars' order             */
+   SHORT    bufKeyPos;                    /* they have to be just after the node         */
+   SHORT    bufKeyLen;                    /* and maybe temporary overwriten when adding  */
+   SHORT    iFree;                        /* new key to interior node record.            */
+   BYTE *   pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
+   //SHORT    iKeyInBuf;
+
+   struct _CDXPAGE * Owner;
+   struct _CDXPAGE * Child;
+   struct _CDXTAG  * TagParent;
+   struct _CDXPAGE * pPoolPrev;
+   struct _CDXPAGE * pPoolNext;
+} CDXPAGE;
+typedef CDXPAGE * LPCDXPAGE;
+
+typedef struct _CDXSTACK
+{
+   LPCDXPAGE Page;
+   SHORT     iKey;
+} CDXSTACK;
+typedef CDXSTACK * LPCDXSTACK;
+
+typedef struct _CDXLIST
+{
+   ULONG    ulAddr;
+   BOOL     fStat;
+   struct _CDXLIST * pNext;
+} CDXLIST;
+typedef CDXLIST * LPCDXLIST;
+
+typedef struct _CDXTAG
+{
+   char *   szName;           /* Name of tag */
+   char *   KeyExpr;          /* a tag key expression as text */
+   char *   ForExpr;          /* a tag for expression as text */
+   PHB_ITEM pKeyItem;         /* item with a macro pcode for a tag key expression */
+   PHB_ITEM pForItem;         /* item with a macro pcode for a tag for expression */
+   USHORT   uiType;           /* a type of key expression value */
+   USHORT   uiLen;            /* length of the key expression value */
+   USHORT   nField;           /* Field number for simple (one field) key expersion */
+   BYTE     OptFlags;         /* index options flag */
+   BOOL     AscendKey;        /* ascending/descending order flag */
+   BOOL     UniqueKey;        /* unique order flag */
+   BOOL     Temporary;        /* temporary order flag */
+   BOOL     Custom;           /* custom order flag */
+
+   BOOL     UsrAscend;        /* user settable ascending/descending order flag */
+   BOOL     UsrUnique;        /* user settable unique order flag */
+   
+   BOOL     TagChanged;
+   BOOL     TagBOF;
+   BOOL     TagEOF;
+
+   BOOL     fRePos;
+   BYTE     curKeyState;      /* see: CDX_CURKEY_* */
+
+   ULONG    TagBlock;         /* a page offset where a tag header is stored */
+   ULONG    RootBlock;        /* a page offset with the root of keys tree */
+   USHORT   MaxKeys;          /* maximum number of keys in Interior node */
+
+   struct _CDXINDEX * pIndex; /* a parent index info */
+   struct _CDXTAG   * pNext;  /* pointer to next tag in index */
+
+   //CDXSTACK  PageStack[ CDX_STACKSIZE ];  /* stack with page path to current key */
+   LPCDXPAGE RootPage;        /* pointer to root of keys tree in memory */
+   LPCDXKEY  CurKey;          /* current value of key expression */
+   LPCDXKEY  HotKey;          /* value of hot key expression */
+   BOOL      HotFor;          /* index FOR condition for HotKey */
+
+   PHB_ITEM  topScope;        /* Top scope HB_ITEM */
+   LPCDXKEY  topScopeKey;     /* Top scope index key */
+   PHB_ITEM  bottomScope;     /* Bottom scope HB_ITEM */
+   LPCDXKEY  bottomScopeKey;  /* Bottom index key */
+
+   LPCDXPAGE pagePool;        /* page buffer in memory */
+} CDXTAG;
+typedef CDXTAG * LPCDXTAG;
+
+typedef struct _CDXINDEX
+{
+   char *   szFileName;       /* Name of index file */
+   FHANDLE  hFile;            /* Index file handle */
+   struct _CDXAREA  * pArea;  /* Parent WorkArea */
+   struct _CDXINDEX * pNext;  /* The next index in the list */
+   LPCDXTAG pCompound;        /* Compound Tag (index of tags) */
+   LPCDXTAG TagList;          /* List of tags in index file */
+   BOOL     fShared;          /* Shared file */
+   BOOL     fReadonly;        /* Read only file */
+   ULONG    nextAvail;        /* offset to next free page in the end of index file */
+   ULONG    freePage;         /* offset to next free page inside index file */
+   LPCDXLIST freeLst;         /* list of free pages in index file */
+   int      lockWrite;        /* number of write lock set */
+   int      lockRead;         /* number of read lock set */
+   BOOL     fChanged;         /* changes written to index, need upadte ulVersion */
+   ULONG    ulVersion;        /* network version/update flag */
+} CDXINDEX;
+typedef CDXINDEX * LPCDXINDEX;
 
 
 /*
@@ -341,9 +373,12 @@ typedef struct _CDXAREA
    ULONG ulRecCount;             /* Total records */
    char * szDataFileName;        /* Name of data file */
    char * szMemoFileName;        /* Name of memo file */
+   USHORT uiMemoBlockSize;       /* Size of memo block */
+   BYTE bMemoType;               /* MEMO type used in DBF memo fields */
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
-   BYTE bCodePage;
+   BYTE bVersion;                /* DBF version ID byte */
+   BYTE bCodePage;               /* DBF codepage ID */
    BOOL fShared;                 /* Shared file */
    BOOL fReadonly;               /* Read only file */
    USHORT * pFieldOffset;        /* Pointer to field offset array */
@@ -362,21 +397,21 @@ typedef struct _CDXAREA
    BYTE bDay;
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
+#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
+#endif
 
    /*
    *  CDX's additions to the workarea structure
    *
-   *  Warning: The above section MUST match WORKAREA exactly!  Any
+   *  Warning: The above section MUST match DBFAREA exactly! Any
    *  additions to the structure MUST be added below, as in this
    *  example.
    */
 
-   USHORT uiMemoBlockSize;       /* Size of memo block */
-   LPMEMOROOT pMemoRoot;         /* Array of free memo blocks */
-   //LPCDXTAG * lpIndexes;         /* Pointer to indexes array */
-   LPCDXINDEX lpIndexes;         /* Pointer to indexes array */
-   USHORT    uiTag;              /* current tag focus          */
+   BOOL       fCdxAppend;        /* Appended record changed */
+   LPCDXINDEX lpIndexes;         /* Pointer to indexes array  */
+   USHORT     uiTag;             /* current tag focus */
 
 } CDXAREA;
 
@@ -396,15 +431,14 @@ typedef CDXAREA * LPCDXAREA;
 #define hb_cdxBof                                  NULL
 #define hb_cdxEof                                  NULL
 #define hb_cdxFound                                NULL
-extern ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
-//#define hb_cdxGoTo                                 NULL
-extern ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo );
+static ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
+#define hb_cdxGoTo                                 NULL
 #define hb_cdxGoToId                               NULL
-extern ERRCODE hb_cdxGoTop( CDXAREAP pArea );
-extern ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
+static ERRCODE hb_cdxGoTop( CDXAREAP pArea );
+static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
 #define hb_cdxSkip                                 NULL
 #define hb_cdxSkipFilter                           NULL
-extern ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
+static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxAddField                             NULL
 #define hb_cdxAppend                               NULL
 #define hb_cdxCreateFields                         NULL
@@ -416,36 +450,33 @@ extern ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxFieldName                            NULL
 #define hb_cdxFlush                                NULL
 #define hb_cdxGetRec                               NULL
-extern ERRCODE hb_cdxGetValue( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-extern ERRCODE hb_cdxGetVarLen( CDXAREAP pArea, USHORT uiIndex, ULONG * pLength );
-//#define hb_cdxGoCold                               NULL
-extern ERRCODE hb_cdxGoCold( CDXAREAP pArea );
-//#define hb_cdxGoHot                                NULL
-extern ERRCODE hb_cdxGoHot( CDXAREAP pArea );
+#define hb_cdxGetValue                             NULL
+#define hb_cdxGetVarLen                            NULL
+static ERRCODE hb_cdxGoCold( CDXAREAP pArea );
+static ERRCODE hb_cdxGoHot( CDXAREAP pArea );
 #define hb_cdxPutRec                               NULL
-extern ERRCODE hb_cdxPutValue( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+#define hb_cdxPutValue                             NULL
 #define hb_cdxRecall                               NULL
 #define hb_cdxRecCount                             NULL
 #define hb_cdxRecInfo                              NULL
 #define hb_cdxRecNo                                NULL
 #define hb_cdxSetFieldExtent                       NULL
 #define hb_cdxAlias                                NULL
-extern ERRCODE hb_cdxClose( CDXAREAP pArea );
+static ERRCODE hb_cdxClose( CDXAREAP pArea );
 #define hb_cdxCreate                               NULL
-extern ERRCODE hb_cdxInfo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+#define hb_cdxInfo                                 NULL
 #define hb_cdxNewArea                              NULL
-extern ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
+static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
 #define hb_cdxRelease                              NULL
-extern ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
-extern ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
+static ERRCODE hb_cdxStructSize( CDXAREAP pArea, USHORT * uiSize );
+static ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
 #define hb_cdxEval                                 NULL
-extern ERRCODE hb_cdxPack ( CDXAREAP pArea );
+static ERRCODE hb_cdxPack ( CDXAREAP pArea );
 #define hb_cdxPackRec                              NULL
 #define hb_cdxSort                                 NULL
 #define hb_cdxTrans                                NULL
 #define hb_cdxTransRec                             NULL
-/* #define hb_cdxZap                                  NULL */
-extern ERRCODE hb_cdxZap ( CDXAREAP pArea );
+static ERRCODE hb_cdxZap ( CDXAREAP pArea );
 #define hb_cdxChildEnd                             NULL
 #define hb_cdxChildStart                           NULL
 #define hb_cdxChildSync                            NULL
@@ -456,26 +487,23 @@ extern ERRCODE hb_cdxZap ( CDXAREAP pArea );
 #define hb_cdxRelEval                              NULL
 #define hb_cdxRelText                              NULL
 #define hb_cdxSetRel                               NULL
-extern ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
+static ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
 #define hb_cdxOrderListDelete                      NULL
-extern ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE hb_cdxOrderListRebuild( CDXAREAP pArea );
 #define hb_cdxOrderCondition                       NULL
-extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
-extern ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
-extern ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
+static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
+static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo );
 #define hb_cdxClearFilter                          NULL
 #define hb_cdxClearLocate                          NULL
-/* #define hb_cdxClearScope                           NULL */
 static ERRCODE hb_cdxClearScope( CDXAREAP pArea );
 #define hb_cdxCountScope                           NULL
 #define hb_cdxFilterText                           NULL
-/* #define hb_cdxScopeInfo                            NULL */
 static ERRCODE hb_cdxScopeInfo( CDXAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 #define hb_cdxSetFilter                            NULL
 #define hb_cdxSetLocate                            NULL
-/* #define hb_cdxSetScope                             NULL */
 static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define hb_cdxSkipScope                            NULL
 #define hb_cdxCompile                              NULL
@@ -485,13 +513,18 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define hb_cdxLock                                 NULL
 #define hb_cdxUnLock                               NULL
 #define hb_cdxCloseMemFile                         NULL
-extern ERRCODE hb_cdxCreateMemFile( CDXAREAP pArea, LPDBOPENINFO pCreateInfo );
+#define hb_cdxCreateMemFile                        NULL
 #define hb_cdxGetValueFile                         NULL
-extern ERRCODE hb_cdxOpenMemFile( CDXAREAP pArea, LPDBOPENINFO pOpenInfo );
+#define hb_cdxOpenMemFile                          NULL
 #define hb_cdxPutValueFile                         NULL
-extern ERRCODE hb_cdxReadDBHeader( CDXAREAP pArea );
-extern ERRCODE hb_cdxWriteDBHeader( CDXAREAP pArea );
+#define hb_cdxReadDBHeader                         NULL
+#define hb_cdxWriteDBHeader                        NULL
+#define hb_cdxExit                                 NULL
+#define hb_cdxDrop                                 NULL
+#define hb_cdxExists                               NULL
 #define hb_cdxWhoCares                             NULL
+
+//#define hb_cdxSwapBytes( n )  HB_SWAP_ULONG( n );
 
 #if defined(HB_EXTERN_C)
 }

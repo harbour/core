@@ -154,6 +154,9 @@ extern "C" {
 #define hb_sdfPutValueFile                         NULL
 #define hb_sdfReadDBHeader                         NULL
 #define hb_sdfWriteDBHeader                        NULL
+#define hb_sdfExit                                 NULL
+#define hb_sdfDrop                                 NULL
+#define hb_sdfExists                               NULL
 #define hb_sdfWhoCares                             NULL
 
 #if defined(HB_EXTERN_C)

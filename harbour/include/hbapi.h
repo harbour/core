@@ -73,6 +73,7 @@ extern "C" {
 #define HB_IT_LONG      ( ( USHORT ) 0x0008 )
 #define HB_IT_DOUBLE    ( ( USHORT ) 0x0010 )
 #define HB_IT_DATE      ( ( USHORT ) 0x0020 )
+#define HB_IT_LONGLONG  ( ( USHORT ) 0x0040 )
 #define HB_IT_LOGICAL   ( ( USHORT ) 0x0080 )
 #define HB_IT_SYMBOL    ( ( USHORT ) 0x0100 )
 #define HB_IT_ALIAS     ( ( USHORT ) 0x0200 )
@@ -85,6 +86,7 @@ extern "C" {
 #define HB_IT_ARRAY     ( ( USHORT ) 0x8000 )
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( USHORT ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
+#define HB_IS_NUMBER( p ) ( ( p )->type & HB_IT_NUMERIC )
 #define HB_IT_ANY       ( ( USHORT ) 0xFFFF )
 
 #define HB_IS_OF_TYPE( p, t ) ( ( ( p )->type & ~HB_IT_BYREF ) == t )

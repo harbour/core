@@ -54,9 +54,10 @@
 
 ANNOUNCE RDDSYS
 
-init procedure RddInit
+PROCEDURE RddInit
 
    REQUEST DBFNTX
+   REQUEST DBFDBT
 
    /* NOTE: Using this internal version of this functions, since at this
             point the DBFNTX RDD may not be registered, depending on the

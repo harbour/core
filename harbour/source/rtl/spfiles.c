@@ -53,64 +53,75 @@
 #include "hbapifs.h"
 #include "hbset.h"
 
-static BOOL FindFile( BYTE * pFilename, BYTE * path )
+BOOL hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + 3 + 10 ] )
 {
+   BYTE *Path;
    BOOL bIsFile = FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE(HB_TR_DEBUG, ("FindFile(%s, %p)", (char*) pFilename, path));
+   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", (char*) pFilename, RetPath));
+
+   if( RetPath )
+   {
+      Path = RetPath;
+   }
+   else
+   {
+      Path = (BYTE *) hb_xgrab( _POSIX_PATH_MAX + 3 + 10 );
+   }
 
    pFilepath = hb_fsFNameSplit( (char*) pFilename );
+
    if( pFilepath->szPath )
    {
-      hb_fsFNameMerge( (char*) path, pFilepath );
-      bIsFile = hb_fsFile( path );
+      hb_fsFNameMerge( (char*) Path, pFilepath );
+      bIsFile = hb_fsFile( Path );
    }
    else
    {
       if( hb_set.HB_SET_DEFAULT )
       {
          pFilepath->szPath = hb_set.HB_SET_DEFAULT;
-         hb_fsFNameMerge( (char*) path, pFilepath );
-         bIsFile = hb_fsFile( path );
+         hb_fsFNameMerge( (char*) Path, pFilepath );
+         bIsFile = hb_fsFile( Path );
       }
 
       if( !bIsFile && hb_set.HB_SET_PATH )
       {
-         HB_PATHNAMES * nextPath = hb_setGetFirstSetPath();
-         while( !bIsFile && nextPath )
+         HB_PATHNAMES *NextPath = hb_setGetFirstSetPath();
+
+         while( bIsFile == FALSE && NextPath )
          {
-            pFilepath->szPath = nextPath->szPath;
-            hb_fsFNameMerge( (char*) path, pFilepath );
-            bIsFile = hb_fsFile( path );
-            nextPath = nextPath->pNext;
+            pFilepath->szPath = NextPath->szPath;
+            hb_fsFNameMerge( (char*) Path, pFilepath );
+            bIsFile = hb_fsFile( Path );
+            NextPath = NextPath->pNext;
          }
       }
    }
+
    hb_xfree( pFilepath );
 
-   if( !bIsFile )
-      *path = '\0';
+   if( bIsFile == FALSE )
+   {
+      Path[0] = '\0';
+   }
+
+   if( RetPath == NULL )
+   {
+      hb_xfree( Path );
+   }
 
    return bIsFile;
 }
 
-BOOL hb_spFile( BYTE * pFilename )
-{
-   BYTE path[ _POSIX_PATH_MAX + 1 ];
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", (char*) pFilename, path));
-
-   return FindFile( pFilename, path );
-}
-
 FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags )
 {
-   BYTE path[ _POSIX_PATH_MAX + 1 ];
+   BYTE path[ _POSIX_PATH_MAX + 3 + 10 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_spOpen(%p, %hu)", pFilename, uiFlags));
 
-   if( FindFile( pFilename, path ) )
+   if( hb_spFile( pFilename, path ) )
       return hb_fsOpen( path, uiFlags );
    else
       return hb_fsOpen( pFilename, uiFlags );

@@ -8,6 +8,48 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-11-05 22:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * config/global.cf
+   * include/hbapirdd.h
+   * include/hbapi.h
+   * include/hbapifs.h
+   * include/hbdefs.h
+   * include/hbrddcdx.h
+   * include/hbrddntx.h
+   * include/hbrdddbf.h
+   * include/hbrdddel.h
+   * include/hbrddsdf.h
+   + include/hbdbferr.h
+   + include/hbrdddbt.h
+   + include/hbrddfpt.h
+
+   * source/rtl/filesys.c
+   * source/rtl/spfiles.c
+   * source/rtl/filehb.c
+
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/delim1.c
+   * source/rdd/rddsys.prg
+   * source/rdd/sdf1.c
+   * source/rdd/workarea.c
+
+   * source/rdd/dbfcdx/dbfcdx0.prg
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfcdx/dbfcdx1.h
+   - source/rdd/dbfcdx/dbfcdx2.h
+
+   * source/rdd/dbfntx/dbfntx1.c
+
+   + source/rdd/dbfdbt/
+   + source/rdd/dbfdbt/dbfdbt0.prg
+   + source/rdd/dbfdbt/dbfdbt1.c
+
+   + source/rdd/dbffpt/
+   + source/rdd/dbffpt/dbffpt0.prg
+   + source/rdd/dbffpt/dbffpt1.c
+     * Latest RDD changes, has been made by Przemyslaw Czerpak - synced with xHarbour.
+
 2003-10-30 19:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 	* source/compiler/harbour.l
 	* source/compiler/harbour.y

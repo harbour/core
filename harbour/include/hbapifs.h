@@ -69,6 +69,12 @@ typedef int     FHANDLE;
 /* File locking flags */
 #define FL_LOCK       0x0000   /* Lock a region   */
 #define FL_UNLOCK     0x0001   /* Unlock a region */
+#define FL_MASK       0x00FF   /* Mask for lock type */
+
+/* Extended file locking flags */
+#define FLX_EXCLUSIVE 0x0000   /* Exclusive lock  */
+#define FLX_SHARED    0x0100   /* Shared lock     */
+#define FLX_WAIT      0x0200   /* Wait for lock until success */
 
 /* File inheritance flags */
 #define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle     */
@@ -160,7 +166,7 @@ typedef struct _HB_PATHNAMES
 
 extern void    hb_fsAddSearchPath( char * szPath, HB_PATHNAMES * * pSearchList );
 
-extern BOOL    hb_spFile( BYTE * pFilename );
+extern BOOL    hb_spFile( BYTE * pFilename, BYTE RetPath[ _POSIX_PATH_MAX + 3 + 10 ] );
 extern FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
 extern FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
 extern FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );

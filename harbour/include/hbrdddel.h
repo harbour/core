@@ -154,6 +154,9 @@ extern "C" {
 #define hb_delimPutValueFile                         NULL
 #define hb_delimReadDBHeader                         NULL
 #define hb_delimWriteDBHeader                        NULL
+#define hb_delimExit                                 NULL
+#define hb_delimDrop                                 NULL
+#define hb_delimExists                               NULL
 #define hb_delimWhoCares                             NULL
 
 #if defined(HB_EXTERN_C)

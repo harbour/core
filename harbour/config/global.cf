@@ -9,6 +9,8 @@ HB_DB_DRIVERS=\
 	nulsys \
 	dbfntx \
 	dbfcdx \
+	dbffpt \
+	dbfdbt \
 
 ifeq ($(HB_BIN_COMPILE),)
 HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(ARCH)

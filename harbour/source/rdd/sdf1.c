@@ -57,14 +57,22 @@
 #include "hbapiitm.h"
 #include "hbrddsdf.h"
 
+#define __PRG_SOURCE__ __FILE__
+
 HB_FUNC( _SDFC );
 HB_FUNC( SDF_GETFUNCTABLE );
+
+#undef HB_PRG_PCODE_VER
+#define HB_PRG_PCODE_VER HB_PCODE_VER
 
 HB_INIT_SYMBOLS_BEGIN( sdf1__InitSymbols )
 { "_SDFC",            HB_FS_PUBLIC, HB_FUNCNAME( _SDFC ), NULL },
 { "SDF_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( SDF_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
-#if defined(_MSC_VER)
+
+#if defined(HB_STATIC_STARTUP)
+   #pragma startup sdf1__InitSymbols
+#elif defined(_MSC_VER)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
       #pragma comment( linker, "/Merge:.CRT=.data" )
@@ -77,8 +85,7 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
    #pragma startup sdf1__InitSymbols
 #endif
 
-static RDDFUNCS sdfSuper = { NULL };
-
+static RDDFUNCS sdfSuper;
 static RDDFUNCS sdfTable = { hb_sdfBof,
                              hb_sdfEof,
                              hb_sdfFound,
@@ -170,6 +177,9 @@ static RDDFUNCS sdfTable = { hb_sdfBof,
                              hb_sdfPutValueFile,
                              hb_sdfReadDBHeader,
                              hb_sdfWriteDBHeader,
+                             hb_sdfExit,
+                             hb_sdfDrop,
+                             hb_sdfExists,
                              hb_sdfWhoCares
                            };
 

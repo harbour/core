@@ -3,10 +3,9 @@
  */
 
 /*
- * Harbour Project source code:
- * DBFCDX RDD (ver.2)
+ * xHarbour Project source code:
+ * DBF error codes
  *
- * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org
  *
@@ -51,15 +50,32 @@
  *
  */
 
-#include "rddsys.ch"
+#ifndef HB_DBFERR_H_
+#define HB_DBFERR_H_
 
-ANNOUNCE DBFCDX
+#if defined(HB_EXTERN_C)
+extern "C" {
+#endif
 
-procedure DBFCDXInit
+/* DBF errors */
+#define EDBF_OPEN_DBF                              1001
+#define EDBF_CREATE_DBF                            1004
+#define EDBF_READ                                  1010
+#define EDBF_WRITE                                 1011
+#define EDBF_CORRUPT                               1012
+#define EDBF_DATATYPE                              1020
+#define EDBF_DATAWIDTH                             1021
+#define EDBF_UNLOCKED                              1022
+#define EDBF_SHARED                                1023
+#define EDBF_APPENDLOCK                            1024
+#define EDBF_READONLY                              1025
+#define EDBF_LOCK                                  1038
+/* ORDER errors */
+#define EDBF_INVALIDKEY                            1026
 
-   REQUEST _DBFCDX
 
-   rddRegister( "DBF", RDT_FULL )
-   rddRegister( "DBFCDX", RDT_FULL )
+#if defined(HB_EXTERN_C)
+}
+#endif
 
-return
+#endif /* HB_DBFERR_H_ */

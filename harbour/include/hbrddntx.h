@@ -54,28 +54,12 @@
 #define HB_RDDNTX_H_
 
 #include "hbapirdd.h"
+#include "hbdbferr.h"
 #include "hbapicdp.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
 #endif
-
-
-/* DBFNTX errors */
-
-#define EDBF_OPEN_DBF                              1001
-#define EDBF_CREATE_DBF                            1004
-#define EDBF_READ                                  1010
-#define EDBF_WRITE                                 1011
-#define EDBF_CORRUPT                               1012
-#define EDBF_DATATYPE                              1020
-#define EDBF_DATAWIDTH                             1021
-#define EDBF_UNLOCKED                              1022
-#define EDBF_SHARED                                1023
-#define EDBF_APPENDLOCK                            1024
-#define EDBF_READONLY                              1025
-#define EDBF_INVALIDKEY                            1026
-
 
 
 /* DBFNTX default extensions */
@@ -103,7 +87,7 @@ struct _NTXINDEX;
 
 typedef struct _KEYINFO
 {
-   // PHB_ITEM pItem;
+   /* PHB_ITEM pItem; */
    LONG     Tag;
    LONG     Xtra;
    char     key[ 1 ]; /* value of key */
@@ -265,6 +249,7 @@ typedef struct _NTXAREA
    USHORT heapSize;
    USHORT rddID;
    USHORT uiMaxFieldNameLength;
+
    /*
    *  DBFS's additions to the workarea structure
    *
@@ -280,9 +265,12 @@ typedef struct _NTXAREA
    ULONG ulRecCount;             /* Total records */
    char * szDataFileName;        /* Name of data file */
    char * szMemoFileName;        /* Name of memo file */
+   USHORT uiMemoBlockSize;       /* Size of memo block */
+   BYTE bMemoType;               /* MEMO type used in DBF memo fields */
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
-   BYTE bCodePage;
+   BYTE bVersion;                /* DBF version ID byte */
+   BYTE bCodePage;               /* DBF codepage ID */
    BOOL fShared;                 /* Shared file */
    BOOL fReadonly;               /* Read only file */
    USHORT * pFieldOffset;        /* Pointer to field offset array */
@@ -306,14 +294,14 @@ typedef struct _NTXAREA
    /*
    *  NTX's additions to the workarea structure
    *
-   *  Warning: The above section MUST match WORKAREA exactly!  Any
+   *  Warning: The above section MUST match DBFAREA exactly! Any
    *  additions to the structure MUST be added below, as in this
    *  example.
    */
 
-   LPTAGINFO lpCurTag;         /* Pointer to current order */
-   LPTAGINFO lpNtxTag;         /* Pointer to tags list */
-   BOOL fNtxAppend;            /* TRUE if new record is added */
+   LPTAGINFO lpCurTag;           /* Pointer to current order */
+   LPTAGINFO lpNtxTag;           /* Pointer to tags list */
+   BOOL fNtxAppend;              /* TRUE if new record is added */
 
 } NTXAREA;
 
@@ -342,7 +330,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 #define ntxSkipFilter            NULL
 static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxAddField              NULL
-// static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll );
+/* static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll ); */
 #define ntxAppend                NULL
 #define ntxCreateFields          NULL
 #define ntxDeleteRec             NULL
@@ -428,6 +416,9 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo );
 #define ntxPutValueFile          NULL
 #define ntxReadDBHeader          NULL
 #define ntxWriteDBHeader         NULL
+#define ntxExit                  NULL
+#define ntxDrop                  NULL
+#define ntxExists                NULL
 #define ntxWhoCares              NULL
 
 #if defined(HB_EXTERN_C)

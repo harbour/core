@@ -2230,6 +2230,7 @@ HB_FUNC( FLOCK )
    dbLockInfo.fResult = FALSE;
    if( s_pCurrArea )
    {
+      dbLockInfo.itmRecID = NULL;
       dbLockInfo.uiMethod = DBLM_FILE;
       SELF_LOCK( ( AREAP ) s_pCurrArea->pArea, &dbLockInfo );
    }
@@ -2638,6 +2639,45 @@ HB_FUNC( ORDKEYNO )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYNO" );
 }
 
+HB_FUNC( ORDKEYGOTO )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* Either or both may be NIL */
+
+      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_NUMERIC );
+      pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_POSITION, &pOrderInfo );
+      hb_retl( hb_itemGetL( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYGOTO" );
+}
+
+HB_FUNC( ORDSKIPUNIQUE )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = NULL;
+      pOrderInfo.itmNewVal = hb_param( 1, HB_IT_ANY );
+      pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_SKIPUNIQUE, &pOrderInfo );
+      hb_retl( hb_itemGetL( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDSKIPUNIQUE" );
+}
+
 HB_FUNC( ORDKEYVAL )
 {
    DBORDERINFO pOrderInfo;
@@ -2695,6 +2735,48 @@ HB_FUNC( ORDKEYDEL )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYDEL" );
 }
 
+HB_FUNC( ORDDESCEND )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* Either or both may be NIL */
+      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_LOGICAL );
+      pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_ISDESC, &pOrderInfo );
+      hb_retl( hb_itemGetL( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDDESCEND" );
+}
+
+HB_FUNC( ORDISUNIQUE )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* HARBOUR extension: NewVal to set/reset unique flag */
+      pOrderInfo.itmNewVal = hb_param( 3 , HB_IT_LOGICAL );
+      pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_UNIQUE, &pOrderInfo );
+      hb_retl( hb_itemGetL( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDISUNIQUE" );
+}
+
 #endif
 
 HB_FUNC( ORDLISTADD )
@@ -2725,16 +2807,18 @@ HB_FUNC( ORDLISTADD )
             hb_itemRelease( pOrderInfo.itmResult );
          return;
       }
-      SELF_ORDLSTADD( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
 
-      if ( bFirst )                     /* set as controlling order and go top */
+      if( SELF_ORDLSTADD( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo ) == SUCCESS )
       {
-         pOrderInfo.itmOrder  = hb_itemPutNI( NULL, 1 );
-         SELF_ORDLSTFOCUS( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
-         hb_itemRelease( pOrderInfo.itmOrder );
-         SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
+         if ( bFirst )                     /* set as controlling order and go top */
+         {
+            pOrderInfo.itmOrder  = hb_itemPutNI( NULL, 1 );
+            SELF_ORDLSTFOCUS( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
+            hb_itemRelease( pOrderInfo.itmOrder );
+            SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
+         }
+         hb_itemRelease( pOrderInfo.itmResult );
       }
-      hb_itemRelease( pOrderInfo.itmResult );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDLISTADD" );
@@ -2877,8 +2961,10 @@ HB_FUNC( RDDREGISTER )
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szDriver, hb_parc( 1 ),
-                       min( uiLen, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+
+      hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen );
       /*
        * hb_rddRegister returns:
        *
@@ -2932,6 +3018,7 @@ HB_FUNC( RLOCK )
    dbLockInfo.fResult = FALSE;
    if( s_pCurrArea )
    {
+      dbLockInfo.itmRecID = NULL;
       dbLockInfo.uiMethod = DBLM_EXCLUSIVE;
       SELF_LOCK( ( AREAP ) s_pCurrArea->pArea, &dbLockInfo );
    }
@@ -2979,9 +3066,23 @@ HB_FUNC( __RDDSETDEFAULT )
    hb_retc( s_szDefDriver );
 
    uiLen = ( USHORT ) hb_parclen( 1 );
+
    if( uiLen > 0 )
    {
-      s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+      {
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+      }
+
+      if( s_szDefDriver )
+      {
+         s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      }
+      else
+      {
+         s_szDefDriver = ( char * ) hb_xgrab( uiLen + 1 );
+      }
+
       hb_strncpyUpper( s_szDefDriver, hb_parc( 1 ), uiLen );
    }
 }
@@ -2989,41 +3090,61 @@ HB_FUNC( __RDDSETDEFAULT )
 HB_FUNC( RDDSETDEFAULT )
 {
    USHORT uiLen;
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH +1 ];
+   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
 
    hb_rddCheck();
    hb_retc( s_szDefDriver );
 
    uiLen = ( USHORT ) hb_parclen( 1 );
+
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ),
-                       min( uiLen, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+      {
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+      }
 
-      if( !hb_rddFindNode( szNewDriver, NULL ) )
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
+
+      if( ! hb_rddFindNode( szNewDriver, NULL ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "RDDSETDEFAULT" );
          return;
       }
 
-      s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
-      strcpy( s_szDefDriver, szNewDriver );
+      if( s_szDefDriver )
+      {
+         s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      }
+      else
+      {
+         s_szDefDriver = ( char * ) hb_xgrab( uiLen + 1 );
+      }
+
+      strncpy( s_szDefDriver, szNewDriver, uiLen );
+      s_szDefDriver[ uiLen ] = '\0';
    }
 }
 
 HB_FUNC( DBSETDRIVER )
 {
+
    USHORT uiLen;
-   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH +1 ];
+   char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
 
    hb_rddCheck();
    hb_retc( s_szDefDriver );
 
    uiLen = ( USHORT ) hb_parclen( 1 );
+
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szNewDriver, hb_parc( 1 ),
-                       min( uiLen, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ) );
+      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
+      {
+         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+      }
+
+      hb_strncpyUpper( szNewDriver, hb_parc( 1 ), uiLen );
 
       if( !hb_rddFindNode( szNewDriver, NULL ) )
       {
@@ -3031,8 +3152,17 @@ HB_FUNC( DBSETDRIVER )
          return;
       }
 
-      s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
-      strcpy( s_szDefDriver, szNewDriver );
+      if( s_szDefDriver )
+      {
+         s_szDefDriver = ( char * ) hb_xrealloc( s_szDefDriver, uiLen + 1 );
+      }
+      else
+      {
+         s_szDefDriver = ( char * ) hb_xgrab( uiLen + 1 );
+      }
+
+      strncpy( s_szDefDriver, szNewDriver, uiLen );
+      s_szDefDriver[ uiLen ] = '\0';
    }
 }
 

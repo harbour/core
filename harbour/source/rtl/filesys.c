@@ -1291,7 +1291,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 #if defined(X__WIN32__)
 {
    errno = 0;
-   switch( uiMode )
+   switch( uiMode & FL_MASK )
    {
       case FL_LOCK:
          bResult = ( LockFile( DostoWinHandle(hFileHandle), ulStart,0, ulLength,0 ) == 0 );
@@ -1314,7 +1314,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       errno = 0;
 
-      switch( uiMode )
+      switch( uiMode & FL_MASK )
       {
       case FL_LOCK:
 
@@ -1351,7 +1351,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
       errno = 0;
-      switch( uiMode )
+      switch( uiMode & FL_MASK )
       {
          case FL_LOCK:
             bResult = ( locking( hFileHandle, _LK_LOCK, ulLength ) == 0 );
@@ -1375,7 +1375,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
       errno = 0;
-      switch( uiMode )
+      switch( uiMode & FL_MASK )
       {
          case FL_LOCK:
             bResult = ( _locking( hFileHandle, _LK_LOCK, ulLength ) == 0 );
@@ -1402,7 +1402,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
       errno = 0;
 
-      switch( uiMode )
+      switch( uiMode & FL_MASK )
       {
          case FL_LOCK:
 
@@ -1436,7 +1436,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 #elif defined(HAVE_POSIX_IO) && !defined(__IBMCPP__) && ( !defined(__GNUC__) || defined(__DJGPP__) )
 
    errno = 0;
-   switch( uiMode )
+   switch( uiMode & FL_MASK )
    {
       case FL_LOCK:
          bResult = ( lock( hFileHandle, ulStart, ulLength ) == 0 );

@@ -57,14 +57,22 @@
 #include "hbapiitm.h"
 #include "hbrdddel.h"
 
+#define __PRG_SOURCE__ __FILE__
+
 HB_FUNC( _DELIMC );
 HB_FUNC( DELIM_GETFUNCTABLE );
+
+#undef HB_PRG_PCODE_VER
+#define HB_PRG_PCODE_VER HB_PCODE_VER
 
 HB_INIT_SYMBOLS_BEGIN( delim1__InitSymbols )
 { "_DELIMC",            HB_FS_PUBLIC, HB_FUNCNAME( _DELIMC ), NULL },
 { "DELIM_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DELIM_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( delim1__InitSymbols )
-#if defined(_MSC_VER)
+
+#if defined(HB_STATIC_STARTUP)
+   #pragma startup delim1__InitSymbols
+#elif defined(_MSC_VER)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
       #pragma comment( linker, "/Merge:.CRT=.data" )
@@ -77,8 +85,7 @@ HB_INIT_SYMBOLS_END( delim1__InitSymbols )
    #pragma startup delim1__InitSymbols
 #endif
 
-static RDDFUNCS delimSuper = { NULL };
-
+static RDDFUNCS delimSuper;
 static RDDFUNCS delimTable = { hb_delimBof,
                                hb_delimEof,
                                hb_delimFound,
@@ -170,6 +177,9 @@ static RDDFUNCS delimTable = { hb_delimBof,
                                hb_delimPutValueFile,
                                hb_delimReadDBHeader,
                                hb_delimWriteDBHeader,
+                               hb_delimExit,
+                               hb_delimDrop,
+                               hb_delimExists,
                                hb_delimWhoCares
                              };
 
