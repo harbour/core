@@ -57,6 +57,19 @@ function Main()
 
          case nKey == K_RIGHT
               oBrowse:Right()
+
+         case nKey = K_PGDN
+              oBrowse:pageDown()
+
+         case nKey = K_PGUP
+              oBrowse:pageUp()
+
+         case nKey = K_CTRL_PGUP
+              oBrowse:goTop()
+
+         case nKey = K_CTRL_PGDN
+              oBrowse:goBottom()
+
       endcase
    end
 

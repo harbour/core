@@ -1,3 +1,8 @@
+19990813-16:47 GMT+3 Alexander Kresin
+  * source/rtl/tbrowse.prg
+  * tests/working/testbrw.prg
+    * added some functionality ( PageDown(), PageUp(), GoBottom(), GoTop() )
+
 19990813-11:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

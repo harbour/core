@@ -58,12 +58,12 @@ CLASS TBrowse
    METHOD New()            // Constructor
    METHOD Down()           // Moves the cursor down one row
    METHOD End()            VIRTUAL // Moves the cursor to the rightmost visible data column
-   METHOD GoBottom()       VIRTUAL // Repositions the data source to the bottom of file
-   METHOD GoTop()          VIRTUAL // Repositions the data source to the top of file
+   METHOD GoBottom()               // Repositions the data source to the bottom of file
+   METHOD GoTop()                  // Repositions the data source to the top of file
    METHOD Home()           VIRTUAL // Moves the cursor to the leftmost visible data column
    METHOD Left()                   // Moves the cursor left one column
-   METHOD PageDown()       VIRTUAL // Repositions the data source downward
-   METHOD PageUp()         VIRTUAL // Repositions the data source upward
+   METHOD PageDown()               // Repositions the data source downward
+   METHOD PageUp()                 // Repositions the data source upward
    METHOD PanEnd()         VIRTUAL // Moves the cursor to the rightmost data column
    METHOD PanHome()        VIRTUAL // Moves the cursor to the leftmost visible data column
    METHOD PanLeft()        VIRTUAL // Pans left without changing the cursor position
@@ -94,9 +94,9 @@ CLASS TBrowse
                                   ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
                                   // Insert a column object in a browse
 
-   METHOD Invalidate()     INLINE AFill( ::aRedraw, .t. ), ::Stable := .f. // Forces entire redraw during next stabilization
+   METHOD Invalidate()     INLINE AFill( ::aRedraw, .f. ), ::Stable := .f. // Forces entire redraw during next stabilization
    METHOD RefreshAll()     INLINE ::Invalidate() // Causes all data to be recalculated during the next stabilize
-   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .t., ::Stable := .f. // Causes the current row to be refilled and repainted on next stabilize
+   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .f., ::Stable := .f. // Causes the current row to be refilled and repainted on next stabilize
 
    METHOD SetColumn( nColumn, oCol ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                                 ::aColumns[ nColumn ] := oCol, nil ), oCol // Replaces one TBColumn object with another
@@ -140,37 +140,90 @@ METHOD DelColumn( nPos ) CLASS TBrowse
 return oCol
 
 METHOD Down() CLASS TBrowse
-
    ::HitTop = .F.
    if .not. ::HitBottom
       if Eval( ::SkipBlock, 1 ) != 0
          if ::RowPos < ::RowCount
-            ::aRedraw[ ::RowPos ] = .F.
+            ::RefreshCurrent()
             ::RowPos++
-            ::aRedraw[ ::RowPos ] = .F.
+            ::RefreshCurrent()
             ::RelativePos++
          else
-            AFill( ::aRedraw, .F. )
+            ::RefreshAll()
          endif
-         ::stable = .f.
       else
          ::HitBottom = .t.
       endif
    endif
+return Self
 
+METHOD GoBottom() CLASS TBrowse
+   ::HitTop = .F.
+   ::HitBottom = .F.
+   if Eval( ::goBottomBlock ) != 0
+      ::RefreshAll()
+      ::RowPos = ::RowCount
+      ::RelativePos = ::RowCount
+   endif
+return Self
+
+METHOD GoTop() CLASS TBrowse
+   ::HitTop = .F.
+   ::HitBottom = .F.
+   if Eval( ::goTopBlock ) != 0
+      ::RefreshAll()
+      ::RowPos = 1
+      ::RelativePos = 1
+   endif
 return Self
 
 METHOD Left() CLASS TBrowse
    if ::ColPos > ::leftVisible
       ::ColPos--
-      ::aRedraw[ ::RowPos ] = .F.
-      ::stable = .f.
+      ::RefreshCurrent()
    else
       if ::ColPos > 1
          ::leftVisible--
          ::ColPos--
-         AFill( ::aRedraw, .F. )
-         ::stable = .f.
+         ::RefreshAll()
+      endif
+   endif
+return Self
+
+METHOD PageDown() CLASS TBrowse
+   local nDown
+   
+   ::HitTop = .F.
+   if .not. ::HitBottom
+      if ( nDown := Eval( ::SkipBlock, ::RowCount )  ) != 0
+         if nDown < ::RowCount
+            ::RefreshAll()
+            ::RowPos = ::RowCount
+            ::RelativePos = ::RowCount
+         else
+            ::RefreshAll()
+         endif
+      else
+         ::HitBottom = .t.
+      endif
+   endif
+return Self
+
+METHOD PageUp() CLASS TBrowse
+   local nUp
+   
+   ::HitBottom = .F.
+   if .not. ::HitTop
+      if ( nUp := Abs( Eval( ::SkipBlock, - ::RowCount )  ) ) != 0
+         if nUp < ::RowCount
+            ::RefreshAll()
+            ::RowPos = 1
+            ::RelativePos = 1
+         else
+            ::RefreshAll()
+         endif
+      else
+         ::HitBottom = .t.
       endif
    endif
 return Self
@@ -178,14 +231,12 @@ return Self
 METHOD Right() CLASS TBrowse
    if ::ColPos < ::rightVisible
       ::ColPos++
-      ::aRedraw[ ::RowPos ] = .F.
-      ::stable = .f.
+      ::RefreshCurrent()
    else
       if ::ColPos < Len( ::aColumns )
          ::leftVisible++
          ::ColPos++
-         AFill( ::aRedraw, .F. )
-         ::stable = .f.
+         ::RefreshAll()
       endif
    endif
 return Self
@@ -218,10 +269,11 @@ METHOD Stabilize() CLASS TBrowse
 
    if ::aRedraw == Nil .or. ! ::aRedraw[ 1 ]
       // Calculate how many columns fit on the browse width including ColSeps
-      while nColsVisible < Len( ::aColumns ) .and. nColsWidth + ::aColumns[ nColsVisible+1 ]:Width < nWidth
+      while nColsVisible < Len( ::aColumns ) .and. nColsWidth + ::aColumns[ nColsVisible+1 ]:Width <= nWidth
          nColsWidth += ::aColumns[ ++nColsVisible ]:Width
          nColsWidth += Len( ::ColSep )
       end
+      nColsWidth -= Len( ::ColSep )
       ::rightVisible = nColsVisible
       if ::aRedraw == nil
          ::RowCount = ::nBottom - ::nTop + 1 - If( lHeaders, 1, 0 )
@@ -237,7 +289,6 @@ METHOD Stabilize() CLASS TBrowse
       SetPos( ::nTop, ::nLeft )
       DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       for n = ::leftVisible to ::rightVisible
-         ::aColumns[ n ]:ColPos = Col()
          DevOut( Padr( ::aColumns[ n ]:Heading, ::aColumns[ n ]:Width ), ::ColorSpec )
          if ::ColSep != nil .and. n < ::rightVisible
             DevOut( ::ColSep, ::ColorSpec )
@@ -271,8 +322,11 @@ METHOD Stabilize() CLASS TBrowse
       endif
       ::RelativePos = nRow
       SetPos( ::nTop + nRow + If( lHeaders, 0, -1 ), ::nLeft )
-      DevOut( Space( ::aColumns[::leftVisible]:ColPos - ::nLeft ), ::ColorSpec )
+      DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       for n = ::leftVisible to ::rightVisible
+         if nRow == 1
+            ::aColumns[ n ]:ColPos = Col()
+         endif
          if lDisplay
             DevOut( PadR( Eval( ::aColumns[ n ]:block ),;
                  ::aColumns[ n ]:Width ), ::ColorSpec )
@@ -294,14 +348,12 @@ METHOD Up() CLASS TBrowse
    if ! ::HitTop
       if Eval( ::SkipBlock, -1 ) != 0
          if ::RowPos > 1
-            ::aRedraw[ ::RowPos ] = .F.
+            ::RefreshCurrent()
             ::RowPos--
             ::RelativePos--
-            ::aRedraw[ ::RowPos ] = .F.
-            ::stable = .f.
+            ::RefreshCurrent()
          else
-            AFill( ::aRedraw, .F. )
-            ::stable = .f.
+            ::RefreshAll()
          endif
       else
          ::HitTop = .t.
