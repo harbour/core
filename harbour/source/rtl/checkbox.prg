@@ -183,21 +183,9 @@ STATIC Function Display()
 
 
 function __GUICOLOR( cPair, nPos )
-
-   local ccolor := cPair, nPosition, nCommaPos
-   for nPosition := 2 to nPos
-      nCommaPos := At(",", ccolor)
-      if ( nCommaPos == 0 )
-         ccolor := ""
-         exit
-      endif
-      ccolor := SubStr(ccolor, nCommaPos + 1)
-   next
-   nCommaPos := At(",", ccolor)
-   if ( nCommaPos > 0 )
-      ccolor := SubStr(ccolor, 1, nCommaPos - 1)
-   endif
-   return ccolor
+   local ccolor := cPair, nPosition:=0, nCommaPos:=0
+   ccolor:=hb_colorindex(cpair,npos-1)
+return ccolor
 
 function _CHECKBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7)
 LOCAL oCheck

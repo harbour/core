@@ -97,7 +97,7 @@ DAta fBlock init Nil
 DATA Hotbox init ""
 Data ColorSpec init ""
 DATA ColdBox
-Data ISOPEN 
+Data ISOPEN init .f.
 Data aItems init {}
 Data vScrolls 
 
@@ -248,7 +248,7 @@ METHOD SetBottom(xData)  CLASS HBListBox
 
 METHOD ADDITEM( cText, xValue )  CLASS HBListBox
    if ( !( ISCHARACTER( cText ) ) )
-   elseif ( ValType(xValue) $ "CU" )
+   elseif ( ValType(xValue) $ "CUN" )
       AAdd(::aItems, {cText, xValue})
       ::iTemCount++
       if ( ::iTemCount == 1 .and.  ISOBJECT(( ::Topitem := 1,::nTopItem:=1,::vScroll ) ))
@@ -934,16 +934,21 @@ function _LISTBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, Arg8, ;
 
    local oScroll, nPos, nLen, nCurPos
    default arg5 to 1
+   default arg12 to .f.
+   default arg13 to .f.
    oScroll := listbox(Arg1, Arg2, Arg3, Arg4, Arg12)
    if ( !( ISNIL( oScroll ) ) )
       if ( ISCHARACTER( Arg7 ) )
          oScroll:caption:=Arg7
          oScroll:capcol:=Arg2 - __caplengt(Arg7)
       endif
+      if arg9!=nil
       oScroll:colorspec:=Arg9
+      endif
       oScroll:message:=Arg8
       oScroll:fblock:=Arg10
       oScroll:sblock:=Arg11
+      oScroll:isopen:=arg13
       nLen := Len(Arg6)
       for nPos := 1 to nLen
          nCurPos := Arg6[ nPos ]
