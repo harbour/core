@@ -24,6 +24,7 @@ DIRS=\
 else
 
 DIRS=\
+	codepage \
 	common \
 	pp \
 	compiler \
