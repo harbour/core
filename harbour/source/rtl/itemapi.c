@@ -429,7 +429,8 @@ void hb_itemClear( PHB_ITEM pItem )
 
 void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   hb_itemClear( pDest );
+   if( pDest->type )
+      hb_itemClear( pDest );
 
    if( pDest == pSource )
    {

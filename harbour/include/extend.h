@@ -300,6 +300,7 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem ); /* de-references passed variable */
 char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 int      hb_stricmp( const char *s1, const char *s2 );
 BOOL     hb_strempty( char * szText, ULONG ulLen );
+BOOL     hb_strMatchRegExp( char * szString, char * szMask );
 ULONG    hb_strAt( char *, long, char *, long );
 char *   hb_strUpper( char * szText, long lLen );
 char *   hb_strLower( char * szText, long lLen );

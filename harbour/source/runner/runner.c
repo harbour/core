@@ -217,9 +217,19 @@ HARBOUR HB_HB_RUN( void )
 
          ProcessSymbols( pSymRead, ulSymbols );
 
+         /* Initialize static variables first
+          */
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
-            if( pSymRead[ ul ].cScope & FS_INIT )
+            if( (pSymRead[ ul ].cScope & (FS_INIT|FS_EXIT)) == (FS_INIT|FS_EXIT) )
+            {
+               if( pSymRead[ ul ].pFunPtr )
+                     pSymRead[ ul ].pFunPtr();
+            }
+         }
+         for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
+         {
+            if( (pSymRead[ ul ].cScope & (FS_INIT|FS_EXIT)) == FS_INIT )
             {
                 PushSymbol( pSymRead + ul );
                 PushNil();

@@ -36,6 +36,7 @@ define link_exe_file
 $(COMSPEC) /E:2048 /Cecho $(LDFLAGS) NAME $@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
+$(foreach lib, $(RDDLIBS), $(link_lib))
 -$(LD) @__link__.tmp
 endef
 
@@ -45,6 +46,10 @@ ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS := $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
 else
 LINKLIBS := $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
+endif
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH)/$(drv)))
 endif
 LD_RULE = $(link_exe_file)
 

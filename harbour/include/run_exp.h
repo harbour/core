@@ -67,6 +67,8 @@ HARBOUR HB_TANH();
 HARBOUR HB_TFILEREAD();
 HARBOUR HB_TOCHAR();
 HARBOUR HB_VALTYPE();
+HARBOUR HB___MVPUBLIC();
+HARBOUR HB___MVPRIVATE();
 
 /* Same story.
 
@@ -130,7 +132,9 @@ HB_INIT_SYMBOLS_BEGIN( RUNNER )
 { "TANH",           FS_PUBLIC, HB_TANH          , 0 },
 { "TFILEREAD",      FS_PUBLIC, HB_TFILEREAD     , 0 },
 { "TOCHAR",         FS_PUBLIC, HB_TOCHAR        , 0 },
-{ "VALTYPE",        FS_PUBLIC, HB_VALTYPE       , 0 }
+{ "VALTYPE",        FS_PUBLIC, HB_VALTYPE       , 0 },
+{ "__MVPUBLIC",     FS_PUBLIC, HB___MVPUBLIC    , 0 },
+{ "__MVPRIVATE",    FS_PUBLIC, HB___MVPRIVATE   , 0 }
 HB_INIT_SYMBOLS_END( RUNNER );
 #if ! defined(__GNUC__)
 #pragma startup RUNNER

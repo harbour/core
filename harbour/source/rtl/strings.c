@@ -147,6 +147,64 @@ int hb_stricmp( const char *s1, const char *s2 )
    return rc;
 }
 
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following function is Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_strMatchDOS().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
+static BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
+{
+   while (*pszMask && *pszString)
+   {
+      if (*pszMask == '*')
+      {
+         while (*pszMask == '*')
+             pszMask++;
+         if (!(*pszMask))
+            return (TRUE);
+         else
+            if (*pszMask == '?')
+               pszString++;
+            else
+            {
+               while (toupper(*pszString) != toupper(*pszMask))
+               {
+                  if (!(*(++pszString)))
+                     return (FALSE);
+               }
+               while (toupper(*pszString) == toupper(*pszMask))
+               {
+                  if (!(*(++pszString)))
+                     break;
+               }
+               pszMask++;
+            }
+      }
+      else
+         if (toupper(*pszMask) != toupper(*pszString) && *pszMask != '?')
+            return (FALSE);
+         else
+         {
+            pszMask++;
+            pszString++;
+         }
+   }
+   return !((!(*pszString) && *pszMask && *pszMask != '*') ||
+           (!(*pszMask) && *pszString));
+}
+
+/* TODO: Replace it with a code that supports real regular expressions
+ *
+ */
+BOOL hb_strMatchRegExp( char *szString, char *szMask )
+{
+   return hb_strMatchDOS( szString, szMask );
+}
+
+
 /* determines if first char of string is letter */
 /* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
 /* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */

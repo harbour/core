@@ -53,6 +53,7 @@
 #endif
 
 #ifdef __WATCOMC__
+  #include <conio.h>
   #include <i86.h>
   #if defined(__386__) && !defined(__WINDOWS_386__)
     #define INT_86 int386
@@ -194,7 +195,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       int ch = 0;
 #if defined(__CYGWIN__)
 #elif defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows)
-   /* The reason for including _Windows here is that kbhit() and getch() appear 
+   /* The reason for including _Windows here is that kbhit() and getch() appear
      to work properly in console mode. For true Windows mode, changes are needed. */
    #if defined(HARBOUR_GCC_OS2)
       /* Read from the keyboard with no echo, no wait, and no SIGSEV on Ctrl-C */
@@ -501,7 +502,7 @@ HARBOUR HB_INKEY( void )
       {
          /* Release the CPU between checks */
          hb_releaseCPU();
-         
+
          /* Check for timeout */
          if( !forever && clock() >= end_clock ) wait = FALSE;
       }

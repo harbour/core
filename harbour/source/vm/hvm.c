@@ -83,7 +83,6 @@ void Inc( void );             /* increment the latest numeric value on the stack
 void Instring( void );        /* check whether string 1 is contained in string 2 */
 void Less( void );            /* checks if the latest - 1 value is less than the latest, removes both and leaves result */
 void LessEqual( void );       /* checks if the latest - 1 value is less than or equal the latest, removes both and leaves result */
-void Line( WORD wLine );      /* keeps track of the currently processed PRG line */
 void Message( PSYMBOL pSymMsg ); /* sends a message to an object */
 void Minus( void );           /* substracts the latest two values on the stack, removes them and leaves the result */
 void Modulus( void );         /* calculates the modulus of latest two values on the stack, removes them and leaves the result */
@@ -130,6 +129,7 @@ typedef struct _SYMBOLS
    PSYMBOL pModuleSymbols; /* pointer to a one module own symbol table */
    WORD    wModuleSymbols; /* number of symbols on that table */
    struct _SYMBOLS * pNext;/* pointer to the next SYMBOLS structure */
+   SYMBOLSCOPE hScope;     /* scope collected from all symbols in module used to speed initialization code */
 } SYMBOLS, * PSYMBOLS;     /* structure to keep track of all modules symbol tables */
 
 void ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
@@ -142,6 +142,7 @@ void ReleaseLocalSymbols( void );  /* releases the memory of the local symbols l
 void hb_ReleaseDynamicSymbols( void ); /* releases the memory of the dynamic symbol table */
 
 /* stack management functions */
+void StackDec( void );        /* pops an item from the stack without clearing it's contents */
 void StackPop( void );        /* pops an item from the stack */
 void StackFree( void );       /* releases all memory used by the stack */
 void StackPush( void );       /* pushes an item on to the stack */
@@ -209,9 +210,10 @@ BYTE bErrorLevel = 0;     /* application exit errorlevel */
 
    HB_DEBUG( "main\n" );
 
-   hb_itemClear( &aStatics );
-   hb_itemClear( &errorBlock );
-   hb_itemClear( &stack.Return );
+   /* initialize internal data structures */
+   aStatics.type     = IT_NIL;
+   errorBlock.type   = IT_NIL;
+   stack.Return.type = IT_NIL;
 
    StackInit();
    hb_NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
@@ -284,6 +286,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 {
    BYTE bCode;
    WORD w = 0, wParams, wSize;
+   ULONG ulPrivateBase = hb_MemvarGetPrivatesBase();
 
    HB_DEBUG( "VirtualMachine\n" );
 
@@ -430,7 +433,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
 
          case HB_P_LINE:
-              Line( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               w += 3;
               break;
 
@@ -630,6 +633,7 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
       }
    }
+   hb_MemvarSetPrivatesBase( ulPrivateBase );
    HB_DEBUG( "EndProc\n" );
 }
 
@@ -730,7 +734,6 @@ void Do( WORD wParams )
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    HARBOURFUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
-   ULONG ulPrivateBase = hb_MemvarGetPrivatesBase();
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -784,7 +787,6 @@ void Do( WORD wParams )
 
    stack.pBase = stack.pItems + wStackBase;
    stack.iStatics = iStatics;
-   hb_MemvarSetPrivatesBase( ulPrivateBase );
 }
 
 HARBOUR DoBlock( void )
@@ -857,8 +859,9 @@ HARBOUR HB_EVAL( void )
 
 void EndBlock( void )
 {
-   StackPop();
-   hb_itemCopy( &stack.Return, stack.pPos );
+   StackDec();                               /* make the last item visible */
+   hb_itemCopy( &stack.Return, stack.pPos ); /* copy it */
+   hb_itemClear( stack.pPos );               /* and now clear it */
    HB_DEBUG( "EndBlock\n" );
 }
 
@@ -1230,12 +1233,6 @@ void Message( PSYMBOL pSymMsg ) /* sends a message to an object */
    HB_DEBUG2( "Message: %s\n", pSymMsg->szName );
 }
 
-void Line( WORD wLine )
-{
-   stack.pBase->item.asSymbol.lineno = wLine;
-   HB_DEBUG( "line\n" );
-}
-
 void Negate( void )
 {
    if( IS_INTEGER( stack.pPos - 1 ) )
@@ -1267,8 +1264,8 @@ void NotEqual( void )
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
-      StackPop();
-      StackPop();
+      StackDec();
+      StackDec();
       PushLogical( 0 );
    }
 
@@ -1398,8 +1395,8 @@ void Or( void )
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
    {
       iResult = pItem1->item.asLogical.value || pItem2->item.asLogical.value;
-      StackPop();
-      StackPop();
+      StackDec(); stack.pPos->type =IT_NIL;
+      StackDec();
       PushLogical( iResult );
    }
    else
@@ -1466,10 +1463,13 @@ void Plus( void )
 
 long PopDate( void )
 {
-   StackPop();
+   StackDec();
 
    if( IS_DATE( stack.pPos ) )
+   {
+      stack.pPos->type =IT_NIL;
       return stack.pPos->item.asDate.value;
+   }
    else
    {
       printf( "incorrect item value trying to Pop a date value\n" );
@@ -1483,8 +1483,7 @@ double PopDouble( WORD *pwDec )
 {
    double d;
 
-   StackPop();
-
+   StackDec();
    switch( stack.pPos->type & ~IT_BYREF )
    {
       case IT_INTEGER:
@@ -1507,6 +1506,7 @@ double PopDouble( WORD *pwDec )
            exit( 1 );
            d = 0;
    }
+   stack.pPos->type =IT_NIL;
    HB_DEBUG( "PopDouble\n" );
    return d;
 }
@@ -1515,7 +1515,7 @@ void PopLocal( SHORT iLocal )
 {
    PHB_ITEM pLocal;
 
-   StackPop();
+   StackDec();
 
    if( iLocal >= 0 )
     {
@@ -1538,10 +1538,13 @@ void PopLocal( SHORT iLocal )
 
 int PopLogical( void )
 {
-   StackPop();
+   StackDec();
 
    if( IS_LOGICAL( stack.pPos ) )
+   {
+      stack.pPos->type =IT_NIL;
       return stack.pPos->item.asLogical.value;
+   }
    else
    {
       hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_errorNatDescription(EG_CONDITION));
@@ -1551,7 +1554,7 @@ int PopLogical( void )
 
 void PopMemvar( PSYMBOL pSym )
 {
-   StackPop();
+   StackDec();
    hb_MemvarSetValue( pSym, stack.pPos );
    hb_itemClear( stack.pPos );
    HB_DEBUG( "PopMemvar\n" );
@@ -1562,7 +1565,7 @@ double PopNumber( void )
    PHB_ITEM pItem = stack.pPos - 1;
    double dNumber;
 
-   StackPop();
+   StackDec();
 
    switch( pItem->type & ~IT_BYREF )
    {
@@ -1583,6 +1586,7 @@ double PopNumber( void )
            exit( 1 );
            break;
    }
+   stack.pPos->type =IT_NIL;
    return dNumber;
 }
 
@@ -1596,7 +1600,7 @@ void PopStatic( WORD wStatic )
 {
    PHB_ITEM pStatic;
 
-   StackPop();
+   StackDec();
    pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + wStatic - 1;
 
    if( IS_BYREF( pStatic ) )
@@ -1619,7 +1623,6 @@ void Power( void )
 
 void PushLogical( int iTrueFalse )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type    = IT_LOGICAL;
    stack.pPos->item.asLogical.value = iTrueFalse;
    StackPush();
@@ -1651,7 +1654,6 @@ void PushLocal( SHORT iLocal )
 
 void PushLocalByRef( SHORT iLocal )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type = IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
    stack.pPos->item.asRefer.value = iLocal;
@@ -1664,7 +1666,6 @@ void PushLocalByRef( SHORT iLocal )
 
 void PushMemvar( PSYMBOL pSym )
 {
-   hb_itemClear( stack.pPos );
    hb_MemvarGetValue( stack.pPos, pSym );
    StackPush();
    HB_DEBUG( "PushMemvar\n" );
@@ -1672,7 +1673,6 @@ void PushMemvar( PSYMBOL pSym )
 
 void PushMemvarByRef( PSYMBOL pSym )
 {
-   hb_itemClear( stack.pPos );
    hb_MemvarGetRefer( stack.pPos, pSym );
    StackPush();
    HB_DEBUG( "PushMemvar\n" );
@@ -1680,7 +1680,7 @@ void PushMemvarByRef( PSYMBOL pSym )
 
 void PushNil( void )
 {
-   hb_itemClear( stack.pPos );
+   stack.pPos->type =IT_NIL;
    StackPush();
    HB_DEBUG( "PushNil\n" );
 }
@@ -1715,7 +1715,6 @@ void PushStatic( WORD wStatic )
 
 void PushStaticByRef( WORD wStatic )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type = IT_BYREF;
    /* we store the offset instead of a pointer to support a dynamic stack */
    stack.pPos->item.asRefer.value = wStatic -1;
@@ -1733,7 +1732,6 @@ void PushString( char * szText, ULONG length )
    memcpy (szTemp, szText, length);
    szTemp[ length ] = 0;
 
-   hb_itemClear( stack.pPos );
    stack.pPos->type                 = IT_STRING;
    stack.pPos->item.asString.length = length;
    stack.pPos->item.asString.value  = szTemp;
@@ -1743,7 +1741,6 @@ void PushString( char * szText, ULONG length )
 
 void PushSymbol( PSYMBOL pSym )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_SYMBOL;
    stack.pPos->item.asSymbol.value = pSym;
    stack.pPos->item.asSymbol.stackbase   = stack.pPos - stack.pItems;
@@ -1768,7 +1765,6 @@ void PushBlock( BYTE * pCode, PSYMBOL pSymbols )
 {
    WORD wLocals;
 
-   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_BLOCK;
 
    wLocals =pCode[ 5 ] + ( pCode[ 6 ] * 256 );
@@ -1793,7 +1789,6 @@ void PushBlock( BYTE * pCode, PSYMBOL pSymbols )
 
 void PushDate( LONG lDate )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_DATE;
    stack.pPos->item.asDate.value = lDate;
    StackPush();
@@ -1802,7 +1797,6 @@ void PushDate( LONG lDate )
 
 void PushDouble( double dNumber, WORD wDec )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_DOUBLE;
    stack.pPos->item.asDouble.value = dNumber;
    if( dNumber >= 10000000000.0 ) stack.pPos->item.asDouble.length = 20;
@@ -1814,7 +1808,6 @@ void PushDouble( double dNumber, WORD wDec )
 
 void PushInteger( int iNumber )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type = IT_INTEGER;
    stack.pPos->item.asInteger.value   = iNumber;
    stack.pPos->item.asInteger.length  = 10;
@@ -1825,7 +1818,6 @@ void PushInteger( int iNumber )
 
 void PushLong( long lNumber )
 {
-   hb_itemClear( stack.pPos );
    stack.pPos->type   = IT_LONG;
    stack.pPos->item.asLong.value   = lNumber;
    stack.pPos->item.asLong.length  = 10;
@@ -1836,15 +1828,25 @@ void PushLong( long lNumber )
 
 void RetValue( void )
 {
-   StackPop();
-   hb_itemCopy( &stack.Return, stack.pPos );
+   StackDec();                               /* make the last item visible */
+   hb_itemCopy( &stack.Return, stack.pPos ); /* copy it */
+   hb_itemClear( stack.pPos );               /* now clear it */
    HB_DEBUG( "RetValue\n" );
 }
 
 void StackPop( void )
 {
-   hb_itemClear( stack.pPos );
+   if( --stack.pPos < stack.pItems )
+   {
+      printf( "runtime error: stack underflow\n" );
+      exit( 1 );
+   }
+   if( stack.pPos->type )
+      hb_itemClear( stack.pPos );
+}
 
+void StackDec( void )
+{
    if( --stack.pPos < stack.pItems )
    {
       printf( "runtime error: stack underflow\n" );
@@ -1988,6 +1990,8 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
 {
    PSYMBOLS pNewSymbols, pLastSymbols;
    WORD w;
+   SYMBOLSCOPE hSymScope;
+
 #ifdef HARBOUR_OBJ_GENERATION
    static int iObjChecked = 0;
 
@@ -2002,6 +2006,7 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
    pNewSymbols->pModuleSymbols = pModuleSymbols;
    pNewSymbols->wModuleSymbols = wModuleSymbols;
    pNewSymbols->pNext = 0;
+   pNewSymbols->hScope =0;
 
    if( ! pSymbols )
       pSymbols = pNewSymbols;
@@ -2015,11 +2020,12 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
 
    for( w = 0; w < wModuleSymbols; w++ ) /* register each public symbol on the dynamic symbol table */
    {
-      if( ( ! pSymStart ) && ( ( pModuleSymbols + w )->cScope == FS_PUBLIC ) )
+      hSymScope =( pModuleSymbols + w )->cScope;
+      pNewSymbols->hScope |=hSymScope;
+      if( ( ! pSymStart ) && ( hSymScope == FS_PUBLIC ) )
          pSymStart = pModuleSymbols + w;  /* first public defined symbol to start execution */
 
-      if( ( ( pModuleSymbols + w )->cScope == FS_PUBLIC ) ||
-          ( ( pModuleSymbols + w )->cScope & ( FS_MESSAGE | FS_MEMVAR )  ) )
+      if( (hSymScope == FS_PUBLIC) || (hSymScope & ( FS_MESSAGE | FS_MEMVAR )) )
          hb_NewDynSym( pModuleSymbols + w );
    }
 }
@@ -2067,14 +2073,23 @@ void DoInitStatics( void )
    SYMBOLSCOPE scope;
 
    do {
-      for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
+      if( (pLastSymbols->hScope & (FS_INIT | FS_EXIT)) == (FS_INIT | FS_EXIT) )
       {
-         scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
-         if( scope == (FS_INIT | FS_EXIT) )
+         for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
          {
-            PushSymbol( pLastSymbols->pModuleSymbols + w );
-            PushNil();
-            Do( 0 );
+            scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+            if( scope == (FS_INIT | FS_EXIT) )
+            {
+               /* _INITSTATICS procedure cannot call any function and it
+               * cannot use any local variable then it is safe to call
+               * this procedure directly
+               * PushSymbol( pLastSymbols->pModuleSymbols + w );
+               * PushNil();
+               * Do( 0 );
+               */
+               if( ( pLastSymbols->pModuleSymbols + w )->pFunPtr )
+                  ( pLastSymbols->pModuleSymbols + w )->pFunPtr();
+            }
          }
       }
       pLastSymbols = pLastSymbols->pNext;
@@ -2088,14 +2103,17 @@ void DoExitFunctions( void )
    SYMBOLSCOPE scope;
 
    do {
-      for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
-      {
-         scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
-         if( scope == FS_EXIT )
+      if( pLastSymbols->hScope & FS_EXIT )
+      {  /* only if module contains some EXIT functions */
+         for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
          {
-            PushSymbol( pLastSymbols->pModuleSymbols + w );
-            PushNil();
-            Do( 0 );
+            scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+            if( scope == FS_EXIT )
+            {
+               PushSymbol( pLastSymbols->pModuleSymbols + w );
+               PushNil();
+               Do( 0 );
+            }
          }
       }
       pLastSymbols = pLastSymbols->pNext;
@@ -2109,20 +2127,23 @@ void DoInitFunctions( int argc, char * argv[] )
    SYMBOLSCOPE scope;
 
    do {
-      for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
-      {
-         scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
-         if( scope == FS_INIT )
+      if( pLastSymbols->hScope & FS_INIT )
+      {  /* only if module contains some INIT functions */
+         for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
          {
-            int i;
+            scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+            if( scope == FS_INIT )
+            {
+               int i;
 
-            PushSymbol( pLastSymbols->pModuleSymbols + w );
-            PushNil();
+               PushSymbol( pLastSymbols->pModuleSymbols + w );
+               PushNil();
 
-            for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
-               PushString( argv[ i ], strlen( argv[ i ] ) );
+               for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
+                  PushString( argv[ i ], strlen( argv[ i ] ) );
 
-            Do( argc - 1 );
+               Do( argc - 1 );
+            }
          }
       }
       pLastSymbols = pLastSymbols->pNext;

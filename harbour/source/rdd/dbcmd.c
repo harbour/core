@@ -328,7 +328,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    {
       szDrvName = ( PBYTE ) hb_strUpper( ( char * ) szDrvName, strlen( ( const char * ) szDrvName ) );
       if( !( pRddNode = hb_FindRddNode( (char *)szDrvName ) ) )
-	 return FAILURE;
+         return FAILURE;
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
 

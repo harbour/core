@@ -213,7 +213,7 @@ COMMANDS aCommands[] =
  {0,"SET","KEY \1A00 [TO]","SetKey( \1A00, NIL )"},
  {0,"SET","FUNCTION \1A00 [TO] [\1B00]","__SetFunction( \1A00, \1B00 )"},
  {0,"CLEAR","MEMORY","__MVClear()"},
- {0,"RELEASE","\1A10s","__MVXRelease( \1A20 )"},
+ {0,"RELEASE"," \1A00","__MVXRelease( \1A30 )"},
  {0,"RELEASE","ALL","__MVRelease('*', .t.)"},
  {0,"RELEASE","ALL LIKE \1A00","__MVRelease( \1A10, .t. )"},
  {0,"RELEASE","ALL EXCEPT \1A00","__MVRelease( \1A10, .f. )"},

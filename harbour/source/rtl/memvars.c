@@ -41,10 +41,10 @@
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
 
-static PDYNSYM *_privateStack = NULL;
+static PDYNSYM *_privateStack  = NULL;
 static ULONG _privateStackSize = 0;
 static ULONG _privateStackCnt  = 0;
-static int _privateReleaseIgnore = FALSE;
+static ULONG _privateStackBase = 0;
 
 static ULONG _globalTableSize = 0;
 static ULONG _globalFirstFree = 0;
@@ -74,7 +74,7 @@ void hb_MemvarsInit( void )
 
    _privateStack = (PDYNSYM *) hb_xgrab( sizeof(PDYNSYM) * TABLE_INITHB_VALUE );
    _privateStackSize = TABLE_INITHB_VALUE;
-   _privateStackCnt  = 0;
+   _privateStackCnt  = _privateStackBase = 0;
 }
 
 
@@ -192,9 +192,6 @@ HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
    return hValue;
 }
 
-/*      memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );*/
-
-
 /*
  * This function pushes passed dynamic symbol that belongs to PRIVATE variable
  * into the stack. The value will be popped from it if the variable falls
@@ -222,7 +219,9 @@ static void hb_MemvarAddPrivate( PDYNSYM pDynSym )
  */
 ULONG hb_MemvarGetPrivatesBase( void )
 {
-   return _privateStackCnt;
+   ULONG ulBase = _privateStackBase;
+   _privateStackBase =_privateStackCnt;
+   return ulBase;
 }
 
 /*
@@ -233,23 +232,19 @@ void hb_MemvarSetPrivatesBase( ULONG ulBase )
 {
    HB_HANDLE hVar, hOldValue;
 
-   /* Ignore it if it is requested after __PRIVATE function call
-    */
-   if( !_privateReleaseIgnore )
-      while( _privateStackCnt > ulBase )
-      {
-         --_privateStackCnt;
-         hVar =_privateStack[ _privateStackCnt ]->hMemvar;
-         hOldValue =_globalTable[ hVar ].hPrevMemvar;
-         hb_MemvarValueDecRef( hVar );
-         /*
-         * Restore previous value for variables that were overridden
-         */
-         _privateStack[ _privateStackCnt ]->hMemvar =hOldValue;
-      }
-   _privateReleaseIgnore =FALSE;
+   while( _privateStackCnt > _privateStackBase )
+   {
+      --_privateStackCnt;
+      hVar =_privateStack[ _privateStackCnt ]->hMemvar;
+      hOldValue =_globalTable[ hVar ].hPrevMemvar;
+      hb_MemvarValueDecRef( hVar );
+      /*
+      * Restore previous value for variables that were overridden
+      */
+      _privateStack[ _privateStackCnt ]->hMemvar =hOldValue;
+   }
+   _privateStackBase =ulBase;
 }
-
 
 /*
  * This function increases the number of references to passed global value
@@ -484,34 +479,41 @@ static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM
 
       pDynVar->hMemvar = hb_MemvarValueNew( pValue, TRUE );
       _globalTable[ pDynVar->hMemvar ].hPrevMemvar =hCurrentValue;
+
       /* Add this variable to the PRIVATE variables stack
        */
       hb_MemvarAddPrivate( pDynVar );
    }
 }
 
-/* This function releases
+/* This function releases all memory occupied by a memvar variable
+ * It also restores the value that was hidden if there is another
+ * PRIVATE variable with the same name.
  */
 void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
 {
-   HB_HANDLE hVar, hOldValue;
+   ULONG ulBase = _privateStackCnt;
    PDYNSYM pDynVar;
 
    if( IS_STRING(pMemvar) )
    {
-      pDynVar =hb_GetDynSym( pMemvar->item.asString.value );
-
-      if( pDynVar )
+      /* Find the variable with a requested name that is currently visible
+       * Start from the top of the stack.
+       */
+      while( ulBase > 0 )
       {
-         hVar =pDynVar->hMemvar;
-         if( hVar )
+         --ulBase;
+         pDynVar =_privateStack[ ulBase ];
+         /* reset current value to NIL - the overriden variables will be
+         * visible after exit from current procedure
+         */
+         if( pDynVar->hMemvar )
          {
-            hOldValue =_globalTable[ hVar ].hPrevMemvar;
-            hb_MemvarValueDecRef( hVar );
-            /*
-             * Restore previous value for variables that were overridden
-             */
-            pDynVar->hMemvar =hOldValue;
+            if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
+            {
+               hb_itemClear( &_globalTable[ pDynVar->hMemvar ].item );
+               ulBase =0;
+            }
          }
       }
    }
@@ -520,12 +522,42 @@ void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
 }
 
 
-/****************************************************************************
+/* This function releases all memory occupied by a memvar variable and
+ * assigns NIL value - it releases variables created in current
+ * procedure only.
+ * The scope of released variables are specified using passed name's mask
  */
+void hb_MemvarReleaseWithMask( char *szMask, BOOL bInclude )
+{
+   ULONG ulBase = _privateStackCnt;
+   PDYNSYM pDynVar;
+
+   while( ulBase > _privateStackBase )
+   {
+      --ulBase;
+      pDynVar =_privateStack[ ulBase ];
+      /* reset current value to NIL - the overriden variables will be
+       * visible after exit from current procedure
+       */
+      if( pDynVar->hMemvar )
+      {
+         if( bInclude )
+         {
+            if( (szMask[ 0 ] == '*') || hb_strMatchRegExp( pDynVar->pSymbol->szName, szMask ) )
+               hb_itemClear( &_globalTable[ pDynVar->hMemvar ].item );
+         }
+         else if( ! hb_strMatchRegExp( pDynVar->pSymbol->szName, szMask ) )
+            hb_itemClear( &_globalTable[ pDynVar->hMemvar ].item );
+      }
+   }
+}
+
+
+/* ************************************************************************** */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVXPUBLIC()
+ *    __MVPUBLIC()
  *  $CATEGORY$
  *    Variable management
  *  $ONELINER$
@@ -594,7 +626,7 @@ HARBOUR HB___MVPUBLIC( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVXPRIVATE()
+ *    __MVPRIVATE()
  *  $CATEGORY$
  *    Variable management
  *  $ONELINER$
@@ -634,11 +666,6 @@ HARBOUR HB___MVPRIVATE( void )
 
    if( iCount )
    {
-      /* We will create PRIVATE variables here then do not release them
-       * on exit from this function
-       */
-      _privateReleaseIgnore =TRUE;
-
       for( i=1; i<=iCount; i++ )
       {
          pMemvar =hb_param( i, IT_ANY );
@@ -683,6 +710,12 @@ HARBOUR HB___MVPRIVATE( void )
  *  $DESCRIPTION$
  *    This function releases values stored in memory variable. It shouldn't
  *    be called directly, rather it should be placed into RELEASE command.
+ *    If the released variable is a PRIVATE variable then previously hidden
+ *    variable with the same name becomes visible (after exit from the
+ *    procedure where released variable was created).
+ *
+ *    It releases variable even if this variable was created in different
+ *    procedure
  *  $EXAMPLES$
  *
  *  $TESTS$
@@ -735,20 +768,22 @@ HARBOUR HB___MVXRELEASE( void )
  *  $CATEGORY$
  *    Variable management
  *  $ONELINER$
- * This function releases value stored in PRIVATE or PUBLIC variable
+ * This function releases PRIVATE variables created in current procedure
  *  $SYNTAX$
  *    __MVRELEASE( <skeleton>, <include_exclude_flag> )
  *  $ARGUMENTS$
  *    <skeleton> = string that contains the wildcard mask for variables' names
  *       that will be released. Supported wildcards: '*' and '?'
  *    <include_exclude_flag> = logical value that specifies if variables
- *       mathing passed skeleton should be either included in deletion (if .T.)
- *       or excluded from deletion (if .F.)
+ *       that match passed skeleton should be either included in deletion
+ *       (if .T.) or excluded from deletion (if .F.)
  *  $RETURNS$
  *    Nothing
  *  $DESCRIPTION$
  *    This function releases values stored in memory variables. It shouldn't
  *    be called directly, it should be placed into RELEASE ALL command.
+ *    If released variable is a PRIVATE variable then the NIL is assigned.
+ *    PUBLIC variables are not changed.
  *  $EXAMPLES$
  *
  *  $TESTS$
@@ -763,4 +798,24 @@ HARBOUR HB___MVXRELEASE( void )
  */
 HARBOUR HB___MVRELEASE( void )
 {
+   int iCount = hb_pcount();
+   PHB_ITEM pMask;
+
+   if( iCount )
+   {
+      pMask =hb_param( 1, IT_STRING );
+      if( pMask )
+      {
+         BOOL bIncludeVar;
+
+         if( iCount > 1 )
+            bIncludeVar =hb_parl( 2 );
+         else
+            bIncludeVar =TRUE;
+
+         if( pMask->item.asString.value[ 0 ] == '*' )
+            bIncludeVar =TRUE;   /* delete all memvar variables */
+         hb_MemvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
+      }
+   }
 }

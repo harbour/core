@@ -15,13 +15,6 @@
  *
  */
 
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-   The following function is Copyright 1999 Victor Szel <info@szelvesz.hu>:
-      hb_strMatchDOS().
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
-
 #if defined(__IBMCPP__)
    #define INCL_DOSFILEMGR
    #define INCL_DOSERRORS
@@ -145,8 +138,6 @@ HB_INIT_SYMBOLS_END( Dir__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup Dir__InitSymbols
 #endif
-
-static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 
 
 HARBOUR HB_DIRECTORY( void )
@@ -320,7 +311,7 @@ HARBOUR HB_DIRECTORY( void )
       printf("\n fname fext %s %s ",fname,fext);
       while(0==getchar());
  */
-      if (hb_strMatchDOS( fname,pfname) && hb_strMatchDOS( fext,pfext))
+      if (hb_strMatchRegExp( fname,pfname) && hb_strMatchRegExp( fext,pfext))
       {
          attrib      = 0;
          aatrib[0]   = '\0';
@@ -497,45 +488,4 @@ HARBOUR HB_DIRECTORY( void )
    }
 #endif
 #endif /* HAVE_POSIX_IO */
-}
-
-static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
-{
-   while (*pszMask && *pszString)
-   {
-      if (*pszMask == '*')
-      {
-         while (*pszMask == '*')
-             pszMask++;
-         if (!(*pszMask))
-            return (TRUE);
-         else
-            if (*pszMask == '?')
-               pszString++;
-            else
-            {
-               while (toupper(*pszString) != toupper(*pszMask))
-               {
-                  if (!(*(++pszString)))
-                     return (FALSE);
-               }
-               while (toupper(*pszString) == toupper(*pszMask))
-               {
-                  if (!(*(++pszString)))
-                     break;
-               }
-               pszMask++;
-            }
-      }
-      else
-         if (toupper(*pszMask) != toupper(*pszString) && *pszMask != '?')
-            return (FALSE);
-         else
-         {
-            pszMask++;
-            pszString++;
-         }
-   }
-   return !((!(*pszString) && *pszMask && *pszMask != '*') ||
-           (!(*pszMask) && *pszString));
 }

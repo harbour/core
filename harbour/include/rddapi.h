@@ -467,6 +467,7 @@ typedef FIELD * LPFIELD;
 *
 *  Information to administrate the workarea
 */
+struct _RDDFUNCS;	/* forward declaration */
 
 typedef struct _AREA
 {
