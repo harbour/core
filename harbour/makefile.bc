@@ -291,6 +291,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
    $(OBJ_DIR)\dbedit.obj \
+   $(OBJ_DIR)\dbdelim.obj \
    $(OBJ_DIR)\devoutp.obj \
    $(OBJ_DIR)\dircmd.obj \
    $(OBJ_DIR)\dummy.obj \
@@ -1158,6 +1159,13 @@ $(OBJ_DIR)\dbedit.c : $(RTL_DIR)\dbedit.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\dbedit.obj : $(OBJ_DIR)\dbedit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbdelim.c : $(RTL_DIR)\dbdelim.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbdelim.obj : $(OBJ_DIR)\dbdelim.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

@@ -1,3 +1,17 @@
+2001-04-17 17:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * hb_slex.bc
+  * hb_slex.vc
+  * makefile.bc
+  * makefile.vc
+  * doc/funclist.txt
+  * source/rtl/Makefile
+  + source/rtl/dbdelim.prg
+  * source/rtl/dummy.prg
+    + Added __dbDelim() function for use by COPY TO DELIMITED.
+      FIELD, NEXT, FOR, and WHILE clauses are implemented, but I
+      don't know what the first and last two parameters are for.
+
 2001-04-17 21:30 CET Martin Vogel <vogel@inttec.de>
    + contrib/libct/atnum.c
      + AFTERATNUM() function

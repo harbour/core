@@ -287,7 +287,7 @@ __dbCopy                ;S;
 __dbCopyStruct          ;R;
 __dbCopyXStruct         ;R;
 __dbCreate              ;R;
-__dbDelim               ;N;
+__dbDelim               ;S;
 __dbJoin                ;N;
 __dbList                ;R;
 __dbLocate              ;R;
