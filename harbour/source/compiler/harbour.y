@@ -393,6 +393,7 @@ Statement  : ExecFlow Crlf                             {}
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( _ARRAYPUT ); GenPCode1( _POP ); }
            | FunCall ArrayIndex '=' Expression Crlf    { Do( $1 ); GenPCode1( _ARRAYPUT ); }
            | IdSend IDENTIFIER '=' { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
+           | IdSend IDENTIFIER INASSIGN { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
            | ObjectData ArrayIndex '=' Expression Crlf    {}
            | ObjectMethod ArrayIndex '=' Expression Crlf  {}
 
@@ -560,7 +561,6 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | FunCall    ArrayIndex DIVEQ    Expression      {}
            | FunCall    ArrayIndex EXPEQ    Expression      {}
            | FunCall    ArrayIndex MODEQ    Expression      {}
-           | ObjectData INASSIGN Expression                 {}
            | ObjectData PLUSEQ   Expression                 {}
            | ObjectData MINUSEQ  Expression                 {}
            | ObjectData MULTEQ   Expression                 {}
