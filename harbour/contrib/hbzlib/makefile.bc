@@ -60,7 +60,7 @@ LDFLAGS        = $(LDFLAGS)
 
 ZLIB_LIB   = $(LIB_DIR)\zlib.lib
 ZLIB_EXE   = $(ZLIB_DIR)\test.exe
-ZLIB_BOR_DLL = $(ZLIB_DIR)\zlib.dll
+ZLIB_BOR_DLL = $(ZLIB_DIR)\hbzlib.dll
 ZLIB_BOR_DEF = $(LIB_DIR)\zlib.def
 ZLIB_BOR_LIB = $(LIB_DIR)\zlib_bor.lib
 ZLIB_LIB_OBJS =  \
@@ -69,7 +69,7 @@ ZLIB_LIB_OBJS =  \
     $(OBJ_DIR)\zlibapi.obj    
 ZLIB_EXE_OBJS =  \
     $(OBJ_DIR)\test.obj
-ZLIB_DEF_OBJ = $(ZLIB_DIR)\zlib.dll
+ZLIB_DEF_OBJ = $(ZLIB_DIR)\hbzlib.dll
 ZLIB_BOR_LIB_OBJ = $(LIB_DIR)\zlib.def
 
 all: \
@@ -102,7 +102,7 @@ $(OBJ_DIR)\zlibapi.obj : $(ZLIB_DIR)\zlibapi.c
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
 $(ZLIB_BOR_DEF) : $(ZLIB_DEF_OBJ)
-    $(ID)  $(LIB_DIR)\zlib.def  $(ZLIB_DIR)\zlib.dll
+    $(ID)  $(LIB_DIR)\zlib.def  $(ZLIB_DIR)\hbzlib.dll
 
 $(ZLIB_BOR_LIB) : $(ZLIB_BOR_LIB_OBJ)
     $(IL)  $(LIB_DIR)\zlib_bor.lib   $(LIB_DIR)\zlib.def
