@@ -67,12 +67,12 @@ HB_FUNC( DISKSPACE )
    USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
-   uiType = HB_MIN( uiType, HB_DISK_TOTAL );
-
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
 
    struct diskfree_t disk;
    unsigned uiResult;
+
+   uiType = HB_MIN( uiType, HB_DISK_TOTAL );
 
    while( ( uiResult = _dos_getdiskfree( uiDrive, &disk ) ) != 0 )
    {
@@ -113,6 +113,8 @@ HB_FUNC( DISKSPACE )
    }
 
 #elif defined(HB_OS_WIN_32)
+
+   uiType = HB_MIN( uiType, HB_DISK_TOTAL );
 
    while( 1 )
    {
