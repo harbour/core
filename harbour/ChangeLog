@@ -1,3 +1,10 @@
+2001-05-20 13:35 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+
+*contrib/hbzlib/zip.c
+    *Fixed an small bug on hb_zipfilebytdspan()
+contrib/hbzlib/doc/zipnew.txt
+    *Updated the doc to reflect the change
+
 2001-05-19 19:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 +contrib/hbzlib/hbzip2.h
     *include files need by the library

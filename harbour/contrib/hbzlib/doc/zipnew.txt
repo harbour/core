@@ -212,7 +212,7 @@
  *      Create a zip file
  * $SYNTAX$
  *      HB_ZIPFILEBYTDSPAN()( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<iSize>,<lWithPath>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<iSize>,<lWithPath>,<lWithDrive>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
@@ -230,7 +230,7 @@
  *
  *      <cPassword> Password to encrypt the files
  *
- *      <iSize> Size of the archive
+ *      <iSize> Size of the archive, in bytes,default is 1457664 bytes
  *
  *      <lWithPath> Toggle to store the path or not
  *
@@ -304,7 +304,7 @@
  *      Create a zip file on removable media
  * $SYNTAX$
  *      HB_ZIPFILEBYPKSPAN( <cFile> , <cFileToCompress> | <aFiles>, <nLevel> ,
- *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>) ---> lCompress
+ *      <bBlock>,<lOverWrite> ,<cPassword>,<lWithPath>,<lWithDrive>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
