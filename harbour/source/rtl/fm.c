@@ -82,9 +82,11 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
 #ifdef HB_FM_STATISTICS
    s_ulMemoryConsumed    += ulSize;
-   s_ulMemoryMaxConsumed += ulSize;
+   if( s_ulMemoryConsumed > s_ulMemoryMaxConsumed )
+      s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
    s_ulMemoryBlocks++;
-   s_ulMemoryMaxBlocks++;
+   if( s_ulMemoryBlocks > s_ulMemoryMaxBlocks )
+      s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
 #endif
 
    return ( char * ) pMem + sizeof( ULONG );
@@ -107,9 +109,11 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
 #ifdef HB_FM_STATISTICS
    s_ulMemoryConsumed    += ulSize;
-   s_ulMemoryMaxConsumed += ulSize;
+   if( s_ulMemoryConsumed > s_ulMemoryMaxConsumed )
+      s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
    s_ulMemoryBlocks++;
-   s_ulMemoryMaxBlocks++;
+   if( s_ulMemoryBlocks > s_ulMemoryMaxBlocks )
+      s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
 #endif
 
    return ( char * ) pMem + sizeof( ULONG );
@@ -137,8 +141,8 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       s_ulMemoryBlocks--;
 
    s_ulMemoryConsumed += ( ulSize - ulMemSize );
-   if( ulSize > ulMemSize )
-      s_ulMemoryMaxConsumed += ulSize - ulMemSize;
+   if( s_ulMemoryConsumed > s_ulMemoryMaxConsumed )
+      s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
 #endif
 
    return ( char * ) pResult + sizeof( ULONG );
@@ -277,3 +281,12 @@ HARBOUR HB_MEMORY( void )
    hb_retni( 9999 );
 }
 
+HARBOUR HB_MEMUSED()
+{
+   hb_retnl( s_ulMemoryConsumed );
+}
+
+HARBOUR HB_MEMMAX()
+{
+   hb_retnl( s_ulMemoryMaxConsumed );
+}
