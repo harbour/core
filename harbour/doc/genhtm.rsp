@@ -39,17 +39,5 @@ en\setmode.txt
 en\eval.txt
 en\sayget.txt
 en\strotype.txt
-<<<<<<< genhtm.rsp
-en\hbapi.txt
-en\hbapierr.txt
-en\hbapifs.txt
-en\hbapigt.txt
-en\hbapiitm.txt
-en\hbapilng.txt
-en\hbapirdd.txt
-en\hbdate.txt
-en\hbmacro.txt
-en\hbset.txt
-en\hbvm.txt
-en\hbcompat.txt
 en\garbage.txt
+en\idle.txt
