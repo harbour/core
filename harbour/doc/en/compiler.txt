@@ -128,14 +128,14 @@
  *          /w0         - no warnings   </par>
  *          /w or /w1   - Clipper compatible warnings   </par>
  *          /w2         - some useful warnings missed in Clipper   </par>
- *          /w3         - warnings generated for Harbour language extensions and
- *			  also Enables strong type checking but only warns against
- *			  declared types, or types which may be calculated at compile
- *			  time   </par>
- *          /w4         -Enables warning about suspicious operations, which means if you 
- *		          mix undeclared types, or types which can not be calculated at 
- *                        compile time,together with declared types, a warning will be 
- *                        generated.  </par>
+ *          /w3         - warnings generated for Harbour language extensions
+ *                        and also enables strong type checking but only
+ *                        warns against declared types, or types which may be
+ *                        calculated at compile time   </par>
+ *          /w4         - Enables warning about suspicious operations, which
+ *                        means if you mix undeclared types, or types which
+ *                        can not be calculated at compile time,together with
+ *                        declared types, a warning will be  generated.  </par>
  *
  *      /x[<prefix>]     set symbol init function name prefix (for .c only)   </par>
  *      -----------------   </par>

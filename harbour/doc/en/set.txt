@@ -25,7 +25,7 @@
  *    Documentation for: SET PATH,SET INTENSITY,SET ALTERNATE
  *    Documentation for: SET CENTURY,SET DATE,SET CONSOLE
  *    Documentation for: SET EPOCH,SET PRINTER,SET FIXED
- *
+ *    Documentation for: SET BELL
  * See doc/license.txt for licensing terms.
  *
  */
@@ -1316,3 +1316,35 @@
  *  $END$
  */
 
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET BELL
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggle the bell to sound once a GET has been completed.
+ *  $SYNTAX$
+ *      SET BELL on | OFF | (<lBell>)
+ *  $ARGUMENTS$
+ *      <lBell> Logical expression for toggle command
+ *  $DESCRIPTION$
+ *      This command toggles the bell to sound whenever a character is
+ *      entered into the last character positionof a GET,of if an invalid
+ *      data type is entered into a GET.
+ *
+ *      If <lBell > is a logical true (.T.),the bell will be turned
+ *      ON;otherwise, the belle will be turned off.
+ *  $EXAMPLES$
+ *      SET BEEL ON
+ *      cDummy:=space(20)
+ *      ? 3,2 get cDummy
+ *      Read
+ *      SET bell off
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper compliant
+ *  $SEEALSO$
+ *      SET()
+ *  $END$
+ */

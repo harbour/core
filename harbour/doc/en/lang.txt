@@ -103,7 +103,7 @@
  *  $DESCRIPTION$
  *      This function return the current name of the language module in use.     
  *  $EXAMPLES$
-  *      REQUEST HB_LANG_PT
+ *      REQUEST HB_LANG_PT
  *      REQUEST HB_LANG_RO
  *      REQUEST HB_LANG_ES
  *      FUNCTION MAIN()
