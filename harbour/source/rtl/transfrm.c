@@ -29,6 +29,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
+ *
+ * Partial Copyright Matthew Hamilton <mhamilton@bunge.com.au>
+ *    partial copyright with regards to string handling
  */
 
 #include <extend.h>
