@@ -1,3 +1,8 @@
+19990516-01:00 CET Eddie Runia
+  * source/rtl/arrays.c, source/rtl/extend.h
+    ULONG instead of int hb_arrayLen()
+    Reallocation bug in arrayAdd fixed
+
 19990515-19:40 CET Eddie Runia
   * source/rtl/classes.c, source/rtl/arrays.c
     oClone added (actually : aClone can handle both :-)

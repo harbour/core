@@ -143,7 +143,7 @@ void ItemRelease( PITEM pItem );
 
 void hb_arrayNew( PITEM pItem, ULONG ulLen ); /* creates a new array */
 void hb_arrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* retrieves an item */
-int  hb_arrayLen( PITEM pArray ); /* retrives the array len */
+ULONG hb_arrayLen( PITEM pArray ); /* retrives the array len */
 void hb_arraySet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* sets an array element */
 void hb_arraySize( PITEM pArray, ULONG ulLen ); /* sets the array total length */
 void hb_arrayRelease( PITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */

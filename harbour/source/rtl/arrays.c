@@ -45,6 +45,7 @@ void hb_arrayAdd( PITEM pArray, PITEM pValue )
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) pArray->value.pBaseArray;
    hb_arraySize( pArray, pBaseArray->ulLen + 1 );
+   pBaseArray = ( PBASEARRAY ) pArray->value.pBaseArray;
    ItemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
 }
 
@@ -162,7 +163,7 @@ void hb_arrayLast( PITEM pArray, PITEM pResult )
     ItemRelease( pResult );
 }
 
-int hb_arrayLen( PITEM pArray )
+ULONG hb_arrayLen( PITEM pArray )
 {
   if( IS_ARRAY( pArray ) )
     return ( ( PBASEARRAY ) pArray->value.pBaseArray )->ulLen;
