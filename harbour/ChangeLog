@@ -1,3 +1,12 @@
+19990716-18:10 CET Eddie Runia <eddie@runia.com>
+  + tests/working/clasname.prg
+    Test program for clasname implemented. Warning : Just a partial
+    implementation
+  * source/vm/hvm.c
+    void Do() changed so all types call GetMethod
+  * source/rtl/classes.c
+    Small changes so messages to non-objects are properly handled.
+
 19990716-16:00 CET Eddie Runia <eddie@runia.com>
   * source/rtl/transfrm.c
     Memory allocation error resolved

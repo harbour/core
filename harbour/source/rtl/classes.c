@@ -55,6 +55,8 @@
 #define MET_VIRTUAL   4
 #define MET_SUPER     5
 
+HARBOUR DoBlock( void );      /* executes a codeblock */
+
 typedef struct
 {
    void * pMessage;      /* pointer to dynamic symbol when they get ready */
@@ -84,7 +86,10 @@ extern SYMBOL symEval;
 PCLASS  pClasses = 0;
 WORD    wClasses = 0;
 PMETHOD pMethod  = 0;
-PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
+PDYNSYM msgClassName = 0,
+        msgClassH    = 0,
+        msgEval      = 0,
+        msgClassSel  = 0;
 
 /* All functions contained in classes.c */
 
@@ -726,9 +731,14 @@ static HARBOUR GetData( void )
 HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 {
    WORD    wAt, wLimit, wMask;
-   WORD    wClass = pObject->item.asArray.value->wClass;
+   WORD    wClass;
    PCLASS  pClass;
    PDYNSYM pMsg = ( PDYNSYM ) pMessage->pDynSym;
+
+   if( pObject->type == IT_OBJECT )
+      wClass = pObject->item.asArray.value->wClass;
+   else
+      wClass = 0;
 
    if( ! msgClassName )
    {
@@ -759,7 +769,6 @@ HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
             wAt = 0;
       }
    }
-
    if( pMsg == msgClassName )
       return ClassName;
 

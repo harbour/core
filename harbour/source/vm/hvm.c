@@ -720,12 +720,12 @@ void Do( WORD wParams )
       exit( 1 );
    }
 
-   if( ! ( ( IS_NIL( pSelf ) ) || ( IS_BLOCK( pSelf ) ) || ( IS_ARRAY( pSelf ) ) ) )
+/*   if( ! IS_NIL( pSelf ) )
    {
       StackShow();
       printf( "invalid symbol type for self from Do()\n" );
       exit( 1 );
-   }
+   } */
 
    pItem->item.asSymbol.lineno   = 0;
    pItem->item.asSymbol.paramcnt = wParams;
@@ -734,13 +734,17 @@ void Do( WORD wParams )
 
    HB_DEBUG2( "Do with %i params\n", wParams );
 
-   if( IS_OBJECT( pSelf ) ) /* are we sending a message to an object ? */
+   if( ! IS_NIL( pSelf ) ) /* are we sending a message ? */
    {
-      pFunc = GetMethod( pSelf, pSym );
+      if( pSym == &( symEval ) && IS_BLOCK( pSelf ) )
+         pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
+      else
+         pFunc = GetMethod( pSelf, pSym );
+
       if( ! pFunc )
       {
-         printf( "error: message %s not implemented for class %s\n", pSym->szName,
-                 hb_GetClassName( pSelf ) );
+         printf( "error: message %s not implemented for class %s\n",
+                 pSym->szName, hb_GetClassName( pSelf ) );
          exit( 1 );
       }
       pFunc();
