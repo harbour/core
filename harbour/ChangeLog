@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2003-04-03 18:34 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * source/common/hbgete.c
+     ! fixed warning on OS/2 GCC
+
 2003-04-03 19:52 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/codepage/cdpplmaz.c
     ! Minor fix, provided by Jacek Kubica
@@ -83,7 +88,7 @@
 
 2003-03-17 15:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/filesys.c
-  	! Added newline at end of file.
+   ! Added newline at end of file.
 
 2003-03-16 10:33 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/harbour.y
@@ -156,9 +161,9 @@
 
 2003-02-17 13:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dbdelim.c
-  	! Bug fix for EOL handling when using large import files,
-  	  provided by the author of the dbdelim append from code,
-  	  Marco Braida <marcobra@elart.it>
+   ! Bug fix for EOL handling when using large import files,
+     provided by the author of the dbdelim append from code,
+     Marco Braida <marcobra@elart.it>
 
 2003-02-15 11:00 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * config/linux/global.cf
@@ -210,15 +215,15 @@
 
 2003-02-10 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/filesys.c
-  	! I missed one place where the X__WIN32__ guard needs to be used
-  	  (in the hb_fsRename function).
+   ! I missed one place where the X__WIN32__ guard needs to be used
+     (in the hb_fsRename function).
 
 2003-02-05 23:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * contrib/libct/makefile.bc
     ! Added a rule to compile setlast.prg
   * source/rtl/filesys.c
-  	! Always use X__WIN32__ when testing to see if the extended
-  	  Windows file handle conversion utilities should be used.
+   ! Always use X__WIN32__ when testing to see if the extended
+     Windows file handle conversion utilities should be used.
 
 2003-01-30 22:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/vm/asort.c
@@ -296,7 +301,7 @@
   * contrib/libct/readme.txt
   * contrib/libct/ctflist.txt
   * contrib/libct/tests/Makefile
-  + contrib/libct/dattim2.prg 
+  + contrib/libct/dattim2.prg
   + contrib/libct/tests/datetime.prg
     + addmonth(),ctodow(),ctomonth(),daysinmonth(),daystomonth(),dmy(),
       doy(),isleap(),lastdayom(),ntocdow(),ntocmonth(),quarter(),week()
@@ -307,11 +312,11 @@
     * interpretation of <lMode> parameter in posalpha(),poslower(),posupper() and
       posrange() corrected; thanks to Guenther Steiner <byte-one@aon.at>
       for reporting this bug
-	
+
   * include/hblang.ch
       + added constant definitions accessing language specific string via HB_LANG_MESSAGE()
 
-	
+
 2002-11-01 16:20 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * include/hbexprb.c
     ! Fix assign to array_at.
