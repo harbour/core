@@ -123,7 +123,7 @@ void hb_gt_SetCursorStyle(int style)
       break;
 
     case SC_SPECIAL1:
-      cci.dwSize = 99; 
+      cci.dwSize = 99;
       break;
 
     case SC_SPECIAL2:
@@ -138,8 +138,7 @@ void hb_gt_SetCursorStyle(int style)
       break;
 
     }
-   SetConsoleCursorInfo(HCursor, &cci);
-
+  SetConsoleCursorInfo(HCursor, &cci);
 }
 
 int hb_gt_GetCursorStyle(void)
