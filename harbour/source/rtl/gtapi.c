@@ -61,9 +61,6 @@
 /* TODO: functions not implemented yet
 int hb_gtPostExt(void);
 int hb_gtPreExt(void);
-int hb_gtGetBlink(BOOL * bBlink);
-int hb_gtSetBlink(BOOL bBlink);
-int hb_gtSetMode(USHORT uiRows, USHORT uiCols);
 */
 
 static USHORT s_uiCurrentRow = 0;
@@ -98,11 +95,11 @@ void hb_gtInit(void)
 
 void hb_gtExit(void)
 {
+/* ptucker */
     while( s_uiDispCount )
        hb_gtDispEnd();
 
     hb_gt_Done();
-/* ptucker */
     hb_xfree( _Color );
 }
 
@@ -537,7 +534,7 @@ int hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount)
     char buff[255];
 
     memset(buff, uiChar, uiCount);
-    buff[uiCount] = 0x0;
+    buff[uiCount] = 0;
     rc=hb_gtSetPos(uiRow, uiCol);
     if(rc != 0)
         return(rc);

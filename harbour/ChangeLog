@@ -1,3 +1,8 @@
+19990810-00:55 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtapi.c source/rtl/gt/gtwin/c source/rtl/gt/gt_tpl.c
+    * minor formatting changes
+    * corrected an instance of nested comments.
+
 19990809-14:15 EDT Paul Tucker <ptucker@sympatico.ca>
   + source/rtl/xsavescr.prg
     * support for save screen and restore screen commands.

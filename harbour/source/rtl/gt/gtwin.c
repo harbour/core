@@ -71,9 +71,9 @@ void hb_gt_Done(void)
   if( HOutput != HOriginal )
   {
     COORD coDest = {0, 0};
-    COORD coBuf;                        /* the size of the buffer to read into */
-    CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
-    SMALL_RECT srWin;                         /* source rectangle to read from */
+    COORD coBuf;                      /* the size of the buffer to read into */
+    CHAR_INFO *pCharInfo;     /* buffer to store info from ReadConsoleOutput */
+    SMALL_RECT srWin;                       /* source rectangle to read from */
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     CONSOLE_CURSOR_INFO cci;
 
@@ -82,7 +82,7 @@ void hb_gt_Done(void)
     srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
 
     /* allocate a buffer for the screen rectangle */
-    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
+    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.Y * coBuf.X * sizeof(CHAR_INFO));
 
     /* read the screen rectangle into the buffer */
     ReadConsoleOutput(HOutput,                     /* current screen handle  */
@@ -423,7 +423,7 @@ void hb_gt_DispBegin(void)
     srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
 
     /* allocate a buffer for the screen rectangle */
-    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.X * coBuf.Y * sizeof(CHAR_INFO));
+    pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.Y * coBuf.X * sizeof(CHAR_INFO));
 
     /* read the screen rectangle into the buffer */
     ReadConsoleOutput(HOutput,                     /* current screen handle  */

@@ -5,6 +5,7 @@
 /*
  *  GT_TPL.C: Video subsystem template.
  *
+ *  User programs should never call this layer directly!
  */
 
 /* TODO: include any standard headers here */
@@ -76,7 +77,9 @@ int hb_gt_GetCursorStyle(void)
     }
     else
     {
+*/
         /* example from the dos driver */
+/*
         hb_gt_GetCursorSize( &start, &end )
         if((start == 32) && (end == 32))
         {
