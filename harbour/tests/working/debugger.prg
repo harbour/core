@@ -4,6 +4,11 @@
 #include "classes.ch"
 #include "inkey.ch"
 
+#xcommand DEFAULT <uVar1> := <uVal1> ;
+               [, <uVarN> := <uValN> ] => ;
+                  <uVar1> := If( <uVar1> == nil, <uVal1>, <uVar1> ) ;;
+                [ <uVarN> := If( <uVarN> == nil, <uValN>, <uVarN> ); ]
+
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
 #xcommand MENUITEM <cPrompt> [ ACTION <uAction> ] => ;
    TDbMenu():AddItem( TDbMenuItem():New( <cPrompt> [,{|Self|<uAction>}] ) )
@@ -12,20 +17,83 @@
 
 function Main()
 
-   local nCursor := SetCursor( 0 )
-   local lEnd := .f., nKey, nPopup
-   local oMenu := BuildMenu()
+   local oDebugger := TDebugger():New()
 
-   CLS
-   oMenu:Display()
+   oDebugger:Activate()
 
-   SET COLOR TO BG+/B
-   @ 1, 0 CLEAR TO MaxRow() - 6, MaxCol()
+return nil
 
-   @ 1, 0, MaxRow() - 6, MaxCol() BOX B_DOUBLE
-   @ MaxRow() -5, 0 CLEAR TO MaxRow() - 1, MaxCol()
-   @ MaxRow() - 5, 0, MaxRow() - 1, MaxCol() BOX B_SINGLE
-   @ MaxRow() - 5, ( MaxCol() / 2 ) - 4 SAY " Command "
+CLASS TDebugger
+
+   DATA   oPullDown
+   DATA   oWndCode, oWndCommand
+   DATA   oBar
+   DATA   cBackImage, nOldCursor
+
+   METHOD New()
+   METHOD Activate()
+   METHOD Show()
+   METHOD HandleEvent()
+   METHOD Hide()
+
+ENDCLASS
+
+METHOD New() CLASS TDebugger
+
+   ::oPullDown   = BuildMenu()
+   ::oWndCode    = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
+   ::oWndCommand = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
+                                    " Command ", "BG+/B" )
+return Self
+
+METHOD Activate() CLASS TDebugger
+
+   ::Show()
+   ::HandleEvent()
+   ::Hide()
+
+return nil
+
+METHOD HandleEvent() CLASS TDebugger
+
+   local lEnd := .f., nPopup
+
+   while ! lEnd
+
+      nKey = InKey( 0 )
+
+      do case
+         case ::oPullDown:IsOpen()
+              ::oPullDown:ProcessKey( nKey )
+
+         case nKey == K_ESC
+              lEnd = .t.
+
+         otherwise
+              if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
+                 ::oPullDown:ShowPopup( nPopup )
+              endif
+      endcase
+   end
+
+return nil
+
+METHOD Hide() CLASS TDebugger
+
+   RestScreen( ,,,, ::cBackImage )
+   ::cBackImage = nil
+   SetCursor( ::nOldCursor )
+   SetColor( "N/W" )
+
+return nil
+
+METHOD Show() CLASS TDebugger
+
+   ::nOldCursor = SetCursor( 0 )
+   ::cBackImage = SaveScreen()
+   ::oPullDown:Display()
+   ::oWndCode:Show( .t. )
+   ::oWndCommand:Show()
 
    @ MaxRow(), 0 SAY ;
    "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace" COLOR "N/BG"
@@ -40,27 +108,45 @@ function Main()
    @ MaxRow(), 62 SAY "F9" COLOR "GR+/BG"
    @ MaxRow(), 70 SAY "F10" COLOR "GR+/BG"
 
-   while ! lEnd
+return nil
 
-      nKey = InKey( 0 )
+CLASS TDbWindow  // Debugger windows
 
-      do case
-         case oMenu:IsOpen()
-              oMenu:ProcessKey( nKey )
+   DATA   nTop, nLeft, nBottom, nRight
+   DATA   cCaption
+   DATA   cBackImage, cColor
 
-         case nKey == K_ESC
-              lEnd = .t.
+   METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
+   METHOD Show( lFocused )
 
-         otherwise
-              if ( nPopup := oMenu:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
-                 oMenu:ShowPopup( nPopup )
-              endif
-      endcase
-   end
+ENDCLASS
 
-   SetColor( "W/N" )
-   SetCursor( nCursor )
-   CLS
+METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
+
+   ::nTop     = nTop
+   ::nLeft    = nLeft
+   ::nBottom  = nBottom
+   ::nRight   = nRight
+   ::cCaption = cCaption
+   ::cColor   = cColor
+
+return Self
+
+METHOD Show( lFocused ) CLASS TDbWindow
+
+   DEFAULT lFocused := .f.
+
+   ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
+
+   SetColor( ::cColor )
+   @ ::nTop, ::nLeft CLEAR TO ::nBottom, ::nRight
+   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lFocused, B_DOUBLE, B_SINGLE ) ;
+      COLOR ::CColor
+
+   if ! Empty( ::cCaption )
+      @ ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ;
+         SAY ::cCaption
+   endif
 
 return nil
 
