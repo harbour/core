@@ -28,6 +28,12 @@
 /*#define HARBOUR_OBJ_GENERATION*/
 
 
+/* This symbol defines if we want to use the GT API
+ *
+ * By default it is disabled (symbol is not defined)
+*/
+/*#define USE_GTAPI*/
+
 /* Operating system specific definitions
  */
 #define OS_PATH_LIST_SEPARATOR   ';'

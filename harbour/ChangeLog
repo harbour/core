@@ -1,3 +1,7 @@
+19990604-17:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * include/hbsetup.h
+    - Added USE_GTAPI, which defaults to NOT being defined
+
 19990604-17:00 EDT David G. Holm <dholm@jsd-llc.com>
   In each of the following modules, all occurrences of ITEM and PITEM
   were changed to HB_ITEM and PHB_ITEM. Any additional changes are
