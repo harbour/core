@@ -385,7 +385,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
    PHB_ITEM pBase = hb_stack.pBase;
    LONG iLevel = 1;
-   BOOL bRetVal = FALSE;
+   BOOL bRetVal ;
    USHORT uiScope = pMethod->uiScope;
    PHB_DYNS pMessage = pMethod->pMessage;
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
@@ -1619,8 +1619,6 @@ HB_FUNC( __CLSINSTSUPER )
          hb_vmPushNil();
          hb_vmFunction( 0 );                         /* Execute super class      */
 
-         cString=hb_parc(1);                         /* in case of change */
-
          if( HB_IS_OBJECT( &hb_stack.Return ) )
          {
             for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
@@ -1814,9 +1812,7 @@ HB_FUNC( __CLASSH )
    hb_itemRelease( pObject );
 }
 
-/* Work in progress.
- * Added by RâC&JfL
- *
+/*
  * based on hb___msgEval( void )
  */
 HB_FUNC( __EVAL )
@@ -1837,6 +1833,9 @@ HB_FUNC( __EVAL )
    }
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
+
+   hb_itemRelease( pObject );
+
 }
 
 /* ================================================ */

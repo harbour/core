@@ -1,3 +1,13 @@
+2000-11-21 23:42 UTC-0100 JFL (mafact) <jfl@mafact.com>
+   * source/vm/classes.c
+     * minor modif after the last Stack tests
+     * :EVAL forgot to release one created item
+   * source/vm/eval.c
+     * One possible PHB_ITEM use after stack realloc.. fixed (thkx Antonio)
+   * source/vm/arrayshb.c
+     * One possible PHB_ITEM use after stack realloc.. fixed (thkx Antonio)
+
+
 2000-11-21 13:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/idle.c
      + Added Sleep(0) for 32bit Windows mode to forfeit the

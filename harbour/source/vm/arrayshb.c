@@ -187,7 +187,7 @@ HB_FUNC( AFILL )
    else
 #ifdef HB_C52_STRICT
       /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
-               call AEVAL() to do the job, so the error (if any) will also be 
+               call AEVAL() to do the job, so the error (if any) will also be
                thrown by AEVAL().  [vszakats] */
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 #else
@@ -214,7 +214,7 @@ HB_FUNC( ASCAN )
       hb_retnl( 0 );
 }
 
-/* TODO: In Xbase++ fifth parameter determines whether array elements        
+/* TODO: In Xbase++ fifth parameter determines whether array elements
          are passed by reference to the code block. [vszakats] */
 
 HB_FUNC( AEVAL )
@@ -232,7 +232,7 @@ HB_FUNC( AEVAL )
                     ISNUM( 3 ) ? &ulStart : NULL,
                     ISNUM( 4 ) ? &ulCount : NULL );
 
-      hb_itemReturn( pArray ); /* AEval() returns the array itself */
+      hb_itemReturn( hb_stack.pBase + 2 ); /* AEval() returns the array itself */
    }
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
@@ -259,7 +259,7 @@ HB_FUNC( ACOPY )
                        ISNUM( 5 ) ? &ulTarget : NULL );
       }
 
-      hb_itemReturn( pDstArray ); /* ACopy() returns the target array */
+      hb_itemReturn( hb_stack.pBase + 3 ); /* ACopy() returns the target array */
    }
 }
 

@@ -48,7 +48,7 @@ HB_FUNC( EVAL )
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( pItem );
+      hb_vmPush( hb_stack.pBase + 2 );
       /* NOTE: hb_param(0 function cannot be used for parameter access
        * because we need to pass the references too.
        * hb_param() is dereferencing the passed parameters
