@@ -258,6 +258,21 @@ long _parnl( WORD wParam, ... )
    return 0;
 }
 
+int _parinfa( int iParamNum, ULONG uiArrayIndex )
+{
+   PITEM pArray = _param( iParamNum, IT_ARRAY );
+
+   if( pArray )
+   {
+      if( ! uiArrayIndex )
+         return ArrayLen( pArray );
+      else
+         return ArrayGetType( pArray, uiArrayIndex );
+   }
+   else
+      return 0; /* QUESTION: should we raise an error here ? */
+}
+
 WORD _parinfo( WORD wParam )
 {
    if( ! wParam )

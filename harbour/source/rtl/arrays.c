@@ -112,6 +112,29 @@ ULONG ArrayGetStringLen( PITEM pArray, ULONG ulIndex )
    return 0;
 }
 
+int ArrayGetType( PITEM pArray, ULONG ulIndex )
+{
+   PITEM pItem, pError;
+
+   if( IS_ARRAY( pArray ) )
+   {
+	  if( ulIndex <= ( unsigned ) ArrayLen( pArray ) )
+      {
+         pItem = ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ulIndex - 1;
+
+         return pItem->wType;
+      }
+      else
+	  {
+         pError = _errNew();
+         _errPutDescription( pError, "Bound error: Array access" );
+         _errLaunch( pError );
+         _errRelease( pError );
+      }
+   }
+   return 0;
+}
+
 void ArrayLast( PITEM pArray, PITEM pResult )
 {
    if( ( ( PBASEARRAY ) pArray->value.pBaseArray )->ulLen )

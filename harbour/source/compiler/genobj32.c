@@ -524,7 +524,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSym
 
   while( pSymbol )
     {
-      for( w = 0; w < strlen( pSymbol->szName ); w++ )
+      for( w = 0; w < ( WORD ) strlen( pSymbol->szName ); w++ )
 	{
 	  putbyte( pSymbol->szName[ w ], hObjFile );
 	  bCheckSum += pSymbol->szName[ w ];

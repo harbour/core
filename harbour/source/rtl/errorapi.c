@@ -27,6 +27,14 @@ PITEM _errNew( void )
    return &stack.Return;
 }
 
+char * _errGetDescription( PITEM pError )
+{
+   PushSymbol( GetDynSym( "DESCRIPTION" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.szText;
+}
+
 PITEM _errPutDescription( PITEM pError, char * szDescription )
 {
    PushSymbol( GetDynSym( "_DESCRIPTION" )->pSymbol );
@@ -34,6 +42,14 @@ PITEM _errPutDescription( PITEM pError, char * szDescription )
    PushString( szDescription, strlen( szDescription ) );
    Do( 1 );
    return pError;
+}
+
+char * _errGetFileName( PITEM pError )
+{
+   PushSymbol( GetDynSym( "FILENAME" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.szText;
 }
 
 PITEM _errPutFileName( PITEM pError, char * szFileName )
@@ -45,6 +61,14 @@ PITEM _errPutFileName( PITEM pError, char * szFileName )
    return pError;
 }
 
+USHORT _errGetGenCode( PITEM pError )
+{
+   PushSymbol( GetDynSym( "GENCODE" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.iNumber;
+}
+
 PITEM _errPutGenCode( PITEM pError, USHORT uiGenCode )
 {
    PushSymbol( GetDynSym( "_GENCODE" )->pSymbol );
@@ -54,6 +78,14 @@ PITEM _errPutGenCode( PITEM pError, USHORT uiGenCode )
    return pError;
 }
 
+char * _errGetOperation( PITEM pError )
+{
+   PushSymbol( GetDynSym( "OPERATION" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.szText;
+}
+
 PITEM _errPutOperation( PITEM pError, char * szOperation )
 {
    PushSymbol( GetDynSym( "_OPERATION" )->pSymbol );
@@ -61,6 +93,14 @@ PITEM _errPutOperation( PITEM pError, char * szOperation )
    PushString( szOperation, strlen( szOperation ) );
    Do( 1 );
    return pError;
+}
+
+USHORT _errGetOsCode( PITEM pError )
+{
+   PushSymbol( GetDynSym( "OSCODE" )->pSymbol );
+   Push( pError );
+   Do( 0 );
+   return stack.Return.value.iNumber;
 }
 
 PITEM _errPutOsCode( PITEM pError, USHORT uiOsCode )
