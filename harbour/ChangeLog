@@ -1,3 +1,11 @@
+19990919-17:14 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/harbour.y
+    + Added some new items to the new TODO list.
+  * include/hbsetup.h
+    source/compiler/harbour.y
+    + HARBOUR_YYDEBUG moved here for easy setup.
+
 19990919-15:34 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/console.c
