@@ -256,7 +256,6 @@ void GenPortObj( char *, char * );    /* generates the portable objects */
 void GenObj32( char *, char * );      /* generates OBJ 32 bits */
 #endif
 
-/* JOSE */
 /* argument checking */
 void CheckArgs( char *, int );
 
@@ -302,7 +301,6 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "%s statement with no loop in sight",
                        "Syntax error: \'%s\' in: \'%s\'",
                        "Incomplete statement: %s",
-                       /* JOSE */
                        "Incorrect number of arguments: %s %s"
                      };
 
@@ -605,14 +603,8 @@ ExtList    : IDENTIFIER                               { AddExtern( $1 ); }
            | ExtList ',' IDENTIFIER                   { AddExtern( $3 ); }
            ;
 
-/*
-FunCall    : FunStart ')'                { $$ = 0; }
-           | FunStart ArgList ')'        { $$ = $2; }
-           ;
-*/
-/* JOSE */
-FunCall    : FunStart ')' { $$=0; CheckArgs( $1, $$ ); }
-           | FunStart ArgList ')' { $$=$2; CheckArgs( $1, $$ ); }
+FunCall    : FunStart ')'                { $$=0; CheckArgs( $1, $$ ); }
+           | FunStart ArgList ')'        { $$=$2; CheckArgs( $1, $$ ); }
            ;
 
 FunStart   : IDENTIFIER '('              { StaticAssign(); PushSymbol( $1, 1 ); PushNil(); $$ = $1; }
@@ -5011,22 +5003,18 @@ static FUNCINFO _StdFun[] = {
 { "VALTYPE"   , 1, 1 },
 { "WORD"      , 1, 1 },
 { "YEAR"      , 1, 1 },
-{ 0           , 0, 0 },
+{ 0           , 0, 0 }
 };
 
-/* JOSE */
 void CheckArgs( char *cFuncCall, int iArgs )
 {
    FUNCINFO *f = _StdFun;
    int i = 0;
    int iPos = -1;
-   int len = 0;
    char *s = cFuncCall;
 
-   while( *s ) { s++; len++; }
-
    while( f[i].cFuncName )
-      if( strncmp( f[i].cFuncName, cFuncCall, len+1 ) == 0 )
+      if( stricmp( f[i].cFuncName, cFuncCall ) == 0 )
       {
          iPos = i;
          break;
@@ -5034,14 +5022,15 @@ void CheckArgs( char *cFuncCall, int iArgs )
       else
          ++i;
 
-      if( iPos >= 0 && ( _StdFun[iPos].iMinParam != -1 ) )
-         if( iArgs < _StdFun[iPos].iMinParam || iArgs > _StdFun[iPos].iMaxParam )
+      if( iPos >= 0 && ( f[iPos].iMinParam != -1 ) )
+         if( iArgs < f[iPos].iMinParam || iArgs > f[iPos].iMaxParam )
          {
-            char *szMsg = ( char * ) OurMalloc( 50 );
+            char *szMsg = ( char * ) OurMalloc( 30 );
 
-            sprintf( szMsg, " Passed: %i Expected: %i", iArgs, _StdFun[iPos].iMinParam );
+            sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
             GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
 
-            //GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
+          //Clipper way 
+          // GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
          }
 }
