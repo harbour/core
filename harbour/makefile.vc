@@ -36,7 +36,7 @@ RUNNER_DIR=source\runner
 #
 
 CC=cl
-CFLAGS=-w -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
+CFLAGS=-W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -112,6 +112,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\objfunc.obj \
     $(OBJ_DIR)\oldbox.obj \
+    $(OBJ_DIR)\oldclear.obj \
     $(OBJ_DIR)\rddord.obj \
     $(OBJ_DIR)\readkey.obj \
     $(OBJ_DIR)\readvar.obj \
@@ -186,6 +187,7 @@ RDD_OBJS = \
     $(OBJ_DIR)\dbcmd.obj \
     $(OBJ_DIR)\dbf0.obj \
     $(OBJ_DIR)\dbf1.obj \
+    $(OBJ_DIR)\dbnubs.obj \
     $(OBJ_DIR)\sdf0.obj \
     $(OBJ_DIR)\sdf1.obj \
     $(OBJ_DIR)\delim0.obj \
@@ -270,7 +272,7 @@ $(HARBOUR_EXE) : \
     $(PP_DIR)\hbpp.c \
     $(PP_DIR)\hbppint.c \
     $(PP_DIR)\table.c
-    $(CC) $(CFLAGS) -DHARBOUR_OBJ_GENERATION $** -o $(BIN_DIR)\harbour
+    $(CC) $(CFLAGS) -w -DHARBOUR_OBJ_GENERATION $** -o $(BIN_DIR)\harbour
     -del harbour.obj
     -del harboury.obj
     -del harbourl.obj
@@ -544,6 +546,9 @@ $(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\rddord.c : $(RTL_DIR)\rddord.prg
@@ -825,6 +830,9 @@ $(OBJ_DIR)\dbf0.obj : $(RDD_DIR)\dbf0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RDD_DIR)\sdf0.c : $(RDD_DIR)\sdf0.prg

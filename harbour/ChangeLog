@@ -1,3 +1,8 @@
+19991017-09:00 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/oldbox.prg
+     + source/rdd/dbnubs.c
+
 19991017-14:36 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rdd/dbnubs.c
      source/rdd/Makefile
