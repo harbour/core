@@ -295,6 +295,7 @@ static BOOL hb_cdxWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
 #define cdxRelease                              NULL
 #define cdxStructSize                           NULL
 #define cdxSysName                              NULL
+#define cdxZap                                  NULL
 #define cdxClearFilter                          NULL
 #define cdxClearLocate                          NULL
 #define cdxFilterText                           NULL
@@ -605,6 +606,7 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxRelease,
                              cdxStructSize,
                              cdxSysName,
+                             cdxZap,
                              cdxClearFilter,
                              cdxClearLocate,
                              cdxFilterText,

@@ -76,7 +76,6 @@ FUNCTION __dbSDF()         ; RETURN NIL
 FUNCTION __dbSort()        ; RETURN NIL
 FUNCTION __dbTotal()       ; RETURN NIL
 FUNCTION __dbUpdate()      ; RETURN NIL
-FUNCTION __dbZap()         ; RETURN NIL
 
 /* NOTE: Internal functions */
 FUNCTION __dbArrange()     ; RETURN NIL

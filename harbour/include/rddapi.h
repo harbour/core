@@ -665,11 +665,13 @@ typedef struct _RDDFUNCS
    DBENTRYP_VP   sort;
    DBENTRYP_VP   trans;
    DBENTRYP_VP   transRec;
+#endif
    DBENTRYP_V    zap;
 
 
    /* Relational Methods */
 
+#if 0
    DBENTRYP_VP   childEnd;
    DBENTRYP_VP   childStart;
    DBENTRYP_VP   childSync;

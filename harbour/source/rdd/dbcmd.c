@@ -106,6 +106,7 @@ HARBOUR HB_DBTABLEEXT( void );
 HARBOUR HB_DBUNLOCK( void );
 HARBOUR HB_DBUNLOCKALL( void );
 HARBOUR HB_DBUSEAREA( void );
+HARBOUR HB___DBZAP( void );
 HARBOUR HB_DELETED( void );
 HARBOUR HB_EOF( void );
 HARBOUR HB_FCOUNT( void );
@@ -664,6 +665,7 @@ static RDDFUNCS defTable = { defBof,
                              defRelease,
                              defStructSize,
                              defSysName,
+                             defUnSupported,
                              defClearFilter,
                              defClearLocate,
                              defFilterText,
@@ -1272,8 +1274,12 @@ HARBOUR HB_DBCLOSEAREA( void )
    SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
    SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
 
-   if( pWorkAreas == pCurrArea )  /* Empty list */
-      pWorkAreas = NULL;
+   if( pWorkAreas == pCurrArea )
+   {
+      pWorkAreas = pCurrArea->pNext;
+      if( pWorkAreas )
+         pWorkAreas->pPrev = NULL;
+   }
    else
    {
       if( pCurrArea->pPrev )
@@ -1405,8 +1411,12 @@ HARBOUR HB_DBCREATE( void )
          SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
          SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
 
-         if( pWorkAreas == pCurrArea )  /* Empty list */
-            pWorkAreas = NULL;
+         if( pWorkAreas == pCurrArea )
+         {
+            pWorkAreas = pCurrArea->pNext;
+            if( pWorkAreas )
+               pWorkAreas->pPrev = NULL;
+         }
          else
          {
             if( pCurrArea->pPrev )
@@ -1543,8 +1553,12 @@ HARBOUR HB_DBCREATE( void )
    SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
    if( !ISLOG( 4 ) || bError )
    {
-      if( pWorkAreas == pCurrArea )  /* Empty list */
-         pWorkAreas = NULL;
+      if( pWorkAreas == pCurrArea )
+      {
+         pWorkAreas = pCurrArea->pNext;
+         if( pWorkAreas )
+            pWorkAreas->pPrev = NULL;
+      }
       else
       {
          if( pCurrArea->pPrev )
@@ -2153,8 +2167,12 @@ HARBOUR HB_DBUSEAREA( void )
       SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
 
-      if( pWorkAreas == pCurrArea )  /* Empty list */
-         pWorkAreas = NULL;
+      if( pWorkAreas == pCurrArea )
+      {
+         pWorkAreas = pCurrArea->pNext;
+         if( pWorkAreas )
+            pWorkAreas->pPrev = NULL;
+      }
       else
       {
          if( pCurrArea->pPrev )
@@ -2285,11 +2303,34 @@ HARBOUR HB_DBUSEAREA( void )
    if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
    {
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+
+      if( pWorkAreas == pCurrArea )
+      {
+         pWorkAreas = pCurrArea->pNext;
+         if( pWorkAreas )
+            pWorkAreas->pPrev = NULL;
+      }
+      else
+      {
+         if( pCurrArea->pPrev )
+            pCurrArea->pPrev->pNext = pCurrArea->pNext;
+         if( pCurrArea->pNext )
+            pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+      }
+
       hb_xfree( pCurrArea->pArea );
       hb_xfree( pCurrArea );
       pCurrArea = NULL;
       return;
    }
+}
+
+HARBOUR HB___DBZAP( void )
+{
+   if( pCurrArea )
+      SELF_ZAP( ( AREAP ) pCurrArea->pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "__DBZAP" );
 }
 
 HARBOUR HB_DELETED( void )

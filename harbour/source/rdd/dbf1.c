@@ -493,7 +493,7 @@ static BOOL hb_dbfUnLockRecord( AREAP pArea, ULONG lRecNum )
    }
    else                                          /* Resize the list */
    {
-      /* Search de locked record */
+      /* Search the locked record */
       for( lLockPos = 0; lLockPos < pFileInfo->lNumLocksPos; lLockPos++ )
       {
          if( pFileInfo->pLocksPos[ lLockPos ] == lRecNum )
@@ -535,9 +535,9 @@ static BOOL hb_dbfUnLockAllRecords( AREAP pArea )
                    pArea->lpExtendInfo->uiRecordLen, 1, FL_UNLOCK ) )
          bUnLocked = FALSE;
 
-   if( pFileInfo->lNumLocksPos > 1 )
+   if( pFileInfo->lNumLocksPos > 0 )
       hb_xfree( pFileInfo->pLocksPos );
-   pFileInfo->pLocksPos = 0;
+   pFileInfo->pLocksPos = NULL;
    pFileInfo->lNumLocksPos = 0;
 
    return bUnLocked;
@@ -1027,7 +1027,10 @@ static ERRCODE dbfGoTo( AREAP pArea, ULONG lRecNo )
    if( lRecCount > 0 )
       return hb_dbfReadBuffer( pArea, lRecNo );
    else
+   {
+      hb_dbfClearBuffer( pArea );
       return SUCCESS;
+   }
 }
 
 static ERRCODE dbfGoToId( AREAP pArea, PHB_ITEM pItem )
@@ -1148,7 +1151,7 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
             hb_errPutSubCode( pError, 1001 );
             hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
             hb_errPutFileName( pError, ( char * ) pOpenInfo->abName );
-            hb_errPutFlags( pError, EF_CANRETRY );
+            hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
          }
          bRetry = ( SELF_ERROR( pArea, pError ) == E_RETRY );
       }
@@ -1707,6 +1710,32 @@ static ERRCODE dbfWriteDBHeader( AREAP pArea )
    return SUCCESS;
 }
 
+static ERRCODE dbfZap( AREAP pArea )
+{
+   PHB_ITEM pError;
+   DBOPENINFO pInfo;
+
+   if( !pArea->lpExtendInfo->fExclusive )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_SHARED );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_SHARED ) );
+      hb_errPutSubCode( pError, 1023 );
+      SELF_ERROR( pArea, pError );
+      hb_errRelease( pError );
+      return FAILURE;
+   }
+
+   if( SELF_GOCOLD( pArea ) == FAILURE || pArea->lpExtendInfo->fReadOnly )
+      return FAILURE;
+
+   /*
+   TODO: truncate dbf and memo files.
+   */
+
+   return SELF_GOTOP( pArea );
+}
+
 static RDDFUNCS dbfTable = { dbfBof,
                              dbfEof,
                              dbfFound,
@@ -1748,6 +1777,7 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfRelease,
                              dbfStructSize,
                              dbfSysName,
+                             dbfZap,
                              dbfClearFilter,
                              dbfClearLocate,
                              dbfFilterText,

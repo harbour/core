@@ -1,3 +1,14 @@
+19991025-22:05 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rtl/dummy.prg
+    - Removed __dbZap() function.
+
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    * dbUseArea() now show the "Default" option in the alert box.
+    + Added __dbZap() function (incomplete).
+
 19991025-19:46 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     ! DISKSPACE(): Added support for Win32 platform.
