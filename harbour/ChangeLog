@@ -5,6 +5,7 @@
 
    * source/rtl/diskspac.c
      ! Fixed the default case for Win32.
+     ! Fixed to accept a numeric parameter instead of a string.
 
    * source/rtl/getenv.c
      ! Fixed to not modify the item buffer directly.

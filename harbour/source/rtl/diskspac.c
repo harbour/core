@@ -46,23 +46,20 @@
 
 #define HB_OS_WIN_32_USED
 
-#include <ctype.h>
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined(DOS) || defined(__WATCOMC__)
+#if defined(HB_OS_DOS) || defined(__WATCOMC__)
    #include <dos.h>
 #endif
 
 HARBOUR HB_DISKSPACE( void )
 {
    ULONG ulSpaceFree = 0;
-   USHORT uiDrive = ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-                     ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
+   USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
 
-#if defined(DOS) || defined(__WATCOMC__)
+#if defined(HB_OS_DOS) || defined(__WATCOMC__)
 
    struct diskfree_t disk;
    unsigned uiResult;
@@ -90,8 +87,16 @@ HARBOUR HB_DISKSPACE( void )
       DWORD dwNumberOfFreeClusters;
       DWORD dwTotalNumberOfClusters;
 
+      /* Get the default drive */
+
       if( uiDrive == 0 )
+      {
+         USHORT uiErrorOld = hb_fsError();
+
          uiDrive = hb_fsCurDrv() + 1;
+
+         hb_fsSetError( uiErrorOld );
+      }
 
       szPath[ 0 ] = uiDrive + 'A' - 1;
       szPath[ 1 ] = ':';
