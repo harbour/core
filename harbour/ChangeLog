@@ -45,7 +45,7 @@
   * include/hbver.h
     * Version number updated to reflect the deep changes.
   * include/compiler.h
-    * Uncommented code removed
+    * Commented code removed
 
 19991116-21:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
