@@ -1,3 +1,8 @@
+2000-06-20 11:15 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/hbclass.ch
+      * small fix for SETGET methods
+      * small fix for CLASSDATA shared attributes
+
 2000-06-19 23:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbgenerr.c
