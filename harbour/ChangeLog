@@ -9,6 +9,11 @@
 */
   * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c
+    * OrdKeyCount() implemented for DBFNTX
+
+2002-03-28 15:57 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
     * Lot of code is changed to avoid using of PHB_ITEM in internal functions,
       some other optimizations.
       DBFNTX became much faster now ( still not so fast as Clipper ).
