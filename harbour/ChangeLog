@@ -1,3 +1,12 @@
+19990809-13:10 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt_tpl.c
+    + added a number of TODO comments
+  * from  Chen Kedem <niki@actcom.co.il>
+  * source/rtl/gt/gtos2.c
+    + support for:
+      hb_gt_Get/SetBlink
+      hb_gt_Get/SetCursorStyle
+
 Mon Aug 09 11:53:18 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/Makefile: 

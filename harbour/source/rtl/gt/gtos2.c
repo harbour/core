@@ -5,8 +5,8 @@
 /*
  *  GTOS2.C: Video subsystem for OS/2 compilers.
  *
- *  This module is based on VIDMGR by Andrew Clarke and modified for
- *  the Harbour project
+ *  This module is partially based on VIDMGR by Andrew Clarke and modified
+ *  for the Harbour project
  *
  *  User programs should never call this layer directly!
  */
@@ -19,29 +19,30 @@
 #include <os2.h>
 #include "gtapi.h"
 
-#ifndef KBDTRF_FINAL_CHAR_IN
-#define KBDTRF_FINAL_CHAR_IN  FINAL_CHAR_IN
-#endif
-
-static void hb_gt_SetCursorSize(char start, char end);
+static char hb_gt_GetCellSize(void);
+static void hb_gt_SetCursorSize(char start, char end, int visible);
 static void hb_gt_GetCursorSize(char *start, char *end);
 
 void hb_gt_Init(void)
 {
+  /* TODO: Is anything required to initialize the video subsystem? */
 }
 
 void hb_gt_Done(void)
 {
+  /* TODO: */
 }
 
 int hb_gt_IsColor(void)
 {
+    /* TODO: How to detect this? */
     return TRUE;
 }
 
 char hb_gt_GetScreenWidth(void)
 {
     VIOMODEINFO vi;
+
     vi.cb = sizeof(VIOMODEINFO);
     VioGetMode(&vi, 0);
     return vi.col;
@@ -50,6 +51,7 @@ char hb_gt_GetScreenWidth(void)
 char hb_gt_GetScreenHeight(void)
 {
     VIOMODEINFO vi;
+
     vi.cb = sizeof(VIOMODEINFO);
     VioGetMode(&vi, 0);
     return vi.row;
@@ -63,6 +65,7 @@ void hb_gt_SetPos(char cRow, char cCol)
 char hb_gt_Row(void)
 {
     USHORT x, y;
+
     VioGetCurPos(&y, &x, 0);
     return x;
 }
@@ -70,58 +73,92 @@ char hb_gt_Row(void)
 char hb_gt_Col(void)
 {
     USHORT x, y;
+
     VioGetCurPos(&y, &x, 0);
     return y;
 }
 
+
+/* QUESTION: not been used, do we need this function ? */
+/* Answer: In the dos version, this gets called by hb_gt_GetCursorStyle()
+   as that function is written below, we don't need this */
+
+/*
 static void hb_gt_GetCursorSize(char *start, char *end)
 {
     VIOCURSORINFO vi;
+
     VioGetCurType(&vi, 0);
     *start = vi.yStart;
     *end = vi.cEnd;
 }
+*/
 
-static void hb_gt_SetCursorSize(char start, char end)
+static void hb_gt_SetCursorSize(char start, char end, int visible)
 {
+/* Chen Kedem <niki@actcom.co.il> */
     VIOCURSORINFO vi;
+
     vi.yStart = start;
     vi.cEnd = end;
     vi.cx = 0;
-    vi.attr = 0;
+    vi.attr = ( visible ? 0 : -1 );
     VioSetCurType(&vi, 0);
+}
+
+static char hb_gt_GetCellSize()
+{
+/* Chen Kedem <niki@actcom.co.il> */
+    char rc ;
+
+    VIOMODEINFO vi;
+    vi.cb = sizeof(VIOMODEINFO);
+    VioGetMode(&vi, 0);
+    rc = (char)(vi.row ? (vi.vres / vi.row)-1 : 0 );
+    return rc;
 }
 
 int hb_gt_GetCursorStyle(void)
 {
-    char start, end;
+/* Chen Kedem <niki@actcom.co.il> */
     int rc;
+    char cellsize;
+    VIOCURSORINFO vi;
 
-    hb_gt_GetCursorSize(&start, &end);
+    VioGetCurType(&vi, 0);
 
-    if((start == 32) && (end == 32))
+    if ( vi.attr )
     {
         rc=SC_NONE;
-    }
-    else if((start == 6) && (end == 7))
-    {
-        rc=SC_NORMAL;
-    }
-    else if((start == 4) && (end == 7))
-    {
-        rc=SC_INSERT;
-    }
-    else if((start == 0) && (end == 7))
-    {
-        rc=SC_SPECIAL1;
-    }
-    else if((start == 0) && (end == 3))
-    {
-        rc=SC_SPECIAL2;
     }
     else
     {
-        rc=SC_NONE;
+        cellsize = hb_gt_GetCellSize();
+
+        if ( vi.yStart == 0 && vi.cEnd == 0 )
+        {
+            rc=SC_NONE;
+        }
+        else if ( ( vi.yStart == cellsize-1 || vi.yStart == cellsize-2 ) && vi.cEnd == cellsize )
+        {
+            rc=SC_NORMAL;
+        }
+        else if ( vi.yStart == cellsize/2 && vi.cEnd == cellsize )
+        {
+            rc=SC_INSERT;
+        }
+        else if ( vi.yStart == 0 && vi.cEnd == cellsize )
+        {
+            rc=SC_SPECIAL1;
+        }
+        else if ( vi.yStart == 0 && vi.cEnd == cellsize/2 )
+        {
+            rc=SC_SPECIAL2;
+        }
+        else
+        {
+            rc=SC_NONE;
+        }
     }
 
     return(rc);
@@ -129,26 +166,31 @@ int hb_gt_GetCursorStyle(void)
 
 void hb_gt_SetCursorStyle(int style)
 {
+/* Chen Kedem <niki@actcom.co.il> */
+    char cellsize;
+    VIOCURSORINFO vi;
+
+    cellsize = hb_gt_GetCellSize();
     switch(style)
     {
     case SC_NONE:
-        hb_gt_SetCursorSize(32, 32);
+        hb_gt_SetCursorSize( 0, 0, 0);
         break;
 
     case SC_NORMAL:
-        hb_gt_SetCursorSize(6, 7);
+        hb_gt_SetCursorSize(cellsize-1, cellsize, 1);
         break;
 
     case SC_INSERT:
-        hb_gt_SetCursorSize(4, 7);
+        hb_gt_SetCursorSize(cellsize/2, cellsize, 1);
         break;
 
     case SC_SPECIAL1:
-        hb_gt_SetCursorSize(0, 7);
+        hb_gt_SetCursorSize(0, cellsize, 1);
         break;
 
     case SC_SPECIAL2:
-        hb_gt_SetCursorSize(0, 3);
+        hb_gt_SetCursorSize(0, cellsize/2, 1);
         break;
 
     default:
@@ -165,6 +207,7 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 {
     USHORT width;
     char y;
+
     width = (USHORT) ((cRight - cLeft + 1) * 2);
     for (y = cTop; y <= cBottom; y++)
     {
@@ -177,6 +220,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
     USHORT width;
     char y;
+
     width = (USHORT) ((cRight - cLeft + 1) * 2);
     for (y = cTop; y <= cBottom; y++)
     {
@@ -187,36 +231,75 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 
 void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
+   /* TODO: we want to take a screen that is say bright white on blue,
+            and change the attributes only for a section of the screen
+            to white on black.
+   */
 }
 
 void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
-}
-
-void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
-{
-   uiRows=uiCols=0;
+   /* TODO: similar to above - either use gtwin.c as a template, or
+            leave it and I will extrapolate from above function.
+   */
 }
 
 void hb_gt_DispBegin(void)
 {
+   /* TODO: Is there a way to change screen buffers?
+            ie: can we write somewhere without it going to the screen
+            and then update the screen from this buffer at a later time?
+            We will initially want to copy the current screen to this buffer.
+   */
 }
 
 void hb_gt_DispEnd(void)
 {
+   /* TODO: here we flush the buffer, and restore normal screen writes */
+}
+
+void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+{
+    int rc;
+    VIOMODEINFO vi;
+    VioGetMode(&vi, 0);        /* fill structure with current settings */
+    vi.row = uiRows;
+    vi.col = uiCols;
+    rc = VioSetMode(&vi, 0);   /* 0 = Ok, other = Fail */
+/*  return rc   */             /* TODO: set a return value for this function */
 }
 
 void hb_gt_Replicate(char c, DWORD nLength)
 {
+   /* TODO: this will write character c nlength times to the screen.
+            Note that it is not used yet
+            If there is no native function that supports this, it is
+            already handled in a generic way by higher level functions.
+   */
+
    c= ' ';
    nLength = 0;
 
 }
+
 BOOL hb_gt_GetBlink()
 {
-   return FALSE;
+/* Chen Kedem <niki@actcom.co.il> */
+   VIOINTENSITY vi;
+
+   vi.cb   = sizeof(VIOINTENSITY);      /* 6                          */
+   vi.type = 2;                         /* get intensity/blink toggle */
+   VioGetState(&vi, 0);
+   return (vi.fs == 0);                 /* 0 = blink, 1 = intens      */
 }
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
+/* Chen Kedem <niki@actcom.co.il> */
+   VIOINTENSITY vi;
+
+   vi.cb   = sizeof(VIOINTENSITY);      /* 6                          */
+   vi.type = 2;                         /* set intensity/blink toggle */
+   vi.fs   = (bBlink ? 0 : 1);          /* 0 = blink, 1 = intens      */
+   VioSetState(&vi, 0);
 }
