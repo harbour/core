@@ -427,7 +427,6 @@ static BOOL hb_ntxFindNextKey( LPTAGINFO pTag )
          pPage->TagParent->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
          pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
          hb_ntxPageRelease( pPage );
-         hb_ntxPageRelease( pPage );
          return TRUE;
       }
       else
@@ -452,7 +451,6 @@ static BOOL hb_ntxFindNextKey( LPTAGINFO pTag )
             */
                pPage->TagParent->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
                pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
-               hb_ntxPageRelease( pPage );
                hb_ntxPageRelease( pPage );
                return TRUE;
             }
@@ -539,7 +537,6 @@ static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag )
          pPage->TagParent->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
          pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
          hb_ntxPageRelease( pPage );
-         hb_ntxPageRelease( pPage );
          return TRUE;
       }
       else
@@ -555,7 +552,6 @@ static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag )
             {
                pPage->TagParent->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
                pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
-               hb_ntxPageRelease( pPage );
                hb_ntxPageRelease( pPage );
                return TRUE;
             }
@@ -905,10 +901,10 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
    {
       pPage = ( LPPAGEINFO ) hb_xgrab( sizeof( HB_PAGEINFO ) );
       memset( pPage , 0 ,sizeof( HB_PAGEINFO ) );
+      pPage->TagParent = pIndex->CompoundTag;
       if( !ulOffset )
       {
          /* printf( "\nntxPageLoad - 1 ( %5lx )",pPage ); */
-         pPage->TagParent = pIndex->CompoundTag;
          pPage->pPrev = NULL;
          pPage->Page = pIndex->CompoundTag->RootBlock;
          pIndex->CompoundTag->RootPage = pPage;
@@ -919,9 +915,11 @@ static LPPAGEINFO hb_ntxPageLoad( ULONG ulOffset )
             /* printf( "\nntxPageLoad - 2 ( %5lx %5lx )",pIndex->CompoundTag->RootPage,pPage ); */
             pLastPage = hb_ntxPageLast( pIndex );
             /* printf( "\nntxPageLoad - 3 ( %5lx )",pLastPage ); */
-            pPage->TagParent = pIndex->CompoundTag;
             pPage->pPrev = pLastPage;
-            pLastPage->pNext = pPage;
+            if( pLastPage )
+               pLastPage->pNext = pPage;
+            else
+               pIndex->CompoundTag->RootPage = pPage;
             pPage->Page = ulOffset;
       }
       pPage->pKeys = ( LPKEYINFO ) hb_xgrab( sizeof( KEYINFO ) * ( pPage->TagParent->MaxKeys + 1 ) );
@@ -1472,7 +1470,7 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    LPTAGINFO pTag;
    PHB_ITEM pExpr, pKeyExp;
    ULONG ulPos;
-      
+
    ulPos = hb_fsSeek( pIndex->DiskFile, 0, SEEK_END );
 
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
@@ -2291,6 +2289,5 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
-      hb_retni( FAILURE );
-
+      hb_retni( FAILURE );    
 }

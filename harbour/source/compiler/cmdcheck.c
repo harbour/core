@@ -190,6 +190,13 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
                           j += 5;
                           continue;
                        }
+		       else if( !Args[i][j + 1] )
+		       {
+                          Switch[2] = '\0';
+                          hb_compChkEnvironVar( (char*) Switch );
+                          j += 1;
+                          continue;			  
+		       }  
                        break;
 
                      case 'c' :
