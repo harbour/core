@@ -15,7 +15,7 @@
 
    * source/rtl/philesx.c
      ! CURDRIVE() error handling made more like XBase++. Retry is allowed,
-       a the error text is the same. (not tested)
+       and the error text is the same. (not tested)
 
 20000403-13:07 GMT+1 Victor Szakats <info@szelvesz.hu>
 
