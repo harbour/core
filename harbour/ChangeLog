@@ -1,3 +1,23 @@
+19990708-18:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.icc
+    + Have to create a dummy unistd.h in the include directory after
+      running bison and then delete it after building harbour.exe,
+      because GNU bison adds "#include <unistd.h>" for C++ mode, but
+      the IBM Visual Age C++ 3.0 compiler doesn't have such a file.
+  * config/dos/global.cf
+    Added individual -$(RM) commands for *.bak, *.obj, core, and *.o,
+    because the COMMAND.COM DEL command won't take more than one target.
+  * include/fileio.ch
+    + Added copyright and license header and filled in version history
+  * include/filesys.api
+    + Added copyright and license header and filled in version history
+  * include/filesys.h
+    + Added copyright and license header and filled in version history
+  * include/set.ch
+    + Added copyright and license header and filled in version history
+  * include/set.h
+    + Added copyright and license header and filled in version history
+
 19990708-22:00 Bruno Cantero <bruno@issnet.net>
 CVSed by Andi Jahja <andij@aonlippo.co.id>
 

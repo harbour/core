@@ -202,6 +202,7 @@ source\compiler\harboury.c : source\compiler\harbour.y
 
 source\compiler\harbourl.c : source\compiler\harbour.l
    flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
+   echo.>include\unistd.h
 
 $(path_obj)\genobj32.obj : {$(path_c)}genobj32.c
 $(path_obj)\harbour.obj  : {$(path_c)}harbour.c
@@ -218,7 +219,7 @@ $(path_obj)\table.obj    : {$(path_c)}table.c
   icc /C+ $(c_opt) /Fo$@ /Tp$<
 
 $(path_exe)\harbour.exe : $(path_obj)\harboury.obj $(path_obj)\harbourl.obj $(path_obj)\genobj32.obj $(path_obj)\harbour.obj $(path_obj)\hbpp.obj $(path_obj)\hbppint.obj $(path_obj)\table.obj
- icc /C- $(c_opt) /Fe$(path_exe)\harbour.exe /Isource\compiler \
+  icc /C- $(c_opt) /Fe$(path_exe)\harbour.exe /Isource\compiler \
     $(path_obj)\harboury.obj \
     $(path_obj)\harbourl.obj \
     $(path_obj)\genobj32.obj \
@@ -226,3 +227,4 @@ $(path_exe)\harbour.exe : $(path_obj)\harboury.obj $(path_obj)\harbourl.obj $(pa
     $(path_obj)\hbppint.obj  \
     $(path_obj)\table.obj    \
     $(path_obj)\harbour.obj
+  del include\unistd.h

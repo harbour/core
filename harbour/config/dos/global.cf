@@ -40,6 +40,10 @@ dirbase::
 
 clean::
 	-echo Y | $(RM) $(ARCH_DOS)\*.* 
+	-$(RM) *.bak
+	-$(RM) *.obj
+	-$(RM) core
+	-$(RM) *.o
 	-$(RD) $(ARCH_DOS)
 	-$(RD) $(HB_ARCHITECTURE)
 endif
