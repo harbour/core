@@ -54,11 +54,14 @@
 #define MAX_STR_LEN 255
 
 #include "hbapi.h"
+#include "sde60.h"
 
 
 HB_FUNC( SX_VERSION )
 {
-   sx_Version( );
+   char *szVersion=(char*)sx_Version();
+   hb_retc(szVersion);
+   hb_xfree(szVersion);
 }
 
 
