@@ -1,9 +1,35 @@
+
+20000401-21:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   *makefile.bc
+   *utils/hbdoc/makefile
+        *Updated for new hbdoc depedencies
+   +doc/en/datetime.txt
+        *documentation for date/time functions
+   *doc/en/math.txt
+        *documentation for sqrt() function
+    *doc/en/set.txt
+        *some new docs
+    *utils/hbdoc/genng.prg
+     utils/hbdoc/genrtf.prg
+     utils/hbdoc/genos2.prg
+     utils/hbdoc/hbdoc.prg
+     utils/hbdoc/genhtm.prg
+        *Changes to make a better output file
+        *Move FT_ functions from hbdoc to a new file
+    -utils/hbdoc/fileread.prg
+        Removed
+    +utils/hbdoc/fclass1.prg
+    +utils/hbdoc/ffile1.prg
+        *New file class for hbdoc
+    +utils/hbdoc/ft_funcs.prg
+        *New place for the ft_* functions
 20000402-01:41 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/substr.c
      ! Minor fix in comment.
    * source/rtl/filesys.c
      ! Bug fixed for __WATCOMC__
+
 
 20000401-18:00 GMT+1 Victor Szakats <info@szelvesz.hu>
 
