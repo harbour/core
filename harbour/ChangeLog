@@ -1,3 +1,7 @@
+2001-12-09 21:06 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/vm/maindll.c
+     * HBENTRY() generic DLLs entry point implemented
+
 2001-12-09 20:11 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/common/hbtrace.c
    * harbour/source/compiler/cmdcheck.c
