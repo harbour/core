@@ -202,7 +202,7 @@ FUNCTION Main_MISC()
    TEST_LINE( SoundEx( "µ†AêÇ" )              , "A000" )
    TEST_LINE( SoundEx( "12345" )              , "0000" )
 
-   /* NATION functions (do not exist in 5.2e) */
+   /* NATION functions (do not exist in 5.2e US) */
 
    TEST_LINE( NationMsg()                     , "Invalid argument" )
    TEST_LINE( NationMsg("A")                  , "" )
@@ -222,11 +222,11 @@ FUNCTION Main_MISC()
    TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
    TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
    TEST_LINE( NationMsg(14)                   , "" )
-#ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e, 5.3b) */
+#ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e International, 5.3b) */
    TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif
 
-/* These will cause a GPF in CA-Cl*pper (5.2e, 5.3b) */
+/* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
    TEST_LINE( IsAffirm()                      , .F.    )
    TEST_LINE( IsAffirm(.F.)                   , .F.    )
@@ -245,7 +245,7 @@ FUNCTION Main_MISC()
    TEST_LINE( IsAffirm("no")                  , .F.    )
    TEST_LINE( IsAffirm("NO")                  , .F.    )
 
-/* These will cause a GPF in CA-Cl*pper (5.2e, 5.3b) */
+/* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
    TEST_LINE( IsNegative()                    , .F.    )
    TEST_LINE( IsNegative(.F.)                 , .F.    )

@@ -1,3 +1,9 @@
+19991123-13:35 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * rt_misc.prg
+     + Corrected comments regarding Nation functions to specify if they
+       apply to the US or International editions of CA-Clipper 5.2e.
+
 19991123-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/math.c
     + math error handler added for __BORLANDC__ and __MINGW32__
