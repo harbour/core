@@ -158,8 +158,7 @@ static int set_number( PHB_ITEM pItem, int iOldValue )
 
 static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
-   char * szString = NULL;
-   ULONG ulLen = 0;
+   char * szString;
 
    HB_TRACE(HB_TR_DEBUG, ("set_string(%p, %s)", pItem, szOldString));
 

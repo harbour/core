@@ -3808,9 +3808,18 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
       switch( uiIndex )
       {
          case DBOI_KEYCOUNT:
-         case DBOI_POSITION:
-            hb_itemPutND( pInfo->itmResult,0 );
+         {
+            ULONG ulRecCount = 0;
+            SELF_RECCOUNT( ( AREAP ) pArea, &ulRecCount );
+            hb_itemPutND( pInfo->itmResult,ulRecCount );
             break;
+         }
+         case DBOI_POSITION:
+         {
+            hb_itemPutND( pInfo->itmResult,0 );
+            SELF_RECNO( ( AREAP ) pArea, pInfo->itmResult );
+            break;
+         }
          case DBOI_ISCOND:
          case DBOI_ISDESC:
          case DBOI_UNIQUE:
