@@ -1,3 +1,7 @@
+199908.01-20:30 WIB Andi Jahja
+  * msgxxx.c
+    correct directives, it now works
+
 199908.01-16:30 GMT+3 Alexander Kresin
   * hbpplib.b32
     * it works now
