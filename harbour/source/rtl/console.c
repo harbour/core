@@ -254,6 +254,10 @@ static void hb_out( WORD wParam, hb_out_func_typedef * hb_out_func )
 
    switch( hb_parinfo( wParam ) )
    {
+      case IT_STRING:
+           hb_out_func( hb_parc( wParam ), hb_parclen( wParam ) );
+           break;
+
       case IT_DATE:
            szText = hb_dtoc( hb_pards( wParam ), szBuffer, hb_set.HB_SET_DATEFORMAT );
            if( szText )
@@ -282,10 +286,6 @@ static void hb_out( WORD wParam, hb_out_func_typedef * hb_out_func )
               hb_out_func( ".F.", 3 );
            break;
 
-      case IT_STRING:
-           hb_out_func( hb_parc( wParam ), hb_parclen( wParam ) );
-           break;
-
       default:
            break;
    }
@@ -297,7 +297,10 @@ static void hb_outstd( char * fpStr, ULONG len )
    ULONG count = len;
    char * fpPtr = fpStr;
 
-   while( count-- ) printf( "%c", *fpPtr++ );
+   if( strlen( fpStr ) != count )
+      while( count-- ) printf( "%c", *fpPtr++ );
+   else
+      printf( "%s", fpStr );
    fflush( stdout );
 #ifdef HARBOUR_USE_GTAPI
  #ifndef __CYGWIN__
@@ -318,7 +321,11 @@ static void hb_outerr( char * fpStr, ULONG len )
 {
    ULONG count = len;
    char * fpPtr = fpStr;
-   while( count-- ) fprintf( stderr, "%c", *fpPtr++ );
+
+   if( strlen( fpStr ) != count )
+      while( count-- ) fprintf( stderr, "%c", *fpPtr++ );
+   else
+      fprintf( stderr, "%s", fpStr );
    fflush( stderr );
 #ifdef HARBOUR_USE_GTAPI
  #ifndef __CYGWIN__
@@ -345,7 +352,10 @@ static void hb_altout( char * fpStr, ULONG len )
       hb_gtGetPos( &dev_row, &dev_col );
    #else
       ULONG count = len;
-      while( count-- ) printf( "%c", *fpPtr++ );
+      if( strlen( fpStr ) != count )
+         while( count-- ) printf( "%c", *fpPtr++ );
+      else
+         printf( "%s", fpStr );
       adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
    #endif
    }
@@ -422,7 +432,7 @@ static void hb_altout( char * fpStr, ULONG len )
 /* Output an item to the screen and/or printer */
 static void hb_devout( char * fpStr, ULONG len )
 {
-   if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
+   if( hb_set_printhan >= 0 && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       unsigned write_len;
@@ -455,7 +465,10 @@ static void hb_devout( char * fpStr, ULONG len )
    #else
       ULONG count = len;
       char * fpPtr = fpStr;
-      while( count-- ) printf( "%c", *fpPtr++ );
+      if( strlen( fpStr ) != count )
+         while( count-- ) printf( "%c", *fpPtr++ );
+      else
+         printf( "%s", fpStr );
       adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
    #endif
    }
@@ -471,7 +484,10 @@ static void hb_dispout( char * fpStr, ULONG len )
    #else
       ULONG count = len;
       char * fpPtr = fpStr;
-      while( count-- ) printf( "%c", *fpPtr++ );
+      if( strlen( fpStr ) != count )
+         while( count-- ) printf( "%c", *fpPtr++ );
+      else
+         printf( "%s", fpStr );
       adjust_pos( fpStr, len, &dev_row, &dev_col, hb_max_row(), hb_max_col() );
    #endif
 }
@@ -629,7 +645,6 @@ HARBOUR HB_DEVOUT( void ) /* writes a single value to the current device (screen
    {
 #ifdef HARBOUR_USE_GTAPI
       char fpOldColor[ CLR_STRLEN ];
-
       if( ISCHAR(2) )
       {
          hb_gtGetColorStr( fpOldColor );

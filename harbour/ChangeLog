@@ -1,3 +1,13 @@
+19990818-14:33 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/console.c
+   * source/rtl/gtapi.c
+     * a number of small changes to improve speed.
+   * source/rtl/gt/gtwin.c
+     * correction to cursor positioning when dispend called
+   * tests/working/dirtest.prg
+     * comment out (for now) asort
+       it works, but it's rather slow on a larger directory
+
 19990818-14:13 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/rdd/dbcmd.c

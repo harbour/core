@@ -79,7 +79,6 @@ void hb_gt_Done(void)
     hb_gtDispBegin();  /* must use these versions ! */
     hb_gtDispEnd();
 
-    SetConsoleActiveScreenBuffer(HOutput);
   }
   CloseHandle(HInput);
   HInput = INVALID_HANDLE_VALUE;
@@ -106,7 +105,8 @@ char hb_gt_GetScreenWidth(void)
   LOG("GetScreenWidth");
   GetConsoleScreenBufferInfo(HOutput, &csbi);
 /*   return (char)csbi.dwMaximumWindowSize.X; */
-  return (char)max(csbi.srWindow.Right - csbi.srWindow.Left +1,40);
+/*  return (char)max(csbi.srWindow.Right - csbi.srWindow.Left +1,40); */
+  return (char)max(csbi.dwSize.X,40);
 }
 
 char hb_gt_GetScreenHeight(void)
@@ -116,7 +116,8 @@ char hb_gt_GetScreenHeight(void)
   LOG("GetScreenHeight");
   GetConsoleScreenBufferInfo(HOutput, &csbi);
 /*   return (char)csbi.dwMaximumWindowSize.Y; */
-  return (char)max(csbi.srWindow.Bottom - csbi.srWindow.Top +1,25);
+/*  return (char)max(csbi.srWindow.Bottom - csbi.srWindow.Top +1,25); */
+  return (char)max(csbi.dwSize.Y,25);
 }
 
 void hb_gt_SetPos(char cRow, char cCol)
@@ -381,16 +382,20 @@ void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attrib
 void hb_gt_DispBegin(void)
 {
 /* ptucker */
-  COORD coDest = {0, 0};
-  COORD coBuf;                        /* the size of the buffer to read into */
-  CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
-  SMALL_RECT srWin;                         /* source rectangle to read from */
-
   if( hb_gtDispCount() == 1 )
   {
+    COORD coDest = {0, 0};
+    COORD coBuf;                      /* the size of the buffer to read into */
+    CHAR_INFO *pCharInfo;     /* buffer to store info from ReadConsoleOutput */
+    SMALL_RECT srWin;                       /* source rectangle to read from */
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    GetConsoleScreenBufferInfo(HOutput, &csbi);
     srWin.Top    = srWin.Left = 0;
-    srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
-    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
+//    srWin.Bottom = (cobuf.Y = hb_gt_GetScreenHeight()) -1;
+//    srWin.Right  = (coBuf.X = hb_gt_GetScreenWidth()) -1;
+    srWin.Bottom = (coBuf.Y = csbi.dwSize.Y) -1;
+    srWin.Right  = (coBuf.X = csbi.dwSize.X) -1;
 
     /* allocate a buffer for the screen rectangle */
     pCharInfo = (CHAR_INFO *)hb_xgrab(coBuf.Y * coBuf.X * sizeof(CHAR_INFO));
@@ -400,7 +405,7 @@ void hb_gt_DispBegin(void)
                  pCharInfo,                        /* transfer area          */
                  coBuf,                        /* size of destination buffer */
                  coDest,               /* upper-left cell to write data to   */
-                 &srWin);            /* screen buffer rectangle to read from */
+                 &csbi.srWindow);    /* screen buffer rectangle to read from */
 
     if( HStealth == INVALID_HANDLE_VALUE )
     {
@@ -418,7 +423,7 @@ void hb_gt_DispBegin(void)
                  pCharInfo,                                 /* data to write */
                  coBuf,                     /* col/row size of source buffer */
                  coDest,        /* upper-left cell to write data from in src */
-                 &srWin);             /* screen buffer rect to write data to */
+                 &csbi.srWindow);     /* screen buffer rect to write data to */
 
     hb_xfree(pCharInfo);
   }
@@ -431,8 +436,11 @@ void hb_gt_DispEnd(void)
   if( hb_gtDispCount() == 0 )
   {
     CONSOLE_CURSOR_INFO cci;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleCursorInfo(HCursor, &cci);
+    GetConsoleScreenBufferInfo(HCursor, &csbi);
     SetConsoleCursorInfo(HOutput, &cci);
+    SetConsoleCursorPosition(HOutput, csbi.dwCursorPosition);
     SetConsoleActiveScreenBuffer(HOutput);
     HStealth = HCursor;
     HCursor  = HOutput;
@@ -456,8 +464,8 @@ static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld )
   srWin.Right  = csbi.dwSize.X - 1;
 
   SetConsoleScreenBufferSize(HNew, csbi.dwSize);
-  SetConsoleWindowInfo(HNew, FALSE, &srWin);
   SetConsoleWindowInfo(HNew, TRUE,  &csbi.srWindow);
+  SetConsoleWindowInfo(HNew, FALSE, &srWin);
 
   return 0;
 }

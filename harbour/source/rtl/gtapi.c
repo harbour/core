@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.58   19990811   ptucker   changes to gtWriteCon and gtWrite to improve
+ *                             speed.
  * 1.56   19990811   ptucker   Corrected initial MaxRow/col
  * 1.53   19990807   ptucker   Modified Dispbegin/end support
  * 1.47   19990802   ptucker   DispBegin/End and SetMode for gtWin
@@ -619,7 +621,7 @@ int hb_gtSetSnowFlag(BOOL bNoSnow)
 int hb_gtWrite(char * fpStr, ULONG length)
 {
     int iRow, iCol, iMaxCol, iMaxRow, iTemp;
-    ULONG size;
+    ULONG size = length;
     char attr=_Color[s_uiColorIndex] & 0xff,
          *fpPointer = fpStr;
 
@@ -629,9 +631,10 @@ int hb_gtWrite(char * fpStr, ULONG length)
     iMaxRow = s_uiMaxRow;
     iMaxCol = s_uiMaxCol;
 
-    length = ( length < hb_gtMaxCol()-iCol+1 ) ? length : hb_gtMaxCol()-iCol+1;
+    length = ( length < iMaxCol-iCol+1 ) ? length : iMaxCol-iCol+1;
 
     size = length;
+#ifndef HARBOUR_USE_WIN_GTAPI
     if (iCol + size > iMaxCol)
     {
        /* Calculate eventual row position and the remainder size for the column adjust */
@@ -658,7 +661,7 @@ int hb_gtWrite(char * fpStr, ULONG length)
           iTemp = 0;
           if (s_uiCurrentCol > 0)
           {
-             /* Ensure that the truncated text will fill the screen */
+               /* Ensure that the truncated text will fill the screen */
              fpPointer -= s_uiCurrentCol;
              s_uiCurrentCol = 0;
           }
@@ -670,13 +673,17 @@ int hb_gtWrite(char * fpStr, ULONG length)
        iRow = iMaxRow;
     }
     else size = length;
-
+#endif
     /* Now the text string can be displayed */
     hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size);
 
+#ifdef HARBOUR_USE_WIN_GTAPI
+    /* yeah yeah, looks weird */
+    hb_gtSetPos( iRow, iCol+size);
+#else
     /* Finally, save the new cursor position */
     hb_gtSetPos (iRow, iCol);
-
+#endif
     return(0);
 }
 
@@ -692,11 +699,15 @@ int hb_gtWriteAt(USHORT uiRow, USHORT uiCol, char * fpStr, ULONG length)
 
 int hb_gtWriteCon(char * fpStr, ULONG length)
 {
-    int rc = 0;
+    int rc = 0, ldisp=FALSE, nLen = 0;
     USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol;
+    USHORT tmpRow = s_uiCurrentRow, tmpCol = s_uiCurrentCol;
     ULONG count;
     char ch[2];
     char * fpPtr = fpStr;
+    char strng[500];
+
+    hb_gtDispBegin();
 
     ch[1] = 0;
     for(count = 0; count < length; count++)
@@ -707,6 +718,7 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
           case 7:
              break;
           case 8:
+/*
              if(uiCol > 0) uiCol--;
              else if(uiRow > 0)
              {
@@ -718,28 +730,82 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
                 hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, -1, 0);
                 uiCol=s_uiMaxCol;
              }
-             hb_gtSetPos (uiRow, uiCol);
+*/
+             if( nLen > 0 )
+                 --nLen;
+             if( uiCol > 0 )
+                 --uiCol;
+             
              break;
           case 10:
+/*
              if(uiRow < s_uiMaxRow) uiRow++;
              else
              {
                 hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, 1, 0);
              }
              hb_gtSetPos (uiRow, uiCol);
+*/
+             ++uiRow;
+             ldisp=TRUE;
              break;
           case 13:
              uiCol = 0;
-             hb_gtSetPos (uiRow, uiCol);
+/*             hb_gtSetPos (uiRow, uiCol); */
              break;
           default:
-             rc = hb_gtWrite(ch, 1);
-             hb_gtGetPos (&uiRow, &uiCol);
+             if( ++uiCol > s_uiMaxCol )
+             {
+                uiCol = 0;
+                ++uiRow;
+                ldisp = TRUE;
+             }
+             if( ldisp )
+             {
+                hb_gtSetPos (tmpRow, tmpCol);
+                if( nLen )
+                   rc = hb_gtWrite(strng, nLen );
+                hb_gtDispEnd();
+                hb_gtDispBegin();
+                nLen=0;
+             }
+             if( uiRow > s_uiMaxRow )
+             {
+                hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, uiRow - s_uiMaxRow, 0);
+                uiRow = s_uiMaxRow;
+                uiCol = 0;
+             }
+
+             if( ldisp )
+             {
+                tmpRow=uiRow; tmpCol=uiCol;
+                hb_gtSetPos( uiRow, uiCol);
+                ldisp = FALSE;
+             }
+             strng[nLen++] = ch[0];
        }
        if(rc)
-          return(rc);
+          break;
     }
-    return(0);
+
+    if( !rc )
+    {
+       hb_gtSetPos (tmpRow, tmpCol);
+       if( nLen )
+          rc = hb_gtWrite(strng, nLen );
+       if( uiRow > s_uiMaxRow )
+       {
+          hb_gtScroll(0, 0, s_uiMaxRow, s_uiMaxCol, uiRow - s_uiMaxRow, 0);
+          uiRow = s_uiMaxRow;
+          uiCol = 0;
+       }
+
+       hb_gtSetPos (uiRow, uiCol);
+    }
+
+    hb_gtDispEnd();
+
+    return rc;
 }
 
 int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols)
@@ -756,7 +822,7 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
    {
       char * fpBlank = (char *)hb_xgrab (iLength);
       char * fpBuff = (char *)hb_xgrab (iLength * 2);
-      if (fpBlank && fpBuff)
+*      if (fpBlank && fpBuff)
       {
          char attr = _Color[s_uiColorIndex] & 0xff;
 

@@ -15,7 +15,8 @@ local cOs := OS(), cNewLine
       cNewLine := CHR( 10 )
    END IF
 
-adir := asort( directory(filespec,attribs),,, {|x,y|upper(x[1]) < upper(y[1])} )
+// adir := asort( directory(filespec,attribs),,, {|x,y|upper(x[1]) < upper(y[1])} )
+adir := directory(filespec,attribs)
 
 for x := 1 to len(adir)
    outstd(cNewLine)
