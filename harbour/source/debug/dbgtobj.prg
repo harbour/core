@@ -119,7 +119,7 @@ Local owndsets
    ocol:width := nMaxElem
    ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( ::ArrayReference[ ::arrayindex ,2] ), nWidth  - 12 ) } ) )
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ), nWidth  - 12 ) } ) )
    oBrwSets:Cargo := 1 // Actual highligthed row
    ocol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    ocol:width:= MaxCol() - 14 - nMaxElem
@@ -251,6 +251,7 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     LOCAL lScoreSave := Set( _SET_SCOREBOARD, .f. )
     LOCAL lExitSave  := Set( _SET_EXIT, .t. )
     LOCAL bInsSave   := SetKey( K_INS )
+    local cValue
 
     // make sure browse is stable
     obro:forcestable()
@@ -268,7 +269,8 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     column := oBro:getColumn( oBro:colPos )
 
     // create a corresponding GET
-    @  row(),col() get pitem[nSet,2]
+    cValue = PadR( ValToStr( pitem[nSet,2] ), column:Width )
+    @  row(),col() GET cValue
 //    get := Getnew( Row(),col(), column:block,,, oBro:colorSpec )
 
 
@@ -280,6 +282,10 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     Set( _SET_SCOREBOARD, lScoreSave )
     Set( _SET_EXIT, lExitSave )
     SetKey( K_INS, bInsSave )
+
+    if LastKey() == K_ENTER
+       __ObjSendMsg( ::TheObj, "_" + pitem[ nSet, 1 ], &cValue )
+    endif
 
     // check exit key from get
     nKey := LastKey()
