@@ -86,7 +86,7 @@ void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
 int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
-int truncmp (char*, char**, int);
+int truncmp (char**, char**, int);
 int strincmp (char*, char**);
 int strolen ( char* );
 void stroupper ( char* );
@@ -829,15 +829,25 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
     while ( *ptri != '\0' && !endTranslation )
     {
       SKIPTABSPACES( ptrmp );
+      if( *ptrmp == '[' && !numBrackets && !strtopti )
+         strtopti = ptrmp;
+      if( !numBrackets && strtopti && strtptri != ptri && ISNAME( *ptri ) )
+      {
+         strtptri = ptri;
+         ptrmp = strtopti;
+         ptr = ptri;
+         ipos = NextName( &ptr, tmpname );
+         ipos = md_strAt( tmpname, ipos, strtopti, TRUE );
+         if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
+         {
+            ptr = strtopti+ipos-2;
+            while( *ptr != '[' && *ptr != ']' ) ptr--;
+            if( *ptr != ']' )
+               ptrmp = ptr;
+         }
+      }
       switch ( *ptrmp ) {
        case '[':
-         if( !numBrackets && !strtopti )
-            strtopti = ptrmp;
-         if( !numBrackets && strtopti && strtptri != ptri && ISNAME( *ptri ) )
-         {
-            strtptri = ptri;
-            ptrmp = strtopti;
-         }
          numBrackets++;
          aIsRepeate[ Repeate ] = 0;
          lastopti[Repeate++] = ptrmp;
@@ -901,14 +911,14 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          break;
        default:    /*   Key word    */
          if( !numBrackets ) strtopti = NULL;
-         ptr = ptrmp;
-         if ( *ptri == ',' || truncmp(ptri, &ptrmp, !com_or_xcom ) )
+         ptr = ptri;
+         if ( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
          {
+           ptri = ptr;
            if ( numBrackets )
               SkipOptional( &ptrmp );
            else return -1;
          }
-         else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
       }
       SKIPTABSPACES( ptri );
     };
@@ -1787,28 +1797,27 @@ int stroncpy (char* ptro, char* ptri, int lens )
  return i;
 }
 
-int truncmp (char* ptro, char** ptri, int lTrunc )
+int truncmp (char** ptro, char** ptri, int lTrunc )
 {
-   char *ptrb = ptro, co, ci;
+   char *ptrb = *ptro, co, ci;
 
    for ( ; **ptri != ' ' && **ptri != '\t' && **ptri != ',' && **ptri != '[' && **ptri != ']' &&
-       **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
-       ptro++, (*ptri)++ );
-   co = *(ptro-1);
+       **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(**ptro);
+       (*ptro)++, (*ptri)++ );
+   co = *(*ptro-1);
    ci = **ptri;
    if ( ( ( ci == ' ' || ci == ',' || ci == '[' ||
        ci == ']' || ci == '\1' || ci == '\0' ) &&
-       ( ( !ISNAME(*ptro) && ISNAME(co) ) ||
+       ( ( !ISNAME(**ptro) && ISNAME(co) ) ||
        ( !ISNAME(co) ) ) ) )
       return 0;
-   else if ( lTrunc && ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(*ptro) && ISNAME(co) )
+   else if ( lTrunc && *ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(**ptro) && ISNAME(co) )
    {
       while( ISNAME(**ptri) ) (*ptri)++;
       return 0;
    }
    return 1;
 }
-
 int strincmp (char* ptro, char** ptri )
 {
    char co, ci;

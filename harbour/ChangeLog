@@ -1,3 +1,7 @@
+19990923-23:42 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Fixed bugs, noted by Antonio Linares and Matteo Baccan
+
 19990923-13:58 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Fixed a bug with clauses definition order.
