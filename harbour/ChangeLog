@@ -8,12 +8,34 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-27 12:13 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    ! .NET IL implementation for HB_P_PUSHBYTE
+
+  Notice: This opcode is responsible for placing a byte onto the stack.
+  As all Harbour variables are going to be managed as object type (meanwhile
+  we don't implement strong typing), a box (to turn a value into an object)
+  process is also performed. We may check later on if this is needed for all
+  processes.
+
+  This test already works:
+
+  function Main()
+
+     local n := 123
+
+     ? n
+
+     ? 10
+
+  return nil
+
 2003-06-27 10:21 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     ! .NET IL implementation for HB_P_POPLOCALNEAR and HB_P_PUSHLOCALNEAR
 
-  Notice: These opcodes are resposable for loading the values on the locals and
-  also for pushing their contents onto the virtual machine stack.
+  Notice: These opcodes are responsable for loading the values on the locals and
+  also for pushing the locals contents onto the virtual machine stack.
 
   You can already run tests like this:
 
