@@ -1,3 +1,11 @@
+19990910-16:00 GMT+2 Ryszard Glab <rglab@imim.med.pl>
+
+    *source/vm/hvm.c
+	* string alias is now correctly handled
+	
+    *include/rddapi.h
+	+ added declaration for hb_rddSelectAorkAreaAlias
+	
 19990910-11:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Enabled some alias tests which fail. (Ryszard, could you take a look

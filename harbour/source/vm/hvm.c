@@ -1985,9 +1985,7 @@ static void hb_vmPopAlias( void )
       case IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         /* TODO: synchronize it with RDD API
-         hb_SelectWorkAreaAlias( pItem->item.asString.value );
-         */
+         hb_rddSelectWorkAreaAlias( pItem->item.asString.value );
          hb_itemClear( pItem );
          break;
 
@@ -2026,9 +2024,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
       case IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         /* TODO: synchronize it with RDD API
-         hb_SelectWorkAreaAlias( pAlias->item.asString.value );
-         */
+         hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
          hb_itemClear( pAlias );
          break;
 
@@ -2260,9 +2256,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
       case IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         /* TODO: synchronize it with RDD API
-         hb_SelectWorkAreaAlias( pAlias->item.asString.value );
-         */
+         hb_rddSelectWorkAreaAlias( pAlias->item.asString.value );
          hb_itemClear( pAlias );
          break;
 
@@ -2706,9 +2700,7 @@ static void hb_vmSwapAlias( void )
       case IT_STRING:
          /* Alias was evaluated from an expression, for example: (cVar)->field
           */
-         /* TODO: synchronize it with RDD API
          hb_rddSelectWorkAreaAlias( pWorkArea->item.asString.value );
-         */
          hb_itemClear( pWorkArea );
          break;
 

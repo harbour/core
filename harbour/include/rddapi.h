@@ -12,6 +12,7 @@ typedef USHORT ERRCODE;
 /* RDD virtual machine integration functions */
 
 extern int  hb_rddGetCurrentWorkAreaNumber( void );
+extern void hb_rddSelectWorkAreaAlias( char * szAlias );
 extern void hb_rddSelectWorkAreaNumber( int iArea );
 extern void hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
 extern void hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
