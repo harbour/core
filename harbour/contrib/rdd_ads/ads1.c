@@ -272,13 +272,11 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
    }
 
    /* Free all filenames */
-HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor free buf (%p)", pArea));
    if( pArea->szDataFileName )
    {
       hb_xfree( pArea->szDataFileName );
       pArea->szDataFileName = NULL;
    }
-HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor 3(%p)", pArea));
    return uiError;
 }
 
@@ -1166,7 +1164,6 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pArea->szDataFileName = hb_xgrab( strlen(pOpenInfo->abName)+1 );
       strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
-      //pArea->szDataFileName = ( char * ) pOpenInfo->abName;
       pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
       if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
       {
@@ -1186,8 +1183,11 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       if( ulRetVal != AE_SUCCESS )
       {
-         // set neterr instead (bh) commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
-         return FAILURE;
+         if ( ulRetVal == 1001 || ulRetVal == 7008)        /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
+            return FAILURE;                /* just set neterr  */
+         else
+            commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
+
       }
       pArea->hTable    = hTable;
       pArea->fShared   = pOpenInfo->fShared;
@@ -1431,7 +1431,7 @@ static ERRCODE adsOrderListRebuild( ADSAREAP pArea )
 
 static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
-   ADSHANDLE phIndex;
+   ADSHANDLE  phIndex;
    ADSHANDLE  hTableOrIndex ;
    UNSIGNED32 ulRetVal;
    UNSIGNED32 ulOptions = ADS_DEFAULT;
@@ -1486,8 +1486,13 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       hTableOrIndex = pArea->hTable;
    }
-   if ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fDescending)
-      ulOptions |= ADS_DESCENDING;
+   if ( pArea->lpdbOrdCondInfo )
+   {
+      if( pArea->lpdbOrdCondInfo->fDescending )
+         ulOptions |= ADS_DESCENDING;
+   }
+   if ( pOrderInfo->fUnique )
+      ulOptions |= ADS_UNIQUE;
 
    ulRetVal = AdsCreateIndex( hTableOrIndex, pOrderInfo->abBagName,
            pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pExprItem ),
@@ -1903,6 +1908,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 
 static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 {
+   UNSIGNED8   aucKey[ADS_MAX_KEY_LENGTH];
    HB_TRACE(HB_TR_DEBUG, ("adsSetScope(%p, %p)", pArea, sInfo));
 
    if( pArea->hOrdCurrent )

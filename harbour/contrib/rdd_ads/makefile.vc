@@ -33,9 +33,10 @@ HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 #
 
 ADS_LIB_OBJS = \
-    $(OBJ_DIR)\ads0.obj \
-    $(OBJ_DIR)\ads1.obj \
-    $(OBJ_DIR)\adsfunc.obj
+    $(OBJ_DIR)\ads0.obj    \
+    $(OBJ_DIR)\ads1.obj    \
+    $(OBJ_DIR)\adsfunc.obj \
+    $(OBJ_DIR)\adsmgmnt.obj
 
 #
 # Our default target
@@ -47,6 +48,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ads0.obj del $(OBJ_DIR)\ads0.obj
    -@if exist $(OBJ_DIR)\ads1.obj del $(OBJ_DIR)\ads1.obj
    -@if exist $(OBJ_DIR)\adsfunc.obj del $(OBJ_DIR)\adsfunc.obj
+   -@if exist $(OBJ_DIR)\adsmgmnt.obj del $(OBJ_DIR)\adsmgmnt.obj
    -@if exist $(ADS_LIB) del $(ADS_LIB)
 
 #
@@ -63,6 +65,9 @@ $(ADS_LIB) : $(ADS_LIB_OBJS)
 $(OBJ_DIR)\ads0.obj : ads0.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
     $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+
+$(OBJ_DIR)\adsmgmnt.obj : adsmgmnt.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\adsfunc.obj : adsfunc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

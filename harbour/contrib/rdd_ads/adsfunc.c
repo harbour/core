@@ -326,7 +326,8 @@ HB_FUNC( ADSGETAOFOPTLEVEL )
    if( pArea )
    {
       AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
-      hb_retni( pusOptLevel );
+      hb_retni( pusOptLevel > 65000 ? ADS_OPTIMIZED_NONE : pusOptLevel );
+            /* If no aof, returns 65,353 */
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFOPTLEVEL" );

@@ -1,3 +1,33 @@
+2001-03-23 00:45 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+      * added unique index creation support
+      * tweaked SELF_OPEN to return FAILURE only for probable sharing
+         errors, but throw a real error for everything else.
+         This way you get the information at runtime for things like
+         failure to find a server or other useful ADS error#s
+
+   * contrib/rdd_ads/adsfunc.c
+      * minor error handling in ADSGETAOFOPTLEVEL
+
+   * source/rdd/dbcmd.c
+      * fixed handling of fourth IsScoped parameter in dbSetRelation
+
+   + contrib/rdd_ads/adsmgmnt.c
+      + added wrappers for most Management functions, including statistics
+         on connections, comm success rates,
+         # of open tables/indexes/users, etc.
+         (( work in progress ))
+
+   + contrib/rdd_ads/testmg.prg
+      + simple test for management functions
+
+   * contrib/rdd_ads/Makefile
+   * contrib/rdd_ads/makefile.bc
+   * contrib/rdd_ads/makefile.vc
+      * added adsmgmnt.c to build
+
+   >>> I only use Borland; someone please check the other make files!
+
 2001-03-22 13:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/runjava/runjava.c
      + Added support for Argument Errors

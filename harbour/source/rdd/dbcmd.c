@@ -30,7 +30,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
-l *
+ *
  */
 
 #include <ctype.h>
@@ -2729,7 +2729,7 @@ HB_FUNC( ORDSCOPE )
 
    if( s_pCurrArea )
    {
-      if( !ISNUM( 1 ) || ( !ISNIL( 2 ) && hb_parinfo( 2 ) != HB_IT_STRING ) )
+      if( !ISNUM( 1 ) || (!ISNIL(2) && !( ISCHAR(2) || ISNUM(2) || ISDATE(2) || ISLOG(2) )))
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDSCOPE" );
          return;
@@ -2746,7 +2746,10 @@ HB_FUNC( ORDSCOPE )
          if ( ISNIL( 2 ) )                /* explicitly passed NIL, clear it */
             sInfo.scopeValue = NULL;
          else
-            sInfo.scopeValue = (BYTE*) hb_parc( 2 );
+            sInfo.scopeValue = (BYTE*) (ISCHAR( 2 ) ? hb_parc( 2 ) :
+                                       (ISDATE( 2 ) ? hb_pards( 2 ) : hb_parc( 2 ) ) ) ;
+         /* this is a temp fix until we decide if the item should be passed down or "parsed" here */
+
 
          SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
       }else
@@ -2796,7 +2799,7 @@ HB_FUNC( DBSETRELATION )
 
       if( hb_pcount() < 2 || ( !( hb_parinfo( 1 ) & HB_IT_NUMERIC ) &&
           ( hb_parinfo( 1 ) != HB_IT_STRING ) ) ||
-          ( hb_pcount() > 3 && !( hb_parinfo( 4 ) & HB_IT_LOGICAL ) ) )
+          !( ISNIL( 4 ) || ISLOG( 4 ) )  )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "DBSETRELATION" );
          return;

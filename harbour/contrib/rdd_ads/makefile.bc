@@ -11,15 +11,17 @@ BIN_DIR = ..\..\bin\b32
 OBJ_DIR = ..\..\obj\b32
 LIB_DIR = ..\..\lib\b32
 
-$(LIB_DIR)\rddads.lib : \
-   $(OBJ_DIR)\ads0.obj \
-   $(OBJ_DIR)\ads1.obj \
-   $(OBJ_DIR)\adsfunc.obj
+$(LIB_DIR)\rddads.lib :   \
+   $(OBJ_DIR)\ads0.obj    \
+   $(OBJ_DIR)\ads1.obj    \
+   $(OBJ_DIR)\adsfunc.obj \
+   $(OBJ_DIR)\adsmgmnt.obj
 
-$(OBJ_DIR)\ads0.c      : ads0.prg
-$(OBJ_DIR)\ads0.obj    : $(OBJ_DIR)\ads0.c
-$(OBJ_DIR)\ads1.obj    : ads1.c
-$(OBJ_DIR)\adsfunc.obj : adsfunc.c
+$(OBJ_DIR)\ads0.c       : ads0.prg
+$(OBJ_DIR)\ads0.obj     : $(OBJ_DIR)\ads0.c
+$(OBJ_DIR)\ads1.obj     : ads1.c
+$(OBJ_DIR)\adsfunc.obj  : adsfunc.c
+$(OBJ_DIR)\adsmgmnt.obj : adsmgmnt.c
 
 .c.obj:
   bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -o$@ $<
