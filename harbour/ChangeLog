@@ -1,3 +1,9 @@
+20000209-22:37 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + /D_Windows to compiler flags
+   * source/rtl/tone.c
+     * change _WINDOWS_ back to _Windows
+
 20000210-15:15 GMT+3 Alexander Kresin
    * source/rtl/setfunc.prg
      * minor bug fixed:
