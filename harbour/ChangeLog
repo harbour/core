@@ -1,3 +1,7 @@
+19990901-17:59 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbcmd.c
+     + Added Lock() function
+
 19990901-17:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/set.c
     funclist.txt

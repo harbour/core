@@ -98,6 +98,7 @@ HARBOUR HB_FLOCK( void );
 HARBOUR HB_FOUND( void );
 HARBOUR HB_HEADER( void );
 HARBOUR HB_LASTREC( void );
+HARBOUR HB_LOCK( void );
 HARBOUR HB_LUPDATE( void );
 HARBOUR HB_NETERR( void );
 HARBOUR HB_RDDLIST( void );
@@ -1584,6 +1585,23 @@ HARBOUR HB_HEADER( void )
 HARBOUR HB_LASTREC( void )
 {
    HB_RECCOUNT();
+}
+
+HARBOUR HB_LOCK( void )
+{
+   DBLOCKINFO pLockInfo;
+
+   pLockInfo.fResult = FALSE;
+   if( pCurrArea )
+   {
+      pLockInfo.itmRecID = 0;
+      pLockInfo.uiMethod = FILE_LOCK;
+      SELF_LOCK( ( AREAP ) pCurrArea->pArea, &pLockInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, 0, "LOCK" );
+
+   hb_retl( pLockInfo.fResult );
 }
 
 HARBOUR HB_LUPDATE( void )
