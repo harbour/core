@@ -59,6 +59,9 @@
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
 
+/* Information structure hold by DATA aCallStack
+   aCallStack = { { cFunctionName, aLocalVariables, nStartLine }, ... } */
+
 #pragma -es0
 
 #include "hbclass.ch"
@@ -115,7 +118,8 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                     AIns( s_oDebugger:aCallStack, 1 )
                     // same as aCallStack[ 1 ] = { cProcName, {} }
                     s_oDebugger:aCallStack[ 1 ] = { SubStr( cModuleName,;
-                                                  RAt( ":", cModuleName ) + 1 ), {} }
+                                             RAt( ":", cModuleName ) + 1 ), {}, nil }
+                                             // nil means no line number stored yet
                  endif
                  s_oDebugger:LoadVars()
               endif
@@ -145,7 +149,8 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                     if !s_oDebugger:lCodeblock
                        ASize( s_oDebugger:aCallStack, Len( s_oDebugger:aCallStack ) + 1 )
                        AIns( s_oDebugger:aCallStack, 1 )
-                       s_oDebugger:aCallStack[ 1 ] := { cProcName, {} }
+                       // nil means no line number stored yet
+                       s_oDebugger:aCallStack[ 1 ] := { cProcName, {}, nil }
                        s_oDebugger:lCodeblock := .T.
                     endif
                  endif
@@ -243,6 +248,7 @@ CLASS TDebugger
    METHOD BarDisplay()
    METHOD BuildCommandWindow()
 
+   METHOD CallStackProcessKey( nKey )
    METHOD ClrModal() INLINE iif( ::lMonoDisplay, "N/W, W+/W, W/N, W+/N",;
                                 "N/W, R/W, N/BG, R/BG" )
 
@@ -462,19 +468,95 @@ METHOD BuildCommandWindow() CLASS TDebugger
 
 return nil
 
+METHOD CallStackProcessKey( nKey ) CLASS TDebugger
+
+   local n, nSkip, lUpdate := .f.
+
+   do case
+      case nKey == K_HOME
+           if ::oBrwStack:Cargo > 1
+              ::oBrwStack:GoTop()
+              ::oBrwStack:ForceStable()
+              lUpdate = .t.
+           endif
+
+      case nKey == K_END
+           if ::oBrwStack:Cargo < Len( ::aCallStack )
+              ::oBrwStack:GoBottom()
+              ::oBrwStack:ForceStable()
+              lUpdate = .t.
+           endif
+
+      case nKey == K_UP
+           if ::oBrwStack:Cargo > 1
+              ::oBrwStack:Up()
+              ::oBrwStack:ForceStable()
+              lUpdate = .t.
+           endif
+
+      case nKey == K_DOWN
+           if ::oBrwStack:Cargo < Len( ::aCallStack )
+              ::oBrwStack:Down()
+              ::oBrwStack:ForceStable()
+              lUpdate = .t.
+           endif
+
+      case nKey == K_PGUP
+           ::oBrwStack:PageUp()
+           ::oBrwStack:ForceStable()
+           lUpdate = .t.
+
+      case nKey == K_PGDN
+           ::oBrwStack:PageDown()
+           ::oBrwStack:ForceStable()
+           lUpdate = .t.
+
+      case nKey == K_LBUTTONDOWN
+           if ( nSkip := MRow() - ::oWndStack:nTop - ::oBrwStack:RowPos ) != 0
+              if nSkip > 0
+                 for n = 1 to nSkip
+                    ::oBrwStack:Down()
+                    ::oBrwStack:Stabilize()
+                 next
+              else
+                 for n = 1 to nSkip + 2 step -1
+                    ::oBrwStack:Up()
+                    ::oBrwStack:Stabilize()
+                 next
+              endif
+              ::oBrwStack:ForceStable()
+           endif
+           lUpdate = .t.
+   endcase
+
+   if lUpdate
+      // source line for a function
+      if ::aCallStack[ ::oBrwStack:Cargo ][ 3 ] != nil
+         ::GotoLine( ::aCallStack[ ::oBrwStack:Cargo ][ 3 ] )
+      else
+         ::GotoLine( 1 )
+      endif
+   endif
+
+return nil
+
 METHOD CodeWindowProcessKey( nKey ) CLASS TDebugger
 
    do case
       case nKey == K_HOME
            ::oBrwText:GoTop()
-           SetCursor( SC_SPECIAL1 )
+           if ::oWndCode:lFocused
+              SetCursor( SC_SPECIAL1 )
+           endif
 
       case nKey == K_END
            ::oBrwText:GoBottom()
            ::oBrwText:nCol = ::oWndCode:nLeft + 1
            ::oBrwText:nFirstCol = ::oWndCode:nLeft + 1
            SetPos( Row(), ::oWndCode:nLeft + 1 )
-           SetCursor( SC_SPECIAL1 )
+           if ::oWndCode:lFocused
+              SetCursor( SC_SPECIAL1 )
+           endif
 
       case nKey == K_LEFT
            ::oBrwText:Left()
@@ -778,13 +860,13 @@ METHOD EditVar( nVar ) CLASS TDebugger
          otherwise
             do case
                case cVarType == "Local"
-                  __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
+                  __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &cVarStr )
 
                case cVarType == "Static"
-                  __vmVarSSet( ::aVars[ nVar ][ 2 ], &uVarValue )
+                  __vmVarSSet( ::aVars[ nVar ][ 2 ], &cVarStr )
 
                otherwise
-                  ::aVars[ nVar ][ 2 ] := &uVarValue
+                  ::aVars[ nVar ][ 2 ] := &cVarStr
                   &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
             endcase
       endcase
@@ -904,7 +986,6 @@ METHOD HandleEvent() CLASS TDebugger
               nKey == K_END .or. nKey == K_ENTER .or. nKey == K_PGDN .or. nKey == K_PGUP
               oWnd := ::aWindows[ ::nCurrentWindow ]
               oWnd:KeyPressed( nKey )
-
 
          case nKey == K_F1
               ::ShowHelp()
@@ -1089,23 +1170,25 @@ METHOD ShowCallStack() CLASS TDebugger
 
       ::oWndStack := TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
                                      "Calls" )
+      ::oWndStack:bKeyPressed  := { | nKey | ::CallStackProcessKey( nKey ) }
+      ::oWndStack:bLButtonDown := { | nKey | ::CallStackProcessKey( K_LBUTTONDOWN ) }
+
       AAdd( ::aWindows, ::oWndStack )
       ::nCurrentWindow = Len( ::aWindows )
 
       ::oBrwStack := TBrowseNew( 2, MaxCol() - 14, MaxRow() - 7, MaxCol() - 1 )
       ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
-      ::oBrwStack:GoTopBlock := { || n := 1 }
-      ::oBrwStack:GoBottomBlock := { || n := Len( ::aCallStack ) }
-      ::oBrwStack:SkipBlock := { | nSkip, nPos | nPos := n,;
-                             n := iif( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
-                             Max( 1, n + nSkip ) ), n - nPos }
+      ::oBrwStack:GoTopBlock := { || ::oBrwStack:Cargo := 1 }
+      ::oBrwStack:GoBottomBlock := { || ::oBrwStack:Cargo := Len( ::aCallStack ) }
+      ::oBrwStack:SkipBlock = { | nSkip, nOld | nOld := ::oBrwStack:Cargo,;
+                  ::oBrwStack:Cargo += nSkip,;
+                  ::oBrwStack:Cargo := Min( Max( ::oBrwStack:Cargo, 1 ),;
+                  Len( ::aCallStack ) ), ::oBrwStack:Cargo - nOld }
 
       ::oBrwStack:Cargo := 1 // Actual highligthed row
-      ::oBrwStack:autolite := .F.
 
-      ::oBrwStack:AddColumn( oCol:=TBColumnNew( "",  { || PadC( ::aCallStack[ n ][ 1 ], 14 ) } ) )
-      ocol:ColorBlock := { || { iif( n == ::oBrwStack:Cargo, 2, 1 ), 3 } }
-      ocol:Defcolor :=    { 2,1 }
+      ::oBrwStack:AddColumn( oCol := TBColumnNew( "",;
+                      { || PadC( ::aCallStack[ ::oBrwStack:Cargo ][ 1 ], 14 ) } ) )
 
       ::oWndStack:bPainted := { || ::oBrwStack:ColorSpec := __DbgColors()[ 2 ] + "," + ;
                                   __DbgColors()[ 5 ] + "," + __DbgColors()[ 4 ],;
@@ -1214,8 +1297,8 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
    endif
 
    if ::lShowLocals
-      for n := 1 to Len( ::aCallStack[ 1 ][ 2 ] )
-         AAdd( ::aVars, ::aCallStack[ 1 ][ 2 ][ n ] )
+      for n := 1 to Len( ::aCallStack[ ::oBrwStack:Cargo ][ 2 ] )
+         AAdd( ::aVars, ::aCallStack[ ::oBrwStack:Cargo ][ 2 ][ n ] )
       next
    endif
 
@@ -1265,7 +1348,7 @@ METHOD ShowVars() CLASS TDebugger
       ::oWndVars:Show( .f. )
       AAdd( ::aWindows, ::oWndVars )
       ::oWndVars:bLButtonDown := { | nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
-      ::oWndVars:bLDblClick   := { | nMRow, nMCol | ::EditVar( n ) }
+      ::oWndVars:bLDblClick   := { | nMRow, nMCol | ::EditVar( ::oBrwVars:Cargo[ 1 ] ) }
       ::oWndVars:bPainted     := { || if(Len( ::aVars ) > 0, ( ::obrwVars:ForceStable(),RefreshVarsS(::oBrwVars) ),) }
    else
 
@@ -1382,7 +1465,8 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
 
    ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
    AIns( ::aCallStack, 1 )
-   ::aCallStack[ 1 ] := { cFunction, {} } // function name and locals array
+   // nil means that no line number is stored yet
+   ::aCallStack[ 1 ] := { cFunction, {}, nil } // function name and locals array
 
    if !::lGo
       if ::oWndStack != nil
@@ -1594,11 +1678,17 @@ METHOD GotoLine( nLine ) CLASS TDebugger
    nRow = Row()
    nCol = Col()
 
+   // no source code line stored yet
+   if ::oBrwStack != nil .and. Len( ::aCallStack ) > 0 .and. ;
+      ::aCallStack[ ::oBrwStack:Cargo ][ 3 ] == nil
+      ::aCallStack[ ::oBrwStack:Cargo ][ 3 ] = nLine
+   endif
+
    if ::oBrwStack != nil .and. ! ::oBrwStack:Stable
       ::oBrwStack:ForceStable()
    endif
 
-   if SetCursor() != SC_SPECIAL1
+   if ::oWndCode:lFocused .and. SetCursor() != SC_SPECIAL1
       SetPos( nRow, nCol )
       SetCursor( SC_SPECIAL1 )
    endif
