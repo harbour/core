@@ -1,4 +1,16 @@
-20000504-22:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+20000506-16:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbpcode.c
+     + Added logic to hb_compStrongType() to support object methods and properties.
+     * Enhanced logic of array checks.
+
+   * include/hberrors.h
+     ! Added #define HB_COMP_WARN_ARRAY_ASSIGN_SUSPECT
+
+   * source/compiler/hbgenerr.c
+     * Added : 4Suspicious type in assignment to declared array element expected: \'%s\'"
+
+20000506-12:10 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/hbpcode.c
      + Added logic to allow PLUS an MINUS to accept any type as long as same.
@@ -66,10 +78,10 @@
      + Added "Adaptive Type Checking" to control type mismatch in undeclared variables.
 
    * include/hberrors.h
-     ! Added #define HB_COMP_ARRAY_ASSIGN_TYPE to HB_COMP_WARN_ARRAY_ASSIGN_TYPE
+     ! Modified #define HB_COMP_ARRAY_ASSIGN_TYPE to HB_COMP_WARN_ARRAY_ASSIGN_TYPE
 
    * source/compiler/hbgenerr.c
-     * Added : Moved "Suspecious ..." to level w4
+     * Moved "Suspecious ..." to level w4
 
    * tests/testwarn.prg
      + Added code to demonstrate "Adaptive Type Checking".
