@@ -56,7 +56,11 @@
 
 #include "hbapi.h"
 
+#if defined(__DJGPP__)
+#include <libm/math.h>
+#else
 #include <math.h>
+#endif
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -82,6 +86,9 @@ extern "C" {
    #define HB_MATH_HANDLER
    #define matherr _matherr
    #define exception _exception
+#elif defined(__DJGPP__)
+   #define HB_MATH_HANDLER
+   _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #endif
 
 typedef struct _HB_MATH_EXCEPTION
