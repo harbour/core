@@ -1,3 +1,18 @@
+20000201-13:00 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+    *source/compiler/harbour.y
+    *source/compiler/genc.c
+	* fixed GPF (core dump) if private/public variable was initialized
+	  with a codeblock with a local parameter, e.g.
+	  PRIVATE var:={ | x | expression }
+	* static variables cannot be initialized with a codeblock which
+	  uses a local variable, e.g.
+	  LOCAL locvar
+	  STATIC stavar:={ || locvar }
+	  Notice that Clipper is compiling it however it generates a runtime
+	  error if such codeblock is evaluated.
+
 20000131-21:20 GMT+1 Victor Szakats <info@szelvesz.hu>
   * include/hbextern.ch
     source/runner/stdalone/external.prg

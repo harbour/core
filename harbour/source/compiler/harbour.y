@@ -88,6 +88,7 @@ static void hb_compVariableDim( char *, HB_EXPR_PTR );
 /* Misc functions defined in harbour.c */
 extern void hb_compGenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 );
 extern void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2);
+void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
 
 
 #ifdef HARBOUR_YYDEBUG
@@ -1046,42 +1047,39 @@ ExtVarDef  : VarDef
                }
            ;
 
-VarDef     : IdentName AsType
+VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
                {
                   if( hb_comp_iVarScope == VS_STATIC )
                   {
                      hb_compStaticDefStart();   /* switch to statics pcode buffer */
-                     hb_compVariableAdd( $1, $2 );
                      hb_compStaticDefEnd();
                   }
                   else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
                   {
-                     hb_compVariableAdd( $1, $2 );
                      hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), FALSE );
                   }
-                  else
-                     hb_compVariableAdd( $1, $2 );
                }
 
-           | IdentName AsType INASSIGN Expression
+           | IdentName AsType { hb_compVariableAdd( $1, $2 );
+                                 $<iNumber>$ = hb_comp_iVarScope;
+                              }
+             INASSIGN Expression
                {
+                  hb_comp_iVarScope = $<iNumber>3;
                   if( hb_comp_iVarScope == VS_STATIC )
                   {
                      hb_compStaticDefStart();   /* switch to statics pcode buffer */
-                     hb_compVariableAdd( $1, $2 );
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $4 ) ) );
+                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1 ), $5 ) ) );
                      hb_compStaticDefEnd();
                   }
                   else if( hb_comp_iVarScope == VS_PUBLIC || hb_comp_iVarScope == VS_PRIVATE )
                   {
-                     hb_compExprDelete( hb_compExprGenPush( $4 ) );
-                     hb_compVariableAdd( $1, $2 );
+                     hb_compExprDelete( hb_compExprGenPush( $5 ) );
                      hb_compRTVariableAdd( hb_compExprNewRTVar( $1, NULL ), TRUE );
                   }
                   else
                   {
-                     hb_compVariableAdd( $1, $2 );
-                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1 ), $4 ) ) );
+                     hb_compExprDelete( hb_compExprGenStatement( hb_compExprAssign( hb_compExprNewVar( $1 ), $5 ) ) );
                   }
                }
 
@@ -1437,6 +1435,9 @@ int hb_compYACCMain( char * szName )
       hb_compFunctionAdd( hb_strupr( hb_strdup( "" ) ), FS_PUBLIC, FUN_PROCEDURE );
 
    yyparse();
+
+   /* fix all previous function returns offsets */
+   hb_compFixReturns();
 
    hb_compExternGen();       /* generates EXTERN symbols names */
 

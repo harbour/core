@@ -747,7 +747,14 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                   fprintf( yyc, "\t%i, %i,",
                            pFunc->pCode[ lPCodePos ],
                            pFunc->pCode[ lPCodePos + 1 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, w )->szName );
+                  /* NOTE:
+                   * When a codeblock is used to initialize a static variable
+                   * the the names of local variables cannot be determined
+                   * because at the time of C code generation we don't know
+                   * in which function was defined this local variable
+                   */
+                  if( (pFunc->cScope & (FS_INIT | FS_EXIT)) != (FS_INIT | FS_EXIT) )
+                     if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, w )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos +=2;
                }

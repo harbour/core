@@ -69,7 +69,7 @@ static void hb_compGenFieldPCode( BYTE , int, char *, PFUNCTION );      /* gener
 static void hb_compGenVariablePCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 static void hb_compGenVarPCode( BYTE , char * );    /* generates the pcode for undeclared variable */
 
-static void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
+void hb_compFixReturns( void ); /* fixes all last defined function returns jumps offsets */
 static PFUNCTION hb_compFunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
 static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 
@@ -220,9 +220,6 @@ int main( int argc, char * argv[] )
       {
          /* we create the output file name */
          hb_compOutputFile();
-
-         /* fix all previous function returns offsets */
-         hb_compFixReturns();
 
          if( ! hb_comp_bQuiet )
          {
@@ -378,13 +375,6 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
       --hb_comp_iLine;
       hb_compGenError( hb_comp_szErrors, 'E', ERR_FOLLOWS_EXEC, ( hb_comp_iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
    }
-
-   /* When static variable is added then hb_comp_functions.pLast points to function
-    * that will initialise variables. The function where variable is being
-    * defined is stored in pOwner member.
-    */
-   if( hb_comp_iVarScope == VS_STATIC )
-      pFunc = pFunc->pOwner;
 
    /* Check if a declaration of duplicated variable name is requested */
    if( pFunc->szName )
@@ -947,8 +937,12 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
    PFUNCTION pFunc = hb_comp_functions.pLast;
 
    if( pFunc->szName )
+   {
       /* we are in a function/procedure -we don't need any tricks */
+      if( pFunc->pOwner )
+         pFunc =pFunc->pOwner;
       return hb_compVariableGetPos( pFunc->pLocals, szVarName );
+   }
    else
    {
       /* we are in a codeblock */
@@ -960,10 +954,21 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
          * where the codeblock is defined
          */
          PFUNCTION pOutBlock = pFunc;   /* the outermost codeblock */
+         BOOL bStatic;
 
          pFunc = pFunc->pOwner;
          while( pFunc )
          {
+            bStatic = FALSE;
+            if( ( pFunc->cScope & (FS_INIT | FS_EXIT) ) == (FS_INIT | FS_EXIT) )
+            {
+               /* we are in a codeblock used to initialize a static variable -
+                * skip to a function where this static variable was declared
+                */
+               pFunc = pFunc->pOwner;
+               bStatic = TRUE;
+            }
+
             iVar = hb_compVariableGetPos( pFunc->pLocals, szVarName );
             if( iVar )
             {
@@ -974,6 +979,25 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                   * the current codeblock is defined
                   */
                   hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
+                  return iVar;
+               }
+               else if( bStatic )
+               {
+                  /* local variable was referenced in a codeblock during 
+                   * initialization of static variable. This cannot be supported
+                   * because static variables are initialized at program
+                   * startup when there is no local variables yet - hence we
+                   * cannot detach this local variable
+                   * For example:
+                   * LOCAL locvar
+                   * STATIC stavar:={ | x | locvar}
+                   * 
+                   * NOTE: Clipper creates such a codeblock however at the
+                   * time of codeblock evaluation it generates a runtime error:
+                   * 'bound error: array acccess'
+                   * Called from: (b)STATICS$(0)
+                   */
+                  hb_compGenError( hb_comp_szErrors, 'E', ERR_ILLEGAL_INIT, "(b)", szVarName );
                   return iVar;
                }
                else
@@ -1337,7 +1361,7 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
 void hb_compGenFieldPCode( BYTE bPCode, int wVar, char * szVarName, PFUNCTION pFunc )
 {
    PVAR pField;
-   
+
    if( ! pFunc->szName )
    {
       /* we have to check the list of nested codeblock up to a function
@@ -1884,7 +1908,7 @@ static void hb_compCheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
    }
 }
 
-static void hb_compFixReturns( void ) /* fixes all last defined function returns jumps offsets */
+void hb_compFixReturns( void ) /* fixes all last defined function returns jumps offsets */
 {
    if( hb_comp_iWarnings && hb_comp_functions.pLast )
    {
