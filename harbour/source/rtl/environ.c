@@ -54,15 +54,8 @@ HARBOUR OS()
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__)
 
 #if defined(_Windows)
-   hb_os = "Windows 95/98";
-/*   _AX = 0x160A;
-   geninterrupt(0x2F);
-   if(_AX == 0)
-   { */
-      hb_osmajor  = _osmajor ; /* _BX / 256; */
-      hb_osminor  = _osminor ; /* _BX % 256; */
-      hb_osletter = 0;
-/*   } */
+   /* TODO: Determine the Windows type (32s/95/98/NT) and version */
+   hb_os = "Windows";
 #else
    /* detect OS/2 */
    if(_osmajor >= 10)

@@ -1,3 +1,8 @@
+19990602-20:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/environ.c
+    - Modified #ifdef _Windows section to return "Windows"
+      instead of "Windows 95/98".
+
 19990602-18:20 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/strings.c
     - Changed if( lLen > lSubLen ) to if( lLen >= lSubLen )
