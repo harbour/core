@@ -108,7 +108,7 @@ FUNCTION dbEval( bBlock, bFor, bWhile, nNext, nRecord, lRest )
          RETURN NIL
       ENDIF
 
-      IF ISNUM( nRecord )
+      IF ISNUMBER( nRecord )
 
          IF nRecord >= 1 .AND. nRecord <= LastRec()
             dbGoto( nRecord )

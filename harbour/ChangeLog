@@ -1,3 +1,9 @@
+19991127-15:57 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rdd/dbeval.prg
+    * ISNUM() -> ISNUMBER
+  * makefile.vc
+    + dbeval.prg
+
 19991127-15:57 EST Paul Tucker <ptucker@sympatico.ca>
   * Clipper does _not_ quit if //noalert is specified and alert() is called.
   * source/rtl/alert.prg
