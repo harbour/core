@@ -87,7 +87,7 @@ HB_FUNC( LIBFREE )
  * Syntax: HB_DllDo( <cFuncName> [,<params...>] ) --> [<uResult>]
  */
 
-HB_FUNC( HB_DLLDO )
+HB_FUNC( HB_LIBDO )
 {
    PHB_DYNS pDynSym = hb_dynsymFind( hb_strupr( hb_parc( 1 ) ) );
 
