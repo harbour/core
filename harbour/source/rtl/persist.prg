@@ -57,11 +57,54 @@ CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
 
+   METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( MemoRead( cFileName ) )
+
+   METHOD LoadFromText( cObjectText )
+
    METHOD SaveToText( cObjectName )
 
    METHOD SaveToFile( cFileName ) INLINE MemoWrit( cFileName, ::SaveToText() )
 
 ENDCLASS
+
+METHOD LoadFromText( cObjectText ) CLASS HBPersistent
+
+   local nLines := MLCount( cObjectText )
+   local nLine  := 1, cLine, cToken
+   local lStart := .t., aArray
+   private oSelf
+
+   while Empty( MemoLine( cObjectText,, nLine ) ) // We skip the first empty lines
+      nLine++
+   end
+
+   while nLine <= nLines
+      cLine  = MemoLine( cObjectText,, nLine )
+
+      do case
+         case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "OBJECT"
+              if lStart
+                 lStart = .f.
+              else
+              endif
+
+         case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "ARRAY"
+              if Left( cToken := LTrim( __StrToken( cLine, 2 ) ), 2 ) == "::"
+                 __ObjSendMsg( Self, "_" + SubStr( cToken, 3 ), Array( Val( __StrToken( cLine, 4 ) ) ) )
+              endif
+
+         case Left( cToken := LTrim( __StrToken( cLine, 1, "=" ) ), 2 ) == "::"
+              M->oSelf = Self
+              cLine = StrTran( cLine, "::", "oSelf:" )
+              cLine = StrTran( cLine, "=", ":=" )
+              &( cLine )
+
+      endcase
+
+      nLine++
+   end
+
+return nil
 
 METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
