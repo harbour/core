@@ -70,6 +70,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
       pTemp->type = HB_IT_STRING;
       pTemp->item.asString.length = strlen( pItem->item.asSymbol.value->szName ) + 2;
       pTemp->item.asString.value = ( char * ) hb_xgrab( pTemp->item.asString.length + 1 );
+      pTemp->item.asString.bPcode = FALSE;
 
       sprintf( pTemp->item.asString.value, "[%s]", pItem->item.asSymbol.value->szName );
 
