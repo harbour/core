@@ -4,6 +4,9 @@
    * tests/Makefile
      + Test program added for Language API
 
+   - source/rtl/msgxxx.c
+     - Removed.
+
 20000414-22:03 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * make_gnu.*
