@@ -1,4 +1,4 @@
-; 
+;
 ; $Id$
 ;
 ; The Harbour Project
@@ -55,7 +55,7 @@ BIN2L                   ;R;
 BIN2W                   ;R;
 BOF                     ;R;
 BREAK                   ;R;
-BROWSE                  ;N;
+BROWSE                  ;S;
 CDOW                    ;R;
 CHR                     ;R;
 CMONTH                  ;R;

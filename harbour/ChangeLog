@@ -1,3 +1,13 @@
+19991230-08:22 GMT+2 Chen Kedem <niki@actcom.co.il>
+  * source/rtl/text.prg
+    + doc for __TextSave()
+    + doc for __TextRestore()
+  * source/rtl/xsavescr.prg
+    + doc for __XSaveScreen()
+    + doc for __XRestScreen()
+  * doc/funclist.txt
+    * BROWSE() marked as S (not yet ready, missing EDIT mode)
+
 1999-12-29 19:00 EDT David G. Holm <dholm@jsd-llc.com>
 
    * doc/gmake.txt

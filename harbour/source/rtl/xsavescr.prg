@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -33,13 +33,122 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    __XSaveScreen() documentation
+ *    __XRestScreen() documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 STATIC s_cScrn
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __XSaveScreen()  (SAVE SCREEN command)
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Save whole screen image and coordinate to an internal buffer
+ *  $SYNTAX$
+ *      __XSaveScreen() --> NIL
+ *
+ *      or
+ *
+ *      SAVE SCREEN
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      __XSaveScreen() always return NIL.
+ *  $DESCRIPTION$
+ *      __XSaveScreen() save the image of the whole screen into an internal
+ *      buffer, it also save current cursor position. The information could
+ *      later be restored by __XRestScreen(). Each call to __XSaveScreen()
+ *      overwrite the internal buffer.
+ *
+ *      SAVE SCREEN command is preprocessed into __XSaveScreen() function
+ *      during compile time. Note that SAVE SCREEN TO is preprocessed into
+ *      SAVESCREEN() function.
+ *
+ *      __XSaveScreen() is a compatibility function, it is superseded by
+ *      SAVESCREEN() which allow you to save part or all the screen into a
+ *      variable.
+ *  $EXAMPLES$
+ *      // save the screen, display list of files than restore the screen
+ *      SAVE SCREEN
+ *      DIR *.*
+ *      WAIT
+ *      RESTORE SCREEN
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()
+ *  $PLATFORMS$
+ *      __XSaveScreen() is part of the GT API, and supported only by some
+ *      platforms.
+ *  $FILES$
+ *  $SEEALSO$
+ *      RESTORE SCREEN, RESTSCREEN(), SAVESCREEN()
+ *  $END$
+ */
 
 PROCEDURE __XSAVESCREEN()
 
    s_cScrn := { Row(), Col(), SaveScreen() }
 
    RETURN
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __XRestScreen()  (RESTORE SCREEN command)
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Restore screen image and coordinate from an internal buffer
+ *  $SYNTAX$
+ *      __XRestScreen() --> NIL
+ *
+ *      or
+ *
+ *      RESTORE SCREEN
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      __XRestScreen() always return NIL.
+ *  $DESCRIPTION$
+ *      __XRestScreen() restore saved image of the whole screen from an
+ *      internal buffer that was saved by __XSaveScreen(), it also restore
+ *      cursor position. After a call to __XRestScreen() the internal buffer
+ *      is cleared.
+ *
+ *      RESTORE SCREEN command is preprocessed into __XRestScreen() function
+ *      during compile time. Note that RESTORE SCREEN FROM is preprocessed
+ *      into RESTSCREEN() function.
+ *
+ *      __XRestScreen() is a compatibility function, it is superseded by
+ *      RESTSCREEN() which allow you to restore the screen from a variable.
+ *  $EXAMPLES$
+ *      // save the screen, display list of files than restore the screen
+ *      SAVE SCREEN
+ *      DIR *.*
+ *      WAIT
+ *      RESTORE SCREEN
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __XRestScreen() works exactly like CA-Clipper's __XRestScreen()
+ *  $PLATFORMS$
+ *      __XRestScreen() is part of the GT API, and supported only by some
+ *      platforms.
+ *  $FILES$
+ *  $SEEALSO$
+ *      RESTSCREEN(), SAVE SCREEN, SAVESCREEN()
+ *  $END$
+ */
 
 PROCEDURE __XRESTSCREEN()
 

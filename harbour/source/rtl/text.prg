@@ -33,12 +33,55 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    __TextSave() documentation
+ *    __TextRestore() documentation
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "set.ch"
 
 STATIC s_cFile
 STATIC s_lOldPrinter
 STATIC s_lOldExtra
 STATIC s_cOldExtraFile
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __TextSave()
+ *  $CATEGORY$
+ *      Internal
+ *  $ONELINER$
+ *      Redirect console output to printer or a file and save old settings
+ *  $SYNTAX$
+ *      __TextSave( <cFile> ) --> NIL
+ *  $ARGUMENTS$
+ *      <cFile> is either "PRINTER" (note the uppercase) in which console
+ *      output is SET to PRINTER, or a name of a text file with a default
+ *      ".txt" extension, that is used to redirect console output.
+ *  $RETURNS$
+ *      __TextSave() always return NIL.
+ *  $DESCRIPTION$
+ *      __TextSave() is used in the preprocessing of the TEXT TO command to
+ *      redirect the console output while saving old settings that can be
+ *      restored later by __TextRestore().
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __TextSave() is an Undocumented CA-Clipper function
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      SET(), SET ALTERNATE, SET PRINTER, TEXT, __TextRestore()
+ *  $END$
+ */
 
 PROCEDURE __TextSave( cFile )
 
@@ -53,6 +96,35 @@ PROCEDURE __TextSave( cFile )
 
    RETURN
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __TextRestore()
+ *  $CATEGORY$
+ *      Internal
+ *  $ONELINER$
+ *      Restore console output settings as saved by __TextSave()
+ *  $SYNTAX$
+ *      __TextRestore() --> NIL
+ *  $ARGUMENTS$
+ *      none.
+ *  $RETURNS$
+ *      __TextRestore() always return NIL.
+ *  $DESCRIPTION$
+ *      __TextRestore() is used in the preprocessing of the TEXT TO command
+ *      to restore console output settings that were previously saved by
+ *      __TextSave().
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *  $COMPLIANCE$
+ *      __TextRestore() is an Undocumented CA-Clipper function
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      SET(), SET ALTERNATE, SET PRINTER, TEXT, __TextSave()
+ *  $END$
+ */
+
 PROCEDURE __TextRestore()
 
    IF s_cFile == "PRINTER"
@@ -63,4 +135,3 @@ PROCEDURE __TextRestore()
    ENDIF
 
    RETURN
-
