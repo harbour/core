@@ -1108,6 +1108,7 @@ return Get():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 /* NOTE: Same as _GET_() */
 
 FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+
    LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
 
    uVar := uVar // Suppress unused variable warning
@@ -1115,11 +1116,29 @@ FUNCTION __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
 
-   RETURN oGet
+RETURN oGet
+
+FUNCTION __GETA( aBaseVar, cVarName, cPicture, bValid, bWhen, bSetGet, anIndex )
+
+   LOCAL oGet, cIndex := '', nLen := Len( anIndex ), Counter
+
+   FOR Counter := 1 TO nLen
+      cIndex += '[' + LTrim( Str( anIndex[ Counter ] ) ) + ']'
+   NEXT
+
+   bSetGet := {|x| M->__aArray := aBaseVar, IIF( x == NIL, M->&( "__aArray" + cIndex ), M->&( "__aArray" + cIndex ) := x ) }
+
+   oGet := Get():New(,, bSetGet, cVarName, cPicture )
+
+   oGet:PreBlock := bWhen
+   oGet:PostBlock := bValid
+
+RETURN oGet
 
 /* NOTE: Same as __GET() */
 
 FUNCTION _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+
    LOCAL oGet := Get():New(,, bSetGet, cVarName, cPicture )
 
    uVar := uVar // Suppress unused variable warning

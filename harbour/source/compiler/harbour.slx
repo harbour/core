@@ -265,7 +265,8 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "STEP"            		) AS_TOKEN( HB_STEP            ),
                      LEX_WORD( "TO"              		) AS_TOKEN( HB_TO              ),
                      LEX_WORD( "WITH"              		) AS_TOKEN( HB_WITH            ),
-                     LEX_WORD( "_FIELD"          		) AS_TOKEN( FIELD              )
+                     LEX_WORD( "_FIELD"          		) AS_TOKEN( FIELD              ),
+                     LEX_WORD( "_GET_"          		) AS_TOKEN( GET                )
                    };
 
 /* Intermediate Reductions when still ambigious or need further reductions. */
@@ -380,8 +381,11 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( OPTIONAL    , '@'         , 0      , 0          ) PASS_THROUGH(),
                     IF_SEQUENCE_IS( OPTIONAL    , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
-                    IF_SEQUENCE_IS( PROCREQ     , '('         , 0      , 0          ) PASS_THROUGH(),
+                    IF_SEQUENCE_IS( PROCREQ     , '('         , 0      , 0          ) REDUCE_TO( PROCREQ + DONT_REDUCE, 0          ),
                     IF_SEQUENCE_IS( PROCREQ     , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
+
+                    IF_SEQUENCE_IS( GET         , '('         , 0      , 0          ) REDUCE_TO( GET + DONT_REDUCE , 0             ),
+                    IF_SEQUENCE_IS( GET         , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),
 
                     IF_SEQUENCE_IS( NE1         , _LINE_      , 0      , 0          ) REDUCE_TO( LINE + DONT_REDUCE, 0             ),
                     IF_SEQUENCE_IS( _LINE_      , 0           , 0      , 0          ) REDUCE_TO( HB_IDENTIFIER     , 0             ),

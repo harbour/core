@@ -1,3 +1,14 @@
+2000-11-01 04:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+
+   * source/compiler/harbour.slx
+     + Added support for pseudo function _GET_(...)
+   * source/compiler/harbour.sly
+     + Added support for pseudo function _GET_(...) to be converted into appropriate __GET(...) or __GETA(...)
+   * source/rtl/tget.prg
+     + Added __GETA() to correctly support early binding of Array Element Index of GET
+   * tests/testread.prg
+     + Added code to test correct (early) binding of Array Element Index of GET
+
 2000-10-31 20:56 GMT+1 JFL (Mafact) <jfl@mafact.com>
    * source/vm/classes.c
      * Bug correction where __OBJHASMSG() returned True when no msg exist
