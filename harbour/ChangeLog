@@ -1,3 +1,7 @@
+19990709-11:05 CET Eddie Runia <eddie@runia.com>
+  * source/compiler/harbour.y
+    Copyright portable objects added
+
 19990709-10:50 CET Eddie Runia <eddie@runia.com>
   * tests/working/*.prg
     identified my tests and moved them to the PD

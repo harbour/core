@@ -31,6 +31,9 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  * You can contact me at: alinares@fivetech.com
+ *
+ * Partial Copyright (C) 1999 Eddie Runia <eddie@runia.com>
+ *   partial copyright regarding generation portable objects
  */
 
 #define BUILD         27    /* current harbour.y build */
