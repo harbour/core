@@ -1,3 +1,7 @@
+19990508-20:57 Eddie Runia
+   * source/rtl/arrays.c:
+     Fixed unreleased memory block in aEval.
+
 19990508-15:24 CET Victor Szel <info@szelvesz.hu>
 
    * source/rtl/strings.c:
