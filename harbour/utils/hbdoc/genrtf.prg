@@ -355,7 +355,7 @@ FUNCTION ProcessRtf()
                IF lData
                   oRtf:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Data " + cFuncName )
                ELSEIF lMethod
-                  oRtf:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Method " + cFuncName )
+                  oRtf:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, LEFT( cFilename, AT( '.', cFilename ) - 1 )  + ":"+cFuncName )
                ELSE
                   oRtf:WriteTitle(  cFuncName, cFuncName, cOneLine,cCategory)
                   //               oRtf:WriteParBold( cOneLine )
@@ -438,8 +438,9 @@ FUNCTION ProcessRtf()
                      IF !lBlankLine
                         oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
-
+                    oRtf:WritePar( "" )                 //:endpar()
                      oRtf:WriteParBold( " Data" )
+                    oRtf:WritePar( "" )                 //:endpar()
                      nMode     := D_DATALINK
                      lAddBlank := .T.
 
@@ -448,8 +449,9 @@ FUNCTION ProcessRtf()
                ELSEIF AT( cDatanolink, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lIsDataLink
+                     oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( " Data" )
-
+//                     oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
                      nMode     := D_NORMAL
                      lAddBlank := .T.
@@ -458,7 +460,9 @@ FUNCTION ProcessRtf()
                   END
                ELSEIF AT( cMethodslink, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
+                  oRtf:WritePar( "" )                 //:endpar()
                      oRtf:WriteParBold( " Method" )
+oRtf:WritePar( "" )                 //:endpar()
                      nMode     := D_METHODLINK
                      lAddBlank := .T.
 
@@ -467,9 +471,11 @@ FUNCTION ProcessRtf()
                ELSEIF AT( cMethodsnolink, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lIsMethodLink
+                     oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( " Methods" )
+                        oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
-
+                        oRtf:WritePar( "" )                 //:endpar()
                      nMode     := D_NORMAL
                      lAddBlank := .T.
                      lPar      := .T.
@@ -491,7 +497,7 @@ FUNCTION ProcessRtf()
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
                                                               oRtf:WritePar('') //:endpar()
-                        oRtf:WriteParBold( " Tests" )
+                       oRtf:WriteParBold( " Tests" )
                         oRtf:WritePar( '' )                 //:endpar()
                      ENDIF
 
@@ -610,7 +616,7 @@ FUNCTION ProcessRtf()
                      ENDIF
                      cTemp   := SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( ":", cBuffer ) + 1 )
-                     oRtf:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
+                     oRtf:WriteJumpLink1( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
@@ -623,7 +629,7 @@ FUNCTION ProcessRtf()
                      cTemp   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) + 1 )
                      cName   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( "()", cBuffer ) + 2 )
-                     oRtf:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
+                     oRtf:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ),ALLTRIM( cTemp ), cBuffer )
 
                   ELSEIF nMode = D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE

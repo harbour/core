@@ -296,10 +296,11 @@ FUNCTION ProcessWww()
                ENDIF
                lDoc      := .F.
                lClassDoc := .F.
-
+               lData   := .F.
+               lMethod := .F.
                IF lEndReturns .AND. lClassDoc
                   lEndReturns := .f.
-                  oHtm:WriteText( "</p></dd>" )
+                  oHtm:WriteText( "</pre>" )
                ENDIF
                IF lEndArgs .AND. lClassDoc
                   lEndArgs := .f.
@@ -407,14 +408,20 @@ FUNCTION ProcessWww()
                ENDIF
                IF lEndDesc .AND. lClassDoc
                   lEndDesc := .f.
+                  if lWasTestExamples
+                  oHtm:WriteText( "</pre>" )
+                  else
                   oHtm:WriteText( "</p></dd>" )
+                  lWasTestExamples:=.f.
+                  endif
+
                ENDIF
                ohtm:WriteText( '<br>' )
                ohtm:WriteText( '<br>' )
                ohtm:Writetext( '<hr>' )
                ohtm:WriteText( '<br>' )
                ohtm:WriteText( '<br>' )
-
+     
                oHtm:WriteText( "<a NAME=" + '"' + ALLTRIM( cFuncname )  + '"' + "></a>" )
 
                //  2) Category
@@ -504,6 +511,53 @@ end
                   lAddBlank := .T.
                   lEndDesc  := .t.
                end
+               ELSEIF AT( cdatalink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lBlankLine
+oHtm:writeText("<br>")  //:endpar()
+//                     oHtm:WriteParBold( " Data" )
+                        oHtm:WriteText( "</dl><dl><dt><b>Data</b></dt>" )
+//oHtm:writeText("<br>")  //:endpar()
+                     endif
+                     nMode     := D_DATALINK
+  //                   lAddBlank := .T.
+
+                     lIsDataLink := .T.
+                  END
+               ELSEIF AT( cDatanolink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lIsDataLink
+                    oHtm:writeText("<br>")                //:endpar()
+                        oHtm:WriteText( "</dl><dl><dt><b>Data</b></dt>" )
+//                    oHtm:writeText("<br>")                //:endpar()
+                     ENDIF
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+
+                  END
+               ELSEIF AT( cMethodslink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                 oHtm:writeText("<br>")                //:endpar()
+                     oHtm:WriteParBold( " Method" )
+//oHtm:writeText("<br>")  //:endpar()
+                     nMode     := D_METHODLINK
+                     lAddBlank := .T.
+
+                     lIsMethodLink := .T.
+                  END
+               ELSEIF AT( cMethodsnolink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lIsMethodLink
+                    oHtm:writeText("<br>")                //:endpar()
+                        oHtm:WriteParBold( " Methods" )
+                       oHtm:writepar("<br>")                //:endpar()
+                     ENDIF
+//                       oHtm:writeText("<br>")                //:endpar()
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+
+                  END
+
                ELSEIF AT( cExam, cBuffer ) > 0
                   if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
@@ -654,8 +708,8 @@ end
                         lAddBlank := .F.
                      ENDIF
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
-                     ohtm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
-
+                     ohtm:WriteText( "<dd><a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a></dd>' )
+                     ohtm:writetext('<dd><br></dd>')
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
@@ -666,8 +720,10 @@ end
                         lAddBlank := .F.
                      ENDIF
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( "(", cBuffer ) - 1 ) )
-                     ohtm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
-
+                     if !lBlankline
+                     ohtm:WriteText( "<dd><a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a></dd>' )
+                     ohtm:writetext('<dd><br></dd>')
+                    endif
                   ELSEIF nMode = D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;

@@ -57,6 +57,7 @@ CLASS TRTF
    METHOD WriteParBox( cPar )
    METHOD WriteLink( clink )
    METHOD WriteJumpLink( clink )
+   METHOD WriteJumpLink1( cLink, cName, cText )
    METHOD CLOSE()
    METHOD WriteParBold( cPar, lCenter )
    METHOD WriteParBoldText( cPar, cText )
@@ -267,6 +268,12 @@ METHOD WriteLink( cLink ) CLASS TRTF
 
 RETURN Self
 METHOD WriteJumpLink( cLink, cName, cText ) CLASS TRTF
+
+   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb ' + ALLTRIM( HB_OEMTOANSI( cName ) ) + '}{\v\f6 ' + "IDH_" + IF( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + '}' + cText + CRLF )
+
+RETURN Self
+
+METHOD WriteJumpLink1( cLink, cName, cText ) CLASS TRTF
 
    FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\ul ' + ALLTRIM( HB_OEMTOANSI( cName ) ) + '}{\v\f6 ' + "IDH_" + IF( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + '}' + cText + CRLF )
 
