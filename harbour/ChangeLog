@@ -1,3 +1,9 @@
+2000-01-21 14:05 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/environ.c
+     ! Fixed bug in setting end of string for case VER_PLATFORM_WIN32_WINDOWS:
+     ! Put Windows support for MingW32 back in after accidentally removing it.
+
 20000121-17:57 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * now can be used truncated preprocessor directives ( #defi, #inclu, ... )
