@@ -7,6 +7,16 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   + contrib/apollo
+     * Started Apollo SDE60.DLL connection for accessing
+       SIXNSX database files
+       Note: This is only the start.
+
+2001-12-29 05:10 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   Export declaration to meet MSVC syntax ( also work with BCC )
+
+   * include/hbapi.h
+     * declaration of hb_parc() synchronized with that in extend.c
    * source/vm/extend.c
      * char * HB_EXPORT => char HB_EXPORT *
    * source/vm/maindll.c
@@ -81,7 +91,7 @@
       System's usage of CONTRIBS= for some contrib libraries.
       Note: If a contrib lib directory name includes the lib prefix,
             then you have to include it (e.g. CONTRIBS=libmisc), but
-	
+            the actual library name listed in the library's Makefile
             must not (e.g., LIBNAME=misc).
 
   * contrib/libmisc/Makefile
@@ -140,7 +150,7 @@
      contrib/libgt/Make_b32.bat
     * Added the Lib prefix from library name
     + contrib/htmllib/*.prg
-     ! Fixed all return value checking for the Win32 API 
+      contrib/htmllib/*.ch
       contrib/htmllib/Makefile.bc
       contrib/htmllib/Makefile
       * Sources and neccessary files to build htmllib-harbour cgi library
