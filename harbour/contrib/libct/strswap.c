@@ -96,7 +96,7 @@ HB_FUNC (STRSWAP)
     /* get parameters */
     char *pcString1 = (char *)hb_parc (1);
     char *pcString2 = (char *)hb_parc (2);
-    char *pcRet1, *pcRet2;
+    char *pcRet1 = NULL, *pcRet2 = NULL;
     int iChange1, iChange2;
     size_t sIndex, sCmpLen;
 
