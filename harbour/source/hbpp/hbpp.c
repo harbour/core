@@ -1273,7 +1273,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          break;
       case '1':  /* Dumb stringify result marker  */
          pp_rQuotes( expreal, &sQuotes );
-         pp_Stuff ( "\"\"", ptro, 2, 4, lenres );
+         pp_Stuff ( sQuotes, ptro, 2, 4, lenres );
          if ( lenreal )
           pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
          rmlen = lenreal + 2;
@@ -1287,7 +1287,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          else
          {
           pp_rQuotes( expreal, &sQuotes );
-          pp_Stuff ( "\"\"", ptro, 2, 4, lenres );
+          pp_Stuff ( sQuotes, ptro, 2, 4, lenres );
           pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
           rmlen = lenreal + 2;
          }
@@ -1303,7 +1303,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
          else
          {
           pp_rQuotes( expreal, &sQuotes );
-          pp_Stuff ( "\"\"", ptro, 2, 4, lenres );
+          pp_Stuff ( sQuotes, ptro, 2, 4, lenres );
           pp_Stuff ( expreal, ptro+1, lenreal, 0, lenres );
           rmlen = lenreal + 2;
          }

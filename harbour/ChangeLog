@@ -1,3 +1,7 @@
+19990728-11:31 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * Yet another problem fixed with rtl_test and C++ Builder
+
 19990728-10:22 Alexander Kresin
   * source\hbpp\hbpp.c
   * source\hbpp\hbppint.c
