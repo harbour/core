@@ -11,7 +11,7 @@
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
- *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE
+ *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -25,54 +25,38 @@
  *  $ONELINER$
  *      Open a file.
  *  $SYNTAX$
- *     FOPEN( <cFile>, [<nMode>] ) --> nHandle
+ *      FOPEN( <cFile>, [<nMode>] ) --> nHandle
  *  $ARGUMENTS$
- *     <cFile> Name of file to open
- *     <nMode> Dos file open mode
- *   file is to be accessed.  The open mode is composed of elements from the
- *   two types of modes described in the tables below.  If just the Access
- *   Mode is used, the file is opened non-sharable.  The default open mode is
- *   zero, which indicates non-sharable and read-only.
- *
- *
- *   FOPEN() Sharing Modes
- *   ------------------------------------------------------------------------
- *   Mode    Fileio.ch      Operation
- *   ------------------------------------------------------------------------
- *   0       FO_COMPAT      Compatibility mode (default)
- *   16      FO_EXCLUSIVE   Exclusive use
- *   32      FO_DENYWRITE   Prevent others from writing
- *   48      FO_DENYREAD    Prevent others from reading
- *   64      FO_DENYNONE    Allow others to read or write
- *   64      FO_SHARED      Same as FO_DENYNONE
- *   ------------------------------------------------------------------------
- *
- *     The Access Modes in combination (+) with the Sharing modes determine the
- *   accessibility of the file in a network environment.
- *
+ *      <cFile> Name of file to open
+ *      <nMode> Dos file open mode
+ *      file is to be accessed.  The open mode is composed of elements from the
+ *      two types of modes described in the tables below.  If just the Access
+ *      Mode is used, the file is opened non-sharable.  The default open mode is
+ *      zero, which indicates non-sharable and read-only.
  *  $RETURNS$
  *      <nHandle> a DOS file handle
  *  $DESCRIPTION$
  *      This function opens a file expressed as <cFile> and returns a DOS
  *      file handle to be used with other low-level file functions.The
  *      value of <nMode> represents the status of the file to be opened;
- *      the default value is 0.The DOS file open modes are as the follows:
+ *      the default value is 0. The DOS file open modes are as the follows:
  *
- *      0          Read only
- *      1          Write only
- *      2          Read/write
- *      16         Exclusive read only
- *      17         Exclusive write only
- *      18         Exclusive read/write only
- *      32         Prevent others from writing
- *      33         Prevent others from reading
- *      34         Prevent read/write only
- *      48         Deny read only
- *      49         Deny write only
- *      50         Deny read/Write
- *      64         Share read only
- *      65         Share write only
- *      66         Share read/write
+ *           0          Read only
+ *           1          Write only
+ *           2          Read/write
+ *           16         Exclusive read only
+ *           17         Exclusive write only
+ *           18         Exclusive read/write only
+ *           32         Prevent others from writing
+ *           33         Prevent others from reading
+ *           34         Prevent read/write only
+ *           48         Deny read only
+ *           49         Deny write only
+ *           50         Deny read/Write
+ *           64         Share read only
+ *           65         Share write only
+ *           66         Share read/write
+ *
  *
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function.Files handles may be in the range of 0 to 65535. The
@@ -127,25 +111,24 @@
  *      this Function.
  *
  *      Value of <nAttribute>       File Attribute
- *          0                       Normal/Default,Read/Write
- *          1                       Read-only,Attemptinf to open for
- *                                  output returns an error
- *          2                       Hidden,Excluded from normal DIR
- *                                  search
- *          4                       Create,Excluded from normal DIR
- *                                  search
+ *
+ *           0                       Normal/Default,Read/Write
+ *           1                       Read-only,Attemptinf to open for
+ *                                   output returns an error
+ *           2                       Hidden,Excluded from normal DIR
+ *                                   search
+ *           4                       Create,Excluded from normal DIR
+ *                                   search
  *  $EXAMPLES$
  *      IF (nh:=FCREATE("TEST.TXT") <0
  *          ? "Can not create file"
  *      ENDIF
- *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
- *     FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
+ *      FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
  *  $INCLUDE$
  *
  *  $END$
@@ -221,8 +204,8 @@
  *  $RETURNS$
  *      <nBytesWritten> the number of bytes successfully written.
  *  $DESCRIPTION$
- *      This function writes the contents of <cBuffer> to the file designa-
- *      ted by its file handle <nHandle>. If used, <nBytes> is the number of
+ *      This function writes the contents of <cBuffer> to the file designated
+ *      by its file handle <nHandle>. If used, <nBytes> is the number of
  *      bytes in <cBuffer> to write.
  *      The returned value is the number of bytes successfully written to the
  *      DOS file. If the returned value is 0, an error has occurred (unless
@@ -273,41 +256,34 @@
  *
  *      Error   Meaning
  *
- *      0       Successful
- *      2       File not found
- *      3       Path not found
- *      4       Too many files open
- *      5       Access denied
- *      6       Invalid handle
- *      8       Insufficient memory
- *      15      Invalid drive specified
- *      19      Attempted to write to a write-protected disk
- *      21      Drive not ready
- *      23      Data CRC error
- *      29      Write fault
- *      30      Read fault
- *      32      Sharing violation
- *      33      Lock Violation
- *
+ *           0        Successful
+ *           2        File not found
+ *           3        Path not found
+ *           4        Too many files open
+ *           5        Access denied
+ *           6        Invalid handle
+ *           8        Insufficient memory
+ *           15       Invalid drive specified
+ *           19       Attempted to write to a write-protected disk
+ *           21       Drive not ready
+ *           23       Data CRC error
+ *           29       Write fault
+ *           30       Read fault
+ *           32       Sharing violation
+ *           33       Lock Violation
  *  $DESCRIPTION$
  *      After every low-level file function,this function will return
  *      a value that provides additional informationon the status of
  *      the last low-level file functions's performance.If the FERROR()
  *      function returns a 0, no error was detected.Below is a table
  *      of possibles values returned by the FERROR() function.
- *
  *  $EXAMPLES$
- *   ^CFE  This example tests FERROR() after the creation of a binary
- *      file and displays an error message if the create fails:
- *
  *      #include "Fileio.ch"
  *      //
  *      nHandle := FCREATE("Temp.txt", FC_NORMAL)
  *      IF FERROR() != 0
  *         ? "Cannot create file, DOS error ", FERROR()
  *      ENDIF
- *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -338,9 +314,9 @@
  *     disk. The <nHandle> value is derived from the FCREATE()
  *     or FOPEN() function.
  *  $EXAMPLES$
- *
- *  $TESTS$
- *
+ *     nHandle:=FOPEN('x.txt')
+ *     ? FSEEK(nHandle0,2)
+ *     FCLOSE(nHandle)
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -385,8 +361,6 @@
  *      ELSE
  *          ? "File can not be deleted"
  *      ENDIF
- *  $TESTS$
- *
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -540,19 +514,17 @@
  *      as may the drive and/or path name. If a drive are not explicity
  *      specified,FILE() will first search the current drive and directory,
  *      and will look for the file in the directories specified by SET PATH
- *      TO and ST DEFAULT TO commands.However, this command does not look
+ *      TO and SET DEFAULT TO commands.However, this command does not look
  *      at the values in the DOS PATH command.
  *  $EXAMPLES$
  *      ? file('c:\harbour\doc\compiler.txt")
  *      ? file('c:/harbour/doc/subcodes.txt")
- *  $TESTS$
- *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compatible.
+ *      This function is CA-Clipper compatible.
  *  $SEEALSO$
- *
+ *      SET PATH,SET DEFAULT,SET()
  *  $INCLUDE$
  *
  *  $END$
@@ -769,7 +741,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      "COPY FILE","SET DEFAULT","SET PATH","SET PRINTER",TYPE
+ *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
  *  $END$
  */
 
@@ -823,7 +795,7 @@
  *
  *      // display MyText.DAT file on printer only
  *      SET CONSOLE OFF
- *      TYPE MyText.DAT" TO PRINTER
+ *      TYPE MyText.DAT TO PRINTER
  *      SET CONSOLE ON
  *
  *      // display MyText.DAT file on screen and into a file MyReport.txt
@@ -836,6 +808,44 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *      "COPY FILE","SET DEFAULT","SET PATH","SET PRINTER",__TYPEFILE()
+ *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CURDIR()
+ *  $CATEGORY$
+ *      Low Level
+ *  $ONELINER$
+ *      Returns the current OS directory name.
+ *  $SYNTAX$
+ *      CURDIR( [<cDrive>] )  --> cPath
+ *  $ARGUMENTS$
+ *      <cDir> OS drive letter
+ *  $RETURNS$
+ *      <cPath> Name of directory
+ *  $DESCRIPTION$
+ *      This function yields the name of the current OS directory on a
+ *      specified drive.If <cDrive> is not speficied,the currently logged
+ *      drive will be used.
+ *      This function should not return the leading and trailing
+ *      (back)slashes.
+ *      If an error has been detected by the function,or the current OS
+ *      directory is the root,the value of the function will be a NULL
+ *      byte.
+ *  $EXAMPLES$
+ *      ? Curdir()
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper Compatible
+ *  $PLATFORMS$
+ *      ALL
+ *  $FILES$
+ *
+ *  $SEEALSO$
+ *      FILE()
  *  $END$
  */

@@ -168,7 +168,7 @@
  *      ALL
  *  $FILES$
  *  $SEEALSO$
- *      TTroff(), TRtf(), THtml(), TOs2()
+ *      TTroff(),TRtf(),THtml(),TOs2()
  *  $END$
  */
 

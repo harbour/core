@@ -20,6 +20,10 @@
  *    Documentation for: SETTYPEAHEAD()
  *    Documentation for: __XHELP()
  *
+ * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Documentation for: SET WRAP,SET DEFAULT,SET MESSAGE
+ *    Documentation for: SET PATH
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -50,9 +54,14 @@
  *  $ONELINER$
  *      Changes or evaluated enviromental settings
  * $SYNTAX$
- *      Set<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
+ *      Set(<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
  * $ARGUMENTS$
- *               <nSet>           <xNewSetting>           <xOption>
+ *      <nSet> Set Number
+ *      <xNewSetting> Any expression to assing a value to the seting
+ *      <xOption> Logical expression
+ *
+ *                <nSet>            <xNewSetting>          <xOption>            
+ *
  *              _SET_ALTERNATE   <lFlag> | <cOnOff>
  *                   If enabled, QOUT() and QQOUT() write to the screen and to
  *                   a file, provided that a file has been opened or created
@@ -676,5 +685,126 @@
  *      __XHELP() is fully CA-Clipper compliant.
  *  $SEEALSO$
  *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET DEFAULT
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Establishes the Harbour search drive and directory.
+ *  $SYNTAX$
+ *      SET DEFAULT TO [<cPath>]
+ *  $ARGUMENTS$
+ *      <cPath> Drive and/or path.
+ *  $DESCRIPTION$
+ *      This command changes the drive and directory used for reading and
+ *      writting database,index,memory, and alternate files.Specifying no
+ *      parameters with this command will default the operation to the
+ *      current logged drive and directory.
+ *  $EXAMPLES$
+ *      SET DEFAULT to c:\TEMP
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper Compliant.
+ *  $SEEALSO$
+ *      SET PATH,CURDIR(),SET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET WRAP
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Toggle wrapping the PROMPTs in a menu.
+ *  $SYNTAX$
+ *      SET WRAP ON/OFF
+ *      SET WRAP (<lWrap>)
+ *  $ARGUMENTS$
+ *      <lWrap> Logical expression for toggle
+ *  $DESCRIPTION$
+ *      This command toggles the highlighted bars in a @...PROMPT command
+ *      to wrap around in a bottom-to-top and top-to-bottom manner.If the
+ *      value of the logical expression <lWrap> is a logical false (.F.),
+ *      the wrapping mode is set OFF;otherwise,it is set ON.
+ *  $EXAMPLES$
+ *      See Tests/menutest.prg
+ *  $STATUS$
+ *      R 
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper Compliant.
+ *  $SEEALSO$
+ *      @...PROMPT,MENU TO
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET MESSAGE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Extablishes a message row for @...PROMPT command
+ *  $SYNTAX$
+ *      SET MESSAGE TO [<nRow> [CENTER]]
+ *  $ARGUMENTS$
+ *      <nRow> Row number to display the message
+ *  $DESCRIPTION$
+ *      This command is designed to work in conjuntion with the MENU TO and
+ *      @...PROMPT commands.With this command, a row number between 0 and
+ *      MAXROW() may be specified in <nRow>.This establishes the row on
+ *      witch any message associated with an @...PROMPT command will apear.
+ *      If the value of <nRow> is 0,all messages will be supressed.
+ *      All messaged will be left-justifies unless the CENTER clause is
+ *      used.In this case,the individual messages in each @...PROMPT command
+ *      will be centered at the designated row (unless <nRow> is 0).All
+ *      messages are independent;therefor,the screen area is cleared out
+ *      by the centered message will vary based on the length of each
+ *      individual message.
+ *      Specifying no parameters with this command set the row value to 0,
+ *      witch suppresses all messages output.
+ *      The British spelling of CENTRE is also supported.
+ *  $EXAMPLES$
+ *      See Tests/menutest.prg
+ *  $STATUS$
+ *      R 
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper Compliant.
+ *  $SEEALSO$
+ *      SET(),SET WRAP,@...PROMPT,MENU TO
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $COMMANDNAME$
+ *      SET PATH
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Specifies a search path for opening files
+ *  $SYNTAX$
+ *      SET WRAP TO [<cPath>]
+ *  $ARGUMENTS$
+ *      <cPath> Search path for files
+ *  $DESCRIPTION$
+ *      This command specifies the search path for files required by most
+ *      commands and functions not found in the current drive and directory.
+ *      This pertains primarily,but not exclusively, to databases,indexes,
+ *      and memo files,as well as to memory,labels,and reports files. The
+ *      search hiracrchy is: 1 Current drive and directory,2 The SET DEFAULT
+ *      path;3 The SET PATH path.
+ *  $EXAMPLES$
+ *      SET PATH TO c:\Harbour\Test
+ *  $STATUS$
+ *      R 
+ *  $COMPLIANCE$
+ *      This command is Ca-Clipper Compliant.
+ *  $SEEALSO$
+ *      SET DEFAULT,CURDIR(),SET()
  *  $END$
  */

@@ -4,93 +4,80 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     CD()
+ *      CD()
  *  $CATEGORY$
- *     DOS
+ *      DOS
  *  $ONELINER$
- *     Change the Current Directory
+ *      Change the Current Directory
  *  $SYNTAX$
- *     CD(<NDIR>)
+ *      CD(<cDir>) --> lSuccess
  *  $ARGUMENTS$
- *     <NDIR> DIR TO BE CHANGED
+ *      <cDir> DIR TO BE CHANGED
  *  $RETURNS$
- *     .T. IF SUCEFUL
- *     .F. IF NOT
- *
+ *      <lSucess> .T. IF SUCESSFUL; otherwise .F.
  *  $DESCRIPTION$
- *     CHANGE THE CURRENT DIRECTORY
+ *      CHANGE THE CURRENT DIRECTORY
  *  $EXAMPLES$
- *     IF CD("OLA")
+ *      IF CD("OLA")
+ *         RETURN(.T.)
+ *      ELSE
+ *         RETURN(.F.)
+ *      ENDIF
+ *  $SEEALSO$
+ *      MD(),RD()
+ *  $INCLUDE$
+ *      extend.h dos.h dir.h bios.h
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MD()
+ *  $CATEGORY$
+ *      DOS
+ *  $ONELINER$
+ *      Creates a Directory
+ *  $SYNTAX$
+ *      MD(<cDir>) -> <lSucess>
+ *  $ARGUMENTS$
+ *      <cDir> DIRECTORY TO BE CREATED
+ *  $RETURNS$
+ *      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+ *  $DESCRIPTION$
+ *      CREATE A  DIRECTORY
+ *  $EXAMPLES$
+ *      IF MD("OLA")
  *        RETURN(.T.)
- *     ELSE
+ *      ELSE
  *        RETURN(.F.)
+ *      ENDIF
+ *  $SEEALSO$
+ *      CD(),MD()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      RD()
+ *  $CATEGORY$
+ *      DOS
+ *  $ONELINER$
+ *      Remove a Directory
+ *  $SYNTAX$
+ *      RD(<cDir>) --> <lSucess>
+ *  $ARGUMENTS$
+ *     <cDir> DIR TO BE DELETED
+ *  $RETURNS$
+ *     <lSucess> .T. IF SUCESSFUL; otherwise .F.
+ *  $DESCRIPTION$
+ *     REMOVE A  DIRECTORY
+ *  $EXAMPLES$
+ *     IF RD("OLA")
+ *       RETURN(.T.)
+ *     ELSE
+ *       RETURN(.F.)
  *     ENDIF
- *
  *  $SEEALSO$
- *      MD() RD()
- *  $INCLUDE$
- *     extend.h dos.h dir.h bios.h
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *     MD()
- *  $CATEGORY$
- *     DOS
- *  $ONELINER$
- *     Creates a Directory
- *  $SYNTAX$
- *     MD(<NDIR>)
- *  $ARGUMENTS$
- *    <NDIR> DIRECTORY TO BE CREATED
- *  $RETURNS$
- *    .T. IF SUCEFUL
- *    .F. IF NOT
- *
- *  $DESCRIPTION$
- *    CREATE A  DIRECTORY
- *  $EXAMPLES$
- *  IF MD("OLA")
- *      RETURN(.T.)
- *  ELSE
- *      RETURN(.F.)
- *  ENDIF
- *
- *  $SEEALSO$
- *     CD() MD()
- *  $INCLUDE$
- *     extend.h dos.h dir.h bios.h
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *     RD()
- *  $CATEGORY$
- *     DOS
- *  $ONELINER$
- *     Remove a Directory
- *  $SYNTAX$
- *     RD(<NDIR>)
- *  $ARGUMENTS$
- *    <NDIR> DIR TO BE DELETED
- *  $RETURNS$
- *    .T. IF SUCEFUL
- *    .F. IF NOT
- *
- *  $DESCRIPTION$
- *    REMOVE A  DIRECTORY
- *  $EXAMPLES$
- *  IF RD("OLA")
- *      RETURN(.T.)
- *  ELSE
- *      RETURN(.F.)
- *  ENDIF
- *
- *  $SEEALSO$
- *     CD() MD()
- *  $INCLUDE$
- *     extend.h dos.h dir.h bios.h
+ *     CD(),MD()
  *  $END$
  */

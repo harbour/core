@@ -110,25 +110,27 @@
  *      Following are active keys that handled by DBEDIT():
  *      ---------------------------------------------------
  *
- *      Left           - Move one column to the left (previous field)
- *      Right          - Move one column to the right (next field)
- *      Up             - Move up one row (previous record)
- *      Down           - Move down one row (next record)
- *      Page-Up        - Move to the previous screen
- *      Page-Down      - Move to the next screen
- *      Ctrl Page-Up   - Move to the top of the file
- *      Ctrl Page-Down - Move to the end of the file
- *      Home           - Move to the leftmost visible column
- *      End            - Move to the rightmost visible column
- *      Ctrl Left      - Pan one column to the left
- *      Ctrl Right     - Pan one column to the right
- *      Ctrl Home      - Move to the leftmost column
- *      Ctrl End       - Move to the rightmost column
+ *
+ *           Left           - Move one column to the left (previous field)
+ *           Right          - Move one column to the right (next field)
+ *           Up             - Move up one row (previous record)
+ *           Down           - Move down one row (next record)
+ *           Page-Up        - Move to the previous screen
+ *           Page-Down      - Move to the next screen
+ *           Ctrl Page-Up   - Move to the top of the file
+ *           Ctrl Page-Down - Move to the end of the file
+ *           Home           - Move to the leftmost visible column
+ *           End            - Move to the rightmost visible column
+ *           Ctrl Left      - Pan one column to the left
+ *           Ctrl Right     - Pan one column to the right
+ *           Ctrl Home      - Move to the leftmost column
+ *           Ctrl End       - Move to the rightmost column
  *
  *      When <xUserFunc> is omitted, two more keys are active:
  *
- *      Esc            - Terminate BROWSE()
- *      Enter          - Terminate BROWSE()
+ *           Esc            - Terminate BROWSE()
+ *           Enter          - Terminate BROWSE()
+ *
  *
  *      When DBEDIT() execute <xUserFunc> it pass the following arguments:
  *      nMode and the index of current record in <acColumns>. If <acColumns>
@@ -138,12 +140,14 @@
  *      DBEDIT() nMode could be one of the following:
  *      ---------------------------------------------
  *
- *      DE_IDLE         0      DBEDIT() is idle, all movement keys have been
+ *
+ *           DE_IDLE         0      DBEDIT() is idle, all movement keys have been
  *                             handled.
- *      DE_HITTOP       1      Attempt to cursor past top of file.
- *      DE_HITBOTTOM    2      Attempt to cursor past bottom of file.
- *      DE_EMPTY        3      No records in work area, database is empty.
- *      DE_EXCEPT       4      Key exception.
+ *           DE_HITTOP       1      Attempt to cursor past top of file.
+ *           DE_HITBOTTOM    2      Attempt to cursor past bottom of file.
+ *           DE_EMPTY        3      No records in work area, database is empty.
+ *           DE_EXCEPT       4      Key exception.
+ *
  *
  *      The user define function or code block must return a value that tell
  *      DBEDIT() what to do next.
@@ -151,9 +155,9 @@
  *      User function return codes:
  *      ---------------------------
  *
- *      DE_ABORT        0      Abort DBEDIT().
- *      DE_CONT         1      Continue DBEDIT() as is.
- *      DE_REFRESH      2      Force reread/redisplay of all data rows.
+ *           DE_ABORT        0      Abort DBEDIT().
+ *           DE_CONT         1      Continue DBEDIT() as is.
+ *           DE_REFRESH      2      Force reread/redisplay of all data rows.
  *
  *      The user function is called once in each of the following cases:
  *      - The database is empty.

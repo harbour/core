@@ -1,3 +1,18 @@
+20000303-17:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  *utils/hbdoc/genrtf.prg
+      *small changes
+      *Fixed warnings reported by Victor
+  *source/tools/rtf.prg
+      *Small Changes
+  *doc/en/ht_doc.txt
+   doc/en/ht_file.txt
+   doc/en/ht_conv.txt
+      *Small Formating
+   *doc/en/file.txt
+      *Added new Docs
+   *doc/en/set.txt
+      Added new Docs
+
 20000303-20:50 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/*.api
      ! Changed header filenames to the new ones.

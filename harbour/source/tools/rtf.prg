@@ -117,12 +117,12 @@ RETURN Self
 METHOD WritePar( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20' + HB_OEMTOANSI(cPar )+CRLF)
+   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20\b0\i0\li300' + HB_OEMTOANSI(cPar )+CRLF)
 RETURN Self
 METHOD WriteParText( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle,  HB_OEMTOANSI(cPar )+CRLF)
+   FWRITE( Self:nHandle,  HB_OEMTOANSI(cPar ))
 RETURN Self
 METHOD EndPar() CLASS TRTF
    FWRITE( Self:nHandle, '\par' + CRLF )
@@ -133,9 +133,9 @@ METHOD WriteParBold( cPar,lCenter ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
    if lCenter
-       FWRITE( Self:nHandle, '\par \pard\qc\cf1\f6\fs30\i\b ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
+       FWRITE( Self:nHandle, '\par \pard\qc\cf1\f6\fs30\i\b\li300 ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
    else
-       FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs30\i\b ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
+       FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs30\i\b\li300 ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
    Endif
 RETURN Self
 
@@ -146,7 +146,7 @@ METHOD WriteParBoldText( cPar,cText ) CLASS TRTF
    cText:=StrTran(cText,"{","\{")
    cText:=StrTran(cText,"}","\}")
 
-   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20\i\b       ' +  ALLTRIM(HB_OEMTOANSI( cPar )) + ' \b\cf1\f6\fs20\i ' +ALLTRIM(HB_OEMTOANSI(cText)) + CRLF )
+   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20\i\b       ' +  ALLTRIM(HB_OEMTOANSI( cPar )) + ' \b\cf1\f6\fs20\i0\b0\li300 ' +ALLTRIM(HB_OEMTOANSI(cText)) + CRLF )
 RETURN Self
 
 METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
