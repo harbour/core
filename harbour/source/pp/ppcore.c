@@ -1737,10 +1737,10 @@ static BOOL isExpres( char * stroka )
   printf( "Len1: %i Len2: %i RealExp: >%s< Last: %c\n", l1, l2, stroka - l2, ( stroka - l2 )[l1-1] );
   */
 
-  /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":/*+-%^=(<>"
+  /* Ron Pinkas modified 2000-06-17 Expression can't be valid if last charcter is one of these: ":*+/-%^=(<>"
   return ( l1 <= l2 );
   */
-  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/*+-%^=(<>" ) );
+  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":*+/-%^=(<>" ) );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )

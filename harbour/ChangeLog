@@ -1,3 +1,11 @@
+2000-06-18 15:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbmacro.h
+	*changed functions declarations for documentation purposes
+	
+    *source/pp/ppcode.c
+	*fixed "nested /* comments" warning when compiled with GCC
+
 2000-06-17 13:38 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
      ! Fixed isExpress() to check last charcter of the expression and return false if it is one of these:
