@@ -544,6 +544,7 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\genasc.obj \
    $(OBJ_DIR)\genhpc.obj \
    $(OBJ_DIR)\genhtm.obj \
+   $(OBJ_DIR)\genchm.obj \
    $(OBJ_DIR)\genng.obj \
    $(OBJ_DIR)\genos2.obj \
    $(OBJ_DIR)\genrtf.obj \
@@ -2043,6 +2044,7 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(OBJ_DIR)\genasc.obj >> make.tmp
    echo. $(OBJ_DIR)\genhpc.obj >> make.tmp
    echo. $(OBJ_DIR)\genhtm.obj >> make.tmp
+   echo. $(OBJ_DIR)\genchm.obj >> make.tmp
    echo. $(OBJ_DIR)\genng.obj >> make.tmp
    echo. $(OBJ_DIR)\genos2.obj >> make.tmp
    echo. $(OBJ_DIR)\genrtf.obj >> make.tmp
@@ -2090,6 +2092,12 @@ $(OBJ_DIR)\genhtm.c : $(HBDOC_DIR)\genhtm.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\genhtm.obj : $(OBJ_DIR)\genhtm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\genchm.c : $(HBDOC_DIR)\genchm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\genchm.obj : $(OBJ_DIR)\genchm.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\genng.c : $(HBDOC_DIR)\genng.prg
