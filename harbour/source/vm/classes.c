@@ -117,6 +117,17 @@
  *    Correction made relative to CLASSDATA SHARED !
  *    Fixed init when redefining on subclass
  *
+ *    1.22 06/??/2000 ?
+ *    1.23 06/??/2000 ?
+ *    1.24 06/??/2000 ?
+ *    1.25 06/??/2000 ?
+ *    1.26 07/??/2000 RGlab
+ *    Garbage collector fixe
+ *
+ *    1.26 07/15/2000 JFL&RAC
+ *    Fixe for the potential case where we coudl not find
+ *    one free bucket when inheriting the super method
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -140,7 +151,7 @@ typedef struct
    USHORT   uiDataShared;      /* Item position for datashared (original pos within Shared Class) */
    USHORT   uiSprClass;        /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;           /* Scoping value */
-   PHB_ITEM pInitValue;        /* Item Value and value for data (could be initiated by INIT KeyWord) */
+   PHB_ITEM pInitValue;        /* Init Value for data */
    BYTE     bClsDataInitiated; /* There is one value assigned at init time */
 } METHOD, * PMETHOD;
 
@@ -158,7 +169,7 @@ typedef struct
    PHB_FUNC pFunError;      /* error handler for not defined messages */
 } CLASS, * PCLASS;
 
-#define BASE_METHODS    255 /* starting maximum number of message */
+#define BASE_METHODS   100  /* starting maximum number of message */
 #define BUCKET          5
 #define HASH_KEY        ( BASE_METHODS / BUCKET ) /* Idealy, here we want a "nombre premier" */
 
@@ -222,7 +233,7 @@ static void hb_clsDictRealloc( PCLASS pClass )
 
       do
       {
-         uiNewHashKey += ( USHORT ) HASH_KEY;
+         uiNewHashKey += ( USHORT ) HASH_KEY ;
 
          pNewMethods = ( PMETHOD ) hb_xgrab( uiNewHashKey * BUCKET * sizeof( METHOD ) );
          memset( pNewMethods, 0, uiNewHashKey * BUCKET * sizeof( METHOD ) );
@@ -868,6 +879,7 @@ HB_FUNC( __CLSNEW )
    USHORT nLenClsDatas = 0;
    USHORT nLenInlines = 0;
    USHORT nLenDatas = 0;
+   BOOL bResize = FALSE;
 
    pahSuper = hb_itemParam( 3 );      /* Replace the initial uiSuper   */
    uiSuper  = ( USHORT ) hb_itemSize( pahSuper ); /* Number of Super class present */
@@ -896,7 +908,7 @@ HB_FUNC( __CLSNEW )
          PHB_ITEM pSuper;
          PHB_ITEM pClsAnyTmp;
          USHORT nSuper;
-         USHORT ui, uiAt, uiLimit;
+         USHORT ui, uiAt, uiLimit, uiCurrent ;
          PCLASS pSprCls;
          USHORT nLen;
 
@@ -964,9 +976,8 @@ HB_FUNC( __CLSNEW )
             hb_itemRelease( pClsAnyTmp );
          }
 
+
          /* Now working on pMethods */
-         if( ( pNewCls->uiMethods + 1 ) > ( pNewCls->uiHashKey * BUCKET * 2 / 3 ) )
-            hb_clsDictRealloc( pNewCls );
 
          if( i == 1 )
          {
@@ -976,8 +987,25 @@ HB_FUNC( __CLSNEW )
             pNewCls->pFunError = pSprCls->pFunError;
          }
 
-         for( ui = 0; ui < uiLimit; ui++ )
+
+         bResize = ( ( pNewCls->uiMethods + pSprCls->uiMethods ) > ( pNewCls->uiHashKey * BUCKET * 2 / 3 ) ) ;
+         uiCurrent = 0 ;
+
+         do
          {
+
+          if( bResize )
+          {
+            /* Not easy to debug ... I don't find any samples here where this case appear */
+            hb_clsDictRealloc( pNewCls );
+            bResize=FALSE;
+          }
+
+          /* When doing the eventual second pass after call to hb_clsDictRealloc */
+          /* We review only messages not already treated */
+
+          for( ui = uiCurrent ; ui < uiLimit; ui++ )
+          {
             USHORT uiBucket;
 
             pMsg = ( PHB_DYNS ) pSprCls->pMethods[ ui ].pMessage;
@@ -994,8 +1022,10 @@ HB_FUNC( __CLSNEW )
                      break;
 #endif
 
-                  if( pNewCls->pMethods[ uiAt+uiBucket ].pMessage == 0 ) /* this message position is empty */
+                  /* Ok, this bucket is empty */
+                  if( pNewCls->pMethods[ uiAt+uiBucket ].pMessage == 0 )
                   {
+
                      /* Now, we can increment the msg count */
                      pNewCls->uiMethods++;
 
@@ -1043,11 +1073,23 @@ HB_FUNC( __CLSNEW )
                      }
                      break;
                   }
-                  else if( pNewCls->pMethods[ uiAt + uiBucket ].pMessage == pMsg ) /*if( strcmp( pNewCls->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName, pMsg->pSymbol->szName ) == 0 )*/
+                  else if( pNewCls->pMethods[ uiAt + uiBucket ].pMessage == pMsg )
                      break;
                }
+
+               /* No space found for this message, call hb_dicrealloc() */
+               if (uiBucket == BUCKET)
+                {
+                 bResize=TRUE;
+                 uiCurrent = ui ;
+                 break;
+                }
+
             }
-         }
+
+          }
+
+         } while ( ui < uiLimit );
       }
    }
    else

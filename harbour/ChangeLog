@@ -1,8 +1,13 @@
+2000-07-15 01:20 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
+   * source/vm/classes.c
+     * ! minor correction to allow the case where we would be in need of
+       hb_clsdictrealloc during inheritance (no more empty bucket).
+
 2000-07-14 20:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
         * the garbage collector scans now hb_stack.Return values
-        
+
 2000-07-14 09:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
      ! Minor correction, to accept a match, if all rule's tokens used.
