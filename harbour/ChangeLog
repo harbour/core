@@ -1,3 +1,24 @@
+20000523-02:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+ 
+   * makefile.bc
+   * makefile.vc
+   * contrib/hbclip/hbclip.ch
+   * source/compiler/hbgenerr.c
+   * source/lang/Makefile
+   * source/lang/msgcs852.c
+   * source/lang/msgcsiso.c
+   * source/lang/msgcskam.c
+   * source/lang/msgsr852.c
+   * source/lang/msgsriso.c
+   * source/rtl/Makefile
+     * misc small corrections and fixes.
+ 
+   * include/hbapi.h
+   * source/rtl/console.c
+   * source/rtl/xsavescr.c
+     ! Fixed memory leak when no __XRESTSCREEN() was called after an
+       __XSAVESCREEN()
+ 
 2000-05-22 18:15 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/filesys.c

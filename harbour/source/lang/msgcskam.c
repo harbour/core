@@ -188,3 +188,4 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_CSKAM )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_lang_Init_CSKAM
 #endif
+

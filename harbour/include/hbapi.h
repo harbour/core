@@ -459,6 +459,7 @@ extern void     hb_conOutStd( char * pStr, ULONG ulLen );
 extern void     hb_conOutErr( char * pStr, ULONG ulLen );
 extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor );
 extern char *   hb_conSetColor( char * szColor );
+extern void     hb_conXSaveRestRelease( void );
 
 /* compiler and macro compiler */
 extern char * hb_compReservedName( char * );

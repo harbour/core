@@ -139,6 +139,7 @@ void hb_conRelease( void )
    s_szCrLf[ 1 ] = '\0';
 
    hb_setkeyExit();  /* April White, May 6, 2000 */
+   hb_conXSaveRestRelease();
 
    hb_gtExit();
    hb_mouseExit();

@@ -45,49 +45,48 @@
 
 #ifndef __HARBOUR__
 
-    #ifndef HB_CLIP_CH_
-    #define HB_CLIP_CH_
+#ifndef HB_CLIP_CH_
+#define HB_CLIP_CH_
 
-    /* TODO: Rewrite as much of these in C or Clipper */
+/* TODO: Rewrite as much of these in C or Clipper */
 
-    #xtranslate HB_ARGCHECK( <s> )                            => ( .F. )
-    #xtranslate HB_ARGSTRING( <s> )                           => ""
-    #xtranslate HB_FNAMESPLIT( <s> )                          => NIL
-    #xtranslate HB_FNAMEMERGE( <s1>[, <s2>[, <s3>[, <s4>]]] ) => ""
-    #xtranslate HB_PVALUE( <n> )                              => NIL
-    #xtranslate HB_SETKEYGET( [<n>][, <b>] )                  => NIL
-    #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
-    #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
+#xtranslate HB_ARGCHECK( <s> )                            => ( .F. )
+#xtranslate HB_ARGSTRING( <s> )                           => ""
+#xtranslate HB_FNAMESPLIT( <s> )                          => NIL
+#xtranslate HB_FNAMEMERGE( <s1>[, <s2>[, <s3>[, <s4>]]] ) => ""
+#xtranslate HB_PVALUE( <n> )                              => NIL
+#xtranslate HB_SETKEYGET( [<n>][, <b>] )                  => NIL
+#xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
+#xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
 
-    #TRANSLATE AS ARRAY [OF <type>] =>
+#translate AS ARRAY [OF <type>] =>
 
-    #TRANSLATE AS CHAR =>
-    #TRANSLATE AS CHARACTER =>
-    #TRANSLATE AS STRING =>
+#translate AS CHAR =>
+#translate AS CHARACTER =>
+#translate AS STRING =>
 
-    #TRANSLATE AS CLASS <ClassName> =>
-    #TRANSLATE AS STRU <StruName> =>
-    #TRANSLATE AS STRUCTURE <StruName> =>
+#translate AS CLASS <ClassName> =>
+#translate AS STRU <StruName> =>
+#translate AS STRUCTURE <StruName> =>
 
-    #TRANSLATE AS NUM =>
-    #TRANSLATE AS NUMERIC =>
+#translate AS NUM =>
+#translate AS NUMERIC =>
 
-    #TRANSLATE AS DATE =>
-    #TRANSLATE AS BLOCK =>
+#translate AS DATE =>
+#translate AS BLOCK =>
 
-    #TRANSLATE AS OBJ =>
-    #TRANSLATE AS OBJECT =>
+#translate AS OBJ =>
+#translate AS OBJECT =>
 
-    #TRANSLATE AS BOOL =>
-    #TRANSLATE AS BOOLEAN =>
-    #TRANSLATE AS LOG =>
-    #TRANSLATE AS LOGICAL =>
+#translate AS BOOL =>
+#translate AS BOOLEAN =>
+#translate AS LOG =>
+#translate AS LOGICAL =>
 
-    #TRANSLATE AS VAR =>
-    #TRANSLATE AS VARIANT =>
+#translate AS VAR =>
+#translate AS VARIANT =>
 
-    #COMMAND DECLARE <*x*> =>
-
-    #COMMAND STRUCTURE <*x*> =>
+#command DECLARE <*x*> =>
+#command STRUCTURE <*x*> =>
 
 #endif

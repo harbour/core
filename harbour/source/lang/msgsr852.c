@@ -44,12 +44,12 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SR852",                        /* ID */
-      "Serbian",                   /* Name (in English) */
+      "SR852",                    /* ID */
+      "Serbian",                  /* Name (in English) */
       "Srpski",                   /* Name (in native language) */
-      "SR",                        /* RFC ID */
-      "852",                       /* Codepage */
-      "$Revision$ $Date$",         /* Version */
+      "SR",                       /* RFC ID */
+      "852",                      /* Codepage */
+      "$Revision$ $Date$",     /* Version */
 
       /* Month names */
 
@@ -64,7 +64,7 @@ static HB_LANG s_lang =
       "Septembar",
       "Oktobar",
       "Novembar",
-      "Decembar"
+      "Decembar",
 
       /* Day names */
 
@@ -74,7 +74,7 @@ static HB_LANG s_lang =
       "Sreda",
       "¬etvrtak",
       "Petak",
-      "Subota"
+      "Subota",
 
       /* CA-Cl*pper compatible natmsg items */
 

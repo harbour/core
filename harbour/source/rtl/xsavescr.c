@@ -53,6 +53,15 @@ static SHORT s_iRow;
 static SHORT s_iCol;
 static void * s_pBuffer = NULL;
 
+void hb_conXSaveRestRelease( void )
+{
+   if( s_pBuffer )
+   {
+      hb_xfree( s_pBuffer );
+      s_pBuffer = NULL;
+   };
+}
+
 HB_FUNC( __XSAVESCREEN )
 {
    if( s_pBuffer != NULL )

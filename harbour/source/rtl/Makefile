@@ -78,12 +78,12 @@ C_SOURCES=\
 	scroll.c     \
 	seconds.c    \
 	set.c        \
-  setcolor.c   \
-  setcurs.c    \
-  setkey.c     \
-  setpos.c     \
-  setposbs.c   \
-  shadow.c     \
+	setcolor.c   \
+	setcurs.c    \
+	setkey.c     \
+	setpos.c     \
+	setposbs.c   \
+	shadow.c     \
 	soundex.c    \
 	space.c      \
 	str.c        \

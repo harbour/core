@@ -6,6 +6,9 @@ ROOT = ../../
 
 C_SOURCES=\
 	msgca.c      \
+	msgcs852.c   \
+	msgcsiso.c   \
+	msgcskam.c   \
 	msgen.c      \
 	msges.c      \
 	msgeu.c      \
@@ -21,9 +24,6 @@ C_SOURCES=\
 	msgro.c      \
 	msgsr852.c   \
 	msgsriso.c   \
-	msgcs852.c   \
-	msgcsiso.c   \
-	msgcskam.c   \
 
 LIBNAME=lang
 
