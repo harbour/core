@@ -1,3 +1,7 @@
+Changelog: 2000-08-13 15:20 UTC+0500 April White <awhite@user.rose.com>
+   * doc/en/
+     - removed hbapi.txt hbcompat.txt hbset.txt
+
 2000-08-13 15:58 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/ads1.c
    * include/hbapirdd.h
@@ -35,8 +39,6 @@
  utils/hbdoc/rtf.prg
     *Added code to generate the Winhelp .cnt file dinanmicall,So every time
      the doc is updated , the winhelp.cnt file will also be updated.
-
-
 
 Changelog: 2000-08-12 20:00 UTC+0500 April White <awhite@user.rose.com>
    disregard my: 2000-07-29 03:00 UTC+0500
@@ -564,7 +566,6 @@ NOTE:
    * source/compiler/hbgenerr.c
      Bug fixes as reported by Andi Jahja
 
->>>>>>> 1.2544
 2000-07-31 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
    * source/macro/macro.slx
