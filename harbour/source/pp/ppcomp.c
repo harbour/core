@@ -66,6 +66,10 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
+static int strncmp_nocase( char* s1, char* s2, int n );
+
+extern BOOL hb_ppInsideTextBlock;
+
 BOOL hb_pp_bInline = FALSE;
 
 static char s_szLine[ HB_PP_STR_SIZE ];
@@ -107,6 +111,35 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
         if( hb_pp_bInline )
         {
+           break;
+        }
+
+        if( hb_ppInsideTextBlock )
+        {
+           char cQuote;
+           int i;
+
+           if( !strncmp_nocase( s_szLine,"ENDTEXT",7 ) && *(s_szLine+7) <= ' ' )
+           {
+              hb_ppInsideTextBlock = FALSE;
+              strcpy( s_szLine,"__TextRestore()" );
+              break;
+           }
+
+           if( !strchr( s_szLine,'\"' ) )
+              cQuote = '\"';
+           else if( !strchr( s_szLine,'\'' ) )
+              cQuote = '\'';
+           else
+              cQuote = '[';
+
+           s_szLine[ lens++ ] = ( cQuote == '[' )? ']':cQuote;
+           s_szLine[ lens++ ] = ')';
+           s_szLine[ lens ] = '\0';
+           for( i=lens;i>=0;i-- )
+              *( s_szLine+i+6 ) = *( s_szLine+i );
+           s_szLine[0] = 'Q'; s_szLine[1] = 'O'; s_szLine[2] = 'u';
+           s_szLine[3] = 't'; s_szLine[4] = '('; s_szLine[5] = cQuote;
            break;
         }
 
@@ -171,6 +204,12 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                        hb_pp_LastOutLine = hb_comp_iLine;
                        */
                        hb_pp_ParseExpression( ptr, s_szOutLine );
+                       if( !strncmp( ptr,"text QOut;",10 ) )
+                       {
+                          /* printf( "\ntext QOut %d\n",strlen(ptr) ); */
+                          memcpy( ptr, ptr+10, strlen(ptr)-9 );
+                          hb_ppInsideTextBlock = TRUE;
+                       }
                     }
                     else
                        *s_szLine = '\0';
@@ -333,3 +372,11 @@ int hb_pp_ReadRules( void )
   }
 }
 
+static int strncmp_nocase( char* s1, char* s2, int n )
+{
+   int i;
+   for( i=0;i<n;i++,s1++,s2++ )
+      if( toupper(*s1) != *s2 )
+         return ( toupper(*s1) - *s2 );
+   return 0;
+}

@@ -184,6 +184,7 @@ static char s_prevchar;
 
 int *      hb_pp_aCondCompile = NULL;
 int        hb_pp_nCondCompile = 0;
+BOOL       hb_ppInsideTextBlock = FALSE;
 
 char *     hb_pp_STD_CH = NULL;
 
@@ -3082,7 +3083,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               break;
 
             case '/':
-              if( readed>0 && buffer[readed-1] == '/' )
+              if( readed>0 && buffer[readed-1] == '/' && !hb_ppInsideTextBlock )
               {
                 maxlen = 0;
                 readed--;
@@ -3090,7 +3091,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               break;
 
             case '*':
-              if( readed > 0 && buffer[readed-1] == '/' )
+              if( readed > 0 && buffer[readed-1] == '/' && !hb_ppInsideTextBlock )
               {
                 s_ParseState = STATE_COMMENT;
                 readed--;

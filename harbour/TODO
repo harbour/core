@@ -11,14 +11,7 @@ _______________________________________________________________________
           Topic                              Responsible developer(s)
 ===================================          =========================
 
-TEXT/ENDTEXT support                         ???
-
 DBFCDX support                               Ryszard Glab
-
-Fixing internal HVM/RTL handling of string   ???
-items (Clipper passes a pointer to the same
-allocated memory instead of creating
-string copies)
 
 Remove #pragma pack() tricks                 ???
 from rdd .h files.
