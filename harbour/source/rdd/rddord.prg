@@ -91,11 +91,18 @@ FUNCTION IndexKey( nOrder )
 
    RETURN ""
 
+FUNCTION OrdSetRelation( xArea, bRelation, cRelation )
+   RETURN dbSetRelation( xArea, bRelation, cRelation, .T. )
+
+/* short (10 chars long) version of some ord* functions for compatibility */
 FUNCTION ORDLISTCLE()
    RETURN ORDLISTCLEAR()
 
 FUNCTION ORDLISTREB()
    RETURN ORDLISTREBUILD()
 
-FUNCTION ORDSETFOCU(xOrder,cFile)
-   RETURN ORDSETFOCUS(xOrder,cFile)
+FUNCTION ORDSETFOCU( xOrder, cFile )
+   RETURN ORDSETFOCUS( xOrder, cFile )
+
+FUNCTION ORDSETRELA( xArea, bRelation, cRelation )
+   RETURN ORDSETRELATION( xArea, bRelation, cRelation, .T. )

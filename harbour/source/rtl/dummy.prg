@@ -56,11 +56,6 @@
 
 #ifdef HB_COMPAT_C53
 FUNCTION ordCond()         ; RETURN NIL
-FUNCTION ordDescend()      ; RETURN .F.
-FUNCTION ordIsUnique()     ; RETURN .F.
-FUNCTION ordKeyGoto()      ; RETURN .F.
-FUNCTION ordSetRelation()  ; RETURN NIL
-FUNCTION ordSkipUnique()   ; RETURN .F.
 #endif
 
 FUNCTION __dbJoin()        ; RETURN NIL

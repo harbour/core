@@ -8,11 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-22 13:26 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
+  * xharbour/source/rdd/rddord.prg
+    + ORDSETRELATION()
+  * xharbour/source/rtl/dummy.prg
+    + removed implemented functions
+     * Latest RDD changes, has been made by Przemyslaw Czerpak - synced with xHarbour.
+
 2003-11-06 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.l
-      * enabled support for break[] (if not full Clipper 
+      * enabled support for break[] (if not full Clipper
       compatibility mode was requested)
-      
+
    * include/hbexpra.c
    * include/hbexprb.c
    * include/hbexprc.c
@@ -24,18 +31,18 @@
    * source/macro/macroa.c
    * source/macro/macrob.c
    * source/macro/macroc.c
-      * fixed optimalization of literal strings that contain macro 
-      operator - strings are not joined if the left argument of 
+      * fixed optimalization of literal strings that contain macro
+      operator - strings are not joined if the left argument of
       '+' operator contains '&'
       for example:
       CHR(38)+'text' -> will no longer look for 'text' variable
       '&var'+'iable' -> will look for 'var' variable instead of
       'variable'
-      
+
       + added optimalization of ASC function
       for example:
       ASC('&') will be replaced with 38
-      
+
       + added optimalization of LEN function
       for example:
       LEN("123") will be replaced with 3
@@ -112,9 +119,9 @@
 		The procedure name is not "uppercased"
 		For example:
 			DO MyProc
-		The compiler look for MyProc.prg file now 
+		The compiler look for MyProc.prg file now
 		(instead of MYPROC.prg)
-		
+
 2003-10-30 10:45 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
    * source/rtl/alert.prg
      ! Reverted changes from 2003-09-07
