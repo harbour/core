@@ -3097,16 +3097,13 @@ void hb_vmPushDouble( double dNumber, int iDec )
 static int hb_vmCalcDoubleWidth( double dNumber, int iDec )
 {
    char buffer[ 260 ];
-   int iLength;
 
    sprintf( buffer, "%.*f", 0, dNumber );
 
-   iLength = strlen( buffer );
-
    if( iDec == 0 )
-      iLength++;
-
-   return iLength;
+      return strlen( buffer ) + 1;
+   else
+      return strlen( buffer );
 }
 
 static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )

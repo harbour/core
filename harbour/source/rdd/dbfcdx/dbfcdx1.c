@@ -531,6 +531,7 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
       return 1;
    if( pKey1 == NULL || pKey1->pItem->item.asString.length == 0 )
       return ( pKey2->pItem->item.asString.length == 0 ) ? 0: -1;
+
    switch( hb_itemType( pKey1->pItem ) )
    {
       case HB_IT_STRING:
@@ -544,6 +545,7 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
                       pKey2->pItem->item.asString.value[ * EndPos ];
             * EndPos += 1;
          } while( iResult == 0 && * EndPos < iLimit );
+
          if( iResult == 0 )
          {
             * EndPos += 1;
@@ -555,8 +557,10 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
          break;
 
       default:
+         iResult = 0;
          printf( "hb_cdxKeyCompare()" );
    }
+
    if( iResult < 0 )
       return -1;
    else if( iResult > 0 )
@@ -2766,6 +2770,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    uiType = hb_itemType( pResult );
    uiLen = 0;
+
    switch( uiType )
    {
       case HB_IT_INTEGER:
@@ -2790,6 +2795,9 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          uiLen = pResult->item.asString.length > CDX_MAX_KEY ? CDX_MAX_KEY :
                  pResult->item.asString.length;
          break;
+
+      default:
+         bType = '\0';
    }
 
    hb_itemRelease( pResult );

@@ -1,3 +1,14 @@
+20000502-09:30 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * utils/hbtest/rt_hvma.prg
+     + Added some tests for the new compile-time generated double widths.
+
+   * source/vm/hvm.c
+     % Some optimization for hb_vmCalcDoubleWidth()
+
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! Fixed two -O2 GCC warnings.
+
 2000-05-02 01:45 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * include/hbapigt.h
@@ -122,7 +133,7 @@
        This is used for codeblocks which have no parameters, use no locals,
        and the total size is smaller than 255 bytes. The majority of codeblocks
        falls into this category.
-       HB_TEST is now 15K smaller.
+       HBTEST is now 15K smaller.
 
      ! WARNING ! All .PRGs must be recompiled after the changes of today.
 
