@@ -36,14 +36,17 @@
 #include "hbclass.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
-#xcommand MENUITEM <cPrompt> [ ACTION <uAction,...> ] => ;
-   TDbMenu():AddItem( TDbMenuItem():New( <cPrompt> [,{|Self|<uAction>}] ) )
+#xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> [ ACTION <uAction,...> ] ;
+   [ <checked: CHECK, CHECKED> ] => ;
+   [ <oMenuItem> := ] TDbMenu():AddItem( TDbMenuItem():New( <cPrompt>,;
+   [{|Self|<uAction>}] ,[<.checked.>] ) )
 #xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
 
 function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
    local oMenu
+   local oLineNumbers
 
    MENU oMenu
       MENUITEM " ~File "
@@ -109,7 +112,8 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENUITEM " ~Options "
       MENU
          MENUITEM " ~Preprocessed Code"     ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~Line Numbers"          ACTION oDebugger:LineNumbers()
+         MENUITEM oLineNumbers PROMPT " ~Line Numbers" ;
+            ACTION ( oDebugger:LineNumbers(), oLineNumbers:Toggle() ) CHECKED
          MENUITEM " ~Exchange Screens"      ACTION Alert( "Not implemented yet!" )
          MENUITEM " swap on ~Input"         ACTION Alert( "Not implemented yet!" )
          MENUITEM " code~Block Trace"       ACTION Alert( "Not implemented yet!" )
