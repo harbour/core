@@ -1,3 +1,20 @@
+20000507-13:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hberrors.h
+     + Added : #define HB_COMP_WARN_VAL_NOT_USED               20
+
+   * source/compiler/harbour.c
+     + Added logic to hb_compOptimizeFrames() to warn about invalid statics usage.
+
+   * source/compiler/hbgenerr.c
+     + Added: "3Value of Variable \'%s\' never used"
+
+   * source/compiler/hbpcode.c
+     * Enhanced support for statics
+
+   * tests/testwarn.prg
+     + Added more code to demonstrate more warnings.
+
 20000507-05:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbpcomp.c
@@ -10,11 +27,12 @@
      + Added support for MEMVAR AS ... syntax.
 
    * source/compiler/hbpcode.c
+     + Added static PVAR hb_compPrivateFind( char * szPrivateName )
      + Added support for FIELD AS ... and MEMVAR AS both local and global.
      ! More refinments
 
    * tests/testwarn.prg
-     + Added code to demonstrate "Adaptive Type Checking".
+     + Added more code to demonstrate more warnings.
 
 20000507-14:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 

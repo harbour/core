@@ -258,15 +258,15 @@ int main( int argc, char * argv[] )
                      if( ! hb_comp_bStartProc )
                         --hb_comp_iFunctionCnt;
 
-                     if( ! hb_comp_bQuiet )
-                        printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
-
                      pFunc = hb_comp_functions.pFirst;
                      while( pFunc )
                      {
                         hb_compOptimizeFrames( pFunc );
                         pFunc = pFunc->pNext;
                      }
+
+                     if( ! hb_comp_bQuiet )
+                        printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
 
                      hb_compGenOutput( hb_comp_iLanguage );
                   }
@@ -2653,6 +2653,24 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
          {
             pFunc->lPCodePos -= 3;
             memmove( pFunc->pCode + 5, pFunc->pCode + 8, pFunc->lPCodePos - 5 );
+         }
+         else
+         /* Check Global Statics. */
+         {
+            //PVAR pVar = pFunc->pStatics;
+            PVAR pVar = hb_comp_functions.pFirst->pStatics;
+
+            while( pVar )
+            {
+               //printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );
+
+               if ( ( ! pVar->iUsed & VU_USED ) && pVar->iUsed & VU_INITIALIZED )
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
+               else if ( pVar->iUsed & VU_USED && ! ( pVar->iUsed & VU_INITIALIZED ) )
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+
+               pVar = pVar->pNext;
+            }
          }
       }
    }

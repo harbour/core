@@ -969,8 +969,12 @@ void hb_compStrongType( int iSize )
 
        if ( pVar )
        {
-          if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
-             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+          //printf( "\nStatic: %s Function: %s Found in: %s\n", pVar->szName, pFunc->szName, pTmp->szName );
+
+          /* Only if "private" static, since global static may be intialized elsewhere. */
+          if ( pTmp == pFunc )
+            if ( ! ( pVar->iUsed & VU_INITIALIZED ) )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
 
           /* Mark as used */
           pVar->iUsed |= VU_USED;

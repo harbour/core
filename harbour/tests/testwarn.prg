@@ -66,7 +66,11 @@ FIELD b AS CHAR
 
 MEMVAR Var1 AS CHAR
 
+STATIC lGlobal AS LOGICAL
+
 PROCEDURE THEMAIN()
+
+  STATIC lStatic := 0
 
   FIELD b AS NUM
   USE TEMP
@@ -82,7 +86,13 @@ PROCEDURE THEMAIN()
 
   b := 'a'
 
-  Var1 := .f.
+  if lStatic
+     Var1 := .F.
+  endif
+
+  IF lGlobal
+     Var1 := .T.
+  ENDIF
 
 RETURN
 
@@ -103,6 +113,9 @@ PROCEDURE SOMEPROC()
   b := 0
 
   Var1 := 1
+
+  if lGlobal = 0
+  endif
 
 RETURN
 PROC MAIN1()
