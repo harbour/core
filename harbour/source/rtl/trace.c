@@ -33,18 +33,6 @@
  *
  */
 
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
- *    HB_HB_TRACEENABLE()
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 #include "extend.h"
 
 HARBOUR HB_HB_TRACESTATE( void )

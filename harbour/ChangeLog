@@ -1,3 +1,33 @@
+19991129-22:22 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.c
+    include/compiler.h
+    * HB_EXITLEVEL_* constants moved to the central header file.
+  * source/rtl/alert.prg
+    source/rtl/asort.prg
+    ! Minor fixes.
+  * include/hbdefs.h
+    ! HB_HANDLE - LONG -> ULONG, to suppress Borland warning in memvars.c
+  * source/rtl/memvars.c
+    ! cast added to suppress Borland warning.
+  * source/pp/stdalone/hbpp.c
+    source/pp/hbpplib.c
+    + Dummy compiler flag variables added for #pragma support.
+  * source/rtl/trace.c
+    - Copyright removed.
+
+19991129-22:22 GMT+1 Jose Lalin <dezac@corevia.com>
+  * source/pp/hbpp.c
+    + Added support for #pragma directives
+      Now we can include compiler settings inside PRG's
+  * include/hberrors.h
+    + Added new #define ERR_PRAGMA_BAD_VALUE
+  + tests/tstprag.prg
+    tests/Makefile
+    + New test for pragma directives
+  + doc/pragma.txt
+    + a bit of info on Harbour pragmas implementation
+    (Uploaded by Victor Szel)
+
 Mon Nov 29 12:45:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/hbtrace.h: 

@@ -49,6 +49,7 @@
 #include "hbpp.h"
 #include "hberrors.h"
 #include "hbver.h"
+#include "compiler.h"
 
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
@@ -60,6 +61,17 @@ static int  s_iWarnings = 0;
 
 PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME hb_comp_pFileName = NULL;
+
+/* These are need for the PP #pragma support */
+BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
+BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
+BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+int  hb_comp_iWarnings = 0;                     /* enable parse warnings */
+BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
+int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 
 int main( int argc, char * argv[] )
 {

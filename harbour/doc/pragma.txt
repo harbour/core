@@ -1,0 +1,79 @@
+#
+# $Id:
+#
+
+INTRODUCTION
+============
+This file explains what is and how to use #pragma directive in Harbour.
+
+PRAGMA
+======
+The #pragma is a directive used in many compilers to change at compile
+time some flags inside the compiler itself.
+
+USAGE
+=====
+Currently the #pragma directive can be used in two ways: switch mode and
+command mode.
+
+The syntax is: #pragma <Expression>[=On/Off] or
+               #pragma -CompilerFlag[+|-]
+
+Remember thar you can use both modes mixed in the same module and
+upper/lower case without worry.
+
+To enable/disable a command you simply do: <CommandName>=On/Off and
+for switches you do: /<SwitchName>+/-
+
+   Example: #pragma AddDebugInfo=Off  /* Suppress debug info */
+            #pragma /B+               /* Add debug info from here */
+
+
+IMPLEMENTATION
+==============
+
+This is the list of the supported commands and switchs:
+
+  * Command                           Switch
+  -----------------------------------------------
+  * AUTOMEMVARS         =<On/Off>     /A<+/->
+  * DEBUGINFO           =<On/Off>     /B<+/->
+  * ENABLEWARNINGS      =<On/Off>     /W<+/->
+  * EXITSEVERITY        =<nLevel>     /E<nLevel>
+  * FORCEMEMVARS        =<On/Off>     /V<+/->
+  * LINEINFO            =<On/Off>     /L<+/->
+  * NOSTARTPROC         =<On/Off>     /N<+/->
+  * PREPROCESSING       =<On/Off>     /P<+/->
+  * WARNINGLEVEL        =<nLevel>     /W<nLevel>
+  * SHORTCUTTING        =<On/Off>     /Z<+/->
+
+  The switchs have the same behaviour as the corresponding compiler ones
+  and the commands are sinonyms for the switchs.
+  
+  * TRACEPRAGMAS
+  This command shows pragma activity when enabled.
+
+  NOTE: you can use the abbreviated commands mode by typing only the
+        first ten chars.
+
+NOTES
+=====
+This directive is not supported in the standalone version of the Harbour
+preprocessor.
+
+EXAMPLES
+========
+
+#pragma NoStartProc=Off
+/* #pragma /N- */
+
+function Test()
+return nil
+
+This is the same as calling Harbour with the -n switch in the command line,
+but with the great benefit that if you forgot to pass the switch if will be
+used anyway because it is included inside the source.
+
+=======
+Regards,
+Jose Lalin <dezac@corevia.com>

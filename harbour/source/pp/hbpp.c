@@ -34,6 +34,18 @@
  */
 
 /*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    Support for #pragma directive and related functions
+ *    See doc/pragma.txt
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*
  * Avoid tracing in preprocessor/compiler.
  */
 #if ! defined(HB_TRACE_UTILS)
@@ -48,6 +60,7 @@
 #include <ctype.h>
 #include "hbpp.h"
 #include "hberrors.h"
+#include "compiler.h"
 
 static COMMANDS * AddCommand( char * );                  /* Add new #command to an array  */
 static COMMANDS * AddTranslate( char * );                /* Add new #translate to an array  */
@@ -88,6 +101,15 @@ static int    NextWord( char **, char *, BOOL );
 static int    NextName( char **, char * );
 static int    NextParm( char **, char * );
 static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, FILE **, BOOL bStandardOnly, char * );
+
+/* These are related to pragma support */
+static int    ParsePragma( char * );
+static BOOL   StringToBool( char *, BOOL );
+static int    StringToInt( char *, int );
+static BOOL   IsOnOffSwitch( char *, BOOL );
+static void   DebugPragma( char *, int, BOOL );
+
+static BOOL s_bTracePragma = FALSE;
 
 #define ISNAME( c )  ( isalnum( c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME 255
@@ -138,7 +160,8 @@ char * hb_pp_szErrors[] =
   "#error: \'%s\'",
   "Memory allocation error",
   "Memory reallocation error",
-  "Freeing a NULL memory pointer"
+  "Freeing a NULL memory pointer",
+  "Value out of range in #pragma directive"
 };
 
 /* Table with parse warnings */
@@ -243,6 +266,10 @@ int hb_pp_ParseDirective( char * sLine )
 
       else if( i == 4 && memcmp( sDirective, "LINE", 4 ) == 0 )
         return -1;
+
+      else if( i == 6 && memcmp( sDirective, "PRAGMA", 6 ) == 0 )
+         ParsePragma( sLine );   /* --- #pragma  --- */
+
       else
         hb_compGenError( hb_pp_szErrors, 'F', ERR_WRONG_DIRECTIVE, sDirective, NULL );
     }
@@ -2257,4 +2284,287 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
     }
 
   return ( *fptr ? TRUE : FALSE );
+}
+
+/* Size of abreviated pragma commands */
+#define PRAGMAS_LEN       8
+
+/* TODO:  Add support for:
+          CompileModule /M
+          QuietMode     /Q
+          RequestLib    /R
+          TempPath      /T
+          StdHeader     /U
+          CheckSyntax   /S
+*/
+
+static int ParsePragma( char * sLine )
+{
+   char pragma[ MAX_NAME ];
+
+   HB_TRACE(HB_TR_DEBUG, ("ParsePragma(%s)", sLine));
+
+   HB_SKIPTABSPACES( sLine );
+
+   NextWord( &sLine, pragma, FALSE );
+
+   if( HB_ISOPTSEP( pragma[ 0 ] ) )
+   {
+      switch( pragma[ 1 ] )
+      {
+         case 'a':
+         case 'A':
+            hb_comp_bAutoMemvarAssume = IsOnOffSwitch( pragma, hb_comp_bAutoMemvarAssume );
+            DebugPragma( pragma, -1, hb_comp_bAutoMemvarAssume );
+            break;
+
+         case 'b':
+         case 'B':
+            hb_comp_bDebugInfo = IsOnOffSwitch( pragma, hb_comp_bDebugInfo );
+            hb_comp_bLineNumbers = hb_comp_bDebugInfo;
+            DebugPragma( pragma, -1, hb_comp_bDebugInfo );
+            break;
+
+         case 'e':
+         case 'E':
+
+            if( pragma[ 2 ] == 's' ||
+                pragma[ 2 ] == 'S' )
+            {
+               switch( pragma[ 3 ] )
+               {
+                  case '\0':
+                  case '0':
+                     hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT;
+                     break;
+
+                  case '1':
+                     hb_comp_iExitLevel = HB_EXITLEVEL_SETEXIT;
+                     break;
+
+                  case '2':
+                     hb_comp_iExitLevel = HB_EXITLEVEL_DELTARGET;
+                     break;
+
+                  default:
+                     hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+               }
+               DebugPragma( pragma, hb_comp_iExitLevel, FALSE );
+            }
+
+            break;
+
+         case 'l':
+         case 'L':
+            hb_comp_bLineNumbers = IsOnOffSwitch( pragma, hb_comp_bLineNumbers );
+            DebugPragma( pragma, -1, hb_comp_bLineNumbers );
+            break;
+
+         case 'n':
+         case 'N':
+            hb_comp_bStartProc = IsOnOffSwitch( pragma, hb_comp_bStartProc );
+            DebugPragma( pragma, -1, hb_comp_bStartProc );
+            break;
+
+         case 'p':
+         case 'P':
+            hb_comp_bPPO = IsOnOffSwitch( pragma, hb_comp_bPPO );
+            DebugPragma( pragma, -1, hb_comp_bPPO );
+            break;
+
+         case 'v':
+         case 'V':
+            hb_comp_bForceMemvars = IsOnOffSwitch( pragma, hb_comp_bForceMemvars );
+            DebugPragma( pragma, -1, hb_comp_bForceMemvars );
+            break;
+
+         case 'w':
+         case 'W':
+            if( pragma[ 2 ] != '\0' )
+            {
+               /* Check for +/- */
+               if( pragma[ strlen( pragma ) - 1 ] == '+' ||
+                   pragma[ strlen( pragma ) - 1 ] == '-' )
+                  hb_comp_iWarnings = IsOnOffSwitch( pragma, hb_comp_iWarnings != 0 ) ? 1 : 0;
+               else
+               {  
+                  /* There is -w<0,1,2,3> probably */
+                  hb_comp_iWarnings = pragma[ 2 ] - '0';
+                  if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
+                     hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+
+                  DebugPragma( pragma, -1, hb_comp_iWarnings );
+               }
+            }
+            break;
+
+         case 'z':
+         case 'Z':
+            hb_comp_bShortCuts = IsOnOffSwitch( pragma, hb_comp_bShortCuts );
+            DebugPragma( pragma, -1, hb_comp_bShortCuts );
+            break;
+
+         default:
+            break;
+      }
+   }
+   else
+   {
+      char * temp = hb_strupr( pragma );
+
+      if( memcmp( pragma, "AUTOMEMVARS", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bAutoMemvarAssume = StringToBool( temp, hb_comp_bAutoMemvarAssume );
+         DebugPragma( pragma, -1, hb_comp_bAutoMemvarAssume );
+      }
+      else if( memcmp( temp, "DEBUGINFO", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bDebugInfo = StringToBool( temp, hb_comp_bDebugInfo );
+         hb_comp_bLineNumbers = hb_comp_bDebugInfo;
+         DebugPragma( pragma, -1, hb_comp_bDebugInfo );
+      }
+      else if( memcmp( temp, "ENABLEWARNINGS", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_iWarnings = StringToBool( temp, hb_comp_iWarnings != 0 ) ? 1 : 0;
+         DebugPragma( pragma, hb_comp_iWarnings, FALSE );
+      }
+      else if( memcmp( temp, "EXITSEVERITY", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_iExitLevel = StringToInt( temp, hb_comp_iExitLevel );
+         if( hb_comp_iExitLevel < 0 || hb_comp_iExitLevel > 2 )
+            hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+         DebugPragma( pragma, hb_comp_iExitLevel, FALSE );
+      }
+      else if( memcmp( temp, "FORCEMEMVARS", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bForceMemvars = StringToBool( temp, hb_comp_bForceMemvars );
+         DebugPragma( pragma, -1, hb_comp_bForceMemvars );
+      }
+      else if( memcmp( temp, "LINEINFO", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bLineNumbers = StringToBool( temp, hb_comp_bLineNumbers );
+         DebugPragma( pragma, -1, hb_comp_bLineNumbers );
+      }
+      else if( memcmp( temp, "NOSTARTPROC", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bStartProc = StringToBool( temp, hb_comp_bStartProc );
+         DebugPragma( pragma, hb_comp_bStartProc, FALSE );
+      }
+      else if( memcmp( temp, "PREPROCESSING", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bPPO = StringToBool( temp, hb_comp_bPPO );
+         DebugPragma( pragma, -1, hb_comp_bPPO );
+      }
+      else if( memcmp( temp, "SHORTCUTTING", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_bShortCuts = StringToBool( temp, hb_comp_bShortCuts );
+         DebugPragma( pragma, -1, hb_comp_bShortCuts );
+      }
+      else if( memcmp( temp, "WARNINGLEVEL", PRAGMAS_LEN ) == 0 )
+      {
+         hb_comp_iWarnings = StringToInt( temp, hb_comp_iWarnings );
+         if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
+            hb_compGenError( hb_pp_szErrors, 'F', ERR_PRAGMA_BAD_VALUE, NULL, NULL );
+         DebugPragma( pragma, -1, hb_comp_iWarnings );
+      }
+      else if( memcmp( temp, "TRACEPRAGMAS", PRAGMAS_LEN ) == 0 )
+      {
+         s_bTracePragma = StringToBool( temp, s_bTracePragma );
+         DebugPragma( pragma, -1, s_bTracePragma );
+      }
+   }
+
+   return 0;
+}
+
+/* Checks for ON/OFF within the string, sets bDefault if not found */
+static BOOL StringToBool( char * str, BOOL bDefault )
+{
+   char * pos;
+   BOOL bRet = bDefault;
+
+   pos = strchr( str, '=' );
+
+   if( pos )
+   {
+      long lPos = pos - str + 1;
+
+      if( str[ lPos ] == 'O' )
+      {
+         if( strlen( str ) >= 2 &&
+             str[ lPos + 1 ] == 'N' )
+            bRet = TRUE;
+         else if( strlen( str ) >= 3 &&
+                  str[ lPos + 1 ] == 'F' &&
+                  str[ lPos + 2 ] == 'F' )
+            bRet = FALSE;
+      }
+   }
+
+   return bRet;
+}
+
+/* Checks for +/- within the string, sets bDefault if not found */
+static BOOL IsOnOffSwitch( char * str, BOOL bDefault )
+{
+   BOOL bRet = bDefault;
+   long lPos = strlen( str ) - 1;
+
+   if( str[ lPos ] == '+' )
+      bRet = TRUE;
+   else if( str[ lPos ] == '-' )
+      bRet = FALSE;
+
+   return bRet;
+}
+
+/* Returns value after =, sets iDefault if not found */
+static int StringToInt( char * str, int iDefault )
+{
+   char * pos;
+   int iRet = iDefault;
+
+   pos = strchr( str, '=' );
+
+   if( pos )
+   {
+      long lPos = pos - str + 1;
+
+      if( lPos && str[ lPos ] )
+         iRet = str[ lPos ] - '0';
+   }
+
+   return iRet;
+}
+
+/* This is only to debug pragmas now */
+static void DebugPragma( char * szStr, int iValue, BOOL bValue )
+{
+   if( s_bTracePragma )
+   {
+      char * ptr = strchr( szStr, '=' );
+      char * temp = hb_xgrab( strlen( szStr ) + 1 );
+      BOOL bIsSwitch = TRUE;
+
+      * temp = '\0';
+
+      /* strip =... from szStr. Just cosmetic */
+      if( ptr )
+      {
+         int i = 0;
+
+         while( szStr[ i ] != '=' )
+            temp[ i ] = szStr[ i++ ];
+
+         temp[ i ] = '\0';
+         bIsSwitch = FALSE;
+      }
+
+      if( iValue > 0 )
+         printf( "#pragma %s set to %i\n", bIsSwitch ? szStr : temp, iValue );
+      else
+         printf( "#pragma %s is %s\n", bIsSwitch ? szStr : temp, bValue ? "ON" : "OFF" );
+
+      hb_xfree( temp );
+   }
 }

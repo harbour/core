@@ -115,6 +115,7 @@
 #define ERR_PPMEMALLOC             11
 #define ERR_PPMEMREALLOC           12
 #define ERR_PPMEMFREE              13
+#define ERR_PRAGMA_BAD_VALUE       14
 
 #define WARN_NONDIRECTIVE          1
 

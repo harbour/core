@@ -16,7 +16,8 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
- *    Changes for higher Clipper compatibility
+ *    Changes for higher Clipper compatibility, console mode, extensions
+ *    __NONOALERT()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation

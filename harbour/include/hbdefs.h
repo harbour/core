@@ -134,8 +134,8 @@ typedef BYTE HB_ATTR;
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
-typedef LONG HB_HANDLE;     /* handle to memvar value */
-typedef char HB_SYMBOLSCOPE;   /* stores symbol's scope */
+typedef ULONG HB_HANDLE;        /* handle to memvar value */
+typedef char  HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
 /* Some common character constants */
 

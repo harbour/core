@@ -826,7 +826,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
       }
       else
       {
-         if( iPos < s_privateStackCnt )
+         if( ( ULONG ) iPos < s_privateStackCnt )
          {
             HB_DYNS_PTR pDynSym = s_privateStack[ iPos ];
 

@@ -325,6 +325,11 @@ extern USHORT hb_comp_wCaseCounter;
 extern char * hb_comp_szErrors[];
 extern char * hb_comp_szWarnings[];
 
+/* /ES command line setting types */
+#define HB_EXITLEVEL_DEFAULT    0
+#define HB_EXITLEVEL_SETEXIT    1
+#define HB_EXITLEVEL_DELTARGET  2
+
 
 HB_EXPR_PTR hb_compExprNewEmpty( void );
 HB_EXPR_PTR hb_compExprNewNil( void );

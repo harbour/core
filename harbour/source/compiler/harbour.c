@@ -40,11 +40,6 @@
    extern unsigned _stklen = UINT_MAX;
 #endif
 
-/* /ES command line setting types */
-#define HB_EXITLEVEL_DEFAULT    0
-#define HB_EXITLEVEL_SETEXIT    1
-#define HB_EXITLEVEL_DELTARGET  2
-
 typedef enum
 {
    LANG_C,                  /* C language (by default) <file.c> */
