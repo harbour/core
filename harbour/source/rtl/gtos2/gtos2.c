@@ -109,9 +109,17 @@ static ULONG s_ulLVBptr;
 /* length of video buffer */
 static USHORT s_usLVBlength;
 
+/* keyboard event record */
+static PKBDKEYINFO s_key;
+
+/* keyboard handle, 0 == default */
+static PHKBD s_hk;
+
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
+   APIRET rc;           /* return code from DosXXX api call */
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    s_uiDispCount = 0;
@@ -121,6 +129,19 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       VioShowBuf(0, s_usLVBlength, 0);
    } else {
       s_ulLVBptr = (ULONG) NULL;
+   }
+
+   /* Alloc tileable memory for calling a 16 subsystem */
+   rc = DosAllocMem((void *) &s_hk, sizeof(HKBD), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   if (rc != NO_ERROR) {
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
+   }
+   /* it is a long after all, so I set it to zero only one time since it never changes */
+   memset(s_hk, 0, sizeof(HKBD));
+
+   rc = DosAllocMem((void *) &s_key, sizeof(KBDKEYINFO), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
+   if (rc != NO_ERROR) {
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
    }
 
    hb_mouse_Init();
@@ -143,6 +164,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 void hb_gt_Exit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Exit()"));
+
+   DosFreeMem(s_key);
+   DosFreeMem(s_hk);
 
    hb_mouse_Exit();
    /* TODO: */
@@ -168,51 +192,34 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    int ch;              /* next char if any */
 
-   PKBDKEYINFO key;     /* keyboard event record */
-   PHKBD hk;            /* keyboard handle, 0 == default */
-   APIRET rc;           /* return code from DosXXX api call */
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) eventmask));
 
-   /* Alloc tileable memory for calling a 16 subsystem */
-   rc = DosAllocMem((void *) &hk, sizeof(HKBD), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
-   if (rc != NO_ERROR) {
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
-   }
-   memset(hk, 0, sizeof(HKBD));
-
-   rc = DosAllocMem((void *) &key, sizeof(KBDKEYINFO), PAG_COMMIT | OBJ_TILE | PAG_WRITE);
-   if (rc != NO_ERROR) {
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_ReadKey() memory allocation failure", NULL, NULL);
-   }
-   memset(key, 0, sizeof(KBDKEYINFO));
+   /* zero out keyboard event record */
+   memset(s_key, 0, sizeof(KBDKEYINFO));
 
    /* Get next character without wait */
-   KbdCharIn(key, IO_NOWAIT, (HKBD) * hk);
+   KbdCharIn(s_key, IO_NOWAIT, (HKBD) * s_hk);
 
    /* extended key codes have 00h or E0h as chChar */
-   if ((key->fbStatus & KBDTRF_EXTENDED_CODE) && (key->chChar == 0x00 || key->chChar == 0xE0))	{
+   if ((s_key->fbStatus & KBDTRF_EXTENDED_CODE) && (s_key->chChar == 0x00 || s_key->chChar == 0xE0))	{
 
       /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
          unless extended keyboard events are allowed, in which case offset it by 512 */
-      if ((key->chChar == 0xE0) && (eventmask & INKEY_RAW)) {
-         ch = (int) key->chScan + 512;
+      if ((s_key->chChar == 0xE0) && (eventmask & INKEY_RAW)) {
+         ch = (int) s_key->chScan + 512;
 
       } else {
-         ch = (int) key->chScan + 256;
+         ch = (int) s_key->chScan + 256;
 
       }
 
-   } else if (key->fbStatus & KBDTRF_FINAL_CHAR_IN) {
-      ch = (int) key->chChar;
+   } else if (s_key->fbStatus & KBDTRF_FINAL_CHAR_IN) {
+      ch = (int) s_key->chChar;
 
    } else {
       ch = 0;
 
    }
-
-   DosFreeMem(key);
-   DosFreeMem(hk);
 
    /* Perform key translations */
    switch( ch )

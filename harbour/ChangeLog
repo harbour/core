@@ -1,3 +1,8 @@
+2001-02-27 09:09 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/gtos2/gtos2.c
+     ! fixed (sort of) changing used variables to statics so that I don't have to alloc them
+       on every call to hb_gt_ReadKey(). Now as fast as it was.
+
 2001-02-26 22:59 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/gtos2/gtos2.c
      ! hb_gt_ReadKey() uses KBD subsystem of OS/2 instead of any compiler runtime
