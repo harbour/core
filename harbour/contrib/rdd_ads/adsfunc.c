@@ -426,6 +426,83 @@ HB_FUNC( ADSKEYCOUNT )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYCOUNT" );
 }
 
+HB_FUNC( ADSADDCUSTOMKEY )
+{
+   ADSAREAP pArea;
+   UNSIGNED8* ordName;
+   UNSIGNED8 ordNum;
+   ADSHANDLE hIndex;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( hb_pcount() > 0 )
+      {
+         if( ISNUM( 1 ) )
+         {
+            ordNum = hb_parni( 1 );
+            AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+         }
+         else
+         {
+            ordName = (UCHAR*)hb_parc( 1 );
+            AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+         }
+         hb_retnl( (LONG) AdsAddCustomKey( hIndex ) );
+      }
+      else
+      {
+         if( pArea->hOrdCurrent != 0)
+         {
+            hIndex = pArea->hOrdCurrent;
+            hb_retnl( (LONG) AdsAddCustomKey( hIndex ) );
+         }
+         else
+            hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSADDCUSTOMKEY" );
+      }
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSADDCUSTOMKEY" );
+}
+
+HB_FUNC( ADSDELETECUSTOMKEY )
+{
+   ADSAREAP pArea;
+   UNSIGNED8* ordName;
+   UNSIGNED8 ordNum;
+   ADSHANDLE hIndex;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( hb_pcount() > 0 )
+      {
+         if( ISNUM( 1 ) )
+         {
+            ordNum = hb_parni( 1 );
+            AdsGetIndexHandleByOrder( pArea->hTable, ordNum, &hIndex );
+         }
+         else
+         {
+            ordName = (UCHAR*)hb_parc( 1 );
+            AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
+         }
+         hb_retnl( (LONG) AdsDeleteCustomKey( hIndex ) );
+      }
+      else
+      {
+         if( pArea->hOrdCurrent != 0)
+         {
+            hIndex = pArea->hOrdCurrent;
+            hb_retnl( (LONG) AdsDeleteCustomKey( hIndex ) );
+         }
+         else
+            hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSDELETECUSTOMKEY" );
+      }
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDELETECUSTOMKEY" );
+}
 
 HB_FUNC( ADSCLEARAOF )
 {

@@ -1,3 +1,11 @@
+2001-10-30 20:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+     * Added support for creating custom indexes
+   * contrib/rdd_ads/adsfunc.c
+     * Two functions added:
+         AdsAddCustomKey( [ cOrder | nPosition ] )
+         AdsDeleteCustomKey( [ cOrder | nPosition ] )
+
 2001-10-30 11:01 GMT Dave Pearson <davep@davep.org>
    * source/rtl/filesys.c
      * Fixed the Un*x oriented code in hb_fsMkDir so that it sets

@@ -1585,6 +1585,8 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }
    if ( pArea->lpdbOrdCondInfo )
    {
+      if( pArea->lpdbOrdCondInfo->fCustom )
+         ulOptions |= ADS_CUSTOM;
       if( pArea->lpdbOrdCondInfo->fDescending )
          ulOptions |= ADS_DESCENDING;
    }
