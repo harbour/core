@@ -240,26 +240,26 @@ Main       : { hb_compLinePush(); } Source       { }
            | /* empty file */
            ;
 
-Source     : Crlf         { hb_comp_EOL = FALSE; }
-           | VarDefs      { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | FieldsDef    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | MemvarDef    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | Declaration  { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | Function     { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | Statement    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | Line         { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
-           | ProcReq      { hb_comp_EOL = FALSE; }
-           | error  Crlf  { hb_comp_EOL = FALSE; yyclearin; }
-           | Source Crlf        { hb_comp_EOL = FALSE; }
-           | Source VarDefs     { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source FieldsDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source MemvarDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source Declaration { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source Function    { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source Statement   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source Line        { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_iLine - 1; }
-           | Source ProcReq     { hb_comp_EOL = FALSE; }
-           | Source error Crlf  { hb_comp_EOL = FALSE; yyclearin; }
+Source     : Crlf      
+           | VarDefs
+           | FieldsDef
+           | MemvarDef
+           | Declaration
+           | Function
+           | Statement
+           | Line
+           | ProcReq
+           | error  Crlf  { yyclearin; }
+           | Source Crlf
+           | Source VarDefs
+           | Source FieldsDef
+           | Source MemvarDef
+           | Source Declaration
+           | Source Function
+           | Source Statement
+           | Source Line
+           | Source ProcReq
+           | Source error Crlf  { yyclearin; }
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf
@@ -406,7 +406,7 @@ CrlfStmnt  : { hb_compLinePushIfInside(); } Crlf
            ;
 
 LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
-           | Statement     { $<lNumber>$ = 1; hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | Statement     { $<lNumber>$ = 1; }
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); }
@@ -1271,44 +1271,58 @@ EmptyStatements : LineStat                                    { $<lNumber>$ = $<
            | EmptyStatements { hb_compLinePush(); } LineStat  { $<lNumber>$ += $<lNumber>3; }
            ;
 
-EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; hb_comp_EOL = FALSE; $<lNumber>$ = 0; }
-           | EmptyStatements       { hb_comp_EOL = FALSE; $<lNumber>$ = $<lNumber>1; }
+EmptyStats : /* empty */           { hb_comp_bDontGenLineNum = TRUE; $<lNumber>$ = 0; }
+           | EmptyStatements       { $<lNumber>$ = $<lNumber>1; }
            ;
 
-IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+IfBegin    : IF SimpleExpression { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF Variable { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | IF Variable { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF PareExpList1 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | IF PareExpList1 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF PareExpList2 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+           | IF PareExpList2 { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
 
-           | IF PareExpListN { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); }
+           | IF PareExpListN { ++hb_comp_wIfCounter; hb_compLinePush(); } Crlf { hb_compExprDelete( hb_compExprGenPush( $2 ) ); $$ = hb_compGenJumpFalse( 0 ); }
                 EmptyStats
                 { $$ = hb_compGenJump( 0 ); hb_compGenJumpHere( $<iNumber>5 ); }
            ;
 
-IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+IfElse     : ELSE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            ;
 
-IfElseIf   : ELSEIF Expression Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compExprDelete( hb_compExprGenPush( $2 ) ); $<iNumber>$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
-                EmptyStats { $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) ); hb_compGenJumpHere( $<iNumber>4 ); }
+IfElseIf   : ELSEIF { hb_compLinePush(); } Expression Crlf 
+                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; 
+                  hb_compExprDelete( hb_compExprGenPush( $3 ) ); 
+                  $<iNumber>$ = hb_compGenJumpFalse( 0 ); 
+                }
+                EmptyStats 
+                { $$ = hb_compElseIfGen( NULL, hb_compGenJump( 0 ) ); 
+                  hb_compGenJumpHere( $<iNumber>5 ); 
+                }
 
-           | IfElseIf ELSEIF Expression Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compExprDelete( hb_compExprGenPush( $3 ) ); $<iNumber>$ = hb_compGenJumpFalse( 0 ); hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
-                EmptyStats { $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) ); hb_compGenJumpHere( $<iNumber>5 ); }
+           | IfElseIf ELSEIF { hb_compLinePush(); } Expression Crlf 
+                { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; 
+                  hb_compExprDelete( hb_compExprGenPush( $4 ) ); 
+                  $<iNumber>$ = hb_compGenJumpFalse( 0 ); 
+                }
+                EmptyStats 
+                { $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) ); 
+                  hb_compGenJumpHere( $<iNumber>6 ); 
+                }
            ;
 
-EndIf      : ENDIF                 { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
-           | END                   { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
+EndIf      : ENDIF    { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
+           | END      { --hb_comp_wIfCounter; hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); }
            ;
 
 DoCase     : DoCaseBegin
@@ -1338,7 +1352,7 @@ EndCase    : ENDCASE
                }
            ;
 
-DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; } Crlf { hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; } Crlf
             ;
 
 DoCaseBegin : DoCaseStart            { }
@@ -1350,40 +1364,32 @@ DoCaseBegin : DoCaseStart            { }
                      }
            ;
 
-Cases      : CASE Expression Crlf
+Cases      : CASE { hb_compLinePush(); } Expression Crlf
                {
-                  hb_compExprDelete( hb_compExprGenPush( $2 ) );
+                  hb_compExprDelete( hb_compExprGenPush( $3 ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0 );
-                  hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              EmptyStats
                {
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $$ = hb_compElseIfGen( 0, hb_compGenJump( 0 ) );
-                  hb_compGenJumpHere( $<iNumber>4 );
-                  hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
+                  hb_compGenJumpHere( $<iNumber>5 );
                }
 
-           | Cases CASE Expression Crlf
+           | Cases CASE { hb_compLinePush(); } Expression Crlf
                {
-                  hb_compExprDelete( hb_compExprGenPush( $3 ) );
+                  hb_compExprDelete( hb_compExprGenPush( $4 ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0 );
-                  hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              EmptyStats
                {
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $$ = hb_compElseIfGen( $1, hb_compGenJump( 0 ) );
-                  hb_compGenJumpHere( $<iNumber>5 );
-                  hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
+                  hb_compGenJumpHere( $<iNumber>6 );
                }
            ;
 
-Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush(); hb_comp_iCompiled = hb_comp_iLine - 1; }
+Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
                 EmptyStats
@@ -1393,21 +1399,17 @@ DoWhile    : WhileBegin Expression Crlf
                {
                   hb_compExprDelete( hb_compExprGenPush( $2 ) );
                   $<lNumber>$ = hb_compGenJumpFalse( 0 );
-                  hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
                 }
              EmptyStats
                {
                   hb_compLoopHere();
                   hb_compGenJump( $1 - hb_comp_functions.pLast->lPCodePos );
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              EndWhile
                {
                   hb_compGenJumpHere( $<lNumber>4 ); --hb_comp_wWhileCounter;
                   hb_compLoopEnd();
                   hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
                 }
            ;
 
@@ -1440,8 +1442,6 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   else
                      hb_compGenPCode1( HB_P_LESSEQUAL );
                   $<lNumber>$ = hb_compGenJumpFalse( 0 );   /* 11 */
-                  hb_compLinePush();
-		  hb_comp_iCompiled = hb_comp_iLine - 1;
                }
              ForStatements                            /* 12 */
                {
@@ -1475,7 +1475,7 @@ ForStatements : EmptyStats NEXT                     { --hb_comp_wForCounter; }
            | EmptyStats END IdentName               { --hb_comp_wForCounter; }
            ;
 
-BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf { hb_compLinePush(); }
+BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf
                 EmptyStats
                 {
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
@@ -1483,15 +1483,14 @@ BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegi
                    */
                   hb_compGenJumpHere( $<lNumber>2 );
                   $<lNumber>$ = hb_compSequenceEnd();
-                  hb_compLinePush();
                 }
                 RecoverSeq
                 {
                    /* Replace END address with RECOVER address in
                     * HB_P_SEQBEGIN opcode if there is RECOVER clause
                     */
-                   if( $<lNumber>7 )
-                      hb_compGenJumpThere( $<lNumber>2, $<lNumber>7-( hb_comp_bLineNumbers ? 3 : 0 ) );
+                   if( $<lNumber>6 )
+                      hb_compGenJumpThere( $<lNumber>2, $<lNumber>6 );
                 }
              END
              {
@@ -1499,19 +1498,17 @@ BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegi
                  * There is no line number after HB_P_SEQEND in case no
                  * RECOVER clause is used
                  */
-                hb_compGenJumpThere( $<lNumber>6, hb_comp_functions.pLast->lPCodePos-((hb_comp_bLineNumbers && !$<lNumber>7)?3:0) );
-                if( $<lNumber>7 )   /* only if there is RECOVER clause */
-                   hb_compLinePushIfDebugger();
-                else
+                hb_compGenJumpThere( $<lNumber>5, hb_comp_functions.pLast->lPCodePos );
+                if( !$<lNumber>6 )   /* only if there is no RECOVER clause */
                    --hb_comp_wSeqCounter;  /* RECOVER is also considered as end of sequence */
-                hb_compSequenceFinish( $<lNumber>2, $<iNumber>5 );
+                hb_compSequenceFinish( $<lNumber>2, $<iNumber>4 );
                 hb_comp_functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
              }
            ;
 
 RecoverSeq : /* no recover */  { $<lNumber>$ = 0; }
-           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); } EmptyStats
-           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); } EmptyStats
+           | RecoverEmpty Crlf { $<lNumber>$ = $<lNumber>1; } EmptyStats
+           | RecoverUsing Crlf { $<lNumber>$ = $<lNumber>1; } EmptyStats
            ;
 
 RecoverEmpty : RECOVER
@@ -1529,6 +1526,7 @@ RecoverUsing : RECOVERUSING IdentName
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
                   --hb_comp_wSeqCounter;
                   hb_compGenPCode1( HB_P_SEQRECOVER );
+                  hb_compLinePush();
                   hb_compGenPopVar( $2 );
                }
            ;
@@ -1565,7 +1563,7 @@ DoArgument : IdentName                { $$ = hb_compExprNewVarRef( $1 ); }
            | PareExpList               { $$ = $1; }
            ;
 
-Crlf       : '\n'          {  hb_comp_EOL = TRUE; hb_comp_bError = FALSE; }
+Crlf       : '\n'          { hb_comp_bError = FALSE; }
            | ';'           { hb_comp_bDontGenLineNum = TRUE; }
            ;
 
@@ -1629,7 +1627,6 @@ int hb_compYACCMain( char * szName )
 
 void yyerror( char * s )
 {
-   hb_comp_EOL = FALSE; /* we are in the middle of a line */
    if( yytext[ 0 ] == '\n' )
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, "<eol>" );
    else

@@ -137,7 +137,6 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
 
    hb_comp_iErrorCount++;
    hb_comp_bError = TRUE;
-   hb_comp_iCompiled = hb_comp_iLine - 1;
 
    /* fatal error - exit immediately */
    if( cPrefix == 'F' )

@@ -381,7 +381,6 @@ extern void hb_compIdentifierClose( void ); /* release the table of identifiers 
 /* variable used by compiler
  */
 extern int           hb_comp_iLine;
-extern int           hb_comp_iCompiled;
 extern FUNCTIONS     hb_comp_functions;
 extern FUNCTIONS     hb_comp_funcalls;
 extern SYMBOLS       hb_comp_symbols;
@@ -431,7 +430,6 @@ extern USHORT        hb_comp_wIfCounter;
 extern USHORT        hb_comp_wWhileCounter;
 extern USHORT        hb_comp_wCaseCounter;
 
-extern BOOL          hb_comp_EOL;
 extern char *        hb_comp_szDeclaredFun;
 
 extern char *        hb_comp_szLastMethod;

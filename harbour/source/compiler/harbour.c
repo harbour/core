@@ -91,7 +91,6 @@ char *        hb_comp_szFromClass;
 PCOMDECLARED  hb_comp_pLastMethod;
 
 int           hb_comp_iLine;                             /* currently processed line number (globaly) */
-int           hb_comp_iCompiled;                         /* Last compiled line */
 char *        hb_comp_szFile;                            /* File Name of last compiled line */
 PFUNCTION     hb_comp_pInitFunc;
 PHB_FNAME     hb_comp_pFileName = NULL;
@@ -124,7 +123,7 @@ BOOL          hb_comp_bBuildInfo = FALSE;                /* print build info */
 BOOL          hb_comp_bLogo = TRUE;                      /* print logo */
 BOOL          hb_comp_bSyntaxCheckOnly = FALSE;          /* syntax check only */
 int           hb_comp_iLanguage = LANG_C;                /* default Harbour generated output language */
-BOOL          hb_comp_EOL;
+int           hb_comp_iJumpOptimize = 1;
 char *        hb_comp_szDeclaredFun = NULL;
 
 BOOL          hb_comp_bAutoOpen = TRUE;
@@ -479,7 +478,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
    pVar->cType = cValueType;
    pVar->iUsed = VU_NOT_USED;
    pVar->pNext = NULL;
-   pVar->iDeclLine = hb_comp_iCompiled;
+   pVar->iDeclLine = hb_comp_iLine - 1;
 
    if ( toupper( cValueType ) == 'S' )
    {
@@ -1391,7 +1390,7 @@ static int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a 
                      pVar->cType = ' ';
                      pVar->iUsed = VU_NOT_USED;
                      pVar->pNext  = NULL;
-                     pVar->iDeclLine = hb_comp_iCompiled;
+                     pVar->iDeclLine = hb_comp_iLine - 1;
 
                      /* Use negative order to signal that we are accessing a local
                      * variable from a codeblock
@@ -1901,28 +1900,15 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
 {
    if( hb_comp_bLineNumbers && ! hb_comp_bDontGenLineNum )
    {
-      /*
-      int iLine = hb_comp_iLine - 1;
-
-      if( hb_pp_nEmptyStrings )
-         iLine -= hb_pp_nEmptyStrings - 2;
-      */
-
       if( ( ( hb_comp_functions.pLast->lPCodePos - hb_comp_ulLastLinePos ) > 3 ) || hb_comp_bDebugInfo )
       {
-         /*
-         printf( "File: %s Line: %i Compiled: %i iLine: %i Empty: %i\n", hb_comp_szFile, hb_comp_files.pLast->iLine, hb_comp_iCompiled, iLine, hb_pp_nEmptyStrings );
-         */
          hb_comp_ulLastLinePos = hb_comp_functions.pLast->lPCodePos;
-         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( hb_comp_iCompiled ), HB_HIBYTE( hb_comp_iCompiled ), ( BOOL ) 0 );
+         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( hb_comp_iLine-1 ), HB_HIBYTE( hb_comp_iLine-1 ), ( BOOL ) 0 );
       }
       else
       {
-         /*
-         printf( "*File: %s Line: %i Compiled: %i iLine: %i Empty: %i\n", hb_comp_szFile, hb_comp_files.pLast->iLine, hb_comp_iCompiled, iLine, hb_pp_nEmptyStrings );
-         */
-         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( hb_comp_iCompiled );
-         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( hb_comp_iCompiled );
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( hb_comp_iLine-1 );
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( hb_comp_iLine-1 );
       }
    }
 
@@ -3275,14 +3261,12 @@ static void hb_compInitVars( void )
    hb_comp_bAnyWarning = FALSE;
 
    hb_comp_iLine = 1;
-   hb_comp_iCompiled = 1;
    hb_comp_iFunctionCnt = 0;
    hb_comp_iErrorCount = 0;
    hb_comp_cVarType = ' ';
    hb_comp_ulLastLinePos = 0;
    hb_comp_iStaticCnt = 0;
    hb_comp_iVarScope = VS_LOCAL;
-   hb_comp_EOL = FALSE;
 }
 
 static void hb_compGenOutput( int iLanguage )

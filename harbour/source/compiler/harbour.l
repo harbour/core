@@ -289,6 +289,7 @@ Separator     {SpaceTab}
 %}
 "case"         BEGIN CASE_;
 <CASE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
+               BEGIN 0;
                yylval.string = hb_compIdentifierNew( "CASE", TRUE );
                hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );

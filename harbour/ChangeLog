@@ -1,3 +1,16 @@
+2000-07-29 09:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+        * removed declaration of hb_comp_iCompiled and hb_comp_EOL
+        
+    *source/compiler/harbour.c
+    *source/compiler/harbour.l
+    *source/compiler/harbour.y
+    *source/compiler/hbgenerr.c
+        * removed hb_comp_iCompiled and hb_comp_EOL
+        * fixed generation of runtime line numbers to meets numbers
+        maintained by the preprocessor
+
 2000-07-28 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/gtstd/gtstd.c
