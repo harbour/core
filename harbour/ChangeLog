@@ -1,3 +1,7 @@
+2000-06-26 20:11 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/ppcomp.c
+     ! Fixed line number to ignore empty lines in #include files,when resuming parent file.
+
 2000-06-26 23:05 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
         *fixed some problems, appeared after last fix and

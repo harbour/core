@@ -204,10 +204,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            if( hb_comp_files.iFiles == 2 )
            {
            }
-           /* Save line number for the last #include line
-           hb_comp_iIncLine = hb_comp_files.pLast->iLine - 1;
-           */
-           /* Ron Pinkas end 2000-06-23 */
 
            /* we close the currently include file and continue */
            fclose( hb_comp_files.pLast->handle );
@@ -220,6 +216,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            /* Ron Pinkas commented
            hb_comp_iLine = hb_comp_files.pLast->iLine;
            */
+
+           /* Ron Pinkas added 2000-06-26 */
+           hb_pp_nEmptyStrings = 0;
+           /* Ron Pinkas end 2000-06-26 */
 
            hb_comp_files.iFiles--;
            lLine = 1;
@@ -236,7 +236,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   if( lLine )
   {
-     sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine + hb_pp_nEmptyStrings ) , hb_comp_files.pLast->szFileName );
+     sprintf( ptrOut, "#line %d \"%s\"", ( hb_comp_files.pLast->iLine ) , hb_comp_files.pLast->szFileName );
      while( *ptrOut ) ptrOut++;
 
      /* Ron Pinkas added 2000-06-14 */
