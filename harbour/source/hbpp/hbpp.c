@@ -10,7 +10,7 @@
  #include <stdlib.h>
  #include <unistd.h>
 #else
- #if defined(__IBMCPP__)
+ #if (defined(_MSC_VER) || defined(__IBMCPP__))
   #include <memory.h>
  #else
   #include <mem.h>

@@ -142,7 +142,7 @@ void gtPuts(char x, char y, char attr, char *str, int len)
     DWORD i, dwlen;
     COORD coord;
     LPWORD pwattr;
-    pwattr = malloc(strlen(str) * sizeof(*pwattr));
+    pwattr = (LPWORD) malloc(strlen(str) * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
@@ -165,12 +165,12 @@ void gtGetText(char x1, char y1, char x2, char y2, char *dest)
     LPWORD pwattr;
     char y, *pstr;
     width = (x2 - x1 + 1);
-    pwattr = malloc(width * sizeof(*pwattr));
+    pwattr = (LPWORD) malloc(strlen(str) * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
     }
-    pstr = malloc(width);
+    pstr = (char *)malloc(width);
     if (!pstr)
     {
         free(pwattr);
@@ -201,12 +201,12 @@ void gtPutText(char x1, char y1, char x2, char y2, char *srce)
     LPWORD pwattr;
     char y, *pstr;
     width = (x2 - x1 + 1);
-    pwattr = malloc(width * sizeof(*pwattr));
+    pwattr = (LPWORD) malloc(strlen(str) * sizeof(*pwattr));
     if (!pwattr)
     {
         return;
     }
-    pstr = malloc(width);
+    pstr = (char *)malloc(width);
     if (!pstr)
     {
         free(pwattr);

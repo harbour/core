@@ -35,19 +35,21 @@
   #endif
 #endif
 
-#if defined(__BORLANDC__) || defined(__IBMCPP__)
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER)
   #include <sys\stat.h>
   #include <io.h>
   #include <fcntl.h>
   #include <share.h>
-  #if defined(__IBMCPP__)
+  #if defined(__IBMCPP__) || defined(_MSC_VER)
     #include <direct.h>
   #else
     #include <dir.h>
   #endif
 
-  #if !defined(HAVE_POSIX_IO)
-  #define HAVE_POSIX_IO
+  #if !defined(_MSC_VER)
+    #if !defined(HAVE_POSIX_IO)
+    #define HAVE_POSIX_IO
+    #endif
   #endif
 #endif
 
@@ -438,6 +440,9 @@ BYTEP   hb_fsCurDir ( USHORT uiDrive )
 #else
         cwd_buff[0] = 0;
         last_error = FS_ERROR;
+#endif
+#if defined(_MSC_VER)
+        BYTEP dmm = cwd_buff;
 #endif
         return (BYTEP)cwd_buff;
 }

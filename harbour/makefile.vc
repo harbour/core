@@ -15,6 +15,7 @@
 
 COMPILER_DIR=source\compiler
 RTL_DIR=source\rtl
+HBPP_DIR=source\hbpp
 TOOLS_DIR=source\tools
 VM_DIR=source\vm
 INCLUDE_DIR=include
@@ -28,7 +29,8 @@ OBJ_DIR=obj
 
 CC=cl
 CFLAGS=-w -I$(INCLUDE_DIR)
-CLIBFLAGS=$(CFLAGS) -c -Zi /TP
+CLIBFLAGS=$(CFLAGS) -c /TP
+CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
 #
 # Macros to access our library names
@@ -123,10 +125,17 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harboury.c \
     $(COMPILER_DIR)\harbourl.c \
     $(COMPILER_DIR)\genobj32.c \
-    $(COMPILER_DIR)\harbour.c
-    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.obj -o $(BIN_DIR)\harbour
+    $(COMPILER_DIR)\harbour.c \
+    $(HBPP_DIR)\hbpp.c \
+    $(HBPP_DIR)\hbppint.c \
+    $(HBPP_DIR)\table.c
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(HBPP_DIR)\hbppint.c $(HBPP_DIR)\hbpp.c $(HBPP_DIR)\table.c -o $(BIN_DIR)\harbour
     -del harboury.obj
     -del harbourl.obj
+    -del harbour.obj
+    -del hbppint.obj
+    -del hbpp.obj
+    -del table.obj
 
 #
 # Library depencies and build rules
@@ -145,11 +154,11 @@ $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 # Compiler source depencies and build rules
 #
 
-#$(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
-#    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\harboury.c
-#
-#$(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
-#    flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
+$(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\harboury.c
+
+$(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
+    flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
 # RTL source depencies below. Add as needed
@@ -195,7 +204,7 @@ $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\files.obj : $(RTL_DIR)\files.c
-    $(CC) $(CLIBFLAGS) /TC -Fo$@ $**
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -293,7 +302,7 @@ $(OBJ_DIR)\genobj.obj : $(TOOLS_DIR)\genobj.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
-    $(CC) $(CLIBFLAGS) /TC -Fo$@ $**
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\io.obj : $(TOOLS_DIR)\io.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

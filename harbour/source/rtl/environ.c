@@ -9,7 +9,7 @@
 #include <errorapi.h>
 #include <version.h>
 
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__DJGPP__)
   #include <dos.h>
   #include <stdlib.h>
 #endif

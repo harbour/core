@@ -1,3 +1,9 @@
+19990619-14:35 CET Matteo Baccan
+   * makefile.vc, source/hbpp/hbpp.c, source/hbpp/hbppint.c,
+     source/rtl/environ.c, source/rtl/files.c, source/rtl/gt/gtwin.c,
+     source/tools/hb_f.c
+     Patches to allow for succesful compilation with MS Visual C++
+
 19990619-14:00 Ryszard Glab <rglab@imid.med.pl>
 
 * tests/working/testcgi.prg

@@ -50,7 +50,7 @@ HARBOUR HB_HB_FUSE( void )
      else
          open_flags = 0;
 
-      handles[area]  = hb_fsOpen( hb_parc(1), open_flags );
+      handles[area]  = hb_fsOpen( (BYTEP) hb_parc(1), open_flags );
       offset[area]   = 0;
       recno[area]    = 1;
       b              = ( char * )hb_xgrab( b_size );
@@ -110,7 +110,7 @@ long hb_hbfskip( int recs )
    if ( recs > 0 ) {
       for (y = 0; y < recs; y++ ) {
          hb_fsSeek( handles[area], offset[area], SEEK_SET );
-         read_len = hb_fsRead( handles[area], b, b_size );
+         read_len = hb_fsRead( handles[area], (BYTEP) b, b_size );
          for (x = 0; x < read_len; x++ ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
                  ((*(b + x) == 10) && (*(b + x + 1) == 13)) ) {
@@ -144,7 +144,7 @@ long hb_hbfskip( int recs )
          }
 
          hb_fsSeek( handles[area], read_pos, SEEK_SET );
-         read_len = hb_fsRead( handles[area], b, read_len );
+         read_len = hb_fsRead( handles[area], (BYTEP) b, read_len );
 
          for (x = read_len - 4; x >= 0; x-- ) {
             if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
@@ -174,7 +174,7 @@ HARBOUR HB_HB_FREADLN( void )
    long read;
 
    hb_fsSeek( handles[area], offset[area], SEEK_SET );
-   read = hb_fsRead( handles[area], b, b_size );
+   read = hb_fsRead( handles[area], (BYTEP) b, b_size );
 
    for ( x = 0; x < b_size; x++ ) {
       if ( ((*(b + x) == 13) && (*(b + x + 1) == 10)) ||
@@ -242,7 +242,7 @@ HARBOUR HB_HB_FGOBOTTOM(void)
       do {
 
          hb_fsSeek( handles[area], offset[area], SEEK_SET );
-         len = hb_fsRead(  handles[area], c, c_size );
+         len = hb_fsRead(  handles[area], (BYTEP) c, c_size );
          for ( x = 0; x < len; x++ ) {
             if ( ((*(c + x) == 13) && (*(c + x + 1) == 10)) ||
                  ((*(c + x) == 10) && (*(c + x + 1) == 13)) ||
