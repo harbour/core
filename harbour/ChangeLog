@@ -1,3 +1,11 @@
+2001-08-17 15:09 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! fixed ::DispCell() cursor positioning (broken with latest changes to
+       implement picture handling)
+     * changed ::autolite handling
+     ! fixed ::GoBottom() method which was not repainting TBrowse correctly if
+       available records were less than available rows.
+
 2001-08-16 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/pp/pptable.c
@@ -16,7 +24,7 @@
   * include/hbextern.ch
     * removed extern declaration for ALTD() function
   * source/rtl/tbrowse.prg
-    * Added support for Autolite = .f. (I hope this is the right fix)     
+    * Added support for Autolite = .f. (I hope this is the right fix)
 2001-08-11 08:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
   *tests/testbrw.prg
     * updated to show the use of pictures with tbrowse
@@ -52,7 +60,7 @@
 
   * tests/gtstdtst.prg
       Submitted by "Fergus McDonald" <listsub@qvolution.com>
-  	+ New test module for GTSTD terminal driver.
+   + New test module for GTSTD terminal driver.
 
   * source/rtl/gtstd/gtstd.c
       Submitted by "Fergus McDonald" <listsub@qvolution.com>

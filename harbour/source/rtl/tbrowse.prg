@@ -57,7 +57,7 @@
  * Copyright 2000, 2001 Maurilio Longo <maurilio.longo@libero.it>
  * Cursor movement handling and stabilization loop
  * ::PageUp(), ::PageDown(), ::Down(), ::Up(), ::GoBottom(), ::GoTop(), ::Stabilize()
- * ::GotoXY()
+ * ::GotoXY(), ::DispCell()
  *
  * Copyright 2001 Manu Exposito <maex14@dipusevilla.es>
  * Activate data PICTURE DispCell(nColumn, nColor)
@@ -67,9 +67,6 @@
 
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible. [vszakats] */
-
-/* TODO: Fix TBrowse when AutoLite = .F. 
-         This is also needed to make dbEdit() work correctly. [vszakats] */
 
 /* TODO: :firstScrCol() --> nScreenCol
          Determines screen column where the first table column is displayed.
@@ -364,14 +361,18 @@ return Self
 
 METHOD GoBottom() CLASS TBrowse
 
-   local nToEnd
+   local nToTop
+
 
    ::Moved()
 
    Eval(::goBottomBlock)
-   nToEnd := Abs(Eval(::SkipBlock, -::RowCount))
-   ::nNewRowPos := nToEnd
-   ::nLastRetrieved := ::RowCount - nToEnd
+   // Skip back from last record as many records as TBrowse can hold
+   nToTop := Abs(Eval(::SkipBlock, -(::RowCount - 1)))
+   // From top of TBrowse new row position is nToTop + 1 records away
+   ::nNewRowPos := nToTop + 1
+   // Last read record is first record inside TBrowse
+   ::nLastRetrieved := 1
    ::RefreshAll()
 
 return Self
@@ -574,10 +575,9 @@ return Self
 METHOD DeHilite() CLASS TBrowse
 
    local nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
-   local nCol := ::aColumns[ ::ColPos ]:ColPos
 
-   SetPos( nRow, nCol )
-   ::DispCell(::ColPos, 1)
+   SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
+   ::DispCell(::ColPos, CLR_STANDARD)
 
 return Self
 
@@ -595,21 +595,16 @@ METHOD Hilite() CLASS TBrowse
    local nColor
    local cColor
    local nRow
-   local nCol
+
+   nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
+
+   SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
    if ::AutoLite
-      nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
-      nCol := ::aColumns[ ::ColPos ]:ColPos
+      ::DispCell(::ColPos, CLR_ENHANCED)
 
-      SetPos( nRow, nCol )
-      ::DispCell(::ColPos, 2)
-   /*QUESTION : Is this the correct fix when autolite is .f. */
    else
-      nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
-      nCol := ::aColumns[ ::ColPos ]:ColPos
-
-      SetPos( nRow, nCol )
-      ::DispCell(::ColPos, 3)
+      ::DispCell(::ColPos, CLR_STANDARD)
 
    endif
 
@@ -941,7 +936,7 @@ METHOD Stabilize() CLASS TBrowse
                endif
 
                if lDisplay
-                  ::DispCell(n, 1)
+                  ::DispCell(n, CLR_STANDARD)
                   SetPos( Row(), nCol + ::aColumns[ n ]:Width )
 
                else
@@ -1034,17 +1029,19 @@ METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 return Self
 
 
+
 METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
-   local oCol   := ::aColumns[nColumn]
+   LOCAL oCol   := ::aColumns[nColumn]
    LOCAL ftmp   := Eval(oCol:block)
    LOCAL nCol   := Col()
    LOCAL cType  := ValType( ftmp )
-   local cPict  := if( !empty( oCol:Picture ), oCol:Picture, "@" )
-   local cDisp  := ""
-   local cColor := iif(oCol:ColorBlock != NIL,;
-                       hb_ColorIndex(::ColorSpec, Eval(oCol:ColorBlock, ftmp)[nColor] - 1),;
-                       hb_ColorIndex(::ColorSpec, nColor - 1))
+   LOCAL cPict  := iif( !empty( oCol:Picture ), oCol:Picture, "@" )
+   LOCAL cDisp
+   // NOTE: When nColor is used as an array index we need to increment it by one since CLR_STANDARD is 0
+   LOCAL cColor := iif(oCol:ColorBlock != NIL,;
+                       hb_ColorIndex(::ColorSpec, Eval(oCol:ColorBlock, ftmp)[nColor + 1] - 1),;
+                       hb_ColorIndex(::ColorSpec, nColor))
 
    do case
       case cType $ "CM"
@@ -1054,18 +1051,24 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
          cDisp := Right( transform(  ftmp, cPict ), ::aColumns[ nColumn ]:Width )
 
       case cType == "D"
-         cPict := if( cPict == "@", "@D", cPict )
+         cPict := iif( cPict == "@", "@D", cPict )
          cDisp := Right( transform(  ftmp, cPict ), ::aColumns[ nColumn ]:Width )
 
       case cType == "L"
          cDisp := Space( ::aColumns[ nColumn ]:Width / 2 ) + iif( ftmp, "T","F" )
+
+      otherwise
+         cDisp := ""
+
    endcase
 
    DispOut( cDisp, cColor )
    DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), cColor)
 
    // Logical fields are centered on column width
-//   SetPos( Row(), nCol + if( cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ) )
+   // NOTE: DO NOT REMOVE THIS LINE It is needed to have cursor on correct screen column
+   //       inside each TBrowse column
+   SetPos( Row(), nCol + iif( cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ) )
 
 return Self
 
