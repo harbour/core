@@ -459,7 +459,7 @@
 #define ADS_MAX_TAG_NAME         128
 #define ADS_MAX_TAGS             50    /* maximum for CDX/ADI file */
 #define ADS_MAX_OBJECT_NAME      200   /* maximum length of DD object name */
-
+#define ADS_MAX_TABLE_AND_PATH   ADS_MAX_TABLE_NAME + ADS_MAX_PATH
 
 /*
  * Valid range of page sizes for ADI indexes.  The default page size is 512
@@ -501,13 +501,13 @@
 #define ADS_AUTOINC              15    /* 4 byte auto-increment value */
 #define ADS_RAW                  16    /* Untranslated data */
 #define ADS_CURDOUBLE            17    /* IEEE 8 byte floating point currency */
-
+#define ADS_MONEY                18    /* 8 byte, 4 implied decimal Currency Field */
+#define ADS_LONGLONG             19    /* 8 byte integer */
 
 /*
  * supported User Defined Function types to be used with AdsRegisterUDF
  */
 #define ADS_INDEX_UDF            1
-
 
 /*
  * Constant for AdsMgGetConfigInfo
@@ -617,6 +617,11 @@ typedef struct
    UNSIGNED16  usInternetPort;         /* Internet Port */
    UNSIGNED16  usMaxConnFailures;      /* Maximum Internet connection failures allowed. */
    UNSIGNED32  ulInternetKeepAlive;    /* In Milliseconds */
+
+   UNSIGNED16  usCompressionLevel;     /* Compression option at server.  ADS_COMPRESS_NEVER,
+                                        * ADS_COMPRESS_INTERNET, or ADS_COMPRESS_ALWAYS */
+   UNSIGNED16  usReserved5;            /* reserved */
+   UNSIGNED32  ulReserved6;            /* reserved */
 
    } ADS_MGMT_CONFIG_PARAMS;
 
@@ -730,18 +735,22 @@ typedef struct _ADD_FIELD_DESC_
 #define ADS_DD_MAX_PROPERTY_LEN     0xFFFE
 #define ADS_DD_MAX_OBJECT_NAME_LEN  200
 
-#define ADS_DD_TABLE_OBJECT          1
-#define ADS_DD_RELATION_OBJECT       2
-#define ADS_DD_INDEX_FILE_OBJECT     3
-#define ADS_DD_FIELD_OBJECT          4
-#define ADS_DD_COLUMN_OBJECT         4
-#define ADS_DD_INDEX_OBJECT          5
-#define ADS_DD_VIEW_OBJECT           6
-#define ADS_DD_VIEW_OR_TABLE_OBJECT  7  /* Used in AdsFindFirst/NextTable */
-#define ADS_DD_USER_OBJECT           8
-#define ADS_DD_USER_GROUP_OBJECT     9
-#define ADS_DD_PROCEDURE_OBJECT     10
-#define ADS_DD_DATABASE_OBJECT      11
+#define ADS_DD_UNKNOWN_OBJECT            0
+#define ADS_DD_TABLE_OBJECT              1
+#define ADS_DD_RELATION_OBJECT           2
+#define ADS_DD_INDEX_FILE_OBJECT         3
+#define ADS_DD_FIELD_OBJECT              4
+#define ADS_DD_COLUMN_OBJECT             4
+#define ADS_DD_INDEX_OBJECT              5
+#define ADS_DD_VIEW_OBJECT               6
+#define ADS_DD_VIEW_OR_TABLE_OBJECT      7  /* Used in AdsFindFirst/NextTable */
+#define ADS_DD_USER_OBJECT               8
+#define ADS_DD_USER_GROUP_OBJECT         9
+#define ADS_DD_PROCEDURE_OBJECT          10
+#define ADS_DD_DATABASE_OBJECT           11
+#define ADS_DD_LINK_OBJECT               12
+#define ADS_DD_TABLE_VIEW_OR_LINK_OBJECT 13  /* Used in v6.2 AdsFindFirst/NextTable */
+#define ADS_DD_TRIGGER_OBJECT            14
 
 
 /* Common properties numbers < 100 */
@@ -762,7 +771,8 @@ typedef struct _ADD_FIELD_DESC_
 #define ADS_DD_INTERNET_SECURITY_LEVEL 108
 #define ADS_DD_MAX_FAILED_ATTEMPTS     109
 #define ADS_DD_ALLOW_ADSSYS_NET_ACCESS 110
-
+#define ADS_DD_VERSION_MAJOR           111  /* properties for customer dd version */
+#define ADS_DD_VERSION_MINOR           112
 
 /* Table properties between 200 and 299 */
 #define ADS_DD_TABLE_VALIDATION_EXPR   200
@@ -781,6 +791,9 @@ typedef struct _ADD_FIELD_DESC_
 #define ADS_DD_TABLE_DEFAULT_INDEX     213
 #define ADS_DD_TABLE_ENCRYPTION        214
 #define ADS_DD_TABLE_MEMO_BLOCK_SIZE   215
+#define ADS_DD_TABLE_PERMISSION_LEVEL  216
+#define ADS_DD_TABLE_TRIGGER_TYPES     217
+#define ADS_DD_TABLE_TRIGGER_OPTIONS   218
 
 /* Field properties between 300 - 399 */
 #define ADS_DD_FIELD_DEFAULT_VALUE     300
@@ -792,14 +805,20 @@ typedef struct _ADD_FIELD_DESC_
 #define ADS_DD_FIELD_TYPE              306
 #define ADS_DD_FIELD_LENGTH            307
 #define ADS_DD_FIELD_DECIMAL           308
+#define ADS_DD_FIELD_NUM               309
 
 /* Index tag properties between 400 - 499 */
-#define ADS_DD_INDEX_FILE_NAME           400
-#define ADS_DD_INDEX_EXPRESSION          401
-#define ADS_DD_INDEX_CONDITION           402
-#define ADS_DD_INDEX_OPTIONS             403
-#define ADS_DD_INDEX_KEY_LENGTH          404
-#define ADS_DD_INDEX_KEY_TYPE            405
+#define ADS_DD_INDEX_FILE_NAME         400
+#define ADS_DD_INDEX_EXPRESSION        401
+#define ADS_DD_INDEX_CONDITION         402
+#define ADS_DD_INDEX_OPTIONS           403
+#define ADS_DD_INDEX_KEY_LENGTH        404
+#define ADS_DD_INDEX_KEY_TYPE          405
+#define ADS_DD_INDEX_FTS_MIN_LENGTH    406
+#define ADS_DD_INDEX_FTS_DELIMITERS    407
+#define ADS_DD_INDEX_FTS_NOISE         408
+#define ADS_DD_INDEX_FTS_DROP_CHARS    409
+#define ADS_DD_INDEX_FTS_CONDITIONAL_CHARS 410
 
 /* RI properties between 500-599 */
 #define ADS_DD_RI_PARENT_GRAPH         500
@@ -809,17 +828,8 @@ typedef struct _ADD_FIELD_DESC_
 #define ADS_DD_RI_FOREIGN_INDEX        504
 #define ADS_DD_RI_UPDATERULE           505
 #define ADS_DD_RI_DELETERULE           506
-
-/* Referential Integrity (RI) update and delete rules */
-#define ADS_DD_RI_CASCADE       1
-#define ADS_DD_RI_RESTRICT      2
-#define ADS_DD_RI_SETNULL       3
-#define ADS_DD_RI_SETDEFAULT    4
-
-/* Default Field Value Options */
-#define ADS_DD_DFV_UNKNOWN         1
-#define ADS_DD_DFV_NONE            2
-#define ADS_DD_DFV_VALUES_STORED   3
+#define ADS_DD_RI_NO_PKEY_ERROR        507
+#define ADS_DD_RI_CASCADE_ERROR        508
 
 /* User properties between 600-699 */
 #define ADS_DD_USER_GROUP_NAME         600
@@ -836,40 +846,108 @@ typedef struct _ADD_FIELD_DESC_
 #define ADS_DD_PROC_INVOKE_OPTION      804
 
 /* Index file properties 900-999 */
-#define ADS_DD_INDEX_FILE_PATH           900
-#define ADS_DD_INDEX_FILE_PAGESIZE       901
+#define ADS_DD_INDEX_FILE_PATH         900
+#define ADS_DD_INDEX_FILE_PAGESIZE     901
 
 /*
  * Object rights properties 1001 - 1099 .  They can be used
  * with either user or user group objects.
  */
-#define ADS_DD_TABLES_RIGHTS      1001
-#define ADS_DD_VIEWS_RIGHTS       1002
-#define ADS_DD_PROCS_RIGHTS       1003
-#define ADS_DD_OBJECTS_RIGHTS     1004
-#define ADS_DD_FREE_TABLES_RIGHTS 1005
+#define ADS_DD_TABLES_RIGHTS           1001
+#define ADS_DD_VIEWS_RIGHTS            1002
+#define ADS_DD_PROCS_RIGHTS            1003
+#define ADS_DD_OBJECTS_RIGHTS          1004
+#define ADS_DD_FREE_TABLES_RIGHTS      1005
 
 /* User Properties 1101 - 1199 */
 #define ADS_DD_USER_PASSWORD           1101
 #define ADS_DD_USER_GROUP_MEMBERSHIP   1102
+#define ADS_DD_USER_BAD_LOGINS         1103
+
+/* User group Properties 1201 - 1299 */
+/* None at this moment. */
+
+/* Link properties 1301 - 1399 */
+#define ADS_DD_LINK_PATH               1300
+#define ADS_DD_LINK_OPTIONS            1301
+#define ADS_DD_LINK_USERNAME           1302
+
+/* Trigger properties 1400 - 1499 */
+#define ADS_DD_TRIG_TABLEID            1400
+#define ADS_DD_TRIG_EVENT_TYPE         1401
+#define ADS_DD_TRIG_TRIGGER_TYPE       1402
+#define ADS_DD_TRIG_CONTAINER_TYPE     1403
+#define ADS_DD_TRIG_CONTAINER          1404
+#define ADS_DD_TRIG_FUNCTION_NAME      1405
+#define ADS_DD_TRIG_PRIORITY           1406
+#define ADS_DD_TRIG_OPTIONS            1407
+#define ADS_DD_TRIG_TABLENAME          1408
+
 
 #define ADS_DD_LEVEL_0  0
 #define ADS_DD_LEVEL_1  1
 #define ADS_DD_LEVEL_2  2
 
+/* Referential Integrity (RI) update and delete rules */
+#define ADS_DD_RI_CASCADE       1
+#define ADS_DD_RI_RESTRICT      2
+#define ADS_DD_RI_SETNULL       3
+#define ADS_DD_RI_SETDEFAULT    4
 
-/* User group Properties 1201 - 1299 */
-/* None at this moment. */
-/* Also object rights properties 1001 - 1099 */
+/* Default Field Value Options */
+#define ADS_DD_DFV_UNKNOWN         1
+#define ADS_DD_DFV_NONE            2
+#define ADS_DD_DFV_VALUES_STORED   3
 
 /* Supported permissions in the data dictionary */
-#define ADS_PERMISSION_READ         1
-#define ADS_PERMISSION_UPDATE       2
-#define ADS_PERMISSION_INSERT       3
-#define ADS_PERMISSION_DELETE       4
-#define ADS_PERMISSION_EXECUTE      5
-#define ADS_PERMISSION_INHERIT      6
+#define ADS_PERMISSION_READ         0x00000001
+#define ADS_PERMISSION_UPDATE       0x00000002
+#define ADS_PERMISSION_EXECUTE      0x00000004
+#define ADS_PERMISSION_INHERIT      0x00000008
+#define ADS_PERMISSION_INSERT       0x00000010
+#define ADS_PERMISSION_DELETE       0x00000020
+#define ADS_PERMISSION_LINK_ACCESS  0x00000040
+#define ADS_PERMISSION_ALL          0xFFFFFFFF
 
+/* Link DD options */
+#define ADS_LINK_GLOBAL             0x00000001
+#define ADS_LINK_AUTH_ACTIVE_USER   0x00000002
+#define ADS_LINK_PATH_IS_STATIC     0x00000004
+
+/* Trigger event types */
+#define ADS_TRIGEVENT_INSERT             1
+#define ADS_TRIGEVENT_UPDATE             2
+#define ADS_TRIGEVENT_DELETE             3
+
+/* Trigger types */
+#define ADS_TRIGTYPE_BEFORE         0x00000001
+#define ADS_TRIGTYPE_INSTEADOF      0x00000002
+#define ADS_TRIGTYPE_AFTER          0x00000004
+
+/* Trigger container types */
+#define ADS_TRIG_WIN32DLL           1
+#define ADS_TRIG_COM                2
+#define ADS_TRIG_SCRIPT             3
+
+/*
+ * Trigger options, if changed or adding more please inspect code
+ * in RemoveTriggerFromDictionary
+ */
+#define ADS_TRIGOPTIONS_NO_VALUES             0x00000000
+#define ADS_TRIGOPTIONS_WANT_VALUES           0x00000001
+#define ADS_TRIGOPTIONS_WANT_MEMOS_AND_BLOBS  0x00000002
+#define ADS_TRIGOPTIONS_DEFAULT               0x00000003  /* default is to include vals and memos */
+#define ADS_TRIGOPTIONS_NO_TRANSACTION        0x00000004  /* don't use implicit transactions */
+
+/*
+ * Table permission verification levels.
+ * level 1 is all columns searchable, even those without permission.
+ * level 2 is default. Permission to the column is required to search or filter on a column.
+ * level 3 is most restricted. Only static SQL cursor is allowed.
+ */
+#define ADS_DD_TABLE_PERMISSION_LEVEL_1   1
+#define ADS_DD_TABLE_PERMISSION_LEVEL_2   2
+#define ADS_DD_TABLE_PERMISSION_LEVEL_3   3
 
 
 /* stored procedure functions must be of this type */

@@ -143,7 +143,7 @@
  *      ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
  *      ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
  *      ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
- *  </table>
+ *      </table>
  *  $RETURNS$
  *      <nError>  ADS error code, or 0 for success.
  *  $DESCRIPTION$
@@ -432,16 +432,20 @@
  *  $ONELINER$
  *      Estimated key position of current record within the specified index
  *  $SYNTAX$
- *      ADSGetRelKeyPos([<xTag>]) --> nKeyPos
+ *      ADSGetRelKeyPos() --> nKeyPos
  *  $ARGUMENTS$
- *      <xTag>  Index to use. Default is current index.
+ *      None.  Only accesses the current index, if any.
  *  $RETURNS$
- *      The relative key position within the current index.
- *      This function estimates the position of the current key in the indicated
- *      index order. The value returned is between 0.0 and 1.0, inclusive.
- *      If there are scopes set on the index order, the position returned
- *      is relative to the visible records.
+ *      A value between 0.0 and 1.0, inclusive.
  *  $DESCRIPTION$
+ *      This function estimates the relative key position within the current index,
+ *      respecting any scope setting.
+ *      It also works with no active index to yield the relative position of the
+ *      current record number.
+ *      The value returned is between 0.0 and 1.0, inclusive.
+ *
+ *      This is the recommended function for positioning a scrollbar
+ *      or other "coarse" position interface.
  *      See ACE.HLP for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
@@ -455,7 +459,45 @@
  *      Library is RddAds
  *      Header is ads.ch
  *  $SEEALSO$
- *      ADSKeyNo(),ADSKeyCount()
+ *      ADSKeyNo(),ADSKeyCount(),ADSSetRelKeyPos()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSSetRelKeyPos()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      GoTo the given estimated key position within the current index
+ *  $SYNTAX$
+ *      ADSSetSelKeyPos( <nPercent> ) --> nError
+ *  $ARGUMENTS$
+ *      <nPercent>  Relative key position between 0.0 and 1.0, inclusive.
+ *  $RETURNS$
+ *      The return/error value of the ADS API call.
+ *  $DESCRIPTION$
+ *      This function moves the record pointer to the estimated relative position
+ *      within the current index order, respecting any scope setting.
+ *      It also works with no active index to go to the relative position of the
+ *      current record number.
+ *
+ *      This is the recommended function for re-positioning in reaction to
+ *      a dragged scrollbar thumb or other "coarse" navigation interface.
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      ADSKeyNo(),ADSKeyCount(),ADSGetRelKeyPos()
  *  $END$
  */
 
@@ -535,17 +577,15 @@
  *         ADS_RESPECTFILTERS   Respect filters and scopes
  *         ADS_IGNOREFILTERS    Ignore filters and scopes
  *         ADS_RESPECTSCOPES    Respect scopes only
-        </table>
+ *      </table>
  *  $RETURNS$
  *      <nKeyNo>   The logical key number of the current record in the given index.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.</par>
  *      Wrapper for AdsGetKeyNum. </par>
-        This function may be slow on a large database with
-        ADS_RESPECTFILTERS set because it walks through the keys to get the
-        current position.  Compare to ADSGetRelKeyPos().
- *  $EXAMPLES$
- *  $TESTS$
+ *      This function may be slow on a large database with
+ *      ADS_RESPECTFILTERS set because it walks through the keys to get the
+ *      current position.  Compare to ADSGetRelKeyPos().
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -559,8 +599,6 @@
  *      ADSKeyCount(),ADSGetRelKeyPos()
  *  $END$
  */
-
-
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -583,19 +621,17 @@
  *      The Advantage Database Server has a fast Proprietary locking mode that
  *      is more efficient than traditional network locking. It is only available
  *      when using the remote server (not the local server).
-
+ *
  *      If a file is opened in the proprietary mode, other applications cannot
  *      open it in a "write" mode. So if non-Advantage applications need
  *      concurrent access to the data files, use the Compatibility locking mode
  *      by calling  ADSLocking( .F. ).
-
+ *
  *      ADSLocking() is a Get/Set function for the locking mode. It affects
  *      files at the time they are opened. So when a data
  *      file is opened, the current setting is used for that file until it is
  *      closed. Different files can have different locking modes by changing
  *      the setting before opening a second file.
- *  $EXAMPLES$
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -632,7 +668,7 @@
  *      Database Server will use the rights of the connected user when
  *      opening the file. If the user does not have rights to the
  *      directory or server, then the open call will fail.
-
+ *
  *      If the setting is .F., then the ADS will
  *      ignore the connected user's rights and open the file
  *      regardless. This lets you allow only
@@ -678,7 +714,6 @@
  *      DLLs doing all the indexing. So to do progress meters
  *      you need to implement this.
  *  $EXAMPLES$
- *       <table>
  *       FUNCTION Main()
  *          ...
  *          AdsRegCallBack( {|nPercent| outputstuff(nPercent)}  )
@@ -693,8 +728,6 @@
  *          ? "output stuff", nPercent
  *       RETURN inkey() == 27
  *       /*  If press ESC, returns .T. to abort.   */
- *      </table>
- *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -958,14 +991,135 @@
  *  $END$
  */
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsTestRecLocks()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Turn On or Off a "debug mode" for trapping missed record locks.
+ *  $SYNTAX$
+ *      AdsTestRecLocks( <lOnOff> ) --> lPriorSetting
+ *  $ARGUMENTS$
+ *      <lOnOff>    New setting. Default is FALSE.
+ *  $RETURNS$
+ *      Prior Setting.
+ *  $DESCRIPTION$
+ *      AdsTestRecLocks() is a Get/Set function for a "record lock checking" mode.
+ *      ADS has Implicit Record locking that can mask programming errors.
+ *      Implicit locking can occur the first time a value is written to a
+ *      field with no lock in effect. The lock can potentially remain in
+ *      effect indefinitely if the record pointer is not moved, causing
+ *      bugs later in program execution that are hard to find.
+ *      In Harbour internal RDDs, a runtime error occurs if an attempt is made
+ *      to write to a shared file without a proper lock.
+ *
+ *      AdsTestRecLocks( .T. ) will turn on a debugging mode to mimic this behavior
+ *      and throw an error instead of allowing an implicit lock. Each time a field
+ *      is set, we see if the file is open exclusively or locked, and whether
+ *      the record has been explicitly locked already. If not, we throw
+ *      an error so the developer can catch the missing lock condition.
+ *      For performance reasons, Release code should leave this OFF.
+ *      Although the call to AdsIsRecordLocked is documented as a client
+ *      call, not a server request, and should be fast, it will be
+ *      called for EACH FIELD as it is assigned a value.
+ *
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsGetLastError()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Returns any error code generated by the most recent ADS API call
+ *  $SYNTAX$
+ *      AdsGetLastError() --> nErrorCode
+ *  $ARGUMENTS$
+ *      None.
+ *  $RETURNS$
+ *      The error code generated by the most recent ADS API call. Zero for success.
+ *  $DESCRIPTION$
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsIsExprValid()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Determine if the ADS server can parse an expression
+ *  $SYNTAX$
+ *      AdsIsExprValid( <cExp> ) --> lSuccess
+ *  $ARGUMENTS$
+ *      <cExp>    Any hopefully valid expression; often a filter string
+ *  $RETURNS$
+ *      .T. if the expression is understood by ADS.
+ *  $DESCRIPTION$
+ *      ADS has its own limitations for the logical or string expressions
+ *      used in indexes, filters, scopes, etc. Unlike internal RDDs like DBFNTX,
+ *      the server is independent of the applications code, so it cannot understand
+ *      references to PUBLIC variables or User-Defined Functions (UDFs).
+ *      (See ACE.HLP under Advantage Expression Engine for a list of functions
+ *      allowed by ADS.)
+ *      Call AdsIsExprValid() to determine if the server can process the expression.
+ *
+ *      For illustration, consider filter expressions.
+ *      Since Harbour attempts to be as compatible with Clipper as possible,
+ *      you CAN set a filter that ADS DOES NOT understand, but the filtering
+ *      will be done by the RDD layer itself and ADS will be unaware of the
+ *      filter setting. This means more data will be sent "across the wire" from
+ *      the server to the client, and the client (in RDDADS) will be doing the
+ *      processing. Since the value of a database server is to have more processing
+ *      done by the server itself to reduce network traffic, it is better to only use
+ *      filter expressions ADS can understand.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
 
 /* TO-DO:
 
-AdsIsExprValid
 ADSGETCONNECTIONHANDLE
-AdsGetLastError
-AdsSetRelKeyPos
-AdsGetRelKeyPos
 
 v6:
    AdsAddTable

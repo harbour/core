@@ -73,8 +73,20 @@ int adsRights = 1;
 int adsCharType = ADS_ANSI;
 ADSHANDLE adsConnectHandle = 0;
 BOOL bDictionary = FALSE;               /* Use Data Dictionary? */
+BOOL bTestRecLocks = FALSE;             /* Debug Implicit locks */
 
 PHB_ITEM itmCobCallBack = 0;
+
+
+HB_FUNC( ADSTESTRECLOCKS )              /* Debug Implicit locks Set/Get call */
+{
+   BOOL oldSetting = bTestRecLocks;
+
+   if( ISLOG(1) )
+      bTestRecLocks = hb_parl( 1 );
+
+   hb_retl( oldSetting );
+}
 
 HB_FUNC( ADSSETFILETYPE )
 {
@@ -171,6 +183,35 @@ HB_FUNC( ADSISSERVERLOADED )
    hb_retnl( pusConnectType );
 } */
 
+HB_FUNC( ADSGETSERVERTIME )
+{
+
+   UNSIGNED32 ulRetVal ;
+   UNSIGNED8 pucDateBuf[ 16 ];
+   UNSIGNED8 pucTimeBuf[ 16 ];
+
+   UNSIGNED16 pusDateBufLen = 16;
+   UNSIGNED16 pusTimeBufLen = 16;
+
+   SIGNED32 plTime = 0;
+
+   ADSHANDLE hConnect = ISNUM( 1 ) ? hb_parnl( 1 ) : adsConnectHandle;
+
+   ulRetVal = AdsGetServerTime( hConnect, pucDateBuf, &pusDateBufLen, &plTime, pucTimeBuf, &pusTimeBufLen );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      hb_reta( 3 ) ;
+      hb_storc( (char * )pucDateBuf, -1, 1 );
+      hb_storc( (char *) pucTimeBuf, -1, 2 );
+      hb_stornl( plTime, -1, 3 );
+   } else
+   {
+      AdsShowError( (UNSIGNED8 *) "AdsGetServerTime error:" );
+      hb_ret();
+   }
+}
+
 HB_FUNC( ADSISTABLELOCKED )
 {
    UNSIGNED32 ulRetVal ;
@@ -240,6 +281,16 @@ HB_FUNC( ADSSETCHARTYPE )
          adsCharType = charType;
    }
    hb_retni( oldType );
+   return;
+}
+
+// return whether the current table is opened with OEM or ANSI character set
+HB_FUNC( ADSGETTABLECHARTYPE )
+{
+   UNSIGNED16 usCharType;
+   ADSAREAP   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   AdsGetTableCharType(pArea->hTable, &usCharType );
+   hb_retni( usCharType );
    return;
 }
 
@@ -1332,61 +1383,6 @@ HB_FUNC( ADSSHOWERROR )
    AdsShowError( pucTitle );
 }
 
-HB_FUNC( ADSGETNUMACTIVELINKS )
-{
-   UNSIGNED16 pusNumLinks = 0;
-
-   if( adsConnectHandle )
-   {
-      AdsGetNumActiveLinks( adsConnectHandle, &pusNumLinks );
-   }
-   hb_retnl( pusNumLinks );
-}
-
-#ifdef ADS_REQUIRE_VERSION6
-
-HB_FUNC(ADSADDTABLE)
-{
-   UNSIGNED32 ulRetVal;
-   UNSIGNED8 *pTableName = hb_parc( 1 );
-   UNSIGNED8 *pTableFileName = hb_parc( 2 );
-   UNSIGNED8 *pTableIndexFileName = hb_parc( 3 );
-
-   ulRetVal= AdsDDAddTable( adsConnectHandle, pTableName, pTableFileName, adsFileType, adsCharType, pTableIndexFileName, NULL);
-
-   if ( ulRetVal == AE_SUCCESS )
-      hb_retl(1);
-   else
-      hb_retl(0);
-}
-
-HB_FUNC( ADSADDUSERTOGROUP )
-{
-   UNSIGNED32 ulRetVal;
-   UNSIGNED8 *pGroup = hb_parc( 1 );
-   UNSIGNED8 *pName  = hb_parc( 2 );
-
-   ulRetVal = AdsDDAddUserToGroup( adsConnectHandle,
-                                   pGroup,
-                                   pName);
-
-   if ( ulRetVal == AE_SUCCESS )
-        hb_retl(1);
-    else
-        hb_retl(0);
-}
-
-HB_FUNC( ADSUSEDICTIONARY )
-{
-   BOOL bOld = bDictionary;
-   if ( ISLOG( 1 ) )
-      bDictionary = hb_parl( 1 ) ;
-
-   hb_retl(bOld);
-}
-
-#endif
-
 HB_FUNC( ADSBEGINTRANSACTION )
 {
    ADSHANDLE hConnect = ISNUM( 1 ) ? hb_parnl( 1 ) : 0;
@@ -1463,6 +1459,29 @@ HB_FUNC( ADSCACHERECORDS )
    hb_retl( ulRetVal );
 }
 
+/*
+  Reindex all tags of the currently selected table
+  Returns true if successful, false if fails.
+  Error code available by calling AdsGetLastError()
+*/
+
+HB_FUNC( ADSREINDEX )
+{
+   UNSIGNED32 ulRetVal ;
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+      ulRetVal = AdsReindex( pArea->hTable);
+   else
+      ulRetVal = AdsReindex( -1 ); // should return error!
+
+   if( ulRetVal == AE_SUCCESS )
+      hb_retl( 1 );
+   else
+      hb_retl( 0 );
+}
+
 HB_FUNC( ADSVERSION )
 {
    int iVersionType = ISNUM(1) ? hb_parni(1) : 0;
@@ -1487,6 +1506,324 @@ HB_FUNC( ADSVERSION )
       ucVersion[0] = 0;
    }
 
-   hb_retc(ucVersion);
+   hb_retc( ucVersion );
 }
 
+#ifdef ADS_REQUIRE_VERSION6
+
+HB_FUNC( ADSGETNUMACTIVELINKS )         // requires 6.2 !
+{
+   UNSIGNED16 pusNumLinks = 0;
+
+   if( adsConnectHandle )
+   {
+      AdsGetNumActiveLinks( adsConnectHandle, &pusNumLinks );
+   }
+   hb_retnl( pusNumLinks );
+}
+
+HB_FUNC( ADSDDADDTABLE )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pTableName = hb_parc( 1 );
+   UNSIGNED8 *pTableFileName = hb_parc( 2 );
+   UNSIGNED8 *pTableIndexFileName = hb_parc( 3 );
+
+   ulRetVal= AdsDDAddTable( adsConnectHandle, pTableName, pTableFileName, adsFileType, adsCharType, pTableIndexFileName, NULL);
+
+   if ( ulRetVal == AE_SUCCESS )
+      hb_retl(1);
+   else
+      hb_retl(0);
+}
+
+HB_FUNC( ADSDDADDUSERTOGROUP )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pGroup = hb_parc( 1 );
+   UNSIGNED8 *pName  = hb_parc( 2 );
+
+   ulRetVal = AdsDDAddUserToGroup( adsConnectHandle,
+                                   pGroup,
+                                   pName);
+
+   if ( ulRetVal == AE_SUCCESS )
+      hb_retl(1);
+   else
+      hb_retl(0);
+}
+
+HB_FUNC( ADSUSEDICTIONARY )
+{
+   BOOL bOld = bDictionary;
+   if ( ISLOG( 1 ) )
+      bDictionary = hb_parl( 1 ) ;
+
+   hb_retl(bOld);
+}
+
+HB_FUNC( ADSCONNECT60 )
+{
+   UNSIGNED32 ulRetVal ;
+   UNSIGNED8  *pucServerPath = hb_parc( 1 );
+   UNSIGNED16 usServerTypes  = hb_parnl( 2 );
+   UNSIGNED8  *pucUserName   = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL ;
+   UNSIGNED8  *pucPassword   = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL ;
+   UNSIGNED32 ulOptions      = ISNUM( 5 ) ? hb_parnl( 5 ) : ADS_DEFAULT ;
+
+   ulRetVal = AdsConnect60( pucServerPath,
+                            usServerTypes,
+                            pucUserName,
+                            pucPassword,
+                            ulOptions,
+                            &adsConnectHandle );
+
+   if( ulRetVal == AE_SUCCESS )
+      hb_retl( 1 ) ;
+   else
+      hb_retl( 0 ) ;
+
+}
+
+HB_FUNC( ADSDDCREATE )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8  *pucDictionaryPath = hb_parc( 1 ) ;
+   UNSIGNED16 usEncrypt          = ISNUM(2) ? hb_parnl( 0 ) : 0 ;
+   UNSIGNED8  *pucDescription    = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL ;
+
+   ulRetVal = AdsDDCreate( ( UNSIGNED8 *)pucDictionaryPath,
+                           usEncrypt,
+                           ( UNSIGNED8 *)pucDescription,
+                           &adsConnectHandle );
+
+   if( ulRetVal == AE_SUCCESS )
+      hb_retl( 1 );
+   else
+      hb_retl( 0 );
+
+}
+
+HB_FUNC( ADSDDCREATEUSER )
+{
+    UNSIGNED32 ulRetVal;
+    UNSIGNED8 *pucGroupName     = ISCHAR(1) ? hb_parc(1) : NULL;
+    UNSIGNED8 *pucUserName      = ISCHAR(2) ? hb_parc(2) : NULL;
+    UNSIGNED8 *pucPassword      = ISCHAR(3) ? hb_parc(3) : NULL;
+    UNSIGNED8 *pucDescription   = ISCHAR(4) ? hb_parc(4) : NULL;
+    ulRetVal = AdsDDCreateUser( adsConnectHandle, pucGroupName,
+                             pucUserName, pucPassword, pucDescription );
+    hb_retl( ulRetVal == AE_SUCCESS );
+}
+
+HB_FUNC( ADSDDGETDATABASEPROPERTY )
+{
+    #define ADS_MAX_PARAMDEF_LEN  2048
+    UNSIGNED16 ulProperty = ( UNSIGNED16 ) hb_parni( 1 );
+    char sBuffer[ADS_MAX_PARAMDEF_LEN];
+    UNSIGNED16 ulLength;
+    UNSIGNED16 ulBuffer;
+    BOOL bChar = FALSE ;
+
+
+    switch ( ulProperty )
+    {
+       case ADS_DD_COMMENT:
+       case ADS_DD_DEFAULT_TABLE_PATH:
+       case ADS_DD_USER_DEFINED_PROP:
+       case ADS_DD_TEMP_TABLE_PATH:
+       case ADS_DD_VERSION:
+       {
+          ulLength = ADS_MAX_PARAMDEF_LEN ;
+          AdsDDGetDatabaseProperty( adsConnectHandle, ulProperty, &sBuffer, &ulLength );
+          bChar = TRUE ;
+          break;
+       }
+       case ADS_DD_LOG_IN_REQUIRED:
+       case ADS_DD_VERIFY_ACCESS_RIGHTS:
+       case ADS_DD_ENCRYPT_TABLE_PASSWORD:
+       case ADS_DD_ENCRYPT_NEW_TABLE:
+       {
+          ulLength = sizeof( UNSIGNED16 );
+          AdsDDGetDatabaseProperty( adsConnectHandle, ulProperty, &ulBuffer, &ulLength );
+          break;
+       }
+    }
+
+   if( ulProperty == ADS_DD_LOG_IN_REQUIRED || ulProperty == ADS_DD_VERIFY_ACCESS_RIGHTS  || ulProperty == ADS_DD_ENCRYPT_NEW_TABLE )
+      hb_retl( ulBuffer );
+   else if( bChar )
+      hb_retclen( sBuffer, ulLength );
+   else
+      hb_retnl( ulBuffer );
+}
+
+HB_FUNC( ADSDDSETDATABASEPROPERTY )
+{
+   char * szProperty;
+   UNSIGNED16 ulLength;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 ulBuffer;
+   UNSIGNED16 ulProperty = ( UNSIGNED16 ) hb_parni( 1 );
+   PHB_ITEM pParam = hb_param( 2, HB_IT_ANY ) ;
+
+   switch( ulProperty )
+   {
+      case ADS_DD_COMMENT:
+      case ADS_DD_DEFAULT_TABLE_PATH:
+      case ADS_DD_USER_DEFINED_PROP:
+      case ADS_DD_TEMP_TABLE_PATH:
+      case ADS_DD_ADMIN_PASSWORD:
+      case ADS_DD_ENCRYPT_TABLE_PASSWORD:
+      {
+         ulRetVal = AdsDDSetDatabaseProperty( adsConnectHandle, ulProperty, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) );
+         break;
+      }
+      case ADS_DD_MAX_FAILED_ATTEMPTS:
+      case ADS_DD_INTERNET_SECURITY_LEVEL:
+      case ADS_DD_VERSION_MAJOR:
+      case ADS_DD_VERSION_MINOR:
+      {
+         ulBuffer = hb_itemGetNI( pParam );
+         ulRetVal = AdsDDSetDatabaseProperty( adsConnectHandle, ulProperty, &ulBuffer, 2 );
+         break;
+      }
+      case ADS_DD_LOG_IN_REQUIRED:
+      case ADS_DD_VERIFY_ACCESS_RIGHTS:
+      case ADS_DD_ENCRYPT_NEW_TABLE:
+      case ADS_DD_ENABLE_INTERNET:
+      {
+         ulBuffer =  hb_itemGetL( pParam );
+         ulRetVal = AdsDDSetDatabaseProperty( adsConnectHandle, ulProperty, &ulBuffer, 2 );
+         break;
+      }
+   }
+   hb_retl( ulRetVal == AE_SUCCESS );
+}
+
+/*
+UNSIGNED32 ENTRYPOINT AdsDDGetUserProperty( ADSHANDLE  hObject,
+                                            UNSIGNED8  *pucUserName,
+                                            UNSIGNED16 usPropertyID,
+                                            VOID       *pvProperty,
+                                            UNSIGNED16 *pusPropertyLen );
+*/
+HB_FUNC( ADSDDGETUSERPROPERTY )
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8  *pucUserName      = hb_parc(1);
+   UNSIGNED16 usPropertyID      = hb_parni(2);
+   UNSIGNED8  *pvProperty       = hb_parc(3);
+   UNSIGNED16 usPropertyLen     = hb_parni(4);
+   ulRetVal = AdsDDGetUserProperty( adsConnectHandle, pucUserName, usPropertyID,
+                                    pvProperty, &usPropertyLen );
+   hb_retl( ulRetVal == AE_SUCCESS );
+}
+/*
+   Verify if a username/password combination is valid for this database
+   Call :    ADSTESTLOGIN(serverpath,servertypes,username,password,options,
+                          [userproperty,buffer,bufferlength])
+   Returns : True if login succeeds
+
+   Notes:    This creates a temporary connection only during the execution of this
+             function, without disturbing the stored one for any existing connection
+
+             If the optional last 3 parameters are supplied, then it queries the
+             requested user property and returns it in the buffer. This is useful
+             fo example to get the groups of which the user is a member
+*/
+
+HB_FUNC( ADSTESTLOGIN )
+{
+   UNSIGNED32 ulRetVal ;
+   UNSIGNED8  *pucServerPath = hb_parc( 1 );
+   UNSIGNED16 usServerTypes  = hb_parnl( 2 );
+   UNSIGNED8  *pucUserName   = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL ;
+   UNSIGNED8  *pucPassword   = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL ;
+   UNSIGNED32 ulOptions      = ISNUM( 5 ) ? hb_parnl( 5 ) : ADS_DEFAULT ;
+   UNSIGNED16 usPropertyID   = ISNUM( 6 ) ? hb_parni( 6 ) : 0;
+   UNSIGNED8  *pvProperty    = ISCHAR( 7 ) ? hb_parc( 7 ) : NULL ;
+   UNSIGNED16 usPropertyLen  = ISNUM( 8 ) ? hb_parni( 8 ) : 0;
+   ADSHANDLE  adsTestHandle;
+
+   ulRetVal = AdsConnect60( pucServerPath,
+                            usServerTypes,
+                            pucUserName,
+                            pucPassword,
+                            ulOptions,
+                            &adsTestHandle );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      if( usPropertyLen > 0 )
+        AdsDDGetUserProperty( adsTestHandle, pucUserName, usPropertyID,
+                                             pvProperty, &usPropertyLen );
+      AdsDisconnect( adsTestHandle );
+      hb_retl( 1 ) ;
+   }
+   else
+      hb_retl( 0 ) ;
+}
+
+HB_FUNC( ADSRESTRUCTURETABLE )
+{
+   // call:
+   // AdsRestructureTable( cTable, cAddFields, cDeleteFields, cChangeFields )
+
+   //UNSIGNED32  AdsRestructureTable( ADSHANDLE hConnect,UNSIGNED8 *pucName,
+   //   UNSIGNED8 *pucAlias,UNSIGNED16 usTableType,UNSIGNED16 usCharType,
+   //   UNSIGNED16 usLockType,UNSIGNED16 usCheckRights,UNSIGNED8
+   //   *pucAddFields,UNSIGNED8 *pucDeleteFields,UNSIGNED8 *pucChangeFields );
+   //adsFileType ADS_DEFAULT, ADS_ADT, ADS_NTX and ADS_CDX
+
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pTableName      = hb_parc( 1 );
+   UNSIGNED8 *pucAddFields    = hb_parc( 2 );
+   UNSIGNED8 *pucDeleteFields = hb_parc( 3 );
+   UNSIGNED8 *pucChangeFields = hb_parc( 4 );
+
+
+   ulRetVal = AdsRestructureTable( adsConnectHandle, pTableName, NULL,
+                  adsFileType, adsCharType, adsLockType,
+                  adsRights,
+                  pucAddFields,
+                  pucDeleteFields,
+                  pucChangeFields );
+
+
+   hb_retl( (long) ulRetVal );
+}
+
+HB_FUNC( ADSCOPYTABLECONTENTS )
+{
+   ADSAREAP pArea;
+   ADSAREAP pDest;
+   UNSIGNED32 ulRetVal;
+   char * szAlias = hb_parc(1);
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer(); // Source
+   if( pArea )
+   {
+      if( hb_rddSelectWorkAreaAlias(szAlias) == SUCCESS )
+      {
+         pDest = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer(); // Destination
+         if (pDest)
+         {
+            ulRetVal = AdsCopyTableContents( pArea->hTable,
+                                             pDest->hTable,
+                                             ADS_IGNOREFILTERS );
+            if ( ulRetVal == AE_SUCCESS )
+               hb_retl(1);
+            else
+               hb_retl(0);
+         }
+      }
+      else
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, " ADSCOPYTABLECONTENTS" );
+}
+
+#endif   /* ADS_REQUIRE_VERSION6  */
+/*  Please add all-version functions above this block */

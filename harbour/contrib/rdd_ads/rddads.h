@@ -59,7 +59,7 @@
 *  Change to be one higher than the current version number in the Id string.
 */
 
-#define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.12"
+#define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.4"
 
 /*
 *  ADS WORKAREA
@@ -125,3 +125,14 @@ typedef struct _ADSAREA_
 } ADSAREA;
 
 typedef ADSAREA * ADSAREAP;
+
+UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE  hObj,
+                                       UNSIGNED8  *pucFldName,
+                                       UNSIGNED8  *pucBuf,
+                                       UNSIGNED32 ulLen );
+
+UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE  hTbl,
+                                       UNSIGNED8  *pucFldName,
+                                       UNSIGNED8  *pucBuf,
+                                       UNSIGNED32 *pulLen );
+

@@ -8,6 +8,30 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-16 17:40 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/adsmgmnt.c
+   * contrib/rdd_ads/ace.h
+   * contrib/rdd_ads/rddads.h
+   * contrib/rdd_ads/doc/en/adsfuncs.txt
+      ! Renamed Data Dictionary functions for consistency:
+          adsAddTable() to adsDDAddTale()
+          adsAddUserToGroup to adsDDAddUserToGroup()
+      ! Moved adsGetNumActiveLinks() inside the ADS_REQUIRE_VERSION6 to avoid
+        compile errors with ADS version older than v. 6.0
+      + Syncronized with xHarbour - Thanks to Brian Hays, Toninho, et. al.
+        added the following functions:
+        adsConnect60()
+        adsCopyTableContents()
+        adsDDCreate()
+        adsDDCreateUser()
+        adsDDGetDatabaseProperty()
+        adsDDGetUserProperty()
+        adsDDSetDatabaseProperty()
+        adsGetTableCharType()
+        adsMGGetLockOwner()
+      
 2004-02-16 15:52 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * src/rtl/set.c
