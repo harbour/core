@@ -1,3 +1,7 @@
+19991102-04:05 GMT+1 Antonio Linares
+   * makefile.b32
+     * some files added. Alphabetical ordered.
+
 19991101-11:53 GMT+3 Alexander Kresin
   * source/pp/hbpp.c
     * Fixed bug
@@ -62,7 +66,7 @@
     % hb_strEmpty(), hb_str*cmp() a few optimalizations.
     + Using const keyword for hb_str*() function parameters.
     * Small formatting, some Hungarian notations adjusted.
-    + CHR() STRICT mode replaced with a comment, that the buggy Clipper 
+    + CHR() STRICT mode replaced with a comment, that the buggy Clipper
       behaviour should (or should not) be implemented in the Harbour compiler
       optimizer.
   - tests/hardcr.prg
@@ -70,7 +74,7 @@
     tests/Makefile
     + These test files has been removed, since they were moved to RTL_TEST
   * tests/rtl_test.prg
-    * Some CHR() tests simplified, one added to show the buggy Clipper 
+    * Some CHR() tests simplified, one added to show the buggy Clipper
       behaviour.
     + HARDCR(), MEMOTRAN() tests added.
 
