@@ -172,6 +172,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\transfrm.obj \
     $(OBJ_DIR)\treport.obj \
     $(OBJ_DIR)\type.obj \
+    $(OBJ_DIR)\typefile.obj \
     $(OBJ_DIR)\valtype.obj \
     $(OBJ_DIR)\wait.obj \
     $(OBJ_DIR)\word.obj \
@@ -880,6 +881,12 @@ $(OBJ_DIR)\treport.obj : $(OBJ_DIR)\treport.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\type.obj : $(RTL_DIR)\type.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\typefile.c : $(RTL_DIR)\typefile.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\typefile.obj : $(OBJ_DIR)\typefile.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\valtype.obj : $(RTL_DIR)\valtype.c

@@ -1,3 +1,7 @@
+20000216-13:12 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/typefile.prg
+
 20000216-06:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *makefile.bc
         *added  the typefile makefile
