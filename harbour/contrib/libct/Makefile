@@ -21,6 +21,7 @@ C_SOURCES = \
         charrepl.c \
         charsort.c \
         charswap.c \
+	count.c \
 	ct.c \
 	ctmath.c \
         ctset.c \
@@ -30,8 +31,10 @@ C_SOURCES = \
         ctcrypt.c \
         ctposupp.c \
 	finan.c \
+	justify.c \
 	math.c \
 	num1.c \
+	relation.c \
         token1.c \
 	trig.c \
         wordrepl.c \

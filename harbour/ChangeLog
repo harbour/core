@@ -1,3 +1,16 @@
+2001-07-23 20:10 MEST Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/count.c
+     + COUNTLEFT() & COUNTRIGHT() functions
+   + contrib/libct/justify.c
+     + JUSTLEFT() & JUSTRIGHT() functions
+   + contrib/libct/relation.c
+     + CHARRELA() & CHARRELREP() functions
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+     + count.c, justify.c and relation.c added
+
 2001-07-23 17:37 GMT Dave Pearson <davep@davep.org>
    * source/rtl/profiler.prg
      * Replace old profile reporting code with an OO approach.

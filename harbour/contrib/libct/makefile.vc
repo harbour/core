@@ -126,6 +126,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
+   $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmath.obj \
    $(OBJ_DIR)\ctset.obj \
@@ -135,8 +136,10 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\finan.obj \
+   $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
+   $(OBJ_DIR)\relation.obj \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
@@ -168,6 +171,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\charrepl.* del $(OBJ_DIR)\charrepl.*
    -@if exist $(OBJ_DIR)\charsort.* del $(OBJ_DIR)\charsort.*
    -@if exist $(OBJ_DIR)\charswap.* del $(OBJ_DIR)\charswap.*
+   -@if exist $(OBJ_DIR)\count.* del $(OBJ_DIR)\count.*
    -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
    -@if exist $(OBJ_DIR)\ctmath.* del $(OBJ_DIR)\ctmath.*
    -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
@@ -177,8 +181,10 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
    -@if exist $(OBJ_DIR)\ctposupp.* del $(OBJ_DIR)\ctposupp.*
    -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
+   -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
    -@if exist $(OBJ_DIR)\math.* del $(OBJ_DIR)\math.*
    -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
+   -@if exist $(OBJ_DIR)\relation.* del $(OBJ_DIR)\relation.*
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
    -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*
    -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*

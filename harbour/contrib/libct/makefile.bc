@@ -106,6 +106,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
+   $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmath.obj \
    $(OBJ_DIR)\ctset.obj \
@@ -115,8 +116,10 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctposupp.obj \
    $(OBJ_DIR)\finan.obj \
+   $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
+   $(OBJ_DIR)\relation.obj \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
@@ -204,6 +207,10 @@ $(OBJ_DIR)\charswap.obj : $(TOOLS_DIR)\charswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\count.obj : $(TOOLS_DIR)\count.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ct.obj : $(TOOLS_DIR)\ct.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -240,11 +247,19 @@ $(OBJ_DIR)\finan.obj : $(TOOLS_DIR)\finan.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\justify.obj : $(TOOLS_DIR)\justify.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\math.obj : $(TOOLS_DIR)\math.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\num1.obj : $(TOOLS_DIR)\num1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\relation.obj : $(TOOLS_DIR)\relation.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
