@@ -1,3 +1,11 @@
+2000-08-15 14:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   * doc/en/cmdline.txt
+     * Formated text added by Victor
+
+   *utils/hbdoc/hbdoc.prg
+    utils/hbdoc/genchm.prg
+     * Generated Content file for Windows .CHM help now match Windows .HLP help
+
 2000-08-15 22:00 UTC+0700 Andi Jahja <andij@aonlippo.co.id>
 
    * source/lang/msgid.c
