@@ -54,6 +54,7 @@
  *    hb_itemPutNDLen()
  *    hb_itemPutNILen()
  *    hb_itemPutNLLen()
+ *    hb_itemSetCMemo()
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    hb_itemStrCmp()
@@ -467,6 +468,12 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->item.asString.value[ ulLen ] = '\0';
 
    return pItem;
+}
+
+void hb_itemSetCMemo( PHB_ITEM pItem )
+{
+   if( pItem && HB_IS_STRING( pItem ) ) 
+      pItem->type |= HB_IT_MEMOFLAG;
 }
 
 /* NOTE: The caller should free the pointer if it's not NULL. [vszakats] */
@@ -1288,6 +1295,7 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
    switch( pItem->type )
    {
       case HB_IT_STRING:
+      case HB_IT_MEMO:
          buffer = hb_itemGetCPtr( pItem );
          * ulLen = hb_itemGetCLen( pItem );
          * bFreeReq = FALSE;

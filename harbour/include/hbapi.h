@@ -81,7 +81,7 @@ extern "C" {
 #define HB_IS_LONG( p )    HB_IS_OF_TYPE( p, HB_IT_LONG )
 #define HB_IS_NUMERIC( p ) ( ( p )->type & HB_IT_NUMERIC )
 #define HB_IS_OBJECT( p )  HB_IS_OF_TYPE( p, HB_IT_OBJECT )
-#define HB_IS_STRING( p )  HB_IS_OF_TYPE( p, HB_IT_STRING )
+#define HB_IS_STRING( p )  ( ( ( p )->type & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
 #define HB_IS_MEMO( p )    HB_IS_OF_TYPE( p, HB_IT_MEMO )
 #define HB_IS_SYMBOL( p )  HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
 #define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )

@@ -80,6 +80,7 @@ extern PHB_ITEM hb_itemParam    ( USHORT uiParam );
 extern PHB_ITEM hb_itemPutC     ( PHB_ITEM pItem, char * szText );
 extern PHB_ITEM hb_itemPutCPtr  ( PHB_ITEM pItem, char * szText, ULONG ulLen );
 extern PHB_ITEM hb_itemPutCL    ( PHB_ITEM pItem, char * szText, ULONG ulLen );
+extern void     hb_itemSetCMemo ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemPutDS    ( PHB_ITEM pItem, char * szDate );
 extern PHB_ITEM hb_itemPutDL    ( PHB_ITEM pItem, long lJulian );
 extern PHB_ITEM hb_itemPutL     ( PHB_ITEM pItem, BOOL bValue );

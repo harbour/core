@@ -1,3 +1,25 @@
+20000403-04:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rdd/dbf1.c
+     ! Now the MEMO fields are marked as MEMO.
+       (Two HBTEST failures gone)
+
+   * source/vm/itemapi.c
+   * include/hbapi.h
+     + Added hb_itemSetCMemo() Item API call, to mark a string as MEMO.
+     ! hb_itemString() made MEMO aware.
+     ! HB_IS_STRING() made MEMO aware.
+
+   * utils/hbtest/rt_hvm.prg
+     + A bunch (~100) of number width handling tests added, many of them fail.
+
+   * source/vm/hvm.c
+     ! hb_vmNegate() fixed handling of number width for doubles
+     ! hb_vmPushDouble() fixed handling of number widths.
+     + TOFIX added for hb_vmPushDouble(), because in Clipper the exact width
+       is extracted from the pcode, the problem is that Harbour doesn't have
+       this info stored there.
+
 20000403-02:11 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * contrib/runjava/runjava.c

@@ -1010,6 +1010,8 @@ static ERRCODE dbfGetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                           ( ( LPDBFMEMO ) pField->memo )->uiLen );
          else
             hb_itemPutC( pItem, "" );
+
+         hb_itemSetCMemo( pItem );
          break;
    }
    return SUCCESS;
