@@ -49,7 +49,28 @@ DECLARE  FT_MKDIR( CDIR AS STRING ) //AS USUAL
 DECLARE  StrPos( cBuffer AS STRING ) AS NUMERIC
 DECLARE  GetNumberofTableItems( cBuffer AS STRING ) AS NUMERIC
 DECLARE  FREADline( nH AS NUMERIC, @cB AS STRING, nMaxLine AS NUMERIC )
-DECLARE  FILEBASE() AS OBJECT
+//DECLARE  FILEBASE() AS OBJECT
+DECLARE  FILEBASE ;
+    New( cname AS STRING) AS CLASS FILEBASE; 
+    FOPEN()   AS OBJECT;
+    closefile() AS OBJECT;
+    fskip( OPTIONAL n  AS NUMERIC)  AS OBJECT;
+    FWRITE( c AS STRING) AS OBJECT;
+    retrieve() AS STRING;
+    fgoTop()      AS OBJECT;
+    fgoBottom()     AS OBJECT;
+    fgoto()    AS NUMERIC;
+    create() AS OBJECT;
+    fappendByte( cByte )    AS OBJECT;
+    BuffGet METHOD BufferGet( OPTIONAL lDirection AS LOGICAL ) AS NUMERIC;
+    SKIP( OPTIONAL nRecord AS NUMERIC )                  AS OBJECT;
+    WRITE( cChar AS STRING )                   AS OBJECT;
+    goTop()                          AS OBJECT;
+    goBottom()                       AS OBJECT;
+    GOTO( OPTIONAL nValue AS NUMERIC)                   AS NUMERIC;
+    OPEN()                           AS OBJECT;
+    append(OPTIONAL cline AS STRING) AS OBJECT
+
 STATIC TheHandle As Object
 /****
 *   FT_FUSE(cFile,nMode)   ---> nHandle

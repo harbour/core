@@ -119,6 +119,7 @@ MEMVAR lAuthor
 MEMVAR lRtf
 MEMVAR lNgi
 MEMVAR lOs2
+MEMVAR lPdf
 MEMVAR lWww
 MEMVAR lChm
 MEMVAR lNorton
@@ -167,6 +168,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    PUBLIC lRtf        := .F.
    PUBLIC lNgi        := .F.
    PUBLIC lOs2        := .F.
+   PUBLIC lPdf        := .F.
    PUBLIC lWww        := .F.
    PUBLIC lChm        := .F.
    PUBLIC lNorton     := .F.
@@ -204,6 +206,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             lRtf := .T.
          ELSEIF cFlags = "HTM"
             lWww := .T.
+         ELSEIF cFlags = "PDF"
+            lPdf := .T.
+
          ELSEIF cFlags = "CHM"
             lChm := .T.
          ELSEIF cFlags = "TRF"
@@ -236,6 +241,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       ? "          /os2 OS/2 help source code For OS/2"
       ? "          /htm Generate HTML output"
       ? "          /chm Generate HTML source files for Windows .CHM Help files"
+      ? "          /pdf Generate an Adobe Portable Document (.PDF)"
       ? "          /trf Gerenate Linux TROFF code"
       ? "          /doc Create continuous ASCII file w/o author information"
       ? " "
@@ -279,6 +285,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          FT_MKDIR( "chm" )
       ENDIF
 
+   ELSEIF   lPdf
+      IF EMPTY( DIRECTORY( "pdf.*", "D" ) )
+         FT_MKDIR( "pdf" )
+      ENDIF
+
    ELSEIF lNgi
       IF EMPTY( DIRECTORY( "ngi.*", "D" ) )
          FT_MKDIR( "ngi" )
@@ -318,6 +329,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                ProcessFiles()
             ELSEIF lRtf
                ProcessRtf()
+            ELSEIF lPdf
+            #ifdef PDF
+//               ProcessPDF(.t.)
+               ProcessPDF(.f.)
+  //       #endif
             ELSEIF lWww
                ProcessWww()
             ELSEIF lChm
@@ -344,6 +360,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ASCIIFILES()
          ELSEIF lNorton
             ProcessFiles()
+         ELSEIF lPdf
+//         #ifdef PDF
+            ProcessPDF(.t.)
+            ProcessPDF(.f.)
+//         #endif
          ELSEIF lRtf
             ProcessRtf()
          ELSEIF lWww
@@ -380,6 +401,10 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lRTF
       @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;         
               + " input files"
+   ELSEIF lPdf
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Adobe Portable Document Format" ) ;         
+              + " input files"
+
    ELSEIF lWww .or. lChm
       @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;         
               + " input files"
