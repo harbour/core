@@ -59,7 +59,7 @@
 
 BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
-   PBASEARRAY pBaseArray = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_xgrab( sizeof( HB_BASEARRAY ) );
    ULONG ulPos;
 
    hb_itemClear( pItem );
@@ -88,12 +88,12 @@ BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    if( IS_ARRAY( pArray ) )
    {
-      PBASEARRAY pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
+      PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
 
       if( pBaseArray->ulLen < ULONG_MAX )
       {
          hb_arraySize( pArray, pBaseArray->ulLen + 1 );
-         pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
+         pBaseArray = ( PHB_BASEARRAY ) pArray->item.asArray.value;
          hb_itemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
 
          return TRUE;
@@ -123,7 +123,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
 {
    if( IS_ARRAY( pArray ) )
    {
-      PBASEARRAY pBaseArray = pArray->item.asArray.value;
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG ulPos;
 
       if( ! pBaseArray->ulLen )
@@ -175,7 +175,7 @@ BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 
       if( ulIndex > 0 && ulIndex <= ulLen )
       {
-         PBASEARRAY pBaseArray = pArray->item.asArray.value;
+         PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
 
          hb_itemClear( pBaseArray->pItems + ( ulIndex - 1 ) );
 
@@ -199,7 +199,7 @@ BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
 
       if( ulIndex > 0 && ulIndex <= ulLen )
       {
-         PBASEARRAY pBaseArray = pArray->item.asArray.value;
+         PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
 
          hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
 
@@ -401,7 +401,7 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * p
 {
    if( IS_ARRAY( pArray ) )
    {
-      PBASEARRAY pBaseArray = pArray->item.asArray.value;
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulStart;
       ULONG ulCount;
@@ -435,7 +435,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
 {
    if( IS_ARRAY( pArray ) )
    {
-      PBASEARRAY pBaseArray = pArray->item.asArray.value;
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulStart;
       ULONG ulCount;
@@ -538,7 +538,7 @@ BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * p
 {
    if( IS_ARRAY( pArray ) && IS_BLOCK( bBlock ) )
    {
-      PBASEARRAY pBaseArray = pArray->item.asArray.value;
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulStart;
       ULONG ulCount;
@@ -580,7 +580,7 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
 {
    if( IS_ARRAY( pArray ) )
    {
-      PBASEARRAY pBaseArray = pArray->item.asArray.value;
+      PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulPos;
 
@@ -608,8 +608,8 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
 {
    if( IS_ARRAY( pSrcArray ) && IS_ARRAY( pDstArray ) )
    {
-      PBASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
-      PBASEARRAY pDstBaseArray = pDstArray->item.asArray.value;
+      PHB_BASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
+      PHB_BASEARRAY pDstBaseArray = pDstArray->item.asArray.value;
       ULONG ulSrcLen = pSrcBaseArray->ulLen;
       ULONG ulDstLen = pDstBaseArray->ulLen;
       ULONG ulStart;
@@ -671,8 +671,8 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 
    if( IS_ARRAY( pSrcArray ) )
    {
-      PBASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
-      PBASEARRAY pDstBaseArray;
+      PHB_BASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
+      PHB_BASEARRAY pDstBaseArray;
       ULONG ulSrcLen = pSrcBaseArray->ulLen;
       ULONG ulCount;
 

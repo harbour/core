@@ -2207,7 +2207,7 @@ void hb_vmDo( USHORT uiParams )
    LONG wStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
    LONG wItemIndex = pItem - hb_stack.pItems;
    PHB_ITEM pSelf = hb_stack.pPos - uiParams - 1;   /* NIL, OBJECT or BLOCK */
-   PBASEARRAY pSelfBase;
+   PHB_BASEARRAY pSelfBase;
    PHB_FUNC pFunc;
    int iStatics = hb_stack.iStatics;              /* Return iStatics position */
    BOOL bDebugPrevState = s_bDebugging;

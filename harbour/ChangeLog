@@ -1,3 +1,15 @@
+19991020-13:27 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/extend.h
+     source/rtl/arrays.c
+     source/rtl/classes.c
+     source/vm/hvm.c
+     * Name change, to avoid possible collision.
+       BASEARRAY     -> HB_BASEARRAY
+       PBASEARRAY    -> PHB_BASEARRAY
+       BASEARRAY_PTR -> HB_BASEARRAY_PTR
+       NOTE: HB_ARRAY would be a better name, but that would collide with
+             the Harbour function HB_ARRAY (ARRAY()).
+
 19991020-12:59 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/hbdefs.h
      source/pp/hbpplib.c

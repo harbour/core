@@ -201,7 +201,7 @@ typedef struct _HB_BASEARRAY
    USHORT   uiClass;      /* offset to the classes base if it is an object */
    USHORT   uiPrevCls;    /* for fixing after access super */
    BOOL     bSuperCast;   /* is it a super cast ? */
-} BASEARRAY, * PBASEARRAY, * BASEARRAY_PTR;
+} HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
 /* stack managed by the virtual machine */
 typedef struct

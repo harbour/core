@@ -1132,13 +1132,13 @@ static HARBOUR hb___msgGetData( void )
  */
 static HARBOUR hb___msgSuper( void )
 {
-   PHB_ITEM   pObject    = hb_stack.pBase + 1;
-   PHB_ITEM   pSuper     = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
-   PBASEARRAY pNewBase   = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
-   USHORT     uiSuperCls = s_pMethod->uiData;     /* Get handle of superclass */
+   PHB_ITEM      pObject    = hb_stack.pBase + 1;
+   PHB_ITEM      pSuper     = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
+   PHB_BASEARRAY pNewBase   = ( PHB_BASEARRAY ) hb_xgrab( sizeof( HB_BASEARRAY ) );
+   USHORT        uiSuperCls = s_pMethod->uiData;     /* Get handle of superclass */
 
    memcpy( pSuper,   pObject, sizeof( HB_ITEM ) ); /* Allocate new structures  */
-   memcpy( pNewBase, pObject->item.asArray.value, sizeof( BASEARRAY ) );
+   memcpy( pNewBase, pObject->item.asArray.value, sizeof( HB_BASEARRAY ) );
 
    pSuper->item.asArray.value = pNewBase;
 
