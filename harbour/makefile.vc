@@ -102,7 +102,10 @@ HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
 
 !ifdef HB_DOC_PDF
-   HBPDF_DIR   = contrib\pdflib
+# don't indent definitions
+# don't indent definitions
+# don't indent definitions
+HBPDF_DIR   = contrib\pdflib
 !endif
 
 #
@@ -116,13 +119,14 @@ CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
 
-!if $(HB_LEX) == SIMPLEX
-   CFLAGS = $(CFLAGS) -DSIMPLEX
-   CLIBFLAGS = $(CLIBFLAGS) -DSIMPLEX
+!if ( "$(HB_LEX)"=="SIMPLEX" )
+# don't indent definitions
+CFLAGS = $(CFLAGS) -DSIMPLEX
+CLIBFLAGS = $(CLIBFLAGS) -DSIMPLEX
 !endif
 
 !ifdef HB_DOC_PDF
-   HARBOURFLAGS = $(HARBOURFLAGS) -dPDF
+HARBOURFLAGS = $(HARBOURFLAGS) -dPDF
 !endif
 
 #
@@ -166,8 +170,10 @@ HB_GT_LIBS = \
    $(GTWIN_LIB)
 
 !ifndef HB_GT_LIB
+# don't indent definitions
 HB_GT_LIB = $(GTWIN_LIB)
 !else
+# don't indent definitions
 HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 !endif
 
@@ -457,14 +463,14 @@ MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macrob.obj \
    $(OBJ_DIR)\macroc.obj
 
-!if $(HB_LEX) == SIMPLEX
-    MACRO_LIB_OBJS = \
-       $(MACRO_LIB_OBJS) \
-       $(OBJ_DIR)\macroslx.obj
+!if ( "$(HB_LEX)"=="SIMPLEX" )
+MACRO_LIB_OBJS = \
+   $(MACRO_LIB_OBJS) \
+   $(OBJ_DIR)\macroslx.obj
 !else
-    MACRO_LIB_OBJS = \
-       $(MACRO_LIB_OBJS) \
-       $(OBJ_DIR)\macrol.obj
+MACRO_LIB_OBJS = \
+   $(MACRO_LIB_OBJS) \
+   $(OBJ_DIR)\macrol.obj
 !endif
 
 #
@@ -887,7 +893,7 @@ $(HBMAKE_EXE) : \
 # HARBOUR.EXE rules
 #
 
-!if $(HB_LEX) == SIMPLEX
+!if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\harbour.c \
@@ -995,7 +1001,7 @@ $(GTDOS_LIB) : $(GTDOS_LIB_OBJS)
 # HARBOUR.EXE dependencies
 #
 
-!if $(HB_LEX) == SIMPLEX
+!if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.sly
    bison -d -o$@ $**
@@ -1017,7 +1023,7 @@ $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 # MACRO.LIB dependencies
 #
 
-!if $(HB_LEX) == SIMPLEX
+!if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
    bison -p hb_comp -d $** -o$@
@@ -1038,7 +1044,7 @@ $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -Fo$@  $**
 
-!if $(HB_LEX) == SIMPLEX
+!if ( "$(HB_LEX)"=="SIMPLEX" )
 
 $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    -$(ECHO) > $(OBJ_DIR)\unistd.h

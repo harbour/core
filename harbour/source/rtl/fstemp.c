@@ -120,7 +120,7 @@ HB_FUNC( HB_FTEMPCREATE )
                               ISNUM( 3 ) ? hb_parni( 3 ) : FC_NORMAL,
                               szName ) );
 
-   hb_storc( szName, 4 );
+   hb_storc( ( char *) szName, 4 );
 }
 
 #endif
