@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-17 21:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/cdpapi.c
+    ! Bug fixed in hb_cdpTranslate() and hb_cdpnTranslate()
+  * source/rdd/dbf1.c
+    * RDD works Ok now, if field names in dbf are in lower case ( this
+      may be if dbf created by other dbms )
+  * source/codepage/cdprukoi.c
+    ! Bug fixed.
+
 2003-06-17 17:22 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/debug/debugger.prg
   * source/debug/dbgwa.prg
