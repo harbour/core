@@ -60,6 +60,10 @@ function aSort( aIn, nStart, nCount, bBlock )
       nCount := Len( aIn ) - nStart
    ENDIF
 
+   IF nCount == 0
+      RETURN aIn
+   ENDIF
+
    IF !( ValType( bBlock ) == "B" )
       bBlock := {| x, y | x < y }
    ENDIF
@@ -81,7 +85,7 @@ static function QuickSort( aSort, nLeft, nRight, bOrder )
 
    local nUp     := nLeft
    local nDown   := nRight
-   local xMiddle := aSort[ int ( ( nLeft + nRight ) / 2 ) ]
+   local xMiddle := aSort[ int( ( nLeft + nRight ) / 2 ) ]
    local xTemp
    local lOk     := .T.
 
