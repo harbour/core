@@ -1,3 +1,9 @@
+2000-06-04 11:16 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcomp.c
+   * source/pp/ppcore.c
+     ! Corrected compiler warnings
+
 2000-06-04 18:51 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbdoc/Makefile
@@ -6,7 +12,7 @@
 
 2000-06-04 09:40 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
-     * Changed case of '@' in hb_pp_RdStr() to only add missing space when in the begining of a new line.
+     * Changed case of '@' in hb_pp_RdStr() to only add missing space when in the beginning of a new line.
 
 2000-06-04 09:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
 *utils/hbdoc/hbdoc.prg

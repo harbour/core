@@ -185,7 +185,7 @@ int hb_pp_ReadRules( void )
   char * ptr;
   int lContinue;
   int lens, rdlen;
-  int lLine = 0, i;
+  int lLine = 0;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ReadRules()"));
 

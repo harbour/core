@@ -124,7 +124,10 @@ static int    StringToInt( char *, int );
 static BOOL   IsOnOffSwitch( char *, BOOL );
 static void   DebugPragma( char *, int, BOOL );
 
+/* Ron Pinkas Added */
 void hb_pp_Table( void );
+int hb_pp_ReadRules( void );
+/* Ron Pinkas End */
 
 static BOOL s_bTracePragma = FALSE;
 
@@ -195,7 +198,9 @@ char * hb_pp_szWarnings[] =
 
 void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
 {
+   /*
    COMMANDS * stcmd;
+   */
 
    if( hb_pp_STD_CH )
    {
@@ -220,9 +225,8 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
 
                 hb_pp_ReadRules();
 
-                stcmd = hb_pp_topCommand;
-
                 /*
+                stcmd = hb_pp_topCommand;
                 while ( stcmd )
                 {
                     printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
@@ -1157,12 +1161,16 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                     char * ptrTemp;
 
                     ptrTemp = ++ptrmp;
+                    printf( "\n1 Skipping: %s\n", ptrmp );
                     SkipOptional( &ptrmp );
+                    printf( "\n1 After Skipping: %s\n", ptrmp );
 
                     while( *(ptrmp + 2) == '[' && ptrmp != ptrTemp )
                     {
                       ptrmp += 3;
+                      printf( "\n2 Skipping: %s\n", ptrmp );
                       SkipOptional( &ptrmp );
+                      printf( "\n2 After Skipping: %s\n", ptrmp );
                     }
                   }
                 }
@@ -1180,12 +1188,16 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                   char * ptrTemp;
 
                   ptrTemp = ++ptrmp;
+                  printf( "\n3 Skipping: %s\n", ptrmp );
                   SkipOptional( &ptrmp );
+                  printf( "\n3 After Skipping: %s\n", ptrmp );
 
                   while( *(ptrmp + 2) == '[' && ptrmp != ptrTemp )
                   {
                     ptrmp += 3;
+                    printf( "\n4 Skipping: %s\n", ptrmp );
                     SkipOptional( &ptrmp );
+                    printf( "\n4 After Skipping: %s\n", ptrmp );
                   }
                 }
               }
@@ -2120,7 +2132,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   char cha, cLast = '\0', symbLast = '\0';
 
   /* Ron Pinkas Begin 2000-06-04 */
-  BOOL bNewLine = TRUE;
+  static BOOL bNewLine = TRUE;
   /* Ron Pinkas End */
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
