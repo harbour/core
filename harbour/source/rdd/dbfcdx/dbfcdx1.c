@@ -4747,7 +4747,7 @@ extern ERRCODE hb_cdxZap ( CDXAREAP pArea )
 ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
-   char * szFileName, * szFileNameDbfPath = NULL;
+   char * szFileName, * szFileNameDbfPath = NULL, * szBaseName;
    AREAP pArea = (AREAP) pAreaCdx;
    LPCDXINDEX pIndex;
    DBORDERINFO pExtInfo;
@@ -4774,6 +4774,7 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    pIndex = hb_cdxIndexNew( pArea );
 
    //pAreaCdx->lpIndexes = pIndex;
+   /*
    if ( pAreaCdx->lpIndexes == NULL) {
       pAreaCdx->lpIndexes = pIndex;
    }
@@ -4785,12 +4786,14 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       }
       pIndexTmp->pNext = pIndex;
    }
+   */
    strcpy( szFileName, hb_itemGetCPtr( pOrderInfo->atomBagName ) );
 
    if( strlen( szFileName ) == 0 )
    {
       hb_cdxOrderListClear( (CDXAREAP) pArea );
       hb_xfree( szFileName );
+      hb_cdxIndexFree( pIndex );
       return FAILURE;
    }
    else
@@ -4803,6 +4806,8 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
          strcat( szFileName, pExtInfo.itmResult->item.asString.value );
          hb_itemRelease( pExtInfo.itmResult );
       }
+      szBaseName = ( char * ) hb_xgrab( CDX_MAXTAGNAMELEN + 1 );
+      hb_strncpyUpper( szBaseName, pFileName->szName, CDX_MAXTAGNAMELEN );
       if( !pFileName->szPath )
       {
          hb_xfree( pFileName );
@@ -4818,6 +4823,33 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       /* pArea->szDataFileName = (char *) hb_xgrab( strlen( (char * ) pOpenInfo->abName)+1 ); */
       }
       hb_xfree( pFileName );
+   }
+
+   if ( pAreaCdx->lpIndexes != NULL) {
+      pIndexTmp = pAreaCdx->lpIndexes;
+      while ( pIndexTmp && ( strcmp( szBaseName, pIndexTmp->pCompound->szName ) != 0 ) )
+         pIndexTmp = pIndexTmp->pNext;
+      if ( pIndexTmp )
+      {
+         // index already open, do nothing
+         // TODO: the full pathname should be compared when APIs are available
+         // hb_cdxOrderListClear( (CDXAREAP) pArea );
+         hb_xfree( szFileName );
+         hb_xfree( szBaseName );
+         hb_cdxIndexFree( pIndex );
+         return FAILURE;
+      }
+   }
+   if ( pAreaCdx->lpIndexes == NULL) {
+      pAreaCdx->lpIndexes = pIndex;
+   }
+   else
+   {
+      pIndexTmp = pAreaCdx->lpIndexes;
+      while ( pIndexTmp->pNext ) {
+         pIndexTmp = pIndexTmp->pNext;
+      }
+      pIndexTmp->pNext = pIndex;
    }
 
    uiFlags =  (USHORT) ( pAreaCdx->fReadonly  ? FO_READ : FO_READWRITE );
@@ -4871,13 +4903,15 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       if( szFileNameDbfPath != NULL )
          hb_xfree( szFileNameDbfPath );
       hb_xfree( szFileName );
+      hb_xfree( szBaseName );
       return FAILURE;
    }
 
    /* Corrupted? */
    /*mising test !*/
    /* load the tags*/
-   pIndex->pCompound = hb_cdxTagNew( pIndex, szFileName, 0 );
+   /* pIndex->pCompound = hb_cdxTagNew( pIndex, szFileName, 0 ); */
+   pIndex->pCompound = hb_cdxTagNew( pIndex, szBaseName, 0 );
    pIndex->pCompound->OptFlags = 0xE0;
    pIndex->fShared   = pAreaCdx->fShared;
    pIndex->fReadonly = pAreaCdx->fReadonly;
@@ -4961,6 +4995,7 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       hb_xfree( szFileNameDbfPath );
 
    hb_xfree( szFileName );
+   hb_xfree( szBaseName );
 
    return SUCCESS;
 }
@@ -5312,6 +5347,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
          hb_macroDelete( pForMacro );
       return FAILURE;
    }
+   pIndex->szFileName = ( char * ) hb_xgrab( strlen( szFileName ) + 1 );
+   strcpy( pIndex->szFileName, szFileName);
 
    /* Corrupted? */
    if( !bNewFile )
