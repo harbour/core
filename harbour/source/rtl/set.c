@@ -33,7 +33,7 @@
                                         in call to hb_setColor() to account
                                         for no or NIL parameters.
    V 1.48   David G. Holm               Simplified SET_COLOR handling.
-                                        Made changes to deal with the 
+                                        Made changes to deal with the
                                         hb_set.HB_SET_COLOR string having
                                         a fixed 64 byte size.
    V 1.46   Paul Tucker                 Modifed SetColor handling.
@@ -310,7 +310,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
                   S_IWRITE );
    if (handle < 0)
    {
-      hb_errorRT_TERMINAL( EG_CREATE, 2013, "Create error", path );
+      hb_errorRT_TERMINAL( EG_CREATE, 2013, NULL, path );
    }
    return handle;
 #endif
@@ -701,7 +701,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_DECIMALS) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {
@@ -745,7 +745,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_EPOCH) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {
@@ -808,7 +808,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_MARGIN) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {
@@ -826,7 +826,7 @@ HARBOUR HB_SET (void)
          {
             if (set_number (pArg2, hb_set.HB_SET_MESSAGE) < 0)
             {
-               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+               hb_errorRT_BASE(EG_ARG, 2020, NULL, "SET");
             }
             else
             {

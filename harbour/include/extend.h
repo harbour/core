@@ -48,10 +48,7 @@ typedef struct          /* symbol support structure */
 #define FS_INIT         8
 #define FS_EXIT        16
 #define FS_MESSAGE     32
-
-#define VS_PRIVATE     64
-#define VS_PUBLIC     128
-#define VS_MEMVAR     (VS_PRIVATE | VS_PUBLIC)
+#define FS_MEMVAR     128
 
 void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols );  /* invokes the virtual machine */
 void ProcessSymbols( SYMBOL *, WORD );

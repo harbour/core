@@ -29,10 +29,10 @@
    their web site at http://www.gnu.org/).
 
    You can contact me at: dezac@corevia.com
-  
+
    The following functions are Copyright 1999 Jose Lalin <dezac@corevia.com>:
       hb_isleapyear(), hb_daysinmonth(), hb_doy(), hb_wom(), hb_woy()
-      HB_AMONTHS(), HB_ADAYS(), HB_ISLEAPYEAR(), HB_DAYSINMONTH(), 
+      HB_AMONTHS(), HB_ADAYS(), HB_ISLEAPYEAR(), HB_DAYSINMONTH(),
       HB_EOM(), HB_BOM(), HB_WOM(), HB_DOY(), HB_WOY(), HB_EOY(), HB_BOY()
  */
 
@@ -179,7 +179,7 @@ HARBOUR HB_ISLEAPYEAR( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 9999, "Argument error", "ISLEAPYEAR");
+      hb_errorRT_BASE(EG_ARG, 9999, NULL, "ISLEAPYEAR");
    }
 }
 

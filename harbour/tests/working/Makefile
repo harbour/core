@@ -134,5 +134,6 @@ LIBS=\
 	tools \
 	vm \
 	rtl \
+	rdd \
 
 include $(TOP)$(ROOT)config/test.cf

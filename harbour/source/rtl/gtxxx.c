@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "hbsetup.h"
+
 #if defined(HARBOUR_USE_GTAPI)
    #if defined(HARBOUR_USE_DOS_GTAPI)
       #include "gt/gtdos.c"

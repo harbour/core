@@ -283,7 +283,10 @@ WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, ch
    hb_errPutSubSystem( pError, HB_ERR_SS_BASE );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
-   hb_errPutDescription( pError, szDescription );
+   if( szDescription )
+      hb_errPutDescription( pError, szDescription );
+   else
+      hb_errPutDescription( pError, hb_ErrorNatDescription(ulGenCode) );
    hb_errPutOperation( pError, szOperation );
 
    wRetVal = hb_errLaunch( pError );
@@ -302,7 +305,10 @@ WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription
    hb_errPutSubSystem( pError, HB_ERR_SS_TERMINAL );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
-   hb_errPutDescription( pError, szDescription );
+   if( szDescription )
+      hb_errPutDescription( pError, szDescription );
+   else
+      hb_errPutDescription( pError, hb_ErrorNatDescription(ulGenCode) );
    hb_errPutOperation( pError, szOperation );
 
    wRetVal = hb_errLaunch( pError );
@@ -321,7 +327,10 @@ WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
    hb_errPutSubSystem( pError, HB_ERR_SS_DBCMD );
    hb_errPutGenCode( pError, ulGenCode );
    hb_errPutSubCode( pError, ulSubCode );
-   hb_errPutDescription( pError, szDescription );
+   if( szDescription )
+      hb_errPutDescription( pError, szDescription );
+   else
+      hb_errPutDescription( pError, hb_ErrorNatDescription(ulGenCode) );
    hb_errPutOperation( pError, szOperation );
 
    wRetVal = hb_errLaunch( pError );

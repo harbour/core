@@ -1,3 +1,99 @@
+19990726-02:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+        *include/errorapi.h
+         + added declaration of hb_ErrorNatDescription() function -this
+          function should be used to read a description of generic errors
+
+        *source/rtl/errorapi.c
+         * changed to read a generic error description form national
+          language module:
+          hb_errorRT_BASE(), hb_errorRT_TERMINAL(), hb_errorRT_DBCM() calls
+          hb_ErrorNatDescription() when there is no description specified
+          in function that generates an error
+
+        *include/error.ch
+         * new generic error codes:
+                EG_ARGCOUNT     Incorrect number of arguments
+                EG_ARRACCESS    array access
+                EG_ARRASSIGN    array assign
+                EG_NOTARRAY     not an array
+                EG_CONDITION    conditional
+
+        *source/rtl/natmsg/msgbas.c
+        *source/rtl/natmsg/msgcat.c
+        *source/rtl/natmsg/msgcz852.c
+        *source/rtl/natmsg/msgczkam.c
+        *source/rtl/natmsg/msgdut.c
+        *source/rtl/natmsg/msgeo.c
+        *source/rtl/natmsg/msgfre.c
+        *source/rtl/natmsg/msggal.c
+        *source/rtl/natmsg/msgger.c
+        *source/rtl/natmsg/msghu.c
+        *source/rtl/natmsg/msgia.c
+        *source/rtl/natmsg/msgita.c
+        *source/rtl/natmsg/msgkor.c
+        *source/rtl/natmsg/msgpl852.c
+        *source/rtl/natmsg/msgplmaz.c
+        *source/rtl/natmsg/msgpor.c
+        *source/rtl/natmsg/msgr1251.c
+        *source/rtl/natmsg/msgru866.c
+        *source/rtl/natmsg/msgspa.c
+        *source/rtl/natmsg/msguk.c
+        *source/rtl/natmsg/msgyu852.c
+         + the table with generic errors' descriptions was added
+         + new hb_ErrorNatDescription() that returns error description
+
+        *source/rtl/natmsg/msgpliso.c
+         + new module for Polish ISO-8859-2 coding
+
+        *source/rtl/arrays.c
+        *source/rtl/copyfile.c
+        *source/rtl/classes.c
+        *source/rtl/dates.c
+        *source/rtl/math.c
+        *source/rtl/set.c
+        *source/rtl/strings.c
+        *source/rtl/transfrm.c
+        *source/rtl/memvar.c
+        *source/rtl/rdd/dbcmd.c
+        *source/tools/dates2.c
+        *source/vm/hvm.c
+         * changed to use generic error codes (EG_*) instead of hard-coded
+          descriptions
+
+        *source/rdd/Makefile
+         *corrected to compile files placed in this directory
+
+        *tests/working/Makefile
+         + added rdd library
+
+        *source/rtl/gtxxx.c
+         + added #include "hbsetup.h" to properly include platform specific
+          files based on settings in hbsetup.h
+
+        *source/rtl/msgxxx.c
+         + added #include "hbsetup.h" to properly include platform specific
+          files based on settings in hbsetup.h
+         +added #include "hbdefs.h"
+
+        *source/compiler/harbour.y
+         + added support for '-a' automatic MEMVAR declaration
+         * extended support for MEMVAR declaration
+         + added definition of VS_PRIVATE and VS_PUBLIC
+
+        *include/hberror.h
+         + new warning code WARN_MEMVAR_ASSUMED
+
+        *include/extend.h
+         - removed definition of VS_PRIVATE and VS_PUBLIC
+
+        *source/rtl/memvars.c
+         + added definition of VS_PRIVATE and VS_PUBLIC
+
+        *source/hbpp/table.c
+         * changed names for memvar related functions ('__MV' prefix)
+          in RELEASE, CLEAR* and SAVE/RESTORE commands
+
 19990725-23:12 CET Victor Szel <info@szelvesz.hu>
    + make_tpl.bat
      Template batch file to call the GNU make system.

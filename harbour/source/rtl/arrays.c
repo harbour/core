@@ -65,9 +65,6 @@ PHB_ITEM hb_itemArrayPut( PHB_ITEM , ULONG , PHB_ITEM );
 extern STACK  stack;
 extern SYMBOL symEval;
 
-static char *szBoundError    = "Bound error: Array access";
-static char *szArgumentError = "Argument error: incorrect type";
-
 
 /*
  * Internal
@@ -108,12 +105,12 @@ char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return "        ";
 }
@@ -134,12 +131,12 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return 0;
 }
@@ -166,12 +163,12 @@ double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return 0;
 }
@@ -218,12 +215,12 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         ItemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
 }
 
@@ -242,12 +239,12 @@ char *hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return "";
 }
@@ -267,12 +264,12 @@ ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return 0;
 }
@@ -288,12 +285,12 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return 0;
 }
@@ -313,7 +310,7 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
     return pArray->item.asArray.value->ulLen;
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
     }
   return 0;
 }
@@ -326,12 +323,12 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         ItemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
       else
         {
-          hb_errorRT_BASE(EG_ARG, 1133, "Bound error", "array assign");
+          hb_errorRT_BASE(EG_BOUND, 1133, NULL, hb_ErrorNatDescription(EG_ARRASSIGN));
         }
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 1069, "Argument error", "array assign");
+      hb_errorRT_BASE(EG_ARG, 1069, NULL, hb_ErrorNatDescription(EG_ARRASSIGN));
     }
 }
 
@@ -394,10 +391,7 @@ void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
     }
 }
 
@@ -420,18 +414,12 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, szBoundError );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
     }
 }
 
@@ -454,18 +442,12 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, szBoundError );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_BOUND, 1132, NULL, hb_ErrorNatDescription(EG_ARRACCESS));
         }
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
     }
 }
 
@@ -539,10 +521,7 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
     }
   return 0;
 }
@@ -577,7 +556,7 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
     }
   else
     {
-      hb_errorRT_BASE(EG_ARG, 2017, "Argument error", "AEVAL");
+      hb_errorRT_BASE(EG_ARG, 2017, NULL, "AEVAL");
     }
 }
 
@@ -603,10 +582,7 @@ void hb_arrayRelease( PHB_ITEM pArray )
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
     }
 }
 
@@ -644,10 +620,7 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
     }
 }
 
@@ -684,10 +657,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    }
    else
    {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, NULL, hb_ErrorNatDescription(EG_NOTARRAY));
    }
    return pDstArray;
 }

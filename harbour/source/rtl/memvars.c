@@ -38,6 +38,9 @@
 #include <errorapi.h>
 #include <error.ch>
 
+#define VS_PRIVATE     64
+#define VS_PUBLIC     128
+
 static PDYNSYM *_privateStack = NULL;
 static ULONG _privateStackSize = 0;
 static ULONG _privateStackCnt  = 0;
@@ -365,7 +368,7 @@ void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
       }
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, "Unknown variable: ", pMemvarSymb->szName );
+      hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
 void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
@@ -390,10 +393,10 @@ void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
             ItemCopy( pItem, pGetItem );
       }
       else /* variable is not initialized */
-         hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+         hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, "Unknown variable: ", pMemvarSymb->szName );
+      hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
 void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
@@ -417,10 +420,10 @@ void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
          ++_globalTable[ pDyn->hMemvar ].counter;
       }
       else
-         hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+         hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
    }
    else
-      hb_errorRT_BASE( EG_NOVAR, 1003, "Unknown variable: ", pMemvarSymb->szName );
+      hb_errorRT_BASE( EG_NOVAR, 1003, NULL, pMemvarSymb->szName );
 }
 
 /*
@@ -446,7 +449,7 @@ static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
    else if( IS_STRING( pMemvar ) )
       pDynVar =hb_GetDynSym( pMemvar->item.asString.value );
    else
-      hb_errorRT_BASE( EG_ARG, 3000, "Argument error: ", "&" );
+      hb_errorRT_BASE( EG_ARG, 3000, NULL, "&" );
 
    if( pDynVar )
       hb_MemvarCreateFromDynSymbol( pDynVar, bScope, pValue );
@@ -513,7 +516,7 @@ void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
       }
    }
    else
-      hb_errorRT_BASE( EG_ARG, 3000, "Argument error: ", "RELEASE" );
+      hb_errorRT_BASE( EG_ARG, 3000, NULL, "RELEASE" );
 }
 
 
@@ -539,11 +542,11 @@ void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
  *    This function can be called either by the harbour compiler or by user.
  *    The compiler always passes the item of IT_SYMBOL type that stores the
  *    name of variable.
- *      If a variable with the same name exists already then the new 
+ *      If a variable with the same name exists already then the new
  *    variable is not created - the previous value remains unchanged.
- *      If it is first variable with this name then the  variable is 
+ *      If it is first variable with this name then the  variable is
  *       initialized with .T. value.
- *    
+ *
  *  $EXAMPLES$
  *
  *  $TESTS$
@@ -611,7 +614,7 @@ HARBOUR HB___MVPUBLIC( void )
  *    If a variable with the same name exists already then the value of old
  *    variable is hidden until the new variable is  released. The new variable
  *    is always initialized to NIL value.
- *    
+ *
  *  $EXAMPLES$
  *
  *  $TESTS$

@@ -4,4 +4,12 @@
 
 ROOT = ../../
 
-include $(TOP)$(ROOT)config/dir.cf
+C_SOURCES=\
+        dbcmd.c \
+
+PRG_SOURCES=\
+        rddsys.prg \
+
+LIB=rdd
+
+include $(TOP)$(ROOT)config/lib.cf

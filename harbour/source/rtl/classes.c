@@ -486,10 +486,8 @@ HARBOUR HB_CLASSMOD(void)
                          hb_param( 3, IT_BLOCK ) );
          else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
          {                                      /* Not allowed for DATA     */
-            PHB_ITEM pError = hb_errNew();
-            hb_errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");
-            hb_errLaunch(pError);
-            hb_errRelease(pError);
+            /*hb_errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");*/
+            hb_errorRT_BASE(EG_ARG, 3001, NULL, "CLASSMOD");
          }
          else                                   /* Modify METHOD            */
             pClass->pMethods[ wAt ].pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
@@ -815,10 +813,7 @@ HARBOUR HB_ISMESSAGE(void)
       hb_retl( hb_isMessage( pObject, pString->item.asString.value ) != 0 );
    else
    {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Argument error: ISMESSAGE");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 3000, NULL, "ISMESSAGE");
    }
 }
 
@@ -841,10 +836,7 @@ HARBOUR HB_OCLONE( void )
    }
    else
    {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Argument error: OCLONE");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 3000, NULL, "OCLONE");
    }
 }
 
@@ -871,10 +863,7 @@ HARBOUR HB_OSEND(void)
    }
    else
    {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Argument error: OSEND");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 3000, NULL, "OSEND");
    }
 }
 
@@ -1016,10 +1005,8 @@ HARBOUR HB___INSTSUPER( void )
 
          if( !IS_OBJECT( &stack.Return ) )
          {
-            PHB_ITEM pError = hb_errNew();
-            hb_errPutDescription(pError, "INSTSUPER : Super class does not return an object");
-            hb_errLaunch(pError);
-            hb_errRelease(pError);
+            /* hb_errPutDescription(pError, "INSTSUPER : Super class does not return an object"); */
+            hb_errorRT_BASE(EG_ARG, 3002, NULL, "__INSTSUPER");
          }
 
          for( w = 0; !bFound && w < wClasses; w++ )
@@ -1033,10 +1020,8 @@ HARBOUR HB___INSTSUPER( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "INSTSUPER : Cannot find super class");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         /* hb_errPutDescription(pError, "INSTSUPER : Cannot find super class"); */
+         hb_errorRT_BASE(EG_ARG, 3003, NULL, "__INSTSUPER");
       }
    }
    if( !bFound )

@@ -52,4 +52,10 @@
 #define EG_APPENDLOCK     40
 #define EG_LOCK           41
 
+#define EG_ARGCOUNT       45
+#define EG_ARRACCESS      46
+#define EG_ARRASSIGN      47
+#define EG_NOTARRAY       48
+#define EG_CONDITION      49
+
 #endif /* _ERROR_CH */

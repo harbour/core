@@ -29,7 +29,7 @@
  *  See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
  *
  *  The following functions are Copyright 1999 Jose Lalin <dezac@corevia.com>:
- *     hb__seconds(), HB_SECONDS(), hb_cmonth(), HB_CMONTH(), 
+ *     hb__seconds(), HB_SECONDS(), hb_cmonth(), HB_CMONTH(),
  *     hb_cdow(), HB_CDOW(), HB_DAY(), HB_MONTH(), HB_YEAR(),
  *     hb_dow(), HB_DOW()
 */
@@ -419,13 +419,13 @@ HARBOUR HB_DTOS( void )
       }
       else
       {
-         hb_errorRT_BASE(EG_ARG, 1120, "Argument error", "DTOS");
+         hb_errorRT_BASE(EG_ARG, 1120, NULL, "DTOS");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARG, 1120, "Incorrect number of arguments", "DTOS");
+      hb_errorRT_BASE(EG_ARGCOUNT, 1120, NULL, "DTOS");
    }
 #endif
 }
@@ -459,7 +459,7 @@ HARBOUR HB_DAY( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1114, "Argument error", "DAY");
+      hb_errorRT_BASE(EG_ARG, 1114, NULL, "DAY");
    }
 }
 
@@ -487,7 +487,7 @@ HARBOUR HB_MONTH( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1113, "Argument error", "MONTH");
+      hb_errorRT_BASE(EG_ARG, 1113, NULL, "MONTH");
    }
 }
 
@@ -515,7 +515,7 @@ HARBOUR HB_YEAR( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1112, "Argument error", "YEAR");
+      hb_errorRT_BASE(EG_ARG, 1112, NULL, "YEAR");
    }
 }
 
@@ -534,7 +534,7 @@ HARBOUR HB_TIME( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 9999, "Incorrect number of arguments", "TIME");
+      hb_errorRT_BASE(EG_ARGCOUNT, 9999, NULL, "TIME");
    }
 }
 
@@ -554,7 +554,7 @@ HARBOUR HB_DATE( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARG, 9999, "Incorrect number of arguments", "DATE");
+      hb_errorRT_BASE(EG_ARGCOUNT, 9999, NULL, "DATE");
    }
 }
 long hb_dow( long d, long m, long y )
@@ -603,7 +603,7 @@ HARBOUR HB_DOW( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1115, "Argument error", "DOW");
+      hb_errorRT_BASE(EG_ARG, 1115, NULL, "DOW");
    }
 }
 
@@ -621,13 +621,13 @@ HARBOUR HB_CMONTH( void )
      }
      else
      {
-        hb_errorRT_BASE(EG_ARG, 1116, "Argument error", "CMONTH");
+        hb_errorRT_BASE(EG_ARG, 1116, NULL, "CMONTH");
      }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARG, 1116, "Incorrect number of arguments", "CMONTH");
+      hb_errorRT_BASE(EG_ARGCOUNT, 1116, NULL, "CMONTH");
    }
 }
 
@@ -645,13 +645,13 @@ HARBOUR HB_CDOW( void )
       }
       else
       {
-         hb_errorRT_BASE(EG_ARG, 1117, "Argument error", "CDOW");
+         hb_errorRT_BASE(EG_ARG, 1117, NULL, "CDOW");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARG, 1117, "Incorrect number of arguments", "CDOW");
+      hb_errorRT_BASE(EG_ARGCOUNT, 1117, NULL, "CDOW");
    }
 }
 
@@ -662,6 +662,6 @@ HARBOUR HB_SECONDS( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARG, 9999, "Incorrect number of arguments", "SECONDS");
+      hb_errorRT_BASE(EG_ARGCOUNT, 9999, NULL, "SECONDS");
    }
 }

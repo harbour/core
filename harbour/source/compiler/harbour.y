@@ -197,6 +197,7 @@ void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support st
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 void GenReturn( WORD wOffset );  /* generates a return offset to later on fill it with the proper exiting pcode address */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
+WORD GetAliasedVarPos( PVAR pVars, char * szAlias, char * szVarName ); /* check for aliased variable */
 PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
 WORD GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local variable */
@@ -276,6 +277,9 @@ typedef enum
 #define VS_STATIC     2
 #define VS_FIELD      4
 #define VS_PARAMETER  8
+#define VS_PRIVATE    64
+#define VS_PUBLIC     128
+#define VS_MEMVAR     (VS_PUBLIC | VS_PRIVATE)
 int iVarScope = VS_LOCAL;   /* holds the scope for next variables to be defined */
                             /* different values for iVarScope */
 
@@ -305,6 +309,7 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
 
 /* Table with parse warnings */
 char * _szWarnings[] = {
+      "Ambiguous reference: \'%s\'",
       "Ambiguous reference, assuming memvar: \'%s\'",
       "Variable: \'%s\' declared but not used in function: \'%s\'",
       "CodeBlock Parameter: \'%s\' declared but not used in function: \'%s\'",
@@ -425,6 +430,8 @@ int _iLanguage = LANG_C;        /* default Harbour generated output language */
 int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
 int _iShortCuts = 1;            /* .and. & .or. expressions shortcuts */
 int _iWarnings = 0;             /* enable parse warnings */
+int _iAutoMemvarAssume = 0;     /* holds if undeclared variables are automatically assumed MEMVAR */
+int _iForceMemvars = 0;         /* holds if memvars are assumed when accesing undeclared variable */
 
 WORD _wSeqCounter   = 0;
 WORD _wForCounter   = 0;
@@ -1187,6 +1194,7 @@ int harbour_main( int argc, char * argv[] )
 
                case 'a':
                case 'A':
+                    _iAutoMemvarAssume =1;
                     break;
 
                case 'd':
@@ -1290,6 +1298,7 @@ int harbour_main( int argc, char * argv[] )
 
                case 'v':
                case 'V':
+                    _iForceMemvars =1;
                     break;
 
                case 'w':
@@ -1376,8 +1385,8 @@ int harbour_main( int argc, char * argv[] )
          if( _iStartProc )
             FunDef( yy_strupr( yy_strdup( _pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          else
-             /* Don't pass the name of module if the code for starting procedure 
-             * will be not generated. The name cannot be placed as first symbol 
+             /* Don't pass the name of module if the code for starting procedure
+             * will be not generated. The name cannot be placed as first symbol
              * because this symbol can be used as function call or memvar's name.
              */
             FunDef( yy_strupr( yy_strdup( "" ) ), FS_PUBLIC, FUN_PROCEDURE );
@@ -1731,6 +1740,7 @@ void AddVar( char * szVarName )
       /* variable defined in a function/procedure */
       CheckDuplVars( pFunc->pFields, szVarName, iVarScope );
       CheckDuplVars( pFunc->pStatics, szVarName, iVarScope );
+      CheckDuplVars( pFunc->pMemvars, szVarName, iVarScope );
    }
    else
      /* variable defined in a codeblock */
@@ -1749,22 +1759,25 @@ void AddVar( char * szVarName )
       PCOMSYMBOL pSym;
       WORD wPos;
 
-      if( ! pFunc->pMemvars )
-          pFunc->pMemvars = pVar;
-      else
+      if( _iAutoMemvarAssume || iVarScope == VS_MEMVAR )
       {
-          pLastVar = pFunc->pMemvars;
-          while( pLastVar->pNext )
-            pLastVar = pLastVar->pNext;
-          pLastVar->pNext = pVar;
+         /** add this variable to the list of MEMVAR variables
+          */
+         if( ! pFunc->pMemvars )
+            pFunc->pMemvars = pVar;
+         else
+         {
+            pLastVar = pFunc->pMemvars;
+            while( pLastVar->pNext )
+               pLastVar = pLastVar->pNext;
+            pLastVar->pNext = pVar;
+         }
       }
 
       switch( iVarScope )
       {
           case VS_MEMVAR:
             /* variable declared in MEMVAR statement */
-            pSym =AddSymbol( yy_strdup(szVarName), &wPos );
-            pSym->cScope |= VS_MEMVAR;
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
@@ -1772,7 +1785,7 @@ void AddVar( char * szVarName )
                 pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
                 if( ! pSym )
                    pSym =AddSymbol( yy_strdup(szVarName), &wPos );
-                pSym->cScope |= VS_MEMVAR;
+                pSym->cScope |=VS_MEMVAR;
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
                 GenPCode1( LOBYTE(functions.pLast->wParamCount) );
             }
@@ -1783,8 +1796,8 @@ void AddVar( char * szVarName )
                 PushNil();
                 PushSymbol( yy_strdup(szVarName), 0 );
                 Do( 1 );
-                pSym =GetSymbol( szVarName, &wPos );
-                pSym->cScope |= VS_MEMVAR;
+                pSym =GetSymbol( szVarName, NULL );
+                pSym->cScope |=VS_MEMVAR;
             }
             break;
           case VS_PUBLIC:
@@ -1793,8 +1806,8 @@ void AddVar( char * szVarName )
                 PushNil();
                 PushSymbol( yy_strdup(szVarName), 0 );
                 Do( 1 );
-                pSym =GetSymbol( szVarName, &wPos );
-                pSym->cScope |= VS_MEMVAR;
+                pSym =GetSymbol( szVarName, NULL );
+                pSym->cScope |=VS_MEMVAR;
             }
             break;
       }
@@ -1980,7 +1993,7 @@ void Duplicate( void )
       pNewStackType->pPrev = pStackValType;
 
       pStackValType = pNewStackType;
-      /*debug_msg( "\n***Duplicate()\n ", NULL );*/
+      /*debug_msg( "\n* *Duplicate()\n ", NULL );*/
    }
 }
 
@@ -2175,11 +2188,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       else
          fprintf( yyc, "FS_PUBLIC" );
 
+      if( pSym->cScope & VS_MEMVAR )
+         fprintf( yyc, " | FS_MEMVAR" );
+
       if( ( pSym->cScope != FS_MESSAGE ) && ( pSym->cScope & FS_MESSAGE ) ) /* only for non public symbols */
          fprintf( yyc, " | FS_MESSAGE" );
-
-      if( pSym->cScope & VS_MEMVAR )
-         fprintf( yyc, " | VS_MEMVAR" );
 
       /* specify the function address if it is a defined function or an
          external called function */
@@ -3002,7 +3015,7 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
             pNewStackType->pPrev = pStackValType;
 
             pStackValType = pNewStackType;
-            debug_msg( "\n***GetVarPos()\n", NULL );
+            debug_msg( "\n* *GetVarPos()\n", NULL );
          }
          return wVar;
       }
@@ -3136,6 +3149,106 @@ int GetStaticVarPos( char *szVarName )
   return 0;
 }
 
+/* Checks if passed aliased variable is declared in passed variable's list
+ * returns the order + 1 of a variable if defined or zero
+ */
+WORD GetAliasedVarPos( PVAR pVars, char *szAlias, char *szVarName )
+{
+   WORD wVar = 1;
+
+   /*TODO: add checking for alias */
+   szAlias =szAlias;
+   while( pVars )
+   {
+      if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
+      {
+         if( _iWarnings )
+         {
+            PSTACK_VAL_TYPE pNewStackType;
+
+            pVars->iUsed = 1;
+
+            pNewStackType = ( STACK_VAL_TYPE * )OurMalloc( sizeof( STACK_VAL_TYPE ) );
+            pNewStackType->cType = pVars->cType;
+            pNewStackType->pPrev = pStackValType;
+
+            pStackValType = pNewStackType;
+            debug_msg( "\n* *GetAliasedVarPos()\n", NULL );
+         }
+         return wVar;
+      }
+      else
+      {
+         if( pVars->pNext )
+         {
+            pVars = pVars->pNext;
+            wVar++;
+         }
+         else
+            return 0;
+      }
+   }
+   return 0;
+}
+
+/* Checks if passed variable name is declared as FIELD
+ * Returns 0 if not found in FIELD list or its position in this list if found
+ */
+int GetFieldVarPos( char *szVarName )
+{
+   int iVar;
+   PFUNCTION pFunc =functions.pLast;
+
+   if( pFunc->szName )
+      /* we are in a function/procedure -we don't need any tricks */
+      iVar =GetAliasedVarPos( pFunc->pFields, NULL, szVarName );
+   else
+   {
+      /* we have to check the list of nested codeblock up to a function
+       * where the codeblock is defined
+       */
+      while( pFunc->pOwner )
+         pFunc =pFunc->pOwner;
+      iVar =GetAliasedVarPos( pFunc->pFields, NULL, szVarName );
+   }
+   /* If not found on the list declared in current function then check
+    * the global list (only if there will be no starting procedure)
+    */
+   if( ! iVar && ! _iStartProc )
+      iVar =GetAliasedVarPos( functions.pFirst->pFields, NULL, szVarName );
+
+   return iVar;
+}
+
+/** Checks if passed variable name is declared as FIELD
+ * Returns 0 if not found in FIELD list or its position in this list if found
+ */
+int GetMemvarPos( char *szVarName )
+{
+   int iVar;
+   PFUNCTION pFunc =functions.pLast;
+
+   if( pFunc->szName )
+      /* we are in a function/procedure -we don't need any tricks */
+      iVar =GetAliasedVarPos( pFunc->pMemvars, NULL, szVarName );
+   else
+   {
+      /* we have to check the list of nested codeblock up to a function
+       * where the codeblock is defined
+       */
+      while( pFunc->pOwner )
+         pFunc =pFunc->pOwner;
+      iVar =GetAliasedVarPos( pFunc->pMemvars, NULL, szVarName );
+   }
+   /* if not found on the list declared in current function then check
+    * the global list (only if there will be no starting procedure)
+    */
+   if( ! iVar && ! _iStartProc )
+      iVar =GetAliasedVarPos( functions.pFirst->pMemvars, NULL, szVarName );
+
+   return iVar;
+}
+
 WORD FixSymbolPos( WORD wCompilePos )
 {
    return (_iStartProc ? wCompilePos-1 : wCompilePos-2);
@@ -3222,7 +3335,7 @@ void Inc( void )
          sType[1] = 0;
       }
       else
-        debug_msg( "\n***Inc() Compile time stack overflow\n", NULL );
+        debug_msg( "\n* *Inc() Compile time stack overflow\n", NULL );
 
 
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3254,7 +3367,7 @@ WORD JumpFalse( int iOffset )
          sType[1] = 0;
       }
       else
-        debug_msg( "\n***HB_P_JUMPFALSE Compile time stack overflow\n", NULL );
+        debug_msg( "\n* *HB_P_JUMPFALSE Compile time stack overflow\n", NULL );
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3264,7 +3377,7 @@ WORD JumpFalse( int iOffset )
 
       /* compile time assignment value has to be released */
       pFree = pStackValType;
-      debug_msg( "\n***---JampFalse()\n", NULL );
+      debug_msg( "\n* *---JampFalse()\n", NULL );
 
       if( pStackValType )
       {
@@ -3308,7 +3421,7 @@ WORD JumpTrue( int iOffset )
          sType[1] = 0;
       }
       else
-        debug_msg( "\n***HB_P_JUMPTRUE Compile time stack overflow\n", NULL );
+        debug_msg( "\n* *HB_P_JUMPTRUE Compile time stack overflow\n", NULL );
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3318,7 +3431,7 @@ WORD JumpTrue( int iOffset )
 
       /* compile time assignment value has to be released */
       pFree = pStackValType;
-      debug_msg( "\n***---JampTrue() \n", NULL );
+      debug_msg( "\n* *---JampTrue() \n", NULL );
 
       if( pStackValType )
       {
@@ -3357,7 +3470,7 @@ void LineBody( void ) /* generates the pcode with the currently compiled source 
       GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
 }
 
-/*
+/**
  * Function generates passed pcode for passed variable name
  */
 void MemvarPCode( BYTE bPCode, char * szVarName )
@@ -3365,7 +3478,29 @@ void MemvarPCode( BYTE bPCode, char * szVarName )
    WORD wVar;
    PCOMSYMBOL pVar;
 
-   GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
+   if( _iForceMemvars )
+   {
+      wVar =GetMemvarPos( szVarName );
+      if( ! wVar )
+      {
+         wVar =GetFieldVarPos( szVarName );
+         if( ! wVar )
+            GenWarning( ((bPCode==HB_P_POPMEMVAR) ? WARN_MEMVAR_ASSUMED : WARN_AMBIGUOUS_VAR),
+                  szVarName, NULL );
+      }
+   }
+   else
+   {
+      wVar =GetFieldVarPos( szVarName );
+      if( ! wVar )
+      {
+         wVar =GetMemvarPos( szVarName );
+         if( ! wVar )
+            GenWarning( ((bPCode==HB_P_POPMEMVAR) ? WARN_MEMVAR_ASSUMED : WARN_AMBIGUOUS_VAR),
+                  szVarName, NULL );
+      }
+   }
+
 
    pVar = GetSymbol( szVarName, &wVar );
    if( ! pVar )
@@ -4406,6 +4541,7 @@ void CodeBlockEnd()
 
   /*NOTE:  8 = HB_P_PUSHBLOCK + WORD(size) + WORD(wParams) + WORD(wLocals) +_ENDBLOCK */
   wSize =( WORD ) pCodeblock->lPCodePos +8 +wLocals*2;
+
   GenPCode3( HB_P_PUSHBLOCK, LOBYTE(wSize), HIBYTE(wSize) );
   GenPCode1( LOBYTE(pCodeblock->wParamCount) );
   GenPCode1( HIBYTE(pCodeblock->wParamCount) );
@@ -4453,7 +4589,6 @@ void CodeBlockEnd()
      else
         debug_msg( "\n***CodeBlockEnd() Compile time stack overflow\n", NULL );
   }
-
 }
 
 /* Set the name of an alias for the list of previously declared FIELDs

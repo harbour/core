@@ -69,7 +69,7 @@ HARBOUR HB___COPYFILE( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 2010, "Argument error", "__COPYFILE");
+      hb_errorRT_BASE(EG_ARG, 2010, NULL, "__COPYFILE");
    }
 }
 
@@ -84,7 +84,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    while ((fhndSource = hb_fsOpen((BYTEP)szSource, FO_READ)) == FS_ERROR)
    {
-      if (hb_errorRT_BASE(EG_ARG, 2012, "Open error", szSource) == E_DEFAULT)
+      if (hb_errorRT_BASE(EG_OPEN, 2012, NULL, szSource) == E_DEFAULT)
       {
          *ulWrittenTotal = (ULONG)-1L;
          break;
@@ -95,7 +95,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
    {
       while ((fhndDest = hb_fsCreate((BYTEP)szDest, FC_NORMAL)) == FS_ERROR)
       {
-         if (hb_errorRT_BASE(EG_ARG, 2012, "Create error", szDest) == E_DEFAULT)
+         if (hb_errorRT_BASE(EG_CREATE, 2012, NULL, szDest) == E_DEFAULT)
          {
             *ulWrittenTotal = (ULONG)-2L;
             break;
@@ -123,7 +123,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
          {
             while ((usWritten = hb_fsWrite(fhndDest, buffer, usRead)) != usRead)
             {
-               if (hb_errorRT_BASE(EG_ARG, 2012, "Write error", szDest) == E_DEFAULT)
+               if (hb_errorRT_BASE(EG_WRITE, 2012, NULL, szDest) == E_DEFAULT)
                {
                   bRetVal = FALSE;
                   break;

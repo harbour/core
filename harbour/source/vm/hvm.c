@@ -667,7 +667,7 @@ void And( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, "Argument error", "conditional");
+      hb_errorRT_BASE(EG_ARG, 1066, NULL, ".AND.");
    }
 }
 
@@ -919,7 +919,7 @@ void Equal( BOOL bExact )
 
    else if( pItem1->type != pItem2->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1070, "Argument error", "==");
+      hb_errorRT_BASE(EG_ARG, 1070, NULL, "==");
    }
 
    else
@@ -1053,7 +1053,7 @@ void Greater( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1075, "Argument error", ">");
+      hb_errorRT_BASE(EG_ARG, 1075, NULL, ">");
    }
 }
 
@@ -1099,7 +1099,7 @@ void GreaterEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1076, "Argument error", ">=");
+      hb_errorRT_BASE(EG_ARG, 1076, NULL, ">=");
    }
 }
 
@@ -1121,7 +1121,7 @@ void Inc( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1086, "Argument error", "++");
+      hb_errorRT_BASE(EG_ARG, 1086, NULL, "++");
    }
 }
 
@@ -1167,7 +1167,7 @@ void Instring( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1109, "Argument error", "$");
+      hb_errorRT_BASE(EG_ARG, 1109, NULL, "$");
    }
 }
 
@@ -1279,7 +1279,7 @@ void Less( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1073, "Argument error", "<");
+      hb_errorRT_BASE(EG_ARG, 1073, NULL, "<");
    }
 }
 
@@ -1325,7 +1325,7 @@ void LessEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1074, "Argument error", "<=");
+      hb_errorRT_BASE(EG_ARG, 1074, NULL, "<=");
    }
 }
 
@@ -1365,7 +1365,7 @@ void Not( void )
    if( IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
    else
-      hb_errorRT_BASE(EG_ARG, 1077, "Argument error", ".NOT.");
+      hb_errorRT_BASE(EG_ARG, 1077, NULL, ".NOT.");
 }
 
 void NotEqual( void )
@@ -1408,7 +1408,7 @@ void NotEqual( void )
 
    else if( pItem1->type != pItem2->type )
    {
-      hb_errorRT_BASE(EG_ARG, 1072, "Argument error", "<>");
+      hb_errorRT_BASE(EG_ARG, 1072, NULL, "<>");
    }
 
    else
@@ -1478,7 +1478,7 @@ void Minus( void )
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_isMessage( stack.pPos - 2, "-" ) )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
    else
-      hb_errorRT_BASE(EG_ARG, 1082, "Argument error", "-");
+      hb_errorRT_BASE(EG_ARG, 1082, NULL, "-");
 
 }
 
@@ -1523,7 +1523,7 @@ void Or( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, "Argument error", "conditional");
+      hb_errorRT_BASE(EG_ARG, 1066, NULL, ".OR.");
    }
 }
 
@@ -1578,7 +1578,7 @@ void Plus( void )
       OperatorCall( pItem1, pItem2, "+" );
 
    else
-      hb_errorRT_BASE( EG_ARG, 1081, "Types of arguments do not match", "+" );
+      hb_errorRT_BASE( EG_DATATYPE, 1081, NULL, "+" );
 
    HB_DEBUG( "Plus\n" );
 }
@@ -1657,18 +1657,13 @@ void PopLocal( SHORT iLocal )
 
 int PopLogical( void )
 {
-   PHB_ITEM pError;
-
    StackPop();
 
    if( IS_LOGICAL( stack.pPos ) )
       return stack.pPos->item.asLogical.value;
    else
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Argument error: conditional" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_ErrorNatDescription(EG_CONDITION));
       return 0;
    }
 }
@@ -2143,7 +2138,7 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
          pSymStart = pModuleSymbols + w;  /* first public defined symbol to start execution */
 
       if( ( ( pModuleSymbols + w )->cScope == FS_PUBLIC ) ||
-          ( ( pModuleSymbols + w )->cScope & ( FS_MESSAGE | VS_MEMVAR ) ) )
+          ( ( pModuleSymbols + w )->cScope & ( FS_MESSAGE | FS_MEMVAR )  ) )
          hb_NewDynSym( pModuleSymbols + w );
    }
 }
@@ -2242,7 +2237,7 @@ HARBOUR HB_LEN( void )
               break;
 
          default:
-              hb_errorRT_BASE(EG_ARG, 1111, "Argument error", "LEN");
+              hb_errorRT_BASE(EG_ARG, 1111, NULL, "LEN");
               break;
       }
    }
@@ -2425,11 +2420,6 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
-      PHB_ITEM pError = hb_errNew();
-
-      hb_errPutDescription(pError, "Argument error: PVALUE");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
-      hb_ret();
+      hb_errorRT_BASE(EG_ARG, 1082, NULL, "PVALUE");
    }
 }

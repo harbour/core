@@ -599,7 +599,7 @@ HARBOUR HB_TRANSFORM( void )
          }
          default:
          {
-            hb_errorRT_BASE(EG_ARG, 1122, "Argument error", "TRANSFORM");
+            hb_errorRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
          }
       }
    }
@@ -647,7 +647,7 @@ HARBOUR HB_TRANSFORM( void )
          }
          default:
          {
-           hb_errorRT_BASE(EG_ARG, 1122, "Argument error", "TRANSFORM");
+           hb_errorRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
          }
       }
    }
