@@ -1,3 +1,7 @@
+20000306-15:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * contrib/rdd_ads/ads1.c
+     ! FS_* macros renamed to _HB_FS_*
+
 20000306-13:25 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hberrors.h
      - Obsolete WARN_NONDIRECTIVE #define removed.

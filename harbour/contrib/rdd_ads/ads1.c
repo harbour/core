@@ -59,8 +59,8 @@ extern int adsRights;
 extern int adsCharType;
 
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
-{ "_ADS",             FS_PUBLIC, HB__ADS,             0 },
-{ "ADS_GETFUNCTABLE", FS_PUBLIC, HB_ADS_GETFUNCTABLE, 0 }
+{ "_ADS",             _HB_FS_PUBLIC, HB__ADS,             0 },
+{ "ADS_GETFUNCTABLE", _HB_FS_PUBLIC, HB_ADS_GETFUNCTABLE, 0 }
 HB_INIT_SYMBOLS_END( ads1__InitSymbols )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup ads1__InitSymbols
