@@ -1897,6 +1897,30 @@ static void hb_vmPower( void )
    }
 }
 
+static void hb_vmIncDouble( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmIncDouble()"));
+
+   switch( pItem->type & ~HB_IT_BYREF )
+   {
+      case HB_IT_INTEGER:
+         pItem->item.asInteger.value++;
+         break;
+
+      case HB_IT_LONG:
+         pItem->item.asLong.value++;
+         break;
+
+      case HB_IT_DOUBLE:
+         pItem->item.asDouble.value++;
+         break;
+
+      default:
+         hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
+         break;
+   }
+}
+
 static void hb_vmInc( void )
 {
    PHB_ITEM pItem;
@@ -1906,15 +1930,14 @@ static void hb_vmInc( void )
    pItem = hb_stackItemFromTop( -1 );
 
    if( HB_IS_NUMERIC( pItem ) )
-   {
-      int iDec, iType = pItem->type;
-      double dNumber = hb_vmPopDouble( &iDec );
-      hb_vmPushNumType( ++dNumber, iDec, iType, iType );
-   }
+      hb_vmIncDouble( pItem );
+
    else if( HB_IS_DATE( pItem ) )
       hb_vmPushDate( hb_vmPopDate() + 1 );
+
    else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "__OpInc" ) )
       hb_vmOperatorCallUnary( hb_stackItemFromTop( -1 ), "__OPINC" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1086, NULL, "++", 1, pItem );
@@ -1928,6 +1951,30 @@ static void hb_vmInc( void )
    }
 }
 
+static void hb_vmDecDouble( PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDecDouble()"));
+
+   switch( pItem->type & ~HB_IT_BYREF )
+   {
+      case HB_IT_INTEGER:
+         pItem->item.asInteger.value--;
+         break;
+
+      case HB_IT_LONG:
+         pItem->item.asLong.value--;
+         break;
+
+      case HB_IT_DOUBLE:
+         pItem->item.asDouble.value--;
+         break;
+
+      default:
+         hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
+         break;
+   }
+}
+
 static void hb_vmDec( void )
 {
    PHB_ITEM pItem;
@@ -1937,15 +1984,14 @@ static void hb_vmDec( void )
    pItem = hb_stackItemFromTop( -1 );
 
    if( HB_IS_NUMERIC( pItem ) )
-   {
-      int iDec, iType = pItem->type;
-      double dNumber = hb_vmPopDouble( &iDec );
-      hb_vmPushNumType( --dNumber, iDec, iType, iType );
-   }
+      hb_vmDecDouble( pItem );
+
    else if( HB_IS_DATE( pItem) )
       hb_vmPushDate( hb_vmPopDate() - 1 );
+
    else if( HB_IS_OBJECT( pItem ) && hb_objHasMsg( pItem, "__OpDec" ) )
       hb_vmOperatorCallUnary( pItem, "__OPDEC" );
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1087, NULL, "--", 1, pItem );
