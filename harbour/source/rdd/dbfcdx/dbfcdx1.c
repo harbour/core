@@ -4686,7 +4686,7 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
       lRecno = hb_cdxTagKeyFind( pTag, pKey2 );
       pArea->fEof = pTag->TagEOF;
       pArea->fBof = pTag->TagBOF;
-      hb_cdxKeyFree( pKey2 );
+      /* hb_cdxKeyFree( pKey2 ); */
 
       if( lRecno > 0 )
       {
@@ -4715,15 +4715,46 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
       {
          retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
          pArea->fFound = TRUE;
+         if( retvalue != FAILURE )
+            if ( hb_set.HB_SET_DELETED || pArea->dbfi.itmCobExpr != NULL )
+            {
+               USHORT endPos;
+               int k;
+               retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+               k = hb_cdxKeyCompare( pKey2, pTag->CurKeyInfo, &endPos, FALSE );
+               if ( k == 0)
+               {
+                  pArea->fFound = TRUE;
+               }
+               else
+               {
+                  pArea->fFound = FALSE;
+                  if( !bSoftSeek )
+                  {
+                     //retvalue = SELF_GOTO( ( AREAP ) pArea, 0 );
+                     SELF_GOBOTTOM( ( AREAP ) pArea );
+                     retvalue = SELF_SKIP( ( AREAP ) pArea, 1 );
+                  }
+               }
+            }
+         hb_cdxKeyFree( pKey2 );
          return retvalue;
       }
       else
       {
+         hb_cdxKeyFree( pKey2 );
          pArea->fFound = FALSE;
 
          if( bSoftSeek && !pTag->TagEOF )
          {
-            return SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
+            //return SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
+            retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
+            if( retvalue != FAILURE )
+               if ( hb_set.HB_SET_DELETED || pArea->dbfi.itmCobExpr != NULL )
+               {
+                  retvalue = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
+               }
+            return retvalue;
          }
          else
          {
@@ -5072,7 +5103,7 @@ static long hb_cdxDBOIKeyCount( CDXAREAP pArea )
       hb_cdxPageFree( pPage2 );
    }
    hb_cdxTagKeyFind( pTag, pCurKey );
-   hb_cdxTagTagClose( pTag );
+   /* hb_cdxTagTagClose( pTag ); */
    hb_cdxKeyFree( pCurKey );
    return lKeyCount;
 }
@@ -5142,7 +5173,7 @@ static long hb_cdxDBOIKeyNo( CDXAREAP pArea )
          }
       }
       hb_cdxTagKeyFind( pTag, pCurKey );
-      hb_cdxTagTagClose( pTag );
+      /*hb_cdxTagTagClose( pTag ); */
       hb_cdxKeyFree( pCurKey );
    }
    return lKeyNo;
