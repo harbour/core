@@ -76,10 +76,10 @@
  *
  * As much as possible, the profiler class and the profile report classes
  * attempt to turn off the profiler to ensure that we don't get some sort of
- * Heisenberg effect. IOW, we don't want the profiler showing up in the
- * profiler.
+ * Heisenberg effect. In other words, we don't want the profiler showing up
+ * in the profiler.
  *
- * Many of the "Protected:" scope specifiers in the source have beenc
+ * Many of the "Protected:" scope specifiers in the source have been
  * commented out where there's a problem with scope in harbour's class
  * system. Note that those comments will be removed when the bug is fixed.
  *
