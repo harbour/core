@@ -3469,6 +3469,11 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
 
   if ( lRec > 0 )                 // only one record
     SELF_GOTO( pAreaFrom, lRec ); // go there
+  else
+  {
+    if( !pWhile && !bRest )    // this two stay current
+      SELF_GOTOP( pAreaFrom ); // else start from the top
+  }
 
   // move those records assuming we are positioned on one.
   while( keepGoing )

@@ -1,3 +1,10 @@
+2001-04-13 09:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.c
+     + Added TODO comment.
+
+   * source/rdd/dbcmd.c
+      Posted COPY TO fix for Harrier (default to TOP if REST or WHILE not provided)
+
 2001-04-12 10:56 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/ads1.c
       * Fixed ordName/dbOrderInfo: it returned blank for any

@@ -928,7 +928,7 @@ void hb_compDeclaredInit( void )
    _DECL s_002 = { "ABS"     , 'N', 1         , (BYTE*)"N"                    , NULL     , NULL         , &s_001 };
    _DECL s_003 = { "ACHOICE" , 'N', 9         , (BYTE*)"NNNNc\x7a\x9d\xa8\xa8", NULL     , NULL         , &s_002 };
 
-   /* TODO: Add all functions. */
+   /* TODO: Rest of Standard Functions. */
 
    /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
 
@@ -958,6 +958,8 @@ void hb_compDeclaredInit( void )
                           ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
    _DECL s_GET_01     = { "ASSIGN"       , ' ', 0         , (BYTE*)NULL         , NULL     , NULL         , NULL            };
    _DECL s_GET_02     = { "COLORDISP"    , 'S', 1         , (BYTE*)"\x9d"       , &s_GET   , NULL         , &s_GET_01       };
+
+   /* TODO: finish GET Class, and add definitions for TBCOLUMN and TBROWSE. */
 
    #undef _DECL
 
