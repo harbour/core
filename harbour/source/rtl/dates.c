@@ -428,7 +428,7 @@ HARBOUR HB_DTOS( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARGCOUNT, 1120, NULL, "DTOS");
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "DTOS");
    }
 #endif
 }
@@ -537,7 +537,7 @@ HARBOUR HB_TIME( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARGCOUNT, 9999, NULL, "TIME");
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "TIME");
    }
 }
 
@@ -557,7 +557,7 @@ HARBOUR HB_DATE( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARGCOUNT, 9999, NULL, "DATE");
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "DATE");
    }
 }
 long hb_dow( long d, long m, long y )
@@ -630,7 +630,7 @@ HARBOUR HB_CMONTH( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARGCOUNT, 1116, NULL, "CMONTH");
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "CMONTH");
    }
 }
 
@@ -654,7 +654,7 @@ HARBOUR HB_CDOW( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARGCOUNT, 1117, NULL, "CDOW");
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "CDOW");
    }
 }
 
@@ -665,6 +665,6 @@ HARBOUR HB_SECONDS( void )
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      hb_errorRT_BASE(EG_ARGCOUNT, 9999, NULL, "SECONDS");
+      hb_errorRT_BASE(EG_ARGCOUNT, 3000, NULL, "SECONDS");
    }
 }

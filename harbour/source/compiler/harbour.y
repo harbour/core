@@ -290,7 +290,8 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "%s statement with no loop in sight",
                        "Syntax error: \'%s\' in: \'%s\'",
                        "Incomplete statement: %s",
-                       "Incorrect number of arguments: %s %s"
+                       "Incorrect number of arguments: %s %s",
+                       "Invalid lvalue"
                      };
 
 /* Table with parse warnings */
@@ -420,6 +421,11 @@ BOOL _bWarnings = FALSE;             /* enable parse warnings */
 BOOL _bAutoMemvarAssume = FALSE;     /* holds if undeclared variables are automatically assumed MEMVAR */
 BOOL _bForceMemvars = FALSE;         /* holds if memvars are assumed when accesing undeclared variable */
 
+/* This variable is used to flag if variables have to be passed by reference
+ * - it is required in DO <proc> WITH <params> statement
+ */
+BOOL _bForceByRefer = FALSE;
+
 WORD _wSeqCounter   = 0;
 WORD _wForCounter   = 0;
 WORD _wIfCounter    = 0;
@@ -495,7 +501,7 @@ extern int _iState;     /* current parser state (defined in harbour.l */
 %type <dNum>    DOUBLE
 %type <iNumber> ArgList ElemList ExpList FunCall FunScope IncDec Logical Params ParamList
 %type <iNumber> INTEGER BlockExpList Argument IfBegin VarId VarList MethParams ObjFunCall
-%type <iNumber> MethCall BlockList FieldList
+%type <iNumber> MethCall BlockList FieldList DoArgList
 %type <lNumber> INTLONG WhileBegin BlockBegin
 %type <pVoid>   IfElseIf Cases
 
@@ -573,7 +579,8 @@ Statement  : ExecFlow Crlf        {}
            | VarAssign Crlf       { GenPCode1( HB_P_POP ); }
 
            | IDENTIFIER '=' Expression Crlf            { PopId( $1 ); }
-           | AliasExp '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
+           | AliasVar '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
+           | AliasFunc '=' Expression Crlf             { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | FunArrayCall '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression Crlf { Function( 1 ); GenPCode1( HB_P_POP ); }
@@ -728,8 +735,11 @@ Macro      : '&' Variable
            | '&' '(' Expression ')'
            ;
 
-AliasExp   : IDENTIFIER ALIAS IDENTIFIER                 {}
+AliasVar   : IDENTIFIER ALIAS IDENTIFIER                 {}
            | '(' Expression ')' ALIAS IDENTIFIER         {}
+           ;
+
+AliasExp   : AliasVar                                    {}
            | AliasFunc                                   {}
            ;
 
@@ -816,8 +826,22 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_DIVIDE  ); GenPCode1( HB_P_ARRAYPUT ); }
            | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_POWER   ); GenPCode1( HB_P_ARRAYPUT ); }
            | ObjectMethod ArrayIndex MODEQ    { GenPCode1( HB_P_DUPLTWO ); GenPCode1( HB_P_ARRAYAT ); } Expression { GenPCode1( HB_P_MODULUS ); GenPCode1( HB_P_ARRAYPUT ); }
-           | AliasExp INASSIGN Expression                 {}
+           | AliasVar INASSIGN Expression                 {}
+           | AliasVar PLUSEQ   Expression                 {}
+           | AliasVar MINUSEQ  Expression                 {}
+           | AliasVar MULTEQ   Expression                 {}
+           | AliasVar DIVEQ    Expression                 {}
+           | AliasVar EXPEQ    Expression                 {}
+           | AliasVar MODEQ    Expression                 {}
+           | AliasFunc INASSIGN Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           | AliasFunc PLUSEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           | AliasFunc MINUSEQ  Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           | AliasFunc MULTEQ   Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           | AliasFunc DIVEQ    Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           | AliasFunc EXPEQ    Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
+           | AliasFunc MODEQ    Expression { --iLine; GenError( _szCErrors, 'E', ERR_INVALID_LVALUE, NULL, NULL ); }
            ;
+
 
 Operators  : Expression '='    Expression   { GenPCode1( HB_P_EQUAL ); } /* compare */
            | Expression '+'    Expression   { GenPCode1( HB_P_PLUS ); }
@@ -1086,8 +1110,15 @@ RecoverUsing : RECOVER USING IDENTIFIER
            ;
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
-           | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); } WITH ArgList { Do( $5 ); }
-           | WHILE { PushSymbol( yy_strdup("WHILE"), 1 ); PushNil(); } WITH ArgList { Do( $4 ); }
+           | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); _bForceByRefer=TRUE; } WITH DoArgList { Do( $5 ); _bForceByRefer=FALSE; }
+           | WHILE { PushSymbol( yy_strdup("WHILE"), 1 ); PushNil(); _bForceByRefer=TRUE; } WITH DoArgList { Do( $4 ); _bForceByRefer=FALSE; }
+           ;
+
+DoArgList  : ','                               { PushNil(); PushNil(); $$ = 2; }
+           | Expression                        { $$ = 1; }
+           | DoArgList ','                     { PushNil(); $$++; }
+           | DoArgList ',' Expression          { $$++; }
+           | ',' { PushNil(); } Expression     { $$ = 2; }
            ;
 
 Crlf       : '\n'

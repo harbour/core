@@ -482,7 +482,7 @@ HARBOUR HB_CLASSMOD(void)
          else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
          {                                      /* Not allowed for DATA     */
             /*hb_errPutDescription(pError, "CLASSMOD: Cannot modify a DATA item");*/
-            hb_errorRT_BASE(EG_ARG, 3001, NULL, "CLASSMOD");
+            hb_errorRT_BASE(EG_ARG, 3004, NULL, "CLASSMOD");
          }
          else                                   /* Modify METHOD            */
             pClass->pMethods[ wAt ].pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
@@ -831,7 +831,7 @@ HARBOUR HB_OCLONE( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 3000, NULL, "OCLONE");
+      hb_errorRT_BASE(EG_ARG, 3001, NULL, "OCLONE");
    }
 }
 

@@ -150,7 +150,7 @@ HARBOUR HB_STRFORMAT (void) /* StrFormat() */
 
    nMaskPos = 0;
 
-   pszRetVal = pszRetValSave = hb_xgrab(nRetValLen + 1);
+   pszRetVal = pszRetValSave = (char *) hb_xgrab(nRetValLen + 1);
    while (nMaskPos < nMaskLen)
    {
       if (pszMask[nMaskPos] == '%')

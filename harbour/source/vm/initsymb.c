@@ -41,6 +41,7 @@ HARBOUR HB_CTOD( void );
 HARBOUR HB_DATE( void );
 HARBOUR HB_DAY( void );
 HARBOUR HB_DEVPOS( void );
+HARBOUR HB_DO( void );
 HARBOUR HB_DOW( void );
 HARBOUR HB_DTOC( void );
 HARBOUR HB_DTOS( void );
@@ -90,7 +91,7 @@ static SYMBOL symbols[] = {
     { "DAY"       , FS_PUBLIC, HB_DAY          , 0 },
     { "DELETED"   , FS_PUBLIC, NULL            , 0 },
     { "DEVPOS"    , FS_PUBLIC, HB_DEVPOS       , 0 },
-    { "DO"        , FS_PUBLIC, NULL            , 0 },
+    { "DO"        , FS_PUBLIC, HB_DO           , 0 },
     { "DOW"       , FS_PUBLIC, HB_DOW          , 0 },
     { "DTOC"      , FS_PUBLIC, HB_DTOC         , 0 },
     { "DTOS"      , FS_PUBLIC, HB_DTOS         , 0 },
@@ -151,10 +152,10 @@ void InitSymbolTable( void )
    * Place here your user defined <modulename>__InitSymbols functions
    */
 
-   
-  /* 
+
+  /*
    * The symbol tables from runtime support modules start here
-   */ 
+   */
 #ifdef HARBOUR_STRICT_ANSI_C
    #include "initsymb.h"
 #endif

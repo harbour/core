@@ -13,6 +13,7 @@ C_SOURCES=\
         dates.c \
         descend.c \
         dir.c \
+	do.c \
         environ.c \
         errorapi.c \
         extend.c \

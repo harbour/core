@@ -444,7 +444,7 @@ static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
    else if( IS_STRING( pMemvar ) )
       pDynVar =hb_GetDynSym( pMemvar->item.asString.value );
    else
-      hb_errorRT_BASE( EG_ARG, 3000, NULL, "&" );
+      hb_errorRT_BASE( EG_ARG, 3008, NULL, "&" );
 
    if( pDynVar )
       hb_MemvarCreateFromDynSymbol( pDynVar, bScope, pValue );
@@ -518,7 +518,7 @@ void hb_MemvarRelease( HB_ITEM_PTR pMemvar )
       }
    }
    else
-      hb_errorRT_BASE( EG_ARG, 3000, NULL, "RELEASE" );
+      hb_errorRT_BASE( EG_ARG, 3008, NULL, "RELEASE" );
 }
 
 

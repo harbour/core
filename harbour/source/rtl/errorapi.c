@@ -335,3 +335,26 @@ WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
 
    return wRetVal;
 }
+
+WORD hb_errorRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+{
+   PHB_ITEM pError = hb_errNew();
+   WORD wRetVal;
+
+   hb_errPutSeverity( pError, ES_ERROR );
+   hb_errPutSubSystem( pError, HB_ERR_SS_BASE );
+   hb_errPutGenCode( pError, ulGenCode );
+   hb_errPutSubCode( pError, ulSubCode );
+   if( szDescription )
+      hb_errPutDescription( pError, szDescription );
+   else
+      hb_errPutDescription( pError, hb_errorNatDescription(ulGenCode) );
+   hb_errPutOperation( pError, szOperation );
+
+   wRetVal = hb_errLaunch( pError );
+
+   hb_errRelease( pError );
+
+   return wRetVal;
+}
+

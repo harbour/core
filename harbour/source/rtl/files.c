@@ -584,7 +584,7 @@ HARBOUR HB_FOPEN( void )
         }
         else
         {
-            hb_errorRT_BASE(EG_ARG, 2021, "Argument error", "FOPEN");
+            hb_errorRT_BASE(EG_ARG, 3006, NULL, "FOPEN");
         }
 
         hb_retni(file_handle);

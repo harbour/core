@@ -491,7 +491,7 @@ HARBOUR HB_INKEY( void )
    if( wait && forever && ( s_eventmask & ( INKEY_ALL + INKEY_EXTENDED ) ) == 0 )
    {
       /* There is no point in waiting forever for no input events! */
-      hb_errorRT_BASE(EG_ARG, 9001, "Argument error", "INKEY");
+      hb_errorRT_BASE(EG_ARG, 3007, NULL, "INKEY");
    }
    else
    {

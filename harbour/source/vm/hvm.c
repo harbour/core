@@ -1456,7 +1456,7 @@ void Plus( void )
       OperatorCall( pItem1, pItem2, "+" );
 
    else
-      hb_errorRT_BASE( EG_DATATYPE, 1081, NULL, "+" );
+      hb_errorRT_BASE( EG_ARG, 1081, NULL, "+" );
 
    HB_DEBUG( "Plus\n" );
 }
@@ -2354,6 +2354,6 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
-      hb_errorRT_BASE(EG_ARG, 9999, NULL, "PVALUE");
+      hb_errorRT_BASE(EG_ARG, 3011, NULL, "PVALUE");
    }
 }

@@ -59,8 +59,8 @@
 #define ERR_UNMATCHED_EXIT      18
 #define ERR_SYNTAX2             19
 #define ERR_INCOMPLETE_STMT     20
-/* JOSE */
 #define ERR_CHECKING_ARGS       21
+#define ERR_INVALID_LVALUE      22
 
 #define WARN_AMBIGUOUS_VAR         1
 #define WARN_MEMVAR_ASSUMED        2

@@ -1,3 +1,58 @@
+19990802-06:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/tools/strfmt.c
+	* added (char *) type cast to call for hb_xgrab()
+
+    *config/dos/djgpp.cf
+    *config/linux/gcc.cf
+	* changed to link correctly regardless the libraries order
+	 (the GCC linker searches the library only once by default)
+
+    *source/rtl/classes.c
+    *source/rtl/dates.c
+    *source/rtl/files.c
+    *source/rtl/inkey.c
+    *source/rtl/math.c
+    *source/rtl/memvars.c
+    *source/rtl/strings.c
+    *source/tools/dates2.c
+    *source/vm/hvm.c
+        * changed numbering of error subcodes
+
+    *source/rtl/errorapi.c
+        + added hb_errorRT_TOOLS() function
+
+    *include/errorapi.h
+        + added definition of HB_ERR_SS_TOOLS
+        + added hb_errorRT_TOOLS() function
+
+    *doc/subcodes.txt
+        + added new file with proposed format for documenting of used
+         error subcodes.
+
+    *include/hberors.h
+        + added new error code ERR_INVALID_LVALUE
+
+    *source/compiler/harbour.y
+        + added new error 'invalid lvalue' generated in cases like:
+         alias->(var1, var2) := 0
+        + enhanced support for DO <proc> WITH statement - procedure is
+         called however variables are nnot passed by reference yet
+
+    *source/vm/initsymb.c
+        + updated systems symbols' table with HB_DO function
+
+    *source/rtl/do.c
+        + added new HARBOUR HB_DO function (visible in harbour as 'DO')
+         that calls passed function/procedure.
+         This function can be called directly passing the string with
+         function/procedure name or passing a codeblock.
+         This function is also used to implement DO <proc> WITH
+         statement
+
+    *source/rtl/Makefile
+	    + added new file do.c
+	    
 19990801-21:58 GMT+1 Victor Szel <info@szelvesz.hu>
    % source/rtl/descend.c
      #include <ctype.h> removed

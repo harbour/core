@@ -56,6 +56,7 @@
 #define HB_ERR_SS_BASE                  "BASE"
 #define HB_ERR_SS_TERMINAL              "TERM"
 #define HB_ERR_SS_DBCMD                 "DBCMD"
+#define HB_ERR_SS_TOOLS                 "TOOLS"
 
 /* oError:GenCode */
 
@@ -100,6 +101,7 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName );
 WORD hb_errorRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 WORD hb_errorRT_TERMINAL( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
+WORD hb_errorRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation );
 /* TODO: Enable this:
 void     hb_errorInternal( ULONG ulCode );
 */

@@ -175,7 +175,7 @@ HARBOUR HB_ISLEAPYEAR( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 9999, NULL, "ISLEAPYEAR");
+      hb_errorRT_TOOLS(EG_ARG, 4001, NULL, "ISLEAPYEAR");
    }
 }
 
