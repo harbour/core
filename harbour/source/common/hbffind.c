@@ -8,6 +8,7 @@
  *
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  *                Viktor Szakats <viktor.szakats@syenar.hu>
+ *                Paul Tucker <ptucker@sympatico.ca>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -112,15 +113,11 @@
    #include <errno.h>
    #include <dirent.h>
    #include <time.h>
-
-   #if !defined(HAVE_POSIX_IO)
-      #define HAVE_POSIX_IO
-   #endif
    
    typedef struct
    {
       DIR *           dir;
-      struct dirent   entry;
+      struct dirent * entry;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
 #else
@@ -131,114 +128,187 @@
 
 /* ------------------------------------------------------------- */
 
-static USHORT AttrToHarbour( USHORT uiMask )
+USHORT hb_fsAttrFromRaw( ULONG raw_attr )
 {
-   USHORT uiRetMask;
+   USHORT uiAttr;
 
-   HB_TRACE(HB_TR_DEBUG, ("AttrToHarbour(%hu)", uiMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrFromRaw(%hu)", raw_attr));
 
 #if defined(HB_OS_DOS)
 
-   uiRetMask = 0;
-   if( uiMask & FA_ARCH )   uiRetMask |= HB_FA_ARCHIVE;
-   if( uiMask & FA_DIREC )  uiRetMask |= HB_FA_DIRECTORY;
-   if( uiMask & FA_HIDDEN ) uiRetMask |= HB_FA_HIDDEN;
-   if( uiMask & FA_RDONLY ) uiRetMask |= HB_FA_READONLY;
-   if( uiMask & FA_LABEL )  uiRetMask |= HB_FA_LABEL;
-   if( uiMask & FA_SYSTEM ) uiRetMask |= HB_FA_SYSTEM;
+   uiAttr = 0;
+   if( raw_attr & FA_ARCH )   uiAttr |= HB_FA_ARCHIVE;
+   if( raw_attr & FA_DIREC )  uiAttr |= HB_FA_DIRECTORY;
+   if( raw_attr & FA_HIDDEN ) uiAttr |= HB_FA_HIDDEN;
+   if( raw_attr & FA_RDONLY ) uiAttr |= HB_FA_READONLY;
+   if( raw_attr & FA_LABEL )  uiAttr |= HB_FA_LABEL;
+   if( raw_attr & FA_SYSTEM ) uiAttr |= HB_FA_SYSTEM;
 
 #elif defined(HB_OS_OS2)
 
-   uiRetMask = 0;
-   if( uiMask & FILE_ARCHIVED )  uiRetMask |= HB_FA_ARCHIVE;
-   if( uiMask & FILE_DIRECTORY ) uiRetMask |= HB_FA_DIRECTORY;
-   if( uiMask & FILE_HIDDEN )    uiRetMask |= HB_FA_HIDDEN;
-   if( uiMask & FILE_READONLY )  uiRetMask |= HB_FA_READONLY;
-   if( uiMask & FILE_SYSTEM )    uiRetMask |= HB_FA_SYSTEM;
+   uiAttr = 0;
+   if( raw_attr & FILE_ARCHIVED )  uiAttr |= HB_FA_ARCHIVE;
+   if( raw_attr & FILE_DIRECTORY ) uiAttr |= HB_FA_DIRECTORY;
+   if( raw_attr & FILE_HIDDEN )    uiAttr |= HB_FA_HIDDEN;
+   if( raw_attr & FILE_READONLY )  uiAttr |= HB_FA_READONLY;
+   if( raw_attr & FILE_SYSTEM )    uiAttr |= HB_FA_SYSTEM;
 
 #elif defined(HB_OS_WIN_32)
 
-   uiRetMask = 0;
-   if( uiMask & FILE_ATTRIBUTE_ARCHIVE )   uiRetMask |= HB_FA_ARCHIVE;
-   if( uiMask & FILE_ATTRIBUTE_DIRECTORY ) uiRetMask |= HB_FA_DIRECTORY;
-   if( uiMask & FILE_ATTRIBUTE_HIDDEN )    uiRetMask |= HB_FA_HIDDEN;
-   if( uiMask & FILE_ATTRIBUTE_READONLY )  uiRetMask |= HB_FA_READONLY;
-   if( uiMask & FILE_ATTRIBUTE_SYSTEM )    uiRetMask |= HB_FA_SYSTEM;
+   uiAttr = 0;
+   if( raw_attr & FILE_ATTRIBUTE_ARCHIVE )   uiAttr |= HB_FA_ARCHIVE;
+   if( raw_attr & FILE_ATTRIBUTE_DIRECTORY ) uiAttr |= HB_FA_DIRECTORY;
+   if( raw_attr & FILE_ATTRIBUTE_HIDDEN )    uiAttr |= HB_FA_HIDDEN;
+   if( raw_attr & FILE_ATTRIBUTE_READONLY )  uiAttr |= HB_FA_READONLY;
+   if( raw_attr & FILE_ATTRIBUTE_SYSTEM )    uiAttr |= HB_FA_SYSTEM;
 
 #elif defined(HB_OS_UNIX)
 
-   uiRetMask = 0;
-   if( S_ISREG( uiMask ) )  uiRetMask |= HB_FA_ARCHIVE;
-   if( S_ISDIR( uiMask ) )  uiRetMask |= HB_FA_DIRECTORY;
-   if( S_ISLNK( uiMask ) )  uiRetMask |= HB_FA_REPARSE;
-   if( S_ISCHR( uiMask ) )  uiRetMask |= HB_FA_COMPRESSED;
-   if( S_ISBLK( uiMask ) )  uiRetMask |= HB_FA_DEVICE;
-   if( S_ISFIFO( uiMask ) ) uiRetMask |= HB_FA_TEMPORARY;
-   if( S_ISSOCK( uiMask ) ) uiRetMask |= HB_FA_SPARSE;
+   uiAttr = 0;
+   if( S_ISREG( raw_attr ) )  uiAttr |= HB_FA_ARCHIVE;
+   if( S_ISDIR( raw_attr ) )  uiAttr |= HB_FA_DIRECTORY;
+   if( S_ISLNK( raw_attr ) )  uiAttr |= HB_FA_REPARSE;
+   if( S_ISCHR( raw_attr ) )  uiAttr |= HB_FA_COMPRESSED;
+   if( S_ISBLK( raw_attr ) )  uiAttr |= HB_FA_DEVICE;
+   if( S_ISFIFO( raw_attr ) ) uiAttr |= HB_FA_TEMPORARY;
+   if( S_ISSOCK( raw_attr ) ) uiAttr |= HB_FA_SPARSE;
 
 #else
 
-   HB_SYMBOL_UNUSED( uiMask );
-   uiRetMask = 0;
+   HB_SYMBOL_UNUSED( raw_attr );
+   uiAttr = 0;
 
 #endif
 
-   return uiRetMask;
+   return uiAttr;
 }
 
-static USHORT AttrFromHarbour( USHORT uiMask )
+ULONG hb_fsAttrToRaw( USHORT uiAttr )
 {
-   USHORT uiRetMask;
+   ULONG raw_attr;
 
-   HB_TRACE(HB_TR_DEBUG, ("AttrToHarbour(%hu)", uiMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrToRaw(%hu)", uiAttr));
 
 #if defined(HB_OS_DOS)
 
-   uiRetMask = 0;
-   if( uiMask & HB_FA_ARCHIVE )   uiRetMask |= FA_ARCH;
-   if( uiMask & HB_FA_DIRECTORY ) uiRetMask |= FA_DIREC;
-   if( uiMask & HB_FA_HIDDEN )    uiRetMask |= FA_HIDDEN;
-   if( uiMask & HB_FA_READONLY )  uiRetMask |= FA_RDONLY;
-   if( uiMask & HB_FA_LABEL )     uiRetMask |= FA_LABEL;
-   if( uiMask & HB_FA_SYSTEM )    uiRetMask |= FA_SYSTEM;
+   raw_attr = 0;
+   if( uiAttr & HB_FA_ARCHIVE )   raw_attr |= FA_ARCH;
+   if( uiAttr & HB_FA_DIRECTORY ) raw_attr |= FA_DIREC;
+   if( uiAttr & HB_FA_HIDDEN )    raw_attr |= FA_HIDDEN;
+   if( uiAttr & HB_FA_READONLY )  raw_attr |= FA_RDONLY;
+   if( uiAttr & HB_FA_LABEL )     raw_attr |= FA_LABEL;
+   if( uiAttr & HB_FA_SYSTEM )    raw_attr |= FA_SYSTEM;
 
 #elif defined(HB_OS_OS2)
 
-   uiRetMask = 0;
-   if( uiMask & HB_FA_ARCHIVE )   uiRetMask |= FILE_ARCHIVED;
-   if( uiMask & HB_FA_DIRECTORY ) uiRetMask |= FILE_DIRECTORY;
-   if( uiMask & HB_FA_HIDDEN )    uiRetMask |= FILE_HIDDEN;
-   if( uiMask & HB_FA_READONLY )  uiRetMask |= FILE_READONLY;
-   if( uiMask & HB_FA_SYSTEM )    uiRetMask |= FILE_SYSTEM;
+   raw_attr = 0;
+   if( uiAttr & HB_FA_ARCHIVE )   raw_attr |= FILE_ARCHIVED;
+   if( uiAttr & HB_FA_DIRECTORY ) raw_attr |= FILE_DIRECTORY;
+   if( uiAttr & HB_FA_HIDDEN )    raw_attr |= FILE_HIDDEN;
+   if( uiAttr & HB_FA_READONLY )  raw_attr |= FILE_READONLY;
+   if( uiAttr & HB_FA_SYSTEM )    raw_attr |= FILE_SYSTEM;
 
 #elif defined(HB_OS_WIN_32)
 
-   uiRetMask = 0;
-   if( uiMask & HB_FA_ARCHIVE )   uiRetMask |= FILE_ATTRIBUTE_ARCHIVE ;
-   if( uiMask & HB_FA_DIRECTORY ) uiRetMask |= FILE_ATTRIBUTE_DIRECTORY;
-   if( uiMask & HB_FA_HIDDEN )    uiRetMask |= FILE_ATTRIBUTE_HIDDEN;
-   if( uiMask & HB_FA_READONLY )  uiRetMask |= FILE_ATTRIBUTE_READONLY;
-   if( uiMask & HB_FA_SYSTEM )    uiRetMask |= FILE_ATTRIBUTE_SYSTEM;
+   raw_attr = 0;
+   if( uiAttr & HB_FA_ARCHIVE )   raw_attr |= FILE_ATTRIBUTE_ARCHIVE;
+   if( uiAttr & HB_FA_DIRECTORY ) raw_attr |= FILE_ATTRIBUTE_DIRECTORY;
+   if( uiAttr & HB_FA_HIDDEN )    raw_attr |= FILE_ATTRIBUTE_HIDDEN;
+   if( uiAttr & HB_FA_READONLY )  raw_attr |= FILE_ATTRIBUTE_READONLY;
+   if( uiAttr & HB_FA_SYSTEM )    raw_attr |= FILE_ATTRIBUTE_SYSTEM;
 
 #elif defined(HB_OS_UNIX)
 
-   uiRetMask = 0;
-   if( S_ISREG( uiMask ) )  uiRetMask |= HB_FA_ARCHIVE;
-   if( S_ISDIR( uiMask ) )  uiRetMask |= HB_FA_DIRECTORY;
-   if( S_ISLNK( uiMask ) )  uiRetMask |= HB_FA_REPARSE;
-   if( S_ISCHR( uiMask ) )  uiRetMask |= HB_FA_COMPRESSED;
-   if( S_ISBLK( uiMask ) )  uiRetMask |= HB_FA_DEVICE;
-   if( S_ISFIFO( uiMask ) ) uiRetMask |= HB_FA_TEMPORARY;
-   if( S_ISSOCK( uiMask ) ) uiRetMask |= HB_FA_SPARSE;
+   raw_attr = 0;
+   if( uiAttr & HB_FA_ARCHIVE )    raw_attr |= S_IFREG;
+   if( uiAttr & HB_FA_DIRECTORY )  raw_attr |= S_IFDIR;
+   if( uiAttr & HB_FA_REPARSE )    raw_attr |= S_IFLNK;
+   if( uiAttr & HB_FA_COMPRESSED ) raw_attr |= S_IFCHR;
+   if( uiAttr & HB_FA_DEVICE )     raw_attr |= S_IFBLK;
+   if( uiAttr & HB_FA_TEMPORARY )  raw_attr |= S_IFIFO;
+   if( uiAttr & HB_FA_SPARSE )     raw_attr |= S_IFSOCK;
 
 #else
 
-   HB_SYMBOL_UNUSED( uiMask );
-   uiRetMask = 0;
+   HB_SYMBOL_UNUSED( uiAttr );
+   raw_attr = 0;
 
 #endif
 
-   return uiRetMask;
+   return raw_attr;
+}
+
+/* Converts a CA-Cl*pper compatible file attribute string 
+   to the internal reprensentation. */
+
+USHORT hb_fsAttrEncode( char * szAttr )
+{
+   char * pos = szAttr;
+   char ch;
+   USHORT uiAttr = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrEncode(%p)", szAttr));
+
+   while( ( ch = toupper( *pos ) ) != '\0' )
+   {
+      switch( ch )
+      {
+         case 'R': uiAttr |= HB_FA_READONLY;   break;
+         case 'H': uiAttr |= HB_FA_HIDDEN;     break;
+         case 'S': uiAttr |= HB_FA_SYSTEM;     break;
+         case 'V': uiAttr |= HB_FA_LABEL;      break;
+         case 'D': uiAttr |= HB_FA_DIRECTORY;  break;
+         case 'A': uiAttr |= HB_FA_ARCHIVE;    break;
+#ifdef HB_EXTENSION
+         case 'I': uiAttr |= HB_FA_DEVICE;     break;
+         case 'T': uiAttr |= HB_FA_TEMPORARY;  break;
+         case 'P': uiAttr |= HB_FA_SPARSE;     break;
+         case 'L': uiAttr |= HB_FA_REPARSE;    break;
+         case 'C': uiAttr |= HB_FA_COMPRESSED; break;
+         case 'O': uiAttr |= HB_FA_OFFLINE;    break;
+         case 'X': uiAttr |= HB_FA_NOTINDEXED; break;
+         case 'E': uiAttr |= HB_FA_ENCRYPTED;  break;
+         case 'M': uiAttr |= HB_FA_VOLCOMP;    break;
+#endif
+      }
+
+      pos++;
+   }
+
+   return uiAttr;
+}
+
+/* Converts a file attribute (ffind->attr) to the CA-Cl*pper 
+   compatible file attribute string format. */
+
+char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
+{
+   char * ptr = szAttr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrDecode(%hu, %p)", uiAttr, szAttr));
+
+   /* Using the same order as CA-Cl*pper did: RHSDA. */
+   if( uiAttr & HB_FA_READONLY   ) *ptr++ = 'R';
+   if( uiAttr & HB_FA_HIDDEN     ) *ptr++ = 'H';
+   if( uiAttr & HB_FA_SYSTEM     ) *ptr++ = 'S';
+   if( uiAttr & HB_FA_LABEL      ) *ptr++ = 'V';
+   if( uiAttr & HB_FA_DIRECTORY  ) *ptr++ = 'D';
+   if( uiAttr & HB_FA_ARCHIVE    ) *ptr++ = 'A';
+#ifdef HB_EXTENSION
+   if( uiAttr & HB_FA_DEVICE     ) *ptr++ = 'I';
+   if( uiAttr & HB_FA_TEMPORARY  ) *ptr++ = 'T';
+   if( uiAttr & HB_FA_SPARSE     ) *ptr++ = 'P';
+   if( uiAttr & HB_FA_REPARSE    ) *ptr++ = 'L';
+   if( uiAttr & HB_FA_COMPRESSED ) *ptr++ = 'C';
+   if( uiAttr & HB_FA_OFFLINE    ) *ptr++ = 'O';
+   if( uiAttr & HB_FA_NOTINDEXED ) *ptr++ = 'X';
+   if( uiAttr & HB_FA_ENCRYPTED  ) *ptr++ = 'E';
+   if( uiAttr & HB_FA_VOLCOMP    ) *ptr++ = 'M';
+#endif
+
+   *ptr = '\0';
+
+   return szAttr;
 }
 
 static void hb_fsFindFill( PHB_FFIND ffind )
@@ -253,7 +323,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    USHORT nMin;
    USHORT nSec;
 
-   USHORT nAttr;
+   ULONG  raw_attr;
 
    /* Set the default values in case some platforms don't 
       support some of these, or they may fail on them. */
@@ -270,7 +340,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
       strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
       ffind->size = info->entry.ff_fsize;
    
-      nAttr = info->entry.ff_attrib;
+      raw_attr = info->entry.ff_attrib;
    
       {
          time_t ftime;
@@ -302,7 +372,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
       strncpy( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
       ffind->size = sStat.st_size;
 
-      nAttr = info->entry.attrFile;
+      raw_attr = info->entry.attrFile;
 
       {
          time_t ftime;
@@ -329,7 +399,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
       /* TOFIX: nFileSizeHigh is not yet used. */
       ffind->size = info->pFindFileData.nFileSizeLow;
    
-      nAttr = ( USHORT ) info->pFindFileData.dwFileAttributes;
+      raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
    
       {
          FILETIME ft;
@@ -368,7 +438,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
       strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
       ffind->size = sStat.st_size;
 
-      nAttr = sStat.st_mode;
+      raw_attr = sStat.st_mode;
 
       {
          time_t ftime;
@@ -398,7 +468,8 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    {
       HB_SYMBOL_UNUSED( info );
 
-      nAttr  =
+      raw_attr = 0;
+
       nYear  =
       nMonth =
       nDay   =
@@ -414,7 +485,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    ffind->szName[ _POSIX_PATH_MAX ] = '\0';
    ffind->szName[ 8 + 1 + 3 ] = '\0';
 
-   ffind->attr = AttrToHarbour( nAttr );
+   ffind->attr = hb_fsAttrFromRaw( raw_attr );
 
    ffind->lDate = hb_dateEncode( nYear, nMonth, nDay );
    hb_dateStrPut( ffind->szDate, nYear, nMonth, nDay );
@@ -438,7 +509,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
    {
       PHB_FFIND_INFO info = ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
 
-      bFound = ( findfirst( pszFileName, &info->entry, AttrFromHarbour( uiAttr ) ) == 0 );
+      bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
    }
 
 #elif defined(HB_OS_OS2)
@@ -450,7 +521,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
 
       bFound = DosFindFirst( pszFileName,
                              &info->hFindFile,
-                             ( LONG ) AttrFromHarbour( uiAttr ),
+                             ( LONG ) hb_fsAttrToRaw( uiAttr ),
                              &info->entry,
                              sizeof( info->entry ),
                              &info->findCount,
@@ -463,7 +534,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
       PHB_FFIND_INFO info = ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
 
       info->hFindFile = FindFirstFile( pszFileName, &info->pFindFileData );
-      info->dwAttr    = AttrFromHarbour( uiAttr );
+      info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( uiAttr );
 
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
@@ -578,7 +649,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 #elif defined(HB_OS_UNIX)
 
    {
-      bFound = ( ( entry = readdir( info->dir ) ) != NULL );
+      bFound = ( ( info->entry = readdir( info->dir ) ) != NULL );
    }
 
 #elif defined(HB_OS_MAC)
@@ -618,8 +689,12 @@ void hb_fsFindClose( PHB_FFIND ffind )
          PHB_FFIND_INFO info = ffind->info;
 
 #if defined(HB_OS_DOS)
-        
-         #if !defined(__DJGPP__)
+
+         #if defined(__DJGPP__)
+         {
+            HB_SYMBOL_UNUSED( info );
+         }
+         #else
          {
             findclose( &info->entry );
          }

@@ -50,7 +50,7 @@
  *
  */
 
-#if defined(HARBOUR_OBJ_GENERATION) || defined(HB_INCLUDE_WINEXCHANDLER)
+#if defined(HB_INCLUDE_WINEXCHANDLER)
    #define HB_OS_WIN_32_USED
 #endif
 
@@ -372,6 +372,8 @@ void hb_vmIsLocalRef( void )
 
 #ifdef HB_INCLUDE_WINEXCHANDLER
 
+#if defined(HB_OS_WIN_32)
+
 WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
    PHB_ITEM *pBase = hb_stack.pBase;
@@ -405,6 +407,8 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
 
    return EXCEPTION_EXECUTE_HANDLER; /* EXCEPTION_CONTINUE_SEARCH; */
 }
+
+#endif
 
 #endif
 

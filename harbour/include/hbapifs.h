@@ -182,6 +182,12 @@ extern PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr );
 extern BOOL      hb_fsFindNext( PHB_FFIND ffind );
 extern void      hb_fsFindClose( PHB_FFIND ffind );
 
+/* Misc helper functions */
+extern USHORT    hb_fsAttrFromRaw( ULONG raw_attr );
+extern ULONG     hb_fsAttrToRaw( USHORT uiAttr );
+extern USHORT    hb_fsAttrEncode( char * szAttr );
+extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
+
 #if defined(HB_EXTERN_C)
 }
 #endif

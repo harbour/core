@@ -81,14 +81,12 @@ CLASS Get
    DATA Changed
    DATA Clear
    DATA Col
-   DATA ColorSpec
    DATA DecPos
    DATA ExitState
    DATA HasFocus
    DATA Minus
    DATA Name
    DATA Original
-   DATA Picture
    DATA Pos
    DATA PostBlock
    DATA PreBlock
@@ -103,12 +101,18 @@ CLASS Get
    DATA Message
    #endif
 
+   DATA cColorSpec   HIDDEN   // Used only for METHOD ColorSpec
+   DATA cPicture     HIDDEN   // Used only for METHOD Picture
+
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec )
 
    METHOD Assign()
 #ifdef HB_COMPAT_XPP
    MESSAGE _Assign METHOD Assign()
 #endif
+
+   METHOD ColorSpec() SETGET  // Replace to DATA ColorSpec
+   METHOD Picture()   SETGET  // Replace to DATA Picture
    METHOD Display()
    METHOD ColorDisp( cColorSpec ) INLINE ::ColorSpec := cColorSpec, ::Display(), Self
    METHOD KillFocus()
@@ -118,6 +122,7 @@ CLASS Get
    METHOD Undo()
    METHOD UnTransform()
    METHOD UpdateBuffer() INLINE  ::buffer := ::PutMask(), ::Assign(), Self
+
    METHOD VarGet()
    METHOD VarPut()
 
@@ -180,7 +185,6 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::Minus      := .f.
    ::Name       := cVarName
    ::Original   := ::VarGet()
-   ::Picture    := cPicture
    ::Pos        := NIL
    ::PostBlock  := NIL
    ::PreBlock   := NIL
@@ -193,16 +197,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::nDispPos   := 1
    ::nOldPos    := 0
 
-   // Existe function en picture
-
-   ::ParsePict( cPicture )
-
-   ::buffer  := ::PutMask( ::Original, .f. )
-   ::nMaxLen := Len( ::buffer )
-
-   if ::nDispLen == NIL
-      ::nDispLen := ::nMaxLen
-   endif
+   ::Picture    := cPicture
 
 return Self
 
@@ -392,7 +387,7 @@ METHOD SetFocus() CLASS Get
    ::hasfocus   := .t.
    ::rejected   := .f.
    ::typeout    := .f.
-   ::ParsePict( :: Picture )
+
    ::buffer     := ::PutMask( ::VarGet(), .f. )
    ::changed    := .f.
    ::clear      := ( "K" $ ::cPicFunc .or. ::type == "N")
@@ -1127,4 +1122,61 @@ METHOD DelWordRight() CLASS Get
    ::Display()
 
 return Self
+
+//---------------------------------------------------------------------------//
+
+/* The METHOD ColorSpec and MESSAGE _ColorSpec allow to replace the
+ * property ColorSpec for a function to control the content and 
+ * to carry out certain actions to normalize the data.
+ * The particular case is that the function receives a single color and
+ * be used for GET_CLR_UNSELECTED and GET_CLR_ENHANCED.
+ */
+
+METHOD ColorSpec( cColorSpec ) CLASS Get
+
+   local cClrUnSel, cClrEnh
+
+   if cColorSpec != NIL
+
+      cClrUnSel := iif( !Empty( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ),;
+                                hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ),;
+                                hb_ColorIndex( SetColor(), GET_CLR_UNSELECTED ) )
+   
+      cClrEnh   := iif( !Empty( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ),;
+                                hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ),;
+                                cClrUnSel )
+
+      ::cColorSpec := cClrUnSel + " , " + cClrEnh
+
+   endif
+
+return ::cColorSpec
+
+//---------------------------------------------------------------------------//
+
+/* The METHOD Picture and MESSAGE _Picture allow to replace the
+ * property Picture for a function to control the content and 
+ * to carry out certain actions to normalize the data.
+ * The particular case is that the Picture is loaded later on 
+ * to the creation of the object, being necessary to carry out 
+ * several tasks to adjust the internal data of the object.
+ */
+
+METHOD Picture( cPicture ) CLASS Get
+
+   if cPicture != NIL
+
+      ::cPicture := cPicture
+      ::ParsePict( cPicture )
+
+      ::buffer  := ::PutMask( )
+      ::nMaxLen := Len( ::buffer )
+
+      if ::nDispLen == NIL
+         ::nDispLen := ::nMaxLen
+      endif
+
+   endif
+
+return ::cPicture
 

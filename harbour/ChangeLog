@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-17 17:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     ! Fix added again for displaying logical field in a 
+       100% CA-Cl*pper compatible way.
+
+   * source/rtl/tget.prg
+     ! Fixes by Walter Negro (GET single color colorspec and 
+       picture modifying on-the-fly)
+
+   * source/common/hbffind.c
+   * include/hbapifs.h
+     ! DJGPP warning fixed.
+     ! Fixed for Linux by Luiz
+     ! AttrFromHarbour() fix for Unix
+     + Added some new helper funcions.
+       hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
+       hb_fsAttrEncode( char * szAttr )
+     * Some type cleanups around the attribs.
+
+   * source/vm/estack.c
+     ! Small corrections to the #ifdefs.
+
 2001-12-17 14:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbver.h
