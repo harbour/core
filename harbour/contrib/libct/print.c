@@ -98,6 +98,8 @@ HB_FUNC( PRINTSTAT )
 
    Status = regs.h.ah;
 
+#else
+   HB_SYMBOL_UNUSED( uiPort );
 #endif
 
    hb_retni( Status );
@@ -147,6 +149,8 @@ HB_FUNC( PRINTREADY )
 
    Status = regs.h.ah;
 
+#else
+   HB_SYMBOL_UNUSED( uiPort );
 #endif
 
    hb_retl( (Status == 0x90) );
