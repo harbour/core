@@ -208,7 +208,7 @@ void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
 
 void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear )
 {
-  HB_TRACE(("hb_dateStrGet(%s, %p, %p, %p)", szDate, plDay, plMonth, plYear));
+   HB_TRACE(("hb_dateStrGet(%s, %p, %p, %p)", szDate, plDay, plMonth, plYear));
 
    if( szDate && strlen( szDate ) == 8 )
    {
