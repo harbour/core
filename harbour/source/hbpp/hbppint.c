@@ -34,17 +34,15 @@
    their web site at http://www.gnu.org/).
  */
 
-#if defined(__GNUC__) || defined(__WATCOMC__)
+#if ( defined(__GNUC__) || defined(__WATCOMC__) ) && ! defined(__MINGW32__)
  #include <string.h>
  #include <stdlib.h>
-#else
- #if ( defined(_MSC_VER) || defined(__IBMCPP__) )
+#elif ( defined(_MSC_VER) || defined(__IBMCPP__) )
   #include <memory.h>
   #include <stdlib.h>
- #else
+#else
   #include <alloc.h>
   #include <mem.h>
- #endif
 #endif
 #include <stdio.h>
 #include "hbpp.h"

@@ -46,7 +46,7 @@
    #include <io.h>
 #endif
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <unistd.h>
@@ -80,7 +80,7 @@
    #endif
 #endif
 
-#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER)
+#if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <sys\stat.h>
    #include <io.h>
    #include <fcntl.h>
@@ -90,7 +90,7 @@
       #include <dir.h>
    #endif
 
-   #if defined(_MSC_VER)
+   #if defined(_MSC_VER) || defined(__MINGW32__)
       #include <sys\locking.h>
    #else
       #if !defined(HAVE_POSIX_IO)
@@ -163,7 +163,7 @@ extern int rename( const char *, const char * );
 
 /* Convert HARBOUR flags to IO subsystem flags */
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
 static int convert_open_flags( USHORT uiFlags )
 {
@@ -173,7 +173,7 @@ static int convert_open_flags( USHORT uiFlags )
    result_flags |= O_BINARY;
 /* DEBUG: printf("\nconvert_open_flags: O_BINARY"); */
 
-#if defined( _MSC_VER )
+#if defined( _MSC_VER ) || defined(__MINGW32__)
    if( uiFlags == 0 )
    {
       result_flags |= O_RDONLY;
@@ -201,7 +201,7 @@ static int convert_open_flags( USHORT uiFlags )
 /* DEBUG: printf(" O_RDWR"); */
    }
 
-#if ! defined(_MSC_VER)
+#if ! defined(_MSC_VER) && ! defined(__MINGW32__)
    /* shared flags */
    if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
    {
@@ -292,9 +292,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
    s_uiErrorLast = errno;
 
-#else
-
-   #if defined(_MSC_VER)
+#elif defined(_MSC_VER)
 
       int iShare = _SH_DENYNO;
 
@@ -314,12 +312,30 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
          hFileHandle = _open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
       s_uiErrorLast = errno;
 
-   #else
+#elif defined(__MINGW32__)
+
+      int iShare = SH_DENYNO;
+
+      if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
+         iShare = SH_DENYRD;
+
+      else if( uiFlags & FO_EXCLUSIVE )
+         iShare = SH_DENYRW;
+
+      else if( uiFlags & FO_DENYWRITE )
+         iShare = SH_DENYWR;
+
+      errno = 0;
+      if( iShare )
+         hFileHandle = sopen( ( char * ) pFilename, convert_open_flags( uiFlags ), iShare );
+      else
+         hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
+      s_uiErrorLast = errno;
+
+#else
 
       hFileHandle = FS_ERROR;
       s_uiErrorLast = FS_ERROR;
-
-   #endif
 
 #endif
 
@@ -334,7 +350,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 
    s_uiErrorLast = 0;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    convert_create_flags( uiFlags, &oflag, &pmode );
@@ -359,7 +375,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 
 void    hb_fsClose( FHANDLE hFileHandle )
 {
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    close( hFileHandle );
@@ -395,7 +411,7 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    }
    s_uiErrorLast = errno;
 
-#elif defined(_MSC_VER)
+#elif defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    switch( uiDevMode )
@@ -422,7 +438,7 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiRead;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    uiRead = read( hFileHandle, pBuff, uiCount );
@@ -444,7 +460,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    uiWritten = write( hFileHandle, pBuff, uiCount );
@@ -466,7 +482,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulReadTotal = 0;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    while( ulReadTotal < ulCount )
@@ -497,7 +513,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulWrittenTotal = 0;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    while( ulWrittenTotal < ulCount )
@@ -534,7 +550,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       /* 'Seek Error' */
       s_uiErrorLast = 25;
 
-   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
       /* get current offset */
       errno = 0;
       ulPos = lseek( hFileHandle, 0, SEEK_CUR );
@@ -547,7 +563,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    else
    {
 
-   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+   #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
       errno = 0;
       ulPos = lseek( hFileHandle, lOffset, Flags );
@@ -591,7 +607,7 @@ int     hb_fsDelete( BYTE * pFilename )
 
 #else
 
-   #if defined(_MSC_VER)
+   #if defined(_MSC_VER) || defined(__MINGW32__)
 
       errno = 0;
       iResult = remove( ( char * ) pFilename );
@@ -613,7 +629,7 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 {
    int iResult;
 
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    errno = 0;
    iResult = rename( ( char * ) pOldName, ( char * ) pNewName );
@@ -634,7 +650,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 {
    int iResult = 0;
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
    ULONG ulOldPos;
 #endif
 
@@ -653,9 +669,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    }
    s_uiErrorLast = errno;
 
-#else
-
-#if defined(_MSC_VER)
+#elif defined(_MSC_VER)
 
    ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
@@ -672,12 +686,27 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
    hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
 
+#elif defined(__MINGW32__)
+
+   ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
+
+   switch( uiMode )
+   {
+      case FL_LOCK:
+         iResult = _locking( hFileHandle, _LK_LOCK, ulLength );
+         break;
+
+      case FL_UNLOCK:
+         iResult = _locking( hFileHandle, _LK_UNLOCK, ulLength );
+         break;
+   }
+
+   hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
+
 #else
 
    iResult = 1;
    s_uiErrorLast = FS_ERROR;
-
-#endif
 
 #endif
 
@@ -686,7 +715,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 void    hb_fsCommit( FHANDLE hFileHandle )
 {
-#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
    int dup_handle;
 
@@ -801,7 +830,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__)
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
 
    USHORT uiSave = _getdrive();
 
@@ -831,7 +860,7 @@ BYTE    hb_fsCurDrv( void )
 {
    USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__)
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
 
    errno = 0;
    uiResult = _getdrive();
@@ -851,7 +880,7 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__)
+#if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
 
    USHORT uiSave = _getdrive();
 

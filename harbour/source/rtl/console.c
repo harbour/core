@@ -69,7 +69,7 @@
 #include "gtapi.h"            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
                                  we can always get the border styles */
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
    #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
       #include <io.h>

@@ -19,10 +19,13 @@
 /* NOTE: The following #ifdef block #including <windows.h> must
          be ahead of any and all #include statements! */
 
-#if defined(_Windows) || defined(_WIN32)
+#if defined(_Windows) || defined(_WIN32) || defined(__MINGW32__)
    #if !defined(__CYGWIN__)
       #define WIN32_LEAN_AND_MEAN
       #include <windows.h>
+      #if defined(__MINGW32__)
+         #define HB_DONT_DEFINE_BASIC_TYPES
+      #endif
    #endif
 #endif
 
@@ -30,12 +33,12 @@
 #include "errorapi.h"
 #include "hbver.h"
 
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__DJGPP__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__DJGPP__) || defined(__MINGW32__)
    #include <dos.h>
    #include <stdlib.h>
 #endif
 
-#if defined(__GNUC__) && !defined(__DJGPP__)
+#if defined(__GNUC__) && !defined(__DJGPP__) && ! defined(__MINGW32__)
    #include <sys/utsname.h>
 #endif
 
@@ -79,7 +82,7 @@ HARBOUR HB_OS( void )
 
 #else
 
-#if defined(__GNUC__) && !defined(__DJGPP__)
+#if defined(__GNUC__) && !defined(__DJGPP__) && !defined(__MINGW32__)
 
    struct utsname un;
 
@@ -97,9 +100,9 @@ HARBOUR HB_OS( void )
 #else
 
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_Windows) || defined(_WIN32)
+#if defined(_Windows) || defined(_WIN32) || defined(__MINGW32__)
 
 /* NOTE: Support for determining the window version by Luiz Rafael Culik
    Culik@sl.conex.net
@@ -297,7 +300,7 @@ HARBOUR HB_GETENV( void )
 
 HARBOUR HB___RUN( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(__MSC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGWIN__)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(__MSC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGWIN__) || defined(__MINGW32__)
    if( ISCHAR( 1 ) )
       system( hb_parc( 1 ) );
 #else

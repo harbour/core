@@ -34,7 +34,7 @@
  */
 
 #include <stdlib.h>
-#if defined(__GNUC__)
+#if defined(__GNUC__) && ! defined(__MINGW32__)
  #include <string.h>
  #include <unistd.h>
 #else

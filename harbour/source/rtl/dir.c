@@ -7,6 +7,7 @@
  *         by the optional file and attribute mask.
  *
  * Latest mods:
+ * 1.49   19990915   dholm     Added __MINGW32__ support
  * 1.46   19990915   ptucker   Return results are now fully compatible
  *                             particularly using MSVC - other os's need
  *                             testing.
@@ -69,9 +70,12 @@
    #define INCL_DOSERRORS
 #endif
 
-#if defined(_MSC_VER)
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#if defined(_MSC_VER) || defined(__MINGW32__)
+   #define WIN32_LEAN_AND_MEAN
+   #include <windows.h>
+   #if defined(__MINGW32__)
+      #define HB_DONT_DEFINE_BASIC_TYPES
+   #endif
 #endif
 
 #include <ctype.h>
@@ -79,7 +83,7 @@
 #include "itemapi.h"
 #include "directry.ch"
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>
@@ -102,7 +106,7 @@
    #include <time.h>
 #endif
 
-#if defined(__WATCOMC__) || defined(_MSC_VER)
+#if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <sys/stat.h>
    #include <share.h>
    #include <fcntl.h>
@@ -285,7 +289,7 @@ static USHORT osAttributesToMask( BYTE * byAttrib )
 #else
    #if defined(__IBMCPP__)
    #else
-      #if defined(_MSC_VER)
+      #if defined(_MSC_VER) || defined(__MINGW32__)
       #elif defined(__BORLANDC__) || defined(__DJGPP__)
       #else
       #endif
@@ -305,7 +309,7 @@ static BYTE * osMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 #else
    #if defined(__IBMCPP__)
    #else
-      #if defined(_MSC_VER)
+      #if defined(_MSC_VER) || defined(__MINGW32__)
       #elif defined(__BORLANDC__) || defined(__DJGPP__)
       #else
       #endif
@@ -432,7 +436,7 @@ HARBOUR HB_DIRECTORY( void )
    struct stat statbuf;
    struct tm * ft;
 
-#if defined(_MSC_VER )
+#if defined(_MSC_VER ) || defined(__MINGW32__)
    struct _finddata_t entry;
    long hFile;
 #elif defined(__IBMCPP__)
@@ -541,7 +545,7 @@ HARBOUR HB_DIRECTORY( void )
    tzset();
    pDir = hb_itemArrayNew( 0 );
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 
    strcpy( string, dirname );
    strcat( string, pattern );
@@ -624,7 +628,7 @@ HARBOUR HB_DIRECTORY( void )
       {
          attrib = 0;
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
          /* due to short-name support: reconstruct the filename */
          if( bEightDotThree )
          {
@@ -672,7 +676,7 @@ HARBOUR HB_DIRECTORY( void )
                #if defined(__IBMCPP__)
                   attrib = entry.attrFile;
                #else
-                  #if defined(_MSC_VER)
+                  #if defined(_MSC_VER) || defined(__MINGW32__)
                      attrib = entry.attrib;
                      if( bEightDotThree )
                      {
@@ -750,7 +754,7 @@ HARBOUR HB_DIRECTORY( void )
          }
       }
    }
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
    while( _findnext( hFile, &entry ) == 0 );
    _findclose( hFile );
 #elif defined(__IBMCPP__)
@@ -763,7 +767,7 @@ HARBOUR HB_DIRECTORY( void )
    hb_itemReturn( pDir ); /* DIRECTORY() returns an array */
    hb_itemRelease( pDir );
 
-#if defined(_MSC_VER) || defined(__IBMCPP__)
+#if defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MINGW32__)
 
    }
 #endif

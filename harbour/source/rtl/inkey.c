@@ -32,6 +32,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.36   David G. Holm               Added __MINGW32__ support
    V 1.35   David G. Holm               Changed the __CYGWIN__ build to use
                                         the Unix keyboard input method and
                                         modified it to not block the VM.
@@ -70,7 +71,7 @@
 #include "inkey.h"
 #include "init.h"
 
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER) || defined(__MINGW32__)
    #include <conio.h>
    #include <dos.h>
 #elif  defined(__DJGPP__)
@@ -145,7 +146,7 @@ static HB_inkey_enum s_eventmask;
 void hb_releaseCPU( void )
 {
 /* TODO: Add code to release time slices on all platforms */
-#if defined(_Windows)
+#if defined(_Windows) || defined(__MINGW32__)
    /* according to ms docs, you should not do this in a Win app. dos only */
 #elif defined(OS2)
    DosSleep( 25 ); /* Duration is in milliseconds */
@@ -218,7 +219,8 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
       non-blocking Unix-style keyboard input is implemented */
    char ch;
    read( STDIN_FILENO, &ch, 1 );
-   key = ch;
+   if( ch == '\n' ) key = '\r';
+   else key = ch;
 #else
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
@@ -267,7 +269,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
    {
       int ch = 0;
-#if ( defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows) ) && ! defined(__CYGWIN__)
+#if ( defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
    /* The reason for including _Windows here is that kbhit() and getch() appear
      to work properly in console mode. For true Windows mode, changes are needed. */
    #if defined(HARBOUR_GCC_OS2)

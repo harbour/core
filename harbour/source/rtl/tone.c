@@ -30,6 +30,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.10   David G. Holm               Added __MINGW32__ support
    V 1.8    David G. Holm               Added '&& ! defined(_Windows)'
                                         check to all __BORLANDC__ checks.
    V 1.6    David G. Holm               Added Win32 Beep(), thanks to
@@ -53,6 +54,8 @@
    #include <pc.h>
    #include <time.h>
 #elif defined(_Windows)
+#elif defined(__MINGW32__)
+   #include <stdlib.h>
 #elif defined(__BORLANDC__)
    #include <dos.h>
    #include <time.h>
@@ -133,7 +136,7 @@ void hb_tone( double frequency, double duration )
    ULONG temp;
 #elif defined(WINNT) || defined(_Windows)
    ULONG temp;
-#elif defined(OS2)
+#elif defined(OS2) || defined(__MINGW32__)
    USHORT temp;
 #elif defined(__DJGPP__) || defined(__BORLANDC__)
    USHORT temp; /* Use USHORT, because this variable gets added to clock()
@@ -144,7 +147,7 @@ void hb_tone( double frequency, double duration )
    ULONG temp;    /* Avoid unreferenced temp */
    duration = -1; /* Exit without delay */
 #endif
-#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows)
+#if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(__MINGW32__)
    frequency = MIN( MAX( 0.0, frequency ), 32767.0 );
    duration = duration * 1000.0 / 18.2; /* milliseconds */
 #elif defined(__DJGPP) || defined(__BORLANDC__)
@@ -160,7 +163,7 @@ void hb_tone( double frequency, double duration )
    {
 #if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(__CYGWIN__)
       temp = MIN( MAX ( 0, duration ), ULONG_MAX );
-#elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__)
+#elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__)
       temp = MIN( MAX ( 0, duration ), USHRT_MAX );
 #endif
       duration -= temp;
@@ -176,6 +179,8 @@ void hb_tone( double frequency, double duration )
          DosBeep( ( ULONG ) frequency, temp );
 #elif defined(OS2)
          DosBeep( ( USHORT ) frequency, temp );
+#elif defined(__MINGW32__)
+         beep( frequency, temp );
 #elif defined(WINNT)
          Beep( ( ULONG ) frequency, temp );
 #elif defined(_Windows) && ! defined(_Windows)

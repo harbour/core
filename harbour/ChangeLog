@@ -1,3 +1,15 @@
+19990914-20:45 EDT David G. Holm <dholm@jsd-llc.com>
+  + config/win32/mingw32.cf
+  * source/hbpp/hbpp.c
+  * source/hbpp/hbppint.c
+  * source/rtl/console.c
+  * source/rtl/dir.c
+  * source/rtl/environ.c
+  * source/rtl/filesys.c
+  * source/rtl/inkey.c
+  * source/rtl/tone.c
+    + Added __MINGW32__ support for Cygnus GCC compiler.
+
 19990916-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/compiler/symbols.asm (removed)
