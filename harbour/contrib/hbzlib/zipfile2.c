@@ -54,9 +54,9 @@
 #define WRITEBUFFERSIZE (8192)
 extern int err;
 
-void hb____ChangeFileDate(const char *filename,uLong dosdate,tm_unz tmu_date)
+void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
 {
-#ifdef defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32)
   HANDLE hFile;
   FILETIME ftm,ftLocal,ftCreate,ftLastAcc,ftLastWrite;
   HB_SYMBOL_UNUSED(tmu_date);        
@@ -90,14 +90,6 @@ void hb____ChangeFileDate(const char *filename,uLong dosdate,tm_unz tmu_date)
 
 /* mymkdir and change_file_date are not 100 % portable
    As I don't know well Unix, I wait feedback for the unix portion */
-
-int hb___MyMkdir(const char *DirectoryName)
-{
-    int uiReturn;
-    uiReturn = mkdir(DirectoryName);
-    return uiReturn;
-}
-
 int hb___MakeDir(char *NewDirectory)
 {
   char *szBuffer ;
@@ -113,7 +105,7 @@ int hb___MakeDir(char *NewDirectory)
   if (szBuffer[uiLen-1] == '/') {
     szBuffer[uiLen-1] = '\0';
   }
-  if (hb___MyMkdir(szBuffer) == 0)
+  if (hb_fsMkDir(szBuffer))
     {
       hb_xfree((void*) szBuffer);
       return 1;
@@ -123,12 +115,13 @@ int hb___MakeDir(char *NewDirectory)
   while (1)
     {
       char hold;
-
+      int iResult;
       while(*p && *p != '\\' && *p != '/')
         p++;
       hold = *p;
       *p = 0;
-      if ((hb___MyMkdir(szBuffer) == -1) && (errno == ENOENT))
+      iResult=hb_fsMkDir(szBuffer);
+      if (( iResult== -1) && (errno == ENOENT))
         {
           hb_xfree((void*) szBuffer);
           return 0;
@@ -188,14 +181,15 @@ int hb___Extract(unzFile uf,int opt_extract_without_path,int opt_overwrite,PHB_I
 
 
 
-int hb___unZipFiles(char *szFile,PHB_ITEM pBlock)
+int hb___unZipFiles(char *szFile,PHB_ITEM pBlock,BOOL iExtractPath)
 {
         const char *szZipFileName=NULL;
         const char *filename_to_extract=NULL;
 	int i;
 	int opt_do_list=0;
 	int opt_do_extract=1;
-    int opt_do_extract_withoutpath=0;
+        int opt_do_extract_withoutpath=iExtractPath;
+
 	int opt_overwrite=0;
 	char filename_try[512];
 	unzFile uf=NULL;
@@ -240,7 +234,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 	char filename_inzip[256];
 	char* filename_withoutpath;
 	char* p;
-
+        char NewFileToWrite[256];
     FHANDLE fout;
     BYTE * buf;
     uInt size_buf;
@@ -261,7 +255,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
     {
         return UNZ_INTERNALERROR;
     }
-
+        strcpy(NewFileToWrite,filename_inzip);
 	p = filename_withoutpath = filename_inzip;
 	while ((*p) != '\0')
 	{
@@ -274,19 +268,25 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 	{
 		if ((*popt_extract_without_path)==0)
 		{
-                        hb___MyMkdir(filename_inzip);
+                        hb_fsMkDir(filename_inzip);
 		}
 	}
 	else
 	{
-		const char* write_filename;
+
+                char* write_filename;
 		int skip=0;
 
-		if ((*popt_extract_without_path)==0)
-			write_filename = filename_inzip;
-		else
-			write_filename = filename_withoutpath;
+                if ((*popt_extract_without_path)==0) {
 
+			write_filename = filename_inzip;
+                        
+                        }
+                else     {
+ 
+			write_filename = filename_withoutpath;
+                        
+                        }
                 if(pBlock !=NULL){
                    PHB_ITEM pFileName=hb_itemPutC(NULL, (char *)write_filename);
                    hb_vmEvalBlockV( pBlock, 1, pFileName );
@@ -306,7 +306,7 @@ int hb___ExtractCurrentFile(unzFile uf,const int* popt_extract_without_path,int*
 
 
             /* some zipfile don't contain directory alone before file */
-            if ((fout==NULL) && ((*popt_extract_without_path)==0) && 
+            if ((fout==-1) && ((*popt_extract_without_path)==0) && 
                                 (filename_withoutpath!=(char*)filename_inzip))
             {
                 char c=*(filename_withoutpath-1);
