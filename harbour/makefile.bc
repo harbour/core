@@ -20,7 +20,7 @@
 #                      Note that this will require the pdflib contrib.
 #       HB_GT_LIB    - To override the default GT driver
 #                      (search for HB_GT_LIBS for a list of values)
-#       HB_LEX       - If set to SIMPLEX, an alternate lexer will be 
+#       HB_LEX       - If set to SIMPLEX, an alternate lexer will be
 #                      used instead of the Flex based one.
 #       PRG_USR      - Extra Harbour compiler options
 #                      (GNU make compatible envvar)
@@ -292,6 +292,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\shadow.obj \
    $(OBJ_DIR)\soundex.obj \
    $(OBJ_DIR)\space.obj \
+   $(OBJ_DIR)\spfiles.obj \
    $(OBJ_DIR)\str.obj \
    $(OBJ_DIR)\strcase.obj \
    $(OBJ_DIR)\strings.obj \
@@ -1737,6 +1738,10 @@ $(OBJ_DIR)\soundex.obj : $(RTL_DIR)\soundex.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\space.obj : $(RTL_DIR)\space.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\spfiles.obj : $(RTL_DIR)\spfiles.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
