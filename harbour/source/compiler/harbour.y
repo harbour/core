@@ -3098,7 +3098,7 @@ WORD JumpFalse( int iOffset )
          sType[1] = 0;
       }
       else
-	 debug_msg( "\n***_JUMPFALSE Compile time stack overflow\n", NULL );
+	 debug_msg( "\n***HB_P_JUMPFALSE Compile time stack overflow\n", NULL );
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3148,7 +3148,7 @@ WORD JumpTrue( int iOffset )
          sType[1] = 0;
       }
       else
-	 debug_msg( "\n***_JUMPTRUE Compile time stack overflow\n", NULL );
+	 debug_msg( "\n***HB_P_JUMPTRUE Compile time stack overflow\n", NULL );
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3378,7 +3378,7 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
       	    pNewStackType->pPrev = pStackValType;
 
       	    pStackValType = pNewStackType;
-      	    debug_msg( "\n***_PUSHMEMVAR\n ", NULL );
+      	    debug_msg( "\n***HB_P_PUSHMEMVAR\n ", NULL );
          }
       }
    }
@@ -3868,7 +3868,7 @@ void GenPCode1( BYTE byte )
 {
    PFUNCTION pFunc = functions.pLast;   /* get the currently defined Clipper function */
 
-   /* Releasing value consumed by _ARRAYPUT */
+   /* Releasing value consumed by HB_P_ARRAYPUT */
    if( _iWarnings )
    {
       if( byte == HB_P_PUSHSELF )
@@ -3880,7 +3880,7 @@ void GenPCode1( BYTE byte )
          pNewStackType->pPrev = pStackValType;
 
          pStackValType = pNewStackType;
-         debug_msg( "\n***_PUSHSELF\n", NULL );
+         debug_msg( "\n***HB_P_PUSHSELF\n", NULL );
       }
       else if( byte == HB_P_ARRAYPUT )
       {
@@ -3893,19 +3893,19 @@ void GenPCode1( BYTE byte )
          if( pStackValType )
             pStackValType = pStackValType->pPrev;
 	 else
-            debug_msg( "\n***_ARRAYPUT Compile time stack overflow\n", NULL );
+            debug_msg( "\n***HB_P_ARRAYPUT Compile time stack overflow\n", NULL );
 
          if( pFree )
       	    OurFree( pFree );
 
 	 /* Releasing compile time array element index value */
          pFree = pStackValType;
-         debug_msg( "\n***---_ARRAYPUT\n", NULL );
+         debug_msg( "\n***---HB_P_ARRAYPUT\n", NULL );
 
          if( pStackValType )
             pStackValType = pStackValType->pPrev;
 	 else
-            debug_msg( "\n***_ARRAYPUT2 Compile time stack overflow\n", NULL );
+            debug_msg( "\n***HB_P_ARRAYPUT2 Compile time stack overflow\n", NULL );
 
          if( pFree )
       	    OurFree( pFree );
@@ -3915,7 +3915,7 @@ void GenPCode1( BYTE byte )
          PSTACK_VAL_TYPE pFree;
 
          pFree = pStackValType;
-         debug_msg( "\n***---_POP / _RETVALUE / _FORTEST / _ARRAYAT pCode: %i\n", byte );
+         debug_msg( "\n***---HB_P_POP / HB_P_RETVALUE / HB_P_FORTEST / HB_P_ARRAYAT pCode: %i\n", byte );
 
          if( pStackValType )
             pStackValType = pStackValType->pPrev;
@@ -3941,7 +3941,7 @@ void GenPCode1( BYTE byte )
 	    sType2[1] = 0;
 	 }
 	 else
-            debug_msg( "\n***_MULT pCode: %i Compile time stack overflow\n", byte );
+            debug_msg( "\n***HB_P_MULT pCode: %i Compile time stack overflow\n", byte );
 
 	 /* skip back to the 1st. operand */
 	 if( pOperand1 )
@@ -3950,7 +3950,7 @@ void GenPCode1( BYTE byte )
 	    sType1[1] = 0;
 	 }
 	 else
-            debug_msg( "\n***_MULT2 pCode: %i Compile time stack overflow\n", byte );
+            debug_msg( "\n***HB_P_MULT2 pCode: %i Compile time stack overflow\n", byte );
 
          if( pOperand1 && pOperand1->cType != 'N' && pOperand1->cType != ' ' )
 	    GenWarning( WARN_NUMERIC_TYPE, sType1, NULL );
@@ -3986,7 +3986,7 @@ void GenPCode1( BYTE byte )
 	    sType2[1] = 0;
 	 }
 	 else
-            debug_msg( "\n***_PLUS / _MINUS Compile time stack overflow\n", NULL );
+            debug_msg( "\n***HB_P_PLUS / HB_P_MINUS Compile time stack overflow\n", NULL );
 
 	 if( pOperand1 )
 	 {
@@ -3994,7 +3994,7 @@ void GenPCode1( BYTE byte )
 	    sType1[1] = 0;
 	 }
 	 else
-            debug_msg( "\n***_PLUS / _MINUS2 Compile time stack overflow\n", NULL );
+            debug_msg( "\n***HB_P_PLUS / HB_P_MINUS2 Compile time stack overflow\n", NULL );
 
          if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
 	    GenWarning( WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
@@ -4030,7 +4030,7 @@ void GenPCode1( BYTE byte )
 	    sType2[1] = 0;
 	 }
 	 else
-            debug_msg( "\n***_EQUAL pCode: %i Compile time stack overflow\n", byte );
+            debug_msg( "\n***HB_P_EQUAL pCode: %i Compile time stack overflow\n", byte );
 
 	 if( pOperand1 )
 	 {
@@ -4038,7 +4038,7 @@ void GenPCode1( BYTE byte )
 	    sType1[1] = 0;
 	 }
 	 else
-            debug_msg( "\n***_EQUAL2 pCode: %i Compile time stack overflow\n", byte );
+            debug_msg( "\n***HB_P_EQUAL2 pCode: %i Compile time stack overflow\n", byte );
 
          if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
 	    GenWarning( WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
@@ -4068,7 +4068,7 @@ void GenPCode1( BYTE byte )
 	    sType[1] = 0;
 	 }
 	 else
-	    debug_msg( "\n***_NOT Compile time stack overflow\n", NULL );
+	    debug_msg( "\n***HB_P_NOT Compile time stack overflow\n", NULL );
 
          if( pStackValType && pStackValType->cType == ' ' )
 	    GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
