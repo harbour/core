@@ -1,3 +1,7 @@
+19990531-10:15 CET Felipe G. Coury (upload Eddie Runia)
+   * tests/working/testhtml.prg
+     beautiful !!
+
 19990530-23:05 CET Eddie Runia
    * source/rtl/objfunc.prg
      since aEval has been clean for a long time, it was time to use it !
