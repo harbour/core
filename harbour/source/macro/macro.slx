@@ -51,17 +51,14 @@
 
 /* code that fills input buffer
  */
-#define YY_INPUT( buf, result, max_size ) result = 0;
+#undef YY_INPUT
+   #define YY_INPUT( buf, result, max_size ) result = 0;
 
 #undef STREAM_EXCEPTION
    #define STREAM_EXCEPTION( sPair, cChar ) \
            hb_macroError( EG_SYNTAX, sPair ); \
            aiReturn[ iReturn++ ] = '\n'; \
            aiReturn[ iReturn++ ] = LITERAL;
-
-static int iTexts = 0;
-static char * aTexts[128];
-static char* sIdOnHold;
 
 long hb_lex_Hex2L( char* sHex );
 
@@ -119,7 +116,8 @@ SELF_CONTAINED_WORDS_ARE {
                          };
 
 /* Key Words. */
-LANGUAGE_KEY_WORDS_ARE { ""
+LANGUAGE_KEY_WORDS_ARE {
+                         LEX_WORD( ""       ) AS_TOKEN( 0         )
                        };
 
 /* Intermediate Words when ambigious. */
@@ -132,8 +130,8 @@ LANGUAGE_KEY_WORDS_ARE { ""
 /* Words. */
 LANGUAGE_WORDS_ARE {
                      LEX_WORD( "IF"        ) AS_TOKEN( _IF_        ),
-                     LEX_WORD( "NIL"       ) AS_TOKEN( NIL         ),
                      LEX_WORD( "IIF"       ) AS_TOKEN( IIF         ),
+                     LEX_WORD( "NIL"       ) AS_TOKEN( NIL         ),
                      LEX_WORD( "SELF"      ) AS_TOKEN( _SELF_      ),
                      LEX_WORD( "QSELF"     ) AS_TOKEN( QSELF       ),
                      LEX_WORD( "FIELD"     ) AS_TOKEN( _FIELD_     ),
@@ -432,8 +430,6 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
    /* Resetting (prepairing). */
    sIdentifier = (char*) hb_xgrab( iWordLen + 1 );
    sIdentifier[0] = '\0';
-
-   DEBUG_INFO( printf( "Prepared Text: %i Pointer: %i\n", iTexts, sIdentifier ) );
 
    switch ( x )
    {

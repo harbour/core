@@ -23,7 +23,7 @@ DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
 DECLARE cOtherFunc( ) AS STRING
 
-DECLARE cOtherFunc( @cVar as string, optional nVar as numeric, optional other as usual ) AS STRING
+DECLARE cOtherFunc( @cVar as string, optional nVar as numeric, optional other /*as variant*/ ) AS STRING
 
 DECLARE Seconds() AS NUMERIC
 
@@ -32,7 +32,7 @@ DECLARE Int( n AS NUMERIC ) AS NUMERIC
 DECLARE TEST() AS NUMERIC
 
 DECLARE MyClass                              ;
-        nMyFunc( nVal AS NUMERIC) As Num
+        nMyFunc( nVal AS NUMERIC) AS NUMERIC
 
 DECLARE MyClass                              ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;

@@ -1,3 +1,12 @@
+2000-07-31 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/simplex.c
+   * source/macro/macro.slx
+     ! Corrected compiler warnings
+
+   * tests/testwarn.prg
+   * utils/hbdoc/ft_funcs.prg
+     * Commented AS USUAL until votes results tabulated
+
 2000-07-31 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/gtsln/gtsln.c

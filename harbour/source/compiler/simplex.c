@@ -63,7 +63,6 @@
 
 /* Pairs. */
 static char sPair[ 2048 ];
-static int  iPairLen;
 static char cTerm;
 static BOOL bExclusive;
 static char * sExclude;
