@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-20 21:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    ! Few fixes related to the latest hb_parc() changes
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed in indexing
+
 2002-10-19 16:50 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * include/hbdefs.h
      * Added definition for UINT

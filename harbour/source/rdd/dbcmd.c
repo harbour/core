@@ -1955,14 +1955,14 @@ HB_FUNC( DBUSEAREA )
       szDriver = s_szDefDriver;
 
    szFileName = hb_parc( 3 );
-   if( strlen( szFileName ) == 0 )
+   if( szFileName == (char*)0 || strlen( szFileName ) == 0 )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
       return;
    }
 
    pFileName = hb_fsFNameSplit( szFileName );
-   strncpy( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+   strncpy( szAlias, (ISCHAR(4))? hb_parc( 4 ):"", HARBOUR_MAX_RDD_ALIAS_LENGTH );
    if( strlen( szAlias ) == 0 )
       strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
    uiLen = strlen( szAlias );
@@ -2399,8 +2399,8 @@ HB_FUNC( ORDCREATE )
       dbOrderInfo.abBagName = ( BYTE * ) hb_parc( 1 );
       dbOrderInfo.atomBagName = ( BYTE * ) hb_parc( 2 );
       dbOrderInfo.abExpr = hb_param( 3, HB_IT_STRING );
-      if( ( ( strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
-            ( strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||
+      if( ( ( dbOrderInfo.abBagName == (char*)0 || strlen( ( char * ) dbOrderInfo.abBagName ) == 0 ) &&
+            ( dbOrderInfo.atomBagName == (char*)0 || strlen( ( char * ) dbOrderInfo.atomBagName ) == 0 ) ) ||
           !dbOrderInfo.abExpr )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDCREATE" );
@@ -3032,7 +3032,7 @@ HB_FUNC( DBSETRELATION )
       else
       {
          szAlias = hb_parc( 1 );
-         if( ( uiChildArea = hb_rddSelect( szAlias ) ) == 0 )
+         if( szAlias == (char*)0 || ( uiChildArea = hb_rddSelect( szAlias ) ) == 0 )
          {
             hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
             return;

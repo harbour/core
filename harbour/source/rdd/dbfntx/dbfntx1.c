@@ -2203,7 +2203,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
    LPSORTITEM pKey = pSortInfo->pKeyFirst;
    char* buffer;
    BOOL lSave = FALSE;
-   ULONG* lpArray = hb_ntxKeysInPage( pSortInfo->ulKeyCount, pTag->MaxKeys );
+   ULONG* lpArray = hb_ntxKeysInPage( pSortInfo->ulKeyCount, pTag->MaxKeys-1 );
 
    maxKeys = (USHORT)lpArray[1];
    ulFullNodes = lpArray[lpArray[0]+1];
@@ -3450,7 +3450,6 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    uiType = hb_itemType( pResult );
    uiLen = uiDec = 0;
-   bType = '\0';
    switch( uiType )
    {
       case HB_IT_INTEGER:
