@@ -1,3 +1,10 @@
+19991001-00:25 EDT Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/rtl/dircmd.prg
+    + source/rtl/fieldbl.prg
+    + source/rtl/setfunc.prg
+    + source/rtl/text.prg
+
 19991001-05:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   + source/rtl/dircmd.prg

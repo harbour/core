@@ -79,12 +79,14 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\descend.obj \
     $(OBJ_DIR)\devoutp.obj \
     $(OBJ_DIR)\dir.obj \
+    $(OBJ_DIR)\dircmd.obj \
     $(OBJ_DIR)\do.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
+    $(OBJ_DIR)\fieldbl.obj \
     $(OBJ_DIR)\filesys.obj \
     $(OBJ_DIR)\fm.obj \
     $(OBJ_DIR)\gtapi.obj \
@@ -106,12 +108,14 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\readvar.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\setcolor.obj \
+    $(OBJ_DIR)\setfunc.obj \
     $(OBJ_DIR)\setkey.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\tbcolumn.obj \
     $(OBJ_DIR)\tbrowse.obj \
     $(OBJ_DIR)\tclass.obj \
     $(OBJ_DIR)\terror.obj \
+    $(OBJ_DIR)\text.obj \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\tone.obj \
@@ -401,6 +405,12 @@ $(OBJ_DIR)\devoutp.obj : $(RTL_DIR)\devoutp.c
 $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\dircmd.c : $(RTL_DIR)\dircmd.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\dircmd.obj : $(RTL_DIR)\dircmd.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\do.obj : $(RTL_DIR)\do.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -417,6 +427,12 @@ $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\fieldbl.c : $(RTL_DIR)\fieldbl.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\fieldbl.obj : $(RTL_DIR)\fieldbl.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
@@ -494,6 +510,12 @@ $(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
 $(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RTL_DIR)\setfunc.c : $(RTL_DIR)\setfunc.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\setfunc.obj : $(RTL_DIR)\setfunc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(RTL_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
@@ -525,6 +547,12 @@ $(RTL_DIR)\terror.c : $(RTL_DIR)\terror.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\terror.obj : $(RTL_DIR)\terror.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\text.c : $(RTL_DIR)\text.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\text.obj : $(RTL_DIR)\text.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tget.c : $(RTL_DIR)\tget.prg
