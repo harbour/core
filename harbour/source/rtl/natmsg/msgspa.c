@@ -2,9 +2,6 @@
  * $Id$
  */
 
-#include <extend.h>
-#include <ctype.h>
-
 char *hb_monthsname[ 12 ] = {
    "Enero", "Febrero", "Marzo",
    "Abril", "Mayo", "Junio", "Julio",

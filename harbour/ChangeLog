@@ -1,5 +1,11 @@
+19990613 23:23 CET Eddie Runia
+  * source/rtl/natmsg/msggal.c
+    forgot this one
+  * tests/working/cmphello.prg
+    Hm, I little bit quick this evening forgot the != 0 part :-)
+
 19990613 23:15 CET Eddie Runia
-  * source/rtl/natmsg/msg???.c
+  + source/rtl/natmsg/msg???.c
     more languages added.
   * source/rtl/natxxx.c
     id.
