@@ -34,21 +34,22 @@ PRG_HEADERS=\
         achoice.ch   \
         assert.ch    \
         box.ch       \
-        classes.ch   \
         color.ch     \
         common.ch    \
         dbedit.ch    \
         dbstruct.ch  \
         directry.ch  \
         error.ch     \
-        external.ch  \
         fileio.ch    \
         getexit.ch   \
         hboo.ch      \
+        hbclass.ch   \
+        hbextern.ch  \
+        hbmemvar.ch  \
         inkey.ch     \
         memoedit.ch  \
-        memvars.ch   \
         rddsys.ch    \
+        reserved.ch  \
         set.ch       \
         setcurs.ch   \
         simpleio.ch  \
