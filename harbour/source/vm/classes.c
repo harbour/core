@@ -203,7 +203,7 @@ static PHB_DYNS s_msgClsParent = NULL;
 static PHB_ITEM hb_clsInst( USHORT uiClass );
 static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
-static BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName );
+       BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
 static void     hb_clsRelease( PCLASS );
        void     hb_clsReleaseAll( void );

@@ -440,6 +440,7 @@ extern double   hb_numRound( double dResult, int iDec ); /* round a number to a 
 
 /* class management */
 extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
+extern BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 
 /* object management */
 extern char *   hb_objGetClsName( PHB_ITEM pObject ); /* retrieves an object class name */
@@ -618,4 +619,3 @@ extern char * hb_getenv( const char * name );
 #endif
 
 #endif /* HB_APIEXT_H_ */
-
