@@ -234,7 +234,7 @@ static void close_text( FHANDLE handle )
    if( handle != FS_ERROR )
    {
       #if ! defined(OS_UNIX_COMPATIBLE)
-         hb_fsWrite( handle, "\x1A", 1 );
+         hb_fsWrite( handle, (BYTE *)"\x1A", 1 );
       #endif
       hb_fsClose( handle );
    }
@@ -263,8 +263,8 @@ static FHANDLE open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set
 
    /* QUESTION: What sharing mode does Clipper use ? [vszel] */
 
-   while( ( handle = ( bMode ? hb_fsOpen( path, FO_WRITE | FO_DENYWRITE ) :
-                               hb_fsCreate( path, FC_NORMAL ) ) ) == FS_ERROR )
+   while( ( handle = ( bMode ? hb_fsOpen( (BYTE *)path, FO_WRITE | FO_DENYWRITE ) :
+                               hb_fsCreate( (BYTE *)path, FC_NORMAL ) ) ) == FS_ERROR )
    {
       WORD wResult;
 

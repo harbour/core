@@ -1,4 +1,9 @@
-19990902--01:44 GMT+1 Victor Szel <info@szelvesz.hu>
+19990901-21:24 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/filesys.c
+     hb_fsReadLarge() -> drop out on eof
+     hb_fsWriteLarge() -> drop out on disk full
+
+19990902-01:44 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
     include/filesys.h
     - For speed reasons the hb_fsRead/Write() functions were set back to use

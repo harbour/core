@@ -444,13 +444,14 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    {
       USHORT uiRead = read( hFileHandle, pBuff, ( USHORT ) ( ulCount - ulReadTotal ) );
 
-      if( uiRead == ( USHORT )-1 )
+      /* -1 for bad hFileHandle or file is WriteOnly
+          0 for EOF
+       */
+      if( uiRead == ( USHORT )-1  || uiRead == 0 )
          break;
 
       ulReadTotal += ( ULONG ) uiRead;
 
-      if( uiRead < ( USHORT ) ( ulCount - ulReadTotal ) )
-         break;
    }
    s_uiErrorLast = errno;
 
@@ -474,13 +475,14 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    {
       USHORT uiWritten = write( hFileHandle, pBuff, ( USHORT ) ( ulCount - ulWrittenTotal ) );
 
-      if( uiWritten == ( USHORT )-1 )
+      /* -1 on bad hFileHandle
+          0 on disk full
+       */
+      if( uiWritten == ( USHORT )-1 || uiWritten == 0 )
          break;
 
       ulWrittenTotal += ( ULONG ) uiWritten;
 
-      if( uiWritten < ( USHORT ) ( ulCount - ulWrittenTotal ) )
-         break;
    }
    s_uiErrorLast = errno;
 
