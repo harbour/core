@@ -39,7 +39,7 @@ typedef struct
 
 extern HB_BORINITSYMBOL hb_BorFirstSymbol, hb_BorLastSymbol;
 
-static void hb_vmProcessBorlandInitSegment( void )
+void hb_vmProcessBorlandInitSegment( void )
 {
    HB_PBORINITSYMBOL pFirst = &hb_BorFirstSymbol;
 
