@@ -91,6 +91,7 @@ extern "C" {
 #define NTX_MAX_KEY          256      /* Max len of key */
 #define NTXBLOCKSIZE         1024     /* Size of block in NTX file */
 #define NTX_LOCK_OFFSET      1000000000
+#define NTX_PAGES_PER_TAG    32
 
 /* forward declarations
  */
@@ -121,14 +122,10 @@ typedef struct HB_PAGEINFO_STRU
 {
    LONG      Page;
    BOOL      Changed;
-   BOOL      NewRoot;
    BOOL      lBusy;
    USHORT    uiKeys;
    SHORT     CurKey;
    char*     buffer;
-   struct   HB_PAGEINFO_STRU * pPrev;
-   struct   HB_PAGEINFO_STRU * pNext;
-   struct   _TAGINFO * TagParent;
 } HB_PAGEINFO;
 
 typedef HB_PAGEINFO * LPPAGEINFO;
@@ -149,11 +146,12 @@ typedef struct _TAGINFO
    BOOL       TagChanged;
    BOOL       TagBOF;
    BOOL       TagEOF;
+   BOOL       NewRoot;
+   BOOL       Memory;
    BYTE       KeyType;
    BYTE       OptFlags;
    LONG       TagBlock;
    LONG       RootBlock;
-   USHORT     uiPages;
    USHORT     KeyLength;
    USHORT     KeyDec;
    USHORT     MaxKeys;
@@ -161,9 +159,13 @@ typedef struct _TAGINFO
    USHORT     stackDepth;
    USHORT     stackLevel;
    ULONG      keyCount;
+   ULONG      ulPagesDepth;
+   ULONG      ulPages;
+   ULONG      ulPagesStart;
    LPKEYINFO  CurKeyInfo;
-   LPPAGEINFO RootPage;
+   LPPAGEINFO pages;
    BOOL       InIndex;
+   char*      buffer;
    struct    _NTXINDEX * Owner;
    struct    _TAGINFO * pNext;
 } TAGINFO;
@@ -173,9 +175,7 @@ typedef TAGINFO * LPTAGINFO;
 typedef struct _NTXINDEX
 {
    char *    IndexName;
-   BOOL      Exact;
    BOOL      Locked;
-   BOOL      Corrupted;
    LONG      TagRoot;
    LONG      NextAvail;
    struct   _NTXAREA * Owner;
@@ -392,7 +392,7 @@ static ERRCODE ntxOrderListClear( NTXAREAP pArea );
 #define ntxOrderListDelete       NULL
 static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static ERRCODE ntxOrderListRebuild( NTXAREAP pArea );
-#define ntxOrderCondition        NULL
+static ERRCODE ntxOrderCondition( NTXAREAP area, LPDBORDERCONDINFO pOrdCondInfo );
 static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
          /* Create new Index */
 #define ntxOrderDestroy          NULL

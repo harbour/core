@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-05-06 15:48 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed in ntxOrderListRebuild()
+
+2002-05-06 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/pptable.c
+    * Added new clause 'MEMORY' to INDEX command
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
+    * New feature implemented for dbfntx - index creating in memory
+      If you specify MEMORY clause in INDEX ON ... command ( additional, 17-th
+      parameter is added to ordcondset() ), index will not be written to disk,
       but will be kept in memory, what significantly increases the performance.
       This may be especially helpful in case of creating temporary indexes for
       reporting, etc.
