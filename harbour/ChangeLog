@@ -1,3 +1,10 @@
+19990715-23:14 CET Patrick Mast <harbour@PatrickMast.com>
+   All files for the Preprocessor lib from Felipe Coury <fcoury@flexsys-ci.com>
+   + source/hbpp/preproc.c
+   + doc/hbpplib.txt
+   + tests/working/testpre.prg
+   * changed tests/working/bld32exe.bat (to include hbpp.lib)
+
 19990715-16:30 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l

@@ -1,0 +1,23 @@
+Harbour run-time preprocessing library.
+Felipe Coury <fcoury@flexsys-ci.com>
+
+
+How to create HBPP.LIB
+
+This file should contain preproc.c, hbpplib.b32, bldhbpp.bat,
+testpre.prg, bld32exe.bat and hbpplib.txt (this file<g>).
+
+In order to create and test this library, you should put:
+
+- preproc.c in \HARBOUR\SOURCE\HBPP directory;
+- hbpplib.b32 and bldhbpp.bat in \HARBOUR directory;
+- testpre.prg and bld32exe.bat in \HARBOUR\TESTS\WORKING directory;
+- hbpplib.txt in \HARBOUR\DOC directory;
+
+Then, you need to run bldhbpp.bat to create HBPP.LIB on
+\HARBOUR\LIBS\B32 directory. Note that by now the only makefile is
+for compiling with Borland C compilers. I kindly ask who has other
+compilers/environments to write the missing makefiles please!
+
+To test testpre.prg you just need to go TESTS\WORKING dir and make
+it using HB32 TESTPRE.
