@@ -88,15 +88,39 @@ HB_FUNC( SX_COMMIT )
 }
 
 
+/* -----------------29/12/2001 19:59-----------------
+ * sx_CreateExec()
+ *  => NILL.
+ * --------------------------------------------------*/
+HB_FUNC( SX_CREATEEXEC )
+{
+    sx_CreateExec( );
+}
+
+
 /* -----------------29/12/2001 19:18-----------------
  * sx_CreateField()
  * --------------------------------------------------*/
 HB_FUNC( SX_CREATEFIELD )
 {
-   sx_CreateField( hb_parc( 1 ),        /* Field name */
-                   hb_parc( 2 ),        /* Field type */
-                   hb_parni( 3 ),       /* Field lenght */
-                   hb_parni( 4 ) );     /* Field decimals */
+   sx_CreateField( hb_parc( 1 ),           /* Field name */
+                   hb_parc( 2 ),           /* Field type */
+                   hb_parni( 3 ),          /* Field lenght */
+                   hb_parni( 4 ) );        /* Field decimals */
+}
+
+
+/* -----------------29/12/2001 19:59-----------------
+ * sx_CreateNew()
+ *  => The work area number assigned to the database.
+ * --------------------------------------------------*/
+HB_FUNC( SX_CREATENEW )
+{
+    hb_retni(
+     sx_CreateNew( hb_parc( 1 ),           /* Field name */
+                   hb_parc( 2 ),           /* Alias */
+                   hb_parni( 3 ),          /* RDE Type */
+                   hb_parni( 4 ) ) );      /* The maximum number of fields to be added to the file structure */
 }
 
 
@@ -114,8 +138,25 @@ HB_FUNC( SX_EOF )
  * --------------------------------------------------*/
 HB_FUNC( SX_GETSTRING )
 {
-   char *szString=(char*)sx_GetString( hb_parc( 1 ) );  /* Field name  */
-   hb_retc(szString);
+   hb_retc( ( char * )sx_GetString( hb_parc( 1 ) ) );  /* Field name  */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_Go()
+ * --------------------------------------------------*/
+HB_FUNC( SX_GO )
+{
+    sx_Go( hb_parni( 1 ) );                /* The record number to go */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_GoBottom()
+ * --------------------------------------------------*/
+HB_FUNC( SX_GOBOTTOM )
+{
+    sx_GoBottom( ) ;
 }
 
 
@@ -134,12 +175,22 @@ HB_FUNC( SX_GOTOP )
 HB_FUNC( SX_INDEXTAG )
 {
     hb_retni(
-     sx_IndexTag( hb_parc( 1 ),         /* Field name */
-                  hb_parc( 2 ),         /* Tag name */
-                  hb_parc( 3 ),         /* Index expression as a string */
-                  hb_parni( 4 ),        /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
-                  hb_parl( 5 ),         /* True for a descend index */
-                  hb_parc( 6) ) );      /* Condition */
+     sx_IndexTag( hb_parc( 1 ),            /* Field name */
+                  hb_parc( 2 ),            /* Tag name */
+                  hb_parc( 3 ),            /* Index expression as a string */
+                  hb_parni( 4 ),           /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
+                  hb_parl( 5 ),            /* True for a descend index */
+                  hb_parc( 6) ) );         /* Condition */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_RecCOunt()
+ * --------------------------------------------------*/
+HB_FUNC( SX_RECCOUNT )
+{
+    hb_retni(
+     sx_RecCount( ) );
 }
 
 
@@ -148,7 +199,17 @@ HB_FUNC( SX_INDEXTAG )
  * --------------------------------------------------*/
 HB_FUNC( SX_RECNO )
 {
-    hb_retni( sx_RecNo( ) );
+    hb_retni(
+     sx_RecNo( ) );
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_Reindex()
+ * --------------------------------------------------*/
+HB_FUNC( SX_REINDEX )
+{
+    sx_Reindex( );
 }
 
 
@@ -157,9 +218,47 @@ HB_FUNC( SX_RECNO )
  * --------------------------------------------------*/
 HB_FUNC( SX_REPLACE )
 {
-    sx_Replace( hb_parc( 1 ),           /* Field name */
-                hb_parni( 2 ),          /* Data type */
-                hb_parc( 3) );          /* Data */
+    sx_Replace( hb_parc( 1 ),              /* Field name */
+                hb_parni( 2 ),             /* Data type */
+                hb_parc( 3) );             /* Data */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_RLock()
+ * --------------------------------------------------*/
+HB_FUNC( SX_RLOCK )
+{
+    sx_Rlock( hb_parni( 1 ) );             /* The physical record number of the record to be locked. */
+}
+
+
+/* -----------------29/12/2001 20:13-----------------
+ * sx_Seek()
+ * --------------------------------------------------*/
+HB_FUNC( SX_SEEK )
+{
+    hb_retl(
+     sx_Seek( hb_parc( 1 ) ) );            /* The value to search for as a string */
+}
+
+
+/* -----------------29/12/2001 19:59-----------------
+ * sx_SetMemoBlockSize()
+ * --------------------------------------------------*/
+HB_FUNC( SX_SETMEMOBLOCKSIZE )
+{
+    sx_SetMemoBlockSize( hb_parni( 1 ) );  /* The new default block size. */
+                                           /* The size must be a value from 1 through 1024. */
+}
+
+
+/* -----------------29/12/2001 19:59-----------------
+ * sx_SetSoftSeek()
+ * --------------------------------------------------*/
+HB_FUNC( SX_SETSOFTSEEK )
+{
+    sx_SetSoftSeek( hb_parl( 1 ) );        /* True to set softseek ON */
 }
 
 
@@ -168,9 +267,8 @@ HB_FUNC( SX_REPLACE )
  * --------------------------------------------------*/
 HB_FUNC( SX_SKIP )
 {
-    sx_Skip( hb_parni( 1 ) );           /* Number of records to skip */
+    sx_Skip( hb_parni( 1 ) );              /* Number of records to skip */
 }
-
 
 
 /* -----------------29/12/2001 19:17-----------------
@@ -178,10 +276,11 @@ HB_FUNC( SX_SKIP )
  * --------------------------------------------------*/
 HB_FUNC( SX_USE )
 {
- hb_retni( sx_Use( hb_parc( 1 ),        /* Filename */
-                   hb_parc( 2 ),        /* Alias */
-                   hb_parni( 3 ),       /* OpenMode */
-                   hb_parni( 4) ));     /* RDE Type */
+     hb_retni(
+      sx_Use( hb_parc( 1 ),                /* Filename */
+              hb_parc( 2 ),                /* Alias */
+              hb_parni( 3 ),               /* OpenMode */
+              hb_parni( 4) ));             /* RDE Type */
 }
 
 
@@ -190,9 +289,7 @@ HB_FUNC( SX_USE )
  * --------------------------------------------------*/
 HB_FUNC( SX_VERSION )
 {
-   char *szVersion=(char*)sx_Version();
-   hb_retc(szVersion);
-   /*hb_xfree(szVersion);*/
+   hb_retc( ( char * ) sx_Version() );
 }
 
 
@@ -203,3 +300,34 @@ HB_FUNC( SX_ZAP )
 {
    sx_Zap( );
 }
+
+
+
+/*
+2001-12-28 20:39 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo
+     + Added function sx_GoBottom()
+     + Added function sx_Go()
+     + Added function sx_Seek()
+     + Added function sx_SetSoftSeek()
+     + Added function sx_RLock()
+     + Added function sx_Reindex()
+     + Added function sx_RecCount()
+     + Added function sx_SetMemoBlockSize()
+     + Added function sx_CreateNew()
+     + Added function sx_CreateField()
+     + Added function sx_CreateExec()
+
+
+
+ *
+ *
+     + Added function sx_IndexTag()
+     + Added function sx_RecNo()
+     + Added function sx_Replace()
+     + Added function sx_Skip()
+     + Added function sx_Use()
+     + Added function sx_Zap()
+   * contrib/apollo/test
+     * Added added functions in the test application.
+*/

@@ -77,12 +77,44 @@
 Function Main()
 LOCAL nAlias,f
 
+   sx_SetMemoBlockSize(32)
+
    ? "Apollo version " + sx_Version()
+
+   ? ""
+   ? "Cleaning up files.."
+   FErase( "TEST.DBF" )
+   FErase( "TEST.SMT" )
+   FErase( "TEST.NSX" )
+   ? "OK!"
+
+   ? ""
+   ? "Creating a new database file.."
+   nAlias:=sx_CreateNew("TEST.DBF",;  // full path filename
+                        "test1",;     // Alias
+                        SDENSX,;      // rdeType
+                        6)            // Maximum fields added by sx_CreateField
+   IF nAlias=0
+      ? "Error creating database"
+      RETU NIL
+   ENDIF
+
+   sx_CreateField("FIRST"   ,"C",40,0)
+   sx_CreateField("LAST"    ,"C",40,0)
+   sx_CreateField("NOTES"   ,"M",10,0)
+   sx_CreateField("AGE"     ,"N", 3,0)
+   sx_CreateField("MARRIED" ,"L", 1,0)
+   sx_CreateField("BIRTDATE","D", 8,0)
+
+   sx_CreateExec()
+   sx_Close()
+   ?? "OK!"
 
    nAlias:=sx_Use("TEST.DBF","test2",EXCLUSIVE,SDENSX)
    sx_Zap()
    IF Valtype(nAlias)="N" .AND. nAlias # 0
       ? "OK opening 'TEST.DBF'"
+
 
       ? "Adding 1000 records..."
       FOR f=1 to 1000
@@ -93,9 +125,11 @@ LOCAL nAlias,f
          sx_Commit()
       NEXT
 
+
       ? "Creating Index..."
       sx_IndexTag(,"LAST","LAST+FIRST",0)
       ? "Created a HiPer-Six index. See 'TEST.NSX'"
+
 
       sx_GoTop()
       WHILE !sx_Eof()
@@ -103,6 +137,29 @@ LOCAL nAlias,f
          @ 18,2 SAY sx_GetString( "LAST" )
          sx_Skip(1)
       ENDDO
+
+
+      ? ""
+      sx_GoTop()
+      sx_SetSoftSeek( .f. ) // SetSoftSeek OFF
+      IF sx_Seek( "928 Mast" )
+         ? "String '928 Mast' found in record number "+ LTrim( Str( sx_RecNo() ) )
+      ELSE
+         ? "String '928 Mast' NOT Found..."
+      ENDIF
+
+
+      ? ""
+      ? "There are "+LTrim( Str( sx_RecCount()  ) )+" records in the database"
+
+      ?
+      ? "Reindexing now..."
+      sx_ReIndex()
+      ?? "OK!"
+
+
+
+
       sx_Close()
 
    ELSE

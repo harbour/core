@@ -7,6 +7,23 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/vm/dynlibhb.c
+     - remove function hb_StartApp() and related _hInstance
+   * source/vm/hvm.c
+     - remove reference to hb_StartApp()
+   * source/compiler/hbusage.c
+     + add documentation of -gc3 switch
+
+2001-12-30 08:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/compiler/cmdcheck.c
+     + switch -gc3 => produce modiule with NO_START_UP
+
+   * source/vm/genc.c
+     + switch -gc3 now produce NO_START_UP codes.
+
+   * source/vm/hvm.c
+     - commented the use of hb_StartApp()
+
    * include/hbcomp.h
      + definition of HB_COMPGENC_NO_STARTUP
 
