@@ -555,13 +555,13 @@ int ParseExpression( char* sLine, char* sOutLine )
   memcpy ( sLine, sOutLine, ptro - sOutLine + 1);
 
   /* Look for definitions from #translate    */
-  ptri = sLine; ptro = sOutLine;
-  while ( ( lenToken = NextName(&ptri, sToken, &ptro) ) > 0 )
-   if ( (ndef=TraSearch(sToken,0)) >= 0 )
-    WorkTranslate( sToken, &ptri, ptro, ndef );
+  ptri = sLine;
+  while ( ( lenToken = NextName(&ptri, sToken, NULL) ) > 0 )
+    if ( (ndef=TraSearch(sToken,0)) >= 0 )
+      WorkTranslate( sToken, &ptri, ptro, ndef );
 
   /* Look for definitions from #command      */
-  if ( kolpass < 2 )
+  if ( kolpass < 3 )
   {
    ptri = sLine; isdvig = 0;
    do
@@ -711,12 +711,12 @@ int WorkCommand ( char* sToken, char* ptri, char* ptro, int ndef )
   groupchar = '@';
   rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, TRUE );
 
-  if ( !rez ) ndef = ComSearch(sToken,ndef);
+  if ( rez < 0 ) ndef = ComSearch(sToken,ndef);
  }
- while ( !rez && ndef >= 0 );
+ while ( rez < 0 && ndef >= 0 );
 
  *(ptro+lenres) = '\0';
- if ( rez ) return lenres;
+ if ( rez >= 0 ) return lenres;
  return -1;
 }
 
@@ -724,8 +724,11 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
 {
  int rez;
  int lenres;
- char *ptrmp;
+ int lenToken;
+ char *ptrmp, *ptr;
 
+ lenToken = strolen( sToken );
+ ptr = *ptri - lenToken;
  do
  {
   lenres = strocpy ( ptro, aTranslates[ndef].value );
@@ -734,14 +737,14 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
   groupchar = '@';
   rez = CommandStuff ( ptrmp, *ptri, ptro, &lenres, FALSE );
 
-  if ( !rez ) ndef = TraSearch(sToken,ndef-1);
+  if ( rez < 0 ) ndef = TraSearch(sToken,ndef-1);
  }
- while ( !rez && ndef >= 0 );
+ while ( rez < 0 && ndef >= 0 );
 
  *(ptro+lenres) = '\0';
- if ( rez )
+ if ( rez >= 0 )
  {
-  Stuff( ptro, *ptri, lenres, rez, strolen(*ptri) );
+  Stuff( ptro, ptr, lenres, rez + lenToken, strolen(ptr) );
   return lenres;
  }
  return 0;
@@ -754,7 +757,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
  char *ptri = inputLine, *ptr;
 
   SKIPTABSPACES( ptri );
-  if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return 0; }
+  if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return -1; }
   else
    while ( *ptri != '\0' && !endTranslation )
    {
@@ -778,7 +781,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
         {
           SkipOptional( &ptrmp, ptro, lenres, &nbr);
         }
-        else return 0;
+        else return -1;
        }
        break;
       case '\1':  /*  Match marker */
@@ -788,11 +791,11 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          {
            SkipOptional( &ptrmp, ptro, lenres, &nbr);
          }
-         else return 0;
+         else return -1;
        }
        break;
       case '\0':
-       if ( com_or_tra ) return 0; else endTranslation = TRUE;
+       if ( com_or_tra ) return -1; else endTranslation = TRUE;
       default:    /*   Key word    */
        ptr = ptrmp;
        if ( *ptri == ',' || strincmp(ptri, &ptrmp ) )
@@ -801,7 +804,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
         {
            SkipOptional( &ptrmp, ptro, lenres, &nbr);
         }
-        else return 0;
+        else return -1;
        }
        else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
      }
@@ -822,7 +825,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
        break;
       case ']': ptrmp++; break;
       default:
-       return 0;
+       return -1;
      }
    }
    while ( *ptrmp != '\0' );
@@ -981,7 +984,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
 int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
 {
  int lens = 0;
- char *sZnaki = "+-=><*/$.&:";
+ char *sZnaki = "+-=><*/$.&:#";
  int State;
  int StBr1 = 0, StBr2 = 0, StBr3 = 0;
  int rez = 0;
@@ -1158,7 +1161,8 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
            lennew = ptr2-ptr-1;
 
            memcpy ( expnew, ptr+1, lennew );
-           *(expnew + lennew++) = ' ';
+           if ( *expnew != ' ' && *(expnew + lennew-1) != ' ' )
+             *(expnew + lennew++) = ' ';
            *(expnew + lennew) = '\0';
            while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
              lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );

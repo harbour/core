@@ -1,3 +1,7 @@
+19990712-10:52 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * fixed some bugs of #translate implementation
+
 19990711-21:30 Eddie Runia <eddie@runia.com>
    * source/rtl/classes.c
      Debug text removed
