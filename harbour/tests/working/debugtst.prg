@@ -116,9 +116,10 @@ function ToChar( xTxt, cSeparator, lDebug )
          endif
 
       case cValTxt=="A"                         // Array
-         cOut       := ""
          if lDebug
             cOut += "{"
+         else
+            cOut := ""
          endif
          nLen := Len( xTxt )
          for n := 1 to nLen                     // For each item : Recurse !
@@ -140,9 +141,7 @@ function ToChar( xTxt, cSeparator, lDebug )
 
       case cValTxt=="O"                         // Object
          if lDebug
-            if lDebug
-                cOut := "Class#"+ToChar( xTxt:ClassH() )+"{"
-            endif
+            cOut := "Class#"+ToChar( xTxt:ClassH() )+"{"
             nLen := Len( xTxt )
             for n := 1 to nLen                     // For each item : Recurse !
                cOut += ToChar( xTxt[n], cSeparator, lDebug )
@@ -150,9 +149,7 @@ function ToChar( xTxt, cSeparator, lDebug )
                   cOut += cSeparator
                endif
             next n
-            if lDebug
-               cOut += ";" + ToChar( aoData( xTxt ), ", " ) + "}"
-            endif
+            cOut += ";" + ToChar( aoData( xTxt ), ", " ) + "}"
          else
             cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
          endif
