@@ -198,6 +198,39 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
 /* determines if first char of string is letter */
 /* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
 /* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ISALPHA()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Checks if leftmost character in a string is an alphabetic character
+ *  $SYNTAX$
+ *      ISALPHA(<cString>) --> lAlpha
+ *  $ARGUMENTS$
+ *      <cString> Any character string
+ *  $RETURNS$
+ *      lAlpha Logical true (.T.) or false (.F.).
+ *  $DESCRIPTION$
+ *      This function return a logical true (.T.) if the first character
+ *      in <cString> is an alphabetic character.If not, the function will
+ *      return a logical false (.F.).
+ *  $EXAMPLES$
+ *      QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) 
+ *      QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) 
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compilant
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      ISDIGIT(),ISLOWER(),ISUPPER(),LOWER(),UPPER()
+ *  $END$
+ */
+
 HARBOUR HB_ISALPHA( void )
 {
    hb_retl( isalpha( *hb_parc( 1 ) ) );
@@ -206,6 +239,40 @@ HARBOUR HB_ISALPHA( void )
 /* determines if first char of string is digit */
 /* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
 /* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ISDIGIT()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Checks if leftmost character is a digit character
+ *  $SYNTAX$
+ *      ISDIGIT(<cString>) --> lDigit
+ *  $ARGUMENTS$
+ *      <cString> Any character string
+ *  $RETURNS$
+ *      lDigit Logical true (.T.) or false (.F.).
+ *  $DESCRIPTION$
+ *      This function takes the caracter string <cString> and checks to
+ *      see if the leftmost character is a digit,from 1 to 9.If so, the
+ *      function will return a logical true (.T.);otherwise, it will
+ *      return a logical false (.F.).
+ *  $EXAMPLES$
+ *      QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) 
+ *      QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) 
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compilant
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      ISALPHA(),ISLOWER(),ISUPPER(),LOWER(),UPPER()
+ *  $END$
+ */
+
 HARBOUR HB_ISDIGIT( void )
 {
    hb_retl( isdigit( *hb_parc( 1 ) ) );
@@ -214,6 +281,40 @@ HARBOUR HB_ISDIGIT( void )
 /* determines if first char of string is upper-case */
 /* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
 /* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ISUPPER()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Checks if leftmost character is an uppercased letter.
+ *  $SYNTAX$
+ *      ISUPPER(<cString>) --> lUpper
+ *  $ARGUMENTS$
+ *      <cString> Any character string
+ *  $RETURNS$
+ *      lUpper Logical true (.T.) or false (.F.).
+ *  $DESCRIPTION$
+ *      This function takes the caracter string <cString> and checks to
+ *      see if the leftmost character is a uppercased letter.If so, the
+ *      function will return a logical true (.T.);otherwise, it will
+ *      return a logical false (.F.).
+ *  $EXAMPLES$
+ *      QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) 
+ *      QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) 
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compilant
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      ISALPHA(),ISLOWER(),ISDIGIT(),LOWER(),UPPER()
+ *  $END$
+ */
+
 HARBOUR HB_ISUPPER( void )
 {
    hb_retl( isupper( *hb_parc( 1 ) ) );
@@ -222,6 +323,40 @@ HARBOUR HB_ISUPPER( void )
 /* determines if first char of string is lower-case */
 /* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
 /* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ISLOWER()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Checks if leftmost character is an lowercased letter.
+ *  $SYNTAX$
+ *      ISLOWER(<cString>) --> lLower
+ *  $ARGUMENTS$
+ *      <cString> Any character string
+ *  $RETURNS$
+ *      lLower Logical true (.T.) or false (.F.).
+ *  $DESCRIPTION$
+ *      This function takes the caracter string <cString> and checks to
+ *      see if the leftmost character is a lowercased letter.If so, the
+ *      function will return a logical true (.T.);otherwise, it will
+ *      return a logical false (.F.).
+ *  $EXAMPLES$
+ *      QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) 
+ *      QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) 
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compilant
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      ISALPHA(),ISDIGIT(),ISUPPER(),LOWER(),UPPER()
+ *  $END$
+ */
+
 HARBOUR HB_ISLOWER( void )
 {
    hb_retl( islower( *hb_parc( 1 ) ) );
@@ -246,33 +381,33 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
 /* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
 /*  $DOC$
  *  $FUNCNAME$
- *     LTRIM()
+ *      LTRIM()
  *  $CATEGORY$
- *     Strings   
+ *      Strings   
  *  $ONELINER$
- *     Removes leading spaces from a string 
+ *      Removes leading spaces from a string 
  *  $SYNTAX$
- *     LTRIM(<cString>)   --> <cReturn>
+ *      LTRIM(<cString>)   --> <cReturn>
  *  $ARGUMENTS$
- *     <cString>  Character expression with leading spaces
+ *      <cString>  Character expression with leading spaces
  *  $RETURNS$
- *     <cReturn>  The same character expression with leading spaces removed
+ *      <cReturn>  The same character expression with leading spaces removed
  *  $DESCRIPTION$
- *     This function trims the leading space blanl
+ *      This function trims the leading space blanl
  *  $EXAMPLES$
- *     ? QOUT( LTRIM("HELLO     "))
+ *      ? QOUT( LTRIM("HELLO     "))
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This functions is CA-CLIPPER compatible
+ *      This functions is CA-CLIPPER compatible
  *  $PLATFORMS$
  *
  *  $FILES$
  *
  *  $SEEALSO$
- *     TRIM(),RTRIM(),ALLTRIM()
+ *      TRIM(),RTRIM(),ALLTRIM()
  *  $END$
  */
 
@@ -569,6 +704,39 @@ HARBOUR HB_PADC( void )
 
 /* locates a substring in a string */
 /* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AT()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Locates the position of a substring in a main string.
+ *  $SYNTAX$
+ *      AT(<cSearch>,<cString>) --> nPos
+ *  $ARGUMENTS$
+ *      <cSearch>  Substring to search for
+ *      <cString>  Main string
+ *  $RETURNS$
+ *      AT() return the starting position of the first occurrence of the
+ *      substring in the main string
+ *  $DESCRIPTION$
+ *      This function searches the string <cString> for the characters in
+ *      the first string <cSearch>. If the substring is not contained within
+ *      the second expression,the function will return 0.
+ *  $EXAMPLES$
+ *      QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" )
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compatible.
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      RAT()
+ *  $END$
+ */
+
 HARBOUR HB_AT( void )
 {
    PHB_ITEM pSub = hb_param( 1, IT_STRING );
@@ -594,6 +762,40 @@ HARBOUR HB_AT( void )
 /* locates a substring in a string starting at the end */
 /* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
 /* NOTE: Will not work with a search string > 64 KB on some platforms */
+/*  $DOC$
+ *  $FUNCNAME$
+ *      RAT()
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Searches for a substring from the right side of a string.
+ *  $SYNTAX$
+ *      RAT(<cSearch>,<cString>) --> nPos
+ *  $ARGUMENTS$
+ *      <cSearch>  Substring to search for
+ *      <cString>  Main string
+ *  $RETURNS$
+ *      RAT() return the location of beginnig position.
+ *  $DESCRIPTION$
+ *      This function searches througt <cString> for the first existence
+ *      of <cSearch>.The search operation is performed from the right side
+ *      of <cString> to the left. If the function is unable to find any
+ *      occurence of <cSearch> in <cString>,the value of the function will be 0.
+ *  $EXAMPLES$
+ *      QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcsefgfedcba' ) + "'" )
+ *  $TESTS$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Will not work with a search string > 64 KB on some platforms
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      AT(),SUBSTR(),RIGHT()
+ *  $END$
+ */
+
 HARBOUR HB_RAT( void )
 {
    ULONG ulSubLen = hb_parclen( 1 );
@@ -682,13 +884,13 @@ HARBOUR HB_ASC( void )
 /* returns the left-most n characters in string */
 /*  $DOC$
  *  $FUNCNAME$
- *     LEFT()
+ *      LEFT()
  *  $CATEGORY$
- *     Strings
+ *      Strings
  *  $ONELINER$
- *     Extract the leftmost substring of a character expression
+ *      Extract the leftmost substring of a character expression
  *  $SYNTAX$
- *     LEFT(<cString>,<nPos>) --> <cReturn>
+ *      LEFT(<cString>,<nPos>) --> <cReturn>
  *  $ARGUMENTS$
  *      <cString> Main character to be parsed
  *      <nPos>    Number of bytes to return beggining at the leftmost position
@@ -699,19 +901,19 @@ HARBOUR HB_ASC( void )
  *      It is equivalent to the following programing expression:
  *          SUBSTR(<cString>,1,<nPos>
  *  $EXAMPLES$
- *    ? QOUT(LEFT('HELLO HARBOUR',5)
+ *      ? QOUT(LEFT('HELLO HARBOUR',5))
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This functions is CA CLIPPER compatible
+ *      This functions is CA CLIPPER compatible
  *  $PLATFORMS$
  *
  *  $FILES$
  *
  *  $SEEALSO$
- *     SUBSTR(),RIGHT(),AT(),RAT()
+ *      SUBSTR(),RIGHT(),AT(),RAT()
  *  $END$
  */
 
@@ -746,13 +948,13 @@ HARBOUR HB_LEFT( void )
 /* returns the right-most n characters in string */
 /*  $DOC$
  *  $FUNCNAME$
- *     RIGHT()
+ *      RIGHT()
  *  $CATEGORY$
- *     Strings
+ *      Strings
  *  $ONELINER$
- *     Extract the rightmost substring of a character expression
+ *      Extract the rightmost substring of a character expression
  *  $SYNTAX$
- *     SUBSTR(<cString>,<nPos>) --> <cReturn>
+ *      SUBSTR(<cString>,<nPos>) --> <cReturn>
  *  $ARGUMENTS$
  *      <cString> Character expression to be parsed
  *      <nPos>    Number of bytes to return beggining at the rightmost position
@@ -762,19 +964,19 @@ HARBOUR HB_LEFT( void )
  *      This functions returns the rightmost <nPos> characters of <cString>.
  *
  *  $EXAMPLES$
- *    ? QOUT(RIGHT('HELLO HARBOUR',5)
+ *      ? QOUT(RIGHT('HELLO HARBOUR',5))
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This functions is CA CLIPPER compatible
+ *      This functions is CA CLIPPER compatible
  *  $PLATFORMS$
  *
  *  $FILES$
  *
  *  $SEEALSO$
- *     SUBSTR(),LEFT(),AT(),RAT()
+ *      SUBSTR(),LEFT(),AT(),RAT()
  *  $END$
  */
 
@@ -804,44 +1006,44 @@ HARBOUR HB_RIGHT( void )
 /* returns l characters from n characters into string */
 /*  $DOC$
  *  $FUNCNAME$
- *     SUBSTR()
+ *      SUBSTR()
  *  $CATEGORY$
- *     Strings
+ *      Strings
  *  $ONELINER$
- *     Returns a substring from a main string
+ *      Returns a substring from a main string
  *  $SYNTAX$
- *     SUBSTR(<cString>,<nStart>[,<nLen>)] --> <cReturn>
+ *      SUBSTR(<cString>,<nStart>[,<nLen>)] --> <cReturn>
  *  $ARGUMENTS$
- *     <cString> Character expression to be parsed
- *     <nStart>  Start position
- *     <nLen>    Number of characters to return 
+ *      <cString> Character expression to be parsed
+ *      <nStart>  Start position
+ *      <nLen>    Number of characters to return 
  *  $RETURNS$
- *     <cReturn>  Substring of evaluation
+ *      <cReturn>  Substring of evaluation
  *  $DESCRIPTION$
- *     This functions returns a character string formed from <cString>,
- *     starting at the position of <nStart> and continuing on for a
- *     lenght of <nLen> characters. If <nLen> is not specified, the value
- *     will be all remaining characters from the position of <nStart>.
- *     The value of <nStart> may be negative. If it is, the direction of
- *     operation is reversed from a default of left-to-right to right-to-left
- *     for the number of characters specified in <nStart>.
+ *      This functions returns a character string formed from <cString>,
+ *      starting at the position of <nStart> and continuing on for a
+ *      lenght of <nLen> characters. If <nLen> is not specified, the value
+ *      will be all remaining characters from the position of <nStart>.
+ *      The value of <nStart> may be negative. If it is, the direction of
+ *      operation is reversed from a default of left-to-right to right-to-left
+ *      for the number of characters specified in <nStart>.
  *     
  *
  *  $EXAMPLES$
- *     FUNCTION MAIN()
- *     LOCAL X:=REPLICATE('ABCD',70000)
+ *      FUNCTION MAIN()
+ *      LOCAL X:=REPLICATE('ABCD',70000)
  *
- *     ? QOUT(SUBSTR(X,65519,200)
+ *      ? QOUT(SUBSTR(X,65519,200)
  *
- *     RETURN NIL
+ *      RETURN NIL
  *  $TESTS$
- *     ? QOUT(SUBSTR('HELLO HARBOUR',5)
+ *      ? QOUT(SUBSTR('HELLO HARBOUR',5)
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This functions is CA CLIPPER compatible with the execption that
- *     CA CLIPPER will generate an error if the passed string is >65519 bytes.
- *     Harbour Not.
+ *      This functions is CA CLIPPER compatible with the execption that
+ *      CA CLIPPER will generate an error if the passed string is >65519 bytes and
+ *      Harbour depends of plataform.
  *  $PLATFORMS$
  *
  *  $FILES$
