@@ -1,3 +1,8 @@
+20000415-15:15 DST Paul Tucker <ptucker@sympatico.ca>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     * a number of casts to allow msvc to compile
+     * added missing entries to workarea struct
+
 20000415-20:46 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rdd/dbfcdx/dbfcdx1.c

@@ -257,7 +257,15 @@ HB_INIT_SYMBOLS_BEGIN( dbfcdx1__InitSymbols )
 { "_DBFCDX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFCDX ), NULL },
 { "DBFCDX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFCDX_GETFUNCTABLE ), NULL }
 HB_INIT_SYMBOLS_END( dbfcdx1__InitSymbols )
-#if ! defined(__GNUC__) && ! defined(_MSC_VER)
+#if defined(_MSC_VER)
+   #pragma data_seg( INIT$BEG,"DATA" )
+   #pragma data_seg( INIT$HRB,"DATA" )
+   static HB_$INITSYM hb_vm_auto_dbfcdx1__InitSymbols = dbfcdx1__InitSymbols;
+   #pragma data_seg()
+   #if _MSC_VER >= 1000
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #endif
+#elif ! defined(__GNUC__)
    #pragma startup dbfcdx1__InitSymbols
 #endif
 
@@ -750,12 +758,12 @@ static void hb_cdxTagTagStore( LPTAGINFO pTag )
    pHeader.Reserve4 = 1 + ( pTag->KeyExpr == NULL ? 0 : strlen( pTag->KeyExpr ) );
    pHeader.KeyExpLen = pHeader.Reserve4;
    if( pTag->KeyExpr != NULL )
-      strcpy( pHeader.KeyPool, pTag->KeyExpr );
+      strcpy( ( char * ) pHeader.KeyPool, pTag->KeyExpr );
    uiForLen = pTag->ForExpr == NULL ? 0 : strlen( pTag->ForExpr );
    if( uiForLen > 0 )
    {
       pHeader.ForExpLen = uiForLen + 1;
-      strcpy( pHeader.KeyPool + pHeader.KeyExpLen, pTag->ForExpr );
+      strcpy( ( char * ) pHeader.KeyPool + pHeader.KeyExpLen, pTag->ForExpr );
    }
    else
       pHeader.ForExpLen = 1;
@@ -1183,12 +1191,12 @@ static void hb_cdxTagTagLoad( LPTAGINFO pTag )
    pTag->UniqueKey = ( pTag->OptFlags & 0x01 );
    pTag->AscendKey = ( pHeader.AscDesc == 0 );
    pTag->KeyExpr = ( char * ) hb_xgrab( CDX_MAX_KEY + 1 );
-   hb_strncpyUpper( pTag->KeyExpr, pHeader.KeyPool, CDX_MAX_KEY );
+   hb_strncpyUpper( pTag->KeyExpr, ( char * ) pHeader.KeyPool, CDX_MAX_KEY );
    if( pTag->OptFlags < 0x80 && pTag->KeyExpr[ 0 ] == 0 )
       return;
    if( pTag->OptFlags & 0x80 )
       return;
-   SELF_COMPILE( pTag->Owner->Owner, pTag->KeyExpr );
+   SELF_COMPILE( pTag->Owner->Owner, ( BYTE * ) pTag->KeyExpr );
    pTag->pKeyItem = pTag->Owner->Owner->valResult;
    pTag->Owner->Owner->valResult = NULL;
    pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
@@ -1222,9 +1230,9 @@ static void hb_cdxTagTagLoad( LPTAGINFO pTag )
    if( pHeader.KeyPool[ strlen( pTag->KeyExpr ) + 1 ] == NULL )
       return;
    pTag->ForExpr = ( char * ) hb_xgrab( CDX_MAX_KEY + 1 );
-   hb_strncpyUpper( pTag->ForExpr, pHeader.KeyPool +
+   hb_strncpyUpper( pTag->ForExpr, ( const char * ) pHeader.KeyPool +
                     strlen( pTag->KeyExpr ) + 1, CDX_MAX_KEY );
-   SELF_COMPILE( pTag->Owner->Owner, pTag->ForExpr );
+   SELF_COMPILE( pTag->Owner->Owner, ( BYTE * ) pTag->ForExpr );
    pTag->pForItem = pTag->Owner->Owner->valResult;
    pTag->Owner->Owner->valResult = NULL;
    pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
@@ -1981,9 +1989,9 @@ static LPSORTINFO hb_cdxSortNew( LPTAGINFO pTag, BOOL bUnique )
       pSort->NodeShift++;
    }
    pSort->ChunkSize = pSort->ChunkLimit;
-   pSort->ChunkList = hb_xgrab( pSort->ChunkSize * sizeof( LONG ) );
+   pSort->ChunkList = ( long * ) hb_xgrab( pSort->ChunkSize * sizeof( LONG ) );
    memset( pSort->ChunkList, 0, pSort->ChunkSize * sizeof( LONG ) );
-   P = hb_xgrab( pSort->SortChunk * sizeof( BYTE ) );
+   P = ( BYTE * ) hb_xgrab( pSort->SortChunk * sizeof( BYTE ) );
    memset( P, 0, pSort->SortChunk * sizeof( BYTE ) );
    pSort->ChunkList[ 0 ] = ( LONG ) P;
    hb_cdxSortLinkNew( pSort, &pSort->RootLink );
@@ -2060,7 +2068,7 @@ static void hb_cdxSortGetNewChunk( LPSORTINFO pSort )
    }
    P = ( BYTE * ) pSort->ChunkList[ pSort->ChunkCur ];
    if( P == NULL )
-      P = hb_xgrab( pSort->SortChunk * sizeof( BYTE ) );
+      P = ( BYTE * ) hb_xgrab( pSort->SortChunk * sizeof( BYTE ) );
    if( pSort->ChunkCur != 0 )
    {
       memset( P, 0, pSort->SortChunk * sizeof( BYTE ) );
@@ -2900,14 +2908,14 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    pArea->lpIndexInfo = pIndex;
 
    /* New file? */
-   if( !hb_fsFile( szFileName ) )
+   if( !hb_fsFile( ( BYTE * ) szFileName ) )
    {
-      pIndex->DiskFile = hb_fsCreate( szFileName, FC_NORMAL );
+      pIndex->DiskFile = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
       bNewFile = TRUE;
    }
    else
    {
-      pIndex->DiskFile = hb_fsOpen( szFileName, FO_READWRITE |
+      pIndex->DiskFile = hb_fsOpen( ( BYTE * ) szFileName, FO_READWRITE |
                                     ( pArea->lpExtendInfo->fExclusive ?
                                       FO_EXCLUSIVE : FO_DENYNONE ) );
       bNewFile = FALSE;
@@ -2984,14 +2992,14 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    hb_xfree( szFileName );
 
-   hb_strncpyUpper( szTagName, pOrderInfo->atomBagName, CDX_MAX_TAG_NAME_LEN );
+   hb_strncpyUpper( szTagName, ( const char * ) pOrderInfo->atomBagName, CDX_MAX_TAG_NAME_LEN );
    uiCount = strlen( szTagName );
    while( uiCount > 0 && szTagName[ uiCount - 1 ] == ' ' )
       uiCount--;
    szTagName[ uiCount ] = NULL;
    hb_cdxIndexAddTag( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
-                      pKeyExp, bType, uiLen, pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor :
-                      NULL, pForExp, pArea->lpdbOrdCondInfo ?
+                      pKeyExp, bType, uiLen, ( char * ) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor :
+                      NULL ), pForExp, pArea->lpdbOrdCondInfo ?
                       !pArea->lpdbOrdCondInfo->fDescending : TRUE , pOrderInfo->fUnique );
 
    hb_xfree( szTagName );
@@ -3263,9 +3271,14 @@ static RDDFUNCS cdxTable = { cdxBof,
                              cdxOrderInfo,
                              cdxClearFilter,
                              cdxClearLocate,
+                             NULL,
+                             NULL,
                              cdxFilterText,
+                             NULL,
                              cdxSetFilter,
                              cdxSetLocate,
+                             NULL,
+                             NULL,
                              cdxCompile,
                              cdxError,
                              cdxEvalBlock,
