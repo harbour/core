@@ -257,6 +257,7 @@ void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
 void *   hb_xgrab( ULONG lSize );   /* allocates memory */
 void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 void     hb_xfree( void * pMem );    /* frees memory */
+ULONG    hb_xsize( void * pMem ); /* returns the size of an allocated memory block */
 
 void     ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource );
 void     ItemRelease( PHB_ITEM pItem );

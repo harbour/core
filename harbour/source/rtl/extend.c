@@ -926,3 +926,8 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    ulMemoryConsumed -= ulMemSize;
    ulMemoryBlocks--;
 }
+
+ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
+{
+   return * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+}

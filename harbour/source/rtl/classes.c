@@ -78,7 +78,9 @@ typedef struct
    PHB_ITEM   pInlines;     /* Array for inline codeblocks */
 } CLASS, * PCLASS;
 
-#define BUCKET 4
+#define BASE_METHODS  200
+#define BUCKET          4
+#define HASH_KEY      BASE_METHODS/BUCKET
 
 extern STACK stack;
 extern SYMBOL symEval;
@@ -324,14 +326,14 @@ HARBOUR HB_CLASSCREATE(void)
    {
       pNewCls->wDatas     = hb_parni( 2 );
       pNewCls->wDataFirst = 0;
-      pNewCls->pMethods   = ( PMETHOD ) hb_xgrab( 100 * sizeof( METHOD ) );
+      pNewCls->pMethods   = ( PMETHOD ) hb_xgrab( BASE_METHODS * sizeof( METHOD ) );
       pNewCls->wMethods   = 0;
-      pNewCls->wHashKey   = 25;                 /* BUCKET = 4 repetitions   */
+      pNewCls->wHashKey   = HASH_KEY;                 /* BUCKET = 4 repetitions   */
 
       pNewCls->pClassDatas = hb_itemArrayNew( 0 );
       pNewCls->pInlines    = hb_itemArrayNew( 0 );
 
-      memset( pNewCls->pMethods, 0, 100 * sizeof( METHOD ) );
+      memset( pNewCls->pMethods, 0, BASE_METHODS * sizeof( METHOD ) );
    }
    hb_retni( ++wClasses );
 }
@@ -1098,5 +1100,4 @@ HARBOUR HB___WDATAS(void)
    if( wClass )
       hb_retni( pClasses[ wClass - 1 ].wDatas );
 }
-
 

@@ -1,3 +1,10 @@
+19990719-18:33 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/classes.c
+     * enhanced methods amount meanwhile DictRealloc() is built.
+     * several defines missing.
+   * source/rtl/extend.c
+     * new hb_xsize() function needed for classes.c DictRealloc() implementation.
+
 19990719-18:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
     *source/compiler/harbour.y
      -removed call for non ANSI C 'stricmp'
@@ -21,7 +28,7 @@
 19990719-16:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
     *source/rtl/msgxxx.c
      +added support for Polish national messages
-     
+
     *source/rtl/natmsg/msgpl852.c
     *source/rtl/natmsg/msgplmaz.c
      * corrected names of months
@@ -223,7 +230,7 @@
 
 Fri Jul 16 17:53:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/gt/gtwin.c: 
+	* source/rtl/gt/gtwin.c:
 	Added the possibility to log everything to a file; this made it
 	possible for me to find out what was wrong with GTwin (which is,
 	noone was calling gtInit()).
