@@ -1,3 +1,8 @@
+2000-06-10 17:06 UTC-0500 April White <awhite@user.rose.com>
+
+  * source/rtl/makefile
+    + added tobject.prg to PRG_SOURCES section
+
 2000-06-10 -05:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * doc/en/rddord.txt
      *Small changes
