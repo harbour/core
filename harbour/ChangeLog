@@ -1,3 +1,18 @@
+2001-09-02 14:20 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * harbour/source/vm/classes.c
+    Added BOOL bIsPersistent to the METHOD structure
+    (notice that both datas and methods use that structure)
+
+  * harbour/source/rtl/tclass.prg
+    Added lPersistent parameter to AddMultiData, AddData and
+    AddInline methods.
+
+  * harbour/include/hboo.ch
+    Added new defines HB_OO_DATA_PERSISTENT and HB_OO_MTHD_PERSISTENT
+
+  * harbour/include/hbclass.ch
+    Added new clause PERSISTENT or PROPERTY to both datas and methods.
+
 2001-09-01 19:00 GMT+1 Antonio Linares <alinares@fivetech.com>
   * harbour/contrib/hgf/win32/tmenu.prg
     METHOD FindItem( nId ) added
