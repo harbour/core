@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-02 11:35 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/compiler/harbour.slx
+    ! Add 'static' in definition of hb_comp_SLX_InterceptAction and
+      hb_comp_SLX_CustomAction.
+
 2003-07-02 09:25 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * makefile.nt
   * makefile.vc
