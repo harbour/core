@@ -1,3 +1,13 @@
+20000411-20:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
+   +doc/class_tp.txt
+     *Doc template for classes
+   *doc/en/misc.txt
+     *Version() doc change to reflect the changes on the function
+   *doc/en/rddord.txt
+     +Doc for INDEXEXT() and INDEXKEY()
+   *doc/en/rddmisc.txt
+     *Changed doc for lastrec function()   
+
 20000412-01:17 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtapi.c
