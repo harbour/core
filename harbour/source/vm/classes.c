@@ -150,6 +150,8 @@ typedef struct
 #define BUCKET          5
 #define HASH_KEY        ( BASE_METHODS / BUCKET )
 
+extern BOOL hb_bProfiler; /* profiler activity status */
+
 static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
 static PMETHOD  s_pMethod      = NULL; /* TOFIX: The object engine is not thread safe because of this. [vszakats] */
@@ -741,7 +743,10 @@ PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc 
             pFunction = pMethod->pFunction;
             hb_clsScope( pObject, pMethod );
             s_pMethod = pMethod ;
-            pMethod->ulCalls++; /* Profiler */
+
+            if( hb_bProfiler )
+               pMethod->ulCalls++; /* Profiler */
+
             return pFunction;
          }
          uiAt++;
