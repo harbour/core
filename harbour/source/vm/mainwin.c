@@ -40,6 +40,9 @@
 
 #if defined(HB_OS_WIN_32)
 
+int argc = 0;
+char * argv[ 20 ];
+
 HANDLE hb_hInstance = 0;
 HANDLE hb_hPrevInstance = 0;
 
@@ -48,20 +51,48 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     LPSTR lpCmdLine,          /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
-   char * argv[ 1 ];  /* TODO: parse lpCmdLine and generate the proper values */
+   LPSTR pArgs = LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
+   BYTE  bAppName[ 250 ];
+
+   strcpy( pArgs, lpCmdLine );
 
    HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
 
-   HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( hPrevInstance );
-   HB_SYMBOL_UNUSED( lpCmdLine );
    HB_SYMBOL_UNUSED( iCmdShow );
 
-   argv[ 0 ] = NULL;  /* TOFIX: Generate argv/argc from commandline */
+   GetModuleFileName( hInstance, bAppName, 249 );
+   argv[ 0 ] = bAppName;
 
-   hb_cmdargInit( 0, argv );
+   if( * pArgs != 0 )
+      argv[ ++argc ] = pArgs;
+
+   while( * pArg != 0 )
+   {
+      if( * pArg == ' ' )
+      {
+         * pArg++ = 0;
+         argc++;
+
+         while( * pArg == ' ' )
+           pArg++;
+
+         if( * pArg != 0 )
+            argv[ argc ] = pArg++;
+         else
+            argc--;
+      }
+      else
+         pArg++;
+   }
+   argc++;
+
+   hb_cmdargInit( argc, argv );
    hb_vmInit( TRUE );
    hb_vmQuit();
+
+   LocalFree( pArgs );  /* QUESTION: It seems we never reach here,
+                                     so how may we free it ? */
 
    /* NOTE: The exit value is set by exit() */
    /* NOTE: This point is never reached */
@@ -70,4 +101,3 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 }
 
 #endif
-
