@@ -1,3 +1,8 @@
+2000-12-29 9:18 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * utils/hbpp/hbpp.c
+     * Now it creates exactly the same .ppo as Harbour, without extra empty
+       lines
+
 2000-12-26 20:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *utils/hbmake/radios.prg
  utils/hbmake/checks.prg
