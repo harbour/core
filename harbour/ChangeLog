@@ -1,3 +1,7 @@
+19990824-15:30 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/filesys.c
+    * added a couple of casts.
+
 19990824-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/hbdefs.h
@@ -10,7 +14,6 @@
         WITH PARAMETERS PASSED BY REFERENCE, PLEASE ALSO NOTE THAT
         FRead() IS NOT WORKING RIGHT NOW )
 
-  * source/rtl/filesys.c
     doc/subcodes.txt
     * Huge cleanup, reformatted, eliminated usage of internal structures, 
       fixed types, standardized variable names, explicit constants changed

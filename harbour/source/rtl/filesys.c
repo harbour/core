@@ -727,7 +727,7 @@ HARBOUR HB_FREAD( void )
          /* NOTE: Warning, the read buffer will be directly modified ! */
 
          ulRead = hb_fsRead( hb_parni( 1 ),
-                             hb_parc( 2 ),
+                             (unsigned char *)hb_parc( 2 ),
                              ulToRead );
       }
    }
@@ -855,7 +855,7 @@ HARBOUR HB_FREADSTR( void )
          buffer[ ulRead ] = '\0';
 
          /* NOTE: This is valid, Clipper will not return Chr(0) from FREADSTR() */
-         hb_retc( buffer );
+         hb_retc( (char *)buffer );
 
          hb_xfree( buffer );
       }
