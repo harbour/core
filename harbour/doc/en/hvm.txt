@@ -26,15 +26,16 @@
  *  $SYNTAX$
  *      PROCNAME( <nLevel> ) --> <cProcName>
  *  $ARGUMENTS$
- *      <nLevel> is the function level required.
+ *      <nLevel> is the function level required.   </par>
  *  $RETURNS$
- *      Return the name of the function that it is being executed.
+ *      <cProcName> The name of the function that it is being executed.   </par>
  *  $DESCRIPTION$
  *      This function look at the top of the stack and gets the current
  *      executed function if no arguments are passed. Otherwise it returns
- *      the name of the function or procedure at <nLevel>.
+ *      the name of the function or procedure at <nLevel>.   </par>
  *  $EXAMPLES$
  *      See Test
+ *  </fixed>
  *  $TESTS$
  *      This test will show the functions and procedures in stack
  *      before executing it.
@@ -44,10 +45,11 @@
  *            ? ProcName( n++ )
  *         end do
  *      return nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCNAME() is fully CA-Clipper compliant.
+ *      PROCNAME() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      PROCLINE(),PROCFILE()
  *  $END$
@@ -63,25 +65,27 @@
  *  $SYNTAX$
  *      PROCLINE( <nLevel> ) --> <nLine>
  *  $ARGUMENTS$
- *      <nLevel> is the function level required.
+ *      <nLevel> is the function level required.   </par>
  *  $RETURNS$
- *      Return the line number of the function that it is being executed.
+ *      <nLine> The line number of the function that it is being executed.   </par>
  *  $DESCRIPTION$
  *      This function look at the top of the stack and gets the current
  *      line number of executed function if no arguments are passed.
  *      Otherwise it returns the line number of the function or procedure
- *      at <nLevel>.
+ *      at <nLevel>.   </par>
  *  $EXAMPLES$
  *      See Test
+ *  </fixed>
  *  $TESTS$
  *      function Test()
  *         ? ProcLine( 0 )
  *         ? ProcName( 2 )
  *      return nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCLINE() is fully CA-Clipper compliant.
+ *      PROCLINE() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      PROCNAME(),PROCFILE()
  *  $END$
@@ -97,24 +101,26 @@
  *  $SYNTAX$
  *      PROCFILE( <xExp> ) --> <cEmptyString>
  *  $ARGUMENTS$
- *      <xExp> is any valid type.
+ *      <xExp> is any valid type.   </par>
  *  $RETURNS$
- *      Return and empty string
+ *      <cEmptyString> Return an empty string   </par>
  *  $DESCRIPTION$
  *      This function is added to the RTL for full compatibility. It allways
- *      returns an empty string.
+ *      returns an empty string.   </par>
  *  $EXAMPLES$
  *      ? ProcFile()
+ *  </fixed>
  *  $TESTS$
  *      function Test()
  *         ? ProcFile()
  *         ? ProcFile( NIL )
  *         ? ProcFile( 2 )
  *      return nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCFILE() is fully CA-Clipper compliant.
+ *      PROCFILE() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      PROCNAME(),PROCLINE()
  *  $END$
@@ -130,13 +136,14 @@
  *  $SYNTAX$
  *      HB_PVALUE( <nArg> ) --> <xExp>
  *  $ARGUMENTS$
- *      A number that indicates the argument to check.
+ *      A number that indicates the argument to check.   </par>
  *  $RETURNS$
- *      Returns the value stored by an argument.
+ *      <xExp> Returns the value stored by an argument.   </par>
  *  $DESCRIPTION$
- *      This function is useful to check the value stored in an argument.
+ *      This function is useful to check the value stored in an argument.   </par>
  *  $EXAMPLES$
  *      See Test
+ *  </fixed>
  *  $TESTS$
  *      function Test( nValue, cString )
  *         if PCount() == 2
@@ -144,10 +151,11 @@
  *            ? hb_PValue( 2 ), cString
  *         endif
  *      return nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.
+ *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      PCOUNT()
  *  $END$
@@ -161,17 +169,18 @@
  *  $ONELINER$
  *      Retrieves the number of arguments passed to a function.
  *  $SYNTAX$
- *      PCOUNT() --> <nArgs>
+ *      PCOUNT() --> <nArgs>   </par>
  *  $ARGUMENTS$
- *      None
+ *      None   </par>
  *  $RETURNS$
- *      Returns a number that indicates the number of arguments
- *      passed to a function or procedure.
+ *      <nArgs> A number that indicates the number of arguments
+ *      passed to a function or procedure.   </par>
  *  $DESCRIPTION$
  *      This function is useful to check if a function or procedure
- *      has received the required number of arguments.
+ *      has received the required number of arguments.   </par>
  *  $EXAMPLES$
  *      See Test
+ *  </fixed>
  *  $TESTS$
  *      function Test( xExp )
  *         if PCount() == 0
@@ -180,10 +189,11 @@
  *            ? xExp
  *         endif
  *      return nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PCOUNT() is fully CA-Clipper compliant.
+ *      PCOUNT() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      HB_PVALUE()
  *  $END$
@@ -199,24 +209,26 @@
  *  $SYNTAX$
  *      __QUIT() --> NIL
  *  $ARGUMENTS$
- *      None
+ *      None   </par>
  *  $RETURNS$
- *      NIL
+ *      NIL   </par>
  *  $DESCRIPTION$
  *      This function terminates the current application and returns
- *      to the system.
+ *      to the system.   </par>
  *  $EXAMPLES$
  *      See Test
+ *  </fixed>
  *  $TESTS$
  *      function EndApp( lYesNo )
  *         if lYesNo
  *            __Quit()
  *         endif
  *      return nil
+ *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __QUIT() is fully CA-Clipper compliant.
+ *      __QUIT() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      QUIT
  *  $END$
@@ -232,22 +244,22 @@
  *  $SYNTAX$
  *      CLIPINIT() --> NIL
  *  $ARGUMENTS$
- *      none.
+ *      none.   </par>
  *  $RETURNS$
- *      CLIPINIT() always return NIL.
+ *      CLIPINIT() always return NIL.   </par>
  *  $DESCRIPTION$
  *      CLIPINIT() is one of the pre-defined INIT PROCEDURE and is executed
  *      at program startup. It declare an empty MEMVAR PUBLIC array called
  *      GetList that is going to be used by the Get system, It activate the
  *      default error handler, and (at least for the moment) call the
- *      function that set the default help key.
+ *      function that set the default help key.   </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      It is said that CLIPINIT() should not call that function that set
- *      the default help key since CA-Clipper do it in some other place.
+ *      the default help key since CA-Clipper do it in some other place.   </par>
  *  $PLATFORMS$
- *  $FILES$
+ *      All   </par>
  *  $SEEALSO$
  *       INIT PROCEDURE
  *  $END$
@@ -263,16 +275,16 @@
  *  $SYNTAX$
  *      __SetHelpK() --> NIL
  *  $ARGUMENTS$
- *      none.
+ *      none.   </par>
  *  $RETURNS$
- *      __SetHelpK() always return NIL.
+ *      __SetHelpK() always return NIL.   </par>
  *  $DESCRIPTION$
  *      Set F1 to execute a function called HELP if such a function is
- *      linked into the program.
+ *      linked into the program.   </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()
+ *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()   </par>
  *  $SEEALSO$
  *      __XHelp(),SET KEY,SETKEY()
  *  $END$
@@ -289,18 +301,19 @@
  *      BREAK( <xExp> ) --> NIL
  *  $ARGUMENTS$
  *      <xExp> is any valid expression. It is always required.
- *      If do not want to pass any argument, just use NIL.
+ *      If do not want to pass any argument, just use NIL.   </par>
  *  $RETURNS$
- *      NIL
+ *      NIL   </par>
  *  $DESCRIPTION$
  *      This function passes control to the RECOVER statement in a
- *      BEGIN SEQUENCE block.
+ *      BEGIN SEQUENCE block.   </par>
  *  $EXAMPLES$
  *      Break( NIL )
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BREAK() is fully CA-Clipper compliant.
+ *      BREAK() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      BEGIN SEQUENCE
  *  $END$
@@ -317,20 +330,20 @@
  *      DO( <xFuncProc> [, <xArguments...>] )
  *  $ARGUMENTS$
  *      <xFuncProc> = Either a string with a function/procedure name to be called
- *      or a codeblock to evaluate
+ *      or a codeblock to evaluate   </par>
  *      <xArguments> = arguments passed to a called function/procedure or to
- *      a codeblock
+ *      a codeblock   </par>
  *  $RETURNS$
- *      A value that was returned from called function
+ *      A value that was returned from called function   </par>
  *  $DESCRIPTION$
  *      This function can be called either by the harbour compiler or by user.
  *      The compiler always passes the item of IT_SYMBOL type that stores the
- *      name of procedure specified in DO <proc> WITH ... statement.
+ *      name of procedure specified in DO <proc> WITH ... statement.   </par>
  *      If called procedure/function doesn't exist then the runtime error
- *      is generated.
+ *      is generated.   </par>
  *      This function can be used as replacement of macro operator.
  *      It is also used internally to implement DO <proc> WITH <args...>
- *      In this case <xFuncProc> is of type HB_SYMB
+ *      In this case <xFuncProc> is of type HB_SYMB   </par>
  *  $EXAMPLES$
  *      cbCode ={|x| MyFunc( x )}
  *      DO( cbCode, 1 )
@@ -340,7 +353,7 @@
  *
  *      Old style (slower):
  *      DO &cFunction WITH 3
- *
+ *  </fixed>
  *  $END$
  */
 
@@ -356,11 +369,11 @@
  *  $ARGUMENTS$
  *      <nProcLevel> Is the procedure level, same as used in ProcName()
  *      and ProcLine(), from which a local variable containts is going to
- *      be retrieved.
- *      <nLocal> Is the index of the local variable to retrieve.
+ *      be retrieved.   </par>
+ *      <nLocal> Is the index of the local variable to retrieve.   </par>
  *  $RETURNS$
- *      The containts of a specific local variable
+ *      The containts of a specific local variable   </par>
  *  $DESCRIPTION$
- *      This function is used from the debugger
+ *      This function is used from the debugger   </par>
  *  $END$
  */

@@ -30,23 +30,23 @@
  *      the timeout period has elapsed. If only this parameter is specified
  *      and it is not numeric, it will be treated as if it were 0. But if both
  *      parameters are specified and this parameter is not numeric, it will be
- *      treated as if it were not present.
+ *      treated as if it were not present.  </par>
  *
- *      <nEvents> is an optional mask of input events that are to be enabled.
+ *      <nEvents> is an optional mask of input events that are to be enabled.  </par>
  *      If omitted, defaults to hb_set.HB_SET_EVENTMASK. Valid input maks are
  *      in inkey.ch and are explained below. It is recommended that the mask
  *      names be used rather than their numeric values, in case the numeric
  *      values change in future releases of Harbour. To allow more than one
- *      type of input event, simply add the various mask names together.
- *        INKEY_MOVE     = Mouse motion events are allowed
- *        INKEY_LDOWN    = The mouse left click down event is allowed
- *        INKEY_LUP      = The mouse left click up event is allowed
- *        INKEY_RDOWN    = The mouse right click down event is allowed
- *        INKEY_RUP      = The mouse right click up event is allowed
- *        INKEY_KEYBOARD = All keyboard events are allowed
- *        INKEY_ALL      = All mouse and keyboard events are allowed
+ *      type of input event, simply add the various mask names together.  </par>
+ *        INKEY_MOVE     = Mouse motion events are allowed  </par>
+ *        INKEY_LDOWN    = The mouse left click down event is allowed  </par>
+ *        INKEY_LUP      = The mouse left click up event is allowed  </par>
+ *        INKEY_RDOWN    = The mouse right click down event is allowed  </par>
+ *        INKEY_RUP      = The mouse right click up event is allowed  </par>
+ *        INKEY_KEYBOARD = All keyboard events are allowed  </par>
+ *        INKEY_ALL      = All mouse and keyboard events are allowed  </par>
  *      If the parameter is not numeric, it will be treated as if it were set
- *      to hb_set.HB_SET_EVENTMASK.
+ *      to hb_set.HB_SET_EVENTMASK.  </par>
  *  $RETURNS$
  *      0 in case of timeout with no input event, otherwise returns a value
  *      in the range -39 to 386 for keyboard events or the range 1001 to 1007
@@ -55,7 +55,7 @@
  *      event return codes in the range 32 through 127 are equivalent to the
  *      printable ASCII character set. Keyboard event return codes in the
  *      range 128 through 255 are assumed to be printable, but results may
- *      vary based on hardware and nationality.
+ *      vary based on hardware and nationality.  </par>
  *  $DESCRIPTION$
  *      INKEY() can be used to detect input events, such as keypress, mouse
  *      movement, or mouse key clicks (up and/or down).
@@ -64,8 +64,10 @@
  *      ? "Please press the ESC key."
  *      WHILE INKEY( 0.1 ) != K_ESC
  *      END
+ *  </fixed>
  *  $TESTS$
  *      KEYBOARD "AB"; ? INKEY(), INKEY() ==>   65   66
+ *  </fixed>
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -74,7 +76,7 @@
  *      if the first parameter is less than or equal to 0 and the second
  *      parameter (or the default mask) is not valid, because otherwise INKEY
  *      would never return, because it was, in effect, asked to wait forever
- *      for no events (Note: In Clipper, this also blocks SET KEY events).
+ *      for no events (Note: In Clipper, this also blocks SET KEY events).  </par>
  *  $SEEALSO$
  *      inkey.ch
  *  $END$
@@ -94,27 +96,29 @@
  *  $ARGUMENTS$
  *      <cString> is the optional string to stuff into the Harbour keyboard
  *      buffer after clearing it first. Note: The character ";" is converted
- *      to CHR(13) (this is an undocumented CA-Clipper feature).
+ *      to CHR(13) (this is an undocumented CA-Clipper feature).  </par>
  *  $RETURNS$
- *      There is no return value
+ *      There is no return value  </par>
  *  $DESCRIPTION$
  *      Clears the Harbour keyboard typeahead buffer and then inserts an
- *      optional string into it.
+ *      optional string into it.  </par>
  *  $EXAMPLES$
  *      // Stuff an Enter key into the keyboard buffer
  *      KEYBOARD CHR(13)
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
+ *  </fixed>
  *  $TESTS$
  *      KEYBOARD CHR(13); ? INKEY() ==> 13
  *      KEYBOARD ";" ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Clipper 5.3
+ *      __KEYBOARD() is compliant with CA-Clipper 5.3  </par>
  *  $SEEALSO$
- *    CLEAR TYPEAHEAD, KEYBOARD
+ *    CLEAR TYPEAHEAD,KEYBOARD
  *  $END$
  */
 
@@ -129,25 +133,27 @@
  *      HB_keyPut( <nInkeyCode> )
  *  $ARGUMENTS$
  *      <nInkeyCode> is the inkey code, which should be inserted into the
- *      keyboard buffer.
+ *      keyboard buffer.  </par>
  *  $RETURNS$
- *      There is no return value
+ *      There is no return value  </par>
  *  $DESCRIPTION$
  *      Inserts an inkey code to the string buffer. The buffer is *not*
  *      cleared in this operation. This function allows to insert such
  *      inkey codes which are not in the range of 0 to 255. To insert more
  *      than one code, call the function repeatedly. The zero code cannot
- *      be inserted.
+ *      be inserted.  </par>
  *  $EXAMPLES$
  *      // Stuff an Alt+PgDn key into the keyboard buffer
  *      HB_KEYPUT( K_ALT_PGDN )
+ *  </fixed>
  *  $TESTS$
  *      HB_KEYPUT( K_ALT_PGDN ) ; ? INKEY() ==> 417
  *      HB_KEYPUT( K_F11 ) ; ? INKEY() ==> -40
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Was not part of Clipper
+ *      Was not part of Clipper  </par>
  *  $SEEALSO$
  *      KEYBOARD,CLEAR TYPEAHEAD,INKEY()
  *  $END$
@@ -163,12 +169,12 @@
  *  $SYNTAX$
  *      NEXTKEY() --> nKey
  *  $ARGUMENTS$
- *      None
+ *      None  </par>
  *  $RETURNS$
- *      There is no return value
+ *      <nKey> There is no return value  </par>
  *  $DESCRIPTION$
  *      Returns the value of the next key in the Harbour keyboard buffer
- *      without extracting it.
+ *      without extracting it.  </par>
  *  $EXAMPLES$
  *      // Use NEXTKEY() with INKEY() to change display character or by
  *      // itself to exit the loop, so that the caller can detect the Esc.
@@ -184,12 +190,14 @@
  *            END IF
  *         END IF
  *      END WHILE
+ *  </fixed>
  *  $TESTS$
  *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      NEXTKEY() is compliant with CA-Clipper 5.3
+ *      NEXTKEY() is compliant with CA-Clipper 5.3  </par>
  *  $SEEALSO$
  *      INKEY(),LASTKEY()
  *  $END$
@@ -205,12 +213,12 @@
  *  $SYNTAX$
  *      LASTKEY() --> nKey
  *  $ARGUMENTS$
- *      None
+ *      None  </par>
  *  $RETURNS$
- *      There is no return value
+ *      <nKey> There is no return value  </par>
  *  $DESCRIPTION$
  *      Returns the value of the last key exttracted from the Harbour
- *      keyboard buffer
+ *      keyboard buffer  </par>
  *  $EXAMPLES$
  *      // Continue looping unless the ESC key was pressed in MainFunc()
  *      WHILE TRUE
@@ -219,12 +227,14 @@
  *            EXIT
  *         END IF
  *      END WHILE
+ *  </fixed>
  *  $TESTS$
  *      KEYBOARD "AB"; ? INKEY(), LASTKEY() ==>   65   65
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      LASTKEY() is compliant with CA-Clipper 5.3
+ *      LASTKEY() is compliant with CA-Clipper 5.3  </par>
  *  $SEEALSO$
  *      INKEY(),LASTKEY()
  *  $END$
@@ -239,30 +249,32 @@
  *  $ONELINER$
  *      Stuffs the keyboard with a string
  *  $SYNTAX$
- *      KEYBOARD <cString>
+ *      KEYBOARD <cString>  </par>
  *  $ARGUMENTS$
  *      <cString> String to be processed, one character at a time,
- *      by the Harbour keyboard processor
+ *      by the Harbour keyboard processor  </par>
  *  $DESCRIPTION$
  *      This command stuff the input buffer with <cString>. The
  *      number of character that can be stuffed into the keyboard
  *      buffer is controled by SET TYPEAHEAD command and may range
  *      from 0 to 32,622, with each character appearing in the ASCII
  *      range of 0 to 255. None of the extended keys may be stuffed
- *      in the keyboard buffer.
- *      Issuing a KEYBOARD " " will clear the keyboard buffer.
+ *      in the keyboard buffer.  </par>
+ *      Issuing a KEYBOARD " " will clear the keyboard buffer.  </par>
  *  $EXAMPLES$
  *      // Stuff an Enter key into the keyboard buffer
  *      KEYBOARD CHR(13)
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
+ *  </fixed>
  *  $TESTS$
  *      KEYBOARD CHR(13); ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Clipper 5.3
+ *      __KEYBOARD() is compliant with CA-Clipper 5.3  </par>
  *  $SEEALSO$
  *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
@@ -278,39 +290,39 @@
  *  $SYNTAX$
  *      READKEY() --> nKeyCode
  *  $ARGUMENTS$
- *      none.
+ *      none.  </par>
  *  $RETURNS$
  *      READKEY() return a numeric code representing the key that cause READ
- *      to terminate.
+ *      to terminate.  </par>
  *  $DESCRIPTION$
  *      READKEY() is used after a READ was terminated to determine the exit
  *      key pressed. If the get buffer was updated during READ, 256 is added
- *      to the return code.
+ *      to the return code.  </par>
  *
- *      Exit key        Return code    Return code
- *                      (not updated)  (updated)
- *      --------------  -------------  -----------
- *      Up                    4            260
- *      Down                  5            261
- *      Page-Up               6            262
- *      Page-Down             7            263
- *      Ctrl Page-Up         34            290
- *      Ctrl Page-Down       35            291
- *      Esc                  12            268
- *      Ctrl End             14            270
- *      Enter                15            271
+ *      Exit key        Return code    Return code  </par>
+ *                      (not updated)  (updated)  </par>
+ *      --------------  -------------  -----------  </par>
+ *      Up                    4            260  </par>
+ *      Down                  5            261  </par>
+ *      Page-Up               6            262  </par>
+ *      Page-Down             7            263  </par>
+ *      Ctrl Page-Up         34            290  </par>
+ *      Ctrl Page-Down       35            291  </par>
+ *      Esc                  12            268  </par>
+ *      Ctrl End             14            270  </par>
+ *      Enter                15            271  </par>
  *
- *      Key >= 32            15            271
- *      otherwise             0              0
+ *      Key >= 32            15            271  </par>
+ *      otherwise             0              0  </par>
  *
  *      READKEY() is a compatibility function so try not use it. READKEY()
  *      is superseded by LASTKEY() which return INKEY() code for that key,
  *      UPDATED() could be use to find if the get buffer was changed during
- *      READ.
+ *      READ.  </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      READKEY() works exactly like CA-Clipper's READKEY().
+ *      READKEY() works exactly like CA-Clipper's READKEY().  </par>
  *  $SEEALSO$
  *       @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
  *  $END$
@@ -324,23 +336,24 @@
  *  $ONELINER$
  *      Returns the mouse cursor row position
  *  $SYNTAX$
- *      MRow() --> nMouseColumn
+ *      MRow() --> nMouseRow
  *  $ARGUMENTS$
- *      None
+ *      None  </par>
  *  $RETURNS$
- *      The mouse cursor column position
+ *      <nMouseRow> The mouse cursor row position  </par>
  *  $DESCRIPTION$
  *  $EXAMPLES$
  *      local nKey
  *      nKey = InKey( 0 )
  *      do case
  *         case nKey ==
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour Specific
+ *      This function is a Harbour Specific  </par>
  *  $PLATFORMS$
- *      This function is Windows Specific
+ *      This function is Windows Specific  </par>
  *  $SEEALSO$
  *      MCOL()
  *  $END$
@@ -356,21 +369,22 @@
  *  $SYNTAX$
  *      MCol() --> nMouseColumn
  *  $ARGUMENTS$
- *      None
+ *      None  </par>
  *  $RETURNS$
- *      The mouse cursor column position
+ *      <nMouseColumn> The mouse cursor column position  </par>
  *  $DESCRIPTION$
  *  $EXAMPLES$
  *      local nKey
  *      nKey = InKey( 0 )
  *      do case
  *         case nKey ==
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is a Harbour Specific
+ *      This function is a Harbour Specific  </par>
  *  $PLATFORMS$
- *      This function is Windows Specific
+ *      This function is Windows Specific  </par>
  *  $SEEALSO$
  *      MROW()
  *  $END$

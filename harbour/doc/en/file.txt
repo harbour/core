@@ -27,20 +27,16 @@
  *  $SYNTAX$
  *      FOPEN( <cFile>, [<nMode>] ) --> nHandle
  *  $ARGUMENTS$
- *      <cFile> Name of file to open
- *      <nMode> Dos file open mode
- *      file is to be accessed.  The open mode is composed of elements from the
- *      two types of modes described in the tables below.  If just the Access
- *      Mode is used, the file is opened non-sharable.  The default open mode is
- *      zero, which indicates non-sharable and read-only.
+ *      <cFile> Name of file to open   </par>
+ *      <nMode> Dos file open mode   </par>
  *  $RETURNS$
- *      <nHandle> a DOS file handle
+ *      <nHandle> a DOS file handle   </par>
  *  $DESCRIPTION$
  *      This function opens a file expressed as <cFile> and returns a DOS
  *      file handle to be used with other low-level file functions.The
  *      value of <nMode> represents the status of the file to be opened;
- *      the default value is 0. The DOS file open modes are as the follows:
- *
+ *      the default value is 0. The DOS file open modes are as the follows:   </par>
+ *  <table>
  *       0              Read only
  *       1              Write only
  *       2              Read/write
@@ -56,22 +52,24 @@
  *       64             Share read only
  *       65             Share write only
  *       66             Share read/write
- *
+ *  </table>
  *      If there is an error in opening a file, a -1 will be returned by
  *      the function.Files handles may be in the range of 0 to 65535. The
  *      status of the SET DEFAULT TO and SET PATH TO commands has no effect
  *      on this function.Directory names and paths must be specified along
- *      with the file that is to be opened.
+ *      with the file that is to be opened.   </par>
  *      If an error has occured, see the returns values from FERROR() for
- *      possible reasons for the error.
+ *      possible reasons for the error.   </par>
  *  $EXAMPLES$
+    
  *      IF (nH:=FOPEN('X.TXT',66)<0
  *         ? 'File cann't be open'
  *      ENDIF
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Clipper compliant   </par>
  *  $SEEALSO$
  *      FCREATE(),FERROR(),FCLOSE()
  *  $END$
@@ -87,11 +85,11 @@
  *  $SYNTAX$
  *      FCREATE( <cFile>, [<nAttribute>] ) --> nHandle
  *  $ARGUMENTS$
- *      <cFile> is the name of the file to create.
+ *      <cFile> is the name of the file to create.   </par>
  *
- *      <nAttribute> Numeric code for the DOS file attribute
+ *      <nAttribute> Numeric code for the DOS file attribute   </par>
  *  $RETURNS$
- *      <nHandle>  Numeric expression
+ *      <nHandle>  Numeric expression   </par>
  *  $DESCRIPTION$
  *      This function creates a new file with a filename of <cFile>. The
  *      default value of <nAttribute> is 0 and is used to set the DOS
@@ -99,28 +97,30 @@
  *      The return value will be DOS file handle that is associated
  *      with the new file. This number will be between zero to 65,535,
  *      inclusive. If an error occurs, the return value of this function
- *      will be -1
+ *      will be -1.   </par>
+ *
  *      If the file <cFile> already exists, the existing file will be
- *      truncated to a file lenght of 0 bytes.
+ *      truncated to a file lenght of 0 bytes.   </par>
+
  *      If specified, the folowing table shows the value for <nAttribute>
  *      and their related meaning to the file <cFile> being created by
- *      this Function.
- *
+ *      this Function.   </par>
+ *  <table>
  *       <nAttribute>   File Attribute
  *       0              Normal/Default,Read/Write
- *       1              Read-only,Attempting to open for
- *       |              output returns an error
+ *       1              Read-only,Attempting to open for output returns an error
  *       2              Hidden,Excluded from normal DIR search                                  
  *       4              Create,Excluded from normal DIR search
- *                                 
+ *  </table>
  *  $EXAMPLES$
  *      IF (nh:=FCREATE("TEST.TXT") <0
  *          ? "Can not create file"
  *      ENDIF
+ *    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Clipper compliant   </par>
  *  $SEEALSO$
  *      FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
  *  $END$
@@ -136,22 +136,25 @@
  *  $SYNTAX$
  *      FREAD( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytes
  *  $ARGUMENTS$
- *      <nHandle>     Dos file handle
- *      <cBufferVar>  Character expression passed by reference
- *      <nBytes>      Number of bytes to read.
+ *      <nHandle>     Dos file handle   </par>
+ *      <cBufferVar>  Character expression passed by reference   </par>
+ *      <nBytes>      Number of bytes to read.   </par>
  *  $RETURNS$
  *      <nBytes> the number of bytes successfyly read from the file
- *      <nHandle>
+ *      <nHandle>   </par>
  *  $DESCRIPTION$
  *      This function reads the characters from a DOS file whose file handle
  *      is <nHandle> into it character memory variable expressed as <cBuffer>.
  *      The function returns the number of bytes successfully read into
- *      <cBuffer>.
+ *      <cBuffer>.   </par>
+
  *      The value of <nHandle> is obtained from either it call to the FOPEN()
- *      or the FCREATE() function.
+ *      or the FCREATE() function.   </par>
+
  *      The <cBuffer> expression is passed by reference and must be defined
  *      before this function is called. It also must be at least the same
- *      length as <nBytes>.
+ *      length as <nBytes>.   </par>
+
  *      <nBytes> is the number of bytes to read, starting at the current DOS
  *      file pointer position. If this function is successful in reading
  *      the characters from the file, the length of <cBuffer> or the number
@@ -160,7 +163,7 @@
  *      ssive read.The return value is the number of byte successfully read
  *      from the file <nHandle>. If a 0 is returned, or if the number of
  *      bytes read matches neither the length of <cBuffer> nor the specified
- *      value in <nBytes> an end-of-file condition has been reached.
+ *      value in <nBytes> an end-of-file condition has been reached.   </par>
  *  $EXAMPLES$
  *      cBuffer:=SPACE(500)
  *      IF (nH:=FOPEN('X.TXT))>0
@@ -168,11 +171,12 @@
  *         ? cbuffer
  *      ENDIF
  *      FCLOSE(nH)
+ *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
  *     This function is not CA-Clipper compliant since may can read
- *     strings greather the 65K depending of platform.
+ *     strings greather the 65K depending of platform.   </par>
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $END$
@@ -188,37 +192,41 @@
  *  $SYNTAX$
  *     FWRITE( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesWritten
  *  $ARGUMENTS$
- *     <nHandle>  DOS file handle number.
- *     <cBuffer>  Character expression to be written.
- *     <nBytes>   The number of bytes to write.
+ *     <nHandle>  DOS file handle number.   </par>
+ *     <cBuffer>  Character expression to be written.   </par>
+ *     <nBytes>   The number of bytes to write.   </par>
  *  $RETURNS$
- *      <nBytesWritten> the number of bytes successfully written.
+ *      <nBytesWritten> the number of bytes successfully written.   </par>
  *  $DESCRIPTION$
  *      This function writes the contents of <cBuffer> to the file designated
  *      by its file handle <nHandle>. If used, <nBytes> is the number of
- *      bytes in <cBuffer> to write.
- *      The returned value is the number of bytes successfully written to the
+ *      bytes in <cBuffer> to write.   </par>
+
+ *      The returned value is the number of bytes successfully written to the   
  *      DOS file. If the returned value is 0, an error has occurred (unless
  *      this is intended). A successful write occurs when the number returned
- *      by FWRITE() is equal to either LEN( <cBuffer>) or <nBytes>.
+ *      by FWRITE() is equal to either LEN( <cBuffer>) or <nBytes>.   </par>
+
  *      The value of <cBuffer> is the string or variable to be written to the
- *      open DOS file <nHandle>.
+ *      open DOS file <nHandle>.   </par>
+
  *      The value of <nBytes> is the number of bytes to write out to the file.
  *      The disk write begins with the current file position in <nHandle>. If
  *      this variable is not used, the entire contents of <cBuffer> is written
- *      to the file.
- *      To truncate a file. a call of FWRITE( nHandle, "", 0 ) is needed.
+ *      to the file.   </par>
+ *      To truncate a file. a call of FWRITE( nHandle, "", 0 ) is needed.   </par>
  *  $EXAMPLES$
  *      nHandle:=FCREATE('x.txt')
  *      FOR X:=1 to 10
  *        FWRITE(nHandle,STR(x))
  *      NEXT
  *      FCLOSE(nHandle)
+    </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is not CA-Clipper compatile since
- *      it can writes strings greather the 64K
+ *      it can writes strings greather the 64K   </par>
  *  $SEEALSO$
  *      FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
  *  $END$
@@ -235,33 +243,34 @@
  *      FERROR() --> <nErrorCode>
  *  $RETURNS$
  *      <nErrorCode> Value of the DOS error last encountered by a
- *      low-level file function.
+ *      low-level file function.   </par>
  *
- *      FERROR() Return Values
+ *      FERROR() Return Values     </par>
  *
- *      Error   Meaning
- *
- *           0        Successful
- *           2        File not found
- *           3        Path not found
- *           4        Too many files open
- *           5        Access denied
- *           6        Invalid handle
- *           8        Insufficient memory
- *           15       Invalid drive specified
- *           19       Attempted to write to a write-protected disk
- *           21       Drive not ready
- *           23       Data CRC error
- *           29       Write fault
- *           30       Read fault
- *           32       Sharing violation
- *           33       Lock Violation
+ *      Error   Meaning   </par>
+ *      <table>
+ *       0              Successful
+ *       2              File not found
+ *       3              Path not found
+ *       4              Too many files open
+ *       5              Access denied
+ *       6              Invalid handle
+ *       8              Insufficient memory
+ *       15             Invalid drive specified
+ *       19             Attempted to write to a write-protected disk
+ *       21             Drive not ready
+ *       23             Data CRC error
+ *       29             Write fault
+ *       30             Read fault
+ *       32             Sharing violation
+ *       33             Lock Violation
+ *  </table>
  *  $DESCRIPTION$
  *      After every low-level file function,this function will return
  *      a value that provides additional informationon the status of
  *      the last low-level file functions's performance.If the FERROR()
  *      function returns a 0, no error was detected.Below is a table
- *      of possibles values returned by the FERROR() function.
+ *      of possibles values returned by the FERROR() function.   </par>
  *  $EXAMPLES$
  *      #include "Fileio.ch"
  *      //
@@ -269,10 +278,11 @@
  *      IF FERROR() != 0
  *         ? "Cannot create file, DOS error ", FERROR()
  *      ENDIF
+ *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compatible
+ *     This function is CA-Clipper compatible   </par>
  *  $SEEALSO$
  *     FCLOSE(),FERASE(),FOPEN(),FWRITE()
  *  $END$
@@ -288,22 +298,23 @@
  *  $SYNTAX$
  *     FCLOSE( <nHandle> ) --> <lSuccess>
  *  $ARGUMENTS$
- *     <nHandle> DOS file handle
+ *     <nHandle> DOS file handle   </par>
  *  $RETURNS$
- *     <lSuccess>  Logical TRUE (.T.) or FALSE (.F.)
+ *     <lSuccess>  Logical TRUE (.T.) or FALSE (.F.)   </par>
  *  $DESCRIPTION$
  *     This function closes an open file with a dos file handle
  *     of <nHandle> and writes the associated DOS buffer to the
  *     disk. The <nHandle> value is derived from the FCREATE()
- *     or FOPEN() function.
+ *     or FOPEN() function.   </par>
  *  $EXAMPLES$
  *     nHandle:=FOPEN('x.txt')
  *     ? FSEEK(nHandle0,2)
  *     FCLOSE(nHandle)
+ *     </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *     This function is CA-Clipper compliant   </par>
  *  $SEEALSO$
  *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
  *  $END$
@@ -319,22 +330,23 @@
  *  $SYNTAX$
  *      FERASE( <cFile> ) --> nSuccess
  *  $ARGUMENTS$
- *      <cFile> Name of file to erase.
+ *      <cFile> Name of file to erase.   </par>
  *  $RETURNS$
- *      <nSuccess> 0 if successful, -1 if not
+ *      <nSuccess> 0 if successful, -1 if not   </par>
  *  $DESCRIPTION$
  *      This function deletes the file specified in <cFile> from the disk.
  *      No extensions are assumed. The drive and path my be included in
  *      <cFile>; neither the SET DEFAULT not the SET PATH command controls
  *      the performance of this function.If the drive or path is not used,
  *      the function will look for the file only on the currently selected
- *      direcytory on the logged drive.
+ *      direcytory on the logged drive.   </par>
  *
  *      If the function is able to successfully delete the file from the
  *      disk, the value of the function will be 0; otherwise a -1 will
  *      be returned.If not successfu, aditional information may be
- *      obtained by calling the FERROR() function.
- *      Note: Any file to be removed by FERASE() must still be closed.
+ *      obtained by calling the FERROR() function.   </par>
+ *
+ *      Note: Any file to be removed by FERASE() must still be closed.   </par>
  *
  *  $EXAMPLES$
  *      IF (FERASE("TEST.TXT")==0)
@@ -342,10 +354,11 @@
  *      ELSE
  *          ? "File can not be deleted"
  *      ENDIF
+ *  </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper Compatible
+ *     This function is CA-Clipper Compatible   </par>
  *  $SEEALSO$
  *     FERROR(),FRENAME()
  *  $END$
@@ -361,39 +374,42 @@
  *  $SYNTAX$
  *      FRENAME( <cOldFile>, <cNewFile> ) --> nSuccess
  *  $ARGUMENTS$
- *     <cOldFile> Old filenarne to he changed
- *     <cNewFile> New filename
+ *     <cOldFile> Old filenarne to he changed   </par>
+ *     <cNewFile> New filename   </par>
  *  $RETURNS$
  *     <nSuccess> If sucessful, a 0 will he returned otherwise,
- *     a -1 will be returned.
+ *     a -1 will be returned.   </par>
  *  $DESCRIPTION$
  *      This function renames the specified file <cOldFile> to <cNewFile>.
  *      A filename and/or directory name may be specified for either para-
  *      meter. However, if a path is supplied as part of <cNewFile> and
  *      this path is different from either the path specified in <cOldFile>
  *      or (if none is used) the current drive and directory, the function
- *      will not execute successfully.
+ *      will not execute successfully.   </par>
+
  *      Neither parameter is subject to the control of the SET PATH TO or
  *      SET DEFAULT TO commands. In attempting to locate the file to be
  *      renamed, this function will search the default drive and directory
  *      or the drive and path specified in <cOldFile>. It will not search
  *      directories named by the SET PATH TO and SET DEFAULT TO commands
- *      or by the DOS PATH statement.
+ *      or by the DOS PATH statement.   </par>
+
  *      If the file specified in <cNewFile> exists or the file is open,
  *      the function will be unable to rename the file.If the function
  *      is unable to complete its operation,it will return a value of -1.
  *      If it is able to rename the file, the return value for the function
  *      will be 0.A call to FERROR() function will give additional infor-
- *      mation about any error found.
+ *      mation about any error found.   </par>
  *  $EXAMPLES$
  *      nResult:=FRENAME("x.txt","x1.txt")
  *      IF nResult <0
  *         ? "File could not be renamed."
  *      ENDIF
+ *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *     This function is CA-Clipper compliant   </par>
  *  $SEEALSO$
  *     ERASE,FERASE(),FERROR(),FILE(),RENAME
  *  $END$
@@ -409,32 +425,35 @@
  *  $SYNTAX$
  *      FSEEK( <nHandle>, <nOffset>, [<nOrigin>] ) --> nPosition
  *  $ARGUMENTS$
- *     <nHandle> DOS file handle.
- *     <nOffset> The number of bytes to move.
- *     <nOrigin> The relative position in the file.
+ *     <nHandle> DOS file handle.   </par>
+ *     <nOffset> The number of bytes to move.   </par>
+ *     <nOrigin> The relative position in the file.   </par>
  *  $RETURNS$
- *      <nPosition> the current position relative to begin-of-file
+ *      <nPosition> the current position relative to begin-of-file   </par>
  *  $DESCRIPTION$
  *      This function sets the file pointer in the file whose DOS file
  *      handle is <nHandle> and moves the file pointer by <expN2> bytes
  *      from the file position designated by <nOrigin>. The returned value
  *      is the relative position of the file pointer to the beginning-of-file
- *      marker once the operation has been completed.
+ *      marker once the operation has been completed.   </par>
+
  *      <nHandle> is the file handle number. It is obtained from the FOPEN()
- *      or FCREATE() function.
+ *      or FCREATE() function.   </par>
+
  *      The value of <nOffSet> is the number of bytes to move the file pointer
  *      from the position determined by <nOrigin>.The value of <nOffset> may
- *      be a negative number, suggesting backward movement.
+ *      be a negative number, suggesting backward movement.   </par>
+
  *      The value of <nOrigin> designates the starting point from which the
- *      file pointer should he moved, as shown in the following table:
- *
+ *      file pointer should he moved, as shown in the following table:   </par>
+ *      <table>
  *       <nOrigin>      File position
  *       0              Beginning of file
  *       1              Current file pointer position
  *       2              End of file
- *
+ *      </table>
  *      If a value is not provided for <nOrigin>, it defaults to 0 and
- *      moves the file pointer from the beginning of the file.
+ *      moves the file pointer from the beginning of the file.   </par>
  *  $EXAMPLES$
  *      // here is a function that read one text line from an open file
  *
@@ -456,10 +475,11 @@
  *        FSEEK( nH, nSavePos + nEol + 1, FS_SET )
  *      ENDIF
  *      RETURN nNumRead != 0
+ *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
  *  $INCLUDE$
@@ -477,26 +497,28 @@
  *  $SYNTAX$
  *      FILE( <cFileSpec> ) --> lExists
  *  $ARGUMENTS$
- *      <cFileSpec> Dos Skeleton or file name to find.
+ *      <cFileSpec> Dos Skeleton or file name to find.   </par>
  *  $RETURNS$
  *      <lExists> a logical true (.T.) if the file exists or logical
- *      false (.F.).
+ *      false (.F.).   </par>
  *  $DESCRIPTION$
  *      This function return a logical true (.T.) if the given filename
- *      <cFileSpec> exist.
+ *      <cFileSpec> exist.   </par>
+
  *      Dos skeletons symbols may be used in the filename in <cFileSpec>,
  *      as may the drive and/or path name. If a drive are not explicity
  *      specified,FILE() will first search the current drive and directory,
  *      and will look for the file in the directories specified by SET PATH
  *      TO and SET DEFAULT TO commands.However, this command does not look
- *      at the values in the DOS PATH command.
+ *      at the values in the DOS PATH command.   </par>
  *  $EXAMPLES$
  *      ? file('c:\harbour\doc\compiler.txt")
  *      ? file('c:/harbour/doc/subcodes.txt")
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.
+ *      This function is CA-Clipper compatible.   </par>
  *  $SEEALSO$
  *      SET PATH,SET DEFAULT,SET()
  *  $END$
@@ -512,37 +534,41 @@
  *  $SYNTAX$
  *      FREADSTR(<nHandle>, <nBytes>) --> cString
  *  $ARGUMENTS$
- *      <nHandle> DOS file handle number.
+ *      <nHandle> DOS file handle number.    </par>
  *
- *      <nBytes>  Number of bytes to read.
+ *      <nBytes>  Number of bytes to read.   </par>
  *  $RETURNS$
- *      <cString> an characted expression
+ *      <cString> an characted expression    </par>
  *  $DESCRIPTION$
  *      This function returns a character string of <nBytes> bytes from a
- *      file whose DOS file handle is <nHandle>.
+ *      file whose DOS file handle is <nHandle>.   </par>
+
  *      The value of the file handle <nHandle> is obtained from either the
- *      FOPEN() or FCREATE() functions.
+ *      FOPEN() or FCREATE() functions.   </par>
+
  *      The value of <nBytes> is the number of bytes to read from the file.
  *      The returned string will be the number of characters specified in
  *      <nBytes> or the number of bytes read before an end-of-file charac-
- *      ter (ASCII 26) is found.
+ *      ter (ASCII 26) is found.   </par>
+
  *      NOTE  This function is similar to the FREAD() function, except that
  *      it will not     read binary characters that may he required as part of
  *      a header of a file construct. Characters Such as CHR(0) and CHR(26)
  *      may keep this   function from performing its intended operation. In this
  *      event, the FREAD() function should he used in place of the FREADSTR()
- *      function.
+ *      function.   </par>
  *  $EXAMPLES$
  *      IF ( nH := FOPEN("x.txt") ) > 0
  *         cStr := Freadstr(nH,100)
  *         ? cStr
  *      ENDIF
  *      FCLOSE(nH)
+ *   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This function is not CA-Clipper compliant since may read
- *      strings greather the 65K depending of platform.
+ *      strings greather the 65K depending of platform.   </par>
  *  $SEEALSO$
  *      BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $END$
@@ -558,24 +584,26 @@
  *  $ONELINER$
  *      Changes the name of a specified file
  *  $SYNTAX$
- *     RENAME <cOldFile> TO <cNewFile>
+ *     RENAME <cOldFile> TO <cNewFile>   </par>
  *  $ARGUMENTS$
- *      <cOldFile> Old filename
- *      <cNewFile> New Filename
+ *      <cOldFile> Old filename   </par>
+ *      <cNewFile> New Filename   </par>
  *  $DESCRIPTION$
  *      This command changes the name of <cOldFile> to <cNewFile>.Both
  *      <cOldFile> and <cNewFile> must include a file extension.This command
  *      if not affected by the SET PATH TO or SET DEFAULT TO commands;drive
  *      and directoy designaters must be specified if either file is in a
- *      directory other then the default drive and directory.
+ *      directory other then the default drive and directory.   </par>
+ *
  *      If <cNewFile> id currently open or if it previously exists, this
- *      command will not perform the desired operation.
+ *      command will not perform the desired operation.   </par>
  *  $EXAMPLES$
  *      RENAME c:\autoexec.bat to c:\autoexec.old
+ *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible
+ *      This command is CA-Clipper compatible   </par>
  *  $SEEALSO$
  *      CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
  *  $END$
@@ -591,21 +619,23 @@
  *  $SYNTAX$
  *      ERASE <xcFile>
  *  $ARGUMENTS$
- *      <xcFile> Name of file to remove
+ *      <xcFile> Name of file to remove   </par>
  *  $DESCRIPTION$
  *      This command removes a file from the disk.The use of a drive,directo-
  *      ry,and wild-card skeleton operator is allowed for the root of the
  *      filename.The file extension is required.The SET DEFAULT and SET PATH
- *      commands do not affect this command.
+ *      commands do not affect this command.   </par>
+
  *      The file must be considered closed by the operating system before it
- *      may be deleted.
+ *      may be deleted.   </par>
  *  $EXAMPLES$
  *      Erase c:\autoexec.bat
  *      Erase c:/temp/read.txt
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible
+ *      This command is CA-Clipper compatible   </par>
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),DELETE FILE
  *  $END$
@@ -621,21 +651,23 @@
  *  $SYNTAX$
  *      DELETE FILE <xcFile>
  *  $ARGUMENTS$
- *      <xcFile> Name of file to remove
+ *      <xcFile> Name of file to remove         </par>
  *  $DESCRIPTION$
  *      This command removes a file from the disk.The use of a drive,directo-
  *      ry,and wild-card skeleton operator is allowed for the root of the
  *      filename.The file extension is required.The SET DEFAULT and SET PATH
- *      commands do not affect this command.
+ *      commands do not affect this command.    </par>
+
  *      The file must be considered closed by the operating system before it
- *      may be deleted.
+ *      may be deleted.   </par>
  *  $EXAMPLES$
  *      Erase c:\autoexec.bat
  *      Erase c:/temp/read.txt
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible
+ *      This command is CA-Clipper compatible   </par>
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),ERASE
  *  $END$
@@ -652,27 +684,27 @@
  *      __TYPEFILE( <cFile>, [<lPrint>] ) --> NIL
  *  $ARGUMENTS$
  *      <cFile> is a name of the file to display. If the file have an
- *      extension, it must be specified (there is no default value).
+ *      extension, it must be specified (there is no default value).   </par>
  *
  *      <lPrint> is an optional logical value that specifies whether the
  *      output should go only to the screen (.F.) or to both the screen and
- *      printer (.T.), the default is (.F.).
+ *      printer (.T.), the default is (.F.).   </par>
  *  $RETURNS$
- *      __TYPEFILE() always return NIL.
+ *      __TYPEFILE() always return NIL.   </par>
  *  $DESCRIPTION$
  *      __TYPEFILE() function type the content of a text file on the screen
  *      with an option to send this information also to the printer. The
- *      file is displayed as is without any headings or formating.
+ *      file is displayed as is without any headings or formating.   </par>
  *
  *      If <cFile> contain no path, __TYPEFILE() try to find the file first
  *      in the SET DEFAULT directory and then in search all of the SET PATH
- *      directories. If <cFile> can not be found a run-time error occur.
+ *      directories. If <cFile> can not be found a run-time error occur.   </par>
  *
- *      Use SET CONSOLE OFF to suppress screen output.
- *      You can pause the output using Ctrl-S, press any key to resume.
+ *      Use SET CONSOLE OFF to suppress screen output.                     </par>
+ *      You can pause the output using Ctrl-S, press any key to resume.   </par>
  *
  *      __TYPEFILE() function is used in the preprocessing of the TYPE
- *      command.
+ *      command.  </par>
  *  $EXAMPLES$
  *      The following examples assume a file name MyText.DAT exist in all
  *      specified paths, a run-time error would displayed if it does not
@@ -687,10 +719,11 @@
  *      SET CONSOLE OFF
  *      __TYPEFILE( "MyText.DAT", .T. )
  *      SET CONSOLE ON
+ *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()
+ *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()   </par>
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
  *  $END$
@@ -709,30 +742,30 @@
  *      <xcFile> is a name of the file to display. If the file have an
  *      extension, it must be specified (there is no default value).
  *      It can be specified as literal file name or as a character
- *      expression enclosed in parentheses.
+ *      expression enclosed in parentheses.   </par>
  *
  *      TO PRINTER is an optional keyword that specifies that the output
- *      should go to both the screen and printer.
+ *      should go to both the screen and printer.   </par>
  *
  *      TO FILE <xcDestFile> copy the source <xcFile> also to a file. If no
  *      extension is given (.txt) is added to the output file name.
  *      <xcDestFile> can be specified as literal file name or as a character
- *      expression enclosed in parentheses.
+ *      expression enclosed in parentheses.   </par>
  *  $DESCRIPTION$
  *      TYPE command type the content of a text file on the screen
  *      with an option to send this information also to the printer or to
  *      an alternate file. The file is displayed as is without any headings
- *      or formating.
+ *      or formating.   </par>
  *
  *      If <xcFile> contain no path, TYPE try to find the file first in the
  *      SET DEFAULT directory and then in search all of the SET PATH
- *      directories. If <xcFile> can not be found a run-time error occur.
+ *      directories. If <xcFile> can not be found a run-time error occur.   </par>
  *
  *      If <xcDestFile> contain no path it is created in the SET DEFAULT
- *      directory.
+ *      directory.   </par>
  *
- *      Use SET CONSOLE OFF to suppress screen output.
- *      You can pause the output using Ctrl-S, press any key to resume.
+ *      Use SET CONSOLE OFF to suppress screen output.   </par>
+ *      You can pause the output using Ctrl-S, press any key to resume.   </par>
  *  $EXAMPLES$
  *      The following examples assume a file name MyText.DAT exist in all
  *      specified paths, a run-time error would displayed if it does not
@@ -750,10 +783,11 @@
  *
  *      // display MyText.DAT file on screen and into a file MyReport.txt
  *      TYPE MyText.DAT TO FILE MyReport
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      TYPE works exactly like CA-Clipper's TYPE
+ *      TYPE works exactly like CA-Clipper's TYPE   </par>
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
  *  $END$
@@ -769,26 +803,29 @@
  *  $SYNTAX$
  *      CURDIR( [<cDrive>] )  --> cPath
  *  $ARGUMENTS$
- *      <cDir> OS drive letter
+ *      <cDir> OS drive letter   </par>
  *  $RETURNS$
- *      <cPath> Name of directory
+ *      <cPath> Name of directory   </par>
  *  $DESCRIPTION$
  *      This function yields the name of the current OS directory on a
  *      specified drive.If <cDrive> is not speficied,the currently logged
- *      drive will be used.
+ *      drive will be used.   </par>
+
  *      This function should not return the leading and trailing
- *      (back)slashes.
+ *      (back)slashes.   </par>
+
  *      If an error has been detected by the function,or the current OS
  *      directory is the root,the value of the function will be a NULL
- *      byte.
+ *      byte.   </par>
  *  $EXAMPLES$
  *      ? Curdir()
+ *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper Compatible
+ *      This function is Ca-Clipper Compatible   </par>
  *  $PLATFORMS$
- *      ALL
+ *      ALL   </par>
  *  $SEEALSO$
  *      FILE()
  *  $END$

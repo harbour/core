@@ -158,12 +158,12 @@
  *      Use the "INIT <uValue>" clause to initialize that DATA to <uValue>
  *      whenever the class is first used.  </par>
  *  $EXAMPLES$
-   <fixed>
+       <fixed>
  *      CLASS TWindow
  *         DATA   hWnd, nOldProc
  *         CLASSDATA lRegistered AS LOGICAL
  *      ENDCLASS
-    </fixed>
+        </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -245,7 +245,7 @@
  *                   Use this syntax only for defining a full method after
  *                   the ENDCLASS command.  </par>
  *  $EXAMPLES$
-    <fixed>
+        <fixed>
  *      CLASS TWindow
  *         DATA   hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
@@ -262,9 +262,11 @@
  *         ... <code> ...
  *         ... <code> ...
  *      RETURN Self
-    </fixed>
+        </fixed>
  *  $TESTS$
+        <fixed>
  *      TestOp.prg
+         </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

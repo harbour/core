@@ -288,7 +288,7 @@
  *
  *      <nDelay> is a Harbour extension.    </par>
  *  $SEEALSO$
- *       @...PROMPT,MENU TO, STDOUT(),__NONOALERT()
+ *       @...PROMPT,MENU TO,STDOUT(),__NONOALERT()
  *  $END$
  */
 
@@ -387,6 +387,7 @@
  *      </fixed>
  *  $TESTS$
  *      see the regression test suit for comprehensive tests.   </par>
+ *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

@@ -24,26 +24,28 @@
  *  $SYNTAX$
  *      MEMOTRAN( <cString>, <cHard>, <cSoft> ) --> <cConvertedString>
  *  $ARGUMENTS$
- *      <cString> is a string of chars to convert.
+ *      <cString> is a string of chars to convert.   </par>
  *      <cHard> is the character to replace hard carriages with. If not
- *      specified defaults to semicolon.
+ *      specified defaults to semicolon.   </par>
  *      <cSoft> is the character to replace soft carriages with. If not
- *      specified defaults to single space.
+ *      specified defaults to single space.   </par>
  *  $RETURNS$
- *      <cConvertedString> Trasformed string.
+ *      <cConvertedString> Trasformed string.   </par>
  *  $DESCRIPTION$
  *      Returns a string/memo with carriage chars converted to specified
- *      chars.
+ *      chars.   </par>
  *  $EXAMPLES$
  *      ? MEMOTRAN( DATA->CNOTES )
+ *  </fixed>
  *  $TESTS$
  *      @ 1, 1 SAY MEMOTRAN( Data->CNOTES )
  *      will display converted string starting on row two, column two of the
  *      current device.
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOTRAN() is fully CA-Clipper compliant.
+ *      MEMOTRAN() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      HARDCR(),STRTRAN()
  *  $END$
@@ -59,22 +61,24 @@
  *  $SYNTAX$
  *      HARDCR( <cString> ) --> <cConvertedString>
  *  $ARGUMENTS$
- *      <cString> is a string of chars to convert.
+ *      <cString> is a string of chars to convert.   </par>
  *  $RETURNS$
- *      <cConvertedString> Trasformed string.
+ *      <cConvertedString> Trasformed string.   </par>
  *  $DESCRIPTION$
  *      Returns a string/memo with soft carriages chars converted to
- *      hard carraige char.
+ *      hard carraige char.   </par>
  *  $EXAMPLES$
  *      ? HARDCR( Data->CNOTES )
+ *  </fixed>
  *  $TESTS$
  *      @ 1, 1 SAY HARDCR( Data->CNOTES )
  *      will display converted string starting on row two, column two of the
  *      current device.
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HARDCR() is fully CA-Clipper compliant.
+ *      HARDCR() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      MEMOTRAN(),STRTRAN()
  *  $END$

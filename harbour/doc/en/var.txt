@@ -21,33 +21,34 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVPUBLIC()
+ *      __MVPUBLIC()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function creates a PUBLIC variable
+ *      This function creates a PUBLIC variable
  *  $SYNTAX$
- *    __MVPUBLIC( <variable_name> )
+ *      __MVPUBLIC( <variable_name> )
  *  $ARGUMENTS$
- *    <variable_name> = either a string that contains the variable's name or
- *       an one-dimensional array of strings with variable names
- *       No skeleton are allowed here.
+ *      <variable_name> = either a string that contains the variable's name or
+ *      an one-dimensional array of strings with variable names
+ *      No skeleton are allowed here.   </par>
  *  $RETURNS$
- *    Nothing
+ *      Nothing   </par>
  *  $DESCRIPTION$
- *    This function can be called either by the harbour compiler or by user.
- *    The compiler always passes the item of IT_SYMBOL type that stores the
- *    name of variable.
+ *      This function can be called either by the harbour compiler or by user.
+ *      The compiler always passes the item of IT_SYMBOL type that stores the
+ *      name of variable.   </par>
  *      If a variable with the same name exists already then the new
- *    variable is not created - the previous value remains unchanged.
+ *      variable is not created - the previous value remains unchanged.   </par>
  *      If it is first variable with this name then the  variable is
- *       initialized with .T. value.
- *
+ *      initialized with .T. value.   </par>
  *  $EXAMPLES$
- *  $TESTS$
+ *      None Avaliable
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is a Harbour extension   </par>
  *  $SEEALSO$
  *
  *  $END$
@@ -55,96 +56,90 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVPRIVATE()
+ *      __MVPRIVATE()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function creates a PRIVATE variable
+ *      This function creates a PRIVATE variable
  *  $SYNTAX$
- *    __MVPRIVATE( <variable_name> )
+ *      __MVPRIVATE( <variable_name> )
  *  $ARGUMENTS$
- *    <variable_name> = either a string that contains the variable's name or
- *       an one-dimensional array of strings with variable names
- *       No skeleton are allowed here.
+ *      <variable_name> = either a string that contains the variable's name or
+ *      an one-dimensional array of strings with variable names
+ *      No skeleton are allowed here.   </par>
  *  $RETURNS$
- *    Nothing
+ *      Nothing   </par>
  *  $DESCRIPTION$
- *    This function can be called either by the harbour compiler or by user.
- *    The compiler always passes the item of IT_SYMBOL type that stores the
- *    name of variable.
- *    If a variable with the same name exists already then the value of old
- *    variable is hidden until the new variable is  released. The new variable
- *    is always initialized to NIL value.
- *
+ *      This function can be called either by the harbour compiler or by user.
+ *      The compiler always passes the item of IT_SYMBOL type that stores the
+ *      name of variable.   </par>
+ *      If a variable with the same name exists already then the value of old
+ *      variable is hidden until the new variable is  released. The new variable
+ *      is always initialized to NIL value.   </par>
  *  $EXAMPLES$
- *
- *  $TESTS$
- *
+ *      None Avaliable
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
+ *      This function is a Harbour extension   </par>
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVXRELEASE()
+ *      __MVXRELEASE()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function releases value stored in PRIVATE or PUBLIC variable
+ *      This function releases value stored in PRIVATE or PUBLIC variable
  *  $SYNTAX$
- *    __MVXRELEASE( <variable_name> )
+ *      __MVXRELEASE( <variable_name> )
  *  $ARGUMENTS$
- *    <variable_name> = either a string that contains the variable's name or
- *       an one-dimensional array of strings with variable names
- *       No skeleton are allowed here.
+ *      <variable_name> = either a string that contains the variable's name or
+ *      an one-dimensional array of strings with variable names
+ *      No skeleton are allowed here.   </par>
  *  $RETURNS$
- *    Nothing
+ *      Nothing   </par>
  *  $DESCRIPTION$
- *    This function releases values stored in memory variable. It shouldn't
- *    be called directly, rather it should be placed into RELEASE command.
+ *      This function releases values stored in memory variable. It shouldn't
+ *      be called directly, rather it should be placed into RELEASE command.   </par>
  *      If the released variable is a PRIVATE variable then previously hidden
- *    variable with the same name becomes visible after exit from the
- *    procedure where released variable was created. If you access
- *    the released variable in the same function/procedure where it
- *    was created the the NIL value is returned. You can however assign
- *    a new value to released variable without any side effects.
+ *      variable with the same name becomes visible after exit from the
+ *      procedure where released variable was created. If you access
+ *      the released variable in the same function/procedure where it
+ *      was created the the NIL value is returned. You can however assign
+ *      a new value to released variable without any side effects.   </par>
  *
- *    It releases variable even if this variable was created in different
- *    procedure
+ *      It releases variable even if this variable was created in different
+ *      procedure   </par>
  *  $EXAMPLES$
  *
- *    PROCEDURE MAIN()
- *    PRIVATE mPrivate
+ *      PROCEDURE MAIN()
+ *      PRIVATE mPrivate
  *
- *       mPrivate :="PRIVATE from MAIN()"
- *       ? mPrivate     //PRIVATE from MAIN()
- *       Test()
- *       ? mPrivate     //PRIVATE from MAIN()
+ *        mPrivate :="PRIVATE from MAIN()"
+ *        ? mPrivate     //PRIVATE from MAIN()
+ *        Test()
+ *        ? mPrivate     //PRIVATE from MAIN()
  *
- *    RETURN
+ *      RETURN
  *
- *    PROCEDURE Test()
- *    PRIVATE mPrivate
+ *      PROCEDURE Test()
+ *      PRIVATE mPrivate
  *
- *       mPrivate :="PRIVATE from Test()"
- *       ? mPrivate           //PRIVATE from TEST()
- *       RELEASE mPrivate
- *       ? mPrivate           //NIL
- *       mPrivate :="Again in Test()"
+ *        mPrivate :="PRIVATE from Test()"
+ *        ? mPrivate           //PRIVATE from TEST()
+ *        RELEASE mPrivate
+ *        ? mPrivate           //NIL
+ *        mPrivate :="Again in Test()"
  *
- *    RETURN
- *
- *  $TESTS$
- *
+ *      RETURN
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is a Harbour extension   </par>
  *  $SEEALSO$
  *
  *  $END$
@@ -152,39 +147,38 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVRELEASE()
+ *      __MVRELEASE()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- * This function releases PRIVATE variables
+ *      This function releases PRIVATE variables
  *  $SYNTAX$
- *    __MVRELEASE( <skeleton>, <include_exclude_flag> )
+ *      __MVRELEASE( <skeleton>, <include_exclude_flag> )
  *  $ARGUMENTS$
- *    <skeleton> = string that contains the wildcard mask for variables' names
- *       that will be released. Supported wildcards: '*' and '?'
- *    <include_exclude_flag> = logical value that specifies if variables
- *       that match passed skeleton should be either included in deletion
- *       (if .T.) or excluded from deletion (if .F.)
+ *      <skeleton> = string that contains the wildcard mask for variables' names
+ *      that will be released. Supported wildcards: '*' and '?'   </par>
+ *      <include_exclude_flag> = logical value that specifies if variables
+ *      that match passed skeleton should be either included in deletion
+ *      (if .T.) or excluded from deletion (if .F.)   </par>
  *  $RETURNS$
  *    Nothing
  *  $DESCRIPTION$
- *    This function releases values stored in memory variables. It shouldn't
- *    be called directly, it should be placed into RELEASE ALL command.
+ *      This function releases values stored in memory variables. It shouldn't
+ *      be called directly, it should be placed into RELEASE ALL command.   </par>
  *      If the released variable is a PRIVATE variable then previously hidden
- *    variable with the same name becomes visible after exit from the
- *    procedure where released variable was created. If you access
- *    the released variable in the same function/procedure where it
- *    was created the the NIL value is returned. You can however assign
- *    a new value to released variable without any side effects.
- *      PUBLIC variables are not changed by this function.
+ *      variable with the same name becomes visible after exit from the
+ *      procedure where released variable was created. If you access
+ *      the released variable in the same function/procedure where it
+ *      was created the the NIL value is returned. You can however assign
+ *      a new value to released variable without any side effects.
+ *      PUBLIC variables are not changed by this function.   </par>
  *  $EXAMPLES$
- *
- *  $TESTS$
- *
+ *      None Avaliable
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is a Harbour extension   </par>
  *  $SEEALSO$
  *
  *  $END$
@@ -192,270 +186,266 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVSCOPE()
+ *      __MVSCOPE()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    If variable exists then returns its scope.
+ *      If variable exists then returns its scope.
  *  $SYNTAX$
- *    __MVSCOPE( <cVarName> )
+ *      __MVSCOPE( <cVarName> )
  *  $ARGUMENTS$
- *    <cVarName> = a string with a variable name to check
+ *      <cVarName> = a string with a variable name to check   </par>
  *  $RETURNS$
- *    The symbolic values are defined in include/hbmemvar.ch
- *    HB_MV_NOT_FOUND     =variable is not declared (not found in symbol table)
- *    HB_MV_UNKNOWN       =if variable doesn't exist (but found in symbol table)
- *    HB_MV_ERROR         =if information cannot be obtained (memory error
- *       or argument error)
- *    HB_MV_PUBLIC         =for public variables
- *    HB_MV_PRIVATE_GLOBAL =for private variables declared outside of current
- *       function/procedure
- *    HB_MV_PRIVATE_LOCAL  =for private variables declared in current
- *       function/procedure
+ *      The symbolic values are defined in include/hbmemvar.ch   </par>
+ *      HB_MV_NOT_FOUND     =variable is not declared (not found in symbol table)   </par>
+ *      HB_MV_UNKNOWN       =if variable doesn't exist (but found in symbol table)   </par>
+ *      HB_MV_ERROR         =if information cannot be obtained (memory error
+ *      or argument error)   </par>
+ *      HB_MV_PUBLIC         =for public variables   </par>
+ *      HB_MV_PRIVATE_GLOBAL =for private variables declared outside of current
+ *      function/procedure   </par>
+ *      HB_MV_PRIVATE_LOCAL  =for private variables declared in current
+ *      function/procedure   </par>
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
  *
- *    PROCEDURE MAIN()
- *    PUBLIC mPublic
- *    PRIVATE mPrivateGlobal
+ *      PROCEDURE MAIN()
+ *      PUBLIC mPublic
+ *      PRIVATE mPrivateGlobal
  *
  *      CallProc()
- *       ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
+ *      ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
  *
- *    RETURN
+ *      RETURN
  *
- *    PROCEDURE CallProc()
- *    PRIVATE mPrivateLocal
+ *      PROCEDURE CallProc()
+ *      PRIVATE mPrivateLocal
  *
- *       ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
- *       ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
- *       ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
- *       ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
+ *      ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
+ *      ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
+ *      ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
+ *      ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
  *
- *       IF( __mvScope( "mPublic" ) > HB_MV_ERROR )
- *          ? "Variable exists"
- *       ELSE
- *          ? "Variable not created yet"
- *       ENDIF
+ *      IF( __mvScope( "mPublic" ) > HB_MV_ERROR )
+ *         ? "Variable exists"
+ *      ELSE
+ *         ? "Variable not created yet"
+ *      ENDIF
  *
- *    RETURN
+ *      RETURN
  *
- *  $TESTS$
- *
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is a Harbour Extension   </par>
  *  $SEEALSO$
- *    include/hbmemvar.ch
+ *      include/hbmemvar.ch   </par>
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVCLEAR()
+ *      __MVCLEAR()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function releases all PRIVATE and PUBLIC variables
+ *      This function releases all PRIVATE and PUBLIC variables
  *  $SYNTAX$
- *    __MVCLEAR()
+ *      __MVCLEAR()
  *  $ARGUMENTS$
- *
+ *      None   </par>
  *  $RETURNS$
- *    Nothing
+ *      Nothing   </par>
  *  $DESCRIPTION$
- *      This function releases all PRIVATE and PUBLIC variables.
- *    It is used to implement CLEAR MEMORY statement.
- *    The memory occupied by all visible variables are released - any
- *    attempt to access the variable will result in a runtime error.
- *    You have to reuse PRIVATE or PUBLIC statement to create again
- *    the variable that was cleared by this function.
+ *      This function releases all PRIVATE and PUBLIC variables.   </par>
+ *      It is used to implement CLEAR MEMORY statement.   </par>
+ *      The memory occupied by all visible variables are released - any
+ *      attempt to access the variable will result in a runtime error.
+ *      You have to reuse PRIVATE or PUBLIC statement to create again
+ *      the variable that was cleared by this function.   </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
- *  $SEEALSO$
- *
+ *      This function is a Harbour extension   </par>
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVDBGINFO()
+ *      __MVDBGINFO()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function returns the information about the variables for debugger
+ *      This function returns the information about the variables for debugger
  *  $SYNTAX$
- *    __MVDBGINFO( <nScope> [, <nPosition> [, @<cVarName>] ] )
+ *      __MVDBGINFO( <nScope> [, <nPosition> [, @<cVarName>] ] )
  *  $ARGUMENTS$
- *     <nScope> = the scope of variables for which an information is asked
- *           Supported values (defined in hbmemvar.ch)
- *           HB_MV_PUBLIC
- *           HB_MV_PRIVATE (or any other value)
- *     <nPosition> = the position of asked variable on the list of variables
- *        with specified scope - it should start from position 1
- *     <cVarName> = the value is filled with a variable name if passed by
- *        reference and <nPosition> is specified
+ *      <nScope> = the scope of variables for which an information is asked
+ *           Supported values (defined in hbmemvar.ch)   </par>
+ *           HB_MV_PUBLIC   </par>
+ *           HB_MV_PRIVATE (or any other value)   </par>
+ *      <nPosition> = the position of asked variable on the list of variables
+ *      with specified scope - it should start from position 1   </par>
+ *      <cVarName> = the value is filled with a variable name if passed by
+ *      reference and <nPosition> is specified   </par>
  *  $RETURNS$
- *     The return value depends on the number of arguments passed
+ *      The return value depends on the number of arguments passed   </par>
  *  $DESCRIPTION$
- *      This function retrieves the information about memvar variables.
+ *      This function retrieves the information about memvar variables.   </par>
  *      It returns either the number of variables with given scope (when the
- *    first argument is passed only) or a value of variable identified by its
- *    position in the variables' list (when second argument is passed).
+ *      first argument is passed only) or a value of variable identified by its
+ *      position in the variables' list (when second argument is passed).   </par>
  *      It also returns the name of a variable if optional third argument
- *    is passed by reference.
+ *      is passed by reference.   </par>
  *
  *      If requested variable doesn't exist (requested position is
- *    greater then the number of defined variables) then NIL value is
- *    returned and variable name is set to "?"
+ *      greater then the number of defined variables) then NIL value is
+ *      returned and variable name is set to "?"   </par>
  *
  *      The dynamic symbols table is used to find a PUBLIC variable then
- *    the PUBLIC variables are always sorted alphabetically. The PRIVATE
- *    variables are sorted in the creation order.
+ *      the PUBLIC variables are always sorted alphabetically. The PRIVATE
+ *      variables are sorted in the creation order.   </par>
  *
- *    Note:
- *    Due to dynamic nature of memvar variables there is no guarantee that
- *    successive calls to retrieve the value of <Nth> PUBLIC variable will
- *    return the value of the same variable.
+ *      Note:   </par>
+ *      Due to dynamic nature of memvar variables there is no guarantee that
+ *      successive calls to retrieve the value of <Nth> PUBLIC variable will
+ *      return the value of the same variable.   </par>
  *  $EXAMPLES$
  *
- *  #include <hbmemvar.ch>
+ *      #include <hbmemvar.ch>
  *
- *  LOCAL nCount, i, xValue, cName
+ *      LOCAL nCount, i, xValue, cName
  *
- *  nCount =_mvDBGINFO( HB_MV_PUBLIC )
- *  FOR i:=1 TO nCount
- *     xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
- *     ? i, cName, xValue
- *  NEXT
- *
+ *      nCount =_mvDBGINFO( HB_MV_PUBLIC )
+ *      FOR i:=1 TO nCount
+ *          xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+ *          ? i, cName, xValue
+ *      NEXT
+ *   </fixed>
  *  $TESTS$
+ *      #include <hbmemvar.ch>
+ *      PROCEDURE MAIN()
  *
- *  #include <hbmemvar.ch>
- *  PROCEDURE MAIN()
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      PUBLIC cPublic:='cPublic in MAIN'
  *
- *    PUBLIC cPublic:='cPublic in MAIN'
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      PRIVATE cPrivate:='cPrivate in MAIN'
  *
- *    PRIVATE cPrivate:='cPrivate in MAIN'
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      CountMemvars()
  *
- *    CountMemvars()
- *
- *    ? 'Back in Main'
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? 'Back in Main'
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
  *
- *  RETURN
+ *      RETURN
  *
- *  PROCEDURE CountMemvars()
- *  LOCAL i, nCnt, xVal, cName
- *  PUBLIC ccPublic:='ccPublic'
- *  PRIVATE ccPrivate:='ccPrivate'
+ *      PROCEDURE CountMemvars()
+ *      LOCAL i, nCnt, xVal, cName
+ *      PUBLIC ccPublic:='ccPublic'
+ *      PRIVATE ccPrivate:='ccPrivate'
  *
- *    ? 'In CountMemvars'
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? 'In CountMemvars'
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
- *    PRIVATE cPublic:='cPublic'
+ *      PRIVATE cPublic:='cPublic'
  *
- *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
- *    nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
- *    FOR i:=1 TO nCnt
+ *      nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
+ *      FOR i:=1 TO nCnt
  *        xVal =__mvDBGINFO( HB_MV_PRIVATE, i, @cName )
  *        ? i, '=', cName, xVal
- *    NEXT
+ *      NEXT
  *
- *    nCnt =__mvDBGINFO( HB_MV_PUBLIC ) +1
- *    FOR i:=1 TO nCnt
+ *      nCnt =__mvDBGINFO( HB_MV_PUBLIC ) +1
+ *      FOR i:=1 TO nCnt
  *        xVal =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
  *        ? i, '=', cName, xVal
- *    NEXT
+ *      NEXT
  *
- *  RETURN
- *
+ *      RETURN
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *     This function should be called from the debugger only.
- *  $SEEALSO$
- *
+ *     This function should be called from the debugger only.   </par>
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVGET()
+ *      __MVGET()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function returns value of memory variable
+ *      This function returns value of memory variable
  *  $SYNTAX$
- *    __MVGET( <cVarName> )
+ *      __MVGET( <cVarName> )  --> <xVar>
  *  $ARGUMENTS$
- *    <cVarName> - string that specifies the name of variable
+ *      <cVarName> - string that specifies the name of variable   </par>
  *  $RETURNS$
- *    The value of variable
+ *      <xVar> The value of variable   </par>
  *  $DESCRIPTION$
  *      This function returns the value of PRIVATE or PUBLIC variable if
- *    this variable exists otherwise it generates a runtime error.
- *    The variable is specified by its name passed as the function parameter.
+ *      this variable exists otherwise it generates a runtime error.   </par>
+ *      The variable is specified by its name passed as the function parameter.   </par>
  *  $EXAMPLES$
- *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
- *    __MVPUT( cMemvar, x ) ) }
+ *      FUNCTION MEMVARBLOCK( cMemvar )
+ *      RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
+ *      __MVPUT( cMemvar, x ) ) }
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is a Harbour extension   </par>
  *  $SEEALSO$
- *    __MVPUT()
+ *      __MVPUT()
  *  $END$
  */
 
 /*  $DOC$
  *  $FUNCNAME$
- *    __MVPUT()
+ *      __MVPUT()
  *  $CATEGORY$
- *    Variable Management
+ *      Variable Management
  *  $ONELINER$
- *    This function set the value of memory variable
+ *      This function set the value of memory variable
  *  $SYNTAX$
- *    __MVGET( <cVarName> [, <xValue>] )
+ *      __MVGET( <cVarName> [, <xValue>] )  --> <xValue>
  *  $ARGUMENTS$
- *    <cVarName> - string that specifies the name of variable
- *    <xValue>   - a value of any type that will be set - if it is not
- *      specified then NIL is assumed
+ *      <cVarName> - string that specifies the name of variable   </par>
+ *      <xValue>   - a value of any type that will be set - if it is not
+ *      specified then NIL is assumed   </par>
  *  $RETURNS$
- *    A value assigned to the given variable.
+ *      <xValue> A value assigned to the given variable.   </par>
  *  $DESCRIPTION$
  *      This function sets the value of PRIVATE or PUBLIC variable if
- *    this variable exists otherwise it generates a runtime error.
- *    The variable is specified by its name passed as the function
- *    parameter.
- *    If a value is not specified then the NIL is assumed
+ *      this variable exists otherwise it generates a runtime error.
+ *      The variable is specified by its name passed as the function
+ *      parameter.   </par>
+ *      If a value is not specified then the NIL is assumed   </par>
  *  $EXAMPLES$
- *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
- *     __MVPUT( cMemvar, x ) ) }
+ *      FUNCTION MEMVARBLOCK( cMemvar )
+ *      RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ),;
+ *      __MVPUT( cMemvar, x ) ) }
+ *   </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is a Harbour extension   </par>
  *  $SEEALSO$
  *    __MVPUT()
  *  $END$
@@ -469,11 +459,11 @@
  *  $ONELINER$
  *      Returns a codeblock that sets/gets a value of memvar variable
  *  $SYNTAX$
- *      MEMVARBLOCK( <cMemvarName> )
+ *      MEMVARBLOCK( <cMemvarName> ) --> <bBlock>
  *  $ARGUMENTS$
- *      <cMemvarName> - a string that contains the name of variable
+ *      <cMemvarName> - a string that contains the name of variable   </par>
  *  $RETURNS$
- *      a codeblock that sets/get the value of variable
+ *      <bBlock> a codeblock that sets/get the value of variable   </par>
  *  $DESCRIPTION$
  *      This function returns a codeblock that sets/gets the value of
  *      PRIVATE or PUBLIC variable. When this codeblock is evaluated
@@ -481,7 +471,7 @@
  *      of given variable. If the second parameter is passed for
  *      the codeblock evaluation then its value is used to set the new
  *      value of given variable - the passed value is also returned
- *      as a value of the codeblock evaluation.
+ *      as a value of the codeblock evaluation.   </par>
  *  $EXAMPLES$
  *      PROCEDURE MAIN()
  *      LOCAL cbSetGet
@@ -492,10 +482,11 @@
  *      ? "Value of xPublic variable", EVAL( cbSetGet )
  *
  *      RETURN
- *  $TESTS$
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
+ *      This function is Ca-Clipper compatible     </par>
  *  $SEEALSO$
  *      __MVGET(),__MVPUT()
  *  $END$
@@ -511,23 +502,23 @@
  *  $SYNTAX$
  *      FIELDBLOCK( <cFieldName> ) --> bFieldBlock
  *  $ARGUMENTS$
- *      <cFieldName> is a string that contain the field name.
+ *      <cFieldName> is a string that contain the field name.   </par>
  *  $RETURNS$
  *      FIELDBLOCK() return a code block that when evaluate could retrieve
  *      field value or assigning a new value to the field. If <cFieldName>
  *      is not specified or from type other than character, FIELDBLOCK()
- *      return NIL.
- *  $DESCRIPTION$
+ *      return NIL.   </par>
+ *  $DESCRIPTION$  
  *      FIELDBLOCK() return a code block that sets/gets the value of field.
  *      When this code block is evaluated without any parameters passed then
  *      it returns the current value of the given field. If the code block
  *      is evaluated with a parameter, than its value is used to set a new
  *      value to the field, this value is also return by the block. If the
  *      block is evaluate and there is no field with the name <cFieldName>
- *      in the current work area, the code block return NIL.
+ *      in the current work area, the code block return NIL.   </par>
  *
  *      Note that FIELDBLOCK() works on the current work area, if you need
- *      a specific work area code block use FIELDWBLOCK() instead.
+ *      a specific work area code block use FIELDWBLOCK() instead.   </par>
  *  $EXAMPLES$
  *      // open a file named Test that have a field named "name"
  *      LOCAL bField
@@ -536,14 +527,14 @@
  *      ? 'Original value of field "name" :', EVAL( bField )
  *      EVAL( bField, "Mr X new name" )
  *      ? 'New value for the field "name" :', EVAL( bField )
- *  $TESTS$
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      If the block is evaluate and there is no field with the name
- *      <cFieldName> in the current work area, the code block return NIL.
+ *      <cFieldName> in the current work area, the code block return NIL.   </par>
  *
- *      CA-Clipper would raise BASE/1003 error if the field does not exist.
+ *      CA-Clipper would raise BASE/1003 error if the field does not exist.   </par>
  *  $SEEALSO$
  *      EVAL(),FIELDWBLOCK(),MEMVARBLOCK()
  *  $END$
@@ -559,15 +550,15 @@
  *  $SYNTAX$
  *      FIELDWBLOCK( <cFieldName>, <nWorkArea> ) --> bFieldBlock
  *  $ARGUMENTS$
- *      <cFieldName> is a string that contain the field name.
+ *      <cFieldName> is a string that contain the field name.   </par>
  *
- *      <nWorkArea> is the work area number in which <cFieldName> exist.
+ *      <nWorkArea> is the work area number in which <cFieldName> exist.   </par>
  *  $RETURNS$
  *      FIELDWBLOCK() return a code block that when evaluate could retrieve
  *      field value or assigning a new value for a field in a given work
  *      area. If <cFieldName> is not specified or from type other than
  *      character, or if <nWorkArea> is not specified or is not numeric
- *      FIELDWBLOCK() return NIL.
+ *      FIELDWBLOCK() return NIL.   </par>
  *  $DESCRIPTION$
  *      FIELDWBLOCK() return a code block that sets/gets the value of field
  *      from a given work area. When this code block is evaluated without
@@ -576,7 +567,7 @@
  *      value is used to set a new value to the field, this value is also
  *      return by the block. If the block is evaluate and there is no field
  *      with the name <cFieldName> in work area number <nWorkArea>, the code
- *      block return NIL.
+ *      block return NIL.   </par>
  *  $EXAMPLES$
  *      LOCAL bField
  *      // this block work on the field "name" that exist on work area 2
@@ -594,14 +585,14 @@
  *      ? "Name value for file Two :", EVAL( bField )
  *      EVAL( bField, "Two has new name" )
  *      ? "and now: ", One->name, Two->name
- *  $TESTS$
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      If the block is evaluate and there is no field with the name
- *      <cFieldName> in the given work area, the code block return NIL.
+ *      <cFieldName> in the given work area, the code block return NIL.   </par>
  *
- *      CA-Clipper would raise BASE/1003 error if the field does not exist.
+ *      CA-Clipper would raise BASE/1003 error if the field does not exist.   </par>
  *  $SEEALSO$
  *      EVAL(),FIELDBLOCK(),MEMVARBLOCK()
  *  $END$
@@ -617,21 +608,21 @@
  *  $SYNTAX$
  *      TYPE( <cExp> ) --> <cReturnType>
  *  $ARGUMENTS$
- *      <cExp> must be a character expression.
+ *      <cExp> must be a character expression.   </par>
  *  $RETURNS$
- *      Returns a string indicating the type of the passed expression.
+ *      <cReturnType> a string indicating the type of the passed expression.   </par>
  *
- *    "A"   - array
- *    "B"   - block
- *    "C"   - string
- *    "D"   - date
- *    "L"   - logical
- *    "M"   - memo
- *    "N"   - numeric
- *    "O"   - object
- *    "U"   - NIL, local, or static variable, or not linked-in function
- *    "UE"  - syntax error in the expression or invalid arguments
- *    "UI"  - function with non-reserved name was requested
+ *    "A"   - array   </par>
+ *    "B"   - block   </par>
+ *    "C"   - string   </par>
+ *    "D"   - date   </par>
+ *    "L"   - logical   </par>
+ *    "M"   - memo   </par>
+ *    "N"   - numeric   </par>
+ *    "O"   - object   </par>
+ *    "U"   - NIL, local, or static variable, or not linked-in function   </par>
+ *    "UE"  - syntax error in the expression or invalid arguments   </par>
+ *    "UI"  - function with non-reserved name was requested   </par>
  *  $DESCRIPTION$
  *      This function returns a string which represents the data type
  *      of the argument. The argument can be any valid Harbour expression.
@@ -640,33 +631,18 @@
  *      is returned (in other words there is no call for passed UDF function
  *      during a data type determination - this is Clipper compatible
  *      behavior). Additionally if requested user defined function is not
- *      linked into executable then "U" is returned.
+ *      linked into executable then "U" is returned.   </par>
  *
  *      The data type of expression is checked by invoking a macro compiler
  *      and by evaluation of generated code (if there is no syntax errors).
  *      This causes that TYPE() cannot determine a type of local or static
- *      variables - only symbols visible at runtime can be checked.
+ *      variables - only symbols visible at runtime can be checked.   </par>
  *
  *      Notice the subtle difference between TYPE and VALTYPE functions.
  *      VALTYPE() function doesn't call a macro compiler - it simply checks
  *      the type of passed argument of any type. TYPE() requires a string
  *      argument with a valid Harbour expression - the data type of this
- *      expression is returned.
- *
- *    Notes:
- *      - Incompatibility with Clipper:
- *          In the following code:
- *
- *          PRIVATE lCond := 0
- *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )
- *
- *          Clipper will print "UE" - in Harbour the output will be "UI"
- *
- *      - if "UI" is returned then the syntax of the expression is
- *          correct. However invalid arguments can be passed to
- *          function/procedure that will cause runtime errors during
- *          evaluation of expression.
- *
+ *      expression is returned.   </par>
  *  $EXAMPLES$
  *       ? TYPE( "{ 1, 2 }" )                            //prints "A"
  *       ? TYPE( "IIF(.T., SUBSTR('TYPE',2,1), .F.)" )   //prints "C"
@@ -688,11 +664,23 @@
  *          SET FILTER TO &cFilter
  *       ENDIF
  *
- *  $TESTS$
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *
+ *      - Incompatibility with Clipper:   </par>
+ *          In the following code:   </par>
+ *
+ *          PRIVATE lCond := 0   </par>
+ *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )   </par>
+ *
+ *          Clipper will print "UE" - in Harbour the output will be "UI"   </par>
+ *
+ *      - if "UI" is returned then the syntax of the expression is
+ *          correct. However invalid arguments can be passed to
+ *          function/procedure that will cause runtime errors during
+ *          evaluation of expression.   </par>
  *  $SEEALSO$
  *      VALTYPE()
  *  $END$
@@ -708,14 +696,15 @@
  *  $SYNTAX$
  *      VALTYPE( <xExp> ) --> <cReturnType>
  *  $ARGUMENTS$
- *      <xExp> is any valid expression.
+ *      <xExp> is any valid expression.   </par>
  *  $RETURNS$
- *      Returns a character indicating the type of the passed expression.
+ *      <cReturnType> a character indicating the type of the passed expression.   </par>
  *  $DESCRIPTION$
  *      This function returns one character which represents the date type
- *      of the argument.
+ *      of the argument.   </par>
  *  $EXAMPLES$
  *      See Test
+ *  </fixed>
  *  $TESTS$
  *      function Test()
  *         ? ValType( Array( 1 ) )  --> "A"
@@ -727,10 +716,11 @@
  *         ? ValType( TBrowse() )   --> "O"
  *         ? ValType( NIL )         --> "U"
  *      return nil
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      VALTYPE() is fully CA-Clipper compliant.
+ *      VALTYPE() is fully CA-Clipper compliant.   </par>
  *  $SEEALSO$
  *      TYPE()
  *  $END$

@@ -21,22 +21,22 @@
  *  $ONELINER$
  *     TClass() is used in the creation of all classes
  *  $SYNTAX$
- *     oClass := TClass():New("TMyClass")
- *        -or-
+ *     oClass := TClass():New("TMyClass")   </par>
+ *        -or-   </par>
  *     TClass() is usually accessed by defining a class with the commands
- *     defined in hbclass.h:
- *        CLASS TGetList    // Calls TClass() to create the TGetList class
- *           ...
- *        ENDCLASS
+ *     defined in hbclass.h:   </par>
+ *        CLASS TGetList    // Calls TClass() to create the TGetList class   </par>
+ *           ...     </par>
+ *        ENDCLASS   </par>
  *  $ARGUMENTS$
- *
+ *      
  *  $RETURNS$
  *     An instance of the TClass Class. This special object's :New()
- *     method can then create the classes you define.
+ *     method can then create the classes you define.   </par>
  *  $DESCRIPTION$
- *     TClass is a class that ...
- *     The class methods are as follows:
- *        New()                 Create a new instance of the class
+ *     TClass is a class that ...   </par>
+ *     The class methods are as follows:   </par>
+ *        New()                 Create a new instance of the class   </par>
  *  $EXAMPLES$
  *     FUNCTION TestObject()
  *     local oObject
@@ -45,6 +45,7 @@
  *     oObject:End()
  *
  *     RETURN Nil
+ *      </fixed>
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -54,9 +55,9 @@
  *     In Harbour, you can create your own classes--complete with
  *     Methods, Instance Variables, Class Variables and Inheritance.
  *     Entire applications can be designed and coded in Object Oriented
- *     style.
+ *     style.   </par>
  *  $PLATFORMS$
- *     All
+ *     All   </par>
  *  $SEEALSO$
  *     __objHasData(),Object Oriented Programming,CLASS
  *  $END$

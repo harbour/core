@@ -23,13 +23,14 @@
  *  $CATEGORY$
  *      DOS
  *  $RETURNS$
- *     <cOperatinSystem>  -> The Current operating system
+ *     <cOperatinSystem>  -> The Current operating system   </par>
  *  $DESCRIPTION$
- *      This function will return the current operating system
+ *      This function will return the current operating system   </par>
  *  $EXAMPLES$
  *      ? OS()
+ *  </fixed>
  *  $FILES$
- *      source/rtl/environ.c
+ *      source/rtl/environ.c   </par>
  *  $END$
  */
 
@@ -44,16 +45,17 @@
  *      VERSION([<xMode>]  --> <cReturn>
  *  $ARGUMENTS$
  *      [<xMode>]   Optional Parameter that enables the display
- *      of the C compiler version that HARBOUR was built with.
+ *      of the C compiler version that HARBOUR was built with.   </par>
  *  $RETURNS$
  *      <cReturn>   String contining the Harbour Version or the Harbour
- *      and C compiler Version when the <nMode> parameter is used.
+ *      and C compiler Version when the <nMode> parameter is used.   </par>
  *  $DESCRIPTION$
  *      This function returns the HARBOUR Version or the Harbour Version+C
- *      compiler Version used to create the Harbour runtime library
+ *      compiler Version used to create the Harbour runtime library   </par>
  *  $EXAMPLES$
  *     ? QOUT(VERSION())    // Displays Harbour version only
  *     ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
+ *  </fixed>
  *  $STATUS$
  *     S
  *  $COMPLIANCE$
@@ -62,9 +64,9 @@
  *     the Version of the CA-Clipper Compiler. The Harbour version returns
  *     only the Harbour Version if called without the <nMode> parameter, but
  *     returns both the Harbour Version and the Version of the C compiler used
- *     to build Harbour when the <nMode> parameter is present.
+ *     to build Harbour when the <nMode> parameter is present.   </par>
  *  $FILES$
- *    source/rtl/environ.c
+ *    source/rtl/environ.c   </par>
  *  $SEEALSO$
  *    OS()
  *  $END$
@@ -80,25 +82,26 @@
  *  $SYNTAX$
  *      GETENV(<cEnviroment>, <cDefaultValue> )  --> <cReturn>
  *  $ARGUMENTS$
- *      <cEnviroment> Enviromental variable to obtain
- *      <cDefaultValue> Optional value to return if <cEnvironment> is not found
+ *      <cEnviroment> Enviromental variable to obtain   </par>
+ *      <cDefaultValue> Optional value to return if <cEnvironment> is not found   </par>
  *  $RETURNS$
- *      <cReturn>     Value of the Variable
+ *      <cReturn>     Value of the Variable   </par>
  *  $DESCRIPTION$
  *      This function yields a string that is the value of the
  *      environmental variable <cEnviroment>, witch is stored at the
  *      level with the Set command. If no environmental variable
- *      can be found, the value of the function will be a empty string.
+ *      can be found, the value of the function will be a empty string.   </par>
  *  $EXAMPLES$
  *      ? QOUT(GETENV('PATH'))
  *      ? QOUT(GETENV('CONFIG'))
  *      ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA-CLIPPER compliant
+ *      This functions is CA-CLIPPER compliant   </par>
  *  $FILES$
- *     source/rtl/environ.c
+ *     source/rtl/environ.c   </par>
  *  $END$
  */
 
@@ -111,24 +114,23 @@
  *      Run a external program
  *  $SYNTAX$
  *      __RUN( <cCommand> )
- *  $CATEGORY$
- *      DOS
  *  $ARGUMENTS$
- *      <cCommand> Command to execute
+ *      <cCommand> Command to execute   </par>
  *  $DESCRIPTION$
  *      This command runs an external program. Please make sure that you have
- *      enough free memory to be able to run the external program.
+ *      enough free memory to be able to run the external program.   </par>
  *      Do not use it to run Terminate and Stay Resident programs
- *      (in case of DOS) since it cause several problems
+ *      (in case of DOS) since it cause several problems   </par>
  *
  *      Note: This function is what the RUN command preprocesses into.
  *            It is considered bad form to use this function directly.
- *            Use the RUN command instead.
+ *            Use the RUN command instead.   </par>
  *  $EXAMPLES$
  *      __Run( "edit " + cMyTextFile )    // Runs an external editor
  *      __Run( "command" )                // Gives a DOS shell (DOS only)
+ *  </fixed>
  *  $FILES$
- *      source/rtl/environ.c
+ *      source/rtl/environ.c   </par>
  *  $SEEALSO$
  *      RUN
  *  $END$
@@ -145,15 +147,15 @@
  *      TONE( <nFrequency>, <nDuration> ) --> NIL
  *  $ARGUMENTS$
  *      <nFrequency> is a non-negative numeric value that specifies the
- *      frequency of the tone in hertz.
+ *      frequency of the tone in hertz.   </par>
  *      <nDuration> is a positive numeric value which specifies the duration
- *      of the tone in 1/18 of a second units.
+ *      of the tone in 1/18 of a second units.   </par>
  *  $RETURNS$
- *      TONE() always return NIL.
+ *      TONE() always return NIL.   </par>
  *  $DESCRIPTION$
  *      TONE() is a sound function that could be used to irritate the end
  *      user, his or her dog, and the surrounding neighborhood. The frequency
- *      is clamped to the range 0 to 32767 Hz.
+ *      is clamped to the range 0 to 32767 Hz.   </par>
  *  $EXAMPLES$
  *      If lOk   // Good Sound
  *         TONE(  500, 1 )
@@ -164,6 +166,7 @@
  *         TONE(  499, 5 )
  *         TONE(  700, 5 )
  *      EndIf
+ *      </fixed>
  *  $TESTS$
  *      TONE( 800, 1 )                         // same as ? CHR(7)
  *      TONE( 32000, 200 )                     // any dogs around yet?
@@ -173,10 +176,11 @@
  *      TONE( 10, 18.2 )                       // 1 second delay
  *      TONE( -1 )                             // 1/18.2 second delay
  *      TONE( )                                // 1/18.2 second delay
+ *  </fixed>
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TONE() works exactly like CA-Clipper's TONE().
+ *      TONE() works exactly like CA-Clipper's TONE().   </par>
  *  $SEEALSO$
  *      CHR(),SET BELL
  *  $END$

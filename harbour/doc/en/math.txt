@@ -1,0 +1,253 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: ABS(),EXP(),LOG(),INT(),MAX()
+ *    MIN()
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ABS()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Return the absolute value of a number.
+ *  $SYNTAX$
+ *      ABS(<nNumber>) --> <nAbsNumber>
+ *  $ARGUMENTS$
+ *      <nNumber> Any number   </par>
+ *  $RETURNS$
+ *      <nAbsNumber> The absolute numeric value    </par>
+ *  $DESCRIPTION$
+ *      This function yeilds the absolute value of the numeric value or
+ *      expression <nNumber>   </par>
+ *  $EXAMPLES$
+ *      Proc Main()
+ *
+ *      Local nNumber:=50
+ *      Local nNumber1:=27
+ *      cls
+ *
+ *      qout(nNumber-nNumber1)
+ *      qout(nNumber1-nNumber)
+ *      qout(ABS(nNumber-nNumber1))
+ *      qout(ABSnNumber1-nNumber))
+ *      qout(ABS( -1 * 345))
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant       </par>
+ *  $PLATFORMS$
+ *      All    </par>
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      EXP()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Calculates the exponential of a real number
+ *  $SYNTAX$
+ *      EXP( <nNumber> ) --> <nExpoent>
+ *  $ARGUMENTS$
+ *      <nNumber> Any  real number   </par>
+ *  $RETURNS$
+ *      <nExpoent> The expoent number of <nNumber>   </par>
+ *  $DESCRIPTION$
+ *      This function returns the exponential of any given real number
+ *      <nNumber>          </par>
+ *  $EXAMPLES$
+ *      ? EXP(632512)
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant.   </par>
+ *  $PLATFORMS$
+ *      All   </par>
+ *  $SEEALSO$
+ *      LOG()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INT()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Return the integer port of a numeric value
+ *  $SYNTAX$
+ *      INT( <nNumber> ) --> <nIntNumber>
+ *  $ARGUMENTS$
+ *      <nNumber> Any  numeric value </par>
+ *  $RETURNS$
+ *      <nIntNumber> The integer portion of the numeric value   </par>
+ *  $DESCRIPTION$
+ *      This function convert a numeric expression to an integer. all decimals
+ *      digit are truncated.This function does not round a value upward or
+ *      downward;it merely truncated a numeric expression.  </par>
+ *  $EXAMPLES$
+ *      SET Decimal to 5   
+ *      ? INT(632512.62541)
+ *      ? INT(845414111.91440)
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant.   </par>
+ *  $PLATFORMS$
+ *      All   </par>
+ *  $SEEALSO$
+ *      ROUND(),STRZERO()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      LOG()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Returns the natural logarithm of a number
+ *  $SYNTAX$
+ *      LOG( <nNumber> ) --> <nLog>
+ *  $ARGUMENTS$
+ *      <nNumber> Any numeric expression  </par>
+ *  $RETURNS$
+ *      <nExpoent> The natural logaritmh of <nNumber>   </par>
+ *  $DESCRIPTION$
+ *      This function will return the natural logarithm of the number <nNumber>.  </par>
+ *      If <nNumber> is 0 or is less them 0,a numeric overflow condition exist,
+ *      witch is depicted on the display device as a series of asterisks.   </par>
+ *      This functions is the inverse of EXP() function.   </par>
+ *  $EXAMPLES$
+ *      ? LOG(632512)
+ *      </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is CA-Clipper compliant.   </par>
+ *  $PLATFORMS$
+ *      All   </par>
+ *  $SEEALSO$
+ *      EXP()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MAX()
+ *  $CATEGORY$
+ *      MATH
+ *  $ONELINER$
+ *      Returns the maximum of either two number or two dates.
+ *  $SYNTAX$
+ *      MAX(<xValue>,<xValue1>)  --> <xMax>
+ *  $ARGUMENTS$
+ *      <xValue> Any date or numeric value.   </par>
+ *      <xValue1> Any date or numeric value.   </par>
+ *  $RETURNS$
+ *      <xMax> Eighter a numeric or date value   </par>
+ *  $DESCRIPTION$
+ *      This function returns the larger of the two passed espressions. If
+ *      <xValue> and <xValue1> are numeric data types,the value returned by
+ *      this function will be a numeric data type as well and will be the
+ *      larger of the two numbers passed to it.If <xValue> and <xValue1> are
+ *      date data types,the return value for this function will be a date
+ *      data type as well;it will be the latest of the two dates passed to it.  </par>
+ *  $EXAMPLES$
+ *      ? MAX(214514214,6251242142)
+ *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')  
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant   </par>
+ *  $PLATFORMS$
+ *      All    </par>
+ *  $SEEALSO$
+ *      Min()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MIN()
+ *  $CATEGORY$
+ *      MATH
+ *  $ONELINER$
+ *      Determines a minumum value or dates.
+ *  $SYNTAX$
+ *      MIN(<xValue>,<xValue1>)  --> <xMin>
+ *  $ARGUMENTS$
+ *      <xValue> Any date or numeric value.   </par>
+ *      <xValue1> Any date or numeric value.   </par>
+ *  $RETURNS$
+ *      <xMin> Eighter a numeric or date value   </par>
+ *  $DESCRIPTION$
+ *      This function returns the smaller of the two passed espressions. The
+ *      value of this function will be the result of this comparasion.If <xValue>
+ *      is a numeric data type,<xValue1> must so be a numeric data type.The
+ *      same may be said if <xValue> is a date data type.   </par>
+ *  $EXAMPLES$
+ *      ? MIN(214514214,6251242142)
+ *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')  
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This function is Ca-Clipper compliant   </par>
+ *  $PLATFORMS$
+ *      All    </par>
+ *  $SEEALSO$
+ *      MAX()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      MOD()
+ *  $CATEGORY$
+ *      Math
+ *  $ONELINER$
+ *      Return the modulus of two numbers
+ *  $SYNTAX$
+ *      MOD( <nNumber>,<nNumber1>) -->  <nReturn>
+ *  $ARGUMENTS$
+ *      <nNumber>  Numerator in a divisional expression   </par>
+ *      <nNumber1> Denominator in a divisional expression     </par>
+ *  $RETURNS$
+ *      <nReturn>  Remind from the division   </par>
+ *  $DESCRIPTION$
+ *      This functuion will return a value that is correspondent to the
+ *      reminder of one number divided by another   </par>
+ *  $EXAMPLES$
+ *      ? MOD(12,8.521)
+ *      ? Mod(12,0)
+ *      ? Mod(62412.5142,4522114.12014)
+ *  </fixed>
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      This Function is Ca-Clipper compliant   </par>
+ *  $PLATFORMS$
+ *      All   </par>
+ *  $SEEALSO$
+ *      %
+ *  $END$
+ */

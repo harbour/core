@@ -28,24 +28,25 @@
  *  $SYNTAX$
  *      __objHasData( <oObject>, <cSymbol> ) --> lExist
  *  $ARGUMENTS$
- *      <oObject> is an object to scan.
+ *      <oObject> is an object to scan.   </par>
  *
- *      <cSymbol> is the name of the symbol to look for.
+ *      <cSymbol> is the name of the symbol to look for.   </par>
  *  $RETURNS$
  *      __objHasData() return .T. if the given <cSymbol> exist as DATA
- *      (instance variable) in object <oObject), .F. if it does not exist.
+ *      (instance variable) in object <oObject), .F. if it does not exist.   </par>
  *  $DESCRIPTION$
  *      __objHasData() is a low level class support function that let you
- *      find out if a symbol is an instance variable in a given object.
+ *      find out if a symbol is an instance variable in a given object.   </par>
  *  $EXAMPLES$
  *      oB := TBrowseNew( 0, 0, 24, 79 )
  *      ? __objHasData( oB, "nLeft" )      // this should return .T.
  *      ? __objHasData( oB, "lBugFree" )   // hopefully this should be .F.
  *      ? __objHasData( oB, "Left" )       // .F. since this is a METHOD
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objHasData() is a Harbour extension.
+ *      __objHasData() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -61,24 +62,25 @@
  *  $SYNTAX$
  *      __objHasMethod( <oObject>, <cSymbol> ) --> lExist
  *  $ARGUMENTS$
- *      <oObject> is an object to scan.
+ *      <oObject> is an object to scan.   </par>
  *
- *      <cSymbol> is the name of the symbol to look for.
+ *      <cSymbol> is the name of the symbol to look for.   </par>
  *  $RETURNS$
  *      __objHasMethod() return .T. if the given <cSymbol> exist as METHOD
- *      (class function) in object <oObject), .F. if it does not exist.
+ *      (class function) in object <oObject), .F. if it does not exist.   </par>
  *  $DESCRIPTION$
  *      __objHasMethod() is a low level class support function that let you
- *      find out if a symbol is a class function in a given object.
+ *      find out if a symbol is a class function in a given object.   </par>
  *  $EXAMPLES$
  *      oB := TBrowseNew( 0, 0, 24, 79 )
  *      ? __objHasMethod( oB, "nLeft" )      // .F. since this is a DATA
  *      ? __objHasMethod( oB, "FixBugs" )    // hopefully this should be .F.
  *      ? __objHasMethod( oB, "Left" )       // this should return .T.
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objHasMethod() is a Harbour extension.
+ *      __objHasMethod() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __ObjGetMethodList(),__objGetMsgList(),__objHasData()
  *  $END$
@@ -94,21 +96,21 @@
  *  $SYNTAX$
  *      __objGetMsgList( <oObject>, [<lData>] ) --> aNames
  *  $ARGUMENTS$
- *      <oObject> is an object to scan.
+ *      <oObject> is an object to scan.   </par>
  *
  *      <lData> is an optional logical value that specifies the information
  *      to return. A value of .T. instruct the function to return list of
  *      all DATA names, .F. return list of all METHOD names. Default value
- *      is .T.
+ *      is .T.   </par>
  *  $RETURNS$
  *      __objGetMsgList() return an array of character stings with all DATA
  *      names or all METHOD names for a given object. __objGetMsgList()
  *      would return an empty array {} if the given object does not contain
- *      the requested information.
+ *      the requested information.   </par>
  *  $DESCRIPTION$
  *      __objGetMsgList() is a low level class support function that let you
  *      find all instance variable or class functions names for a given
- *      object.
+ *      object.   </par>
  *  $EXAMPLES$
  *      // show information about TBrowse class
  *      oB := TBrowseNew( 0, 0, 24, 79 )
@@ -120,10 +122,11 @@
  *      FOR i = 1 to len ( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
  *      NEXT
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objGetMsgList() is a Harbour extension.
+ *      __objGetMsgList() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __ObjGetMethodList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
@@ -139,15 +142,15 @@
  *  $SYNTAX$
  *      __objGetMethodList( <oObject> ) --> aMethodNames
  *  $ARGUMENTS$
- *      <oObject> is an object to scan.
+ *      <oObject> is an object to scan.   </par>
  *  $RETURNS$
  *      __objGetMethodList() return an array of character stings with all
  *      METHOD names for a given object. __objGetMethodList() would return
- *      an empty array {} if the given object does not contain any METHOD.
+ *      an empty array {} if the given object does not contain any METHOD.   </par>
  *  $DESCRIPTION$
  *      __objGetMethodList() is a low level class support function that let
- *      you find all class functions names for a given object.
- *      It is equivalent to __objGetMsgList( oObject, .F. ).
+ *      you find all class functions names for a given object.   </par>
+ *      It is equivalent to __objGetMsgList( oObject, .F. ).   </par>
  *  $EXAMPLES$
  *      // show information about TBrowse class
  *      oB := TBrowseNew( 0, 0, 24, 79 )
@@ -155,10 +158,11 @@
  *      FOR i = 1 to len ( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
  *      NEXT
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objGetMethodList() is a Harbour extension.
+ *      __objGetMethodList() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objGetMsgList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
  *  $END$
@@ -174,20 +178,20 @@
  *  $SYNTAX$
  *      __objGetValueList( <oObject>, [<aExcept>] ) --> aData
  *  $ARGUMENTS$
- *      <oObject> is an object to scan.
+ *      <oObject> is an object to scan.   </par>
  *
  *      <aExcept> is an optional array with DATA names you want to exclude
- *      from the scan.
+ *      from the scan.   </par>
  *  $RETURNS$
  *      __objGetValueList() return a 2D array that contain pairs of a DATA
  *      symbol name and the value of DATA. __objGetValueList() would return
  *      an empty array {} if the given object does not contain the requested
- *      information.
+ *      information.   </par>
  *  $DESCRIPTION$
  *      __objGetValueList() is a low level class support function that
  *      return an array with DATA names and value, each array element is a
- *      pair of: aData[ i, HB_OO_DATA_SYMBOL ] contain the symbol name
- *               aData[ i, HB_OO_DATA_VALUE  ] contain the value of DATA
+ *      pair of: aData[ i, HB_OO_DATA_SYMBOL ] contain the symbol name     </par>
+ *               aData[ i, HB_OO_DATA_VALUE  ] contain the value of DATA   </par>
  *  $EXAMPLES$
  *      // show information about TBrowse class
  *      oB := TBrowseNew( 0, 0, 24, 79 )
@@ -196,12 +200,13 @@
  *          ? "DATA name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
  *            "    value=", aData[ i, HB_OO_DATA_VALUE  ]
  *      NEXT
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objGetValueList() is a Harbour extension.
+ *      __objGetValueList() is a Harbour extension.   </par>
  *  $FILES$
- *      Header file is hboo.ch
+ *      Header file is hboo.ch   </par>
  *  $SEEALSO$
  *      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList()
  *  $END$
@@ -217,18 +222,18 @@
  *  $SYNTAX$
  *      __ObjSetValueList( <oObject>, <aData> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is an object to set.
+ *      <oObject> is an object to set.   </par>
  *
  *      <aData> is a 2D array with a pair of instance variables and values
- *      for setting those variable.
+ *      for setting those variable.   </par>
  *  $RETURNS$
- *      __ObjSetValueList() return a reference to <oObject>.
+ *      __ObjSetValueList() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __ObjSetValueList() is a low level class support function that let
  *      you set a group of instance variables with values. each array
- *      element in <aData> is a pair of:
- *      aData[ i, HB_OO_DATA_SYMBOL ] which contain the variable name to set
- *      aData[ i, HB_OO_DATA_VALUE  ] contain the new variable value.
+ *      element in <aData> is a pair of:   </par>
+ *      aData[ i, HB_OO_DATA_SYMBOL ] which contain the variable name to set   </par>
+ *      aData[ i, HB_OO_DATA_VALUE  ] contain the new variable value.   </par>
  *  $EXAMPLES$
  *      // set some TBrowse instance variable
  *      oB := TBrowse():New()
@@ -246,12 +251,13 @@
  *      ? oB:nLeft     // 10
  *      ? oB:nBottom   // 20
  *      ? oB:nRight    // 70
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __ObjSetValueList() is a Harbour extension.
+ *      __ObjSetValueList() is a Harbour extension.   </par>
  *  $FILES$
- *      Header file is hboo.ch
+ *      Header file is hboo.ch   </par>
  *  $SEEALSO$
  *      __ObjGetValueList()
  *  $END$
@@ -267,20 +273,20 @@
  *  $SYNTAX$
  *      __objAddMethod( <oObject>, <cMethodName>, <nFuncPtr> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
- *      <cMethodName> is the symbol name of the new METHOD to add.
+ *      <cMethodName> is the symbol name of the new METHOD to add.   </par>
  *
- *      <nFuncPtr> is a pointer to a function to associate with the method.
+ *      <nFuncPtr> is a pointer to a function to associate with the method.   </par>
  *  $RETURNS$
- *      __objAddMethod() return a reference to <oObject>.
+ *      __objAddMethod() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objAddMethod() is a low level class support function that add a
  *      new METHOD to an object. <oObject> is unchanged if a symbol with the
- *      name <cMethodName> already exist in <oObject>.
+ *      name <cMethodName> already exist in <oObject>.   </par>
  *
  *      Note that <nFuncPtr> is a special pointer to a function that was
- *      created using the @ operator, see example below.
+ *      created using the @ operator, see example below.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
  *      oHappy := TClass():New( "THappy" )
@@ -300,10 +306,11 @@
  *              cSmile := "*SMILE*"
  *      ENDCASE
  *      RETURN cSmile
+ *  </fixed>
  *  $STATUS$
  *      R 
  *  $COMPLIANCE$
- *      __objAddMethod() is a Harbour extension.
+ *      __objAddMethod() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
  *  $END$
@@ -319,17 +326,17 @@
  *  $SYNTAX$
  *      __objAddInline( <oObject>, <cInlineName>, <bInline> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
- *      <cInlineName> is the symbol name of the new INLINE to add.
+ *      <cInlineName> is the symbol name of the new INLINE to add.   </par>
  *
- *      <bInline> is a code block to associate with the INLINE method.
+ *      <bInline> is a code block to associate with the INLINE method.   </par>
  *  $RETURNS$
- *      __objAddInline() return a reference to <oObject>.
+ *      __objAddInline() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objAddInline() is a low level class support function that add a
  *      new INLINE method to an object. <oObject> is unchanged if a symbol
- *      with the name <cInlineName> already exist in <oObject>.
+ *      with the name <cInlineName> already exist in <oObject>.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
  *      oHappy  := TClass():New( "THappy" )
@@ -338,10 +345,11 @@
  *      ? oHappy:Smile( 1 )       // :)
  *      ? oHappy:Smile( 2 )       // ;)
  *      ? oHappy:Smile( 3 )       // *SMILE*
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objAddInline() is a Harbour extension.
+ *      __objAddInline() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
  *  $END$
@@ -357,15 +365,15 @@
  *  $SYNTAX$
  *      __objAddData( <oObject>, <cDataName> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
- *      <cDataName> is the symbol name of the new DATA to add.
+ *      <cDataName> is the symbol name of the new DATA to add.   </par>
  *  $RETURNS$
- *      __objAddData() return a reference to <oObject>.
+ *      __objAddData() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objAddData() is a low level class support function that add a new
  *      DATA to an object. <oObject> is unchanged if a symbol with the name
- *      <cDataName> already exist in <oObject>.
+ *      <cDataName> already exist in <oObject>.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a lHappy DATA
  *      oHappy  := TClass():New( "THappy" )
@@ -376,10 +384,11 @@
  *      ELSE
  *         ? ":(..."
  *      ENDIF
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objAddData() is a Harbour extension.
+ *      __objAddData() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$
@@ -395,22 +404,22 @@
  *  $SYNTAX$
  *      __objModMethod( <oObject>, <cMethodName>, <nFuncPtr> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
- *      <cMethodName> is the symbol name of the METHOD to modify.
+ *      <cMethodName> is the symbol name of the METHOD to modify.   </par>
  *
  *      <nFuncPtr> is a pointer to a new function to associate with the
- *      method.
+ *      method.   </par>
  *  $RETURNS$
- *      __objModMethod() return a reference to <oObject>.
+ *      __objModMethod() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objModMethod() is a low level class support function that modify
  *      a METHOD in an object and replace it with a new function. <oObject>
  *      is unchanged if a symbol with the name <cMethodName> does not exist
- *      in <oObject>. __objModMethod() is used in inheritance mechanism.
+ *      in <oObject>. __objModMethod() is used in inheritance mechanism.   </par>
  *
  *      Note that <nFuncPtr> is a special pointer to a function that was
- *      created using the @ operator, see example below.
+ *      created using the @ operator, see example below.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
  *      oHappy := TClass():New( "THappy" )
@@ -441,10 +450,11 @@
  *              cSmile := "*WINK*"
  *      ENDCASE
  *      RETURN cSmile
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objModMethod() is a Harbour extension.
+ *      __objModMethod() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddMethod(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -460,19 +470,19 @@
  *  $SYNTAX$
  *      __objModInline( <oObject>, <cInlineName>, <bInline> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
- *      <cInlineName> is the symbol name of the INLINE method to modify.
+ *      <cInlineName> is the symbol name of the INLINE method to modify.   </par>
  *
- *      <bInline> is a new code block to associate with the INLINE method.
+ *      <bInline> is a new code block to associate with the INLINE method.   </par>
  *  $RETURNS$
- *      __objModInline() return a reference to <oObject>.
+ *      __objModInline() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objModInline() is a low level class support function that modify
  *      an INLINE method in an object and replace it with a new code block.
  *      <oObject> is unchanged if a symbol with the name <cInlineName> does
  *      not exist in <oObject>. __objModInline() is used in inheritance
- *      mechanism.
+ *      mechanism.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
  *      oHappy  := TClass():New( "THappy" )
@@ -485,10 +495,11 @@
  *      __objModInline( oHappy, "Smile", bYourInline )
  *      ? oHappy:Smile( 1 )       // *SMILE*
  *      ? oHappy:Smile( 2 )       // *WINK*
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objModInline() is a Harbour extension.
+ *      __objModInline() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddInline(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
  *  $END$
@@ -504,19 +515,19 @@
  *  $SYNTAX$
  *      __objDelMethod( <oObject>, <cSymbol> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
  *      <cSymbol> is the symbol name of METHOD or INLINE method to be
- *      deleted (removed) from the object.
+ *      deleted (removed) from the object.   </par>
  *  $RETURNS$
- *      __objDelMethod() return a reference to <oObject>.
+ *      __objDelMethod() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objDelMethod() is a low level class support function that delete
  *      (remove) a METHOD or an INLINE method from an object. <oObject> is
  *      unchanged if a symbol with the name <cSymbol> does not exist in
- *      <oObject>.
+ *      <oObject>.   </par>
  *
- *      __objDelInline() is exactly the same as __objDelMethod().
+ *      __objDelInline() is exactly the same as __objDelMethod().   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
  *      oHappy := TClass():New( "THappy" )
@@ -535,10 +546,11 @@
  *              cSmile := ";)"
  *      ENDCASE
  *      RETURN cSmile
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objDelMethod() is a Harbour extension.
+ *      __objDelMethod() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
@@ -554,17 +566,17 @@
  *  $SYNTAX$
  *      __objDelInline( <oObject>, <cSymbol> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
  *      <cSymbol> is the symbol name of METHOD or INLINE method to be
- *      deleted (removed) from the object.
+ *      deleted (removed) from the object.   </par>
  *  $RETURNS$
- *      __objDelInMethod() return a reference to <oObject>.
+ *      __objDelInMethod() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objDelInMethod() is a low level class support function that delete
  *      (remove) a METHOD or an INLINE method from an object. <oObject> is
  *      unchanged if a symbol with the name <cSymbol> does not exist in
- *      <oObject>.
+ *      <oObject>.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
  *      oHappy := TClass():New( "THappy" )
@@ -583,10 +595,11 @@
  *              cSmile := ";)"
  *      ENDCASE
  *      RETURN cSmile
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objDelMethod() is a Harbour extension.
+ *      __objDelMethod() is a Harbour extension.   </par>
  *  $SEEALSO$
  *      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
  *  $END$
@@ -602,16 +615,16 @@
  *  $SYNTAX$
  *      __objDelMethod( <oObject>, <cDataName> ) --> oObject
  *  $ARGUMENTS$
- *      <oObject> is the object to work on.
+ *      <oObject> is the object to work on.   </par>
  *
  *      <cDataName> is the symbol name of DATA to be deleted (removed) from
- *      the object.
+ *      the object.   </par>
  *  $RETURNS$
- *      __objDelData() return a reference to <oObject>.
+ *      __objDelData() return a reference to <oObject>.   </par>
  *  $DESCRIPTION$
  *      __objDelData() is a low level class support function that delete
  *      (remove) a DATA from an object. <oObject> is unchanged if a symbol
- *      with the name <cDataName> does not exist in <oObject>.
+ *      with the name <cDataName> does not exist in <oObject>.   </par>
  *  $EXAMPLES$
  *      // create a new THappy class and add a lHappy DATA
  *      oHappy  := TClass():New( "THappy" )
@@ -620,10 +633,11 @@
  *      // remove lHappy DATA
  *      __objDelData( oHappy, "lHappy" )
  *      ? __objHasData( oHappy, "lHappy" )    // .F.
+ *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __objDelData() is a Harbour extension.
+ *      __objDelData() is a Harbour extension.   </par>
  *  $SEEALSO$
  *    __objAddData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
  *  $END$
