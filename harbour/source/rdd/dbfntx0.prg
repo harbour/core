@@ -22,17 +22,17 @@
    You can contact me at: bruno@issnet.net
  */
 
-// Standard Harbour RDDSys system
+#include "rddsys.ch"
 
-procedure RddSys
+procedure Request_DbfNTX0
 
 return
 
-init procedure RDDInit
+init procedure InitDbfNtx
 
-// REQUEST DBFNTX0
-   Request_DBFNTX0() // Force link dbfntx0 file
+// REQUEST DBFNTX1
+   Request_DBFNTX1() // Force link dbfntx1 file
 
-   rddSetDefault( "DBFNTX" )
+   rddRegister( "DBFNTX", RDT_FULL )
 
 return

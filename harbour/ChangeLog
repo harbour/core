@@ -1,3 +1,15 @@
+19990725-19:47 GMT+1 Bruno Cantero <bruno@issnet.net>
+   + include/rddsys.ch, source/rdd/dbfntx0.prg, source/rdd/dbfntx1.c
+     Skeleton for DBFNTX functions
+   + tests/working/testrdd.prg
+     Test for RDD functions
+   * source/rdd/dbcmd.c
+     Bug fixed
+   * source/rdd/rddsys.prg
+     Register the default driver (DNFNTX)
+   * include/rdd.api, include/rdd_api.old
+     File renamed
+
 19990724-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
    * tests/working/buildvc.bat
