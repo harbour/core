@@ -2,6 +2,7 @@ There are two strip files here :
 
 #1 : strip.prg          This one is broken
 #2 : strip2.prg         This one works
+#3 : strip3.prg         Broken as well
 
 You'll need to the latest FILES.C for this + my harbour.y patch.
 
@@ -9,7 +10,10 @@ The first one uses the TClass().
 
 The second one uses the Class functions.
 
+The third one uses the TClass() but store ClassH in the static.
+
 The STATIC which is used, is removed (set to NIL) once you are done.
+
 
 Good luck
 
