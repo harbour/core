@@ -122,6 +122,15 @@ HARBOUR STRDUMP();
 HARBOUR STRTOKEN();
 HARBOUR ROT13();
 HARBOUR PVALUE();
+HARBOUR HB_FUSE();
+HARBOUR HB_FRECNO();
+HARBOUR HB_FLASTREC();
+HARBOUR HB_FGOTOP();
+HARBOUR HB_FGOBOTTOM();
+HARBOUR HB_FGOTO();
+HARBOUR HB_FEOF();
+HARBOUR HB_FREADLN();
+HARBOUR HB_FSKIP();
 
 /* Same story.
 
@@ -245,5 +254,17 @@ static SYMBOL symbols[] = {
 { "STRDUMP",        FS_PUBLIC, STRDUMP       , 0 },
 { "STRTOKEN",       FS_PUBLIC, STRTOKEN      , 0 },
 { "ROT13",          FS_PUBLIC, ROT13         , 0 },
-{ "PVALUE",         FS_PUBLIC, PVALUE        , 0 }
+{ "PVALUE",         FS_PUBLIC, PVALUE        , 0 },
+{ "HB_FUSE",        FS_PUBLIC, HB_FUSE       , 0 },
+{ "HB_FRECNO",      FS_PUBLIC, HB_FRECNO     , 0 },
+{ "HB_FLASTREC",    FS_PUBLIC, HB_FLASTREC   , 0 },
+{ "HB_FGOTOP",      FS_PUBLIC, HB_FGOTOP     , 0 },
+{ "HB_FGOBOTTOM",   FS_PUBLIC, HB_FGOBOTTOM  , 0 },
+{ "HB_FGOTO",       FS_PUBLIC, HB_FGOTO      , 0 },
+{ "HB_FEOF",        FS_PUBLIC, HB_FEOF       , 0 },
+{ "HB_FREADLN",     FS_PUBLIC, HB_FREADLN    , 0 },
+{ "HB_FSKIP",       FS_PUBLIC, HB_FSKIP      , 0 }
 };
+
+
+
