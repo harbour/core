@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-22 20:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    ! Bug fixed in skipping, when both Bof and Eof are true.
+
 2002-06-21 17:15 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/tgetlist.prg
     + Add #include tbrowse.ch for TBrowse defines.

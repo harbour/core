@@ -3098,7 +3098,7 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
      BOOL lContinue = FALSE;
      ULONG ulRecNo = pArea->ulRecNo;
 
-     if ( pArea->fBof )
+     if ( pArea->fBof && !pArea->fEof )
         SELF_GOTOP( ( AREAP ) pArea );
 
      if ( lToSkip == 0 )
