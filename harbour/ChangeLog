@@ -31,7 +31,7 @@
 
    * include/clipdefs.h
      ! pascal keyword removed from here, too. So the rule has changed that
-       all mixed or lower case CLIPPER function names should be converted to
+       all mixed or lower case CLIPPER function names must be converted to
        uppercase to make it work with Harbour.
 
 20000326-16:58 EST Paul Tucker <ptucker@sympatico.ca>
