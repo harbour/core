@@ -135,7 +135,7 @@ static BOOL hb_comp_bExternal   = FALSE;
  */
 static PEXTERN hb_comp_pExterns = NULL;
 static PAUTOOPEN hb_comp_pAutoOpen = NULL;
-static int hb_compAutoOpen( char * szPrg );
+static int hb_compAutoOpen( char * szPrg, BOOL * bSkipGen );
 
 /* -m Support */
 static BOOL hb_compAutoOpenFind( char * szName );
@@ -3419,7 +3419,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
          if( hb_compInclude( szFileName, NULL ) )
          {
-            BOOL bSkipGen  ;
+            BOOL bSkipGen = FALSE ;
             FILES tmpFiles ;
 
             #ifdef HB_NESTED_COMPILE
@@ -3491,7 +3491,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
 
                if( ! hb_compFunctionFind( pAutoOpen->szName ) )
-                  hb_compAutoOpen( pAutoOpen->szName );
+                  hb_compAutoOpen( pAutoOpen->szName, &bSkipGen );
 
                hb_xfree( pAutoOpen->szName );
                hb_xfree( pAutoOpen );
@@ -3529,11 +3529,15 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
 
          /* End of finalization phase. */
 
-            bSkipGen = FALSE;
-
-            if( hb_comp_bAnyWarning )
+            if( hb_comp_iErrorCount || hb_comp_bAnyWarning )
             {
-               if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+               if( hb_comp_iErrorCount )
+               {
+                  iStatus = EXIT_FAILURE;
+                  bSkipGen = TRUE;
+                  printf( "%i error%s\n\nNo code generated\n", hb_comp_iErrorCount, ( hb_comp_iErrorCount > 1 ? "s" : "" ) );
+               }
+               else if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
                {
                   iStatus = EXIT_FAILURE;
                }
@@ -3710,7 +3714,7 @@ BOOL hb_compAutoOpenFind( char * szName )
    return FALSE;
 }
 
-int hb_compAutoOpen( char * szPrg )
+int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
 {
    int iStatus = EXIT_SUCCESS;
 
@@ -3746,8 +3750,6 @@ int hb_compAutoOpen( char * szPrg )
 
          if( hb_compInclude( szFileName, NULL ) )
          {
-            BOOL bSkipGen  ;
-
             if( ! hb_comp_bQuiet )
             {
                if( hb_comp_bPPO )
@@ -3768,7 +3770,15 @@ int hb_compAutoOpen( char * szPrg )
             if( hb_comp_bStartProc )
                hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
 
-            yyparse();
+           {
+              int i = hb_comp_iExitLevel ;
+              BOOL b = hb_comp_bAnyWarning;
+
+              yyparse();
+
+              hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
+              hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
+           }
 
             /* Close processed file (it is opened in hb_compInclude() function ) */
             fclose( yyin );
@@ -3783,7 +3793,7 @@ int hb_compAutoOpen( char * szPrg )
                else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
                {
                   iStatus = EXIT_FAILURE;
-                  bSkipGen = TRUE;
+                  *pbSkipGen = TRUE;
                   printf( "\nNo code generated.\n" );
                }
             }

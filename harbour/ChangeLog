@@ -1,3 +1,10 @@
+2000-06-11 23:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   source/compiler/harbour.c
+     * hb_compCompile() Added Clipper like message showing how many parse errors found.
+     * hb_compAutoOpen() added 2nd paramter pointer to bSkipGen of caller (hb_compCompile()).
+       Added logic to not "remember" hb_comp_bAnyWarning and hb_comp_iErrorCount from previous parsings.
+
 2000-06-11 21:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h
@@ -17,8 +24,8 @@
      * Enclosed functions to support in-line nested compilation within #ifdef HB_NESTED_COMPILE
      * Modified hb_compCompile() to support future in-line nested compilation, and defed it out.
      * Changed hb_compCompile() to call hb_compAutoOpen() for modules called in DO ... that are not defined in main prg.
-     ! Completed -m support, by default directives in external opened modules will be avialable to subsequent externals.
-       this feature is defed out if strict compatibilty ise selected.
+     ! Completed -m support, by default directives in external opened modules will be available to subsequent externals.
+       this feature is defed out if strict compatibility is selected.
 
 2000-06-08-07:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 
