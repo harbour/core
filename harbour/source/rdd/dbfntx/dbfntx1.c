@@ -2240,6 +2240,61 @@ static ERRCODE ntxClose( NTXAREAP pArea )
    return SUPER_CLOSE( ( AREAP ) pArea );
 }
 
+static ERRCODE ntxLock( NTXAREAP pArea, LPDBLOCKINFO pLockInfo )
+{
+   HB_TRACE(HB_TR_DEBUG, ("ntxLock(%p, %p)", pArea, pLockInfo));
+   
+   if( SUPER_LOCK( ( AREAP ) pArea, pLockInfo ) )
+   {
+      LPNTXINDEX lpIndex;
+
+      if( pLockInfo->uiMethod == DBLM_FILE )
+      {
+         lpIndex = pArea->lpNtxIndex;
+         while( lpIndex )
+         {
+            pArea->lpCurIndex = lpIndex;
+            if( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) )
+            {
+               ntxUnLock( pArea,0 );
+               return FAILURE;
+            }
+            lpIndex = lpIndex->pNext;
+         }
+      }
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
+}
+
+ERRCODE ntxUnLock( NTXAREAP pArea, ULONG ulRecNo )
+{
+   BOOL fFLocked;
+
+   HB_TRACE(HB_TR_DEBUG, ("ntxUnLock(%p, %lu)", pArea, ulRecNo));
+
+   fFLocked = pArea->fFLocked;
+   if( SUPER_UNLOCK( ( AREAP ) pArea, ulRecNo ) )
+   {
+      LPNTXINDEX lpIndex;
+
+      if( fFLocked )
+      {
+         lpIndex = pArea->lpNtxIndex;
+         while( lpIndex )
+         {
+            pArea->lpCurIndex = lpIndex;
+            hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
+            lpIndex = lpIndex->pNext;
+         }
+      }
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
+}
+
 static RDDFUNCS ntxTable = { ntxBof,
                              ntxEof,
                              ntxFound,
@@ -2322,8 +2377,8 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxError,
                              ntxEvalBlock,
                              ntxRawLock,
-                             ntxLock,
-                             ntxUnLock,
+                             ( DBENTRYP_VL ) ntxLock,
+                             ( DBENTRYP_UL ) ntxUnLock,
                              ntxCloseMemFile,
                              ntxCreateMemFile,
                              ntxGetValueFile,
@@ -2350,4 +2405,5 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
       hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
       hb_retni( FAILURE );
+
 }

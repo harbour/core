@@ -1,3 +1,14 @@
+2001-02-14 12:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/include/hbapirdd.h
+     * Wrong parameters of SUPER_UNLOCK fixed
+   * harbour/include/hbrddntx.h
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     + ntxLock(), ntxUnLock() added
+       * These virtual functions are for index files locking/unlocking while
+         appropriate dbf locking/unlocking
+         I used here locking of first 512 bytes of index file ( don't know yet,
+         is it Clipper compatible ).
+
 2001-02-13 17:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * harbour/source/rtl/idle.c
      * Changed Sleep(0) to Sleep(20) so that Harbour will properly release CPU on Win32.

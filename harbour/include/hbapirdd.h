@@ -1082,7 +1082,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_GETLOCKS(w, g)            ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
 #define SUPER_RAWLOCK(w, i, l)          ((*(SUPERTABLE)->rawlock)(w, i, l))
 #define SUPER_LOCK(w, sp)               ((*(SUPERTABLE)->lock)(w, sp))
-#define SUPER_UNLOCK(w)                 ((*(SUPERTABLE)->unlock)(w))
+#define SUPER_UNLOCK(w,l)                 ((*(SUPERTABLE)->unlock)(w,l))
 
 
 /* Memofile functions */
