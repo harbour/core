@@ -52,6 +52,7 @@ PRG_SOURCES=\
         terror.prg \
         tget.prg \
         tgetlist.prg \
+        xsavescr.prg
 
 LIB=rtl
 

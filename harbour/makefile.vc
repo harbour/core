@@ -99,6 +99,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\transfrm.obj \
+    $(OBJ_DIR)\xsavescr.obj \
     $(RDD_OBJS)
 
 #
@@ -275,6 +276,9 @@ $(OBJ_DIR)\table.obj : $(HBPP_DIR)\table.c
 #
 # RTL source dependencies below. Add as needed
 #
+
+#$(OBJ_DIR)\getch.obj : $(RTL_DIR)\getch.c
+# cl -w -Ow -Ge -I\mvs\vc98\crt\src -I$(INCLUDE_DIR) -Zi -GZ -GA -GF -DDEBUG -D_CRTBLD -c -Fo$@ $**
 
 $(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
@@ -454,6 +458,12 @@ $(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\xsavescr.c : $(RTL_DIR)\xsavescr.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
