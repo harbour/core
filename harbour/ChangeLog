@@ -1,3 +1,22 @@
+2001-04-01 15:46 GMT+6 April White <awhite@mail.rosecom.ca>
+   * doc/en/hb_api.txt
+      ! removed duplicate copies of:
+          hb_pcount(), hb_ret(), hb_retc(), hb_retclen(), hb_retds(),
+          hb_retd(), hb_retdl(), hb_retl(), hb_retnd(), hb_retni(),
+          hb_retnl(), hb_retnlen(), hb_retndlen(), hb_retnilen(),
+          hb_retnllen(), hb_reta()
+      ! added a note to the description of each of the above that explains
+        what happens when HB_API_MACROS is defined (each is replaced with a
+        macro expression)
+
+      * hb_pcount() entry
+        ! corrected typo,
+
+   * source/compiler/genc.c:
+     ! correct comment 'the the'
+     ! wrapped assignment within while() loop with brackets to eliminate
+       a warning in djgpp
+
 2001-04-01 15:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rtl/gtsln/gtsln.c
      ! minor fix, provided by Marek Paliwoda

@@ -443,7 +443,7 @@
  *  $CATEGORY$
  *      Extend API
  *  $ONELINER$
- *      Returns the number of suplied parameters
+ *      Returns the number of supplied parameters
  *  $SYNTAX$
  *      C Prototype
  *
@@ -454,7 +454,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_pcount() --> ( ( int ) hb_stack.pBase->item.asSymbol.paramcnt )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -487,7 +488,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_ret() --> hb_itemClear( &hb_stack.Return )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -520,7 +522,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retc( szText ) --> hb_itemPutC( &hb_stack.Return, szText )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -555,7 +558,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retclen( szText, ulLen ) --> hb_itemPutCL( &hb_stack.Return, szText, ulLen )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -588,7 +592,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retds( szDate ) --> hb_itemPutDS( &hb_stack.Return, szDate )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -625,7 +630,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retd( lYear, lMonth, lDay ) --> hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -658,7 +664,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retdl( lJulian ) --> hb_itemPutDL( &hb_stack.Return, lJulian )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -691,7 +698,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retl( iLogical ) --> hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -724,7 +732,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retnd( dNumber ) --> hb_itemPutND( &hb_stack.Return, dNumber )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -757,7 +766,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retni( iNumber ) --> hb_itemPutNI( &hb_stack.Return, iNumber )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -790,7 +800,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retnl( lNumber ) --> hb_itemPutNL( &hb_stack.Return, lNumber )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -827,7 +838,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retnlen( dNumber, iWidth, iDec ) --> hb_itemPutNLen( &hb_stack.Return, dNumber, iWidth, iDec )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -864,7 +876,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retndlen( dNumber, iWidth, iDec ) --> hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -899,7 +912,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retnilen( iNumber, iWidth ) --> hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -934,7 +948,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_retnllen( lNumber, iWidth ) --> hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -967,7 +982,8 @@
  *  $RETURNS$
  *
  *  $DESCRIPTION$
- *      Conditional on: not HB_API_MACROS
+ *      Note that when HB_API_MACROS is defined, this function is replaced with
+ *      a macro: hb_reta( ulLen ) --> hb_arrayNew( &hb_stack.Return, ulLen )
  *  $EXAMPLES$
  *
  *  $STATUS$
@@ -7031,552 +7047,6 @@
  *
  *  $DESCRIPTION$
  *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_pcount()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_pcount(  ) --> <see ( ( int ) hb_stack.pBase->item.asSymbol.paramcnt )>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_ret()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_ret(  ) --> <see hb_itemClear( &hb_stack.Return )>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_reta()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_reta( ulLen ) --> <see hb_arrayNew( &hb_stack.Return, ulLen )>
- *  $ARGUMENTS$
- *      <ulLen>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retc()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retc( szText ) --> <see hb_itemPutC( &hb_stack.Return, szText )>
- *  $ARGUMENTS$
- *      <szText>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retclen()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retclen( szText, ulLen ) --> <see hb_itemPutCL( &hb_stack.Return, szText, ulLen )>
- *  $ARGUMENTS$
- *      <szText>
- *
- *      <ulLen>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retds()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retds( szDate ) --> <see hb_itemPutDS( &hb_stack.Return, szDate )>
- *  $ARGUMENTS$
- *      <szDate>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retd()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retd( lYear, lMonth, lDay ) --> <see hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay )>
- *  $ARGUMENTS$
- *      <lYear>
- *
- *      <lMonth>
- *
- *      <lDay>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retdl()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retdl( lJulian ) --> <see hb_itemPutDL( &hb_stack.Return, lJulian )>
- *  $ARGUMENTS$
- *      <lJulian>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retl()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retl( iLogical ) --> <see hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE )>
- *  $ARGUMENTS$
- *      <iLogical>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retnd()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retnd( dNumber ) --> <see hb_itemPutND( &hb_stack.Return, dNumber )>
- *  $ARGUMENTS$
- *      <dNumber>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retni()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retni( iNumber ) --> <see hb_itemPutNI( &hb_stack.Return, iNumber )>
- *  $ARGUMENTS$
- *      <iNumber>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retnl()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retnl( lNumber ) --> <see hb_itemPutNL( &hb_stack.Return, lNumber )>
- *  $ARGUMENTS$
- *      <lNumber>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retnlen()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retnlen( dNumber, iWidth, iDec ) --> <see hb_itemPutNLen( &hb_stack.Return, dNumber, iWidth, iDec )>
- *  $ARGUMENTS$
- *      <dNumber>
- *
- *      <iWidth>
- *
- *      <iDec>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retndlen()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retndlen( dNumber, iWidth, iDec ) --> <see hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec )>
- *  $ARGUMENTS$
- *      <dNumber>
- *
- *      <iWidth>
- *
- *      <iDec>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retnilen()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retnilen( iNumber, iWidth ) --> <see hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth )>
- *  $ARGUMENTS$
- *      <iNumber>
- *
- *      <iWidth>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Compliance is not applicable to API calls.
- *  $FILES$
- *      Header file is hbapi.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_retnllen()
- *  $CATEGORY$
- *      Extend API
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include <hbapi.h>
- *      hb_retnllen( lNumber, iWidth ) --> <see hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth )>
- *  $ARGUMENTS$
- *      <lNumber>
- *
- *      <iWidth>
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      Conditional on: HB_API_MACROS
  *  $EXAMPLES$
  *
  *  $STATUS$

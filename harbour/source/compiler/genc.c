@@ -1143,7 +1143,7 @@ static HB_GENC_FUNC( hb_p_pushblock )
                pFunc->pCode[ lPCodePos + 1 ] );
       /* NOTE:
          * When a codeblock is used to initialize a static variable
-         * the the names of local variables cannot be determined
+         * the names of local variables cannot be determined
          * because at the time of C code generation we don't know
          * in which function was defined this local variable
          */
@@ -1607,7 +1607,7 @@ static HB_GENC_FUNC( hb_p_statics )
 
             i = 0;
 
-            while( chr = pVar->szName[ i++ ] )
+            while( ( chr = pVar->szName[ i++ ] ) )
             {
                if( chr == '\'' || chr == '\\')
                   fprintf( cargo->yyc, " \'\\%c\',", chr );
