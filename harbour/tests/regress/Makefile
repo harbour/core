@@ -9,11 +9,11 @@ endif
 ROOT = ../../
 
 PRG_SOURCES=\
+        rt_main.prg  \
         rt_array.prg \
         rt_date.prg  \
         rt_file.prg  \
         rt_hvm.prg   \
-        rt_main.prg  \
         rt_math.prg  \
         rt_misc.prg  \
         rt_str.prg   \

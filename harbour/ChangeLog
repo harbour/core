@@ -1,3 +1,10 @@
+2000-03-06 20:05 GMT-5 David G. Holm <dholm@ sd-llc.com>
+   * tests/regress/Makefile
+     ! Several of the supported platforms begin program execution with
+       the first object module listed when the executable is created,
+       which means that it is necessary to list the rt_main object
+       module first in the Makefile.
+
 20000306-22:12 GMT+1 Victor Szakats <info@szelvesz.hu>
    - tests/ee.lbl
    - tests/ee.frm
