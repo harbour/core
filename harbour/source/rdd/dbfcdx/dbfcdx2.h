@@ -108,7 +108,7 @@ static LONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex );
 static void hb_cdxIndexResetAvailPage( LPCDXINDEX pIndex );
 static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
 static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
-static void hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKeyExp,
+static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKeyExp,
                                PHB_ITEM pKeyItem, BYTE bType, USHORT uiLen, char * szForExp,
                                PHB_ITEM pForItem, BOOL bAscending, BOOL bUnique );
 
@@ -138,6 +138,7 @@ static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
 static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
 static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static LPCDXTAG hb_cdxGetTagByNumber(CDXAREAP pArea,  USHORT uiTag );
+static USHORT hb_cdxGetTagNumber(CDXAREAP pArea, LPCDXTAG pFindTag);
 static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEYINFO pKey, PHB_ITEM pItem, USHORT uiType );
 static LPCDXTAG hb_cdxReorderTagList ( LPCDXTAG TagList );
 static ERRCODE hb_cdxGoEof( CDXAREAP pArea );

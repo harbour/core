@@ -409,7 +409,7 @@ static void hb_cdxGetMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 /*
  * Append blocks to free memo blocks list.
  */
-static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks )
+static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, ULONG ulBlocks )
 {
    /*
    SHORT iCount;
@@ -420,7 +420,7 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxAddFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( ulBlock );
-   HB_SYMBOL_UNUSED( uiBlocks );
+   HB_SYMBOL_UNUSED( ulBlocks );
    return;
    /*
     * Def'ed out temporarily this version doesn't seem correct for shared access or compatible with VFP.
@@ -504,7 +504,7 @@ static void hb_cdxAddFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks 
 /*
  * Try get free memo blocks from list.
  */
-static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT uiBlocks )
+static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, ULONG ulBlocks )
 {
    /*
    USHORT uiCount;
@@ -515,7 +515,7 @@ static BOOL hb_cdxCompleteFromFreeBlocks( CDXAREAP pArea, ULONG ulBlock, USHORT 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxCompleteFromFreeBlocks(%p, %lu, %hu)", pArea, ulBlock, uiBlocks));
    HB_SYMBOL_UNUSED( pArea );
    HB_SYMBOL_UNUSED( ulBlock );
-   HB_SYMBOL_UNUSED( uiBlocks );
+   HB_SYMBOL_UNUSED( ulBlocks );
    return FALSE;
    /*
     * Def'ed out temporarily this version doesn't seem correct for shared access or compatible with VFP.
@@ -618,7 +618,7 @@ static void hb_cdxWriteMemo( CDXAREAP pArea, ULONG ulBlock, PHB_ITEM pItem, ULON
                              ULONG * ulStoredBlock, USHORT uiType )
 {
    /* USHORT uiBloksRequired, uiBlocksUsed; */
-   ULONG ulBlocksRequired, ulBlocksUsed;
+   ULONG ulBlocksRequired, ulBlocksUsed = 0;
    MEMOBLOCK mbBlock;
    BOOL bWriteBlocks;
 
@@ -2739,7 +2739,7 @@ static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, LONG lPos, void * pBuffer,
       hb_errInternal( 1010, "Write in index page failed.", "", "" );
 }
 
-static void hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKeyExp,
+static LPCDXTAG hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKeyExp,
                                PHB_ITEM pKeyItem, BYTE bType, USHORT uiLen, char * szForExp,
                                PHB_ITEM pForItem, BOOL bAscending, BOOL bUnique )
 {
@@ -2788,6 +2788,7 @@ static void hb_cdxIndexAddTag( LPCDXINDEX pIndex, char * szTagName, char * szKey
    hb_cdxKeyFree( pKey );
    pIndex->pCompound->RootPage->Changed = TRUE;
    hb_cdxTagTagClose( pIndex->pCompound );
+   return pTag;
 }
 
 
@@ -3025,7 +3026,7 @@ static void hb_cdxSortFree( LPSORTINFO pSort )
    }
    if ( pSort->szTempFileName )
    {
-      hb_fsDelete( (unsigned char *) pSort->szTempFileName );
+      hb_fsDelete( (unsigned char *) ( pSort->szTempFileName ) );
       hb_xfree( pSort->szTempFileName );
       pSort->szTempFileName = NULL;
    }
@@ -3211,8 +3212,8 @@ static BOOL hb_cdxSortSwapGetNextKey( LPSORTINFO pSort, LONG * pKeyRec, BYTE * p
    USHORT winPage, nPage;
    BYTE    winKeyLen;
    char *  winKeyVal;
-   int iLimit, iResult;
-
+   int iResult;
+   winPage = winKeyLen = 0; /* this way some compilers don't emit warnings */
    winKeyVal = NULL;
    for ( nPage = 0 ; nPage < pSort->nSwapPages ; nPage++) {
       pPage = pSort->pSwapPage + nPage;
@@ -3304,9 +3305,8 @@ static int hb_cdxSortSwapBuildIndex( LPSORTINFO pSort )
    LONG nKeyRec;
    BYTE KeyVal[CDX_MAXKEY];
    USHORT nKeyLen;
-   BOOL lCont;
 
-   pSort->pSwapPage = (LPSORTSWAPPAGE *) hb_xgrab( pSort->nSwapPages * sizeof( SORTSWAPPAGE ) );
+   pSort->pSwapPage = (LPSORTSWAPPAGE) hb_xgrab( pSort->nSwapPages * sizeof( SORTSWAPPAGE ) );
    if ( !pSort->pSwapPage )
       hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Not enough memory for index merging", "hb_cdxTagDoIndex", NULL );
 
@@ -3922,6 +3922,33 @@ static LPCDXTAG hb_cdxGetTagByNumber(CDXAREAP pArea,  USHORT uiTag )
    }
    return pTag;
 }
+
+static USHORT hb_cdxGetTagNumber(CDXAREAP pArea, LPCDXTAG pFindTag)
+{
+   LPCDXTAG pTag;
+   LPCDXINDEX pCdx;
+   USHORT uiTag;
+
+   if( ! pFindTag )
+      return 0;
+   pCdx = pArea->lpIndexes;
+   pTag = NULL;
+   uiTag = 0;
+   while ( pCdx && (pTag != pFindTag) ) {
+      pTag = pCdx->TagList;
+      while ( pTag && (pTag != pFindTag) ) {
+         pTag = pTag->pNext;
+         uiTag++;
+      }
+      if ( pTag )
+         uiTag++;
+      pCdx = pCdx->pNext;
+   }
+   if ( !pTag )
+      uiTag = 0;
+   return uiTag;
+}
+
 
 static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
@@ -5350,6 +5377,11 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
          // index already open, do nothing
          // TODO: the full pathname should be compared when APIs are available
          // hb_cdxOrderListClear( (CDXAREAP) pArea );
+         if ( ! pAreaCdx->uiTag )
+         {
+            pAreaCdx->uiTag = hb_cdxGetTagNumber( pAreaCdx, pIndexTmp->TagList);
+            SELF_GOTOP( ( AREAP ) pArea );
+         }
          hb_xfree( szFileName );
          hb_xfree( szBaseName );
          hb_cdxIndexFree( pIndex );
@@ -5503,9 +5535,15 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       pLastTag->pNext = TagList;
    }
 
-   /*missing: ordSetFocus(1) if there was no other open index in the area*/
-   //pIndex->uiTag = 1;
-   //SELF_GOTOP( ( AREAP ) pArea );
+   /* dbfcdx specific: If there was no controlling order, set this one.
+    * This is the behaviour of Clipper's dbfcdx, although
+    * Clipper doc says a different rule
+    * */
+   if ( ! pAreaCdx->uiTag )
+   {
+      pAreaCdx->uiTag = hb_cdxGetTagNumber( pAreaCdx, pIndex->TagList);
+      SELF_GOTOP( ( AREAP ) pArea );
+   }
 
    if( szFileNameDbfPath != NULL )
       hb_xfree( szFileNameDbfPath );
@@ -5935,7 +5973,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    while( uiCount > 0 && szTagName[ uiCount - 1 ] == ' ' )
       uiCount--;
    szTagName[ uiCount ] = 0;
-   hb_cdxIndexAddTag( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
+   pTag = hb_cdxIndexAddTag( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
                       pKeyExp, bType, uiLen, ( char * ) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor :
                       NULL ), pForExp, pArea->lpdbOrdCondInfo ?
                       !pArea->lpdbOrdCondInfo->fDescending : TRUE , pOrderInfo->fUnique );
@@ -5943,6 +5981,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    hb_xfree( szTagName );
 
    hb_cdxIndexUnLockWrite( pIndex, NULL );
+   pAreaCdx->uiTag = hb_cdxGetTagNumber(pAreaCdx, pTag);
 
    /* Clear pArea->lpdbOrdCondInfo */
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
@@ -6023,7 +6062,7 @@ ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiTag;
-   LPCDXTAG pTag;
+   LPCDXTAG pTag = NULL;
    USHORT uiAux;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pOrderInfo));
@@ -6628,3 +6667,4 @@ ERRCODE hb_cdxWriteDBHeader( CDXAREAP pArea )
 // ( DBENTRYP_SVP )   hb_cdxWhoCares        : NULL
 
 /* end of cdxrdd.c */
+
