@@ -115,7 +115,7 @@ Separator     {SpaceTab}
 
 %x            STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
-%x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
+%x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_ DECLARE_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_
 %s            INDEX
 
@@ -312,6 +312,12 @@ Separator     {SpaceTab}
                  return IDENTIFIER;
                }
              }
+%{
+/* ************************************************************************ */
+%}
+"decl"("are"|"ar"|"a")? { BEGIN PRIVATE_;
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                }
 %{
 /* ************************************************************************ */
 %}
@@ -894,10 +900,10 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"priv"|"priva"|"privat"|"private" { BEGIN PRIVATE_;
+"priv"("ate"|"at"|"a")? { BEGIN PRIVATE_;
                   yylval.string = yy_strupr( yy_strdup( yytext ) );
                 }
-<PRIVATE_>{Separator}+[_a-zA-Z]   { /* an identifier after PRIVATE */
+<PRIVATE_>{Separator}+[_a-zA-Z] { /* an Identifier after PRIVATE */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
@@ -926,7 +932,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"publ"|"publi"|"public" { BEGIN PUBLIC_;
+"publ"("ic"|"i")? { BEGIN PUBLIC_;
                   yylval.string = yy_strupr( yy_strdup( yytext ) );
                 }
 <PUBLIC_>{Separator}+[_a-zA-Z]   { /* an identifier after PUBLIC */

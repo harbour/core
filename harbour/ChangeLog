@@ -1,5 +1,10 @@
+19990809-03:47 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/compiler/harbour.l
+     + added DECLARE statement - treated as PRIVATE
+       (Don't recall the exact rules for DECLARE)
+
 19990809-03:23 EDT Paul Tucker <ptucker@sympatico.ca>
-   * source/rtl/filesys.c
+   * source/rtl/filesys.c"source/rtl/filesys" 
      * hb_fsLock implimented for msvc
 
 19990809-07:40 GMT+1 Victor Szel <info@szelvesz.hu>
