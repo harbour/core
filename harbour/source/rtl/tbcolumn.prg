@@ -67,6 +67,10 @@ CLASS TBColumn
    DATA  FootSep              // Footing separator character
    DATA  HeadSep              // Heading separator character
    DATA  Picture              // Column picture string
+#ifdef HB_COMPAT_C53
+   DATA  PreBlock             // Code block validating values
+   DATA  PostBlock            // Code block determining editing
+#endif
 
    ACCESS Width INLINE ::nWidth           // Column display width
    ASSIGN Width(n) INLINE ::SetWidth(n)
@@ -98,7 +102,7 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
 
    DEFAULT cHeading TO ""
 
-   ::DefColor := { 1, 2 }
+   ::DefColor := { 1, 2, 1, 1 }
    ::FootSep  := ""
    ::ColPos   := 1
 
@@ -114,7 +118,7 @@ METHOD New( cHeading, bBlock ) CLASS TBColumn
    #ifdef HB_COMPAT_C53
 
       ::aSetStyle := Array( TBC_CUSTOM - 1 )
-   
+
       ::aSetStyle[ TBC_READWRITE ] := .f.
       ::aSetStyle[ TBC_MOVE ]      := .f.
       ::aSetStyle[ TBC_SIZE ]      := .f.
@@ -150,7 +154,7 @@ METHOD SetStyle( nMode, lSetting ) CLASS TBColumn
   IF ISLOGICAL( lSetting )
      ::aSetStyle[ nMode ] := lSetting
   ENDIF
- 
+
 RETURN lRet
 
 #endif
