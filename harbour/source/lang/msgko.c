@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (KR)
  *
- * Copyright 2000 Kwon, Oh-Chul <ohchul@fivetech.net>
+ * Copyright 2000 Kwon, Oh-Jun  <ohjun@fivetech.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -71,10 +71,10 @@ static HB_LANG s_lang =
       "일요일",
       "월요일",
       "화요일",
-      "수"
-      "목",
-      "금",
-      "토",
+      "수요일"
+      "목요일",
+      "금요일",
+      "토요일",
 
       /* CA-Cl*pper compatible natmsg items */
 
@@ -174,7 +174,7 @@ static HB_LANG s_lang =
 
       /* Texts */
 
-      "YYYY-MM-DD",
+      "YYYY/MM/DD",
       "Y",
       "N"
    }
@@ -188,4 +188,3 @@ HB_CALL_ON_STARTUP_END( hb_lang_Init_KO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_lang_Init_KO
 #endif
-

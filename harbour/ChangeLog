@@ -1,3 +1,7 @@
+2000-11-03 22:30 UTC+0100 (for) Charles,Kwon <jfl@mafact.com>
+   * source/lang/msgko.c
+      Charles,Kwon update as requested ...
+
 2000-11-02 20:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected minor bug with [] string delimiters.
