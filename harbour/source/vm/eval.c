@@ -67,9 +67,6 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 
-/* DJGPP can sprintf a float that is almost 320 digits long */
-#define HB_MAX_DOUBLE_LENGTH 320
-
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_evalNew(%p, %p)", pEvalInfo, pItem));
