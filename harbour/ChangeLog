@@ -1,3 +1,26 @@
+19990922-22:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/tests/working/rtl_test.prg
+    + Added a bunch of file name split/merge function tests, these are
+      uncommented right now, since functions are not yet generating the
+      ideal results. The functions should be fixed after Build 30.
+      Maybe some expected results should be fixed, too.
+  * source/rtl/fm.c
+    source/rtl/extend.c
+    * hb_xmem*() functions moved to fm.c
+  * source/rtl/filesys.c
+    ! Some more fix for hb_fsFNameMerge() buffer overrun.
+    + HB_HB_FNAMESPLIT()
+      HB_HB_FNAMEMERGE() functions added.
+  * source/rtl/gt/gtwin.c
+    source/rtl/gt/gtdos.c
+    source/rtl/set.c
+    % Removed NULL checks for the results of hb_xgrab() calls, since these
+      function will always return valid pointers (they will throw an
+      unrecoverable error on failure). If someone needs to handle the
+      memory allocation failure explicitly, he should use hb_xalloc() which
+      may return a NULL pointer.
+
 19990921-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/hbpp/hbpp.c

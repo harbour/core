@@ -49,6 +49,8 @@
  *    HB_DISKCHANGE()
  *    HB_DISKNAME()
  *    HB_DISKSPACE() (parts by Luiz Rafael Culik <Culik@sl.conex.net>)
+ *    HB_HB_FNAMESPLIT()
+ *    HB_HB_FNAMEMERGE()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_fsChDrv()
@@ -1536,7 +1538,7 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
          }
       }
 
-      if( pFileName->szName )
+      if( pFileName->szName && iLen < _POSIX_PATH_MAX )
       {
          strncpy( szFileName + iLen, pFileName->szName, _POSIX_PATH_MAX - iLen );
          szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
@@ -1562,8 +1564,11 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
          szFileName[ iLen ] = '\0';
       }
 
-      strncpy( szFileName + iLen, pFileName->szExtension, _POSIX_PATH_MAX - iLen );
-      szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
+      if( iLen < _POSIX_PATH_MAX )
+      {
+         strncpy( szFileName + iLen, pFileName->szExtension, _POSIX_PATH_MAX - iLen );
+         szFileName[ _POSIX_PATH_MAX - 1 ] = '\0';
+      }
    }
 
 /* DEBUG
@@ -1576,3 +1581,32 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 
    return szFileName;
 }
+
+HARBOUR HB_HB_FNAMESPLIT( void )
+{
+   if( ISCHAR( 1 ) )
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+
+      hb_storc( pFileName->szPath, 2 );
+      hb_storc( pFileName->szName, 3 );
+      hb_storc( pFileName->szExtension, 4 );
+      hb_storc( "", 5 ); /* TODO: Drive support for related platforms */
+
+      hb_xfree( pFileName );
+   }
+}
+
+HARBOUR HB_HB_FNAMEMERGE( void )
+{
+   HB_FNAME pFileName;
+   char szFileName[ _POSIX_PATH_MAX ];
+
+   pFileName.szPath = ISCHAR( 1 ) ? hb_parc( 1 ) : NULL;
+   pFileName.szName = ISCHAR( 2 ) ? hb_parc( 2 ) : NULL;
+   pFileName.szExtension = ISCHAR( 3 ) ? hb_parc( 3 ) : NULL;
+/* pFileName.szDrive = ISCHAR( 4 ) ? hb_parc( 4 ) : NULL; */
+
+   hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
+}
+

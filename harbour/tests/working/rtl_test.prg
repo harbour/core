@@ -1987,6 +1987,104 @@ STATIC FUNCTION Main_MISC()
 
    FErase("$$MEMOFI.TMP")
 
+#ifdef __HARBOUR__TEMP_COMMENTED_OUT_
+
+   /* HB_FNAMESPLIT(), HB_FNAMEMERGE() */
+
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO              " ) , "C:\WORK\HELLO;C:\WORK\;HELLO;;"                                          )
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO.             " ) , "C:\WORK\HELLO.;C:\WORK\;HELLO;.;"                                        )
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO.PRG          " ) , "C:\WORK\HELLO.PRG;C:\WORK\;HELLO;.PRG;"                                  )
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO\             " ) , "C:\WORK\HELLO\;C:\WORK\HELLO\;;;"                                        )
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO\.PRG         " ) , "C:\WORK\HELLO\.PRG;C:\WORK\HELLO\;.PRG;;"                                )
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO\A.PRG        " ) , "C:\WORK\HELLO\A.PRG;C:\WORK\HELLO\;A;.PRG;"                              )
+   TEST_LINE( TESTFNAME( "C:\WORK\HELLO\A.B.PRG      " ) , "C:\WORK\HELLO\A.B.PRG;C:\WORK\HELLO\;A.B;.PRG;"                          )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO               " ) , "C:WORK\HELLO;C:WORK\;HELLO;;"                                            )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO.              " ) , "C:WORK\HELLO.;C:WORK\;HELLO;.;"                                          )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO.PRG           " ) , "C:WORK\HELLO.PRG;C:WORK\;HELLO;.PRG;"                                    )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO\              " ) , "C:WORK\HELLO\;C:WORK\HELLO\;;;"                                          )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO\.PRG          " ) , "C:WORK\HELLO\.PRG;C:WORK\HELLO\;.PRG;;"                                  )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO\A.PRG         " ) , "C:WORK\HELLO\A.PRG;C:WORK\HELLO\;A;.PRG;"                                )
+   TEST_LINE( TESTFNAME( "C:WORK\HELLO\A.B.PRG       " ) , "C:WORK\HELLO\A.B.PRG;C:WORK\HELLO\;A.B;.PRG;"                            )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO          " ) , "C:\WORK.OLD\HELLO;C:\WORK.OLD\;HELLO;;"                                  )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO.         " ) , "C:\WORK.OLD\HELLO.;C:\WORK.OLD\;HELLO;.;"                                )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO.PRG      " ) , "C:\WORK.OLD\HELLO.PRG;C:\WORK.OLD\;HELLO;.PRG;"                          )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO\         " ) , "C:\WORK.OLD\HELLO\;C:\WORK.OLD\HELLO\;;;"                                )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO\.PRG     " ) , "C:\WORK.OLD\HELLO\.PRG;C:\WORK.OLD\HELLO\;.PRG;;"                        )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO\A.PRG    " ) , "C:\WORK.OLD\HELLO\A.PRG;C:\WORK.OLD\HELLO\;A;.PRG;"                      )
+   TEST_LINE( TESTFNAME( "C:\WORK.OLD\HELLO\A.B.PRG  " ) , "C:\WORK.OLD\HELLO\A.B.PRG;C:\WORK.OLD\HELLO\;A.B;.PRG;"                  )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO           " ) , "C:WORK.OLD\HELLO;C:WORK.OLD\;HELLO;;"                                    )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO.          " ) , "C:WORK.OLD\HELLO.;C:WORK.OLD\;HELLO;.;"                                  )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO.PRG       " ) , "C:WORK.OLD\HELLO.PRG;C:WORK.OLD\;HELLO;.PRG;"                            )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO\          " ) , "C:WORK.OLD\HELLO\;C:WORK.OLD\HELLO\;;;"                                  )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO\.PRG      " ) , "C:WORK.OLD\HELLO\.PRG;C:WORK.OLD\HELLO\;.PRG;;"                          )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO\A.PRG     " ) , "C:WORK.OLD\HELLO\A.PRG;C:WORK.OLD\HELLO\;A;.PRG;"                        )
+   TEST_LINE( TESTFNAME( "C:WORK.OLD\HELLO\A.B.PRG   " ) , "C:WORK.OLD\HELLO\A.B.PRG;C:WORK.OLD\HELLO\;A.B;.PRG;"                    )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO               " ) , "C:.OLD\HELLO;C:.OLD\;HELLO;;"                                            )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO.              " ) , "C:.OLD\HELLO.;C:.OLD\;HELLO;.;"                                          )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO.PRG           " ) , "C:.OLD\HELLO.PRG;C:.OLD\;HELLO;.PRG;"                                    )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO\              " ) , "C:.OLD\HELLO\;C:.OLD\HELLO\;;;"                                          )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO\.PRG          " ) , "C:.OLD\HELLO\.PRG;C:.OLD\HELLO\;.PRG;;"                                  )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO\A.PRG         " ) , "C:.OLD\HELLO\A.PRG;C:.OLD\HELLO\;A;.PRG;"                                )
+   TEST_LINE( TESTFNAME( "C:.OLD\HELLO\A.B.PRG       " ) , "C:.OLD\HELLO\A.B.PRG;C:.OLD\HELLO\;A.B;.PRG;"                            )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO        " ) , "\\SERVER\WORK\HELLO;\\SERVER\WORK\;HELLO;;"                              )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO.       " ) , "\\SERVER\WORK\HELLO.;\\SERVER\WORK\;HELLO;.;"                            )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO.PRG    " ) , "\\SERVER\WORK\HELLO.PRG;\\SERVER\WORK\;HELLO;.PRG;"                      )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO\       " ) , "\\SERVER\WORK\HELLO\;\\SERVER\WORK\HELLO\;;;"                            )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO\.PRG   " ) , "\\SERVER\WORK\HELLO\.PRG;\\SERVER\WORK\HELLO\;.PRG;;"                    )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO\A.PRG  " ) , "\\SERVER\WORK\HELLO\A.PRG;\\SERVER\WORK\HELLO\;A;.PRG;"                  )
+   TEST_LINE( TESTFNAME( "\\SERVER\WORK\HELLO\A.B.PRG" ) , "\\SERVER\WORK\HELLO\A.B.PRG;\\SERVER\WORK\HELLO\;A.B;.PRG;"              )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO         " ) , "\SERVER\WORK\HELLO;\SERVER\WORK\;HELLO;;"                                )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO.        " ) , "\SERVER\WORK\HELLO.;\SERVER\WORK\;HELLO;.;"                              )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO.PRG     " ) , "\SERVER\WORK\HELLO.PRG;\SERVER\WORK\;HELLO;.PRG;"                        )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO\        " ) , "\SERVER\WORK\HELLO\;\SERVER\WORK\HELLO\;;;"                              )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO\.PRG    " ) , "\SERVER\WORK\HELLO\.PRG;\SERVER\WORK\HELLO\;.PRG;;"                      )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO\A.PRG   " ) , "\SERVER\WORK\HELLO\A.PRG;\SERVER\WORK\HELLO\;A;.PRG;"                    )
+   TEST_LINE( TESTFNAME( "\SERVER\WORK\HELLO\A.B.PRG " ) , "\SERVER\WORK\HELLO\A.B.PRG;\SERVER\WORK\HELLO\;A.B;.PRG;"                )
+   TEST_LINE( TESTFNAME( "C:\HELLO                   " ) , "C:\HELLO;C:\;HELLO;;"                                                    )
+   TEST_LINE( TESTFNAME( "C:\HELLO.                  " ) , "C:\HELLO.;C:\;HELLO;.;"                                                  )
+   TEST_LINE( TESTFNAME( "C:\HELLO.PRG               " ) , "C:\HELLO.PRG;C:\;HELLO;.PRG;"                                            )
+   TEST_LINE( TESTFNAME( "C:\HELLO\                  " ) , "C:\HELLO\;C:\HELLO\;;;"                                                  )
+   TEST_LINE( TESTFNAME( "C:\HELLO\.PRG              " ) , "C:\HELLO\.PRG;C:\HELLO\;.PRG;;"                                          )
+   TEST_LINE( TESTFNAME( "C:\HELLO\A.PRG             " ) , "C:\HELLO\A.PRG;C:\HELLO\;A;.PRG;"                                        )
+   TEST_LINE( TESTFNAME( "C:\HELLO\A.B.PRG           " ) , "C:\HELLO\A.B.PRG;C:\HELLO\;A.B;.PRG;"                                    )
+   TEST_LINE( TESTFNAME( "C:HELLO                    " ) , "C:HELLO;C:;HELLO;;"                                                      )
+   TEST_LINE( TESTFNAME( "C:HELLO.                   " ) , "C:HELLO.;C:;HELLO;.;"                                                    )
+   TEST_LINE( TESTFNAME( "C:HELLO.PRG                " ) , "C:HELLO.PRG;C:;HELLO;.PRG;"                                              )
+   TEST_LINE( TESTFNAME( "C:HELLO\                   " ) , "C:HELLO\;C:HELLO\;;;"                                                    )
+   TEST_LINE( TESTFNAME( "C:HELLO\.PRG               " ) , "C:HELLO\.PRG;C:HELLO\;.PRG;;"                                            )
+   TEST_LINE( TESTFNAME( "C:HELLO\A.PRG              " ) , "C:HELLO\A.PRG;C:HELLO\;A;.PRG;"                                          )
+   TEST_LINE( TESTFNAME( "C:HELLO\A.B.PRG            " ) , "C:HELLO\A.B.PRG;C:HELLO\;A.B;.PRG;"                                      )
+   TEST_LINE( TESTFNAME( "\\HELLO                    " ) , "\\HELLO;\\;HELLO;;"                                                      )
+   TEST_LINE( TESTFNAME( "\\HELLO.                   " ) , "\\HELLO.;\\;HELLO;.;"                                                    )
+   TEST_LINE( TESTFNAME( "\\HELLO.PRG                " ) , "\\HELLO.PRG;\\;HELLO;.PRG;"                                              )
+   TEST_LINE( TESTFNAME( "\\HELLO\                   " ) , "\\HELLO\;\\HELLO\;;;"                                                    )
+   TEST_LINE( TESTFNAME( "\\.PRG                     " ) , "\\.PRG;\\;.PRG;;"                                                        )
+   TEST_LINE( TESTFNAME( "\\A.PRG                    " ) , "\\A.PRG;\\;A;.PRG;"                                                      )
+   TEST_LINE( TESTFNAME( "\\A.B.PRG                  " ) , "\\A.B.PRG;\\;A.B;.PRG;"                                                  )
+   TEST_LINE( TESTFNAME( "\HELLO                     " ) , "\HELLO;\;HELLO;;"                                                        )
+   TEST_LINE( TESTFNAME( "\HELLO.                    " ) , "\HELLO.;\;HELLO;.;"                                                      )
+   TEST_LINE( TESTFNAME( "\HELLO.PRG                 " ) , "\HELLO.PRG;\;HELLO;.PRG;"                                                )
+   TEST_LINE( TESTFNAME( "\HELLO\                    " ) , "\HELLO\;\HELLO\;;;"                                                      )
+   TEST_LINE( TESTFNAME( "\HELLO\.PRG                " ) , "\HELLO\.PRG;\HELLO\;.PRG;;"                                              )
+   TEST_LINE( TESTFNAME( "\HELLO\A.PRG               " ) , "\HELLO\A.PRG;\HELLO\;A;.PRG;"                                            )
+   TEST_LINE( TESTFNAME( "\HELLO\A.B.PRG             " ) , "\HELLO\A.B.PRG;\HELLO\;A.B;.PRG;"                                        )
+   TEST_LINE( TESTFNAME( "HELLO                      " ) , "HELLO;;HELLO;;"                                                          )
+   TEST_LINE( TESTFNAME( "HELLO.                     " ) , "HELLO.;;HELLO;.;"                                                        )
+   TEST_LINE( TESTFNAME( "HELLO.PRG                  " ) , "HELLO.PRG;;HELLO;.PRG;"                                                  )
+   TEST_LINE( TESTFNAME( "HELLO\                     " ) , "HELLO\;HELLO\;;;"                                                        )
+   TEST_LINE( TESTFNAME( ".PRG                       " ) , ".PRG;;.PRG;;"                                                            )
+   TEST_LINE( TESTFNAME( "A.PRG                      " ) , "A.PRG;;A;.PRG;"                                                          )
+   TEST_LINE( TESTFNAME( "A.B.PRG                    " ) , "A.B.PRG;;A.B;.PRG;"                                                      )
+   TEST_LINE( TESTFNAME( "                           " ) , ";;;;"                                                                    )
+   TEST_LINE( TESTFNAME( "\                          " ) , "\;\;;;"                                                                  )
+   TEST_LINE( TESTFNAME( "\\                         " ) , "\\;\\;;;"                                                                )
+   TEST_LINE( TESTFNAME( "C                          " ) , "C;;C;;"                                                                  )
+   TEST_LINE( TESTFNAME( "C:                         " ) , "C:;C:;;;"                                                                )
+   TEST_LINE( TESTFNAME( "C:\                        " ) , "C:\;C:\;;;"                                                              )
+   TEST_LINE( TESTFNAME( "C:\\                       " ) , "C:\\;C:\\;;;"                                                            )
+
+#endif
+
    RETURN NIL
 
 #ifdef __HARBOUR__
@@ -2463,6 +2561,17 @@ STATIC FUNCTION TAStr( aArray )
    NEXT
 
    RETURN cString
+
+STATIC FUNCTION TESTFNAME( cFull )
+   LOCAL cPath, cName, cExt, cDrive
+
+   HB_FNameSplit( RTrim( cFull ), @cPath, @cName, @cExt, @cDrive )
+
+   RETURN HB_FNameMerge( cPath, cName, cExt ) + ";" + ;
+          cPath + ";" +;
+          cName + ";" +;
+          cExt + ";" +;
+          cDrive
 
 STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
    LOCAL tmp, tmp1

@@ -502,45 +502,44 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
    {
       char * fpBlank = ( char * ) hb_xgrab( iLength );
       char * fpBuff = ( char * ) hb_xgrab( iLength * 2 );
-      if( fpBlank && fpBuff )
+
+      memset( fpBlank, ' ', iLength );
+
+      iColOld = iColNew = usLeft;
+      if( iCols >= 0 )
       {
-         memset( fpBlank, ' ', iLength );
+         iColOld += iCols;
+         iColSize = ( int ) ( usRight - usLeft );
+         iColSize -= iCols;
+      }
+      else
+      {
+         iColNew -= iCols;
+         iColSize = ( int ) ( usRight - usLeft );
+         iColSize += iCols;
+      }
 
-         iColOld = iColNew = usLeft;
-         if( iCols >= 0 )
+      for( iCount = ( iRows >= 0 ? usTop : usBottom );
+           ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
+           ( iRows >= 0 ? iCount++ : iCount-- ) )
+      {
+         int iRowPos = iCount + iRows;
+
+         /* Blank the scroll region in the current row */
+         hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
+
+         if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
          {
-            iColOld += iCols;
-            iColSize = ( int ) ( usRight - usLeft );
-            iColSize -= iCols;
-         }
-         else
-         {
-            iColNew -= iCols;
-            iColSize = ( int ) ( usRight - usLeft );
-            iColSize += iCols;
-         }
+            /* Read the text to be scrolled into the current row */
+            hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
 
-         for( iCount = ( iRows >= 0 ? usTop : usBottom );
-              ( iRows >= 0 ? iCount <= usBottom : iCount >= usTop );
-              ( iRows >= 0 ? iCount++ : iCount-- ) )
-         {
-            int iRowPos = iCount + iRows;
-
-            /* Blank the scroll region in the current row */
-            hb_gt_Puts( iCount, usLeft, attr, fpBlank, iLength );
-
-            if( ( iRows || iCols ) && iRowPos <= usBottom && iRowPos >= usTop )
-            {
-               /* Read the text to be scrolled into the current row */
-               hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff );
-
-               /* Write the scrolled text to the current row */
-               hb_gt_PutText( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
-            }
+            /* Write the scrolled text to the current row */
+            hb_gt_PutText( iCount, iColNew, iCount, iColNew + iColSize, fpBuff );
          }
       }
-      if( fpBlank ) hb_xfree( fpBlank );
-      if( fpBuff ) hb_xfree( fpBuff );
+
+      hb_xfree( fpBlank );
+      hb_xfree( fpBuff );
    }
 
    hb_gtSetPos( usRow, usCol );

@@ -33,6 +33,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_xmemcpy()
+ *    hb_xmemset()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 /* NOTE: If you turn this on, the memory subsystem will collect information
          about several statistical data about memory management, it will show
          these on exit if memory seem to have leaked.
@@ -164,4 +176,56 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       }
    }
 #endif
+}
+
+void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
+{
+   BYTE * pDest = ( BYTE * ) pDestArg;
+   BYTE * pSource = ( BYTE * ) pSourceArg;
+   ULONG  ulRemaining = ulLen;
+   int    iCopySize;
+
+   while( ulRemaining )
+   {
+      /* Overcome the memcpy() size_t limitation */
+      if( ulRemaining > UINT_MAX )
+      {
+         iCopySize = UINT_MAX;
+         ulRemaining -= ( ULONG ) iCopySize;
+      }
+      else
+      {
+         iCopySize = ( int ) ulRemaining;
+         ulRemaining = 0;
+      }
+      memcpy( pDest, pSource, iCopySize );
+      pDest += iCopySize;
+      pSource += iCopySize;
+   }
+   return pDestArg;
+}
+
+void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
+{
+   BYTE * pDest = ( BYTE * ) pDestArg;
+   ULONG  ulRemaining = ulLen;
+   int    iSetSize;
+
+   while( ulRemaining )
+   {
+      /* Overcome the memset() size_t limitation */
+      if( ulRemaining > UINT_MAX )
+      {
+         iSetSize = UINT_MAX;
+         ulRemaining -= ( ULONG ) iSetSize;
+      }
+      else
+      {
+         iSetSize = ( int ) ulRemaining;
+         ulRemaining = 0;
+      }
+      memset( pDest, iFill, iSetSize );
+      pDest += iSetSize;
+   }
+   return pDestArg;
 }

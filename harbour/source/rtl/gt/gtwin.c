@@ -275,18 +275,11 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
    USHORT width, i, y;
 
    LOG( "GetText" );
+
    width = ( usRight - usLeft + 1 );
    pwattr = ( LPWORD ) hb_xgrab( width * sizeof( *pwattr ) );
-   if( ! pwattr )
-   {
-      return;
-   }
    pstr = ( BYTE * ) hb_xgrab( width );
-   if( ! pstr )
-   {
-      hb_xfree( pwattr );
-      return;
-   }
+
    for( y = usTop; y <= usBottom; y++ )
    {
       coord.X = ( DWORD ) usLeft;
@@ -301,8 +294,9 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
          dest++;
       }
    }
-   hb_xfree( pwattr );
+
    hb_xfree( pstr );
+   hb_xfree( pwattr );
 }
 
 void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE * srce )
@@ -314,18 +308,11 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
    USHORT width, i, y;
 
    LOG( "PutText") ;
+
    width = ( usRight - usLeft + 1 );
    pwattr = ( LPWORD ) hb_xgrab( width * sizeof( *pwattr ) );
-   if( ! pwattr )
-   {
-      return;
-   }
    pstr = ( BYTE * ) hb_xgrab( width );
-   if( ! pstr )
-   {
-      hb_xfree( pwattr );
-      return;
-   }
+
    for( y = usTop; y <= usBottom; y++ )
    {
       for( i = 0; i < width; i++ )
@@ -340,8 +327,9 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
       WriteConsoleOutputAttribute( HOutput, pwattr, width, coord, &len );
       WriteConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &len );
    }
-   hb_xfree( pwattr );
+
    hb_xfree( pstr );
+   hb_xfree( pwattr );
 }
 
 void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )

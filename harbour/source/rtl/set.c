@@ -431,9 +431,10 @@ HARBOUR HB___SETCENTURY( void )
       size -= y_size;
       if( hb_set_century ) size += 4;
       else size += 2;
+
       /* Create the new date format */
       szNewFormat = ( char * ) hb_xgrab( size + 1 );
-      if( szNewFormat )
+
       {
          int format_len;
          if( y_start > 0 ) memcpy( szNewFormat, szDateFormat, y_start );
