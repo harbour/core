@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 13:27 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * include/hbapi.h
+   * include/hbtypes.h
+   * source/vm/extend.c
+   * source/vm/maindllp.c
+     ! all hb_stor... functions changed to return an int value
+
+   Notice: These changes fixes the extend API compatibility issues
+           with Clipper reported by gabor salai <gabor.salai@euroherc.hr>
+
 2002-10-19 12:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/extend.c
      ! minor fix to hb_parc()
