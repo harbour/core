@@ -1,3 +1,11 @@
+19990604-14:14 CET Patrick Mast
+  * source/rtl/set.c
+    Removed #include <sys\stat.h>
+  * source/rtl/files.c
+    Removed #include <sys\stat.h>
+  * source/compiler/harbour.y
+    Put in the build Nr.
+
 19990604-14:24 CET Victor Szel (upload Eddie Runia)
   + source/rtl/natmsg/msghu.c
     National language message file for Hungarian
