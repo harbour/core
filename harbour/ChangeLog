@@ -5,6 +5,10 @@
   + harbour/tests/testpers.prg
     objects persistence sample using Class TPersistent objects
 
+  * harbour/makefile.bc
+    persist.prg module added to Borland makefile.
+    Notice that other makefiles should be updated
+
 2001-09-02 18:32 GMT+1 Antonio Linares <alinares@fivetech.com>
   * harbour/source/vm/classes.c
     New function __ClsGetProperties() added. Syntax:
