@@ -1,19 +1,23 @@
+19990728-19:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * include/classes.ch
+     Added support for 'Super' keyword
+
 19990728-19:35 CET Patrick Mast <harbour@PatrickMast.com> <jsalas@gruposp.com>
   + /harbour/contrib/directX
     Added Jesus'es DirectX files.
 
 Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/dir.c: 
+	* source/rtl/dir.c:
 	Fixed a typo: #if define(USE_NT) => #if defined(USE_NT).
-	
-	* source/rtl/inkey.c: 
+
+	* source/rtl/inkey.c:
 	Added an include of <mingw32/conio.h> when compiling with gcc.
 
-	* include/Makefile: 
-	* tests/working/Makefile: 
+	* include/Makefile:
+	* tests/working/Makefile:
 	Updated list of files.
-	
+
 19990728-14:30 CET Eddie Runia <eddie@runia.com>
   * source/rtl/dir.c
     #include <errno.h> added
@@ -65,7 +69,7 @@ Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      * minor correction in case of inverted coordinates
 
 19990728-05:40 CET Victor Szel <info@szelvesz.hu>
-   ! source/compiler/harbour.y/MakeFilename() - 
+   ! source/compiler/harbour.y/MakeFilename() -
      Fixed bug, which sometimes caused that the
      filename losed the "." extension separator char.
    ! tests/working/makefile - newcopy.prg removed.
@@ -148,9 +152,9 @@ Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/rtl/natmsg/msgspa.c
     *source/rtl/natmsg/msguk.c
     *source/rtl/natmsg/msgyu852.c
-	* corrected bug in hb_ErrorNetDescription 
+	* corrected bug in hb_ErrorNetDescription
 	(was "<=" instead of "<" ;-)
-	 
+
 19990727-19:48 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      Fixed a GFP (Paul, test it)
