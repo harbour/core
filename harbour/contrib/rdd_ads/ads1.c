@@ -1346,9 +1346,24 @@ static ERRCODE adsStructSize( ADSAREAP pArea, USHORT * StructSize )
 
 static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
 {
+   UNSIGNED16 usTableType;
+
    HB_TRACE(HB_TR_DEBUG, ("adsSysName(%p, %p)", pArea, pBuffer));
-   HB_SYMBOL_UNUSED( pArea );
-   strcpy( (char *) pBuffer, "ADS");
+
+   AdsGetTableType( pArea->hTable, &usTableType );
+   switch( usTableType )
+   {
+      case ADS_NTX:
+         strcpy( (char *) pBuffer, "ADSNTX");
+         break;
+      case ADS_CDX:
+         strcpy( (char *) pBuffer, "ADSCDX");
+         break;
+      case ADS_ADT:
+         strcpy( (char *) pBuffer, "ADSADT");
+         break;
+   }
+
    return SUCCESS;
 }
 

@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-03-24 16:08 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+   * include\hbtrace.h
+     + Added #defines HB_TR_LEVEL_xxx
+
+   * This allows to skip the limitation of DOS and WINDOWS to include the
+     symbol '='inside an environment variable.
+     Ex:
          SET CFLAGS=-DHB_TR_LEVEL_DEBUG
      it's equal to
          SET CFLAGS=-DHB_TR_LEVEL_DEBUG=5      // Not permited in DOS &WIN

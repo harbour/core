@@ -2742,6 +2742,15 @@ static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize )
    return SUCCESS;
 }
 
+static ERRCODE ntxSysName( NTXAREAP pArea, BYTE * pBuffer )
+{
+   HB_TRACE(HB_TR_DEBUG, ("ntxSysName(%p, %p)", pArea, pBuffer));
+   HB_SYMBOL_UNUSED( pArea );
+
+   strncpy( ( char * ) pBuffer, "DBFNTX", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+   return SUCCESS;
+}
+
 static ERRCODE ntxPack( NTXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxPack(%p)", pArea ));
