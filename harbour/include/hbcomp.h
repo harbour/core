@@ -412,6 +412,7 @@ extern char * hb_comp_buffer; /* yacc input buffer */
 
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
+extern void hb_compGenILCode( PHB_FNAME );     /* generates the .NET IL language output */
 extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
 extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
 extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
