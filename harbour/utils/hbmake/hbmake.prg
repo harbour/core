@@ -88,6 +88,7 @@ Static lBcc        := .T.
 Static lGcc        := .F.
 Static lVcc        := .F.
 Static lForce      := .F.
+Static lLinux      := .F.
 Static szProject:=""
 Static lLibrary:=.f.
 Static lIgnoreErrors:=.F.
@@ -113,6 +114,7 @@ Default p6 To ""
 
 if at("OS/2",cOs)>0
     lGcc:=.t.
+    lLinux:=.t.
     lBcc:=.f.
 endif
 allParam:=p1 + p2 +p3+p4 + p5 +p6
@@ -123,6 +125,7 @@ allparam:=strtran(allparam,"-e","-E")
 allparam:=strtran(allparam,"-i","-I")
 allparam:=strtran(allparam,"-p","-P")
 allparam:=strtran(allparam,"-b","-B")
+allparam:=strtran(allparam,"-gl","-GL")
 allparam:=strtran(allparam,"-g","-G")
 allparam:=strtran(allparam,"-v","-V")
 allparam:=strtran(allparam,"-f","-F")
@@ -144,6 +147,7 @@ else
    ? "          /b+ Use BCC as C compiler"
    ? "          /g  Use GCC as C compiler"
 endif
+   ? "          /gl  Use GCC as C compiler in Linux"   
    ? "          /v  Use MSVC as C compiler"
    ? "          /f  Force recompiltion of all files"
    ? "          /i  Ignore errors returned by commamnd"
@@ -171,6 +175,15 @@ If Pcount() == 2
       allparam:=strtran(allparam,"-B","")
 
    Endif
+if at("-GL",allparam)>0
+      lBcc := .F.
+      lGcc := .T.
+      lVcc := .F.
+      lLinux := .T.
+      allparam:=strtran(allparam,"-GL","")
+
+   Endif
+
 if at("-G",allparam)>0
       lBcc := .F.
       lGcc := .T.
@@ -242,6 +255,15 @@ If Pcount() > 2
       allparam:=strtran(allparam,"-B","")
 
    Endif
+if at("-GL",allparam)>0
+      lBcc := .F.
+      lGcc := .T.
+      lVcc := .F.
+      lLinux := .T.
+      allparam:=strtran(allparam,"-GL","")
+
+   Endif
+   
 if at("-G",allparam)>0
       lBcc := .F.
       lGcc := .T.
@@ -605,8 +627,8 @@ Local cPath := ''
 Local cEnv
 Local aEnv
 Local nPos
-if at("linux",GetEnv("HB_ARCHITECTURE"))>0
-    cpath:="/usr/bin"
+if lLinux 
+    cpath:="."
 else
     cEnv  := Gete( "PATH" )
     aEnv  := listasarray2( cEnv, ";" )
@@ -786,6 +808,7 @@ Local nPos
 Local aMacro
 Local aTemp
 Local nCount
+Local cCurrentRead:=''
 // ? "setting link file"
 cRead  := Alltrim( readln( @leof ) )
      szProject:=cRead
@@ -807,25 +830,46 @@ For nPos := 1 To Len( amacro )
       findmacro( amacro[ nPos ], @cRead )
    Endif
 Next
-cLinkcomm   := cRead + "  @" + cLinker
-nLinkHandle := Fcreate( clinker )
+if !lLinux
+   cLinkcomm   := cRead + "  @" + cLinker
+   nLinkHandle := Fcreate( clinker )
+else
+   cLinkComm := cRead+ " "
+endif
 //#define CRLF hb_osnewline()
+
 For nPos := 1 To 7
    cRead  := Alltrim( readln( @leof ) )
+   cCurrentRead:=cRead
    amacro := listasarray2( cRead, " " )
    For ncount := 1 To Len( amacro )
       If At( "$", amacro[ nCount ] ) > 0
          findmacro( amacro[ nCount ], @cRead )
-         If At( ".exe", cRead ) > 0 .and. lGcc
-            Fwrite( nLinkhandle, "-o " + cRead + CRLF )
-         Else
-            Fwrite( nLinkhandle, cRead + CRLF )
-         Endif
-      Endif
+         /*comment*/
+         if at('$(PROJECT)',cCurrentRead)>0
+            if !lGcc
+               if !lLinux
+                Fwrite( nLinkhandle, cRead + CRLF )
+               endif
+            ELSEIF lGcc .and. lLinux
+               cLinkComm +=  "-o " + cRead + " " 
+            ELSEIF lGcc .and. !lLinux .and. at('.exe',cread)>0              
+               Fwrite( nLinkhandle, "-o " + cRead + CRLF )
+            endif
+         else
+            if !lLinux
+               Fwrite( nLinkhandle, cRead + CRLF )
+            else
+               cLinkComm += cRead +" "
+            endif
+         endif
+     Endif
    Next
 Next
+if !lLinux
 Fclose( nLinkhandle )
-
+Endif
+outstd(cLinkComm)
 Return nil
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -1050,7 +1094,9 @@ Local lGenppo      := .f.
 Local getlist      := {}
 Local cTopFile     := ""
 Local cDefBccLibs  := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib gtwin.lib"
-Local cDefGccLibs  := "-lvm -lrtl -lgtdos -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
+Local cDefGccLibs  := "-lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
+Local cDefGccLibsOs2  := "-lvm -lrtl -lgtos2 -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
+Local cDeflibGccLibs := "-Wl,--start-group -lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon -lm -Wl,--end-group"
 Local cscreen      := Savescreen( 0, 0, Maxrow(), Maxcol() )
 local citem:=""
 Local cExt:=""
@@ -1073,9 +1119,9 @@ Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
 @  0,  0, Maxrow(), Maxcol() Box( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 ATTENTION( "Enviroment options", 0 )
 @  1,  1 Say "Select Os"
-@  1, 12 Get cos radio { "Win32", "OS/2", "Linux" }
+@  1, 12 Get cos radio { "Win32", "OS/2", "Linux" } valid !empty(cos)
 @  1, 23 Say "Select C Compiler"
-@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }
+@  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" } valid !empty(cCompiler)
 @  1, 48 Say "Graphic Library"
 @  1, 64 Get lFwh checkbox "Use FWH" when Cos=="Win32"
 @  2, 64 Get lcw checkbox "Use C4W"          when Cos=="Win32"
@@ -1130,11 +1176,11 @@ If lBcc
 
 Elseif lGcc
    if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or. cOs=="Linux"
-   Aadd( aCommands, { ".cpp.o:", "$(BCB)/gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
+   Aadd( aCommands, { ".cpp.o:", "gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
-   Aadd( aCommands, { ".c.o:", "$(BCB)/gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
+   Aadd( aCommands, { ".c.o:", "gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -g -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)/harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
 else
    Aadd( aCommands, { ".cpp.o:", "$(BCB)\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
@@ -1224,7 +1270,7 @@ if lGcc
         hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
         cExt:=substr(cExt,2)
 /*        Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + " $(PR) "+CRLF )*/
-          Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cExt),Strtran( cTopfile, "PRG", "" ),Strtran( cTopfile, "prg", "" )) + " $(PR) "+CRLF )
+          Fwrite( nLinkHandle, "PROJECT = " + if(isupper(cExt),Strtran( cTopfile, ".PRG", "" ),Strtran( cTopfile, ".prg", "" )) + " $(PR) "+CRLF )
    else
         hb_FNAMESPLIT(cTopfile,@cPath ,@cTest, @cExt , @cDrive)
         cExt:=substr(cExt,2)
@@ -1289,7 +1335,13 @@ if lBcc .or. lVcc
         Fwrite( nLinkHandle, "LIBFILES = " +cDefBccLibs + CRLF )
    endif
 elseif lGcc
-        Fwrite( nLinkHandle, "LIBFILES = " +cDefgccLibs + CRLF )
+      if  cOs=="Linux"
+          Fwrite( nLinkHandle, "LIBFILES = " +cDeflibGccLibs + CRLF )
+      elseif cOs=="OS/2"
+          Fwrite( nLinkHandle, "LIBFILES = " + cDefGccLibsOs2 + CRLF )
+      else
+          Fwrite( nLinkHandle, "LIBFILES = " +cDefgccLibs + CRLF )
+      endif
 endif
  Fwrite( nLinkHandle, "DEFFILE = "+CRLF)
  fWrite( nLinkHandle, "HARBOURFLAGS = " +cDefHarOpts+CRLF)
@@ -1319,8 +1371,8 @@ elseif lVcc
  Fwrite( nLinkHandle, "ALLLIB = $(LIBFILES) comdlg32.lib shell32.lib user32.lib gdi32.lib"+CRLF)
 
 elseif lGcc
- Fwrite( nLinkHandle, "CFLAG1 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/../include")+ " -c -Wall"+CRLF)
- Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/../lib")+CRLF)
+ Fwrite( nLinkHandle, "CFLAG1 = "+if(at("Linux",cOs)>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/../include")+ " -c -Wall"+CRLF)
+ Fwrite( nLinkHandle, "CFLAG2 = "+if(at("Linux",cOs)>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/../lib")+CRLF)
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = $(CFLAG2)"+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = "+CRLF)
@@ -1382,7 +1434,11 @@ elseif lGcc
         Fwrite( nLinkHandle, "#BUILD"+CRLF)
         Fwrite( nLinkHandle, " "+CRLF)
         Fwrite( nLinkHandle, "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)"+CRLF)
-        Fwrite( nLinkHandle, "    $(BCB)\$(LINKER) @&&!"+CRLF)
+        if at('Linux',cOs)>0
+           Fwrite( nLinkHandle, "    $(LINKER) @&&!"+CRLF)
+        else
+           Fwrite( nLinkHandle, "    $(BCB)\$(LINKER) @&&!"+CRLF)
+        endif
         Fwrite( nLinkHandle, "    $(PROJECT) "+CRLF)
         Fwrite( nLinkHandle, "    $(ALLOBJ)  "+CRLF)
         Fwrite( nLinkHandle, "    $(LFLAGS)  "+CRLF)
@@ -2195,3 +2251,11 @@ While at("!endif",cRead)==0
    Endif
 enddo
 Return nil
+/*comment*/
+/*         If At( ".", cRead ) > 0 .and. lGcc
+            Fwrite( nLinkhandle, "-o " + cRead + CRLF )
+         Else
+            Fwrite( nLinkhandle, cRead + CRLF )
+         Endif
+         */
+

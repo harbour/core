@@ -57,14 +57,14 @@
 #include "common.ch"
 #include "radiodef.ch"
 
-FUNCTION RadioGets(bVar, cVar, aChoices, aGetList)
+FUNCTION RadioGets(bVar, cVar, aChoices, aGetList,bValid)
 
 LOCAL oGet
 LOCAL nRow := Row(), nCol := Col()
 LOCAL nGets := Len(aChoices)
 LOCAL nGet
 LOCAL nStartGet := Len(aGetList) + 1
-
+   default bvalid to {||.t.}
 
   // For each element in aChoices
   FOR nGet := 1 To nGets
@@ -78,7 +78,7 @@ LOCAL nStartGet := Len(aGetList) + 1
     Aadd(aGetList, oGet)
 
     oGet:cargo := Array(RADIO_NUM_IVARS)
-
+   oGet:PostBlock:=bValid
     oGet:radioGsb  := bVar
     oGet:radioGets := Array(nGets)
 
