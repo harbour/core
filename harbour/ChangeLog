@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-12-03 22:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * makefile.bc
+  * makefile.nt
+    * Added lines, needed for compiling of cdpla850.c
+  * source/codepage/cdpla850.c
+  * source/codepage/Makefile
+    ! Minor fixes
+
 2002-11-01 12:00 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/dbsdf.prg
     ! fixed importing/exporting on linux

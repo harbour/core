@@ -2157,6 +2157,9 @@ $(OBJ_DIR)\msgzhgb.obj : $(LANG_DIR)\msgzhgb.c
 #
 # CODEPAGE.LIB dependencies
 #
+$(OBJ_DIR)\cdpla850.obj : $(CODEPAGE_DIR)\cdpla850.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\cdppl852.obj : $(CODEPAGE_DIR)\cdppl852.c
    $(CC) $(CLIBFLAGS) -o$@ $**

@@ -91,6 +91,6 @@ HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PT )
    hb_cdpRegister( &s_codepage );
 HB_CALL_ON_STARTUP_END( hb_codepage_Init_PT )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_EN
+   #pragma startup hb_codepage_Init_PT
 #endif
 
