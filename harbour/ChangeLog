@@ -1,3 +1,9 @@
+2001-05-15 13:20 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * doc/en/objfunc.txt
+     * update the doc for __objGetMsgList() to reflect
+       changelog 2001-05-13 22:10 UTC+1 JFL (mafact) <jfl@mafact.com>
+       also added a short DATA/CLASSDATA explanation by J.Lefebvre
+
 2001-05-14 21:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/compiler/hbusage.c
