@@ -7,6 +7,11 @@
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version, with one exception:
  *
+ * The exception is that if you link this file with other files to produce
+ * an executable, this does not by itself causes the resulting executable
+ * to be covered by the GNU General Public License. Your use of that
+ * executable is in no way restricted on account of linking this file.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the

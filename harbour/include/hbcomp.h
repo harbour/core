@@ -416,7 +416,6 @@ extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
  */
 extern int           hb_comp_iLine;
 extern int           hb_comp_iCompiled;
-extern char *        hb_comp_szFile;
 extern FUNCTIONS     hb_comp_functions;
 extern FUNCTIONS     hb_comp_funcalls;
 extern SYMBOLS       hb_comp_symbols;

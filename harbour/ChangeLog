@@ -1,3 +1,15 @@
+2000-07-10 20:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbcomp.h
+   * source/compiler/harbour.y
+   * source/compiler/hbgenerr.c
+     - Removed hb_comp_szFile
+
+   * source/compiler/harbour.slx
+     * Reduced aStrings and YY_BUF_SIZE to 2048
+
+   * source/compiler/simplex.c
+     + Added RTL license exception.
+
 2000-07-10-22:20 Luiz Rafael Culik <culik@sl.conex.net>
   *contrib/hbzlib/zipfile2.c
      +hb___GetNumbersofFilestoUnzip(char *szFile) internal function that returns
@@ -24,10 +36,10 @@
 
     *include/hbcomp.h
         * added a forward declaration to comiple with Watcom C/C++
-        
+
     *source/compiler/harbour.c
         * added missing declaration of hb_compReleaseStrings()
-        
+
     *source/rtl/errorapi.c
         * error objects created during error launching called internally
         are locked to prevent deallocation by the GC
@@ -51,7 +63,6 @@
         * during sweep phase the items are checked only once to prevent
         recursive loops
 
->>>>>>> 1.2397
 2000-07-09 01:02 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hbcomp.h
      + Added: external BOOL hb_comp_bSimpLex

@@ -241,23 +241,23 @@ Main       : { hb_compLinePush(); } Source       { }
            ;
 
 Source     : Crlf         { hb_comp_EOL = FALSE; }
-           | VarDefs      { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | FieldsDef    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | MemvarDef    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Declaration  { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Function     { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Statement    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Line         { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
+           | VarDefs      { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
+           | FieldsDef    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
+           | MemvarDef    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
+           | Declaration  { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
+           | Function     { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
+           | Statement    { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
+           | Line         { hb_comp_EOL = FALSE; hb_comp_iCompiled = 2; }
            | ProcReq      { hb_comp_EOL = FALSE; }
            | error  Crlf  { hb_comp_EOL = FALSE; yyclearin; }
            | Source Crlf        { hb_comp_EOL = FALSE; }
-           | Source VarDefs     { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Source FieldsDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Source MemvarDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Source Declaration { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Source Function    { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Source Statement   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
-           | Source Line        { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; hb_comp_szFile = hb_strdup( hb_comp_files.pLast->szFileName ); }
+           | Source VarDefs     { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source FieldsDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source MemvarDef   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source Declaration { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source Function    { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source Statement   { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
+           | Source Line        { hb_comp_EOL = FALSE; hb_comp_iCompiled = hb_comp_files.pLast->iLine - 1; }
            | Source ProcReq     { hb_comp_EOL = FALSE; }
            | Source error Crlf  { hb_comp_EOL = FALSE; yyclearin; }
            ;

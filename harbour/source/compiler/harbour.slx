@@ -46,7 +46,7 @@
 
 static int iTexts = 0, iStrings = 0, iString;
 static char * aTexts[256];
-static char * aStrings[16384];
+static char * aStrings[2048];
 static char * pString;
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */

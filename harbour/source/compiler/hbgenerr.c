@@ -129,7 +129,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
    if( cPrefix != 'F' && hb_comp_bError )
       return;
 
-   printf( "\r%s(%i) ", hb_comp_szFile, iLine );
+   printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
 
    printf( "Error %c%04i  ", cPrefix, iError );
    printf( szErrors[ iError - 1 ], szError1, szError2 );
@@ -154,7 +154,7 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
-      printf( "\r%s(%i) ", hb_comp_szFile, iLine );
+      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
 
       printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( szText + 1, szWarning1, szWarning2 );
