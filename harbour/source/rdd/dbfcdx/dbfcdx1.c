@@ -1571,7 +1571,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
                       cTemp[i] = (*pTemp);
                     cTemp[0] ^= 0x80;
                   }
-                  hb_cdxSortInsertWord( pSort, ulRecNo, cTemp );
+                  hb_cdxSortInsertWord( pSort, ulRecNo, (char *) cTemp );
                   break;
 
                default:
@@ -2082,7 +2082,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
       return;
    if( pTag->OptFlags & 0x80 )
       return;
-   SELF_COMPILE( pTag->pIndex->pArea, ( BYTE * ) pTag->KeyExpr );
+   SELF_COMPILE( (AREAP) pTag->pIndex->pArea, ( BYTE * ) pTag->KeyExpr );
    pTag->pKeyItem = pTag->pIndex->pArea->valResult;
    pTag->pIndex->pArea->valResult = NULL;
    pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
@@ -2129,7 +2129,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
    pTag->ForExpr = ( char * ) hb_xgrab( CDX_MAXKEY + 1 );
    hb_strncpyUpper( pTag->ForExpr, ( const char * ) pHeader.KeyPool +
                     strlen( pTag->KeyExpr ) + 1, CDX_MAXKEY );
-   SELF_COMPILE( pTag->pIndex->pArea, ( BYTE * ) pTag->ForExpr );
+   SELF_COMPILE( (AREAP) pTag->pIndex->pArea, ( BYTE * ) pTag->ForExpr );
    pTag->pForItem = pTag->pIndex->pArea->valResult;
    pTag->pIndex->pArea->valResult = NULL;
    pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
@@ -3479,7 +3479,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
 
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
 
-   if( SELF_GOCOLD( pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
    /* If we have a codeblock for the expression, use it */
@@ -3487,7 +3487,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
       pExpr = pOrderInfo->itmCobExpr;
    else /* Otherwise, try compiling the key expression string */
    {
-      if( SELF_COMPILE( pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
+      if( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
          return FAILURE;
       pExpr = pArea->valResult;
       pArea->valResult = NULL;
@@ -3498,12 +3498,12 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
    hb_itemCopy( pKeyExp, pExpr );
 
    /* Get a blank record before testing expression */
-   SELF_GOBOTTOM( pArea );
-   SELF_SKIP( pArea, 1 );
+   SELF_GOBOTTOM( ( AREAP ) pArea );
+   SELF_SKIP( ( AREAP ) pArea, 1 );
    pExpMacro = pForMacro = NULL;
    if( hb_itemType( pExpr ) == HB_IT_BLOCK )
    {
-      if( SELF_EVALBLOCK( pArea, pExpr ) == FAILURE )
+      if( SELF_EVALBLOCK( ( AREAP ) pArea, pExpr ) == FAILURE )
       {
          hb_itemRelease( pKeyExp );
          return FAILURE;
@@ -3561,7 +3561,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
       hb_errPutGenCode( pError, EG_DATAWIDTH );
       hb_errPutSubCode( pError, 1026 );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATAWIDTH ) );
-      SELF_ERROR( pArea, pError );
+      SELF_ERROR( ( AREAP ) pArea, pError );
       hb_errRelease( pError );
       if( pExpMacro != NULL )
          hb_macroDelete( pExpMacro );
@@ -3578,7 +3578,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
       else /* Otherwise, try compiling the conditional expression string */
       {
         if( pArea->lpdbOrdCondInfo->abFor ) {
-          if( SELF_COMPILE( pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
+          if( SELF_COMPILE( (AREAP) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
           {
             hb_itemRelease( pKeyExp );
             if( pExpMacro != NULL )
@@ -3602,7 +3602,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
    {
       if( hb_itemType( pExpr ) == HB_IT_BLOCK )
       {
-         if( SELF_EVALBLOCK( pArea, pExpr ) == FAILURE )
+         if( SELF_EVALBLOCK( ( AREAP ) pArea, pExpr ) == FAILURE )
          {
             hb_itemRelease( pKeyExp );
             hb_itemRelease( pForExp );
@@ -3645,7 +3645,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
          strcat( szFileName, pFileName->szPath );
       strcat( szFileName, pFileName->szName );
       pExtInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( pArea, DBOI_BAGEXT, &pExtInfo );
+      SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo );
       strcat( szFileName, pExtInfo.itmResult->item.asString.value );
       hb_itemRelease( pExtInfo.itmResult );
    }
@@ -3656,7 +3656,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
       if( !pFileName->szExtension )
       {
          pExtInfo.itmResult = hb_itemPutC( NULL, "" );
-         SELF_ORDINFO( pArea, DBOI_BAGEXT, &pExtInfo );
+         SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo );
          strcat( szFileName, pExtInfo.itmResult->item.asString.value );
          hb_itemRelease( pExtInfo.itmResult );
       }
@@ -3666,7 +3666,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
    hb_xfree( pFileName );
 
    /* Close all index */
-   hb_cdxOrderListClear( pArea );
+   hb_cdxOrderListClear( (CDXAREAP) pArea );
 
    pIndex = hb_cdxIndexNew( pArea );
    pAreaCdx->lpIndexes = pIndex;
@@ -3687,7 +3687,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
 
    if( pIndex->hFile == FS_ERROR )
    {
-      hb_cdxOrderListClear( pArea );
+      hb_cdxOrderListClear( (CDXAREAP)  pArea );
       hb_xfree( szFileName );
       hb_xfree( szTagName );
       hb_itemRelease( pKeyExp );
@@ -3771,8 +3771,8 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderI
    hb_xfree( szTagName );
 
    /* Clear pArea->lpdbOrdCondInfo */
-   SELF_ORDSETCOND( pArea, NULL );
-   return SELF_GOTOP( pArea );
+   SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
+   return SELF_GOTOP( ( AREAP ) pArea );
 }
 
 static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
@@ -3789,11 +3789,11 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListAdd(%p, %p)", pArea, pOrderInfo));
 
-   if( SELF_GOCOLD( pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
    /* Close all index for now (it must be fixed!)*/
-   hb_cdxOrderListClear( pArea );
+   hb_cdxOrderListClear((CDXAREAP)  pArea );
 
    /* File exists? */
    /* Check file name */
@@ -3806,7 +3806,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 
    if( strlen( szFileName ) == 0 )
    {
-      hb_cdxOrderListClear( pArea );
+      hb_cdxOrderListClear( (CDXAREAP) pArea );
       hb_xfree( szFileName );
       return FAILURE;
    }
@@ -3816,7 +3816,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       if( !pFileName->szExtension )
       {
          pExtInfo.itmResult = hb_itemPutC( NULL, "" );
-         SELF_ORDINFO( pArea, DBOI_BAGEXT, &pExtInfo );
+         SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo );
          strcat( szFileName, pExtInfo.itmResult->item.asString.value );
          hb_itemRelease( pExtInfo.itmResult );
       }
@@ -3839,7 +3839,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
          hb_errPutFileName( pError, szFileName );
          hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );
        }
-       bRetry = ( SELF_ERROR( pArea, pError ) == E_RETRY );
+       bRetry = ( SELF_ERROR( ( AREAP ) pArea, pError ) == E_RETRY );
      }
      else
        bRetry = FALSE;
@@ -3849,7 +3849,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 
    if( pIndex->hFile == FS_ERROR )
    {
-      hb_cdxOrderListClear( pArea );
+      hb_cdxOrderListClear( (CDXAREAP)  pArea );
       hb_xfree( szFileName );
       return FAILURE;
    }
@@ -3878,7 +3878,7 @@ static ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       hb_cdxTagKeyRead( pIndex->pCompound, NEXT_RECORD );
    }
    /*missing: ordSetFocus(1) if there was no other open index in the area*/
-   SELF_GOTOP( pArea );
+   SELF_GOTOP( ( AREAP ) pArea );
 
    hb_xfree( szFileName );
    return SUCCESS;
@@ -3890,7 +3890,7 @@ extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("cdxOrderListClear(%p)", pArea));
    /* Commit changes first */
-   if( SELF_GOCOLD( pArea ) == FAILURE )
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
    while( pArea->lpIndexes )
@@ -3918,16 +3918,16 @@ static ERRCODE hb_cdxGoTop( CDXAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("cdxGoTop(%p)", pArea));
    /*must change to follow ordSetFocus()*/
    if ( ! pArea->lpIndexes )
-     SUPER_GOTOP( pArea );
+     SUPER_GOTOP( ( AREAP ) pArea );
    else
    {
      LPCDXTAG pTag;
      pTag = pArea->lpIndexes->TagList;
      hb_cdxTagTagOpen( pTag, 0 );
      hb_cdxTagKeyRead( pTag, TOP_RECORD );
-     SELF_GOTO( pArea, pTag->CurKeyInfo->Tag );
+     SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
    }
-   return SELF_SKIPFILTER( pArea, 1 );
+   return SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
 }
 
 static ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
@@ -3935,16 +3935,16 @@ static ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("cdxGoBottom(%p)", pArea));
    /*must change to follow ordSetFocus()*/
    if ( ! pArea->lpIndexes )
-     SUPER_GOBOTTOM( pArea );
+     SUPER_GOBOTTOM( ( AREAP ) pArea );
    else
    {
      LPCDXTAG pTag;
      pTag = pArea->lpIndexes->TagList;
      hb_cdxTagTagOpen( pTag, 0 );
      hb_cdxTagKeyRead( pTag, BTTM_RECORD );
-     SELF_GOTO( pArea, pTag->CurKeyInfo->Tag );
+     SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
    }
-   return SELF_SKIPFILTER( pArea, -1 );
+   return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
 
 static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
@@ -3953,17 +3953,17 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
 
    /*must change to follow ordSetFocus()*/
    if ( ! pArea->lpIndexes )
-     SUPER_SKIPRAW( pArea, lToSkip );
+     SUPER_SKIPRAW( ( AREAP ) pArea, lToSkip );
    else
    {
      LPCDXTAG pTag;
      pTag = pArea->lpIndexes->TagList;
 
      if ( pArea->fBof )
-        SELF_GOTOP( pArea );
+        SELF_GOTOP( ( AREAP ) pArea );
 
      if ( lToSkip == 0 )
-       SUPER_SKIPRAW( pArea, 0 );
+       SUPER_SKIPRAW( ( AREAP ) pArea, 0 );
      else if ( lToSkip > 0 )
      {
        if ( !pArea->fEof )
@@ -3971,12 +3971,12 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
           while ( !pTag->TagEOF && lToSkip-- > 0 )
             hb_cdxTagKeyRead( pTag, NEXT_RECORD );
           if ( !pTag->TagEOF )
-            SELF_GOTO( pArea, pTag->CurKeyInfo->Tag );
+            SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
           else
           {
             //BOOL fTop;                    /* TRUE if "top" */
             //BOOL fBottom;                 /* TRUE if "bottom" */
-            SUPER_GOBOTTOM( pArea );
+            SUPER_GOBOTTOM( ( AREAP ) pArea );
             SUPER_SKIPRAW( pArea, 1 );
             pArea->fEof = pTag->TagEOF = TRUE;
           }
@@ -3986,25 +3986,25 @@ static ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
      {
        if ( pArea->fEof )
        {
-         SELF_GOBOTTOM( pArea );
+         SELF_GOBOTTOM( ( AREAP ) pArea );
          lToSkip++;
        }
        pTag->TagBOF = FALSE;
        while ( !pTag->TagBOF && lToSkip++ < 0 )
          hb_cdxTagKeyRead( pTag, PREV_RECORD );
        if ( !pTag->TagBOF )
-         SELF_GOTO( pArea, pTag->CurKeyInfo->Tag );
+         SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
        else
        {
          //BOOL fTop;                    /* TRUE if "top" */
          //BOOL fBottom;                 /* TRUE if "bottom" */
          pTag->TagBOF = FALSE;
-         SELF_GOTOP( pArea );
+         SELF_GOTOP( ( AREAP ) pArea );
          pArea->fBof = pTag->TagBOF = TRUE;
        }
      }
    }
-   return SELF_SKIPFILTER( pArea, -1 );
+   return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
 
 static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
@@ -4024,7 +4024,7 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
      hb_errPutSubCode( pError, 1020 );
      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_NOORDER ) );
      hb_errPutFlags( pError, EF_CANDEFAULT );
-     SELF_ERROR( pArea, pError );
+     SELF_ERROR( ( AREAP ) pArea, pError );
      hb_errRelease( pError );
      return FAILURE;
    }
@@ -4049,7 +4049,7 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
      hb_cdxKeyFree( pKey2 );
      if ( lRecno > 0 )
      {
-       retvalue = SELF_GOTO( pArea, pTag->CurKeyInfo->Tag );
+       retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
        pArea->fFound = TRUE;
        return retvalue;
      }
@@ -4058,12 +4058,12 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL b
        pArea->fFound = FALSE;
        if ( bSoftSeek && !pTag->TagEOF )
        {
-         return SELF_GOTO( pArea, pTag->CurKeyInfo->Tag );
+         return SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
        }
        else
        {
-         SELF_GOBOTTOM( pArea );
-         return SELF_SKIPRAW( pArea, 1 );
+         SELF_GOBOTTOM( ( AREAP ) pArea );
+         return SELF_SKIPRAW( ( AREAP ) pArea, 1 );
          //pArea->fEof = pTag->TagEOF = TRUE;
        }
      }

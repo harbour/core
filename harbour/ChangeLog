@@ -1,3 +1,8 @@
+2000-10-12 20:30 GMT +0200 JFL (mafact) <jfl@mafact.com>
+     * source/rdd/dbfcdx/dbfcdx1.c
+       * added casts, posted by John Skelton
+
+
 2000-10-12 10:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/rddcpy.c
      * added casts, posted by John Skelton
