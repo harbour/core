@@ -60,7 +60,7 @@
 #endif
 
 #include <stdio.h>
-#include <setjmp.h>
+/* #include <setjmp.h> */
 
 #include "hbpp.h"
 #include "hbcomp.h"
@@ -92,10 +92,7 @@ BOOL           hb_comp_bDebugInfo = FALSE;                /* holds if generate d
 int            hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 FILE *         hb_comp_yyppo = NULL;
 
-static jmp_buf s_env;
-
-/* TODO: Extend the function to allow directives
-         and external include files              */
+/* static jmp_buf s_env; */
 
 /* TODO: This function should return an error code. The preprocessed sting
  * should be returned  by a reference.
@@ -232,8 +229,8 @@ HB_FUNC( __PREPROCESS )
       char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
       char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
 
-      if( setjmp( s_env ) == 0 )
-      {
+      /* if( setjmp( s_env ) == 0 ) */
+      { 
          char * ptr = pText;
          int slen;
 
@@ -255,13 +252,13 @@ HB_FUNC( __PREPROCESS )
 
          hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
       }
-      else
-      {
+      /* else
+      {  */
          /* an error occured during parsing.
           * The longjmp was used in GenError()
           */
-         hb_retc( NULL );
-      }
+      /*   hb_retc( NULL );
+      } */
 
       hb_xfree( pText );
       hb_xfree( pOut );
@@ -287,7 +284,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * 
    hb_errLaunch( pError );
    hb_errRelease( pError );
 
-   longjmp( s_env, iError == 0 ? -1 : iError );
+   /* longjmp( s_env, iError == 0 ? -1 : iError ); */
 }
 
 void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )

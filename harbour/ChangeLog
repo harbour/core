@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rtl/str.c
+    * Added checking of parameters to be Clipper compatible
+      Added possibility to omit second parameter, while third exists:
+        Str( number,,dec )
+
+2002-03-18 01:48 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      + added compatibility with Clipper 5.3 (FlexFile) memo headers
      bug reported by Walter Negro.
