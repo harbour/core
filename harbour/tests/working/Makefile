@@ -107,6 +107,7 @@ PRG_SOURCES=\
 	seconds.prg \
 	set_num.prg \
 	set_test.prg \
+	sound.prg \
 	statfun.prg \
 	statics.prg \
 	strcmp.prg \
