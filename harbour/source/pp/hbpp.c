@@ -69,6 +69,7 @@ int WorkMarkers( char**, char**, char*, int* );
 int getExpReal ( char *, char **, int, int );
 int isExpres ( char* );
 int TestOptional( char*, char* );
+int CheckOptional( char*, char*, char*, int*, int, int );
 void SkipOptional( char** );
 
 DEFINES* DefSearch(char *);
@@ -123,7 +124,7 @@ int lInclude = 0;
 int *aCondCompile, nCondCompile = 0, maxCondCompile = 5;
 int nline=0;
 int aIsRepeate[5], Repeate;
-char *lastInputptr[5];
+int lReplacePat = 1;
 int numBrackets;
 char groupchar;
 
@@ -827,147 +828,145 @@ int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra, int com_or_xcom )
 {
-  int endTranslation = FALSE, ipos;
-  char *lastopti[2], *strtopti = NULL, *strtptri = NULL;
-  char *ptri = inputLine, *ptr, tmpname[MAX_NAME];;
+   int endTranslation = FALSE, ipos;
+   char *lastopti[3], *strtopti = NULL, *strtptri = NULL;
+   char *ptri = inputLine, *ptr, tmpname[MAX_NAME];
 
-  numBrackets = 0;
-  SKIPTABSPACES( ptri );
-  if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return -1; }
-  else
-    while ( *ptri != '\0' && !endTranslation )
-    {
-      SKIPTABSPACES( ptrmp );
-      if( *ptrmp == '[' && !numBrackets && !strtopti )
-         strtopti = ptrmp;
-      if( !numBrackets && strtopti && strtptri != ptri && ISNAME( *ptri ) )
+   numBrackets = 0;
+   SKIPTABSPACES( ptri );
+   if ( ptrmp == NULL ) { if ( *ptri != '\0' ) return -1; }
+   else
+      while ( *ptri != '\0' && !endTranslation )
       {
-         strtptri = ptri;
-         ptrmp = strtopti;
-         ptr = ptri;
-         ipos = NextName( &ptr, tmpname );
-         ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE );
-         if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
+         SKIPTABSPACES( ptrmp );
+         if( *ptrmp == '[' && !numBrackets && !strtopti )
+            strtopti = ptrmp;
+         if( !numBrackets && strtopti && strtptri != ptri && ISNAME( *ptri ) )
          {
-            ptr = strtopti+ipos-2;
-            while( *ptr != '[' && *ptr != ']' ) ptr--;
-            if( *ptr != ']' )
-               ptrmp = ptr;
-         }
-      }
-      switch ( *ptrmp ) {
-       case '[':
-         numBrackets++;
-         aIsRepeate[ Repeate ] = 0;
-         lastInputptr[Repeate] = ptri;
-         lastopti[Repeate++] = ptrmp;
-         ptrmp++;
-         break;
-       case ']':
-         if( Repeate )
-         {
-            Repeate--;
-            if( aIsRepeate[ Repeate ] )
+            strtptri = ptri;
+            ptrmp = strtopti;
+            ptr = ptri;
+            ipos = NextName( &ptr, tmpname );
+            ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE );
+            if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
             {
-               if( ISNAME(*ptri) )
+               ptr = strtopti+ipos-2;
+               while( *ptr != '[' && *ptr != ']' ) ptr--;
+               if( *ptr != ']' )
+                  ptrmp = ptr;
+            }
+         }
+         switch ( *ptrmp ) {
+         case '[':
+            numBrackets++;
+            aIsRepeate[ Repeate ] = 0;
+            lastopti[Repeate++] = ptrmp;
+            ptrmp++;
+            if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_xcom, com_or_xcom ) )
+               SkipOptional( &ptrmp );
+            break;
+         case ']':
+            if( Repeate )
+            {
+               Repeate--;
+               if( aIsRepeate[ Repeate ] )
                {
-                  ptr = ptri;
-                  ipos = NextName( &ptr, tmpname );
-                  ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE );
-                  if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
+                  if( ISNAME(*ptri) )
                   {
-                     ptrmp = lastopti[Repeate];
-                     ptrmp++;
-                     Repeate++;
-                     SkipOptional( &ptrmp );
-                     numBrackets++;
-                     ptrmp++;
-                     strtptri = ptri;
+                     ptr = ptri;
+                     ipos = NextName( &ptr, tmpname );
+                     ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE );
+                     if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
+                     {
+                        ptrmp = lastopti[Repeate];
+                        ptrmp++;
+                        Repeate++;
+                        SkipOptional( &ptrmp );
+                        numBrackets++;
+                        ptrmp++;
+                        strtptri = ptri;
+                     }
+                     else
+                        ptrmp = lastopti[Repeate];
                   }
                   else
                      ptrmp = lastopti[Repeate];
                }
-               else
-                  ptrmp = lastopti[Repeate];
+               else ptrmp++;
+               numBrackets--;
             }
-            else ptrmp++;
-            numBrackets--;
-         }
-         else { numBrackets--; ptrmp++; }
-         break;
-       case ',':
-         if( !numBrackets ) strtopti = NULL;
-         if ( *ptri == ',' ) { ptrmp++; ptri++; }
-         else
-         {
-           if ( numBrackets )
-           {
-              SkipOptional( &ptrmp );
-              ptri = lastInputptr[Repeate];
-           }
-           else return -1;
-         }
-         break;
-       case '\1':  /*  Match marker */
-         if( !numBrackets ) strtopti = NULL;
-         if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres ) )
-         {
-           if ( numBrackets )
-           {
-              SkipOptional( &ptrmp );
-              ptri = lastInputptr[Repeate];
-           }
-           else return -1;
-         }
-         break;
-       case '\0':
-         if ( com_or_tra )
-           return -1;
-         else endTranslation = TRUE;
-         break;
-       default:    /*   Key word    */
-         if( !numBrackets ) strtopti = NULL;
-         ptr = ptri;
-         if ( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
-         {
-           ptri = ptr;
-           if ( numBrackets )
-           {
-              SkipOptional( &ptrmp );
-              ptri = lastInputptr[Repeate];
-           }
-           else return -1;
-         }
-      }
-      SKIPTABSPACES( ptri );
-    };
-
-  if ( *ptrmp != '\0' )
-  {
-    if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0]; }
-    numBrackets = 0;
-    do
-    {
-      SKIPTABSPACES( ptrmp );
-      if ( *ptrmp != '\0' )
-        switch ( *ptrmp ) {
-          case '[':
-            ptrmp++;
-            SkipOptional( &ptrmp );
-            ptrmp++;
+            else { numBrackets--; ptrmp++; }
             break;
-          case ']': ptrmp++; break;
-          default:
-            return -1;
-        }
-    }
-    while ( *ptrmp != '\0' );
-  }
-  SearnRep( "\1","",0,ptro,lenres);
+         case ',':
+            if( !numBrackets ) strtopti = NULL;
+            if ( *ptri == ',' ) { ptrmp++; ptri++; }
+            else
+            {
+               if ( numBrackets )
+               {
+                  SkipOptional( &ptrmp );
+               }
+               else return -1;
+            }
+            break;
+         case '\1':  /*  Match marker */
+            if( !numBrackets ) strtopti = NULL;
+            if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres ) )
+            {
+               if ( numBrackets )
+               {
+                  SkipOptional( &ptrmp );
+               }
+               else return -1;
+            }
+            break;
+         case '\0':
+            if ( com_or_tra )
+               return -1;
+            else endTranslation = TRUE;
+            break;
+         default:    /*   Key word    */
+            if( !numBrackets ) strtopti = NULL;
+            ptr = ptri;
+            if ( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
+            {
+               ptri = ptr;
+               if ( numBrackets )
+               {
+                  SkipOptional( &ptrmp );
+               }
+               else return -1;
+            }
+         }
+         SKIPTABSPACES( ptri );
+      };
 
-  *(ptro + *lenres) = '\0';
-  *lenres = RemoveSlash( ptro );   /* Removing '\' from result string */
-  if ( com_or_tra ) return 1; else return (ptri-inputLine);
+      if ( *ptrmp != '\0' )
+      {
+         if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0]; }
+         numBrackets = 0;
+         do
+         {
+            SKIPTABSPACES( ptrmp );
+            if ( *ptrmp != '\0' )
+               switch ( *ptrmp ) {
+               case '[':
+                  ptrmp++;
+                  SkipOptional( &ptrmp );
+                  ptrmp++;
+                  break;
+               case ']': ptrmp++; break;
+               default:
+                  return -1;
+               }
+         }
+         while ( *ptrmp != '\0' );
+      }
+   SearnRep( "\1","",0,ptro,lenres);
+
+   *(ptro + *lenres) = '\0';
+   *lenres = RemoveSlash( ptro );   /* Removing '\' from result string */
+   if ( com_or_tra ) return 1; else return (ptri-inputLine);
 }
 
 int RemoveSlash( char *stroka )
@@ -1231,7 +1230,13 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
      if ( **ptri == '\'' ) State = STATE_QUOTE1;
      else if ( **ptri == '\"' ) State = STATE_QUOTE2;
      else if ( ISNAME(**ptri) ) State = STATE_EXPRES_ID;
-     else if ( **ptri == ' ' && State == STATE_EXPRES_ID ) State = STATE_ID_END;
+     else if ( **ptri == ' ' )
+     {
+        if( State == STATE_EXPRES_ID ) State = STATE_ID_END;
+        else if( lens > 2 && ( ( *(*ptri-2)=='+' && *(*ptri-1)=='+' ) ||
+                               ( *(*ptri-2)=='-' && *(*ptri-1)=='-' ) ) )
+           State = STATE_ID_END;
+     }     
      else if ( **ptri == '(' ) { StBr1++; State = STATE_BRACKET; }
      else if ( **ptri == '[' ) { StBr2++; State = STATE_BRACKET; }
      else if ( **ptri == '{' ) { StBr3++; State = STATE_BRACKET; }
@@ -1300,6 +1305,86 @@ int TestOptional( char *ptr1, char *ptr2 )
    return !flagname;
 }
 
+int CheckOptional( char* ptrmp, char* ptri, char* ptro, int* lenres, int com_or_tra, int com_or_xcom )
+{
+   int save_numBr = numBrackets, save_Repeate = Repeate;
+   int endTranslation = FALSE, result = TRUE;
+   char *lastInputptr[5];
+   char *lastopti[3], *ptr;
+
+   lReplacePat = FALSE;
+   lastInputptr[Repeate] = ptri;
+   while ( *ptri != '\0' && !endTranslation && result )
+   {
+      SKIPTABSPACES( ptrmp );
+      switch ( *ptrmp ) {
+      case '[':
+         numBrackets++;
+         aIsRepeate[ Repeate ] = 0;
+         lastInputptr[Repeate] = ptri;
+         lastopti[Repeate++] = ptrmp;
+         ptrmp++;
+         break;
+      case ']':
+         if( numBrackets == save_numBr )
+            endTranslation = TRUE;
+         else
+         {
+            if( Repeate )
+            {
+               Repeate--;
+               ptrmp = lastopti[Repeate];
+            }
+            else ptrmp++;
+            numBrackets--;
+         }
+         break;
+      case ',':
+         if ( *ptri == ',' ) { ptrmp++; ptri++; }
+         else
+         {
+            if ( numBrackets - save_numBr > 0 )
+            {
+               SkipOptional( &ptrmp );
+               ptri = lastInputptr[Repeate];
+            }
+            else result = FALSE;
+         }
+         break;
+      case '\1':  /*  Match marker */
+         if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres ) )
+         {
+            if ( numBrackets - save_numBr > 0 )
+            {
+               SkipOptional( &ptrmp );
+               ptri = lastInputptr[Repeate];
+            }
+            else result = FALSE;
+         }
+         break;
+      case '\0':
+         result = FALSE;
+      default:    /*   Key word    */
+         ptr = ptri;
+         if ( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
+         {
+            ptri = ptr;
+            if ( numBrackets - save_numBr > 0 )
+            {
+               SkipOptional( &ptrmp );
+               ptri = lastInputptr[Repeate];
+            }
+            else result = FALSE;
+         }
+      }
+      SKIPTABSPACES( ptri );
+   };
+   Repeate = save_Repeate;
+   numBrackets = save_numBr;
+   lReplacePat = TRUE;
+   return result;
+}
+
 void SkipOptional( char** ptri )
 {
    int nbr = 0;
@@ -1348,6 +1433,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       if ( *ptr == '[' )
       {
          if( Repeate ) aIsRepeate[ Repeate - 1 ]++;
+         if( !lReplacePat ) return;
          ptr2 = ptrOut + ifou + 3;
          while ( *ptr2 != ']' && *(ptr-1) != '\\' )
          {
@@ -1404,7 +1490,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
             }
          }
       }
-      if ( !rezs )
+      if ( !rezs && lReplacePat )
       {
          if ( *(ptrOut + ifou + 2) != '0' && *(exppatt+1) )
          {
@@ -1420,6 +1506,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
                              ptrOut + ifou - 1, *lenres-isdvig-ifou+1 );
          isdvig += ifou - 1;
       }
+      else if( !lReplacePat ) isdvig += ifou;
       ptrOut = ptro + isdvig;
    }
 }

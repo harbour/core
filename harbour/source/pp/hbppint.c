@@ -86,7 +86,7 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
          lens--;
          lens--;
          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
-         if( sLine[ lens + 1 ] == ' ' || sLine[ lens + 1 ] == '\t' ) lens++;
+         sLine[ ++lens ] = ' ';
          sLine[ ++lens ] = '\0';
 
          *ptrOut++ = '\n';
@@ -154,6 +154,7 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o )
          lens--;
          lens--;
          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
+         sLine[ ++lens ] = ' ';
          sLine[ ++lens ] = '\0';
       }
       else
