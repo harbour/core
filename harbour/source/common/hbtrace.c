@@ -36,6 +36,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "hbtrace.h"
 
 char * hb_tr_file_ = "";
@@ -78,7 +79,7 @@ void hb_tr_trace( char * fmt, ... )
    * Print file and line.
    */
   fprintf(hb_tr_fp_, "%s:%d: %s ",
-	  hb_tr_file_ + i, hb_tr_line_, slevel[hb_tr_level_]);
+          hb_tr_file_ + i, hb_tr_line_, slevel[hb_tr_level_]);
 
   /*
    * Print the name and arguments for the function.

@@ -2,6 +2,10 @@
 # $Id$
 #
 
+ifeq ($(HB_MAIN),)
+HB_MAIN = std
+endif
+
 ROOT = ../../../
 
 PRG_SOURCES=\

@@ -131,6 +131,7 @@
    #include <fcntl.h>
    #include <share.h>
    #include <direct.h>
+   #include <io.h>
    #if defined(__BORLANDC__)
       #include <dir.h>
       #include <dos.h>
@@ -138,7 +139,9 @@
 
    #if defined(_MSC_VER) || defined(__MINGW32__)
       #include <sys\locking.h>
+      #define ftruncate _chsize
    #else
+      #define ftruncate chsize
       #if !defined(HAVE_POSIX_IO)
          #define HAVE_POSIX_IO
       #endif
@@ -541,6 +544,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    errno = 0;
    uiWritten = write( hFileHandle, pBuff, uiCount );
    s_uiErrorLast = errno;
+   ftruncate( hFileHandle, tell( hFileHandle ) );
    if( uiWritten == ( USHORT ) -1 )
       uiWritten = 0;
 
@@ -554,9 +558,9 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiWritten;
 }
 
-#if USHORT_MAX != ULONG_MAX
+#if UINT_MAX != ULONG_MAX
 
-#define LARGE_MAX ( USHRT_MAX - 1L )
+#define LARGE_MAX ( UINT_MAX - 1L )
 
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
@@ -574,9 +578,9 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    while( ulLeftToRead )
    {
       /* Determine how much to read this time */
-      if( ulLeftToRead > ( ULONG ) LARGE_MAX )
+      if( ulLeftToRead > ( ULONG ) INT_MAX )
       {
-         uiToRead = LARGE_MAX;
+         uiToRead = INT_MAX;
          ulLeftToRead -= ( ULONG ) uiToRead;
       }
       else
@@ -621,9 +625,9 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    while( ulLeftToWrite )
    {
       /* Determine how much to write this time */
-      if( ulLeftToWrite > ( ULONG ) LARGE_MAX )
+      if( ulLeftToWrite > ( ULONG ) INT_MAX )
       {
-         uiToWrite = LARGE_MAX;
+         uiToWrite = INT_MAX;
          ulLeftToWrite -= ( ULONG ) uiToWrite;
       }
       else
@@ -642,6 +646,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
       pPtr += uiWritten;
    }
    s_uiErrorLast = errno;
+   ftruncate( hFileHandle, tell( hFileHandle ) );
 
 #else
 

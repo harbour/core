@@ -20,7 +20,7 @@ LD_OUT = /Fe
 LDFLAGS = /C-
 ifeq ($(HB_MAIN),)
 else
-LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/main$(HB_MAIN).obj
+LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/main.obj
 endif
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
