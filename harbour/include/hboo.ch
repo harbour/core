@@ -50,16 +50,16 @@
 #define HB_OO_CH_
 
 /* Method or Data attribute (nScope)*/
-#define HB_OO_CLSTP_EXPORTED    1 // No comment, default
-#define HB_OO_CLSTP_PROTECTED   2 // Only usable from one of the object's method (even sublclassed object)
-#define HB_OO_CLSTP_HIDDEN      4 // Only usable from one of the object's method (and not from sublclassed one)
-#define HB_OO_CLSTP_CTOR        8 // Constructor  (Not yet used)
-#define HB_OO_CLSTP_READONLY   16 // No comment
-#define HB_OO_CLSTP_SHARED     32 // Allow a classvar (or classmethod) to be shared by all the subclasses.
-                                  // Not the default behaviour as each subclass will have its own copy by default.
-#define HB_OO_CLSTP_CLASS      64 // The related message is a superobject call, uidata is the superclass handle
-                                  // pInitValue contain one superclass object instance (absolutely needed for Inline msg and class data)
-#define HB_OO_CLSTP_SUPER     128 // The related message is inherited from a superclass
+#define HB_OO_CLSTP_EXPORTED    1 /* No comment, default */
+#define HB_OO_CLSTP_PROTECTED   2 /* Only usable from one of the object's method (even sublclassed object) */
+#define HB_OO_CLSTP_HIDDEN      4 /* Only usable from one of the object's method (and not from sublclassed one) */
+#define HB_OO_CLSTP_CTOR        8 /* Constructor  (Not yet used) */
+#define HB_OO_CLSTP_READONLY   16 /* No comment */
+#define HB_OO_CLSTP_SHARED     32 /* Allow a classvar (or classmethod) to be shared by all the subclasses.
+                                     Not the default behaviour as each subclass will have its own copy by default. */
+#define HB_OO_CLSTP_CLASS      64 /* The related message is a superobject call, uidata is the superclass handle
+                                     pInitValue contain one superclass object instance (absolutely needed for Inline msg and class data) */
+#define HB_OO_CLSTP_SUPER     128 /* The related message is inherited from a superclass */
 
 /* Message types */
 #define HB_OO_MSG_METHOD        0
@@ -69,7 +69,7 @@
 #define HB_OO_MSG_VIRTUAL       4
 #define HB_OO_MSG_SUPER         5
 #define HB_OO_MSG_ONERROR       6
-#define HB_OO_MSG_CLSMTHD       7 // for the future ;-) RAC&JF
+#define HB_OO_MSG_CLSMTHD       7 /* for the future */
 
 /* Data */
 #define HB_OO_DATA_SYMBOL       1
@@ -88,7 +88,7 @@
 #define HB_OO_MTHD_PFUNCTION    2
 #define HB_OO_MTHD_SCOPE        3
 
-/* ClassMethod */ //for the future ;-)
+/* ClassMethod */ /* for the future */
 #define HB_OO_CLSM_SYMBOL       1
 #define HB_OO_CLSM_PFUNCTION    2
 #define HB_OO_CLSM_SCOPE        3

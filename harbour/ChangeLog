@@ -41,7 +41,7 @@
    * source/rtl/tbcolumn.prg
      * Restored the previous high level CLASS versions (the fixes where kept),
        since it should now work with 10 chars mode.
-     ! Some fixed to make it work in 10 chars mode.
+     ! Some fixes to make it work in 10 chars mode.
      ; Now Harbour will compile with 10 chars mode, but note that it still 
        won't link.
 
