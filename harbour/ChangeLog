@@ -2,7 +2,6 @@
 
    - include/hbclip.ch
    + contrib/hbclip/hbclip.ch
-   + contrib/hbclip/hbclip.lib
    + contrib/hbclip/hbclip.prg
    + contrib/hbclip/hbcolind.c
    + contrib/hbclip/hbkeyput.prg
