@@ -55,14 +55,14 @@ HARBOUR OS()
 
 #if defined(_Windows)
    hb_os = "Windows 95/98";
-   _AX = 0x160A;
+/*   _AX = 0x160A;
    geninterrupt(0x2F);
    if(_AX == 0)
-   {
-      hb_osmajor  = _BX / 256;
-      hb_osminor  = _BX % 256;
+   { */
+      hb_osmajor  = _osmajor ; /* _BX / 256; */
+      hb_osminor  = _osminor ; /* _BX % 256; */
       hb_osletter = 0;
-   }
+/*   } */
 #else
    /* detect OS/2 */
    if(_osmajor >= 10)

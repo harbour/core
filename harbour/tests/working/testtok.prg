@@ -16,12 +16,8 @@ function strtoarray(s)
    local aResult := {}
    local t, l
 
-   QOut( "Here" )
    while( s <> "" )
-      QOut( "This" )
       t := strtoken(s, 1,, @l)
-
-
       aadd(aResult, t)
       s := substr(s, l + 2) // skip the delimiter
 
