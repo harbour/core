@@ -1,8 +1,8 @@
 20000306-22:12 GMT+1 Victor Szakats <info@szelvesz.hu>
-   - ee.lbl
-   - ee.frm
-   + test.lbl
-   + test.frm
+   - tests/ee.lbl
+   - tests/ee.frm
+   + tests/test.lbl
+   + tests/test.frm
    * tests/testrpt.prg
      tests/testlbl.prg
      * EE.* renamed to TEST.*
