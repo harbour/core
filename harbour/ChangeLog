@@ -1,10 +1,18 @@
+2000-01-19 08:28 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     + fixed and improved to use Class TDbMenuItem METHOD Display
+       everytime a menuitem is displayed.
+   * source/compiler/genc.c
+     ! fixed a new bug that was providing wrong filenames to the
+       debugger.
+
 2000-01-18 22:20  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
     *ngdoc/ft_helpc.prg
         Enhaced. Now Generate Norton Guide Source Code and TROFF Files
     *source/tools/rtf.prg
         Document the Files and Source code Formated
     *source/tools/html.prg
-        Document the Files and Source code Formated   
+        Document the Files and Source code Formated
     +ngdoc/harbour.lnk
         Link file for Norton Guide. ha.lnk is needed for the other output files
     +ngdoc/harbour.rsp
