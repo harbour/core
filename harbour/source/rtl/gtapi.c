@@ -48,7 +48,8 @@ void hb_gtInit(void)
     hb_gtSetPos( gtWhereY(), gtWhereX() );
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
-    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
+    hb_gtSetColorStr( "W/N,N/W,N/N,N/N,N/W" );
+/*    hb_gtSetColorStr( hb_set.HB_SET_COLOR ); */
 }
 
 void hb_gtExit(void)
