@@ -124,8 +124,8 @@ HB_FUNC( WINGETTEXT )
 {
    BYTE bBuffer[ 255 ];
 
-   GetWindowText( ( HWND ) hb_parnl( 1 ), bBuffer, 254 );
-   hb_retc( bBuffer );
+   GetWindowText( ( HWND ) hb_parnl( 1 ), (char*) bBuffer, 254 );
+   hb_retc( (char*) bBuffer );
 }
 
 
@@ -221,7 +221,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
    hb_vmDo( 4 );
 
    if( hb_arrayGetType( &hb_stack.Return, 1 ) == HB_IT_NIL )
-      return DefWindowProc( ( HANDLE ) hWnd, message, wParam, lParam );
+      return DefWindowProc( ( HWND ) hWnd, message, wParam, lParam );
    else
       return hb_parnl( -1, 1 );
 }
@@ -259,7 +259,7 @@ HB_FUNC( WINSETWIDTH )
    WORD wHeight;
 
    GetWindowRect( hWnd, &rct );
-   wHeight = rct.bottom - rct.top;
+   wHeight = (WORD) ( rct.bottom - rct.top );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {
@@ -291,7 +291,7 @@ HB_FUNC( WINSETHEIGHT )
    WORD wWidth;
 
    GetWindowRect( hWnd, &rct );
-   wWidth = rct.right - rct.left;
+   wWidth = (WORD) ( rct.right - rct.left );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {
@@ -333,8 +333,8 @@ HB_FUNC( WINSETTOP )
    WORD wHeight, wWidth;
 
    GetWindowRect( hWnd, &rct );
-   wHeight = rct.bottom - rct.top;
-   wWidth  = rct.right - rct.left;
+   wHeight = (WORD) ( rct.bottom - rct.top );
+   wWidth  = (WORD) ( rct.right - rct.left );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {
@@ -376,8 +376,8 @@ HB_FUNC( WINSETLEFT )
    WORD wHeight, wWidth;
 
    GetWindowRect( hWnd, &rct );
-   wHeight = rct.bottom - rct.top;
-   wWidth  = rct.right - rct.left;
+   wHeight = (WORD) ( rct.bottom - rct.top );
+   wWidth  = (WORD) ( rct.right - rct.left );
 
    if( GetWindowLong( hWnd, GWL_STYLE ) && WS_CHILD )
    {

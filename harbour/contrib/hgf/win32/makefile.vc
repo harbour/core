@@ -1,0 +1,69 @@
+# makefile for Microsoft Visual C++ 32 bits
+# Building of hgfwin32.lib - Harbour GUI framework for Win32
+
+INCLUDE_DIR = ..\..\..\include
+HARBOUR_EXE = ..\..\..\bin\vc\HARBOUR.EXE
+CC = CL
+CFLAGS = -TP -W3 -nologo -I$(INCLUDE_DIR) -DWIN32
+CLIBFLAGS = $(CFLAGS) -c
+CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
+
+BIN_DIR = ..\..\..\bin\vc
+OBJ_DIR = ..\..\..\obj\vc
+LIB_DIR = ..\..\..\lib\vc
+
+HGFWIN_LIB = $(LIB_DIR)\hgfwin32.lib
+HGFWIN_LIB_OBJS =  \
+   $(OBJ_DIR)\button.obj   \
+   $(OBJ_DIR)\edit.obj     \
+   $(OBJ_DIR)\form.obj     \
+   $(OBJ_DIR)\menu.obj     \
+   $(OBJ_DIR)\menuitem.obj \
+   $(OBJ_DIR)\winctrl.obj  \
+   $(OBJ_DIR)\win32.obj
+
+$(HGFWIN_LIB) : $(HGFWIN_LIB_OBJS)
+    lib /OUT:$(HGFWIN_LIB) $(HGFWIN_LIB_OBJS)
+
+#
+# ADS dependencies
+#
+
+$(OBJ_DIR)\button.c     : button.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+
+$(OBJ_DIR)\button.obj   : $(OBJ_DIR)\button.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\edit.c       : edit.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+
+$(OBJ_DIR)\edit.obj     : $(OBJ_DIR)\edit.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\form.c       : form.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+
+$(OBJ_DIR)\form.obj     : $(OBJ_DIR)\form.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\menu.c       : menu.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+
+$(OBJ_DIR)\menu.obj     : $(OBJ_DIR)\menu.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\menuitem.c   : menuitem.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+
+$(OBJ_DIR)\menuitem.obj : $(OBJ_DIR)\menuitem.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\winctrl.c    : winctrl.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$*.c
+
+$(OBJ_DIR)\winctrl.obj  : $(OBJ_DIR)\winctrl.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\win32.obj    : win32.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
