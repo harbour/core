@@ -50,7 +50,9 @@ function aSort( aIn, nStart, nCount, bBlock )
         bBlock := {| x, y | x < y }
    ENDIF
 
-   QuickSort( aIn, nStart, nCount, bBlock )
+   IF len( aIn ) > 0
+      QuickSort( aIn, nStart, nCount, bBlock )
+   ENDIF
 
 return aIn
 
