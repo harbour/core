@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-11-10 19:35 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  *source/rtl/alert.prg  
+    ! fix initialization of cold Var
 
 2002-11-08 13:19 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
   * source/rtl/errorapi.c
@@ -15,6 +18,7 @@
     !Fixed bug reported Brian Hays (the solution is also from Brian)
 
 2002-11-07 22:05 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  *source/rtl/alert.prg
   ! due an little mistake i`ve posted xharbour code, i`ve reverted back to version 1.38 and applyed the patch
 2002-11-07 08:30 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/alert.prg

@@ -61,7 +61,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nOldDispCount
    LOCAL nCount
    Local cNew,cOld,cTemp
-
+    
 #ifdef HB_COMPAT_C53
    LOCAL nMRow, nMCol
 #endif
@@ -119,7 +119,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       CASE ValType( xMessage ) == "B" ; xMessage := "{||...}"
       OTHERWISE                       ; xMessage := "NIL"
       ENDCASE
-
+      cOld:= xMessage
+    
      if Len(cOld) >60
       WHILE LEN(cOld) > 0
 
