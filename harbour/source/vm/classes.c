@@ -395,7 +395,7 @@ void hb_clsIsClassRef( void )
    }
 }
 
-void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
+static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
    PHB_ITEM pCaller;

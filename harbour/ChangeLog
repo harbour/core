@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 13:43 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * contrib/libct/Makefile
+     ! Fixed tabs, EOF
+
+   * contrib/libgt/Makefile
+     ! Fixed LIBNAME
+
+   * source/vm/classes.c
+     ! missing "static" keyword
+
 2001-12-15 12:32 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * TODO
