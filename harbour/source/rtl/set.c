@@ -29,6 +29,12 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.68   David G. Holm               Added user file error code safeguards.
+                                        When opening a "text" file is append
+                                        mode in open_handle(), remove the EOF
+                                        character from the end of the file.
+   V 1.67   David G. Holm               Corrected file open/create logic
+                                        in open_handle() function.
    V 1.64   Victor Szel                 Converted to use the FS API.
                                         hb_err*() handles E_BREAK.
                                         extrahan closing mode on exit fixed.
@@ -226,22 +232,33 @@ static char * set_string( PHB_ITEM pItem, char * old_str )
 static void close_binary( FHANDLE handle )
 {
    if( handle != FS_ERROR )
+   {
+      /* Close the file handle without disrupting the current
+         user file error value */
+      int user_ferror = hb_fsError();
       hb_fsClose( handle );
+      hb_fsSetError( user_ferror );
+   }
 }
 
 static void close_text( FHANDLE handle )
 {
    if( handle != FS_ERROR )
    {
+      /* Close the file handle without disrupting the current
+         user file error value */
+      int user_ferror = hb_fsError();
       #if ! defined(OS_UNIX_COMPATIBLE)
          hb_fsWrite( handle, (BYTE *)"\x1A", 1 );
       #endif
       hb_fsClose( handle );
+      hb_fsSetError( user_ferror );
    }
 }
 
 static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_set_enum set_specifier )
 {
+   int user_ferror = hb_fsError(); /* Save the current user file error code */
    FHANDLE handle;
    PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
@@ -272,10 +289,30 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
       if( bAppend )
       {  /* Append mode */
 	 if( hb_fsFile( (BYTE *)path ) )
-	 {  /* If the file already exists, open it... */
-            handle = hb_fsOpen( (BYTE *)path, FO_WRITE | FO_DENYWRITE );
+	 {  /* If the file already exists, open it (in read-write mode, in
+	       case of non-Unix and text modes). */
+            handle = hb_fsOpen( (BYTE *)path, FO_READWRITE | FO_DENYWRITE );
             if( handle != FS_ERROR )
-               hb_fsSeek( handle, 0, FS_END ); /* ... then go to EOF to append. */
+            {  /* Position to EOF */
+            #if ! defined(HB_OS_UNIX_COMPATIBLE)
+               /* Non-Unix needs special binary vs. text file handling */
+               if( set_specifier == HB_SET_PRINTFILE )
+               {  /* PRINTFILE is binary and needs no special handling. */
+            #endif
+                  hb_fsSeek( handle, 0, FS_END );
+            #if ! defined(HB_OS_UNIX_COMPATIBLE)
+               }
+               else
+               {  /* All other files are text files and may have an EOF
+                     ('\x1A') character at the end (non-UNIX only). */
+                  char cEOF = '\0';
+                  hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
+                  hb_fsRead( handle, &cEOF, 1 );   /* Read the last char. */
+                  if( cEOF == '\x1A' )             /* If it's an EOF, */
+                     hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */
+               }
+             #endif
+            }
          }
          else bCreate = TRUE; /* Otherwise create a new file. */
       }
@@ -300,6 +337,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
             break;
       }
    }
+   hb_fsSetError( user_ferror ); /* Restore the current user file error code */
    return handle;
 }
 

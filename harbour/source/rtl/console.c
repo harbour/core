@@ -313,6 +313,7 @@ static void hb_altout( char * pStr, ULONG len )
    if( hb_set.HB_SET_ALTERNATE && hb_set_althan >= 0 )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
       ULONG count = len;
       pPtr = pStr;
@@ -331,10 +332,12 @@ static void hb_altout( char * pStr, ULONG len )
          hb_fsWrite( hb_set_althan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    if( hb_set_extrahan >= 0 )
    {
       /* Print to extra file if valid alternate file */
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
       ULONG count = len;
       pPtr = pStr;
@@ -353,10 +356,12 @@ static void hb_altout( char * pStr, ULONG len )
          hb_fsWrite( hb_set_extrahan, ( BYTE * ) pPtr, write_len );
          pPtr += write_len;
       }
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
       ULONG count = len;
       pPtr = pStr;
@@ -377,6 +382,7 @@ static void hb_altout( char * pStr, ULONG len )
       }
       if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
       else s_uiPCol += len;
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 }
 
@@ -386,6 +392,7 @@ static void hb_devout( char * pStr, ULONG len )
    if( hb_set_printhan >= 0 && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       unsigned write_len;
       ULONG count = len;
       char * pPtr = pStr;
@@ -406,6 +413,7 @@ static void hb_devout( char * pStr, ULONG len )
       }
       if( len + s_uiPCol > USHRT_MAX ) s_uiPCol = USHRT_MAX;
       else s_uiPCol += len;
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    else
    {
@@ -472,6 +480,7 @@ void hb_devpos( WORD row, WORD col )
       otherwise position console */
    if( hb_set_printhan >= 0 && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       if( row < s_uiPRow )
       {
          hb_fsWrite( hb_set_printhan, ( BYTE * ) "\x0C", 1 );
@@ -489,6 +498,7 @@ void hb_devpos( WORD row, WORD col )
 
       s_uiPRow = row;
       s_uiPCol = col;
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
    else
    {
@@ -537,11 +547,13 @@ HARBOUR HB_QOUT( void )
 
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       s_uiPRow++;
       s_uiPCol = hb_set.HB_SET_MARGIN;
       count = s_uiPCol;
       while( count-- > 0 )
          hb_fsWrite( hb_set_printhan, ( BYTE * ) " ", 1 );
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 
    HB_QQOUT();
@@ -669,8 +681,10 @@ HARBOUR HB___EJECT( void ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set_printhan >= 0 )
    {
+      int user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWrite( hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
       s_uiPRow = s_uiPCol = 0;
+      hb_fsSetError( user_ferror ); /* Restore last user file error code */
    }
 }
 
