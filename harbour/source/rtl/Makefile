@@ -30,6 +30,7 @@ C_SOURCES=\
 	empty.c      \
 	errorapi.c   \
 	file.c       \
+	filehb.c     \
 	filesys.c    \
 	fkmax.c      \
 	fnsplit.c    \

@@ -281,6 +281,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\empty.obj \
    $(OBJ_DIR)\errorapi.obj \
    $(OBJ_DIR)\file.obj \
+   $(OBJ_DIR)\filehb.obj \
    $(OBJ_DIR)\filesys.obj \
    $(OBJ_DIR)\fkmax.obj \
    $(OBJ_DIR)\fnsplit.obj \

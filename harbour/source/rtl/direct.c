@@ -139,19 +139,19 @@ HB_FUNC( DIRECTORY )
          {
             PHB_ITEM pSubarray = hb_itemArrayNew( F_LEN );
             char buffer[ 32 ];
-          
+
             hb_arraySet( pSubarray, F_NAME, hb_itemPutC( pFilename, ffind->szName ) );
             hb_arraySet( pSubarray, F_SIZE, hb_itemPutNL( pSize, ffind->size ) );
             hb_arraySet( pSubarray, F_DATE, hb_itemPutDL( pDate, ffind->lDate ) );
             hb_arraySet( pSubarray, F_TIME, hb_itemPutC( pTime, ffind->szTime ) );
             hb_arraySet( pSubarray, F_ATTR, hb_itemPutC( pAttr, hb_fsAttrDecode( ffind->attr, buffer ) ) );
-          
+
             /* Don't exit when array limit is reached */
             hb_arrayAdd( pDir, pSubarray );
-          
+
             hb_itemRelease( pSubarray );
          }
-      } 
+      }
       while( hb_fsFindNext( ffind ) );
 
       hb_itemRelease( pFilename );

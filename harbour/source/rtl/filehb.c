@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hb_fsFile() function
+ * FILE() function
  *
  * Copyright 1999-2002 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
@@ -53,18 +53,10 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-BOOL hb_fsFile( BYTE * pFilename )
+/* TODO: Xbase++ has an extension where the second parameter can specify
+         the required attribute. */
+
+HB_FUNC( FILE )
 {
-   PHB_FFIND ffind;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", (char*) pFilename));
-
-   if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_ALL ) ) != NULL )
-   {
-      hb_fsFindClose( ffind );
-      return TRUE;
-   }
-   else
-      return FALSE;
+   hb_retl( ISCHAR( 1 ) ? hb_spFile( ( unsigned char * ) hb_parc( 1 ) ) : FALSE );
 }
-

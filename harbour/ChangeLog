@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2001-12-22 03:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/rtl/filesys.c
+     * add required C casts
+   * include/hbinit.h
+     * inconsistent hb_vmProcessSymbols() declaration corrected
+
+2001-12-21 17:58 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
    * source/rtl/filesys.c
    * source/rtl/philes.c
    * include/hbapifs.h
