@@ -1,3 +1,11 @@
+20000726-22:50 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * contrib/mysql/makefile
+     * changed to be harbour gnu make system compatible
+   * contrib/mysql/mysql.c
+     * should now compile with latest version of include files from MySQL. Not tested.
+   * contrib/mysql/tmysql.prg
+     * removed a couple of warnings.
+
 2000-07-26 16:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/vm/hvm.c

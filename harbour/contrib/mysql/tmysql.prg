@@ -115,11 +115,9 @@ METHOD FieldGet(nNum) CLASS TMySQLRow
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
       return ::aRow[nNum]
-   else
-      return nil
    endif
 
-return
+return nil
 
 
 METHOD FieldPut(nNum, Value) CLASS TMySQLRow
@@ -161,11 +159,9 @@ METHOD FieldName(nPosition) CLASS TMySQLRow
 
    if nPosition >=1 .AND. nPosition <= Len(::aFieldStruct)
       return ::aFieldStruct[nPosition][MYSQL_FS_NAME]
-   else
-      return ""
    endif
 
-return
+return ""
 
 
 // returns a WHERE x=y statement which uses primary key (if available)
@@ -297,6 +293,7 @@ return Self
 static function NMonth(cMonthValue)
 
    static cMonths := {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" }
+   local nMonth
 
    nMonth := AScan(cMonths, cMonthValue)
 
