@@ -1,3 +1,10 @@
+2000-11-09 01:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     * Fixed STATE_QUOT3 ([]) support in getExpReal() and added STATE_QUOT3 support to NextParm() NextName() and md_strAt()
+
+   /* Before this fix #define and #translate were activated within [] strings - Fixed!
+      Now strings delimiter conversion should be complete. */
+
 2000-11-08 24:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
    * utils/hbpp/hbpp.c
