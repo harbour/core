@@ -1,3 +1,9 @@
+19991004-01:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  - make_b31.bat
+    makefile.b31
+    harbour.b31
+    - Removed, make_b16.bat should be used instead.
+
 19991004-01:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * build16.bat -> make_b16.bat
     build31.bat -> make_b31.bat
