@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  ; Changes thanks to Alexander's feedback
+
+2002-02-26 17:20 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * .cvsignore
+    + Added freebsd and freebsd/* to the CVS ignore list.
+
+
+2002-02-27 16:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * contrib/Makefile
     - Removed apollo from the w32 build path, because it now requires
       the use of third-party (Apollo) include files.

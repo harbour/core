@@ -83,7 +83,12 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
             ulPos++;
          }
          else if( ulSubPos )
+         {
+            /* Go back to the first character after the first match,
+               or else tests like "22345" $ "012223456789" will fail. */
+            ulPos -= ( ulSubPos - 1 );
             ulSubPos = 0;
+         }
          else
             ulPos++;
       }
