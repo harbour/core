@@ -387,7 +387,7 @@ extern void     hb_consoleRelease( void );
 extern char *   hb_consoleGetNewLine( void );
 extern void     hb_outstd( char * pStr, ULONG ulLen );
 extern void     hb_outerr( char * pStr, ULONG ulLen );
-
+extern USHORT   hb_setCursor( BOOL bSetCursor, USHORT usNewCursor );
 extern void     hb_tone( double dFrequency, double dDuration );
 extern char *   hb_setColor( char * );
 

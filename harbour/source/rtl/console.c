@@ -143,6 +143,7 @@ void hb_consoleInitialize( void )
 #ifdef HARBOUR_USE_GTAPI
    hb_gtInit();
    hb_gtGetPos( &s_uiDevRow, &s_uiDevCol );
+   hb_gtSetCursor( SC_NORMAL );
 #else
    s_uiDevRow = 0;
    s_uiDevCol = 0;
@@ -1091,19 +1092,28 @@ HARBOUR HB_RESTSCREEN( void )
 #endif
 }
 
+USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
+{
+   USHORT usPreviousCursor;
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtGetCursor( &usPreviousCursor );
+   if( bSetCursor )
+      hb_gtSetCursor( usNewCursor );
+
+#else
+   usPreviousCursor = hb_set.HB_SET_CURSOR;
+   if( bSetCursor )
+      hb_set.HB_SET_CURSOR = ( hb_cursor_enum ) usNewCursor;
+#endif
+   return usPreviousCursor;
+}
+
 HARBOUR HB_SETCURSOR( void )
 {
-#ifdef HARBOUR_USE_GTAPI
-   USHORT usPreviousCursor;
-
-   hb_gtGetCursor( &usPreviousCursor );
-   if( hb_pcount() == 1 )
-      hb_gtSetCursor( hb_parni( 1 ) );
-
-   hb_retni( usPreviousCursor );
-#else
-   hb_retni( SC_NORMAL );
-#endif
+   if( hb_pcount() == 1 && ISNUM( 1 ) )
+      hb_retni( hb_setCursor( TRUE, hb_parni( 1 ) ) );
+   else
+      hb_retni( hb_setCursor( FALSE, 0 ) );
 }
 
 HARBOUR HB_SETBLINK( void )

@@ -36,6 +36,8 @@
 /*
  * ChangeLog:
  *
+ * V 1.81   David G. Holm               Corrected _SET_CURSOR to use the GT API
+ *                                      when available.
  * V 1.70   David G. Holm               Corrected _SET_COLOR case to only use
  *                                      '.asString' if 'IS_STRING', otherwise
  *                                      use "" instead of only if 'IS_NIL'.
@@ -736,8 +738,10 @@ HARBOUR HB_SET( void )
          if( args > 1 ) hb_set.HB_SET_CONSOLE = set_logical( pArg2 );
          break;
       case HB_SET_CURSOR     :
-         hb_retni( hb_set.HB_SET_CURSOR );
-         if( args > 1 ) hb_set.HB_SET_CURSOR = ( HB_cursor_enum ) set_number( pArg2, hb_set.HB_SET_CURSOR );
+         if( args >= 2 && IS_NUMERIC( pArg2 ) )
+            hb_retni( hb_setCursor( TRUE, hb_itemGetNI( pArg2 ) ) );
+         else
+            hb_retni( hb_setCursor( FALSE, 0 ) );
          break;
       case HB_SET_DATEFORMAT :
          if( hb_set.HB_SET_DATEFORMAT ) hb_retc( hb_set.HB_SET_DATEFORMAT );
@@ -947,7 +951,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = '\0';
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
-   hb_set.HB_SET_CURSOR = SC_NORMAL;
+   hb_set.HB_SET_CURSOR = SC_NORMAL;    /* Only needed for non-GTAPI */
    hb_set.HB_SET_DATEFORMAT = ( char * ) hb_xgrab( 9 );
    memcpy( hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9 );
    hb_set.HB_SET_DEBUG = FALSE;

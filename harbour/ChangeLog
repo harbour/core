@@ -1,3 +1,20 @@
+19990930-15:20 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * include/extend.h
+    + Added hb_setCursor() prototype.
+
+  * source/rtl/console.c
+    + Added hb_gtSetCursor( SC_NORMAL ) to hb_consoleInitialize().
+    + Added hb_setCursor(), which does the grunt work that SETCURSOR
+      used to do, so that it can be called from SET().
+    % SETCURSOR() is now a shell function that calls hb_setCursor().
+
+  * source/rtl/set.c
+    ! SET( _SET_CURSOR [, SC_...] ) now calls hb_setCursor().
+
+  * source/runner/stdalone/external.prg
+    + Added HB_OSNEWLINE
+
 19990930-21:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/common.ch
     rtl/asort.prg
