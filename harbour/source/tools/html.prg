@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -111,7 +110,6 @@ METHOD WriteLink( cLink ) CLASS THTML
 
 RETURN Self
 
-*+ EOF: HTML.PRG
 /*  $DOC$
  *  $FUNCNAME$
  *     THtml()

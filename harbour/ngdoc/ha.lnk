@@ -1,44 +1,42 @@
 !name: Harbour Build 31 Reference Guide
-!credits:
-Release : 01/18/2000
-        Build By Luiz Rafael Culik
+!credits: Harbour (c) http://www.harbour-project.org
+        2000/01/18 build By Luiz Rafael Culik
         Functions Documented by:
-        Victor Szel
-        Chen   Luiz  Rafael Culik
+        Chen Kedem, Luiz Rafael Culik
 !Menu: Commands
-Command     Comm.ngo
+Command                    comm.ngo
 !menu: A-E
-Array                   array.ngo
-Code Block              codeblo.ngo
-Console Input           consimpu.ngo
-Conversion              Conv.ngo 
-Data base               Database.ngo
-Data Input And Output    datai.ngo
-Dos                     dos.ngo
+Array                      array.ngo
+Code Block                 codeblo.ngo
+Console Input              consimpu.ngo
+Conversion                 conv.ngo
+Database                   database.ngo
+Data Input and Output      datai.ngo
+Dos                        dos.ngo
 !menu:F-N
-Error Recovery          error.ngo
-Enviroment   Envirom.ngo
-Events        Event.ngo  
-File Management         FILEMANa.ngo
-Internal                Internal.ngo
-Gt                      Gt.ngo
-Misc                    Misc.ngo
-Nation                  Nation.ngo
+Error Recovery             error.ngo
+Enviroment                 envirom.ngo
+Events                     event.ngo
+File Management            filemana.ngo
+Internal                   internal.ngo
+Gt                         gt.ngo
+Misc                       misc.ngo
+Nation                     nation.ngo
 !menu: O-T
-Object Manipulation     obj.ngo
-Operating System Specific        opersyst.ngo
-Parameter Checks              Parame.ngo
-Run-Time Library, Strings    runtime.ngo
-String                String.ngo
-Strings                Strings.ngo
-Tbrowse Class          tbrow.ngo
-Terminal               Terminal.ngo
+Object Manipulation        obj.ngo
+Operating System Specific  opersyst.ngo
+Parameter Checks           parame.ngo
+Run-Time Library, Strings  runtime.ngo
+String                     string.ngo
+Strings                    strings.ngo
+Tbrowse Class              tbrow.ngo
+Terminal                   terminal.ngo
 !menu: U-Z
-Unknown                unknown.ngo
-Utility                Utility.ngo
-VARIABLE MANAGEMENT   mv.ngo
-document              doc.ngo 
-!Menu: HARBOUR
-License                license.ngo
-Readme                 readme.ngo
-Tools                  Tools.ngo 
+Unknown                    unknown.ngo
+Utility                    utility.ngo
+Variable management        mv.ngo
+document                   doc.ngo
+!Menu: Harbour
+License                    license.ngo
+Readme                     readme.ngo
+Tools                      tools.ngo

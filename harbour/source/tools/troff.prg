@@ -43,8 +43,8 @@
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-CLASS TTROFF
 
+CLASS TTROFF
    DATA cFile
    DATA nHandle
    METHOD New( cFile )
@@ -55,13 +55,14 @@ CLASS TTROFF
    METHOD WriteTitle( cTitle, cTopic )
    METHOD WriteText( cText )
 ENDCLASS
-METHOD NEW( cFile ) CLASS TTROFF
 
+METHOD NEW( cFile ) CLASS TTROFF
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
 RETURN Self
+
 METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
 
    LOCAL cWriteTitle := '.br' + CRLF + ;
@@ -108,15 +109,14 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
 RETURN Self
 
 METHOD WriteText( cText ) CLASS TTROFF
-
    FWRITE( Self:nHandle, cText + CRLF )
 RETURN Self
-METHOD WritePar( cPar ) CLASS TTROFF
 
+METHOD WritePar( cPar ) CLASS TTROFF
    FWRITE( Self:nHandle, ALLTRIM( STRTRAN( cPar, ".", "\." ) ) + CRLF )
 RETURN Self
-METHOD WriteParBold( cPar ) CLASS TTROFF
 
+METHOD WriteParBold( cPar ) CLASS TTROFF
    LOCAL cWriteBold := '.sp' + CRLF + ;
       '.in 0.08i' + CRLF + ;
       '\fB' + cPar + CRLF + ;
@@ -136,8 +136,6 @@ METHOD WriteLink( cLink ) CLASS TTROFF
 
 RETURN Self
 
-*+ EOF: TROFF.PRG
-*+ EOF: RTF.PRG
 /*  $DOC$
  *  $FUNCNAME$
  *     TTroff()

@@ -42,6 +42,7 @@
 
 #include "extend.h"
 #include "itemapi.h"
+
 /*  $DOC$
  *  $FUNCNAME$
  *      HB_ANSITOOEM()
@@ -99,6 +100,7 @@ HARBOUR HB_HB_ANSITOOEM( void )
    else
       hb_retc( "" );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *      HB_OEMTOANSI()

@@ -33,6 +33,10 @@
  *
  */
 
+/* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
+         the debugger output may interfere with the applications output
+         redirection, and is also slower. [vszel] */
+
 #include "hbclass.ch"
 #include "hbmemvar.ch"
 #include "box.ch"
@@ -261,14 +265,14 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
            else
               cResult = "Command error"
            endif
-           @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY ;
-              Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ) ;
-              COLOR ::oWndCommand:cColor
-           @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 SAY cResult ;
-              COLOR ::oWndCommand:cColor
+           DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1,;
+              Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ),;
+              ::oWndCommand:cColor )
+           DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, cResult,;
+              ::oWndCommand:cColor )
            ::oWndCommand:ScrollUp( 1 )
-           @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY "> " ;
-              COLOR ::oWndCommand:cColor
+           DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
+              ::oWndCommand:cColor )
            cCommand = Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
            ::oGetListCommand:oGet:VarPut( cCommand )
            ::oGetListCommand:oGet:Buffer = cCommand
@@ -431,9 +435,9 @@ METHOD Show() CLASS TDebugger
    ::oPullDown:Display()
    ::oWndCode:Show( .t. )
    ::oWndCommand:Show()
-   @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY ">"
+   DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ">" )
 
-   SET COLOR TO "N/BG"
+   SetColor( "N/BG" )
    @ MaxRow(), 0 CLEAR TO MaxRow(), MaxCol()
 
    DispOutAt( MaxRow(),  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", "N/BG" )
@@ -507,11 +511,13 @@ return nil
 
 METHOD ShowVars() CLASS TDebugger
 
-   local n := 1
+   local n
    local nWidth
-   local nCount, i, xValue, cName
 
    if ::oWndVars == nil
+
+      n := 1
+
       ::oWndCode:nTop += 5
       ::oBrwText:nTop += 5
       ::oBrwText:RefreshAll()
@@ -708,7 +714,7 @@ METHOD ViewSets() CLASS TDebugger
                                  oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    local n := 1
    local nWidth := oWndSets:nRight - oWndSets:nLeft - 1
-   local oCol, cSet
+   local oCol
 
    oBrwSets:ColorSpec = "N/W, W+/W, N/BG"
    oBrwSets:GoTopBlock = { || n := 1 }
@@ -863,7 +869,7 @@ METHOD ScrollUp( nLines ) CLASS TDbWindow
 
    DEFAULT nLines TO 1
 
-   SET COLOR TO ::cColor
+   SetColor( ::cColor )
    Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
 
 return nil
@@ -895,7 +901,7 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
    @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lOnOff, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
 
-   @ ::nTop, ::nLeft + 1 SAY "[" + Chr( 254 ) + "]" COLOR ::cColor
+   DispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
 
    if ! Empty( ::cCaption )
       ::SetCaption( ::cCaption )
@@ -1137,7 +1143,6 @@ return nil
 METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
    local oPopup
-   local nAt
 
    if nPopup != 0
       oPopup = ::aItems[ nPopup ]:bAction
@@ -1159,7 +1164,7 @@ return nil
 
 METHOD Display() CLASS TDbMenu
 
-   local n, nAt
+   local n
 
    SetColor( ::cClrPopup )
 
@@ -1284,8 +1289,6 @@ METHOD GoTop() CLASS TDbMenu
 return nil
 
 METHOD ShowPopup( nPopup ) CLASS TDbMenu
-
-   local nAt, oMenuItem
 
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
    ::nOpenPopup = nPopup
@@ -1526,3 +1529,4 @@ static function ValToStr( uVal )
    endcase
 
 return cResult
+

@@ -1,3 +1,27 @@
+20000131-01:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/harbinit.prg
+    ! CLIPPER530 is declared only when HB_COMPAT_53 is defined.
+  * source/debug/debugger.prg
+    ! SAYs converted to DispOutAt() calls. NOTE added about this.
+    % Unused variables removed.
+    % Minor optimization.
+  * tests/regress/rt_main.ch
+    ! Date used for testing changed (for accuracy only).
+  * source/vm/maindll.c
+    ! Fixed CVS ID header.
+  - source/tools/ha.lnk
+    - Removed.
+  * ngdoc/*.lnk
+    * Formatting.
+  * source/rtl/oemansi.c
+    source/rtl/pvalue.c
+    source/tools/troff.prg
+    source/tools/os2.prg
+    source/tools/rtf.prg
+    source/tools/html.prg
+    source/tools/ng.prg
+    * Formatting: some newlines added, minor fixes.
+
 20000131-00:05 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/environ.c
     ! Fixed VERSION() for MINGW32 (it was generating a GPF).

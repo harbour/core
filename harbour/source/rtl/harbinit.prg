@@ -51,9 +51,15 @@ ANNOUNCE SysInit
 
 /* NOTE: For complete compatibility */
 PROCEDURE CLIPPER520
-RETURN
+   RETURN
+
+#ifdef HB_COMPAT_C53
+
+/* NOTE: For complete compatibility */
 PROCEDURE CLIPPER530
-RETURN
+   RETURN
+
+#endif
 
 /*  $DOC$
  *  $FUNCNAME$

@@ -55,6 +55,7 @@ CLASS TNortonGuide
    METHOD WriteParBold( cPar )
    METHOD WriteTitle(  cTopic , cTitle )
 ENDCLASS
+
 METHOD NEW( cFile ) CLASS TNortonGuide
 
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
@@ -102,7 +103,6 @@ METHOD WriteLink( cLink ) CLASS TNortonGuide
 
 RETURN Self
 
-*+ EOF: NG.PRG
 /*  $DOC$
  *  $FUNCNAME$
  *     TNortonGuide()

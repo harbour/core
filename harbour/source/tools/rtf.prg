@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -57,8 +56,8 @@ CLASS TRTF
    METHOD WriteTitle( cTitle, cTopic )
    METHOD EndPar()
 ENDCLASS
-METHOD NEW( cFile ) CLASS TRTF
 
+METHOD NEW( cFile ) CLASS TRTF
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
@@ -117,9 +116,7 @@ METHOD WritePar( cPar ) CLASS TRTF
 RETURN Self
 
 METHOD EndPar() CLASS TRTF
-
    FWRITE( Self:nHandle, ' }\par' + CRLF )
-
 RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TRTF
@@ -174,7 +171,6 @@ METHOD WriteLink( cLink ) CLASS TRTF
 
 RETURN Self
 
-*+ EOF: RTF.PRG
 /*  $DOC$
  *  $FUNCNAME$
  *     TRtf()

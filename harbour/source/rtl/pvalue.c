@@ -61,7 +61,7 @@
  *            ? hb_PValue( 2 ), cString
  *         endif
  *      return nil
-  *  $STATUS$
+ *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.

@@ -1,11 +1,13 @@
 !name: Harbour build 31 reference Guide
-!Credits: HARBOUR(c) http://www.harbour-project.org
-          01/15/2000  
+!credits: Harbour (c) http://www.harbour-project.org
+        2000/01/18 build By Luiz Rafael Culik
+        Functions Documented by:
+        Chen Kedem, Luiz Rafael Culik
 !menu: Reference
-Functions A-M   Funcam.ngo
-Functions N-_   Funcn_.ngo
-Command         Comm.ngo     
-!menu: HARBOUR
-READ ME    overview.ngo
-LICENSE    license.ngo
+Functions A-M   funcam.ngo
+Functions N-_   funcn_.ngo
+Command         comm.ngo
+!menu: Harbour
+Readme          overview.ngo
+License         license.ngo
 

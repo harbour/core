@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id$
  */
 
 /*
@@ -50,3 +50,4 @@ BOOL WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
 
    return TRUE;
 }
+

@@ -43,6 +43,7 @@
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
+
 CLASS TOs2
    DATA cFile
    DATA nHandle
@@ -57,7 +58,8 @@ CLASS TOs2
    METHOD WriteTitle(cTopic, cTitle )
    METHOD DostoOs2Text(cText)
 ENDCLASS
-   METHOD New( cFile ) CLASS TOs2
+
+METHOD New( cFile ) CLASS TOs2
 
    IF Self:aLinkRef==NIL
       Self:aLinkRef:={}
@@ -125,8 +127,7 @@ METHOD CLOSE() CLASS TOs2
 RETURN Self
 
 METHOD WriteLink( cLink ) CLASS TOs2
-LOCAL nItem
-
+   LOCAL nItem
    
    if  Self:Scanlink(cLink) ==0
          nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cLink})  // Again.
@@ -160,16 +161,13 @@ METHOD ScanLink(cLink) CLASS TOs2
 RETURN nItem
 
 METHOD DosToOs2Text(cText) CLASS TOs2
-LOCAL cReturn
+   LOCAL cReturn
 
-cReturn:=STRTRAN(cText,'"',"&cdq.")
-
-cReturn:=STRTRAN(cReturn,':',"&colon.")
-
-cReturn:=STRTRAN(cReturn,',',"&comma.")
+   cReturn := STRTRAN(cText,'"',"&cdq.")
+   cReturn := STRTRAN(cReturn,':',"&colon.")
+   cReturn := STRTRAN(cReturn,',',"&comma.")
 
 Return cReturn
-
 
 /*  $DOC$
  *  $FUNCNAME$
