@@ -292,7 +292,7 @@ __dbJoin                ;N;
 __dbList                ;R;
 __dbLocate              ;R;
 __dbPack                ;R;
-__dbSDF                 ;N;
+__dbSDF                 ;S;
 __dbSort                ;N;
 __dbTotal               ;N;
 __dbUpdate              ;R;

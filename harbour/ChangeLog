@@ -1,3 +1,19 @@
+2001-04-19 17:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * hb_slex.bc
+  * hb_slex.vc
+  * makefile.bc
+  * makefile.vc
+  * source/rtl/Makefile
+  * source/rtl/dbdelim.prg
+  + source/rtl/dbsdf.prg
+  * tests/Makefile
+  + tests/sdf_test.prg
+    + Added __dbSDF() with support for COPY TO SDF.
+    + Added dbdelim.obj to makefile.vc.
+    * Fixed CVS ID header in dbdelim.prg.
+    * Changed name of Export() function in dbdelim.prg to ExportVar()
+
 2001-04-19 15:07 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/teditor.prg
      ! regression from previous fix

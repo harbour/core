@@ -118,8 +118,9 @@ PRG_SOURCES=\
 	browdb.prg   \
 	browdbx.prg  \
 	browse.prg   \
-	dbdelim.prg   \
+	dbdelim.prg  \
 	dbedit.prg   \
+	dbsdf.prg    \
 	devoutp.prg  \
 	dircmd.prg   \
 	dummy.prg    \

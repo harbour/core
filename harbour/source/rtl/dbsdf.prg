@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- * Copies the contents of a database to a delimited text file.
- * Appends the contents of a delimited text file to a database.
+ * Copies the contents of a database to an SDF text file.
+ * Appends the contents of an SDF text file to a database.
  *
  * Copyright 2001 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
@@ -57,24 +57,20 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __dbDelim()
+ *      __dbSDF()
  *  $CATEGORY$
  *      Conversion
  *  $ONELINER$
- *      Copies the contents of a database to a delimited text file or
- *      appends the contents of a delimited text file to a database.
+ *      Copies the contents of a database to an SDF text file or
+ *      appends the contents of an SDF text file to a database.
  *  $SYNTAX$
- *      __dbDelim( <lExport>, <xcFile>, [<xcDelim>], [<aFields>],
+ *      __dbSDF( <lExport>, <xcFile>, [<aFields>],
  *      [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], <lRest>  ) --> NIL
  *  $ARGUMENTS$
- *      <lExport> If set to .T., copies records to a delimited file.
- *      If set to .F., append records from a delimited file.
+ *      <lExport> If set to .T., copies records to an SDF file.
+ *      If set to .F., append records from an SDF file.
  *      <xcFile> The name of the text file to copy to or append from.
  *      If a file extension is not specified, ".txt" is used by default.
- *      <xcDelim> Either the character to use as the character field
- *      delimiter (only the first character is used). or "BLANK" (not case
- *      sensitive), which eliminates the character field delimiters and
- *      sets the field separator to a single space instead of a comma.
  *      <aFields> An aray of field names to limit the processint to. If
  *      not specified, or if empty, then all fields are processed.
  *      <bFor> An optional code block containing a FOR expression that
@@ -92,47 +88,36 @@
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
- *      __dbDelim() copies all or selected contents of a database table
- *      to an SDF text file or appends all or selected contents of an SDF
- *      text file to a database table.
+ *      __dbSDF() copies all or selected contents of a database table
+ *      to an SDF text file or appends all or selected contents of an
+ *      SDF text file to a database table.
  *  $EXAMPLES$
- *      // Copy delinquent accounts into a delimited text file.
+ *      // Copy delinquent accounts into an SDF text file.
  *      USE ACCOUNTS NEW
- *      COPY TO overdue DELIMITED FOR !EMPTY( accounts->duedate ) ;
+ *      COPY TO overdue SDF FOR !EMPTY( accounts->duedate ) ;
  *      .AND. DATE() - accounts->duedate > 30
  *      // Import new customer records.
  *      USE CUSTOMER NEW
- *      APPEND FROM customer DELIMITED
+ *      APPEND FROM customer SDF
  *  $TESTS$
  *      
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      __dbDelim() is intended to be fully compliant with CA-Clipper's
+ *      __dbSDF() is intended to be fully compliant with CA-Clipper's
  *      function of the same name and is the underlying implementation
- *      of the APPEND FROM DELIMITED and COPY TO DELIMITED commands.
+ *      of the APPEND FROM SDF and COPY TO SDF commands.
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *
  *  $SEEALSO$
- *      __dbSDF(), APPEND FROM, COPY TO
+ *      __dbDelim(), APPEND FROM, COPY TO
  *  $END$
  */
 
-FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
-   LOCAL index, handle, lWriteSep, cFileName := cFile, nStart, nCount, oErr
-   LOCAL cSeparator := ",", cDelim := CHR( 34 )
-
-   // Process the delimiter argument.
-   IF !EMPTY( cDelimArg )
-      IF UPPER( cDelimArg ) == "BLANK"
-         cDelim := ""
-         cSeparator := " "
-      ELSE
-         cDelim := LEFT( cDelimArg, 1 )
-      END IF
-   END IF
+FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
+   LOCAL index, handle, cFileName := cFile, nStart, nCount, oErr
 
    // Process the file name argument.
    index := RAT( ".", cFileName )
@@ -174,13 +159,13 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
    END IF
 
    IF lExport
-      // COPY TO DELIMITED
+      // COPY TO SDF
       handle := FCREATE( cFileName )
       IF handle == -1
          oErr := ErrorNew()
          oErr:severity := ES_ERROR
          oErr:genCode := EG_CREATE
-         oErr:subSystem := "DELIM"
+         oErr:subSystem := "SDF"
          oErr:subCode := 1002
          oErr:description := HB_LANGERRMSG( oErr:genCode )
          oErr:canRetry := .T.
@@ -197,31 +182,22 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
             // This simplifies the looping logic.
             bWhile := {||!BOF().AND.!EOF()}
          END IF
-         // Set up for the start of the first record.
-         lWriteSep := .F.
-         // Process the records to copy delimited.
+         // Process the records to copy SDF.
          WHILE EVAL( bWhile ) .AND. ( nCount == -1 .OR. nCount > 0 )
             IF EVAL( bFor )
                IF EMPTY( aFields )
                   // Process all fields.
                   FOR index := 1 TO FCOUNT()
-                     IF lWriteSep
-                        AppendSep( handle, cSeparator )
-                     END IF
-                     lWriteSep := ExportVar( handle, FIELDGET( index ), cDelim )
+                     ExportFixed( handle, FIELDGET( index ) )
                   NEXT index
                ELSE
                   // Process the specified fields.
                   FOR index := 1 TO LEN( aFields )
-                     IF lWriteSep
-                        AppendSep( handle, cSeparator )
-                     END IF
-                     lWriteSep := ExportVar( handle, FIELDGET( FIELDPOS( aFields[ index ] ) ), cDelim )
+                     ExportFixed( handle, FIELDGET( FIELDPOS( aFields[ index ] ) ) )
                   NEXT index
                END IF
                // Set up for the start of the next record.
                AppendEOL( handle )
-               lWriteSep := .F.
             END IF
             IF nCount != -1
                nCount--
@@ -232,13 +208,13 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
          FCLOSE( handle )
       END IF
    ELSE
-      // APPEND FROM DELIMITED
+      // APPEND FROM SDF
       handle := FOPEN( cFileName )
       IF handle == -1
          oErr := ErrorNew()
          oErr:severity := ES_ERROR
          oErr:genCode := EG_OPEN
-         oErr:subSystem := "DELIM"
+         oErr:subSystem := "SDF"
          oErr:subCode := 1001
          oErr:description := HB_LANGERRMSG( oErr:genCode )
          oErr:canRetry := .T.
@@ -256,11 +232,11 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
    END IF
 RETURN NIL
 
-STATIC FUNCTION ExportVar( handle, xField, cDelim )
+STATIC FUNCTION ExportFixed( handle, xField )
    LOCAL cText := "", lWrite := .F.
    DO CASE
       CASE VALTYPE( xField ) == "C"
-         cText := cDelim + TRIM( xField ) + cDelim
+         cText := xField
          lWrite := .T.
       CASE VALTYPE( xField ) == "D"
          cText := DTOS( xField )
@@ -269,7 +245,7 @@ STATIC FUNCTION ExportVar( handle, xField, cDelim )
          cText := IF( xField, "T", "F" )
          lWrite := .T.
       CASE VALTYPE( xField ) == "N"
-         cText := LTRIM( STR( xField ) )
+         cText := STR( xField )
          lWrite := .T.
    END CASE
    FWRITE( handle, cText )
@@ -282,6 +258,3 @@ RETURN FWRITE( handle, cEOL )
 STATIC FUNCTION AppendEOF( handle )
    STATIC cEOF := CHR( 26 )
 RETURN FWRITE( handle, cEOF )
-
-STATIC FUNCTION AppendSep( handle, cSep )
-RETURN FWRITE( handle, cSep )

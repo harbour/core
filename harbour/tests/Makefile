@@ -109,6 +109,7 @@ PRG_SOURCES=\
 	round.prg \
 	say.prg \
 	scroll.prg \
+	sdf_test.prg \
 	seconds.prg \
 	setkeys.prg \
 	set_num.prg \
