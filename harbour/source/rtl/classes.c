@@ -10,6 +10,7 @@ void PushNil( void );
 void PushSymbol( PSYMBOL );
 void Message( PSYMBOL );
 void Do( WORD wParams );
+void ArrayDel( PITEM, WORD );
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -136,12 +137,22 @@ char * _GetClassName( PITEM pObject )
 
 static HARBOUR GetData( void )
 {
-   ArrayGet( stack.pBase + 1, pMethod->wData, &stack.Return );
+   PITEM pObject = stack.pBase + 1;
+   WORD  wIndex  = pMethod->wData;
+
+   if( wIndex > ArrayLen ( pObject ) )          /* Resize needed            */
+      ArraySize( pObject, wIndex );             /* Make large enough        */
+   ArrayGet( pObject, wIndex, &stack.Return );
 }
 
 static HARBOUR SetData( void )
 {
-   ArraySet( stack.pBase + 1, pMethod->wData, stack.pBase + 2 );
+   PITEM pObject = stack.pBase + 1;
+   WORD  wIndex  = pMethod->wData;
+
+   if( wIndex > ArrayLen( pObject ) )           /* Resize needed            */
+      ArraySize( pObject, wIndex );             /* Make large enough        */
+   ArraySet( pObject, wIndex, stack.pBase + 2 );
 }
 
 static HARBOUR GetClassData( void )
@@ -505,4 +516,114 @@ HARBOUR OSEND()             /* <xRet> = oSend( <oObj>, <cSymbol>, <xArg,..> */
    }
 }
 
+
+HARBOUR __WDATAINC()         /* <nSeq> = __wDataInc( <hClass> )*/
+{
+   WORD  wClass   = _parnl( 1 );
+
+   if( wClass )
+      _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and increase     */
+}                                                /* number of DATAs         */
+
+HARBOUR __WDATADEC()         /* <nSeq> = __wDataDec( <hClass> )*/
+{
+   WORD  wClass   = _parnl( 1 );
+
+   if( wClass )
+      _retni( ++pClasses[ wClass - 1 ].wDatas ); /* Return and decrease     */
+}                                                /* number of DATAs         */
+
+HARBOUR CLASSMOD()      /* Modify message (only for INLINE and METHOD)      */
+                        /* <xOld> := ClassMod( <oObj>, <cSymbol>, <pFunc> ) */
+{
+   PITEM   pString  = _param( 2, IT_STRING );
+   PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
+   PDYNSYM pMsg     = ( PDYNSYM ) pMessage->pDynSym;
+   PCLASS  pClass;
+
+   WORD    wClass   = _parni( 1 );
+   WORD    wAt;
+   WORD    wLimit;
+
+   HARBOURFUNC pFunc;
+
+   if( wClass && wClass <= wClasses )
+   {
+      pClass = &pClasses[ wClass - 1 ];
+      wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
+      wLimit = wAt + BUCKET;
+
+      while( ( wAt < wLimit ) &&
+             ( pClass->pMethods[ wAt ].pMessage &&
+             ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
+         wAt++;
+
+      if( wAt <= wLimit )
+      {                                         /* Requested method found   */
+         pFunc = pClass->pMethods[ wAt ].pFunction;
+         if( pFunc == EvalInline )              /* INLINE method changed    */
+         {
+            ArraySet(  &pClass->aInlines, pClass->pMethods[ wAt ].wData,
+                       _param( 3, IT_BLOCK ) );
+         }
+         else if( ( pFunc == SetData ) || ( pFunc == GetData ) )
+         {                                      /* Not allowed for DATA     */
+            printf( "\nCannot modify a DATA item" );
+            exit(1);
+         }                                      /* TODO : Real error        */
+         else                                   /* Modify METHOD            */
+         {
+            pClass->pMethods[ wAt ].pFunction = ( HARBOURFUNC ) _parnl( 3 );
+         }
+      }
+   }
+}
+
+HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
+                        /* <xOld> := ClassDel( <oObj>, <cSymbol> )          */
+{
+   PITEM   pString  = _param( 2, IT_STRING );
+   PSYMBOL pMessage = GetDynSym( pString->value.szText )->pSymbol;
+   PDYNSYM pMsg     = ( PDYNSYM ) pMessage->pDynSym;
+   PCLASS  pClass;
+
+   WORD    wClass   = _parni( 1 );
+   WORD    wAt;
+   WORD    wLimit;
+
+   HARBOURFUNC pFunc;
+
+   if( wClass && wClass <= wClasses )
+   {
+      pClass = &pClasses[ wClass - 1 ];
+      wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
+      wLimit = wAt + BUCKET;
+
+      while( ( wAt < wLimit ) &&
+             ( pClass->pMethods[ wAt ].pMessage &&
+             ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
+         wAt++;
+
+      if( wAt <= wLimit )
+      {                                         /* Requested method found   */
+         pFunc = pClass->pMethods[ wAt ].pFunction;
+         if( pFunc == EvalInline )              /* INLINE method deleted    */
+         {
+            ArrayDel(  &pClass->aInlines, pClass->pMethods[ wAt ].wData );
+                                                /* Delete INLINE block      */
+         }                                      /* Move messages            */
+         for( ; pClass->pMethods[ wAt ].pMessage && wAt < wLimit; wAt ++ )
+            memcpy( &( pClass->pMethods[ wAt ]     ),
+                    &( pClass->pMethods[ wAt + 1 ] ), sizeof( METHOD ) );
+
+         pClass->pMethods[ wAt ].pFunction  = NULL;
+         pClass->pMethods[ wAt ].pMessage   = NULL;
+         pClass->pMethods[ wAt ].wData      = NULL;
+         pClass->pMethods[ wAt ].wScope     = NULL;
+         pClass->pMethods[ wAt ].wInitValue = NULL;
+
+         pClass->wMethods--;                    /* Decrease number messages */
+      }
+   }
+}
 

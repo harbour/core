@@ -1,3 +1,9 @@
+#define MET_METHOD    0
+#define MET_DATA      1
+#define MET_CLASSDATA 2
+#define MET_INLINE    3
+#define MET_VIRTUAL   4
+
 #define DATA_SYMBOL 1
 #define DATA_VAL    2
 
@@ -113,4 +119,143 @@ function aOSet( oObject, aData )
                                                 // Send the message
    next n
 return oObject
+
+
+//
+// <oObj> := oAddMethod( <oObj>, <cSymbol>, <nFuncPtr> )
+//
+// Add a method to an already existing class
+//
+function oAddMethod( oObj, cSymbol, nFuncPtr )
+
+   if IsMessage( oObj, cSymbol )
+      QOut( "OADDMETHOD: ", cSymbol, " already exists in class." )
+   elseif ValType( nFuncPtr ) != "N"
+      QOut( "OADDMETHOD: Argument type error <nFuncPtr>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OADDMETHOD: Argument type error <oObj>" )
+   else
+      ClassAdd( oObj:ClassH, cSymbol, nFuncPtr, MET_METHOD )
+   endif
+return oObj
+
+
+//
+// <oObj> := oAddInline( <oObj>, <cSymbol>, <bInline> )
+//
+// Add an INLINE to an already existing class
+//
+function oAddInline( oObj, cSymbol, bInline )
+
+   if IsMessage( oObj, cSymbol )
+      QOut( "OADDINLINE: ", cSymbol, " already exists in class." )
+   elseif ValType( bInline ) != "B"
+      QOut( "OADDINLINE: Argument type error <bInline>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OADDINLINE: Argument type error <oObj>" )
+   else
+      ClassAdd( oObj:ClassH, cSymbol, bInline, MET_INLINE )
+   endif
+return oObj
+
+
+//
+// <oObj> := oAddData( <oObj>, <cSymbol> )
+//
+// Add a DATA to an already existing class
+//
+function oAddData( oObj, cSymbol )
+
+   local nSeq
+
+   if IsMessage( oObj, cSymbol ) .or. IsMessage( oObj, "_" + cSymbol )
+      QOut( "OADDDATA: ", cSymbol, " already exists in class." )
+   elseif ValType( oObj ) != "O"
+      QOut( "OADDDATA: Argument type error <oObj>" )
+   else
+      nSeq := __wDataInc( oObj:ClassH )         // Allocate new Seq#
+      ClassAdd( oObj:ClassH, cSymbol,       nSeq, MET_DATA )
+      ClassAdd( oObj:ClassH, "_" + cSymbol, nSeq, MET_DATA )
+   endif
+return oObj
+
+
+//
+// <oObj> := oModMethod( <oObj>, <cSymbol>, <nFuncPtr> )
+//
+// Modify a method to an already existing class
+//
+function oModMethod( oObj, cSymbol, nFuncPtr )
+
+   if !IsMethod( oObj, cSymbol )
+      QOut( "OMODMETHOD: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( nFuncPtr ) != "N"
+      QOut( "OMODMETHOD: Argument type error <nFuncPtr>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OMODMETHOD: Argument type error <oObj>" )
+   else
+      ClassMod( oObj:ClassH, cSymbol, nFuncPtr )
+   endif
+return oObj
+
+
+//
+// <oObj> := oModInline( <oObj>, <cSymbol>, <bInline> )
+//
+// Modify an INLINE to an already existing class
+//
+function oModInline( oObj, cSymbol, bInline )
+
+   if !IsMethod( oObj, cSymbol )
+      QOut( "OMODINLINE: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( bInline ) != "B"
+      QOut( "OMODINLINE: Argument type error <bInline>" )
+   elseif ValType( oObj ) != "O"
+      QOut( "OMODINLINE: Argument type error <oObj>" )
+   else
+      ClassMod( oObj:ClassH, cSymbol, bInline )
+   endif
+return oObj
+
+
+//
+// <oObj> := oDelMethod( <oObj>, <cSymbol> )
+//
+// Delete a method from an already existing class
+//
+function oDelMethod( oObj, cSymbol )
+
+   if !IsMethod( oObj, cSymbol )
+      QOut( "ODELMETHOD: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( oObj ) != "O"
+      QOut( "ODELMETHOD: Argument type error <oObj>" )
+   else
+      ClassDel( oObj:ClassH, cSymbol )
+   endif
+return oObj
+
+function oDelInline( oObj, cSymbol )
+return oDelMethod( oObj, cSymbol )              // Same story
+
+
+//
+// <oObj> := oDelData( <oObj>, <cSymbol> )
+//
+// Delete a DATA from an already existing class
+//
+function oDelData( oObj, cSymbol )
+
+   local nSeq
+
+   if !IsData( oObj, cSymbol )
+      QOut( "ODELDATA: ", cSymbol, " doesnot exists in class." )
+   elseif ValType( oObj ) != "O"
+      QOut( "ODELDATA: Argument type error <oObj>" )
+   else
+      ClassDel( oObj:ClassH, cSymbol,      )
+      ClassDel( oObj:ClassH, "_" + cSymbol )
+      nSeq := __wDataDec( oObj:ClassH )         // Decrease wData
+   endif
+return oObj
+
 
