@@ -1083,7 +1083,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                              ( int ) hb_set.HB_SET_DECIMALS );
                }
                break;
-         case  ADS_AUTOINC:              
+         case  ADS_AUTOINC:
                hb_itemPutNLen( pItem, dVal, ( int ) 10 , (int) 0 );
                break;
 
@@ -1552,6 +1552,7 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
 
    /* Size for deleted records flag */
    pArea->uiRecordLen = 1;
+   pArea->uiMaxFieldNameLength = 150;   /* this is temporarily, must be changed */
    return SUCCESS;
 }
 

@@ -84,6 +84,7 @@ typedef struct _ADSAREA_
    USHORT heap;
    USHORT heapSize;
    USHORT rddID;
+   USHORT uiMaxFieldNameLength;
 
    /*
    *  ADS's additions to the workarea structure
