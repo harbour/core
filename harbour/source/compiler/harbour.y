@@ -1546,7 +1546,7 @@ BOOL hb_compInclude( char * szFileName, PATHNAMES * pSearch )
 
    hb_comp_files.pLast = pFile;
 #ifdef __cplusplus
-   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( hb_comp_buffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
+   yy_switch_to_buffer( ( YY_BUFFER_STATE ) ( hb_comp_buffer = ( char * ) yy_create_buffer( yyin, 8192 * 2 ) ) );
 #else
    yy_switch_to_buffer( hb_comp_buffer = yy_create_buffer( yyin, 8192 * 2 ) );
 #endif

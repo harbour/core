@@ -1,3 +1,7 @@
+2000-03-12 21:50 GMT-5 David G. Holm <dholm@ sd-llc.com>
+   * source/compiler/harbour.y
+     ! Added missing ( char * ) override for C++ on line 1549.
+
 20000312-15:18 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * standardise compile for tone.c and oemansi.c
