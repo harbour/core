@@ -65,5 +65,6 @@
 
 HARBOUR HB_TYPE( void )
 {
-   /* TODO: Implement this. */
+    /* TODO: implement this */
+    hb_retc( "U" );
 }

@@ -1,3 +1,9 @@
+20000117-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/type.c
+	* added hb_retc( "U" ) for initial implementation of TYPE() function
+	(due to a very popular demand :)
+
 20000117-12:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/achoice.prg
