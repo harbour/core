@@ -1213,7 +1213,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             if( pField->uiDec )
                ulRetVal = AdsSetDouble( pArea->hTable, szName, hb_itemGetND( pItem ) );
             else
-               ulRetVal = AdsSetLong( pArea->hTable, szName, hb_itemGetNL( pItem ) );
+               ulRetVal = AdsSetDouble( pArea->hTable, szName, hb_itemGetND( pItem ) );
             if( ulRetVal != AE_DATA_TOO_LONG )
                bError = FALSE;
          }
