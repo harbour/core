@@ -2974,6 +2974,6 @@ void hb_vmRequestCancel( void )
    if( hb_set.HB_SET_CANCEL )
    {
       printf( "\nCancelled at: %s (%i)\n", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
-      wActionRequest = HB_QUIT_REQUESTED;
+      s_wActionRequest = HB_QUIT_REQUESTED;
    }
 }
