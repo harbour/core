@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+        BCC  : makefile.bc => C_USR = __EXPORT__
+        MsVC : makefile.vc =>    --ditto--
+
+2001-12-25 14:40 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+   * contrib/libct/Makefile
+    * Removed the Lib prefix from library name
    * contrib/libmisc/Makefile
     * Removed the Lib prefix from library name
    * contrib/libgt/Makefile.bc
