@@ -81,6 +81,21 @@ PHB_ITEM hb_param( int iParam, int iMask )
    return NULL;
 }
 
+PHB_ITEM hb_paramError( int iParam )
+{
+   static HB_ITEM s_NIL;
+   PHB_ITEM pParam = hb_param( iParam, HB_IT_ANY );
+
+   hb_itemClear( &s_NIL );
+
+   if( pParam == NULL )
+   {
+      pParam = &s_NIL;
+   }
+
+   return pParam;
+}
+
 /* NOTE: Caller should not modify the buffer returned by this function.
          [vszakats] */
 

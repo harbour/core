@@ -81,7 +81,7 @@ HB_FUNC( ARRAY )
 
          if( hb_parnl( iParam ) < 0 ) /* || hb_parnl( iParam ) <= 4096 */
          {
-            hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ) );
+            hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), 1, hb_param( iParam, HB_IT_ANY ) );
             bError = TRUE;
             break;
          }
@@ -103,10 +103,10 @@ HB_FUNC( AADD )
       if( pValue && hb_arrayAdd( pArray, pValue ) )
          hb_itemReturn( pValue );
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD" );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD", 2, pArray, hb_paramError( 2 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD" );
+      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, "AADD", 2, hb_paramError(1), hb_paramError( 2 ) );
 }
 
 /* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
@@ -126,7 +126,7 @@ HB_FUNC( ASIZE )
    }
 #ifdef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
    else
-      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE" );
+      hb_errRT_BASE( EG_ARG, 2023, NULL, "ASIZE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 #endif
 }
 
@@ -190,9 +190,9 @@ HB_FUNC( AFILL )
       /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
                call AEVAL() to do the job, so the error (if any) will also be
                thrown by AEVAL().  [vszakats] */
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", 4, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
 #else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL" );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL", 4, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
 #endif
 }
 
@@ -236,7 +236,7 @@ HB_FUNC( AEVAL )
       hb_itemReturn( hb_stackItemFromBase( 1 ) ); /* AEval() returns the array itself */
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", 4, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
 }
 
 HB_FUNC( ACOPY )

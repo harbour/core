@@ -720,6 +720,66 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    return pDstArray;
 }
 
+PHB_ITEM hb_arrayFromStack( USHORT uiLen )
+{
+   PHB_ITEM pArray = hb_itemNew( NULL );
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
+   USHORT uiPos
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromStack(%iu)", uiLen));
+
+   pArray->type = HB_IT_ARRAY;
+
+   if( uiLen > 0 )
+      pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * uiLen );
+   else
+      pBaseArray->pItems = NULL;
+
+   pBaseArray->ulLen      = uiLen;
+   pBaseArray->uiHolders  = 1;
+   pBaseArray->uiClass    = 0;
+   pBaseArray->uiPrevCls  = 0;
+
+   for( uiPos = 0; uiPos < uiLen; uiPos++ )
+   {
+      hb_itemCopy( pBaseArray->pItems + uiPos, hb_stackItemFromTop( uiPos - uiLen ) );
+   }
+
+   pArray->item.asArray.value = pBaseArray;
+
+   return pArray;
+}
+
+PHB_ITEM hb_arrayFromParams( void )
+{
+   PHB_ITEM pArray = hb_itemNew( NULL );
+   PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
+   USHORT uiPos, uiPCount = hb_pcount();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_arrayFromParams()"));
+
+   pArray->type = HB_IT_ARRAY;
+
+   if( uiPCount > 0 )
+      pBaseArray->pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * uiPCount );
+   else
+      pBaseArray->pItems = NULL;
+
+   pBaseArray->ulLen      = uiPCount;
+   pBaseArray->uiHolders  = 1;
+   pBaseArray->uiClass    = 0;
+   pBaseArray->uiPrevCls  = 0;
+
+   for( uiPos = 2; uiPos <= uiPCount; uiPos++ )
+   {
+      hb_itemCopy( pBaseArray->pItems + uiPos - 2, hb_stackItemFromBase( uiPos ) );
+   }
+
+   pArray->item.asArray.value = pBaseArray;
+
+   return pArray;
+}
+
 /* This releases array when called from the garbage collector */
 HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
 {

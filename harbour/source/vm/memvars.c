@@ -380,7 +380,7 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
       {
          if( HB_IS_STRING( &pValue->item ) )
              hb_itemClear( &pValue->item );
-         hb_memvarRecycle( hValue );    
+         hb_memvarRecycle( hValue );
 
          HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
       }
@@ -609,7 +609,7 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
    else if( HB_IS_STRING( pMemvar ) )
       pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
    else
-      hb_errRT_BASE( EG_ARG, 3008, NULL, "&" );
+      hb_errRT_BASE( EG_ARG, 3008, NULL, "&", 2, pMemvar, pValue );
 
    if( pDynVar )
       hb_memvarCreateFromDynSymbol( pDynVar, bScope, pValue );
@@ -698,7 +698,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE" );
+      hb_errRT_BASE( EG_ARG, 3008, NULL, "RELEASE", 1, pMemvar );
 }
 
 
@@ -1202,7 +1202,7 @@ HB_FUNC( __MVGET )
       /* TODO: This should be expanded a little to report a passed incorrect
        * value to the error handler
        */
-      hb_errRT_BASE_SubstR( EG_ARG, 3009, NULL, NULL );
+      hb_errRT_BASE_SubstR( EG_ARG, 3009, NULL, NULL, 1, hb_paramError( 1 ) );
    }
 }
 
@@ -1246,7 +1246,7 @@ HB_FUNC( __MVPUT )
       /* TODO: This should be expanded a little to report a passed incorrect
        * value to the error handler
        */
-      HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL );
+      HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL, 1, hb_paramError( 1 ) );
 
       if( pRetValue )
          hb_itemRelease( pRetValue );
@@ -1280,7 +1280,7 @@ HB_FUNC( __MVSAVE )
 
       while( ( fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL ) ) == FS_ERROR )
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 
          if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
@@ -1391,7 +1391,7 @@ HB_FUNC( __MVSAVE )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2008, NULL, "__MSAVE" );
+      hb_errRT_BASE( EG_ARG, 2008, NULL, "__MSAVE", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
 }
 
 /* NOTE: There's an extension in Harbour, which makes it possible to only
@@ -1429,7 +1429,7 @@ HB_FUNC( __MVRESTORE )
 
       while( ( fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_DENYWRITE | FO_PRIVATE ) ) == FS_ERROR )
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 
          if( uiAction == E_DEFAULT || uiAction == E_BREAK )
             break;
@@ -1529,7 +1529,7 @@ HB_FUNC( __MVRESTORE )
          hb_retl( FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE" );
+      hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
 /* ----------------------------------------------------------------------- */

@@ -112,7 +112,7 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 
    if( ! HB_IS_STRING(pItem) )
    {
-      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1080, NULL, "&" );
+      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1080, NULL, "&", 0 );
 
       bValid = FALSE;
       if( pResult )
@@ -197,7 +197,7 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
       hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
    }
 
-   pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&" );
+   pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 0 );
 
    if( pResult )
    {

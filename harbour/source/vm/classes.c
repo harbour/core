@@ -429,7 +429,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
                strcpy( szName, szNameObject );
                strcat( szName, ":" );
                strcat( szName, pMessage->pSymbol->szName );
-               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName );
+               hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName, 0 );
             }
          }
 /* We have to rethink about hidden, in the meantime, better to do nothing :(            */
@@ -454,7 +454,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
          strcpy( szName, szNameObject );
          strcat( szName, ":" );
          strcat( szName, pMessage->pSymbol->szName );
-         hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName );
+         hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (protected)", szName, 0 );
       }
 /* We have to rethink about hidden, in the meantime, better to do nothing :(     */
 /*    else if( ( uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )          */
@@ -480,7 +480,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
             strcpy( szName, szNameObject );
             strcat( szName, ":" );
             strcat( szName, pMessage->pSymbol->szName );
-            hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (readonly)", szName );
+            hb_errRT_BASE( EG_NOMETHOD, 1004, "Scope violation (readonly)", szName, 0 );
          }
       }
 #endif
@@ -738,7 +738,7 @@ HB_FUNC( __CLSADDMSG )
       PMETHOD  pNewMeth;
 
       if( wType == HB_OO_MSG_INLINE && hb_param( 3, HB_IT_BLOCK ) == NULL )
-         hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG" );
+         hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG", 0 );
 
       if( pClass->uiMethods > ( pClass->uiHashKey * BUCKET * 2 / 3 ) )
          hb_clsDictRealloc( pClass );
@@ -1483,13 +1483,13 @@ HB_FUNC( __CLSMODMSG )
                PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
 
                if( pBlock == NULL )
-                  hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG" );
+                  hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG", 0 );
                else
                   hb_arraySet( pClass->pInlines, pClass->pMethods[ uiAt ].uiData, pBlock );
             }
             else if( ( pFunc == hb___msgSetData ) || ( pFunc == hb___msgGetData ) )
             {                                      /* Not allowed for DATA     */
-               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG" );
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG", 0 );
             }
             else                                   /* Modify METHOD            */
                pClass->pMethods[ uiAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
@@ -1540,7 +1540,7 @@ HB_FUNC( __OBJHASMSG )
    if( pObject && pString )
       hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) != 0 );
    else
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJHASMSG" );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJHASMSG", 0 );
 }
 
 
@@ -1556,7 +1556,7 @@ HB_FUNC( __OBJCLONE )
    if( pSrcObject )
       hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcObject ) ) );
    else
-      hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE" );
+      hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE", 0 );
 }
 
 
@@ -1589,7 +1589,7 @@ HB_FUNC( __OBJSENDMSG )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG" );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG", 0 );
 }
 
 /*
@@ -1627,10 +1627,10 @@ HB_FUNC( __CLSINSTSUPER )
             }
          }
          else
-            hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER" );
+            hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER" );
+         hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER", 0 );
    }
 
    if( ! bFound )
@@ -1828,7 +1828,7 @@ HB_FUNC( __EVAL )
       hb_vmDo( ( USHORT ) uiPCount );     /* Self is also an argument */
    }
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 0 );
 
    hb_itemRelease( pObject );
 
@@ -2006,7 +2006,7 @@ static HARBOUR hb___msgEval( void )
       hb_vmDo( ( USHORT ) uiPCount );                       /* Self is also an argument */
    }
    else
-      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL" );
+      hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, "EVAL", 0 );
 }
 
 /*

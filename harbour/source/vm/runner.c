@@ -150,7 +150,7 @@ HB_FUNC( __HRBRUN )
 
       while ( ( file = hb_hrbFileOpen( szFileName ) ) == NULL )
       {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY );
+         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY, 1, hb_paramError( 1 ) );
 
          if( uiAction == E_DEFAULT && uiAction == E_BREAK )
             break;
@@ -229,7 +229,7 @@ HB_FUNC( __HRBRUN )
                pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                if( !pDynSym )
                {
-                  hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName );
+                  hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName, 0 );
                   bError = TRUE;
                   break;
                }
@@ -317,7 +317,7 @@ HB_FUNC( __HRBRUN )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN" );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN", 0 );
 }
 
 
@@ -401,7 +401,7 @@ static long hb_hrbFileReadLong( FILE * file, char * szFileName )
 
    if( cLong[ 3 ] )                             /* Convert to long if ok    */
    {
-      hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
+      hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE, 0 );
       return 0;
    }
    else
@@ -419,7 +419,7 @@ static void hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileRead(%p, %s, %p, %d, %d)", file, szFileName, cBuffer, iSize, iCount));
 
    if( iCount != ( int ) fread( cBuffer, iSize, iCount, file ) )
-      hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
+      hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE, 0 );
 }
 
 
