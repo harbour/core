@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-17 21:41 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rdd/dbcmd.c
+    ! fixed bug on hb_strncpyUpper() use from DbUseArea()
+
 2003-09-17 10:54 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
   * harbour/source/ftl/tget.prg
     ! Fixed bug in unTransform() method that truncated
@@ -26,9 +30,9 @@
 2003-09-15 12:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbf1.c
    * source/rdd/dbfntx/dbfntx1.c
-     ! Bug fixed in hb_IncString(), reported by Przemyslaw Czerpak - 
+     ! Bug fixed in hb_IncString(), reported by Przemyslaw Czerpak -
        now this function respects the national sorting rules.
-     ! Bug fixed in hb_ntxTagKeyNo(), reported by Przemyslaw Czerpak - 
+     ! Bug fixed in hb_ntxTagKeyNo(), reported by Przemyslaw Czerpak -
        index unlocking wasn't present in some occasions.
      ! Bug fixed with scoping, reported by Giovi Verrua.
 
@@ -36,7 +40,7 @@
   * harbour/harbour.spec
     * small fix in auto platform detection (thanks to Tomaz Zupan)
   * harbour/make_tgz.sh
-    * added auto platform detection 
+    * added auto platform detection
 
 2003-09-11 01:00  UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
   * harbour/harbour.spec
@@ -46,7 +50,7 @@
   * harbour/harbour.spec
     * Added automatic platform resolution (borrowed from courier-imap project)
   * harbour/make_rpm.sh
-    * small fix needed to work with Mandrake Linux    
+    * small fix needed to work with Mandrake Linux
 
 2003-09-10 23:27 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * harbour/harbour.spec
@@ -130,9 +134,9 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
    * source/rtl/gtcrs/gtcrs.c
      ! fixed displaying of boxes in xterm
    * source/rtl/alert.prg
-     ! changed BoxString parameter while displaying box to NIL. It 
+     ! changed BoxString parameter while displaying box to NIL. It
        is needed to corectly display alert box in xterm.
-     
+
 2003-08-29 07:03 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * source/vm/hvm.c
      ! Fix implemented for -0.0 on hb_vmPushDouble() as proposed by
