@@ -160,8 +160,6 @@ STATIC aDefRules     := {}, aDefResults   := {}
 STATIC aTransRules   := {}, aTransResults := {}
 STATIC aCommRules    := {}, aCommResults  := {}
 
-STATIC nPendingLines := 0, aPendingLines  := {}
-
 STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., ;
        bCount := .T., bCCH := .F., bCompile := .F.
 
@@ -436,7 +434,7 @@ RETURN s_xRet
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_ExecProcedure( aProc, sProcName )
+FUNCTION PP_ExecProcedure( aProc, sProcName )
 
    LOCAL nBlock, nBlocks := Len( aProc[2] ), xErr
    LOCAL nVar, nVars
@@ -555,7 +553,7 @@ PROCEDURE PP_ExecProcedure( aProc, sProcName )
       aSize( s_aProcStack[s_nProcStack], 2 )
    ENDIF
 
-RETURN
+RETURN s_xRet
 
 //--------------------------------------------------------------//
 
@@ -738,7 +736,7 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
+FUNCTION PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
 
    LOCAL nNext, sBlock, sTemp
    LOCAL sSymbol
@@ -810,6 +808,13 @@ PROCEDURE PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
                      sStep    := SubStr( sBlock, nAt + 6 )
                      IF sStep == ""
                         sStep := "1"
+                     ENDIF
+
+                     // No procedure declaration.
+                     IF nProcId == 0
+                        sSymbol := "Implied_Main"
+                        aSize( aProcedures, ++nProcId )
+                        aProcedures[nProcId] := { sSymbol, {} }
                      ENDIF
 
                      aAdd( aProcedures[ nProcId ][2], { 0, &( "{||" + sCounter + ":=" + sStart + "}" ), nLine } ) // Loop back
@@ -1068,6 +1073,13 @@ PROCEDURE PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
                   ENDIF
                ENDIF
 
+               // No procedure declaration.
+               IF nProcId == 0
+                  sSymbol := "Implied_Main"
+                  aSize( aProcedures, ++nProcId )
+                  aProcedures[nProcId] := { sSymbol, {} }
+               ENDIF
+
                IF sBlock == ""
                   aAdd( aProcedures[ nProcId ][2], { 0, NIL, nLine } )
                ELSE
@@ -1128,6 +1140,13 @@ PROCEDURE PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
                   sStep    := SubStr( sBlock, nAt + 6 )
                   IF sStep == ""
                      sStep := "1"
+                  ENDIF
+
+                  // No procedure declaration.
+                  IF nProcId == 0
+                     sSymbol := "Implied_Main"
+                     aSize( aProcedures, ++nProcId )
+                     aProcedures[nProcId] := { sSymbol, {} }
                   ENDIF
 
                   aAdd( aProcedures[ nProcId ][2], { 0, &( "{||" + sCounter + ":=" + sStart + "}" ), nLine } ) // Loop back
@@ -1386,6 +1405,13 @@ PROCEDURE PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
                ENDIF
             ENDIF
 
+            // No procedure declaration.
+            IF nProcId == 0
+               sSymbol := "Implied_Main"
+               aSize( aProcedures, ++nProcId )
+               aProcedures[nProcId] := { sSymbol, {} }
+            ENDIF
+
             IF sBlock == ""
                aAdd( aProcedures[ nProcId ][2], { 0, NIL, nLine } )
             ELSE
@@ -1399,7 +1425,7 @@ PROCEDURE PP_CompileLine( sPPed, nLine, aProcedures, aInitExit, nProcId )
 
    END SEQUENCE
 
-RETURN
+RETURN aProcedures
 
 //--------------------------------------------------------------//
 
@@ -2524,6 +2550,8 @@ RETURN .T.
 
 FUNCTION PP_PreProLine( sLine, nLine, sSource )
 
+   LOCAL nPendingLines := 0, aPendingLines  := {}
+
    LOCAL sDirective, bX, sToken, nRule
    LOCAL nNewLineAt, nLines, Counter
    LOCAL sLeft, sPassed, asOutLines := {}, sOut := '', cChar
@@ -2533,6 +2561,35 @@ FUNCTION PP_PreProLine( sLine, nLine, sSource )
    LOCAL sError
    LOCAL sBackupLine
    LOCAL sSkipped
+
+   nPosition := 0
+   WHILE ( nNewLineAt := nAtSkipStr( ';', sLine ) ) > 0
+      nPendingLines++
+      aSize( aPendingLines, nPendingLines )
+
+      nPosition++
+      aIns( aPendingLines, nPosition )
+      aPendingLines[ nPosition ] := Left( sLine, nNewLineAt - 1 )
+
+      //? "Pending #", nPendingLines,  Left( sLine, nNewLineAt - 1 ), aPendingLines[nPendingLines]
+      sLine := LTrim( SubStr( sLine, nNewLineAt + 1 ) )
+   ENDDO
+
+   IF nPosition > 0
+      IF ! Empty( sLine )
+          nPendingLines++
+          aSize( aPendingLines, nPendingLines )
+
+          nPosition++
+          aIns( aPendingLines, nPosition )
+          aPendingLines[ nPosition ] := sLine
+      ENDIF
+
+      //? "Pending #", nPendingLines, sLine, aPendingLines[nPendingLines]
+      sLine := aPendingLines[1]
+      aDel( aPendingLines, 1 )
+      nPendingLines--
+   ENDIF
 
    WHILE .T.
       //? "Processing: '" + sLine + "'"
@@ -7424,7 +7481,7 @@ RETURN sIdentifier
 
 FUNCTION nAtSkipStr( sFind, sLine )
 
-   LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar, sTmp, nLenFind := Len( sFind )
+   LOCAL nAt, nLen := Len( sLine ), cChar, cLastChar := ' ', sTmp, nLenFind := Len( sFind )
 
    FOR nAt := 1 TO nLen
        IF SubStr( sLine, nAt, nLenFind ) == sFind
@@ -7572,12 +7629,23 @@ STATIC FUNCTION InitRunResults()
 RETURN .T.
 
 //--------------------------------------------------------------//
-PROCEDURE PP_RunInit()
+PROCEDURE PP_RunInit( aProcedures )
 
    STATIC s_anRulesLen[6]
 
+   IF ValType( aProcedures ) != 'A'
+      Alert( "Invalid parameter to: " + ProcName() + " must be Array!" )
+   ELSE
+      aSize( aProcedures, 0 )
+      ErrorBlock( {|oErr| RP_Run_Err( oErr, aProcedures ) } )
+   ENDIF
+
    IF ! s_lRunLoaded
       s_lRunLoaded := .T.
+
+      InitRules()
+      InitResults()
+
       InitRunRules()
       InitRunResults()
 

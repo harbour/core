@@ -1,3 +1,22 @@
+2001-05-28 19:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Modified PP_PreProLine() to handle multi-line lines (;) as primary line.
+     * Improved PP_RunInit() accept aProcedure as paramater. Now it can auto handle setup of RP_Run_Err() and reset aProcedures to {}
+       + Added loading of std.ch
+
+   * contrib/dot/prgscrpt.prg
+     * Simplified samples, and added a simpler inline form sample.
+
+   /*
+     PP_RunInit( aCompiledProcs )
+
+     // Note the return value from PP_ExecProcedure() and no Procedure declaration in this 1st. sample...
+     Alert( PP_ExecProcedure( ;
+              PP_CompileLine( ;
+                PP_PreProLine( "Private cVar := 'Hi there'; ? cVar; Return 'Returned from embedded script!'" ), ;
+                               0, aCompiledProcs, NIL, @nProcId )[1] ) )
+   */
+
 2001-05-28 14:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Renamed PP_ProcessLine() to PP_PreProLine() and PP_ProcessFile() to PP_PreProFile() to allow 10 chars uniqueness.
