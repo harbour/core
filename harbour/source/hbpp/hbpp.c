@@ -139,7 +139,7 @@ char * _szPErrors[] = { "Can\'t open include file \"%s\"",
 
 /* Table with parse warnings */
 char * _szPWarnings[] =
-{ 
+{
    "Non directive in include file"
 };
 
@@ -1867,7 +1867,7 @@ int NextParm ( char** sSource, char* sDest )
 
 BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStandardOnly )
 {
-  FILENAME *pFileName;
+  PHB_FNAME pFileName;
   char szFName[ _POSIX_PATH_MAX ]; /* filename to parse */
 
   if ( bStandardOnly )
@@ -1876,22 +1876,22 @@ BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStan
   }
   else
   {
-    pFileName = SplitFilename( szFileName );
-    pFileName->path = _pFileName->path;
-    MakeFilename( szFName, pFileName );
+    pFileName = hb_fsFNameSplit( szFileName );
+    pFileName->szPath = _pFileName->szPath;
+    hb_fsFNameMerge( szFName, pFileName );
     *fptr = fopen( szFName, "r" );
     hb_xfree( pFileName );
   }
 
   if ( !*fptr && pSearch )
   {
-    pFileName = SplitFilename( szFileName );
-    pFileName->name = szFileName;
-    pFileName->extension = NULL;
+    pFileName = hb_fsFNameSplit( szFileName );
+    pFileName->szName = szFileName;
+    pFileName->szExtension = NULL;
     while ( pSearch && !*fptr )
     {
-      pFileName->path = pSearch->szPath;
-      MakeFilename( szFName, pFileName );
+      pFileName->szPath = pSearch->szPath;
+      hb_fsFNameMerge( szFName, pFileName );
       *fptr = fopen( szFName, "r" );
       pSearch = pSearch->pNext;
     }

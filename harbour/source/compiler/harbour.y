@@ -51,13 +51,6 @@
 
 #define debug_msg( x, z )
 
-/* TODO: #define this for various platforms */
-#define PATH_DELIMITER "/\\"
-#define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
-
-#define OPT_DELIMITER  "/-"
-#define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
-
 extern FILE *yyin;      /* currently yacc parsed file */
 extern int iLine;       /* currently parsed file line number */
   /* Following two lines added for preprocessor */
@@ -120,9 +113,6 @@ typedef struct __EXTERN
    struct __EXTERN * pNext;
 } _EXTERN, * PEXTERN;      /* support structure for extern symbols */
 /* as they have to be placed on the symbol table later than the first public symbol */
-
-FILENAME *SplitFilename( char * );  /* splits filename into a path, a name and an extension */
-char *MakeFilename( char *, FILENAME *);  /* joins a path, a name an an extension int filename */
 
 /* Support for aliased expressions
  */
@@ -467,7 +457,7 @@ WORD _wStatics = 0;       /* number of defined statics variables on the PRG */
 PEXTERN pExterns = 0;
 PTR_LOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
-FILENAME *_pFileName =NULL;
+PHB_FNAME _pFileName = NULL;
 ALIASID_PTR pAliasId = NULL;
 
 PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
@@ -1413,7 +1403,7 @@ int harbour_main( int argc, char * argv[] )
             }
          }
          else
-            _pFileName =SplitFilename( argv[ iArg ] );
+            _pFileName =hb_fsFNameSplit( argv[ iArg ] );
          iArg++;
       }
 
@@ -1423,13 +1413,13 @@ int harbour_main( int argc, char * argv[] )
 
       if( _pFileName )
       {
-        if( !_pFileName->extension )
-          _pFileName->extension =".prg";
-        MakeFilename( szFileName, _pFileName );
+        if( !_pFileName->szExtension )
+          _pFileName->szExtension =".prg";
+        hb_fsFNameMerge( szFileName, _pFileName );
         if ( lPpo )
         {
-          _pFileName->extension =".ppo";
-          MakeFilename( szPpoName, _pFileName );
+          _pFileName->szExtension =".ppo";
+          hb_fsFNameMerge( szPpoName, _pFileName );
           yyppo = fopen ( szPpoName, "w" );
         }
       }
@@ -1477,7 +1467,7 @@ int harbour_main( int argc, char * argv[] )
          /* Generate the starting procedure frame
           */
          if( _bStartProc )
-            FunDef( yy_strupr( yy_strdup( _pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
+            FunDef( yy_strupr( yy_strdup( _pFileName->szName ) ), FS_PUBLIC, FUN_PROCEDURE );
          else
              /* Don't pass the name of module if the code for starting procedure
              * will be not generated. The name cannot be placed as first symbol
@@ -1513,46 +1503,46 @@ int harbour_main( int argc, char * argv[] )
             }
 
             /* we create a the output file */
-            _pFileName->path = szOutPath;
+            _pFileName->szPath = szOutPath;
             switch( _iLanguage )
             {
                case LANG_C:
-                    _pFileName->extension =".c";
-                    MakeFilename( szFileName, _pFileName );
-                    GenCCode( szFileName, _pFileName->name );
+                    _pFileName->szExtension =".c";
+                    hb_fsFNameMerge( szFileName, _pFileName );
+                    GenCCode( szFileName, _pFileName->szName );
                     break;
 
                case LANG_JAVA:
-                    _pFileName->extension =".java";
-                    MakeFilename( szFileName, _pFileName );
-                    GenJava( szFileName, _pFileName->name );
+                    _pFileName->szExtension =".java";
+                    hb_fsFNameMerge( szFileName, _pFileName );
+                    GenJava( szFileName, _pFileName->szName );
                     break;
 
                case LANG_PASCAL:
-                    _pFileName->extension =".pas";
-                    MakeFilename( szFileName, _pFileName );
-                    GenPascal( szFileName, _pFileName->name );
+                    _pFileName->szExtension =".pas";
+                    hb_fsFNameMerge( szFileName, _pFileName );
+                    GenPascal( szFileName, _pFileName->szName );
                     break;
 
                case LANG_RESOURCES:
-                    _pFileName->extension =".rc";
-                    MakeFilename( szFileName, _pFileName );
-                    GenRC( szFileName, _pFileName->name );
+                    _pFileName->szExtension =".rc";
+                    hb_fsFNameMerge( szFileName, _pFileName );
+                    GenRC( szFileName, _pFileName->szName );
                     break;
 
                case LANG_PORT_OBJ:
-                    _pFileName->extension =".hrb";
-                    MakeFilename( szFileName, _pFileName );
-                    GenPortObj( szFileName, _pFileName->name );
+                    _pFileName->szExtension =".hrb";
+                    hb_fsFNameMerge( szFileName, _pFileName );
+                    GenPortObj( szFileName, _pFileName->szName );
                     break;
             }
          }
 #ifdef HARBOUR_OBJ_GENERATION
          if( _bObj32 )
          {
-            _pFileName->extension = ".obj";
-            MakeFilename( szFileName, _pFileName );
-            GenObj32( szFileName, _pFileName->name );
+            _pFileName->szExtension = ".obj";
+            hb_fsFNameMerge( szFileName, _pFileName );
+            GenObj32( szFileName, _pFileName->szName );
          }
 #endif
          if ( lPpo ) fclose ( yyppo );
@@ -1603,124 +1593,6 @@ void PrintUsage( char * szSelf )
           "\t/z\t\tsuppress shortcutting (.and. & .or.)\n"
           "\t/10\t\trestrict symbol length to 10 characters\n"
           , szSelf );
-}
-
-/*
- * Split given filename into path, name and extension
-*/
-FILENAME *SplitFilename( char *szFilename )
-{
-  FILENAME *pName =(FILENAME *)hb_xalloc( sizeof(FILENAME) );
-  int iLen = strlen(szFilename);
-  int iSlashPos, iDotPos;
-  int iPos;
-
-  pName->path =pName->name =pName->extension =NULL;
-
-  iSlashPos =iLen-1;
-  iPos =0;
-  while( iSlashPos >= 0 && !IS_PATH_SEP(szFilename[ iSlashPos ]) )
-    --iSlashPos;
-  if( iSlashPos == 0 )
-  {
-    /* root path ->  \filename */
-    pName->_buffer[ 0 ] =PATH_DELIMITER[0];
-    pName->_buffer[ 1 ] ='\x0';
-    pName->path =pName->_buffer;
-    iPos =2;  /* first free position after the slash */
-  }
-  else if( iSlashPos > 0 )
-  {
-    /* path with separator ->  path\filename */
-    memcpy( pName->_buffer, szFilename, iSlashPos );
-    pName->_buffer[ iSlashPos ] ='\x0';
-    pName->path =pName->_buffer;
-    iPos =iSlashPos +1;   /* first free position after the slash */
-  }
-
-  iDotPos =iLen-1;
-  while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
-    --iDotPos;
-  if( (iDotPos-iSlashPos) > 1 )
-  {
-    /* the dot was found
-     * and there is at least one character between a slash and a dot
-     */
-    if( iDotPos == iLen-1 )
-    {
-      /* the dot is the last character -use it as extension name */
-      pName->extension =pName->_buffer+iPos;
-      pName->_buffer[ iPos++ ] ='.';
-      pName->_buffer[ iPos++ ] ='\x0';
-    }
-    else
-    {
-      pName->extension =pName->_buffer+iPos;
-      /* copy rest of the string with terminating ZERO character */
-      memcpy( pName->extension, szFilename+iDotPos+1, iLen-iDotPos );
-      iPos +=iLen-iDotPos;
-    }
-  }
-  else
-    /* there is no dot in the filename or it is  '.filename' */
-    iDotPos =iLen;
-
-  pName->name =pName->_buffer+iPos;
-  memcpy( pName->name, szFilename+iSlashPos+1, iDotPos-iSlashPos-1 );
-  pName->name[ iDotPos-iSlashPos-1 ] ='\x0';
-
-  return pName;
-}
-
-/*
- * This function joins path, name and extension into a string with a filename
-*/
-char *MakeFilename( char *szFileName, FILENAME *pFileName )
-{
-#if 0
-  fprintf(stderr, "path: |%s|\n"
-                  "name: |%s|\n"
-                  " ext: |%s|\n",
-          pFileName->path, pFileName->name, pFileName->extension);
-#endif
-
-  if( pFileName->path && pFileName->path[ 0 ] )
-  {
-    /* we have not empty path specified */
-    int iLen =strlen(pFileName->path);
-    strcpy( szFileName, pFileName->path );
-    /* if the path is a root directory then we don't need to add path separator */
-    if( !(IS_PATH_SEP(pFileName->path[ 0 ]) && pFileName->path[ 0 ] == '\x0') )
-    {
-      /* add the path separator only in cases:
-       *  when a name doesn't start with it
-       *  when the path doesn't end with it
-       */
-      if( !( IS_PATH_SEP(pFileName->name[ 0 ]) || IS_PATH_SEP(pFileName->path[ iLen-1 ]) ) )
-      {
-        szFileName[ iLen++ ] =PATH_DELIMITER[0];
-        szFileName[ iLen ] ='\x0';
-      }
-    }
-    strcpy( szFileName+iLen, pFileName->name );
-  }
-  else
-    strcpy( szFileName, pFileName->name );
-
-  if( pFileName->extension )
-  {
-    int iLen =strlen(szFileName);
-
-    if( !(pFileName->extension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
-    {
-      /* add extension separator only when extansion doesn't contain it */
-      szFileName[ iLen++ ] ='.';
-      szFileName[ iLen ]   ='\x0';
-    }
-    strcpy( szFileName+iLen, pFileName->extension );
-  }
-
-  return szFileName;
 }
 
 /*
@@ -2116,15 +1988,15 @@ int Include( char * szFileName, PATHNAMES *pSearch )
   {
     if( pSearch )
     {
-      FILENAME *pFileName =SplitFilename( szFileName );
+      PHB_FNAME pFileName =hb_fsFNameSplit( szFileName );
       char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
 
-      pFileName->name =szFileName;
-      pFileName->extension =NULL;
+      pFileName->szName =szFileName;
+      pFileName->szExtension =NULL;
       while( pSearch && !yyin )
       {
-        pFileName->path =pSearch->szPath;
-        MakeFilename( szFName, pFileName );
+        pFileName->szPath =pSearch->szPath;
+        hb_fsFNameMerge( szFName, pFileName );
         yyin = fopen( szFName, "r" );
         if( ! yyin )
         {
@@ -2406,8 +2278,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    /* writes the symbol table */
    /* Generate the wrapper that will initialize local symbol table
     */
-   yy_strupr( _pFileName->name );
-   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( %s__InitSymbols )\n", _pFileName->name );
+   yy_strupr( _pFileName->szName );
+   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( %s__InitSymbols )\n", _pFileName->szName );
 
    if( ! _bStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
@@ -2461,8 +2333,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
       pSym = pSym->pNext;
    }
-   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols )\n", _pFileName->name );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n\n\n", _pFileName->name );
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols )\n", _pFileName->szName );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup %s__InitSymbols\n#endif\n\n\n", _pFileName->szName );
 
    /* Generate functions data
     */
@@ -5242,6 +5114,118 @@ static void LoopEnd( void )
   if( pLoop == pLoops )
     pLoops = NULL;
   hb_xfree( (void *) pLoop );
+}
+
+/* Split given filename into path, name and extension */
+PHB_FNAME hb_fsFNameSplit( char *szFilename )
+{
+  PHB_FNAME pName = (PHB_FNAME) hb_xgrab( sizeof(HB_FNAME) );
+  int iLen = strlen(szFilename);
+  int iSlashPos;
+  int iDotPos;
+  int iPos;
+
+  pName->szPath = pName->szName = pName->szExtension = NULL;
+
+  iSlashPos = iLen-1;
+  iPos = 0;
+
+  while( iSlashPos >= 0 && !IS_PATH_SEP(szFilename[ iSlashPos ]) )
+    --iSlashPos;
+
+  if( iSlashPos == 0 )
+  {
+    /* root path ->  \filename */
+    pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
+    pName->szBuffer[ 1 ] = '\x0';
+    pName->szPath = pName->szBuffer;
+    iPos = 2;  /* first free position after the slash */
+  }
+  else if( iSlashPos > 0 )
+  {
+    /* path with separator ->  path\filename */
+    memcpy( pName->szBuffer, szFilename, iSlashPos );
+    pName->szBuffer[ iSlashPos ] = '\x0';
+    pName->szPath = pName->szBuffer;
+    iPos = iSlashPos + 1;   /* first free position after the slash */
+  }
+
+  iDotPos = iLen-1;
+  while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
+    --iDotPos;
+  if( (iDotPos-iSlashPos) > 1 )
+  {
+    /* the dot was found
+     * and there is at least one character between a slash and a dot
+     */
+    if( iDotPos == iLen-1 )
+    {
+      /* the dot is the last character -use it as extension name */
+      pName->szExtension = pName->szBuffer+iPos;
+      pName->szBuffer[ iPos++ ] = '.';
+      pName->szBuffer[ iPos++ ] = '\x0';
+    }
+    else
+    {
+      pName->szExtension = pName->szBuffer+iPos;
+      /* copy rest of the string with terminating ZERO character */
+      memcpy( pName->szExtension, szFilename+iDotPos+1, iLen-iDotPos );
+      iPos += iLen-iDotPos;
+    }
+  }
+  else
+    /* there is no dot in the filename or it is  '.filename' */
+    iDotPos = iLen;
+
+  pName->szName = pName->szBuffer + iPos;
+  memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
+  pName->szName[ iDotPos - iSlashPos - 1 ] = '\x0';
+
+  return pName;
+}
+
+/* This function joins path, name and extension into a string with a filename */
+char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
+{
+  if( pFileName->szPath && pFileName->szPath[ 0 ] )
+  {
+    /* we have not empty path specified */
+    int iLen = strlen(pFileName->szPath);
+
+    strcpy( szFileName, pFileName->szPath );
+
+    /* if the path is a root directory then we don't need to add path separator */
+    if( !(IS_PATH_SEP(pFileName->szPath[ 0 ]) && pFileName->szPath[ 0 ] == '\x0') )
+    {
+      /* add the path separator only in cases:
+       *  when a name doesn't start with it
+       *  when the path doesn't end with it
+       */
+      if( !( IS_PATH_SEP(pFileName->szName[ 0 ]) || IS_PATH_SEP(pFileName->szPath[ iLen-1 ]) ) )
+      {
+        szFileName[ iLen++ ] = OS_PATH_DELIMITER;
+        szFileName[ iLen ] = '\x0';
+      }
+    }
+    strcpy( szFileName+iLen, pFileName->szName );
+  }
+  else
+    strcpy( szFileName, pFileName->szName );
+
+  if( pFileName->szExtension )
+  {
+    int iLen = strlen(szFileName);
+
+    if( !(pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
+    {
+      /* add extension separator only when extansion doesn't contain it */
+      szFileName[ iLen++ ] = '.';
+      szFileName[ iLen ] = '\x0';
+    }
+    strcpy( szFileName+iLen, pFileName->szExtension );
+  }
+
+  return szFileName;
 }
 
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */

@@ -1,3 +1,13 @@
+19990820-14:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    source/hbpp/hbpp.c
+    source/hbpp/hbpplib.c
+    source/hbpp/stdalone/hbpp.c
+    include/hbpp.h
+    + All occurence of FILENAME, MakeFilename, SplitFilename() changed
+      to the Harbour standard hb_fsFName*() and HB_FNAME. This way one
+      copy of them could be safely removed.
+
 19990820-13:47 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source\rdd\dbcmd.c
      Fixed some warnings, now RDD compile without warnings

@@ -15,14 +15,6 @@ typedef struct _PATHNAMES { /* the list of pathnames to search with #include */
   struct _PATHNAMES *pNext;
 } PATHNAMES;
 
-typedef struct             /* support for filenames */
-{
-  char _buffer[ _POSIX_PATH_MAX+3 ];
-  char *path;
-  char *name;
-  char *extension;
-} FILENAME;
-
 struct _DEFINES;
 typedef struct _DEFINES
 {
@@ -48,6 +40,7 @@ typedef struct _COMMANDS
 
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 
+/* TODO: #define this for various platforms */
 #define PATH_DELIMITER  "/\\"
 #define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
 #define OPT_DELIMITER  "/-"
@@ -75,8 +68,17 @@ extern char * _szPWarnings[];
 
 /* Needed support modules, but not contained in HBPP.C */
 
-extern FILENAME *SplitFilename( char * );  /* splits filename into a path, a name and an extension */
-extern char *MakeFilename( char *, FILENAME *);  /* joins a path, a name an an extension int filename */
+/* Filename support */
+typedef struct
+{
+  char   szBuffer[ _POSIX_PATH_MAX + 3 ];
+  char * szPath;
+  char * szName;
+  char * szExtension;
+} HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
+
+extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */
+extern char *    hb_fsFNameMerge ( char * szFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
 extern void *   hb_xalloc( ULONG lSize );   /* allocates memory, returns NULL on failure */
 extern void *   hb_xgrab( ULONG lSize );   /* allocates memory, exists on failure */
@@ -86,7 +88,7 @@ extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory
 /* Needed support variables, but not contained in HBPP.C */
 
 extern PATHNAMES *_pIncludePath;
-extern FILENAME *_pFileName;
+extern PHB_FNAME _pFileName;
 extern DEFINES *topDefine;
 extern COMMANDS *topCommand;
 extern COMMANDS *topTranslate;
