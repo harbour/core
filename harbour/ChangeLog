@@ -1,3 +1,7 @@
+19990522-14:40 CET Eddie Runia
+  * tests/working/*.bat
+    -i..\..\include added
+
 19990522-14:10 CET Eddie Runia
   Change from 11:43 committed
   * tests/broken/instr.prg
