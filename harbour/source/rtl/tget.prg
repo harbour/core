@@ -1321,6 +1321,7 @@ METHOD DelEnd() CLASS Get
 
    ::Pos := ::nMaxEdit
 
+   ::Delete( .f. )
    do while ::Pos > nPos
       ::BackSpace( .f. )
    enddo
