@@ -36,8 +36,6 @@
 #include <ctype.h>
 #include "init.h"
 
-extern STACK stack;
-
 HARBOUR HB_DESCEND(void);
 
 HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols )

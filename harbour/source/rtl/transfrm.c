@@ -58,10 +58,6 @@ HB_INIT_SYMBOLS_END( Transfrm__InitSymbols );
 #pragma startup Transfrm__InitSymbols
 #endif
 
-extern STACK stack;
-
-void StackPop( void );                          /* TOFIX: Should go away    */
-
 /* Function flags                                                           */
 
 #define PF_LEFT    0x0001   /* @B */
@@ -364,6 +360,9 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
     dValue      : Number to picture
     lRetSize    : The size of the returned string is passed here !
 */
+
+void StackPop( void );                          /* TOFIX: Should go away    */
+
 PHB_ITEM NumDefault( double dValue )
 {                                               /* Default number           */
    PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */

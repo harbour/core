@@ -59,9 +59,6 @@ HB_INIT_SYMBOLS_END( Arrays__InitSymbols );
 #pragma startup Arrays__InitSymbols
 #endif
 
-extern STACK  stack;
-extern SYMBOL symEval;
-
 /*
  * Internal
  */

@@ -229,6 +229,11 @@ typedef struct _HB_VALUE
    HB_HANDLE hPrevMemvar;
 } HB_VALUE, * HB_VALUE_PTR;
 
+extern STACK stack;
+extern SYMBOL symEval;
+extern HB_ITEM errorBlock;
+extern HB_ITEM aStatics;
+
 PHB_ITEM hb_param( int iParam, WORD wType ); /* retrieve a generic parameter */
 char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
 ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
@@ -287,6 +292,8 @@ char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert 
 int      hb_stricmp( const char *s1, const char *s2 );
 BOOL     hb_strempty( char * szText, ULONG ulLen );
 ULONG    hb_strAt( char *, long, char *, long );
+char *   hb_strUpper( char * szText, long lLen );
+char *   hb_strLower( char * szText, long lLen );
 
 HARBOURFUNC hb_GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the method pointer of a object class */
 char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */

@@ -38,11 +38,6 @@
 #include "extend.h"
 #include <string.h>
 
-extern STACK stack;
-
-#define FALSE   0
-#define TRUE    1
-
 /* functions for memvar variables
  */
 HB_HANDLE hb_MemvarValueNew( PHB_ITEM, int );

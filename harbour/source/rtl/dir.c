@@ -14,6 +14,14 @@
  *                             been requested.
  *
  */
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following function is Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_strMatchDOS().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #if defined(__IBMCPP__)
    #define INCL_DOSFILEMGR
    #define INCL_DOSERRORS
@@ -144,7 +152,6 @@ static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 HARBOUR HB_DIRECTORY( void )
 {
 #if defined(HAVE_POSIX_IO)
-   extern STACK  stack;
 
    PHB_ITEM arg1_it = hb_param(1,IT_STRING);
    PHB_ITEM arg2_it = hb_param(2,IT_STRING);

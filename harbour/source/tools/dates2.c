@@ -73,10 +73,6 @@ HB_INIT_SYMBOLS_END( Dates2__InitSymbols );
 #pragma startup Dates2__InitSymbols
 #endif
 
-/* In msgxxx.c modules */
-extern char *hb_monthsname[];
-extern char *hb_daysname[];
-
 static int hb__daysinmonth[ 12 ] =
 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 

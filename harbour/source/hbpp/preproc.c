@@ -44,7 +44,6 @@
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 #define STR_SIZE 8192
 
-extern STACK stack;
 extern int ParseExpression( char*, char* );
 
 PATHNAMES *_pIncludePath = NULL;

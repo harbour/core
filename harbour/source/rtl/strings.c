@@ -32,8 +32,6 @@
 #include <math.h>
 #include "set.h"
 
-extern STACK stack;
-
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 static double infinity = 0;
 #endif

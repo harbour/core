@@ -42,9 +42,6 @@
 #include "ctoharb.h"
 #include "itemapi.h"
 
-extern STACK stack;                             /* External data used       */
-extern HB_ITEM aStatics;
-
 PHB_ITEM ArrayClone( PHB_ITEM );
 
 /* $Doc$

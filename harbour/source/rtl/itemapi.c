@@ -28,9 +28,6 @@
 #include "dates.h"
 #include "set.h"
 
-extern STACK stack;
-extern SYMBOL symEval;
-
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
    BOOL bResult = FALSE;

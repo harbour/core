@@ -27,10 +27,6 @@
 #include "itemapi.h"
 #include "errorapi.h"
 
-extern HB_ITEM errorBlock;
-extern STACK stack;
-extern SYMBOL symEval;
-
 PHB_ITEM hb_errNew( void )
 {
    PHB_ITEM pReturn = hb_itemNew( NULL );

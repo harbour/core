@@ -1,3 +1,39 @@
+19990729-12:13 CET Victor Szel <info@szelvesz.hu>
+  + include/extend.h - 
+    hb_strLower(), hb_strUpper() declarations added.
+    extern STACK stack; added
+    extern SYMBOL symEval; added
+    extern HB_ITEM errorBlock; added
+    extern HB_ITEM aStatics; added
+  - source/rdd/dbcmd.c
+    source/rtl/setcolor.c
+    now redundant hb_strUpper() declarations removed.
+  - source/rtl/transfrm.c
+    source/rtl/classes.c
+    source/rtl/arrays.c
+    source/rtl/math.c
+    source/rtl/itemapi.c
+    source/rtl/extend.c
+    source/rtl/dir.c
+    source/rtl/descend.c
+    source/rtl/dates.c
+    source/rtl/codebloc.c
+    source/rtl/errorapi.c
+    source/rdd/dbcmd.c
+    source/hbpp/preproc.c
+    source/tools/debug.c
+    Removed explicit references to above added externs.
+  + include/dates.h - 
+    extern char *hb_monthsname[]; added
+    extern char *hb_daysname[]; added
+  - source/rtl/dates.c
+    source/tools/dates2.c  
+    Removed explicit references to above added externs.
+  - source/rtl/classes.c - Removed reference to DoBlock()
+  - source/rtl/codebloc.c - Redefinition of TRUE/FALSE removed.
+  + source/rtl/dir.c - Copyright statement added for
+    hb_strMatchDOS() function.
+
 19990729-11:20 CET Victor Szel <info@szelvesz.hu>
   ! tests/working/rtl_test.prg - Now returns errorlevel 1
     if anything fails, and 0 if OK. Now for sure.

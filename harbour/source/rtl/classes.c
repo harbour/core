@@ -55,8 +55,6 @@
 #define MET_VIRTUAL   4
 #define MET_SUPER     5
 
-HARBOUR DoBlock( void );      /* executes a codeblock */
-
 typedef struct
 {
    void      * pMessage;   /* pointer to dynamic symbol when they get ready */
@@ -81,9 +79,6 @@ typedef struct
 #define BASE_METHODS  200
 #define BUCKET        4
 #define HASH_KEY      BASE_METHODS/BUCKET
-
-extern STACK stack;
-extern SYMBOL symEval;
 
 PCLASS  pClasses     = 0;
 WORD    wClasses     = 0;

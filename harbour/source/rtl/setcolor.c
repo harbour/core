@@ -31,9 +31,6 @@
  static char old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
 #endif
 
-/* From strings.c */
-char *hb_strUpper(char *szText, long lLen);
-
 char *hb_setColor( char *sColor )
 {
 #ifdef HARBOUR_USE_GTAPI

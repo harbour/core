@@ -31,8 +31,6 @@
 #include "dates.h"
 #include "item.api"
 
-extern STACK stack;
-
 ULONG ulMemoryBlocks = 0;
 ULONG ulMemoryMaxBlocks = 0;
 ULONG ulMemoryMaxConsumed = 0;

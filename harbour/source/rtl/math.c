@@ -14,8 +14,6 @@
 #include "errorapi.h"
 #include <math.h>
 
-extern STACK stack;
-
 HARBOUR HB_ABS( void );
 HARBOUR HB_EXP( void );
 HARBOUR HB_INT( void );

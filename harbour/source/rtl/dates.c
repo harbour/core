@@ -53,12 +53,6 @@
    #define HB_OPTIMIZE_DTOS
 #endif
 
-extern STACK stack;
-
-/* In msgxxx.c modules */
-extern char *hb_monthsname[];
-extern char *hb_daysname[];
-
 HARBOUR HB_CDOW( void );
 HARBOUR HB_CMONTH( void );
 HARBOUR HB_CTOD( void );

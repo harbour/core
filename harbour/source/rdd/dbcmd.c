@@ -94,11 +94,6 @@ HB_INIT_SYMBOLS_END( dbCmd__InitSymbols );
 #pragma startup dbCmd__InitSymbols
 #endif
 
-/* From strings.c */
-char * hb_strUpper( char * szText, long lLen );
-
-extern STACK stack;
-
 static char * szDefDriver;      /* Default RDD name */
 static USHORT uiCurrArea;       /* Selectd area */
 static PRDDNODE pRDDList;       /* Registered RDD's */
