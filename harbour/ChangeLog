@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-11 00:47  UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * harbour/harbour.spec
+    * Added automatic platform resolution (borrowed from courier-imap project)
+  * harbour/make_rpm.sh
+    * small fix needed to work with Mandrake Linux    
+
 2003-09-10 23:27 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * harbour/harbour.spec
   * harbour/make_tgz.sh

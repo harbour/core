@@ -12,7 +12,7 @@
 
 test_reqrpm()
 {
-    rpm -q "$1" &> /dev/null
+    rpm -q --whatprovides "$1" &> /dev/null
 }
 
 TOINST_LST=""
