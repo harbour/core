@@ -1,3 +1,9 @@
+20000129-14:30  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
+    *source/rtl/oemansi.c
+        *Added documentation to HB_oemtoansi() and Hb_ansitooem() 
+    *source/rtl/strings.c
+         *Added documentation to AT(),RAT(),ISDIGIT(),ISALPHA(),ISLOWER(),ISUPPER()
+
 20000129-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
@@ -46,6 +52,7 @@
    * source/tools/os2.prg
    * source/tools/troff.prg
        * Fixed the aligment of text on generating the source files
+
 
 20000127-12:54 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * doc/whatsnew.txt
@@ -488,7 +495,11 @@ NOTE: All sources HAVE TO be recompiled!!!
 
    * ngdoc/ft_helpc.prg
      ! Renamed to lower case for Linux compatibility.
+<<<<<<< ChangeLog
      + Added CVS $Id$ header.
+=======
+     + Added CVS $Id$ header.
+>>>>>>> 1.1537
 
    * ngdoc/ha.lnk
      ! Renamed to lower case for Linux compatibility.
@@ -503,7 +514,11 @@ NOTE: All sources HAVE TO be recompiled!!!
 
    * source/tools/rtf.prg
      ! Renamed to lower case for Linux compatibility.
+<<<<<<< ChangeLog
      + Added CVS $Id$ header.
+=======
+     + Added CVS $Id$ header.
+>>>>>>> 1.1537
 
 20000109-14:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
