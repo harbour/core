@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * source/rtl/Makefile
+   * source/rtl/filesys.c
+   * source/rtl/philes.c
+     - Removed old FILE() and hb_fsFile().
+
+   * source/common/hbffind.c
+     ! Fixed date handling. The null terminating char was
        missing.
 
 2001-12-21 14:37 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -21,8 +27,7 @@
        low and Harbour level functions.
      * Cleaned up the new Win32 API branches.
 
-     * Renamed to ChangeLog.012 and started an new one
-   * source/pp/pragma.c
+     * Renamed to ChangeLog.012 and started an new one   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)
