@@ -3932,6 +3932,7 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   LONG       toGo=lNext;
   BOOL       bFor, bWhile;
   BOOL       keepGoing=TRUE;
+  BOOL       bDeleted;
   AREAP      pAreaFrom;
   AREAP      pAreaTo;
   LPAREANODE pAreaRelease=NULL;
@@ -4023,6 +4024,10 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
             if ( cAreaFrom )
                s_pCurrArea = pAreaRelease;
             rddMoveFields( pAreaFrom, pAreaTo, pFields, (cAreaFrom)?s_pCurrAreaSaved:NULL ); /*move the data*/
+            bDeleted = FALSE;
+            SELF_DELETED( ( AREAP ) pAreaFrom, &bDeleted );
+            if ( bDeleted )
+               SELF_DELETE( ( AREAP ) pAreaTo );
          }
          if ( lRec == 0 || pFor )  /*not only one record? Or there's a For clause?*/
             keepGoing = TRUE;
