@@ -23,6 +23,8 @@ function Main( cFrom, cTo )
    oFrom := TTextFile()
    HBDebug( { aoMethod( oFrom ), aoData( oFrom ) } )
 //   oFrom:Super:Run()
+   oFrom:Set( "DoIt !" )
+   QOut( oFrom:Out )
    oFrom:New( cFrom, "R" )
    oTo   := TTextFile()
 //   HBDebug( aoMethod( oTo ) )
@@ -51,6 +53,9 @@ function TEmpty()
 
       oEmpty:AddInline( "New", {|self|self} )        // Constructor
       oEmpty:AddInline( "Run", {||QOut( "Run!" ) } ) // Test command
+      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
+      oEmpty:AddData( "Out" )
+                                                     // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
       oEmpty:Create()
