@@ -144,7 +144,7 @@ HB_FUNC( ALLTRIM )
       ULONG ulLen = hb_strRTrimLen( pszText, hb_itemGetCLen( pText ),
          ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
-      hb_strLTrim( pszText, &ulLen );
+      pszText = hb_strLTrim( pszText, &ulLen );
       hb_retclen( pszText, ulLen );
    }
    else

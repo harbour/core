@@ -424,7 +424,7 @@ int hb_parinfo( int iParam )
    }
 }
 
-#ifndef HB_EXTEND_API_MACROS
+#ifndef HB_API_MACROS
 
 int hb_pcount( void )
 {
