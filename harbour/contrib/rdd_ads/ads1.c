@@ -1565,11 +1565,9 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       if( ulRetVal != AE_SUCCESS )
       {
-         if ( ulRetVal == 1001 || ulRetVal == 7008)        /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
-            return FAILURE;                /* just set neterr  */
-         else
+         if ( ulRetVal != 1001 && ulRetVal != 7008)     /* 1001 and 7008 are standard ADS Open Errors that will usually be sharing issues */
             commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
-
+         return FAILURE;                /* just set neterr  */
       }
 
       pArea->hTable    = hTable;
