@@ -61,6 +61,10 @@ long lNumber = 0;
 #define OPERATOR        -1
 int _iState = LOOKUP;
 
+/* Support for Array Index */
+int iIndexSets  = 0;
+int i_INDEX_STATE = 0;
+
 void yy_lex_count_lf( void )
 {
   char * pTmp = yytext;
@@ -78,8 +82,12 @@ InvalidNumber [0-9]+\.
 Number        ([0-9]+)|([0-9]*\.[0-9]+)
 HexNumber     0x[0-9A-F]+
 Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
-String        (\"(([^\"]*)|([\!]*))\")|(\'(([^\']*)|([\!]*))\')
+
+/* TODO check if String definition can be removed - Ron Pinkas added support for [] String Delimiters see STRING1, STRING2 and STRING3*/
+/*String        (\"(([^\"]*)|([\!]*))\")|(\'(([^\']*)|([\!]*))\')*/
+
 PseudoFunc    {Identifier}"("+.*")"+
+Array         {Identifier}[ \t]*(\[[^\]]*\])+
 
 Comment1      "/*"([^\*]|[\*][^\/])*"*/"
 Comment2      [\/][\/].*
@@ -88,8 +96,9 @@ LineCont      (;.*\n)
 Separator     {SpaceTab}|{Comment}|{LineCont}
 
 %x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
-%x            IFDEF IFNDEF STRING1 STRING2
+%x            IFDEF IFNDEF STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_
+%s            INDEX
 
 %%
 
@@ -100,17 +109,38 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 '              BEGIN STRING1;
 \"             BEGIN STRING2;
+<INITIAL>\[    BEGIN STRING3;
 
 <STRING1>[^'^\n]*   GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0;
 <STRING2>[^\"^\n]*  GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0;
+<STRING3>[^\]]*\n   GenError( ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0;
 
-<STRING1>[^']*'   { BEGIN 0; yylval.string = strdup( yytext + 1 );
-                    yylval.string[ yyleng - 2 ] = 0; return LITERAL; }
-<STRING2>[^\"]*\" { BEGIN 0; yylval.string = strdup( yytext + 1 );
-                    yylval.string[ yyleng - 2 ] = 0; return LITERAL; }
+<STRING1>[^']*'   { BEGIN 0; yylval.string = strdup( yytext );
+                    yylval.string[ yyleng - 1 ] = 0; return LITERAL; }
+<STRING2>[^\"]*\" { BEGIN 0; yylval.string = strdup( yytext );
+                    yylval.string[ yyleng - 1 ] = 0; return LITERAL; }
+<STRING3>[^\]]*\] { BEGIN 0; yylval.string = strdup( yytext );
+                    yylval.string[ yyleng - 1 ] = 0; return LITERAL; }
+
+<INDEX>\n    { yyerror( "Unterminated Array Index" ); exit(1); }
+
+<INDEX>\[    { return yytext[ 0 ] ; }
+
+<INDEX>\]    {
+                iIndexSets-- ;
+                if( iIndexSets == 0 )
+                {
+                   /* printf( "\nIndex End\n" ); */
+
+                   /* No longer in this state. */
+                   i_INDEX_STATE = 0;
+                   BEGIN 0;
+                }
+                return yytext[ 0 ];
+             }
 
 "/*"           BEGIN COMMENT3;
-<COMMENT3>"*"["*"]*"/" BEGIN 0;
+<COMMENT3>"*"["*"]*"/" { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0; }
 <COMMENT3>[^"*/"\n]* ;
 <COMMENT3>"*"     ;
 <COMMENT3>[\/\"]+ ;
@@ -122,12 +152,12 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 <DEFINE>{SpaceTab}          ;
 <DEFINE>{Identifier}        LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
 <DEFINE>{PseudoFunc}        LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
-<DEFINE>{String}            LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
+
 <DEFINE>-?{Number}          LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
 <DEFINE>{HexNumber}         LastDef( pDefs )->szValue = strdup( yytext ); BEGIN 0;
 <DEFINE>"/*".*"*/"          ;
 <DEFINE>{Number}{SpaceTab}*[\(]    yyerror( "Syntax error in #define" );
-<DEFINE>{String}{SpaceTab}*[\(]    yyerror( "Syntax error in #define" );
+
 <DEFINE>{Identifier}{SpaceTab}*[\(] Define( yytext ); BEGIN DEFINE_PARAMS;
 <DEFINE_PARAMS>{SpaceTab}   ;
 <DEFINE_PARAMS>{Identifier} DefineKey( yytext );
@@ -650,7 +680,65 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  }
               }
 
-{String}      yylval.string = strdup( yytext + 1 ); yylval.string[ yyleng - 2 ] = 0; return LITERAL;
+{Array}      { BEGIN INDEX;
+              {
+               int i = 0, iIdentifierLength = 0;
+               char chr;
+
+               /* Other states will know to resume this state. */
+               i_INDEX_STATE = 1;
+
+               while( i < yyleng )
+               {
+                  chr = *( yytext + i++ );
+                  if( chr == '[' )
+                  {
+                     if( iIdentifierLength )
+                     {
+                        iIndexSets++;
+                     }
+                     else
+                     {
+                        iIdentifierLength = i - 1;
+                        iIndexSets++;
+                     }
+                  }
+               }
+
+               yyless( iIdentifierLength );
+
+               /* Remove optional white space between Identifier and Index */
+               while( yytext[ iIdentifierLength - 1] < 48 )
+                  iIdentifierLength--;
+
+               yyleng = iIdentifierLength;
+               yytext[yyleng] = 0;
+               /* printf( "\nIdentifier = %s Length = %i IndexSets = %i\n", strupr( strdup( yytext ) ), iIdentifierLength, iIndexSets ); */
+              }
+
+              {
+               PDEFINE pDef = FindDef( yytext );
+               char * szText; int c;
+
+               if( pDef )
+               {
+                  c = strlen( pDef->szValue ) - 1;
+                  szText = pDef->szValue;
+                  while( c >= 0 )
+                     unput( szText[ c-- ] );
+               }
+               else
+               {
+                   if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
+                   {
+                      yytext[ 10 ] = 0;
+                      yyleng = 10;
+                   }
+                   yylval.string = strupr( strdup( yytext ) );
+                   return IDENTIFIER;
+               }
+              }
+             }
 
 {LineCont}    ++iLine;
 

@@ -3,15 +3,15 @@
 IF A%1 == A GOTO :SINTAX
 IF A%2 == A GOTO :NOOUTPUT
 
-echo -mh -O2 -Fm -e%2.exe -I..\..\include ..\..\source\vm\hvm.c %1.c > b32.bc
-echo ..\..\libs\b32\harbour.lib ..\..\libs\b32\hbtools.lib ..\..\libs\b32\terminal.lib >> b32.bc
+echo -O2 -e%2.exe -I..\..\include ..\..\source\vm\hvm.c %1.c > b32.bc
+echo ..\..\libs\b32\harbour.lib  ..\..\libs\b32\terminal.lib >> b32.bc
 bcc32 @b32.bc
 del b32.bc
 GOTO :END
 
 :NOOUTPUT
-echo -mh -O2 -Fm -e%1.exe -I..\..\include ..\..\source\vm\hvm.c %1.c > b32.bc
-echo ..\..\libs\b32\harbour.lib ..\..\libs\b32\hbtools.lib ..\..\libs\b32\terminal.lib >> b32.bc
+echo -O2 -e%1.exe -I..\..\include ..\..\source\vm\hvm.c %1.c > b32.bc
+echo ..\..\libs\b32\harbour.lib  ..\..\libs\b32\terminal.lib >> b32.bc
 bcc32 @b32.bc
 del b32.bc
 GOTO :END
