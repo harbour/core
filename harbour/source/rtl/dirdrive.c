@@ -33,14 +33,14 @@
  *
  */
 
+/* NOTE: Clipper 5.3 functions */
+
 #include <ctype.h>
 
 #include "hbapi.h"
 #include "hbapifs.h"
 
 #ifdef HB_COMPAT_C53
-
-/* NOTE: Clipper 5.3 only */
 
 HB_FUNC( DIRCHANGE )
 {
@@ -54,8 +54,7 @@ HB_FUNC( DIRCHANGE )
    hb_fsSetError( uiErrorOld );
 }
 
-/* NOTE: Clipper 5.3 only */
-/* NOTE: Clipper 5.3 NG incorrectly states that the name if this function is
+/* NOTE: Clipper 5.3 NG incorrectly states that the name of this function is
          DIRMAKE(), in reality it's not. */
 
 HB_FUNC( MAKEDIR )
@@ -69,8 +68,6 @@ HB_FUNC( MAKEDIR )
 
    hb_fsSetError( uiErrorOld );
 }
-
-/* NOTE: Clipper 5.3 only */
 
 HB_FUNC( DIRREMOVE )
 {

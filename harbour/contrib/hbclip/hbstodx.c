@@ -4,7 +4,7 @@
 
 /*
  * Harbour Compatibility Library for CA-Cl*pper source code:
- * HB_STOD() function
+ * STOD() function
  *
  * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -35,7 +35,7 @@
 
 #include "extend.h"
 
-CLIPPER HB_STOD( void )
+CLIPPER STOD( void )
 {
    /* The length check is a fix to avoid buggy behaviour of _retds() */
    _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );

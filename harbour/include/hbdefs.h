@@ -119,20 +119,11 @@
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
 #if defined(__GNUC__)
-   #define pascal __attribute__ ((stdcall))
-#endif
-
-#if defined(_MSC_VER)
+   #define HARBOUR void __attribute__ ((stdcall))
+#elif defined(_MSC_VER) || defined(__IBMCPP__)
    #define HARBOUR void
-   #define EXTERNAL_LINKAGE
 #else
-   #if defined(__IBMCPP__)
-      #define HARBOUR void
-      #define EXTERNAL_LINKAGE _LNK_CONV
-   #else
-      #define HARBOUR void pascal
-      #define EXTERNAL_LINKAGE
-   #endif
+   #define HARBOUR void pascal
 #endif
 
 #define __HARBOUR__

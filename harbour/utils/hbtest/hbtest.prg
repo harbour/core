@@ -488,6 +488,7 @@ STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
 
    RETURN cRetVal
 
+#ifndef HAVE_HBCLIP
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
@@ -509,6 +510,7 @@ FUNCTION SToD( cDate )
 
    RETURN dDate
 
+#endif
 #endif
 #endif
 
