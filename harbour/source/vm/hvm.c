@@ -2134,7 +2134,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* modu
    if( ! iObjChecked )
    {
       iObjChecked = 1;
-      ProcessObjSymbols();   /* to asure Harbour OBJ symbols are processed first */
+      hb_vmProcessObjSymbols();   /* to asure Harbour OBJ symbols are processed first */
    }
 #endif
 

@@ -1,3 +1,7 @@
+19990816-01:11 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/vm/hvm.c
+    * ProcessObjSymbols -> hb_vmProcessObjSymbols
+
 19990816-02:45 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/extend.h
