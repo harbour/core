@@ -74,4 +74,7 @@
                               WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX + ;
                               WS_MAXIMIZEBOX)
 
+#define WS_CHILD     0x40000000
+#define WS_TABSTOP   0x00010000
+
 #endif
