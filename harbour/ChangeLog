@@ -1,3 +1,22 @@
+20000211-22:31 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * makefile.vc
+     ! Modified to generate all the intermediate .c/.y/.l files in the obj dir
+       instead of the original files' dir, since this way the make process
+       is not conflicting with the GNU-make system, so they can be used in
+       parallel.
+     * HBDOC is generated in the BIN directory.
+     + RT_MAIN generation added.
+     + Added nulsys.lib
+   + obj/b16/empty
+   + obj/b32/empty
+   + obj/vc/empty
+   * makefile.b32
+     makefile.b16
+     makefile.vc
+     + From now on the intermediate files are generated in the obj\b16,
+       obj\b32 and obj\vc depending on the build system. This way the Borland
+       and Microsoft make systems will not conflict and can be used in parallel.
+
 20000211-19:37 GMT+1 Victor Szakats <info@szelvesz.hu>
    * ha.lnk      -> categ.lnk
      harbour.lnk -> alpha.lnk

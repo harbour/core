@@ -10,7 +10,7 @@
 .path.y   = source\compiler
 .path.exe = bin
 .path.lib = lib\b16
-.path.obj = obj
+.path.obj = obj\b16
 .path.prg = source\rtl;source\tools;source\debug
 
 PROJECT: harbour.lib lib\b16\terminal.lib harbour.exe hbpp.exe
