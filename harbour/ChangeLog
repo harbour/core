@@ -1,3 +1,10 @@
+20000403-23:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *utils/hbdoc/genng.prg
+     utils/hbdoc/genhtm.prg
+        *Fixed handling for multi columns tables
+    *utils/hbdoc/ft_funcs.prg
+        +GetNumberofTableItems() added to count the number of item of a table
+
 20000404-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbpp.h
