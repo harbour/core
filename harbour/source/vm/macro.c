@@ -412,6 +412,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem )
       struMacro.Flags      = HB_MACRO_GEN_PUSH;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
+      struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
@@ -442,6 +443,7 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
       struMacro.Flags      = HB_MACRO_GEN_POP;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
+      struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
@@ -511,6 +513,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       struMacro.Flags      = iFlag;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
+      struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
       hb_xfree( szString );
       struMacro.string = NULL;
@@ -537,6 +540,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
+      struMacro.status     = HB_MACRO_CONT;
       iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
@@ -564,7 +568,8 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
    pMacro->Flags = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH;
    pMacro->bShortCuts = hb_comp_bShortCuts;
-   pMacro->uiNameLen = HB_SYMBOL_NAME_LEN;
+   pMacro->uiNameLen  = HB_SYMBOL_NAME_LEN;
+   pMacro->status     = HB_MACRO_CONT;
    iStatus = hb_macroParse( pMacro, szString );
    if( ! ( iStatus == HB_MACRO_OK && ( pMacro->status & HB_MACRO_CONT ) ) )
    {
