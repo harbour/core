@@ -1,3 +1,15 @@
+2000-06-26 19:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+        * added declaration of hb_gcLockItem()/hb_gcUnlockItem()
+        
+    *source/vm/garbage.c
+        * added definition of hb_gcLockItem()/hb_gcUnlockItem()
+        
+    *source/vm/classes.c
+        * all arrays created internally for CLASS structure are now locked
+        to prevent premature deallocation by the garbage collector
+
 2000-06-26 20:11 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcomp.c
      ! Fixed line number to ignore empty lines in #include files,when resuming parent file.

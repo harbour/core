@@ -145,6 +145,22 @@ void *hb_gcUnlock( void *pBlock )
    return pBlock;
 }
 
+void hb_gcLockItem( HB_ITEM_PTR pItem )
+{
+   if( HB_IS_ARRAY( pItem ) )
+      hb_gcLock( pItem->item.asArray.value );
+   else if( HB_IS_BLOCK( pItem ) )
+      hb_gcLock( pItem->item.asBlock.value );
+}
+
+void hb_gcUnlockItem( HB_ITEM_PTR pItem )
+{
+   if( HB_IS_ARRAY( pItem ) )
+      hb_gcUnlock( pItem->item.asArray.value );
+   else if( HB_IS_BLOCK( pItem ) )
+      hb_gcUnlock( pItem->item.asBlock.value );
+}
+
 void hb_gcCollect( void )
 {
    if( s_pCurrBlock && !s_bCollecting )

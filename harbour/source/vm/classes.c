@@ -290,11 +290,16 @@ static void hb_clsRelease( PCLASS pClass )
 
    for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
       if( pMeth->pInitValue )
+      {
+         hb_gcUnlockItem( pMeth->pInitValue );
          hb_itemRelease( pMeth->pInitValue );
+      }
 
    hb_xfree( pClass->szName );
    hb_xfree( pClass->pMethods );
 
+   hb_gcUnlockItem( pClass->pClassDatas );
+   hb_gcUnlockItem( pClass->pInlines );
    hb_itemRelease( pClass->pClassDatas );
    hb_itemRelease( pClass->pInlines );
 }
@@ -721,6 +726,11 @@ HB_FUNC( __CLSADDMSG )
                      pNewMeth->pInitValue = hb_itemNew( NULL );
                      hb_itemCopy( pNewMeth->pInitValue, pInit );
                   }
+                  /* The init value is not stored inside of any harbour
+                     variable then it can be deallocated prematurely by the GC
+                     We have to lock the item with the value to prevent it.
+                  */
+                  hb_gcLockItem( pNewMeth->pInitValue );
                }
             }
             break;
@@ -748,6 +758,11 @@ HB_FUNC( __CLSADDMSG )
                      pNewMeth->pInitValue = hb_itemNew( NULL );
                      hb_itemCopy( pNewMeth->pInitValue, pInit );
                   }
+                  /* The init value is not stored inside of any harbour
+                     variable then it can be deallocated prematurely by the GC
+                     We have to lock the item with the value to prevent it.
+                  */
+                  hb_gcLockItem( pNewMeth->pInitValue );
                }
             }
 
@@ -761,8 +776,6 @@ HB_FUNC( __CLSADDMSG )
             }
             else
             {
-               PHB_ITEM pTmpItemPtr;
-
                if( pMessage->pSymbol->szName[ 0 ] == '_' )
                 {
                   pNewMeth->pFunction = hb___msgSetShrData;
@@ -889,8 +902,10 @@ HB_FUNC( __CLSNEW )
 
             /* CLASS DATA Not Shared ( new array, new value ) */
             pNewCls->pClassDatas  = hb_arrayClone( pSprCls->pClassDatas );
+            hb_gcLockItem( pNewCls->pClassDatas );
 
             pNewCls->pInlines = hb_arrayClone( pSprCls->pInlines );
+            hb_gcLockItem( pNewCls->pInlines );
 
             pNewCls->uiDatasShared = pSprCls->uiDatasShared;
 
@@ -1012,6 +1027,11 @@ HB_FUNC( __CLSNEW )
                             hb_itemCopy( pInitValue, pSprCls->pMethods[ ui ].pInitValue );
                             pNewCls->pMethods[ uiAt + uiBucket ].pInitValue = pInitValue;
                          }
+                         /* The init value is not stored inside of any harbour
+                          * variable then it can be deallocated prematurely by the GC
+                          * We have to lock the item with the value to prevent it.
+                          */
+                         hb_gcLockItem( pNewCls->pMethods[ uiAt + uiBucket ].pInitValue );
                       }
                       break;
                    }
@@ -1035,7 +1055,9 @@ HB_FUNC( __CLSNEW )
       pNewCls->uiHashKey    = HASH_KEY;
 
       pNewCls->pClassDatas  = hb_itemArrayNew( 0 );
+      hb_gcLockItem( pNewCls->pClassDatas );
       pNewCls->pInlines     = hb_itemArrayNew( 0 );
+      hb_gcLockItem( pNewCls->pInlines );
       pNewCls->pFunError    = NULL;
    }
    hb_itemRelease( pahSuper );
