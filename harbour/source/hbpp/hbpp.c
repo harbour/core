@@ -1022,7 +1022,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
   {
     if ( numBrackets )
     {
-//      SearnRep( exppatt,"",0,ptro,lenres);
+/*      SearnRep( exppatt,"",0,ptro,lenres); */
       return 0;
     }
   }
@@ -1044,7 +1044,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
       {
         if ( numBrackets )
         {
-//          SearnRep( exppatt,"",0,ptro,lenres);
+/*          SearnRep( exppatt,"",0,ptro,lenres); */
           return 0;
         }
       }
@@ -1063,7 +1063,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
       {
         if ( numBrackets )
         {
-//          SearnRep( exppatt,"",0,ptro,lenres);
+/*          SearnRep( exppatt,"",0,ptro,lenres); */
           return 0;
         }
       }
@@ -1073,7 +1073,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
    {
      if ( numBrackets )
      {
-//       SearnRep( exppatt,"",0,ptro,lenres);
+/*       SearnRep( exppatt,"",0,ptro,lenres); */
        return 0;
      }
      else lenreal = 0;
@@ -1137,7 +1137,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
    {  /* If restricted match marker doesn't correspond to real parameter */
       if ( numBrackets )
       {
-//        SearnRep( exppatt,"",0,ptro,lenres);
+/*        SearnRep( exppatt,"",0,ptro,lenres); */
         return 0;
       }
       else return 0;

@@ -1,3 +1,9 @@
+19990926-19:22 GMT+1 Victor Szel <info@szelvesz.hu>
+  * funclist.txt
+    + __ACCEPTSTR marked ready.
+  * source/hbpp/hbpp.c
+    ! Non-ANSI (//) comments changed to /**/
+
 19990926-17:22 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/asort.prg
     ! The block return type detection code now calls the block with 

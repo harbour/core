@@ -261,7 +261,7 @@ RDDNAME                 ;R;
 RDDSETDEFAULT           ;R;
 ; INTERNAL FUNCTIONS
 __Accept                ;R;
-__AcceptStr             ;N;
+__AcceptStr             ;R;
 __AtPrompt              ;R;
 __CopyFile              ;R;
 __dbApp                 ;N;
