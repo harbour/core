@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * comment this line pDstObject->item.asArray.value->puiClsTree = NULL;
+    * Fixed hb_arrayClone()
+    + Add line 777, was token from __objClone() and xHarbour.
+      Thanks, Ron.
+
 2002-03-01 15:00 UTC-0500 Jorge A. Giraldo <jorgeagiraldo@emtelsa.multi.net.co>
   * contrib\delphi\hbdll\bld_sdll.bat
     * -b option ommited, people expect a DLL without DOS debugger

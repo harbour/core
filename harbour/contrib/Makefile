@@ -7,7 +7,6 @@ ROOT = ../
 ifeq ($(HB_ARCHITECTURE),w32)
 
 DIRS=\
-	apollo \
 	htmllib \
 	libct \
 	libgt \
