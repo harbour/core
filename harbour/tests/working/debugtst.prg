@@ -297,11 +297,22 @@ return nil
 //
 // If we do not want 'cName' duplicated we have to use aoGet :
 //
-// aNewExcept := aAdd( oSource:aExcept(), "cName" )
-//                              /* Add cName to exception list               */
+// aNewExcept := aClone( oSource:aExcept() )
+// aAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
 // oTarget:Transfer( aoGet( oSource, aNewExcept ) )
 //                              /* Get DATA from oSource with new exceptions */
 //                              /* Transfer DATA to oTarget                  */
+//
+// To set two DATA of oTarget :
+//
+// oTarget:Transfer( { "nLeft", 10 }, { "nRight", 5 } )
+//
+// or :
+//
+// aCollect := {}
+// aAdd( aCollect, { "nLeft" , 10 } )
+// aAdd( aCollect, { "nRight", 5  } )
+// oTarget:Transfer( aCollect )
 //
 // Copy oSource to a memo field :
 //
