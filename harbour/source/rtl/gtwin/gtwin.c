@@ -449,6 +449,13 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      #endif
                   }
                }
+               else if( ch == 9 && wKey == 15 && ( dwState & SHIFT_PRESSED ) )
+               {
+                  #ifdef HB_DEBUG_KEYBOARD
+                     fprintf( stdout, "@" );
+                  #endif
+                  ch = wKey + 256;   /* Shift+TAB */
+               }
             }
             if( extended )
             {

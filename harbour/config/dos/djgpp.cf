@@ -21,6 +21,7 @@ endif
 
 LD = gcc
 LD_OUT = -o
+LDFLAGS = -lm
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
