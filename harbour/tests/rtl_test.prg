@@ -1709,6 +1709,23 @@ STATIC FUNCTION Main_MISC()
 
    TEST_LINE( TSTRING(1000)                   , "00:16:40" )
 
+   TEST_LINE( SoundEx()                       , "0000" )
+   TEST_LINE( SoundEx( 10 )                   , "0000" )
+   TEST_LINE( SoundEx( @scString )            , "H400" )
+   TEST_LINE( SoundEx( "" )                   , "0000" )
+   TEST_LINE( SoundEx( "Hm" )                 , "H500" )
+   TEST_LINE( SoundEx( "Smith" )              , "S530" )
+   TEST_LINE( SoundEx( "Harbour" )            , "H616" )
+   TEST_LINE( SoundEx( "HARBOUR" )            , "H616" )
+   TEST_LINE( SoundEx( "Harpour" )            , "H616" )
+   TEST_LINE( SoundEx( "Hello" )              , "H400" )
+   TEST_LINE( SoundEx( "Aardwaark" )          , "A636" )
+   TEST_LINE( SoundEx( "Ardwark" )            , "A636" )
+   TEST_LINE( SoundEx( "Bold" )               , "B430" )
+   TEST_LINE( SoundEx( "Cold" )               , "C430" )
+   TEST_LINE( SoundEx( "Colt" )               , "C430" )
+   TEST_LINE( SoundEx( "C"+Chr(0)+"olt" )     , "C430" )
+
    /* FOR/NEXT */
 
    TEST_LINE( TFORNEXT( .F., .T., NIL )       , "E BASE 1086 Argument error ++ F:S"       )

@@ -108,8 +108,6 @@ FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
 FUNCTION __SetFormat()     ; RETURN NIL
 
-FUNCTION SoundEx()         ; RETURN ""
-
 FUNCTION _NatSortVer()     ; RETURN ""
 FUNCTION IsAffirm()        ; RETURN .F.
 FUNCTION IsNegative()      ; RETURN .F.

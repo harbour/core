@@ -235,7 +235,7 @@ SETMODE                 ;S;
 SETPOS                  ;R;
 SETPOSBS                ;R;
 SETPRC                  ;R;
-SOUNDEX                 ;S;
+SOUNDEX                 ;R;
 SPACE                   ;R;
 SQRT                    ;R;
 STR                     ;R;

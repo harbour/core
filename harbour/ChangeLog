@@ -1,3 +1,16 @@
+19991018-09:21 GMT+1 Victor Szel <info@szelvesz.hu>
+   + source/rtl/soundex.c
+     source/rtl/Makefile
+     source/rtl/dummy.prg
+     source/rtl/rtl_test.prg
+     doc/funclist.txt
+     + SOUNDEX() and related regression tests added.
+       WARNING ! Please add new file to non-GNU make systems.
+   - source/rtl/afields.prg (removed)
+     source/rtl/Makefile
+     - AFIELDS() removed from the RTL, since it was already implemented in 
+       the RDD.
+
 19991018-08:55 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rtl/dummy.prg
     - __dbSetLocate() and __dbSetFound() functions removed.

@@ -36,6 +36,7 @@ C_SOURCES=\
         samples.c \
         set.c \
         setcolor.c \
+        soundex.c \
         strings.c \
         tone.c \
         transfrm.c \
@@ -47,7 +48,6 @@ C_SOURCES=\
 PRG_SOURCES=\
         achoice.prg \
         adir.prg \
-        afields.prg \
         alert.prg \
         asort.prg \
         browdb.prg \
