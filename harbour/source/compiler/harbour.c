@@ -2820,8 +2820,8 @@ void hb_compCodeBlockEnd( void )
    USHORT wPos;
    PVAR pVar, pFree;
 
-   if( hb_comp_iJumpOptimize && 
-       hb_comp_functions.pLast && 
+   if( hb_comp_iJumpOptimize &&
+       hb_comp_functions.pLast &&
        hb_comp_functions.pLast->iNOOPs )
       hb_compOptimizeJumps();
 
@@ -2943,9 +2943,7 @@ static void hb_compGenOutput( int iLanguage )
          break;
 
       case LANG_OBJ32:
-#ifdef HARBOUR_OBJ_GENERATION
          hb_compGenObj32( hb_comp_pFileName );
-#endif
          break;
 
       case LANG_JAVA:

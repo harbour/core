@@ -51,7 +51,6 @@ void hb_compGenJava( PHB_FNAME pFileName )
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-   USHORT wLen, wVar;
    ULONG lPCodePos;
    LONG lSymbols;
    ULONG ulCodeLength;

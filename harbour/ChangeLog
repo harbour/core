@@ -1,3 +1,20 @@
+20000420-23:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/cmdcheck.c
+     - Removed #ifdef HARBOUR_OBJ_GENERATION
+
+   * source/compiler/genhrb.c
+     - Removed unused vars wVar and wLen.
+
+   * source/compiler/genjava.c
+     - Removed unused vars wVar and wLen.
+
+   * source/compiler/genobj32.c
+     - Removed #ifdef HARBOUR_OBJ_GENERATION
+
+   * source/compiler/harbour.c
+     - Removed #ifdef HARBOUR_OBJ_GENERATION
+
 20000420-20:10 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c
