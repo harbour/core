@@ -59,10 +59,11 @@
 /* returns the numeric value of a character string representation of a number */
 double hb_strVal( const char * szText, ULONG ulLen )
 {
-   double dValue = 0.0;
+   long double ldValue = 0.0;
    ULONG ulPos;
    ULONG ulDecPos = 0;
    BOOL bNegative = FALSE;
+   long double ldScale = 0.1L;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s, %d)", szText, ulLen));
 
@@ -92,19 +93,24 @@ double hb_strVal( const char * szText, ULONG ulLen )
       if( szText[ ulPos ] == '.' && ulDecPos == 0 )
       {
          ulDecPos++;
+         ldScale = 0.1L;
       }
       else if( szText[ ulPos ] >= '0' && szText[ ulPos ] <= '9' )
       {
          if( ulDecPos )
-            dValue += ( ( double ) ( szText[ ulPos ] - '0' ) ) / pow( 10.0, ( double ) ulDecPos++ );
+         {
+            ldValue += ldScale * ( long double )( szText[ ulPos ] - '0' );
+            ldScale *= 0.1L;
+         }
          else
-            dValue = ( dValue * 10 ) + ( ( double ) ( szText[ ulPos ] - '0' ) );
+            ldValue = ( ldValue * 10.0L ) + ( long double )( szText[ ulPos ] - '0' );
       }
       else
          break;
    }
 
-   return bNegative && dValue != 0.0 ? -dValue : dValue;
+
+   return ( double )( bNegative && ldValue != 0.0L ? -ldValue : ldValue );
 }
 
 /* returns the numeric value of a character string representation of a number  */
@@ -141,3 +147,4 @@ HB_FUNC( VAL )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, "VAL", 1, hb_paramError( 1 ) );
 }
+
