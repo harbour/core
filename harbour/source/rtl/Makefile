@@ -36,6 +36,7 @@ C_SOURCES=\
 	gete.c       \
 	gt.c         \
 	gtapi.c      \
+	gtapiu.c     \
 	gx.c         \
 	hardcr.c     \
 	inkey.c      \

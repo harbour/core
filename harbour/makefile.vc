@@ -221,6 +221,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gete.obj \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
+   $(OBJ_DIR)\gtapiu.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\inkey.obj \

@@ -72,4 +72,26 @@
 #define _gtWriteAt      hb_gtWriteAt
 #define _gtWriteCon     hb_gtWriteCon
 
+/* Undocumented part */
+
+#define _gtInit         hb_gtInit
+#define _gtExit         hb_gtExit
+
+#define _gtWCreate      hb_gtWCreate
+#define _gtWDestroy     hb_gtWDestroy
+#define _gtWFlash       hb_gtWFlash
+#define _gtWApp         hb_gtWApp
+#define _gtWCurrent     hb_gtWCurrent
+#define _gtWPos         hb_gtWPos
+#define _gtWVis         hb_gtWVis
+
+#define _gtSLR          hb_gtSLR
+#define _gtModalRead    hb_gtModalRead
+#define _gtBeginWrite   hb_gtBeginWrite
+#define _gtEndWrite     hb_gtEndWrite
+#define _gtFlushCursor  hb_gtFlushCursor
+#define _gtSetColor     hb_gtSetColor
+#define _gtGetColor     hb_gtGetColor
+#define _gtSetBorder    hb_gtSetBorder
+
 #endif /* _GT_API */

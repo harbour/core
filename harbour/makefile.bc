@@ -196,6 +196,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\gete.obj \
    $(OBJ_DIR)\gt.obj \
    $(OBJ_DIR)\gtapi.obj \
+   $(OBJ_DIR)\gtapiu.obj \
    $(OBJ_DIR)\gx.obj \
    $(OBJ_DIR)\hardcr.obj \
    $(OBJ_DIR)\inkey.obj \
@@ -1179,6 +1180,10 @@ $(OBJ_DIR)\gt.obj : $(RTL_DIR)\gt.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\gtapiu.obj : $(RTL_DIR)\gtapiu.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

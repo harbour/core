@@ -223,21 +223,19 @@ int main( int argc, char * argv[] )
 
    for( i = 1; i < argc; i++ )
    {
-      if( !HB_ISOPTSEP( argv[ i ][ 0 ] ) )
+      if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
       {
-         if( !bAnyFiles )
-         {
+         if( ! bAnyFiles )
             bAnyFiles = TRUE;
-         }
 
-         hb_compCompile( argv[i], argc, argv );
+         iStatus = hb_compCompile( argv[ i ], argc, argv );
 
          if( iStatus != EXIT_SUCCESS )
             break;
       }
    }
 
-   if( !bAnyFiles )
+   if( ! bAnyFiles )
    {
       hb_compPrintUsage( argv[ 0 ] );
       iStatus = EXIT_FAILURE;
@@ -3758,9 +3756,7 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
                   printf( "Compiling module '%s'...\n", szFileName );
             }
 
-            #if defined( HB_C52_STRICT )
-               hb_pp_Init();
-            #endif
+            hb_pp_Init();
 
             /*
             yyrestart( yyin );
@@ -3770,15 +3766,15 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
             if( hb_comp_bStartProc )
                hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
 
-           {
-              int i = hb_comp_iExitLevel ;
-              BOOL b = hb_comp_bAnyWarning;
-
-              yyparse();
-
-              hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
-              hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
-           }
+            {
+               int i = hb_comp_iExitLevel ;
+               BOOL b = hb_comp_bAnyWarning;
+          
+               yyparse();
+          
+               hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
+               hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
+            }
 
             /* Close processed file (it is opened in hb_compInclude() function ) */
             fclose( yyin );

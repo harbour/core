@@ -1,3 +1,26 @@
+2000-06-19 10:11 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapigt.h
+   * include/gt.api
+   + source/rtl/gtapiu.c
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     + Added all the missing undocumented GT API calls found in CA-Clipper 5.x.
+       The implementation is still missing, but now there's a dummy skeleton 
+       for them.
+
+   * source/compiler/harbour.c
+     ! Fixed a bug, where the status returned from hb_compCompile() was 
+       ignored.
+     * The PP reinitialization turned on even on non-STRICT mode, to be 100%
+       Clipper compatible.
+
+2000-06-17 20:34 UTC-0500 April White <awhite@user.rose.com>
+
+   * include/hbapi.h
+     * forgot an end of comment tag
+
 2000-06-17 19:43 UTC+0500 April White <awhite@user.rose.com>
 
    * include/hbapi.h

@@ -150,6 +150,30 @@ extern USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pbyStr, ULONG ulL
 extern USHORT hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen );
 extern char * hb_gtVersion( void );
 
+/* Undocumented CA-Clipper 5.x GT API calls */
+
+#define HB_GT_RECT void
+#define HB_GT_WND void
+#define HB_GT_RGB void
+#define HB_GT_SLR void
+
+extern void   hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd );
+extern void   hb_gtWDestroy( HB_GT_WND * wnd );
+extern BOOL   hb_gtWFlash( void );
+extern void   hb_gtWApp( HB_GT_WND ** wnd );
+extern void   hb_gtWCurrent( HB_GT_WND * wnd );
+extern void   hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect );
+extern BOOL   hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus );
+
+extern USHORT hb_gtSLR( HB_GT_SLR * pSLR ); /* System Level Request */
+extern USHORT hb_gtModalRead( void * );
+extern USHORT hb_gtBeginWrite( void );
+extern USHORT hb_gtEndWrite( void );
+extern USHORT hb_gtFlushCursor( void );
+extern USHORT hb_gtSetColor( HB_GT_RGB * color );
+extern USHORT hb_gtGetColor( HB_GT_RGB * color );
+extern USHORT hb_gtSetBorder( HB_GT_RGB * color );
+
 /* Private interface listed below. these are common to all platforms */
 
 extern void   hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
