@@ -24,6 +24,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    LOCAL nNumCols                          // Number of columns in the window
    LOCAL nNumRows                          // Number of rows in the window
+   LOCAL nRowsClr                          // Number of rows to clear
    LOCAL acCopy    := {}                   // A padded copy of the items
    LOCAL alSelect                          // Select permission
    LOCAL nNewPos   := 0                    // The next item to be selected
@@ -95,7 +96,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nAtTop := Max( 1, nItems - nNumrows + 1 )
       ENDIF
 
-      DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect )
+      DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nItems )
 
    ENDIF
 
@@ -116,6 +117,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             nKey := 0
          ENDIF
 
+         nRowsClr := Min( nNumRows, nItems )
          nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
 
          IF nMode == AC_NOITEM
@@ -142,7 +144,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          ENDIF
 
-         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect )
+         DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nRowsClr )
 
       CASE ( nKey == K_ESC .OR. nMode == AC_NOITEM ) .AND. !lUserFunc
 
@@ -286,7 +288,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect )
             ENDIF
          ELSE
-            nNewPos := nAtTop + nNumRows - 1
+            nNewPos := Min( nAtTop + nNumRows - 1, nItems )
             DO WHILE !Eval( bSelect, alSelect[ nNewPos ] )
                nNewPos--
             ENDDO
@@ -453,6 +455,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          IF nPos > 0
 
+            nRowsClr := Min( nNumRows, nItems )
             nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
 
             IF nMode == AC_NOITEM
@@ -479,7 +482,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
             ENDIF
 
-            DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect )
+            DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nRowsClr )
          ENDIF
       ENDIF
 
@@ -489,7 +492,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    RETURN nPos
 
-STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nArrLen, bSelect )
+STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nArrLen, bSelect, nRowsClr )
 
    LOCAL nCntr
    LOCAL nRow                              // Screen row
@@ -497,9 +500,11 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
    LOCAL nSaveRow := Row()                 // Position at start of routine
    LOCAL nSaveCol := Col()                 // Position at start of routine
 
+   Default nRowsClr to nNumRows
+
    DispBegin()
 
-   FOR nCntr := 1 TO nNumRows
+   FOR nCntr := 1 TO Min( nNumRows, nRowsClr )
 
       nRow   := nTop + nCntr - 1
       nIndex := nCntr + nAtTop - 1
