@@ -84,6 +84,7 @@ CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
 
 #
 # Macros to access our library names

@@ -83,6 +83,7 @@ CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
 
 #
 # Macros to access our library names
@@ -650,7 +651,7 @@ all: \
 
 $(HBPP_EXE) : \
    $(PP_DIR)\stdalone\hbpp.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(HBPP_EXE) /link $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(HBPP_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
 
 #
 # HBRUN.EXE rules
@@ -660,7 +661,7 @@ $(HBRUN_EXE) : \
    $(HBRUN_DIR)\hbrun.prg \
    $(HBRUN_DIR)\exttools.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\exttools.c -o $(HBRUN_EXE) /link $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\exttools.c -o $(HBRUN_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
 # HBTEST.EXE rules
@@ -679,7 +680,7 @@ $(HBTEST_EXE) : \
    $(HBTEST_DIR)\rt_stra.prg \
    $(HBTEST_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_hvma.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_stra.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LIBS)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_hvma.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_stra.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LDFLAGS) $(LIBS)
 
 #
 # HBDOC.EXE rules
@@ -703,7 +704,7 @@ $(HBDOC_EXE) : \
    $(HBDOC_DIR)\ffile1.prg \
    $(HBDOC_DIR)\ft_funcs.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c $(OBJ_DIR)\html.c $(OBJ_DIR)\ng.c $(OBJ_DIR)\os2.c $(OBJ_DIR)\rtf.c $(OBJ_DIR)\troff.c $(OBJ_DIR)\fclass1.c $(OBJ_DIR)\ffile1.c $(OBJ_DIR)\ft_funcs.c -o $(HBDOC_EXE) /link $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c $(OBJ_DIR)\html.c $(OBJ_DIR)\ng.c $(OBJ_DIR)\os2.c $(OBJ_DIR)\rtf.c $(OBJ_DIR)\troff.c $(OBJ_DIR)\fclass1.c $(OBJ_DIR)\ffile1.c $(OBJ_DIR)\ft_funcs.c -o $(HBDOC_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
 # HARBOUR.EXE rules
@@ -728,7 +729,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
    -echo. > $(OBJ_DIR)\unistd.h
-   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -del $(OBJ_DIR)\unistd.h
 
 

@@ -1,3 +1,12 @@
+20000413-04:42 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/common/hbtrace.c
+     ! Fixed a previous optimization attempt, which caused hb_tr_level() to 
+       reinit itself on every call. (10% speedup for HBTEST /ALL)
+
+   * makefile.*
+     + LDFLAGS added for MSVC and BCC
+
 20000413-02:55 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/extend.c

@@ -88,6 +88,8 @@ int hb_tr_level( void )
       char * out;
       char * env;
 
+      s_level = HB_TR_DEFAULT;
+
       out = getenv( "HB_TR_OUTPUT" );
       if( out != NULL && out[ 0 ] != '\0' )
       {
@@ -113,8 +115,6 @@ int hb_tr_level( void )
             }
          }
       }
-      else
-         s_level = HB_TR_DEFAULT;
    }
 
    return s_level;
