@@ -1,3 +1,7 @@
+19991215-13:35 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Bug fixed, reported by Victor Szel
+
 19991215-09:34 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/hbclass.ch
      * ERROR HANDLER and ON ERROR METHODs defined (they are equivalent)

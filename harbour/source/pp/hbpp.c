@@ -947,7 +947,8 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
         HB_SKIPTABSPACES( ptrmp );
         if( *ptrmp == '[' && !s_numBrackets && !strtopti )
           strtopti = ptrmp;
-        if( !s_numBrackets && strtopti && strtptri != ptri && ISNAME( *ptri ) )
+        if( !s_numBrackets && strtopti && strtptri != ptri &&
+           ( ISNAME( *ptri ) || *ptri=='&' ) )
           {
             strtptri = ptri;
             ptrmp = strtopti;
@@ -1281,7 +1282,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
 static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
 {
   int lens = 0;
-  char * sZnaki = "+-=><*/$.&:#%!^";
+  char * sZnaki = "+-=><*/$.:#%!^";
   int State;
   int StBr1 = 0, StBr2 = 0, StBr3 = 0;
   BOOL rez = FALSE;
@@ -1316,7 +1317,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
         break;
       case STATE_ID:
       case STATE_ID_END:
-        if( ( (ISNAME(**ptri) || **ptri=='\\') && State == STATE_ID_END ) ||
+        if( ( (ISNAME(**ptri) || **ptri=='\\' || **ptri=='&') && State == STATE_ID_END ) ||
              **ptri==',' || **ptri=='\'' || **ptri=='\"' || **ptri==')' )
           {
             if( **ptri == ',' )
