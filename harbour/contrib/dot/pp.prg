@@ -384,7 +384,7 @@ PROCEDURE RP_Dot()
 
    ProcessFile( "rp_dot.ch" )
 
-   ErrorBlock( {|oError| RP_Dot_Err( oError ) } )
+   ErrorBlock( {|oErr| RP_Dot_Err( oErr ) } )
 
    CLEAR SCREEN
    SET SCOREBOARD OFF
@@ -742,11 +742,11 @@ PROCEDURE PP_Run( cFile )
 
    bCompile := .T.
 
-   ErrorBlock( {|oError| RP_Comp_Err( oError ) } )
+   ErrorBlock( {|oErr| RP_Comp_Err( oErr ) } )
    ProcessFile( "rp_run.ch" )
    ProcessFile( cFile )
 
-   ErrorBlock( {|oError| RP_Run_Err( oError ) } )
+   ErrorBlock( {|oErr| RP_Run_Err( oErr ) } )
    ExecuteProcedure( s_aProcedures[1] )
 
    bCompile := .F.
@@ -771,15 +771,15 @@ RETURN
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Dot_Err( oError )
+PROCEDURE RP_Dot_Err( oErr )
 
    LOCAL Counter, xArg, sArgs := ""
 
    IF ValType( oErr:Args ) == 'A'
       sArgs := " - Arguments: "
 
-      FOR Counter := 1 TO Len( oError:Args )
-         xArg := oError:Args[Counter]
+      FOR Counter := 1 TO Len( oErr:Args )
+         xArg := oErr:Args[Counter]
 
          DO CASE
             CASE xArg == NIL
@@ -814,7 +814,7 @@ PROCEDURE RP_Dot_Err( oError )
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
 
-   Alert( "Sorry, could not execute: " + oError:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   Alert( "Sorry, could not execute: " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
 
    BREAK
 
@@ -822,15 +822,15 @@ PROCEDURE RP_Dot_Err( oError )
 
 //--------------------------------------------------------------//
 
-PROCEDURE RP_Comp_Err( oError )
+PROCEDURE RP_Comp_Err( oErr )
 
    LOCAL Counter, xArg, sArgs := ""
 
    IF ValType( oErr:Args ) == 'A'
       sArgs := " - Arguments: "
 
-      FOR Counter := 1 TO Len( oError:Args )
-         xArg := oError:Args[Counter]
+      FOR Counter := 1 TO Len( oErr:Args )
+         xArg := oErr:Args[Counter]
 
          DO CASE
             CASE xArg == NIL
@@ -865,7 +865,7 @@ PROCEDURE RP_Comp_Err( oError )
       sArgs := Left( sArgs, Len( sArgs ) -2 )
    ENDIF
 
-   Alert( "Sorry, could not compile: " + oError:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
+   Alert( "Sorry, could not compile: " + oErr:Description + sArgs + " " + ProcName(2) + '[' + Str( ProcLine(2) ) + ']')
 
    BREAK
 
