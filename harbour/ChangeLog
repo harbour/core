@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
    * tests/testpers.prg
+         Tests if the string contains a " and uses single quotes
+         instead, or use [] if it contains both.
+         Future enhancement should cover if contains all 3....
+
+   * contrib/rdd_ads/adsfunc.c
+	
 
 2002-01-24 17:53 UTC+0000 Dave Pearson <davep@davep.org>
    * include/hbpcode.h
