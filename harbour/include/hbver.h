@@ -36,6 +36,7 @@
 /*
  * ChangeLog:
  *
+ * V 1.6    Patrick Mast                Bumped build to 31 and updated date
  * V 1.5    David G. Holm               Bumped revision code to "b" and
  *                                      changed date for public release.
  * V 1.4    David G. Holm               Bumped revision code to "a" and
@@ -84,10 +85,10 @@ extern int    hb_day;
 
 #define hb_major     0       /* Major version number */
 #define hb_minor     0       /* Minor version number */
-#define hb_revision  "b"     /* Revision letter */
-#define hb_build     30      /* Build number */
-#define hb_year      1999    /* Build year */
-#define hb_month     10      /* Build month */
-#define hb_day       16      /* Build day */
+#define hb_revision  ""      /* Revision letter */
+#define hb_build     31      /* Build number */
+#define hb_year      2000    /* Build year */
+#define hb_month     01      /* Build month */
+#define hb_day       26      /* Build day */
 
 #endif /* HB_VER_H_ */
