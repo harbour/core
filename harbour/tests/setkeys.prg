@@ -3,7 +3,7 @@
 
    Harbour Project source code - http://www.Harbour-Project.org
 
-   By: A White - awhite@user.rose.com
+   By: A White - awhite@mail.rosecom.ca
 
    This file contains the Harbour function(s) that maintain the list
    of set-keys (hot-keys).

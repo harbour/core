@@ -9,7 +9,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: SET(), __SETCENTURY()
  *
- * Copyright 1999 A White <awhite@user.rose.com>
+ * Copyright 1999 A White <awhite@mail.rosecom.ca>
  *    Documentation for: SETKEY(), HB_SetKeyGet(), HB_SETKEYSAVE(),
  *                       HB_SetKeyCheck(), SET KEY
  *

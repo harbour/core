@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-22 01:29 UTC+0500 April White <awhite@mail.rosecom.ca>
+  * doc/en/set.txt
+  * source/compiler/hbusage.c
+  * source/rtl/setkey.c
+  * tests/setkeys.prg
+    ; my email address, just in case you want to find me :-)
+
 2002-07-19 09:10 UTC+0500 April White <awhite@mail.rosecom.ca>
   ! contrib/btree/hb_BTree.c
     * struct hb_btree pStrCompare function pointer changed to use the size_t
