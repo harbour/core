@@ -38,22 +38,28 @@
          redirection, and is also slower. [vszel] */
 
 #include "hbclass.ch"
+#include "common.ch"
 
 CLASS TDbMenuItem
 
    DATA nRow, nCol
    DATA cPrompt
    DATA bAction
+   DATA lChecked
 
-   METHOD New( cPrompt, bAction )
+   METHOD New( cPrompt, bAction, lChecked )
    METHOD Display( cClrText, cClrHotKey )
+   METHOD Toggle() INLINE ::lChecked := ! ::lChecked
 
 ENDCLASS
 
-METHOD New( cPrompt, bAction ) CLASS TDbMenuItem
+METHOD New( cPrompt, bAction, lChecked ) CLASS TDbMenuItem
 
-   ::cPrompt := cPrompt
-   ::bAction := bAction
+   DEFAULT lChecked TO .f.
+
+   ::cPrompt  := cPrompt
+   ::bAction  := bAction
+   ::lChecked := lChecked
 
 return Self
 
@@ -68,5 +74,6 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
      ( nAt := At( "~", ::cPrompt ) ) - 1,;
      SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
-return Self
+   DispOutAt( ::nRow, ::nCol, If( ::lChecked, Chr( 251 ), "" ), cClrText )
 
+return Self
