@@ -1,3 +1,18 @@
+2001-02-06 17:47 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/dbgtmenu.prg
+     + debugger colors selection support.
+
+   * harbour/source/debug/dbgmenu.prg
+     + call to debugger SelColors() option.
+
+   * harbour/source/debug/dbgtwin.prg
+     + debugger colors selection support.
+
+   * harbour/source/debug/debugger.prg
+     + colors selection option implemented
+
+     Notice: Not finished yet.
+
 2001-02-06 12:11 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/dbgmenu.prg
      + New CHECKED clause added on menuitems.
