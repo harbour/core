@@ -82,6 +82,8 @@
 static BOOL   s_bInit = FALSE;
 static USHORT s_uiPRow;
 static USHORT s_uiPCol;
+static SHORT  s_originalMaxRow;
+static SHORT  s_originalMaxCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
 static int    s_iFilenoStdin;
 static int    s_iFilenoStdout;
@@ -129,13 +131,20 @@ void hb_conInit( void )
    s_bInit = TRUE;
 
    hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
-
+   s_originalMaxRow = hb_gtMaxRow(); /* Save the original */
+   s_originalMaxCol = hb_gtMaxCol(); /* screen size */
    hb_setkeyInit();  /* April White, May 6, 2000 */
 }
 
 void hb_conRelease( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conRelease()"));
+
+   if( s_originalMaxRow != hb_gtMaxRow() || s_originalMaxCol != hb_gtMaxCol() )
+   {
+      /* If the program changed the screen size, restore the original */
+      hb_gtSetMode( s_originalMaxRow + 1, s_originalMaxCol + 1 );
+   }
 
    hb_fsSetDevMode( s_iFilenoStdout, FD_TEXT );
    hb_fsSetDevMode( s_iFilenoStderr, FD_TEXT );
