@@ -1,3 +1,7 @@
+19990718-18:05 CET Patrick Mast <harbour@PatrickMast.com>
+  * Release of Build #28
+  * version.h, updated build version
+
 19990718-17:33 CET Patrick Mast <harbour@PatrickMast.com>
   * /source/rtl/errorsys.prg
     changed #include "include\error.ch" back into #include "error.ch"

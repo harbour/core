@@ -29,6 +29,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.11   Patrick Mast                Bumped build to 28 and updated date
+                                        for new public release.
    V 1.10   David G. Holm               Added my email address.
    V 1.9    David G. Holm               Added Copyright and License notice.
                                         Added version history.
@@ -63,9 +65,9 @@
    #define hb_major     0       /* Major version number */
    #define hb_minor     0       /* Minor version number */
    #define hb_revision  "d"     /* Revision letter */
-   #define hb_build     27      /* Build number */
+   #define hb_build     28      /* Build number */
    #define hb_year      1999    /* Build year */
    #define hb_month     7       /* Build month */
-   #define hb_day       7       /* Build day */
+   #define hb_day       18      /* Build day */
 
 #endif /* HB_VER_H_ */
