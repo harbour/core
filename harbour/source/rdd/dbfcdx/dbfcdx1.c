@@ -4728,7 +4728,8 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
          else
          {
             SELF_GOBOTTOM( ( AREAP ) pArea );
-            return SELF_SKIPRAW( ( AREAP ) pArea, 1 );
+            /* return SELF_SKIPRAW( ( AREAP ) pArea, 1 ); */
+            return SELF_SKIP( ( AREAP ) pArea, 1 );
             /*pArea->fEof = pTag->TagEOF = TRUE; */
          }
       }

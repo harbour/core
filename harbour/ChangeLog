@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-05 21:22 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * contrib/odbc/Makefile
+   * contrib/odbc/odbc.c
+   * contrib/odbc/todbc.prg
+     * Aded support for linux to odbc library
+
 2002-02-05 15:13 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! fixed columns width handling when there are frozen columns
