@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * EVAL() functions and DO command
+ * DO command/function
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
@@ -37,6 +37,8 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
+
+/* NOTE: DO() as a function is a Harbour extension. [vszakats] */
 
 HB_FUNC( DO )
 {

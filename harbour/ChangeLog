@@ -5,6 +5,10 @@
        Note that hb_vmFunction() is still there since it's used from one 
        places in classes.c.
 
+   * source/rtl/do.c
+     ! Typo
+     + NOTE added about Harbour extension.
+
 20000502-19:12 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * makefile.vc

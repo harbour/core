@@ -163,7 +163,6 @@ static void    hb_vmPopLocal( SHORT iLocal );     /* pops the stack latest value
 static void    hb_vmPopStatic( USHORT uiStatic ); /* pops the stack latest value onto a static */
 
 /* stack management functions */
-       void    hb_stackPop( void );        /* pops an item from the stack */
 static void    hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
 static void    hb_stackFree( void );       /* releases all memory used by the stack */
 static void    hb_stackPush( void );       /* pushes an item on to the stack */
