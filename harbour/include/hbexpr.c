@@ -945,7 +945,11 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
  */
 HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR pAlias, HB_EXPR_PTR pVariable )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_ALIASVAR );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewAliasVar()"));
+
+   pExpr = hb_compExprNew( HB_ET_ALIASVAR );
 
    pExpr->value.asAlias.pAlias    = pAlias;
    pExpr->value.asAlias.pVar      = pVariable;
@@ -966,7 +970,11 @@ HB_EXPR_PTR hb_compExprNewAliasVar( HB_EXPR_PTR pAlias, HB_EXPR_PTR pVariable )
  */
 HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_ALIASEXPR );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewAliasExpr()"));
+
+   pExpr = hb_compExprNew( HB_ET_ALIASEXPR );
 
    pExpr->value.asAlias.pAlias    = pAlias;
    pExpr->value.asAlias.pExpList  = pExpList;
@@ -980,8 +988,11 @@ HB_EXPR_PTR hb_compExprNewAliasExpr( HB_EXPR_PTR pAlias, HB_EXPR_PTR pExpList )
  */
 HB_EXPR_PTR hb_compExprNewSend( HB_EXPR_PTR pObject, char * szMessage )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_SEND );
+   HB_EXPR_PTR pExpr;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewSend(%p, %s)", pObject, szMessage));
+
+   pExpr = hb_compExprNew( HB_ET_SEND );
    pExpr->value.asMessage.szMessage = szMessage;
    pExpr->value.asMessage.pObject   = pObject;
    pExpr->value.asMessage.pParms     = NULL;
@@ -1008,7 +1019,11 @@ HB_EXPR_PTR hb_compExprNewMethodCall( HB_EXPR_PTR pObject, HB_EXPR_PTR pArgList 
  */
 HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR pFirstItem )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_LIST );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewList()"));
+
+   pExpr = hb_compExprNew( HB_ET_LIST );
    pExpr->value.asList.pExprList = pFirstItem;
    return pExpr;
 }
@@ -1017,7 +1032,11 @@ HB_EXPR_PTR hb_compExprNewList( HB_EXPR_PTR pFirstItem )
  */
 HB_EXPR_PTR hb_compExprNewArgList( HB_EXPR_PTR pFirstItem )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_ARGLIST );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewArgList()"));
+
+   pExpr = hb_compExprNew( HB_ET_ARGLIST );
    pExpr->value.asList.pExprList = pFirstItem;
    return pExpr;
 }
@@ -1044,7 +1063,11 @@ HB_EXPR_PTR hb_compExprAddListExpr( HB_EXPR_PTR pList, HB_EXPR_PTR pNewItem )
 
 HB_EXPR_PTR hb_compExprNewVar( char * szName )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_VARIABLE );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewVar(%s)", szName));
+
+   pExpr = hb_compExprNew( HB_ET_VARIABLE );
    pExpr->value.asSymbol = szName;
    return pExpr;
 }
@@ -1056,8 +1079,11 @@ HB_EXPR_PTR hb_compExprNewVar( char * szName )
  */
 HB_EXPR_PTR hb_compExprNewRTVar( char * szName, HB_EXPR_PTR pMacroVar )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_RTVAR );
+   HB_EXPR_PTR pExpr;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewRTVar(%s, %p)", szName, pMacroVar));
+
+   pExpr = hb_compExprNew( HB_ET_RTVAR );
    pExpr->value.asRTVar.szName = szName;
    pExpr->value.asRTVar.pMacro = pMacroVar;
    if( pMacroVar )
@@ -1069,7 +1095,11 @@ HB_EXPR_PTR hb_compExprNewRTVar( char * szName, HB_EXPR_PTR pMacroVar )
  */
 HB_EXPR_PTR hb_compExprNewFunName( char * szName )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_FUNNAME );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunName(%s)", szName));
+
+   pExpr = hb_compExprNew( HB_ET_FUNNAME );
    pExpr->value.asSymbol = szName;
    return pExpr;
 }
@@ -1078,7 +1108,11 @@ HB_EXPR_PTR hb_compExprNewFunName( char * szName )
  */
 HB_EXPR_PTR hb_compExprNewAlias( char * szName )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_ALIAS );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewAlias(%s)", szName));
+
+   pExpr = hb_compExprNew( HB_ET_ALIAS );
    pExpr->value.asSymbol = szName;
    return pExpr;
 }
@@ -1343,7 +1377,11 @@ HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR pNegExpr )
  */
 HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_EO_ASSIGN );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprAssign()"));
+
+   pExpr = hb_compExprNew( HB_EO_ASSIGN );
    pExpr->value.asOperator.pLeft  = pLeftExpr;
    pExpr->value.asOperator.pRight = pRightExpr;
    return pExpr;
@@ -1359,7 +1397,11 @@ HB_EXPR_PTR hb_compExprAssign( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
 #ifndef HB_MACRO_SUPPORT
 HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightExpr )
 {
-   HB_EXPR_PTR pExpr = hb_compExprNew( HB_EO_ASSIGN );
+   HB_EXPR_PTR pExpr;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprAssignStatic()"));
+
+   pExpr = hb_compExprNew( HB_EO_ASSIGN );
 
    pExpr->value.asOperator.pLeft  = pLeftExpr;
    /* Try to reduce the assigned value */
@@ -1494,6 +1536,8 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr )
 #endif
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenStatement(%i)", pExpr->ExprType));
+
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
    HB_EXPR_USE( pExpr, HB_EA_STATEMENT );
    return pExpr;
@@ -1508,6 +1552,8 @@ HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR pExpr )
 #endif
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenPush(%i)", pExpr->ExprType));
+
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
    HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
    return pExpr;
@@ -1521,6 +1567,8 @@ HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR pExpr, HB_MACRO_DECL )
 HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR pExpr )
 #endif
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenPop(%i)", pExpr->ExprType));
+
    return HB_EXPR_USE( pExpr, HB_EA_POP_PCODE );
 }
 
@@ -5890,7 +5938,11 @@ static BOOL hb_compExprCheckMacroVar( char * szText )
  */
 static HB_CBVAR_PTR hb_compExprCBVarNew( char * szVarName, BYTE bType )
 {
-   HB_CBVAR_PTR pVar = ( HB_CBVAR_PTR ) HB_XGRAB( sizeof( HB_CBVAR ) );
+   HB_CBVAR_PTR pVar;
+   
+   HB_TRACE(HB_TR_DEBUG, ("hb_compExprCBVarNew(%s)", szVarName));
+
+   pVar = ( HB_CBVAR_PTR ) HB_XGRAB( sizeof( HB_CBVAR ) );
 
    pVar->szName = szVarName;
    pVar->bType  = bType;

@@ -377,8 +377,8 @@ LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
            | Statement     { $<lNumber>$ = 1; }
            ;
 
-Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
-           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; }
+Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; hb_compLinePush(); }
+           | Statements LineStat       { $<lNumber>$ += $<lNumber>2; hb_compLinePush(); }
            ;
 
 ExtList    : IdentName                      { hb_compExternAdd( $1 ); }

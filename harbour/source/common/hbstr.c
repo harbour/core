@@ -80,11 +80,10 @@ char * hb_strupr( char * pszText )
 char * hb_strdup( const char * pszText )
 {
    char * pszDup;
-   int iLen;
+   int iLen = strlen( pszText ) + 1;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s)", pszText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strdup(%s, %i)", pszText, iLen));
 
-   iLen = strlen( pszText ) + 1;
    pszDup = ( char * ) hb_xgrab( iLen );
    memcpy( pszDup, pszText, iLen );
 

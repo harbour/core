@@ -93,7 +93,7 @@ static void hb_gt_GetCursorSize( char * start, char * end );
 #endif
 #ifndef __DJGPP__
    static char FAR * scrnPtr;
-   static char FAR * scrnStealth;
+   static char FAR * scrnStealth = NULL;
    static char FAR * hb_gt_ScreenAddress( void );
 #endif
 
@@ -162,6 +162,11 @@ void hb_gt_Init( void )
 void hb_gt_Done( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
+
+#ifndef __DJGPP__
+  if( scrnStealth != ( char * ) -1 )
+     hb_xfree( scrnStealth );
+#endif
 }
 
 BOOL hb_gt_IsColor( void )

@@ -179,9 +179,16 @@ void hb_tr_trace( char * fmt, ... )
       /*
        * Reset file and line.
        */
-      hb_tr_file_ = "";
-      hb_tr_line_ = -1;
       hb_tr_level_ = -1;
+      /* NOTE: resetting file name/line numer will cause that we will unable
+       * to report the location of code that allocated unreleased memory blocks
+       * See hb_xalloc/hb_xgrab in source/rtl/fm.c
+       */
+      if( hb_tr_level() < HB_TR_DEBUG )
+      {
+         hb_tr_file_ = "";
+         hb_tr_line_ = -1;
+      }
    }
 }
 

@@ -64,7 +64,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    pMacro->length = strlen( szString );
    pMacro->pos    = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s, %i)", pMacro, szString, iFlag));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s)", pMacro, szString));
 
    /* initialize the output (pcode) buffer - it will be filled by yacc */
    pMacro->pCodeInfo = (HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
@@ -72,7 +72,7 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    pMacro->pCodeInfo->lPCodePos  = 0;
    pMacro->pCodeInfo->pLocals    = NULL;
    pMacro->pCodeInfo->pPrev      = NULL;
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s, %i)", pMacro, szString, iFlag));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s)", pMacro, szString));
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
 
    return hb_compParse( pMacro );
@@ -183,7 +183,11 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError(%p)", pMacro));
 
    if( pMacro )
+   {
+      HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError.(%s)", pMacro->string));
+      
       hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
+   }
 
    pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&" );
 
@@ -586,7 +590,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
       if( hb_macroIsIdent( szString ) )
       {
          HB_DYNS_PTR pDynSym =  hb_dynsymGet( szString );
-	 
+
          hb_stackPop();    /* remove compiled string */
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
@@ -930,6 +934,8 @@ void hb_compGenPopAliasedVar( char * szVarName,
                               char * szAlias,
                               long lWorkarea, HB_MACRO_DECL )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_compGenPopAliasedVar(%s->%s)",szAlias,szVarName));
+   
    if( bPushAliasValue )
    {
       if( szAlias )
@@ -958,7 +964,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( hb_strdup( szAlias ), HB_MACRO_PARAM );
+                  hb_compGenPushSymbol( szAlias, HB_MACRO_PARAM );
                   hb_compMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_MACRO_PARAM );
                }
             }
@@ -1023,6 +1029,8 @@ void hb_compGenPushAliasedVar( char * szVarName,
                                char * szAlias,
                                long lWorkarea, HB_MACRO_DECL )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_compGenPushAliasedVar(%s->%s)",szAlias,szVarName));
+   
    if( bPushAliasValue )
    {
       if( szAlias )
@@ -1055,7 +1063,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
                }
                else
                {  /* database alias */
-                  hb_compGenPushSymbol( hb_strdup( szAlias ), HB_MACRO_PARAM );
+                  hb_compGenPushSymbol( szAlias, HB_MACRO_PARAM );
                   hb_compMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_MACRO_PARAM );
                }
             }

@@ -1,3 +1,38 @@
+20000213-16:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	* line number opcodes are correctly generated inside IF/ENDIF,
+	WHILE/END
+	
+    *source/macro/macro.c
+	* fixed unreleased memory when database alias was used
+
+    *source/macro/macro.y
+	* fixed unreleased memory when invalid syntax was found during
+	macro string parsing
+
+    *include/hbexpr.c
+	* added more tracing information
+	
+    *source/common/hbstr.c
+	* hb_strdup() reports the length of a string in tracing info	
+
+    *source/rtl/gt/gtdos.c
+	* fixed unreleased memory block
+	
+    *include/hbtrace.h
+    *source/common/hbtrace.c
+	* added HB_TRACE_STEALTH definition to print tracing information 
+	without changing filename/linenum information
+	* hb_tr_trace() doesn't clear filename/linenum info on exit - this
+	info is used in fm.c to store the location of code that requested
+	memory allocation
+
+    *source/rtl/fm.c
+	* when HB_TR_LEVEL is set to HB_TR_DEBUG then allocated memory blocks
+	store C function name and line number instead of PRG filename/linenum
+	This allows to easy locate the source of unrealeased memory blocks
+		
 20000213-13:27 GMT+1 Victor Szakats <info@szelvesz.hu>
    ! makefile.bc
      ! Some bugs fixed related to the previous change.

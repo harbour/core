@@ -55,10 +55,6 @@
          This should be normally turned off in a final release */
 #define HB_FM_STATISTICS
 
-#if defined(HB_FM_STATISTICS) && !defined(HB_TR_LEVEL)
-   #define HB_TR_LEVEL HB_TR_ERROR
-#endif
-
 /* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
@@ -70,6 +66,16 @@
 #include "extend.h"
 #include "errorapi.h"
 #include "hbmemory.ch"
+
+#if defined(HB_FM_STATISTICS) && !defined(HB_TR_LEVEL)
+   #define HB_TR_LEVEL HB_TR_ERROR
+#endif
+
+//#if HB_TR_LEVEL >= HB_TR_DEBUG
+//extern char * hb_tr_file_;
+//extern int hb_tr_line_;
+//#endif
+
 
 #ifdef HB_FM_STATISTICS
 
@@ -101,7 +107,10 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
    void * pMem;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
+   /* NOTE: we cannot use here HB_TRACE because it will overwrite the
+    * function name/line number of code which called hb_xalloc/hb_xgrab
+    */
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
 
    pMem = malloc( ulSize + sizeof( HB_MEMINFO ) );
 
@@ -123,16 +132,30 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 
    ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
-   if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
+
+   if( hb_tr_level() >= HB_TR_DEBUG )
    {
-      ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
-      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
-              hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+      /* NOTE: PRG line number/procname is not very useful during hunting
+      * for memory leaks - this is why we are using the previously stored
+      * function/line info - this is a location of code that called
+      * hb_xalloc/hb_xgrab
+      */
+      ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_tr_line_; /* C line number */
+      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName, hb_tr_file_ );
    }
    else
    {
-      ( ( PHB_MEMINFO ) pMem )->uiProcLine = 0; /* PRG line number */
-      ( ( PHB_MEMINFO ) pMem )->szProcName[ 0 ] = '\0'; /* PRG ProcName */
+      if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
+      {
+         ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
+         strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
+               hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+      }
+      else
+      {
+         ( ( PHB_MEMINFO ) pMem )->uiProcLine = 0; /* PRG line number */
+         ( ( PHB_MEMINFO ) pMem )->szProcName[ 0 ] = '\0'; /* PRG ProcName */
+      }
    }
 
    s_lMemoryConsumed    += ulSize;
@@ -157,7 +180,10 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 {
    void * pMem;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
+   /* NOTE: we cannot use here HB_TRACE because it will overwrite the
+    * function name/line number of code which called hb_xalloc/hb_xgrab
+    */
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
 #ifdef HB_FM_STATISTICS
 
@@ -181,16 +207,30 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
    ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
-   if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
+
+   if( hb_tr_level() >= HB_TR_DEBUG )
    {
-      ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
-      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
-              hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+      /* NOTE: PRG line number/procname is not very useful during hunting
+      * for memory leaks - this is why we are using the previously stored
+      * function/line info - this is a location of code that called
+      * hb_xalloc/hb_xgrab
+      */
+      ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_tr_line_; /* C line number */
+      strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName, hb_tr_file_ );
    }
    else
    {
-      ( ( PHB_MEMINFO ) pMem )->uiProcLine = 0; /* PRG line number */
-      ( ( PHB_MEMINFO ) pMem )->szProcName[ 0 ] = '\0'; /* PRG ProcName */
+      if( hb_stack.pItems && ( hb_stack.pBase != hb_stack.pItems ) )
+      {
+         ( ( PHB_MEMINFO ) pMem )->uiProcLine = hb_stack.pBase->item.asSymbol.lineno; /* PRG line number */
+         strcpy( ( ( PHB_MEMINFO ) pMem )->szProcName,
+               hb_stack.pBase->item.asSymbol.value->szName ); /* PRG ProcName */
+      }
+      else
+      {
+         ( ( PHB_MEMINFO ) pMem )->uiProcLine = 0; /* PRG line number */
+         ( ( PHB_MEMINFO ) pMem )->szProcName[ 0 ] = '\0'; /* PRG ProcName */
+      }
    }
 
    s_lMemoryConsumed    += ulSize;
@@ -221,7 +261,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    PHB_MEMINFO pMemBlock;
    ULONG ulMemSize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
    if( ! pMem )
       hb_errInternal( 9999, "hb_xrealloc called with a NULL pointer", NULL, NULL );
@@ -276,7 +316,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 {
 #ifdef HB_FM_STATISTICS
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
+   HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
    if( pMem )
    {
