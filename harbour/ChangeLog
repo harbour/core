@@ -1,3 +1,19 @@
+2000-06-24 22:10 GMT -3 Luiz Rafael Culik <Culik@sl.conex.net>
++contrib/samples/makefile.bc    
+    *Makefile for samples.lib for borland compilers
+
+*contrib/hbzlib/makefile.bc
+    *Small changes
+
+*contrib/hbzlib/zlibapi.c
+    %some enhacements to hb___CompressMultipleFile()
+
+*contrib/hbzlib/test.prg    
+    *added test to demostrate the changes
+
+*contrib/hbzlib/doc/zip.txt
+    *Small changes to reflect the function changes
+
 2000-06-24 11:42 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * include/hbclass.ch
      - Uncommented the VO #xtranslate as they do work correctly.
