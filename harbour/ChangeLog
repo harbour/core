@@ -1,3 +1,6 @@
+2001-05-16 08:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/checks.prg
+      updated to the new licence  
 2001-05-16 08:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *make_b32.bat
     b32_slex.bat
