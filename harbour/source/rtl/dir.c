@@ -13,6 +13,10 @@
  *                             been requested.
  *
  */
+#if defined(__IBMCPP__)
+   #define INCL_DOSFILEMGR
+   #define INCL_DOSERRORS
+#endif
 
 #include <hbsetup.h>
 #include <extend.h>
@@ -56,6 +60,20 @@
   #endif
 
   #define _chmod chmod
+#endif
+
+#if defined(__IBMCPP__)
+  #include <sys/stat.h>
+//  #include <share.h>
+//  #include <fcntl.h>
+//  #include <io.h>
+//  #include <errno.h>
+//  #include <direct.h>
+  #include <time.h>
+
+  #if !defined(HAVE_POSIX_IO)
+  #define HAVE_POSIX_IO
+  #endif
 #endif
 
 #if defined(__BORLANDC__)
@@ -133,6 +151,12 @@ HARBOUR HB_DIRECTORY( void )
 #if defined(_MSC_VER )
    struct _finddata_t entry;
    long hFile;
+#elif defined(__IBMCPP__)
+   FILEFINDBUF3 entry;
+   HDIR         hFind = HDIR_CREATE;
+   ULONG        fileTypes = FILE_ARCHIVED | FILE_DIRECTORY | FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY;
+   ULONG        findSize = sizeof( entry );
+   ULONG        findCount = 1;
 #else
    struct dirent *entry;
    DIR  * dir;
@@ -237,7 +261,14 @@ HARBOUR HB_DIRECTORY( void )
     do
     {
       strcpy(string,entry.name);
-
+#elif defined(__IBMCPP__)
+   strcpy(string,dirname);
+   strcat(string,pattern);
+   if( DosFindFirst( string, &hFind, fileTypes, &entry, findSize, &findCount, FIL_STANDARD ) == NO_ERROR && findCount > 0 )
+   {
+    do
+    {
+      strcpy(string,entry.achName);
 #else
    dir = opendir( dirname );
    if (NULL == dir)
@@ -286,6 +317,8 @@ HARBOUR HB_DIRECTORY( void )
 
 #if defined(_MSC_VER)
          strcpy(filename,entry.name);
+#elif defined(__IBMCPP__)
+         strcpy( filename, entry.achName );
 #else
          strcpy(filename,entry->d_name);
 #endif
@@ -339,7 +372,20 @@ HARBOUR HB_DIRECTORY( void )
 	 if( S_ISSOCK(statbuf.st_mode) )
 	   strcat( aatrib, "K" );
 #else
-      #ifdef _MSC_VER
+   #if defined(__IBMCPP__)
+         attrib = entry.attrFile;
+         if( attrib & FILE_ARCHIVED )
+            strcat( aatrib, "A" );
+         if( attrib & FILE_DIRECTORY )
+            strcat( aatrib, "D" );
+         if( attrib & FILE_HIDDEN )
+            strcat( aatrib, "H" );
+         if( attrib & FILE_READONLY )
+            strcat( aatrib, "R" );
+         if( attrib & FILE_SYSTEM )
+            strcat( aatrib, "S" );
+   #else
+      #if defined(_MSC_VER)
          attrib = entry.attrib;
       #else
          attrib = _chmod(fullfile,0);
@@ -378,7 +424,7 @@ HARBOUR HB_DIRECTORY( void )
             strcat(aatrib,"O");
          if (attrib & FA_NOTINDEXED)
             strcat(aatrib,"X");
-
+   #endif
 #endif
          /* TODO: attribute match rtn */
          pos = string;
@@ -421,8 +467,10 @@ HARBOUR HB_DIRECTORY( void )
    }
 #if defined(_MSC_VER)
    while( _findnext( hFile, &entry ) == 0 );
-
    _findclose( hFile );
+#elif defined(__IBMCPP__)
+   while( DosFindNext (hFind, &entry, findSize, &findCount) == NO_ERROR && findCount > 0 );
+   DosFindClose( hFind );
 #else
    closedir( dir );
 #endif
@@ -431,7 +479,7 @@ HARBOUR HB_DIRECTORY( void )
 
    hb_itemRelease(pdir);
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__IBMCPP__)
 
    }
 #endif

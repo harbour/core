@@ -1,3 +1,12 @@
+19990727-16:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dir.c
+    + Added support for IBM Visual Age C++ compiler
+  * source/rtl/gt/gtos2.c
+    ! Corrected function declration for gtSetAttribute()
+  * tests/working/dirtest.prg
+    * Changed QOUT() to OUTSTD() to allow the directory listing to be
+      redirected, regardless of whether or not the GT API is linked in
+
 19990727-22:20 CET Victor Szel <info@szelvesz.hu>
    + tests/broken/lnlenli1.prg
    + tests/broken/lnlenli2.prg
