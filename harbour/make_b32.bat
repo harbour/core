@@ -1,7 +1,7 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN

@@ -1,3 +1,11 @@
+2000-06-12 17:20 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
+   *source\rtl\tobject.prg
+   *source\rtl\tclass.prg
+   *source\vm\classes.prg
+     * Many corrections regarding superobject access as inherited datas
+     * Inherit of a method Setget work even if the same msg
+     * is a data from one superobject.
+
 2000-06-12 16:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/run.c
@@ -5,28 +13,28 @@
     *source/rtl/gtsln/gtsln.c
     *source/rtl/gtsln/kbsln.c
     *source/rtl/gtsln/keytrans.c
-	*added more slang support - thanks to Marek Paliwoda
-	
+        *added more slang support - thanks to Marek Paliwoda
+
     *source/rtl/gtcrs/gtcrs.c
     *source/rtl/gtdos/gtdos.c
     *source/rtl/gtos2/gtos2.c
     *source/rtl/gtpca/gtpca.c
     *source/rtl/gtstd/gtstd.c
     *source/rtl/gtwin/gtwin.c
-	*added dummy hb_gt_Suspend()/hb_gt_Resume()
+        *added dummy hb_gt_Suspend()/hb_gt_Resume()
 
 2000-06-12 16:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	*fixed bug when 'DO &macrovar' was used
+        *fixed bug when 'DO &macrovar' was used
 
 2000-06-12 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c
-	*fixed unused variable tmpFiles
-	
+        *fixed unused variable tmpFiles
+
     *source/vm/macro.c
-	*fixed bug when field variable was macro-compiled
+        *fixed bug when field variable was macro-compiled
 
 2000-06-11 23:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
 
@@ -114,8 +122,8 @@
 
 2000-06-09 08:15 UTC+0100 Lubos Janica <janica@fornax.sk>
     * source/rdd/dbfntx1.c
-    	After this change we can create indexes. And they working with Clipper !
-	But this isn't optimized.
+        After this change we can create indexes. And they working with Clipper !
+        But this isn't optimized.
       * Module initialization for other then GNU compilers
       + static ERRCODE hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level)
       + static ERRCODE hb_ntxPageKeyInsert( LPPAGEINFO pPage, PHB_ITEM pKey, int pos )
@@ -160,10 +168,10 @@
 
    * include/hberrors.h
      + Added:
-		#define HB_PP_ERR_CANNOT_OPEN_RULES             15
-		#define HB_COMP_ERR_BAD_RULES_FILE_NAME         16
+                #define HB_PP_ERR_CANNOT_OPEN_RULES             15
+                #define HB_COMP_ERR_BAD_RULES_FILE_NAME         16
 
-		#define HB_PP_WARN_NO_DIRECTIVES                2
+                #define HB_PP_WARN_NO_DIRECTIVES                2
 
 2000-06-07 22:42 UTC+0200 JFl&RaC <jfl@mafact.com>,<rac@mafact.com>
 
