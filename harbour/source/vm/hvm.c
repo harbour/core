@@ -4691,6 +4691,15 @@ HB_FUNC( __VMVARSLIST )
 }
 
 /* $Doc$
+ * $FuncName$     <nStatics> __vmVarSLen()
+ * $Description$  Return the statics array length.
+ * $End$ */
+HB_FUNC( __VMVARSLEN )
+{
+   hb_retnl( s_aStatics.item.asArray.value->ulLen );
+}
+
+/* $Doc$
  * $FuncName$     <xStat> __vmVarSGet(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
