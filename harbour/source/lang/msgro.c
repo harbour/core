@@ -89,7 +89,7 @@ static HB_LANG s_lang =
       "Invalid date",
       "Range: ",
       " - ",
-      "Y/N",
+      "D/N",
       "INVALID EXPRESSION",
    
       /* Error description names */
