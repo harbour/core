@@ -1,3 +1,10 @@
+19990808-17:25 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + debug.lib
+     + menuto
+   * source/rtl/buildvc.bat
+     + debug.lib
+
 19990807-22:55 GMT+1 Victor Szel <info@szelvesz.hu>
    * builddos.bat
      makedos.env

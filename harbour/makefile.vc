@@ -43,6 +43,7 @@ HARBOUR_LIB=$(LIB_DIR)\harbour.lib
 TERMINAL_LIB=$(LIB_DIR)\terminal.lib
 TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 HBPP_LIB=$(LIB_DIR)\hbpp.lib
+DEBUG_LIB=$(LIB_DIR)\debug.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 HARBOURFLAGS=-iinclude -n
@@ -68,7 +69,6 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\do.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
-    $(OBJ_DIR)\terror.obj \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
@@ -83,6 +83,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\langapi.obj \
     $(OBJ_DIR)\math.obj \
     $(OBJ_DIR)\memvars.obj \
+    $(OBJ_DIR)\menuto.obj \
     $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\objfunc.obj \
@@ -94,6 +95,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\tbcolumn.obj \
     $(OBJ_DIR)\tbrowse.obj \
     $(OBJ_DIR)\tclass.obj \
+    $(OBJ_DIR)\terror.obj \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
     $(OBJ_DIR)\transfrm.obj \
@@ -168,6 +170,13 @@ HBPP_LIB_OBJS = \
     $(OBJ_DIR)\hbpplib.obj
 
 #
+# OBJ list for debug.lib. Add new ones as needed
+#
+
+DEBUG_LIB_OBJS = \
+    $(OBJ_DIR)\debugger.obj
+
+#
 # Our default target
 #
 
@@ -176,6 +185,7 @@ all: $(HARBOUR_EXE) \
      $(TOOLS_LIB) \
      $(TERMINAL_LIB) \
      $(HBPP_LIB) \
+     $(DEBUG_LIB) \
      $(DBFNTX_LIB)
 
 $(HARBOUR_EXE) : \
@@ -206,6 +216,9 @@ $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
 
 $(HBPP_LIB) : $(HBPP_LIB_OBJS)
     lib /OUT:$(HBPP_LIB) $(HBPP_LIB_OBJS)
+
+$(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
+    lib /OUT:$(DEBUG_LIB) $(DEBUG_LIB_OBJS)
 
 $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
     lib /OUT:$(TERMINAL_LIB) $(TERMINAL_LIB_OBJS)
@@ -332,12 +345,6 @@ $(RTL_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
 $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(RTL_DIR)\terror.c : $(RTL_DIR)\terror.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
-
-$(OBJ_DIR)\terror.obj : $(RTL_DIR)\terror.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -369,6 +376,12 @@ $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\menuto.obj : $(RTL_DIR)\menuto.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
@@ -420,6 +433,12 @@ $(RTL_DIR)\tclass.c : $(RTL_DIR)\tclass.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
 $(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\terror.c : $(RTL_DIR)\terror.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\terror.obj : $(RTL_DIR)\terror.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\tget.c : $(RTL_DIR)\tget.prg
