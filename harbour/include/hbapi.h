@@ -528,8 +528,8 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    int iListElements;
 } HB_MACRO, * HB_MACRO_PTR;
 
-extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext ); /* retrieve results of a macro expansion */
-extern void   hb_macroSetValue( HB_ITEM_PTR pItem ); /* assign a value to a macro-expression item */
+extern void   hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags ); /* retrieve results of a macro expansion */
+extern void   hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags ); /* assign a value to a macro-expression item */
 extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
 extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */
 extern void   hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
@@ -537,8 +537,8 @@ extern HB_MACRO_PTR hb_macroCompile( char * szString ); /* compile a string and 
 extern void   hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
 extern char * hb_macroTextSubst( char * szString, ULONG *pulStringLen ); /* substitute macro variables occurences within a given string */
 extern BOOL   hb_macroIsIdent( char * szString ); /* determine if a string is a valid function or variable name */
-extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); /* compiles and evaluates an aliased macro expression */
-extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); /* compiles and evaluates an aliased macro expression */
+extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
+extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags ); /* compiles and evaluates an aliased macro expression */
 extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 extern char * hb_macroExpandString( char *szString, ULONG ulLength, BOOL *pbNewString ); /* expands valid '&' operator */
 

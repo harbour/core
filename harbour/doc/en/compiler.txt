@@ -62,15 +62,15 @@
  *
  *          /kc          clear all flags (strict Clipper compatibility)   
  *
- *          /kh          Harbour extensions   
+ *          /kh          Harbour extensions (default)  
  *
- *          /ki          HB_INLINE support enabled (default)  
+ *          /ki          HB_INLINE support enabled (default)
  *
- *          /ks          synchronize compile and runtime modes (default)  
+ *          /kr          use runtime settings for the macro compiler  
  *
  *          /kx          other xbase dialects extensions (default)   
  *
- *          /k?          invoke help information      
+ *          /k?          invoke help information     
  *
  *      /l               suppress line number information      </par>
  *      =================   </par>

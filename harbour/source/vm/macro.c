@@ -71,7 +71,7 @@ BOOL hb_comp_bShortCuts = TRUE;
 /* various flags for macro compiler */
 static ULONG s_macroFlags = HB_SM_SHORTCUTS;
 
-static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int );
+static void hb_macroUseAliased( HB_ITEM_PTR, HB_ITEM_PTR, int, BYTE );
 static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
 
 /* ************************************************************************* */
@@ -87,13 +87,12 @@ static void hb_compMemvarCheck( char * szVarName, HB_MACRO_DECL );
 static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
 {
    /* update the current status for logical shortcuts */
-   hb_comp_bShortCuts = s_macroFlags & HB_SM_SHORTCUTS;
+   hb_comp_bShortCuts = pMacro->supported & HB_SM_SHORTCUTS;
 
    /* initialize the input buffer - it will be scanned by lex */
    pMacro->string = szString;
    pMacro->length = strlen( szString );
    pMacro->pos    = 0;
-   pMacro->supported = s_macroFlags;
    pMacro->bShortCuts = hb_comp_bShortCuts;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s)", pMacro, szString));
@@ -443,7 +442,7 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * EVAL( {|| &macro} )
  *
  */
-void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
+void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
 {
    /* TODO: remove these externals */
    extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
@@ -467,6 +466,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
       struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
       struMacro.status        = HB_MACRO_CONT;
       struMacro.iListElements = 0;
+      struMacro.supported     = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
 
       if( iContext != 0 )
       {
@@ -491,7 +491,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
       }
 
 #ifdef HB_MACRO_STATEMENTS
-      if( s_macroFlags & HB_SM_PREPROC )
+      if( struMacro.supported & HB_SM_PREPROC )
       {
          char * ptr;
          int slen;
@@ -524,7 +524,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
       }
 
 #ifdef HB_MACRO_STATEMENTS
-      if( s_macroFlags & HB_SM_PREPROC )
+      if( struMacro.supported & HB_SM_PREPROC )
       {
         hb_xfree( pText );
         hb_xfree( pOut );
@@ -563,7 +563,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
  * placed on the left side of the assignment
  * POP operation
  */
-void hb_macroSetValue( HB_ITEM_PTR pItem )
+void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSetValue(%p)", pItem));
 
@@ -576,6 +576,7 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
       struMacro.Flags      = HB_MACRO_GEN_POP;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
+      struMacro.supported  = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
       iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
@@ -593,11 +594,11 @@ void hb_macroSetValue( HB_ITEM_PTR pItem )
  *    &alias->var := any
  *    alias->&var := any
  */
-void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
+void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPopAliasedValue(%p, %p)", pAlias, pVar));
 
-   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_POP );
+   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_POP, flags );
 }
 
 /* Compiles and run an aliased macro expression - generated pcode
@@ -605,11 +606,11 @@ void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
  *    any := &alias->var
  *    any := alias->&var
  */
-void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
+void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, BYTE flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPushAliasedValue(%p, %p)", pAlias, pVar));
 
-   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_PUSH );
+   hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_PUSH, flags );
 }
 
 /*
@@ -626,7 +627,7 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
  *    instead of
  *    &( "M + M" ) -> &( "M + M" )
  */
-static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag )
+static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag, BYTE bSupported )
 {
    if( HB_IS_STRING( pAlias ) && HB_IS_STRING( pVar ) )
    {
@@ -645,6 +646,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       struMacro.Flags      = iFlag;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
+      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? s_macroFlags : bSupported;
       iStatus = hb_macroParse( &struMacro, szString );
       hb_xfree( szString );
       struMacro.string = NULL;
@@ -671,6 +673,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag 
       struMacro.Flags      = iFlag | HB_MACRO_GEN_ALIASED;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
+      struMacro.supported  = (bSupported & HB_SM_RT_MACRO) ? s_macroFlags : bSupported;
       iStatus = hb_macroParse( &struMacro, szString );
 
       hb_stackPop();    /* remove compiled string */
@@ -717,6 +720,8 @@ HB_MACRO_PTR hb_macroCompile( char * szString )
    pMacro->Flags = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH;
    pMacro->uiNameLen  = HB_SYMBOL_NAME_LEN;
    pMacro->status     = HB_MACRO_CONT;
+   pMacro->supported  = s_macroFlags;
+
    iStatus = hb_macroParse( pMacro, szString );
    if( ! ( iStatus == HB_MACRO_OK && ( pMacro->status & HB_MACRO_CONT ) ) )
    {
@@ -814,6 +819,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
       struMacro.Flags      = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_TYPE;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
+      struMacro.supported  = s_macroFlags;
       iStatus = hb_macroParse( &struMacro, szString );
 
       if( iStatus == HB_MACRO_OK )
@@ -902,15 +908,6 @@ ULONG hb_macroSetMacro( BOOL bSet, ULONG flag )
       else
          s_macroFlags &= ~flag;
    }
-
-   return ulCurrentFlags;
-}
-
-ULONG hb_macroAutoSetMacro( ULONG flags )
-{
-   ULONG ulCurrentFlags = s_macroFlags;
-
-   s_macroFlags = flags;
 
    return ulCurrentFlags;
 }

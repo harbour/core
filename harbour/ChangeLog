@@ -1,3 +1,23 @@
+2001-08-17 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *doc/en/compiler.txt
+    *source/compiler/hbusage.c
+        *updated to keep current state of compiler switches
+        
+    *include/hbexprc.c
+        *fixed support for "&macro" syntax (macro was not expanded in
+        cases: "&macro.&(macro)"
+        
+    *include/hbapi.h
+    *include/hbexprb.c
+    *source/vm/hvm.c
+    *source/vm/macro.c
+        *optimized support for compile time switches synchronization
+
+    *source/compiler/harbour.y
+        *fixed support for #line directive
+
+
 2001-08-17 15:09 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! fixed ::DispCell() cursor positioning (broken with latest changes to

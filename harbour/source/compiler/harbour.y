@@ -414,6 +414,7 @@ CrlfStmnt  : { hb_compLinePushIfInside(); } Crlf
 LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
+           | Line          { $<lNumber>$ = 1; }
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }

@@ -437,6 +437,7 @@ BOOL hb_compExprCheckMacroVar( char * szText )
 {
    char * pTmp = szText;
    BOOL bTextSubst = FALSE;
+   BOOL bMacroText = FALSE;
 
    while( ( pTmp = strchr( pTmp, '&' ) ) != NULL )
    {
@@ -453,9 +454,12 @@ BOOL hb_compExprCheckMacroVar( char * szText )
       /* NOTE: All variables are assumed memvars in macro compiler -
        * there is no need to check for a valid name
        */
-#if !defined( HB_MACRO_SUPPORT )
       if( bTextSubst )
       {
+#if defined( HB_MACRO_SUPPORT )
+         HB_SYMBOL_UNUSED( bMacroText );     
+         return TRUE;    /*there is no need to check all '&' occurences */
+#else    
          /* There is a valid character after '&' that can be used in
           * variable name - check if the whole variable name is valid
           * (local, static and field  variable names are invalid because
@@ -474,10 +478,11 @@ BOOL hb_compExprCheckMacroVar( char * szText )
          *pTmp = '\0';
          hb_compVariableMacroCheck( pStart );
          *pTmp = cSave;
-      }
+         bMacroText = TRUE;
 #endif
+      }
    }
-   return bTextSubst;
+   return bMacroText;
 }
 
 /* Reduces the list of expressions

@@ -338,30 +338,8 @@ static HB_EXPR_FUNC( hb_compExprUseString )
       case HB_EA_PUSH_PCODE:
          {
             HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asString.string, pSelf->ulLength );
-#if !defined( HB_MACRO_SUPPORT )
-                /* only memvar variables are allowed in macro compilation - there is no
-                 * need to check for locals or static variables
-                 */
-         if( hb_compExprCheckMacroVar( pSelf->value.asString.string ) )
-         {
-            HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-
-            /* Always add add byte to pcode indicating requested macro compiler flag. */
-            #if defined( HB_MACRO_SUPPORT )
-               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_COMPFLAG_RT_MACRO );
-            #else
-               HB_EXPR_GENPCODE1( hb_compGenPData1,
-                                  (
-                                    ( hb_comp_Supported & HB_COMPFLAG_HARBOUR  ? HB_SM_HARBOUR   : 0 ) |
-                                    ( hb_comp_Supported & HB_COMPFLAG_XBASE    ? HB_SM_XBASE     : 0 ) |
-                                    ( hb_comp_bShortCuts                       ? HB_SM_SHORTCUTS : 0 ) |
-                                    ( hb_comp_Supported & HB_COMPFLAG_RT_MACRO ? HB_SM_RT_MACRO  : 0 )
-                                  )
-                                );
-            #endif
-         }
-
-#endif
+            if( hb_compExprCheckMacroVar( pSelf->value.asString.string ) )
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
          }
          break;
       case HB_EA_POP_PCODE:
