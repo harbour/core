@@ -1,3 +1,31 @@
+2000-04-17 14:40 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/en/set.txt
+  * include/hbset.h
+  * include/set.ch
+  * source/pp/pptable.c
+  * source/rtl/set.c
+    + Added support for 'SET( _SET_LANGUAGE, <cLanguageID> )'.
+
+  * include/hbsetup.h
+    + Added __RSXNT__ to the platform test for OS_DOS_COMPATIBLE.
+    ! Only define HB_OS_UNIX if it is not already defined (unchanged)
+      and OS_UNIX_COMPATIBLE is defined (used to be platform tests),
+      because HB_OS_UNIX was being set for RSXNT and I couldn't see
+      the point of duplicating all of the platform tests.
+
+  * config/w32/gcc.cf
+  * config/w32/mingw32.cf
+  * config/w32/rsxnt.cf
+    + Added LNK_USR_PATH and LNK_USR_LIB environment variables to specify
+      non-Harbour libraries. Put one or more paths in LNK_USR_PATH and one
+      or more base library names in LNK_USR_LIB, using spaces to separate.
+
+  + source/lang/msgis850.c
+  * source/lang/Makefile
+    + Added partial Icelandic support for code page 850 (the national
+      language code page for Icelandic is 861).
+
 20000417-16:06 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * config/os2/gcc.cf

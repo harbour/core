@@ -302,6 +302,10 @@
  *                   disabled, GETs and PROMPTs are displayed using the
  *                   standard color setting.
  *
+ *              _SET_LANGUAGE    <cLanguageID>
+ *
+ *                   Specifies the language to be used for Harbour messages.
+ *
  *              _SET_MARGIN      <nColumns>
  *
  *                   Sets the left margin for all printed output. The default

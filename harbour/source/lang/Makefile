@@ -14,10 +14,10 @@ C_SOURCES=\
 	msghu852.c   \
 	msghucwi.c   \
 	msghuwin.c   \
+	msgis850.c   \
 	msgpt.c      \
 	msgro.c      \
 
 LIBNAME=lang
 
 include $(TOP)$(ROOT)config/lib.cf
-

@@ -103,7 +103,10 @@ typedef enum
    HB_SET_OPTIMIZE      = 44, 
    HB_SET_AUTOPEN       = 45,
    HB_SET_AUTORDER      = 46,
-   HB_SET_AUTOSHARE     = 47
+   HB_SET_AUTOSHARE     = 47,
+
+   /* Harbour SET extensions start at 100 */
+   HB_SET_LANGUAGE      = 100
 } HB_set_enum;
 
 typedef struct
@@ -148,7 +151,7 @@ typedef struct
    BOOL    HB_SET_WRAP;
    int     HB_SET_MESSAGE;
    BOOL    HB_SET_MCENTER;
-   BOOL    HB_SET_SCROLLBREAK;   /* QUESTION: What does this do ? */
+   BOOL    HB_SET_SCROLLBREAK;
    HB_inkey_enum HB_SET_EVENTMASK;
    int     HB_SET_MBLOCKSIZE;
    char *  HB_SET_MFILEEXT;

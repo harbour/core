@@ -40,6 +40,7 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbapilng.h"
 #include "hbset.h"
 
 HB_SET_STRUCT hb_set;
@@ -603,6 +604,13 @@ HB_FUNC( SET )
          hb_retl( hb_set.HB_SET_WRAP );
          if( args > 1 ) hb_set.HB_SET_WRAP = set_logical( pArg2 );
          break;
+      case HB_SET_LANGUAGE   :
+         hb_retc( hb_langID() );
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) )
+         {
+            hb_langSelectID( hb_itemGetCPtr( pArg2 ) );
+         }
+         break;
       default                :
          /* Return NIL if called with invalid SET specifier */
          break;
@@ -693,4 +701,3 @@ void hb_setRelease( void )
 
    hb_set.HB_SET_TYPEAHEAD = -1; hb_inkeyReset( TRUE ); /* Free keyboard typeahead buffer */
 }
-

@@ -96,8 +96,9 @@ static DEFINES sD___47 = {"_SET_OPTIMIZE",NULL,-1,"44", &sD___46 };
 static DEFINES sD___48 = {"_SET_AUTOPEN",NULL,-1,"45", &sD___47 };
 static DEFINES sD___49 = {"_SET_AUTORDER",NULL,-1,"46", &sD___48 };
 static DEFINES sD___50 = {"_SET_AUTOSHARE",NULL,-1,"47", &sD___49 };
+static DEFINES sD___51 = {"_SET_LANGUAGE",NULL,-1,"100", &sD___50 };
 
-DEFINES * hb_pp_topDefine = &sD___50;
+DEFINES * hb_pp_topDefine = &sD___51;
 
 static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
 static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };

@@ -58,6 +58,16 @@ ifneq ($(HB_SCREEN_LIB),)
 LINKLIBS += -l$(HB_SCREEN_LIB)
 endif
 
+# Add the optional user path(s)
+ifneq ($(LNK_USR_PATH),)
+LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
+endif
+
+# Add the optional user libarary (or libraries)
+ifneq ($(LNK_USR_LIB),)
+LINKLIBS += $(foreach lib, $(LNK_USR_LIB), -l$(lib))
+endif
+
 # The -) option could be appropriate to link against libraries with
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.

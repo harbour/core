@@ -95,7 +95,10 @@
 #define _SET_AUTORDER     46
 #define _SET_AUTOSHARE    47
 
-
 #define _SET_COUNT        47
+
+#define _SET_LANGUAGE    100
+
+#define __SET_COUNT_HB     1
 
 #endif /* _SET_CH */

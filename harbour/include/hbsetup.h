@@ -165,7 +165,7 @@
  */
 #if defined(__GNUC__)
    /* The GNU C compiler is used */
-   #if defined(__DJGPP__) || defined(__EMX__) || defined(_Windows) || defined(_WIN32)
+   #if defined(__DJGPP__) || defined(__EMX__) || defined(_Windows) || defined(_WIN32) || defined(__RSXNT__)
       /* The DJGPP port of GNU C is used - for DOS platform */
       #define OS_DOS_COMPATIBLE
       #define OS_PATH_LIST_SEPARATOR    ';'
@@ -239,7 +239,7 @@
 #endif
 
 #ifndef HB_OS_UNIX
-   #if defined(__GNUC__) && !(defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGNUS__))
+   #ifdef OS_UNIX_COMPATIBLE
       #define HB_OS_UNIX
    #endif
 #endif

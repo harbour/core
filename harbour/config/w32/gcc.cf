@@ -47,6 +47,14 @@ LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
 endif
 
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+# HB_SCREEN_LIB=ncurses
+# HB_SCREEN_LIB=slang
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKLIBS += -l$(HB_SCREEN_LIB)
+endif
+
 # Add the optional user path(s)
 ifneq ($(LNK_USR_PATH),)
 LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
@@ -55,14 +63,6 @@ endif
 # Add the optional user libarary (or libraries)
 ifneq ($(LNK_USR_LIB),)
 LINKLIBS += $(foreach lib, $(LNK_USR_LIB), -l$(lib))
-endif
-
-# HB_SCREEN_LIB: empty, or one of ncurses, slang
-# HB_SCREEN_LIB=ncurses
-# HB_SCREEN_LIB=slang
-
-ifneq ($(HB_SCREEN_LIB),)
-LINKLIBS += -l$(HB_SCREEN_LIB)
 endif
 
 # The -) option could be appropriate to link against libraries with
