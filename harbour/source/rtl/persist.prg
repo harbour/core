@@ -74,12 +74,13 @@ return Self
 METHOD SaveToText( cObjectName ) CLASS TPersistent
 
    local oNew := &( ::ClassName() + "()" ):New()
-   local aProperties, n, uValue, cObject
+   local aProperties, n, uValue, cObject, cType
 
-   static nIndent := 0
+   static nIndent := -3
 
    DEFAULT cObjectName TO ::cName
 
+   nIndent += 3
    cObject := Space( nIndent ) + "OBJECT " + If( nIndent != 0, "::", "" ) + ;
               cObjectName + " AS " + ::ClassName() + HB_OsNewLine() + HB_OsNewLine()
 
@@ -87,21 +88,48 @@ METHOD SaveToText( cObjectName ) CLASS TPersistent
 
    for n = 1 to Len( aProperties )
       uValue = __objSendMsg( Self, aProperties[ n ] )
-      if ValType( uValue ) == "O"
-         if __objDerivedFrom( uValue, "TPERSISTENT" )
-            nIndent += 3
-            cObject += HB_OsNewLine() + uValue:SaveToText( aProperties[ n ] )
-            nIndent -= 3
-         endif
-      else
-         cObject += Space( nIndent ) + "   ::" + aProperties[ n ] + " = " + ;
-                    If( ValType( uValue ) == "C", '"', "" ) + ;
-                    HB_ValToStr( uValue ) + ;
-                    If( ValType( uValue ) == "C", '"', "" )
-      endif
+      cType  = ValType( uValue )
+      do case
+         case cType == "A"
+              nIndent += 3
+              cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
+              nIndent -= 3
+
+         case cType == "O"
+              if __objDerivedFrom( uValue, "TPERSISTENT" )
+                 cObject += HB_OsNewLine() + uValue:SaveToText( aProperties[ n ] )
+              endif
+
+         otherwise
+            cObject += Space( nIndent ) + "   ::" + aProperties[ n ] + " = " + ;
+                       If( ValType( uValue ) == "C", '"', "" ) + ;
+                       HB_ValToStr( uValue ) + ;
+                       If( ValType( uValue ) == "C", '"', "" )
+      endcase
       cObject += HB_OsNewLine()
    next
 
-   cObject += HB_OsNewLine() + Space( nIndent ) + "ENDOBJECT" + HB_OsNewLine()
+   cObject += HB_OsNewLine() + Space( nIndent ) + "ENDOBJECT"
+   nIndent -= 3
+   if nIndent > 0
+      cObject += HB_OsNewLine()
+   endif
 
 return cObject
+
+static function ArrayToText( aArray, cName, nIndent )
+
+   local cArray := Space( nIndent ) + "ARRAY ::" + cName + " LEN " + ;
+                   AllTrim( Str( Len( aArray ) ) ) + HB_OsNewLine() + HB_OsNewLine()
+   local n, uValue
+
+   for n = 1 to Len( aArray )
+      if __objDerivedFrom( aArray[ n ], "TPERSISTENT" )
+         cArray += aArray[ n ]:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
+                   " ]" ) + HB_OsNewLine()
+      endif
+   next
+
+   cArray += Space( nIndent ) + "ENDARRAY"
+
+return cArray
