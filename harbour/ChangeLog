@@ -1,5 +1,6 @@
 20000207-22:13 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.b32
+     Makefile
      ngdoc/* -> utils/hbdoc/*
      * NGDOC directory renamed a moved to the right place.
    * utils/hbdoc/hbdoc.prg
