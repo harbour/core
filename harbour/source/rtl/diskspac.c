@@ -64,6 +64,13 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
+#if defined(HB_OS_BSD)
+   #include <sys/param.h>
+   #include <sys/mount.h>
+#elif defined(HB_OS_UNIX)
+   #include <sys/vfs.h>
+#endif
+
 HB_FUNC( DISKSPACE )
 {
    USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
@@ -197,7 +204,15 @@ HB_FUNC( DISKSPACE )
 #elif defined(HB_OS_UNIX)
 
    {
+      struct statfs st;
+      char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : "/";
+
       HB_SYMBOL_UNUSED( uiDrive );
+
+      if ( statfs( szName, &st) == 0 )
+         dSpace = ( double ) st.f_blocks * ( double ) st.f_bsize;
+      else
+         bError = TRUE;
    }
 
 #else

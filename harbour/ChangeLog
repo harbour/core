@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-26 18:40 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
+  * source/pp/ppcore.c
+    * allow to compile file with <CR><LF> on *nix platforms.
+      It's dirty hack but works good for me and resolves one of the
+      most important problem with common CLIPPER and Harbour
+      (and other XBASE compatible compilers like FlagShip and CLIP)
+      sources - only Harbour cannot compile files with <CR>.
+
+  * source/compiler/cmdcheck.c
+    ! fix which allow to use file names with '-' char in '-o' option
+
+  * source/rtl/diskspac.c
+    + added support for diskspace on UNIX platforms
+      (first parameter is path name, if omitted "/" is checked)
+
 2003-05-26 15:50 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * harbour/source/rtl/cdpapi.c
     * small correction in s_en_codepage = { ... }

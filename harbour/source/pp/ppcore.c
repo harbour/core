@@ -2995,6 +2995,11 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char
     cha = sBuffer[ *iBuffer ];
     (*iBuffer)++;
 
+    if( cha == '\r' )
+    {
+      cha = ' ';
+    }
+
     if( cha == '\n' )
     {
       if( ( ! hb_pp_bInline ) && s_ParseState == STATE_COMMENT && symbLast == ';' )
