@@ -78,7 +78,7 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-long hb_dateEncode( long lYear, long lMonth, long lDay )
+long HB_EXPORT hb_dateEncode( long lYear, long lMonth, long lDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lYear, lMonth, lDay));
 
@@ -108,7 +108,7 @@ long hb_dateEncode( long lYear, long lMonth, long lDay )
    return 0;
 }
 
-void hb_dateDecode( long lJulian, long * plYear, long * plMonth, long * plDay )
+void HB_EXPORT hb_dateDecode( long lJulian, long * plYear, long * plMonth, long * plDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, plYear, plMonth, plDay));
 
@@ -136,7 +136,7 @@ void hb_dateDecode( long lJulian, long * plYear, long * plMonth, long * plDay )
    }
 }
 
-void hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
+void HB_EXPORT hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %ld, %ld, %ld)", szDate, lYear, lMonth, lDay));
 

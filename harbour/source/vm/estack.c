@@ -71,6 +71,11 @@
 
 HB_STACK hb_stack;
 
+HB_STACK HB_EXPORT hb_GetStack( void )
+{
+    return hb_stack;
+}
+
 /* ------------------------------- */
 
 void hb_stackPop( void )

@@ -81,6 +81,8 @@ typedef struct
    char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } HB_STACK;
 
+HB_STACK HB_EXPORT hb_GetStack( void );
+
 extern HB_STACK hb_stack;
 
 typedef struct

@@ -3263,7 +3263,7 @@ static void hb_vmSwapAlias( void )
 /* Execution                       */
 /* ------------------------------- */
 
-void hb_vmDo( USHORT uiParams )
+void HB_EXPORT hb_vmDo( USHORT uiParams )
 {
    PHB_ITEM pItem;
    PHB_SYMB pSym;
@@ -3459,7 +3459,7 @@ void hb_vmDo( USHORT uiParams )
    s_ulProcLevel--;
 }
 
-void hb_vmSend( USHORT uiParams )
+void HB_EXPORT hb_vmSend( USHORT uiParams )
 {
    PHB_ITEM pItem;
    PHB_SYMB pSym;
@@ -3926,7 +3926,7 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
 /* Push                            */
 /* ------------------------------- */
 
-void hb_vmPush( PHB_ITEM pItem )
+void HB_EXPORT hb_vmPush( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPush(%p)", pItem));
 
@@ -3934,7 +3934,7 @@ void hb_vmPush( PHB_ITEM pItem )
    hb_stackPush();
 }
 
-void hb_vmPushNil( void )
+void HB_EXPORT hb_vmPushNil( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushNil()"));
 
@@ -3942,7 +3942,7 @@ void hb_vmPushNil( void )
    hb_stackPush();
 }
 
-void hb_vmPushLogical( BOOL bValue )
+void HB_EXPORT hb_vmPushLogical( BOOL bValue )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -3953,12 +3953,12 @@ void hb_vmPushLogical( BOOL bValue )
    hb_stackPush();
 }
 
-void hb_vmPushNumber( double dNumber, int iDec )
+void HB_EXPORT hb_vmPushNumber( double dNumber, int iDec )
 {
    hb_vmPushNumType( dNumber, iDec, 0, 0 );
 }
 
-void hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
+void HB_EXPORT hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushNumber(%lf, %d)", dNumber, iDec));
 
@@ -3975,7 +3975,7 @@ void hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 )
       hb_vmPushDouble( dNumber, hb_set.HB_SET_DECIMALS );
 }
 
-void hb_vmPushInteger( int iNumber )
+void HB_EXPORT hb_vmPushInteger( int iNumber )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -3987,7 +3987,7 @@ void hb_vmPushInteger( int iNumber )
    hb_stackPush();
 }
 
-void hb_vmPushLong( long lNumber )
+void HB_EXPORT hb_vmPushLong( long lNumber )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4018,7 +4018,7 @@ void hb_vmPushLongConst( long lNumber )
    hb_stackPush();
 }
 
-void hb_vmPushDouble( double dNumber, int iDec )
+void HB_EXPORT hb_vmPushDouble( double dNumber, int iDec )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4089,7 +4089,7 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    hb_stackPush();
 }
 
-void hb_vmPushDate( long lDate )
+void HB_EXPORT hb_vmPushDate( long lDate )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4100,7 +4100,7 @@ void hb_vmPushDate( long lDate )
    hb_stackPush();
 }
 
-void hb_vmPushPointer( void * pPointer )
+void HB_EXPORT hb_vmPushPointer( void * pPointer )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4111,7 +4111,7 @@ void hb_vmPushPointer( void * pPointer )
    hb_stackPush();
 }
 
-void hb_vmPushString( char * szText, ULONG length )
+void HB_EXPORT hb_vmPushString( char * szText, ULONG length )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
@@ -4158,7 +4158,7 @@ void hb_vmPushStringPcode( char * szText, ULONG length )
    hb_stackPush();
 }
 
-void hb_vmPushSymbol( PHB_SYMB pSym )
+void HB_EXPORT hb_vmPushSymbol( PHB_SYMB pSym )
 {
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 

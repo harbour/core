@@ -77,7 +77,7 @@ void hb_dynsymLog( void )
       printf( "%i %s\n", uiPos + 1, s_pDynItems[ uiPos ].pDynSym->pSymbol->szName );
 }
 
-PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
+PHB_SYMB HB_EXPORT hb_symbolNew( char * szName )      /* Create a new symbol */
 {
    PHB_SYMB pSymbol;
 
@@ -93,7 +93,7 @@ PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
    return pSymbol;
 }
 
-PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
+PHB_DYNS HB_EXPORT hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
    PHB_DYNS pDynSym;
 
@@ -155,7 +155,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    return pDynSym;
 }
 
-PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
+PHB_DYNS HB_EXPORT hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
@@ -200,7 +200,7 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
    return pDynSym;
 }
 
-PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
+PHB_DYNS HB_EXPORT hb_dynsymFindName( char * szName )  /* finds a symbol */
 {
    char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
 
@@ -240,7 +240,7 @@ PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
    return hb_dynsymFind( szUprName );
 }
 
-PHB_DYNS hb_dynsymFind( char * szName )
+PHB_DYNS HB_EXPORT hb_dynsymFind( char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFind(%s)", szName));
 

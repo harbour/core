@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-16 13:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * include/hbstack.h
+   * source/vm/hvm.c
+   * source/vm/itemapi.c
+   * source/vm/estack.c
+   * source/vm/dynsym.c
+   * source/rtl/dates.c
+   * source/rtl/file.c
+   * source/rtl/filesys.c
+     * HB_EXPORT is added to ITEM API, FILE API and some other function
+       definitions to make it possible to call them when they are in the dll.
+
 2004-04-14 19:05 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * harbour/contrib/rdd_ads/adsfunc.c
      Added adsGetConnectionType() provided by Randy Portnoff
