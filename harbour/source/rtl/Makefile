@@ -33,6 +33,7 @@ C_SOURCES=\
         mtran.c \
         oldbox.c \
         oldclear.c \
+        samples.c \
         set.c \
         setcolor.c \
         strings.c \

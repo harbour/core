@@ -1,3 +1,28 @@
+19991017-20:46 GMT+1 Victor Szel <info@szelvesz.hu>
+   + source/rtl/samples.c
+     source/rtl/Makefile
+     source/rtl/dummy.prg
+     source/rtl/rtl_test.prg
+     + AMPM() (tested)
+     + DAYS()
+     + ELAPTIME()
+     + LENNUM()
+     + SECS()
+     + TSTRING()
+       Functions added, mostly not yet tested. RTL_TEST tests added for AMPM().
+       WARNING ! Please add new file to non-GNU make systems.
+   * include/extend.h
+     + hb_strVal() prototype added.
+     + hb_strLTrim() prototype added.
+   * source/rtl/dummy.prg
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     ! Some internal functions removed (added today), since they seem not
+       real Clipper functions.
+     + Several new Clipper (documented) functions added (db*() for 5.3, and
+       SOUNDEX())
+     + One new undocumented function added. (__FLEDIT)
+
 19991017-09:00 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rtl/oldbox.prg

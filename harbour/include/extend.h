@@ -343,6 +343,8 @@ extern ULONG    hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulL
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
 extern char *   hb_strncpyUpper( char * pDest, char * pSource, ULONG ulLen );
+extern double   hb_strVal( char * szText );
+extern char *   hb_strLTrim( char * szText, ULONG * ulLen );
 
 extern double   hb_numRound( double dResult, int iDec );
 

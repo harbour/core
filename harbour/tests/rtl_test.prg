@@ -1654,14 +1654,17 @@ STATIC FUNCTION Main_STRINGS()
    RETURN NIL
 
 #ifdef __HARBOUR__
+
 STATIC FUNCTION New_STRINGS()
-   TEST_LINE( HB_VALTOSTR( 4 )                   , "         4"    )
-   TEST_LINE( HB_VALTOSTR( 4.0 / 2 )             , "         2.00" )
-   TEST_LINE( HB_VALTOSTR( "String" )            , "String"        )
-   TEST_LINE( HB_VALTOSTR( CTOD( "2001/01/01" ) ), "2001.01.01"    )
-   TEST_LINE( HB_VALTOSTR( NIL )                 , "NIL"           )
-   TEST_LINE( HB_VALTOSTR( .F. )                 , ".F."           )
-   TEST_LINE( HB_VALTOSTR( .T. )                 , ".T."           )
+
+   TEST_LINE( HB_ValToStr( 4 )                   , "         4"    )
+   TEST_LINE( HB_ValToStr( 4.0 / 2 )             , "         2.00" )
+   TEST_LINE( HB_ValToStr( "String" )            , "String"        )
+   TEST_LINE( HB_ValToStr( SToD( "20010101" ) )  , "2001.01.01"    )
+   TEST_LINE( HB_ValToStr( NIL )                 , "NIL"           )
+   TEST_LINE( HB_ValToStr( .F. )                 , ".F."           )
+   TEST_LINE( HB_ValToStr( .T. )                 , ".T."           )
+
    RETURN NIL
 
 STATIC FUNCTION Long_STRINGS()
@@ -1671,9 +1674,26 @@ STATIC FUNCTION Long_STRINGS()
    TEST_LINE( ( "1234567890" + SPACE( 810910 ) ) - ( "1234567890" + SPACE( 810910 ) ), "12345678901234567890" + SPACE( 810910 * 2 ) )
 
    RETURN NIL
+
 #endif
 
 STATIC FUNCTION Main_MISC()
+
+   /* AMPM() */
+
+   TEST_LINE( AMPM( "" )                      , "12 am"                                   )
+   TEST_LINE( AMPM( "HELLO" )                 , "12LLO am"                                )
+   TEST_LINE( AMPM( " 0:23:45" )              , "12:23:45 am"                             )
+   TEST_LINE( AMPM( "00:23:45" )              , "12:23:45 am"                             )
+   TEST_LINE( AMPM( " 5:23:45" )              , " 5:23:45 am"                             )
+   TEST_LINE( AMPM( "05:23:45" )              , "05:23:45 am"                             )
+   TEST_LINE( AMPM( "12:23:45" )              , "12:23:45 pm"                             )
+   TEST_LINE( AMPM( "20:23:45" )              , " 8:23:45 pm"                             )
+   TEST_LINE( AMPM( "24:23:45" )              , "12:23:45 am"                             )
+   TEST_LINE( AMPM( "25:23:45" )              , "13:23:45 pm"                             )
+   TEST_LINE( AMPM( "2" )                     , "2 am"                                    )
+   TEST_LINE( AMPM( "02:23" )                 , "02:23 am"                                )
+   TEST_LINE( AMPM( "02:23:45.10" )           , "02:23:45.10 am"                          )
 
    /* FOR/NEXT */
 

@@ -54,6 +54,12 @@ FUNCTION dbSeek()          ; RETURN .F.
 FUNCTION dbSetRelation()   ; RETURN NIL
 FUNCTION dbClearRelation() ; RETURN NIL
 FUNCTION dbEval()          ; RETURN NIL
+FUNCTION dbFileGet()       ; RETURN .F. /* 5.3 */
+FUNCTION dbFilePut()       ; RETURN .F. /* 5.3 */
+FUNCTION dbInfo()          ; RETURN NIL /* 5.3 */
+FUNCTION dbOrderInfo()     ; RETURN NIL /* 5.3 */
+FUNCTION dbRecordInfo()    ; RETURN NIL /* 5.3 */
+FUNCTION dbFieldInfo()     ; RETURN NIL /* 5.3 */
 
 FUNCTION MemoEdit( str )   ; RETURN str
 FUNCTION MLCToPos()        ; RETURN 0
@@ -83,6 +89,7 @@ FUNCTION __dbSetFound()    ; RETURN NIL
 FUNCTION __dbSetLocate()   ; RETURN NIL
 FUNCTION __dbTrans()       ; RETURN NIL
 FUNCTION __dbTransRec()    ; RETURN NIL
+FUNCTION __FLEdit          ; RETURN {}
 
 FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION IsPrinter()       ; RETURN .T.
@@ -103,17 +110,7 @@ FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
 FUNCTION __SetFormat()     ; RETURN NIL
 
-FUNCTION AMPM()            ; RETURN ""
-FUNCTION TString()         ; RETURN ""
-FUNCTION Secs()            ; RETURN 0
-FUNCTION Days()            ; RETURN 0
-FUNCTION LenNum()          ; RETURN 0
-FUNCTION ElapTime()        ; RETURN 0
-
-FUNCTION __BNames()        ; RETURN NIL
-FUNCTION __LNames()        ; RETURN NIL
-FUNCTION __SNames()        ; RETURN NIL
-FUNCTION __SrcName()       ; RETURN NIL
+FUNCTION SoundEx()         ; RETURN ""
 
 FUNCTION _NatSortVer()     ; RETURN ""
 FUNCTION IsAffirm()        ; RETURN .F.
