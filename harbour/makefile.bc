@@ -339,6 +339,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\browdb.obj \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
+   $(OBJ_DIR)\characte.obj \
    $(OBJ_DIR)\checkbox.obj \
    $(OBJ_DIR)\color53.obj \
    $(OBJ_DIR)\dbedit.obj \
@@ -1333,6 +1334,12 @@ $(OBJ_DIR)\cdpapi.obj : $(RTL_DIR)\cdpapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\characte.c : $(RTL_DIR)\characte.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\characte.obj : $(OBJ_DIR)\characte.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\checkbox.c : $(RTL_DIR)\checkbox.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
