@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -102,6 +102,7 @@
  *    Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
  *    outside of Constructors /!\ Could be related to some incompatibility
  *    Added hb_objGetRealClsName to keep a full class tree
+ *    Fixed hb_clsIsParent
  *
  * See doc/license.txt for licensing terms.
  *
@@ -529,6 +530,9 @@ BOOL hb_clsIsParent( PCLASS pClass, char * szParentName )
    USHORT uiAt, uiLimit;
 
    uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
+
+   if( strcmp( pClass->szName, szParentName ) == 0 )
+     return TRUE;
 
    for( uiAt = 0; uiAt < uiLimit; uiAt++)
    {

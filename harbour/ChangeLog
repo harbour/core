@@ -1,3 +1,8 @@
+2001-10-10 23:50 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/classes.c
+       Fixed hb_clsIsParent for same class as parent ...
+       (xBase++ compatibility)
+
 2001-10-10 10:07 GMT Dave Pearson <davep@davep.org>
    * source/rtl/tbrowse.prg
      * Fixed bug in :insColumn() as reported by Andreas Moroder in 
