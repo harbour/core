@@ -15,9 +15,9 @@ PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 harbour.lib : alert.obj arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
               dir.obj do.obj dynsym.obj environ.obj error.obj menu.obj \
-              errorapi.obj errorsys.obj extend.obj files.obj fm.obj \
+              errorapi.obj errorsys.obj extend.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj memvars.obj \
-              math.obj mathx.obj msges.obj mtran.obj objfunc.obj \
+              math.obj mathx.obj msgxxx.obj mtran.obj objfunc.obj \
               set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tclass.obj tget.obj tgetlist.obj transfrm.obj
 
@@ -54,7 +54,7 @@ math.obj     : math.c     extend.h hbdefs.h
 mathx.obj    : mathx.c    extend.h hbdefs.h
 memvars.obj  : memvars.c  extend.h hbdefs.h
 menu.obj     : menu.c     extend.h hbdefs.h
-msguk.obj    : msguk.c    extend.h hbdefs.h
+msgxxx.obj   : msgxxx.c   extend.h hbdefs.h
 mtran.obj    : mtran.c    extend.h hbdefs.h
 objfunc.obj  : objfunc.c  extend.h hbdefs.h
 set.obj      : set.c      extend.h hbdefs.h
