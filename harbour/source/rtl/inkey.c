@@ -1041,7 +1041,8 @@ HARBOUR HB_INKEY( void )
  *      CLEAR TYPEAHEAD
  *  $ARGUMENTS$
  *      <cString> is the optional string to stuff into the Harbour keyboard
- *      buffer after clearing it first.
+ *      buffer after clearing it first. Note: The character ";" is converted
+ *      to CHR(13) (this is an undocumented CA-Clipper feature).
  *  $RETURNS$
  *      There is no return value
  *  $DESCRIPTION$
@@ -1054,6 +1055,7 @@ HARBOUR HB_INKEY( void )
  *      CLEAR TYPEAHEAD
  *  $TESTS$
  *      KEYBOARD CHR(13); ? INKEY() ==> 13
+ *      KEYBOARD ";" ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
  *  $STATUS$
  *      R
@@ -1076,6 +1078,7 @@ HARBOUR HB___KEYBOARD( void )
       if( size != 0 )
       {
          /* Stuff the string */
+         int ch;
          BYTE * fPtr = ( BYTE * ) hb_parc( 1 );
 
          if( size >= hb_set.HB_SET_TYPEAHEAD )
@@ -1086,7 +1089,11 @@ HARBOUR HB___KEYBOARD( void )
          }
 
          while( size-- )
-            hb_inkeyPut( *fPtr++ );
+         {
+            ch = *fPtr++;
+            if( ch == 59 ) ch = 13; /* Convert ";" to CR, like Clipper does */
+            hb_inkeyPut( ch );
+         }
       }
    }
 }
