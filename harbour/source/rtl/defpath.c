@@ -53,6 +53,8 @@
 #include "hbapi.h"
 #include "hbset.h"
 
+#ifdef HB_C52_UNDOC
+
 HB_FUNC( DEFPATH )
 {
    char buffer[ _POSIX_PATH_MAX ];
@@ -92,3 +94,4 @@ HB_FUNC( __DEFPATH )
    HB_FUNCNAME( DEFPATH )();
 }
 
+#endif

@@ -93,6 +93,8 @@ char * hb_nationGetMsg( USHORT uiMsg )
    return ( uiMsg >= 1 && uiMsg <= 13 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + uiMsg - 1 ) : "";
 }
 
+#ifdef HB_C52_UNDOC
+
 HB_FUNC( ISAFFIRM )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
@@ -140,3 +142,4 @@ HB_FUNC( _NATMSGVER )
    hb_retc( "NATMSGS (Harbour)" );
 }
 
+#endif

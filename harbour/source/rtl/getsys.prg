@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * GET system module (default)
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Luiz Rafael Culik
- *    Support for Ca-Clipper 5.3 Getsystem
+ *    Support for CA-Clipper 5.3 Getsystem
  *
  * See doc/license.txt for licensing terms.
  *
@@ -63,19 +63,23 @@
 
 #include "common.ch"
 #include "hbsetup.ch"
-#ifndef HB_COMPAT_C53
-FUNCTION ReadModal( GetList, nPos )
-#else
-FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
-#endif
-   LOCAL oGetList
+
 #ifdef HB_COMPAT_C53
-   Local lMsgFlag
-   Local cSaveColor
-   Local cOldMsg
-   Local lColorFlag
-   Local oGet
+FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
+#else
+FUNCTION ReadModal( GetList, nPos )
 #endif
+
+   LOCAL oGetList
+
+#ifdef HB_COMPAT_C53
+   LOCAL lMsgFlag
+   LOCAL cSaveColor
+   LOCAL cOldMsg
+   LOCAL lColorFlag
+   LOCAL oGet
+#endif
+
    IF Empty( GetList )
       SetPos( MaxRow() - 1, 0 )
       RETURN .F.
@@ -90,6 +94,7 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
    IF ! ( ISNUMBER( nPos ) .AND. nPos > 0 )
       oGetList:nPos := oGetList:Settle( 0 )
    ENDIF
+
 #ifdef HB_COMPAT_C53
    if     ( ! ValType( nMsgRow ) == "N" )
       lMsgFlag := .f.
@@ -106,13 +111,14 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
       lColorFlag := ( ValType( cMsgColor ) == "C" )
 
    endif
-   
 #endif
+
    DO WHILE oGetList:nPos != 0
 
       oGetList:oGet := oGetList:aGetList[ oGetList:nPos ]
       oGetList:PostActiveGet()
-   #ifdef HB_COMPAT_C53
+
+#ifdef HB_COMPAT_C53
       if ( lMsgFlag )
          oGet := oGetList:aGetList[ oGetList:nPos ]
             if ( lColorFlag )
@@ -131,13 +137,14 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
                SetColor( cSaveColor )
             endif
       endif
-      #endif
+#endif
+
       IF ISBLOCK( oGetList:oGet:Reader )
-      #ifndef HB_COMPAT_C53
-         Eval( oGetList:oGet:Reader, oGetList:oGet )
-      #Else
+#ifdef HB_COMPAT_C53
          Eval( oGetList:oGet:Reader, oGetList:oGet ,Ogetlist)
-      #endif
+#else
+         Eval( oGetList:oGet:Reader, oGetList:oGet )
+#endif
       ELSE
          oGetList:Reader()
       ENDIF
@@ -145,11 +152,13 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
       oGetList:nPos := oGetList:Settle()
 
    ENDDO
-   #ifdef HB_COMPAT_C53
+
+#ifdef HB_COMPAT_C53
    if ( lMsgFlag )
       RestScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight, cOldMsg )
    endif
 #endif
+
    SetPos( MaxRow() - 1, 0 )
 
    RETURN oGetList:lUpdated
@@ -158,7 +167,6 @@ PROCEDURE GetReader( oGet )
    oGet:Reader()
 
    RETURN
-
 
 FUNCTION GetActive( oGet )
    LOCAL oGetList := __GetListActive()
@@ -338,11 +346,14 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    ENDIF
 
    RETURN .F.
+
 #ifdef HB_COMPAT_C53
+
 PROCEDURE GUIReader( oGet ,oGetlist,a,b)
  
    oGetlist:GuiReader(oGet,oGetList,a,b)
-return
+
+   RETURN
 
 PROCEDURE GuiApplyKey(oGet,nKey)
    LOCAL oGetList := __GetListActive()
@@ -379,6 +390,5 @@ FUNCTION GuiGetPostValidate( oGet,oGui )
    ENDIF
 
    RETURN .F.
-
 
 #endif

@@ -53,7 +53,10 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-/* NOTE: CA-Cl*pper undocumented */
+/* NOTE: Cannot be disabled with the HB_C52_UNDOC macro, because this symbol 
+         is referenced by the VM [vszakats] */
+
+/* NOTE: Clipper 5.x undocumented */
 
 HB_FUNC( SETPOSBS ) /* Move the screen position to the right by one column */
 {

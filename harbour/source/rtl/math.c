@@ -62,125 +62,122 @@
 #include "hbapierr.h"
 #include "hbmath.h"
 
-
 #if defined(HB_MATH_HANDLER)
 
 static int s_internal_math_error = 0; /* TOFIX: This is not thread safe. */
 
-int hb_getMathError( void )
+int hb_mathGetError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_getMathError()"));
-   return( s_internal_math_error );
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathGetError()"));
+
+   return s_internal_math_error;
 }
 
-void hb_resetMathError( void )
+void hb_mathResetError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_resetMathError()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathResetError()"));
+
    s_internal_math_error = 0;
 }
 
 /* math handler present ? */
-int hb_isMathHandler( void )
+int hb_mathIsHandler( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_isMathHandler()"));
-   return (1);
-}
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathIsHandler()"));
 
+   return 1;
+}
 
 static PHB_MATH_HANDLERCHAINELEMENT s_pChain = NULL; /* TODO: make this thread safe */
 
 /* install custom math handler */
-HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
+HB_MATH_HANDLERHANDLE hb_mathHandlerInstall( HB_MATH_HANDLERPROC handlerproc )
 {
-
-  PHB_MATH_HANDLERCHAINELEMENT pChain, pNewChainelement;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_installMathHandler (%p)", handlerproc));
-  pNewChainelement = (PHB_MATH_HANDLERCHAINELEMENT)hb_xgrab (sizeof (HB_MATH_HANDLERCHAINELEMENT));
-  pNewChainelement->handlerproc = handlerproc;
-  pNewChainelement->status      = HB_MATH_HANDLER_STATUS_ACTIVE;
-                                  /* initially activated */
-  pNewChainelement->pnext       = NULL;
-
-  pChain = s_pChain;
-  if (pChain == NULL)
-  {
-    s_pChain = pNewChainelement;
-  }
-  else
-  {
-    while (pChain->pnext != NULL)
-      pChain = pChain->pnext;
-    pChain->pnext = pNewChainelement;
-  }
-
-  return ((HB_MATH_HANDLERHANDLE)pNewChainelement);
-
+   PHB_MATH_HANDLERCHAINELEMENT pChain, pNewChainelement;
+ 
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerInstall (%p)", handlerproc));
+   pNewChainelement = (PHB_MATH_HANDLERCHAINELEMENT)hb_xgrab (sizeof (HB_MATH_HANDLERCHAINELEMENT));
+   pNewChainelement->handlerproc = handlerproc;
+   pNewChainelement->status      = HB_MATH_HANDLER_STATUS_ACTIVE;
+                                   /* initially activated */
+   pNewChainelement->pnext       = NULL;
+ 
+   pChain = s_pChain;
+   if( pChain == NULL )
+   {
+      s_pChain = pNewChainelement;
+   }
+   else
+   {
+      while( pChain->pnext != NULL )
+         pChain = pChain->pnext;
+      pChain->pnext = pNewChainelement;
+   }
+ 
+   return ( HB_MATH_HANDLERHANDLE ) pNewChainelement;
 }
 
 /* deinstall custom math handler */
-int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
+int hb_mathHandlerDeinstall( HB_MATH_HANDLERHANDLE handle )
 {
+   PHB_MATH_HANDLERCHAINELEMENT pChain;
+ 
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerDeinstall (%p)", handle));
 
-  PHB_MATH_HANDLERCHAINELEMENT pChain;
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_deinstallMathHandler (%p)", handle));
-  if (handle != NULL)
-  {
-    if (s_pChain == (PHB_MATH_HANDLERCHAINELEMENT)handle)
-    {
-      s_pChain = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->pnext;
-      hb_xfree ((void *)handle);
-      return (0);
-    }
-    else
-    {
-      pChain = s_pChain;
-
-      while (pChain != NULL)
+   if( handle != NULL )
+   {
+      if( s_pChain == ( PHB_MATH_HANDLERCHAINELEMENT ) handle )
       {
-        if (pChain->pnext == (PHB_MATH_HANDLERCHAINELEMENT)handle)
-        {
-          pChain->pnext = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->pnext;
-          hb_xfree ((void *)handle);
-          return (0);
-        }
-
-        pChain = pChain->pnext;
+         s_pChain = ( ( PHB_MATH_HANDLERCHAINELEMENT ) handle )->pnext;
+         hb_xfree( ( void * ) handle);
+         return 0;
       }
-    }
-  }
-
-  return (-1);  /* not found, not deinstalled, so return error code */
-
+      else
+      {
+         pChain = s_pChain;
+        
+         while( pChain != NULL )
+         {
+            if( pChain->pnext == ( PHB_MATH_HANDLERCHAINELEMENT ) handle )
+            {
+               pChain->pnext = ( ( PHB_MATH_HANDLERCHAINELEMENT ) handle )->pnext;
+               hb_xfree( ( void * ) handle );
+               return 0;
+            }
+            
+            pChain = pChain->pnext;
+         }
+      }
+   }
+ 
+   return -1;  /* not found, not deinstalled, so return error code */
 }
 
 /* set custom math handler status */
-int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
+int hb_mathHandlerSetStatus( HB_MATH_HANDLERHANDLE handle, int status )
 {
-  int oldstatus = HB_MATH_HANDLER_STATUS_NOTFOUND;
+   int oldstatus = HB_MATH_HANDLER_STATUS_NOTFOUND;
+  
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerSetStatus (%p, %i)", handle, status));
+  
+   if( handle != NULL )
+   {
+      oldstatus = ( ( PHB_MATH_HANDLERCHAINELEMENT ) handle )->status;
+      ( ( PHB_MATH_HANDLERCHAINELEMENT ) handle )->status = status;
+   }
 
-  HB_TRACE(HB_TR_DEBUG, ("hb_setMathHandlerStatus (%p, %i)", handle, status));
-  if (handle != NULL)
-  {
-    oldstatus = ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status;
-    ((PHB_MATH_HANDLERCHAINELEMENT)handle)->status = status;
-  }
-  return (oldstatus);
+   return oldstatus;
 }
 
 /* get custom math handler status */
-int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
+int hb_mathHandlerGetStatus( HB_MATH_HANDLERHANDLE handle )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_getMathHandlerStatus (%p)", handle));
-  if (handle != NULL)
-  {
-    return (((PHB_MATH_HANDLERCHAINELEMENT)handle)->status);
-  }
-  else
-  {
-    return (HB_MATH_HANDLER_STATUS_NOTFOUND);
-  }
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerGetStatus (%p)", handle));
+
+   if( handle != NULL )
+      return ( ( PHB_MATH_HANDLERCHAINELEMENT ) handle )->status;
+   else
+      return HB_MATH_HANDLER_STATUS_NOTFOUND;
 }
 
 
@@ -188,7 +185,6 @@ int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
  */
 int matherr( struct exception * err )
 {
-
    PHB_MATH_HANDLERCHAINELEMENT pChain = s_pChain;
    int retval = -1;
    double dretval = 0.0;
@@ -200,46 +196,46 @@ int matherr( struct exception * err )
    switch( err->type )
    {
       case DOMAIN:
-         exc.type = HB_MATHERR_DOMAIN;
+         exc.type = HB_MATH_ERR_DOMAIN;
          break;
       case SING:
-         exc.type = HB_MATHERR_SING;
+         exc.type = HB_MATH_ERR_SING;
          break;
       case OVERFLOW:
-         exc.type = HB_MATHERR_OVERFLOW;
+         exc.type = HB_MATH_ERR_OVERFLOW;
          break;
       case UNDERFLOW:
-         exc.type = HB_MATHERR_UNDERFLOW;
+         exc.type = HB_MATH_ERR_UNDERFLOW;
          break;
       case TLOSS:
-         exc.type = HB_MATHERR_TLOSS;
+         exc.type = HB_MATH_ERR_TLOSS;
          break;
       case PLOSS:
-         exc.type = HB_MATHERR_PLOSS;
+         exc.type = HB_MATH_ERR_PLOSS;
          break;
       default:
-         exc.type = HB_MATHERR_UNKNOWN;
+         exc.type = HB_MATH_ERR_UNKNOWN;
          break;
    }
+
    exc.name = err->name;
    exc.arg1 = err->arg1;
    exc.arg2 = err->arg2;
    exc.retval = err->retval;
 
-   while (pChain != NULL)
+   while( pChain != NULL )
    {
-     int ret;
-     if (pChain->status == HB_MATH_HANDLER_STATUS_ACTIVE)
-     {
-       ret = (*(pChain->handlerproc))(&exc);
-       /* store the math return value from the handler that returns the largest integer */
-       if (ret > retval)
-       {
-         dretval = exc.retval;
-         retval = ret;
-       }
-     }
-     pChain = pChain->pnext;
+      if( pChain->status == HB_MATH_HANDLER_STATUS_ACTIVE )
+      {
+         int ret = ( *( pChain->handlerproc ) )( &exc );
+         /* store the math return value from the handler that returns the largest integer */
+         if( ret > retval )
+         {
+            dretval = exc.retval;
+            retval = ret;
+         }
+      }
+      pChain = pChain->pnext;
    }
 
    switch( err->type )
@@ -273,62 +269,69 @@ int matherr( struct exception * err )
          break;
    }
 
-   if (retval == -1)
+   if( retval == -1 )
    {
-     /* default behaviour */
-     err->retval = 0.0;
-     return (1);   /* don't print any message and don't set errno */
+      /* default behaviour */
+      err->retval = 0.0;
+      return 1;   /* don't print any message and don't set errno */
    }
 
    err->retval = dretval;
-   return (retval);
 
+   return retval;
 }
 
 #else /* defined (HB_MATH_HANDLER) */
 
 /* the functions don't do anything but they must exist */
 
-int hb_getMathError (void)
+int hb_mathGetError( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_getMathError()"));
-  return (0);
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathGetError()"));
+
+   return 0;
 }
 
-void hb_resetMathError (void)
+void hb_mathResetError( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_resetMathError()"));
-  return;
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathResetError()"));
+
+   return;
 }
 
-int hb_isMathHandler (void)
+int hb_mathIsHandler( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_isMathHandler()"));
-  return (0);
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathIsHandler()"));
+
+   return 0;
 }
 
-HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
+HB_MATH_HANDLERHANDLE hb_mathHandlerInstall( HB_MATH_HANDLERPROC handlerproc )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_installMathHandler (%p)", handlerproc));
-  return ((HB_MATH_HANDLERHANDLE)NULL);
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerInstall (%p)", handlerproc));
+
+   return ( HB_MATH_HANDLERHANDLE ) NULL;
 }
 
-int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
+int hb_mathHandlerDeinstall( HB_MATH_HANDLERHANDLE handle )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_deinstallMathHandler (%p)", handle));
-  return (-1);
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerDeinstall (%p)", handle));
+
+   return -1;
 }
 
-int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
+int hb_mathHandlerSetStatus( HB_MATH_HANDLERHANDLE handle, int status )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_setMathHandlerStatus (%p, %i)", handle, status));
-  return (HB_MATH_HANDLER_STATUS_NOTFOUND);
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerSetStatus (%p, %i)", handle, status));
+
+   return HB_MATH_HANDLER_STATUS_NOTFOUND;
 }
 
-int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle)
+int hb_mathHandlerGetStatus( HB_MATH_HANDLERHANDLE handle )
 {
-  HB_TRACE(HB_TR_DEBUG, ("hb_getMathHandlerStatus (%p)", handle));
-  return (HB_MATH_HANDLER_STATUS_NOTFOUND);
+   HB_TRACE(HB_TR_DEBUG, ("hb_mathHandlerGetStatus (%p)", handle));
+
+   return HB_MATH_HANDLER_STATUS_NOTFOUND;
 }
 
 #endif

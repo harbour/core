@@ -111,12 +111,12 @@ CLASS HBGetList
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
    METHOD SetFocus()
    METHOD Updated() INLINE ::lUpdated
-   #ifdef  HB_COMPAT_C53
+#ifdef HB_COMPAT_C53
    METHOD GUIReader(oget,getsys,a,b)
-   METHOD GUIApplyKey(  oGUI, nKey )
-   METHOD GuiPreValidate(oGui)
-   METHOD GuiPostValidate(oGui)
-   #endif
+   METHOD GUIApplyKey( oGUI, nKey )
+   METHOD GUIPreValidate(oGui)
+   METHOD GUIPostValidate(oGui)
+#endif
 ENDCLASS
 
 METHOD New( GetList ) CLASS HBGetList
@@ -141,6 +141,7 @@ METHOD SetFocus() CLASS HBGetList
    ::aGetList[ ::nPos ]:SetFocus()
 
    return Self
+
 METHOD Reader() CLASS HBGetList
 
    local oGet := ::oGet
@@ -559,8 +560,9 @@ METHOD ReadUpdated( lUpdated ) CLASS HBGetList
 return lSavUpdated
 
 #ifdef HB_COMPAT_C53
+
 METHOD GuiReader(oget,getsys,a,b) CLASS HBGetList
-//Local oGet := ::oGet
+  //Local oGet := ::oGet
    Local oGui
    IF ( ! ::GUIPreValidate( oGet , oGet:Control ) )
    elseif ( ValType( oGet:Control ) == "O" )
@@ -716,7 +718,6 @@ METHOD GUIApplyKey(  oGUI, nKey ) CLASS HBGetList
 
 #endif
 
-
       if ( ! lClose )
       elseif ( ! TheClass == "LISTBOX" )
       elseif ( ! oGUI:DropDown )
@@ -728,7 +729,6 @@ METHOD GUIApplyKey(  oGUI, nKey ) CLASS HBGetList
    ENDCASE
 
    RETURN Self
-
 
 
 METHOD GUIPostValidate( oGUI ) CLASS HBGetList

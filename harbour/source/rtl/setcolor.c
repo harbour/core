@@ -89,6 +89,8 @@ HB_FUNC( SETBLINK )
       hb_gtSetBlink( hb_parl( 1 ) );
 }
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_COLORTON )
 {
    if( ISCHAR( 1 ) )
@@ -96,3 +98,5 @@ HB_FUNC( HB_COLORTON )
    else
       hb_retni( 0 );
 }
+
+#endif

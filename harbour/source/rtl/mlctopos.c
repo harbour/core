@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
  * MLCTOPOS() function
  *
@@ -125,11 +129,12 @@ HB_FUNC( MLCTOPOS )
       ulLastLen   = ulCurLength ;
    }
 
-   if ( ulLine == ulLines )
+   if( ulLine == ulLines )
    {
-     ulLastLen--;   /*Column is zero based*/
-     hb_retnl( ulBegOfLine + ( ( ulCol < ulLastLen ) ? ulCol : ulLastLen ) );
+      ulLastLen--;   /* Column is zero based */
+      hb_retnl( ulBegOfLine + ( ( ulCol < ulLastLen ) ? ulCol : ulLastLen ) );
    }
    else
       hb_retnl( ulLen );
 }
+

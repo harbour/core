@@ -117,8 +117,12 @@ HB_FUNC( RTRIM )
    {
       char * pszText = hb_itemGetCPtr( pText );
 
+#ifdef HB_EXTENSION
       hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ),
          ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) );
+#else
+      hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ), FALSE ) );
+#endif
    }
    else
       /* NOTE: "TRIM" is right here [vszakats] */

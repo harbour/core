@@ -1,3 +1,47 @@
+2001-12-05 19:44 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbmath.h 
+   * source/rtl/math.c
+   * contrib/libct/ctmath.c
+     * Renamed math handler C level functions to match the 
+       naming system of Harbour:
+       hb_getMathError         -> hb_mathGetError        
+       hb_resetMathError       -> hb_mathResetError      
+       hb_isMathHandler        -> hb_mathIsHandler       
+       hb_installMathHandler   -> hb_mathHandlerInstall  
+       hb_deinstallMathHandler -> hb_mathHandlerDeinstall
+       hb_setMathHandlerStatus -> hb_mathHandlerSetStatus
+       hb_getMathHandlerStatus -> hb_mathHandlerGetStatus
+       HB_MATHERR*             -> HB_MATH_ERR*           
+
+   * source/rtl/mlctopos.c 
+   * source/rtl/mpostolc.c
+     ! Missing CVS headers added.
+
+   * include/hbextern.ch
+   * source/rtl/defpath.c 
+   * source/rtl/natmsg.c 
+   * source/rtl/oemansi.c
+   * source/rtl/seconds.c 
+   * source/rtl/setcolor.c
+   * source/rtl/setposbs.c 
+   * source/rtl/shadow.c
+   * source/rtl/trim.c 
+     ! Functions, features marked as extensions or 
+       as undocumented.
+     * Functions reordered by category in hbextern.ch
+       It's now smaller, faster, and it's much more 
+       meaningful for the eye.
+     ! Fixed faulty defines in hbextern.ch which 
+       excluded the complete GETSYS function list, 
+       when C53 compatibility was turned off.
+     ! Some missing symbols added to hbextern.ch
+     ! Removed doubly defined items from hbextern.ch
+
+   * source/rtl/getsys.prg
+   * source/rtl/tgetlist.prg
+     * Some formatting.
+
 2001-12-05 14:08 GTM+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/eval.c
      ! hb_evalBlock0() and hb_evalBlock1() functions added

@@ -53,6 +53,8 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
+#ifdef HB_EXTENSION
+
 HB_FUNC( HB_SHADOW )
 {
    if( hb_pcount() >= 4 )
@@ -72,6 +74,8 @@ HB_FUNC( HB_CLRAREA )
                           hb_parni( 4 ),
                           hb_parni( 5 ) );
 }
+
+#endif
 
 #ifdef HB_C52_UNDOC
 

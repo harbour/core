@@ -55,6 +55,7 @@
 #define HB_MATH_H_
 
 #include "hbapi.h"
+
 #include <math.h>
 
 #if defined(HB_EXTERN_C)
@@ -83,45 +84,44 @@ extern "C" {
    #define exception _exception
 #endif
 
-extern int hb_getMathError (void);
-extern void hb_resetMathError (void);
-extern int hb_isMathHandler (void);
-
 typedef struct _HB_MATH_EXCEPTION
 {
-  int type;
-  char *name;
-  double arg1;
-  double arg2;
-  double retval;
+   int type;
+   char * name;
+   double arg1;
+   double arg2;
+   double retval;
 } HB_MATH_EXCEPTION;
 
-typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION *err);
+typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
 
 typedef struct HB_MATH_HANDLERCHAINELEMENT_
 {
-  HB_MATH_HANDLERPROC                   handlerproc;
-  int                                   status;
-  struct HB_MATH_HANDLERCHAINELEMENT_ * pnext;
+   HB_MATH_HANDLERPROC                   handlerproc;
+   int                                   status;
+   struct HB_MATH_HANDLERCHAINELEMENT_ * pnext;
 } HB_MATH_HANDLERCHAINELEMENT, * PHB_MATH_HANDLERCHAINELEMENT;
 typedef PHB_MATH_HANDLERCHAINELEMENT HB_MATH_HANDLERHANDLE;
 
-extern HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc);
-extern int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle);
-extern int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status);
-extern int hb_getMathHandlerStatus (HB_MATH_HANDLERHANDLE handle);
+extern int  hb_mathGetError( void );
+extern void hb_mathResetError( void );
+extern int  hb_mathIsHandler( void );
+extern HB_MATH_HANDLERHANDLE hb_mathHandlerInstall( HB_MATH_HANDLERPROC handlerproc );
+extern int  hb_mathHandlerDeinstall( HB_MATH_HANDLERHANDLE handle );
+extern int  hb_mathHandlerSetStatus( HB_MATH_HANDLERHANDLE handle, int status );
+extern int  hb_mathHandlerGetStatus( HB_MATH_HANDLERHANDLE handle );
 
-#define HB_MATH_HANDLER_STATUS_NOTFOUND   ((int)-1)
-#define HB_MATH_HANDLER_STATUS_INACTIVE   ((int)0)
-#define HB_MATH_HANDLER_STATUS_ACTIVE     ((int)1)
+#define HB_MATH_HANDLER_STATUS_NOTFOUND   ( ( int ) -1 )
+#define HB_MATH_HANDLER_STATUS_INACTIVE   ( ( int ) 0 )
+#define HB_MATH_HANDLER_STATUS_ACTIVE     ( ( int ) 1 )
 
-#define HB_MATHERR_UNKNOWN   ((int)0)
-#define HB_MATHERR_DOMAIN    ((int)1)
-#define HB_MATHERR_SING      ((int)2)
-#define HB_MATHERR_OVERFLOW  ((int)3)
-#define HB_MATHERR_UNDERFLOW ((int)4)
-#define HB_MATHERR_TLOSS     ((int)5)
-#define HB_MATHERR_PLOSS     ((int)6)
+#define HB_MATH_ERR_UNKNOWN               ( ( int ) 0 )
+#define HB_MATH_ERR_DOMAIN                ( ( int ) 1 )
+#define HB_MATH_ERR_SING                  ( ( int ) 2 )
+#define HB_MATH_ERR_OVERFLOW              ( ( int ) 3 )
+#define HB_MATH_ERR_UNDERFLOW             ( ( int ) 4 )
+#define HB_MATH_ERR_TLOSS                 ( ( int ) 5 )
+#define HB_MATH_ERR_PLOSS                 ( ( int ) 6 )
 
 
 #if defined(HB_EXTERN_C)
