@@ -570,7 +570,7 @@ static HARBOUR ClassSel(void)
                                                 /* Create a transfer array  */
       for( wAt = 0; wAt < wLimit ; wAt++ )
       {
-         pMessage = pClass->pMethods[ wAt ].pMessage;
+         pMessage = ( PHB_DYNS ) pClass->pMethods[ wAt ].pMessage;
          if( pMessage )                         /* Hash Entry used ?        */
          {
             pItem  = hb_itemPutC( NULL, pMessage->pSymbol->szName );
