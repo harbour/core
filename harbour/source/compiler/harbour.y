@@ -773,6 +773,7 @@ IncDec     : INC                             { $$ = 1; }
 
 Variable   : VarId                     {}
            | VarAt                     { GenPCode1( HB_P_ARRAYAT ); }
+           | Array ArrayIndex          { GenPCode1( HB_P_ARRAYAT ); }
            | FunCallArray              { GenPCode1( HB_P_ARRAYAT ); }
            | ObjectData                {}
            | ObjectData ArrayIndex     { GenPCode1( HB_P_ARRAYAT ); }
@@ -1488,7 +1489,20 @@ int harbour_main( int argc, char * argv[] )
 
                case 'i':
                case 'I':
-                  AddSearchPath( argv[ iArg ] + 2, &_pIncludePath );
+                  {
+                     char * pPath;
+                     char * pDelim;
+                     char * szInclude;
+
+                     pPath = szInclude = yy_strdup( argv[ iArg ] + 2 );
+                     while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+                     {
+                        * pDelim = '\0';
+                        AddSearchPath( pPath, &_pIncludePath );
+                        pPath = pDelim + 1;
+                     }
+                     AddSearchPath( pPath, &_pIncludePath );
+                  }
                   break;
 
                case 'l':
