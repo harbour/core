@@ -65,7 +65,7 @@ int WorkDefine ( char**, char*, DEFINES * );    /* Replace fragment of code with
 int WorkPseudoF ( char**, char*, DEFINES*);     /* Replace pseudofunction with a #defined result text */
 int WorkCommand ( char*, char*, COMMANDS* );
 int WorkTranslate ( char*, char*, COMMANDS*, int* );
-int CommandStuff ( char *, char *, char *, int*, int );
+int CommandStuff ( char *, char *, char *, int*, int, int );
 int RemoveSlash( char * );
 int WorkMarkers( char**, char**, char*, int* );
 int getExpReal ( char *, char **, int, int );
@@ -87,7 +87,7 @@ void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
 int stroncpy (char*, char*, int);
 int strincpy (char*, char*);
-int strincmp (char*, char**);
+int strincmp (char*, char**, int);
 int strolen ( char* );
 void stroupper ( char* );
 int strotrim ( char* );
@@ -122,7 +122,7 @@ int ParseState = 0;
 int lInclude = 0;
 int *aCondCompile, nCondCompile = 0, maxCondCompile = 5;
 int nline=0;
-int Repeate;
+int aIsRepeate[5],Repeate;
 int numBrackets;
 char groupchar;
 
@@ -707,7 +707,7 @@ int WorkDefine ( char** ptri, char* ptro, DEFINES *stdef )
 
 int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
 {
-   char parfict[MAX_NAME], parreal[MAX_NAME];
+   char parfict[MAX_NAME], *ptrreal;
    char *ptrb;
    int ipos, ifou, ibeg;
    int lenfict, lenreal, lenres;
@@ -727,7 +727,9 @@ int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
             if ( **ptri != ')' )
             {
                (*ptri)++;             /* Get next real parameter */
-               lenreal = NextParm( ptri, parreal );
+               SKIPTABSPACES( *ptri );
+               ptrreal = *ptri;
+               lenreal = NextParm( ptri, NULL);
 
                ptrb = ptro;
                while ( (ifou = pp_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
@@ -735,7 +737,7 @@ int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
                   ptrb = ptrb+ifou-1;
                   if ( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
                   {
-                     pp_Stuff ( parreal, ptrb, lenreal, lenfict, lenres );
+                     pp_Stuff ( ptrreal, ptrb, lenreal, lenfict, lenres );
                      lenres += lenreal - lenfict;
                      ptrb += lenreal;
                   }
@@ -768,7 +770,7 @@ int WorkCommand ( char* ptri, char* ptro, COMMANDS *stcmd )
       ptrmp = stcmd->mpatt;                      /* Pointer to a match pattern */
       Repeate = 0;
       groupchar = '@';
-      rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, TRUE );
+      rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, TRUE, stcmd->com_or_xcom );
 
       stcmd = stcmd->last;
       if ( rez < 0 && stcmd != NULL ) stcmd = ComSearch(sToken, stcmd);
@@ -793,7 +795,7 @@ int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
       ptrmp = sttra->mpatt;
       Repeate = 0;
       groupchar = '@';
-      rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, FALSE );
+      rez = CommandStuff ( ptrmp, ptri, ptro, &lenres, FALSE, sttra->com_or_xcom );
 
       sttra = sttra->last;
       if ( rez < 0 && sttra != NULL ) sttra = TraSearch(sToken, sttra);
@@ -809,7 +811,7 @@ int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
    return -1;
 }
 
-int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra )
+int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra, int com_or_xcom )
 {
   int endTranslation = FALSE;
   char *lastopti[2];
@@ -822,16 +824,21 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
     while ( *ptri != '\0' && !endTranslation )
     {
       SKIPTABSPACES( ptrmp );
-      SKIPTABSPACES( ptri );
       switch ( *ptrmp ) {
        case '[':
          numBrackets++;
+         aIsRepeate[ Repeate ] = 0;
          lastopti[Repeate++] = ptrmp;
          ptrmp++;
          break;
        case ']':
          if ( Repeate )
-           { Repeate--; ptrmp = lastopti[Repeate]; numBrackets--; }
+         {
+            Repeate--;
+            if( aIsRepeate[ Repeate ] ) ptrmp = lastopti[Repeate];
+            else ptrmp++;
+            numBrackets--;
+         }
          else { numBrackets--; ptrmp++; }
          break;
        case ',':
@@ -862,7 +869,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          break;
        default:    /*   Key word    */
          ptr = ptrmp;
-         if ( *ptri == ',' || strincmp(ptri, &ptrmp ) )
+         if ( *ptri == ',' || strincmp(ptri, &ptrmp, !com_or_xcom ) )
          {
            if ( numBrackets )
            {
@@ -872,6 +879,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
          }
          else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
       }
+      SKIPTABSPACES( ptri );
     };
 
   if ( *ptrmp != '\0' )
@@ -1055,7 +1063,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
        SKIPTABSPACES( ptr );
            /* Comparing real parameter and restriction value */
        ptrtemp = ptr;
-       if ( !strincmp ( *ptri, &ptr ) )
+       if ( !strincmp ( *ptri, &ptr, FALSE ) )
        {
          lenreal = stroncpy( expreal, *ptri, (ptr-ptrtemp) );
          *ptri += lenreal;
@@ -1097,7 +1105,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres )
 int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
 {
  int lens = 0;
- char *sZnaki = "+-=><*/$.&:#%!";
+ char *sZnaki = "+-=><*/$.&:#%!^";
  int State;
  int StBr1 = 0, StBr2 = 0, StBr3 = 0;
  int rez = 0;
@@ -1253,6 +1261,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       }
       if ( *ptr == '[' )
       {
+         if( Repeate ) aIsRepeate[ Repeate - 1 ]++;
          ptr2 = ptrOut + ifou + 3;
          while ( *ptr2 != ']' && *(ptr-1) != '\\' )
          {
@@ -1392,7 +1401,8 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
                if( *expreal != '\0' )
                {
                   if ( !lenitem || *expreal == '(' || *expreal == '&' ||
-                                     *expreal == '\"' || *expreal == '\'' )
+                   (*expreal=='\"' && *(expreal+lenitem-1)=='\"') ||
+                   (*expreal == '\'' && *(expreal+lenitem-1)=='\'') )
                   {
                      if( ifou ) lenitem++;
                      pp_Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
@@ -1416,7 +1426,8 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
             while ( ifou > 0 );
          }
          else if ( !lenreal || *expreal == '(' || *expreal == '&' ||
-                                  *expreal == '\"' || *expreal == '\'' )
+                 (*expreal=='\"' && *(expreal+lenreal-1)=='\"') ||
+                 (*expreal == '\'' && *(expreal+lenreal-1)=='\'') )
            pp_Stuff ( (*expreal=='&')? expreal+1:expreal, ptro,
                    (*expreal=='&')? lenreal-1:lenreal, 4, lenres );
          else
@@ -1720,17 +1731,26 @@ int stroncpy (char* ptro, char* ptri, int lens )
  return i;
 }
 
-int strincmp (char* ptro, char** ptri )
+int strincmp (char* ptro, char** ptri, int lTrunc )
 {
- for ( ; **ptri != ' ' && **ptri != '\t' && **ptri != ',' && **ptri != '[' && **ptri != ']' &&
-   **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
-     ptro++, (*ptri)++ );
- if ( ( **ptri == ' ' || **ptri == ',' || **ptri == '[' ||
-      **ptri == ']' || **ptri == '\1' || **ptri == '\0' ) &&
-      ( ( !ISNAME(*ptro) && ISNAME(*(ptro-1)) ) ||
-      ( !ISNAME(*(ptro-1)) ) ) )
-    return 0;
- return 1;
+   char *ptrb = ptro, co, ci;
+
+   for ( ; **ptri != ' ' && **ptri != '\t' && **ptri != ',' && **ptri != '[' && **ptri != ']' &&
+       **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
+       ptro++, (*ptri)++ );
+   co = *(ptro-1);
+   ci = **ptri;
+   if ( ( ( ci == ' ' || ci == ',' || ci == '[' ||
+       ci == ']' || ci == '\1' || ci == '\0' ) &&
+       ( ( !ISNAME(*ptro) && ISNAME(co) ) ||
+       ( !ISNAME(co) ) ) ) )
+      return 0;       
+   else if ( lTrunc && ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(*ptro) && ISNAME(co) )
+   {
+      while( ISNAME(**ptri) ) (*ptri)++;
+      return 0;
+   }
+   return 1;
 }
 
 int strincpy (char* ptro, char* ptri )
@@ -1771,25 +1791,23 @@ void stroupper ( char *stroka )
 
 int strotrim ( char *stroka )
 {
- char *ptr = stroka, lastc = '0';
+ char *ptr = stroka, lastc = '0', curc;
  int lens = 0, State = STATE_NORMAL;
- while ( *stroka != '\0' )
+ while ( ( curc = *stroka ) != '\0' )
  {
-  if ( State == STATE_QUOTE1 ) { if (*stroka == '\'') State = STATE_NORMAL; }
-  else if ( State == STATE_QUOTE2 ) { if (*stroka=='\"') State = STATE_NORMAL; }
+  if ( State == STATE_QUOTE1 ) { if (curc == '\'') State = STATE_NORMAL; }
+  else if ( State == STATE_QUOTE2 ) { if (curc=='\"') State = STATE_NORMAL; }
   else
   {
-   if ( *stroka == '\'' ) State = STATE_QUOTE1;
-   else if ( *stroka == '\"' ) State = STATE_QUOTE2;
+   if ( curc == '\'' ) State = STATE_QUOTE1;
+   else if ( curc == '\"' ) State = STATE_QUOTE2;
+   else if ( curc == '\t' ) curc = ' ';
   }
-/*  if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
-      ( (ISNAME(lastc) || lastc=='>') && (ISNAME(*(stroka+1)) || *(stroka+1)=='<') ) )
-*/
-  if ( State != STATE_NORMAL || (*stroka != ' ' && *stroka != '\t') ||
-      ( *stroka==' ' && lastc != ' ' && lastc != ',' && lastc != '(' && *(stroka+1)!=',') )
+  if ( State != STATE_NORMAL || curc != ' ' ||
+      ( curc==' ' && lastc != ' ' && lastc != ',' && lastc != '(' && *(stroka+1)!=',') )
   {
-     *ptr++ = *stroka;
-     lastc = *stroka;
+     *ptr++ = curc;
+     lastc = curc;
      lens++;
   }
   stroka++;

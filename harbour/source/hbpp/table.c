@@ -227,7 +227,7 @@
    static COMMANDS sC___127 = {0,"SET","KEY \1A00 [TO]","SetKey( \1A00, NIL )",&sC___126 };
    static COMMANDS sC___128 = {0,"SET","FUNCTION \1A00 [TO] [\1B00]","__SetFunction( \1A00, \1B00 )",&sC___127 };
    static COMMANDS sC___129 = {0,"CLEAR","MEMORY","__MVClear()",&sC___128 };
-   static COMMANDS sC___130 = {0,"RELEASE"," \1A00","__MVXRelease( \1A30 )",&sC___129 };
+   static COMMANDS sC___130 = {0,"RELEASE"," \1A10","__MVXRelease( \1A30 )",&sC___129 };
    static COMMANDS sC___131 = {0,"RELEASE","ALL","__MVRelease('*', .t.)",&sC___130 };
    static COMMANDS sC___132 = {0,"RELEASE","ALL LIKE \1A00","__MVRelease( \1A10, .t. )",&sC___131 };
    static COMMANDS sC___133 = {0,"RELEASE","ALL EXCEPT \1A00","__MVRelease( \1A10, .f. )",&sC___132 };

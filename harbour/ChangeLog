@@ -1,3 +1,8 @@
+19990915-23:20 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+  * source/hbpp/table.c
+    * fixed some bugs, reported by Victor and Matteo
+
 19990915-15:50 GMT+1 Victor Szel <info@szelvesz.hu>
   * doc/hdr_tpl.txt
     * Some small changes.
@@ -35,7 +40,7 @@
     * Slight change in the format of the copyright header, the text itself
       has not changed.
   * source/rtl/filesys.c
-    + hb_fnFNameMerge() - TOFIX: added again about the lack of buffer overlow 
+    + hb_fnFNameMerge() - TOFIX: added again about the lack of buffer overlow
       handling.
   * .cvsignore
     ! DOS/LINUX/OS2 GNU Make systems working directories added.
@@ -80,7 +85,7 @@
       with.
   * tests/working/dirtest.prg
     + added 3rd parameter to indicate 'want 8.3 filenames'
-  
+
 19990915-03:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/do.c
     - Previous fix undone, since it was causing other problems.
@@ -123,11 +128,11 @@
   * config/rules.cf
     * Harbour flag /q changed to /q0 to omit the compiler header.
   * source/rtl/do.c
-    ! DO() fixed to use hb_dynsymFind() instead of hb_dynsymGet(), 
+    ! DO() fixed to use hb_dynsymFind() instead of hb_dynsymGet(),
       now it properly displays when the passed string is not a symbol, rather
       then throwing an internal error.
   * source/compiler/harbour.y
-    + /CREDITS command line switch to display the development team. Like in 
+    + /CREDITS command line switch to display the development team. Like in
       Clipper.
 
 19990914-13:15 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -137,7 +142,7 @@
     + /f switch changed to /gf, and the whole object generation build
       in to the source in a more standard way. It works now.
     + /q0 switch added to the help screen.
-    + All filename composing stuff related to specific output types moved to 
+    + All filename composing stuff related to specific output types moved to
       the appropriate gen*.c file. This way the code is more modular.
     ! One variable made static in genobj32.c
 
@@ -146,7 +151,7 @@
     include/external.ch
     * Regenerated.
   * source/runner/runlib.c
-    ! Made some steps to release memory blocks when an undeclared symbol error 
+    ! Made some steps to release memory blocks when an undeclared symbol error
       occurs, seemingly with few success. This needs some more work.
     + TODO added about a possible direction for further development.
       The idea would be to replicate the Blinker DLL functionality.
@@ -155,9 +160,9 @@
     source/compiler/gen*.c
     * Only every 100th line number is shown on the counter while parsing,
       this way it's more Clipper like. In theory it should also be faster,
-      but due to the stdout buffering, it's approx. the same speed. Though it 
+      but due to the stdout buffering, it's approx. the same speed. Though it
       could be faster in some platform/compiler/screen output combinations.
-    + The "syntax ok" message is now replaced with the total number of 
+    + The "syntax ok" message is now replaced with the total number of
       functions and the total number of lines. Similar to Clipper, but not
       so specific to the generated output.
     + /q0 switch no suppresses the "Harbour Compiler" header.
@@ -179,7 +184,7 @@
       hb_itemPutNLen().
   * source/rtl/itemapi.c
     include/itemapi.h
-    + hb_itemPutNLen() generic function added to assign a number to an item, 
+    + hb_itemPutNLen() generic function added to assign a number to an item,
       the low-level type of the number is automatically selected, based on the
       magnitude and presence of decimal places. Similar to hb_vmPushNumber().
     + hb_itemPutN?Len() functions will now accept any negative width/dec
@@ -197,7 +202,7 @@
     + hb_stackDispLocal() - More values are printed, the format changed.
   * tests/working/rtl_test.prg
     tests/working/overload.prg
-    ! The tests fixed again, "+="/"-=" operators removed from the class 
+    ! The tests fixed again, "+="/"-=" operators removed from the class
       declaration.
     * "+"/"-" implementation changed to not modify the original value, since
       the expression "oString + 'A'" in itself in one line is not valid anyway.
@@ -209,7 +214,7 @@
   * source/vm/hvm.c
     + hb_vmInString() - Added support for overloading the "$" operator.
     ! hb_vmPlus() - Fixed the operator overloading feature.
-    + hb_vmNotEqual() - Added support for alternate notequal operators: 
+    + hb_vmNotEqual() - Added support for alternate notequal operators:
       "<>" and "#".
   * tests/working/rtl_test.prg
     tests/working/overload.prg
