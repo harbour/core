@@ -1,3 +1,14 @@
+20000513-00:19 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/stringsx.c
+     * Changed StrToken() to __StrToken()
+     - removed unused functions
+     + added standard copyright, please note that __StrToken() is NOT my work.
+   * source/rtl/teditor.prg
+     * StrToken() now is __StrToken()
+   * ChangeLog, now saved as unix file, only cr at end of line, forced my editor to save all files
+     as unix files regardless of their actual state.
+
 20000512-08:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.y

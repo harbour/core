@@ -122,7 +122,7 @@ STATIC function Text2Array(cString)
    ncSLen := Len(cString)
 
    while nRetLen < ncSLen
-      cLine := StrToken(cString, nTokNum++, cEOL)
+      cLine := __StrToken(cString, nTokNum++, cEOL)
       nRetLen += Len(cLine) + iif(nEOLLen > 1, nEOLLen - 1, 1)
 
       if nEOLLen > 1
