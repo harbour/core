@@ -10,6 +10,22 @@
      + Added #define HB_PP_ERR_TOO_MANY_INCLUDES 17
 
    * source/pp/ppcore.c
+     + Added : #define HB_PP_MAX_INCLUDES FOPEN_MAX - 5 - 1 (Victor ?)
+     + Added : "Too many nested #includes, can\'t open: \'%s\'"
+     + Added logic to protect against too many nested includes.
+
+
+   * source/macro/macro.slx
+   * source/compiler/harbour.slx
+     + Added (int) casting to isalpha() parameter calls.
+
+   * source/compiler/hbslex.c
+     * Removed extra empty line.
+
+   * include/hberrors.h
+     + Added #define HB_PP_ERR_TOO_MANY_INCLUDES 17
+
+   * source/pp/ppcore.c
      + Addded: #define HB_PP_MAX_INCLUDES FOPEN_MAX - 5 - 1 (Victor ?)
      + Added : "Too many nested #includes, can\'t open: \'%s\'"
      + Added logic to protect against too many nested includes.
