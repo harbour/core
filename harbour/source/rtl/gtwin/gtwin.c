@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-
+/* #define HB_DEBUG_KEYBOARD */
 /*
  * Harbour Project source code:
  * Video subsystem for Win32 compilers
@@ -343,6 +343,27 @@ static int StdFnKeys( WORD wKey, BOOL bEnhanced )
    return ch;
 }
 
+static int IgnoreKeyCodes( int wKey )
+{
+   int ignore = 0;
+   switch( wKey )
+   {
+      /* Virtual scan codes to ignore */
+      case 29: /* Ctrl */
+      case 40: /* Circle Accent */
+      case 41: /* Tick Accent */
+      case 42: /* Left Shift */
+      case 43: /* Reverse Tick Accent */
+      case 54: /* Right Shift */
+      case 56: /* Alt */
+      case 58: /* Caps Lock */
+      case 69: /* Num Lock */
+      case 70: /* Pause or Scroll Lock */
+         ignore = -1;
+   }
+   return ignore;
+}
+
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
 {
    int ch = 0, extended = 0;
@@ -387,10 +408,10 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
             WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
-            /*
+            #ifdef HB_DEBUG_KEYBOARD
                fprintf( stdout, "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch );
-               if( dwState & CAPSLOCK_ON ) fprintf( stdout, " CL" hb_kb_tr_stop
-               if( dwState & ENHANCED_KEY ) fprintf( stdout, " EK" hb_kb_tr_stop
+               if( dwState & CAPSLOCK_ON ) fprintf( stdout, " CL" );
+               if( dwState & ENHANCED_KEY ) fprintf( stdout, " EK" );
                if( dwState & LEFT_ALT_PRESSED ) fprintf( stdout, " LA" );
                if( dwState & RIGHT_ALT_PRESSED ) fprintf( stdout, " RA" );
                if( dwState & LEFT_CTRL_PRESSED ) fprintf( stdout, " LC" );
@@ -399,68 +420,88 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                if( dwState & SCROLLLOCK_ON ) fprintf( stdout, " SL" );
                if( dwState & SHIFT_PRESSED ) fprintf( stdout, " SH" );
                fprintf( stdout, " " );
-            */
+            #endif
             if( ch == 224 )
             {
                /* Strip extended key lead-in codes */
                ch = 0;
-               /* fprintf( stdout, "-" ); */
+               #ifdef HB_DEBUG_KEYBOARD
+                  fprintf( stdout, "-" );
+               #endif
             }
-            else if( ch < 0  && ( ch != -32  || wChar > 50 ) )
+            else if( ch < 0  && ch != -32 && ch != -16 && !IgnoreKeyCodes( wKey ) )
             {
                /* Process international key codes */
                ch += 256;
-               /* fprintf( stdout, "+" ); */
+               #ifdef HB_DEBUG_KEYBOARD
+                  fprintf( stdout, "+" );
+               #endif
+            }
+            else if( ch < 0 )
+            {
+               /* Ignore any negative character codes that didn't get handled
+                  by the international keyboard processing */
+               ch = 0;
             }
             else
             {
-               /* fprintf( stdout, "0" ); */
-               if( ( ( ch == 0 || ch == -32 ) && ( dwState & ( SHIFT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
-               || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) ) )
+               #ifdef HB_DEBUG_KEYBOARD
+                  fprintf( stdout, "0" );
+               #endif
+               if( ( ( ch == 0 || ch == -32 || ch == -16 ) && ( dwState & ( SHIFT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
+               || ( ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) )
+               && ! ( ( dwState & ( RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED ) ) == ( RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED ) ) ) )
                {
                   extended = 1;
-                  /* fprintf( stdout, "1" ); */
+                  #ifdef HB_DEBUG_KEYBOARD
+                     fprintf( stdout, "1" );
+                  #endif
                }
                else if( ch == 0 )
                {
                   if( eventmask & INKEY_RAW )
                   {
                      extended = 1;
-                     /* fprintf( stdout, "2" ); */
+                     #ifdef HB_DEBUG_KEYBOARD
+                        fprintf( stdout, "2" );
+                     #endif
+                  }
+                  else if( IgnoreKeyCodes( wKey ) )
+                  {
+                     #ifdef HB_DEBUG_KEYBOARD
+                        fprintf( stdout, "!" );
+                     #endif
                   }
                   else
                   {
                      ch = StdFnKeys( wKey, 0 );
-                     /* fprintf( stdout, "3" ); */
+                     #ifdef HB_DEBUG_KEYBOARD
+                        fprintf( stdout, "3" );
+                     #endif
                   }
                }
             }
             if( extended )
             {
-               /* fprintf( stdout, "4" ); */
+               #ifdef HB_DEBUG_KEYBOARD
+                  fprintf( stdout, "4" );
+               #endif
                /* Process non-ASCII key codes */
                if( eventmask & INKEY_RAW ) wKey = wChar;
                /* Discard standalone state key presses for normal mode only */
-               if( ( eventmask & INKEY_RAW ) == 0 ) switch( wKey )
+               if( ( eventmask & INKEY_RAW ) == 0 && IgnoreKeyCodes( wKey ) )
                {
-                  /* Virtual scan codes to ignore */
-                  case 29: /* Ctrl */
-                  case 40: /* Circle Accent */
-                  case 41: /* Tick Accent */
-                  case 42: /* Left Shift */
-                  case 43: /* Reverse Tick Accent */
-                  case 54: /* Right Shift */
-                  case 56: /* Alt */
-                  case 58: /* Caps Lock */
-                  case 69: /* Num Lock */
-                  case 70: /* Pause or Scroll Lock */
                      wKey = 0;
-                     /* fprintf( stdout, "5" );  */
+                     #ifdef HB_DEBUG_KEYBOARD
+                        fprintf( stdout, "5" );
+                     #endif
                }
                if( wKey == 0 ) ch = 0;
                else
                {
-                  /* fprintf( stdout, "6" ); */
+                  #ifdef HB_DEBUG_KEYBOARD
+                     fprintf( stdout, "6" );
+                  #endif
                   if( eventmask & INKEY_RAW )
                   {
                      /* Pass along all virtual key codes with all
@@ -473,7 +514,9 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      if( dwState & LEFT_ALT_PRESSED ) wKey += 8192;
                      if( dwState & RIGHT_ALT_PRESSED ) wKey += 16384;
                      ch = wKey;
-                     /* fprintf( stdout, "7" ); */
+                     #ifdef HB_DEBUG_KEYBOARD
+                        fprintf( stdout, "7" );
+                     #endif
                   }
                   else
                   {
@@ -482,17 +525,23 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      BOOL bCtrl = dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED );
                      BOOL bShift = dwState & SHIFT_PRESSED;
                      BOOL bEnhanced = dwState & ENHANCED_KEY;
-                     /* fprintf( stdout, "8" ); */
+                     #ifdef HB_DEBUG_KEYBOARD
+                        fprintf( stdout, "8" );
+                     #endif
 
                      HB_TRACE(HB_TR_INFO, ("hb_gt_ReadKey(): wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
 
                      if( bAlt )
                      {
-                        /* fprintf( stdout, "9" ); /*
+                        #ifdef HB_DEBUG_KEYBOARD
+                           fprintf( stdout, "9" );
+                        #endif
                         /* Alt key held */
                         if( ch == 0 || ch == wChar || tolower( ch ) == tolower( wChar ) )
                         {
-                           /* fprintf( stdout, "a" ); */
+                           #ifdef HB_DEBUG_KEYBOARD
+                              fprintf( stdout, "a" );
+                           #endif
                            /* Only translate if not AltGr */
                            if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
                            else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
@@ -513,7 +562,9 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      }
                      else if( bCtrl )
                      {
-                        /* fprintf( stdout, "b" ); */
+                        #ifdef HB_DEBUG_KEYBOARD
+                           fprintf( stdout, "b" );
+                        #endif
                         /* Ctrl key held */
                         if( wKey == 53 && bEnhanced ) ch = KP_CTRL_SLASH; /* Num Pad / */
                         else switch( wKey )
@@ -615,7 +666,9 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      }
                      else if( bShift )
                      {
-                        /* fprintf( stdout, "c" ); */
+                        #ifdef HB_DEBUG_KEYBOARD
+                           fprintf( stdout, "c" );
+                        #endif
                         /* Shift key held */
                         if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
                         else switch( wKey )
@@ -687,7 +740,9 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      }
                      else
                      {
-                        /* fprintf( stdout, "d" ); */
+                        #ifdef HB_DEBUG_KEYBOARD
+                           fprintf( stdout, "d" );
+                        #endif
                         ch = StdFnKeys( wKey, bEnhanced );
                      }
                   }
@@ -785,8 +840,8 @@ USHORT hb_gt_GetScreenWidth( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
    GetConsoleScreenBufferInfo( s_HOutput, &csbi );
-/* return csbi.dwMaximumWindowSize.X; */
-/* return HB_MAX( csbi.srWindow.Right - csbi.srWindow.Left + 1, 40 ); */
+/* return csbi.dwMaximumWindowSize.X;  */
+/* return HB_MAX( csbi.srWindow.Right - csbi.srWindow.Left + 1, 40 );  */
    return HB_MAX( csbi.dwSize.X, 40 );
 }
 
@@ -797,8 +852,8 @@ USHORT hb_gt_GetScreenHeight( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
    GetConsoleScreenBufferInfo( s_HOutput, &csbi );
-/* return csbi.dwMaximumWindowSize.Y; */
-/* return HB_MAX( csbi.srWindow.Bottom - csbi.srWindow.Top + 1, 25 ); */
+/* return csbi.dwMaximumWindowSize.Y;  */
+/* return HB_MAX( csbi.srWindow.Bottom - csbi.srWindow.Top + 1, 25 );  */
    return HB_MAX( csbi.dwSize.Y, 25 );
 }
 
