@@ -59,9 +59,11 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  34    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  35    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
+#define IS_LATIN               1    /* Should be 1, if the national alphabet
+                                       is based on Latin */
 #define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
                                        has the same weight as appropriate
                                        unaccented. */
@@ -83,8 +85,8 @@
  */
 
 static HB_CODEPAGE s_codepage = { "PLISO",NUMBER_OF_CHARACTERS,
-    "A¡BCÆDEÊFGHIJKL£MNÑOÓPQRS¦TUWXYZ¬¯","a±bcædeêfghijkl³mnñoópqrs¶tuwxyz¼¿",
-    ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
+    "A¡BCÆDEÊFGHIJKL£MNÑOÓPQRS¦TUVWXYZ¬¯","a±bcædeêfghijkl³mnñoópqrs¶tuvwxyz¼¿",
+    IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_ANNOUNCE( PLISO );
 

@@ -80,6 +80,7 @@ typedef struct _HB_CODEPAGE
    int   nChars;
    char *CharsUpper;
    char *CharsLower;
+   BOOL  lLatin;
    BOOL  lAccEqual;
    BOOL  lAccInterleave;
    BOOL  lSort;

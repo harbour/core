@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-02 14:18 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbapicdp.h
+  * source/codepage/cdp_tpl.c
+  * source/codepage/cdpgedos.c
+  * source/codepage/Cdpgewin.c
+  * source/codepage/cdpla850.c
+  * source/codepage/cdppl852.c
+  * source/codepage/cdppliso.c
+  * source/codepage/cdpplmaz.c
+  * source/codepage/cdpru866.c
+  * source/codepage/cdprukoi.c
+  * source/codepage/cdpruwin.c
+  * source/rtl/cdpapi.c
+    ! Few fixes in codepage subsystem
+
 2003-04-01 16:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/transfrm.c
     * Transform() now uses codepages while converting to upper case.

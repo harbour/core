@@ -101,6 +101,7 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                cdpage->lSort = FALSE;
                if( cdpage->nChars )
                {
+                  int nAddLower = cdpage->nChars + ( (cdpage->lLatin)? 6:0 );
                   cdpage->s_chars = (BYTE*) hb_xgrab(256);
                   memset( cdpage->s_chars,'\0',256 );
                   cdpage->s_upper = (BYTE*) hb_xgrab(256);
@@ -174,7 +175,7 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      iu = (((int)*ptrUpper)&255);
                      cdpage->s_chars[ iu ] = i;
                      il = (((int)*ptrLower)&255);
-                     cdpage->s_chars[ il ] = i+cdpage->nChars;
+                     cdpage->s_chars[ il ] = i+nAddLower;
                      if( iu < iumax || il < ilmax )
                         cdpage->lSort = TRUE;
                      iumax = iu; ilmax = il;
@@ -184,6 +185,27 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      il = ((int)(*ptrUpper))&255;
                      cdpage->s_lower[il] = *ptrLower;
                   }
+                  if( cdpage->lLatin )
+                  {
+                     for( i=91; i<=96; i++ )
+                     {
+                        if( !cdpage->s_chars[i] )
+                           cdpage->s_chars[i] = cdpage->nChars + (i-90);
+                     }
+                     for( i=123; i<=255; i++ )
+                     {
+                        if( !cdpage->s_chars[i] )
+                           cdpage->s_chars[i] = cdpage->nChars + nAddLower + (i-122);
+                     }
+                  }
+                  /*
+                  for( i=0; i<32; i++ )
+                     printf( "\n %3d %3d %3d %3d %3d %3d %3d %3d",cdpage->s_chars[i*8],
+                       cdpage->s_chars[i*8+1],cdpage->s_chars[i*8+2],
+                       cdpage->s_chars[i*8+3],cdpage->s_chars[i*8+4],
+                       cdpage->s_chars[i*8+5],cdpage->s_chars[i*8+6],
+                       cdpage->s_chars[i*8+7] );
+                  */
                   if( nMulti )
                   {
                      cdpage->multi = (PHB_MULTICHAR) hb_xgrab( sizeof(HB_MULTICHAR)*nMulti );
@@ -193,7 +215,6 @@ BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                   else
                      cdpage->multi = NULL;
                }
-               // printf( "\n%s %d",s_cdpage->id,s_cdpage->lSort );
                return TRUE;
             }
          }
@@ -223,10 +244,7 @@ PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE cdpage )
    if( cdpage )
    {
       s_cdpage = cdpage;
-      printf("Codepage - Yes");
    }
-   else
-      printf("Codepage - No");
 
    return cdpOld;
 }
@@ -281,7 +299,7 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
 {
    int i, iRet = 0, n1, n2;
    int lAcc1 = 0, lAcc2 = 0;
-   // printf( "\nhb_cdpcmp-0 %s %s",szFirst,szSecond );
+   /* printf( "\nhb_cdpcmp-0 %s %s",szFirst,szSecond ); */
    for( i=0; i<iLen; i++,szFirst++,szSecond++ )
       if( *szFirst != *szSecond )
       {
@@ -290,14 +308,14 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
          {
             /* One of characters doesn't belong to the national characters */
             iRet = ( (((int)*szFirst)&255) < (((int)*szSecond)&255) )? -1 : 1;
-            // printf( "\n|%c|%c|%d %d %d",*szFirst,*szSecond,((int)*szFirst)&255,((int)*szSecond)&255,iRet );
+            /* printf( "\n|%c|%c|%d %d %d",*szFirst,*szSecond,((int)*szFirst)&255,((int)*szSecond)&255,iRet ); */
             break;
          }
          if( cdpage->nMulti && i )
          {
             int j, nd1 = 0, nd2 = 0;
             PHB_MULTICHAR pmulti = cdpage->multi;
-            // printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond );
+            /* printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond ); */
             for( j=0; j<cdpage->nMulti; j++,pmulti++ )
             {
                if( ( *szFirst == pmulti->cLast[0] || 
@@ -311,7 +329,7 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
                      *(szSecond-1) == pmulti->cFirst[1] )  )
                    nd2 = pmulti->nCode;
             }
-            // printf( "\nhb_cdpcmp-2 %d %d",nd1,nd2 );
+            /* printf( "\nhb_cdpcmp-2 %d %d",nd1,nd2 ); */
             if( nd1 && !nd2 )
             {
                n2 = (int)cdpage->s_chars[ ((int)*(szSecond-1))&255 ];
@@ -322,7 +340,7 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
             {
                n1 = (int)cdpage->s_chars[ ((int)*(szFirst-1))&255 ];
                iRet = ( n1 < nd2 )? -1 : 1;
-               // printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 );
+               /* printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 ); */
                break;
             }
             else if( nd1 && nd2 )
@@ -349,7 +367,7 @@ int hb_cdpcmp( char* szFirst, char* szSecond, int iLen, PHB_CODEPAGE cdpage )
             break;
          }
       }
-   // printf( " : %d",iRet );
+   /* printf( " : %d",iRet ); */
 
    if( !iRet && lAcc1 )
       return 1;
