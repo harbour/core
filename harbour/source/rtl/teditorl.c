@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * __STRTOKEN() helper routine for TEDITOR.PRG
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ *                Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
