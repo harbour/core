@@ -214,6 +214,9 @@ int main( int argc, char * argv[] )
          if( ! bAnyFiles )
             bAnyFiles = TRUE;
 
+         if( i > 1 )
+            hb_pp_Init();
+
          iStatus = hb_compCompile( argv[ i ], argc, argv );
 
          if( iStatus != EXIT_SUCCESS )
@@ -3538,7 +3541,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
       iStatus = EXIT_FAILURE;
    }
    hb_xfree( hb_comp_pFileName );
-   
+
    return iStatus;
 }
 
