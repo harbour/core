@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-01-19 13:39 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx1.c
+     ! fixed a bug in descending skipping
+     + added support for ordKeyNo() and ordKeyCount()
 
 2002-01-19 08:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rtl/typefile.prg

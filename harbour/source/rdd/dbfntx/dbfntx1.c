@@ -1723,7 +1723,7 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
 static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
 {
 
-   ULONG ulRecNo, ulRecCount, ulKeyNo = 0;
+   ULONG ulRecNo, ulRecCount, ulKeyNo = 0, lStep = 0;
    USHORT uiCurLen;
    char szBuffer[ HB_MAX_DOUBLE_LENGTH + 1 ];
    NTXAREAP pArea;
@@ -1826,8 +1826,23 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                printf( "ntxCreateOrder" );
          }
       }
-      if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll )
-         SELF_SKIP( ( AREAP ) pArea, 1 );
+      if( pArea->lpdbOrdCondInfo )
+      {
+         if( !pArea->lpdbOrdCondInfo->fAll )
+            SELF_SKIP( ( AREAP ) pArea, 1 );
+         if( pArea->lpdbOrdCondInfo->lStep )
+         {
+            lStep ++;
+            if( lStep == (ULONG) pArea->lpdbOrdCondInfo->lStep )
+               lStep = 0;
+         }
+         if( pArea->lpdbOrdCondInfo->itmCobEval && !lStep )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pArea->lpdbOrdCondInfo->itmCobEval );
+            hb_vmDo( 0 );
+         }
+      }
    }
    if( ulKeyNo < ulRecCount && ulKeyNo%2 )
       hb_ntxSortKeyAdd( pTag, &sortInfo, NULL, ulKeyNo );
