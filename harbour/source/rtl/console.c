@@ -95,7 +95,7 @@ USHORT hb_max_col( void )
 }
 
 #ifndef USE_GTAPI
-void adjust_pos( char * fpStr, WORD uiLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
+static void adjust_pos( char * fpStr, WORD uiLen, USHORT * row, USHORT * col, USHORT max_row, USHORT max_col )
 {
    WORD uiCount;
    for( uiCount = 0; uiCount < uiLen; uiCount++ )
@@ -264,7 +264,7 @@ static void hb_altout( char * fpStr, WORD uiLen )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
-      adjust_pos( fpStr, uiLen, &p_row, &p_col, -1, -1 );
+      p_col += uiLen;
    }
 }
 
@@ -275,7 +275,7 @@ static void hb_devout( char * fpStr, WORD uiLen )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       write( hb_set_printhan, fpStr, uiLen );
-      adjust_pos( fpStr, uiLen, &p_row, &p_col, -1, -1 );
+      p_col += uiLen;
    }
    else
    {
@@ -366,6 +366,11 @@ HARBOUR HB_QOUT( void )
       MessageBox( 0, _parc( 1 ), "Harbour", 0 );
    #else
       hb_altout( CrLf, strlen (CrLf) );
+      if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
+      {
+         p_row++;
+         p_col=0;
+      }
       HB_QQOUT();
    #endif
 }

@@ -20,7 +20,7 @@ extern STACK stack;
 extern char *hb_monthsname[];
 extern char *hb_daysname[];
 
-double hb_seconds( void )
+double hb__seconds( void )
 {
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
    struct time t;
@@ -588,7 +588,7 @@ HARBOUR HB_CDOW( void )
 HARBOUR HB_SECONDS( void )
 {
    if( _pcount() == 0 )
-      _retnd( hb_seconds() );
+      _retnd( hb__seconds() );
    else
    {
       /* QUESTION: Clipper catches this at compile time! */

@@ -4,12 +4,16 @@
 /* Harbour Preprocessor , version 0.9
    author - Alexander Kresin             */
 
-#if defined(__DJGPP__) || defined(__GNUC__)
+#if defined(__GNUC__)
  #include <string.h>
  #include <stdlib.h>
  #include <unistd.h>
 #else
- #include <mem.h>
+ #if defined(__IBMCPP__)
+  #include <memory.h>
+ #else
+  #include <mem.h>
+ #endif
 #endif
 
 #include <stdio.h>
@@ -59,6 +63,7 @@ char* strodup ( char * );
 int NextWord ( char**, char*, int);
 int NextName ( char**, char*, char**);
 int Include( char *, PATHNAMES *, FILE** );
+int OpenInclude( char *, PATHNAMES *, FILE** );
 
 #define isname(c)  (isalnum(c) || c=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
@@ -392,7 +397,7 @@ int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
 {
  int i = 0, ipos, ifou;
  int explen,rmlen;
- char exppatt[MAX_NAME], expreal[4] = "\1  0";
+ char exppatt[MAX_NAME], expreal[5] = "\1  0";
  char lastchar = '@', exptype;
  char *ptr;
 

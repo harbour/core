@@ -2,12 +2,17 @@
  * $Id$
  */
 
-#if defined(__DJGPP__) || defined(__GNUC__)
+#if defined(__GNUC__)
  #include <string.h>
  #include <stdlib.h>
 #else
- #include <alloc.h>
- #include <mem.h>
+ #if defined(__IBMCPP__)
+  #include <memory.h>
+  #include <stdlib.h>
+ #else
+  #include <alloc.h>
+  #include <mem.h>
+ #endif
 #endif
 #include <stdio.h>
 #include "harb.h"

@@ -1,3 +1,26 @@
+19990615-22:55 EDT David G. Holm <dholm@jsd-llc.com>
+  * ChangeLog
+    - Added comment to entry 19990615-12:30 EDT David G. Holm
+      about renaming two hb_ functions in source/rtl/console.c
+  * makefile.icc
+    - Build component parts of Harbour.exe separately
+  * source/hbpp/hbpp.c
+    - Added #ifdef block for IBM C++ compiler
+    - Added prototype for OpenInclude()
+    - Increased size of expreal array in ConvertPatterns from 4 to 5,
+      because it is being initialized from a zero terminated string
+  * source/hbpp/hbppint.c
+    - Added #ifdef block for IBM C++ compiler
+  * source/rtl/console.c
+    - I went overboard in tracking the printer position, because
+      Clipper doesn't make any adjustments for control characters sent
+      to the printer. But it does adjust the printer row and column when
+      QOUT() output goes to the printer, which is what I had missed.
+  * source/rtl/dates.c
+    - Changed hb_seconds() to hb__seconds(), because IBM C++
+      librarian can't distinguish between HARBOUR HB_SECONDS(void)
+      and double hb_seconds(void)
+
 19990616-08:00 WIB Andi Jahja
   + source\rtl\natmsg\msgia.c
     Language module for Indonesian languange
@@ -23,6 +46,9 @@
     - Added HARBOUR HB_SETPOS()
     - Improved printer position tracking
     - Improved screen position tracking when not using GT API
+    - Renamed hb_maxrow() to hb_max_row() and hb_maxcol() to hb_max_col(),
+      because IBM C++ librarian can't distinguish between functions with
+      the same name that differ only by the return argument.
   * source/rtl/files.c
     - convert_create_flags no longer returns a value, so declare as void
   * source/rtl/set.c
@@ -56,10 +82,10 @@
 
 * source/compiler/harbour.y
   * added missing error message
-  
+
 * source/compiler/harbour.l
   * removed printf introducced for debugging purpose
-  
+
 19990615-07:00 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.y
@@ -70,7 +96,7 @@
  * corrected line continnuation logic
 
 * include/hberrors.h
- + added new error message 
+ + added new error message
 
 * include/hbsetup.h
  * removed unneccessary '*/' defined for Watcom compiler
@@ -209,93 +235,93 @@ Fri Jun 11 1999 19:35 PST Ron Pinkas
 
 Fri Jun 11 19:14:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile:
-	* include/set.h:
-	* source/compiler/harbour.y:
-	* source/hbpp/harb.h:
-	* source/hbpp/hbpp.c:
-	* source/rtl/arrays.c:
-	* source/rtl/classes.c:
-	* source/rtl/console.c:
-	* source/rtl/dates.c:
-	* source/rtl/descend.c:
-	* source/rtl/dir.c:
-	* source/rtl/environ.c:
-	* source/rtl/files.c:
-	* source/rtl/hardcr.c:
-	* source/rtl/math.c:
-	* source/rtl/mtran.c:
-	* source/rtl/set.c:
-	* source/rtl/strings.c:
-	* source/rtl/transfrm.c:
-	* source/runner/run_exp.h:
-	* source/runner/runner.c:
-	* source/tools/asciisum.c:
-	* source/tools/ascpos.c:
-	* source/tools/atdiff.c:
-	* source/tools/chareven.c:
-	* source/tools/charmix.c:
-	* source/tools/charodd.c:
-	* source/tools/chrcount.c:
-	* source/tools/chrfirst.c:
-	* source/tools/chrtotal.c:
-	* source/tools/datesx.c:
-	* source/tools/debug.c:
-	* source/tools/hb_f.c:
-	* source/tools/io.c:
-	* source/tools/mathx.c:
-	* source/tools/strcount.c:
-	* source/tools/strcspn.c:
-	* source/tools/strdiff.c:
-	* source/tools/strexpan.c:
-	* source/tools/stringsx.c:
-	* source/tools/strleft.c:
-	* source/tools/strpbrk.c:
-	* source/tools/strright.c:
-	* source/vm/dynsym.c:
-	* source/vm/hvm.c:
-	* source/vm/initsymb.c:
-	* tests/working/Makefile:
-	* tests/working/dates.prg:
-	* tests/working/dates2.prg:
-	* tests/working/empty.prg:
-	* tests/working/filexist.prg:
-	* tests/working/inifiles.prg:
-	* tests/working/next.prg:
-	* tests/working/test_all.prg:
-	* tests/working/teststr.prg:
-	* tests/working/transfrm.prg:
-	When the compiler sees a function called FOO, it generates a call
-	to HB_FOO. This meant updating the code generation (with the help
-	of Eddie Runia) and updating all HARBOUR functions to prepend an
-	HB_ to each of them. I also made sure all of them where declared
-	in uppercase and had the signature HARBOUR HB_FOO(void).
-	I may have missed something. In particular, test testhbf.prg does
-	not work, but I wanted to commit this change anyway.
+        * include/Makefile:
+        * include/set.h:
+        * source/compiler/harbour.y:
+        * source/hbpp/harb.h:
+        * source/hbpp/hbpp.c:
+        * source/rtl/arrays.c:
+        * source/rtl/classes.c:
+        * source/rtl/console.c:
+        * source/rtl/dates.c:
+        * source/rtl/descend.c:
+        * source/rtl/dir.c:
+        * source/rtl/environ.c:
+        * source/rtl/files.c:
+        * source/rtl/hardcr.c:
+        * source/rtl/math.c:
+        * source/rtl/mtran.c:
+        * source/rtl/set.c:
+        * source/rtl/strings.c:
+        * source/rtl/transfrm.c:
+        * source/runner/run_exp.h:
+        * source/runner/runner.c:
+        * source/tools/asciisum.c:
+        * source/tools/ascpos.c:
+        * source/tools/atdiff.c:
+        * source/tools/chareven.c:
+        * source/tools/charmix.c:
+        * source/tools/charodd.c:
+        * source/tools/chrcount.c:
+        * source/tools/chrfirst.c:
+        * source/tools/chrtotal.c:
+        * source/tools/datesx.c:
+        * source/tools/debug.c:
+        * source/tools/hb_f.c:
+        * source/tools/io.c:
+        * source/tools/mathx.c:
+        * source/tools/strcount.c:
+        * source/tools/strcspn.c:
+        * source/tools/strdiff.c:
+        * source/tools/strexpan.c:
+        * source/tools/stringsx.c:
+        * source/tools/strleft.c:
+        * source/tools/strpbrk.c:
+        * source/tools/strright.c:
+        * source/vm/dynsym.c:
+        * source/vm/hvm.c:
+        * source/vm/initsymb.c:
+        * tests/working/Makefile:
+        * tests/working/dates.prg:
+        * tests/working/dates2.prg:
+        * tests/working/empty.prg:
+        * tests/working/filexist.prg:
+        * tests/working/inifiles.prg:
+        * tests/working/next.prg:
+        * tests/working/test_all.prg:
+        * tests/working/teststr.prg:
+        * tests/working/transfrm.prg:
+        When the compiler sees a function called FOO, it generates a call
+        to HB_FOO. This meant updating the code generation (with the help
+        of Eddie Runia) and updating all HARBOUR functions to prepend an
+        HB_ to each of them. I also made sure all of them where declared
+        in uppercase and had the signature HARBOUR HB_FOO(void).
+        I may have missed something. In particular, test testhbf.prg does
+        not work, but I wanted to commit this change anyway.
 
 Fri Jun 11 17:11:09 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/bin.cf:
-	* config/dir.cf:
-	* config/global.cf:
-	* config/install.cf:
-	* config/lib.cf:
-	* config/rules.cf:
-	* config/test.cf:
-	* config/dos/dir.cf:
-	* config/dos/djgpp.cf:
-	* config/dos/global.cf:
-	* config/dos/install.cf:
-	* config/win32/dir.cf:
-	* config/win32/gcc.cf:
-	* config/win32/global.cf:
-	* config/win32/install.cf:
-	* config/win32/msvc.cf:
-	* config/win32/rules.cf:
-	Reorganized things in an attempt to make it clearer how to support
-	different platforms and compilers. Also added as much support as I
-	could for running the GNU-make build system under plain
-	COMMAND.COM (DOS and Win95), not only under bash.
+        * config/bin.cf:
+        * config/dir.cf:
+        * config/global.cf:
+        * config/install.cf:
+        * config/lib.cf:
+        * config/rules.cf:
+        * config/test.cf:
+        * config/dos/dir.cf:
+        * config/dos/djgpp.cf:
+        * config/dos/global.cf:
+        * config/dos/install.cf:
+        * config/win32/dir.cf:
+        * config/win32/gcc.cf:
+        * config/win32/global.cf:
+        * config/win32/install.cf:
+        * config/win32/msvc.cf:
+        * config/win32/rules.cf:
+        Reorganized things in an attempt to make it clearer how to support
+        different platforms and compilers. Also added as much support as I
+        could for running the GNU-make build system under plain
+        COMMAND.COM (DOS and Win95), not only under bash.
 
 19990611-17:00 CET Matthew Hamiltion
   * tests/working/inifiles.prg
