@@ -57,7 +57,8 @@
 CLASS TMenuItem
 
    DATA   cCaption  // Specifies the text of the menu item
-   DATA   cAction   // A character description of the method to invoke
+   DATA   cName     // The name of this component
+   DATA   OnClick   // A character description of the method to invoke
    DATA   nId       // Command value to send to the container form
    DATA   lEnabled  // Specifies whether the menu item is enabled
    DATA   aItems    // Contains the menu items in the submenu of the menu item
@@ -68,6 +69,7 @@ CLASS TMenuItem
 
    METHOD New( oOwner ) // Creates a new menu item
    METHOD Add( oMenuItem ) // Adds a new drop down menu item
+   METHOD FindItem( nId ) // Searches for a sub menuitem given its id
 
 ENDCLASS
 
@@ -94,3 +96,21 @@ METHOD Add( oMenuItem ) CLASS TMenuItem
    AAdd( ::aItems, oMenuItem )
 
 return nil
+
+METHOD FindItem( nId ) CLASS TMenuItem
+
+   local oMenuItem, n
+
+   for n = 1 to Len( ::aItems )
+      if ( oMenuItem := ::aItems[ n ] ):nId == nId
+         return oMenuItem
+      else
+         if oMenuItem:aItems != nil
+            if ( oMenuItem := oMenuItem:FindItem( nId ) ) != nil
+               return oMenuItem
+            endif
+         endif
+      endif
+   next
+
+return oMenuItem

@@ -59,8 +59,9 @@ CLASS TMenu
    DATA   nHandle
    DATA   aItems
 
-   METHOD New( oForm )
-   METHOD Add( oMenuItem )
+   METHOD New( oForm )      // Creates a new menu
+   METHOD Add( oMenuItem )  // Adds a menuitem
+   METHOD FindItem( nId )   // Searches for a sub menuitem given its id
 
 ENDCLASS
 
@@ -80,3 +81,21 @@ METHOD Add( oMenuItem ) CLASS TMenu
    AAdd( ::aItems, oMenuItem )
 
 return nil
+
+METHOD FindItem( nId ) CLASS TMenu
+
+   local oMenuItem, n
+
+   for n = 1 to Len( ::aItems )
+      if ( oMenuItem := ::aItems[ n ] ):nId == nId
+         return oMenuItem
+      else
+         if oMenuItem:aItems != nil
+            if ( oMenuItem := oMenuItem:FindItem( nId ) ) != nil
+               return oMenuItem
+            endif
+         endif
+      endif
+   next
+
+return oMenuItem
