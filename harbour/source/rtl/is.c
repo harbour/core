@@ -65,7 +65,7 @@ HB_FUNC( ISALPHA )
 
    if( szString != NULL )
    {
-      if( isalpha( ( int ) * szString ) )
+      if( isalpha( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
       else if( s_cdpage->nChars && 
            ( strchr( s_cdpage->CharsUpper,* szString ) || strchr( s_cdpage->CharsLower,* szString ) ) )
@@ -84,7 +84,7 @@ HB_FUNC( ISDIGIT )
    char * szString = hb_parc( 1 );
 
    if( szString != NULL )
-      hb_retl( isdigit( ( int ) * szString ) );
+      hb_retl( isdigit( ( unsigned char ) * szString ) );
    else
       hb_retl( FALSE );
 }
@@ -97,7 +97,7 @@ HB_FUNC( ISUPPER )
 
    if( szString != NULL )
    {
-      if( isupper( ( int ) * szString ) )
+      if( isupper( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
       else if( s_cdpage->nChars && strchr( s_cdpage->CharsUpper,* szString ) )
          hb_retl( TRUE );
@@ -116,7 +116,7 @@ HB_FUNC( ISLOWER )
 
    if( szString != NULL )
    {
-      if( islower( ( int ) * szString ) )
+      if( islower( ( unsigned char ) * szString ) )
          hb_retl( TRUE );
       else if( s_cdpage->nChars && strchr( s_cdpage->CharsLower,* szString ) )
          hb_retl( TRUE );
