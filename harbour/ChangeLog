@@ -1,3 +1,13 @@
+19991111-04:41 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! hb_xrealloc() several things fixed (access to the pointer after 
+      reallocating it, uneccessary structure initializations, access to NULL
+      pointers of failed or zero size realloc), RTL_TEST GPF fixed.
+    ! Simplified, optimized and fixed the dump part.
+    + TODO added about inconsistent hb_xrealloc() behaviour.
+    + Size is shown in the dump.
+    % strcpy( p, "" ) calls optimized.
+
 19991111-01:18 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/fm.c
     ! hb_xrealloc() check for a passed NULL pointer.
