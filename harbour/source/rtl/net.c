@@ -83,6 +83,10 @@
       #include <sys/param.h>
    #endif
 
+#elif defined(HB_OS_UNIX)
+
+   #define MAXGETHOSTNAME 256      /* should be enough for a host name */
+
 #endif
 
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
@@ -92,7 +96,7 @@
 
 HB_FUNC( NETNAME )
 {
-#if defined(HB_OS_OS2) && defined(__GNUC__)
+#if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
    {
       char szValue[ MAXGETHOSTNAME + 1 ];
