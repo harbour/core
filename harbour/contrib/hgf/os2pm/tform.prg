@@ -78,7 +78,6 @@ CLASS TForm
    ASSIGN   nWidth( nNewWidth ) INLINE ;
                WinSetWidth( ::hWnd, nNewWidth )
 
-
 ENDCLASS
 
 
@@ -122,7 +121,7 @@ return nil
 
 ASSIGN oMenu( oNewMenu ) CLASS TForm
 
-   ::oMainMenu = oNewMenu
+   ::oMainMenu := oNewMenu
 
    WinSetParent( oNewMenu:nHandle, ::hWnd, .t. )
    WinSetOwner( oNewMenu:nHandle, ::hWnd )

@@ -80,3 +80,4 @@ char ** __crt0_glob_function( char * _arg )
    return 0;
 }
 #endif
+

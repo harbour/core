@@ -59,19 +59,21 @@
 
 CLASS TMenu
 
-   DATA   nHandle          // Handle of this SUBMENU (be it top level or drop down)
+   DATA   nHandle          // Handle of MIS_ACTIONBAR
    DATA   aItems           // Items inside this menu
+   DATA   oParent          // Parent/Owner of menu
 
-   METHOD New( oForm )
-   METHOD Add( oMenuItem )
+   METHOD   New(oForm)
+   METHOD   Add(oMenuItem)
 
 ENDCLASS
 
 
 METHOD New( oForm ) CLASS TMenu
 
-   ::aItems  = {}
-   ::nHandle = WinCreateMenu( oForm:hWnd )
+   ::aItems  := {}
+   ::oParent := oForm
+   ::nHandle := WinCreateMenu( oForm:hWnd )
 
 return Self
 
@@ -79,7 +81,7 @@ return Self
 METHOD Add( oMenuItem ) CLASS TMenu
 
    WinAddMenuItem( ::nHandle, oMenuItem:cCaption, MIT_END,;
-                   oMenuItem:nHandle, oMenuItem:nId, oMenuItem:lEnabled )
+                   nil, oMenuItem:nId, oMenuItem:lEnabled )
 
    AAdd( ::aItems, oMenuItem )
 

@@ -226,6 +226,30 @@ HB_FUNC( WINADDMENUITEM )
 }
 
 
+// Given an id of a menuitem changes it to a MIS_SUBMENU type of menu item
+// NOTE: You have to delete and reinsert a menu item if you want to change it from
+//       a MIS_TEXT to a MIS_SUBMENU type of menuitem
+HB_FUNC( WINMAKESUBMENUITEM )
+{
+   MENUITEM mit;
+   MRESULT rc;
+   char text[100];
+
+   rc = WinSendMsg((HWND) hb_parnl(1), MM_QUERYITEM, MPFROM2SHORT(hb_parni(2), FALSE ), &mit );
+   if ((BOOL)rc) {
+      WinSendMsg((HWND) hb_parnl(1), MM_QUERYITEMTEXT, MPFROM2SHORT(hb_parni(2), 100), &text );
+      WinSendMsg((HWND) hb_parnl(1), MM_DELETEITEM, MPFROM2SHORT(hb_parni(2), FALSE ), 0L );
+
+      mit.hwndSubMenu = hb_parnl(3);
+      mit.afStyle |= MIS_SUBMENU;
+
+      // re-insert the menuitem
+      WinSendMsg((HWND) hb_parnl(1), MM_INSERTITEM, &mit, &text);
+   }
+   hb_retnl(0);
+}
+
+
 HB_FUNC( WINSETPARENT )
 {
    hb_retl( WinSetParent( ( HWND ) hb_parnl( 1 ), ( HWND ) hb_parnl( 2 ),
