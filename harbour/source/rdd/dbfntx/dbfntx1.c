@@ -194,8 +194,8 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
    }
    bExact = ( bExact || pPage->TagParent->KeyType != 'C' );
    pPage->CurKey = 0;
-   if( pPage->uiKeys > 0 )
-   {
+   // if( pPage->uiKeys > 0 )
+   // {
       while( k > 0 && pPage->CurKey <= pPage->uiKeys )
       {
          p =  pPage->pKeys + pPage->CurKey;
@@ -274,7 +274,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
          if( k > 0 )
             pPage->CurKey++;
       }
-   }
+   // }
    hb_ntxPageRelease( pPage );
    return k;
 }
@@ -425,7 +425,7 @@ static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag )
 {
    int seekRes;
    LPKEYINFO pKey;
-   LPPAGEINFO pPage;
+   LPPAGEINFO pPage, pChildPage;
 
    pKey = hb_ntxKeyNew( NULL );
    hb_ntxGetCurrentKey( pTag, pKey );
@@ -441,7 +441,20 @@ static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag )
       pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->Owner->Owner->ulRecNo );
       pPage->CurKey--;
-      pPage->CurKey--;
+      if( ( pPage->pKeys+pPage->CurKey )->Tag )
+      {
+         do
+         {
+            pChildPage = hb_ntxPageLoad( ( pPage->pKeys+pPage->CurKey )->Tag );
+            hb_ntxPageRelease( pPage );
+            pPage = pChildPage;
+            pPage->CurKey = pPage->uiKeys;
+         }
+         while( ( pPage->pKeys+pPage->CurKey )->Tag );
+         pPage->CurKey--;
+      }
+      else
+         pPage->CurKey--;
       if( pPage->CurKey >= 0 )
       {
          /* printf( "\n\rhb_ntxFindPrevKey - 2" ); */
@@ -491,19 +504,20 @@ static BOOL hb_ntxPageReadPrevKey( LPTAGINFO pTag )
          pPage->CurKey--;
          if( ( pPage->pKeys+pPage->CurKey )->Tag )
          {
-            if( ( pPage->pKeys+pPage->CurKey )->Tag )
+            do
             {
                pChildPage = hb_ntxPageLoad( ( pPage->pKeys+pPage->CurKey )->Tag );
                hb_ntxPageRelease( pPage );
                pPage = pChildPage;
-               pPage->CurKey = pPage->uiKeys - 1;
+               pPage->CurKey = pPage->uiKeys;
             }
+            while( ( pPage->pKeys+pPage->CurKey )->Tag );
+            pPage->CurKey--;
          }
          else
             pPage->CurKey--;
          if( pPage->CurKey >= 0 )
          {
-            hb_itemCopy( pPage->TagParent->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );
             pPage->TagParent->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
             pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
             hb_ntxPageRelease( pPage );
@@ -1313,6 +1327,263 @@ static ERRCODE hb_ntxTagKeyAdd( LPTAGINFO pTag, PHB_ITEM pKey)
    return SUCCESS;
 }
 
+/*
+typedef struct _SORTITEM
+{
+   ULONG    rec_no;
+   char     key[ 1 ];
+} SORTITEM;
+*/
+
+struct _SORTITEM;
+typedef struct _SORTITEM
+{
+   struct _SORTITEM *  pNext;
+   ULONG    rec_no;
+   char     key[ 1 ];
+} SORTITEM;
+
+typedef SORTITEM * LPSORTITEM;
+
+typedef struct _NTXSORTINFO
+{
+   ULONG       Tag;
+   USHORT      itemLength;
+   USHORT      nItems;
+   BYTE *      sortBuffer;
+   LPSORTITEM  pKeyFirst;
+   LPSORTITEM  pKey1;
+   LPSORTITEM  pKey2;
+   char**      pageBuffers;
+} NTXSORTINFO;
+
+typedef NTXSORTINFO * LPNTXSORTINFO;
+
+static void hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szkey )
+{
+
+   LPSORTITEM pKeyNew, pKey, pKeyTmp, pKeyLast = NULL, pKeyPrev;
+/*
+   LPSORTITEM* aKeys = (LPSORTITEM*) sortBuffer;
+   pKeyNew = (LPSORTITEM) ( sortBuffer +
+          sizeof( LPSORTITEM ) * pTag->Owner->Owner->ulRecCount +
+          ( sizeof( ULONG ) + pTag->KeyLength ) * ( pTag->Owner->Owner->ulRecNo - 1 ) );
+
+   aKeys[ pTag->Owner->Owner->ulRecNo - 1 ] = pKeyNew;
+*/
+
+   /* printf( "\n\rhb_ntxSortKeyAdd - 0 ( %s )",szkey ); */
+   pKeyNew = (LPSORTITEM) ( pSortInfo->sortBuffer +
+           pSortInfo->itemLength * ( pTag->Owner->Owner->ulRecNo - 1 ) );
+   pKeyNew->rec_no = pTag->Owner->Owner->ulRecNo;
+   pKeyNew->pNext = NULL;
+   memcpy( pKeyNew->key, szkey, pTag->KeyLength );
+
+   if( ++(pSortInfo->nItems) < 2 && pKeyNew->rec_no < pTag->Owner->Owner->ulRecCount )
+      return;
+
+   if( pSortInfo->nItems == 2 )
+   {
+      pKeyTmp = (LPSORTITEM) ( pSortInfo->sortBuffer +
+           pSortInfo->itemLength * ( pTag->Owner->Owner->ulRecNo - 2 ) );
+      if( memcmp( pKeyNew->key, pKeyTmp->key, pTag->KeyLength ) < 0 )
+         pKeyNew->pNext = pKeyTmp;
+      else
+      {
+         pKeyTmp->pNext = pKeyNew;
+         pKeyNew = pKeyTmp;
+      }
+   }
+   if( pTag->Owner->Owner->ulRecNo < 3 )
+   {
+      pSortInfo->pKeyFirst = pKeyNew;
+      pSortInfo->nItems = 0;
+      return;
+   }
+
+   while( pSortInfo->nItems )
+   {
+      pKeyPrev = NULL;
+      pKeyTmp = pKeyNew->pNext;
+      pKeyNew->pNext = NULL;
+
+      if( pKeyLast )
+      {
+         pKeyPrev = pKeyLast;
+         pKey = pKeyLast->pNext;
+      }
+      else if( pSortInfo->pKey1 &&
+          ( memcmp( pKeyNew->key, pSortInfo->pKey1->key, pTag->KeyLength ) >= 0 ) )
+      {
+         pKeyPrev = pSortInfo->pKey1;
+         pKey = pSortInfo->pKey1->pNext;
+      }
+      else
+         pKey = pSortInfo->pKeyFirst;
+      while( pKey )
+      {
+         if( memcmp( pKeyNew->key, pKey->key, pTag->KeyLength ) < 0 )
+         {
+            pKeyNew->pNext = pKey;
+            if( pKeyPrev )
+            {
+               pKeyPrev->pNext = pKeyNew;
+               pSortInfo->pKey1 = pKeyNew;
+            }
+            else
+               pSortInfo->pKeyFirst = pKeyNew;
+            break;
+         }
+
+         pKeyPrev = pKey;
+         pKey = pKey->pNext;
+      }
+      if( !pKey )
+      {
+         pKeyPrev->pNext = pKeyNew;
+         pSortInfo->pKey1 = pKeyNew;
+      }
+
+      pKeyLast = pKeyNew;
+      pKeyNew = pKeyTmp;
+      ( pSortInfo->nItems ) --;
+   }
+/*
+   {
+      int i = 0;
+      char ctmp[30];
+      ctmp[ pTag->KeyLength ] = 0;
+      printf( "\n\r------------------" );
+      for( pKey = pSortInfo->pKeyFirst; pKey ; pKey = pKey->pNext,i++ )
+      {
+         memcpy( ctmp,pKey->key,pTag->KeyLength );
+         printf( "\n\r%d %s",i,ctmp );
+      }
+   }
+*/
+
+}
+
+static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, USHORT level )
+{
+   USHORT i, maxKeys = pTag->MaxKeys*2/3;
+   LPNTXBUFFER itemlist;
+   LPNTXITEM item;
+
+   if( !pSortInfo->pageBuffers[ level ] )
+   {
+      if( !pKey )
+         return;
+      pSortInfo->pageBuffers[ level ] = (char*) hb_xgrab( NTXBLOCKSIZE );
+      memset( pSortInfo->pageBuffers[ level ], 0, NTXBLOCKSIZE );
+      itemlist = ( LPNTXBUFFER ) pSortInfo->pageBuffers[ level ];
+      for( i = 0; i < maxKeys + 1; i++ )
+         itemlist->item_offset[i] = 2 + 2 * ( pTag->MaxKeys + 1 ) +
+               i * ( pTag->KeyLength + 8 );
+   }
+   else
+      itemlist = ( LPNTXBUFFER ) pSortInfo->pageBuffers[ level ];
+   /* printf( "\nhb_ntxRootPage - 1( itemlist->item_count=%d %d",itemlist->item_count,itemlist->item_offset[itemlist->item_count] ); */
+   item = (NTXITEM *)( pSortInfo->pageBuffers[ level ] + itemlist->item_offset[itemlist->item_count] );
+   item->page = pSortInfo->Tag;
+   if( itemlist->item_count < maxKeys && pKey )
+   {
+      item->rec_no = pKey->rec_no;
+      memcpy( item->key, pKey->key, pTag->KeyLength );
+      itemlist->item_count++;
+   }
+   else
+   {
+      if( pKey || itemlist->item_count > 0 )
+      {
+         pSortInfo->Tag += NTXBLOCKSIZE;
+         hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) pSortInfo->pageBuffers[ level ], NTXBLOCKSIZE );
+         itemlist->item_count = 0;
+         memset( pSortInfo->pageBuffers[ level ] + 4 + 2 * ( pTag->MaxKeys + 1 ),
+            0, NTXBLOCKSIZE - 6 - 2 * ( pTag->MaxKeys + 1 ) );
+      }
+      if( !pKey )
+         pTag->RootBlock = pSortInfo->Tag;
+      hb_ntxRootPage( pTag, pSortInfo, pKey, level+1 );
+   }
+}
+
+static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
+{
+   USHORT i, maxKeys = pTag->MaxKeys*2/3;
+   LPNTXBUFFER itemlist;
+   LPNTXITEM item;
+   ULONG numKey = 0;
+   LPSORTITEM pKey = pSortInfo->pKeyFirst;
+   char* buffer;
+   BOOL lSave = FALSE;
+
+   pSortInfo->Tag = 0;
+   pSortInfo->pageBuffers = (char**) hb_xgrab( sizeof( char* ) * 10 );
+   for( i = 0; i < 10; i++ )
+      pSortInfo->pageBuffers[i] = NULL;
+   pSortInfo->pageBuffers[0] = (char*) hb_xgrab( NTXBLOCKSIZE );
+   memset( pSortInfo->pageBuffers[0], 0, NTXBLOCKSIZE );
+   itemlist = ( LPNTXBUFFER ) pSortInfo->pageBuffers[0];
+   for( i = 0; i < maxKeys + 1; i++ )
+      itemlist->item_offset[i] = 2 + 2 * ( pTag->MaxKeys + 1 ) +
+            i * ( pTag->KeyLength + 8 );
+   buffer = pSortInfo->pageBuffers[0];
+
+   /* printf( "\nhb_ntxBufferSave - 1 ( maxKeys=%d )",maxKeys ); */
+   while( pKey )
+   {
+      for( i = 0; i < maxKeys && pKey > 0; i++, numKey++, pKey = pKey->pNext )
+      {
+         /* printf( "\nhb_ntxBufferSave - 2 ( i=%d maxKeys=%d )",i,maxKeys ); */
+         item = (NTXITEM *)( buffer + itemlist->item_offset[i] );
+         item->page = 0;
+         item->rec_no = pKey->rec_no;
+         memcpy( item->key, pKey->key, pTag->KeyLength );
+      }
+      itemlist->item_count = i;
+
+      pSortInfo->Tag += NTXBLOCKSIZE;
+      hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
+      /* printf( "\nhb_ntxBufferSave - 5 ( numKey=%d )",numKey ); */
+      hb_ntxRootPage( pTag, pSortInfo, pKey, 1 );
+      numKey ++;
+      if( pKey )
+         pKey = pKey->pNext;
+   }
+   hb_xfree( pSortInfo->pageBuffers[ 0 ] );
+   for( i = 1; i < 10; i++ )
+      if( pSortInfo->pageBuffers[ i ] )
+      {
+         itemlist = ( LPNTXBUFFER ) pSortInfo->pageBuffers[ i ];
+         if( itemlist->item_count )
+         {
+            if( lSave )
+            {
+               item = (NTXITEM *)( pSortInfo->pageBuffers[ i ] + itemlist->item_offset[itemlist->item_count] );
+               item->page = pSortInfo->Tag;
+            }
+            lSave = TRUE;
+            pSortInfo->Tag += NTXBLOCKSIZE;
+            hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) pSortInfo->pageBuffers[ i ], NTXBLOCKSIZE );
+            pTag->RootBlock = pSortInfo->Tag;
+         }
+         hb_xfree( pSortInfo->pageBuffers[ i ] );
+      }
+   hb_xfree( pSortInfo->pageBuffers );
+   if( !pTag->RootBlock )
+      pTag->RootBlock = 1024;
+}
+
+static void hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf )
+{
+   if( *numRecinBuf == 10 )
+      *numRecinBuf = 0;
+   if( *numRecinBuf == 0 )
+      hb_fsRead( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
+   pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;
+   (*numRecinBuf) ++;
+}
 
 static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
 {
@@ -1324,28 +1595,42 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    HB_MACRO_PTR pMacro;
    PHB_ITEM pItem;
    BOOL bWhileOk;
-#ifdef DEBUG
-   LPPAGEINFO pPage;
+   NTXSORTINFO sortInfo;
+   BYTE* readBuffer;
+   USHORT numRecinBuf = 0;
+   BYTE * pRecordTmp;
 
-   ulRecCount = ( pIndex->Owner->ulRecCount > 200 ) ? 200 :
-
-      pIndex->Owner->ulRecCount;
-#else
    ulRecCount = pIndex->Owner->ulRecCount;
-#endif
-   /* printf( "\nntxIndexCreate - 0" ); */
    pArea = pIndex->Owner;
    pTag = pIndex->CompoundTag;
    pItem = hb_itemNew( NULL );
+
+   readBuffer = (BYTE*) hb_xgrab( pArea->uiRecordLen * 10 );
+   /* itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength; */
+   sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength;
+   sortInfo.nItems = 0;
+   sortInfo.pKey1 = sortInfo.pKey2 = NULL;
+   sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
+   if( !sortInfo.sortBuffer )
+   {
+      /* TODO: handling of few reduced buffers */
+      printf( "\r\nhb_ntxIndexCreate: Not enough room for index buffer !" );
+      return FAILURE;
+   }
+
+   pRecordTmp = pArea->pRecord;
+   hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
       /* printf( "\nntxIndexCreate - 1" ); */
+      /*
       hb_fsSeek( pArea->hDataFile,
                  pArea->uiHeaderLen + ( ulRecNo - 1 ) * pArea->uiRecordLen,
                  FS_SET );
       hb_fsRead( pArea->hDataFile,
                  pArea->pRecord,
-                 pArea->uiRecordLen );
+                 pArea->uiRecordLen ); */
+      hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf );
       pArea->ulRecNo = ulRecNo;
       if( pTag->pForItem != NULL )
          /* TODO: test for expression */
@@ -1379,32 +1664,21 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                   hb_itemRelease( pItem );
                   return FAILURE;
                }
-               hb_ntxTagKeyAdd( pTag, pItem );
-#ifdef DEBUG
-               pPage = pTag->RootPage;
-               while( pPage )
-               {
-                  if( pPage->Changed )
-                  {
-                     if( pPage->NewRoot )
-                     {
-                        pPage->TagParent->RootBlock = pPage->Page;
-                        hb_ntxHeaderSave( pIndex );
-                     }
-                     hb_ntxPageSave( pPage );
-                  }
-                  pPage = pPage->pNext;
-               }
-               hb_ntxIndexDump( pIndex );
-#endif
+               // hb_ntxTagKeyAdd( pTag, pItem );
+               hb_ntxSortKeyAdd( pTag, &sortInfo, pItem->item.asString.value );
                break;
             default:
                printf( "ntxCreateOrder" );
          }
       }
    }
+   pArea->pRecord = pRecordTmp;
+   hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
+   hb_ntxBufferSave( pTag, &sortInfo );
+   hb_xfree( sortInfo.sortBuffer );
+   hb_xfree( readBuffer );
    hb_itemRelease( pItem );
-   hb_ntxPageFree( pTag->RootPage,TRUE );
+   // hb_ntxPageFree( pTag->RootPage,TRUE );
    pTag->RootPage = NULL;
    /* printf( "\nntxIndexCreate - 10" ); */
    return SUCCESS;
@@ -2108,10 +2382,15 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          hb_macroDelete( pForMacro );
       return FAILURE;
    }
-   hb_ntxHeaderSave( pIndex );
    if( hb_ntxIndexCreate( pIndex ) == FAILURE )
    {
       return FAILURE;
+   }
+   hb_ntxHeaderSave( pIndex );
+   {
+      BYTE emptyBuffer[250];
+      memset( emptyBuffer, 0, 250 );
+      hb_fsWrite( pIndex->DiskFile, emptyBuffer, 250 );
    }
 
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
@@ -2491,5 +2770,4 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
       hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
       hb_retni( FAILURE );
-
 }

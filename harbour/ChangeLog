@@ -1,3 +1,17 @@
+2001-03-07 10:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     ! fixed skipping for some special cases
+     + hb_ntxSortKeyAdd()
+       * Sorting of keys
+     + hb_ntxRootPage()
+     + hb_ntxBufferSave()
+       * Building index from sorted keys
+     + hb_ntxReadBuf()
+       * read buffering
+     * Index creating is fully rewritten.
+       Now DBFNTX creates good balanced B-trees ( as CA-Clipper )
+       and works faster than before.
+
 2001-03-04 16:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      * Completed management of Variable Scoping.
