@@ -7,9 +7,16 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  + doc\es\pcode.txt
+  + doc\es\vm.txt
+  + doc\es\howtobsd.txt
+  + doc\es\harbext.txt
+  + doc\es\cmdline.txt
+  + doc\es\simplex.txt
+  + doc\es\strotype.txt
   + doc\es\dbdelim.txt
   + doc\es\dbsdf.txt
-     ! was not working for bcc32 since last change. fixed 
+     * Doc translation to spanish provided by Alejandro de Garate
 
 2002-01-22 10:37 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c

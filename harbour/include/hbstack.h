@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The eval stack 
+ * The eval stack
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -87,10 +87,10 @@ typedef struct
 
 #if defined(HB_STACK_MACROS)
 
-#define hb_stackItemFromTop( n )    ( * ( hb_stack->pPos + (n) ) )
-#define hb_stackItemFromBase( n )   ( * ( hb_stack->pBase + (n) + 1 ) )
+#define hb_stackItemFromTop( n )    ( * ( hb_stack.pPos + (n) ) )
+#define hb_stackItemFromBase( n )   ( * ( hb_stack.pBase + (n) + 1 ) )
 #define hb_stackTopOffset( )        ( hb_stack.pPos - hb_stack.pItems )
-#define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + )
+#define hb_stackBaseOffset( )       ( hb_stack.pBase - hb_stack.pItems + 1)
 #define hb_stackTopItem( )          ( * hb_stack.pPos )
 #define hb_stackBaseItem( )         ( * hb_stack.pBase )
 #define hb_stackSelfItem( )         ( * ( hb_stack.pBase + 1 ) )
