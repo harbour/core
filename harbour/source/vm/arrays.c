@@ -595,11 +595,12 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
       ULONG ulLen = pBaseArray->ulLen;
       ULONG ulPos;
 
-      for( ulPos = 0; ulPos < ulLen; ulPos++ )
-         hb_itemClear( pBaseArray->pItems + ulPos );
-
       if( pBaseArray->pItems )
+      {
+         for( ulPos = 0; ulPos < ulLen; ulPos++ )
+            hb_itemClear( pBaseArray->pItems + ulPos );
          hb_xfree( pBaseArray->pItems );
+      }
 
       hb_gcFree( (void *)pBaseArray );
 
@@ -730,7 +731,7 @@ HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
       while( ulLen-- )
       {
          /* Only strings should be deallocated.
-          * Arrays, objects and codeblock should be released directly by 
+          * Arrays, objects and codeblock should be released directly by
           * the garbage collector
           */
          if( HB_IS_STRING( pItem ) && pItem->item.asString.value )
@@ -739,6 +740,8 @@ HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
          ++pItem;
       }
       hb_xfree( pBaseArray->pItems );
+      pBaseArray->pItems = NULL;
+      pBaseArray->ulLen  = 0;
    }
 }
 

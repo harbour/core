@@ -1077,48 +1077,11 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       ( pSource->item.asArray.value )->uiHolders++;
    }
    else if( HB_IS_BLOCK( pSource ) )
-      hb_codeblockIncRef( pSource );
-
+   {
+      ( pSource->item.asBlock.value )->ulCounter++;
+   }
    else if( HB_IS_MEMVAR( pSource ) )
       hb_memvarValueIncRef( pSource->item.asMemvar.value );
-}
-
-/* Internal API, not standard Clipper */
-HB_ITEM_PTR hb_itemIncRef( HB_ITEM_PTR pItem )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemIncRef(%p)", pItem));
-
-   if( HB_IS_ARRAY( pItem ) )
-   {
-      ( pItem->item.asArray.value )->uiHolders++;
-   }
-   else if( HB_IS_BLOCK( pItem ) )
-      hb_codeblockIncRef( pItem );
-   else if( HB_IS_MEMVAR( pItem ) )
-      hb_memvarValueIncRef( pItem->item.asMemvar.value );
-   else if( HB_IS_BYREF( pItem ) )
-      pItem = hb_itemIncRef( hb_itemUnRef( pItem ) );
-
-   return pItem;
-}
-
-/* Internal API, not standard Clipper */
-HB_ITEM_PTR hb_itemDecRef( HB_ITEM_PTR pItem )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDecRef(%p)", pItem));
-
-   if( HB_IS_ARRAY( pItem ) )
-   {
-      ( pItem->item.asArray.value )->uiHolders--;
-   }
-   else if( HB_IS_BLOCK( pItem ) )
-      hb_codeblockDecRef( pItem );
-   else if( HB_IS_MEMVAR( pItem ) )
-      hb_memvarValueDecRef( pItem->item.asMemvar.value );
-   else if( HB_IS_BYREF( pItem ) )
-      pItem = hb_itemIncRef( hb_itemUnRef( pItem ) );
-
-   return pItem;
 }
 
 void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )

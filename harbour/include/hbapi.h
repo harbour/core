@@ -433,8 +433,6 @@ extern void     hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock *
 extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
 extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer ); /* get local variable passed by reference */
 extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
-extern void     hb_codeblockIncRef( PHB_ITEM pItem );
-extern void     hb_codeblockDecRef( PHB_ITEM pItem );
 
 /* memvars subsystem */
 extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */

@@ -1,3 +1,17 @@
+2000-11-08 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbapi.h
+    *include/hbapiitm.h
+    *source/vm/arrays.c
+    *source/vm/codebloc.c
+    *source/vm/garbage.c
+    *source/vm/itemapi.c
+    *source/vm/memvars.c
+        * fixed the order of memory deallocations done in the garbage
+          collector (this will fix many random core dumps/GPF's)
+        * removed unnecessary reference counter inc/dec operations       
+        
+
 2000-11-07 22:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
      + Added: #define HB_COMP_ERR_BLOCK                       47

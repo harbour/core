@@ -2,6 +2,7 @@ PROCEDURE Main()
 
    LOCAL i, bBlock[3]
 
+   MEMVAR  Var1, Var2, Var3, Macro
    PRIVATE Var1, Var2, Var3, Macro
 
    M->Var1 := "Var1"
