@@ -39,7 +39,7 @@
 
 static oDebugger
 
-function Debugger( uParam )  // debugger entry point
+function __dbgEntry( uParam )  // debugger entry point
 
    do case
       case ValType( uParam ) == "C"   // called from hvm.c hb_vmModuleName()

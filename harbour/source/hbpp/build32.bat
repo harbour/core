@@ -1,1 +1,0 @@
-make -fmakefile.b32

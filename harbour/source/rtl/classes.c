@@ -45,7 +45,6 @@
 #include "errorapi.h"
 #include "itemapi.h"
 #include "ctoharb.h"
-#include "init.h"
 #include "hboo.ch"
 
 typedef struct
@@ -102,21 +101,6 @@ static HARBOUR  hb___msgSetClsData( void );
 static HARBOUR  hb___msgGetData( void );
 static HARBOUR  hb___msgSetData( void );
 
-       HARBOUR  HB___CLSNEW( void );
-       HARBOUR  HB___CLSINST( void );
-       HARBOUR  HB___CLSINSTSUPER( void );
-       HARBOUR  HB___CLSADDMSG( void );
-       HARBOUR  HB___CLSDELMSG( void );
-       HARBOUR  HB___CLSMODMSG( void );
-       HARBOUR  HB___CLS_CNTCLSDATA(void);
-       HARBOUR  HB___CLS_CNTDATA( void );
-       HARBOUR  HB___CLS_DECDATA( void );
-       HARBOUR  HB___CLS_INCDATA( void );
-       HARBOUR  HB___OBJGETCLSNAME( void );
-       HARBOUR  HB___OBJCLONE( void );
-       HARBOUR  HB___OBJHASMSG( void );
-       HARBOUR  HB___OBJSENDMSG( void );
-
 /* All function contained in matching objfunc.prg */
 
 extern HARBOUR  HB___OBJGETMSGLIST( void );
@@ -133,42 +117,6 @@ extern HARBOUR  HB___OBJDELINLINE( void );
 extern HARBOUR  HB___OBJDELMETHOD( void );
 extern HARBOUR  HB___OBJMODINLINE( void );
 extern HARBOUR  HB___OBJMODMETHOD( void );
-
-/* Exported symbols of both classes.c and objfunc.prg */
-
-HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols )
-{ "__CLSNEW"           , FS_PUBLIC, HB___CLSNEW           , 0 },
-{ "__CLSINST"          , FS_PUBLIC, HB___CLSINST          , 0 },
-{ "__CLSINSTSUPER"     , FS_PUBLIC, HB___CLSINSTSUPER     , 0 },
-{ "__CLSADDMSG"        , FS_PUBLIC, HB___CLSADDMSG        , 0 },
-{ "__CLSDELMSG"        , FS_PUBLIC, HB___CLSDELMSG        , 0 },
-{ "__CLSMODMSG"        , FS_PUBLIC, HB___CLSMODMSG        , 0 },
-{ "__CLS_CNTCLSDATA"   , FS_PUBLIC, HB___CLS_CNTCLSDATA   , 0 },
-{ "__CLS_CNTDATA"      , FS_PUBLIC, HB___CLS_CNTDATA      , 0 },
-{ "__CLS_DECDATA"      , FS_PUBLIC, HB___CLS_DECDATA      , 0 },
-{ "__CLS_INCDATA"      , FS_PUBLIC, HB___CLS_INCDATA      , 0 },
-{ "__OBJGETCLSNAME"    , FS_PUBLIC, HB___OBJGETCLSNAME    , 0 },
-{ "__OBJCLONE"         , FS_PUBLIC, HB___OBJCLONE         , 0 },
-{ "__OBJHASMSG"        , FS_PUBLIC, HB___OBJHASMSG        , 0 },
-{ "__OBJSENDMSG"       , FS_PUBLIC, HB___OBJSENDMSG       , 0 },
-{ "__OBJGETMSGLIST"    , FS_PUBLIC, HB___OBJGETMSGLIST    , 0 },
-{ "__OBJGETMETHODLIST" , FS_PUBLIC, HB___OBJGETMETHODLIST , 0 },
-{ "__OBJGETVALUELIST"  , FS_PUBLIC, HB___OBJGETVALUELIST  , 0 },
-{ "__OBJSETVALUELIST"  , FS_PUBLIC, HB___OBJSETVALUELIST  , 0 },
-{ "__OBJHASDATA"       , FS_PUBLIC, HB___OBJHASDATA       , 0 },
-{ "__OBJHASMETHOD"     , FS_PUBLIC, HB___OBJHASMETHOD     , 0 },
-{ "__OBJADDDATA"       , FS_PUBLIC, HB___OBJADDDATA       , 0 },
-{ "__OBJADDINLINE"     , FS_PUBLIC, HB___OBJADDINLINE     , 0 },
-{ "__OBJADDMETHOD"     , FS_PUBLIC, HB___OBJADDMETHOD     , 0 },
-{ "__OBJDELDATA"       , FS_PUBLIC, HB___OBJDELDATA       , 0 },
-{ "__OBJDELINLINE"     , FS_PUBLIC, HB___OBJDELINLINE     , 0 },
-{ "__OBJDELMETHOD"     , FS_PUBLIC, HB___OBJDELMETHOD     , 0 },
-{ "__OBJMODINLINE"     , FS_PUBLIC, HB___OBJMODINLINE     , 0 },
-{ "__OBJMODMETHOD"     , FS_PUBLIC, HB___OBJMODMETHOD     , 0 }
-HB_INIT_SYMBOLS_END( Classes__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Classes__InitSymbols
-#endif
 
 /*
  * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )

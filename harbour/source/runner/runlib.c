@@ -1,8 +1,9 @@
 /*
  * $Id$
  */
+
 /*
- * Runner.c contains the .HRB object system
+ * runlib.c contains the .HRB object runner system
  *
  * Copyright(C) 1999 by Eddie Runia <eddie@runia.com>
  *
@@ -24,11 +25,14 @@
  */
 
 #include "extend.h"
-#include "pcode.h"
+#include "itemapi.h"
 #include "errorapi.h"
 #include "ctoharb.h"
-#include "init.h"
-#include "initsymd.h"
+#include "pcode.h"
+
+/* TODO: Fill the error codes with valid ones (instead of 9999) */
+/* TOFIX: Change this assembler hack to something standard and portable */
+/* TODO: Change the fopen()/fread()/fclose() calls to hb_fs*() */
 
 /* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
@@ -59,10 +63,10 @@ typedef union
 
 typedef struct
 {
-   char      *szName;                           /* Name of the function     */
+   char *     szName;                           /* Name of the function     */
    PASM_CALL  pAsmCall;                         /* Assembler call           */
    BYTE *     pCode;                            /* P-code                   */
-} DYNFUNC, *PDYNFUNC;
+} HB_DYNF, *PHB_DYNF;
 
 
 #define SYM_NOLINK  0                           /* Symbol does not have to
@@ -73,21 +77,22 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-       HARBOUR   HB_HB_RUN();
-static PASM_CALL CreateFun( PHB_SYMB, BYTE * ); /* Create a dynamic function*/
-static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
-static void      HRB_FileClose( FILE * );
-static void      HRB_FileRead ( char *, int, int, FILE * );
-static FILE     *HRB_FileOpen ( char * );
-       BYTE      ReadByte( FILE * );
-       char     *ReadId  ( FILE * );
-       long      ReadLong( FILE * );
+static ULONG     hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded );
+static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode ); /* Create a dynamic function*/
+static void      hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void * Address );
+static void      hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset, void * Address, ULONG ulNext );
 
+static FILE *    hb_hrbFileOpen( char * szFileName );
+static void      hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int iSize, int iCount );
+static BYTE      hb_hrbFileReadByte( FILE * file, char * szFileName );
+static char *    hb_hrbFileReadId( FILE * file, char * szFileName );
+static long      hb_hrbFileReadLong( FILE * file, char * szFileName );
+static void      hb_hrbFileClose( FILE * file );
 
-ULONG ulSymEntry = 0;                           /* Link enhancement         */
+static ULONG     s_ulSymEntry = 0;              /* Link enhancement         */
 
 /*
-   HB_Run( <cFile> )
+   __HRBRUN( <cFile> [, xParam1 [, xParamN ] ] ) -> return value.
 
    This program will get the data from the .HRB file and run the p-code
    contained in it.
@@ -95,74 +100,86 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR HB_HB_RUN( void )
+
+HARBOUR HB___HRBRUN( void )
 {
-   char *szFileName;
-
-   FILE *file;
-
-   ULONG ulSymbols;                             /* Number of symbols        */
-   ULONG ulFuncs;                               /* Number of functions      */
-   ULONG ulSize;                                /* Size of function         */
-   ULONG ul, ulPos;
-
-   int i;
-
-   PHB_SYMB pSymRead;                           /* Symbols read             */
-   PDYNFUNC pDynFunc;                           /* Functions read           */
-   PHB_DYNS pDynSym;
-
    if( hb_pcount() == 0 )
-      printf( "\nPlease give HRB file name\n" );
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN" );
+   }
    else
    {
-      szFileName = hb_parc( 1 );
-      file = HRB_FileOpen( szFileName );        /* Open as binary           */
+      char *szFileName = hb_parc( 1 );
+      FILE *file;
+
+      /* Open as binary */
+
+      while ((file = hb_hrbFileOpen( szFileName )) == NULL)
+      {
+         if ( hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
+         {
+            break;
+         }
+      }
+
       if( file )
       {
-         ulSymbols = ReadLong( file );
+         ULONG ulSymbols;                             /* Number of symbols        */
+         ULONG ulFuncs;                               /* Number of functions      */
+         ULONG ulSize;                                /* Size of function         */
+         ULONG ul, ulPos;
+
+         PHB_SYMB pSymRead;                           /* Symbols read             */
+         PHB_DYNF pDynFunc;                           /* Functions read           */
+         PHB_DYNS pDynSym;
+
+         PHB_ITEM pRetVal;
+
+         int i;
+
+         ulSymbols = hb_hrbFileReadLong( file, szFileName );
          pSymRead = ( PHB_SYMB )hb_xgrab( ulSymbols * sizeof( HB_SYMB ) );
 
          for( ul=0; ul < ulSymbols; ul++)       /* Read symbols in .HRB     */
          {
-            pSymRead[ ul ].szName  = ReadId( file );
-            pSymRead[ ul ].cScope  = ReadByte( file );
-            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) (ULONG) ReadByte( file );
+            pSymRead[ ul ].szName  = hb_hrbFileReadId( file, szFileName );
+            pSymRead[ ul ].cScope  = hb_hrbFileReadByte( file, szFileName );
+            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) (ULONG) hb_hrbFileReadByte( file, szFileName );
             pSymRead[ ul ].pDynSym = NULL;
          }
 
-         ulFuncs = ReadLong( file );            /* Read number of functions */
-         pDynFunc = ( PDYNFUNC ) hb_xgrab( ulFuncs * sizeof( DYNFUNC ) );
+         ulFuncs = hb_hrbFileReadLong( file, szFileName );            /* Read number of functions */
+         pDynFunc = ( PHB_DYNF ) hb_xgrab( ulFuncs * sizeof( HB_DYNF ) );
          for( ul=0; ul < ulFuncs; ul++)         /* Read symbols in .HRB     */
          {
-            pDynFunc[ ul ].szName = ReadId( file );
+            pDynFunc[ ul ].szName = hb_hrbFileReadId( file, szFileName );
 
-            ulSize = ReadLong( file );      /* Read size of function    */
+            ulSize = hb_hrbFileReadLong( file, szFileName );      /* Read size of function    */
             pDynFunc[ ul ].pCode = ( BYTE * )hb_xgrab( ulSize );
-            HRB_FileRead( pDynFunc[ ul ].pCode, 1, ulSize, file );
+            hb_hrbFileRead( file, szFileName, pDynFunc[ ul ].pCode, 1, ulSize );
                                                 /* Read the block           */
 
-            pDynFunc[ ul ].pAsmCall = CreateFun( pSymRead,
+            pDynFunc[ ul ].pAsmCall = hb_hrbAsmCreateFun( pSymRead,
                                                  pDynFunc[ ul ].pCode );
                                                 /* Create matching dynamic  */
                                                 /* function                 */
          }
 
-         ulSymEntry = 0;
+         s_ulSymEntry = 0;
          for( ul = 0; ul < ulSymbols; ul++ )    /* Linker                   */
          {
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_FUNC )
             {
-               ulPos = FindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
+               ulPos = hb_hrbFindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
                {
-/*                  if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
+                  /* Exists and NOT static ?  */
+/*                if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
                       !( pSymRead[ ul ].cScope & FS_STATIC ) )
-                  {                           */  /* Exists and NOT static ?  */
-/*                     printf( "\nDuplicate identifier '%s' %i.",
-                             pSymRead[ ul ].szName, pSymRead[ul].cScope );
-                     exit( 1 );
-                  } */
+                  {
+                     hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
+                  }
+*/
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
                }
                else
@@ -173,9 +190,7 @@ HARBOUR HB_HB_RUN( void )
                pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                if( !pDynSym )
                {
-                  printf( "\nUnknown or unregistered function '%s'.",
-                          pSymRead[ ul ].szName );
-                  exit( 1 );
+                  hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName );
                }
                pSymRead[ ul ].pFunPtr = pDynSym->pFunPtr;
             }
@@ -187,19 +202,19 @@ HARBOUR HB_HB_RUN( void )
           */
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
-            if( (pSymRead[ ul ].cScope & FS_INITEXIT) == FS_INITEXIT )
+            if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INITEXIT )
             {
-	        /* call (_INITSTATICS) function. This function assigns
-		 * literal values to static variables only. There is no need
-		 * to pass any parameters to this function because they
-		 * cannot be used to initialize static variable.
-		 */
-	        pSymRead[ ul ].pFunPtr();
+                /* call (_INITSTATICS) function. This function assigns
+                 * literal values to static variables only. There is no need
+                 * to pass any parameters to this function because they
+                 * cannot be used to initialize static variable.
+                 */
+                pSymRead[ ul ].pFunPtr();
             }
          }
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
-            if( (pSymRead[ ul ].cScope & FS_INITEXIT) == FS_INIT )
+            if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INIT )
             {
                 hb_vmPushSymbol( pSymRead + ul );
                 hb_vmPushNil();
@@ -215,6 +230,9 @@ HARBOUR HB_HB_RUN( void )
          for( i = 0; i < (hb_pcount() - 1); i++ )
             hb_vmPush( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
          hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
+
+         pRetVal = hb_itemNew( NULL );
+         hb_itemCopy( pRetVal, &stack.Return );
 
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
          {
@@ -244,27 +262,26 @@ HARBOUR HB_HB_RUN( void )
 
          hb_xfree( pDynFunc );
          hb_xfree( pSymRead );
-         HRB_FileClose( file );
-      }
-      else
-      {
-         printf( "\nCannot open %s\n", szFileName );
+         hb_hrbFileClose( file );
+
+         hb_itemReturn( pRetVal );
+         hb_itemRelease( pRetVal );
       }
    }
 }
 
 
-static ULONG FindSymbol( char *szName, PDYNFUNC pDynFunc, ULONG ulLoaded )
+static ULONG hb_hrbFindSymbol( char *szName, PHB_DYNF pDynFunc, ULONG ulLoaded )
 {
    ULONG ulRet;
-   BYTE  bFound;
 
-   if( ( ulSymEntry < ulLoaded ) &&             /* Is it a normal list ?    */
-       !strcmp( szName, pDynFunc[ ulSymEntry ].szName ) )
-      ulRet = ulSymEntry++;
+   if( ( s_ulSymEntry < ulLoaded ) &&             /* Is it a normal list ?    */
+       !strcmp( szName, pDynFunc[ s_ulSymEntry ].szName ) )
+      ulRet = s_ulSymEntry++;
    else
    {
-      bFound = FALSE;
+      BOOL bFound = FALSE;
+
       ulRet = 0;
       while( !bFound && ulRet < ulLoaded )
       {
@@ -276,25 +293,25 @@ static ULONG FindSymbol( char *szName, PDYNFUNC pDynFunc, ULONG ulLoaded )
       if( !bFound )
          ulRet = SYM_NOT_FOUND;
    }
-   return( ulRet );
+   return ulRet;
 }
 
 
 /* ReadId
    Read the next (zero terminated) identifier */
-char *ReadId( FILE *file )
+static char * hb_hrbFileReadId( FILE *file, char * szFileName )
 {
    char *szTemp;                                /* Temporary buffer         */
    char *szIdx;
    char *szRet;
 
-   BYTE  bCont = TRUE;
+   BOOL  bCont = TRUE;
 
    szTemp = ( char * )hb_xgrab( 256 );
    szIdx  = szTemp;
    do
    {
-      HRB_FileRead( szIdx, 1, 1, file );
+      hb_hrbFileRead( file, szFileName, szIdx, 1, 1 );
       if( *szIdx )
          szIdx++;
       else
@@ -305,107 +322,63 @@ char *ReadId( FILE *file )
    strcpy( szRet, szTemp );
    hb_xfree( szTemp );
 
-   return( szRet );
+   return szRet;
 }
 
 
-BYTE ReadByte( FILE *file )
+static BYTE hb_hrbFileReadByte( FILE *file, char * szFileName )
 {
    BYTE bRet;
 
-   HRB_FileRead( &bRet, 1, 1, file );
-   return( bRet );
+   hb_hrbFileRead( file, szFileName, &bRet, 1, 1);
+
+   return bRet;
 }
 
 
-long ReadLong( FILE *file )
+static long hb_hrbFileReadLong( FILE *file, char * szFileName )
 {
    char cLong[4];                               /* Temporary long           */
 
-   HRB_FileRead( cLong, 4, 1, file );
+   hb_hrbFileRead( file, szFileName, cLong, 4, 1 );
 
    if( cLong[3] )                               /* Convert to long if ok    */
    {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Error reading .HRB file");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
-      return( 0L );
+      hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
+      return 0;
    }
    else
-      return( ( (BYTE) cLong[0] )             +
-              ( (BYTE) cLong[1] ) * 0x100     +
-              ( (BYTE) cLong[2] ) * 0x10000   +
-              ( (BYTE) cLong[3] ) * 0x1000000 );
+      return ( (BYTE) cLong[0] )             +
+             ( (BYTE) cLong[1] ) * 0x100     +
+             ( (BYTE) cLong[2] ) * 0x10000   +
+             ( (BYTE) cLong[3] ) * 0x1000000 ;
 }
 
 
-/*  HRB_FileRead
+/*  hb_hrbFileRead
     Controlled read from file. If errornous -> Break */
-static void HRB_FileRead( char *cBuffer, int iSize, int iCount, FILE *fStream )
+static void hb_hrbFileRead( FILE *file, char * szFileName, char *cBuffer, int iSize, int iCount )
 {
-   if( iCount != (int) fread( cBuffer, iSize, iCount, fStream ) )
+   if( iCount != (int) fread( cBuffer, iSize, iCount, file ) )
    {                                            /* Read error               */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Error reading .HRB file");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
-      exit(1);
+      hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
    }
 }
 
 
-/*  HRB_FileOpen
+/*  hb_hrbFileOpen
     Open an .HRB file  */
-static FILE *HRB_FileOpen( char *szFileName )
+static FILE * hb_hrbFileOpen( char *szFileName )
 {
-   return( fopen( szFileName, "rb" ) );
+   return fopen( szFileName, "rb" );
 }
 
 
-/*  HRB_FileClose
+/*  hb_hrbFileClose
     Close an .HRB file  */
-static void HRB_FileClose( FILE *file )
+static void hb_hrbFileClose( FILE *file )
 {
    fclose( file );
-}
-
-
-/* Patch an address of the dynamic function */
-static void Patch( BYTE * pCode, ULONG ulOffset, void *Address )
-{
-/* #if 32 bits and low byte first */
-
-   pCode[ ulOffset     ] = ( (ULONG) Address       ) & 0xFF;
-   pCode[ ulOffset + 1 ] = ( (ULONG) Address >>  8 ) & 0xFF;
-   pCode[ ulOffset + 2 ] = ( (ULONG) Address >> 16 ) & 0xFF;
-   pCode[ ulOffset + 3 ] = ( (ULONG) Address >> 24 ) & 0xFF;
-
-/* #elseif 16 bits and low byte first */
-/* #elseif 32 bits and high byte first */
-/* #elseif ... */
-/* #endif */
-}
-
-
-/* Intel specific ?? Patch an address relative to the next instruction */
-static void PatchRelative( BYTE * pCode,   ULONG ulOffset,
-                           void *Address, ULONG ulNext )
-{
-/* #if 32 bits and low byte first */
-   ULONG ulBase = (ULONG) pCode + ulNext;
-                                /* Relative to next instruction */
-   ULONG ulRelative = (ULONG) Address - ulBase;
-
-   pCode[ ulOffset     ] = ( ulRelative       ) & 0xFF;
-   pCode[ ulOffset + 1 ] = ( ulRelative >>  8 ) & 0xFF;
-   pCode[ ulOffset + 2 ] = ( ulRelative >> 16 ) & 0xFF;
-   pCode[ ulOffset + 3 ] = ( ulRelative >> 24 ) & 0xFF;
-
-/* #elseif 16 bits and low byte first */
-/* #elseif 32 bits and high byte first */
-/* #elseif ... */
-/* #endif */
 }
 
 
@@ -424,7 +397,7 @@ static void PatchRelative( BYTE * pCode,   ULONG ulOffset,
    If a .PRG contains 10 functions, 10 dynamic functions are created which
    are all the same :-) except for 2 pointers.
 */
-static PASM_CALL CreateFun( PHB_SYMB pSymbols, BYTE * pCode )
+static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 {
    PASM_CALL asmRet = (PASM_CALL) hb_xgrab( sizeof( ASM_CALL ) );
 
@@ -433,15 +406,51 @@ static PASM_CALL CreateFun( PHB_SYMB pSymbols, BYTE * pCode )
                                               /* Copy new assembler code in */
 /* #if INTEL32 */
 
-   Patch( asmRet->pAsmData,  1, pSymbols );   /* Insert pointer to testsym  */
-   Patch( asmRet->pAsmData,  6, pCode);       /* Insert pointer to testcode */
-   PatchRelative( asmRet->pAsmData, 11, &hb_vmExecute, 15 );
+   hb_hrbAsmPatch( asmRet->pAsmData,  1, pSymbols );   /* Insert pointer to testsym  */
+   hb_hrbAsmPatch( asmRet->pAsmData,  6, pCode);       /* Insert pointer to testcode */
+   hb_hrbAsmPatchRelative( asmRet->pAsmData, 11, &hb_vmExecute, 15 );
                                       /* Insert pointer to hb_vmExecute() */
 
 /* #elseif INTEL16 */
 /* #elseif MOTOROLA */
 /* #elseif ... */
 /* #endif */
-   return( asmRet );
+   return asmRet;
 }
 
+/* Patch an address of the dynamic function */
+static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void *Address )
+{
+/* #if 32 bits and low byte first */
+
+   pCode[ ulOffset     ] = ( (ULONG) Address       ) & 0xFF;
+   pCode[ ulOffset + 1 ] = ( (ULONG) Address >>  8 ) & 0xFF;
+   pCode[ ulOffset + 2 ] = ( (ULONG) Address >> 16 ) & 0xFF;
+   pCode[ ulOffset + 3 ] = ( (ULONG) Address >> 24 ) & 0xFF;
+
+/* #elseif 16 bits and low byte first */
+/* #elseif 32 bits and high byte first */
+/* #elseif ... */
+/* #endif */
+}
+
+
+/* Intel specific ?? Patch an address relative to the next instruction */
+static void hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset,
+                                    void * Address, ULONG ulNext )
+{
+/* #if 32 bits and low byte first */
+   ULONG ulBase = (ULONG) pCode + ulNext;
+                                /* Relative to next instruction */
+   ULONG ulRelative = (ULONG) Address - ulBase;
+
+   pCode[ ulOffset     ] = ( ulRelative       ) & 0xFF;
+   pCode[ ulOffset + 1 ] = ( ulRelative >>  8 ) & 0xFF;
+   pCode[ ulOffset + 2 ] = ( ulRelative >> 16 ) & 0xFF;
+   pCode[ ulOffset + 3 ] = ( ulRelative >> 24 ) & 0xFF;
+
+/* #elseif 16 bits and low byte first */
+/* #elseif 32 bits and high byte first */
+/* #elseif ... */
+/* #endif */
+}

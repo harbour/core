@@ -38,7 +38,6 @@
 #include "errorapi.h"
 #include "error.ch"
 #include "memvars.ch"
-#include "init.h"
 
 #define VS_PRIVATE     64
 #define VS_PUBLIC     128
@@ -64,25 +63,6 @@ static HB_VALUE_PTR _globalTable = NULL;
 static void hb_memvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS, BYTE, PHB_ITEM );
 static void hb_memvarAddPrivate( PHB_DYNS );
-
-HARBOUR HB___MVPUBLIC( void );
-HARBOUR HB___MVPRIVATE( void );
-HARBOUR HB___MVXRELEASE( void );
-HARBOUR HB___MVRELEASE( void );
-HARBOUR HB___MVSCOPE( void );
-HARBOUR HB___MVCLEAR( void );
-
-HB_INIT_SYMBOLS_BEGIN( Memvars__InitSymbols )
-{ "__MVPUBLIC"    , FS_PUBLIC, HB___MVPUBLIC   , 0 },
-{ "__MVPRIVATE"   , FS_PUBLIC, HB___MVPRIVATE  , 0 },
-{ "__MVXRELEASE"  , FS_PUBLIC, HB___MVXRELEASE , 0 },
-{ "__MVRELEASE"   , FS_PUBLIC, HB___MVRELEASE  , 0 },
-{ "__MVSCOPE"     , FS_PUBLIC, HB___MVSCOPE    , 0 },
-{ "__MVCLEAR"     , FS_PUBLIC, HB___MVCLEAR    , 0 }
-HB_INIT_SYMBOLS_END( Memvars__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Memvars__InitSymbols
-#endif
 
 void hb_memvarsInit( void )
 {

@@ -1,4 +1,7 @@
-// $Id$
+/* 
+ * $Id$
+ */
+
 /*
    Harbour Project source code
 
@@ -537,7 +540,7 @@ EXTERNAL NUMTOTXTEN
 //
 //symbols from file: tools/numtxthu.prg
 //
-//EXTERNAL NUMTOTXTHU	//it uses undefined symbol STRZERO
+EXTERNAL NUMTOTXTHU
 //
 //symbols from file: tools/stringp.prg
 //

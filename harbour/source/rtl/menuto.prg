@@ -61,6 +61,7 @@ function __MenuTo( bBlock, cVariable )
    local cSaveReadVar
 
    local lDeclared
+   local bAction
 
    // Detect if a memvar was passed
 

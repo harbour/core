@@ -54,7 +54,6 @@
 #endif
 
 #include "extend.h"
-#include "init.h"
 #include "inkey.h" /* For hb_releaseCPU() */
 
 #if defined(HARBOUR_GCC_OS2)
@@ -108,16 +107,6 @@
  *      CHR(), SET BELL
  *  $END$
  */
-
-
-HARBOUR HB_TONE(void);
-
-HB_INIT_SYMBOLS_BEGIN( Tone__InitSymbols )
-{ "TONE", FS_PUBLIC, HB_TONE, 0 }
-HB_INIT_SYMBOLS_END( Tone__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Tone__InitSymbols
-#endif
 
 void hb_tone( double frequency, double duration )
 {

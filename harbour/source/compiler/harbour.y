@@ -278,47 +278,50 @@ int iVarScope = VS_LOCAL;   /* holds the scope for next variables to be defined 
                             /* different values for iVarScope */
 
 /* Table with parse errors */
-char * _szCErrors[] = { "Statement not allowed outside of procedure or function",
-                       "Redefinition of procedure or function: \'%s\'",
-                       "Duplicate variable declaration: \'%s\'",
-                       "%s declaration follows executable statement",
-                       "Outer codeblock variable is out of reach: \'%s\'",
-                       "Invalid numeric format '.'",
-                       "Unterminated string: \'%s\'",
-                       "Redefinition of predefined function %s: \'%s\'",
-                       "Illegal initializer: \'%s\'",
-                       "ENDIF does not match IF",
-                       "ENDDO does not match WHILE",
-                       "ENDCASE does not match DO CASE",
-                       "NEXT does not match FOR",
-                       "ELSE does not match IF",
-                       "ELSEIF does not match IF",
-                       "Syntax error: \'%s\'",
-                       "Unclosed control structures at line: %i",
-                       "%s statement with no loop in sight",
-                       "Syntax error: \'%s\' in: \'%s\'",
-                       "Incomplete statement: %s",
-                       "Incorrect number of arguments: %s %s",
-                       "Invalid lvalue",
-                       "Invalid use of \'@\' (pass by reference): \'%s\'",
-                        "Formal parameters already declared"
-                     };
+char * _szCErrors[] =
+{
+   "Statement not allowed outside of procedure or function",
+   "Redefinition of procedure or function: \'%s\'",
+   "Duplicate variable declaration: \'%s\'",
+   "%s declaration follows executable statement",
+   "Outer codeblock variable is out of reach: \'%s\'",
+   "Invalid numeric format '.'",
+   "Unterminated string: \'%s\'",
+   "Redefinition of predefined function %s: \'%s\'",
+   "Illegal initializer: \'%s\'",
+   "ENDIF does not match IF",
+   "ENDDO does not match WHILE",
+   "ENDCASE does not match DO CASE",
+   "NEXT does not match FOR",
+   "ELSE does not match IF",
+   "ELSEIF does not match IF",
+   "Syntax error: \'%s\'",
+   "Unclosed control structures at line: %i",
+   "%s statement with no loop in sight",
+   "Syntax error: \'%s\' in: \'%s\'",
+   "Incomplete statement: %s",
+   "Incorrect number of arguments: %s %s",
+   "Invalid lvalue",
+   "Invalid use of \'@\' (pass by reference): \'%s\'",
+   "Formal parameters already declared"
+};
 
 /* Table with parse warnings */
-char * _szCWarnings[] = {
-      "Ambiguous reference: \'%s\'",
-      "Ambiguous reference, assuming memvar: \'%s\'",
-      "Variable: \'%s\' declared but not used in function: \'%s\'",
-      "CodeBlock Parameter: \'%s\' declared but not used in function: \'%s\'",
-      "Incompatible type in assignment to: \'%s\' expected: \'%s\'",
-      "Incompatible operand type: \'%s\' expected: \'Logical\'",
-      "Incompatible operand type: \'%s\' expected: \'Numeric\'",
-      "Incompatible operand types: \'%s\' and: \'%s\'",
-      "Suspicious type in assignment to: \'%s\' expected: \'%s\'",
-      "Suspicious operand type: \'UnKnown\' expected: \'%s\'",
-      "Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
-      "Suspicious operand type: \'UnKnown\' expected: \'Numeric\'"
-     };
+char * _szCWarnings[] =
+{
+   "Ambiguous reference: \'%s\'",
+   "Ambiguous reference, assuming memvar: \'%s\'",
+   "Variable: \'%s\' declared but not used in function: \'%s\'",
+   "CodeBlock Parameter: \'%s\' declared but not used in function: \'%s\'",
+   "Incompatible type in assignment to: \'%s\' expected: \'%s\'",
+   "Incompatible operand type: \'%s\' expected: \'Logical\'",
+   "Incompatible operand type: \'%s\' expected: \'Numeric\'",
+   "Incompatible operand types: \'%s\' and: \'%s\'",
+   "Suspicious type in assignment to: \'%s\' expected: \'%s\'",
+   "Suspicious operand type: \'UnKnown\' expected: \'%s\'",
+   "Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
+   "Suspicious operand type: \'UnKnown\' expected: \'Numeric\'"
+};
 
 /* Table with reserved functions names
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY

@@ -35,11 +35,10 @@
  */
 
 /* TODO: Getting rid of calling back HARBOUR HB_STR() function */
-/*       and #include "ctohard.h" */
+/*       and #include "ctoharb.h" */
 
 #include <ctype.h>
 #include "extend.h"
-#include "init.h"
 #include "ctoharb.h"
 #include "itemapi.h"
 #include "errorapi.h"
@@ -51,16 +50,6 @@
 /*                                                                          */
 /*  Date : 29/04/1999                                                       */
 /*                                                                          */
-
-HARBOUR HB_TRANSFORM( void );
-
-
-HB_INIT_SYMBOLS_BEGIN( Transfrm__InitSymbols )
-{ "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
-HB_INIT_SYMBOLS_END( Transfrm__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Transfrm__InitSymbols
-#endif
 
 /* Function flags                                                           */
 
@@ -88,6 +77,16 @@ HB_INIT_SYMBOLS_END( Transfrm__InitSymbols )
 #define DF_EOT 3                                /* End of table for Century */
 
 static char *szBritish[] = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
+
+extern HARBOUR HB_STR( void );
+
+/* NOTE: This is called via its symbol name, so we should make sure */
+/*       that it gets linked */
+/*       Don't make this function static, because it's not called from this file. */
+void hb_transformForceLink()
+{
+   HB_STR();
+}
 
 /*
    PictFunc -> Analyze function flags and return binary flags bits
@@ -257,6 +256,7 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
 
       /* TOFIX: iCount seem to always be zero at this point */
 
+#if 0
       if( !iCount )                             /* No real picture          */
       {
          hb_xfree( szRet );
@@ -267,6 +267,7 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
       }
       else
       {
+#endif
          for( i=0; i < ulPic; i++ )
          {
             cPic = szPic[i];
@@ -312,7 +313,9 @@ static char *NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValue
             else
                szRet[i] = cPic;
          }
+#if 0
       }
+#endif
       if( ( wPicFlags & PF_CREDIT ) && ( dValue >= 0 ) )
       {
          szRet[i++] = ' ';
@@ -375,25 +378,25 @@ HARBOUR HB_TRANSFORM( void )
 
    if( ISCHAR( 2 ) && hb_parclen( 2 ) > 0 )
    {
-      PHB_ITEM pPic      = hb_param( 2, IT_STRING ); /* Picture string           */
+      PHB_ITEM pPic       = hb_param( 2, IT_STRING ); /* Picture string           */
 
-      char    *szPic     = pPic->item.asString.value;
+      char    *szPic      = pPic->item.asString.value;
       char    *szTemp;
       char    *szResult;
       char    *szExp;
 
-      long    lPic       = pPic->item.asString.length;
-      long    lPicStart  = 0;                      /* Start of template        */
-      long    lExpPos    = 0;
-      long    lResultPos = 0;
+      ULONG   ulPic       = pPic->item.asString.length;
+      ULONG   ulPicStart  = 0;                  /* Start of template        */
+      ULONG   ulExpPos    = 0;
+      ULONG   ulResultPos = 0;
+      ULONG   n;
 
-      WORD    wPicFlags  = 0;                      /* Function flags           */
-      int     n;
+      WORD    wPicFlags   = 0;                  /* Function flags           */
 
       if( *szPic == '@' )                       /* Function marker found    */
       {
-         wPicFlags = PictFunc( &szPic, (ULONG*)&lPic ); /* Get length of function   */
-         lPicStart = pPic->item.asString.length - lPic;
+         wPicFlags = PictFunc( &szPic, &ulPic ); /* Get length of function   */
+         ulPicStart = pPic->item.asString.length - ulPic;
                                                 /* Get start of template    */
       }
 
@@ -402,11 +405,11 @@ HARBOUR HB_TRANSFORM( void )
          case IT_STRING:
          {
             szExp = pExp->item.asString.value;
-            szResult = (char *)hb_xgrab( ( (ULONG) (lPic-lPicStart) >
+            szResult = (char *)hb_xgrab( ( (ulPic-ulPicStart) >
                        pExp->item.asString.length) ?
-                       (lPic-lPicStart) + 64 : pExp->item.asString.length + 64 );
+                       (ulPic-ulPicStart) + 64 : pExp->item.asString.length + 64 );
                                                 /* Grab enough              */
-            szPic += lPicStart;                 /* Skip functions           */
+            szPic += ulPicStart;                /* Skip functions           */
 
             if( wPicFlags & PF_UPPER )          /* Function : @!            */
             {
@@ -418,15 +421,15 @@ HARBOUR HB_TRANSFORM( void )
                }
             }
 
-            if( lPic )                          /* Template string          */
+            if( ulPic )                         /* Template string          */
             {
-               while( lPic && (ULONG)lExpPos < pExp->item.asString.length )
+               while( ulPic && ulExpPos < pExp->item.asString.length )
                {                                /* Analyze picture mask     */
                   switch( *szPic )
                   {
                      case '!':                  /* Upper                    */
                      {
-                        szResult[lResultPos++] = toupper(szExp[lExpPos++]);
+                        szResult[ulResultPos++] = toupper(szExp[ulExpPos++]);
                         break;
                      }
                      case 'L':                  /* Ignored                  */
@@ -444,33 +447,33 @@ HARBOUR HB_TRANSFORM( void )
                      case 'X':
                      case ' ':
                      {
-                        szResult[lResultPos++] = szExp[lExpPos++];
+                        szResult[ulResultPos++] = szExp[ulExpPos++];
                         break;
                      }
 
                      default:                   /* Other choices            */
                      {
-                        szResult[lResultPos++] = *szPic;
-                        lExpPos++;
+                        szResult[ulResultPos++] = *szPic;
+                        ulExpPos++;
                      }
                   }
                   szPic++;
-                  lPic--;
+                  ulPic--;
                }
             }
             else if( wPicFlags & (PF_UPPER + PF_REMAIN) )
             {                                   /* Without template         */
                for( n = pExp->item.asString.length; n; n--)
-                 szResult[lResultPos++] = *szExp++;
+                 szResult[ulResultPos++] = *szExp++;
             }
 
-            if( ( wPicFlags & PF_REMAIN ) && lPic )
+            if( ( wPicFlags & PF_REMAIN ) && ulPic )
             {                                   /* Any chars left           */
-               for( n = lPic; n; n--)
-                  szResult[lResultPos++] = *szPic;
+               for( n = ulPic; n; n--)
+                  szResult[ulResultPos++] = *szPic;
                                                 /* Export remainder         */
             }
-            hb_retclen(szResult, lResultPos);
+            hb_retclen(szResult, ulResultPos);
             hb_xfree(szResult);
             break;
          }
@@ -479,12 +482,12 @@ HARBOUR HB_TRANSFORM( void )
          {
             BOOL bDone = FALSE;
 
-            szResult   =  (char *) hb_xgrab( lPic + 1 );
+            szResult    =  (char *) hb_xgrab( ulPic + 1 );
                                                 /* That's all folks        */
-            szPic      += lPicStart;            /* Skip functions           */
-            lResultPos =  1;
+            szPic       += ulPicStart;          /* Skip functions           */
+            ulResultPos =  1;
 
-            if( lPic )                          /* Template string          */
+            if( ulPic )                         /* Template string          */
             {
                switch( *szPic )
                {
@@ -492,7 +495,7 @@ HARBOUR HB_TRANSFORM( void )
                   {
                      *szResult = pExp->item.asLogical.value ? 'Y' : 'N';
                      szPic++;
-                     lPic--;
+                     ulPic--;
                      bDone = TRUE;              /* Logical written          */
                      break;
                   }
@@ -502,7 +505,7 @@ HARBOUR HB_TRANSFORM( void )
                   {
                      *szResult = pExp->item.asLogical.value ? 'T' : 'F';
                      szPic++;
-                     lPic--;
+                     ulPic--;
                      bDone = TRUE;
                      break;
                   }
@@ -510,45 +513,45 @@ HARBOUR HB_TRANSFORM( void )
                   default:
                   {
                     *szResult = *szPic++;
-                    lPic--;
+                    ulPic--;
                   }
                }
             }
-            if( ( wPicFlags & PF_REMAIN ) && lPic )
+            if( ( wPicFlags & PF_REMAIN ) && ulPic )
             {                                   /* Any chars left           */
-               for( n = lPic; n; n--)           /* Copy remainder           */
-                  szResult[lResultPos++] = *szPic++;
+               for( n = ulPic; n; n--)          /* Copy remainder           */
+                  szResult[ulResultPos++] = *szPic++;
                if( !bDone )                     /* Logical written ?        */
-                  szResult[lResultPos++] = pExp->item.asLogical.value ? 'T' : 'F';
+                  szResult[ulResultPos++] = pExp->item.asLogical.value ? 'T' : 'F';
             }
-            hb_retclen( szResult, lResultPos );
+            hb_retclen( szResult, ulResultPos );
             hb_xfree( szResult );
             break;
          }
          case IT_INTEGER:
          {
-            szResult = NumPicture( szPic + lPicStart, lPic, wPicFlags,
-                    (double) pExp->item.asInteger.value, (ULONG*)&lResultPos,
+            szResult = NumPicture( szPic + ulPicStart, ulPic, wPicFlags,
+                    (double) pExp->item.asInteger.value, &ulResultPos,
                      pExp->item.asInteger.length, 0 );
-            hb_retclen( szResult, lResultPos );
+            hb_retclen( szResult, ulResultPos );
             hb_xfree( szResult );
             break;
          }
          case IT_LONG:
          {
-            szResult = NumPicture( szPic + lPicStart, lPic, wPicFlags,
-                    (double) pExp->item.asLong.value, (ULONG *)&lResultPos,
+            szResult = NumPicture( szPic + ulPicStart, ulPic, wPicFlags,
+                    (double) pExp->item.asLong.value, &ulResultPos,
                      pExp->item.asLong.length, 0 );
-            hb_retclen( szResult, lResultPos );
+            hb_retclen( szResult, ulResultPos );
             hb_xfree( szResult );
             break;
          }
          case IT_DOUBLE:
          {
-            szResult = NumPicture( szPic + lPicStart, lPic, wPicFlags,
-                    (double) pExp->item.asDouble.value, (ULONG *)&lResultPos,
+            szResult = NumPicture( szPic + ulPicStart, ulPic, wPicFlags,
+                    (double) pExp->item.asDouble.value, &ulResultPos,
                      pExp->item.asDouble.length, pExp->item.asDouble.decimal );
-            hb_retclen( szResult, lResultPos);
+            hb_retclen( szResult, ulResultPos);
             hb_xfree( szResult );
             break;
          }

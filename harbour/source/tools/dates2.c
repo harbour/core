@@ -40,38 +40,8 @@
 #include <time.h>
 #include "extend.h"
 #include "errorapi.h"
-#include "init.h"
 #include "itemapi.h"
 #include "dates.h"
-
-HARBOUR HB_ADAYS(void);
-HARBOUR HB_AMONTHS(void);
-HARBOUR HB_BOM(void);
-HARBOUR HB_BOY(void);
-HARBOUR HB_DAYSINMONTH(void);
-HARBOUR HB_DOY(void);
-HARBOUR HB_EOM(void);
-HARBOUR HB_EOY(void);
-HARBOUR HB_ISLEAPYEAR(void);
-HARBOUR HB_WOM(void);
-HARBOUR HB_WOY(void);
-
-HB_INIT_SYMBOLS_BEGIN( Dates2__InitSymbols )
-{ "ADAYS",         FS_PUBLIC, HB_ADAYS         , 0 },
-{ "AMONTHS",       FS_PUBLIC, HB_AMONTHS       , 0 },
-{ "BOM",           FS_PUBLIC, HB_BOM           , 0 },
-{ "BOY",           FS_PUBLIC, HB_BOY           , 0 },
-{ "DAYSINMONTH",   FS_PUBLIC, HB_DAYSINMONTH   , 0 },
-{ "DOY",           FS_PUBLIC, HB_DOY           , 0 },
-{ "EOM",           FS_PUBLIC, HB_EOM           , 0 },
-{ "EOY",           FS_PUBLIC, HB_EOY           , 0 },
-{ "ISLEAPYEAR",    FS_PUBLIC, HB_ISLEAPYEAR    , 0 },
-{ "WOM",           FS_PUBLIC, HB_WOM           , 0 },
-{ "WOY",           FS_PUBLIC, HB_WOY           , 0 }
-HB_INIT_SYMBOLS_END( Dates2__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Dates2__InitSymbols
-#endif
 
 static int hb__daysinmonth[ 12 ] =
 { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };

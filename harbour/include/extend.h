@@ -285,6 +285,9 @@ extern char *   hb_strDescend( char * szText, ULONG ulLen );
 extern ULONG    hb_strAt(char *szSub, ULONG ulSubLen, char *szText, ULONG ulLen);
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
+extern char *   hb_strDescend( char * szText, ULONG ulLen );
+
+extern double   hb_mathRound( double dResult, int iDec );
 
 /* class management */
 extern void     hb_clsReleaseAll( void );    /* releases all defined classes */

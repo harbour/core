@@ -35,16 +35,6 @@
 #include "itemapi.h"
 #include "errorapi.h"
 #include "ctoharb.h"
-#include "init.h"
-
-HARBOUR HB_DO( void );
-
-HB_INIT_SYMBOLS_BEGIN( Do__InitSymbols )
-{ "DO"     , FS_PUBLIC, HB_DO       , 0 }
-HB_INIT_SYMBOLS_END( Do__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Do__InitSymbols
-#endif
 
 /*  $DOC$
  *  $FUNCNAME$

@@ -22,6 +22,15 @@
    You can contact me at: alinares@fivetech.com
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_strEmpty().
+      hb_strMatchDOS().
+      hb_STRZERO().
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include <ctype.h>
 #include <math.h>
 
@@ -40,69 +49,6 @@ static double infinity = 0;
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320
-
-HARBOUR HB_ALLTRIM( void );
-HARBOUR HB_ASC( void );
-HARBOUR HB_AT( void );
-HARBOUR HB_CHR( void );
-HARBOUR HB_ISALPHA( void );
-HARBOUR HB_ISDIGIT( void );
-HARBOUR HB_ISUPPER( void );
-HARBOUR HB_ISLOWER( void );
-HARBOUR HB_LEFT( void );
-HARBOUR HB_LOWER( void );
-HARBOUR HB_LTRIM( void );
-HARBOUR HB_PAD( void );
-HARBOUR HB_PADC( void );
-HARBOUR HB_PADL( void );
-HARBOUR HB_PADR( void );
-HARBOUR HB_RAT( void );
-HARBOUR HB_REPLICATE( void );
-HARBOUR HB_RIGHT( void );
-HARBOUR HB_RTRIM( void );
-HARBOUR HB_SPACE( void );
-HARBOUR HB_STR( void );
-HARBOUR HB_STRTRAN( void );
-HARBOUR HB_STUFF( void );
-HARBOUR HB_SUBSTR( void );
-HARBOUR HB_TRIM( void );
-HARBOUR HB_UPPER( void );
-HARBOUR HB_VAL( void );
-
-HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols )
-#if 0
-{ "ASC"          , FS_PUBLIC, HB_ASC        , 0 },
-{ "AT"           , FS_PUBLIC, HB_AT         , 0 },
-{ "CHR"          , FS_PUBLIC, HB_CHR        , 0 },
-{ "LEFT"         , FS_PUBLIC, HB_LEFT       , 0 },
-{ "LOWER"        , FS_PUBLIC, HB_LOWER      , 0 },
-{ "LTRIM"        , FS_PUBLIC, HB_LTRIM      , 0 },
-{ "REPLICATE"    , FS_PUBLIC, HB_REPLICATE  , 0 },
-{ "RTRIM"        , FS_PUBLIC, HB_RTRIM      , 0 },
-{ "SPACE"        , FS_PUBLIC, HB_SPACE      , 0 },
-{ "STR"          , FS_PUBLIC, HB_STR        , 0 },
-{ "SUBSTR"       , FS_PUBLIC, HB_SUBSTR     , 0 },
-{ "TRIM"         , FS_PUBLIC, HB_TRIM       , 0 },
-{ "UPPER"        , FS_PUBLIC, HB_UPPER      , 0 },
-{ "VAL"          , FS_PUBLIC, HB_VAL        , 0 },
-#endif
-{ "ALLTRIM"      , FS_PUBLIC, HB_ALLTRIM    , 0 },
-{ "ISALPHA"      , FS_PUBLIC, HB_ISALPHA    , 0 },
-{ "ISDIGIT"      , FS_PUBLIC, HB_ISDIGIT    , 0 },
-{ "ISUPPER"      , FS_PUBLIC, HB_ISUPPER    , 0 },
-{ "ISLOWER"      , FS_PUBLIC, HB_ISLOWER    , 0 },
-{ "PAD"          , FS_PUBLIC, HB_PAD        , 0 },
-{ "PADC"         , FS_PUBLIC, HB_PADC       , 0 },
-{ "PADL"         , FS_PUBLIC, HB_PADL       , 0 },
-{ "PADR"         , FS_PUBLIC, HB_PADR       , 0 },
-{ "RAT"          , FS_PUBLIC, HB_RAT        , 0 },
-{ "RIGHT"        , FS_PUBLIC, HB_RIGHT      , 0 },
-{ "STRTRAN"      , FS_PUBLIC, HB_STRTRAN    , 0 },
-{ "STUFF"        , FS_PUBLIC, HB_STUFF      , 0 }
-HB_INIT_SYMBOLS_END( Strings__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Strings__InitSymbols
-#endif
 
 /* The rest of functions is pulled automatically by initsymb.c */
 
@@ -163,14 +109,6 @@ int hb_stricmp( const char *s1, const char *s2 )
    }
    return rc;
 }
-
-
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-   The following function is Copyright 1999 Victor Szel <info@szelvesz.hu>:
-      hb_strMatchDOS().
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
 
 static BOOL  hb_strMatchDOS (char *pszString, char *pszMask)
 {
@@ -1096,17 +1034,17 @@ HARBOUR HB_STRTRAN( void )
 
                if( bAll || ulCount > 0 )
                {
-                  LONG lFound = 0;
+                  ULONG ulFound = 0;
                   LONG lReplaced = 0;
                   ULONG i = 0;
                   ULONG ulLength = pText->item.asString.length;
 
                   while( i < pText->item.asString.length )
                   {
-                     if( (bAll || lReplaced < ulCount) && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
+                     if( (bAll || lReplaced < (LONG)ulCount) && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
                      {
-                        lFound++;
-                        if( lFound >= ulStart )
+                        ulFound++;
+                        if( ulFound >= ulStart )
                         {
                            lReplaced++;
                            ulLength = ulLength - pSeek->item.asString.length + ulReplace;
@@ -1119,19 +1057,19 @@ HARBOUR HB_STRTRAN( void )
                         i++;
                   }
 
-                  if( lFound )
+                  if( ulFound )
                   {
                      char *szResult = (char *)hb_xgrab(ulLength + 1);
                      char *szPtr = szResult;
 
-                     lFound = 0;
+                     ulFound = 0;
                      i = 0;
                      while( i < pText->item.asString.length )
                      {
                         if( lReplaced && !memcmp(szText + i, szSeek, pSeek->item.asString.length) )
                         {
-                           lFound++;
-                           if( lFound >= ulStart )
+                           ulFound++;
+                           if( ulFound >= ulStart )
                            {
                               lReplaced--;
                               memcpy(szPtr, szReplace, ulReplace);
@@ -1295,7 +1233,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
-            double dNumber =hb_itemGetND( pNumber );
+            double dNumber = hb_itemGetND( pNumber );
 
             #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
             if( pNumber->item.asDouble.length == 99 || dNumber == infinity || dNumber == -infinity )
@@ -1304,6 +1242,9 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             else
             #endif
             {
+               if( iDec < pNumber->item.asDouble.decimal )
+                  dNumber = hb_mathRound( dNumber, iDec );
+
                if( iDec > 0 )
                   iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
                else
@@ -1374,7 +1315,8 @@ HARBOUR HB_STR( void )
             hb_retc( szResult );
             hb_xfree( szResult );
          }
-         else hb_retc( "" );
+         else
+            hb_retc( "" );
       }
       else
       {
@@ -1385,6 +1327,87 @@ HARBOUR HB_STR( void )
    {
       /* NOTE: Clipper catches this at compile time! */
       hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "STR");
+   }
+}
+
+/* converts a numeric to a string with optional width & precision.
+   calls hb_itemStr() after validating parameters.
+   After that it pads the result with zeros.
+*/
+HARBOUR HB_STRZERO( void )
+{
+   if( hb_pcount() > 0 && hb_pcount() < 4 )
+   {
+      BOOL bValid = TRUE;
+      PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+      PHB_ITEM pWidth  = NULL;
+      PHB_ITEM pDec    = NULL;
+
+      if( !pNumber )
+         bValid = FALSE;
+      else
+      {
+         if( hb_pcount() > 1 )
+         {
+            pWidth = hb_param( 2, IT_NUMERIC );
+            if( !pWidth)
+               bValid = FALSE;
+         }
+         if( hb_pcount() > 2 )
+         {
+            pDec = hb_param( 3, IT_NUMERIC );
+            if( !pDec )
+               bValid = FALSE;
+         }
+      }
+      if( bValid )
+      {
+         char * szResult = hb_itemStr( pNumber, pWidth, pDec );
+
+         if( szResult )
+         {
+            ULONG ulPos = 0;
+
+            while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] != '-' )
+            {
+               ulPos++;
+            }
+
+            if ( szResult[ ulPos ] == '-' )
+            {
+               /* Negative sign found */
+
+               szResult[ ulPos ] = ' ';
+
+               ulPos = 0;
+               while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] == ' ' )
+               {
+                  szResult[ ulPos++ ] = '0';
+               }
+
+               szResult[ 0 ] = '-';
+            }
+            else
+            {
+               /* Negative sign not found */
+
+               ulPos = 0;
+               while( szResult[ ulPos ] != '\0' && szResult[ ulPos ] == ' ' )
+               {
+                  szResult[ ulPos++ ] = '0';
+               }
+            }
+
+            hb_retc( szResult );
+            hb_xfree( szResult );
+         }
+         else
+            hb_retc( "" );
+      }
+      else
+      {
+         hb_errRT_BASE(EG_ARG, 9999, NULL, "STRZERO");
+      }
    }
 }
 

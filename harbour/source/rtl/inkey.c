@@ -77,24 +77,6 @@
 #include "extend.h"
 #include "errorapi.h"
 #include "inkey.h"
-#include "init.h"
-
-HARBOUR HB___KEYBOARD( void );
-HARBOUR HB_INKEY( void );
-HARBOUR HB_LASTKEY( void );
-HARBOUR HB_NEXTKEY( void );
-
-HB_INIT_SYMBOLS_BEGIN( INKEY__InitSymbols )
-#if 0
-{ "INKEY"     , FS_PUBLIC, HB_INKEY     , 0 },
-#endif
-{ "__KEYBOARD", FS_PUBLIC, HB___KEYBOARD, 0 },
-{ "LASTKEY"   , FS_PUBLIC, HB_LASTKEY   , 0 },
-{ "NEXTKEY"   , FS_PUBLIC, HB_NEXTKEY   , 0 },
-HB_INIT_SYMBOLS_END( INKEY__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup INKEY__InitSymbols
-#endif
 
 #if defined( OS_UNIX_COMPATIBLE )
 #include <unistd.h>
@@ -112,7 +94,7 @@ HB_CALL_ON_STARTUP_BEGIN( init_input_mode )
 
   tcgetattr( STDIN_FILENO, &startup_attributes );
   atexit( restore_input_mode );
-  
+
   tcgetattr( STDIN_FILENO, &ta );
   ta.c_lflag &= ~(ICANON | ECHO);
   ta.c_cc[ VMIN ] =0;
@@ -173,7 +155,7 @@ void hb_releaseCPU( void )
 #endif
 }
 
-int hb_inkey ( double seconds, HB_inkey_enum event_mask, int wait, int forever )
+int hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )
 {
    int key;
    clock_t end_clock;

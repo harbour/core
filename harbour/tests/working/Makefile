@@ -12,6 +12,7 @@ LIBS=\
         vm \
         rtl \
         hbpp \
+        runner \
 
 ifeq ($(PM),)
   PM := $(pm)

@@ -66,7 +66,6 @@
  */
 
 #include "extend.h"
-#include "init.h"
 
 #define CHR_HARD1   ((char)13)
 #define CHR_HARD2   ((char)10)
@@ -74,24 +73,15 @@
 #define CHR_SOFT1   ((char)141)
 #define CHR_SOFT2   ((char)10)
 
-HARBOUR HB_MEMOTRAN(void);
-
-HB_INIT_SYMBOLS_BEGIN( Memotran__InitSymbols )
-{ "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
-HB_INIT_SYMBOLS_END( Memotran__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Memotran__InitSymbols
-#endif
-
 /* NOTE: pszResult must have an allocated buffer of at least */
 /*       ulStringLen */
 
-void hb_memotran( char *pszResult, ULONG *ulResultLen, char *pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
+char * hb_strMemotran( char *pszResult, ULONG *ulResultLen, char *pszString, ULONG ulStringLen, char cHardcr, char cSoftcr )
 {
    ULONG ulStringPos = 0;
    ULONG ulResultPos = 0;
 
-   while (ulStringPos < ulStringLen)
+   while ( ulStringPos < ulStringLen )
    {
       if      ( pszString[ ulStringPos     ] == CHR_HARD1 &&
                 pszString[ ulStringPos + 1 ] == CHR_HARD2 )
@@ -114,6 +104,8 @@ void hb_memotran( char *pszResult, ULONG *ulResultLen, char *pszString, ULONG ul
    pszResult[ ulResultPos ] = '\0';
 
    *ulResultLen = ulResultPos;
+
+   return pszResult;
 }
 
 HARBOUR HB_MEMOTRAN( void )
@@ -125,7 +117,7 @@ HARBOUR HB_MEMOTRAN( void )
       char cSoftcr = ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
       ULONG ulResultLen;
 
-      hb_memotran( pszResult, &ulResultLen, hb_parc( 1 ), hb_parclen( 1 ), cHardcr, cSoftcr );
+      hb_strMemotran( pszResult, &ulResultLen, hb_parc( 1 ), hb_parclen( 1 ), cHardcr, cSoftcr );
       hb_retclen( pszResult, ulResultLen );
 
       hb_xfree( pszResult );

@@ -38,21 +38,11 @@
 #include "hbpp.h"
 #include "extend.h"
 #include "itemapi.h"
-#include "init.h"
 #include "hberrors.h"
 
 PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
 BOOL _bWarnings = FALSE;
-
-HARBOUR HB___PREPROCESS(void);
-
-HB_INIT_SYMBOLS_BEGIN( Preprocess__InitSymbols )
-{ "__PREPROCESS",     FS_PUBLIC, HB___PREPROCESS    , 0 }
-HB_INIT_SYMBOLS_END( Preprocess__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Preprocess__InitSymbols
-#endif
 
 /* TODO: Extend the function to allow directives
          and external include files              */

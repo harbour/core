@@ -9,10 +9,6 @@
 #include "extend.h"
 #include "ctoharb.h"
 
-#ifdef HARBOUR_STRICT_ANSI_C
-   #include "initsymd.h"
-#endif
-
 extern HARBOUR HB_AADD( void );
 extern HARBOUR HB_ABS( void );
 extern HARBOUR HB_ASC( void );
@@ -131,18 +127,6 @@ static HB_SYMB symbols[] = {
  */
 void InitSymbolTable( void )
 {
-  /*
-   * Place here your user defined <modulename>__InitSymbols functions
-   */
-
-
-  /*
-   * The symbol tables from runtime support modules start here
-   */
-#ifdef HARBOUR_STRICT_ANSI_C
-   #include "initsymc.h"
-#endif
-
   /*
    * The system symbol table with runtime functions HAVE TO be called last
    */

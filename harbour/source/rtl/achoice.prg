@@ -97,26 +97,27 @@
 
 function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHiLytRow )
 
-   local nNumCols  := 0                    // Number of columns in the window
-   local nNumRows  := 0                    // Number of rows in the window
+   local nNumCols                          // Number of columns in the window
+   local nNumRows                          // Number of rows in the window
    local acCopy    := {}                   // A padded copy of the items
-   local alSelect  := {}                   // Select permission
+   local alSelect                          // Select permission
    local nNewPos   := 0                    // The next item to be selected
    local lFinished := .F.                  // Is processing finished?
    local nKey      := 0                    // The keystroke to be processed
    local nMode     := AC_IDLE              // The current operating mode
    local nAtTop    := 1                    // The number of the item at the top
    local nAtBtm    := 1                    // The number of the item at the bottom
-   local nItems    := 0                    // The number of items
+   local nItems                            // The number of items
    local nGap      := 0                    // The number of lines between top and current lines
                                            // Block used to search for items
-   local bScan := { | cX | if( left( cX, 1 ) == upper( chr( nKey ) ), .T., .F. ) }
    local lUserFunc                         // Is a user function to be used?
    local nUserFunc := 0                    // Return value from user function
    local nSaveCsr  := setcursor( SC_NONE )
    local nFrstItem := 0
    local nLastItem := 0
    local nCntr
+   local bAction
+   local cKey
 
    ColorSelect( CLR_STANDARD )
 
@@ -439,21 +440,24 @@ function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHi
          lFinished := .T.
 
       case InRange( 32, nKey, 255 ) .and. ( ( !lUserFunc ) .or. ( nMode == AC_GOTO ) )
+
+         cKey := upper( chr( nKey ) )
+
          * Find next selectable item
-         nNewPos := ascan( acCopy, bScan, nPos + 1 )
-         do while InRange( nPos, nNewPos, nLastItem ) .and. ( !alSelect[ nNewPos ] )
-            nNewPos := ascan( acCopy, bScan, nNewPos + 1 )
-         enddo
+         FOR nNewPos := nPos + 1 TO nItems
+              IF alSelect[ nNewPos ] .AND. left( acCopy[ nNewPos ], 1 ) == cKey
+                   EXIT
+              ENDIF
+         NEXT
+         IF nNewPos == nItems + 1
+              FOR nNewPos := 1 TO nPos - 1
+                   IF alSelect[ nNewPos ] .AND. left( acCopy[ nNewPos ], 1 ) == cKey
+                        EXIT
+                   ENDIF
+              NEXT
+         ENDIF
 
-         IF nNewPos == 0
-            * Loop back to beginning item, if there is one
-            nNewPos := ascan( acCopy, bScan )
-            do while InRange( 1, nNewPos, nLastItem ) .and. ( !alSelect[ nNewPos ] )
-               nNewPos := ascan( acCopy, bScan, nNewPos + 1 )
-            enddo
-         endif
-
-         IF InRange( nFrstItem, nNewPos, nLastItem ) .and. alSelect[ nNewPos ]
+         IF nNewPos != nPos
             IF InRange( nAtTop, nNewPos, nAtTop + nNumRows - 1 )
                * On same page
                DispLine( acCopy[ nPos ], nTop + ( nPos - nAtTop ), nLft, alSelect[ nPos ], .F. )
@@ -522,7 +526,8 @@ static function DispPage( acCopy, alSelect, nTop, nLft, nNumRows, nPos, nAtTop )
       IF InRange( 1, nIndex, nArrLen )
          DispLine( acCopy[ nIndex ], nRow, nLft, alSelect[ nIndex ], nIndex == nPos )
       else
-         SetPos( nRow, nCol )
+         ColorSelect( CLR_STANDARD )
+         SetPos( nRow, nLft )
          DispOut( space( len( acCopy[ 1 ] ) ) )
       endif
    next

@@ -40,7 +40,6 @@
 #include "itemapi.h"
 #include "set.h"
 #include "dates.h"
-#include "init.h"
 
 #include <ctype.h>
 #include <time.h>
@@ -52,41 +51,6 @@
 #endif
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    #define HB_OPTIMIZE_DTOS
-#endif
-
-HARBOUR HB_CDOW( void );
-HARBOUR HB_CMONTH( void );
-HARBOUR HB_CTOD( void );
-HARBOUR HB_DATE( void );
-HARBOUR HB_DAY( void );
-HARBOUR HB_DOW( void );
-HARBOUR HB_DTOC( void );
-HARBOUR HB_DTOS( void );
-HARBOUR HB_MONTH( void );
-HARBOUR HB_SECONDS( void );
-HARBOUR HB_STOD( void );
-HARBOUR HB_TIME( void );
-HARBOUR HB_YEAR( void );
-
-HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols )
-#if 0
-{ "CDOW"     , FS_PUBLIC, HB_CDOW    , 0 },
-{ "CMONTH"   , FS_PUBLIC, HB_CMONTH  , 0 },
-{ "CTOD"     , FS_PUBLIC, HB_CTOD    , 0 },
-{ "DATE"     , FS_PUBLIC, HB_DATE    , 0 },
-{ "DAY"      , FS_PUBLIC, HB_DAY     , 0 },
-{ "DOW"      , FS_PUBLIC, HB_DOW     , 0 },
-{ "DTOC"     , FS_PUBLIC, HB_DTOC    , 0 },
-{ "DTOS"     , FS_PUBLIC, HB_DTOS    , 0 },
-{ "MONTH"    , FS_PUBLIC, HB_MONTH   , 0 },
-{ "SECONDS"  , FS_PUBLIC, HB_SECONDS , 0 },
-{ "TIME"     , FS_PUBLIC, HB_TIME    , 0 },
-{ "YEAR"     , FS_PUBLIC, HB_YEAR    , 0 },
-#endif
-{ "STOD"     , FS_PUBLIC, HB_STOD    , 0 }
-HB_INIT_SYMBOLS_END( Dates__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Dates__InitSymbols
 #endif
 
 /* The other functions are pulled in automatically by initsymb.c */

@@ -16,7 +16,6 @@
 #endif
 
 #include "extend.h"
-#include "init.h"
 #include "errorapi.h"
 #include "hbver.h"
 
@@ -42,21 +41,6 @@
   #else
     #define INT_86 int86
   #endif
-#endif
-
-HARBOUR HB___RUN(void);
-HARBOUR HB_GETENV(void);
-HARBOUR HB_OS(void);
-HARBOUR HB_VERSION(void);
-
-HB_INIT_SYMBOLS_BEGIN( Environ__InitSymbols )
-{ "__RUN"  , FS_PUBLIC, HB___RUN  , 0 },
-{ "GETENV" , FS_PUBLIC, HB_GETENV , 0 },
-{ "OS"     , FS_PUBLIC, HB_OS     , 0 },
-{ "VERSION", FS_PUBLIC, HB_VERSION, 0 }
-HB_INIT_SYMBOLS_END( Environ__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Environ__InitSymbols
 #endif
 
 HARBOUR HB_OS(void)

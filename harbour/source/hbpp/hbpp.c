@@ -125,17 +125,19 @@ int numBrackets;
 char groupchar;
 
 /* Table with parse errors */
-char * _szPErrors[] = { "Can\'t open include file \"%s\"",
-                       "#else does not match #if",
-                       "#endif does not match #if",
-                       "Error in include file name",
-                       "#define without parameters",
-                       "Absent \"=>\" in command definition",
-                       "Error in pattern definition",
-                       "Cycled #define",
-                       "Wrong directive \"%s\"",
-                       "#error: \'%s\'"
-                     };
+char * _szPErrors[] =
+{
+   "Can\'t open include file \"%s\"",
+   "#else does not match #if",
+   "#endif does not match #if",
+   "Error in include file name",
+   "#define without parameters",
+   "Absent \"=>\" in command definition",
+   "Error in pattern definition",
+   "Cycled #define",
+   "Wrong directive \"%s\"",
+   "#error: \'%s\'"
+};
 
 /* Table with parse warnings */
 char * _szPWarnings[] =

@@ -1,9 +1,0 @@
-# makefile for Borland C/C++ 32 bits
-
-PROJECT: hbpp.exe
-
-hbpp.exe : hbppmain.c hbpp.c table.c
-   bcc32  -O2 -ehbpp.exe -I..\..\include hbppmain.c hbpp.c table.c
-   del hbppmain.obj
-   del hbpp.obj
-   del table.obj

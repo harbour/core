@@ -222,6 +222,7 @@ SPACE                   ;R;
 SQRT                    ;R;
 STR                     ;R;
 STRTRAN                 ;R;
+STRZERO                 ;R;
 STUFF                   ;R;
 SUBSTR                  ;R;
 TIME                    ;R;

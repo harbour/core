@@ -28,40 +28,6 @@
 #include "langapi.h"
 #include "ctoharb.h"
 #include "dates.h"
-#include "init.h"
-
-HARBOUR HB_AADD(void);
-HARBOUR HB_ACLONE(void);
-HARBOUR HB_ACOPY(void);
-HARBOUR HB_ADEL(void);
-HARBOUR HB_AEVAL(void);
-HARBOUR HB_AFILL(void);
-HARBOUR HB_AINS(void);
-HARBOUR HB_ARRAY(void);
-HARBOUR HB_ASCAN(void);
-HARBOUR HB_ASIZE(void);
-HARBOUR HB_ASORT(void);
-HARBOUR HB_ATAIL(void);
-
-HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols )
-#if 0
-{ "AADD",           FS_PUBLIC, HB_AADD          , 0 },
-#endif
-{ "ACLONE",         FS_PUBLIC, HB_ACLONE        , 0 },
-{ "ACOPY",          FS_PUBLIC, HB_ACOPY         , 0 },
-{ "ADEL",           FS_PUBLIC, HB_ADEL          , 0 },
-{ "AEVAL",          FS_PUBLIC, HB_AEVAL         , 0 },
-{ "AFILL",          FS_PUBLIC, HB_AFILL         , 0 },
-{ "AINS",           FS_PUBLIC, HB_AINS          , 0 },
-{ "ARRAY",          FS_PUBLIC, HB_ARRAY         , 0 },
-{ "ASCAN",          FS_PUBLIC, HB_ASCAN         , 0 },
-{ "ASIZE",          FS_PUBLIC, HB_ASIZE         , 0 },
-{ "ASORT",          FS_PUBLIC, HB_ASORT         , 0 },
-{ "ATAIL",          FS_PUBLIC, HB_ATAIL         , 0 },
-HB_INIT_SYMBOLS_END( Arrays__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Arrays__InitSymbols
-#endif
 
 /*
  * Internal

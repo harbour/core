@@ -5,19 +5,12 @@
 ROOT = ../../
 
 C_SOURCES=\
-	runhrb.c
+        runlib.c \
 
-PRG_SOURCES=\
-	external.prg
-	
-PRG_MAIN=runmain.prg
+LIB=runner
 
-LIBS=\
-	tools \
-        debug \
-	rdd \
-	vm \
-	rtl \
-	hbpp \
+DIRS=\
+	stdalone \
 
-include $(TOP)$(ROOT)config/bin.cf
+include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/dir.cf

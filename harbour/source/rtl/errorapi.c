@@ -27,21 +27,16 @@
 #include "itemapi.h"
 #include "errorapi.h"
 #include "langapi.h"
-#include "init.h"
 
-HARBOUR HB___ERRRT_BASE(void);
+extern HARBOUR HB_ERRORNEW( void );
 
-extern HARBOUR HB_ERRORSYS( void ); /* from errorsys.prg */
-extern HARBOUR HB_ERRORNEW( void ); /* from terror.prg */
-
-HB_INIT_SYMBOLS_BEGIN( Errorapi__InitSymbols )
-{ "__ERRRT_BASE"  , FS_PUBLIC, HB___ERRRT_BASE , 0 },
-{ "ERRORSYS"      , FS_PUBLIC, HB_ERRORSYS     , 0 },
-{ "ERRORNEW"      , FS_PUBLIC, HB_ERRORNEW     , 0 }
-HB_INIT_SYMBOLS_END( Errorapi__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Errorapi__InitSymbols
-#endif
+/* NOTE: This is called via its symbol name, so we should make sure */
+/*       that it gets linked. */
+/*       Don't make this function static, because it's not called from this file. */
+void hb_errForceLink()
+{
+   HB_ERRORNEW();
+}
 
 PHB_ITEM hb_errNew( void )
 {

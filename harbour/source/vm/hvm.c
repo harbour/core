@@ -101,8 +101,6 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 #endif
 #endif
 
-static void hb_vmForceLink( void );
-
 /* virtual machine state */
 
 BOOL     bHB_DEBUG = FALSE;  /* if TRUE traces the virtual machine activity */
@@ -120,33 +118,11 @@ BYTE     byErrorLevel = 0; /* application exit errorlevel */
 #define HB_DEBUG( x )     if( bHB_DEBUG ) printf( x )
 #define HB_DEBUG2( x, y ) if( bHB_DEBUG ) printf( x, y )
 
-HB_INIT_SYMBOLS_BEGIN( Hvm__InitSymbols )
-#if 0
-{ "LEN"              , FS_PUBLIC, HB_LEN                , 0 },
-{ "EMPTY"            , FS_PUBLIC, HB_EMPTY              , 0 },
-{ "PCOUNT"           , FS_PUBLIC, HB_PCOUNT             , 0 },
-#endif
-{ "EVAL"             , FS_PUBLIC, HB_EVAL               , 0 },
-{ "VALTYPE"          , FS_PUBLIC, HB_VALTYPE            , 0 },
-{ "ERRORBLOCK"       , FS_PUBLIC, HB_ERRORBLOCK         , 0 },
-{ "PROCNAME"         , FS_PUBLIC, HB_PROCNAME           , 0 },
-{ "PROCLINE"         , FS_PUBLIC, HB_PROCLINE           , 0 },
-{ "__QUIT"           , FS_PUBLIC, HB___QUIT             , 0 },
-{ "ERRORLEVEL"       , FS_PUBLIC, HB_ERRORLEVEL         , 0 },
-{ "PVALUE"           , FS_PUBLIC, HB_PVALUE             , 0 }
-HB_INIT_SYMBOLS_END( Hvm__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Hvm__InitSymbols
-#endif
-
 /* application entry point */
 
 int main( int argc, char * argv[] )
 {
    int i;
-   void ( * DontDiscardForceLink )( void ) = &hb_vmForceLink;
-
-   HB_SYMBOL_UNUSED( DontDiscardForceLink );
 
    HB_DEBUG( "main\n" );
 
@@ -768,7 +744,7 @@ void hb_vmArrayPut( void )
 static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a specific source code line */
 {
    bDebugShowLines = FALSE;
-   hb_vmPushSymbol( hb_dynsymFind( "DEBUGGER" )->pSymbol );
+   hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushInteger( wLine );
    hb_vmDo( 1 );
@@ -1471,7 +1447,7 @@ void hb_vmModuleName( char * szModuleName ) /* PRG and function name information
 {
    bDebugging = TRUE;
    bDebugShowLines = FALSE;
-   hb_vmPushSymbol( hb_dynsymFind( "DEBUGGER" )->pSymbol );
+   hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushString( szModuleName, strlen( szModuleName ) );
    hb_vmDo( 1 );
@@ -2303,7 +2279,9 @@ static void hb_vmDoInitFunctions( int argc, char * argv[] )
    } while( pLastSymbols );
 }
 
-static void hb_vmForceLink( void )  /* To force the link of some functions */
+/* NOTE: We should make sure that these get linked. */
+/*       Don't make this function static, because it's not called from this file. */
+void hb_vmForceLink( void )
 {
    HB_ERRORSYS();
    HB_ERRORNEW();

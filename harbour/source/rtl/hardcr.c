@@ -63,38 +63,37 @@
  */
 
 #include "extend.h"
-#include "init.h"
+
+#define CHR_HARD1   ((char)13)
 
 #define CHR_SOFT1   ((char)141)
 #define CHR_SOFT2   ((char)10)
 
-HARBOUR HB_HARDCR(void);
-
-HB_INIT_SYMBOLS_BEGIN( HardCR__InitSymbols )
-{ "HARDCR", FS_PUBLIC, HB_HARDCR, 0 }
-HB_INIT_SYMBOLS_END( HardCR__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup HardCR__InitSymbols
-#endif
-
-char *hb_hardcr( char *string )
+char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 {
-   char *s;
+   ULONG ulStringPos;
 
-   if( string )
+   for ( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
    {
-      for( s = string; *s; ++s )
-         if( *s == CHR_SOFT1 && *(s+1) == CHR_SOFT2 )
-            *s++ = '\n';
-      *s = '\0';
+      if ( pszString[ ulStringPos     ] == CHR_SOFT1 &&
+           pszString[ ulStringPos + 1 ] == CHR_SOFT2 )
+      {
+         pszString[ ulStringPos ] = CHR_HARD1;
+      }
    }
-   return string;
+
+   return pszString;
 }
 
 HARBOUR HB_HARDCR( void )
 {
-   if( ISCHAR( 1 ) )
-      hb_retc( hb_hardcr( hb_parc( 1 ) ) );
+   if ( ISCHAR( 1 ) )
+   {
+      ULONG ulStringLen = hb_parclen( 1 );
+
+      hb_retclen( hb_strHardCR( hb_parc( 1 ), ulStringLen ), ulStringLen );
+   }
    else
       hb_retc( "" );
 }
+

@@ -10,36 +10,8 @@
 
 #include <math.h>
 #include "extend.h"
-#include "init.h"
 #include "set.h"
 #include "errorapi.h"
-
-HARBOUR HB_ABS( void );
-HARBOUR HB_EXP( void );
-HARBOUR HB_INT( void );
-HARBOUR HB_LOG( void );
-HARBOUR HB_MAX( void );
-HARBOUR HB_MIN( void );
-HARBOUR HB_MOD( void );
-HARBOUR HB_ROUND( void );
-HARBOUR HB_SQRT( void );
-
-HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols )
-#if 0
-{ "HB_ABS"   , FS_PUBLIC, HB_ABS   , 0 },
-{ "HB_EXP"   , FS_PUBLIC, HB_EXP   , 0 },
-{ "HB_INT"   , FS_PUBLIC, HB_INT   , 0 },
-{ "HB_LOG"   , FS_PUBLIC, HB_LOG   , 0 },
-{ "HB_MAX"   , FS_PUBLIC, HB_MAX   , 0 },
-{ "HB_MIN"   , FS_PUBLIC, HB_MIN   , 0 },
-{ "HB_ROUND" , FS_PUBLIC, HB_ROUND , 0 },
-{ "HB_SQRT"  , FS_PUBLIC, HB_SQRT  , 0 },
-#endif
-{ "HB_MOD"   , FS_PUBLIC, HB_MOD   , 0 }
-HB_INIT_SYMBOLS_END( Math__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Math__InitSymbols
-#endif
 
 /* The rest of functions is pulled automatically by initsymb.c */
 
@@ -269,31 +241,39 @@ FUNCTION MOD(cl_num, cl_base)
    }
 }
 
+double hb_mathRound( double dResult, int iDec )
+{
+   int iSize = 64;
+   char * szResult;
+
+   if( iDec < 1 ) iDec = 0;
+   else if( dResult != 0.0 )
+   {
+      double dAdjust = pow( 10, iDec );
+      dResult = floor( dResult * dAdjust + 0.5 );
+      dResult = dResult / dAdjust;
+   }
+
+   szResult = ( char * ) hb_xgrab( iSize + iDec + 1 );
+   if( szResult )
+   {
+      sprintf( szResult, "%*.*f", iSize, iDec, dResult );
+      dResult = atof( szResult );
+      hb_xfree( szResult );
+   }
+
+   return dResult;
+}
+
 HARBOUR HB_ROUND( void )
 {
    if( hb_pcount() == 2 )
    {
       if( hb_param(1, IT_NUMERIC) && hb_param( 2, IT_NUMERIC ) )
       {
-         int iSize = 64, iDec = hb_parni( 2 );
-         char * szResult;
-         double dResult = hb_parnd( 1 );
+         int iDec = hb_parni( 2 );
 
-         if( iDec < 1 ) iDec = 0;
-         else if( dResult != 0.0 )
-         {
-            double dAdjust = pow( 10, iDec );
-            dResult = floor( dResult * dAdjust + 0.5 );
-            dResult = dResult / dAdjust;
-         }
-         szResult = ( char * ) hb_xgrab( iSize + iDec + 1 );
-         if( szResult )
-         {
-            sprintf( szResult, "%*.*f", iSize, iDec, dResult );
-            dResult = atof( szResult );
-            hb_xfree( szResult );
-         }
-         hb_retnd( dResult );
+         hb_retnd( hb_mathRound( hb_parnd( 1 ), iDec ) );
          stack.Return.item.asDouble.decimal = iDec;
       }
       else

@@ -1,3 +1,142 @@
+19990822-07:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/strings.c
+    ! hb_itemStr() fixed so that it rounds the value if the required
+      decimal width is smaller than the original. Note that rounding is
+      buggy so it still doesn't work.
+    * HB_STRTRAN() one more long converted to ULONG. (lFound -> ulFound)
+
+  * include/extend.h
+    source/rtl/math.c
+    tests/working/rtl_test.prg
+    + Made a C callable version of ROUND() function, named hb_mathRound().
+    + Added ROUND() tests.
+
+  * source/rtl/strzero.prg
+    source/runner/stdalone/external.prg
+    include/external.ch
+    tests/working/rtl_test.prg
+    funclist.txt
+    + STRZERO() added.
+    + STRZERO() and STR() tests added.
+    + EXTERNAL NUMTOTXTHU enabled, since STRZERO() is existing now.
+
+  * source/rtl/alert.prg
+    source/rtl/menuto.prg
+    source/rtl/achoice.prg
+    ! Some warnings fixed. (Why aren't we compiling with /w by default ?)
+    ! Hotkey handling bug fixed in ACHOICE().
+    ! Comment typo fixed in Alert()
+
+  * source/rtl/hardcr.c
+    tests/working/hardcr.prg
+    ! Fixed a bug in HARDCR() with handling strings including Chr(0).
+      It's now 100% Clipper compatible.
+    * hb_hardcr() renamed to hb_strHardCR()
+
+  * source/rtl/mtran.c
+    * Small change in internal function, it returns the resulting string
+      pointer now.
+    * hb_memotran() renamed to hb_strMemotran()
+
+  * source/tools/dates2.c
+    source/hbpp/hbpplib.c
+    source/vm/hvm.c
+    source/vm/initsymb.c
+    source/rtl/arrays.c
+    source/rtl/classes.c
+    source/rtl/console.c
+    source/rtl/copyfile.c
+    source/rtl/dates.c
+    source/rtl/descend.c
+    source/rtl/dir.c
+    source/rtl/do.c
+    source/rtl/environ.c
+    source/rtl/errorapi.c
+    source/rtl/filesys.c
+    source/rtl/hardcr.c
+    source/rtl/inkey.c
+    source/rtl/math.c
+    source/rtl/memvars.c
+    source/rtl/mtran.c
+    source/rtl/set.c
+    source/rtl/setcolor.c
+    source/rtl/strings.c
+    source/rtl/tone.c
+    source/rtl/transfrm.c
+    - Removed HB_INIT_SYMBOLS_*() automatic symbol registration, placed
+      "forcelink" code where needed.
+
+  * include/extend.h
+    + hb_strDescend() prototype added. (this may be used in index creation
+      once)
+
+  * source/runner/runhrb.c (removed)
+    source/runner/runlib.c (added)
+    source/runner/external.prg -> source/runner/stdalone/external.prg
+    source/runner/runhrb.prg -> source/runner/stdalone/runner.prg
+    source/runner/Makefile
+    source/runner/stdalone/Makefile
+    tests/working/Makefile
+    include/initsymb.h (removed)
+    include/initsymc.h (removed)
+    include/run_exp.h (removed)
+    runner.b32 (added !! NOT tested !!)
+    build32.bat (modified)
+    build40.bat (modified)
+    - Removed include files not needed anymore.
+    + Separated runner library from standalone executable.
+    * Renamed HB_RUN() to __HRBRUN()
+    + Added return value support to __HRBRUN()
+    + Added standard error messages to runlib.c, printf() is no longer called.
+    + TODO: the error codes should be replaced with meaningful ones.
+    * Large cleanup in runlib.c, functions made static, renamings, some BYTE
+      changed to BOOL, TOFIX, TODO added, etc.
+    + runner.prg help message standardized, extended.
+    + Tried to modify Borland makefiles to be able to build runner.
+    + Added runner lib to the Makefile's library list.
+    ( !! PLEASE CHECK THE BORLAND MAKEFILES !! )
+
+  * tests/working/rtl_test.prg
+    + /FAIL switch added to only show failing lines.
+    * Reindented using 3 characters.
+
+  * source/rtl/inkey.c
+    include/inkey.h
+    ! Some ints changed to BOOL.
+
+  * source/rtl/transform.c
+    tests/working/rtl_test.prg
+    ! The rest of the long types and one int converted to ULONG.
+    ! A temporary fix for an obvious bug, an if branch commented out.
+      This way it seems to work far better. GPF seem to have fixed.
+      Now only 10 tests fails.
+    ! TRANSFORM() test results corrected where Clipper is buggy, two
+      tests added which previously GPF-ed.
+
+  * source/debug/debugger.prg
+    source/vm/hvm.c
+    * Function DEBUGGER renamed to __DBGENTRY
+
+  * libs/icc/empty 
+    - Removed since this directory is not used anymore.
+
+  * source/hbpp/makefile.b16 (moved to /hbpp.b16)
+    source/hbpp/makefile.b32 (moved to /hbpp.b32)
+    source/hbpp/build.bat (removed)
+    source/hbpp/build32.bat (removed)
+    build.bat
+    build32.bat
+    hbpp.b16 (added !! NOT tested !!)
+    hbpp.b32 (added !! NOT tested !!)
+    + Moved to the root, renamed and incorporated to the mainstream 
+      Borland make process, it's commented out.
+    ( !! PLEASE UPDATE THE BORLAND MAKEFILES !! )
+
+  * source/compiler/harbour.y
+    source/hbpp/hbpp.c
+    * Reformatted code for error and warning tables.
+
 19990821-22:18 GMT+3 Alexander Kresin
   * source/debug/tbrwtext.prg
     * minor improvements

@@ -50,7 +50,6 @@
 #include "dates.h"
 #include "set.h"
 #include "inkey.h"
-#include "init.h"
 
 #if defined(__GNUC__)
   #include <unistd.h>
@@ -70,79 +69,6 @@
 #define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */
 #else
 #define CRLF_BUFFER_LEN 3     /*length of buffer for CR/LF characters */
-#endif
-
-HARBOUR HB___ACCEPT(void);
-HARBOUR HB___EJECT( void );
-HARBOUR HB_COL( void );
-HARBOUR HB_ROW( void );
-HARBOUR HB_DBGSHADOW( void );
-HARBOUR HB_DEVOUT( void );
-HARBOUR HB_DEVOUTPICT( void );
-HARBOUR HB_DEVPOS( void );
-HARBOUR HB_DISPBEGIN( void );
-HARBOUR HB_DISPBOX( void );
-HARBOUR HB_DISPCOUNT( void );
-HARBOUR HB_DISPEND( void );
-HARBOUR HB_DISPOUT( void );
-HARBOUR HB_ISCOLOR( void );
-HARBOUR HB_MAXCOL( void );
-HARBOUR HB_MAXROW( void );
-HARBOUR HB_NOSNOW( void );
-HARBOUR HB_OUTSTD( void );
-HARBOUR HB_OUTERR( void );
-HARBOUR HB_PCOL( void );
-HARBOUR HB_PROW( void );
-HARBOUR HB_RESTSCREEN( void );
-HARBOUR HB_SCROLL( void );
-HARBOUR HB_SAVESCREEN( void );
-HARBOUR HB_SETCURSOR( void );
-HARBOUR HB_SETBLINK( void );
-HARBOUR HB_SETPOS( void );
-HARBOUR HB_SETPRC( void );
-HARBOUR HB_SHADOW( void );
-HARBOUR HB_QOUT( void );
-HARBOUR HB_QQOUT( void );
-HARBOUR HB___COLORINDEX( void );
-
-HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
-#if 0
-{ "COL"         , FS_PUBLIC, HB_COL         , 0 },
-{ "ROW"         , FS_PUBLIC, HB_ROW         , 0 },
-{ "DEVPOS"      , FS_PUBLIC, HB_DEVPOS      , 0 },
-{ "PCOL"        , FS_PUBLIC, HB_PCOL        , 0 },
-{ "PROW"        , FS_PUBLIC, HB_PROW        , 0 },
-{ "SETPOS"      , FS_PUBLIC, HB_SETPOS      , 0 },
-#endif
-{ "__ACCEPT"    , FS_PUBLIC, HB___ACCEPT    , 0 },
-{ "__EJECT"     , FS_PUBLIC, HB___EJECT     , 0 },
-{ "DBGSHADOW"   , FS_PUBLIC, HB_DBGSHADOW   , 0 },
-{ "DEVOUT"      , FS_PUBLIC, HB_DEVOUT      , 0 },
-{ "DEVOUTPICT"  , FS_PUBLIC, HB_DEVOUTPICT  , 0 },
-{ "DISPBEGIN"   , FS_PUBLIC, HB_DISPBEGIN   , 0 },
-{ "DISPBOX"     , FS_PUBLIC, HB_DISPBOX     , 0 },
-{ "DISPCOUNT"   , FS_PUBLIC, HB_DISPCOUNT   , 0 },
-{ "DISPEND"     , FS_PUBLIC, HB_DISPEND     , 0 },
-{ "DISPOUT"     , FS_PUBLIC, HB_DISPOUT     , 0 },
-{ "ISCOLOR"     , FS_PUBLIC, HB_ISCOLOR     , 0 },
-{ "MAXCOL"      , FS_PUBLIC, HB_MAXCOL      , 0 },
-{ "MAXROW"      , FS_PUBLIC, HB_MAXROW      , 0 },
-{ "NOSNOW"      , FS_PUBLIC, HB_NOSNOW      , 0 },
-{ "OUTERR"      , FS_PUBLIC, HB_OUTERR      , 0 },
-{ "OUTSTD"      , FS_PUBLIC, HB_OUTSTD      , 0 },
-{ "RESTSCREEN"  , FS_PUBLIC, HB_RESTSCREEN  , 0 },
-{ "SCROLL"      , FS_PUBLIC, HB_SCROLL      , 0 },
-{ "SAVESCREEN"  , FS_PUBLIC, HB_SAVESCREEN  , 0 },
-{ "SETCURSOR"   , FS_PUBLIC, HB_SETCURSOR   , 0 },
-{ "SETBLINK"    , FS_PUBLIC, HB_SETBLINK    , 0 },
-{ "SETPRC"      , FS_PUBLIC, HB_SETPRC      , 0 },
-{ "SHADOW"      , FS_PUBLIC, HB_SHADOW      , 0 },
-{ "QOUT"        , FS_PUBLIC, HB_QOUT        , 0 },
-{ "QQOUT"       , FS_PUBLIC, HB_QQOUT       , 0 },
-{ "__COLORINDEX", FS_PUBLIC, HB___COLORINDEX, 0 }
-HB_INIT_SYMBOLS_END( Console__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Console__InitSymbols
 #endif
 
 static USHORT dev_row, dev_col, p_row, p_col;

@@ -171,7 +171,6 @@
 #include "errorapi.h"
 #include "set.h"
 #include "inkey.h"
-#include "init.h"
 
 #ifndef O_BINARY
    #define O_BINARY 0   /* O_BINARY not defined on Linux */
@@ -183,17 +182,6 @@ BOOL hb_set_century;
 int hb_set_althan;
 int hb_set_extrahan;
 int hb_set_printhan;
-
-HARBOUR HB_SET( void );
-HARBOUR HB___SETCENTURY( void );
-
-HB_INIT_SYMBOLS_BEGIN( Set__InitSymbols )
-{ "__SETCENTURY", FS_PUBLIC, HB___SETCENTURY, 0 },
-{ "SET"         , FS_PUBLIC, HB_SET       , 0   }
-HB_INIT_SYMBOLS_END( Set__InitSymbols )
-#if ! defined(__GNUC__)
-#pragma startup Set__InitSymbols
-#endif
 
 static BOOL set_logical (PHB_ITEM pItem)
 {

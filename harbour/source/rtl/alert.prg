@@ -16,7 +16,7 @@
 // ; TOFIX: Clipper can display an alert box even when DispBegin() is in effect.
 // ; Clipper defines a clipped window for Alert()
 // ; Clipper will return NIL if the first parameter is not a string, but
-//   this is not documented. This implementation convert the first parameter
+//   this is not documented. This implementation converts the first parameter
 //   to a string if another type was passed. You can switch back to
 //   Clipper compatible mode by defining constant
 //   HARBOUR_STRICT_CLIPPER_COMPATIBILITY.
@@ -171,7 +171,7 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
       nOldRow := Row()
       nOldCol := Col()
       nOldCursor := SetCursor(0)
-      cScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len(aSay) + 3, nInitCol + nWidth + 1 )
+      cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len(aSay) + 3, nInitCol + nWidth + 1 )
 
       /* draw box */
       @ nInitRow, nInitCol, nInitRow + Len(aSay) + 3, nInitCol + nWidth + 1  ;
@@ -238,7 +238,7 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
    ELSE
 
       /* Restore status */
-      RestScreen( nInitRow, nInitCol, nInitRow + Len(aSay) + 3, nInitCol + nWidth + 1, cScreen )
+      RestScreen( nInitRow, nInitCol, nInitRow + Len(aSay) + 3, nInitCol + nWidth + 1, cOldScreen )
       SetCursor(nOldCursor)
       SetPos(nOldRow, nOldCol)
 
