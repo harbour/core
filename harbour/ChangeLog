@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-01-23 09:05 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * makefile.nt
+    + hbverdsp.obj module added to makefile.nt
+
 2005-01-22 23:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     ! Yet another rare bug fixed.
