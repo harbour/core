@@ -516,7 +516,7 @@ HARBOUR HB_INKEY( void )
    int args = hb_pcount();
    int key = 0;
    BOOL wait = FALSE, forever = FALSE;
-   double seconds;
+   double seconds = 0.0;
    HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
 
    if( args > 2 )

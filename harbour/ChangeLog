@@ -1,3 +1,10 @@
+19990910-17:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/inkey.c
+    ! In HARBOUR HB_INKEY( void ), the double seconds variable has to
+      be initialized to 0.0, because not all compilers initialize all
+      local variables to 0 and seconds is not assigned if INKEY() was
+      called with no parameters.
+
 19990910-22:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
     ! Fixed the operator overloading feature. (Reported by David)
