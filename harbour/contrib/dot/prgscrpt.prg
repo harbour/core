@@ -15,7 +15,7 @@ Procedure Main()
    sPPed := PP_PreProLine( "RETURN" )
    PP_CompileLine( sPPed, 3, aCompiledProcs, NIL, @nProcId )
 
-   PP_ExecuteProcedure( aCompiledProcs[1] )
+   PP_ExecProcedure( aCompiledProcs[1] )
 
    // OR :
 
@@ -29,6 +29,6 @@ Procedure Main()
    sPPEd += ";" + PP_PreProLine( "return 'Hello Again'" )
 
    PP_CompileLine( sPPed, 0, aCompiledProcs, NIL, @nProcId )
-   PP_ExecuteProcedure( aCompiledProcs[1] )
+   PP_ExecProcedure( aCompiledProcs[1] )
 
 return
