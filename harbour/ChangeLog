@@ -1,3 +1,7 @@
+2001-12-07 22:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    * Added support for Deleted() function in index adn condition expressions
+
 2001-12-06 22:40 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
      ! Fixed write and read operations returning -1
      ! fixed an small bug when using multiple -D switch

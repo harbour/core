@@ -1714,6 +1714,7 @@ static void hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
       hb_fsReadLarge( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
 
    pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;
+   pArea->fDeleted = ( pArea->pRecord[ 0 ] == '*' );
    (*numRecinBuf) ++;
 }
 
@@ -1735,6 +1736,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    BYTE* readBuffer;
    USHORT numRecinBuf = 0;
    BYTE * pRecordTmp;
+   BOOL fValidBuffer;
 
    ulRecCount = pIndex->Owner->ulRecCount;
    pArea = pIndex->Owner;
@@ -1755,6 +1757,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    }
 
    pRecordTmp = pArea->pRecord;
+   fValidBuffer = pArea->fValidBuffer;
+   pArea->fValidBuffer = TRUE;
    hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
@@ -1816,6 +1820,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
       }
    }
    pArea->pRecord = pRecordTmp;
+   pArea->fValidBuffer = fValidBuffer;
    hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
    hb_ntxBufferSave( pTag, &sortInfo );
    hb_xfree( sortInfo.sortBuffer );
