@@ -13,7 +13,7 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -Wall $(C_USER)
+CFLAGS = -Wall
 
 LD = gcc
 LD_OUT = -o
@@ -62,7 +62,7 @@ echo. $(file) >> __link__.tmp
 endef
 
 define link_exe_file
-echo. $(LDFLAGS) $(L_USER) $(LD_OUT)$@ > __link__.tmp
+echo. $(LDFLAGS) $(LD_OUT)$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
 $(foreach file, $(LINKLIBS), $(link_file))
