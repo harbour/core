@@ -33,48 +33,29 @@
  *
  */
 
-#include "hbclass.ch"
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Jose Lalin <dezac@corevia.com>
+ *    Rewritten using the lower-level Harbour class creation way.
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include "common.ch"
-
-CLASS TBColumn
-
-   DATA Block      // Code block to retrieve data for the column
-   DATA Cargo      // User-definable variable
-   DATA ColorBlock // Code block that determines color of data items
-   DATA ColSep     // Column separator character
-   DATA DefColor   // Array of numeric indexes into the color table
-   DATA Footing    // Column footing
-   DATA FootSep    // Footing separator character
-   DATA Heading    // Column heading
-   DATA HeadSep    // Heading separator character
-   DATA Width      // Column display width
-   DATA ColPos     // Temporary column position on screen
-
-   METHOD New()    // Constructor
-
-ENDCLASS
-
-METHOD New() CLASS TBColumn
-
-   ::DefColor := { 1, 2 }
-   ::FootSep  := ""
-   ::ColPos   := 1
-
-return Self
-
-/* TOFIX: In Clipper the column widths are not determined at this point. 
-          [vszakats] */
+#include "hbsetup.ch"
 
 function TBColumnNew( cHeading, bBlock )
 
-   local oCol := TBColumn():New()
-   local nWidth, cType
+   LOCAL oClass
+   LOCAL nWidth, cType
 
-   oCol:Heading := cHeading
+   /* TOFIX: In Clipper the column widths are not determined at this point. 
+             [vszakats] */
 
    if ISBLOCK( bBlock )
-
-      oCol:block := bBlock
 
       cType := Valtype( Eval( bBlock ) )
 
@@ -95,9 +76,56 @@ function TBColumnNew( cHeading, bBlock )
             nWidth := 0
       endcase
 
-      oCol:Width := iif( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
-
    endif
 
-return oCol
+   oClass := TClass():New( "TBCOLUMN" )
 
+   oClass:AddData( "Block", ;             // Code block to retrieve data for the column
+      iif( ISBLOCK( bBlock ), bBlock, NIL ) )
+
+   oClass:AddData( "Cargo" )              // User-definable variable
+   oClass:AddData( "ColorBlock" )         // Code block that determines color of data items
+   oClass:AddData( "ColPos", 1 )          // Temporary column position on screen
+   oClass:AddData( "ColSep" )             // Column separator character
+   oClass:AddData( "DefColor", { 1, 2 } ) // Array of numeric indexes into the color table
+   oClass:AddData( "Footing" )            // Column footing
+   oClass:AddData( "FootSep", "" )        // Footing separator character
+   oClass:AddData( "Heading", cHeading )  // Column heading
+   oClass:AddData( "HeadSep" )            // Heading separator character
+
+   oClass:AddData( "Width", ;             // Column display width
+      iif( cHeading != NIL, Max( Len( cHeading ), nWidth ), nWidth ) )
+
+#ifdef HB_EXTENSION
+   oClass:AddMethod( "New", @New() )      // Constructor
+#endif
+
+#ifdef HB_COMPAT_C53
+   oClass:AddMethod( "SetStyle", @SetStyle() )
+#endif
+
+   oClass:Create()
+
+return oClass:Instance()
+
+#ifdef HB_EXTENSION
+static function New()
+
+   LOCAL Self := QSelf()
+
+   ::DefColor := { 1, 2 }
+   ::FootSep  := ""
+   ::ColPos   := 1
+
+return Self
+#endif
+
+#ifdef HB_COMPAT_C53
+static function SetStyle( nStyle, lStyle )
+
+   LOCAL Self := QSelf()
+
+   /* TODO: Implement this */
+
+return Self
+#endif

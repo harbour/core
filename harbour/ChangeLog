@@ -1,3 +1,23 @@
+20000523-02:58 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   ; Thanks to Jose Lalin for these:
+   ; Now these source files work with the ten character symbol name limit.
+
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tbrowse.prg
+      * fully rewritten using the low-level class creation
+      % changed to follow the "old" C52 contructor syntax without
+        using wrappers. Now TB<class>New() is the *real* constructor
+      - removed #include "hbclass.ch"
+      ! Put New() between HB_EXTENSION guards
+      % formatting and clean
+      + added a C53 method between #ifdef HB_COMPAT_53 branchs
+
+   * source/rtl/tgetlist.prg
+      * fully rewritten using the low-level class creation
+      - removed #include "hbclass.ch"
+      % formatting and clean
+
 20000523-02:06 GMT+1 Victor Szakats <info@szelvesz.hu>
  
    * makefile.bc

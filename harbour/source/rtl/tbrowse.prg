@@ -33,6 +33,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Jose Lalin <dezac@corevia.com>
+ *    Rewritten using the lower-level Harbour class creation way.
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible. [vszakats] */
 
@@ -62,97 +73,97 @@
           cursor positioning. Yes, Harbour is smarter, but it's not compatible.
           [vszakats] */
 
-#include "hbclass.ch"
+#include "common.ch"
 #include "color.ch"
+#include "hbsetup.ch"
 
-CLASS TBrowse
+function TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   DATA aColumns      // Array to hold all browse columns
-   DATA autoLite      // Logical value to control highlighting
-   DATA cargo         // User-definable variable
-   DATA colorSpec     // Color table for the TBrowse display
-   DATA colPos        // Current cursor column position
-   DATA colSep        // Column separator character
-   DATA footSep       // Footing separator character
-   DATA freeze        // Number of columns to freeze
-   DATA goBottomBlock // Code block executed by TBrowse:goBottom()
-   DATA goTopBlock    // Code block executed by TBrowse:goTop()
-   DATA headSep       // Heading separator character
-   DATA hitBottom     // Indicates the end of available data
-   DATA hitTop        // Indicates the beginning of available data
-   DATA leftVisible   // Indicates position of leftmost unfrozen column in display
-   DATA nBottom       // Bottom row number for the TBrowse display
-   DATA nLeft         // Leftmost column for the TBrowse display
-   DATA nRight        // Rightmost column for the TBrowse display
-   DATA nTop          // Top row number for the TBrowse display
-   DATA rightVisible  // Indicates position of rightmost unfrozen column in display
-   DATA rowCount      // Number of visible data rows in the TBrowse display
-   DATA rowPos        // Current cursor row position
-   DATA skipBlock     // Code block used to reposition data source
-   DATA stable        // Indicates if the TBrowse object is stable
-   DATA aRedraw       // Array of logical items indicating, is appropriate row need to be redraw
-   DATA RelativePos   // Indicates record position relatively position of first record on the screen
-   DATA lHeaders      // Internal variable, indicate, are there column headers to paint
-   DATA aRect         // The rectangle specified with ColorRect()
-   DATA aRectColor    // The color positions to use in the rectangle specified with ColorRect()
+   LOCAL oClass := TClass():New( "TBROWSE" )
 
-   METHOD New()       // Constructor
-   METHOD Down()      // Moves the cursor down one row
-   METHOD End()       // Moves the cursor to the rightmost visible data column
-   METHOD GoBottom()  // Repositions the data source to the bottom of file
-   METHOD GoTop()     // Repositions the data source to the top of file
-   METHOD Home()      // Moves the cursor to the leftmost visible data column
-   METHOD Left()      // Moves the cursor left one column
-   METHOD PageDown()  // Repositions the data source downward
-   METHOD PageUp()    // Repositions the data source upward
-   METHOD PanEnd()    // Moves the cursor to the rightmost data column
-   METHOD PanHome()   // Moves the cursor to the leftmost visible data column
-   METHOD PanLeft()   // Pans left without changing the cursor position
-   METHOD PanRight()  // Pans right without changing the cursor position
-   METHOD Right()     // Moves the cursor right one column
-   METHOD Up()        // Moves the cursor up one row
+   DEFAULT nTop    TO 0
+   DEFAULT nLeft   TO 0
+   DEFAULT nBottom TO MaxRow()
+   DEFAULT nRight  TO MaxCol()
 
-   METHOD AddColumn( oCol ) INLINE ;
-      AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
+   oClass:AddData( "aColumns", {} )          // Array to hold all browse columns
+   oClass:AddData( "autoLite", .t. )         // Logical value to control highlighting
+   oClass:AddData( "cargo" )                 // User-definable variable
+   oClass:AddData( "colorSpec", SetColor() ) // Color table for the TBrowse display
+   oClass:AddData( "colPos", 1 )             // Current cursor column position
+   oClass:AddData( "colSep", " " )           // Column separator character
+   oClass:AddData( "footSep", "" )           // Footing separator character
+   oClass:AddData( "freeze", 0 )             // Number of columns to freeze
+   oClass:AddData( "goBottomBlock" )         // Code block executed by TBrowse:goBottom()
+   oClass:AddData( "goTopBlock" )            // Code block executed by TBrowse:goTop()
+   oClass:AddData( "headSep", "" )           // Heading separator character
+   oClass:AddData( "hitBottom", .f. )        // Indicates the end of available data
+   oClass:AddData( "hitTop", .f. )           // Indicates the beginning of available data
+   oClass:AddData( "leftVisible", 1 )        // Indicates position of leftmost unfrozen column in display
+   oClass:AddData( "nBottom", nBottom )      // Bottom row number for the TBrowse display
+   oClass:AddData( "nLeft", nLeft )          // Leftmost column for the TBrowse display
+   oClass:AddData( "nRight", nRight )        // Rightmost column for the TBrowse display
+   oClass:AddData( "nTop", nTop )            // Top row number for the TBrowse display
+   oClass:AddData( "rightVisible" )          // Indicates position of rightmost unfrozen column in display
+   oClass:AddData( "rowCount" )              // Number of visible data rows in the TBrowse display
+   oClass:AddData( "rowPos", 1 )             // Current cursor row position
+   oClass:AddData( "skipBlock" )             // Code block used to reposition data source
+   oClass:AddData( "stable", .f. )           // Indicates if the TBrowse object is stable
+                                             
+   oClass:AddData( "aRedraw", {} )           // Array of logical items indicating, is appropriate row need to be redraw
+   oClass:AddData( "RelativePos", 1 )        // Indicates record position relatively position of first record on the screen
+   oClass:AddData( "lHeaders", .f. )         // Internal variable, indicate, are there column headers to paint
+   oClass:AddData( "aRect", {} )             // The rectangle specified with ColorRect()
+   oClass:AddData( "aRectColor", {} )        // The color positions to use in the rectangle specified with ColorRect()
 
-   METHOD ColCount() INLINE Len( ::aColumns )
-   METHOD ColorRect()              // Alters the color of a rectangular group of cells
-                                   // Returns the display width of a particular column
-   METHOD ColWidth( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
-                                          ::aColumns[ nColumn ]:Width, nil )
-   METHOD Configure( nMode ) VIRTUAL // Reconfigures the internal settings of the TBrowse object
-                                   // nMode is an undocumented parameter in CA-Cl*pper
-   METHOD LeftDetermine()          // Determine leftmost unfrozen column in display
-   METHOD DeHilite()               // Dehighlights the current cell
+#ifdef HB_EXTENSION
+   oClass:AddMethod( "New",            @New() )             // Constructor
+#endif
 
-   METHOD DelColumn( nPos )        // Delete a column object from a browse
+   oClass:AddMethod( "Down",           @Down() )            // Moves the cursor down one row
+   oClass:AddMethod( "End",            @End() )             // Moves the cursor to the rightmost visible data column
+   oClass:AddMethod( "GoBottom",       @GoBottom() )        // Repositions the data source to the bottom of file
+   oClass:AddMethod( "GoTop",          @GoTop() )           // Repositions the data source to the top of file
+   oClass:AddMethod( "Home",           @Home() )            // Moves the cursor to the leftmost visible data column
+   oClass:AddMethod( "Left",           @_Left() )           // Moves the cursor left one column
+   oClass:AddMethod( "PageDown",       @PageDown() )        // Repositions the data source downward
+   oClass:AddMethod( "PageUp",         @PageUp() )          // Repositions the data source upward
+   oClass:AddMethod( "PanEnd",         @PanEnd() )          // Moves the cursor to the rightmost data column
+   oClass:AddMethod( "PanHome",        @PanHome() )         // Moves the cursor to the leftmost visible data column
+   oClass:AddMethod( "PanLeft",        @PanLeft() )         // Pans left without changing the cursor position
+   oClass:AddMethod( "PanRight",       @PanRight() )        // Pans right without changing the cursor position
+   oClass:AddMethod( "Right",          @Right() )           // Moves the cursor right one column
+   oClass:AddMethod( "Up",             @Up() )              // Moves the cursor up one row
+   oClass:AddMethod( "AddColumn",      @AddColumn() )       // Adds a TBColumn object to the TBrowse object
+   oClass:AddMethod( "ColCount",       @ColCount() )        
+   oClass:AddMethod( "ColorRect",      @ColorRect() )       // Alters the color of a rectangular group of cells
+                                                            // Returns the display width of a particular column
+   oClass:AddMethod( "ColWidth",       @ColWidth() )        
+   oClass:AddMethod( "Configure",      @Configure() )       // Reconfigures the internal settings of the TBrowse object
+                                                            // nMode is an undocumented parameter in CA-Cl*pper
+   oClass:AddMethod( "LeftDetermine",  @Leftdetermine() )   // Determine leftmost unfrozen column in display
+   oClass:AddMethod( "DeHilite",       @DeHilite() )        // Dehighlights the current cell
+   oClass:AddMethod( "DelColumn",      @DelColumn() )       // Delete a column object from a browse
+   oClass:AddMethod( "ForceStable",    @ForceStable() )     // Performs a full stabilization
+   oClass:AddMethod( "GetColumn",      @GetColumn() )       // Gets a specific TBColumn object
+   oClass:AddMethod( "Hilite",         @Hilite() )          // Highlights the current cell
+   oClass:AddMethod( "InsColumn",      @InsColumn() )       // Insert a column object in a browse
+   oClass:AddMethod( "Invalidate",     @Invalidate() )      // Forces entire redraw during next stabilization
+   oClass:AddMethod( "RefreshAll",     @RefreshAll() )      // Causes all data to be recalculated during the next stabilize
+   oClass:AddMethod( "RefreshCurrent", @RefreshCurrent() )  // Causes the current row to be refilled and repainted on next stabilize
+   oClass:AddMethod( "SetColumm",      @SetColumn() )       // Replaces one TBColumn object with another
+   oClass:AddMethod( "Stabilize",      @Stabilize() )       // Performs incremental stabilization
+   oClass:AddMethod( "DispCell",       @DispCell() )        // Displays a single cell
 
-   METHOD ForceStable()            // Performs a full stabilization
+   oClass:Create()
 
-   METHOD GetColumn( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
-                                          ::aColumns[ nColumn ], nil ) // Gets a specific TBColumn object
+return oClass:Instance()
 
-   METHOD Hilite()                 // Highlights the current cell
+#ifdef HB_EXTENSION
+//--------------------------------------------------------------------------//
+static function New( oCol )
 
-   METHOD InsColumn( nPos, oCol ) INLINE ASize( ::aColumns, Len( ::aColumns + 1 ) ),;
-                                  AIns( ::aColumns, nPos ),;
-                                  ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
-                                   // Insert a column object in a browse
-
-   METHOD Invalidate()             // Forces entire redraw during next stabilization
-   METHOD RefreshAll()     INLINE ::Invalidate() // Causes all data to be recalculated during the next stabilize
-   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .f., ::Stable := .f., Self // Causes the current row to be refilled and repainted on next stabilize
-
-   METHOD SetColumn( nColumn, oCol ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
-                                                ::aColumns[ nColumn ] := oCol, nil ), oCol // Replaces one TBColumn object with another
-
-   METHOD Stabilize()              // Performs incremental stabilization
-
-   METHOD DispCell( nColumn, cColor ) // Displays a single cell
-
-ENDCLASS
-
-METHOD New() CLASS TBrowse
+   LOCAL Self := QSelf()
 
    ::aColumns    := {}
    ::nTop        := 0
@@ -178,10 +189,66 @@ METHOD New() CLASS TBrowse
    ::aRectColor  := {}
 
 return Self
+#endif
 
-METHOD DelColumn( nPos ) CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function AddColumn( oCol )
 
-   local oCol := ::aColumns[ nPos ]
+   LOCAL Self := QSelf()
+
+   AAdd( ::aColumns, oCol )
+   ::Configure( 2 )
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function ColCount()
+return Len( QSelf():aColumns )
+
+//--------------------------------------------------------------------------//
+static function ColorRect( aRect, aRectColor )
+
+   LOCAL Self := QSelf()
+
+   ::aRect        := aRect
+   ::aRectColor   := aRectColor
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function ColWidth( nColumn )
+
+   LOCAL Self := QSelf()
+
+return If( 0 < nColumn .and. nColumn <= Len( ::aColumns ), ;
+            ::aColumns[ nColumn ]:Width, NIL )
+
+//--------------------------------------------------------------------------//
+static function Configure( nMode ) /* VIRTUAL */
+return NIL
+
+//--------------------------------------------------------------------------//
+static function DeHilite()
+
+   LOCAL Self := QSelf()
+   LOCAL nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != NIL,;
+                       Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
+                       Eval( ::aColumns[ ::ColPos ]:Block ) )[ 1 ], 1 )
+   LOCAL cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
+   LOCAL nRow := ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty( ::HeadSep ), 0, 1 )
+   LOCAL nCol := ::aColumns[ ::ColPos ]:ColPos
+
+   SetPos( nRow, nCol )
+   ::DispCell( ::ColPos, cColor )
+   SetPos( nRow, nCol )
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function DelColumn( nPos )
+
+   LOCAL Self := QSelf()
+   LOCAL oCol  := ::aColumns[ nPos ]
 
    ADel( ::aColumns, nPos )
    ASize( ::aColumns, Len( ::aColumns ) - 1 )
@@ -189,9 +256,34 @@ METHOD DelColumn( nPos ) CLASS TBrowse
 
 return oCol
 
-METHOD Down() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function DispCell( nColumn, cColor )
 
-   local n
+   LOCAL Self := QSelf()
+   LOCAL ftmp := Eval( ::aColumns[ nColumn ]:block )
+   LOCAL nCol := Col()
+
+   do case
+   case valtype( ftmp ) $ "CM"
+      DispOut( Left( ftmp, ::aColumns[ nColumn ]:Width ), cColor )
+   case valtype( ftmp ) == "N"
+      DispOut( Left( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+   case valtype( ftmp ) == "D"
+      DispOut( Right( DToC( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+   case valtype( ftmp ) == "L"
+      DispOut( Space( ::aColumns[ nColumn ]:Width / 2 ), ::ColorSpec )
+      DispOut( If( ftmp, "T","F" ), cColor )
+   endcase
+
+   DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), ::ColorSpec )
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function Down()
+
+   LOCAL Self := QSelf()
+   LOCAL n
 
    ::HitTop := .F.
    if !::HitBottom
@@ -214,7 +306,10 @@ METHOD Down() CLASS TBrowse
 
 return Self
 
-METHOD End() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function End()
+
+   LOCAL Self := QSelf()
 
    if ::ColPos < ::rightVisible
       ::ColPos := ::rightVisible
@@ -223,7 +318,28 @@ METHOD End() CLASS TBrowse
 
 return Self
 
-METHOD GoBottom() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function ForceStable()
+
+   LOCAL Self := QSelf()
+
+   while !::Stabilize()
+   end
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function GetColumn( nColumn )
+
+   LOCAL Self := QSelf()
+
+return If( 0 < nColumn .and. nColumn <= Len( ::aColumns ), ;
+            ::aColumns[ nColumn ], NIL )
+
+//--------------------------------------------------------------------------//
+static function GoBottom()
+
+   LOCAL Self := QSelf()
 
    ::HitTop := .F.
    ::HitBottom := .F.
@@ -235,7 +351,10 @@ METHOD GoBottom() CLASS TBrowse
 
 return Self
 
-METHOD GoTop() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function GoTop()
+
+   LOCAL Self := QSelf()
 
    ::HitTop := .F.
    ::HitBottom := .F.
@@ -247,7 +366,35 @@ METHOD GoTop() CLASS TBrowse
 
 return Self
 
-METHOD Home() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function Hilite()
+
+   LOCAL Self := QSelf()
+   LOCAL nColor
+   LOCAL cColor
+   LOCAL nRow
+   LOCAL nCol
+
+   if ::AutoLite
+
+      nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != NIL,;
+                    Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
+                    Eval( ::aColumns[ ::ColPos ]:Block ) )[ 2 ], 2 )
+      cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
+      nRow := ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty( ::HeadSep ), 0, 1 )
+      nCol := ::aColumns[ ::ColPos ]:ColPos
+
+      SetPos( nRow, nCol )
+      ::DispCell( ::ColPos, cColor )
+      SetPos( nRow, nCol )
+   endif
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function Home()
+
+   LOCAL Self := QSelf()
 
    if ::ColPos != ::leftVisible
       ::ColPos := ::leftVisible
@@ -256,10 +403,24 @@ METHOD Home() CLASS TBrowse
 
 return Self
 
-METHOD Invalidate() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function InsColumn( nPos, oCol )
 
-   local n
-   local lFooters := .f.
+   LOCAL Self := QSelf()
+
+   ASize( ::aColumns, Len( ::aColumns + 1 ) )
+   AIns( ::aColumns, nPos )
+   ::aColumns[ nPos ] := oCol
+   ::Configure( 2 )
+
+return oCol
+
+//--------------------------------------------------------------------------//
+static function Invalidate()
+
+   LOCAL Self := QSelf()
+   LOCAL n
+   LOCAL lFooters := .f.
 
    for n := 1 to Len( ::aColumns )
       if ! Empty( ::aColumns[ n ]:Footing )
@@ -278,9 +439,11 @@ METHOD Invalidate() CLASS TBrowse
 
 return Self
 
-METHOD Left() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function _Left()
 
-   local leftVis := ::leftVisible
+   LOCAL Self := QSelf()
+   LOCAL leftVis := ::leftVisible
 
    if ::ColPos > ::leftVisible .or. ( ::ColPos < ::leftVisible .and. ::ColPos > 1 ) ;
        .or. ( ::ColPos == ::leftVisible .and. ::Freeze > 0 .and. ::leftVisible  - ::Freeze == 1 )
@@ -302,17 +465,19 @@ METHOD Left() CLASS TBrowse
 
 return Self
 
-METHOD LeftDetermine() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function LeftDetermine()
 
-   local nWidthMax := ::nRight - ::nLeft + 1  // Visible width of the browse
-   local nWidth := 0
-   local nCol
+   LOCAL Self := QSelf()
+   LOCAL nWidthMax := ::nRight - ::nLeft + 1  // Visible width of the browse
+   LOCAL nWidth := 0
+   LOCAL nCol
 
    if ::Freeze > 0
       for nCol := 1 TO ::Freeze
          nWidth += ::aColumns[ nCol ]:Width
          if nCol < Len( ::aColumns )
-            nWidth += If( ::aColumns[ nCol + 1 ]:ColSep != Nil,;
+            nWidth += If( ::aColumns[ nCol + 1 ]:ColSep != NIL,;
                Len( ::aColumns[ nCol + 1 ]:ColSep ),;
                Len( ::ColSep ) )
          endif
@@ -334,9 +499,11 @@ METHOD LeftDetermine() CLASS TBrowse
 
 return nCol + 1
 
-METHOD PageDown() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function PageDown()
 
-   local nDown
+   LOCAL Self := QSelf()
+   LOCAL nDown
 
    ::HitTop := .F.
    if !::HitBottom
@@ -355,9 +522,11 @@ METHOD PageDown() CLASS TBrowse
 
 return Self
 
-METHOD PageUp() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function PageUp()
 
-   local nUp
+   LOCAL Self := QSelf()
+   LOCAL nUp
 
    ::HitBottom := .F.
    if !::HitTop
@@ -376,7 +545,10 @@ METHOD PageUp() CLASS TBrowse
 
 return Self
 
-METHOD PanEnd() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function PanEnd()
+
+   LOCAL Self := QSelf()
 
    if ::ColPos < Len( ::aColumns )
       if ::rightVisible < Len( ::aColumns )
@@ -392,7 +564,10 @@ METHOD PanEnd() CLASS TBrowse
 
 return Self
 
-METHOD PanHome() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function PanHome()
+
+   LOCAL Self := QSelf()
 
    if ::ColPos > 1
       if ::leftVisible > ::Freeze + 1
@@ -407,9 +582,11 @@ METHOD PanHome() CLASS TBrowse
 
 return Self
 
-METHOD PanLeft() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function PanLeft()
 
-   local n := ::ColPos - ::leftVisible
+   LOCAL Self := QSelf()
+   LOCAL n := ::ColPos - ::leftVisible
 
    if ::leftVisible > ::Freeze + 1
       ::rightVisible--
@@ -420,9 +597,11 @@ METHOD PanLeft() CLASS TBrowse
 
 return Self
 
-METHOD PanRight() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function PanRight()
 
-   local n := ::ColPos - ::leftVisible
+   LOCAL Self := QSelf()
+   LOCAL n := ::ColPos - ::leftVisible
 
    if ::rightVisible < Len( ::aColumns )
       ::rightVisible++
@@ -433,7 +612,31 @@ METHOD PanRight() CLASS TBrowse
 
 return Self
 
-METHOD Right() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function RefreshAll()
+
+   LOCAL Self := QSelf()
+
+   /* TOFIX: This is not exactly the same as invalidate, since this one will 
+             also refresh the data not only redisplay the tbrowse.
+             [vszakats] */
+
+return ::Invalidate()
+
+//--------------------------------------------------------------------------//
+static function RefreshCurrent()
+
+   LOCAL Self := QSelf()
+
+   ::aRedraw[ ::RowPos ] := .f.
+   ::Stable := .f.
+
+return Self
+
+//--------------------------------------------------------------------------//
+static function Right()
+
+   LOCAL Self := QSelf()
 
    if ::ColPos < ::rightVisible
       ::DeHilite()
@@ -450,61 +653,28 @@ METHOD Right() CLASS TBrowse
 
 return Self
 
-METHOD DeHilite() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function SetColumn( nColumn, oCol )
 
-   local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
-                       Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
-                       Eval( ::aColumns[ ::ColPos ]:Block ) )[ 1 ], 1 )
-   local cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
-   local nRow := ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty( ::HeadSep ), 0, 1 )
-   local nCol := ::aColumns[ ::ColPos ]:ColPos
+   LOCAL Self := QSelf()
 
-   SetPos( nRow, nCol )
-   ::DispCell( ::ColPos, cColor )
-   SetPos( nRow, nCol )
+   If( 0 < nColumn .and. nColumn <= Len( ::aColumns ), ;
+            ::aColumns[ nColumn ] := oCol, NIL )
 
-return Self
+return oCol
 
-METHOD ForceStable() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function Stabilize()
 
-   while !::Stabilize()
-   end
-
-return Self
-
-METHOD Hilite() CLASS TBrowse
-
-   local nColor
-   local cColor
-   local nRow
-   local nCol
-
-   if ::AutoLite
-
-      nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
-                    Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
-                    Eval( ::aColumns[ ::ColPos ]:Block ) )[ 2 ], 2 )
-      cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
-      nRow := ::nTop + ::RowPos - If( ::lHeaders, 0, 1 ) + If( Empty( ::HeadSep ), 0, 1 )
-      nCol := ::aColumns[ ::ColPos ]:ColPos
-
-      SetPos( nRow, nCol )
-      ::DispCell( ::ColPos, cColor )
-      SetPos( nRow, nCol )
-   endif
-
-return Self
-
-METHOD Stabilize() CLASS TBrowse
-
-   local iW, n, nRow, nCol, lDisplay := .t.
-   local nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
-   local nColsWidth := 0                   // Total width of visible columns plus ColSep
-   local nColsVisible                      // Number of columns that fit on the browse width
-   local lFooters := .f.                   // Are there column footers to paint ?
-   local cColColor                         // Column color to use
-   local oCol, oCol2
-   local nToAdd
+   LOCAL Self := QSelf()
+   LOCAL iW, n, nRow, nCol, lDisplay := .t.
+   LOCAL nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
+   LOCAL nColsWidth := 0                   // Total width of visible columns plus ColSep
+   LOCAL nColsVisible                      // Number of columns that fit on the browse width
+   LOCAL lFooters := .f.                   // Are there column footers to paint ?
+   LOCAL cColColor                         // Column color to use
+   LOCAL oCol, oCol2
+   LOCAL nToAdd
 
    if Empty(::aRedraw) .or. !::aRedraw[ 1 ]
       // Are there any column header to paint ?
@@ -533,7 +703,7 @@ METHOD Stabilize() CLASS TBrowse
             nToAdd := ::aColumns[ nColsVisible + 1 ]:Width
 
             if nColsVisible >= 1 .and. nColsVisible < Len( ::aColumns )
-               nToAdd += If( ::aColumns[ nColsVisible + 1 ]:ColSep != Nil,;
+               nToAdd += If( ::aColumns[ nColsVisible + 1 ]:ColSep != NIL,;
                   Len( ::aColumns[ nColsVisible + 1 ]:ColSep ),;
                   Len( ::ColSep ) )
             endif
@@ -559,7 +729,7 @@ METHOD Stabilize() CLASS TBrowse
          nToAdd := ::aColumns[ nColsVisible + 1 ]:Width
 
          if nColsVisible >= ::leftVisible .or. ::Freeze > 0
-            nToAdd += If( ::aColumns[ nColsVisible + 1 ]:ColSep != Nil,;
+            nToAdd += If( ::aColumns[ nColsVisible + 1 ]:ColSep != NIL,;
                Len( ::aColumns[ nColsVisible + 1 ]:ColSep ),;
                Len( ::ColSep ) )
          endif
@@ -583,8 +753,8 @@ METHOD Stabilize() CLASS TBrowse
    else
       oCol := ::aColumns[ If( ::rightVisible != 0, ::rightVisible, 1 ) ]
       oCol2 := ::aColumns[ If( ::Freeze > 0, 1, ::leftVisible ) ]
-      nColsWidth := If( oCol != nil, oCol:ColPos, 0 ) + ;
-        If( oCol != nil, oCol:Width, 0 ) - oCol2:ColPos
+      nColsWidth := If( oCol != NIL, oCol:ColPos, 0 ) + ;
+        If( oCol != NIL, oCol:Width, 0 ) - oCol2:ColPos
       lFooters := ( ::RowCount != ::nBottom - ::nTop + 1 - If( ::lHeaders, 1, 0 ) - ;
                 - If( Empty( ::HeadSep ), 0, 1 ) - If( Empty( ::FootSep ), 0, 1 ) )
    endif
@@ -598,7 +768,7 @@ METHOD Stabilize() CLASS TBrowse
             endif
             DispOut( PadR( ::aColumns[ n ]:Heading, ::aColumns[ n ]:Width ), ::ColorSpec )
             if n < ::rightVisible
-               DispOut( Space( If( ::aColumns[ n + 1 ]:ColSep != Nil, ;
+               DispOut( Space( If( ::aColumns[ n + 1 ]:ColSep != NIL, ;
                  Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
             endif
          next
@@ -615,7 +785,7 @@ METHOD Stabilize() CLASS TBrowse
                DispOut( Replicate( Right( ::HeadSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
                if n < ::rightVisible
                   DispOut( Left( ::HeadSep, Len( ::HeadSep ) - 1 ), ::ColorSpec )
-                  iW := Len( ::HeadSep ) - 1 - If( ::aColumns[ n + 1 ]:ColSep != Nil, ;
+                  iW := Len( ::HeadSep ) - 1 - If( ::aColumns[ n + 1 ]:ColSep != NIL, ;
                       Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
                endif
             next
@@ -635,7 +805,7 @@ METHOD Stabilize() CLASS TBrowse
                DispOut( Replicate( Right( ::FootSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
                if n < ::rightVisible
                   DispOut( Left( ::FootSep, Len( ::FootSep ) - 1 ), ::ColorSpec )
-                  iW := Len( ::FootSep ) - 1 - If( ::aColumns[ n + 1 ]:ColSep != Nil, ;
+                  iW := Len( ::FootSep ) - 1 - If( ::aColumns[ n + 1 ]:ColSep != NIL, ;
                       Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
                endif
             next
@@ -652,7 +822,7 @@ METHOD Stabilize() CLASS TBrowse
                endif
             DispOut( PadR( ::aColumns[ n ]:Footing, ::aColumns[ n ]:Width ), ::ColorSpec )
             if n < ::rightVisible
-               DispOut( Space( If( ::aColumns[ n + 1 ]:ColSep != Nil, ;
+               DispOut( Space( If( ::aColumns[ n + 1 ]:ColSep != NIL, ;
                  Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
             endif
          next
@@ -705,7 +875,7 @@ METHOD Stabilize() CLASS TBrowse
 
          if lDisplay
 
-            cColColor := If( ::aColumns[ n ]:ColorBlock != nil,;
+            cColColor := If( ::aColumns[ n ]:ColorBlock != NIL,;
                              hb_ColorIndex( ::ColorSpec,;
                              Eval( ::aColumns[ n ]:ColorBlock,;
                              Eval( ::aColumns[ n ]:Block ) )[ 1 ] - 1 ),;
@@ -718,9 +888,9 @@ METHOD Stabilize() CLASS TBrowse
          endif
 
          if n < ::rightVisible
-            if ::aColumns[ n + 1 ]:ColSep != Nil
+            if ::aColumns[ n + 1 ]:ColSep != NIL
                DispOut( ::aColumns[ n + 1 ]:ColSep, ::ColorSpec )
-            elseif ::ColSep != nil
+            elseif ::ColSep != NIL
                DispOut( ::ColSep, ::ColorSpec )
             endif
          endif
@@ -732,9 +902,11 @@ METHOD Stabilize() CLASS TBrowse
 
 return .f.
 
-METHOD Up() CLASS TBrowse
+//--------------------------------------------------------------------------//
+static function Up()
 
-   local n
+   LOCAL Self := QSelf()
+   LOCAL n
 
    ::HitBottom := .F.
    if !::HitTop
@@ -756,55 +928,4 @@ METHOD Up() CLASS TBrowse
    endif
 
 return Self
-
-METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
-
-   ::aRect       := aRect
-   ::aRectColor  := aRectColor
-
-return Self
-
-METHOD DispCell( nColumn, cColor ) CLASS TBrowse
-
-   LOCAL ftmp := Eval( ::aColumns[ nColumn ]:block )
-   LOCAL nCol := Col()
-
-   do case
-   case valtype( ftmp ) $ "CM"
-      DispOut( Left( ftmp, ::aColumns[ nColumn ]:Width ), cColor )
-   case valtype( ftmp ) == "N"
-      DispOut( Left( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
-   case valtype( ftmp ) == "D"
-      DispOut( Right( DToC( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
-   case valtype( ftmp ) == "L"
-      DispOut( Space( ::aColumns[ nColumn ]:Width / 2 ), ::ColorSpec )
-      DispOut( If( ftmp, "T","F" ), cColor )
-   endcase
-
-   DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), ::ColorSpec )
-
-return Self
-
-
-function TBrowseNew( nTop, nLeft, nBottom, nRight )
-
-   local oBrw := TBrowse():New()
-
-   if nTop != nil
-      oBrw:nTop := nTop
-   endif
-
-   if nLeft != nil
-      oBrw:nLeft := nLeft
-   endif
-
-   if nBottom != nil
-      oBrw:nBottom := nBottom
-   endif
-
-   if nRight != nil
-      oBrw:nRight := nRight
-   endif
-
-return oBrw
 
