@@ -49,6 +49,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oLineNumbers
    local oCaseSensitive
    local oMonoDisplay
+   local oPublic, oPrivate, oStatic, oLocal, oAll, oSort
 
    MENU oMenu
       MENUITEM " ~File "
@@ -103,13 +104,26 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Monitor "
       MENU
-         MENUITEM " ~Public"                ACTION oDebugger:ShowVars()
-         MENUITEM " pri~Vate "              ACTION oDebugger:ShowVars()
-         MENUITEM " ~Static"                ACTION oDebugger:ShowVars()
-         MENUITEM " ~Local"                 ACTION oDebugger:ShowVars()
+         MENUITEM oPublic PROMPT " ~Public" ;
+            ACTION ( oDebugger:Public(), oPublic:Toggle() )
+
+         MENUITEM oPrivate PROMPT " pri~Vate " ;
+            ACTION ( oDebugger:Private(), oPrivate:Toggle() )
+
+         MENUITEM oStatic PROMPT " ~Static" ;
+            ACTION ( oDebugger:Static(), oStatic:Toggle() )
+
+         MENUITEM oLocal PROMPT " ~Local" ;
+            ACTION ( oDebugger:Local(), oLocal:Toggle() )
+
          SEPARATOR
-         MENUITEM " ~All"                   ACTION Alert( "Not implemented yet!" )
-         MENUITEM " s~Ort"                  ACTION Alert( "Not implemented yet!" )
+         MENUITEM oAll PROMPT " ~All" ;
+            ACTION ( oDebugger:All(), oAll:Toggle(),;
+                     oPublic:lChecked := oPrivate:lChecked := oStatic:lChecked := ;
+                     oLocal:lChecked := oAll:lChecked )
+
+         MENUITEM oSort PROMPT " s~Ort" ;
+            ACTION ( oDebugger:Sort(), oSort:Toggle() )
       ENDMENU
 
       MENUITEM " ~Options "
