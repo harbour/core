@@ -1,3 +1,21 @@
+19990910-22:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    ! Fixed the operator overloading feature. (Reported by David)
+  * source/compiler/harbour.y
+    + Added /es switch, like in Clipper. /es0 and /es is the default, no
+      errorlevel is raised on warning, /es1 will set errorlevel, /es2 will
+      set errorlevel and not generate output.
+    + The program header is always (even with /q) printed now, right at startup.
+    * "id" -> "prefix"
+    + /m /r /t /u @ command line switches added as todo, checks and 
+      messages added to the source, commented out lines added to help screen.
+  * tests/working/Makefile
+    tests/working/statinit.prg
+    + //NOTEST removed, the missing dummy HELLO() function added, so now it
+      links.
+  * source/rtl/memvars.c
+    * Fixed the MEMVARBLOCK() implementation in the doc examples 8)
+
 19990910-15:25 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gt/gtos2.c
     ! I forgot to remove a debug printf() call when I committed the

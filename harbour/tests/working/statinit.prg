@@ -1,4 +1,3 @@
-//NOTEST
 //
 // $Id$
 //
@@ -12,4 +11,7 @@ FUNCTION Main()
 
    ? "This is a compiler test, so if you see this, the test was successful."
 
+   RETURN NIL
+
+FUNCTION Hello()
    RETURN NIL

@@ -455,18 +455,25 @@ FUNCTIONS functions, funcalls;
 PFUNCTION _pInitFunc;
 SYMBOLS symbols;
 
-BOOL _bStartProc = TRUE;             /* holds if we need to create the starting procedure */
-BOOL _bLineNumbers = TRUE;           /* holds if we need pcodes with line numbers */
-BOOL _bQuiet = FALSE;                /* quiet mode */
-BOOL _bSyntaxCheckOnly = FALSE;      /* syntax check only */
-int  _iLanguage = LANG_C;            /* default Harbour generated output language */
-BOOL _bRestrictSymbolLength = FALSE; /* generate 10 chars max symbols length */
-BOOL _bShortCuts = TRUE;             /* .and. & .or. expressions shortcuts */
-BOOL _bWarnings = FALSE;             /* enable parse warnings */
-BOOL _bAutoMemvarAssume = FALSE;     /* holds if undeclared variables are automatically assumed MEMVAR */
-BOOL _bForceMemvars = FALSE;         /* holds if memvars are assumed when accesing undeclared variable */
-BOOL _bDebugInfo = FALSE;            /* holds if generate debugger required info */
-char _szPrefix[ 20 ] = { '\0' };
+/* /ES command line setting types */
+#define HB_EXITLEVEL_DEFAULT    0
+#define HB_EXITLEVEL_SETEXIT    1
+#define HB_EXITLEVEL_DELTARGET  2
+
+BOOL _bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
+BOOL _bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL _bQuiet = FALSE;                    /* quiet mode */
+BOOL _bSyntaxCheckOnly = FALSE;          /* syntax check only */
+int  _iLanguage = LANG_C;                /* default Harbour generated output language */
+BOOL _bRestrictSymbolLength = FALSE;     /* generate 10 chars max symbols length */
+BOOL _bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
+BOOL _bWarnings = FALSE;                 /* enable parse warnings */
+BOOL _bAnyWarning = FALSE;               /* holds if there was any warning during the compilation process */
+BOOL _bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR */
+BOOL _bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable */
+BOOL _bDebugInfo = FALSE;                /* holds if generate debugger required info */
+char _szPrefix[ 20 ] = { '\0' };         /* holds the prefix added to the generated symbol init function name (in C output currently) */
+int  _iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 
 /* This variable is used to flag if variables have to be passed by reference
  * - it is required in DO <proc> WITH <params> statement
@@ -1349,6 +1356,8 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
       printf( "Warning %c%i  ", cPrefix, iWarning );
       printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
       printf( "\n" );
+
+      _bAnyWarning = TRUE;
    }
 }
 
@@ -1367,6 +1376,10 @@ void EXTERNAL_LINKAGE close_on_exit( void )
 int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
+   BOOL bSkipGen;
+
+   printf( "Harbour compiler build %i%s (%04d.%02d.%02d)\n",
+      hb_build, hb_revision, hb_year, hb_month, hb_day );
 
    if( argc > 1 )
    {
@@ -1415,6 +1428,45 @@ int harbour_main( int argc, char * argv[] )
                      free( szDefText );
                   }
                   break;
+
+               case 'e':
+               case 'E':
+
+                  if( argv[ iArg ][ 2 ] == 's' ||
+                      argv[ iArg ][ 2 ] == 'S' )
+                  {
+                     switch( argv[ iArg ][ 3 ] )
+                     {
+                        case '\0':
+                        case '0':
+                           _iExitLevel = HB_EXITLEVEL_DEFAULT;
+                           break;
+
+                        case '1':
+                           _iExitLevel = HB_EXITLEVEL_SETEXIT;
+                           break;
+
+                        case '2':
+                           _iExitLevel = HB_EXITLEVEL_DELTARGET;
+                           break;
+
+                        default:
+                           /* NOTE: Redundant code */
+                           printf( "Invalid command line option: %s\n",
+                              &argv[ iArg ][ 0 ] );
+                           exit( EXIT_FAILURE );
+                     }
+                  }
+                  else
+                  {
+                     /* NOTE: Redundant code */
+                     printf( "Invalid command line option: %s\n",
+                        &argv[ iArg ][ 0 ] );
+                     exit( EXIT_FAILURE );
+                  }
+
+                  break;
+
 #ifdef HARBOUR_OBJ_GENERATION
                case 'f':
                case 'F':
@@ -1471,6 +1523,12 @@ int harbour_main( int argc, char * argv[] )
                   _bLineNumbers = FALSE;
                   break;
 
+               case 'm':
+               case 'M':
+                  /* TODO: Implement this switch */
+                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  break;
+
                case 'n':
                case 'N':
                   _bStartProc = FALSE;
@@ -1492,9 +1550,27 @@ int harbour_main( int argc, char * argv[] )
                   _bQuiet = TRUE;
                   break;
 
+               case 'r':
+               case 'R':
+                  /* TODO: Implement this switch */
+                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  break;
+
                case 's':
                case 'S':
                   _bSyntaxCheckOnly = TRUE;
+                  break;
+
+               case 't':
+               case 'T':
+                  /* TODO: Implement this switch */
+                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
+                  break;
+
+               case 'u':
+               case 'U':
+                  /* TODO: Implement this switch */
+                  printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
                   break;
 
                case 'v':
@@ -1539,14 +1615,14 @@ int harbour_main( int argc, char * argv[] )
                   break;
             }
          }
+         else if( argv[ iArg ][ 0 ] == '@' )
+            /* TODO: Implement this switch */
+            printf( "Not yet supported command line option: %s\n", &argv[ iArg ][ 0 ] );
          else
             _pFileName = hb_fsFNameSplit( argv[ iArg ] );
+
          iArg++;
       }
-
-      if( !_bQuiet )
-         printf( "Harbour compiler build %i%s (%04d.%02d.%02d)\n",
-            hb_build, hb_revision, hb_year, hb_month, hb_day );
 
       if( _pFileName )
       {
@@ -1579,6 +1655,7 @@ int harbour_main( int argc, char * argv[] )
       symbols.pLast    = NULL;
 
       _pInitFunc = NULL;
+      _bAnyWarning = FALSE;
 
       atexit( close_on_exit );
 
@@ -1618,10 +1695,24 @@ int harbour_main( int argc, char * argv[] )
          fclose( yyin );
          files.pLast = NULL;
 
+         bSkipGen = FALSE;
+
+         if( _bAnyWarning )
+         {
+            if( _iExitLevel == HB_EXITLEVEL_SETEXIT )
+               iStatus = 1;
+            if( _iExitLevel == HB_EXITLEVEL_DELTARGET )
+            {
+               iStatus = 1;
+               bSkipGen = TRUE;
+               printf( "\nNo code generated\n" );
+            }
+         }
+
 #ifdef HARBOUR_OBJ_GENERATION
-         if( ! _bSyntaxCheckOnly && ! _bObj32 )
+         if( ! _bSyntaxCheckOnly && ! bSkipGen && ! _bObj32 )
 #else
-         if( ! _bSyntaxCheckOnly )
+         if( ! _bSyntaxCheckOnly && ! bSkipGen )
 #endif
          {
             if( _pInitFunc )
@@ -1702,7 +1793,8 @@ int harbour_main( int argc, char * argv[] )
             GenObj32( szFileName, _pFileName->szName );
          }
 #endif
-         if( lPpo ) fclose ( yyppo );
+         if( lPpo )
+            fclose( yyppo );
       }
       else
       {
@@ -1728,6 +1820,7 @@ void PrintUsage( char * szSelf )
            "\t/a\t\tautomatic memvar declaration\n"
            "\t/b\t\tdebug info\n"
            "\t/d<id>[=<val>]\t#define <id>\n"
+           "\t/es[<level>]\tset exit severity\n"
 #ifdef HARBOUR_OBJ_GENERATION
            "\t/f\t\tgenerated object file\n"
            "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
@@ -1740,19 +1833,24 @@ void PrintUsage( char * szSelf )
            "\t\t\t /gr (Resources) --> <file.rc>\n"
            "\t/i<path>\tadd #include file search path\n"
            "\t/l\t\tsuppress line number information\n"
+/* TODO:   "\t/m\t\tcompile module only\n" */
            "\t/n\t\tno implicit starting procedure\n"
            "\t/o<path>\tobject file drive and/or path\n"
            "\t/p\t\tgenerate pre-processed output (.ppo) file\n"
            "\t/q\t\tquiet\n"
+/* TODO:   "\t/r[<lib>]\trequest linker to search <lib> (or none)\n" */
            "\t/s\t\tsyntax check only\n"
+/* TODO:   "\t/t<path>\tpath for temp file creation\n" */
+/* TODO:   "\t/u[<file>]\tuse command def set in <file> (or none)\n" */
            "\t/v\t\tvariables are assumed M->\n"
            "\t/w\t\tenable warnings\n"
-           "\t/x[<id>]\tset symbol init function name prefix\n"
+           "\t/x[<prefix>]\tset symbol init function name prefix\n"
 #ifdef YYDEBUG
            "\t/y\t\ttrace lex & yacc activity\n"
 #endif
            "\t/z\t\tsuppress shortcutting (.and. & .or.)\n"
            "\t/10\t\trestrict symbol length to 10 characters\n"
+/* TODO:   "\t @<file>\tcompile list of modules in <file>\n" */
            , szSelf );
 }
 

@@ -1174,11 +1174,8 @@ void hb_vmEqual( BOOL bExact )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
 
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "==" ) )
-   {
-      hb_stackPop();
-      hb_stackPop();
       hb_vmOperatorCall( pItem1, pItem2, "==" );
-   }
+
    else if( bExact && IS_ARRAY( pItem1 ) && IS_ARRAY( pItem2 ) )
    {
       BOOL bResult = pItem1->item.asArray.value->pItems && pItem2->item.asArray.value->pItems &&
@@ -1326,13 +1323,7 @@ void hb_vmGreater( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, ">" ) )
-   {
-      PHB_ITEM pItem2 = stack.pPos - 1;
-      PHB_ITEM pItem1 = stack.pPos - 2;
-      hb_stackPop();
-      hb_stackPop();
-      hb_vmOperatorCall( pItem1, pItem2, ">" );
-   }
+      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
@@ -1379,13 +1370,7 @@ void hb_vmGreaterEqual( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, ">=" ) )
-   {
-      PHB_ITEM pItem2 = stack.pPos - 1;
-      PHB_ITEM pItem1 = stack.pPos - 2;
-      hb_stackPop();
-      hb_stackPop();
-      hb_vmOperatorCall( pItem1, pItem2, ">=" );
-   }
+      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">=" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
@@ -1483,13 +1468,7 @@ void hb_vmLess( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "<" ) )
-   {
-      PHB_ITEM pItem2 = stack.pPos - 1;
-      PHB_ITEM pItem1 = stack.pPos - 2;
-      hb_stackPop();
-      hb_stackPop();
-      hb_vmOperatorCall( pItem1, pItem2, "<" );
-   }
+      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
@@ -1536,13 +1515,7 @@ void hb_vmLessEqual( void )
    }
 
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "<=" ) )
-   {
-      PHB_ITEM pItem2 = stack.pPos - 1;
-      PHB_ITEM pItem1 = stack.pPos - 2;
-      hb_stackPop();
-      hb_stackPop();
-      hb_vmOperatorCall( pItem1, pItem2, "<=" );
-   }
+      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<=" );
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
@@ -1666,11 +1639,7 @@ void hb_vmNotEqual( void )
       hb_vmPushLogical( hb_vmPopLogical() != hb_vmPopLogical() );
 
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "!=" ) )
-   {
-      hb_stackPop();
-      hb_stackPop();
       hb_vmOperatorCall( pItem1, pItem2, "!=" );
-   }
 
    else if( pItem1->type != pItem2->type )
    {
@@ -1749,11 +1718,8 @@ void hb_vmMinus( void )
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-" );
    }
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
-   {
-      hb_stackPop();
-      hb_stackPop();
       hb_vmOperatorCall( pItem1, pItem2, "-" );
-   }
+
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-" );
@@ -1917,11 +1883,7 @@ void hb_vmPlus( void )
    }
 
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem2, "+" ) )
-   {
-      hb_stackPop();
-      hb_stackPop();
       hb_vmOperatorCall( pItem1, pItem2, "+" );
-   }
 
    else
    {

@@ -1346,7 +1346,7 @@ HARBOUR HB___MVDBGINFO( void )
  *    The variable is specified by its name passed as the function parameter.
  *  $EXAMPLES$
  *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( x==NIL, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
+ *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
  *
  *  $COMPLIANCE$
@@ -1424,7 +1424,7 @@ HARBOUR HB___MVGET( void )
  *    If a value is not specified then the NIL is assumed
  *  $EXAMPLES$
  *    FUNCTION MEMVARBLOCK( cMemvar )
- *    RETURN {|x| IIF( x==NIL, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
+ *    RETURN {|x| IIF( PCOUNT()==0, __MVGET( cMemvar ), __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
  *
  *  $COMPLIANCE$
