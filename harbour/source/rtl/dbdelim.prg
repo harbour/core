@@ -295,25 +295,33 @@ local vRes
 local nPos1Deli, nPos2Deli
 //if there is one field only there is no Separator and i put...
 row:=row+cSeparator
-nPosSep:=at(cSeparator,row) // seek the first Separator eg. ,
+nPosSep:=1
+nPosNextSep:=at(cSeparator,row) // seek the first Separator eg. ,
 nPos1Deli:=at(cDelim,row)                // seek the first delimiter "
-nPos2Deli:=at(cDelim,row,nPos1deli+1)    // seek the second delimiter "
-if nPosSep>nPos1Deli .and. nPosSep<nPos2Deli
-   nPosSep=nPos2deli+1
+nPos2Deli:=at(cDelim,row,nPos1Deli+1)    // seek the second delimiter "
+if nPos1Deli > 0 .and. nPos2Deli > 0
+   if nPosNextSep>nPos1Deli .and. nPosNextSep<nPos2Deli
+      nPosSep:=nPos1Deli
+      nPosNextSep=nPos2Deli+1
+   endif
 endif
-aadd( aMyval,substr(row,1,nPosSep-1) )
+aadd( aMyval,substr(row,nPosSep,nPosNextSep-1) )
+nPosSep:=nPosNextSep
 do while .t.
-    nPosNextSep:=at(cSeparator,row,nPosSep+2)
+    nPosNextSep:=at(cSeparator,row,nPosSep+1)
     if nPosNextSep=0
        exit
     endif
     nPos1Deli:=at(cDelim,row,nPosSep)     // seek the first delimiter "
-    nPos2Deli:=at(cDelim,row,nPos1deli+1)    // seek the second delimiter "
-    if nPosNextSep>nPos1Deli .and. nPosNextSep<nPos2Deli
-       nPosNextSep=nPos2deli+1
+    nPos2Deli:=at(cDelim,row,nPos1Deli+1)    // seek the second delimiter "
+    if nPos1Deli > 0 .and. nPos2Deli > 0
+        if nPosNextSep>nPos1Deli .and. nPosNextSep<nPos2Deli
+           nPosSep=nPos1Deli
+           nPosNextSep=nPos2Deli+1
+        endif
     endif
     aadd( aMyVal,substr(row,nPosSep+1,nPosnextSep-nPosSep-1) )
-    nPosSep:=nPosnextSep    
+    nPosSep:=nPosNextSep    
     if nPosSep>lenrow
        exit
     endif 

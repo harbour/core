@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-13 22:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dbdelim.prg
+    ! Bug fixes for consecutive blank fields in a record and for
+      records that have no delimiters (either because there are
+      no character fields or because all of the character fields
+      are blank).
+
 2002-09-09 16:48 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * source/common/hbffind.c
     - Remove redundant line which used FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
