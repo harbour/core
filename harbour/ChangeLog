@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-23 10:53 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * makefile.bc
+    + gencli.c module added
+
+  Please update other makefiles.
+
 2003-06-23 10:20 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   + source/compiler/gencli.c
     ! Compiler .NET .il source generation
