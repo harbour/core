@@ -609,6 +609,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
          if( info->dwAttr == 0 ||
            ( info->pFindFileData.dwFileAttributes == 0 ) ||
            ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
+           ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
            ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
             bFound = TRUE;
@@ -622,6 +623,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
                if( info->dwAttr == 0 ||
                  ( info->pFindFileData.dwFileAttributes == 0 ) ||
                  ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
+                 ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
                  ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
                {
                   bFound = TRUE;
@@ -751,6 +753,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
          if( info->dwAttr == 0 ||
              ( info->pFindFileData.dwFileAttributes == 0 ) ||
              ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
+             ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
              ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
             bFound = TRUE;
