@@ -1,45 +1,52 @@
-//
-// Debug function tests
-//
+/* $Doc$
+ * $Description$  Debug function tests.
+ *                Based on classes.prg
+ * $Requirement$  source\tools\debug.c
+ *                source\rtl\itemapi.c (1999/05/04)
+ * $Date$         1999/05/06
+ * $End$ */
 function Main()
 
    local oForm := TForm():New()
 
    QOut( oForm:ClassName() )
-
    oForm:Show()
 
-   QOut( "DEBUG" )
+   QOut( "-DEBUG-" )
 
-   QOut( "Statics = ",     ToChar( __aStatic(), ", ", .T. ) )
-   QOut( "Type static[1]", ValType( __Static(1) ) )
+   QOut( "Statics        = ", ToChar ( __aStatic(), ", ", .T. ) )
+   QOut( "Type static[1] = ", ValType( __Static(1) ) )
+   QOut( "Stack length   = ", __StackLen() )
+   QOut( "Stack          = ", ToChar ( __Stack(), ", ", .T. ) )
 
 return nil
 
 
-//
-// Always return a correct value
-//
+/* $Doc$
+ * $FuncName$     <xRet> Default( <xArg>, <xDefault> )
+ * $Description$  If argument is not set, return default
+ * $End$ */
 function Default( xArg, xDef )
 return if( ValType(xArg) != ValType(xDef), xDef, xArg )
 
 
-//
-// ToChar -> Convert xTxt to character
-//
-// xTxt       : Item to write
-// cSeparator : Separator for arrays. Def:' '
-// lDebug     : Write debug output {"first",.F.}. Def:.F.
-//
+/* $Doc$
+ * $FuncName$     <cOut> ToChar( <xTxt>, [cSeparator], [lDebug] )
+ * $Description$  Convert to character
+ * $Arguments$    <xTxt>       : Item to write
+ *                [cSeparator] : Separator for arrays
+ *                [lDebug]     : .T. -> Write debug output {"first",.F.}
+ * $End$ */
 function ToChar( xTxt, cSeparator, lDebug )
 
    local cValTxt
    local cOut
    local n
+   local nLen
 
-   lDebug     := Default( lDebug, .F. )
+   cSeparator := Default( cSeparator, " " )
+   lDebug     := Default( lDebug,     .F. )
    cValTxt    := ValType( xTxt )
-   cSeparator := Default( cSeparator, " ")
 
    do case
       case cValTxt=="C" .or. cValTxt=="M"       // Character
@@ -68,28 +75,35 @@ function ToChar( xTxt, cSeparator, lDebug )
          if lDebug
             cOut += if( cValTxt=="A", "{", "Object(" )
          endif
-         for n := 1 to Len( xTxt )
-            cOut += ToChar( xTxt[n], cSeparator, lDebug ) + cSeparator
+         nLen := Len( xTxt )
+         for n := 1 to nLen                     // For each item : Recurse !
+            cOut += ToChar( xTxt[n], cSeparator, lDebug )
+            if n != nLen
+               cOut += cSeparator
+            endif
          next n
-         cOut := Substr( cOut, 1, Len( cOut ) - Len( cSeparator ) )
          if lDebug
             cOut += if( cValTxt=="O", ")", "}" )
          endif
 
-      case cValTxt=="B"                         // Code block (??)
+      case cValTxt=="B"                         // Codeblock
          if lDebug
             cOut := "Block"
          else
             cOut := Eval( xTxt )
          endif
 
-      case cValTxt=="O"                         // Object (??)
+      case cValTxt=="O"                         // Object
          cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
 
    endcase
 return cOut
 
 
+/* $Doc$
+ * $FuncName$     <oForm> TForm()
+ * $Description$  Returns TForm object
+ * $End$ */
 function TForm()
 
    static oClass
@@ -112,6 +126,10 @@ function TForm()
 return oClass:Instance()                  // builds an object of this class
 
 
+/* $Doc$
+ * $FuncName$     <oForm> TForm:New()
+ * $Description$  Constructor
+ * $End$ */
 static function New()
 
    local Self := QSelf()
@@ -124,6 +142,10 @@ static function New()
 return Self
 
 
+/* $Doc$
+ * $FuncName$     TForm:Show()
+ * $Description$  Show a form
+ * $End$ */
 static function Show()
 
    local Self := QSelf()
