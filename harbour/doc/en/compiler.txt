@@ -2,233 +2,239 @@
  * $Id$
  */
 
-/*
- * Las siguientes partes son derechos adquiridos de sus autores individuales.
- * www - http://www.harbour-project.org
- *
- * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
- * Documentación en Español de:  Opciones del Compilador
- *
- * Vea doc/license.txt por los términos de la licencia.
- *
- */
-
-
 /*  $DOC$
  *  $FUNCNAME$
- *      Opciones del Compilador
+ *      Compiler Options
  *  $CATEGORY$
- *      Documentación
+ *      Document
  *  $ONELINER$
- *      Opciones del Compilador
+ *      Compiler Options
  *  $DESCRIPTION$
  *
- *      Invocando al compilador Harbour:   </par>
- *      ===============================   </par>
+ *      <b>Invoking the Harbour compiler:  </b> </par>
+ *      ==============================   </par>
  *
- *         harbour <archivo[.prg]> [opciones]   </par>
- *      or                                      </par>
- *         harbour [opciones] <archivo[.prg]>    </par>
+ *         harbour <file[.prg]> [options]   </par>
+ *      or                                  </par>
+ *         harbour [options] <file[.prg]>   </par>
  *      or   </par>
- *         harbour [opciones] <archivo[.prg]> [opciones]   </par>
+ *         harbour [options] <file[.prg]> [options]   </par>
  *
+ *      The command line options have to be separated by at least one space.
+ *      The option can start with either '/' character or '-' character.   
  *
- *      Las opciones de la línea de comandos debe ser separada, al menos por
- *      un espacio en blanco.   </par>
- *      Las opciones pueden comenzar con el carácter '/' ó '-',    </par>
+ *      <b>The Harbour command line options:  </b> </par>
+ *      =================================   </par>
  *
- *      Opciones de la línea de comandos de:   </par>
- *      ====================================   </par>
+ *      /a               automatic memvar declaration   </par>
+ *      =================   </par>
+
+ *          This causes all variables declared by PARAMETER, PRIVATE or PUBLIC
+ *          statements to be automatically declared as MEMVAR variables.   
  *
- *      /a               Declaración Automática de memvar    </par>
- *      -----------------   </par>
- *          Esto causa que todas las variables declaradas por las sentencias
- *          PARAMETER, PRIVATE ó PUBLIC sean automáticamente declaradas como
- *          variables MEMVAR.          </par>
- *
- *      /b               Información de depuración (Bug)  </par>
- *      -----------------   </par>
- *          El compilador genera toda la información requerida para depuración </par>
+ *      /b               debug info   </par>
+ *      =================   </par>
+
+ *          The compiler generates all information required for debugging   
  *
  *      /d<id>[=<val>]   #define <id>   </par>
- *      -----------------   </par>
+ *      =================   </par>
  *
- *      /es[<nivel>]     establece la Severidad de la salida (Exit Severity) </par>
- *      -----------------   </par>
+ *      /es[<level>]     set exit severity   </par>
+ *      =================   </par>
  *
- *          /es or /es0 - Todas las advertencias son ignoradas y el código de
- *                        salida retornado por el compilador (accedido por el
- *                        comando de DOS ERRORLEVEL) es igual a cero si no
- *                        hay errores en el archivo fuente compilado. </par>
- *          /es1        - Cualquier advertencia genera un código de salida
- *                        distinto de cero, pero la salida es aún creada. </par>
- *          /es2        - Cualquier advertencia es tratada como error y ningún
- *                        archivo de salida es creado. El código de salida es
- *                        establecido a un valor distinto de cero.  </par>
+ *          /es or /es0 - all warnings are ignored and exit code returned by
+ *                        the compiler (accessed by DOS ERRORLEVEL command)
+ *                        is equal to 0 if there are no errors in compiled
+ *                        source file.   
  *
- *      /g<tipo>         Generación del tipo de archivo de salida <type> </par>
- *      -----------------                                  </par>
+ *          /es1        - any warnings generate a non-zero exit code, but
+ *                        output is still created.   
  *
- *          /gc          tipo de salida: fuente de lenguaje C (.c) (defecto) </par>
- *          /gf          tipo de salida: Windows/DOS OBJ32 (.obj)      </par>
- *          /gh          tipo de salida: Objeto Portable de Harbour (.hrb) </par>
- *          /gj          tipo de salida: fuente de Java (.java)         </par>
- *          /gp          tipo de salida: fuente de Pascal (.pas)        </par>
- *          /gr          tipo de salida: recursos de Windows (.rc)      </par>
+ *          /es2        - all warnings are treated as errors and no output
+ *                        file is created. The exit code is set to a non-zero
+ *                        value.   
+
+ *      /g<type>         output type generated is <type> </par>
+ *      =================   </par>
  *
- *      /i<ruta>         agrega la ruta de búsqueda de archivos #Include  </par>
- *      -----------------   </par>
+ *          /gc[<type>]  output type: C source (.c) (default)
+ *                          <type>: 0=compact 1=normal 2=verbose (default)
  *
- *      /l               suprime la información del número de Línea   </par>
- *      -----------------   </par>
- *          El compilador no genera el número de línea del código fuente
- *          en el archivo de salida. La función PROCLINE() retornará cero
- *          para los módulos compilados usando esta opción.   </par>
+ *          /go          output type: Platform dependant object module
  *
- *      /m               compilar el Módulo actual solamente  </par>
- *      -----------------   </par>
+ *          /gh          output type: Harbour Portable Object (.hrb)
  *
- *      /n               sin procedimiento de inicio implícito </par>
- *      -----------------   </par>
- *          El compilador no crea un procedimiento con el mismo nombre
- *          que el del archivo compilado.  Esto significa que algunas
- *          declaraciones puestas antes de la primera sentencia de
- *          PROCEDURE ó FUNCTION tienen el alcance del archivo y pueden ser
- *          accedidas/usadas en todas las funciones/procedimientos definidos
- *          en el archivo fuente compilado. Todas las sentencias ejecutables
- *          puestas al principio del archivo y antes de la primera sentencia
- *          de PROCEDURE ó FUNCTION son ignoradas.  </par>
+
+ *      /i<path>         add #include file search path   </par>
+ *      =================   </par>
  *
- *      /o<ruta>         unidad de disco y/o ruta para el archivo de salida </par>
- *      -----------------   </par>
+ *      /k<mode>         enable <mode> compatibility mode  </par>
+ *      =================                                  </par>
  *
- *      /p               genera un archivo de salida Pre-procesada (.ppo) </par>
- *      -----------------   </par>
- *          El compilador solamente crea el archivo que contiene el
- *          resultado del archivo fuente pre-procesado.   </par>
+ *          /kc          clear all flags (strict Clipper compatibility)   
  *
- *      /q               Quieto  </par>
- *      -----------------   </par>
- *          El compilador no imprime ningún mensaje durante la compilación
- *          (excepto la información del copyright).   </par>
+ *          /kh          Harbour extensions (default)  
  *
- *          /q0          que permanezca realmente Quieto y no muestre ni
- *                       siquiera la información del copyright.   </par>
+ *          /ki          HB_INLINE support enabled (default)
  *
- *      /r[<libreria>]   solicita al linker Revisar por <libreria> (ó ninguna) </par>
- *      -----------------   </par>
- *          Actualmente no soportado en Harbour.           </par>
+ *          /kr          use runtime settings for the macro compiler  
  *
- *      /s               solo chequeo de Sintaxis.          </par>
- *      -----------------   </par>
- *          El compilador chequea la sintaxis solamente. Ningún archivo de
- *          salida es generado.  </par>
+ *          /kx          other xbase dialects extensions (default)   
  *
- *      /t<ruta>         ruta para la creación de un archivo Temporario  </par>
- *      -----------------   </par>
- *          Actualmente no usado en harbour (El compilador de harbour no
- *          crea ningún archivo temporal)   </par>
+ *          /k?          invoke help information     
  *
- *      /u[<archivo>]       Usar la definición de comando establecido en el
- *                          <archivo> (ó ninguno)   </par>
- *      -----------------   </par>
- *          Aún no soportado.   </par>
+ *      /l               suppress line number information      </par>
+ *      =================   </par>
  *
- *      /v               las Variables son asumidas como M->   </par>
- *      -----------------   </par>
- *          Todas las variables sin declarar ó unaliased son asumidas como
- *          variables MEMVAR (variables privadas ó públicas). si este switch
- *          no es usado entones el alcance de estas variables es chequeado
- *          en tiempo de ejecución.    </par>
+ *          The compiler does not generate the source code line numbers in   
+ *          the output file. The PROCLINE() function will return 0 for   
+ *          modules compiled using this option.   
  *
- *      /w[<nivel>]      Establece el número de nivel de las advertencias
- *                       (Warnings) (0..4, por defecto es 1)   </par>
- *      -----------------   </par>
+ *      /m               compile current module only   </par>
+ *      =================   </par>
  *
- *         /w0         - sin advertencias                          </par>
- *         /w or /w1   - advertencias compatibles con Clipper      </par>
- *         /w2         - algunas advertencias útiles ausentes en Clipper </par>
- *         /w3         - advertencias generadas para extensiones al lenguaje
- *                       hechas en Harbour. También habilita el chequeo de
- *                       sintaxis fuertemente tipeada pero sólo advierte
- *                       contra los tipos declarados, o los tipos que pueden
- *                       ser calculados en tiempo de compilación.    </par>
- *         /w4         - habilita advertencias acerca de operaciones que son
- *                       sospechosas, lo cual significa que si se mezclan tipos
- *                       sin declarar ó tipos que no pueden ser calculados
- *                       en tiempo de compilación, junto con los tipos ya
- *                       declarados, una advertencia será generada.   </par>
+ *      /n               no implicit starting procedure   </par>
+ *      =================   </par>
  *
- *      /x[<prefijo>]    establece el símbolo del prefijo agregado al nombre
- *                       de función (para archivo.c solamente)   </par>
- *      -----------------   </par>
- *          Establece el símbolo del prefijo agregado al nombre de función
- *          de inicio (en la salida de lenguaje C, actualmente). Esta función
- *          es generada automáticamente para cada módulo de PRG compilado.
- *          Este prefijo adicional puede ser usado para suprimir problemas
- *          con símbolos duplicados durante el enlazado de una aplicación
- *          (linking) con alguna librería de terceros.   </par>
+ *          The compiler does not create a procedure with the same name as
+ *          the compiled file. This means that any declarations placed
+ *          before the first PROCEDURE or FUNCTION statement have file-
+ *          wide scope and can be accessed/used in all functions/procedures
+ *          defined in the compiled source file. All executable statements
+ *          placed at the beginning of the file and before the first
+ *          PROCEDURE/FUNCTION statement are ignored.   
  *
- *      /y               seguimiento de la actividad de Lex & Yacc   </par>
- *      -----------------   </par>
- *          El compilador Harbour usa las utilidades FLEX y YACC para analizar
- *          el código fuente y generar el archivo de salida requerido.
- *          Esta opción sigue la actividad de esas utilidades. </par>
+ *      /o<path>         output file drive and/or path   </par>
+ *      =================   </par>
  *
- *      /z               suprime el cortocircuito lógico (.and. y .or.) </par>
- *      -----------------   </par>
+ *      /p               generate pre-processed output (.ppo) file   </par>
+ *      =================   </par>
  *
- *      /10              restringe la longitud de símbolos a 10 caracteres. </par>
- *      -----------------   </par>
- *          Todos los nombres de variables y de funciones son cortados a un
- *          máximo de 10 caracteres.  </par>
+ *          The compiler only creates the file that contains the result of
+ *          pre-processing the source file.   
  *
+ *      /q               quiet   </par>
+ *      =================   </par>
  *
- *      Compilación en modo lote (batch).   </par>
- *      ================================   </par>
+ *          The compiler does not print any messages during compiling
+ *          (except the copyright info).   
  *
- *       @<archivo>         compila la lista de módulos en el <archivo>   </par>
- *      -----------------        </par>
- *          No soportado aún.    </par>
+ *          /q0     be really quiet and don't display even the copyright info   
  *
+ *      /r[<lib>]        request linker to search <lib> (or none)   </par>
+ *      =================   </par>
  *
+ *          Currently not supported in Harbour.   
  *
- *      Conocidas incompatibilidades entre compiladores harbour y clipper  </par>
- *      =================================================================   </par>
+ *      /s               syntax check only   </par>
+ *      =================   </par>
+ *
+ *          The compiler checks the syntax only. No output file is generated.   
+ *
+ *      /t<path>         path for temp file creation   </par>
+ *      =================   </par>
+ *
+ *          Currently not used in Harbour (the Harbour compiler does not
+ *          create any temporary files).   
+ *
+ *      /u[<file>]       use command definition set in <file> (or none)   </par>
+ *      =================   </par>
+ *
+ *      /v               variables are assumed M->   </par>
+ *      =================   </par>
+ *
+ *          All undeclared or unaliased variables are assumed MEMVAR
+ *          variables (private or public variables). If this switch is not
+ *          used then the scope of such variables is checked at runtime.   
+ *
+ *      /w[<level>]      set warning level number (0..4, default 1)   </par>
+ *      =================   </par>
+ *
+ *          /w0         - no warnings
+ *
+ *          /w or /w1   - Clipper compatible warnings
+ *
+ *          /w2         - some useful warnings missed in Clipper
+ *
+ *          /w3         - warnings generated for Harbour language extensions
+ *                        and also enables strong type checking but only
+ *                        warns against declared types, or types which may be
+ *                        calculated at compile time
+ *
+ *          /w4         - Enables warning about suspicious operations, which
+ *                        means if you mix undeclared types, or types which
+ *                        can not be calculated at compile time,together with
+ *                        declared types, a warning will be  generated.  
+ *
+ *      /x[<prefix>]     set symbol init function name prefix (for .c only)   </par>
+ *      =================   </par>
+ *
+ *          Sets the prefix added to the generated symbol init function name
+ *          (in C output currently). This function is generated
+ *          automatically for every PRG module compiled. This additional
+ *          prefix can be used to suppress problems with duplicated symbols
+ *          during linking an application with some third party libraries.   
+ *
+ *      /y               trace lex & yacc activity   </par>
+ *      =================   </par>
+ *
+ *          The Harbour compiler uses the FLEX and YACC utilities to parse
+ *          the source code and to generate the required output file. This
+ *          option traces the activity of these utilities.   
+ *
+ *      /z               suppress logical shortcutting (.and. & .or.)   </par>
+ *      =================   </par>
+ *
+ *      /10              restrict symbol length to 10 characters   </par>
+ *      =================   </par>
+ *
+ *          All variable and function names are cut to maximum 10 characters.   
+ *
+ *      Compilation in batch mode.   </par>
+ *      ==========================   </par>
+ *
+ *       @<file>         compile list of modules in <file>   </par>
+ *      =================        </par>
+ *
+ *          Not supported yet.   
+ *
+ *      <b>Known incompatibilities between harbour and clipper compilers  </b> </par>
+ *      =============================================================   </par>
  *
  *      NOTE:   </par>
- *        Si desea librerías de compilación y ejecución 100 % compatibles,
- *      entonces Ud. debe definir: HARBOUR_STRICT_CLIPPER_COMPATIBILITY.
- *      Esta opción debe ser definida en el archvivo ../include/hbsetup.h
- *      (en efecto esta opción es puesta en un comentario por defecto - Ud.
- *      necesita remover los caracteres /* */ solamente. Este cambio debe ser
- *      realizado antes de invocar la utilidad make.   </par>
+ *
+ *      If you want a 100% compatible runtime libraries then
+ *      you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY. This
+ *      option should be defined in the file include/hbsetup.h (in fact this
+ *      option is placed in a comment by default - you need to remove the
+ *      /* */ characters only). This change has to be done before invoking
+ *      the make utility.   
  *
  *
- *      Manejo de variables sin declarar </par>
- *      --------------------------------   </par>
- *        Cuando un valor es asignado a una variable no declarada y la opción
- *      -v  de la línea de comandos no es usada, entonces el compilador
- *      Clipper asume que la variable es una variable PRIVATE ó PUBLIC y
- *      genera un opcode POPM (pop memvar).   </par>
+ *      <b>Handling of undeclared variables  </b> </par>
+ *      ================================   </par>
  *
- *      Cuando el valor de una variable no declarada es accedido y la opción
- *      -v de la línea de comandos no es usada, el compilador Harbour genera
- *      un opcode  PUSHV (push variable) para determinar el tipo de variable
- *      en tiempo de ejecución
-
- *      Si un campo con el nombre requerido existe en el area de trabajo
- *      actual, entonces este valor es usado. Si no existe el campo, entones
- *      una variable PRIVATE ó PUBLIC es usada (si existe).   </par>
+ *      When a value is assigned to an undeclared variable and the '-v'
+ *      command line option is not used, then the Clipper compiler assumes
+ *      that the variable is a PRIVATE or a PUBLIC variable and generates
+ *      POPM (pop memvar) opcode.   
  *
- *        El compilador Harbour genera un opcode para determinar el tipo de
- *      variable en tiempo de ejecución (POPVARIABLE or PUSHVARIABLE) en
- *      ambos casos (asignación y acceso).   </par>
+ *      When the value of an undeclared variable is accessed and the '-v'
+ *      command line option is not used, the Clipper compiler generates PUSHV
+ *      (push variable) opcode that determines the type of variable at runtime.
+ *      If a field with the requested name exists in the current workarea then
+ *      its value is used. If there is no field then a PRIVATE or a PUBLIC
+ *      variable is used (if exists).   
  *
- *      La diferencia puede ser chequeada por el siguiente código:   </par>
-
+ *      The Harbour compiler generates an opcode to determine the type of
+ *      variable at runtime (POPVARIABLE or PUSHVARIABLE) in both cases
+ *      (assignment and access).   
+ *
+ *      The difference can be checked by the following code:   
+ *
  *          <fixed>
- *      PROCEDURE MAIN()
+ *      PROCEDURE MAIN()  
  *      PRIVATE myname
  *
  *        DBCREATE( "TEST", { { "MYNAME", "C", 10, 0} } )
@@ -251,62 +257,61 @@
  *
  *      RETURN
  *     </fixed>
+ *         
+ *      <b>Passing an undeclared variable by the reference </b>  </par>
+ *      ===============================================   </par>
  *
- *      Pasando por refeerencia una variable no declarada   </par>
- *      -------------------------------------------------   </par>
- *        El compilador Harbour usa un opcode especial PUSHP para pasar una
- *      referencia  a una variable no declarada ( el operador '@' ). El tipo
- *      de la variable pasada es chequeada en tiempo de ejecución (field or
- *      memvar). Sin embargo las variables de campo no pueden ser pasadas por
- *      referencia. Esto significa que Clipper chequea sólo la variable memvar
- *      y no mira por una de campo.
- *      Esta es la razón por la cual el compilador Harbour usa el opcode
- *      habitual PUSHMEMVARREF en estos casos. Nótese que el comportamiento
- *      en tiempo de ejecución es el mismo en Clipper y en Harbour - sólo los
- *      opcodes generados son diferentes.   </par>
- *
- *
- *      Manejo de mensajes a objetos   </par>
- *      ----------------------------   </par>
- *
- *        El seteo de HARBOUR_STRICT_CLIPPER_COMPATIBILITY determina
- *      la forma en que el envío encadenado de mensajes es manejado </par>
- *
- *      Por ejemplo, el siguiente código: </par>
- *
- *      a:b( COUNT() ):c += 1   </par>
- *
- *      será manejado como:   </par>
- *
- *      a:b( COUNT() ):c := a:b( COUNT() ):c + 1   </par>
- *      en modo de compatibilidad estricta y  </par>
- *
- *      temp := a:b( COUNT() ), temp:c += 1   </par>
- *      en modo no-estricto.   </par>
- *
- *        En la práctica, Clipper llamará a la función COUNT() dos veces:
- *      La primera vez antes de la adición y la segunda después de la
- *      adición.
- *      En Harbour, COUNT() será llamada sólo una vez, antes de la adición. </par>
- *
- *        El método Harbour (no-estricto) es:   </par>
- *      1) Más rápido   </par>
- *      2) Garantiza que la misma variable de instancia del mismo
- *         objeto será cambiada.  </par>
- *
- *      (Ver también: ../source/compiler/expropt.c)   </par>
+ *      The Clipper compiler uses the special opcode PUSHP to pass a
+ *      reference to an undeclared variable ( '@' operator ). The type of
+ *      passed variable is checked at runtime (field or memvar). However,
+ *      field variables cannot be passed by reference. This means that
+ *      Clipper checks the memvar variable only and doesn't look for a field.
+ *      This is the reason why the Harbour compiler uses the usual
+ *      PUSHMEMVARREF opcode in such cases. Notice that the runtime behavior
+ *      is the same in Clipper and in Harbour - only the generated opcodes
+ *      are different.   
  *
  *
- *      Inicialización variables estáticas     </par>
- *      ----------------------------------      </par>
+ *      Handling of object messages   </par>
+ *      ===========================   </par>
  *
- *      Hay una diferencia en la inicialización de las variables estáticas
- *      que son inicializadas con un bloque de código que refiere a una
- *      variable local. Por ejemplo:   </par>
+ *        The HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
+ *      the way chained send messages are handled.   
+ *
+ *      For example, the following code:   
+ *
+ *      a:b( COUNT() ):c += 1   
+ *
+ *      will be handled as:   
+ *
+ *      a:b( COUNT() ):c := a:b( COUNT() ):c + 1   
+ *
+ *      in strict Clipper compatibility mode and   
+ *
+ *      temp := a:b( COUNT() ), temp:c += 1   
+ *
+ *      in non-strict mode.   
+ *
+ *      In practice, Clipper will call the COUNT() function two times:
+ *      the first time before addition and the second one after addition.
+ *      In Harbour, COUNT() will be called only once, before addition.   
+ *
+ *      The Harbour (non-strict) method is:   </par>
+ *      1) faster   </par>
+ *      2) it guarantees that the same instance variable of the same object
+ *      will be changed   
+ *
+ *      (See also: source/compiler/expropt.c)   
+ *
+ *      <b>Initialization of static variables      </b></par>
+ *      ==================================      </par>
+ *
+ *      There is a difference in the initialization of static
+ *      variables that are initialized with a codeblock that refers to
+ *      a local variable. For example:   
 
  *      <fixed>
  *      PROCEDURE TEST()
- *
  *      LOCAL MyLocalVar
  *      STATIC MyStaticVar := {|| MyLocalVar }
  *
@@ -316,24 +321,22 @@
  *      RETURN
  *      </fixed>
 
- *      El código de arriba compila bien en Clipper, pero éste genera un
- *      error de ejecución:
- *           Error/BASE 1132 Bound error: array access
- *      Called from (b)STATICS$(0)   </par>
+ *      The above code compiles fine in Clipper, but it generates a
+ *      runtime error Error/BASE 1132 Bound error: array access
+ *      Called form (b)STATICS$(0)   
  *
- *      En Harbour este código genera un error en tiempo de compilación:
- *      Error E0009 Illegal variable (b) initializer: 'MyLocalVar'   </par>
+ *      In Harbour this code generates a compile time error:
+ *      Error E0009 Illegal variable (b) initializer: 'MyLocalVar'   
  *
- *      Ambos Clipper y Harbour estan manejando todas las variables locales
- *      usadas en una forma especial: ellas son separadas de la pila (stack)
- *      local de la función / procedimiento donde ellas son declaradas.
- *      Esto permite acceder a estas variables despues de la salida de una
- *      función / procedimiento. Sin embargo todas las variables estáticas
- *      son inicializadas en un procedimiento separado ('STATICS$' en Clipper
- *      y '(_INITSTATICS)' en Harbour) antes del procedimiento principal y
- *      antes de todos los procedimientos INIT. Las variables locales no
- *      existen en la pila de evaluación (eval stack) donde las variables
- *      estáticas son inicializadas, así ellas no pueden ser separadas.  </par>
+ *      Both Clipper and Harbour are handling all local variables used in a
+ *      codeblock in a special way: they are detached from the local stack
+ *      of function/procedure where they are declared. This allows access to
+ *      these variables after the exit from a function/procedure. However,
+ *      all static variables are initialized in a separate procedure
+ *      ('STATICS$' in Clipper and '(_INITSTATICS)' in Harbour) before the
+ *      main procedure and before all INIT procedures. The local variables
+ *      don't exist on the eval stack when static variables are initialized,
+ *      so they cannot be detached.   
  *
  *  $END$
  */

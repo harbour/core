@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-03-12 11:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/dbsdf.prg
+     * bug fixed, reported by Mikhail Malyh
+
+2002-03-10 15:25 UTC-0300 Luiz Rafael Culik<culikr@uol.com.br>
   * source/pp/pptable.c
     * Fixed command for SET PRINTER TO
   * source/rtl/set.c

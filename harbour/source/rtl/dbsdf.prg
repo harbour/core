@@ -185,12 +185,16 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
             IF EMPTY( aFields )
                // Process all fields.
                FOR index := 1 TO FCOUNT()
-                  FieldPut( index,ImportFixed( handle,index,aStruct ) )
+                  IF !ImportFixed( handle,index,aStruct )
+                     EXIT
+                  ENDIF
                NEXT index
             ELSE
                // Process the specified fields.
                FOR index := 1 TO LEN( aFields )
-                  FieldPut( FIELDPOS( aFields[ index ] ),ImportFixed( handle,FIELDPOS( aFields[ index ] ),aStruct ) )
+                  IF !ImportFixed( handle,FIELDPOS( aFields[ index ] ),aStruct )
+                     EXIT
+                  ENDIF
                NEXT index
             END IF
             // Set up for the start of the next record.
@@ -217,17 +221,29 @@ STATIC FUNCTION ExportFixed( handle, xField )
 RETURN .T.
 
 STATIC FUNCTION ImportFixed( handle, index, aStruct )
-   LOCAL cBuffer := Space(aStruct[ index,3 ])
+   LOCAL cBuffer := Space(aStruct[ index,3 ]), pos, res := .T.
+   LOCAL vres
+
    FREAD( handle, @cBuffer, aStruct[ index,3 ] )
+   IF ( pos := At( CHR(13),cBuffer ) ) > 0
+      res := .F.
+      FSEEK( handle, -( aStruct[ index,3 ] - pos + 1 ), FS_RELATIVE )
+      IF pos > 1
+         cBuffer := Left( cBuffer,pos-1 )
+      ELSE
+         RETURN res
+      ENDIF
+   ENDIF
    DO CASE
-      CASE aStruct[ index,2 ] == "C"
-         RETURN cBuffer
       CASE aStruct[ index,2 ] == "D"
-         RETURN HB_STOD( cBuffer )
+         vres := HB_STOD( cBuffer )
       CASE aStruct[ index,2 ] == "L"
-         RETURN iif( cBuffer == "T",.T.,.F. )
+         vres := iif( cBuffer == "T",.T.,.F. )
       CASE aStruct[ index,2 ] == "N"
-         RETURN VAL( cBuffer )
+         vres := VAL( cBuffer )
+      OTHERWISE
+         vres := cBuffer
    END CASE
-RETURN cBuffer
+   FIELDPUT( index, vres )
+RETURN res
 
