@@ -3129,7 +3129,7 @@ void hb_stackDispCall( void )
 
    while( pBase != hb_stack.pItems )
    {
-      char buffer[ 128 ];
+      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
@@ -3661,7 +3661,7 @@ void hb_vmRequestCancel( void )
 
    if( hb_set.HB_SET_CANCEL )
    {
-      char buffer[ 128 ];
+      char buffer[ HB_SYMBOL_NAME_LEN + 32 ];
 
       hb_outerr( hb_consoleGetNewLine(), 0 );
       sprintf( buffer, "Cancelled at: %s (%i)", hb_stack.pBase->item.asSymbol.value->szName, hb_stack.pBase->item.asSymbol.lineno );

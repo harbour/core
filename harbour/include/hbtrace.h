@@ -63,11 +63,11 @@
 
 /*
  * This is black magic...
- * What we do here is to generate calls to ECHO_CREATE only for those
+ * What we do here is to generate calls to HB_ECHO_CREATE only for those
  * levels that are less or equal to the COMPILATION time HB_TR_LEVEL.
  */
 
-#define ECHO_CREATE(l, x)     do \
+#define HB_ECHO_CREATE(l, x)  do \
                               { \
                                 if (hb_tr_level() >= l) { \
                                   hb_tr_file_ = __FILE__; \
@@ -78,43 +78,43 @@
                               } while (0)
 
 #if HB_TR_LEVEL >= HB_TR_DEBUG
-#define _ECHO_TRACE_HB_TR_DEBUG(x)    ECHO_CREATE(HB_TR_DEBUG, x)
+#define HB_ECHO_TRACE_HB_TR_DEBUG(x)    HB_ECHO_CREATE(HB_TR_DEBUG, x)
 #else
-#define _ECHO_TRACE_HB_TR_DEBUG(x)    
+#define HB_ECHO_TRACE_HB_TR_DEBUG(x)    
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_INFO
-#define _ECHO_TRACE_HB_TR_INFO(x)     ECHO_CREATE(HB_TR_INFO, x)
+#define HB_ECHO_TRACE_HB_TR_INFO(x)     HB_ECHO_CREATE(HB_TR_INFO, x)
 #else
-#define _ECHO_TRACE_HB_TR_INFO(x)     
+#define HB_ECHO_TRACE_HB_TR_INFO(x)
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_WARNING
-#define _ECHO_TRACE_HB_TR_WARNING(x)  ECHO_CREATE(HB_TR_WARNING, x)
+#define HB_ECHO_TRACE_HB_TR_WARNING(x)  HB_ECHO_CREATE(HB_TR_WARNING, x)
 #else
-#define _ECHO_TRACE_HB_TR_WARNING(x)  
+#define HB_ECHO_TRACE_HB_TR_WARNING(x)  
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_ERROR
-#define _ECHO_TRACE_HB_TR_ERROR(x)    ECHO_CREATE(HB_TR_ERROR, x)
+#define HB_ECHO_TRACE_HB_TR_ERROR(x)    HB_ECHO_CREATE(HB_TR_ERROR, x)
 #else
-#define _ECHO_TRACE_HB_TR_ERROR(x)    
+#define HB_ECHO_TRACE_HB_TR_ERROR(x)    
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_FATAL
-#define _ECHO_TRACE_HB_TR_FATAL(x)    ECHO_CREATE(HB_TR_FATAL, x)
+#define HB_ECHO_TRACE_HB_TR_FATAL(x)    HB_ECHO_CREATE(HB_TR_FATAL, x)
 #else
-#define _ECHO_TRACE_HB_TR_FATAL(x)    
+#define HB_ECHO_TRACE_HB_TR_FATAL(x)    
 #endif
 
 #if 1  /* always! */
-#define _ECHO_TRACE_HB_TR_ALWAYS(x)   ECHO_CREATE(HB_TR_ALWAYS, x)
+#define HB_ECHO_TRACE_HB_TR_ALWAYS(x)   HB_ECHO_CREATE(HB_TR_ALWAYS, x)
 #else
-#define _ECHO_TRACE_HB_TR_ALWAYS(x)   
+#define HB_ECHO_TRACE_HB_TR_ALWAYS(x)   
 #endif
 
      
-#define  HB_TRACE(l, x)               _ECHO_TRACE_##l(x)
+#define HB_TRACE(l, x)                HB_ECHO_TRACE_##l(x)
 
 
 

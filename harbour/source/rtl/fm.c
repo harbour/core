@@ -49,6 +49,10 @@
  *
  */
 
+/* TODO: hb_xrealloc() is not completely consistent now, since it will
+         destroy the pointer when called with a zero parameter, and return NULL.
+         But will not accept NULL pointer as a parameter. [vszel] */
+
 /* NOTE: If you turn this on, the memory subsystem will collect information
          about several statistical data about memory management, it will show
          these on exit if memory seem to have leaked.
@@ -76,7 +80,7 @@ typedef struct _HB_MEMINFO
    ULONG  ulSignature;
    ULONG  ulSize;
    USHORT uiProcLine;
-   char   szProcName[ 256 ];
+   char   szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
    struct _HB_MEMINFO * pPrevBlock;
    struct _HB_MEMINFO * pNextBlock;
 } HB_MEMINFO, * PHB_MEMINFO;
@@ -234,61 +238,75 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
    PHB_MEMINFO pMemBlock;
    ULONG ulMemSize;
-   void * pResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
+   if( ! pMem )
+      hb_errInternal( 9999, "hb_xrealloc called with a NULL pointer", NULL, NULL );
+
    pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
+
+   if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
+      hb_errInternal( 9999, "hb_xrealloc called with a bad pointer", NULL, NULL );
 
    ulMemSize = pMemBlock->ulSize;
 
    if( ulSize == 0 )
+   {
       DeleteNode( pMemBlock );
+      free( ( void * ) pMem );
+      pMem = NULL;
+
+      s_lMemoryBlocks--;
+   }
    else
    {
-      if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
-         hb_errInternal( 9999, "hb_xrealloc called with a bad pointer", NULL, NULL );
+      pMem = realloc( pMemBlock, ulSize + sizeof( HB_MEMINFO ) );
 
-      pResult = realloc( pMemBlock, ulSize + sizeof( HB_MEMINFO ) );
-
-      if( pResult )
+      if( pMem )
       {
-         ( ( PHB_MEMINFO ) pResult )->pPrevBlock = pMemBlock->pPrevBlock;
-         ( ( PHB_MEMINFO ) pResult )->pNextBlock = pMemBlock->pNextBlock;
+         ( ( PHB_MEMINFO ) pMem )->pPrevBlock = pMemBlock->pPrevBlock;
+         ( ( PHB_MEMINFO ) pMem )->pNextBlock = pMemBlock->pNextBlock;
          if( pMemBlock->pPrevBlock )
-            ( ( PHB_MEMINFO ) pResult )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pResult;
-         if( ( ( PHB_MEMINFO ) pResult )->pNextBlock )
-            ( ( PHB_MEMINFO ) pResult )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pResult;
+            ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
+         if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
+            ( ( PHB_MEMINFO ) pMem )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pMem;
       }
    }
-
-   if( ! pResult )
-      hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
-
-   ( ( PHB_MEMINFO ) pResult )->ulSignature = HB_MEMINFO_SIGNATURE;
-   ( ( PHB_MEMINFO ) pResult )->ulSize = ulSize;  /* size of the memory block */
-
-   if( ! ulSize )
-      s_lMemoryBlocks--;
 
    s_lMemoryConsumed += ( ulSize - ulMemSize );
    if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
       s_lMemoryMaxConsumed = s_lMemoryConsumed;
 
-   return ( char * ) pResult + sizeof( HB_MEMINFO );
+   if( ! pMem )
+      hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
+
+   ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
+   ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
+
+   return ( char * ) pMem + sizeof( HB_MEMINFO );
 
 #else
 
-   void * pResult;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
-   pResult = realloc( ( char * ) pMem, ulSize );
+   if( ! pMem )
+      hb_errInternal( 9999, "hb_xrealloc called with a NULL pointer", NULL, NULL );
 
-   if( ! pResult )
-      hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
+   if( ulSize == 0 )
+   {
+      free( ( void * ) pMem );
+      pMem = NULL;
+   }
+   else
+   {
+      pMem = realloc( ( char * ) pMem, ulSize );
 
-   return ( char * ) pResult;
+      if( ! pMem )
+         hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
+   }
+
+   return ( char * ) pMem;
 
 #endif
 }
@@ -316,7 +334,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
          free( ( void * ) pMemBlock );
    }
    else
-      hb_errInternal( 9999, "hb_xfree called with a null pointer", NULL, NULL );
+      hb_errInternal( 9999, "hb_xfree called with a NULL pointer", NULL, NULL );
 
 #else
 
@@ -327,7 +345,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
       free( ( char * ) pMem - sizeof( ULONG ) - sizeof( ULONG ) );
    }
    else
-      hb_errInternal( 9999, "hb_xfree called with a null pointer", NULL, NULL );
+      hb_errInternal( 9999, "hb_xfree called with a NULL pointer", NULL, NULL );
 
 #endif
 }
@@ -358,29 +376,33 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 #ifdef HB_FM_STATISTICS
    if( s_lMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
-      char buffer[ 100 ];
-
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-      hb_outerr( "----------------------------------------", 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-      sprintf( buffer, "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
-      hb_outerr( buffer, 0 );
-
-      if( s_lMemoryBlocks )
+      /* NOTE: Put this in a separate block to optimize stack space usage [vszel] */
       {
+         char buffer[ 100 ];
+
          hb_outerr( hb_consoleGetNewLine(), 0 );
-         sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
+         hb_outerr( "----------------------------------------", 0 );
+         hb_outerr( hb_consoleGetNewLine(), 0 );
+         sprintf( buffer, "Total memory allocated: %li bytes (%li blocks)", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
          hb_outerr( buffer, 0 );
+
+         if( s_lMemoryBlocks )
+         {
+            hb_outerr( hb_consoleGetNewLine(), 0 );
+            sprintf( buffer, "WARNING! Memory allocated but not released: %li bytes (%li blocks)", s_lMemoryConsumed, s_lMemoryBlocks );
+            hb_outerr( buffer, 0 );
+         }
       }
 
       if( s_pFirstBlock )
       {
+         char buffer[ HB_SYMBOL_NAME_LEN + 40 ];
          PHB_MEMINFO pMemBlock = s_pFirstBlock;
          USHORT ui = 1;
 
          do
          {
-            sprintf( buffer, "\nblock %i: %s line %i", ui++, pMemBlock->szProcName,
+            sprintf( buffer, "%sblock %i: %s line %i", hb_consoleGetNewLine(), ui++, pMemBlock->szProcName,
                      pMemBlock->uiProcLine );
             HB_TRACE( HB_TR_ERROR, (buffer));
             pMemBlock = pMemBlock->pNextBlock;

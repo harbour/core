@@ -131,22 +131,14 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
-   char * szUprName;
+   char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGet(%s)", szName));
 
-   szUprName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
-   strcpy( szUprName, szName ); /* make a copy as we may get a const string */
-   hb_strupr( szUprName );      /* turn it uppercase */
-
-   /* if( strlen( szUprName ) > 10 )
-      szUprName[ 10 ] = '\0'; keeps this here for 10 chars /c compatibility mode */
-
-   pDynSym = hb_dynsymFind( szUprName );
+   /* make a copy as we may get a const string, the turn it to uppercase */
+   pDynSym = hb_dynsymFind( hb_strncpyUpper( szUprName, szName, HB_SYMBOL_NAME_LEN ) );
    if( ! pDynSym )       /* Does it exists ? */
       pDynSym = hb_dynsymNew( hb_symbolNew( szUprName ) );   /* Make new symbol */
-
-   hb_xfree( szUprName );                                /* release memory */
 
    return pDynSym;
 }
@@ -154,20 +146,12 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
 PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
 {
    PHB_DYNS pDynSym;
-   ULONG ulLen;
-   char * szUprName;
+   char szUprName[ HB_SYMBOL_NAME_LEN + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFindName(%s)", szName));
 
-   ulLen = strlen( szName );
-   szUprName = ( char * ) hb_xgrab( ulLen + 1 );
-   hb_strncpyUpper( szUprName, szName, ulLen ); /* make a copy as we may get a const string */
-
-   /* if( strlen( szUprName ) > 10 )
-      szUprName[ 10 ] = '\0'; keeps this here for 10 chars /c compatibility mode */
-
-   pDynSym = hb_dynsymFind( szUprName );
-   hb_xfree( szUprName );                                /* release memory */
+   /* make a copy as we may get a const string */
+   pDynSym = hb_dynsymFind( hb_strncpyUpper( szUprName, szName, HB_SYMBOL_NAME_LEN ) );
 
    return pDynSym;
 }

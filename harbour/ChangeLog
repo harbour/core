@@ -1,3 +1,33 @@
+19991111-01:18 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! hb_xrealloc() check for a passed NULL pointer.
+    ! hb_xrealloc() signature check moved before any MEMINFO usage.
+    ! Explicit \n changed to hb_consoleGetNewLine() call.
+    ! 256 buffer size for symbol names changed to HB_SYMBOL_NAME_LEN constant.
+    ! Now the hb_xrealloc() is returning a NULL pointer (instead of trash) 
+      when the passed length is zero, and it's also freeing the pointer with 
+      free().
+    % hb_xrealloc() - pResult variable optimized out.
+  * source/rtl/hbsetup.h
+    + HB_SYMBOL_NAME_LEN constant added to set the maximum handled symbol
+      name length in Harbour (both compiler/runtime), this can be set to any
+      value by specifying C_USR=-DHB_SYMBOL_NAME_LEN=10 in the make process.
+      TODO: Add support for the compiler to cut the symbols to this size on
+            compile. This way the /10 switch may be replaced by this #define,
+            since /10 works perfect when the RTL also "knows" about this limit,
+            and is compiled using this limit.
+  * include/hbtrace.h
+    ! Every macro names prefixed with HB_
+  * source/vm/hvm.c
+    ! Explicit buffer sizes are now determined using the HB_SYMBOL_NAME_LEN 
+      constant. They can't overrun anymore.
+  * source/vm/dynsym.c
+    % hb_dynsymGet(), hb_dynsymFindName() - Using local stack for temp symbol
+      name buffer instead of hb_xgrab()/hb_xfree(). Some optimalizations.
+      Now they will cut the symbol name to the HB_SYMBOL_NAME_LEN size, so 
+      by setting this to 10, we're 100% Cl*pper compatible from this respect.
+      These functions are now faster.
+
 19991110-23:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbtrace.h
     % Excluded trace calls are converted to nohting instead of "do {} while 0"
