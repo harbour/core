@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Norton Guide Support Code For FT_HELPC
+ * OS/2 IPF Documentation Support Code For HBDOC
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -53,7 +53,7 @@ CLASS TOs2
    METHOD WritePar(cPar)
    METHOD WriteLink(cLink)
    METHOD ScanLink(cLink)
-   METHOD CLOSE()
+   METHOD Close()
    METHOD WriteParBold(cPar)
    METHOD WriteTitle(cTopic, cTitle )
    METHOD DostoOs2Text(cText)
@@ -65,7 +65,7 @@ METHOD New( cFile ) CLASS TOs2
       Self:aLinkRef:={}
       Self:nRef:=1
    ENDIF
-           
+
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
@@ -98,9 +98,9 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TOs2
    cTopic := ALLTRIM( cTopic )
 
    IF  Self:Scanlink(cTopic) ==0
-         nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cTopic})  
+         nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cTopic})
    ELSE  // Just in case that nItem>0 so the Link is already referenced
-     nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cTopic}) 
+     nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cTopic})
    ENDIF
 
    fWrite(Self:nHandle,':title.'+ALLTRIM(cTitle)+CRLF)
@@ -128,7 +128,7 @@ RETURN Self
 
 METHOD WriteLink( cLink ) CLASS TOs2
    LOCAL nItem
-   
+
    if  Self:Scanlink(cLink) ==0
          nItem:=ASCAN(Self:aLinkRef,{|a| a[1]==cLink})  // Again.
    ELSE
@@ -171,55 +171,55 @@ Return cReturn
 
 /*  $DOC$
  *  $FUNCNAME$
- *     TOs2()
+ *      TOs2()
  *  $CATEGORY$
- *     Harbour Tools
+ *      Harbour Tools
  *  $ONELINER$
- *     OS/2 Class
+ *      OS/2 Documentation Class
  *  $SYNTAX$
- *     oNg:=TOs2():New(<cFile>)
+ *      oNg:=TOs2():New(<cFile>)
  *  $ARGUMENTS$
- *     <cFile> Name of the IPF Source file to create
+ *      <cFile> Name of the IPF Source file to create
  *  $RETURNS$
- *     An  instance of the TOs2 Class
+ *      An instance of the TOs2 Class
  *  $DESCRIPTION$
- *     TOs2() is a class that create the Norton Guide Source
- *     Code of the same name you pass to the constructor.
- *     The class methods are as follows:
- *        New(<cFile>) Create a new instance of the THtml class.
- *        Close() Close the create file
- *        WriteTitle(<cTopic>,<cTitle>) Write the file title
- *        WritePar(<cPar>)   Writes a paragrafer
- *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
- *        WriteLink(<cLink>)  Write a link to another topic
- *        ScanLink(<clink>) Scan the aLinkRef array for a valid topic
- *        DosToOs2Text(<cText>) Convert a Dos string to a OS/2 String
+ *      TOs2() is a class that creates the OS/2 IPF Source
+ *      of the same name you pass to the constructor.
+ *      The class methods are as follows:
+ *         New(<cFile>)          Create a new instance of the TOs2 class
+ *         Close()               Close the created file
+ *         WriteTitle(<cTopic>,<cTitle>)  Write the file title
+ *         WritePar(<cPar>)      Write a paragraph
+ *         WriteParBold(<cPar>)  Same as WritePar(), but the text is bold
+ *         WriteLink(<cLink>)    Write a link to another topic
+ *         ScanLink(<clink>)     Scan the aLinkRef array for a valid topic
+ *         DosToOs2Text(<cText>) Convert a Dos string to a OS/2 String
  *  $EXAMPLES$
- *     FUNCTION MAIN()
+ *      FUNCTION MAIN()
  *
- *     LOCAL oNg
+ *      LOCAL oNg
  *
- *     oNg := TOs2():New( "ngi\harbour.ngi" )
- *     oNg:WriteTitle( "Harbour Reference Guide" )
- *     oNg:WritePar( "HARBOUR" )
- *     oNg:WriteLink( "OverView" )
- *     oNg:WriteLink( "License" )
- *     
- *     oNg:WritePar( "See the Links Above" )
- *     oNg:Close()
- *     RETURN Nil
+ *      oNg := TOs2():New( "ngi\harbour.ngi" )
+ *      oNg:WriteTitle( "Harbour Reference Guide" )
+ *      oNg:WritePar( "HARBOUR" )
+ *      oNg:WriteLink( "OverView" )
+ *      oNg:WriteLink( "License" )
+ *
+ *      oNg:WritePar( "See the Links Above" )
+ *      oNg:Close()
+ *      RETURN Nil
  *
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This is a new Harbour Tools class
+ *      This is a new Harbour Tools class
  *  $PLATFORMS$
- *     ALL
+ *      ALL
  *  $FILES$
  *
  *  $SEEALSO$
- *     TCLASS()
+ *      TNortonGuide()
  *  $END$
  */

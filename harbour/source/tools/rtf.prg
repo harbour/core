@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * RTF Support Code For FT_HELPC
+ * RTF Documentation Support Code For HBDOC
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -51,7 +51,7 @@ CLASS TRTF
    METHOD New( cFile )
    METHOD WritePar( cPar )
    METHOD WriteLink( clink )
-   METHOD CLOSE()
+   METHOD Close()
    METHOD WriteParBold( cPar )
    METHOD WriteTitle( cTitle, cTopic )
    METHOD EndPar()
@@ -112,7 +112,7 @@ RETURN Self
 METHOD WritePar( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle, '\pard{\cf1\fs30 ' + HB_OEMTOANSI("    ")+ HB_OEMTOANSI(cPar )) 
+   FWRITE( Self:nHandle, '\pard{\cf1\fs30 ' + HB_OEMTOANSI("    ")+ HB_OEMTOANSI(cPar ))
 RETURN Self
 
 METHOD EndPar() CLASS TRTF
@@ -173,56 +173,56 @@ RETURN Self
 
 /*  $DOC$
  *  $FUNCNAME$
- *     TRtf()
+ *      TRtf()
  *  $CATEGORY$
- *     Harbour Tools
+ *      Harbour Tools
  *  $ONELINER$
- *     Rtf Class
+ *      Rtf Class
  *  $SYNTAX$
- *     oNg:=TRtf():New(<cFile>)
+ *      oNg:=TRtf():New(<cFile>)
  *  $ARGUMENTS$
- *     <cFile> Name of the RTF file to create
+ *      <cFile> Name of the RTF file to create
  *  $RETURNS$
- *     An  instance of the TRtf Class
+ *      An  instance of the TRtf Class
  *  $DESCRIPTION$
- *     TRtf() is a class that create the Norton Guide Source
- *     Code of the same name you pass to the constructor.
- *     The class methods are as follows:
- *        New(<cFile>) Create a new instance of the THtml class.
- *        Close() Close the create file
- *        WriteTitle(<cTopic>,<cTitle>) Write the file title
- *        WritePar(<cPar>)   Writes a paragrafer
- *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
- *        WriteLink(<cLink>)  Write a link to another topic
- *        WriteHeader()  Writes the RTF header
- *        EndPar()       Write the end paragrafer delimeter  
+ *      TRtf() is a class that creates the RTF Documentation Source
+ *      Code of the same name you pass to the constructor.
+ *      The class methods are as follows:
+ *         New(<cFile>)         Create a new instance of the TRtf class
+ *         Close()              Close the create file
+ *         WriteTitle(<cTopic>,<cTitle>)  Write the file title
+ *         WritePar(<cPar>)     Write a paragraph
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
+ *         WriteLink(<cLink>)   Write a link to another topic
+ *         WriteHeader()        Write the RTF header
+ *         EndPar()             Write the end paragraph delimiter
  *  $EXAMPLES$
- *     FUNCTION MAIN()
+ *      FUNCTION MAIN()
  *
- *     LOCAL oRtf
+ *      LOCAL oRtf
  *
- *     oRtf := TRtf():New( "rtf\harbour.rtf" )
- *     oRtf:WriteHeader()
- *     oRtf:WriteTitle( "Harbour Reference Guide" )
- *     oRtf:WritePar( "HARBOUR" ):Endpar()
- *     oRtf:WriteLink( "OverView" )
- *     oRtf:WriteLink( "License" )
- *     
- *     oRtf:WritePar( "See the Links Above" ):EndPar()
- *     oRtf:Close()
- *     RETURN Nil
+ *      oRtf := TRtf():New( "rtf\harbour.rtf" )
+ *      oRtf:WriteHeader()
+ *      oRtf:WriteTitle( "Harbour Reference Guide" )
+ *      oRtf:WritePar( "HARBOUR" ):Endpar()
+ *      oRtf:WriteLink( "OverView" )
+ *      oRtf:WriteLink( "License" )
+ *
+ *      oRtf:WritePar( "See the Links Above" ):EndPar()
+ *      oRtf:Close()
+ *      RETURN Nil
  *
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This is a new Harbour Tools class
+ *      This is a new Harbour Tools class
  *  $PLATFORMS$
- *     ALL
+ *      ALL
  *  $FILES$
  *
  *  $SEEALSO$
- *     TCLASS()
+ *      TNortonGuide()
  *  $END$
  */

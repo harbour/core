@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TROFF Support Code For FT_HELPC
+ * TROFF Support Code For HBDOC
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -50,7 +50,7 @@ CLASS TTROFF
    METHOD New( cFile )
    METHOD WritePar( cPar )
    METHOD WriteLink( clink )
-   METHOD CLOSE()
+   METHOD Close()
    METHOD WriteParBold( cPar )
    METHOD WriteTitle( cTitle, cTopic )
    METHOD WriteText( cText )
@@ -138,54 +138,54 @@ RETURN Self
 
 /*  $DOC$
  *  $FUNCNAME$
- *     TTroff()
+ *      TTroff()
  *  $CATEGORY$
- *     Harbour Tools
+ *      Harbour Tools
  *  $ONELINER$
- *     Troff Class
+ *      Troff Class
  *  $SYNTAX$
- *     oTroff:=TTrof():New(<cFile>)
+ *      oTroff:=TTrof():New(<cFile>)
  *  $ARGUMENTS$
- *     <cFile> Name of the RTF file to create
+ *      <cFile> Name of the Troff file to create
  *  $RETURNS$
- *     An  instance of the TTroff Class
+ *      An  instance of the TTroff Class
  *  $DESCRIPTION$
- *     TRtf() is a class that create the Norton Guide Source
- *     Code of the same name you pass to the constructor.
- *     The class methods are as follows:
- *        New(<cFile>) Create a new instance of the THtml class.
- *        Close() Close the create file
- *        WriteTitle(<cTopic>,<cTitle>) Write the file title
- *        WritePar(<cPar>)   Writes a paragrafer
- *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
- *        WriteLink(<cLink>)  Write a link to another topic
- *        WriteText()  Writes a text with out formating
+ *      TTroff() is a class that creates the TROFF Documentation Source
+ *      Code of the same name you pass to the constructor.
+ *      The class methods are as follows:
+ *         New(<cFile>)         Create a new instance of the THtml class
+ *         Close()              Close the created file
+ *         WriteTitle(<cTopic>,<cTitle>) Write the file title
+ *         WritePar(<cPar>)     Write a paragraph
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
+ *         WriteLink(<cLink>)   Write a link to another topic
+ *         WriteText()          Writes text without formating
  *  $EXAMPLES$
- *     FUNCTION MAIN()
+ *      FUNCTION MAIN()
  *
- *     LOCAL oTroff
- *     oTroff := TTroff():New( "tr\harbour.ngi" )
- *     oTroff:WriteTitle( "Harbour Reference Guide" )
- *     oTroff:WritePar( "HARBOUR" )
- *     oTroff:WriteLink( "OverView" )
- *     oTroff:WriteLink( "License" )
- *     
- *     oTroff:WritePar( "See the Links Above" )
- *     oTroff:Close()
+ *      LOCAL oTroff
+ *      oTroff := TTroff():New( "tr\harbour.ngi" )
+ *      oTroff:WriteTitle( "Harbour Reference Guide" )
+ *      oTroff:WritePar( "HARBOUR" )
+ *      oTroff:WriteLink( "OverView" )
+ *      oTroff:WriteLink( "License" )
  *
- *     RETURN Nil
+ *      oTroff:WritePar( "See the Links Above" )
+ *      oTroff:Close()
+ *
+ *      RETURN Nil
  *
  *  $TESTS$
  *
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This is a new Harbour Tools class
+ *      This is a new Harbour Tools class
  *  $PLATFORMS$
- *     ALL
+ *      ALL
  *  $FILES$
  *
  *  $SEEALSO$
- *     TCLASS()
+ *      TNortonGuide()
  *  $END$
  */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Norton Guide Support Code For FT_HELPC
+ * Norton Guide Support Code For HBDOC
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -51,7 +51,7 @@ CLASS TNortonGuide
 
    METHOD WritePar( cPar )
    METHOD WriteLink( clink )
-   METHOD CLOSE()
+   METHOD Close()
    METHOD WriteParBold( cPar )
    METHOD WriteTitle(  cTopic , cTitle )
 ENDCLASS
@@ -105,50 +105,50 @@ RETURN Self
 
 /*  $DOC$
  *  $FUNCNAME$
- *     TNortonGuide()
+ *      TNortonGuide()
  *  $CATEGORY$
- *     Harbour Tools
+ *      Harbour Tools
  *  $ONELINER$
- *     Norton Guide Class
+ *      Norton Guide Class
  *  $SYNTAX$
- *     oNg:=TNortonGuide():New(<cFile>)
+ *      oNg:=TNortonGuide():New(<cFile>)
  *  $ARGUMENTS$
- *     <cFile> Name of the Ng Source file to create
+ *      <cFile> Name of the Ng Source file to create
  *  $RETURNS$
- *     An  instance of the TNortonGuide Class
+ *      An instance of the TNortonGuide Class
  *  $DESCRIPTION$
- *     TNortonGuide() is a class that create the Norton Guide Source
- *     Code of the same name you pass to the constructor.
- *     The class methods are as follows:
- *        New(<cFile>) Create a new instance of the THtml class.
- *        Close() Close the create file
- *        WriteTitle(<cTopic>,<cTitle>) Write the file title
- *        WritePar(<cPar>)   Writes a paragrafer
- *        WriteParBold(<cPar>)   Same as WritePar(), but the text is bold style.
- *        WriteLink(<cLink>)  Write a link to another topic
+ *      TNortonGuide() is a class that creates the Norton Guide Source
+ *      Code of the same name you pass to the constructor.
+ *      The class methods are as follows:
+ *         New(<cFile>)         Create an instance of the TNortonGuide class
+ *         Close()              Close the created file
+ *         WriteTitle(<cTopic>,<cTitle>)  Write the file title
+ *         WritePar(<cPar>)     Write a paragraph
+ *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold
+ *         WriteLink(<cLink>)   Write a link to another topic
  *  $EXAMPLES$
- *     FUNCTION MAIN()
+ *      FUNCTION MAIN()
  *
- *     LOCAL oNg
+ *      LOCAL oNg
  *
- *     oNg := TNortonGuide():New( "ngi\harbour.ngi" )
- *     oNg:WriteTitle( "Harbour Reference Guide" )
- *     oNg:WritePar( "HARBOUR" )
- *     oNg:WriteLink( "OverView" )
- *     oNg:WriteLink( "License" )
- *     
- *     oNg:WritePar( "See the Links Above" )
- *     oNg:Close()
- *     RETURN Nil
+ *      oNg := TNortonGuide():New( "ngi\harbour.ngi" )
+ *      oNg:WriteTitle( "Harbour Reference Guide" )
+ *      oNg:WritePar( "HARBOUR" )
+ *      oNg:WriteLink( "OverView" )
+ *      oNg:WriteLink( "License" )
+ *
+ *      oNg:WritePar( "See the Links Above" )
+ *      oNg:Close()
+ *      RETURN Nil
  *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This is a new Harbour Tools class
+ *      This is a new Harbour Tools class
  *  $PLATFORMS$
- *     ALL
+ *      ALL
  *  $FILES$
  *  $SEEALSO$
- *     TCLASS()
+ *      TTroff(), TRtf(), THtml(), TOs2()
  *  $END$
  */
