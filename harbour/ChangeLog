@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-27 11:34 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * include/hbapi.h
+  * source/vm/classes.c
+    * hb_clsIsParent() made public
+
 2003-03-27 18:35 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rdd/dbcmd.c
   * contrib/rdd_ads/adsfunc.c
