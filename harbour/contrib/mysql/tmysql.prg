@@ -479,7 +479,8 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
-                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
+                    ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
                   aRow[i] := Val(aRow[i])
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
@@ -689,7 +690,10 @@ METHOD GetBlankRow() CLASS TMySQLTable
          aRow[i] := ""
 
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE      .OR.;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE .OR.;
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
+
          aRow[i] := 0
 
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
@@ -821,8 +825,6 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
          */
          if (aStruct[i][DBS_DEC] == 0) .and. (aStruct[i][DBS_LEN] <= 18)
             do case
-               case (aStruct[i][DBS_LEN] <= 2)
-                  ::cCreateQuery += aStruct[i][DBS_NAME] + " tinyint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
                case (aStruct[i][DBS_LEN] <= 4)
                   ::cCreateQuery += aStruct[i][DBS_NAME] + " smallint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
                case (aStruct[i][DBS_LEN] <= 6)
