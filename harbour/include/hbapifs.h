@@ -61,9 +61,11 @@ extern "C" {
 #endif
 
 #define FS_ERROR F_ERROR
-
+#ifdef __WIN32__
+typedef long    FHANDLE;
+#else
 typedef int    FHANDLE;
-
+#endif
 /* File locking flags */
 #define FL_LOCK       0x0000   /* Lock a region   */
 #define FL_UNLOCK     0x0001   /* Unlock a region */
