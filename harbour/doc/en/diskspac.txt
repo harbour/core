@@ -66,7 +66,7 @@
  *      floating point value with 0 decimals if the disk is > 2 gigabytes.
  *      <nType> is a Harbour extension.
  *  $PLATFORMS$
- *      Dos,Windows and OS/2
+ *      Dos,Windows/OS/2 and Unix
  *  $FILES$
  *      Library is Rtl.lib
  *      Header is Fileio.ch
