@@ -117,5 +117,10 @@
 #define DBOI_AUTOORDER          63  /* Get/set default order: production index  */
 #define DBOI_AUTOSHARE          64  /* Get/set automatic sharing control        */
 
+/* Return values for DBOI_OPTLEVEL */
+#define DBOI_OPTIMIZED_NONE     0
+#define DBOI_OPTIMIZED_PART     1
+#define DBOI_OPTIMIZED_FULL     2
+
 #endif
 

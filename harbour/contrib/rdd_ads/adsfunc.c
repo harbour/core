@@ -36,8 +36,9 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-#include "hbinit.h"
 #include "hbapiitm.h"
+#include "hbinit.h"
+#include "hbvm.h"
 #include "rddsys.ch"
 #include "hbapilng.h"
 #include "hbdate.h"
@@ -52,6 +53,8 @@ int adsLockType = ADS_PROPRIETARY_LOCKING;
 int adsRights = 1;
 int adsCharType = ADS_ANSI;
 ADSHANDLE adsConnectHandle = 0;
+
+PHB_ITEM itmCobCallBack = 0;
 
 HB_FUNC( ADSSETFILETYPE )
 {
@@ -273,28 +276,6 @@ HB_FUNC( ADSCLEARAOF )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCLEARAOF" );
 }
 
-HB_FUNC( ADSCUSTOMIZEAOF )
-{
-   ADSAREAP pArea;
-   UNSIGNED32 pulRecords[1];
-   UNSIGNED16 usOption = ADS_AOF_ADD_RECORD;
-   UNSIGNED32 ulRetVal;
-
-   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   if( pArea )
-   {
-      pulRecords[0] = hb_parnl( 1 );
-      if( ISNUM(2) )
-         usOption = hb_parni( 2 );
-      ulRetVal = AdsCustomizeAOF( pArea->hTable, 1, pulRecords, usOption);
-      if ( ulRetVal == AE_SUCCESS )
-         hb_retl( 1 );
-      else
-         hb_retl( 0 );
-   }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
-}
 
 HB_FUNC( ADSEVALAOF )
 {
@@ -320,17 +301,18 @@ HB_FUNC( ADSGETAOF )
    ADSAREAP pArea;
    UNSIGNED8 pucFilter[HARBOUR_MAX_RDD_FILTER_LENGTH+1];
    UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH;
-   UNSIGNED32 ulRetVal;
+   UNSIGNED32 ulRetVal = FAILURE;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
-   {
       ulRetVal = AdsGetAOF( pArea->hTable, pucFilter, &pusLen );
-      if ( ulRetVal == AE_SUCCESS )
-         hb_retc( ( char * ) pucFilter );
-   }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOF" );
+
+   if ( ulRetVal == AE_SUCCESS )
+      hb_retc( ( char * ) pucFilter );
+   else
+      hb_retc( "" );
 }
 
 HB_FUNC( ADSGETAOFOPTLEVEL )
@@ -370,7 +352,7 @@ HB_FUNC( ADSGETAOFNOOPT )
 HB_FUNC( ADSISRECORDINAOF )
 {
    ADSAREAP pArea;
-   UNSIGNED32 ulRecordNumber = 0;
+   UNSIGNED32 ulRecordNumber = 0;       /* 0 for current record */
    UNSIGNED16 bIsInAOF;
    UNSIGNED32 ulRetVal;
 
@@ -378,8 +360,9 @@ HB_FUNC( ADSISRECORDINAOF )
    if( pArea )
    {
       if( hb_pcount() > 0 )
-         ulRecordNumber = hb_parni( 1 );
+         ulRecordNumber = hb_parnl( 1 );
       ulRetVal = AdsIsRecordInAOF( pArea->hTable, ulRecordNumber, &bIsInAOF );
+
       if ( ulRetVal == AE_SUCCESS && bIsInAOF )
          hb_retl( 1 );
       else
@@ -404,7 +387,7 @@ HB_FUNC( ADSSETAOF )
 {
    ADSAREAP pArea;
    char * pucFilter;
-   UNSIGNED16 usResolve = ADS_RESOLVE_IMMEDIATE;
+   UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  //ADS_RESOLVE_IMMEDIATE
    UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
@@ -805,3 +788,79 @@ HB_FUNC( ADSCONVERTTABLE )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSCONVERTTABLE" );
 
 }
+
+UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
+{
+   PHB_ITEM pPercentDone = hb_itemPutNI(NULL, usPercentDone);
+
+   if ( itmCobCallBack )
+   {
+      hb_vmEvalBlockV( itmCobCallBack, 1, pPercentDone ) ;
+   }
+   else
+   {
+      HB_TRACE(HB_TR_DEBUG, ("ShowPercentage(%d) called with no codeblock set.\n", usPercentDone ));
+   }
+   hb_itemRelease( pPercentDone );
+   return 0;
+
+}  /* ShowPercentage */
+
+
+HB_FUNC( ADSREGCALLBACK    )
+{
+   UNSIGNED32 ulRetVal;
+
+   /* Note: current implementation is not thread safe.
+      ADS can register multiple callbacks, but one per thread/connection.
+      To be thread safe, we need multiple connections.
+      The registered function (and its codeblock itmCobCallBack) should
+      NOT make any Advantage Client Engine calls. If it does,
+      it is possible to get error code 6619 "Communication Layer is busy".
+
+   */
+
+   itmCobCallBack = hb_itemParam( 1 );
+   if ( !itmCobCallBack || ( hb_itemType(itmCobCallBack) != HB_IT_BLOCK ) )
+   {
+      hb_retl( FALSE );
+      return;
+   }
+   hb_gcLockItem( itmCobCallBack );
+
+   ulRetVal = AdsRegisterProgressCallback( ShowPercentage );
+   if ( ulRetVal != AE_SUCCESS )
+   {
+      hb_gcUnlockItem( itmCobCallBack );
+      hb_itemRelease( itmCobCallBack );
+      itmCobCallBack = 0;
+      hb_retl( FALSE );
+      return;
+   }
+
+}
+
+
+HB_FUNC( ADSCLRCALLBACK  )
+{
+   if ( itmCobCallBack )
+   {
+      hb_retni( AdsClearProgressCallback  () );
+
+      hb_gcUnlockItem( itmCobCallBack );
+      hb_itemRelease( itmCobCallBack );
+      itmCobCallBack = 0;
+
+   }
+}
+
+HB_FUNC( ADSISINDEXED )
+{
+   ADSAREAP pArea;
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if(pArea)
+      hb_retl(pArea->hOrdCurrent);
+   else
+      hb_retl( FALSE );
+}
+

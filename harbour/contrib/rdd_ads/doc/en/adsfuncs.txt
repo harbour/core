@@ -131,13 +131,13 @@
  *  $ONELINER$
  *      Add or remove records from an existing AOF
  *  $SYNTAX$
- *      ADSCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> lSuccess
+ *      ADSCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> nSuccess
  *  $ARGUMENTS$
  *      <nRecno | aRecNos> Can be either a single record number or an array of
  *      record numbers to add or delete from the AOF. If omitted, defaults to
  *      the current record.
  *
- *      <nType>   The type of operation: 
+ *      <nType>   The type of operation:
 
  *      <table>
  *      ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
@@ -145,7 +145,7 @@
  *      ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
  *  </table>
  *  $RETURNS$
- *      <lSuccess>  True if the operation is successful.
+ *      <nError>  ADS error code, or 0 for success.
  *  $DESCRIPTION$
  *      An Advantage Optimized Filter (AOF) consists of a bitmap of the records in
  *      the database. If bit 5 is on, record 5 is considered a visible record.
@@ -207,6 +207,8 @@
  *      <nOptimizationLevel>      </par>
  *      Values are defined in ads.ch:
  *      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
+ *      IMPORTANT NOTE: These values are NOT the same as those returned
+ *      by dbOrderInfo().
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
  *  $EXAMPLES$
@@ -268,7 +270,7 @@
  *  $SYNTAX$
  *      ADSGetAOF() --> cFilter
  *  $ARGUMENTS$
- *      None 
+ *      None
  *  $RETURNS$
  *      <cFilter>  The filter expression used in the call to AdsSetAOF.
  *  $DESCRIPTION$

@@ -270,17 +270,17 @@ static BOOL strcmpNoCase( char * s1, char * s2, int n )
  */
 
 #define  adsBof                  NULL
-//ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
-//{
-//   HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
+/*ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
 
-//   if( pArea->uiParents )
-//   {
-//      AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
-//      *pBof = pArea->fBof;
-//   }
-//   return SUPER_BOF( (AREAP)pArea, pBof );
-//}
+   if( pArea->uiParents )
+   {
+      AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
+      *pBof = pArea->fBof;
+   }
+   return SUPER_BOF( (AREAP)pArea, pBof );
+}*/
 
 ERRCODE adsEof( ADSAREAP pArea, BOOL * pEof )
 {
@@ -987,7 +987,6 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
                     adsLockType, adsRights,
                     hb_set.HB_SET_MBLOCKSIZE,
                     ucfieldDefs, &hTable);
-
    hb_xfree(ucfieldDefs);
    if( uRetVal != AE_SUCCESS )
    {
@@ -1100,14 +1099,12 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->hOrdCurrent = 0;
 
 
-//HB_TRACE(HB_TR_ALWAYS, ("\n\nadsOpen(%p) pOpenInfo->abName(%s) pOpenInfo->fShared(%d) pOpenInfo->fReadonly(%d)",
-//         pArea, pOpenInfo->abName, (int)pOpenInfo->fShared, (int)pOpenInfo->fReadonly  ));
-
       ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
                   adsFileType, adsCharType, adsLockType, adsRights,
                   ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
                   ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
                    &hTable);
+
       if( ulRetVal != AE_SUCCESS )
       {
          commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
@@ -1356,9 +1353,13 @@ static ERRCODE adsOrderListRebuild( ADSAREAP pArea )
 static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
    ADSHANDLE phIndex;
+   ADSHANDLE  hTableOrIndex ;
    UNSIGNED32 ulRetVal;
    UNSIGNED32 ulOptions = ADS_DEFAULT;
-   PHB_ITEM pItem = pOrderInfo->abExpr;
+   PHB_ITEM   pExprItem = pOrderInfo->abExpr;
+   UNSIGNED16 pus16     = 0;
+   UNSIGNED8  pucWhile[ (ADS_MAX_KEY_LENGTH * 2) + 3 ];
+
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
    if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' )
@@ -1369,15 +1370,56 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          ulOptions = ADS_COMPOUND;
    }
 
-   ulRetVal = AdsCreateIndex( pArea->hTable, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ),
-           ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor )? (UCHAR*)pArea->lpdbOrdCondInfo->abFor:(UCHAR*)"",
-           (UCHAR*)"", ulOptions, &phIndex);
+   pucWhile[0] = 0;
+   if ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fUseCurrent && pArea->hOrdCurrent )
+   {
+      UNSIGNED8 pucScope[ ADS_MAX_KEY_LENGTH+1 ];
+      UNSIGNED16 pusBufLen = ADS_MAX_KEY_LENGTH;
+      /*
+         ADS subIndex does not obey scope, so create a While expression
+         from the index key and scope expression if there is one.
+      */
+      ulRetVal = AdsGetScope( pArea->hOrdCurrent, ADS_BOTTOM, pucScope, &pusBufLen );
+      if ( ulRetVal == AE_SUCCESS && pusBufLen)
+      {
+         /* TODO:
+            if tag/file exists AND a bagname specifies a non-structural bag, it does not subindex!
+            Have to see if it's there already and delete it!  For now, warn users to delete
+            secondary bags before creating temp indexes with USECURRENT
+         */
+         AdsGetKeyType(pArea->hOrdCurrent, &pus16);
+         strcpy(pucWhile, (UCHAR*)hb_itemGetCPtr( pExprItem ) );
+         if ( pus16 == ADS_STRING )     /* add quotation marks around the key */
+         {
+            strcat(pucWhile, "<=\"");
+            strcat(pucWhile, pucScope );
+            strcat(pucWhile, "\"" );
+         }
+         else
+         {
+            strcat(pucWhile, "<=");
+            strcat(pucWhile, pucScope );
+         }
+      }
+      hTableOrIndex = pArea->hOrdCurrent;
+   }
+   else
+   {
+      hTableOrIndex = pArea->hTable;
+   }
+
+   ulRetVal = AdsCreateIndex( hTableOrIndex, pOrderInfo->abBagName,
+           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pExprItem ),
+           ( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->abFor ) ? (UCHAR*)pArea->lpdbOrdCondInfo->abFor : (UCHAR*)"",
+           pucWhile, ulOptions, &phIndex);
+
    if ( ulRetVal != AE_SUCCESS )
    {
       commonError( pArea, EG_CREATE, ( USHORT ) ulRetVal, (char*) pOrderInfo->abBagName );
       return FAILURE;
-   }
+   }else
+      pArea->hOrdCurrent = phIndex;
+
    return adsGoTop( pArea );
 }
 
@@ -1501,7 +1543,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
       case DBOI_RECNO :                 /* TODO: OR IS THIS JUST RECNO?? */
       case DBOI_KEYNORAW :
          if( phIndex )
-            AdsGetKeyNum  ( phIndex, ADS_IGNOREFILTERS, &pul32);
+            AdsGetKeyNum  ( phIndex, ADS_RESPECTSCOPES, &pul32);
          else
             AdsGetRecordNum  ( pArea->hTable, ADS_IGNOREFILTERS, &pul32);
          hb_itemPutNL(pOrderInfo->itmResult, pul32);
@@ -1557,8 +1599,8 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          hb_itemPutNL(pOrderInfo->itmResult, pul32);
          break;
 
-      case DBOI_KEYCOUNTRAW :           /* ignore filter or scope */
-         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_IGNOREFILTERS, &pul32);
+      case DBOI_KEYCOUNTRAW :           /* ignore filter but RESPECT SCOPE */
+         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_RESPECTSCOPES, &pul32);
          hb_itemPutNL(pOrderInfo->itmResult, pul32);
          break;
 
@@ -1593,18 +1635,18 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          AdsGetAOFOptLevel( pArea->hTable, &pus16, NULL, NULL );
          switch( pus16 )
          {
-            case ADS_OPTIMIZED_FULL:
-               hb_itemPutNI(pOrderInfo->itmResult, 2);
+            case ADS_OPTIMIZED_FULL:    /* ADS values are different from Harbour */
+               hb_itemPutNI(pOrderInfo->itmResult, DBOI_OPTIMIZED_FULL);
                break;
             case ADS_OPTIMIZED_PART:
-               hb_itemPutNI(pOrderInfo->itmResult, 1);
+               hb_itemPutNI(pOrderInfo->itmResult, DBOI_OPTIMIZED_PART);
                break;
             default:
-               hb_itemPutNI(pOrderInfo->itmResult, 0);
+               hb_itemPutNI(pOrderInfo->itmResult, DBOI_OPTIMIZED_NONE);
          }
          break;
 
-/* Unsupported:
+/* Unsupported TODO:
 
 DBOI_FILEHANDLE
 DBOI_FULLPATH
@@ -1616,6 +1658,7 @@ DBOI_KEYADD
 DBOI_KEYDELETE
 DBOI_KEYSINCLUDED
 DBOI_SKIPUNIQUE
+ // these are really global settings:
 DBOI_STRICTREAD
 DBOI_OPTIMIZE
 DBOI_AUTOORDER
@@ -1639,9 +1682,20 @@ DBOI_AUTOSHARE
 
 static ERRCODE adsClearFilter( ADSAREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("adsClearFilter(%p)", pArea));
 
+   HB_TRACE(HB_TR_DEBUG, ("adsClearFilter(%p)", pArea));
+   /*
+    We don't know if an AOF was used.
+    Since a call to the server would need to be made to see if there's an AOF
+    anyway, just always attempt to clear it.
+    ///
+    ///UNSIGNED8   aucAOF[64];
+    ///UNSIGNED16  usLength;
+    ///  if ( AdsGetAOF( pArea->hTable, aucAOF, &usLength ) == AE_SUCCESS && usLength > 0)
+   */
+   AdsClearAOF ( pArea->hTable );
    AdsClearFilter  ( pArea->hTable );
+
    return SUPER_CLEARFILTER( ( AREAP ) pArea );
 }
 
@@ -1671,6 +1725,9 @@ static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem )
 static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
    BOOL bValidExpr = FALSE;
+   UNSIGNED16 usResolve = ADS_RESOLVE_DYNAMIC ;  /*ADS_RESOLVE_IMMEDIATE ;get this from a SETting*/
+   UNSIGNED32 ulRetVal = AE_INVALID_EXPRESSION;
+
    HB_TRACE(HB_TR_DEBUG, ("adsSetFilter(%p, %p)", pArea, pFilterInfo));
 
    /* ----------------- NOTE: ------------------
@@ -1679,11 +1736,21 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
       filter the records locally.
     --------------------------------------------------*/
 
-   AdsIsExprValid( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), (UNSIGNED16*) &bValidExpr );
-   if ( bValidExpr )
-      AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
+   /* must do this first as it calls clearFilter */
+   if (SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) == SUCCESS )
+   {
+      AdsIsExprValid( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), (UNSIGNED16*) &bValidExpr );
+      if ( bValidExpr )
+      {
 
-   return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
+         if ( hb_set.HB_SET_OPTIMIZE )
+         {
+            ulRetVal = AdsSetAOF( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText), usResolve );
+         }else
+            ulRetVal = AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
+      }
+   }
+   return ulRetVal == AE_SUCCESS ? SUCCESS : FAILURE ;
 }
 
 #define  adsSetLocate             NULL
@@ -1917,3 +1984,55 @@ HB_FUNC( ADS_GETFUNCTABLE )
    else
        hb_retni( FAILURE );
 }
+
+HB_FUNC( ADSCUSTOMIZEAOF )
+{
+   ADSAREAP pArea;
+   UNSIGNED32 ulNumRecs = 0;
+   UNSIGNED32 ulRecord;
+   UNSIGNED32 *pulRecords;
+   UNSIGNED16 usOption = ADS_AOF_ADD_RECORD;
+   UNSIGNED32 ulRetVal = AE_SUCCESS + 1;  /* initialize to something other than success */
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( ISNUM(2) )                    /* add, delete or toggle */
+         usOption = hb_parni( 2 );
+
+      if( ISNIL(1) )                    /* default to current record */
+      {
+         ulNumRecs = 1;
+         AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+               (UNSIGNED32 *)&(pArea->ulRecNo) );
+         ulRecord = pArea->ulRecNo;
+      }
+      else if( ISNUM( 1 ) )             /* Passed a single recno */
+         ulRecord = hb_parnl( 1 );
+      else if( ISARRAY( 1 ) )           /* convert array of recnos to C array */
+         ulNumRecs = hb_parinfa( 1, 0 );
+
+      if ( ulNumRecs )
+      {
+         pulRecords = (UNSIGNED32 *) hb_xgrab( ulNumRecs * sizeof( UNSIGNED32 ) );
+         if ( ulNumRecs > 1 )           /* convert array of recnos to C array */
+         {
+            for ( ulRecord = 0; ulRecord < ulNumRecs; ulRecord++)
+               pulRecords[ulRecord] = hb_parnl( 1, ulRecord + 1);
+         }else
+            pulRecords[0] = ulRecord;
+
+         ulRetVal = AdsCustomizeAOF( pArea->hTable, ulNumRecs, pulRecords, usOption);
+         /* if server has Customized AOF, clear the super filter so bits won't get flipped off! */
+         if ( ulRetVal == AE_SUCCESS )
+            SUPER_CLEARFILTER( ( AREAP ) pArea );
+
+         hb_xfree(pulRecords);
+      }
+
+      hb_retnl( ulRetVal );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
+}
+
