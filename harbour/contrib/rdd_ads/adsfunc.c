@@ -1291,7 +1291,7 @@ HB_FUNC( ADSROLLBACKTRANSACTION )
 
 HB_FUNC( ADSFAILEDTRANSACTIONRECOVERY )
 {
-   hb_retnl( AdsFailedTransactionRecovery( (ISCHAR(1))? hb_parc(1) : NULL ) );
+   hb_retnl( AdsFailedTransactionRecovery( (ISCHAR(1))? ( unsigned char * ) hb_parc(1) : NULL ) );
 }
 
 HB_FUNC( ADSINTRANSACTION )

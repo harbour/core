@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-27 18:35 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rdd/dbcmd.c
+  * contrib/rdd_ads/adsfunc.c
+    * Minor type casting fixes for MSVC
+
 2003-03-26 16:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     ! Bug fixed related to COPY TO .. FIELDS ..., reported by Lorenzo Fiorini
@@ -30,9 +35,9 @@
     + Added RDD test, contributed by Randy Portnoff <randy@palmasdev.com>
 
 2003-03-25 16:46 UTC+0100 Martin Vogel <vogel@inttec.de>
-  * contrib/libct/dattime2.prg	
+  * contrib/libct/dattime2.prg
     * bug fix in function addmonth()
-	
+
 2003-03-24 15:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     ! bug fixed with improper using of hb_strUpper() - reported by Lorenzo Fiorini
