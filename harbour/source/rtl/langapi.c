@@ -36,11 +36,11 @@
 #include "extend.h"
 #include "langapi.h"
 
-static HB_LANG langEN = 
+static HB_LANG langEN =
 {
-   "English",			/* Name */
-   "EN",			/* RFC ID */
-   "437",  		        /* Codepage */
+   "English",                   /* Name */
+   "EN",                        /* RFC ID */
+   "437",                       /* Codepage */
 
    /* Texts */
 
@@ -87,7 +87,7 @@ static HB_LANG langEN =
       "Bound error",
       "String overflow",
       "Numeric overflow",
-      "Divide by zero",
+      "Zero divisor",
       "Numeric error",
       "Syntax error",
       "Operation too complex",
@@ -96,11 +96,11 @@ static HB_LANG langEN =
       "Memory low",
       "Undefined function",
       "No exported method",
-      "Variable does not exists",
-      "Alias does not exists",
+      "Variable does not exist",
+      "Alias does not exist",
       "No exported variable",
-      "Incorrect alias name",
-      "Duplicated alias name",
+      "Illegal characters in alias",
+      "Alias already in use",
       "",
       "Create error",
       "Open error",
@@ -112,18 +112,18 @@ static HB_LANG langEN =
       "",
       "",
       "",
-      "Unsupported operation",
+      "Operation not supported",
       "Limit exceeded",
-      "Index corruption detected",
-      "Incorrect type of data",
-      "Data width too long",
+      "Corruption detected",
+      "Data type error",
+      "Data width error",
       "Workarea not in use",
       "Workarea not indexed",
-      "Exclusive use required",
+      "Exclusive required",
       "Lock required",
       "Write not allowed",
       "Append lock failed",
-      "Lock failure",
+      "Lock Failure",
       "",
       "",
       "",
@@ -148,7 +148,7 @@ static HB_LANG langEN =
 };
 
 static PHB_LANG s_langDef = &langEN;
- 
+
 void     hb_langDSet             ( PHB_LANG lang )
 {
    if( lang )

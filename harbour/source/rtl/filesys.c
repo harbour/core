@@ -328,48 +328,62 @@ void    hb_fsClose  ( FHANDLE hFileHandle )
 
 }
 
-USHORT  hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+/* NOTE: CA-Clipper uses USHORT instead of ULONG here. */
+
+ULONG   hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   USHORT uiRead;
+   ULONG ulReadTotal = 0;
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
-   uiRead = read( hFileHandle, pBuff, uiCount );
+   while( ulReadTotal < ulCount )
+   {
+      USHORT uiRead = read( hFileHandle, pBuff, ( USHORT ) ( ulCount - ulReadTotal ) );
+
+      if( uiRead == ( USHORT )-1 )
+         break;
+
+      ulReadTotal += ( ULONG ) uiRead;
+   }
    s_uiErrorLast = errno;
-   if( uiRead == ( USHORT )-1 )
-      uiRead = 0;
 
 #else
 
-   uiRead = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return uiRead;
+   return ulReadTotal;
 }
 
-USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+/* NOTE: CA-Clipper uses USHORT instead of ULONG here. */
+
+ULONG   hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   USHORT uiWritten;
+   ULONG ulWrittenTotal = 0;
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
-   uiWritten = write( hFileHandle, pBuff, uiCount );
+   while( ulWrittenTotal < ulCount )
+   {
+      USHORT uiWritten = write( hFileHandle, pBuff, ( USHORT ) ( ulCount - ulWrittenTotal ) );
+
+      if( uiWritten == ( USHORT )-1 )
+         break;
+
+      ulWrittenTotal += ( ULONG ) uiWritten;
+   }
    s_uiErrorLast = errno;
-   if( uiWritten == ( USHORT )-1 )
-      uiWritten = 0;
 
 #else
 
-   uiWritten = 0;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return uiWritten;
+   return ulWrittenTotal;
 }
 
 ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
@@ -388,7 +402,7 @@ ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       ulPos = lseek( hFileHandle, 0, SEEK_CUR );
       if( errno != 0 )
          s_uiErrorLast = errno;
-       
+
    #endif
 
    }
@@ -717,7 +731,7 @@ HARBOUR HB_FOPEN( void )
 {
    if( ISCHAR( 1 ) )
       hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
-                           ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ ) );
+                           ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
    else
       hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }
@@ -1018,7 +1032,7 @@ HARBOUR HB_DISKCHANGE( void )
    int uiErrorOld = s_uiErrorLast;
 
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) ) == 0 : 
+            hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) ) == 0 :
             FALSE );
 
    s_uiErrorLast = uiErrorOld;

@@ -120,7 +120,7 @@ static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
    }   
 
    uiLen--;
-   for( iCount= 0; iCount < uiLen; iCount++ )
+   for( iCount = 0; iCount < uiLen; iCount++ )
       if( szBuffer[ iCount ] == '0' )
          szBuffer[ iCount ] = ' ';
       else
@@ -813,26 +813,27 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case 'N':
          szEndChar = * ( szText + pField->uiLen );
-         * ( szText + pField->uiLen ) = 0;
+         * ( szText + pField->uiLen ) = '\0';
          if( pField->uiDec )
             hb_itemPutND( pItem, atof( ( char * ) szText ) );
          else
             hb_itemPutNL( pItem, atol( ( char * ) szText ) );
+         hb_itemSetNLen( pItem, ( WORD ) pField->uiLen, ( WORD ) pField->uiDec );
          * ( szText + pField->uiLen ) = szEndChar;
          break;
 
       case 'D':
          szEndChar = * ( szText + pField->uiLen );
-         * ( szText + pField->uiLen ) = 0;
+         * ( szText + pField->uiLen ) = '\0';
          hb_itemPutDS( pItem, ( char * ) szText );
          * ( szText + pField->uiLen ) = szEndChar;
          break;
 
       case 'L':
          if( * szText == 'T' )
-            hb_itemPutL( pItem, 1 );
+            hb_itemPutL( pItem, TRUE );
          else
-            hb_itemPutL( pItem, 0 );
+            hb_itemPutL( pItem, FALSE );
          break;
 
       case 'M':

@@ -73,7 +73,7 @@ typedef struct
    int   iFiles;        /* number of files currently opened */
 } FILES;                /* structure to control several opened PRGs and CHs */
 
-int Include( char * szFileName, PATHNAMES *pSearchPath );  /* end #include support */
+int Include( char * szFileName, PATHNAMES * pSearchPath );  /* end #include support */
 
 /*
  * flags for bFlags member
@@ -95,11 +95,11 @@ typedef struct __ELSEIF
 
 typedef struct _LOOPEXIT
 {
-  WORD wOffset;
-  WORD wLine;
-  struct _LOOPEXIT *pLoopList;
-  struct _LOOPEXIT *pExitList;
-  struct _LOOPEXIT *pNext;
+   WORD wOffset;
+   WORD wLine;
+   struct _LOOPEXIT * pLoopList;
+   struct _LOOPEXIT * pExitList;
+   struct _LOOPEXIT * pNext;
 } LOOPEXIT, * PTR_LOOPEXIT;  /* support structure for EXIT and LOOP statements */
 static void LoopStart( void );
 static void LoopEnd( void );
@@ -121,9 +121,9 @@ typedef struct _ALIASID
    char type;
    union {
       int iAlias;
-      char *szAlias;
+      char * szAlias;
    } alias;
-   struct _ALIASID *pPrev;
+   struct _ALIASID * pPrev;
 } ALIASID, *ALIASID_PTR;
 
 #define  ALIAS_NUMBER   1
@@ -162,8 +162,8 @@ void yy_switch_to_buffer( void * ); /* yacc functions to manage multiple files *
 void yy_delete_buffer( void * ); /* yacc functions to manage multiple files */
 #endif
 
-char * yy_strdup( char *p );  /* this will exit if there is not enough memory */
-char *yy_strupr( char *p );
+char * yy_strdup( char * p );  /* this will exit if there is not enough memory */
+char *yy_strupr( char * p );
 
 #if 0
 static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype */
@@ -193,7 +193,7 @@ void GenBreak( void );  /* generate code for BREAK statement */
 void * GenElseIf( void * pFirstElseIf, WORD wOffset ); /* generates a support structure for elseifs pcode fixups */
 void GenExterns( void ); /* generates the symbols for the EXTERN names */
 PFUNCTION GetFuncall( char * szFunName ); /* locates a previously defined called function */
-int GetFieldVarPos( char *, PFUNCTION *);   /* return if passed name is a field variable */
+int GetFieldVarPos( char *, PFUNCTION * );   /* return if passed name is a field variable */
 PVAR GetVar( PVAR pVars, WORD wOrder ); /* returns a variable if defined or zero */
 WORD GetVarPos( PVAR pVars, char * szVarName ); /* returns the order + 1 of a variable if defined or zero */
 int GetLocalVarPos( char * szVarName ); /* returns the order + 1 of a local variable */
@@ -338,71 +338,71 @@ char * _szCWarnings[] =
  * NOTE: THIS TABLE MUST BE SORTED ALPHABETICALLY
 */
 static const char * _szReservedFun[] = {
-  "AADD"      ,
-  "ABS"       ,
-  "ASC"       ,
-  "AT"        ,
-  "BOF"       ,
-  "BREAK"     ,
-  "CDOW"      ,
-  "CHR"       ,
-  "CMONTH"    ,
-  "COL"       ,
-  "CTOD"      ,
-  "DATE"      ,
-  "DAY"       ,
-  "DELETED"   ,
-  "DEVPOS"    ,
-  "DOW"       ,
-  "DTOC"      ,
-  "DTOS"      ,
-  "EMPTY"     ,
-  "EOF"       ,
-  "EXP"       ,
-  "FCOUNT"    ,
-  "FIELDNAME" ,
-  "FLOCK"     ,
-  "FOUND"     ,
-  "INKEY"     ,
-  "INT"       ,
-  "LASTREC"   ,
-  "LEFT"      ,
-  "LEN"       ,
-  "LOCK"      ,
-  "LOG"       ,
-  "LOWER"     ,
-  "LTRIM"     ,
-  "MAX"       ,
-  "MIN"       ,
-  "MONTH"     ,
-  "PCOL"      ,
-  "PCOUNT"    ,
-  "PROW"      ,
-  "QSELF"     ,
-  "RECCOUNT"  ,
-  "RECNO"     ,
-  "REPLICATE" ,
-  "RLOCK"     ,
-  "ROUND"     ,
-  "ROW"       ,
-  "RTRIM"     ,
-  "SECONDS"   ,
-  "SELECT"    ,
-  "SETPOS"    ,
-  "SPACE"     ,
-  "SQRT"      ,
-  "STR"       ,
-  "SUBSTR"    ,
-  "TIME"      ,
-  "TRANSFORM" ,
-  "TRIM"      ,
-  "TYPE"      ,
-  "UPPER"     ,
-  "VAL"       ,
-  "WORD"      ,
-  "YEAR"
+   "AADD"      ,
+   "ABS"       ,
+   "ASC"       ,
+   "AT"        ,
+   "BOF"       ,
+   "BREAK"     ,
+   "CDOW"      ,
+   "CHR"       ,
+   "CMONTH"    ,
+   "COL"       ,
+   "CTOD"      ,
+   "DATE"      ,
+   "DAY"       ,
+   "DELETED"   ,
+   "DEVPOS"    ,
+   "DOW"       ,
+   "DTOC"      ,
+   "DTOS"      ,
+   "EMPTY"     ,
+   "EOF"       ,
+   "EXP"       ,
+   "FCOUNT"    ,
+   "FIELDNAME" ,
+   "FLOCK"     ,
+   "FOUND"     ,
+   "INKEY"     ,
+   "INT"       ,
+   "LASTREC"   ,
+   "LEFT"      ,
+   "LEN"       ,
+   "LOCK"      ,
+   "LOG"       ,
+   "LOWER"     ,
+   "LTRIM"     ,
+   "MAX"       ,
+   "MIN"       ,
+   "MONTH"     ,
+   "PCOL"      ,
+   "PCOUNT"    ,
+   "PROW"      ,
+   "QSELF"     ,
+   "RECCOUNT"  ,
+   "RECNO"     ,
+   "REPLICATE" ,
+   "RLOCK"     ,
+   "ROUND"     ,
+   "ROW"       ,
+   "RTRIM"     ,
+   "SECONDS"   ,
+   "SELECT"    ,
+   "SETPOS"    ,
+   "SPACE"     ,
+   "SQRT"      ,
+   "STR"       ,
+   "SUBSTR"    ,
+   "TIME"      ,
+   "TRANSFORM" ,
+   "TRIM"      ,
+   "TYPE"      ,
+   "UPPER"     ,
+   "VAL"       ,
+   "WORD"      ,
+   "YEAR"
 };
-#define RESERVED_FUNCTIONS  sizeof(_szReservedFun) / sizeof(char *)
+#define RESERVED_FUNCTIONS  sizeof( _szReservedFun ) / sizeof( char * )
 /* function compares strings upto maximum 4 characters (used in bsearch) */
 /* Borland C 3.1 reports error when this forward declaration is used
  * int sz_compare4( const void *, const void * );
@@ -413,19 +413,19 @@ static const char * _szReservedFun[] = {
  * SECO() is not allowed because of Clipper function SECONDS()
  * however SECO32() is a valid name.
  */
-int EXTERNAL_LINKAGE sz_compare4( const void *pLookup, const void *pReserved )
+int EXTERNAL_LINKAGE sz_compare4( const void * pLookup, const void * pReserved )
 {
-  int iCmp;
+   int iCmp;
 
-  iCmp = strncmp( (const char *)pLookup, *((const char * *)pReserved), 4 );
-  if( iCmp == 0 )
-     iCmp = strncmp( (const char *)pLookup, *((const char * *)pReserved),
-                     strlen((const char *)pLookup) );
-  return iCmp;
+   iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ), 4 );
+   if( iCmp == 0 )
+      iCmp = strncmp( ( const char * ) pLookup, * ( ( const char * * ) pReserved ),
+                      strlen( ( const char * ) pLookup ) );
+   return iCmp;
 }
 
 #define RESERVED_FUNC(szName) \
- bsearch( (szName), _szReservedFun, RESERVED_FUNCTIONS, sizeof(char*), sz_compare4 )
+   bsearch( (szName), _szReservedFun, RESERVED_FUNCTIONS, sizeof( char * ), sz_compare4 )
 
 
 FILES files;
@@ -468,15 +468,15 @@ LONG _lMessageFix   = 0;  /* Position of the message which needs to be changed *
 BOOL _bObj32 = FALSE;     /* generate OBJ 32 bits */
 #endif
 WORD _wStatics = 0;       /* number of defined statics variables on the PRG */
-PEXTERN pExterns = 0;
-PTR_LOOPEXIT pLoops = 0;
+PEXTERN pExterns = NULL;
+PTR_LOOPEXIT pLoops = NULL;
 PATHNAMES *_pIncludePath = NULL;
 PHB_FNAME _pFileName = NULL;
 ALIASID_PTR pAliasId = NULL;
 WORD _wLastLinePos = 0;    /* position of last opcode with line number */
 BOOL _bDontGenLineNum = FALSE;   /* suppress line number generation */
 
-PSTACK_VAL_TYPE pStackValType = 0; /* compile time stack values linked list */
+PSTACK_VAL_TYPE pStackValType = NULL; /* compile time stack values linked list */
 char cVarType = ' ';               /* current declared variable type */
 
 #define LOOKUP 0
@@ -743,7 +743,7 @@ IfInline   : IIF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
                     debug_msg( "\n***---IIF()\n", NULL );
 
                     pStackValType = pStackValType->pPrev;
-                    hb_xfree( (void *)pFree );
+                    hb_xfree( ( void * )pFree );
                   }
                   else
                     debug_msg( "\n***IIF() Compile time stack overflow\n", NULL );
@@ -764,7 +764,7 @@ IfInline   : IIF '(' Expression ',' { $<iNumber>$ = JumpFalse( 0 ); }
                       debug_msg( "\n***---IIF()\n", NULL );
 
                       pStackValType = pStackValType->pPrev;
-                      hb_xfree( (void *)pFree );
+                      hb_xfree( ( void * )pFree );
                     }
                     else
                       debug_msg( "\n***IIF() Compile time stack overflow\n", NULL );
@@ -1138,25 +1138,25 @@ EndWhile   : END
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
              TO Expression                       { PushId( $2 ); }
              StepExpr Crlf                       { if( $<lNumber>9 )
-	                                              GenPCode1( HB_P_FORTEST ); 
-						   else
-						      GenPCode1( HB_P_LESS ); 
-						   $<iNumber>$ = JumpTrue( 0 ); 
-						   Line(); 
-						 }
-             ForStatements                       { LoopHere(); 
-                                                   PushId( $2 ); 
-						   if( $<lNumber>9 )
-						      GenPCode1( HB_P_PLUS ); 
-						   else
-						      Inc();
-						   PopId( $2 ); 
-						   Jump( $<iNumber>5 - functions.pLast->lPCodePos ); 
-						   JumpHere( $<iNumber>11 ); 
-						   LoopEnd(); 
-						   if( $<lNumber>9 )
-						      GenPCode1( HB_P_POP );
-						 }
+                                                      GenPCode1( HB_P_FORTEST );
+                                                   else
+                                                      GenPCode1( HB_P_LESS );
+                                                   $<iNumber>$ = JumpTrue( 0 );
+                                                   Line();
+                                                 }
+             ForStatements                       { LoopHere();
+                                                   PushId( $2 );
+                                                   if( $<lNumber>9 )
+                                                      GenPCode1( HB_P_PLUS );
+                                                   else
+                                                      Inc();
+                                                   PopId( $2 );
+                                                   Jump( $<iNumber>5 - functions.pLast->lPCodePos );
+                                                   JumpHere( $<iNumber>11 );
+                                                   LoopEnd();
+                                                   if( $<lNumber>9 )
+                                                      GenPCode1( HB_P_POP );
+                                                 }
            ;
 
 ForAssign  : '='
@@ -1293,49 +1293,50 @@ void * GenElseIf( void * pFirst, WORD wOffset )
 
 void GenError( char* _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  if( files.pLast->szFileName != NULL )
-     printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-  else
-     printf( "\rLine %i ", iLine );
-  printf( "Error %c%i  ", cPrefix, iError );
-  printf( _szErrors[ iError - 1 ], szError1, szError2 );
-  printf( "\n\n" );
+   if( files.pLast->szFileName != NULL )
+      printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
+   else
+      printf( "\rLine %i ", iLine );
+   printf( "Error %c%i  ", cPrefix, iError );
+   printf( _szErrors[ iError - 1 ], szError1, szError2 );
+   printf( "\n\n" );
 
-  exit( EXIT_FAILURE );
+   exit( EXIT_FAILURE );
 }
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-    if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
-    {
-        printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
-        printf( "Warning %c%i  ", cPrefix, iWarning );
-        printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
-        printf( "\n" );
-    }
+   if( _bWarnings && iWarning < WARN_ASSIGN_SUSPECT ) /* TODO: add switch to set level */
+   {
+      printf( "\r%s(%i) ", files.pLast->szFileName, iLine );
+      printf( "Warning %c%i  ", cPrefix, iWarning );
+      printf( _szWarnings[ iWarning - 1 ], szWarning1, szWarning2 );
+      printf( "\n" );
+   }
 }
 
 void EXTERNAL_LINKAGE close_on_exit( void )
 {
-  PFILE pFile = files.pLast;
+   PFILE pFile = files.pLast;
 
-  while( pFile )
-  {
-    printf( "\nClosing file: %s\n", pFile->szFileName );
-    fclose( pFile->handle );
-    pFile = (PFILE) pFile->pPrev;
-  }
+   while( pFile )
+   {
+      printf( "\nClosing file: %s\n", pFile->szFileName );
+      fclose( pFile->handle );
+      pFile = (PFILE) pFile->pPrev;
+   }
 }
 
 int harbour_main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
-   char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-   char szPpoName[ _POSIX_PATH_MAX ];
-   char *szOutPath ="";
 
    if( argc > 1 )
    {
+      char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
+      char szPpoName[ _POSIX_PATH_MAX ];
+      PHB_FNAME pOutPath = NULL;
+
       Hbpp_init();  /* Initialization of preprocessor arrays */
       /* Command line options */
       while( iArg < argc )
@@ -1345,148 +1346,148 @@ int harbour_main( int argc, char * argv[] )
             switch( argv[ iArg ][ 1 ] )
             {
                case '1':
-                    if( argv[ iArg ][ 2 ] == '0' )
-                       _bRestrictSymbolLength = TRUE;
-                    break;
+                  if( argv[ iArg ][ 2 ] == '0' )
+                     _bRestrictSymbolLength = TRUE;
+                  break;
 
                case 'a':
                case 'A':
-                    _bAutoMemvarAssume = TRUE;
-                    break;
+                  _bAutoMemvarAssume = TRUE;
+                  break;
 
                case 'b':
                case 'B':
-                    _bDebugInfo = TRUE;
-                    _bLineNumbers = TRUE;
-                    break;
+                  _bDebugInfo = TRUE;
+                  _bLineNumbers = TRUE;
+                  break;
 
                case 'd':
                case 'D':   /* defines a Lex #define from the command line */
-                    {
-                       unsigned int i = 0;
-                       char * szDefText = yy_strdup( argv[ iArg ] + 2 );
-                       while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
-                          i++;
-                       if( szDefText[ i ] != '=' )
-                          AddDefine( szDefText, 0 );
-                       else
-                       {
-                          szDefText[ i ] = 0;
-                          AddDefine( szDefText, szDefText + i + 1 );
-                       }
-                       free( szDefText );
-                    }
-                    break;
+                  {
+                     unsigned int i = 0;
+                     char * szDefText = yy_strdup( argv[ iArg ] + 2 );
+                     while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
+                        i++;
+                     if( szDefText[ i ] != '=' )
+                        AddDefine( szDefText, 0 );
+                     else
+                     {
+                        szDefText[ i ] = '\0';
+                        AddDefine( szDefText, szDefText + i + 1 );
+                     }
+                     free( szDefText );
+                  }
+                  break;
 #ifdef HARBOUR_OBJ_GENERATION
                case 'f':
                case 'F':
-                    {
-                       char * szUpper = yy_strupr( yy_strdup( &argv[ iArg ][ 2 ] ) );
-                       if( ! strcmp( szUpper, "OBJ32" ) )
-                          _bObj32 = TRUE;
-                       free( szUpper );
-                    }
-                    break;
+                  {
+                     char * szUpper = yy_strupr( yy_strdup( &argv[ iArg ][ 2 ] ) );
+                     if( ! strcmp( szUpper, "OBJ32" ) )
+                        _bObj32 = TRUE;
+                     free( szUpper );
+                  }
+                  break;
 #endif
                case 'g':
                case 'G':
-                    switch( argv[ iArg ][ 2 ] )
-                    {
-                       case 'c':
-                       case 'C':
-                            _iLanguage = LANG_C;
-                            break;
+                  switch( argv[ iArg ][ 2 ] )
+                  {
+                     case 'c':
+                     case 'C':
+                        _iLanguage = LANG_C;
+                        break;
 
-                       case 'j':
-                       case 'J':
-                            _iLanguage = LANG_JAVA;
-                            break;
+                     case 'j':
+                     case 'J':
+                        _iLanguage = LANG_JAVA;
+                        break;
 
-                       case 'p':
-                       case 'P':
-                            _iLanguage = LANG_PASCAL;
-                            break;
+                     case 'p':
+                     case 'P':
+                        _iLanguage = LANG_PASCAL;
+                        break;
 
-                       case 'r':
-                       case 'R':
-                            _iLanguage = LANG_RESOURCES;
-                            break;
+                     case 'r':
+                     case 'R':
+                        _iLanguage = LANG_RESOURCES;
+                        break;
 
-                       case 'h':
-                       case 'H':
-                            _iLanguage = LANG_PORT_OBJ;
-                            break;
+                     case 'h':
+                     case 'H':
+                        _iLanguage = LANG_PORT_OBJ;
+                        break;
 
-                       default:
-                            printf( "\nUnsupported output language option\n" );
-                            exit( EXIT_FAILURE );
-                    }
-                    break;
+                     default:
+                        printf( "\nUnsupported output language option\n" );
+                        exit( EXIT_FAILURE );
+                  }
+                  break;
 
                case 'i':
                case 'I':
-                    AddSearchPath( argv[ iArg ]+2, &_pIncludePath );
-                    break;
+                  AddSearchPath( argv[ iArg ]+2, &_pIncludePath );
+                  break;
 
                case 'l':
                case 'L':
-                    _bLineNumbers = FALSE;
-                    break;
+                  _bLineNumbers = FALSE;
+                  break;
 
                case 'n':
                case 'N':
-                    _bStartProc = FALSE;
-                    break;
+                  _bStartProc = FALSE;
+                  break;
 
                case 'o':
                case 'O':
-                    szOutPath = argv[ iArg ]+2;
-                    break;
+                  pOutPath = hb_fsFNameSplit( argv[ iArg ] + 2 );
+                  break;
 
                /* Added for preprocessor needs */
                case 'p':
                case 'P':
-                    lPpo = 1;
-                    break;
+                  lPpo = 1;
+                  break;
 
                case 'q':
                case 'Q':
-                    _bQuiet = TRUE;
-                    break;
+                  _bQuiet = TRUE;
+                  break;
 
                case 's':
                case 'S':
-                    _bSyntaxCheckOnly = TRUE;
-                    break;
+                  _bSyntaxCheckOnly = TRUE;
+                  break;
 
                case 'v':
                case 'V':
-                    _bForceMemvars = TRUE;
-                    break;
+                  _bForceMemvars = TRUE;
+                  break;
 
                case 'w':
                case 'W':
-                    _bWarnings = TRUE;
-                    break;
+                  _bWarnings = TRUE;
+                  break;
 
                case 'y':
                case 'Y':
-                    yydebug = TRUE;
-                    break;
+                  yydebug = TRUE;
+                  break;
 
                case 'z':
                case 'Z':
-                    _bShortCuts = FALSE;
-                    break;
+                  _bShortCuts = FALSE;
+                  break;
 
                default:
-                    printf( "Invalid command line option: %s\n",
-                            &argv[ iArg ][ 0 ] );
-                    break;
+                  printf( "Invalid command line option: %s\n",
+                          &argv[ iArg ][ 0 ] );
+                  break;
             }
          }
          else
-            _pFileName =hb_fsFNameSplit( argv[ iArg ] );
+            _pFileName = hb_fsFNameSplit( argv[ iArg ] );
          iArg++;
       }
 
@@ -1496,35 +1497,35 @@ int harbour_main( int argc, char * argv[] )
 
       if( _pFileName )
       {
-        if( !_pFileName->szExtension )
-          _pFileName->szExtension =".prg";
-        hb_fsFNameMerge( szFileName, _pFileName );
-        if ( lPpo )
-        {
-          _pFileName->szExtension =".ppo";
-          hb_fsFNameMerge( szPpoName, _pFileName );
-          yyppo = fopen ( szPpoName, "w" );
-        }
+         if( !_pFileName->szExtension )
+            _pFileName->szExtension = ".prg";
+         hb_fsFNameMerge( szFileName, _pFileName );
+         if( lPpo )
+         {
+            _pFileName->szExtension = ".ppo";
+            hb_fsFNameMerge( szPpoName, _pFileName );
+            yyppo = fopen ( szPpoName, "w" );
+         }
       }
       else
       {
-        PrintUsage( argv[ 0 ] );
-        return iStatus;
+         PrintUsage( argv[ 0 ] );
+         return iStatus;
       }
 
       files.iFiles     = 0;        /* initialize support variables */
-      files.pLast      = 0;
+      files.pLast      = NULL;
       functions.iCount = 0;
-      functions.pFirst = 0;
-      functions.pLast  = 0;
+      functions.pFirst = NULL;
+      functions.pLast  = NULL;
       funcalls.iCount  = 0;
-      funcalls.pFirst  = 0;
-      funcalls.pLast   = 0;
+      funcalls.pFirst  = NULL;
+      funcalls.pLast   = NULL;
       symbols.iCount   = 0;
-      symbols.pFirst   = 0;
-      symbols.pLast    = 0;
+      symbols.pFirst   = NULL;
+      symbols.pLast    = NULL;
 
-      _pInitFunc   =NULL;
+      _pInitFunc = NULL;
 
       atexit( close_on_exit );
 
@@ -1534,17 +1535,17 @@ int harbour_main( int argc, char * argv[] )
 
          if( szInclude )
          {
-          char * pPath;
-          char * pDelim;
+            char * pPath;
+            char * pDelim;
 
-          pPath = szInclude = yy_strdup( szInclude );
-          while( (pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR )) != NULL )
-          {
-            *pDelim = '\0';
+            pPath = szInclude = yy_strdup( szInclude );
+            while( (pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR )) != NULL )
+            {
+               *pDelim = '\0';
+               AddSearchPath( pPath, &_pIncludePath );
+               pPath = pDelim + 1;
+            }
             AddSearchPath( pPath, &_pIncludePath );
-            pPath = pDelim + 1;
-          }
-          AddSearchPath( pPath, &_pIncludePath );
          }
 
          /* Generate the starting procedure frame
@@ -1572,70 +1573,91 @@ int harbour_main( int argc, char * argv[] )
          {
             if( _pInitFunc )
             {
-              PCOMSYMBOL pSym;
+               PCOMSYMBOL pSym;
 
-              /* Fix the number of static variables */
-              _pInitFunc->pCode[ 1 ] =LOBYTE( _wStatics );
-              _pInitFunc->pCode[ 2 ] =HIBYTE( _wStatics );
-              _pInitFunc->wStaticsBase =_wStatics;
+               /* Fix the number of static variables */
+               _pInitFunc->pCode[ 1 ] =LOBYTE( _wStatics );
+               _pInitFunc->pCode[ 2 ] =HIBYTE( _wStatics );
+               _pInitFunc->wStaticsBase =_wStatics;
 
-              pSym = AddSymbol( _pInitFunc->szName, NULL );
-              pSym->cScope |= _pInitFunc->cScope;
-              functions.pLast->pNext = _pInitFunc;
-              ++functions.iCount;
+               pSym = AddSymbol( _pInitFunc->szName, NULL );
+               pSym->cScope |= _pInitFunc->cScope;
+               functions.pLast->pNext = _pInitFunc;
+               ++functions.iCount;
             }
 
+            _pFileName->szPath = NULL;
+            _pFileName->szExtension = NULL;
+
             /* we create a the output file */
-            _pFileName->szPath = szOutPath;
+            if( pOutPath )
+            {
+               if( pOutPath->szPath )
+                  _pFileName->szPath = pOutPath->szPath;
+               if( pOutPath->szName )
+               {
+                  _pFileName->szName = pOutPath->szName;
+                  if( pOutPath->szExtension )
+                     _pFileName->szExtension = pOutPath->szExtension;
+               }
+            }
+
             switch( _iLanguage )
             {
                case LANG_C:
-                    _pFileName->szExtension =".c";
-                    hb_fsFNameMerge( szFileName, _pFileName );
-                    GenCCode( szFileName, _pFileName->szName );
-                    break;
+                  if( ! _pFileName->szExtension )
+                     _pFileName->szExtension =".c";
+                  hb_fsFNameMerge( szFileName, _pFileName );
+                  GenCCode( szFileName, _pFileName->szName );
+                  break;
 
                case LANG_JAVA:
-                    _pFileName->szExtension =".java";
-                    hb_fsFNameMerge( szFileName, _pFileName );
-                    GenJava( szFileName, _pFileName->szName );
-                    break;
+                  if( ! _pFileName->szExtension )
+                     _pFileName->szExtension =".java";
+                  hb_fsFNameMerge( szFileName, _pFileName );
+                  GenJava( szFileName, _pFileName->szName );
+                  break;
 
                case LANG_PASCAL:
-                    _pFileName->szExtension =".pas";
-                    hb_fsFNameMerge( szFileName, _pFileName );
-                    GenPascal( szFileName, _pFileName->szName );
-                    break;
+                  if( ! _pFileName->szExtension )
+                     _pFileName->szExtension =".pas";
+                  hb_fsFNameMerge( szFileName, _pFileName );
+                  GenPascal( szFileName, _pFileName->szName );
+                  break;
 
                case LANG_RESOURCES:
-                    _pFileName->szExtension =".rc";
-                    hb_fsFNameMerge( szFileName, _pFileName );
-                    GenRC( szFileName, _pFileName->szName );
-                    break;
+                  if( ! _pFileName->szExtension )
+                     _pFileName->szExtension =".rc";
+                  hb_fsFNameMerge( szFileName, _pFileName );
+                  GenRC( szFileName, _pFileName->szName );
+                  break;
 
                case LANG_PORT_OBJ:
-                    _pFileName->szExtension =".hrb";
-                    hb_fsFNameMerge( szFileName, _pFileName );
-                    GenPortObj( szFileName, _pFileName->szName );
-                    break;
+                  if( ! _pFileName->szExtension )
+                     _pFileName->szExtension =".hrb";
+                  hb_fsFNameMerge( szFileName, _pFileName );
+                  GenPortObj( szFileName, _pFileName->szName );
+                  break;
             }
          }
 #ifdef HARBOUR_OBJ_GENERATION
          if( _bObj32 )
          {
-            _pFileName->szExtension = ".obj";
+            if( ! _pFileName->szExtension )
+               _pFileName->szExtension = ".obj";
             hb_fsFNameMerge( szFileName, _pFileName );
             GenObj32( szFileName, _pFileName->szName );
          }
 #endif
-         if ( lPpo ) fclose ( yyppo );
+         if( lPpo ) fclose ( yyppo );
       }
       else
       {
          printf( "Can't open input file: %s\n", szFileName );
          iStatus = 1;
       }
-      hb_xfree( (void *) _pFileName );
+      hb_xfree( ( void * ) _pFileName );
+      if( pOutPath ) hb_xfree( pOutPath );
    }
    else
       PrintUsage( argv[ 0 ] );
@@ -1648,56 +1670,56 @@ int harbour_main( int argc, char * argv[] )
 */
 void PrintUsage( char * szSelf )
 {
-  printf( "Syntax: %s <file.prg> [options]\n"
-          "\nOptions: \n"
-          "\t/a\t\tautomatic memvar declaration\n"
-          "\t/b\t\tdebug info\n"
-          "\t/d<id>[=<val>]\t#define <id>\n"
+   printf( "Syntax: %s <file.prg> [options]\n"
+           "\nOptions: \n"
+           "\t/a\t\tautomatic memvar declaration\n"
+           "\t/b\t\tdebug info\n"
+           "\t/d<id>[=<val>]\t#define <id>\n"
 #ifdef HARBOUR_OBJ_GENERATION
-          "\t/f\t\tgenerated object file\n"
-          "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
+           "\t/f\t\tgenerated object file\n"
+           "\t\t\t /fobj32 --> Windows/Dos 32 bits OBJ\n"
 #endif
-          "\t/g\t\tgenerated output language\n"
-          "\t\t\t /gc (C default) --> <file.c>\n"
-          "\t\t\t /gh (HRB file)  --> <file.hrb>\n"
-          "\t\t\t /gj (Java)      --> <file.java>\n"
-          "\t\t\t /gp (Pascal)    --> <file.pas>\n"
-          "\t\t\t /gr (Resources) --> <file.rc>\n"
-          "\t/i<path>\tadd #include file search path\n"
-          "\t/l\t\tsuppress line number information\n"
-          "\t/n\t\tno implicit starting procedure\n"
-          "\t/o<path>\tobject file drive and/or path\n"
-          "\t/p\t\tgenerate pre-processed output (.ppo) file\n"
-          "\t/q\t\tquiet\n"
-          "\t/s\t\tsyntax check only\n"
-          "\t/v\t\tvariables are assumed M->\n"
-          "\t/w\t\tenable warnings\n"
-          "\t/y\t\ttrace lex & yacc activity\n"
-          "\t/z\t\tsuppress shortcutting (.and. & .or.)\n"
-          "\t/10\t\trestrict symbol length to 10 characters\n"
-          , szSelf );
+           "\t/g\t\tgenerated output language\n"
+           "\t\t\t /gc (C default) --> <file.c>\n"
+           "\t\t\t /gh (HRB file)  --> <file.hrb>\n"
+           "\t\t\t /gj (Java)      --> <file.java>\n"
+           "\t\t\t /gp (Pascal)    --> <file.pas>\n"
+           "\t\t\t /gr (Resources) --> <file.rc>\n"
+           "\t/i<path>\tadd #include file search path\n"
+           "\t/l\t\tsuppress line number information\n"
+           "\t/n\t\tno implicit starting procedure\n"
+           "\t/o<path>\tobject file drive and/or path\n"
+           "\t/p\t\tgenerate pre-processed output (.ppo) file\n"
+           "\t/q\t\tquiet\n"
+           "\t/s\t\tsyntax check only\n"
+           "\t/v\t\tvariables are assumed M->\n"
+           "\t/w\t\tenable warnings\n"
+           "\t/y\t\ttrace lex & yacc activity\n"
+           "\t/z\t\tsuppress shortcutting (.and. & .or.)\n"
+           "\t/10\t\trestrict symbol length to 10 characters\n"
+           , szSelf );
 }
 
 /*
  * Function that adds specified path to the list of pathnames to search
  */
-void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
+void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
 {
-  PATHNAMES *pPath = *pSearchList;
+   PATHNAMES * pPath = *pSearchList;
 
-  if( pPath )
-  {
-    while( pPath->pNext )
+   if( pPath )
+   {
+      while( pPath->pNext )
       pPath = pPath->pNext;
-    pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
-    pPath = pPath->pNext;
-  }
-  else
-  {
-    *pSearchList =pPath =(PATHNAMES *)hb_xgrab( sizeof(PATHNAMES) );
-  }
-  pPath->pNext  = NULL;
-  pPath->szPath = szPath;
+      pPath->pNext = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+      pPath = pPath->pNext;
+   }
+   else
+   {
+      *pSearchList = pPath = ( PATHNAMES * ) hb_xgrab( sizeof( PATHNAMES ) );
+   }
+   pPath->pNext  = NULL;
+   pPath->szPath = szPath;
 }
 
 
@@ -1735,9 +1757,9 @@ void AddExtern( char * szExternName ) /* defines a new extern name */
    PEXTERN pExtern = ( PEXTERN ) hb_xgrab( sizeof( _EXTERN ) ), pLast;
 
    pExtern->szName = szExternName;
-   pExtern->pNext  = 0;
+   pExtern->pNext  = NULL;
 
-   if( pExterns == 0 )
+   if( pExterns == NULL )
       pExterns = pExtern;
    else
    {
@@ -1755,8 +1777,8 @@ void AddVar( char * szVarName )
 
    if( ! _bStartProc && functions.iCount <= 1 && iVarScope == VS_LOCAL )
    {
-     /* Variable declaration is outside of function/procedure body.
-        In this case only STATIC and PARAMETERS variables are allowed. */
+      /* Variable declaration is outside of function/procedure body.
+         In this case only STATIC and PARAMETERS variables are allowed. */
       --iLine;
       GenError( _szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
    }
@@ -1782,7 +1804,7 @@ void AddVar( char * szVarName )
        * value initialization
        */
       if( _pInitFunc->bFlags & FUN_ILLEGAL_INIT )
-        GenError( _szCErrors, 'E', ERR_ILLEGAL_INIT, szVarName, pFunc->szName );
+         GenError( _szCErrors, 'E', ERR_ILLEGAL_INIT, szVarName, pFunc->szName );
    }
 
    /* Check if a declaration of duplicated variable name is requested */
@@ -1795,8 +1817,8 @@ void AddVar( char * szVarName )
          CheckDuplVars( pFunc->pMemvars, szVarName, iVarScope );
    }
    else
-     /* variable defined in a codeblock */
-     iVarScope =VS_PARAMETER;
+      /* variable defined in a codeblock */
+      iVarScope =VS_PARAMETER;
    CheckDuplVars( pFunc->pLocals, szVarName, iVarScope );
 
    pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
@@ -1828,72 +1850,72 @@ void AddVar( char * szVarName )
 
       switch( iVarScope )
       {
-          case VS_MEMVAR:
+         case VS_MEMVAR:
             /* variable declared in MEMVAR statement */
             break;
-          case (VS_PARAMETER | VS_PRIVATE):
+         case (VS_PARAMETER | VS_PRIVATE):
             {
-                BOOL bNewParameter = FALSE;
+               BOOL bNewParameter = FALSE;
 
-                if( ++functions.pLast->wParamNum > functions.pLast->wParamCount )
-                {
-                   functions.pLast->wParamCount =functions.pLast->wParamNum;
-                   bNewParameter = TRUE;
-                }
+               if( ++functions.pLast->wParamNum > functions.pLast->wParamCount )
+               {
+                  functions.pLast->wParamCount =functions.pLast->wParamNum;
+                  bNewParameter = TRUE;
+               }
 
-                pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
-                if( ! pSym )
-                   pSym =AddSymbol( yy_strdup(szVarName), &wPos );
-                pSym->cScope |=VS_MEMVAR;
-                GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
-                GenPCode1( LOBYTE(functions.pLast->wParamNum) );
+               pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
+               if( ! pSym )
+                  pSym =AddSymbol( yy_strdup(szVarName), &wPos );
+               pSym->cScope |=VS_MEMVAR;
+               GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
+               GenPCode1( LOBYTE(functions.pLast->wParamNum) );
 
-                /* Add this variable to the local variables list - this will
-                 * allow to use the correct positions for real local variables.
-                 * The name of variable have to be hidden because we should
-                 * not find this name on the local variables list.
-                 * We have to use the new structure because it is used in
-                 * memvars list already.
-                 */
-                if( bNewParameter )
-                {
-                   pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
-                   pVar->szName = yy_strdup( szVarName );
-                   pVar->szAlias = NULL;
-                   pVar->cType = cVarType;
-                   pVar->iUsed = 0;
-                   pVar->pNext = NULL;
-                   pVar->szName[ 0 ] ='!';
-                   if( ! pFunc->pLocals )
-                       pFunc->pLocals = pVar;
-                   else
-                   {
-                       pLastVar = pFunc->pLocals;
-                       while( pLastVar->pNext )
-                          pLastVar = pLastVar->pNext;
-                       pLastVar->pNext = pVar;
-                   }
-                }
+               /* Add this variable to the local variables list - this will
+                * allow to use the correct positions for real local variables.
+                * The name of variable have to be hidden because we should
+                * not find this name on the local variables list.
+                * We have to use the new structure because it is used in
+                * memvars list already.
+                */
+               if( bNewParameter )
+               {
+                  pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
+                  pVar->szName = yy_strdup( szVarName );
+                  pVar->szAlias = NULL;
+                  pVar->cType = cVarType;
+                  pVar->iUsed = 0;
+                  pVar->pNext = NULL;
+                  pVar->szName[ 0 ] ='!';
+                  if( ! pFunc->pLocals )
+                     pFunc->pLocals = pVar;
+                  else
+                  {
+                     pLastVar = pFunc->pLocals;
+                     while( pLastVar->pNext )
+                        pLastVar = pLastVar->pNext;
+                     pLastVar->pNext = pVar;
+                  }
+               }
             }
             break;
-          case VS_PRIVATE:
+         case VS_PRIVATE:
             {
-                PushSymbol(yy_strdup("__MVPRIVATE"), 1);
-                PushNil();
-                PushSymbol( yy_strdup(szVarName), 0 );
-                Do( 1 );
-                pSym =GetSymbol( szVarName, NULL );
-                pSym->cScope |=VS_MEMVAR;
+               PushSymbol( yy_strdup( "__MVPRIVATE" ), 1);
+               PushNil();
+               PushSymbol( yy_strdup(szVarName), 0 );
+               Do( 1 );
+               pSym = GetSymbol( szVarName, NULL );
+               pSym->cScope |= VS_MEMVAR;
             }
             break;
-          case VS_PUBLIC:
+         case VS_PUBLIC:
             {
-                PushSymbol(yy_strdup("__MVPUBLIC"), 1);
-                PushNil();
-                PushSymbol( yy_strdup(szVarName), 0 );
-                Do( 1 );
-                pSym =GetSymbol( szVarName, NULL );
-                pSym->cScope |=VS_MEMVAR;
+               PushSymbol( yy_strdup( "__MVPUBLIC" ), 1);
+               PushNil();
+               PushSymbol( yy_strdup(szVarName), 0 );
+               Do( 1 );
+               pSym = GetSymbol( szVarName, NULL );
+               pSym->cScope |= VS_MEMVAR;
             }
             break;
       }
@@ -1902,72 +1924,73 @@ void AddVar( char * szVarName )
    {
       switch( iVarScope )
       {
-          case VS_LOCAL:
-          case VS_PARAMETER:
-              { WORD wLocal = 1;
+         case VS_LOCAL:
+         case VS_PARAMETER:
+            {
+               WORD wLocal = 1;
 
-                 if( ! pFunc->pLocals )
-                    pFunc->pLocals = pVar;
-                 else
-                 {
-                    pLastVar = pFunc->pLocals;
-                    while( pLastVar->pNext )
-                    {
-                       pLastVar = pLastVar->pNext;
-                       wLocal++;
-                    }
-                    pLastVar->pNext = pVar;
-                 }
-                 if( iVarScope == VS_PARAMETER )
-                 {
-                    ++functions.pLast->wParamCount;
-                    functions.pLast->bFlags |= FUN_USES_LOCAL_PARAMS;
-                 }
-                 if( _bDebugInfo )
-                 {
-                    GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
-                    GenPCodeN( (BYTE *)szVarName, strlen( szVarName ) );
-                    GenPCode1( 0 );
-                 }
-              }
-              break;
+               if( ! pFunc->pLocals )
+                  pFunc->pLocals = pVar;
+               else
+               {
+                  pLastVar = pFunc->pLocals;
+                  while( pLastVar->pNext )
+                  {
+                     pLastVar = pLastVar->pNext;
+                     wLocal++;
+                  }
+                  pLastVar->pNext = pVar;
+               }
+               if( iVarScope == VS_PARAMETER )
+               {
+                  ++functions.pLast->wParamCount;
+                  functions.pLast->bFlags |= FUN_USES_LOCAL_PARAMS;
+               }
+               if( _bDebugInfo )
+               {
+                  GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
+                  GenPCodeN( ( BYTE * )szVarName, strlen( szVarName ) );
+                  GenPCode1( 0 );
+               }
+            }
+            break;
 
-          case VS_STATIC:
-                if( ! pFunc->pStatics )
-                    pFunc->pStatics = pVar;
-                else
-                {
-                    pLastVar = pFunc->pStatics;
-                    while( pLastVar->pNext )
-                      pLastVar = pLastVar->pNext;
-                    pLastVar->pNext = pVar;
-                }
-              break;
+         case VS_STATIC:
+            if( ! pFunc->pStatics )
+               pFunc->pStatics = pVar;
+            else
+            {
+               pLastVar = pFunc->pStatics;
+               while( pLastVar->pNext )
+                  pLastVar = pLastVar->pNext;
+               pLastVar->pNext = pVar;
+            }
+            break;
 
-          case VS_FIELD:
-                if( ! pFunc->pFields )
-                    pFunc->pFields = pVar;
-                else
-                {
-                    pLastVar = pFunc->pFields;
-                    while( pLastVar->pNext )
-                      pLastVar = pLastVar->pNext;
-                    pLastVar->pNext = pVar;
-                }
-              break;
+         case VS_FIELD:
+            if( ! pFunc->pFields )
+               pFunc->pFields = pVar;
+            else
+            {
+               pLastVar = pFunc->pFields;
+               while( pLastVar->pNext )
+                  pLastVar = pLastVar->pNext;
+               pLastVar->pNext = pVar;
+            }
+            break;
       }
 
    }
 }
 
-PCOMSYMBOL AddSymbol( char * szSymbolName, WORD *pwPos )
+PCOMSYMBOL AddSymbol( char * szSymbolName, WORD * pwPos )
 {
    PCOMSYMBOL pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
 
    pSym->szName = szSymbolName;
    pSym->cScope = 0;
    pSym->cType = cVarType;
-   pSym->pNext = 0;
+   pSym->pNext = NULL;
 
    if( ! symbols.iCount )
    {
@@ -1982,7 +2005,7 @@ PCOMSYMBOL AddSymbol( char * szSymbolName, WORD *pwPos )
    symbols.iCount++;
 
    if( pwPos )
-      *pwPos =symbols.iCount;
+      *pwPos = symbols.iCount;
 
    /*if( cVarType != ' ') printf("\nDeclared %s as type %c at symbol %i\n", szSymbolName, cVarType, symbols.iCount );*/
    return pSym;
@@ -1992,8 +2015,8 @@ PCOMSYMBOL AddSymbol( char * szSymbolName, WORD *pwPos )
  */
 void AliasAdd( ALIASID_PTR pAlias )
 {
-   pAlias->pPrev =pAliasId;
-   pAliasId =pAlias;
+   pAlias->pPrev = pAliasId;
+   pAliasId = pAlias;
 }
 
 /* Restores previously selected alias
@@ -2013,7 +2036,7 @@ void AliasAddInt( int iWorkarea )
    ALIASID_PTR pAlias = (ALIASID_PTR) hb_xgrab( sizeof( ALIASID ) );
 
    pAlias->type =ALIAS_NUMBER;
-   pAlias->alias.iAlias =iWorkarea;
+   pAlias->alias.iAlias = iWorkarea;
    AliasAdd( pAlias );
 }
 
@@ -2021,9 +2044,9 @@ void AliasAddInt( int iWorkarea )
  */
 void AliasAddExp( void )
 {
-   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xgrab( sizeof( ALIASID ) );
+   ALIASID_PTR pAlias = ( ALIASID_PTR ) hb_xgrab( sizeof( ALIASID ) );
 
-   pAlias->type =ALIAS_EVAL;
+   pAlias->type = ALIAS_EVAL;
    AliasAdd( pAlias );
 }
 
@@ -2031,10 +2054,10 @@ void AliasAddExp( void )
  */
 void AliasAddStr( char * szAlias )
 {
-   ALIASID_PTR pAlias = (ALIASID_PTR) hb_xgrab( sizeof( ALIASID ) );
+   ALIASID_PTR pAlias = ( ALIASID_PTR ) hb_xgrab( sizeof( ALIASID ) );
 
-   pAlias->type =ALIAS_NAME;
-   pAlias->alias.szAlias =szAlias;
+   pAlias->type = ALIAS_NAME;
+   pAlias->alias.szAlias = szAlias;
    AliasAdd( pAlias );
 }
 
@@ -2061,37 +2084,37 @@ void AliasSwap( void )
    GenPCode1( HB_P_SWAPALIAS );
 }
 
-int Include( char * szFileName, PATHNAMES *pSearch )
+int Include( char * szFileName, PATHNAMES * pSearch )
 {
-  PFILE pFile;
+   PFILE pFile;
 
-  yyin = fopen( szFileName, "r" );
-  if( ! yyin )
-  {
-    if( pSearch )
-    {
-      PHB_FNAME pFileName =hb_fsFNameSplit( szFileName );
-      char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
-
-      pFileName->szName =szFileName;
-      pFileName->szExtension =NULL;
-      while( pSearch && !yyin )
+   yyin = fopen( szFileName, "r" );
+   if( ! yyin )
+   {
+      if( pSearch )
       {
-        pFileName->szPath =pSearch->szPath;
-        hb_fsFNameMerge( szFName, pFileName );
-        yyin = fopen( szFName, "r" );
-        if( ! yyin )
-        {
-            pSearch = pSearch->pNext;
-            if( ! pSearch )
-              return 0;
-        }
+         PHB_FNAME pFileName =hb_fsFNameSplit( szFileName );
+         char szFName[ _POSIX_PATH_MAX ];    /* filename to parse */
+
+         pFileName->szName =szFileName;
+         pFileName->szExtension =NULL;
+         while( pSearch && !yyin )
+         {
+            pFileName->szPath =pSearch->szPath;
+            hb_fsFNameMerge( szFName, pFileName );
+            yyin = fopen( szFName, "r" );
+            if( ! yyin )
+            {
+               pSearch = pSearch->pNext;
+               if( ! pSearch )
+                  return 0;
+            }
+         }
+         hb_xfree( ( void * ) pFileName );
       }
-      hb_xfree( (void *) pFileName );
-    }
-    else
-      return 0;
-  }
+      else
+         return 0;
+   }
 
    if( ! _bQuiet )
       printf( "\nparsing file %s\n", szFileName );
@@ -2193,21 +2216,21 @@ void FieldPCode( BYTE bPCode, char * szVarName )
 /*
  * This function creates and initialises the _FUNC structure
  */
-PFUNCTION FunctionNew( char *szName, SYMBOLSCOPE cScope )
+PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
 {
    PFUNCTION pFunc;
 
    pFunc = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
    pFunc->szName       = szName;
    pFunc->cScope       = cScope;
-   pFunc->pLocals      = 0;
-   pFunc->pStatics     = 0;
-   pFunc->pFields      = 0;
-   pFunc->pMemvars     = 0;
-   pFunc->pCode        = 0;
+   pFunc->pLocals      = NULL;
+   pFunc->pStatics     = NULL;
+   pFunc->pFields      = NULL;
+   pFunc->pMemvars     = NULL;
+   pFunc->pCode        = NULL;
    pFunc->lPCodeSize   = 0;
    pFunc->lPCodePos    = 0;
-   pFunc->pNext        = 0;
+   pFunc->pNext        = NULL;
    pFunc->wParamCount  = 0;
    pFunc->wParamNum    = 0;
    pFunc->wStaticsBase = _wStatics;
@@ -2227,24 +2250,24 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 {
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
-   char * *pFunction;
+   char * * pFunction;
 
    pFunc = GetFunction( szFunName );
    if( pFunc )
    {
       /* The name of a function/procedure is already defined */
       if( ( pFunc != functions.pFirst ) || _bStartProc )
-        /* it is not a starting procedure that was automatically created */
-        GenError( _szCErrors, 'E', ERR_FUNC_DUPL, szFunName, NULL );
+         /* it is not a starting procedure that was automatically created */
+         GenError( _szCErrors, 'E', ERR_FUNC_DUPL, szFunName, NULL );
    }
 
-   pFunction = (char * *)RESERVED_FUNC( szFunName );
+   pFunction = ( char * * ) RESERVED_FUNC( szFunName );
    if( pFunction && !( functions.iCount==0 && !_bStartProc ) )
    {
       /* We are ignoring it when it is the name of PRG file and we are
        * not creating implicit starting procedure
        */
-        GenError( _szCErrors, 'E', ERR_FUNC_RESERVED, *pFunction, szFunName );
+      GenError( _szCErrors, 'E', ERR_FUNC_RESERVED, *pFunction, szFunName );
    }
 
    FixReturns();    /* fix all previous function returns offsets */
@@ -2255,8 +2278,8 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
       pSym = AddSymbol( szFunName, NULL );
 
    if( cScope != FS_PUBLIC )
-/*      pSym->cScope = FS_PUBLIC; */
-/*   else */
+/*    pSym->cScope = FS_PUBLIC; */
+/* else */
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = FunctionNew( szFunName, cScope );
@@ -2274,7 +2297,7 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
    }
    functions.iCount++;
 
-   _wLastLinePos =0;    /* optimization of line numbers opcode generation */
+   _wLastLinePos = 0;   /* optimization of line numbers opcode generation */
 
    GenPCode3( HB_P_FRAME, 0, 0 );   /* frame for locals and parameters */
    GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
@@ -2282,32 +2305,32 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
    if( _bDebugInfo )
    {
       GenPCode1( HB_P_MODULENAME );
-      GenPCodeN( (BYTE *)files.pLast->szFileName, strlen( files.pLast->szFileName ) );
+      GenPCodeN( ( BYTE * )files.pLast->szFileName, strlen( files.pLast->szFileName ) );
       GenPCode1( ':' );
-      GenPCodeN( (BYTE *)szFunName, strlen( szFunName ) );
+      GenPCodeN( ( BYTE * )szFunName, strlen( szFunName ) );
       GenPCode1( 0 );
    }
 }
 
-void GenJava( char *szFileName, char *szName )
+void GenJava( char * szFileName, char * szName )
 {
-  printf( "\ngenerating Java language output...\n" );
-  printf( "%s -> not implemented yet! %s\n", szFileName, szName );
+   printf( "\nGenerating Java language output...\n" );
+   printf( "%s -> not implemented yet! %s\n", szFileName, szName );
 }
 
-void GenPascal( char *szFileName, char *szName )
+void GenPascal( char * szFileName, char * szName )
 {
-  printf( "\ngenerating Pascal language output...\n" );
-  printf( "%s -> not implemented yet! %s\n", szFileName, szName );
+   printf( "\nGenerating Pascal language output...\n" );
+   printf( "%s -> not implemented yet! %s\n", szFileName, szName );
 }
 
-void GenRC( char *szFileName, char *szName )
+void GenRC( char * szFileName, char * szName )
 {
-  printf( "\ngenerating resources output...\n" );
-  printf( "%s -> not implemented yet! %s\n", szFileName, szName );
+   printf( "\nGenerating resources output...\n" );
+   printf( "%s -> not implemented yet! %s\n", szFileName, szName );
 }
 
-void GenCCode( char *szFileName, char *szName )       /* generates the C language output */
+void GenCCode( char * szFileName, char * szName )       /* generates the C language output */
 {
    PFUNCTION pFunc = functions.pFirst, pFTemp;
    PCOMSYMBOL pSym = symbols.pFirst;
@@ -2324,8 +2347,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-     printf( "Error opening file %s\n", szFileName );
-     return;
+      printf( "Error opening file %s\n", szFileName );
+      return;
    }
 
    if( ! _bQuiet )
@@ -2425,7 +2448,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
     */
    pFunc = functions.pFirst;
    if( ! _bStartProc )
-     pFunc = pFunc->pNext; /* No implicit starting procedure */
+      pFunc = pFunc->pNext; /* No implicit starting procedure */
    while( pFunc )
    {
       if( pFunc->cScope != FS_PUBLIC )
@@ -2777,7 +2800,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_POPLOCAL:
                  {
-                   SHORT wVar = * ( ( SHORT *) &(pFunc->pCode )[ lPCodePos + 1 ] );
+                   SHORT wVar = * ( ( SHORT * ) &(pFunc->pCode )[ lPCodePos + 1 ] );
                    /* Variable with negative order are local variables
                     * referenced in a codeblock -handle it with care
                     */
@@ -2868,11 +2891,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                           pFunc->pCode[ lPCodePos + 2 ],
                           pFunc->pCode[ lPCodePos + 1 ] +
                           pFunc->pCode[ lPCodePos + 2 ] * 256 );
-                 w = * ( ( WORD *) &( pFunc->pCode [ lPCodePos + 3 ] ) );
+                 w = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos + 3 ] ) );
                  fprintf( yyc, "\t\t%i, %i,\t/* number of local parameters (%i) */\n",
                           pFunc->pCode[ lPCodePos + 3 ],
                           pFunc->pCode[ lPCodePos + 4 ], w );
-                 wVar = * ( ( WORD *) &( pFunc->pCode [ lPCodePos + 5 ] ) );
+                 wVar = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
                  fprintf( yyc, "\t\t%i, %i,\t/* number of local variables (%i) */\n",
                           pFunc->pCode[ lPCodePos + 5 ],
                           pFunc->pCode[ lPCodePos + 6 ], wVar );
@@ -2880,7 +2903,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  /* create the table of referenced local variables */
                  while( wVar-- )
                  {
-                   w = * ( ( WORD *) &( pFunc->pCode [ lPCodePos ] ) );
+                   w = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos ] ) );
                    fprintf( yyc, "\t\t%i, %i,\t/* %s */\n",
                             pFunc->pCode[ lPCodePos ],
                             pFunc->pCode[ lPCodePos + 1 ],
@@ -2930,7 +2953,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_PUSHLOCAL:
                  {
-                   SHORT wVar = * ( ( SHORT *) &(pFunc->pCode )[ lPCodePos + 1 ] );
+                   SHORT wVar = * ( ( SHORT * ) &(pFunc->pCode )[ lPCodePos + 1 ] );
                    /* Variable with negative order are local variables
                     * referenced in a codeblock -handle it with care
                     */
@@ -2960,7 +2983,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_PUSHLOCALREF:
                  {
-                   SHORT wVar = * ( ( SHORT *) &(pFunc->pCode )[ lPCodePos + 1 ] );
+                   SHORT wVar = * ( ( SHORT * ) &(pFunc->pCode )[ lPCodePos + 1 ] );
                    /* Variable with negative order are local variables
                     * referenced in a codeblock -handle it with care
                     */
@@ -3189,14 +3212,14 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
    pFunc =functions.pFirst;
    while( pFunc )
-     pFunc = KillFunction( pFunc );
+      pFunc = KillFunction( pFunc );
 
    pFunc =funcalls.pFirst;
    while( pFunc )
    {
-     funcalls.pFirst =pFunc->pNext;
-     hb_xfree( (void *) pFunc );  /*NOTE: szName will be released by KillSymbol() */
-     pFunc =funcalls.pFirst;
+      funcalls.pFirst =pFunc->pNext;
+      hb_xfree( ( void * ) pFunc );  /*NOTE: szName will be released by KillSymbol() */
+      pFunc =funcalls.pFirst;
    }
 
    pSym =symbols.pFirst;
@@ -3209,69 +3232,69 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
 PFUNCTION KillFunction( PFUNCTION pFunc )
 {
-  PFUNCTION pNext = pFunc->pNext;
-  PVAR pVar;
+   PFUNCTION pNext = pFunc->pNext;
+   PVAR pVar;
 
-  while( pFunc->pLocals )
-  {
-    pVar = pFunc->pLocals;
-    pFunc->pLocals =pVar->pNext;
+   while( pFunc->pLocals )
+   {
+      pVar = pFunc->pLocals;
+      pFunc->pLocals =pVar->pNext;
 
-    hb_xfree( (void *) pVar->szName );
-    hb_xfree( (void *) pVar );
-  }
+      hb_xfree( ( void * ) pVar->szName );
+      hb_xfree( ( void * ) pVar );
+   }
 
-  while( pFunc->pStatics )
-  {
-    pVar = pFunc->pStatics;
-    pFunc->pStatics =pVar->pNext;
+   while( pFunc->pStatics )
+   {
+      pVar = pFunc->pStatics;
+      pFunc->pStatics =pVar->pNext;
 
-    hb_xfree( (void *) pVar->szName );
-    hb_xfree( (void *) pVar );
-  }
+      hb_xfree( ( void * ) pVar->szName );
+      hb_xfree( ( void * ) pVar );
+   }
 
-  while( pFunc->pFields )
-  {
-    pVar = pFunc->pFields;
-    pFunc->pFields =pVar->pNext;
+   while( pFunc->pFields )
+   {
+      pVar = pFunc->pFields;
+      pFunc->pFields =pVar->pNext;
 
-    hb_xfree( (void *) pVar->szName );
-    if( pVar->szAlias )
-    {
-      hb_xfree( (void *) pVar->szAlias );
-    }
-    hb_xfree( (void *) pVar );
-  }
+      hb_xfree( ( void * ) pVar->szName );
+      if( pVar->szAlias )
+      {
+         hb_xfree( ( void * ) pVar->szAlias );
+      }
+      hb_xfree( ( void * ) pVar );
+   }
 
-  while( pFunc->pMemvars )
-  {
-    pVar =pFunc->pMemvars;
-    pFunc->pMemvars =pVar->pNext;
+   while( pFunc->pMemvars )
+   {
+      pVar =pFunc->pMemvars;
+      pFunc->pMemvars =pVar->pNext;
 
-    hb_xfree( (void *) pVar->szName );
-    if( pVar->szAlias )
-    {
-      hb_xfree( (void *) pVar->szAlias );
-    }
-    hb_xfree( (void *) pVar );
-  }
+      hb_xfree( ( void * ) pVar->szName );
+      if( pVar->szAlias )
+      {
+         hb_xfree( ( void * ) pVar->szAlias );
+      }
+      hb_xfree( ( void * ) pVar );
+   }
 
-  hb_xfree( (void *) pFunc->pCode );
-/*  hb_xfree( (void *) pFunc->szName ); The name will be released in KillSymbol() */
-  hb_xfree( (void *) pFunc );
+   hb_xfree( ( void * ) pFunc->pCode );
+/* hb_xfree( ( void * ) pFunc->szName ); The name will be released in KillSymbol() */
+   hb_xfree( ( void * ) pFunc );
 
-  return pNext;
+   return pNext;
 }
 
 
 PCOMSYMBOL KillSymbol( PCOMSYMBOL pSym )
 {
-  PCOMSYMBOL pNext = pSym->pNext;
+   PCOMSYMBOL pNext = pSym->pNext;
 
-  hb_xfree( (void *) pSym->szName );
-  hb_xfree( (void *) pSym );
+   hb_xfree( ( void * ) pSym->szName );
+   hb_xfree( ( void * ) pSym );
 
-  return pNext;
+   return pNext;
 }
 
 void GenBreak( void )
@@ -3282,27 +3305,27 @@ void GenBreak( void )
 
 void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
-  PEXTERN pDelete;
+   PEXTERN pDelete;
 
-  if( _bDebugInfo )
-     AddExtern( yy_strdup( "__DBGENTRY" ) );
+   if( _bDebugInfo )
+      AddExtern( yy_strdup( "__DBGENTRY" ) );
 
-  while( pExterns )
-  {
-    if( GetSymbol( pExterns->szName, NULL ) )
-    {
-      if( ! GetFuncall( pExterns->szName ) )
-        AddFunCall( pExterns->szName );
-    }
-    else
-    {
-      AddSymbol( pExterns->szName, NULL );
-      AddFunCall( pExterns->szName );
-    }
-    pDelete  = pExterns;
-    pExterns = pExterns->pNext;
-    hb_xfree( (void *) pDelete );
-  }
+   while( pExterns )
+   {
+      if( GetSymbol( pExterns->szName, NULL ) )
+      {
+         if( ! GetFuncall( pExterns->szName ) )
+            AddFunCall( pExterns->szName );
+      }
+      else
+      {
+         AddSymbol( pExterns->szName, NULL );
+         AddFunCall( pExterns->szName );
+      }
+      pDelete  = pExterns;
+      pExterns = pExterns->pNext;
+      hb_xfree( ( void * ) pDelete );
+   }
 }
 
 PFUNCTION GetFuncall( char * szFunctionName ) /* returns a previously called defined function */
@@ -3318,10 +3341,10 @@ PFUNCTION GetFuncall( char * szFunctionName ) /* returns a previously called def
          if( pFunc->pNext )
             pFunc = pFunc->pNext;
          else
-            return 0;
+            return NULL;
       }
    }
-   return 0;
+   return NULL;
 }
 
 PFUNCTION GetFunction( char * szFunctionName ) /* returns a previously defined function */
@@ -3337,10 +3360,10 @@ PFUNCTION GetFunction( char * szFunctionName ) /* returns a previously defined f
          if( pFunc->pNext )
             pFunc = pFunc->pNext;
          else
-            return 0;
+            return NULL;
       }
    }
-   return 0;
+   return NULL;
 }
 
 PVAR GetVar( PVAR pVars, WORD wOrder ) /* returns variable if defined or zero */
@@ -3488,65 +3511,65 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
  * All static variables are hold in a single array at runtime then positions
  * are numbered for whole PRG module.
  */
-int GetStaticVarPos( char *szVarName )
+int GetStaticVarPos( char * szVarName )
 {
-  int iPos;
-  PFUNCTION pFunc = functions.pLast;
+   int iPos;
+   PFUNCTION pFunc = functions.pLast;
 
-  /* First we have to check if this name belongs to a static variable
-    * defined in current function
-    */
-  if( pFunc->pOwner )
+   /* First we have to check if this name belongs to a static variable
+     * defined in current function
+     */
+   if( pFunc->pOwner )
       pFunc =pFunc->pOwner;  /* we are in the static variable definition state */
-  iPos =GetVarPos( pFunc->pStatics, szVarName );
-  if( iPos )
+   iPos =GetVarPos( pFunc->pStatics, szVarName );
+   if( iPos )
       return iPos + pFunc->wStaticsBase;
 
-  /* Next we have to check the list of global static variables
-    * Note: It is not possible to have global static variables when
-    * implicit starting procedure is defined
-    */
-  if( !_bStartProc )
-  {
-    iPos =GetVarPos( functions.pFirst->pStatics, szVarName );
-    if( iPos )
-      return iPos;
-  }
-  return 0;
+   /* Next we have to check the list of global static variables
+     * Note: It is not possible to have global static variables when
+     * implicit starting procedure is defined
+     */
+   if( !_bStartProc )
+   {
+      iPos =GetVarPos( functions.pFirst->pStatics, szVarName );
+      if( iPos )
+         return iPos;
+   }
+   return 0;
 }
 
 /* Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
  * It also returns a pointer to the function where this field was declared
  */
-int GetFieldVarPos( char *szVarName, PFUNCTION *pOwner )
+int GetFieldVarPos( char * szVarName, PFUNCTION * pOwner )
 {
    int iVar;
-   PFUNCTION pFunc =functions.pLast;
+   PFUNCTION pFunc = functions.pLast;
 
-   *pOwner =NULL;
+   *pOwner = NULL;
    if( pFunc->szName )
       /* we are in a function/procedure -we don't need any tricks */
-      iVar =GetVarPos( pFunc->pFields, szVarName );
+      iVar = GetVarPos( pFunc->pFields, szVarName );
    else
    {
       /* we have to check the list of nested codeblock up to a function
        * where the codeblock is defined
        */
       while( pFunc->pOwner )
-         pFunc =pFunc->pOwner;
-      iVar =GetVarPos( pFunc->pFields, szVarName );
+         pFunc = pFunc->pOwner;
+      iVar = GetVarPos( pFunc->pFields, szVarName );
    }
    /* If not found on the list declared in current function then check
     * the global list (only if there will be no starting procedure)
     */
    if( ! iVar && ! _bStartProc )
    {
-      pFunc =functions.pFirst;
-      iVar =GetVarPos( pFunc->pFields, szVarName );
+      pFunc = functions.pFirst;
+      iVar = GetVarPos( pFunc->pFields, szVarName );
    }
    if( iVar )
-      *pOwner =pFunc;
+      *pOwner = pFunc;
 
    return iVar;
 }
@@ -3554,10 +3577,10 @@ int GetFieldVarPos( char *szVarName, PFUNCTION *pOwner )
 /** Checks if passed variable name is declared as FIELD
  * Returns 0 if not found in FIELD list or its position in this list if found
  */
-int GetMemvarPos( char *szVarName )
+int GetMemvarPos( char * szVarName )
 {
    int iVar;
-   PFUNCTION pFunc =functions.pLast;
+   PFUNCTION pFunc = functions.pLast;
 
    if( pFunc->szName )
       /* we are in a function/procedure -we don't need any tricks */
@@ -3582,7 +3605,7 @@ int GetMemvarPos( char *szVarName )
 
 WORD FixSymbolPos( WORD wCompilePos )
 {
-   return (_bStartProc ? wCompilePos-1 : wCompilePos-2);
+   return ( _bStartProc ? wCompilePos - 1 : wCompilePos - 2 );
 }
 
 
@@ -3601,7 +3624,7 @@ PCOMSYMBOL GetSymbol( char * szSymbolName, WORD * pwPos )
       if( ! strcmp( pSym->szName, szSymbolName ) )
       {
          if( pwPos )
-            *pwPos =wCnt;
+            *pwPos = wCnt;
          return pSym;
       }
       else
@@ -3612,10 +3635,10 @@ PCOMSYMBOL GetSymbol( char * szSymbolName, WORD * pwPos )
             ++wCnt;
          }
          else
-            return 0;
+            return NULL;
       }
    }
-   return 0;
+   return NULL;
 }
 
 PCOMSYMBOL GetSymbolOrd( WORD wSymbol )   /* returns a symbol based on its index on the symbol table */
@@ -3658,23 +3681,22 @@ void Inc( void )
 
    if( _bWarnings )
    {
-      char sType[2];
-
       if( pStackValType )
       {
-         sType[0] = pStackValType->cType;
-         sType[1] = 0;
+         if(  pStackValType->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
+         else if( pStackValType->cType != 'N' )
+         {
+            char sType[ 2 ];
+
+            sType[ 0 ] = pStackValType->cType;
+            sType[ 1 ] = '\0';
+
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
+         }
       }
       else
-        debug_msg( "\n* *Inc() Compile time stack overflow\n", NULL );
-
-    if( pStackValType )
-    {
-        if(  pStackValType->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-        else if( pStackValType->cType != 'N' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
-    }
+         debug_msg( "\n* *Inc() Compile time stack overflow\n", NULL );
    }
 }
 
@@ -3697,10 +3719,10 @@ WORD JumpFalse( int iOffset )
       if( pStackValType )
       {
          sType[0] = pStackValType->cType;
-         sType[1] = 0;
+         sType[1] = '\0';
       }
       else
-        debug_msg( "\n* *HB_P_JUMPFALSE Compile time stack overflow\n", NULL );
+         debug_msg( "\n* *HB_P_JUMPFALSE Compile time stack overflow\n", NULL );
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3719,7 +3741,7 @@ WORD JumpFalse( int iOffset )
 
       if( pFree )
       {
-         hb_xfree( (void *) pFree );
+         hb_xfree( ( void * ) pFree );
       }
    }
 
@@ -3751,10 +3773,10 @@ WORD JumpTrue( int iOffset )
       if( pStackValType )
       {
          sType[0] = pStackValType->cType;
-         sType[1] = 0;
+         sType[1] = '\0';
       }
       else
-        debug_msg( "\n* *HB_P_JUMPTRUE Compile time stack overflow\n", NULL );
+         debug_msg( "\n* *HB_P_JUMPTRUE Compile time stack overflow\n", NULL );
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
@@ -3773,7 +3795,7 @@ WORD JumpTrue( int iOffset )
 
       if( pFree )
       {
-         hb_xfree( (void *) pFree );
+         hb_xfree( ( void * ) pFree );
       }
    }
 
@@ -4035,13 +4057,13 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
       if( pVarType )
       {
          sType[0] = pVarType->cType;
-         sType[1] = 0;
+         sType[1] = '\0';
 
          /* skip back to the assigned value */
          pStackValType = pStackValType->pPrev;
       }
       else
-        debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
+         debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
 
       if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
          GenWarning( _szCWarnings, 'W', WARN_ASSIGN_SUSPECT, szVarName, sType );
@@ -4051,7 +4073,7 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
       /* compile time variable has to be released */
       if( pVarType )
       {
-         hb_xfree( (void *) pVarType );
+         hb_xfree( ( void * ) pVarType );
       }
 
       debug_msg( "\n***--- Var at PopId()\n", NULL );
@@ -4066,12 +4088,12 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
       }
       else
       {
-        debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
+         debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
       }
 
       if( pFree )
       {
-         hb_xfree( (void *) pFree );
+         hb_xfree( ( void * ) pFree );
       }
    }
 }
@@ -4151,17 +4173,17 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
          FieldPCode( HB_P_PUSHALIASEDFIELD, szVarName );
    }
 
-  if( _bWarnings )
-  {
-        PSTACK_VAL_TYPE pNewStackType;
+   if( _bWarnings )
+   {
+      PSTACK_VAL_TYPE pNewStackType;
 
-        pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-        pNewStackType->cType = cVarType;
-        pNewStackType->pPrev = pStackValType;
+      pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = cVarType;
+      pNewStackType->pPrev = pStackValType;
 
-        pStackValType = pNewStackType;
-        debug_msg( "\n***HB_P_PUSHMEMVAR\n ", NULL );
-  }
+      pStackValType = pNewStackType;
+      debug_msg( "\n***HB_P_PUSHMEMVAR\n ", NULL );
+   }
 }
 
 void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable by reference to the virtual machine stack */
@@ -4251,19 +4273,19 @@ void PushDouble( double dNumber, BYTE bDec )
    }
 }
 
-void PushFunCall( char *szFunName )
+void PushFunCall( char * szFunName )
 {
-   char * *pFunction;
+   char * * pFunction;
 
-   pFunction = (char * *)RESERVED_FUNC( szFunName );
+   pFunction = ( char * * ) RESERVED_FUNC( szFunName );
    if( pFunction )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-       PushSymbol( yy_strdup( *pFunction ), 1 );
+      PushSymbol( yy_strdup( *pFunction ), 1 );
    }
    else
-       PushSymbol( szFunName, 1 );
+      PushSymbol( szFunName, 1 );
    PushNil();
 }
 
@@ -4344,14 +4366,14 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
 
    if( iIsFunction )
    {
-      char * *pName = (char * *)RESERVED_FUNC( szSymbolName );
+      char * * pName = ( char * * ) RESERVED_FUNC( szSymbolName );
       /* If it is reserved function name then we should truncate
        * the requested name.
        * We have to use passed szSymbolName so we can latter deallocate it
        * (pName points to static data)
        */
       if( pName )
-        szSymbolName[ strlen( *pName ) ] ='\0';
+         szSymbolName[ strlen( *pName ) ] ='\0';
    }
 
    pSym = GetSymbol( szSymbolName, &wSym );
@@ -4374,9 +4396,9 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
       char cType;
 
       if( iIsFunction )
-        cType = pSym->cType;
+         cType = pSym->cType;
       else
-        cType = cVarType;
+         cType = cVarType;
 
       pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
       pNewStackType->cType = cType;
@@ -4408,23 +4430,22 @@ void Dec( void )
 
    if( _bWarnings )
    {
-      char sType[2];
-
       if( pStackValType )
       {
-        sType[0] = pStackValType->cType;
-        sType[1] = 0;
+         if( pStackValType->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
+         else if( pStackValType->cType != 'N' )
+         {
+            char sType[ 2 ];
+
+            sType[ 0 ] = pStackValType->cType;
+            sType[ 1 ] = '\0';
+
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
+         }
       }
       else
-        debug_msg( "\n***Dec() Compile time stack overflow\n", NULL );
-
-    if( pStackValType )
-    {
-        if( pStackValType->cType == ' ' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
-        else if( pStackValType->cType != 'N' )
-            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType, NULL );
-    }
+         debug_msg( "\n***Dec() Compile time stack overflow\n", NULL );
    }
 }
 
@@ -4455,7 +4476,7 @@ void Do( BYTE bParams )
 
          if( pFree )
          {
-            hb_xfree( (void *) pFree );
+            hb_xfree( ( void * ) pFree );
          }
       }
 
@@ -4465,11 +4486,11 @@ void Do( BYTE bParams )
       if( pStackValType )
          pStackValType = pStackValType->pPrev;
       else
-          debug_msg( "\n***Do(2) Compile time stack overflow\n", NULL );
+         debug_msg( "\n***Do(2) Compile time stack overflow\n", NULL );
 
-      if ( pFree )
+      if( pFree )
       {
-         hb_xfree( (void *) pFree );
+         hb_xfree( ( void * ) pFree );
       }
 
       /* releasing the compile time procedure value */
@@ -4481,9 +4502,9 @@ void Do( BYTE bParams )
          pStackValType = pStackValType->pPrev;
       }
 
-      if ( pFree )
+      if( pFree )
       {
-         hb_xfree( (void *) pFree );
+         hb_xfree( ( void * ) pFree );
       }
    }
 }
@@ -4506,7 +4527,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       PVAR pVar;
 
       pVar = functions.pLast->pLocals;
-      while ( pVar )
+      while( pVar )
       {
          if( pVar->szName && functions.pLast->szName && functions.pLast->szName[0] && ! pVar->iUsed )
             GenWarning( _szCWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
@@ -4515,7 +4536,7 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       }
 
       pVar = functions.pLast->pStatics;
-      while ( pVar )
+      while( pVar )
       {
          if( pVar->szName && functions.pLast->szName && functions.pLast->szName[0] && ! pVar->iUsed )
             GenWarning( _szCWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, functions.pLast->szName );
@@ -4526,27 +4547,27 @@ void FixReturns( void ) /* fixes all last defined function returns jumps offsets
       /* Clear the compile time stack values (should be empty at this point) */
       while( pStackValType )
       {
-        PSTACK_VAL_TYPE pFree;
+         PSTACK_VAL_TYPE pFree;
 
-        debug_msg( "\n***Compile time stack underflow - type: %c\n", pStackValType->cType );
-        pFree = pStackValType;
-        pStackValType = pStackValType->pPrev;
-        hb_xfree( (void *) pFree );
+         debug_msg( "\n***Compile time stack underflow - type: %c\n", pStackValType->cType );
+         pFree = pStackValType;
+         pStackValType = pStackValType->pPrev;
+         hb_xfree( ( void * ) pFree );
       }
-      pStackValType = 0;
+      pStackValType = NULL;
    }
 
 /* TODO: check why it triggers this error in keywords.prg
    if( pLoops )
    {
-     PTR_LOOPEXIT pLoop = pLoops;
-     char cLine[ 64 ];
+      PTR_LOOPEXIT pLoop = pLoops;
+      char cLine[ 64 ];
 
-     while( pLoop->pNext )
-        pLoop =pLoop->pNext;
+      while( pLoop->pNext )
+         pLoop =pLoop->pNext;
 
-     itoa( pLoop->wLine, cLine, 10 );
-     GenError( _szCErrors, 'E', ERR_UNCLOSED_STRU, cLine, NULL );
+      itoa( pLoop->wLine, cLine, 10 );
+      GenError( _szCErrors, 'E', ERR_UNCLOSED_STRU, cLine, NULL );
    }
 */
 }
@@ -4567,13 +4588,13 @@ void Function( BYTE bParams )
          debug_msg( "\n***---Function() parameter %i \n", i );
 
          if( pStackValType )
-          pStackValType = pStackValType->pPrev;
+            pStackValType = pStackValType->pPrev;
          else
-          debug_msg( "\n***Function() parameter %i Compile time stack overflow\n", i );
+            debug_msg( "\n***Function() parameter %i Compile time stack overflow\n", i );
 
          if( pFree )
          {
-            hb_xfree( (void *) pFree );
+            hb_xfree( ( void * ) pFree );
          }
       }
 
@@ -4586,9 +4607,9 @@ void Function( BYTE bParams )
          pStackValType = pStackValType->pPrev;
       }
 
-      if ( pFree )
+      if( pFree )
       {
-         hb_xfree( (void *) pFree );
+         hb_xfree( ( void * ) pFree );
       }
    }
 }
@@ -4608,27 +4629,27 @@ void GenArray( WORD wElements )
          pFree = pStackValType;
          debug_msg( "\n***---element %i at GenArray()\n", wIndex );
 
-          if( pStackValType )
+         if( pStackValType )
             pStackValType = pStackValType->pPrev;
-          else
+         else
             debug_msg( "\n***GenArray() Compile time stack overflow\n", NULL );
 
-          if ( pFree )
-          {
-            hb_xfree( (void *) pFree );
-          }
+         if( pFree )
+         {
+            hb_xfree( ( void * ) pFree );
+         }
       }
 
       if( wElements == 0 )
       {
-          PSTACK_VAL_TYPE pNewStackType;
+         PSTACK_VAL_TYPE pNewStackType;
 
-          pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
-          pNewStackType->cType = 'A';
-          pNewStackType->pPrev = pStackValType;
+         pNewStackType = ( STACK_VAL_TYPE * )hb_xgrab( sizeof( STACK_VAL_TYPE ) );
+         pNewStackType->cType = 'A';
+         pNewStackType->pPrev = pStackValType;
 
-          pStackValType = pNewStackType;
-          debug_msg( "\n***empty array in GenArray()\n ", NULL );
+         pStackValType = pNewStackType;
+         debug_msg( "\n***empty array in GenArray()\n ", NULL );
       }
 
       /* Using the either remaining 1st element place holder or a new item if empty array. */
@@ -4672,7 +4693,7 @@ void GenPCode1( BYTE byte )
 
          if( pFree )
          {
-            hb_xfree( (void *) pFree );
+            hb_xfree( ( void * ) pFree );
          }
 
          /* Releasing compile time array element index value */
@@ -4686,7 +4707,7 @@ void GenPCode1( BYTE byte )
 
          if( pFree )
          {
-            hb_xfree( (void *) pFree );
+            hb_xfree( ( void * ) pFree );
          }
       }
       else if( byte == HB_P_POP || byte == HB_P_RETVALUE || byte == HB_P_FORTEST || byte == HB_P_ARRAYAT )
@@ -4703,180 +4724,180 @@ void GenPCode1( BYTE byte )
 
          if( pFree )
          {
-            hb_xfree( (void *) pFree );
+            hb_xfree( ( void * ) pFree );
          }
       }
       else if( byte == HB_P_MULT || byte == HB_P_DIVIDE || byte == HB_P_MODULUS || byte == HB_P_POWER || byte == HB_P_NEGATE )
       {
-        PSTACK_VAL_TYPE pOperand1 = 0, pOperand2;
-        char sType1[2], sType2[2];
+         PSTACK_VAL_TYPE pOperand1 = NULL, pOperand2;
+         char sType1[2], sType2[2];
 
-        /* 2nd. Operand (stack top)*/
-        pOperand2 = pStackValType;
+         /* 2nd. Operand (stack top)*/
+         pOperand2 = pStackValType;
 
-        /* skip back to the 1st. operand */
-        if( pOperand2 )
-        {
+         /* skip back to the 1st. operand */
+         if( pOperand2 )
+         {
             pOperand1 = pOperand2->pPrev;
             sType2[0] = pOperand1->cType;
-            sType2[1] = 0;
-        }
-        else
+            sType2[1] = '\0';
+         }
+         else
             debug_msg( "\n***HB_P_MULT pCode: %i Compile time stack overflow\n", byte );
 
-        /* skip back to the 1st. operand */
-        if( pOperand1 )
-        {
+         /* skip back to the 1st. operand */
+         if( pOperand1 )
+         {
             sType1[0] = pOperand1->cType;
-            sType1[1] = 0;
-        }
-        else
+            sType1[1] = '\0';
+         }
+         else
             debug_msg( "\n***HB_P_MULT2 pCode: %i Compile time stack overflow\n", byte );
 
-        if( pOperand1 && pOperand1->cType != 'N' && pOperand1->cType != ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType1, NULL );
-        else if( pOperand1 && pOperand1->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
+         if( pOperand1 && pOperand1->cType != 'N' && pOperand1->cType != ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType1, NULL );
+         else if( pOperand1 && pOperand1->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
 
-        if( pOperand2 && pOperand2->cType != 'N' && pOperand2->cType != ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType2, NULL );
-        else if( pOperand2 && pOperand2->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
+         if( pOperand2 && pOperand2->cType != 'N' && pOperand2->cType != ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_TYPE, sType2, NULL );
+         else if( pOperand2 && pOperand2->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
 
-         /* compile time 2nd. operand has to be released */
-        if( pOperand2 )
-        {
-          hb_xfree( (void *) pOperand2 );
-        }
+          /* compile time 2nd. operand has to be released */
+         if( pOperand2 )
+         {
+            hb_xfree( ( void * ) pOperand2 );
+         }
 
-        /* compile time 1st. operand has to be released *but* result will be pushed and assumed numeric type */
-        pStackValType = pOperand1;
-        pStackValType->cType = 'N';
+         /* compile time 1st. operand has to be released *but* result will be pushed and assumed numeric type */
+         pStackValType = pOperand1;
+         pStackValType->cType = 'N';
       }
       else if( byte == HB_P_PLUS || byte == HB_P_MINUS )
       {
-        PSTACK_VAL_TYPE pOperand1 = 0, pOperand2;
-        char sType1[2], sType2[2], cType = ' ';
+         PSTACK_VAL_TYPE pOperand1 = NULL, pOperand2;
+         char sType1[2], sType2[2], cType = ' ';
 
-        /* 2nd. Operand (stack top)*/
-        pOperand2 = pStackValType;
+         /* 2nd. Operand (stack top)*/
+         pOperand2 = pStackValType;
 
-        /* skip back to the 1st. operand */
-        if( pOperand2 )
-        {
+         /* skip back to the 1st. operand */
+         if( pOperand2 )
+         {
             pOperand1 = pOperand2->pPrev;
             sType2[0] = pOperand2->cType;
-            sType2[1] = 0;
-        }
-        else
-          debug_msg( "\n***HB_P_PLUS / HB_P_MINUS Compile time stack overflow\n", NULL );
+            sType2[1] = '\0';
+         }
+         else
+            debug_msg( "\n***HB_P_PLUS / HB_P_MINUS Compile time stack overflow\n", NULL );
 
-        if( pOperand1 )
-        {
+         if( pOperand1 )
+         {
             sType1[0] = pOperand1->cType;
-            sType1[1] = 0;
-        }
-        else
+            sType1[1] = '\0';
+         }
+         else
             debug_msg( "\n***HB_P_PLUS / HB_P_MINUS2 Compile time stack overflow\n", NULL );
 
-        if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
-          GenWarning( _szCWarnings, 'W', WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
-        else if( pOperand1 && pOperand2 && pOperand2->cType != ' ' && pOperand1->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType2, NULL );
-        else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
-        else
-          cType = pOperand1->cType;
+         if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
+            GenWarning( _szCWarnings, 'W', WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
+         else if( pOperand1 && pOperand2 && pOperand2->cType != ' ' && pOperand1->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType2, NULL );
+         else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
+         else
+            cType = pOperand1->cType;
 
-         /* compile time 2nd. operand has to be released */
-        if( pOperand2 )
-        {
-          hb_xfree( (void *) pOperand2 );
-        }
+          /* compile time 2nd. operand has to be released */
+         if( pOperand2 )
+         {
+            hb_xfree( ( void * ) pOperand2 );
+         }
 
-        /* compile time 1st. operand has to be released *but* result will be pushed and type as calculated */
-        /* Resetting */
-        pStackValType = pOperand1;
-        pStackValType->cType = cType;
+         /* compile time 1st. operand has to be released *but* result will be pushed and type as calculated */
+         /* Resetting */
+         pStackValType = pOperand1;
+         pStackValType->cType = cType;
       }
       else if( byte == HB_P_EQUAL || byte == HB_P_LESS ||  byte == HB_P_GREATER || byte == HB_P_INSTRING || byte == HB_P_LESSEQUAL || byte == HB_P_GREATEREQUAL || byte == HB_P_EXACTLYEQUAL || byte == HB_P_NOTEQUAL )
       {
-        PSTACK_VAL_TYPE pOperand1 = 0, pOperand2;
-        char sType1[2], sType2[2];
+         PSTACK_VAL_TYPE pOperand1 = NULL, pOperand2;
+         char sType1[2], sType2[2];
 
-        /* 2nd. Operand (stack top)*/
-        pOperand2 = pStackValType;
+         /* 2nd. Operand (stack top)*/
+         pOperand2 = pStackValType;
 
-        /* skip back to the 1st. operand */
-        if( pOperand2 )
-        {
+         /* skip back to the 1st. operand */
+         if( pOperand2 )
+         {
             pOperand1 = pOperand2->pPrev;
             sType2[0] = pOperand2->cType;
-            sType2[1] = 0;
-        }
-        else
+            sType2[1] = '\0';
+         }
+         else
             debug_msg( "\n***HB_P_EQUAL pCode: %i Compile time stack overflow\n", byte );
 
-        if( pOperand1 )
-        {
+         if( pOperand1 )
+         {
             sType1[0] = pOperand1->cType;
-            sType1[1] = 0;
-        }
-        else
+            sType1[1] = '\0';
+         }
+         else
             debug_msg( "\n***HB_P_EQUAL2 pCode: %i Compile time stack overflow\n", byte );
 
-        if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
-          GenWarning( _szCWarnings, 'W', WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
-        else if( pOperand1 && pOperand2 && pOperand2->cType != ' ' && pOperand1->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType2, NULL );
-        else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
+         if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType != ' ' && pOperand1->cType != pOperand2->cType )
+            GenWarning( _szCWarnings, 'W', WARN_OPERANDS_INCOMPATBLE, sType1, sType2 );
+         else if( pOperand1 && pOperand2 && pOperand2->cType != ' ' && pOperand1->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType2, NULL );
+         else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
 
-         /* compile time 2nd. operand has to be released */
-        if( pOperand2 )
-        {
-           hb_xfree( (void *) pOperand2 );
-        }
+          /* compile time 2nd. operand has to be released */
+         if( pOperand2 )
+         {
+            hb_xfree( ( void * ) pOperand2 );
+         }
 
-        /* compile time 1st. operand has to be released *but* result will be pushed and of type logical */
-        if( pOperand1 )
+         /* compile time 1st. operand has to be released *but* result will be pushed and of type logical */
+         if( pOperand1 )
             pOperand1->cType = 'L';
 
-        /* Resetting */
-        pStackValType = pOperand1;
+         /* Resetting */
+         pStackValType = pOperand1;
       }
       else if( byte == HB_P_NOT )
       {
-        char sType[2];
+         char sType[2];
 
-        if( pStackValType )
-        {
+         if( pStackValType )
+         {
             sType[0] = pStackValType->cType;
-            sType[1] = 0;
-        }
-        else
+            sType[1] = '\0';
+         }
+         else
             debug_msg( "\n***HB_P_NOT Compile time stack overflow\n", NULL );
 
-        if( pStackValType && pStackValType->cType == ' ' )
-          GenWarning( _szCWarnings, 'W', WARN_LOGICAL_SUSPECT, NULL, NULL );
-        else if( pStackValType && pStackValType->cType != 'L' )
-          GenWarning( _szCWarnings, 'W', WARN_LOGICAL_TYPE, sType, NULL );
+         if( pStackValType && pStackValType->cType == ' ' )
+            GenWarning( _szCWarnings, 'W', WARN_LOGICAL_SUSPECT, NULL, NULL );
+         else if( pStackValType && pStackValType->cType != 'L' )
+            GenWarning( _szCWarnings, 'W', WARN_LOGICAL_TYPE, sType, NULL );
 
-        /* compile time 1st. operand has to be released *but* result will be pushed and assumed logical */
-        if( pStackValType )
+         /* compile time 1st. operand has to be released *but* result will be pushed and assumed logical */
+         if( pStackValType )
             pStackValType->cType = 'L';
       }
    }
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = (BYTE *) hb_xgrab( PCODE_CHUNK );
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
       pFunc->lPCodeSize = PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
    else
       if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 1 )
-         pFunc->pCode = (BYTE *)hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
+         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte;
 }
@@ -4887,13 +4908,13 @@ void GenPCode3( BYTE byte1, BYTE byte2, BYTE byte3 )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->pCode      = (BYTE *) hb_xgrab( PCODE_CHUNK );
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( PCODE_CHUNK );
       pFunc->lPCodeSize = PCODE_CHUNK;
       pFunc->lPCodePos  = 0;
    }
    else
       if( ( pFunc->lPCodeSize - pFunc->lPCodePos ) < 3 )
-         pFunc->pCode = (BYTE *) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
+         pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize += PCODE_CHUNK );
 
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte1;
    pFunc->pCode[ pFunc->lPCodePos++ ] = byte2;
@@ -4906,15 +4927,15 @@ void GenPCodeN( BYTE * pBuffer, WORD wSize )
 
    if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
    {
-      pFunc->lPCodeSize = ((wSize / PCODE_CHUNK) +1) * PCODE_CHUNK;
-      pFunc->pCode      = (BYTE *) hb_xgrab( pFunc->lPCodeSize );
+      pFunc->lPCodeSize = ( ( wSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK;
+      pFunc->pCode      = ( BYTE * ) hb_xgrab( pFunc->lPCodeSize );
       pFunc->lPCodePos  = 0;
    }
    else if( pFunc->lPCodePos + wSize > pFunc->lPCodeSize )
    {
       /* not enough free space in pcode buffer - increase it */
-      pFunc->lPCodeSize +=( ((wSize / PCODE_CHUNK) +1) * PCODE_CHUNK );
-      pFunc->pCode = (BYTE *) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
+      pFunc->lPCodeSize += ( ( ( wSize / PCODE_CHUNK ) + 1 ) * PCODE_CHUNK );
+      pFunc->pCode = ( BYTE * ) hb_xrealloc( pFunc->pCode, pFunc->lPCodeSize );
    }
 
    memcpy( pFunc->pCode+pFunc->lPCodePos, pBuffer, wSize );
@@ -4940,7 +4961,7 @@ int SequenceBegin( void )
 {
    GenPCode3( HB_P_SEQBEGIN, 0, 0 );
 
-   return functions.pLast->lPCodePos -2;
+   return functions.pLast->lPCodePos - 2;
 }
 
 /* Generate the opcode to close BEGIN/END sequence
@@ -4954,7 +4975,7 @@ int SequenceEnd( void )
 {
    GenPCode3( HB_P_SEQEND, 0, 0 );
 
-   return functions.pLast->lPCodePos -2;
+   return functions.pLast->lPCodePos - 2;
 }
 
 /* Remove unnecessary opcodes in case there were no executable statements
@@ -4963,11 +4984,13 @@ int SequenceEnd( void )
 void SequenceFinish( int iStartPos, int bUsualStmts )
 {
    if( ! _bDebugInfo ) /* only if no debugger info is required */
+   {
       if( ! bUsualStmts )
       {
-         functions.pLast->lPCodePos =iStartPos -1; /* remove also HB_P_SEQBEGIN */
-         _wLastLinePos =iStartPos -4;
+         functions.pLast->lPCodePos = iStartPos - 1; /* remove also HB_P_SEQBEGIN */
+         _wLastLinePos = iStartPos - 4;
       }
+   }
 }
 
 
@@ -4987,91 +5010,91 @@ void CodeBlockStart()
 
 void CodeBlockEnd()
 {
-  PFUNCTION pCodeblock;   /* pointer to the current codeblock */
-  PFUNCTION pFunc;        /* poiter to a function that owns a codeblock */
-  WORD wSize;
-  WORD wLocals = 0;   /* number of referenced local variables */
-  WORD wPos;
-  PVAR pVar, pFree;
+   PFUNCTION pCodeblock;   /* pointer to the current codeblock */
+   PFUNCTION pFunc;        /* poiter to a function that owns a codeblock */
+   WORD wSize;
+   WORD wLocals = 0;   /* number of referenced local variables */
+   WORD wPos;
+   PVAR pVar, pFree;
 
-  pCodeblock = functions.pLast;
+   pCodeblock = functions.pLast;
 
-  /* return to pcode buffer of function/codeblock in which the current
-   * codeblock was defined
-   */
-  functions.pLast = pCodeblock->pOwner;
+   /* return to pcode buffer of function/codeblock in which the current
+    * codeblock was defined
+    */
+   functions.pLast = pCodeblock->pOwner;
 
-  /* find the function that owns the codeblock */
-  pFunc = pCodeblock->pOwner;
-  while( pFunc->pOwner )
-    pFunc = pFunc->pOwner;
-  pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
+   /* find the function that owns the codeblock */
+   pFunc = pCodeblock->pOwner;
+   while( pFunc->pOwner )
+      pFunc = pFunc->pOwner;
+   pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
 
-  /* generate a proper codeblock frame with a codeblock size and with
-   * a number of expected parameters
-   */
-  /*QUESTION: would be 64kB enough for a codeblock size?
-   * we are assuming now a WORD for a size of codeblock
-   */
+   /* generate a proper codeblock frame with a codeblock size and with
+    * a number of expected parameters
+    */
+   /*QUESTION: would be 64kB enough for a codeblock size?
+    * we are assuming now a WORD for a size of codeblock
+    */
 
-  /* Count the number of referenced local variables */
-  pVar = pCodeblock->pStatics;
-  while( pVar )
-  {
-    pVar = pVar->pNext;
-    ++wLocals;
-  }
+   /* Count the number of referenced local variables */
+   pVar = pCodeblock->pStatics;
+   while( pVar )
+   {
+      pVar = pVar->pNext;
+      ++wLocals;
+   }
 
-  /*NOTE:  8 = HB_P_PUSHBLOCK + WORD(size) + WORD(wParams) + WORD(wLocals) +_ENDBLOCK */
-  wSize =( WORD ) pCodeblock->lPCodePos +8 +wLocals*2;
+   /*NOTE:  8 = HB_P_PUSHBLOCK + WORD(size) + WORD(wParams) + WORD(wLocals) +_ENDBLOCK */
+   wSize =( WORD ) pCodeblock->lPCodePos +8 +wLocals*2;
 
-  GenPCode3( HB_P_PUSHBLOCK, LOBYTE(wSize), HIBYTE(wSize) );
-  GenPCode1( LOBYTE(pCodeblock->wParamCount) );
-  GenPCode1( HIBYTE(pCodeblock->wParamCount) );
-  GenPCode1( LOBYTE(wLocals) );
-  GenPCode1( HIBYTE(wLocals) );
+   GenPCode3( HB_P_PUSHBLOCK, LOBYTE(wSize), HIBYTE(wSize) );
+   GenPCode1( LOBYTE(pCodeblock->wParamCount) );
+   GenPCode1( HIBYTE(pCodeblock->wParamCount) );
+   GenPCode1( LOBYTE(wLocals) );
+   GenPCode1( HIBYTE(wLocals) );
 
-  /* generate the table of referenced local variables */
-  pVar = pCodeblock->pStatics;
-  while( wLocals-- )
-  {
-    wPos = GetVarPos( pFunc->pLocals, pVar->szName );
-    GenPCode1( LOBYTE(wPos) );
-    GenPCode1( HIBYTE(wPos) );
+   /* generate the table of referenced local variables */
+   pVar = pCodeblock->pStatics;
+   while( wLocals-- )
+   {
+      wPos = GetVarPos( pFunc->pLocals, pVar->szName );
+      GenPCode1( LOBYTE(wPos) );
+      GenPCode1( HIBYTE(wPos) );
 
-    pFree = pVar;
-    hb_xfree( (void *) pFree->szName );
-    pVar = pVar->pNext;
-    hb_xfree( (void *) pFree );
-  }
+      pFree = pVar;
+      hb_xfree( ( void * ) pFree->szName );
+      pVar = pVar->pNext;
+      hb_xfree( ( void * ) pFree );
+   }
 
-  GenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos );
-  GenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
+   GenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos );
+   GenPCode1( HB_P_ENDBLOCK ); /* finish the codeblock */
 
-  /* this fake-function is no longer needed */
-  hb_xfree( (void *) pCodeblock->pCode );
-  pVar = pCodeblock->pLocals;
-  while( pVar )
-  {
-    if( _bWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
-       GenWarning( _szCWarnings, 'W', WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
+   /* this fake-function is no longer needed */
+   hb_xfree( ( void * ) pCodeblock->pCode );
+   pVar = pCodeblock->pLocals;
+   while( pVar )
+   {
+      if( _bWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
+         GenWarning( _szCWarnings, 'W', WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
-    /* free used variables */
-    pFree = pVar;
-    hb_xfree( (void *) pFree->szName );
-    pVar = pVar->pNext;
-    hb_xfree( (void *) pFree );
-  }
-  hb_xfree( (void *) pCodeblock );
+      /* free used variables */
+      pFree = pVar;
+      hb_xfree( ( void * ) pFree->szName );
+      pVar = pVar->pNext;
+      hb_xfree( ( void * ) pFree );
+   }
+   hb_xfree( ( void * ) pCodeblock );
 
-  if( _bWarnings )
-  {
-     if( pStackValType )
-        /* reusing the place holder of the result value */
-        pStackValType->cType = 'B';
-     else
-        debug_msg( "\n***CodeBlockEnd() Compile time stack overflow\n", NULL );
-  }
+   if( _bWarnings )
+   {
+      if( pStackValType )
+         /* reusing the place holder of the result value */
+         pStackValType->cType = 'B';
+      else
+         debug_msg( "\n***CodeBlockEnd() Compile time stack overflow\n", NULL );
+   }
 }
 
 /* Set the name of an alias for the list of previously declared FIELDs
@@ -5081,17 +5104,17 @@ void CodeBlockEnd()
  */
 void FieldsSetAlias( char * szAlias, int iField )
 {
-  PVAR pVar;
+   PVAR pVar;
 
-  pVar = functions.pLast->pFields;
-  while( iField-- && pVar )
+   pVar = functions.pLast->pFields;
+   while( iField-- && pVar )
       pVar = pVar->pNext;
 
-  while( pVar )
-  {
-    pVar->szAlias = szAlias;
-    pVar = pVar->pNext;
-  }
+   while( pVar )
+   {
+      pVar->szAlias = szAlias;
+      pVar = pVar->pNext;
+   }
 }
 
 /* This functions counts the number of FIELD declaration in a function
@@ -5099,16 +5122,16 @@ void FieldsSetAlias( char * szAlias, int iField )
  */
 int FieldsCount()
 {
-  int iFields = 0;
-  PVAR pVar = functions.pLast->pFields;
+   int iFields = 0;
+   PVAR pVar = functions.pLast->pFields;
 
-  while( pVar )
-  {
-    ++iFields;
-    pVar = pVar->pNext;
-  }
+   while( pVar )
+   {
+      ++iFields;
+      pVar = pVar->pNext;
+   }
 
-  return iFields;
+   return iFields;
 }
 
 /*
@@ -5121,12 +5144,12 @@ int FieldsCount()
  */
 void StaticDefStart( void )
 {
-  iVarScope =VS_STATIC;
-  Line();
+   iVarScope =VS_STATIC;
+   Line();
 
-  functions.pLast->bFlags |= FUN_USES_STATICS;
-  if( ! _pInitFunc )
-  {
+   functions.pLast->bFlags |= FUN_USES_STATICS;
+   if( ! _pInitFunc )
+   {
       _pInitFunc =FunctionNew( yy_strdup("(_INITSTATICS)"), FS_INIT );
       _pInitFunc->pOwner =functions.pLast;
       _pInitFunc->bFlags =FUN_USES_STATICS | FUN_PROCEDURE;
@@ -5135,13 +5158,12 @@ void StaticDefStart( void )
       PushInteger( 1 );   /* the number of static variables is unknown now */
       GenPCode3( HB_P_STATICS, 0, 0 );
       GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
-  }
-  else
-  {
+   }
+   else
+   {
       _pInitFunc->pOwner =functions.pLast;
       functions.pLast =_pInitFunc;
-  }
-
+   }
 }
 
 /*
@@ -5150,26 +5172,26 @@ void StaticDefStart( void )
  */
 void StaticDefEnd( WORD wCount )
 {
-  functions.pLast =_pInitFunc->pOwner;
-  _pInitFunc->pOwner =NULL;
-  _wStatics += wCount;
-  iVarScope =VS_LOCAL;
+   functions.pLast =_pInitFunc->pOwner;
+   _pInitFunc->pOwner =NULL;
+   _wStatics += wCount;
+   iVarScope =VS_LOCAL;
 
-  if( _bWarnings )
-  {
-     PSTACK_VAL_TYPE pFree;
+   if( _bWarnings )
+   {
+      PSTACK_VAL_TYPE pFree;
 
-     if( pStackValType )
-     {
-        pFree = pStackValType;
-        debug_msg( "\n***---%i in StaticeDefEnd()\n", _wStatics );
+      if( pStackValType )
+      {
+         pFree = pStackValType;
+         debug_msg( "\n***---%i in StaticeDefEnd()\n", _wStatics );
 
-        pStackValType = pStackValType->pPrev;
-        hb_xfree( (void *) pFree );
-     }
-     else
-        debug_msg( "\n***StaticDefEnd() Compile time stack overflow\n", NULL );
-  }
+         pStackValType = pStackValType->pPrev;
+         hb_xfree( ( void * ) pFree );
+      }
+      else
+         debug_msg( "\n***StaticDefEnd() Compile time stack overflow\n", NULL );
+   }
 }
 
 /*
@@ -5191,24 +5213,24 @@ void StaticAssign( void )
  */
 static void LoopStart( void )
 {
-  PTR_LOOPEXIT pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof(LOOPEXIT) );
+   PTR_LOOPEXIT pLoop = ( PTR_LOOPEXIT ) hb_xgrab( sizeof(LOOPEXIT) );
 
-  if( pLoops )
-  {
-    PTR_LOOPEXIT pLast =pLoops;
+   if( pLoops )
+   {
+      PTR_LOOPEXIT pLast =pLoops;
 
-    while( pLast->pNext )
-      pLast =pLast->pNext;
-    pLast->pNext =pLoop;
-  }
-  else
-    pLoops = pLoop;
+      while( pLast->pNext )
+         pLast =pLast->pNext;
+      pLast->pNext =pLoop;
+   }
+   else
+      pLoops = pLoop;
 
-  pLoop->pNext       =NULL;
-  pLoop->pExitList   =NULL;
-  pLoop->pLoopList   =NULL;
-  pLoop->wOffset =functions.pLast->lPCodePos;  /* store the start position */
-  pLoop->wLine   =iLine;
+   pLoop->pNext       = NULL;
+   pLoop->pExitList   = NULL;
+   pLoop->pLoopList   = NULL;
+   pLoop->wOffset = functions.pLast->lPCodePos;  /* store the start position */
+   pLoop->wLine   = iLine;
 }
 
 /*
@@ -5216,31 +5238,31 @@ static void LoopStart( void )
  */
 static void LoopLoop( void )
 {
-  PTR_LOOPEXIT pLast, pLoop;
+   PTR_LOOPEXIT pLast, pLoop;
 
-  if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
-  {
+   if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
+   {
       /* Attempt to LOOP from BEGIN/END sequence
        * Notice that LOOP is allowed in RECOVER code.
        */
       GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
-  }
+   }
 
-  pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
+   pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
 
-  pLoop->pLoopList =NULL;
-  pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
+   pLoop->pLoopList =NULL;
+   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
 
-  pLast =pLoops;
-  while( pLast->pNext )
-    pLast =pLast->pNext;
+   pLast =pLoops;
+   while( pLast->pNext )
+      pLast =pLast->pNext;
 
-  while( pLast->pLoopList )
-    pLast =pLast->pLoopList;
+   while( pLast->pLoopList )
+      pLast =pLast->pLoopList;
 
-  pLast->pLoopList =pLoop;
+   pLast->pLoopList =pLoop;
 
-  Jump( 0 );
+   Jump( 0 );
 }
 
 /*
@@ -5248,31 +5270,31 @@ static void LoopLoop( void )
  */
 static void LoopExit( void )
 {
-  PTR_LOOPEXIT pLast, pLoop;
+   PTR_LOOPEXIT pLast, pLoop;
 
-  if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
-  {
+   if( _wSeqCounter && _wSeqCounter >= _wWhileCounter )
+   {
       /* Attempt to EXIT from BEGIN/END sequence
        * Notice that EXIT is allowed in RECOVER code.
        */
       GenError( _szCErrors, 'E', ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
-  }
+   }
 
-  pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
+   pLoop = (PTR_LOOPEXIT) hb_xgrab( sizeof( LOOPEXIT ) );
 
-  pLoop->pExitList =NULL;
-  pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
+   pLoop->pExitList =NULL;
+   pLoop->wOffset =functions.pLast->lPCodePos;  /* store the position to fix */
 
-  pLast =pLoops;
-  while( pLast->pNext )
-    pLast =pLast->pNext;
+   pLast =pLoops;
+   while( pLast->pNext )
+      pLast =pLast->pNext;
 
-  while( pLast->pExitList )
-    pLast =pLast->pExitList;
+   while( pLast->pExitList )
+      pLast =pLast->pExitList;
 
-  pLast->pExitList =pLoop;
+   pLast->pExitList =pLoop;
 
-  Jump( 0 );
+   Jump( 0 );
 }
 
 /*
@@ -5280,19 +5302,19 @@ static void LoopExit( void )
  */
 static void LoopHere( void )
 {
-  PTR_LOOPEXIT pLoop = pLoops, pFree;
+   PTR_LOOPEXIT pLoop = pLoops, pFree;
 
-  while( pLoop->pNext )
-    pLoop = pLoop->pNext;
+   while( pLoop->pNext )
+      pLoop = pLoop->pNext;
 
-  pLoop =pLoop->pLoopList;
-  while( pLoop )
-  {
-    JumpHere( pLoop->wOffset +1 );
-    pFree = pLoop;
-    pLoop = pLoop->pLoopList;
-    hb_xfree( (void *) pFree );
-  }
+   pLoop = pLoop->pLoopList;
+   while( pLoop )
+   {
+      JumpHere( pLoop->wOffset +1 );
+      pFree = pLoop;
+      pLoop = pLoop->pLoopList;
+      hb_xfree( ( void * ) pFree );
+   }
 }
 
 /*
@@ -5300,27 +5322,27 @@ static void LoopHere( void )
  */
 static void LoopEnd( void )
 {
-  PTR_LOOPEXIT pExit, pLoop = pLoops, pLast = pLoops, pFree;
+   PTR_LOOPEXIT pExit, pLoop = pLoops, pLast = pLoops, pFree;
 
-  while( pLoop->pNext )
-  {
-    pLast = pLoop;
-    pLoop = pLoop->pNext;
-  }
+   while( pLoop->pNext )
+   {
+      pLast = pLoop;
+      pLoop = pLoop->pNext;
+   }
 
-  pExit =pLoop->pExitList;
-  while( pExit )
-  {
-    JumpHere( pExit->wOffset +1 );
-    pFree = pExit;
-    pExit = pExit->pExitList;
-    hb_xfree( (void *) pFree );
-  }
+   pExit =pLoop->pExitList;
+   while( pExit )
+   {
+      JumpHere( pExit->wOffset +1 );
+      pFree = pExit;
+      pExit = pExit->pExitList;
+      hb_xfree( ( void * ) pFree );
+   }
 
-  pLast->pNext = NULL;
-  if( pLoop == pLoops )
-    pLoops = NULL;
-  hb_xfree( (void *) pLoop );
+   pLast->pNext = NULL;
+   if( pLoop == pLoops )
+      pLoops = NULL;
+   hb_xfree( ( void * ) pLoop );
 }
 
 #define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )
@@ -5407,6 +5429,13 @@ PHB_FNAME hb_fsFNameSplit( char * szFilename )
    memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
    pName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
 
+/* DEBUG
+   printf( "\nFilename: %s\n", szFilename );
+   printf( "\n  szPath: %s\n", pName->szPath );
+   printf( "\n  szName: %s\n", pName->szName );
+   printf( "\n   szExt: %s\n", pName->szExtension );
+*/
+
    return pName;
 }
 
@@ -5486,21 +5515,22 @@ char * yy_strupr( char * p )
 {
    char * p1;
 
-   for ( p1 = p; * p1; p1++ )
+   for( p1 = p; * p1; p1++ )
       * p1 = toupper( * p1 );
-   return( p );
+
+   return p;
 }
 
-char * yy_strdup( char *p )
+char * yy_strdup( char * p )
 {
-  char *pDup;
-  int iLen;
+   char * pDup;
+   int iLen;
 
-  iLen = strlen( p ) +1;
-  pDup = (char *) hb_xgrab( iLen );
-  memcpy( pDup, p, iLen );
+   iLen = strlen( p ) +1;
+   pDup = ( char * ) hb_xgrab( iLen );
+   memcpy( pDup, p, iLen );
 
-  return pDup;
+   return pDup;
 }
 
 
@@ -5508,7 +5538,7 @@ char * yy_strdup( char *p )
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-void GenPortObj( char *szFileName, char *szName )
+void GenPortObj( char * szFileName, char * szName )
 {
    PFUNCTION pFunc /*= functions.pFirst */;
    PCOMSYMBOL pSym = symbols.pFirst;
@@ -5525,12 +5555,12 @@ void GenPortObj( char *szFileName, char *szName )
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-     printf( "Error opening file %s\n", szFileName );
-     return;
+      printf( "Error opening file %s\n", szFileName );
+      return;
    }
 
    if( ! _bQuiet )
-      printf( "\ngenerating portable object file...\n" );
+      printf( "\nGenerating portable object...\n" );
 
    /* writes the symbol table */
 
@@ -5543,10 +5573,10 @@ void GenPortObj( char *szFileName, char *szName )
       lSymbols++;
       pSym = pSym->pNext;
    }
-   fputc( (BYTE) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
-   fputc( (BYTE) ( ( lSymbols >> 8  ) & 255 ), yyc );
-   fputc( (BYTE) ( ( lSymbols >> 16 ) & 255 ), yyc );
-   fputc( (BYTE) ( ( lSymbols >> 24 ) & 255 ), yyc );
+   fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
+   fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), yyc );
+   fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );
+   fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), yyc );
 
    pSym = symbols.pFirst;
    if( ! _bStartProc )
@@ -5591,16 +5621,16 @@ void GenPortObj( char *szFileName, char *szName )
       lSymbols++;
       pFunc = pFunc->pNext;
    }
-   fputc( (BYTE) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
-   fputc( (BYTE) ( ( lSymbols >> 8  ) & 255 ), yyc );
-   fputc( (BYTE) ( ( lSymbols >> 16 ) & 255 ), yyc );
-   fputc( (BYTE) ( ( lSymbols >> 24 ) & 255 ), yyc );
+   fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
+   fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), yyc );
+   fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );
+   fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), yyc );
 
    /* Generate functions data
     */
    pFunc = functions.pFirst;
    if( ! _bStartProc )
-     pFunc = pFunc->pNext; /* No implicit starting procedure */
+      pFunc = pFunc->pNext; /* No implicit starting procedure */
 
    while( pFunc )
    {
@@ -5611,10 +5641,10 @@ void GenPortObj( char *szFileName, char *szName )
        * one additional byte
        */
       ulCodeLength =pFunc->lPCodePos +1;
-      fputc( (BYTE) ( ( ulCodeLength       ) & 255 ), yyc ); /* Write size */
-      fputc( (BYTE) ( ( ulCodeLength >> 8  ) & 255 ), yyc );
-      fputc( (BYTE) ( ( ulCodeLength >> 16 ) & 255 ), yyc );
-      fputc( (BYTE) ( ( ulCodeLength >> 24 ) & 255 ), yyc );
+      fputc( ( BYTE ) ( ( ulCodeLength       ) & 255 ), yyc ); /* Write size */
+      fputc( ( BYTE ) ( ( ulCodeLength >> 8  ) & 255 ), yyc );
+      fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ), yyc );
+      fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ), yyc );
 
 /*      printf( "Creating output for %s\n", pFunc->szName ); */
 
@@ -5708,9 +5738,9 @@ void GenPortObj( char *szFileName, char *szName )
 
                     if( bLocals || pFunc->wParamCount )
                     {
-                        fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
-                        fputc(   (BYTE)(bLocals - pFunc->wParamCount), yyc );
-                        fputc(   (BYTE)(pFunc->wParamCount), yyc );
+                        fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                        fputc( ( BYTE )(bLocals - pFunc->wParamCount), yyc );
+                        fputc( ( BYTE )(pFunc->wParamCount), yyc );
                         lPCodePos += 2;
                     }
                     else
@@ -5731,7 +5761,7 @@ void GenPortObj( char *szFileName, char *szName )
             case HB_P_POPALIASEDFIELD:
             case HB_P_PUSHALIASEDFIELD:
                  fputc( pFunc->pCode[ lPCodePos ], yyc );
-                 wVar =FixSymbolPos( pFunc->pCode[ lPCodePos+1 ] + 256 *pFunc->pCode[ lPCodePos+2 ] );
+                 wVar =FixSymbolPos( pFunc->pCode[ lPCodePos+1 ] + 256 * pFunc->pCode[ lPCodePos+2 ] );
                  fputc( LOBYTE( wVar ), yyc );
                  fputc( HIBYTE( wVar ), yyc );
                  lPCodePos +=3;
@@ -5747,7 +5777,7 @@ void GenPortObj( char *szFileName, char *szName )
                  break;
 
             case HB_P_PUSHBLOCK:
-                 wVar = * ( ( WORD *) &( pFunc->pCode [ lPCodePos + 5 ] ) );
+                 wVar = * ( ( WORD * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
                  fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
                  fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
                  fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
@@ -5927,36 +5957,38 @@ static FUNCINFO _StdFun[] = {
 { 0           , 0, 0 }
 };
 
-void CheckArgs( char *cFuncCall, int iArgs )
+void CheckArgs( char * szFuncCall, int iArgs )
 {
-   FUNCINFO *f = _StdFun;
+   FUNCINFO * f = _StdFun;
    int i = 0;
    int iPos = -1;
    int iCmp;
 
-   while( f[i].cFuncName )
+   while( f[ i ].cFuncName )
    {
-     iCmp = strncmp( cFuncCall, f[i].cFuncName, 4 );
-     if( iCmp == 0 )
-         iCmp = strncmp( cFuncCall, f[i].cFuncName, strlen(cFuncCall) );
-     if( iCmp == 0 )
-     {
+      iCmp = strncmp( szFuncCall, f[ i ].cFuncName, 4 );
+      if( iCmp == 0 )
+         iCmp = strncmp( szFuncCall, f[ i ].cFuncName, strlen( szFuncCall ) );
+      if( iCmp == 0 )
+      {
          iPos = i;
          break;
-     }
-     else
+      }
+      else
          ++i;
    }
 
-   if( iPos >= 0 && ( f[iPos].iMinParam != -1 ) )
-     if( iArgs < f[iPos].iMinParam || iArgs > f[iPos].iMaxParam )
-     {
-        char szMsg[ 30 ];
+   if( iPos >= 0 && ( f[ iPos ].iMinParam != -1 ) )
+   {
+      if( iArgs < f[ iPos ].iMinParam || iArgs > f[ iPos ].iMaxParam )
+      {
+         char szMsg[ 30 ];
 
-        sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
-        GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
+         sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[ iPos ].iMinParam );
+         GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, szMsg );
 
-        /* Clipper way */
-        /* GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL ); */
-     }
+         /* Clipper way */
+         /* GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, NULL ); */
+      }
+   }
 }

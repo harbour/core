@@ -68,7 +68,7 @@ FUNCTION Main( cPar1 )
 
    LOCAL lcString  := "HELLO"
    LOCAL lcStringE := ""
-   LOCAL lcStringZ := "A" + Chr(0) + "B"
+   LOCAL lcStringZ := "A" + Chr( 0 ) + "B"
    LOCAL lnIntZ    := 0
    LOCAL lnDoubleZ := 0.0
    LOCAL lnIntP    := 10
@@ -78,7 +78,7 @@ FUNCTION Main( cPar1 )
    LOCAL lnLongN   := -100000
    LOCAL lnDoubleN := -10.567 /* Use different number of decimals than the default */
    LOCAL lnDoubleI := Log( 0 )
-   LOCAL ldDateE   := SToD("")
+   LOCAL ldDateE   := SToD( "" )
    LOCAL llFalse   := .F.
    LOCAL llTrue    := .T.
    LOCAL loObject  := ErrorNew()
@@ -110,7 +110,7 @@ FUNCTION Main( cPar1 )
    /* NOTE: mxNotHere intentionally not declared */
    PRIVATE mcString  := "HELLO"
    PRIVATE mcStringE := ""
-   PRIVATE mcStringZ := "A" + Chr(0) + "B"
+   PRIVATE mcStringZ := "A" + Chr( 0 ) + "B"
    PRIVATE mnIntZ    := 0
    PRIVATE mnDoubleZ := 0.0
    PRIVATE mnIntP    := 10
@@ -120,7 +120,7 @@ FUNCTION Main( cPar1 )
    PRIVATE mnLongN   := -100000
    PRIVATE mnDoubleN := -10.567
    PRIVATE mnDoubleI := Log( 0 )
-   PRIVATE mdDateE   := SToD("")
+   PRIVATE mdDateE   := SToD( "" )
    PRIVATE mlFalse   := .F.
    PRIVATE mlTrue    := .T.
    PRIVATE moObject  := ErrorNew()
@@ -402,10 +402,34 @@ FUNCTION Main( cPar1 )
 
 /* NOTE: TEST_CALL() should be used here, since CA-Cl*pper can't preprocess
          the TEST_LINE() variation properly. */
-/* TEST_LINE( ("NOTHERE")->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    ) */
+// TEST_LINE( ("NOTHERE")->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+// TEST_LINE( (mcString)->NOFIELD             , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+// TEST_LINE( ({})->NOFIELD                   , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+// TEST_LINE( ({|| NIL })->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+// TEST_LINE( (.T.)->NOFIELD                  , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
    TEST_CALL( '("NOTHERE")->NOFIELD', {|| ("NOTHERE")->NOFIELD }, "E BASE 1002 Alias does not exist NOTHERE F:R" )
+   TEST_CALL( '(mcString)->NOFIELD' , {|| (mcString)->NOFIELD } , "E BASE 1002 Alias does not exist HELLO F:R"   )
+   TEST_CALL( '({})->NOFIELD'       , {|| ({})->NOFIELD }       , "E BASE 1065 Argument error & F:S"             )
+   TEST_CALL( '({|| NIL })->NOFIELD', {|| ({|| NIL })->NOFIELD }, "E BASE 1065 Argument error & F:S"             )
+   TEST_CALL( '(.T.)->NOFIELD'      , {|| (.T.)->NOFIELD }      , "E BASE 1065 Argument error & F:S"             )
+   TEST_CALL( '(NIL)->NOFIELD'      , {|| (NIL)->NOFIELD }      , "E BASE 1065 Argument error & F:S"             )
+   TEST_CALL( '("NOTHERE")->(Eof())', {|| ("NOTHERE")->(Eof()) }, .T.                                            )
+   TEST_CALL( '(mcString)->(Eof())' , {|| (mcString)->(Eof()) } , .T.                                            )
+   TEST_CALL( '({})->(Eof())'       , {|| ({})->(Eof()) }       , .T.                                            )
+   TEST_CALL( '({|| NIL })->(Eof())', {|| ({|| NIL })->(Eof()) }, .T.                                            )
+   TEST_CALL( '(.T.)->(Eof())'      , {|| (.T.)->(Eof()) }      , .T.                                            )
+   TEST_CALL( '(.F.)->(Eof())'      , {|| (.F.)->(Eof()) }      , .T.                                            )
+   TEST_CALL( '(NIL)->(Eof())'      , {|| (NIL)->(Eof()) }      , .T.                                            )
    TEST_LINE( NOTHERE->NOFIELD                , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
    TEST_LINE( 200->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
+   TEST_LINE( 200->("NOFIELD")                , "NOFIELD"                                         )
+   TEST_LINE( 200->(NIL)                      , NIL                                               )
+   TEST_LINE( 200->(1)                        , 1                                                 )
+   TEST_LINE( 200->(1.5)                      , 1.5                                               )
+   TEST_LINE( 200->({})                       , "{.[0].}"                                         )
+   TEST_LINE( 200->({|| NIL })                , "{||...}"                                         )
+   TEST_LINE( 200->(.T.)                      , .T.                                               )
+
 #endif
 
    TEST_LINE( loObject:hello                  , "E BASE 1004 No exported method HELLO F:S"        )

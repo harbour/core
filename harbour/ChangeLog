@@ -1,3 +1,42 @@
+19990901-15:40 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    + It will now recognize and accept filenames specified via the
+      /o switch (not only paths), it also allows to override the extension.
+      Like CLIPPER.EXE.
+    * Indentation more or less fixed.
+    * Zeros changed to NULL and '\0'.
+    % Inc()/Dec() logic cleaned-up. Note that there are many more places where 
+      such logic cleaning and variable scoping optim. could be done.
+      I'm also not sure if the debug_msg() calls should only be made when
+      warnings are turned on, IMHO they should always appear when DEBUG is on.
+    ! Some formatting errors corrected.
+  * tests/working/fileio.prg
+    + New test cycle added beginning with FOpen() (Temporary solution)
+    ! nFlags is not NIL anymore.
+  * tests/working/rtl_test.prg
+    + Some tough alias related tests added. They are commented out
+      for Harbour, since right now they will GPF for sure.
+  * source/rtl/langapi.c
+    source/rtl/natmsg/*.c
+    ! Fixed eleven error messages to look exactly like in Clipper.
+  * source/rtl/filesys.c
+    include/filesys.h
+    * hb_fsRead(), hb_fsWrite() changed to use ULONG instead of USHORT.
+      ( ! not tested ! )
+    ! FOPEN() added FO_COMPAT to the default open flags. (cosmetic)
+  * source/rdd/dbf1.c
+    + GetValue() now sets the width and decimals of the returned numeric
+      value properly using hb_itemSetNLen(). ( not tested )
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    + hb_itemGetNLen() added. The pair of the recently added hb_itemSetNLen().
+  * source/rtl/console.c
+    + Some static renamed and prefixed with s_
+  * source/compiler/symbols.asm
+    + CVS header added.
+  * source/compiler/harbour.c
+    ! Formatting errors corrected.
+
 19990901-14:40 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
@@ -33,7 +72,7 @@
 19990831-23:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/itemapi.c
     include/itemapi.h
-    + hb_itemSetNLen() added to set the numeric values length and number 
+    + hb_itemSetNLen() added to set the numeric values length and number
       of decimal places. This way we have a standard way to set these without
       fiddling with the internals. Cool.
 
@@ -364,7 +403,7 @@
     ! hb_fsFNameSplit() fixed handling of colon in filenames.
       (reported by Bruno Cantero)
   * source/compiler/harbour.y
-    ! Fixed the name format of the generated symbol registration function, 
+    ! Fixed the name format of the generated symbol registration function,
       since it was causing a compiler error where the .prg name begun with
       a number ( for example: 1.prg ). The new format is: hb_vm_SymbolInit_*()
   * include/ctoharb.h
@@ -645,12 +684,12 @@
 19990825-13:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
-	* corrected alias handling in hb_vmAliasSwap() however we still need
-	to implement the function that will select an workarea using passed
-	string with an alias name
-	* if QUIT or BREAK is called in EXIT PROCEDURE then processing
-	of these procedures is stopped
-	
+        * corrected alias handling in hb_vmAliasSwap() however we still need
+        to implement the function that will select an workarea using passed
+        string with an alias name
+        * if QUIT or BREAK is called in EXIT PROCEDURE then processing
+        of these procedures is stopped
+
 19990825-12:50 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rdd/dbcmd.c
@@ -659,7 +698,7 @@
     ! Modified so that it defines each function everytime, not just when
       __DOS__ constant is defined. __DOS__ guard was moved around the function
       bodies.
-    ! Removed FILE() function from here, since it's already declared in 
+    ! Removed FILE() function from here, since it's already declared in
       Harbour RTL/filesys.c
   * include/external.ch
     source/runner/stdalone/external.prg
@@ -924,13 +963,13 @@
 19990824-14:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* corrected arguments type checking in Inc/Dec functions
+        * corrected arguments type checking in Inc/Dec functions
 
     *source/hbppint.h
-	* memory.h is not defined in WATCOM C/C++
+        * memory.h is not defined in WATCOM C/C++
 
     *include/rddapi.h
-	* added forward declaration for _AREA struct
+        * added forward declaration for _AREA struct
 
 19990824-11:07 GMT+1 Bruno Cantero <bruno@issnet.net>
    * funclist.txt
@@ -995,8 +1034,8 @@
         * EXIT functions are called on exit when QUIT is requested
 
 QUESTION: How to handle the call to QUIT function inside of
-	EXIT procedure? Should we continue execution of the rest of
-	procedures or immediatelly quit to OS?
+        EXIT procedure? Should we continue execution of the rest of
+        procedures or immediatelly quit to OS?
 
     *include/pcode.h
         + added new opcodes
@@ -1015,7 +1054,7 @@ NOTE: You have to recompile all PRG code!
         + new file to test BEGIN/RECOVER/END sequence and BREAK statement
 
     *tests/working/Makefile
-	* added begin.prg
+        * added begin.prg
 
 19990823-10:45 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
@@ -1233,7 +1272,7 @@ NOTE: You have to recompile all PRG code!
     source/vm/hvm.c
     * Function DEBUGGER renamed to __DBGENTRY
 
-  * libs/icc/empty 
+  * libs/icc/empty
     - Removed since this directory is not used anymore.
 
   * source/hbpp/makefile.b16 (moved to /hbpp.b16)
@@ -1244,7 +1283,7 @@ NOTE: You have to recompile all PRG code!
     build32.bat
     hbpp.b16 (added !! NOT tested !!)
     hbpp.b32 (added !! NOT tested !!)
-    + Moved to the root, renamed and incorporated to the mainstream 
+    + Moved to the root, renamed and incorporated to the mainstream
       Borland make process, it's commented out.
     ( !! PLEASE UPDATE THE BORLAND MAKEFILES !! )
 
@@ -1257,7 +1296,7 @@ NOTE: You have to recompile all PRG code!
     * minor improvements
   * makefile.b32
     * added tone.c
-  
+
 19990821-14:20 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/inkey.c

@@ -25,6 +25,7 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_itemGetNLen()
       hb_itemSetNLen()
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
@@ -391,6 +392,30 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    pItem->item.asLong.value  = lNumber;
 
    return pItem;
+}
+
+void hb_itemGetNLen( PHB_ITEM pItem, WORD * pwWidth, WORD * pwDecimal )
+{
+   if( pItem )
+   {
+      switch( pItem->type )
+      {
+         case IT_DOUBLE:
+            * pwWidth = pItem->item.asDouble.length;
+            * pwDecimal = pItem->item.asDouble.decimal;
+            break;
+
+         case IT_LONG:
+            * pwWidth = pItem->item.asLong.length;
+            * pwDecimal = 0;
+            break;
+
+         case IT_INTEGER:
+            * pwWidth = pItem->item.asInteger.length;
+            * pwDecimal = 0;
+            break;
+      }
+   }
 }
 
 void hb_itemSetNLen( PHB_ITEM pItem, WORD wWidth, WORD wDecimal )

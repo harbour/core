@@ -1,3 +1,7 @@
+ ;
+ ; $Id$
+ ;
+
  ; Copyright(C) 1999 by Antonio Linares.
  ;
  ; This program is free software; you can redistribute it and/or modify
