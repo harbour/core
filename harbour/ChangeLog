@@ -1,7 +1,8 @@
 Wed May 05 09:24:22 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* Added back include/set.ch, now in lowercase; same thing for
-	tests/working/block2.prg.
+	* Added back include/Set.ch, and tests/working/block2.PRG; they
+	can' be renamed through CVS, and the repository will have to be
+	updated by hand.
 
 Wed May 05 09:19:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
