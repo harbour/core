@@ -817,6 +817,7 @@ $(HBDOC_EXE) : \
 
 $(HBMAKE_EXE) : \
    $(HBMAKE_DIR)\hbmake.prg \
+   $(HBMAKE_DIR)\hbmutils.prg \
    $(HBMAKE_DIR)\radios.prg \
    $(HBMAKE_DIR)\checks.prg \
    $(HBMAKE_DIR)\fclass1.prg \

@@ -681,6 +681,7 @@ HBDOC_EXE_OBJS = \
 
 HBMAKE_EXE_OBJS = \
    $(OBJ_DIR)\hbmake.obj \
+   $(OBJ_DIR)\hbmutils.obj \
    $(OBJ_DIR)\checks.obj \
    $(OBJ_DIR)\pickarry.obj \
    $(OBJ_DIR)\pickfile.obj \
@@ -2582,6 +2583,7 @@ $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
    $(ECHO) $(CFLAGS) > make.tmp
    $(ECHO) -M -e$(HBMAKE_EXE) >> make.tmp
    $(ECHO) $(OBJ_DIR)\hbmake.obj >> make.tmp
+   $(ECHO) $(OBJ_DIR)\hbmutils.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\radios.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\checks.obj >> make.tmp
    $(ECHO) $(OBJ_DIR)\fclass1.obj >> make.tmp
@@ -2600,14 +2602,20 @@ $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
    $(ECHO) $(MACRO_LIB) >> make.tmp
    $(ECHO) $(DBFNTX_LIB) >> make.tmp
    $(ECHO) $(DBFCDX_LIB) >> make.tmp
-
+   $(ECHO) $(DEBUG_LIB) >> make.tmp
    $(CC) @make.tmp
    $(DEL) make.tmp
 
 $(OBJ_DIR)\hbmake.c : $(HBMAKE_DIR)\hbmake.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -b $** -o$@
 
 $(OBJ_DIR)\hbmake.obj : $(OBJ_DIR)\hbmake.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\hbmutils.c : $(HBMAKE_DIR)\hbmutils.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\hbmutils.obj : $(OBJ_DIR)\hbmutils.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\radios.c : $(HBMAKE_DIR)\radios.prg

@@ -1,3 +1,26 @@
+2001-10-20 20:00 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * source/compiler/harbour.c
+      * Changed some function parameters in the _DECL section
+   * utils/hbmake/hbmake.prg
+      % removed unused variables
+      + New parameter -r: recurse sub directories on editor mode
+      % enhaced -e and -el: the enhaced parameters has an x on the end.
+      using the -ex or -elx tells hbmake to use harbour .obj generation capabilities
+      % many For/Next Loop replaced for an fastern Aeval() function call
+      * Support for generating output files in other dir
+     
+   + utils/hbmake/hbmutils.prg
+      * All utilities function inside hbmake.prg was moved to this module
+   * utils/hbmake/pickfile.prg
+      *added pickafile() function
+   + doc/hbmake.txt
+      * some info about hbmake. Linux users should read to see how to set harbour.cfg.
+   * makefile.bc
+     makefile.vc
+     hb_slex.vc
+     utils/hbmake/Makefile
+      * Added hbmutils.prg to dependencie List
+
 2001-10-20 07:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    *contrib/hbzlib/zipnew.cpp
    contrib/hbzlib/zipcomp.cpp

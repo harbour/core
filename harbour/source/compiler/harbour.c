@@ -935,11 +935,11 @@ void hb_compDeclaredInit( void )
                    ----------  ---  ----------  ------------------------------  ---------  -------------  ------ */
    _DECL s_001 = { "AADD"    , ' ', 2         , (BYTE*)"A "                   , NULL     , NULL         , NULL   };
    _DECL s_002 = { "ABS"     , 'N', 1         , (BYTE*)"N"                    , NULL     , NULL         , &s_001 };
-   _DECL s_003 = { "ACHOICE" , 'N', 9         , (BYTE*)"NNNNc\x7a\x9d\xa8\xa8", NULL     , NULL         , &s_002 };
+   _DECL s_003 = { "ACHOICE" , 'N', 9         , (BYTE*)"NNNNA\x7a\x9d\xa8\xa8", NULL     , NULL         , &s_002 };
    _DECL s_004 = { "ACLONE"  , 'A', 1 , (BYTE*)"A"    , NULL     , NULL , &s_003};
    _DECL s_005 = { "ACOPY"   , 'A', 5 , (BYTE*)"AA\xa8\xa8\xa8"       , NULL     , NULL , &s_004};
    _DECL s_006 = { "ADEL"    , 'A', 2 , (BYTE*)"AN"   , NULL     , NULL , &s_005};
-   _DECL s_007 = { "ADIR"    , 'N', 6 , (BYTE*)"\x9d""\x9b\x9b\x9b\x9b\x9b", NULL     , NULL , &s_006};
+   _DECL s_007 = { "ADIR"    , 'N', 6 , (BYTE*)"\x9d\x9b\x9b\x9b\x9b\x9b", NULL     , NULL , &s_006};
    _DECL s_008 = { "AEVAL"   , 'A', 4 , (BYTE*)"AB\xa8\xa8"   , NULL     , NULL , &s_007};
    _DECL s_009 = { "AFIELDS" , 'N', 4 , (BYTE*)"A\x9b\x9b\x9b", NULL     , NULL , &s_008};
    _DECL s_010 = { "AFILL"   , 'A', 4 , (BYTE*)"A \xa8\xa8"   , NULL     , NULL , &s_009};
@@ -950,7 +950,7 @@ void hb_compDeclaredInit( void )
    _DECL s_015 = { "AMPM"    , 'C', 1 , (BYTE*)"C"    , NULL     , NULL , &s_014};
    _DECL s_016 = { "ARRAY"   , 'A', 3 , (BYTE*)"N\xa8\xa8"    , NULL     , NULL , &s_015};
    _DECL s_017 = { "ASC"     , 'N', 1 , (BYTE*)"C"    , NULL     , NULL , &s_016};
-   _DECL s_018 = { "ASCAN"   , 'N', 4 , (BYTE*)"A \xa8\xa8"   , NULL     , NULL , &s_017};
+   _DECL s_018 = { "ASCAN"   , 'N', 4 , (BYTE*)"A\xa7\xa8\xa8"   , NULL     , NULL , &s_017};
    _DECL s_019 = { "ASIZE"   , 'A', 2 , (BYTE*)"AN"   , NULL     , NULL , &s_018};
    _DECL s_020 = { "ASORT"   , 'A', 4 , (BYTE*)"A\xa8\xa8\x9c"   , NULL     , NULL , &s_019};
    _DECL s_021 = { "AT"      , 'N', 2 , (BYTE*)"CC"   , NULL     , NULL , &s_020};
@@ -1009,7 +1009,7 @@ void hb_compDeclaredInit( void )
    _DECL s_074 = { "DBUSEAREA"       , '-', 6 , (BYTE*)"\xa6\x9d""C\x9d\xa6\xa6", NULL     , NULL , &s_073};
    _DECL s_075 = { "DELETED" , 'L', 0 , (BYTE*)NULL , NULL     , NULL , &s_074};
    _DECL s_076 = { "DESCEND" , ' ', 1 , (BYTE*)" "    , NULL     , NULL , &s_075};
-   _DECL s_077 = { "DEVOUT"  , '-', 2 , (BYTE*)" C"   , NULL     , NULL , &s_076};
+   _DECL s_077 = { "DEVOUT"  , '-', 2 , (BYTE*)" \x9d"   , NULL     , NULL , &s_076};
    _DECL s_078 = { "DEVOUTPICT"      , '-', 3 , (BYTE*)" C\x9d"       , NULL     , NULL , &s_077};
    _DECL s_079 = { "DEVPOS"  , '-', 2 , (BYTE*)"NN"   , NULL     , NULL , &s_078};
    _DECL s_080 = { "DIRECTORY"       , 'A', 3 , (BYTE*)"\x9d\x9d\xa6"    , NULL     , NULL , &s_079};
@@ -1031,7 +1031,7 @@ void hb_compDeclaredInit( void )
    _DECL s_096 = { "EXP"     , 'N', 1 , (BYTE*)"N"    , NULL     , NULL , &s_095};
    _DECL s_097 = { "FCLOSE"  , 'L', 1 , (BYTE*)"N"    , NULL     , NULL , &s_096};
    _DECL s_098 = { "FCOUNT"  , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_097};
-   _DECL s_099 = { "FCREATE" , 'N', 2 , (BYTE*)"CN"   , NULL     , NULL , &s_098};
+   _DECL s_099 = { "FCREATE" , 'N', 2 , (BYTE*)"C\xa8"   , NULL     , NULL , &s_098};
    _DECL s_100 = { "FERASE"  , 'N', 1 , (BYTE*)"C"    , NULL     , NULL , &s_099};
    _DECL s_101 = { "FERROR"  , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_100};
    _DECL s_102 = { "FIELD"   , 'C', 1 , (BYTE*)"N"    , NULL     , NULL , &s_101};
@@ -1125,8 +1125,8 @@ void hb_compDeclaredInit( void )
    _DECL s_190 = { "ORDNUMBER"       , 'N', 2 , (BYTE*)"C\x9d", NULL     , NULL , &s_189};
    _DECL s_191 = { "ORDSETFOCUS"     , 'C', 2 , (BYTE*)"\x7a\x9d"     , NULL     , NULL , &s_190};
    _DECL s_192 = { "OS"      , 'C', 0 , (BYTE*)NULL , NULL     , NULL , &s_191};
-   _DECL s_193 = { "OUTERR"  , '-', 1 , (BYTE*)" "    , NULL     , NULL , &s_192};
-   _DECL s_194 = { "OUTSTD"  , '-', 1 , (BYTE*)" "    , NULL     , NULL , &s_193};
+   _DECL s_193 = { "OUTERR"  , '-', 1 , (BYTE*)"\x7a"    , NULL     , NULL , &s_192};
+   _DECL s_194 = { "OUTSTD"  , '-', 1 , (BYTE*)"\x7a"    , NULL     , NULL , &s_193};
    _DECL s_195 = { "PADC"    , 'C', 3 , (BYTE*)" N\x9d"       , NULL     , NULL , &s_194};
    _DECL s_196 = { "PADL"    , 'C', 3 , (BYTE*)" N\x9d"       , NULL     , NULL , &s_195};
    _DECL s_197 = { "PADR"    , 'C', 3 , (BYTE*)" N\x9d"       , NULL     , NULL , &s_196};
@@ -1136,8 +1136,8 @@ void hb_compDeclaredInit( void )
    _DECL s_201 = { "PROCLINE", 'N', 1 , (BYTE*)"\xa8" , NULL     , NULL , &s_200};
    _DECL s_202 = { "PROCNAME", 'N', 1 , (BYTE*)"\xa8" , NULL     , NULL , &s_201};
    _DECL s_203 = { "PROW"    , 'N', 0 , (BYTE*)NULL , NULL     , NULL , &s_202};
-   _DECL s_204 = { "QOUT"    , '-', 2 , (BYTE*)"  "   , NULL     , NULL , &s_203};
-   _DECL s_205 = { "QQOUT"   , '-', 2 , (BYTE*)"  "   , NULL     , NULL , &s_204};
+   _DECL s_204 = { "QOUT"    , '-', 2 , (BYTE*)"\x7a\x7a"   , NULL     , NULL , &s_203};
+   _DECL s_205 = { "QQOUT"   , '-', 2 , (BYTE*)"\x7a\x7a"   , NULL     , NULL , &s_204};
    _DECL s_206 = { "RAT"     , 'N', 2 , (BYTE*)"CC"   , NULL     , NULL , &s_205};
    _DECL s_207 = { "RDDLIST" , 'A', 1 , (BYTE*)"\xa8" , NULL     , NULL , &s_206};
    _DECL s_208 = { "RDDNAME" , 'C', 0 , (BYTE*)NULL , NULL     , NULL , &s_207};

@@ -1,0 +1,51 @@
+/*
+ * $Id$
+ */
+
+Hbmake Readme
+
+
+Hbmake is an powerfull make system for Harbour.It include an Editor mode for
+the creation of the make file.
+
+Hbmake support the follow Switchs
+
+-b Use Bcc as the C compiler.This options is default under Win32
+-g Use Gcc as the C compiler.This options is default under OS/2
+-gl Use Gcc as the C compiler on Linux
+-v Use MSVC as the C compiler
+-D Define an macro. Multiple macros can be used in an single line
+Ex:
+-DOB=c.obj;d.obj
+and also Multiple -D is also supported
+-p Print all command and defines
+-f Force all files to be rebuild
+-e Open the editor mode.
+-ex Open the editor mode in extended mode
+-el Open the editor mode for creating libraries.
+-elx Open the editor mode for creating librariesin extented mode.
+-i Ignore errors returned by commands
+-r Recurse directories for source code
+The hbmake dont support old styles .RMK/.Lnk Files. hbmake create it own when the editor mode is used with include both compile and link sections on the same file.
+
+Now How to use the editor mode
+
+go to the directory from with the application source that you to
+convert.
+call hbmake <filename>.bc -e
+this will evoke hbmake editor mode.
+
+then select your OS,C Compiler
+If you need an Graphic library such as  FWH or C4W, select the appropiate box, if you also use rddads. also check this box.
+
+Select the harbour compiler options that you also what to use, along
+with
+the defaut values
+Select the files that will be part of your app
+
+then select the main file
+
+then the new make file is create.
+then call hbmake <filename>.bc
+
+If you have compiler errors use hbmake <filename>.bc -f

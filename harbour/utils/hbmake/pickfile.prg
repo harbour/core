@@ -72,6 +72,9 @@
 
 #include "common.ch"
 #include "box.ch"
+#ifndef __HARBOUR__
+#include 'hbclip.ch'
+#endif
 #include "directry.ch"
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -86,8 +89,8 @@
 function pickfile( cFileSpec )
 
 local cOldString := savescreen( 8, 19, 16, 61 )
-local aFiles     := directory( cFileSpec )
-local aPickList  := {}
+local aFiles   as array  := directory( cFileSpec )
+local aPickList := {}
 local cRetVal    := ''
 local sel
 
@@ -116,5 +119,32 @@ endif
 restscreen( 8, 19, 16, 61, cOldString )
 
 return cRetVal
+
+function pickafile( afiles )
+
+local cOldString := savescreen( 8, 19, 16, 61 )
+local aPickList  := {}
+local cRetVal    := ''
+local sel
+
+/*default cFileSpec to '*.*'*/
+
+dispbox( 8, 19, 16, 61, B_SINGLE + " ", "+W/R" )
+
+if len( aFiles ) > 0
+
+/*   aeval( aFiles, { | xx | aadd( aPickList, ;
+          xx)} )*/
+
+   sel := achoice( 9, 20, 15, 60, aFiles )
+
+   cRetVal := iif( lastkey() == 27, '', substr(aFiles[ sel ],1,at(' ',afiles[sel])-1) )
+
+endif
+
+restscreen( 8, 19, 16, 61, cOldString )
+
+return cRetVal
+
 
 *+ EOF: PICKFILE.PRG
