@@ -50,6 +50,7 @@ return Self
 
 METHOD GotoLine( nLine ) CLASS TBrwText
 
+   DispBegin()
    if nLine > ::nLine
       while ::nLine < nLine
          ::Down()
@@ -61,6 +62,7 @@ METHOD GotoLine( nLine ) CLASS TBrwText
       end
       ::ForceStable()
    endif
+   DispEnd()
 
 return nil
 

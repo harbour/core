@@ -1,4 +1,8 @@
 19990825-09:02 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/tbrwtext.prg
+     * Improved display functionality.
+
+19990825-09:02 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + Breakpoints already working.
      (Notice the Harbour debugger does not debug multiple files yet).
