@@ -1,3 +1,21 @@
+20000411-16:32 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/inkey.c
+   * source/rtl/accept.c
+   * include/hbapi.h
+     % hb_inkey() optimized, tight loops made faster, using less variables,
+       especially "wait forever" and "wait nothing" optimized.
+     ! hb_inkey() GCC -O2 warning fixed.
+     - Removed "forever" parameter of hb_inkey(), now hb_inkey() determines
+       this instead of the caller.
+     * Case when waiting forever for no events is now silently handled in
+       hb_inkey() by returning a zero. The Harbour specific runtime error
+       has been removed.
+     % INKEY() optimized, now it's a two liner.
+
+   * source/rtl/gtwin/gtwin.c
+     ! inkeypoll trace text fixed.
+
 20000411-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *config/dos/watcom.cf

@@ -368,7 +368,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                      BOOL bShift = dwState & SHIFT_PRESSED;
                      BOOL bEnhanced = dwState & ENHANCED_KEY;
 
-                        HB_TRACE(HB_TR_INFO, ("hb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
+                        HB_TRACE(HB_TR_INFO, ("hb_gt_ReadKey(): wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
 
                      if( bAlt )
                      {
@@ -603,7 +603,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
                else
                   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
-               HB_TRACE(HB_TR_INFO, ("hb_inkeyPoll: wKey is %d", wKey));
+               HB_TRACE(HB_TR_INFO, ("hb_gt_ReadKey(): wKey is %d", wKey));
             }
 #endif
          }

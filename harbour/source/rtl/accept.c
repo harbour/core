@@ -82,7 +82,7 @@ HB_FUNC( __ACCEPT )
    while( input != K_ENTER )
    {
       /* Wait forever, for keyboard events only */
-      input = hb_inkey( 0.0, ( HB_inkey_enum ) INKEY_KEYBOARD, 1, 1 );
+      input = hb_inkey( TRUE, 0.0, ( HB_inkey_enum ) INKEY_KEYBOARD );
       switch( input )
       {
          case K_BS:

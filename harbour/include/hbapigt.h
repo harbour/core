@@ -174,7 +174,7 @@ extern char * hb_gt_Version( void );
                              used for all the Harbour builds that need it */
 
 /* Harbour keyboard support functions */
-extern int    hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever ); /* Wait for keyboard input */
+extern int    hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask ); /* Wait for keyboard input */
 extern int    hb_inkeyGet( void );            /* Extract the next key from the Harbour keyboard buffer */
 extern void   hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */
 extern int    hb_inkeyLast( void );           /* Return the value of the last key that was extracted */

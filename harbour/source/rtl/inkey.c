@@ -103,30 +103,41 @@ void hb_releaseCPU( void )
 #endif
 }
 
-int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )
+int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
 {
    int key;
-   clock_t end_clock;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_inkey(%lf, %d, %d, %d)", seconds, (int) event_mask, (int) wait, (int) forever));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkey(%d, %lf, %d)", (int) bWait, dSeconds, (int) event_mask));
 
    s_eventmask = event_mask;                   /* Set current input event mask */
-   /* Check or wait for input events */
-   if( wait ) end_clock = clock() + ( clock_t ) ( seconds * CLOCKS_PER_SEC );
    s_inkeyPoll = TRUE;                         /* Force polling */
 
-   while( wait && hb_inkeyNext() == 0 )
+   /* Wait for input events if requested */
+   if( bWait )
    {
-      /* Release the CPU between checks */
-      hb_releaseCPU();
+      if( ( dSeconds * CLOCKS_PER_SEC ) < 1 )  /* Wait forever ? */
+      {
+         /* There is no point in waiting forever for no input events! */
+         if( ( event_mask & ( INKEY_ALL + INKEY_EXTENDED ) ) != 0 )
+         {
+            while( hb_inkeyNext() == 0 )
+               hb_releaseCPU();
+         }
+      }
+      else
+      {
+         clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
 
-      /* Check for timeout */
-      if( !forever && clock() >= end_clock ) wait = FALSE;
+         while( hb_inkeyNext() == 0 && clock() < end_clock )
+            hb_releaseCPU();
+      }
    }
-   /* Get the current input event or 0 */
-   key = hb_inkeyGet();
+
+   key = hb_inkeyGet();                        /* Get the current input event or 0 */
+
    s_inkeyPoll = FALSE;                        /* Stop forced polling */
    s_eventmask = hb_set.HB_SET_EVENTMASK;      /* Restore original input event mask */
+
    return key;
 }
 
@@ -218,12 +229,14 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
    s_inkeyLast = 0;
    s_inkeyPoll = FALSE;
    s_inkeyForce = 0;
+
    /* The allocate flag allows the same function to be used to reset the
       buffer or to reset and allocate, reallocate, or free the buffer */
    if( allocate )
    {
       /* If the buffer already exists, free it */
       if( s_inkeyBuffer ) hb_xfree( s_inkeyBuffer );
+
       /* Always allocate a new buffer, unless it's being freed from hb_setRelease() */
       if( hb_set.HB_SET_TYPEAHEAD > -1 )
       {
@@ -233,45 +246,18 @@ void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
             even when polling is disabled, calling INKEY() or NEXTKEY() will
             temporarily re-enable polling */
          s_inkeyBuffer = ( int * ) hb_xgrab( sizeof( int )
-         * ( hb_set.HB_SET_TYPEAHEAD == 0 ? 16 : hb_set.HB_SET_TYPEAHEAD ) );
+            * ( hb_set.HB_SET_TYPEAHEAD == 0 ? 16 : hb_set.HB_SET_TYPEAHEAD ) );
       }
    }
 }
 
 HB_FUNC( INKEY )
 {
-   int args = hb_pcount();
-   int key = 0;
-   BOOL wait = FALSE, forever = FALSE;
-   double seconds = 0.0;
-   HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
+   USHORT uiPCount = hb_pcount();
 
-   if( args == 1 || ( args > 1 && hb_param( 1, HB_IT_NUMERIC ) ) )
-   {
-      /* If only one parameter or if 1st parameter is numeric, then use it
-         as the number of seconds to wait for an input event, in seconds. */
-      seconds = hb_parnd( 1 );
-      wait = TRUE;
-      if( seconds * CLOCKS_PER_SEC < 1 ) forever = TRUE;
-   }
-
-   if( args > 1 && hb_param( 2, HB_IT_NUMERIC ) )
-   {
-      /* If 2nd parameter is numeric, then use it as the input mask */
-      event_mask = ( HB_inkey_enum )hb_parni( 2 );
-   }
-
-   if( wait && forever && ( event_mask & ( INKEY_ALL + INKEY_EXTENDED ) ) == 0 )
-   {
-      /* There is no point in waiting forever for no input events! */
-      hb_errRT_BASE( EG_ARG, 3007, NULL, "INKEY" );
-   }
-   else
-   {
-      /* Call the low-level hb_inkey() function. */
-      key = hb_inkey( seconds, event_mask, wait, forever );
-   }
-   hb_retni( key );
+   hb_retni( hb_inkey( uiPCount == 1 || ( uiPCount > 1 && ISNUM( 1 ) ),
+                       hb_parnd( 1 ),
+                       ISNUM( 2 ) ? ( HB_inkey_enum ) hb_parni( 2 ) : hb_set.HB_SET_EVENTMASK ) );
 }
 
 HB_FUNC( __KEYBOARD )
