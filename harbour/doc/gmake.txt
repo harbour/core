@@ -184,13 +184,17 @@ For GCC on Linux:
   HB_ARCHITECTURE   linux
   HB_COMPILER       gcc
   HB_GT_LIB         gtstd
-  Note: If you have an ncurses library or a slang library, you may
+  Notes:
+    1)  If you have an ncurses library or a slang library, you may
         want to try one of the following two values for HB_GT_LIB:
               gtcrs
               gtsln
         In which case you'll also need to export HB_SCREEN_LIB with
         the name of the appropriate screen library, if it doesn't
         match the default value in config/linux/gcc.cf.
+    2)  If you want to take advantage of compiler cache programs 
+        (such as http://ccaache.samba.org), you may set environment 
+	variable HB_CCACHE with the value containing the name of program.
 
 For GCC on OS/2 for VIO mode:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and

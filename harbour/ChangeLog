@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-21 11:05 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+ * doc/gmake.txt
+   * Documented use of compiler cache with HB_CCACHE.
+
 2002-05-21 01:20 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
  * source/common/hbffind.c
    * substitute constant for FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
