@@ -116,7 +116,7 @@
 #include <ctype.h>             /* For toupper() */
 
 /* DEBUG only*/
-/*#include <windows.h>*/
+/* #include <windows.h> */
 
 typedef struct
 {
@@ -2363,4 +2363,40 @@ void hb_mthAddTime( void * pMethod, ULONG ulClockTicks )
 {
    if( pMethod != NULL )
       ( ( PMETHOD ) pMethod )->ulTime += ulClockTicks;
+}
+
+/* __ClsGetProperties( nClassHandle ) --> aPropertiesNames
+ * Notice that this function works quite similar to __CLASSSEL()
+ * except that just returns the name of the datas and methods
+ * that have been declared as PROPERTY (or PERSISTENT) */
+
+HB_FUNC( __CLSGETPROPERTIES )
+{
+   USHORT uiClass = ( USHORT ) hb_parni( 1 );
+   PHB_ITEM pReturn = hb_itemNew( NULL );
+
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PCLASS pClass = s_pClasses + ( uiClass - 1 );
+      USHORT uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET ); /* Number of Hash keys      */
+      USHORT uiAt;
+
+      hb_itemRelease( pReturn );
+      pReturn = hb_itemArrayNew( 0 );
+                                                /* Create a transfer array  */
+      for( uiAt = 0; uiAt < uiLimit; uiAt++ )
+      {
+         PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
+
+         if( pMessage && ( pClass->pMethods[ uiAt ].bIsPersistent == TRUE ) ) /* Hash Entry used ? */
+         {
+            PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
+                                                /* Add to array */
+            hb_arrayAdd( pReturn, pItem );
+            hb_itemRelease( pItem );
+         }
+      }
+   }
+
+   hb_itemRelease( hb_itemReturn( pReturn ) );
 }
