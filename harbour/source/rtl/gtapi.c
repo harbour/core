@@ -393,6 +393,17 @@ int hb_gtSetColorStr( char * fpColorString )
    int nColor = 0;
    int nCount = -1, i = 0, y;
 
+   if( !fpColorString )
+      return 1;
+   if( ! *fpColorString )
+   {
+      s_Color[0] = 0x7;
+      s_Color[1] = 0x70;
+      s_Color[2] = 0;
+      s_Color[3] = 0;
+      s_Color[4] = 0x7;
+   }
+        
    do
    {
       c = *fpColorString++;
