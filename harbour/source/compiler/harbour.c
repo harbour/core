@@ -626,29 +626,39 @@ BOOL hb_compVariableMacroCheck( char * szVarName )
 
 PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
 {
-   PCOMSYMBOL pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
-
-   pSym->szName = szSymbolName;
-   pSym->cScope = 0;
-   pSym->cType = hb_comp_cVarType;
-   pSym->pNext = NULL;
-
-   if( ! hb_comp_symbols.iCount )
+   PCOMSYMBOL pSym;
+   
+   if( szSymbolName[ 0 ] )
    {
-      hb_comp_symbols.pFirst = pSym;
-      hb_comp_symbols.pLast  = pSym;
+      /* Create a symbol for non-empty names only.
+       * NOTE: an empty name is passed for a fake starting function when
+       * '-n' switch is used
+      */
+      pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
+
+      pSym->szName = szSymbolName;
+      pSym->cScope = 0;
+      pSym->cType = hb_comp_cVarType;
+      pSym->pNext = NULL;
+
+      if( ! hb_comp_symbols.iCount )
+      {
+         hb_comp_symbols.pFirst = pSym;
+         hb_comp_symbols.pLast  = pSym;
+      }
+      else
+      {
+         ( ( PCOMSYMBOL ) hb_comp_symbols.pLast )->pNext = pSym;
+         hb_comp_symbols.pLast = pSym;
+      }
+      hb_comp_symbols.iCount++;
+
+      if( pwPos )
+         *pwPos = hb_comp_symbols.iCount -1; /* position number starts form 0 */
    }
    else
-   {
-      ( ( PCOMSYMBOL ) hb_comp_symbols.pLast )->pNext = pSym;
-      hb_comp_symbols.pLast = pSym;
-   }
-   hb_comp_symbols.iCount++;
+      pSym = NULL;
 
-   if( pwPos )
-      *pwPos = hb_comp_symbols.iCount;
-
-   /*if( hb_comp_cVarType != ' ') printf("\nDeclared %s as type %c at symbol %i\n", szSymbolName, hb_comp_cVarType, hb_comp_symbols.iCount );*/
    return pSym;
 }
 
@@ -722,7 +732,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* there is not a symbol on the symbol table for this function name */
       pSym = hb_compSymbolAdd( szFunName, NULL );
 
-   if( cScope != HB_FS_PUBLIC )
+   if( pSym && cScope != HB_FS_PUBLIC )
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = hb_compFunctionNew( szFunName, cScope );
@@ -763,6 +773,7 @@ void hb_compAnnounce( char * szFunName )
 
    pFunc = hb_compFunctionFind( szFunName );
    if( pFunc )
+
    {
       /* there is a function/procedure defined already - ANNOUNCEd procedure
        * have to be a public symbol - check if existing symbol is public
@@ -1185,19 +1196,14 @@ static int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
    return iVar;
 }
 
-USHORT hb_compSymbolFixPos( USHORT wCompilePos )
-{
-   return ( hb_comp_bStartProc ? wCompilePos - 1 : wCompilePos - 2 );
-}
-
-
 /* returns a symbol pointer from the symbol table
- * and sets its position in the symbol table
+ * and sets its position in the symbol table.
+ * NOTE: symbol's position number starts from 0
  */
 PCOMSYMBOL hb_compSymbolFind( char * szSymbolName, USHORT * pwPos )
 {
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-   USHORT wCnt = 1;
+   USHORT wCnt = 0;
 
    if( pwPos )
       *pwPos = 0;
@@ -1223,10 +1229,13 @@ PCOMSYMBOL hb_compSymbolFind( char * szSymbolName, USHORT * pwPos )
    return NULL;
 }
 
-PCOMSYMBOL hb_compSymbolGetPos( USHORT wSymbol )   /* returns a symbol based on its index on the symbol table */
+/* returns a symbol based on its index on the symbol table 
+ * index starts from 0
+*/
+PCOMSYMBOL hb_compSymbolGetPos( USHORT wSymbol )  
 {
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
-   USHORT w = 1;
+   USHORT w = 0;
 
    while( w++ < wSymbol && pSym->pNext )
       pSym = pSym->pNext;
@@ -2284,6 +2293,14 @@ static void hb_compCheckDuplVars( PVAR pVar, char * szVarName, int iVarScope )
 
 void hb_compFixReturns( void ) /* fixes all last defined function returns jumps offsets */
 {
+   if( hb_comp_functions.pLast && (hb_comp_functions.pLast->bFlags & FUN_WITH_RETURN) == 0 )
+   {
+      /* The last statement in a function/procedure was not a RETURN
+       * Generate end-of-procedure pcode
+       */
+      hb_compGenPCode1( HB_P_ENDPROC );
+   }
+
    if ( hb_comp_iJumpOptimize )
       if ( hb_comp_functions.pLast && hb_comp_functions.pLast->iNOOPs )
          hb_compOptimizeJumps();

@@ -119,16 +119,12 @@ void hb_compGenObj32( PHB_FNAME pFileName )
 
 static ULONG GetSymbolsSize( void )
 {
-  return ( hb_comp_symbols.iCount - ( hb_comp_bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
+  return hb_comp_symbols.iCount * sizeof( HB_SYMB );
 }
 
 static PCOMSYMBOL GetFirstSymbol( void )
 {
   PCOMSYMBOL pSymbol = hb_comp_symbols.pFirst;
-
-  if( ! hb_comp_bStartProc )
-    pSymbol = pSymbol->pNext;
-
   return pSymbol;
 }
 
@@ -477,7 +473,7 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
   USHORT wTotalLen = ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
   PFUNCTION pFunction = hb_comp_functions.pFirst;
-  ULONG ulPCodeOffset = ( hb_comp_symbols.iCount - ( hb_comp_bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
+  ULONG ulPCodeOffset = hb_comp_symbols.iCount * sizeof( HB_SYMB );
 
   if( ! hb_comp_bStartProc )
     pFunction = pFunction->pNext;
@@ -552,12 +548,21 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
 
   while( pFunction )
     {
-      BOOL bEndProcRequired = TRUE;
-
-      for( w = 0; w < pFunction->lPCodePos; w++ )
+      w = 0;
+      while( w < pFunction->lPCodePos )
         {
            switch( pFunction->pCode[ w ] )
            {
+              case HB_P_JUMPFAR:
+              case HB_P_JUMPFARFALSE:
+              case HB_P_JUMPFARTRUE:
+              {
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 w += 2;
+              }
+              break;
+
               case HB_P_ARRAYDIM:
               case HB_P_ARRAYGEN:
               case HB_P_DO:
@@ -577,7 +582,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
-                 w += 2;
+                 w += 3;
               }
               break;
 
@@ -591,7 +596,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                  putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
-                 w += 3;
+                 w += 4;
               }
               break;
 
@@ -602,7 +607,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                  putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 4 ], hObjFile, &bChk );
-                 w += 4;
+                 w += 5;
               }
               break;
 
@@ -616,7 +621,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                     putbyte( bLocals - pFunction->wParamCount, hObjFile, &bChk );
                     putbyte( pFunction->wParamCount, hObjFile, &bChk );
                  }
-                 w += 2;
+                 w += 3;
               }
               break;
 
@@ -624,21 +629,11 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
               {
                  if( pFunction->bFlags & FUN_USES_STATICS )
                  {
-                    USHORT wPos;
                     hb_compSymbolFind( hb_comp_pInitFunc->szName, &wPos );
-                    wPos = hb_compSymbolFixPos( wPos );
                     putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                     putword( wPos, hObjFile, &bChk );
                  }
-                 w += 2;
-              }
-              break;
-
-              case HB_P_ENDPROC:
-              {
-                 if( w + 1 == pFunction->lPCodePos )
-                    bEndProcRequired = FALSE;
-                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 w += 3;
               }
               break;
 
@@ -656,25 +651,21 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
               case HB_P_PUSHMEMVARREF:
               case HB_P_PUSHSYM:
               {
-                 USHORT wPos = pFunction->pCode[ w + 1 ] +
-                               pFunction->pCode[ w + 2 ] * 256;
-                 wPos = hb_compSymbolFixPos( wPos );
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
-                 putword( wPos, hObjFile, &bChk );
-                 w += 2;
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
+                 w += 3;
               }
               break;
 
               case HB_P_STATICS:
               {
-                 USHORT wPos = pFunction->pCode[ w + 1 ] +
-                               pFunction->pCode[ w + 2 ] * 256;
-                 wPos = hb_compSymbolFixPos( wPos );
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
-                 putword( wPos, hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 4 ], hObjFile, &bChk );
-                 w += 4;
+                 w += 5;
               }
               break;
 
@@ -682,16 +673,16 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
               {
                  USHORT uLen = pFunction->pCode[ w + 1 ] +
                                pFunction->pCode[ w + 2 ] * 256;
-                 putbyte( HB_P_PUSHSTR, hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                  putword( uLen, hObjFile, &bChk );
-                 w += 2;
+                 w += 3;
 
                  if( uLen > 0 )
                  {
                     USHORT u = 0;
 
                     while( u++ < uLen )
-                       putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
+                       putbyte( pFunction->pCode[ w++ ], hObjFile, &bChk );
                  }
               }
               break;
@@ -701,37 +692,31 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
-                 w += 2;
+                 w += 3;
 
-                 while( pFunction->pCode[ w + 1 ] )
-                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
-
-                 w++;
-                 putbyte( 0, hObjFile, &bChk );
+		 do {
+                    putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 } while( pFunction->pCode[ w++ ] )
               }
               break;
 
               case HB_P_MODULENAME:
               {
-                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w++ ], hObjFile, &bChk );
 
-                 while( pFunction->pCode[ w + 1 ] )
-                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
-
-                 w++;
-                 putbyte( 0, hObjFile, &bChk );
+		 do {
+                    putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 } while( pFunction->pCode[ w++ ] )
               }
               break;
 
               case HB_P_PARAMETER:
               {
-                 USHORT wPos = pFunction->pCode[ w + 1 ] +
-                               pFunction->pCode[ w + 2 ] * 256;
-                 wPos = hb_compSymbolFixPos( wPos );
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
-                 putword( wPos, hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w + 2 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
-                 w += 3;
+                 w += 4;
               }
               break;
 
@@ -745,11 +730,11 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                  putbyte( pFunction->pCode[ w + 3 ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 4 ], hObjFile, &bChk );
                  putword( uVars, hObjFile, &bChk );
-                 w += 6;
+                 w += 7;
                  while( uVars-- )
                  {
-                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
-                    putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
+                    putbyte( pFunction->pCode[ w++ ], hObjFile, &bChk );
+                    putbyte( pFunction->pCode[ w++ ], hObjFile, &bChk );
                  }
               }
               break;
@@ -760,15 +745,14 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                  while( i++ < sizeof( double ) + sizeof( BYTE ) )
                     putbyte( pFunction->pCode[ ++w ], hObjFile, &bChk );
+		++w;
               }
               break;
 
               default:
-                 putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
+                 putbyte( pFunction->pCode[ w++ ], hObjFile, &bChk );
            }
         }
-      if( bEndProcRequired )
-         putbyte( HB_P_ENDPROC, hObjFile, &bChk );
 
       pFunction = pFunction->pNext;
     }

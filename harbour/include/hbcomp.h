@@ -183,7 +183,6 @@ extern PCOMSYMBOL hb_compSymbolAdd( char *, USHORT * );
 extern PCOMSYMBOL hb_compSymbolKill( PCOMSYMBOL );    /* releases all memory allocated by symbol and returns the next one */
 extern PCOMSYMBOL hb_compSymbolFind( char *, USHORT * ); /* returns a symbol pointer from the symbol table */
 extern PCOMSYMBOL hb_compSymbolGetPos( USHORT );   /* returns a symbol based on its index on the symbol table */
-extern USHORT     hb_compSymbolFixPos( USHORT );    /* converts symbol's compile-time position into generation-time position */
 
 extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 

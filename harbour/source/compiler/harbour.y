@@ -1457,6 +1457,7 @@ int hb_compYACCMain( char * szName )
       pSym->cScope |= hb_comp_pInitFunc->cScope;
       hb_comp_functions.pLast->pNext = hb_comp_pInitFunc;
       hb_comp_functions.pLast = hb_comp_pInitFunc;
+      hb_compGenPCode1( HB_P_ENDPROC );
       ++hb_comp_functions.iCount;
    }
 

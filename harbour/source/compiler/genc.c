@@ -44,7 +44,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    USHORT iNestedCodeblock = 0;
    ULONG lPCodePos;
    char chr;
-   BOOL bEndProcRequired;
    LONG lOffset;
 
    FILE * yyc;             /* file handle for C output */
@@ -106,9 +105,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
     */
    hb_strupr( pFileName->szName );
    fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
-
-   if( ! hb_comp_bStartProc )
-      pSym = pSym->pNext; /* starting procedure is always the first symbol */
 
    while( pSym )
    {
@@ -195,7 +191,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       fprintf( yyc, "\n{\n   static BYTE pcode[] =\n   {\n" );
 
-      bEndProcRequired = TRUE;
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
       {
@@ -273,7 +268,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                lPCodePos++;
                if( lPCodePos == pFunc->lPCodePos )
                {
-                  bEndProcRequired = FALSE;
                   fprintf( yyc, "\tHB_P_ENDPROC\n" );
                }
                else
@@ -563,13 +557,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_MESSAGE:
                {
-                  USHORT wFixPos;
-
                   wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wSym );
                   fprintf( yyc, "\tHB_P_MESSAGE, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wSym ),
+                           HB_HIBYTE( wSym ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wSym )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -631,13 +622,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PARAMETER:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PARAMETER, %i, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ),
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ),
                            pFunc->pCode[ lPCodePos + 3 ] );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
@@ -662,13 +650,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_POPALIASEDFIELD:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_POPALIASEDFIELD, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -677,13 +662,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_POPALIASEDVAR:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_POPALIASEDVAR, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -692,13 +674,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_POPFIELD:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_POPFIELD, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -746,13 +725,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_POPMEMVAR:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_POPMEMVAR, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -779,13 +755,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_POPVARIABLE:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_POPVARIABLE, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName  );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -804,14 +777,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHALIASEDFIELD:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHALIASEDFIELD, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -820,14 +790,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHALIASEDVAR:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHALIASEDVAR, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -898,14 +865,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHFIELD:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHFIELD, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -1014,14 +978,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHMEMVAR:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHMEMVAR, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -1030,14 +991,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHMEMVARREF:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHMEMVARREF, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -1125,14 +1083,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHSYM:
                {
-                  USHORT wFixPos;
-
                   wSym = pFunc->pCode[ lPCodePos + 1 ] +
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wSym );
                   fprintf( yyc, "\tHB_P_PUSHSYM, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wSym ),
+                           HB_HIBYTE( wSym ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wSym )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -1141,14 +1096,11 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
             case HB_P_PUSHVARIABLE:
                {
-                  USHORT wFixPos;
-
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
-                  wFixPos = hb_compSymbolFixPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHVARIABLE, %i, %i,",
-                           HB_LOBYTE( wFixPos ),
-                           HB_HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wVar ),
+                           HB_HIBYTE( wVar ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -1194,7 +1146,6 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                if( pFunc->bFlags & FUN_USES_STATICS )
                {
                   hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
-                  w = hb_compSymbolFixPos( w );
                   fprintf( yyc, "\tHB_P_SFRAME, %i, %i,",
                            HB_LOBYTE( w ), HB_HIBYTE( w ) );
                   if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* symbol (_INITSTATICS) */" );
@@ -1204,9 +1155,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                break;
 
             case HB_P_STATICS:
-
                hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
-               w = hb_compSymbolFixPos( w );
                fprintf( yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
                         HB_LOBYTE( w ),
                         HB_HIBYTE( w ),
@@ -1245,16 +1194,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          }
       }
 
-      if( bEndProcRequired )
-      {
-         if( hb_comp_bGenCVerbose ) fprintf( yyc, "/* %05li */ ", lPCodePos );
-         else fprintf( yyc, "\t" );
-         fprintf( yyc, "HB_P_ENDPROC\n" );
-      }
-      else
-      {
-         if( hb_comp_bGenCVerbose ) fprintf( yyc, "/* %05li */\n", lPCodePos );
-      }
+      if( hb_comp_bGenCVerbose ) fprintf( yyc, "/* %05li */\n", lPCodePos );
 
       fprintf( yyc, "   };\n\n" );
       fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
