@@ -264,7 +264,7 @@ FHANDLE hb_fsCreate ( BYTE * pFilename, USHORT uiFlags )
 
    s_uiErrorLast = 0;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
    convert_create_flags( uiFlags, &oflag, &pmode );
@@ -279,25 +279,8 @@ FHANDLE hb_fsCreate ( BYTE * pFilename, USHORT uiFlags )
 
 #else
 
-   #if defined(_MSC_VER)
-
-      errno = 0;
-      convert_create_flags( uiFlags, &oflag, &pmode );
-      hFileHandle = _open( ( char * ) pFilename, oflag, pmode );
-      if( hFileHandle == -1 )
-      {
-         /* This if block is required, because errno will be set
-            if the file did not exist and had to be created, even
-            when the create is successful! */
-         s_uiErrorLast = errno;
-      }
-
-   #else
-
-      hFileHandle = FS_ERROR;
-      s_uiErrorLast = FS_ERROR;
-
-   #endif
+   hFileHandle = FS_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -306,7 +289,7 @@ FHANDLE hb_fsCreate ( BYTE * pFilename, USHORT uiFlags )
 
 void    hb_fsClose  ( FHANDLE hFileHandle )
 {
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
    close( hFileHandle );
@@ -314,19 +297,13 @@ void    hb_fsClose  ( FHANDLE hFileHandle )
 
 #else
 
-   #if defined(_MSC_VER)
-
-      errno = 0;
-      _close( hFileHandle );
-      s_uiErrorLast = errno;
-
-   #else
-
-      s_uiErrorLast = FS_ERROR;
-
-   #endif
+   s_uiErrorLast = FS_ERROR;
 
 #endif
+
+   /* Convert 'Invalid Memory Block' to 'Invalid Handle' */
+   if( s_uiErrorLast == 9 )
+      s_uiErrorLast = 6;
 
 }
 
@@ -334,7 +311,7 @@ USHORT  hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiRead;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
    uiRead = read( hFileHandle, pBuff, uiCount );
@@ -344,20 +321,8 @@ USHORT  hb_fsRead   ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 #else
 
-   #if defined(_MSC_VER)
-
-      errno = 0;
-      uiRead = _read( hFileHandle, pBuff, uiCount );
-      s_uiErrorLast = errno;
-      if( uiRead == ( USHORT )-1 )
-         uiRead = 0;
-
-   #else
-
-      uiRead = 0;
-      s_uiErrorLast = FS_ERROR;
-
-   #endif
+   uiRead = 0;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -368,7 +333,7 @@ USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
    uiWritten = write( hFileHandle, pBuff, uiCount );
@@ -378,20 +343,8 @@ USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 #else
 
-   #if defined(_MSC_VER)
-
-      errno = 0;
-      uiWritten = _write( hFileHandle, pBuff, uiCount );
-      s_uiErrorLast = errno;
-      if( uiWritten == ( USHORT )-1 )
-         uiWritten = 0;
-
-   #else
-
-      uiWritten = 0;
-      s_uiErrorLast = FS_ERROR;
-
-   #endif
+   uiWritten = 0;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -400,30 +353,45 @@ USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 ULONG   hb_fsSeek   ( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {
-   ULONG ulPos;
+   ULONG ulPos = -1;
+   USHORT Flags = convert_seek_flags( uiFlags );
 
-#if defined(HAVE_POSIX_IO)
+   if( lOffset < 0 && Flags == SEEK_SET )
+   {
+      /* 'Seek Error' */
+      s_uiErrorLast = 25;
 
-   errno = 0;
-   ulPos = lseek( hFileHandle, lOffset, convert_seek_flags( uiFlags ) );
-   s_uiErrorLast = errno;
+  #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
+      /* get current offset */
+      errno = 0;
+      ulPos = lseek( hFileHandle, 0, SEEK_CUR );
+      if( errno != 0 )
+         s_uiErrorLast = errno;
+       
+  #endif
 
-#else
+   }
+   else
+   {
 
-   #if defined(_MSC_VER)
+  #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
       errno = 0;
-      ulPos = _lseek( hFileHandle, lOffset, convert_seek_flags( uiFlags ) );
+      ulPos = lseek( hFileHandle, lOffset, Flags );
       s_uiErrorLast = errno;
 
-   #else
+  #else
 
       ulPos = 0;
       s_uiErrorLast = FS_ERROR;
 
-   #endif
+  #endif
 
-#endif
+      /* Convert 'Unknown Command' to 'Seek Error' */
+      if( s_uiErrorLast == 22 )
+         s_uiErrorLast = 25;
+
+   }
 
    return ulPos;
 }
@@ -433,12 +401,14 @@ USHORT  hb_fsError  ( void )
    return s_uiErrorLast;
 }
 
-void    hb_fsDelete ( BYTE * pFilename )
+int hb_fsDelete ( BYTE * pFilename )
 {
+   int retval;
+
 #if defined(HAVE_POSIX_IO)
 
    errno = 0;
-   unlink( ( char * ) pFilename );
+   retval = unlink( ( char * ) pFilename );
    s_uiErrorLast = errno;
 
 #else
@@ -446,7 +416,7 @@ void    hb_fsDelete ( BYTE * pFilename )
    #if defined(_MSC_VER)
 
       errno = 0;
-      remove( ( char *) pFilename );
+      retval = remove( ( char *) pFilename );
       s_uiErrorLast = errno;
 
    #else
@@ -456,14 +426,17 @@ void    hb_fsDelete ( BYTE * pFilename )
    #endif
 
 #endif
+   return retval;
 }
 
-void    hb_fsRename ( BYTE * pOldName, BYTE * pNewName )
+int hb_fsRename ( BYTE * pOldName, BYTE * pNewName )
 {
+   int retval = -1;
+
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    errno = 0;
-   rename( ( char * ) pOldName, ( char * ) pNewName );
+   retval = rename( ( char * ) pOldName, ( char * ) pNewName );
    s_uiErrorLast = errno;
 
 #else
@@ -471,6 +444,8 @@ void    hb_fsRename ( BYTE * pOldName, BYTE * pNewName )
    s_uiErrorLast = FS_ERROR;
 
 #endif
+
+   return retval;
 }
 
 BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
@@ -528,7 +503,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 void    hb_fsCommit ( FHANDLE hFileHandle )
 {
-#if defined(HAVE_POSIX_IO)
+#if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
    int dup_handle;
 
@@ -543,25 +518,8 @@ void    hb_fsCommit ( FHANDLE hFileHandle )
    }
 
 #else
-   #if defined(_MSC_VER)
 
-      int dup_handle;
-
-      errno = 0;
-      dup_handle = _dup( hFileHandle );
-      s_uiErrorLast = errno;
-
-      if( dup_handle != -1 )
-      {
-         _close( dup_handle );
-         s_uiErrorLast = errno;
-      }
-
-   #else
-
-      s_uiErrorLast = FS_ERROR;
-
-   #endif
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 }
@@ -821,23 +779,30 @@ HARBOUR HB_FCLOSE( void )
 
 HARBOUR HB_FERASE( void )
 {
+   int retval = -1;
+
+   s_uiErrorLast = 3;
+
    if( ISCHAR( 1 ) )
    {
-      hb_fsDelete( ( BYTE * ) hb_parc( 1 ) );
+      retval = hb_fsDelete( ( BYTE * ) hb_parc( 1 ) );
    }
 
-   hb_retni( s_uiErrorLast );
+   hb_retni( retval );
 }
 
 HARBOUR HB_FRENAME( void )
 {
+   int retval = -1;
+
+   s_uiErrorLast = 2;
+
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {
-      hb_fsRename( ( BYTE * ) hb_parc( 1 ),
-                   ( BYTE * ) hb_parc( 2 ) );
+      retval = hb_fsRename( ( BYTE * ) hb_parc( 1 ),
+                            ( BYTE * ) hb_parc( 2 ) );
    }
-
-   hb_retni( s_uiErrorLast );
+   hb_retni( retval );
 }
 
 HARBOUR HB_FSEEK( void )

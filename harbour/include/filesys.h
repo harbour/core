@@ -68,7 +68,7 @@ extern void     hb_fsCommit     ( FHANDLE hFileHandle );
 extern FHANDLE  hb_fsCreate     ( BYTE * pFilename, USHORT uiAttribute );
 extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
 extern BYTE     hb_fsCurDrv     ( void );
-extern void     hb_fsDelete     ( BYTE * pFilename );
+extern int      hb_fsDelete     ( BYTE * pFilename );
 extern USHORT   hb_fsError      ( void );
 extern FHANDLE  hb_fsExtOpen    ( BYTE * pFilename, BYTE * pDefExt,
                                   USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
@@ -79,7 +79,7 @@ extern BOOL     hb_fsMkDir      ( BYTE * pDirName );
 extern FHANDLE  hb_fsOpen       ( BYTE * pFilename, USHORT uiFlags );
 extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount );
 extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
-extern void     hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
+extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount );
 

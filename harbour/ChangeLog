@@ -1,3 +1,12 @@
+19990829-15:47 EDT Paul Tucker <ptucker@sympatico.ca>
+   * include/filesys.h
+     * hb_fsDelete and hb_fsRename now return int
+   * source/rtl/filesys.c
+     hb_fsDelete(), hb_fsRename
+     now Clipper compatible (so far, only tested with msvc)
+     combined _some_ #if posix and msc_ver statements since posix version
+     works with msvc
+
 19990829-13:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/include/set.h
      rearrange set struct to be in correct order
