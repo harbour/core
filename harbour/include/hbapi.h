@@ -268,6 +268,28 @@ extern double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as 
 extern int      hb_parni( int iParam, ... ); /* retrieve a numeric parameter as a integer */
 extern long     hb_parnl( int iParam, ... ); /* retrieve a numeric parameter as a long */
 extern PHB_ITEM hb_param( int iParam, int iMask ); /* retrieve a generic parameter */
+
+#ifdef HB_EXTEND_API_MACROS
+
+#define hb_pcount()                          ( ( int ) hb_stack.pBase->item.asSymbol.paramcnt )
+
+#define hb_ret()                             hb_itemClear( &hb_stack.Return )
+#define hb_reta( ulLen )                     hb_arrayNew( &hb_stack.Return, ulLen )
+#define hb_retc( szText )                    hb_itemPutC( &hb_stack.Return, szText )
+#define hb_retclen( szText, ulLen )          hb_itemPutCL( &hb_stack.Return, szText, ulLen )
+#define hb_retds( szDate )                   hb_itemPutDS( &hb_stack.Return, szDate )
+#define hb_retd( lYear, lMonth, lDay )       hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay )
+#define hb_retl( iLogical )                  hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE )
+#define hb_retnd( dNumber )                  hb_itemPutND( &hb_stack.Return, dNumber )
+#define hb_retni( iNumber )                  hb_itemPutNI( &hb_stack.Return, iNumber )
+#define hb_retnl( lNumber )                  hb_itemPutNL( &hb_stack.Return, lNumber )
+#define hb_retnlen( dNumber, iWidth, iDec )  hb_itemPutNLen( &hb_stack.Return, dNumber, iWidth, iDec )
+#define hb_retndlen( dNumber, iWidth, iDec ) hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec )
+#define hb_retnilen( iNumber, iWidth )       hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth )
+#define hb_retnllen( lNumber, iWidth )       hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth )
+
+#else
+
 extern int      hb_pcount( void );          /* returns the number of suplied parameters */
 
 extern void     hb_ret( void );             /* post a NIL return value */
@@ -284,6 +306,8 @@ extern void     hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns 
 extern void     hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
 extern void     hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
 extern void     hb_reta( ULONG ulLen );  /* returns an array with a specific length */
+
+#endif
 
 extern void     hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
 extern void     hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */

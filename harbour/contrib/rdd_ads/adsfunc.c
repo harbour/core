@@ -61,7 +61,6 @@ HB_FUNC( ADSSETFILETYPE )
          adsFileType = fileType;
    }
    hb_retni( oldType );
-   return;
 }
 
 HB_FUNC( ADSSETSERVERTYPE )
@@ -73,8 +72,6 @@ HB_FUNC( ADSSETSERVERTYPE )
       if( servType>0 && servType<3 )
          AdsSetServerType( servType );
    }
-   hb_ret();
-   return;
 }
 
 HB_FUNC( ADSLOCKING )
@@ -326,8 +323,6 @@ HB_FUNC( ADSGETAOF )
       ulRetVal = AdsGetAOF( pArea->hTable, pucFilter, &pusLen );
       if ( ulRetVal == AE_SUCCESS )
          hb_retc( ( char * ) pucFilter );
-      else
-         hb_ret();
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOF" );

@@ -1,3 +1,17 @@
+20000413-02:55 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/extend.c
+   * include/hbapi.h
+     % Experimental HB_EXTEND_API_MACROS macro added, which (if defined) will
+       convert hb_pcount() and hb_ret*() Extend API function calls into 
+       Item API calls and direct item accesses. So that it should be faster
+       and also a bit larger (~3K larger Harbour exes for BCC55)
+
+   * source/rtl/set.c
+   * source/rdd/dbcmd.c
+   * contrib/rdd_ads/adsfunc.c
+     % hb_ret() call removed.
+
 20000413-02:14 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapiitm.h

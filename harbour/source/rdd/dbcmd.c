@@ -2794,7 +2794,6 @@ HB_FUNC( FIELDPUT )
          return;
       }
    }
-   hb_ret();
 }
 
 HB_FUNC( FLOCK )

@@ -608,7 +608,7 @@ HB_FUNC( SET )
          break;
       default                :
          /* Return NIL if called with invalid SET specifier */
-         hb_ret();
+         break;
    }
 }
 

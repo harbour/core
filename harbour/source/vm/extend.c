@@ -95,7 +95,6 @@ char * hb_parc( int iParam, ... )
 
       if( HB_IS_STRING( pItem ) )
          return pItem->item.asString.value;
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -125,7 +124,6 @@ ULONG hb_parclen( int iParam, ... )
 
       if( HB_IS_STRING( pItem ) )
          return pItem->item.asString.length;
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -163,7 +161,6 @@ ULONG hb_parcsiz( int iParam, ... )
 
          if( HB_IS_STRING( pItem ) )
             return pItem->item.asString.length + 1;
-
          else if( HB_IS_ARRAY( pItem ) )
          {
             va_list va;
@@ -197,7 +194,6 @@ char * hb_pards( int iParam, ... )
 
       if( HB_IS_DATE( pItem ) )
          return hb_dateDecStr( hb_stack.szDate, pItem->item.asDate.value );
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -229,7 +225,6 @@ char * hb_pardsbuff( char * szDate, int iParam, ... )
 
       if( HB_IS_DATE( pItem ) )
          return hb_dateDecStr( szDate, pItem->item.asDate.value );
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -259,16 +254,12 @@ int hb_parl( int iParam, ... )
 
       if( HB_IS_LOGICAL( pItem ) )
          return pItem->item.asLogical.value ? 1 : 0;
-
       else if( HB_IS_INTEGER( pItem ) )
          return pItem->item.asInteger.value != 0 ? 1 : 0;
-
       else if( HB_IS_LONG( pItem ) )
          return pItem->item.asLong.value != 0 ? 1 : 0;
-
       else if( HB_IS_DOUBLE( pItem ) )
          return pItem->item.asDouble.value != 0.0 ? 1 : 0;
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -298,13 +289,10 @@ double hb_parnd( int iParam, ... )
 
       if( HB_IS_DOUBLE( pItem ) )
          return pItem->item.asDouble.value;
-
       else if( HB_IS_INTEGER( pItem ) )
          return ( double ) pItem->item.asInteger.value;
-
       else if( HB_IS_LONG( pItem ) )
          return ( double ) pItem->item.asLong.value;
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -334,13 +322,10 @@ int hb_parni( int iParam, ... )
 
       if( HB_IS_INTEGER( pItem ) )
          return pItem->item.asInteger.value;
-
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
-
       else if( HB_IS_DOUBLE( pItem ) )
          return ( int ) pItem->item.asDouble.value;
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -370,16 +355,12 @@ long hb_parnl( int iParam, ... )
 
       if( HB_IS_LONG( pItem ) )
          return pItem->item.asLong.value;
-
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
-
       else if( HB_IS_DOUBLE( pItem ) )
          return ( long ) pItem->item.asDouble.value;
-
       else if( HB_IS_DATE( pItem ) )
          return pItem->item.asDate.value;
-
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -446,6 +427,8 @@ int hb_parinfo( int iParam )
          return 0;
    }
 }
+
+#ifndef HB_EXTEND_API_MACROS
 
 int hb_pcount( void )
 {
@@ -554,6 +537,8 @@ void hb_retnllen( long lNumber, int iWidth )
    hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth );
 }
 
+#endif
+
 void hb_storc( char * szText, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d, ...)", szText, iParam));
@@ -571,7 +556,6 @@ void hb_storc( char * szText, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1  )
          hb_itemPutC( hb_itemUnRef( pItem ), szText );
    }
@@ -594,7 +578,6 @@ void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1  )
          hb_itemPutCL( hb_itemUnRef( pItem ), szText, ulLen );
    }
@@ -619,7 +602,6 @@ void hb_stords( char * szDate, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1  )
          hb_itemPutDS( hb_itemUnRef( pItem ), szDate );
    }
@@ -642,7 +624,6 @@ void hb_storl( int iLogical, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1  )
          hb_itemPutL( hb_itemUnRef( pItem ), iLogical ? TRUE : FALSE );
    }
@@ -665,7 +646,6 @@ void hb_storni( int iValue, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1  )
          hb_itemPutNI( hb_itemUnRef( pItem ), iValue );
    }
@@ -688,7 +668,6 @@ void hb_stornl( long lValue, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutNI( hb_itemUnRef( pItem ), lValue );
    }
@@ -711,9 +690,7 @@ void hb_stornd( double dNumber, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-
       else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutND( hb_itemUnRef( pItem ), dNumber );
    }
 }
-
