@@ -536,7 +536,6 @@ LASTKFUNC     ;N;
 LASTKLINE     ;N; 
 LASTKPROC     ;N; 
 NUMFKEY       ;N; 
-SETLASTKEY    ;S; 
 ;
 ;
 ;3.2 system info functions

@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-08 22:10 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
+  - contrib/libct/setlast.prg
+  * contrib/libct/Makefile
+  * contrib/libct/ctflist.txt
+  * contrib/libct/makefile.bc
+  * contrib/libct/makefile.vc
+    - Removed SETLASTKEY() from libct, because it conflicts with the RTL
+      implementation which is also cleaner.
+
 2004-06-08 02:25 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   * source/debug/debugger.prg
     + Added preliminary CLD-compatible scripting capabilities.

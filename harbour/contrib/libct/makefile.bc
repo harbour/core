@@ -153,7 +153,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\invertwin.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
-   $(OBJ_DIR)\setlast.obj \
 
 #
 # Our default target
@@ -444,9 +443,3 @@ $(OBJ_DIR)\screen2.obj : $(OBJ_DIR)\screen2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\setlast.c : $(TOOLS_DIR)\setlast.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\setlast.obj : $(OBJ_DIR)\setlast.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

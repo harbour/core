@@ -172,7 +172,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\invertwin.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
-   $(OBJ_DIR)\setlast.obj \
 
 #
 # Our default target
@@ -242,7 +241,6 @@ CLEAN:
    -@if exist $(OBJ_DIR)\invertwin.* del $(OBJ_DIR)\invertwin.*
    -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
    -@if exist $(OBJ_DIR)\screen2.* del $(OBJ_DIR)\screen2.*
-   -@if exist $(OBJ_DIR)\setlast.* del $(OBJ_DIR)\screen2.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #
