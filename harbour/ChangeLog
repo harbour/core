@@ -1,3 +1,7 @@
+2000-07-13 19:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     ! Removed excess characters at end of #undef directives.
+
 2000-07-13 23:24 UTC+0200 JfL <jfl@mafact.com> & RaC <Rac@mafact.com>
    * source/rtl/tClass.prg
      * Prepared for InitClass (Not working )

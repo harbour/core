@@ -32,7 +32,7 @@
 //#define DEBUG_LEX
 
 #ifdef DEBUG_LEX
-   #undef DEBUG_INFO(x)
+   #undef DEBUG_INFO
       #define DEBUG_INFO(x) x
 #endif
 
@@ -47,7 +47,7 @@
    int yy_lex_input( char *, int );
    #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
-#undef YY_BUF_SIZE HB_PP_STR_SIZE
+#undef YY_BUF_SIZE
    #define YY_BUF_SIZE HB_PP_STR_SIZE
 
 static int iTexts = 0;
@@ -847,10 +847,10 @@ LANGUAGE_RULES_ARE {
 
 /* SimpLex Macros. */
 
-#undef LEX_CASE(x)
+#undef LEX_CASE
    #define LEX_CASE(x) toupper(x)
 
-#undef NEW_LINE_ACTION(x)
+#undef NEW_LINE_ACTION
    #define NEW_LINE_ACTION() \
 		while( iTexts ) \
                 { \
@@ -866,7 +866,7 @@ LANGUAGE_RULES_ARE {
                 }
 
 #ifdef SHOW_LEX_TOKENS
-   #undef INTERCEPT_ACTION(x)
+   #undef INTERCEPT_ACTION
    	#define INTERCEPT_ACTION(x) \
 	\
       	if( x == IDENTIFIER ) \
@@ -894,7 +894,7 @@ LANGUAGE_RULES_ARE {
 
 /* Support Functions implemented as macros for speed. */
 
-#undef ELEMENT_TOKEN(x)
+#undef ELEMENT_TOKEN
   #define ELEMENT_TOKEN(x)\
 \
    if( x == NULL || *x == '\0' )\
@@ -1029,7 +1029,7 @@ LANGUAGE_RULES_ARE {
       }\
    }
 
-#undef CUSTOM_ACTION(x)
+#undef CUSTOM_ACTION
    #define CUSTOM_ACTION(x) \
 \
    DEBUG_INFO( printf( "Custom Action for %i\n", x ) );\
@@ -1380,7 +1380,7 @@ LANGUAGE_RULES_ARE {
       x = 0;\
    }
 
-#undef INIT_ACTION()
+#undef INIT_ACTION
    #define INIT_ACTION() hb_comp_bSimpLex = TRUE;
 
 int yy_lex_input( char *buffer, int iBufferSize )
