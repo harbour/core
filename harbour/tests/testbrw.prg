@@ -38,6 +38,8 @@ function Main()
    oBrowse:GetColumn(3):Footing = 'Third'
    oBrowse:GetColumn(4):Footing = 'Forth'
    oBrowse:GetColumn(5):Footing = 'Fifth'
+   // needed since I've changed some columns _after_ I've added them to TBrowse object
+   oBrowse:Configure()
 
    Alert( oBrowse:ClassName() )
    Alert( oBrowse:GetColumn( 1 ):ClassName() )

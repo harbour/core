@@ -94,7 +94,8 @@ CLASS TBrowse
 
    DATA aRedraw       // Array of logical items indicating, is appropriate row need to be redraw
    DATA RelativePos   // Indicates record position relatively position of first record on the screen
-   DATA lHeaders      // Internal variable, indicate, are there column headers to paint
+   DATA lHeaders      // Internal variable which indicates whether there are column footers to paint
+   DATA lFooters      // Internal variable which indicates whether there are column footers to paint
    DATA aRect         // The rectangle specified with ColorRect()
    DATA aRectColor    // The color positions to use in the rectangle specified with ColorRect()
 
@@ -120,7 +121,7 @@ CLASS TBrowse
                                    // Returns the display width of a particular column
    METHOD ColWidth( nColumn ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ]:Width, NIL )
-   METHOD Configure( nMode ) VIRTUAL // Reconfigures the internal settings of the TBrowse object
+   METHOD Configure( nMode )       // Reconfigures the internal settings of the TBrowse object
                                    // nMode is an undocumented parameter in CA-Cl*pper
    METHOD LeftDetermine()          // Determine leftmost unfrozen column in display
    METHOD DeHilite()               // Dehighlights the current cell
@@ -160,21 +161,22 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    default  nRight  to MaxCol()
 
    ::aColumns    := {}
-   ::AutoLite    := .t.
+   ::AutoLite    := .T.
    ::leftVisible := 1
    ::ColPos      := 1
    ::Freeze      := 0
-   ::HitBottom   := .f.
-   ::HitTop      := .f.
+   ::HitBottom   := .F.
+   ::HitTop      := .F.
    ::ColorSpec   := SetColor()
    ::ColSep      := " "
    ::FootSep     := ""
    ::HeadSep     := ""
    ::RowPos      := 1
-   ::stable      := .f.
+   ::stable      := .F.
    ::RelativePos := 1
    ::aRedraw     := {}
-   ::lHeaders    := .f.
+   ::lHeaders    := .F.
+   ::lFooters    := .F.
    ::aRect       := {}
    ::aRectColor  := {}
 
@@ -185,6 +187,33 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
 
 return Self
 
+
+METHOD Configure(nMode) CLASS TBrowse
+
+   local n
+
+   ::lHeaders := .F.
+   ::lFooters := .F.
+
+   // Are there any column header to paint ?
+   for n := 1 to Len(::aColumns)
+      if !Empty(::aColumns[n]:Heading)
+         ::lHeaders := .T.
+         exit
+      endif
+   next
+
+   // Are there any column footer to paint ?
+   for n := 1 to Len(::aColumns)
+      if !Empty(::aColumns[n]:Footing)
+         ::lFooters := .T.
+         exit
+      endif
+   next
+
+   ::Invalidate()
+
+return Self
 
 // Adds a TBColumn object to the TBrowse object
 METHOD AddColumn( oCol ) CLASS TBrowse
@@ -205,12 +234,15 @@ return Self
 METHOD DelColumn( nPos ) CLASS TBrowse
 
    local oCol := ::aColumns[ nPos ]
+   local n
 
    ADel( ::aColumns, nPos )
    ASize( ::aColumns, Len( ::aColumns ) - 1 )
+
    ::Configure( 2 )
 
 return oCol
+
 
 METHOD Down() CLASS TBrowse
 
@@ -248,12 +280,22 @@ return Self
 
 METHOD GoBottom() CLASS TBrowse
 
+   local nToEnd := 0
+
    ::HitTop := .F.
    ::HitBottom := .F.
-   if Eval( ::goBottomBlock ) != 0
+
+   // if there are fewer records than available display area
+   if (nToEnd := Eval(::SkipBlock, ::RowCount)) < ::RowCount
       ::RefreshAll()
-      ::RowPos := ::RowCount
-      ::RelativePos := ::RowCount
+      ::RowPos += nToEnd
+      ::RelativePos += nToEnd
+   else
+      if Eval( ::goBottomBlock ) != 0
+         ::RefreshAll()
+         ::RowPos := ::RowCount
+         ::RelativePos := ::RowCount
+      endif
    endif
 
 return Self
@@ -282,22 +324,14 @@ return Self
 METHOD Invalidate() CLASS TBrowse
 
    local n
-   local lFooters := .f.
-
-   for n := 1 to Len( ::aColumns )
-      if ! Empty( ::aColumns[ n ]:Footing )
-         lFooters := .t.
-         exit
-      endif
-   next
 
    ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
-               iif( lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
+               iif( ::lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
                iif( Empty( ::FootSep ), 0, 1 )
 
-   AFill( ::aRedraw, .f. )
+   AFill(::aRedraw, .F. )
 
-   ::Stable := .f.
+   ::Stable := .F.
 
 return Self
 
@@ -408,8 +442,8 @@ METHOD PageDown() CLASS TBrowse
       if ( nDown := Eval( ::SkipBlock, ::RowCount )  ) != 0
          if nDown < ::RowCount
             ::RefreshAll()
-            ::RowPos := ::RowCount
-            ::RelativePos := ::RowCount
+            ::RowPos += nDown
+            ::RelativePos += nDown
          else
             ::RefreshAll()
          endif
@@ -565,26 +599,11 @@ METHOD Stabilize() CLASS TBrowse
    local nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
    local nColsWidth := 0                   // Total width of visible columns plus ColSep
    local nColsVisible                      // Number of columns that fit on the browse width
-   local lFooters := .f.                   // Are there column footers to paint ?
    local cColColor                         // Column color to use
    local oCol, oCol2
    local nToAdd
 
    if Empty(::aRedraw) .or. !::aRedraw[ 1 ]
-      // Are there any column header to paint ?
-      for n := 1 to Len( ::aColumns )
-         if ! Empty( ::aColumns[ n ]:Heading )
-            ::lHeaders := .t.
-            exit
-         endif
-      next
-      // Are there any column footer to paint ?
-      for n := 1 to Len( ::aColumns )
-         if ! Empty( ::aColumns[ n ]:Footing )
-            lFooters := .t.
-            exit
-         endif
-      next
       // Calculate how many columns fit on the browse width including ColSeps
       if ::Freeze > 0
          if ::leftVisible <= ::Freeze
@@ -640,7 +659,7 @@ METHOD Stabilize() CLASS TBrowse
 
       if Empty(::aRedraw)
          ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
-               iif( lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - iif( Empty( ::FootSep ), 0, 1 )
+               iif( ::lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - iif( Empty( ::FootSep ), 0, 1 )
          ::aRedraw := Array( ::RowCount )
          AFill( ::aRedraw, .F. )
       endif
@@ -649,8 +668,11 @@ METHOD Stabilize() CLASS TBrowse
       oCol2 := ::aColumns[ iif( ::Freeze > 0, 1, ::leftVisible ) ]
       nColsWidth := iif( oCol != NIL, oCol:ColPos, 0 ) + ;
         iif( oCol != NIL, oCol:Width, 0 ) - oCol2:ColPos
-      lFooters := ( ::RowCount != ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
-                - iif( Empty( ::HeadSep ), 0, 1 ) - iif( Empty( ::FootSep ), 0, 1 ) )
+
+      /* NOTE: 01/01/2000 - maurilio.longo@libero.it
+               Should not be needed anymore. */
+      /*::lFooters := ( ::RowCount != ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
+                - iif( Empty( ::HeadSep ), 0, 1 ) - iif( Empty( ::FootSep ), 0, 1 ) )*/
    endif
 
    if !::aRedraw[ 1 ]
@@ -693,7 +715,7 @@ METHOD Stabilize() CLASS TBrowse
          DispOut( Replicate( Right( ::HeadSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       endif
       if ! Empty( ::FootSep ) // Drawing footing separator
-         DispOutAt( ::nBottom - iif( lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOutAt( ::nBottom - iif( ::lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
          if Len( ::FootSep ) > 1
             iW := 0
             for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
@@ -712,7 +734,7 @@ METHOD Stabilize() CLASS TBrowse
          endif
          DispOut( Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       endif
-      if lFooters                // Drawing footers
+      if ::lFooters                // Drawing footers
          DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
          for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
                if ::Freeze > 0 .and. n == ::Freeze + 1

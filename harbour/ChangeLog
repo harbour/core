@@ -1,3 +1,13 @@
+2000-10-01 18:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   *source/rtl/tbrowse.prg
+      ! PageDown() and GoBottom() methods weren't working when number of available record was lower than
+        available display space (::RowCount).
+      ! Presence and need to draw header and/or footers is evaluated during column insertion/deletion
+        calling method Configure(). Method Configure() _has_ to be called when an already added TBColumn
+        object is changed.
+   *tests/testbrw.prg
+      ! Added call to Configure() method
+
 2000-09-30 22:22 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    *contrib/mysql/tmysql.prg
       ! fixes / changes to work with tsqlbrw.prg
