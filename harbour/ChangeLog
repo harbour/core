@@ -1,3 +1,13 @@
+2000-11-21 18:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcomp.c
+     * Corrected 1 compiler warning.
+
+   * source/pp/ppcore.c
+     + Added s_bArray support logic to WorkDefine()
+
+   * source/rtl/idle.c
+     * Revered order of hb_gcCollectAll() and hb_releaseCPU();
+
 2000-11-21 23:42 UTC-0100 JFL (mafact) <jfl@mafact.com>
    * source/vm/classes.c
      * minor modif after the last Stack tests

@@ -157,6 +157,9 @@ int        hb_pp_nCondCompile = 0;
 
 char *     hb_pp_STD_CH = NULL;
 
+/* Ron Pinkas added 2000-11-21 */
+static BOOL s_bArray = FALSE;
+
 /* Table with parse errors */
 char * hb_pp_szErrors[] =
 {
@@ -185,10 +188,6 @@ char * hb_pp_szWarnings[] =
    "1Redefinition or duplicate definition of #define %s",
    "1No directives in command definitions file"
 };
-
-/*
-extern BOOL bDebug;
-*/
 
 void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 {
@@ -964,16 +963,17 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
               }
            }
 
+           #if 0
+               printf( "Line: >%s<\n", ptri );
+               printf( "Out: >%s<\n", ptro );
+           #endif
+
            /* Look for definitions from #translate    */
            stcmd = hb_pp_topTranslate;
            while( stcmd != NULL )
            {
               ptri = sLine + isdvig;
               lenToken = strlen(stcmd->name);
-
-              #if 0
-                 printf( "Line: >%s<\n", ptri );
-              #endif
 
               while( ( ifou = md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE, FALSE )) > 0 )
               {
@@ -1111,23 +1111,52 @@ static int WorkDefine( char ** ptri, char * ptro, DEFINES * stdef )
      lens = hb_pp_strocpy( ptro,stdef->value );
   }
   else
-    {
-      HB_SKIPTABSPACES( *ptri );
-      if( **ptri == '(' )
+  {
+     HB_SKIPTABSPACES( *ptri );
+
+     if( **ptri == '(' )
+     {
+        npars = 0; ptr = *ptri;
+
+        do
         {
-          npars = 0; ptr = *ptri;
-          do
-            {
-              ptr++;
-              if( NextParm( &ptr, NULL ) > 0 ) npars++;
-            }
-          while( *ptr != ')' && *ptr != '\0' );
-          if( *ptr == ')' && stdef->npars == npars )
-            lens = WorkPseudoF( ptri, ptro, stdef );
-          else return -1;
+           ptr++;
+
+           if( NextParm( &ptr, NULL ) > 0 )
+           {
+              npars++;
+           }
         }
-      else return -1;
-    }
+        while( *ptr != ')' && *ptr != '\0' );
+
+        if( *ptr == ')' && stdef->npars == npars )
+        {
+           /* Ron Pinkas added 2000-11-21 */
+           char *pTmp = ptr + 1;
+
+           while( *pTmp && ( *pTmp == ' ' || *pTmp == '\t' ) )
+           {
+             pTmp++;
+           }
+           if( *pTmp == '[' )
+           {
+              s_bArray = TRUE;
+           }
+           /* END - Ron Pinkas added 2000-11-21 */
+
+           lens = WorkPseudoF( ptri, ptro, stdef );
+        }
+        else
+        {
+           return -1;
+        }
+     }
+     else
+     {
+        return -1;
+     }
+  }
+
   return lens;
 }
 
@@ -3049,7 +3078,6 @@ static int NextWord( char ** sSource, char * sDest, BOOL lLower )
 static int NextName( char ** sSource, char * sDest )
 {
   /* Ron Pinkas added 2000-11-08 */
-  static BOOL s_bArray = FALSE;
   char cLastChar = '\0', *pString = NULL, *pTmp;
   /* END - Ron Pinkas added 2000-11-08 */
 
@@ -3100,6 +3128,7 @@ static int NextName( char ** sSource, char * sDest )
            **sSource = '\0';
            if( strchr( pString, '"' ) == NULL )
            {
+              printf( "OOps!\n" );
               *pString = '"';
               **sSource = '"';
            }
@@ -3253,11 +3282,10 @@ static int NextParm( char ** sSource, char * sDest )
   if( sDest != NULL )
   {
      *sDest = '\0';
+     #if 0
+        printf( "NextParm: >%s<\n", sDest - lenName );
+     #endif
   }
-
-  #if 0
-     printf( "NextParm: >%s<\n", sDest - lenName );
-  #endif
 
   return lenName;
 }

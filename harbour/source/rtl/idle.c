@@ -108,9 +108,9 @@ void hb_idleState( void )
    if( ! s_bIamIdle )
    {
       s_bIamIdle = TRUE;
-      hb_releaseCPU();
       hb_gcCollectAll();
-   
+      hb_releaseCPU();
+
       if( s_pIdleTasks )
       {
          hb_vmEvalBlock( s_pIdleTasks + s_uiIdleTask );
@@ -148,7 +148,7 @@ HB_FUNC( HB_IDLESTATE )
 HB_FUNC( HB_IDLEADD )
 {
    HB_ITEM_PTR pBlock = hb_param( 1, HB_IT_BLOCK );
-   
+
    if( pBlock )
    {
       ++s_uiIdleMaxTask;
@@ -164,8 +164,8 @@ HB_FUNC( HB_IDLEADD )
       /* prevent releasing if this block if it is no longer stored inside of
        * a harbour variable
        */
-      hb_gcLockItem( pBlock );   
-      
+      hb_gcLockItem( pBlock );
+
       hb_retnl( ( ULONG ) pBlock->item.asBlock.value );    /* TODO: access to pointers from harbour code */
    }
    else
@@ -176,13 +176,13 @@ HB_FUNC( HB_IDLEADD )
 HB_FUNC( HB_IDLEDEL )
 {
    BOOL bFound = FALSE;
-   
+
    if( s_pIdleTasks && ( hb_parinfo( 1 ) & HB_IT_NUMERIC ) )
    {
       SHORT iTask;
       ULONG ulID = hb_parnl( 1 );   /* TODO: access to pointers from harbour code */
       HB_ITEM_PTR pItem = s_pIdleTasks;
-      
+
       iTask = 0;
       while( iTask < s_uiIdleMaxTask && !bFound )
       {
@@ -190,12 +190,12 @@ HB_FUNC( HB_IDLEDEL )
          {
              hb_gcUnlockItem( pItem );
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
-          
+
              --s_uiIdleMaxTask;
              if( s_uiIdleMaxTask )
              {
                 if( iTask != s_uiIdleMaxTask )
-                   memcpy( &s_pIdleTasks[ iTask ], &s_pIdleTasks[ iTask + 1 ], 
+                   memcpy( &s_pIdleTasks[ iTask ], &s_pIdleTasks[ iTask + 1 ],
                            sizeof( HB_ITEM ) * (s_uiIdleMaxTask - iTask) );
                 s_pIdleTasks = ( HB_ITEM_PTR ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM ) * s_uiIdleMaxTask );
              }
@@ -206,7 +206,7 @@ HB_FUNC( HB_IDLEDEL )
              }
              bFound = TRUE;
          }
-         ++pItem; 
+         ++pItem;
          ++iTask;
       }
    }

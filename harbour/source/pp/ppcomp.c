@@ -270,7 +270,9 @@ int hb_pp_ReadRules( void )
      if( rdlen < 0 )
      {
         if( hb_comp_files.iFiles == 1 )
+        {
            return 0;      /* we have reached the main EOF */
+        }
         else
         {
            CloseInclude();
@@ -280,7 +282,5 @@ int hb_pp_ReadRules( void )
         *s_szLine = '\0';
      }
   }
-
-  return lens;
 }
 
