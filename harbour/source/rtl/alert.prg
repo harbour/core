@@ -51,8 +51,8 @@ FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
       cColorNorm := 'w+/r'
       cColorHigh := 'w+/b'
    ELSE
-      cColorHigh := StrTran(iif(At("/", cColorNorm) == 0, "N", SubStr(cColorNorm, At("/", cColorNorm) + 1)) + "/" +;
-                            iif(At("/", cColorNorm) == 0, cColorNorm, Left(cColorNorm, At("/", cColorNorm) - 1)), "+", "")
+      cColorHigh := StrTran(StrTran(iif(At("/", cColorNorm) == 0, "N", SubStr(cColorNorm, At("/", cColorNorm) + 1)) + "/" +;
+                                    iif(At("/", cColorNorm) == 0, cColorNorm, Left(cColorNorm, At("/", cColorNorm) - 1)), "+", ""), "*", "")
    ENDIF
 
    IF nDelay == NIL

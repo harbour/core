@@ -26,7 +26,7 @@
 #include "set.h"
 #include "extend.h"
 #include "dates.h"
-#include "item.api"
+#include "itemapi.h"
 
 PHB_ITEM hb_param( int iParam, WORD wMask )
 {

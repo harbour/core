@@ -8,8 +8,8 @@
  * NOTE: compile extend1.prg and extend2.c and link both files
  */
 
-#include <extend.api>
 #include <string.h>
+#include "extend.api"
 
 HARBOUR HB_STRINGS1()
 {

@@ -1,3 +1,15 @@
+19990731-14:44 CET Victor Szel <info@szelvesz.hu>
+   ! source/rtl/alert.prg - Handling of "*" in color string is
+     made compatible with Clipper.
+   - source/hbpp/buildgcc.bat - Removed. Use GNU Make instead.
+   - include/fm.api - _xrealloc removed, since it was not there
+     in Clipper.
+   ! source/rtl/extend.c - "item.api" -> "itemapi.h"
+   ! source/tools/hb_f.c - "filesys.api" -> "filesys.h"
+   * tests/working/extend2.c - #include <x> -> "x"
+   + funclist.txt - Extended with a huge amount of new functions, method
+     and class variables. Please review it for your functions.
+
 19990731-14:50 Alexander Kresin
   * source\hbpp\hbpp.c
   * source\hbpp\table.c
