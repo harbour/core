@@ -6,6 +6,6 @@
 
 function Main()
 
-   QOut( "Hello world!" )
+   ? "Hello world!"
 
 return nil
