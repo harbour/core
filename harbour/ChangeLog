@@ -1,3 +1,11 @@
+20000331-19:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/valtype.c
+   * source/vm/itemapi.c
+   * include/hbapi.h
+   * include/hbapiitm.h
+     * hb_valtypeGet() -> hb_itemTypeStr()
+
 20000331-19:06 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbapi.h

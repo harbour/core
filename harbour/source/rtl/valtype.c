@@ -36,39 +36,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-char * hb_valtypeGet( HB_ITEM_PTR pItem )
-{
-   switch( hb_itemType( pItem ) & ~IT_BYREF )
-   {
-      case IT_ARRAY:
-         return ( hb_arrayIsObject( pItem ) ? "O" : "A" );
-
-      case IT_BLOCK:
-         return "B";
-
-      case IT_DATE:
-         return "D";
-
-      case IT_LOGICAL:
-         return "L";
-
-      case IT_INTEGER:
-      case IT_LONG:
-      case IT_DOUBLE:
-         return "N";
-
-      case IT_STRING:
-         return "C";
-
-      case IT_MEMO:
-         return "M";
-   }
-
-   return "U";
-}
-
 HB_FUNC( VALTYPE )
 {
-   hb_retc( hb_valtypeGet( hb_param( 1, IT_ANY ) ) );
+   hb_retc( hb_itemTypeStr( hb_param( 1, IT_ANY ) ) );
 }
 

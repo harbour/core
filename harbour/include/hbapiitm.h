@@ -95,6 +95,7 @@ extern BOOL     hb_itemRelease  ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemReturn   ( PHB_ITEM pItem );
 extern ULONG    hb_itemSize     ( PHB_ITEM pItem );
 extern USHORT   hb_itemType     ( PHB_ITEM pItem );
+extern char *   hb_itemTypeStr  ( PHB_ITEM pItem );
 
 /* Non Clipper compliant internal API */
 

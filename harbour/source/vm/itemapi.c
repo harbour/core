@@ -940,6 +940,37 @@ USHORT hb_itemType( PHB_ITEM pItem )
       return IT_NIL;
 }
 
+char * hb_itemTypeStr( PHB_ITEM pItem )
+{
+   switch( pItem->type & ~IT_BYREF )
+   {
+      case IT_ARRAY:
+         return ( hb_arrayIsObject( pItem ) ? "O" : "A" );
+
+      case IT_BLOCK:
+         return "B";
+
+      case IT_DATE:
+         return "D";
+
+      case IT_LOGICAL:
+         return "L";
+
+      case IT_INTEGER:
+      case IT_LONG:
+      case IT_DOUBLE:
+         return "N";
+
+      case IT_STRING:
+         return "C";
+
+      case IT_MEMO:
+         return "M";
+   }
+
+   return "U";
+}
+
 /* Internal API, not standard Clipper */
 
 void hb_itemClear( PHB_ITEM pItem )

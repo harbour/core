@@ -482,7 +482,6 @@ extern char * hb_macroGetType( HB_ITEM_PTR );
 
 /* misc */
 extern char * hb_version( USHORT uiMode );
-extern char * hb_valtypeGet( HB_ITEM_PTR );
 
 #if defined(HB_EXTERN_C)
 }
