@@ -3537,6 +3537,25 @@ static LPCDXTAG hb_cdxReorderTagList ( LPCDXTAG TagList )
    return TagList;
 }
 
+static ERRCODE hb_cdxGoEof( CDXAREAP pArea )
+{
+   ERRCODE  retvalue;
+   LPCDXTAG pTag;
+   HB_TRACE(HB_TR_DEBUG, ("cdxGoBottom(%p)", pArea));
+
+   pTag = hb_cdxGetActiveTag( pArea );
+   retvalue = SUPER_GOTO( ( AREAP ) pArea, 0 );
+   if( pArea->ulRecCount ) {
+      pArea->fBof = FALSE;
+      if ( pTag )
+         pTag->TagBOF = FALSE;
+   }
+   pArea->fEof = TRUE;
+   if ( pTag )
+      pTag->TagEOF = TRUE;
+   return retvalue;
+}
+
 
 
 /*
@@ -4057,9 +4076,12 @@ ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
             {
                /*BOOL fTop;        */            /* TRUE if "top" */
                /*BOOL fBottom;     */            /* TRUE if "bottom" */
+               /*
                SUPER_GOBOTTOM( ( AREAP ) pArea );
                SUPER_SKIPRAW( ( AREAP ) pArea, 1 );
                pArea->fEof = pTag->TagEOF = TRUE;
+               */
+               hb_cdxGoEof( pArea );
             }
          }
       }
@@ -5001,8 +5023,11 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    hb_itemCopy( pKeyExp, pExpr );
 
    /* Get a blank record before testing expression */
+   /*
    SELF_GOBOTTOM( ( AREAP ) pArea );
    SELF_SKIP( ( AREAP ) pArea, 1 );
+   */
+   hb_cdxGoEof( pAreaCdx );
    pExpMacro = pForMacro = NULL;
    if( hb_itemType( pExpr ) == HB_IT_BLOCK )
    {
@@ -5274,7 +5299,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
 
    hb_xfree( szFileName );
 
-   hb_strncpyUpper( szTagName, ( const char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
+   if ( strlen(( const char * ) pOrderInfo->atomBagName) > 0 )
+      hb_strncpyUpper( szTagName, ( const char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
    uiCount = strlen( szTagName );
    while( uiCount > 0 && szTagName[ uiCount - 1 ] == ' ' )
       uiCount--;
