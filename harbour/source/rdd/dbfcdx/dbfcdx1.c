@@ -2631,7 +2631,7 @@ static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, LONG lPos, void * pBuffer,
                                   USHORT uiSize )
 {
    /* testing properly rights */
-   if ( pIndex->pArea->fReadonly )
+   if ( pIndex->fReadonly )
       hb_errInternal( 9101, "hb_cdxIndexPageWrite on readonly database.", "", "" );
 
    /* if ( pIndex->fShared && !pIndex->lockWrite ) */
@@ -3503,6 +3503,39 @@ static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return uiTag;
 }
 
+static LPCDXTAG hb_cdxReorderTagList ( LPCDXTAG TagList )
+{
+   LPCDXTAG pTag1, pTag2, pTagTmp;
+
+   pTag1 = TagList;
+   while( pTag1->pNext )
+   {
+      if( pTag1->TagBlock < pTag1->pNext->TagBlock )
+         pTag1 = pTag1->pNext;
+      else
+      {
+         if( TagList->TagBlock > pTag1->pNext->TagBlock )
+         {
+            pTagTmp = TagList;
+            TagList = pTag1->pNext;
+            pTag1->pNext = pTag1->pNext->pNext;
+            TagList->pNext = pTagTmp;
+         }
+         else
+         {
+            pTag2 = TagList;
+            while( pTag2->pNext && (pTag2->pNext->TagBlock < pTag1->pNext->TagBlock) )
+               pTag2 = pTag2->pNext;
+
+            pTagTmp = pTag2->pNext;
+            pTag2->pNext = pTag1->pNext;
+            pTag1->pNext = pTag1->pNext->pNext;
+            pTag2->pNext->pNext = pTagTmp;
+         }
+      }
+   }
+   return TagList;
+}
 
 
 
@@ -4747,7 +4780,9 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    /* load the tags*/
    pIndex->pCompound = hb_cdxTagNew( pIndex, szFileName, 0 );
    pIndex->pCompound->OptFlags = 0xE0;
-   pIndex->fShared = pAreaCdx->fShared;
+   pIndex->fShared   = pAreaCdx->fShared;
+   pIndex->fReadonly = pAreaCdx->fReadonly;
+
    hb_cdxIndexResetAvailPage( pIndex );
 
    hb_cdxIndexLockRead( pIndex, NULL );
@@ -5148,6 +5183,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    {
       pIndex->hFile = hb_spCreate( ( BYTE * ) szFileName, FC_NORMAL );
       bNewFile = TRUE;
+      pIndex->fShared   = pAreaCdx->fShared;
+      pIndex->fReadonly = FALSE;
    }
    else
    {
@@ -5155,6 +5192,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
                                     ( pAreaCdx->fShared ?
                                       FO_DENYNONE : FO_EXCLUSIVE ) );
       bNewFile = FALSE;
+      pIndex->fShared   = pAreaCdx->fShared;
+      pIndex->fReadonly = FALSE;
    }
 
    if( pIndex->hFile == FS_ERROR )
@@ -5178,6 +5217,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
       bNewFile = ( hb_fsSeek( pIndex->hFile, 0, FS_END ) <= CDX_PAGELEN );
       hb_fsSeek( pIndex->hFile, 0, FS_SET );
    }
+
+   hb_cdxIndexLockWrite( pIndex, NULL );
 
    if( bNewFile )
    {
@@ -5210,6 +5251,9 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
          }
          hb_cdxTagKeyRead( pIndex->pCompound, NEXT_RECORD );
       }
+      if ( pIndex->TagList != NULL ) {
+         pIndex->TagList = hb_cdxReorderTagList(pIndex->TagList);
+      }
    }
 
    /* Update DBF header */
@@ -5241,6 +5285,8 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
                       !pArea->lpdbOrdCondInfo->fDescending : TRUE , pOrderInfo->fUnique );
 
    hb_xfree( szTagName );
+
+   hb_cdxIndexUnLockWrite( pIndex, NULL );
 
    /* Clear pArea->lpdbOrdCondInfo */
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
@@ -5449,6 +5495,13 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
             if( uiAux != HB_IT_NIL )
               hb_cdxKeyGetItem( pTag->CurKeyInfo, pOrderInfo->itmResult, uiAux );
          }
+         break;
+
+      case DBOI_KEYADD :
+         hb_itemPutL( pOrderInfo->itmResult, 0 );
+         break;
+      case DBOI_KEYDELETE :
+         hb_itemPutL( pOrderInfo->itmResult, 0 );
          break;
 
       default:

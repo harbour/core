@@ -139,6 +139,7 @@ static LPCDXTAG hb_cdxGetActiveTag( CDXAREAP pArea );
 static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 static LPCDXTAG hb_cdxGetTagByNumber(CDXAREAP pArea,  USHORT uiTag );
 static PHB_ITEM hb_cdxKeyGetItem( LPKEYINFO pKey, PHB_ITEM pItem, USHORT uiType );
+static LPCDXTAG hb_cdxReorderTagList ( LPCDXTAG TagList );
 
 static USHORT hb_cdxIndexCheckVersion( LPCDXINDEX pIndex );
 static USHORT hb_cdxIndexUnLockRead( LPCDXINDEX pIndex, LPCDXTAG pTag );

@@ -188,6 +188,7 @@ typedef struct _CDXINDEX
    struct   _CDXINDEX * pNext;   /* The next index in the list */
    /* USHORT    uiTag;      */        /* current tag focus          */
    BOOL fShared;                 /* Shared file */
+   BOOL fReadonly;               /* Read only file */
    int       lockWrite;
    int       lockRead;
    int       changesWritten;
