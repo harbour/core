@@ -1,3 +1,9 @@
+20000415-21:1 GMT -3 Luiz Rafael Culik <culik@sl.conex.net)
+ *doc/subcodes.txt
+    *renamed all categories to Run time Error
+ *doc/en/command.txt
+    *rename category from command to oop command
+
 20000415-16:04 DST Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbfcdx/dbfcdx1.c
      * corrected my change to the segment naming.
