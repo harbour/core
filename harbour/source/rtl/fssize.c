@@ -61,7 +61,7 @@ ULONG hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
    {
       FHANDLE hFileHandle = hb_fsOpen( pszFileName, 0 );
       
-      if( hFileHandle )
+      if( hFileHandle != FS_ERROR )
       {
          ULONG ulPos;
       
