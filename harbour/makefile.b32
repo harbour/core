@@ -31,7 +31,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               dir.obj dircmd.obj do.obj dynsym.obj dummy.obj \
               environ.obj errorapi.obj errorsys.obj extend.obj \
               fieldbl.obj fileread.obj filesys.obj fm.obj \
-              harbinit.obj hardcr.obj hbtrace.obj hb_f.obj hvm.obj \
+              harbinit.obj hardcr.obj hbfsapi.obj hbtrace.obj hb_f.obj hvm.obj \
               initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
               langapi.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
@@ -84,6 +84,7 @@ filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
 harbinit.obj : harbinit.c extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
+hbfsapi.obj  : hbfsapi.c  extend.h hbdefs.h
 hbtrace.obj  : hbtrace.c  extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 hvm.obj      : hvm.c      extend.h hbdefs.h
@@ -180,7 +181,7 @@ wait.c       : wait.prg      harbour.exe
   bcc32 $(BCC_OPT) -c -Iinclude -o$@ -DHARBOUR_USE_WIN_GTAPI $<
   tlib lib\b32\harbour.lib -+$@,,
 
-harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj genobj32.obj expropt.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
+harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj genobj32.obj expropt.obj harbour.obj hbfsapi.obj compiler.h hbppint.c hbpp.c table.c
    echo $(BCC_OPT) > temp.bld
    echo -ebin\harbour.exe >> temp.bld
    echo -Iinclude;source\compiler >> temp.bld
@@ -194,6 +195,7 @@ harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj ge
    echo source\compiler\genpas.obj >> temp.bld
    echo source\compiler\expropt.obj >> temp.bld
    echo source\compiler\harbour.obj >> temp.bld
+   echo obj\hbfsapi.obj >> temp.bld
    echo source\pp\hbppint.c >> temp.bld
    echo source\pp\hbpp.c >> temp.bld
    echo source\pp\table.c >> temp.bld

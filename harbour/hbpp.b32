@@ -1,18 +1,19 @@
-# 
+#
 # $Id$
-# 
+#
 
 # makefile for Borland C/C++ 32 bits
 
-.path.c   = source\pp
+.path.c   = source\pp;source\common
 .path.h   = include
 .path.lib = lib\b32
 .path.obj = obj
 
 PROJECT: lib\b32\hbpp.lib hbpp.exe
 
-lib\b32\hbpp.lib : hbppint.obj hbpp.obj table.obj hbpplib.obj
+lib\b32\hbpp.lib : hbfsapi.obj hbppint.obj hbpp.obj table.obj hbpplib.obj
 
+hbfsapi.obj : hbfsapi.c
 hbppint.obj : hbppint.c
 hbpp.obj    : hbpp.c
 table.obj   : table.c

@@ -1,3 +1,7 @@
+19991119-16:59 GMT+1 Antonio Linares
+  * updated makefile.b32
+  * updated hbpp.b32
+
 19991119-14:51 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rdd/dbf1.c
     source/rdd/delim1.c
@@ -26,7 +30,7 @@
    - tests/strings3.prg
    * tests/Makefile
      - Removed strings3.prg
-    
+
    * tests/rtl_test.prg
      + Added massive string comparison tests that used to be in strings3.prg.
        But don't feel sorry for me having to type all those lines in, because
@@ -38,11 +42,11 @@
 19991118-12:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     * source/vm/hvm.c
-	* corrected code in hb_vmPopAlias() - the stack pointer was 
+	* corrected code in hb_vmPopAlias() - the stack pointer was
 	decreased before the call to hb_vmSelectWorkarea - later
 	the error recovery code was overwriting the alias item which
 	caused unreleased memory
-	
+
 19991118-06:05 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source\common\hbfsapi.c  (reported missing by Matteo)
@@ -71,13 +75,13 @@
 
     *source/rtl/classes.c
     *source/rtl/arrays.c
-	* corrected assignment of NULL to an unsigned int type - some 
+	* corrected assignment of NULL to an unsigned int type - some
 	compilers don't like it
-	
+
     *tests/rtl_test.prg
 	* added #ifdef __HARBOUR__ to suppres generation of errors that
 	are now reported at compile time (array[ 0 ], IIF( "str", ...) )
-	
+
 19991118-07:25 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/common/hbfsapi.c
   + include/hbfsapi.h
@@ -123,10 +127,10 @@
     *source/compiler/expropt.c
 	* corrected support for expression->identifier syntax
 	* corrected optimization for division operator
-	
+
     *include/compiler.h
 	* removed declaration no longer needed
-	
+
 19991117-10:51 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/expropt.c
     ! Fixed the compile-time calculation of numeric operations with results
