@@ -1,3 +1,9 @@
+2001-02-08 20:57 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     + ntxPutValue()
+     + hb_ntxPageKeyDel()
+     Updating of opened indexes implemented ( not good yet, but works ).
+
 2001-02-08 17:30 GMT+1 Ignacio Ortiz <ignacioortiz@fivetech.com>
    * harbour/source/debug/dbgtmenu.prg
      + Minor fix
