@@ -715,14 +715,8 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
 
    if ::lHeaders          // Drawing headers
 
-      if ::nHeaderHeight > 1
-         // Clear area of screen occupied by headers
-         DispBox(::nTop, ::nLeft, ::nTop + ::nHeaderHeight - 1, ::nRight, cBlankBox, ::ColorSpec)
-
-      else
-         DispOutAt(::nTop, ::nLeft, Space(::nRight - ::nLeft + 1), ::ColorSpec )
-
-      endif
+      // Clear area of screen occupied by headers
+      DispBox(::nTop, ::nLeft, ::nTop + ::nHeaderHeight - 1, ::nRight, cBlankBox, ::ColorSpec)
 
       // Set cursor at first field start of description
       DevPos(::nTop, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
@@ -787,13 +781,7 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
    if ::lFooters                // Drawing footers
 
       // Clear area of screen occupied by footers
-      if ::nFooterHeight > 1
-         DispBox(::nBottom - ::nFooterHeight + 1, ::nLeft, ::nBottom, ::nRight, cBlankBox, ::ColorSpec)
-
-      else
-         DispOutAt(::nBottom, ::nLeft, Space(::nRight - ::nLeft + 1), ::ColorSpec)
-
-      endif
+      DispBox(::nBottom - ::nFooterHeight + 1, ::nLeft, ::nBottom, ::nRight, cBlankBox, ::ColorSpec)
 
       // Set cursor at first field start of description
       DevPos(::nBottom, ::nLeft + (( nWidth - ::nColsWidth ) / 2))
@@ -1278,8 +1266,6 @@ METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) CLASS TBrowse
             DevPos(nRow + n - 1, nCol)
             DispOut(PadR(__StrToken(@cS, n, ";"), nPadLen), cColor)
 
-            //cSubStr := iif((nSemiCPos := Rat(";", cStr)) <> 0, Right(cStr, Len(cStr) - nSemiCPos), cStr)
-            //cStr := Left(cStr, nSemiCPos - 1)
          next
 
          DevPos(nRow, nCol + nPadLen)
@@ -1300,9 +1286,6 @@ METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) CLASS TBrowse
          for n := 0 to (::nFooterHeight - 1)
             DevPos(nRow - n, nCol)
             DispOut(PadR(__StrToken(@cS, ::nFooterHeight - n, ";"), nPadLen), cColor)
-
-            //cSubStr := iif((nSemiCPos := Rat(";", cStr)) <> 0, Right(cStr, Len(cStr) - nSemiCPos), cStr)
-            //cStr := Left(cStr, nSemiCPos - 1)
          next
 
          DevPos(nRow, nCol + nPadLen)

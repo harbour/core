@@ -1,3 +1,8 @@
+2001-08-22 01:42 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     * now that DispBox() works as expected I can use it even for 1 line headers/
+       footers inside ::RedrawHeaders()
+
 2001-08-22 01:25 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/gtos2.c
      + Driver tries to set codepage 437 on startup. Needed by box drawing functions
