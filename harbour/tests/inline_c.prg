@@ -15,7 +15,11 @@ PROCEDURE MAIN( cLine, cDelim )
    NEXT i
 
    QOut( HB_INLINE() )
-         { hb_retc( "\na C String, including { and \" \n" ); }
+         { hb_retc( "\na C String, including { and \" { \n" ); }
+
+   QOut( C_Func() )
+
+   QOut( PostDumpTest() )
 
 RETURN
 
@@ -75,3 +79,13 @@ FUNCTION aTokens( cLine, cDelimiter )
    #endif
 
 RETURN aTokens
+
+#pragma BEGINDUMP
+HB_FUNC( C_FUNC )
+{
+   hb_retc( "returned from C_FUN\n" );
+}
+#pragma STOPDUMP
+
+Function PostDumpTest()
+RETURN "Post Dump Test"

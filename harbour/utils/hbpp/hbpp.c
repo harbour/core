@@ -78,6 +78,7 @@ BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables
 BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
 BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
 int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+FILE *hb_comp_yyppo = NULL;
 
 int main( int argc, char * argv[] )
 {
@@ -513,4 +514,10 @@ BOOL hb_pp_fopen( char * szFileName )
    hb_comp_files.iFiles = 1;
 
    return TRUE;
+}
+
+PINLINE   hb_compInlineAdd( char * szFunName )
+{
+   HB_SYMBOL_UNUSED( szFunName );
+   return NULL;
 }

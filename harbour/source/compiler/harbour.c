@@ -1084,16 +1084,18 @@ PINLINE hb_compInlineAdd( char * szFunName )
    PINLINE pInline;
    PCOMSYMBOL   pSym;
 
-   pSym = hb_compSymbolFind( szFunName, NULL );
-   if( ! pSym )
+   if( szFunName )
    {
-      pSym = hb_compSymbolAdd( szFunName, NULL );
+      pSym = hb_compSymbolFind( szFunName, NULL );
+      if( ! pSym )
+      {
+         pSym = hb_compSymbolAdd( szFunName, NULL );
+      }
+      if( pSym )
+      {
+         pSym->cScope |= HB_FS_STATIC;
+      }
    }
-   if( pSym )
-   {
-      pSym->cScope |= HB_FS_STATIC;
-   }
-
    pInline = hb_compInlineNew( szFunName );
 
    if( hb_comp_inlines.iCount == 0 )
@@ -1304,7 +1306,7 @@ PINLINE hb_compInlineFind( char * szFunctionName )
 
    while( pInline )
    {
-      if( ! strcmp( pInline->szName, szFunctionName ) )
+      if( pInline->szName && strcmp( pInline->szName, szFunctionName ) == 0 )
          return pInline;
       else
       {

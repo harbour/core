@@ -169,6 +169,70 @@ void hb_pp_ParsePragma( char * szLine )
          hb_comp_bAutoMemvarAssume = StringToBool( szLine, hb_comp_bAutoMemvarAssume );
          DebugPragma( szLine, -1, hb_comp_bAutoMemvarAssume );
       }
+      else if( memcmp( szLine, "BEGINDUMP", PRAGMAS_LEN ) == 0 )
+      {
+         char sBuffer[ HB_PP_STR_SIZE ], *pBuffer, sDirective[9] ;
+         int iSize;
+         extern BOOL hb_pp_bInline;
+         PINLINE pInline;
+
+         hb_pp_bInline = TRUE;
+
+         pInline = hb_compInlineAdd( NULL );
+
+       DigestInline :
+
+         iSize = hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, sBuffer );
+         if( iSize == 0 )
+         {
+            hb_pp_bInline = FALSE;
+            return;
+         }
+
+         pBuffer = (char*) sBuffer;
+
+         while( *pBuffer == ' ' || *pBuffer == '\t' )
+         {
+            pBuffer++;
+         }
+         if( *pBuffer == '#' )
+         {
+            pBuffer++;
+            while( *pBuffer == ' ' || *pBuffer == '\t' )
+            {
+               pBuffer++;
+            }
+            hb_strupr( strncpy( sDirective, pBuffer, 6 ) );
+            if( memcmp( sDirective, "PRAGMA", 6 ) == 0 )
+            {
+               pBuffer += 6;
+            }
+            while( *pBuffer == ' ' || *pBuffer == '\t' )
+            {
+               pBuffer++;
+            }
+            hb_strupr( strncpy( sDirective, pBuffer, 8 ) );
+            if( memcmp( sDirective, "STOPDUMP", 8 ) == 0 )
+            {
+               hb_pp_bInline = FALSE;
+               return;
+            }
+         }
+
+         if( pInline->pCode == NULL )
+         {
+            pInline->pCode = hb_xgrab( ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+            strcpy( pInline->pCode, (char*) sBuffer );
+         }
+         else
+         {
+            pInline->pCode = hb_xrealloc( pInline->pCode, pInline->lPCodeSize + ( iSize = strlen( (char*) sBuffer ) ) + 1 );
+            strcpy( pInline->pCode + pInline->lPCodeSize, (char*) sBuffer );
+         }
+         pInline->lPCodeSize += iSize;
+
+         goto DigestInline;
+      }
       else if( memcmp( szLine, "DEBUGINFO", PRAGMAS_LEN ) == 0 )
       {
          hb_comp_bDebugInfo = StringToBool( szLine, hb_comp_bDebugInfo );

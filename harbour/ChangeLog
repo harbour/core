@@ -1,3 +1,17 @@
+2001-01-13 02:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/genc.c
+   * source/compiler/harbour.c
+   * source/pp/pragma.c
+     + Added support for #pragma BEGINDUMP ... [#pragma STOPDUMP] or EOF.
+       /* BEGINDUMP & STOPDUMP are just a suggestion. */
+
+   * utils/hbpp/hbpp.c
+   * source/pp/pplib.c
+     + Added empty stub hb_compInlineAdd() (needed by pragma.c)
+
+   * tests/inline_c.prg
+     + Added code to demonstrate #pragam BEGINDUMP
+
 2001-01-11 20:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
    * source/compiler/harbour.slx

@@ -61,14 +61,17 @@ int         hb_comp_iLine;       /* currently parsed file line number */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
 BOOL hb_comp_bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
 BOOL hb_comp_bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+
 #if 0
 BOOL hb_comp_bShortCuts = TRUE;                 /* .and. & .or. expressions shortcuts */
 #endif
+
 int  hb_comp_iWarnings = 0;                     /* enable parse warnings */
 BOOL hb_comp_bAutoMemvarAssume = FALSE;         /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
 BOOL hb_comp_bForceMemvars = FALSE;             /* holds if memvars are assumed when accesing undeclared variable (-v)*/
 BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
 int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
+FILE *hb_comp_yyppo = NULL;
 
 static jmp_buf s_env;
 
@@ -152,6 +155,12 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const c
    HB_SYMBOL_UNUSED( iWarning );
    HB_SYMBOL_UNUSED( szWarning1 );
    HB_SYMBOL_UNUSED( szWarning2 );
+}
+
+PINLINE   hb_compInlineAdd( char * szFunName )
+{
+   HB_SYMBOL_UNUSED( szFunName );
+   return NULL;
 }
 
 #endif

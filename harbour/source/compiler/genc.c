@@ -103,7 +103,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       /* write functions prototypes for inline blocks */
       while( pInline )
       {
-         fprintf( yyc, "static HB_FUNC( %s );\n", pInline->szName );
+         if( pInline->szName )
+            fprintf( yyc, "static HB_FUNC( %s );\n", pInline->szName );
          pInline = pInline->pNext;
       }
 
@@ -231,21 +232,28 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       /* Generate codeblocks data
        */
-      if( hb_comp_inlines.iCount )
+      if( hb_comp_cInlineID )
       {
          fprintf( yyc, "#include \"hbapi.h\"\n" );
-         pInline = hb_comp_inlines.pFirst;
-         while( pInline )
+      }
+
+      pInline = hb_comp_inlines.pFirst;
+      while( pInline )
+      {
+         fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
+
+         if( pInline->szName )
          {
-            fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
             fprintf( yyc, "static HB_FUNC( %s )\n", pInline->szName );
-            fprintf( yyc, "%s", pInline->pCode );
-            pInline = pInline->pNext;
          }
+         fprintf( yyc, "%s", pInline->pCode );
+         pInline = pInline->pNext;
       }
    }
    else
+   {
       fprintf( yyc, "/* Empty source file */\n\n" );
+   }
 
    fclose( yyc );
 
@@ -265,7 +273,10 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    while( pInline )
    {
       hb_comp_inlines.pFirst = pInline->pNext;
-      hb_xfree( ( void * ) pInline->pCode );
+      if( pInline->pCode )
+      {
+         hb_xfree( ( void * ) pInline->pCode );
+      }
       hb_xfree( ( void * ) pInline->szFileName );
       hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
       pInline = hb_comp_inlines.pFirst;
