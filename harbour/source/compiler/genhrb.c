@@ -100,13 +100,13 @@ void GenPortObj( PHB_FNAME pFileName )
 
       /* specify the function address if it is a defined function or a
          external called function */
-      if( GetFunction( pSym->szName ) ) /* is it a defined function ? */
+      if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
       {
          fputc( SYM_FUNC, yyc );
       }
       else
       {
-         if( GetFuncall( pSym->szName ) )
+         if( hb_compFunCallFind( pSym->szName ) )
          {
             fputc( SYM_EXTERN, yyc );
          }
@@ -270,7 +270,7 @@ void GenPortObj( PHB_FNAME pFileName )
             case HB_P_POPALIASEDFIELD:
             case HB_P_PUSHALIASEDFIELD:
                fputc( pFunc->pCode[ lPCodePos ], yyc );
-               wVar = FixSymbolPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
+               wVar = hb_compSymbolFixPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
                fputc( HB_LOBYTE( wVar ), yyc );
                fputc( HB_HIBYTE( wVar ), yyc );
                lPCodePos += 3;
@@ -278,7 +278,7 @@ void GenPortObj( PHB_FNAME pFileName )
 
             case HB_P_PARAMETER:
                fputc( pFunc->pCode[ lPCodePos ], yyc );
-               wVar = FixSymbolPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
+               wVar = hb_compSymbolFixPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
                fputc( HB_LOBYTE( wVar ), yyc );
                fputc( HB_HIBYTE( wVar ), yyc );
                fputc( pFunc->pCode[ lPCodePos + 3 ], yyc );
@@ -336,8 +336,8 @@ void GenPortObj( PHB_FNAME pFileName )
                /* we only generate it if there are statics used in this function */
                if( pFunc->bFlags & FUN_USES_STATICS )
                {
-                  hb_compGetSymbol( hb_comp_pInitFunc->szName, &w );
-                  w = FixSymbolPos( w );
+                  hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+                  w = hb_compSymbolFixPos( w );
                   fputc( pFunc->pCode[ lPCodePos ], yyc );
                   fputc( HB_LOBYTE( w ), yyc );
                   fputc( HB_HIBYTE( w ), yyc );
@@ -348,8 +348,8 @@ void GenPortObj( PHB_FNAME pFileName )
                break;
 
             case HB_P_STATICS:
-               hb_compGetSymbol( hb_comp_pInitFunc->szName, &w );
-               w = FixSymbolPos( w );
+               hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+               w = hb_compSymbolFixPos( w );
                fputc( pFunc->pCode[ lPCodePos ], yyc );
                fputc( HB_LOBYTE( w ), yyc );
                fputc( HB_HIBYTE( w ), yyc );

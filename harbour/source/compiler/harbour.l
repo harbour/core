@@ -73,21 +73,16 @@ extern int PreProcess( FILE*, FILE*, char *);
 int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
-/* variables defined in harbour.y */
-extern int hb_comp_bRestrictSymbolLength;
-
-int iLine = 1;
-long lNumber = 0;
 
 #define LOOKUP          0       /* scan from the begining of line */
 #define OPERATOR        -1
 #define SEPARATOR       -2
-int hb_comp_iState = LOOKUP;
+static int hb_comp_iState = LOOKUP;
 static int _iOpenBracket = 0;
 
 /* Support for Array Index */
-int iIndexSets  = 0;
-int i_INDEX_STATE = 0;
+static int iIndexSets  = 0;
+static int i_INDEX_STATE = 0;
 
 %}
 
@@ -220,16 +215,16 @@ Separator     {SpaceTab}
 \n.*         {
                 hb_comp_iState = LOOKUP;
                 yyless( 1 );
-                /*++iLine;*/
+                /*++hb_comp_iLine;*/
 #if 0
                 if( ! hb_comp_bQuiet )
                 {
-                   printf( "\r%i", iLine );
+                   printf( "\r%i", hb_comp_iLine );
                 }
 #endif
-                if( ! hb_comp_bQuiet && ( iLine % 100 ) == 0 )
+                if( ! hb_comp_bQuiet && ( hb_comp_iLine % 100 ) == 0 )
                 {
-                   printf( "\r%i", iLine );
+                   printf( "\r%i", hb_comp_iLine );
                    fflush( stdout );
                 }
                 return '\n';
@@ -1175,7 +1170,10 @@ Separator     {SpaceTab}
 
 {Number}       { return yy_ConvertNumber( yytext ); }
 
-{HexNumber}   {  sscanf( yytext, "%lxI", &lNumber );
+{HexNumber}   {  
+                long lNumber = 0;
+
+                 sscanf( yytext, "%lxI", &lNumber );
 
                  if( ( double )SHRT_MIN <= lNumber &&
                         lNumber <= ( double )SHRT_MAX )

@@ -1,3 +1,41 @@
+19991120-14:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+        * fixed NOT operator precedence
+        * fixed the infinite loop when a duplicated variable error
+        was reported
+	* fixed '=' operator use (there was conflict between a compare
+	and assignment context)
+	* added new warning "Unreachable code'
+	* fatal errors (errors for which the compilation process should
+	terminate immediately should use 'F' prefix)
+	* corrected logic of handling errors (the compilation can be continued
+	with no GPF or core dump)
+
+    *source/compiler/expropt.c
+        * corrected to support 'DO procname' statement
+
+    *include/compiler.h
+    *source/compiler/harbour.y
+    *source/compiler/harbour.c
+    *source/compiler/expropt.c
+    *source/compiler/genc.c
+    *source/compiler/genhrb.c
+    *source/compiler/genjava.c
+    *source/compiler/genobj32.c
+        * finished uniform naming scheme hb_comp* 
+        * cleared up declarations and visibility of functions and variables
+
+    *include/hberrors.h
+	* added new warning "Unreachable code'
+	
+    *source/debug/debugger.prg
+	* removed one unreachable RETURN statement
+
+    *source/pp/hbpp.c
+	* all errors reported by the preprocesor are promoted to fatal
+	errors ('F' prefix)
+		
 19991119-16:59 GMT+1 Antonio Linares
   * updated makefile.b32
   * updated hbpp.b32

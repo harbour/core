@@ -170,7 +170,7 @@ static BOOL IsExternal( ULONG ulSymbol )
   while( ul++ < ulSymbol )
     pSymbol = pSymbol->pNext;
 
-  return ! GetFunction( pSymbol->szName );
+  return ! hb_compFunctionFind( pSymbol->szName );
 }
 
 static USHORT GetExternalPos( char * szExternal )
@@ -302,7 +302,7 @@ static void GenerateExternals( FILE * hObjFile )
   pFunc = hb_comp_funcalls.pFirst;
   while( pFunc )
     {
-      if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
+      if( ! ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
         wExternals++;
       pFunc = pFunc->pNext;
     }
@@ -315,7 +315,7 @@ static void GenerateExternals( FILE * hObjFile )
       pFunc = hb_comp_funcalls.pFirst;
       while( pFunc )
         {
-          if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
+          if( ! ( pFTemp = hb_compFunctionFind( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
             externNames[ w++ ] = pFunc->szName;
           pFunc = pFunc->pNext;
         }
@@ -528,7 +528,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
 
       if( ! IsExternal( y ) )
         {
-          ulFunctionOffset = ( GetFunctionPos( pSymbol->szName ) - 1 ) *
+          ulFunctionOffset = ( hb_compFunctionGetPos( pSymbol->szName ) - 1 ) *
             sizeof( prgFunction );
           * ( ( ULONG * ) &symbol[ 5 ] ) = ulFunctionOffset;
         }

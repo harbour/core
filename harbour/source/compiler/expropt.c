@@ -577,14 +577,21 @@ HB_EXPR_PTR hb_compExprNewFunCall( char *szFunName, HB_EXPR_PTR pParms )
    HB_EXPR_PTR pExpr = NULL;
    int iCount;
 
-   iCount = hb_compExprListLen( pParms );
-   /* Check the special case when no parameters are passed - in this case
-    * pParms is an expression of type HB_ET_NONE and we shouldn't
-    * replace it with NIL value
-    */
-   if( iCount == 1 && pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-      --iCount;
-   hb_compCheckArgs( szFunName, iCount );
+   if( pParms )
+   {
+      iCount = hb_compExprListLen( pParms );
+      /* Check the special case when no parameters are passed - in this case
+      * pParms is an expression of type HB_ET_NONE and we shouldn't
+      * replace it with NIL value
+      */
+      if( iCount == 1 && pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
+         --iCount;
+   }
+   else
+      iCount = 0;
+
+   hb_compFunCallCheck( szFunName, iCount );
+
    if( ( strcmp( "CHR", szFunName ) == 0 ) && iCount )
    {
       /* try to change it into a string */
@@ -604,6 +611,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( char *szFunName, HB_EXPR_PTR pParms )
          hb_compExprDelete( pParms );
       }
    }
+
    if( pExpr == NULL )
    {
       pExpr = hb_compExprNew( HB_ET_FUNCALL );
@@ -1123,7 +1131,7 @@ HB_EXPR_PTR hb_compExprSetOperand( HB_EXPR_PTR pExpr, HB_EXPR_PTR pItem )
       /* the right side of an operator is an expression with other operator
        * e.g. a := 2 + b * 3
        *   We have to set the proper order of evaluation using
-       * precedennce rules
+       * precedence rules
        */
       unsigned char ucLeft = s_PrecedTable[ pExpr->ExprType ];
       if( ucLeft >= ucRight )
@@ -1366,7 +1374,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
             pVar = ( HB_CBVAR_PTR ) pSelf->value.asList.pIndex;
             while( pVar )
             {
-               hb_compAddVar( pVar->szName, pVar->bType );
+               hb_compVariableAdd( pVar->szName, pVar->bType );
                pVar =pVar->pNext;
             }
             pExpr = pSelf->value.asList.pExprList;
@@ -2015,7 +2023,8 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          {
             /* Reduce the expressions on the list of arguments
              */
-            pSelf->value.asFunCall.pParms = HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_REDUCE );
+            if( pSelf->value.asFunCall.pParms )
+               pSelf->value.asFunCall.pParms = HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_REDUCE );
          }
          break;
 
@@ -2034,11 +2043,19 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             hb_compGenPushFunCall( pSelf->value.asFunCall.szFunName );
             hb_compGenPCode1( HB_P_PUSHNIL );
 
-            usCount = hb_compExprListLen( pSelf->value.asFunCall.pParms );
-            if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-               --usCount;
-            if( usCount )
-               HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+            if( pSelf->value.asFunCall.pParms )
+            {
+               /* NOTE: pParms will be NULL in 'DO procname' (if there is
+                * no WITH keyword)
+                */
+               usCount = hb_compExprListLen( pSelf->value.asFunCall.pParms );
+               if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
+                  --usCount;
+               if( usCount )
+                  HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+            }
+            else
+               usCount = 0;
             hb_compGenPCode3( HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount  ) );
          }
          break;
@@ -2054,11 +2071,16 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             hb_compGenPushFunCall( pSelf->value.asFunCall.szFunName );
             hb_compGenPCode1( HB_P_PUSHNIL );
 
-            usCount = hb_compExprListLen( pSelf->value.asFunCall.pParms );
-            if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
-               --usCount;
-            if( usCount )
-               HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+            if( pSelf->value.asFunCall.pParms )
+            {
+               usCount = hb_compExprListLen( pSelf->value.asFunCall.pParms );
+               if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
+                  --usCount;
+               if( usCount )
+                  HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_PUSH_PCODE );
+            }
+            else
+               usCount = 0;
             hb_compGenPCode3( HB_P_DO, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
          }
          break;

@@ -868,8 +868,6 @@ METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
 
 return 0
 
-return .f.
-
 METHOD GoBottom() CLASS TDbMenu
 
    local oPopup
