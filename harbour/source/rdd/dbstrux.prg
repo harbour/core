@@ -151,9 +151,8 @@ FUNCTION __FLEDIT( aStruct, aFieldList )
 
 #endif
 
-*/
-
 /* NOTE: Internal helper function, CA-Cl*pper name is: __FLEDIT() */
+
 
 FUNCTION __dbStructFilter( aStruct, aFieldList )
    LOCAL aStructFiltered
@@ -164,18 +163,13 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
       RETURN aStruct
    ENDIF
 
-   /* Convert field list to uppercase. */
-
-   aStructFiltered := Array( Len( aFieldList ) )
-   aEval( aFieldList, {| cField, nIndex | aStructFiltered[ nIndex ] := RTrim( Upper( cField ) ) } )
-   aFieldList := aStructFiltered
-
    /* Build a filtered list of the requested fields. */
 
    aStructFiltered := {}
-   bFindName := {| aField | aField[ DBS_NAME ] == cName }
+   bFindName := {| aField | aField[ DBS_NAME ] == RTrim( Upper(cName ) ) }
 
-   aEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName, nIndex := aScan( aStruct, bFindName ),;
-      iif( nIndex == 0, NIL, aAdd( aStructFiltered, aStruct[ nIndex ] ) ) } )
+   aEval( aFieldList, {| cFieldName, nIndex | cName := cFieldName,nIndex := aScan( aStruct, bFindName ),;
+      iif( nIndex == 0, NIL, aAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
 
    RETURN aStructFiltered
+

@@ -61,7 +61,7 @@
 #include <sqlext.h>
 #include <sqltypes.h>
 
-HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
+HB_FUNC( SQLALLOCEN ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
 {
    HENV hEnv;
    RETCODE ret = SQLAllocEnv( &hEnv );
@@ -70,7 +70,7 @@ HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENV( @hEnv ) --> nRetCode */
    hb_retni( ret );
 }
 
-HARBOUR HB_SQLALLOCCO( void ) /* HB_SQLALLOCCONNECT( hEnv, @ hDbc ) --> nRetCode */
+HB_FUNC( SQLALLOCCO ) /* HB_SQLALLOCCONNECT( hEnv, @ hDbc ) --> nRetCode */
 {
    HDBC hDbc;
    RETCODE ret = SQLAllocConnect( ( HENV ) hb_parnl( 1 ), &hDbc );
@@ -79,7 +79,7 @@ HARBOUR HB_SQLALLOCCO( void ) /* HB_SQLALLOCCONNECT( hEnv, @ hDbc ) --> nRetCode
    hb_retni( ret );
 }
 
-HARBOUR HB_SQLDRIVERC( void ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lPrompt ) --> nRetCode */
+HB_FUNC( SQLDRIVERC ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lPrompt ) --> nRetCode */
 {
    BYTE  bBuffer1[ 1024 ];
    SWORD  wLen;
@@ -91,22 +91,22 @@ HARBOUR HB_SQLDRIVERC( void ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lP
    hb_retni( ret );
 }
 
-HARBOUR HB_SQLDISCONN( void )  /* HB_SQLDISCONNECT( hDbc ) --> nRetCode */
+HB_FUNC( SQLDISCONN )  /* HB_SQLDISCONNECT( hDbc ) --> nRetCode */
 {
    hb_retni( SQLDisconnect( ( HDBC ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLFREECON( void )  /* HB_SQLFREECONNECT( hDbc ) --> nRetCode */
+HB_FUNC( SQLFREECON )  /* HB_SQLFREECONNECT( hDbc ) --> nRetCode */
 {
    hb_retni( SQLFreeConnect( ( HDBC ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLFREEENV( void )  /* HB_SQLFREEENV( hEnv ) --> nRetCode */
+HB_FUNC( SQLFREEENV )  /* HB_SQLFREEENV( hEnv ) --> nRetCode */
 {
    hb_retni( SQLFreeEnv( ( HENV ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLALLOCST()  /* HB_SQLALLOCSTMT( hDbc, @ hStmt ) --> nRetCode */
+HB_FUNC( SQLALLOCST )  /* HB_SQLALLOCSTMT( hDbc, @ hStmt ) --> nRetCode */
 {
    HSTMT hStmt;
 
@@ -114,22 +114,22 @@ HARBOUR HB_SQLALLOCST()  /* HB_SQLALLOCSTMT( hDbc, @ hStmt ) --> nRetCode */
    hb_stornl( ( LONG ) hStmt, 2 );
 }
 
-HARBOUR HB_SQLFREESTM() /* HB_SQLFREESTMT( hStmt, nType ) --> nRetCode */
+HB_FUNC( SQLFREESTM ) /* HB_SQLFREESTMT( hStmt, nType ) --> nRetCode */
 {
    hb_retni( SQLFreeStmt( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
-HARBOUR HB_SQLEXECDIR( void )  /* HB_SQLEXECDIRECT( hStmt, cStatement ) --> nRetCode */
+HB_FUNC( SQLEXECDIR )  /* HB_SQLEXECDIRECT( hStmt, cStatement ) --> nRetCode */
 {
    hb_retni( SQLExecDirect( ( HSTMT ) hb_parnl( 1 ), hb_parc( 2 ), SQL_NTS ) );
 }
 
-HARBOUR HB_SQLFETCH( void )   /* HB_SQLFETCH( hStmt ) --> nRetCode */
+HB_FUNC( SQLFETCH )   /* HB_SQLFETCH( hStmt ) --> nRetCode */
 {
    hb_retni( SQLFetch( ( HSTMT ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLGETDATA( void ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) --> nRetCode */
+HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) --> nRetCode */
 {
    SDWORD lLen  = ( SDWORD ) hb_parnl( 4 );
    PTR  bBuffer = hb_xgrab( lLen );
@@ -146,19 +146,19 @@ HARBOUR HB_SQLGETDATA( void ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBu
 }
 
 /* HB_NUMRESULTCOLS( hStmt, @nColCount ) */
-HARBOUR HB_SQLNUMRES( void )
+HB_FUNC( SQLNUMRES )
 {
     SQLSMALLINT nCols;
     WORD wResult = SQLNumResultCols( ( HSTMT ) hb_parnl( 1 ), &nCols );
 
-    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
+ /*   if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO ) */
        hb_stornl( ( LONG ) nCols, 2 );
 
     hb_retni( wResult );
 }
 
 /* HB_SQLDESCRIBECOL( hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType, @nColSize, @nDec, @nNull ) --> nRetCode */
-HARBOUR HB_SQLDESCRIB( void )
+HB_FUNC( SQLDESCRIB )
 {
     SDWORD      lLen      = ( SDWORD ) hb_parnl( 4 );
     PTR         bBuffer   = hb_xgrab( lLen );
@@ -188,7 +188,7 @@ HARBOUR HB_SQLDESCRIB( void )
 }
 
 /* HB_SQLEXTENDEDFETCH( hStmt, nOrientation, nOffset, @nRows, @nRowStatus ) */
-HARBOUR HB_SQLEXTENDE( void )
+HB_FUNC( SQLEXTENDE )
 {
     SQLUINTEGER  uiRowCountPtr = hb_parni( 4 );
     SQLUSMALLINT siRowStatus   = hb_parni( 5 );
@@ -207,13 +207,13 @@ HARBOUR HB_SQLEXTENDE( void )
     hb_retni( wResult );
 }
 
-HARBOUR HB_SQLFETCHSC( void )
+HB_FUNC( SQLFETCHSC )
 {
     hb_retni( SQLFetchScroll( ( HSTMT ) hb_parnl( 1 ),
                               hb_parnl( 2 ), hb_parnl( 3 ) ) );
 }
 
-HARBOUR HB_SQLERROR() //  hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg
+HB_FUNC( SQLERROR ) //  hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg
 {
    BYTE bBuffer1[ 256 ], szErrorMsg[ 256 ];
    UDWORD lError;

@@ -1,3 +1,11 @@
+20000331-20:27 GMT+3 Alexander Kresin
+  * source/rdd/dbstrux.prg
+    * some changes, provided by Chen Kedem
+  * contrib/odbc/bld_b32.bat
+  * contrib/odbc/hbodbc.b32
+  * contrib/odbc/odbc.c
+  * some fixes
+
 20000331-10:45 EST Paul Tucker <ptucker@sympatico.ca>
    * contrib/rdd_ads/ads1.c
      * updated initSymbols handling
@@ -37,10 +45,10 @@
 
 20000330-23:04 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
 
-	* include/hbvmpub.h
-	  ! with OS/2 GCC pragma pack(8) is not valid
-	* source/rtl/gtos2/gtos2.c
-	  * with OS/2 GCC kbhit() is not available (it's a ToolKit function)  	
+        * include/hbvmpub.h
+          ! with OS/2 GCC pragma pack(8) is not valid
+        * source/rtl/gtos2/gtos2.c
+          * with OS/2 GCC kbhit() is not available (it's a ToolKit function)
 
 20000330-12:15 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/dates.c

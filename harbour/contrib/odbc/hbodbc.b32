@@ -17,4 +17,4 @@ todbc.c   : todbc.prg
    implib ..\..\lib\b32\odbc32.lib odbc32.def
 
 .prg.c :
-  ..\bin\harbour $< /n /i..\..\include
+  ..\..\bin\harbour $< /n /p /i..\..\include
