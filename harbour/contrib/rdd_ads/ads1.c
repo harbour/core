@@ -904,7 +904,7 @@ static ERRCODE adssetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
 
    HB_TRACE(HB_TR_DEBUG, ("adssetRel(%p, %p)", pArea, lpdbRelations));
 
-   SUPER_SETREL( ( AREAP ) pArea, lpdbRelations );
+   SUPER_SETREL( ( AREAP ) pArea, (LPDBOPENINFO) lpdbRelations );
    if( !( hIndex = ( (ADSAREAP)lpdbRelations->lpaChild )->hOrdCurrent ) )
       return FAILURE;
    if( !lpdbRelations->abKey )

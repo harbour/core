@@ -1,3 +1,7 @@
+2000-07-12 21:41 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+     *contrib/rdd_ads/ads1.c
+     * Warning fixed, reported by David G. Holm
+
 2000-07-12 12:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * config/c.cf
