@@ -1,3 +1,10 @@
+20000209-07:35 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/inkey.c
+     + Added support for Inkey() K_LDBLCLK and K_RDBLCLK events.
+
+   * source/debug/debugger.prg
+     + test added for Inkey() K_LDBLCLK event. It is working right.
+
 20000208-17:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
@@ -13,15 +20,15 @@
           used in DO CASE statement
 
     *tests/keywords.prg
-        * added some more test code 
-	
+        * added some more test code
+
     *source/rtl/wait.prg
 	* fixed code to stop generation of error 'unreachable code'
 
     *source/rtl/gt/gtstd.c
         * added dummy function hb_gt_ReadKey() if compiled for U*ix
 	  (I don't know why it worked previously without this function)
-	
+
 20000208-12:00 GMT+1 Antonio Linares <alinares@fivetech.com>
    * tests/bld_b32.bat
      * updated to use latest Borland makefile changes

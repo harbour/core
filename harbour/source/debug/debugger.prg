@@ -364,6 +364,9 @@ METHOD HandleEvent() CLASS TDebugger
                  ::aWindows[ ::nCurrentWindow ]:SetFocus( .t. )
               endif
 
+         case nKey == K_LDBLCLK
+              Alert( "Mouse Left button doble click" )
+
          case nKey == K_LBUTTONDOWN
               if MRow() == 0
                  if ( nPopup := ::oPullDown:GetItemOrdByCoors( 0, MCol() ) ) != 0

@@ -659,11 +659,17 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 
             else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
                      FROM_LEFT_1ST_BUTTON_PRESSED )
-               ch = K_LBUTTONDOWN;
+               if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
+                  ch = K_LDBLCLK;
+               else
+                  ch = K_LBUTTONDOWN;
 
             else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
                      RIGHTMOST_BUTTON_PRESSED )
-               ch = K_RBUTTONDOWN;
+               if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
+                  ch = K_RDBLCLK;
+               else
+                  ch = K_RBUTTONDOWN;
          }
          /* Set up to process the next input event (if any) */
          s_cNumIndex++;
