@@ -66,7 +66,6 @@ CLASS TForm FROM TPersistent
 
    DATA      hWnd
    DATA      oMainMenu
-   DATA      cName
 
    DATA      OnClick  PROPERTY
 
