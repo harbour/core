@@ -1270,12 +1270,12 @@ void hb_compPrepareOptimize()
    if ( hb_comp_functions.pLast->pJumps )
    {
 
-      hb_comp_functions.pLast->pJumps = hb_xrealloc( hb_comp_functions.pLast->pJumps, sizeof( ULONG ) * hb_comp_functions.pLast->iJumps );
+      hb_comp_functions.pLast->pJumps = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pJumps, sizeof( ULONG ) * hb_comp_functions.pLast->iJumps );
       hb_comp_functions.pLast->pJumps[ hb_comp_functions.pLast->iJumps - 1 ] = ( ULONG ) ( hb_comp_functions.pLast->lPCodePos - 4 );
    }
    else
    {
-      hb_comp_functions.pLast->pJumps = hb_xgrab( sizeof( ULONG ) );
+      hb_comp_functions.pLast->pJumps = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
       hb_comp_functions.pLast->pJumps[ hb_comp_functions.pLast->iJumps - 1 ] = ( LONG ) ( hb_comp_functions.pLast->lPCodePos - 4 );
    }
 
@@ -1292,12 +1292,12 @@ void hb_compPrepareOptimize()
 
       if ( hb_comp_functions.pLast->pNOOPs )
       {
-         hb_comp_functions.pLast->pNOOPs = hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
+         hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
          hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 1;
       }
       else
       {
-         hb_comp_functions.pLast->pNOOPs = hb_xgrab( sizeof( ULONG ) );
+         hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
          hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 1;
       }
 
@@ -1308,12 +1308,12 @@ void hb_compPrepareOptimize()
 
          if ( hb_comp_functions.pLast->pNOOPs )
          {
-            hb_comp_functions.pLast->pNOOPs = hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
+            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
             hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 2;
          }
          else
          {
-            hb_comp_functions.pLast->pNOOPs = hb_xgrab( sizeof( ULONG ) );
+            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
             hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = hb_comp_functions.pLast->lPCodePos - 2;
          }
       }
@@ -1502,12 +1502,12 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
          if ( hb_comp_functions.pLast->pNOOPs )
          {
-           hb_comp_functions.pLast->pNOOPs = hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
+           hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
            hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
          }
          else
          {
-           hb_comp_functions.pLast->pNOOPs = hb_xgrab( sizeof( ULONG ) );
+           hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
            hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 2;
          }
 
@@ -1518,12 +1518,12 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
             if ( hb_comp_functions.pLast->pNOOPs )
             {
-               hb_comp_functions.pLast->pNOOPs = hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
+               hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
                hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 1;
             }
             else
             {
-               hb_comp_functions.pLast->pNOOPs = hb_xgrab( sizeof( ULONG ) );
+               hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
                hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 1;
             }
          }
@@ -1601,12 +1601,12 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
 
          if ( hb_comp_functions.pLast->pNOOPs )
          {
-            hb_comp_functions.pLast->pNOOPs = hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
+            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xrealloc( hb_comp_functions.pLast->pNOOPs, sizeof( ULONG ) * hb_comp_functions.pLast->iNOOPs );
             hb_comp_functions.pLast->pNOOPs[ hb_comp_functions.pLast->iNOOPs - 1 ] = ( ULONG ) ulFrom + 2;
          }
          else
          {
-            hb_comp_functions.pLast->pNOOPs = hb_xgrab( sizeof( ULONG ) );
+            hb_comp_functions.pLast->pNOOPs = ( ULONG * ) hb_xgrab( sizeof( ULONG ) );
             hb_comp_functions.pLast->pNOOPs[ 0 ] = ( ULONG ) ulFrom + 2;
          }
       }
@@ -2336,10 +2336,10 @@ void hb_compOptimizeJumps( void )
 {
    /* Jump Optimizer */
    BYTE  * pCode      = hb_comp_functions.pLast->pCode;
-   BYTE  * pOptimized = hb_xgrab( hb_comp_functions.pLast->lPCodePos - hb_comp_functions.pLast->iNOOPs );
+   BYTE  * pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - hb_comp_functions.pLast->iNOOPs );
    ULONG * pNOOPs     = hb_comp_functions.pLast->pNOOPs;
    ULONG * pJumps     = hb_comp_functions.pLast->pJumps;
-   int   * piShifts   = hb_xgrab( sizeof( int ) * hb_comp_functions.pLast->iJumps );
+   int   * piShifts   = ( int * ) hb_xgrab( sizeof( int ) * hb_comp_functions.pLast->iJumps );
    ULONG ulOptimized  = 0;
    ULONG ulNextByte   = 0;
    int iNOOP;
@@ -2790,7 +2790,6 @@ void hb_compCodeBlockEnd( void )
       pVar = pVar->pNext;
       hb_xfree( ( void * ) pFree );
    }
-
    /* Release the NOOP array. */
    if ( pCodeblock->pNOOPs )
       hb_xfree( ( void * ) pCodeblock->pNOOPs );

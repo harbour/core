@@ -1,3 +1,7 @@
+20000418-22:05 DST Paul Tucker <ptucker@sympatico.ca>
+   * source/compiler/harbour.c
+     * added casts.
+
 20000418-18:35 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.c
