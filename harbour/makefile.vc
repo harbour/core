@@ -5,13 +5,32 @@
 #
 # Makefile for Harbour project for Microsoft Visual C (32 bits)
 #
-# To add new files to this makefile:
+# Notes about this makefile:
 #
-# 1. Add obj name to one of the OBJ list for the appropriate
-#    library (if adding RTL functions)
-# 2. Add file dependency and compile rule to end of this file
-#    (see current one as an example)
+# 1. To add new files to a dependancy list, add an obj name to one of the
+#    OBJ lists for the appropriate library.
+#    NOTE: put .prg related obj's last in the lib list.
 #
+# 2. This is a recursive script.  If you change the name of this file,
+#    be sure to change MK_FILE (a few lines down) to the new name as well.
+#
+# 3. Recurrsion rules are quite simple:
+#     If you specifiy /a on the command line, files in the obj\vc dir
+#     will be deleted, and nmake will recurse without the /a flag
+#
+#     If a .prg.obj rule is fired, nmake will execute this script with
+#     a specific target as a parameter immediatley after compiling a given
+#     set of prg files.
+#      ie: Harbour $<
+#          nmake /fmakefile.vc obj\vc\rtl.lib2
+#     which will simply get make to re-evaluate the dependancy list for the
+#     lib, and as a result, it will execute the C compiler to create the obj's
+#     for the prg's that were created just prior to the recurrsive call. Once
+#     the obj's are created, the recurrsion is complete.
+#
+
+MK_FILE      = makefile.vc
+MK_FLAGS     = $(MAKEFLAGS: =)
 
 BIN_DIR      = bin\vc
 LIB_DIR      = lib\vc
@@ -40,8 +59,7 @@ HBDOC_DIR    = utils\hbdoc
 #
 
 AS = masm
-CC = cl
-CFLAGS = -TP -W1 -nologo -I$(INCLUDE_DIR) -D_Windows -DHB_GT_WIN
+CFLAGS = -TP -W1 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN
 CLIBFLAGS = $(CFLAGS) -c
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 
@@ -76,11 +94,6 @@ RUNNER_DLL   = $(BIN_DIR)\runjava.dll
 #
 
 .SUFFIXES: .prg .lib
-
-# QUESTION: Any make genius tell us why this doesn't work?
-
-{$(OBJ_DIR)}.obj{$(LIB_DIR)}.lib:
-   lib /OUT:$@ $**
 
 # override builtin
 
@@ -128,9 +141,9 @@ LIBS2 = \
 {$(RTL_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RTL_LIB)2
 
 RTL_LIB_OBJS = \
    $(OBJ_DIR)\binnum.obj \
@@ -219,9 +232,9 @@ RTL_LIB_OBJS = \
 {$(TOOLS_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
 
 TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\asciisum.obj \
@@ -272,8 +285,8 @@ TOOLS_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 MACRO_LIB_OBJS = \
-   $(OBJ_DIR)\macroy.obj \
    $(OBJ_DIR)\macrol.obj \
+   $(OBJ_DIR)\macroy.obj \
    $(OBJ_DIR)\macro.obj
 
 #
@@ -284,29 +297,33 @@ MACRO_LIB_OBJS = \
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
 {$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $*.c
+
+# temporarily out
+#   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RDD_LIB)2
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
-   $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dbf1.obj \
    $(OBJ_DIR)\dbnubs.obj \
-   $(OBJ_DIR)\dbstrux.obj \
-   $(OBJ_DIR)\sdf0.obj \
-   $(OBJ_DIR)\sdf1.obj \
-   $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\delim1.obj \
+   $(OBJ_DIR)\sdf1.obj \
+   \
+   $(OBJ_DIR)\dbf0.obj \
+   $(OBJ_DIR)\dbstrux.obj \
+   $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\rddord.obj \
-   $(OBJ_DIR)\rddsys.obj
+   $(OBJ_DIR)\rddsys.obj \
+   $(OBJ_DIR)\sdf0.obj
 
 
 {$(RDD_DIR)\nulsys}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(NULSYS_LIB)2
 
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
@@ -315,25 +332,27 @@ NULSYS_LIB_OBJS = \
 {$(RDD_DIR)\dbfntx}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFNTX_LIB)2
 
 DBFNTX_LIB_OBJS = \
-   $(OBJ_DIR)\dbfntx0.obj \
-   $(OBJ_DIR)\dbfntx1.obj
+   $(OBJ_DIR)\dbfntx1.obj \
+   \
+   $(OBJ_DIR)\dbfntx0.obj
 
 
 {$(RDD_DIR)\dbfcdx}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFCDX_LIB)2
 
 DBFCDX_LIB_OBJS = \
-   $(OBJ_DIR)\dbfcdx0.obj \
-   $(OBJ_DIR)\dbfcdx1.obj
+   $(OBJ_DIR)\dbfcdx1.obj \
+   \
+   $(OBJ_DIR)\dbfcdx0.obj
 
 #
 # RUNNER.LIB rules
@@ -365,9 +384,9 @@ PP_LIB_OBJS = \
 {$(DEBUG_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DEBUG_LIB)2
 
 DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgmenu.obj \
@@ -397,9 +416,9 @@ COMMON_LIB_OBJS = \
 {$(VM_DIR)}.c{$(OBJ_DIR)}.obj::
    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 
-{$(VM_DIR)}.prg{$(OBJ_DIR)}.obj:
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$*.c
-   $(CC) $(CLIBFLAGS) -Fo$@ $*.c
+{$(VM_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(VM_LIB)2
 
 VM_LIB_OBJS = \
    $(OBJ_DIR)\arrays.obj \
@@ -431,23 +450,66 @@ VM_LIB_OBJS = \
 # Our default target
 #
 
-all: \
+
+!if ( "$(MK_FLAGS)"=="A" )
+
+all: zot \
+   $(COMMON_LIB) \
+   $(PP_LIB) \
    $(HARBOUR_EXE) \
-   $(LIBLIST) \
+   $(RTL_LIB) \
+   $(DEBUG_LIB) \
+   $(MACRO_LIB) \
+   $(RDD_LIB) \
+   $(DBFCDX_LIB) \
+   $(DBFNTX_LIB) \
+   $(NULSYS_LIB) \
+   $(RUNNER_LIB) \
+   $(TOOLS_LIB) \
+   $(VM_LIB) \
    $(PP_EXE) \
    $(RUNNER_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
 #  $(RUNNER_DLL)
 
+MK_FLAGS = $(MK_FLAGS:A=)
+
+zot:
+   -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
+   -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
+   -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
+
+!else
+
+all: \
+   $(COMMON_LIB) \
+   $(PP_LIB) \
+   $(HARBOUR_EXE) \
+   $(RTL_LIB) \
+   $(DEBUG_LIB) \
+   $(MACRO_LIB) \
+   $(RDD_LIB) \
+   $(DBFCDX_LIB) \
+   $(DBFNTX_LIB) \
+   $(NULSYS_LIB) \
+   $(RUNNER_LIB) \
+   $(TOOLS_LIB) \
+   $(VM_LIB) \
+   $(PP_EXE) \
+   $(RUNNER_EXE) \
+   $(HBTEST_EXE) \
+   $(HBDOC_EXE) \
+#  $(RUNNER_DLL)
+
+!endif
+
 $(PP_EXE) : \
-   $(PP_DIR)\stdalone\hbpp.c \
-   $(COMMON_DIR)\hbfsapi.c \
-   $(COMMON_DIR)\hbstr.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(PP_EXE) /link $(PP_LIB)
+   $(PP_DIR)\stdalone\hbpp.c
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(PP_EXE) /link $(PP_LIB) $(COMMON_LIB)
 
 #
-# HBRUN.EXE rules
+# Runner
 #
 
 $(RUNNER_EXE) : \
@@ -515,37 +577,31 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\genrc.c \
    $(COMPILER_DIR)\genjava.c \
    $(COMPILER_DIR)\genpas.c \
-   $(COMPILER_DIR)\expropt.c \
-   $(COMMON_DIR)\reserved.c \
-   $(COMMON_DIR)\hbfsapi.c \
-   $(COMMON_DIR)\hbstr.c \
-   $(PP_DIR)\ppcore.c \
-   $(PP_DIR)\ppcomp.c \
-   $(PP_DIR)\pptable.c
-   command /c echo. > include\unistd.h
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE)
-   command /c del include\unistd.h
+   $(COMPILER_DIR)\expropt.c
+   -echo. > $(INCLUDE_DIR)\unistd.h
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(PP_LIB) $(COMMON_LIB)
+   -del $(INCLUDE_DIR)\unistd.h
 
 #
 # Library dependencies and build rules
 #
 
-$(RTL_LIB)    : $(RTL_LIB_OBJS)
+$(RTL_LIB) : $(RTL_LIB_OBJS)
    lib /out:$@ $**
 
 $(COMMON_LIB) : $(COMMON_LIB_OBJS)
    lib /out:$@ $**
 
-$(DEBUG_LIB)  : $(DEBUG_LIB_OBJS)
+$(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
    lib /out:$@ $**
 
-$(MACRO_LIB)  : $(MACRO_LIB_OBJS)
+$(MACRO_LIB) : $(MACRO_LIB_OBJS)
    lib /out:$@ $**
 
-$(PP_LIB)     : $(PP_LIB_OBJS)
+$(PP_LIB) : $(PP_LIB_OBJS)
    lib /out:$@ $**
 
-$(RDD_LIB)    : $(RDD_LIB_OBJS)
+$(RDD_LIB) : $(RDD_LIB_OBJS)
    lib /out:$@ $**
 
 $(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
@@ -560,10 +616,10 @@ $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
 $(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
    lib /out:$@ $**
 
-$(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
+$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
    lib /out:$@ $**
 
-$(VM_LIB)     : $(VM_LIB_OBJS)
+$(VM_LIB) : $(VM_LIB_OBJS)
    lib /out:$@ $**
 
 #
@@ -571,7 +627,7 @@ $(VM_LIB)     : $(VM_LIB_OBJS)
 #
 
 $(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
-   bison -d $(COMPILER_DIR)\harbour.y -o$(OBJ_DIR)\harboury.c
+   bison -d -o$(OBJ_DIR)\harboury.c $(COMPILER_DIR)\harbour.y
 
 $(OBJ_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
    flex -i -8 -o$(OBJ_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
@@ -590,228 +646,22 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-   command /c echo. > include\unistd.h
+   -echo. > $(INCLUDE_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -w -DYY_NEVER_INTERACTIVE -Fo$@ $**
-   command /c del include\unistd.h
+   -del $(INCLUDE_DIR)\unistd.h
 
-$(OBJ_DIR)\macro.obj : $(MACRO_DIR)\macro.c
 
-#
-# PP.LIB dependencies
-#
+# dummy targets used for prg to c creation
 
-$(OBJ_DIR)\pplib.obj    : $(PP_DIR)\pplib.c
-$(OBJ_DIR)\ppcore.obj   : $(PP_DIR)\ppcore.c
-$(OBJ_DIR)\ppcomp.obj   : $(PP_DIR)\ppcomp.c
-$(OBJ_DIR)\pptable.obj  : $(PP_DIR)\pptable.c
-
-#
-# RTL.LIB dependencies
-#
-
-$(OBJ_DIR)\achoice.obj  : $(RTL_DIR)\achoice.prg
-$(OBJ_DIR)\adir.obj     : $(RTL_DIR)\adir.prg
-$(OBJ_DIR)\alert.obj    : $(RTL_DIR)\alert.prg
-$(OBJ_DIR)\asort.obj    : $(RTL_DIR)\asort.prg
-$(OBJ_DIR)\binnum.obj   : $(RTL_DIR)\binnum.c
-$(OBJ_DIR)\browdb.obj   : $(RTL_DIR)\browdb.prg
-$(OBJ_DIR)\browse.obj   : $(RTL_DIR)\browse.prg
-$(OBJ_DIR)\console.obj  : $(RTL_DIR)\console.c
-$(OBJ_DIR)\copyfile.obj : $(RTL_DIR)\copyfile.c
-$(OBJ_DIR)\dates.obj    : $(RTL_DIR)\dates.c
-$(OBJ_DIR)\dbedit.obj   : $(RTL_DIR)\dbedit.prg
-$(OBJ_DIR)\descend.obj  : $(RTL_DIR)\descend.c
-$(OBJ_DIR)\devoutp.obj  : $(RTL_DIR)\devoutp.prg
-$(OBJ_DIR)\dir.obj      : $(RTL_DIR)\dir.c
-$(OBJ_DIR)\dircmd.obj   : $(RTL_DIR)\dircmd.prg
-$(OBJ_DIR)\do.obj       : $(RTL_DIR)\do.c
-$(OBJ_DIR)\dummy.obj    : $(RTL_DIR)\dummy.prg
-$(OBJ_DIR)\empty.obj    : $(RTL_DIR)\empty.c
-$(OBJ_DIR)\environ.obj  : $(RTL_DIR)\environ.c
-$(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
-$(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.prg
-$(OBJ_DIR)\fieldbl.obj  : $(RTL_DIR)\fieldbl.prg
-$(OBJ_DIR)\filesys.obj  : $(RTL_DIR)\filesys.c
-$(OBJ_DIR)\gtapi.obj    : $(RTL_DIR)\gtapi.c
-$(OBJ_DIR)\gtxxx.obj    : $(RTL_DIR)\gtxxx.c
-$(OBJ_DIR)\hardcr.obj   : $(RTL_DIR)\hardcr.c
-$(OBJ_DIR)\inkey.obj    : $(RTL_DIR)\inkey.c
-$(OBJ_DIR)\input.obj    : $(RTL_DIR)\input.prg
-$(OBJ_DIR)\isprint.obj  : $(RTL_DIR)\isprint.c
-$(OBJ_DIR)\langapi.obj  : $(RTL_DIR)\langapi.c
-$(OBJ_DIR)\len.obj      : $(RTL_DIR)\len.c
-$(OBJ_DIR)\math.obj     : $(RTL_DIR)\math.c
-$(OBJ_DIR)\memofile.obj : $(RTL_DIR)\memofile.c
-$(OBJ_DIR)\memoline.obj : $(RTL_DIR)\memoline.c
-$(OBJ_DIR)\memvarbl.obj : $(RTL_DIR)\memvarbl.prg
-$(OBJ_DIR)\menuto.obj   : $(RTL_DIR)\menuto.prg
-$(OBJ_DIR)\mlcount.obj  : $(RTL_DIR)\mlcount.c
-$(OBJ_DIR)\mlpos.obj    : $(RTL_DIR)\mlpos.c
-$(OBJ_DIR)\mouseapi.obj : $(RTL_DIR)\mouseapi.c
-$(OBJ_DIR)\mousexxx.obj : $(RTL_DIR)\mousexxx.c
-$(OBJ_DIR)\msgxxx.obj   : $(RTL_DIR)\msgxxx.c
-$(OBJ_DIR)\mtran.obj    : $(RTL_DIR)\mtran.c
-$(OBJ_DIR)\natmsg.obj   : $(RTL_DIR)\natmsg.c
-$(OBJ_DIR)\net.obj      : $(RTL_DIR)\net.c
-$(OBJ_DIR)\objfunc.obj  : $(RTL_DIR)\objfunc.prg
-$(OBJ_DIR)\oemansi.obj  : $(RTL_DIR)\oemansi.c
-$(OBJ_DIR)\oldbox.obj   : $(RTL_DIR)\oldbox.c
-$(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
-$(OBJ_DIR)\readkey.obj  : $(RTL_DIR)\readkey.prg
-$(OBJ_DIR)\samples.obj  : $(RTL_DIR)\samples.c
-$(OBJ_DIR)\set.obj      : $(RTL_DIR)\set.c
-$(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
-$(OBJ_DIR)\setfunc.obj  : $(RTL_DIR)\setfunc.prg
-$(OBJ_DIR)\setkey.obj   : $(RTL_DIR)\setkey.prg
-$(OBJ_DIR)\setta.obj    : $(RTL_DIR)\setta.prg
-$(OBJ_DIR)\soundex.obj  : $(RTL_DIR)\soundex.c
-$(OBJ_DIR)\strings.obj  : $(RTL_DIR)\strings.c
-$(OBJ_DIR)\tbcolumn.obj : $(RTL_DIR)\tbcolumn.prg
-$(OBJ_DIR)\tbrowse.obj  : $(RTL_DIR)\tbrowse.prg
-$(OBJ_DIR)\tclass.obj   : $(RTL_DIR)\tclass.prg
-$(OBJ_DIR)\terror.obj   : $(RTL_DIR)\terror.prg
-$(OBJ_DIR)\text.obj     : $(RTL_DIR)\text.prg
-$(OBJ_DIR)\tget.obj     : $(RTL_DIR)\tget.prg
-$(OBJ_DIR)\tgetlist.obj : $(RTL_DIR)\tgetlist.prg
-$(OBJ_DIR)\tlabel.obj   : $(RTL_DIR)\tlabel.prg
-$(OBJ_DIR)\tone.obj     : $(RTL_DIR)\tone.c
-$(OBJ_DIR)\trace.obj    : $(RTL_DIR)\trace.c
-$(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
-$(OBJ_DIR)\treport.obj  : $(RTL_DIR)\treport.prg
-$(OBJ_DIR)\type.obj     : $(RTL_DIR)\type.c
-$(OBJ_DIR)\typefile.obj : $(RTL_DIR)\typefile.prg
-$(OBJ_DIR)\valtype.obj  : $(RTL_DIR)\valtype.c
-$(OBJ_DIR)\wait.obj     : $(RTL_DIR)\wait.prg
-$(OBJ_DIR)\word.obj     : $(RTL_DIR)\word.c
-$(OBJ_DIR)\xhelp.obj    : $(RTL_DIR)\xhelp.c
-$(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.prg
-
-#
-# DEBUG.LIB dependencies
-#
-
-$(OBJ_DIR)\dbgmenu.obj  : $(DEBUG_DIR)\dbgmenu.prg
-$(OBJ_DIR)\debugger.obj : $(DEBUG_DIR)\debugger.prg
-$(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.prg
-
-#
-# RUNNER.LIB dependencies
-#
-
-$(OBJ_DIR)\runlib.obj : $(RUNNER_DIR)\runlib.c
-
-#
-# VM.LIB dependencies
-#
-
-$(OBJ_DIR)\arrays.obj   : $(VM_DIR)\arrays.c
-$(OBJ_DIR)\break.obj    : $(VM_DIR)\break.c
-$(OBJ_DIR)\classes.obj  : $(VM_DIR)\classes.c
-$(OBJ_DIR)\cmdarg.obj   : $(VM_DIR)\cmdarg.c
-$(OBJ_DIR)\codebloc.obj : $(VM_DIR)\codebloc.c
-$(OBJ_DIR)\debug.obj    : $(VM_DIR)\debug.c
-$(OBJ_DIR)\dynsym.obj   : $(VM_DIR)\dynsym.c
-$(OBJ_DIR)\extend.obj   : $(VM_DIR)\extend.c
-$(OBJ_DIR)\fm.obj       : $(VM_DIR)\fm.c
-$(OBJ_DIR)\harbinit.obj : $(VM_DIR)\harbinit.prg
-$(OBJ_DIR)\hvm.obj      : $(VM_DIR)\hvm.c
-$(OBJ_DIR)\initexit.obj : $(VM_DIR)\initexit.c
-$(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
-$(OBJ_DIR)\itemapi.obj  : $(VM_DIR)\itemapi.c
-$(OBJ_DIR)\maindll.obj  : $(VM_DIR)\maindll.c
-$(OBJ_DIR)\mainstd.obj  : $(VM_DIR)\mainstd.c
-$(OBJ_DIR)\mainwin.obj  : $(VM_DIR)\mainwin.c
-$(OBJ_DIR)\memvars.obj  : $(VM_DIR)\memvars.c
-$(OBJ_DIR)\pcount.obj   : $(VM_DIR)\pcount.c
-$(OBJ_DIR)\proc.obj     : $(VM_DIR)\proc.c
-$(OBJ_DIR)\pvalue.obj   : $(VM_DIR)\pvalue.c
-$(OBJ_DIR)\symbols.obj  : $(VM_DIR)\symbols.asm
-
-#
-# TOOLS.LIB dependencies
-#
-
-$(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
-$(OBJ_DIR)\ascpos.obj   : $(TOOLS_DIR)\ascpos.c
-$(OBJ_DIR)\atdiff.obj   : $(TOOLS_DIR)\atdiff.c
-$(OBJ_DIR)\chareven.obj : $(TOOLS_DIR)\chareven.c
-$(OBJ_DIR)\charmix.obj  : $(TOOLS_DIR)\charmix.c
-$(OBJ_DIR)\charodd.obj  : $(TOOLS_DIR)\charodd.c
-$(OBJ_DIR)\chrcount.obj : $(TOOLS_DIR)\chrcount.c
-$(OBJ_DIR)\chrfirst.obj : $(TOOLS_DIR)\chrfirst.c
-$(OBJ_DIR)\chrtotal.obj : $(TOOLS_DIR)\chrtotal.c
-$(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
-$(OBJ_DIR)\ctchrmix.obj : $(TOOLS_DIR)\ctchrmix.c
-$(OBJ_DIR)\ctcrypt.obj  : $(TOOLS_DIR)\ctcrypt.c
-$(OBJ_DIR)\dates2.obj   : $(TOOLS_DIR)\dates2.c
-$(OBJ_DIR)\datesx.obj   : $(TOOLS_DIR)\datesx.c
-$(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
-$(OBJ_DIR)\fileread.obj : $(TOOLS_DIR)\fileread.prg
-$(OBJ_DIR)\hb_f.obj     : $(TOOLS_DIR)\hb_f.c
-$(OBJ_DIR)\html.obj     : $(TOOLS_DIR)\html.prg
-$(OBJ_DIR)\io.obj       : $(TOOLS_DIR)\io.c
-$(OBJ_DIR)\mathx.obj    : $(TOOLS_DIR)\mathx.c
-$(OBJ_DIR)\nconvert.obj : $(TOOLS_DIR)\nconvert.prg
-$(OBJ_DIR)\ng.obj       : $(TOOLS_DIR)\ng.prg
-$(OBJ_DIR)\numtxten.obj : $(TOOLS_DIR)\numtxten.prg
-$(OBJ_DIR)\numtxthu.obj : $(TOOLS_DIR)\numtxthu.prg
-$(OBJ_DIR)\os2.obj      : $(TOOLS_DIR)\os2.prg
-$(OBJ_DIR)\rtf.obj      : $(TOOLS_DIR)\rtf.prg
-$(OBJ_DIR)\strasint.obj : $(TOOLS_DIR)\strasint.c
-$(OBJ_DIR)\strcount.obj : $(TOOLS_DIR)\strcount.c
-$(OBJ_DIR)\strcspn.obj  : $(TOOLS_DIR)\strcspn.c
-$(OBJ_DIR)\strdiff.obj  : $(TOOLS_DIR)\strdiff.c
-$(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
-$(OBJ_DIR)\strfmt.obj   : $(TOOLS_DIR)\strfmt.c
-$(OBJ_DIR)\stringp.obj  : $(TOOLS_DIR)\stringp.prg
-$(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c
-$(OBJ_DIR)\strleft.obj  : $(TOOLS_DIR)\strleft.c
-$(OBJ_DIR)\strpbrk.obj  : $(TOOLS_DIR)\strpbrk.c
-$(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
-$(OBJ_DIR)\troff.obj    : $(TOOLS_DIR)\troff.prg
-
-#
-# RDD.LIB dependencies
-#
-
-$(OBJ_DIR)\dbcmd.obj    : $(RDD_DIR)\dbcmd.c
-$(OBJ_DIR)\rddsys.obj   : $(RDD_DIR)\rddsys.prg
-$(OBJ_DIR)\dbf0.obj     : $(RDD_DIR)\dbf0.prg
-$(OBJ_DIR)\dbf1.obj     : $(RDD_DIR)\dbf1.c
-$(OBJ_DIR)\dbnubs.obj   : $(RDD_DIR)\dbnubs.c
-$(OBJ_DIR)\dbstrux.obj  : $(RDD_DIR)\dbstrux.prg
-$(OBJ_DIR)\sdf0.obj     : $(RDD_DIR)\sdf0.prg
-$(OBJ_DIR)\sdf1.obj     : $(RDD_DIR)\sdf1.c
-$(OBJ_DIR)\delim0.obj   : $(RDD_DIR)\delim0.prg
-$(OBJ_DIR)\delim1.obj   : $(RDD_DIR)\delim1.c
-$(OBJ_DIR)\rddord.obj   : $(RDD_DIR)\rddord.prg
-
-#
-# NULSYS.LIB dependencies
-#
-
-$(OBJ_DIR)\nulsys.obj   : $(RDD_DIR)\nulsys\nulsys.prg
-
-#
-# DBFNTX.LIB dependencies
-#
-
-$(OBJ_DIR)\dbfntx0.obj  : $(RDD_DIR)\dbfntx\dbfntx0.prg
-$(OBJ_DIR)\dbfntx1.obj  : $(RDD_DIR)\dbfntx\dbfntx1.c
-
-#
-# DBFCDX.LIB dependencies
-#
-
-$(OBJ_DIR)\dbfcdx0.obj  : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
-$(OBJ_DIR)\dbfcdx1.obj  : $(RDD_DIR)\dbfcdx\dbfcdx1.c
-
-#
-# COMMON.LIB dependencies
-#
-
-$(OBJ_DIR)\hbtrace.obj  : $(COMMON_DIR)\hbtrace.c
-$(OBJ_DIR)\hbfsapi.obj  : $(COMMON_DIR)\hbfsapi.c
-$(OBJ_DIR)\hbstr.obj    : $(COMMON_DIR)\hbstr.c
-$(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c
-
+$(RTL_LIB)2    : $(RTL_LIB_OBJS)
+$(COMMON_LIB)2 : $(COMMON_LIB_OBJS)
+$(DEBUG_LIB)2  : $(DEBUG_LIB_OBJS)
+$(MACRO_LIB)2  : $(MACRO_LIB_OBJS)
+$(PP_LIB)2     : $(PP_LIB_OBJS)
+$(RDD_LIB)2    : $(RDD_LIB_OBJS)
+$(DBFCDX_LIB)2 : $(DBFCDX_LIB_OBJS)
+$(DBFNTX_LIB)2 : $(DBFNTX_LIB_OBJS)
+$(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
+$(RUNNER_LIB)2 : $(RUNNER_LIB_OBJS)
+$(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
+$(VM_LIB)2     : $(VM_LIB_OBJS)

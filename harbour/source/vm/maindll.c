@@ -33,7 +33,7 @@
  *
  */
 
-#if defined(_Windows)
+#if defined(_Windows) || defined(_WIN32)
 
 #include <windows.h>
 #include "hbvm.h"

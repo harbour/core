@@ -46,7 +46,7 @@ HARBOUR HB_HB_ANSITOOEM( void )
    PHB_ITEM pString = hb_param( 1, IT_STRING );
 
    if( pString )
-#if defined(_Windows) || defined(WINNT)
+#if defined(_Windows) || defined(WINNT) || defined(_WIN32)
    {
       DWORD ulLen = hb_itemGetCLen( pString );
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
@@ -68,7 +68,7 @@ HARBOUR HB_HB_OEMTOANSI( void )
    PHB_ITEM pString = hb_param( 1, IT_STRING );
 
    if( pString )
-#if defined(_Windows) || defined(WINNT)
+#if defined(_Windows) || defined(WINNT) || defined(_WIN32)
    {
       DWORD ulLen = hb_itemGetCLen( pString );
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );

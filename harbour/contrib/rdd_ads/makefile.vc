@@ -16,9 +16,9 @@ BIN_DIR     = ..\..\bin\vc
 #
 
 CC = cl
-CFLAGS = -W1 -nologo -I$(INCLUDE_DIR) -D_Windows
-CLIBFLAGS = $(CFLAGS) -c /TP
-CLIBFLAGSDEBUG = $(CFLAGS) -c -Zi /TP
+CFLAGS = -TP -W1 -nologo -I$(INCLUDE_DIR)
+CLIBFLAGS = $(CFLAGS) -c
+CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 
 #
 # Macros to access our library names

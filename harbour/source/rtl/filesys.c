@@ -214,7 +214,7 @@ static USHORT s_uiErrorLast = 0;
    #define HB_FS_SOPEN
 #endif
 
-#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
+#if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(_WIN32) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 /* These platforms and/or compilers have common drive letter support */
    #define HB_FS_DRIVE_LETTER
 #endif
@@ -1564,7 +1564,7 @@ HARBOUR HB_DISKSPACE( void )
                     ( ULONG ) disk.sectors_per_cluster *
                     ( ULONG ) disk.bytes_per_sector;
 
-#elif defined(_Windows) || defined(WINNT)
+#elif defined(_Windows) || defined(WINNT) || defined(_WIN32)
 
    {
       char szPath[ 4 ];

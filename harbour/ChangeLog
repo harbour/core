@@ -1,3 +1,24 @@
+20000314-18:56 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbdefs.h
+     source/rtl/dates.c
+     source/rtl/filesys.c
+     source/rtl/net.c
+     source/rtl/oemansi.c
+     source/rtl/tone.c
+     source/vm/maindll.c
+     source/vm/mainwin.c
+     source/vm/fm.c
+     ! MSVC will compile out of the box, and doesn't require the _Windows macro
+       to be #defined.
+   * makefile.vc
+     contrib/rdd_ads/makefile.vc
+     % Made it much smaller (again) using recursion. HARBOUR.EXE is called
+       with multiple source files at a time, so it's faster now.
+       The new files have to be added only in one place to the makefile.
+       Thanks to Paul Tucker.
+     % -D_Windows hack removed.
+     * Minor enhacements.
+
 20000314-07:56 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/harbour.c
      ! A few more global variables are reinitialized between files, when 

@@ -33,7 +33,7 @@
  *
  */
 
-#if defined(_Windows)
+#if defined(_Windows) || defined(_WIN32)
 
 #include <windows.h>
 #include "hbapi.h"
@@ -56,7 +56,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    HB_SYMBOL_UNUSED( lpCmdLine );
    HB_SYMBOL_UNUSED( iCmdShow );
 
-   argv[ 0 ] = NULL;  /* temporary workaround */
+   argv[ 0 ] = NULL;  /* TOFIX: Generate argv/argc from commandline */
 
    hb_cmdargInit( 0, argv );
    hb_vmInit( TRUE );
