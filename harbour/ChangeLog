@@ -1,3 +1,9 @@
+19990623-22:30 WIB Andi Jahja <andij@aonlippo.co.id>
+  + tests/working/testcopy.prg
+  + source/rtl/copyfile.c
+    - __CopyFile() clone
+  * makefile.b32 to include __copyfile()
+
 19990623-19:30 WIB Andi Jahja<andij@aonlippo.co.id>
   + tests/working/rtfclass.prg
 
