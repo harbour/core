@@ -1,3 +1,16 @@
+19990827-13:01 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     + Added new function hb_vmDebuggerEndProc()
+       (notifies the Debugger __DBGENTRY() about a HB_P_ENDPROC
+   * source/rtl/tbrowse.prg
+     * fixed small bug on method stabilize
+   * source/debug/debugger.prg
+     + Added support for the CallStack window
+       (notice I have intentionally left it open by default, to
+        monitorize how it is working)
+   * source/debug/tbrwtext.prg
+     * small fixes.
+
 19990826-06:50 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/inkey.c
@@ -13,7 +26,7 @@
     ! INKEY() fixed parameter count checking bug introduced a few hours ago.
 
 19990826-06:00 GMT+1 Victor Szel <info@szelvesz.hu>
- 
+
   * include/mouseapi.h
     source/rtl/mouseapi.c
     source/rtl/mouse/mousedos.c
@@ -33,7 +46,7 @@
 
   * include/Makefile
     include/mouseapi.h
-    source/rtl/mouseapi.c 
+    source/rtl/mouseapi.c
     source/rtl/mousexxx.c (renamed)
     source/rtl/Makefile
     source/rtl/mouse/mousetpl.c
@@ -51,9 +64,9 @@
   * source/vm/hvm.c
     include/rddapi.h
     * Some int -> BOOL, Some 0 -> NULL, '\0', Some cleanup.
-    ! LEN(), EMPTY(), PCOUNT() returns a runtime error if bad number of 
-      parameter was passed. 
-    + BREAK() doesn't have a parameter count check, an explanation of this 
+    ! LEN(), EMPTY(), PCOUNT() returns a runtime error if bad number of
+      parameter was passed.
+    + BREAK() doesn't have a parameter count check, an explanation of this
       added as a NOTE:.
     * hb_rdd*() function declarations moved to rddapi.h
   * include/ctoharb.h
@@ -91,8 +104,8 @@
     source/hbpp/hbpplib.c
     source/hbpp/stdalone/hbpp.c
     source/rtl/errorapi.c
-    % GenError(), GenWarning(), hb_errInternel() no longer need sprintf() 
-      neither the local stack buffers, so there's no more an undocumented limit 
+    % GenError(), GenWarning(), hb_errInternel() no longer need sprintf()
+      neither the local stack buffers, so there's no more an undocumented limit
       on the message length.
   * source/rtl/console.c
     ! In some places printf( "\n" ) was changed to print CrLf.
@@ -102,7 +115,7 @@
     source/vm/hvm.c
     ! Uses hb_consoleGetNewLine() instead of \n character, so that it will
       work on all platforms. This was needed because we have turned off cooked
-      mode of stdout, so the compiler/OS will not do it for us. The bug could 
+      mode of stdout, so the compiler/OS will not do it for us. The bug could
       be observed in the stack dump on an internal error in DOS/DJGPP.
   * source/rtl/console.c
     include/extend.h
@@ -172,8 +185,8 @@
       NULL return value.
     - One exit() after GenError() removed (source/hbpp/hbpp.c).
     * exit( 1 ) -> exit( EXIT_FAILURE )
-    ! GenWarning(), GenError(), CheckArgs() was allocating memory which was not 
-      freed.Now the stack is used instead of calling memalloc functions, so 
+    ! GenWarning(), GenError(), CheckArgs() was allocating memory which was not
+      freed.Now the stack is used instead of calling memalloc functions, so
       they can be used to report memory errors, too.
     ! The last printf() changed to GenError() in harbour.l
 

@@ -44,12 +44,16 @@ function __dbgEntry( uParam )  // debugger entry point
 
    do case
       case ValType( uParam ) == "C"   // called from hvm.c hb_vmModuleName()
-           if oDebugger == nil .and. !lExit
-              oDebugger = TDebugger():New()
-              oDebugger:Activate( uParam )
+           if ! lExit
+              if oDebugger == nil
+                 oDebugger = TDebugger():New()
+                 oDebugger:Activate( uParam )
+              else
+                 oDebugger:ShowCode( uParam )
+              endif
            endif
 
-      case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebugShowLines()
+      case ValType( uParam ) == "N"   // called from hvm.c hb_vmDebuggerShowLines()
            if oDebugger != nil
               oDebugger:SaveAppStatus()
               if oDebugger:lGo
@@ -67,6 +71,9 @@ function __dbgEntry( uParam )  // debugger entry point
                  SetCursor( oDebugger:nAppCursor )
               endif
            endif
+
+      otherwise   // called from hvm.c hb_vmDebuggerEndProc()
+         oDebugger:EndProc()
    endcase
 
 return nil
@@ -76,15 +83,16 @@ CLASS TDebugger
    DATA   aWindows, nCurrentWindow
    DATA   oPullDown
    DATA   oWndCode, oWndCommand, oWndStack
-   DATA   oBar, oBrwText, cPrgName
+   DATA   oBar, oBrwText, cPrgName, oBrwStack
    DATA   cImage
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
-   DATA   aBreakPoints
+   DATA   aBreakPoints, aCallStack
    DATA   lGo
 
    METHOD New()
    METHOD Activate( cModuleName )
+   METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
    METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., ::Exit()
    METHOD GoToLine( nLine )
@@ -115,6 +123,7 @@ METHOD New() CLASS TDebugger
                                        "Command", "BG+/B" )
    ::lEnd           = .f.
    ::aBreakPoints   = {}
+   ::aCallStack     = {}
    ::lGo            = .f.
 
    AAdd( ::aWindows, ::oWndCode )
@@ -126,12 +135,25 @@ METHOD Activate( cModuleName ) CLASS TDebugger
 
    ::Show()
    ::ShowCode( cModuleName )
+   ::ShowCallStack()
    ::cImage := SaveScreen()
    DispBegin()
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
    SetPos( ::nAppRow, ::nAppCol )
    SetColor( ::cAppColors )
    SetCursor( ::nAppCursor )
+
+return nil
+
+METHOD EndProc() CLASS TDebugger
+
+   if Len( ::aCallStack ) > 1
+      ADel( ::aCallStack, 1 )
+      ASize( ::aCallStack, Len( ::aCallStack ) - 1 )
+      if ::oBrwStack != nil
+         ::oBrwStack:RefreshAll()
+      endif
+   endif
 
 return nil
 
@@ -252,6 +274,9 @@ METHOD Show() CLASS TDebugger
    ::oWndCode:Show( .t. )
    ::oWndCommand:Show()
 
+   SET COLOR TO "N/BG"
+   @ MaxRow(), 0 CLEAR TO MaxRow(), MaxCol()
+
    @ MaxRow(), 0 SAY ;
    "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace" COLOR "N/BG"
    @ MaxRow(),  0 SAY "F1" COLOR "GR+/BG"
@@ -278,11 +303,27 @@ return nil
 
 METHOD ShowCallStack() CLASS TDebugger
 
+   local n := 1
+
    if ::oWndStack == nil
-      ::oWndStack = TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 1, MaxCol(),;
+      ::oWndCode:nRight -= 16
+      ::oBrwText:nRight -= 16
+      ::oBrwText:aColumns[ 1 ]:Width -= 16
+      ::oWndCode:SetFocus( .t. )
+      ::oWndStack = TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
                                      "Stack", "BG+/B" )
       ::oWndStack:Show( .f. )
       AAdd( ::aWindows, ::oWndStack )
+      ::oBrwStack = TBrowseNew( 2, MaxCol() - 14, MaxRow() - 7, MaxCol() - 1 )
+      ::oBrwStack:ColorSpec = "BG+/B, N/BG"
+      ::oBrwStack:GoTopBlock = { || n := 1 }
+      ::oBrwStack:GoBottomBlock = { || n := Len( ::aCallStack ) }
+      ::oBrwStack:SkipBlock = { | nSkip, nPos | nPos := n,;
+                             n := If( nSkip > 0, Min( Len( ::aCallStack ), n + nSkip ),;
+                             Max( 1, n + nSkip )), n - nPos }
+
+      ::oBrwStack:AddColumn( TBColumnNew( "",  { || PadC( ::aCallStack[ n ], 14 ) } ) )
+      ::oBrwStack:ForceStable()
    endif
 
 return nil
@@ -293,16 +334,28 @@ return { | a | a[ 1 ] == Self:oBrwText:nLine }
 
 METHOD ShowCode( cModuleName ) CLASS TDebugger
 
-   ::cPrgName := SubStr( cModuleName, 1, At( ":", cModuleName ) - 1 )
-   ::oBrwText = TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
-                ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
+   local cFunction := SubStr( cModuleName, At( ":", cModuleName ) + 1 )
+   local cPrgName  := SubStr( cModuleName, 1, At( ":", cModuleName ) - 1 )
 
-   ::oBrwText:aColumns[ 1 ]:ColorBlock = { || If( AScan( ::aBreakPoints,;
-      CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
-      // { | aBreak | aBreak[ 1 ] == ::nLine }
+   ASize( ::aCallStack, Len( ::aCallStack ) + 1 )
+   AIns( ::aCallStack, 1 )
+   ::aCallStack[ 1 ] = cFunction
 
-   ::oBrwText:ForceStable()
-   ::oWndCode:SetCaption( ::cPrgName )
+   if ::oWndStack != nil
+      ::oBrwStack:RefreshAll()
+   endif
+
+   if cPrgName != ::cPrgName
+      ::cPrgName := cPrgName
+      ::oBrwText = TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
+                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
+
+      ::oBrwText:aColumns[ 1 ]:ColorBlock = { || If( AScan( ::aBreakPoints,;
+         CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
+
+      ::oBrwText:ForceStable()
+      ::oWndCode:SetCaption( ::cPrgName )
+   endif
 
 return nil
 
@@ -345,6 +398,10 @@ return AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == nLine } ) != 0
 METHOD GotoLine( nLine ) CLASS TDebugger
 
    ::oBrwText:GotoLine( nLine )
+
+   if ::oBrwStack != nil .and. ! ::oBrwStack:Stable
+      ::oBrwStack:ForceStable()
+   endif
 
 return nil
 
@@ -394,6 +451,7 @@ CLASS TDbWindow  // Debugger windows
    DATA   nTop, nLeft, nBottom, nRight
    DATA   cCaption
    DATA   cBackImage, cColor
+   DATA   lFocused, bGotFocus
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
    METHOD SetCaption( cCaption )
@@ -429,6 +487,8 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
 
    DispBegin()
 
+   ::lFocused = lOnOff
+
    @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lOnOff, B_DOUBLE, B_SINGLE ) ;
       COLOR ::cColor
 
@@ -438,6 +498,10 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
    endif
 
    DispEnd()
+
+   if lOnOff .and. ::bGotFocus != nil
+      Eval( ::bGotFocus, Self )
+   endif
 
 return nil
 
