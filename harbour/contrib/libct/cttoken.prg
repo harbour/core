@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CT_NUMTOKEN() and CT_TOKEN() CA-Tools function
+ * NUMTOKEN() and TOKEN() CA-Tools function
  *
  * Copyright 2000 Phil Barnett <philb@iag.net>
  * www - http://www.harbour-project.org
@@ -40,7 +40,7 @@
 // used in the like named function in Clipper Tools III, so it should
 // work identically.
 
-function CT_NUMTOKEN( cString, cDelimiter )
+function NUMTOKEN( cString, cDelimiter )
 
    local x
    local nStrLen    := len( cString )
@@ -79,7 +79,7 @@ function CT_NUMTOKEN( cString, cDelimiter )
 // This defaults to the same delimiters as used in the like named
 // function in Clipper Tools III, so it should work identically.
 
-function CT_TOKEN( cString, cDelimiter, nPointer )
+function TOKEN( cString, cDelimiter, nPointer )
 
    local x
    local nStrLen      := len( cString )

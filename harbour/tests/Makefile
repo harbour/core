@@ -9,7 +9,6 @@ endif
 ROOT = ../
 
 LIBS=\
-	tools \
 	debug \
 	vm \
 	rtl \

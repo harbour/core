@@ -15,7 +15,6 @@ PRG_SOURCES=\
 PRG_MAIN=hbrun.prg
 
 LIBS=\
-	tools \
 	debug \
 	vm \
 	rtl \

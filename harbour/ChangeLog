@@ -1,3 +1,25 @@
+20000423-11:38 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   + contrib/libct/*
+   + contrib/libgt/*
+   + contrib/libmisc/*
+   - source/tools/*
+   * source/Makefile
+   * makefile.bc
+   * makefile.vc
+   * tests/Makefile
+   * utils/hbrun/Makefile
+   - utils/hbrun/exttools.prg
+   + utils/hbrun/external.prg
+     * TOOLS dir moved to CONTRIB, and split into three parts. CT_ prefixed
+       removed from the CT function names.
+     ; ! WARNING ! It's likely that some test program will fail now, because 
+       they are using functions from TOOLS. These tests should be removed or 
+       corrected.
+
+   * source/vm/hvm.c
+     % Optimizations in hb_vmExecute()
+
 20000423-06:09 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/harbour.c

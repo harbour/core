@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CT_CHARMIX() CA-Tools compatible function
+ * CHARMIX() CA-Tools compatible function
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -38,7 +38,7 @@
 
 /* NOTE: CA-Tools will hang if the second parameter is an empty string */
 
-HB_FUNC( CT_CHARMIX )
+HB_FUNC( CHARMIX )
 {
    PHB_ITEM pStr1 = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pStr2 = hb_param( 2, HB_IT_STRING );

@@ -14,6 +14,5 @@ DIRS=\
 	lang \
 	rdd \
 	debug \
-	tools \
 
 include $(ROOT)config/dir.cf

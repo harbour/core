@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ * The declarations for the functions/procedures not part of Harbour.
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,60 +33,7 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
-#include "setcurs.ch"
+#include "hbsetup.ch"
 
-MEMVAR GetList
-
-FUNCTION CT_CENTER( c, n, p )
-   RETURN PadC( AllTrim( c ), n, p )
-
-FUNCTION CT_CSETCURS( l )
-
-   IF PCount() == 0
-      RETURN SetCursor() != SC_NONE
-   ENDIF
-
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
-
-FUNCTION CT_CSETKEY( n )
-   RETURN SetKey( n )
-
-FUNCTION CT_ENHANCED()
-
-   ColorSelect( CLR_ENHANCED )
-
-   RETURN ""
-
-FUNCTION CT_STANDARD()
-
-   ColorSelect( CLR_STANDARD )
-
-   RETURN ""
-
-FUNCTION CT_LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION CT_RESTGETS( aGetList )
-
-   GetList := aGetList
-
-   RETURN .T.
-
-FUNCTION CT_SAVEGETS()
-   LOCAL aGetList := GetList
-
-   GetList := {}
-
-   RETURN aGetList
-
-FUNCTION CT_SCREENMIX( c, a, row, col )
-
-   DEFAULT row TO Row()
-   DEFAULT col TO Col()
-
-   RestScreen( row, col, row, col + Len( a ) - 1, CT_CHARMIX( c, a ) )
-
-   RETURN ""
+/* Fill it as needed */
 

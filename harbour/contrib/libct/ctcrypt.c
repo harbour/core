@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CT_CRYPT() CA-Tools compatible function
+ * CRYPT() CA-Tools compatible function
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -35,7 +35,7 @@
 
 #include "hbapi.h"
 
-HB_FUNC( CT_CRYPT )
+HB_FUNC( CRYPT )
 {
    ULONG ulCryptLen = hb_parclen( 2 );
 

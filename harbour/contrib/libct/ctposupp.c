@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CT_COLORTON() CA-Tools function
+ * POSUPPER() CA-Tools function
  *
  * Copyright 2000 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -33,74 +33,22 @@
  *
  */
 
+#include <ctype.h>
+
 #include "hbapi.h"
 
-static BYTE StrToColor( char * pszColor )
+HB_FUNC( POSUPPER )
 {
-   BYTE color = 0;
-   BOOL bFore = TRUE;
+   BYTE * pbyString = ( BYTE * ) hb_parc( 1 );
+   ULONG ulLen = hb_parclen( 1 );
+   ULONG ulPos;
 
-   while( *pszColor && *pszColor != ',' )
+   for( ulPos = 0; ulPos < ulLen; ulPos++ )
    {
-      switch( *pszColor++ )
-      {
-      case '*':
-         color |= 0x80;
-         break;
- 
-      case '+':
-         color |= 0x08;
-         break;
-
-      case '/':
-         bFore = FALSE;
-         break;
-
-      case 'W':
-      case 'w':
-         color |= bFore ? 0x07 : 0x70;
-         break;
-
-      case 'R':
-      case 'r':
-         if( *pszColor == 'B' || *pszColor == 'b' )
-         {
-            color |= bFore ? 0x05 : 0x50;
-            pszColor++;
-         }
-         else
-            color |= bFore ? 0x04 : 0x40;
-         break;
-
-      case 'G':
-      case 'g':
-         if( *pszColor == 'R' || *pszColor == 'r' )
-         {
-            color |= bFore ? 0x06 : 0x60;
-            pszColor++;
-         }
-         else
-            color |= bFore ? 0x02 : 0x20;
-         break;
-
-      case 'B':
-      case 'b':
-         if( *pszColor == 'G' || *pszColor == 'g' )
-         {
-            color |= bFore ? 0x03 : 0x30;
-            pszColor++;
-         }
-         else
-            color |= bFore ? 0x01 : 0x10;
-         break;
-      }
+      if( isupper( pbyString[ ulPos ] ) )
+         hb_retnl( ulPos + 1 );
    }
 
-   return color;
-}
-
-HB_FUNC( CT_COLORTON )
-{
-   hb_retni( StrToColor( hb_parc( 1 ) ) );
+   hb_retnl( 0 );
 }
 

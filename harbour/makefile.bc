@@ -71,7 +71,6 @@ MACRO_DIR    = source\macro
 PP_DIR       = source\pp
 RDD_DIR      = source\rdd
 RTL_DIR      = source\rtl
-TOOLS_DIR    = source\tools
 VM_DIR       = source\vm
 HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
@@ -101,7 +100,6 @@ NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 PP_LIB       = $(LIB_DIR)\pp.lib
 RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
-TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
 GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
@@ -316,48 +314,6 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgro.obj 
 
 #
-# TOOLS.LIB rules
-#
-
-TOOLS_LIB_OBJS = \
-   $(OBJ_DIR)\asciisum.obj \
-   $(OBJ_DIR)\ascpos.obj \
-   $(OBJ_DIR)\atdiff.obj \
-   $(OBJ_DIR)\chareven.obj \
-   $(OBJ_DIR)\charmix.obj \
-   $(OBJ_DIR)\charodd.obj \
-   $(OBJ_DIR)\chrcount.obj \
-   $(OBJ_DIR)\chrfirst.obj \
-   $(OBJ_DIR)\chrtotal.obj \
-   $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctchrmix.obj \
-   $(OBJ_DIR)\ctcolton.obj \
-   $(OBJ_DIR)\ctcrypt.obj \
-   $(OBJ_DIR)\ctposupp.obj \
-   $(OBJ_DIR)\dates2.obj \
-   $(OBJ_DIR)\dbftools.obj \
-   $(OBJ_DIR)\hb_f.obj \
-   $(OBJ_DIR)\mathx.obj \
-   $(OBJ_DIR)\strasint.obj \
-   $(OBJ_DIR)\strcount.obj \
-   $(OBJ_DIR)\strcspn.obj \
-   $(OBJ_DIR)\strdiff.obj \
-   $(OBJ_DIR)\strexpan.obj \
-   $(OBJ_DIR)\strfmt.obj \
-   $(OBJ_DIR)\stringsx.obj \
-   $(OBJ_DIR)\strleft.obj \
-   $(OBJ_DIR)\strpbrk.obj \
-   $(OBJ_DIR)\strright.obj \
-   \
-   $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\cttoken.obj \
-   $(OBJ_DIR)\fileread.obj \
-   $(OBJ_DIR)\nconvert.obj \
-   $(OBJ_DIR)\numtxten.obj \
-   $(OBJ_DIR)\numtxthu.obj \
-   $(OBJ_DIR)\stringp.obj
-
-#
 # MACRO.LIB rules
 #
 
@@ -527,7 +483,7 @@ HARBOUR_EXE_OBJS = \
 
 HBRUN_EXE_OBJS = \
    $(OBJ_DIR)\hbrun.obj \
-   $(OBJ_DIR)\exttools.obj \
+   $(OBJ_DIR)\external.obj \
 
 #
 # HBTEST.EXE rules
@@ -578,7 +534,6 @@ all: \
    $(HARBOUR_EXE) \
    $(VM_LIB) \
    $(RTL_LIB) \
-   $(TOOLS_LIB) \
    $(MACRO_LIB) \
    $(DEBUG_LIB) \
    $(LANG_LIB) \
@@ -606,7 +561,6 @@ $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
 $(PP_LIB)     : $(PP_LIB_OBJS)
 $(RDD_LIB)    : $(RDD_LIB_OBJS)
 $(RTL_LIB)    : $(RTL_LIB_OBJS)
-$(TOOLS_LIB)  : $(TOOLS_LIB_OBJS)
 $(VM_LIB)     : $(VM_LIB_OBJS)
 $(GTDOS_LIB)  : $(GTDOS_LIB_OBJS)
 $(GTPCA_LIB)  : $(GTPCA_LIB_OBJS)
@@ -1640,171 +1594,6 @@ $(OBJ_DIR)\msgro.obj : $(LANG_DIR)\msgro.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 #
-# TOOLS.LIB dependencies
-#
-
-$(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ascpos.obj : $(TOOLS_DIR)\ascpos.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\atdiff.obj : $(TOOLS_DIR)\atdiff.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\chareven.obj : $(TOOLS_DIR)\chareven.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\charmix.obj : $(TOOLS_DIR)\charmix.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\charodd.obj : $(TOOLS_DIR)\charodd.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\chrcount.obj : $(TOOLS_DIR)\chrcount.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\chrfirst.obj : $(TOOLS_DIR)\chrfirst.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\chrtotal.obj : $(TOOLS_DIR)\chrtotal.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctchksum.obj : $(TOOLS_DIR)\ctchksum.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctchrmix.obj : $(TOOLS_DIR)\ctchrmix.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctcolton.obj : $(TOOLS_DIR)\ctcolton.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctposupp.obj : $(TOOLS_DIR)\ctposupp.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\cttoken.c : $(TOOLS_DIR)\cttoken.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\cttoken.obj : $(OBJ_DIR)\cttoken.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\fileread.obj : $(OBJ_DIR)\fileread.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\nconvert.obj : $(OBJ_DIR)\nconvert.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\numtxten.obj : $(OBJ_DIR)\numtxten.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\numtxthu.obj : $(OBJ_DIR)\numtxthu.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strasint.obj : $(TOOLS_DIR)\strasint.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strcount.obj : $(TOOLS_DIR)\strcount.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strcspn.obj : $(TOOLS_DIR)\strcspn.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strdiff.obj : $(TOOLS_DIR)\strdiff.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strfmt.obj : $(TOOLS_DIR)\strfmt.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\stringp.c : $(TOOLS_DIR)\stringp.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\stringp.obj : $(OBJ_DIR)\stringp.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strleft.obj : $(TOOLS_DIR)\strleft.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-#
 # MACRO.LIB dependencies
 #
 
@@ -1990,7 +1779,7 @@ $(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
    echo. -e$(HBRUN_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
-   echo. $(OBJ_DIR)\exttools.obj >> make.tmp
+   echo. $(OBJ_DIR)\external.obj >> make.tmp
    echo. $(PP_LIB) >> make.tmp
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
@@ -1999,7 +1788,6 @@ $(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
    echo. $(LANG_LIB) >> make.tmp
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
-   echo. $(TOOLS_LIB) >> make.tmp
    echo. $(DBFNTX_LIB) >> make.tmp
    echo. $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp
@@ -2011,10 +1799,10 @@ $(OBJ_DIR)\hbrun.c : $(HBRUN_DIR)\hbrun.prg
 $(OBJ_DIR)\hbrun.obj : $(OBJ_DIR)\hbrun.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\exttools.c : $(HBRUN_DIR)\exttools.prg
+$(OBJ_DIR)\external.c : $(HBRUN_DIR)\external.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
-$(OBJ_DIR)\exttools.obj : $(OBJ_DIR)\exttools.c
+$(OBJ_DIR)\external.obj : $(OBJ_DIR)\external.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 #
@@ -2147,7 +1935,6 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(LANG_LIB) >> make.tmp
    echo. $(RDD_LIB) >> make.tmp
    echo. $(MACRO_LIB) >> make.tmp
-   echo. $(TOOLS_LIB) >> make.tmp
    echo. $(DBFNTX_LIB) >> make.tmp
    echo. $(DBFCDX_LIB) >> make.tmp
    $(CC) @make.tmp

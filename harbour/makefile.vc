@@ -69,7 +69,6 @@ MACRO_DIR    = source\macro
 PP_DIR       = source\pp
 RDD_DIR      = source\rdd
 RTL_DIR      = source\rtl
-TOOLS_DIR    = source\tools
 VM_DIR       = source\vm
 HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
@@ -100,7 +99,6 @@ NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
 PP_LIB       = $(LIB_DIR)\pp.lib
 RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
-TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
@@ -147,7 +145,6 @@ LIBLIST = \
    $(DBFCDX_LIB) \
    $(DBFNTX_LIB) \
    $(NULSYS_LIB) \
-   $(TOOLS_LIB) \
    $(VM_LIB) \
    $(HB_GT_LIB)
 
@@ -351,55 +348,6 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj 
-
-#
-# TOOLS.LIB rules
-#
-
-{$(TOOLS_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-
-{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.obj::
-   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
-
-TOOLS_LIB_OBJS = \
-   $(OBJ_DIR)\asciisum.obj \
-   $(OBJ_DIR)\ascpos.obj \
-   $(OBJ_DIR)\atdiff.obj \
-   $(OBJ_DIR)\chareven.obj \
-   $(OBJ_DIR)\charmix.obj \
-   $(OBJ_DIR)\charodd.obj \
-   $(OBJ_DIR)\chrcount.obj \
-   $(OBJ_DIR)\chrfirst.obj \
-   $(OBJ_DIR)\chrtotal.obj \
-   $(OBJ_DIR)\ctchksum.obj \
-   $(OBJ_DIR)\ctchrmix.obj \
-   $(OBJ_DIR)\ctcolton.obj \
-   $(OBJ_DIR)\ctcrypt.obj \
-   $(OBJ_DIR)\ctposupp.obj \
-   $(OBJ_DIR)\dates2.obj \
-   $(OBJ_DIR)\dbftools.obj \
-   $(OBJ_DIR)\hb_f.obj \
-   $(OBJ_DIR)\mathx.obj \
-   $(OBJ_DIR)\strasint.obj \
-   $(OBJ_DIR)\strcount.obj \
-   $(OBJ_DIR)\strcspn.obj \
-   $(OBJ_DIR)\strdiff.obj \
-   $(OBJ_DIR)\strexpan.obj \
-   $(OBJ_DIR)\strfmt.obj \
-   $(OBJ_DIR)\stringsx.obj \
-   $(OBJ_DIR)\strleft.obj \
-   $(OBJ_DIR)\strpbrk.obj \
-   $(OBJ_DIR)\strright.obj \
-   \
-   $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\cttoken.obj \
-   $(OBJ_DIR)\fileread.obj \
-   $(OBJ_DIR)\nconvert.obj \
-   $(OBJ_DIR)\numtxten.obj \
-   $(OBJ_DIR)\numtxthu.obj \
-   $(OBJ_DIR)\stringp.obj
 
 #
 # MACRO.LIB rules
@@ -626,7 +574,6 @@ all: zot \
    $(HARBOUR_EXE) \
    $(VM_LIB) \
    $(RTL_LIB) \
-   $(TOOLS_LIB) \
    $(MACRO_LIB) \
    $(DEBUG_LIB) \
    $(LANG_LIB) \
@@ -659,7 +606,6 @@ all: \
    $(HARBOUR_EXE) \
    $(VM_LIB) \
    $(RTL_LIB) \
-   $(TOOLS_LIB) \
    $(MACRO_LIB) \
    $(DEBUG_LIB) \
    $(LANG_LIB) \
@@ -687,9 +633,9 @@ $(HBPP_EXE) : \
 
 $(HBRUN_EXE) : \
    $(HBRUN_DIR)\hbrun.prg \
-   $(HBRUN_DIR)\exttools.prg
+   $(HBRUN_DIR)\external.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\exttools.c -o $(HBRUN_EXE) /link $(LDFLAGS) $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\external.c -o $(HBRUN_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
 # HBTEST.EXE rules
@@ -793,9 +739,6 @@ $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
 $(NULSYS_LIB) : $(NULSYS_LIB_OBJS)
    lib /out:$@ $**
 
-$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
-   lib /out:$@ $**
-
 $(VM_LIB) : $(VM_LIB_OBJS)
    lib /out:$@ $**
 
@@ -848,7 +791,6 @@ $(RDD_LIB)2    : $(RDD_LIB_OBJS)
 $(DBFCDX_LIB)2 : $(DBFCDX_LIB_OBJS)
 $(DBFNTX_LIB)2 : $(DBFNTX_LIB_OBJS)
 $(NULSYS_LIB)2 : $(NULSYS_LIB_OBJS)
-$(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
 $(VM_LIB)2     : $(VM_LIB_OBJS)
 $(GTPCA_LIB)2  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)2  : $(GTSTD_LIB_OBJS)
