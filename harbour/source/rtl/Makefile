@@ -125,6 +125,7 @@ PRG_SOURCES=\
     browdbx.prg  \
     browse.prg   \
     checkbox.prg \
+    color53.prg  \
     dbdelim.prg  \
     dbedit.prg   \
     dbsdf.prg    \
@@ -140,6 +141,7 @@ PRG_SOURCES=\
     memoedit.prg \
     memvarbl.prg \
     menuto.prg   \
+    mssgline.prg \
     objfunc.prg  \
     perfuncs.prg \
     persist.prg  \

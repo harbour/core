@@ -348,6 +348,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\browdbx.obj \
    $(OBJ_DIR)\browse.obj \
    $(OBJ_DIR)\checkbox.obj \
+   $(OBJ_DIR)\color53.obj \
    $(OBJ_DIR)\dbedit.obj \
    $(OBJ_DIR)\dbdelim.obj \
    $(OBJ_DIR)\dbsdf.obj \
@@ -363,6 +364,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\memoedit.obj \
    $(OBJ_DIR)\memvarbl.obj \
    $(OBJ_DIR)\menuto.obj \
+   $(OBJ_DIR)\mssgline.obj \
    $(OBJ_DIR)\objfunc.obj \
    $(OBJ_DIR)\perfuncs.obj \
    $(OBJ_DIR)\persist.obj \
