@@ -1,3 +1,19 @@
+20000209-20:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *utils/hbdoc/hbdoc.prg
+         *Separated in several files
+    +utils/hbdoc/genos2.prg
+    +utils/hbdoc/gentrf.prg
+    +utils/hbdoc/genng.prg
+    +utils/hbdoc/genhtm.prg
+    +utils/hbdoc/genrtf.prg
+    +utils/hbdoc/genhpc.prg
+    +utils/hbdoc/genasc.prg
+         *Contains the Procedures to create the output files
+    *utils/hbdoc/Makefile
+         +Added the new hbdoc modules
+    *makefile.b32
+         *Update for hbdoc changes
+
 20000209-13:30 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      + Added INKEY_ALL second parameter to Inkey() call.

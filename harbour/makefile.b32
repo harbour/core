@@ -243,7 +243,14 @@ REGRESS_EXE_OBJS  = $(REGRESS_DIR)\rt_main.obj \
                     $(REGRESS_DIR)\rt_misc.obj
 
 HBDOC_EXE         = $(HBDOC_DIR)\hbdoc.exe
-HBDOC_EXE_OBJS    = $(HBDOC_DIR)\hbdoc.obj
+HBDOC_EXE_OBJS    = $(HBDOC_DIR)\hbdoc.obj \
+                    $(HBDOC_DIR)\genos2.obj \ 
+                    $(HBDOC_DIR)\gentrf.obj \
+                    $(HBDOC_DIR)\genng.obj  \
+                    $(HBDOC_DIR)\genhtm.obj \
+                    $(HBDOC_DIR)\genrtf.obj \
+                    $(HBDOC_DIR)\genhpc.obj \
+                    $(HBDOC_DIR)\genasc.obj 
 
 PROJECT: $(COMMON_LIB) \
          $(PP_LIB) \
@@ -1312,12 +1319,20 @@ $(REGRESS_DIR)\rt_misc.obj : $(REGRESS_DIR)\rt_misc.c
 #
 # hbdoc.exe
 #
+
 $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 
    echo $(BCC_OPT) > temp.bld
    echo -e$(HBDOC_DIR)\hbdoc.exe >> temp.bld
    echo -I$(INCLUDE_DIR) >> temp.bld
    echo $(HBDOC_DIR)\hbdoc.obj >> temp.bld
+   echo $(HBDOC_DIR)\genos2.obj >> temp.bld
+   echo $(HBDOC_DIR)\gentrf.obj >> temp.bld
+   echo $(HBDOC_DIR)\genng.obj  >> temp.bld
+   echo $(HBDOC_DIR)\genhtm.obj >> temp.bld
+   echo $(HBDOC_DIR)\genrtf.obj >> temp.bld
+   echo $(HBDOC_DIR)\genhpc.obj >> temp.bld
+   echo $(HBDOC_DIR)\genasc.obj >> temp.bld
    echo $(HARBOUR_LIB) >> temp.bld
    echo $(PP_LIB) >> temp.bld
    echo $(COMMON_LIB) >> temp.bld
@@ -1334,3 +1349,48 @@ $(HBDOC_DIR)\hbdoc.c : $(HBDOC_DIR)\hbdoc.prg
 
 $(HBDOC_DIR)\hbdoc.obj : $(HBDOC_DIR)\hbdoc.c
    bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\genos2.obj : $(HBDOC_DIR)\genos2.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\genos2.c : $(HBDOC_DIR)\genos2.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\genng.c : $(HBDOC_DIR)\genng.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\genng.obj : $(HBDOC_DIR)\genng.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\genhtm.c : $(HBDOC_DIR)\genhtm.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\genhtm.obj : $(HBDOC_DIR)\genhtm.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\gentrf.obj : $(HBDOC_DIR)\gentrf.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\genasc.c : $(HBDOC_DIR)\genasc.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\genasc.obj : $(HBDOC_DIR)\genasc.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\genhpc.c : $(HBDOC_DIR)\genhpc.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\genhpc.obj : $(HBDOC_DIR)\genhpc.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(HBDOC_DIR)\genrtf.c : $(HBDOC_DIR)\genrtf.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n -q -o$@
+
+$(HBDOC_DIR)\genrtf.obj : $(HBDOC_DIR)\genrtf.c
+   bcc32 $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+
+
