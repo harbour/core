@@ -33,6 +33,17 @@
  *
  */
 
+ /*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
+ * Cursor movement handling and stabilization loop
+ * ::PageUp(), ::PageDown(), ::Down(), ::Up(), ::GoBottom(), ::GoTop(), ::Stabilize()
+ *
+ */
+
+
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible. [vszakats] */
 
@@ -53,114 +64,119 @@
 
 /* TOFIX: Multiline headers and footer are not supported. [vszakats] */
 
-/* TOFIX: The cursor is not left at the same position as in Clipper, this is
-          very important, since several apps relies on it. Check CA-Cl*pper
-          5.2e for the right implementation since 5.3 broke it. [vszakats]
-   NOTE:  18/nov/2000 - maurilio.longo@libero.it
-          I think this is fixed, please someone prove I'm wrong :-)) */
-
 #include "common.ch"
 #include "hbclass.ch"
 #include "color.ch"
 #include "inkey.ch"
+
 CLASS TBrowse
 
-   DATA aColumns      // Array to hold all browse columns
-   DATA autoLite      // Logical value to control highlighting
-   DATA cargo         // User-definable variable
-   DATA colorSpec     // Color table for the TBrowse display
-   DATA colPos        // Current cursor column position
-   DATA colSep        // Column separator character
-   DATA footSep       // Footing separator character
-   DATA freeze        // Number of columns to freeze
-   DATA goBottomBlock // Code block executed by TBrowse:goBottom()
-   DATA goTopBlock    // Code block executed by TBrowse:goTop()
-   DATA headSep       // Heading separator character
-   DATA hitBottom     // Indicates the end of available data
-   DATA hitTop        // Indicates the beginning of available data
-   DATA leftVisible   // Indicates position of leftmost unfrozen column in display
-   DATA nBottom       // Bottom row number for the TBrowse display
-   DATA nLeft         // Leftmost column for the TBrowse display
-   DATA nRight        // Rightmost column for the TBrowse display
-   DATA nTop          // Top row number for the TBrowse display
-   DATA rightVisible  // Indicates position of rightmost unfrozen column in display
-   DATA rowCount      // Number of visible data rows in the TBrowse display
-   DATA rowPos        // Current cursor row position
-   DATA skipBlock     // Code block used to reposition data source
-   DATA stable        // Indicates if the TBrowse object is stable
+   DATA aColumns              // Array to hold all browse columns
+   DATA autoLite              // Logical value to control highlighting
+   DATA cargo                 // User-definable variable
+   DATA colorSpec             // Color table for the TBrowse display
+   DATA colPos                // Current cursor column position
+   DATA colSep                // Column separator character
+   DATA footSep               // Footing separator character
+   DATA freeze                // Number of columns to freeze
+   DATA goBottomBlock         // Code block executed by TBrowse:goBottom()
+   DATA goTopBlock            // Code block executed by TBrowse:goTop()
+   DATA headSep               // Heading separator character
+   DATA hitBottom             // Indicates the end of available data
+   DATA hitTop                // Indicates the beginning of available data
+   DATA leftVisible           // Indicates position of leftmost unfrozen column in display
+   DATA nBottom               // Bottom row number for the TBrowse display
+   DATA nLeft                 // Leftmost column for the TBrowse display
+   DATA nRight                // Rightmost column for the TBrowse display
+   DATA nTop                  // Top row number for the TBrowse display
+   DATA rightVisible          // Indicates position of rightmost unfrozen column in display
+   DATA rowCount              // Number of visible data rows in the TBrowse display
+   DATA rowPos                // Current cursor row position
+   DATA skipBlock             // Code block used to reposition data source
+   DATA stable                // Indicates if the TBrowse object is stable
 
-   DATA aRedraw       // Array of logical items indicating, is appropriate row need to be redraw
-   DATA LastRetrieved // Position, relative to first row, of last retrieved row
-   DATA lHeaders      // Internal variable which indicates whether there are column footers to paint
-   DATA lFooters      // Internal variable which indicates whether there are column footers to paint
-   DATA lRedrawFrame  // True if I need to redraw Headers/Footers
-   DATA aRect         // The rectangle specified with ColorRect()
-   DATA aRectColor    // The color positions to use in the rectangle specified with ColorRect()
-
-   #ifdef HB_COMPAT_C53
+#ifdef HB_COMPAT_C53
    DATA aKeys
-   #endif
+#endif
 
-   METHOD New(nTop, nLeft, nBottom, nRight)  // Constructor
-   METHOD Down()      // Moves the cursor down one row
-   METHOD End()       // Moves the cursor to the rightmost visible data column
-   METHOD GoBottom()  // Repositions the data source to the bottom of file
-   METHOD GoTop()     // Repositions the data source to the top of file
-   METHOD Home()      // Moves the cursor to the leftmost visible data column
-   MESSAGE Left() METHOD _Left() // Moves the cursor left one column
-   METHOD PageDown()  // Repositions the data source downward
-   METHOD PageUp()    // Repositions the data source upward
-   METHOD PanEnd()    // Moves the cursor to the rightmost data column
-   METHOD PanHome()   // Moves the cursor to the leftmost visible data column
-   METHOD PanLeft()   // Pans left without changing the cursor position
-   METHOD PanRight()  // Pans right without changing the cursor position
-   MESSAGE Right() METHOD _Right() // Moves the cursor right one column
-   METHOD Up()        // Moves the cursor up one row
+   METHOD New(nTop, nLeft, nBottom, nRight)                 // Constructor
+   METHOD Down()                                            // Moves the cursor down one row
+   METHOD End()                                             // Moves the cursor to the rightmost visible data column
+   METHOD GoBottom()                                        // Repositions the data source to the bottom of file
+   METHOD GoTop()                                           // Repositions the data source to the top of file
+   METHOD Home()                                            // Moves the cursor to the leftmost visible data column
+   MESSAGE Left() METHOD _Left()                            // Moves the cursor left one column
+   METHOD PageDown()                                        // Repositions the data source downward
+   METHOD PageUp()                                          // Repositions the data source upward
+   METHOD PanEnd()                                          // Moves the cursor to the rightmost data column
+   METHOD PanHome()                                         // Moves the cursor to the leftmost visible data column
+   METHOD PanLeft()                                         // Pans left without changing the cursor position
+   METHOD PanRight()                                        // Pans right without changing the cursor position
+   MESSAGE Right() METHOD _Right()                          // Moves the cursor right one column
+   METHOD Up()                                              // Moves the cursor up one row
 
    METHOD AddColumn( oCol )
    METHOD ColCount() INLINE Len( ::aColumns )
-   METHOD ColorRect()              // Alters the color of a rectangular group of cells
-                                   // Returns the display width of a particular column
+   METHOD ColorRect()                                       // Alters the color of a rectangular group of cells
+                                                            // Returns the display width of a particular column
    METHOD ColWidth( nColumn ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ]:Width, NIL )
-   METHOD Configure( nMode )       // Reconfigures the internal settings of the TBrowse object
-                                   // nMode is an undocumented parameter in CA-Cl*pper
-   METHOD LeftDetermine()          // Determine leftmost unfrozen column in display
-   METHOD DeHilite()               // Dehighlights the current cell
+   METHOD Configure( nMode )                                // Reconfigures the internal settings of the TBrowse object
+                                                            // nMode is an undocumented parameter in CA-Cl*pper
+   METHOD DeHilite()                                        // Dehighlights the current cell
 
-   METHOD DelColumn( nPos )        // Delete a column object from a browse
+   METHOD DelColumn( nPos )                                 // Delete a column object from a browse
 
-   METHOD ForceStable()            // Performs a full stabilization
+   METHOD ForceStable()                                     // Performs a full stabilization
 
    METHOD GetColumn( nColumn ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ], NIL ) // Gets a specific TBColumn object
 
-   METHOD Hilite()                 // Highlights the current cell
+   METHOD Hilite()                                          // Highlights the current cell
 
    METHOD InsColumn( nPos, oCol ) INLINE ASize( ::aColumns, Len( ::aColumns + 1 ) ),;
                                   AIns( ::aColumns, nPos ),;
                                   ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
-                                   // Insert a column object in a browse
+                                                            // Insert a column object in a browse
 
-   METHOD Invalidate()             // Forces entire redraw during next stabilization
-   METHOD RefreshAll()     INLINE ::Invalidate() // Causes all data to be recalculated during the next stabilize
-   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .f., ::Stable := .f., Self // Causes the current row to be refilled and repainted on next stabilize
+   METHOD Invalidate()                                      // Forces entire redraw during next stabilization
+   METHOD RefreshAll()     INLINE ::Invalidate()            // Causes all data to be recalculated during the next stabilize
+   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .T., ::stable := .F., Self // Causes the current row to be refilled and repainted on next stabilize
 
    METHOD SetColumn( nColumn, oCol ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                                 ::aColumns[ nColumn ] := oCol, NIL ), oCol // Replaces one TBColumn object with another
+   METHOD Stabilize()                                       // Performs incremental stabilization
 
-   METHOD Stabilize()               // Performs incremental stabilization
-
-   METHOD DispCell(nColumn, nColor) // Displays a single cell
-
-   #ifdef HB_COMPAT_C53
+#ifdef HB_COMPAT_C53
    METHOD SetKey(nKey, bBlock)
    METHOD ApplyKey(nKey)
    METHOD InitKeys(Self)
    METHOD TApplyKey(nKey, o)
-   #endif
+#endif
+
+   HIDDEN:     /* H I D D E N */
+
+   METHOD LeftDetermine()                 // Determine leftmost unfrozen column in display
+   METHOD DispCell(nColumn, nColor)       // Displays a single cell
+   METHOD HowManyCol(nWidth)              // Counts how many cols can be displayed
+   METHOD RedrawHeaders(nWidth)           // Repaints TBrowse Headers
+
+   DATA aRect                             // The rectangle specified with ColorRect()
+   DATA aRectColor                        // The color positions to use in the rectangle specified with ColorRect()
+   DATA aRedraw                           // Array of logical items indicating, is appropriate row need to be redraw
+   DATA lHeaders                          // Internal variable which indicates whether there are column footers to paint
+   DATA lFooters                          // Internal variable which indicates whether there are column footers to paint
+   DATA lRedrawFrame                      // True if I need to redraw Headers/Footers
+   DATA nColsWidth                        // Total width of visible columns plus ColSep
+   DATA nColsVisible                      // Number of columns that fit on the browse width
+   DATA lHitTop                           // Internal Top/Bottom reached flag
+   DATA lHitBottom
+   DATA nRecsToSkip                       // Recs to skip on next Stabilize()
+   DATA nNewRowPos                        // Next position of data source (after first phase of stabilization)
+   DATA nLastRetrieved                    // Position, relative to first row, of last retrieved row (with an Eval(::SkipBlock, n))
 
 ENDCLASS
+
 
 METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
 
@@ -169,26 +185,33 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    default  nBottom to MaxRow()
    default  nRight  to MaxCol()
 
-   ::aColumns    := {}
-   ::AutoLite    := .T.
-   ::leftVisible := 1
-   ::ColPos      := 1
-   ::Freeze      := 0
-   ::HitBottom   := .F.
-   ::HitTop      := .F.
-   ::ColorSpec   := SetColor()
-   ::ColSep      := " "
-   ::FootSep     := ""
-   ::HeadSep     := ""
-   ::RowPos      := 1
-   ::stable      := .F.
-   ::LastRetrieved := 1
-   ::aRedraw     := {}
-   ::lHeaders    := .F.
-   ::lFooters    := .F.
-   ::lRedrawFrame:= .T.
-   ::aRect       := {}
-   ::aRectColor  := {}
+   ::aColumns        := {}
+   ::AutoLite        := .T.
+   ::leftVisible     := 1
+   ::ColPos          := 1
+   ::Freeze          := 0
+   ::HitBottom       := .F.
+   ::HitTop          := .F.
+   ::lHitTop         := .F.
+   ::lHitBottom      := .F.
+   ::ColorSpec       := SetColor()
+   ::ColSep          := " "
+   ::FootSep         := ""
+   ::HeadSep         := ""
+   ::RowPos          := 1
+   ::nNewRowPos      := 1
+   ::stable          := .F.
+   ::nLastRetrieved  := 1
+   ::nRecsToSkip     := 0
+   ::aRedraw         := {}
+   ::lHeaders        := .F.
+   ::lFooters        := .F.
+   ::lRedrawFrame    := .T.
+   ::aRect           := {}
+   ::aRectColor      := {}
+   ::nColsWidth      := 0
+   ::nColsVisible    := 0
+
 
    ::nTop := nTop
    ::nLeft := nLeft
@@ -197,12 +220,15 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
 
 return Self
 
+
 METHOD Invalidate() CLASS TBrowse
 
-   AFill(::aRedraw, .F. )
-   ::Stable := .F.
+   AFill(::aRedraw, .T. )
+   ::stable := .F.
+   ::lRedrawFrame := .T.
 
 return Self
+
 
 METHOD Configure(nMode) CLASS TBrowse
 
@@ -274,57 +300,28 @@ return oCol
 
 METHOD Down() CLASS TBrowse
 
-   local n
+   ::stable := .F.
+   ::DeHilite()
 
-   ::HitTop := .F.
-   if !::HitBottom
-      ::DeHilite()
-      if Eval( ::SkipBlock, 1 ) != 0
-         if ::RowPos < ::RowCount
-            ::RowPos++
-            ::LastRetrieved++
-            ::Hilite()
-         else
-            n := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
-            Scroll( n, ::nLeft, n + ::RowCount - 1, ::nRight, 1 )
-            ::RefreshCurrent()
-         endif
-      else
-         ::Hilite()
-         ::HitBottom := .T.
-      endif
-   endif
+   ::nRecsToSkip := 1
 
 return Self
 
 
 METHOD Up() CLASS TBrowse
 
-   local n
+   ::stable := .F.
+   ::DeHilite()
 
-   ::HitBottom := .F.
-   if !::HitTop
-      ::DeHilite()
-      if Eval( ::SkipBlock, -1 ) != 0
-         if ::RowPos > 1
-            ::RowPos--
-            ::LastRetrieved--
-            ::Hilite()
-         else
-            n := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
-            Scroll( n, ::nLeft, n + ::RowCount - 1, ::nRight, -1 )
-            ::RefreshCurrent()
-         endif
-      else
-         ::Hilite()
-         ::HitTop := .T.
-      endif
-   endif
+   ::nRecsToSkip := -1
 
 return Self
 
 
 METHOD End() CLASS TBrowse
+
+   ::stable := .F.
+   ::DeHilite()
 
    if ::ColPos < ::rightVisible
       ::ColPos := ::rightVisible
@@ -334,41 +331,40 @@ METHOD End() CLASS TBrowse
 
 return Self
 
+
 METHOD GoBottom() CLASS TBrowse
 
-   local nToEnd := 0
+   local nToEnd
 
-   ::HitTop := .F.
-   ::HitBottom := .F.
+   ::stable := .F.
+   ::DeHilite()
 
-   // if there are fewer records than available display area
-   if (nToEnd := Eval(::SkipBlock, ::RowCount)) < ::RowCount
-      ::RefreshAll()
-      ::RowPos += nToEnd
-      ::LastRetrieved += nToEnd
-   else
-      if Eval( ::goBottomBlock ) != 0
-         ::RefreshAll()
-         ::RowPos := ::RowCount
-         ::LastRetrieved := ::RowCount
-      endif
-   endif
+   Eval(::goBottomBlock)
+   nToEnd := Abs(Eval(::SkipBlock, -::RowCount))
+   ::nNewRowPos := nToEnd
+   ::nLastRetrieved := ::RowCount - nToEnd
+   ::RefreshAll()
 
 return Self
+
 
 METHOD GoTop() CLASS TBrowse
 
-   ::HitTop := .F.
-   ::HitBottom := .F.
-   if Eval( ::goTopBlock ) != 0
-      ::RefreshAll()
-      ::RowPos := 1
-      ::LastRetrieved := 1
-   endif
+   ::stable := .F.
+   ::DeHilite()
+
+   Eval(::goTopBlock)
+   ::nLastRetrieved := 1
+   ::nNewRowPos := 1
+   ::RefreshAll()
 
 return Self
 
+
 METHOD Home() CLASS TBrowse
+
+   ::stable := .F.
+   ::DeHilite()
 
    if ::ColPos != ::leftVisible
       ::ColPos := ::leftVisible
@@ -378,12 +374,14 @@ METHOD Home() CLASS TBrowse
 
 return Self
 
+
 METHOD _Right() CLASS TBrowse
 
+   ::stable := .F.
+   ::DeHilite()
+
    if ::ColPos < ::rightVisible
-      ::DeHilite()
       ::ColPos++
-      ::Hilite()
    else
       if ::ColPos < Len( ::aColumns )
          ::rightVisible++
@@ -401,10 +399,11 @@ METHOD _Left() CLASS TBrowse
 
    local leftVis := ::leftVisible
 
+   ::stable := .F.
+   ::DeHilite()
+
    if ::ColPos > ::leftVisible
-      ::DeHilite()
       ::ColPos--
-      ::Hilite()
    else
       if ::ColPos <= Max(::leftVisible, ::Freeze) .AND. ::ColPos > 1
          while leftVis == ::leftVisible
@@ -452,49 +451,31 @@ METHOD LeftDetermine() CLASS TBrowse
 
 return nCol + 1
 
+
 METHOD PageDown() CLASS TBrowse
 
-   local nDown
+   ::stable := .F.
+   ::DeHilite()
 
-   ::HitTop := .F.
-   if !::HitBottom
-      if ( nDown := Eval( ::SkipBlock, ::RowCount )  ) != 0
-         if ::RowPos + nDown < ::RowCount
-            ::RowPos += nDown
-            ::LastRetrieved += nDown
-            ::RefreshAll()
-         else
-            ::RefreshAll()
-         endif
-      else
-         ::HitBottom := .T.
-      endif
-   endif
+   ::nRecsToSkip := (::RowCount - ::RowPos) + ::RowCount
 
 return Self
+
 
 METHOD PageUp() CLASS TBrowse
 
-   local nUp
+   ::stable := .F.
+   ::DeHilite()
 
-   ::HitBottom := .F.
-   if !::HitTop
-      if ( nUp := Abs( Eval( ::SkipBlock, - ::RowCount )  ) ) != 0
-         if nUp < ::RowCount
-            ::RowPos := 1
-            ::LastRetrieved := 1
-            ::RefreshAll()
-         else
-            ::RefreshAll()
-         endif
-      else
-         ::HitTop := .T.
-      endif
-   endif
+   ::nRecsToSkip := - ((::RowPos - 1) + ::RowCount)
 
 return Self
 
+
 METHOD PanEnd() CLASS TBrowse
+
+   ::stable := .F.
+   ::DeHilite()
 
    if ::ColPos < Len( ::aColumns )
       if ::rightVisible < Len( ::aColumns )
@@ -511,7 +492,11 @@ METHOD PanEnd() CLASS TBrowse
 
 return Self
 
+
 METHOD PanHome() CLASS TBrowse
+
+   ::stable := .F.
+   ::DeHilite()
 
    if ::ColPos > 1
       if ::leftVisible > ::Freeze + 1
@@ -527,10 +512,14 @@ METHOD PanHome() CLASS TBrowse
 
 return Self
 
+
 METHOD PanLeft() CLASS TBrowse
 
    local n := ::ColPos - ::leftVisible
    local leftVis := ::leftVisible
+
+   ::stable := .F.
+   ::DeHilite()
 
    if ::leftVisible > ::Freeze + 1
       while leftVis == ::leftVisible
@@ -544,9 +533,13 @@ METHOD PanLeft() CLASS TBrowse
 
 return Self
 
+
 METHOD PanRight() CLASS TBrowse
 
    local n := ::ColPos - ::leftVisible
+
+   ::stable := .F.
+   ::DeHilite()
 
    if ::rightVisible < Len( ::aColumns )
       ::rightVisible++
@@ -558,6 +551,7 @@ METHOD PanRight() CLASS TBrowse
 
 return Self
 
+
 METHOD DeHilite() CLASS TBrowse
 
    local nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
@@ -568,12 +562,14 @@ METHOD DeHilite() CLASS TBrowse
 
 return Self
 
+
 METHOD ForceStable() CLASS TBrowse
 
    while !::Stabilize()
    end
 
 return Self
+
 
 METHOD Hilite() CLASS TBrowse
 
@@ -593,223 +589,368 @@ METHOD Hilite() CLASS TBrowse
 
 return Self
 
+// Calculate how many columns fit on the browse width including ColSeps
+METHOD HowManyCol(nWidth) CLASS TBrowse
 
-METHOD Stabilize() CLASS TBrowse
-
-   local iW, n, nRow, nCol, lDisplay := .T.
-   local nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
-   local nColsWidth := 0                   // Total width of visible columns plus ColSep
-   local nColsVisible                      // Number of columns that fit on the browse width
-   local cColColor                         // Column color to use
-   local oCol, oCol2
    local nToAdd
 
-   if ::lRedrawFrame
-      // Calculate how many columns fit on the browse width including ColSeps
-      if ::Freeze > 0
-         if ::leftVisible <= ::Freeze
-            ::leftVisible := ::Freeze + 1
-         endif
+   // They were locals, so now I need to clear them (should fix this)
+   ::nColsWidth := 0
+   ::nColsVisible := 0
 
-         nColsVisible := 0
-         while nColsVisible < ::Freeze
-
-            nToAdd := ::aColumns[ nColsVisible + 1 ]:Width
-
-            if nColsVisible >= 1 .and. nColsVisible < Len( ::aColumns )
-               nToAdd += iif( ::aColumns[ nColsVisible + 1 ]:ColSep != NIL,;
-                  Len( ::aColumns[ nColsVisible + 1 ]:ColSep ),;
-                  Len( ::ColSep ) )
-            endif
-
-            if nColsWidth + nToAdd > nWidth
-               exit
-            endif
-
-            nColsWidth += nToAdd
-            nColsVisible++
-         enddo
-
-         if nColsWidth > nWidth
-            ::Freeze := 0
-            nColsWidth := 0
-         endif
+   if ::Freeze > 0
+      if ::leftVisible <= ::Freeze
+         ::leftVisible := ::Freeze + 1
       endif
 
-      nColsVisible := ::leftVisible - 1
+      ::nColsVisible := 0
+      while ::nColsVisible < ::Freeze
 
-      while nColsVisible < Len( ::aColumns )
+         nToAdd := ::aColumns[ ::nColsVisible + 1 ]:Width
 
-         nToAdd := ::aColumns[ nColsVisible + 1 ]:Width
-
-         if nColsVisible >= ::leftVisible .or. ::Freeze > 0
-            nToAdd += iif( ::aColumns[ nColsVisible + 1 ]:ColSep != NIL,;
-               Len( ::aColumns[ nColsVisible + 1 ]:ColSep ),;
-               Len( ::ColSep ) )
+         if ::nColsVisible >= 1 .and. ::nColsVisible < Len( ::aColumns )
+            nToAdd += iif( ::aColumns[ ::nColsVisible + 1 ]:ColSep != NIL,;
+                           Len( ::aColumns[ ::nColsVisible + 1 ]:ColSep ),;
+                           Len( ::ColSep ) )
          endif
 
-         if nColsWidth + nToAdd > nWidth
+         if ::nColsWidth + nToAdd > nWidth
             exit
          endif
 
-         nColsWidth += nToAdd
-         nColsVisible++
+         ::nColsWidth += nToAdd
+         ::nColsVisible++
       enddo
 
-      ::rightVisible := nColsVisible
-
-   else
-      oCol := ::aColumns[ iif( ::rightVisible != 0, ::rightVisible, 1 ) ]
-      oCol2 := ::aColumns[ iif( ::Freeze > 0, 1, ::leftVisible ) ]
-      nColsWidth := iif( oCol != NIL, oCol:ColPos, 0 ) + ;
-        iif( oCol != NIL, oCol:Width, 0 ) - oCol2:ColPos
-
+      if ::nColsWidth > nWidth
+         ::Freeze := 0
+         ::nColsWidth := 0
+      endif
    endif
 
-   if ::lRedrawFrame
-      if ::lHeaders          // Drawing headers
-         DispOutAt( ::nTop, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
-         for n := iif(::Freeze > 0, 1, ::leftVisible) to ::rightVisible
+   ::nColsVisible := ::leftVisible - 1
+
+   while ::nColsVisible < Len( ::aColumns )
+
+      nToAdd := ::aColumns[ ::nColsVisible + 1 ]:Width
+
+      if ::nColsVisible >= ::leftVisible .or. ::Freeze > 0
+         nToAdd += iif( ::aColumns[ ::nColsVisible + 1 ]:ColSep != NIL,;
+                        Len( ::aColumns[ ::nColsVisible + 1 ]:ColSep ),;
+                        Len( ::ColSep ) )
+      endif
+
+      if ::nColsWidth + nToAdd > nWidth
+         exit
+      endif
+
+      ::nColsWidth += nToAdd
+      ::nColsVisible++
+   enddo
+
+   ::rightVisible := ::nColsVisible
+
+return Self
+
+// Gets TBrowse width and width of displayed columns plus colsep
+METHOD RedrawHeaders(nWidth) CLASS TBrowse
+
+   local n, iW
+
+   if ::lHeaders          // Drawing headers
+      DispOutAt( ::nTop, ::nLeft, Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+      for n := iif(::Freeze > 0, 1, ::leftVisible) to ::rightVisible
+         if ::Freeze > 0 .and. n == ::Freeze + 1
+            n := ::leftVisible
+         endif
+         DispOut( PadR( ::aColumns[ n ]:Heading, ::aColumns[ n ]:Width ), ::ColorSpec )
+         if n < ::rightVisible
+            DispOut( Space( iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
+                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
+         endif
+      next
+
+      // Every time there is some space to fill up and this space is an odd number of chars we need to
+      // round it up to next value here since first DispOutAt() does round it down because it uses a simple
+      // division (ie Space(7/2) gives 3 on first call and 4 here).
+      DispOut(Space(Int(Round((nWidth - ::nColsWidth) / 2, 0))), ::ColorSpec)
+   endif
+
+   if ! Empty( ::HeadSep )  //Drawing heading separator
+      DispOutAt( ::nTop + iif( ::lHeaders, 1, 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+      if Len( ::HeadSep ) > 1
+         iW := 0
+         for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
             if ::Freeze > 0 .and. n == ::Freeze + 1
                n := ::leftVisible
             endif
-            DispOut( PadR( ::aColumns[ n ]:Heading, ::aColumns[ n ]:Width ), ::ColorSpec )
+            DispOut( Replicate( Right( ::HeadSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
             if n < ::rightVisible
-               DispOut( Space( iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                 Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
+               DispOut( Left( ::HeadSep, Len( ::HeadSep ) - 1 ), ::ColorSpec )
+               iW := Len( ::HeadSep ) - 1 - iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
+                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
             endif
          next
-
-         // Every time there is some space to fill up and this space is an odd number of chars we need to
-         // round it up to next value here since first DispOutAt() does round it down because it uses a simple
-         // division (ie Space(7/2) gives 3 on first call and 4 here).
-         DispOut(Space(Int(Round((nWidth - nColsWidth) / 2, 0))), ::ColorSpec)
+      else
+         DispOut( Replicate( ::HeadSep, ::nColsWidth ), ::ColorSpec )
       endif
+      DispOut( Replicate( Right( ::HeadSep, 1 ), Int(Round((nWidth - ::nColsWidth) / 2, 0)) ), ::ColorSpec )
+   endif
 
-      if ! Empty( ::HeadSep )  //Drawing heading separator
-         DispOutAt( ::nTop + iif( ::lHeaders, 1, 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
-         if Len( ::HeadSep ) > 1
-            iW := 0
-            for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
-               if ::Freeze > 0 .and. n == ::Freeze + 1
-                  n := ::leftVisible
-               endif
-               DispOut( Replicate( Right( ::HeadSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
-               if n < ::rightVisible
-                  DispOut( Left( ::HeadSep, Len( ::HeadSep ) - 1 ), ::ColorSpec )
-                  iW := Len( ::HeadSep ) - 1 - iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                      Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
-               endif
-            next
-         else
-            DispOut( Replicate( ::HeadSep, nColsWidth ), ::ColorSpec )
-         endif
-         DispOut( Replicate( Right( ::HeadSep, 1 ), Int(Round((nWidth - nColsWidth) / 2, 0)) ), ::ColorSpec )
-      endif
-
-      if ! Empty( ::FootSep ) // Drawing footing separator
-         DispOutAt( ::nBottom - iif( ::lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
-         if Len( ::FootSep ) > 1
-            iW := 0
-            for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
-               if ::Freeze > 0 .and. n == ::Freeze + 1
-                  n := ::leftVisible
-               endif
-               DispOut( Replicate( Right( ::FootSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
-               if n < ::rightVisible
-                  DispOut( Left( ::FootSep, Len( ::FootSep ) - 1 ), ::ColorSpec )
-                  iW := Len( ::FootSep ) - 1 - iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                      Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
-               endif
-            next
-         else
-            DispOut( Replicate( ::FootSep, nColsWidth ), ::ColorSpec )
-         endif
-         DispOut( Replicate( Right( ::FootSep, 1 ), Int(Round((nWidth - nColsWidth) / 2, 0)) ), ::ColorSpec )
-      endif
-
-      if ::lFooters                // Drawing footers
-         DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+   if ! Empty( ::FootSep ) // Drawing footing separator
+      DispOutAt( ::nBottom - iif( ::lFooters, 1, 0 ), ::nLeft, Replicate( Right( ::FootSep, 1 ), ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+      if Len( ::FootSep ) > 1
+         iW := 0
          for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
-               if ::Freeze > 0 .and. n == ::Freeze + 1
-                  n := ::leftVisible
-               endif
-            DispOut( PadR( ::aColumns[ n ]:Footing, ::aColumns[ n ]:Width ), ::ColorSpec )
+            if ::Freeze > 0 .and. n == ::Freeze + 1
+               n := ::leftVisible
+            endif
+            DispOut( Replicate( Right( ::FootSep, 1 ), ::aColumns[ n ]:Width - iW ), ::ColorSpec )
             if n < ::rightVisible
-               DispOut( Space( iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
-                 Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
+               DispOut( Left( ::FootSep, Len( ::FootSep ) - 1 ), ::ColorSpec )
+               iW := Len( ::FootSep ) - 1 - iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
+                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) )
             endif
          next
-         DispOut(Space(Int(Round((nWidth - nColsWidth) / 2, 0))), ::ColorSpec)
+      else
+         DispOut( Replicate( ::FootSep, ::nColsWidth ), ::ColorSpec )
       endif
+      DispOut( Replicate( Right( ::FootSep, 1 ), Int(Round((nWidth - ::nColsWidth) / 2, 0)) ), ::ColorSpec )
+   endif
+
+   if ::lFooters                // Drawing footers
+      DispOutAt( ::nBottom, ::nLeft, Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+      for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
+         if ::Freeze > 0 .and. n == ::Freeze + 1
+            n := ::leftVisible
+         endif
+         DispOut( PadR( ::aColumns[ n ]:Footing, ::aColumns[ n ]:Width ), ::ColorSpec )
+         if n < ::rightVisible
+            DispOut( Space( iif( ::aColumns[ n + 1 ]:ColSep != NIL, ;
+                     Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
+         endif
+      next
+      DispOut(Space(Int(Round((nWidth - ::nColsWidth) / 2, 0))), ::ColorSpec)
+   endif
+
+return Self
+
+
+METHOD Stabilize() CLASS TBrowse
+
+   local nRow, nCol, n
+   local nWidth := ::nRight - ::nLeft + 1 // Visible width of the browse
+   local cColColor                        // Column color to use
+
+   local oStartCol, oEndCol
+
+   local lDisplay                      // Is there something to show inside current cell?
+   local nRecsSkipped                  // How many records do I really skipped?
+   local nFirstRow                     // Where is on screen first row of TBrowse?
+
+
+   if ::lRedrawFrame
+      // How may columns fit on TBrowse width?
+      ::HowManyCol(nWidth)
+      ::RedrawHeaders(nWidth)
 
       // Now that browser frame has been redrawn we don't need to redraw it unless
       // displayed columns change
       ::lRedrawFrame := .F.
+
+   else
+      oStartCol := ::aColumns[ iif( ::rightVisible != 0, ::rightVisible, 1 ) ]
+      oEndCol := ::aColumns[ iif( ::Freeze > 0, 1, ::leftVisible ) ]
+      ::nColsWidth := iif( oStartCol != NIL, oStartCol:ColPos, 0 ) + ;
+        iif( oStartCol != NIL, oStartCol:Width, 0 ) - oEndCol:ColPos
+
    endif
 
-   for nRow := 1 to ::RowCount    // Looking for row to redraw
-      if !::aRedraw[ nRow ]
-         ::aRedraw[ nRow ] := .T.
-         exit
-      endif
-   next
+   // From this point there is stabilization of rows which is made up of three phases
+   // 1st repositioning of data source
+   // 2nd redrawing of rows, after each row we exit stabilization loop with .F.
+   // 3rd if all rows have been redrawn we set ::stable state to .T.
+   if !::stable
 
-   if nRow > ::RowCount          // if all rows are draw, hilite current
-      if !::stable
-         Eval( ::SkipBlock, ::RowPos - ::LastRetrieved )
-         ::LastRetrieved := ::RowPos
-         ::HitBottom := .F.
-         ::stable := .T.
-      endif
-      // NOTE: DBU relies upon current cell being reHilite()d even if it is already stable
-      ::HiLite()
-      return .t.
-   else             // redraw a row
-      if nRow != ::LastRetrieved
-         if lDisplay := Eval( ::SkipBlock, nRow - ::LastRetrieved ) != 0
-            ::LastRetrieved := nRow
-         endif
-      endif
+      // If I have a requested movement still to handle
+      if ::nRecsToSkip <> 0
 
-      DispOutAt( ::nTop + nRow + iif( ::lHeaders, 0, -1 ) + iif( Empty( ::HeadSep ), 0, 1 ), ::nLeft,;
-         Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         nRecsSkipped := Eval(::SkipBlock, ::nRecsToSkip)
 
-      for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
+         // I've hit top or bottom margin
+         if nRecsSkipped == 0
 
-         if ::Freeze > 0 .and. n == ::Freeze + 1
-            n := ::leftVisible
-         endif
-         if nRow == 1
-            ::aColumns[ n ]:ColPos := Col()
-         endif
+            if ::nRecsToSkip > 0
+               ::lHitBottom := .T.
 
-         nCol := Col()
+            elseif ::nRecsToSkip < 0
+               ::lHitTop := .T.
 
-         if lDisplay
-            ::DispCell(n, 1)
-            SetPos( Row(), nCol + ::aColumns[ n ]:Width )
-
-         else
-            // Clear cell
-            DispOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
-
-         endif
-
-         if n < ::rightVisible
-            if ::aColumns[ n + 1 ]:ColSep != NIL
-               DispOut( ::aColumns[ n + 1 ]:ColSep, ::ColorSpec )
-            elseif ::ColSep != NIL
-               DispOut( ::ColSep, ::ColorSpec )
+            else //::nRecsToSkip == 0
+               //
             endif
+
+            // Since I didn't move, last record retrieved is current one
+            ::aRedraw[::nNewRowPos] := .T.
+
+         elseif nRecsSkipped == ::nRecsToSkip
+
+            // If after movement I'm still inside present TBrowse
+            if (::nNewRowPos + nRecsSkipped >= 1) .AND. (::nNewRowPos + nRecsSkipped <= ::RowCount)
+               ::nNewRowPos += nRecsSkipped
+               ::nLastRetrieved := ::nNewRowPos
+               ::aRedraw[::nNewRowPos] := .T.
+
+            else
+               // It was K_PGDN or K_PGUP
+               if Abs(nRecsSkipped) >= ::RowCount
+
+                  // K_PGDN
+                  if nRecsSkipped > 0
+                     ::nLastRetrieved := ::RowCount
+
+                  else // K_PGUP
+                     ::nLastRetrieved := 1
+
+                  endif
+
+                  ::RefreshAll()
+
+               else // K_DN or K_UP
+
+                  // Where does really start first TBrowse row?
+                  nFirstRow := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
+
+                  // I'm at top or bottom of TBrowse so I can scroll
+                  if ::nNewRowPos == ::RowCount
+                     Scroll(nFirstRow + nRecsSkipped - 1, ::nLeft, nFirstRow + ::RowCount - 1, ::nRight, nRecsSkipped)
+                     ::nLastRetrieved := ::RowCount
+
+                  else
+                     Scroll(nFirstRow, ::nLeft, nFirstRow + ::RowCount + nRecsSkipped, ::nRight, nRecsSkipped)
+                     ::nLastRetrieved := 1
+
+                  endif
+
+                  ::aRedraw[::nNewRowPos] := .T.
+
+               endif
+            endif
+
+         else // I couldn't move as far as requested
+            ::nNewRowPos := ::nNewRowPos + nRecsSkipped //iif(nRecsSkipped > 0, ::nNewRowPos + nRecsSkipped, 1)
+            ::nLastRetrieved := ::nNewRowPos
+            ::aRedraw[::nNewRowPos] := .T.
+
          endif
+
+         // Data source moved, so next time I won't enter this stage of stabilization
+         ::nRecsToSkip := 0
+
+         // Exit first stage of stabilization
+         return .F.
+
+      endif
+
+      // Data source is alredy at correct record number, now we need
+      // to repaint browser accordingly.
+      for nRow := 1 to ::RowCount
+
+         // if there is a row to repaint
+         if ::aRedraw[nRow]
+
+            DispOutAt(::nTop + nRow + iif( ::lHeaders, 0, -1 ) + iif( Empty( ::HeadSep ), 0, 1 ), ::nLeft,;
+                      Space( ( nWidth - ::nColsWidth ) / 2 ), ::ColorSpec )
+
+            for n := iif( ::Freeze > 0, 1, ::leftVisible ) to ::rightVisible
+
+               if ::Freeze > 0 .and. n == ::Freeze + 1
+                  n := ::leftVisible
+               endif
+               if nRow == 1
+                  ::aColumns[ n ]:ColPos := Col()
+               endif
+
+               nCol := Col()
+
+               // NOTE: If my TBrowse has 20 rows but I have only 3 recs, clipper clears
+               //       remaining 17 rows in a single operation, I will, instead, try to skip
+               //       17 times. Should be made more clever.
+               if nRow <> ::nLastRetrieved
+                  if lDisplay := Eval(::SkipBlock, nRow - ::nLastRetrieved) == (nRow - ::nLastRetrieved)
+                     ::nLastRetrieved := nRow
+                  endif
+               else
+                  lDisplay := .T.
+               endif
+
+               if lDisplay
+                  ::DispCell(n, 1)
+                  SetPos( Row(), nCol + ::aColumns[ n ]:Width )
+
+               else
+                  // Clear cell
+                  DispOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
+
+               endif
+
+               if n < ::rightVisible
+                  if ::aColumns[ n + 1 ]:ColSep != NIL
+                     DispOut( ::aColumns[ n + 1 ]:ColSep, ::ColorSpec )
+                  elseif ::ColSep != NIL
+                     DispOut( ::ColSep, ::ColorSpec )
+                  endif
+               endif
+            next
+
+            DispOut(Space(Int(Round((nWidth - ::nColsWidth) / 2, 0))), ::ColorSpec)
+
+            // doesn't need to be redrawn
+            ::aRedraw[nRow] := .F.
+
+            // Exit incremental row stabilization
+            return .F.
+         endif
+
       next
 
-      DispOut(Space(Int(Round((nWidth - nColsWidth) / 2, 0))), ::ColorSpec)
+      // If I reach this point I've repainted all rows so I can set ::stable state
+      if nRow > ::RowCount
+
+         // If I have fewer records than available TBrowse rows, cursor cannot be lower than
+         // last record (note ::lHitBottom is set only during a movement)
+         if ::nLastRetrieved < ::nNewRowPos
+            ::nNewRowPos := ::nLastRetrieved
+         endif
+
+         // If I'm not already under cursor I have to set data source to cursor position
+         if ::nLastRetrieved <> ::nNewRowPos
+            Eval(::SkipBlock, ::nNewRowPos - ::nLastRetrieved)
+            ::nLastRetrieved := ::nNewRowPos
+         endif
+
+         // new cursor position
+         ::RowPos := ::nNewRowPos
+
+         ::HitTop := ::lHitTop
+         ::lHitTop := .F.
+         ::HitBottom := ::lHitBottom
+         ::lHitBottom := .F.
+
+         ::Hilite()
+         ::stable := .T.
+
+         return .T.
+      endif
+
+   else
+      /* NOTE: DBU relies upon current cell being reHilited() even if already stable */
+      ::Hilite()
+      return .T.
 
    endif
 
-return .f.
+return .F.
 
 
 METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
@@ -818,6 +959,7 @@ METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
    ::aRectColor  := aRectColor
 
 return Self
+
 
 METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 

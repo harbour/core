@@ -853,6 +853,9 @@ METHOD Query(cQuery) CLASS TMySQLServer
 
    local oQuery, cTableName, i, cUpperQuery, nNumTables, cToken
 
+   default cQuery to ""
+
+
    cUpperQuery := Upper(AllTrim(cQuery))
    i := 1
    nNumTables := 1

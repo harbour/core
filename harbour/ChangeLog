@@ -1,3 +1,14 @@
+2000-12-04 17:54 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     * I've rewritten from scratch stabilization and movement keys handling.
+       They were simply broken in previous TBrowse. They are now nearly 100% clipper compatible.
+       DBU now works correctly when lastrec() + 1 is reached and leaved.
+       ::stable state and ::HitTop or ::HitBottom were wrongly set _before_ stabilization and not
+       during as it should. ::GoBottom() was not calling ::goBottomBlock.
+       Movement handling methods were calling ::skipBlock and they should not, this was
+       causing unneeded skipping being requested to data source.
+       I hope these last changes have fixed TBrowse class. Please test it extensively.
+
 2000-12-03 15:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      ! Optimized __GETA() support, and changed it to be implementated identical to Clipper.
