@@ -113,20 +113,24 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  if uParam3 == 1 // in-function static variable
                     cStaticName  = uParam2
                     nStaticIndex = uParam1
-                    if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
-                         { | aVar | aVar[ 1 ] == cStaticName } ) ) != 0
-                       s_oDebugger:aVars[ nAt ] = { cStaticName, nStaticIndex, "Static" }
-                    else
-                       AAdd( s_oDebugger:aVars, { cStaticName, nStaticIndex, "Static" } )
+                    if s_oDebugger:lShowStatics
+                       if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
+                            { | aVar | aVar[ 1 ] == cStaticName } ) ) != 0
+                          s_oDebugger:aVars[ nAt ] = { cStaticName, nStaticIndex, "Static" }
+                       else
+                          AAdd( s_oDebugger:aVars, { cStaticName, nStaticIndex, "Static" } )
+                       endif
                     endif
                  else            // local variable
                     cLocalName  = uParam2
                     nLocalIndex = uParam1
-                    if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
-                         { | aVar | aVar[ 1 ] == cLocalName } ) ) != 0
-                       s_oDebugger:aVars[ nAt ] = { cLocalName, nLocalIndex, "Local", ProcName( 1 ) }
-                    else
-                       AAdd( s_oDebugger:aVars, { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
+                    if s_oDebugger:lShowLocals
+                       if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
+                            { | aVar | aVar[ 1 ] == cLocalName } ) ) != 0
+                          s_oDebugger:aVars[ nAt ] = { cLocalName, nLocalIndex, "Local", ProcName( 1 ) }
+                       else
+                          AAdd( s_oDebugger:aVars, { cLocalName, nLocalIndex, "Local", ProcName( 1 ) } )
+                       endif
                     endif
                  endif
                  if s_oDebugger:oBrwVars != nil
