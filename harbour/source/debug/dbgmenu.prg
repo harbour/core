@@ -54,9 +54,9 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENU
          MENUITEM " ~Open..."         ACTION oDebugger:Open()
          MENUITEM " ~Resume"          ACTION Alert( "Not implemented yet!" )
-         MENUITEM " ~OS Shell"        ACTION Alert( "Not implemented yet!" )
+         MENUITEM " O~S Shell"        ACTION oDebugger:OSShell()
          SEPARATOR
-         MENUITEM " e~Xit    Alt-X "  ACTION oDebugger:Exit(), oDebugger:Hide()
+         MENUITEM " e~Xit    Alt-X "  ACTION oDebugger:Exit(), oDebugger:Hide(), __Quit()
       ENDMENU
 
       MENUITEM " ~Locate "
