@@ -101,6 +101,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\harbinit.obj \
     $(OBJ_DIR)\hardcr.obj \
     $(OBJ_DIR)\hbtrace.obj \
+    $(OBJ_DIR)\hbfsapi.obj \
     $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\inkey.obj \
@@ -257,16 +258,18 @@ all: $(HARBOUR_EXE) \
      $(RUNNER_EXE)
 
 $(PP_EXE) : \
-    $(PP_DIR)\stdalone\hbpp.c
+    $(PP_DIR)\stdalone\hbpp.c \
+    $(COMMON_DIR)\hbfsapi.c
     @if exist obj\hbpp.obj del obj\hbpp.obj
     $(CC) -TP $(CFLAGS) $** -o $(BIN_DIR)\hbpp /link $(PP_LIB)
     -del hbpp.obj
+    -del hbfsapi.obj
 
 $(RUNNER_EXE) : \
     $(RUNNER_DIR)\stdalone\external.prg \
     $(RUNNER_DIR)\stdalone\hbrun.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg 
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg 
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg
     $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\hbrun.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\hbrun /link  $(LIBS)
     -del external.obj
     -del hbrun.obj
@@ -280,6 +283,7 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genhrb.c \
     $(COMPILER_DIR)\genrc.c \
     $(COMPILER_DIR)\genjava.c \
+    $(COMMON_DIR)\hbfsapi.c \
     $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\expropt.c \
     $(PP_DIR)\hbpp.c \
@@ -299,6 +303,7 @@ $(HARBOUR_EXE) : \
     -del hbpp.obj
     -del hbppint.obj
     -del table.obj
+    -del hbfsapi.obj
 
 #
 # Library dependencies and build rules
@@ -514,6 +519,9 @@ $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\hbtrace.obj : $(COMMON_DIR)\hbtrace.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
