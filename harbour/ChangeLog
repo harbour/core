@@ -1,3 +1,9 @@
+19990910-14:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * tests/working/Makefile
+    ! Moved statinit.prg to BAD_PRG_SOURCES, because it won't link.
+  * tests/working/statinit.prg
+    ! Added '//NOTEST' as the first line, because it won't link.
+
 19990910-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Added a more complete ALIAS regression test suite.

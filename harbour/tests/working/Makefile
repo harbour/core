@@ -113,7 +113,6 @@ PRG_SOURCES=\
         sound.prg \
         statfun.prg \
         statics.prg \
-        statinit.prg \
         strcmp.prg \
         strdelim.prg \
         strings.prg \
@@ -163,6 +162,7 @@ BAD_PRG_SOURCES=\
         spawn.prg \
         spawn2.prg \
         statics1.prg \
+        statinit.prg \
         statics2.prg \
         test10.prg \
         testid.prg \
