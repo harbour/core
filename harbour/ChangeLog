@@ -1,3 +1,10 @@
+2001-10-03 17:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/isprint.c
+    - The Windows version doesn't work with RSXNT,
+      due to link time errors, so exclude __RSXNT__
+      from the HB_OS_WIN_32 branches.
+
 2001-09-30 17:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    *source/rtl/filesys.c
      * Some minor changes to the Win32 section(Verify the return code of the function
