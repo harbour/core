@@ -45,9 +45,9 @@
 
 #ifndef _HTML_CH
 
-#include "simpleIO.ch"
+#include "simpleio.ch"
 #include "forms.ch"
-#include "Colors.ch"
+#include "colors.ch"
 
 #xTranslate  DEFAULT( <p>, <v> ) => <p> := IF( <p> == NIL, <v>, <p> )
 
@@ -761,3 +761,4 @@
 
 #define _HTML_CH
 #endif
+
