@@ -1,3 +1,22 @@
+19990804 GMT+1 Antonio Linares <alinares@fivetech.com>
+  + source/rtl/TGet.prg added
+    Harbour Class TGet (developed by Ignacio Ortiz)
+  + source/rtl/TGetList.prg added
+    Harbour Class TGetList (object oriented implementation of Clipper
+    language GetSys.prg)
+  * makefile.b32
+    + TGet.prg and TGetList.prg modules added.
+    * Alphabetically sorted names.
+    * Please note I have not updated other makefiles
+  + tests/working/TestRead.prg added
+    * @ ... GET and READ sample
+  * source/compiler/harbour.y
+    * Fixed VarDef IDENTIFIER '[' ExpList ']' rule
+  * source/vm/hvm.c
+    * Added support for DimArray() just for one dimension
+      (it generates an error and exists if trying to build a more
+       than one dimensions array).
+
 199908.04-11:35 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Some bugs fixed,mentioned by Victor Szel, Matteo Baccan and David G. Holm
@@ -115,11 +134,11 @@
 
 Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/rddapi.h: 
+	* include/rddapi.h:
 	Changed all #ifdef 0 with #if 0, assuming the original intent was
 	to comment those sections out.
-	
-	* source/rtl/gt/gtwin.c: 
+
+	* source/rtl/gt/gtwin.c:
 	Moved an unused variable within the commented out portion of the
 	code where it was used.
 
@@ -171,7 +190,7 @@ Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      source/rtl/Makefile
      makefile.*
    ! makefile.b31 - Fixed a bug where filesys.obj depended on extend.c
-   + include/filesys.api 
+   + include/filesys.api
      include/extend.api - Some more CA-Cl*pper defines added.
    * source/rtl/gt/gtwin.c
      __CYGWIN32__ -> __CYGWIN__
