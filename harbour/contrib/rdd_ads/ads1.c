@@ -2085,8 +2085,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
          UNSIGNED16 pus16KeyType = 0;
          AdsGetKeyType(pArea->hOrdCurrent, &pus16KeyType);
 
-         /* make sure passed item has same type as index: if not leave pucScope == NULL */
-         pucScope[0] = 0;
+         /* make sure passed item has same type as index */
          switch( pus16KeyType )
          {
             case ADS_STRING:
@@ -2124,18 +2123,19 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 */
                break;
 
-            case ADS_LOGICAL:
+/*            case ADS_LOGICAL:
                if ( sInfo->scopeValue->type == HB_IT_LOGICAL )
                {
                   bTypeError = FALSE;
                   if ( hb_itemGetL( sInfo->scopeValue ) )
                   {
+
                      pucScope[0] = 1;
                      pucScope[1] = 0;
                   }
                }
                break;
-
+*/
          }
 /*          if ( bTypeError  ) */
 /*          { */

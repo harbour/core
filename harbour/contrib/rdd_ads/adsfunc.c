@@ -157,14 +157,14 @@ HB_FUNC( ADSISSERVERLOADED )
       nConnToCheck = adsConnectHandle;
 
    if ( !nConnToCheck )
-   { 
-      nConnToCheck = adsConnectHandle; 
+   {
+      nConnToCheck = adsConnectHandle;
 
-   } 
-   ulRetVal = AdsGetConnectionType (adsConnectHandle, &pusConnectType) ; 
+   }
+   ulRetVal = AdsGetConnectionType (adsConnectHandle, &pusConnectType) ;
 
-   if ( ulRetVal != AE_SUCCESS ) 
-      pusConnectType = 0; 
+   if ( ulRetVal != AE_SUCCESS )
+      pusConnectType = 0;
 
    hb_retnl( pusConnectType );
 } */
@@ -579,13 +579,15 @@ HB_FUNC( ADSGETAOFOPTLEVEL )
    UNSIGNED16 pusOptLevel;
    UNSIGNED8 pucNonOpt[1];
    UNSIGNED16 pusLen = 0;
+   UNSIGNED32 ulRetVal;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
-      hb_retni( pusOptLevel > 65000 ? ADS_OPTIMIZED_NONE : pusOptLevel );
-            /* If no aof, returns 65,353 */
+      ulRetVal = AdsGetAOF( pArea->hTable, pucNonOpt, &pusLen );
+      if ( ulRetVal == AE_SUCCESS )
+         ulRetVal = AdsGetAOFOptLevel( pArea->hTable, &pusOptLevel, pucNonOpt, &pusLen );
+      hb_retni( ulRetVal == AE_SUCCESS  ? pusOptLevel : ADS_OPTIMIZED_NONE  );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFOPTLEVEL" );

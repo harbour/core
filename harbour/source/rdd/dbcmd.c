@@ -2052,7 +2052,7 @@ HB_FUNC( FIELDPOS )
 
    if( s_pCurrArea )
    {
-      hb_strncpyUpper( szName, hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_strncpyUpperTrim( szName, hb_parc( 1 ), hb_parclen( 1 ) );
       hb_retni( hb_rddFieldIndex( ( AREAP ) s_pCurrArea->pArea, szName ) );
    }
    else

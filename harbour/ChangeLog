@@ -1,3 +1,19 @@
+2001-11-21 17:45 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rtl/strcase.c
+      + added hb_strncpyUpperTrim to both upperize and trim
+
+   * contrib/rdd_ads/ads1.c
+      * removed bad pointer initialization
+
+   * source/rdd/dbcmd.c
+      * fieldpos() now calls hb_strncpyUpperTrim so padded
+         field names don't fail
+
+   * contrib/rdd_ads/adsfunc.c
+      * fixed AdsGetAOFOptLevel to return correct value if there's
+         no AOF active
+
 2001-11-22 04:45 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * contrib/libnf/getvid.c
      ! HB_FUNC(_V_SETVPG), use int iPage only if HB_OS_DOS is defined

@@ -99,6 +99,29 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
    return pDest;
 }
 
+/* This function copies and converts szText to upper case AND Trims it
+ */
+char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
+
+   pDest[ ulLen ] ='\0';
+
+   while( ulLen-- && pSource[ ulLen ] == ' ')
+      pDest[ ulLen ] = '\0';
+
+   ulLen++;
+   while( ulLen-- )
+   {
+      /* some compilers impliment toupper as a macro, and this has side effects! */
+      /* *pDest++ = toupper( *pSource++ ); */
+      pDest[ ulLen ] = toupper( pSource[ ulLen ] );
+   }
+
+   return pDest;
+}
+
+
 /* converts string to lower case */
 HB_FUNC( LOWER )
 {
