@@ -104,6 +104,8 @@ HB_FUNC( TRANSFORM )
       char * szResult;
       ULONG  ulResultPos;
 
+      double dValue = 0;
+
       /* ======================================================= */
       /* Analyze picture functions                               */
       /* ======================================================= */
@@ -200,16 +202,15 @@ HB_FUNC( TRANSFORM )
 
          char szPicDate[ 11 ];
          BOOL bAnyPic = FALSE;
+         BOOL bFound  = FALSE;
 
          /* Grab enough */
 
          /* Support date function for strings */
-         if( uiPicFlags & PF_DATE )
+         if( ( uiPicFlags & PF_DATE ) || 
+           ( ( uiPicFlags & PF_BRITISH ) && ( uiPicFlags & PF_REMAIN ) ) )
          {
-            hb_dateFormat( "XXXXXXXX", szPicDate,
-               ( uiPicFlags & PF_BRITISH ) ?
-                 ( hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" ) :
-                 hb_set.HB_SET_DATEFORMAT );
+            hb_dateFormat( "XXXXXXXX", szPicDate, hb_set.HB_SET_DATEFORMAT );
 
             szPic = szPicDate;
             ulPicLen = strlen( szPicDate );
@@ -220,60 +221,92 @@ HB_FUNC( TRANSFORM )
          /* Template string */
          if( ulPicLen )
          {
-            while( ulPicLen && ulExpPos < ulExpLen ) /* Analyze picture mask */
+            while( ulPicLen )                        /* Analyze picture mask */
             {
-               switch( *szPic )
+               if( ulExpPos < ulExpLen )
                {
-                  /* Upper */
-                  case '!':
+                  switch( *szPic )
                   {
-                     szResult[ ulResultPos++ ] = toupper( szExp[ ulExpPos ] );
-                     ulExpPos++;
-                     bAnyPic = TRUE;
-                     break;
-                  }
-
-                  /* Out the character */
-                  case '#':
-                  case '9':
-                  case 'a':
-                  case 'A':
-                  case 'l':
-                  case 'L':
-                  case 'n':
-                  case 'N':
-                  case 'x':
-                  case 'X':
-                  {
-                     szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
-                     ulExpPos++;
-                     bAnyPic = TRUE;
-                     break;
-                  }
-
-                  /* Logical */
-                  case 'y':
-                  case 'Y':
-                  {
-                     szResult[ ulResultPos++ ] = ( szExp[ ulExpPos ] == 't' ||
-                                                   szExp[ ulExpPos ] == 'T' ||
-                                                   szExp[ ulExpPos ] == 'y' ||
-                                                   szExp[ ulExpPos ] == 'Y' ) ? 'Y' : 'N';
-                     ulExpPos++;
-                     bAnyPic = TRUE;
-                     break;
-                  }
-
-                  /* Other choices */
-                  default:
-                  {
-                     szResult[ ulResultPos++ ] = *szPic;
-
-                     if( !( uiPicFlags & PF_REMAIN ) )
+                     /* Upper */
+                     case '!':
+                     {
+                        szResult[ ulResultPos++ ] = toupper( szExp[ ulExpPos ] );
                         ulExpPos++;
+                        bAnyPic = TRUE;
+                        break;
+                     }
+
+                     /* Out the character */
+                     case '#':
+                     case '9':
+                     case 'a':
+                     case 'A':
+                     case 'l':
+                     case 'L':
+                     case 'n':
+                     case 'N':
+                     case 'x':
+                     case 'X':
+                     {
+                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( szExp[ ulExpPos ] ) : szExp[ ulExpPos ];
+                        ulExpPos++;
+                        bAnyPic = TRUE;
+                        break;
+                     }
+
+                     /* Logical */
+                     case 'y':
+                     case 'Y':
+                     {
+                        szResult[ ulResultPos++ ] = ( szExp[ ulExpPos ] == 't' ||
+                                                      szExp[ ulExpPos ] == 'T' ||
+                                                      szExp[ ulExpPos ] == 'y' ||
+                                                      szExp[ ulExpPos ] == 'Y' ) ? 'Y' : 'N';
+                        ulExpPos++;
+                        bAnyPic = TRUE;
+                        break;
+                     }
+
+                     /* Other choices */
+                     default:
+                     {
+                        szResult[ ulResultPos++ ] = *szPic;
+
+                        if( !( uiPicFlags & PF_REMAIN ) )
+                           ulExpPos++;
+                     }
                   }
                }
+               else if( !( uiPicFlags & PF_REMAIN ) )
+                  break;
 
+               else
+               {
+                  switch( *szPic )
+                  {
+                     case '!':
+                     case '#':
+                     case '9':
+                     case 'a':
+                     case 'A':
+                     case 'l':
+                     case 'L':
+                     case 'n':
+                     case 'N':
+                     case 'x':
+                     case 'X':
+                     case 'y':
+                     case 'Y':
+                     {
+                        szResult[ ulResultPos++ ] = ' ';
+                        break;
+                     }
+
+                     default:
+                        szResult[ ulResultPos++ ] = *szPic;
+                  }
+               }
+                  
                szPic++;
                ulPicLen--;
             }
@@ -282,7 +315,33 @@ HB_FUNC( TRANSFORM )
          {
             while( ulExpPos++ < ulExpLen )
             {
-               szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+               if( uiPicFlags & PF_EXCHANG )
+               {
+                  switch( *szExp )
+                  {
+                     case ',':
+                     {
+                        szResult[ ulResultPos++ ] = '.';
+                        break;
+                     }
+                     case '.':
+                     {
+                        if( !bFound && ulResultPos )
+                        {
+                           szResult[ ulResultPos++ ] = ',';
+                           bFound = TRUE;
+                        }
+
+                        break;
+                     }
+                     default:
+                        szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+                  }
+               }
+               else
+               {
+                  szResult[ ulResultPos++ ] = ( uiPicFlags & PF_UPPER ) ? toupper( *szExp ) : *szExp;
+               }
                szExp++;
             }
          }
@@ -303,6 +362,19 @@ HB_FUNC( TRANSFORM )
             while( ulPicLen-- )
                szResult[ ulResultPos++ ] = ' ';
          }
+
+         if( ( ( uiPicFlags & PF_DATE ) && ( uiPicFlags & PF_BRITISH ) ) ||
+           ( ( uiPicFlags & PF_BRITISH ) && ( uiPicFlags & PF_REMAIN ) ) )
+         {
+           szPicDate[ 0 ] = szResult[ 3 ];
+           szPicDate[ 1 ] = szResult[ 4 ];
+
+           szResult[ 3 ] = szResult[ 0 ];
+           szResult[ 4 ] = szResult[ 1 ];
+
+           szResult[ 0 ] = szPicDate[ 0 ];
+           szResult[ 1 ] = szPicDate[ 1 ];
+         }
       }
 
       /* ======================================================= */
@@ -311,7 +383,6 @@ HB_FUNC( TRANSFORM )
 
       else if( HB_IS_NUMERIC( pValue ) )
       {
-         double   dValue = hb_itemGetND( pValue );
          double   dPush;
 
          int      iOrigWidth;
@@ -333,14 +404,13 @@ HB_FUNC( TRANSFORM )
          BOOL     bInit  = FALSE;
          BOOL     bEnd   = FALSE;
 
+         dValue = hb_itemGetND( pValue );
          hb_itemGetNLen( pValue, &iOrigWidth, &iOrigDec );
 
          /* Support date function for numbers */
          if( uiPicFlags & PF_DATE )
          {
             hb_dateFormat( "99999999", szPicDate,
-               ( uiPicFlags & PF_BRITISH ) ?
-                 ( hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" ) :
                  hb_set.HB_SET_DATEFORMAT );
 
             szPic = szPicDate;
@@ -354,7 +424,8 @@ HB_FUNC( TRANSFORM )
          for( i = 0; i < ulPicLen && !bFound; i++ )      /* Count number in front    */
          {
             if( szPic[ i ] == '.' )
-               bFound = !( uiPicFlags & PF_NUMDATE );  /* Exit when numeric        */
+/*               bFound = !( uiPicFlags & PF_NUMDATE );    / * Exit when numeric        */
+               bFound =  TRUE;
             else if( szPic[ i ] == '9' || szPic[ i ] == '#' ||
                      szPic[ i ] == '$' || szPic[ i ] == '*' )
                iCount++;
@@ -427,20 +498,30 @@ HB_FUNC( TRANSFORM )
                   if( !bInit && ( cPic == '9' || cPic == '#' || cPic == '$' || cPic == '*' ) )
                      bInit = TRUE;
                   if( cPic == '9' || cPic == '#' )
-                     szResult[ i ] = szStr[ iCount++ ];  /* Just copy                */
+                  {
+                     if( iCount < iWidth )
+                        szResult[ i ] = szStr[ iCount++ ];  /* Just copy                */
+                     else
+                        szResult[ i ] = ' ';
+                  }
                   else if( cPic == '.' && bInit && !bEnd )
                   {
-                     if( uiPicFlags & PF_NUMDATE )    /* Dot in date              */
-                        szResult[ i ] = cPic;
-                     else                             /* Dot in number            */
+                     if( uiPicFlags & PF_EXCHANG ) /* Exchange . and ,         */
                      {
-                        if( uiPicFlags & PF_EXCHANG ) /* Exchange . and ,         */
+                        szResult[ i ] = ',';
+                        iCount++;
+                     }
+                     else
+                     {
+                        if( uiPicFlags & PF_NUMDATE )    /* Dot in date              */
                         {
-                           szResult[ i ] = ',';
+                           szResult[ i ] = cPic;
                            iCount++;
                         }
-                        else
+                        else                             /* Dot in number            */
+                        {
                            szResult[ i ] = szStr[ iCount++ ];
+                        }
                      }
                   }
                   else if( ( cPic == '$' || cPic == '*' ) && !bEnd )
@@ -585,9 +666,12 @@ HB_FUNC( TRANSFORM )
 
       else if( HB_IS_DATE( pValue ) )
       {
+         char szPicDate[ 11 ];
          char szDate[ 9 ];
 
-         szResult = ( char * ) hb_xgrab( 11 );
+         int  nFor;
+
+         szResult = ( char * ) hb_xgrab( 13 );
 
          hb_dateFormat( hb_itemGetDS( pValue, szDate ), szResult,
             ( uiPicFlags & PF_BRITISH ) ?
@@ -595,6 +679,27 @@ HB_FUNC( TRANSFORM )
               hb_set.HB_SET_DATEFORMAT );
 
          ulResultPos = strlen( szResult );
+
+         if( uiPicFlags & PF_REMAIN )
+         {
+            hb_dateFormat( "99999999", szPicDate,
+               ( uiPicFlags & PF_BRITISH ) ?
+                 ( hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" ) :
+                 hb_set.HB_SET_DATEFORMAT );
+
+            ulPicLen = strlen( szPicDate );
+
+            for( nFor = 0; nFor < ulPicLen; nFor++ )
+            {
+               if( szPicDate[ nFor ] != '9' )
+               {
+                  memmove( szResult + nFor + 1, szResult + nFor, 12 - nFor );
+                  szResult[ nFor ] = szPicDate[ nFor ];
+                  ulResultPos++;
+               }
+            }
+         }
+
       }
 
       /* ======================================================= */
@@ -678,15 +783,16 @@ HB_FUNC( TRANSFORM )
          /* Trim left and pad with spaces */
          if( uiPicFlags & PF_LEFT )
          {
-            ULONG ulFirstChar = 0;
+            
+            ULONG ulFirstChar = ( ( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) ) ? 1: 0 );
 
             while( ulFirstChar < ulResultPos && szResult[ ulFirstChar ] == ' ' )
                ulFirstChar++;
 
             if( ulFirstChar < ulResultPos )
             {
-               memmove( szResult, szResult + ulFirstChar, ulResultPos - ulFirstChar );
-               memset( szResult + ulResultPos - ulFirstChar, ' ', ulFirstChar );
+               memmove( szResult + ( ( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) ) ? 1: 0 ), szResult + ulFirstChar, ulResultPos - ulFirstChar );
+               memset( szResult + ulResultPos - ulFirstChar + ( ( ( uiPicFlags & PF_PARNEG ) && dValue < 0 && !( uiPicFlags & PF_PARNEGWOS ) ) ? 1: 0 ), ' ', ulFirstChar );
             }
          }
 
