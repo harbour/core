@@ -1,3 +1,16 @@
+2001-04-20 18:05 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  + include/hb_io.h
+  * source/common/hbtrace.c
+  * source/rtl/console.c
+  * source/rtl/dir.c
+  * source/rtl/disksphb.c
+  * source/rtl/filesys.c
+  * source/rtl/gtapi.c
+    + Instead of using #include <io.h> and/or messy #ifdef blocks to
+      include <unistd.h> and/or <io.h>, just use #include "hb_io.h"
+      (based on an idea from Dave Pearson).
+
 2001-04-20 19:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/libmisc/dbftools.c
      * fieldtype() fixed accordingly to RDD changes

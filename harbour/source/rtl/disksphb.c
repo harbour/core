@@ -104,7 +104,7 @@ HB_FUNC( HB_DISKSPACE )
          }
          else
          {
-            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT | EF_CANRETRY ) == E_RETRY, 2, hb_paramError( 1 ), hb_paramError( 2 ) )
+            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, ( EF_CANDEFAULT | EF_CANRETRY ) == E_RETRY, 2, hb_paramError( 1 ), hb_paramError( 2 ) ) )
                continue;
          }
          break;

@@ -54,9 +54,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <io.h>
 
 #include "hbapi.h"
+#include "hb_io.h"
 #include "hbtrace.h"
 
 char * hb_tr_file_ = "";

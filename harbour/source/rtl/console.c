@@ -74,13 +74,7 @@
 #include "hbapifs.h"
 #include "hbapigt.h"
 #include "hbset.h"
-
-#if defined(__GNUC__) && ! defined(__MINGW32__)
-   #include <unistd.h>
-#endif
-#if !defined(OS_UNIX_COMPATIBLE)
-   #include <io.h>
-#endif
+#include "hb_io.h"
 
 /* length of buffer for CR/LF characters */
 #define CRLF_BUFFER_LEN   OS_EOL_LEN + 1

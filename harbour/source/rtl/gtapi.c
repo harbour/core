@@ -55,19 +55,11 @@
  *
  */
 
-#if defined(__GNUC__) && ! defined(__MINGW32__)
-   #include <unistd.h>
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(__EMX__)
-      #include <io.h>
-   #endif
-#else
-   #include <io.h>
-#endif
-
 #include <ctype.h>
 
 #include "hbapigt.h"
 #include "hbset.h"
+#include "hb_io.h"
 
 static BOOL   s_bInit = FALSE;
 

@@ -90,20 +90,16 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hb_io.h"
 #include "directry.ch"
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
-   #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
    #include <dirent.h>
    #include <time.h>
-
-   #if !defined(OS_UNIX_COMPATIBLE)
-      #include <io.h>
-   #endif
 
    #if !defined(HAVE_POSIX_IO)
       #define HAVE_POSIX_IO
@@ -114,7 +110,6 @@
    #include <sys/stat.h>
    #include <share.h>
    #include <fcntl.h>
-   #include <io.h>
    #include <errno.h>
    #include <direct.h>
    #include <time.h>
@@ -126,7 +121,6 @@
    #include <sys/stat.h>
    #include <share.h>
    #include <fcntl.h>
-   #include <io.h>
    #include <errno.h>
    #include <direct.h>
    #include <time.h>
@@ -148,7 +142,6 @@
 
 #if defined(__BORLANDC__)
    #include <sys\stat.h>
-   #include <io.h>
    #include <fcntl.h>
    #include <share.h>
    #include <dirent.h>

@@ -77,17 +77,14 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hb_io.h"
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
-   #include <unistd.h>
    #include <fcntl.h>
    #include <errno.h>
 
-   #if !defined(OS_UNIX_COMPATIBLE)
-      #include <io.h>
-   #endif
    #if defined(__DJGPP__)
       #include <dir.h>
       #define _getdrive getdisk
@@ -106,7 +103,6 @@
    #include <sys/stat.h>
    #include <share.h>
    #include <fcntl.h>
-   #include <io.h>
    #include <direct.h>
    #include <errno.h>
    #include <dos.h>
@@ -121,7 +117,6 @@
    #include <sys\stat.h>
    #include <share.h>
    #include <fcntl.h>
-   #include <io.h>
    #include <direct.h>
    #if defined(__BORLANDC__)
       #include <dir.h>
