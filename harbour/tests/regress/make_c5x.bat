@@ -12,8 +12,8 @@ clipper rt_math.prg  /w /n
 clipper rt_misc.prg  /w /n
 clipper rt_str.prg   /w /n
 
-rtlink out rt_main fi rt_main, rt_array, rt_date, rt_file, rt_hvm, rt_math, rt_misc, rt_str
+if %1.==. set _=rtlink 
+if not %1.==. set _=exospace
+%_ out rt_main fi rt_main, rt_array, rt_date, rt_file, rt_hvm, rt_math, rt_misc, rt_str
 
 del *.obj
-rt_main.exe > rtl_main.c5x
-

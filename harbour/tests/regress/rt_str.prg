@@ -1079,7 +1079,7 @@ FUNCTION Main_STRINGS()
 
    RETURN NIL
 
-FUNCTION Comp_STRINGS()
+FUNCTION Comp_Str()
    LOCAL old_exact := SET( _SET_EXACT, .F. )
 
    TEST_LINE( "ABC" == "", .F. )
@@ -1191,7 +1191,7 @@ FUNCTION Comp_STRINGS()
    SET( _SET_EXACT, old_exact )
    RETURN NIL
 
-FUNCTION Exact_Strings()
+FUNCTION Exact_Str()
    LOCAL old_exact := SET( _SET_EXACT, .T. )
 
    TEST_LINE( "ABC" == "", .F. )
