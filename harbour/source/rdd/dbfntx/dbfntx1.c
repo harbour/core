@@ -3268,17 +3268,20 @@ static ERRCODE ntxGoHot( NTXAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxGoHot(%p)", pArea));
 
-   if( SUPER_GOHOT( ( AREAP ) pArea ) == SUCCESS && !pArea->fNtxAppend )
+   if( SUPER_GOHOT( ( AREAP ) pArea ) == SUCCESS )
    {
-      pTag = pArea->lpNtxTag;
-      while( pTag )
+      if( !pArea->fNtxAppend )
       {
-         hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
-         if( pTag->pForItem == NULL || checkLogicalExpr( pTag->pForItem, NULL ) )
-            pTag->InIndex = TRUE;
-         else
-            pTag->InIndex = FALSE;
-         pTag = pTag->pNext;
+         pTag = pArea->lpNtxTag;
+         while( pTag )
+         {
+            hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
+            if( pTag->pForItem == NULL || checkLogicalExpr( pTag->pForItem, NULL ) )
+               pTag->InIndex = TRUE;
+            else
+               pTag->InIndex = FALSE;
+            pTag = pTag->pNext;
+         }
       }
       return SUCCESS;
    }
