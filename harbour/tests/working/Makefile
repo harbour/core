@@ -47,4 +47,8 @@ PRG_SOURCES=\
 	val.prg \
 	while.prg \
 
+LIBS=\
+	vm \
+	rtl \
+
 include $(TOP)$(ROOT)config/test.cf

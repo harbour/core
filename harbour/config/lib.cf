@@ -2,10 +2,14 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
+include $(TOP)$(ROOT)config/prg.cf
 
 LIB_NAME = $(LIB_PREF)$(LIB)$(LIB_EXT)
 LIB_ARCH = $(ARCH_DIR)$(LIB_NAME)
+
+ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first : dirbase descend
 

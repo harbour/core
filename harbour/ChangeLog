@@ -1,3 +1,33 @@
+Thu May 06 13:09:45 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/bin.cf: 
+	* config/c.cf: 
+	* config/lib.cf: 
+	* config/prg.cf: 
+	* config/test.cf: 
+	* source/rtl/Makefile: 
+	By mistake, we were not compiling the PRG files into OBJS for the
+	rtl library.
+	
+	* source/rtl/dates.c: 
+	Changed the use of min with explicit code. min and max are macros
+	in some platforms, functions in others, and it is usually a mess
+	to link against them.
+
+	* source/Makefile: 
+	* source/tools/Makefile: 
+	This directory was not being compiled.
+	
+	* source/tools/genobj.c: 
+	Got rid of most (all?) the warnings.
+	
+	* tests/working/Makefile: 
+	Now the libs to link against are explicitly specified in the
+	Makefile.
+	
+	* tests/working/statics.prg: 
+	Cleaned up all ^M characters.
+	
 Thu May 06 12:34:45 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/compiler/harbour.l: 

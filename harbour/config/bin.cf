@@ -2,10 +2,13 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 
 EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
 EXE_ARCH = $(ARCH_DIR)$(EXE_NAME)
+
+ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
 first : dirbase descend
 

@@ -2,8 +2,6 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/global.cf
-
 C_OBJS = $(C_SOURCES:.c=$(OBJ_EXT))
 
 MAIN_OBJ = $(C_MAIN:.c=$(OBJ_EXT))
@@ -21,7 +19,7 @@ LEX_C = $(shell echo $(LEX_SOURCE) | cut -c1-4)_l.c
 LEX_OBJ = $(LEX_C:.c=$(OBJ_EXT))
 endif
 
-ALL_OBJS = $(C_OBJS) $(MAIN_OBJ) $(YACC_OBJ) $(LEX_OBJ)
+ALL_C_OBJS = $(C_OBJS) $(MAIN_OBJ) $(YACC_OBJ) $(LEX_OBJ)
 
 
 $(YACC_OBJ) : $(YACC_C)

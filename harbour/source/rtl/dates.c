@@ -122,7 +122,9 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
    /*
      * Determine the maximum size of the formatted date string
      */
-   size = min (10, strlen (hb_set.HB_SET_DATEFORMAT));
+   size = strlen (hb_set.HB_SET_DATEFORMAT);
+   if (size > 10)
+     size = 10;
 
    format_count = 0;
    used_d = used_m = used_y = FALSE;

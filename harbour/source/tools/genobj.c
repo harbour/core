@@ -10,6 +10,10 @@
 #include <string.h>
 #include <types.h>
 
+#if defined(__GNUC__) || defined(__DJGPP__)
+  #include <unistd.h>
+#endif
+
 void CompiledFileName( int hObjFile, char * szFileName );
 void CompilerVersion( int hObjFile, char * szFileName );
 void LocalNames( int hObjFile, char * szNames[] );
@@ -47,7 +51,7 @@ int main( int argc, char * argv[] )
                             3, /* "CODE" position + 1 into localNames */
                             0x3D ); /* segment length */
 
-   PubDef( hObjFile, "MAIN", 1, 0x10 ); /* 1 = _TEXT segment, 0x10 offset into it );
+   PubDef( hObjFile, "MAIN", 1, 0x10 ); /* 1 = _TEXT segment, 0x10 offset into it ); */
 
    /* data segment */
    DefineSegment( hObjFile, 4, /* "_DATA" position + 1 into localNames */
@@ -82,6 +86,7 @@ int main( int argc, char * argv[] )
    End( hObjFile );
 
    close( hObjFile );
+   return 0;
 }
 
 void putbyte( BYTE b, int hObjFile )
@@ -110,7 +115,7 @@ void CompiledFileName( int hObjFile, char * szFileName )
    putbyte( wLen, hObjFile );     /* szFileName length */
    bChk += wLen;
 
-   while( bChar = * szFileName++ )
+   while( (bChar = * szFileName++) )
    {
       putbyte( bChar, hObjFile );   /* each of the szFileName characters */
       bChk += bChar;
@@ -134,7 +139,7 @@ void CompilerVersion( int hObjFile, char * szVersion )
 
    putword( 0, hObjFile );
 
-   while( bChar = * szVersion++ )
+   while( (bChar = * szVersion++) )
    {
       putbyte( bChar, hObjFile );   /* each of the szFileName characters */
       bChk += bChar;
@@ -148,7 +153,6 @@ void LocalNames( int hObjFile, char * szNames[] )
    BYTE b = 0, c;
    WORD wTotalLen = 0;
    BYTE bChk = 0;
-   BYTE bChar;
 
    while( szNames[ b ] )
       wTotalLen += strlen( szNames[ b++ ] );
@@ -201,7 +205,7 @@ void PubDef( int hObjFile, char * szName, WORD wSegment, WORD wOffset )
    putbyte( strlen( szName ), hObjFile );
    bChk += strlen( szName );
 
-   while( bChar = * szName++ )
+   while( (bChar = * szName++) )
    {
       putbyte( bChar, hObjFile );
       bChk += bChar;
@@ -220,7 +224,6 @@ void ExternalNames( int hObjFile, char * szNames[] )
    BYTE b = 0, c;
    WORD wTotalLen = 0;
    BYTE bChk = 0;
-   BYTE bChar;
 
    while( szNames[ b ] )
       wTotalLen += strlen( szNames[ b++ ] ) + 1;
@@ -389,7 +392,6 @@ void Fixup( int hObjFile, BYTE bType, WORD wOffset, BYTE bFlags, BYTE bSymbol )
 void End( int hObjFile )
 {
    BYTE bChk = 0;
-   BYTE bChar;
 
    putbyte( 0x8A, hObjFile );  bChk += 0x8A;
 

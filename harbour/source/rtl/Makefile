@@ -21,6 +21,11 @@ C_SOURCES=\
 	strings.c \
 	transfrm.c \
 
+PRG_SOURCES=\
+	error.prg \
+	errorsys.prg \
+	tclass.prg \
+
 LIB=rtl
 
 include $(TOP)$(ROOT)config/lib.cf

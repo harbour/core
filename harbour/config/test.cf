@@ -2,6 +2,7 @@
 # $Id$
 #
 
+include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/prg.cf
 
 first : dirbase descend
