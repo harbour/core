@@ -1,11 +1,15 @@
+19991219-15:55 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Bug fixed, reported by Victor Szel
+
 19991218-18:25 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbexpr.c
-	* static variables can be initialised with arrays that
-	contains parenthesized epressions e.g. STATIC a:={ (1) }
-	* fixed code that handles aliased macro expressions
-	e.g. FIELD->&var1 := var2
-	
+        * static variables can be initialised with arrays that
+        contains parenthesized epressions e.g. STATIC a:={ (1) }
+        * fixed code that handles aliased macro expressions
+        e.g. FIELD->&var1 := var2
+
 19991218-10:35 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/objfunc.prg
     source/rtl/readkey.prg
@@ -156,8 +160,8 @@
          there is no support for nested macros and complex macros)
 
     *source/macro.y
-	* added #undef __GNUC__ as a workaround of bison.simple bug in
-	yyparse() declaration
+        * added #undef __GNUC__ as a workaround of bison.simple bug in
+        yyparse() declaration
 
 19991211-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
@@ -179,7 +183,7 @@
     *source/vm/hvm.c
     *source/rtl/codebloc.c
         * added support for macro-compiled codeblocks
-	* restored %pure_parser option :)
+        * restored %pure_parser option :)
 
     *source/macro/macro.l
         * added tracing headers
@@ -293,7 +297,7 @@ NOTE: All non GNU-Make scripts should be updated!
             - text substitution: "text &macro"
             - function calls: &macro()
             - aliased macro variables: &macro->var and alias->&var
-	    - macro-compiled codeblocks
+            - macro-compiled codeblocks
 
 NOTE: All non GNU-Make scripts should be updated!
 
@@ -318,10 +322,10 @@ NOTE: source/macro/macro.c file includes source/compiler/expropt.c
     *samples/hscript/Makefile
     *samples/misc/Makefile
     *samples/pe/Makefile
-	* 'macro' library added
+        * 'macro' library added
 
     *source/compiler/cmdcheck.c
-	* replaced strupr with hb_strupr
+        * replaced strupr with hb_strupr
 
 NOTE: All PRG sources HAVE TO be recompiled!!!
 
@@ -332,7 +336,7 @@ NOTE: Add macro.lib to all non-GNU make scripts or batch files.
     include/compiler.h
     + Additional function renaming (prefixing with hb_comp), some functions
       moved to other files. Declarations fixed, some static vars prefixed
-      with s_. Some functions made static, some declaration moved to 
+      with s_. Some functions made static, some declaration moved to
       compiler.h.
       hb_Chk*() -> hb_compChk*()
       Print*() -> hb_compPrint*()

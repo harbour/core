@@ -1734,8 +1734,9 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
                      ( *expreal == '\'' && *(expreal+lenitem-1)=='\'' ) )
                   {
                     if( ifou ) lenitem++;
+                    if( *expreal == '&' ) lenitem--;
                     hb_pp_Stuff( ( *expreal=='&' ) ? expreal + 1 : expreal, ptro,
-                              ( *expreal=='&' ) ? lenitem - 1 : lenitem, 0, lenres );
+                              lenitem, 0, lenres );
                   }
                 else
                   {
@@ -1757,8 +1758,11 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
     else if( !lenreal || *expreal == '(' || *expreal == '&' ||
              ( *expreal == '\"' && *( expreal + lenreal - 1 ) == '\"' ) ||
              ( *expreal == '\'' && *( expreal + lenreal - 1 ) == '\'' ) )
-      hb_pp_Stuff( ( *expreal == '&' ) ? expreal + 1 : expreal, ptro,
+      {
+        if( *expreal == '&' ) rmlen--;
+        hb_pp_Stuff( ( *expreal == '&' ) ? expreal + 1 : expreal, ptro,
                 ( *expreal == '&' ) ? lenreal - 1 : lenreal, 4, lenres );
+      }
     else
       {
         pp_rQuotes( expreal, sQuotes );
