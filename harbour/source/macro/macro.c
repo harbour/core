@@ -695,7 +695,7 @@ char * hb_macroGetType( HB_ITEM_PTR pItem )
                 * Now the value of expression is placed on the eval stack -
                 * check its type and pop it from the stack
                 */
-               szType = hb_valtypeGet( hb_stack.pPos - 1 );
+               szType = hb_itemTypeStr( hb_stack.pPos - 1 );
                hb_stackPop();
             }
             else

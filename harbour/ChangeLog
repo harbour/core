@@ -1,3 +1,7 @@
+20000331-15:50 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/macro/macro.c
+     * hb_valtypeGet() -> hb_itemTypeStr()
+
 20000331-15:10 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rdd/dbf1.c
    * source/rdd/sdf1.c
