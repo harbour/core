@@ -7,7 +7,7 @@
 
 function Main()
 
-   local oForm2 := TForm2():New()
+   local oForm2 := HBForm2():New()
 
    oForm2:OnClick = "Form2Click"
 
@@ -15,18 +15,18 @@ function Main()
 
 return nil
 
-CLASS TForm2 FROM TForm
+CLASS HBForm2 FROM HBForm
 
    METHOD New()
 
-   METHOD ViewAsTextClick( oSender )
+   METHOD ViewAsTextClick( oSender ) INLINE MsgInfo( ::SaveToText() )
    METHOD ExitClick( oSender ) INLINE ::Close()
 
    METHOD Form2Click( oSender, nXPos, nYPos )
 
 ENDCLASS
 
-METHOD New() CLASS TForm2
+METHOD New() CLASS HBForm2
 
    local oMenu, oMenuItem
 
@@ -34,15 +34,15 @@ METHOD New() CLASS TForm2
 
    ::Caption = "Harbour GUI demo"
 
-   oMenu = TMenu():New( Self )
+   oMenu = HBMenu():New( Self )
 
-   oMenuItem = TMenuItem():New( oMenu )
+   oMenuItem = HBMenuItem():New( oMenu )
    oMenuitem:Caption = "View as Text"
    oMenuitem:Name    = "ViewAsText"
    oMenuItem:OnClick  = "ViewAsTextClick"  // The container method to execute
    oMenu:Add( oMenuItem )
 
-   oMenuItem = TMenuItem():New( oMenu )
+   oMenuItem = HBMenuItem():New( oMenu )
    oMenuitem:Caption = "Exit"
    oMenuitem:Name    = "Exit"
    oMenuItem:OnClick  = "ExitClick"  // The container method to execute
@@ -52,13 +52,7 @@ METHOD New() CLASS TForm2
 
 return Self
 
-METHOD ViewAsTextClick( oSender ) CLASS TForm2
-
-   MsgInfo( ::SaveToText() )
-
-return nil
-
-METHOD Form2Click( oSender, nXPos, nYPos ) CLASS TForm2
+METHOD Form2Click( oSender, nXPos, nYPos ) CLASS HBForm2
 
    MsgInfo( "Click at " + AllTrim( Str( nXPos ) ) + ", " + ;
             AllTrim( Str( nYPos ) ) )

@@ -8,13 +8,13 @@
 
 function Main()
 
-   local oForm3 := TForm3():New()
+   local oForm3 := HBForm3():New()
 
    oForm3:ShowModal()
 
 return nil
 
-CLASS TForm3 FROM TForm
+CLASS HBForm3 FROM HBForm
 
    METHOD New()
 
@@ -22,7 +22,7 @@ CLASS TForm3 FROM TForm
 
 ENDCLASS
 
-METHOD New() CLASS TForm3
+METHOD New() CLASS HBForm3
 
    Super:New()
 

@@ -7,7 +7,7 @@
 
 function Main()
 
-   local oForm3 := TForm3():New()
+   local oForm3 := HBForm3():New()
 
    oForm3:LoadFromFile( "form3.hbf" )
 
@@ -15,7 +15,7 @@ function Main()
 
 return nil
 
-CLASS TForm3 FROM TForm
+CLASS HBForm3 FROM HBForm
 
    METHOD FormClick( oSender, nX, nY ) INLINE MsgInfo( "Click" )
 
