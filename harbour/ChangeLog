@@ -1,3 +1,7 @@
+2000-07-29 08:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.bc
+     * Synchronized with makefile.bc
+
 2000-07-29 17:34 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * makefile.vc
@@ -9,14 +13,14 @@
 
    * utils/hbtest/*
      + Added check for :Arg variable of returned error objects.
-       Note that currently Harbour doesn't support the :Arg var, so many 
+       Note that currently Harbour doesn't support the :Arg var, so many
        tests will fail which looked OK until now.
 
    * source/vm/itemapi.c
      % Small optimizations.
 
    * source/vm/arrays.c
-     - hb_arrayGetBool() removed, since it was the same as hb_arrayGetL(), but 
+     - hb_arrayGetBool() removed, since it was the same as hb_arrayGetL(), but
        had no prototype in hbapi.h.
      % Small optimizations.
 
