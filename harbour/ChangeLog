@@ -1,3 +1,34 @@
+20000413-19:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hvm.c
+     * Added FAR support to HB_P_SEQBEGIN and HB_P_SEQEND
+
+   * source/compiler/harbour.c
+     * Modified hb_compGenJumpThere() to revert back to "short" JUMPs when fixing the jumps, it will than use HB_P_NOOP for the unused 3rd byte.
+     * It now supports all variations of JUMP including SEQBEGIN and  SEQEND as well as the logig to not interfere with "short" JUMPs.
+     + Added more error handling to hb_compGenJumpThere()
+
+   * source/include/hbexprb.c
+     * Modified handling of .OR. .AND. and IIF() to use "short" JUMPs - note the use of -1 when calling hb_compGenJumpXXX().
+
+   * source/compiler/genc.c
+     + Added support for HB_P_NOOP (was missing!)
+     * Modified HB_P_SEQBEGIN and HB_P_SEQEND to support FAR jumps
+
+   * source/compiler/hbgenerr.c
+     + Added following errors:
+        "Jump offset too long for HB_P_JUMP needed HB_P_JUMPFAR",
+        "Jump offset too long for HB_P_JUMPTRUE needed HB_P_JUMPFARTRUE",
+        "Jump offset too long for HB_P_JUMPFALSE needed HB_P_JUMPFARFALSE",
+        "HB_P_JUMPx not found when fixing offset"
+
+   * source/include/hbexprb.c
+     + Added following defines:
+	#define HB_COMP_ERR_INVALID_JUMP                45
+	#define HB_COMP_ERR_INVALID_JUMPTRUE            46
+	#define HB_COMP_ERR_INVALID_JUMPFALSE           47
+	#define HB_COMP_ERR_JUMP_NOT_FOUND              48
+
 20000414-03:08 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/hvm.c
@@ -286,7 +317,7 @@
         *hb_gtWwriteCon() fixed to correctly support LF characters in
 	U*nix environment (LF should move carriage return to the leftmost
 	column)
-	
+
     *source/rtl/gtcrs/gtcrs.c
         *updated to return multi-character keycodes that are not mapped
         to Clipper INKEY() keycodes
@@ -355,7 +386,7 @@
    * include/hbsetup.ch
    * source/vm/cmdarg.c
      + Added HB_EXTENSION macro to guard Harbour extensions.
-     + Added HB_C52_UNDOC macro to guard undocumented interfaces of 
+     + Added HB_C52_UNDOC macro to guard undocumented interfaces of
        CA-Cl*pper 5.2e
      * HARBOUR_STRICT_CLIPPER_COMPATIBILITY renamed to HB_STRICT_C52
 
@@ -394,7 +425,7 @@
        target platform, since at that point we don't know yet what is the
        target platform. This may fix OS/2 GCC in some places. The only downside
        in theory is that INCL_* may collide with some non-OS/2 defines.
-       Note that __IBMCPP__ != OS/2, it also has a Win32 version, and 
+       Note that __IBMCPP__ != OS/2, it also has a Win32 version, and
        __EMX__&!__RSXNT__ *is* OS/2.
      * Some minor cleanups.
      ! Fixed DIRECTORY() for OS/2 GCC and IBMCPP for Win32. Not tested.
@@ -411,7 +442,7 @@
    *utils/hbdoc/hrb.rsp
     utils/hbdoc/hrbtools.rsp
       *Changed to reflect the docs changes
-   *utils/hbdoc/genng.prg 
+   *utils/hbdoc/genng.prg
     utils/hbdoc/genrtf.prg
     utils/hbdoc/genos2.prg
     utils/hbdoc/genhtm.prg
@@ -439,13 +470,13 @@
    * source/rtl/gtdos/mousedos.c
      + Added support for the RSXNT compiler under DOS 32 bit.
        Harbour executable don't run yet.
-     + DISKSPACE() for DOS now uses INT_86 instead of the less-portable 
+     + DISKSPACE() for DOS now uses INT_86 instead of the less-portable
        library call.
      ! GTDOS and MOUSEDOS use the standard INT86, so they should work on
        more platforms now, easier to extend and much more clear.
 
    + config/w32/rsxnt.cf
-   * include/hbsetup.h   
+   * include/hbsetup.h
    * source/common/hbver.c
    * source/rtl/diskspac.c
    * source/rtl/gtwin/gtwin.c
@@ -477,7 +508,7 @@
      % Removed the branches where the word registers were accessed via "w".
        "x" is supported by __BORLANDC__, __DJGPP__, _MSC_VER, __RSX32__,
        __WATCOM__, __TURBOC__ (9.5). Who's missing ?
-   
+
    * source/common/hbver.c
      + Shows DJGPP package version.
 
