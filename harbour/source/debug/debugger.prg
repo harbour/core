@@ -216,6 +216,7 @@ CLASS TDebugger
    METHOD FindPrevious()
    METHOD SearchLine()
    METHOD ToggleCaseSensitive() INLINE ::lCaseSensitive := !::lCaseSensitive
+   METHOD ShowWorkAreas() INLINE __dbgShowWorkAreas( Self )
 
 ENDCLASS
 
@@ -750,7 +751,7 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
       AAdd( ::aVars, { cName, xValue, "Private" } )
    next
 
-   if Type( "__DbgStatics" ) != "L"
+   if Type( "__DbgStatics" ) == "A"
       for n = 1 to Len( __DbgStatics )
          for m = 1 to Len( __DbgStatics[ n ][ 2 ] )
             cStaticName  = __DbgStatics[ n ][ 2 ][ m ]
