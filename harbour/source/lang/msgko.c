@@ -44,10 +44,10 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "KR",                        /* ID */
-      "English",                   /* Name (in English) */
+      "KO",                        /* ID */
+      "Korean",                    /* Name (in English) */
       "한국어",                    /* Name (in native language) */
-      "KR",                        /* RFC ID */
+      "KO",                        /* RFC ID */
       "949",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
 
@@ -89,7 +89,7 @@ static HB_LANG s_lang =
       "잘못된 날짜",
       "범위: ",
       " - ",
-      "Y/N",
+      "예/아니오",
       "잘못된 표현식",
 
       /* Error description names */
