@@ -467,9 +467,10 @@ return oOldGet
 
 METHOD ShowScoreboard() CLASS TGetList
 
-   local nRow, nCol, nOldCursor := SetCursor( 0 )
+   local nRow, nCol, nOldCursor
 
    if Set( _SET_SCOREBOARD )
+      nOldCursor = SetCursor( 0 )
       nRow = Row()
       nCol = Col()
       SetPos( SCORE_ROW, SCORE_COL )
