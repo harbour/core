@@ -1,3 +1,8 @@
+19990618-19:39 CET Patrick Mast
+  * tests\working\hscript\bld32exe.bat
+    changed line 17 : echo ..\runner.obj >> b32.bc
+    because runner.obj is not in tests\working\hscript but in tests\working
+
 19990618-17:00 CET Victor Szel <info@szelvesz.hu>
   * Fixed some GCC warnings in:
     source/compiler/harbour.y
