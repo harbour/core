@@ -494,7 +494,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    {        /* if it was at eof, and another station or handle added a record, it needs to GoTo or AtEof stays True. */
       AdsRefreshRecord(pArea->hTable);
    }
-   else if( ulRecNo > 0  && (pArea->iFileType==ADS_ADT || ulRecNo <= pArea->ulRecCount ) )
+   else if( ulRecNo > 0  && (pArea->iFileType == ADS_ADT || ulRecNo <= pArea->ulRecCount ) )
    {  /*   ADTs can have a recno greater than RecCount because it recycles deleted records !!! */
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
@@ -827,14 +827,14 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
          case 'M':
             pFieldInfo.uiType = HB_IT_MEMO;
-            pFieldInfo.uiLen = (adsFileType == ADS_ADT) ? 9 : 10;
+            pFieldInfo.uiLen = ( adsFileType == ADS_ADT ) ? 9 : 10;
             break;
 
          case 'D':
             if( strlen(szFieldType) == 1 || ! hb_stricmp( szFieldType, "date" ) )
             {
                pFieldInfo.uiType = HB_IT_DATE;
-               pFieldInfo.uiLen = (adsFileType == ADS_ADT) ? 4 : 8;
+               pFieldInfo.uiLen = ( adsFileType == ADS_ADT ) ? 4 : 8;
             }
             else if( ! hb_stricmp( szFieldType, "double" ) )
             {
@@ -868,7 +868,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
          case 'B':
             pFieldInfo.uiType = HB_IT_MEMO;
             pFieldInfo.uiTypeExtended = ADS_BINARY;
-            pFieldInfo.uiLen = (adsFileType == ADS_ADT)? 9:10;
+            pFieldInfo.uiLen = ( adsFileType == ADS_ADT ) ? 9 : 10;
             break;
 
          case 'V':
@@ -931,7 +931,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             {
                pFieldInfo.uiType = HB_IT_MEMO;
                pFieldInfo.uiTypeExtended = ADS_IMAGE;
-               pFieldInfo.uiLen = (adsFileType == ADS_ADT)? 9:10;
+               pFieldInfo.uiLen = ( adsFileType == ADS_ADT ) ? 9 : 10;
             }
             else
                return FAILURE;
@@ -1398,11 +1398,11 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       }
       else if( ulRetVal == AE_DATA_TOO_LONG )
       {
-         commonError( pArea, EG_WRITE, (USHORT) ulRetVal, NULL, 0 );
+         commonError( pArea, EG_WRITE, ( USHORT ) ulRetVal, NULL, 0 );
       }
       else
       {
-         commonError( pArea, EG_WRITE, (USHORT) ulRetVal, NULL, 0 );
+         commonError( pArea, EG_WRITE, ( USHORT ) ulRetVal, NULL, 0 );
       }
 
       return FAILURE;
@@ -1651,7 +1651,7 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       }
 
       case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ((pArea->iFileType==ADS_ADT) ? ".adt" : ".dbf") );
+         hb_itemPutC( pItem, ( ( pArea->iFileType == ADS_ADT ) ? ".adt" : ".dbf" ) );
          break;
 
       case DBI_FULLPATH :
@@ -1673,8 +1673,8 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_MEMOEXT:
-         hb_itemPutC( pItem, ((pArea->iFileType==ADS_ADT) ? ".adm" :
-                                (pArea->iFileType==ADS_CDX) ? ".fpt" : ".dbt") );
+         hb_itemPutC( pItem, ( ( pArea->iFileType == ADS_ADT ) ? ".adm" :
+                               ( pArea->iFileType == ADS_CDX ) ? ".fpt" : ".dbt" ) );
          break;
 
       case DBI_DB_VERSION     :   /* HOST driver Version */
@@ -1733,7 +1733,7 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
    pArea->uiRecordLen = 1;
 
    pArea->iFileType = adsFileType;
-   pArea->uiMaxFieldNameLength = (pArea->iFileType == ADS_ADT) ? ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
+   pArea->uiMaxFieldNameLength = ( pArea->iFileType == ADS_ADT ) ? ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
 
    return SUCCESS;
 }
@@ -1878,9 +1878,9 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       SELF_ADDFIELD( ( AREAP ) pArea, &dbFieldInfo );
    }
 
-   /* Alloc buffer */
-   if( pArea->maxFieldLen < 18 )
-      pArea->maxFieldLen = 18;
+   /* Alloc buffer. Extended types may require 24 bytes  */
+   if( pArea->maxFieldLen < 24 )
+      pArea->maxFieldLen = 24;
    pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->maxFieldLen + 1 );
    pArea->fValidBuffer = FALSE;
    if( adsRecCount( pArea, &ulRecCount ) == FAILURE )
@@ -1909,17 +1909,17 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
    if( pArea->hTable )
       AdsGetTableType( pArea->hTable, &usTableType );
    else
-      usTableType = (UNSIGNED16)adsFileType;
+      usTableType = (UNSIGNED16) adsFileType;
    switch( usTableType )
    {
       case ADS_NTX:
-         strcpy( (char *) pBuffer, "ADSNTX");
+         strcpy( (char *) pBuffer, "ADSNTX" );
          break;
       case ADS_CDX:
-         strcpy( (char *) pBuffer, "ADSCDX");
+         strcpy( (char *) pBuffer, "ADSCDX" );
          break;
       case ADS_ADT:
-         strcpy( (char *) pBuffer, "ADSADT");
+         strcpy( (char *) pBuffer, "ADSADT" );
          break;
    }
 
@@ -2049,7 +2049,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    if( !pArea->hOrdCurrent )
      *pucName = '\0';
    else
-     AdsGetIndexName( pArea->hOrdCurrent, pucName, &pusLen);
+     AdsGetIndexName( pArea->hOrdCurrent, pucName, &pusLen );
 
    pOrderInfo->itmResult = hb_itemPutCL( pOrderInfo->itmResult, ( char * ) pucName, pusLen );
 
@@ -2077,7 +2077,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
          if( ulLen > ADS_MAX_TAG_NAME )
             ulLen = ADS_MAX_TAG_NAME;
 
-         strncpy( ( char * ) pucTagName, pSrc, ulLen);
+         strncpy( ( char * ) pucTagName, pSrc, ulLen );
          pucTagName[ulLen] = '\0';
 
          if ( ulLen )
@@ -2090,8 +2090,13 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
       }
       if( ulRetVal != AE_SUCCESS )
       {
-         pArea->hOrdCurrent = 0;
-         return FAILURE;
+         if ( pArea->iFileType == ADS_NTX )
+            phIndex = pArea->hOrdCurrent;        /* ntx compatibilty: keep last order if failed */
+         else
+         {
+            pArea->hOrdCurrent = 0;
+            return FAILURE;
+         }
       }
       pArea->hOrdCurrent = phIndex;
    }
@@ -2369,7 +2374,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                case ADS_NUMERIC:
                   if ( pArea->iFileType == ADS_NTX )
                   {
-                     if ( aucBuffer[0] == '-' || aucBuffer[0] == ',')      /* negative number encoding */
+                     if ( aucBuffer[0] == '-' || aucBuffer[0] == ',' )     /* negative number encoding */
                      {
                         pus16 = 0;
                         while ( pus16 < pusLen && aucBuffer[pus16] == ',') /* leading zeros were set as commas for sorting */
@@ -2470,7 +2475,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
       case DBOI_BAGEXT:
          hb_itemPutC( pOrderInfo->itmResult,
-                ((pArea->iFileType==ADS_ADT) ? ".adi" : (pArea->iFileType==ADS_CDX) ? ".cdx" : ".ntx") );
+                ( ( pArea->iFileType == ADS_ADT ) ? ".adi" : ( pArea->iFileType == ADS_CDX ) ? ".cdx" : ".ntx" ) );
          break;
 
       case DBOI_ORDERCOUNT:
@@ -2938,8 +2943,8 @@ static ERRCODE adsDrop( PHB_ITEM pItemTable )
 
   pBuffer = hb_itemGetCPtr( pItemTable );
   strcpy( szFileName, pBuffer );
-  if ( !strchr( szFileName, '.' ))
-    strcat( szFileName, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
+  if ( ! strchr( szFileName, '.' ) )
+    strcat( szFileName, ( ( adsFileType == ADS_ADT ) ? ".adt" : ".dbf" ) );
   return hb_fsDelete( (BYTE *) szFileName );
 }
 
@@ -2951,8 +2956,8 @@ BOOL adsExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
 
   pBuffer = hb_itemGetCPtr( pItemIndex != NULL ? pItemIndex : pItemTable );
   strcpy( szFileName, pBuffer );
-  if ( pItemTable && !strchr( szFileName, '.' ))
-    strcat( szFileName, ((adsFileType==ADS_ADT) ? ".adt" : ".dbf") );
+  if ( pItemTable && ! strchr( szFileName, '.' ) )
+    strcat( szFileName, ( ( adsFileType == ADS_ADT ) ? ".adt" : ".dbf" ) );
   return hb_fsFile( (BYTE *) szFileName );
 }
 
@@ -3124,7 +3129,7 @@ HB_FUNC( ADSSETRELKEYPOS )
                if ( pArea->fEof )
                   hb_retnd( 1.0 );
                else
-                  hb_retnd( (double) pArea->ulRecNo/ ulRecCount  );
+                  hb_retnd( (double) pArea->ulRecNo / ulRecCount  );
             }
          }
       }

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-17 8:14 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/rdd_sys/ads1.c
+     * reuploaded to CVS (somehow it didn't get through the last time)
+
 2004-03-11 16:01 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_sys/ads1.c
      * NTX compatibility fix in adsOrderListFocus() to keep current order if
