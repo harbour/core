@@ -141,7 +141,6 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\proc.obj \
     $(OBJ_DIR)\pvalue.obj \
     $(OBJ_DIR)\readkey.obj \
-    $(OBJ_DIR)\readvar.obj \
     $(OBJ_DIR)\reserved.obj \
     $(OBJ_DIR)\samples.obj \
     $(OBJ_DIR)\set.obj \
@@ -729,12 +728,6 @@ $(RTL_DIR)\readkey.c : $(RTL_DIR)\readkey.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\readkey.obj : $(RTL_DIR)\readkey.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
-$(RTL_DIR)\readvar.c : $(RTL_DIR)\readvar.prg
-    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
-
-$(OBJ_DIR)\readvar.obj : $(RTL_DIR)\readvar.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\reserved.obj : $(COMMON_DIR)\reserved.c

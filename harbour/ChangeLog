@@ -1,3 +1,7 @@
+20000210-22:55 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     - source/rtl/readvar.prg
+
 20000211-04:15 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
      - readvar.prg removed.
