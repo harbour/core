@@ -9,7 +9,7 @@
 INCLUDE_DIR = ..\..\include
 OBJ_DIR     = ..\..\obj\vc
 LIB_DIR     = ..\..\lib\vc
-BIN_DIR     = ..\..\bin\vc
+BIN_DIR     = ..\..\bin
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -42,6 +42,12 @@ ADS_LIB_OBJS = \
 #
 
 all: $(ADS_LIB)
+
+CLEAN:
+   -@if exist $(OBJ_DIR)\ads0.obj del $(OBJ_DIR)\ads0.obj
+   -@if exist $(OBJ_DIR)\ads1.obj del $(OBJ_DIR)\ads1.obj
+   -@if exist $(OBJ_DIR)\adsfunc.obj del $(OBJ_DIR)\adsfunc.obj
+   -@if exist $(ADS_LIB) del $(ADS_LIB)
 
 #
 # Library dependencies and build rules

@@ -52,7 +52,7 @@ MK_FLAGS     = $(MAKEFLAGS: =)
 
 OBJ_DIR     = ..\..\obj\vc
 LIB_DIR     = ..\..\lib\vc
-BIN_DIR     = ..\..\bin\vc
+BIN_DIR     = ..\..\bin
 
 #
 # Directory macros. These should never have to change.
@@ -133,14 +133,10 @@ TOOLS_LIB_OBJS = \
 #
 
 
-!if ( "$(MK_FLAGS)"=="A" )
-
-all: zot \
+all: \
    $(TOOLS_LIB)
 
-MK_FLAGS = $(MK_FLAGS:A=)
-
-zot:
+CLEAN:
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
    -@if exist $(OBJ_DIR)\asciisum.obj del $(OBJ_DIR)\asciisum.obj
    -@if exist $(OBJ_DIR)\ascpos.obj del $(OBJ_DIR)\ascpos.obj
@@ -159,13 +155,7 @@ zot:
    -@if exist $(OBJ_DIR)\strleft.obj del $(OBJ_DIR)\strleft.obj
    -@if exist $(OBJ_DIR)\strpbrk.obj del $(OBJ_DIR)\strpbrk.obj
    -@if exist $(OBJ_DIR)\strright.obj del $(OBJ_DIR)\strright.obj 
-
-!else
-
-all: \
-   $(TOOLS_LIB)
-
-!endif
+   -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #
 # Library dependencies and build rules
