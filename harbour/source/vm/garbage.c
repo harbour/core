@@ -51,8 +51,9 @@ typedef struct HB_GARBAGE_
 } HB_GARBAGE, *HB_GARBAGE_PTR;
 
 /* status of memory block */
-#define HB_GC_UNLOCKED  0
-#define HB_GC_LOCKED	1	/* do not collect a memory block */
+#define HB_GC_UNLOCKED     0
+#define HB_GC_LOCKED       1  /* do not collect a memory block */
+#define HB_GC_NOTCHECKED   2  /* this item was not checked yet */
 
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
@@ -70,8 +71,8 @@ static BOOL s_bCollecting = FALSE;
 void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
 {
    HB_GARBAGE_PTR pAlloc;
-   
-   pAlloc = HB_GARBAGE_NEW( ulSize + sizeof( HB_GARBAGE ) ); 
+
+   pAlloc = HB_GARBAGE_NEW( ulSize + sizeof( HB_GARBAGE ) );
    if( pAlloc )
    {
       if( s_pCurrBlock )
@@ -89,7 +90,7 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
       }
       pAlloc->pFunc = pCleanupFunc;
       pAlloc->status = HB_GC_UNLOCKED;
-      
+
       return (void *)( pAlloc + 1 );   /* hide the internal data */
    }
    else
@@ -131,7 +132,7 @@ void *hb_gcLock( void *pBlock )
    {
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
       --pAlloc;
-      
+
       pAlloc->status |= HB_GC_LOCKED;
    }
    return pBlock;
@@ -146,7 +147,7 @@ void *hb_gcUnlock( void *pBlock )
    {
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
       --pAlloc;
-      
+
       pAlloc->status &= ~( ( ULONG ) HB_GC_LOCKED );
    }
    return pBlock;
@@ -187,7 +188,8 @@ void hb_gcCollect( void )
       void *pBlock = ( void * )( s_pCurrBlock + 1 ); /* change for real pointer */
       HB_GARBAGE_PTR pNext = s_pCurrBlock->pNext;
 
-      if( !( s_pCurrBlock->status & HB_GC_LOCKED ) )     
+      s_pCurrBlock->status &= ~( (ULONG)HB_GC_NOTCHECKED );
+      if( !( s_pCurrBlock->status & HB_GC_LOCKED ) )
       {
          if( !hb_vmIsLocalRef( pBlock ) )
          {
@@ -197,8 +199,8 @@ void hb_gcCollect( void )
                {
                   if( !hb_clsIsClassRef( pBlock ) )
                   {
-                     /* It is possible that s_pCurrBlock will be requested 
-                      * to release from a cleanup function - to prevent it 
+                     /* It is possible that s_pCurrBlock will be requested
+                      * to release from a cleanup function - to prevent it
                       * we have to use some flag.
                       */
                      s_bCollecting = TRUE;
@@ -224,12 +226,21 @@ void hb_gcCollect( void )
 */
 void hb_gcCollectAll( void )
 {
-   HB_GARBAGE_PTR pStart = s_pCurrBlock;
-   
-   do
+   HB_GARBAGE_PTR pBlock = s_pCurrBlock;
+
+   if( s_pCurrBlock )
    {
-      hb_gcCollect();
-   } while( s_pCurrBlock && (pStart != s_pCurrBlock) );
+      do
+      {
+         pBlock->status |= HB_GC_NOTCHECKED;
+         pBlock = pBlock->pNext;
+      } while (pBlock != s_pCurrBlock);
+
+      do
+      {
+         hb_gcCollect();
+      } while( s_pCurrBlock && (s_pCurrBlock->status & HB_GC_NOTCHECKED) );
+   }
 }
 
 /* Check if passed item <pItem> contains a reference to passed
@@ -247,7 +258,7 @@ BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
       else
          return FALSE;   /* all items should be passed directly */
    }
-         
+
    if( HB_IS_ARRAY( pItem ) )
    {
       /* NOTE: this checks for objects too */
@@ -257,7 +268,7 @@ BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
       {
          ULONG ulSize = pItem->item.asArray.value->ulLen;
          pItem = pItem->item.asArray.value->pItems;
-      
+
          while( ulSize-- )
          {
             if( hb_gcItemRef( pItem, pBlock ) )
@@ -270,12 +281,12 @@ BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
    else if( HB_IS_BLOCK( pItem ) )
    {
       return ( pItem->item.asBlock.value == ( HB_CODEBLOCK_PTR )pBlock );
-   }      
-   
+   }
+
    return FALSE;
 }
 
-/* service a single garbage collector step 
+/* service a single garbage collector step
  * Check a single memory block if it can be released
 */
 HB_FUNC( HB_GCSTEP )

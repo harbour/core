@@ -1,4 +1,24 @@
-2000-06-02 12:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+2000-07-03 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbpp.h
+    *source/pp/ppcore.c
+        * fixed declaration and definition of hb_pp_SetRule() - Watcom C/C++
+        was recognizing it as overloading of the function
+
+    *source/rtl/gtdos/gtdos.c
+        * fixed low level processor ports access for Watcom C/C++
+
+    *source/vm/garbage.c
+        * fixed possible endless loop in hb_gcCollectAll()
+
+    *source/vm/arrays.c
+        * arrays are no longer released recursively during the garbage
+        collecting
+
+    *source/rdd/dbfntx/dbfntx1.c
+        * fixed warning for unused variable
+        
+2000-07-02 12:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
     *source/vm/memvars.c

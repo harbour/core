@@ -203,7 +203,7 @@ char * hb_pp_szWarnings[] =
 extern BOOL bDebug;
 */
 
-void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ), BOOL hb_comp_bQuiet )
+void hb_pp_SetRules( HB_INCLUDE_FUNC_PTR hb_compInclude, BOOL hb_comp_bQuiet )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pp_SetRules()"));
 

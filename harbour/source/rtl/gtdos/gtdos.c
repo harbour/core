@@ -68,6 +68,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+#include "hbapi.h"
 #include "hbapigt.h"
 #include "hbset.h" /* For Ctrl+Break handling */
 #include "hbvm.h" /* For Ctrl+Break handling */
@@ -975,7 +976,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
                   tasking friendly. */
          end_clock = clock() + temp;
          while( clock() < end_clock )
-            hb_releaseCPU();
+            hb_idleState();
       }
    }
 
@@ -1184,6 +1185,12 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    #define outport( p, w )      /* Do nothing */
    #define outportb( p, b )     /* Do nothing */
    #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
+#elif defined(__WATCOMC__)
+   #define outportb outp        /* Use correct function name */
+   #define outport outpw        /* Use correct function name */
+   #define inport inpw          /* Use correct function name */
+   #define inportb inp          /* Use correct function name */
+   #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
 #else
    #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
 #endif
@@ -1191,7 +1198,7 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
 static void vmode12x40( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0001;               /* video mode 40 cols */
+   regs.HB_XREGS.ax = 0x0001;               /* video mode 40 cols */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    outportb( 0x03D4, 0x09 );         /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
@@ -1202,27 +1209,27 @@ static void vmode12x40( void )
 static void vmode25x40( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0001;
+   regs.HB_XREGS.ax = 0x0001;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
 }
 
 static void vmode28x40( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0001;               /* video mode 40 cols */
+   regs.HB_XREGS.ax = 0x0001;               /* video mode 40 cols */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                    /* load block 0 (BL = 0) */
-   regs.x.ax = 0x1111;               /* load 8x8 monochrome char set into RAM */
+   regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
+   regs.HB_XREGS.ax = 0x1111;               /* load 8x8 monochrome char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
 }
 
 static void vmode50x40( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0001;
+   regs.HB_XREGS.ax = 0x0001;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                    /* load block 0 (BL = 0) */
-   regs.x.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
+   regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
+   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    outport( 0x03D4, 0x060A );
 }
@@ -1230,7 +1237,7 @@ static void vmode50x40( void )
 static void vmode12x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0003;                  /* mode in AL, if bit 7 is on, No CLS */
+   regs.HB_XREGS.ax = 0x0003;                  /* mode in AL, if bit 7 is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    outportb( 0x03D4, 0x09 );            /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
@@ -1241,37 +1248,37 @@ static void vmode12x80( void )
 static void vmode25x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x1202;              /* select 350 scan line mode */
+   regs.HB_XREGS.ax = 0x1202;              /* select 350 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.ax = 0x0083;              /* mode in AL, if higher bit is on, No CLS */
+   regs.HB_XREGS.ax = 0x0083;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                   /* load block 0 (BL = 0) */
-   regs.x.ax = 0x1114;              /* load 8x14 VGA char set into RAM */
+   regs.HB_XREGS.bx = 0;                   /* load block 0 (BL = 0) */
+   regs.HB_XREGS.ax = 0x1114;              /* load 8x14 VGA char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
 }
 
 static void vmode28x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
+   regs.HB_XREGS.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                   /* load block 0 (BL = 0) */
-   regs.x.ax = 0x1111;              /* load 8x8 monochrome char set into RAM */
+   regs.HB_XREGS.bx = 0;                   /* load block 0 (BL = 0) */
+   regs.HB_XREGS.ax = 0x1111;              /* load 8x8 monochrome char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
 }
 
 static void vmode43x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x1201;              /*  select 350 scan line mode */
+   regs.HB_XREGS.ax = 0x1201;              /*  select 350 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
+   regs.HB_XREGS.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    regs.h.bh = 0x1;                 /* bytes per character */
    regs.h.bl = 0x0;                 /* load block 0 */
-   regs.x.ax = 0x1112;              /* load 8x8 double dot char set into RAM */
+   regs.HB_XREGS.ax = 0x1112;              /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
    outport( 0x03D4, 0x060A );       /* update cursor size / pointers */
    POKE_BYTE( 0x40, 0x84, 42);      /* 42 rows number update */
@@ -1280,13 +1287,13 @@ static void vmode43x80( void )
 static void vmode50x80( void )
 {
    union REGS regs;
-   regs.x.ax = 0x1202;               /*  select 400 scan line mode */
+   regs.HB_XREGS.ax = 0x1202;               /*  select 400 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.ax = 0x0003;               /* mode in AL, if bit 7 is on, No CLS */
+   regs.HB_XREGS.ax = 0x0003;               /* mode in AL, if bit 7 is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
-   regs.x.bx = 0;                    /* load block 0 (BL = 0) */
-   regs.x.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
+   regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
+   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
 }
 
@@ -1320,7 +1327,7 @@ static USHORT hb_gt_GetDisplay( void )
 {
    union REGS regs;
 
-   regs.x.ax = 0x1A00;
+   regs.HB_XREGS.ax = 0x1A00;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs);
 
    return ( regs.h.al == 0x1A ) ? regs.h.bl : 0xFF;

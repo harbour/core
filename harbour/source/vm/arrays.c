@@ -746,13 +746,23 @@ static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
    {
       HB_ITEM_PTR pItem = pBaseArray->pItems;
       ULONG ulLen = pBaseArray->ulLen;
-      
+
       while( ulLen-- )
       {
-         pBaseArray->uiHolders = 0;    /* to prevent cyclic release of this array */
-         hb_itemClear( pItem++ );
+         /* Only strings should be deallocated.
+          * Arrays, objects and codeblock should be released directly by 
+          * the garbage collector
+          */
+         if( HB_IS_STRING( pItem ) )
+         {
+            if( pItem->item.asString.value )
+            {
+               hb_xfree( pItem->item.asString.value );
+            }
+         }
+         ++pItem;
       }
       hb_xfree( pBaseArray->pItems );
-   }         
+   }
 }
 
