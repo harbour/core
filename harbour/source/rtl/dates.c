@@ -78,7 +78,7 @@ HB_INIT_SYMBOLS_END( Dates__InitSymbols );
 
 double hb__seconds( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) // || defined(_MSC_VER)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) /* || defined(_MSC_VER) */
    struct time t;
    gettime( &t );
    return( ( ( t.ti_hour * 3600 ) + ( t.ti_min * 60 ) + t.ti_sec ) + (double)t.ti_hund /100 );

@@ -1,3 +1,13 @@
+19990801-21:40 GMT+1 Victor Szel <info@szelvesz.hu>
+   ! source/compiler/harbour.y
+     source/hbpp/hbpplib.c
+     source/odbc/odbc.c
+     source/rtl/dates.c
+     source/rtl/dir.c
+     source/tools/dates2.c
+     include/rddapi.h (some are still left)
+     Changed all // style comments to /**/
+
 19990801-20:40 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/rddsys.prg
      source/rdd/dbf0.prg

@@ -73,7 +73,7 @@ HB_INIT_SYMBOLS_BEGIN( odbc__InitSymbols )
 HB_INIT_SYMBOLS_END( odbc__InitSymbols );
 #pragma odbc__InitSymbols
 
-HARBOUR HB_SQLALLOCEN( void ) // NNECT()   @hEnv   --> nRetCode
+HARBOUR HB_SQLALLOCEN( void ) /* HB_SQLALLOCENNNECT( @hEnv ) --> nRetCode */
 {
    HENV hEnv;
    RETCODE ret = SQLAllocEnv( &hEnv );
@@ -82,7 +82,7 @@ HARBOUR HB_SQLALLOCEN( void ) // NNECT()   @hEnv   --> nRetCode
    hb_retni( ret );
 }
 
-HARBOUR HB_SQLALLOCCO( void ) // NNECT()   hEnv, @ hDbc   --> nRetCode
+HARBOUR HB_SQLALLOCCO( void ) /* HB_SQLALLOCCONNECT( hEnv, @ hDbc ) --> nRetCode */
 {
    HDBC hDbc;
    RETCODE ret = SQLAllocConnect( ( HENV ) hb_parnl( 1 ), &hDbc );
@@ -91,7 +91,7 @@ HARBOUR HB_SQLALLOCCO( void ) // NNECT()   hEnv, @ hDbc   --> nRetCode
    hb_retni( ret );
 }
 
-HARBOUR HB_SQLDRIVERC( void ) // ONNECT()  hDbc, @ cConnectString, lPrompt  --> nRetCode
+HARBOUR HB_SQLDRIVERC( void ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lPrompt ) --> nRetCode */
 {
    BYTE  bBuffer1[ 1024 ];
    SWORD  wLen;
@@ -103,22 +103,22 @@ HARBOUR HB_SQLDRIVERC( void ) // ONNECT()  hDbc, @ cConnectString, lPrompt  --> 
    hb_retni( ret );
 }
 
-HARBOUR HB_SQLDISCONN( void )  // ECT()  hDbc  --> nRetCode
+HARBOUR HB_SQLDISCONN( void )  /* HB_SQLDISCONNECT( hDbc ) --> nRetCode */
 {
    hb_retni( SQLDisconnect( ( HDBC ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLFREECON( void )  // NECT()  hDbc  --> nRetCode
+HARBOUR HB_SQLFREECON( void )  /* HB_SQLFREECONNECT( hDbc ) --> nRetCode */
 {
    hb_retni( SQLFreeConnect( ( HDBC ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLFREEENV( void )  // hEnv  --> nRetCode
+HARBOUR HB_SQLFREEENV( void )  /* HB_SQLFREEENV( hEnv ) --> nRetCode */
 {
    hb_retni( SQLFreeEnv( ( HENV ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLALLOCST()  // MT()   hDbc, @ hStmt  --> nRetCode
+HARBOUR HB_SQLALLOCST()  /* HB_SQLALLOCSTMT( hDbc, @ hStmt ) --> nRetCode */
 {
    HSTMT hStmt;
 
@@ -126,22 +126,22 @@ HARBOUR HB_SQLALLOCST()  // MT()   hDbc, @ hStmt  --> nRetCode
    hb_stornl( ( LONG ) hStmt, 2 );
 }
 
-HARBOUR HB_SQLFREESTM() // T()  hStmt, nType   --> nRetCode
+HARBOUR HB_SQLFREESTM() /* HB_SQLFREESTMT( hStmt, nType ) --> nRetCode */
 {
    hb_retni( SQLFreeStmt( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
-HARBOUR HB_SQLEXECDIR( void )  // ECT()   hStmt, cStatement  --> nRetCode
+HARBOUR HB_SQLEXECDIR( void )  /* HB_SQLEXECDIRECT( hStmt, cStatement ) --> nRetCode */
 {
    hb_retni( SQLExecDirect( ( HSTMT ) hb_parnl( 1 ), hb_parc( 2 ), SQL_NTS ) );
 }
 
-HARBOUR HB_SQLFETCH( void )   //  hStmt  --> nRetCode
+HARBOUR HB_SQLFETCH( void )   /* HB_SQLFETCH( hStmt ) --> nRetCode */
 {
    hb_retni( SQLFetch( ( HSTMT ) hb_parnl( 1 ) ) );
 }
 
-HARBOUR HB_SQLGETDATA( void ) // ( hStmt, nField, nType, nLen, @cBuffer ) --> nRetCode
+HARBOUR HB_SQLGETDATA( void ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) --> nRetCode */
 {
    SDWORD lLen  = ( SDWORD ) hb_parnl( 4 );
    PTR  bBuffer = hb_xgrab( lLen );

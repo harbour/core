@@ -10,110 +10,110 @@
 typedef USHORT ERRCODE;
 typedef void * FARP;
 
-// RDD method return codes
+/* RDD method return codes */
 
 #define SUCCESS 0
 #define FAILURE 1
 
-// Flags for DBTRANSINFO
+/* Flags for DBTRANSINFO */
 
-#define DBTF_MATCH   0x0001
-#define DBTF_PUTREC  0x0002
+#define DBTF_MATCH         0x0001
+#define DBTF_PUTREC        0x0002
 
-// Codes for Locking methods
+/* Codes for Locking methods */
 
-#define DBLM_EXCLUSIVE	   1
-#define DBLM_MULTIPLE	   2
-#define DBLM_FILE	   3
+#define DBLM_EXCLUSIVE     1
+#define DBLM_MULTIPLE      2
+#define DBLM_FILE          3
 
-// Codes for SELF_ORDINFO()
+/* Codes for SELF_ORDINFO() */
 
-#define DBOI_CONDITION	   1  // Get the order condition
-#define DBOI_EXPRESSION    2  // Get the order expression
-#define DBOI_POSITION	   3  // Get the order position
-#define DBOI_RECNO	   4  // Get the order record number
-#define DBOI_NAME	   5  // Get the order list name
-#define DBOI_NUMBER	   6  // Get the order list position
-#define DBOI_BAGNAME	   7  // Get the order Bag name
-#define DBOI_BAGEXT	   8  // Get the order Bag Extension
-#define DBOI_INDEXEXT	   DBOI_BAGEXT
-#define DBOI_INDEXNAME	   DBOI_BAGNAME
-#define DBOI_ORDERCOUNT    9  // Get the number of orders in the index file
-#define DBOI_FILEHANDLE   10  // Get the handle of the index file
-#define DBOI_ISCOND	  11  // Get the flag if the order has a for condition
-#define DBOI_ISDESC	  12  // Get the flag if the order is descending
-#define DBOI_UNIQUE	  13  // Get the flag if the order has the unique attribute set
+#define DBOI_CONDITION     1    /* Get the order condition */
+#define DBOI_EXPRESSION    2    /* Get the order expression */
+#define DBOI_POSITION      3    /* Get the order position */
+#define DBOI_RECNO         4    /* Get the order record number */
+#define DBOI_NAME          5    /* Get the order list name */
+#define DBOI_NUMBER        6    /* Get the order list position */
+#define DBOI_BAGNAME       7    /* Get the order Bag name */
+#define DBOI_BAGEXT        8    /* Get the order Bag Extension */
+#define DBOI_INDEXEXT      DBOI_BAGEXT
+#define DBOI_INDEXNAME     DBOI_BAGNAME
+#define DBOI_ORDERCOUNT    9    /* Get the number of orders in the index file */
+#define DBOI_FILEHANDLE    10   /* Get the handle of the index file */
+#define DBOI_ISCOND        11   /* Get the flag if the order has a for condition */
+#define DBOI_ISDESC        12   /* Get the flag if the order is descending */
+#define DBOI_UNIQUE        13   /* Get the flag if the order has the unique attribute set */
 
-// Codes for SELF_INFO()
+/* Codes for SELF_INFO() */
 
-#define DBI_ISDBF	   1  // Logical: RDD support DBF file format?
-#define DBI_CANPUTREC	   2  // Logical: RDD support Putting Records?
-#define DBI_GETHEADERSIZE  3  // Numeric: Get header size of the file
-#define DBI_LASTUPDATE	   4  // Date:	  Last date RDD file updated
-#define DBI_GETDELIMITER   5  // String:  Get default delimiter
-#define DBI_SETDELIMITER   6  // String:  Set default delimiter
-#define DBI_GETRECSIZE	   7  // Numeric: Get record size of the file
-#define DBI_GETLOCKARRAY   8  // Array: Get an array of locked records
-#define DBI_TABLEEXT	   9  // String:  Get table file extension
+#define DBI_ISDBF          1    /* Logical: RDD support DBF file format? */
+#define DBI_CANPUTREC      2    /* Logical: RDD support Putting Records? */
+#define DBI_GETHEADERSIZE  3    /* Numeric: Get header size of the file */
+#define DBI_LASTUPDATE     4    /* Date:    Last date RDD file updated */
+#define DBI_GETDELIMITER   5    /* String:  Get default delimiter */
+#define DBI_SETDELIMITER   6    /* String:  Set default delimiter */
+#define DBI_GETRECSIZE     7    /* Numeric: Get record size of the file */
+#define DBI_GETLOCKARRAY   8    /* Array: Get an array of locked records */
+#define DBI_TABLEEXT       9    /* String:  Get table file extension */
 
-#define DBI_ISFLOCK	  20  // Get file lock status
+#define DBI_ISFLOCK        20   /* Get file lock status */
 
-#define DBI_CHILDCOUNT	  22  // Number of opened relations
-#define DBI_FILEHANDLE	  23  // Handle of opened file
+#define DBI_CHILDCOUNT     22   /* Number of opened relations */
+#define DBI_FILEHANDLE     23   /* Handle of opened file */
 
-#define DBI_BOF 	  26  // BOF flag - alternate to bof()
-#define DBI_EOF 	  27  // EOF flag - alternate to eof()
-#define DBI_DBFILTER	  28  // Filter expression
-#define DBI_FOUND	  29  // FOUND flag - alternate to found
-#define DBI_FCOUNT	  30  // Number of fields
-#define DBI_LOCKCOUNT	  31  // Get record size of the file
-#define DBI_VALIDBUFFER   32  // Is the current buffer valid
-#define DBI_ALIAS	  33  // Alias name of workarea
-#define DBI_GETSCOPE	  34  // Locate codeblock
-#define DBI_LOCKOFFSET	  35  // New locking offset
-#define DBI_SHARED	  36  // Gets/Sets the shared flag
+#define DBI_BOF            26   /* BOF flag - alternate to bof() */
+#define DBI_EOF            27   /* EOF flag - alternate to eof() */
+#define DBI_DBFILTER       28   /* Filter expression */
+#define DBI_FOUND          29   /* FOUND flag - alternate to found */
+#define DBI_FCOUNT         30   /* Number of fields */
+#define DBI_LOCKCOUNT      31   /* Get record size of the file */
+#define DBI_VALIDBUFFER    32   /* Is the current buffer valid */
+#define DBI_ALIAS          33   /* Alias name of workarea */
+#define DBI_GETSCOPE       34   /* Locate codeblock */
+#define DBI_LOCKOFFSET     35   /* New locking offset */
+#define DBI_SHARED         36   /* Gets/Sets the shared flag */
 
-#define DBI_MEMOEXT	  37  // Gets/Sets the shared flag
-#define DBI_MEMOHANDLE	  38  // Dos handle for memo file
-#define DBI_MEMOBLOCKSIZE 39  // Blocksize in memo files
+#define DBI_MEMOEXT        37   /* Gets/Sets the shared flag */
+#define DBI_MEMOHANDLE     38   /* Dos handle for memo file */
+#define DBI_MEMOBLOCKSIZE  39   /* Blocksize in memo files */
 
-#define DBI_DB_VERSION	 101  // HOST driver Version
-#define DBI_RDD_VERSION  102  // RDD version (current RDD)
+#define DBI_DB_VERSION     101  /* HOST driver Version */
+#define DBI_RDD_VERSION    102  /* RDD version (current RDD) */
 
-#define DBI_USER	1000  // Start of user definable DBI_ values
+#define DBI_USER           1000 /* Start of user definable DBI_ values */
 
-// codes for SELF_RECINFO()
+/* codes for SELF_RECINFO() */
 
-#define DBRI_DELETED	  1
-#define DBRI_LOCKED	  2
-#define DBRI_RECSIZE	  3
-#define DBRI_RECNO	  4
-#define DBRI_UPDATED	  5
+#define DBRI_DELETED       1
+#define DBRI_LOCKED        2
+#define DBRI_RECSIZE       3
+#define DBRI_RECNO         4
+#define DBRI_UPDATED       5
 
 
-// codes for SELF_FIELDINFO()
+/* codes for SELF_FIELDINFO() */
 
-#define DBS_NAME	  1
-#define DBS_TYPE	  2
-#define DBS_LEN 	  3
-#define DBS_DEC 	  4
+#define DBS_NAME           1
+#define DBS_TYPE           2
+#define DBS_LEN            3
+#define DBS_DEC            4
 
-// codes for RawLock types
+/* codes for RawLock types */
 
-#define FILE_LOCK	  1
-#define FILE_UNLOCK	  2
-#define REC_LOCK	  3
-#define REC_UNLOCK	  4
-#define HEADER_LOCK	  5
-#define HEADER_UNLOCK	  6
-#define APPEND_LOCK	  7
-#define APPEND_UNLOCK	  8
+#define FILE_LOCK          1
+#define FILE_UNLOCK        2
+#define REC_LOCK           3
+#define REC_UNLOCK         4
+#define HEADER_LOCK        5
+#define HEADER_UNLOCK      6
+#define APPEND_LOCK        7
+#define APPEND_UNLOCK      8
 
 
 typedef struct _FILEINFO
 {
    FHANDLE hFile;
-   struct _FILEINFO * pNext;   // The next file in the list
+   struct _FILEINFO * pNext;   /* The next file in the list */
 } FILEINFO;
 
 typedef FILEINFO * LPFILEINFO;
@@ -127,11 +127,11 @@ typedef FILEINFO * LPFILEINFO;
 
 typedef struct
 {
-   BYTEP  atomName;        // FIELD (symbol) name
-   USHORT uiType;          // FIELD type
-   USHORT typeExtended;    // FIELD type extended
-   USHORT uiLen;           // Overall FIELD length
-   USHORT uiDec;           // Decimal places of numeric FIELD
+   BYTEP  atomName;        /* FIELD (symbol) name */
+   USHORT uiType;          /* FIELD type */
+   USHORT typeExtended;    /* FIELD type extended */
+   USHORT uiLen;           /* Overall FIELD length */
+   USHORT uiDec;           /* Decimal places of numeric FIELD */
 } DBFIELDINFO;
 
 typedef DBFIELDINFO * LPDBFIELDINFO;
@@ -145,13 +145,13 @@ typedef DBFIELDINFO * LPDBFIELDINFO;
 
 typedef struct
 {
-   USHORT uiArea;          // Work Area number of the data store
-   BYTEP  abName;          // The qualified name of the data store
-   BYTEP  atomAlias;       // The logical name of the data store
-   BOOL   fShared;         // Share mode of the data store
-   BOOL   fReadonly;       // Readonly mode of the data store
+   USHORT uiArea;          /* Work Area number of the data store */
+   BYTEP  abName;          /* The qualified name of the data store */
+   BYTEP  atomAlias;       /* The logical name of the data store */
+   BOOL   fShared;         /* Share mode of the data store */
+   BOOL   fReadonly;       /* Readonly mode of the data store */
 
-   FARP   lpdbHeader;      // Pointer to a header of the data store
+   FARP   lpdbHeader;      /* Pointer to a header of the data store */
 } DBOPENINFO;
 
 typedef DBOPENINFO * LPDBOPENINFO;
@@ -163,31 +163,33 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estructura de creaci¢n condicional de orden
 */
 
-//typedef struct _DBORDERCONDINFO
-//{
-//   BOOL  fActive;
-//   BYTEP abFor;
-//   ITEM  itmCobFor;
-//   ITEM  itmCobWhile;
-//   ITEM  itmCobEval;
-//   LONG  lStep;
-//   LONG  lStartRecno;
-//   LONG  lNextCount;
-//   LONG  lRecno;
-//   BOOL  fRest;
-//   BOOL  fDescending;
-//   BOOL  fScoped;
-//   BOOL  fAll;
+#ifdef COMMENT
+typedef struct _DBORDERCONDINFO
+{
+   BOOL  fActive;
+   BYTEP abFor;
+   ITEM  itmCobFor;
+   ITEM  itmCobWhile;
+   ITEM  itmCobEval;
+   LONG  lStep;
+   LONG  lStartRecno;
+   LONG  lNextCount;
+   LONG  lRecno;
+   BOOL  fRest;
+   BOOL  fDescending;
+   BOOL  fScoped;
+   BOOL  fAll;
 
-//   BOOL  fAdditive;
-//   BOOL  fUseCurrent;
-//   BOOL  fCustom;
-//   BOOL  fNoOptimize;
-//   FARP  lpvCargo;
+   BOOL  fAdditive;
+   BOOL  fUseCurrent;
+   BOOL  fCustom;
+   BOOL  fNoOptimize;
+   FARP  lpvCargo;
 
-//} DBORDERCONDINFO;
+} DBORDERCONDINFO;
 
-//typedef DBORDERCONDINFO far * LPDBORDERCONDINFO;
+typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
+#endif
 
 
 
@@ -197,21 +199,23 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estructura de creaci¢n de orden
 */
 
-//typedef struct
-//{
-//   LPDBORDERCONDINFO lpdbOrdCondInfo; // Informaci¢n condicional
-//   BYTEP             abBagName;       // Nombre del contenedor de ¢rdenes
-//   BYTEP             atomBagName;     //
-//   ITEM              itmOrder;        //
-//   BOOL              fUnique;         // Indicador que determina si todas
-                                      // las claves con £nicas
+#ifdef COMMENT
+typedef struct
+{
+   LPDBORDERCONDINFO lpdbOrdCondInfo; /* Informaci¢n condicional */
+   BYTEP             abBagName;       /* Nombre del contenedor de ¢rdenes */
+   BYTEP             atomBagName;
+   ITEM              itmOrder;
+   BOOL              fUnique;         /* Indicador que determina si todas */
+                                      /* las claves con £nicas */
 
-//   ITEM              itmCobExpr;      // Bloque de c¢digo conteniendo la
-                                      // expresi¢n clave
-//   ITEM              abExpr;          // Cadena conteniendo la expresi¢n clave
-//} DBORDERCREATEINFO;
+   ITEM              itmCobExpr;      /* Bloque de c¢digo conteniendo la */
+                                      /* expresi¢n clave */
+   ITEM              abExpr;          /* Cadena conteniendo la expresi¢n clave */
+} DBORDERCREATEINFO;
 
-//typedef DBORDERCREATEINFO far * LPDBORDERCREATEINFO;
+typedef DBORDERCREATEINFO * LPDBORDERCREATEINFO;
+#endif
 
 
 
@@ -221,20 +225,22 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estructura de Set Index
 */
 
-//typedef struct
-//{
-//   ITEM atomBagName;  // Nombre del contenedor de ¢rdenes
-//   ITEM itmOrder;     // Nombre o n£mero de la orden
+#ifdef COMMENT
+typedef struct
+{
+   ITEM atomBagName;  /* Nombre del contenedor de ¢rdenes */
+   ITEM itmOrder;     /* Nombre o n£mero de la orden */
 
-//   ITEM itmCobExpr;   // Bloque de c¢digo conteniendo la expresi¢n clave
+   ITEM itmCobExpr;   /* Bloque de c¢digo conteniendo la expresi¢n clave */
 
-//   ITEM itmResult;    // Resultado de la operaci¢n
+   ITEM itmResult;    /* Resultado de la operaci¢n */
 
-//   BOOL fAllTags;     // Indicador de todos los tags a abrir
+   BOOL fAllTags;     /* Indicador de todos los tags a abrir */
 
-//} DBORDERINFO;
+} DBORDERINFO;
 
-//typedef DBORDERINFO far * LPDBORDERINFO;
+typedef DBORDERINFO * LPDBORDERINFO;
+#endif
 
 
 
@@ -244,24 +250,26 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estructura de  mbito
 */
 
-//typedef struct
-//{
-//   ITEM itmCobFor;   // Bloque de c¢digo representaci¢n de una cl usula FOR
-//   ITEM lpstrFor;    // Cadena representaci¢n de una cl usula FOR
-//   ITEM itmCobWhile; // Bloque de c¢digo representaci¢n de una cl usula WHILE
-//   ITEM lpstrWhile;  // Cadena representaci¢n de una cl usula WHILE
-//   ITEM lNext;
-//   ITEM itmRecID;
-//   ITEM fRest;       // TRUE si se empieza desde el registro actual
+#ifdef COMMENT
+typedef struct
+{
+   ITEM itmCobFor;   /* Bloque de c¢digo representaci¢n de una cl usula FOR */
+   ITEM lpstrFor;    /* Cadena representaci¢n de una cl usula FOR */
+   ITEM itmCobWhile; /* Bloque de c¢digo representaci¢n de una cl usula WHILE */
+   ITEM lpstrWhile;  /* Cadena representaci¢n de una cl usula WHILE */
+   ITEM lNext;
+   ITEM itmRecID;
+   ITEM fRest;       /* TRUE si se empieza desde el registro actual */
 
-//   BOOL fIgnoreFilter;
-//   BOOL fIncludeDeleted;
-//   BOOL fLast;
-//   BOOL fIgnoreDuplicates;
+   BOOL fIgnoreFilter;
+   BOOL fIncludeDeleted;
+   BOOL fLast;
+   BOOL fIgnoreDuplicates;
 
-//} DBSCOPEINFO;
+} DBSCOPEINFO;
 
-//typedef DBSCOPEINFO far * LPDBSCOPEINFO;
+typedef DBSCOPEINFO * LPDBSCOPEINFO;
+#endif
 
 
 
@@ -271,14 +279,16 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estructura de filtro
 */
 
-//typedef struct
-//{
-//   ITEM itmCobExpr;       // Bloque representaci¢n de la expresi¢n FILTER
-//   ITEM abFilterText;     // Cadena representaci¢n de la expresi¢n FILTER
-//   BOOL fFilter;
-//} DBFILTERINFO;
+#ifdef COMMENT
+typedef struct
+{
+   ITEM itmCobExpr;       /* Bloque representaci¢n de la expresi¢n FILTER */
+   ITEM abFilterText;     /* Cadena representaci¢n de la expresi¢n FILTER */
+   BOOL fFilter;
+} DBFILTERINFO;
 
-//typedef DBFILTERINFO far * LPDBFILTERINFO;
+typedef DBFILTERINFO * LPDBFILTERINFO;
+#endif
 
 
 
@@ -288,19 +298,21 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  La estrurcura de relaciones
 */
 
-//typedef struct _DBRELINFO
-//{
-//   ITEM itmCobExpr;   // Bloque representaci¢n de la clave relacional SEEK
-//   ITEM abKey;        // Cadena representaci¢n de la clave relacional SEEK
+#ifdef COMMENT
+typedef struct _DBRELINFO
+{
+   ITEM               itmCobExpr;   /* Bloque representaci¢n de la clave relacional SEEK */
+   ITEM               abKey;        /* Cadena representaci¢n de la clave relacional SEEK */
 
-//   struct _AREA far *lpaParent; // El padre de esta relaci¢n
-//   struct _AREA far *lpaChild;  // Los hijos del padre
+   struct _AREA      *lpaParent;    /* El padre de esta relaci¢n */
+   struct _AREA      *lpaChild;     /* Los hijos del padre */
 
-//   struct _DBRELINFO far *lpdbriNext;   // Siguiente hijo o padre
+   struct _DBRELINFO *lpdbriNext;   /* Siguiente hijo o padre */
 
-//} DBRELINFO;
+} DBRELINFO;
 
-//typedef DBRELINFO far * LPDBRELINFO;
+typedef DBRELINFO * LPDBRELINFO;
+#endif
 
 
 
@@ -313,13 +325,15 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  en cada registro del  rea de trabajo
 */
 
-//typedef struct
-//{
-//   ITEM        itmBlock;  // El bloque a evaluar
-//   DBSCOPEINFO dbsci;     // Ambito que limita la evaluaci¢n
-//} DBEVALINFO;
+#ifdef COMMENT
+typedef struct
+{
+   ITEM        itmBlock;  /* El bloque a evaluar */
+   DBSCOPEINFO dbsci;     /* Ambito que limita la evaluaci¢n */
+} DBEVALINFO;
 
-//typedef DBEVALINFO far * LPDBEVALINFO;
+typedef DBEVALINFO * LPDBEVALINFO;
+#endif
 
 
 /*
@@ -331,13 +345,15 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  de una base de datos a otra; utilizada por DBTRANSINFO
 */
 
-//typedef struct
-//{
-//   USHORT uiSource;       // N£mero de ¡ndice de campo del fuente
-//   USHORT uiDest;         // N£mero de ¡ndice de campo del destino
-//} DBTRANSITEM;
+#ifdef COMMENT
+typedef struct
+{
+   USHORT uiSource;       /* N£mero de ¡ndice de campo del fuente */
+   USHORT uiDest;         /* N£mero de ¡ndice de campo del destino */
+} DBTRANSITEM;
 
-//typedef DBTRANSITEM far * LPDBTRANSITEM;
+typedef DBTRANSITEM * LPDBTRANSITEM;
+#endif
 
 
 /*
@@ -349,19 +365,21 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *   rea de trabajo a otra
 */
 
-//typedef struct
-//{
-//   struct _AREA far *lpaSource; // Puntero al  rea de trabajo fuente
-//   struct _AREA far *lpaDest;   // Puntero al  rea de trabajo destino
-//   DBSCOPEINFO   dbsci;         // Ambito de limitaci¢n de transferencia
+#ifdef COMMENT
+typedef struct
+{
+   struct _AREA *lpaSource;     /* Puntero al  rea de trabajo fuente */
+   struct _AREA *lpaDest;       /* Puntero al  rea de trabajo destino */
+   DBSCOPEINFO   dbsci;         /* Ambito de limitaci¢n de transferencia */
 
-//   USHORT        uiFlags;       // Atributos de transferencia
+   USHORT        uiFlags;       /* Atributos de transferencia */
 
-//   USHORT        uiItemCount;   // Contador de elementos
-//   LPDBTRANSITEM lpTransItems;  // Matriz de elementos
-//} DBTRANSINFO;
+   USHORT        uiItemCount;   /* Contador de elementos */
+   LPDBTRANSITEM lpTransItems;  /* Matriz de elementos */
+} DBTRANSINFO;
 
-//typedef DBTRANSINFO far * LPDBTRANSINFO;
+typedef DBTRANSINFO * LPDBTRANSINFO;
+#endif
 
 
 /*
@@ -374,22 +392,24 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  orden de la ordenaci¢n.
 */
 
-//typedef struct
-//{
-//   USHORT uiField;        // Indice dentro de la estructura
-//                          //  rea-de-trabajo->campos
-//   USHORT uiFlags;        // Indicadores de ordenaci¢n
-//} DBSORTITEM;
+#ifdef COMMENT
+typedef struct
+{
+   USHORT uiField;        /* Indice dentro de la estructura */
+                          /*  rea-de-trabajo->campos */
+   USHORT uiFlags;        /* Indicadores de ordenaci¢n */
+} DBSORTITEM;
 
-//typedef DBSORTITEM far * LPDBSORTITEM;
+typedef DBSORTITEM * LPDBSORTITEM;
+#endif
 
-// Indicadores para DBSORTITEM
-//#define SF_ASCEND       1
-//#define SF_CASE	        2
-//#define SF_DESCEND      4
-//#define SF_NUM         32
-//#define SF_DOUBLE      64
-//#define SF_LONG       128
+/* Indicadores para DBSORTITEM */
+#define SF_ASCEND       1
+#define SF_CASE         2
+#define SF_DESCEND      4
+#define SF_NUM         32
+#define SF_DOUBLE      64
+#define SF_LONG       128
 
 
 
@@ -401,17 +421,19 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  Informaci¢n para la ordenaci¢n f¡sica en un  rea de trabajo
 */
 
-//typedef struct
-//{
-//   DBTRANSINFO   dbtri;        // Informaci¢n de transferencia del  rea de
-                               // trabajo destino
-//   LPDBSORTITEM  lpdbsItem;    // Campos que componen los valores claves en
-			       // la ordenaci¢n
-//   USHORT        uiItemCount;  // Contador de elementos
+#ifdef COMMENT
+typedef struct
+{
+   DBTRANSINFO   dbtri;        /* Informaci¢n de transferencia del  rea de */
+                               /* trabajo destino */
+   LPDBSORTITEM  lpdbsItem;    /* Campos que componen los valores claves en */
+                               /* la ordenaci¢n */
+   USHORT        uiItemCount;  /* Contador de elementos */
 
-//} DBSORTINFO;
+} DBSORTINFO;
 
-//typedef DBSORTINFO far * LPDBSORTINFO;
+typedef DBSORTINFO * LPDBSORTINFO;
+#endif
 
 
 /*
@@ -422,14 +444,16 @@ typedef DBOPENINFO * LPDBOPENINFO;
 *  Contiene informaci¢n de bloqueos de registro o fichero
 */
 
-//typedef struct
-//{
-//   ULONG  itmRecID;
-//   USHORT uiMethod;
-//   BOOL   fResult;
-//} DBLOCKINFO;
+#ifdef COMMENT
+typedef struct
+{
+   ULONG  itmRecID;
+   USHORT uiMethod;
+   BOOL   fResult;
+} DBLOCKINFO;
 
-//typedef DBLOCKINFO far * LPDBLOCKINFO;
+typedef DBLOCKINFO * LPDBLOCKINFO;
+#endif
 
 
 
@@ -443,14 +467,14 @@ typedef DBOPENINFO * LPDBOPENINFO;
 
 typedef struct _FIELD
 {
-   USHORT  uiType;           // Field type
-   USHORT  uiTypeExtended;   // Field type - extended
-   USHORT  uiLen;            // Field length
-   USHORT  uiDec;            // Decimal length
-   USHORT  uiArea;           // Area this field resides in
-   FARP    sym;              // Symbol that represents the field
+   USHORT  uiType;           /* Field type */
+   USHORT  uiTypeExtended;   /* Field type - extended */
+   USHORT  uiLen;            /* Field length */
+   USHORT  uiDec;            /* Decimal length */
+   USHORT  uiArea;           /* Area this field resides in */
+   FARP    sym;              /* Symbol that represents the field */
 
-   struct _FIELD *lpfNext;   // The next field in the list
+   struct _FIELD *lpfNext;   /* The next field in the list */
 
 } FIELD;
 
@@ -467,43 +491,43 @@ typedef FIELD * LPFIELD;
 *
 *  Information to administrate the workarea
 */
-struct _RDDFUNCS;	/* forward declaration */
+struct _RDDFUNCS;       /* forward declaration */
 
 typedef struct _AREA
 {
-   struct _RDDFUNCS * lprfsHost; // Virtual method table for this workarea
+   struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
 
-   USHORT  uiArea;               // The number assigned to this workarea
-//   FARP    atomAlias;            // Pointer to the alias symbol for this workarea
+   USHORT  uiArea;               /* The number assigned to this workarea */
+// FARP    atomAlias;            /* Pointer to the alias symbol for this workarea */
 
-//   USHORT  uiFieldExtent;        // Total number of fields allocated
-   USHORT  uiFieldCount;         // Total number of fields used
-   LPFIELD lpFields;             // Pointer to an array of fields
+// USHORT  uiFieldExtent;        /* Total number of fields allocated */
+   USHORT  uiFieldCount;         /* Total number of fields used */
+   LPFIELD lpFields;             /* Pointer to an array of fields */
 
-//   FARP lpFieldExtents;          // Void ptr for additional field properties
+// FARP lpFieldExtents;          /* Void ptr for additional field properties */
 
-//   ITEM valResult;               // All purpose result holder
+// ITEM valResult;               /* All purpose result holder */
 
-//   BOOL fTop;                    // TRUE if "top"
-//   BOOL fBottom;                 // TRUE if "bottom"
-//   BOOL fBof;                    // TRUE if "bof"
-//   BOOL fEof;                    // TRUE if "eof"
-//   BOOL fFound;                  // TRUE if "found"
+// BOOL fTop;                    /* TRUE if "top" */
+// BOOL fBottom;                 /* TRUE if "bottom" */
+// BOOL fBof;                    /* TRUE if "bof" */
+// BOOL fEof;                    /* TRUE if "eof" */
+// BOOL fFound;                  /* TRUE if "found" */
 
-//   DBSCOPEINFO  dbsi;            // Info regarding last LOCATE
-//   DBFILTERINFO dbfi;            // Filter in effect
+// DBSCOPEINFO  dbsi;            /* Info regarding last LOCATE */
+// DBFILTERINFO dbfi;            /* Filter in effect */
 
-//   LPDBORDERCONDINFO lpdbOrdCondInfo;
+// LPDBORDERCONDINFO lpdbOrdCondInfo;
 
-//   LPDBRELINFO  lpdbRelations;   // Parent/Child relationships used
-//   USHORT       uiParents;       // Number of parents for this area
+// LPDBRELINFO  lpdbRelations;   /* Parent/Child relationships used */
+// USHORT       uiParents;       /* Number of parents for this area */
 
-//   HANDLE   heap;
-//   USHORT   heapSize;
+// HANDLE   heap;
+// USHORT   heapSize;
 
-//   USHORT   rddID;
+// USHORT   rddID;
 
-   LPFILEINFO lpFileInfo;        // Files used by this workarea
+   LPFILEINFO lpFileInfo;        /* Files used by this workarea */
 
 } AREA;
 
@@ -515,26 +539,27 @@ typedef AREA * LPAREA;
 
 /*--------------------* Virtual Method Table *----------------------*/
 
-typedef USHORT ( * DBENTRYP_V  )( AREAP area );
-typedef USHORT ( * DBENTRYP_BP )( AREAP area, BOOL * param );
-typedef USHORT ( * DBENTRYP_L  )( AREAP area, LONG param );
-typedef USHORT ( * DBENTRYP_I  )( AREAP area, PHB_ITEM param );
-typedef USHORT ( * DBENTRYP_SI )( AREAP area, USHORT index, PHB_ITEM param );
-typedef USHORT ( * DBENTRYP_VP )( AREAP area, LPDBOPENINFO param );
-typedef USHORT ( * DBENTRYP_SP )( AREAP area, USHORT * param );
+typedef USHORT ( * DBENTRYP_V    )( AREAP area );
+typedef USHORT ( * DBENTRYP_BP   )( AREAP area, BOOL * param );
+typedef USHORT ( * DBENTRYP_L    )( AREAP area, LONG param );
+typedef USHORT ( * DBENTRYP_I    )( AREAP area, PHB_ITEM param );
+typedef USHORT ( * DBENTRYP_SI   )( AREAP area, USHORT index, PHB_ITEM param );
+typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
+typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 
-//typedef USHORT (far * DBENTRYP_S)(AREAP area, USHORT param);
-//typedef USHORT (far * DBENTRYP_LP)(AREAP area, LONGP param);
-//typedef USHORT (far * DBENTRYP_PP)(AREAP area, FARPP param);
-//typedef USHORT (far * DBENTRYP_SVP)(AREAP area, USHORT index, FARP param);
-//typedef USHORT (far * DBENTRYP_SVPB)(AREAP area, USHORT index, FARP param, USHORT mode);
-//typedef USHORT (far * DBENTRYP_VPL)(AREAP area, FARP p1, LONG p2);
-//typedef USHORT (far * DBENTRYP_VPLP)(AREAP area, FARP p1, LONGP p2);
-//typedef USHORT (far * DBENTRYP_LSP)(AREAP area, LONG p1, USHORTP p2);
-//typedef USHORT (far * DBENTRYP_SSI) (AREAP area, USHORT p1, USHORT p2, ITEM p3);
-//typedef USHORT (far * DBENTRYP_ISI) (AREAP area, ITEM p1, USHORT p2, ITEM p3);
-//typedef USHORT (far * DBENTRYP_VSP) (AREAP area, USHORT action, LONG lRecord);
-
+#ifdef COMMENT
+typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param);
+typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONGP param);
+typedef USHORT ( * DBENTRYP_PP   )( AREAP area, FARPP param);
+typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, FARP param);
+typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, FARP param, USHORT mode);
+typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, FARP p1, LONG p2);
+typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, FARP p1, LONGP p2);
+typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
+typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, ITEM p3);
+typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, ITEM p1, USHORT p2, ITEM p3);
+typedef USHORT ( * DBENTRYP_VSP  )( AREAP area, USHORT action, LONG lRecord);
+#endif
 
 
 /*--------------------* Virtual Method Table *----------------------*/
@@ -544,136 +569,136 @@ typedef struct _RDDFUNCS
 
    /* Movement and positioning methods */
 
-   DBENTRYP_BP  bof;
-   DBENTRYP_BP  eof;
-   DBENTRYP_BP  found;
-   DBENTRYP_V   goBottom;
-   DBENTRYP_L   go;
-//   DBENTRYP_I   goToId;
-   DBENTRYP_V   goTop;
-//   DBENTRYP_SI  seek;
-   DBENTRYP_L   skip;
-//   DBENTRYP_L   skipFilter;      /* L   */
-//   DBENTRYP_L   skipRaw;         /* L   */
+   DBENTRYP_BP   bof;
+   DBENTRYP_BP   eof;
+   DBENTRYP_BP   found;
+   DBENTRYP_V    goBottom;
+   DBENTRYP_L    go;
+// DBENTRYP_I    goToId;
+   DBENTRYP_V    goTop;
+// DBENTRYP_SI   seek;
+   DBENTRYP_L    skip;
+// DBENTRYP_L    skipFilter;
+// DBENTRYP_L    skipRaw;
 
 
    /* Data management */
 
-//   DBENTRYP_VP  addField;        /* VP  */
-//   DBENTRYP_S   append;          /* S   */
-//   DBENTRYP_I   createFields;    /* I   */
-//   DBENTRYP_V   deleterec;       /* V   */
-//   DBENTRYP_SP  deleted;         /* SP  */
-//   DBENTRYP_SP  fieldCount;      /* SP  */
-//   DBENTRYP_VP  fieldDisplay;    /* VP  */
-//   DBENTRYP_SSI fieldInfo;       /* SSI */
-//   DBENTRYP_SVP fieldName;       /* SVP */
-//   DBENTRYP_V   flush;           /* V   */
-//   DBENTRYP_PP  getRec;          /* PP  */
-//   DBENTRYP_SI  getValue;        /* SI  */
-//   DBENTRYP_SVP getVarLen;       /* SVP */
-//   DBENTRYP_V   goCold;          /* V   */
-//   DBENTRYP_V   goHot;           /* V   */
-//   DBENTRYP_VP  putRec;          /* VP  */
-//   DBENTRYP_SI  putValue;        /* SI  */
-//   DBENTRYP_V   recall;          /* V   */
-//   DBENTRYP_LP  reccount;        /* LP  */
-//   DBENTRYP_ISI recInfo;         /* ISI */
-//   DBENTRYP_I   recno;           /* I   */
-//   DBENTRYP_S   setFieldExtent;  /* S   */
+// DBENTRYP_VP   addField;
+// DBENTRYP_S    append;
+// DBENTRYP_I    createFields;
+// DBENTRYP_V    deleterec;
+// DBENTRYP_SP   deleted;
+// DBENTRYP_SP   fieldCount;
+// DBENTRYP_VP   fieldDisplay;
+// DBENTRYP_SSI  fieldInfo;
+// DBENTRYP_SVP  fieldName;
+// DBENTRYP_V    flush;
+// DBENTRYP_PP   getRec;
+// DBENTRYP_SI   getValue;
+// DBENTRYP_SVP  getVarLen;
+// DBENTRYP_V    goCold;
+// DBENTRYP_V    goHot;
+// DBENTRYP_VP   putRec;
+// DBENTRYP_SI   putValue;
+// DBENTRYP_V    recall;
+// DBENTRYP_LP   reccount;
+// DBENTRYP_ISI  recInfo;
+// DBENTRYP_I    recno;
+// DBENTRYP_S    setFieldExtent;
 
    /* WorkArea/Database management */
 
-//   DBENTRYP_VP  alias;           /* VP  */
-   DBENTRYP_V   close;
-   DBENTRYP_VP  create;
-//   DBENTRYP_SI  info;            /* SI  */
-//   DBENTRYP_V   newarea;         /* V   */
-   DBENTRYP_VP  open;
-   DBENTRYP_V   release;         /* V   */
-   DBENTRYP_SP  structSize;
-//   DBENTRYP_VP  sysName;         /* VP  */
-//   DBENTRYP_VP  dbEval;          /* VP  */
-//   DBENTRYP_V   pack;            /* V   */
-//   DBENTRYP_LSP packRec;         /* LSP */
-//   DBENTRYP_VP  sort;            /* VP  */
-//   DBENTRYP_VP  trans;           /* VP  */
-//   DBENTRYP_VP  transRec;        /* VP  */
-//   DBENTRYP_V   zap;             /* V   */
+// DBENTRYP_VP   alias;
+   DBENTRYP_V    close;
+   DBENTRYP_VP   create;
+// DBENTRYP_SI   info;
+// DBENTRYP_V    newarea;
+   DBENTRYP_VP   open;
+   DBENTRYP_V    release;
+   DBENTRYP_SP   structSize;
+// DBENTRYP_VP   sysName;
+// DBENTRYP_VP   dbEval;
+// DBENTRYP_V    pack;
+// DBENTRYP_LSP  packRec;
+// DBENTRYP_VP   sort;
+// DBENTRYP_VP   trans;
+// DBENTRYP_VP   transRec;
+// DBENTRYP_V    zap;
 
 
    /* Relational Methods */
 
-//   DBENTRYP_VP  childEnd;        /* VP  */
-//   DBENTRYP_VP  childStart;      /* VP  */
-//   DBENTRYP_VP  childSync;       /* VP  */
-//   DBENTRYP_V   syncChildren;    /* V   */
-//   DBENTRYP_V   clearRel;        /* V   */
-//   DBENTRYP_V   forceRel;        /* V   */
-//   DBENTRYP_SVP relArea;         /* SVP */
-//   DBENTRYP_VP  relEval;         /* VP  */
-//   DBENTRYP_SVP relText;         /* SVP */
-//   DBENTRYP_VP  setRel;          /* VP  */
+// DBENTRYP_VP   childEnd;
+// DBENTRYP_VP   childStart;
+// DBENTRYP_VP   childSync;
+// DBENTRYP_V    syncChildren;
+// DBENTRYP_V    clearRel;
+// DBENTRYP_V    forceRel;
+// DBENTRYP_SVP  relArea;
+// DBENTRYP_VP   relEval;
+// DBENTRYP_SVP  relText;
+// DBENTRYP_VP   setRel;
 
 
    /* Order Management */
 
-//   DBENTRYP_VP  orderListAdd;     /* VP  */
-//   DBENTRYP_V   orderListClear;   /* V   */
-//   DBENTRYP_VP  orderListDelete;  /* VP  */
-//   DBENTRYP_VP  orderListFocus;   /* VP */
-//   DBENTRYP_V   orderListRebuild; /* V   */
+// DBENTRYP_VP   orderListAdd;
+// DBENTRYP_V    orderListClear;
+// DBENTRYP_VP   orderListDelete;
+// DBENTRYP_VP   orderListFocus;
+// DBENTRYP_V    orderListRebuild;
 
-//   DBENTRYP_VP  orderCondition;   /* VP  */
-//   DBENTRYP_VP  orderCreate;      /* VP  */
-//   DBENTRYP_VP  orderDestroy;     /* VP  */
-//   DBENTRYP_SVP orderInfo;        /* SVP */
+// DBENTRYP_VP   orderCondition;
+// DBENTRYP_VP   orderCreate;
+// DBENTRYP_VP   orderDestroy;
+// DBENTRYP_SVP  orderInfo;
 
    /* Filters and Scope Settings */
 
-//   DBENTRYP_V   clearFilter;     /* V   */
-//   DBENTRYP_V   clearLocate;     /* V   */
-//   DBENTRYP_V   clearScope;      /* V   */
-//   DBENTRYP_VPLP countScope;     /* VPLP*/
-//   DBENTRYP_VP  filterText;      /* VP  */
-//   DBENTRYP_SI  scopeInfo;       /* SI  */
-//   DBENTRYP_VP  setFilter;       /* VP  */
-//   DBENTRYP_VP  setLocate;       /* VP  */
-//   DBENTRYP_VP  setScope;        /* VP  */
-//   DBENTRYP_VPL skipScope;       /* VPL */
+// DBENTRYP_V    clearFilter;
+// DBENTRYP_V    clearLocate;
+// DBENTRYP_V    clearScope;
+// DBENTRYP_VPLP countScope;
+// DBENTRYP_VP   filterText;
+// DBENTRYP_SI   scopeInfo;
+// DBENTRYP_VP   setFilter;
+// DBENTRYP_VP   setLocate;
+// DBENTRYP_VP   setScope;
+// DBENTRYP_VPL  skipScope;
 
    /* Miscellaneous */
 
-//   DBENTRYP_VP  compile;         /* VP */
-//   DBENTRYP_VP  error;           /* VP */
-//   DBENTRYP_I   evalBlock;       /* I  */
+// DBENTRYP_VP   compile;
+// DBENTRYP_VP   error;
+// DBENTRYP_I    evalBlock;
 
 
    /* Network operations */
 
-//   DBENTRYP_VSP rawlock;         /* VSP */
-//   DBENTRYP_VP  lock;            /* VP  */
-//   DBENTRYP_L   unlock;          /* L   */
+// DBENTRYP_VSP  rawlock;
+// DBENTRYP_VP   lock;
+// DBENTRYP_L    unlock;
 
 
    /* Memofile functions */
 
-//   DBENTRYP_V   closeMemFile;    /* V   */
-//   DBENTRYP_VP  createMemFile;   /* VP  */
-//   DBENTRYP_SVPB getValueFile;    /* SVPB */
-//   DBENTRYP_VP  openMemFile;     /* VP  */
-//   DBENTRYP_SVP putValueFile;    /* SVP */
+// DBENTRYP_V    closeMemFile;
+// DBENTRYP_VP   createMemFile;
+// DBENTRYP_SVPB getValueFile;
+// DBENTRYP_VP   openMemFile;
+// DBENTRYP_SVP  putValueFile;
 
 
    /* Database file header handling */
 
-//   DBENTRYP_V   readDBHeader;    /* V   */
-   DBENTRYP_V   writeDBHeader;   /* V   */
+// DBENTRYP_V    readDBHeader;
+   DBENTRYP_V    writeDBHeader;
 
 
    /* Special and reserved methods */
 
-//   DBENTRYP_SVP whoCares;        /* SVP */
+// DBENTRYP_SVP  whoCares;
 
 } RDDFUNCS;
 
@@ -685,314 +710,316 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 /* Movement and positioning methods */
 
-#define SELF_BOF(w, sp)            ((*(w)->lprfsHost->bof)(w, sp))
-#define SELF_EOF(w, sp)            ((*(w)->lprfsHost->eof)(w, sp))
-#define SELF_FOUND(w, sp)          ((*(w)->lprfsHost->found)(w, sp))
-#define SELF_GOTO(w, l)            ((*(w)->lprfsHost->go)(w, l))
-#define SELF_GOTOID(w, sp)         ((*(w)->lprfsHost->goToId)(w, sp))
-#define SELF_GOBOTTOM(w)           ((*(w)->lprfsHost->goBottom)(w))
-#define SELF_GOTOP(w)              ((*(w)->lprfsHost->goTop)(w))
-#define SELF_SEEK(w, i, v)         ((*(w)->lprfsHost->seek)(w, i, v))
-#define SELF_SKIP(w, l)            ((*(w)->lprfsHost->skip)(w, l))
-#define SELF_SKIPFILTER(w, l)      ((*(w)->lprfsHost->skipFilter)(w, l))
-#define SELF_SKIPRAW(w, l)         ((*(w)->lprfsHost->skipRaw)(w, l))
+#define SELF_BOF(w, sp)                 ((*(w)->lprfsHost->bof)(w, sp))
+#define SELF_EOF(w, sp)                 ((*(w)->lprfsHost->eof)(w, sp))
+#define SELF_FOUND(w, sp)               ((*(w)->lprfsHost->found)(w, sp))
+#define SELF_GOTO(w, l)                 ((*(w)->lprfsHost->go)(w, l))
+#define SELF_GOTOID(w, sp)              ((*(w)->lprfsHost->goToId)(w, sp))
+#define SELF_GOBOTTOM(w)                ((*(w)->lprfsHost->goBottom)(w))
+#define SELF_GOTOP(w)                   ((*(w)->lprfsHost->goTop)(w))
+#define SELF_SEEK(w, i, v)              ((*(w)->lprfsHost->seek)(w, i, v))
+#define SELF_SKIP(w, l)                 ((*(w)->lprfsHost->skip)(w, l))
+#define SELF_SKIPFILTER(w, l)           ((*(w)->lprfsHost->skipFilter)(w, l))
+#define SELF_SKIPRAW(w, l)              ((*(w)->lprfsHost->skipRaw)(w, l))
 
 
 /* Data management */
 
-#define SELF_ADDFIELD(w, ip)       ((*(w)->lprfsHost->addField)(w, ip))
-#define SELF_APPEND(w,l)           ((*(w)->lprfsHost->append)(w,l))
-#define SELF_CREATEFIELDS(w, v)    ((*(w)->lprfsHost->createFields)(w, v))
-#define SELF_DELETE(w)             ((*(w)->lprfsHost->deleterec)(w))
-#define SELF_DELETED(w, sp)        ((*(w)->lprfsHost->deleted)(w, sp))
-#define SELF_FIELDCOUNT(w, sp)     ((*(w)->lprfsHost->fieldCount)(w, sp))
-#define SELF_FIELDDISPLAY(w, sp)   ((*(w)->lprfsHost->fieldDisplay)(w, sp))
-#define SELF_FIELDINFO(w,s1,s2,v)  ((*(w)->lprfsHost->fieldInfo)(w,s1,s2,v))
-#define SELF_FIELDNAME(w, i, bp)   ((*(w)->lprfsHost->fieldName)(w, i, bp))
-#define SELF_FLUSH(w)              ((*(w)->lprfsHost->flush)(w))
-#define SELF_GETREC(w, bpp)        ((*(w)->lprfsHost->getRec)(w, bpp))
-#define SELF_GETVALUE(w, i, v)     ((*(w)->lprfsHost->getValue)(w, i, v))
-#define SELF_GETVARLEN(w, i, lp)   ((*(w)->lprfsHost->getVarLen)(w, i, lp))
-#define SELF_GOCOLD(w)             ((*(w)->lprfsHost->goCold)(w))
-#define SELF_GOHOT(w)              ((*(w)->lprfsHost->goHot)(w))
-#define SELF_PUTVALUE(w, i, v)     ((*(w)->lprfsHost->putValue)(w, i, v))
-#define SELF_PUTREC(w, bp)         ((*(w)->lprfsHost->putRec)(w, bp))
-#define SELF_RECALL(w)             ((*(w)->lprfsHost->recall)(w))
-#define SELF_RECCOUNT(w, sp)       ((*(w)->lprfsHost->reccount)(w, sp))
-#define SELF_RECINFO(w,v1,i,v2)    ((*(w)->lprfsHost->recInfo)(w,v1,i,v2))
-#define SELF_RECNO(w, i)           ((*(w)->lprfsHost->recno)(w, i))
-#define SELF_SETFIELDEXTENT(w, s)  ((*(w)->lprfsHost->setFieldExtent)(w, s))
+#define SELF_ADDFIELD(w, ip)            ((*(w)->lprfsHost->addField)(w, ip))
+#define SELF_APPEND(w,l)                ((*(w)->lprfsHost->append)(w,l))
+#define SELF_CREATEFIELDS(w, v)         ((*(w)->lprfsHost->createFields)(w, v))
+#define SELF_DELETE(w)                  ((*(w)->lprfsHost->deleterec)(w))
+#define SELF_DELETED(w, sp)             ((*(w)->lprfsHost->deleted)(w, sp))
+#define SELF_FIELDCOUNT(w, sp)          ((*(w)->lprfsHost->fieldCount)(w, sp))
+#define SELF_FIELDDISPLAY(w, sp)        ((*(w)->lprfsHost->fieldDisplay)(w, sp))
+#define SELF_FIELDINFO(w,s1,s2,v)       ((*(w)->lprfsHost->fieldInfo)(w,s1,s2,v))
+#define SELF_FIELDNAME(w, i, bp)        ((*(w)->lprfsHost->fieldName)(w, i, bp))
+#define SELF_FLUSH(w)                   ((*(w)->lprfsHost->flush)(w))
+#define SELF_GETREC(w, bpp)             ((*(w)->lprfsHost->getRec)(w, bpp))
+#define SELF_GETVALUE(w, i, v)          ((*(w)->lprfsHost->getValue)(w, i, v))
+#define SELF_GETVARLEN(w, i, lp)        ((*(w)->lprfsHost->getVarLen)(w, i, lp))
+#define SELF_GOCOLD(w)                  ((*(w)->lprfsHost->goCold)(w))
+#define SELF_GOHOT(w)                   ((*(w)->lprfsHost->goHot)(w))
+#define SELF_PUTVALUE(w, i, v)          ((*(w)->lprfsHost->putValue)(w, i, v))
+#define SELF_PUTREC(w, bp)              ((*(w)->lprfsHost->putRec)(w, bp))
+#define SELF_RECALL(w)                  ((*(w)->lprfsHost->recall)(w))
+#define SELF_RECCOUNT(w, sp)            ((*(w)->lprfsHost->reccount)(w, sp))
+#define SELF_RECINFO(w,v1,i,v2)         ((*(w)->lprfsHost->recInfo)(w,v1,i,v2))
+#define SELF_RECNO(w, i)                ((*(w)->lprfsHost->recno)(w, i))
+#define SELF_SETFIELDEXTENT(w, s)       ((*(w)->lprfsHost->setFieldExtent)(w, s))
 
 
 /* WorkArea/Database management */
 
-#define SELF_ALIAS(w, bp)          ((*(w)->lprfsHost->alias)(w, bp))
-#define SELF_CLOSE(w)              ((*(w)->lprfsHost->close)(w))
-#define SELF_CREATE(w, ip)         ((*(w)->lprfsHost->create)(w, ip))
-#define SELF_INFO(w, i, g)         ((*(w)->lprfsHost->info)(w, i, g))
-#define SELF_NEW(w)                ((*(w)->lprfsHost->newarea)(w))
-#define SELF_OPEN(w, ip)           ((*(w)->lprfsHost->open)(w, ip))
-#define SELF_RELEASE(w)            ((*(w)->lprfsHost->release)(w))
-#define SELF_STRUCTSIZE(w, sp)     ((*(w)->lprfsHost->structSize)(w,sp))
-#define SELF_SYSNAME(w, bp)        ((*(w)->lprfsHost->sysName)(w, bp))
-#define SELF_DBEVAL(w, ip)         ((*(w)->lprfsHost->dbEval)(w, ip))
-#define SELF_PACK(w)               ((*(w)->lprfsHost->pack)(w))
-#define SELF_PACKREC(w, l, sp)     ((*(w)->lprfsHost->packRec)(w, l, sp))
-#define SELF_SORT(w, ip)           ((*(w)->lprfsHost->sort)(w, ip))
-#define SELF_TRANS(w, ip)          ((*(w)->lprfsHost->trans)(w, ip))
-#define SELF_TRANSREC(w, ip)       ((*(w)->lprfsHost->transRec)(w, ip))
-#define SELF_ZAP(w)                ((*(w)->lprfsHost->zap)(w))
+#define SELF_ALIAS(w, bp)               ((*(w)->lprfsHost->alias)(w, bp))
+#define SELF_CLOSE(w)                   ((*(w)->lprfsHost->close)(w))
+#define SELF_CREATE(w, ip)              ((*(w)->lprfsHost->create)(w, ip))
+#define SELF_INFO(w, i, g)              ((*(w)->lprfsHost->info)(w, i, g))
+#define SELF_NEW(w)                     ((*(w)->lprfsHost->newarea)(w))
+#define SELF_OPEN(w, ip)                ((*(w)->lprfsHost->open)(w, ip))
+#define SELF_RELEASE(w)                 ((*(w)->lprfsHost->release)(w))
+#define SELF_STRUCTSIZE(w, sp)          ((*(w)->lprfsHost->structSize)(w,sp))
+#define SELF_SYSNAME(w, bp)             ((*(w)->lprfsHost->sysName)(w, bp))
+#define SELF_DBEVAL(w, ip)              ((*(w)->lprfsHost->dbEval)(w, ip))
+#define SELF_PACK(w)                    ((*(w)->lprfsHost->pack)(w))
+#define SELF_PACKREC(w, l, sp)          ((*(w)->lprfsHost->packRec)(w, l, sp))
+#define SELF_SORT(w, ip)                ((*(w)->lprfsHost->sort)(w, ip))
+#define SELF_TRANS(w, ip)               ((*(w)->lprfsHost->trans)(w, ip))
+#define SELF_TRANSREC(w, ip)            ((*(w)->lprfsHost->transRec)(w, ip))
+#define SELF_ZAP(w)                     ((*(w)->lprfsHost->zap)(w))
 
 
 /* Relational Methods */
 
-#define SELF_CHILDEND(w, ip)       ((*(w)->lprfsHost->childEnd)(w, ip))
-#define SELF_CHILDSTART(w, ip)     ((*(w)->lprfsHost->childStart)(w, ip))
-#define SELF_CHILDSYNC(w, ip)      ((*(w)->lprfsHost->childSync)(w, ip))
-#define SELF_SYNCCHILDREN(w)       ((*(w)->lprfsHost->syncChildren)(w))
-#define SELF_CLEARREL(w)           ((*(w)->lprfsHost->clearRel)(w))
-#define SELF_FORCEREL(w)           ((*(w)->lprfsHost->forceRel)(w))
-#define SELF_RELAREA(w, s, sp)     ((*(w)->lprfsHost->relArea)(w, s, sp))
-#define SELF_RELEVAL(w, ip)        ((*(w)->lprfsHost->relEval)(w, ip))
-#define SELF_RELTEXT(w, s, bp)     ((*(w)->lprfsHost->relText)(w, s, bp))
-#define SELF_SETREL(w, ip)         ((*(w)->lprfsHost->setRel)(w, ip))
+#define SELF_CHILDEND(w, ip)            ((*(w)->lprfsHost->childEnd)(w, ip))
+#define SELF_CHILDSTART(w, ip)          ((*(w)->lprfsHost->childStart)(w, ip))
+#define SELF_CHILDSYNC(w, ip)           ((*(w)->lprfsHost->childSync)(w, ip))
+#define SELF_SYNCCHILDREN(w)            ((*(w)->lprfsHost->syncChildren)(w))
+#define SELF_CLEARREL(w)                ((*(w)->lprfsHost->clearRel)(w))
+#define SELF_FORCEREL(w)                ((*(w)->lprfsHost->forceRel)(w))
+#define SELF_RELAREA(w, s, sp)          ((*(w)->lprfsHost->relArea)(w, s, sp))
+#define SELF_RELEVAL(w, ip)             ((*(w)->lprfsHost->relEval)(w, ip))
+#define SELF_RELTEXT(w, s, bp)          ((*(w)->lprfsHost->relText)(w, s, bp))
+#define SELF_SETREL(w, ip)              ((*(w)->lprfsHost->setRel)(w, ip))
 
 
 /* Order Management */
 
-#define SELF_ORDLSTADD(w, lp)     ((*(w)->lprfsHost->orderListAdd)(w, lp))
-#define SELF_ORDLSTDELETE(w, lp)  ((*(w)->lprfsHost->orderListDelete)(w, lp))
-#define SELF_ORDLSTFOCUS(w, lp)   ((*(w)->lprfsHost->orderListFocus)(w,lp))
-#define SELF_ORDLSTREBUILD(w)     ((*(w)->lprfsHost->orderListRebuild)(w))
-#define SELF_ORDLSTCLEAR(w)       ((*(w)->lprfsHost->orderListClear)(w))
+#define SELF_ORDLSTADD(w, lp)           ((*(w)->lprfsHost->orderListAdd)(w, lp))
+#define SELF_ORDLSTDELETE(w, lp)        ((*(w)->lprfsHost->orderListDelete)(w, lp))
+#define SELF_ORDLSTFOCUS(w, lp)         ((*(w)->lprfsHost->orderListFocus)(w,lp))
+#define SELF_ORDLSTREBUILD(w)           ((*(w)->lprfsHost->orderListRebuild)(w))
+#define SELF_ORDLSTCLEAR(w)             ((*(w)->lprfsHost->orderListClear)(w))
 
-#define SELF_ORDSETCOND(w, ip) ((*(w)->lprfsHost->orderCondition)(w, ip))
-#define SELF_ORDCREATE(w, ip)  ((*(w)->lprfsHost->orderCreate)(w, ip))
-#define SELF_ORDDESTROY(w, p)  ((*(w)->lprfsHost->orderDestroy)(w, p))
-#define SELF_ORDINFO(w, i, p)  ((*(w)->lprfsHost->orderInfo)(w, i, p))
-#define SELF_ORDEXPR(w, p)     ((*(w)->lprfsHost->orderInfo)(w, DBOI_EXPRESSION, p))
-#define SELF_ORDCOND(w, p)     ((*(w)->lprfsHost->orderInfo)(w, DBOI_CONDITION,  p))
-#define SELF_ORDRECNO(w, p)    ((*(w)->lprfsHost->orderInfo)(w, DBOI_RECNO,      p))
-#define SELF_ORDPOS(w, p)      ((*(w)->lprfsHost->orderInfo)(w, DBOI_POSITION,   p))
-#define SELF_ORDNUMBER(w, p)   ((*(w)->lprfsHost->orderInfo)(w, DBOI_NUMBER,     p))
-#define SELF_ORDNAME(w, p)     ((*(w)->lprfsHost->orderInfo)(w, DBOI_NAME,       p))
-#define SELF_ORDBAGNAME(w, p)  ((*(w)->lprfsHost->orderInfo)(w, DBOI_BAGNAME,    p))
-#define SELF_ORDBAGEXT(w,  p)  ((*(w)->lprfsHost->orderInfo)(w, DBOI_BAGEXT,     p))
+#define SELF_ORDSETCOND(w, ip)          ((*(w)->lprfsHost->orderCondition)(w, ip))
+#define SELF_ORDCREATE(w, ip)           ((*(w)->lprfsHost->orderCreate)(w, ip))
+#define SELF_ORDDESTROY(w, p)           ((*(w)->lprfsHost->orderDestroy)(w, p))
+#define SELF_ORDINFO(w, i, p)           ((*(w)->lprfsHost->orderInfo)(w, i, p))
+#define SELF_ORDEXPR(w, p)              ((*(w)->lprfsHost->orderInfo)(w, DBOI_EXPRESSION, p))
+#define SELF_ORDCOND(w, p)              ((*(w)->lprfsHost->orderInfo)(w, DBOI_CONDITION,  p))
+#define SELF_ORDRECNO(w, p)             ((*(w)->lprfsHost->orderInfo)(w, DBOI_RECNO,      p))
+#define SELF_ORDPOS(w, p)               ((*(w)->lprfsHost->orderInfo)(w, DBOI_POSITION,   p))
+#define SELF_ORDNUMBER(w, p)            ((*(w)->lprfsHost->orderInfo)(w, DBOI_NUMBER,     p))
+#define SELF_ORDNAME(w, p)              ((*(w)->lprfsHost->orderInfo)(w, DBOI_NAME,       p))
+#define SELF_ORDBAGNAME(w, p)           ((*(w)->lprfsHost->orderInfo)(w, DBOI_BAGNAME,    p))
+#define SELF_ORDBAGEXT(w,  p)           ((*(w)->lprfsHost->orderInfo)(w, DBOI_BAGEXT,     p))
 
 
 /* Filters and Scope Settings */
 
-#define SELF_CLEARFILTER(w)        ((*(w)->lprfsHost->clearFilter)(w))
-#define SELF_CLEARLOCATE(w)        ((*(w)->lprfsHost->clearLocate)(w))
-#define SELF_CLEARSCOPE(w)         ((*(w)->lprfsHost->clearScope)(w))
-#define SELF_COUNTSCOPE(w,ip,lp)   ((*(w)->lprfsHost->countScope)(w,ip,lp))
-#define SELF_FILTERTEXT(w, bp)     ((*(w)->lprfsHost->filterText)(w, bp))
-#define SELF_SCOPEINFO(w,i,v)      ((*(w)->lprfsHost->scopeInfo)(w,i,v))
-#define SELF_SETFILTER(w, ip)      ((*(w)->lprfsHost->setFilter)(w, ip))
-#define SELF_SETLOCATE(w, ip)      ((*(w)->lprfsHost->setLocate)(w, ip))
-#define SELF_SETSCOPE(w, ip)       ((*(w)->lprfsHost->setScope)(w, ip))
-#define SELF_SKIPSCOPE(w, bp, l)   ((*(w)->lprfsHost->skipScope)(w, bp, l))
+#define SELF_CLEARFILTER(w)             ((*(w)->lprfsHost->clearFilter)(w))
+#define SELF_CLEARLOCATE(w)             ((*(w)->lprfsHost->clearLocate)(w))
+#define SELF_CLEARSCOPE(w)              ((*(w)->lprfsHost->clearScope)(w))
+#define SELF_COUNTSCOPE(w,ip,lp)        ((*(w)->lprfsHost->countScope)(w,ip,lp))
+#define SELF_FILTERTEXT(w, bp)          ((*(w)->lprfsHost->filterText)(w, bp))
+#define SELF_SCOPEINFO(w,i,v)           ((*(w)->lprfsHost->scopeInfo)(w,i,v))
+#define SELF_SETFILTER(w, ip)           ((*(w)->lprfsHost->setFilter)(w, ip))
+#define SELF_SETLOCATE(w, ip)           ((*(w)->lprfsHost->setLocate)(w, ip))
+#define SELF_SETSCOPE(w, ip)            ((*(w)->lprfsHost->setScope)(w, ip))
+#define SELF_SKIPSCOPE(w, bp, l)        ((*(w)->lprfsHost->skipScope)(w, bp, l))
 
 
 /* Miscellaneous */
 
-#define SELF_COMPILE(w, bp)        ((*(w)->lprfsHost->compile)(w, bp))
-#define SELF_ERROR(w, ip)          ((*(w)->lprfsHost->error)(w, ip))
-#define SELF_EVALBLOCK(w, v)       ((*(w)->lprfsHost->evalBlock)(w, v))
+#define SELF_COMPILE(w, bp)             ((*(w)->lprfsHost->compile)(w, bp))
+#define SELF_ERROR(w, ip)               ((*(w)->lprfsHost->error)(w, ip))
+#define SELF_EVALBLOCK(w, v)            ((*(w)->lprfsHost->evalBlock)(w, v))
 
 
 /* Network operations */
 
-#define SELF_GETLOCKS(w, g)        ((*(w)->lprfsHost->info)(w, DBI_GETLOCKARRAY, g))
-#define SELF_RAWLOCK(w, i, l)      ((*(w)->lprfsHost->rawlock)(w, i, l))
-#define SELF_LOCK(w, sp)           ((*(w)->lprfsHost->lock)(w, sp))
-#define SELF_UNLOCK(w, l)          ((*(w)->lprfsHost->unlock)(w, l))
+#define SELF_GETLOCKS(w, g)             ((*(w)->lprfsHost->info)(w, DBI_GETLOCKARRAY, g))
+#define SELF_RAWLOCK(w, i, l)           ((*(w)->lprfsHost->rawlock)(w, i, l))
+#define SELF_LOCK(w, sp)                ((*(w)->lprfsHost->lock)(w, sp))
+#define SELF_UNLOCK(w, l)               ((*(w)->lprfsHost->unlock)(w, l))
 
 
 /* Memofile functions */
 
-#define SELF_CLOSEMEMFILE(w)       ((*(w)->lprfsHost->closeMemFile)(w))
-#define SELF_CREATEMEMFILE(w,bp)   ((*(w)->lprfsHost->createMemFile)(w,bp))
-#define SELF_GETVALUEFILE(w,i,bp,b) ((*(w)->lprfsHost->getValueFile)(w,i,bp,b))
-#define SELF_OPENMEMFILE(w,bp)     ((*(w)->lprfsHost->openMemFile)(w,bp))
-#define SELF_PUTVALUEFILE(w,i,bp)  ((*(w)->lprfsHost->putValueFile)(w,i,bp))
+#define SELF_CLOSEMEMFILE(w)            ((*(w)->lprfsHost->closeMemFile)(w))
+#define SELF_CREATEMEMFILE(w,bp)        ((*(w)->lprfsHost->createMemFile)(w,bp))
+#define SELF_GETVALUEFILE(w,i,bp,b)     ((*(w)->lprfsHost->getValueFile)(w,i,bp,b))
+#define SELF_OPENMEMFILE(w,bp)          ((*(w)->lprfsHost->openMemFile)(w,bp))
+#define SELF_PUTVALUEFILE(w,i,bp)       ((*(w)->lprfsHost->putValueFile)(w,i,bp))
 
 
 /* Database file header handling */
 
-#define SELF_READDBHEADER(w)       ((*(w)->lprfsHost->readDBHeader)(w))
-#define SELF_WRITEDBHEADER(w)      ((*(w)->lprfsHost->writeDBHeader)(w))
+#define SELF_READDBHEADER(w)            ((*(w)->lprfsHost->readDBHeader)(w))
+#define SELF_WRITEDBHEADER(w)           ((*(w)->lprfsHost->writeDBHeader)(w))
 
 
 /* Info operations */
 
-#define SELF_RECSIZE(w, lp)        ((*(w)->lprfsHost->info)(w, DBI_GETRECSIZE, lp))
-#define SELF_HEADERSIZE(w, fp)     ((*(w)->lprfsHost->info)(w, DBI_GETHEADERSIZE, fp))
-#define SELF_LUPDATE(w, fp)        ((*(w)->lprfsHost->info)(w, DBI_LASTUPDATE, fp ))
-#define SELF_SETDELIM(w, fp)       ((*(w)->lprfsHost->info)(w, DBI_SETDELIMITER, fp))
-#define SELF_GETDELIM(w, fp)       ((*(w)->lprfsHost->info)(w, DBI_GETDELIMITER, fp))
-#define SELF_TABLEEXT(w, fp)       ((*(w)->lprfsHost->info)(w, DBI_TABLEEXT, fp))
+#define SELF_RECSIZE(w, lp)             ((*(w)->lprfsHost->info)(w, DBI_GETRECSIZE, lp))
+#define SELF_HEADERSIZE(w, fp)          ((*(w)->lprfsHost->info)(w, DBI_GETHEADERSIZE, fp))
+#define SELF_LUPDATE(w, fp)             ((*(w)->lprfsHost->info)(w, DBI_LASTUPDATE, fp ))
+#define SELF_SETDELIM(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_SETDELIMITER, fp))
+#define SELF_GETDELIM(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_GETDELIMITER, fp))
+#define SELF_TABLEEXT(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_TABLEEXT, fp))
 
 
 /*--------------------* M‚todos SUPER *------------------------*/
 
+#ifdef COMMENT
+
 /* M‚todos de movimiento y posicionamiento */
 
-//#define SUPER_BOF(w, sp)            ((*(SUPERTABLE)->bof)(w, sp))
-//#define SUPER_EOF(w, sp)            ((*(SUPERTABLE)->eof)(w, sp))
-//#define SUPER_FOUND(w, sp)          ((*(SUPERTABLE)->found)(w, sp))
-//#define SUPER_GOTO(w, l)            ((*(SUPERTABLE)->go)(w, l))
-//#define SUPER_GOTOID(w, sp)         ((*(SUPERTABLE)->goToId)(w, sp))
-//#define SUPER_GOBOTTOM(w)           ((*(SUPERTABLE)->goBottom)(w))
-//#define SUPER_GOTOP(w)              ((*(SUPERTABLE)->goTop)(w))
-//#define SUPER_SEEK(w, i, v)         ((*(SUPERTABLE)->seek)(w, i, v))
-//#define SUPER_SKIP(w, l)            ((*(SUPERTABLE)->skip)(w, l))
-//#define SUPER_SKIPFILTER(w, l)      ((*(SUPERTABLE)->skipFilter)(w, l))
-//#define SUPER_SKIPRAW(w, l)         ((*(SUPERTABLE)->skipRaw)(w, l))
+#define SUPER_BOF(w, sp)                ((*(SUPERTABLE)->bof)(w, sp))
+#define SUPER_EOF(w, sp)                ((*(SUPERTABLE)->eof)(w, sp))
+#define SUPER_FOUND(w, sp)              ((*(SUPERTABLE)->found)(w, sp))
+#define SUPER_GOTO(w, l)                ((*(SUPERTABLE)->go)(w, l))
+#define SUPER_GOTOID(w, sp)             ((*(SUPERTABLE)->goToId)(w, sp))
+#define SUPER_GOBOTTOM(w)               ((*(SUPERTABLE)->goBottom)(w))
+#define SUPER_GOTOP(w)                  ((*(SUPERTABLE)->goTop)(w))
+#define SUPER_SEEK(w, i, v)             ((*(SUPERTABLE)->seek)(w, i, v))
+#define SUPER_SKIP(w, l)                ((*(SUPERTABLE)->skip)(w, l))
+#define SUPER_SKIPFILTER(w, l)          ((*(SUPERTABLE)->skipFilter)(w, l))
+#define SUPER_SKIPRAW(w, l)             ((*(SUPERTABLE)->skipRaw)(w, l))
 
 
 /* Manejo de datos */
 
-//#define SUPER_ADDFIELD(w, ip)       ((*(SUPERTABLE)->addField)(w, ip))
-//#define SUPER_APPEND(w,l)           ((*(SUPERTABLE)->append)(w,l))
-//#define SUPER_CREATEFIELDS(w, v)    ((*(SUPERTABLE)->createFields)(w, v))
-//#define SUPER_DELETE(w)             ((*(SUPERTABLE)->deleterec)(w))
-//#define SUPER_DELETED(w, sp)        ((*(SUPERTABLE)->deleted)(w, sp))
-//#define SUPER_FIELDCOUNT(w, sp)     ((*(SUPERTABLE)->fieldCount)(w, sp))
-//#define SUPER_FIELDDISPLAY(w, sp)   ((*(SUPERTABLE)->fieldDisplay)(w, sp))
-//#define SUPER_FIELDINFO(w,s1,s2,v)  ((*(SUPERTABLE)->fieldInfo)(w,s1,s2,v))
-//#define SUPER_FIELDNAME(w, i, bp)   ((*(SUPERTABLE)->fieldName)(w, i, bp))
-//#define SUPER_FLUSH(w)              ((*(SUPERTABLE)->flush)(w))
-//#define SUPER_GETREC(w, bpp)        ((*(SUPERTABLE)->getRec)(w, bpp))
-//#define SUPER_GETVALUE(w, i, v)     ((*(SUPERTABLE)->getValue)(w, i, v))
-//#define SUPER_GETVARLEN(w, i, lp)   ((*(SUPERTABLE)->getVarLen)(w, i, lp))
-//#define SUPER_GOCOLD(w)             ((*(SUPERTABLE)->goCold)(w))
-//#define SUPER_GOHOT(w)              ((*(SUPERTABLE)->goHot)(w))
-//#define SUPER_PUTVALUE(w, i, v)     ((*(SUPERTABLE)->putValue)(w, i, v))
-//#define SUPER_PUTREC(w, bp)         ((*(SUPERTABLE)->putRec)(w, bp))
-//#define SUPER_RECALL(w)             ((*(SUPERTABLE)->recall)(w))
-//#define SUPER_RECCOUNT(w, sp)       ((*(SUPERTABLE)->reccount)(w, sp))
-//#define SUPER_RECINFO(w,v1,i,v2)    ((*(SUPERTABLE)->recInfo)(w,v1,i,v2))
-//#define SUPER_RECNO(w, sp)          ((*(SUPERTABLE)->recno)(w, sp))
-//#define SUPER_SETFIELDEXTENT(w, s)  ((*(SUPERTABLE)->setFieldExtent)(w, s))
+#define SUPER_ADDFIELD(w, ip)           ((*(SUPERTABLE)->addField)(w, ip))
+#define SUPER_APPEND(w,l)               ((*(SUPERTABLE)->append)(w,l))
+#define SUPER_CREATEFIELDS(w, v)        ((*(SUPERTABLE)->createFields)(w, v))
+#define SUPER_DELETE(w)                 ((*(SUPERTABLE)->deleterec)(w))
+#define SUPER_DELETED(w, sp)            ((*(SUPERTABLE)->deleted)(w, sp))
+#define SUPER_FIELDCOUNT(w, sp)         ((*(SUPERTABLE)->fieldCount)(w, sp))
+#define SUPER_FIELDDISPLAY(w, sp)       ((*(SUPERTABLE)->fieldDisplay)(w, sp))
+#define SUPER_FIELDINFO(w,s1,s2,v)      ((*(SUPERTABLE)->fieldInfo)(w,s1,s2,v))
+#define SUPER_FIELDNAME(w, i, bp)       ((*(SUPERTABLE)->fieldName)(w, i, bp))
+#define SUPER_FLUSH(w)                  ((*(SUPERTABLE)->flush)(w))
+#define SUPER_GETREC(w, bpp)            ((*(SUPERTABLE)->getRec)(w, bpp))
+#define SUPER_GETVALUE(w, i, v)         ((*(SUPERTABLE)->getValue)(w, i, v))
+#define SUPER_GETVARLEN(w, i, lp)       ((*(SUPERTABLE)->getVarLen)(w, i, lp))
+#define SUPER_GOCOLD(w)                 ((*(SUPERTABLE)->goCold)(w))
+#define SUPER_GOHOT(w)                  ((*(SUPERTABLE)->goHot)(w))
+#define SUPER_PUTVALUE(w, i, v)         ((*(SUPERTABLE)->putValue)(w, i, v))
+#define SUPER_PUTREC(w, bp)             ((*(SUPERTABLE)->putRec)(w, bp))
+#define SUPER_RECALL(w)                 ((*(SUPERTABLE)->recall)(w))
+#define SUPER_RECCOUNT(w, sp)           ((*(SUPERTABLE)->reccount)(w, sp))
+#define SUPER_RECINFO(w,v1,i,v2)        ((*(SUPERTABLE)->recInfo)(w,v1,i,v2))
+#define SUPER_RECNO(w, sp)              ((*(SUPERTABLE)->recno)(w, sp))
+#define SUPER_SETFIELDEXTENT(w, s)      ((*(SUPERTABLE)->setFieldExtent)(w, s))
 
 
 /* Manejo de  reas de trabajo/bases de datos */
 
-//#define SUPER_ALIAS(w, bp)        ((*(SUPERTABLE)->alias)(w, bp))
-//#define SUPER_CLOSE(w)            ((*(SUPERTABLE)->close)(w))
-//#define SUPER_CREATE(w, ip)       ((*(SUPERTABLE)->create)(w, ip))
-//#define SUPER_INFO(w, i, g)       ((*(SUPERTABLE)->info)(w, i, g))
-//#define SUPER_NEW(w)              ((*(SUPERTABLE)->newarea)(w))
-//#define SUPER_OPEN(w, ip)         ((*(SUPERTABLE)->open)(w, ip))
-//#define SUPER_RELEASE(w)          ((*(SUPERTABLE)->release)(w))
-//#define SUPER_STRUCTSIZE(w, sp)   ((*(SUPERTABLE)->structSize)(w, sp))
-//#define SUPER_SYSNAME(w, bp)      ((*(SUPERTABLE)->sysName)(w, bp))
-//#define SUPER_DBEVAL(w, ip)       ((*(SUPERTABLE)->dbEval)(w, ip))
-//#define SUPER_PACK(w)             ((*(SUPERTABLE)->pack)(w))
-//#define SUPER_PACKREC(w, l, sp)   ((*(SUPERTABLE)->packRec)(w, l, sp))
-//#define SUPER_SORT(w, ip)         ((*(SUPERTABLE)->sort)(w, ip))
-//#define SUPER_TRANS(w, ip)        ((*(SUPERTABLE)->trans)(w, ip))
-//#define SUPER_TRANSREC(w, ip)     ((*(SUPERTABLE)->transRec)(w, ip))
-//#define SUPER_ZAP(w)              ((*(SUPERTABLE)->zap)(w))
+#define SUPER_ALIAS(w, bp)              ((*(SUPERTABLE)->alias)(w, bp))
+#define SUPER_CLOSE(w)                  ((*(SUPERTABLE)->close)(w))
+#define SUPER_CREATE(w, ip)             ((*(SUPERTABLE)->create)(w, ip))
+#define SUPER_INFO(w, i, g)             ((*(SUPERTABLE)->info)(w, i, g))
+#define SUPER_NEW(w)                    ((*(SUPERTABLE)->newarea)(w))
+#define SUPER_OPEN(w, ip)               ((*(SUPERTABLE)->open)(w, ip))
+#define SUPER_RELEASE(w)                ((*(SUPERTABLE)->release)(w))
+#define SUPER_STRUCTSIZE(w, sp)         ((*(SUPERTABLE)->structSize)(w, sp))
+#define SUPER_SYSNAME(w, bp)            ((*(SUPERTABLE)->sysName)(w, bp))
+#define SUPER_DBEVAL(w, ip)             ((*(SUPERTABLE)->dbEval)(w, ip))
+#define SUPER_PACK(w)                   ((*(SUPERTABLE)->pack)(w))
+#define SUPER_PACKREC(w, l, sp)         ((*(SUPERTABLE)->packRec)(w, l, sp))
+#define SUPER_SORT(w, ip)               ((*(SUPERTABLE)->sort)(w, ip))
+#define SUPER_TRANS(w, ip)              ((*(SUPERTABLE)->trans)(w, ip))
+#define SUPER_TRANSREC(w, ip)           ((*(SUPERTABLE)->transRec)(w, ip))
+#define SUPER_ZAP(w)                    ((*(SUPERTABLE)->zap)(w))
 
 
 /* M‚todos relacionales */
 
-//#define SUPER_CHILDEND(w, ip)     ((*(SUPERTABLE)->childEnd)(w, ip))
-//#define SUPER_CHILDSTART(w, ip)   ((*(SUPERTABLE)->childStart)(w, ip))
-//#define SUPER_CHILDSYNC(w, ip)    ((*(SUPERTABLE)->childSync)(w, ip))
-//#define SUPER_SYNCCHILDREN(w)     ((*(SUPERTABLE)->syncChildren)(w))
-//#define SUPER_CLEARREL(w)         ((*(SUPERTABLE)->clearRel)(w))
-//#define SUPER_FORCEREL(w)         ((*(SUPERTABLE)->forceRel)(w))
-//#define SUPER_RELAREA(w, s, sp)   ((*(SUPERTABLE)->relArea)(w, s, sp))
-//#define SUPER_RELEVAL(w, ip)      ((*(SUPERTABLE)->relEval)(w, ip))
-//#define SUPER_RELTEXT(w, s, bp)   ((*(SUPERTABLE)->relText)(w, s, bp))
-//#define SUPER_SETREL(w, ip)       ((*(SUPERTABLE)->setRel)(w, ip))
+#define SUPER_CHILDEND(w, ip)           ((*(SUPERTABLE)->childEnd)(w, ip))
+#define SUPER_CHILDSTART(w, ip)         ((*(SUPERTABLE)->childStart)(w, ip))
+#define SUPER_CHILDSYNC(w, ip)          ((*(SUPERTABLE)->childSync)(w, ip))
+#define SUPER_SYNCCHILDREN(w)           ((*(SUPERTABLE)->syncChildren)(w))
+#define SUPER_CLEARREL(w)               ((*(SUPERTABLE)->clearRel)(w))
+#define SUPER_FORCEREL(w)               ((*(SUPERTABLE)->forceRel)(w))
+#define SUPER_RELAREA(w, s, sp)         ((*(SUPERTABLE)->relArea)(w, s, sp))
+#define SUPER_RELEVAL(w, ip)            ((*(SUPERTABLE)->relEval)(w, ip))
+#define SUPER_RELTEXT(w, s, bp)         ((*(SUPERTABLE)->relText)(w, s, bp))
+#define SUPER_SETREL(w, ip)             ((*(SUPERTABLE)->setRel)(w, ip))
 
 
 /* Manejo de ¢rdenes */
 
-//#define SUPER_ORDLSTADD(w, lp)    ((*(SUPERTABLE)->orderListAdd)(w, lp))
-//#define SUPER_ORDLSTDELETE(w, lp) ((*(SUPERTABLE)->orderListDelete)(w, lp))
-//#define SUPER_ORDLSTFOCUS(w, lp)  ((*(SUPERTABLE)->orderListFocus)(w, lp))
-//#define SUPER_ORDLSTREBUILD(w)    ((*(SUPERTABLE)->orderListRebuild)(w))
-//#define SUPER_ORDLSTCLEAR(w)      ((*(SUPERTABLE)->orderListClear)(w))
+#define SUPER_ORDLSTADD(w, lp)          ((*(SUPERTABLE)->orderListAdd)(w, lp))
+#define SUPER_ORDLSTDELETE(w, lp)       ((*(SUPERTABLE)->orderListDelete)(w, lp))
+#define SUPER_ORDLSTFOCUS(w, lp)        ((*(SUPERTABLE)->orderListFocus)(w, lp))
+#define SUPER_ORDLSTREBUILD(w)          ((*(SUPERTABLE)->orderListRebuild)(w))
+#define SUPER_ORDLSTCLEAR(w)            ((*(SUPERTABLE)->orderListClear)(w))
 
-//#define SUPER_ORDSETCOND(w,ip) ((*(SUPERTABLE)->orderCondition)(w, ip))
-//#define SUPER_ORDCREATE(w, ip) ((*(SUPERTABLE)->orderCreate)(w, ip))
-//#define SUPER_ORDDELETE(w, ip) ((*(SUPERTABLE)->orderDelete)(w, ip))
-//#define SUPER_ORDINFO(w, i, p) ((*(SUPERTABLE)->orderInfo)(w, i, p))
-//#define SUPER_ORDEXPR(w, p)    ((*(SUPERTABLE)->orderInfo)(w, DBOI_EXPRESSION, p))
-//#define SUPER_ORDCOND(w, p)    ((*(SUPERTABLE)->orderInfo)(w, DBOI_CONDITION,  p))
-//#define SUPER_ORDRECNO(w, p)   ((*(SUPERTABLE)->orderInfo)(w, DBOI_RECNO,      p))
-//#define SUPER_ORDPOS(w, p)     ((*(SUPERTABLE)->orderInfo)(w, DBOI_POSITION,   p))
-//#define SUPER_ORDNUMBER(w, p)  ((*(SUPERTABLE)->orderInfo)(w, DBOI_NUMBER,     p))
-//#define SUPER_ORDNAME(w, p)    ((*(SUPERTABLE)->orderInfo)(w, DBOI_NAME,       p))
-//#define SUPER_ORDBAGNAME(w, p) ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGNAME,    p))
-//#define SUPER_ORDBAGEXT(w,  p) ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGEXT,     p))
+#define SUPER_ORDSETCOND(w,ip)          ((*(SUPERTABLE)->orderCondition)(w, ip))
+#define SUPER_ORDCREATE(w, ip)          ((*(SUPERTABLE)->orderCreate)(w, ip))
+#define SUPER_ORDDELETE(w, ip)          ((*(SUPERTABLE)->orderDelete)(w, ip))
+#define SUPER_ORDINFO(w, i, p)          ((*(SUPERTABLE)->orderInfo)(w, i, p))
+#define SUPER_ORDEXPR(w, p)             ((*(SUPERTABLE)->orderInfo)(w, DBOI_EXPRESSION, p))
+#define SUPER_ORDCOND(w, p)             ((*(SUPERTABLE)->orderInfo)(w, DBOI_CONDITION,  p))
+#define SUPER_ORDRECNO(w, p)            ((*(SUPERTABLE)->orderInfo)(w, DBOI_RECNO,      p))
+#define SUPER_ORDPOS(w, p)              ((*(SUPERTABLE)->orderInfo)(w, DBOI_POSITION,   p))
+#define SUPER_ORDNUMBER(w, p)           ((*(SUPERTABLE)->orderInfo)(w, DBOI_NUMBER,     p))
+#define SUPER_ORDNAME(w, p)             ((*(SUPERTABLE)->orderInfo)(w, DBOI_NAME,       p))
+#define SUPER_ORDBAGNAME(w, p)          ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGNAME,    p))
+#define SUPER_ORDBAGEXT(w,  p)          ((*(SUPERTABLE)->orderInfo)(w, DBOI_BAGEXT,     p))
 
 
 /* Establecimiento de filtros y  mbitos */
 
-//#define SUPER_CLEARFILTER(w)      ((*(SUPERTABLE)->clearFilter)(w))
-//#define SUPER_CLEARLOCATE(w)      ((*(SUPERTABLE)->clearLocate)(w))
-//#define SUPER_CLEARSCOPE(w)       ((*(SUPERTABLE)->clearScope)(w))
-//#define SUPER_COUNTSCOPE(w,ip,lp) ((*(SUPERTABLE)->countScope)(w,ip,lp))
-//#define SUPER_FILTERTEXT(w, bp)   ((*(SUPERTABLE)->filterText)(w, bp))
-//#define SUPER_SCOPEINFO(w,i,v)    ((*(SUPERTABLE)->scopeInfo)(w,i,v))
-//#define SUPER_SETFILTER(w, ip)    ((*(SUPERTABLE)->setFilter)(w, ip))
-//#define SUPER_SETLOCATE(w, ip)    ((*(SUPERTABLE)->setLocate)(w, ip))
-//#define SUPER_SETSCOPE(w, ip)     ((*(SUPERTABLE)->setScope)(w, ip))
-//#define SUPER_SKIPSCOPE(w, bp, l) ((*(SUPERTABLE)->skipScope)(w, bp, l))
+#define SUPER_CLEARFILTER(w)            ((*(SUPERTABLE)->clearFilter)(w))
+#define SUPER_CLEARLOCATE(w)            ((*(SUPERTABLE)->clearLocate)(w))
+#define SUPER_CLEARSCOPE(w)             ((*(SUPERTABLE)->clearScope)(w))
+#define SUPER_COUNTSCOPE(w,ip,lp)       ((*(SUPERTABLE)->countScope)(w,ip,lp))
+#define SUPER_FILTERTEXT(w, bp)         ((*(SUPERTABLE)->filterText)(w, bp))
+#define SUPER_SCOPEINFO(w,i,v)          ((*(SUPERTABLE)->scopeInfo)(w,i,v))
+#define SUPER_SETFILTER(w, ip)          ((*(SUPERTABLE)->setFilter)(w, ip))
+#define SUPER_SETLOCATE(w, ip)          ((*(SUPERTABLE)->setLocate)(w, ip))
+#define SUPER_SETSCOPE(w, ip)           ((*(SUPERTABLE)->setScope)(w, ip))
+#define SUPER_SKIPSCOPE(w, bp, l)       ((*(SUPERTABLE)->skipScope)(w, bp, l))
 
 
 /* Diversos */
 
-//#define SUPER_COMPILE(w, bp)      ((*(SUPERTABLE)->compile)(w, bp))
-//#define SUPER_ERROR(w, ip)        ((*(SUPERTABLE)->error)(w, ip))
-//#define SUPER_EVALBLOCK(w, v)     ((*(SUPERTABLE)->evalBlock)(w, v))
+#define SUPER_COMPILE(w, bp)            ((*(SUPERTABLE)->compile)(w, bp))
+#define SUPER_ERROR(w, ip)              ((*(SUPERTABLE)->error)(w, ip))
+#define SUPER_EVALBLOCK(w, v)           ((*(SUPERTABLE)->evalBlock)(w, v))
 
 
 /* Operaciones de red */
 
-//#define SUPER_GETLOCKS(w, g)      ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
-//#define SUPER_RAWLOCK(w, i, l)    ((*(SUPERTABLE)->rawlock)(w, i, l))
-//#define SUPER_LOCK(w, sp)         ((*(SUPERTABLE)->lock)(w, sp))
-//#define SUPER_UNLOCK(w)           ((*(SUPERTABLE)->unlock)(w))
+#define SUPER_GETLOCKS(w, g)            ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
+#define SUPER_RAWLOCK(w, i, l)          ((*(SUPERTABLE)->rawlock)(w, i, l))
+#define SUPER_LOCK(w, sp)               ((*(SUPERTABLE)->lock)(w, sp))
+#define SUPER_UNLOCK(w)                 ((*(SUPERTABLE)->unlock)(w))
 
 
 /* Funciones de ficheros memo */
 
-//#define SUPER_CLOSEMEMFILE(w)       ((*(SUPERTABLE)->closeMemFile)(w))
-//#define SUPER_CREATEMEMFILE(w,bp)   ((*(SUPERTABLE)->createMemFile)(w,bp))
-//#define SUPER_GETVALUEFILE(w,i,bp,b) ((*(SUPERTABLE)->getValueFile)(w,i,bp,b))
-//#define SUPER_OPENMEMFILE(w,bp)     ((*(SUPERTABLE)->openMemFile)(w,bp))
-//#define SUPER_PUTVALUEFILE(w,i,bp)  ((*(SUPERTABLE)->putValueFile)(w,i,bp))
+#define SUPER_CLOSEMEMFILE(w)           ((*(SUPERTABLE)->closeMemFile)(w))
+#define SUPER_CREATEMEMFILE(w,bp)       ((*(SUPERTABLE)->createMemFile)(w,bp))
+#define SUPER_GETVALUEFILE(w,i,bp,b)    ((*(SUPERTABLE)->getValueFile)(w,i,bp,b))
+#define SUPER_OPENMEMFILE(w,bp)         ((*(SUPERTABLE)->openMemFile)(w,bp))
+#define SUPER_PUTVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->putValueFile)(w,i,bp))
 
 
 /* Manejo de cabeceras de ficheros de base de datos */
 
-//#define SUPER_READDBHEADER(w)       ((*(SUPERTABLE)->readDBHeader)(w))
-//#define SUPER_WRITEDBHEADER(w)      ((*(SUPERTABLE)->writeDBHeader)(w))
+#define SUPER_READDBHEADER(w)           ((*(SUPERTABLE)->readDBHeader)(w))
+#define SUPER_WRITEDBHEADER(w)          ((*(SUPERTABLE)->writeDBHeader)(w))
 
 
 /* Operaciones Info */
 
-//#define SUPER_RECSIZE(w, lp)      ((*(SUPERTABLE)->info)(w, DBI_GETRECSIZE, lp))
-//#define SUPER_HEADERSIZE(w, fp)   ((*(SUPERTABLE)->info)(w, DBI_GETHEADERSIZE, fp))
-//#define SUPER_LUPDATE(w, fp)      ((*(SUPERTABLE)->info)(w, DBI_LASTUPDATE, fp ))
-//#define SUPER_SETDELIM(w, fp)     ((*(SUPERTABLE)->info)(w, DBI_SETDELIMITER, fp))
-//#define SUPER_GETDELIM(w, fp)     ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
-//#define SUPER_TABLEEXT(w, fp)     ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
+#define SUPER_RECSIZE(w, lp)          ((*(SUPERTABLE)->info)(w, DBI_GETRECSIZE, lp))
+#define SUPER_HEADERSIZE(w, fp)       ((*(SUPERTABLE)->info)(w, DBI_GETHEADERSIZE, fp))
+#define SUPER_LUPDATE(w, fp)          ((*(SUPERTABLE)->info)(w, DBI_LASTUPDATE, fp ))
+#define SUPER_SETDELIM(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_SETDELIMITER, fp))
+#define SUPER_GETDELIM(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
+#define SUPER_TABLEEXT(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
-
+#endif
 
 /*
 *  PROTOTYPES
 *  ----------
 */
-ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName );
+extern ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName );
 extern ERRCODE hb_rddDisinherit( BYTEP drvName );
 extern USHORT  hb_rddExtendType( USHORT fieldType );
 extern USHORT  hb_rddFieldType( USHORT extendType );

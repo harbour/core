@@ -45,8 +45,7 @@
  *      same name.  I changed the behaviour because some of the strings
  *      I process contain embedded NULs.
  *  $EXAMPLES$
- *       ? gt_ascpos("the cat sat on the mat", 3)
- *                                   // prints e
+ *       ? gt_ascpos("the cat sat on the mat", 3) // prints e
  *  $END$
  */
 

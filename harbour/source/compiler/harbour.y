@@ -2057,8 +2057,8 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
       pSym = AddSymbol( szFunName, NULL );
 
    if( cScope != FS_PUBLIC )
-//      pSym->cScope = FS_PUBLIC;
-//   else
+/*      pSym->cScope = FS_PUBLIC; */
+/*   else */
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = FunctionNew( szFunName, cScope );
@@ -5289,7 +5289,7 @@ void CheckArgs( char *cFuncCall, int iArgs )
         sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
         GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
 
-        //Clipper way
-        // GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
+        /* Clipper way */
+        /* GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL ); */
      }
 }

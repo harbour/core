@@ -66,11 +66,11 @@
 
 #if defined(__IBMCPP__)
   #include <sys/stat.h>
-//  #include <share.h>
-//  #include <fcntl.h>
-//  #include <io.h>
-//  #include <errno.h>
-//  #include <direct.h>
+/*  #include <share.h>  */
+/*  #include <fcntl.h>  */
+/*  #include <io.h>     */
+/*  #include <errno.h>  */
+/*  #include <direct.h> */
   #include <time.h>
 
   #if !defined(HAVE_POSIX_IO)
@@ -413,8 +413,8 @@ HARBOUR HB_DIRECTORY( void )
 #if defined(USE_NT)
          if (attrib & FA_ENCRYPTED)
             strcat(aatrib,"E");
-//         if (attrib & FA_NORMAL)
-//            strcat(aatrib,"N");
+/*       if (attrib & FA_NORMAL) */
+/*          strcat(aatrib,"N");  */
          if (attrib & FA_TEMPORARY)
             strcat(aatrib,"T");
          if (attrib & FA_SPARSE)

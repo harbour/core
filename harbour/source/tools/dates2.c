@@ -254,8 +254,9 @@ HARBOUR HB_DOY( void )
       hb_retni( 0 );
 }
 
+/* Return the nWeek of the year (1 - 52, 0 - 52 if ISO) */
+
 HARBOUR HB_WOY( void )
-// Return the nWeek of the year (1 - 52, 0 - 52 if ISO)
 {
    PHB_ITEM pDate = hb_param( 1, IT_DATE );
    long lDay, lMonth, lYear;

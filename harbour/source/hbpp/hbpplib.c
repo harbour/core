@@ -76,7 +76,7 @@ HARBOUR HB_PREPROCESS(void)
 
     if ( (resParse = ParseExpression( ptr, pOut )) > 0 )
     {
-        // Some error here?
+        /* Some error here? */
     }
 
     hb_retc(pText); /* Preprocessor returns parsed line in input buffer */
