@@ -4,6 +4,37 @@
 
 ----------------------------------------------------------------------
 
+Version 0.37 Build 37 (2001-06-26)
+
+- Fixed and improved NTX support
+- Improved and fixed OOP
+- More enhanced DOT prompt with scripting engine
+- Enhanced HBMake utility
+- New HBZLib library for ZIP support in Harbour
+- COPY TO DELIMITED and COPY TO SDF implemented
+- Added support for HB_TR_FLUSH environment variable
+- New Harbour License based on the license used for Guile 1.4
+- New HB_INKEY_EXTENDED keyboard input mode
+- More complete ADS support
+- Extended run-time preprocessing possibilities (TPreprocessor class)
+- Debugger fixes. It is really usable now.
+- Access OLEDB & COM objects with the TOleAuto() class
+
+Version 0.36 Build 36 (2001-02-22)
+
+- NTX read and write support
+- Support for Inline C code
+- Dot prompt and limited Harbour Interpreter
+- More support and fixes for ADS databases
+- Improved and fixed stack handling
+- Improved OOP
+- Better Class(y) and TopClass compatibility
+- MemoEdit() for 95% complete
+- More improved and enhanced TBrowse class
+- Lots of improvements on the Harbour Debugger
+- APPEND FROM & COPY TO started
+- New hbMake utility
+
 Version 0.35 Build 35 (2000-08-15)
 
 - Added HB_IDLE*() idle state handling functions.
