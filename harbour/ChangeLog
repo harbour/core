@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-16 14:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbfntx/dbfntx1.c
+    * A bug in hb_ntxTagKeyCount() fixed - reported by Jos© Luis Capel
+
 2003-04-15 13:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   + contrib/ole
   + contrib/ole/bldtest.bat

@@ -491,6 +491,14 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
          lRecno = ( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ),
                       pKey, FALSE, TRUE ) <= 0 )? pTag->CurKeyInfo->Xtra:0;
          hb_ntxKeyFree( pKey );
+         if( lRecno )
+         {
+            pPage =  hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
+            pPage->CurKey = hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra );
+            if( pPage->CurKey )
+               strcpy( pTag->CurKeyInfo->key, ( KEYITEM( pPage, pPage->CurKey-1 ) )->key );
+            hb_ntxPageRelease( pTag,pPage );
+         }
       }
       else
       {
