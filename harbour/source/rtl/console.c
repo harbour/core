@@ -1111,7 +1111,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
  *  $EXAMPLES$
  *      ? __ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *  $TESTS$
- *      see in coloring.prg for a comprehensive regression test suit.
+ *      see in rtl_test.prg for a comprehensive regression test suit.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

@@ -241,17 +241,31 @@ FUNCTION MOD(cl_num, cl_base)
    }
 }
 
-double hb_mathRound( double dResult, int iDec )
+double hb_numRound( double dResult, int iDec )
 {
    int iSize = 64;
    char * szResult;
 
-   if( iDec < 1 ) iDec = 0;
-   else if( dResult != 0.0 )
+   if( dResult != 0.0 )
    {
-      double dAdjust = pow( 10, iDec );
-      dResult = floor( dResult * dAdjust + 0.5 );
-      dResult = dResult / dAdjust;
+      double dAdjust;
+
+      if( iDec == 0 )
+      {
+         dResult = floor( dResult + 0.5 );
+      }
+      else if( iDec < 0 )
+      {
+         dAdjust = pow( 10, -iDec );
+         dResult = floor( dResult / dAdjust + 0.5 );
+         dResult = dResult * dAdjust;
+      }
+      else
+      {
+         dAdjust = pow( 10, iDec );
+         dResult = floor( dResult * dAdjust + 0.5 );
+         dResult = dResult / dAdjust;
+      }
    }
 
    szResult = ( char * ) hb_xgrab( iSize + iDec + 1 );
@@ -273,7 +287,7 @@ HARBOUR HB_ROUND( void )
       {
          int iDec = hb_parni( 2 );
 
-         hb_retnd( hb_mathRound( hb_parnd( 1 ), iDec ) );
+         hb_retnd( hb_numRound( hb_parnd( 1 ), iDec ) );
          stack.Return.item.asDouble.decimal = iDec;
       }
       else

@@ -36,12 +36,12 @@
 
 /* TRANSFORM() tests written by Eddie Runia <eddie@runia.comu> */
 
-/* NOTE: Always compile with /n switches */
+/* NOTE: Always compile with /n switch */
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
 /* TODO: Incorporate tests from test/working/string*.prg */
 
-#translate TEST_LINE(<x>, <result>) => TEST_CALL(<(x)>, {|| <x> }, <result>)
+#translate TEST_LINE( <x>, <result> ) => TEST_CALL(<(x)>, {|| <x> }, <result>)
 
 STATIC snPass
 STATIC snFail
@@ -49,7 +49,7 @@ STATIC scFileName
 STATIC snFhnd
 STATIC scNewLine
 STATIC snCount
-STATIC slShowFailOnly
+STATIC slShowAll
 
 FUNCTION Main( cPar1 )
 
@@ -86,6 +86,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Round(50, 2)                    , 50.00            )
    TEST_LINE( Round(50, -1)                   , 50               )
    TEST_LINE( Round(50, -2)                   , 100              )
+   TEST_LINE( Round(10.50, 0)                 , 11               )
+   TEST_LINE( Round(10.50, -1)                , 10               )
 
    /* AT() */
 
@@ -532,12 +534,12 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    IF "OS/2" $ cOs .OR. ;
       "DOS"  $ cOs
-      scNewLine := Chr(13) + Chr(10)
+      scNewLine := Chr( 13 ) + Chr( 10 )
    ELSE
-      scNewLine := Chr(10)
+      scNewLine := Chr( 10 )
    ENDIF
 
-   slShowFailOnly := "/FAIL" $ Upper( cParam )
+   slShowAll := "/ALL" $ Upper( cParam )
 
 /*
 #ifdef __HARBOUR__
@@ -554,40 +556,40 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    snPass := 0
    snFail := 0
 
-   fWrite(snFhnd, "   Version: " + Version() + scNewLine +;
-                  "        OS: " + OS() + scNewLine +;
-                  "Date, Time: " + DToS(Date()) + " " + Time() + scNewLine +;
-                  "    Output: " + scFileName + scNewLine +;
-                  "  Switches: " + cParam + scNewLine +;
-                  "===========================================================================" + scNewLine +;
-                  scNewLine)
+   fWrite( snFhnd, "   Version: " + Version() + scNewLine +;
+                   "        OS: " + OS() + scNewLine +;
+                   "Date, Time: " + DToS( Date() ) + " " + Time() + scNewLine +;
+                   "    Output: " + scFileName + scNewLine +;
+                   "  Switches: " + cParam + scNewLine +;
+                   "===========================================================================" + scNewLine +;
+                   scNewLine )
 
-   fWrite(snFhnd, PadL("No", 4) + ". " +;
-                  PadR("TestCall()", 35) + " -> " +;
-                  PadR("Result", 15) + " | " +;
-                  PadR("Expected", 15) +;
-                  " [! *FAIL* !]" + scNewLine)
-   fWrite(snFhnd, "---------------------------------------------------------------------------" + scNewLine)
+   fWrite( snFhnd, PadL( "No", 4 ) + ". " +;
+                   PadR( "TestCall()", 35 ) + " -> " +;
+                   PadR( "Result", 15 ) + " | " +;
+                   PadR( "Expected", 15 ) +;
+                   " [! *FAIL* !]" + scNewLine )
+   fWrite( snFhnd, "---------------------------------------------------------------------------" + scNewLine )
 
    RETURN NIL
 
-STATIC FUNCTION TEST_CALL(cBlock, bBlock, xResultExpected)
-   LOCAL xResult := Eval(bBlock)
+STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
+   LOCAL xResult := Eval( bBlock )
 
    snCount++
 
-   IF !slShowFailOnly .OR. !( xResult == xResultExpected )
+   IF slShowAll .OR. !( xResult == xResultExpected )
 
-      fWrite(snFhnd, Str(snCount, 4) + ". " +;
-                     PadR(StrTran(cBlock, Chr(0), "."), 35) + " -> " +;
-                     PadR('"' + StrTran(XToStr(xResult), Chr(0), ".") + '"', 15) + " | " +;
-                     PadR('"' + StrTran(XToStr(xResultExpected), Chr(0), ".") + '"', 15))
+      fWrite( snFhnd, Str( snCount, 4 ) + ". " +;
+                      PadR( StrTran( cBlock, Chr(0), "." ), 35 ) + " -> " +;
+                      PadR( '"' + StrTran( XToStr( xResult ), Chr(0), "." ) + '"', 15 ) + " | " +;
+                      PadR( '"' + StrTran( XToStr( xResultExpected ), Chr(0), "." ) + '"', 15 ) )
 
       IF !( xResult == xResultExpected )
-         fWrite(snFhnd, " ! *FAIL* !" )
+         fWrite( snFhnd, " ! *FAIL* !" )
       ENDIF
 
-      fWrite(snFhnd, scNewLine)
+      fWrite( snFhnd, scNewLine )
    ENDIF
 
    IF xResult == xResultExpected
@@ -600,33 +602,33 @@ STATIC FUNCTION TEST_CALL(cBlock, bBlock, xResultExpected)
 
 STATIC FUNCTION TEST_END()
 
-   fWrite(snFhnd, scNewLine +;
-                  "===========================================================================" + scNewLine +;
-                  "Test calls passed: " + Str(snPass) + scNewLine +;
-                  "Test calls failed: " + Str(snFail) + scNewLine +;
-                  scNewLine)
+   fWrite( snFhnd, scNewLine +;
+                   "===========================================================================" + scNewLine +;
+                   "Test calls passed: " + Str( snPass ) + scNewLine +;
+                   "Test calls failed: " + Str( snFail ) + scNewLine +;
+                   scNewLine )
 
    IF snFail != 0
-      IF "CLIPPER" $ Upper(Version())
-         fWrite(snFhnd, "WARNING ! Failures detected using Clipper." + scNewLine +;
-                        "Please fix the expected result list, if this is not a bug in Clipper itself." + scNewLine)
+      IF "CLIPPER" $ Upper( Version() )
+         fWrite( snFhnd, "WARNING ! Failures detected using Clipper." + scNewLine +;
+                         "Please fix the expected result list, if this is not a bug in Clipper itself." + scNewLine )
       ELSE
-         fWrite(snFhnd, "WARNING ! Failures detected" + scNewLine)
+         fWrite( snFhnd, "WARNING ! Failures detected" + scNewLine )
       ENDIF
    ENDIF
 
-   ErrorLevel(iif(snFail != 0, 1, 0))
+   ErrorLevel( iif( snFail != 0, 1, 0 ) )
 
    RETURN NIL
 
-STATIC FUNCTION XToStr(xValue)
-   LOCAL cType := ValType(xValue)
+STATIC FUNCTION XToStr( xValue )
+   LOCAL cType := ValType( xValue )
 
    DO CASE
    CASE cType == "C" ; RETURN xValue
-   CASE cType == "N" ; RETURN LTrim(Str(xValue))
-   CASE cType == "D" ; RETURN DToC(xValue)
-   CASE cType == "L" ; RETURN iif(xValue, ".T.", ".F.")
+   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "D" ; RETURN DToC( xValue )
+   CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className + " Object"
    CASE cType == "U" ; RETURN "NIL"
    CASE cType == "B" ; RETURN "{||...}"
@@ -639,17 +641,17 @@ STATIC FUNCTION XToStr(xValue)
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION SToD( cDate )
-   LOCAL cOldDateFormat := Set(_SET_DATEFORMAT, "dd/mm/yyyy")
+STATIC FUNCTION SToD( cDate )
+   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd/mm/yyyy" )
    LOCAL dDate
 
-   Set(_SET_DATEFORMAT, "yyyy/mm/dd")
+   Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
    dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
                   SubStr( cDate, 5, 2 ) + "/" +;
                   SubStr( cDate, 7, 2 ) )
 
-   Set(_SET_DATEFORMAT, cOldDateFormat)
+   Set( _SET_DATEFORMAT, cOldDateFormat )
 
    RETURN dDate
 

@@ -1243,7 +1243,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             #endif
             {
                if( iDec < pNumber->item.asDouble.decimal )
-                  dNumber = hb_mathRound( dNumber, iDec );
+                  dNumber = hb_numRound( dNumber, iDec );
 
                if( iDec > 0 )
                   iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
@@ -1277,9 +1277,75 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    return( szResult );
 }
 
-/* converts a numeric to a string with optional width & precision.
-   calls hb_itemStr() after validating parameters
-*/
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      STR
+ *  $CATEGORY$
+ *      Run-time Library, Strings
+ *  $ONELINER$
+ *      Convert a numeric expression to a character string.
+ *  $SYNTAX$
+ *      STR(<nNumber>, [<nLength>], [<nDecimals>]) --> cNumber
+ *  $ARGUMENTS$
+ *      <nNumber> is the numeric expression to be converted to a character
+ *      string.
+ *      <nLength> is the length of the character string to return, including
+ *      decimal digits, decimal point, and sign.
+ *      <nDecimals> is the number of decimal places to return.
+ *  $RETURNS$
+ *      STR() returns <nNumber> formatted as a character string.  If the
+ *      optional length and decimal arguments are not specified, STR()
+ *      returns the character string according to the following rules:
+ *
+ *      Results of STR() with No Optional Arguments
+ *      ---------------------------------------------------------------
+ *      Expression               Return Value Length
+ *      ---------------------------------------------------------------
+ *      Field Variable           Field length plus decimals
+ *      Expressions/constants    Minimum of 10 digits plus decimals
+ *      VAL()                    Minimum of 3 digits
+ *      MONTH()/DAY()            3 digits
+ *      YEAR()                   5 digits
+ *      RECNO()                  7 digits
+ *      ---------------------------------------------------------------
+ *  $DESCRIPTION$
+ *      STR() is a numeric conversion function that converts numeric values
+ *      to character strings. It is commonly used to concatenate numeric values 
+ *      to character strings. STR() has applications displaying numbers, 
+ *      creating codes such as part numbers from numeric values, and creating 
+ *      index keys that combine numeric and character data.
+ *
+ *      STR() is like TRANSFORM(), which formats numeric values as character
+ *      strings using a mask instead of length and decimal specifications.
+ *
+ *      The inverse of STR() is VAL(), which converts character numbers to
+ *      numerics.
+ *
+ *      *  If <nLength> is less than the number of whole number digits in
+ *         <nNumber>, STR() returns asterisks instead of the number.
+ *
+ *      *  If <nLength> is less than the number of decimal digits
+ *         required for the decimal portion of the returned string, Harbour
+ *         rounds the number to the available number of decimal places.
+ *
+ *      *  If <nLength> is specified but <nDecimals> is omitted (no
+ *         decimal places), the return value is rounded to an integer.
+ *  $EXAMPLES$
+ *      ? STR( 10, 6, 2 ) // " 10.00"
+ *      ? STR( -10, 8, 2 ) // "  -10.00"
+ *  $TESTS$
+ *      see in rtl_test.prg for a comprehensive regression test suit.
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CA-Clipper compatible.
+ *  $SEEALSO$
+ *      STRZERO()
+ *      VAL()
+ *  $END$
+ */
+
 HARBOUR HB_STR( void )
 {
    if( hb_pcount() > 0 && hb_pcount() < 4 )
@@ -1330,10 +1396,78 @@ HARBOUR HB_STR( void )
    }
 }
 
-/* converts a numeric to a string with optional width & precision.
-   calls hb_itemStr() after validating parameters.
-   After that it pads the result with zeros.
-*/
+/* ------------------------------------------------- */
+/* Copyright (C) 1999 Victor Szel <info@szelvesz.hu> */
+/* ------------------------------------------------- */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      STRZERO
+ *  $CATEGORY$
+ *      Run-time Library, Strings
+ *  $ONELINER$
+ *      Convert a numeric expression to a character string, zero padded.
+ *  $SYNTAX$
+ *      STRZERO(<nNumber>, [<nLength>], [<nDecimals>]) --> cNumber
+ *  $ARGUMENTS$
+ *      <nNumber> is the numeric expression to be converted to a character
+ *      string.
+ *      <nLength> is the length of the character string to return, including
+ *      decimal digits, decimal point, and sign.
+ *      <nDecimals> is the number of decimal places to return.
+ *  $RETURNS$
+ *      STRZERO() returns <nNumber> formatted as a character string.  If the
+ *      optional length and decimal arguments are not specified, STRZERO()
+ *      returns the character string according to the following rules:
+ *
+ *      Results of STRZERO() with No Optional Arguments
+ *      ---------------------------------------------------------------
+ *      Expression               Return Value Length
+ *      ---------------------------------------------------------------
+ *      Field Variable           Field length plus decimals
+ *      Expressions/constants    Minimum of 10 digits plus decimals
+ *      VAL()                    Minimum of 3 digits
+ *      MONTH()/DAY()            3 digits
+ *      YEAR()                   5 digits
+ *      RECNO()                  7 digits
+ *      ---------------------------------------------------------------
+ *  $DESCRIPTION$
+ *      STRZERO() is a numeric conversion function that converts numeric values
+ *      to character strings. It is commonly used to concatenate numeric values 
+ *      to character strings. STRZERO() has applications displaying numbers, 
+ *      creating codes such as part numbers from numeric values, and creating 
+ *      index keys that combine numeric and character data.
+ *
+ *      STRZERO() is like TRANSFORM(), which formats numeric values as character
+ *      strings using a mask instead of length and decimal specifications.
+ *
+ *      The inverse of STRZERO() is VAL(), which converts character numbers to
+ *      numerics.
+ *
+ *      *  If <nLength> is less than the number of whole number digits in
+ *         <nNumber>, STR() returns asterisks instead of the number.
+ *
+ *      *  If <nLength> is less than the number of decimal digits
+ *         required for the decimal portion of the returned string, Harbour
+ *         rounds the number to the available number of decimal places.
+ *
+ *      *  If <nLength> is specified but <nDecimals> is omitted (no
+ *         decimal places), the return value is rounded to an integer.
+ *  $EXAMPLES$
+ *      ? STRZERO( 10, 6, 2 ) // "010.00"
+ *      ? STRZERO( -10, 8, 2 ) // "-0010.00"
+ *  $TESTS$
+ *      see in rtl_test.prg for a comprehensive regression test suit.
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CA-Clipper compatible (it was not mentioned in the docs though).
+ *  $SEEALSO$
+ *      STR()
+ *      VAL()
+ *  $END$
+ */
+
 HARBOUR HB_STRZERO( void )
 {
    if( hb_pcount() > 0 && hb_pcount() < 4 )
@@ -1375,7 +1509,8 @@ HARBOUR HB_STRZERO( void )
 
             if ( szResult[ ulPos ] == '-' )
             {
-               /* Negative sign found */
+               /* Negative sign found, put the negative sign to the first */
+               /* position */
 
                szResult[ ulPos ] = ' ';
 
@@ -1431,3 +1566,4 @@ int hb_strgreater( char * sz1, char * sz2 )
 
    return HB_STRGREATER_EQUAL;
 }
+

@@ -28,7 +28,7 @@ endif
 # The -( option could be appropriate to link against libraries with
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.
-# LINKLIBS += -Wl,-(
+LINKLIBS += -Wl,-(
 
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
@@ -44,7 +44,7 @@ endif
 # The -) option could be appropriate to link against libraries with
 # cyclic dependencies, but I think it is not really necessary if the
 # libraries are kept in proper order.
-# LINKLIBS += -Wl,-)
+LINKLIBS += -Wl,-)
 
 LDFLAGS = $(LINKPATHS)
 
