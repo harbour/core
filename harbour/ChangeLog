@@ -1,3 +1,29 @@
+20000116-15:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hberrors.h
+        * added WARN_DUPL_ANNOUNCE
+        * added ERR_FUNC_ANNOUNCE
+
+    *include/compiler.h
+        * added declaration of hb_compAnnounce( char * )
+        which creates an ANNOUNCEd procedure
+
+    *source/compiler/hbgenerr.c
+        * added warning when redundant ANNOUNCE statement is used
+        * added error message when ANNUNCEd procedure is declared STATIC
+
+    *source/compiler/harbour.y
+    *source/compiler/harbour.l
+    *source/compiler/harbour.c
+        * fixed support for ANNOUNCE statement
+        (static variables are no longer bound to ANNOUNCEd procedure)
+
+    *source/pp/table.c
+        * removed fixed translation of ANNOUNCE statement
+
+    *source/compiler/cmdcheck.c
+	* restored correct support for '-w' compiler switch
+	
 20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
     *source/rtl/arrays.c
     *source/rtl/type.c

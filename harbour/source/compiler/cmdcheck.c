@@ -408,7 +408,13 @@ void hb_compChkEnvironVar( char * szSwitch )
 
              case 'w':
              case 'W':
-                hb_comp_bAnyWarning = TRUE;
+                  hb_comp_iWarnings = 1;
+                  if( s[ 1 ] )
+                  {  /*there is -w<0,1,2,3> probably */
+                     hb_comp_iWarnings = s[ 1 ] - '0';
+                     if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
+                        hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, s, NULL );
+                  }
                 break;
 
              case 'x':

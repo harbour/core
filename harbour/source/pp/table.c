@@ -388,7 +388,6 @@
    static COMMANDS sC___237 = {0,"SET","ORDER TO \1A00 [IN \1B40]","ordSetFocus( \1A00 [, \1B30] )",&sC___236 };
    static COMMANDS sC___238 = {0,"SET","ORDER TO TAG \1A40 [IN \1B40]","ordSetFocus( \1A30 [, \1B30] )",&sC___237 };
    static COMMANDS sC___239 = {0,"SET","ORDER TO","ordSetFocus(0)",&sC___238 };
-   static COMMANDS sC___240 = {0,"ANNOUNCE","\1A10","procedure \1A00 ; return",&sC___239 };
 
-   COMMANDS * hb_pp_topCommand = &sC___240;
+   COMMANDS * hb_pp_topCommand = &sC___239;
    COMMANDS * hb_pp_topTranslate = NULL;

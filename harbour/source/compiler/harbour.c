@@ -689,8 +689,6 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       pSym = hb_compSymbolAdd( szFunName, NULL );
 
    if( cScope != FS_PUBLIC )
-/*    pSym->cScope = FS_PUBLIC; */
-/* else */
       pSym->cScope |= cScope; /* we may have a non public function and a object message */
 
    pFunc = hb_compFunctionNew( szFunName, cScope );
@@ -723,6 +721,50 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
    }
 }
 
+/* create an ANNOUNCEd procedure
+ */
+void hb_compAnnounce( char * szFunName )
+{
+   PFUNCTION pFunc;
+
+   pFunc = hb_compFunctionFind( szFunName );
+   if( pFunc )
+   {
+      /* there is a function/procedure defined already - ANNOUNCEd procedure
+       * have to be a public symbol - check if existing symbol is public
+       */
+      if( pFunc->cScope & FS_STATIC )
+         hb_compGenError( hb_comp_szErrors, 'F', ERR_FUNC_ANNOUNCE, szFunName, NULL );
+   }
+   else
+   {
+      PCOMSYMBOL pSym;
+
+      /* create a new procedure
+       */
+      pSym = hb_compSymbolAdd( szFunName, NULL );
+      pSym->cScope = FS_PUBLIC;
+
+      pFunc = hb_compFunctionNew( szFunName, FS_PUBLIC );
+      pFunc->bFlags |= FUN_PROCEDURE;
+
+      if( hb_comp_functions.iCount == 0 )
+      {
+         hb_comp_functions.pFirst = pFunc;
+         hb_comp_functions.pLast  = pFunc;
+      }
+      else
+      {
+         hb_comp_functions.pLast->pNext = pFunc;
+         hb_comp_functions.pLast = pFunc;
+      }
+      hb_comp_functions.iCount++;
+
+      /* this function have a very limited functionality
+       */
+      hb_compGenPCode1( HB_P_ENDPROC );
+   }
+}
 
 PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
 {
@@ -1721,7 +1763,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
       }
    }
    else
-      /* Alias is already placed on stack 
+      /* Alias is already placed on stack
        * NOTE: An alias will be determined at runtime then we cannot decide
        * here if passed name is either a field or a memvar
        */

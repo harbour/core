@@ -80,7 +80,8 @@ char * hb_comp_szErrors[] =
    "Invalid array index expression: \'%s\'",
    "Bound error: \'%s\'",
    "Macro of declared symbol: \'%s\'",
-   "Invalid selector in send: \'%s\'"
+   "Invalid selector in send: \'%s\'",
+   "ANNOUNCEd procedure \'%s\' must be a public symbol"
 };
 
 /* Table with parse warnings */
@@ -105,7 +106,8 @@ char * hb_comp_szWarnings[] =
    "3Suspicious operand type: \'UnKnown\' expected: \'Logical\'",
    "3Suspicious operand type: \'UnKnown\' expected: \'Numeric\'",
    "0Meaningless use of expression: \'%s\'",
-   "1Unreachable code"
+   "1Unreachable code",
+   "1Redundant \'ANNOUNCE %s\' statement ignored"
 };
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )

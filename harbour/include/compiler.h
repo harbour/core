@@ -161,6 +161,7 @@ extern void      hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, in
 extern PFUNCTION hb_compFunctionFind( char * szFunName ); /* locates a previously defined function */
 extern USHORT    hb_compFunctionGetPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 extern PFUNCTION hb_compFunctionKill( PFUNCTION );    /* releases all memory allocated by function and returns the next one */
+extern void      hb_compAnnounce( char * );
 
 extern PFUNCTION hb_compFunCallAdd( char * szFuntionName );
 extern PFUNCTION hb_compFunCallFind( char * szFunName ); /* locates a previously defined called function */

@@ -127,6 +127,8 @@ USHORT hb_comp_wCaseCounter  = 0;
 static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
+static char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
+
 %}
 
 %union                  /* special structure used by lex and yacc to share info */
@@ -157,7 +159,7 @@ static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
 %token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_INTEGER NUM_LONG
 %token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
-%token EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
+%token ANNOUNCE EXTERN INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
@@ -347,6 +349,21 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | EXTERN ExtList CrlfStmnt
+           | ANNOUNCE IDENTIFIER {
+               if( hb_comp_szAnnounce == NULL )
+               {
+                  /* check for reserved name
+                  * NOTE: Clipper doesn't check for it
+                  */
+                  char * szFunction = hb_compReservedName( $2 );
+                  if( szFunction )
+                     hb_compGenError( hb_comp_szErrors, 'E', ERR_FUNC_RESERVED, szFunction, $2 );
+                  hb_comp_szAnnounce = $2;
+               }
+               else
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_DUPL_ANNOUNCE, $2, NULL );
+             } Crlf  
+
            ;
 
 CrlfStmnt  : { hb_compLinePushIfInside(); } Crlf
@@ -1432,6 +1449,9 @@ int hb_compYACCMain( char * szName )
       ++hb_comp_functions.iCount;
    }
 
+   if( hb_comp_szAnnounce )
+      hb_compAnnounce( hb_comp_szAnnounce );
+
    /* Close processed file (it is opened in hb_compInclude() function )
    */
    fclose( yyin );
@@ -1809,7 +1829,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
      USHORT uCount = hb_compExprListLen( pInitValue );
      HB_EXPR_PTR pVar = hb_compExprNewVar( szName );
      HB_EXPR_PTR pAssign;
- 
+
      hb_compStaticDefStart();   /* switch to statics pcode buffer */
      /* create a static variable */
      hb_compVariableAdd( szName, 'A' );
@@ -1827,7 +1847,7 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue )
   else
   {
      USHORT uCount = hb_compExprListLen( pInitValue );
-     
+
      hb_compVariableAdd( szName, 'A' );
      hb_compExprDelete( hb_compExprGenPush( pInitValue ) );
      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ) );
