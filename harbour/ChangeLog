@@ -10,6 +10,7 @@
     * corrected screen buffer size for dispbegin
   * makefile.vc
     + adir.prg
+    + setkey.prg
     * Corrections to Achoice, filesys
   * re-enabled gtDispbegin/end calls in gtBox
 

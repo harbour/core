@@ -86,6 +86,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\objfunc.obj \
     $(OBJ_DIR)\set.obj \
     $(OBJ_DIR)\setcolor.obj \
+    $(OBJ_DIR)\setkey.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\tclass.obj \
     $(OBJ_DIR)\transfrm.obj \
@@ -376,6 +377,12 @@ $(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\setcolor.obj : $(RTL_DIR)\setcolor.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\setkey.c : $(RTL_DIR)\setkey.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
+
+$(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
