@@ -1010,7 +1010,7 @@ Separator     {SpaceTab}
 "recover"      hb_comp_iState = RECOVER; return RECOVER;
 "retu"|"retur"|"return"  hb_comp_iState = RETURN; return RETURN;
 "static"       hb_comp_iState = STATIC; return STATIC;
-"step"/[^(]    return STEP;
+"step"         return STEP;
 "to"           return TO;
 "using"        return USING;
 %{
@@ -1160,12 +1160,12 @@ Separator     {SpaceTab}
 [\)]           --_iOpenBracket; hb_comp_iState =SEPARATOR; return yytext[ 0 ];
 
 [\x00-\x1F]	return yytext[ 0 ]; /* see below */
-[\x80-\xFF]	{ 
-		/* This have to be the last rule - any nonstandard and not handled 
+[\x80-\xFF]	{
+            /* This have to be the last rule - any nonstandard and not handled
 	         * characters should go to grammar analyser instead of printing it
 	         * on stdout.
- 	         */ 
-		return yytext[ 0 ]; 
+ 	         */
+            return yytext[ 0 ];
 	    }
 
 %{

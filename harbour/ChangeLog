@@ -1,3 +1,16 @@
+20000129-13:20 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+    *source/compiler/expropt.c
+    *source/macro/macro.c
+        * empty list expression is not allowed now - this generates
+        syntax error:  funcall( ()->expression, () )
+
+    *source/compiler/harbour.l
+    *source/compiler/harbour.y
+        * fixed support for STEP and TO keywords
+	* fixed GPF (core dump) if field variable is used in a codeblock
+
 20000129-01:55 EST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source/rtl/oemansi.c

@@ -1050,7 +1050,7 @@ HB_EXPR_PTR hb_compExprNewVar( char * szName )
 }
 
 /* Create a new declaration of PUBLIC or PRIVATE variable.
- * 
+ *
  * szName is a string with variable name if 'PUBLIC varname' context
  * pMacroVar is a macro expression if 'PUBLIC &varname' context
  */
@@ -1369,7 +1369,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    if( pRightExpr->ExprType == HB_ET_ARGLIST )
    {
        /* HB_ET_ARGLIST is used in case of STATIC var[dim1, dim2, dimN]
-        * was used - we have to check if all array dimensions are 
+        * was used - we have to check if all array dimensions are
 	* constant values
         */
 	hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr );
@@ -2111,13 +2111,22 @@ static HB_EXPR_FUNC( hb_compExprUseList )
          {
             HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
-            while( pExpr )
+            if( pExpr->ExprType == HB_ET_NONE && pExpr->pNext == NULL )
             {
-               if( pExpr->pNext )
-                  HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
-               else
-                  HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );   /* the last expression */
-               pExpr = pExpr->pNext;
+               /* Empty list was used ()
+                */
+               hb_compErrorSyntax( pExpr );
+            }
+            else
+            {
+               while( pExpr )
+               {
+                  if( pExpr->pNext )
+                     HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
+                  else
+                     HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );   /* the last expression */
+                  pExpr = pExpr->pNext;
+               }
             }
          }
          break;
@@ -2617,8 +2626,17 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
                 *
                 * NOTE: FALSE = don't push alias value
                 */
-               HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
-               hb_compGenPopAliasedVar( pSelf->value.asAlias.pVar->value.asSymbol, FALSE, NULL, 0 );
+               if( pAlias->ExprType == HB_ET_NONE )
+               {
+                  /* empty expression -> ()->var
+                  */
+                  hb_compErrorAlias( pAlias );
+               }
+               else
+               {
+                  HB_EXPR_USE( pAlias, HB_EA_PUSH_PCODE );
+                  hb_compGenPopAliasedVar( pSelf->value.asAlias.pVar->value.asSymbol, FALSE, NULL, 0 );
+               }
             }
             else
                hb_compErrorAlias( pAlias );
@@ -2830,7 +2848,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
           hb_compGenPushVar( pSelf->value.asSymbol );
 #endif
           break;
-	  
+
        case HB_EA_POP_PCODE:
 #ifdef HB_MACRO_SUPPORT
          if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )

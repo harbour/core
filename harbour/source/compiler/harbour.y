@@ -192,7 +192,7 @@ static char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %right '\n' ';' ','
 /*the highest precedence*/
 
-%type <string>  IDENTIFIER LITERAL SendId MACROVAR MACROTEXT
+%type <string>  IdentName IDENTIFIER LITERAL SendId MACROVAR MACROTEXT
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
@@ -258,9 +258,9 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
            | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
-Function   : FunScope FUNCTION  IDENTIFIER { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
-           | FunScope PROCEDURE IDENTIFIER { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | FunScope DECLARE_FUN IDENTIFIER Params AsType Crlf { hb_compSymbolAdd( $3, NULL ); }
+Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
+           | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
+           | FunScope DECLARE_FUN IdentName Params AsType Crlf { hb_compSymbolAdd( $3, NULL ); }
            ;
 
 FunScope   :                  { $$ = FS_PUBLIC; }
@@ -284,8 +284,8 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
            ;
 
-ParamList  : IDENTIFIER AsType                { hb_compVariableAdd( $1, ' ' ); $$ = 1; }
-           | ParamList ',' IDENTIFIER AsType  { hb_compVariableAdd( $3, $4 ); $$++; }
+ParamList  : IdentName AsType                { hb_compVariableAdd( $1, ' ' ); $$ = 1; }
+           | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, $4 ); $$++; }
            ;
 
 /* NOTE: This alllows the use of Expression as a statement.
@@ -349,7 +349,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | EXTERN ExtList CrlfStmnt
-           | ANNOUNCE IDENTIFIER {
+           | ANNOUNCE IdentName {
                if( hb_comp_szAnnounce == NULL )
                {
                   /* check for reserved name
@@ -362,7 +362,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
                }
                else
                   hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_DUPL_ANNOUNCE, $2, NULL );
-             } Crlf  
+             } Crlf
 
            ;
 
@@ -377,8 +377,13 @@ Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
            | Statements LineStat       { $<lNumber>$ += $<lNumber>2; }
            ;
 
-ExtList    : IDENTIFIER                      { hb_compExternAdd( $1 ); }
-           | ExtList ',' IDENTIFIER          { hb_compExternAdd( $3 ); }
+ExtList    : IdentName                      { hb_compExternAdd( $1 ); }
+           | ExtList ',' IdentName          { hb_compExternAdd( $3 ); }
+           ;
+
+IdentName  : IDENTIFIER       { $$ = $1; }
+           | STEP             { $$ = hb_strdup( "STEP" ); }
+           | TO               { $$ = hb_strdup( "TO" ); }
            ;
 
 /* Numeric values
@@ -449,10 +454,10 @@ ArrayAtAlias : ArrayAt ALIASOP      { $$ = $1; }
 
 /* Variables
  */
-Variable    : IDENTIFIER         { $$ = hb_compExprNewVar( $1 ); }
+Variable    : IdentName         { $$ = hb_compExprNewVar( $1 ); }
 ;
 
-VarAlias    : IDENTIFIER ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
+VarAlias    : IdentName ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
 ;
 
 /* Macro variables
@@ -497,7 +502,7 @@ FieldVarAlias  : FieldAlias VarAlias            { hb_compExprDelete( $1 ); $$ = 
                | FieldAlias IfInlineAlias       { hb_compExprDelete( $1 ); $$ = hb_compErrorAlias( $2 ); }
                ;
 
-AliasId     : IDENTIFIER      { $$ = hb_compExprNewVar( $1 ); }
+AliasId     : IdentName      { $$ = hb_compExprNewVar( $1 ); }
             | MacroVar        { $$ = $1; }
 	    | MacroExpr       { $$ = $1; }
             ;
@@ -561,7 +566,7 @@ VariableAtAlias : VariableAt ALIASOP      { $$ = $1; }
 
 /* Function call
  */
-FunCall    : IDENTIFIER '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
+FunCall    : IdentName '(' ArgList ')'   { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( $1 ), $3 ); }
            | MacroVar '(' ArgList ')'     { $$ = hb_compExprNewFunCall( $1, $3 ); }
 ;
 
@@ -570,8 +575,8 @@ ArgList    : Argument                     { $$ = hb_compExprNewArgList( $1 ); }
            ;
 
 Argument   : EmptyExpression                   { $$ = $1; }
-           | '@' IDENTIFIER                    { $$ = hb_compExprNewVarRef( $2 ); }
-           | '@' IDENTIFIER '(' ')'            { $$ = hb_compExprNewFunRef( $2 ); }
+           | '@' IdentName                    { $$ = hb_compExprNewVarRef( $2 ); }
+           | '@' IdentName '(' ')'            { $$ = hb_compExprNewFunRef( $2 ); }
            ;
 
 FunCallAlias : FunCall ALIASOP        { $$ = $1; }
@@ -579,7 +584,7 @@ FunCallAlias : FunCall ALIASOP        { $$ = $1; }
 
 /* Object's instance variable
  */
-SendId      : IDENTIFIER      { $$ = $1; }
+SendId      : IdentName      { $$ = $1; }
             | MacroVar        { $$ = "&"; hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_SEND, "&", NULL); }
             ;
 
@@ -615,7 +620,7 @@ ObjectMethod : ObjectData '(' ArgList ')'    { $$ = hb_compExprNewMethodCall( $1
 ObjectMethodAlias : ObjectMethod ALIASOP        { $$ = $1; }
 ;
 
-/* NOTE: We have to distinguish IDENTIFIER here because it is repeated
+/* NOTE: We have to distinguish IdentName here because it is repeated
  * in DoArgument (a part of DO <proc> WITH .. statement)
  * where it generates different action.
  */
@@ -656,7 +661,7 @@ EmptyExpression: /* nothing => nil */        { $$ = hb_compExprNewEmpty(); }
            | Expression
 ;
 
-LValue      : IDENTIFIER                     { $$ = hb_compExprNewVar( $1 ); }
+LValue      : IdentName                     { $$ = hb_compExprNewVar( $1 ); }
             | AliasVar
             | MacroVar
             | MacroExpr
@@ -941,8 +946,8 @@ BlockExpList : Expression                { $$ = hb_compExprAddListExpr( $<asExpr
 BlockNoVar : /* empty list */    { $$ = NULL; }
 ;
 
-BlockVarList : IDENTIFIER AsType                 { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, $2 ); }
-           | BlockVarList ',' IDENTIFIER AsType  { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, $4 ); }
+BlockVarList : IdentName AsType                 { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, $2 ); }
+           | BlockVarList ',' IdentName AsType  { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, $4 ); }
            ;
 
 /* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )
@@ -1041,7 +1046,7 @@ ExtVarDef  : VarDef
                }
            ;
 
-VarDef     : IDENTIFIER AsType
+VarDef     : IdentName AsType
                {
                   if( hb_comp_iVarScope == VS_STATIC )
                   {
@@ -1058,7 +1063,7 @@ VarDef     : IDENTIFIER AsType
                      hb_compVariableAdd( $1, $2 );
                }
 
-           | IDENTIFIER AsType INASSIGN Expression
+           | IdentName AsType INASSIGN Expression
                {
                   if( hb_comp_iVarScope == VS_STATIC )
                   {
@@ -1080,8 +1085,8 @@ VarDef     : IDENTIFIER AsType
                   }
                }
 
-           | IDENTIFIER DimList		   { hb_compVariableDim( $1, $2 ); }
-           | IDENTIFIER DimList AS_ARRAY   { hb_compVariableDim( $1, $2 ); }
+           | IdentName DimList        { hb_compVariableDim( $1, $2 ); }
+           | IdentName DimList AS_ARRAY   { hb_compVariableDim( $1, $2 ); }
            ;
 
 /* NOTE: DimList and DimIndex is the same as ArrayIndex and IndexList
@@ -1099,16 +1104,16 @@ DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2 ); }
 FieldsDef  : FIELD { hb_comp_iVarScope = VS_FIELD; } FieldList Crlf
            ;
 
-FieldList  : IDENTIFIER AsType               { $$=hb_compFieldsCount(); hb_compVariableAdd( $1, $2 ); }
-           | FieldList ',' IDENTIFIER AsType { hb_compVariableAdd( $3, $4 ); }
-           | FieldList IN IDENTIFIER { hb_compFieldSetAlias( $3, $<iNumber>1 ); }
+FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVariableAdd( $1, $2 ); }
+           | FieldList ',' IdentName AsType { hb_compVariableAdd( $3, $4 ); }
+           | FieldList IN IdentName { hb_compFieldSetAlias( $3, $<iNumber>1 ); }
            ;
 
 MemvarDef  : MEMVAR { hb_comp_iVarScope = VS_MEMVAR; } MemvarList Crlf
            ;
 
-MemvarList : IDENTIFIER                            { hb_compVariableAdd( $1, ' ' ); }
-           | MemvarList ',' IDENTIFIER             { hb_compVariableAdd( $3, ' ' ); }
+MemvarList : IdentName                            { hb_compVariableAdd( $1, ' ' ); }
+           | MemvarList ',' IdentName             { hb_compVariableAdd( $3, ' ' ); }
            ;
 
 ExecFlow   : IfEndif
@@ -1314,7 +1319,7 @@ StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
            ;
 
 ForStatements : EmptyStats NEXT                     { --hb_comp_wForCounter; }
-           | EmptyStats NEXT IDENTIFIER             { --hb_comp_wForCounter; }
+           | EmptyStats NEXT IdentName             { --hb_comp_wForCounter; }
            ;
 
 BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf { hb_compLinePush(); }
@@ -1366,7 +1371,7 @@ RecoverEmpty : RECOVER
                }
            ;
 
-RecoverUsing : RECOVER USING IDENTIFIER
+RecoverUsing : RECOVER USING IdentName
                {
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
@@ -1382,7 +1387,7 @@ RecoverUsing : RECOVER USING IDENTIFIER
  * DO .. WITH ++variable
  * will pass the value of variable not a reference
  */
-DoName     : IDENTIFIER       { $$ = hb_compExprNewFunName( $1 ); }
+DoName     : IdentName       { $$ = hb_compExprNewFunName( $1 ); }
            | MacroVar         { $$ = $1; }
 	   | MacroExpr		{ $$ = $1; }
            ;
@@ -1402,8 +1407,8 @@ DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExp
            | DoArgList ',' DoArgument  { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-DoArgument : IDENTIFIER                { $$ = hb_compExprNewVarRef( $1 ); }
-           | '@' IDENTIFIER '(' ')'    { $$ = hb_compExprNewFunRef( $2 ); }
+DoArgument : IdentName                { $$ = hb_compExprNewVarRef( $1 ); }
+           | '@' IdentName '(' ')'    { $$ = hb_compExprNewFunRef( $2 ); }
            | SimpleExpression          { $$ = $1; }
            | PareExpList               { $$ = $1; }
            ;

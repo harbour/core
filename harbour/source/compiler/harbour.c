@@ -906,8 +906,9 @@ PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ) /* returns variable if def
 {
    USHORT w = 1;
 
-   while( pVars->pNext && w++ < wOrder )
-      pVars = pVars->pNext;
+   if( pVars )
+       while( pVars->pNext && w++ < wOrder )
+          pVars = pVars->pNext;
 
    return pVars;
 }
@@ -1335,7 +1336,18 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
  */
 void hb_compGenFieldPCode( BYTE bPCode, int wVar, char * szVarName, PFUNCTION pFunc )
 {
-   PVAR pField = hb_compVariableFind( pFunc->pFields, wVar );
+   PVAR pField;
+   
+   if( ! pFunc->szName )
+   {
+      /* we have to check the list of nested codeblock up to a function
+       * where the codeblock is defined
+       */
+      while( pFunc->pOwner )
+         pFunc = pFunc->pOwner;
+   }
+
+   pField = hb_compVariableFind( pFunc->pFields, wVar );
 
    if( pField->szAlias )
    {  /* the alias was specified in FIELD declaration
