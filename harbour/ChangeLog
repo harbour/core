@@ -1,12 +1,16 @@
+2000-01-22 20:03 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Improved debugger: Command window is starting working.
+
 2000-01-22 13:40 GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
    * ngdoc/ft_helpc.prg
       *Added support for OS2 IPF source code
    +source/tools/os2.prg
-      Support class for FT_HELPC generate OS2 IPF files      
+      Support class for FT_HELPC generate OS2 IPF files
 2000-01-22 10:22 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * source/rtl/environ.c (From Jose Lalin)
      ! Getenv accepts a default value to return when the envvar is not found
-     ! Updated function doc     
+     ! Updated function doc
 
 2000-01-21 14:05 GMT-5 David G. Holm <dholm@ sd-llc.com>
 
