@@ -2651,7 +2651,7 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull )
       return;
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
    memset( (void*) &Header, 0, sizeof( NTXHEADER ) );
-   Header.type = 15;
+   Header.type = 6;
    Header.version = 1;
    Header.root = pIndex->CompoundTag->RootBlock;
    Header.next_page = pIndex->NextAvail;

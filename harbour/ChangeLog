@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-29 11:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbfntx/dbfntx1.c
+     * Signature byte for ntx files is changed to be Clipper compatible.
+   * include/hbver.h
+     * Release info has been corrected
+
 2003-09-29 09:10 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
    * harbour.spec
      * Release info has been changed.
