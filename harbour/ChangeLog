@@ -1,3 +1,14 @@
+19990725-09:50 CET Felipe Coury
+   + tests/working/hscript/guestbk.ini; tests/working/hscript/guestbk.htm;
+     tests/working/hscript/guestbk.prg; tests/working/hscript/guestbk.txt;
+     tests/working/hscript/bldguest.bat;
+     Harbour guestbook added
+
+
+19990725-09:45 CET Eddie Runia <eddie@runia.com>
+   * source/runner/runner.c
+     GPL text added
+
 19990726-09:45 Antonio Linares <alinares@fivetech.com>
    * source/rtl/natmsg/msguk.c
       * missing #include <hbdefs.h>
