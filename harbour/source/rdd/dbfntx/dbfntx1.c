@@ -421,23 +421,21 @@ static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
-         printf( "\n\rhb_ntxTagKeyNo: Cannot find current key:" );
          return 0;
       }
       ulKeyNo = 1;
       for( i=0;i<=pTag->stackLevel;i++ )
       {
          pPage = hb_ntxPageLoad( pTag,pTag->stack[i].page );
-         if( pTag->stack[i].ikey )
+         ulKeyNo += pTag->stack[i].ikey;
+         if( pTag->stackLevel )
+            pTag->stack[i].ikey --;
+         for( j=0;j<=pTag->stack[i].ikey;j++ )
          {
-            ulKeyNo += pTag->stack[i].ikey;
-            for( j=0;j<pTag->stack[i].ikey;j++ )
-            {
-               p = KEYITEM( pPage, j );
-               if( p->page )
-                  hb__ntxTagKeyCount( pTag, hb_ntxPageLoad( pTag,p->page ),
-                                          &ulKeyNo );
-            }
+            p = KEYITEM( pPage, j );
+            if( p->page )
+               hb__ntxTagKeyCount( pTag, hb_ntxPageLoad( pTag,p->page ),
+                                       &ulKeyNo );
          }
          hb_ntxPageRelease( pTag,pPage );
       }
@@ -3339,6 +3337,7 @@ static ERRCODE ntxZap( NTXAREAP pArea )
       {
          hb_ntxPageFree( pTag,TRUE );
          pTag->RootBlock = pTag->TagBlock = NTXBLOCKSIZE;
+         pTag->keyCount = 0;
          hb_ntxHeaderSave( pTag->Owner, FALSE );
 
          memset( buffer, 0, NTXBLOCKSIZE );
@@ -3637,6 +3636,9 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          hb_itemPutC( pInfo->itmResult, ".ntx" );
          return SUCCESS;
    }
+
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
 
    if( pArea->lpNtxTag &&
        ( pTag = ntxFindIndex( pArea , pInfo->itmOrder ) ) != NULL )
@@ -3953,6 +3955,7 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
          hb_fsWrite( pTag->Owner->DiskFile, NULL, 0 );
       }
       pTag->RootBlock = 0;
+      pTag->keyCount = 0;
       hb_ntxIndexCreate( pTag->Owner );
 
       if( !pTag->Memory )
@@ -4140,3 +4143,4 @@ HB_FUNC( DBFNTX_GETFUNCTABLE )
    else
       hb_retni( FAILURE );
 }
+
