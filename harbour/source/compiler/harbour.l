@@ -770,7 +770,11 @@ Separator     {SpaceTab}
 	 /* NOTE: hb_compiLineINLINE is being RESET in ppcomp.c - hb_pp_Internal() */
 
      if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_HB_INLINE ) )
-	    return IDENTIFIER;
+     {
+	     yylval.string = hb_compIdentifierNew( "HB_INLINE", TRUE );
+         hb_comp_iState = IDENTIFIER;
+         return IDENTIFIER;
+     }
         
 	 if( hb_comp_iLineINLINE )
 	 {

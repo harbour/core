@@ -60,11 +60,15 @@
  *      /k<mode>         enable <mode> compatibility mode  </par>
  *      =================                                  </par>
  *
- *          /kc          strict Clipper compatibility   
+ *          /kc          clear all flags (strict Clipper compatibility)   
  *
- *          /kh          Harbour extensions (default)   
+ *          /kh          Harbour extensions   
  *
- *          /kx          other xbase dialects extensions   
+ *          /ki          HB_INLINE support enabled (default)  
+ *
+ *          /ks          synchronize compile and runtime modes (default)  
+ *
+ *          /kx          other xbase dialects extensions (default)   
  *
  *          /k?          invoke help information      
  *

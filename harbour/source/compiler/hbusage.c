@@ -110,9 +110,10 @@ void hb_compPrintModes( void )
 {
    static const char * szOptions [] =
    {
-           "\nOptions:  c               strict Clipper mode",
+           "\nOptions:  c               clear all flags (strict Clipper mode)",
            "\n          h               Harbour mode (default)",
            "\n          i               enable support for HB_INLINE",
+           "\n          s               synchronize compile and runtime modes",
            "\n          x               extended xbase mode",
            "\n          ?               this info",
            "\n"

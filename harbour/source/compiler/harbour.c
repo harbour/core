@@ -190,6 +190,7 @@ int main( int argc, char * argv[] )
    hb_comp_Supported  = HB_COMPFLAG_HARBOUR;
    hb_comp_Supported |= HB_COMPFLAG_XBASE;
    hb_comp_Supported |= HB_COMPFLAG_HB_INLINE;
+   hb_comp_Supported |= HB_COMPFLAG_SYNCHRONIZE;
 
    /* First check the environment variables */
    hb_compChkCompilerSwitch( 0, NULL );

@@ -1,3 +1,22 @@
+2001-08-07 13:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    * doc/en/compiler.txt
+        *updated to keep current compiler state
+        
+    * include/hbcomp.h
+    * source/compiler/cmdcheck.c
+    * source/compiler/genc.c
+    * source/compiler/harbour.c
+    * source/compiler/hbusage.c
+        * added a new switch -ks that request the synchronization of
+        compile time and runtime options (enabled by default).
+        Use -kc to disable it.
+        
+    * source/compiler/harbour.l
+        * fixed bug when HB_INLINE is interpreted as an identifier 
+        (-ki option)
+
+
 2001-08-07 01:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    + doc/en/clipper.txt
      + New file describing Harbour features that are different from Clipper.

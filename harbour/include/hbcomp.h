@@ -509,6 +509,7 @@ extern ULONG         hb_comp_Supported;
 #define HB_COMPFLAG_HARBOUR        1    /* -kh */
 #define HB_COMPFLAG_XBASE          2    /* -kx */
 #define HB_COMPFLAG_HB_INLINE      4    /* -ki */
+#define HB_COMPFLAG_SYNCHRONIZE    8    /* -ks */
 
 #ifdef HB_MACRO_SUPPORT
   #define HB_COMP_ISSUPPORTED(flag)    ( HB_MACRO_DATA->supported & (flag) )

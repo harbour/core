@@ -55,7 +55,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PCOMCLASS    pClass;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
-   BOOL bSyncMacro = TRUE;
+   BOOL bSyncMacro;
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
@@ -205,13 +205,15 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                     hb_comp_szPrefix, pFileName->szName );
 
 
-      fprintf( yyc, "#ifdef __cplusplus\n"
-                    "  extern \"C\" ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
-                    "#else\n"
-                    "  extern ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
-                    "#endif\n"
-                    "extern BOOL hb_vm_bSetMacroLevel;\n\n"
-             );
+      bSyncMacro = (hb_comp_Supported & HB_COMPFLAG_SYNCHRONIZE);
+      if( bSyncMacro )
+         fprintf( yyc, "#ifdef __cplusplus\n"
+                       "  extern \"C\" ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
+                       "#else\n"
+                       "  extern ULONG hb_macroSetMacro( BOOL bSet, ULONG flag );\n"
+                       "#endif\n"
+                       "extern BOOL hb_vm_bSetMacroLevel;\n\n"
+                );
 
       /* Generate functions data
        */
@@ -243,8 +245,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          {
             fprintf( yyc, "   if( hb_vm_bSetMacroLevel )\n"
                           "   {\n" );
-            fprintf( yyc, "      hb_macroSetMacro( %i, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_HARBOUR ), HB_SM_HARBOUR );
-            fprintf( yyc, "      hb_macroSetMacro( %i, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_XBASE ), HB_SM_XBASE );
+            fprintf( yyc, "      hb_macroSetMacro( %lu, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_HARBOUR ), HB_SM_HARBOUR );
+            fprintf( yyc, "      hb_macroSetMacro( %lu, %i );\n", ( hb_comp_Supported & HB_COMPFLAG_XBASE ), HB_SM_XBASE );
             fprintf( yyc, "      hb_vm_bSetMacroLevel = FALSE;\n" );
             fprintf( yyc, "   };\n\n" );
 
