@@ -97,6 +97,7 @@ CLASS TEditor
    METHOD RefreshWindow()                                // Redraw a window
    METHOD RefreshLine()                                  // Redraw a line
    METHOD RefreshColumn()                                // Redraw a column of text
+   METHOD LineColor(nRow) INLINE ::cColorSpec            // Returns color string to use to draw nRow (current line if nRow is empty)
 
    METHOD MoveCursor(nKey)                               // Move cursor inside text / window (needs a movement key)
    METHOD InsertState(lInsState)                         // Changes lInsert value and insertion / overstrike mode of editor
@@ -547,7 +548,7 @@ METHOD RefreshWindow() CLASS TEditor
    nOCur := SetCursor(SC_NONE)
 
    for i := 0 to Min(::nNumRows - 1, ::naTextLen - 1)
-      DispOutAt(::nTop + i, ::nLeft, PadR(SubStr(::GetLine(::nFirstRow + i), ::nFirstCol, ::nNumCols), ::nNumCols, " "), ::cColorSpec)
+      DispOutAt(::nTop + i, ::nLeft, PadR(SubStr(::GetLine(::nFirstRow + i), ::nFirstCol, ::nNumCols), ::nNumCols, " "), ::LineColor(::nFirstRow + i))
    next
 
    // Clear rest of editor window (needed when deleting lines of text)
@@ -570,7 +571,7 @@ METHOD RefreshLine() CLASS TEditor
    nOCol := ::Col()
    nORow := ::Row()
 
-   DispOutAt(::Row(), ::nLeft, PadR(SubStr(::GetLine(::nRow), ::nFirstCol, ::nNumCols), ::nNumCols, " "), ::cColorSpec)
+   DispOutAt(::Row(), ::nLeft, PadR(SubStr(::GetLine(::nRow), ::nFirstCol, ::nNumCols), ::nNumCols, " "), ::LineColor(::nRow))
 
    ::SetPos(nORow, nOCol)
 
@@ -590,7 +591,7 @@ METHOD RefreshColumn() CLASS TEditor
    nOCur := SetCursor(SC_NONE)
 
    for i := 0 to Min(::nNumRows - 1, ::naTextLen - 1)
-      DispOutAt(::nTop + i, nOCol, SubStr(::GetLine(::nFirstRow + i), ::nCol, 1), ::cColorSpec)
+      DispOutAt(::nTop + i, nOCol, SubStr(::GetLine(::nFirstRow + i), ::nCol, 1), ::LineColor(::nFirstRow + i))
    next
 
    SetCursor(nOCur)
@@ -998,3 +999,8 @@ METHOD SetPos(nRow, nCol) CLASS TEditor
    SetPos(::nPhysRow, ::nPhysCol)
 
 return ::nPhysRow
+
+
+/*METHOD LineColor(nRow) CLASS TEditor
+
+return ::cColorSpec*/

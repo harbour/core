@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Text file browser class
  *
- * Copyright 1999, 2000 {list of individual authors and e-mail addresses}
+ * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -41,40 +41,61 @@
 
 CLASS TBrwText FROM TEditor
 
-   DATA   cFileName // the name of the browsed file
-   DATA   nHandle   // To hold the handle of the browsed file
-   DATA   nFileSize // bytes size of the browsed file
-   DATA   cLine     // Currently selected text line
-   DATA   nLine
+   DATA  cFileName      // the name of the browsed file
+   DATA  nActiveLine    // Active line inside Code Window (last executed one)
 
-   METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColors)
+   DATA  cColor            // Color for code window lines
+   DATA  cCursorColor      // Hilited one
 
-   METHOD GoTop()
-   METHOD GoBottom()
-   METHOD Up()
-   METHOD Down()
-   METHOD PageUp()
-   METHOD PageDown()
+   DATA  cBreakpColor      // Color for lines with a break point active
+   DATA  cHiBreakpColor    // Hilited one
 
-   METHOD RefreshAll()
-   METHOD RefreshCurrent()
+   DATA  aBreakPoints      // Array with line numbers of active Break Points
 
-   METHOD GotoLine(n)
-   METHOD GetLine(nRow)
+   METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cCursorC, cBreakpC)
 
+   METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a TEditor like a TBrowse
+   METHOD   GoBottom()
+   METHOD   Up()
+   METHOD   Down()
+   METHOD   Left()
+   METHOD   Right()
+   METHOD   PageUp()
+   METHOD   PageDown()
+   METHOD   RefreshAll()
+   METHOD   RefreshCurrent()
+
+   METHOD   GotoLine(n)                      // Moves active line cursor, that is it hilights last executed line of code
+
+   METHOD   GetLine(nRow)                    // Redefine TEditor method to add line number
+   METHOD   LineColor(nRow)                  // Redefine TEditor method to handle line coloring
+
+   METHOD   ToggleBreakPoint(nRow, lSet)     // if lSet is .T. there is a BreakPoint active at nRow,
+                                             // if lSet is .F. BreakPoint at nRow has to be removed
 ENDCLASS
 
 
-METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColors) CLASS TBrwText
+// Color strings have two members: normal and inverted one
+METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cCursorC, cBreakpC) CLASS TBrwText
 
-   DEFAULT cColors TO SetColor()
+   DEFAULT cCursorC TO SetColor()
+   DEFAULT cBreakpC TO SetColor()
 
    ::cFileName := cFileName
-   ::cLine     := Space( nRight - nLeft - 2 )
-   ::nLine     := 1
+   ::nActiveLine := 1
+
+   ::cColor := cCursorC
+   ::cCursorColor := hb_ColorIndex(::cColor, 2) + hb_ColorIndex(::cColor, 1)
+
+   ::cBreakpColor := cBreakpC
+   ::cHiBreakpColor := hb_ColorIndex(::cBreakpColor, 2) + hb_ColorIndex(::cBreakpColor, 1)
+
+   ::aBreakPoints := {}
 
    Super:New("", nTop, nLeft, nBottom, nRight, .T.)
-   Super:SetColor(cColors)
+   // Standard TEditor window drawing color
+   Super:SetColor(cCursorC)
+
    Super:LoadFile(cFileName)
 
 return Self
@@ -92,6 +113,16 @@ return Self
 
 METHOD Up() CLASS TBrwText
    ::MoveCursor(K_UP)
+return Self
+
+
+METHOD Left() CLASS TBrwText
+   ::MoveCursor(K_LEFT)
+return Self
+
+
+METHOD Right() CLASS TBrwText
+   ::MoveCursor(K_RIGHT)
 return Self
 
 
@@ -114,21 +145,23 @@ METHOD RefreshAll() CLASS TBrwText
    ::RefreshWindow()
 return Self
 
-METHOD RefreshCurrent() CLASS TBrwText
-return Self
 
-METHOD ForceStable() CLASS TBrwText
+METHOD RefreshCurrent() CLASS TBrwText
+   ::RefreshLine()
 return Self
 
 
 METHOD GotoLine(n) CLASS TBrwText
 
+   // We need to set active line before calling ::RefreshLine() since ::LineColor()
+   // uses nActiveLine to decide which color to use to paint line
+   ::nActiveLine := n
    ::RefreshLine()
-   Super:GotoLine(n)
 
-   ::Hilite()
+   Super:GotoLine(n)
+   // I need to call ::RefreshLine() here because TEditor does not repaint current line
+   // if it needs not to and without this explicit call I don't see ActiveLine cursor movement
    ::RefreshLine()
-   ::DeHilite()
 
 return Self
 
@@ -137,4 +170,48 @@ METHOD GetLine(nRow) CLASS TBrwText
 
 return AllTrim(Str(nRow)) + ": " + Super:GetLine(nRow)
 
+
+METHOD LineColor(nRow) CLASS TBrwText
+
+   local cColor, lHilited, lBreak
+
+   lHilited := (nRow == ::nActiveLine)
+   lBreak := AScan(::aBreakPoints, nRow) > 0
+
+   if lHilited .AND. lBreak
+      cColor := ::cHiBreakpColor
+
+   elseif lHilited
+      cColor := ::cCursorColor
+
+   elseif lBreak
+      cColor := ::cBreakpColor
+
+   else
+      cColor := ::cColor
+
+   endif
+
+return cColor
+
+
+METHOD ToggleBreakPoint(nRow, lSet) CLASS TBrwText
+
+   local nAt := AScan(::aBreakPoints, nRow)
+
+   if lSet
+      // add it only if not present
+      if nAt == 0
+         AAdd(::aBreakPoints, nRow)
+      endif
+
+   else
+      if nAt <> 0
+         ADel( ::aBreakPoints, nAt )
+         ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+      endif
+
+   endif
+
+return Self
 

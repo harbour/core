@@ -170,6 +170,9 @@ METHOD New() CLASS TDebugger
 
    ::oWndCode       := TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
    ::oWndCode:bKeyPressed := { | nKey | ::CodeWindowProcessKey( nKey ) }
+   ::oWndCode:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_SPECIAL1 ) }
+   ::oWndCode:bLostFocus  := { || SetCursor( SC_NONE ) }
+
    AAdd( ::aWindows, ::oWndCode )
 
    ::BuildCommandWindow()
@@ -226,6 +229,12 @@ METHOD CodeWindowProcessKey( nKey ) CLASS TDebugger
 
       case nKey == K_END
            ::oBrwText:GoBottom()
+
+      case nKey == K_LEFT
+           ::oBrwText:Left()
+
+      case nKey == K_RIGHT
+           ::oBrwText:Right()
 
       case nKey == K_UP
            ::oBrwText:Up()
@@ -691,7 +700,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
    if cPrgName != ::cPrgName
       ::cPrgName := cPrgName
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
-                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
+                   ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG", "W+/R, W+/BG" )
 
       //::oBrwText:aColumns[ 1 ]:ColorBlock := { || iif( AScan( ::aBreakPoints,;
       //   CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
@@ -737,9 +746,11 @@ METHOD InputBox( cMsg, uValue, bValid ) CLASS TDebugger
 
 return iif( LastKey() != K_ESC, AllTrim( uTemp ), uValue )
 
+
 METHOD IsBreakPoint( nLine ) CLASS TDebugger
 
 return AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == nLine } ) != 0
+
 
 METHOD GotoLine( nLine ) CLASS TDebugger
 
@@ -788,9 +799,11 @@ METHOD ToggleBreakPoint() CLASS TDebugger
 
    if nAt == 0
       AAdd( ::aBreakPoints, { ::oBrwText:nRow, ::cPrgName } )     // it was nLine
+      ::oBrwText:ToggleBreakPoint(::oBrwText:nRow, .T.)
    else
       ADel( ::aBreakPoints, nAt )
       ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+      ::oBrwText:ToggleBreakPoint(::oBrwText:nRow, .F.)
    endif
 
    ::oBrwText:RefreshCurrent()
