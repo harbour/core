@@ -1,0 +1,28 @@
+#
+# $Id$#
+
+
+# makefile for Borland C/C++ 32 bits
+# Building of apollo.lib - VistaSoftware's Apollo database driver
+
+INCLUDE_DIR = ..\..\include
+
+BIN_DIR = ..\..\bin\b32
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
+
+$(LIB_DIR)\apollo.lib :   \
+   $(OBJ_DIR)\apollo.obj  \
+   $(OBJ_DIR)\apollo1.obj
+
+$(OBJ_DIR)\apollo1.c    : apollo1.prg
+$(OBJ_DIR)\apollo1.obj  : $(OBJ_DIR)\apollo1.c
+$(OBJ_DIR)\apollo.obj   : apollo.c
+
+.c.obj:
+  bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -o$@ $<
+  tlib $(LIB_DIR)\apollo.lib -+$@,,
+
+.prg.c:
+  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
+
