@@ -50,12 +50,10 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
            "\n                           <type>: 0=compact, 1=normal, 2=verbose (default)",
 #ifdef HARBOUR_OBJ_GENERATION
-           "\n          %cgf              output type: Windows/DOS OBJ32 (.obj)",
+           "\n          %cgo              output type: Windows/DOS OBJ32 (.obj)",
 #endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgj              output type: Java source (.java)",
-           "\n          %cgp              output type: Pascal source (.pas)",
-           "\n          %cgr              output type: Windows resource (.rc)",
            "\n          %ci<path>         add #include file search path",
            "\n          %cj[0|1]          Jump Optimizer 0=disabled 1=enabled (default)",
            "\n          %cl               suppress line number information",

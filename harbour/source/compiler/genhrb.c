@@ -92,19 +92,13 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
       /* specify the function address if it is a defined function or a
          external called function */
       if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
-      {
          fputc( SYM_FUNC, yyc );
-      }
       else
       {
          if( hb_compFunCallFind( pSym->szName ) )
-         {
             fputc( SYM_EXTERN, yyc );
-         }
          else
-         {
             fputc( SYM_NOLINK, yyc );
-         }
       }
       pSym = pSym->pNext;
    }
@@ -139,8 +133,6 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
       fputc( ( BYTE ) ( ( ulCodeLength >> 8  ) & 255 ), yyc );
       fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ), yyc );
       fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ), yyc );
-
-/*      printf( "Creating output for %s\n", pFunc->szName ); */
 
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )

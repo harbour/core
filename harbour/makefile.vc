@@ -750,9 +750,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
    $(COMPILER_DIR)\genhrb.c \
-   $(COMPILER_DIR)\genrc.c \
    $(COMPILER_DIR)\genjava.c \
-   $(COMPILER_DIR)\genpas.c \
    $(COMPILER_DIR)\expropta.c \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c

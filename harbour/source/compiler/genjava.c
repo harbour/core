@@ -54,7 +54,6 @@ void hb_compGenJava( PHB_FNAME pFileName )
    ULONG lPCodePos;
    LONG lSymbols;
    ULONG ulCodeLength;
-   FILE * s_yyc;             /* file handle for C output */
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".java";
@@ -111,19 +110,13 @@ void hb_compGenJava( PHB_FNAME pFileName )
       /* specify the function address if it is a defined function or a
          external called function */
       if( hb_compFunctionFind( pSym->szName ) ) /* is it a defined function ? */
-      {
          hb_fputc( SYM_FUNC );
-      }
       else
       {
          if( hb_compFunCallFind( pSym->szName ) )
-         {
             hb_fputc( SYM_EXTERN );
-         }
          else
-         {
             hb_fputc( SYM_NOLINK );
-         }
       }
       pSym = pSym->pNext;
    }
@@ -159,11 +152,9 @@ void hb_compGenJava( PHB_FNAME pFileName )
       hb_fputc( ( BYTE ) ( ( ulCodeLength >> 16 ) & 255 ) );
       hb_fputc( ( BYTE ) ( ( ulCodeLength >> 24 ) & 255 ) );
 
-/*      printf( "Creating output for %s\n", pFunc->szName ); */
-
       lPCodePos = 0;
       while( lPCodePos < pFunc->lPCodePos )
-          hb_fputc( pFunc->pCode[ lPCodePos++ ] );
+         hb_fputc( pFunc->pCode[ lPCodePos++ ] );
 
       pFunc = pFunc->pNext;
    }
@@ -198,6 +189,7 @@ static void hb_fputc( BYTE b )
 static void hb_fputs( char * szName )
 {
    unsigned int nPos = 0;
+
    while( nPos < strlen( szName ) )
       hb_fputc( szName[ nPos++ ] );
 }

@@ -1,3 +1,36 @@
+20000422-16:16 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/genc.c
+   * source/compiler/genhrb.c
+   * source/compiler/genjava.c
+     ! Optimized all output types. Variables removed, made faster, cleaner.
+     % #include "hbpcode.h" is not included in the generated C code for -gc0
+     ! Warnings fixed in GENOBJ32
+
+   * source/compiler/cmdcheck.c
+   * source/compiler/hbusage.c
+     * -gf switch changed to -go
+
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+   * source/compiler/cmdcheck.c
+   * source/compiler/hbusage.c
+   - source/compiler/genrc.c
+   - source/compiler/genpas.c
+   * source/compiler/Makefile
+   * makefile.bc
+   * makefile.vc
+     - Removed GENPAS and GENRC because they not used.
+
+   * source/compiler/harbour.c
+     ! Returning errorlevel after the help screen. (Thanks to Dave)
+
+   * include/hbvm.h
+   * source/vm/hvm.c
+     ! PushOne/PushZero/PushByte() made static in hvm.c
+     ! Fixed trace call in PushByte()
+     ! Fixed casts in PushOne/PushZero/PushByte()
+
 20000422-06:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
    * source/include/hbvm.h
      * Corrected comments of hb_vmPushOne(), hb_vmPushZero(), and hb_vmPushByte()

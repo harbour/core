@@ -61,8 +61,6 @@ typedef enum
    LANG_C,                      /* C language (by default) <file.c> */
    LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
    LANG_JAVA,                   /* Java <file.java> */
-   LANG_PASCAL,                 /* Pascal <file.pas> */
-   LANG_RESOURCES,              /* Resources <file.rc> */
    LANG_PORT_OBJ                /* Portable objects <file.hrb> */
 } LANGUAGES;                    /* supported Harbour output languages */
 
@@ -317,8 +315,6 @@ extern char * hb_comp_buffer; /* yacc input buffer */
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( PHB_FNAME );      /* generates the C language output */
 extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language output */
-extern void hb_compGenPascal( PHB_FNAME );     /* generates the Pascal language output */
-extern void hb_compGenRC( PHB_FNAME );         /* generates the RC language output */
 extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
 extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 

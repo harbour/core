@@ -27,8 +27,6 @@ C_SOURCES=\
 	genhrb.c \
 	genjava.c \
 	genobj32.c \
-	genpas.c \
-	genrc.c \
 	hbfunchk.c \
 	hbgenerr.c \
 	hbpcode.c \

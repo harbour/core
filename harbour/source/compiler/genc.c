@@ -35,25 +35,22 @@
 
 #include "hbcomp.h"
 
-static void hb_compGenCReadable( PFUNCTION pFunc );
-static void hb_compGenCCompact( PFUNCTION pFunc );
-static void hb_fputc( BYTE b );
-
-static FILE * s_yyc; /* file handle for C output */
-static int s_nChar;
+static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
+static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
 
 void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 {
    char szFileName[ _POSIX_PATH_MAX ];
    PFUNCTION pFunc = hb_comp_functions.pFirst, pFTemp;
    PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+   FILE * yyc; /* file handle for C output */
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   s_yyc = fopen( szFileName, "wb" );
-   if( ! s_yyc )
+   yyc = fopen( szFileName, "wb" );
+   if( ! yyc )
    {
       hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
@@ -65,13 +62,14 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       fflush( stdout );
    }
 
-   fprintf( s_yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
+   fprintf( yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
       HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
-   fprintf( s_yyc, " * Generated C source code\n */\n\n" );
+   fprintf( yyc, " * Generated C source code\n */\n\n" );
 
-   fprintf( s_yyc, "#include \"hbvmpub.h\"\n" );
-   fprintf( s_yyc, "#include \"hbpcode.h\"\n" );
-   fprintf( s_yyc, "#include \"hbinit.h\"\n\n\n" );
+   fprintf( yyc, "#include \"hbvmpub.h\"\n" );
+   if( hb_comp_iGenCOutput != HB_COMPGENC_COMPACT )
+      fprintf( yyc, "#include \"hbpcode.h\"\n" );
+   fprintf( yyc, "#include \"hbinit.h\"\n\n\n" );
 
    if( ! hb_comp_bStartProc )
       pFunc = pFunc->pNext; /* No implicit starting procedure */
@@ -80,14 +78,14 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    while( pFunc )
    {
       if( pFunc->cScope & HB_FS_STATIC || pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT )
-         fprintf( s_yyc, "static " );
+         fprintf( yyc, "static " );
       else
-         fprintf( s_yyc, "       " );
+         fprintf( yyc, "       " );
 
       if( pFunc == hb_comp_pInitFunc )
-         fprintf( s_yyc, "HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
+         fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
       else
-         fprintf( s_yyc, "HB_FUNC( %s );\n", pFunc->szName );
+         fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
       pFunc = pFunc->pNext;
    }
    /* write functions prototypes for called functions outside this PRG */
@@ -96,7 +94,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    {
       pFTemp = hb_compFunctionFind( pFunc->szName );
       if( ! pFTemp || pFTemp == hb_comp_functions.pFirst )
-         fprintf( s_yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
+         fprintf( yyc, "extern HB_FUNC( %s );\n", pFunc->szName );
       pFunc = pFunc->pNext;
    }
 
@@ -104,7 +102,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    /* Generate the wrapper that will initialize local symbol table
     */
    hb_strupr( pFileName->szName );
-   fprintf( s_yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
+   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_%s%s )\n", hb_comp_szPrefix, pFileName->szName );
 
    while( pSym )
    {
@@ -114,47 +112,47 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
          * we are using these two bits to mark the special function used to
          * initialize static variables
          */
-         fprintf( s_yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, hb_INITSTATICS, NULL }" ); /* NOTE: hb_ intentionally in lower case */
+         fprintf( yyc, "{ \"(_INITSTATICS)\", HB_FS_INIT | HB_FS_EXIT, hb_INITSTATICS, NULL }" ); /* NOTE: hb_ intentionally in lower case */
       }
       else
       {
-         fprintf( s_yyc, "{ \"%s\", ", pSym->szName );
+         fprintf( yyc, "{ \"%s\", ", pSym->szName );
 
          if( pSym->cScope & HB_FS_STATIC )
-            fprintf( s_yyc, "HB_FS_STATIC" );
+            fprintf( yyc, "HB_FS_STATIC" );
 
          else if( pSym->cScope & HB_FS_INIT )
-            fprintf( s_yyc, "HB_FS_INIT" );
+            fprintf( yyc, "HB_FS_INIT" );
 
          else if( pSym->cScope & HB_FS_EXIT )
-            fprintf( s_yyc, "HB_FS_EXIT" );
+            fprintf( yyc, "HB_FS_EXIT" );
 
          else
-            fprintf( s_yyc, "HB_FS_PUBLIC" );
+            fprintf( yyc, "HB_FS_PUBLIC" );
 
          if( pSym->cScope & VS_MEMVAR )
-            fprintf( s_yyc, " | HB_FS_MEMVAR" );
+            fprintf( yyc, " | HB_FS_MEMVAR" );
 
          if( ( pSym->cScope != HB_FS_MESSAGE ) && ( pSym->cScope & HB_FS_MESSAGE ) ) /* only for non public symbols */
-            fprintf( s_yyc, " | HB_FS_MESSAGE" );
+            fprintf( yyc, " | HB_FS_MESSAGE" );
 
          /* specify the function address if it is a defined function or an
             external called function */
          if( hb_compFunctionFind( pSym->szName ) ) /* is it a function defined in this module */
-            fprintf( s_yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
+            fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
          else if( hb_compFunCallFind( pSym->szName ) ) /* is it a function called from this module */
-            fprintf( s_yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
+            fprintf( yyc, ", HB_FUNCNAME( %s ), NULL }", pSym->szName );
          else
-            fprintf( s_yyc, ", NULL, NULL }" );   /* memvar */
+            fprintf( yyc, ", NULL, NULL }" );   /* memvar */
       }
 
       if( pSym != hb_comp_symbols.pLast )
-         fprintf( s_yyc, ",\n" );
+         fprintf( yyc, ",\n" );
 
       pSym = pSym->pNext;
    }
 
-   fprintf( s_yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s%s )\n"
                  "#if defined(_MSC_VER)\n"
                  "   #if _MSC_VER >= 1010\n"
                  /* [pt] First version of MSC I have that supports this */
@@ -184,26 +182,26 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    while( pFunc )
    {
       if( pFunc->cScope != HB_FS_PUBLIC )
-         fprintf( s_yyc, "static " );
+         fprintf( yyc, "static " );
 
       if( pFunc == hb_comp_pInitFunc )        /* Is it STATICS$ */
-         fprintf( s_yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
+         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
       else
-         fprintf( s_yyc, "HB_FUNC( %s )", pFunc->szName );
+         fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
 
-      fprintf( s_yyc, "\n{\n   static BYTE pcode[] =\n   {\n" );
+      fprintf( yyc, "\n{\n   static BYTE pcode[] =\n   {\n" );
 
       if( hb_comp_iGenCOutput == HB_COMPGENC_COMPACT )
-         hb_compGenCCompact( pFunc );
+         hb_compGenCCompact( pFunc, yyc );
       else
-         hb_compGenCReadable( pFunc );
+         hb_compGenCReadable( pFunc, yyc );
 
-      fprintf( s_yyc, "   };\n\n" );
-      fprintf( s_yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
+      fprintf( yyc, "   };\n\n" );
+      fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n\n" );
       pFunc = pFunc->pNext;
    }
 
-   fclose( s_yyc );
+   fclose( yyc );
 
    pFunc = hb_comp_functions.pFirst;
    while( pFunc )
@@ -225,7 +223,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       printf( "Done.\n" );
 }
 
-static void hb_compGenCReadable( PFUNCTION pFunc )
+static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
 {
    USHORT iNestedCodeblock = 0;
    ULONG lPCodePos = 0;
@@ -236,657 +234,599 @@ static void hb_compGenCReadable( PFUNCTION pFunc )
       switch( pFunc->pCode[ lPCodePos ] )
       {
          case HB_P_AND:
-            fprintf( s_yyc, "\tHB_P_AND,\n" );
+            fprintf( yyc, "\tHB_P_AND,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ARRAYPUSH:
-            fprintf( s_yyc, "\tHB_P_ARRAYPUSH,\n" );
+            fprintf( yyc, "\tHB_P_ARRAYPUSH,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ARRAYPOP:
-            fprintf( s_yyc, "\tHB_P_ARRAYPOP,\n" );
+            fprintf( yyc, "\tHB_P_ARRAYPOP,\n" );
             lPCodePos++;
             break;
 
          case HB_P_DEC:
-            fprintf( s_yyc, "\tHB_P_DEC,\n" );
+            fprintf( yyc, "\tHB_P_DEC,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ARRAYDIM:
-            {
-               USHORT w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_ARRAYDIM, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %i */", w );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_ARRAYDIM, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_DIVIDE:
-            fprintf( s_yyc, "\tHB_P_DIVIDE,\n" );
+            fprintf( yyc, "\tHB_P_DIVIDE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_DO:
-            fprintf( s_yyc, "\tHB_P_DO, %i, %i,\n",
+            fprintf( yyc, "\tHB_P_DO, %i, %i,\n",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 2 ] );
             lPCodePos += 3;
             break;
 
          case HB_P_DUPLICATE:
-            fprintf( s_yyc, "\tHB_P_DUPLICATE,\n" );
+            fprintf( yyc, "\tHB_P_DUPLICATE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_DUPLTWO:
-            fprintf( s_yyc, "\tHB_P_DUPLTWO,\n" );
+            fprintf( yyc, "\tHB_P_DUPLTWO,\n" );
             lPCodePos++;
             break;
 
          case HB_P_EQUAL:
-            fprintf( s_yyc, "\tHB_P_EQUAL,\n" );
+            fprintf( yyc, "\tHB_P_EQUAL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_EXACTLYEQUAL:
-            fprintf( s_yyc, "\tHB_P_EXACTLYEQUAL,\n" );
+            fprintf( yyc, "\tHB_P_EXACTLYEQUAL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ENDBLOCK:
             --iNestedCodeblock;
-            fprintf( s_yyc, "\tHB_P_ENDBLOCK,\n" );
+            fprintf( yyc, "\tHB_P_ENDBLOCK,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ENDPROC:
             lPCodePos++;
             if( lPCodePos == pFunc->lPCodePos )
-               fprintf( s_yyc, "\tHB_P_ENDPROC\n" );
+               fprintf( yyc, "\tHB_P_ENDPROC\n" );
             else
-               fprintf( s_yyc, "\tHB_P_ENDPROC,\n" );
+               fprintf( yyc, "\tHB_P_ENDPROC,\n" );
             break;
 
          case HB_P_FALSE:
-            fprintf( s_yyc, "\tHB_P_FALSE,\n" );
+            fprintf( yyc, "\tHB_P_FALSE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_FORTEST:          /* ER For tests. Step > 0 LESS */
                                      /* Step < 0 GREATER */
-            fprintf( s_yyc, "\tHB_P_FORTEST,\n" );
+            fprintf( yyc, "\tHB_P_FORTEST,\n" );
             lPCodePos++;
             break;
 
          case HB_P_FRAME:
-            {
-               PVAR pLocal  = pFunc->pLocals;
-               BYTE bLocals = 0;
-
-               while( pLocal )
-               {
-                  pLocal = pLocal->pNext;
-                  bLocals++;
-               }
-
-               if( bLocals || pFunc->wParamCount )
-               {
-                  fprintf( s_yyc, "\tHB_P_FRAME, %i, %i,",
-                           bLocals - pFunc->wParamCount,
-                           pFunc->wParamCount );
-                  if( bVerbose ) fprintf( s_yyc, "\t/* locals, params */" );
-                  fprintf( s_yyc, "\n" );
-               }
-            }
+            fprintf( yyc, "\tHB_P_FRAME, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* locals, params */" );
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             break;
 
          case HB_P_FUNCPTR:
-            fprintf( s_yyc, "\tHB_P_FUNCPTR,\n" );
+            fprintf( yyc, "\tHB_P_FUNCPTR,\n" );
             lPCodePos++;
             break;
 
          case HB_P_FUNCTION:
-            fprintf( s_yyc, "\tHB_P_FUNCTION, %i, %i,\n",
+            fprintf( yyc, "\tHB_P_FUNCTION, %i, %i,\n",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 2 ] );
             lPCodePos += 3;
             break;
 
          case HB_P_ARRAYGEN:
-            {
-               USHORT w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_ARRAYGEN, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %i */", w );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_ARRAYGEN, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_GREATER:
-            fprintf( s_yyc, "\tHB_P_GREATER,\n" );
+            fprintf( yyc, "\tHB_P_GREATER,\n" );
             lPCodePos++;
             break;
 
          case HB_P_GREATEREQUAL:
-            fprintf( s_yyc, "\tHB_P_GREATEREQUAL,\n" );
+            fprintf( yyc, "\tHB_P_GREATEREQUAL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_INC:
-            fprintf( s_yyc, "\tHB_P_INC,\n" );
+            fprintf( yyc, "\tHB_P_INC,\n" );
             lPCodePos++;
             break;
 
          case HB_P_INSTRING:
-            fprintf( s_yyc, "\tHB_P_INSTRING,\n" );
+            fprintf( yyc, "\tHB_P_INSTRING,\n" );
             lPCodePos++;
             break;
 
          case HB_P_JUMPSHORT:
-         /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
+            fprintf( yyc, "\tHB_P_JUMPSHORT, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
-               if ( lOffset > 127 )
+               if( lOffset > 127 )
                   lOffset -= 256;
 
-               fprintf( s_yyc, "\tHB_P_JUMPSHORT, %i,",
-                         pFunc->pCode[ lPCodePos + 1 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 2;
             break;
 
          case HB_P_JUMP:
-         /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
+            fprintf( yyc, "\tHB_P_JUMP, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
 
-               if ( lOffset > SHRT_MAX )
+               if( lOffset > SHRT_MAX )
                   lOffset -= 65536;
 
-               fprintf( s_yyc, "\tHB_P_JUMP, %i, %i,",
-                         pFunc->pCode[ lPCodePos + 1 ],
-                         pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             break;
 
          case HB_P_JUMPFAR:
-         /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
+            fprintf( yyc, "\tHB_P_JUMPFAR, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
-               if ( lOffset > 8388607L )
+               if( lOffset > 8388607L )
                   lOffset -= 16777216;
 
-               fprintf( s_yyc, "\tHB_P_JUMPFAR, %i, %i, %i,",
-                         pFunc->pCode[ lPCodePos + 1 ],
-                         pFunc->pCode[ lPCodePos + 2 ],
-                         pFunc->pCode[ lPCodePos + 3 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 4;
             break;
 
          case HB_P_JUMPSHORTFALSE:
+            fprintf( yyc, "\tHB_P_JUMPSHORTFALSE, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
 
-               if ( lOffset > 127 )
+               if( lOffset > 127 )
                   lOffset -= 256;
 
-               fprintf( s_yyc, "\tHB_P_JUMPSHORTFALSE, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 2;
             break;
 
          case HB_P_JUMPFALSE:
+            fprintf( yyc, "\tHB_P_JUMPFALSE, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
 
-               if ( lOffset > SHRT_MAX )
+               if( lOffset > SHRT_MAX )
                   lOffset -= 65536;
 
-               fprintf( s_yyc, "\tHB_P_JUMPFALSE, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             break;
 
          case HB_P_JUMPFARFALSE:
+            fprintf( yyc, "\tHB_P_JUMPFARFALSE, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
-               if ( lOffset > 8388607L )
+               if( lOffset > 8388607L )
                   lOffset -= 16777216;
 
-               fprintf( s_yyc, "\tHB_P_JUMPFARFALSE, %i, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ],
-                        pFunc->pCode[ lPCodePos + 3 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 4;
             break;
 
          case HB_P_JUMPSHORTTRUE:
+            fprintf( yyc, "\tHB_P_JUMPSHORTTRUE, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
-               if ( lOffset > 127 )
+               if( lOffset > 127 )
                   lOffset -= 256;
 
-               fprintf( s_yyc, "\tHB_P_JUMPSHORTTRUE, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 2;
             break;
 
          case HB_P_JUMPTRUE:
+            fprintf( yyc, "\tHB_P_JUMPTRUE, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
-               if ( lOffset > SHRT_MAX )
+               if( lOffset > SHRT_MAX )
                   lOffset -= 65536;
 
-               fprintf( s_yyc, "\tHB_P_JUMPTRUE, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             break;
 
          case HB_P_JUMPFARTRUE:
+            fprintf( yyc, "\tHB_P_JUMPFARTRUE, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
-               if ( lOffset > 8388607L )
+               if( lOffset > 8388607L )
                   lOffset -= 16777216;
 
-               fprintf( s_yyc, "\tHB_P_JUMPFARTRUE, %i, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ],
-                        pFunc->pCode[ lPCodePos + 3 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-               fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
             }
+            fprintf( yyc, "\n" );
             lPCodePos += 4;
             break;
 
          case HB_P_LESS:
-            fprintf( s_yyc, "\tHB_P_LESS,\n" );
+            fprintf( yyc, "\tHB_P_LESS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_LESSEQUAL:
-            fprintf( s_yyc, "\tHB_P_LESSEQUAL,\n" );
+            fprintf( yyc, "\tHB_P_LESSEQUAL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_LINE:
-            {
-               USHORT w;
-               if( bVerbose ) fprintf( s_yyc, "/* %05li */ ", lPCodePos );
-               else fprintf( s_yyc, "\t" );
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "HB_P_LINE, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %i */", w );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            if( bVerbose ) fprintf( yyc, "/* %05li */ ", lPCodePos );
+            else fprintf( yyc, "\t" );
+            fprintf( yyc, "HB_P_LINE, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %i */", pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_LOCALNAME:
-            fprintf( s_yyc, "\tHB_P_LOCALNAME, %i, %i,",
+            fprintf( yyc, "\tHB_P_LOCALNAME, %i, %i,",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 2 ] );
-            if( bVerbose ) fprintf( s_yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 3 );
-            fprintf( s_yyc, "\n" );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 3 );
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             while( pFunc->pCode[ lPCodePos ] )
             {
                char chr = pFunc->pCode[ lPCodePos++ ];
                if( chr == '\'' || chr == '\\')
-                  fprintf( s_yyc, " \'\\%c\',", chr );
+                  fprintf( yyc, " \'\\%c\',", chr );
                else
-                  fprintf( s_yyc, " \'%c\',", chr );
+                  fprintf( yyc, " \'%c\',", chr );
             }
-            fprintf( s_yyc, " 0,\n" );
+            fprintf( yyc, " 0,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MACROPOP:
-            fprintf( s_yyc, "\tHB_P_MACROPOP,\n" );
+            fprintf( yyc, "\tHB_P_MACROPOP,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MACROPOPALIASED:
-            fprintf( s_yyc, "\tHB_P_MACROPOPALIASED,\n" );
+            fprintf( yyc, "\tHB_P_MACROPOPALIASED,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MACROPUSH:
-            fprintf( s_yyc, "\tHB_P_MACROPUSH,\n" );
+            fprintf( yyc, "\tHB_P_MACROPUSH,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MACROPUSHALIASED:
-            fprintf( s_yyc, "\tHB_P_MACROPUSHALIASED,\n" );
+            fprintf( yyc, "\tHB_P_MACROPUSHALIASED,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MACROSYMBOL:
-            fprintf( s_yyc, "\tHB_P_MACROSYMBOL,\n" );
+            fprintf( yyc, "\tHB_P_MACROSYMBOL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MACROTEXT:
-            fprintf( s_yyc, "\tHB_P_MACROTEXT,\n" );
+            fprintf( yyc, "\tHB_P_MACROTEXT,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MESSAGE:
-            {
-               USHORT wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_MESSAGE, %i, %i,",
-                        HB_LOBYTE( wSym ),
-                        HB_HIBYTE( wSym ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wSym )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_MESSAGE, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_MINUS:
-            fprintf( s_yyc, "\tHB_P_MINUS,\n" );
+            fprintf( yyc, "\tHB_P_MINUS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MODULENAME:
-            fprintf( s_yyc, "\tHB_P_MODULENAME," );
+            fprintf( yyc, "\tHB_P_MODULENAME," );
             if( bVerbose )
-               fprintf( s_yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 1 );
-            fprintf( s_yyc, "\n" );
+               fprintf( yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 1 );
+            fprintf( yyc, "\n" );
             lPCodePos++;
             while( pFunc->pCode[ lPCodePos ] )
             {
                char chr = pFunc->pCode[ lPCodePos++ ];
                if( chr == '\'' || chr == '\\')
-                  fprintf( s_yyc, " \'\\%c\',", chr );
+                  fprintf( yyc, " \'\\%c\',", chr );
                else
-                  fprintf( s_yyc, " \'%c\',", chr );
+                  fprintf( yyc, " \'%c\',", chr );
             }
-            fprintf( s_yyc, " 0,\n" );
+            fprintf( yyc, " 0,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MODULUS:
-            fprintf( s_yyc, "\tHB_P_MODULUS,\n" );
+            fprintf( yyc, "\tHB_P_MODULUS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_MULT:
-            fprintf( s_yyc, "\tHB_P_MULT,\n" );
+            fprintf( yyc, "\tHB_P_MULT,\n" );
             lPCodePos++;
             break;
 
          case HB_P_NEGATE:
-            fprintf( s_yyc, "\tHB_P_NEGATE,\n" );
+            fprintf( yyc, "\tHB_P_NEGATE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_NOT:
-            fprintf( s_yyc, "\tHB_P_NOT,\n" );
+            fprintf( yyc, "\tHB_P_NOT,\n" );
             lPCodePos++;
             break;
 
          case HB_P_NOTEQUAL:
-            fprintf( s_yyc, "\tHB_P_NOTEQUAL,\n" );
+            fprintf( yyc, "\tHB_P_NOTEQUAL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_OR:
-            fprintf( s_yyc, "\tHB_P_OR,\n" );
+            fprintf( yyc, "\tHB_P_OR,\n" );
             lPCodePos++;
             break;
 
          case HB_P_PARAMETER:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PARAMETER, %i, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ),
-                        pFunc->pCode[ lPCodePos + 3 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 4;
-            }
+            fprintf( yyc, "\tHB_P_PARAMETER, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 4;
             break;
 
          case HB_P_PLUS:
-            fprintf( s_yyc, "\tHB_P_PLUS,\n" );
+            fprintf( yyc, "\tHB_P_PLUS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_POP:
-            fprintf( s_yyc, "\tHB_P_POP,\n" );
+            fprintf( yyc, "\tHB_P_POP,\n" );
             lPCodePos++;
             break;
 
          case HB_P_POPALIAS:
-            fprintf( s_yyc, "\tHB_P_POPALIAS,\n" );
+            fprintf( yyc, "\tHB_P_POPALIAS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_POPALIASEDFIELD:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_POPALIASEDFIELD, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_POPALIASEDFIELD, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POPALIASEDVAR:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_POPALIASEDVAR, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_POPALIASEDVAR, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POPFIELD:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_POPFIELD, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_POPFIELD, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POPLOCAL:
+            fprintf( yyc, "\tHB_P_POPLOCAL, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
                /* Variable with negative order are local variables
                 * referenced in a codeblock -handle it with care
                 */
+
                if( iNestedCodeblock )
                {
                   /* we are accesing variables within a codeblock */
                   /* the names of codeblock variable are lost     */
                   if( wVar < 0 )
-                  {
-                     fprintf( s_yyc, "\tHB_P_POPLOCAL, %i, %i,",
-                              pFunc->pCode[ lPCodePos + 1 ],
-                              pFunc->pCode[ lPCodePos + 2 ] );
-                     if( bVerbose ) fprintf( s_yyc, "\t/* localvar%i */", -wVar );
-                     fprintf( s_yyc, "\n" );
-                  }
+                     fprintf( yyc, "\t/* localvar%i */", -wVar );
                   else
-                  {
-                     fprintf( s_yyc, "\tHB_P_POPLOCAL, %i, %i,",
-                              pFunc->pCode[ lPCodePos + 1 ],
-                              pFunc->pCode[ lPCodePos + 2 ] );
-                     if( bVerbose ) fprintf( s_yyc, "\t/* codeblockvar%i */", wVar );
-                     fprintf( s_yyc, "\n" );
-                  }
+                     fprintf( yyc, "\t/* codeblockvar%i */", wVar );
                }
                else
-               {
-                  fprintf( s_yyc, "\tHB_P_POPLOCAL, %i, %i,",
-                           pFunc->pCode[ lPCodePos + 1 ],
-                           pFunc->pCode[ lPCodePos + 2 ] );
-                  if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
-                  fprintf( s_yyc, "\n" );
-               }
-               lPCodePos += 3;
+                  fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POPMEMVAR:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_POPMEMVAR, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_POPMEMVAR, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POPSTATIC:
+            fprintf( yyc, "\tHB_P_POPSTATIC, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                PVAR pVar;
                PFUNCTION pTmp = hb_comp_functions.pFirst;
-
                USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-                   pTmp = pTmp->pNext;
+                  pTmp = pTmp->pNext;
                pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
-               fprintf( s_yyc, "\tHB_P_POPSTATIC, %i, %i,",
-                         pFunc->pCode[ lPCodePos + 1 ],
-                         pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", pVar->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
+
+               fprintf( yyc, "\t/* %s */", pVar->szName );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POPVARIABLE:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_POPVARIABLE, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName  );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_POPVARIABLE, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName  );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_POWER:
-            fprintf( s_yyc, "\tHB_P_POWER,\n" );
+            fprintf( yyc, "\tHB_P_POWER,\n" );
             lPCodePos++;
             break;
 
          case HB_P_PUSHALIAS:
-            fprintf( s_yyc, "\tHB_P_PUSHALIAS,\n" );
+            fprintf( yyc, "\tHB_P_PUSHALIAS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_PUSHALIASEDFIELD:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHALIASEDFIELD, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHALIASEDFIELD, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHALIASEDVAR:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHALIASEDVAR, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHALIASEDVAR, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHBLOCK:
+
+            ++iNestedCodeblock;
+
+            fprintf( yyc, "\tHB_P_PUSHBLOCK, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %i */",
+                     pFunc->pCode[ lPCodePos + 1 ] +
+                     pFunc->pCode[ lPCodePos + 2 ] * 256 );
+            fprintf( yyc, "\n" );
+
             {
                USHORT wVar, w;
-
-               ++iNestedCodeblock;
-
-               fprintf( s_yyc, "\tHB_P_PUSHBLOCK, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %i */",
-                        pFunc->pCode[ lPCodePos + 1 ] +
-                        pFunc->pCode[ lPCodePos + 2 ] * 256 );
-               fprintf( s_yyc, "\n" );
-
                w = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 3 ] ) );
-               fprintf( s_yyc, "\t%i, %i,",
+               fprintf( yyc, "\t%i, %i,",
                         pFunc->pCode[ lPCodePos + 3 ],
                         pFunc->pCode[ lPCodePos + 4 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* number of local parameters (%i) */", w );
-               fprintf( s_yyc, "\n" );
+               if( bVerbose ) fprintf( yyc, "\t/* number of local parameters (%i) */", w );
+               fprintf( yyc, "\n" );
 
                wVar = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos + 5 ] ) );
-               fprintf( s_yyc, "\t%i, %i,",
+               fprintf( yyc, "\t%i, %i,",
                         pFunc->pCode[ lPCodePos + 5 ],
                         pFunc->pCode[ lPCodePos + 6 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* number of local variables (%i) */", wVar );
-               fprintf( s_yyc, "\n" );
+               if( bVerbose ) fprintf( yyc, "\t/* number of local variables (%i) */", wVar );
+               fprintf( yyc, "\n" );
 
                lPCodePos += 7;  /* codeblock size + number of parameters + number of local variables */
                /* create the table of referenced local variables */
                while( wVar-- )
                {
                   w = * ( ( USHORT * ) &( pFunc->pCode [ lPCodePos ] ) );
-                  fprintf( s_yyc, "\t%i, %i,",
+                  fprintf( yyc, "\t%i, %i,",
                            pFunc->pCode[ lPCodePos ],
                            pFunc->pCode[ lPCodePos + 1 ] );
                   /* NOTE:
@@ -896,379 +836,326 @@ static void hb_compGenCReadable( PFUNCTION pFunc )
                    * in which function was defined this local variable
                    */
                   if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) != ( HB_FS_INIT | HB_FS_EXIT ) )
-                     if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, w )->szName );
-                  fprintf( s_yyc, "\n" );
+                     if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, w )->szName );
+                  fprintf( yyc, "\n" );
                   lPCodePos +=2;
                }
             }
             break;
 
          case HB_P_PUSHDOUBLE:
+            fprintf( yyc, "\tHB_P_PUSHDOUBLE, " );
             {
                int i;
                ++lPCodePos;
-               fprintf( s_yyc, "\tHB_P_PUSHDOUBLE, " );
                for( i = 0; i < sizeof( double ) + sizeof( BYTE ); ++i )
-                  fprintf( s_yyc, "%i,", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %.*f, %d */",
+                  fprintf( yyc, "%i,", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
+               if( bVerbose ) fprintf( yyc, "\t/* %.*f, %d */",
                   *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
                   *( ( double * ) &( pFunc->pCode[ lPCodePos ] ) ),
                   *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ) );
-               fprintf( s_yyc, "\n" );
                lPCodePos += sizeof( double ) + sizeof( BYTE );
             }
+            fprintf( yyc, "\n" );
             break;
 
          case HB_P_PUSHFIELD:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHFIELD, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHFIELD, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHBYTE:
-            fprintf( s_yyc, "\tHB_P_PUSHBYTE, %i,",
+            fprintf( yyc, "\tHB_P_PUSHBYTE, %i,",
                      pFunc->pCode[ lPCodePos + 1 ] );
-            if( bVerbose ) fprintf( s_yyc, "\t/* %i */",
+            if( bVerbose ) fprintf( yyc, "\t/* %i */",
                      pFunc->pCode[ lPCodePos + 1 ] );
-            fprintf( s_yyc, "\n" );
+            fprintf( yyc, "\n" );
             lPCodePos += 2;
             break;
 
          case HB_P_PUSHINT:
-            fprintf( s_yyc, "\tHB_P_PUSHINT, %i, %i,",
+            fprintf( yyc, "\tHB_P_PUSHINT, %i, %i,",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 2 ] );
-            if( bVerbose ) fprintf( s_yyc, "\t/* %i */",
+            if( bVerbose ) fprintf( yyc, "\t/* %i */",
                      pFunc->pCode[ lPCodePos + 1 ] +
                      pFunc->pCode[ lPCodePos + 2 ] * 256 );
-            fprintf( s_yyc, "\n" );
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             break;
 
          case HB_P_PUSHLOCAL:
+            fprintf( yyc, "\tHB_P_PUSHLOCAL, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
                /* Variable with negative order are local variables
                 * referenced in a codeblock -handle it with care
                 */
+
                if( iNestedCodeblock )
                {
                   /* we are accesing variables within a codeblock */
                   /* the names of codeblock variable are lost     */
                   if( wVar < 0 )
-                  {
-                     fprintf( s_yyc, "\tHB_P_PUSHLOCAL, %i, %i,",
-                              pFunc->pCode[ lPCodePos + 1 ],
-                              pFunc->pCode[ lPCodePos + 2 ] );
-                     if( bVerbose ) fprintf( s_yyc, "\t/* localvar%i */", -wVar );
-                     fprintf( s_yyc, "\n" );
-                  }
+                     fprintf( yyc, "\t/* localvar%i */", -wVar );
                   else
-                  {
-                     fprintf( s_yyc, "\tHB_P_PUSHLOCAL, %i, %i,",
-                              pFunc->pCode[ lPCodePos + 1 ],
-                              pFunc->pCode[ lPCodePos + 2 ] );
-                     if( bVerbose ) fprintf( s_yyc, "\t/* codeblockvar%i */", wVar );
-                     fprintf( s_yyc, "\n" );
-                  }
+                     fprintf( yyc, "\t/* codeblockvar%i */", wVar );
                }
                else
-               {
-                  fprintf( s_yyc, "\tHB_P_PUSHLOCAL, %i, %i,",
-                           pFunc->pCode[ lPCodePos + 1 ],
-                           pFunc->pCode[ lPCodePos + 2 ] );
-                  if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
-                  fprintf( s_yyc, "\n" );
-               }
-               lPCodePos += 3;
+                  fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHLOCALREF:
+            fprintf( yyc, "\tHB_P_PUSHLOCALREF, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                SHORT wVar = * ( ( SHORT * ) &( pFunc->pCode )[ lPCodePos + 1 ] );
                /* Variable with negative order are local variables
                 * referenced in a codeblock -handle it with care
                 */
+
                if( iNestedCodeblock )
                {
                   /* we are accesing variables within a codeblock */
                   /* the names of codeblock variable are lost     */
                   if( wVar < 0 )
-                  {
-                     fprintf( s_yyc, "\tHB_P_PUSHLOCALREF, %i, %i,",
-                              pFunc->pCode[ lPCodePos + 1 ],
-                              pFunc->pCode[ lPCodePos + 2 ] );
-                     if( bVerbose ) fprintf( s_yyc, "\t/* localvar%i */", -wVar );
-                     fprintf( s_yyc, "\n" );
-                  }
+                     fprintf( yyc, "\t/* localvar%i */", -wVar );
                   else
-                  {
-                     fprintf( s_yyc, "\tHB_P_PUSHLOCALREF, %i, %i,",
-                              pFunc->pCode[ lPCodePos + 1 ],
-                              pFunc->pCode[ lPCodePos + 2 ] );
-                     if( bVerbose ) fprintf( s_yyc, "\t/* codeblockvar%i */", wVar );
-                     fprintf( s_yyc, "\n" );
-                  }
+                     fprintf( yyc, "\t/* codeblockvar%i */", wVar );
                }
                else
-               {
-                  fprintf( s_yyc, "\tHB_P_PUSHLOCALREF, %i, %i,",
-                           pFunc->pCode[ lPCodePos + 1 ],
-                           pFunc->pCode[ lPCodePos + 2 ] );
-                  if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
-                  fprintf( s_yyc, "\n" );
-               }
-               lPCodePos += 3;
+                  fprintf( yyc, "\t/* %s */", hb_compVariableFind( pFunc->pLocals, wVar )->szName );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHLONG:
-            fprintf( s_yyc, "\tHB_P_PUSHLONG, %i, %i, %i, %i,",
+            fprintf( yyc, "\tHB_P_PUSHLONG, %i, %i, %i, %i,",
                      pFunc->pCode[ lPCodePos + 1 ],
                      pFunc->pCode[ lPCodePos + 2 ],
                      pFunc->pCode[ lPCodePos + 3 ],
                      pFunc->pCode[ lPCodePos + 4 ] );
-            if( bVerbose ) fprintf( s_yyc, "\t/* %li */", *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
-            fprintf( s_yyc, "\n" );
+            if( bVerbose ) fprintf( yyc, "\t/* %li */", *( ( long * ) &( pFunc->pCode[ lPCodePos + 1 ] ) ) );
+            fprintf( yyc, "\n" );
             lPCodePos += ( 1 + sizeof( long ) );
             break;
 
          case HB_P_PUSHMEMVAR:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHMEMVAR, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHMEMVAR, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHMEMVARREF:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHMEMVARREF, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHMEMVARREF, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHNIL:
-            fprintf( s_yyc, "\tHB_P_PUSHNIL,\n" );
+            fprintf( yyc, "\tHB_P_PUSHNIL,\n" );
             lPCodePos++;
             break;
 
          case HB_P_PUSHSELF:
-            fprintf( s_yyc, "\tHB_P_PUSHSELF,\n" );
+            fprintf( yyc, "\tHB_P_PUSHSELF,\n" );
             lPCodePos++;
             break;
 
          case HB_P_PUSHSTATIC:
+            fprintf( yyc, "\tHB_P_PUSHSTATIC, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                PVAR pVar;
                PFUNCTION pTmp = hb_comp_functions.pFirst;
-
                USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-                   pTmp = pTmp->pNext;
+                  pTmp = pTmp->pNext;
                pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
-               fprintf( s_yyc, "\tHB_P_PUSHSTATIC, %i, %i,",
-                         pFunc->pCode[ lPCodePos + 1 ],
-                         pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", pVar->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
+               fprintf( yyc, "\t/* %s */", pVar->szName );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHSTATICREF:
+            fprintf( yyc, "\tHB_P_PUSHSTATICREF, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose )
             {
                PVAR pVar;
                PFUNCTION pTmp = hb_comp_functions.pFirst;
 
                USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
-                   pTmp = pTmp->pNext;
+                  pTmp = pTmp->pNext;
                pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
-               fprintf( s_yyc, "\tHB_P_PUSHSTATICREF, %i, %i,",
-                         pFunc->pCode[ lPCodePos + 1 ],
-                         pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", pVar->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
+               fprintf( yyc, "\t/* %s */", pVar->szName );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHSTR:
+            fprintf( yyc, "\tHB_P_PUSHSTR, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
             {
                USHORT wLen = pFunc->pCode[ lPCodePos + 1 ] +
                              pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHSTR, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %i */", wLen );
+               if( bVerbose ) fprintf( yyc, "\t/* %i */", wLen );
                lPCodePos +=3;
                if( wLen > 0 )
                {
-                  unsigned char uchr;
-
-                  fprintf( s_yyc, "\n\t" );
+                  fprintf( yyc, "\n\t" );
                   while( wLen-- )
                   {
-                     uchr = ( unsigned char ) ( pFunc->pCode[ lPCodePos++ ] );
+                     BYTE uchr = ( BYTE ) pFunc->pCode[ lPCodePos++ ];
                      /*
                       * NOTE: After optimization some CHR(n) can be converted
                       *    into a string containing nonprintable characters.
                       *
                       * TODO: add switch to use hexadecimal format "%#04x"
                       */
-                     if( ( uchr < (unsigned char) ' ' ) || ( uchr >= 127 ) )
-                        fprintf( s_yyc, "%i, ", uchr );
+                     if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
+                        fprintf( yyc, "%i, ", uchr );
                      else if( strchr( "\'\\\"", uchr ) )
-                        fprintf( s_yyc, "%i, ", uchr );
+                        fprintf( yyc, "%i, ", uchr );
                      else
-                        fprintf( s_yyc, "\'%c\', ", uchr );
+                        fprintf( yyc, "\'%c\', ", uchr );
                   }
                }
-               fprintf( s_yyc, "\n" );
             }
+            fprintf( yyc, "\n" );
             break;
 
          case HB_P_PUSHSYM:
-            {
-               USHORT wSym = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHSYM, %i, %i,",
-                        HB_LOBYTE( wSym ),
-                        HB_HIBYTE( wSym ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wSym )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHSYM, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_PUSHVARIABLE:
-            {
-               USHORT wVar = pFunc->pCode[ lPCodePos + 1 ] +
-                             pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( s_yyc, "\tHB_P_PUSHVARIABLE, %i, %i,",
-                        HB_LOBYTE( wVar ),
-                        HB_HIBYTE( wVar ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %s */", hb_compSymbolGetPos( wVar )->szName );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 3;
-            }
+            fprintf( yyc, "\tHB_P_PUSHVARIABLE, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* %s */", hb_compSymbolGetPos( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 )->szName );
+            fprintf( yyc, "\n" );
+            lPCodePos += 3;
             break;
 
          case HB_P_RETVALUE:
-            fprintf( s_yyc, "\tHB_P_RETVALUE,\n" );
+            fprintf( yyc, "\tHB_P_RETVALUE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_SEQBEGIN:
+            fprintf( yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            if( bVerbose )
             {
                LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
-               fprintf( s_yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ],
-                        pFunc->pCode[ lPCodePos + 3 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, lPCodePos + lOffset );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 4;
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, lPCodePos + lOffset );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 4;
             break;
 
          case HB_P_SEQEND:
+            if( bVerbose ) fprintf( yyc, "/* %05li */ ", lPCodePos );
+            else fprintf( yyc, "\t" );
+            fprintf( yyc, "HB_P_SEQEND, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ] );
+            if( bVerbose )
             {
-               LONG lOffset;
-               if( bVerbose ) fprintf( s_yyc, "/* %05li */ ", lPCodePos );
-               else fprintf( s_yyc, "\t" );
-               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
-               fprintf( s_yyc, "HB_P_SEQEND, %i, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ],
-                        pFunc->pCode[ lPCodePos + 3 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* %li (abs: %05li) */", lOffset, lPCodePos + lOffset );
-               fprintf( s_yyc, "\n" );
-               lPCodePos += 4;
+               LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
+               fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, lPCodePos + lOffset );
             }
+            fprintf( yyc, "\n" );
+            lPCodePos += 4;
             break;
 
          case HB_P_SEQRECOVER:
-            fprintf( s_yyc, "\tHB_P_SEQRECOVER,\n" );
+            fprintf( yyc, "\tHB_P_SEQRECOVER,\n" );
             lPCodePos++;
             break;
 
          case HB_P_SFRAME:
-            /* we only generate it if there are statics used in this function */
-            if( pFunc->bFlags & FUN_USES_STATICS )
-            {
-               USHORT w;
-               hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
-               fprintf( s_yyc, "\tHB_P_SFRAME, %i, %i,",
-                        HB_LOBYTE( w ), HB_HIBYTE( w ) );
-               if( bVerbose ) fprintf( s_yyc, "\t/* symbol (_INITSTATICS) */" );
-               fprintf( s_yyc, "\n" );
-            }
+            fprintf( yyc, "\tHB_P_SFRAME, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* symbol (_INITSTATICS) */" );
+            fprintf( yyc, "\n" );
             lPCodePos += 3;
             break;
 
          case HB_P_STATICS:
-            {
-               USHORT w;
-               hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
-               fprintf( s_yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
-                        HB_LOBYTE( w ),
-                        HB_HIBYTE( w ),
-                        pFunc->pCode[ lPCodePos + 3 ],
-                        pFunc->pCode[ lPCodePos + 4 ] );
-               if( bVerbose ) fprintf( s_yyc, "\t/* symbol (_INITSTATICS), %i statics */", pFunc->pCode[ lPCodePos + 3 ] + pFunc->pCode[ lPCodePos + 4 ] * 256 );
-               fprintf( s_yyc, "\n" );
-            }
+            fprintf( yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ],
+                     pFunc->pCode[ lPCodePos + 2 ],
+                     pFunc->pCode[ lPCodePos + 3 ],
+                     pFunc->pCode[ lPCodePos + 4 ] );
+            if( bVerbose ) fprintf( yyc, "\t/* symbol (_INITSTATICS), %i statics */", pFunc->pCode[ lPCodePos + 3 ] + pFunc->pCode[ lPCodePos + 4 ] * 256 );
+            fprintf( yyc, "\n" );
             lPCodePos += 5;
             break;
 
          case HB_P_SWAPALIAS:
-            fprintf( s_yyc, "\tHB_P_SWAPALIAS,\n" );
+            fprintf( yyc, "\tHB_P_SWAPALIAS,\n" );
             lPCodePos++;
             break;
 
          case HB_P_TRUE:
-            fprintf( s_yyc, "\tHB_P_TRUE,\n" );
+            fprintf( yyc, "\tHB_P_TRUE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ONE:
-            fprintf( s_yyc, "\tHB_P_ONE,\n" );
+            fprintf( yyc, "\tHB_P_ONE,\n" );
             lPCodePos++;
             break;
 
          case HB_P_ZERO:
-            fprintf( s_yyc, "\tHB_P_ZERO,\n" );
+            fprintf( yyc, "\tHB_P_ZERO,\n" );
             lPCodePos++;
             break;
 
          case HB_P_NOOP:
-            fprintf( s_yyc, "\tHB_P_NOOP,\n" );
+            fprintf( yyc, "\tHB_P_NOOP,\n" );
             lPCodePos++;
             break;
 
          default:
-            fprintf( s_yyc, "\t%u, /* Incorrect pcode value: %u */\n", pFunc->pCode[ lPCodePos ], pFunc->pCode[ lPCodePos ] );
+            fprintf( yyc, "\t%u, /* Incorrect pcode value: %u */\n", pFunc->pCode[ lPCodePos ], pFunc->pCode[ lPCodePos ] );
             printf( "Incorrect pcode value: %u\n", pFunc->pCode[ lPCodePos ] );
             lPCodePos = pFunc->lPCodePos;
             break;
@@ -1276,38 +1163,36 @@ static void hb_compGenCReadable( PFUNCTION pFunc )
    }
 
    if( bVerbose )
-      fprintf( s_yyc, "/* %05li */\n", lPCodePos );
+      fprintf( yyc, "/* %05li */\n", lPCodePos );
 }
 
-static void hb_compGenCCompact( PFUNCTION pFunc )
+static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
 {
    ULONG lPCodePos = 0;
+   int nChar;
 
-   fprintf( s_yyc, "\t" );
+   fprintf( yyc, "\t" );
 
-   s_nChar = 0;
+   nChar = 0;
 
    while( lPCodePos < pFunc->lPCodePos )
-      hb_fputc( pFunc->pCode[ lPCodePos++ ] );
-
-   if( s_nChar != 0)
-      fprintf( s_yyc, "\n" );
-}
-
-static void hb_fputc( BYTE b )
-{
-   ++s_nChar;
-
-   if( s_nChar > 1 )
-      fprintf( s_yyc, ", " );
-
-   if( s_nChar == 9 )
    {
-      fprintf( s_yyc, "\n\t" );
-      s_nChar = 1;
+      ++nChar;
+   
+      if( nChar > 1 )
+         fprintf( yyc, ", " );
+   
+      if( nChar == 9 )
+      {
+         fprintf( yyc, "\n\t" );
+         nChar = 1;
+      }
+   
+      /* Displaying as decimal is more compact than hex */
+      fprintf( yyc, "%d", ( int ) pFunc->pCode[ lPCodePos++ ] );
    }
 
-   /* Displaying as decimal is more compact than hex */
-   fprintf( s_yyc, "%d", ( int ) b );
+   if( nChar != 0)
+      fprintf( yyc, "\n" );
 }
 

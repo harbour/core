@@ -342,7 +342,7 @@ static void CompiledFileName( FILE * hObjFile, char * szFileName )
 
   putbyte( wLen, hObjFile, &bChk );     /* szFileName length */
 
-  while( (bChar = * szFileName++) )
+  while( ( bChar = * szFileName++ ) != 0 )
       putbyte( bChar, hObjFile, &bChk );   /* each of the szFileName characters */
 
   putbyte( 256 - bChk, hObjFile, &bChk ); /* a checksum that will be recalculated by the linker */
@@ -358,7 +358,7 @@ static void CompilerVersion( FILE * hObjFile, char * szVersion )
   putword( 3 + wLen, hObjFile, &bChk ); /* now it comes the total length of this OBJ record */
   putword( 0, hObjFile, &bChk );
 
-  while( ( bChar = * szVersion++ ) )
+  while( ( bChar = * szVersion++ ) != 0 )
       putbyte( bChar, hObjFile, &bChk );   /* each of the szFileName characters */
 
   putbyte( 256 - bChk, hObjFile, &bChk ); /* a checksum that will be recalculated by the linker */
@@ -561,10 +561,10 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
   putbyte( strlen( szPrefix ) + strlen( szName ), hObjFile, &bChk );
 
   szTemp = szPrefix;
-  while( ( bChar = * szTemp++ ) )
+  while( ( bChar = * szTemp++ ) != 0 )
      putbyte( bChar, hObjFile, &bChk );
 
-  while( ( bChar = * szName++ ) )
+  while( ( bChar = * szName++ ) != 0 )
      putbyte( bChar, hObjFile, &bChk );
 
   putword( wOffset, hObjFile, &bChk );

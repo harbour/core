@@ -282,24 +282,14 @@ void hb_compChkEnvironVar( char * szSwitch )
                       }
                       break;
 
-                   case 'f':
-                   case 'F':
+                   case 'o':
+                   case 'O':
                       hb_comp_iLanguage = LANG_OBJ32;
                       break;
 
                    case 'j':
                    case 'J':
                       hb_comp_iLanguage = LANG_JAVA;
-                      break;
-
-                   case 'p':
-                   case 'P':
-                      hb_comp_iLanguage = LANG_PASCAL;
-                      break;
-
-                   case 'r':
-                   case 'R':
-                      hb_comp_iLanguage = LANG_RESOURCES;
                       break;
 
                    case 'h':

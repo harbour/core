@@ -515,8 +515,6 @@ HARBOUR_EXE_OBJS = \
    $(OBJ_DIR)\genc.obj \
    $(OBJ_DIR)\genobj32.obj \
    $(OBJ_DIR)\genjava.obj \
-   $(OBJ_DIR)\genpas.obj \
-   $(OBJ_DIR)\genrc.obj \
    $(OBJ_DIR)\genhrb.obj \
    $(OBJ_DIR)\expropta.obj \
    $(OBJ_DIR)\exproptb.obj \
@@ -685,8 +683,6 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    echo. $(OBJ_DIR)\genc.obj >> make.tmp
    echo. $(OBJ_DIR)\genobj32.obj >> make.tmp
    echo. $(OBJ_DIR)\genjava.obj >> make.tmp
-   echo. $(OBJ_DIR)\genpas.obj >> make.tmp
-   echo. $(OBJ_DIR)\genrc.obj >> make.tmp
    echo. $(OBJ_DIR)\genhrb.obj >> make.tmp
    echo. $(OBJ_DIR)\expropta.obj >> make.tmp
    echo. $(OBJ_DIR)\exproptb.obj >> make.tmp
@@ -732,12 +728,6 @@ $(OBJ_DIR)\genobj32.obj : $(COMPILER_DIR)\genobj32.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\genjava.obj : $(COMPILER_DIR)\genjava.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-
-$(OBJ_DIR)\genpas.obj : $(COMPILER_DIR)\genpas.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-
-$(OBJ_DIR)\genrc.obj : $(COMPILER_DIR)\genrc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\genhrb.obj : $(COMPILER_DIR)\genhrb.c

@@ -140,6 +140,9 @@ static void    hb_vmPushAlias( void );            /* pushes the current workarea
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+static void    hb_vmPushOne( void ); /* pushes a 1 onto the stack */
+static void    hb_vmPushZero( void ); /* pushes a 0 onto the stack */
+static void    hb_vmPushByte( BYTE bNumber ); /* pushes a 1 byte integer number onto the stack */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
@@ -2955,32 +2958,32 @@ void hb_vmPushNumber( double dNumber, int iDec )
       hb_vmPushDouble( dNumber, hb_set.HB_SET_DECIMALS );
 }
 
-void hb_vmPushOne( void )
+static void hb_vmPushOne( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushOne()"));
 
    hb_stack.pPos->type = HB_IT_INTEGER;
-   hb_stack.pPos->item.asInteger.value = ( BYTE ) 1;
+   hb_stack.pPos->item.asInteger.value = ( int ) 1;
    hb_stack.pPos->item.asInteger.length = 10;
    hb_stackPush();
 }
 
-void hb_vmPushZero( void )
+static void hb_vmPushZero( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushZero()"));
 
    hb_stack.pPos->type = HB_IT_INTEGER;
-   hb_stack.pPos->item.asInteger.value = ( BYTE ) 0;
+   hb_stack.pPos->item.asInteger.value = ( int ) 0;
    hb_stack.pPos->item.asInteger.length = 10;
    hb_stackPush();
 }
 
-void hb_vmPushByte( BYTE bNumber )
+static void hb_vmPushByte( BYTE bNumber )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushInteger(%i)", bNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushByte(%i)", bNumber));
 
    hb_stack.pPos->type = HB_IT_INTEGER;
-   hb_stack.pPos->item.asInteger.value = bNumber;
+   hb_stack.pPos->item.asInteger.value = ( int ) bNumber;
    hb_stack.pPos->item.asInteger.length = 10;
    hb_stackPush();
 }

@@ -293,7 +293,10 @@ int main( int argc, char * argv[] )
    }
 
    if( !bAnyFiles )
+   {
       hb_compPrintUsage( argv[ 0 ] );
+      iStatus = EXIT_FAILURE;
+   }
 
    if( hb_comp_pOutPath )
       hb_xfree( hb_comp_pOutPath );
@@ -2370,9 +2373,11 @@ void hb_compOptimizeFrames()
    ULONG ulOptimized = 0;
    ULONG ulNextByte;
    USHORT w;
-   BYTE  * pOptimized;
+   BYTE * pOptimized;
 
-   if ( pFunc == NULL || pFunc->pCode[0] != HB_P_FRAME || pFunc->pCode[3] != HB_P_SFRAME )
+   if( pFunc == NULL || 
+       pFunc->pCode[ 0 ] != HB_P_FRAME || 
+       pFunc->pCode[ 3 ] != HB_P_SFRAME )
       return;
 
    pLocal = pFunc->pLocals;
@@ -2399,9 +2404,9 @@ void hb_compOptimizeFrames()
    else
       bSkipSFRAME = 1;
 
-   if ( bSkipFRAME  || bSkipSFRAME )
+   if( bSkipFRAME || bSkipSFRAME )
    {
-      if ( bSkipFRAME  && bSkipSFRAME )
+      if( bSkipFRAME && bSkipSFRAME )
       {
          pOptimized = ( BYTE * ) hb_xgrab( pFunc->lPCodePos - 6 );
 
@@ -2425,28 +2430,28 @@ void hb_compOptimizeFrames()
       {
          pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - 3 );
 
-         pOptimized[0] = pFunc->pCode[0];
-         pOptimized[1] = pFunc->pCode[1];
-         pOptimized[2] = pFunc->pCode[2];
+         pOptimized[ 0 ] = pFunc->pCode[ 0 ];
+         pOptimized[ 1 ] = pFunc->pCode[ 1 ];
+         pOptimized[ 2 ] = pFunc->pCode[ 2 ];
 
          ulNextByte = 6;
          ulOptimized = 3;
 
-         while ( ulNextByte < pFunc->lPCodePos )
+         while( ulNextByte < pFunc->lPCodePos )
             pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
 
          pFunc->lPCodePos -= 3;
       }
 
-      hb_xfree( (void *) pFunc->pCode );
+      hb_xfree( ( void * ) pFunc->pCode );
       pFunc->pCode = pOptimized;
    }
 }
 
 int hb_compSort_ULONG( const void * pLeft, const void * pRight )
 {
-    ULONG ulLeft  = *( (ULONG *) (pLeft) );
-    ULONG ulRight = *( (ULONG *) (pRight) );
+    ULONG ulLeft  = *( ( ULONG * ) ( pLeft ) );
+    ULONG ulRight = *( ( ULONG * ) ( pRight ) );
 
     if( ulLeft == ulRight )
        return 0 ;
@@ -2476,7 +2481,7 @@ void hb_compOptimizeJumps( void )
    //getchar();
 
    /* Needed so the pasting of PCODE pieces below will work correctly  */
-   qsort( (void *) pNOOPs, hb_comp_functions.pLast->iNOOPs, sizeof( ULONG ), hb_compSort_ULONG );
+   qsort( ( void * ) pNOOPs, hb_comp_functions.pLast->iNOOPs, sizeof( ULONG ), hb_compSort_ULONG );
 
 /*
    for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
@@ -2970,14 +2975,6 @@ static void hb_compGenOutput( int iLanguage )
 
       case LANG_JAVA:
          hb_compGenJava( hb_comp_pFileName );
-         break;
-
-      case LANG_PASCAL:
-         hb_compGenPascal( hb_comp_pFileName );
-         break;
-
-      case LANG_RESOURCES:
-         hb_compGenRC( hb_comp_pFileName );
          break;
 
       case LANG_PORT_OBJ:
