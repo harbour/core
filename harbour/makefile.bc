@@ -337,6 +337,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghuwin.obj \
    $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgit.obj \
+   $(OBJ_DIR)\msgko.obj \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgsr852.obj \
@@ -1760,6 +1761,10 @@ $(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgit.obj : $(LANG_DIR)\msgit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\msgko.obj : $(LANG_DIR)\msgko.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 

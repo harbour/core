@@ -41,6 +41,7 @@
  *    DOSERROR()
  *    __ERRINHANDLER()
  *    __ERRRT_BASE()
+ *    __ERRRT_SBASE()
  *    hb_errLaunch()
  *    hb_errLaunchSubst()
  *    hb_errGetFlags()
@@ -728,6 +729,15 @@ HB_FUNC( __ERRRT_BASE )
                   ( ULONG ) hb_parnl( 2 ),
                   ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
                   hb_parc( 4 ) );
+}
+
+HB_FUNC( __ERRRT_SBASE )
+{
+   hb_itemRelease( hb_itemReturn(
+         hb_errRT_BASE_Subst( ( ULONG ) hb_parnl( 1 ),
+                              ( ULONG ) hb_parnl( 2 ),
+                              ISCHAR( 3 ) ? hb_parc( 3 ) : NULL,
+                              hb_parc( 4 ) ) ) );
 }
 
 USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )

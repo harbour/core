@@ -2162,38 +2162,3 @@ static HARBOUR hb___msgVirtual( void )
    ;
 }
 
-
-/* ************** C Function associate to TObject.prg ********************* */
-
-/* tObject:Error(cDesc,cClass,cMsg,nCode) */
-HB_FUNC( TOBJECT_ER )
-{
-   char * pszDesc  = hb_parc( 1 );
-   char * pszClass = hb_parc( 2 );
-   char * pszMsg   = hb_parc( 3 );
-   char   szTmp[255] ;
-   USHORT uiCode = 1004 ;
-
-   PHB_ITEM pResult ;
-
-   if (hb_pcount()>3)
-    uiCode= (USHORT) hb_parni(4);
-
-   strcpy( szTmp, pszClass );
-   strcat( szTmp, ":" );
-
-   if( uiCode==1005 )
-    {
-     strcat( szTmp, pszMsg+1 );
-     pResult = hb_errRT_BASE_Subst( EG_NOVARMETHOD, 1005, pszDesc, szTmp );
-    }
-   else
-    {
-     strcat( szTmp, pszMsg );
-     pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, pszDesc, szTmp );
-    }
-
-   hb_itemReturn( pResult );
-   hb_itemRelease( pResult );
-
-}

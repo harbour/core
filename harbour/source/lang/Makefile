@@ -25,6 +25,7 @@ C_SOURCES=\
 	msghuwin.c   \
 	msgis850.c   \
 	msgit.c      \
+	msgko.c      \
 	msgpt.c      \
 	msgro.c      \
 	msgsr852.c   \

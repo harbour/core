@@ -1,3 +1,23 @@
+2000-07-24 22:12 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbextern.ch
+   * source/rtl/errorapi.c
+   * source/rtl/tobject.prg
+   * source/vm/classes.c
+     * TOBJECT_ERROR() implemented in Clipper/Harbour instead of C to keep it 
+       clean.
+     + __errRT_SBASE() internal function added to throw a substitutable (?)
+       runtime error.
+
+   * source/lang/msgko.c
+   * source/lang/Makefile
+   * makefile.bc
+   * makefile.vc
+     + Korean language module updated. Thanks to Kwon Oh-Chul.
+
+   - tests/test.frm
+     - Removed since it was corrupted.
+
 2000-07-22 23:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      ! Optimized handling of Hex Numbers.

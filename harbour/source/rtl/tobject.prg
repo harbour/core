@@ -57,6 +57,7 @@
 
 #include "common.ch"
 #include "hboo.ch"
+#include "error.ch"
 
 FUNCTION TObject()
    STATIC s_oClass
@@ -73,7 +74,7 @@ FUNCTION TObject()
       s_oClass:AddMethod( "NEW"  , @TObject_New()  , nScope )
       s_oClass:AddMethod( "INIT" , @TObject_Init() , nScope )
 
-      s_oClass:AddMethod( "ERROR", @TOBJECT_ER() , nScope ) /* see classes.c */
+      s_oClass:AddMethod( "ERROR", @TOBJECT_ERROR() , nScope ) /* see classes.c */
 
       s_oClass:SetOnError( @TObject_DftonError() )
 
@@ -146,7 +147,12 @@ static function TObject_Dftonerror(xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPa
 return QSelf():MSGNOTFOUND( __GetMessage(), xPar0, xPar1, xPar2, xPar3, xPar4, xPar5, xPar6, xPar7, xPar8, xPar9, ;
                                             xPar10,xPar11,xPar12,xPar13,xPar14,xPar15,xPar16,xPar17,xPar18,xPar19 )
 
-/* This function is stored within classes.c and will generate on runTime error */
-/*
-* static function TObject_Er(cMsgErr, cCls, cMsg)
-*/
+static function TObject_Error( cDesc, cClass, cMsg, nCode )
+
+   DEFAULT nCode TO 1004
+
+   IF nCode == 1005
+      RETURN __errRT_SBASE( EG_NOVARMETHOD, 1005, cDesc, cClass + ":" + cMsg )
+   ENDIF
+
+   RETURN __errRT_SBASE( EG_NOMETHOD, nCode, cDesc, cClass + ":" + cMsg )
