@@ -91,7 +91,7 @@ extern "C" {
 #define NTX_MAX_REC_NUM                                       0x7FFFFFFFL
 #define NTX_IGNORE_REC_NUM                                             -1
 
-#define NTX_MAX_KEY  250      /* Max len of key */
+#define NTX_MAX_KEY  256      /* Max len of key */
 #define NTXBLOCKSIZE 1024     /* Size of block in NTX file */
 
 /* forward declarations
@@ -193,7 +193,9 @@ typedef struct _NTXHEADER    /* Header of NTX file */
    USHORT   half_page;
    char     key_expr[ NTX_MAX_KEY ];
    char     unique;
-   char     reserve[9];
+   char     unknown;
+   char     descend;
+   char     reserve[7];
    char     for_expr[ NTX_MAX_KEY ];
 } NTXHEADER;
 

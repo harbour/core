@@ -67,6 +67,11 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
       lSymbols++;
       pSym = pSym->pNext;
    }
+   fputc( ( BYTE ) 192, yyc );
+   fputs( "HRB", yyc );
+   fputc( 2, yyc );
+   fputc( 0, yyc );
+
    fputc( ( BYTE ) ( ( lSymbols       ) & 255 ), yyc ); /* Write number symbols */
    fputc( ( BYTE ) ( ( lSymbols >> 8  ) & 255 ), yyc );
    fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );

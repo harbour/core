@@ -759,6 +759,7 @@ static BOOL hb_ntxPageReadBottomKey( LPPAGEINFO pPage, ULONG ulOffset )
 
 static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
 {
+/*
    if( !pTag->AscendKey )
    {
       switch( bTypRead )
@@ -780,6 +781,7 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
             break;
       }
    }
+*/
    pTag->TagBOF = pTag->TagEOF = FALSE;
    if( pTag->Owner->Owner->ulRecCount )
    {
@@ -1335,6 +1337,8 @@ static int hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, BOOL is
    {
       nBegin = pPage->uiKeys / 2;
       cmp = hb_ntxItemCompare( pPage->pKeys[ nBegin ].pItem , pKey, TRUE );
+      if( !pPage->TagParent->AscendKey )
+         cmp = -cmp;
       if( !cmp && pPage->TagParent->UniqueKey )
          return 1;
       if( cmp > 0 )
@@ -1378,6 +1382,8 @@ static int hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, BOOL is
       if( i == pPage->uiKeys )
          break;
       cmp = hb_ntxItemCompare( pPage->pKeys[ i ].pItem , pKey, TRUE );
+      if( !pPage->TagParent->AscendKey )
+         cmp = -cmp;
       if( !cmp && pPage->TagParent->UniqueKey )
          return 1;
    }
@@ -1503,6 +1509,7 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
 
    LPSORTITEM pKeyNew, pKey, pKeyTmp, pKeyLast = NULL, pKeyPrev;
    int result;
+   BOOL fDescend = !pTag->AscendKey; 
 
    /* printf( "\n\rhb_ntxSortKeyAdd - 0 ( %s )",szkey ); */
    pKeyNew = (LPSORTITEM) ( pSortInfo->sortBuffer +
@@ -1521,7 +1528,10 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
    {
       pKeyTmp = (LPSORTITEM) ( pSortInfo->sortBuffer +
            pSortInfo->itemLength * ( ulKeyNo - 2 ) );
-      if( memcmp( pKeyNew->key, pKeyTmp->key, pTag->KeyLength ) < 0 )
+      result = memcmp( pKeyNew->key, pKeyTmp->key, pTag->KeyLength );
+      if( fDescend && result )
+         result = ( result > 0 )? -1:1;
+      if( result < 0 )
          pKeyNew->pNext = pKeyTmp;
       else
       {
@@ -1547,27 +1557,37 @@ static BOOL hb_ntxSortKeyAdd( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* szk
          pKeyPrev = pKeyLast;
          pKey = pKeyLast->pNext;
       }
-      else if( pSortInfo->pKey1 &&
-          ( result = memcmp( pKeyNew->key, pSortInfo->pKey1->key, pTag->KeyLength ) ) >= 0 )
+      else if( pSortInfo->pKey1 )
       {
-         if( !result && pTag->UniqueKey )
+         result = memcmp( pKeyNew->key, pSortInfo->pKey1->key, pTag->KeyLength );
+         if( fDescend && result )
+            result = ( result > 0 )? -1:1;
+         if( result >= 0 )
          {
-            pSortInfo->ulKeyCount --;
-            pKeyNew = pKeyTmp;
-            ( pSortInfo->nItems ) --;
-            continue;
+            if( !result && pTag->UniqueKey )
+            {
+               pSortInfo->ulKeyCount --;
+               pKeyNew = pKeyTmp;
+               ( pSortInfo->nItems ) --;
+               continue;
+            }
+            else
+            {
+               pKeyPrev = pSortInfo->pKey1;
+               pKey = pSortInfo->pKey1->pNext;
+            }
          }
          else
-         {
-            pKeyPrev = pSortInfo->pKey1;
-            pKey = pSortInfo->pKey1->pNext;
-         }
+            pKey = pSortInfo->pKeyFirst;
       }
       else
          pKey = pSortInfo->pKeyFirst;
       while( pKey )
       {
-         if( ( result = memcmp( pKeyNew->key, pKey->key, pTag->KeyLength ) ) < 0 )
+         result = memcmp( pKeyNew->key, pKey->key, pTag->KeyLength );
+         if( fDescend && result )
+            result = ( result > 0 )? -1:1;
+         if( result < 0 )
          {
             pKeyNew->pNext = pKey;
             if( pKeyPrev )
@@ -1661,6 +1681,8 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
 {
    char *key1, *key2;
    short int nPage, iPage;
+   int result;
+   BOOL fDescend = !pTag->AscendKey;
    USHORT itemLength = sizeof( ULONG ) + pTag->KeyLength;
    LPSORTITEM pKey = *ppKey;
    LPSWAPPAGE pSwapPage = (LPSWAPPAGE) ( pSortInfo->swappages );
@@ -1678,14 +1700,26 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
       {
          key2 = ( (LPPAGEITEM) ( pSwapPage->page +
                        itemLength*pSwapPage->curkey ) )->key;
-         if( !key1 || memcmp( (BYTE*)key1,(BYTE*)key2,pTag->KeyLength ) > 0 )
+         if( key1 )
+         {
+            result = memcmp( (BYTE*)key1,(BYTE*)key2,pTag->KeyLength );
+            if( fDescend && result )
+               result = ( result > 0 )? -1:1;
+         }
+         if( !key1 || result > 0 )
          {
             nPage = iPage;
             key1 = key2;
          }
       }         
    }
-   if( ( pKey && !key1 ) || ( pKey && memcmp( (BYTE*)key1,(BYTE*)pKey->key,pTag->KeyLength ) > 0 ) )
+   if( pKey && key1 )
+   {
+      result = memcmp( (BYTE*)key1,(BYTE*)pKey->key,pTag->KeyLength );
+      if( fDescend && result )
+         result = ( result > 0 )? -1:1;
+   }
+   if( ( pKey && !key1 ) || ( pKey && result > 0 ) )
    {
       pKeyRoot->rec_no = pKey->rec_no;
       memcpy( pKeyRoot->key, pKey->key, pTag->KeyLength );
@@ -2122,6 +2156,7 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex )
    if( pIndex->CompoundTag->ForExpr )
       strcpy( Header.for_expr , pIndex->CompoundTag->ForExpr );
    Header.unique = pIndex->CompoundTag->UniqueKey;
+   Header.descend = !pIndex->CompoundTag->AscendKey;
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
    hb_fsWrite( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER));
    if( pIndex->CompoundTag->RootPage )
@@ -2254,8 +2289,8 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    
    pTag->pKeyItem = pKeyExp;
    pTag->pForItem = pForExp;
-   pTag->AscendKey = 1; /* fAscendKey; */
    pTag->UniqueKey = Header.unique;
+   pTag->AscendKey = !Header.descend;
    pTag->KeyType = 'C'; /* bKeyType; */
    pTag->KeyLength = Header.key_size;
    pTag->KeyDec = Header.key_dec;
@@ -3410,6 +3445,7 @@ static RDDFUNCS ntxTable = { ntxBof,
 HB_FUNC(_DBFNTX )
 {
 }
+
 
 HB_FUNC( DBFNTX_GETFUNCTABLE )
 {

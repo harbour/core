@@ -135,6 +135,7 @@ static void      hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset, void * Ad
 static FILE *    hb_hrbFileOpen( char * szFileName );
 static void      hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int iSize, int iCount );
 static BYTE      hb_hrbFileReadByte( FILE * file, char * szFileName );
+static int       hb_hrbFileReadHead( FILE * file, char * szFileName );
 static char *    hb_hrbFileReadId( FILE * file, char * szFileName );
 static long      hb_hrbFileReadLong( FILE * file, char * szFileName );
 static void      hb_hrbFileClose( FILE * file );
@@ -300,7 +301,13 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
       PHB_SYMB pSymRead;                           /* Symbols read             */
       PHB_DYNF pDynFunc;                           /* Functions read           */
       PHB_DYNS pDynSym;
+      int nVersion = hb_hrbFileReadHead( file, szFileName );
 
+      if( !nVersion )
+      {
+         hb_hrbFileClose( file );
+         return NULL;
+      }
       pHrbBody = ( PHRB_BODY ) hb_xgrab( sizeof( HRB_BODY ) );
       pHrbBody->ulSymStart = -1;
       pHrbBody->ulSymbols = hb_hrbFileReadLong( file, szFileName );
@@ -498,6 +505,25 @@ static ULONG hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded 
    return ulRet;
 }
 
+static int hb_hrbFileReadHead( FILE * file, char * szFileName )
+{
+   char szHead[] = { '\192','H','R','B' }, szBuf[4];
+   char cInt[ 2 ];
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadHead(%p)", file ));
+
+   hb_hrbFileRead( file, szFileName, szBuf, 1, 4 );
+   if( !strncmp( szHead,szBuf,4 ) )
+   {
+      hb_errRT_BASE_Ext1( EG_CORRUPTION, 9999, NULL, szFileName, 0, EF_CANDEFAULT, 1, hb_paramError( 1 ) );
+      return 0;
+   }
+   hb_hrbFileRead( file, szFileName, cInt, 2, 1 );
+
+   return ( ( BYTE ) cInt[ 0 ] ) +
+          ( ( BYTE ) cInt[ 1 ] ) * 0x100 ;
+
+}
 
 /* ReadId
    Read the next (zero terminated) identifier */

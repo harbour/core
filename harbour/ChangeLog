@@ -7,6 +7,16 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rtl/Tgetlist.prg
+    * Minor modifications proposed by Walter Negro
+
+2002-02-04 13:50 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
+  * source/rtl/memoline.c
+  * source/rtl/mlcount.c
+    * Disable limitation of string length to 254 when
+      no HB_C52_STRICT used.
+  * source/rtl/at.c
+  * source/source/compiler/Hbfuncchk.c
   * doc/en/string.txt
     * Two new parameters nStart & nEnd of At() function when
       no HB_C52_STRICT used.
