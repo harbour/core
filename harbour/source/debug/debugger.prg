@@ -70,7 +70,7 @@ return nil
 
 CLASS TDebugger
 
-   DATA   aWindows
+   DATA   aWindows, nCurrentWindow
    DATA   oPullDown
    DATA   oWndCode, oWndCommand
    DATA   oBar, oBrwText, cPrgName
@@ -88,7 +88,9 @@ CLASS TDebugger
    METHOD HandleEvent()
    METHOD Hide()
    METHOD InputBox( cMsg, uValue )
+   METHOD NextWindow()
    METHOD Open()
+   METHOD PrevWindow()
    METHOD RestoreAppStatus()
    METHOD SaveAppStatus()
    METHOD Show()
@@ -100,14 +102,15 @@ ENDCLASS
 
 METHOD New() CLASS TDebugger
 
-   ::aWindows     = {}
-   ::oPullDown    = BuildMenu( Self )
-   ::oWndCode     = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
-   ::oWndCommand  = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
-                                    " Command ", "BG+/B" )
-   ::lEnd         = .f.
-   ::aBreakPoints = {}
-   ::lGo          = .f.
+   ::aWindows       = {}
+   ::nCurrentWindow = 1
+   ::oPullDown      = BuildMenu( Self )
+   ::oWndCode       = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
+   ::oWndCommand    = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
+                                       "Command", "BG+/B" )
+   ::lEnd           = .f.
+   ::aBreakPoints   = {}
+   ::lGo            = .f.
 
    AAdd( ::aWindows, ::oWndCode )
    AAdd( ::aWindows, ::oWndCommand )
@@ -176,6 +179,12 @@ METHOD HandleEvent() CLASS TDebugger
          case nKey == K_F9
               ::ToggleBreakPoint()
 
+         case nKey == K_TAB
+              ::NextWindow()
+
+         case nKey == K_SH_TAB
+              ::PrevWindow()
+
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
                  ::oPullDown:ShowPopup( nPopup )
@@ -191,6 +200,38 @@ METHOD Hide() CLASS TDebugger
    ::cAppImage = nil
    SetColor( ::cAppColors )
    SetCursor( ::nAppCursor )
+
+return nil
+
+METHOD NextWindow() CLASS TDebugger
+
+   local oWnd
+
+   if Len( ::aWindows ) > 0
+      oWnd = ::aWindows[ ::nCurrentWindow++ ]
+      oWnd:SetFocus( .f. )
+      if ::nCurrentWindow > Len( ::aWindows )
+         ::nCurrentWindow = 1
+      endif
+      oWnd = ::aWindows[ ::nCurrentWindow ]
+      oWnd:SetFocus( .t. )
+   endif
+
+return nil
+
+METHOD PrevWindow() CLASS TDebugger
+
+   local oWnd
+
+   if Len( ::aWindows ) > 0
+      oWnd = ::aWindows[ ::nCurrentWindow-- ]
+      oWnd:SetFocus( .f. )
+      if ::nCurrentWindow < 1
+         ::nCurrentWindow = Len( ::aWindows )
+      endif
+      oWnd = ::aWindows[ ::nCurrentWindow ]
+      oWnd:SetFocus( .t. )
+   endif
 
 return nil
 
@@ -245,9 +286,7 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       // { | aBreak | aBreak[ 1 ] == ::nLine }
 
    ::oBrwText:ForceStable()
-
-   @ ::oWndCode:nTop, ( ( ::oWndCode:nRight - ::oWndCode:nLeft ) / 2 ) - ;
-     ( Len( ::cPrgName ) + 2 ) / 2 SAY " " + ::cPrgName + " "
+   ::oWndCode:SetCaption( ::cPrgName )
 
 return nil
 
@@ -337,6 +376,8 @@ CLASS TDbWindow  // Debugger windows
    DATA   cBackImage, cColor
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
+   METHOD SetCaption( cCaption )
+   METHOD SetFocus( lOnOff )
    METHOD Show( lFocused )
    METHOD Move()
 
@@ -353,21 +394,41 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
 
 return Self
 
+METHOD SetCaption( cCaption ) CLASS TDbWindow
+
+   ::cCaption = cCaption
+
+   if ! Empty( cCaption )
+      @ ::nTop, ( ( ::nRight - ::nLeft ) / 2 ) - ;
+     ( Len( cCaption ) + 2 ) / 2 SAY " " + cCaption + " " COLOR ::cColor
+   endif
+
+return nil
+
+METHOD SetFocus( lOnOff ) CLASS TDbWindow
+
+   DispBegin()
+
+   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lOnOff, B_DOUBLE, B_SINGLE ) ;
+      COLOR ::cColor
+
+   if ! Empty( ::cCaption )
+      @ ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ;
+         SAY " " + ::cCaption + " " COLOR ::cColor
+   endif
+
+   DispEnd()
+
+return nil
+
 METHOD Show( lFocused ) CLASS TDbWindow
 
    DEFAULT lFocused := .f.
 
    ::cBackImage = SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
-
    SetColor( ::cColor )
    SCROLL( ::nTop, ::nLeft, ::nBottom, ::nRight )
-   @ ::nTop, ::nLeft, ::nBottom, ::nRight BOX If( lFocused, B_DOUBLE, B_SINGLE ) ;
-      COLOR ::CColor
-
-   if ! Empty( ::cCaption )
-      @ ::nTop, ::nLeft + ( ::nRight - ::nLeft ) / 2 - Len( ::cCaption ) / 2 ;
-         SAY ::cCaption
-   endif
+   ::SetFocus( lFocused )
 
 return nil
 
@@ -905,8 +966,8 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " &Window "
       MENU
-         MENUITEM " &Next     Tab "         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " &Prev  Sh-Tab"          ACTION Alert( "Not implemented yet!" )
+         MENUITEM " &Next     Tab "         ACTION oDebugger:NextWindow()
+         MENUITEM " &Prev  Sh-Tab"          ACTION oDebugger:PrevWindow()
          MENUITEM " &Move"                  ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Size"                  ACTION Alert( "Not implemented yet!" )
          MENUITEM " &Zoom      F2"          ACTION Alert( "Not implemented yet!" )
