@@ -225,11 +225,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       /* save screen info to restore on exit */
       memcpy( &s_csbi, &csbi, sizeof( csbi ) );
 
-      csbi.dwSize.X = HB_MIN( csbi.dwSize.X, 80 );
-      csbi.dwSize.Y = HB_MIN( csbi.dwSize.Y, 50 );
+      csbi.srWindow.Right = HB_MIN( csbi.srWindow.Right, csbi.dwSize.X-1 );
+      csbi.srWindow.Bottom = HB_MIN( csbi.srWindow.Bottom, csbi.dwSize.Y-1 );
 
-      csbi.srWindow.Right = HB_MIN( csbi.srWindow.Right, 79 );
-      csbi.srWindow.Bottom = HB_MIN( csbi.srWindow.Bottom, 49 );
       csbi.srWindow.Top = csbi.srWindow.Left = 0;
 
       SetConsoleWindowInfo( s_HOriginal, TRUE,  &csbi.srWindow );

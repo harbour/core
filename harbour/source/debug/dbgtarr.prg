@@ -54,7 +54,7 @@
 #include "setcurs.ch"
 #include "hbclass.ch"
 #include "inkey.ch"
-
+#include "common.ch"
 Class TDBGArray
 
 data aWindows
@@ -83,38 +83,38 @@ Local owndsets
    local oCol
    if (nsize<maxrow()-2)
       if nRow <> nil
-         owndsets:=TDbWindow():New( GetTopPos(nRow), 5, getBottomPos(nRow+nsize+1), maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]" ,"N/W" )
+         owndsets:=TDbWindow():New( GetTopPos(nRow), 5, getBottomPos(nRow+nsize+1), maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,6))+"]" ,"N/W" )
       else
-         owndsets:=TDbWindow():New( 1, 5, 2+nsize, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
+         owndsets:=TDbWindow():New( 1, 5, 2+nsize, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,6))+"]"  ,"N/W")
       endif
    else
-      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
+      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,6))+"]"  ,"N/W")
    endif
-                  ::nCurWindow++
+   ::nCurWindow++
    oWndSets:lFocused:=.t.
    aadd(::aWindows,owndsets)
 
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
 
-oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, owndsets:nRight-1)
-
+   oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, owndsets:nRight-1)
+   oBrwSets:autolite:=.f.
    oBrwSets:ColorSpec := __Dbg():ClrModal()
-   oBrwSets:GoTopBlock := { || n := 1 }
-   oBrwSets:GoBottomBlock := { || n := Len( aArray ) }
-   oBrwSets:SkipBlock := { | nSkip, nPos | nPos := n,;
-                          n := iif( nSkip > 0, Min( Len( aArray ), n + nSkip ),;
-                          Max( 1, n + nSkip ) ), n - nPos }
-   oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::arrayName+"["+alltrim(str(n,4))+"]"} ) )
-   ocol:width:=len(::arrayName+"["+alltrim(str(len(aarray),4))+"]" )
-   ocol:ColorBlock :=    { || { iif( n == oBrwSets:Cargo, 2, 1 ), 2 } }
-   oBrwSets:Freeze:=1
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[ n ] ), nWidth - oCol:Width - 1 ) } ) )
-   oBrwSets:Cargo := 1 // Actual highligthed row
-   ocol:ColorBlock := { || { iif( n == oBrwSets:Cargo, 3, 1 ), 3 } }
-   oBrwsets:colpos:=2
-   ::aWindows[::nCurWindow]:bPainted    := { || oBrwSets:ForceStable() }
+   oBrwSets:Cargo :={ 1,{}} // Actual highligthed row
+   oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::arrayName+"["+alltrim(str(oBrwSets:cargo[ 1 ],6))+"]"} ) )
+   ocol:width:=len(::arrayName+"["+alltrim(str(len(aarray),6))+"]" )
+   oCol:DefColor:={1,2}
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[oBrwSets:cargo[ 1 ] ] ), nWidth - oCol:Width - 1 ) } ) )
+   aadd(oBrwSets:Cargo[2],aarray)
+   oCol:width:=50
+   ocol:DefColor:={1,3}
+   oBrwSets:GOTOPBLOCK := { || oBrwSets:cargo[ 1 ]:= 1 } 
+   oBrwSets:GoBottomBlock := { || oBrwSets:cargo[ 1 ]:= Len(oBrwSets:cargo[ 2 ][ 1 ])} 
+   oBrwSets:SKIPBLOCK := { |nPos| ( nPos:= ArrayBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ]:= ;
+   oBrwSets:cargo[ 1 ] + nPos,nPos ) } 
+
+   ::aWindows[::nCurWindow]:bPainted    := { || RefreshVarsS(oBrwSets)}
    ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
-                            ::aWindows[::nCurWindow],::arrayName ,Len(aArray),aArray) }
+                           ::aWindows[::nCurWindow],::arrayName ,Len(aArray),aArray)}
 
    SetCursor( SC_NONE )
    ::aWindows[::nCurWindow]:ShowModal()
@@ -123,45 +123,28 @@ return self
 
 method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class TDBGArray
 
-   local nSet := oBrwSets:Cargo
+   local nSet := oBrwSets:cargo[1]
    local cTemp:=str(nSet,4)
    local cOldname:= ::arrayName
    Local nPos
+
+   local nRecsToSkip
    do case
 
-
       case nKey == K_UP
-           if oBrwSets:Cargo > 1
-              oBrwSets:Cargo--
-              oBrwSets:RefreshCurrent()
               oBrwSets:Up()
-              oBrwSets:ForceStable()
-           endif
-
       case nKey == K_DOWN
-           if oBrwSets:Cargo < nSets
-              oBrwSets:Cargo++
-              oBrwSets:RefreshCurrent()
               oBrwSets:Down()
-              oBrwSets:ForceStable()
-           endif
-
-      case nKey == K_HOME
-           if oBrwSets:Cargo > 1
-              oBrwSets:Cargo := 1
+      case nKey == K_HOME .or. (nKey == K_CTRL_PGUP) .or. (nKey == K_CTRL_HOME)
               oBrwSets:GoTop()
-              oBrwSets:ForceStable()
-           endif
-
-      case nKey == K_END
-           if oBrwSets:Cargo < nSets
-              oBrwSets:Cargo := nSets
+      case nKey == K_END .or. (nkey == K_CTRL_PGDN) .or. (nkey == K_CTRL_END )
               oBrwSets:GoBottom()
-              oBrwSets:ForceStable()
-           endif
-
+      Case nKey == K_PGDN
+              oBrwSets:pageDown()
+      Case nKey == K_PGUP
+              OBrwSets:PageUp()
       Case nKey ==13
-           if nSet==oBrwSets:Cargo
+
                if valtype(aArray[nSet])=="A"
                   SetPos(ownd:nBottom,ownd:nLeft)
                   ::aWindows[::nCurwindow]:lFocused:=.f.
@@ -187,15 +170,11 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class T
 
                endif
 
-            endif
-
    endcase
+      RefreshVarsS(oBrwSets)
 
-   if nSet != oBrwSets:Cargo
-      ::aWindows[::nCurwindow]:SetCaption( cName + "["+AllTrim( Str( oBrwSets:Cargo ) ) +".."+ ;
+      ::aWindows[::nCurwindow]:SetCaption( cName + "["+AllTrim( Str( oBrwSets:cargo[1] ) ) +".."+ ;
                        Alltrim(str(LenArr))+ "]")
-   endif
-
 return self
 
 static function ValToStr( uVal )
@@ -278,3 +257,22 @@ Static function GetBottomPos(nPos)
 Local nReturn:=0
 nReturn :=if(nPos<maxrow()-2,nPos ,maxrow()-2)
 return nReturn
+
+static procedure RefreshVarsS( oBrowse )
+
+   local nLen := Len(oBrowse:aColumns)
+
+   if ( nLen == 2 )
+      oBrowse:dehilite():colpos:=2
+   endif
+   oBrowse:dehilite():forcestable()
+   if ( nLen == 2 )
+      oBrowse:hilite():colpos:=1
+   endif
+   oBrowse:hilite()  
+   return
+static function ArrayBrowseSkip( nPos, oBrwSets,n )
+
+   return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
+      iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
+      Len(oBrwSets:cargo[ 2 ][ 1 ]) - oBrwSets:cargo[ 1 ], nPos ) )

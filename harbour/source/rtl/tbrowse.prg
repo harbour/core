@@ -613,7 +613,7 @@ METHOD DeHilite() CLASS TBrowse
 
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
-   cType := ::DispCell(::ColPos, CLR_STANDARD)
+   cType := ::DispCell(::ColPos, if(::aColumns[ ::ColPos ]:defcolor[1]==1,CLR_STANDARD,::aColumns[ ::ColPos ]:defcolor[1]))
 
    SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
 
@@ -638,8 +638,9 @@ METHOD Hilite() CLASS TBrowse
    // Start of cell
    SetPos( nRow, ::aColumns[ ::ColPos ]:ColPos )
 
-   cType := ::DispCell(::ColPos, CLR_ENHANCED)
+//   cType := ::DispCell(::ColPos, CLR_ENHANCED)
 
+   cType := ::DispCell(::ColPos, if(::aColumns[ ::ColPos ]:defcolor[2]==2,CLR_ENHANCED,::aColumns[ ::ColPos ]:defcolor[2]))
    // Put cursor back on first char of cell value
    SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
 
