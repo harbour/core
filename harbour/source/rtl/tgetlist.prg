@@ -38,6 +38,7 @@
 #include "getexit.ch"
 #include "inkey.ch"
 #include "set.ch"
+#include "setcurs.ch"
 
 #define SCORE_ROW       0
 #define SCORE_COL      60
@@ -478,8 +479,10 @@ METHOD ShowScoreboard() CLASS TGetList
    if Set( _SET_SCOREBOARD )
       nRow = Row()
       nCol = Col()
+      nOldCursor = SetCursor( SC_NONE )
       DispOutAt( SCORE_ROW, SCORE_COL, If( Set( _SET_INSERT ), "Ins", "   " ) )
       SetPos( nRow, nCol )
+      SetCursor( nOldCursor )
    endif
 
 return nil
