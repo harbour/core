@@ -1,3 +1,10 @@
+2000-06-28-23:20 Luiz Rafael Culik <culik@sl.conex.net>
+*contrib/hbzlib/zipfile2.c
+   -hb___MyMkdir() Functions. All Calls to this function replaced with hb_fsMkDir()
+   *some bugs fixed
+*contrib/hbzlib/hbzip.h
+   -removed hb___MyMkdir() function declaration
+
 2000-06-27 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
     
     *include/hbapi.h
