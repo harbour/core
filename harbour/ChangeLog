@@ -2,6 +2,8 @@
    * source/rtl/tone.c
      * change _Windows to _WINDOWS_
      * assign 0 to temp if ifdefs' not matched
+   * makefile.vc
+     * correct building of hbdoc.exe
 
 20000209-22:10 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc

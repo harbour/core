@@ -291,9 +291,9 @@ all: $(HARBOUR_EXE) \
      $(DBFNTX_LIB) \
      $(DBFCDX_LIB) \
      $(PP_EXE) \
-     $(HBDOC_EXE) \
      $(RUNNER_LIB) \
-     $(RUNNER_EXE)
+     $(RUNNER_EXE) \
+     $(HBDOC_EXE)
 #     $(RUNNER_DLL)
 
 $(PP_EXE) : \
