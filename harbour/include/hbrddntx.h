@@ -338,12 +338,12 @@ static ERRCODE ntxClose( NTXAREAP pArea );
 static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize );
 #define ntxSysName               NULL
 #define ntxEval                  NULL
-#define ntxPack                  NULL
+static ERRCODE ntxPack( NTXAREAP pArea );
 #define ntPackRec                NULL
 #define ntxSort                  NULL
 #define ntxTrans                 NULL
 #define ntxTransRec              NULL
-#define ntxZap                   NULL
+static ERRCODE ntxZap( NTXAREAP pArea );
 #define ntxchildEnd              NULL
 #define ntxchildStart            NULL
 #define ntxchildSync             NULL
@@ -360,7 +360,7 @@ static ERRCODE ntxOrderListClear( NTXAREAP pArea );
          /* Close all indexes */
 #define ntxOrderListDelete       NULL
 static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo );
-#define ntxOrderListRebuild      NULL
+static ERRCODE ntxOrderListRebuild( NTXAREAP pArea );
 #define ntxOrderCondition        NULL
 static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
          /* Create new Index */

@@ -2167,6 +2167,59 @@ static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize )
    return SUCCESS;
 }
 
+static ERRCODE ntxPack( NTXAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("ntxPack(%p)", pArea ));
+
+   if( SUPER_PACK( ( AREAP ) pArea ) == SUCCESS )
+     return ntxOrderListRebuild( pArea );
+   else
+     return FAILURE;
+}
+
+static ERRCODE ntxZap( NTXAREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("ntxZap(%p)", pArea ));
+
+   if( SUPER_ZAP( ( AREAP ) pArea ) == SUCCESS )
+   {
+      LPNTXINDEX lpIndex, lpIndexTmp;
+      LPTAGINFO pTag;
+      char* buffer;
+      USHORT i, maxKeys;
+      LPNTXBUFFER itemlist;
+
+      buffer = (char*) hb_xgrab( NTXBLOCKSIZE );
+      lpIndex = pArea->lpNtxIndex;
+      lpIndexTmp = pArea->lpCurIndex;
+      while( lpIndex )
+      {
+         lpIndex->CompoundTag->RootBlock = NTXBLOCKSIZE;
+         hb_ntxHeaderSave( lpIndex );
+
+         pTag = lpIndex->CompoundTag;
+         maxKeys = pTag->MaxKeys*2/3;
+         memset( buffer, 0, NTXBLOCKSIZE );
+         itemlist = ( LPNTXBUFFER ) buffer;
+         itemlist->item_count = 0;
+         for( i = 0; i < maxKeys + 1; i++ )
+            itemlist->item_offset[i] = 2 + 2 * ( pTag->MaxKeys + 1 ) +
+               i * ( pTag->KeyLength + 8 );
+
+         hb_fsSeek( lpIndex->DiskFile, NTXBLOCKSIZE, FS_SET );
+         hb_fsWrite( lpIndex->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
+         hb_fsWrite( lpIndex->DiskFile, NULL, 0 );
+
+         lpIndex = lpIndex->pNext;
+      }
+      pArea->lpCurIndex = lpIndexTmp;
+      hb_xfree( buffer );
+      return SUCCESS;
+   }
+   else
+     return FAILURE;
+}
+
 static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
    PHB_ITEM pExpr, pResult, pError;
@@ -2592,6 +2645,22 @@ static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    return SUCCESS;
 }
 
+static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
+{
+   LPNTXINDEX lpIndex, lpIndexTmp;
+
+   HB_TRACE(HB_TR_DEBUG, ("ntxOrderListRebuild(%p)", pArea));
+
+   lpIndex = pArea->lpNtxIndex;
+   lpIndexTmp = pArea->lpCurIndex;
+   while( lpIndex )
+   {
+      lpIndex = lpIndex->pNext;
+   }
+   pArea->lpCurIndex = lpIndexTmp;
+   return SUCCESS;
+}
+
 static ERRCODE ntxClose( NTXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxClose(%p)", pArea));
@@ -2702,12 +2771,12 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ( DBENTRYP_SP ) ntxStructSize,
                              ntxSysName,
                              ntxEval,
-                             ntxPack,
+                             ( DBENTRYP_V ) ntxPack,
                              ntPackRec,
                              ntxSort,
                              ntxTrans,
                              ntxTransRec,
-                             ntxZap,
+                             ( DBENTRYP_V ) ntxZap,
                              ntxchildEnd,
                              ntxchildStart,
                              ntxchildSync,
@@ -2722,7 +2791,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ( DBENTRYP_V ) ntxOrderListClear,
                              ntxOrderListDelete,
                              ( DBENTRYP_OI ) ntxOrderListFocus,
-                             ntxOrderListRebuild,
+                             ( DBENTRYP_V ) ntxOrderListRebuild,
                              ntxOrderCondition,
                              ( DBENTRYP_VOC ) ntxOrderCreate,
                              ntxOrderDestroy,
