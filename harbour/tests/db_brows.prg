@@ -43,16 +43,19 @@
 #include "fileio.ch"
 #include "db_brows.ch"
 
+MEMVAR mslist,x1,y1,x2,y2,title,maskey
+MEMVAR kolfld, firstfld, prmsf
+MEMVAR klfs, razmer, numfld, xfld, first_f, str_bar
+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function Main()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION Main
+FUNCTION Main( filename )
 
 LOCAL vybkey
-   PARAMETERS filename
 PRIVATE mslist[ LI_LEN ]
    IF filename = Nil
       ? 'You should sign filename to browse in command line.'
@@ -83,21 +86,21 @@ RETURN Nil
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
-FUNCTION DBFLIST( _x1, _y1, _x2, _y2, _title, maskey )
+FUNCTION DBFLIST
 
-LOCAL rezproc, xkey, rez, fipos, wndbuf, prview, prsohr, predit, predxx, oldcolors, ym, xm, i
-LOCAL fbar1, fbar2
+LOCAL rezproc, xkey, rez, fipos, wndbuf, oldcolors, ym, xm, i
+LOCAL prview, prsohr, predit, predxx
+LOCAL fbar1, fbar2, vartmp, varbuf
+LOCAL GetList := {}
 #ifdef VER_MOUSE
-   // PARAMETERS x1,y1,x2,y2,title,maskey,ctrl_ar
+   PARAMETERS x1,y1,x2,y2,title,maskey,ctrl_ar
 #else
-   // PARAMETERS x1,y1,x2,y2,title,maskey
+   PARAMETERS x1,y1,x2,y2,title,maskey
 #endif
-PRIVATE x1      := _x1, y1 := _y1, x2 := _x2, y2 := _y2, title := _title
-PRIVATE GetList := {}
-PRIVATE kolfld, firstfld, prmsf, vartmp, varbuf
+PRIVATE kolfld, firstfld, prmsf
 PRIVATE klfs, razmer, numfld, xfld, first_f
    IF TYPE( "str_bar" ) <> "C"
-PRIVATE str_bar := "±þ"
+      PRIVATE str_bar := "±þ"
    ENDIF
    IF x1 > 99
       x1     := x1 - 100
@@ -181,7 +184,7 @@ PRIVATE str_bar := "±þ"
       //     ENDIF
       VIVSTR( firstfld, LI_NSTR + y1, IF( predit > 1, numfld, 0 ) )
       SETCOLOR( LI_CLR )                // “¡à âì ¢ë¤¥«¥­¨¥
-      /*
+/*
      IF .NOT. ( TYPE("Sx_Keyno()") == "U")
       @ y1+2,x2,y2-2,x2 BOX LEFT(str_bar,1)
       @ y1+1,x2 SAY SUBSTR(str_bar,2,1)
@@ -354,7 +357,7 @@ PRIVATE str_bar := "±þ"
             IF LI_WHEN = Nil .OR. LEN( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] = Nil .OR. EVAL( LI_WHEN[ fipos ] )
                IF prmsf
                   vartmp := IIF( LEN( LI_MSF ) < fipos, 1, LI_MSF[ fipos ] )
-                  IF TYPE( "vartmp" ) = "N"
+                  IF VALTYPE( vartmp ) = "N"
                      IF vartmp <> 2
                         LOOP
                      ENDIF
@@ -386,7 +389,7 @@ PRIVATE str_bar := "±þ"
                         ENDIF
                      ENDIF
                   ENDIF
-FIELDPUT( fipos, varbuf )
+                  FIELDPUT( fipos, varbuf )
                   IF .NOT. SET( _SET_EXCLUSIVE )
                      UNLOCK
                   ENDIF
@@ -506,7 +509,6 @@ RETURN IIF( klf = 0, 1, klf )
 FUNCTION MSFNEXT( fldnext )
 
 LOCAL vartmp
-MEMVAR prmsf
    IF prmsf
       DO WHILE fldnext <= LEN( LI_MSF ) .AND. fldnext <= klfs
          vartmp := LI_MSF[ fldnext ]
@@ -532,7 +534,6 @@ RETURN fldnext
 PROCEDURE MSFBACK( fldnext )
 
 LOCAL vartmp
-MEMVAR prmsf
    IF prmsf
       DO WHILE fldnext <= LEN( LI_MSF ) .AND. fldnext > first_f
          vartmp := LI_MSF[ fldnext ]
@@ -560,7 +561,6 @@ RETURN
 FUNCTION VIVNAMES( fifld )
 
 LOCAL i, x, oldc, fif
-MEMVAR x1, y1, x2, y2
    IF LI_NAMES <> Nil
       x := x1 + 2
       i := 1
@@ -596,7 +596,6 @@ RETURN Nil
 FUNCTION WNDVIVOD
 
 LOCAL firstrec, nstr, tekzp1
-MEMVAR x1, y1, x2, y2, firstfld, razmer
    IF LI_PRFLT
       tekzp1 := LI_TEKZP
    ENDIF
@@ -634,10 +633,8 @@ RETURN nstr - 1
 PROCEDURE VIVSTR( fifld, nstroka, vybfld )
 
 LOCAL x, i, shablon, sviv, fif
-MEMVAR x1, y1, x2, y2, xfld, first_f, numfld, klfs
    xfld := x := x1 + 2
    IF LI_KOLZ > 0
-      fldname := SPACE( 8 )
       fif     := IIF( LI_FREEZE > 0, 1, fifld )
       IF fifld <> first_f .AND. vybfld = 0
          @ nstroka, x1 + 1 SAY "<"
@@ -895,5 +892,3 @@ FUNC NUM_STR( NOM, KOLZN )
 
    NOM := INT( NOM )
 RETURN ( REPLICATE( "0", KOLZN - LEN( LTRIM( STR( NOM ) ) ) ) + LTRIM( STR( NOM ) ) )
-
-*+ EOF: SAMPLE.PRG

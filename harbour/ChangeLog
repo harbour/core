@@ -1,3 +1,7 @@
+20000318-14:36 GMT+3 Alexander Kresin
+   * tests/db_brows.prg
+     * Cleaned, warnings fixed
+
 20000318-02:37 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/vm/memvars.c
      % One variable scope adjusted.
@@ -159,7 +163,7 @@
      + Some internal functions made static
    * makefile.bc
      ! It's not relying on the default CC and AS macros, to make it work
-       on BCC45 without any cludges. BCC45 MAKE.EXE is defaulting to bcc or 
+       on BCC45 without any cludges. BCC45 MAKE.EXE is defaulting to bcc or
        bcc32 depending on the WIN32 macro.
    * source/rtl/maindll.c
      ! Fixed to compile with BCC45
@@ -218,7 +222,7 @@
    * source/rtl/gt/gtwin.c
    * source/rtl/gtapi.c
      * added explicit casts to remove warnings.
-   
+
 2000-03-15 19:00 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * source/rtl/tone.c
      ! Rearranged include file #elif list to test for __CYGWIN__
@@ -232,10 +236,10 @@
      source/pp/pplib.c
      source/compiler/hbgenerr.c
      + Added warning when a macro is doubly defined.
-       !! IMPORTANT TOFIX !!: The filename and line number will not be shown in 
+       !! IMPORTANT TOFIX !!: The filename and line number will not be shown in
        every cases, and even if shown it will wrong.
      ! The PP related static variables are now initialized in hb_pp_Init();
-       !! IMPORTANT TOFIX !!: The tables in PPTABLE.C should also be 
+       !! IMPORTANT TOFIX !!: The tables in PPTABLE.C should also be
        reinitialized on hb_pp_Init() to make multiple file compiling work.
      ; Until these are not fixed the warning is commented out.
    * include/hbver.h
@@ -350,8 +354,8 @@
 
 20000314-07:56 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/harbour.c
-     ! A few more global variables are reinitialized between files, when 
-       multiple files are passed at the command line. Note the ANNOUNCE-d 
+     ! A few more global variables are reinitialized between files, when
+       multiple files are passed at the command line. Note the ANNOUNCE-d
        symbols and possibly other things are not yet cleared.
 
 20000314-07:11 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -394,7 +398,7 @@
    * source/compiler/harbour.c
      ! Fixed not to display a newly added message when -q is specified.
    * makefile.bc
-     % Macro names synchronized with makefile.vc. Note that BCC_OPT has changed 
+     % Macro names synchronized with makefile.vc. Note that BCC_OPT has changed
        to CFLAGS.
      % Made more compact and robust.
    * makefile.vc
@@ -410,7 +414,7 @@
    * contrib/rdd_ads/makefile.vc
      + Minor changes.
    * makefile.vc
-     % Optimized MSVC make process, much smaller and faster. 
+     % Optimized MSVC make process, much smaller and faster.
        Thanks go to Paul Tucker.
 
 20000313-13:20 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -479,11 +483,11 @@
      include/Makefile
      * hbwinapi.h functionality moved to hbdefs.h (which is always included
        first)
-     * All #include "hbwinapi.h" and #include <windows.h> changed to 
+     * All #include "hbwinapi.h" and #include <windows.h> changed to
        #define HB_OS_WIN_32_USED
      ! Now the inclusion of windows.h doesn't depent on the requested GT mode.
        So it's possible to link for the Win32 platform a non-GT mode Harbour.
-       !!WARNING!! Since this change involves many platform/compiler 
+       !!WARNING!! Since this change involves many platform/compiler
        combinations, please test it on yours and report any possible errors.
        WIN32/MINGW32, WIN32/GCC, WIN32/BCC32/55, DOS/BCC16/31, WIN32/MSVC have
        been tested.
@@ -515,8 +519,8 @@
    * include/hbsetup.h
      makefile.vc
      makefile.bc
-     + Shorter GTAPI selection macros added, to reduce scrolling/line wrapping 
-       while building, and HB_ is the standard prefix anyway. Currently both 
+     + Shorter GTAPI selection macros added, to reduce scrolling/line wrapping
+       while building, and HB_ is the standard prefix anyway. Currently both
        the short and the old long #defines will work. The new ones:
        HB_GT_STD
        HB_GT_DOS
@@ -596,7 +600,7 @@
      source/vm/itemapi.c
      source/vm/maindll.c
      source/vm/mainwin.c
-     * Platform/compiler related #ifdef-s changed to #if defined() for easy 
+     * Platform/compiler related #ifdef-s changed to #if defined() for easy
        GREP.
 
 20000311-23:00 GMT+3 Alexander Kresin
@@ -605,7 +609,7 @@
    * source/rdd/dbcmd.c
    * source/rdd/dbf1.c
    * source/rdd/dbfcdx/dbfcdx1.c
-     * uncommented scope functions in header file and added declarations to 
+     * uncommented scope functions in header file and added declarations to
        virtual method tables in *.c files
 
 20000311-18:52 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -654,7 +658,7 @@
      % hb_gtSetPos() small optim.
    * source/rtl/dir.c
      ! chmod() changed back to _rtl_chmod().
-  
+
 20000311-19:16 GMT+3 Alexander Kresin
    + contrib/rdd_ads/make_vc.bat
    + contrib/rdd_ads/makefile.vc
@@ -673,7 +677,7 @@
      ! Small correction.
    * make_tpl.*
      bin/bld_tpl.*
-     ! "<>" chars around the email address replaced with "()", since it 
+     ! "<>" chars around the email address replaced with "()", since it
        confused some OSes.
    * source/rtl/tget.prg
      ! TOFIX added.
@@ -681,7 +685,7 @@
 20000308-15:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gt/gtstd.c
-	*replaced s_szCrLf with hb_consoleGetNewLine()
+        *replaced s_szCrLf with hb_consoleGetNewLine()
 
 20000308-00:40 GMT+1 Victor Szakats <info@szelvesz.hu>
    * samples/Makefile
@@ -768,7 +772,7 @@
      makefile.bc
      makefile.vc
      + The Borland and MSVC build process changed to generate the executables
-       in different bin directories to completely separate them and to be 
+       in different bin directories to completely separate them and to be
        compatible with the GNU-make system.
    * Makefile
    - obj/Makefile
@@ -787,15 +791,15 @@
      source/rtl/gtapi.c
      ! hb_gt_ReadKey() made common for all GT types. OS specific branch removed.
      + TOFIXes added to gtwin.c for all the places where the API calling
-       rules are violated, so that the upper level API is called from a 
+       rules are violated, so that the upper level API is called from a
        lower one.
    * source/rtl/console.c
-     ! SETCURSOR(), RESTSCREEN() fixed when called with more parameter then  
+     ! SETCURSOR(), RESTSCREEN() fixed when called with more parameter then
        required.
      % Minor optimization.
      % Got rid of a few non-GTAPI branches.
      % s_iDevRow and s_iDevCol removed.
-       !! WARNING !! Non-GT mode has not been tested. Also some more tests 
+       !! WARNING !! Non-GT mode has not been tested. Also some more tests
        would be good for the GT mode.
      + TOFIXes added for all places where the API calling rules are violated,
        so that an API level is skipped and the low-level API is directly
@@ -832,7 +836,7 @@
    - make_b40.bat
      make_b32.bat
      - Removed this version specific batch file.
-       The -O2 option was removed for BCC40 due to PP bugs back then, ? and ?? 
+       The -O2 option was removed for BCC40 due to PP bugs back then, ? and ??
        was not PP-ed properly. Anyone could test this now ?
        If it still doesn't work I will add a warning to MAKE_B32.BAT about that.
    * makefile.bc
@@ -859,8 +863,8 @@
      bin\bld_*.bat
      + Changed names of libraries. Now they are compatible with the GNU-make
        library names.
-     ; NOTE: Since now Harbour has a common library naming system, which is 
-       used in all make systems. Documentation can refer to them in the 
+     ; NOTE: Since now Harbour has a common library naming system, which is
+       used in all make systems. Documentation can refer to them in the
        $FILES$ section.
 
 20000307-03:45 EST Paul Tucker <ptucker@sympatico.ca>
@@ -911,7 +915,7 @@
        __ARGV      -> HB_ARGV
        __SHADOW    -> HB_SHADOW
        __KEYPUT    -> HB_KEYPUT
-       Name of some Harbour internal functions changed to better reflect that 
+       Name of some Harbour internal functions changed to better reflect that
        they are Harbour extensions.
 
 2000-03-06 20:05 GMT-5 David G. Holm <dholm@jsd-llc.com>
@@ -958,7 +962,7 @@
      ! Warnings treaten as non-fatal (with #pragma).
    * tests/memvar.prg
      tests/testvars.prg
-     ! Warnings fixed.   
+     ! Warnings fixed.
    * tests/dates.prg
      ! A PROC was returning a value.
    - include/hbrptlbl.ch
@@ -1231,12 +1235,12 @@
 20000302-12:35 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/pp/hbpp.c
-	*moved #include <sys/timeb.h> after harbour specific definitions
-	are defined (OS_UNIX_COMPATIBLE)
-	(BTW: is this include file really needed ? )
+        *moved #include <sys/timeb.h> after harbour specific definitions
+        are defined (OS_UNIX_COMPATIBLE)
+        (BTW: is this include file really needed ? )
 
     *source/rtl/typefile.prg
-	*removed RETURN NIL in a PROCEDURE
+        *removed RETURN NIL in a PROCEDURE
 
 20000301-15:20 EST Paul Tucker <ptucker@sympatico.ca>
    * source/tools/strasint.c
