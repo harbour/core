@@ -882,7 +882,7 @@ ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       uiFlags =  pArea->fReadonly  ? FO_READ : FO_READWRITE;
       uiFlags |= pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
-      hFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+      hFile = hb_spOpen( ( BYTE * ) szFileName, uiFlags );
 
       if( hFile != FS_ERROR )
       {
@@ -1147,7 +1147,7 @@ ERRCODE hb_cdxCreateMemFile( CDXAREAP pArea, LPDBOPENINFO pCreateInfo )
       /* Try create */
       do
       {
-         pArea->hMemoFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+         pArea->hMemoFile = hb_spCreate( pCreateInfo->abName, FC_NORMAL );
          if( pArea->hMemoFile == FS_ERROR )
          {
             if( !pError )
@@ -1207,7 +1207,7 @@ ERRCODE hb_cdxOpenMemFile( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Try open */
    do
    {
-      pArea->hMemoFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+      pArea->hMemoFile = hb_spOpen( pOpenInfo->abName, uiFlags );
       if( pArea->hMemoFile == FS_ERROR )
       {
          if( !pError )
@@ -4143,12 +4143,12 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    /* New file? */
    if( !hb_fsFile( ( BYTE * ) szFileName ) )
    {
-      pIndex->hFile = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
+      pIndex->hFile = hb_spCreate( ( BYTE * ) szFileName, FC_NORMAL );
       bNewFile = TRUE;
    }
    else
    {
-      pIndex->hFile = hb_fsOpen( ( BYTE * ) szFileName, FO_READWRITE |
+      pIndex->hFile = hb_spOpen( ( BYTE * ) szFileName, FO_READWRITE |
                                     ( pAreaCdx->fShared ?
                                       FO_DENYNONE : FO_EXCLUSIVE ) );
       bNewFile = FALSE;
@@ -4317,7 +4317,7 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
    {
       pIndex->hFile = FS_ERROR;
       if( szFileNameDbfPath )
-         pIndex->hFile = hb_fsOpen( ( BYTE * ) szFileNameDbfPath, uiFlags );
+         pIndex->hFile = hb_spOpen( ( BYTE * ) szFileNameDbfPath, uiFlags );
 
       if( pIndex->hFile != FS_ERROR )
       {
@@ -4326,7 +4326,7 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       }
       else
       {
-         pIndex->hFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+         pIndex->hFile = hb_spOpen( ( BYTE * ) szFileName, uiFlags );
          if( pIndex->hFile != FS_ERROR )
          {
             pIndex->szFileName = ( char * ) hb_xgrab( strlen( szFileName ) + 1 );

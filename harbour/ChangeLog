@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Change maindll.* to maindllh.*
+
+2001-12-28 12:30 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * source/vm/hvm.c
+     ! MSVC cannot find start procedure => hb_StartApp() now only
+       applied to Borland C++
+
 2001-12-28 05:15 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * utils/hbmake/hbmutils.prg
      ! function renaming: filedate() => hbmake_filedate()

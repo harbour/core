@@ -1524,7 +1524,7 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    /* Try create */
    do
    {
-      pArea->hDataFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+      pArea->hDataFile = hb_spCreate( pCreateInfo->abName, FC_NORMAL );
       if( pArea->hDataFile == FS_ERROR )
       {
          if( !pError )
@@ -1695,7 +1695,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Try open */
    do
    {
-      pArea->hDataFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+      pArea->hDataFile = hb_spOpen( pOpenInfo->abName, uiFlags );
       if( pArea->hDataFile == FS_ERROR )
       {
          if( !pError )
@@ -2341,7 +2341,7 @@ ERRCODE hb_dbfCreateMemFile( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       /* Try create */
       do
       {
-         pArea->hMemoFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+         pArea->hMemoFile = hb_spCreate( pCreateInfo->abName, FC_NORMAL );
          if( pArea->hMemoFile == FS_ERROR )
          {
             if( !pError )
@@ -2393,7 +2393,7 @@ ERRCODE hb_dbfOpenMemFile( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Try open */
    do
    {
-      pArea->hMemoFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+      pArea->hMemoFile = hb_spOpen( pOpenInfo->abName, uiFlags );
       if( pArea->hMemoFile == FS_ERROR )
       {
          if( !pError )

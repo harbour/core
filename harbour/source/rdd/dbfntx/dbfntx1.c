@@ -2642,7 +2642,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
                         pOrderInfo->fUnique );
    pIndex->CompoundTag = pTag;
 
-   pIndex->DiskFile = hb_fsCreate( ( BYTE * ) szFileName , FC_NORMAL );
+   pIndex->DiskFile = hb_spCreate( ( BYTE * ) szFileName , FC_NORMAL );
    if(pIndex->DiskFile == FS_ERROR) {
       hb_xfree( szFileName );
       hb_itemRelease( pKeyExp );
@@ -2784,7 +2784,7 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    do
    {
-     pIndex->DiskFile = hb_fsOpen( ( BYTE * ) szFileName, uiFlags );
+     pIndex->DiskFile = hb_spOpen( ( BYTE * ) szFileName, uiFlags );
      if( pIndex->DiskFile == FS_ERROR )
      {
        if( !pError )
