@@ -1216,6 +1216,7 @@ FUNC crtmakfile( cFile )
     LOCAL cHtmlLib       := ""
     LOCAL lLinux         := At( 'linux', Lower( Os() ) ) > 0
     LOCAL nWriteFiles    := 0
+    Local cResName       := Space(50)
 
     nLinkHandle := Fcreate( cFile )
     WriteMakeFileHeader()
@@ -1262,7 +1263,7 @@ FUNC crtmakfile( cFile )
     @ 10,  1 SAY aLangMessages[ 38 ]   GET cUserDef     PICT "@s15"
     @ 10, 40 SAY aLangMessages[ 39 ]  GET cUserInclude PICT "@s15"
     @ 11,  1 GET lExternalLib checkbox caption aLangMessages[ 40 ] 
-
+    @ 12,  1 Say "Resource file Name" Get CResName 
     READ
 
     IF !Empty( cUserDef )
@@ -1734,8 +1735,9 @@ FUNC crtmakfile( cFile )
 
     ENDIF
 
-    Fwrite( nLinkHandle, "RESFILES = " + CRLF )
-    Fwrite( nLinkHandle, "RESDEPEN = $(RESFILES)" + CRLF )
+    CResName :=lower(CResName ) 
+    Fwrite( nLinkHandle, "RESFILES = "+ CResName  + CRLF )
+    Fwrite( nLinkHandle, "RESDEPEN = "+ strtran(CResName,".rc",".res")  + CRLF )
 
     IF lRddads
 
@@ -2101,7 +2103,7 @@ FUNCTION CompUpdatedfiles()
 
                         IF nPos > 0
 
-                            cComm := Strtran( cComm, "o$*", "o" + aobjs[ nPos ] )
+                            cComm := Strtran( cComm, "o$*", "o" + aobjsc[ nPos ] )
                             cComm := Strtran( cComm, "$**", acs[ nFiles ] )
                             cComm += " > test.out"
                             Outstd( cComm )

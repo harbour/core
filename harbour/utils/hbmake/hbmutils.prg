@@ -55,7 +55,7 @@ Function GetSourceFiles( lSubdir )
            For y := 1 To nDataLen
               If At( '.PRG', Upper( adata[ y, 1 ] ) ) > 0 .or. At( '.C', Upper( adata[ y, 1 ] ) ) > 0
                  If lSubdir
-                    Aadd( aRet, Strtran( astru[ nCounter ], cDir, '' ) + Pad( aData[ y, 1 ], 13 ) + ;
+                    Aadd( aRet, Strtran( astru[ nCounter ], cDir, '' ) +  aData[ y, 1 ] + ;
                           Str( aData[ y, 2 ], 8 ) + '  ' + ;
                           Dtoc( aData[ y, 3 ] ) + '  ' + ;
                           aData[ y, 4 ] )
