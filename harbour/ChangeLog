@@ -1,3 +1,7 @@
+19990616-13:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/hbpp/hbppint.c
+    - Added extern declaration for strocpy()
+
 19990616-11:30 CET Eddie Runia
   * source/rtl/console.c
     Eject should be __Eject of course

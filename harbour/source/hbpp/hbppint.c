@@ -22,6 +22,7 @@ extern int ParseExpression( char*, char* );
 extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
 extern int WrStr(FILE*,char *);
 extern int strolen ( char* );
+extern int strocpy (char*, char* );
 
 int PreProcess( FILE*, FILE*, char *);
 int Hp_Parse( FILE*, FILE* );
