@@ -356,17 +356,21 @@ METHOD HandleEvent() CLASS TDebugger
       nKey = InKey( 0 )
 
       do case
-         case nKey == K_LBUTTONDOWN
-              Alert( Str( MRow() ) + ", " + Str( MCol() ) )
-
-         case nKey == K_RBUTTONDOWN
-              Alert( "K_RBUTTONDOWN" )
-
          case ::oPullDown:IsOpen()
               ::oPullDown:ProcessKey( nKey )
               if ::oPullDown:nOpenPopup == 0 // Closed
                  ::aWindows[ ::nCurrentWindow ]:SetFocus( .t. )
               endif
+
+         case nKey == K_LBUTTONDOWN
+              if MRow() == 0
+                 if ( nPopup := ::oPullDown:GetItemOrdByCoors( 0, MCol() ) ) != 0
+                    SetCursor( SC_NONE )
+                    ::oPullDown:ShowPopup( nPopup )
+                 endif
+              endif
+
+         case nKey == K_RBUTTONDOWN
 
          case nKey == K_ESC
               ::RestoreAppStatus()
@@ -404,8 +408,10 @@ METHOD HandleEvent() CLASS TDebugger
 
          otherwise
               if ( nPopup := ::oPullDown:GetHotKeyPos( AltToKey( nKey ) ) ) != 0
-                 SetCursor( SC_NONE )
-                 ::oPullDown:ShowPopup( nPopup )
+                 if ::oPullDown:nOpenPopup != nPopup
+                    SetCursor( SC_NONE )
+                    ::oPullDown:ShowPopup( nPopup )
+                 endif
               endif
       endcase
    end
@@ -1076,6 +1082,7 @@ CLASS TDbMenu  /* debugger menu */
    METHOD Display()
    METHOD EvalAction()
    METHOD GetHotKeyPos( nKey )
+   METHOD GetItemOrdByCoors( nRow, nCol )
    METHOD GoBottom()
    METHOD GoDown() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoRight()
    METHOD GoLeft()
@@ -1175,9 +1182,11 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
    if nPopup != 0
       oPopup = ::aItems[ nPopup ]:bAction
-      RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
-                  oPopup:cBackImage )
-      oPopup:cBackImage = nil
+      if oPopup:ClassName() == "TDBMENU"
+         RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
+                     oPopup:cBackImage )
+         oPopup:cBackImage = nil
+      endif
       ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
    endif
 
@@ -1244,6 +1253,19 @@ METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
 
 return 0
 
+METHOD GetItemOrdByCoors( nRow, nCol ) CLASS TDbMenu
+
+   local n
+
+   for n = 1 to Len( ::aItems )
+      if ::aItems[ n ]:nRow == nRow .and. nCol >= ::aItems[ n ]:nCol .and. ;
+         nCol <= ::aItems[ n ]:nCol + Len( ::aItems[ n ]:cPrompt ) - 2
+         return n
+      endif
+   next
+
+return 0
+
 METHOD GoBottom() CLASS TDbMenu
 
    local oPopup
@@ -1301,7 +1323,6 @@ METHOD GoRight() CLASS TDbMenu
          ::ShowPopup( ::nOpenPopup := 1 )
       endif
    endif
-   // DispEnd()
 
 return nil
 
@@ -1334,6 +1355,16 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
    local nPopup
 
    do case
+      case nKey == K_LBUTTONDOWN
+           if MRow() == 0
+              if ( nPopup := ::GetItemOrdByCoors( 0, MCol() ) ) != 0
+                 if nPopup != ::nOpenPopup
+                    ::ClosePopup( ::nOpenPopup )
+                    ::ShowPopup( nPopup )
+                 endif
+              endif
+           endif
+
       case nKey == K_ESC
            ::Close()
 
@@ -1360,8 +1391,10 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
 
       otherwise
          if ( nPopup := ::GetHotKeyPos( AltToKey( nKey ) ) ) != 0
-            ::Close()
-            ::ShowPopup( nPopup )
+            if nPopup != ::nOpenPopup
+               ::Close()
+               ::ShowPopup( nPopup )
+            endif
          endif
    endcase
 

@@ -1,3 +1,7 @@
+20000206-10:12 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Mouse support to select pulldown top items (just that for now)
+
 20000205-17:00 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/compiler/hbusage.c
      + The command line help screen uses the platform dependent switch
@@ -177,7 +181,6 @@
 
    * doc/whatsnew.txt
      % Synchronized with updates that were made to the build31 branch
-
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
