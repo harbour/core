@@ -6,17 +6,17 @@ ROOT = ../../
 
 C_SOURCES=\
 	dbcmd.c \
-        dbf1.c \
-        dbnubs.c \
-        sdf1.c \
-        delim1.c \
+	dbf1.c \
+	dbnubs.c \
+	sdf1.c \
+	delim1.c \
 
 PRG_SOURCES=\
-        dbf0.prg \
-        dbstrux.prg \
-        sdf0.prg \
-        delim0.prg \
-        rddord.prg \
+	dbf0.prg \
+	dbstrux.prg \
+	sdf0.prg \
+	delim0.prg \
+	rddord.prg \
 	rddsys.prg \
 
 LIBNAME=rdd

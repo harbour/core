@@ -6,7 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtpca.c \
-        mousepca.c \
+	mousepca.c \
 
 LIBNAME=gtpca
 

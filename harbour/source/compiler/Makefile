@@ -22,17 +22,17 @@ LEX_HEADERS=\
 	hbdefs.h
 
 C_SOURCES=\
-        cmdcheck.c \
-        genc.c \
-        genhrb.c \
-        genjava.c \
-        genobj32.c \
-        genpas.c \
-        genrc.c \
-        hbfunchk.c \
-        hbgenerr.c \
-        hbpcode.c \
-        hbusage.c \
+	cmdcheck.c \
+	genc.c \
+	genhrb.c \
+	genjava.c \
+	genobj32.c \
+	genpas.c \
+	genrc.c \
+	hbfunchk.c \
+	hbgenerr.c \
+	hbpcode.c \
+	hbusage.c \
 	expropta.c \
 	exproptb.c \
 	exproptc.c \

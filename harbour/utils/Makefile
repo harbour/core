@@ -5,9 +5,9 @@
 ROOT = ../
 
 DIRS=\
-        hbrun \
-        hbdoc \
-        hbtest \
-#       hbextern \
+	hbrun \
+	hbdoc \
+	hbtest \
+#	hbextern \
 
 include $(ROOT)config/dir.cf

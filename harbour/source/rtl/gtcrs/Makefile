@@ -6,7 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtcrs.c \
-        mousecrs.c \
+	mousecrs.c \
 
 LIBNAME=gtcrs
 

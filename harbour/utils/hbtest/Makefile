@@ -9,27 +9,27 @@ endif
 ROOT = ../../
 
 PRG_SOURCES=\
-        hbtest.prg   \
-        rt_array.prg \
-        rt_date.prg  \
-        rt_file.prg  \
-        rt_hvm.prg   \
-        rt_math.prg  \
-        rt_misc.prg  \
-        rt_str.prg   \
-        rt_trans.prg \
+	hbtest.prg   \
+	rt_array.prg \
+	rt_date.prg  \
+	rt_file.prg  \
+	rt_hvm.prg   \
+	rt_math.prg  \
+	rt_misc.prg  \
+	rt_str.prg   \
+	rt_trans.prg \
 
 PRG_MAIN=hbtest.prg
 
 LIBS=\
-        debug \
-        vm \
-        rtl \
-        rdd \
-        rtl \
-        vm \
+	debug \
+	vm \
+	rtl \
+	rdd \
+	rtl \
+	vm \
 	macro \
-        pp \
-        common \
+	pp \
+	common \
 
 include $(TOP)$(ROOT)config/bin.cf

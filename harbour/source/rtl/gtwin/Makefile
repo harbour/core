@@ -6,7 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtwin.c \
-        mousewin.c \
+	mousewin.c \
 
 LIBNAME=gtwin
 

@@ -6,7 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtsln.c \
-        mousesln.c \
+	mousesln.c \
 
 LIBNAME=gtsln
 

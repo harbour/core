@@ -5,23 +5,23 @@
 ROOT = ../../
 
 LIBS=\
-        debug \
-        vm \
-        rtl \
-        rdd \
-        rtl \
-        vm \
+	debug \
+	vm \
+	rtl \
+	rdd \
+	rtl \
+	vm \
 	macro \
-        pp \
-        common \
+	pp \
+	common \
 
 ifeq ($(PM),)
   PM := $(pm)
 endif
 ifeq ($(PM),) # PM not defined = build all files
 PRG_SOURCES=\
-        guess.prg \
-        mankala.prg \
+	guess.prg \
+	mankala.prg \
 
 PRG_HEADERS=\
 

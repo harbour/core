@@ -8,6 +8,6 @@ DIRS=\
 	guestbk \
 	hscript \
 	misc \
-        pe \
+	pe \
 
 include $(ROOT)config/dir.cf

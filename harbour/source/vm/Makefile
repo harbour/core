@@ -5,31 +5,31 @@
 ROOT = ../../
 
 C_SOURCES=\
-        arrays.c     \
-        arrayshb.c   \
-        break.c      \
-        classes.c    \
-        cmdarg.c     \
-        debug.c      \
+	arrays.c     \
+	arrayshb.c   \
+	break.c      \
+	classes.c    \
+	cmdarg.c     \
+	debug.c      \
 	dynsym.c     \
-        codebloc.c   \
-        extend.c     \
-        fm.c         \
-	hvm.c        \
-        initexit.c   \
+	codebloc.c   \
+	extend.c     \
+	fm.c	 \
+	hvm.c	\
+	initexit.c   \
 	initsymb.c   \
-        itemapi.c    \
-        macro.c      \
-        main.c       \
-        memvars.c    \
-        memvclip.c   \
-        pcount.c     \
-        proc.c       \
-        pvalue.c     \
-        runner.c     \
+	itemapi.c    \
+	macro.c      \
+	main.c       \
+	memvars.c    \
+	memvclip.c   \
+	pcount.c     \
+	proc.c       \
+	pvalue.c     \
+	runner.c     \
 
 PRG_SOURCES=\
-        harbinit.prg \
+	harbinit.prg \
 
 LIBNAME=vm
 

@@ -6,7 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtdos.c \
-        mousedos.c \
+	mousedos.c \
 
 LIBNAME=gtdos
 

@@ -6,7 +6,7 @@ ROOT = ../../../
 
 C_SOURCES=\
 	gtos2.c \
-        mouseos2.c \
+	mouseos2.c \
 
 LIBNAME=gtos2
 

@@ -12,7 +12,7 @@ DIRS=\
 	vm \
 	rdd \
 	macro \
-        debug \
+	debug \
 	tools \
 
 include $(ROOT)config/dir.cf

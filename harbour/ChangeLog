@@ -1,3 +1,10 @@
+20000402-16:17 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * */Makefile
+     ! 8 spaces in rules converted to tabs.
+       Just wondering why is this needed at all ?
+       It's not an easy one, but please try to take care of this rule.
+
 20000402-15:59 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    - source/macro/macro.c
