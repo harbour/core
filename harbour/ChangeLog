@@ -1,5 +1,16 @@
+19990728-05:40 CET Victor Szel <info@szelvesz.hu>
+   ! source/compiler/harbour.y/MakeFilename() - 
+     Fixed bug, which sometimes caused that the
+     filename losed the "." extension separator char.
+   ! tests/working/makefile - newcopy.prg removed.
+   + tests/working/strsub.prg - Added some more tests, and the
+     expected results.
+   ! source/vm/hvm.c - Minus() simplified and fixed for strings.
+   ! config/dos/djgpp.cf - Added -g to CFLAGS, so it's
+     able to make test programs.
+
 19990728-03:50 CET Victor Szel <info@szelvesz.hu>
-   ! config\win32\msvc.cf - Missing include added.
+   ! config/win32/msvc.cf - Missing include added.
 
 19990727-16:30 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dir.c

@@ -1451,30 +1451,21 @@ void Minus( void )
    }
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      ULONG lLen = pItem1->item.asString.length;
-      ULONG lInc = 0;
-      ULONG i;
+      ULONG ulLen = pItem1->item.asString.length;
 
       pItem1->item.asString.value = (char*)hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
+      pItem1->item.asString.length += pItem2->item.asString.length;
 
-      while( lLen && pItem1->item.asString.value[lLen - 1] == ' ' )
+      while( ulLen && pItem1->item.asString.value[ulLen - 1] == ' ' )
       {
-         lLen--;
-         lInc++;
+         ulLen--;
       }
 
-      pItem1->item.asString.length = lLen;
-      lLen = pItem2->item.asString.length;
-      pItem2->item.asString.length += lInc;
-
-      for( i = 0; i < lInc; i++)
-         pItem2->item.asString.value[lLen + i] = ' ';
-
-      memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
-              pItem2->item.asString.value, pItem2->item.asString.length );
-
-      pItem1->item.asString.length += pItem2->item.asString.length;
+      memcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
+      ulLen += pItem2->item.asString.length;
+      memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen);
       pItem1->item.asString.value[ pItem1->item.asString.length ] = 0;
+
       if( pItem2->item.asString.value )
       {
          hb_xfree( pItem2->item.asString.value );

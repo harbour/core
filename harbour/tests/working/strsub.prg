@@ -1,6 +1,17 @@
 
 // Testing strings concat
 
+// Expected result:
+//
+// [STRINGSCONCAT  ]
+// [STRINGSCONCAT   ]
+// [STRINGSCONCAT    ]
+// >AB<
+// >AB  <
+// >AB   <
+// >A B  <
+// >B    <
+
 function main()
 
   LOCAL a := "STRINGS "
@@ -14,6 +25,12 @@ function main()
     c -= b
     QOut( "[" + c + "]" )
   next
+
+  QOut( ">" + "A" - "B"    + "<" ) // "AB"
+  QOut( ">" + "A  " - "B"  + "<" ) // "AB  "
+  QOut( ">" + "A  " - "B " + "<" ) // "AB   "
+  QOut( ">" + "A  " - " B" + "<" ) // "A B  "
+  QOut( ">" + "   " - "B " + "<" ) // "B    "
 
   QOut()
   __Accept( "Press a key to raise an error!" )

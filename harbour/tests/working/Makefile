@@ -64,7 +64,6 @@ PRG_SOURCES=\
 	memvar.prg \
 	mtran.prg \
 	multiarg.prg \
-	newcopy.prg \
 	nums.prg \
 	objarr.prg \
 	objasign.prg \
