@@ -1,3 +1,23 @@
+19990916-17:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/dynsym.c
+    *include/extend.h
+	+ new function HB_DYNS hb_dynsymFindName( char * szName )
+	that checks if given name is a public symbol - this function
+	converts given name to uppercase before checking
+	
+    *source/rtl/itemapi.c
+    *source/rtl/classes.c
+    *source/rtl/do.c
+    *source/vm/hvm.c
+	* replaced hb_dynsymGet with new hb_dynsymFindName
+	
+    *source/rdd/dbcmd.c
+	* replaced hb_dynsymFind with new hb_dynsymFindName
+	
+    *source/rtl/dir.c
+	* corrected invalid mask value in HarbourToOsMask()
+    
 19990916-14:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * makefile.vc
     ! Fixed version by Matteo Baccan.

@@ -139,6 +139,24 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
    return pDynSym;
 }
 
+PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
+{
+   PHB_DYNS pDynSym;
+   ULONG ulLen = strlen( szName );
+   char * szUprName;
+
+   szUprName = ( char * ) hb_xgrab( ulLen + 1 );
+   hb_strncpyUpper( szUprName, szName, ulLen ); /* make a copy as we may get a const string */
+
+   /* if( strlen( szUprName ) > 10 )
+      szUprName[ 10 ] = '\0'; keeps this here for 10 chars /c compatibility mode */
+
+   pDynSym = hb_dynsymFind( szUprName );
+   hb_xfree( szUprName );                                /* release memory */
+
+   return pDynSym;
+}
+
 PHB_DYNS hb_dynsymFind( char * szName )
 {
    if( s_pDynItems == NULL )

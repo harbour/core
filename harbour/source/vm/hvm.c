@@ -1843,17 +1843,47 @@ void hb_vmMult( void )
 
 void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char * szSymbol )
 {
-   hb_vmPush( pItem1 );                             /* Push object              */
-   hb_vmMessage( hb_dynsymGet( szSymbol )->pSymbol );  /* Push operation           */
-   hb_vmPush( pItem2 );                             /* Push argument            */
-   hb_vmFunction( 1 );
+   PHB_DYNS pMsg = hb_dynsymFindName( szSymbol );
+   if( pMsg )
+   {
+      hb_vmPush( pItem1 );                             /* Push object              */
+      hb_vmMessage( pMsg->pSymbol );           /* Push operation           */
+      hb_vmPush( pItem2 );                             /* Push argument            */
+      hb_vmFunction( 1 );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, szSymbol );
+      if( pResult )
+      {
+         hb_itemClear( &stack.Return );
+         hb_itemCopy( stack.pPos, pResult );
+         hb_stackPush();
+	 hb_itemClear( pResult );
+      }
+   }
 }
 
 void hb_vmOperatorCallUnary( PHB_ITEM pItem1, char * szSymbol )
 {
-   hb_vmPush( pItem1 );                             /* Push object              */
-   hb_vmMessage( hb_dynsymGet( szSymbol )->pSymbol );  /* Push operation           */
-   hb_vmFunction( 0 );
+   PHB_DYNS pMsg = hb_dynsymFindName( szSymbol );
+   if( pMsg )
+   {
+      hb_vmPush( pItem1 );                             /* Push object              */
+      hb_vmMessage( pMsg->pSymbol );  /* Push operation           */
+      hb_vmFunction( 0 );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_NOMETHOD, 1004, NULL, szSymbol );
+      if( pResult )
+      {
+         hb_itemClear( &stack.Return );
+         hb_itemCopy( stack.pPos, pResult );
+         hb_stackPush();
+	 hb_itemClear( pResult );
+      }
+   }
 }
 
 void hb_vmOr( void )
@@ -3133,7 +3163,7 @@ void hb_vmRequestCancel( void )
 
 HARBOUR HB___XHELP( void )
 {
-   PHB_DYNS pDynSym = hb_dynsymGet( "HELP" );
+   PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
 
    if( pDynSym )
    {

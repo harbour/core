@@ -539,7 +539,7 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    szGetFuncTable = ( char * ) hb_xgrab( strlen( szDriver ) + 14 );
    strcpy( szGetFuncTable, szDriver );
    strcat( szGetFuncTable, "_GETFUNCTABLE" );
-   pGetFuncTable = hb_dynsymFind( szGetFuncTable );
+   pGetFuncTable = hb_dynsymFindName( szGetFuncTable );
    hb_xfree( szGetFuncTable );
    if( !pGetFuncTable )
       return 2;              /* Not valid RDD */
@@ -580,7 +580,7 @@ static USHORT hb_rddSelect( char * szAlias )
 {
    PHB_DYNS pSymAlias;
 
-   pSymAlias = hb_dynsymFind( szAlias );
+   pSymAlias = hb_dynsymFindName( szAlias );
    if( pSymAlias && pSymAlias->hArea )
       return pSymAlias->hArea;
    else
@@ -713,17 +713,9 @@ ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 {
    PHB_DYNS pSymArea;
-   WORD wLen;
    ERRCODE bResult;
-   /* NOTE: szAlias have to be allocated on the stack because hb_errLaunch
-    * doesn't return control to this function if QUIT action is requested
-    */
-   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH ];
 
-   wLen = strlen( szName );
-   hb_strncpyUpper( szAlias, szName, wLen );
-
-   pSymArea = hb_dynsymFind( szAlias );
+   pSymArea = hb_dynsymFindName( szName );
    if( pSymArea && pSymArea->hArea )
       bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
    else
@@ -735,7 +727,7 @@ ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
       HB_ITEM_PTR pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
-                              NULL, szAlias, 0, EF_CANRETRY );
+                              NULL, szName, 0, EF_CANRETRY );
 
       bResult = FAILURE;
       while( wAction == E_RETRY )
@@ -743,7 +735,7 @@ ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
          wAction = hb_errLaunch( pError );
          if( wAction == E_RETRY )
          {
-            pSymArea = hb_dynsymFind( szAlias );
+            pSymArea = hb_dynsymFindName( szName );
             if( pSymArea && pSymArea->hArea )
             {
                bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
@@ -1263,8 +1255,6 @@ HARBOUR HB_DBSELECTAREA( void )
    if( ISCHAR( 1 ) )
    {
       szAlias = hb_parc( 1 );
-      hb_strUpper( szAlias, strlen( szAlias ) );
-
       if( ( uiNewArea = hb_rddSelect( szAlias ) ) == 0 )
       {
          hb_errRT_BASE( EG_NOALIAS, 1002, 0, szAlias );

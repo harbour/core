@@ -306,8 +306,11 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
  */
 ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
 {
-   PHB_SYMB pMessage = hb_dynsymGet( szString )->pSymbol;
-   return ( ULONG ) hb_objGetMethod( pObject, pMessage );
+   PHB_DYNS pDynSym = hb_dynsymFindName( szString );
+   if( pDynSym )
+      return ( ULONG ) hb_objGetMethod( pObject, pDynSym->pSymbol );
+   else
+      return 0;
 }                                                /* Get funcptr of message   */
 
 
@@ -497,45 +500,49 @@ HARBOUR HB___CLSDELMSG( void )
 
    if( wClass && wClass <= s_wClasses && pString )
    {
-      PCLASS   pClass   = s_pClasses + wClass - 1;
-      PHB_SYMB pMessage = hb_dynsymGet( pString->item.asString.value )->pSymbol;
-      PHB_DYNS pMsg     = pMessage->pDynSym;
-      WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
-      WORD     wMask    = pClass->wHashKey * BUCKET;
-      WORD     wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
-
-      while( ( wAt != wLimit ) &&
-             ( pClass->pMethods[ wAt ].pMessage &&
-             ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
+      PHB_DYNS pMsg = hb_dynsymFindName( pString->item.asString.value );
+      
+      if( pMsg )
       {
-         wAt++;
-         if( wAt == wMask )
-            wAt = 0;
-      }
-
-      if( wAt != wLimit )
-      {                                         /* Requested method found   */
-         PHB_FUNC pFunc = pClass->pMethods[ wAt ].pFunction;
-
-         if( pFunc == hb___msgEvalInline )      /* INLINE method deleted    */
+         PCLASS   pClass   = s_pClasses + wClass - 1;
+         WORD     wMask    = pClass->wHashKey * BUCKET;
+         PHB_SYMB pMessage = pMsg->pSymbol;
+         WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
+         WORD     wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
+    
+         while( ( wAt != wLimit ) &&
+                ( pClass->pMethods[ wAt ].pMessage &&
+                ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
          {
-            hb_arrayDel( pClass->pInlines, pClass->pMethods[ wAt ].wData );
-                                                /* Delete INLINE block      */
-         }
-                                                /* Move messages            */
-         while( pClass->pMethods[ wAt ].pMessage && wAt != wLimit )
-         {
-            memcpy( pClass->pMethods + wAt,
-                    pClass->pMethods + ( ( wAt == wMask ) ? 0 : wAt + 1 ),
-                    sizeof( METHOD ) );
             wAt++;
             if( wAt == wMask )
                wAt = 0;
          }
 
-         memset( pClass->pMethods + wAt, 0, sizeof( METHOD ) );
+         if( wAt != wLimit )
+         {                                         /* Requested method found   */
+            PHB_FUNC pFunc = pClass->pMethods[ wAt ].pFunction;
 
-         pClass->wMethods--;                    /* Decrease number messages */
+            if( pFunc == hb___msgEvalInline )      /* INLINE method deleted    */
+            {
+               hb_arrayDel( pClass->pInlines, pClass->pMethods[ wAt ].wData );
+                                                   /* Delete INLINE block      */
+            }
+                                                /* Move messages            */
+            while( pClass->pMethods[ wAt ].pMessage && wAt != wLimit )
+            {
+               memcpy( pClass->pMethods + wAt,
+                       pClass->pMethods + ( ( wAt == wMask ) ? 0 : wAt + 1 ),
+                       sizeof( METHOD ) );
+               wAt++;
+               if( wAt == wMask )
+                  wAt = 0;
+            }
+
+            memset( pClass->pMethods + wAt, 0, sizeof( METHOD ) );
+
+            pClass->wMethods--;                    /* Decrease number messages */
+         }
       }
    }
 }
@@ -579,41 +586,45 @@ HARBOUR HB___CLSMODMSG( void )
 
    if( wClass && wClass <= s_wClasses && pString )
    {
-      PCLASS   pClass   = s_pClasses + wClass - 1;
-      PHB_SYMB pMessage = hb_dynsymGet( pString->item.asString.value )->pSymbol;
-      PHB_DYNS pMsg     = pMessage->pDynSym;
-      WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
-      WORD     wMask    = pClass->wHashKey * BUCKET;
-      WORD     wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
+      PHB_DYNS pMsg = hb_dynsymFindName( pString->item.asString.value );
 
-      while( ( wAt != wLimit ) &&
-             ( pClass->pMethods[ wAt ].pMessage &&
-             ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
+      if( pMsg )
       {
-         wAt++;
-         if( wAt == wMask )
-            wAt = 0;
-      }
+         PCLASS   pClass   = s_pClasses + wClass - 1;
+         PHB_SYMB pMessage = pMsg->pSymbol;
+         WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
+         WORD     wMask    = pClass->wHashKey * BUCKET;
+         WORD     wLimit   = wAt ? ( wAt - 1 ) : ( wMask - 1 );
 
-      if( wAt != wLimit )
-      {                                         /* Requested method found   */
-         PHB_FUNC pFunc = pClass->pMethods[ wAt ].pFunction;
-
-         if( pFunc == hb___msgEvalInline )      /* INLINE method changed    */
+         while( ( wAt != wLimit ) &&
+                ( pClass->pMethods[ wAt ].pMessage &&
+                ( pClass->pMethods[ wAt ].pMessage != pMsg ) ) )
          {
-            PHB_ITEM pBlock = hb_param( 3, IT_BLOCK );
+            wAt++;
+            if( wAt == wMask )
+               wAt = 0;
+         }
 
-            if( pBlock == NULL )
-               hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG" );
-            else
-               hb_arraySet( pClass->pInlines, pClass->pMethods[ wAt ].wData, pBlock );
+         if( wAt != wLimit )
+         {                                         /* Requested method found   */
+            PHB_FUNC pFunc = pClass->pMethods[ wAt ].pFunction;
+
+            if( pFunc == hb___msgEvalInline )      /* INLINE method changed    */
+            {
+               PHB_ITEM pBlock = hb_param( 3, IT_BLOCK );
+
+               if( pBlock == NULL )
+                  hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG" );
+               else
+                  hb_arraySet( pClass->pInlines, pClass->pMethods[ wAt ].wData, pBlock );
+            }
+            else if( ( pFunc == hb___msgSetData ) || ( pFunc == hb___msgGetData ) )
+            {                                      /* Not allowed for DATA     */
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG" );
+            }
+            else                                   /* Modify METHOD            */
+               pClass->pMethods[ wAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
          }
-         else if( ( pFunc == hb___msgSetData ) || ( pFunc == hb___msgGetData ) )
-         {                                      /* Not allowed for DATA     */
-            hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG" );
-         }
-         else                                   /* Modify METHOD            */
-            pClass->pMethods[ wAt ].pFunction = ( PHB_FUNC ) hb_parnl( 3 );
       }
    }
 }
@@ -697,14 +708,19 @@ HARBOUR HB___OBJSENDMSG( void )
 
    if( pMessage && pObject )                /* Object & message passed      */
    {
-      WORD w;
+      PHB_DYNS pMsg = hb_dynsymFindName( pMessage->item.asString.value );
 
-      hb_vmPush( pObject );                      /* Push object                  */
-      hb_vmMessage( hb_dynsymGet( pMessage->item.asString.value )->pSymbol );
+      if( pMsg )
+      {
+         WORD w;
+	 
+         hb_vmPush( pObject );                      /* Push object                  */
+         hb_vmMessage( pMsg->pSymbol );
                                             /* Push char symbol as message  */
-      for( w = 3; w <= hb_pcount(); w++ )   /* Push arguments on stack      */
-         hb_vmPush( hb_param( w, IT_ANY ) );
-      hb_vmDo( hb_pcount()-2 );                  /* Execute message              */
+         for( w = 3; w <= hb_pcount(); w++ )   /* Push arguments on stack      */
+            hb_vmPush( hb_param( w, IT_ANY ) );
+         hb_vmDo( hb_pcount()-2 );                  /* Execute message              */
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG" );

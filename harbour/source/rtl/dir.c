@@ -242,7 +242,7 @@ static USHORT HarbourToOsMask( USHORT usMask )
 
    usRetMask = 0;
    if( usMask & FA_ARCH )
-      usRetMask = S_ISREG;    /* 0x0000  (numbers as in ms impimentation) */
+      usRetMask = S_IFREG;    /* 0x0000  (numbers as in ms impimentation) */
    if( usMask & FA_DIREC )
       usRetMask |= S_IFDIR;   /* 0x3000 */
    if( usMask & FA_REPARSE )
@@ -256,9 +256,9 @@ static USHORT HarbourToOsMask( USHORT usMask )
    if( usMask & FA_SPARSE )    /* s_issock... */
       usRetMask |= S_IFSOCK;  /* -not in ms- cygwin=140000 decimal! */
    if( usMask & FA_LABEL )
-      usRetMask |= S_IFLABEL; /* 0x5000 */
+      usRetMask |= 0;	/* TODO: check this: S_IFLABEL; */ /* 0x5000 */
    if( usMask & FA_RDONLY )
-      usRetMask ~= S_IRUSR;   /* ??? - want to mask off this bit */
+      usRetMask &= ~S_IWUSR;   /* clear the WRITE permission bit */
 
 #else
    #if defined(__IBMCPP__)

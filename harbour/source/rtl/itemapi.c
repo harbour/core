@@ -108,7 +108,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
-         hb_vmPushSymbol( hb_dynsymGet( hb_itemGetCPtr( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
+         hb_vmPushSymbol( hb_dynsymFindName( hb_itemGetCPtr( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          hb_vmPushNil();
          while( uiParam <= pEvalInfo->paramCount )
             hb_vmPush( pEvalInfo->pItems[ uiParam++ ] );
@@ -178,7 +178,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
    {
       if( IS_STRING( pItem ) )
       {
-         PHB_DYNS pDynSym = hb_dynsymGet( hb_itemGetCPtr( pItem ) );
+         PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
 
          if( pDynSym )
          {
@@ -255,7 +255,7 @@ PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 
    if( szFunc )
    {
-      PHB_DYNS pDynSym = hb_dynsymGet( szFunc );
+      PHB_DYNS pDynSym = hb_dynsymFindName( szFunc );
 
       if( pDynSym )
       {
