@@ -1,7 +1,11 @@
+19991007-23:18 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/tclass.prg
+     * Method SetType() small fix (missing else).
+
 19991007-17:37 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rdd/rddsys.prg
      ! Now using __rddSetDefault() instead of rddSetDefault(). This is
-       required because at this point the requested RDD may not be 
+       required because at this point the requested RDD may not be
        registered and __rddSetDefault() will count with this.
    * source/rdd/dbcmd.c
      ! dbSetDriver() now throws the same error as Clipper.
@@ -20,7 +24,7 @@
 
     *source/coompiler/expropt.c
 	* added RCS Id header
-	* added Ron Pinkas as copyright holder because he is the 
+	* added Ron Pinkas as copyright holder because he is the
 	initial creator of this code
 
 19991007-11:30 EDT Paul Tucker <ptucker@sympatico.ca>
@@ -45,7 +49,7 @@
     *source/compiler/harbour.y
 	* applied changes posted by Eddie Runia to correct compile
 	a:b[ 1 ]:c syntax
-	
+
     *source/compiler/Makefile
     *makefile.b32
     *makefile.vc
@@ -53,8 +57,8 @@
 
     *source/rtl/dates.c
 	* change in #include (error in Linux)
-	<sys\timeb.h> -> <sys/timeb.h>	
-	
+	<sys\timeb.h> -> <sys/timeb.h>
+
 19991007-09:16 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tclass.prg
      * Method SetType() defaults init value to .f. when AS LOGICAL is specified.

@@ -194,7 +194,7 @@ STATIC FUNCTION AddData( cData, xInit )  /* xInit is initializer */
       xInit := ::uInit
    ENDIF
 
-   aAdd( ::aDatas, { cData, xInit } )
+   AAdd( ::aDatas, { cData, xInit } )
 
    RETURN NIL
 
@@ -262,6 +262,8 @@ STATIC FUNCTION SetType( cType )
 
    if cType != nil .and. Upper( cType ) == "LOGICAL" .and. ::uInit == nil
       ::uInit = .f.
+   else
+      ::uInit = nil
    endif
 
    RETURN NIL
