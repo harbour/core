@@ -1348,7 +1348,9 @@ static HB_GENC_FUNC( hb_p_pushfield )
 
 static HB_GENC_FUNC( hb_p_pushbyte )
 {
+   // load constant numeric onto the stack
    fprintf( cargo->yyc, "   ldc.i4.s   %i\n", pFunc->pCode[ lPCodePos + 1 ] );
+   // turn the stack value into an object
    fprintf( cargo->yyc, "   box        [mscorlib]System.Int32\n" );
 
    // fprintf( cargo->yyc, "\tHB_P_PUSHBYTE, %i,",
