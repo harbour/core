@@ -84,7 +84,7 @@ void hb_compGenILCode( PHB_FNAME pFileName )  /* generates the IL output */
 
    fprintf( yyc, "// Harbour Compiler, Alpha build %d.%d (%s)\n",
       HB_VER_MINOR, HB_VER_REVISION, HB_VER_LEX );
-   fprintf( yyc, "// Generated IL source code\n\n" );
+   fprintf( yyc, "// Generated .NET IL source code\n\n" );
 
    if( hb_comp_iFunctionCnt )
    {
@@ -497,7 +497,10 @@ static HB_GENC_FUNC( hb_p_exactlyequal )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_EXACTLYEQUAL,\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "call bool ObjExactlyEqual( object, object )\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_EXACTLYEQUAL,\n" );
    return 1;
 }
 
@@ -667,19 +670,30 @@ static HB_GENC_FUNC( hb_p_jumpnear )
 
 static HB_GENC_FUNC( hb_p_jump )
 {
-   fprintf( cargo->yyc, "\tHB_P_JUMP, %i, %i,",
-            pFunc->pCode[ lPCodePos + 1 ],
-            pFunc->pCode[ lPCodePos + 2 ] );
-   if( cargo->bVerbose )
-   {
-      LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+   LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] +
+                             pFunc->pCode[ lPCodePos + 2 ] * 256 );
 
-      if( lOffset > SHRT_MAX )
-         lOffset -= 65536;
+   if( lOffset > SHRT_MAX )
+      lOffset -= 65536;
 
-      fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
-   }
-   fprintf( cargo->yyc, "\n" );
+   fprintf( cargo->yyc, "  IL_%04lX:  ", lPCodePos );
+   fprintf( cargo->yyc, "br.s" );
+   fprintf( cargo->yyc, "  IL_%04lX\n", ( LONG ) ( lPCodePos + lOffset ) );
+
+   // fprintf( cargo->yyc, "\tHB_P_JUMP, %i, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ],
+   //          pFunc->pCode[ lPCodePos + 2 ] );
+   // if( cargo->bVerbose )
+   // {
+   //    LONG lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+   //
+   //    if( lOffset > SHRT_MAX )
+   //       lOffset -= 65536;
+   //
+   //    fprintf( cargo->yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+   // }
+   // fprintf( cargo->yyc, "\n" );
+
    return 3;
 }
 
@@ -2307,6 +2321,65 @@ static void hb_genNetFunctions( FILE * yyc )
 "  IL_0037:  ret",
 "}", 0 };
 
+   // public static bool ObjExactlyEqual( object a, object b )
+   // {
+   //    if( a.GetType() == typeof( int ) && b.GetType() == typeof( int ) )
+   //       return ( int ) a == ( int ) b;
+   //
+   //    if( a.GetType() == typeof( string ) && b.GetType() == typeof( string ) )
+   //       return a.ToString() == b.ToString();
+   //
+   //    return false;
+   // }
+
+   char * ObjExactlyEqual[] = {
+"\n.method public static bool ObjExactlyEqual(object a, object b)",
+"{",
+"  .maxstack  2",
+"  .locals init (bool V_0)",
+"  IL_0000:  ldarg.0",
+"  IL_0001:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0006:  ldtoken    [mscorlib]System.Int32",
+"  IL_000b:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0010:  bne.un.s   IL_0037",
+"  IL_0012:  ldarg.1",
+"  IL_0013:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_0018:  ldtoken    [mscorlib]System.Int32",
+"  IL_001d:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0022:  bne.un.s   IL_0037",
+"  IL_0024:  ldarg.0",
+"  IL_0025:  unbox      [mscorlib]System.Int32",
+"  IL_002a:  ldind.i4",
+"  IL_002b:  ldarg.1",
+"  IL_002c:  unbox      [mscorlib]System.Int32",
+"  IL_0031:  ldind.i4",
+"  IL_0032:  ceq",
+"  IL_0034:  stloc.0",
+"  IL_0035:  br.s       IL_0073",
+"  IL_0037:  ldarg.0",
+"  IL_0038:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_003d:  ldtoken    [mscorlib]System.String",
+"  IL_0042:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0047:  bne.un.s   IL_006f",
+"  IL_0049:  ldarg.1",
+"  IL_004a:  callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()",
+"  IL_004f:  ldtoken    [mscorlib]System.String",
+"  IL_0054:  call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)",
+"  IL_0059:  bne.un.s   IL_006f",
+"  IL_005b:  ldarg.0",
+"  IL_005c:  callvirt   instance string [mscorlib]System.Object::ToString()",
+"  IL_0061:  ldarg.1",
+"  IL_0062:  callvirt   instance string [mscorlib]System.Object::ToString()",
+"  IL_0067:  call       bool [mscorlib]System.String::op_Equality(string,string)",
+"  IL_006c:  stloc.0",
+"  IL_006d:  br.s       IL_0073",
+"  IL_006f:  ldc.i4.0",
+"  IL_0070:  stloc.0",
+"  IL_0071:  br.s       IL_0073",
+"  IL_0073:  ldloc.0",
+"  IL_0074:  ret",
+"}", 0 };
+
    i = 0;
    while( ObjAdd[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjAdd[ i++ ] );
@@ -2318,4 +2391,8 @@ static void hb_genNetFunctions( FILE * yyc )
    i = 0;
    while( ObjForTest[ i ] != 0 )
       fprintf( yyc, "%s\n", ObjForTest[ i++ ] );
+
+   i = 0;
+   while( ObjExactlyEqual[ i ] != 0 )
+      fprintf( yyc, "%s\n", ObjExactlyEqual[ i++ ] );
 }
