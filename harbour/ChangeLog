@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-14 13:49 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/getlist.prg
+    + Add __GetListLast() for support to the functions Update() and
+      ReadUpdate()
+  * source/rtl/getsys.prg
+    ! Fixed compatibility functions Update() and ReadUpdate().
+      Now use __GetListLast() instead of __GetListActive().
+      __GetListActive() reference to the active oGetList, beginning and
+       concluding with the ReadModal.
+      __GetListLast() reference to the last oGetList form the beginning
+       of the ReadModal until another ReadModal begins.
+    ! Fix bug in Accelerator(), Clipper 5.3 compatibility function.
+    * Some cleanup.
+  * source/rtl/tget.prg
+    + Add support for SET DELIMITERS
+  * source/rtl/tgetlist.prg
+    ! Change __GetListActive() for __GetListLast() for support to
+      Update() and ReadUpdate()
 
 2002-06-14 20:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
