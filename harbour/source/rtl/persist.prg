@@ -179,7 +179,7 @@ static function ValToText( uValue )
            cText = AllTrim( Str( uValue ) )
 
       case cType == "D"
-           cText = 'HB_STOD( "' + HB_DTOS( uValue ) + '" )'
+           cText = 'HB_STOD( "' + DToS( uValue ) + '" )'
 
       otherwise
            cText = HB_ValToStr( uValue )
