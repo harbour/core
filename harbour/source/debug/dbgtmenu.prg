@@ -391,3 +391,4 @@ function __dbgAltToKey( nKey )
                             K_ALT_Y, K_ALT_Z }, nKey )
 
 return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
+

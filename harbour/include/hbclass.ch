@@ -135,9 +135,6 @@ DECLARE TClass ;
       local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := IIF(<.metaClass.>, <(metaClass)> ,TClass():new( <(ClassName)> , __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
-         if (!<.metaClass.>)                                           ;;
-           metaClass := TClass():new( <(ClassName)> + " class", __HB_CLS_PAR ( [ <SuperClass1>():class ] [, <SuperClassN>():class] ) ) ;;
-         endif                                                       ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
@@ -156,9 +153,6 @@ DECLARE TClass ;
       local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ;;
       if s_oClass == NIL ;;
          s_oClass := IIF(<.metaClass.>,<(metaClass)>,TClass():new(<(ClassName)>, __HB_CLS_PAR ( [ <(SuperClass1)> ] [ ,<(SuperClassN)> ] ) ) ) ;;
-         if (!<.metaClass.>)                                           ;;
-           metaClass := TClass():new(<(ClassName)> + " class", __HB_CLS_PAR ( [ <SuperClass1>():class ] [, <SuperClassN>():class] ) ) ;;
-         endif                                                       ;;
      #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<MethodName>() ;
@@ -281,8 +275,6 @@ DECLARE TClass ;
    s_oClass:AddMultiClsData(<(type)>, <uValue>, HBCLSCHOICE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + HB_OO_CLSTP_SHARED, \{<(DataNames)>\}, __HB_CLS_NOINI ) ;
 
 #endif
-
-
 
 #xcommand CLASSMETHOD <MethodName> [ AS <type> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<share: SHARED>] => ;
    _HB_MEMBER <MethodName>() [ AS <type> ];;

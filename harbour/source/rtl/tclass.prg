@@ -66,7 +66,8 @@ FUNCTION TClass()
    STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "TCLASS", 11)
+      s_hClass := __clsNew( "TCLASS", 10)
+/*    s_hClass := __clsNew( "TCLASS", 11)  */
 
       __clsAddMsg( s_hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
       __clsAddMsg( s_hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -104,8 +105,9 @@ FUNCTION TClass()
       __clsAddMsg( s_hClass, "_acSuper"       ,  9, HB_OO_MSG_DATA )
       __clsAddMsg( s_hClass, "nOnError"       , 10, HB_OO_MSG_DATA )
       __clsAddMsg( s_hClass, "_nOnError"      , 10, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "class"          , 11, HB_OO_MSG_DATA )
-      __clsAddMsg( s_hClass, "_class"         , 11, HB_OO_MSG_DATA )
+  /*  __clsAddMsg( s_hClass, "class"          , 11, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_class"         , 11, HB_OO_MSG_DATA ) */
+
    ENDIF
 
    RETURN __clsInst( s_hClass )
@@ -167,7 +169,7 @@ STATIC PROCEDURE Create(MetaClass)
    LOCAL hClass
    LOCAL ahSuper := Array( nLen )
 
-   Self:Class := MetaClass
+/* Self:Class := MetaClass */
 
    IF nLen == 0
       hClass := __clsNew( ::cName, nLenDatas )
@@ -201,12 +203,11 @@ STATIC PROCEDURE Create(MetaClass)
 
    // We will work here on the MetaClass object to add the Class Method
    // as needed
-   nLen := Len( ::aClsMethods )
-   FOR n := 1 TO nLen
-    // do it
-   NEXT
-   //
-
+   //nLen := Len( ::aClsMethods )
+   //FOR n := 1 TO nLen
+   // // do it
+   //NEXT
+   ////
 
    //Local message...
 
@@ -252,7 +253,7 @@ STATIC PROCEDURE Create(MetaClass)
 STATIC FUNCTION Instance()
  LOCAL Self := QSelf()
  Local oInstance := __clsInst( ::hClass )
- //oInstance:Class := Self:Class
+ /*oInstance:Class := Self:Class*/
 RETURN oInstance
 
 //----------------------------------------------------------------------------//

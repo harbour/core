@@ -83,7 +83,7 @@ FUNCTION TObject()
 
       s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, iif(substr(cMsg,1,1)=="_",1005,1004) ) }, nScope )
 
-      s_oClass:AddMultiData(,,nScope,{"CLASS"}, .F. )
+      /*s_oClass:AddMultiData(,,nScope,{"CLASS"}, .F. )*/
 
       /*s_oClass:AddInline( "ADDMETHOD" , { | Self, cMeth, pFunc, nScopeMeth                 |  __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif(nScopeMeth==NIL,1,nScopeMeth) ) }, nScope )                                */
       /*s_oClass:AddInline( "ADDVAR"    , { | Self, cVAR, nScopeMeth, uiData , hClass  |  __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA(hClass) , HB_OO_MSG_DATA, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) )  , ;        */
@@ -126,7 +126,7 @@ FUNCTION TObject()
    ENDIF
 
    oInstance := s_oClass:Instance()
-   oInstance:class := s_oClass
+   /*oInstance:class := s_oClass*/
 
    RETURN oInstance
 

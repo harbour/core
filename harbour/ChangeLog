@@ -1,3 +1,17 @@
+2001-01-18 00:18 GMT+1 JFL (Mafact) <jfl@mafact.com>
+   *harbour/makefile.vc
+    * minor form adjustement
+   *harbour/include/hbclass.ch
+    * Clean the ::Class reference wich does'nt work 
+   *harbour/source/debug/dbgtmenu.prg
+    * Adding a blank line at the end of file to test Simplex and VC++
+   *harbour/source/rtl/tclass.prg
+    * Clean the ::Class reference wich does'nt work 
+   *harbour/source/rtl/tobject.prg
+    * Clean the ::Class reference wich does'nt work 
+
+
+
 2001-01-17 21:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm.estack.c
