@@ -410,7 +410,8 @@ return Self
 METHOD DeHilite() CLASS TBrowse
 
    local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
-                       Eval( ::aColumns[ ::ColPos ]:ColorBlock )[ 1 ], 1 )
+                       Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
+                       Eval( ::aColumns[ ::ColPos ]:Block ) )[ 1 ], 1 )
    local cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
    local ftmp := Eval( ::aColumns[ ::ColPos ]:block )
 
@@ -435,7 +436,8 @@ return nil
 METHOD Hilite() CLASS TBrowse
 
    local nColor := If( ::aColumns[ ::ColPos ]:ColorBlock != nil,;
-                       Eval( ::aColumns[ ::ColPos ]:ColorBlock )[ 2 ], 2 )
+                       Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
+                       Eval( ::aColumns[ ::ColPos ]:Block ) )[ 2 ], 2 )
    local cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
    local ftmp := Eval( ::aColumns[ ::ColPos ]:block )
 
@@ -630,7 +632,8 @@ METHOD Stabilize() CLASS TBrowse
          if lDisplay
             cColColor = If( ::aColumns[ n ]:ColorBlock != nil,;
                             hb_ColorIndex( ::ColorSpec,;
-                            Eval( ::aColumns[ n ]:ColorBlock )[ 1 ] - 1 ),;
+                            Eval( ::aColumns[ n ]:ColorBlock,;
+                            Eval( ::aColumns[ n ]:Block ) )[ 1 ] - 1 ),;
                             ::ColorSpec )
             ftmp = Eval( ::aColumns[ n ]:block )
             if valtype( ftmp ) == "L"
@@ -706,4 +709,3 @@ function TBrowseNew( nTop, nLeft, nBottom, nRight )
    endif
 
 return oBrw
-
