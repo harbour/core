@@ -16,10 +16,6 @@ CLASS TBrwText FROM TBrowse
    DATA   nLine
 
    METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors )
-   METHOD GoTop()
-   METHOD GoBottom()
-   METHOD Skipper( nLines )
-
    METHOD GotoLine( nLine )
 
 ENDCLASS
@@ -44,58 +40,13 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors ) CLASS TBrwText
    ::Autolite  = .t.
 
    ::AddColumn( TbColumnNew( "", { || Alltrim( Str( ::nLine ) ) + ": " + ::cLine } ) )
-   ::GoTopBlock    = { || ::GoTop() }
-   ::GoBottomBlock = { || ::GoBottom() }
-   ::SkipBlock     = { | nLines | ::Skipper( nLines ) }
+   ::GoTopBlock    = { || GoFirstLine( Self ) }
+   ::GoBottomBlock = { || GoLastLine( Self ) }
+   ::SkipBlock     = { | nLines | Skipper( Self, nLines ) }
 
    ::GoTop()
 
 return Self
-
-METHOD GoTop() CLASS TBrwText
-
-   local cLine
-
-   FSeek( ::nHandle, 0, FS_SET )
-   FReadLn( ::nHandle, @cLine )
-   ::cLine = cLine
-   ::nLine = 1
-   FSeek( ::nHandle, 0, FS_SET )
-
-return nil
-
-METHOD GoBottom() CLASS TBrwText
-
-   local cLine := ::cLine
-
-   FSeek( ::nHandle, -1, FS_END )
-   GoPrevLine( ::nHandle, @cLine, ::nFileSize )
-   ::cLine = cLine
-
-return nil
-
-METHOD Skipper( nLines ) CLASS TBrwText
-
-   local nSkipped := 0
-   local cLine := ::cLine
-
-   // Skip down
-   if nLines > 0
-      while nSkipped != nLines .and. GoNextLine( ::nHandle, @cLine )
-         nSkipped++
-      end
-      ::cLine = cLine
-   // Skip Up
-   else
-      while nSkipped != nLines .and. GoPrevLine( ::nHandle, @cLine, ::nFileSize )
-         nSkipped--
-      end
-      ::cLine = cLine
-   endif
-
-   ::nLine += nSkipped
-
-return nSkipped
 
 METHOD GotoLine( nLine ) CLASS TBrwText
 
@@ -112,6 +63,51 @@ METHOD GotoLine( nLine ) CLASS TBrwText
    endif
 
 return nil
+
+static function GoFirstLine( oBrw )
+
+   local cLine
+
+   FSeek( oBrw:nHandle, 0, FS_SET )
+   FReadLn( oBrw:nHandle, @cLine )
+   oBrw:cLine = cLine
+   oBrw:nLine = 1
+   FSeek( oBrw:nHandle, 0, FS_SET )
+
+return nil
+
+static function GoLastLine( oBrw )
+
+   local cLine := oBrw:cLine
+
+   FSeek( oBrw:nHandle, -1, FS_END )
+   GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
+   oBrw:cLine = cLine
+
+return nil
+
+static function Skipper( oBrw, nLines )
+
+   local nSkipped := 0
+   local cLine := oBrw:cLine
+
+   // Skip down
+   if nLines > 0
+      while nSkipped != nLines .and. GoNextLine( oBrw:nHandle, @cLine )
+         nSkipped++
+      end
+      oBrw:cLine = cLine
+   // Skip Up
+   else
+      while nSkipped != nLines .and. GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
+         nSkipped--
+      end
+      oBrw:cLine = cLine
+   endif
+
+   oBrw:nLine += nSkipped
+
+return nSkipped
 
 static function FReadLn( nHandle, cBuffer )
 

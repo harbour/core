@@ -22,7 +22,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               langapi.obj math.obj mathx.obj memvars.obj menuto.obj mtran.obj msges.obj \
               objfunc.obj \
               set.obj setcolor.obj setkey.obj strings.obj symbols.obj stringp.obj \
-              stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj transfrm.obj
+              stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
 
 symbols.obj  : symbols.asm
 
@@ -80,6 +80,7 @@ tbrwtext.obj : tbrwtext.c extend.h hbdefs.h
 tclass.obj   : tclass.c   extend.h hbdefs.h
 tget.obj     : tget.c     extend.h hbdefs.h
 tgetlist.obj : tgetlist.c extend.h hbdefs.h
+tone.obj     : tone.c     extend.h init.h inkey.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
 
 achoice.c    : achoice.prg   harbour.exe
@@ -107,14 +108,14 @@ tgetlist.c   : tgetlist.prg  harbour.exe
   tlib .\libs\b32\harbour.lib -+$@,,
 
 .prg.c:
-  bin\harbour $< /n /osource\rtl /iinclude /p
+  bin\harbour $< /n /osource\rtl /iinclude
 
 .c.obj:
-  bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_GTAPI $<
+  bcc32 -c -O2 -I.\include -o$@ -DHARBOUR_USE_GTAPI $<
   tlib .\libs\b32\harbour.lib -+$@,,
 
 harbour.exe : harboury.c harbourl.c genobj32.obj harbour.obj compiler.h hbppint.c hbpp.c table.c
-   echo -v -O2 > bld.32
+   echo -O2 > bld.32
    echo -ebin\harbour.exe >> bld.32
    echo -Iinclude;source\compiler;source\hbpp >> bld.32
    echo source\compiler\harboury.c >> bld.32
@@ -134,9 +135,9 @@ harbourl.c : harbour.l
    flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
 
 genobj32.obj : genobj32.c
-   bcc32 -c -O2 -v -I.\include -osource\compiler\genobj32.obj \
+   bcc32 -c -O2 -I.\include -osource\compiler\genobj32.obj \
         source\compiler\genobj32.c
 
 harbour.obj : harbour.c
-   bcc32 -c -O2 -v -I.\include -osource\compiler\harbour.obj \
+   bcc32 -c -O2 -I.\include -osource\compiler\harbour.obj \
         source\compiler\harbour.c

@@ -1,10 +1,16 @@
+19990821-22:18 GMT+3 Alexander Kresin
+  * source/debug/tbrwtext.prg
+    * minor improvements
+  * makefile.b32
+    * added tone.c
+  
 19990821-14:20 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/inkey.c
-	* added test code for OS_UNIX_COMPATIBLE based on noncanonical
-	low-level terminal functions - we need however to extend this
-	code to support different terminals
-	
+        * added test code for OS_UNIX_COMPATIBLE based on noncanonical
+        low-level terminal functions - we need however to extend this
+        code to support different terminals
+
 19990821-00:05 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * improved debugger functionality.
@@ -41,36 +47,36 @@
 19990820-15:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/strings.c
-	* corrected a NULL assigment to '\x0'
+        * corrected a NULL assigment to '\x0'
 
     *source/rdd/dbcmd.c
-	* corrected SELF_DELETE to SELF_DELETED in HB_DELETED function
+        * corrected SELF_DELETE to SELF_DELETED in HB_DELETED function
 
     *source/runner/runner.c
-	* corrected NULL to 0L (we are returning LONG in ReadLong())
+        * corrected NULL to 0L (we are returning LONG in ReadLong())
 
     *include/external.ch
-	+ new file with EXTERNAL declaration for all harbour
-	functions/procedures
+        + new file with EXTERNAL declaration for all harbour
+        functions/procedures
 
     *source/rtl/dir.c
-	* corrected a parameter passed to 'opendir' function when
-	Watcom C/C++ is used
+        * corrected a parameter passed to 'opendir' function when
+        Watcom C/C++ is used
 
     *source/runner/Makefile
     *source/runner/external.prg
     *source/runner/runhrb.c
     *source/runner/runmain.prg
-	* new files to create the runner executable.
-	+ external.prg is here temporary because the preprocessor doesn't
-	process EXTERNAL statement yet
-	+ runhrb.c is copied from runner.c however without all code used
-	to handle the symbol table
-	+ runmain.prg calls HB_RUN from runhrb.c
-	NOTE: I have left runner.c unchanged because I was unable to
-	replace	it with new files in all these build*.bat - these
-	build*.bat doesn't allow to create an executable from more then
-	one source file :(
+        * new files to create the runner executable.
+        + external.prg is here temporary because the preprocessor doesn't
+        process EXTERNAL statement yet
+        + runhrb.c is copied from runner.c however without all code used
+        to handle the symbol table
+        + runmain.prg calls HB_RUN from runhrb.c
+        NOTE: I have left runner.c unchanged because I was unable to
+        replace it with new files in all these build*.bat - these
+        build*.bat doesn't allow to create an executable from more then
+        one source file :(
 
 19990820-14:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbsetup.h
