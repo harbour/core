@@ -12,12 +12,14 @@
 #
 #       CFLAGS       - Extra C compiler options for libraries and for 
 #                      executables
+#       C_USR        - Extra C compiler options for libraries and for 
+#                      executables (GNU make compatible envvar)
 #       CLIBFLAGS    - Extra C compiler options for the libraries
 #       HARBOURFLAGS - Extra Harbour compiler options
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
 #       HB_GT_LIB    - To override the default GT driver
-#                      (search for HB_GT_LIBS for a list)
-#       DO_HBRUNJAV  - Defines this if you want HBRUNJAV.DLL to be built.
-#                      (you must have a JDK installed for this)
+#                      (search for HB_GT_LIBS for a list of values)
 #
 
 #
@@ -77,10 +79,10 @@ HBDOC_DIR    = utils\hbdoc
 #
 
 AS             = masm
-CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(HARBOURFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 
 #
 # Macros to access our library names
@@ -98,7 +100,6 @@ RTL_LIB      = $(LIB_DIR)\rtl.lib
 TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
-GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
 GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
@@ -108,7 +109,6 @@ HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
-HBRUNJAV_DLL = $(BIN_DIR)\hbrunjav.dll
 
 !ifndef HB_GT_LIB
 HB_GT_LIB = $(GTWIN_LIB)
@@ -597,10 +597,7 @@ all: zot \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
-   $(HBDOC_EXE) \
-!ifdef DO_HBRUNJAV
-   $(HBRUNJAV_DLL)
-!endif
+   $(HBDOC_EXE)
 
 MK_FLAGS = $(MK_FLAGS:A=)
 
@@ -610,7 +607,6 @@ zot:
    -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
    -@if exist $(BIN_DIR)\*.exe del $(BIN_DIR)\*.exe > nul
    -@if exist $(BIN_DIR)\*.map del $(BIN_DIR)\*.map > nul
-   -@if exist $(BIN_DIR)\*.dll del $(BIN_DIR)\*.dll > nul
 
 !else
 
@@ -633,10 +629,7 @@ all: \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
-   $(HBDOC_EXE) \
-!ifdef DO_HBRUNJAV
-   $(HBRUNJAV_DLL)
-!endif
+   $(HBDOC_EXE)
 
 !endif
 
@@ -653,19 +646,6 @@ $(HBRUN_EXE) : \
    $(HBRUN_DIR)\exttools.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\exttools.c -o $(HBRUN_EXE) /link $(LIBS2)
-
-!ifdef DO_HBRUNJAV
-
-#
-# HBRUNJAV.DLL rules (to compile this you must have a JDK installed)
-#
-
-$(HBRUNJAV_DLL) : $(HBRUN_DIR)\runjava.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(HBRUN_DIR)\runjava.c -o $(HBRUNJAV_DLL) /link-dll $(LIBS)
-    -del $(BIN_DIR)\runjava.exp
-    -del $(BIN_DIR)\runjava.lib
-
-!endif
 
 #
 # HBTEST.EXE rules

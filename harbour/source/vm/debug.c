@@ -108,22 +108,23 @@ HB_FUNC( __VMSTKGLIST )
  * $FuncName$     <nVars> __vmStkLCount()
  * $Description$  Returns the length of the stack of the calling function
  * $End$ */
-static USHORT StackLen( void )
+static USHORT hb_stackLen( void )
 {
    PHB_ITEM pItem;
    PHB_ITEM pBase;
    USHORT uiCount = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_StackLen()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
 
    pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
    for( pItem = pBase; pItem < hb_stack.pBase; pItem++, uiCount++ );
 
    return uiCount;
 }
+
 HB_FUNC( __VMSTKLCOUNT )
 {
-   hb_retni( StackLen() );
+   hb_retni( hb_stackLen() );
 }
 
 /* $Doc$

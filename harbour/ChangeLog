@@ -1,3 +1,39 @@
+20000327-01:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   - doc/cvshowto.txt
+   + doc/howtocvs.txt
+   + doc/howtomak.txt
+     + Enhanced the CVS upload guide.
+     + Added guide how to make Harbour binary from the source.
+
+   * makefile.*
+     + C_USR and PRG_USR GNU-make style envvars are now working with MSVC
+       and Borland makefiles.
+
+   + contrib/runjava/bld_java.bat
+   + contrib/runjava/make_vc.bat
+   + contrib/runjava/Harbour.java
+   + contrib/runjava/hbrunj.h
+   + contrib/runjava/runjava.c
+   + contrib/runjava/makefile.vc
+     + The JAVA runner contribution has been added to a new directory
+       along with all the support files needed to make it work.
+       Thanks to Matteo Baccan for this contribution.
+     ; !! WARNING !! I could not test this since I don't have the java 
+       tools needed.
+
+   * makefile.vc
+   * make_vc.bat
+     - The JAVA runtime generation feature removed. (see previous entry)
+
+   * source/vm/debug.c
+     * One static function renamed.
+
+   * include/clipdefs.h
+     ! pascal keyword removed from here, too. So the rule has changed that
+       all mixed or lower case CLIPPER function names should be converted to
+       uppercase to make it work with Harbour.
+
 20000326-16:58 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtwin/gtwin.c
      * further refinement on screen sizing.  Size is now restored on exit.
@@ -32,7 +68,7 @@
      * Now the HARBOUR keyword requires the function name to be in uppercase.
        The compatibility CLIPPER keyword still allows for mixed case function
        names on some platforms. The reason is that "pascal" keyword is 
-       non-portable, and the above requiremenet was already there for some
+       non-portable, and the above requirement was already there for some
        platforms, now it's a generic rule.
      - Removed the __attribute__ ((stdcall)) for the __GNUC__ branch. Setting
        any specific calling convention is not needed, since we don't need to 
@@ -43,7 +79,7 @@
    * source/pp/ppcore.c
      + Added predefined macro __HB_MAIN__. The macro is undefined or holds the 
        value of HARBOUR_START_PROCEDURE depending on the compiler.
-       Use this code to make your Harbour startup procedure platform
+       Use this code to make your Harbour startup procedure platform/compiler
        independent:
        #ifndef __HB_MAIN__
           #define __HB_MAIN__ AppMain /* Or whatever you wish to call it */
@@ -52,7 +88,7 @@
 
    + contrib/hbclip/hbclip.h
      + Added header file which can be used to maintain common C source code
-       for CA-Cl*pper and Harbour. The legacy code need a one-time conversion
+       for CA-Cl*pper and Harbour. The legacy code needs a one-time conversion
        to make this work.
 
    * source/rtl/dir.c
@@ -189,9 +225,6 @@
     *utils/hbdoc/genrtf.prg
      source/tools/rtf.prg
         * some fixes and a small enhacement
-
-
-
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg

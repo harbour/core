@@ -13,7 +13,6 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD_OK
 
-   if exist bin\vc\*.dll copy bin\vc\*.dll bin\*.* > nul
    copy bin\vc\*.exe bin\*.* > nul
    copy lib\vc\*.lib lib\*.* > nul
    goto EXIT
@@ -26,7 +25,6 @@ if "%1" == "CLEAN" goto CLEAN
 :CLEAN
 
    if exist bin\vc\*.exe del bin\vc\*.exe
-   if exist bin\vc\*.dll del bin\vc\*.dll
    if exist bin\vc\*.pdb del bin\vc\*.pdb
    if exist bin\vc\*.ilk del bin\vc\*.ilk
    if exist bin\vc\*.map del bin\vc\*.map

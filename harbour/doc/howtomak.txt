@@ -1,0 +1,34 @@
+/*
+ * $Id$
+ */
+
+HOW TO BUILD HARBOUR FROM THE SOURCE
+------------------------------------
+
+You'll need these:
+  - Flex
+  - Bison (set BISON_SIMPLE envvar to point to bison.simple)
+  - A supported (check MAKE_TPL.BAT for a list) C compiler (with all the envvars set (path, lib, include, etc...))
+  - GNU-make if you want to use it with some other C compiler than GCC
+  - TASM for BCC
+  - TASM32 for BCC32
+  - MASM for MSVC
+  - Harbour source
+  - Around 10-15MB of free disk space for each separate platform/compiler
+    combinations.
+
+To build Harbour using GNU-make:
+  - Set the required two envvars (check MAKE_GNU.* for them)
+  - Run MAKE_GNU.*
+To build Harbour using non-GNU make with BCC 3.1:
+  - Run MAKE_B16.BAT
+To build Harbour using non-GNU make with BCC 4.x, 5.x:
+  - MAKE_B32.BAT
+To build Harbour using non-GNU make with MSVC:
+  - MAKE_VC.BAT
+
+To build a final executable, see above, but use BIN/BLD*.* 
+instead of MAKE*.*
+
+Victor Szakats <info@szelvesz.hu>
+

@@ -1,0 +1,99 @@
+/*
+ * $Id$
+ */
+
+HOW TO USE THE CVS
+------------------
+
+Here's how to prepare for uploading to the CVS server
+=====================================================
+
+ 1) Read the Harbour FAQ (www.harbour-project.org), monitor the 
+    mailing-list (Harbour at www.onelist.com), consult with the
+    developers, make contributions. This way your chances are high
+    to get a RW access to the CVS.
+ 2) Before uploading anything you'll need Developer (RW) status for the 
+    Harbour CVS server. To get this please make a request on the list, 
+    or contact the Harbour Administrators. Note that getting Developer 
+    status is not an automatic process.
+ 3) You'll need a CVS client for your platform.
+ 4) You'll need an SSH client for your platform.
+ 5) You'll need to configure CVS and SSH for the Harbour Project.
+    (see: CVS_SSH.TXT)
+ 6) Do a complete checkout to get the fresh source tree.
+
+Here's how to upload your changes to the CVS server
+===================================================
+
+ 1) Do the changes in the source, and in parallel modify ChangeLog
+ 2) Go online (if needed)
+ 3) CVS LOGIN (if needed)
+ 4) CVS UPDATE
+ 5) Resolve all conflicts (mostly ChangeLog)
+ 6) Copy the last ChangeLog entry to the clipboard
+ 7) CVS COMMIT (starts another task on my system)
+ 8) New email message, paste the new ChangeLog entry
+ 9) Copy and paste the ChangeLog entry header to the subject after 
+    "CHANGELOG: "
+10) The CVS pops up a window with the changed filenames
+11) Check if all the changed filenames are referred in the ChangeLog entry,
+    if not, make the corrections and start again
+12) Paste the ChangeLog entry header to the CVS window, save, exit
+13) CVS is now uploading,
+    if there are any errors, make the corrections and start again
+14) Always check if the upload session ended without errors.
+15) Send the email message containing the changes
+16) Go offline (if needed)
+
+Important notes:
+
+ 1) *Always* add a ChangeLog entry when uploading to the CVS.
+ 2) When adding a new file to the CVS, always use lower case 8.3 
+    filenames (*), add a CVS ID header to the file, don't use tabs 
+    in the file, end the file with a newline char.
+    Possibly consult other Developers about the new filename and file
+    placement.
+    Add the new filename to the related makefiles.
+    (*) There are two exceptions: ChangeLog.* and Makefile
+ 3) When adding a new directory, always consult the Developers about 
+    the name and placing of it. On the CVS, there's no way to completely 
+    remove a directory, that's why this is important.
+
+Here's how to format your ChangeLog entries
+===========================================
+
+- Always add new entries to the top of the ChangeLog file.
+
+- Add an entry header using this format:
+  YYYYMMDD HH:MM GMT-+TZ Your Full Name <your_email_address>
+
+- Add a entry body which lists all filenames changed, all of
+  them with full path spec. Mention the name of the changed function or
+  macro. Describe what you've changed, the reasons, and other comments 
+  and explanations you find useful. If the change needs some related work
+  to be done by someone else (documentation, makefile), make note about this.
+  Group the related changes into logical sections separated by empty lines.
+  
+  Sample:
+
+   * dir/filenam1.txt
+   + dir/filenam2.txt
+   - dir/filenam3.txt
+     * Changed, bla-bla
+     ! Fixed
+     % Optimized
+     + Added
+     - Removed
+     ; Comment
+
+  Note that using these specific marks is preferred although not a 
+  requirement.
+
+- Leave an empty line between the header and body and one after the body.
+
+Here's how to use the CVS server in anonymous read-only mode
+============================================================
+
+(TODO)
+
+Victor Szakats <info@szelvesz.hu>

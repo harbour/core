@@ -1,0 +1,102 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Harbour Project JAVA support for Microsoft Visual C (32 bits)
+#
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR = ..\..\include
+OBJ_DIR     = ..\..\obj\vc
+LIB_DIR     = ..\..\lib\vc
+BIN_DIR     = ..\..\bin\vc
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
+
+CFLAGS         = -I$(INCLUDE_DIR) -I. -TP -W3 -nologo $(C_USR) $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
+
+#
+# Macros to access our library names
+#
+
+COMMON_LIB   = $(LIB_DIR)\common.lib
+DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
+DBFNTX_LIB   = $(LIB_DIR)\dbfntx.lib
+DEBUG_LIB    = $(LIB_DIR)\debug.lib
+MACRO_LIB    = $(LIB_DIR)\macro.lib
+NULSYS_LIB   = $(LIB_DIR)\nulsys.lib
+PP_LIB       = $(LIB_DIR)\pp.lib
+RDD_LIB      = $(LIB_DIR)\rdd.lib
+RTL_LIB      = $(LIB_DIR)\rtl.lib
+TOOLS_LIB    = $(LIB_DIR)\tools.lib
+VM_LIB       = $(LIB_DIR)\vm.lib
+
+GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
+GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
+GTWIN_LIB    = $(LIB_DIR)\gtwin.lib
+
+#
+# Macros to access our target names
+#
+
+HBRUNJAV_DLL   = $(BIN_DIR)\hbrunjav.dll
+HBRUNJAV_CLASS = $(OBJ_DIR)\Harbour.class
+
+#
+#
+#
+
+!ifndef HB_GT_LIB
+HB_GT_LIB = $(GTWIN_LIB)
+!endif
+
+LIBLIST = \
+   $(RTL_LIB) \
+   $(COMMON_LIB) \
+   $(DEBUG_LIB) \
+   $(MACRO_LIB) \
+   $(PP_LIB) \
+   $(RDD_LIB) \
+   $(DBFCDX_LIB) \
+   $(DBFNTX_LIB) \
+   $(NULSYS_LIB) \
+   $(TOOLS_LIB) \
+   $(VM_LIB) \
+   $(HB_GT_LIB)
+
+#
+# macro.lib needs to be listed twice
+#
+
+LIBS = \
+   $(LIBLIST) \
+   $(MACRO_LIB)
+
+#
+# Our default target
+#
+
+all: \
+   $(HBRUNJAV_DLL) \
+   $(HBRUNJAV_CLASS)
+
+#
+# HBRUNJAV.DLL rules (to compile this you must have a JDK installed)
+#
+
+$(HBRUNJAV_DLL) : runjava.c
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ runjava.c -o $(HBRUNJAV_DLL) /link-dll $(LIBS)
+   -del $(BIN_DIR)\hbrunjav.exp
+   -del $(BIN_DIR)\hbrunjav.lib
+
+$(HBRUNJAV_CLASS) : Harbour.java
+   javac Harbour.java -d $(OBJ_DIR)\
+
