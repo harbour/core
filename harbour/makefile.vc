@@ -70,6 +70,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\arrays.obj \
     $(OBJ_DIR)\asort.obj \
     $(OBJ_DIR)\browdb.obj \
+    $(OBJ_DIR)\browse.obj \
     $(OBJ_DIR)\classes.obj \
     $(OBJ_DIR)\cmdarg.obj \
     $(OBJ_DIR)\codebloc.obj \
@@ -396,6 +397,12 @@ $(RTL_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\browdb.obj : $(RTL_DIR)\browdb.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\browse.c : $(RTL_DIR)\browse.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\browse.obj : $(RTL_DIR)\browse.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
