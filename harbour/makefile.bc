@@ -460,6 +460,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\codebloc.obj \
    $(OBJ_DIR)\debug.obj \
    $(OBJ_DIR)\dynsym.obj \
+   $(OBJ_DIR)\estack.obj \
    $(OBJ_DIR)\eval.obj \
    $(OBJ_DIR)\extend.obj \
    $(OBJ_DIR)\fm.obj \
@@ -613,7 +614,7 @@ HBMAKE_EXE_OBJS = \
    $(OBJ_DIR)\pickarry.obj \
    $(OBJ_DIR)\pickfile.obj \
    $(OBJ_DIR)\prb_stak.obj \
-   $(OBJ_DIR)\radios.obj 
+   $(OBJ_DIR)\radios.obj
 
 #
 # Our default target
@@ -637,7 +638,7 @@ all: \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
-   $(HBMAKE_EXE) 
+   $(HBMAKE_EXE)
 #
 # Library dependencies and build rules
 #
@@ -942,6 +943,10 @@ $(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\eval.obj : $(VM_DIR)\eval.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\estack.obj : $(VM_DIR)\estack.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 

@@ -159,9 +159,7 @@ EXTERNAL PROCFILE
 //
 //symbols from file: vm\pvalue.c
 //
-#ifdef HB_EXTENSION
-EXTERNAL HB_PVALUE
-#endif
+EXTERNAL __PVALUE
 //
 //symbols from file: vm\harbinit.prg
 //

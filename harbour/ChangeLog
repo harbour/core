@@ -1,3 +1,11 @@
+2000-12-12 17:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * makefile.bc
+   * hb_slex.bc
+     * Changed to include new source\vm\estack.c
+
+   * include/hbextern.ch
+     * Changed HB_PVALUE() to __PVALUE()
+
 2000-12-12 21:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 
 *utils/hbmake/hbmake.prg
@@ -36,10 +44,10 @@ TAGged all files with 'old-eval-stack' tag before commiting changes
     *source/vm/proc.c
         *changed to support the new eval stack code
         *added #include "hbstack.h" when hb_stack.Return was used
-        
+
 NOTE! some modules still use a direct access to the eval stack
-      internal architecture (hb_stack.pItems) - mostly in 
-      function/messages names lookup code      
+      internal architecture (hb_stack.pItems) - mostly in
+      function/messages names lookup code
 
     *source/vm/Makefile
         *added estack.c
@@ -50,13 +58,13 @@ NOTE! some modules still use a direct access to the eval stack
     *source/vm/pvalue.c
     *tests/multiarg.prg
         *renamed HB_PVALUE to __PVALUE
-        * __PVALUE is no longer an HB_EXTENSION - it is an internal 
+        * __PVALUE is no longer an HB_EXTENSION - it is an internal
         function now
 
     *include/hbexpra.c
         *renamed HB_PVALUE to __PVALUE
         *fixed support for __GETA to be compatible with the latest
-        Ron's changes in tgetint.prg       
+        Ron's changes in tgetint.prg
 
 2000-12-12 00:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rtl/memoline.c
