@@ -29,17 +29,17 @@
 #define HB_FM_STATISTICS
 
 #ifndef __MPW__
- #include <malloc.h>
+   #include <malloc.h>
 #endif
 
 #include "extend.h"
 #include "errorapi.h"
 
 #ifdef HB_FM_STATISTICS
-static ULONG s_ulMemoryBlocks = 0;	/* memory blocks used */
-static ULONG s_ulMemoryMaxBlocks = 0;	/* maximum number of used memory blocks */
-static ULONG s_ulMemoryMaxConsumed = 0;	/* memory size consumed */
-static ULONG s_ulMemoryConsumed = 0;	/* memory max size consumed */
+static ULONG s_ulMemoryBlocks = 0;      /* memory blocks used */
+static ULONG s_ulMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
+static ULONG s_ulMemoryMaxConsumed = 0; /* memory size consumed */
+static ULONG s_ulMemoryConsumed = 0;    /* memory max size consumed */
 #endif
 
 void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */

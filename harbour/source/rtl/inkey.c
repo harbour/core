@@ -43,7 +43,7 @@
          Harbour includes are ahead of platform includes.
 */
 #ifdef __IBMCPP__
-  #define INCL_DOSPROCESS
+   #define INCL_DOSPROCESS
 #endif
 
 #include "extend.h"
@@ -52,45 +52,45 @@
 #include "init.h"
 
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__) || defined(_MSC_VER)
-  #include <conio.h>
-  #include <dos.h>
+   #include <conio.h>
+   #include <dos.h>
 #elif  defined(__DJGPP__)
-  #include <pc.h>
-  #include <dos.h>
+   #include <pc.h>
+   #include <dos.h>
 #elif defined(HARBOUR_GCC_OS2)
-  #include <stdlib.h>
+   #include <stdlib.h>
 #elif defined(__IBMCPP__)
-  #define INCL_DOSPROCESS
-  #include <bsedos.h>
-  #include <conio.h>
+   #define INCL_DOSPROCESS
+   #include <bsedos.h>
+   #include <conio.h>
 #elif defined(__CYGWIN__)
-  #include <mingw32/conio.h>
+   #include <mingw32/conio.h>
 #endif
 #include <time.h>
 
 #ifdef __WATCOMC__
-  #include <conio.h>
-  #include <i86.h>
-  #if defined(__386__) && !defined(__WINDOWS_386__)
-    #define INT_86 int386
-    #define DOS_REGS REGS
-  #else
-    #define INT_86 int86
-    #define DOS_REGS REGS
-  #endif
+   #include <conio.h>
+   #include <i86.h>
+   #if defined(__386__) && !defined(__WINDOWS_386__)
+      #define INT_86 int386
+      #define DOS_REGS REGS
+   #else
+      #define INT_86 int86
+      #define DOS_REGS REGS
+   #endif
 #elif defined(__EMX__)
-  #define INT_86 _int86
-  #define DOS_REGS REGS
+   #define INT_86 _int86
+   #define DOS_REGS REGS
 #elif defined(_MSC_VER)
-  #define INT_86 _int86
-  #define DOS_REGS _REGS
+   #define INT_86 _int86
+   #define DOS_REGS _REGS
 #else
-  #define INT_86 int86
-  #define DOS_REGS REGS
+   #define INT_86 int86
+   #define DOS_REGS REGS
 #endif
 
 #if defined(HARBOUR_GCC_OS2)
-  ULONG DosSleep( ULONG ulMilliseconds );
+   ULONG DosSleep( ULONG ulMilliseconds );
 #endif
 
 #if defined(OS_UNIX_COMPATIBLE)
@@ -144,23 +144,23 @@ void hb_releaseCPU( void )
 
    returns zero on failure. (means not supported)
  */
-  #if defined(__TURBOC__)
-   _AX = 0x1680;
-    geninterrupt( 0x2f );
-   _AH = 0;
-   _AL ^= 0x80;
-  #else
-    union REGS regs;
-    regs.h.ah = 0x16;
-    regs.h.al = 0x80;
-  #if defined(__WATCOMC__) && defined(__386__)
-    int386( 0x2f, &regs, &regs );
-  #else
-    int86( 0x2f, &regs, &regs );
-  #endif
-    regs.h.ah  = 0;
-    regs.h.al ^= 0x80;
-  #endif
+   #if defined(__TURBOC__)
+      _AX = 0x1680;
+      geninterrupt( 0x2f );
+      _AH = 0;
+      _AL ^= 0x80;
+   #else
+      union REGS regs;
+      regs.h.ah = 0x16;
+      regs.h.al = 0x80;
+      #if defined(__WATCOMC__) && defined(__386__)
+         int386( 0x2f, &regs, &regs );
+      #else
+         int86( 0x2f, &regs, &regs );
+      #endif
+      regs.h.ah  = 0;
+      regs.h.al ^= 0x80;
+   #endif
 #elif defined(OS_UNIX_COMPATIBLE)
 #else
 #endif

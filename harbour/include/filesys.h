@@ -62,7 +62,7 @@ typedef struct
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
 extern BOOL     hb_fsChDir      ( BYTE * pDirName );
-extern USHORT   hb_fsChDrv      ( BYTE * nDrive );
+extern USHORT   hb_fsChDrv      ( BYTE nDrive );
 extern void     hb_fsClose      ( FHANDLE hFileHandle );
 extern void     hb_fsCommit     ( FHANDLE hFileHandle );
 extern FHANDLE  hb_fsCreate     ( BYTE * pFilename, USHORT uiAttribute );

@@ -790,7 +790,7 @@ static void hb_vmAliasPop( void )
 
       default:
          hb_itemClear( pItem );
-         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
          break;
    }
 
@@ -843,7 +843,7 @@ static void hb_vmAliasSwap( void )
 
       default:
          hb_itemClear( pWorkArea );
-         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
          break;
    }
    memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
@@ -1066,7 +1066,12 @@ void hb_vmDo( WORD wParams )
          pFunc = hb_objGetMethod( pSelf, pSym );
 
       if( ! pFunc )
-         hb_errInternal( 9999, "Message %s not implemented for class %s", pSym->szName, hb_objGetClsName( pSelf ) );
+      {
+         if( pSym->szName[ 0 ] == '_' )
+            hb_errRT_BASE( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
+         else
+            hb_errRT_BASE( EG_NOMETHOD, 1004, NULL, pSym->szName );
+      }
 
       pFunc();
    }
@@ -1612,28 +1617,31 @@ void hb_vmMinus( void )
    }
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      ULONG ulLen = pItem1->item.asString.length;
-
-      pItem1->item.asString.value = (char*)hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
-      pItem1->item.asString.length += pItem2->item.asString.length;
-
-      while( ulLen && pItem1->item.asString.value[ulLen - 1] == ' ' )
+      if( ( double ) ( ( double ) pItem1->item.asString.length + ( double ) pItem2->item.asString.length ) < ( double ) ULONG_MAX )
       {
-         ulLen--;
-      }
+         ULONG ulLen = pItem1->item.asString.length;
 
-      memcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
-      ulLen += pItem2->item.asString.length;
-      memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen);
-      pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
+         pItem1->item.asString.value = ( char * ) hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
+         pItem1->item.asString.length += pItem2->item.asString.length;
 
-      if( pItem2->item.asString.value )
-      {
-         hb_xfree( pItem2->item.asString.value );
-         pItem2->item.asString.value = NULL;
+         while( ulLen && pItem1->item.asString.value[ ulLen - 1 ] == ' ' )
+            ulLen--;
+
+         memcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
+         ulLen += pItem2->item.asString.length;
+         memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen);
+         pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
+
+         if( pItem2->item.asString.value )
+         {
+            hb_xfree( pItem2->item.asString.value );
+            pItem2->item.asString.value = NULL;
+         }
+         hb_stackPop();
+         return;
       }
-      hb_stackPop();
-      return;
+      else
+         hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-" );
    }
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
@@ -1728,18 +1736,23 @@ void hb_vmPlus( void )
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      pItem1->item.asString.value = (char*)hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
-      memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
-              pItem2->item.asString.value, pItem2->item.asString.length );
-      pItem1->item.asString.length += pItem2->item.asString.length;
-      pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
-      if( pItem2->item.asString.value )
+      if( ( double ) ( ( double ) pItem1->item.asString.length + ( double ) pItem2->item.asString.length ) < ( double ) ULONG_MAX )
       {
-         hb_xfree( pItem2->item.asString.value );
-         pItem2->item.asString.value = NULL;
+         pItem1->item.asString.value = ( char * ) hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
+         memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
+                 pItem2->item.asString.value, pItem2->item.asString.length );
+         pItem1->item.asString.length += pItem2->item.asString.length;
+         pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
+         if( pItem2->item.asString.value )
+         {
+            hb_xfree( pItem2->item.asString.value );
+            pItem2->item.asString.value = NULL;
+         }
+         hb_stackPop();
+         return;
       }
-      hb_stackPop();
-      return;
+      else
+         hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+" );
    }
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
@@ -1827,7 +1840,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
 
       default:
          hb_itemClear( pAlias );
-         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
          break;
    }
 
@@ -2037,7 +2050,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
 
       default:
          hb_itemClear( pAlias );
-         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
          break;
    }
 

@@ -2,6 +2,19 @@
  * $Id$
  */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      HB_CURDIR()
+      HB_DIRCHANGE()
+      HB_MAKEDIR()
+      HB_DIRREMOVE()
+      HB_DISKCHANGE()
+      HB_DISKNAME()
+      HB_DISKSPACE() (parts by Luiz Rafael Culik <Culik@sl.conex.net>)
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 /* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will
          set the file pointer to the passed negative value, and the subsequent
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
@@ -68,6 +81,10 @@
 
 #ifdef __MPW__
    #include <fcntl.h>
+#endif
+
+#ifdef DOS
+   #include <dos.h>
 #endif
 
 #ifndef O_BINARY
@@ -618,7 +635,7 @@ BYTE *  hb_fsCurDir ( USHORT uiDrive )
 
 /* TODO: Implement nDrive */
 
-USHORT  hb_fsChDrv  ( BYTE * nDrive )
+USHORT  hb_fsChDrv  ( BYTE nDrive )
 {
    USHORT iResult;
 
@@ -894,10 +911,129 @@ HARBOUR HB_FREADSTR( void )
 /* NOTE: This function should not return the leading and trailing */
 /*       (back)slashes. */
 
+/* NOTE: Clipper 5.3 only */
+
 HARBOUR HB_CURDIR( void )
 {
+   int uiErrorOld = s_uiErrorLast;
+
    hb_retc( ( char * ) hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
       ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+/* NOTE: Clipper 5.3 only */
+
+HARBOUR HB_DIRCHANGE( void )
+{
+   int uiErrorOld = s_uiErrorLast;
+   int iResult;
+
+   if( ISCHAR( 1 ) )
+   {
+      if( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) )
+         iResult = 0;
+      else
+         iResult = s_uiErrorLast;
+   }
+   else
+      iResult = -1;
+
+   hb_retni( iResult );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+/* NOTE: Clipper 5.3 only */
+/* NOTE: Clipper 5.3 NG incorrectly states that the name if this function is
+         DIRMAKE(), in reality it's not. */
+
+HARBOUR HB_MAKEDIR( void )
+{
+   int uiErrorOld = s_uiErrorLast;
+   int iResult;
+
+   if( ISCHAR( 1 ) )
+   {
+      if( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) )
+         iResult = 0;
+      else
+         iResult = s_uiErrorLast;
+   }
+   else
+      iResult = -1;
+
+   hb_retni( iResult );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+/* NOTE: Clipper 5.3 only */
+
+HARBOUR HB_DIRREMOVE( void )
+{
+   int uiErrorOld = s_uiErrorLast;
+   int iResult;
+
+   if( ISCHAR( 1 ) )
+   {
+      if( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) )
+         iResult = 0;
+      else
+         iResult = s_uiErrorLast;
+   }
+   else
+      iResult = -1;
+
+   hb_retni( iResult );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+HARBOUR HB_DISKSPACE( void )
+{
+   USHORT nDrive = ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
+                   ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
+
+#ifdef DOS
+   struct diskfree_t disk;
+
+   _dos_getdiskfree( nDrive, &disk );
+
+   hb_retnl( ( LONG ) ( ( ULONG ) disk.avail_clusters *
+                        ( ULONG ) disk.sectors_per_cluster *
+                        ( ULONG ) disk.bytes_per_sector ) );
+#else
+
+   HB_SYMBOL_UNUSED( nDrive );
+
+   hb_retnl( 0 );
+
+#endif
+}
+
+HARBOUR HB_DISKCHANGE( void )
+{
+   int uiErrorOld = s_uiErrorLast;
+
+   hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
+            hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) ) == 0 : 
+            FALSE );
+
+   s_uiErrorLast = uiErrorOld;
+}
+
+HARBOUR HB_DISKNAME( void )
+{
+   int uiErrorOld = s_uiErrorLast;
+   char szDrive[ 1 ];
+
+   szDrive[ 0 ] = ( ( char ) hb_fsCurDrv() ) + 'A';
+
+   hb_retclen( szDrive, 1 );
+
+   s_uiErrorLast = uiErrorOld;
 }
 
 HARBOUR HB_BIN2I( void )

@@ -44,10 +44,10 @@
 #include <ctype.h>
 #include <time.h>
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
-  #include <dos.h>
+   #include <dos.h>
 #endif
 #if defined(_MSC_VER)
-  #include <sys\timeb.h>
+   #include <sys\timeb.h>
 #endif
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
    #define HB_OPTIMIZE_DTOS

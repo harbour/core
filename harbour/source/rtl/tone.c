@@ -48,27 +48,27 @@
 */
 
 #if defined(__DJGPP__)
-  #include <pc.h>
-  #include <time.h>
+   #include <pc.h>
+   #include <time.h>
 #elif defined(_Windows)
 #elif defined(__BORLANDC__)
-  #include <dos.h>
-  #include <time.h>
+   #include <dos.h>
+   #include <time.h>
 #elif defined(OS2)
-  #include <dos.h>
+   #include <dos.h>
 #elif defined(__CYGWIN__)
-  #include <Windows32/Base.h>
-  #include <Windows32/Defines.h>
-  #include <Windows32/Structures.h>
-  #include <Windows32/CommonFunctions.h>
-  #define HB_DONT_DEFINE_BASIC_TYPES
+   #include <Windows32/Base.h>
+   #include <Windows32/Defines.h>
+   #include <Windows32/Structures.h>
+   #include <Windows32/CommonFunctions.h>
+   #define HB_DONT_DEFINE_BASIC_TYPES
 #endif
 
 #include "extend.h"
 #include "inkey.h" /* For hb_releaseCPU() */
 
 #if defined(HARBOUR_GCC_OS2)
-  ULONG DosBeep (ULONG ulFrequency, ULONG ulDuration);
+   ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );
 #endif
 
 /*  $DOC$
@@ -198,7 +198,7 @@ void hb_tone( double frequency, double duration )
 #endif
 }
 
-HARBOUR HB_TONE(void)
+HARBOUR HB_TONE( void )
 {
    double frequency, duration;
    if( PCOUNT > 0 && ISNUM( 1 ) )

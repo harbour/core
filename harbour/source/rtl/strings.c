@@ -49,10 +49,10 @@
 
 #include "init.h"
 
-static double infinity = 0;
+static double s_dInfinity = 0;
 
 HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
-   infinity = -log( 0 );
+   s_dInfinity = -log( 0 );
 HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 #if ! defined(__GNUC__)
 #pragma startup Strings_InitInfinity
@@ -1169,7 +1169,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
             double dNumber = hb_itemGetND( pNumber );
 
             #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-            if( pNumber->item.asDouble.length == 99 || dNumber == infinity || dNumber == -infinity )
+            if( pNumber->item.asDouble.length == 99 || dNumber == s_dInfinity || dNumber == -s_dInfinity )
                /* Numeric overflow */
                iBytes = iSize + 1;
             else

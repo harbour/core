@@ -1,3 +1,62 @@
+19990830-19:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/filesys.c
+    include/filesys.h
+    funclist.txt
+    + Added: DIRCHANGE(), MAKEDIR(), DIRREMOVE(), DISKCHANGE(), DISKNAME()
+      All of them are Clipper 5.3 compatible functions. Some of them will not
+      work, since the underlying low level API is not worked out.
+    ! Fixed CURDIR() to preserve the FERROR() value.
+    ! Fixed prototype of hb_fsChDrv().
+    + DISKSPACE() added (currently only working in DOS).
+  * source/rtl/arrays.c
+    + hb_arrayAdd() added BASE/1187 Bound error "AADD" error message.
+    ! 1068 Not an array errors changed to the 9999 code, until we allocate
+      a 3xxx error for. This error was not there in Clipper.
+  * source/vm/hvm.c
+    + Added standard "no exported method" and "no exported variable"
+      runtime error instead of the internal error.
+      ( ErrorNew():hello := 1, ErrorNew():hello )
+    + hb_vmPlus() and hb_vmMinus() added "string overflow" runtime errors
+      (1209, 1210) (could not test this though :)
+    * Error code 1000 in BADALIAS errors changed to 9999, until someone finds
+      out the correct error code, since there's no 1000 error code in Clipper.
+  * source/rtl/set.c
+    ! Fixed to also accept strings that *begin* with "ON" or "OFF", like 
+      Clipper.
+  * source/rtl/tone.c
+    source/rtl/codebloc.c
+    source/rtl/memvars.c
+    source/rtl/environ.c
+    source/rtl/classes.c
+    source/rtl/console.c
+    source/rtl/langapi.c
+    source/rtl/setcolor.c
+    source/rtl/strings.c
+    source/rtl/dates.c
+    source/rtl/set.c
+    source/rtl/transfrm.c (removed static)
+    source/rtl/inkey.c
+    source/rtl/fm.c
+    source/rtl/dir.c
+    source/rtl/gtapi.c
+    * Formatting errors corrected.
+    + static variables prefixed with "s_"
+    * Some type changed to BOOL.
+
+19990830-16:59 +0300 Chen Kedem <niki@actcom.co.il>
+   * source/rtl/mouse/mouseos2.c
+     * hb_mouse_Hide() now work in any text screen mode.
+     * hb_mouse_IsButtonPressed() now return TRUE if any button was 
+       pressed.
+       TOFIX: every time I read event from the queue I lose the result
+       so I can not check if iButton was pressed, so for now I ignore
+       iButton and return TRUE if the last event saved had DOWN in it.
+       also to keep the noise level down I mask out MOUSE_MOTION 
+       events.
+     * suMouHandle changed to s_uMouHandle
+     * Some reformatting.
+
 19990830-12:49 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * Handle nesting of gtPre/PostExt 

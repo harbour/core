@@ -61,25 +61,25 @@
                                  we can always get the border styles */
 
 #if defined(__GNUC__)
-  #include <unistd.h>
-  #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
-    #include <io.h>
-  #endif
+   #include <unistd.h>
+   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+      #include <io.h>
+   #endif
 #else
-  #include <io.h>
+   #include <io.h>
 #endif
 #include <fcntl.h>
 
 #define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */
 
 #if defined(OS_UNIX_COMPATIBLE)
-#define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */
+   #define CRLF_BUFFER_LEN 2     /*length of buffer for CR/LF characters */
 #else
-#define CRLF_BUFFER_LEN 3     /*length of buffer for CR/LF characters */
+   #define CRLF_BUFFER_LEN 3     /*length of buffer for CR/LF characters */
 #endif
 
 static USHORT dev_row, dev_col, p_row, p_col;
-static char CrLf[ CRLF_BUFFER_LEN ];
+static char s_szCrLf[ CRLF_BUFFER_LEN ];
 
 void hb_consoleRelease( void )
 {
@@ -91,12 +91,12 @@ void hb_consoleRelease( void )
 void hb_consoleInitialize( void )
 {
 #if defined(OS_DOS_COMPATIBLE)
-   CrLf[ 0 ] = '\r';
-   CrLf[ 1 ] = '\n';
-   CrLf[ 2 ] = '\0';
+   s_szCrLf[ 0 ] = '\r';
+   s_szCrLf[ 1 ] = '\n';
+   s_szCrLf[ 2 ] = '\0';
 #else
-   CrLf[ 0 ] = '\n';
-   CrLf[ 1 ] = '\0';
+   s_szCrLf[ 0 ] = '\n';
+   s_szCrLf[ 1 ] = '\0';
 #endif
 
    p_row = p_col = 0;
@@ -122,7 +122,7 @@ void hb_consoleInitialize( void )
 
 char * hb_consoleGetNewLine( void )
 {
-   return CrLf;
+   return s_szCrLf;
 }
 
 WORD hb_max_row( void )
@@ -452,12 +452,12 @@ void hb_setpos( WORD row, WORD col )
 
       if( row < dev_row || col < dev_col )
       {
-         printf( CrLf );
+         printf( s_szCrLf );
          dev_col = 0;
          dev_row++;
       }
       else if( row > dev_row ) dev_col = 0;
-      for( count = dev_row; count < row; count++ ) printf( CrLf );
+      for( count = dev_row; count < row; count++ ) printf( s_szCrLf );
       for( count = dev_col; count < col; count++ ) printf( " " );
 #endif
 
@@ -477,7 +477,7 @@ void hb_devpos( WORD row, WORD col )
          write( hb_set_printhan, "\x0C", 1 );
          p_row = p_col = 0;
       }
-      for( count = p_row; count < row; count++ ) write( hb_set_printhan, CrLf, CRLF_BUFFER_LEN-1 );
+      for( count = p_row; count < row; count++ ) write( hb_set_printhan, s_szCrLf, CRLF_BUFFER_LEN-1 );
       if( row > p_row ) p_col = 0;
       col += hb_set.HB_SET_MARGIN;
       for( count = p_col; count < col; count++ ) write( hb_set_printhan, " ", 1 );
@@ -527,7 +527,7 @@ HARBOUR HB_QOUT( void )
 {
    WORD count;
 
-   hb_altout( CrLf, CRLF_BUFFER_LEN - 1 );
+   hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
@@ -725,7 +725,7 @@ HARBOUR HB_SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
    {
       WORD count;
       dev_row = iMR;
-      for( count = 0; count < dev_row ; count++ ) printf( CrLf );
+      for( count = 0; count < dev_row ; count++ ) printf( s_szCrLf );
       dev_row = dev_col = 0;
    }
 #endif
@@ -1065,7 +1065,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 
    if( hb_pcount() == 1 )          /* cPrompt passed                         */
    {
-      hb_altout( CrLf, CRLF_BUFFER_LEN - 1 );
+      hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
       hb_altout( szPrompt, len );
    }
 #ifdef OS_UNIX_COMPATIBLE

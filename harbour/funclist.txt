@@ -90,7 +90,7 @@ DEVOUT                  ;R;
 DEVOUTPICT              ;R;
 DEVPOS                  ;R;
 DIRECTORY               ;R;
-DISKSPACE               ;N;
+DISKSPACE               ;R;
 DISPBEGIN               ;S;
 DISPBOX                 ;R;
 DISPCOUNT               ;S;

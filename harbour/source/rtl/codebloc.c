@@ -58,87 +58,87 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
             WORD *pLocalPosTable,
             PHB_SYMB pSymbols )
 {
-  HB_CODEBLOCK_PTR pCBlock;
+   HB_CODEBLOCK_PTR pCBlock;
 
-  pCBlock =( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof(HB_CODEBLOCK) );
+   pCBlock = ( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof( HB_CODEBLOCK ) );
 
-  /* Store the number of referenced local variables
-   */
-  pCBlock->wLocals =wLocals;
-  if( wLocals )
-  {
-    /* NOTE: if a codeblock will be created by macro compiler then
-     * wLocal have to be ZERO
-     */
-    WORD w = 0;
-    PHB_ITEM pLocal;
-    HB_HANDLE hMemvar;
-
-    /* Create a table that will store the values of local variables
-     * accessed in a codeblock
-     */
-    pCBlock->pLocals =(PHB_ITEM) hb_xgrab( wLocals * sizeof(HB_ITEM) );
-
-    while( wLocals-- )
-    {
-      /* Swap the current value of local variable with the reference to this
-       * value.
-       * TODO: If Harbour will support threads in the future then we need
-       * to implement some kind of semaphores here.
+   /* Store the number of referenced local variables
+    */
+   pCBlock->wLocals = wLocals;
+   if( wLocals )
+   {
+      /* NOTE: if a codeblock will be created by macro compiler then
+       * wLocal have to be ZERO
        */
-      pLocal =stack.pBase +1 +(*pLocalPosTable++);
+      WORD w = 0;
+      PHB_ITEM pLocal;
+      HB_HANDLE hMemvar;
 
-      if( ! IS_MEMVAR( pLocal ) )
+      /* Create a table that will store the values of local variables
+       * accessed in a codeblock
+       */
+      pCBlock->pLocals = ( PHB_ITEM ) hb_xgrab( wLocals * sizeof( HB_ITEM ) );
+
+      while( wLocals-- )
       {
-         /* Change the value only if this variable is not referenced
-          * by another codeblock yet.
-          * In this case we have to copy the current value to a global memory
-          * pool so it can be shared by codeblocks
+         /* Swap the current value of local variable with the reference to this
+          * value.
+          * TODO: If Harbour will support threads in the future then we need
+          * to implement some kind of semaphores here.
           */
+         pLocal = stack.pBase + 1 + ( *pLocalPosTable++ );
 
-         hMemvar =hb_memvarValueNew( pLocal, FALSE );
+         if( ! IS_MEMVAR( pLocal ) )
+         {
+            /* Change the value only if this variable is not referenced
+             * by another codeblock yet.
+             * In this case we have to copy the current value to a global memory
+             * pool so it can be shared by codeblocks
+             */
 
-         pLocal->type =IT_BYREF | IT_MEMVAR;
-         pLocal->item.asMemvar.itemsbase =hb_memvarValueBaseAddress();
-         pLocal->item.asMemvar.offset    =0;
-         pLocal->item.asMemvar.value     =hMemvar;
+            hMemvar = hb_memvarValueNew( pLocal, FALSE );
 
-         hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-         memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
+            pLocal->type = IT_BYREF | IT_MEMVAR;
+            pLocal->item.asMemvar.itemsbase = hb_memvarValueBaseAddress();
+            pLocal->item.asMemvar.offset    = 0;
+            pLocal->item.asMemvar.value     = hMemvar;
+
+            hb_memvarValueIncRef( pLocal->item.asMemvar.value );
+            memcpy( pCBlock->pLocals + w, pLocal, sizeof( HB_ITEM ) );
+         }
+         else
+         {
+            /* This variable is already detached (by another codeblock)
+             * - copy the reference to a value
+             */
+            /* Increment the reference counter so this value will not be
+             * released if other codeblock will be deleted
+             */
+            hb_memvarValueIncRef( pLocal->item.asMemvar.value );
+            memcpy( pCBlock->pLocals + w, pLocal, sizeof( HB_ITEM ) );
+
+         }
+
+         ++w;
       }
-      else
-      {
-         /* This variable is already detached (by another codeblock)
-          * - copy the reference to a value
-          */
-         /* Increment the reference counter so this value will not be
-          * released if other codeblock will be deleted
-          */
-         hb_memvarValueIncRef( pLocal->item.asMemvar.value );
-         memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
+   }
+   else
+      pCBlock->pLocals = NULL;
 
-      }
+   /*
+    * The codeblock pcode is stored in static segment.
+    * The only allowed operation on a codeblock is evaluating it then
+    * there is no need to duplicate its pcode - just store the pointer to it
+    */
+   pCBlock->pCode = pBuffer;
 
-      ++w;
-    }
-  }
-  else
-    pCBlock->pLocals =NULL;
-
-  /*
-   * The codeblock pcode is stored in static segment.
-   * The only allowed operation on a codeblock is evaluating it then
-   * there is no need to duplicate its pcode - just store the pointer to it
-   */
-  pCBlock->pCode = pBuffer;
-
-  pCBlock->pSymbols  =pSymbols;
-  pCBlock->lCounter  =1;
+   pCBlock->pSymbols  = pSymbols;
+   pCBlock->lCounter  = 1;
 
 #ifdef CODEBLOCKDEBUG
-  printf( "\ncodeblock created (%li) %lx", pCBlock->lCounter, pCBlock );
+   printf( "\ncodeblock created (%li) %lx", pCBlock->lCounter, pCBlock );
 #endif
-  return pCBlock;
+   return pCBlock;
 }
 
 /* Delete a codeblock
@@ -181,11 +181,11 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
  */
 void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
-  int iStatics = stack.iStatics;
+   int iStatics = stack.iStatics;
 
-  stack.iStatics = pItem->item.asBlock.statics;
-  hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
-  stack.iStatics = iStatics;
+   stack.iStatics = pItem->item.asBlock.statics;
+   hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
+   stack.iStatics = iStatics;
 }
 
 /* Get local variable referenced in a codeblock
@@ -194,16 +194,16 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
    /* local variables accessed in a codeblock are always stored as reference */
-   return hb_itemUnRef( pCBlock->pLocals -iItemPos -1 );
+   return hb_itemUnRef( pCBlock->pLocals - iItemPos - 1 );
 }
 
 /* Get local variable passed by reference
  */
 PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
-  HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-  return pCBlock->pLocals -pRefer->item.asRefer.value -1;
+   return pCBlock->pLocals - pRefer->item.asRefer.value - 1;
 }
 
 /* Copy the codeblock
@@ -212,9 +212,9 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
  */
 void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-  pDest->item.asBlock.value =pSource->item.asBlock.value;
-  pDest->item.asBlock.value->lCounter++;
-  #ifdef CODEBLOCKDEBUG
-    printf( "\ncopy a codeblock (%li) %lx", pSource->item.asBlock.value->lCounter, pSource->item.asBlock.value );
-  #endif
+   pDest->item.asBlock.value = pSource->item.asBlock.value;
+   pDest->item.asBlock.value->lCounter++;
+   #ifdef CODEBLOCKDEBUG
+      printf( "\ncopy a codeblock (%li) %lx", pSource->item.asBlock.value->lCounter, pSource->item.asBlock.value );
+   #endif
 }

@@ -147,9 +147,15 @@ void hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 void hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    PBASEARRAY pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
-   hb_arraySize( pArray, pBaseArray->ulLen + 1 );
-   pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
-   hb_itemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
+
+   if( pBaseArray->ulLen < ULONG_MAX )
+   {
+      hb_arraySize( pArray, pBaseArray->ulLen + 1 );
+      pBaseArray = ( PBASEARRAY ) pArray->item.asArray.value;
+      hb_itemCopy( pBaseArray->pItems + ( pBaseArray->ulLen - 1 ), pValue );
+   }
+   else
+      hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD" );
 }
 
 void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
@@ -313,7 +319,7 @@ void hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
          hb_itemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 }
 
 void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
@@ -335,7 +341,7 @@ void hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 }
 
 void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
@@ -357,7 +363,7 @@ void hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 }
 
 int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
@@ -432,7 +438,7 @@ int hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 
    return 0;
 }
@@ -491,7 +497,7 @@ void hb_arrayRelease( PHB_ITEM pArray )
       pArray->item.asArray.value = NULL;
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 }
 
 void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
@@ -525,7 +531,7 @@ void hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
          hb_itemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 }
 
 PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
@@ -559,7 +565,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
+      hb_errRT_BASE( EG_ARG, 9999, NULL, hb_langDGetErrorDesc( EG_NOTARRAY ) );
 
    return pDstArray;
 }

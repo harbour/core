@@ -25,9 +25,9 @@
 #include "extend.h"
 #include "set.h"
 #ifdef HARBOUR_USE_GTAPI
- #include "gtapi.h"
+   #include "gtapi.h"
 #else
- static char old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
+   static char s_old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
 #endif
 
 char * hb_setColor( char * sColor )
@@ -35,8 +35,8 @@ char * hb_setColor( char * sColor )
 #ifdef HARBOUR_USE_GTAPI
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
 #else
-   strncpy( old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
-   old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
+   strncpy( s_old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
+   s_old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
 #endif
 
    if( sColor != ( char * ) NULL )
@@ -52,7 +52,7 @@ char * hb_setColor( char * sColor )
 #ifdef HARBOUR_USE_GTAPI
    return hb_set.HB_SET_COLOR;
 #else
-   return old_string;
+   return s_old_string;
 #endif
 }
 

@@ -149,20 +149,20 @@
 */
 
 #if defined(__GNUC__)
- #include <unistd.h>
- #include <sys/types.h>
- #if defined(__DJGPP__)
-   #include <io.h>
- #endif
+   #include <unistd.h>
+   #include <sys/types.h>
+   #if defined(__DJGPP__)
+      #include <io.h>
+   #endif
 #else
- #ifndef __MPW__
-  #include <io.h>
- #endif
+   #ifndef __MPW__
+     #include <io.h>
+   #endif
 #endif
 
 #include <fcntl.h>
 #ifndef __MPW__
- #include <sys/stat.h>
+   #include <sys/stat.h>
 #endif
 #include <errno.h>
 
@@ -190,13 +190,13 @@ static BOOL set_logical( PHB_ITEM pItem )
    if( IS_LOGICAL( pItem ) ) logical = pItem->item.asLogical.value;
    else if( IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.length == 2 )
+      if( pItem->item.asString.length >= 2 )
       {
          if( toupper( pItem->item.asString.value[ 0 ] ) == 'O'
          && toupper( pItem->item.asString.value[ 1 ] ) == 'N' )
             logical = TRUE;
       }
-      else if( pItem->item.asString.length == 3 )
+      else if( pItem->item.asString.length >= 3 )
       {
          if( toupper( pItem->item.asString.value[ 0 ] ) == 'O'
          && toupper( pItem->item.asString.value[ 1 ] ) == 'F'
@@ -351,13 +351,13 @@ HARBOUR HB___SETCENTURY( void )
    if( pItem && IS_LOGICAL( pItem ) ) hb_set_century = pItem->item.asLogical.value;
    else if( pItem && IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.length == 2 )
+      if( pItem->item.asString.length >= 2 )
       {
          if( toupper( pItem->item.asString.value[ 0 ] ) == 'O'
          && toupper( pItem->item.asString.value[ 1 ] ) == 'N' )
             hb_set_century = TRUE;
       }
-      else if( pItem->item.asString.length == 3 )
+      else if( pItem->item.asString.length >= 3 )
       {
          if( toupper ( pItem->item.asString.value[ 0 ] ) == 'O'
          && toupper ( pItem->item.asString.value[ 1 ] ) == 'F'

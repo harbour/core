@@ -32,81 +32,52 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.3    Chen Kedem                  hb_mouse_Hide() now work in any text
+                                        screen mode by calling VioGetMode.
+                                        hb_mouse_IsButtonPressed() now return
+                                        TRUE if any button was pressed.
    V 1.0    Chen Kedem                  Initial version.
 */
 
+#define INCL_MOU
+#define INCL_VIO             /* needed only for VioGetMode/VIOMODEINFO    */
+#define INCL_NOPMAPI         /* exclude Presentation Manager Include File */
+
+#include <os2.h>
 #include "mouseapi.h"
 
-/*---------------------------------------------------------------------------*/
-/* TODO: those exist in os2.h which I don't have                             */
-/* #define INCL_???? as needed                                               */
-/* #include <os2.h>                                                          */
-typedef unsigned BOOL;
-typedef unsigned short USHORT;
-typedef unsigned long ULONG;
-#define API unsigned extern far pascal
-#define TRUE 1
-#define FALSE 0
-API MouOpen ( void far *, unsigned far * );
-API MouClose ( unsigned );
-API MouDrawPtr ( unsigned );
-API MouRemovePtr ();
-API MouGetPtrPos ();
-API MouSetPtrPos ();
-API MouGetNumButtons ();
-API MouReadEventQue ();
-typedef struct _NOPTRRECT {
-        USHORT row;
-        USHORT col;
-        USHORT cRow;
-        USHORT cCol;
-} NOPTRRECT;
-typedef struct _PTRLOC {
-        USHORT row;
-        USHORT col;
-} PTRLOC;
-typedef struct _MOUEVENTINFO {
-        USHORT fs;     /* Bit(s)    Significance (if set)       Mask ?
-                          0         mouse move, no buttons down MOUSE_MOTION
-                          1         mouse move, button 1 down   MOUSE_MOTION_WITH_BN1_DOWN
-                          2         button 1 down               MOUSE_BN1_DOWN
-                          3         mouse move, button 2 down   MOUSE_MOTION_WITH_BN2_DOWN
-                          4         button 2 down               MOUSE_BN2_DOWN
-                          5         mouse move, button 3 down   MOUSE_MOTION_WITH_BN3_DOWN
-                          6         button 3 down               MOUSE_BN3_DOWN
-                          7-15      reserved (0)                             */
-        ULONG  time;
-        USHORT row;
-        USHORT col;
-} MOUEVENTINFO;
-/*---------------------------------------------------------------------------*/
-
-static unsigned suMouHandle;            /* mouse logical handle */
+static unsigned s_uMouHandle;                   /* mouse logical handle */
 
 void hb_mouse_Init()
 {
-    if ( MouOpen ( 0L, &suMouHandle ) ) /* try to open mouse */
-        suMouHandle = 0;                /* no mouse found */
+    USHORT fsEvents = MOUSE_MOTION_WITH_BN1_DOWN | MOUSE_BN1_DOWN |
+                      MOUSE_MOTION_WITH_BN2_DOWN | MOUSE_BN2_DOWN |
+                      MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN ;
+
+    if ( MouOpen ( 0L, &s_uMouHandle ) )        /* try to open mouse */
+        s_uMouHandle = 0;                       /* no mouse found */
+    else
+        MouSetEventMask ( &fsEvents, s_uMouHandle );     /* mask some events */
 }
 
 void hb_mouse_Exit(void)
 {
-    if ( suMouHandle )
+    if ( s_uMouHandle )
     {
-        MouClose ( suMouHandle );       /* relese mouse handle */
-        suMouHandle = 0;
+        MouClose ( s_uMouHandle );              /* relese mouse handle */
+        s_uMouHandle = 0;
     }
 }
 
 BOOL hb_mouse_IsPresent(void)
 {
-    return ( suMouHandle != 0 );
+    return ( s_uMouHandle != 0 );
 }
 
 void hb_mouse_Show(void)
 {
-    if ( suMouHandle )
-        MouDrawPtr ( suMouHandle );
+    if ( s_uMouHandle )
+        MouDrawPtr ( s_uMouHandle );
 }
 
 void hb_mouse_Hide(void)
@@ -115,20 +86,22 @@ void hb_mouse_Hide(void)
        NOTE: mouse cursor always visible if not in full screen
     */
     NOPTRRECT rect;
-    if ( suMouHandle )
+    VIOMODEINFO vi;                             /* needed to get max Row/Col */
+    if ( s_uMouHandle )
     {
         /*
-           QUESTION: should I call the GT function ?
+           QUESTION: should I call the GT MaxRow/Col function ?
            pro: encapsulating of the GetScreen function
            con: calling function from another module, GT must be linked in
            con: VioGetMode is been called twice
-           may be a just a call to MaxRow/Col would be enough
         */
-        rect.row  = 0;                        /* x-coordinate upper left */
-        rect.col  = 0;                        /* y-coordinate upper left */
-        rect.cRow = 20/*hb_gt_GetScreenHeight()*/;  /* x-coordinate lower right */
-        rect.cCol = 60/*hb_gt_GetScreenWidth()*/;   /* y-coordinate lower right */
-        MouRemovePtr ( &rect, suMouHandle );
+        vi.cb = sizeof(VIOMODEINFO);
+        VioGetMode(&vi, 0);
+        rect.row  = 0;                          /* x-coordinate upper left */
+        rect.col  = 0;                          /* y-coordinate upper left */
+        rect.cRow = vi.row - 1;                 /* x-coordinate lower right */
+        rect.cCol = vi.col - 1;                 /* y-coordinate lower right */
+        MouRemovePtr ( &rect, s_uMouHandle );
     }
 }
 
@@ -141,9 +114,9 @@ void hb_mouse_Hide(void)
 int hb_mouse_Col(void)
 {
     PTRLOC pos;
-    if ( suMouHandle )
+    if ( s_uMouHandle )
     {
-        MouGetPtrPos ( &pos, suMouHandle );
+        MouGetPtrPos ( &pos, s_uMouHandle );
     }
     return ( (int)pos.col );
 }
@@ -151,9 +124,9 @@ int hb_mouse_Col(void)
 int hb_mouse_Row(void)
 {
     PTRLOC pos;
-    if ( suMouHandle )
+    if ( s_uMouHandle )
     {
-        MouGetPtrPos ( &pos, suMouHandle );
+        MouGetPtrPos ( &pos, s_uMouHandle );
     }
     return ( (int)pos.row );
 }
@@ -161,39 +134,60 @@ int hb_mouse_Row(void)
 void hb_mouse_SetPos( int row, int col )
 {
     PTRLOC pos;
-    if ( suMouHandle )
+    if ( s_uMouHandle )
     {
         pos.row = (USHORT)row;
         pos.col = (USHORT)col;
-        MouSetPtrPos ( &pos, suMouHandle );
+        MouSetPtrPos ( &pos, s_uMouHandle );
     }
 }
 
 BOOL hb_mouse_IsButtonPressed( int iButton )
 {
     /*
-       TODO: just a sample, a work should be done here !
+       TOFIX: every time I read event from the queue I lose the result
+       so I can not check if iButton was pressed, so for now I ignore
+       iButton and return TRUE if the last event saved had DOWN in it.
+       also to keep the noise level down I mask out MOUSE_MOTION events.
     */
-    BOOL bPressed = FALSE;
+    USHORT uMask = 0x0000;
     USHORT WaitOption = 0;    /* 1 = wait until mouse event exist, 0 = don't */
     MOUEVENTINFO MouEvent;
-    if ( suMouHandle )
+    if ( s_uMouHandle )
     {
-        MouReadEventQue ( &MouEvent, &WaitOption, suMouHandle );
-        /*
-           now MouEvent.fs contain the mask for the mouse event,
-           what to do next?
-       */
+        MouReadEventQue ( &MouEvent, &WaitOption, s_uMouHandle );
+        uMask = MouEvent.fs;
+
+#ifdef PLEASE_PLEASE_MAKE_IT_WORK
+        switch(iButton)
+        {
+        case 1:
+            uMask &= ( MOUSE_MOTION_WITH_BN1_DOWN | MOUSE_BN1_DOWN );
+            break;
+        case 2:
+            uMask &= ( MOUSE_MOTION_WITH_BN2_DOWN | MOUSE_BN2_DOWN );
+            break;
+        case 3:
+            uMask &= ( MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN );
+            break;
+        }
+#else
+            uMask &= (
+                       MOUSE_MOTION_WITH_BN1_DOWN | MOUSE_BN1_DOWN |
+                       MOUSE_MOTION_WITH_BN2_DOWN | MOUSE_BN2_DOWN |
+                       MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN
+                     ) ;
+#endif
     }
-    return ( bPressed );
+    return ( uMask != 0 );
 }
 
 int hb_mouse_CountButton(void)
 {
     USHORT usButtons = 0;
-    if ( suMouHandle )
+    if ( s_uMouHandle )
     {
-        MouGetNumButtons ( &usButtons, suMouHandle );
+        MouGetNumButtons ( &usButtons, s_uMouHandle );
     }
     return ( (int)usButtons );
 }
@@ -201,16 +195,14 @@ int hb_mouse_CountButton(void)
 void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
     /*
-       NOTE: I don't know if the OS/2 got a function to do that,
-       the old book I'm using does not have such.
+       TODO: (I don't think that the OS/2 got a function to do it)
     */
 }
 
 void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
     /*
-       NOTE: I don't know if the OS/2 got a function to do that,
-       the old book I'm using does not have such.
+       TODO: (I don't think that the OS/2 got a function to do it)
     */
 }
 

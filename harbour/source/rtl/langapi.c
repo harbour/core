@@ -147,51 +147,51 @@ static HB_LANG langEN =
    }
 };
 
-static PHB_LANG langDef = &langEN;
+static PHB_LANG s_langDef = &langEN;
  
 void     hb_langDSet             ( PHB_LANG lang )
 {
    if( lang )
-      langDef = lang;
+      s_langDef = lang;
 }
 
 PHB_LANG hb_langDGet             ( void )
 {
-   return langDef;
+   return s_langDef;
 }
 
 char *   hb_langDGetName         ( void )
 {
-   return langDef->szName;
+   return s_langDef->szName;
 }
 
 char *   hb_langDGetID           ( void )
 {
-   return langDef->szID;
+   return s_langDef->szID;
 }
 
 char *   hb_langDGetText         ( ULONG ulIndex )
 {
-   return langDef->szTextList[ ( ulIndex < sizeof( langDef->szTextList ) / sizeof( langDef->szTextList[ 0 ] ) ) ? ulIndex : 0 ];
+   return s_langDef->szTextList[ ( ulIndex < sizeof( s_langDef->szTextList ) / sizeof( s_langDef->szTextList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetDayName      ( ULONG ulIndex )
 {
-   return langDef->szDayNameList[ ( ulIndex < sizeof( langDef->szDayNameList ) / sizeof( langDef->szDayNameList[ 0 ] ) ) ? ulIndex : 0 ];
+   return s_langDef->szDayNameList[ ( ulIndex < sizeof( s_langDef->szDayNameList ) / sizeof( s_langDef->szDayNameList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetMonthName    ( ULONG ulIndex )
 {
-   return langDef->szMonthNameList[ ( ulIndex < sizeof( langDef->szMonthNameList ) / sizeof( langDef->szMonthNameList[ 0 ] ) ) ? ulIndex : 0 ];
+   return s_langDef->szMonthNameList[ ( ulIndex < sizeof( s_langDef->szMonthNameList ) / sizeof( s_langDef->szMonthNameList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetErrorDesc    ( ULONG ulIndex )
 {
-   return langDef->szErrorDescList[ ( ulIndex < sizeof( langDef->szErrorDescList ) / sizeof( langDef->szErrorDescList[ 0 ] ) ) ? ulIndex : 0 ];
+   return s_langDef->szErrorDescList[ ( ulIndex < sizeof( s_langDef->szErrorDescList ) / sizeof( s_langDef->szErrorDescList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 
 char *   hb_langDGetErrorIntr    ( ULONG ulIndex )
 {
-   return langDef->szErrorIntrList[ ( ulIndex < sizeof( langDef->szErrorIntrList ) / sizeof( langDef->szErrorIntrList[ 0 ] ) ) ? ulIndex : 0 ];
+   return s_langDef->szErrorIntrList[ ( ulIndex < sizeof( s_langDef->szErrorIntrList ) / sizeof( s_langDef->szErrorIntrList[ 0 ] ) ) ? ulIndex : 0 ];
 }
 

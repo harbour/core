@@ -72,13 +72,13 @@ typedef struct
 #define BUCKET        4
 #define HASH_KEY      ( BASE_METHODS / BUCKET )
 
-static PCLASS   pClasses     = 0;
-static WORD     wClasses     = 0;
-static PMETHOD  pMethod      = 0;
-static PHB_DYNS msgClassName = 0;
-static PHB_DYNS msgClassH    = 0;
-static PHB_DYNS msgEval      = 0;
-static PHB_DYNS msgClassSel  = 0;
+static PCLASS   s_pClasses     = NULL;
+static WORD     s_wClasses     = 0;
+static PMETHOD  s_pMethod      = NULL;
+static PHB_DYNS s_msgClassName = NULL;
+static PHB_DYNS s_msgClassH    = NULL;
+static PHB_DYNS s_msgEval      = NULL;
+static PHB_DYNS s_msgClassSel  = NULL;
 
 /* All functions contained in classes.c */
 
@@ -120,9 +120,9 @@ HARBOUR HB___CLSADDMSG( void )
 {
    WORD wClass = hb_parnl( 1 );
 
-   if( wClass && wClass <= wClasses )
+   if( wClass && wClass <= s_wClasses )
    {
-      PCLASS   pClass   = &pClasses[ wClass - 1 ];
+      PCLASS   pClass   = &s_pClasses[ wClass - 1 ];
       PHB_DYNS pMessage = hb_dynsymGet( hb_parc( 2 ) );
       WORD     wType    = hb_parni( 4 );
       WORD     wAt      = ( ( ( unsigned ) pMessage ) % pClass->wHashKey ) * BUCKET;
@@ -225,19 +225,19 @@ HARBOUR HB___CLSNEW( void )
    WORD   wSuper = hb_parni( 3 );               /* Super class present      */
    PCLASS pNewCls;
 
-   if( pClasses )
-      pClasses = ( PCLASS ) hb_xrealloc( pClasses,
-                 sizeof( CLASS ) * ( wClasses + 1 ) );
+   if( s_pClasses )
+      s_pClasses = ( PCLASS ) hb_xrealloc( s_pClasses,
+                 sizeof( CLASS ) * ( s_wClasses + 1 ) );
    else
-      pClasses = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
+      s_pClasses = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
 
-   pNewCls = pClasses + wClasses;
+   pNewCls = s_pClasses + s_wClasses;
    pNewCls->szName = ( char * ) hb_xgrab( hb_parclen( 1 ) + 1 );
    strcpy( pNewCls->szName, hb_parc( 1 ) );
 
    if( wSuper )
    {
-      PCLASS pSprCls = pClasses + wSuper - 1;
+      PCLASS pSprCls = s_pClasses + wSuper - 1;
       WORD   wSize;
 
       pNewCls->wDataFirst  = pSprCls->wDatas;
@@ -266,7 +266,7 @@ HARBOUR HB___CLSNEW( void )
 
       memset( pNewCls->pMethods, 0, BASE_METHODS * sizeof( METHOD ) );
    }
-   hb_retni( ++wClasses );
+   hb_retni( ++s_wClasses );
 }
 
 
@@ -283,9 +283,9 @@ HARBOUR HB___CLSDELMSG( void )
    WORD     wClass   = hb_parni( 1 );
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
 
-   if( wClass && wClass <= wClasses && pString )
+   if( wClass && wClass <= s_wClasses && pString )
    {
-      PCLASS   pClass   = pClasses + wClass - 1;
+      PCLASS   pClass   = s_pClasses + wClass - 1;
       PHB_SYMB pMessage = hb_dynsymGet( pString->item.asString.value )->pSymbol;
       PHB_DYNS pMsg     = pMessage->pDynSym;
       WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
@@ -349,9 +349,9 @@ HARBOUR HB___CLSINST( void )
 {
    WORD wClass = hb_parni( 1 );
 
-   if( wClass <= wClasses )
+   if( wClass <= s_wClasses )
    {
-      PCLASS  pClass = pClasses + ( wClass - 1 );
+      PCLASS  pClass = s_pClasses + ( wClass - 1 );
       WORD    wAt;
       WORD    wLimit = pClass->wHashKey * BUCKET;
       PMETHOD pMeth  = pClass->pMethods;                /* Initialize DATA          */
@@ -375,9 +375,9 @@ HARBOUR HB___CLSMODMSG( void )
    WORD     wClass   = hb_parni( 1 );
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
 
-   if( wClass && wClass <= wClasses && pString )
+   if( wClass && wClass <= s_wClasses && pString )
    {
-      PCLASS   pClass   = pClasses + wClass - 1;
+      PCLASS   pClass   = s_pClasses + wClass - 1;
       PHB_SYMB pMessage = hb_dynsymGet( pString->item.asString.value )->pSymbol;
       PHB_DYNS pMsg     = pMessage->pDynSym;
       WORD     wAt      = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
@@ -449,14 +449,14 @@ HARBOUR HB___OBJGETCLSNAME( void )
    {
       wClass = pObject->item.asArray.value->wClass;
 
-      hb_retc( pClasses[ wClass - 1 ].szName );
+      hb_retc( s_pClasses[ wClass - 1 ].szName );
    }
    else
    {
       wClass = hb_parni( 1 );
 
-      if( wClass <= wClasses )
-         hb_retc( pClasses[ wClass - 1 ].szName );
+      if( wClass <= s_wClasses )
+         hb_retc( s_pClasses[ wClass - 1 ].szName );
       else
          hb_retc( "" );
    }
@@ -482,9 +482,9 @@ static HARBOUR hb___msgClsSel( void )
          wClass = pItemRef->item.asArray.value->wClass;
    }
 
-   if( wClass && wClass <= wClasses )
+   if( wClass && wClass <= s_wClasses )
    {
-      PCLASS   pClass = &pClasses[ wClass - 1 ];
+      PCLASS   pClass = &s_pClasses[ wClass - 1 ];
       WORD     wLimit = pClass->wHashKey * BUCKET; /* Number of Hash keys      */
       WORD     wPos   = 0;
       WORD     wAt;
@@ -533,7 +533,7 @@ static HARBOUR hb___msgEvalInline( void )
    WORD    wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
    WORD    w;
 
-   hb_arrayGet( pClasses[ wClass - 1 ].pInlines, pMethod->wData, &block );
+   hb_arrayGet( s_pClasses[ wClass - 1 ].pInlines, s_pMethod->wData, &block );
 
    hb_vmPushSymbol( &symEval );
    hb_vmPush( &block );
@@ -562,7 +562,7 @@ char * hb_objGetClsName( PHB_ITEM pObject )
          szClassName = "ARRAY";
       else
          szClassName =
-            ( pClasses + pObject->item.asArray.value->wClass - 1 )->szName;
+            ( s_pClasses + pObject->item.asArray.value->wClass - 1 )->szName;
    }
    else                                         /* built in types           */
    {
@@ -614,10 +614,10 @@ char * hb_objGetClsName( PHB_ITEM pObject )
 static HARBOUR hb___msgGetClsData( void )
 {
    WORD wClass = ( stack.pBase + 1 )->item.asArray.value->wClass;
-   WORD wIndex = pMethod->wData;
+   WORD wIndex = s_pMethod->wData;
 
-   if( wClass && wClass <= wClasses )
-      hb_arrayGet( pClasses[ wClass - 1 ].pClassDatas, wIndex, &stack.Return );
+   if( wClass && wClass <= s_wClasses )
+      hb_arrayGet( s_pClasses[ wClass - 1 ].pClassDatas, wIndex, &stack.Return );
 }
 
 
@@ -629,7 +629,7 @@ static HARBOUR hb___msgGetClsData( void )
 static HARBOUR hb___msgGetData( void )
 {
    PHB_ITEM pObject = stack.pBase + 1;
-   WORD     wIndex  = pMethod->wData;
+   WORD     wIndex  = s_pMethod->wData;
 
    if( wIndex > ( WORD ) hb_arrayLen ( pObject ) )
                                                 /* Resize needed            */
@@ -654,29 +654,29 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
    else
       wClass = 0;
 
-   if( ! msgClassName )
+   if( ! s_msgClassName )
    {
-      msgClassName = hb_dynsymGet( "CLASSNAME" );  /* Standard messages        */
-      msgClassH    = hb_dynsymGet( "CLASSH" );     /* Not present in classdef. */
-      msgClassSel  = hb_dynsymGet( "CLASSSEL" );
-      msgEval      = hb_dynsymGet( "EVAL" );
+      s_msgClassName = hb_dynsymGet( "CLASSNAME" );  /* Standard messages        */
+      s_msgClassH    = hb_dynsymGet( "CLASSH" );     /* Not present in classdef. */
+      s_msgClassSel  = hb_dynsymGet( "CLASSSEL" );
+      s_msgEval      = hb_dynsymGet( "EVAL" );
    }
 
-   if( wClass && wClass <= wClasses )
+   if( wClass && wClass <= s_wClasses )
    {
-      PCLASS pClass = &pClasses[ wClass - 1 ];
+      PCLASS pClass = &s_pClasses[ wClass - 1 ];
       WORD   wAt    = ( ( ( unsigned ) pMsg ) % pClass->wHashKey ) * BUCKET;
       WORD   wMask  = pClass->wHashKey * BUCKET;
       WORD   wLimit = wAt ? ( wAt - 1 ) : ( wMask - 1 );
 
-      pMethod = 0;                              /* Current method pointer   */
+      s_pMethod = NULL;                            /* Current method pointer   */
 
       while( wAt != wLimit )
       {
          if( pClass->pMethods[ wAt ].pMessage == pMsg )
          {
-            pMethod = pClass->pMethods + wAt;
-            return pMethod->pFunction;
+            s_pMethod = pClass->pMethods + wAt;
+            return s_pMethod->pFunction;
          }
          wAt++;
          if( wAt == wMask )
@@ -684,19 +684,19 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
       }
    }
 
-   if( pMsg == msgClassName )
+   if( pMsg == s_msgClassName )
       return hb___msgClsName;
 
-   else if( pMsg == msgClassH )
+   else if( pMsg == s_msgClassH )
       return hb___msgClsH;
 
-   else if( pMsg == msgClassSel )
+   else if( pMsg == s_msgClassSel )
       return hb___msgClsSel;
 
-   else if( pMsg == msgEval )
+   else if( pMsg == s_msgEval )
       return hb___msgEvalInline;
 
-   return 0;
+   return NULL;
 }
 
 
@@ -810,11 +810,11 @@ void hb_clsReleaseAll( void )
 {
    WORD w;
 
-   for( w = 0; w < wClasses; w++ )
-      hb_clsRelease( pClasses + w );
+   for( w = 0; w < s_wClasses; w++ )
+      hb_clsRelease( s_pClasses + w );
 
-   if( pClasses )
-      hb_xfree( pClasses );
+   if( s_pClasses )
+      hb_xfree( s_pClasses );
 }
 
 
@@ -828,7 +828,7 @@ static HARBOUR hb___msgSuper( void )
    PHB_ITEM   pObject   = stack.pBase + 1;
    PHB_ITEM   pSuper    = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
    PBASEARRAY pNewBase  = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
-   WORD       wSuperCls = pMethod->wData;       /* Get handle of superclass */
+   WORD       wSuperCls = s_pMethod->wData;     /* Get handle of superclass */
 
    memcpy( pSuper,   pObject, sizeof( HB_ITEM ) );
                                                 /* Allocate new structures  */
@@ -855,10 +855,10 @@ static HARBOUR hb___msgSetClsData( void )
    WORD     wClass  = ( stack.pBase + 1 )->item.asArray.value->wClass;
    PHB_ITEM pReturn = stack.pBase + 2;
 
-   if( wClass && wClass <= wClasses )
+   if( wClass && wClass <= s_wClasses )
    {
-      hb_arraySet( pClasses[ wClass - 1 ].pClassDatas,
-                   pMethod->wData, pReturn );
+      hb_arraySet( s_pClasses[ wClass - 1 ].pClassDatas,
+                   s_pMethod->wData, pReturn );
       hb_itemCopy( &stack.Return, pReturn );
    }
 }
@@ -873,7 +873,7 @@ static HARBOUR hb___msgSetData( void )
 {
    PHB_ITEM pObject = stack.pBase + 1;
    PHB_ITEM pReturn = stack.pBase + 2;
-   WORD     wIndex  = pMethod->wData;
+   WORD     wIndex  = s_pMethod->wData;
 
    if( wIndex > ( WORD ) hb_arrayLen( pObject ) )
                                                 /* Resize needed            */
@@ -917,9 +917,9 @@ HARBOUR HB___CLSINSTSUPER( void )
             hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER" );
          }
 
-         for( w = 0; !bFound && w < wClasses; w++ )
+         for( w = 0; !bFound && w < s_wClasses; w++ )
          {                                      /* Locate the entry         */
-            if( !hb_stricmp( pString->item.asString.value, pClasses[ w ].szName ) )
+            if( !hb_stricmp( pString->item.asString.value, s_pClasses[ w ].szName ) )
             {
                hb_retni( w + 1 );               /* Entry + 1 = hb___msgClsH    */
                bFound = TRUE;
@@ -945,7 +945,7 @@ HARBOUR HB___CLS_CNTCLSDATA( void )
 
    if( wClass )
    {
-      PCLASS pClass = &pClasses[ wClass - 1 ];
+      PCLASS pClass = &s_pClasses[ wClass - 1 ];
       hb_retni( hb_arrayLen( pClass->pClassDatas ) );
    }
 }
@@ -960,7 +960,7 @@ HARBOUR HB___CLS_CNTDATA( void )
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
-      hb_retni( pClasses[ wClass - 1 ].wDatas );
+      hb_retni( s_pClasses[ wClass - 1 ].wDatas );
 }
 
 /*
@@ -973,7 +973,7 @@ HARBOUR HB___CLS_DECDATA( void )
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
-      hb_retni( pClasses[ wClass - 1 ].wDatas-- );
+      hb_retni( s_pClasses[ wClass - 1 ].wDatas-- );
 }
 
 
@@ -987,6 +987,6 @@ HARBOUR HB___CLS_INCDATA( void )
    WORD wClass = hb_parnl( 1 );
 
    if( wClass )
-      hb_retni( ++pClasses[ wClass - 1 ].wDatas );
+      hb_retni( ++s_pClasses[ wClass - 1 ].wDatas );
 }
 

@@ -76,8 +76,6 @@
 #define DF_YMD 2
 #define DF_EOT 3                                /* End of table for Century */
 
-static char * szBritish[] = { "DD/MM/YY", "DD/MM/YYYY" }; /* For @E                */
-
 extern HARBOUR HB_STR( void );
 
 /* NOTE: This is called via its symbol name, so we should make sure */
@@ -363,7 +361,7 @@ static char * NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValu
 static char * DatePicture( char * szDate, WORD wPicFlags, char * szResult )
 {
    if( wPicFlags & PF_BRITISH )
-      hb_dtoc( szDate, szResult, szBritish[ ( hb_set_century ? 1 : 0 ) ] );
+      hb_dtoc( szDate, szResult, hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" );
    else
       hb_dtoc( szDate, szResult, hb_set.HB_SET_DATEFORMAT );
 
