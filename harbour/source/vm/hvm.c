@@ -1040,13 +1040,13 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PUSHSTR:
          {
             USHORT uiSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmPushString( ( char * ) pCode + w + 3, ( ULONG ) uiSize );
+            hb_vmPushStringPcode( ( char * ) pCode + w + 3, ( ULONG ) uiSize - 1 );
             w += ( 3 + uiSize );
             break;
          }
 
          case HB_P_PUSHSTRSHORT:
-            hb_vmPushString( ( char * ) pCode + w + 2, ( ULONG ) pCode[ w + 1 ] );
+            hb_vmPushStringPcode( ( char * ) pCode + w + 2, ( ULONG ) pCode[ w + 1 ] - 1 );
             w += ( 2 + pCode[ w + 1 ] );
             break;
 
@@ -1669,17 +1669,15 @@ static void hb_vmPlus( void )
    {
       if( ( double ) ( ( double ) pItem1->item.asString.length + ( double ) pItem2->item.asString.length ) < ( double ) ULONG_MAX )
       {
-         pItem1->item.asString.value = ( char * ) hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
-         hb_xmemcpy( pItem1->item.asString.value + pItem1->item.asString.length,
-                     pItem2->item.asString.value, pItem2->item.asString.length );
-         pItem1->item.asString.length += pItem2->item.asString.length;
-         pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
+         ULONG ulLen1       = pItem1->item.asString.length;
+         ULONG ulNewLen     = ulLen1 + pItem2->item.asString.length;
+         char * szNewString = ( char * ) hb_xgrab( ulNewLen + 1 );
 
-         if( pItem2->item.asString.value )
-         {
-            hb_xfree( pItem2->item.asString.value );
-            pItem2->item.asString.value = NULL;
-         }
+         hb_xmemcpy( szNewString, pItem1->item.asString.value, ulLen1 );
+         hb_xmemcpy( szNewString + ulLen1, pItem2->item.asString.value, pItem2->item.asString.length );
+         hb_itemClear( pItem1 );
+         hb_itemClear( pItem2 );
+         hb_itemPutCPtr( pItem1, szNewString, ulNewLen );
          hb_stackPop();
       }
       else
@@ -1752,10 +1750,13 @@ static void hb_vmMinus( void )
    {
       if( ( double ) ( ( double ) pItem1->item.asString.length + ( double ) pItem2->item.asString.length ) < ( double ) ULONG_MAX )
       {
-         ULONG ulLen = pItem1->item.asString.length;
+         ULONG ulLen        = pItem1->item.asString.length;
+         ULONG ulNewLen     = ulLen + pItem2->item.asString.length;
+         char * szNewString = ( char * ) hb_xgrab( ulNewLen + 1 );
 
-         pItem1->item.asString.value = ( char * ) hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
-         pItem1->item.asString.length += pItem2->item.asString.length;
+         hb_xmemcpy( szNewString, pItem1->item.asString.value, ulLen );
+         hb_itemClear( pItem1 );
+         hb_itemPutCPtr( pItem1, szNewString, ulNewLen );
 
          while( ulLen && pItem1->item.asString.value[ ulLen - 1 ] == ' ' )
             ulLen--;
@@ -1765,11 +1766,6 @@ static void hb_vmMinus( void )
          hb_xmemset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen );
          pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
 
-         if( pItem2->item.asString.value )
-         {
-            hb_xfree( pItem2->item.asString.value );
-            pItem2->item.asString.value = NULL;
-         }
          hb_stackPop();
       }
       else
@@ -3820,7 +3816,24 @@ void hb_vmPushString( char * szText, ULONG length )
 
    pStackTopItem->type = HB_IT_STRING;
    pStackTopItem->item.asString.length = length;
-   pStackTopItem->item.asString.value = szTemp;
+   pStackTopItem->item.asString.value  = szTemp;
+   pStackTopItem->item.asString.bPcode = FALSE;
+   pStackTopItem->item.asString.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
+   *( pStackTopItem->item.asString.puiHolders ) = 1;
+   hb_stackPush();
+}
+
+void hb_vmPushStringPcode( char * szText, ULONG length )
+{
+   char * szTemp;
+   PHB_ITEM pStackTopItem = hb_stackTopItem();
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushStringPcode(%s, %lu)", szText, length));
+
+   pStackTopItem->type = HB_IT_STRING;
+   pStackTopItem->item.asString.length = length;
+   pStackTopItem->item.asString.value  = szText;
+   pStackTopItem->item.asString.bPcode = TRUE;
    hb_stackPush();
 }
 
