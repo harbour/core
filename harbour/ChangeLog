@@ -1,3 +1,14 @@
+20000423-03:24 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/harbour.c
+     ! Frame optimizer is called after all functions have been processed, 
+       otherwise the static frames cannot be fixed up correctly.
+     ! Frame optimizer also called for the static initialization function to
+       fixup or remove its SFRAME pcode.
+     ! Frame optimizer now fixes up HB_P_STATICS pcode.
+     + Added SFRAME removing for the static initializatoin function.
+     % The frame pcode removing made much faster.
+
 20000422-22:47 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/hbexprb.c
@@ -102,7 +113,7 @@
    * source/compiler/Makefile
    * makefile.bc
    * makefile.vc
-     - Removed GENPAS and GENRC because they not used.
+     - Removed GENPAS and GENRC because they were not used.
 
    * source/compiler/harbour.c
      ! Returning errorlevel after the help screen. (Thanks to Dave)

@@ -63,7 +63,7 @@ static void hb_compCheckDuplVars( PVAR pVars, char * szVarName, int iVarScope );
 //int hb_compSort_ULONG( ULONG * ulLeft, ULONG * ulRight );
 static void hb_compOptimizeJumps( void );
 static void hb_compPrepareOptimize( void );
-static void hb_compOptimizeFrames( void );
+static void hb_compOptimizeFrames( PFUNCTION pFunc );
 
 /* global variables */
 FILES       hb_comp_files;
@@ -228,6 +228,8 @@ int main( int argc, char * argv[] )
 
                   if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
                   {
+                     PFUNCTION pFunc;
+
                      /* we create the output file name */
                      hb_compOutputFile();
 
@@ -236,6 +238,16 @@ int main( int argc, char * argv[] )
 
                      if( ! hb_comp_bQuiet )
                         printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
+
+                     pFunc = hb_comp_functions.pFirst;
+                     while( pFunc )
+                     {
+                        hb_compOptimizeFrames( pFunc );
+                        pFunc = pFunc->pNext;
+                     }
+
+                     if( hb_comp_pInitFunc )
+                        hb_compOptimizeFrames( hb_comp_pInitFunc );
 
                      hb_compGenOutput( hb_comp_iLanguage );
                   }
@@ -2342,8 +2354,6 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
        hb_comp_functions.pLast->iNOOPs )
       hb_compOptimizeJumps();
 
-   hb_compOptimizeFrames();
-
    if( hb_comp_iWarnings && hb_comp_functions.pLast )
    {
       PVAR pVar;
@@ -2375,90 +2385,88 @@ void hb_compFixReturns( void ) /* fixes all last defined function returns jumps 
    }
 }
 
-void hb_compOptimizeFrames()
+void hb_compOptimizeFrames( PFUNCTION pFunc )
 {
-   PFUNCTION pFunc = hb_comp_functions.pLast;
-   PVAR pLocal;
-   int bLocals = 0;
-   int bSkipFRAME = 0;
-   int bSkipSFRAME = 0;
-   ULONG ulOptimized = 0;
-   ULONG ulNextByte;
    USHORT w;
-   BYTE * pOptimized;
 
-   if( pFunc == NULL || 
-       pFunc->pCode[ 0 ] != HB_P_FRAME || 
-       pFunc->pCode[ 3 ] != HB_P_SFRAME )
+   if( pFunc == NULL )
       return;
 
-   pLocal = pFunc->pLocals;
-   while( pLocal )
+   if( pFunc == hb_comp_pInitFunc )
    {
-      pLocal = pLocal->pNext;
-      bLocals++;
-   }
+      if( pFunc->pCode[ 0 ] == HB_P_STATICS &&
+          pFunc->pCode[ 5 ] == HB_P_SFRAME )
+      {
+         hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+         pFunc->pCode[ 1 ] = HB_LOBYTE( w );
+         pFunc->pCode[ 2 ] = HB_HIBYTE( w );
+         pFunc->pCode[ 6 ] = HB_LOBYTE( w );
+         pFunc->pCode[ 7 ] = HB_HIBYTE( w );
 
-   if( bLocals || pFunc->wParamCount )
-   {
-      pFunc->pCode[ 1 ] = ( BYTE )( bLocals - pFunc->wParamCount );
-      pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
-   }
-   else
-      bSkipFRAME = 1;
+         /* Remove the SFRAME pcode if there's no global static 
+            initialization: */
 
-   if( pFunc->bFlags & FUN_USES_STATICS )
-   {
-      hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
-      pFunc->pCode[ 4 ] = HB_LOBYTE( w );
-      pFunc->pCode[ 5 ] = HB_HIBYTE( w );
+         /* NOTE: For some reason this will not work for the static init
+                  function, so I'm using an ugly hack instead. [vszakats] */
+/*       if( !( pFunc->bFlags & FUN_USES_STATICS ) ) */
+         if( pFunc->pCode[ 8 ] == HB_P_ENDPROC )
+         {
+            pFunc->lPCodePos -= 3;
+            memmove( pFunc->pCode + 5, pFunc->pCode + 8, pFunc->lPCodePos - 5 );
+         }
+      }
    }
-   else
-      bSkipSFRAME = 1;
-
-   if( bSkipFRAME || bSkipSFRAME )
+   else if( pFunc->pCode[ 0 ] == HB_P_FRAME && 
+            pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
+      PVAR pLocal;
+      int bLocals = 0;
+      BOOL bSkipFRAME;
+      BOOL bSkipSFRAME;
+
+      pLocal = pFunc->pLocals;
+      while( pLocal )
+      {
+         pLocal = pLocal->pNext;
+         bLocals++;
+      }
+
+      if( bLocals || pFunc->wParamCount )
+      {
+         pFunc->pCode[ 1 ] = ( BYTE )( bLocals - pFunc->wParamCount );
+         pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
+         bSkipFRAME = FALSE;
+      }
+      else
+         bSkipFRAME = TRUE;
+
+      if( pFunc->bFlags & FUN_USES_STATICS )
+      {
+         hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+         pFunc->pCode[ 4 ] = HB_LOBYTE( w );
+         pFunc->pCode[ 5 ] = HB_HIBYTE( w );
+         bSkipSFRAME = FALSE;
+      }
+      else
+         bSkipSFRAME = TRUE;
+
+      /* Remove the frame pcodes if they are not needed */
+
       if( bSkipFRAME && bSkipSFRAME )
       {
-         pOptimized = ( BYTE * ) hb_xgrab( pFunc->lPCodePos - 6 );
-
-         ulNextByte = 6;
-         while( ulNextByte < pFunc->lPCodePos )
-            pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
-
          pFunc->lPCodePos -= 6;
+         memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->lPCodePos );
       }
       else if( bSkipFRAME )
       {
-         pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - 3 );
-
-         ulNextByte = 3;
-         while( ulNextByte < pFunc->lPCodePos )
-            pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
-
          pFunc->lPCodePos -= 3;
+         memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
       }
       else if( bSkipSFRAME )
       {
-         pOptimized = ( BYTE * ) hb_xgrab( hb_comp_functions.pLast->lPCodePos - 3 );
-
-         pOptimized[ 0 ] = pFunc->pCode[ 0 ];
-         pOptimized[ 1 ] = pFunc->pCode[ 1 ];
-         pOptimized[ 2 ] = pFunc->pCode[ 2 ];
-
-         ulNextByte = 6;
-         ulOptimized = 3;
-
-         while( ulNextByte < pFunc->lPCodePos )
-            pOptimized[ ulOptimized++ ] = pFunc->pCode[ ulNextByte++ ];
-
          pFunc->lPCodePos -= 3;
+         memmove( pFunc->pCode + 3, pFunc->pCode + 6, pFunc->lPCodePos - 3 );
       }
-      else
-         pOptimized = NULL; /* To avoid GCC -O2 warning */
-
-      hb_xfree( ( void * ) pFunc->pCode );
-      pFunc->pCode = pOptimized;
    }
 }
 
@@ -2512,7 +2520,7 @@ void hb_compOptimizeJumps( void )
 
    for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps; iJump++ )
    {
-      switch ( pCode[ pJumps[ iJump ] ] )
+      switch( pCode[ pJumps[ iJump ] ] )
       {
          case HB_P_JUMPSHORT :
          case HB_P_JUMPSHORTFALSE :
@@ -2575,9 +2583,9 @@ void hb_compOptimizeJumps( void )
    for( iNOOP = 0; iNOOP < hb_comp_functions.pLast->iNOOPs; iNOOP++ )
    {
       /* Adjusting preceding jumps that pooint to code beyond the current NOOP or trailing backward jumps pointing to lower address. */
-      for ( iJump = 0; iJump < hb_comp_functions.pLast->iJumps ; iJump++ )
+      for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps ; iJump++ )
       {
-         switch ( pCode[ pJumps[ iJump ] ] )
+         switch( pCode[ pJumps[ iJump ] ] )
          {
             case HB_P_JUMPSHORT :
             case HB_P_JUMPSHORTFALSE :
@@ -2699,7 +2707,7 @@ void hb_compOptimizeJumps( void )
    //printf( "\rCopied" );
    //getchar();
 
-   hb_xfree( (void *) pCode );
+   hb_xfree( ( void * ) pCode );
 
    hb_comp_functions.pLast->pCode      = pOptimized;
    hb_comp_functions.pLast->lPCodePos  = ulOptimized;
