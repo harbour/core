@@ -421,6 +421,7 @@ BOOL _bShortCuts = TRUE;             /* .and. & .or. expressions shortcuts */
 BOOL _bWarnings = FALSE;             /* enable parse warnings */
 BOOL _bAutoMemvarAssume = FALSE;     /* holds if undeclared variables are automatically assumed MEMVAR */
 BOOL _bForceMemvars = FALSE;         /* holds if memvars are assumed when accesing undeclared variable */
+BOOL _bDebugInfo = FALSE;            /* holds if generate debugger required info */
 
 /* This variable is used to flag if variables have to be passed by reference
  * - it is required in DO <proc> WITH <params> statement
@@ -1233,6 +1234,12 @@ int harbour_main( int argc, char * argv[] )
                     _bAutoMemvarAssume = TRUE;
                     break;
 
+               case 'b':
+               case 'B':
+                    _bDebugInfo = TRUE;
+                    _bLineNumbers = TRUE;
+                    break;
+
                case 'd':
                case 'D':   /* defines a Lex #define from the command line */
                     {
@@ -1520,6 +1527,7 @@ void PrintUsage( char * szSelf )
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
           "\t/a\t\tautomatic memvar declaration\n"
+          "\t/b\t\tdebug info\n"
           "\t/d<id>[=<val>]\t#define <id>\n"
 #ifdef HARBOUR_OBJ_GENERATION
           "\t/f\t\tgenerated object file\n"
@@ -2127,6 +2135,15 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
 
    GenPCode3( HB_P_FRAME, 0, 0 );   /* frame for locals and parameters */
    GenPCode3( HB_P_SFRAME, 0, 0 );     /* frame for statics variables */
+
+   if( _bDebugInfo )
+   {
+      GenPCode1( HB_P_MODULENAME );
+      GenPCodeN( files.pLast->szFileName, strlen( files.pLast->szFileName ) );
+      GenPCode1( ':' );
+      GenPCodeN( szFunName, strlen( szFunName ) );
+      GenPCode1( 0 );
+   }
 }
 
 void GenJava( char *szFileName, char *szName )
@@ -2468,6 +2485,21 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case HB_P_MINUS:
                  fprintf( yyc, "                HB_P_MINUS,\n" );
+                 lPCodePos++;
+                 break;
+
+            case HB_P_MODULENAME:
+                 fprintf( yyc, "                HB_P_MODULENAME, /* %s */\n",
+                          ( char * ) pFunc->pCode + lPCodePos++ + 1 );
+                 while( pFunc->pCode[ lPCodePos ] )
+                 {
+                    chr = pFunc->pCode[ lPCodePos++ ];
+                    if( chr == '\'' || chr == '\\')
+                      fprintf( yyc, " \'\\%c\',", chr );
+                    else
+                      fprintf( yyc, " \'%c\',", chr );
+                 }
+                 fprintf( yyc, " 0,\n" );
                  lPCodePos++;
                  break;
 
