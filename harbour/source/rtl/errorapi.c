@@ -784,7 +784,7 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, ch
    }
    va_end( va );
 
-   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
+   pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_CANRETRY );
 
    /* Assign the new array to the object data item. */
    hb_vmPushSymbol( hb_dynsymGet( "_ARGS" )->pSymbol );
