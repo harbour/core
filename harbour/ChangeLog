@@ -1,3 +1,22 @@
+2001-02-23 21:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+     * building of indexes optimized
+2001-02-13 hh:mm GMT+1 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
+  * source/rtl/filesys.c
+    * hb_fsOpen
+    * hb_fsCreate
+    * hb_fsClose
+    * hb_fsRead
+    * hb_fsWrite
+    * hb_fsReadLarge
+    * hb_fsWriteLarge
+    * hb_fsSeek
+    * hb_fsTell
+    + added logic to use Win32 API calls
+  
+  * tests/files.prg
+    * tested up to 20,000 DBF files
+
 2001-02-23 19:35 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
    * harbour/source/rtl/filesys.c
    * harbour/source/rtl/math.c

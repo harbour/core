@@ -54,6 +54,12 @@
  *            and David G. Holm <dholm@jsd-llc.com>
  *    hb_fsEof()
  *
+ * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
+ *                                   <tecnico.sireinsa@ctv.es>
+ *    Added __WIN32__ check for any compiler to use the Win32
+ *    API calls to allow openning an unlimited number of files
+ *    simultaneously.
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -120,6 +126,7 @@
    #if defined(__BORLANDC__)
       #include <dir.h>
       #include <dos.h>
+      #include <windows.h>
    #endif
 
    #if defined(_MSC_VER) || defined(__MINGW32__)
@@ -343,7 +350,41 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
 
-#if defined(HAVE_POSIX_IO) && ! defined(__IBMCPP__)
+#if defined(__WIN32__)
+
+   {
+      DWORD dwFlags = 0;
+      DWORD dwShare = FILE_SHARE_READ | FILE_SHARE_WRITE;
+
+      // read & write flags
+      if( uiFlags & FO_WRITE )
+         dwFlags |= GENERIC_WRITE;
+
+      if( uiFlags & FO_READWRITE )
+         dwFlags |= GENERIC_READ;
+
+      // shared flags
+      if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
+         dwShare = FILE_SHARE_WRITE;
+
+      else if( uiFlags & FO_DENYWRITE )
+         dwShare = FILE_SHARE_READ;
+
+      else if( uiFlags & FO_EXCLUSIVE )
+         dwShare = 0;
+
+      errno = 0;
+
+      hFileHandle = ( FHANDLE ) CreateFile( ( char * ) pFilename, dwFlags,
+                dwShare, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+
+      if( hFileHandle == ( FHANDLE ) INVALID_HANDLE_VALUE )
+         errno = GetLastError();
+
+      s_uiErrorLast = errno;
+   }
+
+#elif defined(HAVE_POSIX_IO) && ! defined(__IBMCPP__)
 
    errno = 0;
    hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
@@ -413,7 +454,33 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 
    s_uiErrorLast = 0;
 
-#if defined(HB_FS_FILE_IO)
+#if defined(__WIN32__)
+
+   {
+      DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
+
+      if( uiFlags & FC_READONLY )
+         dwFlags |= FILE_ATTRIBUTE_READONLY;
+
+      if( uiFlags & FC_HIDDEN )
+         dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+
+      if( uiFlags & FC_SYSTEM )
+         dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+
+      errno = 0;
+
+      hFileHandle = ( FHANDLE ) CreateFile( ( char * ) pFilename,
+                    GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+                    dwFlags, NULL );
+
+      if( hFileHandle == ( FHANDLE ) INVALID_HANDLE_VALUE )
+         errno = GetLastError();
+
+      s_uiErrorLast = errno;
+   }
+
+#elif defined(HB_FS_FILE_IO)
 
    errno = 0;
    convert_create_flags( uiFlags, &oflag, &pmode );
@@ -443,7 +510,13 @@ void    hb_fsClose( FHANDLE hFileHandle )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   close( hFileHandle );
+
+   #if defined(__WIN32__)
+      CloseHandle( ( HANDLE ) hFileHandle );
+   #else
+      close( hFileHandle );
+   #endif
+
    s_uiErrorLast = errno;
 
 #else
@@ -518,7 +591,19 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   uiRead = read( hFileHandle, pBuff, uiCount );
+
+   #if defined(__WIN32__)
+      {
+         DWORD dwRead = 0;
+
+         ReadFile( ( HANDLE ) hFileHandle, pBuff, uiCount, &dwRead, NULL );
+         uiRead = ( USHORT ) dwRead;
+         errno = GetLastError();
+      }
+   #else
+      uiRead = read( hFileHandle, pBuff, uiCount );
+   #endif
+
    s_uiErrorLast = errno;
    if( uiRead == ( USHORT ) -1 )
       uiRead = 0;
@@ -542,18 +627,31 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   if( uiCount )
-   {
-      uiWritten = write( hFileHandle, pBuff, uiCount );
-      if( uiWritten == ( USHORT ) -1 )
+
+   #if defined(__WIN32__)
+      {
+         DWORD dwWritten = 0;
+
+         WriteFile( ( HANDLE ) hFileHandle, pBuff, uiCount, &dwWritten, NULL );
+         uiWritten = ( USHORT ) dwWritten;
+         errno = GetLastError();
+      }
+   #else
+
+      if( uiCount )
+      {
+         uiWritten = write( hFileHandle, pBuff, uiCount );
+         if( uiWritten == ( USHORT ) -1 )
+            uiWritten = 0;
+      }
+      else
+      {
          uiWritten = 0;
-   }
-   else
-   {
-      uiWritten = 0;
-      ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) );
-   }
-   s_uiErrorLast = errno;
+         ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) );
+      }
+      s_uiErrorLast = errno;
+
+   #endif
 
 #else
 
@@ -574,7 +672,11 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   #if defined(HB_FS_LARGE_OPTIMIZED)
+
+   #if defined(__WIN32__)
+      ReadFile( ( HANDLE ) hFileHandle, pBuff, ulCount, &ulRead, NULL );
+      errno = GetLastError();
+   #elif defined(HB_FS_LARGE_OPTIMIZED)
       ulRead = read( hFileHandle, pBuff, ulCount );
    #else
       {
@@ -631,48 +733,55 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   if( ulCount )
-   #if defined(HB_FS_LARGE_OPTIMIZED)
-      ulWritten = write( hFileHandle, pBuff, ulCount );
+
+   #if defined(__WIN32__)
+      WriteFile( ( HANDLE ) hFileHandle, pBuff, ulCount, &ulWritten, NULL );
+      errno = GetLastError();
    #else
-      {
-         ULONG ulLeftToWrite = ulCount;
-         USHORT uiToWrite;
-         USHORT uiWritten;
-         BYTE * pPtr = pBuff;
-
-         ulWritten = 0;
-
-         while( ulLeftToWrite )
+      if( ulCount )
+      #if defined(HB_FS_LARGE_OPTIMIZED)
+         ulWritten = write( hFileHandle, pBuff, ulCount );
+      #else
          {
-            /* Determine how much to write this time */
-            if( ulLeftToWrite > ( ULONG ) INT_MAX )
-            {
-               uiToWrite = INT_MAX;
-               ulLeftToWrite -= ( ULONG ) uiToWrite;
-            }
-            else
-            {
-               uiToWrite = ( USHORT ) ulLeftToWrite;
-               ulLeftToWrite = 0L;
-            }
-            uiWritten = write( hFileHandle, pPtr, uiToWrite );
-            /* -1 on bad hFileHandle
-                0 on disk full
-             */
-            if( uiWritten == ( USHORT ) -1 || uiWritten == 0 )
-               break;
+            ULONG ulLeftToWrite = ulCount;
+            USHORT uiToWrite;
+            USHORT uiWritten;
+            BYTE * pPtr = pBuff;
 
-            ulWritten += ( ULONG ) uiWritten;
-            pPtr += uiWritten;
+            ulWritten = 0;
+
+            while( ulLeftToWrite )
+            {
+               /* Determine how much to write this time */
+               if( ulLeftToWrite > ( ULONG ) INT_MAX )
+               {
+                  uiToWrite = INT_MAX;
+                  ulLeftToWrite -= ( ULONG ) uiToWrite;
+               }
+               else
+               {
+                  uiToWrite = ( USHORT ) ulLeftToWrite;
+                  ulLeftToWrite = 0L;
+               }
+               uiWritten = write( hFileHandle, pPtr, uiToWrite );
+               /* -1 on bad hFileHandle
+                   0 on disk full
+                */
+               if( uiWritten == ( USHORT ) -1 || uiWritten == 0 )
+                  break;
+
+               ulWritten += ( ULONG ) uiWritten;
+               pPtr += uiWritten;
+            }
          }
+      #endif
+      else
+      {
+         ulWritten = 0;
+         ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) );
       }
    #endif
-   else
-   {
-      ulWritten = 0;
-      ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) );
-   }
+
    s_uiErrorLast = errno;
 
 #else
@@ -701,7 +810,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 
       {
          APIRET ret = DosSetFilePtr( hFileHandle, 0, SEEK_CUR, &ulPos );
-      
+
          if( ret != 0 )
          {
             ulPos = 0;
@@ -713,7 +822,11 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 
       /* get current offset */
       errno = 0;
-      ulPos = lseek( hFileHandle, 0, SEEK_CUR );
+      #if defined(__WIN32__)
+         ulPos = SetFilePointer( ( HANDLE ) hFileHandle, 0, NULL, FILE_CURRENT );
+      #else
+         ulPos = lseek( hFileHandle, 0, SEEK_CUR );
+      #endif
       if( errno != 0 )
       {
          ulPos = 0;
@@ -737,7 +850,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 
       {
          APIRET ret = DosSetFilePtr( hFileHandle, lOffset, Flags, &ulPos );
-      
+
          if( ret != 0 )
          {
             ulPos = 0;
@@ -748,7 +861,11 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    #elif defined(HB_FS_FILE_IO)
 
       errno = 0;
-      ulPos = lseek( hFileHandle, lOffset, Flags );
+      #if defined(__WIN32__)
+         ulPos = SetFilePointer( ( HANDLE ) hFileHandle, lOffset, NULL, Flags );
+      #else
+         ulPos = lseek( hFileHandle, lOffset, Flags );
+      #endif
       if( errno != 0 )
          ulPos = 0;
       s_uiErrorLast = errno;
@@ -777,7 +894,11 @@ ULONG   hb_fsTell( FHANDLE hFileHandle )
 #if defined(HB_FS_FILE_IO)
 
    errno = 0;
-   ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
+   #if defined(__WIN32__)
+      ulPos = SetFilePointer( ( HANDLE ) hFileHandle, 0, NULL, FILE_CURRENT );
+   #else
+      ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
+   #endif
    s_uiErrorLast = errno;
 
 #else
