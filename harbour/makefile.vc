@@ -14,6 +14,16 @@
 #
 
 #
+# NOTE: In order to compile with MSVC you'll have to create an empty
+#       file with the name UNISTD.H in the \INCLUDE directory, until
+#       the issue is sorted out [vszakats].
+#
+
+#
+# TODO: Generate the same library names as the GNU-make system.
+#
+
+#
 # Directory macros. These should never have to change.
 #
 

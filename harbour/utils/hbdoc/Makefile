@@ -23,11 +23,11 @@ PRG_MAIN=hbdoc.prg
 LIBS=\
         tools \
         debug \
-        rtl \
-        rdd \
         vm \
+        rtl \
         rdd \
         rtl \
+        vm \
 	macro \
         pp \
         runner \

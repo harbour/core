@@ -11,11 +11,10 @@ echo pp.lib >> build.tmp
 echo common.lib >> build.tmp
 echo terminal.lib >> build.tmp
 echo macro.lib >> build.tmp
-echo tools.lib >> build.tmp
 echo dbfntx.lib >> build.tmp
 echo dbfcdx.lib >> build.tmp
 echo debug.lib >> build.tmp
-echo runner.lib >> build.tmp
+echo tools.lib >> build.tmp
 bcc @build.tmp
 del build.tmp
 del %1.c

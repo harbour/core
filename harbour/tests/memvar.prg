@@ -2,6 +2,32 @@
 //
 // $Id$
 //
+
+MEMVAR memvar
+MEMVAR memvar1
+MEMVAR memvar2
+MEMVAR memvar3
+MEMVAR memvar4
+MEMVAR mempublic
+MEMVAR memprivate
+MEMVAR memparam
+MEMVAR memfunc
+MEMVAR public1
+MEMVAR public2
+MEMVAR public3
+MEMVAR publCB
+MEMVAR private1
+MEMVAR private2
+MEMVAR private3
+MEMVAR privVar
+MEMVAR para1
+MEMVAR para2
+MEMVAR para3
+MEMVAR parameter1again
+MEMVAR param1
+MEMVAR param2
+MEMVAR initmem
+
 PROCEDURE MAIN()
 LOCAL main:=0
 

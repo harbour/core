@@ -9,7 +9,7 @@
 ;
 ; Where:
 ; <state> - R[eady], S[tarted], N[ot Started]
-; <platform> - dos[-bcc31]
+; <platform> - dos[-bcc16]
 ;              dos[-djgpp]
 ;              dos[-watcom]
 ;              w32[-bcc32][+T]

@@ -2,6 +2,11 @@
 // $Id$
 //
 
+// This file is OK to have warnings.
+#ifdef __HARBOUR__
+   #pragma -es0
+#endif
+
 DECLARE FUNCTION nMyFunc( ) AS NUMERIC
 
 FUNCTION Main()

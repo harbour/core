@@ -34,9 +34,51 @@
  */
 
 #include "hbclass.ch"
-#include "hbrptlbl.ch"
 #include "error.ch"
+#include "fileio.ch"
 #include "inkey.ch"
+
+#define F_OK            0       // No error
+#define F_EMPTY         -3      // File is empty
+
+#define _LF_SAMPLES     2       // "Do you want more samples?"
+#define _LF_YN          12      // "Y/N"
+
+#define LBL_REMARK      1       // Character, remark from label file
+#define LBL_HEIGHT      2       // Numeric, label height
+#define LBL_WIDTH       3       // Numeric, label width
+#define LBL_LMARGIN     4       // Numeric, left margin
+#define LBL_LINES       5       // Numeric, lines between labels
+#define LBL_SPACES      6       // Numeric, spaces between labels
+#define LBL_ACROSS      7       // Numeric, number of labels across
+#define LBL_FIELDS      8       // Array of Field arrays
+
+#define LBL_COUNT       8       // Numeric, number of label fields
+
+// Field array definitions ( one array per field )
+#define LF_EXP          1       // Block, field expression
+#define LF_TEXT         2       // Character, text of field expression
+#define LF_BLANK        3       // Logical, compress blank fields, .T.=Yes .F.=No
+
+#define LF_COUNT        3       // Numeric, number of elements in field array
+
+#define BUFFSIZE        1034    // Size of label file
+#define FILEOFFSET      74      // Start of label content descriptions
+#define FIELDSIZE       60
+#define REMARKOFFSET    2
+#define REMARKSIZE      60
+#define HEIGHTOFFSET    62
+#define HEIGHTSIZE      2
+#define WIDTHOFFSET     64
+#define WIDTHSIZE       2
+#define LMARGINOFFSET   66
+#define LMARGINSIZE     2
+#define LINESOFFSET     68
+#define LINESSIZE       2
+#define SPACESOFFSET    70
+#define SPACESSIZE      2
+#define ACROSSOFFSET    72
+#define ACROSSSIZE      2
 
 CLASS TLabelForm
 

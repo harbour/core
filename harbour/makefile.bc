@@ -2,6 +2,10 @@
 # $Id$
 #
 
+#
+# TODO: Generate the same library names as the GNU-make system.
+#
+
 # makefile for Borland C/C++ compilers
 
 # Merge duplicate strings

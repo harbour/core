@@ -6,7 +6,7 @@ FUNCTION MAIN()
     
     USE Test New
 
-    LABEL FORM EE
+    LABEL FORM TEST
 
     USE
 

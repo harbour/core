@@ -1,3 +1,49 @@
+20000306-22:12 GMT+1 Victor Szakats <info@szelvesz.hu>
+   - ee.lbl
+   - ee.frm
+   + test.lbl
+   + test.frm
+   * tests/testrpt.prg
+     tests/testlbl.prg
+     * EE.* renamed to TEST.*
+   * makefile.bc
+     makefile.vc
+     + TODO added.
+   - include/unistd.h
+   * doc/gmake.txt
+     makefile.vc
+     - UNISTD.H addition (20000306-17:34 GMT+1) undone.
+   - config/dos/bcc31.cfg
+   + config/dos/bcc16.cfg
+     config/dos/global.cfg
+     make_tpl.*
+     bin/bld_tpl.*
+     doc/gmake.txt
+     doc/funclist.txt
+     * Renamed.
+   * bin/bld_tpl.*
+     + lib list made common for all platforms.
+     + BCC32 added for bld_tpl.*.
+   * bin/bld_tpl.*
+     source/runner/stdalone/Makefile
+     tests/Makefile
+     tests/regress/Makefile
+     utils/hbdoc/Makefile
+     ! Changed the order of libs to make it work after the VM/RTL moves.
+   * tests/parexpr.prg
+     tests/testwarn.prg
+     ! Warnings treaten as non-fatal (with #pragma).
+   * tests/memvar.prg
+     tests/testvars.prg
+     ! Warnings fixed.   
+   * tests/dates.prg
+     ! A PROC was returning a value.
+   - include/hbrptlbl.ch
+     source/rtl/tlabel.prg
+     source/rtl/treport.prg
+     * Public #defines from a public header moved to the only source
+       files where they are used.
+
 20000306-17:34 GMT+1 Victor Szakats <info@szelvesz.hu>
    + include/unistd.h
    * doc/gmake.txt

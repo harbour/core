@@ -33,11 +33,11 @@
  *
  */
 
-#include 'common.ch'
-#include 'error.ch'
-#include 'fileio.ch'
+#include "common.ch"
+#include "error.ch"
+#include "fileio.ch"
 
-#define pBUFFER_LENGTH 2048
+#define BUFFER_LENGTH 2048
 
 PROCEDURE __TYPEFILE( cFile, lPrint )
    LOCAL nHandle, cBuffer
@@ -109,7 +109,7 @@ PROCEDURE __TYPEFILE( cFile, lPrint )
    // display the whole buffer since it said: "without any headings or formating"
 
    ?                                                      // start in a new line
-   DO WHILE fread( nHandle, @cbuffer, pBUFFER_LENGTH ) > 0
+   DO WHILE fread( nHandle, @cbuffer, BUFFER_LENGTH ) > 0
       ?? cBuffer
    ENDDO
 

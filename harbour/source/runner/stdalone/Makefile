@@ -14,15 +14,16 @@ PRG_SOURCES=\
 PRG_MAIN=hbrun.prg
 
 LIBS=\
-        runner \
-	tools \
+        tools \
         debug \
-	rdd \
-	vm \
-	rdd \
-	rtl \
-	pp \
+        vm \
+        rtl \
+        rdd \
+        rtl \
+        vm \
 	macro \
-	common \
+        pp \
+        runner \
+        common \
 
 include $(TOP)$(ROOT)config/bin.cf

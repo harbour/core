@@ -53,7 +53,6 @@ PRG_HEADERS=\
         hbextern.ch  \
         hbmemory.ch  \
         hbmemvar.ch  \
-        hbrptlbl.ch  \
         hbsetup.ch   \
         inkey.ch     \
         memoedit.ch  \

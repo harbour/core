@@ -44,7 +44,7 @@ export HB_ARCHITECTURE=linux
 # ---------------------------------------------------------------
 # The following HB_COMPILER values are currently supported:
 #  - When HB_ARCHITECTURE=dos
-#    - bcc31
+#    - bcc16
 #    - djgpp
 #    - watcom
 #  - When HB_ARCHITECTURE=w32

@@ -44,7 +44,7 @@ set HB_ARCHITECTURE=dos
 rem ---------------------------------------------------------------
 rem The following HB_COMPILER values are currently supported:
 rem  - When HB_ARCHITECTURE=dos
-rem    - bcc31
+rem    - bcc16
 rem    - djgpp
 rem    - watcom
 rem  - When HB_ARCHITECTURE=w32

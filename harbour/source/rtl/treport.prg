@@ -34,9 +34,102 @@
  */
 
 #include "hbclass.ch"
-#include "hbrptlbl.ch"
 #include "error.ch"
+#include "fileio.ch"
 #include "inkey.ch"
+
+#define F_OK            0       // No error
+#define F_EMPTY         -3      // File is empty
+
+#define _RFRM_PAGENO            3       // "Page No."
+#define _RFRM_SUBTOTAL          4       // "** Subtotal **"
+#define _RFRM_SUBSUBTOTAL       5       // "* Subsubtotal *"
+#define _RFRM_TOTAL             6       // "*** Total ***"
+
+#define RPT_HEADER      1       // Array of header strings
+#define RPT_WIDTH       2       // Numeric, report page width
+#define RPT_LMARGIN     3       // Numeric, report page offset
+#define RPT_RMARGIN     4       // NIL, Not used
+#define RPT_LINES       5       // Numeric, number of lines per page
+#define RPT_SPACING     6       // Numeric, single=1, double=2
+#define RPT_BEJECT      7       // Logical, eject before 1st page, .T.=Yes .F.=No
+#define RPT_AEJECT      8       // Logical, eject after last page, .T.=Yes .F.=No
+#define RPT_PLAIN       9       // Logical, plain report, .T.=Yes .F.=No
+#define RPT_SUMMARY     10      // Logical, no detail lines, .T.=Yes .F.=No
+#define RPT_COLUMNS     11      // Array of Column arrays
+#define RPT_GROUPS      12      // Array of Group arrays
+#define RPT_HEADING     13      // Character, heading for the report
+
+#define RPT_COUNT       13      // Number of elements in the Report array
+
+
+// Column array definitions ( one array per column definition )
+#define RCT_EXP         1       // Block, contains compiled column expression
+#define RCT_TEXT        2       // Character, contains text column expression
+#define RCT_TYPE        3       // Character, type of expression
+#define RCT_HEADER      4       // Array of column heading strings
+#define RCT_WIDTH       5       // Numeric, column width including decimals and
+                                // decimal point
+#define RCT_DECIMALS    6       // Numeric, number of decimal places
+#define RCT_TOTAL       7       // Logical, total this column, .T.=Yes .F.=No
+#define RCT_PICT        8       // Character, picture string
+
+#define RCT_COUNT       8       // Number of elements in the Column array
+
+
+// Group array definitions ( one array per group definition )
+#define RGT_EXP         1       // Block, contains compiled group expression
+#define RGT_TEXT        2       // Character, contains text group expression
+#define RGT_TYPE        3       // Character, type of expression
+#define RGT_HEADER      4       // Character, column heading string
+#define RGT_AEJECT      5       // Logical, eject after group, .T.=Yes .F.=No
+
+#define RGT_COUNT       5       // Number of elements in the Group array
+
+#define SIZE_FILE_BUFF          1990    // Size of report file
+#define SIZE_LENGTHS_BUFF       110
+#define SIZE_OFFSETS_BUFF       110
+#define SIZE_EXPR_BUFF          1440
+#define SIZE_FIELDS_BUFF        300
+#define SIZE_PARAMS_BUFF        24
+
+// Definitions for offsets into the FILE_BUFF string
+#define LENGTHS_OFFSET          5       // Start of expression length array
+#define OFFSETS_OFFSET          115     // Start of expression position array
+#define EXPR_OFFSET             225     // Start of expression data area
+#define FIELDS_OFFSET           1665    // Start of report columns (fields)
+#define PARAMS_OFFSET           1965    // Start of report parameters block
+
+// These are offsets into the FIELDS_BUFF string to actual values
+// Values are added to a block offset FLD_OFFSET that is moved in
+// increments of 12
+#define FIELD_WIDTH_OFFSET      1
+#define FIELD_TOTALS_OFFSET     6
+#define FIELD_DECIMALS_OFFSET   7
+
+// These are offsets into FIELDS_BUFF which are used to 'point' into
+// the EXPR_BUFF string which contains the textual data
+#define FIELD_CONTENT_EXPR_OFFSET       9
+#define FIELD_HEADER_EXPR_OFFSET        11
+
+// These are actual offsets into the PARAMS_BUFF string which
+// are used to 'point' into the EXPR_BUFF string
+#define PAGE_HDR_OFFSET         1
+#define GRP_EXPR_OFFSET         3
+#define SUB_EXPR_OFFSET         5
+#define GRP_HDR_OFFSET          7
+#define SUB_HDR_OFFSET          9
+
+// These are actual offsets into the PARAMS_BUFF string to actual values
+#define PAGE_WIDTH_OFFSET       11
+#define LNS_PER_PAGE_OFFSET     13
+#define LEFT_MRGN_OFFSET        15
+#define RIGHT_MGRN_OFFSET       17
+#define COL_COUNT_OFFSET        19
+#define DBL_SPACE_OFFSET        21
+#define SUMMARY_RPT_OFFSET      22
+#define PE_OFFSET               23
+#define OPTION_OFFSET           24
 
 CLASS TReportForm
 

@@ -8,6 +8,11 @@
 // These tests were written by Dave Pearson <davep@hagbard.demon.co.uk> and
 // are placed into the public domain.
 
+// This file is OK to have warnings.
+#ifdef __HARBOUR__
+   #pragma -es0
+#endif
+
 Function Main()
 Local x
 Local y

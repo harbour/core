@@ -22,13 +22,12 @@ PRG_SOURCES=\
 PRG_MAIN=rt_main.prg
 
 LIBS=\
-        tools \
         debug \
-        rtl \
-        rdd \
         vm \
+        rtl \
         rdd \
         rtl \
+        vm \
 	macro \
         pp \
         runner \

@@ -87,4 +87,4 @@ procedure TestCentury(cNewLine)
    OUTSTD (__SETCENTURY ())
    __SETCENTURY (5)
    OUTSTD (__SETCENTURY ())
-return nil
+return
