@@ -52,13 +52,13 @@
 
 #include "hbclass.ch"
 
-CLASS Nil FROM ScalarObject
+CLASS _Nil FROM ScalarObject
 
    METHOD AsString()
 
 ENDCLASS
 
-METHOD AsString() CLASS Nil
+METHOD AsString() CLASS _Nil
 
 return "NIL"
 
