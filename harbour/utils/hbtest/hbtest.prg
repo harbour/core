@@ -356,7 +356,7 @@ STATIC FUNCTION TEST_END()
 
    FWrite( s_nFhnd, "===========================================================================" + HB_OSNewLine() +;
                     "Test calls passed: " + Str( s_nPass ) + HB_OSNewLine() +;
-                    "Test calls failed: " + Str( s_nFail ) + HB_OSNewLine() +;
+                    "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + HB_OSNewLine() +;
                     "                   ----------" + HB_OSNewLine() +;
                     "            Total: " + Str( s_nPass + s_nFail ) +;
                     " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + HB_OSNewLine() +;

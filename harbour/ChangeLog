@@ -1,3 +1,11 @@
+20000402-20:01 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * utils/hbtest/hbtest.prg
+     + Shows the percentage of the failures compared to the number of tests.
+
+   * source/rtl/gtapi.c
+     * Minor
+
 20000402-19:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/rt_array.prg
@@ -9,15 +17,15 @@
 
    * utils/hbtest/rt_str.prg
    * utils/hbtest/rt_array.prg
-     * STRZERO() and AFILL() test result made dependent on the
+     * STRZERO() and AFILL() test results made dependent on the
        HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting.
 
    * source/vm/arrayshb.c
-     + Added CA-Cl*pper implementation specific runtime error for the 
+     + AFILL() - added CA-Cl*pper implementation specific runtime error for the
        STRICT_COMPATIBLE branch.
-     + Added Harbour specific runtime error on bad parameter.
+     + AFILL() - Added Harbour specific runtime error on bad parameter.
 
-   ; All these modifications cause the Regression Test failure to drop by 8.
+   ; All these modifications cause the Regression Test failures to drop by 8.
 
 20000402-18:50 GMT+1 Victor Szakats <info@szelvesz.hu>
 

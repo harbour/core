@@ -442,9 +442,10 @@ USHORT hb_gtSetColorStr( char * fpColorString )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gtSetColorStr(%s)", fpColorString));
 
-   if( !fpColorString )
+   if( fpColorString == NULL )
       return 1;
-   if( ! *fpColorString )
+
+   if( *fpColorString == '\0' )
    {
       s_Color[ 0 ] = 0x07;
       s_Color[ 1 ] = 0x70;
