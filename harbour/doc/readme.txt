@@ -17,4 +17,5 @@ ensure that you are using the latest release.
 If you have any questions about Harbour please be sure to read the FAQ
 <URL:http://www.harbour-project.org/faq/>. Also, please be sure to read the
 documentation that comes with Harbour, you should find it in the same
-directory in which you found this file.
+directory in which you found this file. You might want to start by reading
+dirstruc.txt because this is your map to the harbour source directories.

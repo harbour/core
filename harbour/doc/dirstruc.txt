@@ -28,13 +28,13 @@ in order to remove empty directories)
 |
 +---config             - Configuration Files (.cf) for the GNU Make system.
 |   |
-|   +---dos            -
+|   +---dos            - Configuration files specific to DOS.
 |   |
-|   +---linux          -
+|   +---linux          - Configutation files specific to GNU/Linux.
 |   |
-|   +---os2            -
+|   +---os2            - Configutation files specific to OS/2.
 |   |
-|   +---w32            -
+|   +---w32            - Configutation files specific to MS-Win32.
 |
 +---contrib            - Miscellaneous contribution files. Those are not part
 |   |                    of the official Harbour project.
@@ -63,7 +63,7 @@ in order to remove empty directories)
 |   |
 |   +---hgf            - Harbour GUI framework.
 |   |   |
-|   |   +---gtk        - Implementation for GTK environment.
+|   |   +---gtk        - Implementation for GTK+ environment.
 |   |   |
 |   |   +---os2pm      - Implementation for OS/2 Presentation Manager
 |   |   |                environment.
@@ -143,7 +143,7 @@ in order to remove empty directories)
 |   |
 |   +---hscript        - Harbour Script.
 |   |
-|   +---misc           - a few humble demonstration.
+|   +---misc           - A few humble demonstration.
 |   |
 |   +---pe             - Editor.
 |
@@ -172,7 +172,7 @@ in order to remove empty directories)
 |   +---rtl            - Run-Time libraries functions and various General
 |   |   |                Terminal (GT) implementation
 |   |   |
-|   |   +---gtcgi      -
+|   |   +---gtcgi      - GT subsystem aimed at cgi-bin applications.
 |   |   |
 |   |   +---gtcrs      - GT subsystem based on ncurses.
 |   |   |

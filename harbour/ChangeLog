@@ -1,3 +1,9 @@
+2001-09-07 08:40 GMT Dave Pearson <davep@davep.org>
+   * doc/readme.txt
+      * Added a pointer to dirstruc.txt.
+   * doc/dirstruc.txt
+      * Minor additions and corrections.
+
 2001-09-06 21:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *makefile.vc
     hb_slex.vc
