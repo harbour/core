@@ -11,7 +11,7 @@
    BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
 !endif
 
-INCLUDE_DIR       = include;source\compiler;source\vm
+INCLUDE_DIR       = include;source\compiler;source\vm;obj\b32
 COMPILER_DIR      = source\compiler
 COMMON_DIR        = source\common
 PP_DIR            = source\pp
