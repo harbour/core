@@ -52,7 +52,9 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 #include "hbset.h"
+#include "hbstack.h"
 
 HB_FUNC( FOPEN )
 {
