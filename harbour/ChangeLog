@@ -1,3 +1,7 @@
+2000-05-07 23:30 CET Patrick Mast <harbour@PatrickMast.com>
+   * tests/testhtml.prg
+     * changed the Default() function into If(...)
+
 2000-06-16 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
    * utils/hbdoc/hbdoc.prg
      * Some small enhacements when generating the Windows HTML HELP project
