@@ -151,9 +151,9 @@ typedef enum
 extern void   hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gtExit( void );
 extern void   hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
-extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame );
-extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
-extern USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
+extern USHORT hb_gtBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, BYTE * pbyFrame );
+extern USHORT hb_gtBoxD( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
+extern USHORT hb_gtBoxS( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
 extern USHORT hb_gtColorSelect( USHORT uiColorIndex );
 extern USHORT hb_gtColorToN( char * szColorString );
 extern USHORT hb_gtDispBegin( void );
@@ -221,9 +221,9 @@ extern USHORT hb_gtSetBorder( HB_GT_RGB * color );
 extern void   hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gt_Exit( void );
 extern BOOL   hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen );
-extern USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
-extern USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
-extern USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
+extern USHORT hb_gt_Box( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
+extern USHORT hb_gt_BoxD( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
+extern USHORT hb_gt_BoxS( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
 extern SHORT  hb_gt_Col( void );
 extern void   hb_gt_DispBegin( void );
 extern USHORT hb_gt_DispCount( void );
@@ -233,7 +233,7 @@ extern USHORT hb_gt_GetCursorStyle( void );
 extern USHORT hb_gt_GetScreenHeight( void );
 extern USHORT hb_gt_GetScreenWidth( void );
 extern void   hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst );
-extern USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr );
+extern USHORT hb_gt_HorizLine( SHORT uiRow, SHORT uiLeft, SHORT uiRight, BYTE byChar, BYTE byAttr );
 extern BOOL   hb_gt_IsColor( void );
 extern BOOL   hb_gt_PreExt( void );
 extern BOOL   hb_gt_PostExt( void );
@@ -254,7 +254,7 @@ extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod );
 extern void   hb_gt_Tone( double dFrequency, double dDuration );
 extern char * hb_gt_Version( void );
-extern USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr );
+extern USHORT hb_gt_VertLine( SHORT uiCol, SHORT uiTop, SHORT uiBottom, BYTE byChar, BYTE byAttr );
 
 /* Keyboard related declarations */
 

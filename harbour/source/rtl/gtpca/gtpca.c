@@ -479,118 +479,177 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
    }
 }
 
-USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
-                  BYTE *szBox, BYTE byAttr )
+USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
+                  BYTE * szBox, BYTE byAttr )
 {
-   USHORT uiRow;
-   USHORT uiCol;
-   USHORT uiHeight;
-   USHORT uiWidth;
+   USHORT ret = 1;
+   SHORT Row;
+   SHORT Col;
+   SHORT Height;
+   SHORT Width;
 
-   /* Ensure that box is drawn from top left to bottom right. */
-   if( uiTop > uiBottom )
+   if( Left >= 0 || Left < hb_gt_GetScreenWidth()
+   || Right >= 0 || Right < hb_gt_GetScreenWidth()
+   || Top >= 0 || Top < hb_gt_GetScreenHeight()
+   || Bottom >= 0 || Bottom < hb_gt_GetScreenHeight() )
    {
-      USHORT tmp = uiTop;
-      uiTop = uiBottom;
-      uiBottom = tmp;
-   }
-   if( uiLeft > uiRight )
-   {
-      USHORT tmp = uiLeft;
-      uiLeft = uiRight;
-      uiRight = tmp;
-   }
 
-   uiRow = uiTop;
-   uiCol = uiLeft;
-
-   /* Draw the box or line as specified */
-   uiHeight = uiBottom - uiTop + 1;
-   uiWidth  = uiRight - uiLeft + 1;
-
-   hb_gt_DispBegin();
-
-   if( uiHeight > 1 && uiWidth > 1 )
-      hb_gt_xPutch( uiRow, uiCol, byAttr, szBox[ 0 ] ); /* Upper left corner */
-
-   uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
-
-   if( uiCol <= uiRight )
-      hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
-
-   if( uiHeight > 1 && uiWidth > 1 )
-      hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 2 ] ); /* Upper right corner */
-
-   if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
-   {
-      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      /* Ensure that box is drawn from top left to bottom right. */
+      if( Top > Bottom )
       {
-         uiCol = uiLeft;
-         hb_gt_xPutch( uiRow, uiCol++, byAttr, szBox[ 7 ] ); /* Left side */
-         hb_gt_Replicate( uiRow, uiCol, byAttr, szBox[ 8 ], uiRight - uiLeft - 1 ); /* Fill */
-         hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+         SHORT tmp = Top;
+         Top = Bottom;
+         Bottom = tmp;
       }
-   }
-   else
-   {
-      for( uiRow = ( uiWidth > 1 ? uiTop + 1 : uiTop ); uiRow < ( uiWidth > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+      if( Left > Right )
       {
-         hb_gt_xPutch( uiRow, uiLeft, byAttr, szBox[ 7 ] ); /* Left side */
-         if( uiWidth > 1 )
-            hb_gt_xPutch( uiRow, uiRight, byAttr, szBox[ 3 ] ); /* Right side */
+         SHORT tmp = Left;
+         Left = Right;
+         Right = tmp;
       }
+
+      /* Draw the box or line as specified */
+      Height = Bottom - Top + 1;
+      Width  = Right - Left + 1;
+
+      hb_gt_DispBegin();
+
+      if( Height > 1 && Width > 1 && Top >= 0 && Top < hb_gt_GetScreenHeight() && Left >= 0 && Left < hb_gt_GetScreenWidth() )
+         hb_gt_xPutch( Top, Left, byAttr, szBox[ 0 ] ); /* Upper left corner */
+
+      Col = ( Height > 1 ? Left + 1 : Left );
+      if(Col < 0 )
+      {
+         Width += Col;
+         Col = 0;
+      }
+      if( Right >= hb_gt_GetScreenWidth() )
+      {
+         Width -= Right - hb_gt_GetScreenWidth() + 1;
+      }
+
+      if( Col <= Right && Col < hb_gt_GetScreenWidth() && Top >= 0 && Top < hb_gt_GetScreenHeight() )
+         hb_gt_Replicate( Top, Col, byAttr, szBox[ 1 ], Width + ( (Right - Left) > 1 ? -2 : 0 ) ); /* Top line */
+
+      if( Height > 1 && (Right - Left) > 1 && Right < hb_gt_GetScreenWidth() && Top >= 0 && Top < hb_gt_GetScreenHeight() )
+         hb_gt_xPutch( Top, Right, byAttr, szBox[ 2 ] ); /* Upper right corner */
+
+      if( szBox[ 8 ] && Height > 2 && Width > 2 )
+      {
+         for( Row = Top + 1; Row < Bottom; Row++ )
+         {
+            if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
+            {
+               Col = Left;
+               if( Col < 0 )
+                  Col = 0; // The width was corrected earlier.
+               else
+                  hb_gt_xPutch( Row, Col++, byAttr, szBox[ 7 ] ); /* Left side */
+               hb_gt_Replicate( Row, Col, byAttr, szBox[ 8 ], Width - 2 ); /* Fill */
+               if( Right < hb_gt_GetScreenWidth() )
+                  hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
+            }
+         }
+      }
+      else
+      {
+         for( Row = ( Width > 1 ? Top + 1 : Top ); Row < ( (Right - Left ) > 1 ? Bottom : Bottom + 1 ); Row++ )
+         {
+            if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
+            {
+               if( Left >= 0 && Left < hb_gt_GetScreenWidth() )
+                  hb_gt_xPutch( Row, Left, byAttr, szBox[ 7 ] ); /* Left side */
+               if( ( Width > 1 || Left < 0 ) && Right < hb_gt_GetScreenWidth() )
+                  hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
+            }
+         }
+      }
+
+      if( Height > 1 && Width > 1 )
+      {
+         if( Left >= 0 && Bottom < hb_gt_GetScreenHeight() )
+            hb_gt_xPutch( Bottom, Left, byAttr, szBox[ 6 ] ); /* Bottom left corner */
+
+         Col = Left + 1;
+         if( Col < 0 )
+            Col = 0; // And use the width that was calculated earlier.
+
+         if( Col <= Right && Bottom < hb_gt_GetScreenHeight() )
+            hb_gt_Replicate( Bottom, Col, byAttr, szBox[ 5 ], Width - 2 ); /* Bottom line */
+
+         if( Right < hb_gt_GetScreenWidth() && Bottom < hb_gt_GetScreenHeight() )
+            hb_gt_xPutch( Bottom, Right, byAttr, szBox[ 4 ] ); /* Bottom right corner */
+      }
+      hb_gt_DispEnd();
+      ret = 0;
    }
 
-   if( uiHeight > 1 && uiWidth > 1 )
+   return ret;
+}
+
+USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
+{
+   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
+}
+
+USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE byAttr )
+{
+   USHORT ret = 1;
+   if( Row >= 0 && Row < hb_gt_GetScreenHeight() )
    {
-      hb_gt_xPutch( uiBottom, uiLeft, byAttr, szBox[ 6 ] ); /* Bottom left corner */
+      if( Left < 0 )
+         Left = 0;
+      else if( Left >= hb_gt_GetScreenWidth() )
+         Left = hb_gt_GetScreenWidth() - 1;
+   
+      if( Right < 0 )
+         Right = 0;
+      else if( Right >= hb_gt_GetScreenWidth() )
+         Right = hb_gt_GetScreenWidth() - 1;
 
-      uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
-
-      if( uiCol <= uiRight && uiHeight > 1 )
-         hb_gt_Replicate( uiBottom, uiCol, byAttr, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
-
-      hb_gt_xPutch( uiBottom, uiRight, byAttr, szBox[ 4 ] ); /* Bottom right corner */
+      if( Left < Right )
+         hb_gt_Replicate( Row, Left, byAttr, byChar, Right - Left + 1 );
+      else
+         hb_gt_Replicate( Row, Right, byAttr, byChar, Left - Right + 1 );
+      ret = 0;
    }
-
-   hb_gt_DispEnd();
-
-   return 0;
+   return ret;
 }
 
-USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byAttr )
 {
-   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
-}
+   USHORT ret = 1;
+   SHORT Row;
 
-USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
-{
-   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
-}
-
-USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
-{
-   if( uiLeft < uiRight )
-      hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
-   else
-      hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
-   return 0;
-}
-
-USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
-{
-   USHORT uRow;
-
-   if( uiTop <= uiBottom )
-      uRow = uiTop;
-   else
+   if( Col >= 0 && Col < hb_gt_GetScreenWidth() )
    {
-      uRow = uiBottom;
-      uiBottom = uiTop;
+      if( Top < 0 )
+         Top = 0;
+      else if( Top >= hb_gt_GetScreenHeight() )
+         Top = hb_gt_GetScreenHeight() - 1;
+
+      if( Bottom < 0 )
+         Bottom = 0;
+      else if( Bottom >= hb_gt_GetScreenHeight() )
+         Bottom = hb_gt_GetScreenHeight() - 1;
+
+      if( Top <= Bottom )
+         Row = Top;
+      else
+      {
+         Row = Bottom;
+         Bottom = Top;
+      }
+      while( Row <= Bottom )
+         hb_gt_xPutch( Row++, Col, byAttr, byChar );
+      ret = 0;
    }
-   while( uRow <= uiBottom )
-      hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
-   return 0;
+   return ret;
 }
 
 BOOL hb_gt_PreExt()

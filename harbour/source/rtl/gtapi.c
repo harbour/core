@@ -166,109 +166,76 @@ void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
    }
 }
 
-USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
+USHORT hb_gtBox( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame )
 {
-   USHORT uiMaxRow;
-   USHORT uiMaxCol;
+   USHORT Ret;
+   USHORT tmp;
+   BYTE cPadChar;
+   BYTE szBox[ 10 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyFrame));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBox(%hd, %hd, %hd, %hd, %p)", Top, Left, Bottom, Right, pbyFrame));
 
-   uiMaxRow = hb_gt_GetScreenHeight();
-   uiMaxCol = hb_gt_GetScreenWidth();
+   /* NOTE: For full compatibility, pad box string with last char if too
+            short [vszakats] */
 
-   /* TODO: Would be better to support these cases, Clipper implementation was
-            quite messy, which can be considered as a bug. [vszakats] */
+   cPadChar = ' ';
+   for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
+      cPadChar = szBox[ tmp ] = *pbyFrame++;
+   while( tmp < 8 )
+      szBox[ tmp++ ] = cPadChar;
+   szBox[ tmp ] = '\0';
 
-   if( uiTop  < uiMaxRow && uiBottom < uiMaxRow &&
-       uiLeft < uiMaxCol && uiRight  < uiMaxCol )
+   if( Top != Bottom )
    {
-      /* NOTE: For full compatibility, pad box string with last char if too
-               short [vszakats] */
-      USHORT tmp;
-      BYTE cPadChar;
-      BYTE szBox[ 10 ];
-
-      cPadChar = ' ';
-      for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
-         cPadChar = szBox[ tmp ] = *pbyFrame++;
-      while( tmp < 8 )
-         szBox[ tmp++ ] = cPadChar;
-      szBox[ tmp ] = '\0';
-
-      if( uiTop != uiBottom )
-      {
-         if( uiLeft != uiRight )
-            hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, szBox, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-         else
-            hb_gt_VertLine( uiLeft, uiTop, uiBottom, szBox[ 3 ], ( BYTE ) s_pColor[ s_uiColorIndex ] );
-      }
+      if( Left != Right )
+         Ret = hb_gt_Box( Top, Left, Bottom, Right, szBox, ( BYTE ) s_pColor[ s_uiColorIndex ] );
       else
-         hb_gt_HorizLine( uiTop, uiLeft, uiRight, szBox[ 1 ], ( BYTE ) s_pColor[ s_uiColorIndex ] );
-
-      hb_gtSetPosContext( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
-
-      return 0;
+         Ret = hb_gt_VertLine( Left, Top, Bottom, szBox[ 3 ], ( BYTE ) s_pColor[ s_uiColorIndex ] );
    }
    else
-      return 1;
+      Ret = hb_gt_HorizLine( Top, Left, Right, szBox[ 1 ], ( BYTE ) s_pColor[ s_uiColorIndex ] );
+
+   hb_gtSetPosContext( HB_MAX(Top,0) + 1, HB_MAX(Left,0) + 1, HB_GT_SET_POS_AFTER );
+
+   return Ret;
 }
 
-USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
+USHORT hb_gtBoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
 {
-   USHORT uiMaxRow;
-   USHORT uiMaxCol;
+   USHORT Ret;
 
-   uiMaxRow = hb_gt_GetScreenHeight();
-   uiMaxCol = hb_gt_GetScreenWidth();
-
-   if( uiTop  < uiMaxRow && uiBottom < uiMaxRow &&
-       uiLeft < uiMaxCol && uiRight  < uiMaxCol )
+   if( Top != Bottom )
    {
-      if( uiTop != uiBottom )
-      {
-         if( uiLeft != uiRight )
-            hb_gt_BoxD( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_DOUBLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-         else
-            hb_gt_VertLine( uiLeft, uiTop, uiBottom, HB_B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-      }
+      if( Left != Right )
+         Ret = hb_gt_BoxD( Top, Left, Bottom, Right, ( BYTE * ) _B_DOUBLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
       else
-         hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_DOUBLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-
-      hb_gtSetPosContext( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
-
-      return 0;
+         Ret = hb_gt_VertLine( Left, Top, Bottom, HB_B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
    }
    else
-      return 1;
+      Ret = hb_gt_HorizLine( Top, Left, Right, HB_B_DOUBLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+
+   hb_gtSetPosContext( HB_MAX(Top,0) + 1, HB_MAX(Left,0) + 1, HB_GT_SET_POS_AFTER );
+
+   return Ret;
 }
 
-USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
+USHORT hb_gtBoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right )
 {
-   USHORT uiMaxRow;
-   USHORT uiMaxCol;
+   USHORT Ret;
 
-   uiMaxRow = hb_gt_GetScreenHeight();
-   uiMaxCol = hb_gt_GetScreenWidth();
-
-   if( uiTop  < uiMaxRow && uiBottom < uiMaxRow &&
-       uiLeft < uiMaxCol && uiRight  < uiMaxCol )
+   if( Top != Bottom )
    {
-      if( uiTop != uiBottom )
-      {
-         if( uiLeft != uiRight )
-            hb_gt_BoxS( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_SINGLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-         else
-            hb_gt_VertLine( uiLeft, uiTop, uiBottom, HB_B_SINGLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-      }
+      if( Left != Right )
+         Ret = hb_gt_BoxS( Top, Left, Bottom, Right, ( BYTE * ) _B_SINGLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
       else
-         hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_SINGLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
-
-      hb_gtSetPosContext( uiTop + 1, uiLeft + 1, HB_GT_SET_POS_AFTER );
-
-      return 0;
+         Ret = hb_gt_VertLine( Left, Top, Bottom, HB_B_SINGLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
    }
    else
-      return 1;
+      Ret = hb_gt_HorizLine( Top, Left, Right, HB_B_SINGLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+
+   hb_gtSetPosContext( HB_MAX(Top,0) + 1, HB_MAX(Left,0) + 1, HB_GT_SET_POS_AFTER );
+
+   return Ret;
 }
 
 USHORT hb_gtColorSelect( USHORT uiColorIndex )

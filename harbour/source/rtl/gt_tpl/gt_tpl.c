@@ -411,53 +411,53 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
       hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
 }
 
-USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
+USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
                   BYTE * pbyFrame, BYTE byAttr )
 {
-   HB_SYMBOL_UNUSED( uiTop );
-   HB_SYMBOL_UNUSED( uiLeft );
-   HB_SYMBOL_UNUSED( uiBottom );
-   HB_SYMBOL_UNUSED( uiRight );
+   HB_SYMBOL_UNUSED( Top );
+   HB_SYMBOL_UNUSED( Left );
+   HB_SYMBOL_UNUSED( Bottom );
+   HB_SYMBOL_UNUSED( Right );
    HB_SYMBOL_UNUSED( pbyFrame );
    HB_SYMBOL_UNUSED( byAttr );
 
    return 0;
 }
 
-USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+USHORT hb_gt_BoxD( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
 {
-   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
 }
 
-USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr )
+USHORT hb_gt_BoxS( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right, BYTE * pbyFrame, BYTE byAttr )
 {
-   return hb_gt_Box( uiTop, uiLeft, uiBottom, uiRight, pbyFrame, byAttr );
+   return hb_gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr );
 }
 
-USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr )
+USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE byAttr )
 {
-   if( uiLeft < uiRight )
-      hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
+   if( Left < Right )
+      hb_gt_Replicate( Row, Left, byAttr, byChar, Right - Left + 1 );
    else
-      hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+      hb_gt_Replicate( Row, Right, byAttr, byChar, Left - Right + 1 );
 
    return 0;
 }
 
-USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr )
+USHORT hb_gt_VertLine( SHORT Col, SHORT Top, SHORT Bottom, BYTE byChar, BYTE byAttr )
 {
-   USHORT uRow;
+   SHORT Row;
 
-   if( uiTop <= uiBottom )
-      uRow = uiTop;
+   if( Top <= Bottom )
+      Row = Top;
    else
    {
-      uRow = uiBottom;
-      uiBottom = uiTop;
+      Row = Bottom;
+      Bottom = Top;
    }
 
-   while( uRow <= uiBottom )
-      hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+   while( Row <= Bottom )
+      hb_gt_xPutch( Row++, Col, byAttr, byChar );
 
    return 0;
 }
