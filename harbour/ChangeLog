@@ -1,3 +1,9 @@
+2001-02-20 13:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/include/hbver.h
+     * Changed release info to 0.36, etc.
+   * harbour/source/rdd/rddsys.prg
+     * Default RDD changed to DBFNTX
+
 2001-02-20 01:50 GMT-3 Horacio Roldan <horacioroldan@usa.net>
    * harbour/source/vm/asort.c
      * Fixed bug in optimization test that prevented sorting some arrays.

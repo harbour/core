@@ -42,11 +42,11 @@
    #define HB_VER_LEX "Flex"
 #endif
 #define HB_VER_MAJOR    0       /* Major version number */
-#define HB_VER_MINOR    35      /* Minor version number */
-#define HB_VER_REVISION "j"     /* Revision letter */
-#define HB_VER_BUILD    35      /* Build number */
-#define HB_VER_YEAR     2000    /* Build year */
-#define HB_VER_MONTH    11      /* Build month */
-#define HB_VER_DAY      30      /* Build day */
+#define HB_VER_MINOR    36      /* Minor version number */
+#define HB_VER_REVISION " "     /* Revision letter */
+#define HB_VER_BUILD    36      /* Build number */
+#define HB_VER_YEAR     2001    /* Build year */
+#define HB_VER_MONTH    02      /* Build month */
+#define HB_VER_DAY      20      /* Build day */
 
 #endif /* HB_VER_H_ */

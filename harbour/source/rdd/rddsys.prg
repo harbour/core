@@ -39,13 +39,13 @@ ANNOUNCE RDDSYS
 
 init procedure RddInit
 
-   REQUEST DBFCDX
+   REQUEST DBFNTX
 
    /* NOTE: Using this internal version of this functions, since at this
-            point the DBFCDX RDD may not be registered, depending on the
+            point the DBFNTX RDD may not be registered, depending on the
             execution order of INIT procedures. */
 
-   __rddSetDefault( "DBFCDX" )
+   __rddSetDefault( "DBFNTX" )
 
 return
 
