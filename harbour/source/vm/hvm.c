@@ -3844,8 +3844,8 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter(
 {
    PHB_ITEM pBase = hb_stack.pBase;
 
-   char buffer[ 128 ];
-   char msg[ 1024 ];
+   char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
+   char msg[ 2048 ];
 
    HB_SYMBOL_UNUSED( ExceptionInfo );
 
