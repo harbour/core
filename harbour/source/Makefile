@@ -5,6 +5,7 @@
 ROOT = ../
 
 DIRS=\
+	common \
 	pp \
 	compiler \
 	rtl \

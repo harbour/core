@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "hbsetup.h"
+#include "hbtrace.h"
 
 #if defined(__IBMCPP__)
    /* With the exception of WORD, the IBM Visual Age C++ compiler has

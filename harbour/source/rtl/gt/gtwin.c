@@ -93,9 +93,9 @@ static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
 
 #if (defined(HB_LOG) && (HB_LOG != 0))
 static FILE * flog = 0;
-int line = 0;
+static int line = 0;
 #define LOG(x) \
-do
+do \
 { \
    flog = fopen( "c:/tmp/gt.log", "a" ); \
    fprintf( flog, "%5d> GT: %s\n", line++, x ); \

@@ -1,3 +1,39 @@
+Wed Oct 20 19:28:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/Makefile: 
+	* source/common/Makefile: 
+	* source/common/hbtrace.c: 
+	* include/hbtrace.h: 
+	Added a common/ library where all "common" stuff should be
+	implemented. For starters, I placed here a rudimentary tracing
+	facility. Basically, all functions should be of the form:
+
+	int foo(char* name /* other parameters */)
+	{
+	  HB_TRACE(("foo(%s)", name));
+
+	  /* implementation */
+	}
+
+	If harbour is compiled with HB_DO_TRACE defined, then this will
+	generate a trace on stderr of all functions being called (caution:
+	it generates LOTS of output!!!). If HB_DO_TRACE is not defined,
+	the HB_TRACE() lines are defined out and there is no performance
+	hit.
+
+	* include/hbdefs.h: 
+	Included hbtrace.h.
+	
+	* source/pp/hbpp.c: 
+	* source/pp/hbppint.c: 
+	* source/pp/hbpplib.c: 
+	* source/pp/stdalone/Makefile: 
+	* source/pp/stdalone/hbpp.c: 
+	Added tracing calls as a "proof of concept".
+	
+	* source/rtl/gt/gtwin.c: 
+	Fixed two minor typos.
+
 19991020-21:30 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/achoice.prg
      % FUNCTION -> PROCEDURE for speed.
