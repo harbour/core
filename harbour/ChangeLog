@@ -1,3 +1,8 @@
+19990713-22:30 CET Eddie Runia <eddie@runia.com>
+   - source/runner/run_exp.h
+   + include/run_exp.h
+     run_exp.h moved because of problem with BC 4.5
+
 19990713-20:35 CET Eddie Runia <eddie@runia.com>
    * source/rtl/tclass.prg
      Changed standard message Super to __Super
