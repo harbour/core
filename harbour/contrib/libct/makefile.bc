@@ -118,13 +118,20 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
+   $(OBJ_DIR)\numat.obj \
+   $(OBJ_DIR)\pad.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
+   $(OBJ_DIR)\range.obj \
    $(OBJ_DIR)\relation.obj \
+   $(OBJ_DIR)\remove.obj \
+   $(OBJ_DIR)\replace.obj \
+   $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
+   $(OBJ_DIR)\wordtoch.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
 
@@ -257,6 +264,14 @@ $(OBJ_DIR)\num1.obj : $(TOOLS_DIR)\num1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\numat.obj : $(TOOLS_DIR)\numat.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\pad.obj : $(TOOLS_DIR)\pad.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\pos1.obj : $(TOOLS_DIR)\pos1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -269,7 +284,23 @@ $(OBJ_DIR)\posdiff.obj : $(TOOLS_DIR)\posdiff.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\range.obj : $(TOOLS_DIR)\range.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\relation.obj : $(TOOLS_DIR)\relation.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\remove.obj : $(TOOLS_DIR)\remove.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\replace.obj : $(TOOLS_DIR)\replce.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\strswap.obj : $(TOOLS_DIR)\strswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -282,6 +313,10 @@ $(OBJ_DIR)\trig.obj : $(TOOLS_DIR)\trig.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\wordrepl.obj : $(TOOLS_DIR)\wordrepl.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\wordtoch.obj : $(TOOLS_DIR)\wordtoch.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

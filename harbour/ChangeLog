@@ -1,3 +1,29 @@
+2001-08-18 16:45 MEST Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/numat.c
+     + NUMAT() function
+   + contrib/libct/pad.c
+     + PADLEFT(), PADRIGHT() functions
+   + contrib/libct/range.c
+     + RANGEREM(), RANGEREPL() functions
+   + contrib/libct/remove.c
+     + REMALL(), REMLEFT(), REMRIGHT() functions
+   + contrib/libct/replace.c
+     + REPLALL(), REPLLEFT(), REPLRIGHT() functions
+   + contrib/libct/strswap.c
+     + STRSWAP() function
+   + contrib/libct/wordtoch.c
+     + WORDTOCH() function
+
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+     + numat.c, pad.c, range.c, remove.c, replace.c, 
+       strswap.c and wordtoch.c added
+
+   * contrib/libct/ctflist.txt
+     * function status updated
+
 2001-08-17 22:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
     *source/compiler/gencobj.c
       *added conditional for _MSC_VER when checking if harbour -o is used

@@ -138,13 +138,20 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\math.obj \
    $(OBJ_DIR)\num1.obj \
+   $(OBJ_DIR)\numat.obj \
+   $(OBJ_DIR)\pad.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
+   $(OBJ_DIR)\range.obj \
    $(OBJ_DIR)\relation.obj \
+   $(OBJ_DIR)\remove.obj \
+   $(OBJ_DIR)\replace.obj \
+   $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\trig.obj \
    $(OBJ_DIR)\wordrepl.obj \
+   $(OBJ_DIR)\wordtoch.obj \
    \
    $(OBJ_DIR)\ctmisc.obj \
 
@@ -185,13 +192,20 @@ CLEAN:
    -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
    -@if exist $(OBJ_DIR)\math.* del $(OBJ_DIR)\math.*
    -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
+   -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*
+   -@if exist $(OBJ_DIR)\pad.* del $(OBJ_DIR)\pad.*
    -@if exist $(OBJ_DIR)\pos1.* del $(OBJ_DIR)\pos1.*
    -@if exist $(OBJ_DIR)\pos2.* del $(OBJ_DIR)\pos2.*
    -@if exist $(OBJ_DIR)\posdiff.* del $(OBJ_DIR)\posdiff.*
+   -@if exist $(OBJ_DIR)\range.* del $(OBJ_DIR)\range.*
    -@if exist $(OBJ_DIR)\relation.* del $(OBJ_DIR)\relation.*
+   -@if exist $(OBJ_DIR)\remove.* del $(OBJ_DIR)\remove.*
+   -@if exist $(OBJ_DIR)\replace.* del $(OBJ_DIR)\replace.*
+   -@if exist $(OBJ_DIR)\strswap.* del $(OBJ_DIR)\strswap.*
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
    -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*
    -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*
+   -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 

@@ -33,13 +33,20 @@ C_SOURCES = \
 	justify.c \
 	math.c \
 	num1.c \
+	numat.c \
+	pad.c \
 	pos1.c \
 	pos2.c \
 	posdiff.c \
+	range.c \
 	relation.c \
+	remove.c \
+	replace.c \
+	strswap.c \
         token1.c \
 	trig.c \
-        wordrepl.c \
+	wordrepl.c \
+	wordtoch.c \
 
 PRG_SOURCES= \
         ctmisc.prg \
