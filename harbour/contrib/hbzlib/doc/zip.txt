@@ -12,10 +12,10 @@
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
- *      <cFileToCompress>  Name of a file to Compress ,Drive and/or path
+ *      <cFileToCompress>  Name of a file to Compress, Drive and/or path
  *      can be used
  *
- *      <aFiles>  An array containing files to compress,Drive and/or path
+ *      <aFiles>  An array containing files to compress, Drive and/or path
  *      can be used
  *
  *      <nLevel>  Compression level ranging from 0 to 9
@@ -24,38 +24,42 @@
  *
  *      <lOverWrite>  Toggle to overwite the file if exists
  * $RETURNS$
- *      <lCompress>  .T. if file was create,otherwise .f.
+ *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
- *      This function create a zip file named <cFile>. If the extension
- *      is ommited , .ZIP will be assumed. If the second parameter is a
- *      character string, this file will be added to the zip file.If the
- *      second parameter is an array,all files names contained in <aFiles>
+ *      This function creates a zip file named <cFile>. If the extension
+ *      is ommited, .ZIP will be assumed. If the second parameter is a
+ *      character string, this file will be added to the zip file. If the
+ *      second parameter is an array, all file names contained in <aFiles>
  *      will be compressed.
  *
  *      If <nLevel> is used, it detemines the compression type where 0 means
- *      No compression and 9 means best compression.
+ *      no compression and 9 means best compression.
  *
  *      If <bBlock> is used, every time the file is opened to compress it
- *      will do the action specified.
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
  *
  *      If <lOverWrite> is used , it toggles to overwrite or not the existing
- *      file.Default is to overwrite the file.
+ *      file. Default is to overwrite the file.
  * $EXAMPLES$
  *      FUNCTION MAIN()
+ *
  *      IF HB_ZIPFILE( "TEST.ZIP","TEST.PRG") 
  *         qout("File was successly create")
  *      ENDIF
+ *
  *      IF HB_ZIPFILE( "TEST1.ZIP",{"TEST.PRG","c:\windows\win.ini"}) 
  *         qout("File was successly create")
  *      ENDIF
+ *
  *      IF HB_ZIPFILE( "TEST2.ZIP",{"TEST.PRG","c:\windows\win.ini"},8,{|nPos,cFile|,qout(cFile)}) 
  *         qout("File was successly create")
  *      ENDIF
- *      aFiles:={"TEST.PRG","c:\windows\win.ini"}
- *      nLen=len(afiles)
+ *
+ *      aFiles := {"TEST.PRG","c:\windows\win.ini"}
+ *      nLen   := Len(afiles)
  *      aGauge := GaugeNew( 5, 5, 7,40 , "W/B", "W+/B" ,'²')
  *      GaugeDisplay( aGauge )                                            
- *      Hb_ZIPFILE('test33.zip',afiles,8,{|nPos,cFile| GaugeUpdate(aGauge,nPos/nLen)})
+ *      Hb_ZIPFILE('test33.zip',aFiles,8,{|cFile,nPos| GaugeUpdate(aGauge,nPos/nLen)})
  *      Return Nil
  * $STATUS$
  *      R
@@ -87,19 +91,21 @@
  *      <lWithPath> Toggle to create directory if needed
  *
  * $RETURNS$
- *      <lCompress>  .T. if all file was successfuly restored,otherwise .f.
+ *      <lCompress>  .t. if all file was successfuly restored, otherwise .f.
  * $DESCRIPTION$
  *      This function restores all files contained inside the <cFile>.
- *      If the extension is ommited ,.ZIP will be assumed. If a file already 
- *      exists, it wlllbe overwriten.
+ *      If the extension is ommited, .ZIP will be assumed. If a file already 
+ *      exists, it wlll be overwriten.
  *
  *      If <bBlock> is used, every time the file is opened to compress it
- *      will do the action specified.
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
  * $EXAMPLES$
  *      FUNCTION MAIN()
+ *
  *      IF HB_UNZIPFILE( "TEST.ZIP") 
  *         qout("File was successly create")
  *      ENDIF
+ *
  *      IF HB_ZIPFILE( "TEST2.ZIP",{|cFile|,qout(cFile)}) 
  *         qout("File was successly create")
  *      ENDIF
@@ -124,7 +130,7 @@
  * $CATEGORY$
  *      ZIP FUNCTION
  * $ONELINER$
- *      Gets the number of files 
+ *      Gets the number of files that are in the zipfile
  * $SYNTAX$
  *      HB_GETUNZIPFILE( <cFile>) ---> nNumber
  * $ARGUMENTS$
@@ -133,26 +139,31 @@
  *      <nNumber>  The number of files contained inside the zipfile
  * $DESCRIPTION$
  *      This function returns the number of files that is stored in the zipfile.
- *      The propurse for this function is to use in conjuntion with the
+ *      The purpose for this function is to use in conjuntion with the
  *      HB_UNZIPFILE() function, so you can use returned result in the code
  *      block. See example below.
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *      Local nFiles :=HB_GETUNZIPFILE('test.zip')
+ *
  *      if nFiles >0
  *         ? "This files Contains ",nfiles
  *      endif
+ *
  *      Return Nil
  *
  *      Here is an example of How to use HB_GETUNZIPFILE() in conjunction
  *      with HB_UNZIPFILE()
+ *
  *      Function Main()
  *      Local aGauge,nLen
+ * 
  *      aGauge := GaugeNew( 5, 5, 7,40 , "W/B", "W+/B" ,'²')
  *      GaugeDisplay( aGauge )
- *      nlen:=HB_GETUNZIPFILE('test22')
- *      hb_UNZIPFILE('test22',{|cFile,nPos| GaugeUpdate(aGauge,nPos/nLen),qout(cFile)},.T.)
- *      return Nil      
+ *      nLen := HB_GETUNZIPFILE('test22')
+ *      hb_UNZIPFILE('test22',{|cFile,nPos| GaugeUpdate(aGauge,nPos/nLen),qout(cFile)},.t.)
+ *
+ *      Return Nil      
  * $STATUS$
  *      R
  * $COMPLIANCE$
