@@ -645,14 +645,336 @@
  *  $END$
  */
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsRegCallBack()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      For Progress displays: Sets a codeblock to be called during indexing
+ *  $SYNTAX$
+ *      AdsRegCallBack( bEval )  --> nil
+ *  $ARGUMENTS$
+ *      <bEval>    The codeblock that is eval'ed every 2 seconds during
+ *      indexing. A numeric value of the "percent completed" is passed
+ *      to the codeblock by the ADS server. The codeblock should return
+ *      a logical value: .T. to abort or .F. to not stop indexing.
+ *
+ *  $RETURNS$
+ *      <nil>
+ *  $DESCRIPTION$
+ *      See ACE.HLP for full details on AdsRegisterProgressCallback.
+ *      ACE32.DLL does not support the EVAL/EVERY clauses. Remember, there
+ *      is an external process doing the indexing that knows nothing of
+ *      Harbour expressions or codeblocks. Even with Local Server it's the
+ *      DLLs doing all the indexing. So to do progress meters
+ *      you need to implement this.
+ *  $EXAMPLES$
+ *       <table>
+ *       FUNCTION Main()
+ *          ...
+ *          AdsRegCallBack( {|nPercent| outputstuff(nPercent)}  )
+ *          /* The above codeblock will be called approximately
+ *               every 2 seconds while indexing.
+ *               The codeblock can return .T. to abort.   */
+ *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
+ *          AdsClrCallBack()
+ *       RETURN nil
+ *
+ *       FUNCTION outputstuff(nPercent)  /* The "callback" function */
+ *          ? "output stuff", nPercent
+ *       RETURN inkey() == 27
+ *       /*  If press ESC, returns .T. to abort.   */
+ *      </table>
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsClrCallBack()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsClrCallBack()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Clears the callback set by AdsRegCallBack().
+ *  $SYNTAX$
+ *      AdsClrCallBack() --> nil
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *      <nil>
+ *  $DESCRIPTION$
+ *      See AdsRegCallBack().
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsRegCallBack()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSSetDefault() *
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Get/Set function for ADS's DEFAULT setting.
+ *  $SYNTAX$
+ *      ADSSetDefault( [<cPath>] ) --> cPriorSetting
+ *  $ARGUMENTS$
+ *      <cPath>    Sets new value if passed.
+ *
+ *  $RETURNS$
+ *      <cPriorSetting>
+ *  $DESCRIPTION$
+ *      This function is NOT recommended! It allows direct access to the
+ *      ADS internal equivalent to SET DEFAULT TO. But this setting is
+ *      automatically maintained by Harbour's Set() function and the
+ *      SET DEFAULT TO command, so normal programming will not use this.
+ *      It exists primarily for testing purposes.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSSetDeleted() *
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Get/Set function for ADS's ShowDeleted() setting.
+ *  $SYNTAX$
+ *      ADSSetDeleted( [<lOnOff>] ) --> lPriorSetting
+ *  $ARGUMENTS$
+ *      <lOnOff>    Sets new value if passed. The value is parallel
+ *      to Harbour usage, so pass .F. to see deleted records or .T.
+ *      to hide them. (This is inverted from ADS's AdsShowDeleted()
+ *      syntax.)
+ *
+ *  $RETURNS$
+ *      <lPriorSetting>
+ *  $DESCRIPTION$
+ *      This function is NOT recommended! It allows direct access to the
+ *      ADS internal equivalent to SET DELETED. But this setting is
+ *      automatically maintained by Harbour's Set() function and the
+ *      SET DELETED ON/OFF command, so normal programming will not use this.
+ *      It exists primarily for testing purposes.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsSetSearchPath() *
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Get/Set function for ADS's AdsSetSearchPath() setting.
+ *  $SYNTAX$
+ *      AdsSetSearchPath( [<cPath>] ) --> cPriorSetting
+ *  $ARGUMENTS$
+ *      <cPath>     Sets new value if passed.
+ *
+ *  $RETURNS$
+ *      <cPriorSetting>
+ *  $DESCRIPTION$
+ *      This function is NOT recommended! It allows direct access to the
+ *      ADS AdsSetSearchPath() setting. But this setting is
+ *      automatically maintained by Harbour's Set() function and the
+ *      SET PATH command, so normal programming will not use this.
+ *      It exists primarily for testing purposes.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsSetExact() *
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Get/Set function for ADS's AdsSetExact() setting.
+ *  $SYNTAX$
+ *      AdsSetExact( [<lOnOff>] ) --> lPriorSetting
+ *  $ARGUMENTS$
+ *      <lOnOff>    Sets new value if passed.
+
+ *  $RETURNS$
+ *      <lPriorSetting>
+ *  $DESCRIPTION$
+ *      This function is NOT recommended! It allows direct access to the
+ *      ADS internal equivalent to SET EXACT. But this setting is
+ *      automatically maintained by Harbour's Set() function and the
+ *      SET EXACT ON/OFF command, so normal programming will not use this.
+ *      It exists primarily for testing purposes.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSSetCharType()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Sets the type of character data expected when opening tables.
+ *  $SYNTAX$
+ *      ADSSetCharType( <nCharType> ) --> nPriorSetting
+ *  $ARGUMENTS$
+ *      <nCharType>    Type of character data in the table.
+ *      From ADS docs:
+ *      Options are ADS_ANSI and ADS_OEM. This indicates the type of
+ *      character data to be stored in the table. For compatibility with
+ *      DOS-based CA-Clipper applications, ADS_OEM should be specified.
+ *      When usTableType is ADS_ADT, this parameter is ignored and ANSI
+ *      is always used.
+ *
+ *  $RETURNS$
+ *      <nPriorSetting>
+ *  $DESCRIPTION$
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *      This sets the usCharType parameter used when ADS opens a table.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsRightsCheck(),AdsLocking(), ADSSetFileType()
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsIsIndexed()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Fast determination for if current workarea has a selected index
+ *  $SYNTAX$
+ *      AdsIsIndexed() --> lActiveIndex
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *      <lActiveIndex>
+ *  $DESCRIPTION$
+ *      Equivalent to <b>empty(ordSetFocus())<\b>, but faster.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *  $SEEALSO$
+ *  $END$
+ */
+
 
 /* TO-DO:
 
-ADSSetCharType
-ADSSetDefault
-ADSSetDeleted
-ADSSetFileType
-ADSSetServerType
+AdsIsExprValid
+ADSGETCONNECTIONHANDLE
+AdsGetLastError
+AdsSetRelKeyPos
+AdsGetRelKeyPos
+
+v6:
+   AdsAddTable
+   AdsAddUserToGroup
+   ADSUSEDICTIONARY
+
+AdsAddCustomKey
+AdsDeleteCustomKey
+AdsGetTableAlias
+AdsConnect
+AdsDisconnect
+AdsCloseAllTables
+AdsWriteAllRecords
+AdsRefreshRecord
+AdsCopyTable
+AdsConvertTable
+AdsGetNumIndexes
 
 ADSDecryptRecord
 ADSDecryptTable
@@ -663,5 +985,42 @@ ADSEncryptTable
 ADSIsEncryptionEnabled
 ADSIsRecordEncrypted
 ADSIsTableEncrypted
+
 */
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      xxx()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      xxx
+ *  $SYNTAX$
+ *      xxx( <lMode> ) --> lPriorSetting
+ *  $ARGUMENTS$
+ *      <lMode>    xxx
+ *      xxx
+ *
+ *  $RETURNS$
+ *      <lPriorSetting>
+ *  $DESCRIPTION$
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      xxx()
+ *  $END$
+ */
+
 

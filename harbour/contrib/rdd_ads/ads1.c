@@ -69,6 +69,7 @@
 static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
 static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 static ERRCODE adsSetScope(  ADSAREAP pArea, LPDBORDSCOPEINFO sInfo );
+static iSetListenerHandle;
 
 HB_FUNC( _ADS );
 HB_FUNC( ADS_GETFUNCTABLE );
@@ -77,6 +78,8 @@ extern int adsFileType;                 /* current global setting */
 extern int adsLockType;
 extern int adsRights;
 extern int adsCharType;
+extern BOOL bDictionary;
+extern ADSHANDLE adsConnectHandle;
 
 #ifdef HB_PCODE_VER
    #undef HB_PRG_PCODE_VER
@@ -101,6 +104,48 @@ HB_INIT_SYMBOLS_END( ads1__InitSymbols )
 #endif
 
 static RDDFUNCS adsSuper = { NULL };
+
+void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum when )
+{
+   HB_TRACE(HB_TR_DEBUG, ("adsSetListener_callback (%d  %d)", setting, when));
+   if ( when == HB_SET_LISTENER_AFTER )  /* we don't do anything with BEFORE calls */
+   {
+      switch ( setting )
+      {
+         case HB_SET_DATEFORMAT :
+            AdsSetDateFormat( (UNSIGNED8*) hb_set.HB_SET_DATEFORMAT );
+            break;
+         case HB_SET_DEFAULT    :
+            AdsSetDefault( (UNSIGNED8*) hb_set.HB_SET_DEFAULT );
+            break;
+         case HB_SET_DELETED    :
+            AdsShowDeleted( ! hb_set.HB_SET_DELETED );
+            break;
+         case HB_SET_EPOCH      :
+            AdsSetEpoch( hb_set.HB_SET_EPOCH );
+            break;
+         case HB_SET_EXACT      :
+            AdsSetExact( hb_set.HB_SET_EXACT );
+            break;
+         case HB_SET_PATH       :
+            AdsSetSearchPath( (UNSIGNED8*) hb_set.HB_SET_PATH );
+            break;
+
+/* Possible TODO?
+         case HB_SET_MFILEEXT   :
+            if( hb_set.HB_SET_MFILEEXT ) hb_retc( hb_set.HB_SET_MFILEEXT );
+            break;
+         case HB_SET_STRICTREAD :
+            hb_retl( hb_set.HB_SET_STRICTREAD );
+            break;
+
+*/
+      }
+   }
+
+}
+
+
 
 static void commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char* filename )
 {
@@ -785,6 +830,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                pFieldInfo.uiType = HB_IT_LONG;
                pFieldInfo.uiTypeExtended = ADS_DOUBLE;
                pFieldInfo.uiLen = 8;
+               pFieldInfo.uiDec = uiDec;
             }
             else
                return FAILURE;
@@ -1043,6 +1089,8 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    DOUBLE     dVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
+
+   dVal = 0;
 
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
@@ -1603,7 +1651,14 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->hStatement = 0;
       pArea->hOrdCurrent = 0;
 
-      ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, pOpenInfo->atomAlias,
+      if (bDictionary)
+         ulRetVal = AdsOpenTable  ( adsConnectHandle, pOpenInfo->abName, pOpenInfo->atomAlias,
+                  ADS_DEFAULT, adsCharType, adsLockType, adsRights,
+                  ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
+                  ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
+                   &hTable);
+      else
+         ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, pOpenInfo->atomAlias,
                   pArea->iFileType, adsCharType, adsLockType, adsRights,
                   ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
                   ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
@@ -1943,7 +1998,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
-   if( !pArea->lpdbOrdCondInfo || ( pArea->lpdbOrdCondInfo->fAll && 
+   if( !pArea->lpdbOrdCondInfo || ( pArea->lpdbOrdCondInfo->fAll &&
                                     !pArea->lpdbOrdCondInfo->fAdditive ) )
       SELF_ORDLSTCLEAR( ( AREAP ) pArea );
 
@@ -2029,7 +2084,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    }else
       pArea->hOrdCurrent = phIndex;
 
-   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll && 
+   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll &&
                                  !pArea->lpdbOrdCondInfo->fAdditive )
    {
       ADSHANDLE ahIndex[50];
@@ -2779,6 +2834,9 @@ BOOL adsExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
 static ERRCODE adsExit( void )
 {
    AdsApplicationExit();
+   if ( iSetListenerHandle )
+      hb_setListenerRemove( iSetListenerHandle ) ;
+
    return SUCCESS;
 }
 
@@ -2893,11 +2951,14 @@ HB_FUNC( ADS_GETFUNCTABLE )
    uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
    * uiCount = RDDFUNCSCOUNT;
 
-   HB_TRACE(HB_TR_DEBUG, ("ADS_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("ADS_GETFUNCTABLE(%i, %p)", *uiCount, pTable));
 
    pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
    if( pTable )
+   {
+      iSetListenerHandle = hb_setListenerAdd( adsSetListener_callback );
       hb_retni( hb_rddInherit( pTable, &adsTable, &adsSuper, 0 ) );
+   }
    else
        hb_retni( FAILURE );
 }

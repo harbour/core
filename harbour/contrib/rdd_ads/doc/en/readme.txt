@@ -74,15 +74,42 @@
  *      ACE will <b>always</b> automatically open an index with the same
  *      name as the data file.  There is no way to turn this feature off.
 
- *      Be sure to use the command SET DEFAULT TO (cDir) and not its
- *      equivalent Set() function call. The Set() function will not make
- *      the call to ADS to change its internal setting, but the command
- *      will. The same is true for DATEFORMAT, DELETE, and EPOCH.
+ *      You can use the Set() function call as well as the equivalent
+ *      commands for SET DEFAULT TO, DATEFORMAT, DELETE, and EPOCH.
+ *      Harbour automatically makes the call to ADS to change its internal
+ *      setting to match Harbour's.
 
- *      For programmers who are already familiar with the
- *      ACE engine, this also means there are some differences
- *      between the RDDADS in Harbour and the parallel ACE documentation.
-
+ *      INDEXING and Progress Displays:
+ *      ACE32.DLL does not support the EVAL/EVERY clauses. Remember, there
+ *      is an external process doing the indexing that knows nothing of
+ *      Harbour expressions or codeblocks. Even with Local Server it's the
+ *      DLLs doing all the indexing. So to do progress meters
+ *      you need to implement <b>adsRegCallback( bEval )</b>.
+ *      It lets you set a codeblock that is eval'ed every 2 seconds.
+ *      A numeric value of the "percent completed" is passed to the
+ *      codeblock by the ADS server.
+ *
+ *       <table>
+ *       FUNCTION Main()
+ *          ...
+ *          AdsRegCallBack( {|nPercent| outputstuff(nPercent)}  )
+ *          /* The above codeblock will be called approximately
+ *               every 2 seconds while indexing.
+ *               The codeblock can return .T. to abort.   */
+ *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
+ *          AdsClrCallBack()
+ *       RETURN nil
+ *
+ *       FUNCTION outputstuff(nPercent)  /* The "callback" function */
+ *          ? "output stuff", nPercent
+ *       RETURN inkey() == 27
+ *       /*  If press ESC, returns .T. to abort.   */
+ *      </table>
+ *
+ *      For programmers who are already familiar with the ACE engine,
+ *      Harbour's compatibility with dbfcdx means there are some differences
+ *      between the RDDADS in Harbour and the parallel ACE documentation:
+ *
  *      1) In ACE, skipping backwards to BOF goes to the phantom record and
  *      sets the record number to 0.  In RDDADS, the  record pointer stays at
  *      the Top record and only the BOF flag is set to True.

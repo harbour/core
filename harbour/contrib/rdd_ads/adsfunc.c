@@ -64,6 +64,7 @@
 #include "hbstack.h"
 
 #define HARBOUR_MAX_RDD_FILTER_LENGTH     256
+#define MAX_STR_LEN 255
 extern ERRCODE adsCloseCursor( ADSAREAP pArea );
 
 int adsFileType = ADS_CDX;
@@ -71,6 +72,7 @@ int adsLockType = ADS_PROPRIETARY_LOCKING;
 int adsRights = 1;
 int adsCharType = ADS_ANSI;
 ADSHANDLE adsConnectHandle = 0;
+BOOL bDictionary = FALSE;               /* Use Data Dictionary? */
 
 PHB_ITEM itmCobCallBack = 0;
 
@@ -243,12 +245,28 @@ HB_FUNC( ADSSETCHARTYPE )
 
 HB_FUNC( ADSSETDEFAULT )
 {
+   UNSIGNED8  pucDefault[ MAX_STR_LEN+1];
+   UNSIGNED16 pusLen = MAX_STR_LEN;
+
+   AdsGetDefault( pucDefault, &pusLen);
+
+   hb_retclen( pucDefault, pusLen );
+
    if( ISCHAR(1) )
       AdsSetDefault( (UNSIGNED8*) hb_parc( 1 ) );
+
 }
+
 
 HB_FUNC( ADSSETSEARCHPATH )
 {
+   UNSIGNED8  pucPath[ MAX_STR_LEN+1];
+   UNSIGNED16 pusLen = MAX_STR_LEN;
+
+   AdsGetSearchPath( pucPath, &pusLen);
+
+   hb_retclen( pucPath, pusLen );
+
    if( ISCHAR(1) )
       AdsSetSearchPath( (UNSIGNED8*) hb_parc( 1 ) );
 }
@@ -256,7 +274,25 @@ HB_FUNC( ADSSETSEARCHPATH )
 HB_FUNC( ADSSETDELETED )
 {
    UNSIGNED16 usShowDeleted = hb_parl( 1 );
-   AdsShowDeleted( !usShowDeleted );
+   UNSIGNED16 pbShowDeleted ;
+
+   AdsGetDeleted( &pbShowDeleted ) ;
+   hb_retl( ! pbShowDeleted );
+
+   if( ISLOG(1) )
+      AdsShowDeleted( !usShowDeleted );
+}
+
+HB_FUNC( ADSSETEXACT )
+{
+   UNSIGNED16 usExact = hb_parl( 1 );
+   UNSIGNED16 pbExact ;
+
+   AdsGetExact( &pbExact ) ;
+   hb_retl( pbExact );
+
+   if( ISLOG(1) )
+      AdsSetExact( usExact );
 }
 
 HB_FUNC( ADSBLOB2FILE )
@@ -267,7 +303,7 @@ HB_FUNC( ADSBLOB2FILE )
 
    szFileName = hb_parc( 1 );
    szFieldName = hb_parc( 2 );
-   if( !szFileName || !szFieldName || ( strlen( szFileName ) == 0 ) || 
+   if( !szFileName || !szFieldName || ( strlen( szFileName ) == 0 ) ||
             ( strlen( szFieldName ) == 0 ) )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSBLOB2FILE" );
@@ -291,7 +327,7 @@ HB_FUNC( ADSFILE2BLOB )
 
    szFileName = hb_parc( 1 );
    szFieldName = hb_parc( 2 );
-   if( !szFileName || !szFieldName || ( strlen( szFileName ) == 0 ) || 
+   if( !szFileName || !szFieldName || ( strlen( szFileName ) == 0 ) ||
          ( strlen( szFieldName ) == 0 ) )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSFILE2BLOB" );
@@ -907,6 +943,7 @@ HB_FUNC( ADSDISCONNECT )
 
    if ( ulRetVal == AE_SUCCESS )
    {
+      adsConnectHandle = 0;
       hb_retl( 1 );
    }
    else
@@ -1253,3 +1290,46 @@ HB_FUNC( ADSGETLASTERROR )
    hb_retnl( ulLastErr );
 }
 
+#ifdef ADS_REQUIRE_VERSION6
+
+HB_FUNC(ADSADDTABLE)
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pTableName = hb_parc( 1 );
+   UNSIGNED8 *pTableFileName = hb_parc( 2 );
+   UNSIGNED8 *pTableIndexFileName = hb_parc( 3 );
+
+   ulRetVal= AdsDDAddTable( adsConnectHandle, pTableName, pTableFileName, adsFileType, adsCharType, pTableIndexFileName, NULL);
+
+   if ( ulRetVal == AE_SUCCESS )
+      hb_retl(1);
+   else
+      hb_retl(0);
+}
+
+HB_FUNC(ADSADDUSERTOGROUP)
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED8 *pGroup = hb_parc( 1 );
+   UNSIGNED8 *pName  = hb_parc( 2 );
+
+   ulRetVal = AdsDDAddUserToGroup( adsConnectHandle,
+                                   pGroup,
+                                   pName);
+
+   if ( ulRetVal == AE_SUCCESS )
+        hb_retl(1);
+    else
+        hb_retl(0);
+}
+
+HB_FUNC(ADSUSEDICTIONARY)
+{
+   BOOL bOld = bDictionary;
+   if ( ISLOG( 1 ) )
+      bDictionary = hb_parl( 1 ) ;
+
+   hb_retl(bOld);
+}
+
+#endif

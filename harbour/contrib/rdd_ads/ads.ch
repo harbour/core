@@ -87,10 +87,27 @@
 
 #command SET SERVER LOCAL   => AdsSetServerType ( 1 )
 #command SET SERVER REMOTE  => AdsSetServerType ( 2 )
+
 /* Server type constants for ORing with AdsSetServerType() */
 #define ADS_LOCAL_SERVER         1
 #define ADS_REMOTE_SERVER        2
 #define ADS_AIS_SERVER           4
+
+/*
+   If you are want to use functions from ADS version 6 or later
+   (data dictionary support, built-in Internet Server
+   capabilities, etc.), you must do two things:
+
+   1) Link with an ACE32.LIB created from the version 6 or
+         later dll that imports these functions, and
+   2) Set this "define" when compiling rddads:
+
+   #define ADS_REQUIRE_VERSION6
+
+   Otherwise, any version of ADS will work but you won't have
+   the extra functionality available past v.5.
+
+*/
 
 
 #command SET AXS LOCKING <x:ON,OFF>                                   ;
@@ -98,27 +115,5 @@
 
 #command SET CHARTYPE TO <x:ANSI,OEM>                                 ;
       => AdsSetCharType( if( upper( <(x)> ) == "OEM", 2, 1 ) )
-
-#command SET DEFAULT TO <(path)>                                      ;
-      => Set( _SET_DEFAULT, <(path)> ); AdsSetDefault( <(path)> )
-#command SET DEFAULT TO                                               ;
-      => Set( _SET_DEFAULT, "" ); AdsSetDefault( "" )
-
-#command SET PATH TO <(path)>                                         ;
-      => Set( _SET_PATH, <(path)> ); AdsSetSearchPath( <(path)> )
-#command SET PATH TO                                                  ;
-      => Set( _SET_PATH, "" ); AdsSetSearchPath( "" )
-
-#command SET DELETED <x:ON,OFF,&>                                     ;
-      =>  Set( _SET_DELETED, <(x)> )                                  ;
-          ;AdsSetDeleted( if( upper( <(x)> ) == "ON", .t., .f. ) )
-#command SET DELETED (<x>)                                            ;
-      =>  Set( _SET_DELETED, <x> ); AdsSetDeleted( <x> )
-
-#command SET EPOCH TO <year>                                          ;
-      => Set( _SET_EPOCH, <year> ); AdsSetEpoch( <year> )
-
-#command SET DATE FORMAT [TO] <c>                                     ;
-      => Set( _SET_DATEFORMAT, <c> ); AdsSetDateFormat( <c> )
 
 #command COMMIT                 => AdsWriteAllRecords()

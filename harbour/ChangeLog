@@ -8,6 +8,70 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2002-12-17 10:50 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads.ch
+      - Removed commands for SET PATH, DEFAULT, DELETED, EXACT,
+        DATEFORMAT and EPOCH since these are handled by the
+        Set Listener functionality now.
+      + added new #define ADS_REQUIRE_VERSION6 to control version 6
+         ace32.lib/linker requirements
+
+   * contrib/rdd_ads/ads1.c
+      * created Set Listener support for
+         HB_SET_DATEFORMAT
+         HB_SET_DEFAULT
+         HB_SET_DELETED
+         HB_SET_EPOCH
+         HB_SET_EXACT
+         HB_SET_PATH
+         So whenever you call the Set() function or commands,
+         ADS is automatically updated.
+
+      * added these fixes by Luiz Culik:
+         * Created bDictionary and adsConnectHandle to allow access
+            to ads data dictionaries;
+         * store pFieldInfo.uiDec = uiDec for doubles in adsCreateFields.
+
+      * fixed initialization of dVal in adsGetValue
+            (fix by Ron Christie)
+
+      * fixed Trace in ADS_GETFUNCTABLE(%i, %p), *uiCount, pTable));
+         to show the contents of uiCount instead of the pointer address.
+
+   * contrib/rdd_ads/adsfunc.c
+      * to test SetListener capabilities, added or upgraded
+         these functions to be classic "Set/Get" functions so
+         they return the prior ads setting:
+            AdsSetDeleted
+            AdsSetDefault
+            AdsSetSearchPath
+            AdsSetExact
+         NOTE! Because the Set() function now also controls
+         ADS, there is no reason for normal code to ever call
+         these functions. If you do, you may get ADS out of sync
+         with Harbour's settings and create unpredictable results.
+
+      + added these funcs by Luiz Culik:
+         AdsAddTable()
+         AdsAddUser To Group()
+         AdsUseDictionary()
+         These are all protected by ADS_REQUIRE_VERSION6, so to use them
+         you must define it when compiling rddads.
+
+      The data dictionary support is a work-in-progress and may need
+      to be re-thought, so don't get too dependent upon current
+      implementation.
+
+    * contrib/rdd_ads/doc/en/adsfuncs.txt
+        + added documentation for functions in adsfunc.c
+    * contrib/rdd_ads/doc/en/readme.txt
+        + added explanation for using the Set() function call
+          as well as the equivalent commands for SET DEFAULT TO,
+          DATEFORMAT, DELETE, EXACT and EPOCH.
+        + added explanation of INDEXING and Progress Displays using
+            AdsRegCallBack() (and why EVAL/EVERY cannot be supported.)
+
 2002-12-17 12:40 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/tget.prg
     ! Fix, UpdateBuffer() should not actualize the variable if the value
@@ -53,7 +117,7 @@
 
 2002-11-26 21:20 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
   * contrib/odbc/browodbc.prg
-    ! There was a bug in skipping, that threw an error when 
+    ! There was a bug in skipping, that threw an error when
       dataset contained 0 rows
 
 2002-11-25 21:45 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
@@ -98,7 +162,7 @@
 
 2002-11-18 22:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
-    ! COPY TO ... FIELDS ... is fixed - fields in the result dbf are in the 
+    ! COPY TO ... FIELDS ... is fixed - fields in the result dbf are in the
       same secuence as in the FIELDS clause.
 
 2002-11-18 14:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
