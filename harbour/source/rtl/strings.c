@@ -381,7 +381,9 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
       }
       else if( IS_DATE( pItem ) )
       {
-         szText = hb_dtoc( hb_pards( 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
+         char szDate[ 9 ];
+
+         szText = hb_dtoc( hb_pardsbuff( szDate, 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
          *pulSize = strlen( szText );
       }
       else if( IS_INTEGER( pItem ) )

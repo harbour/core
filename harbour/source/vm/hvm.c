@@ -3088,7 +3088,10 @@ static void hb_stackDispLocal( void )
             break;
 
          case IT_DATE:
-            printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, hb_stack.szDate ) );
+            {
+               char szDate[ 9 ];
+               printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, szDate ) );
+            }
             break;
 
          case IT_DOUBLE:

@@ -101,6 +101,7 @@ double hb_secondsToday( void )
 
    ftime( &tb );
    oTime = localtime( &tb.time );
+
    return ( oTime->tm_hour * 3600 ) +
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
@@ -123,33 +124,32 @@ char * hb_cdow( int iDay )
 
 long hb_dateEncode( long lDay, long lMonth, long lYear )
 {
-   BOOL bValid = FALSE;
-   long lFactor = ( lMonth < 3 ) ? -1 : 0;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
    /* Perform date validation */
-   if( lMonth >= 1 && lMonth <= 12 && lDay >= 1
-      && lYear >= 1 && lYear <= 2999 )
+   if( lYear >= 1 && lYear <= 2999 &&
+       lMonth >= 1 && lMonth <= 12 &&
+       lDay >= 1 )
    {
       /* Month, year, and lower day limits are simple,
          but upper day limit is dependent upon month and leap year */
-      int aiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+      USHORT auiDayLimit[ 12 ] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
       if( ( ( lYear % 4 == 0 && lYear % 100 != 0 ) || lYear % 400 == 0 ) )
-         aiDayLimit[ 1 ] = 29;
+         auiDayLimit[ 1 ] = 29;
 
-      if( lDay <= ( long ) aiDayLimit[ ( int ) lMonth - 1 ] )
-         bValid = TRUE;
+      if( lDay <= ( long ) auiDayLimit[ ( int ) lMonth - 1 ] )
+      {
+         long lFactor = ( lMonth < 3 ) ? -1 : 0;
+
+         return ( 1461 * ( lFactor + 4800 + lYear ) / 4 ) +
+                ( ( lMonth - 2 - ( lFactor * 12 ) ) * 367 ) / 12 -
+                ( 3 * ( ( lFactor + 4900 + lYear ) / 100 ) / 4 ) +
+                lDay - 32075;
+      }
    }
 
-   if( bValid )
-      return ( 1461 * ( lFactor + 4800 + lYear ) / 4 ) +
-             ( ( lMonth - 2 - ( lFactor * 12 ) ) * 367 ) / 12 -
-             ( 3 * ( ( lYear + 4900 + lFactor ) / 100 ) / 4 ) +
-             lDay - 32075;
-   else
-      return 0;
+   return 0;
 }
 
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
@@ -168,14 +168,16 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
       V = 80 * julian / 2447;
       U = V / 11;
 
-      if( plDay )   *plDay   = julian - ( 2447 * V / 80 );
-      if( plMonth ) *plMonth = V + 2 - ( U * 12 );
-      if( plYear )  *plYear  = X + U + ( W - 49 ) * 100;
+      *plDay   = julian - ( 2447 * V / 80 );
+      *plMonth = V + 2 - ( U * 12 );
+      *plYear  = X + U + ( W - 49 ) * 100;
    }
    else
+   {
       *plDay   =
       *plMonth =
       *plYear  = 0;
+   }
 }
 
 void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
@@ -212,10 +214,12 @@ void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * pl
                  ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
    }
    else
+   {
       /* Date string missing or bad length, so force an empty date */
       *plDay   =
       *plMonth =
       *plYear  = 0;
+   }
 }
 
 /* This function always closes the date with a zero byte, so it needs a
@@ -249,85 +253,98 @@ HARBOUR HB_CTOD( void )
 {
    if( hb_pcount() == 1 )
    {
-      char * szDate = hb_parc( 1 );
-      int d_value = 0, m_value = 0, y_value = 0;
-      char szDateFormat[ 9 ];
-
-      if( szDate )
+      if( ISCHAR( 1 ) )
       {
-         int d_pos = 0, m_pos = 0, y_pos = 0;
-         int count, digit, size = strlen( hb_set.HB_SET_DATEFORMAT );
+         char * szDate = hb_parc( 1 );
+         int d_value = 0, m_value = 0, y_value = 0;
+         char szDateFormat[ 9 ];
 
-         for( count = 0; count < size; count++ )
+         if( szDate )
          {
-            switch( hb_set.HB_SET_DATEFORMAT[ count ] )
+            int d_pos = 0, m_pos = 0, y_pos = 0;
+            int count, digit, size = strlen( hb_set.HB_SET_DATEFORMAT );
+
+            for( count = 0; count < size; count++ )
             {
-               case 'D':
-               case 'd':
-                  if( d_pos == 0 )
-                  {
-                     if( m_pos == 0 && y_pos == 0 ) d_pos = 1;
-                     else if( m_pos == 0 || y_pos == 0 ) d_pos = 2;
-                     else d_pos = 3;
-                  }
-                  break;
-               case 'M':
-               case 'm':
-                  if( m_pos == 0 )
-                  {
-                     if( d_pos == 0 && y_pos == 0 ) m_pos = 1;
-                     else if( d_pos == 0 || y_pos == 0 ) m_pos = 2;
-                     else m_pos = 3;
-                  }
-                  break;
-               case 'Y':
-               case 'y':
-                  if( y_pos == 0 )
-                  {
-                     if( m_pos == 0 && d_pos == 0 ) y_pos = 1;
-                     else if( m_pos == 0 || d_pos == 0 ) y_pos = 2;
-                     else y_pos = 3;
-                  }
+               switch( hb_set.HB_SET_DATEFORMAT[ count ] )
+               {
+                  case 'D':
+                  case 'd':
+                     if( d_pos == 0 )
+                     {
+                        if( m_pos == 0 && y_pos == 0 ) d_pos = 1;
+                        else if( m_pos == 0 || y_pos == 0 ) d_pos = 2;
+                        else d_pos = 3;
+                     }
+                     break;
+                  case 'M':
+                  case 'm':
+                     if( m_pos == 0 )
+                     {
+                        if( d_pos == 0 && y_pos == 0 ) m_pos = 1;
+                        else if( d_pos == 0 || y_pos == 0 ) m_pos = 2;
+                        else m_pos = 3;
+                     }
+                     break;
+                  case 'Y':
+                  case 'y':
+                     if( y_pos == 0 )
+                     {
+                        if( m_pos == 0 && d_pos == 0 ) y_pos = 1;
+                        else if( m_pos == 0 || d_pos == 0 ) y_pos = 2;
+                        else y_pos = 3;
+                     }
+               }
+            }
+
+            size = strlen( szDate );
+
+            for( count = 0; count < size; count++ )
+            {
+               digit = szDate[ count ];
+               if( isdigit( digit ) )
+               {
+                  if( d_pos == 1 )
+                     d_value = ( d_value * 10 ) + digit - '0';
+                  else if( m_pos == 1 )
+                     m_value = ( m_value * 10 ) + digit - '0';
+                  else if( y_pos == 1 )
+                     y_value = ( y_value * 10 ) + digit - '0';
+               }
+               else if( digit != ' ' )
+               {
+                  d_pos--;
+                  m_pos--;
+                  y_pos--;
+               }
+            }
+
+            if( y_value > 0 && y_value < 100 )
+            {
+               count = hb_set.HB_SET_EPOCH % 100;
+               digit = hb_set.HB_SET_EPOCH / 100;
+
+               if( y_value >= count )
+                  y_value += ( digit * 100 );
+               else
+                  y_value += ( ( digit * 100 ) + 100 );
             }
          }
 
-         size = strlen( szDate );
+         sprintf( szDateFormat, "%04i%02i%02i", y_value, m_value, d_value );
 
-         for( count = 0; count < size; count++ )
+         hb_retds( szDateFormat );
+      }
+      else
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1119, NULL, "CTOD" );
+
+         if( pResult )
          {
-            digit = szDate[ count ];
-            if( isdigit( digit ) )
-            {
-               if( d_pos == 1 )
-                  d_value = ( d_value * 10 ) + digit - '0';
-               else if( m_pos == 1 )
-                  m_value = ( m_value * 10 ) + digit - '0';
-               else if( y_pos == 1 )
-                  y_value = ( y_value * 10 ) + digit - '0';
-            }
-            else if( digit != ' ' )
-            {
-               d_pos--;
-               m_pos--;
-               y_pos--;
-            }
-         }
-
-         if( y_value > 0 && y_value < 100 )
-         {
-            count = hb_set.HB_SET_EPOCH % 100;
-            digit = hb_set.HB_SET_EPOCH / 100;
-
-            if( y_value >= count )
-               y_value += ( digit * 100 );
-            else
-               y_value += ( ( digit * 100 ) + 100 );
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
          }
       }
-
-      sprintf( szDateFormat, "%04i%02i%02i", y_value, m_value, d_value );
-
-      hb_retds( szDateFormat );
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CTOD" ); /* NOTE: Clipper catches this at compile time! */
@@ -353,7 +370,7 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
 
    if( szDate && szFormattedDate && strlen( szDate ) == 8 ) /* A valid date is always 8 characters */
    {
-      const char *szPtr;
+      const char * szPtr;
       int digit;
       BOOL used_d, used_m, used_y;
 
@@ -509,13 +526,21 @@ HARBOUR HB_DTOC( void )
    {
       if( ISDATE( 1 ) )
       {
-         char * szDate = hb_pards( 1 );
+         char szDate[ 9 ];
          char szFormatted[ 11 ];
 
-         hb_retc( hb_dtoc( szDate, szFormatted, hb_set.HB_SET_DATEFORMAT ) );
+         hb_retc( hb_dtoc( hb_pardsbuff( szDate, 1 ), szFormatted, hb_set.HB_SET_DATEFORMAT ) );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1118, NULL, "DTOC" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1118, NULL, "DTOC" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DTOC" ); /* NOTE: Clipper catches this at compile time! */
@@ -530,9 +555,21 @@ HARBOUR HB_DTOS( void )
    if( hb_pcount() == 1 )
    {
       if( ISDATE( 1 ) )
-         hb_retc( hb_pards( 1 ) );
+      {
+         char szDate[ 9 ];
+
+         hb_retc( hb_pardsbuff( szDate, 1 ) );
+      }
       else
-         hb_errRT_BASE( EG_ARG, 1120, NULL, "DTOS" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1120, NULL, "DTOS" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DTOS" ); /* NOTE: Clipper catches this at compile time! */
@@ -557,7 +594,7 @@ HARBOUR HB_HB_STOD( void )
    hb_retds( hb_parc( 1 ) );
 }
 
-HARBOUR HB_DAY( void )
+HARBOUR HB_YEAR( void )
 {
    if( hb_pcount() == 1 )
    {
@@ -569,13 +606,21 @@ HARBOUR HB_DAY( void )
 
          hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
 
-         hb_retnllen( lDay, 3 );
+         hb_retnllen( lYear, 5 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1114, NULL, "DAY" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1112, NULL, "YEAR" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DAY" ); /* NOTE: Clipper catches this at compile time! */
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "YEAR" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_MONTH( void )
@@ -593,13 +638,21 @@ HARBOUR HB_MONTH( void )
          hb_retnllen( lMonth, 3 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1113, NULL, "MONTH" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1113, NULL, "MONTH" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MONTH" ); /* NOTE: Clipper catches this at compile time! */
 }
 
-HARBOUR HB_YEAR( void )
+HARBOUR HB_DAY( void )
 {
    if( hb_pcount() == 1 )
    {
@@ -611,13 +664,21 @@ HARBOUR HB_YEAR( void )
 
          hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
 
-         hb_retnllen( lYear, 5 );
+         hb_retnllen( lDay, 3 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1112, NULL, "YEAR" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1114, NULL, "DAY" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "YEAR" ); /* NOTE: Clipper catches this at compile time! */
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DAY" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_TIME( void )
@@ -663,6 +724,7 @@ HARBOUR HB_DATE( void )
          oTime = localtime( &t );
          sprintf( szResult, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
       #endif
+
       hb_retds( szResult );
    }
    else
@@ -704,7 +766,15 @@ HARBOUR HB_DOW( void )
             hb_retnllen( 0, 3 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1115, NULL, "DOW" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1115, NULL, "DOW" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "DOW" ); /* NOTE: Clipper catches this at compile time! */
@@ -724,7 +794,15 @@ HARBOUR HB_CMONTH( void )
          hb_retc( hb_cmonth( lMonth ) );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1116, NULL, "CMONTH" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1116, NULL, "CMONTH" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CMONTH" ); /* NOTE: Clipper catches this at compile time! */
@@ -738,13 +816,26 @@ HARBOUR HB_CDOW( void )
 
       if( pDate )
       {
-         long lDay, lMonth, lYear;
+         if( pDate->item.asDate.value )
+         {
+            long lDay, lMonth, lYear;
 
-         hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
-         hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
+            hb_dateDecode( pDate->item.asDate.value, &lDay, &lMonth, &lYear );
+            hb_retc( hb_cdow( hb_dow( lDay, lMonth, lYear ) ) );
+         }
+         else
+            hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1117, NULL, "CDOW" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1117, NULL, "CDOW" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CDOW" ); /* NOTE: Clipper catches this at compile time! */
@@ -757,3 +848,4 @@ HARBOUR HB_SECONDS( void )
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SECONDS" ); /* NOTE: Clipper catches this at compile time! */
 }
+

@@ -300,8 +300,11 @@ HARBOUR HB_MAX( void )
          }
       }
       else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
-         hb_retds( hb_itemGetNL( p1 ) >= hb_itemGetNL( p2 ) ? hb_pards( 1 ) : hb_pards( 2 ) );
+      {
+         char szDate[ 9 ];
 
+         hb_retds( hb_itemGetNL( p1 ) >= hb_itemGetNL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
+      }
       else
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1093, NULL, "MAX" );
@@ -359,8 +362,11 @@ HARBOUR HB_MIN( void )
          }
       }
       else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
-         hb_retds( hb_itemGetNL( p1 ) <= hb_itemGetNL( p2 ) ? hb_pards( 1 ) : hb_pards( 2 ) );
+      {
+         char szDate[ 9 ];
 
+         hb_retds( hb_itemGetNL( p1 ) <= hb_itemGetNL( p2 ) ? hb_pardsbuff( szDate, 1 ) : hb_pardsbuff( szDate, 2 ) );
+      }
       else
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1092, NULL, "MIN" );

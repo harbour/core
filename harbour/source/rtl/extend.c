@@ -235,6 +235,43 @@ char * hb_pards( int iParam, ... )
    return hb_dateDecStr( hb_stack.szDate, 0 );
 }
 
+/* NOTE: szDate must be a 9 chars wide buffer. */
+
+char * hb_pardsbuff( char * szDate, int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%d, ...)", iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem;
+
+      if( iParam == -1 )
+         pItem = &hb_stack.Return;
+      else
+         pItem = hb_stack.pBase + 1 + iParam;
+
+      if( IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( IS_DATE( pItem ) )
+         return hb_dateDecStr( szDate, pItem->item.asDate.value );
+
+      else if( IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return hb_arrayGetDS( pItem, ulArrayIndex, szDate );
+      }
+   }
+
+   return hb_dateDecStr( szDate, 0 );
+}
+
 int hb_parl( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d, ...)", iParam));

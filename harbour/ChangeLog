@@ -1,3 +1,26 @@
+19991113-13:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/extend.c
+    include/extend.h
+    + hb_pardsbuff() Extend API function added, which does the same as
+      hb_pards(), but multi-thread friendly without any tricks, it will simply
+      accept a buffer for the return value.
+  * source/rtl/dates.c
+    source/rtl/math.c
+    source/rtl/strings.c
+    source/rtl/transform.c
+    * Changed to use hb_pardsbuff() instead of hb_pards()
+       DTOC(), DTOS(), MIN(), MAX(), TRANSFORM(), PAD*()
+  * tests/rtl_test.prg
+    + DTOC(), DTOS(), DAY(), MONTH(), YEAR(), DAY(), DOW(), CMONTH(), CDOW(),
+      TIME(), CTOD() regression tests added.
+  * source/rtl/dates.c
+    % Small optimalizations.
+    ! Error substitution added for all date functions.
+    + CTOD() - Added missing runtime error.
+    ! CDOW() - Fixed for empty and bad dates.
+  * source/vm/hvm.c
+    * hb_stack.szDate changed to local buffer.
+
 19991113-03:23 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/itemapi.c
     % hb_evalNew(), hb_evalPutParam(), hb_evalRelease(), hb_itemRelease(),

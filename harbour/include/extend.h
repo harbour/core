@@ -243,6 +243,7 @@ extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
 extern ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
 extern ULONG    hb_parcsiz( int iParam, ... );
 extern char *   hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
+extern char *   hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex );
 extern int      hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern int      hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */

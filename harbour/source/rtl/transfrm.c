@@ -572,8 +572,10 @@ HARBOUR HB_TRANSFORM( void )
             }
             case IT_DATE:
             {
+               char szDate[ 9 ];
                char szResult[ 11 ];
-               DatePicture( hb_pards( 1 ), uiPicFlags, szResult );
+
+               DatePicture( hb_pardsbuff( szDate, 1 ), uiPicFlags, szResult );
                hb_retc( szResult );
                break;
             }
@@ -613,8 +615,10 @@ HARBOUR HB_TRANSFORM( void )
             }
             case IT_DATE:
             {
+               char szDate[ 9 ];
                char szResult[ 11 ];
-               DatePicture( hb_pards( 1 ), 0, szResult );
+
+               DatePicture( hb_pardsbuff( szDate, 1 ), 0, szResult );
                hb_retc( szResult );
                break;
             }
