@@ -1,3 +1,22 @@
+2001-09-08 11:32 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/rtl/persist.prg
+     extern HB_STOD added
+
+   * harbour/contrib/hgf/win32/win32.ch
+     some defines added
+
+   * harbour/contrib/hgf/win32/makefile.bc
+     module edit.prg added
+
+   * harbour/contrib/hgf/win32/button.prg
+     Some defines moved to win32.ch
+
+   * harbour/contrib/hgf/win32/edit.prg
+     Class HBEdit
+
+   * harbour/contrib/hgf/tests/testctrl.prg
+     HBEdit control test added
+
 2001-09-08 00:01 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * hb_slex.bat
    * make_b32.bat
