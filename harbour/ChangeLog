@@ -1,3 +1,7 @@
+19990925-11:10 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * Fixed some bugs, noted by Victor Szel, Andi Jahja and Antonio Linares
+
 19990925-07:52 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/testwarn.prg
     ! Added a MAIN() function.
