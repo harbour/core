@@ -86,8 +86,8 @@
 #include "hbapifs.h"
 #include "hbapigt.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 typedef enum
@@ -211,8 +211,8 @@ extern HB_SET_STRUCT hb_set;
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_SET_H_ */

@@ -36,8 +36,8 @@
 #ifndef HB_INIT_H_
 #define HB_INIT_H_
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* statics symbols initialization */
@@ -132,8 +132,8 @@ extern void hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* stati
 
 #endif /* HARBOUR_STRICT_ANSI_C */
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_INIT_H_ */

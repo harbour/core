@@ -44,8 +44,8 @@
 #include "hbdefs.h"
 #include "hbvmpub.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* items types and type checking macros */
@@ -484,8 +484,8 @@ extern char * hb_macroGetType( HB_ITEM_PTR );
 extern char * hb_version( USHORT uiMode );
 extern char * hb_valtypeGet( HB_ITEM_PTR );
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_APIEXT_H_ */

@@ -49,8 +49,8 @@
 #include "hbexprop.h"
 #include "hbpcode.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* compiler related declarations */
@@ -371,8 +371,8 @@ extern char *      hb_comp_szWarnings[];
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_COMP_H_ */

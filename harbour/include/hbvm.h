@@ -38,8 +38,8 @@
 
 #include "hbapi.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* Harbour virtual machine init/exit functions */
@@ -89,8 +89,8 @@ extern void    hb_vmPushSymbol( PHB_SYMB pSym ); /* pushes a function pointer on
 extern void    hb_stackDispCall( void );
 extern void    hb_stackPop( void );        /* pops an item from the stack */
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_VM_H_ */

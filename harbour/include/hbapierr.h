@@ -39,8 +39,8 @@
 #include "hbapi.h"
 #include "error.ch"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* Error codes (returned from hb_errLaunch()) */
@@ -155,8 +155,8 @@ typedef struct HB_ERROR_INFO_
 /*  set/get current error handler */
 extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR );
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_APIERR_H_ */

@@ -36,8 +36,8 @@
 #ifndef HB_TRACE_H_
 #define HB_TRACE_H_
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /*
@@ -185,8 +185,8 @@ extern int    hb_tracelevel( int new_level );
 extern int    hb_tr_level( void );
 extern void   hb_tr_trace( char * fmt, ... );
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_TRACE_H_ */

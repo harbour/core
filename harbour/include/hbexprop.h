@@ -38,8 +38,8 @@
 
 #include "hbapi.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* value types seen at language level
@@ -351,8 +351,8 @@ void hb_compExprDelete( HB_EXPR_PTR );
 
 #endif
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif  /* HB_EXPROP_H_ */

@@ -41,8 +41,8 @@
 #include "hberrors.h"
 #include "hbver.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* the list of pathnames to search with #include */
@@ -107,8 +107,8 @@ extern DEFINES *  hb_pp_topDefine;
 extern COMMANDS * hb_pp_topCommand;
 extern COMMANDS * hb_pp_topTranslate;
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_PP_H_ */

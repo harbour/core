@@ -55,8 +55,8 @@
 #include "hbexprop.h"
 #include "hbpcode.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* flags for compilation process
@@ -135,8 +135,8 @@ extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );
 extern void hb_compCodeBlockStart( HB_MACRO_DECL );
 extern void hb_compCodeBlockEnd( HB_MACRO_DECL );
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_MACRO_H_ */

@@ -232,5 +232,12 @@
    #endif
 #endif
 
-#endif /* HB_SETUP_H_ */
+/* ***********************************************************************
+ * Extern "C" detection
+ */
 
+#if defined(__cplusplus) && !defined(__IBMCPP__)
+   #define HB_EXTERN_C
+#endif
+
+#endif /* HB_SETUP_H_ */

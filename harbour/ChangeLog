@@ -1,3 +1,27 @@
+2000-03-27 23:20 GMT-5 David G. Holm <dholm@jsd-llc.com>
+   * include/hbapi.h
+   * include/hbapierr.h
+   * include/hbapifs.h
+   * include/hbapigt.h
+   * include/hbapiitm.h
+   * include/hbapilng.h
+   * include/hbapirdd.h
+   * include/hbcomp.h
+   * include/hbdate.h
+   * include/hberrors.h
+   * include/hbexprop.h
+   * include/hbinit.h
+   * include/hbmacro.h
+   * include/hbpp.h
+   * include/hbset.h
+   * include/hbsetup.h
+   * include/hbtrace.h
+   * include/hbvm.h
+   * include/hbvmpub.h
+     % Changed from using #if defined(__cplusplus) to using #if
+       defined(HB_EXTERN_C) and added definition of HB_EXTERN_C to
+       hbsetup.h #if defined(__cplusplus) && !defined(__IBMCPP__)
+
 20000328-03:35 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + doc/c_std.txt

@@ -38,8 +38,8 @@
 
 #include "hbdefs.h"
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 struct _HB_DYNS;
@@ -76,8 +76,8 @@ typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
 extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_VMPUB_H_ */

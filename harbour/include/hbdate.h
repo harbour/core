@@ -36,8 +36,8 @@
 #ifndef HB_DATE_H_
 #define HB_DATE_H_
 
-#if defined(__cplusplus)
-//extern "C" {
+#if defined(HB_EXTERN_C)
+extern "C" {
 #endif
 
 /* In msgxxx.c modules */
@@ -56,8 +56,8 @@ extern void     hb_dateStrGet( const char * szDate, long * plDay, long * plMonth
 extern char *   hb_dateDecStr( char * szDate, long lJulian );
 extern long     hb_dateEncStr( char * szDate );
 
-#if defined(__cplusplus)
-//}
+#if defined(HB_EXTERN_C)
+}
 #endif
 
 #endif /* HB_DATE_H_ */
