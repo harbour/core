@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-16 17:08 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * harbour/contrib/rdd_ads/adsfunc.c
+     Renamed adsGetConnectionType() as AdsGetTableConType() and added
+     adsGetConnectionType( [hConnect] ) from Brian Hays' implementation in xHarbour.
+
+     Due to the recent changes introduced to Harbour that render FWH inoperable,
+     this is likely my last contribution to Harbour's CVS as I'll be using xHarbour
+     only with my FWH apps (I currently use FW/FWH 2.3c).
+
 2004-04-16 19:05 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * hrbdll.bc
      * Makefile for the harbour.dll is changed

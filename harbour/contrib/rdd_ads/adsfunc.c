@@ -165,6 +165,33 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
 {
    UNSIGNED16 pusConnectType = 0;
    UNSIGNED32 ulRetVal;
+   ADSHANDLE  hConnToCheck = ISNUM( 1 ) ? (ADSHANDLE) hb_parnl( 1 ) : adsConnectHandle;
+      // caller can specify a connection. Otherwise use current handle.
+      // The global adsConnectHandle will continue to be 0 if no adsConnect60 (Data
+      // Dictionary) calls are made. Simple table access uses an implicit connection
+      // whose handle we don't see unless you get it from an opened table
+      // with  ADSGETTABLECONTYPE
+
+   if( hConnToCheck )
+   {
+      ulRetVal = AdsGetConnectionType ( hConnToCheck, &pusConnectType ) ;
+      if( ulRetVal != AE_SUCCESS )
+      {
+         // it may have set an error value, or leave as 0.   pusConnectType = AE_INVALID_CONNECTION_HANDLE;
+      }
+   }
+   else
+   {
+      // pusConnectType = AE_INVALID_CONNECTION_HANDLE;
+      pusConnectType = AE_NO_CONNECTION;
+   }
+   hb_retnl( pusConnectType );
+}
+
+HB_FUNC( ADSGETTABLECONTYPE )
+{
+   UNSIGNED16 pusConnectType = 0;
+   UNSIGNED32 ulRetVal;
    ADSAREAP   pArea;
    ADSHANDLE  pTableConnectHandle = 0;
 
