@@ -164,7 +164,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
     bReturn=false;
 	}
      catch(...){}
-     if (HB_IS_BLOCK(pProgressInfo))
+     if (pProgressInfo)
         hb_itemRelease(pProgressInfo    );
     return bReturn;  /* to avoid warning */
 }
@@ -286,7 +286,7 @@ int   hb_CompressFile(char *szFile,PHB_ITEM pArray,int iCompLevel,PHB_ITEM pBloc
 	}
      catch(...){}
     pDiskStatus=NULL    ;
-     if (HB_IS_BLOCK(pProgressInfo))
+     if (pProgressInfo)
         hb_itemRelease(pProgressInfo    );
 
     return  bReturn;  /* to avoid warning */
@@ -408,7 +408,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
     bReturn=false;
 	}
      catch(...){}
-     if (HB_IS_BLOCK(pProgressInfo))
+     if (pProgressInfo)
         hb_itemRelease(pProgressInfo    );
     
     return     bReturn;  /* to avoid warning */
@@ -510,7 +510,7 @@ int   hb_CompressFileStd(char *szFile,char *szFiletoCompress,int iCompLevel,PHB_
 	}
     catch(...){}
     pDiskStatus=NULL    ;
-     if (HB_IS_BLOCK(pProgressInfo))
+     if (pProgressInfo)
         hb_itemRelease(pProgressInfo    );
 
     return true;  /* to avoid warning */

@@ -57,22 +57,12 @@
 
 #define HB_OS_WIN_32_USED
 
-#include "hbvm.h"
-#include "hbapiitm.h"
-
-typedef void ( * VM_PROCESS_DLL_SYMBOLS ) ( PHB_SYMB pModuleSymbols,
-                                            USHORT uiModuleSymbols );
-
-typedef void ( * VM_DLL_EXECUTE ) ( const BYTE * pCode, PHB_SYMB pSymbols );
-
-typedef BOOL ( * EXT_IS_ARRAY ) ( int iParam );
-typedef char * ( * EXT_PARC1 )  ( int iParam );
-typedef char * ( * EXT_PARC2 )  ( int iParam, ULONG ulArrayIndex );
+#include "hbtypes.h"
 
 
 #if defined(HB_OS_WIN_32)
 
-BOOL HB_EXPORT WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
+BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
              pvReserved ) );
@@ -146,5 +136,515 @@ char * hb_parc( int iParam, ... )
    else
       return "";
 }
+
+PHB_ITEM hb_param( int iParam, int iMask ) /* retrieve a generic parameter */
+{
+   PHB_ITEM pReturn;
+   FARPROC pParam=GetProcAddress( GetModuleHandle( NULL ), "_hb_param" );
+   if (pParam)
+      pReturn=((HB_PARAM)pParam)(iParam,iMask);
+   return pReturn;
+}
+
+PHB_ITEM hb_paramError( int iParam ) /* Returns either the generic parameter or a NIL item if param not provided */
+{
+   PHB_ITEM pReturn;
+   FARPROC pParamError=GetProcAddress( GetModuleHandle( NULL ), "_hb_paramError" );
+   if (pParamError)
+      pReturn=((HB_PARAMERROR)pParamError)(iParam);
+   return pReturn;
+}
+int   hb_pcount( void )          /* returns the number of suplied parameters */
+{
+   int iReturn;
+   FARPROC pCounts=GetProcAddress(GetModuleHandle( NULL ), "_hb_pcount" );
+   if (pCounts)
+      iReturn=((HB_PCOUNTS)pCounts)();
+   return iReturn;
+}
+
+void hb_retc( char * szText )   /* returns a string */
+{
+   FARPROC pRetc=GetProcAddress(GetModuleHandle( NULL ), "_hb_retc" );
+   if (pRetc)
+      ((HB_RETC)pRetc)(szText);
+}
+
+void hb_retclen( char * szText, ULONG ulLen ) /* returns a string with a specific length */
+{
+   FARPROC pRetclen=GetProcAddress(GetModuleHandle( NULL ), "_hb_retclen" );
+   if (pRetclen)
+      ((HB_RETCLEN)pRetclen)(szText,ulLen);
+}
+
+void hb_retds( char * szDate )  /* returns a date, must use yyyymmdd format */
+{
+   FARPROC pRetds=GetProcAddress(GetModuleHandle( NULL ), "_hb_retds" );
+   if (pRetds)
+      ((HB_RETDS)pRetds)(szDate);
+}
+
+void hb_retd( long lYear, long lMonth, long lDay ) /* returns a date */
+{
+   FARPROC pRetd=GetProcAddress(GetModuleHandle( NULL ), "_hb_retd" );
+   if (pRetd)
+      ((HB_RETD)pRetd)(lYear,lMonth,lDay);
+}
+
+void hb_retdl( long lJulian )   /* returns a long value as a julian date */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retdl" );
+   if (pRet)
+      ((HB_RETDL)pRet)(lJulian);
+
+}
+
+void hb_retl( int iTrueFalse ) /*  returns a logical integer */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retl" );
+   if (pRet)
+      ((HB_RETDL)pRet)(iTrueFalse);
+}
+
+void hb_retnd( double dNumber ) /* returns a double */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retnd" );
+   if (pRet)
+      ((HB_RETND)pRet)(dNumber);
+}
+
+void     hb_retni( int iNumber )    /* returns a integer number */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retni" );
+   if (pRet)
+      ((HB_RETNI)pRet)(iNumber);
+
+}
+
+void hb_retnl( long lNumber )   /* returns a long number */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retnl" );
+   if (pRet)
+      ((HB_RETNL)pRet)(lNumber);
+}
+
+void hb_retnlen( double dNumber, int iWidth, int iDec ) /* returns a double, with specific width and decimals */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retnlen" );
+   if (pRet)
+      ((HB_RETNLEN)pRet)(dNumber,iWidth,iDec);
+
+}
+
+void hb_retndlen( double dNumber, int iWidth, int iDec ) /* returns a double, with specific width and decimals */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retndlen" );
+   if (pRet)
+      ((HB_RETNDLEN)pRet)(dNumber,iWidth,iDec);
+}
+
+void hb_retnilen( int iNumber, int iWidth ) /* returns a integer number, with specific width */
+{
+    FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retnilen" );
+    if (pRet)
+      ((HB_RETNILEN)pRet)(iNumber,iWidth);
+}
+
+void hb_retnllen( long lNumber, int iWidth ) /* returns a long number, with specific width */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_retnilen" );
+   if (pRet)
+      ((HB_RETNLLEN)pRet)(lNumber,iWidth);
+}
+
+void hb_reta( ULONG ulLen )  /* returns an array with a specific length */
+{
+   FARPROC pRet=GetProcAddress(GetModuleHandle( NULL ), "_hb_reta" );
+   if (pRet)
+      ((HB_RETA)pRet)(ulLen);
+}
+
+ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex ) /* retrieve length or element type of an array parameter */
+{
+   ULONG ulReturn;
+   FARPROC pParinfa=GetProcAddress( GetModuleHandle( NULL ), "_hb_parinfa" );
+   if (pParinfa)
+      ulReturn=((HB_PARINFA)pParinfa)(iParamNum,uiArrayIndex);
+   return ulReturn;
+}
+
+int hb_parinfo( int iParam ) /* Determine the param count or data type */
+{
+   int iReturn;
+   FARPROC pParinfo=GetProcAddress( GetModuleHandle( NULL ), "_hb_parinfo" );
+   if (pParinfo)
+      iReturn=((HB_PARINFO)pParinfo)(iParam);
+   return iReturn;
+}
+
+ULONG hb_parclen( int iParam, ... ) /* retrieve a string parameter length */
+{
+   FARPROC pParC= GetProcAddress( GetModuleHandle( NULL ), "_hb_parclen" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   if( pExtIsArray && pParC )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARCLEN2 ) pParC )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARCLEN ) pParC )( iParam );
+   }
+   else
+      return 0;
+}
+
+ULONG    hb_parcsiz( int iParam, ... )/* retrieve a by-reference string parameter length, including terminator */
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pParcSiz= GetProcAddress( GetModuleHandle( NULL ), "_hb_parcsiz" );
+
+   if( pExtIsArray && pParcSiz )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARCSIZ2 ) pParcSiz )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARCSIZ ) pParcSiz )( iParam );
+   }
+   else
+      return 0;
+}
+
+char * hb_pards( int iParam, ... ) /* retrieve a date as a string yyyymmdd */
+{
+   FARPROC pParDs= GetProcAddress( GetModuleHandle( NULL ), "_hb_pards" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+
+   if( pExtIsArray && pParDs )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARDS2 ) pParDs )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARDS ) pParDs )( iParam );
+   }
+   else
+      return "";
+}
+
+char * hb_pardsbuff( char * szDate, int iParam, ... ) /* retrieve a date as a string yyyymmdd */
+{
+   FARPROC pParDsBuff = GetProcAddress( GetModuleHandle( NULL ), "_hb_pardsbuff" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+
+   if( pExtIsArray && pParDsBuff )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARDSBUFF2 ) pParDsBuff )( szDate, iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARDSBUFF ) pParDsBuff )( szDate, iParam );
+   }
+   else
+      return "";
+}
+
+int hb_parl( int iParam, ... ) /* retrieve a logical parameter as an int */
+{
+   int iReturn;
+   FARPROC pParL=GetProcAddress( GetModuleHandle( NULL ), "_hb_parl" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+
+   if( pExtIsArray && pParL )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARL2 ) pParL )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARL ) pParL )( iParam );
+   }
+   else
+      return 0;
+}
+
+double hb_parnd( int iParam, ... ) /* retrieve a numeric parameter as a double */
+{
+
+   FARPROC pParNd=GetProcAddress( GetModuleHandle( NULL ), "_hb_parnd" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+
+   if( pExtIsArray && pParNd )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARND2 ) pParNd )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARND ) pParNd )( iParam );
+   }
+   else
+      return 0;
+}
+
+int hb_parni( int iParam, ... ) /* retrieve a numeric parameter as a integer */
+{
+   int iReturn;
+   FARPROC pParNi=GetProcAddress( GetModuleHandle( NULL ), "_hb_parni" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+
+   if( pExtIsArray && pParNi )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARNI2 ) pParNi )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARNI ) pParNi )( iParam );
+   }
+   else
+      return 0;
+}
+
+long hb_parnl( int iParam, ... ) /* retrieve a numeric parameter as a long */
+{
+
+   FARPROC pParNl=GetProcAddress( GetModuleHandle( NULL ), "_hb_parnl" );
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+
+   if( pExtIsArray && pParNl )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return ( ( HB_PARNL2 ) pParNl )( iParam, ulArrayIndex );
+      }
+      else
+         return ( ( HB_PARNL ) pParNl )( iParam );
+   }
+   else
+      return 0;
+}
+
+void hb_storc( char * szText, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorC = GetProcAddress( GetModuleHandle( NULL ), "_hb_storc" );
+
+   if( pExtIsArray && pStorC )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORC2) pStorC )( szText, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORC ) pStorC )( szText, iParam );
+   }
+}
+
+void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorC = GetProcAddress( GetModuleHandle( NULL ), "_hb_storclen" );
+
+   if( pExtIsArray && pStorC )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORCLEN2) pStorC )( szText, ulLen, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORCLEN ) pStorC )( szText, ulLen, iParam );
+   }
+}
+
+void hb_stords( char * szDate, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorDs = GetProcAddress( GetModuleHandle( NULL ), "_hb_stords" );
+
+   if( pExtIsArray && pStorDs )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORDS2) pStorDs )( szDate, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORDS ) pStorDs )( szDate, iParam );
+   }
+}
+
+void hb_storl( int iLogical, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorL = GetProcAddress( GetModuleHandle( NULL ), "_hb_storl" );
+
+   if( pExtIsArray && pStorL )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORL2) pStorL )( iLogical, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORL ) pStorL )(  iLogical, iParam );
+   }
+}
+
+void hb_storni( int iValue, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorNi = GetProcAddress( GetModuleHandle( NULL ), "_hb_storni" );
+
+   if( pExtIsArray && pStorNi )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORNI2) pStorNi )( iValue, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORNI) pStorNi )(  iValue, iParam );
+   }
+}
+
+void hb_stornl( long lValue, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorNl = GetProcAddress( GetModuleHandle( NULL ), "_hb_stornl" );
+
+   if( pExtIsArray && pStorNl )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORNL2) pStorNl )( lValue, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORNL) pStorNl )(  lValue, iParam );
+   }
+}
+
+void hb_stornd( double dNumber, int iParam, ... )
+{
+   FARPROC pExtIsArray = GetProcAddress( GetModuleHandle( NULL ), "_hb_extIsArray" );
+   FARPROC pStorNd = GetProcAddress( GetModuleHandle( NULL ), "_hb_stornd" );
+
+   if( pExtIsArray && pStorNd )
+   {
+      if( ( ( EXT_IS_ARRAY ) pExtIsArray ) ( iParam ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         ( ( HB_STORND2) pStorNd )( dNumber, iParam, ulArrayIndex );
+      }
+      else
+         ( ( HB_STORND) pStorNd )( dNumber, iParam );
+   }
+}
+
 
 #endif

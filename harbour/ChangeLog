@@ -7,6 +7,19 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * contrib/apollo
+     + Added function sx_GoBottom()
+     + Added function sx_Go()
+     + Added function sx_Seek()
+     + Added function sx_SetSoftSeek()
+     + Added function sx_RLock()
+     + Added function sx_Reindex()
+     + Added function sx_RecCount()
+     + Added function sx_SetMemoBlockSize()
+     + Added function sx_CreateNew()
+     + Added function sx_CreateField()
+     + Added function sx_CreateExec()
+   * contrib/apollo/test
      * Added added functions in the test application.
 
 2001-12-30 04:40 UTC+0700 Andi Jahja <harbour@cbn.net.id>

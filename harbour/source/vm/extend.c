@@ -77,7 +77,7 @@
 /* NOTE: iParam = -1 can be used to access the return value. */
 /* NOTE: iParam = 0 can be used to access the SELF object. */
 
-PHB_ITEM hb_param( int iParam, int iMask )
+PHB_ITEM HB_EXPORT hb_param( int iParam, int iMask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_param(%d, %d)", iParam, iMask));
 
@@ -98,7 +98,7 @@ PHB_ITEM hb_param( int iParam, int iMask )
    return NULL;
 }
 
-PHB_ITEM hb_paramError( int iParam )
+PHB_ITEM  HB_EXPORT hb_paramError( int iParam )
 {
    static HB_ITEM s_NIL;
 
@@ -160,7 +160,7 @@ char HB_EXPORT * hb_parc( int iParam, ... )
    return "";
 }
 
-ULONG hb_parclen( int iParam, ... )
+ULONG  HB_EXPORT hb_parclen( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d, ...)", iParam));
 
@@ -193,7 +193,7 @@ ULONG hb_parclen( int iParam, ... )
          terminating zero byte, and it only works for parameters passed by
          reference. [vszakats] */
 
-ULONG hb_parcsiz( int iParam, ... )
+ULONG  HB_EXPORT hb_parcsiz( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parcsiz(%d, ...)", iParam));
 
@@ -230,7 +230,7 @@ ULONG hb_parcsiz( int iParam, ... )
 /* NOTE: Using hb_stack.szDate as a temporary date buffer guaranties
          good behavior when multithreading. */
 
-char * hb_pards( int iParam, ... )
+char  HB_EXPORT * hb_pards( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pards(%d, ...)", iParam));
 
@@ -261,7 +261,7 @@ char * hb_pards( int iParam, ... )
 
 /* NOTE: szDate must be a 9 chars wide buffer. [vszakats] */
 
-char * hb_pardsbuff( char * szDate, int iParam, ... )
+char  HB_EXPORT * hb_pardsbuff( char * szDate, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%p, %d, ...)", szDate, iParam));
 
@@ -290,7 +290,7 @@ char * hb_pardsbuff( char * szDate, int iParam, ... )
    return hb_dateDecStr( szDate, 0 );
 }
 
-int hb_parl( int iParam, ... )
+int  HB_EXPORT hb_parl( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d, ...)", iParam));
 
@@ -325,7 +325,7 @@ int hb_parl( int iParam, ... )
    return 0;
 }
 
-double hb_parnd( int iParam, ... )
+double  HB_EXPORT hb_parnd( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parnd(%d, ...)", iParam));
 
@@ -358,7 +358,7 @@ double hb_parnd( int iParam, ... )
    return 0;
 }
 
-int hb_parni( int iParam, ... )
+int  HB_EXPORT hb_parni( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d, ...)", iParam));
 
@@ -391,7 +391,7 @@ int hb_parni( int iParam, ... )
    return 0;
 }
 
-long hb_parnl( int iParam, ... )
+long  HB_EXPORT hb_parnl( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parnl(%d, ...)", iParam));
 
@@ -426,7 +426,7 @@ long hb_parnl( int iParam, ... )
    return 0;
 }
 
-ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
+ULONG  HB_EXPORT hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 {
    PHB_ITEM pArray;
 
@@ -445,7 +445,7 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
       return 0;
 }
 
-int hb_parinfo( int iParam )
+int  HB_EXPORT hb_parinfo( int iParam )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parinfo(%d)", iParam));
 
@@ -474,35 +474,35 @@ int hb_parinfo( int iParam )
 
 #ifndef HB_API_MACROS
 
-int hb_pcount( void )
+int  HB_EXPORT hb_pcount( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
 
    return ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt;
 }
 
-void hb_ret( void )
+void  HB_EXPORT hb_ret( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_ret()"));
 
    hb_itemClear( &hb_stack.Return );
 }
 
-void hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
+void  HB_EXPORT hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_reta(%lu)", ulLen));
 
    hb_arrayNew( &hb_stack.Return, ulLen );
 }
 
-void hb_retc( char * szText )
+void HB_EXPORT  hb_retc( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc(%s)", szText));
 
    hb_itemPutC( &hb_stack.Return, szText );
 }
 
-void hb_retclen( char * szText, ULONG ulLen )
+void  HB_EXPORT hb_retclen( char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%s, %lu)", szText, ulLen));
 
@@ -511,77 +511,77 @@ void hb_retclen( char * szText, ULONG ulLen )
 
 /* szDate must have YYYYMMDD format */
 
-void hb_retds( char * szDate )
+void HB_EXPORT hb_retds( char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retds(%s)", szDate));
 
    hb_itemPutDS( &hb_stack.Return, szDate );
 }
 
-void hb_retd( long lYear, long lMonth, long lDay )
+void HB_EXPORT hb_retd( long lYear, long lMonth, long lDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retd(%04i, %02i, %02i)", lYear, lMonth, lDay));
 
    hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay );
 }
 
-void hb_retdl( long lJulian )
+void HB_EXPORT hb_retdl( long lJulian )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retdl(%ld)", lJulian));
 
    hb_itemPutDL( &hb_stack.Return, lJulian );
 }
 
-void hb_retl( int iLogical )
+void HB_EXPORT hb_retl( int iLogical )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retl(%d)", iLogical));
 
    hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE );
 }
 
-void hb_retnd( double dNumber )
+void HB_EXPORT hb_retnd( double dNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnd(%lf)", dNumber));
 
    hb_itemPutND( &hb_stack.Return, dNumber );
 }
 
-void hb_retni( int iNumber )
+void HB_EXPORT hb_retni( int iNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retni(%d)", iNumber));
 
    hb_itemPutNI( &hb_stack.Return, iNumber );
 }
 
-void hb_retnl( long lNumber )
+void HB_EXPORT hb_retnl( long lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%ld)", lNumber));
 
    hb_itemPutNL( &hb_stack.Return, lNumber );
 }
 
-void hb_retnlen( double dNumber, int iWidth, int iDec )
+void HB_EXPORT hb_retnlen( double dNumber, int iWidth, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnlen(%lf, %d, %d)", dNumber, iWidth, iDec));
 
    hb_itemPutNLen( &hb_stack.Return, dNumber, iWidth, iDec );
 }
 
-void hb_retndlen( double dNumber, int iWidth, int iDec )
+void HB_EXPORT hb_retndlen( double dNumber, int iWidth, int iDec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retndlen(%lf, %d, %d)", dNumber, iWidth, iDec));
 
    hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec );
 }
 
-void hb_retnilen( int iNumber, int iWidth )
+void HB_EXPORT hb_retnilen( int iNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnilen(%d, %d)", iNumber, iWidth));
 
    hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth );
 }
 
-void hb_retnllen( long lNumber, int iWidth )
+void HB_EXPORT hb_retnllen( long lNumber, int iWidth )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retnllen(%ld, %d)", lNumber, iWidth));
 
@@ -590,7 +590,7 @@ void hb_retnllen( long lNumber, int iWidth )
 
 #endif
 
-void hb_storc( char * szText, int iParam, ... )
+void HB_EXPORT hb_storc( char * szText, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d, ...)", szText, iParam));
 
@@ -616,7 +616,7 @@ void hb_storc( char * szText, int iParam, ... )
    }
 }
 
-void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
+void HB_EXPORT hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
@@ -644,7 +644,7 @@ void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
 
 /* szDate must have YYYYMMDD format */
 
-void hb_stords( char * szDate, int iParam, ... )
+void HB_EXPORT hb_stords( char * szDate, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d, ...)", szDate, iParam));
 
@@ -670,7 +670,7 @@ void hb_stords( char * szDate, int iParam, ... )
    }
 }
 
-void hb_storl( int iLogical, int iParam, ... )
+void HB_EXPORT hb_storl( int iLogical, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d, ...)", iLogical, iParam));
 
@@ -696,7 +696,7 @@ void hb_storl( int iLogical, int iParam, ... )
    }
 }
 
-void hb_storni( int iValue, int iParam, ... )
+void HB_EXPORT hb_storni( int iValue, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storni(%d, %d, ...)", iValue, iParam));
 
@@ -722,7 +722,7 @@ void hb_storni( int iValue, int iParam, ... )
    }
 }
 
-void hb_stornl( long lValue, int iParam, ... )
+void HB_EXPORT hb_stornl( long lValue, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stornl(%ld, %d, ...)", lValue, iParam));
 
@@ -748,7 +748,7 @@ void hb_stornl( long lValue, int iParam, ... )
    }
 }
 
-void hb_stornd( double dNumber, int iParam, ... )
+void HB_EXPORT hb_stornd( double dNumber, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stornd(%lf, %d, ...)", dNumber, iParam));
 

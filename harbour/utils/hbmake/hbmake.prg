@@ -114,6 +114,12 @@ Local nPos, aFile := {}
 Local aDef := {}
 Local cOs:=OS()
 Local allParam
+
+If Pcount() == 0
+   ShowHelp()
+   Return NIL
+Endif
+
 //__traceprgcalls(.t.)
 //Local oProfile := HBProfile():new()
 //   __setProfiler( .T. )
@@ -126,15 +132,13 @@ Default p3 To ""
 Default p4 To ""
 Default p5 To ""
 Default p6 To ""
+
 if at("OS/2",cOs)>0
     lGcc:=.t.
     lLinux:=.t.
     lBcc:=.f.
 endif
-If Pcount() == 0
-   ShowHelp()
-   Return NIL
-Endif
+
 Allparam:=ConvertParams(@cFile, aFile, p1, p2, p3, p4, p5, p6)
 
 if len( aFile ) > 1
@@ -152,8 +156,22 @@ If empty(cFile) .and. !lEditMode
    Return Nil
 Endif
 
-ProcessParameters(AllParam)
+/*
+allParam:=p1 + p2 +p3+p4 + p5 +p6
+Allparam:=ConvertParams(AllParam)
+If Pcount() == 0
+   ShowHelp()
+   Return NIL
+Endif
+If cFile == NIL .and. !lEditMode
+   ? "File not Found"
+   Return Nil
+Endif
+*/
 
+If Pcount() >= 1
+   ProcessParameters(AllParam)
+Endif
 //if !file(cfile)
 //   return nil
 //endif
@@ -319,7 +337,7 @@ While !leof
         elseif at('!iffile',cTemp)>0
             checkiffile(cTemp)
         elseif at('!stdout',cTemp)>0
-            checkstdout(cTemp)
+            checkstdout(cTemp)            
         endif
         //   endif
      Endif
@@ -714,7 +732,7 @@ else /****** Extended mode *****/
                            outstd(hb_osnewline())
                ! ( cComm )
                   cErrText := memoread( 'test.out' )
-                  lEnd := 'Error' $ cErrText
+                  lEnd := 'Error' $ cErrText 
                /*   if file('test.out'  )
                     ferase('test.out'  )
                   endif*/
@@ -917,6 +935,8 @@ Local cUserdef:=space(40)
 Local cUserInclude:=space(40)
 Local aLibs,aLibsin:={},aLibsout:={}
 local lExternalLib:=.f.
+Local cOldLib:=""
+Local cHtmlLib:=""
 
 nLinkHandle := Fcreate( cFile )
 WriteMakeFileHeader()
@@ -1264,40 +1284,33 @@ if lRddads
 endif
     if Len(alibsout)>0 .and. lExternalLib
         if lvcc .or. lbcc
+            cOldLib:=cDefBccLibs
             nPos:=ascan(aLibsout,{|z| at("html",lower(z))>0 } )
             if npos>0
-               cLibs+=aLibsout[npos]+" "+cDefBccLibs
-            adel(alibsout,nPos)
-            asize(alibsout,len(alibsout)-1)
+                cHtmlLib+=aLibsout[npos]               
+                adel(alibsout,nPos)
+                asize(alibsout,len(alibsout)-1)
             endif
             aeval(alibsout,{ |cLib| cLibs+=" "+cLib})
-            clibs+= " "+cDefBccLibs
-            cDefBccLibs:=cLibs
+            cDefBccLibs:=cHtmlLib+" "+cOldLib+" "+cLibs
         endif
         if lGcc
            nPos:=ascan(aLibsout,{|z| at("html",lower(z))>0 } )
            if npos>0
-                if  cOs=="Linux"
-                    cLibs+="-l"+strtran(aLibsout[npos],'.a',"")+" "+cDeflibGccLibs
-                elseif cOs=="OS/2"
-                    cLibs+="-l"+strtran(aLibsout[npos],'.a',"")+" "+cgcclibsos2
-                else
-                    cLibs+="-l"+strtran(aLibsout[npos],'.a',"")+" "+cDefGccLibs
-                endif
-
+                cHtmlLib+="-l"+strtran(aLibsout[npos],'.a',"")
                 adel(alibsout,nPos)
                 asize(alibsout,len(alibsout)-1)
            endif
                 aeval(alibsout,{ |cLib| cLibs+=" -l"+strtran(cLib,'.a',"")})
-                if  cOs=="Linux"
-                    clibs+= " "+cDeflibGccLibs
-                    cDeflibGccLibs:=cLibs
+                if  cOs=="Linux"                   
+                    cOldLib:= " "+cDeflibGccLibs
+                    cDeflibGccLibs:=cHtmlLib+" "+cOldLib+" "+cLibs
                 elseif cOs=="OS/2"
-                    clibs+= " "+cgcclibsos2
-                    cgcclibsos2:=cLibs
+                    cOldLib:= " "+cgcclibsos2
+                    cgcclibsos2:=cHtmlLib+" "+cOldLib+" "+cLibs
                 else
-                    clibs+= " "+cDefGccLibs
-                    cDefGccLibs:=cLibs
+                    cOldLib:= " "+cDefGccLibs
+                    cDefGccLibs:=cHtmlLib+" "+cOldLib+" "+cLibs
                 endif
             endif
     ENDIF
@@ -1610,8 +1623,8 @@ function fileisnewer(cFile,as)
 local nCount := 0
 IF !lextended
 For nCount:=1 to len(aPrgs)
-         adir := { cFile,, hbmake_filedate( cFile ), hbmake_filetime( cFile ), ;
-                   as[nCount], hbmake_filedate( as[nCount] ), hbmake_filetime( as[nCount] )}
+         adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
+                   as[nCount], filedate( as[nCount] ), filetime( as[nCount] )}
          if empty( adir[ 7 ] )
             adir[ 2 ] := .t.
          else
@@ -1619,8 +1632,8 @@ For nCount:=1 to len(aPrgs)
          endif
 next
 else
-         adir := { cFile,, hbmake_filedate( cFile ), hbmake_filetime( cFile ), ;
-                   as, hbmake_filedate( as ), hbmake_filetime( as )}
+         adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
+                   as, filedate( as ), filetime( as )}
          if empty( adir[ 7 ] )
             adir[ 2 ] := .t.
          else
@@ -2289,7 +2302,7 @@ Local cPath AS STRING := ''
 Local cEnv  AS STRING 
 Local aEnv  AS Array of string
 Local nPos as Numeric
-if lLinux
+if lLinux 
     cpath:="."
 else
     cEnv  := Gete( "PATH" )
@@ -2305,7 +2318,6 @@ else
 endif
 Return cPath
 
-// Function ConvertParams(cParam)
 Function ConvertParams(cFile, aFile, p1, p2, p3, p4, p5, p6)
 
    LOCAL cParam := ""
@@ -2387,6 +2399,24 @@ Function ConvertParams(cFile, aFile, p1, p2, p3, p4, p5, p6)
    cParam:=strtran(cParam,"-f","-F")
    cParam:=strtran(cParam,"-r","-R")
 return cParam
+
+/*
+Function ConvertParams(cParam)
+   cParam:=strtran(cParam,"/","-")
+   cParam:=strtran(cParam,"-elx","-ELX")
+   cParam:=strtran(cParam,"-el","-ELX")
+   cParam:=strtran(cParam,"-ex","-EX")
+   cParam:=strtran(cParam,"-e","-EX")
+   cParam:=strtran(cParam,"-i","-I")
+   cParam:=strtran(cParam,"-p","-P")
+   cParam:=strtran(cParam,"-b","-B")
+   cParam:=strtran(cParam,"-gl","-GL")
+   cParam:=strtran(cParam,"-g","-G")
+   cParam:=strtran(cParam,"-v","-V")
+   cParam:=strtran(cParam,"-f","-F")
+   cParam:=strtran(cParam,"-r","-R")
+return cParam
+*/
 
 Function ShowHelp()
    Local cOs:=OS()
