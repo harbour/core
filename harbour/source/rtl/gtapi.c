@@ -822,10 +822,18 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
                uiCol = uiMaxCol;
             }
 */
-            if( nLen > 0 )
-                --nLen;
+
             if( uiCol > 0 )
-                --uiCol;
+            {
+               --uiCol;
+               ldisp = TRUE;
+            }
+            else if( uiCol == 0 && uiRow > 0 )
+            {
+               uiCol = uiMaxCol;
+               --uiRow;
+               ldisp = TRUE;
+            }
 
             break;
          case 10:

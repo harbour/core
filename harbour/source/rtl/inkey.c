@@ -190,7 +190,7 @@ void hb_releaseCPU( void )
 #endif
 }
 
-int hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )
+int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )
 {
    int key;
    clock_t end_clock;

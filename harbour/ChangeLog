@@ -1,3 +1,27 @@
+19990916-23:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/gtapi.c
+    ! hb_gtWriteCon() fixed handling of backspace character.
+  * source/rtl/console.c
+    % Some extend API calls changed to Item API to make it faster
+    * Types changed: WORD -> USHORT to better sync it with GT API.
+      char * -> BYTE *, int -> USHORT
+    ! __ACCEPT() the length of the return string was not set properly under
+      Unix.
+    ! __ACCEPT() now displays non-string parameters, too, the logic is
+      also simplified by just calling HB_QOUT(), like in Clipper.
+      It will always call QOUT() even if no parameters were passed. This is
+      still not *exactly* what Clipper does.
+    ! __ACCEPT() now displays all parameters not only the first one.
+    ! __ACCEPT() now used hb_retc() instead of hb_retclen().
+    ! hb_consoleRelease() now sets back stdout, and stderr to TEXT mode.
+    ! __ACCEPT() one explicit constant changed to ACCEPT_BUFFER_LEN.
+    ! __ACCEPT() now accepts ascii chars higher than 127, like in Clipper.
+    + __ACCEPTSTR() added for Clipper compatbility, this will return the
+      result of the last __ACCEPT() call.
+  * source/rtl/inkey.c
+    ! Small formatting fix.
+
 19990916-21:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/*.c
