@@ -4,6 +4,9 @@
       it was returning a cast of PHB_DYNS instead of the index.
       To accomodate this, added s_uiClosestDynSym = uiMiddle before
       the return in hb_dynsymFind.
+  * source/rtl/fm.c
+    * added a c/r before ---- for fm_statistics on exit.
+      also minor 'by' => 'but'
 
 19990925-03:00 GMT+1 Victor Szel <info@szelvesz.hu>
 

@@ -163,6 +163,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    {
       char buffer[ 100 ];
 
+      hb_outerr( hb_consoleGetNewLine(), 0 );
       hb_outerr( "----------------------------------------", 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
       sprintf( buffer, "Total memory allocated: %ld bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
@@ -171,7 +172,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       if( s_ulMemoryBlocks )
       {
          hb_outerr( hb_consoleGetNewLine(), 0 );
-         sprintf( buffer, "WARNING! Memory allocated by not released: %ld bytes (%ld blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
+         sprintf( buffer, "WARNING! Memory allocated but not released: %ld bytes (%ld blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
          hb_outerr( buffer, 0 );
       }
    }
