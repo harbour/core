@@ -148,8 +148,7 @@ int gtGetCursorStyle(void)
 
   if(cci.bVisible)
     {
-      /* QUESTION: Is this really correct ? IF _VISIBLE_ -> NONE */
-      rc=SC_NONE;
+      rc=SC_NORMAL;
     }
   else
     {
