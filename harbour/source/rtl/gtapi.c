@@ -6,6 +6,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.37   19990726   ptucker   
  * 1.35   19990726   ptucker   Much improved box drawing speed
  *                             Modifed some if statments to test for != 0
  * 1.34   19990721   ptucker   Corrected _Color mask descriptions
@@ -287,8 +288,6 @@ int hb_gtSetColorStr(char * fpColorString)
                 {
                    nHasU  = 0;
                    nFore |= 0x800;  /* foreground underline bit */
-//                   if( !nColor & ! (nFore & 0x77 ) )
-//                       nColor = 1;
                 }
                 else if( nHasX != 0 )
                 {
