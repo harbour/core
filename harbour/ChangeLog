@@ -1,3 +1,7 @@
+20000123-17:35 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/rtl/tget.prg
+     * Improved: cursor flickering removed
+
 2000-01-23 16:30 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Improved debugger.
