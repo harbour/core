@@ -139,7 +139,7 @@ If Pcount() == 0
    ? "          or use one macro per -D switch"
    Return NIL
 Endif
-If cFile == NIL
+If cFile == NIL .or. !file(cfile)
    ? "File not Found"
    Return Nil
 Endif
