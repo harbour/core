@@ -80,6 +80,7 @@ CLASS TPreProcessor
    METHOD End()
 
    METHOD AddRule( cRule )
+   METHOD AddIncludepath( cIncludePath )
    METHOD SetIncludepath( cIncludePath )
    METHOD TranslateLine( cCode )
    METHOD TranslateFile( cFile, lWritePPO )
@@ -112,9 +113,20 @@ return Self
 
 METHOD SetIncludepath( cIncludePath ) CLASS TPreprocessor
 
-   __PP_Init( cIncludePath )
+   __PP_PATH( cIncludePath, .t. )
 
    ::cIncludepath:=cIncludePath
+
+return Self
+
+
+
+
+METHOD AddIncludepath( cIncludePath ) CLASS TPreprocessor
+
+   __PP_PATH( cIncludePath, .f. )
+
+   ::cIncludepath:=::cIncludePath+";"+cIncludePath
 
 return Self
 
