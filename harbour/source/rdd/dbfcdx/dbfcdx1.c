@@ -4457,7 +4457,8 @@ ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip )
        }
      }
    }
-   return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
+   /* return SELF_SKIPFILTER( ( AREAP ) pArea, -1 ); */
+   return SUCCESS;
 }
 
 ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
