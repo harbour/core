@@ -1,3 +1,12 @@
+19990602-09:30 Alexander Kresin
+  Updated:
+   * source/hbpp/hbpp.c - main preprocessor file
+   * source/hbpp/c.prg  - sample file
+   * source/hbpp/makefile.b16
+   * source/hbpp/makefile.b32
+  Added:
+   * source/hbpp/buildgcc.bat
+   * source/hbpp/table.c
 19990601-23:50 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     - Made progress on GT API, so put USE_GTAPI back in as default.

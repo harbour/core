@@ -7,23 +7,39 @@
 #include <ctype.h>
 #include "harb.h"
 
+typedef struct
+{
+  char *name;
+  char *pars;
+  int npars;
+  char *value;
+} DEFINES;
+
+typedef struct
+{
+  char *name;
+  char *mpatt;
+  char *value;
+} COMMANDS;
+
 int Hp_Parse( int, int );
 int ParseDirective( char* );
 int ParseDefine( char* );
-int AddDefine ( char* );
+DEFINES* AddDefine ( char* );
 int ParseUndef( char* );
 int ParseIfdef( char*, int);
 int ParseCommand( char* );
 int ConvertPatterns ( char*, int, char*, int );
 void AddCommand ( char * );
+COMMANDS* getCommand ( int );
 int ParseExpression( char*, char* );
-void WorkDefine ( char**, char**, int);
+void WorkDefine ( char**, char**, DEFINES*);
 int WorkCommand ( char*, char*, char**, int);
 void CmdParse ( char *ptri, int aCmdStru[100][2] );
 int WorkMarkers( char**, char*, char*, int*, int aCmdStru[100][2], int*, int );
 void SkipOptional( char**, char*, int*);
 
-int DefSearch(char *);
+DEFINES* DefSearch(char *);
 int ComSearch(char *,int);
 void SearnRep( char*,char*,int,char*,int*);
 int ReplacePattern ( char, char*, int, char*, int );
@@ -61,6 +77,7 @@ int NextName ( char**, char*, char**);
 #define IT_EXPR 1
 #define IT_ID 2
 #define IT_COMMA 3
+#define IT_ID_OR_EXPR 4
 
 int ParseState = 0;
 int lInclude = 0;
@@ -69,26 +86,15 @@ int nline=0;
 int Repeate;
 char groupchar;
 
-typedef struct
-{
-  char *name;
-  char *pars;
-  int npars;
-  char *value;
-} DEFINES;
-
-DEFINES *aDefines ;
+extern DEFINES aDefines[] ;
+extern int koldef;
+DEFINES *aDefnew ;
 int koldefines = 0, maxdefines = 50;
 
-typedef struct
-{
-  char *name;
-  char *mpatt;
-  char *value;
-} COMMANDS;
-
-#define INITIAL_ACOM_SIZE 250
-COMMANDS *aCommands ;
+#define INITIAL_ACOM_SIZE 200
+extern COMMANDS aCommands[] ;
+extern int kolcomm;
+COMMANDS *aCommnew ;
 int kolcommands = 0, maxcommands = INITIAL_ACOM_SIZE;
 
 int main (int argc,char* argv[])
@@ -112,12 +118,12 @@ FILENAME *pFileName =NULL;
  { printf("Can't open %s",szFileName); return 1; }
 
  aCondCompile = (int*) _xgrab( sizeof(int) * 5 );
- aDefines = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
- aCommands = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
+ aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
+ aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
 
  Hp_Parse(handl_i,handl_o);
  close(handl_i); close(handl_o);
-
+/*
  for (i=0;i<kolcommands;i++)
  {
   printf("\n\"%s\",",aCommands[i].name);
@@ -126,7 +132,7 @@ FILENAME *pFileName =NULL;
   if (aCommands[i].value !=NULL)   printf("\n\"%s\",",aCommands[i].value);
    else printf("\nNULL,");
  }
-
+*/
  return 0;
 }
 
@@ -266,7 +272,8 @@ int ParseDirective( char* sLine )
 int ParseDefine( char* sLine)
 {
  char defname[MAX_NAME], pars[MAX_NAME];
- int i = 0, npars = 0, ndef;
+ int i = 0, npars = 0;
+ DEFINES *lastdef;
      /* Drag identifier */
  while ( *sLine != '\0' && *sLine != ' ')
  {
@@ -290,49 +297,51 @@ int ParseDefine( char* sLine)
  }
  SKIPTABSPACES(sLine);
 
- ndef = AddDefine ( defname );
+ lastdef = AddDefine ( defname );
 
- aDefines[ndef].value = ( *sLine == '\0' )? NULL : strodup ( sLine );
- aDefines[ndef].npars = npars;
- aDefines[ndef].pars = ( npars == 0 )? NULL : strodup ( pars );
+ lastdef->value = ( *sLine == '\0' )? NULL : strodup ( sLine );
+ lastdef->npars = npars;
+ lastdef->pars = ( npars == 0 )? NULL : strodup ( pars );
 
  return 0;
 }
 
-int AddDefine ( char* defname )
+DEFINES* AddDefine ( char* defname )
 {
- int ndef = DefSearch( defname );
+ DEFINES* stdef = DefSearch( defname );
 
- if ( ndef >= 0 )
+ if ( stdef != NULL )
  {
-  if ( aDefines[ndef].pars != NULL ) _xfree ( aDefines[ndef].pars );
-  _xfree ( aDefines[ndef].value );
+  if ( stdef->pars != NULL ) _xfree ( stdef->pars );
+  _xfree ( stdef->value );
  }
  else
  {
   if ( koldefines == maxdefines )      /* Add new entry to defines table */
   {
    maxdefines += 50;
-   aDefines = (DEFINES *)_xrealloc( aDefines, sizeof( DEFINES ) * maxdefines );
+   aDefnew = (DEFINES *)_xrealloc( aDefnew, sizeof( DEFINES ) * maxdefines );
   }
-  ndef = koldefines++;
-  aDefines[ndef].name = strodup ( defname );
+  stdef = &aDefnew[koldefines++];
+  stdef->name = strodup ( defname );
  }
- return ndef;
+ return stdef;
 }
 
 int ParseUndef( char* sLine)
 {
  char defname[MAX_NAME];
- int i = 0;
+ DEFINES* stdef;
 
  NextWord( &sLine, defname, FALSE );
 
- if ( ( i = DefSearch(defname) ) >= 0 )
+ if ( ( stdef = DefSearch(defname) ) >= 0 )
  {
-  _xfree ( aDefines[i].name );
-  _xfree ( aDefines[i].pars );
-  _xfree ( aDefines[i].value );
+  _xfree ( stdef->name );
+  _xfree ( stdef->pars );
+  _xfree ( stdef->value );
+  stdef->name = NULL;
+/*
   for ( ; i < koldefines-1; i++ )
   {
    aDefines[i].name = aDefines[i+1].name;
@@ -341,6 +350,7 @@ int ParseUndef( char* sLine)
    aDefines[i].npars = aDefines[i+1].npars;
   }
   koldefines--;
+*/
  }
  return 0;
 }
@@ -348,7 +358,7 @@ int ParseUndef( char* sLine)
 int ParseIfdef( char* sLine, int usl)
 {
  char defname[MAX_NAME];
- int i;
+ DEFINES *stdef;
 
   NextWord( &sLine, defname, FALSE );
   if ( *defname == '\0' ) return 3000;
@@ -357,30 +367,44 @@ int ParseIfdef( char* sLine, int usl)
     maxCondCompile += 5;
     aCondCompile = (int*)_xrealloc( aCondCompile, sizeof( int ) * maxCondCompile );
   }
-  if ( ( (i = DefSearch(defname)) >= 0 && usl )
-       || ( i < 0 && !usl ) ) aCondCompile[nCondCompile] = 1;
+  if ( ( (stdef = DefSearch(defname)) != NULL && usl )
+       || ( stdef == NULL && !usl ) ) aCondCompile[nCondCompile] = 1;
   else aCondCompile[nCondCompile] = 0;
   nCondCompile++;
   return 0;
 }
 
-int DefSearch(char *defname)
+DEFINES* DefSearch(char *defname)
 {
  int i,j;
- for ( i=0; i<koldefines; i++ )
+ for ( i=koldefines-1; i>=0; i-- )
+ {
+  for ( j=0; *(aDefnew[i].name+j)==*(defname+j) &&
+             *(aDefnew[i].name+j)!='\0'; j++ );
+  if ( *(aDefnew[i].name+j)==*(defname+j) ) return &aDefnew[i];
+ }
+
+ for ( i=koldef-1; i>=0; i-- )
  {
   for ( j=0; *(aDefines[i].name+j)==*(defname+j) &&
              *(aDefines[i].name+j)!='\0'; j++ );
-  if ( *(aDefines[i].name+j)==*(defname+j) ) break;
+  if ( *(aDefines[i].name+j)==*(defname+j) ) return &aDefines[i];
  }
- if ( i >= koldefines ) return -1;
- return i;
+ return NULL;
 }
 
 int ComSearch(char *cmdname, int ncmd)
 {
  int i,j;
- for ( i=(ncmd)? ncmd:kolcommands-1; i >= 0; i-- )
+ if ( !ncmd || ncmd > kolcomm )
+  for ( i=(ncmd)? ncmd-kolcomm:kolcommands-1; i >= 0; i-- )
+  {
+   for ( j=0; *(aCommnew[i].name+j)==toupper(*(cmdname+j)) &&
+             *(aCommnew[i].name+j)!='\0'; j++ );
+   if ( *(aCommnew[i].name+j)==toupper(*(cmdname+j)) ) return kolcomm+i;
+  }
+
+ for ( i=(ncmd && ncmd<=kolcomm)? ncmd:kolcomm-1; i >= 0; i-- )
  {
   for ( j=0; *(aCommands[i].name+j)==toupper(*(cmdname+j)) &&
              *(aCommands[i].name+j)!='\0'; j++ );
@@ -410,8 +434,8 @@ int ParseCommand( char* sLine)
  if ( (rez = ConvertPatterns ( mpatt, mlen, rpatt, rlen )) > 0 ) return rez;
 
  AddCommand ( cmdname );
- aCommands[kolcommands-1].mpatt = strodup ( mpatt );
- aCommands[kolcommands-1].value = ( rlen > 0 )? strodup ( rpatt ) : NULL;
+ aCommnew[kolcommands-1].mpatt = strodup ( mpatt );
+ aCommnew[kolcommands-1].value = ( rlen > 0 )? strodup ( rpatt ) : NULL;
 
  return 0;
 }
@@ -433,7 +457,12 @@ int ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
    else if ( *(mpatt+i) == '(' ) { exptype = '4'; i++; }
    while ( *(mpatt+i) != '>' )
    {
-    if ( *(mpatt+i) == ',' ) { exptype = '1'; while ( *(mpatt+i++) != '>' ); break; }
+    if ( *(mpatt+i) == ',' )
+    {
+     exptype = '1';
+     while ( *(mpatt+i) != '>' ) i++;
+     break;
+    }
     else if ( *(mpatt+i) == ':' ) { exptype = '2'; break; }
     *(exppatt+explen++) = *(mpatt+i++);
    }
@@ -484,19 +513,25 @@ void AddCommand ( char *cmdname )
  if ( kolcommands == maxcommands )
  {
   maxcommands += 50;
-  aCommands = (COMMANDS *)_xrealloc( aCommands, sizeof( COMMANDS ) * maxcommands );
+  aCommnew = (COMMANDS *)_xrealloc( aCommnew, sizeof( COMMANDS ) * maxcommands );
  }
- aCommands[kolcommands].name = strodup ( cmdname );
+ aCommnew[kolcommands].name = strodup ( cmdname );
  kolcommands++;
+}
+
+COMMANDS* getCommand ( int ndef )
+{
+ return (ndef>=kolcomm)? &(aCommnew[ndef-kolcomm]):&(aCommands[ndef]);
 }
 
 int ParseExpression( char* sLine, char* sOutLine )
 {
  char sToken[MAX_NAME];
  char *ptri, *ptro;
- int lenToken,npars,ndef,i;
+ int lenToken,npars,i,ndef;
  int rezDef, rezCom, kolpass = 0;
- int aUsed[100], kolused = 0, lastused;
+ int kolused = 0, lastused;
+ DEFINES *aUsed[100], *stdef;
 
  do
  {
@@ -505,19 +540,19 @@ int ParseExpression( char* sLine, char* sOutLine )
   lastused = kolused;
    /* Look for macros from #define      */
   while ( ( lenToken = NextName(&ptri, sToken, &ptro) ) > 0 )
-   if ( (ndef=DefSearch(sToken)) >= 0 )
+   if ( (stdef=DefSearch(sToken)) != NULL )
    {
-    for(i=0;i<kolused;i++) if ( aUsed[i] == ndef ) break;
+    for(i=0;i<kolused;i++) if ( aUsed[i] == stdef ) break;
     if ( i < kolused ) { if ( i < lastused ) return 1000; }
     else
-     aUsed[kolused++] = ndef;
-    if ( aDefines[ndef].pars == NULL )
+     aUsed[kolused++] = stdef;
+    if ( stdef->pars == NULL )
     {
      rezDef = 1;
      ptro -= lenToken;
      lenToken = 0;
-     while ( *(aDefines[ndef].value+lenToken) != '\0' )
-      *ptro++ = *(aDefines[ndef].value+lenToken++);
+     while ( *(stdef->value+lenToken) != '\0' )
+      *ptro++ = *(stdef->value+lenToken++);
     }
     else
     {
@@ -530,11 +565,11 @@ int ParseExpression( char* sLine, char* sOutLine )
        if ( *(ptri+i) == ',' ) npars++;
        i++;
       }
-      if ( aDefines[ndef].npars == npars + 1 )
+      if ( stdef->npars == npars + 1 )
       {
        rezDef = 1;
        ptro -= lenToken;
-       WorkDefine( &ptri, &ptro, ndef );
+       WorkDefine( &ptri, &ptro, stdef );
       }
      }
      else *ptro++ = ' ';
@@ -547,7 +582,10 @@ int ParseExpression( char* sLine, char* sOutLine )
   if ( !kolpass )
   {
    ptri = sLine; ptro = sOutLine;
-   lenToken = NextWord( &ptri, sToken, FALSE);
+//   lenToken = NextWord( &ptri, sToken, FALSE);
+   SKIPTABSPACES( ptri );
+   if ( isname(*ptri) ) lenToken = NextName( &ptri, sToken, NULL);
+   else { *sToken = *ptri++; *(sToken+1) = '\0'; lenToken = 1; }
    if ( (ndef=ComSearch(sToken,0)) >= 0 )
    {
     if ( (i = WorkCommand( sToken, ptri, &ptro, ndef )) > 0 )
@@ -562,16 +600,16 @@ int ParseExpression( char* sLine, char* sOutLine )
  return 0;
 }
 
-void WorkDefine ( char** ptri, char** ptro, int ndef )
+void WorkDefine ( char** ptri, char** ptro, DEFINES *stdef )
 {
  char parfict[MAX_NAME], parreal[MAX_NAME];
  char *ptrb;
  int ipos = 0, ifou, ibeg;
  int lenfict, lenreal, lenres;
 
- while ( *(aDefines[ndef].value+ipos) != '\0' ) /* Copying value of macro */
+ while ( *(stdef->value+ipos) != '\0' ) /* Copying value of macro */
  {                                              /* to destination string  */
-  *(*ptro+ipos) = *(aDefines[ndef].value+ipos);
+  *(*ptro+ipos) = *(stdef->value+ipos);
   ipos++;
  }
  *(*ptro+ipos) = '\0';
@@ -580,7 +618,7 @@ void WorkDefine ( char** ptri, char** ptro, int ndef )
  ipos = 0; ibeg = 0;
  do                               /* Parsing through parameters */
  {                                /* in macro definition        */
-  if ( *(aDefines[ndef].pars+ipos)==',' || *(aDefines[ndef].pars+ipos)=='\0' )
+  if ( *(stdef->pars+ipos)==',' || *(stdef->pars+ipos)=='\0' )
   {
    *(parfict+ipos-ibeg) = '\0';
    lenfict = ipos - ibeg;
@@ -609,8 +647,8 @@ void WorkDefine ( char** ptri, char** ptro, int ndef )
     ibeg = ipos+1;
    }
   }
-  else *(parfict+ipos-ibeg) = *(aDefines[ndef].pars+ipos);
-  if ( *(aDefines[ndef].pars+ipos) == '\0' ) break;
+  else *(parfict+ipos-ibeg) = *(stdef->pars+ipos);
+  if ( *(stdef->pars+ipos) == '\0' ) break;
   ipos++;
  }
  while ( 1 );
@@ -627,10 +665,10 @@ int WorkCommand ( char* sToken, char* ptri, char** ptro, int ndef )
  char *ptrmp;
 
  /* Copying result pattern to destination string  */
- lenres = strocpy ( *ptro, aCommands[ndef].value );
+ lenres = strocpy ( *ptro, getCommand(ndef)->value );
 
  CmdParse ( ptri, aCmdStru );     /* Parse input string */
- ptrmp = aCommands[ndef].mpatt;    /* Pointer to a match pattern */
+ ptrmp = getCommand(ndef)->mpatt;    /* Pointer to a match pattern */
  do
  {
   Repeate = 0;
@@ -666,7 +704,7 @@ int WorkCommand ( char* sToken, char* ptri, char** ptro, int ndef )
        rez = 0;
        break;
       default:    /*   Key word    */
-       if ( aCmdStru[iItem][1] != IT_ID ||
+       if ( aCmdStru[iItem][1] == IT_COMMA ||
            strocmp(ptri + aCmdStru[iItem][0], &ptrmp ) )
        {
         if ( nbr ) { SkipOptional( &ptrmp, *ptro, &lenres); iItem--; }
@@ -700,9 +738,9 @@ int WorkCommand ( char* sToken, char* ptri, char** ptro, int ndef )
 
   if ( !rez && (ndef = ComSearch(sToken,ndef-1))>=0 )
   {
-   ptrmp = aCommands[ndef].mpatt; /* Pointer to a match pattern */
+   ptrmp = getCommand(ndef)->mpatt; /* Pointer to a match pattern */
                /* Copying result pattern to destination string  */
-   lenres = strocpy ( *ptro, aCommands[ndef].value );
+   lenres = strocpy ( *ptro, getCommand(ndef)->value );
   }
  }
  while ( !rez && ndef >= 0 );
@@ -779,6 +817,9 @@ void CmdParse ( char *ptri, int aCmdStru[100][2] )
      {
       State = STATE_BRACKET;
       StBr1 = 1;
+      aCmdStru[ aCmdStru[0][0] ][1] = IT_ID_OR_EXPR;
+      aCmdStru[0][0]++;
+      aCmdStru[ aCmdStru[0][0] ][0] = i;
       aCmdStru[ aCmdStru[0][0] ][1] = IT_EXPR;
      }
      else if ( *ptri == '[' )
@@ -792,6 +833,9 @@ void CmdParse ( char *ptri, int aCmdStru[100][2] )
       State = STATE_BRACKET;
       StBr3 = 1;
       aCmdStru[ aCmdStru[0][0] ][1] = IT_ID;
+      aCmdStru[0][0]++;
+      aCmdStru[ aCmdStru[0][0] ][0] = i;
+      aCmdStru[ aCmdStru[0][0] ][1] = IT_EXPR;
      }
      else if ( *ptri == ' ' ) State = STATE_ID_END;
      break;
@@ -825,16 +869,18 @@ int WorkMarkers( char **ptrmp, char *ptri, char *ptro, int *lenres, int aCmdStru
   lenpatt = stroncpy ( exppatt, *ptrmp, 4 );
   *ptrmp += 4;
 
+  ifiItem = *iItem;
+  if ( aCmdStru[ifiItem][1] == IT_ID_OR_EXPR )  (*iItem)++;
   if ( *(exppatt+2) == '4' )       /*  ----  extended match marker  */
   {
         /* Copying a real expression to 'expreal' */
-    lenreal = stroncpy ( expreal, ptri + aCmdStru[*iItem][0],
-                              aCmdStru[*iItem+1][0]-aCmdStru[*iItem][0] );
+    lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
+                              aCmdStru[*iItem+1][0]-aCmdStru[ifiItem][0] );
     SearnRep( exppatt,expreal,lenreal,ptro,lenres);
   }
   else if ( *(exppatt+2) == '3' )  /*  ----  wild match marker  */
   {
-    ifiItem = *iItem; *iItem = aCmdStru[0][0];
+    *iItem = aCmdStru[0][0];
         /* Copying a real expression to 'expreal' */
     lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
                          aCmdStru[*iItem+1][0]-aCmdStru[ifiItem][0] );
@@ -847,8 +893,8 @@ int WorkMarkers( char **ptrmp, char *ptri, char *ptro, int *lenres, int aCmdStru
    *(exppatt+lenpatt) = '\0';
    (*ptrmp)++;
                /* Copying a real expression to 'expreal' */
-   lenreal = stroncpy ( expreal, ptri + aCmdStru[*iItem][0],
-                           aCmdStru[*iItem+1][0]-aCmdStru[*iItem][0] );
+   lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
+                           aCmdStru[*iItem+1][0]-aCmdStru[ifiItem][0] );
 
    ptr = exppatt + 4;
    rezrestr = 0;
@@ -894,7 +940,6 @@ int WorkMarkers( char **ptrmp, char *ptri, char *ptro, int *lenres, int aCmdStru
   }
   else if ( *(exppatt+2) == '1' )  /*  ---- list match marker  */
   {
-     ifiItem = *iItem;
      while ( *iItem < aCmdStru[0][0] && aCmdStru[*iItem+1][1] == IT_COMMA ) *iItem+=2;
         /* Copying a real expression to 'expreal' */
      lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
@@ -904,8 +949,8 @@ int WorkMarkers( char **ptrmp, char *ptri, char *ptro, int *lenres, int aCmdStru
   else                             /*  ---- regular match marker  */
   {
                /* Copying a real expression to 'expreal' */
-     lenreal = stroncpy ( expreal, ptri + aCmdStru[*iItem][0],
-                          aCmdStru[*iItem+1][0]-aCmdStru[*iItem][0] );
+     lenreal = stroncpy ( expreal, ptri + aCmdStru[ifiItem][0],
+                          aCmdStru[*iItem+1][0]-aCmdStru[ifiItem][0] );
      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
   }
   return 1;
@@ -940,7 +985,9 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
 {
  int ifou, isdvig = 0, rezs;
  int kolmarkers;
+ int lennew, i;
  char lastchar = '0';
+ char expnew[MAX_NAME];
  char *ptr, *ptr2;
    while ( (ifou = hb_strAt( exppatt, 2, ptro+isdvig, *lenres-isdvig )) > 0 )
    {
@@ -967,14 +1014,12 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
      }
      else
      {
-      char expnew[MAX_NAME];
-      int lennew = ptr2-ptr-1, i;
+      lennew = ptr2-ptr-1;
 
       memcpy ( expnew, ptr+1, lennew );
       *(expnew + lennew) = '\0';
-      i = hb_strAt( exppatt, 2, expnew, lennew );
-      lennew += ReplacePattern ( exppatt[2], expreal, lenreal,
-                             expnew+i-1, lennew );
+      while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
+       lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
       if ( kolmarkers )
       {
        groupchar = (char) ( (unsigned int)groupchar + 1 );
@@ -1259,11 +1304,11 @@ int NextName ( char** sSource, char* sDest, char **sOut )
 {
  int i = 0;
  while ( **sSource != '\0' && !isname(**sSource) )
-  { if ( *sOut !=NULL ) *(*sOut)++ = **sSource; (*sSource)++; }
+  { if ( sOut !=NULL ) *(*sOut)++ = **sSource; (*sSource)++; }
 
  while ( **sSource != '\0' && isname(**sSource) )
   {
-   if ( *sOut !=NULL ) *(*sOut)++ = **sSource;
+   if ( sOut !=NULL ) *(*sOut)++ = **sSource;
    *sDest++ = *(*sSource)++; i++;
   }
  *sDest = '\0';

@@ -1,4 +1,3 @@
-#include "std.ch"
 SET PATH TO c:\database\
  @ 1,1,10,10 BOX ORAMKA
  @ 10,10 say "Hello World"

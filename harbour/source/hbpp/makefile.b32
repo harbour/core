@@ -2,7 +2,8 @@
 
 PROJECT: hbpp.exe
 
-hbpp.exe : hbpp.c harb.c
-   bcc32  -O2 -I\borland\cbuilder\include hbpp.c harb.c
+hbpp.exe : hbpp.c harb.c table.c
+   bcc32  -O2 -I\borland\cbuilder\include hbpp.c harb.c table.c
    del hbpp.obj
    del harb.obj
+   del table.obj
