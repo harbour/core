@@ -1249,9 +1249,8 @@ USHORT hb_gt_DispCount()
    return s_uiDispCount;
 }
 
-
 USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
-                  BYTE *szBox, BYTE byAttr )
+                  BYTE * szBox, BYTE byAttr )
 {
    USHORT uiRow;
    USHORT uiCol;
@@ -1345,6 +1344,7 @@ USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar
       hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
    else
       hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+
    return 0;
 }
 
@@ -1359,17 +1359,19 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
       uRow = uiBottom;
       uiBottom = uiTop;
    }
+
    while( uRow <= uiBottom )
       hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+
    return 0;
 }
 
-BOOL hb_gt_Suspend()
+BOOL hb_gt_PreExt()
 {
-   return 1;
+   return TRUE;
 }
 
-BOOL hb_gt_Resume()
+BOOL hb_gt_PostExt()
 {
-   return 1;
+   return TRUE;
 }

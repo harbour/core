@@ -326,6 +326,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tgetlist.obj \
    $(OBJ_DIR)\tlabel.obj \
    $(OBJ_DIR)\tmenuitm.obj \
+   $(OBJ_DIR)\tobject.obj \
    $(OBJ_DIR)\tpopup.obj \
    $(OBJ_DIR)\treport.obj \
    $(OBJ_DIR)\ttextlin.obj \
@@ -397,7 +398,9 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\sdf1.obj \
    \
    $(OBJ_DIR)\dbf0.obj \
+   $(OBJ_DIR)\dblist.obj \
    $(OBJ_DIR)\dbstrux.obj \
+   $(OBJ_DIR)\dbupdat.obj \
    $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\rddord.obj \
    $(OBJ_DIR)\rddsys.obj \

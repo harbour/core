@@ -142,7 +142,7 @@ PRG_SOURCES=\
 	tgetlist.prg \
 	tlabel.prg   \
 	tmenuitm.prg \
-  tobject.prg  \
+	tobject.prg  \
 	tpopup.prg   \
 	treport.prg  \
 	ttextlin.prg \

@@ -1395,12 +1395,12 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    return bSuccess;
 }
 
-BOOL hb_gt_Suspend()
+BOOL hb_gt_PreExt()
 {
-   return 1;
+   return TRUE;
 }
 
-BOOL hb_gt_Resume()
+BOOL hb_gt_PostExt()
 {
-   return 1;
+   return TRUE;
 }

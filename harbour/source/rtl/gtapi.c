@@ -163,13 +163,13 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
    uiMaxCol = hb_gt_GetScreenWidth();
 
    /* TODO: Would be better to support these cases, Clipper implementation was
-            quite messy, which can be considered as a bug there. [vszakats] */
+            quite messy, which can be considered as a bug. [vszakats] */
 
    if( uiTop  < uiMaxRow && uiBottom < uiMaxRow &&
        uiLeft < uiMaxCol && uiRight  < uiMaxCol )
    {
-       /* NOTE: For full compatibility, pad box string with last char if too
-                short [vszakats] */
+      /* NOTE: For full compatibility, pad box string with last char if too
+               short [vszakats] */
       USHORT tmp;
       BYTE cPadChar;
       BYTE szBox[ 10 ];
@@ -317,10 +317,11 @@ USHORT hb_gtPreExt( void )
 
          while( uidc-- )
             hb_gt_DispEnd();
+
          /* call platform depend layer to flush all pending outputs and
          * to prepare screen for direct updating
          */
-         hb_gt_Suspend(); 
+         hb_gt_PreExt(); 
       }
 
       s_uiPreCNest = 1;
@@ -338,7 +339,7 @@ USHORT hb_gtPostExt( void )
    if( s_uiPreCNest == 1 )
    {
       /* call platform depend layer to restore all settings */
-      hb_gt_Resume();
+      hb_gt_PostExt();
       
       while( s_uiPreCount-- )
          hb_gt_DispBegin();

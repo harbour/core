@@ -294,7 +294,6 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tbcolumn.obj \
    $(OBJ_DIR)\tbrowse.obj \
    $(OBJ_DIR)\tclass.obj \
-   $(OBJ_DIR)\tobject.obj \
    $(OBJ_DIR)\teditor.obj \
    $(OBJ_DIR)\terror.obj \
    $(OBJ_DIR)\text.obj \
@@ -302,6 +301,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tgetlist.obj \
    $(OBJ_DIR)\tlabel.obj \
    $(OBJ_DIR)\tmenuitm.obj \
+   $(OBJ_DIR)\tobject.obj \
    $(OBJ_DIR)\tpopup.obj \
    $(OBJ_DIR)\treport.obj \
    $(OBJ_DIR)\ttextlin.obj \
@@ -360,8 +360,9 @@ RDD_LIB_OBJS = \
    $(OBJ_DIR)\sdf1.obj \
    \
    $(OBJ_DIR)\dbf0.obj \
-   $(OBJ_DIR)\dbstrux.obj \
    $(OBJ_DIR)\dblist.obj \
+   $(OBJ_DIR)\dbstrux.obj \
+   $(OBJ_DIR)\dbupdat.obj \
    $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\rddord.obj \
    $(OBJ_DIR)\rddsys.obj \
@@ -662,8 +663,8 @@ $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
 #
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
 
-   echo. -e$(HARBOUR_EXE) > make.tmp
-   echo. $(CFLAGS) >> make.tmp
+   echo. $(CFLAGS) > make.tmp
+   echo. -e$(HARBOUR_EXE) >> make.tmp
    echo. $(OBJ_DIR)\harbour.obj >> make.tmp
    echo. $(OBJ_DIR)\harboury.obj >> make.tmp
    echo. $(OBJ_DIR)\harbourl.obj >> make.tmp
@@ -759,6 +760,13 @@ $(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\dblist.c : $(RDD_DIR)\dblist.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dblist.obj : $(OBJ_DIR)\dblist.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
@@ -770,10 +778,10 @@ $(OBJ_DIR)\dbstrux.obj : $(OBJ_DIR)\dbstrux.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\dblist.c : $(RDD_DIR)\dblist.prg
+$(OBJ_DIR)\dbupdat.c : $(RDD_DIR)\dbupdat.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
-$(OBJ_DIR)\dblist.obj : $(OBJ_DIR)\dblist.c
+$(OBJ_DIR)\dbupdat.obj : $(OBJ_DIR)\dbupdat.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
@@ -1490,13 +1498,6 @@ $(OBJ_DIR)\tclass.obj : $(OBJ_DIR)\tclass.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\tobject.c : $(RTL_DIR)\tobject.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\tobject.obj : $(OBJ_DIR)\tobject.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\teditor.c : $(RTL_DIR)\teditor.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -1547,6 +1548,13 @@ $(OBJ_DIR)\tmenuitm.c : $(RTL_DIR)\tmenuitm.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\tmenuitm.obj : $(OBJ_DIR)\tmenuitm.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\tobject.c : $(RTL_DIR)\tobject.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\tobject.obj : $(OBJ_DIR)\tobject.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
@@ -1645,91 +1653,91 @@ $(OBJ_DIR)\xsavescr.obj : $(RTL_DIR)\xsavescr.c
 #
 
 $(OBJ_DIR)\msgca.obj : $(LANG_DIR)\msgca.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgcs852.obj : $(LANG_DIR)\msgcs852.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgcsiso.obj : $(LANG_DIR)\msgcsiso.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgcskam.obj : $(LANG_DIR)\msgcskam.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgcswin.obj : $(LANG_DIR)\msgcswin.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgen.obj : $(LANG_DIR)\msgen.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msges.obj : $(LANG_DIR)\msges.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgeu.obj : $(LANG_DIR)\msgeu.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgfr.obj : $(LANG_DIR)\msgfr.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msggl.obj : $(LANG_DIR)\msggl.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghe862.obj : $(LANG_DIR)\msghe862.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghewin.obj : $(LANG_DIR)\msghewin.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghr852.obj : $(LANG_DIR)\msghr852.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghriso.obj : $(LANG_DIR)\msghriso.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghu852.obj : $(LANG_DIR)\msghu852.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghucwi.obj : $(LANG_DIR)\msghucwi.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msghuwin.obj : $(LANG_DIR)\msghuwin.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgpt.obj : $(LANG_DIR)\msgpt.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgro.obj : $(LANG_DIR)\msgro.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgsr852.obj : $(LANG_DIR)\msgsr852.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\msgsriso.obj : $(LANG_DIR)\msgsriso.c
-   $(CC) $(CLIBFLAGS) -I$(LANG_DIR) -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
 #
@@ -1910,7 +1918,6 @@ $(HBPP_EXE) : \
    $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(HBPP_DIR)\hbpp.c
    echo. $(CFLAGS) > make.tmp
    echo. -e$(HBPP_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbpp.obj >> make.tmp
    echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
    $(CC) @make.tmp
@@ -1923,7 +1930,6 @@ $(HBRUN_EXE) : $(HBRUN_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
    echo. -e$(HBRUN_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
    echo. $(OBJ_DIR)\external.obj >> make.tmp
    echo. $(PP_LIB) >> make.tmp
@@ -1958,7 +1964,6 @@ $(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
    echo. -e$(HBTEST_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbtest.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_hvm.obj >> make.tmp
    echo. $(OBJ_DIR)\rt_hvma.obj >> make.tmp
@@ -2056,7 +2061,6 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
 
    echo. $(CFLAGS) > make.tmp
    echo. -e$(HBDOC_EXE) >> make.tmp
-   echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbdoc.obj >> make.tmp
    echo. $(OBJ_DIR)\genasc.obj >> make.tmp
    echo. $(OBJ_DIR)\genhpc.obj >> make.tmp

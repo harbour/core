@@ -56,7 +56,7 @@ int SLtt_Has_Alt_Charset = 1;
 char *SLtt_Graphics_Char_Pairs = "";
 #endif
 
-extern int hb_gt_Init_Terminal(int phase);
+extern int hb_gt_Init_Terminal( int phase );
 static void hb_gt_build_conv_tabs();
 
 static USHORT uiDispCount;
@@ -65,7 +65,7 @@ static int cursorVisible = 1;
 static int linuxConsole = 0;
 static int underXTerm = 0;
 /* indicate if we are currently running a command from system */
-static int uiSuspended = 0;
+static BOOL s_bSuspended = FALSE;
 
 /* to convert high characters (mostly graphics and control chars) */
 static unsigned char convHighChars[ 256 ];
@@ -791,26 +791,30 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    finish its work. They should be called from run.c.
    They are not re-enrant ???.
 */
-BOOL hb_gt_Suspend()
+BOOL hb_gt_PreExt()
 {
-   if ( !uiSuspended )
-      if ( SLsmg_suspend_smg() != (-1) )
+   if( ! s_bSuspended )
+   {
+      if( SLsmg_suspend_smg() != -1 )
       {
          SLang_reset_tty();
-         uiSuspended = 1;
+         s_bSuspended = TRUE;
       }
-   return uiSuspended;
+   }
+
+   return s_bSuspended;
 }
 
-BOOL hb_gt_Resume()
+BOOL hb_gt_PostExt()
 {
-   if ( uiSuspended )
-      if ( SLsmg_resume_smg() != (-1) )
-         /* reinitialize a terminal */
-         if ( hb_gt_Init_Terminal( 1 ) != (-1) )
-            uiSuspended = 0;
+   if( s_bSuspended && 
+       SLsmg_resume_smg() != -1 &&
+       hb_gt_Init_Terminal( 1 ) != -1 ) /* reinitialize a terminal */
+   {
+      s_bSuspended = FALSE;
+   }
 
-   return uiSuspended;
+   return s_bSuspended;
 }
 
 /* ------------------------------------------------------ */

@@ -46,6 +46,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    /* TODO: Is anything required to initialize the video subsystem? */
+
+   s_uiDispCount = 0;
 }
 
 void hb_gt_Exit( void )
@@ -112,7 +114,9 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
             }
       }
    }
+
    hb_gt_SetPos( row, col );
+
    return TRUE;
 }
 
@@ -342,6 +346,7 @@ BOOL hb_gt_GetBlink()
             from intensity to 'blinking'
             does this work under your platform?
    */
+
    return FALSE;
 }
 
@@ -374,7 +379,6 @@ USHORT hb_gt_DispCount()
    return s_uiDispCount;
 }
 
-
 void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
@@ -386,15 +390,15 @@ void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULON
 }
 
 USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
-                  BYTE *szBox, BYTE byAttr )
+                  BYTE * szBox, BYTE byAttr )
 {
-
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
    HB_SYMBOL_UNUSED( uiRight );
    HB_SYMBOL_UNUSED( szBox );
    HB_SYMBOL_UNUSED( byAttr );
+
    return 0;
 }
 
@@ -414,6 +418,7 @@ USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar
       hb_gt_Replicate( uiRow, uiLeft, byAttr, byChar, uiRight - uiLeft + 1 );
    else
       hb_gt_Replicate( uiRow, uiRight, byAttr, byChar, uiLeft - uiRight + 1 );
+
    return 0;
 }
 
@@ -428,7 +433,19 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
       uRow = uiBottom;
       uiBottom = uiTop;
    }
+
    while( uRow <= uiBottom )
       hb_gt_xPutch( uRow++, uiCol, byAttr, byChar );
+
    return 0;
+}
+
+BOOL hb_gt_PreExt()
+{
+   return TRUE;
+}
+
+BOOL hb_gt_PostExt()
+{
+   return TRUE;
 }

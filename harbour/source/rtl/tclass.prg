@@ -59,12 +59,11 @@
 #include "common.ch"
 #include "hboo.ch"
 
-REQUEST TOBJECT
-//----------------------------------------------------------------------------//
+REQUEST TObject
 
 FUNCTION TClass()
 
-   STATIC s_hClass := NIL
+   STATIC s_hClass /* NOTE: Automatically default to NIL */
 
    IF s_hClass == NIL
       s_hClass := __clsNew( "TCLASS", 9 )

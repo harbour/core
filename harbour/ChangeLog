@@ -1,3 +1,62 @@
+2000-06-16 13:37 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapigt.h
+   * source/rtl/gtapi.c
+   * source/rtl/gt*/*
+     * Renamed hb_gt_Suspend()/hb_gt_Resume() to hb_gt_Pre/PosExt()
+     % Some cleanup on the recent additions to the GT module.
+     ! Small fix for gt_tpl/gt_tpl.c
+     ! Ambiguous nested if()s fixed.
+
+   * source/rtl/transfrm.c
+     ! Fixed handling of "S" picture function, now it works for every 
+       data type, and doesn't need to be the first function to work.
+     * "0" picture function renamed to "L", some steps made towards the 
+       optional filling char support. In the meantime the filling char is 
+       always "0".
+     % Some optimizations made (two static function calls eliminated, since 
+       parameter passing was getting messy). Comments added instead.
+
+   * source/rtl/teditorl.c
+     % Some optimizations made, many casts removed.
+     ! Non-portable ULONG casts on pointers removed.
+
+   * makefile.bc
+     % Removed some more redundant -I$(INCLUDE_DIR)s
+
+   * include/hbclass.ch
+     ! Minor cleanups (#includes moved after the self-guards, nil->NIL,
+       oClass -> s_oClass, indentation, extern->REQUEST)
+
+   * include/hbpp.h
+     ! Minor formatting
+
+   * source/pp/ppcore.c
+   * include/hberrors.h
+     ! HB_COMP_ERR_BAD_RULES_FILE_NAME -> HB_PP_ERR_BAD_RULES_FILE_NAME
+
+   * source/rtl/Makefile
+   * source/rdd/Makefile
+     ! Fixed tabs for recently added files (TOBJECT, DBLIST). 
+       PLEASE pay attention to the tabs when adding new files to the GNU-make 
+       files.
+
+   * source/rtl/tclass.prg
+   * source/rtl/tobject.prg
+     * Some minor cleanups, fixes, optimizations.
+
+   + source/rdd/dbupdat.prg
+   * source/rdd/dblist.prg
+   * source/rdd/Makefile
+   * makefile.vc
+   * makefile.bc
+     * Formatted sources. __DBUPDATE() moved to a separate file.
+     + Comments added. Variables renamed.
+     % Some minor optimizations.
+
+   * makefile.vc
+     ! Updated for TOBJECT and DBLIST
+
 2000-06-16 01:42 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * makefile.bc
      - Removed redundant -I from echo into make.tmp (Harbour.exe)
@@ -56,11 +115,11 @@
    * source/pp/ppcore.c
      ! Fixed getExpReal() to terminate on unbalanced ')'
 
-2000-06-14-13:00 GMT +1 Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
+2000-06-14 13:00 GMT+1 Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
   * memoline.c
       * fixed reported bug
 
-2000-06-13-21:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+2000-06-13 21:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   *makefile.bc
    source/rdd/makefile
       +Added dblist to dependencie list
@@ -120,7 +179,6 @@
    *source\rtl\tclass.prg
     * Correct bug with default initialiser for Logical and Numeric
       * Now a logical is .F. by default and a numeric is 0 !
-
 
 2000-06-12 17:20 UTC+0200 JfL&RaC <jfl@mafact.com> <rac@mafact.com>
    *source\rtl\tobject.prg
@@ -226,7 +284,6 @@
    * source/rdd/dbfntx/dbfntx1.c
      ! Added several missing type casts on hb_xgrab() calls.
      * Converted source code from double spaced to single spaced.
-
 
 2000-06-09 12:00 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
   * include/hbpp.h

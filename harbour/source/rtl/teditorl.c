@@ -34,61 +34,56 @@
  *
  */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #include "hbapi.h"
-#include "extend.api"
-#include "item.api"
 
-static char * hb_strToken( char * szText, long lText,
-                           long lIndex,
+static char * hb_strToken( char * szText, ULONG ulText,
+                           ULONG ulIndex,
                            char cDelimiter,
-                           long * plLen )
+                           ULONG * pulLen )
 {
-   long lStart;
-   long lEnd = 0;
-   long lCounter = 0;
+   ULONG ulStart;
+   ULONG ulEnd = 0;
+   ULONG ulCounter = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strToken(%s, %ld, %ld, %d, %p)", szText, lText, lIndex, (int) cDelimiter, plLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strToken(%s, %lu, %lu, %d, %p)", szText, ulText, ulIndex, (int) cDelimiter, pulLen));
 
    do
    {
-      lStart = lEnd;
+      ulStart = ulEnd;
 
       if( cDelimiter != ' ' )
       {
-         if( szText[ lStart ] == cDelimiter )
-            lStart++;
+         if( szText[ ulStart ] == cDelimiter )
+            ulStart++;
       }
       else
       {
-         while( lStart < lText && szText[ lStart ] == cDelimiter )
-            lStart++;
+         while( ulStart < ulText && szText[ ulStart ] == cDelimiter )
+            ulStart++;
       }
 
-      if( lStart < lText && szText[ lStart ] != cDelimiter )
+      if( ulStart < ulText && szText[ ulStart ] != cDelimiter )
       {
-         lEnd = lStart + 1;
+         ulEnd = ulStart + 1;
 
-         while( lEnd < lText && szText[lEnd] != cDelimiter )
-            lEnd++;
+         while( ulEnd < ulText && szText[ ulEnd ] != cDelimiter )
+            ulEnd++;
       }
       else
-         lEnd = lStart;
+         ulEnd = ulStart;
 
    }
-   while( lCounter++ < lIndex - 1 && lEnd < lText );
+   while( ulCounter++ < ulIndex - 1 && ulEnd < ulText );
 
-   if( lCounter < lIndex )
+   if( ulCounter < ulIndex )
    {
-      *plLen = 0;
+      *pulLen = 0;
       return "";
    }
    else
    {
-      *plLen = lEnd - lStart;
-      return szText + lStart;
+      *pulLen = ulEnd - ulStart;
+      return szText + ulStart;
    }
 }
 
@@ -96,38 +91,44 @@ static char * hb_strToken( char * szText, long lText,
 HB_FUNC( __STRTOKEN )
 {
    char * pszText;
-   long lLen;
+   ULONG ulLen;
 
    pszText = hb_strToken( hb_parc( 1 ), hb_parclen( 1 ),
                           hb_parnl( 2 ),
                           ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ',
-                          &lLen );
+                          &ulLen );
 
-   hb_retclen( pszText, lLen );
+   hb_retclen( pszText, ulLen );
 }
 
 
-/* like __STRTOKEN but returns next token starting from passed position (0 based) inside string
-   StrTkPtr(cString, @nTokPos, Chr(9))
+/* like __STRTOKEN() but returns next token starting from passed position
+   (0 based) inside string.
+   __StrTkPtr( cString, @nTokPos, Chr( 9 ) )
 */
-HB_FUNC(__STRTKPTR)
+HB_FUNC( __STRTKPTR )
 {
-   char * pszString = hb_parc(1);
-   long lLen, lStrLen = hb_parclen(1);
-   long lPos = hb_parnl(2);
+   char * pszString = hb_parc( 1 );
+   ULONG ulStrLen = hb_parclen( 1 );
+   ULONG ulLen;
+   ULONG ulPos = hb_parnl( 2 );
    char * pszText;
 
    /* move start of string past last returned token */
-   pszString = (char *) ((ULONG) pszString + (ULONG) lPos);
+   pszString += ulPos;
 
    /* decrease length of string consequently */
-   lStrLen -= lPos + 1;
+   ulStrLen -= ulPos + 1;
 
-   pszText = hb_strToken(pszString, lStrLen, 1, ISCHAR(3) ? *hb_parc(3) : ' ', &lLen);
+   pszText = hb_strToken( pszString, ulStrLen,
+                          1,
+                          ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ',
+                          &ulLen );
 
    /* return position to start next search from */
-   _stornl((ULONG) lPos + ((ULONG) pszText - (ULONG) pszString + lLen + 1), 2);
+   hb_stornl( pszText - pszString + ulPos + ulLen + 1, 2 );
 
    /* return token */
-   hb_retclen(pszText, lLen);
+   hb_retclen( pszText, ulLen );
 }
+

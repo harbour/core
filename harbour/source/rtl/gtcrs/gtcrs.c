@@ -752,20 +752,20 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    return 0;
 }
 
-BOOL hb_gt_Suspend()
+BOOL hb_gt_PreExt()
 {
    hb_gt_Exit_Terminal();
    hb_gt_Exit_Mouse();
    hb_gt_Exit_Keyboard();
 
-   return 1;
+   return TRUE;
 }
 
-BOOL hb_gt_Resume()
+BOOL hb_gt_PostExt()
 {
    hb_gt_Initialize_Terminal();
    hb_gt_Initialize_Mouse();
    hb_gt_Initialize_Keyboard();
    
-   return 1;
+   return TRUE;
 }

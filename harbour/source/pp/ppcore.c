@@ -285,13 +285,13 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ), BOOL hb_comp_
          }
          else
          {
-            hb_compGenError( hb_pp_szErrors, 'F', HB_COMP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH, NULL );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH, NULL );
          }
       }
       else
       {
          if( ! hb_comp_bQuiet )
-            printf( "Standard command definitions excluded!\n" );
+            printf( "Standard command definitions excluded.\n" );
 
          hb_pp_Init();
       }

@@ -114,7 +114,8 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
    if not "%HB_COMPILER%" == "bcc16" goto A_DOS_BCC16_NOT
 
       echo -O2 -d -mh %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% > build.tmp
-      echo -e%1.exe %1.c >> build.tmp
+      echo -e%1.exe >> build.tmp
+      echo %1.c >> build.tmp
       echo debug.lib >> build.tmp
       echo vm.lib >> build.tmp
       echo rtl.lib >> build.tmp
@@ -134,7 +135,8 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
                                           
    if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
 
-      echo %1.c -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% > build.tmp
+      echo %1.c > build.tmp
+      echo -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> build.tmp
       echo -ldebug >> build.tmp
       echo -lvm >> build.tmp
       echo -lrtl >> build.tmp

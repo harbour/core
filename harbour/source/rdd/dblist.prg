@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __DBLIST(), __DBUPDATE() functions
+ * __DBLIST() function
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -33,86 +33,74 @@
  *
  */
 
-#include "common.ch"
-#include "set.ch"
+/* NOTE: lAll is basically a dummy parameter, nothing really depends on it. 
+         [vszakats] */
 
-FUNCTION __dbList(lOff,aList,lAll,bFor,bWhile,nNext,nRec,lRest,lPrint,cFile)
-Local bBlock,lPrinter,lExtra,cExtraFile,oError
+FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
+   LOCAL lOldPrinter
+   LOCAL lOldExtra
+   LOCAL cOldExtraFile
 
-IF lOff
-    bBlock:={|| (Qout(if(Deleted(), "*", " ")), aEval(aList, ;
-        {|cItem| qqout(eval(cItem),"")}))}
-ELSE    
-    bBlock:={|| (Qout(STR(Recno(),7), if(Deleted(), "*", " ")), aEval(aList, ;
-        {|cItem| qqout(eval(cItem),"")}))}
-ENDIF
+   LOCAL oError
 
-IF (!EMPTY(lPrint))
-    lPrinter := SET(_SET_PRINTER,.T.)
-ENDIF
+   LOCAL bOutBlock
 
-IF (!EMPTY(cFile))
-    IF EMPTY(AT(".",cFile))
-        cFile += ".txt"
-    ENDIF
-    lExtra := SET(_SET_EXTRA, .T.)
-    cExtraFile := SET(_SET_EXTRAFILE,cFile)
-ENDIF
-BEGIN SEQUENCE
-IF (EMPTY(lAll) .and. EMPTY(bFor) .and. EMPTY(bWhile) .and. EMPTY(nNext) .and. ;
-    EMPTY(nRec) .and. EMPTY(lRest))
-    EVAL(bBlock)
-ELSE
-    DBEVAL(bBlock,bFor,bWhile,nNext,nRec,lRest)
-ENDIF
-RECOVER Using oError
-END SEQUENCE
-IF (!EMPTY(lPrint))
-    set printer to (lPrinter)
-ENDIF
+   /* Choose the output style */
 
-IF (!EMPTY(cFile))
-     SET(_SET_EXTRA,lExtra)
-     SET(_SET_EXTRAFILE,cExtraFile)
-ENDIF
-IF oError != NIL
-    Break(oError)
-Endif
+   IF lOff
+      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ),;
+                       aEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
+   ELSE
+      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ),;
+                       aEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
+   ENDIF
 
-RETURN NIL
+   /* Save SETs */
 
-FUNCTION __dbUpdate(cAlias,bKey,lRand,bFields)
+   IF !Empty( lToPrint )
+      lOldPrinter := Set(_SET_PRINTER, .T. )
+   ENDIF
+   IF !Empty( cToFileName )
+      IF At( ".", cToFileName ) == 0
+         cToFileName := cToFileName + ".txt"
+      ENDIF
+      lOldExtra := Set( _SET_EXTRA, .T. )
+      cOldExtraFile := Set( _SET_EXTRAFILE, cToFileName )
+   ENDIF
 
-    Local CurArea,oError,bBlock
-    Default lRand to .F.
-    DBGOTOP()
-    CurArea:=Select()
-    BEGIN SEQUENCE
-        DBSELECTAREA(cAlias)
-        DBGOTOP()
-        While !EOF()
-            bBlock:=EVAL(bKey)
-            DBSELECTAREA(CurArea)
-            IF lRand
-                dbSeek(bBlock, if(.F. ,.T.,NIL))
-                IF Found()
-                    Eval(bFields)
-                Endif
-            ELSE
-                DO WHILE(Eval(bKey) < bBlock .AND. !EOF())
-                    dbSkip()
-                ENDDO
-                IF (Eval(bKey) == bBlock .AND. !EOF())
-                    Eval(bFields)
-                ENDIF
-            ENDIF
-            dbSelectArea(cAlias)
-            dbSkip()
-         ENDDO
-    RECOVER USING oError
-    END SEQUENCE
-    dbSelectArea(CurArea)
-    IF oError != NIL
-        Break(oError)
-    ENDIF
-Return .T.
+   /* Do the job */
+
+   BEGIN SEQUENCE
+
+      IF Empty( lAll ) .AND. ;
+         Empty( bFor ) .AND. ;
+         Empty( bWhile ) .AND. ;
+         Empty( nNext ) .AND. ;
+         Empty( nRecord ) .AND. ;
+         Empty( lRest )
+
+         Eval( bOutBlock )
+      ELSE
+         dbEval( bOutBlock, bFor, bWhile, nNext, nRecord, lRest )
+      ENDIF
+
+   RECOVER USING oError
+   END SEQUENCE
+
+   /* Restor SETs */
+
+   IF !Empty( lToPrint )
+      Set( _SET_PRINTER, lOldPrinter )
+   ENDIF
+   IF !Empty( cToFileName )
+      Set( _SET_EXTRAFILE, cOldExtraFile )
+      Set( _SET_EXTRA, lOldExtra )
+   ENDIF
+
+   /* On error signal the error for the higher level error handler or quit */
+
+   IF oError != NIL
+      Break( oError )
+   ENDIF
+
+   RETURN NIL

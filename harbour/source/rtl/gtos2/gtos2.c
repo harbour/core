@@ -948,12 +948,12 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
    return 0;
 }
 
-BOOL hb_gt_Suspend()
+BOOL hb_gt_PreExt()
 {
-   return 1;
+   return TRUE;
 }
 
-BOOL hb_gt_Resume()
+BOOL hb_gt_PostExt()
 {
-   return 1;
+   return TRUE;
 }

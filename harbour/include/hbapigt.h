@@ -169,6 +169,8 @@ extern USHORT hb_gt_GetScreenWidth( void );
 extern void   hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst );
 extern USHORT hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr );
 extern BOOL   hb_gt_IsColor( void );
+extern BOOL   hb_gt_PreExt( void );
+extern BOOL   hb_gt_PostExt( void );
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
@@ -184,8 +186,6 @@ extern void   hb_gt_SetPos( SHORT iRow, SHORT iCol );
 extern void   hb_gt_Tone( double dFrequency, double dDuration );
 extern char * hb_gt_Version( void );
 extern USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr );
-extern BOOL hb_gt_Suspend();
-extern BOOL hb_gt_Resume();
 
 /* Keyboard related declarations */
 
