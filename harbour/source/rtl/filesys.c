@@ -1047,7 +1047,7 @@ int     hb_fsDelete( BYTE * pFilename )
 
 #else
 
-   iResult = -1;
+   iResult = FS_ERROR;
    s_uiErrorLast = FS_ERROR;
 
 #endif
@@ -1074,7 +1074,7 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
 #else
 
-   iResult = -1;
+   iResult = FS_ERROR;
    s_uiErrorLast = FS_ERROR;
 
 #endif
@@ -1672,7 +1672,7 @@ BYTE    hb_fsCurDrv( void )
        */
       _dos_getdrive( &uiDrive );
       s_uiErrorLast = 0;
-      uiResult = ( USHORT ) uiDrive -1;
+      uiResult = ( USHORT ) uiDrive - 1;
    }
 
 #else
