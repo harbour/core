@@ -1,3 +1,7 @@
+19990925-07:52 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/testwarn.prg
+    ! Added a MAIN() function.
+
 19990925-00:42 EDT Paul Tucker <ptucker@sympatico.ca>
   * tests/working/adirtest.prg
     * slight modification to the first call to Adir() to account for

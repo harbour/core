@@ -4,6 +4,12 @@
 
 DECLARE FUNCTION nMyFunc( ) AS NUMERIC
 
+FUNCTION Main()
+
+   ? "This is a compiler test."
+
+   RETURN NIL
+
 FUNCTION Hex2Dec( lVar AS LOGICAL )
 
    LOCAL nVar AS NUMERIC, cVar AS CHARACTER, lVar2 AS LOGICAL, nNoType := 3
