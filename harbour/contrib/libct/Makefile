@@ -68,6 +68,7 @@ PRG_SOURCES= \
 	invertwin.prg \
 	numconv.prg \
 	screen2.prg \
+	setlast.prg \
 
 LIBNAME=ct
 
