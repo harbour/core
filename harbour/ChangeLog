@@ -1,3 +1,7 @@
+2001-12-09 19:31 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * makefile.bc
+     + added hbgete.c file
+
 2001-12-09 19:18 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/common/hbgete.c
      * environment variables access
