@@ -27,7 +27,7 @@
  *      ADSBlob2File(cFileName, cFieldName) --> lSuccess
  *  $ARGUMENTS$
  *      <cFileName>    File to create. If it already exists, it will be
- *              overwritten on success and destroyed on error.
+ *      overwritten on success and destroyed on error.
  *
  *      <cFieldName>   Field in the current workarea that contains binary data.
  *
@@ -36,11 +36,8 @@
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
  *      ADSBlob2File() is a wrapper for AdsBinaryToFile.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -50,7 +47,6 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
  *      ADSFile2Blob()
  *  $END$
@@ -71,21 +67,17 @@
  *      <cFieldName>   Field in the current workarea to contain the binary data.
  *
  *      <nBinaryType>  Either ADS_BINARY (the default) or ADS_IMAGE.
- *          This parameter is for fields in DBF files.
- *          ADT tables cannot store binary and image data in standard character
- *          memo fields (they have specific field types for that).
- *
+ *      This parameter is for fields in DBF files.
+ *      ADT tables cannot store binary and image data in standard character
+ *      memo fields (they have specific field types for that).
  *  $RETURNS$
  *      <lSuccess>   True if the file is successfully written.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
  *      ADSFile2Blob() is a wrapper for AdsFileToBinary.
  *      Use of this function is illegal in an ADS transaction.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -95,7 +87,6 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
  *      ADSBlob2File()
  *  $END$
@@ -111,16 +102,13 @@
  *  $SYNTAX$
  *      ADSClearAOF()
  *  $ARGUMENTS$
- *
+ *      None
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -130,9 +118,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSCustomizeAOF, ADSEvalAOF, ADSGetAOF, ADSGetAOFoptLevel, ADSIsRecordInAOF, ADSRefreshAOF
+ *      ADSCustomizeAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -147,13 +134,15 @@
  *      ADSCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> lSuccess
  *  $ARGUMENTS$
  *      <nRecno | aRecNos> Can be either a single record number or an array of
- *         record numbers to add or delete from the AOF. If omitted, defaults to
- *         the current record.
+ *      record numbers to add or delete from the AOF. If omitted, defaults to
+ *      the current record.
  *
- *      <nType>   The type of operation: </par><table>
- *         ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
- *         ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
- *         ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
+ *      <nType>   The type of operation: 
+
+ *      <table>
+ *      ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
+ *      ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
+ *      ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
  *  </table>
  *  $RETURNS$
  *      <lSuccess>  True if the operation is successful.
@@ -187,11 +176,8 @@
  *      regardless of available indexes.
 
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -201,9 +187,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSEvalAOF, ADSGetAOF, ADSGetAOFoptLevel, ADSIsRecordInAOF, ADSRefreshAOF
+ *      ADSClearAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -221,14 +206,11 @@
  *  $RETURNS$
  *      <nOptimizationLevel>      </par>
  *      Values are defined in ads.ch:
- *         ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
+ *      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -238,9 +220,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSGetAOF, ADSGetAOFoptLevel, ADSIsRecordInAOF, ADSRefreshAOF
+ *      ADSClearAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -254,18 +235,15 @@
  *  $SYNTAX$
  *      ADSGetAOFoptLevel() --> nOptimizationLevel
  *  $ARGUMENTS$
- *
+ *       None
  *  $RETURNS$
  *      <nOptimizationLevel>      </par>
  *      Values are defined in ads.ch:
- *         ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
+ *      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -275,9 +253,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSGetAOF, ADSIsRecordInAOF, ADSRefreshAOF
+ *      ADSClearAOF(),ADSGetAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -291,16 +268,13 @@
  *  $SYNTAX$
  *      ADSGetAOF() --> cFilter
  *  $ARGUMENTS$
- *
+ *      None 
  *  $RETURNS$
  *      <cFilter>  The filter expression used in the call to AdsSetAOF.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -310,9 +284,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSGetAOFoptLevel, ADSIsRecordInAOF, ADSRefreshAOF
+ *      ADSClearAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -326,17 +299,14 @@
  *  $SYNTAX$
  *      ADSGetAOFnoOpt() --> cFilterFragment
  *  $ARGUMENTS$
- *
+ *    None
  *  $RETURNS$
  *      <cFilterFragment>  If an AOF filter expression is not fully optimizable,
  *      the non-optimizable part of the expression can be retrieved with this function.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -346,9 +316,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSIsRecordInAOF, ADSRefreshAOF
+ *      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -362,7 +331,7 @@
  *  $SYNTAX$
  *      ADSRefreshAOF()
  *  $ARGUMENTS$
- *
+ *      None
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
@@ -371,9 +340,7 @@
  *      or may not be valid records for the filter. ADSRefreshAOF()
  *      re-evaluates the data to include or exclude changed records.
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -383,9 +350,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSIsRecordInAOF, ADSSetAOF
+ *      ADSClearAOF(),ADSIsRecordInAOF(),ADSSetAOF()
  *  $END$
  */
 
@@ -402,17 +368,15 @@
  *       <cFilter>         Filter expression to set.
 
  *       <nResolveOption>  Option to indicate how the filter should be resolved
- *                      in the event that the expression cannot be fully optimized.
- *                      Options are defined in ads.ch:
- *                      ADS_RESOLVE_IMMEDIATE, ADS_RESOLVE_DYNAMIC.
+ *       in the event that the expression cannot be fully optimized.
+ *       Options are defined in ads.ch:
+ *       ADS_RESOLVE_IMMEDIATE, ADS_RESOLVE_DYNAMIC.
  *  $RETURNS$
  *      <lSuccess>   True if AOF is created.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -422,9 +386,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
- *  $SEEALSO$
- *      ADSClearAOF, ADSIsRecordInAOF, ADSRefreshAOF
+  *  $SEEALSO$
+ *      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -444,9 +407,7 @@
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -456,9 +417,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSClearAOF, ADSRefreshAOF
+ *      ADSClearAOF(),ADSRefreshAOF()
  *  $END$
  */
 
@@ -479,14 +439,10 @@
  *      index order. The value returned is between 0.0 and 1.0, inclusive.
  *      If there are scopes set on the index order, the position returned
  *      is relative to the visible records.
-
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -496,9 +452,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSKeyNo(), ADSKeyCount()
+ *      ADSKeyNo(),ADSKeyCount()
  *  $END$
  */
 
@@ -513,18 +468,19 @@
  *      ADSKeyCount([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyCount
  *  $ARGUMENTS$
  *      <xTag>     Numeric order number OR index tag name. Default is current index.
-
-        <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
-            the second parameter to "ordKeyCount" takes a second argument to identify
-            a particular Index File in cases where two files are open that contain
-            orders with the same name. The ADS driver does not support this and
-            will select the first order with the requested name. To stay consistent
-            with other RDDs, therefore, the second parameter is reserved and the
-            <nFilterOption> is passed as a third parameter.
-
+ *
+ *      <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
+ *      the second parameter to "ordKeyCount" takes a second argument to identify
+ *      a particular Index File in cases where two files are open that contain
+ *      orders with the same name. The ADS driver does not support this and
+ *      will select the first order with the requested name. To stay consistent
+ *      with other RDDs, therefore(),the second parameter is reserved and the
+ *      <nFilterOption> is passed as a third parameter.
+ *
  *      <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
 
  *      Options are defined in ads.ch:
+ *
         <table>
  *         ADS_RESPECTFILTERS   Respect filters and scopes
  *         ADS_IGNOREFILTERS    Ignore filters and scopes
@@ -534,11 +490,8 @@
  *      <nKeyCount>  The number of keys within the current index.
  *  $DESCRIPTION$
  *      See ACE.HLP for full details about the Advantage Database Server.
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -548,9 +501,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSKeyNo, ADSGetRelKeyPos
+ *      ADSKeyNo(),ADSGetRelKeyPos()
  *  $END$
  */
 
@@ -564,15 +516,16 @@
  *  $SYNTAX$
  *      ADSKeyNo([<xTag>], [<nFilterOption>]) --> nKeyNo
  *  $ARGUMENTS$
-        <xTag>          Numeric order number OR index tag name. Default is current index.
-
-        <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
-        <fixed>
+ *      <xTag>          Numeric order number OR index tag name. Default is current index.
+ *
+ *      <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
+ *
+ *      <table>
  *      Options are defined in ads.ch:
  *         ADS_RESPECTFILTERS   Respect filters and scopes
  *         ADS_IGNOREFILTERS    Ignore filters and scopes
  *         ADS_RESPECTSCOPES    Respect scopes only
-        </fixed>
+        </table>
  *  $RETURNS$
  *      <nKeyNo>   The logical key number of the current record in the given index.
  *  $DESCRIPTION$
@@ -582,9 +535,7 @@
         ADS_RESPECTFILTERS set because it walks through the keys to get the
         current position.  Compare to ADSGetRelKeyPos().
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -594,9 +545,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *      ADSKeyCount, ADSGetRelKeyPos
+ *      ADSKeyCount(),ADSGetRelKeyPos()
  *  $END$
  */
 
@@ -613,8 +563,8 @@
  *      ADSLocking( <lMode> ) --> lPriorSetting
  *  $ARGUMENTS$
  *      <lMode>    .T. to use the Advantage proprietary locking mode
- *          (this is the default setting if a remote server is used)
- *          or pass .F. to use "compatibility" locking.
+ *      (this is the default setting if a remote server is used)
+ *      or pass .F. to use "compatibility" locking.
  *
  *  $RETURNS$
  *      <lPriorSetting>   .T. if prior setting was for the proprietary mode.
@@ -634,12 +584,8 @@
  *      file is opened, the current setting is used for that file until it is
  *      closed. Different files can have different locking modes by changing
  *      the setting before opening a second file.
- *
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -649,9 +595,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *
+ *      ADSRightsCheck()
  *  $END$
  */
 
@@ -666,7 +611,7 @@
  *      ADSRightsCheck( <lMode> ) --> lPriorSetting
  *  $ARGUMENTS$
  *      <lMode>    .T. to check rights upon opening data files (the default),
- *          or .F. to ignore rights
+ *      or .F. to ignore rights
  *
  *  $RETURNS$
  *      <lPriorSetting>
@@ -682,12 +627,8 @@
  *      ignore the connected user's rights and open the file
  *      regardless. This lets you allow only
  *      Advantage-based applications to access specific data.
-
- *
  *  $EXAMPLES$
- *
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -697,9 +638,8 @@
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
- *
  *  $SEEALSO$
- *
+ *      ADSLocking()
  *  $END$
  */
 
