@@ -1,3 +1,8 @@
+20000320-22:30 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * samples/guestbk/bld_b32.bat
+     ! Fixed.
+
 20000320-17:00 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/cmdarg.c
