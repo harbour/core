@@ -108,6 +108,7 @@
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter
 
+#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
 STATIC nReadHandle
 STATIC nWriteHandle
 STATIC aDirList
@@ -461,10 +462,12 @@ FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
    ELSEIF lWWW
       oHtm := THTML():New( "www\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
+      oHtm:WriteText('<center><img src="http://www.flexsys-ci.com/harbour-project/images/bannerhrblt.gif" ALIGN="MIDDLE"></IMG></center>')
       oHtm:WritePar( "HARBOUR" )
-      oHtm:WriteLink( "OverView" )
-      oHtm:WriteLink( "License" )
+      oHtm:WriteLink( "overview",UpperLower("Harbour Read me" ))
+      oHtm:WriteLink( "license", UpperLower("Harbour License" ))
       oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html","GNU License" )
+      oHtm:WriteLink( "compileroptions.htm","Compiler Options")
       oHtm:WritePar( "" )
       oHtm:WritePar( "Functions A-M" )
       ASORT( awww,,,{|x,y| x[1]<y[1] })
@@ -472,23 +475,31 @@ FUNCTION FT_HELPC( cFlags, cLinkName, cAtFile )
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "A" .AND. LEFT( cTemp, 1 ) < "N" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink( aWww[ nPos ,2],aWww[nPos,1] )
+            oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1] ))
          ENDIF
       NEXT
       oHtm:WritePar( "Functions N-_" )
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "N" .AND. LEFT( cTemp, 1 ) < "_" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink(aWww[ nPos ,2],aWww[nPos,1]   )       
+            oHtm:WriteLink(Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]   )       )
          ENDIF
       NEXT
       oHtm:WritePar( "Commands" )
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]         
-         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW"         
-            oHtm:WriteLink( aWww[ nPos ,2],aWww[nPos,1])
+         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options"        
+            oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT
+      oHtm:WritePar( "Run Time Error" )
+      FOR nPos := 1 TO LEN( aWww )
+         cTemp := aWww[ nPos,1 ]         
+         IF AT( "()", cTemp ) == 0 .AND. Left(ctemp,4) =="BASE" .AND. left(cTemp,4)=="TERM" .and. left(cTemp,5)=="TOOLS"
+            oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
+         ENDIF
+      NEXT
+
       oHtm:Close()
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE
