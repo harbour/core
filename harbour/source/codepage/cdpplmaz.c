@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "PLMAZ",NUMBER_OF_CHARACTERS,
-    "AèBCïDEêFGHIJKLúMN•O£PQRSòTUVWXYZ†°","aÜbcçdeëfghijklímn‰o¢pqrsûtuvwxyz¶ß",
+    "AèBCïDEêFGHIJKLúMN•O£PQRSòTUVWXYZ†°","aÜbcçdeëfghijklímn§o¢pqrsûtuvwxyz¶ß",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_ANNOUNCE( PLMAZ );
@@ -96,4 +96,3 @@ HB_CALL_ON_STARTUP_END( hb_codepage_Init_PLMAZ )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
    #pragma startup hb_codepage_Init_PLMAZ
 #endif
-
