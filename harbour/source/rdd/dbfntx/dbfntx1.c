@@ -131,6 +131,11 @@
 HB_FUNC( _DBFNTX );
 HB_FUNC( DBFNTX_GETFUNCTABLE );
 
+#ifdef HB_PCODE_VER
+   #undef HB_PRG_PCODE_VER
+   #define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
 { "_DBFNTX",             HB_FS_PUBLIC, HB_FUNCNAME( _DBFNTX ),             0 },
 { "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, HB_FUNCNAME( DBFNTX_GETFUNCTABLE) , 0 }
@@ -3116,13 +3121,16 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
           while ( !pTag->TagEOF && lToSkip-- > 0 )
           {
             hb_ntxTagKeyGoTo( pTag, NEXT_RECORD, &lContinue );
-            if( !hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) )
+            if( !pTag->TagEOF )
             {
-               ntxSeek( pArea, 1, pTag->topScope, 0 );
-            }
-            else if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
-            {
-               pTag->TagEOF = TRUE;
+               if( !hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) )
+               {
+                  ntxSeek( pArea, 1, pTag->topScope, 0 );
+               }
+               else if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
+               {
+                  pTag->TagEOF = TRUE;
+               }
             }
           }
           pArea->ulRecNo = ulRecNo;
@@ -3470,6 +3478,12 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          uiLen = pResult->item.asString.length > NTX_MAX_KEY ? NTX_MAX_KEY :
                  pResult->item.asString.length ;
          break;
+
+      default:
+         hb_itemRelease( pKeyExp );
+         if( pExpMacro != NULL )
+            hb_macroDelete( pExpMacro );
+         return FAILURE;
    }
 
    /* Make sure uiLen is not 0 */

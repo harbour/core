@@ -5825,7 +5825,10 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
          break;
 
       default:
-         bType = '\0';
+         hb_itemRelease( pKeyExp );
+         if( pExpMacro != NULL )
+            hb_macroDelete( pExpMacro );
+         return FAILURE;
    }
 
    hb_itemRelease( pResult );
