@@ -1072,7 +1072,7 @@ METHOD Input( cChar ) CLASS Get
             cChar := ""
          endif
       case cPic == "#"
-         if ! IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar $ "+-" )
+         if ! IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar $ ".+-" )
             cChar := ""
          endif
       case cPic == "L"
