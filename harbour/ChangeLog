@@ -1,3 +1,26 @@
+19990519-02:45 Ryszard Glab <rglab@imid.med.pl>
+
+* source/compiler/harbour.y
+    - added support for INCLUDE environment variable
+    - corrected looking for unmatched ENDIF/ELSE//ELSEIF
+    - added '-t' option = alternative initialization of symbol table
+    When this option is used then the Harbour generates C code for a function
+    <modulename>__InitSymbols that have to be called in order to properly
+    initialize the global symbol table. You should use this option if you
+    want to generate the C code output and your C compiler doesn't allow 
+    to call any function before the 'main'.
+
+* surce/vm/initsymb.c
+    - added new file that registers a symbols table with runtime support 
+    functions. This file can be edited to add calls for application specific 
+    functions that registers local symbols tables used in application modules.
+    The Harbour compiler can create <modulename>__InitSymbols functions 
+    when you use '-t' option.
+
+* source/vm/hvm.c
+    - added call for InitSymbolTable function that registers symbol table
+    with runtime support Harbour functions.
+
 19990518-19:30 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/environ.c
     - Enhanced Harbour OS function to return both OS and Version
@@ -311,10 +334,43 @@
       NB! Not needed for 32-bit compilers.
 
 Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+<<<<<<< ChangeLog
+=======
 
         * Makefile:
         Added obj to the list of directories.
+>>>>>>> 1.78
 
+<<<<<<< ChangeLog
+	* Makefile: 
+	Added obj to the list of directories.
+	
+	* source/Makefile: 
+	Added rdd to the list of directories.
+
+	* source/rtl/Makefile: 
+	Added gtapi.c to the list of C sources.
+	
+	* source/rtl/gtapi.c: 
+	Got rid of two warnings with gcc.
+	
+	* source/rtl/environ.c: 
+	Made sure it compiles with gcc.
+	There was a missing #endif.
+	
+	* source/tools/stringp.prg: 
+	* tests/working/debugtst.prg: 
+	Replaced Debug() with HBDebug(), otherwise the generated C source
+	collides with the macro DEBUG.
+	
+ 	* source/vm/hvm.c:
+	Corrected a comment.
+	
+	* source/rdd/Makefile: 
+	* obj/Makefile: 
+	Added these two Makefiles.
+
+=======
         * source/Makefile:
         Added rdd to the list of directories.
 
@@ -340,6 +396,7 @@ Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
         * obj/Makefile:
         Added these two Makefiles.
 
+>>>>>>> 1.78
 19990511-19:20 Eddie Runia
   * source/rtl/classes.c
     (Default) parameter self added to INLINE methods

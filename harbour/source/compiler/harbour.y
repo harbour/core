@@ -131,6 +131,7 @@ static void __yy_memcpy( char * from, char * to, int count ); /* Bison prototype
 /* production related functions */
 PFUNCTION AddFunCall( char * szFuntionName );
 void AddExtern( char * szExternName ); /* defines a new extern name */
+void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 void AddVar( char * szVarName ); /* add a new param, local, static variable to a function definition or a public or private */
 PCOMSYMBOL AddSymbol( char * szSymbolName );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
@@ -352,6 +353,7 @@ int _iSyntaxCheckOnly = 0; /* syntax check only */
 int _iLanguage = LANG_C;   /* default Harbour generated output language */
 int _iRestrictSymbolLength = 0; /* generate 10 chars max symbols length */
 int _iShortCuts = 1;       /* .and. & .or. expressions shortcuts */
+short int _iAltSymbolTableInit = 0; /* alternative method of symbol table initialization */
 WORD _wSeqCounter   = 0;
 WORD _wForCounter   = 0;
 WORD _wIfCounter    = 0;
@@ -791,8 +793,9 @@ IfEndif    : IfBegin EndIf                    { JumpHere( $1 ); }
            | IfBegin IfElseIf IfElse EndIf    { JumpHere( $1 ); FixElseIfs( $2 ); }
            ;
 
-IfBegin    : IF Expression Crlf { $$ = JumpFalse( 0 ); ++_wIfCounter; } IfStats
-                { $$ = Jump( 0 ); JumpHere( $<iNumber>4 ); }
+IfBegin    : IF Expression { ++_wIfCounter; } Crlf { $$ = JumpFalse( 0 ); }
+                IfStats
+                { $$ = Jump( 0 ); JumpHere( $<iNumber>5 ); }
            ;
 
 IfElse     : ELSE Crlf IfStats
@@ -1054,23 +1057,7 @@ int harbour_main( int argc, char * argv[] )
 
                case 'i':
                case 'I':
-                    {
-                      PATHNAMES *pPath = _pIncludePath;
-
-                      if( pPath )
-                      {
-                        while( pPath->pNext )
-                          pPath =pPath->pNext;
-                        pPath->pNext =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
-                        pPath =pPath->pNext;
-                      }
-                      else
-                      {
-                        _pIncludePath = pPath =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
-                      }
-                      pPath->pNext  = NULL;
-                      pPath->szPath = argv[ iArg ]+2;
-                    }
+                    AddSearchPath( argv[ iArg ]+2, &_pIncludePath );
                     break;
 
                case 'l':
@@ -1096,6 +1083,11 @@ int harbour_main( int argc, char * argv[] )
                case 's':
                case 'S':
                     _iSyntaxCheckOnly = 1;
+                    break;
+
+               case 't':
+               case 'T':
+                    _iAltSymbolTableInit = 1;
                     break;
 
                case 'y':
@@ -1152,6 +1144,22 @@ int harbour_main( int argc, char * argv[] )
 
       if( Include( szFileName, NULL ) )
       {
+         char * szInclude = getenv( "INCLUDE" );
+
+         if( szInclude )
+         {
+          char * pPath;
+          char * pDelim;
+
+          pPath = szInclude = strdup( szInclude );
+          while( (pDelim = strchr( pPath, ';' )) != NULL )
+          {
+            *pDelim ='\0';
+            AddSearchPath( pPath, &_pIncludePath );
+            pPath =pDelim + 1;
+          }
+         }
+
          FunDef( strupr( strdup( pFileName->name ) ), FS_PUBLIC, FUN_PROCEDURE );
          yyparse();
          FixReturns();       /* fix all previous function returns offsets */
@@ -1260,6 +1268,7 @@ void PrintUsage( char * szSelf )
           "\t/o<path>\tobject file drive and/or path\n"
           "\t/q\t\tquiet\n"
           "\t/s\t\tsyntax check only\n"
+          "\t/t\t\talternative method of symbol table initialization\n"
           "\t/y\t\ttrace lex & yacc activity\n"
           "\t/z\t\tsupress .and. & .or. shortcutting\n"
           "\t/10\t\trestrict symbol length to 10 characters\n"
@@ -1383,6 +1392,29 @@ char *MakeFilename( char *szFileName, FILENAME *pFileName )
 
   return szFileName;
 }
+
+/*
+ * Function that adds specified path to the list of pathnames to search
+ */
+void AddSearchPath( char *szPath, PATHNAMES * *pSearchList )
+{
+  PATHNAMES *pPath = *pSearchList;
+
+  if( pPath )
+  {
+    while( pPath->pNext )
+      pPath =pPath->pNext;
+    pPath->pNext =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
+    pPath =pPath->pNext;
+  }
+  else
+  {
+    *pSearchList =pPath =(PATHNAMES *)OurMalloc( sizeof(PATHNAMES) );
+  }
+  pPath->pNext  = NULL;
+  pPath->szPath = szPath;
+}
+
 
 PFUNCTION AddFunCall( char * szFunctionName )
 {
@@ -1797,9 +1829,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    if( ! _iStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
 
+   wSym = 0; /* syymbols counter */
    while( pSym )
    {
       fprintf( yyc, "{ \"%s\", ", pSym->szName );
+      ++wSym;
 
       if( pSym->cScope & FS_STATIC )
          fprintf( yyc, "FS_STATIC" );
@@ -1835,7 +1869,15 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    }
    fprintf( yyc, " };\n\n" );
 
-   fprintf( yyc, "#include <init.h>\n\n" );
+   if( _iAltSymbolTableInit )
+   {
+     fprintf( yyc, "void ProcessSymbols( SYMBOL *, WORD );\n" );
+     fprintf( yyc, "/* Add a local symbol table to the global one\n*/\n" );
+     fprintf( yyc, "void %s__InitSymbols( void )\n{\n"
+                   "  ProcessSymbols( symbols, %i );\n}\n\n", symbols.pFirst->szName, wSym );
+   }
+   else
+     fprintf( yyc, "#include <init.h>\n\n" );
 
    /* Generate functions data
     */

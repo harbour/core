@@ -7,6 +7,7 @@ ROOT = ../../
 C_SOURCES=\
 	dynsym.c \
 	hvm.c \
+	initsymb.c \
 
 LIB=vm
 

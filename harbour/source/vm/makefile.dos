@@ -3,7 +3,7 @@
 #
 include ..\..\makedos.env
 
-OBJECTS=hvm.o dynsym.o
+OBJECTS=hvm.o dynsym.o initsymb.o
 
 all:	$(HARBOURLIB)
 

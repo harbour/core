@@ -5,7 +5,7 @@
 
 TARGET=$(HARBOURLIB)
 
-OBJECTS=hvm.obj dynsym.obj
+OBJECTS=hvm.obj dynsym.obj initsymb.obj
 
 all : $(TARGET)
 

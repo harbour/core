@@ -1,4 +1,7 @@
-/* The Harbour virtual machine */
+/* $Id$
+ *
+ * The Harbour virtual machine 
+ */
 
 /* Please note the following comments we may use everywhere
    TODO: something should be added here
@@ -117,6 +120,8 @@ void CodeblockEvaluate( PCODEBLOCK );
 void CodeblockCopy( PITEM, PITEM );
 void CodeblockDetach( PCODEBLOCK );
 
+void InitSymbolTable( void );   /* initialization of runtime support symbols */
+
 static void ForceLink( void );
 
 ULONG hb_isMessage( PITEM, char * );
@@ -185,6 +190,10 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
 #ifdef OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif
+
+   /* Initialize symbol table with runtime support functions */
+   InitSymbolTable();
+
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
 
 #ifdef HARBOUR_MAIN

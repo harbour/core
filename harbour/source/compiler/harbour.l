@@ -395,7 +395,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 %}
 "endif"|"endi" { /* ENDIF can be used in one context only */
                  if( _wIfCounter == 0 )
-                   GenError( ERR_ENDIF, NULL, NULL );
+                   GenError( ERR_ENDIF, NULL, NULL ); 
                  return ENDIF;
                }
 "endc"("ase"|"as"|"a")? { /* ENDCASE can be used in one context only */
