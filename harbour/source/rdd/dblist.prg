@@ -40,10 +40,10 @@ FUNCTION __dbList(lOff,aList,lAll,bFor,bWhile,nNext,nRec,lRest,lPrint,cFile)
 Local bBlock,lPrinter,lExtra,cExtraFile,oError
 
 IF lOff
-    bBlock:={|| (Qout(iff(Deleted(), "*", " ")), aEval(aList, ;
+    bBlock:={|| (Qout(if(Deleted(), "*", " ")), aEval(aList, ;
         {|cItem| qqout(eval(cItem),"")}))}
 ELSE    
-    bBlock:={|| (Qout(STR(Recno(),7), iff(Deleted(), "*", " ")), aEval(aList, ;
+    bBlock:={|| (Qout(STR(Recno(),7), if(Deleted(), "*", " ")), aEval(aList, ;
         {|cItem| qqout(eval(cItem),"")}))}
 ENDIF
 
@@ -94,7 +94,7 @@ FUNCTION __dbUpdate(cAlias,bKey,lRand,bFields)
             bBlock:=EVAL(bKey)
             DBSELECTAREA(CurArea)
             IF lRand
-                dbSeek(bBlock, iff(.F. ,.T.,NIL))
+                dbSeek(bBlock, if(.F. ,.T.,NIL))
                 IF Found()
                     Eval(bFields)
                 Endif
