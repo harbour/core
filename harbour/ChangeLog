@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 2002-01-26 13:03 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * Changed enttry in Changelog 2002-01-25 22:30 from Alexander to Luiz
+
+2002-01-25 22:30 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net>
+    +contrib/hbzlib
+      added source code for ziparchive.lib File names bellow
+       stdafx.cpp ziparchive.cpp zipautobuffer.cpp zipcentraldir.cpp zipcollections.cpp zipcompatibility.cpp
+       zipexception.cpp zipfile.cpp zipfileheader.cpp zipinternalinfo.cpp zipmemfile.cpp zippathcomponent.cpp
        zipplatform.cpp zipplatformcomm.cpp zipstorage.cpp stdafx.h zipabstractfile.h ziparchive.h zipautobuffer.h zipbaseexception.h zipcentraldir.h zipcollections.h zipcompatibility.h zipexception.h zipfile.h zipfileheader.h zipfilemapping.h zipinternalinfo.h zipmemfile.h zippathcomponent.h zipplatform.h zipstorage.h zipstring.h clickout adler32.c compress.c crc32.c deflate.c gvmat32c.c infblock.c infcodes.c inffast.c inflate.c inftrees.c infutil.c maketree.c trees.c uncompr.c zutil.c gzio.c deflate.h infblock.h infcodes.h inffast.h inffixed.h inftrees.h infutil.h trees.h zlib.h zutil.h zconf.h ziparchivemt.mak ziparchive2.mak
     +contrib/hbzlib/ziparchivemt.mak
     +contrib/hbzlib/ziparchive2.mak
@@ -17,7 +24,7 @@
 
 
 2002-01-25 21:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
-	
+  * source/rdd/dbfntx/dbfntx1.c
     ! Few type casts for MSVC
 
 2002-01-25 19:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
