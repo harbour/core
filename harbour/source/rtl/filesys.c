@@ -1303,7 +1303,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
             break;
 
          case FL_UNLOCK:
-            bResult = ( _locking( hFileHandle, _LK_UNLOCK, ulLength ) == 0 );
+            bResult = ( _locking( hFileHandle, _LK_UNLCK, ulLength ) == 0 );
             break;
 
          default:
