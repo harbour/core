@@ -48,6 +48,7 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 */
 
 #define HB_MACRO_SUPPORT
+#define yylex hb_complex
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -117,7 +118,7 @@ MacroTxt      ({MacroVar}|{MacroEnd}|{MacroId})+
 '              BEGIN STRING1;
 \"             BEGIN STRING2;
 
-\[             { 
+\[             {
                    if( pMacro->FlexState == SEPARATOR )
                       BEGIN STRING3;
                    else

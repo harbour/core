@@ -1,3 +1,12 @@
+2000-08-02 09:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/macro/macro.l
+   * source/macro/macro.y
+     + Added: #define yylex hb_complex
+
+   * source/pp/ppcore.c
+     + Added check for the file path when checking self reference of #include.
+     + Added logic to ignore case when checing self reference of #include.
+
 2000-08-02 15:54 UTC+0300 Chen Kedem <niki@actcom.co.il>
 
    * doc/simplex.txt

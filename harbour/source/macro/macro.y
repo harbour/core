@@ -44,6 +44,7 @@
 /* this #define HAVE TO be placed before all #include directives
  */
 #define  HB_MACRO_SUPPORT
+#define yylex hb_complex
 
 #include "hbmacro.h"
 #include "hbcomp.h"
@@ -205,15 +206,15 @@ Main : Expression '\n' {
                               hb_compExprDelete( hb_compExprGenPop( $1, HB_MACRO_PARAM ), HB_MACRO_PARAM );
                            hb_compGenPCode1( HB_P_ENDPROC, HB_MACRO_PARAM );
                         }
-     | Expression error   { 
+     | Expression error   {
                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
-                 hb_macroError( EG_SYNTAX, HB_MACRO_PARAM ); 
+                 hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
 		 hb_compExprDelete( $1, HB_MACRO_PARAM );
 		 YYABORT;
 	       }
-     | error   { 
+     | error   {
                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
-                 hb_macroError( EG_SYNTAX, HB_MACRO_PARAM ); 
+                 hb_macroError( EG_SYNTAX, HB_MACRO_PARAM );
 		 YYABORT;
 	       }
 ;
