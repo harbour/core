@@ -1,3 +1,6 @@
+19990604-22:07 EST Les. Griffith
+  added logic for msguk.c and msguk.obj to makefile.b32
+
 19990604-21:50 EDT David G. Holm <dholm@jsd-llc.com>
   * builddos.bat
     - Pass command line arguments to make processor, so that we can build and
