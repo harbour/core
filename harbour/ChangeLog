@@ -1,9 +1,14 @@
+20000514-18:57 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.y
+    ! Corrected '@' to be accepted on any var in a Function Declaration.
+    ! Simplified rules of Function Declaration Parameter list.
+
 20000514-12:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.y
     + Seperated the DECLARE... from Function, moved into a Declare, and Added Declare as type of Source.
     ! Added reset of hb_comp_iVarScope to DECLARE... to fix wrong "Statement not allowed outside of procedure or function"
-
 
    * source/compiler/hbgenerr.c
      * Modified : "3Duplicate Declaration of %s \'%s\'" to accept 1st parameter type of redeclaration ( Function, Class, Method ).

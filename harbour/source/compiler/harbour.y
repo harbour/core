@@ -196,7 +196,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
 %type <iNumber> FunScope AsType AsArray
-%type <iNumber> Params ParamList DecParams DecList FormalList OptList Optional
+%type <iNumber> Params ParamList
 %type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
 %type <lNumber> WhileBegin
@@ -244,12 +244,12 @@ Source     : Crlf         { hb_comp_EOL = FALSE; }
            | FieldsDef    { hb_comp_EOL = FALSE; }
            | MemvarDef    { hb_comp_EOL = FALSE; }
            | Function     { hb_comp_EOL = FALSE; }
-	   | Declare      { hb_comp_EOL = FALSE; }
+	   | Declaration  { hb_comp_EOL = FALSE; }
            | Statement    { hb_comp_EOL = FALSE; }
            | Line         { hb_comp_EOL = FALSE; }
            | Source Crlf        { hb_comp_EOL = FALSE; }
            | Source Function    { hb_comp_EOL = FALSE; }
-           | Source Declare     { hb_comp_EOL = FALSE; }
+           | Source Declaration { hb_comp_EOL = FALSE; }
            | Source Statement   { hb_comp_EOL = FALSE; }
            | Source VarDefs     { hb_comp_EOL = FALSE; }
            | Source FieldsDef   { hb_comp_EOL = FALSE; }
@@ -266,7 +266,7 @@ Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunct
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
            ;
 
-Declare    : DECLARE_FUN IdentName { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
+Declaration: DECLARE_FUN IdentName { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
                                                                                                                        hb_comp_pLastDeclared->cType = hb_comp_cVarType;
                                                                                                                      hb_comp_szDeclaredFun = NULL;
                                                                                                                      hb_comp_cVarType = ' ';
@@ -304,26 +304,25 @@ Params     :                                                         { $$ = 0; }
            | '(' { hb_comp_iVarScope = VS_PARAMETER; } ParamList ')' { $$ = $3; }
            ;
 
-DecParams  :                  { $$ = 0; }
-           | '(' DecList ')'  { $$ = $2; }
+DecParams  :                  {}
+           | '(' DecList ')'
            ;
 
-DecList    :                  { $$ = 0; }
+DecList    :                  {}
            | FormalList
 	   | FormalList OptList
 	   ;
 
-FormalList : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
-	   | '@' IdentName AsType            { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); $$ = 2; }
-           | FormalList ',' IdentName AsType { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
+FormalList : IdentName AsType                    { hb_compVariableAdd( $1, hb_comp_cVarType ); }
+	   | '@' IdentName AsType                { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); }
+           | FormalList ',' IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType ); }
+           | FormalList ',' '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType ); }
            ;
 
-OptList    : Optional
-	   | OptList Optional
-	   ;
-
-Optional   : ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); $$ = 3; }
-	   | ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); $$ = 4; }
+OptList    : ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+	   | ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+	   | OptList ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); }
+	   | OptList ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $5, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
 	   ;
 
 AsType     : /* not specified */           { hb_comp_cVarType = ' '; }

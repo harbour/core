@@ -49,26 +49,28 @@
    #COMMAND DECLARE FUNCTION <*x*> =>
 #endif
 
-DECLARE FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC ) AS NUMERIC
+//DECLARE Function nMyFunc AS NUMERIC
 
-DECLARE FUNCTION cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
+DECLARE Function nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
-DECLARE FUNCTION cOtherFunc( ) AS CHAR
+DECLARE Function cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
 
-DECLARE FUNCTION seconds() AS NUM
+DECLARE Function cOtherFunc( ) AS CHAR
 
-DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
+DECLARE Function seconds() AS NUM
 
-DECLARE FUNCTION TEST AS NUMERIC
+DECLARE Function int( n AS NUMERIC ) AS NUMERIC
 
-DECLARE CLASS MyClass                              ;
-        Has METHOD   nMyFunc( nVal As Num ) As Num ;
-        Has METHOD   nMyFunc( nVal As Num ) As Num ;
-        Has Data     cMyData    ;
-        Has Method   FinalMethod
+DECLARE Function TEST AS NUMERIC
 
-DECLARE CLASS MyClass                              ;
-        Has METHOD   nMyFunc( nVal As Num ) As Num
+DECLARE Class MyClass                              ;
+        Has Method nMyFunc( nVal As Num ) As Num ;
+        Has Method nMyFunc( nVal As Num ) As Num ;
+        Has Data cMyData    ;
+        Has Method FinalMethod
+
+DECLARE Class MyClass                              ;
+        Has Method nMyFunc( nVal As Num ) As Num
 
 FIELD a AS CHAR
 FIELD b AS CHAR
