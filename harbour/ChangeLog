@@ -1,3 +1,7 @@
+2001-09-08 12:01 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   - hb_slex.bc
+      Removed unneeded file since Simplex uses makefile.bc now
+
 2001-09-08 17:00 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
     *source/vm/macro.c
         * fixed "memory not released" bug during object's variable
