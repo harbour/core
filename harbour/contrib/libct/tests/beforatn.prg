@@ -60,6 +60,8 @@ procedure main
 
 local cStr := "...This...is...a...test!"
 
+ ctinit()
+
  qout ("Begin test of BEFORATNUM()")
  qout ("")
  qout ("  Value of cStr is:"+chr(34)+cStr+chr(34))
@@ -103,6 +105,8 @@ local cStr := "...This...is...a...test!"
 
  qout ("End test of BEFORATNUM()")
  qout ()
+
+ ctexit()
 
 return 
 

@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of VALPOS()")
  qout ("")
 
@@ -69,6 +71,8 @@ procedure main
  qout ("")
  qout ("End test of VALPOS()")
  qout ("")
+
+ ctexit()
 
 return
 

@@ -61,6 +61,8 @@ procedure main
 local cStr := "...This...is...a...test!"
 local ni, npos
 
+ ctinit()
+
  qout ("Begin test of ATTOKEN()")
  qout ("")
 
@@ -84,6 +86,8 @@ local ni, npos
  qout ("")
  qout ("End test of ATTOKEN()")
  qout ()
+
+ ctexit()
 
 return 
 

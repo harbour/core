@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of WORDREM()")
  qout ("")
 
@@ -69,6 +71,8 @@ procedure main
 
  qout ("End test of WORDREM()")
  qout ("")
+
+ ctexit()
 
 return
 

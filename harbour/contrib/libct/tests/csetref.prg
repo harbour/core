@@ -58,6 +58,8 @@
 
 procedure main
 
+  ctinit()
+
   qout ("Begin test of CSETREF()")
   qout ("  Default switch should be .F., is..................................", csetref())
   qout ("  Setting switch to .T., return value should be .F., is.............", csetref (.T.))
@@ -65,5 +67,7 @@ procedure main
   qout ("  Setting switch to .F. again, return value should still be .T., is ", csetref (.F.))
   qout ("End test of CSETREF()")
   qout ("")
+
+  ctexit()
 
 return

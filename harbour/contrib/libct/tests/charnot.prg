@@ -60,6 +60,8 @@ procedure main
 
 local ni, cStr
 
+ ctinit()
+
  qout ("Begin test of CHARNOT()")
  qout ("")
 
@@ -85,6 +87,8 @@ local ni, cStr
 
  qout ("End test of CHARNOT()")
  qout ("")
+
+ ctexit()
 
 return
 

@@ -63,6 +63,8 @@ local ni, npos
 local cPre := " "
 local cPost := " "
 
+ ctinit()
+
  qout ("Begin test of TOKENSEP()")
  qout ("")
 
@@ -87,6 +89,8 @@ local cPost := " "
  qout ("")
  qout ("End test of TOKENSEP()")
  qout ()
+
+ ctexit()
 
 return 
 

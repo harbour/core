@@ -57,6 +57,8 @@
 
 procedure main()
 
+ ctinit()
+
  qout ("Begin test of ATREPL()")
  qout ("")
 
@@ -72,6 +74,8 @@ procedure main()
 
  qout ("End test of ATREPL()")
  qout ("")
+
+ ctexit()
 
 return 
 

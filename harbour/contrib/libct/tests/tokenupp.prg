@@ -60,6 +60,8 @@ procedure main
 
 local cStr := ".,.This.,.is.,.a.,.test!"
 
+ ctinit()
+
  qout ("Begin test of TOKENUPPER()")
  qout ("")
 
@@ -85,6 +87,8 @@ local cStr := ".,.This.,.is.,.a.,.test!"
  qout ("")
  qout ("End test of TOKENUPPER()")
  qout ()
+
+ ctexit()
 
 return 
 

@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of ASCIISUM()")
  qout ("")
 
@@ -68,6 +70,8 @@ procedure main
  qout ("")
  qout ("End test of ASCIISUM()")
  qout ("")
+
+ ctexit()
 
 return
 

@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of CHARADD()")
  qout ("")
 
@@ -70,6 +72,8 @@ procedure main
 
  qout ("End test of CHARADD()")
  qout ("")
+
+ ctexit()
 
 return
 

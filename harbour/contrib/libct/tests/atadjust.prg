@@ -65,6 +65,8 @@ local aStr := {"Introduction: 1",;
                "Discussion: 21"}
 local ni
 
+ ctinit()
+
  // Some simple tests
  qout ("Begin test of ATADJUST()")
  qout ("")
@@ -97,6 +99,8 @@ local ni
 
  qout ("End test of ATADJUST()")
  qout ("")
+
+ ctexit()
 
 return 
 

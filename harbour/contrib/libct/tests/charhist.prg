@@ -61,6 +61,8 @@ procedure main
 local aArr
 local nTotal := 0
 
+ ctinit()
+
  qout ("Begin test of CHARHIST()")
  qout ("")
 
@@ -73,6 +75,8 @@ local nTotal := 0
 
  qout ("End test of CHARHIST()")
  qout ("")
+
+ ctexit()
 
 return
 

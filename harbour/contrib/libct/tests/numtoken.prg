@@ -60,6 +60,8 @@ procedure main
 
 local cStr := ".,.This.,.is.,.a.,.test!"
 
+ ctinit()
+
  qout ("Begin test of NUMTOKEN()")
  qout ("")
 
@@ -81,6 +83,8 @@ local cStr := ".,.This.,.is.,.a.,.test!"
  qout ("")
  qout ("End test of NUMTOKEN()")
  qout ()
+
+ ctexit()
 
 return 
 

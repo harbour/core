@@ -1,3 +1,12 @@
+2001-07-17 22:30 MEST Martin Vogel <vogel@inttec.de>
+
+   * contrib/libct/tests/Makefile
+   + contrib/libct/tests/csetarge.prg
+     + Test program for the new CSETARGERR() function.
+
+   * contrib/libct/tests/*.prg
+     + added calls to CTINIT() and CTEXIT()
+
 2001-07-17 21:50 UTC+1 JFL (mafact) <jfl@mafact.com>
    * source/vm/classes.c
      ! Fixed Scoping where a protected var could be

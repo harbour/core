@@ -60,6 +60,8 @@ procedure main
 
 local cStr := "This is a test!"
 
+ ctinit()
+
  qout ("Begin test of ADDASCII()")
  qout ("")
  // simple tests
@@ -99,14 +101,6 @@ local cStr := "This is a test!"
  qout ("  return value of addascii([AAAA],257,2,.F.) call ('ABAA')..:", addascii("AAAA",257,2,.F.))
  qout ("  return value of addascii([AAAA],258,,.T.) call ('AABC')...:", addascii("AAAA",258,,.T.))
  qout ("  return value of addascii([ABBA],-257,3,.T.) call ('AAAA').:", addascii("ABBA",-257,3,.T.))
-
- // wrong parameter test 
- qout ()
- qout ("Wrong parameter tests:")
- qout ("  return value of valtype (addascii (5789676,1,2,.T.)) call ('C'): ", valtype(addascii(5789676,1,2,.T.)))
- qout ("  return value of addascii ([ABCD],[A],2,.F.) call ('ABCD')......: ", addascii("ABCD","A",2,.F.))
- qout ("  return value of addascii ([ABCD],1,5,.F.) call ('ABCD')........: ", addascii("ABCD",1,5,.F.))
- qout ()                    
 
  qout ("End test of ADDASCII()")
  qout ("")

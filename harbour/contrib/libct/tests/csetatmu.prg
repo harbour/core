@@ -58,6 +58,8 @@
 
 procedure main
 
+  ctinit()
+
   qout ("Begin test of CSETATMUPA()")
   qout ("  Default switch should be .F., is..................................", csetatmupa())
   qout ("  Setting switch to .T., return value should be .F., is.............", csetatmupa (.T.))
@@ -65,5 +67,7 @@ procedure main
   qout ("  Setting switch to .F. again, return value should still be .T., is ", csetatmupa (.F.))
   qout ("End test of CSETATMUPA()")
   qout ("")
+
+  ctexit()
 
 return

@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of WORDSWAP()")
  qout ("")
 
@@ -69,6 +71,8 @@ procedure main
 
  qout ("End test of WORDSWAP()")
  qout ("")
+
+ ctexit()
 
 return
 

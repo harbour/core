@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of CHARLIST()")
  qout ("")
 
@@ -68,6 +70,8 @@ procedure main
 
  qout ("End test of CHARLIST()")
  qout ("")
+
+ ctexit()
 
 return
 

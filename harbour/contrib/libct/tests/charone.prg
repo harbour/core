@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of CHARONE()")
  qout ("")
 
@@ -72,6 +74,8 @@ procedure main
 
  qout ("End test of CHARONE()")
  qout ("")
+
+ ctexit()
 
 return
 

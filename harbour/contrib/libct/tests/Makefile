@@ -63,8 +63,9 @@ PRG_SOURCES=\
 	charswap.prg \
 	charsub.prg \
 	charxor.prg \
-	csetref.prg \
 	csetatmu.prg \
+	csetarge.prg \
+	csetref.prg \
 	numtoken.prg \
 	setatlik.prg \
 	token.prg \

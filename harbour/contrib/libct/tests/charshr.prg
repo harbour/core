@@ -60,6 +60,8 @@ procedure main
 
 local ni, cStr
 
+ ctinit()
+
  qout ("Begin test of CHARSHR()")
  qout ("")
 
@@ -81,6 +83,8 @@ local ni, cStr
 
  qout ("End test of CHARSHR()")
  qout ("")
+
+ ctexit()
 
 return
 

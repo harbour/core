@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of WORDREPL()")
  qout ("")
 
@@ -76,6 +78,8 @@ procedure main
 
  qout ("End test of WORDREPL()")
  qout ("")
+
+ ctexit()
 
 return
 

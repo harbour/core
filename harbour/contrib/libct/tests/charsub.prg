@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of CHARSUB()")
  qout ("")
 
@@ -70,6 +72,8 @@ procedure main
 
  qout ("End test of CHARSUB()")
  qout ("")
+
+ ctexit()
 
 return
 

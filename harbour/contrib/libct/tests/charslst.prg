@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of CHARSLIST()")
  qout ("")
 
@@ -68,6 +70,8 @@ procedure main
 
  qout ("End test of CHARSLIST()")
  qout ("")
+
+ ctexit()
 
 return
 

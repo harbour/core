@@ -60,6 +60,8 @@ procedure main
 
 local cStr := ".,.This.,.is.,.a.,.test!"
 
+ ctinit()
+
  qout ("Begin test of TOKENLOWER()")
  qout ("")
 
@@ -85,6 +87,8 @@ local cStr := ".,.This.,.is.,.a.,.test!"
  qout ("")
  qout ("End test of TOKENLOWER()")
  qout ()
+
+ ctexit()
 
 return 
 

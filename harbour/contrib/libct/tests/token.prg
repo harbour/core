@@ -63,6 +63,8 @@ local ni, npos
 local cPre := " "
 local cPost := " "
 
+ ctinit()
+
  qout ("Begin test of TOKEN()")
  qout ("")
 
@@ -94,6 +96,8 @@ local cPost := " "
  qout ("")
  qout ("End test of TOKEN()")
  qout ()
+
+ ctexit()
 
 return 
 

@@ -58,6 +58,8 @@
 
 procedure main
 
+ ctinit()
+
  qout ("Begin test of ASCPOS()")
  qout ("")
 
@@ -68,6 +70,8 @@ procedure main
  qout ("")
  qout ("End test of ASCPOS()")
  qout ("")
+
+ ctexit()
 
 return
 

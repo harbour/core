@@ -60,6 +60,8 @@ procedure main
 
   local cWildcard := " "
 
+  ctinit()
+
   qout ("Begin test of SETATLIKE()")
   qout ("  Default mode should be 0, is................................", setatlike())
   qout ("  Setting mode to 1, return value should be 0, is.............", setatlike (1))
@@ -74,5 +76,7 @@ procedure main
   qout ("    should yield '#' for cWildcard, does......................", cWildcard)
   qout ("End test of SETATLIKE()")
   qout ("")
+
+  ctexit()
 
 return
