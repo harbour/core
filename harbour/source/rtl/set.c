@@ -795,8 +795,8 @@ void hb_setInitialize( void )
    hb_set.HB_SET_PATH = ( char * ) hb_xgrab( 1 );
    hb_set.HB_SET_PATH[ 0 ] = '\0';
    hb_set.HB_SET_PRINTER = FALSE;
-   hb_set.HB_SET_PRINTFILE = ( char * ) hb_xgrab( 4 );
-   memcpy( hb_set.HB_SET_PRINTFILE, "PRN", 4 ); /* Default printer device */
+   hb_set.HB_SET_PRINTFILE = ( char * ) hb_xgrab( 1 );
+   memcpy( hb_set.HB_SET_PRINTFILE, "", 1 ); /* Default printer device */
    hb_set.hb_set_printhan = FS_ERROR;
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;

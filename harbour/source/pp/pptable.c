@@ -176,7 +176,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___52 = {0,"SET","MARGIN TO","Set( _SET_MARGIN, 0 )",&sC___51 };
    static COMMANDS sC___53 = {0,"SET","PRINTER \1A20ON,OFF,&>","Set( _SET_PRINTER, \1A30 )",&sC___52 };
    static COMMANDS sC___54 = {0,"SET","PRINTER (\1A00)","Set( _SET_PRINTER, \1A00 )",&sC___53 };
-   static COMMANDS sC___55 = {0,"SET","PRINTER TO","Set( _SET_PRINTFILE, "" )",&sC___54 };
+   static COMMANDS sC___55 = {0,"SET","PRINTER TO","Set( _SET_PRINTFILE, '""' )",&sC___54 };
    static COMMANDS sC___56 = {0,"SET","PRINTER TO \1A40 [\1B20 ADDITIVE>]","Set( _SET_PRINTFILE, \1A30, \1B50 )",&sC___55 };
    static COMMANDS sC___57 = {0,"SET","DEVICE TO SCREEN","Set( _SET_DEVICE, 'SCREEN' )",&sC___56 };
    static COMMANDS sC___58 = {0,"SET","DEVICE TO PRINTER","Set( _SET_DEVICE, 'PRINTER' )",&sC___57 };
