@@ -94,7 +94,7 @@ HARBOUR HB___PREPROCESS( void )
          /* an error occured during parsing.
           * The longjmp was used in GenError()
           */
-         hb_retc( "ERROR" );
+         hb_retc( "" );
       }
 
       hb_xfree( pText );
@@ -116,7 +116,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
     */
 
    sprintf( buffer, szErrors[ iError - 1 ], szError1, szError2 );
-   pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iError, buffer, NULL, 0, EF_NONE );
+   pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iError, buffer, NULL, 0, EF_NONE | EF_CANDEFAULT );
    hb_errLaunch( pError );
    hb_errRelease( pError );
 
