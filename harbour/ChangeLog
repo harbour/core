@@ -1,3 +1,15 @@
+2000-10-11 3:58 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   Re-posting changes that had a CVS error yesterday...
+   * contrib/rdd_ads/ads1.c
+      * fixed gpf when getting values at Eof
+      * Fixed Bof problem in child areas.
+
+        Alexander: I had to remove the recently added adsBof()
+        because we have repositioned to record 1 when at Bof,
+        so ADS no longer thinks it's Bof.  The adsEof does fix
+        the other problem, though.  All my tests pass now,
+        so I think we're finally done with Bof issues ;-)
+
 2000-10-11 13:40 GMT -0300 Horacio D. Roldan <horacioroldan@usa.net>
    * source/rdd/dbfcdx/dbfcdx1.c
      Fixed a bug in ordCreate that corrupted the dbf
