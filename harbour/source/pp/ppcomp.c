@@ -121,15 +121,35 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                     pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
 
                     if( lLine )
+                    {
                        sprintf( s_szLine, "#line %d \"%s\"\n", pFile->iLine + hb_pp_nEmptyStrings, pFile->szFileName );
+                    }
                     else
+                    {
                        *s_szLine = '\0';
+                    }
 
                     lLine = 0;
 
+                    /* Ron Pinkas added 2000-06-23 */
+                       /* Produce empty lines, only if previous file is the main prg. */
+                    if( hb_comp_files.iFiles == 2 )
+                    {
+                       tmpPtr = s_szLine + strlen(s_szLine);
+
+                       for( i=0; i < hb_pp_nEmptyStrings; i++ )
+                          *tmpPtr++ = '\n';
+
+                       *tmpPtr = '\0';
+                    }
+                    /* Ron Pinkas end 2000-06-23 */
+
+                    sprintf( s_szLine + strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
+
+                    /* Ron Pinkas added 2000-06-23 */
                     pFile->iLine += ( 1 + hb_pp_nEmptyStrings );
-                    sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"", hb_comp_files.pLast->szFileName );
                     hb_pp_nEmptyStrings = 0;
+                    /* Ron Pinkas end 2000-06-23 */
                  }
                  else
                  {
@@ -178,17 +198,31 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
         if( hb_comp_files.iFiles == 1 )
            return 0;      /* we have reached the main EOF */
         else
-        {  /* we close the currently include file and continue */
+        {
+           /* Ron Pinkas added 2000-06-23 */
+              /* Resumming Main PRG */
+           if( hb_comp_files.iFiles == 2 )
+           {
+           }
+           /* Save line number for the last #include line
+           hb_comp_iIncLine = hb_comp_files.pLast->iLine - 1;
+           */
+           /* Ron Pinkas end 2000-06-23 */
+
+           /* we close the currently include file and continue */
            fclose( hb_comp_files.pLast->handle );
            hb_xfree( hb_comp_files.pLast->pBuffer );
            hb_xfree( hb_comp_files.pLast->szFileName );
            pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
            hb_xfree( hb_comp_files.pLast );
            hb_comp_files.pLast = pFile;
+
+           /* Ron Pinkas commented
            hb_comp_iLine = hb_comp_files.pLast->iLine;
+           */
+
            hb_comp_files.iFiles--;
            lLine = 1;
-           hb_pp_nEmptyStrings = 0;
         }
 
         /* Ron Pinkas added 2000-06-22 */

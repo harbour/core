@@ -1,3 +1,37 @@
+2000-06-24 11:42 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * include/hbclass.ch
+     - Uncommented the VO #xtranslate as they do work correctly.
+
+   * source/pp/pplib.c
+     - Removed int hb_comp_iIncLine
+
+   * include/hbcomp.h
+     - Removed int hb_comp_iIncLine
+     + Added int hb_comp_iCompiled
+     + Added char*  hb_comp_szFile
+     + Added BOOL  hb_comp_bError
+
+   * source/compiler/harbour.c
+     ! Fixed Compile Time Line Numbers
+     ! Fixed Run Time Line Numbers
+
+   * source/compiler/harbour.l
+     ! Rewrote rules for STRING1 STRING2 STRING3 INDEX, were severly broken with regard to unterminated support.
+       /* When working on errors, I founf major problems, with unterminated Array Index and Unterminated Strings
+          I'm surprised no one reported.  This mass was a nightmere to fix. it seems to be working great now. */
+
+   * source/compiler/harbour.y
+     ! Many fixes to support correct line numbers.
+
+   * source/compiler/hbgenerr.c
+     ! Fixed Error System to never report more than 1 error per source line.
+
+   * source/pp/ppcomp.c
+     - Removed code for hb_comp_iIncLine
+
+   * source/pp/ppcore.c
+     * Minor formating.
+
 2000-06-24 20:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h
@@ -11,27 +45,27 @@
             user defined background tasks
             *HB_IAMIDLE() - signals that user code is in idle state
             *HB_ADDIDLE(), HB_DELIDLE() - handle background tasks
-        
+
     *tests/Makefile
     *tests/onidle.prg
         * test program that demonstrate background tasks
-        
+
     *source/vm/garbage.c
         * new module with the garbage collector code
-        
+
     *source/rtl/Makefile
         * added a new file idle.c
-        
+
     *source/rtl/errorapi.c
     *source/rtl/inkey.c
         * fixed to correct support idle states and garbage collector
-       
+
 NOTICE: static HB_ITEM structures cannot be initialized with hb_itemClear()
   call because the structure can occupy a memory with random bits set
-   
+
     *source/vm/Makefile
         * added a new file garbage.c
-        
+
     *source/vm/arrays.c
     *source/vm/codebloc.c
     *source/vm/memvars.c
@@ -41,7 +75,7 @@ NOTICE: static HB_ITEM structures cannot be initialized with hb_itemClear()
     *makefile.bc
     *makefile.vc
         *updated to support idle states and the garbage collector
-        
+
 2000-06-23 22:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
     *contrib/samples/gauge.c
         *Fixed a small bug on Gaugenew()

@@ -95,9 +95,9 @@
 #endif /* HB_SHORTNAMES */
 
 /* VO compatibility */
-/*#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> ) */
-/*#xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> ) */
-/*#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> ) */
+#xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
+#xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> )
+#xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
 
 /*#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> ) */
 

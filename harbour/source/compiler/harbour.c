@@ -90,6 +90,8 @@ char *        hb_comp_szFromClass;
 PCOMDECLARED  hb_comp_pLastMethod;
 
 int           hb_comp_iLine;                             /* currently processed line number (globaly) */
+int           hb_comp_iCompiled;                         /* Last compiled line */
+char *        hb_comp_szFile;                            /* File Name of last compiled line */
 PFUNCTION     hb_comp_pInitFunc;
 PHB_FNAME     hb_comp_pFileName = NULL;
 
@@ -126,6 +128,7 @@ BOOL          hb_comp_EOL;
 char *        hb_comp_szDeclaredFun = NULL;
 
 BOOL          hb_comp_bAutoOpen = TRUE;
+BOOL          hb_comp_bError = FALSE;
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is
  * used to suppress error report generation
@@ -1933,54 +1936,28 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
 {
    if( hb_comp_bLineNumbers && ! hb_comp_bDontGenLineNum )
    {
-      int iLine = hb_comp_iLine;
+      /*
+      int iLine = hb_comp_files.pLast->iLine - 1;
 
-      if( hb_comp_files.iFiles == 1 )
-      {
-         iLine = hb_comp_files.pLast->iLine ;
-      }
-      else
-      {
-         PFILE tmpFile = hb_comp_files.pLast;
-         while( tmpFile->pPrev )
-         {
-                tmpFile = tmpFile->pPrev;
-         }
-         if( tmpFile )
-         {
-            iLine = tmpFile->iLine;
-         }
-      }
-
-      if( yytext[0] == '\n' )
-      {
-         if( hb_pp_nEmptyStrings )
-         {
-            iLine -= ( hb_pp_nEmptyStrings + 2 );
-         }
-         else
-         {
-            iLine--;
-         }
-      }
-      else
-      {
-         iLine--;
-      }
-
-      #if 0
-         printf( "\nLine: %i Empty: %i >%s<\n",  iLine, hb_pp_nEmptyStrings, yytext );
-      #endif
+      if( hb_pp_nEmptyStrings )
+         iLine -= hb_pp_nEmptyStrings - 2;
+      */
 
       if( ( ( hb_comp_functions.pLast->lPCodePos - hb_comp_ulLastLinePos ) > 3 ) || hb_comp_bDebugInfo )
       {
+         /*
+         printf( "File: %s Line: %i Compiled: %i iLine: %i Empty: %i\n", hb_comp_szFile, hb_comp_files.pLast->iLine, hb_comp_iCompiled, iLine, hb_pp_nEmptyStrings );
+         */
          hb_comp_ulLastLinePos = hb_comp_functions.pLast->lPCodePos;
-         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( iLine ), HB_HIBYTE( iLine ), ( BOOL ) 0 );
+         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( hb_comp_iCompiled ), HB_HIBYTE( hb_comp_iCompiled ), ( BOOL ) 0 );
       }
       else
       {
-         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( iLine );
-         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( iLine );
+         /*
+         printf( "*File: %s Line: %i Compiled: %i iLine: %i Empty: %i\n", hb_comp_szFile, hb_comp_files.pLast->iLine, hb_comp_iCompiled, iLine, hb_pp_nEmptyStrings );
+         */
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( hb_comp_iCompiled );
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( hb_comp_iCompiled );
       }
    }
 
@@ -2024,7 +2001,6 @@ void hb_compLinePushIfInside( void ) /* generates the pcode with the currently c
     */
    if( ! hb_comp_bExternal )
    {
-      hb_comp_bExternal = FALSE;
       if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 )
       {
          hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
@@ -3335,6 +3311,7 @@ static void hb_compInitVars( void )
    hb_comp_bAnyWarning = FALSE;
 
    hb_comp_iLine = 1;
+   hb_comp_iCompiled = 1;
    hb_comp_iFunctionCnt = 0;
    hb_comp_iErrorCount = 0;
    hb_comp_cVarType = ' ';
@@ -3444,6 +3421,7 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
             hb_comp_files.pLast  = NULL           ;
             hb_comp_files.iFiles = 0              ;
             hb_comp_iLine        = 1              ;
+            hb_comp_iLine        = 1              ;
          }
          else
          #endif
@@ -3478,6 +3456,8 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
                hb_comp_bExternal = FALSE;
             }
             #endif
+
+            hb_comp_szFile = szFileName;
 
             if( ! hb_comp_bQuiet )
             {

@@ -157,76 +157,127 @@ Separator     {SpaceTab}
 ^[ \t]*"do"[ \t]*"while"[ \t]*"["    { BEGIN STRING3;                    return WHILE;    }
 <INITIAL>\[                          { BEGIN STRING3; }
 
-<STRING1>[^'^\n]*   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-<STRING2>[^\"^\n]*  { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-<STRING3>[^\]]*\n   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-
-<STRING1>[^']*'   { if( i_INDEX_STATE )
-                       BEGIN INDEX;
-                    else
+<STRING1>[^'\n]*$    { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                       iIndexSets = 0;
+                       i_INDEX_STATE = 0;
+		       hb_comp_iState = LOOKUP;
                        BEGIN 0;
+                       return '\n';
+                     }
+<STRING2>[^\"\n]*$   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                       iIndexSets = 0;
+                       i_INDEX_STATE = 0;
+		       hb_comp_iState = LOOKUP;
+                       BEGIN 0;
+                       return '\n';
+                     }
+<STRING3>[^\]\n]*$   { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+                       iIndexSets = 0;
+                       i_INDEX_STATE = 0;
+		       hb_comp_iState = LOOKUP;
+                       BEGIN 0;
+                       return '\n';
+                     }
 
-                    yyleng--;
-                    yytext[yyleng] = 0;
-                    yylval.string = hb_strdup( yytext );
-                    /*printf( "\nLITERAL = %s\n", yylval.string );*/
-                    return LITERAL;
+<STRING1>[^"'"\n]*'  {  if( i_INDEX_STATE )
+                          BEGIN INDEX;
+                        else
+                          BEGIN 0;
+
+                        yyleng--;
+                        yytext[yyleng] = 0;
+                        yylval.string = hb_strdup( yytext );
+                        return LITERAL;
+                     }
+
+<STRING2>[^\"\n]*\"  {  if( i_INDEX_STATE )
+                          BEGIN INDEX;
+                        else
+                          BEGIN 0;
+
+                        yyleng--;
+                        yytext[yyleng] = 0;
+                        yylval.string = hb_strdup( yytext );
+                        return LITERAL;
+                     }
+
+<STRING3>[^\]\n]*\]  {  if( i_INDEX_STATE )
+                          BEGIN INDEX;
+                        else
+                          BEGIN 0;
+
+                        yyleng--;
+                        yytext[yyleng] = 0;
+                        yylval.string = hb_strdup( yytext );
+                        return LITERAL;
+                     }
+
+<INDEX>\[[^\n]*$  { iIndexSets++;
+		     /*
+                     printf( "%i >%s<\n", iIndexSets, yytext );
+		     */
+		     {
+			char * tmpStr = yytext;
+
+                        while( *tmpStr != '\0' )
+			{
+                           if( *tmpStr++ == ']' )
+			   {
+		              yyless(1);
+                              return '[';
+			   }
+		        }
+
+			/* No Closing Bracket - Error! */
+			hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNTERM_ARRAY_INDEX, NULL, NULL );
+                        i_INDEX_STATE = 0;
+			iIndexSets = 0;
+		        hb_comp_iState = LOOKUP;
+                        BEGIN 0;
+			return '\n';
+		     }
                   }
 
-<STRING2>[^\"]*\" { if( i_INDEX_STATE )
-                       BEGIN INDEX;
-                    else
-                       BEGIN 0;
+<INDEX>\][^\n]*\n  { if( iIndexSets )
+                        iIndexSets-- ;
 
-                    yyleng--;
-                    yytext[yyleng] = 0;
-                    yylval.string = hb_strdup( yytext );
-                    /*printf( "\nLITERAL = %s\n", yylval.string );*/
-                    return LITERAL;
-                  }
+                     /*
+                     printf( ">%s<\n", yytext );
+		     */
 
-<STRING3>[^\]]*\] { if( i_INDEX_STATE )
-                       BEGIN INDEX;
-                    else
-                       BEGIN 0;
+                     if( iIndexSets == 0 )
+                     {
+			char * tmpStr = yytext;
 
-                    yyleng--;
-                    yytext[yyleng] = 0;
-                    yylval.string = hb_strdup( yytext );
-                    /*printf( "\nLITERAL = %s\n", yylval.string );*/
-                    return LITERAL;
-                  }
+			/* Default to no Opening Bracket. */
+                        i_INDEX_STATE = 0;
+                        BEGIN 0;
 
-<INDEX>\n    { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_UNTERM_ARRAY_INDEX, NULL, NULL ); }
+                        /* No longer in this state. */
+                        while( *tmpStr != '\0' )
+			{
+                           if( *tmpStr++ == '[' )
+			   {
 
-<INDEX>\[    { iIndexSets++; return yytext[ 0 ]; }
+                              i_INDEX_STATE = 1;
+                              BEGIN INDEX;
+                              break;
+			   }
+			}
+                     }
 
-<INDEX>\]    {
-                iIndexSets-- ;
-                if( iIndexSets == 0 )
-                {
-                   /*printf( "\nIndex End\n" );*/
-
-                   /* No longer in this state. */
-                   i_INDEX_STATE = 0;
-                   BEGIN 0;
-                }
-                hb_comp_iState =OPERATOR;
-                return yytext[ 0 ];
-             }
+		     yyless(1);
+                     hb_comp_iState = OPERATOR;
+                     return ']';
+             	   }
 
 {SpaceTab}     ;
 
-\n.*         {
+\n.           { /* "." after "\n" is important so we skip empty lines, until begining of non empty next line - don't remove!!! */
                 hb_comp_iState = LOOKUP;
+
                 yyless( 1 );
-                /*++hb_comp_iLine;*/
-#if 0
-                if( ! hb_comp_bQuiet )
-                {
-                   printf( "\r%i", hb_comp_iLine );
-                }
-#endif
+
                 if( ! hb_comp_bQuiet && ( hb_comp_iLine % 100 ) == 0 )
                 {
                    printf( "\r%i", hb_comp_iLine );
@@ -1668,7 +1719,8 @@ Separator     {SpaceTab}
                   i_INDEX_STATE = 1;
                }
 
-               iIndexSets--;
+               if( iIndexSets )
+                  iIndexSets--;
 
                unput( '[' );
                hb_comp_iState = OPERATOR;

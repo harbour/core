@@ -413,6 +413,8 @@ extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 /* variable used by compiler
  */
 extern int           hb_comp_iLine;
+extern int           hb_comp_iCompiled;
+extern char *        hb_comp_szFile;
 extern FUNCTIONS     hb_comp_functions;
 extern FUNCTIONS     hb_comp_funcalls;
 extern SYMBOLS       hb_comp_symbols;
@@ -473,6 +475,7 @@ extern char *        hb_comp_szWarnings[];
 
 extern char *        hb_pp_STD_CH;
 extern BOOL          hb_comp_bAutoOpen;
+extern BOOL          hb_comp_bError;
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

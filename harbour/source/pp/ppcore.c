@@ -1241,11 +1241,11 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                   }
                 }
                 */
-                /* Ron Pinkas End */
+                /* Ron Pinkas end 2000-06-02 14:45 UTC-0800 */
               }
-            /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
-            /*
-            else if( ipos && *ptrmp == '[' )
+              /* Ron Pinkas added 2000-06-02 14:45 UTC-0800 */
+              /*
+              else if( ipos && *ptrmp == '[' )
               {
                 ptr = strtopti+ipos;
                 while ( ptr > strtopti && *(--ptr) != ']' ) ;
@@ -1268,7 +1268,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                 }
               }
               */
-              /* Ron Pinkas End */
+              /* Ron Pinkas end 2000-06-02 14:45 UTC-0800 */
           }
         switch( *ptrmp ) {
         case '[':
@@ -1611,13 +1611,13 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
    int StBr1 = 0, StBr2 = 0, StBr3 = 0;
    BOOL rez = FALSE;
 
-   /* Ron Pinkas Begin 2000-06-02 */
+   /* Ron Pinkas added 2000-06-02 */
    BOOL bMacro = FALSE;
-   /* Ron Pinkas End */
+   /* Ron Pinkas end 2000-06-02 */
 
-   /* Ron Pinkas Begin 2000-06-17 */
+   /* Ron Pinkas added 2000-06-17 */
    char cLastChar = '\0';
-   /* Ron Pinkas End */
+   /* Ron Pinkas end 2000-06-17 */
 
    HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d, %d)", expreal, ptri, prlist, maxrez, bStrict));
 
@@ -1678,7 +1678,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                {
                   State = STATE_QUOTE3;
                }
-               /* Ron Pinkas added 2000-06-17 */
+               /* Ron Pinkas end 2000-06-17 */
 
                /* Ron Pinkas commented 2000-06-17
                StBr2++;
@@ -1737,7 +1737,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             }
             else if( IsInStr( **ptri, sZnaki ) )
             {
-               /* Ron Pinkas Begin 2000-06-02 */
+               /* Ron Pinkas added 2000-06-02 */
                if( **ptri=='.' && bMacro )
                {
                   /* Macro terminator '.' */
@@ -1747,7 +1747,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                   bMacro = FALSE;
                }
                else
-               /* Ron Pinkas End */
+               /* Ron Pinkas end 2000-06-02 */
                   State = STATE_EXPRES;
             }
             else if( **ptri == '(' )
@@ -1779,18 +1779,18 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                State = STATE_BRACKET;
                StBr3 = 1;
             }
-            /* Ron Pinkas Begin 2000-06-02 */
+            /* Ron Pinkas added 2000-06-02 */
             else if( **ptri == '&' )
             {
                bMacro = TRUE;
             }
-            /* Ron Pinkas End */
+            /* Ron Pinkas end 2000-06-02 */
             else if( **ptri == ' ' )
             {
                State = STATE_ID_END;
-               /* Ron Pinkas Begin 2000-06-02 */
+               /* Ron Pinkas added 2000-06-02 */
                bMacro = FALSE;
-               /* Ron Pinkas End */
+               /* Ron Pinkas end 2000-06-02 */
             }
 
             break;
@@ -1842,7 +1842,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             {
                rez = TRUE;
             }
-            /* Ron Pinkas End */
+            /* Ron Pinkas end 2000-06-14 */
             else if( **ptri == '(' )
             {
                StBr1++;
@@ -1908,10 +1908,6 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
       }
 
       *expreal = '\0';
-
-      #if 0
-         printf( "\nLen=%i >%s<\n", lens, expreal-lens );
-      #endif
    }
 
    /* Ron Pinkas added 2000-06-21 */
@@ -1926,7 +1922,12 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
           lens = 0;
       }
    }
-   /* Ron Pinkas added 2000-06-21 */
+   /* Ron Pinkas end 2000-06-21 */
+
+   #if 0
+      if( lens )
+         printf( "\nLen=%i >%s<\n", lens, expreal-lens );
+   #endif
 
    return lens;
 }
@@ -2430,9 +2431,9 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   int State = 0;
   char cha, cLast = '\0', symbLast = '\0';
 
-  /* Ron Pinkas Begin 2000-06-04 */
+  /* Ron Pinkas added 2000-06-04 */
   BOOL bNewLine = TRUE;
-  /* Ron Pinkas End */
+  /* Ron Pinkas end 2000-06-04 */
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
@@ -2499,7 +2500,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                 }
               else if( !State ) maxlen = readed = 0;
               break;
-            /* Ron Pinkas Begin 2000-06-01 */
+            /* Ron Pinkas added 2000-06-01 */
             case ';':
                bNewLine = TRUE;
                break;
@@ -2511,12 +2512,12 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                  cha = ' ';
               }
               break;
-            /* Ron Pinkas End */
+            /* Ron Pinkas end 2000-06-01 */
             }
             if( cha != ' ' && cha != ';' ) s_prevchar = cha;
-            /* Ron Pinkas Begin 2000-06-04 */
+            /* Ron Pinkas added 2000-06-04 */
             if( cha != ' ' && cha != '\t' && cha != ';' ) bNewLine = FALSE;
-            /* Ron Pinkas End */
+            /* Ron Pinkas end 2000-06-04 */
           }
           if( cha != ' ' && cha != '\t' ) State = 1;
           if( lDropSpaces && State ) lDropSpaces = 0;
