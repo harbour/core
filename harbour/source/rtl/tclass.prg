@@ -16,7 +16,7 @@ function TClass()
    static hClass := 0
 
    if hClass == 0
-      hClass = ClassCreate( "TCLASS", 7 )
+      hClass = ClassCreate( "TCLASS", 8 )
 
       ClassAdd( hClass, "New",          @New(),          MET_METHOD )
       ClassAdd( hClass, "Create",       @Create(),       MET_METHOD )
@@ -41,13 +41,15 @@ function TClass()
       ClassAdd( hClass, "_aInlines",  6, MET_DATA )
       ClassAdd( hClass, "aVirtuals",  7, MET_DATA )
       ClassAdd( hClass, "_aVirtuals", 7, MET_DATA )
+      ClassAdd( hClass, "hSuper",     8, MET_DATA )
+      ClassAdd( hClass, "_hSuper",    8, MET_DATA )
    endif
 
 return ClassInstance( hClass )
 
 //----------------------------------------------------------------------------//
 
-static function New( cClassName )
+static function New( cClassName, hSuper )
 
    local Self := QSelf()
 
@@ -57,6 +59,7 @@ static function New( cClassName )
    ::aClsDatas = {}
    ::aInlines  = {}
    ::aVirtuals = {}
+   ::hSuper    = Default( hSuper, 0 )
 
 return Self
 
@@ -66,7 +69,7 @@ static function Create()
 
    local Self    := QSelf()
    local n, nLen := Len( ::aDatas )
-   local hClass  := ClassCreate( ::cName, nLen )
+   local hClass  := ClassCreate( ::cName, nLen, ::hSuper )
 
    ::hClass = hClass
 

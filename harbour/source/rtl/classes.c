@@ -63,8 +63,9 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
 
    if( hSuper )
    {
-      pClasses[ wClasses ].wDatas   += pClasses[ hSuper ].wDatas;
-      pClasses[ wClasses ].wMethods =  pClasses[ hSuper ].wMethods;
+      hSuper--;
+      pClasses[ wClasses ].wDatas   = pClasses[ hSuper ].wDatas;
+      pClasses[ wClasses ].wMethods = pClasses[ hSuper ].wMethods;
       pClasses[ wClasses ].pClassDatas =
          hb_arrayClone( pClasses[ hSuper ].pClassDatas );
       pClasses[ wClasses ].pInlines =
@@ -351,6 +352,8 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
 
       if( wAt < wLimit )
       {
+         if( !pClass->pMethods[ wAt ].pMessage )
+            pClass->wMethods++;
          pClass->pMethods[ wAt ].pMessage = pMessage;
          switch( wType )
          {
@@ -401,7 +404,6 @@ HARBOUR CLASSADD() /* hClass, cMessage, pFunction, nType, xInit */
                  exit( 1 );
                  break;
          }
-         pClass->wMethods++;
          return;
       }
    }
