@@ -8,11 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-20 15:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/tests/bldtest/Makefile
+  + harbour/tests/bldtest/bldtest.c
+    + simple C program to check if Harbour can be compiled on
+      used machine / system / C compiler
+
 2004-03-19 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * utils/hbmake/hbmake.prg
       *fixed #define datediff(<x>,<y>) into datediff(x,y)
       (Clipper compatibility)    (thanks to Jacek Kubica)
-
 
 2004-03-19 08:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/debug/debugger.prg
