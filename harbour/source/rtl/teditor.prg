@@ -90,6 +90,7 @@ CLASS TEditor
    DATA  lWordWrap      INIT .F.    // True if word wrapping is active
    DATA  nWordWrapCol   INIT 0      // At which column word wrapping occurs
    DATA  lDirty                     // .T. if there are changes not saved
+   DATA  lExitEdit      INIT .F.    // .T. if user requested to end Edit() method
 
    DATA  cColorSpec     INIT SetColor()     // Color string used for screen writes
 
@@ -816,7 +817,6 @@ METHOD Edit(nPassedKey) CLASS TEditor
    LOCAL i
    LOCAL nKey
    LOCAL lOldInsert
-   LOCAL lKeepGoing := .T.
    LOCAL lDelAppend
 
    if ! ::lEditAllow
@@ -824,7 +824,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
 
    else
 
-      while lKeepGoing
+      while ! ::lExitEdit
 
          // If I haven't been called with a key already preset, evaluate this key and then exit
          if nPassedKey == NIL
@@ -833,7 +833,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
             endif
             nKey := InKey(0)
          else
-            lKeepGoing := .F.
+            ::lExitEdit := .T.
             nKey := nPassedKey
          endif
 
@@ -939,10 +939,11 @@ METHOD Edit(nPassedKey) CLASS TEditor
             case nKey == K_ALT_W
                /* TOFIX: Not clipper compatible */
                ::lSaved := .T.
-               lKeepGoing := .F.
+               ::lExitEdit := .T.
 
             case nKey == K_ESC
-               lKeepGoing := .F.
+               ::lSaved := .F.
+               ::lExitEdit := .T.
 
             otherwise
                /* NOTE: if you call ::Edit() with a key that is passed to ::KeyboardHook() and then

@@ -116,7 +116,6 @@ return Self
 METHOD Edit() CLASS TMemoEditor
 
    local nKey, nUserKey
-   local lKeepGoing := .T.
 
    // NOTE: K_ALT_W is not compatible with clipper exit memo and save key, but I cannot discriminate
    //       K_CTRL_W and K_CTRL_END from harbour code.
@@ -126,7 +125,7 @@ METHOD Edit() CLASS TMemoEditor
    // user function if handle them the standard way or not
    if ::lEditAllow .AND. ::xUserFunction <> nil
 
-      while lKeepGoing
+      while ! ::lExitEdit
 
          // I need to test this condition here since I never block inside TEditor:Edit()
          // if there is an user function
@@ -142,9 +141,6 @@ METHOD Edit() CLASS TMemoEditor
             do case
                case nUserKey == ME_DEFAULT
                   super:Edit(nKey)
-                  if nKey == K_ESC .OR. ::lSaved
-                     lKeepGoing := .F.
-                  endif
 
                case nUserKey >= 1 .AND. nUserKey <= 31
                   super:Edit(nUserKey)
