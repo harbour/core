@@ -105,7 +105,7 @@ int hb_gt_GetCursorStyle(void)
 
 void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
 {
-    VioWrtCharStrAtt(str, (USHORT) len, (USHORT) cRow, (USHORT) cCol, (PBYTE) &attr, 0);
+    VioWrtCharStrAtt(str, (USHORT) len, (USHORT) cRow, (USHORT) cCol, (BYTE *) &attr, 0);
 }
 
 void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
@@ -115,7 +115,7 @@ void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
     width = (USHORT) ((cRight - cLeft + 1) * 2);
     for (y = cTop; y <= cBottom; y++)
     {
-        VioReadCellStr((PBYTE) dest, &width, (USHORT) cLeft, (USHORT) y, 0);
+        VioReadCellStr((BYTE *) dest, &width, (USHORT) cLeft, (USHORT) y, 0);
         dest += width;
     }
 }
@@ -127,7 +127,7 @@ void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
     width = (USHORT) ((cRight - cLeft + 1) * 2);
     for (y = cTop; y <= cBottom; y++)
     {
-        VioWrtCellStr((PBYTE) srce, width, (USHORT) cLeft, (USHORT) y, 0);
+        VioWrtCellStr((BYTE *) srce, width, (USHORT) cLeft, (USHORT) y, 0);
         srce += width;
     }
 }

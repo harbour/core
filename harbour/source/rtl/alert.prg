@@ -55,6 +55,12 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
       RETURN NIL
    ENDIF
 
+   DO WHILE (nPos := At(';', xMessage)) != 0
+      AAdd(aSay, Left(xMessage, nPos - 1))
+      xMessage := SubStr(xMessage, nPos + 1)
+   ENDDO
+   AAdd(aSay, xMessage)
+
 #else
 
    DO CASE

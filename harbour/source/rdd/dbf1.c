@@ -159,23 +159,23 @@ static ERRCODE WriteDBHeader( AREAP pArea )
    {
       switch( pField->uiType )
       {
-	 case 'C':
-	 case 'N':
-	    pHeader.uiRecordLen += pField->uiLen;
-	    break;
+         case 'C':
+         case 'N':
+            pHeader.uiRecordLen += pField->uiLen;
+            break;
 
-	 case 'M':
-	    pHeader.uiRecordLen += 10;
-	    pHeader.bVersion = 0x83;
-	    break;
+         case 'M':
+            pHeader.uiRecordLen += 10;
+            pHeader.bVersion = 0x83;
+            break;
 
-	 case 'D':
-	    pHeader.uiRecordLen += 8;
-	    break;
+         case 'D':
+            pHeader.uiRecordLen += 8;
+            break;
 
-	 case 'L':
-	    pHeader.uiRecordLen += 1;
-	    break;
+         case 'L':
+            pHeader.uiRecordLen += 1;
+            break;
       }
       pField++;
    }
@@ -188,8 +188,8 @@ static ERRCODE WriteDBHeader( AREAP pArea )
    pHeader.uiHeaderLen = ( USHORT ) ( 32 * ( pArea->uiFieldCount + 1 ) + 1 );
    pHeader.bHasTag = 0;
    pHeader.ulRecords = 0;
-   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTEP ) &pHeader,
-		   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
+   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) &pHeader,
+                   sizeof( DBFHEADER ) ) != sizeof( DBFHEADER ) )
       return FAILURE;
 
    pField = pArea->lpFields;
@@ -201,37 +201,37 @@ static ERRCODE WriteDBHeader( AREAP pArea )
       pDBField.bType = pField->uiType;
       switch( pDBField.bType )
       {
-	 case 'C':
-	    pDBField.bLen = pField->uiLen & 0xFF;
-	    pDBField.bDec = pField->uiLen >> 8;
-	    break;
+         case 'C':
+            pDBField.bLen = pField->uiLen & 0xFF;
+            pDBField.bDec = pField->uiLen >> 8;
+            break;
 
-	 case 'M':
-	    pDBField.bLen = 10;
-	    pDBField.bDec = 0;
-	    break;
+         case 'M':
+            pDBField.bLen = 10;
+            pDBField.bDec = 0;
+            break;
 
-	 case 'D':
-	    pDBField.bLen = 8;
-	    pDBField.bDec = 0;
-	    break;
+         case 'D':
+            pDBField.bLen = 8;
+            pDBField.bDec = 0;
+            break;
 
-	 case 'L':
-	    pDBField.bLen = 1;
-	    pDBField.bDec = 0;
-	    break;
+         case 'L':
+            pDBField.bLen = 1;
+            pDBField.bDec = 0;
+            break;
 
-	 case 'N':
-	    pDBField.bLen = pField->uiLen;
-	    pDBField.bDec = pField->uiDec;
-	    break;
+         case 'N':
+            pDBField.bLen = pField->uiLen;
+            pDBField.bDec = pField->uiDec;
+            break;
       }
-      if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTEP ) &pDBField,
-		      sizeof( DBFFIELD ) ) != sizeof( DBFFIELD ) )
-	 return FAILURE;
+      if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) &pDBField,
+                      sizeof( DBFFIELD ) ) != sizeof( DBFFIELD ) )
+         return FAILURE;
       pField++;
    }
-   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTEP ) "\15\32", 2 ) != 2 )
+   if( hb_fsWrite( pArea->lpFileInfo->hFile, ( BYTE * ) "\15\32", 2 ) != 2 )
       return FAILURE;
    return SUCCESS;
 }
@@ -239,19 +239,19 @@ static ERRCODE WriteDBHeader( AREAP pArea )
 static RDDFUNCS dbfSuper = { 0 };
 
 static RDDFUNCS dbfTable = { Bof,
-			     Eof,
-			     Found,
-			     GoBottom,
-			     GoTo,
-			     GoTop,
-			     Skip,
-			     Close,
-			     Create,
-			     Open,
-			     0,	          /* Super Release */
-			     0,           /* Super StructSize */
-			     WriteDBHeader
-			   };
+                             Eof,
+                             Found,
+                             GoBottom,
+                             GoTo,
+                             GoTop,
+                             Skip,
+                             Close,
+                             Create,
+                             Open,
+                             0,           /* Super Release */
+                             0,           /* Super StructSize */
+                             WriteDBHeader
+                           };
 
 HARBOUR HB__DBF( void )
 {

@@ -22,13 +22,24 @@
    You can contact me at: ptucker@sympatico.ca
 */
 
-#include "pcode.h"
+#include "extend.h"
 #include "init.h"
 #include "set.h"
 #ifdef HARBOUR_USE_GTAPI
  #include "gtapi.h"
 #else
  static char old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
+#endif
+
+HARBOUR HB_SETCOLOR( void );
+HARBOUR HB_COLORSELECT( void );
+
+HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
+{ "SETCOLOR"    , FS_PUBLIC, HB_SETCOLOR   , 0 },
+{ "COLORSELECT" , FS_PUBLIC, HB_COLORSELECT, 0 }
+HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
+#if ! defined(__GNUC__)
+#pragma startup SETCOLOR__InitSymbols
 #endif
 
 char *hb_setColor( char *sColor )
@@ -56,17 +67,6 @@ char *hb_setColor( char *sColor )
    return old_string;
 #endif
 }
-
-HARBOUR HB_SETCOLOR( void );
-HARBOUR HB_COLORSELECT( void );
-
-HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
-{ "SETCOLOR"    , FS_PUBLIC, HB_SETCOLOR   , 0 },
-{ "COLORSELECT" , FS_PUBLIC, HB_COLORSELECT, 0 }
-HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
-#if ! defined(__GNUC__)
-#pragma startup SETCOLOR__InitSymbols
-#endif
 
 HARBOUR HB_SETCOLOR( void )
 {

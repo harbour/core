@@ -95,19 +95,19 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 static RDDFUNCS ntxSuper = { 0 };
 
 static RDDFUNCS ntxTable = { Bof,
-			     Eof,
-			     Found,
-			     GoBottom,
-			     GoTo,
-			     GoTop,
-			     Skip,
-			     Close,
-			     0,           /* Super Create */
-			     Open,
-			     0,           /* Super Release */
-			     0,           /* Super StructSize */
-			     0            /* Super WriteDBHeader */
-			   };
+                             Eof,
+                             Found,
+                             GoBottom,
+                             GoTo,
+                             GoTop,
+                             Skip,
+                             Close,
+                             0,           /* Super Create */
+                             Open,
+                             0,           /* Super Release */
+                             0,           /* Super StructSize */
+                             0            /* Super WriteDBHeader */
+                           };
 
 HARBOUR HB__DBFNTX( void )
 {
@@ -122,7 +122,7 @@ HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
    * uiCount = RDDFUNCSCOUNT;
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );
    if( pTable )
-      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( PBYTE ) "DBF" ) );
+      hb_retni( hb_rddInherit( pTable, &ntxTable, &ntxSuper, ( BYTE * ) "DBF" ) );
    else
       hb_retni( FAILURE );
 }

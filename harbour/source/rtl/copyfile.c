@@ -78,7 +78,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    *ulWrittenTotal = 0L;
 
-   while ((fhndSource = hb_fsOpen((BYTEP)szSource, FO_READ)) == FS_ERROR)
+   while ((fhndSource = hb_fsOpen(( BYTE * ) szSource, FO_READ)) == FS_ERROR)
    {
       if (hb_errorRT_BASE_Ext1(EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
       {
@@ -89,7 +89,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    if (fhndSource != FS_ERROR)
    {
-      while ((fhndDest = hb_fsCreate((BYTEP)szDest, FC_NORMAL)) == FS_ERROR)
+      while ((fhndDest = hb_fsCreate(( BYTE * ) szDest, FC_NORMAL)) == FS_ERROR)
       {
          if (hb_errorRT_BASE_Ext1(EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT)
          {
@@ -104,11 +104,11 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
          struct stat struFileInfo;
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
-         PBYTE buffer;
+         BYTE * buffer;
          USHORT usRead;
          USHORT usWritten;
 
-         buffer = (PBYTE)hb_xgrab( BUFFER_SIZE );
+         buffer = (BYTE * ) hb_xgrab( BUFFER_SIZE );
 
          /* QUESTION: Does Clipper throw an error on read or write operation ? */
          /* QUESTION: What is the E_DEFAULT behaviour on that error ? */

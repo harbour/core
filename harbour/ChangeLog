@@ -1,8 +1,63 @@
+19990805-17:10 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/setcolor.c
+     ! #includes "extend.h" instead of "pcode.h"
+   * source/compiler/harbour.y
+     include/hb_vmpub.c
+     % New header file which contains only those definitions which are
+       a must to compile a Harbour generated C file.
+   * source/rtl/natmsg/msghe862.c
+     source/rtl/natmsg/msghewin.c
+     source/rtl/msgxxx.c
+     + Hebrew language files added
+       (Posted by Chen Kedem <niki@synel.co.il>)
+   * source/rtl/Makefile
+     source/rtl/menu.prg (removed)
+     source/rtl/menuto.prg (added)
+     tests/working/testmenu.prg (removed)
+     tests/working/menutest.prg (added)
+     tests/working/Makefile
+     + New MENU TO implementation (Phil Barnett)
+       which is highly Clipper compatible. (nesting, color and setting
+       buffering, setkey, some side effects simulated, output redir behav.)
+       "~" hotkey char support removed, since there's no such in Clipper.
+     + Test includes recursive capability
+     ! Test added to Makefile
+   * source/rtl/achoice.prg
+     + Added SETKEY() handling.
+   * source/rtl/alert.prg
+     ! HARBOUR_STRICT_CLIPPER_COMPATIBILITY mode bug fixed.
+   * include/extend.h
+     - Removed obsolete SYMBOL type.
+   * include/pcode.h
+     source/compiler/harbour.y
+     - #include "extend.h" removed from pcode.h
+   * include/hbdefs.h
+     include/extend.h
+     include/filesys.h
+     include/rddapi.h
+     include/rddapi.h
+     source/rdd/dbf1.c
+     source/rdd/dbfntx\dbfntx1.c
+     source/rdd/dbcmd.c
+     source/rtl/gt\gtos2.c
+     source/rtl/copyfile.c
+     source/rtl/environ.c
+     source/rtl/filesys.c
+     source/runner/runner.c
+     source/vm/hvm.c
+     source/tools/hb_f.c
+     Non Harbour standard, sparsly used and redundant types removed.
+     - PBYTE -> BYTE * (few occurences)
+       BYTEP -> BYTE * (few occurences, non standard)
+       PVOID -> void * (1 occurence)
+       FARPP -> void ** (few occurences)
+       FARP  -> void * (few occurences)
+
 19990805-04:47 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/console.c - Small var naming change.
    * source/rtl/achoice.prg
      ! Fixed: SET DEVICE is no longer redirecting it's output.
-     % Optimialized color handling. (Thanks to Paul Tucker)
+     % Optimalized color handling. (Thanks to Paul Tucker)
 
 19990804-14:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
@@ -44,18 +99,18 @@
 
 Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rdd/dbcmd.c: 
-	Got rid of the bell (0x07) character printed in error messages; it
-	tends to screw up in some consoles.
-	Changed hb_rddRegister() to return an int rather than a bool, so
-	now it is possible to return different status values.
-	Now trying to register the same RDD more than once is a NOOP.
-	
-	* source/rdd/dbfntx/dbfntx0.prg: 
-	KLUDGE ALARM: since the DBFNTX driver depends on the DBF driver,
-	and the order of INIT procedures is not guaranteed (and is
-	actually the wrong order under gcc/Win32), I forced the
-	initialization of DBF before DBFNTX.
+        * source/rdd/dbcmd.c:
+        Got rid of the bell (0x07) character printed in error messages; it
+        tends to screw up in some consoles.
+        Changed hb_rddRegister() to return an int rather than a bool, so
+        now it is possible to return different status values.
+        Now trying to register the same RDD more than once is a NOOP.
+
+        * source/rdd/dbfntx/dbfntx0.prg:
+        KLUDGE ALARM: since the DBFNTX driver depends on the DBF driver,
+        and the order of INIT procedures is not guaranteed (and is
+        actually the wrong order under gcc/Win32), I forced the
+        initialization of DBF before DBFNTX.
 
 19990804-17:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/msgxxx.c
@@ -87,7 +142,7 @@ Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     + Language API initial implementation.
   * source/rtl/vm/ForTest()
     - Removed the "internal error" which stated that there will
-      be infinite loop if STEP 0 is used, Clipper just goes into an 
+      be infinite loop if STEP 0 is used, Clipper just goes into an
       ininite loop.
     ! Changed printf() to a standard error is STEP expression is not numeric.
   * include/errorapi.h
@@ -142,27 +197,27 @@ Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     + CVS tags added.
   * source/rtl/Makefile
     + Added tget*.prg
-  
+
 Wed Aug 04 11:00:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/tools/stringsx.c: 
-	* source/rtl/Makefile: 
-	* source/rtl/stringsx.c: 
-	Moved STRTOKEN from tools/ to rtl/, even though it is not a 100%
-	Clipper standard function. The reason is because we will probably
-	be using this function a lot (such as Antonio did in TGet.prg).
-	
-	* source/rtl/gt/gtwin.c: 
-	* source/vm/hvm.c: 
-	Fixed two minor warnings.
+        * source/tools/stringsx.c:
+        * source/rtl/Makefile:
+        * source/rtl/stringsx.c:
+        Moved STRTOKEN from tools/ to rtl/, even though it is not a 100%
+        Clipper standard function. The reason is because we will probably
+        be using this function a lot (such as Antonio did in TGet.prg).
+
+        * source/rtl/gt/gtwin.c:
+        * source/vm/hvm.c:
+        Fixed two minor warnings.
 
 Wed Aug 04 10:12:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/win32/gcc.cf: 
-	Got rid of -( and -).
+        * config/win32/gcc.cf:
+        Got rid of -( and -).
 
-	* tests/working/Makefile: 
-	Corrected the order of the libraries to link against.
+        * tests/working/Makefile:
+        Corrected the order of the libraries to link against.
 
 199908.04-16:32 GMT+3 Alexander Kresin
   * source/hbpp/table.c
@@ -304,13 +359,13 @@ Wed Aug 04 10:12:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/rddapi.h:
-	Changed all #ifdef 0 with #if 0, assuming the original intent was
-	to comment those sections out.
+        * include/rddapi.h:
+        Changed all #ifdef 0 with #if 0, assuming the original intent was
+        to comment those sections out.
 
-	* source/rtl/gt/gtwin.c:
-	Moved an unused variable within the commented out portion of the
-	code where it was used.
+        * source/rtl/gt/gtwin.c:
+        Moved an unused variable within the commented out portion of the
+        code where it was used.
 
 19990803-14:55 GMT+1 Victor Szel <info@szelvesz.hu>
   ! source/rtl/strings.c - ASC() fixed. It could return negative values
@@ -393,19 +448,19 @@ Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19990803-05:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *tests/working/Makefile
-	+ added possibility to build a single file. Usage:
-	 make PM=file
-	 make PM=file.prg
-	 PM can be replaced with pm
+        + added possibility to build a single file. Usage:
+         make PM=file
+         make PM=file.prg
+         PM can be replaced with pm
 
     *source/compiler/harbour.y
-	* DO .. WITH .. statement passes variables by reference now
+        * DO .. WITH .. statement passes variables by reference now
 
     *source/vm/hvm.c
-	* added reporting of line numbers in some internal errors
+        * added reporting of line numbers in some internal errors
 
     *source/compiler/harbour.l
-	* corrected missed line continuation with BREAK; EXIT; and LOOP;
+        * corrected missed line continuation with BREAK; EXIT; and LOOP;
 
 19990802-20:00 EDT David G. Holm <dholm@jsd-llc.com>
    * config/os2/icc.cf
@@ -458,26 +513,26 @@ Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * tests/working/dates4.prg
      * Changed CHR(10) to CHR(13)+CHR(10)
    * tests/working/dirtest.prg
-     * Attempt to determine if running on a DOS type system and 
+     * Attempt to determine if running on a DOS type system and
        use the result to determine whether to use CR,LF or LF.
    * tests/working/inherit.prg
-     * Attempt to determine if running on a DOS type system and 
+     * Attempt to determine if running on a DOS type system and
        use the result to determine whether to use CR,LF or LF.
    * tests/working/inkeytst.prg
      + Added two command line parameters: If the first one is
        present, only the last test will be run. If the second
        one is present, extended keyboard codes are allowed.
    * tests/working/longstr2.prg
-     * Attempt to determine if running on a DOS type system and 
+     * Attempt to determine if running on a DOS type system and
        use the result to determine whether to use CR,LF or LF.
    * tests/working/readfile.prg
      * Changed from having newline differ based on Clipper vs.
        Harbour to having it differ based on DOS vs. Unix.
    * tests/working/round.prg
-     * Attempt to determine if running on a DOS type system and 
+     * Attempt to determine if running on a DOS type system and
        use the result to determine whether to use CR,LF or LF.
    * tests/working/seconds.prg
-     * Attempt to determine if running on a DOS type system and 
+     * Attempt to determine if running on a DOS type system and
        use the result to determine whether to use CR,LF or LF.
    * tests/working/set_num.prg
      * Changed CHR(10) to CHR(13)+CHR(10)
@@ -487,7 +542,7 @@ Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      source/rtl/dates.c - const keyword added.
    - include/ctoharb.h - extern StackShow() removed.
    - include/set.h - HARBOUR externs removed.
-   * include/extend.h hb_item*() moved to 
+   * include/extend.h hb_item*() moved to
      include/itemapi.h
      source/rtl/console.c
      source/rtl/transfrm.c
@@ -616,16 +671,16 @@ Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + hb_gt_DispBegin hb_gt_DispEnd hb_gt_ScreenBuffer hb_gt_SetMode
    * makefile.vc
      + added do
-   
+
 19990802-06:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/tools/strfmt.c
-	* added (char *) type cast to call for hb_xgrab()
+        * added (char *) type cast to call for hb_xgrab()
 
     *config/dos/djgpp.cf
     *config/linux/gcc.cf
-	* changed to link correctly regardless the libraries order
-	 (the GCC linker searches the library only once by default)
+        * changed to link correctly regardless the libraries order
+         (the GCC linker searches the library only once by default)
 
     *source/rtl/classes.c
     *source/rtl/dates.c
@@ -670,8 +725,8 @@ Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
          statement
 
     *source/rtl/Makefile
-	    + added new file do.c
-	    
+            + added new file do.c
+
 19990801-21:58 GMT+1 Victor Szel <info@szelvesz.hu>
    % source/rtl/descend.c
      #include <ctype.h> removed

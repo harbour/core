@@ -138,9 +138,9 @@ static void hb_CloseAll( void )
       pCurrArea = pWorkAreas;
       pWorkAreas = pWorkAreas->pNext;
       if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
-	 MyError( "No table error ", "9xxxx" );
+         MyError( "No table error ", "9xxxx" );
       else
-	 SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
+         SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
 
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
       hb_xfree( pCurrArea->pArea );
@@ -159,7 +159,7 @@ static LPRDDNODE hb_FindRddNode( char * szDriver )
    while( pRddNode )
    {
       if( strcmp( pRddNode->szName, szDriver ) == 0 ) /* Matched RDD */
-	 return pRddNode;
+         return pRddNode;
       pRddNode = pRddNode->pNext;
    }
    return 0;
@@ -208,7 +208,7 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    {
       pRddNode = pRddList;
       while( pRddNode->pNext )
-	 pRddNode = pRddNode->pNext;   /* Locate the last RDD node */
+         pRddNode = pRddNode->pNext;   /* Locate the last RDD node */
       pRddNode->pNext = pRddNewNode;   /* Add the new RDD node */
    }
    return 0;  /* Ok */
@@ -228,9 +228,9 @@ static void hb_SelectFirstAvailable( void )
    while( pAreaNode )
    {
       if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
-	 break;
+         break;
       else if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
-	 uiCurrArea++;
+         uiCurrArea++;
       pAreaNode = pAreaNode->pNext;
    }
    pCurrArea = 0;   /* Selected WorkArea must be created */
@@ -298,21 +298,21 @@ static ERRCODE StructSize( AREAP pArea, USHORT * uiSize )
 }
 
 static RDDFUNCS defTable = { Bof,
-			     Eof,
-			     Found,
-			     UnSupported_V,
-			     UnSupported_L,
-			     UnSupported_V,
-			     Skip,
-			     Close,
-			     Open, /* Not defCreate */
-			     Open,
-			     Release,
-			     StructSize,
-			     UnSupported_V
-			   };
+                             Eof,
+                             Found,
+                             UnSupported_V,
+                             UnSupported_L,
+                             UnSupported_V,
+                             Skip,
+                             Close,
+                             Open, /* Not defCreate */
+                             Open,
+                             Release,
+                             StructSize,
+                             UnSupported_V
+                           };
 
-ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName )
+ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName )
 {
    char * szSuperName;
    LPRDDNODE pRddNode;
@@ -333,9 +333,9 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       pRddNode = hb_FindRddNode( szSuperName );
       hb_xfree( szSuperName );
       if( !pRddNode )
-	{
-	  return FAILURE;
-	}
+        {
+          return FAILURE;
+        }
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
 
@@ -345,7 +345,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    for( uiCount = 0; uiCount < RDDFUNCSCOUNT; uiCount++ )
    {
       if( * pSubFunction )
-	 * pFunction = * pSubFunction;
+         * pFunction = * pSubFunction;
       pFunction += 1;
       pSubFunction += 1;
    }
@@ -383,9 +383,9 @@ HARBOUR HB_DBCLOSEAREA( void )
    else
    {
       if( pCurrArea->pPrev )
-	 pCurrArea->pPrev->pNext = pCurrArea->pNext;
+         pCurrArea->pPrev->pNext = pCurrArea->pNext;
       if( pCurrArea->pNext )
-	 pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+         pCurrArea->pNext->pPrev = pCurrArea->pPrev;
    }
 
    hb_xfree( pCurrArea->pArea );
@@ -423,45 +423,45 @@ HARBOUR HB_DBCREATE( void )
       pFieldDesc = pStruct->item.asArray.value->pItems + uiSize;
       if( pFieldDesc->item.asArray.value->ulLen != 4 )
       {
-	 hb_xfree( pFields );
-	 MyError( "DBCMD/1014 Argument error", "DBCREATE" );
-	 return;
+         hb_xfree( pFields );
+         MyError( "DBCMD/1014 Argument error", "DBCREATE" );
+         return;
       }
 
       /* TODO: change to a symbol */
-      pField->sym = ( FARP ) hb_arrayGetString( pFieldDesc, 1 );
+      pField->sym = ( void * ) hb_arrayGetString( pFieldDesc, 1 );
 
       if( strlen( ( char * ) pField->sym ) == 0 )
       {
-	 hb_xfree( pFields );
-	 MyError( "DBCMD/1014 Argument error", "DBCREATE" );
-	 return;
+         hb_xfree( pFields );
+         MyError( "DBCMD/1014 Argument error", "DBCREATE" );
+         return;
       }
 
       pField->uiLen = 0;
       pField->uiType = toupper( hb_arrayGetString( pFieldDesc, 2 )[ 0 ] );
       if( pField->uiType == 'N' )
       {
-	 pField->uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
-	 pField->uiDec = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 );
+         pField->uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
+         pField->uiDec = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 );
       }
       else
       {
-	 if( pField->uiType == 'L' || pField->uiType == 'D' ||
-	     pField->uiType == 'M' )
-	    pField->uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
-	 else if( pField->uiType == 'C' )
-	 {
-	    pField->uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 ) +
-			    ( ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 ) << 8 );
-	 }
-	 pField->uiDec = 0;
+         if( pField->uiType == 'L' || pField->uiType == 'D' ||
+             pField->uiType == 'M' )
+            pField->uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 );
+         else if( pField->uiType == 'C' )
+         {
+            pField->uiLen = ( USHORT ) hb_arrayGetDouble( pFieldDesc, 3 ) +
+                            ( ( USHORT ) hb_arrayGetDouble( pFieldDesc, 4 ) << 8 );
+         }
+         pField->uiDec = 0;
       }
       if( pField->uiLen == 0 )
       {
-	 MyError( "DBCMD/1014 Argument error", "DBCREATE" );
-	 hb_xfree( pFields );
-	 return;
+         MyError( "DBCMD/1014 Argument error", "DBCREATE" );
+         hb_xfree( pFields );
+         return;
       }
 
       pField->uiArea = 0;
@@ -470,9 +470,9 @@ HARBOUR HB_DBCREATE( void )
       pPrevField = pField;  /* Link the field */
       pField++;
       if( uiSize < ( pStruct->item.asArray.value->ulLen - 1 ) )
-	 pPrevField->lpfNext = pField;
+         pPrevField->lpfNext = pField;
       else
-	 pPrevField->lpfNext = 0;
+         pPrevField->lpfNext = 0;
    }
    uiFieldCount = uiSize;
 
@@ -506,7 +506,7 @@ HARBOUR HB_DBCREATE( void )
    pTempArea->lpFields = pFields;
    pTempArea->lpFileInfo = 0;
 
-   pInfo.abName = ( PBYTE ) szFileName;
+   pInfo.abName = ( BYTE * ) szFileName;
    if( SELF_CREATE( ( AREAP ) pTempArea, &pInfo ) == FAILURE )
       MyError( "DBCMD/1015 Create error", "DBCREATE" );
 
@@ -569,8 +569,8 @@ HARBOUR HB_DBSELECTAREA( void )
       szAlias = hb_parc( 1 );
       if( ( uiNewArea = hb_FindAlias( szAlias ) ) == 0 )
       {
-	 MyError( "DBCMD/1002 Alias not found", szAlias );
-	 return;
+         MyError( "DBCMD/1002 Alias not found", szAlias );
+         return;
       }
    }
    else if( !ISNUM( 1 ) )
@@ -591,8 +591,8 @@ HARBOUR HB_DBSELECTAREA( void )
    {
       if( ( ( AREAP ) pAreaNode->pArea )->uiArea == uiCurrArea )
       {
-	 pCurrArea = pAreaNode; /* Select a valid WorkArea */
-	 return;
+         pCurrArea = pAreaNode; /* Select a valid WorkArea */
+         return;
       }
       pAreaNode = pAreaNode->pNext;
    }
@@ -622,10 +622,10 @@ HARBOUR HB_DBSKIP( void )
       pItem = hb_param( 1, IT_NUMERIC );
       if( pItem )
       {
-	 if( pItem->type == IT_INTEGER )
-	    lToSkip = pItem->item.asInteger.value;
-	 else if( pItem->type == IT_LONG )
-	    lToSkip = pItem->item.asLong.value;
+         if( pItem->type == IT_INTEGER )
+            lToSkip = pItem->item.asInteger.value;
+         else if( pItem->type == IT_LONG )
+            lToSkip = pItem->item.asLong.value;
       }
       SELF_SKIP( ( AREAP ) pCurrArea->pArea, lToSkip );
    }
@@ -650,13 +650,13 @@ HARBOUR HB_DBUSEAREA( void )
       SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
 
       if( pWorkAreas == pCurrArea )  /* Empty list */
-	 pWorkAreas = 0;
+         pWorkAreas = 0;
       else
       {
-	 if( pCurrArea->pPrev )
-	    pCurrArea->pPrev->pNext = pCurrArea->pNext;
-	 if( pCurrArea->pNext )
-	    pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+         if( pCurrArea->pPrev )
+            pCurrArea->pPrev->pNext = pCurrArea->pNext;
+         if( pCurrArea->pNext )
+            pCurrArea->pNext->pPrev = pCurrArea->pPrev;
       }
 
       hb_xfree( pCurrArea->pArea );
@@ -702,7 +702,7 @@ HARBOUR HB_DBUSEAREA( void )
       /* Need more space? */
       SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
       if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-	 pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
+         pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
 
       pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
    }
@@ -726,8 +726,8 @@ HARBOUR HB_DBUSEAREA( void )
    }
 
    pInfo.uiArea = uiCurrArea;
-   pInfo.abName = ( PBYTE ) szFileName;
-   pInfo.atomAlias = ( PBYTE ) szAlias;
+   pInfo.abName = ( BYTE * ) szFileName;
+   pInfo.atomAlias = ( BYTE * ) szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
 
@@ -746,12 +746,12 @@ HARBOUR HB_DBUSEAREA( void )
    {
       if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
       {
-	 /* Insert the new WorkArea node */
-	 pCurrArea->pPrev = pAreaNode->pPrev;
-	 pCurrArea->pNext = pAreaNode;
-	 pAreaNode->pPrev = pCurrArea;
-	 if( pCurrArea->pPrev )
-	    pCurrArea->pPrev->pNext = pCurrArea;
+         /* Insert the new WorkArea node */
+         pCurrArea->pPrev = pAreaNode->pPrev;
+         pCurrArea->pNext = pAreaNode;
+         pAreaNode->pPrev = pCurrArea;
+         if( pCurrArea->pPrev )
+            pCurrArea->pPrev->pNext = pCurrArea;
       }
       pAreaNode = pAreaNode->pNext;
    }
@@ -766,9 +766,9 @@ HARBOUR HB_EOF( void )
    if( pCurrArea )
    {
       if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
-	 MyError( "No table error ", "9xxxx" );
+         MyError( "No table error ", "9xxxx" );
       else
-	 SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
    }
    hb_retl( bEof );
 }
@@ -780,9 +780,9 @@ HARBOUR HB_FOUND( void )
    if( pCurrArea )
    {
       if( !( ( AREAP ) pCurrArea->pArea )->lprfsHost )
-	 MyError( "No table error ", "9xxxx" );
+         MyError( "No table error ", "9xxxx" );
       else
-	 SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
+         SELF_FOUND( ( AREAP ) pCurrArea->pArea, &bFound );
    }
    hb_retl( bFound );
 }
@@ -801,7 +801,7 @@ HARBOUR HB_RDDLIST( void )
    while( pRddNode )
    {
       if( ( uiType == 0 ) || ( pRddNode->uiType == uiType ) )
-	 hb_arrayAdd( &stack.Return, hb_itemPutC( pName, pRddNode->szName ) );
+         hb_arrayAdd( &stack.Return, hb_itemPutC( pName, pRddNode->szName ) );
       pRddNode = pRddNode->pNext;
    }
    hb_itemRelease( pName );
@@ -825,7 +825,7 @@ HARBOUR HB_RDDREGISTER( void )
        * > 1: error
        */
       if( hb_rddRegister( szDriver, hb_parni( 2 ) ) <= 1 )
-	 return;
+         return;
    }
    MyError( "Internal error", "RDDREGISTER" );
 }

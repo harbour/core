@@ -53,7 +53,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
 
 typedef union
 {
-   PBYTE    pAsmData;                           /* The assembler bytes      */
+   BYTE *   pAsmData;                           /* The assembler bytes      */
    PHB_FUNC pFunPtr;                            /* The (dynamic) harbour
                                                    function                 */
 } ASM_CALL, *PASM_CALL;
@@ -62,7 +62,7 @@ typedef struct
 {
    char      *szName;                           /* Name of the function     */
    PASM_CALL  pAsmCall;                         /* Assembler call           */
-   PBYTE      pCode;                            /* P-code                   */
+   BYTE *     pCode;                            /* P-code                   */
 } DYNFUNC, *PDYNFUNC;
 
 
@@ -75,7 +75,7 @@ typedef struct
                                                    FindSymbol               */
 
        HARBOUR   HB_HB_RUN();
-static PASM_CALL CreateFun( PHB_SYMB, PBYTE );   /* Create a dynamic function*/
+static PASM_CALL CreateFun( PHB_SYMB, BYTE * ); /* Create a dynamic function*/
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 static void      HRB_FileClose( FILE * );
 static void      HRB_FileRead ( char *, int, int, FILE * );
@@ -153,7 +153,7 @@ HARBOUR HB_HB_RUN( void )
             pDynFunc[ ul ].szName = ReadId( file );
 
             ulSize = ReadLong( file ) + 1;      /* Read size of function    */
-            pDynFunc[ ul ].pCode = ( PBYTE )hb_xgrab( ulSize );
+            pDynFunc[ ul ].pCode = ( BYTE * )hb_xgrab( ulSize );
             HRB_FileRead( pDynFunc[ ul ].pCode, 1, ulSize, file );
                                                 /* Read the block           */
 
@@ -383,7 +383,7 @@ static void HRB_FileClose( FILE *file )
 
 
 /* Patch an address of the dynamic function */
-static void Patch( PBYTE pCode, ULONG ulOffset, void *Address )
+static void Patch( BYTE * pCode, ULONG ulOffset, void *Address )
 {
 /* #if 32 bits and low byte first */
 
@@ -400,7 +400,7 @@ static void Patch( PBYTE pCode, ULONG ulOffset, void *Address )
 
 
 /* Intel specific ?? Patch an address relative to the next instruction */
-static void PatchRelative( PBYTE pCode,   ULONG ulOffset,
+static void PatchRelative( BYTE * pCode,   ULONG ulOffset,
                            void *Address, ULONG ulNext )
 {
 /* #if 32 bits and low byte first */
@@ -435,11 +435,11 @@ static void PatchRelative( PBYTE pCode,   ULONG ulOffset,
    If a .PRG contains 10 functions, 10 dynamic functions are created which
    are all the same :-) except for 2 pointers.
 */
-static PASM_CALL CreateFun( PHB_SYMB pSymbols, PBYTE pCode )
+static PASM_CALL CreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 {
    PASM_CALL asmRet = (PASM_CALL) hb_xgrab( sizeof( ASM_CALL ) );
 
-   asmRet->pAsmData = (PBYTE) hb_xgrab( sizeof( prgFunction ) );
+   asmRet->pAsmData = (BYTE * ) hb_xgrab( sizeof( prgFunction ) );
    memcpy( asmRet->pAsmData, prgFunction, sizeof( prgFunction ) );
                                               /* Copy new assembler code in */
 /* #if INTEL32 */

@@ -43,7 +43,7 @@ PRG_SOURCES=\
         devoutp.prg \
         error.prg \
         errorsys.prg \
-	menu.prg \
+	menuto.prg \
         objfunc.prg \
         setkey.prg \
         tclass.prg \

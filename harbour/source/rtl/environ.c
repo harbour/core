@@ -71,7 +71,7 @@ HARBOUR HB_OS(void)
 #ifdef __IBMCPP__
 
    unsigned long aulQSV [QSV_MAX] = {0};
-   APIRET rc= DosQuerySysInfo (1L, QSV_MAX, (PVOID) aulQSV, sizeof (ULONG) * QSV_MAX);
+   APIRET rc= DosQuerySysInfo (1L, QSV_MAX, (void *) aulQSV, sizeof (ULONG) * QSV_MAX);
    if (!rc)
    {
       hb_osmajor  = aulQSV [QSV_VERSION_MAJOR] / 10;

@@ -80,6 +80,7 @@ PRG_SOURCES=\
 	mankala.prg \
 	mathtest.prg \
 	memvar.prg \
+        menutest.prg \
 	mtran.prg \
 	multiarg.prg \
 	nums.prg \

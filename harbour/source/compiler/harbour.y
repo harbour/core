@@ -43,6 +43,7 @@
 #include <malloc.h>     /* required for allocating and freeing memory */
 #include <ctype.h>
 #include "hbsetup.h"    /* main configuration file */
+#include "extend.h"
 #include "pcode.h"      /* pcode values */
 #include "hbdefs.h"     /* our defined types */
 #include "compiler.h"
@@ -2172,8 +2173,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    if( ! _bQuiet )
       printf( "\nGenerating C language output...\n" );
 
-   fprintf( yyc, "#include \"pcode.h\"\n" );
-   fprintf( yyc, "#include \"init.h\"\n\n" );
+   fprintf( yyc, "#include \"hb_vmpub.h\"\n\n\n" );
 
    if( ! _bStartProc )
       pFunc = pFunc->pNext; /* No implicit starting procedure */

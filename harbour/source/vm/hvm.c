@@ -264,7 +264,7 @@ int main( int argc, char * argv[] )
    return bErrorLevel;
 }
 
-void VirtualMachine( PBYTE pCode, PHB_SYMB pSymbols )
+void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols )
 {
    BYTE bCode;
    WORD w = 0, wParams, wSize;

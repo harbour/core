@@ -49,6 +49,10 @@
 #include "natmsg/msgpl852.c"
 #elif defined(HARBOUR_LANGUAGE_PLMAZ)
 #include "natmsg/msgplmaz.c"
+#elif defined(HARBOUR_LANGUAGE_HE862)
+#include "natmsg/msghe862.c"
+#elif defined(HARBOUR_LANGUAGE_HEWIN)
+#include "natmsg/msghewin.c"
 #else
 #include "natmsg/msgen.c"
 #endif

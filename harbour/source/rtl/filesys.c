@@ -242,7 +242,7 @@ static void convert_create_flags( int flags, int *result_flags, unsigned *result
  * FILESYS.API FUNCTIONS --
  */
 
-FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
+FHANDLE hb_fsOpen   ( BYTE * name, USHORT flags )
 {
         FHANDLE handle;
 #if defined(HAVE_POSIX_IO)
@@ -262,7 +262,7 @@ FHANDLE hb_fsOpen   ( BYTEP name, USHORT flags )
         return handle;
 }
 
-FHANDLE hb_fsCreate ( BYTEP name, USHORT flags )
+FHANDLE hb_fsCreate ( BYTE * name, USHORT flags )
 {
         FHANDLE handle;
         int oflag;
@@ -312,7 +312,7 @@ void    hb_fsClose  ( FHANDLE handle )
 #endif
 }
 
-USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
+USHORT  hb_fsRead   ( FHANDLE handle, BYTE * buff, USHORT count )
 {
         USHORT bytes;
 #if defined( HAVE_POSIX_IO )
@@ -334,7 +334,7 @@ USHORT  hb_fsRead   ( FHANDLE handle, BYTEP buff, USHORT count )
         return bytes;
 }
 
-USHORT  hb_fsWrite  ( FHANDLE handle, BYTEP buff, USHORT count )
+USHORT  hb_fsWrite  ( FHANDLE handle, BYTE * buff, USHORT count )
 {
         USHORT bytes;
 #if defined( HAVE_POSIX_IO )
@@ -379,7 +379,7 @@ USHORT  hb_fsError  ( void )
         return last_error;
 }
 
-void    hb_fsDelete ( BYTEP name )
+void    hb_fsDelete ( BYTE * name )
 {
 #if defined(HAVE_POSIX_IO)
         errno = 0;
@@ -396,7 +396,7 @@ void    hb_fsDelete ( BYTEP name )
 #endif
 }
 
-void    hb_fsRename ( BYTEP older, BYTEP newer )
+void    hb_fsRename ( BYTE * older, BYTE * newer )
 {
 #if defined(HAVE_POSIX_IO) || defined( _MSC_VER )
         errno = 0;
@@ -449,7 +449,7 @@ void    hb_fsCommit ( FHANDLE handle )
         return;
 }
 
-BOOL    hb_fsMkDir  ( BYTEP name )
+BOOL    hb_fsMkDir  ( BYTE * name )
 {
         int result;
 #if defined(HAVE_POSIX_IO)
@@ -467,7 +467,7 @@ BOOL    hb_fsMkDir  ( BYTEP name )
         return (result ? FALSE : TRUE );
 }
 
-BOOL    hb_fsChDir  ( BYTEP name )
+BOOL    hb_fsChDir  ( BYTE * name )
 {
         int result;
 #if defined(HAVE_POSIX_IO)
@@ -481,7 +481,7 @@ BOOL    hb_fsChDir  ( BYTEP name )
         return (result ? FALSE : TRUE );
 }
 
-BOOL    hb_fsRmDir  ( BYTEP name )
+BOOL    hb_fsRmDir  ( BYTE * name )
 {
         int result;
 #if defined(HAVE_POSIX_IO)
@@ -497,7 +497,7 @@ BOOL    hb_fsRmDir  ( BYTEP name )
 
 /* TODO: Make it thread safe */
 
-BYTEP   hb_fsCurDir ( USHORT uiDrive )
+BYTE *  hb_fsCurDir ( USHORT uiDrive )
 {
         static char cwd_buff[PATH_MAX+1];
 #if defined(HAVE_POSIX_IO)
@@ -509,14 +509,14 @@ BYTEP   hb_fsCurDir ( USHORT uiDrive )
         last_error = FS_ERROR;
 #endif
 #if defined(_MSC_VER)
-   BYTEP dmm = (BYTEP)cwd_buff;
+   BYTE * dmm = ( BYTE * )cwd_buff;
 #endif
-        return (BYTEP)cwd_buff;
+        return ( BYTE * )cwd_buff;
 }
 
 /* TODO: Implement nDrive */
 
-USHORT  hb_fsChDrv  ( BYTEP nDrive )
+USHORT  hb_fsChDrv  ( BYTE * nDrive )
 {
         USHORT result;
 #if defined(HAVE_POSIX_IO)
@@ -562,8 +562,8 @@ USHORT  hb_fsIsDrv  ( BYTE nDrive )
 }
 
 /* TODO: Implement hb_fsExtOpen */
-FHANDLE hb_fsExtOpen( BYTEP fpFilename, BYTEP fpDefExt,
-                      USHORT uiFlags, BYTEP fpPaths, PHB_ITEM pError )
+FHANDLE hb_fsExtOpen( BYTE * fpFilename, BYTE * fpDefExt,
+                      USHORT uiFlags, BYTE * fpPaths, PHB_ITEM pError )
 {
    return FS_ERROR;
 }
@@ -587,7 +587,7 @@ HARBOUR HB_FOPEN( void )
             else
                 open_flags = 0;
 
-            file_handle = hb_fsOpen( (BYTEP)hb_parc(1), open_flags );
+            file_handle = hb_fsOpen( ( BYTE * )hb_parc(1), open_flags );
         }
         else
         {
@@ -613,7 +613,7 @@ HARBOUR HB_FCREATE( void )
             else
                 create_flags = 0;
 
-            file_handle = hb_fsCreate( (BYTEP)hb_parc(1), create_flags );
+            file_handle = hb_fsCreate( ( BYTE * )hb_parc(1), create_flags );
         }
 
         hb_retni(file_handle);
@@ -630,7 +630,7 @@ HARBOUR HB_FREAD( void )
 
         if( arg1_it && arg2_it && arg3_it )
         {
-            bytes = hb_fsRead(hb_parni(1), (BYTEP)hb_parc(2), hb_parnl(3) );
+            bytes = hb_fsRead(hb_parni(1), ( BYTE * )hb_parc(2), hb_parnl(3) );
         }
 
         hb_retnl(bytes);
@@ -648,7 +648,7 @@ HARBOUR HB_FWRITE( void )
         if( arg1_it && arg2_it )
         {
             bytes = (arg3_it ? hb_parnl(3) : hb_parclen( 2 ) );
-            bytes = hb_fsWrite( hb_parni(1), (BYTEP)hb_parc(2), bytes);
+            bytes = hb_fsWrite( hb_parni(1), ( BYTE * )hb_parc(2), bytes);
         }
 
         hb_retnl(bytes);
@@ -680,7 +680,7 @@ HARBOUR HB_FERASE( void )
 
         if( arg1_it )
         {
-           hb_fsDelete( (BYTEP)hb_parc(1) );
+           hb_fsDelete( ( BYTE * )hb_parc(1) );
         }
 
         hb_retni(last_error=0);
@@ -694,7 +694,7 @@ HARBOUR HB_FRENAME( void )
 
         if( arg1_it && arg2_it )
         {
-            hb_fsRename( (BYTEP)hb_parc(1), (BYTEP)hb_parc(2) );
+            hb_fsRename( ( BYTE * )hb_parc(1), ( BYTE * )hb_parc(2) );
         }
 
         hb_retni(last_error);

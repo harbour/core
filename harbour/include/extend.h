@@ -49,7 +49,7 @@ typedef struct
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
    PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
    struct _DYNSYM * pDynSym;   /* pointer to its dynamic symbol if defined */
-} HB_SYMB, * PHB_SYMB, * HB_SYMB_PTR, SYMBOL, * PSYMBOL, * SYMBOL_PTR;
+} HB_SYMB, * PHB_SYMB, * HB_SYMB_PTR;
 
 /* Harbour Functions scope */
 #define FS_PUBLIC       0
@@ -60,7 +60,7 @@ typedef struct
 #define FS_MESSAGE     32
 #define FS_MEMVAR     128
 
-extern void VirtualMachine( PBYTE pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
+extern void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 
 /* items types */
@@ -145,7 +145,7 @@ struct hb_struMemvar
 
 struct hb_struPointer
 {
-   PVOID value;
+   void * value;
 };
 
 struct hb_struRefer

@@ -203,6 +203,16 @@ function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHi
       endif
 
       do case
+
+      case ( bAction := setkey( nKey ) ) <> NIL
+
+         eval( bAction, procname( 1 ), procline( 1 ), "" )
+         if empty( nextkey() )
+            keyboard chr( 255 )
+            inkey()
+            nKey := 0
+         endif
+
       case ( ( nKey == K_ESC ) .or. ( nMode == AC_NOITEM ) ) .and. ( !lUserFunc )
          nMode     := AC_ABORT
          nPos      := 0

@@ -8,7 +8,6 @@
 #include "filesys.h"
 
 typedef USHORT ERRCODE;
-typedef void * FARP;
 
 /* RDD method return codes */
 
@@ -127,7 +126,7 @@ typedef FILEINFO * LPFILEINFO;
 
 typedef struct
 {
-   BYTEP  atomName;        /* FIELD (symbol) name */
+   BYTE * atomName;        /* FIELD (symbol) name */
    USHORT uiType;          /* FIELD type */
    USHORT typeExtended;    /* FIELD type extended */
    USHORT uiLen;           /* Overall FIELD length */
@@ -146,12 +145,12 @@ typedef DBFIELDINFO * LPDBFIELDINFO;
 typedef struct
 {
    USHORT uiArea;          /* Work Area number of the data store */
-   BYTEP  abName;          /* The qualified name of the data store */
-   BYTEP  atomAlias;       /* The logical name of the data store */
+   BYTE * abName;          /* The qualified name of the data store */
+   BYTE * atomAlias;       /* The logical name of the data store */
    BOOL   fShared;         /* Share mode of the data store */
    BOOL   fReadonly;       /* Readonly mode of the data store */
 
-   FARP   lpdbHeader;      /* Pointer to a header of the data store */
+   void * lpdbHeader;      /* Pointer to a header of the data store */
 } DBOPENINFO;
 
 typedef DBOPENINFO * LPDBOPENINFO;
@@ -167,7 +166,7 @@ typedef DBOPENINFO * LPDBOPENINFO;
 typedef struct _DBORDERCONDINFO
 {
    BOOL     fActive;
-   BYTEP    abFor;
+   BYTE *   abFor;
    PHB_ITEM itmCobFor;
    PHB_ITEM itmCobWhile;
    PHB_ITEM itmCobEval;
@@ -184,7 +183,7 @@ typedef struct _DBORDERCONDINFO
    BOOL     fUseCurrent;
    BOOL     fCustom;
    BOOL     fNoOptimize;
-   FARP     lpvCargo;
+   void *   lpvCargo;
 
 } DBORDERCONDINFO;
 
@@ -203,8 +202,8 @@ typedef DBORDERCONDINFO * LPDBORDERCONDINFO;
 typedef struct
 {
    LPDBORDERCONDINFO lpdbOrdCondInfo; /* Conditional information */
-   BYTEP             abBagName;       /* Name of the Order bag */
-   BYTEP             atomBagName;     /* Name of the Order */
+   BYTE *            abBagName;       /* Name of the Order bag */
+   BYTE *            atomBagName;     /* Name of the Order */
    PHB_ITEM          itmOrder;
    BOOL              fUnique;         /* Flag to determine if all keys are unique */
                                       /* las claves con £nicas */
@@ -469,7 +468,7 @@ typedef struct _FIELD
    USHORT  uiLen;            /* Field length */
    USHORT  uiDec;            /* Decimal length */
    USHORT  uiArea;           /* Area this field resides in */
-   FARP    sym;              /* Symbol that represents the field */
+   void *  sym;              /* Symbol that represents the field */
 
    struct _FIELD *lpfNext;   /* The next field in the list */
 
@@ -495,13 +494,13 @@ typedef struct _AREA
    struct _RDDFUNCS * lprfsHost; /* Virtual method table for this workarea */
 
    USHORT   uiArea;              /* The number assigned to this workarea */
-// FARP     atomAlias;           /* Pointer to the alias symbol for this workarea */
+// void *   atomAlias;           /* Pointer to the alias symbol for this workarea */
 
 // USHORT   uiFieldExtent;       /* Total number of fields allocated */
    USHORT   uiFieldCount;        /* Total number of fields used */
    LPFIELD  lpFields;            /* Pointer to an array of fields */
 
-// FARP     lpFieldExtents;      /* Void ptr for additional field properties */
+// void *   lpFieldExtents;      /* Void ptr for additional field properties */
 
 // PHB_ITEM valResult;           /* All purpose result holder */
 
@@ -547,11 +546,11 @@ typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 #if 0
 typedef USHORT ( * DBENTRYP_S    )( AREAP area, USHORT param);
 typedef USHORT ( * DBENTRYP_LP   )( AREAP area, LONGP param);
-typedef USHORT ( * DBENTRYP_PP   )( AREAP area, FARPP param);
-typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, FARP param);
-typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, FARP param, USHORT mode);
-typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, FARP p1, LONG p2);
-typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, FARP p1, LONGP p2);
+typedef USHORT ( * DBENTRYP_PP   )( AREAP area, void ** param);
+typedef USHORT ( * DBENTRYP_SVP  )( AREAP area, USHORT index, void * param);
+typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHORT mode);
+typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
+typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3);
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3);
@@ -1016,8 +1015,8 @@ typedef RDDFUNCS * PRDDFUNCS;
 *  PROTOTYPES
 *  ----------
 */
-extern ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName );
-extern ERRCODE hb_rddDisinherit( BYTEP drvName );
+extern ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName );
+extern ERRCODE hb_rddDisinherit( BYTE * drvName );
 extern USHORT  hb_rddExtendType( USHORT fieldType );
 extern USHORT  hb_rddFieldType( USHORT extendType );
 

@@ -27,8 +27,6 @@
 #ifndef HB_PCODE_H_
 #define HB_PCODE_H_
 
-#include "extend.h"
-
 typedef enum
 {
    HB_P_AND,            /* peforms the logical AND of two latest stack values, removes them and places result */

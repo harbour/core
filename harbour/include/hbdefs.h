@@ -32,11 +32,8 @@
 
 #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
 
-#undef PVOID
-typedef void * PVOID;
-
 #undef BYTE
-typedef unsigned char BYTE, * PBYTE;   /* 1 byte unsigned */
+typedef unsigned char BYTE;            /* 1 byte unsigned */
 
 #undef WORD                            /* 2 bytes unsigned */
 typedef unsigned short int WORD;
