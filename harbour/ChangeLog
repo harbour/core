@@ -1,3 +1,7 @@
+19990527-21:57 EST Les Griffith
+  * fix to gtwin.c for duplicate function gtwherex 2nd one should be
+    gtwherey
+
 19990527-18:00 EST David G. Holm <dholm@jsd-llc.com>
   * makefile.icc
     - Added missing modules
