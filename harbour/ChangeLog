@@ -1,3 +1,9 @@
+19990613 23:15 CET Eddie Runia
+  * source/rtl/natmsg/msg???.c
+    more languages added.
+  * source/rtl/natxxx.c
+    id.
+
 19990613 23:00 CET Eddie Runia
   * source/rtl/environ.c
     __Run() added for Borland and DJGPP

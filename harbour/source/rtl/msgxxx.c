@@ -24,4 +24,10 @@
 #include "natmsg/msgspa.c"
 #elif (HB_LANGUAGE == UK)
 #include "natmsg/msguk.c"
+#elif (HB_LANGUAGE == CAT)
+#include "natmsg/msgcat.c"
+#elif (HB_LANGUAGE == ITA)
+#include "natmsg/msgita.c"
+#elif (HB_LANGUAGE == FRE)
+#include "natmsg/msgfre.c"
 #endif
