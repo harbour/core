@@ -3526,7 +3526,7 @@ HB_FUNC( DBSETRELATION )
          return;
       }
 
-      dbRelations.lpaChild = s_pArea->pArea;
+      dbRelations.lpaChild = ( AREAP ) s_pArea->pArea;
       dbRelations.itmCobExpr = hb_param( 2, HB_IT_BLOCK );
       dbRelations.abKey = hb_param( 3, HB_IT_STRING );
       dbRelations.lpdbriNext = NULL;
