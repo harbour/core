@@ -108,13 +108,15 @@ char * hb_comp_szWarnings[] =
    "1Function \'%s\' does not end with RETURN statement",
    "3Incompatible type in assignment to: \'%s\' expected: \'%s\'",
    "3Incompatible operand type: \'%s\' expected: \'%s\'",
+   "4Suspicious operand type: \'unknown\' expected: \'%s\'",
    "3Incompatible operand types: \'%s\' and: \'%s\'",
    "4Suspicious type in assignment to: \'%s\' expected: \'%s\'",
-   "4Suspicious operand type: \'unknown\' expected: \'%s\'",
    "3Can\'t use array index with non-array",
    "3Incompatible return type: \'%s\' expected: \'%s\'",
+   "4Suspecious return type: \'%s\' expected: \'%s\'",
    "3Invalid number of parameters: %s expected: %s",
-   "3Incompatible parameter # %s expected: \'%s\'",
+   "3Incompatible parameter: %s expected: \'%s\'",
+   "4Suspecious parameter: %s expected: \'%s\'",
    "3Duplicate declaration of %s \'%s\'",
    "3Function \'%s\' conflicting with its declaration",
    "3Variable \'%s\' used but never initialized",
@@ -125,8 +127,7 @@ char * hb_comp_szWarnings[] =
    "3Message \'%s\' not known in class \'%s\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
-   "1Redundant \'ANNOUNCE %s\' statement ignored",
-   "4Suspecious return type: \'%s\' expected: \'%s\'"
+   "1Redundant \'ANNOUNCE %s\' statement ignored"
 };
 
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )

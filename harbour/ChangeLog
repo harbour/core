@@ -1,3 +1,20 @@
+2001-04-09 11:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hberrors.h
+   * source/compiler/hbgenerr.c
+     + Added #define HB_COMP_WARN_PARAM_SUSPECT 18 -> "4Suspecious parameter: %s expected: \'%s\'"
+
+   * include/hbcomp.h
+     + Added extern PCOMDECLARED  hb_comp_pReleaseDeclared;
+
+   * source/compiler/harbour.c
+     + Added static void hb_compDeclaredInit( void ) initializes decalaration of standard functions;
+
+   * source/compiler/genc.c
+     * Changed release code from hb_comp_pFirstDeclared to hb_comp_pReleaseDeclared.
+
+   * source/compiler/hbpcode.c
+     * Many refinments.
+
 2001-04-08 16:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
      ! Corrected typo.

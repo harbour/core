@@ -40,6 +40,7 @@
  *    hb_compMethodAdd()
  *    hb_compMethodFind()
  *    hb_compDeclaredAdd()
+ *    hb_compDeclaredInit()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -77,6 +78,8 @@ static void hb_compOptimizeJumps( void );
 static void hb_compPrepareOptimize( void );
 static void hb_compOptimizeFrames( PFUNCTION pFunc );
 
+static void hb_compDeclaredInit( void );
+
 /* global variables */
 FILES         hb_comp_files;
 FUNCTIONS     hb_comp_functions;
@@ -84,6 +87,7 @@ FUNCTIONS     hb_comp_funcalls;
 SYMBOLS       hb_comp_symbols;
 PCOMDECLARED  hb_comp_pFirstDeclared;
 PCOMDECLARED  hb_comp_pLastDeclared;
+PCOMDECLARED  hb_comp_pReleaseDeclared;
 
 PCOMCLASS     hb_comp_pFirstClass;
 PCOMCLASS     hb_comp_pLastClass;
@@ -208,6 +212,10 @@ int main( int argc, char * argv[] )
 
    /* Prepare the table of identifiers */
    hb_compIdentifierOpen();
+
+   /* Load standard Declarations. */
+   if ( hb_comp_iWarnings >= 3 )
+	  hb_compDeclaredInit();
 
    /* Process all files passed via the command line. */
 
@@ -885,6 +893,38 @@ PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
    return NULL;
 }
 
+void hb_compDeclaredInit( void )
+{
+  /*
+    \x5c -> ByRef    (+60)             '-'  -> NIL
+    \x7a -> Optional (+90)             'U'  -> Undefined
+
+	' '  -> AnyType                    'A'  -> Array                     'B'  -> Array
+	'A'  -> Array of AnyType           'a'  -> Array of Arrays           'b'  -> Array of Blocks
+    \x7a -> Optional AnyType           \x9b -> Optional Array            \x9c -> Optional Block
+    \x94 -> Optional Array of AnyType  \xb5 -> Optional Array of Arrays  \xb6 -> Optional Array of Blocks
+
+	'C'  -> Character/String           'D'  -> Date                      'L'  -> Logical
+	'c'  -> Array of Strings           'd'  -> Array of Dates            'l'  -> Array of Logicals
+    \x9d -> Optional Character         \x9e -> Optional Date             \xa6 -> Optional Logical
+    \xb7 -> Optional Array of Strings  \xb8 -> Optional Array of Dates   \xc0 -> Optional Array of Logicals
+
+	'N'  -> Numeric                    'O'  -> Object                    'S'  -> Class
+	'n'  -> Array of Numerics          'o'  -> Array of Objects          's'  -> Array of Classes
+    \xa8 -> Optional Numeric           \xa9 -> Optional Object           \xad -> Optional Class
+    \xc2 -> Optional Array of Numerics \xc3 -> Optional Array of Objects \xc7 -> Optional Array of Classes
+
+                                Name        Ret  Param Types              # of Prams  Class  Param Classes  Next
+                                ----------  ---  -----------------------  ----------  -----  -------------  ------ */
+   static COMDECLARED s_001 = { "AADD"    , ' ', "A "                   , 2         , NULL , NULL         , NULL   };
+   static COMDECLARED s_002 = { "ABS"     , 'N', "N"                    , 1         , NULL , NULL         , &s_001 };
+   static COMDECLARED s_003 = { "ACHOICE" , 'N', "NNNNc\x7a\x9d\xa8\xa8", 9         , NULL , NULL         , &s_002 };
+
+   hb_comp_pFirstDeclared   = &s_003; /* Change to BOTTOM item. */
+   hb_comp_pLastDeclared    = &s_001;
+   hb_comp_pReleaseDeclared = &s_001;
+}
+
 PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
 {
    PCOMDECLARED pDeclared;
@@ -916,12 +956,7 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
    pDeclared->pParamClasses = NULL;
    pDeclared->pNext = NULL;
 
-   /* First Declare */
-   if ( hb_comp_pFirstDeclared == NULL )
-      hb_comp_pFirstDeclared = pDeclared;
-   else
-      hb_comp_pLastDeclared->pNext = pDeclared;
-
+   hb_comp_pLastDeclared->pNext = pDeclared;
    hb_comp_pLastDeclared = pDeclared;
 
    return pDeclared;

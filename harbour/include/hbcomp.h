@@ -407,6 +407,7 @@ extern FUNCTIONS     hb_comp_funcalls;
 extern SYMBOLS       hb_comp_symbols;
 extern PCOMDECLARED  hb_comp_pFirstDeclared;
 extern PCOMDECLARED  hb_comp_pLastDeclared;
+extern PCOMDECLARED  hb_comp_pReleaseDeclared;
 extern PCOMCLASS     hb_comp_pFirstClass;
 extern PCOMCLASS     hb_comp_pLastClass;
 extern char *        hb_comp_szFromClass;
