@@ -1,3 +1,24 @@
+2001-03-27 20:05 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    Changes from Marek Paliwoda. Thanks Marek :)
+    
+    *doc/en/gtslang.txt
+    *source/rtl/gtsln/gtsln.c
+    *source/rtl/gtsln/kbsln.c
+    *source/rtl/gtsln/keytrans.c
+     - added support for displaying and entering national characters (see
+       gtslang.txt for details)
+     - improved keyboard support for linux text console. Almost all
+ ALT/CTRL+
+       SpecialKeys should work well. Note that You have to work using true
+       /dev/tty[1-12] device. This means You can't benefit from it when You
+       run Harbour programs from within Midnight Commander for example,
+       because
+ MC uses pseudoterminals.
+     - prepared for other Unix text consoles (SCO) (not tested)
+     - removed support for DOS. It was totally not needed due its
+ limitations
+
 2001-03-27 05:18 GMT-3 Horacio Roldan <horacioroldan@usa.net>
    * harbour/source/rdd/dbcmd.c
      * fixed unallocated memory block in dbcreate
