@@ -1,3 +1,11 @@
+20000424-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/compiler/hbusage.c
+     + Added Patrick Mast, Dave Pearson and Tim Stone to the credit list.
+
+   * makefile.bc
+     ! Fixed after some undocumented changes.
+
 20000424 06:55 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
 *doc/en/file.txt
  doc/en/diskspac.txt

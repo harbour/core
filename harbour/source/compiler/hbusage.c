@@ -130,6 +130,12 @@ void hb_compPrintCredits( void )
            "Ryszard Glab <rglab@imid.med.pl>\n"
            "Victor Szakats <info@szelvesz.hu>\n"
            "Vladimir Kazimirchik <v_kazimirchik@yahoo.com>\n"
+           "\n"
+           "Major contributors:"
+           "\n"
+           "Dave Pearson <davep@davep.org>\n"
+           "Patrick Mast <harbour@winfakt.com>\n"
+           "Tim Stone <timstone@mstrlink.com>\n"
            );
 }
 
