@@ -2518,7 +2518,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             if( nParts == 1 )
             {
                BYTE szTempName[ _POSIX_PATH_MAX ];
-               sortInfo.tempHandle = hb_fsCreateTemp( NULL, ( BYTE * ) "SORT-TMP", FC_NORMAL, szTempName );
+               sortInfo.tempHandle = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szTempName );
                if( sortInfo.tempHandle == FS_ERROR )
                   hb_errInternal( HB_EI_ERRUNRECOV, "Cannot create temp file", "hb_ntxIndexCreate", NULL );
                pszTempName = hb_strdup( szTempName );
