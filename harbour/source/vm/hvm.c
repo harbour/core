@@ -2670,6 +2670,12 @@ static void hb_vmArrayPush( void )
       return;
    }
 
+   if( HB_IS_OBJECT( pArray ) && hb_objHasMsg( pArray, "__OpArrayIndex" ) )
+   {
+      hb_vmOperatorCall( pArray, pIndex, "__OPARRAYINDEX" );
+      return;
+   }
+
    if( HB_IS_ARRAY( pArray ) )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )

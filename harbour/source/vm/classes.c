@@ -131,6 +131,7 @@
  ".AND." = __OpAnd
  ".OR."  = __OpOr
  ":="    = __OpAssign   ... not tested ...
+ "[]"    = __OpArrayIndex
  *
  *
  * See doc/license.txt for licensing terms.
@@ -1069,6 +1070,8 @@ HB_FUNC( __CLSADDMSG )
          pMessage = hb_dynsymGet( "__OpAnd"    ) ;
       else if (strcmp(".OR.",hb_parc(2)) == 0)
          pMessage = hb_dynsymGet( "__OpOr"     ) ;
+      else if( strcmp("[]",hb_parc(2)) == 0)
+         pMessage = hb_dynsymGet( "__OpArrayIndex" ) ;
       else
          pMessage = hb_dynsymGet( hb_parc( 2 ) );
 
@@ -2619,4 +2622,3 @@ HB_FUNC( __CLSGETPROPERTIES )
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
-
