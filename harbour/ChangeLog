@@ -1,4 +1,8 @@
-2001-11-07 03:00 GMT +7 Andi Jahja <harbour@cbn.net.id>
+2001-11-09 05:20 GMT +7 Andi Jahja <harbour@cbn.net.id>
+   * utils/hbmake/hbmutils.prg
+     ! add Copyright header
+
+2001-11-09 03:00 GMT +7 Andi Jahja <harbour@cbn.net.id>
    * utils/hbmake/hbmutils.prg
      ! some clean ups to enable compilation under MsVC
        To Luiz: Please use the standard " for include rather
