@@ -61,6 +61,7 @@ PRG_SOURCES=\
 	dates3.prg \
 	db_brows.prg \
 	dbevalts.prg \
+	delimtst.prg \
 	devtest.prg \
 	dirtest.prg \
 	disptest.prg \

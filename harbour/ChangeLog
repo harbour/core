@@ -1,3 +1,22 @@
+2001-04-18 21:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/dbdelim.prg
+    * Completed the code needed for COPY TO DELIMITED
+
+  * source/rtl/errorsys.prg
+    + Temporarily added a QOUT() ahead of displaying the error
+      message in DEFERROR(), because unless the screen has been
+      scrolled while the program was running, the DOS prompt will
+      overwrite the first line of the error trace after quitting.
+
+  * source/rtl/langapi.c
+    + Added Harbour methods to get language specific error messages
+      and language specific general messages.
+
+  * tests/Makefile
+  + tests/delimtst.prg
+    + New module to test COPY TO DELIMITED and APPEND FROM DELIMITED.
+
 2001-04-18 17:40 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rdd/dbf1.c
