@@ -2062,6 +2062,8 @@ static LPNTXINDEX ntxFindIndex( NTXAREAP pArea , PHB_ITEM lpOrder )
    LPNTXINDEX start, current;
 
    start = pArea->lpNtxIndex;
+   if( !start )
+      return NULL;
    current = start;
 
    if( !lpOrder )
