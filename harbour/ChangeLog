@@ -1,3 +1,9 @@
+19990802-10:50 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + added setkey
+   * source/rtl/setkey.prg
+     * fixed stray comment.
+
 19990802-16:10 GMT+1 Victor Szel <info@szelvesz.hu>
    + include/extend.h
      _PTR flavour of pointer names added.

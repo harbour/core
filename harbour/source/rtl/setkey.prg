@@ -40,8 +40,7 @@
 #define BLOCK      2
 #define CONDITION  3
 
-static aSetKeys := {}       // holds array of hot-key id, code-block,
-activation-block
+static aSetKeys := {}       // holds array of hot-key id, code-block, activation-block
 
 /*  $DOC$
  *  $FUNCNAME$
