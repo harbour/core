@@ -155,17 +155,18 @@ HB_FUNC(SQLFETCHR) // MYSQL_ROW *mysql_fetch_row(MYSQL_RES *)
 
    mrow = mysql_fetch_row(mresult);
 
-   for (i = 0; i < num_fields; i++) {
-      /* if field is not empty */
-      if (mrow[i] != NULL) {
-         temp = _itemPutC(NULL, mrow[i]);
-       } else {
-         temp = _itemPutC(NULL, "");
-       }
+   if ( mrow  != NULL )
+      for (i = 0; i < num_fields; i++) {
+         /* if field is not empty */
+         if (mrow[i] != NULL) {
+            temp = _itemPutC(NULL, mrow[i]);
+          } else {
+            temp = _itemPutC(NULL, "");
+          }
 
-      _itemArrayPut(aRow, i + 1, temp);
-      _itemRelease(temp);
-   }
+         hb_arraySet(aRow, i + 1, temp);
+         _itemRelease(temp);
+      }
    _itemReturn(aRow);
    _itemRelease(aRow);
 }
@@ -197,35 +198,35 @@ HB_FUNC(SQLFETCHF) // MYSQL_FIELD *mysql_fetch_field(MYSQL_RES *)
 
    if (!(mfield == NULL)) {
       temp = _itemPutC(NULL, mfield->name);
-      _itemArrayPut(aField, 1, temp);
+      hb_arraySet(aField, 1, temp);
       _itemRelease(temp);
 
       temp = _itemPutC(NULL, mfield->table);
-      _itemArrayPut(aField, 2, temp);
+      hb_arraySet(aField, 2, temp);
       _itemRelease(temp);
 
       temp = _itemPutC(NULL, mfield->def);
-      _itemArrayPut(aField, 3, temp);
+      hb_arraySet(aField, 3, temp);
       _itemRelease(temp);
 
       temp = _itemPutNL(NULL, (long)mfield->type);
-      _itemArrayPut(aField, 4, temp);
+      hb_arraySet(aField, 4, temp);
       _itemRelease(temp);
 
       temp = _itemPutNL(NULL, mfield->length);
-      _itemArrayPut(aField, 5, temp);
+      hb_arraySet(aField, 5, temp);
       _itemRelease(temp);
 
       temp = _itemPutNL(NULL, mfield->max_length);
-      _itemArrayPut(aField, 6, temp);
+      hb_arraySet(aField, 6, temp);
       _itemRelease(temp);
 
       temp = _itemPutNL(NULL, mfield->flags);
-      _itemArrayPut(aField, 7, temp);
+      hb_arraySet(aField, 7, temp);
       _itemRelease(temp);
 
       temp = _itemPutNL(NULL, mfield->decimals);
-      _itemArrayPut(aField, 8, temp);
+      hb_arraySet(aField, 8, temp);
       _itemRelease(temp);
 
    }
@@ -283,7 +284,7 @@ HB_FUNC(SQLLISTDB) // MYSQL_RES * mysql_list_dbs(MYSQL *, char * wild);
       mrow = mysql_fetch_row(mresult);
       temp = _itemPutC(NULL, mrow[0]);
 
-      _itemArrayPut(aDBs, i + 1, temp);
+      hb_arraySet(aDBs, i + 1, temp);
       _itemRelease(temp);
    }
 
@@ -311,7 +312,7 @@ HB_FUNC(SQLLISTTBL) // MYSQL_RES * mysql_list_tables(MYSQL *, char * wild);
       mrow = mysql_fetch_row(mresult);
       temp = _itemPutC(NULL, mrow[0]);
 
-      _itemArrayPut(aTables, i + 1, temp);
+      hb_arraySet(aTables, i + 1, temp);
       _itemRelease(temp);
    }
 
