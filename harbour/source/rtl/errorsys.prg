@@ -24,7 +24,7 @@
 
 // Standard Harbour ErrorSys system
 
-#include "error.ch"
+#include "include\error.ch"
 
 #define ISCHAR(var)     (ValType(var) == "C")
 #define ISNUM(var)      (ValType(var) == "N")

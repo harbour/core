@@ -1,3 +1,7 @@
+19990718-14:13 CET Patrick Mast <harbour@PatrickMast.com>
+  * /source/rtl/errorsys.prg
+    added the path /include to the error.ch include line
+
 19990718-14:00 CET Eddie Runia <eddie@runia.com>
   * build32.bat
     bldhbpp.bat called
