@@ -47,6 +47,7 @@
 /* Harbour keyboard support functions */
 extern int  hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever ); /* Wait for keyboard input */
 extern int  hb_inkeyGet( void );            /* Extract the next key from the Harbour keyboard buffer */
+extern void hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */
 extern int  hb_inkeyLast( void );           /* Return the value of the last key that was extracted */
 extern int  hb_inkeyNext( void );           /* Return the next key without extracting it */
 extern void hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */

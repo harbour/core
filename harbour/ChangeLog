@@ -1,3 +1,17 @@
+19990826-06:50 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/inkey.c
+    include/inkey.h
+    + hb_inkeyPut() added, see next.
+    + __KEYPUT() added. This function is able to insert *any* inkey codes
+      (not just the 0-255 range) to the keyboard buffer one by one.
+    ! __KEYBOARD() allowed to insert zero codes into the buffer which made
+      INKEY() hang. It's now using hb_inkeyPut() to avoid this.
+    % __KEYBOARD() uses ISCHAR() instead of two hb_p*() calls. Eliminated
+      one of the two hb_parclen() calls.
+    * hb_inkeyPoll() now calls hb_inkeyPut() to insert the new code.
+    ! INKEY() fixed parameter count checking bug introduced a few hours ago.
+
 19990826-06:00 GMT+1 Victor Szel <info@szelvesz.hu>
  
   * include/mouseapi.h
@@ -74,7 +88,7 @@
     include/hbpp.h
     + Standalone PP is now showing the line numbers in errors and warnings.
   * source/compiler/harbour.y
-    source/hbpp/hbplib.c
+    source/hbpp/hbpplib.c
     source/hbpp/stdalone/hbpp.c
     source/rtl/errorapi.c
     % GenError(), GenWarning(), hb_errInternel() no longer need sprintf() 

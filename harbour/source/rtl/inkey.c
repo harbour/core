@@ -397,19 +397,8 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif
-      if( ch )
-      {
-         if( hb_set.HB_SET_TYPEAHEAD )
-         {
-            /* Proper typeahead support is set */
-            int head = s_inkeyHead;
-            s_inkeyBuffer[ head++ ] = ch;
-            if( head >= hb_set.HB_SET_TYPEAHEAD ) head = 0;
-            if( head != s_inkeyTail ) s_inkeyHead = head;
-            else /* TODO: Add error sound */ ;
-         }
-         else s_inkeyForce = ch; /* Typeahead support is disabled */
-      }
+
+      hb_inkeyPut( ch );
    }
 }
 
@@ -516,7 +505,7 @@ HARBOUR HB_INKEY( void )
    double seconds;
    HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
 
-   if( args < 1 || args > 2 )
+   if( args > 2 )
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INKEY" ); /* NOTE: Clipper catches this at compile time! */
 
    if( args == 1 || ( args > 1 && hb_param( 1, IT_NUMERIC ) ) )
@@ -593,23 +582,85 @@ HARBOUR HB___KEYBOARD( void )
 {
    /* Clear the typeahead buffer without reallocating the keyboard buffer */
    hb_inkeyReset( FALSE );
-   if( hb_pcount() > 0 && hb_param( 1, IT_STRING ) && hb_parclen( 1 ) )
+
+   if( ISCHAR( 1 ) )
    {
-      /* Stuff the string */
-      char *fPtr = hb_parc( 1 );
       long size = hb_parclen( 1 );
 
-      if( size >= hb_set.HB_SET_TYPEAHEAD )
+      if( size != 0 )
       {
-         /* Have to allow for a zero size typehead buffer */
-         if( hb_set.HB_SET_TYPEAHEAD ) size = hb_set.HB_SET_TYPEAHEAD - 1;
-         else size = 0;
-      }
-      while( size-- )
-      {
-         s_inkeyBuffer[ s_inkeyHead++ ] = *fPtr++;
+         /* Stuff the string */
+         char *fPtr = hb_parc( 1 );
+
+         if( size >= hb_set.HB_SET_TYPEAHEAD )
+         {
+            /* Have to allow for a zero size typehead buffer */
+            if( hb_set.HB_SET_TYPEAHEAD ) size = hb_set.HB_SET_TYPEAHEAD - 1;
+            else size = 0;
+         }
+
+         while( size-- )
+            hb_inkeyPut( *fPtr++ );
       }
    }
+}
+
+void hb_inkeyPut( int ch )
+{
+   if( ch )
+   {
+      if( hb_set.HB_SET_TYPEAHEAD )
+      {
+         /* Proper typeahead support is set */
+         int head = s_inkeyHead;
+         s_inkeyBuffer[ head++ ] = ch;
+         if( head >= hb_set.HB_SET_TYPEAHEAD ) head = 0;
+         if( head != s_inkeyTail ) s_inkeyHead = head;
+         else /* TODO: Add error sound */ ;
+      }
+      else s_inkeyForce = ch; /* Typeahead support is disabled */
+   }
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __KEYPUT()
+ *  $CATEGORY$
+ *      Console input
+ *  $ONELINER$
+ *      Put an inkey code to the keyboard buffer
+ *  $SYNTAX$
+ *      __keyPut( <nInkeyCode> )
+ *  $ARGUMENTS$
+ *      <nInkeyCode> is the inkey code, which should be inserted into the
+ *      keyboard buffer.
+ *  $RETURNS$
+ *      There is no return value
+ *  $DESCRIPTION$
+ *      Inserts an inkey code to the string buffer. The buffer is *not*
+ *      cleared in this operation. This function allows to insert such
+ *      inkey codes which are not in the range of 0 to 255. To insert more
+ *      than one code, call the function repeatedly. The zero code cannot
+ *      be inserted.
+ *  $EXAMPLES$
+ *      // Stuff an Alt+PgDn key into the keyboard buffer
+ *      __keyPut( K_ALT_PGDN )
+ *  $TESTS$
+ *      __keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
+ *      __keyPut( K_F11 ) ; ? INKEY() ==> -40
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      Was not part of Clipper
+ *  $SEEALSO$
+ *      KEYBOARD, CLEAR TYPEAHEAD, INKEY
+ *  $END$
+ */
+
+HARBOUR HB___KEYPUT( void )
+{
+   if( ISNUM( 1 ) )
+      hb_inkeyPut( hb_parni( 1 ) );
 }
 
 /*  $DOC$
