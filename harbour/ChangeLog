@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! Fix, lost the reference to the current oGetList with recursive
+       execution of ReadModal.
+
+2002-04-24 09:04 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * include/hbrddcdx.h
    * source/rdd/dbfcdx/dbfcdx1.c
    * source/rdd/dbfcdx/dbfcdx1.h
