@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-28 11:56 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    + for...next loops implemented for Harbour.NET
+    ! .NET IL implementation for HB_P_PUSHLONG, HB_P_FORTEST
+    + Added ObjForTest( object, object, object ) for HB_P_FORTEST support
+
 2003-06-28 01:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     + .NET IL implementation for HB_P_JUMPFALSENEAR, HB_P_JUMPNEAR
