@@ -1,4 +1,3 @@
-//NOTEST
 /*
    ReadHRB
 
@@ -6,6 +5,7 @@
 
    ReadHRB <program file>  {No .HRB extension please}
 */
+#include "set.ch"
 
 function Main( cFrom )
 
@@ -18,11 +18,12 @@ function Main( cFrom )
    local cMode := "SYMBOL"
    local cScope
    local nLenCount
+   local nIdx
+   local aTypes := { "NOLINK", "FUNC", "EXTERN" }
 
-   SET EXACT ON
-   SET DATE  TO BRITISH
-   SET ALTERNATE TO readhrb.out
-   SET ALTERNATE ON
+   set( _SET_EXACT, .T. )
+   set( _SET_ALTERNATE, "readhrb.out" )
+   set( _SET_ALTERNATE, .T. )
 
    if cFrom == NIL
       cFrom := "hello.hrb"
@@ -46,7 +47,8 @@ function Main( cFrom )
       cScope := fReadStr( hFile, 1 )
       QQOut(" Scope ", Hex2Val(asc(cScope)))
       cScope := fReadStr( hFile, 1 )
-      QQOut(" Type ", { "NOLINK", "FUNC", "EXTERN" }[ asc(cScope)+1 ] )
+      nIdx   := asc( cScope ) + 1
+      QQOut(" Type ", aTypes[ nIdx ] )
       QOut()
    next n
 
@@ -87,8 +89,7 @@ function Main( cFrom )
 
    fClose( cFrom )
 
-   SET ALTERNATE OFF
-   CLOSE ALTERNATE
+   set( _SET_ALTERNATE, .F. )
 return nil
 
 

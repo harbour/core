@@ -1,3 +1,11 @@
+19990530-17:30 CET Eddie Runia
+   * source/rtl/files.c
+     fixed 0x00 byte handling of fReadStr
+   * tests/working/readhrb.prg
+     now a Harbour program
+   * tests/working/readhrb.lnk
+     removed. No longer necessary
+
 19990530-11:18 EST Les. Griffith
    * added logic for _fscommit in files.c
 
