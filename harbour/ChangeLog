@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-12 13:42 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * hrbdll.bc
+      + added missing references
+      - deleted obsolete refrerences
+
 2004-02-11 13:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    + source/debug/dbgbrwsr.prg
       + The new file with TDbgBrowser class which inherits
