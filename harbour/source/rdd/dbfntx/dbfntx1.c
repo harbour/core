@@ -689,7 +689,7 @@ static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO 
       /* pKey <= p */
       {
          if( ( k == 0 && !lSeek && (ULONG)p->rec_no != pTag->Owner->Owner->ulRecNo )
-             || ( lSeek && hb_ntxIsRecBad( pTag->Owner->Owner, p->rec_no ) ) )
+             || ( lSeek && p->rec_no && hb_ntxIsRecBad( pTag->Owner->Owner, p->rec_no ) ) )
             k = 1;
          if( k <= 0 && pPage->CurKey < pPage->uiKeys )
          {
