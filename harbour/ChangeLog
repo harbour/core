@@ -1,3 +1,21 @@
+20000227-08:59 GMT+2 Chen Kedem <niki@actcom.co.il>
+   * source/rtl/binnum.c
+     + doc for all function
+
+   * source/rtl/filesys.c
+     * small formating for the docs
+     ! in FSEEK() doc $EXAMPLES$ I'd changed "RETURN" into "substr"
+
+   * source/rtl/word.c
+     + add the "INCOMPATIBILITY:" note into $COMPLIANCE$ section
+     * change "INCOMPATIBILITY:" into "NOTE:"
+
+   * source/rtl/typefile.prg
+     * modified to save the state of SET DEVICE and SET PRINTER
+     * modified to search the file on DEFAULT and PATH directories if needed
+     + add support for error recovery Retry and Default
+     + doc for __TYPEFILE()
+
 20000225-19:58 GMT+3 Alexander Kresin
    * contrib/rdd_ads/ads1.c
      * Bug fixed in adsGetValue()

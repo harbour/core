@@ -58,15 +58,17 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      WORD() is NOT fully CA-Clipper compliant.
+ *      The Clipper NG states that WORD() will only work when used in CALL
+ *      commands parameter list, otherwise it will return NIL, in Harbour
+ *      it will work anywhere.
  *  $SEEALSO$
- *       CALL  
+ *       CALL
  *  $END$
  */
 
-/* INCOMPATIBILITY: The Clipper NG states that WORD() will only work when used
-                    in CALL commands parameter list, otherwise it will return
-                    NIL, in Harbour it will work anywhere. */
+/* NOTE: The Clipper NG states that WORD() will only work when used
+         in CALL commands parameter list, otherwise it will return
+         NIL, in Harbour it will work anywhere. */
 
 HARBOUR HB_WORD( void )
 {

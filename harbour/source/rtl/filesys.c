@@ -1329,11 +1329,11 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *  $FUNCNAME$
  *      FOPEN()
  *  $CATEGORY$
- *      LOW LEVEL
+ *      Low level file handling
  *  $ONELINER$
  *      Open a file.
  *  $SYNTAX$
- *     FOPEN(<cFile>, [<nMode>]) --> nHandle
+ *     FOPEN( <cFile>, [<nMode>] ) --> nHandle
  *  $ARGUMENTS$
  *     <cFile> Name of file to open
  *     <nMode> Dos file open mode
@@ -1344,16 +1344,16 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *
  *
  *   FOPEN() Sharing Modes
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   ------------------------------------------------------------------------
  *   Mode    Fileio.ch      Operation
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   ------------------------------------------------------------------------
  *   0       FO_COMPAT      Compatibility mode (default)
  *   16      FO_EXCLUSIVE   Exclusive use
  *   32      FO_DENYWRITE   Prevent others from writing
  *   48      FO_DENYREAD    Prevent others from reading
  *   64      FO_DENYNONE    Allow others to read or write
  *   64      FO_SHARED      Same as FO_DENYNONE
- *   컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+ *   ------------------------------------------------------------------------
  *
  *     The Access Modes in combination (+) with the Sharing modes determine the
  *   accessibility of the file in a network environment.
@@ -1401,7 +1401,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *  $SEEALSO$
  *      FCREATE(),FERROR(),FCLOSE()
  *  $INCLUDE$
- *  
+ *
  *  $END$
  */
 
@@ -1418,16 +1418,15 @@ HARBOUR HB_FOPEN( void )
  *  $FUNCNAME$
  *      FCREATE()
  *  $CATEGORY$
- *      LOW LEVEL
+ *      Low level file handling
  *  $ONELINER$
  *      Creates a file
  *  $SYNTAX$
- *      FCREATE(<cFile>, [<nAttribute>]) --> nHandle
+ *      FCREATE( <cFile>, [<nAttribute>] ) --> nHandle
  *  $ARGUMENTS$
  *      <cFile> is the name of the file to create.
  *
  *      <nAttribute> Numeric code for the DOS file attribute
- *
  *  $RETURNS$
  *      <nHandle>  Numeric expression
  *  $DESCRIPTION$
@@ -1455,7 +1454,7 @@ HARBOUR HB_FOPEN( void )
  *  $EXAMPLES$
  *      IF (nh:=FCREATE("TEST.TXT") <0
  *          ? "Can not create file"
- *      ENDIF 
+ *      ENDIF
  *  $TESTS$
  *
  *  $STATUS$
@@ -1482,11 +1481,11 @@ HARBOUR HB_FCREATE( void )
  *  $FUNCNAME$
  *      FREAD()
  *  $CATEGORY$
- *      Low Level
+ *      Low level file handling
  *  $ONELINER$
  *      Reads a specified number of bytes from a file.
  *  $SYNTAX$
- *      FREAD(<nHandle>, @<cBuffer>, <nBytes>) --> nBytes
+ *      FREAD( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytes
  *  $ARGUMENTS$
  *      <nHandle>     Dos file handle
  *      <cBufferVar>  Character expression passed by reference
@@ -1564,12 +1563,11 @@ HARBOUR HB_FREAD( void )
  *  $FUNCNAME$
  *      FWRITE()
  *  $CATEGORY$
- *      Low Level
+ *      Low level file handling
  *  $ONELINER$
  *      Writes characters to a file
  *  $SYNTAX$
- *     FWRITE(<nHandle>, <cBuffer>, [<nBytes>])
- *      --> nBytesWritten
+ *     FWRITE( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesWritten
  *  $ARGUMENTS$
  *     <nHandle>  DOS file handle number.
  *     <cBuffer>  Character expression to be written.
@@ -1624,7 +1622,7 @@ HARBOUR HB_FWRITE( void )
  *  $FUNCNAME$
  *      FERROR()
  *  $CATEGORY$
- *      Low Level
+ *      Low level file handling
  *  $ONELINER$
  *      Reports the error status of low-level file functions
  *  $SYNTAX$
@@ -1636,9 +1634,9 @@ HARBOUR HB_FWRITE( void )
  *      low-level file function.
  *
  *      FERROR() Return Values
- *   
+ *
  *      Error   Meaning
- *   
+ *
  *      0       Successful
  *      2       File not found
  *      3       Path not found
@@ -1654,7 +1652,7 @@ HARBOUR HB_FWRITE( void )
  *      30      Read fault
  *      32      Sharing violation
  *      33      Lock Violation
- *   
+ *
  *  $DESCRIPTION$
  *      After every low-level file function,this function will return
  *      a value that provides additional informationon the status of
@@ -1694,11 +1692,11 @@ HARBOUR HB_FERROR( void )
  *  $FUNCNAME$
  *     FCLOSE()
  *  $CATEGORY$
- *     Low Level
+ *     Low level file handling
  *  $ONELINER$
  *     Closes an open file
  *  $SYNTAX$
- *     FCLOSE(<nHandle>) --> <lSuccess>
+ *     FCLOSE( <nHandle> ) --> <lSuccess>
  *  $ARGUMENTS$
  *     <nHandle> DOS file handle
  *  $RETURNS$
@@ -1740,11 +1738,11 @@ HARBOUR HB_FCLOSE( void )
  *  $FUNCNAME$
  *      FERASE()
  *  $CATEGORY$
- *      Low Level
+ *      Low level file handling
  *  $ONELINER$
  *      Erase a file from disk
  *  $SYNTAX$
- *      FERASE(<cFile>) --> nSuccess
+ *      FERASE( <cFile> ) --> nSuccess
  *  $ARGUMENTS$
  *      <cFile> Name of file to erase.
  *  $RETURNS$
@@ -1768,7 +1766,7 @@ HARBOUR HB_FCLOSE( void )
  *          ? "File successfully erased"
  *      ELSE
  *          ? "File can not be deleted"
- *      ENDIF 
+ *      ENDIF
  *  $TESTS$
  *
  *  $STATUS$
@@ -1796,11 +1794,11 @@ HARBOUR HB_FERASE( void )
  *  $FUNCNAME$
  *      FRENAME()
  *  $CATEGORY$
- *      Low Level
+ *      File management
  *  $ONELINER$
  *      Renames a file
  *  $SYNTAX$
- *      FRENAME(<cOldFile>, <cNewFile>) --> nSuccess
+ *      FRENAME( <cOldFile>, <cNewFile> ) --> nSuccess
  *  $ARGUMENTS$
  *     <cOldFile> Old filenarne to he changed
  *     <cNewFile> New filename
@@ -1826,7 +1824,6 @@ HARBOUR HB_FERASE( void )
  *      If it is able to rename the file, the return value for the function
  *      will be 0.A call to FERROR() function will give additional infor-
  *      mation about any error found.
-
  *  $EXAMPLES$
  *      nResult:=FRENAME("x.txt","x1.txt")
  *      IF nResult <0
@@ -1858,11 +1855,11 @@ HARBOUR HB_FRENAME( void )
  *  $FUNCNAME$
  *      FSEEK()
  *  $CATEGORY$
- *      Low Level
+ *      Low level file handling
  *  $ONELINER$
  *      Positions the file pointer in a file.
  *  $SYNTAX$
- *      FSEEK(<nHandle>, <nOffset>, [<nOrigin>]) --> nPosition
+ *      FSEEK( <nHandle>, <nOffset>, [<nOrigin>] ) --> nPosition
  *  $ARGUMENTS$
  *     <nHandle> DOS file handle.
  *     <nOffset> The number of bytes to move.
@@ -1892,35 +1889,35 @@ HARBOUR HB_FRENAME( void )
  *      If a value is not provided for <nOrigin>, it defaults to 0 and
  *      moves the file pointer from the beginning of the file.
  *  $EXAMPLES$
- *      STATIC FUNCTION FREADln(nH,cB,nMaxLine)
- *   
- *      LOCAL cLine,nSavePos,nEol,nNumRead
+ *      // here is a function that read one text line from an open file
  *
- *      cLine:=space(nMaxLine)
+ *      // nH = file handle obtained from FOPEN()
+ *      // cB = a string buffer passed-by-reference to hold the result
+ *      // nMaxLine = maximum number of bytes to read
  *
- *      cB:=''
- *
- *      nSavePos:=FTELL(nH)
- *
- *      nNumRead:=FREAD(nH,@cLine,nMaxLine)
- *
- *      IF (nEol:= AT(CRLF,RETURN(cLine,1,nNumRead)))==0
- *        cB:=cLine
+ *      #define EOL HB_OSNEWLINE()
+ *      FUNCTION FREADln( nH, cB, nMaxLine )
+ *      LOCAL cLine, nSavePos, nEol, nNumRead
+ *      cLine := space( nMaxLine )
+ *      cB := ''
+ *      nSavePos := FSEEK( nH, 0, FS_RELATIVE )
+ *      nNumRead := FREAD( nH, @cLine, nMaxLine )
+ *      IF ( nEol := AT( EOL, substr( cLine, 1, nNumRead ) ) ) == 0
+ *        cB := cLine
  *      ELSE
- *        cB:=SUBSTR(cLine,1,nEol-1)
- *        FSEEK(nH,nSavePos+nEol+1,FS_SET)
+ *        cB := SUBSTR( cLine, 1, nEol - 1 )
+ *        FSEEK( nH, nSavePos + nEol + 1, FS_SET )
  *      ENDIF
- *
  *      RETURN nNumRead != 0
  *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant.
+ *      This function is CA-Clipper compliant.
  *  $SEEALSO$
- *     FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
+ *      FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
  *  $INCLUDE$
- *     Fileio.ch
+ *      Fileio.ch
  *  $END$
  */
 
@@ -1970,15 +1967,15 @@ BOOL hb_fsFile( BYTE * pFilename )
  *  $FUNCNAME$
  *      FILE()
  *  $CATEGORY$
- *      Low Level
+ *      File management
  *  $ONELINER$
  *      Tests for the existence of file(s)
  *  $SYNTAX$
- *      FILE(<cFileSpec>) --> lExists
+ *      FILE( <cFileSpec> ) --> lExists
  *  $ARGUMENTS$
  *      <cFileSpec> Dos Skeleton or file name to find.
  *  $RETURNS$
- *      FILE() return a logical true (.T.) or logical false (.F.).    
+ *      FILE() return a logical true (.T.) or logical false (.F.).
  *  $DESCRIPTION$
  *      This function return a logical true (.T.) if the given filename
  *      <cFileSpec> exist.
@@ -2011,18 +2008,19 @@ HARBOUR HB_FILE( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FREADSTR()
+ *      FREADSTR()
  *  $CATEGORY$
- *     Low Level
+ *      Low level file handling
  *  $ONELINER$
  *      Reads a string from a file.
  *  $SYNTAX$
  *      FREADSTR(<nHandle>, <nBytes>) --> cString
  *  $ARGUMENTS$
- *     <nHandle> DOS file handle number
- *     <nBytes>  Number of bytes to read
+ *      <nHandle> DOS file handle number.
+ *
+ *      <nBytes>  Number of bytes to read.
  *  $RETURNS$
- *     FREADSTR() return an characted expression
+ *      FREADSTR() return an characted expression
  *  $DESCRIPTION$
  *      This function returns a character string of <nBytes> bytes from a
  *      file whose DOS file handle is <nHandle>.
@@ -2033,9 +2031,9 @@ HARBOUR HB_FILE( void )
  *      <nBytes> or the number of bytes read before an end-of-file charac-
  *      ter (ASCII 26) is found.
  *      NOTE  This function is similar to the FREAD() function, except that
- *      it will not	read binary characters that may he required as part of
+ *      it will not     read binary characters that may he required as part of
  *      a header of a file construct. Characters Such as CHR(0) and CHR(26)
- *      may keep this	function from performing its intended operation. In this
+ *      may keep this   function from performing its intended operation. In this
  *      event, the FREAD() function should he used in place of the FREADSTR()
  *      function.
  *  $EXAMPLES$
@@ -2046,12 +2044,12 @@ HARBOUR HB_FILE( void )
  *      FCLOSE(nH)
  *  $TESTS$
  *  $STATUS$
- *     R
+ *      R
  *  $COMPLIANCE$
- *     This function is not CA-Clipper compliant since may read
- *     strings greather the 65K depending of platform.
+ *      This function is not CA-Clipper compliant since may read
+ *      strings greather the 65K depending of platform.
  *  $SEEALSO$
- *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
+ *      BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $INCLUDE$
  *
  *  $END$
@@ -2341,7 +2339,7 @@ HARBOUR HB_FSETDEVMOD( void )
  *      and directoy designaters must be specified if either file is in a
  *      directory other then the default drive and directory.
  *      If <cNewFile> id currently open or if it previously exists, this
- *      command will not perform the desired operation. 
+ *      command will not perform the desired operation.
  *  $EXAMPLES$
  *      RENAME c:\autoexec.bat to c:\autoexec.old
  *  $TESTS$
