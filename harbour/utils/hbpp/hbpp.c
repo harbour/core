@@ -63,7 +63,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <malloc.h>     /* required for allocating and freeing memory */
+/* malloc.h has been obsoleted by stdlib.h (and does not even exist in gcc 3.x).
+   #include <malloc.h>
+*/
 
 #include "hbpp.h"
 #include "hbcomp.h"
