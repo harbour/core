@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-09 10:15 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * hrbdll.bc
+     * Added reference to missing hbrandom.c. Can a MSVC user sync hrbdll.vc?
+
 2004-03-09 13:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    + source/rtl/altd.prg
       +new file with ALTD() procedure code
