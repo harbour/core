@@ -786,7 +786,8 @@ HARBOUR HB_DBCREATE( void )
       szDriver = szDefDriver;
 
    uiRddID = 0;
-   if( !( pRddNode = hb_FindRddNode( szDriver, &uiRddID ) ) )
+   pRddNode = hb_FindRddNode( szDriver, &uiRddID ) ;
+   if( !pRddNode )
    {
       hb_errRT_DBCMD( EG_ARG, 1015, 0, "DBCREATE" );
       return;
@@ -943,7 +944,8 @@ HARBOUR HB_DBTABLEEXT( void )
    {
       hb_CheckRdd();
       uiRddID = 0;
-      if( !( pRddNode = hb_FindRddNode( szDefDriver, &uiRddID ) ) )
+      pRddNode = hb_FindRddNode( szDefDriver, &uiRddID );
+      if( !pRddNode )
       {
          hb_retc( "" );
          return;
@@ -1023,7 +1025,8 @@ HARBOUR HB_DBUSEAREA( void )
       szDriver = szDefDriver;
 
    uiRddID = 0;
-   if( !( pRddNode = hb_FindRddNode( szDriver, &uiRddID ) ) )
+   pRddNode = hb_FindRddNode( szDriver, &uiRddID );
+   if( !pRddNode )
    {
       hb_errRT_DBCMD( EG_ARG, 1015, 0, "DBUSEAREA" );
       return;

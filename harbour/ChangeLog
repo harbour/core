@@ -1,3 +1,7 @@
+19990820-13:47 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source\rdd\dbcmd.c
+     Fixed some warnings, now RDD compile without warnings
+
 19990820-13:27 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source\rdd\dbcmd.c
      source\rdd\dbf1.c
