@@ -1042,58 +1042,6 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
             if ( uiAux != HB_IT_NIL )
               hb_cdxKeyGetItem( pTag->CurKeyInfo, pOrderInfo->itmResult, uiAux );
 
-
-            /*
-            switch( pTag->uiType )
-            {
-               case HB_IT_STRING:
-                  hb_itemPutCL( pItem, pTag->CurKeyInfo->Value, pField->uiLen );
-         break;
-
-      case HB_IT_LOGICAL:
-         hb_itemPutL( pItem, pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'T' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 't' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'Y' ||
-                      pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] == 'y' );
-         break;
-
-      case HB_IT_MEMO:
-         hb_dbfGetMemo( pArea, uiIndex, pItem );
-         break;
-
-      case HB_IT_DATE:
-         memcpy( szBuffer, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], 8 );
-         szBuffer[ 8 ] = 0;
-         hb_itemPutDS( pItem, szBuffer );
-         break;
-
-      case HB_IT_LONG:
-         if( pField->uiLen > 20 )
-            bError = TRUE;
-         else
-         {
-            memcpy( szBuffer, pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                    pField->uiLen );
-            szBuffer[ pField->uiLen ] = 0;
-            if( pField->uiDec )
-               hb_itemPutNDLen( pItem, atof( szBuffer ),
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            else
-               if( pField->uiLen > 9 )
-                  hb_itemPutNDLen( pItem, atof( szBuffer ),
-                                   ( int ) pField->uiLen, ( int ) pField->uiDec );
-               else
-                  hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
-         }
-         break;
-
-      default:
-         bError = TRUE;
-         break;
-   }
-         */
-
          }
          break;
 
@@ -1365,8 +1313,8 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
           // for nation sorting support
           //iResult = hb_charcmp( pKey1->value[ * EndPos ],
           //                      pKey2->value[ * EndPos ] )
-          iResult = pKey1->Value[ * EndPos ] -
-                    pKey2->Value[ * EndPos ];
+          iResult = ( (unsigned char) pKey1->Value[ * EndPos ]) -
+                    ( (unsigned char) pKey2->Value[ * EndPos ]);
           * EndPos += 1;
       } while( iResult == 0 && * EndPos < iLimit );
    }
@@ -1374,8 +1322,8 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
    {
       do
       {
-          iResult = pKey1->Value[ * EndPos ] -
-                    pKey2->Value[ * EndPos ];
+          iResult = ( (unsigned char) pKey1->Value[ * EndPos ]) -
+                    ( (unsigned char) pKey2->Value[ * EndPos ]);
           * EndPos += 1;
       } while( iResult == 0 && * EndPos < iLimit );
    }

@@ -1,3 +1,8 @@
+2001-11-10 20:54 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed hb_cdxKeyCompare, inverted sorting if high bit set
+       (positives were before negatives)
+
 2001-11-10 04:20 GMT +0700 Andi Jahja <harbour@cbn.net.id>
    * source/rdd/dbf1.c
       ! comment unused var ULONG ulRecNo
