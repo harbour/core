@@ -75,84 +75,86 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 #endif
 
    /* Grab space */
-   pszCfg = ( char * ) hb_xgrab( strlen( pszEnv ) );
-   hb_searchpath( HB_CFG_FILENAME, pszEnv, pszCfg );
-
-   yyc = fopen( pszCfg, "rt" );
-   if( ! yyc )
+   pszCfg = ( char * ) hb_xgrab( /*strlen( pszEnv )*/ _POSIX_PATH_MAX );
+   if ( *hb_searchpath( HB_CFG_FILENAME, pszEnv, pszCfg ) )
    {
-#if 0
-      /* QUESTION: Add a new error to Harbour ?
-      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );
-      */
-#else
-      printf( "\nError: Can't find %s file.\n", HB_CFG_FILENAME );
-      return;
-#endif
-   }
 
-   while( fgets( szLine, HB_CFG_LINE_LEN, yyc ) != NULL )
-   {
-      ULONG ulLen;
-      char * szStr = szLine;
-      char * szToken;
-
-      /* Trim left */
-      while( HB_ISSPACE( *szStr ) )
-         szStr++;
-
-      /* Trim right */
-      ulLen = strlen( szStr );
-      while( ulLen && HB_ISSPACE( szStr[ ulLen - 1 ] ) )
-         ulLen--;
-
-      szStr[ ulLen ] = '\0';
-      /* TODO: Check for comments within macros, i.e: CC=bcc32 #comment */
-
-      if( szStr )
+      yyc = fopen( pszCfg, "rt" );
+      if( ! yyc )
       {
-         szToken = strtok( szStr, "=" );
-
-         if( szToken )
+#if 0
+         /* QUESTION: Add a new error to Harbour ?
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );
+         */
+#else
+         printf( "\nError: Can't find %s file.\n", HB_CFG_FILENAME );
+         return;
+#endif
+      }
+      
+      while( fgets( szLine, HB_CFG_LINE_LEN, yyc ) != NULL )
+      {
+         ULONG ulLen;
+         char * szStr = szLine;
+         char * szToken;
+         
+         /* Trim left */
+         while( HB_ISSPACE( *szStr ) )
+            szStr++;
+         
+         /* Trim right */
+         ulLen = strlen( szStr );
+         while( ulLen && HB_ISSPACE( szStr[ ulLen - 1 ] ) )
+            ulLen--;
+         
+         szStr[ ulLen ] = '\0';
+         /* TODO: Check for comments within macros, i.e: CC=bcc32 #comment */
+         
+         if( szStr )
          {
-            /* Checks compiler name */
-            if( ! hb_stricmp( szToken, "CC" ) )
+            szToken = strtok( szStr, "=" );
+            
+            if( szToken )
             {
-               szToken = strtok( NULL, "=" );
-               if( szToken ) /* If empty, preserve last value */
-                  sprintf( szCompiler, "%s", szToken );
+               /* Checks compiler name */
+               if( ! hb_stricmp( szToken, "CC" ) )
+               {
+                  szToken = strtok( NULL, "=" );
+                  if( szToken ) /* If empty, preserve last value */
+                     sprintf( szCompiler, "%s", szToken );
+               }
+               
+               /* Checks optional switches */
+               if( szToken && ! hb_stricmp( szToken, "CFLAGS" ) )
+               {
+                  szToken = strtok( NULL, "=" );
+                  if( szToken )
+                     sprintf( szOptions, "%s", szToken );
+               }
+               
+               /* Wanna see C compiler output ? */
+               if( szToken && ! hb_stricmp( szToken, "VERBOSE" ) )
+               {
+                  szToken = strtok( NULL, "=" );
+                  if( szToken && ! hb_stricmp( szToken, "YES" ) )
+                     bVerbose = TRUE;
+               }
+               
+               /* Delete intermediate C file ? */
+               if( szToken && ! hb_stricmp( szToken, "DELTMP" ) )
+               {
+                  szToken = strtok( NULL, "=" );
+                  if( szToken && ! hb_stricmp( szToken, "NO" ) )
+                     bDelTmp = FALSE;
+               }
+               
             }
-
-            /* Checks optional switches */
-            if( szToken && ! hb_stricmp( szToken, "CFLAGS" ) )
-            {
-               szToken = strtok( NULL, "=" );
-               if( szToken )
-                  sprintf( szOptions, "%s", szToken );
-            }
-
-            /* Wanna see C compiler output ? */
-            if( szToken && ! hb_stricmp( szToken, "VERBOSE" ) )
-            {
-               szToken = strtok( NULL, "=" );
-               if( szToken && ! hb_stricmp( szToken, "YES" ) )
-                  bVerbose = TRUE;
-            }
-
-            /* Delete intermediate C file ? */
-            if( szToken && ! hb_stricmp( szToken, "DELTMP" ) )
-            {
-               szToken = strtok( NULL, "=" );
-               if( szToken && ! hb_stricmp( szToken, "NO" ) )
-                  bDelTmp = FALSE;
-            }
-
          }
       }
+      
+      fclose( yyc );
    }
-
-   fclose( yyc );
-
+   
    if( ! hb_comp_bQuiet )
    {
       printf( "Building object module output for \'%s\'...", szFileName );
@@ -210,18 +212,18 @@ void hb_compGenCObj( PHB_FNAME pFileName )
       /* QUESTION: Leave this file if C compiler fails ? */
       if( bDelTmp ) /* && iSuccess ) */
          unlink( ( char * ) szFileName );
+
+      if( ! hb_comp_bQuiet )
+      {
+         if( iSuccess )
+            printf( "Done.\n" );
+         else
+            printf( "\nFailed to execute: \"%s\"\n", szCommandLine );
+      }
    }
    else
    {
       printf( "\nError: No compiler defined in %s\n", HB_CFG_FILENAME );
-   }
-
-   if( ! hb_comp_bQuiet )
-   {
-      if( iSuccess )
-        printf( "Done.\n" );
-      else
-        printf( "\nFailed to execute: %s\n", szCommandLine );
    }
 
    if( pszCfg )

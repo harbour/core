@@ -1,3 +1,8 @@
+2001-11-09 14:41 GMT Dave Pearson <davep@davep.org>
+   * source/compiler/gencobj.c
+      * Further fixes to remove core dumps regarding missing config files
+        or missing information in the config file.
+
 2001-11-08 23:42 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rtl/dummy.prg
      - removed dummy ordKeyVal()
