@@ -41,7 +41,7 @@ numtxten.c   : numtxten.prg harbour.exe
 
 
 .prg.c:
-  bin\harbour $< /n /osource\tools /iinclude
+  bin\harbour $< /n /osource\tools\ /iinclude
 
 .c.obj:
   bcc32  -c  -O2  -I.\include -o$@ $<

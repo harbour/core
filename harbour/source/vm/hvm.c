@@ -1441,6 +1441,8 @@ void hb_vmInstring( void )
       hb_stackPop();
       hb_vmPushLogical( iResult == 0 ? FALSE : TRUE );
    }
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "$" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "$" );
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1109, NULL, "$" );
@@ -1659,6 +1661,12 @@ void hb_vmNotEqual( void )
 
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "!=" ) )
       hb_vmOperatorCall( pItem1, pItem2, "!=" );
+
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "<>" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "<>" );
+
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "#" ) )
+      hb_vmOperatorCall( pItem1, pItem2, "#" );
 
    else if( pItem1->type != pItem2->type )
    {
@@ -1901,7 +1909,7 @@ void hb_vmPlus( void )
       hb_vmPushDate( lDate1 + dNumber2 );
    }
 
-   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem2, "+" ) )
+   else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "+" ) )
       hb_vmOperatorCall( pItem1, pItem2, "+" );
 
    else

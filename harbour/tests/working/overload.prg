@@ -37,10 +37,6 @@ function Main()
    QOut( "Greater than or Equal:", oString <= "Hello" )
    QOut( "Concatenation + :", oString + "Hello" )
    QOut( "Concatenation - :", oString - "Hello" )
-   oString += " World"
-   QOut( "Compound += :", oString )
-   oString -= " World"
-   QOut( "Compound -= :", oString )
 
 return nil
 

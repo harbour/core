@@ -17,7 +17,7 @@ runner.c     : runner.prg
 external.c   : external.prg
 
 .prg.c:
-  bin\harbour $< /n /osource\runner\stdalone /iinclude /p
+  bin\harbour $< /n /osource\runner\stdalone\ /iinclude /p
 
 .c.obj:
   bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_GTAPI $<

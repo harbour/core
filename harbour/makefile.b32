@@ -24,8 +24,6 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               set.obj setcolor.obj setkey.obj strfmt.obj strings.obj symbols.obj stringp.obj \
               stringsx.obj tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj tget.obj tgetlist.obj tone.obj transfrm.obj
 
-symbols.obj  : symbols.asm
-
 achoice.obj  : achoice.c  extend.h hbdefs.h
 adir.obj     : adir.c     extend.h hbdefs.h
 alert.obj    : alert.c    extend.h hbdefs.h
@@ -107,9 +105,6 @@ tget.c       : tget.prg      harbour.exe
 tgetlist.c   : tgetlist.prg  harbour.exe
 readvar.c    : readvar.prg   harbour.exe
 xsavescr.c   : xsavescr.prg  harbour.exe
-.asm.obj:
-  tasm32 $<, $@
-  tlib .\libs\b32\harbour.lib -+$@,,
 
 .prg.c:
   bin\harbour $< /n /osource\rtl\ /iinclude

@@ -1967,10 +1967,6 @@ STATIC FUNCTION Main_OPOVERL()
    TEST_LINE( oString <= "Hello"        , .T.                 )
    TEST_LINE( oString +  "Hello"        , "HelloHello"        )
    TEST_LINE( oString -  "Hello"        , "HelloHello"        )
-   oString:cValue := "Hello"
-   TEST_LINE( oString += " World"       , "Hello World"       )
-   oString:cValue := "Hello"
-   TEST_LINE( oString -= " World"       , "Hello World"       )
 
    RETURN NIL
 

@@ -1,3 +1,21 @@
+19990913-23:45 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/hvm.c
+    + hb_vmInString() - Added support for overloading the "$" operator.
+    ! hb_vmPlus() - Fixed the operator overloading feature.
+    + hb_vmNotEqual() - Added support for alternate notequal operators: 
+      "<>" and "#".
+  * tests/working/rtl_test.prg
+    tests/working/overload.prg
+    - Removed +=, -= tests, since they will destroy the object, basically
+      this gets executed: oString := oString + "Hello", where the right side
+      expression will result in a string, which gets assigned to the object.
+      This could be fixed by changing the overloader block to return self BTW,
+      but from the test point of view, this is the same as "+"/"-".
+  * gt.b32
+    makefile.b32
+    runner.b32
+    ! Fixes by Jose Lalin
+
 19990913-23:00 GMT+1 Victor Szel <info@szelvesz.hu>
   * ChangeLog
     ChangeLog.003
