@@ -129,17 +129,13 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     }
 
     uiCol = (height > 1 ? uiLeft + 1 : uiLeft);
-//  for (uiCol = (height > 1 ? uiLeft + 1 : uiLeft); uiCol < (height > 1 ? uiRight : uiRight - 1 ); uiCol++)
-//  {
-//        hb_gtWriteAt(uiRow, uiCol, pszBox + 1, sizeof(BYTE));
-//        if( height > 1 ) hb_gtWriteAt(uiBottom, uiCol, pszBox + 5, sizeof(BYTE));
+
     if( uiCol <= (height > 1 ? uiRight : uiRight -1 ) )
     {
        hb_gtRepChar( uiRow, uiCol, pszBox[1], uiRight - uiLeft + (height > 1 ? -1: 1 ));
        if( height > 1 )
            hb_gtRepChar( uiBottom, uiCol, pszBox[5], uiRight - uiLeft + (height > 1 ? -1: 1) );
     }
-//  }
 
     if( pszBox[8] && height > 2 && width > 2 )
     {
@@ -147,8 +143,6 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
         {
             uiCol = uiLeft;
             hb_gtWriteAt(uiRow, uiCol++,  pszBox + 7, sizeof(BYTE));
-//            while (uiCol < uiRight)
-//                hb_gtWriteAt(uiRow, uiCol++, pszBox + 8, sizeof(BYTE));
             hb_gtRepChar( uiRow, uiCol,   pszBox[8], uiRight - uiLeft - 1 );
             hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof(BYTE));
         }
