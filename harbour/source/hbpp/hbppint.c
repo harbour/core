@@ -159,7 +159,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
       *sLine = '\0';
      }
      else
-      GenWarning( _szPWarnings, 'W', WARN_NONDIRECTIVE, NULL, NULL );
+      GenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, NULL, NULL );
    }
   }
  }

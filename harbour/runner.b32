@@ -7,7 +7,9 @@
 .path.obj = obj;source\runner;source\runner\stdalone
 .path.prg = source\runner\stdalone
 
-PROJECT: runner.exe runner.lib
+PROJECT: runner.lib runner.exe
+
+runner.lib : runlib.obj
 
 runlib.obj   : runlib.c
 
@@ -15,7 +17,7 @@ runner.c     : runner.prg
 external.c   : external.prg
 
 .prg.c:
-  bin\harbour $< /n /osource\runner /iinclude /p
+  bin\harbour $< /n /osource\runner\stdalone /iinclude /p
 
 .c.obj:
   bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_GTAPI $<

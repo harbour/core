@@ -61,27 +61,27 @@ typedef struct
   char * szExtension;
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
-extern BOOL     hb_fsChDir      ( BYTE * fpDirName );
+extern BOOL     hb_fsChDir      ( BYTE * pDirName );
 extern USHORT   hb_fsChDrv      ( BYTE * nDrive );
 extern void     hb_fsClose      ( FHANDLE hFileHandle );
 extern void     hb_fsCommit     ( FHANDLE hFileHandle );
-extern FHANDLE  hb_fsCreate     ( BYTE * fpFilename, USHORT uiAttribute );
+extern FHANDLE  hb_fsCreate     ( BYTE * pFilename, USHORT uiAttribute );
 extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
 extern BYTE     hb_fsCurDrv     ( void );
-extern void     hb_fsDelete     ( BYTE * fpFilename );
+extern void     hb_fsDelete     ( BYTE * pFilename );
 extern USHORT   hb_fsError      ( void );
-extern FHANDLE  hb_fsExtOpen    ( BYTE * fpFilename, BYTE * fpDefExt,
-                                  USHORT uiFlags, BYTE * fpPaths, PHB_ITEM pError );
+extern FHANDLE  hb_fsExtOpen    ( BYTE * pFilename, BYTE * pDefExt,
+                                  USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
 extern USHORT   hb_fsIsDrv      ( BYTE nDrive );
 extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
                                   ULONG ulLength, USHORT uiMode );
-extern BOOL     hb_fsMkDir      ( BYTE * fpDirName );
-extern FHANDLE  hb_fsOpen       ( BYTE * fpFilename, USHORT uiFlags );
-extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * fpBuff, USHORT uiCount );
-extern BOOL     hb_fsRmDir      ( BYTE * fpDirName );
-extern void     hb_fsRename     ( BYTE * fpOldName, BYTE * fpNewName );
+extern BOOL     hb_fsMkDir      ( BYTE * pDirName );
+extern FHANDLE  hb_fsOpen       ( BYTE * pFilename, USHORT uiFlags );
+extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount );
+extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
+extern void     hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
-extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * fpBuff, USHORT uiCount );
+extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount );
 
 extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */
 extern char *    hb_fsFNameMerge ( char * szFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */

@@ -32,6 +32,8 @@
 /* Harbour virtual machine functions */
 extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
+extern void    hb_vmRequestQuit( void );
+extern void    hb_vmRequestBreak( PHB_ITEM pItem );
 
 /* PCode functions */
 extern void    hb_vmAnd( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */

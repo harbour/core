@@ -26,8 +26,8 @@
 
 #include "error.ch"
 
-#define ISCHAR(var)     (ValType(var) == "C")
-#define ISNUM(var)      (ValType(var) == "N")
+#define ISCHAR( var )   ( ValType(var) == "C" )
+#define ISNUM( var )    ( ValType(var) == "N" )
 
 //----------------------------------------------------------------------------//
 
@@ -50,21 +50,21 @@ static function DefError( oError )
    LOCAL cInfo := ""
    LOCAL n := 2
 
-   cMessage := ErrorMessage(oError)
+   cMessage := ErrorMessage( oError )
 
    // Build buttons
 
    aOptions := {}
 
-// aAdd(aOptions, "Break" )
-   aAdd(aOptions, "Quit" )
+// aAdd( aOptions, "Break" )
+   aAdd( aOptions, "Quit" )
 
    IF oError:canRetry
-      aAdd(aOptions, "Retry")
+      aAdd( aOptions, "Retry" )
    ENDIF
 
    IF oError:canDefault
-      aAdd(aOptions, "Default")
+      aAdd( aOptions, "Default" )
    ENDIF
 
    // Show alert box
@@ -75,14 +75,14 @@ static function DefError( oError )
       IF Empty( oError:osCode )
          nChoice := Alert( cMessage, aOptions )
       ELSE
-         nChoice := Alert( cMessage + ";(DOS Error " + LTrim(Str(oError:osCode)) + ")", aOptions)
+         nChoice := Alert( cMessage + ";(DOS Error " + LTrim( Str( oError:osCode ) ) + ")", aOptions)
       ENDIF
 
    ENDDO
 
    DO CASE
    CASE aOptions[ nChoice ] == "Break"
-//    Break(oError)
+      Break( oError )
    CASE aOptions[ nChoice ] == "Retry"
       RETURN .T.
    CASE aOptions[ nChoice ] == "Default"
@@ -91,8 +91,8 @@ static function DefError( oError )
 
    // "Quit" selected
 
-   IF !Empty(oError:osCode)
-      cMessage += " (DOS Error " + LTrim(Str(oError:osCode)) + ")"
+   IF ! Empty( oError:osCode )
+      cMessage += " (DOS Error " + LTrim( Str( oError:osCode ) ) + ")"
    ENDIF
 
    QOut( cMessage )
@@ -123,29 +123,29 @@ STATIC FUNCTION ErrorMessage(oError)
    cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
-   IF ISCHAR(oError:subsystem)
+   IF ISCHAR( oError:subsystem )
       cMessage += oError:subsystem()
    ELSE
       cMessage += "???"
    ENDIF
 
    // add subsystem's error code if available
-   IF ISNUM(oError:subCode)
-      cMessage += "/" + LTrim(Str(oError:subCode))
+   IF ISNUM( oError:subCode )
+      cMessage += "/" + LTrim( Str( oError:subCode ) )
    ELSE
       cMessage += "/???"
    ENDIF
 
    // add error description if available
-   IF ISCHAR(oError:description)
+   IF ISCHAR( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 
    // add either filename or operation
    DO CASE
-   CASE !Empty(oError:filename)
+   CASE !Empty( oError:filename )
       cMessage += ": " + oError:filename
-   CASE !Empty(oError:operation)
+   CASE !Empty( oError:operation )
       cMessage += ": " + oError:operation
    ENDCASE
 

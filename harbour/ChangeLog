@@ -1,3 +1,26 @@
+19990824-03:50 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/fileio.prg
+    + Rewritten to check more functions in more situations, displaying all
+      return values, etc. (almost like RTL_TEST.PRG)
+  * source/compiler/harbour.y
+    + Changed spaces to tabs in the generated code. This made the 
+      generated code size almost 30% smaller, and the comments better aligned.
+  * source/compiler/harbour.l
+    include/hberrors.h
+    + One yyerror() call converted to standard GenError().
+  * source/hbpp/hbppint.c
+    ! 'W' sign changed to 'I' for preprocessor warning.
+  * config/dos/djgpp.cf
+    - -( -) removed.
+  * runner.b32
+    ! Fixes by Luiz Rafael Culik <Culik@sl.conex.net> implemented.
+  * include/ctoharb.h
+    + hb_vmRequest*() functions added.
+  * source/rtl/errorsys.prg
+    + BREAK uncommented.
+  * include/filesys.h
+    * Some name standardization (fp -> p).
+
 19990823-19:37 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tbrowse.prg
       * Added Class TbColumn DATA ColorBlock support.

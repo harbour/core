@@ -193,7 +193,7 @@ Separator     {SpaceTab}
                     return LITERAL;
                   }
 
-<INDEX>\n    { yyerror( "Unterminated Array Index" ); exit(1); }
+<INDEX>\n    { GenError( _szCErrors, 'E', ERR_UNTERM_ARRAY_INDEX, NULL, NULL ); }
 
 <INDEX>\[    { iIndexSets++; return yytext[ 0 ]; }
 
