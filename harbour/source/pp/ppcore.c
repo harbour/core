@@ -155,7 +155,7 @@ static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;
 
-int        nEmptyStrings;
+int        hb_pp_nEmptyStrings;
 int *      hb_pp_aCondCompile = NULL;
 int        hb_pp_nCondCompile = 0;
 

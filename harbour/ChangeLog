@@ -1,3 +1,12 @@
+20000317-10:53 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/hbclass.ch
+     ! To avoid warning _CLASS_NAME_ is #undef-ed before #define-ed.
+   * include/hbpp.h
+     source/compiler/hbgenerr.c
+     source/pp/*
+     ! nEmptyString global variable prefixed with "hb_"
+     ! nEmptyString declaration moved to the header file.
+
 20000317-09:56 GMT+3 Alexander Kresin
    * source/pp/stdalone/hbpp.c
    * source/pp/ppcomp.c

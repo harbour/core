@@ -49,8 +49,6 @@
 #include "hbpp.h"
 #include "hbcomp.h"
 
-extern int nEmptyStrings;
-
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
 
@@ -64,7 +62,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
 
-  nEmptyStrings = 0;
+  hb_pp_nEmptyStrings = 0;
   while( TRUE )
   {
      pFile = hb_comp_files.pLast;
@@ -85,7 +83,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
              s_szLine[ ++lens ] = ' ';
              s_szLine[ ++lens ] = '\0';
 
-             nEmptyStrings++;
+             hb_pp_nEmptyStrings++;
            }
          else
            {
@@ -107,19 +105,19 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                         pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
                         if( lLine )
                            sprintf( s_szLine, "#line %d \"%s\"\n",
-                           pFile->iLine+nEmptyStrings, pFile->szFileName );
+                           pFile->iLine+hb_pp_nEmptyStrings, pFile->szFileName );
                         else
                            *s_szLine = '\0';
                         lLine = 0;
-                        pFile->iLine += 1+nEmptyStrings;
+                        pFile->iLine += 1+hb_pp_nEmptyStrings;
                         sprintf( s_szLine+strlen(s_szLine), "#line 1 \"%s\"",
                                   hb_comp_files.pLast->szFileName );
-                        nEmptyStrings = 0;
+                        hb_pp_nEmptyStrings = 0;
                      }
                      else
                      {
                         *s_szLine = '\0';
-                        nEmptyStrings++;
+                        hb_pp_nEmptyStrings++;
                      }
                    }
                  else
@@ -131,12 +129,12 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                      else
                      {
                        *s_szLine = '\0';
-                       nEmptyStrings++;
+                       hb_pp_nEmptyStrings++;
                      }
                    }
                }
              else
-                nEmptyStrings++;
+                hb_pp_nEmptyStrings++;
              break;
            }
        }
@@ -155,20 +153,20 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            hb_comp_iLine = hb_comp_files.pLast->iLine;
            hb_comp_files.iFiles--;
            lLine = 1;
-           nEmptyStrings = 0;
+           hb_pp_nEmptyStrings = 0;
           }
        }
      if( *s_szLine ) break;
   }
   if( lLine )
   {
-     sprintf( ptrOut, "#line %d \"%s\"\n",hb_comp_iLine+nEmptyStrings,hb_comp_files.pLast->szFileName );
+     sprintf( ptrOut, "#line %d \"%s\"\n",hb_comp_iLine+hb_pp_nEmptyStrings,hb_comp_files.pLast->szFileName );
      while( *ptrOut ) ptrOut++;
   }
   else
   {
-     if( nEmptyStrings )
-        for( i=0;i<nEmptyStrings;i++ )
+     if( hb_pp_nEmptyStrings )
+        for( i=0;i<hb_pp_nEmptyStrings;i++ )
            *ptrOut++ = '\n';
   }
   lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );

@@ -513,6 +513,8 @@ FUNCTION ProcessFiles()
    NEXT
 
 RETURN NIL
+
+#undef CRLF
 #define CRLF chr(13)+chr(10)
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北

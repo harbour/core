@@ -95,6 +95,7 @@ extern int *  hb_pp_aCondCompile;
 extern int    hb_pp_nCondCompile;
 extern char * hb_pp_szErrors[];
 extern char * hb_pp_szWarnings[];
+extern int    hb_pp_nEmptyStrings;
 
 /* TABLE.C exported variables */
 

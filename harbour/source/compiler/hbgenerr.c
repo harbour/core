@@ -35,8 +35,6 @@
 
 #include "hbcomp.h"
 
-extern int nEmptyStrings;
-
 /* Table with parse errors */
 char * hb_comp_szErrors[] =
 {
@@ -115,7 +113,7 @@ char * hb_comp_szWarnings[] =
 void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
    if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
-      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine + nEmptyStrings );
+      printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine + hb_pp_nEmptyStrings );
 
    printf( "Error %c%04i  ", cPrefix, iError );
    printf( szErrors[ iError - 1 ], szError1, szError2 );
@@ -135,7 +133,7 @@ void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * 
    if( ( szText[ 0 ] - '0' ) <= hb_comp_iWarnings )
    {
       if( hb_comp_files.pLast != NULL && hb_comp_files.pLast->szFileName != NULL )
-         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine + nEmptyStrings );
+         printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, hb_comp_iLine + hb_pp_nEmptyStrings );
       printf( "Warning %c%04i  ", cPrefix, iWarning );
       printf( szText + 1, szWarning1, szWarning2 );
       printf( "\n" );

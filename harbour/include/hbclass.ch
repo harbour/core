@@ -52,6 +52,7 @@
       static oClass ;;
       if oClass == nil ;;
          oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] ) ;;
+     #undef _CLASS_NAME_ ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
      [ ; #translate Super : => ::<SuperClass>: ] ;
