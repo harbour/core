@@ -1,3 +1,15 @@
+2000-12-08 18:45 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! I've fixed all known (to me) issues with latest TBrowse code.
+       ::HitTop/Bottom were set back to .F. if a ::RefreshAll() was issued. This is wrong since only
+       movement keys can reset them.
+       Issuing a long sequence of K_UP/K_DN (or CTRL_...) resulted on wrong movement of datasource (you could
+       even go backward using K_DN :-O)
+       You could get an out of bounds moving around inside tbrowse.
+     * Note that original Clipper TBrowse caches displayed rows, so moving left or right does not require
+       calling ::Skipblock to refresh screen. Present implementation of TBrowse has not such a cache so
+       a lot more of skipping around is needed.
+
 2000-12-06 16:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * makefile.bc
    + include/hbrddntx.h

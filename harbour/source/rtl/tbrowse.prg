@@ -68,6 +68,7 @@
 #include "hbclass.ch"
 #include "color.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 CLASS TBrowse
 
@@ -116,35 +117,30 @@ CLASS TBrowse
    METHOD Up()                                              // Moves the cursor up one row
 
    METHOD AddColumn( oCol )
-   METHOD ColCount() INLINE Len( ::aColumns )
+   METHOD ColCount() INLINE Len(::aColumns)
    METHOD ColorRect()                                       // Alters the color of a rectangular group of cells
-                                                            // Returns the display width of a particular column
-   METHOD ColWidth( nColumn ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
-                                          ::aColumns[ nColumn ]:Width, NIL )
+
+   METHOD ColWidth( nColumn ) INLINE;                       // Returns the display width of a particular column
+          iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ), ::aColumns[ nColumn ]:Width, NIL )
    METHOD Configure( nMode )                                // Reconfigures the internal settings of the TBrowse object
                                                             // nMode is an undocumented parameter in CA-Cl*pper
+
    METHOD DeHilite()                                        // Dehighlights the current cell
-
    METHOD DelColumn( nPos )                                 // Delete a column object from a browse
-
    METHOD ForceStable()                                     // Performs a full stabilization
-
-   METHOD GetColumn( nColumn ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
-                                          ::aColumns[ nColumn ], NIL ) // Gets a specific TBColumn object
+   METHOD GetColumn( nColumn ) INLINE;                      // Gets a specific TBColumn object
+          iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ), ::aColumns[ nColumn ], NIL )
 
    METHOD Hilite()                                          // Highlights the current cell
-
-   METHOD InsColumn( nPos, oCol ) INLINE ASize( ::aColumns, Len( ::aColumns + 1 ) ),;
-                                  AIns( ::aColumns, nPos ),;
-                                  ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
-                                                            // Insert a column object in a browse
-
+   METHOD InsColumn( nPos, oCol ) INLINE;                   // Insert a column object in a browse
+          ASize( ::aColumns, Len( ::aColumns + 1 ) ), AIns( ::aColumns, nPos ),;
+          ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
    METHOD Invalidate()                                      // Forces entire redraw during next stabilization
-   METHOD RefreshAll()     INLINE ::Invalidate()            // Causes all data to be recalculated during the next stabilize
-   METHOD RefreshCurrent() INLINE ::aRedraw[ ::RowPos ] := .T., ::stable := .F., Self // Causes the current row to be refilled and repainted on next stabilize
-
-   METHOD SetColumn( nColumn, oCol ) INLINE iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
-                                                ::aColumns[ nColumn ] := oCol, NIL ), oCol // Replaces one TBColumn object with another
+   METHOD RefreshAll()                                      // Causes all data to be recalculated during the next stabilize
+   METHOD RefreshCurrent() INLINE;                          // Causes the current row to be refilled and repainted on next stabilize
+          ::aRedraw[ ::RowPos ] := .T., ::stable := .F., Self
+   METHOD SetColumn( nColumn, oCol ) INLINE;                // Replaces one TBColumn object with another
+          iif( 0 < nColumn .and. nColumn <= Len( ::aColumns ), ::aColumns[ nColumn ] := oCol, NIL ), oCol
    METHOD Stabilize()                                       // Performs incremental stabilization
 
 #ifdef HB_COMPAT_C53
@@ -160,6 +156,8 @@ CLASS TBrowse
    METHOD DispCell(nColumn, nColor)       // Displays a single cell
    METHOD HowManyCol(nWidth)              // Counts how many cols can be displayed
    METHOD RedrawHeaders(nWidth)           // Repaints TBrowse Headers
+   METHOD Moved()                         // Every time a movement key is issued I need to reset certain properties
+                                          // of TBrowse, I do these settings inside this method
 
    DATA aRect                             // The rectangle specified with ColorRect()
    DATA aRectColor                        // The color positions to use in the rectangle specified with ColorRect()
@@ -223,9 +221,17 @@ return Self
 
 METHOD Invalidate() CLASS TBrowse
 
-   AFill(::aRedraw, .T. )
+   AFill(::aRedraw, .T.)
    ::stable := .F.
    ::lRedrawFrame := .T.
+
+return Self
+
+
+METHOD RefreshAll() CLASS TBrowse
+
+   AFill(::aRedraw, .T.)
+   ::stable := .F.
 
 return Self
 
@@ -300,9 +306,7 @@ return oCol
 
 METHOD Down() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
-
+   ::Moved()
    ::nRecsToSkip := 1
 
 return Self
@@ -310,9 +314,7 @@ return Self
 
 METHOD Up() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
-
+   ::Moved()
    ::nRecsToSkip := -1
 
 return Self
@@ -320,8 +322,7 @@ return Self
 
 METHOD End() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::ColPos < ::rightVisible
       ::ColPos := ::rightVisible
@@ -336,8 +337,7 @@ METHOD GoBottom() CLASS TBrowse
 
    local nToEnd
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    Eval(::goBottomBlock)
    nToEnd := Abs(Eval(::SkipBlock, -::RowCount))
@@ -350,8 +350,7 @@ return Self
 
 METHOD GoTop() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    Eval(::goTopBlock)
    ::nLastRetrieved := 1
@@ -363,8 +362,7 @@ return Self
 
 METHOD Home() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::ColPos != ::leftVisible
       ::ColPos := ::leftVisible
@@ -377,8 +375,7 @@ return Self
 
 METHOD _Right() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::ColPos < ::rightVisible
       ::ColPos++
@@ -399,8 +396,7 @@ METHOD _Left() CLASS TBrowse
 
    local leftVis := ::leftVisible
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::ColPos > ::leftVisible
       ::ColPos--
@@ -454,8 +450,7 @@ return nCol + 1
 
 METHOD PageDown() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    ::nRecsToSkip := (::RowCount - ::RowPos) + ::RowCount
 
@@ -464,8 +459,7 @@ return Self
 
 METHOD PageUp() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    ::nRecsToSkip := - ((::RowPos - 1) + ::RowCount)
 
@@ -474,8 +468,7 @@ return Self
 
 METHOD PanEnd() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::ColPos < Len( ::aColumns )
       if ::rightVisible < Len( ::aColumns )
@@ -495,8 +488,7 @@ return Self
 
 METHOD PanHome() CLASS TBrowse
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::ColPos > 1
       if ::leftVisible > ::Freeze + 1
@@ -518,8 +510,7 @@ METHOD PanLeft() CLASS TBrowse
    local n := ::ColPos - ::leftVisible
    local leftVis := ::leftVisible
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::leftVisible > ::Freeze + 1
       while leftVis == ::leftVisible
@@ -538,8 +529,7 @@ METHOD PanRight() CLASS TBrowse
 
    local n := ::ColPos - ::leftVisible
 
-   ::stable := .F.
-   ::DeHilite()
+   ::Moved()
 
    if ::rightVisible < Len( ::aColumns )
       ::rightVisible++
@@ -741,13 +731,14 @@ METHOD Stabilize() CLASS TBrowse
    local nRow, nCol, n
    local nWidth := ::nRight - ::nLeft + 1 // Visible width of the browse
    local cColColor                        // Column color to use
-
    local oStartCol, oEndCol
-
    local lDisplay                      // Is there something to show inside current cell?
    local nRecsSkipped                  // How many records do I really skipped?
    local nFirstRow                     // Where is on screen first row of TBrowse?
+   local nOldCursor                    // Current shape of cursor (which I remove before stabilization)
 
+
+   nOldCursor := SetCursor(SC_NONE)
 
    if ::lRedrawFrame
       // How may columns fit on TBrowse width?
@@ -772,12 +763,20 @@ METHOD Stabilize() CLASS TBrowse
    // 3rd if all rows have been redrawn we set ::stable state to .T.
    if !::stable
 
+      // NOTE: I can enter here because of a movement key or a ::RefreshAll():ForceStable() call
+
       // If I have a requested movement still to handle
       if ::nRecsToSkip <> 0
 
+         // If I'm not under cursor (maybe I've interrupted an ongoing stabilization) I have to set data source to cursor position
+         if ::nLastRetrieved <> ::nNewRowPos
+            Eval(::SkipBlock, ::nNewRowPos - ::nLastRetrieved)
+            ::nLastRetrieved := ::nNewRowPos
+         endif
+
          nRecsSkipped := Eval(::SkipBlock, ::nRecsToSkip)
 
-         // I've hit top or bottom margin
+         // I've tried to move past top or bottom margin
          if nRecsSkipped == 0
 
             if ::nRecsToSkip > 0
@@ -790,16 +789,12 @@ METHOD Stabilize() CLASS TBrowse
                //
             endif
 
-            // Since I didn't move, last record retrieved is current one
-            ::aRedraw[::nNewRowPos] := .T.
-
          elseif nRecsSkipped == ::nRecsToSkip
 
             // If after movement I'm still inside present TBrowse
             if (::nNewRowPos + nRecsSkipped >= 1) .AND. (::nNewRowPos + nRecsSkipped <= ::RowCount)
                ::nNewRowPos += nRecsSkipped
                ::nLastRetrieved := ::nNewRowPos
-               ::aRedraw[::nNewRowPos] := .T.
 
             else
                // It was K_PGDN or K_PGUP
@@ -813,7 +808,6 @@ METHOD Stabilize() CLASS TBrowse
                      ::nLastRetrieved := 1
 
                   endif
-
                   ::RefreshAll()
 
                else // K_DN or K_UP
@@ -832,15 +826,36 @@ METHOD Stabilize() CLASS TBrowse
 
                   endif
 
-                  ::aRedraw[::nNewRowPos] := .T.
+                  // I've scrolled on screen rows, now I need to scroll ::aRedraw array as well!
+                  if nRecsSkipped > 0
+                     for nRow := 2 to Len(::aRedraw)
+                        ::aRedraw[nRow - 1] := ::aRedraw[nRow]
+                     next
+                  else
+                     for nRow := (Len(::aRedraw) - 1) to 1 step -1
+                        ::aRedraw[nRow + 1] := ::aRedraw[nRow]
+                     next
+                  endif
 
+                  ::aRedraw[::nNewRowPos] := .T.
                endif
             endif
 
          else // I couldn't move as far as requested
-            ::nNewRowPos := ::nNewRowPos + nRecsSkipped //iif(nRecsSkipped > 0, ::nNewRowPos + nRecsSkipped, 1)
+
+            // I need to refresh all rows if I go past current top or bottom row
+            if (::nNewRowPos + nRecsSkipped < 1) .OR. (::nNewRowPos + nRecsSkipped > ::RowCount)
+               // don't go past boundaries
+               ::nNewRowPos := iif(nRecsSkipped > 0, ::RowCount, 1)
+               ::RefreshAll()
+
+            else
+               ::nNewRowPos += nRecsSkipped
+               ::aRedraw[::nNewRowPos] := .T.
+
+            endif
+
             ::nLastRetrieved := ::nNewRowPos
-            ::aRedraw[::nNewRowPos] := .T.
 
          endif
 
@@ -848,6 +863,7 @@ METHOD Stabilize() CLASS TBrowse
          ::nRecsToSkip := 0
 
          // Exit first stage of stabilization
+         SetCursor(nOldCursor)
          return .F.
 
       endif
@@ -909,6 +925,7 @@ METHOD Stabilize() CLASS TBrowse
             ::aRedraw[nRow] := .F.
 
             // Exit incremental row stabilization
+            SetCursor(nOldCursor)
             return .F.
          endif
 
@@ -933,11 +950,10 @@ METHOD Stabilize() CLASS TBrowse
          ::RowPos := ::nNewRowPos
 
          ::HitTop := ::lHitTop
-         ::lHitTop := .F.
          ::HitBottom := ::lHitBottom
-         ::lHitBottom := .F.
 
          ::Hilite()
+         SetCursor(nOldCursor)
          ::stable := .T.
 
          return .T.
@@ -946,11 +962,25 @@ METHOD Stabilize() CLASS TBrowse
    else
       /* NOTE: DBU relies upon current cell being reHilited() even if already stable */
       ::Hilite()
+      SetCursor(nOldCursor)
       return .T.
 
    endif
 
 return .F.
+
+
+// Movement keys cause TBrowse to become unstable.
+METHOD Moved() CLASS TBrowse
+
+   // Internal flags used to set ::HitTop/Bottom during next stabilization
+   ::lHitTop := .F.
+   ::lHitBottom := .F.
+
+   ::DeHilite()
+   ::stable := .F.
+
+return Self
 
 
 METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
