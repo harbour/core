@@ -1,3 +1,9 @@
+19990801-00:15 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * hb_gtScroll() - call gtScroll if WIN_GTAPI
+   * source\rtl\gt\gtapi.c
+     + gtScroll() Much improved scroll speed -not up to Clipper yet though.
+
 19990731-23:20 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rdd/dbcmd.c
      Forced to link rddsys.prg

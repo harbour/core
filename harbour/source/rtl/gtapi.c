@@ -6,6 +6,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.46   19990801   ptucker   simplified hb_gtScroll if WIN_GTAPI
  * 1.44   19990730   ptucker   simplified gtputs and gtSetAttribute
  *                             corrected gtGetCursorStyle for !cci.bVisible
  *                             return SC_NONE - other cases should be handled
@@ -66,8 +67,8 @@ static USHORT s_uiCurrentRow = 0;
 static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
-static USHORT s_uiMaxCol;
-static USHORT s_uiMaxRow;
+static USHORT s_uiMaxCol=80;
+static USHORT s_uiMaxRow=24;
 
 int *_Color;           /* masks: 0x0007     Background
                                  0x0070     Foreground
@@ -85,8 +86,7 @@ void hb_gtInit(void)
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
     gtInit();
-    s_uiMaxCol = hb_gtMaxCol();
-    s_uiMaxRow = hb_gtMaxRow();
+    hb_gtSetMode( 80,50 ); /* though semi-inactive, should be called for now */
     hb_gtSetPos( gtRow(), gtCol() );
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 }
@@ -563,8 +563,8 @@ int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
    HB_SYMBOL_UNUSED( uiRows );
    HB_SYMBOL_UNUSED( uiCols );
-    s_uiMaxCol = hb_gtMaxCol();
     s_uiMaxRow = hb_gtMaxRow();
+    s_uiMaxCol = hb_gtMaxCol();
     return(0);
 }
 
@@ -714,6 +714,10 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
 
 int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols)
 {
+#ifdef HARBOUR_USE_WIN_GTAPI
+    gtScroll( uiTop, uiLeft, uiBottom, uiRight, _Color[s_uiColorIndex], iRows, iCols );
+#else
+
    USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol, uiSize;
    int iLength = (uiRight - uiLeft) + 1;
    int iCount, iColOld, iColNew, iColSize;
@@ -766,6 +770,7 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
    }
    s_uiCurrentRow = uiRow;
    s_uiCurrentCol = uiCol;
+#endif
    return(0);
 }
 

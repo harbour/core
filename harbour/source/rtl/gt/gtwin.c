@@ -326,3 +326,33 @@ char gtRow(void)
   GetConsoleScreenBufferInfo(HOutput, &csbi);
   return csbi.dwCursorPosition.Y;
 }
+
+void gtScroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz )
+{
+/* ptucker */
+  SMALL_RECT Source, Clip;
+  COORD      Target;
+  CHAR_INFO  FillChar;
+
+  Source.Top    = cTop;
+  Source.Left   = cLeft;
+  Source.Bottom = cBottom;
+  Source.Right  = cRight;
+
+  memcpy( &Clip, &Source, sizeof(Clip) );
+
+  if( (horiz | vert) == 0 )
+  {
+     Target.Y = cBottom+1;  /* set outside the clipping region */
+     Target.X = cRight+1;
+  }
+  else
+  {
+     Target.Y = cTop-vert;
+     Target.X = cLeft-horiz;
+  }
+  FillChar.Char.AsciiChar = ' ';
+  FillChar.Attributes = (WORD)attribute;
+
+  ScrollConsoleScreenBuffer(HOutput, &Source, &Clip, Target, &FillChar);
+}
