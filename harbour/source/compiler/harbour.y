@@ -1896,7 +1896,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  break;
 
             case _JUMP:
-                 if( (lPCodePos + 3) < pFunc->lPCodePos )
+                 if( 1 ) /* (lPCodePos + 3) < pFunc->lPCodePos ) */
                  {
                     w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                     fprintf( yyc, "                _JUMP, %i, %i,\t/* %i (abs: %05li) */\n",

@@ -1,3 +1,7 @@
+19990515-16:20 CET Eddie Runia
+  * source/compiler/harbour.y
+    Jump optimalization caused return to fail. Optimalization removed.
+
 19990515-15:15 CET Eddie Runia
   * source/rtl/environ.c
     Crash from geninterrupt resolved
