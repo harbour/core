@@ -106,7 +106,13 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
       lColorFlag := ( ValType( cMsgColor ) == "C" )
 
    endif
+   
+#endif
+   DO WHILE oGetList:nPos != 0
 
+      oGetList:oGet := oGetList:aGetList[ oGetList:nPos ]
+      oGetList:PostActiveGet()
+   #ifdef HB_COMPAT_C53
       if ( lMsgFlag )
          oGet := oGetList:aGetList[ oGetList:nPos ]
             if ( lColorFlag )
@@ -124,12 +130,8 @@ FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
             if ( lColorFlag )
                SetColor( cSaveColor )
             endif
-        Endif
-#endif
-   DO WHILE oGetList:nPos != 0
-
-      oGetList:oGet := oGetList:aGetList[ oGetList:nPos ]
-      oGetList:PostActiveGet()
+      endif
+      #endif
       IF ISBLOCK( oGetList:oGet:Reader )
       #ifndef HB_COMPAT_C53
          Eval( oGetList:oGet:Reader, oGetList:oGet )
