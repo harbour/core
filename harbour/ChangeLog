@@ -1,3 +1,13 @@
+20000509-00:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbpcode.c
+     ! Corrcted HB_P_NOT and minor fixes.
+
+20000508-22:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hbpcode.c
+     * Modified hb_compStrongType() to accept NIL as valid parameter for all declared parameters.
+
 20000508-22:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.l
@@ -6,7 +16,7 @@
    * source/compiler/harbour.y
      ! Fixed warning about conflict
      ! Verified all calls to hb_compVariableAdd() to use hb_comp_cVarType (and VT_OFFSET_* constants) as 2nd parameter
-     + Added rules to support syntax of declartion of variable by reference parameter.
+     + Added rules to support syntax of declaration of variable by reference parameter.
 
    * include/hbcomp.h
      + Added :
@@ -24,7 +34,7 @@
      * Changed "number" to "#" in HB_COMP_WARN_PARAM_TYPE message.
 
    * tests/testwarn.prg
-     + Added code to demonstrate new "Declared Refernced Paramater" syntax:
+     + Added code to demonstrate new "Declared Refernced Parameter" syntax:
          DECLARE FRead( nHandle As Num, @cBufferVar As Char, nBytes As Num ) AS Num
 
 20000508-22:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>

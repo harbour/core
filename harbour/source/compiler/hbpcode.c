@@ -274,7 +274,7 @@ void hb_compStrongType( int iSize )
              sprintf( szType1, "%c", pDeclared->cType );
 
              /* Variant as SubType. */
-             if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+             if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                 cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
              if ( cSubType1 && cSubType1 == '-' )
@@ -328,7 +328,16 @@ void hb_compStrongType( int iSize )
              if ( cFormalType == ( ' ' + VT_OFFSET_OPTIONAL ) || cFormalType >= ( 'A' + VT_OFFSET_OPTIONAL ) )
                 cFormalType -= VT_OFFSET_OPTIONAL;
 
-             if ( cFormalType != ' ' && cFormalType != pFunc->pStack[ iParamBase + iOffset ] )
+             if ( cFormalType == ' ' + VT_OFFSET_BYREF )
+                cFormalType = '@';
+
+             if ( cFormalType == ' ' )
+                ; /* Declared is Variant, accept anything. */
+             else if ( pFunc->pStack[ iParamBase + iOffset ] == '-' )
+                ; /* Parameter is NIL, always accepted. */
+             else if ( cFormalType == '@' && pFunc->pStack[ iParamBase + iOffset ] >= ( 'A' + VT_OFFSET_BYREF ) )
+                ; /* Prameter is ANY REFERENCE, and Parameter is SOME REFERENCE. */
+             else if ( cFormalType != pFunc->pStack[ iParamBase + iOffset ] )
              {
                 if ( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
                    sprintf( szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
@@ -394,7 +403,7 @@ void hb_compStrongType( int iSize )
 
      case HB_P_DEC :
      case HB_P_INC :
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -427,7 +436,7 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -456,10 +465,10 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -530,10 +539,10 @@ void hb_compStrongType( int iSize )
 
        //printf( "\nTop: %c Bottom: %c Typ-SubType: %c Bottom->SubType: %c\n", pFunc->pStack[ pFunc->iStackIndex], pFunc->pStack[ pFunc->iStackIndex - 1 ], pFunc->pStack[ pFunc->iStackIndex] - 100, pFunc->pStack[ pFunc->iStackIndex - 1 ] - 100 );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -618,10 +627,10 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -692,10 +701,10 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -754,8 +763,41 @@ void hb_compStrongType( int iSize )
 
        break;
 
-     case HB_P_AND :
      case HB_P_NOT :
+
+       if ( pFunc->iStackIndex < 1 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
+          cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
+
+       if ( cSubType1 && cSubType1 == '-' )
+          strcpy( szType1, "Variant.SubType\[NIL]" );
+       else if ( cSubType1 )
+          sprintf( szType1, "Variant.SubType\[%c]", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '-' )
+          strcpy( szType1, "NIL" );
+       else
+         sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex - 1 ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "L", NULL );
+
+          /* Override the last item with the new result type which is already there */
+       }
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] != 'L' )
+       {
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "L" );
+
+          /* Override the last item with the new result type */
+          pFunc->pStack[ pFunc->iStackIndex - 1 ] = 'U';
+       }
+
+       break;
+
+     case HB_P_AND :
      case HB_P_OR :
        pFunc->iStackIndex--;
 
@@ -763,10 +805,10 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
-       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] >= 'A' + VT_OFFSET_VARIANT  )
           cSubType1 = ( pFunc->pStack[ pFunc->iStackIndex - 1 ] -= VT_OFFSET_VARIANT );
 
-       if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+       if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
           cSubType2 = ( pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT );
 
        if ( cSubType1 && cSubType1 == '-' )
@@ -927,7 +969,7 @@ void hb_compStrongType( int iSize )
                 pVar = pFunc->pMemvars;
                 while ( pVar )
                 {
-                   if ( pVar->cType > 'z' )
+                   if ( pVar->cType  >= ( 'A' + VT_OFFSET_VARIANT ) )
                       pVar->cType = ' ';
 
                    pVar = pVar->pNext;
@@ -1166,7 +1208,7 @@ void hb_compStrongType( int iSize )
        {
           BYTE cVarType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
 
-          if ( cVarType > 'z' )
+          if ( cVarType  >= ( 'A' + VT_OFFSET_VARIANT ) )
              cVarType -= VT_OFFSET_VARIANT;
 
           if ( cVarType == ' ' )
@@ -1201,10 +1243,10 @@ void hb_compStrongType( int iSize )
        {
           BYTE cVarType = pFunc->pStack[ pFunc->iStackIndex - 1 ], cElementType = pFunc->pStack[ pFunc->iStackIndex - 2 ];
 
-          if ( cVarType > 'z' )
+          if ( cVarType  >= ( 'A' + VT_OFFSET_VARIANT ) )
              cVarType -= VT_OFFSET_VARIANT;
 
-          if ( cElementType > 'z' )
+          if ( cElementType  >= ( 'A' + VT_OFFSET_VARIANT ) )
              cElementType -= VT_OFFSET_VARIANT;
 
           if ( cVarType == ' ' )
@@ -1367,11 +1409,11 @@ void hb_compStrongType( int iSize )
              //printf( "\nSymbol: %s Variable: %s Type: %c #%i Function: %s\n", pSym->szName, pVar->szName, pVar->cType, wVar, pFunc->szName );
 
              /* Allow any type into a Variant, and record the subtype */
-             if ( pVar->cType == ' ' || pVar->cType > 'z' )
+             if ( pVar->cType == ' ' || pVar->cType  >= ( 'A' + VT_OFFSET_VARIANT ) )
              {
                 if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
                    pVar->cType = ' ';
-                else if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+                else if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                    pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
                 else
                    pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
@@ -1385,7 +1427,7 @@ void hb_compStrongType( int iSize )
 
                 //printf( "Variable: %s Type: \'%c\' SubType: %c Comparing: %c Recorded: %s\n", pSym->szName, pVar->cType, pVar->cType - 100, pFunc->pStack[ pFunc->iStackIndex ], szType );
 
-                if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+                if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                    pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;
 
                 if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
@@ -1405,11 +1447,11 @@ void hb_compStrongType( int iSize )
           else
           {
              /* Allow any type into a Variant, and record the subtype */
-             if ( pSym->cType == ' ' || pSym->cType > 'z' )
+             if ( pSym->cType == ' ' || pSym->cType  >= ( 'A' + VT_OFFSET_VARIANT ) )
              {
                 if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
                    pSym->cType = ' ';
-                else if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+                else if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                    pSym->cType = pFunc->pStack[ pFunc->iStackIndex ];
                 else
                    pSym->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
@@ -1419,7 +1461,7 @@ void hb_compStrongType( int iSize )
                 char szType[2];
                 sprintf( szType, "%c", pSym->cType );
 
-                if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+                if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                    pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;
 
                 if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
@@ -1473,11 +1515,11 @@ void hb_compStrongType( int iSize )
          pVar->iUsed |= VU_INITIALIZED;
 
          /* Allow any type into a Variant, and record the subtype */
-         if ( pVar->cType == ' ' || pVar->cType > 'z' )
+         if ( pVar->cType == ' ' || pVar->cType  >= ( 'A' + VT_OFFSET_VARIANT ) )
          {
             if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
                pVar->cType = ' ';
-            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+            else if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
             else
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
@@ -1487,7 +1529,7 @@ void hb_compStrongType( int iSize )
             char szType[2];
             sprintf( szType, "%c", pVar->cType );
 
-            if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+            if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;
 
             if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
@@ -1523,11 +1565,11 @@ void hb_compStrongType( int iSize )
          pVar->iUsed |= VU_INITIALIZED;
 
          /* Allow any type into a Variant, and record the subtype */
-         if ( pVar->cType == ' ' || pVar->cType > 'z' )
+         if ( pVar->cType == ' ' || pVar->cType  >= ( 'A' + VT_OFFSET_VARIANT ) )
          {
             if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
                pVar->cType = ' ';
-            else if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+            else if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
             else
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
@@ -1537,7 +1579,7 @@ void hb_compStrongType( int iSize )
             char szType[2];
             sprintf( szType, "%c", pVar->cType );
 
-            if ( pFunc->pStack[ pFunc->iStackIndex ] > 'z' )
+            if ( pFunc->pStack[ pFunc->iStackIndex ]  >= ( 'A' + VT_OFFSET_VARIANT ) )
                pFunc->pStack[ pFunc->iStackIndex ] -= VT_OFFSET_VARIANT;
 
             if ( pFunc->pStack[ pFunc->iStackIndex ] == '-' )
