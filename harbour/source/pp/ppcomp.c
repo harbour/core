@@ -93,7 +93,11 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
         if( !lContinue )
         {
-           if( *s_szLine != '\0' )
+           if( *s_szLine == '\0' )
+           {
+              hb_pp_nEmptyStrings++;
+           }
+           else
            {
               ptr = s_szLine;
 
@@ -120,9 +124,8 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                  }
                  else
                  {
+                    hb_pp_nEmptyStrings++;
                     *s_szLine = '\0';
-                    /*hb_pp_nEmptyStrings++;*/
-                    hb_comp_files.pLast->iLine++;
                  }
               }
               else
@@ -155,8 +158,6 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                  }
               }
            }
-           else
-              hb_pp_nEmptyStrings++;
 
            break;
         }
@@ -220,6 +221,9 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
 
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
+
+  hb_comp_files.pLast->iLine += hb_pp_nEmptyStrings;
+  hb_pp_nEmptyStrings = 0;
 
   if( handl_o )
      hb_pp_WrStr( handl_o, sOut );

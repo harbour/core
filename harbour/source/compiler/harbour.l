@@ -355,6 +355,8 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 
+^{Separator}*"_procreq_"{Separator}*"(" { return PROCREQ; }
+
 "decl"("are"|"ar"|"a")?           { BEGIN DECLARE_;
                                     yylval.string = hb_strupr( hb_strdup( yytext ) );
                                   }

@@ -162,6 +162,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token MACROVAR MACROTEXT
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
+%token PROCREQ
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -189,7 +190,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %right '\n' ';' ','
 /*the highest precedence*/
 
-%type <string>  IdentName IDENTIFIER LITERAL SendId MACROVAR MACROTEXT
+%type <string>  IdentName IDENTIFIER LITERAL SendId MACROVAR MACROTEXT CompTimeStr
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
@@ -245,6 +246,7 @@ Source     : Crlf         { hb_comp_EOL = FALSE; }
            | Function     { hb_comp_EOL = FALSE; }
            | Statement    { hb_comp_EOL = FALSE; }
            | Line         { hb_comp_EOL = FALSE; }
+           | ProcReq      { hb_comp_EOL = FALSE; }
            | Source Crlf        { hb_comp_EOL = FALSE; }
            | Source Function    { hb_comp_EOL = FALSE; }
            | Source Statement   { hb_comp_EOL = FALSE; }
@@ -253,12 +255,20 @@ Source     : Crlf         { hb_comp_EOL = FALSE; }
            | Source MemvarDef   { hb_comp_EOL = FALSE; }
            | Source Declaration { hb_comp_EOL = FALSE; }
            | Source Line        { hb_comp_EOL = FALSE; }
+           | Source ProcReq     { hb_comp_EOL = FALSE; }
            | Source error Crlf { hb_comp_EOL = FALSE; yyclearin; }
            ;
 
 Line       : LINE NUM_INTEGER LITERAL Crlf
            | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* Xbase++ style */
            ;
+
+ProcReq    : PROCREQ CompTimeStr ')' Crlf { hb_compAutoOpenAdd( $2 ); }
+	   ;
+
+CompTimeStr: LITERAL
+	   | LITERAL '+' LITERAL { char szFileName[ _POSIX_PATH_MAX ]; sprintf( szFileName, "%s%s", $1, $3 ); $$ = szFileName; }
+	   ;
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}

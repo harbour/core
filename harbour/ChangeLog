@@ -1,3 +1,15 @@
+2000-06-15 20:56 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * source/compiler/harbour.l
+   * source/compiler/harbour.y
+     + Added support for _ProcReq_() - compile time function used to implement SET FORMAT TO and
+       SET PROCEDURE TO. Clipper implementation doesn't allow a run time function with this name, Harbour
+       will only intercept it as compile time function, if used at BOL.
+       As compile time function it only accepts a single "Literal", or "Literal + Literal".
+
+   * source/compiler/hbgenerr.c
+   * source/pp/ppcomp.c
+     ! Fixed line numbering. Warnnings and Errors, should now report correct line numbers.
+
 2000-06-15 15:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    + tests/mousetst.prg
