@@ -159,4 +159,5 @@ static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
 static void hb_cdxMacroRun( AREAP pArea, HB_MACRO_PTR pMacro );
 static ERRCODE cdxError( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * filename, USHORT uiFlags );
 static void hb_cdxIndexReindex( LPCDXINDEX pIndex );
+static ERRCODE hb_cdxOrdListClear( CDXAREAP pArea, int iComplete );
 
