@@ -290,11 +290,9 @@ static int convert_open_flags( USHORT uiFlags )
 static int convert_seek_flags( USHORT uiFlags )
 {
    /* by default FS_SET is set */
-   int result_flags = 0;
+   int result_flags = SEEK_SET;
 
    HB_TRACE(("convert_seek_flags(%hu)", uiFlags));
-
-   result_flags = SEEK_SET;
 
    if( uiFlags & FS_RELATIVE )
       result_flags = SEEK_CUR;
@@ -563,8 +561,10 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   ULONG ulRead = 0L, ulLeftToRead = ulCount;
-   USHORT uiToRead, uiRead;
+   ULONG ulRead = 0;
+   ULONG ulLeftToRead = ulCount;
+   USHORT uiToRead;
+   USHORT uiRead;
    BYTE * pPtr = pBuff;
 
    HB_TRACE(("hb_fsReadLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
@@ -608,8 +608,10 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
 ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
-   ULONG ulWritten = 0L, ulLeftToWrite = ulCount;
-   USHORT uiToWrite, uiWritten;
+   ULONG ulWritten = 0;
+   ULONG ulLeftToWrite = ulCount;
+   USHORT uiToWrite;
+   USHORT uiWritten;
    BYTE * pPtr = pBuff;
 
    HB_TRACE(("hb_fsWriteLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
@@ -749,20 +751,16 @@ int     hb_fsDelete( BYTE * pFilename )
    iResult = unlink( ( char * ) pFilename );
    s_uiErrorLast = errno;
 
+#elif defined(_MSC_VER) || defined(__MINGW32__)
+
+   errno = 0;
+   iResult = remove( ( char * ) pFilename );
+   s_uiErrorLast = errno;
+
 #else
 
-   #if defined(_MSC_VER) || defined(__MINGW32__)
-
-      errno = 0;
-      iResult = remove( ( char * ) pFilename );
-      s_uiErrorLast = errno;
-
-   #else
-
-      iResult = -1;
-      s_uiErrorLast = FS_ERROR;
-
-   #endif
+   iResult = -1;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -794,11 +792,7 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
                       ULONG ulLength, USHORT uiMode )
 {
-   int iResult = 0;
-
-#if defined(_MSC_VER) || defined(__MINGW32__)
-   ULONG ulOldPos;
-#endif
+   int iResult;
 
    HB_TRACE(("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
 
@@ -814,42 +808,55 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       case FL_UNLOCK:
          iResult = unlock( hFileHandle, ulStart, ulLength );
          break;
+
+      default:
+         iResult = 0;
    }
    s_uiErrorLast = errno;
 
 #elif defined(_MSC_VER)
 
-   ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
-
-   switch( uiMode )
    {
-      case FL_LOCK:
-         iResult = locking( hFileHandle, _LK_LOCK, ulLength );
-         break;
+      ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
-      case FL_UNLOCK:
-         iResult = locking( hFileHandle, _LK_UNLCK, ulLength );
-         break;
+      switch( uiMode )
+      {
+         case FL_LOCK:
+            iResult = locking( hFileHandle, _LK_LOCK, ulLength );
+            break;
+
+         case FL_UNLOCK:
+            iResult = locking( hFileHandle, _LK_UNLCK, ulLength );
+            break;
+
+         default:
+            iResult = 0;
+      }
+
+      hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
-
-   hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
 
 #elif defined(__MINGW32__)
 
-   ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
-
-   switch( uiMode )
    {
-      case FL_LOCK:
-         iResult = _locking( hFileHandle, _LK_LOCK, ulLength );
-         break;
+      ULONG ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
-      case FL_UNLOCK:
-         iResult = _locking( hFileHandle, _LK_UNLOCK, ulLength );
-         break;
+      switch( uiMode )
+      {
+         case FL_LOCK:
+            iResult = _locking( hFileHandle, _LK_LOCK, ulLength );
+            break;
+
+         case FL_UNLOCK:
+            iResult = _locking( hFileHandle, _LK_UNLOCK, ulLength );
+            break;
+
+         default:
+            iResult = 0;
+      }
+
+      hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
-
-   hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
 
 #else
 
@@ -1228,7 +1235,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );
 
-   return FS_ERROR;
+   return s_uiErrorLast;
 }
 
 /*
@@ -1246,24 +1253,20 @@ HARBOUR HB_FOPEN( void )
 
 HARBOUR HB_FCREATE( void )
 {
-   FHANDLE hFileHandle;
-
    if( ISCHAR( 1 ) )
-      hFileHandle = hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
-                                 ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL );
+      hb_retni( hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
+                             ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
    else
-      hFileHandle = FS_ERROR;
-
-   hb_retni( hFileHandle );
+      hb_retni( FS_ERROR );
 }
 
 HARBOUR HB_FREAD( void )
 {
-   ULONG ulRead = 0;
+   ULONG ulRead;
 
    if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
    {
-      ULONG ulToRead = hb_parnl( 3 );
+      ulRead = hb_parnl( 3 );
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
       /* CA-Clipper determines the maximum size by calling _parcsiz() instead */
@@ -1271,34 +1274,35 @@ HARBOUR HB_FREAD( void )
       /* more then the length of the passed buffer, because the terminating */
       /* zero could be used if needed */
 
-      if( ulToRead <= hb_parcsiz( 2 ) )
+      if( ulRead <= hb_parcsiz( 2 ) )
 #else
-      if( ulToRead <= hb_parclen( 2 ) )
+      if( ulRead <= hb_parclen( 2 ) )
 #endif
       {
-         /* NOTE: Warning, the read buffer will be directly modified ! */
+         /* NOTE: Warning, the read buffer will be directly modified,
+                  this is normal here ! [vszel] */
 
-         ulRead = hb_fsRead( hb_parni( 1 ),
-                             ( BYTE * ) hb_parc( 2 ),
-                             ulToRead );
+         ulRead = hb_fsReadLarge( hb_parni( 1 ),
+                                  ( BYTE * ) hb_parc( 2 ),
+                                  ulRead );
       }
+      else
+         ulRead = 0;
    }
+   else
+      ulRead = 0;
 
    hb_retnl( ulRead );
 }
 
 HARBOUR HB_FWRITE( void )
 {
-   ULONG ulWritten;
-
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
-      ulWritten = hb_fsWrite( hb_parni( 1 ),
-                              ( BYTE * ) hb_parc( 2 ),
-                              ISNUM( 3 ) ? hb_parnl( 3 ) : hb_parclen( 2 ) );
+      hb_retnl( hb_fsWriteLarge( hb_parni( 1 ),
+                                 ( BYTE * ) hb_parc( 2 ),
+                                 ISNUM( 3 ) ? hb_parnl( 3 ) : hb_parclen( 2 ) ) );
    else
-      ulWritten = 0;
-
-   hb_retnl( ulWritten );
+      hb_retnl( 0 );
 }
 
 HARBOUR HB_FERROR( void )
@@ -1321,92 +1325,70 @@ HARBOUR HB_FCLOSE( void )
 
 HARBOUR HB_FERASE( void )
 {
-   int iResult;
-
    s_uiErrorLast = 3;
 
    if( ISCHAR( 1 ) )
-      iResult = hb_fsDelete( ( BYTE * ) hb_parc( 1 ) );
+      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) );
    else
-      iResult = -1;
-
-   hb_retni( iResult );
+      hb_retni( -1 );
 }
 
 HARBOUR HB_FRENAME( void )
 {
-   int iResult;
-
    s_uiErrorLast = 2;
 
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
-      iResult = hb_fsRename( ( BYTE * ) hb_parc( 1 ),
-                            ( BYTE * ) hb_parc( 2 ) );
+      hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ), ( BYTE * ) hb_parc( 2 ) ) );
    else
-      iResult = -1;
-
-   hb_retni( iResult );
+      hb_retni( -1 );
 }
 
 HARBOUR HB_FSEEK( void )
 {
-   ULONG ulPos;
-
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      ulPos = hb_fsSeek( hb_parni( 1 ),
-                         hb_parnl( 2 ),
-                         ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET );
+      hb_retnl( hb_fsSeek( hb_parni( 1 ),
+                           hb_parnl( 2 ),
+                           ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET ) );
    else
-      ulPos = 0;
-
-   hb_retnl( ulPos );
+      hb_retnl( 0 );
 }
 
-BOOL hb_fsFile ( BYTE * pFilename )
+BOOL hb_fsFile( BYTE * pFilename )
 {
-   BOOL is_file = FALSE;
+   BOOL bIsFile;
 
    HB_TRACE(("hb_fsFile(%s)", (char*) pFilename));
 
 /* TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
 
-         is_file = ( access( (const char *)pFilename, F_OK ) == 0 );
+   bIsFile = ( access( ( const char * ) pFilename, F_OK ) == 0 );
 
+#elif defined(__MPW__)
+   {
+      int hFileHandle;
+
+      if( ( hFileHandle = open( pFilename, O_RDONLY ) ) >= 0 )
+      {
+         close( hFileHandle );
+         bIsFile = TRUE;
+      }
+      else
+         bIsFile = FALSE;
+   }
 #else
 
-   #ifdef __MPW__
-
-         int hFileHandle;
-
-         if( ( hFileHandle = open( pFilename, O_RDONLY ) ) >= 0 )
-         {
-            close( hFileHandle );
-            is_file = TRUE;
-         }
-
-   #else
-
-         is_file = ( access( (const char *)pFilename, 0 ) == 0 );
-
-   #endif
+   bIsFile = ( access( ( const char * ) pFilename, 0 ) == 0 );
 
 #endif
 
-   return is_file;
+   return bIsFile;
 }
 
 HARBOUR HB_FILE( void )
 {
    if( hb_pcount() == 1 )
-   {
-      if( ISCHAR( 1 ) )
-      {
-         hb_retl( hb_fsFile( (BYTE *)hb_parc( 1 ) ) );
-      }
-      else
-         hb_retl( FALSE );
-   }
+      hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "FILE" ); /* NOTE: Clipper catches this at compile time! */
 }
@@ -1463,19 +1445,11 @@ HARBOUR HB_CURDIR( void )
 HARBOUR HB_DIRCHANGE( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
-   int iResult;
 
    if( ISCHAR( 1 ) )
-   {
-      if( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) )
-         iResult = 0;
-      else
-         iResult = s_uiErrorLast;
-   }
+      hb_retni( hb_fsChDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : s_uiErrorLast );
    else
-      iResult = -1;
-
-   hb_retni( iResult );
+      hb_retni( -1 );
 
    s_uiErrorLast = uiErrorOld;
 }
@@ -1487,19 +1461,11 @@ HARBOUR HB_DIRCHANGE( void )
 HARBOUR HB_MAKEDIR( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
-   int iResult;
 
    if( ISCHAR( 1 ) )
-   {
-      if( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) )
-         iResult = 0;
-      else
-         iResult = s_uiErrorLast;
-   }
+      hb_retni( hb_fsMkDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : s_uiErrorLast );
    else
-      iResult = -1;
-
-   hb_retni( iResult );
+      hb_retni( -1 );
 
    s_uiErrorLast = uiErrorOld;
 }
@@ -1509,19 +1475,11 @@ HARBOUR HB_MAKEDIR( void )
 HARBOUR HB_DIRREMOVE( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
-   int iResult;
 
    if( ISCHAR( 1 ) )
-   {
-      if( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) )
-         iResult = 0;
-      else
-         iResult = s_uiErrorLast;
-   }
+      hb_retni( hb_fsRmDir( ( BYTE * ) hb_parc( 1 ) ) ? 0 : s_uiErrorLast );
    else
-      iResult = -1;
-
-   hb_retni( iResult );
+      hb_retni( -1 );
 
    s_uiErrorLast = uiErrorOld;
 }

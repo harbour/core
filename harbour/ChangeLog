@@ -1,3 +1,15 @@
+19991103-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     % Nested #ifs converted to #elifs (hb_fsDelete(), hb_fsFile())
+     % Double assigments optimalized
+       (convert_seek_flags(), hb_fsLock(), hb_fsFile())
+     * Code made more clear (hb_fsLock())
+     % Variable usage and assigments optimalized, made faster, smaller and 
+       simpler. FCREATE(), FREAD(), FWRITE(), FERASE(), FRENAME(), FSEEK(),
+       FILE(), DIRCHANGE(), MAKEDIR(), DIRREMOVE()
+     ! FREAD(), FWRITE() now calls hb_fsReadLarge() and hb_fsWriteLarge() 
+       instead of hb_fsRead() and hb_fsWrite().
+
 Wed Nov 03 18:38:03 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* tests/testbrdb.prg: 
