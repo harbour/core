@@ -13,7 +13,7 @@ $(TARGET): $(TARGET).exe
 $(TARGET).exe: $(TARGET).o
 	$(CC) $? -L$(HARBOURDIR)/libs -lharb -o $@ 
 
-$(TARGET).c: $(TARGET).prg
+$(TARGET).c: $(TARGET).prg $(HARBOURDIR)/bin/harbour.exe $(HARBOURDIR)/libs/libharb.a
 	$(HARBOURDIR)/bin/harbour $(TARGET).prg -n
 
 $(TARGET).o: $(TARGET).c

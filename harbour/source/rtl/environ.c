@@ -7,8 +7,9 @@
 #endif
 
 #include <extend.h>
+#include <version.h>
 
-#if defined(__TURBOC__) || defined(__BORLANDC__)
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)
   #include <dos.h>
 #endif
 
@@ -46,7 +47,7 @@ HARBOUR OS()
 
 #else
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__DJGPP__)
 
 #else
 
@@ -166,7 +167,10 @@ HARBOUR OS()
 
 HARBOUR VERSION()
 {
-   _retc( "Harbour alpha version" );
+   char hb_ver[ 80 ];
+   sprintf( hb_ver, "Harbour %d.%d%s Intl. (Build %d)  (%04d.%02d.%02d)",
+      hb_major, hb_minor, hb_revision, hb_build, hb_year, hb_month, hb_day );
+   _retc( hb_ver );
 }
 
 HARBOUR GETENV()

@@ -6,6 +6,9 @@
 #include <extend.h>
 #include <fcntl.h>
 #include <io.h>
+#ifdef __DJGPP__
+   #include <unistd.h>
+#endif
 #include <sys/stat.h>
 #include <set.h>
 #include <errno.h>
