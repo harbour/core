@@ -509,6 +509,7 @@ extern char * hb_macroGetType( HB_ITEM_PTR );
 extern char * hb_verPlatform( void );
 extern char * hb_verCompiler( void );
 extern char * hb_verHarbour( void );
+extern void   hb_verBuildInfo( void );
 
 #if defined(HB_EXTERN_C)
 }

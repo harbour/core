@@ -1140,14 +1140,20 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 
 #elif defined(__MINGW32__)
 
+   errno = 0;
+   _getdcwd( uiDrive, pbyBuffer, ulLen );
+   s_uiErrorLast = errno;
+
+#else
+
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   /* Strip the leading drive spec, and leading backslash if there's one. */
+
    {
       BYTE * pbyStart = pbyBuffer;
-
-      errno = 0;
-      _getdcwd( uiDrive, pbyBuffer, ulLen );
-      s_uiErrorLast = errno;
-
-      /* Strip the leading drive spec, and leading underscore. */
 
       /* NOTE: A trailing underscore is not returned on this platform,
                so we don't need to strip it. [vszakats] */
@@ -1161,11 +1167,14 @@ USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
          memmove( pbyBuffer, pbyStart, ulLen );
    }
 
-#else
+   /* Strip the trailing (back)slash if there's one */
 
-   s_uiErrorLast = FS_ERROR;
+   {
+      ULONG ulLen = strlen( pbyBuffer );
 
-#endif
+      if( strchr( OS_PATH_DELIMITER_LIST, pbyBuffer[ ulLen - 1 ] ) )
+         pbyBuffer[ ulLen - 1 ] = '\0';
+   }
 
    return s_uiErrorLast;
 }

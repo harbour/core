@@ -1,3 +1,11 @@
+20000501-18:05 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/filesys.c
+     ! Fixed hb_fsCurDirBuff() (and CURDIR()) for non-MINGW32 platforms.
+
+   * include/hbapi.h
+     + Added missing declaration from the previous CVS.
+
 20000501-17:42 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/cmdarg.c
