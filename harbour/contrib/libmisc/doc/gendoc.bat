@@ -1,8 +1,28 @@
+@echo off
+rem 
+rem $Id$
+rem 
+
 if "%1" =="/OS2" goto OS2
+if "%1" =="/os2" goto OS2
 if "%1" =="/NGI" goto NG
+if "%1" =="/ngi" goto NG
 if "%1" =="/RTF" goto RTF
+if "%1" =="/rtf" goto RTF
 if "%1" =="/HTM" goto HTM
+if "%1" =="/htm" goto HTM
+if "%1"  =="" goto help
 ECHO Assembling input files
+:help
+    echo.
+    echo. Usage gendoc type
+    echo. where type is:
+    echo. /rtf for Winhelp output
+    echo. /os2 for Os/2 help output
+    echo. /ngi for Norton Guide output
+    echo. /htm for HTML output
+    goto END
+
 :NG
 hbdoc /ngi libmisc.lnk libmisc.rsp
 REM Compile the sources
