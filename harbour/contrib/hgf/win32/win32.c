@@ -89,15 +89,15 @@ HB_FUNC( WINCREATESTDWINDOW )
                         GetModuleHandle( NULL ), NULL) );
 }
 
-HB_FUNC( HB_PM_SHOWMODAL )
+HB_FUNC( HB_FORMSHOWMODAL )
 {
    MSG  msg;
 
-   ShowWindow( (HWND) hb_parnl( 1 ),1 );
-   while (GetMessage( &msg, NULL, 0, 0) )
+   ShowWindow( ( HWND ) hb_parnl( 1 ), 1 );
+   while( GetMessage( &msg, NULL, 0, 0 ) )
    {
-      TranslateMessage (&msg) ;
-      DispatchMessage (&msg) ;
+      TranslateMessage( &msg );
+      DispatchMessage( &msg );
    }
 }
 
@@ -239,4 +239,89 @@ HB_FUNC( NLOWORD )
 HB_FUNC( NHIWORD )
 {
    hb_retnl( HIWORD( hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( WINGETWIDTH )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.right - rct.left );
+}
+
+HB_FUNC( WINSETWIDTH )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   MoveWindow( hWnd, rct.left, rct.top, hb_parnl( 2 ),
+               rct.bottom - rct.top, TRUE );
+}
+
+HB_FUNC( WINGETHEIGHT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.bottom - rct.top );
+}
+
+HB_FUNC( WINSETHEIGHT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   MoveWindow( hWnd, rct.left, rct.top, rct.right - rct.left,
+               hb_parnl( 2 ), TRUE );
+}
+
+HB_FUNC( WINGETTOP )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.top );
+}
+
+HB_FUNC( WINSETTOP )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   MoveWindow( hWnd, rct.left, hb_parnl( 2 ), rct.right - rct.left,
+               rct.bottom - rct.top, TRUE );
+}
+
+
+HB_FUNC( WINGETLEFT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   hb_retnl( rct.left );
+}
+
+HB_FUNC( WINSETLEFT )
+{
+   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   RECT rct;
+
+   GetWindowRect( hWnd, &rct );
+
+   MoveWindow( hWnd, hb_parnl( 2 ), rct.top, rct.right - rct.left,
+               rct.bottom - rct.top, TRUE );
 }
