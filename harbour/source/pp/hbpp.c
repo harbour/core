@@ -2290,7 +2290,8 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
   else
     {
       pFileName = hb_fsFNameSplit( szFileName );
-      pFileName->szPath = pMainFileName->szPath;
+      if( pFileName->szPath == NULL || *(pFileName->szPath) == '\0' )
+         pFileName->szPath = pMainFileName->szPath;
       hb_fsFNameMerge( szInclude, pFileName );
       *fptr = fopen( szInclude, "r" );
       hb_xfree( pFileName );
