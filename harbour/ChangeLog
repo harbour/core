@@ -1,3 +1,13 @@
+20000420-13:46 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+   * source/compiler/genobj32.c
+     * Some little fixes after Antonio changes :)
+     NOTE:
+     JUMPSHORT uses 1 byte for jump offset
+     JUMP      uses 2 bytes 
+     JUMPFAR   uses 3 bytes
+     plus 1 byte for the opcode itself
+   
 20000420-13:10 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/genobj32.c
      * Some little fixes after Ryszard changes

@@ -553,9 +553,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
         {
            switch( pFunction->pCode[ w ] )
            {
-              case HB_P_JUMPFAR:
-              case HB_P_JUMPFARFALSE:
-              case HB_P_JUMPFARTRUE:
+              case HB_P_JUMPSHORT:
+              case HB_P_JUMPSHORTFALSE:
+              case HB_P_JUMPSHORTTRUE:
               {
                  putbyte( pFunction->pCode[ w ], hObjFile, &bChk );
                  putbyte( pFunction->pCode[ w + 1 ], hObjFile, &bChk );
@@ -598,6 +598,9 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
               }
               break;
 
+              case HB_P_JUMPFAR:
+              case HB_P_JUMPFARFALSE:
+              case HB_P_JUMPFARTRUE:
               case HB_P_PARAMETER:
               case HB_P_SEQBEGIN:
               case HB_P_SEQEND:
