@@ -34,7 +34,7 @@
  */
 
 #ifdef __HARBOUR__
-   #define NANFOR
+#define NANFOR
 #endif
 
 #include "directry.ch"
@@ -54,9 +54,19 @@
 #define DELIM   "$"                 // keyword delimiter
 
 #xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
-MEMVAR aDirList,aDocInfo,aWww
+MEMVAR aDirList
+MEMVAR aDocInfo
+MEMVAR aWww
 STATIC NWRITEHANDLE
 
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function ProcessFiles()
+*+
+*+    Called from ( hbdoc.prg    )   2 - function main()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
 FUNCTION ProcessFiles()
 
    //
@@ -103,7 +113,7 @@ FUNCTION ProcessFiles()
    LOCAL nEnd
    LOCAL nCount
 
-   LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ" + CRLF
+   LOCAL cBar        := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ" + CRLF
    LOCAL nMode
    LOCAL cFuncName
    LOCAL cOneLine
@@ -113,37 +123,37 @@ FUNCTION ProcessFiles()
    LOCAL cSeeAlso
    LOCAL cTemp
    LOCAL cChar
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
+   LOCAL lBlankLine  := .F.                // Blank line encountered and sent out
+   LOCAL lAddBlank   := .F.                // Need to add a blank line if next line is not blank
    LOCAL nReadHandle
-   LOCAL cDoc      := DELIM + "DOC" + DELIM                   // DOC keyword
-   LOCAL cEnd      := DELIM + "END" + DELIM                   // END keyword
-   LOCAL cFunc     := DELIM + "FUNCNAME" + DELIM              // FUNCNAME keyword
-   LOCAL cCat      := DELIM + "CATEGORY" + DELIM              // CATEGORY keyword
-   LOCAL cOne      := DELIM + "ONELINER" + DELIM              // ONELINER keyword
-   LOCAL cSyn      := DELIM + "SYNTAX" + DELIM                // SYNTAX keyword
-   LOCAL cArg      := DELIM + "ARGUMENTS" + DELIM             // ARGUMENTS keyword
-   LOCAL cRet      := DELIM + "RETURNS" + DELIM               // RETURNS keyword
-   LOCAL cDesc     := DELIM + "DESCRIPTION" + DELIM           // DESCRIPTION keyword
-   LOCAL cExam     := DELIM + "EXAMPLES" + DELIM              // EXAMPLES keyword
-   LOCAL cSee      := DELIM + "SEEALSO" + DELIM               // SEEALSO keyword
-   LOCAL cInc      := DELIM + "INCLUDE" + DELIM               // INCLUDE keyword
-   LOCAL cComm     := DELIM + "COMMANDNAME" + DELIM           // COMMAND keyword
-   LOCAL cCompl    := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest     := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus   := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat     := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles    := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode  := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction := DELIM + 'FUNCTION' +DELIM
-   
+   LOCAL cDoc        := DELIM + "DOC" + DELIM                  // DOC keyword
+   LOCAL cEnd        := DELIM + "END" + DELIM                  // END keyword
+   LOCAL cFunc       := DELIM + "FUNCNAME" + DELIM             // FUNCNAME keyword
+   LOCAL cCat        := DELIM + "CATEGORY" + DELIM             // CATEGORY keyword
+   LOCAL cOne        := DELIM + "ONELINER" + DELIM             // ONELINER keyword
+   LOCAL cSyn        := DELIM + "SYNTAX" + DELIM               // SYNTAX keyword
+   LOCAL cArg        := DELIM + "ARGUMENTS" + DELIM            // ARGUMENTS keyword
+   LOCAL cRet        := DELIM + "RETURNS" + DELIM              // RETURNS keyword
+   LOCAL cDesc       := DELIM + "DESCRIPTION" + DELIM          // DESCRIPTION keyword
+   LOCAL cExam       := DELIM + "EXAMPLES" + DELIM             // EXAMPLES keyword
+   LOCAL cSee        := DELIM + "SEEALSO" + DELIM              // SEEALSO keyword
+   LOCAL cInc        := DELIM + "INCLUDE" + DELIM              // INCLUDE keyword
+   LOCAL cComm       := DELIM + "COMMANDNAME" + DELIM          // COMMAND keyword
+   LOCAL cCompl      := DELIM + "COMPLIANCE" + DELIM
+   LOCAL cTest       := DELIM + 'TESTS' + DELIM
+   LOCAL cStatus     := DELIM + 'STATUS' + DELIM
+   LOCAL cPlat       := DELIM + 'PLATFORMS' + DELIM
+   LOCAL cFiles      := DELIM + 'FILES' + DELIM
+   LOCAL cSubCode    := DELIM + 'SUBCODE' + DELIM
+   LOCAL cFunction   := DELIM + 'FUNCTION' + DELIM
+
    //
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
+   @ INFILELINE, 20 SAY "Extracting: "         
 
-   @ MODULELINE, 20 SAY "Documenting: "
+   @ MODULELINE, 20 SAY "Documenting: "         
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -153,16 +163,16 @@ FUNCTION ProcessFiles()
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
+      @ LINELINE, 27   SAY "Line:"                                  
 
       nLineCnt := 0
 
       IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
+         WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
          LOOP
       ENDIF
       lEof := .F.
@@ -178,13 +188,13 @@ FUNCTION ProcessFiles()
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
          IF AT( cDoc, cBuffer ) > 0
             IF lDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
+               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
                             + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
             lDoc    := .T.
@@ -195,17 +205,17 @@ FUNCTION ProcessFiles()
             nMode     := D_IGNORE
          ELSEIF AT( cEnd, cBuffer ) > 0
             IF .NOT. lDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
+               WRITE_ERROR( cEnd + " encountered outside of Doc area at line" ;
                             + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ELSE
                //  Add a new entry to our list of files
 
                IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
+                  WRITE_ERROR( "Blank Category",,,, aDirList[ i, F_NAME ] )
                   cCategory := "Unknown"
                ENDIF
                IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
+                  WRITE_ERROR( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
                   cFuncName := "Unknown"
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
@@ -227,13 +237,13 @@ FUNCTION ProcessFiles()
          IF lDoc
             //  1) function name
 
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT(cSubCode,cBuffer) > 0
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) > 0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
+               @ MODULELINE, 33 SAY cFuncName         
 
                nMode := D_NORMAL
 
@@ -285,7 +295,7 @@ FUNCTION ProcessFiles()
                nWriteHandle := FCREATE( "hdf\" + cFileName )
                IF nWriteHandle < 1
                   ? "Error creating", cFileName, ".hdf"
-                  write_error( "Error creating",,,, cFileName + ".hdf" )
+                  WRITE_ERROR( "Error creating",,,, cFileName + ".hdf" )
                ENDIF
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0
@@ -301,7 +311,7 @@ FUNCTION ProcessFiles()
                nLineCnt ++
                cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
+                  WRITE_ERROR( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
                                aDirList[ i, F_NAME ] )
                ENDIF
 
@@ -371,7 +381,7 @@ FUNCTION ProcessFiles()
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cTest, cBuffer ) > 0
-                      nMode=D_TESTS
+                  nMode := D_TESTS
                ELSEIF AT( cCompl, cBuffer ) > 0
 
                   IF !lBlankLine
@@ -432,7 +442,7 @@ FUNCTION ProcessFiles()
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
                   IF nMode = D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
@@ -443,7 +453,7 @@ FUNCTION ProcessFiles()
                      FWRITE( nWriteHandle, cBuffer + CRLF )
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
@@ -456,7 +466,7 @@ FUNCTION ProcessFiles()
                      FWRITE( nWriteHandle, cBuffer + CRLF )
                   ELSEIF nMode = D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
@@ -485,20 +495,20 @@ FUNCTION ProcessFiles()
                         FWRITE( nWriteHandle, ".endpar" + CRLF )
                      ENDIF
                      ProcStatus( nWriteHandle, StripNgControls( cBuffer ) )
-                  ELSEIF    nMode=D_TESTS
-                     IF !EMPTY(cBuffer)
-                          FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                          FWRITE( nWriteHandle, " Tests" + CRLF )
-                          FWRITE( nWriteHandle, ".endpar" + CRLF )
-                          FWRITE( nWriteHandle, CRLF )
+                  ELSEIF nMode = D_TESTS
+                     IF !EMPTY( cBuffer )
+                        FWRITE( nWriteHandle, ".par bold on" + CRLF )
+                        FWRITE( nWriteHandle, " Tests" + CRLF )
+                        FWRITE( nWriteHandle, ".endpar" + CRLF )
+                        FWRITE( nWriteHandle, CRLF )
 
-                  ENDIF
-                          FWRITE( nWriteHandle,StripNgControls( cBuffer ) +CRLF)
+                     ENDIF
+                     FWRITE( nWriteHandle, StripNgControls( cBuffer ) + CRLF )
                   ELSE
 
                      //  unknown data from somewhere
 
-                     write_error( "Unknown Data Type " + cBuffer,, ;
+                     WRITE_ERROR( "Unknown Data Type " + cBuffer,, ;
                                   nLineCnt, ;
                                   LONGONELINE, aDirList[ i, F_NAME ] )
 
@@ -514,10 +524,11 @@ FUNCTION ProcessFiles()
 
 RETURN NIL
 
-
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function Proccalso()
+*+
+*+    Called from ( genhpc.prg   )   1 - function processfiles()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -585,9 +596,19 @@ FUNCTION Proccalso( nWriteHandle, cSeeAlso )
          EXIT
       END
    ENDDO
-   RETURN nil
+RETURN nil
 
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function ProcStatus()
+*+
+*+    Called from ( genasc.prg   )   1 - function asciifiles()
+*+                ( genhpc.prg   )   1 - function processfiles()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
 FUNCTION ProcStatus( nWriteHandle, cBuffer )
+
    IF LEN( ALLTRIM( cBuffer ) ) > 1
       FWRITE( nWriteHandle, cBuffer + CRLF )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
@@ -599,6 +620,14 @@ FUNCTION ProcStatus( nWriteHandle, cBuffer )
    ENDIF
 RETURN nil
 
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Function CheckTop()
+*+
+*+    Called from ( genhpc.prg   )   1 - function processfiles()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
 FUNCTION CheckTop( cTop )
 
    LOCAL nPos
@@ -611,3 +640,5 @@ FUNCTION CheckTop( cTop )
       cTemp := cTop
    ENDIF
 RETURN cTemp
+
+*+ EOF: GENHPC.PRG

@@ -73,6 +73,8 @@ RETURN theHandle:nHan
 *+
 *+    Function ft_FEOF()
 *+
+*+    Called from ( hbdoc.prg    )   1 - function readln()
+*+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION ft_FEOF()
@@ -97,6 +99,8 @@ RETURN cLine
 *+
 *+    Function FT_FReadLn()
 *+
+*+    Called from ( hbdoc.prg    )   1 - function readln()
+*+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION FT_FReadLn()
@@ -112,6 +116,9 @@ RETURN cBuffer
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function FT_FGotop()
+*+
+*+    Called from ( genng.prg    )   1 - static function readfromtop()
+*+                ( genrtf.prg   )   1 - static function readfromtop()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -135,6 +142,8 @@ RETURN nil
 *+
 *+    Function FT_MKDIR()
 *+
+*+    Called from ( hbdoc.prg    )   6 - function main()
+*+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION FT_MKDIR( CDIR )
@@ -146,6 +155,9 @@ RETURN nil
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function StrPos()
+*+
+*+    Called from ( genhtm1.prg  )   1 - function prochtmtable()
+*+                ( genhtm2.prg  )   1 - function prochtmtable()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -181,13 +193,17 @@ RETURN nPos
 *+
 *+    Function GetNumberofTableItems()
 *+
+*+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
+*+                ( genng.prg    )   1 - function procngdesc()
+*+                ( genng1.prg   )   1 - function procngdesc()
+*+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION GetNumberofTableItems( cBuffer )
 
    LOCAL cItem
-   LOCAL nItem  := 0
-   
+   LOCAL nItem := 0
+
    cBuffer := ALLTRIM( cBuffer )
 
    DO WHILE AT( SPACE( 3 ), cBuffer ) > 0
@@ -200,6 +216,35 @@ FUNCTION GetNumberofTableItems( cBuffer )
       ENDIF
    ENDDO
    nItem ++
-RETURN nItem
+   RETURN nItem
+
+#define EOL CHR(13)+CHR(10)
+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function FREADline()
+*+
+*+    Called from ( genng.prg    )   1 - static function readfromtop()
+*+                ( genrtf.prg   )   1 - static function readfromtop()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+FUNCTION FREADline( nH, cB, nMaxLine )
+
+   LOCAL cLine
+   LOCAL nSavePos
+   LOCAL nEol
+   LOCAL nNumRead
+   cLine    := SPACE( nMaxLine )
+   cB       := ''
+   nSavePos := FSEEK( nH, 0, FS_RELATIVE )
+   nNumRead := FREAD( nH, @cLine, nMaxLine )
+   IF ( nEol := AT( EOL, SUBSTR( cLine, 1, nNumRead ) ) ) == 0
+      cB := cLine
+   ELSE
+      cB := SUBSTR( cLine, 1, nEol - 1 )
+      FSEEK( nH, nSavePos + nEol + 1, FS_SET )
+   ENDIF
+RETURN nNumRead != 0
 
 *+ EOF: FT_FUNCS.PRG

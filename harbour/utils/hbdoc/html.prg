@@ -36,7 +36,8 @@
 #include 'hbclass.ch'
 #include 'common.ch'
 #define CRLF HB_OSNewLine()
-Static nX:=0
+STATIC nX := 0
+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Class THTML
@@ -52,58 +53,60 @@ CLASS THTML
    METHOD WritePar( cPar )
    METHOD WriteParBold( cPar )
    METHOD WriteLink( cLink )
-   METHOD WriteText(cText)
+   METHOD WriteText( cText )
    METHOD CLOSE()
 
 ENDCLASS
 
 METHOD New( cFile ) CLASS THTML
-   If Nx >0
-      FCLOSE(NX)
+
+   IF Nx > 0
+      FCLOSE( NX )
    ENDIF
 
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
-         nX := Self:nHandle
+   nX := Self:nHandle
    FWRITE( Self:nHandle, "<BODY>" + CRLF )
 
 RETURN Self
 
 METHOD WriteTitle( cTitle ) CLASS THTML
 
-   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF +'</HEAD>'+CRLF+'<body bgcolor="#FFFFFF">' + CRLF )
+   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '</HEAD>' + CRLF + '<body bgcolor="#FFFFFF">' + CRLF )
 
 RETURN Self
 
 METHOD WritePar( cPar ) CLASS THTML
 
-//   cPar:=STRTRAN(cPar,"<","&lt;")
-//   cPar:=STRTRAN(cPar,">","&gt;")
-   FWRITE( Self:nHandle, '<dd>' + Alltrim(cPar) + '</dd>' + CRLF )
+   //   cPar:=STRTRAN(cPar,"<","&lt;")
+   //   cPar:=STRTRAN(cPar,">","&gt;")
+   FWRITE( Self:nHandle, '<dd>' + ALLTRIM( cPar ) + '</dd>' + CRLF )
 
 RETURN Self
 METHOD WriteText( cPar ) CLASS THTML
 
-   FWRITE( Self:nHandle, cPar  + CRLF )
+   FWRITE( Self:nHandle, cPar + CRLF )
 
 RETURN Self
 
-METHOD WriteParBold( cPar,lEndDl,lPar ) CLASS THTML
-   DEFAULT lEnddl to .T.
-   DEFAULT lPar to .T.
-   If lEndDl .and. lPar
-     FWRITE( Self:nHandle,"</P></dd>"+CRLF+ "</DL>"+CRLF+"<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
-   ELSEif !lPar .and. !lEnddl
-     FWRITE( Self:nHandle,'<DL>'+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
-   ELSEif !lPar .and. lEnddl
-     FWRITE( Self:nHandle,"</PRE></dd>"+CRLF+"</DL>"+CRLF+ "<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
-   ELSEif lPar .and. !lEnddl
-     FWRITE( Self:nHandle,"</P></dd>"+CRLF+"<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
+METHOD WriteParBold( cPar, lEndDl, lPar ) CLASS THTML
+
+   DEFAULT lEnddl TO .T.
+   DEFAULT lPar TO .T.
+   IF lEndDl .AND. lPar
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+   ELSEIF !lPar .AND. !lEnddl
+      FWRITE( Self:nHandle, '<DL>' + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+   ELSEIF !lPar .AND. lEnddl
+      FWRITE( Self:nHandle, "</PRE></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
+   ELSEIF lPar .AND. !lEnddl
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt>' + CRLF )
 
    ENDIF
-RETURN  Self
+RETURN Self
 
 METHOD CLOSE() CLASS THTML
 
@@ -113,7 +116,7 @@ METHOD CLOSE() CLASS THTML
 
 RETURN Self
 
-METHOD WriteLink( cLink ,cName ) CLASS THTML
+METHOD WriteLink( cLink, cName ) CLASS THTML
 
    LOCAL nPos
    LOCAL cTemp := ''
@@ -124,12 +127,12 @@ METHOD WriteLink( cLink ,cName ) CLASS THTML
    ELSE
       cTemp := ALLTRIM( cLink ) + '.htm'
    ENDIF
-   IF cName!=Nil
-      cLink:=cName
+   IF cName != Nil
+      cLink := cName
    ENDIF
-   cTemp:=Strtran(cTemp," ","")
-   FWRITE( Self:nHandle, "<LI><a href=" + Lower(cTemp) + ">" + cLink + "</a></LI>" + CRLF )
-
+   cTemp := STRTRAN( cTemp, " ", "" )
+   FWRITE( Self:nHandle, "<LI><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></LI>" + CRLF )
 
 RETURN Self
 
+*+ EOF: HTML.PRG

@@ -50,15 +50,15 @@ CLASS TNortonGuide
    DATA nHandle
    METHOD New( cFile )
    METHOD WriteParBox( cPar )
-   METHOD WritePar( cPar ,lConv)
+   METHOD WritePar( cPar, lConv )
    METHOD WriteLink( clink )
-   METHOD Close()
+   METHOD CLOSE()
    METHOD WriteParBold( cPar )
-   METHOD WriteTitle(  cTopic , cTitle )
+   METHOD WriteTitle( cTopic, cTitle )
 
 ENDCLASS
 
-METHOD new( cFile ) class TNortonGuide
+METHOD new( cFile ) CLASS TNortonGuide
 
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
@@ -67,25 +67,28 @@ METHOD new( cFile ) class TNortonGuide
 
 RETURN Self
 
-METHOD WritePar( cPar,lconv ) class TNortonGuide
-   DEFAULT lConv to .T.
+METHOD WritePar( cPar, lconv ) CLASS TNortonGuide
+
+   DEFAULT lConv TO .T.
    IF lConv
-     FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
+      FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
    ELSE
-     FWRITE( Self:nHandle, cPar  + CRLF )
+      FWRITE( Self:nHandle, cPar + CRLF )
    ENDIF
 RETURN Self
-METHOD WriteParBox( cPar ) class TNortonGuide
-     FWRITE( Self:nHandle, cPar   )
+METHOD WriteParBox( cPar ) CLASS TNortonGuide
+
+   FWRITE( Self:nHandle, cPar )
 RETURN Self
 
-METHOD WriteParBold( cPar ) class TNortonGuide
-   Self:WritePar("")
+METHOD WriteParBold( cPar ) CLASS TNortonGuide
+
+   Self:WritePar( "" )
    FWRITE( Self:nHandle, '^b' + HB_OEMTOANSI( cPar ) + '^b^' + CRLF )
-   Self:WritePar("")
+   Self:WritePar( "" )
 RETURN Self
 
-METHOD WriteTitle( cTopic, cTitle ) class TNortonGuide
+METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
 
    LOCAL cTemp
    LOCAL nPos
@@ -95,19 +98,20 @@ METHOD WriteTitle( cTopic, cTitle ) class TNortonGuide
 
    FWRITE( Self:nHandle, "!Short: " + cTopic + CRLF )
 
-   Self:WriteParBold(cTitle )
+   Self:WriteParBold( cTitle )
 
 RETURN Self
 
-METHOD CLOSE() class TNortonGuide
+METHOD CLOSE() CLASS TNortonGuide
 
    FCLOSE( Self:nHandle )
 
 RETURN Self
 
-METHOD WriteLink( cLink ) class TNortonGuide
+METHOD WriteLink( cLink ) CLASS TNortonGuide
 
    FWRITE( Self:nHandle, cLink )
 
 RETURN Self
 
+*+ EOF: NG.PRG

@@ -34,7 +34,7 @@
  */
 
 #ifdef __HARBOUR__
-   #define NANFOR
+#define NANFOR
 #endif
 
 #include "directry.ch"
@@ -50,20 +50,32 @@
 #define ERRORLINE    20
 #define LONGLINE     100
 #define LONGONELINE  86
-MEMVAR aDirList,aDocInfo,aWww
+MEMVAR aDirList
+MEMVAR aDocInfo
+MEMVAR aWww
 
 STATIC aAlso
-STATIC aFiTable := {}
-STATIC aSiTable := {}
-STATIC lIsTable :=.F.
+STATIC aFiTable       := {}
+STATIC aSiTable       := {}
+STATIC lIsTable       := .F.
 STATIC nCommentLen
 STATIC lEof
 STATIC aFoiTable      := {}
 STATIC atiTable       := {}
 STATIC nNumTableItems := 0
+STATIC aCurDoc        := {}
+STATIC nCurDoc := 1
 
-STATIC aColorTable:={'aqua','black','fuchia','grey','green','lime','maroon','navy','olive','purple','red','silver','teal','white','yellow'}
+STATIC aColorTable := { 'aqua', 'black', 'fuchia', 'grey', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow' }
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function ProcessWww()
+*+
+*+    Called from ( hbdoc.prg    )   2 - function main()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
 FUNCTION ProcessWww()
 
    //  Copyright (C) 2000 Luiz Rafael Culik
@@ -82,14 +94,14 @@ FUNCTION ProcessWww()
 
    LOCAL i
    LOCAL j
-   LOCAL nFiles      := LEN( aDirList )
+   LOCAL nFiles    := LEN( aDirList )
    LOCAL lDoc
    LOCAL lClassDoc
    LOCAL cBuffer
    LOCAL nEnd
    LOCAL nCount
 
-   LOCAL cBar       := REPLICATE( "-", 80 ) + CRLF
+   LOCAL cBar          := REPLICATE( "-", 80 ) + CRLF
    LOCAL nMode
    LOCAL cFuncName
    LOCAL cOneLine
@@ -100,64 +112,64 @@ FUNCTION ProcessWww()
    LOCAL cTemp
    LOCAL cChar
    LOCAL nPos
-   LOCAL lFirstSintax := .T.
+   LOCAL lFirstSintax  := .T.
    LOCAL lAddEndPreTag := .F.
-   LOCAL lEndDesc := .F.
-   LOCAL lEndArgs :=.F.
-   LOCAL lEndSyntax := .F.
-   LOCAL lEndReturns := .F.
-   LOCAL lEndData := .F.
+   LOCAL lEndDesc      := .F.
+   LOCAL lEndArgs      := .F.
+   LOCAL lEndSyntax    := .F.
+   LOCAL lEndReturns   := .F.
+   LOCAL lEndData      := .F.
    LOCAL lDataLink
-       
-   LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
-   LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
+
+   LOCAL lBlankLine     := .F.             // Blank line encountered and sent out
+   LOCAL lAddBlank      := .F.             // Need to add a blank line if next line is not blank
    LOCAL oHtm
    LOCAL nReadHandle
-   LOCAL lEndConstru := .F.
-   LOCAL lFirstPass:= .T.
-   LOCAL lFirstArg := .T.
-   LOCAL lData := .F.
-   LOCAL lIsDataLink := .F.
-   LOCAL lIsMethodLink := .F.
-   LOCAL lMethod := .F.
-   LOCAL cDoc       := DELIM + "DOC" + DELIM                   // DOC keyword
-   LOCAL cEnd       := DELIM + "END" + DELIM                   // END keyword
-   LOCAL cFunc      := DELIM + "FUNCNAME" + DELIM              // FUNCNAME keyword
-   LOCAL cCat       := DELIM + "CATEGORY" + DELIM              // CATEGORY keyword
-   LOCAL cOne       := DELIM + "ONELINER" + DELIM              // ONELINER keyword
-   LOCAL cSyn       := DELIM + "SYNTAX" + DELIM                // SYNTAX keyword
-   LOCAL cArg       := DELIM + "ARGUMENTS" + DELIM             // ARGUMENTS keyword
-   LOCAL cRet       := DELIM + "RETURNS" + DELIM               // RETURNS keyword
-   LOCAL cDesc      := DELIM + "DESCRIPTION" + DELIM           // DESCRIPTION keyword
-   LOCAL cExam      := DELIM + "EXAMPLES" + DELIM              // EXAMPLES keyword
-   LOCAL cSee       := DELIM + "SEEALSO" + DELIM               // SEEALSO keyword
-   LOCAL cInc       := DELIM + "INCLUDE" + DELIM               // INCLUDE keyword
-   LOCAL cComm      := DELIM + "COMMANDNAME" + DELIM           // COMMAND keyword
-   LOCAL cCompl     := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest      := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus    := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat      := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles     := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode   := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction  := DELIM + 'FUNCTION' +DELIM
-   LOCAL cConstruct := DELIM + 'CONSTRUCTOR' + DELIM
-   LOCAL cDatalink  := DELIM + 'DATALINK' + DELIM
-   LOCAL cDatanolink  := DELIM + 'DATANOLINK' + DELIM
-   LOCAL cMethodslink := DELIM + 'METHODSLINK' + DELIM
+   LOCAL lEndConstru    := .F.
+   LOCAL lFirstPass     := .T.
+   LOCAL lFirstArg      := .T.
+   LOCAL lData          := .F.
+   LOCAL lIsDataLink    := .F.
+   LOCAL lIsMethodLink  := .F.
+   LOCAL lMethod        := .F.
+   LOCAL cDoc           := DELIM + "DOC" + DELIM               // DOC keyword
+   LOCAL cEnd           := DELIM + "END" + DELIM               // END keyword
+   LOCAL cFunc          := DELIM + "FUNCNAME" + DELIM          // FUNCNAME keyword
+   LOCAL cCat           := DELIM + "CATEGORY" + DELIM          // CATEGORY keyword
+   LOCAL cOne           := DELIM + "ONELINER" + DELIM          // ONELINER keyword
+   LOCAL cSyn           := DELIM + "SYNTAX" + DELIM            // SYNTAX keyword
+   LOCAL cArg           := DELIM + "ARGUMENTS" + DELIM         // ARGUMENTS keyword
+   LOCAL cRet           := DELIM + "RETURNS" + DELIM           // RETURNS keyword
+   LOCAL cDesc          := DELIM + "DESCRIPTION" + DELIM       // DESCRIPTION keyword
+   LOCAL cExam          := DELIM + "EXAMPLES" + DELIM          // EXAMPLES keyword
+   LOCAL cSee           := DELIM + "SEEALSO" + DELIM           // SEEALSO keyword
+   LOCAL cInc           := DELIM + "INCLUDE" + DELIM           // INCLUDE keyword
+   LOCAL cComm          := DELIM + "COMMANDNAME" + DELIM       // COMMAND keyword
+   LOCAL cCompl         := DELIM + "COMPLIANCE" + DELIM
+   LOCAL cTest          := DELIM + 'TESTS' + DELIM
+   LOCAL cStatus        := DELIM + 'STATUS' + DELIM
+   LOCAL cPlat          := DELIM + 'PLATFORMS' + DELIM
+   LOCAL cFiles         := DELIM + 'FILES' + DELIM
+   LOCAL cSubCode       := DELIM + 'SUBCODE' + DELIM
+   LOCAL cFunction      := DELIM + 'FUNCTION' + DELIM
+   LOCAL cConstruct     := DELIM + 'CONSTRUCTOR' + DELIM
+   LOCAL cDatalink      := DELIM + 'DATALINK' + DELIM
+   LOCAL cDatanolink    := DELIM + 'DATANOLINK' + DELIM
+   LOCAL cMethodslink   := DELIM + 'METHODSLINK' + DELIM
    LOCAL cMethodsNolink := DELIM + 'METHODSNOLINK' + DELIM
-   LOCAL cData      := DELIM +"DATA"+ DELIM
-   LOCAL cMethod    := DELIM +'METHOD' +DELIM
-   LOCAL cClassDoc  := DELIM+ "CLASSDOC" + DELIM
+   LOCAL cData          := DELIM + "DATA" + DELIM
+   LOCAL cMethod        := DELIM + 'METHOD' + DELIM
+   LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
    //
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "
-   @ MODULELINE, 20 SAY "Documenting: "
+   @ INFILELINE, 20 SAY "Extracting: "          
+   @ MODULELINE, 20 SAY "Documenting: "         
    //  loop through all of the files
-   lFirstArg:=.T.
-   lFirstPass:=.T.
-   lFirstSintax:=.T.
+   lFirstArg    := .T.
+   lFirstPass   := .T.
+   lFirstSintax := .T.
    FOR i := 1 TO nFiles
 
       //  Open file for input
@@ -165,38 +177,38 @@ FUNCTION ProcessWww()
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"
+      @ LINELINE, 27   SAY "Line:"                                  
 
       nLineCnt := 0
 
       IF nReadHandle < 0
-         write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
+         WRITE_ERROR( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
          LOOP
       ENDIF
-      lEof := .F.
-      lDoc := .F.
-      lClassDoc:= .F.
+      lEof      := .F.
+      lDoc      := .F.
+      lClassDoc := .F.
       //  First find the author
-
+      ReadFromTop( nReadHandle )
       DO WHILE .NOT. lEof
 
          //  Read a line
 
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         cBuffer := STRTRAN( cBuffer,chr(10),'')
+         cBuffer := STRTRAN( cBuffer, CHR( 10 ), '' )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
          IF AT( cDoc, cBuffer ) > 0
-            IF lDoc 
-               write_error( cDoc + " encountered during extraction of Doc" ;
+            IF lDoc
+               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
                             + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
             lDoc    := .T.
@@ -207,29 +219,30 @@ FUNCTION ProcessWww()
             nMode     := D_IGNORE
          ELSEIF AT( cClassDoc, cBuffer ) > 0
             IF lClassDoc
-               write_error( cDoc + " encountered during extraction of Doc" ;
+               WRITE_ERROR( cDoc + " encountered during extraction of Doc" ;
                             + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
-            lClassDoc    := .T.
-            cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), ;
-                             nCommentLen ) )
+            lClassDoc := .T.
+            cBuffer   := TRIM( SUBSTR( ReadLN( @lEof ), ;
+                               nCommentLen ) )
             nLineCnt ++
             cCategory := cFuncName := cSeeAlso := ""
             nMode     := D_IGNORE
 
          ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc .and. !lClassDoc
-               write_error( cEnd + " encountered outside of Doc area at line" ;
+                     nCurDoc ++
+            IF .NOT. lDoc .AND. !lClassDoc
+               WRITE_ERROR( cEnd + " encountered outside of Doc area at line" ;
                             + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ELSE
                //  Add a new entry to our list of files
 
                IF EMPTY( cCategory )
-                  write_error( "Blank Category",,,, aDirList[ i, F_NAME ] )
+                  WRITE_ERROR( "Blank Category",,,, aDirList[ i, F_NAME ] )
                   cCategory := "Unknown"
                ENDIF
                IF EMPTY( cFuncName )
-                  write_error( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
+                  WRITE_ERROR( "Blank Function Name",,,, aDirList[ i, F_NAME ] )
                   cFuncName := "Unknown"
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
@@ -237,28 +250,26 @@ FUNCTION ProcessWww()
                IF .NOT. EMPTY( cSeeAlso )
 
                   oHtm:WriteParBold( "See Also " )
-                  oHtm:WriteText("<UL>")
+                  oHtm:WriteText( "<UL>" )
                   ProcWwwalso( oHtm, cSeealso )
-                  oHtm:WriteText("</UL></DL>")
-                  if lDoc
-                     oHtm:WriteText("</DL>")
+                  oHtm:WriteText( "</UL></DL>" )
+                  IF lDoc
+                     oHtm:WriteText( "</DL>" )
                      oHtm:Close()
-                  Endif
+                  ENDIF
 
-                ENDIF
-               lDoc := .F.
+               ENDIF
+               lDoc      := .F.
                lClassDoc := .F.
 
-                  if lEndReturns   .and. lClassDoc
-                    lEndReturns:=.f.
-                    oHtm:WriteText("</p></dd>")
-                  endif
-                  if lEndArgs   .and. lClassDoc
-                    lEndArgs:=.f.
-                    oHtm:WriteText("</p></dd>")
-                  endif
-                
-
+               IF lEndReturns .AND. lClassDoc
+                  lEndReturns := .f.
+                  oHtm:WriteText( "</p></dd>" )
+               ENDIF
+               IF lEndArgs .AND. lClassDoc
+                  lEndArgs := .f.
+                  oHtm:WriteText( "</p></dd>" )
+               ENDIF
 
                nMode := D_IGNORE
             ENDIF
@@ -266,22 +277,16 @@ FUNCTION ProcessWww()
             @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
          ENDIF
 
-
-
-
-
-
-
-         IF lDoc .or. lClassDoc
+         IF lDoc .OR. lClassDoc
             //  1) function name
-            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0 
+            IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) > 0
 
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
+               @ MODULELINE, 33 SAY cFuncName         
 
                nMode := D_NORMAL
 
@@ -301,7 +306,7 @@ FUNCTION ProcessWww()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" 
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -329,50 +334,50 @@ FUNCTION ProcessWww()
                //  Add on the extension
 
                cFileName := LEFT( cFileName, 21 ) + ".htm"
-               if lDoc 
-                oHtm:=THTML():New('htm\'+cFileName)
-               endif
-                IF lFirstPass .and. lClassDoc
-                  lFirstPass:=.F.
-                  oHtm:=THTML():New('htm\'+cFileName)
-                ENDIF
+               IF lDoc
+                  oHtm := THTML():New( 'htm\' + cFileName )
+               ENDIF
+               IF lFirstPass .AND. lClassDoc
+                  lFirstPass := .F.
+                  oHtm       := THTML():New( 'htm\' + cFileName )
+               ENDIF
                IF ohtm:nHandle < 1
                   ? "Error creating", cFileName, ".htm"
-                  write_error( "Error creating",,,, cFileName + ".htm" )
+                  WRITE_ERROR( "Error creating",,,, cFileName + ".htm" )
                ENDIF
 
-            ELSEIF AT( cdata, cBuffer ) > 0 .OR. AT( cmethod, cBuffer ) > 0 
-                   if AT( cdata, cBuffer ) > 0
-                      lData := .T.
-                      lMethod := .F.
-                   ELSEIF AT( cmethod, cBuffer ) > 0
-                      lMethod := .T.
-                      lData:= .F.
-                   ENDIF
+            ELSEIF (AT( cdata, cBuffer ) > 0 .and.  GetItem( cBuffer, nCurdoc ) ).OR. (AT( cmethod, cBuffer ) > 0 .and. GetItem( cBuffer, nCurdoc ) )
+               IF AT( cdata, cBuffer ) > 0
+                  lData   := .T.
+                  lMethod := .F.
+               ELSEIF AT( cmethod, cBuffer ) > 0
+                  lMethod := .T.
+                  lData   := .F.
+               ENDIF
 
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName
+               @ MODULELINE, 33 SAY cFuncName         
 
                nMode := D_NORMAL
-               if AT("(",cfuncname)>0
-               cFuncname:=substr(cFuncName,1,AT("(",cFuncName)-1)
-               endif
-                  if lEndDesc .and. lClassDoc
-                    lEndDesc:=.f.
-                    oHtm:WriteText("</p></dd>")
-               endif
-               ohtm:WriteText('<br>')
-               ohtm:WriteText('<br>')
-               ohtm:Writetext('<hr>')
-               ohtm:WriteText('<br>')
-               ohtm:WriteText('<br>')
+               IF AT( "(", cfuncname ) > 0
+                  cFuncname := SUBSTR( cFuncName, 1, AT( "(", cFuncName ) - 1 )
+               ENDIF
+               IF lEndDesc .AND. lClassDoc
+                  lEndDesc := .f.
+                  oHtm:WriteText( "</p></dd>" )
+               ENDIF
+               ohtm:WriteText( '<br>' )
+               ohtm:WriteText( '<br>' )
+               ohtm:Writetext( '<hr>' )
+               ohtm:WriteText( '<br>' )
+               ohtm:WriteText( '<br>' )
 
-              oHtm:WriteText("<a NAME="+'"'+alltrim(UPPERLOWER(cFuncname))+'"'+"></a>")
-  
+               oHtm:WriteText( "<a NAME=" + '"' + ALLTRIM( UPPERLOWER( cFuncname ) ) + '"' + "></a>" )
+
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0
                cBuffer := ReadLN( @lEof )
@@ -387,143 +392,152 @@ FUNCTION ProcessWww()
                nLineCnt ++
                cOneLine := ALLTRIM( SUBSTR( cBuffer, nCommentLen ) )
                IF LEN( cOneLine ) > LONGONELINE
-                  write_error( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
+                  WRITE_ERROR( "OneLine", cOneLine, nLineCnt, LONGONELINE, ;
                                aDirList[ i, F_NAME ] )
                ENDIF
 
                nMode := D_ONELINE
                //  Now start writing out what we know
-        
-                 if lData
-                    oHtm:WriteText("<H1>DATA "+ alltrim(PAD( cFuncName, 21 )) + "</H1>")
-                    oHtm:WriteText("<p>"+cOneline+"</p>"+ hb_osnewline())
-                 ELSEIF lMethod
-                    oHtm:WriteText("<H1> METHOD "+ alltrim(PAD( cFuncName, 21 )) + "</H1>")
-                    oHtm:WriteText("<p>"+cOneline+"</p>"+ hb_osnewline())
-                 ELSE
-                    oHtm:WriteText("<H1>"+ alltrim(PAD( cFuncName, 21 )) + "</H1>")
-                    AADD( aWWW,{ cFuncName,LEFT(cFileName,AT(".",cFileName)-1)} )
-                    oHtm:WriteText("<p>"+cOneline+"</p>"+ hb_osnewline())
-                 Endif
-                 lFirstSintax := .T.
+
+               IF lData
+                  oHtm:WriteText( "<H1>DATA " + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
+               ELSEIF lMethod
+                  oHtm:WriteText( "<H1> METHOD " + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
+               ELSE
+                  oHtm:WriteText( "<H1>" + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  AADD( aWWW, { cFuncName, LEFT( cFileName, AT( ".", cFileName ) - 1 ) } )
+                  oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
+               ENDIF
+               lFirstSintax := .T.
                //  4) all other stuff
 
             ELSE
-        
+
                IF AT( cSyn, cBuffer ) > 0
-                  oHtm:WriteParBold( " Syntax" ,.f.,.f.)
-                  ohtm:WriteText('<DD><P>')
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
+                if GetItem( cBuffer, nCurdoc ) 
+                  oHtm:WriteParBold( " Syntax", .f., .f. )
+                  ohtm:WriteText( '<DD><P>' )
+                  nMode      := D_SYNTAX
+                  lAddBlank  := .T.
                   lEndSyntax := .T.
-
-               ELSEIF  AT( cConstruct, cBuffer ) > 0
-                     oHtm:WriteParBold( " Constructor syntax", .F.,.f.)
-                  ohtm:WriteText('<DD><P>')
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
+end
+               ELSEIF AT( cConstruct, cBuffer ) > 0
+               if GetItem( cBuffer, nCurdoc ) 
+                  oHtm:WriteParBold( " Constructor syntax", .F., .f. )
+                  ohtm:WriteText( '<DD><P>' )
+                  nMode      := D_SYNTAX
+                  lAddBlank  := .T.
                   lEndSyntax := .T.
-                
-
+               end
                ELSEIF AT( cArg, cBuffer ) > 0
-
+                  if GetItem( cBuffer, nCurdoc ) 
                   oHtm:WriteParBold( " Arguments" )
-                  ohtm:WriteText('<DD><P>') 
+                  ohtm:WriteText( '<DD><P>' )
 
                   nMode     := D_ARG
                   lAddBlank := .T.
-                  lEndArgs:=.t.
+                  lEndArgs  := .t.
+                  end
                ELSEIF AT( cRet, cBuffer ) > 0
-
+                     if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
-*                     oHtm:WritePar( "" )
+                     //                      oHtm:WritePar( "" )
                   ENDIF
 
                   oHtm:WriteParBold( " Returns" )
-                  ohtm:WriteText('<DD><P>')
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-                  lEndReturns:=.t.
+                  ohtm:WriteText( '<DD><P>' )
+                  nMode       := D_ARG
+                  lAddBlank   := .T.
+                  lEndReturns := .t.
+                  end
                ELSEIF AT( cDesc, cBuffer ) > 0
+               if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
                      oHtm:WriteText( "<br>" )
                   ENDIF
 
                   oHtm:WriteParBold( " Description" )
-                  ohtm:WriteText('<DD><P>')
+                  ohtm:WriteText( '<DD><P>' )
 
                   nMode     := D_DESCRIPTION
                   lAddBlank := .T.
-                  lEndDesc:=.t.
-               
+                  lEndDesc  := .t.
+               end
                ELSEIF AT( cExam, cBuffer ) > 0
-
+                  if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
-*                     oHtm:WritePar( "" )
+                     //                      oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Examples" )
-                  oHtm:WriteText("<PRE>")
-                  nMode     := D_EXAMPLE
-                  lAddBlank := .T.
-                  lAddEndPreTag:=.T.                     
-                  
-               
+                  oHtm:WriteText( "<PRE>" )
+                  nMode         := D_EXAMPLE
+                  lAddBlank     := .T.
+                  lAddEndPreTag := .T.
+                  end
                ELSEIF AT( cTest, cBuffer ) > 0
-
+                     if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
- *                    oHtm:WritePar( "" )
+                     //                     oHtm:WritePar( "" )
                   ENDIF
-                   oHtm:WriteParBold( " Tests", .t.,.f.)
-                   oHtm:WriteText("<DD><P>")
+                  oHtm:WriteParBold( " Tests", .t., .f. )
+                  oHtm:WriteText( "<DD><P>" )
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
-
+                     end
                ELSEIF AT( cStatus, cBuffer ) > 0
-
+                        if GetItem( cBuffer, nCurdoc ) 
                   nMode := D_STATUS
-
+                        end
                ELSEIF AT( cCompl, cBuffer ) > 0
-
+                         if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
-*                     oHtm:WritePar( "" )
+                     //                      oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Compliance" )
-                  oHtm:WriteText("<DD><P>")
+                  oHtm:WriteText( "<DD><P>" )
                   nMode     := D_COMPLIANCE
                   lAddBlank := .T.
-                                 
+                         end
                ELSEIF AT( cPlat, cBuffer ) > 0
-
+                            if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
-                  *   oHtm:WritePar( "" )
+                     //    oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Platforms" )
-                  oHtm:WriteText("<DD><P>")
+                  oHtm:WriteText( "<DD><P>" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+                  end
                ELSEIF AT( cFiles, cBuffer ) > 0
-
+                     if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
-                  *   oHtm:WritePar( "" )
+                     //    oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Files" )
-                  oHtm:WriteText("<DD><P>")
+                  oHtm:WriteText( "<DD><P>" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+                  end
                ELSEIF AT( cFunction, cBuffer ) > 0
-
+                     if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
-                  *   oHtm:WritePar( "" )
+                     //    oHtm:WritePar( "" )
                   ENDIF
                   oHtm:WriteParBold( " Functions" )
-                  oHtm:WriteText("<DD><P>")
+                  oHtm:WriteText( "<DD><P>" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
-
+                     end
                ELSEIF AT( cSee, cBuffer ) > 0
+               if GetItem( cBuffer, nCurdoc ) 
                   nMode := D_SEEALSO
+                  end
                ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE            
+               if GetItem( cBuffer, nCurdoc ) 
+                  nMode := D_INCLUDE
+                  end
                   //  All other input is trimmed of comments and sent out
                ELSE
 
@@ -531,18 +545,18 @@ FUNCTION ProcessWww()
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
                   IF nMode = D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Syntax", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
                         lAddBlank := .F.
                      ENDIF
-                      prochtmdesc(cbuffer,oHtm,"Syntax")  
+                     prochtmdesc( cbuffer, oHtm, "Syntax" )
 
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "Arguments", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
@@ -550,34 +564,34 @@ FUNCTION ProcessWww()
                         lAddBlank := .F.
                      ENDIF
 
-          prochtmdesc(cbuffer,oHtm,"Arguments")
+                     prochtmdesc( cbuffer, oHtm, "Arguments" )
                   ELSEIF nMode = D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
 
                      IF lBlankLine
-                        oHtm:WriteText('<br>')
+                        oHtm:WriteText( '<br>' )
                         lAddBlank := .F.
                      ENDIF
 
-                   ProcHtmDesc(cBuffer,oHtm)
+                     ProcHtmDesc( cBuffer, oHtm )
                   ELSEIF nMode = D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-                     prochtmdesc(cBuffer,oHtm,"Example")
+                     prochtmdesc( cBuffer, oHtm, "Example" )
                   ELSEIF nMode = D_DESCRIPTION
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-                     prochtmdesc(cBuffer,oHtm,"Description")
+                     prochtmdesc( cBuffer, oHtm, "Description" )
 
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
@@ -591,41 +605,40 @@ FUNCTION ProcessWww()
                      ENDIF
                   ELSEIF nMode = D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
                         lAddBlank := .F.
                      ENDIF
-                     cTemp:=ALLTRIM(Substr(cBuffer,1,AT(":",cBuffer)-1))
-                     ohtm:WriteText("<a href="+cFileName+"#"+UPPERLOWER(cTemp)+">"+ cBuffer+'</a>')
+                     cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
+                     ohtm:WriteText( "<a href=" + cFileName + "#" + UPPERLOWER( cTemp ) + ">" + cBuffer + '</a>' )
 
                   ELSEIF nMode = D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
                         lAddBlank := .F.
                      ENDIF
-                     cTemp:=ALLTRIM(Substr(cBuffer,1,AT("(",cBuffer)-1))
-                     ohtm:WriteText("<a href="+cFileName+"#"+UPPERLOWER(cTemp)+">"+ cBuffer+'</a>')
-
+                     cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( "(", cBuffer ) - 1 ) )
+                     ohtm:WriteText( "<a href=" + cFileName + "#" + UPPERLOWER( cTemp ) + ">" + cBuffer + '</a>' )
 
                   ELSEIF nMode = D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
-                        write_error( "General", cBuffer, nLineCnt, ;
+                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
-                     prochtmdesc(cBuffer,oHtm,"Compliance")
+                     prochtmdesc( cBuffer, oHtm, "Compliance" )
 
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
                         oHtm:WriteParBold( "Status" )
-                        oHtm:WriteText("<DD><P>")
+                        oHtm:WriteText( "<DD><P>" )
                      ENDIF
                      ProcStatusWww( oHtm, cBuffer )
 
@@ -633,35 +646,35 @@ FUNCTION ProcessWww()
 
                      //  unknown data from somewhere
 
-                     write_error( "Unknown Data Type " + cBuffer,, ;
+                     WRITE_ERROR( "Unknown Data Type " + cBuffer,, ;
                                   nLineCnt, ;
                                   LONGONELINE, aDirList[ i, F_NAME ] )
 
                   ENDIF
                ENDIF
 
-////////////////////
+               ////////////////////
 
             ENDIF
          ENDIF
 
+         IF !lClassDoc .AND. lEof
+            IF VALTYPE( oHtm ) == "O"
+               oHtm:WriteText( '</p></dd></dl>' )
+               oHtm:Close()
+            ENDIF
 
-         if !lClassDoc .and. lEof
-            if valtype(oHtm)=="O"
-              oHtm:WriteText('</p></dd></dl>')
-              oHtm:Close()
-            Endif
-
-          
          ENDIF
 
       ENDDO
       //  Close down the input file
 
       FT_FUSE()
-               if lClassDoc
-               oHtm:Close()
-               Endif
+      IF lClassDoc
+         oHtm:Close()
+      ENDIF
+      nCurDoc := 1
+      aCurDoc := {}
 
    NEXT
 RETURN nil
@@ -679,14 +692,18 @@ RETURN nil
 *+
 FUNCTION ProcWwwBuf( cPar )
 
-   cPar:=STRTRAN(cPar,"<","&lt;")
-   cPar:=STRTRAN(cPar,">","&gt;")
+   cPar := STRTRAN( cPar, "<", "&lt;" )
+   cPar := STRTRAN( cPar, ">", "&gt;" )
 
 RETURN cPar
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function ProcWwwAlso()
+*+
+*+    Called from ( genhtm.prg   )   1 - function processwww()
+*+                ( genhtm1.prg  )   1 - function processwww()
+*+                ( genhtm2.prg  )   1 - function processwww()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -711,10 +728,10 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
          ELSE
             xPos := AT( " ", xTemp )
             IF xPos > 0
-               nLen -= LEN( xTemp ) + 3
+               nLen  -= LEN( xTemp ) + 3
                cTemp := xTemp
-               xTemp:=Substr(xTemp,1,xPos-1 ) + Substr(xTemp,xPos+1)
-               
+               xTemp := SUBSTR( xTemp, 1, xPos - 1 ) + SUBSTR( xTemp, xPos + 1 )
+
             ELSE
                nLen -= LEN( xTemp ) + 2
 
@@ -734,10 +751,10 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
 
             xPos := AT( " ", xTemp )
             IF xPos > 0
-               nLen -= LEN( xTemp ) + 3
-                cTemp := xTemp
-                xTemp:=Substr(xTemp,1,xPos-1 )+Substr(xTemp,xPos+1)
-               
+               nLen  -= LEN( xTemp ) + 3
+               cTemp := xTemp
+               xTemp := SUBSTR( xTemp, 1, xPos - 1 ) + SUBSTR( xTemp, xPos + 1 )
+
             ELSE
                nLen -= LEN( xTemp ) + 2
 
@@ -747,7 +764,7 @@ FUNCTION ProcWwwAlso( nWriteHandle, cSeeAlso )
 
       ENDIF
 
-      nWriteHandle:WriteLink( ALLTRIM( xTemp ),cTemp )
+      nWriteHandle:WriteLink( ALLTRIM( xTemp ), cTemp )
       cSeeAlso := SUBSTR( cSeeAlso, nPos + 1 )
 
       IF nLen == 0 .OR. nLen < 0
@@ -760,11 +777,15 @@ RETURN nil
 *+
 *+    Function ProcStatusWww()
 *+
+*+    Called from ( genhtm.prg   )   1 - function processwww()
+*+                ( genhtm1.prg  )   1 - function processwww()
+*+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
-   IF LEN( ALLTRIM( cBuffer ) ) >1
-      nWriteHandle:WriteText( cBuffer)
+
+   IF LEN( ALLTRIM( cBuffer ) ) > 1
+      nWriteHandle:WriteText( cBuffer )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
       nWriteHandle:WriteText( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
@@ -776,23 +797,33 @@ FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
    ENDIF
 
 RETURN nil
-function FormatHtmBuff(cBuffer,cStyle,oHtm)
 
-Local creturn:=''
-local cline:=''
-LOCAL cOldLine:=''
-local cBuffend:=''
-local lEndBuffer:=.f.
-LOCAL lArgBold:= .f.
-local npos,nposend
-      creturn :=cBuffer+' '
-      if at('</par>',creturn)>0 .or. empty(cBuffer)
-         if empty(cbuffer)
-         creturn:=''
-         endif
-         return creturn
-      endif
-   if cStyle != "Syntax" .AND. cStyle !="Arguments"
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function FormatHtmBuff()
+*+
+*+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+FUNCTION FormatHtmBuff( cBuffer, cStyle, oHtm )
+
+   LOCAL creturn    := ''
+   LOCAL cline      := ''
+   LOCAL cOldLine   := ''
+   LOCAL cBuffend   := ''
+   LOCAL lEndBuffer := .f.
+   LOCAL lArgBold   := .f.
+   LOCAL npos
+   LOCAL nposend
+   creturn := cBuffer + ' '
+   IF AT( '</par>', creturn ) > 0 .OR. EMPTY( cBuffer )
+      IF EMPTY( cbuffer )
+         creturn := ''
+      ENDIF
+      RETURN creturn
+   ENDIF
+   IF cStyle != "Syntax" .AND. cStyle != "Arguments"
       DO WHILE !lEndBuffer
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( '</par>', cLine ) > 0
@@ -801,7 +832,7 @@ local npos,nposend
 
          IF EMPTY( cLine )
             lEndBuffer := .t.
-//            TheBlank   := .t.
+            //            TheBlank   := .t.
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cLine ) > 0
@@ -818,15 +849,15 @@ local npos,nposend
 
       cReturn := '<par>' + cReturn + '    </par>'
 
-  elseif cStyle=='Syntax'
-            cReturn := STRTRAN( cReturn, "<par>","")
-            cReturn := STRTRAN( cReturn, "<", "&lt;" )                     
-            cReturn := STRTRAN( cReturn, ">", "&gt;" )
-        
-         creturn:='<par><b>'+creturn+' </b></par>'
-  ELSEIF cStyle=='Arguments'
+   ELSEIF cStyle == 'Syntax'
+      cReturn := STRTRAN( cReturn, "<par>", "" )
+      cReturn := STRTRAN( cReturn, "<", "&lt;" )
+      cReturn := STRTRAN( cReturn, ">", "&gt;" )
 
-      nPos    := 0
+      creturn := '<par><b>' + creturn + ' </b></par>'
+   ELSEIF cStyle == 'Arguments'
+
+      nPos := 0
       IF AT( "<par>", cReturn ) > 0
          cReturn  := STRTRAN( cReturn, "<par>", "" )
          cReturn  := STRTRAN( cReturn, "</par>", "" )
@@ -835,8 +866,8 @@ local npos,nposend
          cOldLine := LEFT( cReturn, nPos - 1 )
          cReturn  := STRTRAN( cReturn, cOldLine, "" )
          IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
-             cOldLine:=STRTRAN(cOldLine,"<","&lt;")
-             cOldLine:=STRTRAN(cOldLine,">","&gt;")
+            cOldLine := STRTRAN( cOldLine, "<", "&lt;" )
+            cOldLine := STRTRAN( cOldLine, ">", "&gt;" )
             lArgBold := .T.
          ENDIF
       ENDIF
@@ -848,7 +879,7 @@ local npos,nposend
          ENDIF
          IF EMPTY( cLine )
             lEndBuffer := .t.
-//            TheBlank   := .t.
+            //            TheBlank   := .t.
             FT_FSKIP( - 1 )
 
          ENDIF
@@ -862,170 +893,194 @@ local npos,nposend
       ENDDO
       cReturn := STRTRAN( cReturn, "<par>", "" )
       cReturn := STRTRAN( cReturn, "</par>", "" )
-      
-       cReturn:=STRTRAN(cReturn,"<","&lt;")
-       cReturn:=STRTRAN(cReturn,">","&gt;")
-       cOldLine:=STRTRAN(cOldLine,"<","&lt;")
-       cOldLine:=STRTRAN(cOldLine,">","&gt;")
+
+      cReturn  := STRTRAN( cReturn, "<", "&lt;" )
+      cReturn  := STRTRAN( cReturn, ">", "&gt;" )
+      cOldLine := STRTRAN( cOldLine, "<", "&lt;" )
+      cOldLine := STRTRAN( cOldLine, ">", "&gt;" )
 
       IF lArgBold
          cReturn := '       <par><b>' + cOldLine + '</b> ' + cReturn + '    </par>'
       ELSE
          cReturn := '       <par>' + cOldLine + ' ' + cReturn + '    </par>'
       ENDIF
-//   ENDIF
-    lArgBold:=.F.
+      //   ENDIF
+      lArgBold := .F.
 
    ENDIF
 
-//   endif
-return creturn
+   //   endif
+RETURN creturn
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function checkhtmcolor()
+*+
+*+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+FUNC checkhtmcolor( cbuffer, ncolorpos )
 
-  
-func checkhtmcolor(cbuffer,ncolorpos)
-local ncolorend,nreturn,cOldColorString,cReturn,ccolor
+   LOCAL ncolorend
+   LOCAL nreturn
+   LOCAL cOldColorString
+   LOCAL cReturn
+   LOCAL ccolor
 
-do while at("<color:",cbuffer)>0
-          nColorPos:=AT("<color:",cBuffer)
-          ccolor:=substr(cbuffer,ncolorpos+7)
-          nColorend:=AT(">",ccolor)
-          ccolor:=substr(ccolor,1,nColorend-1)
-          cOldColorString:=Substr(cbuffer,ncolorpos)
-          nColorend:=AT(">",cOldColorString)
-          cOldColorString:=Substr(cOldColorString,1,nColorEnd)
-nreturn:=ascan(acolortable,{|x,y| upper(x)==upper(ccolor)})
-if nreturn >0
-  creturn:='<font color='+acolortable[nreturn]+'>'
-endif
-cBuffer:=strtran(cBuffer,cOldColorString,cReturn)
-enddo
-return cbuffer
+   DO WHILE AT( "<color:", cbuffer ) > 0
+      nColorPos       := AT( "<color:", cBuffer )
+      ccolor          := SUBSTR( cbuffer, ncolorpos + 7 )
+      nColorend       := AT( ">", ccolor )
+      ccolor          := SUBSTR( ccolor, 1, nColorend - 1 )
+      cOldColorString := SUBSTR( cbuffer, ncolorpos )
+      nColorend       := AT( ">", cOldColorString )
+      cOldColorString := SUBSTR( cOldColorString, 1, nColorEnd )
+      nreturn         := ASCAN( acolortable, { | x, y | UPPER( x ) == UPPER( ccolor ) } )
+      IF nreturn > 0
+         creturn := '<font color=' + acolortable[ nreturn ] + '>'
+      ENDIF
+      cBuffer := STRTRAN( cBuffer, cOldColorString, cReturn )
+   ENDDO
+RETURN cbuffer
 
-FUNCTION  ProchtmDesc(cBuffer,oHtm,cStyle)
-local cOldLine:=''
-Local npos,CurPos:=0
-LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,nIdentLevel
-LOCAL lEndPar:= .F.
-LOCAL cLine:=''
-LOCAL lEndFixed:=.F.
-LOCAL lArgBold:=.f.
-LOCAL LFstTableItem := .T.
-LOCAL lEndTable:=.F.
-LOCAL lEndBuffer :=.f.
-Default cStyle to "Default"
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function ProchtmDesc()
+*+
+*+    Called from ( genhtm.prg   )   6 - function processwww()
+*+                ( genhtm1.prg  )   6 - function processwww()
+*+                ( genhtm2.prg  )   6 - function processwww()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
 
-if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
-    cBuffer:='<par>'+cBuffer
-endif
+   LOCAL cOldLine      := ''
+   LOCAL npos
+   LOCAL CurPos        := 0
+   LOCAL nColorPos
+   LOCAL ccolor        := ''
+   LOCAL creturn       := ''
+   LOCAL ncolorend
+   LOCAL nIdentLevel
+   LOCAL lEndPar       := .F.
+   LOCAL cLine         := ''
+   LOCAL lEndFixed     := .F.
+   LOCAL lArgBold      := .f.
+   LOCAL LFstTableItem := .T.
+   LOCAL lEndTable     := .F.
+   LOCAL lEndBuffer    := .f.
+   DEFAULT cStyle TO "Default"
 
-if empty(cBuffer)
-oHtm:WriteText("<dd><br></dd>")
-endif
+   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example"
+      cBuffer := '<par>' + cBuffer
+   ENDIF
 
-if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=0
-   if AT("<par>",cBuffer)>=0 .or. AT("</par>",cBuffer)=0   .and. !empty(cbuffer) 
-      If AT("<par>",cBuffer)>0 .and. AT("</par>",cBuffer)>0
-         if cStyle=="Arguments"
+   IF EMPTY( cBuffer )
+      oHtm:WriteText( "<dd><br></dd>" )
+   ENDIF
 
-            creturn:=cBuffer
+   IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
+      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) = 0 .AND. !EMPTY( cbuffer )
+         IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
+            IF cStyle == "Arguments"
 
-            cReturn:=STRTRAN(cReturn,"<par>","")
-            cReturn:=STRTRAN(cReturn,"</par>","")
+               creturn := cBuffer
 
-            cReturn:=alltrim(cReturn)
-            nPos:=AT(" ",cReturn)
-            cOldLine:=left(cReturn,nPos-1)
-            cReturn:=STRTRAN(cReturn,cOldLine,"")
-             IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
-                lArgBold := .T.
-                cOldLine:=STRTRAN(cOldLine,"<","&lt;")
-                cOldLine:=STRTRAN(cOldLine,">","&gt;")
-         
+               cReturn := STRTRAN( cReturn, "<par>", "" )
+               cReturn := STRTRAN( cReturn, "</par>", "" )
 
-             ENDIF
-    if lArgBold
-        cReturn:='       <par><b>'+cOldLine+'</b> '+cReturn+'    </par>'
-      else
-            cReturn:='       <par>'+cOldLine+' '+cReturn+'    </par>'
-      endif
+               cReturn  := ALLTRIM( cReturn )
+               nPos     := AT( " ", cReturn )
+               cOldLine := LEFT( cReturn, nPos - 1 )
+               cReturn  := STRTRAN( cReturn, cOldLine, "" )
+               IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
+                  lArgBold := .T.
+                  cOldLine := STRTRAN( cOldLine, "<", "&lt;" )
+                  cOldLine := STRTRAN( cOldLine, ">", "&gt;" )
 
-      cbuffer:=cReturn
-      endif
-      else
-      cBuffer:=FormathtmBuff(cBuffer,cStyle,oHtm)
-      endif
-endif
-endif
+               ENDIF
+               IF lArgBold
+                  cReturn := '       <par><b>' + cOldLine + '</b> ' + cReturn + '    </par>'
+               ELSE
+                  cReturn := '       <par>' + cOldLine + ' ' + cReturn + '    </par>'
+               ENDIF
 
+               cbuffer := cReturn
+            ENDIF
+         ELSE
+            cBuffer := FormathtmBuff( cBuffer, cStyle, oHtm )
+         ENDIF
+      ENDIF
+   ENDIF
 
-If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
-      cBuffer:=Strtran(cBuffer,'<par>','')
-      cBuffer:=strtran(cBuffer,'</color>','</font> ')
-      nColorPos:=at('<color:',cBuffer)
-      if ncolorpos>0
-      checkhtmcolor(@cbuffer,ncolorpos)
-      endif
-//      Alltrim(cBuffer)
-      If cStyle=="Description" .or. cStyle=="Compliance"
-          nIdentLevel:=6
-          nPos:=0
-          if AT('</par>',cBuffer)>0
-             cBuffer:=strtran(cBuffer,"</par>","")
-          endif
-          if  !empty(cBuffer)
-//             cBuffer:=SUBSTR(cBuffer,2)
-             cBuffeR:=Alltrim(cBuffer)
-             oHtm:WritePar(cBuffer)
-          endif
+   IF AT( '<par>', cBuffer ) > 0 .AND. AT( '</par>', cBuffer ) > 0
+      cBuffer   := STRTRAN( cBuffer, '<par>', '' )
+      cBuffer   := STRTRAN( cBuffer, '</color>', '</font> ' )
+      nColorPos := AT( '<color:', cBuffer )
+      IF ncolorpos > 0
+         checkhtmcolor( @cbuffer, ncolorpos )
+      ENDIF
+      //      Alltrim(cBuffer)
+      IF cStyle == "Description" .OR. cStyle == "Compliance"
+         nIdentLevel := 6
+         nPos        := 0
+         IF AT( '</par>', cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF
+         IF !EMPTY( cBuffer )
+            //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffeR := ALLTRIM( cBuffer )
+            oHtm:WritePar( cBuffer )
+         ENDIF
 
-      ELSEIf cStyle=="Arguments"
+      ELSEIF cStyle == "Arguments"
 
-         if AT('</par>',cBuffer)>0
-            cBuffer:=strtran(cBuffer,"</par>","")
-         endif
-         if  !empty(cBuffer)
-                      cBuffeR:=Alltrim(cBuffer)
-             oHtm:WritePar(cBuffer)
-         endif
+         IF AT( '</par>', cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF
+         IF !EMPTY( cBuffer )
+            cBuffeR := ALLTRIM( cBuffer )
+            oHtm:WritePar( cBuffer )
+         ENDIF
 
-      ELSEIf cStyle=="Syntax"
-          if AT('</par>',cBuffer)>0
-             cBuffer:=strtran(cBuffer,"</par>","")
-             cBuffer:=strtran(cBuffer,"<par>","")
-          endif
-          if  !empty(cBuffer)
-//                    cBuffer:=SUBSTR(cBuffer,2)
-                                 cBuffeR:=Alltrim(cBuffer)
-             oHtm:WritePar(cBuffer)
-          endif
+      ELSEIF cStyle == "Syntax"
+         IF AT( '</par>', cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+            cBuffer := STRTRAN( cBuffer, "<par>", "" )
+         ENDIF
+         IF !EMPTY( cBuffer )
+            //                    cBuffer:=SUBSTR(cBuffer,2)
+            cBuffeR := ALLTRIM( cBuffer )
+            oHtm:WritePar( cBuffer )
+         ENDIF
 
-Elseif cStyle=="Default"
-          if AT('</par>',cBuffer)>0
-             cBuffer:=strtran(cBuffer,"</par>","")
-          endif
-          if  !empty(cBuffer)
-  //                  cBuffer:=SUBSTR(cBuffer,2)
-             cBuffeR:=Alltrim(cBuffer)
-             oHtm:WritePar(cBuffer)
-          endif
+      ELSEIF cStyle == "Default"
+         IF AT( '</par>', cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF
+         IF !EMPTY( cBuffer )
+            //                  cBuffer:=SUBSTR(cBuffer,2)
+            cBuffeR := ALLTRIM( cBuffer )
+            oHtm:WritePar( cBuffer )
+         ENDIF
 
-
-endif
-endif
-If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
+      ENDIF
+   ENDIF
+   IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
       IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
-        
-        oHtm:WriteText("<br>")
+
+         oHtm:WriteText( "<br>" )
          oHtm:WritePar( cBuffer )
       ENDIF
       DO WHILE !lendFixed
          cOldLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cOldLine ) > 0
             lendfixed := .t.
-            cOldLine     := STRTRAN( cOldLine, "</fixed>", "" )
+            cOldLine  := STRTRAN( cOldLine, "</fixed>", "" )
          ENDIF
          IF AT( DELIM, cOldLine ) = 0
             cReturn += ALLTRIM( cOldLine ) + ' '
@@ -1039,14 +1094,14 @@ If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
             oHtm:WritePar( cOldLine )
          ENDIF
       ENDDO
-        oHtm:WriteText( "</pre><br>")
-end
-if AT('<table>',cBuffer)>0
-    do while !lendTable
-        cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-        if  at("</table>",cLine)>0
-          lendTable:=.t.
-        else
+      oHtm:WriteText( "</pre><br>" )
+   END
+   IF AT( '<table>', cBuffer ) > 0
+      DO WHILE !lendTable
+         cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+         IF AT( "</table>", cLine ) > 0
+            lendTable := .t.
+         ELSE
             IF LFstTableItem
                nNumTableItems := GetNumberofTableItems( cLine )
                prochtmtable( cline, nNumTableItems )
@@ -1054,111 +1109,187 @@ if AT('<table>',cBuffer)>0
             ELSE
                prochtmtable( cline, nNumTableItems )
             ENDIF
-          
-    endif
-    enddo
 
-if lEndTable
-    GenhtmTable(oHtm)
-endif
-endif
-return nil
-Function ProchtmTable(cBuffer,nNum)
+         ENDIF
+      ENDDO
 
-Local nPos,cItem,cItem2,cItem3,nColorpos,cColor,cItem4
-
-      cBuffer:=alltrim(cBuffer)           
-      if AT("<color:",cBuffer)>0
-         nColorPos:=AT(":",cBuffer)
-         cColor:=SubStr(cBuffer,nColorpos+1)
-         nPos:=at(">",ccolor)
-            cColor:=substr(ccolor,1,nPos-1)
-
-         cBuffer:=strtran(cbuffer,"</color>","")
-         cBuffer:=STRTRAn(cbuffer,"<color:","")
-         cBuffer:=STRTRAn(cbuffer,">","")
-         cBuffer:=Strtran(cBuffer,ccolor,'')
-         nColorpos:=ASCAn(aColorTable,{|x,y| upper(x)==upper(ccolor)})
-         cColor:=aColortable[nColorPos]
-      Endif
-      if empty(cBuffer)
-      citem:=''
-      citem2:=''
-      citem3:=''
-      citem4:=''
-   else
-                cBuffer:=STRTRAN(cBuffer,"<","&lt;")
-                cBuffer:=STRTRAN(cBuffer,">","&gt;")
-         
-
-   cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-   cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
-   if nNum==2
-       cItem2 := SUBSTR( cBuffer, 1 )
-   else       
-   cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-   cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
-    endif
-
-   IF nNum == 3
-      cItem3 := SUBSTR( cBuffer, 1 )
-   ELSEIF nNum > 3
-      cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
-      cItem4  := SUBSTR( cBuffer, 1 )
+      IF lEndTable
+         GenhtmTable( oHtm )
+      ENDIF
    ENDIF
-endif
-        if cColor<>NIL
-        AADD(afiTable,"<Font color="+ccolor+">"+rtrim(ltrim(cItem))+'</font>')
-        AADD(asiTable,"<Font color="+ccolor+">"+cItem2+'</font>')
-        Else
-        AADD(afiTable,rtrim(ltrim(cItem)))
-        AADD(asiTable,cItem2)
-        endif
+RETURN nil
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function ProchtmTable()
+*+
+*+    Called from ( genhtm.prg   )   2 - function prochtmdesc()
+*+                ( genhtm1.prg  )   1 - function prochtmdesc()
+*+                ( genhtm2.prg  )   1 - function prochtmdesc()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+FUNCTION ProchtmTable( cBuffer, nNum )
 
-      if cColor <>NIL
-          AADD(atiTable,"<Font color="+ccolor+">"+cItem3+'</font>')
-      ELSE  
+   LOCAL nPos
+   LOCAL cItem
+   LOCAL cItem2
+   LOCAL cItem3
+   LOCAL nColorpos
+   LOCAL cColor
+   LOCAL cItem4
+
+   cBuffer := ALLTRIM( cBuffer )
+   IF AT( "<color:", cBuffer ) > 0
+      nColorPos := AT( ":", cBuffer )
+      cColor    := SUBSTR( cBuffer, nColorpos + 1 )
+      nPos      := AT( ">", ccolor )
+      cColor    := SUBSTR( ccolor, 1, nPos - 1 )
+
+      cBuffer   := STRTRAN( cbuffer, "</color>", "" )
+      cBuffer   := STRTRAN( cbuffer, "<color:", "" )
+      cBuffer   := STRTRAN( cbuffer, ">", "" )
+      cBuffer   := STRTRAN( cBuffer, ccolor, '' )
+      nColorpos := ASCAN( aColorTable, { | x, y | UPPER( x ) == UPPER( ccolor ) } )
+      cColor    := aColortable[ nColorPos ]
+   ENDIF
+   IF EMPTY( cBuffer )
+      citem  := ''
+      citem2 := ''
+      citem3 := ''
+      citem4 := ''
+   ELSE
+      cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
+      cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+
+      cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+      IF nNum == 2
+         cItem2 := SUBSTR( cBuffer, 1 )
+      ELSE
+         cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+      ENDIF
+
+      IF nNum == 3
+         cItem3 := SUBSTR( cBuffer, 1 )
+      ELSEIF nNum > 3
+         cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
+         cItem4  := SUBSTR( cBuffer, 1 )
+      ENDIF
+   ENDIF
+   IF cColor <> NIL
+      AADD( afiTable, "<Font color=" + ccolor + ">" + RTRIM( LTRIM( cItem ) ) + '</font>' )
+      AADD( asiTable, "<Font color=" + ccolor + ">" + cItem2 + '</font>' )
+   ELSE
+      AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
+      AADD( asiTable, cItem2 )
+   ENDIF
+
+   IF cColor <> NIL
+      AADD( atiTable, "<Font color=" + ccolor + ">" + cItem3 + '</font>' )
+   ELSE
       AADD( atiTable, cItem3 )
-      Endif
-         if cColor <>NIL
-                AADD(afoiTable,"<Font color="+ccolor+">"+cItem4+'</font>')
-         ELSE
-          AADD( afoiTable, cItem4 )
-      Endif
+   ENDIF
+   IF cColor <> NIL
+      AADD( afoiTable, "<Font color=" + ccolor + ">" + cItem4 + '</font>' )
+   ELSE
+      AADD( afoiTable, cItem4 )
+   ENDIF
 
+RETURN Nil
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function GenhtmTable()
+*+
+*+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
+*+                ( genhtm1.prg  )   1 - function prochtmdesc()
+*+                ( genhtm2.prg  )   1 - function prochtmdesc()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+FUNCTION GenhtmTable( oHtm )
 
-Return Nil
-Function GenhtmTable(oHtm)
-LOCAL x
-        oHtm:WriteText("<br>")
-        oHtm:WriteText("<br>")
-        oHtm:WriteText('<table border=1>') //-4
+   LOCAL x
+   oHtm:WriteText( "<br>" )
+   oHtm:WriteText( "<br>" )
+   oHtm:WriteText( '<table border=1>' )                     //-4
 
-FOR x:=1 to len(asitable)
-        If !empty(asitable[x])
-            if nNumTableItems ==2
-                oHtm:WriteText('<tr><td>'+afitable[x]+'</td><td>' +asitable[x]+'</td></tr> ')
-            elseif nNumTableItems ==3
-               oHtm:WriteText('<tr><td>'+afitable[x]+'</td><td>' +asitable[x]+'</td><td>'+atitable[x]+'</td></tr> ')
-            elseif nNumTableItems ==4
-                oHtm:WriteText('<tr><td>'+afitable[x]+'</td><td>' +asitable[x]+'</td><td>'+atitable[x]+'</td><td>'+afoitable[x]+'</td></tr> ')
-            Endif
-        Else
-            oHtm:WriteText('<tr><td></td></tr> ')
-        endif
-Next
+   FOR x := 1 TO LEN( asitable )
+      IF !EMPTY( asitable[ x ] )
+         IF nNumTableItems == 2
+            oHtm:WriteText( '<tr><td>' + afitable[ x ] + '</td><td>' + asitable[ x ] + '</td></tr> ' )
+         ELSEIF nNumTableItems == 3
+            oHtm:WriteText( '<tr><td>' + afitable[ x ] + '</td><td>' + asitable[ x ] + '</td><td>' + atitable[ x ] + '</td></tr> ' )
+         ELSEIF nNumTableItems == 4
+            oHtm:WriteText( '<tr><td>' + afitable[ x ] + '</td><td>' + asitable[ x ] + '</td><td>' + atitable[ x ] + '</td><td>' + afoitable[ x ] + '</td></tr> ' )
+         ENDIF
+      ELSE
+         oHtm:WriteText( '<tr><td></td></tr> ' )
+      ENDIF
+   NEXT
 
-  oHtm:Writetext("</table>")
+   oHtm:Writetext( "</table>" )
 
-oHtm:WriteText("<br>")
-afiTable:={}
-asitable:={}
-atitable  := {}
-afoitable := {}
+   oHtm:WriteText( "<br>" )
+   afiTable  := {}
+   asitable  := {}
+   atitable  := {}
+   afoitable := {}
 
-Return Nil
+RETURN Nil
 
+*+ EOF: GENHTM.PRG
+STATIC FUNCTION ReadFromTop( nh )
 
+   LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
+   LOCAL cEnd      := DELIM + "END" + DELIM                    // END keyword
+   LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
+   LOCAL cBuffer   := ''
+   LOCAL NPOS      := 0
+   LOCAL nlenpos
+   LOCAL aLocDoc   := {}
+   DO WHILE FREADline( nH, @cBuffer, 4096 )
+      cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
+      AADD( Alocdoc, CbUFFER )
+      IF AT( cEnd, cBuffer ) > 0
+         AADD( aCurdoc, aLocdoc )
+         aLocDoc := {}
+      ENDIF
+
+   ENDDO
+   lEof := .F.
+   FT_FGOTOP()
+RETURN nil
+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Static Function GetItem()
+*+
+*+    Called from ( genng.prg    )  20 - function processing()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+STATIC FUNCTION GetItem( cItem, nCurdoc )
+
+   LOCAL nPos
+   LOCAL cCuritem
+   LOCAL lReturn
+   LOCAL x
+   LOCAL xPos
+   xPos := aCurdoc[ nCurdoc ]
+   nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )
+   IF nPos > 0
+      cCuritem := xPos[ nPos ]
+      IF AT( "$", xPos[ nPos + 1 ] ) > 0
+         lReturn := .f.
+      ELSE
+         lReturn := .t.
+      ENDIF
+
+   ENDIF
+RETURN lReturn
+
+*+ EOF: GENNG.PRG

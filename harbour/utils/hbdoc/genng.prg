@@ -57,12 +57,17 @@ STATIC lEof
 STATIC aFoiTable      := {}
 STATIC atiTable       := {}
 STATIC nNumTableItems := 0
+STATIC aCurDoc        := {}
+
+STATIC nCurDoc := 1
 
 STATIC aColorTable := { { 'aqua', '1B' }, { 'black', '10' }, { 'fuchia', '1D' }, { 'grey', '18' }, { 'green', '12' }, { 'lime', '1A' }, { 'maroon', '16' }, { 'navy', '19' }, { 'olive', '12' }, { 'purple', '15' }, { 'red', '1C' }, { 'silver', '17' }, { 'teal', '13 ' }, { 'white', '1F' }, { 'yellow', '1E' } }
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function ProcessiNg()
+*+
+*+    Called from ( hbdoc.prg    )   2 - function main()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -183,7 +188,7 @@ FUNCTION ProcessiNg()
       lEof := .F.
       lDoc := .F.
       //  First find the author
-
+      ReadFromTop( nReadHandle )
       DO WHILE .NOT. lEof
 
          //  Read a line
@@ -208,10 +213,12 @@ FUNCTION ProcessiNg()
             cCategory := cFuncName := cSeeAlso := ""
             nMode     := D_IGNORE
          ELSEIF AT( cEnd, cBuffer ) > 0
+            nCurDoc ++
             IF .NOT. lDoc
                WRITE_ERROR( cEnd + " enCountered outside of Doc area at line" ;
                             + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ELSE
+
                //  Add a new entry to our list of files
 
                IF EMPTY( cCategory )
@@ -310,7 +317,7 @@ FUNCTION ProcessiNg()
                   WRITE_ERROR( "Error creating",,,, cFileName + ".ngi" )
                ENDIF
                //  2) Category
-            ELSEIF AT( cdata, cBuffer ) > 0 .OR. AT( cmethod, cBuffer ) > 0
+            ELSEIF ( AT( cdata, cBuffer ) > 0 .AND. GetItem( cBuffer, nCurdoc ) ) .OR. ( AT( cmethod, cBuffer ) > 0 .AND. GetItem( cBuffer, nCurdoc ) )
                IF AT( cdata, cBuffer ) > 0
                   lData   := .T.
                   lMethod := .F.
@@ -326,7 +333,7 @@ FUNCTION ProcessiNg()
                @ MODULELINE, 33 SAY cFuncName         
 
                nMode := D_NORMAL
-
+               //          endif
             ELSEIF AT( cCat, cBuffer ) > 0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
@@ -351,8 +358,11 @@ FUNCTION ProcessiNg()
                ELSEIF lMethod
                   oNgi:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Method " + cFuncName )
                ELSE
-
-                  oNgi:WriteTitle( PAD( cFuncName, 21 ) + cOneLine, cFuncName )
+                  IF LEN( cFuncname ) < 22
+                     oNgi:WriteTitle( PAD( cFuncName, 21 ) + cOneLine, cFuncName )
+                  ELSE
+                     oNgi:WriteTitle( PAD( cFuncName, 24 ) + cOneLine, cFuncName )
+                  ENDIF
                   oNgi:WritePar( cOneLine )
                   oNgi:WritePar( cBar )
                   //  4) all other stuff
@@ -360,150 +370,180 @@ FUNCTION ProcessiNg()
             ELSE
 
                IF AT( cSyn, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  oNgi:WriteParBold( " Syntax" )
+                     oNgi:WriteParBold( " Syntax" )
 
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
+                     nMode     := D_SYNTAX
+                     lAddBlank := .T.
+                  ENDIF
                ELSEIF AT( cConstruct, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  oNgi:WriteParBold( " Constructor syntax" )
+                     oNgi:WriteParBold( " Constructor syntax" )
 
-                  nMode     := D_SYNTAX
-                  lAddBlank := .T.
-
+                     nMode     := D_SYNTAX
+                     lAddBlank := .T.
+                  ENDIF
                ELSEIF AT( cArg, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  IF !lBlankLine
+                     IF !lBlankLine
 
-                     oNgi:WriteParBold( " Arguments" )
+                        oNgi:WriteParBold( " Arguments" )
 
+                     ENDIF
+
+                     nMode     := D_ARG
+                     lAddBlank := .T.
                   ENDIF
-
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
                ELSEIF AT( cRet, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  //                  IF !lBlankLine
-                  //                     oNgi:WritePar( "" )
-                  //                  ENDIF
+                     //                  IF !lBlankLine
+                     //                     oNgi:WritePar( "" )
+                     //                  ENDIF
 
-                  oNgi:WriteParBold( " Returns" )
+                     oNgi:WriteParBold( " Returns" )
 
-                  nMode     := D_ARG
-                  lAddBlank := .T.
-
+                     nMode     := D_ARG
+                     lAddBlank := .T.
+                  ENDIF
                ELSEIF AT( cDesc, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  oNgi:WriteParBold( " Description" )
+                     oNgi:WriteParBold( " Description" )
 
-                  nMode     := D_DESCRIPTION
-                  lAddBlank := .T.
-                  lPar      := .T.
+                     nMode     := D_DESCRIPTION
+                     lAddBlank := .T.
+                     lPar      := .T.
+                  ENDIF
                ELSEIF AT( cdatalink, cBuffer ) > 0
-                  IF !lBlankLine
-                     oNgi:WritePar( "" )                    //:endpar()
-                  ENDIF
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lBlankLine
+                        oNgi:WritePar( "" )                 //:endpar()
+                     ENDIF
 
-                  oNgi:WriteParBold( " Data" )
-                  nMode     := D_DATALINK
-                  lAddBlank := .T.
-
-                  lIsDataLink := .T.
-
-               ELSEIF AT( cDatanolink, cBuffer ) > 0
-                  IF !lIsDataLink
                      oNgi:WriteParBold( " Data" )
+                     nMode     := D_DATALINK
+                     lAddBlank := .T.
 
+                     lIsDataLink := .T.
                   ENDIF
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
+               ELSEIF AT( cDatanolink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lIsDataLink
+                        oNgi:WriteParBold( " Data" )
 
-                  lPar := .T.
+                     ENDIF
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+
+                     lPar := .T.
+                  ENDIF
                ELSEIF AT( cMethodslink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  oNgi:WriteParBold( " Method" )
-                  nMode     := D_METHODLINK
-                  lAddBlank := .T.
+                     oNgi:WriteParBold( " Method" )
+                     nMode     := D_METHODLINK
+                     lAddBlank := .T.
 
-                  lIsMethodLink := .T.
-
-               ELSEIF AT( cMethodsnolink, cBuffer ) > 0
-                  IF !lIsMethodLink
-                     oNgi:WriteParBold( " Methods" )
+                     lIsMethodLink := .T.
                   ENDIF
+               ELSEIF AT( cMethodsnolink, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
+                     IF !lIsMethodLink
+                        oNgi:WriteParBold( " Methods" )
+                     ENDIF
 
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-                  lPar      := .T.
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+                     lPar      := .T.
+                  ENDIF
 
                ELSEIF AT( cExam, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  IF !lBlankLine
-                     //                     oNgi:WritePar( "" )
-                     oNgi:WriteParBold( " Examples" )
+                     IF !lBlankLine
+                        //                     oNgi:WritePar( "" )
+                        oNgi:WriteParBold( " Examples" )
+                     ENDIF
+
+                     nMode     := D_EXAMPLE
+                     lAddBlank := .T.
                   ENDIF
-
-                  nMode     := D_EXAMPLE
-                  lAddBlank := .T.
 
                ELSEIF AT( cTest, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  IF !lBlankLine
+                     IF !lBlankLine
 
-                     oNgi:WriteParBold( " Tests" )
+                        oNgi:WriteParBold( " Tests" )
+                     ENDIF
+
+                     nMode     := D_EXAMPLE
+                     lAddBlank := .T.
+                     lPar      := .t.
                   ENDIF
-
-                  nMode     := D_EXAMPLE
-                  lAddBlank := .T.
-                  lPar      := .t.
                ELSEIF AT( cStatus, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  nMode := D_STATUS
+                     nMode := D_STATUS
+                  ENDIF
 
                ELSEIF AT( cCompl, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  IF !lBlankLine
-                     oNgi:WriteParBold( " Compliance" )
+                     IF !lBlankLine
+                        oNgi:WriteParBold( " Compliance" )
+                     ENDIF
+
+                     nMode     := D_COMPLIANCE
+                     lAddBlank := .T.
+                     lPar      := .t.
                   ENDIF
-
-                  nMode     := D_COMPLIANCE
-                  lAddBlank := .T.
-                  lPar      := .t.
                ELSEIF AT( cPlat, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  IF !lBlankLine
-                     oNgi:WriteParBold( " Platforms" )
+                     IF !lBlankLine
+                        oNgi:WriteParBold( " Platforms" )
+                     ENDIF
+
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+                     lPar      := .t.
                   ENDIF
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-                  lPar      := .t.
                ELSEIF AT( cFiles, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  IF !lBlankLine
-                     oNgi:WriteParBold( " Files" )
+                     IF !lBlankLine
+                        oNgi:WriteParBold( " Files" )
+                     ENDIF
+
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+                     lPar      := .t.
                   ENDIF
-
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
-                  lPar      := .t.
                ELSEIF AT( cFunction, cBuffer ) > 0
+                  IF GetItem( cBuffer, nCurdoc )
 
-                  //                  IF !lBlankLine
-                  //                     oNgi:WritePar( "" )
-                  //                  ENDIF
-                  oNgi:WriteParBold( " Functions" )
+                     //                  IF !lBlankLine
+                     //                     oNgi:WritePar( "" )
+                     //                  ENDIF
+                     oNgi:WriteParBold( " Functions" )
 
-                  lPar      := .t.
-                  nMode     := D_NORMAL
-                  lAddBlank := .T.
+                     lPar      := .t.
+                     nMode     := D_NORMAL
+                     lAddBlank := .T.
+                  ENDIF
                ELSEIF AT( cSee, cBuffer ) > 0
-                  nMode := D_SEEALSO
+                  IF GetItem( cBuffer, nCurdoc )
+                     nMode := D_SEEALSO
+                  ENDIF
                ELSEIF AT( cInc, cBuffer ) > 0
-                  nMode := D_INCLUDE
-
+                  IF GetItem( cBuffer, nCurdoc )
+                     nMode := D_INCLUDE
+                  ENDIF
                   //  All other input is trimmed of comments and sent out
 
                ELSE
@@ -518,7 +558,7 @@ FUNCTION ProcessiNg()
                      IF AT( "<par>", cBuffer ) > 0
                         STRTRAN( cBuffer, "<par>", '' )
                         STRTRAN( cBuffer, "</par>", '' )
-                        cBuffer := strtran(cBuffer,space(6),"")
+                        cBuffer := STRTRAN( cBuffer, SPACE( 6 ), "" )
                         cbuFfer := '<par><b>' + cBuffer + '</b></par>'
                      ENDIF
                      procngdesc( cbuffer, oNgi, "Syntax" )
@@ -588,6 +628,9 @@ FUNCTION ProcessiNg()
       //  Close down the input file
 
       FT_FUSE()
+      nCurDoc := 1
+      aCurDoc := {}
+
    NEXT
 RETURN Nil
 
@@ -595,7 +638,9 @@ RETURN Nil
 *+
 *+    Function ProcNgiAlso()
 *+
-*+    Called from ( genng.prg    )   1 - function processing()
+*+    Called from ( genhtm2.prg  )   1 - function processwww()
+*+                ( genng.prg    )   1 - function processing()
+*+                ( genng1.prg   )   1 - function processing()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -609,6 +654,8 @@ RETURN aAlso
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function ProcNgiInput()
+*+
+*+    Called from ( hbdoc.prg    )   1 - function main()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -822,6 +869,7 @@ RETURN NIL
 *+    Function procngialso2()
 *+
 *+    Called from ( genng.prg    )   3 - function procngiinput()
+*+                ( genng1.prg   )   3 - function procngiinput()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -853,7 +901,9 @@ RETURN aAlso
 *+
 *+    Function ProcStatusng()
 *+
-*+    Called from ( genng.prg    )   1 - function processing()
+*+    Called from ( genhtm2.prg  )   1 - function processwww()
+*+                ( genng.prg    )   1 - function processing()
+*+                ( genng1.prg   )   1 - function processing()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -878,6 +928,7 @@ RETURN nil
 *+    Function GenNgTable()
 *+
 *+    Called from ( genng.prg    )   1 - function procngdesc()
+*+                ( genng1.prg   )   1 - function procngdesc()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -897,7 +948,7 @@ FUNCTION GenNgTable( oNgi )
    LOCAL nPos
    LOCAL aLensFItem  := {}
    LOCAL aLensSItem  := {}
-   LOCAL cMaxItem := ''
+   LOCAL cMaxItem    := ''
    LOCAL nmax3
    LOCAL nmax4
    LOCAL npos3
@@ -908,46 +959,45 @@ FUNCTION GenNgTable( oNgi )
    LOCAL aLensfoItem := {}
    LOCAL nLen
    FOR X := 1 TO LEN( afitable )
-   if !empty(afiTable[ x ] ) 
+      IF !EMPTY( afiTable[ x ] )
          AADD( aLensFItem, LEN( afiTable[ x ] ) )
-         end
+      END
    NEXT
    FOR X := 1 TO LEN( asiTable )
-   if !empty(asiTable[ x ] ) 
+      IF !EMPTY( asiTable[ x ] )
          AADD( aLensSItem, LEN( asiTable[ x ] ) )
-         end
+      END
    NEXT
    IF LEN( afoitable ) > 0
-   
+
       FOR X := 1 TO LEN( afoitable )
-      if !empty(afoiTable[ x ] ) 
+         IF !EMPTY( afoiTable[ x ] )
             AADD( aLensfoItem, LEN( afoiTable[ x ] ) )
-            end
+         END
       NEXT
    ENDIF
    IF LEN( atitable ) > 0
       FOR X := 1 TO LEN( atitable )
-      if !empty( atiTable[ x ] ) 
+         IF !EMPTY( atiTable[ x ] )
             AADD( aLenstItem, LEN( atiTable[ x ] ) )
-            end
+         END
       NEXT
    ENDIF
 
    ASORT( aLensFItem,,, { | x, y | x > y } )
    ASORT( aLensSItem,,, { | x, y | x > y } )
-   IF LEN( afoitable ) > 0  .and. nNumTableItems == 4
+   IF LEN( afoitable ) > 0 .AND. nNumTableItems == 4
       ASORT( alenstitem,,, { | x, y | x > y } )
       nmax3 := alenstitem[ 1 ]
       npos  := maxelem( atitable )
       nPos3 := ASCAN( alenstitem, { | x | x == nPos } )
-
 
       ASORT( aLensFoItem,,, { | x, y | x > y } )
       nmax4 := alensfoitem[ 1 ]
       nPos  := maxelem( afoitable )
       nPos4 := ASCAN( alensfoitem, { | x | x == nPos } )
    ENDIF
-   IF LEN( atitable ) > 0 .and. nNumTableItems == 3
+   IF LEN( atitable ) > 0 .AND. nNumTableItems == 3
       ASORT( alenstitem,,, { | x, y | x > y } )
       nmax3 := alenstitem[ 1 ]
       npos  := maxelem( atitable )
@@ -955,7 +1005,7 @@ FUNCTION GenNgTable( oNgi )
 
    ENDIF
 
-   nMax:=aLenssItem[1]
+   nMax  := aLenssItem[ 1 ]
    nPos  := maxelem( asitable )
    nPos1 := ASCAN( aLenssItem, { | x | x == nPos } )
 
@@ -965,103 +1015,102 @@ FUNCTION GenNgTable( oNgi )
    nPos  := maxelem( afitable )
    nPos2 := ASCAN( alensfitem, { | x | x == nPos } )
    IF nNumTableItems == 2
-      cMaxItem:='      '+"É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»"
-      if LEN(cMaxItem)<76
-         oNgi:WritePar("      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
-      Else
-            oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
-      Endif
+      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»"
+      IF LEN( cMaxItem ) < 76
+         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )          //-4
+      ELSE
+         oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "»", .F. )                //-4
+      ENDIF
    ELSEIF nNumTableItems == 3
-      cMaxItem:='      '+"É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»"
-      if LEN(cMaxItem)<76
-         oNgi:WritePar( "      É"+ REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
-      else
-      oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
-      endif
+      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»"
+      IF LEN( cMaxItem ) < 76
+         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )     //-4
+      ELSE
+         oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "»", .F. )           //-4
+      ENDIF
    ELSEIF nNumTableItems == 4
-      cMaxItem:='      '+"É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»"
-      if LEN(cMaxItem)<76
-         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4      
-      else
+      cMaxItem := '      ' + "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»"
+      IF LEN( cMaxItem ) < 76
+         oNgi:WritePar( "      É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )                   //-4
+      ELSE
          oNgi:WritePar( "É" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ë" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ë" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ë" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "»", .F. )     //-4
-   endif
+      ENDIF
    ENDIF
    FOR x := 1 TO LEN( asitable )
-   if !empty(asitable[x])
-      nSpace  := nMax - LEN( asitable[ x ] )
-      nSpace2 := nMax2 - LEN( afitable[ x ] )
+      IF !EMPTY( asitable[ x ] )
+         nSpace  := nMax - LEN( asitable[ x ] )
+         nSpace2 := nMax2 - LEN( afitable[ x ] )
 
-      IF nNumTableItems == 2
-         if len(cMaxItem)<76
-          oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
-         else
-         oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
-         endif
-      ELSEIF nNumTableItems == 3
-         nSpace3 := nMax3 - LEN( atitable[ x ] )
-         if len(cMaxItem)<76
-         oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
-         else
-         oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
-         endif
-      ELSEIF nNumTableItems == 4
-         nSpace3 := nMax3 - LEN( atitable[ x ] )
-         nSpace4 := nMax4 - LEN( afoitable[ x ] )
-         if len(cMaxItem)<76
-                  oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
-         else
-         oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
-         endif
-      ENDIF
+         IF nNumTableItems == 2
+            IF LEN( cMaxItem ) < 76
+               oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
+            ELSE
+               oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º" + HB_OSNEWLINE() )
+            ENDIF
+         ELSEIF nNumTableItems == 3
+            nSpace3 := nMax3 - LEN( atitable[ x ] )
+            IF LEN( cMaxItem ) < 76
+               oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
+            ELSE
+               oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º" + HB_OSNEWLINE() )
+            ENDIF
+         ELSEIF nNumTableItems == 4
+            nSpace3 := nMax3 - LEN( atitable[ x ] )
+            nSpace4 := nMax4 - LEN( afoitable[ x ] )
+            IF LEN( cMaxItem ) < 76
+               oNgi:WriteParBox( "      º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
+            ELSE
+               oNgi:WriteParBox( "º " + afiTable[ x ] + SPACE( nSpace2 ) + " º " + IF( asiTable[ x ] == "|", STRTRAN( asiTable[ x ], "|", " " ), asiTable[ x ] ) + SPACE( nspace ) + " º " + atiTable[ x ] + SPACE( nspace3 ) + " º " + afoiTable[ x ] + SPACE( nspace4 ) + " º" + HB_OSNEWLINE() )
+            ENDIF
+         ENDIF
       ELSE
-      IF nNumTableItems == 2
-      if len(cMaxItem)<76
-             oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
-      else
-             oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
-      endif
-      ELSEIF nNumTableItems == 3
-      if len(cMaxItem)<76
-             oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )           //-4
-      else
-                   oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )           //-4
-      endif
+         IF nNumTableItems == 2
+            IF LEN( cMaxItem ) < 76
+               oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
+            ELSE
+               oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¹", .F. )
+            ENDIF
+         ELSEIF nNumTableItems == 3
+            IF LEN( cMaxItem ) < 76
+               oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )                   //-4
+            ELSE
+               oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¹", .F. )     //-4
+            ENDIF
 
-      ELSEIF nNumTableItems == 4
-      if len(cMaxItem)<76
-              oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )     //-4
-      else
-              oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )     //-4
-      endif
+         ELSEIF nNumTableItems == 4
+            IF LEN( cMaxItem ) < 76
+               oNgi:WritePar( "      Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )             //-4
+            ELSE
+               oNgi:WritePar( "Ì" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Î" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Î" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Î" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¹", .F. )                   //-4
+            ENDIF
+
+         ENDIF
 
       ENDIF
-
-      Endif
    NEXT
 
    IF nNumTableItems == 2
-   if len(cMaxItem)<76   
-      oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
-      else
-      oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
-      endif
+      IF LEN( cMaxItem ) < 76
+         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )          //-4
+      ELSE
+         oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "¼", .F. )                //-4
+      ENDIF
 
    ELSEIF nNumTableItems == 3
-      if len(cMaxItem)<76
+      IF LEN( cMaxItem ) < 76
 
-      oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) +"¼", .F. )     //-4
-      else
-            oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 )+ "¼", .F. )     //-4
-      endif
+         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
+      ELSE
+         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "¼", .F. )     //-4
+      ENDIF
 
    ELSEIF nNumTableItems == 4
-      if len(cMaxItem)<76
-      oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
-      else
-      oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
-      endif
+      IF LEN( cMaxItem ) < 76
+         oNgi:WritePar( "      È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )                   //-4
+      ELSE
+         oNgi:WritePar( "È" + REPL( "Í", aLensFitem[ nPos2 ] + 2 ) + "Ê" + REPL( "Í", alensSitem[ nPos1 ] + 2 ) + "Ê" + REPL( "Í", alensTitem[ nPos3 ] + 2 ) + "Ê" + REPL( "Í", alensfoitem[ nPos4 ] + 2 ) + "¼", .F. )     //-4
+      ENDIF
    ENDIF
-
 
    oNgi:WritePar( "" )
    afiTable  := {}
@@ -1076,16 +1125,17 @@ RETURN Nil
 *+    Function ProcNgTable()
 *+
 *+    Called from ( genng.prg    )   2 - function procngdesc()
+*+                ( genng1.prg   )   2 - function procngdesc()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 FUNCTION ProcNgTable( cBuffer, nNum )
 
    LOCAL nPos
-   LOCAL cItem:=''
-   LOCAL cItem2:=''
-   LOCAL cItem3:=''
-   LOCAL cItem4:=''
+   LOCAL cItem     := ''
+   LOCAL cItem2    := ''
+   LOCAL cItem3    := ''
+   LOCAL cItem4    := ''
    LOCAL xtype
    LOCAL nColorpos
    LOCAL cColor
@@ -1104,7 +1154,7 @@ FUNCTION ProcNgTable( cBuffer, nNum )
       nColorpos := ASCAN( aColorTable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
-/*
+   /*
    If !empty(cBuffer)
        cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
@@ -1135,14 +1185,14 @@ FUNCTION ProcNgTable( cBuffer, nNum )
 
         cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
-        
+
         cItem4  := SUBSTR( cBuffer, 1 )
        else
         citem2:=''
         citem3:=''
         citem4:=''
        endif
-        
+
    ENDIF
    AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
    AADD( asiTable, cItem2 )
@@ -1150,55 +1200,53 @@ FUNCTION ProcNgTable( cBuffer, nNum )
       AADD( afoiTable, cItem4 )
 
   */
-   If !empty(cBuffer)
-       cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
-   else
-       citem:=''
-   endif
+   IF !EMPTY( cBuffer )
+      cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+      cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
+   ELSE
+      citem := ''
+   ENDIF
 
-   if nNum==2
-       If !empty(cBuffer)
-       cItem2 := SUBSTR( cBuffer, 1 )
-       else
-        citem2:=''
-       endif
-   elseif nNum ==3
-          If !empty(cBuffer)
-        cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
-        cItem3 := SUBSTR( cBuffer, 1 )
-       else
-        citem2:=''
-        citem3:=''
-       endif
+   IF nNum == 2
+      IF !EMPTY( cBuffer )
+         cItem2 := SUBSTR( cBuffer, 1 )
+      ELSE
+         citem2 := ''
+      ENDIF
+   ELSEIF nNum == 3
+      IF !EMPTY( cBuffer )
+         cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+         cItem3  := SUBSTR( cBuffer, 1 )
+      ELSE
+         citem2 := ''
+         citem3 := ''
+      ENDIF
 
-  ELSEIF nNum > 3
-         If !empty(cBuffer)
-        cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
+   ELSEIF nNum > 3
+      IF !EMPTY( cBuffer )
+         cItem2  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
 
-        cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
-        cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
-        
-        cItem4  := SUBSTR( cBuffer, 1 )
-       else
-        citem2:=''
-        citem3:=''
-        citem4:=''
-       endif
-        
+         cItem3  := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem3, "" ) )
+
+         cItem4 := SUBSTR( cBuffer, 1 )
+      ELSE
+         citem2 := ''
+         citem3 := ''
+         citem4 := ''
+      ENDIF
+
    ENDIF
    AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
    AADD( asiTable, cItem2 )
-//   IF !EMPTY( cItem3 )
-      AADD( atiTable, cItem3 )
-//   ENDIF
-//   IF !EMPTY( cItem4 )
-      AADD( afoiTable, cItem4 )
- //  ENDIF
-
-
+   //   IF !EMPTY( cItem3 )
+   AADD( atiTable, cItem3 )
+   //   ENDIF
+   //   IF !EMPTY( cItem4 )
+   AADD( afoiTable, cItem4 )
+   //  ENDIF
 
 RETURN Nil
 
@@ -1207,6 +1255,7 @@ RETURN Nil
 *+    Function ProcNGDesc()
 *+
 *+    Called from ( genng.prg    )   6 - function processing()
+*+                ( genng1.prg   )   6 - function processing()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -1223,10 +1272,10 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
    LOCAL cOldLine
    LOCAL lEndPar     := .F.
 
-   LOCAL lEndFixed := .F.
-   LOCAL lEndTable := .F.
+   LOCAL lEndFixed     := .F.
+   LOCAL lEndTable     := .F.
    LOCAL LFstTableItem := .T.
-   LOCAL lArgBold  := .F.
+   LOCAL lArgBold      := .F.
    DEFAULT cStyle TO "Default"
 
    IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example"
@@ -1377,7 +1426,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
                ENDIF
 
             ELSE
-               cLine := SPACE( nidentLevel ) + SUBSTR( ALLTRIM(cBuffer), curPos, 69 )
+               cLine := SPACE( nidentLevel ) + SUBSTR( ALLTRIM( cBuffer ), curPos, 69 )
 
                IF AT( '</par>', cLine ) > 0
                   lEndPar := .T.
@@ -1470,7 +1519,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
             lendTable := .t.
          ELSE
             IF LFstTableItem
-               nNumTableItems := GetNumberofTableItems( cLine )              
+               nNumTableItems := GetNumberofTableItems( cLine )
                procngtable( cline, nNumTableItems )
                LFstTableItem := .f.
             ELSE
@@ -1492,7 +1541,10 @@ RETURN nil
 *+
 *+    Function checkngcolor()
 *+
-*+    Called from ( genng.prg    )   1 - function procngdesc()
+*+    Called from ( genhtm1.prg  )   1 - function prochtmdesc()
+*+                ( genhtm2.prg  )   1 - function prochtmdesc()
+*+                ( genng.prg    )   1 - function procngdesc()
+*+                ( genng1.prg   )   1 - function procngdesc()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -1524,7 +1576,8 @@ RETURN cbuffer
 *+
 *+    Function maxelem()
 *+
-*+    Called from ( genng.prg    )   4 - function genngtable()
+*+    Called from ( genng.prg    )   5 - function genngtable()
+*+                ( genng1.prg   )   4 - function genngtable()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -1540,7 +1593,7 @@ FUNC maxelem( a )
    LOCAL nCount
    FOR nCount := 1 TO nSize
 
-        tam := LEN( a[ nCount ] )
+      tam := LEN( a[ nCount ] )
       max := IF( tam > max, tam, max )
    NEXT
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
@@ -1550,7 +1603,10 @@ RETURN max
 *+
 *+    Function FormatNgBuff()
 *+
-*+    Called from ( genng.prg    )   1 - function procngdesc()
+*+    Called from ( genhtm1.prg  )   1 - function prochtmdesc()
+*+                ( genhtm2.prg  )   1 - function prochtmdesc()
+*+                ( genng.prg    )   1 - function procngdesc()
+*+                ( genng1.prg   )   1 - function procngdesc()
 *+
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -1598,7 +1654,7 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
 
       cReturn := '<par>' + cReturn + '    </par>'
    ELSEIF cStyle == 'Syntax'
-      cReturn := strtran(cReturn,space(4),"")
+      cReturn := STRTRAN( cReturn, SPACE( 4 ), "" )
       cReturn := '<par><b>' + cReturn + ' </b></par>'
 
    ELSEIF cStyle == 'Arguments' .OR. cStyle == "Return"
@@ -1647,5 +1703,63 @@ FUNCTION FormatNgBuff( cBuffer, cStyle, ongi )
    lArgBold := .F.
    //   endif
 RETURN cReturn
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Static Function ReadFromTop()
+*+
+*+    Called from ( genng.prg    )   1 - function processing()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+STATIC FUNCTION ReadFromTop( nh )
+
+   LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
+   LOCAL cEnd      := DELIM + "END" + DELIM                    // END keyword
+   LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
+   LOCAL cBuffer   := ''
+   LOCAL NPOS      := 0
+   LOCAL nlenpos
+   LOCAL aLocDoc   := {}
+   DO WHILE FREADline( nH, @cBuffer, 4096 )
+      cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
+      AADD( Alocdoc, CbUFFER )
+      IF AT( cEnd, cBuffer ) > 0
+         AADD( aCurdoc, aLocdoc )
+         aLocDoc := {}
+      ENDIF
+
+   ENDDO
+   lEof := .F.
+   FT_FGOTOP()
+RETURN nil
+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+*+    Static Function GetItem()
+*+
+*+    Called from ( genng.prg    )  20 - function processing()
+*+
+*+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
+*+
+STATIC FUNCTION GetItem( cItem, nCurdoc )
+
+   LOCAL nPos
+   LOCAL cCuritem
+   LOCAL lReturn
+   LOCAL x
+   LOCAL xPos
+   xPos := aCurdoc[ nCurdoc ]
+   nPos := ASCAN( xPos, { | x, y | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )
+   IF nPos > 0
+      cCuritem := xPos[ nPos ]
+      IF AT( "$", xPos[ nPos + 1 ] ) > 0
+         lReturn := .f.
+      ELSE
+         lReturn := .t.
+      ENDIF
+
+   ENDIF
+RETURN lReturn
 
 *+ EOF: GENNG.PRG

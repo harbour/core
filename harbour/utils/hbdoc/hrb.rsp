@@ -3,6 +3,7 @@
 ..\..\doc\en\browse.txt
 ..\..\doc\en\datetime.txt
 ..\..\doc\en\dbstrux.txt
+..\..\doc\en\diskspac.txt
 ..\..\doc\en\dir.txt
 ..\..\doc\en\error.txt
 ..\..\doc\en\file.txt
@@ -15,6 +16,9 @@
 ..\..\doc\en\nation.txt
 ..\..\doc\en\objfunc.txt
 ..\..\doc\en\rdd.txt
+..\..\doc\en\rdddb.txt
+..\..\doc\en\rddord.txt
+..\..\doc\en\rddmisc.txt
 ..\..\doc\en\set.txt
 ..\..\doc\en\string.txt
 ..\..\doc\en\tclass.txt

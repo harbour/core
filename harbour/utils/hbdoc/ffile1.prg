@@ -36,63 +36,67 @@
 #include "hbclass.ch"
 #include 'common.ch'
 #include 'hbdocdef.ch'
-class FileBase from FileMan
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Class FileBase
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+CLASS FileBase FROM FileMan
 
+   DATA nOpenMode   // Holds the value to use when opening the file
+   DATA nCreateMode // Holds the value to use when creating the file
+   DATA nDosHandle  // Holds the DOS file handle for this
 
-    DATA nOpenMode        // Holds the value to use when opening the file
-    DATA nCreateMode      // Holds the value to use when creating the file
-    DATA nDosHandle       // Holds the DOS file handle for this
+   DATA nEndOfFile  // Holds the last byte value in the file
+   DATA nSkipLength // This holds the default skpping length of 1
+   DATA cName       // This holds the name of the file being worked on
+   DATA nPosition   // This holds the position in the file at
+   DATA lAtBottom   // This is a value to show if at bottom of file
+   DATA lAtTop      // This is a value to show if at top of file
 
+   METHOD new( cname )                  // This is the constructor for the file
+   METHOD FOPEN()   // This opens the specified file
+   METHOD closefile()                   // This closes the specified file
+   METHOD fskip( n )                    // Moves the byte pointer within the file
+   METHOD FWRITE( c )                   // Write passed data to file w/ len() == nSkipLenght
+   METHOD retrieve()                    // Returns the contents of the file at current pos
+   METHOD fgoTop()  // Move the byte pointer to the top of the file
+   METHOD fgoBottom()                   // Move the byte pointer to the bottom of the file
+   METHOD fgoto()   // Moves the byte pointer to a specific location
+   METHOD create()
+   message fappend METHOD fappendByte( cByte )
+   message BuffGet METHOD BufferGet( lDirection )
+   METHOD SKIP( nRecord )               // Moves the byte pointer within the file
+   METHOD WRITE( cChar )                // Write passed data to file w/ len() == nSkipLenght
+   METHOD goTop()   // Move the byte pointer to the top of the file
+   METHOD goBottom()                    // Move the byte pointer to the bottom of the file
+   METHOD GOTO( nValue )                // Moves the byte pointer to a specific location
+   METHOD OPEN()
+   message append METHOD appendLine( cline )
 
+ENDCLASS
 
-    DATA nEndOfFile       // Holds the last byte value in the file
-    DATA nSkipLength      // This holds the default skpping length of 1
-    DATA cName            // This holds the name of the file being worked on
-    DATA nPosition      // This holds the position in the file at
-    DATA lAtBottom      // This is a value to show if at bottom of file
-    DATA lAtTop         // This is a value to show if at top of file
-
-    method new(cname)          // This is the constructor for the file
-    method fopen()          // This opens the specified file
-    method closefile()         // This closes the specified file
-    method fskip(n)          // Moves the byte pointer within the file
-    method fwrite(c)         // Write passed data to file w/ len() == nSkipLenght
-    method retrieve()         // Returns the contents of the file at current pos
-    method fgoTop()         // Move the byte pointer to the top of the file
-    method fgoBottom()      // Move the byte pointer to the bottom of the file
-    method fgoto()          // Moves the byte pointer to a specific location
-    method create()
-    message fappend method fappendByte(cByte)
-    message BuffGet method BufferGet(lDirection)
-    method skip(nRecord)          // Moves the byte pointer within the file
-    method write(cChar)         // Write passed data to file w/ len() == nSkipLenght
-    method goTop()         // Move the byte pointer to the top of the file
-    method goBottom()     // Move the byte pointer to the bottom of the file
-    method goto(nValue)          // Moves the byte pointer to a specific location
-    method open()
-    message append method appendLine(cline)
-
-endclass
-
-/* Method:  Init/New
+   /* Method:  Init/New
    Params:  N/A
    Returns: Self
    Purpose: Constructor
 */
-method new( cName ) class FileBase
-    super:new()
-  // first thing to do is check to see if there is a valid file
+METHOD new( cName ) CLASS FileBase
 
-  ::nSkipLength   := 1
-  ::nOpenMode     := 2   // Mode for which to open the file
-  ::nCreateMode   := 0   // Mode for which to create the file
+   super:new()
+   // first thing to do is check to see if there is a valid file
 
-  ::cName := cName
+   ::nSkipLength := 1
+   ::nOpenMode   := 2                   // Mode for which to open the file
+   ::nCreateMode := 0                   // Mode for which to create the file
 
-  return( self )
+   ::cName := cName
 
-/* Method:  skip( <nRecords> )
+   RETURN ( self )
+
+   /* Method:  skip( <nRecords> )
    Params:  <nRecords>
    Returns: Self
    Purpose: This method moves the file's byte pointer <nRecords> position
@@ -100,302 +104,302 @@ method new( cName ) class FileBase
             on the value of ::nSkipLength which holds the skipping base.
             This class's purpose is to do one byte movements.
 */
-method fskip( nRecords )            class FileBase
+METHOD fskip( nRecords ) CLASS FileBase
 
-  DEFAULT nRecords TO 1
+   DEFAULT nRecords TO 1
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    fseek( ::nDosHandle, (::nSkipLength * nRecords ), 1 )
-    ::nLastDosMessage := ferror()
-    ::nPosition := fseek( ::nDosHandle, 0, 1 )
-    do case
-    case ::nPosition == ::nEndOfFile
-      ::lAtBottom := pTRUE
-      ::lAtTop    := pFALSE
-    case ::nPosition <= 1
-      ::lAtTop    := pTRUE
-      ::lAtBottom := pFALSE
-    otherwise
-      ::lAtBottom := ::lAtTop := pFALSE
-    endcase
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      FSEEK( ::nDosHandle, ( ::nSkipLength * nRecords ), 1 )
+      ::nLastDosMessage := FERROR()
+      ::nPosition       := FSEEK( ::nDosHandle, 0, 1 )
+      DO CASE
+         CASE ::nPosition == ::nEndOfFile
+            ::lAtBottom := pTRUE
+            ::lAtTop    := pFALSE
+         CASE ::nPosition <= 1
+            ::lAtTop    := pTRUE
+            ::lAtBottom := pFALSE
+         OTHERWISE
+            ::lAtBottom := ::lAtTop := pFALSE
+      ENDCASE
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  gotop()
+   /* Method:  gotop()
    Params:  N/A
    Returns: Self
    Purpose: Move the byte pointer to the top of the file
 */
-method fgotop()                     class FileBase
+METHOD fgotop() CLASS FileBase
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    ::nPosition := fseek( ::nDosHandle, 0, 0 )
-    ::nLastDosMessage := ferror()
-    ::lAtTop    := pTRUE
-    ::lAtBottom := pFALSE
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      ::nPosition       := FSEEK( ::nDosHandle, 0, 0 )
+      ::nLastDosMessage := FERROR()
+      ::lAtTop          := pTRUE
+      ::lAtBottom       := pFALSE
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  gobottom()
+   /* Method:  gobottom()
    Params:  N/A
    Returns: Self
    Purpose: Move hte byte pointer of the file to tbe bottom.
 */
-method fgoBottom()                  class FileBase
+METHOD fgoBottom() CLASS FileBase
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    ::nPosition := fseek( ::nDosHandle, 0, 2 )
-    ::nLastDosMessage := ferror()
-    ::lAtTop    := pFALSE
-    ::lAtBottom := pTRUE
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      ::nPosition       := FSEEK( ::nDosHandle, 0, 2 )
+      ::nLastDosMessage := FERROR()
+      ::lAtTop          := pFALSE
+      ::lAtBottom       := pTRUE
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  close()
+   /* Method:  close()
    Params:  N/A
    Returns: Self
    Purpose: To close the file
 */
-method closefile()                     class FileBase
+METHOD closefile() CLASS FileBase
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    fclose( ::nDosHandle )
-    ::nLastDosMessage := ferror()
-    ::delItem( ::nDosHandle )
-    ::lAtTop := ::lAtBottom := pFALSE
-    ::nPosition := 0
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      FCLOSE( ::nDosHandle )
+      ::nLastDosMessage := FERROR()
+      ::delItem( ::nDosHandle )
+      ::lAtTop    := ::lAtBottom := pFALSE
+      ::nPosition := 0
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  retrieve
+   /* Method:  retrieve
    Params:  N/A
    Returns: <cChar>
    Purpose: To return the contents of the file at the current position based
             on the length of ::nSkipLength.
 */
-method retrieve()                  class FileBase
+METHOD retrieve() CLASS FileBase
 
-  local cReturn // as char
-  local nMoved  // as int
+   LOCAL cReturn       // as char
+   LOCAL nMoved        // as int
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    cReturn := space( ::nSkipLength )
-    nMoved := fread( ::nDosHandle, @cReturn, ::nSkipLength )
-    ::nLastDosMessage := ferror()
-    fseek( ::nDosHandle, -(nMoved), 1 )  // Re-position the pointer
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      cReturn           := SPACE( ::nSkipLength )
+      nMoved            := FREAD( ::nDosHandle, @cReturn, ::nSkipLength )
+      ::nLastDosMessage := FERROR()
+      FSEEK( ::nDosHandle, - ( nMoved ), 1 )                // Re-position the pointer
+   ENDIF
 
-  return( cReturn )
+   RETURN ( cReturn )
 
-/* Method:  write(<cChar>)
+   /* Method:  write(<cChar>)
    Params:  <cChar>
    Returns: Self
    Purpose: To write out to the contents of the file the value in the
             parameter <cChar>.
 */
-method fwrite( cChar )              class FileBase
+METHOD FWRITE( cChar ) CLASS FileBase
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    IF cChar IS  pCHARACTER 
-      fwrite( ::nDosHandle, cChar, 1 )
-      ::nLastDosMessage := ferror()
-      if ::noDosError()
-        fseek( ::nDosHandle, ::nPosition, 0 )  // Re-position the pointer
-      endif
-    endif
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      IF cChar IS pCHARACTER
+         FWRITE( ::nDosHandle, cChar, 1 )
+         ::nLastDosMessage := FERROR()
+         IF ::noDosError()
+            FSEEK( ::nDosHandle, ::nPosition, 0 )           // Re-position the pointer
+         ENDIF
+      ENDIF
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  goto(<nRecord>)
+   /* Method:  goto(<nRecord>)
    Params:  <nRecord>       The record byte to move to
    Returns: Self
    Purpose: This method moves the byte marker to the <nRecord> position
             within the file.  It is also based on the value stored to the
             ::nSkipLength instance variable
 */
-method fgoto( nValue )              class FileBase
+METHOD fgoto( nValue ) CLASS FileBase
 
-  if ::noDosError() .and. ::nDosHandle > 0
-    IF nValue IS  pNUMERIC
-      if nValue > 0 .and. ;
-         (nValue * ::nSkipLength) <= ::nEndOfFile
-        fseek( ::nDosHandle, (nValue * ::nSkipLength), 0 )
-        ::nLastDosMessage := ferror()
-        ::nPosition := fseek( ::nDosHandle, 0, 1 )
-        do case
-        case ::nPosition == ::nEndOfFile
-          ::lAtBottom := pTRUE
-          ::lAtTop    := pFALSE
-        case ::nPosition <= 1
-          ::lAtTop    := pTRUE
-          ::lAtBottom := pFALSE
-        otherwise
-          ::lAtBottom := ::lAtTop := pFALSE
-        endcase
-      endif
-    endif
-  endif
+   IF ::noDosError() .AND. ::nDosHandle > 0
+      IF nValue IS pNUMERIC
+         IF nValue > 0 .AND. ;
+                    ( nValue * ::nSkipLength ) <= ::nEndOfFile
+            FSEEK( ::nDosHandle, ( nValue * ::nSkipLength ), 0 )
+            ::nLastDosMessage := FERROR()
+            ::nPosition       := FSEEK( ::nDosHandle, 0, 1 )
+            DO CASE
+               CASE ::nPosition == ::nEndOfFile
+                  ::lAtBottom := pTRUE
+                  ::lAtTop    := pFALSE
+               CASE ::nPosition <= 1
+                  ::lAtTop    := pTRUE
+                  ::lAtBottom := pFALSE
+               OTHERWISE
+                  ::lAtBottom := ::lAtTop := pFALSE
+            ENDCASE
+         ENDIF
+      ENDIF
+   ENDIF
 
-  return( ::nPosition )
+   RETURN ( ::nPosition )
 
-/* Method:  create()
+   /* Method:  create()
    Params:  N/A
    Returns: Self
    Purpose: Creates the specified file with the proper access code
 */
-method Create()                    class FileBase
+METHOD Create() CLASS FileBase
 
-  local nFile // as int
+   LOCAL nFile         // as int
 
-  if ::noDosError()
-    nFile := fcreate( ::cName, ::nCreateMode )
-    ::nLastDosMessage := ferror()
-    if ::noDosError()  // No Error
-      fclose( nFile )        // Close the file
-      ::fopen()               // Re-open the file
-    endif
-  endif
+   IF ::noDosError()
+      nFile             := FCREATE( ::cName, ::nCreateMode )
+      ::nLastDosMessage := FERROR()
+      IF ::noDosError()                 // No Error
+         FCLOSE( nFile )                // Close the file
+         ::fopen()  // Re-open the file
+      ENDIF
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  open()
+   /* Method:  open()
    Params:  N/A
    Returns: Self
    Purpose: Opens the file with the proper access code
 */
-method fopen()                      class FileBase
+METHOD FOPEN() CLASS FileBase
 
-  if ::noDosError()
-    ::nDosHandle := ::openfile( ::cName, ::nOpenMode )
-    ::nEndOfFile := fseek( ::nDosHandle, 0, 2 )
-    ::nPosition  := fseek( ::nDosHandle, 0, 0 )
-    ::lAtTop     := pTRUE
-    ::lAtBottom  := pFALSE
-  endif
+   IF ::noDosError()
+      ::nDosHandle :=::openfile( ::cName, ::nOpenMode )
+      ::nEndOfFile := FSEEK( ::nDosHandle, 0, 2 )
+      ::nPosition  := FSEEK( ::nDosHandle, 0, 0 )
+      ::lAtTop     := pTRUE
+      ::lAtBottom  := pFALSE
+   ENDIF
 
-  return( self )
+RETURN ( self )
 
-method fappendByte(cByte)           class FileBase
+METHOD fappendByte( cByte ) CLASS FileBase
 
-  DEFAULT cByte to ""
+   DEFAULT cByte TO ""
 
-  if !empty( cByte )                                 // Valid line
-    if ::noDosError() .and. ::nDosHandle > 0   // No error
-      fseek(::nDosHandle, 0, 2 )
-      fwrite(::nDosHandle, cByte, 1 )
-      ::nEndOfFile  := fseek(::nDosHandle, 0, 2 )
-      ::nPosition   := fseek(::nDosHandle, -(len(cByte)), 2 )
-      ::nSkipLength := len( cByte )
-      ::lAtBottom   := ::lAtTop := pFALSE
-    endif
-  endif
+   IF !EMPTY( cByte )                   // Valid line
+      IF ::noDosError() .AND. ::nDosHandle > 0              // No error
+         FSEEK( ::nDosHandle, 0, 2 )
+         FWRITE( ::nDosHandle, cByte, 1 )
+         ::nEndOfFile  := FSEEK( ::nDosHandle, 0, 2 )
+         ::nPosition   := FSEEK( ::nDosHandle, - ( LEN( cByte ) ), 2 )
+         ::nSkipLength := LEN( cByte )
+         ::lAtBottom   := ::lAtTop := pFALSE
+      ENDIF
+   ENDIF
 
-  return( self )
+RETURN ( self )
 
 // End of File: FFile1.prg
-method open() class FileBase 
+METHOD OPEN() CLASS FileBase
 
-  Self:nDosHandle        := Self:openfile(::cName, ::nOpenMode)
-  ::nEndOfFile  := fseek(Self:nDosHandle, 0, 2)
-  fseek(Self:nDosHandle, 0, 0)
-  ::nSkipLength := Self:Buffget()
-  ::lAtTop      := pTRUE
-  ::lAtBottom   := pFALSE
-  ::nHan:=  Self:nDosHandle
-  return( self )
+   Self:nDosHandle := Self:openfile( ::cName, ::nOpenMode )
+   ::nEndOfFile    := FSEEK( Self:nDosHandle, 0, 2 )
+   FSEEK( Self:nDosHandle, 0, 0 )
+   ::nSkipLength := Self:Buffget()
+   ::lAtTop      := pTRUE
+   ::lAtBottom   := pFALSE
+   ::nHan        := Self:nDosHandle
+   RETURN ( self )
 
-/* Method:  gotop()
+   /* Method:  gotop()
    Params:  N/A
    Returns: Self
    Purpose: Move the byte pointer to the top of the file
 */
-method gotop() class FileBase 
+METHOD gotop() CLASS FileBase
 
-  if Self:noDosError() .and. Self:nDosHandle > 0
-    ::fgotop()
-    ::nSkipLength := Self:Buffget()
-  endif
+   IF Self:noDosError() .AND. Self:nDosHandle > 0
+      ::fgotop()
+      ::nSkipLength := Self:Buffget()
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  gobottom()
+   /* Method:  gobottom()
    Params:  N/A
    Returns: Self
    Purpose: Move hte byte pointer of the file to tbe bottom.
 */
-method goBottom() class FileBase 
+METHOD goBottom() CLASS FileBase
 
-  local cBuffer            // as char
-  local lWithCRLF := pFALSE// as logical
+   LOCAL cBuffer       // as char
+   LOCAL lWithCRLF := pFALSE               // as logical
 
-  if Self:noDosError() .and. Self:nDosHandle > 0
-    ::fgobottom()
-    // Now, back off from the end one line length and set the marker
-    cBuffer := space( pBUFFER_LENGTH )
-    fseek( Self:nDosHandle, -( pBUFFER_LENGTH ), 2 )
-    fread( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-    if right(cBuffer,2) == pCRLF  // We need to remove this extra one!
-      cBuffer := left(cBuffer, len(cBuffer)-2)
-      lWithCRLF := pTRUE
-    endif
-    cBuffer := substr( cBuffer, rat( pCRLF, cBuffer )+2 )
-    ::nSkipLength := len( cBuffer ) + if( lWithCRLF, 2, 0 )
-    ::nposition := fseek( Self:nDosHandle, -(len(cBuffer)), 2 )
-    if lWithCRLF
-      ::nposition := fseek( Self:nDosHandle, -2, 1 )
-    endif
-  endif
+   IF Self:noDosError() .AND. Self:nDosHandle > 0
+      ::fgobottom()
+      // Now, back off from the end one line length and set the marker
+      cBuffer := SPACE( pBUFFER_LENGTH )
+      FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), 2 )
+      FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
+      IF RIGHT( cBuffer, 2 ) == pCRLF   // We need to remove this extra one!
+         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
+         lWithCRLF := pTRUE
+      ENDIF
+      cBuffer       := SUBSTR( cBuffer, RAT( pCRLF, cBuffer ) + 2 )
+      ::nSkipLength := LEN( cBuffer ) + IF( lWithCRLF, 2, 0 )
+      ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cBuffer ) ), 2 )
+      IF lWithCRLF
+         ::nposition := FSEEK( Self:nDosHandle, - 2, 1 )
+      ENDIF
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  close()
+   /* Method:  close()
    Params:  N/A
    Returns: Self
    Purpose: To close the file
 */
-method fclose()    class FileBase 
+METHOD FCLOSE() CLASS FileBase
 
-  if Self:noDosError() .and. Self:nDosHandle > 0
-    fclose( Self:nDosHandle )
-    Self:nLastDosMessage := ferror()
-    Self:delItem( Self:nDosHandle )
-    Self:lAtTop := Self:lAtBottom := pFALSE
-    Self:nPosition := 0
-  endif
+   IF Self:noDosError() .AND. Self:nDosHandle > 0
+      FCLOSE( Self:nDosHandle )
+      Self:nLastDosMessage := FERROR()
+      Self:delItem( Self:nDosHandle )
+      Self:lAtTop    := Self:lAtBottom := pFALSE
+      Self:nPosition := 0
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  write(<cChar>)
+   /* Method:  write(<cChar>)
    Params:  <cChar>
    Returns: Self
    Purpose: To write out to the contents of the file the value in the
             parameter <cChar>.
 */
-method write( cChar ) class FileBase 
+METHOD WRITE( cChar ) CLASS FileBase
 
-  if Self:noDosError() .and. Self:nDosHandle > 0
-    IF cChar IS  pCHARACTER
-      if cChar > Self:nSkipLength   // we are going to truncate for now...
-        fwrite( Self:nDosHandle, cChar, Self:nSkipLength )
-      else
-        fwrite( Self:nDosHandle, cChar, len(cChar) )
-      endif
-      fseek( Self:nDosHandle, ::nposition, 0 )
-      Self:nLastDosMessage := ferror()
-      if Self:noDosError()
-        fseek( Self:nDosHandle, Self:nPosition, 0 )  // Re-position the pointer
-      endif
-    endif
-  endif
+   IF Self:noDosError() .AND. Self:nDosHandle > 0
+      IF cChar IS pCHARACTER
+         IF cChar > Self:nSkipLength    // we are going to truncate for now...
+            FWRITE( Self:nDosHandle, cChar, Self:nSkipLength )
+         ELSE
+            FWRITE( Self:nDosHandle, cChar, LEN( cChar ) )
+         ENDIF
+         FSEEK( Self:nDosHandle, ::nposition, 0 )
+         Self:nLastDosMessage := FERROR()
+         IF Self:noDosError()
+            FSEEK( Self:nDosHandle, Self:nPosition, 0 )     // Re-position the pointer
+         ENDIF
+      ENDIF
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  getBuffer( <lDirection> )
+   /* Method:  getBuffer( <lDirection> )
    Params:  <lDirection>    Logical toggle for direction
    Returns: <nBytes>
    Purpose: To return the number of bytes either forward or backward from
@@ -405,82 +409,82 @@ method write( cChar ) class FileBase
             in a forward direction.  The default value is a logical true
             (.T.) value.
 */
-method Buffget(lForward)   class FileBase 
+METHOD Buffget( lForward ) CLASS FileBase
 
-  local cBuffer            // as char
-  local nLocation          // as int
-  local nRead              // as int
-  local lWithCRLF := pFALSE// as logical
+   LOCAL cBuffer       // as char
+   LOCAL nLocation     // as int
+   LOCAL nRead         // as int
+   LOCAL lWithCRLF := pFALSE               // as logical
 
-  DEFAULT lForward TO pTRUE
+   DEFAULT lForward TO pTRUE
 
-  if !lForward
+   IF !lForward
 
-    nRead   := fseek( Self:nDosHandle, ;
-                      -(if( ::nposition < pBUFFER_LENGTH, ;
-                            ::nposition, ;
-                            pBUFFER_LENGTH )), ;
-                      1 )  // rewind backwards
+      nRead := FSEEK( Self:nDosHandle, ;
+                      - ( IF( ::nposition < pBUFFER_LENGTH, ;
+                      ::nposition, ;
+                      pBUFFER_LENGTH ) ), ;
+                      1 )               // rewind backwards
 
-    cBuffer := space( ::nposition - nRead )
-    fread( Self:nDosHandle, @cBuffer, (::nposition - nRead) )
+      cBuffer := SPACE( ::nposition - nRead )
+      FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
 
-    if right( cBuffer, 2 ) == pCRLF  // with line already
-      cBuffer   := left( cBuffer, len(cBuffer)-2 )
-      lWithCRLF := pTRUE
-    endif
-    nLocation := len(cBuffer) - (rat( pCRLF, cBuffer ))
+      IF RIGHT( cBuffer, 2 ) == pCRLF   // with line already
+         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
+         lWithCRLF := pTRUE
+      ENDIF
+      nLocation := LEN( cBuffer ) - ( RAT( pCRLF, cBuffer ) )
 
-  else
-    cBuffer := space( pBUFFER_LENGTH )
-    nRead := fread( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-    fseek( Self:nDosHandle, -( if( nRead < pBUFFER_LENGTH, nRead, ;
-                            pBUFFER_LENGTH ) ), 1 )        // Rewind
+   ELSE
+      cBuffer := SPACE( pBUFFER_LENGTH )
+      nRead   := FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
+      FSEEK( Self:nDosHandle, - ( IF( nRead < pBUFFER_LENGTH, nRead, ;
+             pBUFFER_LENGTH ) ), 1 )    // Rewind
 
-    // Now, parse the string. and file
+      // Now, parse the string. and file
 
-    nLocation := at( pCRLF, cBuffer )
+      nLocation := AT( pCRLF, cBuffer )
 
-    // Now, if there is NO CRLF in the buffer and if the value of the
-    // number of bytes read is less than the buffer length, then we
-    // have an end of file condition.
-    if nLocation == 0 .and. ( nRead < pBUFFER_LENGTH )
-      // If so, then set the appropriate flags accordingly.
-      ::lAtBottom := pTRUE
-      ::lAtTop    := pFALSE
-    endif
-  endif
+      // Now, if there is NO CRLF in the buffer and if the value of the
+      // number of bytes read is less than the buffer length, then we
+      // have an end of file condition.
+      IF nLocation == 0 .AND. ( nRead < pBUFFER_LENGTH )
+         // If so, then set the appropriate flags accordingly.
+         ::lAtBottom := pTRUE
+         ::lAtTop    := pFALSE
+      ENDIF
+   ENDIF
 
-  return( nLocation )
+   RETURN ( nLocation )
 
-/* Method:  appendLine( <cLine )
+   /* Method:  appendLine( <cLine )
    Params:  <cLine>         Character line to append
    Returns: Self
    Purpose: To append a blank CRLF delimited line at the end of the file.
             If <cLine> is not passed or if it an empty line with 0 bytes
             in length, the function will not operate.
 */
-method appendLine( cLine ) class FileBase 
+METHOD appendLine( cLine ) CLASS FileBase
 
-  DEFAULT cLine to ""
+   DEFAULT cLine TO ""
 
-  if len( cLine ) == 0                              // Valid line
-    if Self:noDosError() .and. Self:nDosHandle > 0   // No error
-      if !(pCRLF $ cLine )                           // No CRLF, so add
-        cLIne += pCRLF
-      endif
-      fseek(Self:nDosHandle, 0, 2 )
-      fwrite(Self:nDosHandle, cLine )
-      ::nEndOfFile  := fseek(Self:nDosHandle, 0, 2 )
-      ::nposition   := fseek(Self:nDosHandle, -(len(cLine)), 2 )
-      ::nSkipLength := len( cLine )
-      ::lAtBottom   := ::lAtTop := pFALSE
-    endif
-  endif
+   IF LEN( cLine ) == 0                 // Valid line
+      IF Self:noDosError() .AND. Self:nDosHandle > 0        // No error
+         IF !( pCRLF $ cLine )          // No CRLF, so add
+            cLIne += pCRLF
+         ENDIF
+         FSEEK( Self:nDosHandle, 0, 2 )
+         FWRITE( Self:nDosHandle, cLine )
+         ::nEndOfFile  := FSEEK( Self:nDosHandle, 0, 2 )
+         ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cLine ) ), 2 )
+         ::nSkipLength := LEN( cLine )
+         ::lAtBottom   := ::lAtTop := pFALSE
+      ENDIF
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  skip( <nRecords> )
+   /* Method:  skip( <nRecords> )
    Params:  <nRecords>
    Returns: Self
    Purpose: This method moves the file's byte pointer <nRecords> position
@@ -489,132 +493,133 @@ method appendLine( cLine ) class FileBase
             This class's purpose is to do one byte movements.
 */
 
-method skip( nRecords )    class FileBase 
+METHOD SKIP( nRecords ) CLASS FileBase
 
-  local nCount := 0// as int
+   LOCAL nCount := 0   // as int
 
-  DEFAULT nRecords TO 1
+   DEFAULT nRecords TO 1
 
-  // Here, we have to start looking for CHR(13)+CHR(10) character
-  // combinations.  Once found, then we have to set the super class
-  // values appropriately
+   // Here, we have to start looking for CHR(13)+CHR(10) character
+   // combinations.  Once found, then we have to set the super class
+   // values appropriately
 
-  if Self:noDosError() .and. Self:nDosHandle > 0
-    do case
-    case nRecords > 0   // It's positive movement
-      while nCount++ != nRecords
-        ::fskip()
-        ::nSkipLength := Self:Buffget()
-      enddo
+   IF Self:noDosError() .AND. Self:nDosHandle > 0
+      DO CASE
+         CASE nRecords > 0              // It's positive movement
+            WHILE nCount ++ != nRecords
+               ::fskip()
+               ::nSkipLength := Self:Buffget()
+            ENDDO
 
-    case nRecords < 0   // It's negative movement
-      while nCount-- != nRecords
-        ::nSkipLength := Self:Buffget( pFALSE )
-        ::fskip(-1)
-      enddo
+         CASE nRecords < 0              // It's negative movement
+            WHILE nCount -- != nRecords
+               ::nSkipLength := Self:Buffget( pFALSE )
+               ::fskip( - 1 )
+            ENDDO
 
-    endcase
-  endif
+      ENDCASE
+   ENDIF
 
-  return( self )
+   RETURN ( self )
 
-/* Method:  goto(<nRecord>)
+   /* Method:  goto(<nRecord>)
    Params:  <nRecord>       The record byte to move to
    Returns: Self
    Purpose: This method moves the byte marker to the <nRecord> position
             within the file.  It is also based on the value stored to the
             Self:nSkipLength instance variable
 */
-method goto( nValue )      class FileBase 
+METHOD GOTO( nValue ) CLASS FileBase
 
-  local cLine     := ""   // as char
-  local nCount    := 0    // as int
-  local lContinue := pTRUE// as logical
-  local cBuffer           // as char
+   LOCAL cLine     := ""                   // as char
+   LOCAL nCount    := 0                    // as int
+   LOCAL lContinue := pTRUE                // as logical
+   LOCAL cBuffer       // as char
 
-  DEFAULT nValue TO 0
+   DEFAULT nValue TO 0
 
-  if Self:noDosError() .and. Self:nDosHandle > 0
-    IF nValue IS  pNUMERIC
-      if nValue > 0  // o.k. so far
-        fseek( Self:nDosHandle, 0, 0 )  // start at the top
-        while lContinue
-          cBuffer := space( pBUFFER_LENGTH )
-          lContinue := ( fread( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH ) == ;
-                         pBUFFER_LENGTH )
-          cBuffer := cLine + cBuffer
-          while pCRLF $ cBuffer
-            if ++nCount == nValue
-              lContinue := pFALSE
-              exit
-            endif
-            cBuffer := substr( cBuffer, at( pCRLF, cBuffer )+2 )
-          enddo
-          cLine := cBuffer
-        enddo
-        if nCount == nValue  // We have a match
-          fseek( Self:nDosHandle, -( pBUFFER_LENGTH ), 1 )  // Back off from here
-          ::nposition := fseek( Self:nDosHandle, ;
-                                      (pBUFFER_LENGTH - len( cBuffer )), ;
-                                      1 ) // Move
-          ::nSkipLength := Self:Buffget()
-        else
-          fseek( Self:nDosHandle, ::nposition, 0 )
-          nCount := 0
-        endif
-      endif
-    endif
-  endif
+   IF Self:noDosError() .AND. Self:nDosHandle > 0
+      IF nValue IS pNUMERIC
+         IF nValue > 0                  // o.k. so far
+            FSEEK( Self:nDosHandle, 0, 0 )                  // start at the top
+            WHILE lContinue
+               cBuffer   := SPACE( pBUFFER_LENGTH )
+               lContinue := ( FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH ) == ;
+                              pBUFFER_LENGTH )
+               cBuffer := cLine + cBuffer
+               WHILE pCRLF $ cBuffer
+                  IF ++ nCount == nValue
+                     lContinue := pFALSE
+                     EXIT
+                  ENDIF
+                  cBuffer := SUBSTR( cBuffer, AT( pCRLF, cBuffer ) + 2 )
+               ENDDO
+               cLine := cBuffer
+            ENDDO
+            IF nCount == nValue         // We have a match
+               FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), 1 )                // Back off from here
+               ::nposition := FSEEK( Self:nDosHandle, ;
+                                     ( pBUFFER_LENGTH - LEN( cBuffer ) ), ;
+                                     1 )                    // Move
+               ::nSkipLength := Self:Buffget()
+            ELSE
+               FSEEK( Self:nDosHandle, ::nposition, 0 )
+               nCount := 0
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
 
-  return( nCount )
+RETURN ( nCount )
 
 // End of File: FFile2.prg
 
-method BufferGet(lForward)   Class FileBase
+METHOD BufferGet( lForward ) CLASS FileBase
 
-  local cBuffer            // as char
-  local nLocation          // as int
-  local nRead              // as int
-  local lWithCRLF := pFALSE// as logical
+   LOCAL cBuffer       // as char
+   LOCAL nLocation     // as int
+   LOCAL nRead         // as int
+   LOCAL lWithCRLF := pFALSE               // as logical
 
-  DEFAULT lForward TO pTRUE
+   DEFAULT lForward TO pTRUE
 
-  if !lForward
+   IF !lForward
 
-    nRead   := fseek( Self:nDosHandle, ;
-                      -(if( ::nposition < pBUFFER_LENGTH, ;
-                            ::nposition, ;
-                            pBUFFER_LENGTH )), ;
-                      1 )  // rewind backwards
+      nRead := FSEEK( Self:nDosHandle, ;
+                      - ( IF( ::nposition < pBUFFER_LENGTH, ;
+                      ::nposition, ;
+                      pBUFFER_LENGTH ) ), ;
+                      1 )               // rewind backwards
 
-    cBuffer := space( ::nposition - nRead )
-    fread( Self:nDosHandle, @cBuffer, (::nposition - nRead) )
+      cBuffer := SPACE( ::nposition - nRead )
+      FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
 
-    if right( cBuffer, 2 ) == pCRLF  // with line already
-      cBuffer   := left( cBuffer, len(cBuffer)-2 )
-      lWithCRLF := pTRUE
-    endif
-    nLocation := len(cBuffer) - (rat( pCRLF, cBuffer ))
+      IF RIGHT( cBuffer, 2 ) == pCRLF   // with line already
+         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
+         lWithCRLF := pTRUE
+      ENDIF
+      nLocation := LEN( cBuffer ) - ( RAT( pCRLF, cBuffer ) )
 
-  else
-    cBuffer := space( pBUFFER_LENGTH )
-    nRead := fread( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-    fseek( Self:nDosHandle, -( if( nRead < pBUFFER_LENGTH, nRead, ;
-                            pBUFFER_LENGTH ) ), 1 )        // Rewind
+   ELSE
+      cBuffer := SPACE( pBUFFER_LENGTH )
+      nRead   := FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
+      FSEEK( Self:nDosHandle, - ( IF( nRead < pBUFFER_LENGTH, nRead, ;
+             pBUFFER_LENGTH ) ), 1 )    // Rewind
 
-    // Now, parse the string. and file
+      // Now, parse the string. and file
 
-    nLocation := at( pCRLF, cBuffer )
+      nLocation := AT( pCRLF, cBuffer )
 
-    // Now, if there is NO CRLF in the buffer and if the value of the
-    // number of bytes read is less than the buffer length, then we
-    // have an end of file condition.
-    if nLocation == 0 .and. ( nRead < pBUFFER_LENGTH )
-      // If so, then set the appropriate flags accordingly.
-      ::lAtBottom := pTRUE
-      ::lAtTop    := pFALSE
-    endif
-  endif
+      // Now, if there is NO CRLF in the buffer and if the value of the
+      // number of bytes read is less than the buffer length, then we
+      // have an end of file condition.
+      IF nLocation == 0 .AND. ( nRead < pBUFFER_LENGTH )
+         // If so, then set the appropriate flags accordingly.
+         ::lAtBottom := pTRUE
+         ::lAtTop    := pFALSE
+      ENDIF
+   ENDIF
 
-  return( nLocation )
+RETURN ( nLocation )
 
+*+ EOF: FFILE1.PRG

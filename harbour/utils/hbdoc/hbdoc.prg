@@ -92,7 +92,7 @@
  */
 
 #ifdef __HARBOUR__
-   #define NANFOR
+#define NANFOR
 #endif
 
 #include "directry.ch"
@@ -109,22 +109,23 @@
 #define LONGONELINE  66
 
 //  The delimiter
-   memvar aDirList
-   memvar aDocInfo  
-   memvar aLinkInfo 
-   memvar aAuthorList  
-   memvar lAscii       
-   memvar lContinuous  
-   memvar lAuthor 
-   memvar lRtf    
-   memvar lNgi    
-   memvar lOs2    
-   memvar lWww    
-   memvar lNorton 
-   memvar aWWW    
-   memvar lTroff  
+MEMVAR aDirList
+MEMVAR aDocInfo
+MEMVAR aLinkInfo
+MEMVAR aAuthorList
+MEMVAR lAscii
+MEMVAR lContinuous
+MEMVAR lAuthor
+MEMVAR lRtf
+MEMVAR lNgi
+MEMVAR lOs2
+MEMVAR lWww
+MEMVAR lNorton
+MEMVAR aWWW
+MEMVAR lTroff
 /*
 */
+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function MAIN()
@@ -136,10 +137,12 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  LOCAL variables:
    // NG/EH input
 
-   LOCAL aExtensions := { "*.ch","*.prg", "*.c", "*.asm" , "*.txt" }
+   LOCAL aExtensions := { "*.ch", "*.prg", "*.c", "*.asm", "*.txt" }
    LOCAL i
    LOCAL j
-   LOCAL nItem,nHpj,nPos
+   LOCAL nItem
+   LOCAL nHpj
+   LOCAL nPos
    LOCAL cCompiler     // Compiler type
    // Include norton compatable switch for EH
    LOCAL lDone         // Done with a loop
@@ -152,29 +155,28 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL cTemp
    PUBLIC theHandle
    PUBLIC aDirList
-   PUBLIC aDocInfo     := {}
-   PUBLIC aLinkInfo    := {}
-   PUBLIC aAuthorList  := {}
-   PUBLIC lAscii       := .F.              // Create ascii output instead of NG/EH input
-   PUBLIC lContinuous  := .F.              // Create continuous ascii output instead of
-   PUBLIC lAuthor := .T.                   // Include author in output of ascii output
-   PUBLIC lRtf    := .F.
-   PUBLIC lNgi    := .F.
-   PUBLIC lOs2    := .F.
-   PUBLIC lWww    := .F.
-   PUBLIC lNorton := .F.
-   PUBLIC aWWW    := {}
-   PUBLIC lTroff  := .f.
+   PUBLIC aDocInfo    := {}
+   PUBLIC aLinkInfo   := {}
+   PUBLIC aAuthorList := {}
+   PUBLIC lAscii      := .F.               // Create ascii output instead of NG/EH input
+   PUBLIC lContinuous := .F.               // Create continuous ascii output instead of
+   PUBLIC lAuthor     := .T.               // Include author in output of ascii output
+   PUBLIC lRtf        := .F.
+   PUBLIC lNgi        := .F.
+   PUBLIC lOs2        := .F.
+   PUBLIC lWww        := .F.
+   PUBLIC lNorton     := .F.
+   PUBLIC aWWW        := {}
+   PUBLIC lTroff      := .f.
 
-
-//  The following variables are used to allow one to change the delimiter
-//  around the keywords.
+   //  The following variables are used to allow one to change the delimiter
+   //  around the keywords.
 
    //
    //  Entry Point
    //
 
-   mHIDE()
+   MHIDE()
    //  Delete log file if present
 
    IF FILE( "hbdocerr.log" )
@@ -345,7 +347,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    @ MODULELINE,  0 CLEAR TO MODULELINE, MAXCOL()
    @ LINELINE,  0 CLEAR TO LINELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Sorting input files"
+   @ INFILELINE, 30 SAY "Sorting input files"         
 
    ASORT( aDocInfo,,, { | a, b | UPPER( a[ 1 ] + " " + a[ 2 ] ) < UPPER( b[ 1 ] + " " + b[ 2 ] ) } )
 
@@ -353,20 +355,20 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    IF lnorton
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "HelpC" ) ;
-         + " input files"
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "HelpC" ) ;         
+              + " input files"
    ELSEIF lRTF
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;
-         + " input files"
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;         
+              + " input files"
    ELSEIF lWww
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;
-         + " input files"
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;         
+              + " input files"
    ELSEIF lNgi
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "NG" ) ;
-         + " input files"
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "NG" ) ;         
+              + " input files"
    ELSEIF lTroff
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "TROFF" ) ;
-         + " input files"
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "TROFF" ) ;         
+              + " input files"
 
    ENDIF
 
@@ -403,9 +405,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             SET ALTERNATE TO
             SET ALTERNATE OFF
             SET CONSOLE ON
-            write_error( "Category not found: " + aDocInfo[ i, 1 ],,,, aDocInfo[ i, 4 ] )
+            WRITE_ERROR( "Category not found: " + aDocInfo[ i, 1 ],,,, aDocInfo[ i, 4 ] )
             @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]
+            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]         
             SET ALTERNATE TO "assembl.bat" ADDITIVE
             SET ALTERNATE ON
             SET CONSOLE OFF
@@ -415,68 +417,68 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lRtf
       nHpj := FCREATE( 'HARBOUR.HPJ' )
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
-      FWRITE(nHpj, 'HCW=1'+CRLF)
+      FWRITE( nHpj, 'HCW=1' + CRLF )
       FWRITE( nHpj, 'COMPRESS=60 Hall Zeck' + CRLF )
-      FWRITE( nHpj, 'LCID=0x416 0x0 0x0 ;Portugu阺 (brasileiro)'+CRLF)
+      FWRITE( nHpj, 'LCID=0x416 0x0 0x0 ;Portugu阺 (brasileiro)' + CRLF )
       FWRITE( nHpj, 'REPORT=Yes' + CRLF )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
       FWRITE( nHpj, 'TITLE=Harbour Winhelp' + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
       FWRITE( nHpj, 'HLP=.\harbour.hlp' + CRLF )
       FWRITE( nHpj, 'ROOT=' + CURDIR() + "\RTF" + CRLF )
-      FWRITE( nHpj, 'CNT=.\Harbour.cnt'+CRLF)
+      FWRITE( nHpj, 'CNT=.\Harbour.cnt' + CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
-      FWRITE( nHpj, "harbour.rtf"+CRLF)
-      FWRITE( nHpj, '[CONFIG]'+CRLF+'contents()'+CRLF+'prev()'+CRLF+'next()'+CRLF+'BrowseButtons()'+CRLF)
-      FWRITE( nHpj, '[WINDOWS]'+CRLF+'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f3'+CRLF)
+      FWRITE( nHpj, "harbour.rtf" + CRLF )
+      FWRITE( nHpj, '[CONFIG]' + CRLF + 'contents()' + CRLF + 'prev()' + CRLF + 'next()' + CRLF + 'BrowseButtons()' + CRLF )
+      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f3' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f3' + CRLF )
       FCLOSE( nHpj )
    ELSEIF lWWW
       oHtm := THTML():New( "htm\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
-      oHtm:WriteText("<H1>Harbour Reference Guide</H1>")
-      oHtm:WriteText( "<H2>HARBOUR</H2>"+hb_osnEwline()+'<UL>' )
-      oHtm:WriteLink( "overview",UpperLower("Harbour Read me" ))
-      oHtm:WriteLink( "license", UpperLower("Harbour License" ))
-      oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html","GNU License" )
-      oHtm:WriteLink( "compileroptions.htm","Compiler Options")
+      oHtm:WriteText( "<H1>Harbour Reference Guide</H1>" )
+      oHtm:WriteText( "<H2>HARBOUR</H2>" + hb_osnEwline() + '<UL>' )
+      oHtm:WriteLink( "overview", UpperLower( "Harbour Read me" ) )
+      oHtm:WriteLink( "license", UpperLower( "Harbour License" ) )
+      oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl.html", "GNU License" )
+      oHtm:WriteLink( "compileroptions.htm", "Compiler Options" )
       oHtm:WriteText( "</UL>" )
-      oHtm:WriteText("<H2>Alphabetical list of functions</H2>")
+      oHtm:WriteText( "<H2>Alphabetical list of functions</H2>" )
       oHtm:WriteText( "<UL>" )
-      ASORT( awww,,,{|x,y| x[1]<y[1] })
+      ASORT( awww,,, { | x, y | x[ 1 ] < y[ 1 ] } )
 
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos,1 ]
+         cTemp := aWww[ nPos, 1 ]
          IF LEFT( cTemp, 1 ) >= "A" .AND. LEFT( cTemp, 1 ) < "N" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1] ))
+            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
          ENDIF
       NEXT
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos,1 ]
+         cTemp := aWww[ nPos, 1 ]
          IF LEFT( cTemp, 1 ) >= "N" .AND. LEFT( cTemp, 1 ) < "_" .AND. AT( "()", cTemp ) > 0
-            oHtm:WriteLink(Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]   )       )
+            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
          ENDIF
       NEXT
-      oHtm:WriteText("</ul>")
+      oHtm:WriteText( "</ul>" )
       oHtm:Writetext( "<h2>Commands</h2>" )
-      oHtm:WriteText("<UL>")
+      oHtm:WriteText( "<UL>" )
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos,1 ]
-         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options" ;
-         .AND. UPPER(Left(ctemp,4)) <>"BASE" .AND. UPPER(LEFT(cTemp,4))<>"TERM" .and. UPPER(LEFT(cTemp,5))<>"TOOLS"
-         
-            oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
+         cTemp := aWww[ nPos, 1 ]
+         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .AND. cTemp <> "Compiler Options" ;
+                .AND. UPPER( LEFT( ctemp, 4 ) ) <> "BASE" .AND. UPPER( LEFT( cTemp, 4 ) ) <> "TERM" .AND. UPPER( LEFT( cTemp, 5 ) ) <> "TOOLS"
+
+            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
          ENDIF
       NEXT
-      oHtm:WriteText("</ul>")
+      oHtm:WriteText( "</ul>" )
       oHtm:WriteText( "<h2>Run Time Error</h2>" )
-      oHtm:WriteText("<ul>")
+      oHtm:WriteText( "<ul>" )
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos,1 ]
-         IF AT( "()", cTemp ) == 0 .And. UPPER(Left(ctemp,4)) =="BASE" .OR. UPPER(LEFT(cTemp,4))=="TERM" .OR. UPPER(LEFT(cTemp,5))=="TOOLS"
-            oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
+         cTemp := aWww[ nPos, 1 ]
+         IF AT( "()", cTemp ) == 0 .AND. UPPER( LEFT( ctemp, 4 ) ) == "BASE" .OR. UPPER( LEFT( cTemp, 4 ) ) == "TERM" .OR. UPPER( LEFT( cTemp, 5 ) ) == "TOOLS"
+            oHtm:WriteLink( LOWER( aWww[ nPos, 2 ] ), UpperLower( aWww[ nPos, 1 ] ) )
          ENDIF
       NEXT
-      oHtm:WriteText("</ul>")
+      oHtm:WriteText( "</ul>" )
       oHtm:Close()
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE
@@ -530,7 +532,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       ENDIF
 
       @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 30 SAY "Writing summary file"
+      @ INFILELINE, 30 SAY "Writing summary file"         
 
    ENDIF
 
@@ -544,7 +546,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Send out list of authors
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Sorting Author file"
+   @ INFILELINE, 30 SAY "Sorting Author file"         
 
    FOR i := 1 TO LEN( aAuthorList )
 
@@ -582,7 +584,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                            UPPER( a[ 3 ] ) < UPPER( b[ 3 ] ) ) } )
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Writing Author file"
+   @ INFILELINE, 30 SAY "Writing Author file"         
 
    IF LEN( aAuthorList ) > 1
       i     := 2
@@ -620,14 +622,26 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET CONSOLE ON
    SET ALTERNATE OFF
    SET ALTERNATE TO
-    mShow()
-   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"
+   MSHOW()
+   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
 
    //  Return to caller
 
 RETURN NIL
 
 //  End of MAIN()
+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function ListAsArray2()
+*+
+*+    Called from ( genng.prg    )   1 - function procngialso2()
+*+                ( genng1.prg   )   1 - function procngialso2()
+*+                ( genos2.prg   )   1 - function procos2also()
+*+                ( gentrf.prg   )   1 - function proctroffalso()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
 FUNCTION ListAsArray2( cList, cDelimiter )
 
    LOCAL nPos
@@ -644,6 +658,16 @@ FUNCTION ListAsArray2( cList, cDelimiter )
    AADD( aList, cList )                 // Add final element
    //
 RETURN aList        // Return the array
+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function StripNgControls()
+*+
+*+    Called from ( genhpc.prg   )   3 - function processfiles()
+*+                ( gentrf.prg   )   2 - function processtroff()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
 FUNCTION StripNgControls( cString )
 
    LOCAL nPos
@@ -691,6 +715,23 @@ FUNCTION StripNgControls( cString )
 
 RETURN cString
 
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function StripFiles()
+*+
+*+    Called from ( genasc.prg   )   1 - function asciifiles()
+*+                ( genhpc.prg   )   1 - function processfiles()
+*+                ( genhtm.prg   )   1 - function processwww()
+*+                ( genhtm1.prg  )   1 - function processwww()
+*+                ( genhtm2.prg  )   1 - function processwww()
+*+                ( genng.prg    )   1 - function processing()
+*+                ( genng1.prg   )   1 - function processing()
+*+                ( genos2.prg   )   1 - function processos2()
+*+                ( genrtf.prg   )   1 - function processrtf()
+*+                ( gentrf.prg   )   1 - function processtroff()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
 FUNCTION StripFiles( cString )
 
    //
@@ -787,6 +828,10 @@ RETURN nReturn
 *+
 *+    Function ListAsArray()
 *+
+*+    Called from ( genng.prg    )   1 - function procngialso()
+*+                ( genng1.prg   )   1 - function procngialso()
+*+                ( hbdoc.prg    )   1 - function main()
+*+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION ListAsArray( cList, cDelimiter )
@@ -804,10 +849,40 @@ FUNCTION ListAsArray( cList, cDelimiter )
    ENDDO
    AADD( aList, '"' + cList + '"' )     // Add final element
    //
-   RETURN aList     // Return the array
+RETURN aList        // Return the array
+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function ReadLN()
+*+
+*+    Called from ( genasc.prg   )   5 - function asciifiles()
+*+                ( genhpc.prg   )   5 - function processfiles()
+*+                ( genhtm.prg   )   7 - function processwww()
+*+                                   2 - function formathtmbuff()
+*+                                   2 - function prochtmdesc()
+*+                ( genhtm1.prg  )   7 - function processwww()
+*+                                   2 - function formathtmbuff()
+*+                                   2 - function prochtmdesc()
+*+                ( genhtm2.prg  )   6 - function processwww()
+*+                                   2 - function formathtmbuff()
+*+                                   2 - function prochtmdesc()
+*+                ( genng.prg    )   6 - function processing()
+*+                                   4 - function procngiinput()
+*+                                   2 - function procngdesc()
+*+                                   2 - function formatngbuff()
+*+                ( genng1.prg   )   6 - function processing()
+*+                                   4 - function procngiinput()
+*+                                   2 - function procngdesc()
+*+                                   2 - function formatngbuff()
+*+                ( genos2.prg   )   6 - function processos2()
+*+                                   2 - function formatos2buff()
+*+                                   2 - function procos2desc()
+*+                ( genrtf.prg   )   6 - function processrtf()
+*+                                   2 - function procrtfdesc()
+*+                                   2 - function formatrtfbuff()
+*+                ( gentrf.prg   )   5 - function processtroff()
+*+                ( hbdoc.prg    )   1 - function readatfile()
+*+                                   2 - function fill_link_info()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -821,9 +896,12 @@ FUNCTION ReadLN( leof )
 
 RETURN cBuffer
 //  End of ReadLN
+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-*+    Static Function ReadAtFile()
+*+    Function ReadAtFile()
+*+
+*+    Called from ( hbdoc.prg    )   1 - function main()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -879,11 +957,11 @@ RETURN aDirList
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-*+    Static Function write_error()
+*+    Function WRITE_ERROR()
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
+FUNCTION WRITE_ERROR( cDescrip, cBadLine, nLineCnt, nMax, cFile )
 
    //  This routine will send error messages to the error log - hbdocerr.log
    //
@@ -921,6 +999,14 @@ FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
    SET ALTERNATE TO
 
 RETURN NIL
+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+
+*+    Function fill_link_info()
+*+
+*+    Called from ( hbdoc.prg    )   1 - function main()
+*+
+*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 FUNCTION fill_link_info( cLinkName )
 
@@ -950,8 +1036,8 @@ FUNCTION fill_link_info( cLinkName )
    LOCAL cCategory
    LOCAL cFile
    LOCAL nReadHandle
-   LOCAL lMenuMode := .F.                  // Menu infomation being read
-   LOCAL lGetType  := .T.                  // Get the compiled file type to determine complier
+   LOCAL lMenuMode   := .F.                // Menu infomation being read
+   LOCAL lGetType    := .T.                // Get the compiled file type to determine complier
    LOCAL cCompiler     // Compiler Type
    //
    //  Entry Point
@@ -997,3 +1083,5 @@ FUNCTION fill_link_info( cLinkName )
    //  Return to caller
 
 RETURN cCompiler
+
+*+ EOF: HBDOC.PRG

@@ -43,20 +43,21 @@
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-
 CLASS TTROFF
+
    DATA cFile
    DATA nHandle
    METHOD New( cFile )
    METHOD WritePar( cPar )
    METHOD WriteLink( clink )
-   METHOD Close()
+   METHOD CLOSE()
    METHOD WriteParBold( cPar )
    METHOD WriteTitle( cTitle, cTopic )
    METHOD WriteText( cText )
 ENDCLASS
 
 METHOD NEW( cFile ) CLASS TTROFF
+
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
@@ -66,29 +67,29 @@ RETURN Self
 METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
 
    LOCAL cWriteTitle := '.br' + CRLF + ;
-      '.ta' + CRLF + ;
-      '.in 0.08i' + CRLF + ;
-      '.ps -3' + CRLF + ;
-      '.vs -3' + CRLF + ;
-      '.sp 2' + CRLF + ;
-      '\fB' + cTitle + CRLF
+           '.ta' + CRLF + ;
+           '.in 0.08i' + CRLF + ;
+           '.ps -3' + CRLF + ;
+           '.vs -3' + CRLF + ;
+           '.sp 2' + CRLF + ;
+           '\fB' + cTitle + CRLF
    LOCAL cWriteTopic := '.de }n' + CRLF + ;
-      '.bp' + CRLF + ;
-      '.sp .5i' + CRLF + ;
-      '..' + CRLF + ;
-      '.wh -.8i }n' + CRLF + ;
-      '.sp .5i' + CRLF + ;
-      '.po -.4i' + CRLF + ;
-      '.ll 7.5i' + CRLF + ;
-      '.ps 9' + CRLF + ;
-      '.vs 9' + CRLF + ;
-      '.in 0i' + CRLF + ;
-      '.ta 1.63265i' + CRLF + ;
-      '.sp 2' + CRLF + ;
-      '.ne 20' + CRLF + ;
-      '.ps +3' + CRLF + ;
-      '.vs +3' + CRLF + ;
-      cTopic + CRLF
+           '.bp' + CRLF + ;
+           '.sp .5i' + CRLF + ;
+           '..' + CRLF + ;
+           '.wh -.8i }n' + CRLF + ;
+           '.sp .5i' + CRLF + ;
+           '.po -.4i' + CRLF + ;
+           '.ll 7.5i' + CRLF + ;
+           '.ps 9' + CRLF + ;
+           '.vs 9' + CRLF + ;
+           '.in 0i' + CRLF + ;
+           '.ta 1.63265i' + CRLF + ;
+           '.sp 2' + CRLF + ;
+           '.ne 20' + CRLF + ;
+           '.ps +3' + CRLF + ;
+           '.vs +3' + CRLF + ;
+           cTopic + CRLF
    LOCAL cTemp
    LOCAL Npos
    LOCAL cWriteTemp
@@ -109,19 +110,22 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
 RETURN Self
 
 METHOD WriteText( cText ) CLASS TTROFF
+
    FWRITE( Self:nHandle, cText + CRLF )
 RETURN Self
 
 METHOD WritePar( cPar ) CLASS TTROFF
+
    FWRITE( Self:nHandle, ALLTRIM( STRTRAN( cPar, ".", "\." ) ) + CRLF )
 RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TTROFF
+
    LOCAL cWriteBold := '.sp' + CRLF + ;
-      '.in 0.08i' + CRLF + ;
-      '\fB' + cPar + CRLF + ;
-      '.sp' + CRLF + ;
-      '.in 0.4i' + CRLF
+           '.in 0.08i' + CRLF + ;
+           '\fB' + cPar + CRLF + ;
+           '.sp' + CRLF + ;
+           '.in 0.4i' + CRLF
    FWRITE( Self:nHandle, cWriteBold )
 RETURN Self
 
@@ -132,7 +136,8 @@ RETURN Self
 
 METHOD WriteLink( cLink ) CLASS TTROFF
 
-   FWRITE( Self:nHandle, ALLTRIM( cLink ) +CRLF)
+   FWRITE( Self:nHandle, ALLTRIM( cLink ) + CRLF )
 
 RETURN Self
 
+*+ EOF: TROFF.PRG
