@@ -983,8 +983,15 @@ HARBOUR HB_NOSNOW (void)
 HARBOUR HB_SHADOW (void)
 {
 #ifdef HARBOUR_USE_GTAPI
-   if( hb_pcount() == 5 )
-      gtSetAttribute(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,hb_parni(5));
+  USHORT uiAttr;
+
+   if( hb_pcount() == 4 )
+      uiAttr = 7;
+   else if( hb_pcount() == 5 )
+      uiAttr = hb_parni(5);
+   
+   if( hb_pcount() > 3 )
+      gtSetAttribute(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
 #endif
 }
 
