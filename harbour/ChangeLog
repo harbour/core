@@ -7,6 +7,25 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-03-03 16:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  * include/hbapifs.h
+   + prototype for hb_fsPOpen() api
+  * source/rtl/set.c
+    source/rtl/filesys.c
+    * Added Code to Support SET PRINTER TO PIPE <cmd>
+    Code provided by Przemyslaw CzerPak druzus@polbox.com
+  * utils/hbmake/hbmake.prg
+    * Minor fix for Library create response file for ar archiver
+  * utils/hbmake/hbmutils.prg
+    * minor fix for linux
+
+2002-03-03 19:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/dbsdf.prg
+    * Support of APPEND FROM ... SDF ... added
+
+2002-03-03 12:26 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/ppcore.c
+    * bug fixed, reported by Walter Negro
 
 2002-03-02 20:00 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source\rtl\tget.prg
