@@ -1,3 +1,7 @@
+2000-08-02 14:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.l
+     * Changed USUAL to ANYTYPE
+
 2000-08-02 14:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      * Changed VARIANT to ANYTYPE as it appear to be the prefered choice.

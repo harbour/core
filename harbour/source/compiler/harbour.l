@@ -36,9 +36,9 @@
 
 /* Compile using: flex -i -8 -oyylex.c harbour.l */
 
-/* TODO: 4 character abbreviation for strong typing keywords should be added 
+/* TODO: 4 character abbreviation for strong typing keywords should be added
          to be VO compatible [vszakats] */
-/* TODO: VOID strong typing keyword should be added as a new type for NIL. 
+/* TODO: VOID strong typing keyword should be added as a new type for NIL.
          [vszakats] */
 
 #include <stdio.h>
@@ -127,8 +127,8 @@ Separator     {SpaceTab}
 '              BEGIN STRING1;
 \"             BEGIN STRING2;
 
-\[             { 
-                    if( (hb_comp_iState == OPERATOR) || 
+\[             {
+                    if( (hb_comp_iState == OPERATOR) ||
                         (hb_comp_iState == LSEPARATOR) ||
                         (hb_comp_iState == LARRAY) ||
                         (hb_comp_iState == IF) ||
@@ -388,7 +388,7 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 
-"decl"|"decla"|"declar"|"declare" { 
+"decl"|"decla"|"declar"|"declare" {
     BEGIN DECLARE_;
     yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
 }
@@ -408,14 +408,14 @@ Separator     {SpaceTab}
     hb_comp_iState = IDENTIFIER;
     return IDENTIFIER;
 }
-                          
+
 <DECLARE_ID_>({Identifier}|{MacroTxt}){Separator}*[\n\,\[\:\;] { /* variable declaration */
     BEGIN 0;
     yyless(0);
     hb_comp_iState = PRIVATE;
     return PRIVATE;
-}                       
-<DECLARE_ID_>.|\n          { 
+}
+<DECLARE_ID_>.|\n          {
     BEGIN 0;
     unput( yytext[ yyleng-1 ] );
     hb_comp_iState = DECLARE;
@@ -508,7 +508,7 @@ Separator     {SpaceTab}
 <DO_>{Separator}+"while" { /* DO WHILE found -move it to WHILE state */
                 /* NOTE: we cannot decide here if it is DO WHILE <condition>
                  * or DO while [WITH <args>]
-                 */              
+                 */
                 BEGIN 0;
                 hb_comp_iState =DO;
                 yyless( yyleng-5 );
@@ -1435,9 +1435,9 @@ Separator     {SpaceTab}
 "as logical"         { return AS_LOGICAL; }
 "as numeric"         { return AS_NUMERIC; }
 "as object"          { return AS_OBJECT; }
-"as usual"           { return AS_VARIANT; }
+"as anytype"         { return AS_VARIANT; }
 
-"as array of usual"     { return AS_ARRAY; }
+"as array of anytype"   { return AS_ARRAY; }
 "as array of array"     { return AS_ARRAY_ARRAY; }
 "as array of codeblock" { return AS_BLOCK_ARRAY; }
 "as array of string"    { return AS_CHARACTER_ARRAY; }
