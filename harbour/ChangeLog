@@ -1,3 +1,10 @@
+2001-04-12 10:42 UTC+0300 Chen Kedem <niki@actcom.co.il>
+   * source/rtl/tone.c
+   * source/rtl/gtos2/mouseos2.c
+   * source/rtl/lang/msghe862.c
+   * source/rtl/lang/msghewin.c
+    * Replaced the old license with a new license
+
 2001-04-10 16:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbcomp.h
      * Changed order of COMDECLARED elements to be more intuitive for static initialization.
