@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-09-17 21:55 UTC-01 jf lefebvre (mafact) <jfl@mafact.com>
+  * source/rdd/dbfcdx\dbfcdx1.c
+    ! Added needed typecasting for M$soft C
+  * source/vm/classes.c
+    ! Minor cosmetic change and syncro with xHarbour
+
 2002-09-13 23:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dbdelim.prg
     ! Bug fix for fields that have an embedded delimiter.

@@ -3025,7 +3025,7 @@ static void hb_cdxSortFree( LPSORTINFO pSort )
    }
    if ( pSort->szTempFileName )
    {
-      hb_fsDelete( pSort->szTempFileName );
+      hb_fsDelete( (unsigned char *) pSort->szTempFileName );
       hb_xfree( pSort->szTempFileName );
       pSort->szTempFileName = NULL;
    }
@@ -3306,7 +3306,7 @@ static int hb_cdxSortSwapBuildIndex( LPSORTINFO pSort )
    USHORT nKeyLen;
    BOOL lCont;
 
-   pSort->pSwapPage = hb_xgrab( pSort->nSwapPages * sizeof( SORTSWAPPAGE ) );
+   pSort->pSwapPage = (_SORTSWAPPAGE *) hb_xgrab( pSort->nSwapPages * sizeof( SORTSWAPPAGE ) );
    if ( !pSort->pSwapPage )
       hb_errInternal( HB_EI_ERRUNRECOV, "hb_cdxTagDoIndex: Not enough memory for index merging", "hb_cdxTagDoIndex", NULL );
 
