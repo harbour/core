@@ -590,7 +590,7 @@ Statement  : ExecFlow Crlf        {}
            | AliasExp '=' Expression Crlf              { /* TODO */ GenPCode1( HB_P_POP ); }
            | VarId ArrayIndex '=' Expression Crlf      { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | FunArrayCall '=' Expression Crlf          { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
-           | IdSend IDENTIFIER '='      { Message( SetData( $2 ) ); } Expression Crlf  { Function( 1 ); }
+           | ObjectData '=' { MessageFix( SetData( $1 ) ); } Expression Crlf { Function( 1 ); GenPCode1( HB_P_POP ); }
            | ObjectData ArrayIndex '=' Expression Crlf    { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
            | ObjectMethod ArrayIndex '=' Expression Crlf  { GenPCode1( HB_P_ARRAYPUT ); GenPCode1( HB_P_POP ); }
 
