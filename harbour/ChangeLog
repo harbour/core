@@ -1,3 +1,7 @@
+2001-03-24 23:07 GMT-3 Horacio Roldan <horacioroldan@usa.net>
+   * harbour/source/rdd/dbf1.c
+     * fixed bug handling drive letter in opening memo file
+
 2001-03-24 02:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
      * Minor fix for VC++

@@ -1555,10 +1555,7 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       pArea->szMemoFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
       pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
-      if( pFileName->szDrive )
-         strcpy( pArea->szMemoFileName, pFileName->szDrive );
-      else
-         pArea->szMemoFileName[ 0 ] = 0;
+      pArea->szMemoFileName[ 0 ] = 0;
       if( pFileName->szPath )
          strcat( pArea->szMemoFileName, pFileName->szPath );
       strcat( pArea->szMemoFileName, pFileName->szName );
@@ -1714,10 +1711,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       pFileExt = hb_itemPutC( NULL, "" );
       SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pFileExt );
       szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-      if( pFileName->szDrive )
-         strcpy( szFileName, pFileName->szDrive );
-      else
-         szFileName[ 0 ] = 0;
+      szFileName[ 0 ] = 0;
       if( pFileName->szPath )
          strcat( szFileName, pFileName->szPath );
       strcat( szFileName, pFileName->szName );
