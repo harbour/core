@@ -1,3 +1,8 @@
+19990924-11:33 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/classes.c
+    ! hb_clsDictRealloc() one cast added.
+
 19990924-10:05 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * Fixed bug, noted by Matteo Baccan

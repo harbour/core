@@ -142,7 +142,7 @@ static void hb_clsDictRealloc( PCLASS pClass )
 
       for( ui = 0; ui < ( pClass->uiHashKey * BUCKET ); ui++ )
       {
-         PHB_DYNS pMessage = pClass->pMethods[ ui ].pMessage;
+         PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ ui ].pMessage;
 
          if( pMessage )
          {
