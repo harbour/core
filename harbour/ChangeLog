@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-28 21:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/debug/debugger.prg
+    ! aCallStack properly set when using trace mode (K_F10)
+
+  This fixes the debugger bug reported by Guy Roussin.
+
 2003-04-27 15:09 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/dirstruc.txt
     + Add a line about contrib/ole
