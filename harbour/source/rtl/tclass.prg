@@ -260,6 +260,10 @@ STATIC FUNCTION SetType( cType )
 
    ::cType := cType
 
+   if cType != nil .and. Upper( cType ) == "LOGICAL" .and. ::uInit == nil
+      ::uInit = .f.
+   endif
+
    RETURN NIL
 
 //----------------------------------------------------------------------------//
