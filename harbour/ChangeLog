@@ -1,3 +1,17 @@
+2000-09-28 14:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * include/hbapirdd.h
+   * contrib/rdd_ads/rddads.h
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/adsfunc.c
+     * Fixed handling of ADT tables
+     + Added implementation of SQL support in ADS RDD ( beginning )
+     + Added functions:
+             adsConnect()
+             adsCreateSqlStatement()
+             adsExecuteSqlDirect()
+             adsCopyTable()
+             adsConvertTable()
+
 2000-09-27 10:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbcmd.c
    * source/rdd/workarea.c

@@ -50,6 +50,7 @@ int adsFileType = ADS_CDX;
 int adsLockType = ADS_PROPRIETARY_LOCKING;
 int adsRights = 1;
 int adsCharType = ADS_ANSI;
+ADSHANDLE adsConnectHandle = 0;
 
 HB_FUNC( ADSSETFILETYPE )
 {
@@ -577,4 +578,159 @@ HB_FUNC( ADSISTABLEENCRYPTED )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSISTABLEENCRYPTED" );
+}
+
+HB_FUNC( ADSCONNECT )
+{
+   UNSIGNED32 ulRetVal;
+
+   if( hb_pcount() > 0 && ISCHAR( 1 ) )
+   {
+      ulRetVal = AdsConnect ( (UNSIGNED8*) hb_parc( 1 ), &adsConnectHandle );
+      if ( ulRetVal == AE_SUCCESS )
+        hb_retl( 1 );
+      else
+        hb_retl( 0 );
+   }
+   else
+      hb_retl( 0 );
+}
+
+HB_FUNC( ADSCREATESQLSTATEMENT )
+{
+   UNSIGNED32 ulRetVal;
+   ADSAREAP pArea;
+   ADSHANDLE adsStatementHandle;
+   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+   UNSIGNED16 usTableType;
+
+   if( adsConnectHandle )
+   {
+      ulRetVal = AdsCreateSQLStatement( adsConnectHandle, &adsStatementHandle );
+      if( ulRetVal == AE_SUCCESS )
+      {
+        if( !hb_rddInsertAreaNode( "ADS" ) )
+        {
+           AdsCloseSQLStatement( adsStatementHandle );
+           hb_retl( 0 );
+        }
+        else
+        {
+           pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+           if( ISCHAR( 1 ) )
+              strncpy( szAlias, hb_parc( 1 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
+           else
+              strcpy( szAlias, "ADSSQL" );
+           pArea->atomAlias = hb_dynsymGet( szAlias );
+           if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
+           {
+              hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, szAlias );
+              hb_retl( 0 );
+           }
+           ( ( PHB_DYNS ) pArea->atomAlias )->hArea = hb_rddGetCurrentWorkAreaNumber();
+           if( ISNUM( 2 ) )
+           {
+              usTableType = hb_parni( 2 );
+              if( usTableType == ADS_CDX )
+                 AdsStmtSetTableType( adsStatementHandle, ADS_CDX );
+           }
+           pArea->uiArea = hb_rddGetCurrentWorkAreaNumber();
+           pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+           pArea->hStatement = adsStatementHandle;
+           pArea->hTable = 0;
+           pArea->hOrdCurrent = 0;
+           hb_retl( 1 );
+        }
+      }
+      else
+        hb_retl( 0 );
+   }
+   else
+      hb_retl( 0 );
+}
+
+HB_FUNC( ADSEXECUTESQLDIRECT )
+{
+   UNSIGNED32 ulRetVal;
+   ADSHANDLE hCursor = 0;
+   ADSAREAP pArea;
+   DBOPENINFO pInfo;
+
+   if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
+                        && pArea->hStatement && ISCHAR( 1 ) )
+   {
+      ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, hb_parc( 1 ), &hCursor );
+      if( ulRetVal == AE_SUCCESS )
+      {
+         if( hCursor )
+         {
+            pInfo.atomAlias = NULL;
+            pArea->hTable = hCursor;
+            SELF_OPEN( ( AREAP ) pArea, &pInfo );
+         }
+         hb_retl( 1 );
+      }
+      else
+      {
+         UNSIGNED32 pulErrCode;
+         UNSIGNED8 pucBuf[160];
+         UNSIGNED16 pusBufLen = 160;
+         AdsGetLastError( &pulErrCode, &pucBuf, &pusBufLen);
+         printf( "\nDirect 4: %d %s",pulErrCode,pucBuf );
+         hb_retl( 0 );
+      }
+   }
+   else
+      hb_retl( 0 );
+}
+
+HB_FUNC( ADSCOPYTABLE )
+{
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( ISCHAR( 1 ) )
+      {
+         AdsCopyTable( pArea->hTable, ADS_IGNOREFILTERS, hb_parc( 1 ) );
+      }
+      else
+      {
+         hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSCOPYTABLE" );
+         return;
+      }
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSCOPYTABLE" );
+
+}
+
+HB_FUNC( ADSCONVERTTABLE )
+{
+   ADSAREAP pArea;
+   UNSIGNED16 usTableType = ADS_ADT;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if( ISCHAR( 1 ) )
+      {
+         if( ISNUM( 2 ) )
+         {
+            usTableType = hb_parni( 2 );
+            if( usTableType < 1 || usTableType > 3 )
+               usTableType = ADS_ADT;
+         }      
+         AdsConvertTable( pArea->hTable, ADS_IGNOREFILTERS, hb_parc( 1 ), usTableType );
+      }
+      else
+      {
+         hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSCONVERTTABLE" );
+         return;
+      }
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "  ADSCONVERTTABLE" );
+
 }

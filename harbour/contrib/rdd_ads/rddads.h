@@ -86,6 +86,7 @@ typedef struct _ADSAREA_
    BYTE bDay;
    USHORT * pFieldOffset;        /* Pointer to field offset array */
    BYTE * pRecord;               /* Buffer of record data */
+   ULONG maxFieldLen;
    BOOL fValidBuffer;            /* State of buffer */
    BOOL fRecordChanged;          /* Record changed */
    BOOL fShared;                 /* Shared file */
@@ -93,6 +94,7 @@ typedef struct _ADSAREA_
    BOOL fFLocked;                /* TRUE if file is locked */
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
+   ADSHANDLE hStatement;
 } ADSAREA;
 
 typedef ADSAREA * ADSAREAP;

@@ -50,6 +50,7 @@ extern "C" {
 
 /* RDD virtual machine integration functions */
 
+extern USHORT hb_rddInsertAreaNode( char *szDriver );
 extern int     hb_rddGetCurrentWorkAreaNumber( void );
 void *         hb_rddGetCurrentWorkAreaPointer( void );
 extern ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );

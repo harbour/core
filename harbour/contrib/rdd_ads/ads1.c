@@ -256,7 +256,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    pArea->fValidBuffer = FALSE;
    AdsGotoRecord( pArea->hTable, ulRecNo );
    hb_adsCheckBofEof( pArea );
-HB_TRACE(HB_TR_ALWAYS, ("afterCheckBE: %lu %lu ", pArea->ulRecNo, ulRecNo  ));
+   // HB_TRACE(HB_TR_ALWAYS, ("afterCheckBE: %lu %lu ", pArea->ulRecNo, ulRecNo  ));
 
    return SUCCESS;
 }
@@ -455,6 +455,8 @@ static ERRCODE adsFlush( ADSAREAP pArea )
    return SUCCESS;
 }
 
+#define  adsGetRec     NULL
+/*
 static ERRCODE adsGetRec( ADSAREAP pArea, BYTE ** pBuffer )
 {
    UNSIGNED32 pulLen = pArea->uiRecordLen;
@@ -465,12 +467,16 @@ static ERRCODE adsGetRec( ADSAREAP pArea, BYTE ** pBuffer )
    * pBuffer = pArea->pRecord;
    return SUCCESS;
 }
+*/
 
 static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
-   LPFIELD pField;
-   BYTE * pBuffer;
-   char szBuffer[ 21 ];
+   LPFIELD    pField;
+   BYTE *     pBuffer = pArea->pRecord;
+   // char szBuffer[ 21 ];
+   UNSIGNED8  szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
+   UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
+   UNSIGNED32 pulLength;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -480,40 +486,69 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( pArea->fEof )
    {
       int i;
-      pBuffer = pArea->pRecord;
-      for( i=0; i < pArea->uiRecordLen; i++ )
+      for( i=0; i < pArea->maxFieldLen; i++ )
          *( pBuffer+i ) = ' ';
+      *( pBuffer + ( int ) pField->uiLen ) = '\0';
    }
-   else if( !pArea->fValidBuffer )
-      adsGetRec( pArea, &pBuffer );
+//   else if( !pArea->fValidBuffer )
+//      adsGetRec( pArea, &pBuffer );
 
    pField = pArea->lpFields + uiIndex - 1;
+   AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
    switch( pField->uiType )
    {
       case HB_IT_STRING:
-         hb_itemPutCL( pItem, ( char * ) pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
-                       pField->uiLen );
+//         hb_itemPutCL( pItem, ( char * ) pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
+//                       pField->uiLen );
+         if( !pArea->fEof )
+         {
+            pulLength = pArea->maxFieldLen;
+            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+         }
+         hb_itemPutCL( pItem, ( char * ) pBuffer, pField->uiLen );
          break;
 
       case HB_IT_LONG:
-         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
-                 pField->uiLen );
-         szBuffer[ pField->uiLen ] = 0;
+//         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ],
+//                 pField->uiLen );
+//         szBuffer[ pField->uiLen ] = 0;
+         if( !pArea->fEof )
+         {
+            pulLength = pArea->maxFieldLen;
+            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+         }
          if( pField->uiDec )
-            hb_itemPutNDLen( pItem, atof( szBuffer ),
+            hb_itemPutNDLen( pItem, atof( pBuffer ),
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                              ( int ) pField->uiDec );
          else
-            hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
+            hb_itemPutNLLen( pItem, atol( pBuffer ), ( int ) pField->uiLen );
          break;
 
       case HB_IT_DATE:
-         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ], 8 );
-         szBuffer[ 8 ] = 0;
-         hb_itemPutDS( pItem, szBuffer );
+//         memcpy( szBuffer, pBuffer + pArea->pFieldOffset[ uiIndex - 1 ], 8 );
+//         szBuffer[ 8 ] = 0;
+        {
+         UNSIGNED8 pucFormat[ 11 ];
+         UNSIGNED16 pusLen = 10;
+         AdsGetDateFormat  ( pucFormat, &pusLen );
+         AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
+         if( !pArea->fEof )
+         {
+            pulLength = pArea->maxFieldLen;
+            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+         }
+         hb_itemPutDS( pItem, pBuffer );
+         AdsSetDateFormat  ( pucFormat );
          break;
+        }
 
       case HB_IT_LOGICAL:
+         if( !pArea->fEof )
+         {
+            pulLength = pArea->maxFieldLen;
+            AdsGetField( pArea->hTable, szName, pBuffer, &pulLength, ADS_NONE );
+         }
          hb_itemPutL( pItem, pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'T' ||
                       pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 't' ||
                       pArea->pRecord[ pArea->pFieldOffset[ uiIndex - 1 ] ] == 'Y' ||
@@ -522,14 +557,11 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case HB_IT_MEMO:
          {
-           UNSIGNED8 szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
-           UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
            UNSIGNED8 *pucBuf;
            UNSIGNED32 pulLen;
 
-           AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
-           if ( AdsGetMemoLength( pArea->hTable, szName, &pulLen ) ==
-                       AE_NO_CURRENT_RECORD )
+           if ( pArea->fEof || 
+                AdsGetMemoLength( pArea->hTable, szName, &pulLen ) == AE_NO_CURRENT_RECORD )
                hb_itemPutC( pItem, "" );
            else
            {
@@ -587,8 +619,6 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
    if( pArea->uiParents )
    {
-//      AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
-//         (UNSIGNED32 *)&(pArea->ulRecNo) );
       hb_adsCheckBofEof( pArea );
 // xxx can't call this here-- it may skip!!!
    }
@@ -597,7 +627,8 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
 
    pField = pArea->lpFields + uiIndex - 1;
-   szText = pArea->pRecord + pArea->pFieldOffset[ uiIndex - 1 ];
+   // szText = pArea->pRecord + pArea->pFieldOffset[ uiIndex - 1 ];
+   szText = pArea->pRecord;
    bError = TRUE;
    AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
 
@@ -609,8 +640,8 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
-            memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
-            memset( szText + uiCount, ' ', pField->uiLen - uiCount );
+            // memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
+            // memset( szText + uiCount, ' ', pField->uiLen - uiCount );
             AdsSetString( pArea->hTable, szName, (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
@@ -730,8 +761,13 @@ static ERRCODE adsClose( ADSAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("adsClose(%p)", pArea));
 
-   AdsCloseTable  ( pArea->hTable );
-   uiError = SUPER_CLOSE( (AREAP)pArea );
+   if( pArea->hTable )
+   {
+      AdsCloseTable  ( pArea->hTable );
+      uiError = SUPER_CLOSE( (AREAP)pArea );
+   }
+   if( pArea->hStatement )
+      AdsCloseSQLStatement( pArea->hStatement );
 
    /* Free field offset array */
    if( pArea->pFieldOffset )
@@ -896,35 +932,40 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    UNSIGNED16 pusBufLen, pusType;
    DBFIELDINFO dbFieldInfo;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsReadHeader(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
 
-   pArea->szDataFileName = ( char * ) pOpenInfo->abName;
-   pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
-   if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
+   if( pOpenInfo->atomAlias )
    {
-      hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, ( char * ) pOpenInfo->atomAlias );
-      return FAILURE;
-   }
-   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
+      pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
+      if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
+      {
+         hb_errRT_DBCMD( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, ( char * ) pOpenInfo->atomAlias );
+         return FAILURE;
+      }
+      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
+      pArea->szDataFileName = ( char * ) pOpenInfo->abName;
+      pArea->hStatement = 0;
+      pArea->hOrdCurrent = 0;
 
-   ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
+      ulRetVal = AdsOpenTable  ( 0, pOpenInfo->abName, NULL,
                   adsFileType, adsCharType, adsLockType, adsRights,
                   ( (pOpenInfo->fShared) ? ADS_SHARED : ADS_EXCLUSIVE ) |
                   ( (pOpenInfo->fReadonly) ? ADS_READONLY : ADS_DEFAULT ),
                    &hTable);
-   if( ulRetVal != AE_SUCCESS )
-   {
-      commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
-      return FAILURE;
+      if( ulRetVal != AE_SUCCESS )
+      {
+         commonError( pArea, EG_OPEN, ( USHORT ) ulRetVal, ( char * ) pOpenInfo->abName );
+         return FAILURE;
+      }
+      pArea->hTable = hTable;
    }
 
-   pArea->hTable = hTable;
-   pArea->hOrdCurrent = 0;
    SELF_FIELDCOUNT( ( AREAP ) pArea, &uiFields );
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    /* Size for deleted flag */
    pArea->uiRecordLen = 1;
+   pArea->maxFieldLen = 0;
 
    for( uiCount = 1; uiCount <= uiFields; uiCount++ )
    {
@@ -935,6 +976,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       AdsGetFieldType  ( pArea->hTable, szName, &pusType );
       AdsGetFieldLength( pArea->hTable, szName, &pulLength );
       dbFieldInfo.uiLen = ( USHORT ) pulLength;
+      if( pulLength > pArea->maxFieldLen ) pArea->maxFieldLen = pulLength;
       dbFieldInfo.uiDec = 0;
       switch( pusType )
       {
@@ -943,6 +985,8 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          case ADS_NUMERIC:
+         case ADS_DOUBLE:
+         case ADS_INTEGER:
             dbFieldInfo.uiType = HB_IT_LONG;
             AdsGetFieldDecimals( pArea->hTable, szName, ( UNSIGNED16 * ) &pulLength );
             dbFieldInfo.uiDec = ( USHORT ) pulLength;
@@ -964,7 +1008,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    /* Alloc buffer */
-   pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->uiRecordLen );
+   pArea->pRecord = ( BYTE * ) hb_xgrab( pArea->maxFieldLen + 1 );
    pArea->fValidBuffer = FALSE;
    return SELF_GOTOP( ( AREAP ) pArea );
 }
@@ -1513,5 +1557,5 @@ HB_FUNC( ADS_GETFUNCTABLE )
    if( pTable )
       hb_retni( hb_rddInherit( pTable, &adsTable, &adsSuper, 0 ) );
    else
-      hb_retni( FAILURE );
+       hb_retni( FAILURE );
 }
