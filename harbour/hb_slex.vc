@@ -867,7 +867,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
    -echo. > $(OBJ_DIR)\unistd.h
-   $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -DSIMPLEX -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -del $(OBJ_DIR)\unistd.h
 
 

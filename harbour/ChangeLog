@@ -1,3 +1,10 @@
+2001-01-26 16:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.vc
+     + Added -DSIMPLEX to production of HARBOUR_EXE_OBJs.
+
+   * source/vm/hvm.c
+     ! Minor optimization of recent changes to hb_vmSend()
+
 2001-01-25 12:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
      * Modified error messages in hb_vmSend() to report class name of native types (including NIL) along with missing method name.

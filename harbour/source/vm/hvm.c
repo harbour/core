@@ -2871,77 +2871,72 @@ void hb_vmSend( USHORT uiParams )
             PHB_BASEARRAY pSelfBase;
 
             pFunc = hb_objGetMethod( pSelf, pSym );
-
             pSelfBase = pSelf->item.asArray.value;
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
               pSelfBase->uiClass   = pSelfBase->uiPrevCls;
               pSelfBase->uiPrevCls = 0;
             }
+
+            if( pFunc )
+            {
+               pFunc();
+            }
+            else if( pSym->szName[ 0 ] == '_' )
+            {
+               hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
+            }
+            else
+            {
+               hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName );
+            }
          }
          else
          {
-            char sClass[10], sDesc[40];
+            char *sClass, sDesc[64];
 
             pFunc = NULL;
 
             if( HB_IS_POINTER( pSelf ) )
-              sprintf( (char*) sClass, "POINTER" );
+              sClass = "POINTER";
             else if( HB_IS_DATE( pSelf ) )
-              sprintf( (char*) sClass, "DATE" );
+              sClass = "DATE";
             else if( HB_IS_LOGICAL( pSelf ) )
-              sprintf( (char*) sClass, "LOGICAL" );
+              sClass = "LOGICAL";
             else if( HB_IS_SYMBOL( pSelf ) )
-              sprintf( (char*) sClass, "SYMBOL" );
+              sClass = "SYMBOL";
             else if( HB_IS_STRING( pSelf ) )
-              sprintf( (char*) sClass, "CHARACTER" );
+              sClass = "CHARACTER";
             else if( HB_IS_MEMO( pSelf ) )
-              sprintf( (char*) sClass, "MEMO" );
+              sClass = "MEMO";
             else if( HB_IS_BLOCK( pSelf ) )
-              sprintf( (char*) sClass, "BLOCK" );
+              sClass = "BLOCK";
             else if( HB_IS_BYREF( pSelf ) )
-              sprintf( (char*) sClass, "BYREF" );
+              sClass = "BYREF";
             else if( HB_IS_MEMVAR( pSelf ) )
-              sprintf( (char*) sClass, "MEMVAR" );
+              sClass = "MEMVAR";
             else if( HB_IS_ARRAY( pSelf ) )
-              sprintf( (char*) sClass, "ARRAY" );
+              sClass = "ARRAY";
             else if( HB_IS_NUMERIC( pSelf ) )
-              sprintf( (char*) sClass, "NUMERIC" );
+              sClass = "NUMERIC";
             else
-              sprintf( (char*) sClass, "UNKNOWN" );
+              sClass = "UNKNOWN";
 
-            if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) ) == 0 )
+            if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) < 4 ? 4 : strlen( pSym->szName ) ) == 0 )
             {
-               hb_itemPutC( &hb_stack.Return, (char *) sClass );
+               hb_itemPutC( &hb_stack.Return, sClass );
             }
             else if( pSym->szName[ 0 ] == '_' )
             {
               sprintf( (char *) sDesc, "Class: %s has no property", sClass );
-              hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, sDesc, pSym->szName + 1 );
+              hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, (char *) sDesc, pSym->szName + 1 );
             }
             else
             {
               sprintf( (char *) sDesc, "Class: %s has no exported method", sClass );
-              hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, sDesc, pSym->szName );
+              hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, (char *) sDesc, pSym->szName );
             }
          }
-      }
-
-      if( pFunc )
-      {
-         pFunc();
-      }
-      else if( strncmp( pSym->szName, "CLASSNAME", strlen( pSym->szName ) ) == 0 )
-      {
-         /* Class Name of native type was set as return value abobe! */
-      }
-      else if( pSym->szName[ 0 ] == '_' )
-      {
-         hb_errRT_BASE_SubstR( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
-      }
-      else
-      {
-         hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName );
       }
    }
    else /* it is a function */
