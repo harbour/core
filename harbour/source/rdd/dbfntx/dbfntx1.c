@@ -2523,27 +2523,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          {
             if( nParts == 1 )
             {
-               USHORT nAttemptLeft = 999;
-               pszTempName = (char*) hb_xgrab( _POSIX_PATH_MAX );
-               // sortInfo.tempHandle = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, pszTempName );
-               #if defined( HB_OS_LINUX ) || defined( HB_OS_BSD )
-               strcpy(pszTempName, "sort-tmp.XXXXXX" );
-               #endif
-               while( --nAttemptLeft )
-               {
-                  #if !defined( HB_OS_UNIX ) && !defined( HB_OS_BSD )
-                  tmpnam( pszTempName );
-                  sortInfo.tempHandle = hb_fsCreate( (BYTE*)pszTempName,FC_NORMAL );
-                  if( sortInfo.tempHandle != FS_ERROR )
-                     break;
-                  #else
-                  sortInfo.tempHandle =  mkstemp( pszTempName );
-                  if( sortInfo.tempHandle > -1 )
-                  {
-                     break;
-                  }
-                  #endif
-               }
+               BYTE TempName[ _POSIX_PATH_MAX ];
+               sortInfo.tempHandle = hb_fsCreateTemp( "", "SORT-TMP", FC_NORMAL, TempName );
                if( sortInfo.tempHandle == FS_ERROR )
                   hb_errInternal( HB_EI_ERRUNRECOV, "Cannot create temp file", "hb_ntxIndexCreate", NULL );
             }

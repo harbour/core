@@ -8,6 +8,28 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-02 16:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/gencli.c
+      * fixed warnings
+      
+   * source/rtl/cdpapi.c
+      *fixed warnings (Can the author of the code check if
+      I correctly parenthesized multiple || and && conditions?)
+      
+   * source/vm/classes.c
+      *fixed warning in gcc (commented out unused 
+      static hb_clsScope function)
+      
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rtl/fstemp.c
+      * fixed hb_fsCreateTemp() to use 'mkstemp' on Unix
+      * fixed sorting procedure to use hb_fsCreateTemp
+      wrapper function
+
+   * source/rtl/set.c
+      *hb_set.HB_SET_DIRSEPARATOR defaults to '/' on Unix
+      
+
 2004-04-02 13:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexpra.c
    * include/hbexprop.h

@@ -970,7 +970,11 @@ void hb_setInitialize( void )
    hb_set.HB_SET_UNIQUE = FALSE;
    hb_set.HB_SET_FILECASE = HB_SET_CASE_MIXED;
    hb_set.HB_SET_DIRCASE = HB_SET_CASE_MIXED;
+#ifdef HB_OS_UNIX
+   hb_set.HB_SET_DIRSEPARATOR = '/';
+#else
    hb_set.HB_SET_DIRSEPARATOR = '\\';
+#endif
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
    hb_set.HB_SET_DBFLOCKSCHEME = 0;

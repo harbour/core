@@ -201,7 +201,10 @@ static PHB_DYNS s_msgClsParent = NULL;
 /* All functions contained in classes.c */
 
 static PHB_ITEM hb_clsInst( USHORT uiClass );
+#if 0 
+/* see function definition */
 static void     hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod );
+#endif
 static ULONG    hb_cls_MsgToNum( PHB_DYNS pMsg );
        BOOL     hb_clsIsParent( USHORT uiClass, char * szParentName );
 static void     hb_clsDictRealloc( PCLASS pClass );
@@ -424,6 +427,10 @@ void hb_clsIsClassRef( void )
    }
 }
 
+/* Currently (2004.04.02) this function is not used 
+ it is commented out to suppress warning message in gcc
+*/
+#if 0
 static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
@@ -578,6 +585,7 @@ static void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
         }
     }
 }
+#endif
 
 ULONG hb_cls_MsgToNum( PHB_DYNS pMsg )
 {

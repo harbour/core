@@ -53,11 +53,17 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbset.h"
 
 #include <errno.h>
 
+#if defined( HB_OS_UNIX )
+#include <stdlib.h>
+#endif
+
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
+#if !defined( HB_OS_UNIX )
 static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )
 {
    /* TODO: Implement these: */
@@ -70,14 +76,11 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    pszBuffer[ 0 ] = '\0';
 
-   #ifndef HB_OS_UNIX
-      tmpnam( ( char * ) pszBuffer );
-   #else
-      mkstemp( ( char * ) pszBuffer );
-   #endif
+   tmpnam( ( char * ) pszBuffer );
 
    return pszBuffer[ 0 ] != '\0';
 }
+#endif
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
@@ -87,6 +90,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
 
    errno = 0;
 
+#if !defined( HB_OS_UNIX )
    while( --nAttemptLeft )
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
@@ -108,6 +112,38 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
          break;
       }
    }
+#else
+	if( (strlen(pszDir)+strlen(pszPrefix)+6) < _POSIX_PATH_MAX )
+	{
+		FHANDLE fhnd;
+		char cTemplate[_POSIX_PATH_MAX];
+      pszName[0] = '\0';
+		cTemplate[0] = '\0';
+      if( pszDir )
+      {
+         int nLen;
+		   strcpy( cTemplate, pszDir );
+         nLen = strlen( cTemplate );
+         if( cTemplate[nLen] != hb_set.HB_SET_DIRSEPARATOR )
+         {
+            cTemplate[nLen] = hb_set.HB_SET_DIRSEPARATOR;
+            cTemplate[nLen+1] = '\0';
+         }
+      }
+      if( pszPrefix )
+		   strcat( cTemplate, pszPrefix );
+		strcat( cTemplate, "XXXXXX" ); /* required by mkstemp */
+		while( --nAttemptLeft )
+		{
+			fhnd = mkstemp( cTemplate );	
+			if( fhnd >= 0 )
+         {
+            strcpy( pszName, cTemplate );
+				return fhnd;
+         }
+		}
+	}
+#endif
 
    hb_fsSetError( FS_ERROR );
    return FS_ERROR;

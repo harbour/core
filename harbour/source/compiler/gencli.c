@@ -1745,14 +1745,15 @@ static HB_GENC_FUNC( hb_p_pushstrshort )
             *
             * TODO: add switch to use hexadecimal format "%#04x"
             */
-         if( uchr == 0 )
-            fprintf( cargo->yyc, "" );
-         else if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
-            fprintf( cargo->yyc, "%i, ", uchr );
-         else if( strchr( "\'\\\"", uchr ) )
-            fprintf( cargo->yyc, "%i, ", uchr );
-         else
-            fprintf( cargo->yyc, "%c", uchr );
+         if( uchr > 0 )
+         {
+            if( ( uchr < ( BYTE ) ' ' ) || ( uchr >= 127 ) )
+               fprintf( cargo->yyc, "%i, ", uchr );
+            else if( strchr( "\'\\\"", uchr ) )
+               fprintf( cargo->yyc, "%i, ", uchr );
+            else
+               fprintf( cargo->yyc, "%c", uchr );
+         }
       }
    }
    fprintf( cargo->yyc, "\"\n" );

@@ -272,9 +272,10 @@ void  hb_cdpTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
       int nAddLower = (cdpIn->lLatin)? 6:0;
       for( ; *psz; psz++ )
       {
-         if( ( ( n = (int)cdpIn->s_chars[ ((int)*psz)&255 ] ) != 0 ) &&
-             ( n <= cdpIn->nChars || ( n > (cdpOut->nChars+nAddLower) ) &&
-             ( n <= (cdpOut->nChars*2+nAddLower) ) ) )
+         n = (int)cdpIn->s_chars[ ((int)*psz)&255 ];
+         if( ( n != 0 ) &&
+             ( ( n <= cdpIn->nChars ) || ( ( n > (cdpOut->nChars+nAddLower) ) &&
+             ( n <= (cdpOut->nChars*2+nAddLower) ) ) ) )
          {
             n--;
             *psz = ( n >= (cdpOut->nChars+nAddLower) )?
@@ -294,9 +295,10 @@ void  hb_cdpnTranslate( char* psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, unsi
       int nAddLower = (cdpIn->lLatin)? 6:0;
       for( i=0; i<nChars; i++,psz++ )
       {
-         if( ( ( n = (int)cdpIn->s_chars[ ((int)*psz)&255 ] ) != 0 ) &&
-             ( n <= cdpIn->nChars || ( n > (cdpOut->nChars+nAddLower) ) &&
-             ( n <= (cdpOut->nChars*2+nAddLower) ) ) )
+         n = (int)cdpIn->s_chars[ ((int)*psz)&255 ];
+         if( ( n != 0 ) &&
+             ( ( n <= cdpIn->nChars ) || ( ( n > (cdpOut->nChars+nAddLower) ) &&
+             ( n <= (cdpOut->nChars*2+nAddLower) ) ) ) )
          {
             n--;
             *psz = ( n >= (cdpOut->nChars+nAddLower) )?
