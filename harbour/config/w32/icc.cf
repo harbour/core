@@ -45,7 +45,8 @@ endef
 
 LD = icc
 LDFLAGS = $(CFLAGS)
-LINKLIBS = $(foreach lib, $(LIBS), $(_HB_LIB_COMPILE)$(lib))
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(_HB_LIB_COMPILE)$(lib))
+LINKLIBS += $(foreach lib, $(LIBS), $(_HB_LIB_COMPILE)$(lib))
 LD_RULE = $(link_exe_file)
 
 #Note: The empty line below HAVE TO exist!

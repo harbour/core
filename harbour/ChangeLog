@@ -1,3 +1,25 @@
+2001-02-08 12:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * config/dos/djgpp.cf
+  * config/dos/rsx32.cf
+  * config/dos/watcom.cf
+  * config/linux/gcc.cf
+  * config/os2/gcc.cf
+  * config/os2/icc.cf
+  * config/w32/bcc32.cf
+  * config/w32/gcc.cf
+  * config/w32/icc.cf
+  * config/w32/mingw32.cf
+  * config/w32/msvc.cf
+  * config/w32/rsxnt.cf
+    + Added the ability to include contrib libraries by setting
+      CONTRIBS to a list of contrib libraries in the Makefile.
+
+  * tests/Makefile
+    + Added CONTRIBS=libmisc
+    * Moved program modules that use the contrib\libmisc library
+      from BAD_PRG_SOURCES to PRG_SOURCES.
+
 2001-02-09 17:01 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/rtl/gtapi.c
      + hb_gtColorToN() fixed (?).
