@@ -37,33 +37,33 @@
 
 HARBOUR HB_MLCOUNT( void )
 {
-   char * pString     = hb_parc( 1 );
-   BYTE   bLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
-   BYTE   bTabLength  = ISNUM( 3 ) ? hb_parni( 3 ) : 4;
-   BYTE   bLastSpace  = 0;
-   BYTE   bCurLength  = 0;
-   BOOL   bWordWrap   = ISLOG( 4 ) ? hb_parl( 4 ) : TRUE;
-   ULONG  ulLen       = hb_parclen( 1 );
-   ULONG  ulLines     = 0;
+   char * pszString    = hb_parc( 1 );
+   USHORT uiLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
+   USHORT uiTabLength  = ISNUM( 3 ) ? hb_parni( 3 ) : 4;
+   USHORT uiLastSpace  = 0;
+   USHORT uiCurLength  = 0;
+   BOOL   bWordWrap    = ISLOG( 4 ) ? hb_parl( 4 ) : TRUE;
+   ULONG  ulLen        = hb_parclen( 1 );
+   ULONG  ulLines      = 0;
    ULONG  ulPos;
 
-   if( bLineLength < 4 || bLineLength > 254 ) 
-      bLineLength = 79;
+   if( uiLineLength < 4 || uiLineLength > 254 )
+      uiLineLength = 79;
 
-   if( bTabLength > bLineLength ) 
-      bTabLength = bLineLength - 1;
+   if( uiTabLength > uiLineLength )
+      uiTabLength = uiLineLength - 1;
 
    for( ulPos = 0; ulPos < ulLen; ulPos++ )
    {
-      switch( pString[ ulPos ] ) 
+      switch( pszString[ ulPos ] )
       {
          case HB_CHAR_HT:
-            bCurLength += bTabLength;
+            uiCurLength += uiTabLength;
             break;
 
          case HB_CHAR_LF:
-            bCurLength = 0;
-            bLastSpace = 0;
+            uiCurLength = 0;
+            uiLastSpace = 0;
             ulLines++;
             break;
 
@@ -71,32 +71,32 @@ HARBOUR HB_MLCOUNT( void )
             break;
 
          case ' ':
-            bCurLength++;
-            bLastSpace = bCurLength;
+            uiCurLength++;
+            uiLastSpace = uiCurLength;
             break;
 
          default:
-            bCurLength++;
+            uiCurLength++;
       }
 
-      if( bCurLength > bLineLength ) 
+      if( uiCurLength > uiLineLength )
       {
-         if( bWordWrap ) 
+         if( bWordWrap )
          {
-            if( bLastSpace == 0 ) 
-               bCurLength = 1;
+            if( uiLastSpace == 0 )
+               uiCurLength = 1;
             else
-               bCurLength = bCurLength - bLastSpace;
+               uiCurLength = uiCurLength - uiLastSpace;
          }
          else
-            bCurLength = 1;
+            uiCurLength = 1;
 
          ulLines++;
-         bLastSpace = 0;
+         uiLastSpace = 0;
       }
    }
 
-   if( bCurLength > 0 ) 
+   if( uiCurLength > 0 )
       ulLines++;
 
    hb_retnl( ulLines );

@@ -1,3 +1,4 @@
+//NOTEST
 //
 // $Id$
 //
@@ -12,10 +13,10 @@ Function Main()
 
    // First, try all the types. This checks that the VM can cope.
 
-   aEval( { /* NIL, */ "", 0, ctod( "" ), .F., {|| NIL }, ErrorNew() },;
+   aeval( { NIL, "", 0, ctod( "" ), .F., {|| NIL }, ErrorNew() },;
             {|x| qout( x:className ) } )
 
-/*   // Now try against values "in the code". This checks that the
+   // Now try against values "in the code". This checks that the
    // compiler can cope.
 
    qout( NIL:className )
@@ -41,7 +42,7 @@ Function Main()
    // work too.
 
    qout( ( NIL:className ):className )
-   qout( qout( ( NIL:className ):className ):className ) */
+   qout( qout( ( NIL:className ):className ):className )
 
 Return( NIL )
 

@@ -36,7 +36,6 @@ PRG_SOURCES=\
 	calling.prg \
 	cdow.prg \
 	clasinit.prg \
-	clasname.prg \
 	classch.prg \
 	classes.prg \
 	clsdata.prg \
@@ -157,10 +156,13 @@ PRG_HEADERS=\
 
 BAD_PRG_SOURCES=\
 	alias.prg \
+	clasname.prg \
 	dupvars.prg \
 	extend1.prg \
 	keywords.prg \
 	linecont.prg \
+	lnlenli1.prg \
+	lnlenli2.prg \
 	setkeys.prg \
 	spawn.prg \
 	spawn2.prg \
@@ -168,6 +170,7 @@ BAD_PRG_SOURCES=\
 	statics2.prg \
 	test10.prg \
 	testid.prg \
+	vec1.prg \
 
 C_SOURCES=\
 

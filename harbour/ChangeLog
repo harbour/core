@@ -1,3 +1,15 @@
+19991004-19:23 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/broken/*.* moved to tests/working
+    tests/working/Makefile
+    * moved to the BAD_PRG_SOURCES
+  - tests/broken/
+    - Removed
+  * tests/working/hscript/*.* moved to samples/hscript
+    * Moved
+  * source/rtl/mlcount.c
+    * BYTE type changed to USHORT.
+    * Hungarian notation slighly corrected.
+
 19991004-18:58 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/runner/stdalone/hbrun.prg
     + Added (now for sure)
