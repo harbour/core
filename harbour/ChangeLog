@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-02-04 23:10 UTC+0100 JFL (mafact) <jfl@mafact.com>
+   * source/vm/hvm.c
+   * source/vm/classes.c
+     ! fixed bug where object overloading was using modulus in place of power
+       for "**" expression
    * source/vm/runner.c
      ! added mscv needed type casting to lines 515 & 516
 
