@@ -17,6 +17,8 @@
      * Mouse coordinate variables renamed and exported.
      * MCOL()/MROW() in mousewin.c modified to use the exported coordinate
        variables.
+     * MPRESENT() now always returns .T. for Win32, which is not correct, but
+       better than .F.
 
 20000207-12:22 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/math.c

@@ -47,7 +47,7 @@
  *    hb_outstd(), HB_OUTSTD(), HB_PCOL(), HB_PROW(), hb_setpos(),
  *    HB_SETPOS(), HB_SETPRC(), HB_SCROLL(), and hb_consoleInitialize()
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_consoleGetNewLine()
  *    HB_DISPOUTAT()
  *    HB_SETPOSBS()
@@ -1155,8 +1155,8 @@ HARBOUR HB___ACCEPTSTR( void )
 }
 
 /* ------------------------------------------------- */
-/* Copyright (C) 1999 Victor Szel <info@szelvesz.hu> */
-/* ------------------------------------------------- */
+/* Copyright (C) 1999-2000 Victor Szakats <info@szelvesz.hu> */
+/* --------------------------------------------------------- */
 
 /*  $DOC$
  *  $FUNCNAME$
