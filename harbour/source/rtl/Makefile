@@ -46,6 +46,7 @@ PRG_SOURCES=\
         browdb.prg \
         devoutp.prg \
         errorsys.prg \
+        harbinit.prg \
 	memvarbl.prg \
 	menuto.prg \
         objfunc.prg \

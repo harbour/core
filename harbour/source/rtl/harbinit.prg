@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * Main Harbour initialization functions CLIPINIT()
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,51 +33,24 @@
  *
  */
 
-/* TODO: replace calls to _LastRec() and _Recno() with real versions. */
+#include "inkey.ch"
 
-function TBrowseDb( nTop, nLeft, nBott, nRight )
+ANNOUNCE SysInit
 
-   local oTb := TBrowseNew( nTop, nLeft, nBott, nRight )
+INIT PROCEDURE ClipInit
 
-   oTb:SkipBlock     := { | n | TBSkip( n ) }
-   oTb:GoTopBlock    := { || DbGoTop() }
-   oTb:GoBottomBlock := {|| DbGoBottom() }
+   PUBLIC getlist := {}
 
-Return oTb
+   ErrorSys()
 
-static function TbSkip( nRecs )
+   /* TOFIX: In Clipper this function is not called from here CLIPINIT(). */
+   /* NOTE: In Clipper __SETHELPK() is called *after* ERRORSYS(). */
+   __SetHelpK()
 
-   local nSkipped := 0
+   RETURN
 
-   if _LastRec() != 0
-      if nRecs == 0
-         DbSkip( 0 )
-      elseif nRecs > 0 .and. _Recno() != _LastRec() + 1
-         while nSkipped < nRecs
-            DbSkip( 1 )
-            if Eof()
-               DbSkip( -1 )
-               exit
-            endif
-            ++nSkipped
-         end
-      elseif nRecs < 0
-         while nSkipped > nRecs
-            DbSkip( -1 )
-            if Bof()
-               exit
-            endif
-            --nSkipped
-         end
-      endif
-   endif
+FUNCTION __SetHelpK
 
-return nSkipped
+   SET KEY K_F1 TO __XHELP
 
-static function _LastRec()  // Waiting for those function to become available
-
-return 0
-
-static function _RecNo()  // Waiting for those function to become available
-
-return 0
+   RETURN NIL

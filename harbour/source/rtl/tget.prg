@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Class Get
+ * Get Class
  *
  * Copyright 1999 Ignacio Ortiz de Zúniga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org

@@ -1,6 +1,6 @@
-# 
+#
 # $Id$
-# 
+#
 
 # makefile for Borland C/C++ 32 bits
 
@@ -19,7 +19,7 @@ PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj alert.obj \
               dates.obj dates2.obj datesx.obj debug.obj descend.obj devoutp.obj \
               dir.obj dynsym.obj environ.obj terror.obj menu.obj \
-              errorapi.obj errorsys.obj extend.obj files.obj \
+              errorapi.obj errorsys.obj harbinit.obj extend.obj files.obj \
               hardcr.obj hb_f.obj initsymb.obj inkey.obj itemapi.obj memvars.obj \
               math.obj mathx.obj msguk.obj mtran.obj objfunc.obj \
               set.obj setcolor.obj symbols.obj strings.obj stringp.obj \
@@ -47,6 +47,7 @@ errorsys.obj : errorsys.c extend.h hbdefs.h
 extend.obj   : extend.c   extend.h hbdefs.h
 filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
+harbinit.obj : harbinit.c extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 initsymb.obj : initsymb.c extend.h hbdefs.h
@@ -72,6 +73,7 @@ asort.c      : asort.prg     harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
 terror.c     : terror.prg    harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
+harbinit.c   : harbinit.prg  harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 stringp.c    : stringp.prg   harbour.exe
 tclass.c     : tclass.prg    harbour.exe

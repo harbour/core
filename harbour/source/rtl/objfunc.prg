@@ -3,12 +3,11 @@
  */
 
 /*
- * OBJFUNC
+ * Harbour Project source code:
+ * Dynamic Object management and misc. Object related functions
  *
- * Contains additional object oriented functions
- *
- * Copyright (C) 1999 Eddie Runia <eddie@runia.com>
- * Part of the Harbour Project www.harbour-project.org
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,14 +33,16 @@
  *
  */
 
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-
-   The following functions are Copyright 1999 Antonio Linares <alinares@fivetech.com>:
-      __objGetMsgList
-
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ *    __objGetMsgList
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include "hboo.ch"
 #include "error.ch"

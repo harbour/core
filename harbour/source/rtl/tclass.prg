@@ -33,15 +33,17 @@
  *
  */
 
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
-
-   The following functions are Copyright 1999 Eddie Runia <eddie@runia.com>:
-      Support for inheritance
-      Support for default DATA values
-
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    Support for inheritance
+ *    Support for default DATA values
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 // Harbour Class TClass to build classes
 

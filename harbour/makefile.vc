@@ -1,4 +1,4 @@
-# 
+#
 # $Id$
 #
 
@@ -81,6 +81,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\filesys.obj \
     $(OBJ_DIR)\fm.obj \
     $(OBJ_DIR)\gtapi.obj \
+    $(OBJ_DIR)\harbinit.obj \
     $(OBJ_DIR)\hardcr.obj \
     $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
@@ -388,6 +389,9 @@ $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
 
 $(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RTL_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

@@ -56,8 +56,7 @@ typedef struct _SYMBOLS
    SYMBOLSCOPE hScope;      /* scope collected from all symbols in module used to speed initialization code */
 } SYMBOLS, * PSYMBOLS;      /* structure to keep track of all modules symbol tables */
 
-extern HARBOUR HB_ERRORSYS( void );
-extern HARBOUR HB_ERRORNEW( void );
+extern HARBOUR HB_SYSINIT( void );
 
 static void    hb_vmPopAlias( void );        /* pops the workarea number form the eval stack */
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
@@ -2840,8 +2839,7 @@ static void hb_vmDoInitFunctions( int argc, char * argv[] )
 /*       Don't make this function static, because it's not called from this file. */
 void hb_vmForceLink( void )
 {
-   HB_ERRORSYS();
-   HB_ERRORNEW();
+   HB_SYSINIT();
 }
 
 /* ----------------------------- */
@@ -3128,3 +3126,22 @@ void hb_vmRequestCancel( void )
       s_wActionRequest = HB_QUIT_REQUESTED;
    }
 }
+
+/* NOTE: This is an internal undocumented Clipper function, which will try
+         to call the function HELP() if it's defined. This is the default
+         SetKey() handler for the F1 key. */
+
+HARBOUR HB___XHELP( void )
+{
+   PHB_DYNS pDynSym = hb_dynsymGet( "HELP" );
+
+   if( pDynSym )
+   {
+      hb_vmPushSymbol( pDynSym->pSymbol );
+      hb_vmPushNil();
+      hb_vmDo( 0 );
+
+      /* NOTE: Leave the return value as it is. */
+   }
+}
+

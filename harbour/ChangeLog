@@ -1,3 +1,26 @@
+19990916-11:15 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/vm/hvm.c
+    + __XHELP() function added.
+    ; So now if we had defined a function named HELP() in our app, it will be
+      called by default if the user presses the F1 key. Like in Clipper.
+    + Now using SYSINIT to force linking of the system init modul, instead of
+      ERRORSYS. Forcing ERRORNEW explicitly is not needed, so it's now removed.
+  * source/rtl/harbinit.prg
+    + ANNOUNCE SYSINIT added.
+    + __SETHELPK() function added.
+  * source/rtl/harbinit.prg (added)
+    source/rtl/errorsys.prg
+    source/rtl/Makefile
+    makefile.*
+    ! ClipInit() INIT procedure moved from ERRORSYS to a separate .prg,
+      this way the ERRORSYS.PRG module is completely replacable, like in 
+      Clipper.
+      ( ! Borland and MSVC users please check the modified Makefiles ! )
+  * source/rtl/*.prg
+    + All copyright header changed to the new one.
+    + Missing copyright headers added.
+
 19990916-13:07 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * fixed  bug with Release ( noted by David G. Holm )

@@ -3,10 +3,11 @@
  */
 
 /*
- * ASORT - Sort an array
+ * Harbour Project source code:
+ * ASORT() function
  *
- * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
- * Part of the Harbour Project www.harbour-project.org
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +30,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
+ *
  */
 
 /*

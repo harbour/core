@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Class GetList
+ * GetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org

@@ -1,6 +1,6 @@
-# 
+#
 # $Id$
-# 
+#
 
 # makefile for Borland C/C++ 32 bits
 
@@ -21,7 +21,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj debugger.obj descend.obj devoutp.obj \
               dir.obj do.obj dynsym.obj environ.obj terror.obj \
-              errorapi.obj errorsys.obj extend.obj fileread.obj filesys.obj fm.obj \
+              errorapi.obj errorsys.obj harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
               langapi.obj math.obj mathx.obj memvars.obj menuto.obj mtran.obj msges.obj \
               objfunc.obj readvar.obj xsavescr.obj\
@@ -56,6 +56,7 @@ extend.obj   : extend.c   extend.h hbdefs.h
 fileread.obj : fileread.c extend.h hbdefs.h
 filesys.obj  : filesys.c  extend.h hbdefs.h
 fm.obj       : fm.c       extend.h hbdefs.h
+harbinit.obj : harbinit.c extend.h hbdefs.h
 hardcr.obj   : hardcr.c   extend.h hbdefs.h
 hb_f.obj     : hb_f.c     extend.h hbdefs.h
 hvm.obj      : hvm.c      extend.h hbdefs.h
@@ -98,6 +99,7 @@ devoutp.c    : devoutp.prg   harbour.exe
 terror.c     : terror.prg    harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 fileread.c   : fileread.prg  harbour.exe
+harbinit.c   : harbinit.prg  harbour.exe
 menuto.c     : menuto.prg    harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 setkey.c     : setkey.prg    harbour.exe

@@ -3,17 +3,24 @@
  */
 
 /*
-   Harbour Project source code
-   www - http://www.Harbour-Project.org
+ * Harbour Project source code:
+ * PROMPT/MENU TO commands
+ *
+ * Released to Public Domain by Phil Barnett <philb@iag.net>
+ * www - http://www.harbour-project.org
+ *
+ */
 
-   A pure Clipper emulation of the PROMPT/MENU TO commands.
-
-   Author: Phil Barnett <philb@iag.net>
-   Released to Public Domain
-
-   Changes for higher Clipper compatibility by:
-   Victor Szel <info@szelvesz.hu>
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    Changes for higher Clipper compatibility
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 /* NOTE: Recursive use is supported */
 

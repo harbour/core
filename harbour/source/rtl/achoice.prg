@@ -3,14 +3,13 @@
  */
 
 /*
-   Harbour Project source code
-   www - http://www.Harbour-Project.org
-
-   A pure Clipper emulation of the ACHOICE function.
-
-   Author: Peter Townsend <cephas@tpgi.com.au>
-   Code donated to the Public Domain
-*/
+ * Harbour Project source code:
+ * ACHOICE() function
+ *
+ * Released to Public Domain by Peter Townsend <cephas@tpgi.com.au>
+ * www - http://www.harbour-project.org
+ *
+ */
 
 #include "inkey.ch"
 #include "setcurs.ch"

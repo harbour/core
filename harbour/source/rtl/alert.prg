@@ -3,15 +3,24 @@
  */
 
 /*
-   Harbour Project source code
-   www - http://www.Harbour-Project.org
+ * Harbour Project source code:
+ * ALERT() function
+ *
+ * Released to Public Domain by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
+ * www - http://www.harbour-project.org
+ *
+ */
 
-   Written by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
-   http://i.am/kzm
-   Clipper compatibility additions by Victor Szel <info@szelvesz.hu>
-
-   Released into public domain.
-*/
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    Changes for higher Clipper compatibility
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
 #include "box.ch"
 #include "inkey.ch"
