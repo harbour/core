@@ -1,3 +1,23 @@
+19991015-23:15 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/set.h
+   * include/set.ch
+   * source/pp/table.c
+   * source/rtl/set.c
+   * tests/set_num.prg
+   * tests/set_test.prg
+     + Added missing Clipper 5.3 SETs:
+          HB_SET_VIDEOMODE
+          HB_SET_MBLOCKSIZE
+          HB_SET_MFILEEXT
+          HB_SET_STRICTREAD
+          HB_SET_OPTIMIZE
+          HB_SET_AUTOPEN
+          HB_SET_AUTORDER
+          HB_SET_AUTOSHARE
+       Not knowing what their defaults should be, I defaulted the first
+       two to 0, the third one to '\0', and the rest to FALSE.
+
 19991015-22:00 EDT David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/inkey.c

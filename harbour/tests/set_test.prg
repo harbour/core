@@ -60,7 +60,19 @@ function Main()
 
 #ifdef _SET_EVENTMASK
    TestLine( "_SET_EVENTMASK",    39)
+
+   TestLine( "_SET_VIDEOMODE",    40)
+
+   TestLine( "_SET_MBLOCKSIZE",   41)
+   TestLine( "_SET_MFILEEXT",     42)
+
+   TestLine( "_SET_STRICTREAD",   43)
+   TestLine( "_SET_OPTIMIZE",     44)
+   TestLine( "_SET_AUTOPEN",      45)
+   TestLine( "_SET_AUTORDER",     46)
+   TestLine( "_SET_AUTOSHARE",    47)
 #endif
+
 
 return nil
 

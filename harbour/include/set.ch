@@ -36,6 +36,7 @@
 /*
  * ChangeLog:
  *
+ * V 1.10   David G. Holm               Added missing Clipper 5.3 SETs.
  * V 1.4    David G. Holm               Added my email address.
  * V 1.3    David G. Holm               Added copyright and license header,
  *                                      along with a complete version history.
@@ -96,6 +97,18 @@
 
 #define _SET_EVENTMASK    39
 
-#define _SET_COUNT        39
+#define _SET_VIDEOMODE    40
+
+#define _SET_MBLOCKSIZE   41
+#define _SET_MFILEEXT     42
+
+#define _SET_STRICTREAD   43
+#define _SET_OPTIMIZE     44
+#define _SET_AUTOPEN      45
+#define _SET_AUTORDER     46
+#define _SET_AUTOSHARE    47
+
+
+#define _SET_COUNT        47
 
 #endif /* _SET_CH */

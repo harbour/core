@@ -36,6 +36,7 @@
 /*
  * ChangeLog:
  *
+ * V 1.31   David G. Holm               Added missing Clipper 5.3 SETs.
  * V 1.25   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
  *                                      Clipper 5.3 docs are incorrect on this.
  * V 1.19   Victor Szel                 #include <x> changed to #include "x".
@@ -135,7 +136,18 @@ typedef enum
    HB_SET_MCENTER       = 37,
    HB_SET_SCROLLBREAK   = 38,
 
-   HB_SET_EVENTMASK     = 39
+   HB_SET_EVENTMASK     = 39,
+
+   HB_SET_VIDEOMODE     = 40,
+
+   HB_SET_MBLOCKSIZE    = 41,
+   HB_SET_MFILEEXT      = 42,
+
+   HB_SET_STRICTREAD    = 43,
+   HB_SET_OPTIMIZE      = 44, 
+   HB_SET_AUTOPEN       = 45,
+   HB_SET_AUTORDER      = 46,
+   HB_SET_AUTOSHARE     = 47
 } HB_set_enum;
 
 typedef struct
@@ -183,6 +195,14 @@ typedef struct
    BOOL    HB_SET_MCENTER;
    BOOL    HB_SET_SCROLLBREAK;   /* QUESTION: What does this do ? */
    HB_inkey_enum HB_SET_EVENTMASK;
+   int     HB_SET_MBLOCKSIZE;
+   char *  HB_SET_MFILEEXT;
+   BOOL    HB_SET_STRICTREAD;
+   BOOL    HB_SET_OPTIMIZE;
+   BOOL    HB_SET_AUTOPEN;
+   BOOL    HB_SET_AUTORDER;
+   BOOL    HB_SET_AUTOSHARE;
+   int     HB_SET_VIDEOMODE;
 } HB_SET_STRUCT;
 
 extern HB_SET_STRUCT hb_set;

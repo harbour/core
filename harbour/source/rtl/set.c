@@ -47,6 +47,7 @@
 /*
  * ChangeLog:
  *
+ * V 1.86   David G. Holm               Added missing Clipper 5.3 SETs.
  * V 1.84   David G. Holm               Corrected how NIL second parameter
  *                                      is handled for ALTFILE, DEVICE,
  *                                      EXTRAFILE, and PRINTFILE.
@@ -484,6 +485,12 @@ HARBOUR HB___SETCENTURY( void )
  *                   opened or created (even if it is the same file). The
  *                   default file extension is ".txt". There is no default
  *                   file name. Call with an empty string to close the file.
+ *              _SET_AUTOPEN     <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_AUTORDER    <lFlag> | <cOnOff>
+ *                   TODO: Document
+ *              _SET_AUTOSHARE   <lFlag> | <cOnOff>
+ *                   TODO: Document
  *              _SET_BELL        <lFlag> | <cOnOff>
  *                   When enabled, the bell sounds when the last position of
  *                   a GET is reached and/or when a GET validation fails.
@@ -642,6 +649,8 @@ HARBOUR HB___SETCENTURY( void )
  *                   value is 0. Note: PCOL() reflects the printer's column
  *                   position including the margin (e.g., SET MARGIN TO 5
  *                   followed by DEVPOS(5, 10) makes PCOL() return 15).
+ *              _SET_MBLOCKSIZE <nMemoBlockSize>
+ *                   TODO: Document
  *              _SET_MCENTER     <lFlag> | <cOnOff>
  *                   If enabled, display PROMPTs centered on the MESSAGE row.
  *                   If disabled, which is the default, display PROMPTS at
@@ -652,6 +661,10 @@ HARBOUR HB___SETCENTURY( void )
  *                   set row. Note: It is not possible to display prompts
  *                   on the top-most screen row, because row 0 is reserved
  *                   for the SCOREBOARD, if enabled.
+ *              _SET_MFILEEXT    <cMemoFileExt>
+ *                   TODO: Document
+ *              _SET_OPTIMIZE    <lFlag> | <cOnOff>
+ *                   TODO: Document
  *              _SET_PATH        <cDirectories>
  *                   Specifies a path of directories to search through to
  *                   locate a file that can't be located in the DEFAULT
@@ -685,12 +698,16 @@ HARBOUR HB___SETCENTURY( void )
  *                   after key or to LASTREC() + 1 if there is no higher key.
  *                   When disabled, which is the default, a SEEK that fails
  *                   will position the record pointer to LASTREC()+1.
+ *              _SET_STRICTREAD  <lFlag> | <cOnOff>
+ *                   TODO: Document
  *              _SET_TYPEAHEAD   <nKeyStrokes>
  *                   Sets the size of the keyboard typeahead buffer. Defaults
  *                   to 50. The minimum is 16 and the maximum is 4096.
  *              _SET_UNIQUE      <lFlag> | <cOnOff>
  *                   When enabled, indexes are not allowed to have duplicate
  *                   keys. When disabled, indexes are allowed duplicate keys.
+ *              _SET_VIDEOMODE   <nValue>
+ *                   TODO: Document
  *              _SET_WRAP        <lFlag> | <cOnOff>
  *                   When enabled, lightbar menus can be navigated from the
  *                   last position to the first and from the first position
@@ -729,6 +746,18 @@ HARBOUR HB_SET( void )
             if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
                hb_set.hb_set_althan = open_handle( hb_set.HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
          }
+         break;
+      case HB_SET_AUTOPEN    :
+         hb_retl( hb_set.HB_SET_AUTOPEN );
+         if( args > 1 ) hb_set.HB_SET_AUTOPEN = set_logical( pArg2 );
+         break;
+      case HB_SET_AUTORDER   :
+         hb_retl( hb_set.HB_SET_AUTORDER );
+         if( args > 1 ) hb_set.HB_SET_AUTORDER = set_logical( pArg2 );
+         break;
+      case HB_SET_AUTOSHARE  :
+         hb_retl( hb_set.HB_SET_AUTOSHARE );
+         if( args > 1 ) hb_set.HB_SET_AUTOSHARE = set_logical( pArg2 );
          break;
       case HB_SET_BELL       :
          hb_retl( hb_set.HB_SET_BELL );
@@ -873,6 +902,16 @@ HARBOUR HB_SET( void )
                hb_set.HB_SET_MARGIN = set_number( pArg2, hb_set.HB_SET_MARGIN );
          }
          break;
+      case HB_SET_MBLOCKSIZE :
+         hb_retni( hb_set.HB_SET_MBLOCKSIZE );
+         if( args > 1 )
+         {
+            if( set_number( pArg2, hb_set.HB_SET_MBLOCKSIZE ) < 0 )
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET" );
+            else
+               hb_set.HB_SET_MBLOCKSIZE = set_number( pArg2, hb_set.HB_SET_MBLOCKSIZE );
+         }
+         break;
       case HB_SET_MCENTER    :
          hb_retl( hb_set.HB_SET_MCENTER );
          if( args > 1 ) hb_set.HB_SET_MCENTER = set_logical( pArg2 );
@@ -887,10 +926,23 @@ HARBOUR HB_SET( void )
                hb_set.HB_SET_MESSAGE = set_number( pArg2, hb_set.HB_SET_MESSAGE );
          }
          break;
+      case HB_SET_MFILEEXT   :
+         if( hb_set.HB_SET_MFILEEXT ) hb_retc( hb_set.HB_SET_MFILEEXT );
+         else hb_retc( "" );
+         if( args > 1 ) hb_set.HB_SET_MFILEEXT = set_string( pArg2, hb_set.HB_SET_MFILEEXT );
+         break;
+      case HB_SET_OPTIMIZE   :
+         hb_retl( hb_set.HB_SET_OPTIMIZE );
+         if( args > 1 ) hb_set.HB_SET_OPTIMIZE = set_logical( pArg2 );
+         break;
+      case HB_SET_STRICTREAD :
+         hb_retl( hb_set.HB_SET_STRICTREAD );
+         if( args > 1 ) hb_set.HB_SET_STRICTREAD = set_logical( pArg2 );
+         break;
       case HB_SET_PATH       :
          if( hb_set.HB_SET_PATH ) hb_retc( hb_set.HB_SET_PATH );
-         if( args > 1 ) hb_set.HB_SET_PATH = set_string( pArg2, hb_set.HB_SET_PATH );
          else hb_retc( "" );
+         if( args > 1 ) hb_set.HB_SET_PATH = set_string( pArg2, hb_set.HB_SET_PATH );
          break;
       case HB_SET_PRINTER    :
          hb_retl( hb_set.HB_SET_PRINTER );
@@ -939,6 +991,16 @@ HARBOUR HB_SET( void )
          hb_retl( hb_set.HB_SET_UNIQUE );
          if( args > 1 ) hb_set.HB_SET_UNIQUE = set_logical( pArg2 );
          break;
+      case HB_SET_VIDEOMODE  :
+         hb_retni( hb_set.HB_SET_VIDEOMODE );
+         if( args > 1 )
+         {
+            if( set_number( pArg2, hb_set.HB_SET_VIDEOMODE ) < 0 )
+               hb_errRT_BASE( EG_ARG, 2020, NULL, "SET" );
+            else
+               hb_set.HB_SET_VIDEOMODE = set_number( pArg2, hb_set.HB_SET_VIDEOMODE );
+         }
+         break;
       case HB_SET_WRAP       :
          hb_retl( hb_set.HB_SET_WRAP );
          if( args > 1 ) hb_set.HB_SET_WRAP = set_logical( pArg2 );
@@ -954,6 +1016,9 @@ void hb_setInitialize( void )
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
    hb_set.hb_set_althan = FS_ERROR;
+   hb_set.HB_SET_AUTOPEN = FALSE;
+   hb_set.HB_SET_AUTORDER = FALSE;
+   hb_set.HB_SET_AUTOSHARE = FALSE;
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
    hb_set.hb_set_century = FALSE;
@@ -987,8 +1052,12 @@ void hb_setInitialize( void )
    hb_set.HB_SET_INSERT = FALSE;
    hb_set.HB_SET_INTENSITY = TRUE;
    hb_set.HB_SET_MARGIN = 0;
+   hb_set.HB_SET_MBLOCKSIZE = 0;
    hb_set.HB_SET_MCENTER = FALSE;
    hb_set.HB_SET_MESSAGE = 0;
+   hb_set.HB_SET_MFILEEXT = ( char * ) hb_xgrab( 1 );
+   hb_set.HB_SET_MFILEEXT[ 0 ] = '\0';
+   hb_set.HB_SET_OPTIMIZE = FALSE; 
    hb_set.HB_SET_PATH = ( char * ) hb_xgrab( 1 );
    hb_set.HB_SET_PATH[ 0 ] = '\0';
    hb_set.HB_SET_PRINTER = FALSE;
@@ -998,8 +1067,10 @@ void hb_setInitialize( void )
    hb_set.HB_SET_SCOREBOARD = TRUE;
    hb_set.HB_SET_SCROLLBREAK = TRUE;
    hb_set.HB_SET_SOFTSEEK = FALSE;
+   hb_set.HB_SET_STRICTREAD = FALSE;
    hb_set.HB_SET_TYPEAHEAD = 50; hb_inkeyReset( TRUE ); /* Allocate keyboard typeahead buffer */
    hb_set.HB_SET_UNIQUE = FALSE;
+   hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
 }
 
@@ -1015,6 +1086,7 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_DELIMCHARS ) hb_xfree( hb_set.HB_SET_DELIMCHARS );
    if( hb_set.HB_SET_DEVICE )     hb_xfree( hb_set.HB_SET_DEVICE );
    if( hb_set.HB_SET_EXTRAFILE )  hb_xfree( hb_set.HB_SET_EXTRAFILE );
+   if( hb_set.HB_SET_MFILEEXT  )  hb_xfree( hb_set.HB_SET_MFILEEXT );
    if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
 

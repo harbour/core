@@ -76,10 +76,19 @@
    static DEFINES sD___38 = {"_SET_TYPEAHEAD",NULL,-1,"14", &sD___37 };
    static DEFINES sD___39 = {"_SET_UNIQUE",NULL,-1,"10", &sD___38 };
    static DEFINES sD___40 = {"_SET_WRAP",NULL,-1,"35", &sD___39 };
-   static DEFINES sD___41 = {"_SET_COUNT",NULL,-1,"39", &sD___40 };
+   static DEFINES sD___41 = {"_SET_COUNT",NULL,-1,"47", &sD___40 };
    static DEFINES sD___42 = {"_SET_CH",NULL,-1,NULL, &sD___41 };
    static DEFINES sD___43 = {"_DFSET","x,y",2,"Set( _SET_DATEFORMAT, if(__SetCentury(), x, y) )", &sD___42 };
-   DEFINES *topDefine = &sD___43;
+   static DEFINES sD___44 = {"_SET_VIDEOMODE",NULL,-1,"40", &sD___43 };
+   static DEFINES sD___45 = {"_SET_MBLOCKSIZE",NULL,-1,"41", &sD___44 };
+   static DEFINES sD___46 = {"_SET_MFILEEXT",NULL,-1,"42", &sD___45 };
+   static DEFINES sD___47 = {"_SET_STRICTREAD",NULL,-1,"43", &sD___46 };
+   static DEFINES sD___48 = {"_SET_OPTIMIZE",NULL,-1,"44", &sD___47 };
+   static DEFINES sD___49 = {"_SET_AUTOPEN",NULL,-1,"45", &sD___48 };
+   static DEFINES sD___50 = {"_SET_AUTORDER",NULL,-1,"46", &sD___49 };
+   static DEFINES sD___51 = {"_SET_AUTOSHARE",NULL,-1,"47", &sD___50 };
+
+   DEFINES *topDefine = &sD___51;
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };
