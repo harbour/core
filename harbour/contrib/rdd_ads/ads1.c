@@ -65,6 +65,9 @@
 #include "hbset.h"
 #include <ctype.h>
 
+#undef  HARBOUR_MAX_RDD_FIELDNAME_LENGTH
+#define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        150
+
 static ERRCODE adsRecCount(  ADSAREAP pArea, ULONG * pRecCount );
 static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem );
 static ERRCODE adsSetScope(  ADSAREAP pArea, LPDBORDSCOPEINFO sInfo );
@@ -1065,12 +1068,31 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                pArea->fEof = TRUE;
             }
          AdsGetDouble(pArea->hTable, szName,&dVal);
-         if( pField->uiDec )
-            hb_itemPutNDLen( pItem, dVal,
+         if( pField->uiDec ) {
+               hb_itemPutNDLen( pItem, dVal,
                              ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
                              ( int ) pField->uiDec );
-         else
-            hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen ,0);
+               }
+         else            {
+         switch ( pField->uiTypeExtended) {
+         case  ADS_CURDOUBLE :
+         case  ADS_DOUBLE : {
+               int iNewLen =( int ) pField->uiLen +(( int ) hb_set.HB_SET_DECIMALS*2) ;
+               hb_itemPutNDLen( pItem, dVal,
+                             ( int ) iNewLen ,
+                             ( int ) hb_set.HB_SET_DECIMALS );
+               }
+               break;
+         case  ADS_AUTOINC:              
+               hb_itemPutNLen( pItem, dVal, ( int ) 10 , (int) 0 );
+               break;
+
+        default:
+
+               hb_itemPutNLen( pItem, dVal, ( int ) pField->uiLen , (int) 0 );
+            }
+           }
+         break;
          break;
 
       case HB_IT_DATE:
@@ -1339,7 +1361,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    pArea->szDataFileName = (char *) hb_xgrab( strlen( (char *) pCreateInfo->abName ) + 1 );
    strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
-   uiLen = (pArea->uiFieldCount * 22) + 1;
+   uiLen = (pArea->uiFieldCount * HARBOUR_MAX_RDD_FIELDNAME_LENGTH) + 1;
    ucfieldDefs = (UNSIGNED8 *) hb_xgrab( uiLen );
    ucfieldDefs[0]='\0';
    pField = pArea->lpFields;
