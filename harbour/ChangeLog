@@ -1,3 +1,8 @@
+19990715-09:50 CET Patrick Mast <harbour@PatrickMast.com>
+   *source/rtl/environ.c
+    changed all 'defined(__MSC__)' to 'defined(__MSC__) || defined(_MSC_VER)'
+    It compiles with MSVC++ 6.01 now
+
 19990714-22:45 EDT David G. Holm <dholm@jsd-llc.com>
   * config/dos/djgpp.cf
     * Modified to support new HB_*_COMPILE variables
