@@ -1,3 +1,9 @@
+20000515-22:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/hbusage.c
+     ! Removed conditional OBJ generation branch.
+   * source/compiler/hbfix.c
+     ! Unused variable warnings fixed.
+
 20000515-10:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
   * source/compiler/harbour.l
@@ -399,7 +405,7 @@ The follow is mission from previus session
 
    * source/compiler/harbour.c
      ! hb_compGenPushDouble() buffer overflow bug fixed.
-       Thanks for Istvan Foldi.
+       Thanks to Istvan Foldi.
 
 20000505-19:26 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/compiler/genobj32.c

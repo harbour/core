@@ -95,6 +95,9 @@ static HB_FIX_FUNC( hb_p_pushblock )
 
 static HB_FIX_FUNC( hb_p_pushblockshort )
 {
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
    ++cargo->iNestedCodeblock;
 
    return 2;

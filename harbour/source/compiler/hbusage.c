@@ -49,9 +49,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %cg<type>         output type generated is <type> (see below)",
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
            "\n                           <type>: 0=compact, 1=normal, 2=verbose (default)",
-#ifdef HARBOUR_OBJ_GENERATION
            "\n          %cgo              output type: Windows/DOS OBJ32 (.obj)",
-#endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %cgj              output type: Java source (.java)",
            "\n          %ci<path>         add #include file search path",
