@@ -41,45 +41,43 @@ static BOOL hb_strMatchDOS( const char * pszString, const char * pszMask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strMatchDOS(%s, %s)", pszString, pszMask));
 
-   while( *pszMask && *pszString )
+   while( *pszMask != '\0' && *pszString != '\0' )
    {
       if( *pszMask == '*' )
       {
          while( *pszMask == '*' )
-             pszMask++;
+            pszMask++;
 
-         if( ! ( *pszMask ) )
+         if( *pszMask == '\0' )
             return TRUE;
-         else
-            if( *pszMask == '?' )
-               pszString++;
-            else
-            {
-               while( toupper( *pszString ) != toupper( *pszMask ) )
-               {
-                  if( ! ( *( ++pszString ) ) )
-                     return FALSE;
-               }
-               while( toupper( *pszString ) == toupper( *pszMask ) )
-               {
-                  if( ! ( *( ++pszString ) ) )
-                     break;
-               }
-               pszMask++;
-            }
-      }
-      else
-         if( toupper( *pszMask ) != toupper( *pszString ) && *pszMask != '?' )
-            return FALSE;
+         else if( *pszMask == '?' )
+            pszString++;
          else
          {
+            while( toupper( *pszString ) != toupper( *pszMask ) )
+            {
+               if( *( ++pszString ) == '\0' )
+                  return FALSE;
+            }
+            while( toupper( *pszString ) == toupper( *pszMask ) )
+            {
+               if( *( ++pszString ) == '\0' )
+                  break;
+            }
             pszMask++;
-            pszString++;
          }
+      }
+      else if( toupper( *pszMask ) != toupper( *pszString ) && *pszMask != '?' )
+         return FALSE;
+      else
+      {
+         pszMask++;
+         pszString++;
+      }
    }
 
-   return ! ( ( ! ( *pszString ) && *pszMask && *pszMask != '*') ||
-              ( ! ( *pszMask ) && *pszString ) );
+   return ! ( ( *pszMask != '\0' && *pszString == '\0' && *pszMask != '*') ||
+              ( *pszMask == '\0' && *pszString != '\0' ) );
 }
 
 /* TODO: Replace it with a code that supports real regular expressions

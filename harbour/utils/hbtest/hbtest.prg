@@ -525,6 +525,7 @@ FUNCTION HB_SToD( cDate )
 
 #ifndef HAVE_HBCLIP
 #ifndef __HARBOUR__
+#ifndef __XPP__
 
 FUNCTION HB_SToD( cDate )
    LOCAL cOldDateFormat
@@ -544,6 +545,7 @@ FUNCTION HB_SToD( cDate )
 
    RETURN dDate
 
+#endif
 #endif
 #endif
 

@@ -107,3 +107,4 @@ HB_FUNC( MLPOS )
    else
       hb_retnl( ulLen );
 }
+

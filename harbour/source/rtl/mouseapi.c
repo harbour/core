@@ -303,12 +303,10 @@ HB_FUNC( MRESTSTATE )
 
 HB_FUNC( MSETBOUNDS )
 {
-   int iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-   int iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : 0; 
-   int iBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
-   int iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
-
-   hb_mouseSetBounds( iTop, iLeft, iBottom, iRight );
+   hb_mouseSetBounds( ISNUM( 1 ) ? hb_parni( 1 ) : 0, 
+                      ISNUM( 2 ) ? hb_parni( 2 ) : 0, 
+                      ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
+                      ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() );
 }
 
 #endif

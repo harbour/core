@@ -37,11 +37,11 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* NOTE: In Clipper this is written in Clipper, see the source below,
+/* NOTE: In CA-Cl*pper this is written in Clipper, see the source below,
          and the error handling is NOT made here, but in the % operator.
          [vszakats] */
 
-/* NOTE: CA-Clipper is buggy since it relies on the fact that the errorhandler
+/* NOTE: CA-Cl*pper is buggy since it relies on the fact that the errorhandler
          will silently handle zero division errors. [vszakats] */
 
 /* NOTE: This C version fully emulates the behaviour of the original
@@ -97,5 +97,5 @@ HB_FUNC( MOD )
 FUNCTION MOD( cl_num, cl_base )
    LOCAL cl_result := cl_num % cl_base
 
-   RETURN IF( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )
+   RETURN iif( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )
 */

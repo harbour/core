@@ -45,8 +45,8 @@ HB_FUNC( MAX )
 
    if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
    {
-      /* NOTE: The order of these if() branches is significant, */
-      /*       please, don't change it. [vszakats] */
+      /* NOTE: The order of these if() branches is significant,
+               please, don't change it. [vszakats] */
 
       if( HB_IS_DOUBLE( p1 ) || HB_IS_DOUBLE( p2 ) )
       {
@@ -105,8 +105,8 @@ HB_FUNC( MIN )
 
    if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
    {
-      /* NOTE: The order of these if() branches is significant, */
-      /*       please, don't change it. [vszakats] */
+      /* NOTE: The order of these if() branches is significant,
+               please, don't change it. [vszakats] */
 
       if( HB_IS_DOUBLE( p1 ) || HB_IS_DOUBLE( p2 ) )
       {

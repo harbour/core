@@ -162,8 +162,8 @@ HB_FUNC( STRTRAN )
                   }
                   else
                      hb_retclen( szText, ulText );
-                }
-                else
+               }
+               else
                   hb_retclen( szText, ulText );
             }
             else
