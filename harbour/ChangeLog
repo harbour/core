@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-14 14:39 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/vm/classes.c
+    + HB_SETCLSHANDLE() implemented
+
+  Syntax: HB_SetClsHandle( <oObject>, <nClassHandle> ) --> <nPrevClassHandle>
+
+  Real dirty function, though very usefull under certain circunstances:
+  It allows to change the class handle of an object into another class handle,
+  so the object behaves like a different Class of object.
+  Based on objects.lib SetClsHandle().
+
 2003-07-14 09:10 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/rtl/memoline.c
     ! Fixed a bug by missed () in HB_CHAR_SOFT1 compare.
@@ -17,7 +28,7 @@
   + doc/es/hvm.txt
   + doc/es/input.txt
   + doc/es/macro.txt
-  + doc/es/memvar2.txt 
+  + doc/es/memvar2.txt
   + doc/es/misc.txt
   + doc/es/nation.txt
   + doc/es/objfunc.txt
@@ -55,8 +66,8 @@
 
 2003-07-13 12:32 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/es/lang.txt
-    ! Fixed accents, etc, minor formating. Now in sync with english version 
-    
+    ! Fixed accents, etc, minor formating. Now in sync with english version
+
 2003-07-13 12:24 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/es/hbpplib.txt
   * doc/es/howtobsd.txt
@@ -73,7 +84,7 @@
   * doc/es/strotype.txt
   * doc/es/tracing.txt
   * doc/es/vm.txt
-    ! Fixed errors, misspelling, accents, etc, minor formating 
+    ! Fixed errors, misspelling, accents, etc, minor formating
 
 2003-07-13 10:52 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/es/array.txt
@@ -96,7 +107,7 @@
   * doc/es/garbage.txt
   * doc/es/harbext.txt
   * doc/es/hb_set.txt
-    ! Fixed errors, misspelling, accents, etc, minor formating 
+    ! Fixed errors, misspelling, accents, etc, minor formating
 
 2003-07-12 13:02 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/philes.c
