@@ -210,7 +210,7 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "LOGICAL"   ) AS_TOKEN( _LOGICAL_   ),
                      LEX_WORD( "NUMERIC"   ) AS_TOKEN( _NUMERIC_   ),
                      LEX_WORD( "OBJECT"    ) AS_TOKEN( _OBJECT_    ),
-                     LEX_WORD( "VARIANT"   ) AS_TOKEN( _VARIANT_   ),
+                     LEX_WORD( "ANYTYPE"   ) AS_TOKEN( _VARIANT_   ),
                      LEX_WORD( "FIELD"     ) AS_TOKEN( _FIELD_     ),
                      LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      )
                    };
@@ -1209,7 +1209,7 @@ int hb_lex_CustomAction( int x, int iWordLen, int aiHold[], char asHold[][TOKEN_
          break;
 
       case HB_VARIANT_ID :
-         strncpy( sIdentifier, "VARIANT" , iWordLen );
+         strncpy( sIdentifier, "ANYTYPE" , iWordLen );
 	 sIdentifier[iWordLen] = '\0';
          x = IDENTIFIER;
          break;

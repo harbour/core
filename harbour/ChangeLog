@@ -1,3 +1,11 @@
+2000-08-02 14:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     * Changed VARIANT to ANYTYPE as it appear to be the prefered choice.
+
+   * source/compiler/hbpcode.c
+     * Changed \[ to [ to correct compiler warnings.
+     * Changed Usual. to AnyType.
+
 2000-08-02 15:55 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * config/os2/global.cf
@@ -9,7 +17,7 @@
 
     *doc/whatsnew.txt
         * added polish language modules
-        
+
     *source/compiler/harbour.l
         * fixed support for ANNOUNCE and _PROCREQ_
         * optimized some other rules
