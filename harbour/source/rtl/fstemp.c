@@ -87,9 +87,9 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
       {
-          FHANDLE fhnd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE );
+          FHANDLE fhnd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE | FO_EXCL);
 
-          /* This function may fail, if the generated filename got 
+          /* This function may fail, if the generated filename got
              used between generation and the file creation. */
 
           if( fhnd != FS_ERROR )
@@ -99,7 +99,7 @@ FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiA
       }
       else
       {
-         /* Don't attempt to retry if the filename generator is 
+         /* Don't attempt to retry if the filename generator is
             failing for some reason. */
          break;
       }
