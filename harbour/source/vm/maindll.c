@@ -80,5 +80,11 @@ WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
    return TRUE;
 }
 
-#endif
+LONG PASCAL _export HBENTRY( char * cProcName )
+{
+   hb_itemDoC( cProcName, 0, 0 );
 
+   return 0;
+}
+
+#endif
