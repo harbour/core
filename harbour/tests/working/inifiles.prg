@@ -79,7 +79,7 @@ static function New(cFileName)
       Done := .f.
       while !Done
          cFile := space(256)
-         Done := (fread(hFile, cFile, 256) <= 0)
+         Done := (fread(hFile, @cFile, 256) <= 0)
 
          cFile := strtran(cFile, chr(10), '') // so we can just search for CHR(13)
 
