@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-06 09:35 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  + source/rtl/symbol.prg
+    ! Harbour implementation of Class(y) Class Symbol
+
 2003-05-31 21:04 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/rtl/teditor.prg
     ! several improvements for the debugger:
