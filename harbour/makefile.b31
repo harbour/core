@@ -10,7 +10,8 @@
 .path.obj = obj
 .path.prg = source\rtl
 
-c_opt = -mh -O2 -I.\include -DUSE_GTAPI
+#c_opt = -mh -O2 -I.\include -DUSE_GTAPI
+c_opt = -mh -O2 -I.\include
 
 PROJECT: harbour.lib hbtools.lib terminal.lib libs\win16\terminal.lib harbour.exe
 

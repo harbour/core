@@ -2221,7 +2221,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                        fprintf( yyc, "%i, ", ( ( BYTE * ) pFunc->pCode )[ lPCodePos + i ] );
                     fprintf( yyc, "/* %.*f, %d */\n",
                     *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ),
-                    *( ( double * ) &( pFunc->pCode[ lPCodePos ] ) ) );
+                    *( ( double * ) &( pFunc->pCode[ lPCodePos ] ) ),
+                    *( ( BYTE * ) &( pFunc->pCode[ lPCodePos + sizeof( double ) ] ) ) );
                     lPCodePos += sizeof( double ) + sizeof( BYTE );
                  }
                  break;

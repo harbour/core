@@ -1,3 +1,11 @@
+19990601-12:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Ran into problems using GT API with tests\working\mathtest, so removed
+      USE_GTAPI from default use.
+  * source/compiler/harbour.y
+    - Added missing third parameter (a copy of the first one) to the comment
+      section of the generated C pcode for _PUSHDOUBLE.
+
 19990601-12:15 CET Eddie Runia
    * tests/working/inifiles.prg
      new Mab version installed
