@@ -63,12 +63,12 @@
 
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a1 /* byte alignment */
-#endif
-#if defined(__GNUC__)
+#elif defined(__GNUC__)
    #pragma pack(1)
-#endif
-#if defined(__WATCOMC__)
+#elif defined(__WATCOMC__)
    #pragma pack(push, 1);
+#elif defined(__cplusplus)
+   #pragma pack(1)
 #endif
 
 typedef struct
@@ -101,12 +101,12 @@ typedef struct _CDXDATA
 } CDXDATA;
 #if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
    #pragma option -a /* default alignment */
-#endif
-#if defined(__GNUC__)
+#elif defined(__GNUC__)
    #pragma pack()
-#endif
-#if defined(__WATCOMC__)
+#elif defined(__WATCOMC__)
    #pragma pack(pop);
+#elif defined(__cplusplus)
+   #pragma pack()
 #endif
 typedef CDXDATA * LPCDXDATA;
 
