@@ -56,7 +56,7 @@ static int internal_math_error = 0;
  */
 int matherr( struct exception *err )
 {
-   HB_TRACE(("matherr(%p)", err));
+   HB_TRACE(HB_TR_DEBUG, ("matherr(%p)", err));
 
    switch( err->type )
    {
@@ -423,7 +423,7 @@ FUNCTION MOD(cl_num, cl_base)
 
 double hb_numRound( double dResult, int iDec )
 {
-   HB_TRACE(("hb_numRound(%lf, %d)", dResult, iDec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_numRound(%lf, %d)", dResult, iDec));
 
    if( dResult != 0.0 )
    {

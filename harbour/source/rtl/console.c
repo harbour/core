@@ -111,7 +111,7 @@ void hb_consoleInitialize( void )
 {
    int iStderr;
 
-   HB_TRACE(("hb_consoleInitialize()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_consoleInitialize()"));
 
 #if defined(OS_DOS_COMPATIBLE)
    s_szCrLf[ 0 ] = HB_CHAR_CR;
@@ -157,7 +157,7 @@ void hb_consoleInitialize( void )
 
 void hb_consoleRelease( void )
 {
-   HB_TRACE(("hb_consoleRelease()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_consoleRelease()"));
 
    hb_fsSetDevMode( s_iFilenoStdout, FD_TEXT );
    hb_fsSetDevMode( s_iFilenoStderr, FD_TEXT );
@@ -175,7 +175,7 @@ void hb_consoleRelease( void )
 
 char * hb_consoleGetNewLine( void )
 {
-   HB_TRACE(("hb_consoleGetNewLine()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_consoleGetNewLine()"));
 
    return s_szCrLf;
 }
@@ -226,7 +226,7 @@ HARBOUR HB_HB_OSNEWLINE( void )
 
 USHORT hb_max_row( void )
 {
-   HB_TRACE(("hb_max_row()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_max_row()"));
 
 #ifdef HARBOUR_USE_GTAPI
    return hb_gtMaxRow();
@@ -241,7 +241,7 @@ USHORT hb_max_row( void )
 
 USHORT hb_max_col( void )
 {
-   HB_TRACE(("hb_max_col()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_max_col()"));
 
 #ifdef HARBOUR_USE_GTAPI
    return hb_gtMaxCol();
@@ -256,7 +256,7 @@ static void adjust_pos( char * pStr, ULONG ulLen, SHORT * row, SHORT * col, USHO
    ULONG ulCount;
    char * pPtr = pStr;
 
-   HB_TRACE(("adjust_pos(%s, %lu, %p, %p, %hu, %hu)", pStr, ulLen, row, col, max_row, max_col));
+   HB_TRACE(HB_TR_DEBUG, ("adjust_pos(%s, %lu, %p, %p, %hu, %hu)", pStr, ulLen, row, col, max_row, max_col));
 
    for( ulCount = 0; ulCount < ulLen; ulCount++ )
    {
@@ -304,7 +304,7 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
    PHB_ITEM pItem;
    char * pString;
 
-   HB_TRACE(("hb_out(%hu, %p)", uiParam, hb_out_func));
+   HB_TRACE(HB_TR_DEBUG, ("hb_out(%hu, %p)", uiParam, hb_out_func));
 
    pItem = hb_param( uiParam, IT_ANY );
    pString = hb_itemString( pItem, &ulLen, &bFreeReq );
@@ -320,7 +320,7 @@ void hb_outstd( char * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
-   HB_TRACE(("hb_outstd(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_outstd(%s, %lu)", pStr, ulLen));
 
    if( ulLen == 0 )
       ulLen = strlen( pStr );
@@ -357,7 +357,7 @@ void hb_outerr( char * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
-   HB_TRACE(("hb_outerr(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_outerr(%s, %lu)", pStr, ulLen));
 
    if( ulLen == 0 )
       ulLen = strlen( pStr );
@@ -392,7 +392,7 @@ void hb_outerr( char * pStr, ULONG ulLen )
 /* Output an item to the screen and/or printer and/or alternate */
 static void hb_altout( char * pStr, ULONG ulLen )
 {
-   HB_TRACE(("hb_altout(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_altout(%s, %lu)", pStr, ulLen));
 
    if( hb_set.HB_SET_CONSOLE )
    {
@@ -436,7 +436,7 @@ static void hb_altout( char * pStr, ULONG ulLen )
 /* Output an item to the screen and/or printer */
 static void hb_devout( char * pStr, ULONG ulLen )
 {
-   HB_TRACE(("hb_devout(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_devout(%s, %lu)", pStr, ulLen));
 
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
@@ -466,7 +466,7 @@ static void hb_dispout( char * pStr, ULONG ulLen )
 {
    USHORT user_ferror;
 
-   HB_TRACE(("hb_dispout(%s, %lu)", pStr, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dispout(%s, %lu)", pStr, ulLen));
 
 #ifdef HARBOUR_USE_GTAPI
    /* Display to console */
@@ -483,7 +483,7 @@ static void hb_dispout( char * pStr, ULONG ulLen )
 
 void hb_setpos( SHORT row, SHORT col )
 {
-   HB_TRACE(("hb_setpos(%hd, %hd)", row, col));
+   HB_TRACE(HB_TR_DEBUG, ("hb_setpos(%hd, %hd)", row, col));
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtSetPos( row, col );
@@ -512,7 +512,7 @@ void hb_setpos( SHORT row, SHORT col )
 
 void hb_devpos( SHORT row, SHORT col )
 {
-   HB_TRACE(("hb_devpos(%hd, %hd)", row, col));
+   HB_TRACE(HB_TR_DEBUG, ("hb_devpos(%hd, %hd)", row, col));
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
@@ -1090,7 +1090,7 @@ USHORT hb_setCursor( BOOL bSetCursor, USHORT usNewCursor )
 {
    USHORT usPreviousCursor;
 
-   HB_TRACE(("hb_setCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_setCursor(%d, %hu)", (int) bSetCursor, usNewCursor));
 
 #ifdef HARBOUR_USE_GTAPI
    hb_gtGetCursor( &usPreviousCursor );

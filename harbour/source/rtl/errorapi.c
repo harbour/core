@@ -78,7 +78,7 @@ extern HARBOUR HB_ERRORNEW( void );
 /*       that it gets linked. WARNING ! DON'T make this function static. */
 void hb_errForceLink()
 {
-   HB_TRACE(("hb_errForceLink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errForceLink()"));
 
    HB_ERRORNEW();
 }
@@ -118,14 +118,14 @@ HARBOUR HB_DOSERROR( void )
 
 void hb_errInit( void )
 {
-   HB_TRACE(("hb_errInit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errInit()"));
 
    hb_itemClear( &s_errorBlock );
 }
 
 void hb_errExit( void )
 {
-   HB_TRACE(("hb_errExit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errExit()"));
 
    hb_itemClear( &s_errorBlock );
 }
@@ -134,7 +134,7 @@ PHB_ITEM hb_errNew( void )
 {
    PHB_ITEM pReturn;
 
-   HB_TRACE(("hb_errNew()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errNew()"));
 
    pReturn = hb_itemNew( NULL );
 
@@ -151,7 +151,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 {
    USHORT uiAction;
 
-   HB_TRACE(("hb_errLaunch(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errLaunch(%p)", pError));
 
    if( pError )
    {
@@ -238,7 +238,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 {
    PHB_ITEM pResult;
 
-   HB_TRACE(("hb_errLaunchSubst(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errLaunchSubst(%p)", pError));
 
    if( pError )
    {
@@ -290,7 +290,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
 void hb_errRelease( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errRelease(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errRelease(%p)", pError));
 
    /* NOTE: NULL pointer is checked by hb_itemRelease() */
    hb_itemRelease( pError );
@@ -298,7 +298,7 @@ void hb_errRelease( PHB_ITEM pError )
 
 char * hb_errGetDescription( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetDescription(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetDescription(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "DESCRIPTION" )->pSymbol );
    hb_vmPush( pError );
@@ -309,7 +309,7 @@ char * hb_errGetDescription( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
 {
-   HB_TRACE(("hb_errPutDescription(%p, %s)", pError, szDescription));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutDescription(%p, %s)", pError, szDescription));
 
    hb_vmPushSymbol( hb_dynsymGet( "_DESCRIPTION" )->pSymbol );
    hb_vmPush( pError );
@@ -321,7 +321,7 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
 
 char * hb_errGetFileName( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetFileName(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetFileName(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "FILENAME" )->pSymbol );
    hb_vmPush( pError );
@@ -332,7 +332,7 @@ char * hb_errGetFileName( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
 {
-   HB_TRACE(("hb_errPutFileName(%p, %s)", pError, szFileName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutFileName(%p, %s)", pError, szFileName));
 
    hb_vmPushSymbol( hb_dynsymGet( "_FILENAME" )->pSymbol );
    hb_vmPush( pError );
@@ -344,7 +344,7 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
 
 USHORT hb_errGetGenCode( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetGenCode(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetGenCode(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "GENCODE" )->pSymbol );
    hb_vmPush( pError );
@@ -355,7 +355,7 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 {
-   HB_TRACE(("hb_errPutGenCode(%p, %hu)", pError, uiGenCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutGenCode(%p, %hu)", pError, uiGenCode));
 
    hb_vmPushSymbol( hb_dynsymGet( "_GENCODE" )->pSymbol );
    hb_vmPush( pError );
@@ -367,7 +367,7 @@ PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 
 char * hb_errGetOperation( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetOperation(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetOperation(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "OPERATION" )->pSymbol );
    hb_vmPush( pError );
@@ -378,7 +378,7 @@ char * hb_errGetOperation( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
 {
-   HB_TRACE(("hb_errPutOperation(%p, %s)", pError, szOperation));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOperation(%p, %s)", pError, szOperation));
 
    hb_vmPushSymbol( hb_dynsymGet( "_OPERATION" )->pSymbol );
    hb_vmPush( pError );
@@ -390,7 +390,7 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
 
 USHORT hb_errGetOsCode( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetOsCode(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetOsCode(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "OSCODE" )->pSymbol );
    hb_vmPush( pError );
@@ -401,7 +401,7 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 {
-   HB_TRACE(("hb_errPutOsCode(%p, %hu)", pError, uiOsCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutOsCode(%p, %hu)", pError, uiOsCode));
 
    hb_vmPushSymbol( hb_dynsymGet( "_OSCODE" )->pSymbol );
    hb_vmPush( pError );
@@ -413,7 +413,7 @@ PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 
 USHORT hb_errGetSeverity( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetSeverity(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetSeverity(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "SEVERITY" )->pSymbol );
    hb_vmPush( pError );
@@ -424,7 +424,7 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 {
-   HB_TRACE(("hb_errPutSeverity(%p, %hu)", pError, uiSeverity));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSeverity(%p, %hu)", pError, uiSeverity));
 
    hb_vmPushSymbol( hb_dynsymGet( "_SEVERITY" )->pSymbol );
    hb_vmPush( pError );
@@ -436,7 +436,7 @@ PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 
 USHORT hb_errGetSubCode( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetSubCode(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetSubCode(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "SUBCODE" )->pSymbol );
    hb_vmPush( pError );
@@ -447,7 +447,7 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 {
-   HB_TRACE(("hb_errPutSubCode(%p, %hu)", pError, uiSubCode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubCode(%p, %hu)", pError, uiSubCode));
 
    hb_vmPushSymbol( hb_dynsymGet( "_SUBCODE" )->pSymbol );
    hb_vmPush( pError );
@@ -459,7 +459,7 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 
 char * hb_errGetSubSystem( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetSubSytem(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetSubSytem(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "SUBSYSTEM" )->pSymbol );
    hb_vmPush( pError );
@@ -470,7 +470,7 @@ char * hb_errGetSubSystem( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 {
-   HB_TRACE(("hb_errPutSubSytem(%p, %s)", pError, szSubSystem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutSubSytem(%p, %s)", pError, szSubSystem));
 
    hb_vmPushSymbol( hb_dynsymGet( "_SUBSYSTEM" )->pSymbol );
    hb_vmPush( pError );
@@ -482,7 +482,7 @@ PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 
 USHORT hb_errGetTries( PHB_ITEM pError )
 {
-   HB_TRACE(("hb_errGetTries(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetTries(%p)", pError));
 
    hb_vmPushSymbol( hb_dynsymGet( "TRIES" )->pSymbol );
    hb_vmPush( pError );
@@ -493,7 +493,7 @@ USHORT hb_errGetTries( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
 {
-   HB_TRACE(("hb_errPutTries(%p, %hu)", pError, uiTries));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutTries(%p, %hu)", pError, uiTries));
 
    hb_vmPushSymbol( hb_dynsymGet( "_TRIES" )->pSymbol );
    hb_vmPush( pError );
@@ -507,7 +507,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 {
    USHORT uiFlags = EF_NONE;
 
-   HB_TRACE(("hb_errGetFlags(%p)", pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errGetFlags(%p)", pError));
 
    /* ; */
 
@@ -543,7 +543,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 {
-   HB_TRACE(("hb_errPutFlags(%p, %hu)", pError, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutFlags(%p, %hu)", pError, uiFlags));
 
    hb_vmPushSymbol( hb_dynsymGet( "_CANRETRY" )->pSymbol );
    hb_vmPush( pError );
@@ -575,7 +575,7 @@ PHB_ITEM hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... )
    USHORT uiArgPos;
    va_list va;
 
-   HB_TRACE(("hb_errPutArgs(%p, %hu, ...)", pError, uiArgCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errPutArgs(%p, %hu, ...)", pError, uiArgCount));
 
    pArray = hb_itemArrayNew( uiArgCount );
 
@@ -741,7 +741,7 @@ void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar
 {
    char buffer[ 128 ];
 
-   HB_TRACE(("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
    hb_outerr( hb_consoleGetNewLine(), 0 );
    sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );

@@ -38,7 +38,7 @@
  */
 #if ! defined(HB_TRACE_UTILS)
 #if defined(HB_TRACE_LEVEL)
-#undef HB_TRACE_LEVEL)
+#undef HB_TRACE_LEVEL
 #endif
 #endif
 
@@ -173,7 +173,7 @@ int ParseDirective( char* sLine )
   int i;
   FILE* handl_i;
 
-  HB_TRACE(("ParseDirective(%s)", sLine));
+  HB_TRACE(HB_TR_DEBUG, ("ParseDirective(%s)", sLine));
 
   i = NextName( &sLine, sDirective );
   stroupper( sDirective );
@@ -266,7 +266,7 @@ int ParseDefine( char* sLine)
   int i, npars = -1;
   DEFINES *lastdef;
 
-  HB_TRACE(("ParseDefine(%s)", sLine));
+  HB_TRACE(HB_TR_DEBUG, ("ParseDefine(%s)", sLine));
 
   SKIPTABSPACES( sLine );
   if( isalpha( *sLine ) || *sLine == '_' || *sLine > 0x7e )
@@ -302,7 +302,7 @@ DEFINES* AddDefine ( char* defname, char* value )
 {
   DEFINES* stdef = DefSearch( defname );
 
-  HB_TRACE(("AddDefine(%s, %s)", defname, value));
+  HB_TRACE(HB_TR_DEBUG, ("AddDefine(%s, %s)", defname, value));
 
   if ( stdef != NULL )
     stdef->pars = NULL;
@@ -322,7 +322,7 @@ int ParseUndef( char* sLine)
   char defname[MAX_NAME];
   DEFINES* stdef;
 
-  HB_TRACE(("ParseUndef(%s)", sLine));
+  HB_TRACE(HB_TR_DEBUG, ("ParseUndef(%s)", sLine));
 
   NextWord( &sLine, defname, FALSE );
 
@@ -336,7 +336,7 @@ int ParseIfdef( char* sLine, int usl)
   char defname[MAX_NAME];
   DEFINES *stdef;
 
-  HB_TRACE(("ParseIfdef(%s, %d)", sLine, usl));
+  HB_TRACE(HB_TR_DEBUG, ("ParseIfdef(%s, %d)", sLine, usl));
 
   if ( nCondCompile==0 || aCondCompile[nCondCompile-1])
     {
@@ -365,7 +365,7 @@ DEFINES* DefSearch(char *defname)
   int j;
   DEFINES * stdef = topDefine;
 
-  HB_TRACE(("DefSearch(%s)", defname));
+  HB_TRACE(HB_TR_DEBUG, ("DefSearch(%s)", defname));
 
   while( stdef != NULL )
     {
@@ -385,7 +385,7 @@ COMMANDS* ComSearch(char *cmdname, COMMANDS *stcmdStart)
   int j;
   COMMANDS *stcmd = ( stcmdStart )? stcmdStart:topCommand;
 
-  HB_TRACE(("ComSearch(%s, %p)", cmdname, stcmdStart));
+  HB_TRACE(HB_TR_DEBUG, ("ComSearch(%s, %p)", cmdname, stcmdStart));
 
   while( stcmd != NULL )
     {
@@ -407,7 +407,7 @@ COMMANDS* TraSearch(char *cmdname, COMMANDS *sttraStart)
   int j;
   COMMANDS *sttra = ( sttraStart )? sttraStart:topTranslate;
 
-  HB_TRACE(("TraSearch(%s, %p)", cmdname, sttraStart));
+  HB_TRACE(HB_TR_DEBUG, ("TraSearch(%s, %p)", cmdname, sttraStart));
 
   while( sttra != NULL )
     {
@@ -431,7 +431,7 @@ void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
   int mlen,rlen;
   int ipos;
 
-  HB_TRACE(("ParseCommand(%s, $d, $d)", sLine, com_or_xcom, com_or_tra));
+  HB_TRACE(HB_TR_DEBUG, ("ParseCommand(%s, $d, $d)", sLine, com_or_xcom, com_or_tra));
 
   NextWord( &sLine, cmdname, FALSE );
   stroupper( cmdname );
@@ -472,7 +472,7 @@ void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
   char lastchar = '@', exptype;
   char *ptr;
 
-  HB_TRACE(("ConvertPatterns(%s, $d, %s, $d)", mpatt, mlen, rpatt, rlen));
+  HB_TRACE(HB_TR_DEBUG, ("ConvertPatterns(%s, $d, %s, $d)", mpatt, mlen, rpatt, rlen));
 
   while ( *(mpatt+i) != '\0' )
     {
@@ -563,7 +563,7 @@ COMMANDS* AddCommand ( char *cmdname )
 {
   COMMANDS *stcmd;
 
-  HB_TRACE(("AddCommand(%s)", cmdname));
+  HB_TRACE(HB_TR_DEBUG, ("AddCommand(%s)", cmdname));
 
   stcmd = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
   stcmd->last = topCommand;
@@ -576,7 +576,7 @@ COMMANDS* AddTranslate ( char *traname )
 {
   COMMANDS *sttra;
 
-  HB_TRACE(("AddTranslate(%s)", traname));
+  HB_TRACE(HB_TR_DEBUG, ("AddTranslate(%s)", traname));
 
   sttra = ( COMMANDS * ) hb_xgrab( sizeof( COMMANDS ) );
   sttra->last = topTranslate;
@@ -595,7 +595,7 @@ int ParseExpression( char* sLine, char* sOutLine )
   DEFINES *stdef;
   COMMANDS *stcmd;
 
-  HB_TRACE(("ParseExpression(%s, %s)", sLine, sOutLine));
+  HB_TRACE(HB_TR_DEBUG, ("ParseExpression(%s, %s)", sLine, sOutLine));
 
   do
     {
@@ -739,7 +739,7 @@ int WorkDefine ( char** ptri, char* ptro, DEFINES *stdef )
   int npars, lens;
   char *ptr;
 
-  HB_TRACE(("WorkDefine(%p, %s, %p)", ptri, ptro, stdef));
+  HB_TRACE(HB_TR_DEBUG, ("WorkDefine(%p, %s, %p)", ptri, ptro, stdef));
 
   if ( stdef->npars < 0 )
     lens = strocpy( ptro,stdef->value );
@@ -771,7 +771,7 @@ int WorkPseudoF ( char** ptri, char* ptro, DEFINES *stdef )
   int ipos, ifou, ibeg;
   int lenfict, lenreal, lenres;
 
-  HB_TRACE(("WorkPseudoF(%p, %s, %p)", ptri, ptro, stdef));
+  HB_TRACE(HB_TR_DEBUG, ("WorkPseudoF(%p, %s, %p)", ptri, ptro, stdef));
 
   lenres = strocpy( ptro, stdef->value );  /* Copying value of macro to destination string  */
 
@@ -825,7 +825,7 @@ int WorkCommand ( char* ptri, char* ptro, COMMANDS *stcmd )
   char *ptrmp;
   char *sToken = stcmd->name;
 
-  HB_TRACE(("WorkCommand(%s, %s, %p)", ptri, ptro, stcmd));
+  HB_TRACE(HB_TR_DEBUG, ("WorkCommand(%s, %s, %p)", ptri, ptro, stcmd));
 
   do
     {
@@ -852,7 +852,7 @@ int WorkTranslate ( char* ptri, char* ptro, COMMANDS *sttra, int *lens )
   char *ptrmp;
   char *sToken = sttra->name;
 
-  HB_TRACE(("WorkTranslate(%s, %s, %p, %p)", ptri, ptro, sttra, lens));
+  HB_TRACE(HB_TR_DEBUG, ("WorkTranslate(%s, %s, %p, %p)", ptri, ptro, sttra, lens));
 
   do
     {
@@ -882,7 +882,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
   char *lastopti[3], *strtopti = NULL, *strtptri = NULL;
   char *ptri = inputLine, *ptr, tmpname[MAX_NAME];
 
-  HB_TRACE(("CommandStuff(%s, %s, %s, %p, %d, %d)", ptrmp, inputLine, ptro, lenres, com_or_tra, com_or_xcom));
+  HB_TRACE(HB_TR_DEBUG, ("CommandStuff(%s, %s, %s, %p, %d, %d)", ptrmp, inputLine, ptro, lenres, com_or_tra, com_or_xcom));
 
   numBrackets = 0;
   SKIPTABSPACES( ptri );
@@ -1033,7 +1033,7 @@ int RemoveSlash( char *stroka )
   int State = STATE_INIT, lDirective = FALSE;
   int lenres = strolen( stroka );
 
-  HB_TRACE(("RemoveSlash(%s)", stroka));
+  HB_TRACE(HB_TR_DEBUG, ("RemoveSlash(%s)", stroka));
 
   while( *ptr != '\0' )
     {
@@ -1081,7 +1081,7 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int com_or_
   int rezrestr, ipos;
   char *ptr, *ptrtemp;
 
-  HB_TRACE(("WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres));
+  HB_TRACE(HB_TR_DEBUG, ("WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres));
 
   /* Copying a match pattern to 'exppatt' */
   lenpatt = stroncpy ( exppatt, *ptrmp, 4 );
@@ -1229,7 +1229,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
   int StBr1 = 0, StBr2 = 0, StBr3 = 0;
   int rez = 0;
 
-  HB_TRACE(("getExpReal(%s, %p, %d, %d)", expreal, ptri, prlist, maxrez));
+  HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d)", expreal, ptri, prlist, maxrez));
 
   SKIPTABSPACES ( *ptri );
   State = (**ptri=='\'' || **ptri=='\"')? STATE_EXPRES:STATE_ID;
@@ -1330,7 +1330,7 @@ int getExpReal ( char *expreal, char **ptri, int prlist, int maxrez )
 
 int isExpres ( char* stroka )
 {
-  HB_TRACE(("isExpres(%s)", stroka));
+  HB_TRACE(HB_TR_DEBUG, ("isExpres(%s)", stroka));
 
   if ( strolen ( stroka ) > getExpReal ( NULL, &stroka, FALSE, STR_SIZE ) )
     return 0;
@@ -1342,7 +1342,7 @@ int TestOptional( char *ptr1, char *ptr2 )
 {
   int nbr = 0, flagname = 0, statevar = 0;
 
-  HB_TRACE(("TestOptional(%s, %s)", ptr1, ptr2));
+  HB_TRACE(HB_TR_DEBUG, ("TestOptional(%s, %s)", ptr1, ptr2));
 
   while( ptr1 <= ptr2 )
     {
@@ -1381,7 +1381,7 @@ int CheckOptional( char* ptrmp, char* ptri, char* ptro, int* lenres, int com_or_
   char *lastInputptr[5];
   char *lastopti[3], *ptr;
 
-  HB_TRACE(("CheckOptional(%s, %s, %s, %p, %d, %d)", ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom));
+  HB_TRACE(HB_TR_DEBUG, ("CheckOptional(%s, %s, %s, %p, %d, %d)", ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom));
 
   lReplacePat = FALSE;
   lastInputptr[Repeate] = ptri;
@@ -1480,7 +1480,7 @@ void SkipOptional( char** ptri )
 {
   int nbr = 0;
 
-  HB_TRACE(("SkipOptional(%p)", ptri));
+  HB_TRACE(HB_TR_DEBUG, ("SkipOptional(%p)", ptri));
 
   while ( **ptri != ']' || nbr )
     {
@@ -1511,7 +1511,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
   static char expnew[MAX_EXP];
   char *ptr, *ptr2, *ptrOut = ptro;
 
-  HB_TRACE(("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
+  HB_TRACE(HB_TR_DEBUG, ("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
 
   if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
   while ( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE )) > 0 )
@@ -1606,7 +1606,7 @@ int ReplacePattern ( char patttype, char *expreal, int lenreal, char *ptro, int 
   int rmlen = lenreal, ifou, lenitem, i;
   char sQuotes[ 4 ] = "\"\",";
 
-  HB_TRACE(("ReplacePattern(%c, %s, %d, %s, %p)", patttype, expreal, lenreal, ptro, lenres));
+  HB_TRACE(HB_TR_DEBUG, ("ReplacePattern(%c, %s, %d, %s, %p)", patttype, expreal, lenreal, ptro, lenres));
 
   switch ( *(ptro+2) ) {
   case '0':  /* Regular result marker  */
@@ -1752,7 +1752,7 @@ void pp_rQuotes( char *expreal, char *sQuotes )
 {
   int lQuote1 = 0, lQuote2 = 0;
 
-  HB_TRACE(("pp_rQuotes(%s, %s)", expreal, sQuotes));
+  HB_TRACE(HB_TR_DEBUG, ("pp_rQuotes(%s, %s)", expreal, sQuotes));
 
   while( *expreal != '\0' )
     {
@@ -1786,7 +1786,7 @@ int pp_RdStr(FILE* handl_i,char *buffer,int maxlen,int lDropSpaces,char* sBuffer
   int State = 0;
   char cha,cLast='\0';
 
-  HB_TRACE(("pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
+  HB_TRACE(HB_TR_DEBUG, ("pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
   if ( *lenBuffer == 0 ) return -1;
   while(1)
@@ -1856,7 +1856,7 @@ int pp_WrStr(FILE* handl_o,char *buffer)
 {
   int lens = strolen(buffer);
 
-  HB_TRACE(("pp_WrStr(%p, %s)", handl_o, buffer));
+  HB_TRACE(HB_TR_DEBUG, ("pp_WrStr(%p, %s)", handl_o, buffer));
 
   fwrite(buffer,lens,1,handl_o);
   if ( *(buffer+lens-1) != '\n' )
@@ -1867,7 +1867,7 @@ int pp_WrStr(FILE* handl_o,char *buffer)
 /* locates a substring in a string */
 int pp_strAt(char *szSub, int lSubLen, char *szText, int lLen)
 {
-  HB_TRACE(("pp_strAt(%s, %d, %s, %d)", szSub, lSubLen, szText, lLen));
+  HB_TRACE(HB_TR_DEBUG, ("pp_strAt(%s, %d, %s, %d)", szSub, lSubLen, szText, lLen));
 
   if( lSubLen )
     {
@@ -1903,7 +1903,7 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrt
   int kolPrth = 0;
   int lCase = ( *szSub == '\1' )? 0:1;
 
-  HB_TRACE(("md_strAt(%s, %d, %s, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth));
+  HB_TRACE(HB_TR_DEBUG, ("md_strAt(%s, %d, %s, %d, %d)", szSub, lSubLen, szText, checkword, checkPrth));
 
   while( *(szText+lPos) != '\0' && lSubPos < lSubLen )
     {
@@ -1965,7 +1965,7 @@ char* PrevSquare( char* ptr, char* bound, int *kolmark )
 {
    int State = STATE_NORMAL;
 
-   HB_TRACE(("PrevSquare(%s, %s, %d)", ptr, bound, *kolmark));
+   HB_TRACE(HB_TR_DEBUG, ("PrevSquare(%s, %s, %d)", ptr, bound, *kolmark));
    while( ptr > bound )
    {
       if( State == STATE_QUOTE1 )
@@ -1991,7 +1991,7 @@ char* PrevSquare( char* ptr, char* bound, int *kolmark )
 
 int IsInStr ( char symb, char* s )
 {
-  HB_TRACE(("IsInStr(%c, %s)", symb, s));
+  HB_TRACE(HB_TR_DEBUG, ("IsInStr(%c, %s)", symb, s));
 
   while ( *s != '\0' ) if ( *s++ == symb ) return 1;
   return 0;
@@ -2002,7 +2002,7 @@ void pp_Stuff (char *ptri, char * ptro, int len1, int len2, int lenres )
   char *ptr1, *ptr2;
   int i;
 
-  HB_TRACE(("pp_Stuff(%s, %s, %d, %d, %d)", ptri, ptro, len1, len2, lenres));
+  HB_TRACE(HB_TR_DEBUG, ("pp_Stuff(%s, %s, %d, %d, %d)", ptri, ptro, len1, len2, lenres));
 
   if ( len1 > len2 )
     {
@@ -2024,7 +2024,7 @@ int strocpy (char* ptro, char* ptri )
 {
   int lens = 0;
 
-  HB_TRACE(("strocpy(%s, %s)", ptro, ptri));
+  HB_TRACE(HB_TR_DEBUG, ("strocpy(%s, %s)", ptro, ptri));
 
   if ( ptri != NULL )
     while ( *ptri != '\0' )
@@ -2040,7 +2040,7 @@ int stroncpy (char* ptro, char* ptri, int lens )
 {
   int i = 0;
 
-  HB_TRACE(("stroncpy(%s, %s, %d)", ptro, ptri, lens));
+  HB_TRACE(HB_TR_DEBUG, ("stroncpy(%s, %s, %d)", ptro, ptri, lens));
 
   for ( ; i < lens; i++ ) *(ptro+i) = *ptri++;
   i--;
@@ -2054,7 +2054,7 @@ int truncmp (char** ptro, char** ptri, int lTrunc )
 {
   char *ptrb = *ptro, co, ci;
 
-  HB_TRACE(("truncmp(%p, %p, %d)", ptro, ptri, lTrunc));
+  HB_TRACE(HB_TR_DEBUG, ("truncmp(%p, %p, %d)", ptro, ptri, lTrunc));
 
   for ( ; **ptri != ' ' && **ptri != '\t' && **ptri != ',' && **ptri != '[' && **ptri != ']' &&
           **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(**ptro);
@@ -2077,7 +2077,7 @@ int strincmp (char* ptro, char** ptri, int lTrunc )
 {
   char *ptrb = ptro, co, ci;
 
-  HB_TRACE(("strincmp(%s, %p)", ptro, ptri));
+  HB_TRACE(HB_TR_DEBUG, ("strincmp(%s, %p)", ptro, ptri));
 
   for ( ; **ptri != ',' && **ptri != '[' && **ptri != ']' &&
           **ptri != '\1' && **ptri != '\0' && toupper(**ptri)==toupper(*ptro);
@@ -2101,7 +2101,7 @@ int strincpy (char* ptro, char* ptri )
 {
   int lens = 0;
 
-  HB_TRACE(("strincpy(%s, %s)", ptro, ptri));
+  HB_TRACE(HB_TR_DEBUG, ("strincpy(%s, %s)", ptro, ptri));
 
   for ( ; *ptri != ' ' && *ptri != ',' && *ptri != '[' && *ptri != ']' &&
           *ptri != '\1' && *ptri != '\0'; ptro++, ptri++, lens++ )
@@ -2114,7 +2114,7 @@ char* strodup ( char *stroka )
   char *ptr;
   int lens = 0;
 
-  HB_TRACE(("strodup(%s)", stroka));
+  HB_TRACE(HB_TR_DEBUG, ("strodup(%s)", stroka));
 
   while ( *(stroka+lens) != '\0' ) lens++;
   ptr = ( char * ) hb_xgrab( lens + 1 );
@@ -2127,7 +2127,7 @@ int strolen ( char *stroka )
 {
   int lens = 0;
 
-  HB_TRACE(("strolen(%s)", stroka));
+  HB_TRACE(HB_TR_DEBUG, ("strolen(%s)", stroka));
 
   while ( *(stroka+lens) != '\0' ) lens++;
   return lens;
@@ -2135,7 +2135,7 @@ int strolen ( char *stroka )
 
 void stroupper ( char *stroka )
 {
-  HB_TRACE(("stroupper(%s)", stroka));
+  HB_TRACE(HB_TR_DEBUG, ("stroupper(%s)", stroka));
 
   while ( *stroka != '\0' )
     {
@@ -2149,7 +2149,7 @@ int strotrim ( char *stroka )
   char *ptr = stroka, lastc = '0', curc;
   int lens = 0, State = STATE_NORMAL;
 
-  HB_TRACE(("strotrim(%s)", stroka));
+  HB_TRACE(HB_TR_DEBUG, ("strotrim(%s)", stroka));
 
   while ( ( curc = *stroka ) != '\0' )
     {
@@ -2178,7 +2178,7 @@ int NextWord ( char** sSource, char* sDest, int lLower )
 {
   int i = 0;
 
-  HB_TRACE(("NextWord(%p, %s, %d)", sSource, sDest, lLower));
+  HB_TRACE(HB_TR_DEBUG, ("NextWord(%p, %s, %d)", sSource, sDest, lLower));
 
   SKIPTABSPACES( (*sSource) );
   while ( **sSource != '\0' && **sSource != ' ' && **sSource != '\t' && **sSource != '(')
@@ -2195,7 +2195,7 @@ int NextName ( char** sSource, char* sDest )
 {
   int lenName = 0, State = STATE_NORMAL;
 
-  HB_TRACE(("NextName(%p, %s)", sSource, sDest));
+  HB_TRACE(HB_TR_DEBUG, ("NextName(%p, %s)", sSource, sDest));
 
   while ( **sSource != '\0' && ( !ISNAME(**sSource) || State != STATE_NORMAL ) )
     {
@@ -2222,7 +2222,7 @@ int NextParm ( char** sSource, char* sDest )
 {
   int lenName = 0, State = STATE_NORMAL, StBr = 0;
 
-  HB_TRACE(("NextParm(%p, %s)", sSource, sDest));
+  HB_TRACE(HB_TR_DEBUG, ("NextParm(%p, %s)", sSource, sDest));
 
   SKIPTABSPACES( (*sSource) );
   while ( **sSource != '\0' )
@@ -2257,7 +2257,7 @@ BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStan
 {
   PHB_FNAME pFileName;
 
-  HB_TRACE(("OpenInclude(%s, %p, %p, %d)", szFileName, pSearch, fptr, (int) bStandardOnly));
+  HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %d)", szFileName, pSearch, fptr, (int) bStandardOnly));
 
   if ( bStandardOnly )
     {

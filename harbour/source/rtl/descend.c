@@ -69,7 +69,7 @@
 
 void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
 {
-   HB_TRACE(("hb_strDescend(%s, %s, %lu)", szStringTo, szStringFrom, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strDescend(%s, %s, %lu)", szStringTo, szStringFrom, ulLen));
 
    if( ulLen == 1 && szStringFrom[ 0 ] == '\0' )
       szStringTo[ 0 ] = '\0';

@@ -118,7 +118,7 @@ static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
    LONG lAbsNumber;
    int iCount, iPos;
 
-   HB_TRACE(("hb_nltoa(%ld, %p, %hu)", lValue, szBuffer, uiLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_nltoa(%ld, %p, %hu)", lValue, szBuffer, uiLen));
 
    lAbsNumber = ( lValue > 0 ) ? lValue : - lValue;
    iCount = iPos = uiLen;
@@ -164,7 +164,7 @@ static ULONG hb_cdxSwapBytes( ULONG ulValue )
 {
    BYTE * pValue, pByte;
 
-   HB_TRACE(("hb_cdxSwapBytes(%lu)", ulValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxSwapBytes(%lu)", ulValue));
 
    pValue = ( BYTE * ) &ulValue;
    pByte = pValue[ 0 ];
@@ -181,7 +181,7 @@ static void hb_cdxReadMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG lMemoBlock )
    ULONG ulSpaceUsed;
    MEMOHEADER pMemoHeader;
 
-   HB_TRACE(("hb_cdxReadMemo(%p, %p, %lu)", pArea, pMemo, lMemoBlock));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxReadMemo(%p, %p, %lu)", pArea, pMemo, lMemoBlock));
 
    hb_fsSeek( pArea->lpFileInfo->pNext->hFile, lMemoBlock * MEMO_BLOCK, FS_SET );
    hb_fsRead( pArea->lpFileInfo->pNext->hFile, ( BYTE * ) &pMemoHeader,
@@ -204,7 +204,7 @@ static BOOL hb_cdxWriteMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG * lNewRecNo )
    MEMOHEADER pMemoHeader;
    BYTE * pBuffer;
 
-   HB_TRACE(("hb_cdxWriteMemo(%p, %p, %p)", pArea, pMemo, lNewRecNo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdxWriteMemo(%p, %p, %p)", pArea, pMemo, lNewRecNo));
 
    if( !pArea->lpExtendInfo->fExclusive && !pArea->lpFileInfo->fFileLocked &&
        !hb_fsLock( pArea->lpFileInfo->pNext->hFile, LOCK_APPEND - 1, 1, FL_LOCK ) )
@@ -324,7 +324,7 @@ static ERRCODE cdxCreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
    BOOL bError;
    PHB_ITEM pError = NULL;
 
-   HB_TRACE(("cdxCreateMemFile(%p, %p)", pArea, pCreateInfo));
+   HB_TRACE(HB_TR_DEBUG, ("cdxCreateMemFile(%p, %p)", pArea, pCreateInfo));
 
    lpMemInfo = pArea->lpFileInfo->pNext;
    do
@@ -372,7 +372,7 @@ static ERRCODE cdxGetValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    BYTE * szText, szEndChar;
    LPFIELD pField;
 
-   HB_TRACE(("cdxGetValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
+   HB_TRACE(HB_TR_DEBUG, ("cdxGetValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
 
    HB_SYMBOL_UNUSED( pFile );
    if( uiIndex > pArea->uiFieldCount )
@@ -400,7 +400,7 @@ static ERRCODE cdxGetValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
 
 static ERRCODE cdxInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
-   HB_TRACE(("cdxInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("cdxInfo(%p, %hu, %p)", pArea, uiIndex, pItem));
 
    if( uiIndex == DBI_MEMOEXT )
    {
@@ -419,7 +419,7 @@ static ERRCODE cdxOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_ITEM pError = NULL;
    BOOL bRetry;
 
-   HB_TRACE(("cdxOpenMemFile(%p, %p)", pArea, pOpenInfo));
+   HB_TRACE(HB_TR_DEBUG, ("cdxOpenMemFile(%p, %p)", pArea, pOpenInfo));
 
    lpMemInfo = pArea->lpFileInfo->pNext;
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
@@ -465,7 +465,7 @@ static ERRCODE cdxPutValueFile( AREAP pArea, USHORT uiIndex, void * pFile )
    BYTE * szText, szEndChar;
    ULONG lMemoBlock;
 
-   HB_TRACE(("cdxPutValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
+   HB_TRACE(HB_TR_DEBUG, ("cdxPutValueFile(%p, %hu, %p)", pArea, uiIndex, pFile));
 
    HB_SYMBOL_UNUSED( pFile );
 
@@ -497,7 +497,7 @@ static ERRCODE cdxWriteDBHeader( AREAP pArea )
    time_t t;
    struct tm * pTime;
 
-   HB_TRACE(("cdxWriteDBHeader(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("cdxWriteDBHeader(%p)", pArea));
 
    memset( &pHeader, 0, sizeof( DBFHEADER ) );
    pHeader.uiRecordLen = 1;

@@ -84,7 +84,7 @@ int main( int argc, char * argv[] )
   DEFINES * stdef = topDefine;
   COMMANDS * stcmd = topCommand;
 
-  HB_TRACE(("main(%d, %p)", argc, argv));
+  HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
   printf( "Harbour Preprocessor, Build %i%s (%04d.%02d.%02d)\n",
           hb_build, hb_revision, hb_year, hb_month, hb_day );
@@ -228,7 +228,7 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o )
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen;
 
-  HB_TRACE(("Hp_parse(%p, %p)", handl_i, handl_o));
+  HB_TRACE(HB_TR_DEBUG, ("Hp_parse(%p, %p)", handl_i, handl_o));
 
   while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
                              sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
@@ -288,7 +288,7 @@ void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
   DEFINES * stdef1 = topDefine, * stdef2 = NULL, * stdef3;
   COMMANDS * stcmd1 = topCommand, * stcmd2 = NULL, * stcmd3;
 
-  HB_TRACE(("OutTable(%p, %p)", endDefine, endCommand));
+  HB_TRACE(HB_TR_DEBUG, ("OutTable(%p, %p)", endDefine, endCommand));
 
   while( stdef1 != endDefine )
     {
@@ -443,7 +443,7 @@ void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
 {
   PATHNAMES * pPath = *pSearchList;
 
-  HB_TRACE(("AddSearchPath(%s, %p)", szPath, pSearchList));
+  HB_TRACE(HB_TR_DEBUG, ("AddSearchPath(%s, %p)", szPath, pSearchList));
 
   if( pPath )
     {
@@ -462,7 +462,7 @@ void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
 
 void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  HB_TRACE(("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
+  HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
   printf( "\r(%i) ", nline );
   printf( "Error %c%04i  ", cPrefix, iError );
@@ -474,7 +474,7 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
 
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-  HB_TRACE(("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+  HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
   if( _iWarnings )
     {
@@ -502,7 +502,7 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
   int iDotPos;
   int iPos;
 
-  HB_TRACE(("hb_fsFNameSplit(%s)", szFileName));
+  HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", szFileName));
 
   pFileName->szPath =
     pFileName->szName =
@@ -592,7 +592,7 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 {
-  HB_TRACE(("hb_fsFNameMerge(%s, %p)", szFileName, pFileName));
+  HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%s, %p)", szFileName, pFileName));
 
   if( pFileName->szPath && pFileName->szPath[ 0 ] )
     {
@@ -651,7 +651,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 {
   void * pMem = malloc( ulSize );
 
-  HB_TRACE(("hb_xgrab(%lu)", ulSize));
+  HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
   if( ! pMem )
     GenError( _szPErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
@@ -663,7 +663,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
   void * pResult = realloc( pMem, ulSize );
 
-  HB_TRACE(("hb_xrealloc(%p, %lu)", pMem, ulSize));
+  HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
   if( ! pResult )
     GenError( _szPErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
@@ -673,7 +673,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
-  HB_TRACE(("hb_xfree(%p)", pMem));
+  HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
   if( pMem )
     free( pMem );

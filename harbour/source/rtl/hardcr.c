@@ -76,7 +76,7 @@ char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 {
    ULONG ulStringPos;
 
-   HB_TRACE(("hb_strHardCR(%s, %lu)", pszString, ulStringLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strHardCR(%s, %lu)", pszString, ulStringLen));
 
    for( ulStringPos = 0; ulStringPos < ulStringLen; ulStringPos++ )
    {

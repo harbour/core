@@ -45,7 +45,7 @@ static void gt_SetRC(int r, int c);
 
 void hb_gt_Init( void )
 {
-  HB_TRACE(("hb_gt_Init()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
   initscr();
   cbreak();
@@ -55,7 +55,7 @@ void hb_gt_Init( void )
 
 void hb_gt_Done( void )
 {
-  HB_TRACE(("hb_gt_Done()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
   refresh();
   endwin();
@@ -65,7 +65,7 @@ int hb_gt_ReadKey( void )
 {
    int ch;
 
-   HB_TRACE(("hb_gt_ReadKey()")); 
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey()")); 
 
    ch = getch();
    if (ch == ERR) {
@@ -77,7 +77,7 @@ int hb_gt_ReadKey( void )
 
 BOOL hb_gt_IsColor( void )
 {
-  HB_TRACE(("hb_gt_IsColor()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
 
   /* TODO: How to detect this? */
   return TRUE;
@@ -87,7 +87,7 @@ USHORT hb_gt_GetScreenWidth( void )
 {
   int r, c;
 
-  HB_TRACE(("hb_gt_GetScreenWidth()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
   gt_GetMaxRC(&r, &c);
   return c;
@@ -97,7 +97,7 @@ USHORT hb_gt_GetScreenHeight( void )
 {
   int r, c;
 
-  HB_TRACE(("hb_gt_GetScreenHeight()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
   gt_GetMaxRC(&r, &c);
   return r;
@@ -105,7 +105,7 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 {
-  HB_TRACE(("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
 
   gt_SetRC(uiRow, uiCol);
 }
@@ -114,7 +114,7 @@ USHORT hb_gt_Col( void )
 {
   int r, c;
 
-  HB_TRACE(("hb_gt_Col()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
   gt_GetRC(&r, &c);
   return c;
@@ -124,7 +124,7 @@ USHORT hb_gt_Row( void )
 {
   int r, c;
 
-  HB_TRACE(("hb_gt_Row()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
   gt_GetRC(&r, &c);
   return r;
@@ -132,7 +132,7 @@ USHORT hb_gt_Row( void )
 
 USHORT hb_gt_GetCursorStyle( void )
 {
-  HB_TRACE(("hb_gt_GetCursorStyle()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
 
   /* TODO: What shape is the cursor? */
   return 0;
@@ -140,7 +140,7 @@ USHORT hb_gt_GetCursorStyle( void )
 
 void hb_gt_SetCursorStyle( USHORT uiStyle )
 {
-  HB_TRACE(("hb_gt_SetCursorStyle(%hu)", uiStyle));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", uiStyle));
 
   /* TODO: How to set the cursor shape? */
 }
@@ -153,7 +153,7 @@ void hb_gt_Puts( USHORT uiRow,
 {
   ULONG i;
 
-  HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
   move(uiRow, uiCol);
   for (i = 0; i < ulLen; ++i) {
@@ -167,7 +167,7 @@ void hb_gt_GetText( USHORT uiTop,
 		    USHORT uiRight,
 		    BYTE * pbyDst )
 {
-  HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
 
   /* TODO */
 }
@@ -178,7 +178,7 @@ void hb_gt_PutText( USHORT uiTop,
 		    USHORT uiRight,
 		    BYTE * pbySrc )
 {
-  HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
 
   /* TODO */
 }
@@ -189,7 +189,7 @@ void hb_gt_SetAttribute( USHORT uiTop,
 			 USHORT uiRight,
 			 BYTE byAttr )
 {
-  HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
 
   /* TODO: we want to take a screen that is say bright white on blue,
      and change the attributes only for a section of the screen
@@ -205,14 +205,14 @@ void hb_gt_Scroll( USHORT uiTop,
 		   SHORT iRows,
 		   SHORT iCols )
 {
-  HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
 
   /* TODO */
 }
 
 void hb_gt_DispBegin( void )
 {
-  HB_TRACE(("hb_gt_DispBegin()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
   /* TODO: Is there a way to change screen buffers?
      ie: can we write somewhere without it going to the screen
@@ -223,14 +223,14 @@ void hb_gt_DispBegin( void )
 
 void hb_gt_DispEnd()
 {
-  HB_TRACE(("hb_gt_DispEnd()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
   /* TODO: here we flush the buffer, and restore normal screen writes */
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
-  HB_TRACE(("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
   /* TODO: How to change the size of the screen? */
   return TRUE;
@@ -238,7 +238,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 {
-  HB_TRACE(("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) byChar, ulLen));
 
   /* TODO: this will write character c nlength times to the screen.
      Note that it is not used yet
@@ -250,7 +250,7 @@ void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 
 BOOL hb_gt_GetBlink()
 {
-  HB_TRACE(("hb_gt_GetBlink()"));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
 
   /* TODO: under dos, the background 'intensity' bit can be switched
      from intensity to 'blinking'
@@ -261,7 +261,7 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-  HB_TRACE(("hb_gt_SetBlink(%d)", (int) bBlink));
+  HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
 
   /* TODO: set the bit if it's supported */
 }

@@ -44,7 +44,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 {
    PHB_ITEM pTemp;
 
-   HB_TRACE(("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
+   HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
 
    if( pItem->type == IT_SYMBOL )
    {                                            /* Symbol is pushed as text */
@@ -72,7 +72,7 @@ static USHORT hb_stackLenGlobal( void )
    PHB_ITEM pItem;
    USHORT uiCount = 0;
 
-   HB_TRACE(("hb_stackLenGlobal()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackLenGlobal()"));
 
    for( pItem = hb_stack.pItems; pItem++ <= hb_stack.pPos; uiCount++ );
 
@@ -117,7 +117,7 @@ static USHORT StackLen( void )
    PHB_ITEM pBase;
    USHORT uiCount = 0;
 
-   HB_TRACE(("hb_StackLen()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_StackLen()"));
 
    pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
    for( pItem = pBase; pItem < hb_stack.pBase; pItem++, uiCount++ );

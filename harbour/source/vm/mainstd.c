@@ -38,7 +38,7 @@
 
 int main( int argc, char * argv[] )
 {
-   HB_TRACE(("main(%d, %p)", argc, argv));
+   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
 
    hb_cmdargInit( argc, argv );
    hb_vmInit();

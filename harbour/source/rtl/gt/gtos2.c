@@ -55,14 +55,14 @@ static void hb_gt_GetCursorSize( char * start, char * end );
 
 void hb_gt_Init( void )
 {
-   HB_TRACE(("hb_gt_Init()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    /* TODO: Is anything required to initialize the video subsystem? */
 }
 
 void hb_gt_Done( void )
 {
-   HB_TRACE(("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
    /* TODO: */
 }
@@ -72,7 +72,7 @@ BOOL hb_gt_IsColor( void )
 /* Chen Kedem <niki@actcom.co.il> */
    VIOMODEINFO vi;
 
-   HB_TRACE(("hb_gt_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
 
    vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &vi, 0 );
@@ -83,7 +83,7 @@ USHORT hb_gt_GetScreenWidth( void )
 {
    VIOMODEINFO vi;
 
-   HB_TRACE(("hb_gt_GetScreenWidth()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
    vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &vi, 0 );
@@ -94,7 +94,7 @@ USHORT hb_gt_GetScreenHeight( void )
 {
    VIOMODEINFO vi;
 
-   HB_TRACE(("hb_gt_GetScreenHeight()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
    vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &vi, 0 );
@@ -103,7 +103,7 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 {
-   HB_TRACE(("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
 
    VioSetCurPos( uiRow, uiCol, 0 );
 }
@@ -112,7 +112,7 @@ USHORT hb_gt_Row( void )
 {
    USHORT x, y;
 
-   HB_TRACE(("hb_gt_Row()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
    VioGetCurPos( &y, &x, 0 );
    return y;
@@ -122,7 +122,7 @@ USHORT hb_gt_Col( void )
 {
    USHORT x, y;
 
-   HB_TRACE(("hb_gt_Col()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
    VioGetCurPos( &y, &x, 0 );
    return x;
@@ -135,7 +135,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 
    BYTE bCell[ 2 ];                            /* character/attribute pair */
 
-   HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRigth, (int) attr, sVert, sHoriz));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRigth, (int) attr, sVert, sHoriz));
 
    bCell [ 0 ] = ' ';
    bCell [ 1 ] = attr;
@@ -164,7 +164,7 @@ static void hb_gt_GetCursorSize( char * start, char * end )
 {
    VIOCURSORINFO vi;
 
-   HB_TRACE(("hb_gt_GetCursorSize(%p, %p)", start, end));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorSize(%p, %p)", start, end));
 
    VioGetCurType( &vi, 0 );
    *start = vi.yStart;
@@ -177,7 +177,7 @@ static void hb_gt_SetCursorSize( char start, char end, int visible )
 /* Chen Kedem <niki@actcom.co.il> */
    VIOCURSORINFO vi;
 
-   HB_TRACE(("hb_gt_SetCursorSize(%d, %d, %d)", (int) start, (int) end, visible));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorSize(%d, %d, %d)", (int) start, (int) end, visible));
 
    vi.yStart = start;
    vi.cEnd = end;
@@ -192,7 +192,7 @@ static char hb_gt_GetCellSize()
    char rc ;
    VIOMODEINFO vi;
 
-   HB_TRACE(("hb_gt_GetCellSize()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCellSize()"));
 
    vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &vi, 0 );
@@ -207,7 +207,7 @@ USHORT hb_gt_GetCursorStyle( void )
    char cellsize;
    VIOCURSORINFO vi;
 
-   HB_TRACE(("hb_gt_GetCursorStyle()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
 
    VioGetCurType( &vi, 0 );
 
@@ -245,7 +245,7 @@ void hb_gt_SetCursorStyle( USHORT style )
    char cellsize;
    VIOCURSORINFO vi;
 
-   HB_TRACE(("hb_gt_SetCursorStyle(%hu)", style));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
 
    cellsize = hb_gt_GetCellSize();
    switch( style )
@@ -277,7 +277,7 @@ void hb_gt_SetCursorStyle( USHORT style )
 
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
 {
-   HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", usRow, usCol, (int) attr, str, len));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", usRow, usCol, (int) attr, str, len));
 
    VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
 }
@@ -286,7 +286,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    USHORT width, y;
 
-   HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, dest));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, dest));
 
    width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
    for( y = usTop; y <= usBottom; y++ )
@@ -300,7 +300,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    USHORT width, y;
 
-   HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, srce));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, srce));
 
    width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
    for( y = usTop; y <= usBottom; y++ )
@@ -319,7 +319,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 
    USHORT width, y;
 
-   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRigth, (int) attr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRigth, (int) attr));
 
    /*
       assume top level check that coordinate are all valid and fall
@@ -333,7 +333,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 
 void hb_gt_DispBegin( void )
 {
-   HB_TRACE(("hb_gt_DispBegin()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
    /* TODO: Is there a way to change screen buffers?
             ie: can we write somewhere without it going to the screen
@@ -344,7 +344,7 @@ void hb_gt_DispBegin( void )
 
 void hb_gt_DispEnd( void )
 {
-   HB_TRACE(("hb_gt_DispEnd()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
    /* TODO: here we flush the buffer, and restore normal screen writes */
 }
@@ -353,7 +353,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
    VIOMODEINFO vi;
 
-   HB_TRACE(("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
    VioGetMode( &vi, 0 );        /* fill structure with current settings */
    vi.row = uiRows;
@@ -363,7 +363,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 
 void hb_gt_Replicate( BYTE c, ULONG ulLen )
 {
-   HB_TRACE(("hb_gt_Replicate(%d, %lu)", (int) c, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, ulLen));
 
   /* TODO: this will write character c nlength times to the screen.
            Note that it is not used yet
@@ -380,7 +380,7 @@ BOOL hb_gt_GetBlink()
 /* Chen Kedem <niki@actcom.co.il> */
    VIOINTENSITY vi;
 
-   HB_TRACE(("hb_gt_GetBlink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
 
    vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
    vi.type = 2;                         /* get intensity/blink toggle */
@@ -393,7 +393,7 @@ void hb_gt_SetBlink( BOOL bBlink )
 /* Chen Kedem <niki@actcom.co.il> */
    VIOINTENSITY vi;
 
-   HB_TRACE(("hb_gt_SetBlink(%d)", (int) bBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
 
    vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
    vi.type = 2;                         /* set intensity/blink toggle */

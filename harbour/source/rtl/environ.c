@@ -284,7 +284,7 @@ char * hb_version( USHORT uiMode )
 {
    char * pszVersion;
 
-   HB_TRACE(("hb_version(%hu)", uiMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_version(%hu)", uiMode));
 
    pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
 

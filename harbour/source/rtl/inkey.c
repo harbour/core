@@ -158,7 +158,7 @@ static struct termios startup_attributes;
 
 static void restore_input_mode( void )
 {
-   HB_TRACE(("restore_input_mode()"));
+   HB_TRACE(HB_TR_DEBUG, ("restore_input_mode()"));
 
    tcsetattr( STDIN_FILENO, TCSANOW, &startup_attributes );
 }
@@ -227,7 +227,7 @@ void hb_releaseCPU( void )
 #elif defined(OS_UNIX_COMPATIBLE)
 #else
 #endif
-   HB_TRACE(("releaseCPU()"));
+   HB_TRACE(HB_TR_DEBUG, ("releaseCPU()"));
 }
 
 int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever )
@@ -235,7 +235,7 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
    int key;
    clock_t end_clock;
 
-   HB_TRACE(("hb_inkey(%lf, %d, %d, %d)", seconds, (int) event_mask, (int) wait, (int) forever));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkey(%lf, %d, %d, %d)", seconds, (int) event_mask, (int) wait, (int) forever));
 
    s_eventmask = event_mask;                   /* Set current input event mask */
    /* Check or wait for input events */
@@ -261,7 +261,7 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
 {
    int key;
 
-   HB_TRACE(("hb_inkeyGet()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyGet()"));
 
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
@@ -285,7 +285,7 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
 
 int hb_inkeyLast( void )      /* Return the value of the last key that was extracted */
 {
-   HB_TRACE(("hb_inkeyLast()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyLast()"));
 
    hb_inkeyPoll();
    return s_inkeyLast;
@@ -295,7 +295,7 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
 {
    int key;
 
-   HB_TRACE(("hb_inkeyNext()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyNext()"));
 
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
@@ -310,7 +310,7 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
 
 void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour buffer */
 {
-   HB_TRACE(("hb_inkeyPoll()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPoll()"));
 
    /* TODO: Add mouse support */
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
@@ -398,7 +398,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
                         BOOL bShift = dwState & SHIFT_PRESSED;
                         BOOL bEnhanced = dwState & ENHANCED_KEY;
 
-			HB_TRACE(("hb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
+			HB_TRACE(HB_TR_INFO, ("hb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch));
 
                         if( bAlt )
                         {
@@ -634,7 +634,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 		     wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
 		   else
 		     wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
-		   HB_TRACE(("hb_inkeyPoll: wKey is %d", wKey));
+		   HB_TRACE(HB_TR_INFO, ("hb_inkeyPoll: wKey is %d", wKey));
 		 }
 #endif
             }
@@ -843,7 +843,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
 
 void hb_inkeyReset( BOOL allocate )     /* Reset the keyboard buffer */
 {
-   HB_TRACE(("hb_inkeyReset(%d)", (int) allocate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyReset(%d)", (int) allocate));
 
    /* Reset the buffer head and tail pointers, the last key value,
       and the polling override flag */
@@ -1048,7 +1048,7 @@ HARBOUR HB___KEYBOARD( void )
 
 void hb_inkeyPut( int ch )
 {
-   HB_TRACE(("hb_inkeyPut(%d)", ch));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPut(%d)", ch));
 
    if( ch )
    {

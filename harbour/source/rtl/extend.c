@@ -57,7 +57,7 @@
 
 PHB_ITEM hb_param( int iParam, int iMask )
 {
-   HB_TRACE(("hb_param(%d, %d)", iParam, iMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_param(%d, %d)", iParam, iMask));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -85,7 +85,7 @@ PHB_ITEM hb_param( int iParam, int iMask )
 
 char * hb_parc( int iParam, ... )
 {
-   HB_TRACE(("hb_parc(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -120,7 +120,7 @@ char * hb_parc( int iParam, ... )
 
 ULONG hb_parclen( int iParam, ... )
 {
-   HB_TRACE(("hb_parclen(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -159,7 +159,7 @@ ULONG hb_parclen( int iParam, ... )
 
 ULONG hb_parcsiz( int iParam, ... )
 {
-   HB_TRACE(("hb_parcsiz(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parcsiz(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -202,7 +202,7 @@ ULONG hb_parcsiz( int iParam, ... )
 
 char * hb_pards( int iParam, ... )
 {
-   HB_TRACE(("hb_pards(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pards(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -237,7 +237,7 @@ char * hb_pards( int iParam, ... )
 
 int hb_parl( int iParam, ... )
 {
-   HB_TRACE(("hb_parl(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -281,7 +281,7 @@ int hb_parl( int iParam, ... )
 
 double hb_parnd( int iParam, ... )
 {
-   HB_TRACE(("hb_parnd(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnd(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -322,7 +322,7 @@ double hb_parnd( int iParam, ... )
 
 int hb_parni( int iParam, ... )
 {
-   HB_TRACE(("hb_parni(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -363,7 +363,7 @@ int hb_parni( int iParam, ... )
 
 long hb_parnl( int iParam, ... )
 {
-   HB_TRACE(("hb_parnl(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnl(%d, ...)", iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -409,7 +409,7 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 {
    PHB_ITEM pArray;
 
-   HB_TRACE(("hb_parinfa(%d, %lu)", iParamNum, uiArrayIndex));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parinfa(%d, %lu)", iParamNum, uiArrayIndex));
 
    pArray = hb_param( iParamNum, IT_ARRAY );
 
@@ -426,7 +426,7 @@ ULONG hb_parinfa( int iParamNum, ULONG uiArrayIndex )
 
 int hb_parinfo( int iParam )
 {
-   HB_TRACE(("hb_parinfo(%d)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parinfo(%d)", iParam));
 
    if( iParam == 0 )
       return ( int ) hb_stack.pBase->item.asSymbol.paramcnt;
@@ -463,35 +463,35 @@ int hb_parinfo( int iParam )
 
 int hb_pcount( void )
 {
-   HB_TRACE(("hb_pcount()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
 
    return ( int ) hb_stack.pBase->item.asSymbol.paramcnt;
 }
 
 void hb_ret( void )
 {
-   HB_TRACE(("hb_ret()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ret()"));
 
    hb_itemClear( &hb_stack.Return );
 }
 
 void hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
 {
-   HB_TRACE(("hb_reta(%lu)", ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_reta(%lu)", ulLen));
 
    hb_arrayNew( &hb_stack.Return, ulLen );
 }
 
 void hb_retc( char * szText )
 {
-   HB_TRACE(("hb_retc(%s)", szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retc(%s)", szText));
 
    hb_itemPutC( &hb_stack.Return, szText );
 }
 
 void hb_retclen( char * szText, ULONG ulLen )
 {
-   HB_TRACE(("hb_retclen(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%s, %lu)", szText, ulLen));
 
    hb_itemPutCL( &hb_stack.Return, szText, ulLen );
 }
@@ -500,70 +500,70 @@ void hb_retclen( char * szText, ULONG ulLen )
 
 void hb_retds( char * szDate )
 {
-   HB_TRACE(("hb_retds(%s)", szDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retds(%s)", szDate));
 
    hb_itemPutDS( &hb_stack.Return, szDate );
 }
 
 void hb_retl( int iLogical )
 {
-   HB_TRACE(("hb_retl(%d)", iLogical));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retl(%d)", iLogical));
 
    hb_itemPutL( &hb_stack.Return, iLogical ? TRUE : FALSE );
 }
 
 void hb_retnd( double dNumber )
 {
-   HB_TRACE(("hb_retnd(%lf)", dNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnd(%lf)", dNumber));
 
    hb_itemPutND( &hb_stack.Return, dNumber );
 }
 
 void hb_retni( int iNumber )
 {
-   HB_TRACE(("hb_retni(%d)", iNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retni(%d)", iNumber));
 
    hb_itemPutNI( &hb_stack.Return, iNumber );
 }
 
 void hb_retnl( long lNumber )
 {
-   HB_TRACE(("hb_retnl(%ld)", lNumber));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%ld)", lNumber));
 
    hb_itemPutNL( &hb_stack.Return, lNumber );
 }
 
 void hb_retnlen( double dNumber, int iWidth, int iDec )
 {
-   HB_TRACE(("hb_retnlen(%lf, %d, %d)", dNumber, iWidth, iDec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnlen(%lf, %d, %d)", dNumber, iWidth, iDec));
 
    hb_itemPutNLen( &hb_stack.Return, dNumber, iWidth, iDec );
 }
 
 void hb_retndlen( double dNumber, int iWidth, int iDec )
 {
-   HB_TRACE(("hb_retndlen(%lf, %d, %d)", dNumber, iWidth, iDec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retndlen(%lf, %d, %d)", dNumber, iWidth, iDec));
 
    hb_itemPutNDLen( &hb_stack.Return, dNumber, iWidth, iDec );
 }
 
 void hb_retnilen( int iNumber, int iWidth )
 {
-   HB_TRACE(("hb_retnilen(%d, %d)", iNumber, iWidth));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnilen(%d, %d)", iNumber, iWidth));
 
    hb_itemPutNILen( &hb_stack.Return, iNumber, iWidth );
 }
 
 void hb_retnllen( long lNumber, int iWidth )
 {
-   HB_TRACE(("hb_retnllen(%ld, %d)", lNumber, iWidth));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retnllen(%ld, %d)", lNumber, iWidth));
 
    hb_itemPutNLLen( &hb_stack.Return, lNumber, iWidth );
 }
 
 void hb_storc( char * szText, int iParam, ... )
 {
-   HB_TRACE(("hb_storc(%s, %d, ...)", szText, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d, ...)", szText, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -591,7 +591,7 @@ void hb_storc( char * szText, int iParam, ... )
 
 void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
 {
-   HB_TRACE(("hb_storclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -621,7 +621,7 @@ void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
 
 void hb_stords( char * szDate, int iParam, ... )
 {
-   HB_TRACE(("hb_stords(%s, %d, ...)", szDate, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d, ...)", szDate, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -649,7 +649,7 @@ void hb_stords( char * szDate, int iParam, ... )
 
 void hb_storl( int iLogical, int iParam, ... )
 {
-   HB_TRACE(("hb_storl(%d, %d, ...)", iLogical, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d, ...)", iLogical, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -677,7 +677,7 @@ void hb_storl( int iLogical, int iParam, ... )
 
 void hb_storni( int iValue, int iParam, ... )
 {
-   HB_TRACE(("hb_storni(%d, %d, ...)", iValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_storni(%d, %d, ...)", iValue, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -705,7 +705,7 @@ void hb_storni( int iValue, int iParam, ... )
 
 void hb_stornl( long lValue, int iParam, ... )
 {
-   HB_TRACE(("hb_stornl(%ld, %d, ...)", lValue, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornl(%ld, %d, ...)", lValue, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {
@@ -733,7 +733,7 @@ void hb_stornl( long lValue, int iParam, ... )
 
 void hb_stornd( double dNumber, int iParam, ... )
 {
-   HB_TRACE(("hb_stornd(%lf, %d, ...)", dNumber, iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stornd(%lf, %d, ...)", dNumber, iParam));
 
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
    {

@@ -1,3 +1,70 @@
+Thu Nov 04 13:49:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/hbtrace.h: 
+	* source/common/hbtrace.c: 
+	* doc/tracing.txt: 
+	Implemented a better way of tracing with support for several
+	levels (ALWAYS, FATAL, ERROR, WARNING, INFO and DEBUG), efficient
+	compile-out of unwanted levels and level control using an
+	environment variable at run-time. See doc/tracing.txt for detailed
+	information.
+
+	* source/pp/hbpp.c: 
+	* source/pp/hbppint.c: 
+	* source/pp/hbpplib.c: 
+	* source/pp/stdalone/hbpp.c: 
+	* source/rdd/dbcmd.c: 
+	* source/rdd/dbf1.c: 
+	* source/rdd/dbfcdx/dbfcdx1.c: 
+	* source/rtl/arrays.c: 
+	* source/rtl/classes.c: 
+	* source/rtl/codebloc.c: 
+	* source/rtl/console.c: 
+	* source/rtl/copyfile.c: 
+	* source/rtl/dates.c: 
+	* source/rtl/descend.c: 
+	* source/rtl/dir.c: 
+	* source/rtl/environ.c: 
+	* source/rtl/errorapi.c: 
+	* source/rtl/extend.c: 
+	* source/rtl/filesys.c: 
+	* source/rtl/fm.c: 
+	* source/rtl/gtapi.c: 
+	* source/rtl/hardcr.c: 
+	* source/rtl/inkey.c: 
+	* source/rtl/itemapi.c: 
+	* source/rtl/langapi.c: 
+	* source/rtl/math.c: 
+	* source/rtl/memvars.c: 
+	* source/rtl/mouseapi.c: 
+	* source/rtl/mtran.c: 
+	* source/rtl/natmsg.c: 
+	* source/rtl/samples.c: 
+	* source/rtl/set.c: 
+	* source/rtl/setcolor.c: 
+	* source/rtl/strings.c: 
+	* source/rtl/tone.c: 
+	* source/rtl/transfrm.c: 
+	* source/rtl/gt/gt_tpl.c: 
+	* source/rtl/gt/gtcrs.c: 
+	* source/rtl/gt/gtdos.c: 
+	* source/rtl/gt/gtos2.c: 
+	* source/rtl/gt/gtstd.c: 
+	* source/rtl/gt/gtwin.c: 
+	* source/runner/runlib.c: 
+	* source/tools/dates2.c: 
+	* source/tools/hb_f.c: 
+	* source/tools/strasint.c: 
+	* source/tools/stringsx.c: 
+	* source/vm/cmdarg.c: 
+	* source/vm/debug.c: 
+	* source/vm/dynsym.c: 
+	* source/vm/hvm.c: 
+	* source/vm/initsymb.c: 
+	* source/vm/mainstd.c: 
+	* source/vm/mainwin.c: 
+	Changed calls to HB_TRACE to incorporate the new level parameter.
+
 19991103-22:38 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/filesys.c
      % Nested #ifs converted to #elifs (hb_fsDelete(), hb_fsFile())

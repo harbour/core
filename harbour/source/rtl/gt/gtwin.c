@@ -108,7 +108,7 @@ static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
 {
    BOOL bHandled;
 
-   HB_TRACE(("hb_gt_CtrlHandler(%lu)", (unsigned long) dwCtrlType));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_CtrlHandler(%lu)", (unsigned long) dwCtrlType));
 
    switch( dwCtrlType )
    {
@@ -133,7 +133,7 @@ static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
 
 void hb_gt_Init( void )
 {
-   HB_TRACE(("hb_gt_Init()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
    if( ( hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
    {
@@ -159,7 +159,7 @@ void hb_gt_Init( void )
 
 void hb_gt_Done( void )
 {
-   HB_TRACE(("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
    if( HOutput != HOriginal )
    {
@@ -191,7 +191,7 @@ void hb_gt_Done( void )
 
 BOOL hb_gt_IsColor( void )
 {
-   HB_TRACE(("hb_gt_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
 
    /* TODO: need to call something to do this instead of returning TRUE */
    return TRUE;
@@ -201,7 +201,7 @@ USHORT hb_gt_GetScreenWidth( void )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-   HB_TRACE(("hb_gt_GetScreenWidth()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
    GetConsoleScreenBufferInfo( HOutput, &csbi );
 /* return csbi.dwMaximumWindowSize.X; */
@@ -213,7 +213,7 @@ USHORT hb_gt_GetScreenHeight( void )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-   HB_TRACE(("hb_gt_GetScreenHeight()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeight()"));
 
    GetConsoleScreenBufferInfo( HOutput, &csbi );
 /* return csbi.dwMaximumWindowSize.Y; */
@@ -225,7 +225,7 @@ void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 {
    COORD dwCursorPosition;
 
-   HB_TRACE(("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
 
    dwCursorPosition.X = ( SHORT ) uiCol;
    dwCursorPosition.Y = ( SHORT ) uiRow;
@@ -238,7 +238,7 @@ USHORT hb_gt_GetCursorStyle( void )
    CONSOLE_CURSOR_INFO cci;
    USHORT uiCursorShape;
 
-   HB_TRACE(("hb_gt_GetCursorStyle()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
 
    GetConsoleCursorInfo( HCursor, &cci );
 
@@ -277,7 +277,7 @@ void hb_gt_SetCursorStyle( USHORT style )
 {
    CONSOLE_CURSOR_INFO cci;
 
-   HB_TRACE(("hb_gt_SetCursorStyle(%hu)", style));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
 
    GetConsoleCursorInfo( HCursor, &cci );
 
@@ -320,7 +320,7 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
    DWORD dwWritten;
    COORD coord;
 
-   HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) attr, str, len));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) attr, str, len));
 
    coord.X = ( DWORD ) uiCol;
    coord.Y = ( DWORD ) uiRow;
@@ -335,7 +335,7 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
    BYTE * pstr;
    USHORT width;
 
-   HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, dest));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, dest));
 
    width = ( uiRight - uiLeft + 1 );
    pwattr = ( LPWORD ) hb_xgrab( width * sizeof( *pwattr ) );
@@ -370,7 +370,7 @@ void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
    BYTE * pstr;
    USHORT width;
 
-   HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, srce));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, srce));
 
    width = ( uiRight - uiLeft + 1 );
    pwattr = ( LPWORD ) hb_xgrab( width * sizeof( *pwattr ) );
@@ -406,7 +406,7 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
    COORD coord;
    USHORT width;
 
-   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) attr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) attr));
 
    width = uiRight - uiLeft + 1;
 
@@ -425,7 +425,7 @@ USHORT hb_gt_Col( void )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-   HB_TRACE(("hb_gt_Col()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
    GetConsoleScreenBufferInfo( HCursor, &csbi );
 
@@ -436,7 +436,7 @@ USHORT hb_gt_Row( void )
 {
    CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-   HB_TRACE(("hb_gt_Row()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
    GetConsoleScreenBufferInfo( HCursor, &csbi );
 
@@ -447,7 +447,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 {
 /* ptucker */
 
-   HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) attr, iVert, iHoriz));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) attr, iVert, iHoriz));
 
    if( ( iHoriz | iVert ) == 0 ) /* both zero? */
    {
@@ -490,7 +490,7 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 
 void hb_gt_DispBegin( void )
 {
-   HB_TRACE(("hb_gt_DispBegin()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
 /* ptucker */
    if( hb_gtDispCount() == 1 )
@@ -542,7 +542,7 @@ void hb_gt_DispBegin( void )
 
 void hb_gt_DispEnd( void )
 {
-   HB_TRACE(("hb_gt_DispEnd()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
 /* ptucker */
 
@@ -564,7 +564,7 @@ static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld )
    CONSOLE_SCREEN_BUFFER_INFO csbi;
    SMALL_RECT srWin;
 
-   HB_TRACE(("hb_gt_SetScreenBuffer(%p, %p)", HNew, HOld));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetScreenBuffer(%p, %p)", HNew, HOld));
 
    GetConsoleScreenBufferInfo( HOld, &csbi );
 
@@ -588,7 +588,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    SMALL_RECT srWin;
    COORD coBuf;
 
-   HB_TRACE(("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
    GetConsoleScreenBufferInfo( HOutput, &csbi );
    coBuf = GetLargestConsoleWindowSize( HOutput );
@@ -627,7 +627,7 @@ void hb_gt_Replicate( BYTE c, ULONG ulLength )
    COORD coBuf = { 0, 0 };
    DWORD dwWritten;
 
-   HB_TRACE(("hb_gt_Replicate(%d, %lu)", (int) c, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, ulLength));
 
 /* TODO: This is not used and may be eliminated after further review */
    FillConsoleOutputCharacter(
@@ -642,7 +642,7 @@ void hb_gt_Replicate( BYTE c, ULONG ulLength )
 
 BOOL hb_gt_GetBlink()
 {
-   HB_TRACE(("hb_gt_GetBlink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
 
    /* TODO */
    return FALSE;
@@ -650,7 +650,7 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-   HB_TRACE(("hb_gt_SetBlink(%d)", (int) bBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
 
   /* TODO: set the bit if it's supported */
    HB_SYMBOL_UNUSED( bBlink );
@@ -658,7 +658,7 @@ void hb_gt_SetBlink( BOOL bBlink )
 
 void hb_gt_DebugScreen( BOOL bActivate )
 {
-   HB_TRACE(("hb_gt_DebugScreen(%d)", (int) bActivate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DebugScreen(%d)", (int) bActivate));
 
    /* ptucker */
    /* TODO: This is not used and is still a work in progress */

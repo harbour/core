@@ -204,7 +204,7 @@ static BOOL set_logical( PHB_ITEM pItem )
 {
    BOOL bLogical = FALSE;
 
-   HB_TRACE(("set_logical(%p)", pItem));
+   HB_TRACE(HB_TR_DEBUG, ("set_logical(%p)", pItem));
 
    if( IS_LOGICAL( pItem ) )
       bLogical = hb_itemGetL( pItem );
@@ -229,7 +229,7 @@ static BOOL set_logical( PHB_ITEM pItem )
 
 static int set_number( PHB_ITEM pItem, int iOldValue )
 {
-   HB_TRACE(("set_number(%p, %d)", pItem, iOldValue));
+   HB_TRACE(HB_TR_DEBUG, ("set_number(%p, %d)", pItem, iOldValue));
 
    if( IS_NUMERIC( pItem ) )
       return hb_itemGetNI( pItem );
@@ -241,7 +241,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
    char * szString;
 
-   HB_TRACE(("set_string(%p, %s)", pItem, szOldString));
+   HB_TRACE(HB_TR_DEBUG, ("set_string(%p, %s)", pItem, szOldString));
 
    if( IS_STRING( pItem ) )
    {
@@ -264,7 +264,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 
 static void close_binary( FHANDLE handle )
 {
-   HB_TRACE(("close_binary(%p)", handle));
+   HB_TRACE(HB_TR_DEBUG, ("close_binary(%p)", handle));
 
    if( handle != FS_ERROR )
    {
@@ -278,7 +278,7 @@ static void close_binary( FHANDLE handle )
 
 static void close_text( FHANDLE handle )
 {
-   HB_TRACE(("close_text(%p)", handle));
+   HB_TRACE(HB_TR_DEBUG, ("close_text(%p)", handle));
 
    if( handle != FS_ERROR )
    {
@@ -300,7 +300,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
 
-   HB_TRACE(("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
+   HB_TRACE(HB_TR_DEBUG, ("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
 
    user_ferror = hb_fsError(); /* Save the current user file error code */
    /* Create full filename */
@@ -1026,7 +1026,7 @@ HARBOUR HB_SET( void )
 
 void hb_setInitialize( void )
 {
-   HB_TRACE(("hb_setInitialize()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_setInitialize()"));
 
    hb_set.HB_SET_ALTERNATE = FALSE;
    hb_set.HB_SET_ALTFILE = NULL;
@@ -1091,7 +1091,7 @@ void hb_setInitialize( void )
 
 void hb_setRelease( void )
 {
-   HB_TRACE(("hb_setRelease()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_setRelease()"));
 
    close_text( hb_set.hb_set_althan );
    close_text( hb_set.hb_set_extrahan );
@@ -1125,8 +1125,8 @@ HARBOUR HB_DEFPATH( void )
    buffer[ size ] = '\0';
    size = strlen( buffer );
 
-   HB_TRACE(("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
-   HB_TRACE(("HB_DEFPATH: OS_PATH_DELIMITER is |%c| and OS_PATH_LIST_SEPARATOR is |%c|", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR));
+   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
+   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: OS_PATH_DELIMITER is |%c| and OS_PATH_LIST_SEPARATOR is |%c|", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR));
 
    /* If the path is not empty and it doesn't end with a drive or path
       delimiter, then add the appropriate separator. Use ':' if the size

@@ -33,14 +33,24 @@
  *
  */
 
-#if (defined(HB_TRACE_LEVEL) && (HB_TRACE_LEVEL > 0))
-
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "hbtrace.h"
 
 char * hb_tr_file_ = "";
 int    hb_tr_line_ = 0;
+int    hb_tr_level_ = 0;
+
+static char* slevel[HB_TR_LAST] =
+{
+  "HB_TR_ALWAYS",
+  "HB_TR_FATAL",
+  "HB_TR_ERROR",
+  "HB_TR_WARNING",
+  "HB_TR_INFO",
+  "HB_TR_DEBUG"
+};
 
 void hb_tr_trace( char * fmt, ... )
 {
@@ -66,8 +76,8 @@ void hb_tr_trace( char * fmt, ... )
   /*
    * Print file and line.
    */
-  fprintf(stderr, "%s:%d: ",
-	  hb_tr_file_ + i, hb_tr_line_);
+  fprintf(stderr, "%s:%d: %s ",
+	  hb_tr_file_ + i, hb_tr_line_, slevel[hb_tr_level_]);
 
   /*
    * Print the name and arguments for the function.
@@ -85,7 +95,37 @@ void hb_tr_trace( char * fmt, ... )
    * Reset file and line.
    */
   hb_tr_file_ = "";
-  hb_tr_line_ = 0;
+  hb_tr_line_ = -1;
+  hb_tr_level_ = -1;
 }
 
-#endif /* #if (defined(HB_TRACE_LEVEL) && (HB_TRACE_LEVEL > 0)) */
+int hb_tr_level(void)
+{
+  static int level = -1;
+  int i;
+  char* env;
+
+  if (level != -1)
+  {
+    return level;
+  }
+
+  env = getenv("HB_TR_LEVEL");
+  if (env == 0 || env[0] == '\0')
+  {
+    level = HB_TR_DEFAULT;
+  }
+  else
+  {
+    for (i = 0; i < HB_TR_LAST; ++i)
+    {
+      if (strcmp(env, slevel[i]) == 0)
+      {
+        level = i;
+        break;
+      }
+    }
+  }
+
+  return level;
+}

@@ -216,23 +216,23 @@ static int convert_open_flags( USHORT uiFlags )
    /* by default FO_READ + FO_COMPAT is set */
    int result_flags = 0;
 
-   HB_TRACE(("convert_open_flags(%hu)", uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("convert_open_flags(%hu)", uiFlags));
 
    result_flags |= O_BINARY;
-   HB_TRACE(("convert_open_flags: added O_BINARY\n"));
+   HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_BINARY\n"));
 
 #if defined( _MSC_VER ) || defined(__MINGW32__) || defined(__IBMCPP__)
    if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= O_RDONLY;
-      HB_TRACE(("convert_open_flags: added O_RDONLY\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_RDONLY\n"));
    }
 #else
 
    if( ( uiFlags & ( FO_WRITE | FO_READWRITE ) ) == FO_READ )
    {
       result_flags |= ( O_RDONLY | SH_COMPAT );
-      HB_TRACE(("convert_open_flags: added O_RDONLY SH_COMPAT\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_RDONLY SH_COMPAT\n"));
    }
 #endif
 
@@ -240,13 +240,13 @@ static int convert_open_flags( USHORT uiFlags )
    if( uiFlags & FO_WRITE )
    {
       result_flags |= O_WRONLY;
-      HB_TRACE(("convert_open_flags: added O_WRONLY\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_WRONLY\n"));
    }
 
    if( uiFlags & FO_READWRITE )
    {
       result_flags |= O_RDWR;
-      HB_TRACE(("convert_open_flags: added O_RDWR\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added O_RDWR\n"));
    }
 
 #if ! defined(_MSC_VER) && ! defined(__MINGW32__) && ! defined(__IBMCPP__)
@@ -254,35 +254,35 @@ static int convert_open_flags( USHORT uiFlags )
    if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
    {
       result_flags |= SH_DENYRD;
-      HB_TRACE(("convert_open_flags: added SH_DENYRD\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added SH_DENYRD\n"));
    }
 
    else if( uiFlags & FO_EXCLUSIVE )
    {
       result_flags |= SH_DENYRW;
-      HB_TRACE(("convert_open_flags: added SH_DENYRW\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added SH_DENYRW\n"));
    }
 
    else if( uiFlags & FO_DENYWRITE )
    {
       result_flags |= SH_DENYWR;
-      HB_TRACE(("convert_open_flags: added SH_DENYWR\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added SH_DENYWR\n"));
    }
 
    if( uiFlags & FO_DENYNONE )
    {
       result_flags |= SH_DENYNO;
-      HB_TRACE(("convert_open_flags: added SH_DENYNO\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added SH_DENYNO\n"));
    }
 
    if( uiFlags & FO_SHARED )
    {
       result_flags |= SH_DENYNO;
-      HB_TRACE(("convert_open_flags: added SH_DENYNO\n"));
+      HB_TRACE(HB_TR_INFO, ("convert_open_flags: added SH_DENYNO\n"));
    }
 #endif
 
-   HB_TRACE(("convert_open_flags: result is 0x%04x\n", result_flags));
+   HB_TRACE(HB_TR_INFO, ("convert_open_flags: result is 0x%04x\n", result_flags));
 
    return result_flags;
 }
@@ -292,7 +292,7 @@ static int convert_seek_flags( USHORT uiFlags )
    /* by default FS_SET is set */
    int result_flags = SEEK_SET;
 
-   HB_TRACE(("convert_seek_flags(%hu)", uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("convert_seek_flags(%hu)", uiFlags));
 
    if( uiFlags & FS_RELATIVE )
       result_flags = SEEK_CUR;
@@ -305,7 +305,7 @@ static int convert_seek_flags( USHORT uiFlags )
 
 static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned * result_pmode )
 {
-   HB_TRACE(("convert_create_flags(%hu, %p, %p)", uiFlags, result_flags, result_pmode));
+   HB_TRACE(HB_TR_DEBUG, ("convert_create_flags(%hu, %p, %p)", uiFlags, result_flags, result_pmode));
 
    /* by default FC_NORMAL is set */
 
@@ -315,7 +315,7 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
    if( uiFlags & FC_READONLY )
    {
       *result_pmode = S_IRUSR;
-      HB_TRACE(("convert_create_flags: S_IRUSR"));
+      HB_TRACE(HB_TR_INFO, ("convert_create_flags: S_IRUSR"));
    }
 
    if( uiFlags & FC_HIDDEN )
@@ -324,7 +324,7 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
    if( uiFlags & FC_SYSTEM )
       *result_flags |= 0;
 
-   HB_TRACE(("convert_create_flags: 0x%04x, 0x%04x\n", *result_flags, *result_pmode));
+   HB_TRACE(HB_TR_INFO, ("convert_create_flags: 0x%04x, 0x%04x\n", *result_flags, *result_pmode));
 }
 
 #endif
@@ -338,7 +338,7 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 {
    FHANDLE hFileHandle;
 
-   HB_TRACE(("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
 
 #if defined(HAVE_POSIX_IO) && ! defined(__IBMCPP__)
 
@@ -406,7 +406,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
    int oflag;
    unsigned pmode;
 
-   HB_TRACE(("hb_fsCreate(%p, %hu)", pFilename, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiFlags));
 
    s_uiErrorLast = 0;
 
@@ -435,7 +435,7 @@ FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiFlags )
 
 void    hb_fsClose( FHANDLE hFileHandle )
 {
-   HB_TRACE(("hb_fsClose(%p)", hFileHandle));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsClose(%p)", hFileHandle));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -457,7 +457,7 @@ void    hb_fsClose( FHANDLE hFileHandle )
 
 void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 {
-   HB_TRACE(("hb_fsSetDevMode(%p, %hu)", hFileHandle, uiDevMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %hu)", hFileHandle, uiDevMode));
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__) || defined(__WATCOMC__)
 
@@ -511,7 +511,7 @@ USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiRead;
 
-   HB_TRACE(("hb_fsRead(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsRead(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -535,7 +535,7 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
-   HB_TRACE(("hb_fsWrite(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsWrite(%p, %p, %hu)", hFileHandle, pBuff, uiCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -567,7 +567,7 @@ ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    USHORT uiRead;
    BYTE * pPtr = pBuff;
 
-   HB_TRACE(("hb_fsReadLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -614,7 +614,7 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
    USHORT uiWritten;
    BYTE * pPtr = pBuff;
 
-   HB_TRACE(("hb_fsWriteLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsWriteLarge(%p, %p, %lu)", hFileHandle, pBuff, ulCount));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -660,7 +660,7 @@ ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
    ULONG ulPos = -1;
    USHORT Flags;
 
-   HB_TRACE(("hb_fsSeek(%p, %ld, %hu)", hFileHandle, lOffset, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSeek(%p, %ld, %hu)", hFileHandle, lOffset, uiFlags));
 
    Flags = convert_seek_flags( uiFlags );
    if( lOffset < 0 && Flags == SEEK_SET )
@@ -707,7 +707,7 @@ ULONG   hb_fsTell( FHANDLE hFileHandle )
 {
    ULONG ulPos;
 
-   HB_TRACE(("hb_fsTell(%p)", hFileHandle));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsTell(%p)", hFileHandle));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -727,14 +727,14 @@ ULONG   hb_fsTell( FHANDLE hFileHandle )
 
 USHORT  hb_fsError( void )
 {
-   HB_TRACE(("hb_fsError()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
 
    return s_uiErrorLast;
 }
 
 void    hb_fsSetError( USHORT uiError )
 {
-   HB_TRACE(("hb_fsSetError(%hu)", uiError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetError(%hu)", uiError));
 
    s_uiErrorLast = uiError;
 }
@@ -743,7 +743,7 @@ int     hb_fsDelete( BYTE * pFilename )
 {
    int iResult;
 
-   HB_TRACE(("hb_fsDelete(%s)", (char*) pFilename));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsDelete(%s)", (char*) pFilename));
 
 #if defined(HAVE_POSIX_IO)
 
@@ -771,7 +771,7 @@ int hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 {
    int iResult;
 
-   HB_TRACE(("hb_fsRename(%s, %s)", (char*) pOldName, (char*) pNewName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsRename(%s, %s)", (char*) pOldName, (char*) pNewName));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -794,7 +794,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 {
    int iResult;
 
-   HB_TRACE(("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsLock(%p, %lu, %lu, %hu)", hFileHandle, ulStart, ulLength, uiMode));
 
 #if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
 
@@ -870,7 +870,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 void    hb_fsCommit( FHANDLE hFileHandle )
 {
-   HB_TRACE(("hb_fsCommit(%p)", hFileHandle));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
@@ -899,7 +899,7 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 {
    int iResult;
 
-   HB_TRACE(("hb_fsMkDir(%s)", (char*) pDirname));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", (char*) pDirname));
 
 #if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -927,7 +927,7 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 {
    int iResult;
 
-   HB_TRACE(("hb_fsChDir(%s)", (char*) pDirname));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsChDir(%s)", (char*) pDirname));
 
 #if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -949,7 +949,7 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
 {
    int iResult;
 
-   HB_TRACE(("hb_fsRmDir(%s)", (char*) pDirname));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsRmDir(%s)", (char*) pDirname));
 
 #if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
 
@@ -974,7 +974,7 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
 {
    static BYTE s_byDirBuffer[ PATH_MAX + 1 ];
 
-   HB_TRACE(("hb_fsCurDir(%hu)", uiDrive));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDir(%hu)", uiDrive));
 
    hb_fsCurDirBuff( uiDrive, s_byDirBuffer, PATH_MAX + 1 );
 
@@ -986,7 +986,7 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
 
 USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 {
-   HB_TRACE(("hb_fsCurDirBuff(%hu)", uiDrive));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDirBuff(%hu)", uiDrive));
 
    HB_SYMBOL_UNUSED( uiDrive );
 
@@ -1035,7 +1035,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-   HB_TRACE(("hb_fsChDrv(%d)", (int) nDrive));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsChDrv(%d)", (int) nDrive));
 
 #if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
@@ -1104,7 +1104,7 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
 
-   HB_TRACE(("hb_fsIsDrv(%d)", (int) nDrive));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
 #if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
@@ -1164,7 +1164,7 @@ BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
 {
    BOOL bResult;
 
-   HB_TRACE(("hb_fsIsDevice(%p)", hFileHandle));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDevice(%p)", hFileHandle));
 
 #if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
@@ -1189,7 +1189,7 @@ BYTE    hb_fsCurDrv( void )
 {
    USHORT uiResult;
 
-   HB_TRACE(("hb_fsCurDrv()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
 
 #if ( defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) ) && ! defined(__CYGWIN__) ) || defined(__MINGW32__)
 
@@ -1225,7 +1225,7 @@ BYTE    hb_fsCurDrv( void )
 FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
                       USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError )
 {
-   HB_TRACE(("hb_fsExtOpen(%s, %s, %hu, %p, %p)", (char*) pFilename, (char*) pDefExt, uiFlags, pPaths, pError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsExtOpen(%s, %s, %hu, %p, %p)", (char*) pFilename, (char*) pDefExt, uiFlags, pPaths, pError));
 
    s_uiErrorLast = FS_ERROR;
 
@@ -1357,7 +1357,7 @@ BOOL hb_fsFile( BYTE * pFilename )
 {
    BOOL bIsFile;
 
-   HB_TRACE(("hb_fsFile(%s)", (char*) pFilename));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", (char*) pFilename));
 
 /* TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
@@ -1626,7 +1626,7 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
    int iDotPos;
    int iPos;
 
-   HB_TRACE(("hb_fsFNameSplit(%s)", szFileName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", szFileName));
 
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
    iLen = strlen( szFileName );
@@ -1705,10 +1705,10 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
       pFileName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
    }
 
-   HB_TRACE(("hb_fsFNameSplit: Filename: |%s|\n", szFileName));
-   HB_TRACE(("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
-   HB_TRACE(("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));
-   HB_TRACE(("hb_fsFNameSplit:    szExt: |%s|\n", pFileName->szExtension));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", szFileName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:    szExt: |%s|\n", pFileName->szExtension));
 
    return pFileName;
 }
@@ -1718,7 +1718,7 @@ PHB_FNAME hb_fsFNameSplit( char * szFileName )
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 {
-   HB_TRACE(("hb_fsFNameMerge(%s, %p)", szFileName, pFileName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%s, %p)", szFileName, pFileName));
 
    if( pFileName->szPath && pFileName->szPath[ 0 ] )
    {
@@ -1775,10 +1775,10 @@ char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
       }
    }
 
-   HB_TRACE(("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
-   HB_TRACE(("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
-   HB_TRACE(("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
-   HB_TRACE(("hb_fsFNameMerge: Filename: |%s|\n", szFileName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", szFileName));
 
    return szFileName;
 }

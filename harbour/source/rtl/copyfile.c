@@ -51,7 +51,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
    FHANDLE fhndSource;
    FHANDLE fhndDest;
 
-   HB_TRACE(("hb_fsCopy(%s, %s)", szSource, szDest));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCopy(%s, %s)", szSource, szDest));
 
    while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {

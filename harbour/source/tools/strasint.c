@@ -19,7 +19,7 @@ int _GT_Internal_StringAsInt(char *String, int Start, int End)
    int  Digit   = End;
    int  Value   = 0;
 
-   HB_TRACE(("_GT_Internal_StringAsInt(%s, %d, %d)", String, Start, End));
+   HB_TRACE(HB_TR_DEBUG, ("_GT_Internal_StringAsInt(%s, %d, %d)", String, Start, End));
    
    for (Digit = End; Digit >= Start; Digit--)
      {

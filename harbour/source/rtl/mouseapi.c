@@ -63,7 +63,7 @@ static int    s_iRightButton;
 
 void hb_mouseInit( void )
 {
-   HB_TRACE(("hb_mouseInit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseInit()"));
 
    hb_mouse_Init();
 
@@ -78,28 +78,28 @@ void hb_mouseInit( void )
 
 void hb_mouseExit( void )
 {
-   HB_TRACE(("hb_mouseExit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseExit()"));
 
    hb_mouse_Exit();
 }
 
 BOOL hb_mouseIsPresent( void )
 {
-   HB_TRACE(("hb_mouseIsPresent()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseIsPresent()"));
 
    return hb_mouse_IsPresent();
 }
 
 BOOL hb_mouseGetCursor( void )
 {
-   HB_TRACE(("hb_mouseGetCursor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseGetCursor()"));
 
    return s_bVisible;
 }
 
 void hb_mouseSetCursor( BOOL bVisible )
 {
-   HB_TRACE(("hb_mouseSetCursor(%d)", (int) bVisible));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetCursor(%d)", (int) bVisible));
 
    if( bVisible )
    {
@@ -115,49 +115,49 @@ void hb_mouseSetCursor( BOOL bVisible )
 
 int hb_mouseCol( void )
 {
-   HB_TRACE(("hb_mouseCol()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseCol()"));
 
    return hb_mouse_Col();
 }
 
 int hb_mouseRow( void )
 {
-   HB_TRACE(("hb_mouseRow()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseRow()"));
 
    return hb_mouse_Row();
 }
 
 void hb_mouseSetPos( int iRow, int iCol )
 {
-   HB_TRACE(("hb_mouseSetPos(%d, %d)", iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetPos(%d, %d)", iRow, iCol));
 
    hb_mouse_SetPos( iRow, iCol );
 }
 
 BOOL hb_mouseIsButtonPressed( int iButton )
 {
-   HB_TRACE(("hb_mouseIsButtonPressed(%d)", iButton));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseIsButtonPressed(%d)", iButton));
 
    return hb_mouse_IsButtonPressed( iButton );
 }
 
 int hb_mouseCountButton( void )
 {
-   HB_TRACE(("hb_mouseCountButton()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseCountButton()"));
 
    return hb_mouse_CountButton();
 }
 
 void hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
-   HB_TRACE(("hb_mouseSetBounds(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetBounds(%d, %d, %d, %d)", iTop, iLeft, iBottom, iRight));
 
    hb_mouse_SetBounds( iTop, iLeft, iBottom, iRight );
 }
 
 void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
-   HB_TRACE(("hb_mouseSetBounds(%p, %p, %p, %p)", piTop, piLeft, piBottom, piRight));
+   HB_TRACE(HB_TR_DEBUG, ("hb_mouseSetBounds(%p, %p, %p, %p)", piTop, piLeft, piBottom, piRight));
 
    hb_mouse_GetBounds( piTop, piLeft, piBottom, piRight );
 }

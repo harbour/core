@@ -99,7 +99,7 @@ double hb_secondsToday( void )
    struct timeb tb;
    struct tm *oTime;
 
-   HB_TRACE(("hb_secondsToday()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_secondsToday()"));
 
    ftime( &tb );
    oTime = localtime( &tb.time );
@@ -111,7 +111,7 @@ double hb_secondsToday( void )
 
 char * hb_cmonth( int iMonth )
 {
-   HB_TRACE(("hb_cmonth(%d)", iMonth));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cmonth(%d)", iMonth));
 
    if( iMonth >= 1 && iMonth <= 12 )
       return hb_monthsname[ iMonth - 1 ];
@@ -121,7 +121,7 @@ char * hb_cmonth( int iMonth )
 
 char * hb_cdow( int iDay )
 {
-   HB_TRACE(("hb_cdow(%d)", iDay));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdow(%d)", iDay));
 
    if( iDay >= 1 && iDay <= 7 )
       return hb_daysname[ iDay - 1 ];
@@ -134,7 +134,7 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
    BOOL bValid = FALSE;
    long lFactor = ( lMonth < 3 ) ? -1 : 0;
 
-   HB_TRACE(("hb_dateEncode(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
    /* Perform date validation */
    if( lMonth >= 1 && lMonth <= 12 && lDay >= 1
@@ -162,7 +162,7 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
 
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 {
-   HB_TRACE(("hb_dateDecode(%ld, %p, %p, %p)", julian, plDay, plMonth, plYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", julian, plDay, plMonth, plYear));
 
    if( julian > 0 )
    {
@@ -188,7 +188,7 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
 
 void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
 {
-   HB_TRACE(("hb_dateStrPut(%s, %ld, %ld, %ld)", szDate, lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%s, %ld, %ld, %ld)", szDate, lDay, lMonth, lYear));
 
    if( lDay && lMonth && lYear )
    {
@@ -209,7 +209,7 @@ void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
 
 void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear )
 {
-   HB_TRACE(("hb_dateStrGet(%s, %p, %p, %p)", szDate, plDay, plMonth, plYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, plDay, plMonth, plYear));
 
    if( szDate && strlen( szDate ) == 8 )
    {
@@ -233,7 +233,7 @@ char * hb_dateDecStr( char * szDate, long lJulian )
 {
    long lDay, lMonth, lYear;
 
-   HB_TRACE(("hb_dateDecStr(%s, %ld)", szDate, lJulian));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%s, %ld)", szDate, lJulian));
 
    hb_dateDecode( lJulian, &lDay, &lMonth, &lYear );
    hb_dateStrPut( szDate, lDay, lMonth, lYear );
@@ -246,7 +246,7 @@ long hb_dateEncStr( char * szDate )
 {
    long lDay, lMonth, lYear;
 
-   HB_TRACE(("hb_dateEncStr(%s)", szDate));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%s)", szDate));
 
    hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
 
@@ -351,7 +351,7 @@ char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDate
     */
    int format_count, digit_count, size;
 
-   HB_TRACE(("hb_dtoc(%s, %s, %s)", szDate, szFormattedDate, szDateFormat));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dtoc(%s, %s, %s)", szDate, szFormattedDate, szDateFormat));
 
    /*
     * Determine the maximum size of the formatted date string
@@ -685,7 +685,7 @@ HARBOUR HB_DATE( void )
 
 long hb_dow( long d, long m, long y )
 {
-   HB_TRACE(("hb_dow(%ld, %ld, %ld)", d, m, y));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dow(%ld, %ld, %ld)", d, m, y));
 
    if( m < 3 )
    {

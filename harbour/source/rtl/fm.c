@@ -78,7 +78,7 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
 {
    void * pMem;
 
-   HB_TRACE(("hb_xalloc(%lu)", ulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
 
    pMem = malloc( ulSize + sizeof( ULONG ) );
 
@@ -103,7 +103,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 {
    void * pMem;
 
-   HB_TRACE(("hb_xgrab(%lu)", ulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
    pMem = malloc( ulSize + sizeof( ULONG ) );
 
@@ -131,7 +131,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 #endif
    void * pResult;
 
-   HB_TRACE(("hb_xrealloc(%p, %lu)", pMem, ulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
 #ifdef HB_FM_STATISTICS
    ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
@@ -157,7 +157,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
-   HB_TRACE(("hb_xfree(%p)", pMem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
 
    if( pMem )
    {
@@ -174,19 +174,19 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 
 ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
-   HB_TRACE(("hb_xsize(%p)", pMem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
    return * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
 }
 
 void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
-   HB_TRACE(("hb_xinit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
 }
 
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
-   HB_TRACE(("hb_xexit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
 
 #ifdef HB_FM_STATISTICS
    if( s_lMemoryBlocks || hb_cmdargCheck( "INFO" ) )
@@ -221,7 +221,7 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
    ULONG  ulRemaining;
    int    iCopySize;
 
-   HB_TRACE(("hb_xmemcpy(%p, %p, %lu)", pDestArg, pSourceArg, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %lu)", pDestArg, pSourceArg, ulLen));
 
    pDest = ( BYTE * ) pDestArg;
    pSource = ( BYTE * ) pSourceArg;
@@ -253,7 +253,7 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
    ULONG  ulRemaining;
    int    iSetSize;
 
-   HB_TRACE(("hb_xmemset(%p, %d, %lu)", pDestArg, iFill, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %lu)", pDestArg, iFill, ulLen));
 
    pDest = ( BYTE * ) pDestArg;
    ulRemaining = ulLen;
@@ -283,7 +283,7 @@ ULONG hb_xquery( USHORT uiMode )
 {
    ULONG ulResult;
 
-   HB_TRACE(("hb_xquery(%hu)", uiMode));
+   HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%hu)", uiMode));
 
    /* TODO: Return the correct values instead of 9999 [vszel] */
 

@@ -81,7 +81,7 @@ HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 
 BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 {
-   HB_TRACE(("hb_strEmpty(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %lu)", szText, ulLen));
 
    while( ulLen-- )
    {
@@ -101,7 +101,7 @@ int hb_stricmp( const char * s1, const char * s2 )
    ULONG l2;
    ULONG count;
 
-   HB_TRACE(("hb_stricmp(%s, %s)", s1, s2));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stricmp(%s, %s)", s1, s2));
 
    l1 = strlen( s1 );
    l2 = strlen( s2 );
@@ -130,7 +130,7 @@ int hb_strnicmp( const char * s1, const char * s2, ULONG count )
    ULONG l1;
    ULONG l2;
 
-   HB_TRACE(("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strnicmp(%s, %s, %lu)", s1, s2, count));
 
    l1 = strlen( s1 );
    l2 = strlen( s2 );
@@ -157,7 +157,7 @@ int hb_strnicmp( const char * s1, const char * s2, ULONG count )
 
 static BOOL  hb_strMatchDOS( const char * pszString, const char * pszMask )
 {
-   HB_TRACE(("hb_strMatchDOS(%s, %s)", pszString, pszMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strMatchDOS(%s, %s)", pszString, pszMask));
 
    while( *pszMask && *pszString )
    {
@@ -205,7 +205,7 @@ static BOOL  hb_strMatchDOS( const char * pszString, const char * pszMask )
  */
 BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
 {
-   HB_TRACE(("hb_strMatchRegExp(%s, %s)", szString, szMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strMatchRegExp(%s, %s)", szString, szMask));
 
    return hb_strMatchDOS( szString, szMask );
 }
@@ -247,7 +247,7 @@ HARBOUR HB_ISLOWER( void )
 /* also returns the new length in lLen */
 char * hb_strLTrim( const char * szText, ULONG * ulLen )
 {
-   HB_TRACE(("hb_strLTrim(%s, %p)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strLTrim(%s, %p)", szText, ulLen));
 
    while( *ulLen && HB_ISSPACE( *szText ) )
    {
@@ -291,7 +291,7 @@ HARBOUR HB_LTRIM( void )
 /* returns szText and the new length in lLen */
 ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
 {
-   HB_TRACE(("hb_strRTrimLen(%s, %lu. %d)", szText, ulLen, (int) bAnySpace));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strRTrimLen(%s, %lu. %d)", szText, ulLen, (int) bAnySpace));
 
    if( bAnySpace )
    {
@@ -386,7 +386,7 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 {
    char * szText;
 
-   HB_TRACE(("hb_itemPadCond(%p, %p, %p)", pItem, buffer, pulSize));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPadCond(%p, %p, %p)", pItem, buffer, pulSize));
 
    if( pItem )
    {
@@ -562,7 +562,7 @@ HARBOUR HB_PADC( void )
 
 ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
 {
-   HB_TRACE(("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
    if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
@@ -851,7 +851,7 @@ char * hb_strLower( char * szText, ULONG ulLen )
 {
    ULONG i;
 
-   HB_TRACE(("hb_strLower(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %lu)", szText, ulLen));
 
    for( i = 0; i < ulLen; i++ )
       szText[ i ] = tolower( szText[ i ] );
@@ -894,7 +894,7 @@ void hb_strupr( char * szText )
 {
    char * p;
 
-   HB_TRACE(("hb_strupr(%s)", szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", szText));
 
    for( p = szText; *p; p++ )
       *p = toupper( *p );
@@ -905,7 +905,7 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 {
    ULONG i;
 
-   HB_TRACE(("hb_strUpper(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %lu)", szText, ulLen));
 
    for( i = 0; i < ulLen; i++ )
       szText[ i ] = toupper( szText[ i ] );
@@ -919,7 +919,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 {
    char * pStart = pDest;
 
-   HB_TRACE(("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
 
    pDest[ ulLen ] ='\0';
    while( ulLen-- )
@@ -1260,7 +1260,7 @@ HARBOUR HB_STRTRAN( void )
 /* returns the numeric value of a character string representation of a number  */
 double hb_strVal( const char * szText )
 {
-   HB_TRACE(("hb_strVal(%s)", szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_strVal(%s)", szText));
 
    return atof( szText );
 }

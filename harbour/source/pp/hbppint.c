@@ -67,7 +67,7 @@ FILE * yyppo;
 
 void Hbpp_init( void )
 {
-  HB_TRACE(("Hbpp_init()"));
+  HB_TRACE(HB_TR_DEBUG, ("Hbpp_init()"));
 
   lenBuffer = 10;
   iBuffer = 10;
@@ -82,7 +82,7 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
   int lens = 0, rdlen;
   int rezParse;
 
-  HB_TRACE(("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
+  HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
 
   HB_SYMBOL_UNUSED( handl_o );
 
@@ -158,7 +158,7 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen, iLine = 0;
 
-  HB_TRACE(("Hp_Parse(%p, %p)", handl_i, handl_o));
+  HB_TRACE(HB_TR_DEBUG, ("Hp_Parse(%p, %p)", handl_i, handl_o));
 
   while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
                              sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )

@@ -56,7 +56,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 {
    HB_CODEBLOCK_PTR pCBlock;
 
-   HB_TRACE(("hb_codeblockNew(%p, %hu, %p, %p)", pBuffer, uiLocals, pLocalPosTable, pSymbols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p)", pBuffer, uiLocals, pLocalPosTable, pSymbols));
 
    pCBlock = ( HB_CODEBLOCK_PTR ) hb_xgrab( sizeof( HB_CODEBLOCK ) );
 
@@ -163,7 +163,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
    pCBlock->pSymbols  = pSymbols;
    pCBlock->ulCounter = 1;
 
-   HB_TRACE(("codeblock created (%li) %lx", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(HB_TR_INFO, ("codeblock created (%li) %lx", pCBlock->ulCounter, pCBlock));
 
    return pCBlock;
 }
@@ -174,9 +174,9 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   HB_TRACE(("hb_codeblockDelete(%p)", pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockDelete(%p)", pItem));
 
-   HB_TRACE(("deleting a codeblock (%li) %lx", pCBlock->ulCounter, pCBlock));
+   HB_TRACE(HB_TR_INFO, ("deleting a codeblock (%li) %lx", pCBlock->ulCounter, pCBlock));
 
    if( --pCBlock->ulCounter == 0 )
    {
@@ -201,7 +201,7 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
       */
       hb_xfree( pCBlock );
 
-      HB_TRACE(("codeblock deleted (%li) %lx", pCBlock->ulCounter, pCBlock));
+      HB_TRACE(HB_TR_INFO, ("codeblock deleted (%li) %lx", pCBlock->ulCounter, pCBlock));
    }
 }
 
@@ -215,7 +215,7 @@ void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
    int iStatics = hb_stack.iStatics;
 
-   HB_TRACE(("hb_codeblockEvaluate(%p)", pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockEvaluate(%p)", pItem));
 
    hb_stack.iStatics = pItem->item.asBlock.statics;
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
@@ -228,7 +228,7 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   HB_TRACE(("hb_codeblockGetVar(%p, %ld)", pItem, iItemPos));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetVar(%p, %ld)", pItem, iItemPos));
 
    /* local variables accessed in a codeblock are always stored as reference */
    return hb_itemUnRef( pCBlock->pLocals - iItemPos );
@@ -240,7 +240,7 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   HB_TRACE(("hb_codeblockGetRef(%p, %p)", pItem, pRefer));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %p)", pItem, pRefer));
 
    return pCBlock->pLocals - pRefer->item.asRefer.value;
 }
@@ -251,10 +251,10 @@ PHB_ITEM  hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer )
  */
 void  hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE(("hb_codeblockCopy(%p, %p)", pDest, pSource));
+   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockCopy(%p, %p)", pDest, pSource));
 
    pDest->item.asBlock.value = pSource->item.asBlock.value;
    pDest->item.asBlock.value->ulCounter++;
 
-   HB_TRACE(("copied a codeblock (%li) %lx", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value));
+   HB_TRACE(HB_TR_INFO, ("copied a codeblock (%li) %lx", pSource->item.asBlock.value->ulCounter, pSource->item.asBlock.value));
 }

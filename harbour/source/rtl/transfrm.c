@@ -97,7 +97,7 @@ static USHORT PictFunc( char ** szPict, ULONG * pulPicLen )
 
    char * szPic = *szPict;
 
-   HB_TRACE(("PictFunc(%p, %p)", szPict, pulPicLen));
+   HB_TRACE(HB_TR_DEBUG, ("PictFunc(%p, %p)", szPict, pulPicLen));
 
    szPic++;
    ( *pulPicLen )--;
@@ -179,7 +179,7 @@ static char * NumPicture( char * szPic, ULONG ulPic, USHORT uiPicFlags, double d
 
    double   dPush;
 
-   HB_TRACE(("NumPicture(%s, %lu, %hu, %lf)", szPic, ulPic, uiPicFlags, dValue));
+   HB_TRACE(HB_TR_DEBUG, ("NumPicture(%s, %lu, %hu, %lf)", szPic, ulPic, uiPicFlags, dValue));
 
    szRet  = ( char * ) hb_xgrab( ulPic + 4 );   /* Grab enough              */
    *szRet = '\0';
@@ -374,7 +374,7 @@ static char * NumPicture( char * szPic, ULONG ulPic, USHORT uiPicFlags, double d
 */
 static char * DatePicture( char * szDate, USHORT uiPicFlags, char * szResult )
 {
-   HB_TRACE(("DatePicture(%s, %hu, %s)", szDate, uiPicFlags, szResult));
+   HB_TRACE(HB_TR_DEBUG, ("DatePicture(%s, %hu, %s)", szDate, uiPicFlags, szResult));
 
    if( uiPicFlags & PF_BRITISH )
       hb_dtoc( szDate, szResult, hb_set.hb_set_century ? "DD/MM/YYYY" : "DD/MM/YY" );

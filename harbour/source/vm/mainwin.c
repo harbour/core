@@ -47,7 +47,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 {
    char * argv[ 1 ];  /* TODO: parse lpCmdLine and generate the proper values */
 
-   HB_TRACE(("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
+   HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
 
    argv[ 0 ] = NULL;  /* temporary workaround */
 

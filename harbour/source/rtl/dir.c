@@ -221,7 +221,7 @@ static USHORT osToHarbourMask( USHORT usMask )
 {
    USHORT usRetMask;
 
-   HB_TRACE(("osToHarbourMask(%hu)", usMask));
+   HB_TRACE(HB_TR_DEBUG, ("osToHarbourMask(%hu)", usMask));
 
    usRetMask = usMask;
 
@@ -266,7 +266,7 @@ static USHORT HarbourToOsMask( USHORT usMask )
 {
    USHORT usRetMask = usMask;
 
-   HB_TRACE(("HarbourToOsMask(%hu)", usMask));
+   HB_TRACE(HB_TR_DEBUG, ("HarbourToOsMask(%hu)", usMask));
 
 #if defined(OS_UNIX_COMPATIBLE)
 /* TODO: Need to look into this one */
@@ -317,7 +317,7 @@ static USHORT osAttributesToMask( BYTE * byAttrib )
 {
    USHORT usRetMask = 0;
 
-   HB_TRACE(("osAttributes(%p)", byAttrib));
+   HB_TRACE(HB_TR_DEBUG, ("osAttributes(%p)", byAttrib));
 
 #if defined(OS_UNIX_COMPATIBLE)
 #else
@@ -339,7 +339,7 @@ static BYTE * osMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 {
    char * cAttrib = ( char * ) byAttrib;
 
-   HB_TRACE(("osMaskToAttributes(%hu, %p)", usMask, byAttrib));
+   HB_TRACE(HB_TR_DEBUG, ("osMaskToAttributes(%hu, %p)", usMask, byAttrib));
 
 #if defined(OS_UNIX_COMPATIBLE)
 #else
@@ -364,7 +364,7 @@ static USHORT HarbourAttributesToMask( BYTE * byAttrib )
    BYTE c;
    USHORT usMask = 0;
 
-   HB_TRACE(("HarbourAttributesToMask(%p)", byAttrib));
+   HB_TRACE(HB_TR_DEBUG, ("HarbourAttributesToMask(%p)", byAttrib));
 
    while( ( c = toupper( *pos++ ) ) != '\0' )
    {
@@ -396,7 +396,7 @@ static BYTE * HarbourMaskToAttributes( USHORT usMask, BYTE * byAttrib )
 {
    char * cAttrib = ( char * ) byAttrib;
 
-   HB_TRACE(("HarbourMaskToAttributes(%hu, %p)", usMask, byAttrib));
+   HB_TRACE(HB_TR_DEBUG, ("HarbourMaskToAttributes(%hu, %p)", usMask, byAttrib));
 
    *cAttrib = '\0';
    if( usMask & FA_RDONLY )
@@ -575,8 +575,8 @@ HARBOUR HB_DIRECTORY( void )
    if( strlen( pfname ) < 1 )
       strcpy( pfname, "*" );
 
-   HB_TRACE(("dirname: |%s|, pattern: |%s|\n", dirname, pattern));
-   HB_TRACE(("pfname: |%s|, pfext: |%s|\n", pfname, pfext));
+   HB_TRACE(HB_TR_INFO, ("dirname: |%s|, pattern: |%s|\n", dirname, pattern));
+   HB_TRACE(HB_TR_INFO, ("pfname: |%s|, pfext: |%s|\n", pfname, pfext));
 
    /* should have drive,directory in dirname and filespec in pattern */
 
@@ -620,7 +620,7 @@ HARBOUR HB_DIRECTORY( void )
 
    if( NULL == dir )
    {
-      HB_TRACE(("invalid dirname |%s|\n", dirname));
+      HB_TRACE(HB_TR_INFO, ("invalid dirname |%s|\n", dirname));
 
       hb_itemReturn( pDir );
       hb_itemRelease( pDir );
@@ -656,7 +656,7 @@ HARBOUR HB_DIRECTORY( void )
       if( !*fname )
          strcpy( fname, "*" );
 
-      HB_TRACE(("fname: |%s|, fext: |%s|\n", fname, fext));
+      HB_TRACE(HB_TR_INFO, ("fname: |%s|, fext: |%s|\n", fname, fext));
 
       if( hb_strMatchRegExp( fname, pfname ) && hb_strMatchRegExp( fext, pfext ) )
       {
@@ -742,12 +742,12 @@ HARBOUR HB_DIRECTORY( void )
             sprintf( ttime, "%02d:%02d:%02d",
                ft->tm_hour, ft->tm_min, ft->tm_sec );
 
-            HB_TRACE(("name: |%s|, date: |%s|, time: |%s|\n", filename, ddate, ttime));
+            HB_TRACE(HB_TR_INFO, ("name: |%s|, date: |%s|, time: |%s|\n", filename, ddate, ttime));
 
          }
          else
          {
-            HB_TRACE(("invalid file |%s|\n", fullfile));
+            HB_TRACE(HB_TR_INFO, ("invalid file |%s|\n", fullfile));
          }
 
          if( !( ( ( ushbMask & FA_HIDDEN ) == 0 && ( attrib & FA_HIDDEN ) > 0 ) ||
@@ -795,7 +795,7 @@ HARBOUR HB_DIRECTORY( void )
    }
 #endif
 
-   HB_TRACE(("normal return\n"));
+   HB_TRACE(HB_TR_INFO, ("normal return\n"));
 
    hb_itemReturn( pDir ); /* DIRECTORY() returns an array */
    hb_itemRelease( pDir );

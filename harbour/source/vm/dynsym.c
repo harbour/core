@@ -54,7 +54,7 @@ void hb_dynsymLog( void )
 {
    USHORT uiPos;
 
-   HB_TRACE(("hb_dynsymLog()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymLog()"));
 
    for( uiPos = 0; uiPos < s_uiDynSymbols; uiPos++ )   /* For all dynamic symbols */
       printf( "%i %s\n", uiPos + 1, s_pDynItems[ uiPos ].pDynSym->pSymbol->szName );
@@ -64,7 +64,7 @@ PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
 {
    PHB_SYMB pSymbol;
 
-   HB_TRACE(("hb_symbolNew(%s)", szName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_symbolNew(%s)", szName));
 
    pSymbol = ( PHB_SYMB ) hb_xgrab( sizeof( HB_SYMB ) );
    pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
@@ -80,7 +80,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
    PHB_DYNS pDynSym;
 
-   HB_TRACE(("hb_dynsymNew(%p)", pSymbol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymNew(%p)", pSymbol));
 
    pDynSym = hb_dynsymFind( pSymbol->szName ); /* Find position */
    if( pDynSym )            /* If name exists */
@@ -133,7 +133,7 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
    PHB_DYNS pDynSym;
    char * szUprName;
 
-   HB_TRACE(("hb_dynsymGet(%s)", szName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGet(%s)", szName));
 
    szUprName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
    strcpy( szUprName, szName ); /* make a copy as we may get a const string */
@@ -157,7 +157,7 @@ PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
    ULONG ulLen;
    char * szUprName;
 
-   HB_TRACE(("hb_dynsymFindName(%s)", szName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFindName(%s)", szName));
 
    ulLen = strlen( szName );
    szUprName = ( char * ) hb_xgrab( ulLen + 1 );
@@ -174,7 +174,7 @@ PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
 
 PHB_DYNS hb_dynsymFind( char * szName )
 {
-   HB_TRACE(("hb_dynsymFind(%s)", szName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFind(%s)", szName));
 
    if( s_pDynItems == NULL )
    {
@@ -245,7 +245,7 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
    BOOL bCont = TRUE;
    USHORT uiPos;
 
-   HB_TRACE(("hb_dynsymEval(%p, %p)", pFunction, Cargo));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymEval(%p, %p)", pFunction, Cargo));
 
    for( uiPos = 0; uiPos < s_uiDynSymbols && bCont; uiPos++ )
       bCont = ( pFunction )( s_pDynItems[ uiPos ].pDynSym, Cargo );
@@ -255,7 +255,7 @@ void hb_dynsymRelease( void )
 {
    USHORT uiPos;
 
-   HB_TRACE(("hb_dynsymRelease()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymRelease()"));
 
    for( uiPos = 0; uiPos < s_uiDynSymbols; uiPos++ )
    {

@@ -90,7 +90,7 @@ static void hb_memvarAddPrivate( PHB_DYNS );
 
 void hb_memvarsInit( void )
 {
-   HB_TRACE(("hb_memvarsInit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsInit()"));
 
    s_globalTable = ( HB_VALUE_PTR ) hb_xgrab( sizeof( HB_VALUE ) * TABLE_INITHB_VALUE );
    s_globalTableSize = TABLE_INITHB_VALUE;
@@ -107,7 +107,7 @@ void hb_memvarsRelease( void )
 {
    ULONG ulCnt = s_globalLastFree;
 
-   HB_TRACE(("hb_memvarsRelease()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsRelease()"));
 
    if( s_globalTable )
    {
@@ -158,7 +158,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    HB_VALUE_PTR pValue;
    HB_HANDLE hValue = 1;   /* handle 0 is reserved */
 
-   HB_TRACE(("hb_memvarValueNew(%p, %d)", pSource, (int) bTrueMemvar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueNew(%p, %d)", pSource, (int) bTrueMemvar));
 
    if( s_globalFreeCnt )
    {
@@ -214,7 +214,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    else
       pValue->item.type = IT_NIL;
 
-   HB_TRACE(("hb_memvarValueNew: memvar item created with handle %i", hValue));
+   HB_TRACE(HB_TR_INFO, ("hb_memvarValueNew: memvar item created with handle %i", hValue));
 
    return hValue;
 }
@@ -228,7 +228,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
  */
 static void hb_memvarAddPrivate( PHB_DYNS pDynSym )
 {
-   HB_TRACE(("hb_memvarAddPrivate(%p)", pDynSym));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarAddPrivate(%p)", pDynSym));
 
    /* Allocate the value from the end of table
     */
@@ -261,7 +261,7 @@ void hb_memvarSetPrivatesBase( ULONG ulBase )
 {
    HB_HANDLE hVar, hOldValue;
 
-   HB_TRACE(("hb_memvarSetPrivatesBase(%lu)", ulBase));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetPrivatesBase(%lu)", ulBase));
 
    while( s_privateStackCnt > s_privateStackBase )
    {
@@ -283,20 +283,20 @@ void hb_memvarSetPrivatesBase( ULONG ulBase )
  */
 void hb_memvarValueIncRef( HB_HANDLE hValue )
 {
-   HB_TRACE(("hb_memvarValueIncRef(%p)", hValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueIncRef(%p)", hValue));
 
 #if 0
    /* Debug */
    if( hValue < 1 || hValue > s_globalTableSize )
    {
-      HB_TRACE(("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
+      HB_TRACE(HB_TR_INFO, ("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
       exit( 1 );
    }
 #endif
 
    s_globalTable[ hValue ].counter++;
 
-   HB_TRACE(("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
+   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) increment refCounter=%li", hValue, s_globalTable[ hValue ].counter));
 }
 
 /*
@@ -308,19 +308,19 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
 {
    HB_VALUE_PTR pValue;
 
-   HB_TRACE(("hb_memvarValueDecRef(%p)", hValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarValueDecRef(%p)", hValue));
 
 #if 0
    if( hValue < 1 || hValue > s_globalTableSize )
    {
-      HB_TRACE(("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
+      HB_TRACE(HB_TR_INFO, ("Invalid memvar handle %i (max %li)", hValue, s_globalTableSize));
       exit( 1 );
    }
 #endif
 
    pValue = s_globalTable + hValue;
 
-   HB_TRACE(("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
+   HB_TRACE(HB_TR_INFO, ("Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1));
 
    if( pValue->counter > 0 )
    {
@@ -346,7 +346,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
          else
             ++s_globalFreeCnt;
 
-	 HB_TRACE(("Memvar item (%i) deleted", hValue));
+	 HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
       }
    }
    /* This can happen if for example PUBLIC variable holds a codeblock
@@ -357,7 +357,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
     */
 #if 0
    else
-      HB_TRACE(("Attempt to release released item"));
+      HB_TRACE(HB_TR_INFO, ("Attempt to release released item"));
 #endif
 }
 
@@ -373,12 +373,12 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
 {
    PHB_DYNS pDyn;
 
-   HB_TRACE(("hb_memvarSetValue(%p, %p)", pMemvarSymb, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarSetValue(%p, %p)", pMemvarSymb, pItem));
 
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
    {
-      HB_TRACE(("Memvar item (%i)(%s) assigned", pDyn->hMemvar, pMemvarSymb->szName));
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%i)(%s) assigned", pDyn->hMemvar, pMemvarSymb->szName));
 
       if( pDyn->hMemvar )
       {
@@ -405,12 +405,12 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    PHB_DYNS pDyn;
    ERRCODE bSuccess = FAILURE;
 
-   HB_TRACE(("hb_memvarGet(%p, %p)", pItem, pMemvarSymb));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGet(%p, %p)", pItem, pMemvarSymb));
 
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
    {
-      HB_TRACE(("Memvar item (%i)(%s) queried", pDyn->hMemvar, pMemvarSymb->szName));
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%i)(%s) queried", pDyn->hMemvar, pMemvarSymb->szName));
 
       if( pDyn->hMemvar )
       {
@@ -432,7 +432,7 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 
 void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
-   HB_TRACE(("hb_memvarGetValue(%p, %p)", pItem, pMemvarSymb));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetValue(%p, %p)", pItem, pMemvarSymb));
 
    if( hb_memvarGet( pItem, pMemvarSymb ) == FAILURE )
    {
@@ -462,12 +462,12 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
 
-   HB_TRACE(("hb_memvarGetRefer(%p, %p)", pItem, pMemvarSymb));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetRefer(%p, %p)", pItem, pMemvarSymb));
 
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
    {
-      HB_TRACE(("Memvar item (%i)(%s) referenced", pDyn->hMemvar, pMemvarSymb->szName));
+      HB_TRACE(HB_TR_INFO, ("Memvar item (%i)(%s) referenced", pDyn->hMemvar, pMemvarSymb->szName));
 
       if( pDyn->hMemvar )
       {
@@ -517,7 +517,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
  */
 void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
-   HB_TRACE(("hb_memvarNewParameter(%p, %p)", pSymbol, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarNewParameter(%p, %p)", pSymbol, pValue));
 
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_MV_PRIVATE, pValue );
 }
@@ -540,7 +540,7 @@ static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
 {
    PHB_DYNS pDynVar;
 
-   HB_TRACE(("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, bScope, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, bScope, pValue));
 
    /* find dynamic symbol or creeate one */
    if( IS_SYMBOL( pMemvar ) )
@@ -556,7 +556,7 @@ static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
 {
-   HB_TRACE(("hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, bScope, pValue));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, bScope, pValue));
 
    if( bScope & VS_PUBLIC )
    {
@@ -607,7 +607,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
  */
 static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 {
-   HB_TRACE(("hb_memvarRelease(%p)", pMemvar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarRelease(%p)", pMemvar));
 
    if( IS_STRING( pMemvar ) )
    {
@@ -651,7 +651,7 @@ static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
    ULONG ulBase = s_privateStackCnt;
    PHB_DYNS pDynVar;
 
-   HB_TRACE(("hb_memvarReleaseWithMask(%s, %d)", szMask, (int) bInclude));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarReleaseWithMask(%s, %d)", szMask, (int) bInclude));
 
    while( ulBase > s_privateStackBase )
    {
@@ -677,7 +677,7 @@ static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
  */
 static int hb_memvarScopeGet( PHB_DYNS pDynVar )
 {
-   HB_TRACE(("hb_memvarScopeGet(%p)", pDynVar));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarScopeGet(%p)", pDynVar));
 
    if( pDynVar->hMemvar == 0 )
       return HB_MV_UNKNOWN;
@@ -709,7 +709,7 @@ static int hb_memvarScope( char * szVarName, ULONG ulLength )
    int iMemvar = HB_MV_ERROR;
    char * szName;
 
-   HB_TRACE(("hb_memvarScope(%s, %lu)", szVarName, ulLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarScope(%s, %lu)", szVarName, ulLength));
 
    szName = ( char * ) hb_xalloc( ulLength );
    if( szName )
@@ -759,7 +759,7 @@ static HB_DYNS_FUNC( hb_memvarCountPublics )
  */
 static int hb_memvarCount( int iScope )
 {
-   HB_TRACE(("hb_memvarCount(%d)", iScope));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarCount(%d)", iScope));
 
    if( iScope == HB_MV_PUBLIC )
    {
@@ -803,7 +803,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
    HB_ITEM_PTR pValue = NULL;
    *pszName = NULL;
 
-   HB_TRACE(("hb_memvarDebugVariable(%d, %d, %p)", iScope, iPos, pszName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarDebugVariable(%d, %d, %p)", iScope, iPos, pszName));
 
    if( iPos > 0 )
    {
@@ -843,7 +843,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
 {
    HB_DYNS_PTR pDynSym = NULL;
 
-   HB_TRACE(("hb_memvarFindSymbol(%p)", pName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarFindSymbol(%p)", pName));
 
    if( pName )
    {

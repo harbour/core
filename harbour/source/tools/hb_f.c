@@ -125,7 +125,7 @@ static long hb_hbfskip( int recs )
    long x, y;
 
 
-   HB_TRACE(("hb_hbskip(%d)", recs));
+   HB_TRACE(HB_TR_DEBUG, ("hb_hbskip(%d)", recs));
 
    if ( recs > 0 ) {
       for (y = 0; y < recs; y++ ) {

@@ -100,21 +100,21 @@ static int s_iOldCtrlBreak = 0;
 
 static int hb_gt_CtrlBrkHandler( void )
 {
-   HB_TRACE(("hb_gt_CtrlBrkHandler()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_CtrlBrkHandler()"));
    hb_gtBreak = TRUE;
    return 1;
 }
 
 static void hb_gt_CtrlBrkRestore( void )
 {
-   HB_TRACE(("hb_gt_CtrlBrkRestore()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_CtrlBrkRestore()"));
    setcbrk( s_iOldCtrlBreak );
 }
 #endif
 
 void hb_gt_Init( void )
 {
-   HB_TRACE(("hb_gt_Init()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
 #ifdef __DJGPP__
    gppconio_init();
@@ -138,12 +138,12 @@ void hb_gt_Init( void )
 
 void hb_gt_Done( void )
 {
-   HB_TRACE(("hb_gt_Done()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 }
 
 BOOL hb_gt_IsColor( void )
 {
-   HB_TRACE(("hb_gt_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_IsColor()"));
 
    return hb_gt_GetScreenMode() != 7;
 }
@@ -153,7 +153,7 @@ static char FAR * hb_gt_ScreenAddress()
 {
    char FAR * ptr;
 
-   HB_TRACE(("hb_gt_ScreenAddress()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ScreenAddress()"));
 
    #if defined(__WATCOMC__) && defined(__386__)
       if( hb_gt_IsColor() )
@@ -182,7 +182,7 @@ static char FAR * hb_gt_ScreenAddress()
 #ifndef __DJGPP__
 char FAR * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
 {
-   HB_TRACE(("hb_gt_ScreenPtr(%hu, %hu)", cRow, cCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ScreenPtr(%hu, %hu)", cRow, cCol));
 
    return scrnPtr + ( cRow * hb_gt_GetScreenWidth() * 2 ) + ( cCol * 2 );
 }
@@ -190,7 +190,7 @@ char FAR * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
 
 static char hb_gt_GetScreenMode( void )
 {
-   HB_TRACE(("hb_gt_GetScreenMode()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenMode()"));
 
 #if defined(__WATCOMC__) && defined(__386__)
    return *( ( char * ) 0x0449 );
@@ -203,7 +203,7 @@ static char hb_gt_GetScreenMode( void )
 
 USHORT hb_gt_GetScreenWidth( void )
 {
-   HB_TRACE(("hb_gt_GetScreenWidth()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenWidth()"));
 
 #if defined(__WATCOMC__) && defined(__386__)
    return ( USHORT ) *( ( char * ) 0x044A );
@@ -216,7 +216,7 @@ USHORT hb_gt_GetScreenWidth( void )
 
 USHORT hb_gt_GetScreenHeight( void )
 {
-   HB_TRACE(("hb_gt_GetScreenHeigth()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetScreenHeigth()"));
 
 #if defined(__WATCOMC__) && defined(__386__)
    return ( USHORT ) ( char ) ( *( ( char * ) 0x0484 ) + 1 );
@@ -229,7 +229,7 @@ USHORT hb_gt_GetScreenHeight( void )
 
 void hb_gt_SetPos( USHORT usRow, USHORT usCol )
 {
-   HB_TRACE(("hb_gt_SetPos(%hu, %hu)", usRow, usCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetPos(%hu, %hu)", usRow, usCol));
 
 #if defined(__TURBOC__)
    {
@@ -261,7 +261,7 @@ void hb_gt_SetPos( USHORT usRow, USHORT usCol )
 
 static void hb_gt_SetCursorSize( char start, char end )
 {
-   HB_TRACE(("hb_gt_SetCursorSize(%d, %d)", (int) start, (int) end));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorSize(%d, %d)", (int) start, (int) end));
 
 #if defined(__TURBOC__)
    {
@@ -287,7 +287,7 @@ static void hb_gt_SetCursorSize( char start, char end )
 
 static void hb_gt_GetCursorSize( char * start, char *end )
 {
-   HB_TRACE(("hb_gt_GetCursorSize(%p, %p)", start, end));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorSize(%p, %p)", start, end));
 
 #if defined(__TURBOC__)
    {
@@ -318,7 +318,7 @@ USHORT hb_gt_GetCursorStyle( void )
    char start, end;
    int rc;
 
-   HB_TRACE(("hb_gt_GetCursorStyle()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
 
    hb_gt_GetCursorSize( &start, &end );
 
@@ -345,7 +345,7 @@ USHORT hb_gt_GetCursorStyle( void )
 
 void hb_gt_SetCursorStyle( USHORT style )
 {
-   HB_TRACE(("hb_gt_SetCursorStyle(%hu)", style));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetCursorStyle(%hu)", style));
 
    switch( style )
    {
@@ -376,7 +376,7 @@ void hb_gt_SetCursorStyle( USHORT style )
 
 static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
 {
-   HB_TRACE(("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
 
 #ifdef __DJGPP__
    {
@@ -397,7 +397,7 @@ static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
  
 void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 {
-   HB_TRACE(("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
 
 #ifdef __DJGPP__
    {
@@ -417,7 +417,7 @@ void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
 
 void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
 {
-   HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu", cRow, cCol, (int) attr, str, len));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu", cRow, cCol, (int) attr, str, len));
 
 #ifdef __DJGPP__
    {
@@ -476,7 +476,7 @@ void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
 
 void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE * dest )
 {
-   HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, dest));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, dest));
 
 #ifdef __DJGPP__
    {
@@ -500,7 +500,7 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 
 void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE * srce )
 {
-   HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, srce));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, srce));
 
 #ifdef __DJGPP__
    {
@@ -526,7 +526,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 {
    USHORT x, y;
 
-   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d", usTop, usLeft, usBottom, usRight, (int) attr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d", usTop, usLeft, usBottom, usRight, (int) attr));
 
    for( y = usTop; y <= usBottom; y++ )
    {
@@ -543,7 +543,7 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
 
 USHORT hb_gt_Col( void )
 {
-   HB_TRACE(("hb_gt_Col()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Col()"));
 
 #if defined(__TURBOC__)
    {
@@ -569,7 +569,7 @@ USHORT hb_gt_Col( void )
 
 USHORT hb_gt_Row( void )
 {
-   HB_TRACE(("hb_gt_Row()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Row()"));
 
 #if defined(__TURBOC__)
    {
@@ -602,7 +602,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
    int iLength = ( usRight - usLeft ) + 1;
    int iCount, iColOld, iColNew, iColSize;
 
-   HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRight, (int) attr, sVert, sHoriz));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRight, (int) attr, sVert, sHoriz));
 
    hb_gtGetPos( &usRow, &usCol );
 
@@ -655,7 +655,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 
 void hb_gt_DispBegin( void )
 {
-   HB_TRACE(("hb_gt_DispBegin()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
 /* ptucker */
 #ifndef __DJGPP__
@@ -677,7 +677,7 @@ void hb_gt_DispBegin( void )
 
 void hb_gt_DispEnd( void )
 {
-   HB_TRACE(("hb_gt_DispEnd()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
 /* ptucker */
 #ifndef __DJGPP__
@@ -698,7 +698,7 @@ void hb_gt_DispEnd( void )
 
 BOOL hb_gt_SetMode( USHORT usRows, USHORT usCols )
 {
-   HB_TRACE(("hb_gt_SetMode(%hu, %hu)", usRows, usCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", usRows, usCols));
 
    /* TODO: Implement this function. */
 
@@ -710,7 +710,7 @@ BOOL hb_gt_SetMode( USHORT usRows, USHORT usCols )
 
 void hb_gt_Replicate( BYTE c, ULONG nLength )
 {
-   HB_TRACE(("hb_gt_Replicate(%d, %lu)", (int) c, nLength));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%d, %lu)", (int) c, nLength));
 
    c = ' ';
    nLength = 0;
@@ -718,7 +718,7 @@ void hb_gt_Replicate( BYTE c, ULONG nLength )
 
 BOOL hb_gt_GetBlink()
 {
-   HB_TRACE(("hb_gt_GetBlink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetBlink()"));
 
 #if defined(__WATCOMC__) && defined(__386__)
    return *( ( char * ) 0x0465 ) & 0x10;
@@ -731,7 +731,7 @@ BOOL hb_gt_GetBlink()
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-   HB_TRACE(("hb_gt_SetBlink(%d)", (int) bBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetBlink(%d)", (int) bBlink));
 
 #if defined(__TURBOC__)
    {

@@ -42,7 +42,7 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 {
    USHORT uiValue;
 
-   HB_TRACE(("hb_SecToTimeStr(%s, %lu)", pszTime, ulTime));
+   HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%s, %lu)", pszTime, ulTime));
 
    uiValue = ( ulTime / 3600 ) % 24;
    pszTime[ 0 ] = ( char ) ( uiValue / 10 ) + '0';
@@ -65,7 +65,7 @@ static ULONG hb_TimeStrToSec( char * pszTime )
    ULONG ulLen;
    ULONG ulTime = 0;
 
-   HB_TRACE(("hb_TimeStrToSec(%s)", pszTime));
+   HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
 
    ulLen = strlen( pszTime );
 

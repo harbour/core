@@ -45,7 +45,7 @@ static int hb__daysinmonth[ 12 ] =
 
 int hb_isleapyear( long lYear )
 {
-   HB_TRACE(("hb_isleapyear(%ld)", lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_isleapyear(%ld)", lYear));
 
    return (( lYear % 4 == 0 && lYear % 100 != 0 ) || lYear % 400 == 0 )?1:0;
 }
@@ -54,7 +54,7 @@ long hb_daysinmonth( long lMonth, long lYear )
 {
    int i;
 
-   HB_TRACE(("hb_daysinmonth(%ld, %ld)", lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%ld, %ld)", lMonth, lYear));
 
    i = hb_isleapyear( lYear );
    if( lMonth > 0 && lMonth < 13 )
@@ -68,7 +68,7 @@ long hb_doy( long lDay, long lMonth, long lYear )
    int i;
    int iDoy = 0;
 
-   HB_TRACE(("hb_doy(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_doy(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
    for( i = 1; i < lMonth; i++ )
       iDoy += hb_daysinmonth( i, lYear );
@@ -81,7 +81,7 @@ long hb_wom( long lDay, long lMonth, long lYear )
 {
    int iWom;
 
-   HB_TRACE(("hb_wom(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_wom(%ld, %ld, %ld)", lDay, lMonth, lYear));
 
    iWom = lDay + hb_dow( 1, lMonth, lYear) - 1;
    if( iWom > 0 )
@@ -94,7 +94,7 @@ long hb_woy( long lDay, long lMonth, long lYear, BOOL bISO )
 {
    int iWeek, n;
 
-   HB_TRACE(("hb_woy(%ld, %ld, %ld, %d)", lDay, lMonth, lYear, (int) bISO));
+   HB_TRACE(HB_TR_DEBUG, ("hb_woy(%ld, %ld, %ld, %d)", lDay, lMonth, lYear, (int) bISO));
 
    lDay = hb_doy( lDay, lMonth, lYear );
    n = ( ( ( 1 - (bISO ? 1 : 0) ) % 7 ) ) - 1;

@@ -155,7 +155,7 @@ void hb_tone( double dFrequency, double dDuration )
    dDuration = -1.0; /* Exit without delay */
 #endif
 
-   HB_TRACE(("hb_tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_tone(%lf, %lf)", dFrequency, dDuration));
 
 #if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(__MINGW32__)
    dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
