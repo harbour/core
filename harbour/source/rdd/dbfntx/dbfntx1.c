@@ -2638,7 +2638,9 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    }
    pIndex = hb_ntxIndexNew( pArea );
 
-   uiFlags =  pArea->fReadonly  ? FO_READ : FO_READWRITE;
+   /* Index file could be opened with FO_READ only in exclusive readonly mode
+      to allow locking in other modes  */
+   uiFlags =  !pArea->fShared && pArea->fReadonly  ? FO_READ : FO_READWRITE;
    uiFlags |= pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
 
    do
