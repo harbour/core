@@ -1,3 +1,28 @@
+20000322-22:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+    *doc/compiler.txt
+     doc/gnulice.txt
+     doc/harbext.txt
+        *Small Changes
+     *doc/en/binnum.txt
+      doc/en/command.txt
+      doc/en/dir.txt
+      doc/en/diskspac.txt
+      doc/en/dir.txt
+      doc/en/terminal.txt
+      doc/en/treport.txt
+      doc/en/tlable.txt
+      doc/en/readme.txt
+      doc/en/license.txt
+      doc/en/tgetlist.txt
+      doc/en/error.txt
+        *Small changes
+    *utils/hbdoc/genng.prg
+     utils/hbdoc/genos2.prg
+     utils/hbdoc/genrtf.prg
+        !fix code when a Return or Argument is only one line , to add the
+         propery tags to enhace the first word
+
+
 20000322-19:35 EST Paul Tucker <ptucker@sympatico.ca>
    * include/fileio.ch
    * source/rtl/diskspac.c

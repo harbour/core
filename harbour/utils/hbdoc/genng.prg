@@ -1,3 +1,4 @@
+
 /*
  * $Id$
  */
@@ -38,7 +39,7 @@
 #include "fileio.ch"
 #include "inkey.ch"
 #include 'common.ch'
-#include 'hbdoc.ch'
+#include 'hbdocdef.ch'
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -450,7 +451,7 @@ FUNCTION ProcessiNg()
                   ENDIF
 
 
-                  nMode     := D_NORMAL
+                  nMode     := D_EXAMPLE
                   lAddBlank := .T.
                                     lPar:=.t.
                ELSEIF AT( cStatus, cBuffer ) > 0
@@ -922,38 +923,46 @@ Return Nil
 FUNCTION  ProcNGDesc(cBuffer,oNgi,cStyle)
 local cLine:=''
 Local npos,CurPos:=0
-LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,nIdentLevel
+LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,nIdentLevel,cOline
 LOCAL lEndPar:= .F.
 
 LOCAL lEndFixed:=.F.
 LOCAL lEndTable:=.F.
 Default cStyle to "Default"
+if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
+    cBuffer:='<par>'+cBuffer
+endif
 
-
+if empty(cBuffer)
+oNgi:WritePar("")
+endif
 
 if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=0
    if AT("<par>",cBuffer)>=0 .or. AT("</par>",cBuffer)=0   .and. !empty(cbuffer) 
       If AT("<par>",cBuffer)>0 .and. AT("</par>",cBuffer)>0
-      
          if cStyle=="Arguments"
-            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
-//            ? cBuffer
-         if at(") ",cBuffer)>0
-            cBuffer:= strtran(cBuffer,") ",")</b>")
-         elseif at("> ",cBuffer)>0
-            cBuffer:= strtran(cBuffer,"> ","></b>")
-         endif
-         endif
- 
+
+            creturn:=cBuffer
+
+            cReturn:=STRTRAN(cReturn,"<par>","")
+            cReturn:=STRTRAN(cReturn,"</par>","")
+            cReturn:=alltrim(cReturn)
+            nPos:=AT(" ",cReturn)
+            cOLine:=left(cReturn,nPos-1)
+            cReturn:=STRTRAN(cReturn,coLine,"")
+            cReturn:=STRTRAN(cReturn,">","></b>  ")         
+            cReturn:=STRTRAN(cReturn," <","<b> <")
+
+        //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
+      creturn:='       <par><b>'+cOLine+'</b> '+creturn+'    </par>'
+      cbuffer:=cReturn
+      endif
       else
       cBuffer:=FormatngBuff(cBuffer,cStyle,ongi)
       endif
 endif
 endif
 
-if empty(cBuffer)
-oNgi:WritePar("")
-endif
 
 If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
       cBuffer:=Strtran(cBuffer,'<par>','')
@@ -1120,7 +1129,10 @@ Elseif cStyle=="Default"
       Enddo
 endif
 endif
-If AT('<fixed>',cBuffer)>0
+If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
+         if at('<fixed>',cBuffer)=0
+            oNgi:WritePar(cBuffer)
+         endif                
     do while !lendFixed
                 cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
         if at("</fixed>",cLine)>0

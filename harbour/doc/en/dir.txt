@@ -23,24 +23,24 @@
  *  $SYNTAX$
  *      __Dir( [<cFileMask>] ) --> NIL
  *  $ARGUMENTS$
- *      <par><cFileMask> File mask to include in the function return. It could
+ *      <cFileMask> File mask to include in the function return. It could
  *      contain path and standard wildcard characters as supported by your
  *      OS (like * and ?). If <cFileMask> contain no path, then SET DEFAULT
  *      path is used to display files in the mask.   </par>
  *  $RETURNS$
- *      <par>__Dir() always returns NIL.   </par>
+ *      __Dir() always returns NIL.   </par>
  *  $DESCRIPTION$
- *      <par>If no <cFileMask> is given, __Dir() display information about all
+ *      If no <cFileMask> is given, __Dir() display information about all
  *      *.dbf in the SET DEFAULT path, this information contain: file name,
  *      number of records, last update date and the size of each file.   </par>
  *
- *      <par>If <cFileMask> is given, __Dir() list all files that match the mask
+ *      If <cFileMask> is given, __Dir() list all files that match the mask
  *      with the following details: Name, Extension, Size, Date.   </par>
  *
- *      <par>DIR command is preprocessed into __Dir() function during compile
+ *      DIR command is preprocessed into __Dir() function during compile
  *      time.   </par>
  *
- *      <par>__Dir() is a compatibility function, it is superseded by DIRECTORY()
+ *      __Dir() is a compatibility function, it is superseded by DIRECTORY()
  *      which return all the information in a multidimensional array.   </par>
  *  $EXAMPLES$
     <fixed>
@@ -58,10 +58,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>DBF information: CA-Clipper display 8.3 file names, Harbour display
+ *      DBF information: CA-Clipper display 8.3 file names, Harbour display
  *      the first 15 characters of a long file name if available.   </par>
  *
- *      <par>File listing: To format file names displayed we use something like:
+ *      File listing: To format file names displayed we use something like:
  *      PadR( Name, 8 ) + " " + PadR( Ext, 3 )
  *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.   </par>
@@ -80,22 +80,22 @@
  *  $SYNTAX$
  *      DIR [<cFileMask>]
  *  $ARGUMENTS$
- *      <par><cFileMask> File mask to include in the function return. It could
+ *      <cFileMask> File mask to include in the function return. It could
  *      contain path and standard wildcard characters as supported by your
  *      OS (like * and ?). If <cFileMask> contain no path, then SET DEFAULT
  *      path is used to display files in the mask.   </par>
  *  $DESCRIPTION$
- *      <par>If no <cFileMask> is given, __Dir() display information about all
+ *      If no <cFileMask> is given, __Dir() display information about all
  *      *.dbf in the SET DEFAULT path, this information contain: file name,
  *      number of records, last update date and the size of each file.   </par>
  *
- *      <par>If <cFileMask> is given, __Dir() list all files that match the mask
+ *      If <cFileMask> is given, __Dir() list all files that match the mask
  *      with the following details: Name, Extension, Size, Date.   </par>
  *
- *      <par>DIR command is preprocessed into __Dir() function during compile
+ *      DIR command is preprocessed into __Dir() function during compile
  *      time.   </par>
  *
- *      <par>__Dir() is a compatibility function, it is superseded by DIRECTORY()
+ *      __Dir() is a compatibility function, it is superseded by DIRECTORY()
  *      which return all the information in a multidimensional array.   </par>
  *  $EXAMPLES$
     <fixed>
@@ -113,10 +113,10 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>DBF information: CA-Clipper display 8.3 file names, Harbour display
+ *      DBF information: CA-Clipper display 8.3 file names, Harbour display
  *      the first 15 characters of a long file name if available.   </par>
  *
- *      <par>File listing: To format file names displayed we use something like:
+ *      File listing: To format file names displayed we use something like:
  *      PadR( Name, 8 ) + " " + PadR( Ext, 3 )
  *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.   </par>
@@ -136,44 +136,44 @@
  *      ADIR( [<cFileMask>], [<aName>], [<aSize>], [<aDate>],
  *            [<aTime>], [<aAttr>] ) -> nDirEnries
  *  $ARGUMENTS$
- *      <par><cFileMask> File mask to include in the function return. It could
+ *      <cFileMask> File mask to include in the function return. It could
  *      contain path and standard wildcard characters as supported by your
  *      OS (like * and ?). If you omit <cFileMask> or if <cFileMask> contain
  *      no path, then the path from SET DEFAULT is used.   </par>
  *
- *      <par><aName> Array to fill with file name of files that meet <cFileMask>.
+ *      <aName> Array to fill with file name of files that meet <cFileMask>.
  *      Each element is a Character string and include the file name and
  *      extension without the path. The name is the long file name as
  *      reported by the OS and not necessarily the 8.3 uppercase name.   </par>
  *
- *      <par><aSize> Array to fill with file size of files that meet <cFileMask>.
+ *      <aSize> Array to fill with file size of files that meet <cFileMask>.
  *      Each element is a Numeric integer and include the file size in Bytes.
  *      Directories are always zero in size.   </par>
  *
- *      <par><aDate> Array to fill with file last modification date of files that
+ *      <aDate> Array to fill with file last modification date of files that
  *      meet <cFileMask>. Each element is of type Date.   </par>
  *
- *      <par><aTime> Array to fill with file last modification time of files that
+ *      <aTime> Array to fill with file last modification time of files that
  *      meet <cFileMask>. Each element is a Character string in the format
  *      HH:mm:ss.   </par>
  *
- *      <par><aAttr> Array to fill with attribute of files that meet <cFileMask>.
+ *      <aAttr> Array to fill with attribute of files that meet <cFileMask>.
  *      Each element is a Character string, see DIRECTORY() for information
  *      about attribute values. If you pass array to <aAttr>, the function
  *      is going to return files with normal, hidden, system and directory
  *      attributes. If <aAttr> is not specified or with type other than
  *      Array, only files with normal attribute would return.   </par>
  *  $RETURNS$
- *      <par>ADIR() return the number of file entries that meet <cFileMask>   </par>
+ *      ADIR() return the number of file entries that meet <cFileMask>   </par>
  *  $DESCRIPTION$
- *      <par>ADIR() return the number of files and/or directories that match
+ *      ADIR() return the number of files and/or directories that match
  *      a specified skeleton, it also fill a series of given arrays with
  *      the name, size, date, time and attribute of those files. The passed
  *      arrays should pre-initialized to the proper size, see example below.
  *      In order to include hidden, system or directories <aAttr> must be
  *      specified.   </par>
  *
- *      <par>ADIR() is a compatibility function, it is superseded by DIRECTORY()
+ *      ADIR() is a compatibility function, it is superseded by DIRECTORY()
  *      which return all the information in a multidimensional array.   </par>
  *  $EXAMPLES$
     <fixed>
@@ -195,7 +195,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *      <par><aName> is going to be fill with long file name and not necessarily
+ *      <aName> is going to be fill with long file name and not necessarily
  *      the 8.3 uppercase name.   </par>
  *  $SEEALSO$
  *      ARRAY(),DIRECTORY(),SET DEFAULT

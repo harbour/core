@@ -1,3 +1,4 @@
+
 /*
  * $Id$
  */
@@ -40,7 +41,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include 'hbdoc.ch'
+#include 'hbdocdef.ch'
 #include 'common.ch'
 //  output lines on the screen
 
@@ -470,7 +471,7 @@ FUNCTION ProcessRtf()
                   ENDIF
 
                   
-                  nMode     := D_NORMAL
+                  nMode     := D_EXAMPLE
                   lAddBlank := .T.
                   lPar:= .T.
                ELSEIF AT( cStatus, cBuffer ) > 0
@@ -764,26 +765,42 @@ RETURN nil
 FUNCTION  ProcRTFDesc(cBuffer,oRtf,cStyle)
 LOCAL cLine:=''
 LOCAL npos,CurPos:=0
-LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,NIDENTLEVEL
+LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,NIDENTLEVEL,coline
 LOCAL lEndPar:= .F.
 
 LOCAL lEndFixed:=.F.
 LOCAL lEndTable:=.F.
 default cStyle to "Default"
+if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
+    cBuffer:='<par>'+cBuffer
+endif
+
+if empty(cBuffer)
+oRtf:WritePar("")
+endif
+
 
 if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=0
    if AT("<par>",cBuffer)>=0 .or. AT("</par>",cBuffer)=0   .and. !empty(cbuffer) 
       If AT("<par>",cBuffer)>0 .and. AT("</par>",cBuffer)>0
       
          if cStyle=="Arguments"
-            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
-//            ? cBuffer
-         if at(") ",cBuffer)>0
-            cBuffer:= strtran(cBuffer,") ",")</b>")
-         elseif at("> ",cBuffer)>0
-            cBuffer:= strtran(cBuffer,"> ","></b>")
-         endif
-         endif
+
+            creturn:=cBuffer
+
+            cReturn:=STRTRAN(cReturn,"<par>","")
+            cReturn:=STRTRAN(cReturn,"</par>","")
+            cReturn:=alltrim(cReturn)
+            nPos:=AT(" ",cReturn)
+            cOLine:=left(cReturn,nPos-1)
+            cReturn:=STRTRAN(cReturn,coLine,"")
+            cReturn:=STRTRAN(cReturn,">","></b>  ")         
+            cReturn:=STRTRAN(cReturn," <","<b> <")
+
+        //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
+      creturn:='       <par><b>'+cOLine+'</b> '+creturn+'    </par>'
+      cbuffer:=cReturn
+      endif
  
       else
       cBuffer:=FormatrtfBuff(cBuffer,cStyle,ortf)
@@ -848,7 +865,10 @@ Elseif cStyle=="Default"
 
 endif
 endif
-If AT('<fixed>',cBuffer)>0
+If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
+         if at('<fixed>',cBuffer)=0
+            ortf:WritePar(cBuffer)
+         endif                
     do while !lendFixed
                 cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
         if at("</fixed>",cBuffer)>0
@@ -871,9 +891,6 @@ if AT('<table>',cBuffer)>0
     if lEndTable
       GenrtfTable(oRtf)
     endif
-endif
-if empty(cBuffer)
-oRtf:WritePar("")
 endif
 
 //      If cStyle=="Description" .or. cStyle=="Compliance"
@@ -1031,7 +1048,7 @@ LOCAL nPos,nPosEnd
       IF nPos>0
          cBuffend:=Substr(cReturn,nPos+3)
          cReturn:=SubStr(cReturn,1,nPos+3)
-         cReturn:=cReturn+'<color:navy>'+cBuffend+' </color>'
+         cReturn:=cReturn+'<b><color:navy>'+cBuffend+' </color></b>'
          cReturn:='<par>'+cReturn+' </par>'
     ELSE
          cReturn:='<par>'+cReturn+' </par>'

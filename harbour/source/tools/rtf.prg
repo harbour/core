@@ -155,9 +155,9 @@ METHOD WriteParBold( cPar,lCenter ) class TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
    if lCenter
-       FWRITE( Self:nHandle, '\par \pard\qc\cf1\f8\fs30\i\b\fi-710\li710 ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
+       FWRITE( Self:nHandle, '\par \pard\qc\cf1\f5\fs30\i\b\fi-710\li710 ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
    else
-       FWRITE( Self:nHandle, '\par \pard\cf1\f8\fs30\i\b\fi-710\li710 ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
+       FWRITE( Self:nHandle, '\par \pard\cf1\f5\fs30\i\b\fi-710\li710 ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
    Endif
 RETURN Self
 

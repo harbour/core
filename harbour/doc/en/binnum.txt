@@ -24,25 +24,25 @@
  *  $SYNTAX$
  *      BIN2W( <cBuffer> ) --> nNumber
  *  $ARGUMENTS$
- *      <par><cBuffer> is a character string that contain 16 bit encoded unsigned
+ *      <cBuffer> is a character string that contain 16 bit encoded unsigned
  *      short integer (least significant byte first). The first two bytes
  *      are taken into account, the rest if any are ignored.  </par>
  *  $RETURNS$
- *      <par>BIN2W() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
+ *      BIN2W() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
  *  $DESCRIPTION$
- *      <par>BIN2W() is one of the low level binary conversion functions, those
+ *      BIN2W() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. BIN2W() take two bytes of encoded
  *      16 bit unsigned short integer and convert it into standard Harbour
  *      numeric value.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>BIN2W() is the opposite of W2BIN()  </par>
+ *      BIN2W() is the opposite of W2BIN()  </par>
  *  $EXAMPLES$
    <fixed>
  *      // Show header length of a DBF
@@ -62,9 +62,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>BIN2W() works exactly like CA-Clipper's BIN2W()  </par>
+ *      BIN2W() works exactly like CA-Clipper's BIN2W()  </par>
  *  $SEEALSO$
- *      <par>BIN2I(),BIN2L(),BIN2U(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+ *      BIN2I(),BIN2L(),BIN2U(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
  */
 
@@ -78,25 +78,25 @@
  *  $SYNTAX$
  *      BIN2I( <cBuffer> ) --> nNumber
  *  $ARGUMENTS$
- *      <par><cBuffer> is a character string that contain 16 bit encoded signed
+ *      <cBuffer> is a character string that contain 16 bit encoded signed
  *      short integer (least significant byte first). The first two bytes
  *      are taken into account, the rest if any are ignored.  </par>
  *  $RETURNS$
- *      <par>BIN2I() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
+ *      BIN2I() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
  *  $DESCRIPTION$
- *      <par>BIN2I() is one of the low level binary conversion functions, those
+ *      BIN2I() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. BIN2I() take two bytes of encoded
  *      16 bit signed short integer and convert it into standard Harbour
  *      numeric value.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>BIN2I() is the opposite of I2BIN()  </par>
+ *      BIN2I() is the opposite of I2BIN()  </par>
  *  $EXAMPLES$
    <fixed>
  *      // Show DBF last update date
@@ -119,7 +119,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>BIN2I() works exactly like CA-Clipper's BIN2I()  </par>
+ *      BIN2I() works exactly like CA-Clipper's BIN2I()  </par>
  *  $SEEALSO$
  *      BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
@@ -133,27 +133,27 @@
  *  $ONELINER$
  *      Convert signed long encoded bytes into Harbour numeric
  *  $SYNTAX$
- *      <par>BIN2L( <cBuffer> ) --> nNumber
+ *      BIN2L( <cBuffer> ) --> nNumber
  *  $ARGUMENTS$
- *      <par><cBuffer> is a character string that contain 32 bit encoded signed
+ *      <cBuffer> is a character string that contain 32 bit encoded signed
  *      long integer (least significant byte first). The first four bytes
  *      are taken into account, the rest if any are ignored.  </par>
  *  $RETURNS$
- *      <par>BIN2L() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
+ *      BIN2L() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
  *  $DESCRIPTION$
- *      <par>BIN2L() is one of the low level binary conversion functions, those
+ *      BIN2L() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. BIN2L() take four bytes of encoded
  *      32 bit signed long integer and convert it into standard Harbour
  *      numeric value.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>BIN2L() is the opposite of L2BIN()  </par>
+ *      BIN2L() is the opposite of L2BIN()  </par>
  *  $EXAMPLES$
    <fixed>
  *      // Show number of records in DBF
@@ -173,7 +173,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>BIN2L() works exactly like CA-Clipper's BIN2L()  </par>
+ *      BIN2L() works exactly like CA-Clipper's BIN2L()  </par>
  *  $SEEALSO$
  *      BIN2I(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
  *  $END$
@@ -189,25 +189,25 @@
  *  $SYNTAX$
  *      BIN2U( <cBuffer> ) --> nNumber
  *  $ARGUMENTS$
- *      <par><cBuffer> is a character string that contain 32 bit encoded unsigned
+ *      <cBuffer> is a character string that contain 32 bit encoded unsigned
  *      long integer (least significant byte first). The first four bytes
  *      are taken into account, the rest if any are ignored.  </par>
  *  $RETURNS$
- *      <par>BIN2U() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
+ *      BIN2U() return numeric integer (or 0 if <cBuffer> is not a string).  </par>
  *  $DESCRIPTION$
- *      <par>BIN2U() is one of the low level binary conversion functions, those
+ *      BIN2U() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. BIN2U() take four bytes of encoded
  *      32 bit unsigned long integer and convert it into standard Harbour
  *      numeric value.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>BIN2U() is the opposite of U2BIN()  </par>
+ *      BIN2U() is the opposite of U2BIN()  </par>
  *  $EXAMPLES$
    <fixed>
  *      // Show number of records in DBF
@@ -227,9 +227,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>BIN2U() is an XBase++ compatibility function and does not exist
+ *      BIN2U() is an XBase++ compatibility function and does not exist
  *      as a standard CA-Clipper 5.x function.  </par>
- *      <par>This function is only visible if source/rtl/binnum.c was compiled
+ *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.  </par>
  *  $SEEALSO$
  *      BIN2I(),BIN2L(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
@@ -246,24 +246,24 @@
  *  $SYNTAX$
  *      I2BIN( <nNumber> ) --> cBuffer
  *  $ARGUMENTS$
- *      <par><nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
+ *      <nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
  *  $RETURNS$
- *      <par>I2BIN() return two bytes character string that contain 16 bit
+ *      I2BIN() return two bytes character string that contain 16 bit
  *      encoded signed short integer (least significant byte first).  </par>
  *  $DESCRIPTION$
- *      <par>I2BIN() is one of the low level binary conversion functions, those
+ *      I2BIN() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. I2BIN() take a numeric integer
  *      value and convert it into two bytes of encoded 16 bit signed short
  *      integer.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>I2BIN() is the opposite of BIN2I()  </par>
+ *      I2BIN() is the opposite of BIN2I()  </par>
  *  $EXAMPLES$
    <fixed>
  *      // Update DBF "last update" date
@@ -294,7 +294,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>I2BIN() works exactly like CA-Clipper's I2BIN()  </par>
+ *      I2BIN() works exactly like CA-Clipper's I2BIN()  </par>
  *  $SEEALSO$
  *      BIN2I,BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
@@ -310,30 +310,30 @@
  *  $SYNTAX$
  *      W2BIN( <nNumber> ) --> cBuffer
  *  $ARGUMENTS$
- *      <par><nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
+ *      <nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
  *  $RETURNS$
- *      <par>W2BIN() return two bytes character string that contain 16 bit
+ *      W2BIN() return two bytes character string that contain 16 bit
  *      encoded unsigned short integer (least significant byte first).  </par>
  *  $DESCRIPTION$
- *      <par>W2BIN() is one of the low level binary conversion functions, those
+ *      W2BIN() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. W2BIN() take a numeric integer
  *      value and convert it into two bytes of encoded 16 bit unsigned short
  *      integer.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>W2BIN() is the opposite of BIN2W()  </par>
+ *      W2BIN() is the opposite of BIN2W()  </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>W2BIN() is an XBase++ compatibility function and does not exist
+ *      W2BIN() is an XBase++ compatibility function and does not exist
  *      as a standard CA-Clipper 5.x function.  </par>
- *      <par>This function is only visible if source/rtl/binnum.c was compiled
+ *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.  </par>
  *  $SEEALSO$
  *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),FWRITE()
@@ -350,28 +350,28 @@
  *  $SYNTAX$
  *      L2BIN( <nNumber> ) --> cBuffer
  *  $ARGUMENTS$
- *      <par><nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
+ *      <nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
  *  $RETURNS$
- *      <par>L2BIN() return four bytes character string that contain 32 bit
+ *      L2BIN() return four bytes character string that contain 32 bit
  *      encoded signed long integer (least significant byte first).  </par>
  *  $DESCRIPTION$
- *      <par>L2BIN() is one of the low level binary conversion functions, those
+ *      L2BIN() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. L2BIN() take a numeric integer
  *      value and convert it into four bytes of encoded 32 bit signed long
  *      integer.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>L2BIN() is the opposite of BIN2L()  </par>
+ *      L2BIN() is the opposite of BIN2L()  </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>L2BIN() works exactly like CA-Clipper's L2BIN()  </par>
+ *      L2BIN() works exactly like CA-Clipper's L2BIN()  </par>
  *  $SEEALSO$
  *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
  *  $END$
@@ -387,30 +387,30 @@
  *  $SYNTAX$
  *      U2BIN( <nNumber> ) --> cBuffer
  *  $ARGUMENTS$
- *      <par><nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
+ *      <nNumber> is a numeric value to convert (decimal digits are ignored).  </par>
  *  $RETURNS$
- *      <par>U2BIN() return four bytes character string that contain 32 bit
+ *      U2BIN() return four bytes character string that contain 32 bit
  *      encoded unsigned long integer (least significant byte first).  </par>
  *  $DESCRIPTION$
- *      <par>U2BIN() is one of the low level binary conversion functions, those
+ *      U2BIN() is one of the low level binary conversion functions, those
  *      functions convert between Harbour numeric and a character
  *      representation of numeric value. U2BIN() take a numeric integer
  *      value and convert it into four bytes of encoded 32 bit unsigned long
  *      integer.  </par>
 
- *      <par>You might ask what is the need for such functions, well, first of
+ *      You might ask what is the need for such functions, well, first of
  *      all it allow you to read/write information from/to a binary file
  *      (like extracting information from DBF header), it is also a useful
  *      way to share information from source other than Harbour (C for
  *      instance).  </par>
 
- *      <par>U2BIN() is the opposite of BIN2U()  </par>
+ *      U2BIN() is the opposite of BIN2U()  </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>U2BIN() is an XBase++ compatibility function and does not exist
+ *      U2BIN() is an XBase++ compatibility function and does not exist
  *      as a standard CA-Clipper 5.x function.  </par>
- *      <par>This function is only visible if source/rtl/binnum.c was compiled
+ *      This function is only visible if source/rtl/binnum.c was compiled
  *      with the HB_COMPAT_XPP flag.  </par>
  *  $SEEALSO$
  *      BIN2I,BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),FWRITE()
@@ -427,16 +427,16 @@
  *  $SYNTAX$
  *      WORD( <nDouble> ) --> <nInteger>
  *  $ARGUMENTS$
- *      <par><nDouble> is a numeric double value.  </par>
+ *      <nDouble> is a numeric double value.  </par>
  *  $RETURNS$
- *      <par>WORD() return an integer in the range +-32767  </par>
+ *      WORD() return an integer in the range +-32767  </par>
  *  $DESCRIPTION$
- *      <par>This function converts double values to integers to use
+ *      This function converts double values to integers to use
  *      within the CALL command  </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      <par>The Clipper NG states that WORD() will only work when used in CALL
+ *      The Clipper NG states that WORD() will only work when used in CALL
  *      commands parameter list, otherwise it will return NIL, in Harbour
  *      it will work anywhere.  </par>
  *  $SEEALSO$

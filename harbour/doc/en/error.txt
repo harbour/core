@@ -21,19 +21,19 @@
  *  $ONELINER$
  *      Install default error handler
  *  $SYNTAX$
- *      ERRORSYS() --> NIL
+ *      ERRORSYS() --> NIL 
  *  $ARGUMENTS$
- *      none.
+ *      None.   </par>
  *  $RETURNS$
- *      ERRORSYS() always return NIL.
+ *      ERRORSYS() always return NIL.   </par>
  *  $DESCRIPTION$
  *      ERRORSYS() is called upon startup by Harbour and install the default
  *      error handler. Normally you should not call this function directly,
- *      instead use ERRORBLOCK() to install your own error handler.
+ *      instead use ERRORBLOCK() to install your own error handler.   </par>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().
+ *      ERRORSYS() works exactly like CA-Clipper's ERRORSYS().   </par>
  *  $SEEALSO$
  *      ERRORBLOCK(),Error class
  *  $END$

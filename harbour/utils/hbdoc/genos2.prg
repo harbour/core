@@ -40,7 +40,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include "hbdoc.ch"
+#include "hbdocdef.ch"
 #include 'common.ch'
 //  output lines on the screen
 
@@ -440,7 +440,7 @@ FUNCTION ProcessOs2()
                      oOs2:WritePar( "" )
                   ENDIF
                   oOs2:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
+                  nMode     := D_EXAMPLE
                   lAddBlank := .T.
                ELSEIF AT( cTest, cBuffer ) > 0
 
@@ -449,7 +449,7 @@ FUNCTION ProcessOs2()
                   ENDIF
 
                   oOs2:WriteParBold( " Tests" )
-                  nMode     := D_NORMAL
+                  nMode     := D_EXAMPLE
                   lAddBlank := .T.
 
                ELSEIF AT( cStatus, cBuffer ) > 0
@@ -820,26 +820,42 @@ Return Nil
 FUNCTION  Procos2Desc(cBuffer,oOs2,cStyle)
 LOCAL cLine:=''
 LOCAL npos,CurPos:=0
-LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,NIDENTLEVEL
+LOCAL nColorPos,ccolor:='',creturn:='',ncolorend,NIDENTLEVEL,coline
 LOCAL lEndPar:= .F.
 
 LOCAL lEndFixed:=.F.
 LOCAL lEndTable:=.F.
 default cStyle to "Default"
+lendfixed:=.F.
+if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
+    cBuffer:='<par>'+cBuffer
+endif
+if empty(cBuffer)
+oOs2:WritePar("")
+endif
+
 
 if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=0
    if AT("<par>",cBuffer)>=0 .or. AT("</par>",cBuffer)=0   .and. !empty(cbuffer) 
       If AT("<par>",cBuffer)>0 .and. AT("</par>",cBuffer)>0
       
          if cStyle=="Arguments"
-            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
-//            ? cBuffer
-         if at(") ",cBuffer)>0
-            cBuffer:= strtran(cBuffer,") ",")</b>")
-         elseif at("> ",cBuffer)>0
-            cBuffer:= strtran(cBuffer,"> ","></b>")
-         endif
-         endif
+            creturn:=cBuffer
+
+            cReturn:=STRTRAN(cReturn,"<par>","")
+            cReturn:=STRTRAN(cReturn,"</par>","")
+            cReturn:=alltrim(cReturn)
+            nPos:=AT(" ",cReturn)
+            cOLine:=left(cReturn,nPos-1)
+            cReturn:=STRTRAN(cReturn,coLine,"")
+            cReturn:=STRTRAN(cReturn,">","></b>  ")         
+            cReturn:=STRTRAN(cReturn," <","<b> <")
+
+
+          creturn:='       <par><b>'+cOLine+'</b> '+creturn+'    </par>'
+          cbuffer:=cReturn
+
+             endif
  
       else
       cBuffer:=Formatos2Buff(cBuffer,cStyle,oOs2)
@@ -851,11 +867,11 @@ endif
 If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
       cBuffer:=Strtran(cBuffer,'<par>','')
       cBuffer:=StrTran(cBuffer,'<b>',':hp2. ')
-      cBuffer:=StrTran(cBuffer,'</b>',':ehp2 ')
+      cBuffer:=StrTran(cBuffer,'</b>',':ehp2. ')
       cBuffer:=StrTran(cBuffer,'<em>',':hp3. ')
-      cBuffer:=StrTran(cBuffer,'</em>',':ehb3 ')
-      cBuffer:=StrTran(cBuffer,'<i>',':hp1 ')
-      cBuffer:=StrTran(cBuffer,'</i>',':ehp1 ')
+      cBuffer:=StrTran(cBuffer,'</em>',':ehp3. ')
+      cBuffer:=StrTran(cBuffer,'<i>',':hp1. ')
+      cBuffer:=StrTran(cBuffer,'</i>',':ehp1. ')
       cBuffer:=Strtran(cBuffer,'</color>','')
       nColorPos:=at('<color:',cBuffer)
       if ncolorpos>0
@@ -904,13 +920,17 @@ Elseif cStyle=="Default"
 
 endif
 endif
-If AT('<fixed>',cBuffer)>0
+If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
+
+         if at('<fixed>',cBuffer)=0
+            oOs2:WritePar(cBuffer)
+         endif                
+
     do while !lendFixed
                 cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-        if at("</fixed>",cBuffer)>0
+        if at("</fixed>",cBuffer)>0  
           lendfixed:=.t.
         else
-
         oOs2:WritePar(cBuffer)
     endif
     enddo
@@ -927,9 +947,6 @@ if AT('<table>',cBuffer)>0
     if lEndTable
       Genos2Table(oOs2)
     endif
-endif
-if empty(cBuffer)
-oOs2:WritePar("")
 endif
 
 //      If cStyle=="Description" .or. cStyle=="Compliance"

@@ -21,27 +21,27 @@
  *  $ONELINER$
  *      Display a report
  *  $SYNTAX$
- *      REPORT FORM <cReportName> [TO PRINTER] [TO FILE <cFile>] [<cScope>]
- *                  [WHILE <bWhile> ] [FOR <bFor> ] [PLAIN |HEADING <cHeading]
- *                  [NOEJECT] [SUMMARY] [NOCONSOLE]
+ *      REPORT FORM <cReportName> [TO PRINTER] [TO FILE <cFile>] [<cScope>] [WHILE <bWhile> ] [FOR <bFor> ] [PLAIN |HEADING <cHeading>] [NOEJECT] [SUMMARY] [NOCONSOLE]
  *  $ARGUMENTS$
- *      <cReportName> Name of report file
- *      <cFile>       Name of alternate file
- *      <cScope>      Scope
- *      <bWhile>      Logical expression of WHILE condition
- *      <bFor>        Logical expression of FOR condition
- *      <cHeading>    Report heading
+ *      <cReportName> Name of report file   </par>
+ *      <cFile>       Name of alternate file   </par>
+ *      <cScope>      Scope.   </par>
+ *      <bWhile>      Logical expression of WHILE condition .  </par>
+ *      <bFor>        Logical expression of FOR condition.   </par>
+ *      <cHeading>    Report heading   </par>
  *  $RETURNS$
- *      NIL
+ *      NIL   </par>
  *  $DESCRIPTION$
  *      This command prints out the report named <cReportName>, which is a standard
  *      FRM file. The file extension is not required because FRM will be assumed.
  *      The SET PATH TO and SET DEFAULT TO commands affect the search for the file
  *      <cReportName>; unless a drive and path are specified in <cReportName>, REPORT
  *      will search the path specified in the SET PATH command if it cannot find the
- *      report form in the current directory.
+ *      report form in the current directory.   </par>
+
  *      The output of the report will be offset based on the setting of the SET MARGIN
- *      TO value.
+ *      TO value.   </par>
+
  *      By default, output will go to the console; however, it may be controlled via
  *      either the TO PRINTER or TO FILE clause. If the output is to go to the file,
  *      the name of the alternate file is specified in <cFile>. Unless specified in
@@ -49,25 +49,31 @@
  *      <cScope> is the scope for this command. Valid scopes include NEXT <expN> (where
  *      <expN> is tile number of records), RECORD <expN> (a specific record to be
  *      displayed), REST (all records from the current record position), and ALL
- *      (all records). The default is ALL.
+ *      (all records). The default is ALL.   </par>
+
  *      Both logical expressions may work in conjuntion with one another, where <bFor>
  *      is the logical expression for the FOR condition (for records to be displayed
  *      within a given range) and <bWhile> for the WHILE condition (for records to be
- *      displayed until the condition fails).
+ *      displayed until the condition fails).    </par>
+
  *      If the PLAIN clause is specified, date and page numbers are suppressed. In
  *      addition, there is no  automatic page breaking, and the report title and
- *      column headings appear only once at the top of the form.
+ *      column headings appear only once at the top of the form.   </par>
+
  *      If the HEADING clause is used, <cHeading> is displayed on the first title
  *      of each report page. The value of <cHeading> is evaluated only once before
  *      executing the report; varying the values of <cHeading> is not allowed. The
- *      PLAIN clause will take precedence over the HEADING clause if both are included.
+ *      PLAIN clause will take precedence over the HEADING clause if both are included.   </par>
+
  *      If the NOEJECT clause is used, the initial page eject on the report will not be
  *      issued when the output clause TO PRINTER is specified. Otherwise, this clause has
- *      no effect.
+ *      no effect.   </par>
+
  *      If the SUMMARY Clause is specified, the report will contain only groups, subgroups,
- *      and grand total information. The detailed title item information will be ignored.
+ *      and grand total information. The detailed title item information will be ignored.   </par>
+
  *      If the NOCONSOLE clause is specified,output to the console will be turned off
- *      while this command is being executed.
+ *      while this command is being executed.   </par>
  *  $EXAMPLES$
  *      FUNCTION() MAIN
  *
@@ -78,14 +84,14 @@
  *      USE
  *
  *      RETURN NIL
- *  $TESTS$
+
+     </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Command is CA-Clipper compliant.
+ *      This Command is CA-Clipper compliant.   </par>
  *  $PLATFORMS$
- *      ALL
- *  $FILES$
+ *      ALL   </par>
  *  $SEEALSO$
  *      LABEL FORM
  *  $END$
