@@ -131,6 +131,7 @@ HB_FUNC( DIRECTORY )
    /* Get the passed attributes and convert them to Harbour Flags */
 
    uiMask = HB_FA_ARCHIVE
+          | HB_FA_READONLY
           | HB_FA_DEVICE
           | HB_FA_TEMPORARY
           | HB_FA_SPARSE
