@@ -200,10 +200,12 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
    AdsAtBOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fBof) );
    AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
 
-  if( pArea->fBof && !pArea->fEof )
-     AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent:pArea->hTable, 1 );
-/*   return SUPER_SKIPFILTER( (AREAP)pArea, 1 ); */
-   return SUCCESS;
+   if( pArea->fBof && !pArea->fEof )
+   {
+      AdsSkip  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent:pArea->hTable, 1 );
+      return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
+   }else
+      return SUCCESS;
 }
 
 ERRCODE adsCloseCursor( ADSAREAP pArea )
@@ -292,7 +294,6 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    pArea->fValidBuffer = FALSE;
    AdsGotoRecord( pArea->hTable, ulRecNo );
    hb_adsCheckBofEof( pArea );
-   // HB_TRACE(HB_TR_ALWAYS, ("afterCheckBE: %lu %lu ", pArea->ulRecNo, ulRecNo  ));
 
    return SUCCESS;
 }
@@ -522,7 +523,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( pArea->fEof )
    {
       int i;
-      for( i=0; i < pArea->maxFieldLen; i++ )
+      for( i=0; i < (int) pArea->maxFieldLen; i++ )
          *( pBuffer+i ) = ' ';
       *( pBuffer + ( int ) pField->uiLen ) = '\0';
    }
@@ -596,7 +597,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
            UNSIGNED8 *pucBuf;
            UNSIGNED32 pulLen;
 
-           if ( pArea->fEof || 
+           if ( pArea->fEof ||
                 AdsGetMemoLength( pArea->hTable, szName, &pulLen ) == AE_NO_CURRENT_RECORD )
                hb_itemPutC( pItem, "" );
            else
@@ -656,7 +657,6 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    if( pArea->uiParents )
    {
       hb_adsCheckBofEof( pArea );
-// xxx can't call this here-- it may skip!!!
    }
 
    if( uiIndex > pArea->uiFieldCount || pArea->fEof )
@@ -1316,6 +1316,17 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          hb_itemPutNI(pOrderInfo->itmResult, usOrder);
          break;
       }
+      case DBOI_RECNO :
+      {
+         UNSIGNED32 pulKey  ;
+         if( phIndex )
+            AdsGetKeyNum  ( phIndex, ADS_RESPECTSCOPES, &pulKey);
+         else
+            AdsGetRecordNum  ( pArea->hTable, ADS_IGNOREFILTERS, &pulKey);
+         hb_itemPutNL(pOrderInfo->itmResult, pulKey);
+         break;
+      }
+
    }
    return SUCCESS;
 }

@@ -1,3 +1,11 @@
+2000-09-29 00:07 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+   * source/rdd/dbcmd.c
+   * source/rtl/dummy.prg
+      * implemented ordKeyNo()
+      * fixed checkBofEof need to skipfilter without infinite loop
+      * ads1.c line 492 added (int) to clear warning re comparing different types
+
 2000-09-29 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/ads1.c
    * contrib/rdd_ads/adsfunc.c

@@ -2356,6 +2356,30 @@ HB_FUNC( ORDKEY )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEY" );
 }
 
+#ifdef HB_COMPAT_C53
+HB_FUNC( ORDKEYNO )
+{
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
+      if( !pOrderInfo.itmOrder )
+         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+      /* Either or both may be NIL */
+
+      pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_RECNO, &pOrderInfo );
+      hb_retnl( hb_itemGetNL( pOrderInfo.itmResult ) );
+      hb_itemRelease( pOrderInfo.itmResult );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDKEYNO" );
+
+}
+#endif
+
 HB_FUNC( ORDLISTADD )
 {
    DBORDERINFO pOrderInfo;
