@@ -1,3 +1,15 @@
+20000410-20:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
+   *utils/hbdoc/hrb.rsp
+    utils/hbdoc/hrbtools.rsp
+      *Changed to reflect the docs changes
+   *utils/hbdoc/genng.prg 
+    utils/hbdoc/genrtf.prg
+    utils/hbdoc/genos2.prg
+    utils/hbdoc/genhtm.prg
+     !Added code to ignore empty tags when generating the source
+   *utils/hbdoc/ft_funcs.prg
+    +FREADLINE() function
+
 20000411-00:24 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    ; Please retest Harbour on every possible platform.
