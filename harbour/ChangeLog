@@ -1,3 +1,9 @@
+20000418-19:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net)
+  *doc/en/diskspac.txt
+   doc/en/file.txt
+   doc/en/set.txt
+      *Fixed doc by fixing the errors reported by chen
+
 2000-04-18 14:55 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
     ! Don't generate a key code for Caps Lock.
