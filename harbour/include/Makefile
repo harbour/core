@@ -34,7 +34,6 @@ PRG_HEADERS=\
 	inkey.ch \
 	set.ch \
 	setcurs.ch \
-	test.ch \
 
 API_HEADERS=\
 	error.api \

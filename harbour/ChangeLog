@@ -1,3 +1,12 @@
+Fri Jun 25 18:27:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/Makefile: 
+	* tests/working/Makefile: 
+	Updated the file list.
+
+	* tests/working/dirtest.prg: 
+	Made the output easier to be read.
+	
 19990624-21:10 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.l
     - Corrected logic in if block that prints spurious error message when

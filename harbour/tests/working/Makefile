@@ -73,6 +73,7 @@ PRG_SOURCES=\
 	recursiv.prg \
 	returns.prg \
 	round.prg \
+	rtfclass.prg \
 	rtl_test.prg \
 	scroll.prg \
 	seconds.prg \
@@ -91,6 +92,7 @@ PRG_SOURCES=\
 	test.prg \
 	test_all.prg \
 	testcgi.prg \
+	testcopy.prg \
 	testerro.prg \
 	testfor.prg \
 	testgt.prg \
@@ -101,6 +103,7 @@ PRG_SOURCES=\
 	teststr.prg \
 	testtok.prg \
 	testvars.prg \
+	testwarn.prg \
 	transfrm.prg \
 	val.prg \
 	version.prg \
@@ -108,9 +111,9 @@ PRG_SOURCES=\
 
 BAD_PRG_SOURCES=\
 	dupvars.prg \
+	keywords.prg \
 	spawn.prg \
 	spawn2.prg \
-	keywords.prg \
 	test10.prg \
 	testid.prg \
 
