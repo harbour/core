@@ -81,11 +81,11 @@ void hb_releaseCPU( void )
    /* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
       in protected mode, time slices will _not_ be released - you must switch
       to real mode first, execute the following, and switch back.
-   
+
       It just occurred to me that this is actually by design.  Since MS doesn't
       want you to do this from a console app, their solution was to not allow
       the call to work in protected mode - screw the rest of the planet <g>.
-   
+
       returns zero on failure. (means not supported)
    */
 
@@ -93,7 +93,7 @@ void hb_releaseCPU( void )
       union REGS regs;
 
       regs.h.ah = 2;
-      regs.x.ax = 0x1680;
+      regs.HB_XREGS.ax = 0x1680;
 
       HB_DOS_INT86( 0x2F, &regs, &regs );
    }
@@ -190,7 +190,7 @@ int hb_inkeyNext( void )      /* Return the next key without extracting it */
       else
          key = s_inkeyBuffer[ s_inkeyTail ];    /* Next key */
    }
-   else 
+   else
       key = s_inkeyForce; /* Typeahead support is disabled */
 
    return key;
@@ -203,7 +203,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
    {
       int ch = hb_gtReadKey( s_eventmask );
-      
+
       switch( ch )
       {
          case HB_BREAK_FLAG:        /* Check for Ctrl+Break */

@@ -162,7 +162,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
    uiMaxRow = hb_gt_GetScreenHeight();
    uiMaxCol = hb_gt_GetScreenWidth();
 
-   /* TODO: Would be better to support these cases, Clipper implementation was 
+   /* TODO: Would be better to support these cases, Clipper implementation was
             quite messy, which can be considered as a bug there. [vszakats] */
 
    if( uiTop  < uiMaxRow && uiBottom < uiMaxRow &&
@@ -178,10 +178,10 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
 
       USHORT uiTopBak = uiTop;
       USHORT uiLeftBak = uiLeft;
-   
-      /* NOTE: For full compatibility, pad box string with last char if too 
+
+      /* NOTE: For full compatibility, pad box string with last char if too
                short [vszakats] */
-      
+
       {
          USHORT tmp;
 
@@ -192,7 +192,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
             szBox[ tmp++ ] = cPadChar;
          szBox[ tmp ] = '\0';
       }
-      
+
       /* Ensure that box is drawn from top left to bottom right. */
       if( uiTop > uiBottom )
       {
@@ -206,27 +206,27 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
          uiLeft = uiRight;
          uiRight = tmp;
       }
-      
+
       uiRow = uiTop;
       uiCol = uiLeft;
-      
+
       /* Draw the box or line as specified */
       uiHeight = uiBottom - uiTop + 1;
       uiWidth  = uiRight - uiLeft + 1;
-      
+
       hb_gtDispBegin();
-      
+
       if( uiHeight > 1 && uiWidth > 1 )
          hb_gtWriteAt( uiRow, uiCol, szBox + 0, sizeof( BYTE ) ); /* Upper left corner */
-      
+
       uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
-      
+
       if( uiCol <= uiRight )
          hb_gtRepChar( uiRow, uiCol, szBox[ 1 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Top line */
-      
+
       if( uiHeight > 1 && uiWidth > 1 )
          hb_gtWriteAt( uiRow, uiRight, szBox + 2, sizeof( BYTE ) ); /* Upper right corner */
-      
+
       if( szBox[ 8 ] && uiHeight > 2 && uiWidth > 2 )
       {
          for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
@@ -246,23 +246,23 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
                hb_gtWriteAt( uiRow, uiRight, szBox + 3, sizeof( BYTE ) ); /* Right side */
          }
       }
-      
+
       if( uiHeight > 1 && uiWidth > 1 )
       {
          hb_gtWriteAt( uiBottom, uiLeft, szBox + 6, sizeof( BYTE ) ); /* Bottom left corner */
-      
+
          uiCol = ( uiHeight > 1 ? uiLeft + 1 : uiLeft );
-      
+
          if( uiCol <= uiRight && uiHeight > 1 )
             hb_gtRepChar( uiBottom, uiCol, szBox[ 5 ], uiRight - uiLeft + ( uiHeight > 1 ? -1 : 1 ) ); /* Bottom line */
-      
+
          hb_gtWriteAt( uiBottom, uiRight, szBox + 4, sizeof( BYTE ) ); /* Bottom right corner */
       }
-      
+
       hb_gtDispEnd();
-      
+
       hb_gtSetPos( uiTopBak + 1, uiLeftBak + 1 );
-      
+
       return 0;
    }
    else
@@ -367,8 +367,8 @@ USHORT hb_gtPostExt( void )
    return 0;
 }
 
-/* NOTE: szColorString must be at least CLR_STRLEN wide by the NG. It seems 
-         that CA-Cl*pper SETCOLOR() will return string lengths up to 131+EOF. 
+/* NOTE: szColorString must be at least CLR_STRLEN wide by the NG. It seems
+         that CA-Cl*pper SETCOLOR() will return string lengths up to 131+EOF.
          That seems like a 127+1 buffer size, plus lazy overflow checking.
          [vszakats] */
 
@@ -417,8 +417,8 @@ USHORT hb_gtGetColorStr( char * pszColorString )
          if( j == 0 )
          {
             /* NOTE: When STRICT is on, Harbour will put both the "*" and "+"
-                     chars to the first half of the colorspec (like "W*+/B"), 
-                     which is quite ugly, otherwise it will put the "+" to the 
+                     chars to the first half of the colorspec (like "W*+/B"),
+                     which is quite ugly, otherwise it will put the "+" to the
                      first half and the "*" to the second (like "W+/B*"), which
                      is how it should be done. [vszakats] */
 
@@ -630,7 +630,7 @@ USHORT hb_gtSetCursor( USHORT uiCursorStyle )
    if( uiCursorStyle <= SC_SPECIAL2 )
    {
       /* Set the cursor only when, it's in bounds. */
-      if( s_iRow >= 0 && s_iRow < hb_gt_GetScreenHeight() && 
+      if( s_iRow >= 0 && s_iRow < hb_gt_GetScreenHeight() &&
           s_iCol >= 0 && s_iCol < hb_gt_GetScreenWidth() )
          hb_gt_SetCursorStyle( uiCursorStyle );
 
@@ -678,7 +678,7 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
       hb_gt_SetPos( iRow, iCol );
 
       /* If cursor was out bounds, now enable it */
-      if( s_iRow < 0 || s_iRow >= uiMaxRow || 
+      if( s_iRow < 0 || s_iRow >= uiMaxRow ||
           s_iCol < 0 || s_iCol >= uiMaxCol )
          hb_gt_SetCursorStyle( s_uiCursorStyle );
    }
@@ -721,7 +721,7 @@ USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRig
    return 0;
 }
 
-/* NOTE: Above this buffer size the function will allocate dynamic memory and 
+/* NOTE: Above this buffer size the function will allocate dynamic memory and
          will be slower. [vszakats] */
 
 #define REPCHAR_BUFFER_SIZE 255
@@ -921,15 +921,14 @@ USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
 
          case HB_CHAR_CR:
             iCol = 0;
-            if( *pStr != HB_CHAR_LF )
-               bDisp = TRUE;
-            else
+            if( *pStr == HB_CHAR_LF )
             {
                if( iRow >= 0 ) ++iRow;
-               bDisp = TRUE;
                bNewLine = TRUE;
                ++pStr;
+               --ulLength;
             }
+            bDisp = TRUE;
             break;
 
          default:

@@ -125,16 +125,17 @@ static void hb_gt_Initialize_Terminal( void )
    */
    if( s_under_buggy_xterm )
    {
+/*
       char * str;
       
-      str = tigetstr( "enacs" );   /* enable alt character set */
+      str = tigetstr( "enacs" );   / * enable alt character set * /
       if( (str != NULL) && (str != (char *)-1) )
          write( fileno(stdout), str, strlen(str) );
 
-      str = tigetstr( "smacs" );   /* start alt characters set */
+      str = tigetstr( "smacs" );   / * start alt characters set * /
       if( (str != NULL) && (str != (char *)-1) )
          write( fileno(stdout), str, strlen(str) );
-
+*/
       s_alternate_char_set = 0;
    }
    else

@@ -51,7 +51,7 @@ HB_FUNC( NETNAME )
       char szValue[ 16 ];
       union REGS regs;
 
-      regs.x.ax = 0x5E00;
+      regs.HB_XREGS.ax = 0x5E00;
 
       #if defined(__DJGPP__)
       {
@@ -61,10 +61,10 @@ HB_FUNC( NETNAME )
       #else
       {
          struct SREGS sregs;
-         
-         regs.x.dx = FP_OFF( szValue );
+
+         regs.HB_XREGS.dx = FP_OFF( szValue );
          sregs.ds = FP_SEG( szValue );
-         
+
          HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
       }
       #endif

@@ -48,10 +48,10 @@ void hb_mouse_Init( void )
 {
    union REGS regs;
 
-   regs.x.ax = 0;
+   regs.HB_XREGS.ax = 0;
    HB_DOS_INT86( 0x33, &regs, &regs );
-   s_bPresent = regs.x.ax;
-   s_iButtons = regs.x.bx;
+   s_bPresent = regs.HB_XREGS.ax;
+   s_iButtons = regs.HB_XREGS.bx;
 
    if( s_bPresent )
    {
@@ -77,7 +77,7 @@ void hb_mouse_Show( void )
    {
       union REGS regs;
 
-      regs.x.ax = 1;
+      regs.HB_XREGS.ax = 1;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
       s_bCursorVisible = TRUE;
@@ -91,7 +91,7 @@ void hb_mouse_Hide( void )
    {
       union REGS regs;
 
-      regs.x.ax = 2;
+      regs.HB_XREGS.ax = 2;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
       s_bCursorVisible = FALSE;
@@ -104,10 +104,10 @@ int hb_mouse_Col( void )
    {
       union REGS regs;
 
-      regs.x.ax = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      return regs.x.cx / 8;
+      return regs.HB_XREGS.cx / 8;
    }
    else
       return -1;
@@ -119,10 +119,10 @@ int hb_mouse_Row( void )
    {
       union REGS regs;
 
-      regs.x.ax = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      return regs.x.dx / 8;
+      return regs.HB_XREGS.dx / 8;
    }
    else
       return -1;
@@ -134,9 +134,9 @@ void hb_mouse_SetPos( int iRow, int iCol )
    {
       union REGS regs;
 
-      regs.x.ax = 4;
-      regs.x.cx = iRow * 8;
-      regs.x.dx = iCol * 8;
+      regs.HB_XREGS.ax = 4;
+      regs.HB_XREGS.cx = iRow * 8;
+      regs.HB_XREGS.dx = iCol * 8;
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 }
@@ -147,11 +147,11 @@ BOOL hb_mouse_IsButtonPressed( int iButton )
    {
       union REGS regs;
 
-      regs.x.ax = 5;
-      regs.x.bx = iButton;
+      regs.HB_XREGS.ax = 5;
+      regs.HB_XREGS.bx = iButton;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      return regs.x.bx ? TRUE : FALSE;
+      return regs.HB_XREGS.bx ? TRUE : FALSE;
    }
    else
       return FALSE;
@@ -163,10 +163,10 @@ int hb_mouse_CountButton( void )
    {
       union REGS regs;
 
-      regs.x.ax = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      return regs.x.bx;
+      return regs.HB_XREGS.bx;
    }
    else
       return 0;
@@ -181,17 +181,17 @@ void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
       iLeft *= 8;
       iRight *= 8;
 
-      regs.x.ax = 7;
-      regs.x.cx = iLeft;
-      regs.x.dx = iRight;
+      regs.HB_XREGS.ax = 7;
+      regs.HB_XREGS.cx = iLeft;
+      regs.HB_XREGS.dx = iRight;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
       iTop *= 8;
       iBottom *= 8;
 
-      regs.x.ax = 8;
-      regs.x.cx = iTop;
-      regs.x.dx = iBottom;
+      regs.HB_XREGS.ax = 8;
+      regs.HB_XREGS.cx = iTop;
+      regs.HB_XREGS.dx = iBottom;
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 }
@@ -202,15 +202,15 @@ void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRigh
    {
       union REGS regs;
 
-      regs.x.ax = 7;
+      regs.HB_XREGS.ax = 7;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      *piLeft = regs.x.cx / 8;
-      *piRight = regs.x.dx / 8;
+      *piLeft = regs.HB_XREGS.cx / 8;
+      *piRight = regs.HB_XREGS.dx / 8;
 
-      regs.x.ax = 8;
+      regs.HB_XREGS.ax = 8;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      *piTop = regs.x.cx / 8;
-      *piBottom = regs.x.dx / 8;
+      *piTop = regs.HB_XREGS.cx / 8;
+      *piBottom = regs.HB_XREGS.dx / 8;
    }
 }
 

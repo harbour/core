@@ -75,7 +75,7 @@
 /* For screen support */
 #if defined(__POWERC) || (defined(__TURBOC__) && !defined(__BORLANDC__)) || (defined(__ZTC__) && !defined(__SC__))
    #define FAR far
-#elif defined(HB_OS_DOS) && !defined(__DJGPP__) && !defined(__RSX32__)
+#elif defined(HB_OS_DOS) && !defined(__DJGPP__) && !defined(__RSX32__) && !defined(__WATCOMC__)
    #define FAR _far
 #else
    #define FAR
@@ -119,7 +119,7 @@ static int kbhit( void )
    regs.h.ah = 0x0B;
    HB_DOS_INT86( 0x21, &regs, &regs );
 
-   return regs.x.ax;
+   return regs.HB_XREGS.ax;
 }
 
 #endif
@@ -952,8 +952,8 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 
    while( dDuration > 0.0 )
    {
-      /* Use USHORT, because this variable gets added to clock()    
-         to form end_clock and we want to minimize overflow risk */ 
+      /* Use USHORT, because this variable gets added to clock()
+         to form end_clock and we want to minimize overflow risk */
       USHORT temp = ( USHORT ) HB_MIN( HB_MAX( 0, dDuration ), USHRT_MAX );
       clock_t end_clock;
 

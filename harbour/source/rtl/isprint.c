@@ -56,7 +56,7 @@ HB_FUNC( ISPRINTER )
       union REGS regs;
 
       regs.h.ah = 2;
-      regs.x.dx = uiPort - 1;
+      regs.HB_XREGS.dx = uiPort - 1;
 
       HB_DOS_INT86( 0x17, &regs, &regs );
 
@@ -74,7 +74,7 @@ HB_FUNC( ISPRINTER )
             on any platform, but the result may not be the expected one,
             since Unix/Linux doesn't support LPT/COM by nature, other OSs
             may not reflect the actual physical presence of the printer when
-            trying to open it, since we are talking to the spooler. 
+            trying to open it, since we are talking to the spooler.
             [vszakats] */
 
    if( ( hb_strnicmp( pszDOSPort, "LPT", 3 ) == 0 ||

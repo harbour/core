@@ -1128,25 +1128,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 
 #if defined(HB_FS_DRIVE_LETTER)
 
-   {
-      USHORT uiSave = _getdrive();
-
-      errno = 0;
-      _chdrive( nDrive + 1 );
-      if( ( nDrive + 1 ) == _getdrive() )
-      {
-         uiResult = 0;
-         s_uiErrorLast = errno;
-      }
-      else
-      {
-         _chdrive( uiSave );
-         uiResult = FS_ERROR;
-         s_uiErrorLast = FS_ERROR;
-      }
-   }
-
-#elif defined( __WATCOMC__ )
+ #if defined( __WATCOMC__ )
 
    {
       /* 'unsigned int' _have to_ be used in Watcom
@@ -1173,7 +1155,25 @@ USHORT  hb_fsChDrv( BYTE nDrive )
          s_uiErrorLast = FS_ERROR;
       }
    }
+ #else
+   {
+      USHORT uiSave = _getdrive();
 
+      errno = 0;
+      _chdrive( nDrive + 1 );
+      if( ( nDrive + 1 ) == _getdrive() )
+      {
+         uiResult = 0;
+         s_uiErrorLast = errno;
+      }
+      else
+      {
+         _chdrive( uiSave );
+         uiResult = FS_ERROR;
+         s_uiErrorLast = FS_ERROR;
+      }
+   }
+ #endif
 #else
 
    uiResult = FS_ERROR;
@@ -1198,26 +1198,7 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
 
 #if defined(HB_FS_DRIVE_LETTER)
 
-   {
-      USHORT uiSave = _getdrive();
-
-      errno = 0;
-      _chdrive( nDrive + 1 );
-      if( ( nDrive + 1 ) == _getdrive() )
-      {
-         uiResult = 0;
-         s_uiErrorLast = errno;
-      }
-      else
-      {
-         uiResult = FS_ERROR;
-         s_uiErrorLast = FS_ERROR;
-      }
-
-      _chdrive( uiSave );
-   }
-
-#elif defined( __WATCOMC__ )
+ #if defined( __WATCOMC__ )
 
    {
       /* 'unsigned int' _have to_ be used in Watcom
@@ -1241,6 +1222,26 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
       }
       _dos_setdrive( uiSave, &uiTotal );
    }
+ #else
+   {
+      USHORT uiSave = _getdrive();
+
+      errno = 0;
+      _chdrive( nDrive + 1 );
+      if( ( nDrive + 1 ) == _getdrive() )
+      {
+         uiResult = 0;
+         s_uiErrorLast = errno;
+      }
+      else
+      {
+         uiResult = FS_ERROR;
+         s_uiErrorLast = FS_ERROR;
+      }
+
+      _chdrive( uiSave );
+   }
+ #endif
 
 #else
 
