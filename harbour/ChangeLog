@@ -1,3 +1,14 @@
+19990602-23:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/compiler/makefile.dos
+    - bison needs -y option so that it won't replace harbour.c with y_tab.c
+      when building Harbour with DJGPP
+  * source/rtl/console.c
+    - Moved MAXROW() and MAXCOL() from gtapi.c and added #ifdef USE_GTAPI
+      in each. The #else condition defines the screen as 24x80 (23, 79)
+  * source/rtl/gtapi.c
+    - Moved MAXROW() and MAXCOL() to console.c in order to not include the
+      GT API when it isn't wanted (such as when building with DJGPP)
+
 19990602-20:45 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/environ.c
     - Modified #ifdef _Windows section to return "Windows"

@@ -13,7 +13,7 @@ $(TARGET): y_tab.c harbour.c lexyy.c
 	$(CC) $(CFLAGS) y_tab.c harbour.c lexyy.c -o $(TARGET)
 
 y_tab.c : harbour.y
-	bison -d -v harbour.y -o y_tab.c
+	bison -d -v -y harbour.y -o y_tab.c
 
 lexyy.c : harbour.l
 	flex -i -8 -olexyy.c harbour.l

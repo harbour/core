@@ -345,3 +345,21 @@ HARBOUR SCROLL( void ) /* Scrolls a screen region (requires the GT API) */
     _gtScroll( top, left, bottom, right, v_scroll, h_scroll );
 #endif
 }
+
+HARBOUR MAXROW( void ) /* Return the maximum screen row number (zero origin) */
+{
+#ifdef USE_GTAPI
+   _retni( _gtMaxRow () );
+#else
+   _retni( 23 );
+#endif
+}
+
+HARBOUR MAXCOL( void ) /* Return the maximum screen column number (zero origin) */
+{
+#ifdef USE_GTAPI
+   _retni( _gtMaxCol () );
+#else
+   _retni( 79 );
+#endif
+}
