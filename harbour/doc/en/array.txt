@@ -546,7 +546,7 @@
  *      Codeblock calling frequency and order differs from Clipper, since
  *      Harbour uses a different (faster) sorting algorithm (quicksort).
  *  $FILES$
- *      Library is vm
+ *      Library is rtl
  *  $SEEALSO$
  *      ASCAN(),EVAL(),SORT
  *  $END$

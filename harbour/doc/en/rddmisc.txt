@@ -752,36 +752,23 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Lock the current record in the active work area
+ *      Lock a record in a work area
  *  $SYNTAX$
  *      RLOCK() --> lSuccess
  *  $ARGUMENTS$
- *
+ *      None
  *  $RETURNS$
- *     RLOCK() returns true (.T.) if the record lock is obtained; otherwise, it
- *   returns false (.F.).
+ *      RLOCK() True (.T.) if record lock is successful; otherwise, it
+ *      returns false (.F.).
  *  $DESCRIPTION$
- *     RLOCK() is a network function that locks the current record, preventing
- *      other users from updating the record until the lock is released.
- *      RLOCK() provides a shared lock, allowing other users read-only access to
- *      the locked record while allowing only the current user to modify it.  A
- *      record lock remains until another record is locked, an UNLOCK is
- *      executed, the current database file is closed, or an FLOCK() is obtained
- *      on the current database file.
- *
- *      For each invocation of RLOCK(), there is one attempt to lock the current
- *      record, and the result is returned as a logical value.  An attempt to
- *      obtain a record lock fails if another user currently has a file or
- *      record lock, or EXCLUSIVE USE of the database file.  An attempt to
- *      RLOCK() in an empty database returns true (.T.).
- *
- *      By default, RLOCK() operates on the currently selected work area.  It
- *      will operate on an unselected work area if you specify it as part of an
- *      aliased expression (see example below).  This feature is useful since
- *      RLOCK() does not automatically attempt a record lock for related files.
- *
- *      As a general rule, RLOCK() operates solely on the current record.  This
- *      includes the following commands:
+ *      This function returns a logical true (.T.) if an attempt to lock a
+ *      specific record in a selected or designated work area is successful.
+ *      It will yield a false (.F.) if either the file or the desired record
+ *      is currently locked.
+ *      A record that is locked remains locked until another RLOCK() is issued
+ *      or until an UNLOCK command is executed.
+ *      On a Network enviroment the follow command need that the record is
+ *      locked:
  *
  *      @...GET
  *
@@ -790,46 +777,20 @@
  *      RECALL (single record)
  *
  *      REPLACE (single record)
- *
- *
- *      Notes
- *
- *      SET RELATION: HARBOUR does not automatically lock all
- *      records in the relation chain when you lock the current work area
- *      record.  Also, an UNLOCK has no effect on related work areas.
  *  $EXAMPLES$
- *     This example deletes a record in a network environment, using
- *      RLOCK():
- *
- *      USE Customer INDEX CustName SHARED NEW
- *      SEEK "Smith"
- *      IF FOUND()
- *         IF RLOCK()
- *            DELETE
- *            ? "Smith deleted"
- *         ELSE
- *            ? "Record in use by another"
+ *      nId:=10
+ *      USE TestId INDEX TestId NEW
+ *      IF TestId->(DBSEEK(nId))
+ *         IF TestId->(RLOCK())
+ *            DBDELETE()
  *         ENDIF
- *      ELSE
- *         ? "Smith not in Customer file"
  *      ENDIF
- *      CLOSE
- *
- *      This example specifies RLOCK() as an aliased expression to
- *      lock a record in an unselected work area:
- *
- *      USE Sales SHARED NEW
- *      USE Customer SHARED NEW
- *      //
- *      IF !Sales->(RLOCK())
- *         ? "The current Sales record is in use by another"
- *      ENDIF
+ *      USE
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is Ca-Clipper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -843,45 +804,29 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Determine the work area number of a specified alias
+ *      Returns the work area number for a specified alias.
  *  $SYNTAX$
  *      SELECT([<cAlias>]) --> nWorkArea
  *  $ARGUMENTS$
  *      <cAlias> is the target work area alias name.
  *  $RETURNS$
- *      SELECT() returns the work area of the specified alias as a integer
- *      numeric value.
+ *      SELECT() returns the work area number.
  *  $DESCRIPTION$
- *      SELECT() is a database function that determines the work area number of
- *      an alias.  The number returned can range from zero to 250.  If <cAlias>
- *      is not specified, the current work area number is returned.  If <cAlias>
- *      is specified and the alias does not exist, SELECT() returns zero.
- *
- *      Note:  The SELECT() function and SELECT command specified with an
- *      extended expression argument look somewhat alike.  This shouldn't be a
- *      problem since the SELECT() function is not very useful on a line by
- *      itself
+ *      This function returns the work area number for the specified alias
+ *      name <cAlias>.If no parameter is specified,the current work area will
+ *      be the return value of the function.
  *  $EXAMPLES$
- *     This example uses SELECT() to determine which work area
- *      USE...NEW selected:
- *
- *      USE Sales NEW
- *      SELECT 1
- *      ? SELECT("Sales")          // Result: 4
- *
- *      To reselect the value returned from the SELECT() function, use
- *      the SELECT command with the syntax, SELECT (<idMemvar>), like this:
- *
- *      USE Sales NEW
- *      nWorkArea:= SELECT()
- *      USE Customer NEW
- *      SELECT (nWorkArea)
+ *      USE TESTS NEW
+ *      USE NAMES NEW
+ *      cOldArea:=SELECT("NAMES")
+ *      select TEST
+ *      LIST
+ *      SELECT cOldArea
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is Ca-Clipper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -895,32 +840,33 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Determine whether a database file is in USE
+ *      Checks whether a database is in use in a work area
  *  $SYNTAX$
  *      USED() --> lDbfOpen
  *  $ARGUMENTS$
- *
+ *      None.
  *  $RETURNS$
- *      USED() returns true (.T.) if there is a database file in USE; otherwise,
- *      it returns false (.F.).
+ *      <lDbfOpen> True is a database is Used;otherwise False
  *  $DESCRIPTION$
- *      USED() is a database function that determines whether there is a
- *      database file in USE in a particular work area.  By default, USED()
- *      operates on the currently selected work area.  It will operate on an
- *      unselected work area if you specify it as part of an aliased expression.
+ *      This function returns a logical true (.T.) if a database file is in
+ *      USE in the current or designated work area. If no alias is specified
+ *      along with this function , it will default to the currently selected
+ *      work area.
  *  $EXAMPLES$
- *      This example determines whether a database file is in USE in
- *      the current work area:
- *
- *      USE Customer NEW
- *      ? USED()              // Result: .T.
+ *      Use TESTS NEW
+ *      USE Names New
+ *      ? USED()    // .T.
+ *      ? TESTS->(USED()) //.t.
  *      CLOSE
- *      ? USED()              // Result: .F.
+ *      ? USED()  // .F.
+ *      Select TESTS
+ *      ? USED() //.T.
+ *
  *  $TESTS$
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is Ca-clipper Compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
