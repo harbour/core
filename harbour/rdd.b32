@@ -11,8 +11,10 @@
 .path.obj = obj
 .path.prg = source\rdd;source\rdd\dbfntx;source\rdd\dbfcdx
 
-lib\b32\rdd.lib : rddsys.obj dbcmd.obj dbfntx1.obj dbfntx0.obj dbf0.obj dbf1.obj \
-                  delim0.obj delim1.obj sdf0.obj sdf1.obj dbfcdx1.obj dbfcdx0.obj
+lib\b32\rdd.lib : rddsys.obj dbcmd.obj dbfntx1.obj dbfntx0.obj \
+                  dbf0.obj dbf1.obj delim0.obj delim1.obj \
+                  sdf0.obj sdf1.obj dbfcdx1.obj dbfcdx0.obj \
+                  dbnubs.obj rddord.obj
 
 dbf0.c      : dbf0.prg
 dbfntx0.c   : dbfntx0.prg
@@ -20,6 +22,7 @@ rddsys.c    : rddsys.prg
 sdf0.c      : sdf0.prg
 delim0.c    : delim0.prg
 dbfcdx0.c   : dbfcdx0.prg
+rddord.c    : rddord.prg
 
 dbcmd.obj   : dbcmd.c
 rddsys.obj  : rddsys.c
@@ -33,6 +36,7 @@ delim0.obj  : delim0.c
 delim1.obj  : delim1.c
 dbfcdx0.obj : dbfcdx0.c
 dbfcdx1.obj : dbfcdx1.c
+dbnubs.obj  : dbnubs.c
 
 .c.obj :
   bcc32 -c -O2 -Iinclude -o$@ -v $<
@@ -40,4 +44,3 @@ dbfcdx1.obj : dbfcdx1.c
 
 .prg.c:
   bin\harbour $< /n /osource\rdd\ /iinclude
-

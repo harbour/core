@@ -19,27 +19,31 @@
 .path.exe = bin
 .path.lib = lib\b32
 .path.obj = obj;source\compiler
-.path.prg = source\rtl;source\tools;source\debug
+.path.prg = source\rtl;source\tools;source\debug;source\rdd
 
 PROJECT: harbour.exe harbour.lib lib\b32\terminal.lib lib\b32\termwin.lib
 
-harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
-              binnum.obj browdb.obj browse.obj \
+harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
+              asort.obj binnum.obj browdb.obj browse.obj \
               classes.obj cmdarg.obj codebloc.obj copyfile.obj \
-              dates.obj dates2.obj datesx.obj debug.obj debugger.obj \
-              descend.obj devoutp.obj dir.obj do.obj dynsym.obj dummy.obj \
-              environ.obj fieldbl.obj errorapi.obj errorsys.obj \
-              harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
-              hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj input.obj \
-              itemapi.obj langapi.obj mainstd.obj mainwin.obj math.obj \
-              mathx.obj memofile.obj memoline.obj memvars.obj menuto.obj \
-              mlcount.obj mtran.obj msges.obj objfunc.obj oldbox.obj \
-              readvar.obj xsavescr.obj memvarbl.obj readkey.obj set.obj \
-              setta.obj setcolor.obj setta.obj setkey.obj strfmt.obj \
-              strings.obj symbols.obj stringp.obj stringsx.obj \
-              tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj terror.obj \
-              tget.obj tgetlist.obj tone.obj transfrm.obj \
-              wait.obj
+              dates.obj dates2.obj datesx.obj dbstrux.obj \
+              debug.obj debugger.obj descend.obj devoutp.obj \
+              dir.obj dircmd.obj do.obj dynsym.obj dummy.obj \
+              environ.obj errorapi.obj errorsys.obj extend.obj \
+              fieldbl.obj fileread.obj filesys.obj fm.obj \
+              harbinit.obj hardcr.obj hb_f.obj hvm.obj \
+              initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
+              langapi.obj mainstd.obj mainwin.obj math.obj \
+              mathx.obj memofile.obj memoline.obj memvars.obj \
+              memvarbl.obj menuto.obj mlcount.obj mtran.obj msges.obj \
+              natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj \
+              readvar.obj readkey.obj \
+              samples.obj set.obj setta.obj setcolor.obj \
+              setkey.obj setta.obj soundex.obj strfmt.obj \
+              strings.obj stringp.obj stringsx.obj symbols.obj \
+              tbcolumn.obj tbrowse.obj tbrwtext.obj tclass.obj \
+              terror.obj text.obj tget.obj tgetlist.obj tone.obj \
+              transfrm.obj xsavescr.obj wait.obj
 
 symbols.obj  : symbols.asm
 
@@ -58,17 +62,18 @@ copyfile.obj : copyfile.c extend.h hbdefs.h
 dates.obj    : dates.c    extend.h hbdefs.h
 dates2.obj   : dates2.c   extend.h hbdefs.h
 datesx.obj   : datesx.c   extend.h hbdefs.h
+dbstrux.obj  : dbstrux.c  extend.h hbdefs.h
 debug.obj    : debug.c    extend.h hbdefs.h
 debugger.obj : debugger.c extend.h hbdefs.h
 descend.obj  : descend.c  extend.h hbdefs.h
 devout.obj   : devout.c   extend.h hbdefs.h
 devoutp.obj  : devoutp.c  extend.h hbdefs.h
 dir.obj      : dir.c      extend.h hbdefs.h
+dircmd.obj   : dircmd.c   extend.h hbdefs.h
 do.obj       : do.c       extend.h hbdefs.h
 dynsym.obj   : dynsym.c   extend.h hbdefs.h
 dummy.obj    : dummy.c    extend.h hbdefs.h
 environ.obj  : environ.c  extend.h hbdefs.h
-terror.obj   : terror.c   extend.h hbdefs.h
 errorapi.obj : errorapi.c extend.h hbdefs.h
 errorsys.obj : errorsys.c extend.h hbdefs.h
 extend.obj   : extend.c   extend.h hbdefs.h
@@ -83,6 +88,7 @@ hvm.obj      : hvm.c      extend.h hbdefs.h
 initsymb.obj : initsymb.c extend.h hbdefs.h
 inkey.obj    : inkey.c    extend.h hbdefs.h
 input.obj    : input.c    extend.h hbdefs.h
+isprint.obj  : isprint.c  extend.h hbdefs.h
 itemapi.obj  : itemapi.c  extend.h hbdefs.h
 langapi.obj  : langapi.c  extend.h hbdefs.h
 mainstd.obj  : mainstd.c  extend.h hbdefs.h
@@ -97,12 +103,19 @@ memvars.obj  : memvars.c  extend.h hbdefs.h
 menuto.obj   : menuto.c   extend.h hbdefs.h
 msgen.obj    : msgen.c    extend.h hbdefs.h
 mtran.obj    : mtran.c    extend.h hbdefs.h
+natmsg.obj   : natmsg.c   extend.h hbdefs.h
+net.obj      : net.c      extend.h hbdefs.h
 objfunc.obj  : objfunc.c  extend.h hbdefs.h
 oldbox.obj   : oldbox.c   extend.h hbdefs.h
+oldclear.obj : oldclear.c extend.h hbdefs.h
+readkey.obj  : readkey.c  extend.h hbdefs.h
+readvar.obj  : readvar.c  extend.h hbdefs.h
+samples.obj  : samples.c  extend.h hbdefs.h
 set.obj      : set.c      extend.h hbdefs.h
 setta.obj    : setta.c    extend.h hbdefs.h
 setcolor.obj : setcolor.c extend.h hbdefs.h init.h pcode.h
 setkey.obj   : setkey.c   extend.h hbdefs.h
+soundex.obj  : soundex.c  extend.h hbdefs.h
 strfmt.obj   : strfmt.c   extend.h hbdefs.h
 stringp.obj  : stringp.c  extend.h hbdefs.h
 strings.obj  : strings.c  extend.h hbdefs.h
@@ -111,12 +124,12 @@ tbcolumn.obj : tbcolumn.c extend.h hbdefs.h
 tbrowse.obj  : tbrowse.c  extend.h hbdefs.h
 tbrwtext.obj : tbrwtext.c extend.h hbdefs.h
 tclass.obj   : tclass.c   extend.h hbdefs.h
+terror.obj   : terror.c   extend.h hbdefs.h
+text.obj     : text.c     extend.h hbdefs.h
 tget.obj     : tget.c     extend.h hbdefs.h
 tgetlist.obj : tgetlist.c extend.h hbdefs.h
 tone.obj     : tone.c     extend.h init.h inkey.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
-readkey.obj  : readkey.c  extend.h hbdefs.h
-readvar.obj  : readvar.c  extend.h hbdefs.h
 xsavescr.obj : xsavescr.c extend.h hbdefs.h
 wait.obj     : wait.c     extend.h hbdefs.h
 
@@ -126,8 +139,10 @@ alert.c      : alert.prg     harbour.exe
 asort.c      : asort.prg     harbour.exe
 browdb.c     : browdb.prg    harbour.exe
 browse.c     : browse.prg    harbour.exe
+dbstrux.c    : dbstrux.prg   harbour.exe
 debugger.c   : debugger.prg  harbour.exe
 devoutp.c    : devoutp.prg   harbour.exe
+dircmd.c     : dircmd.prg    harbour.exe
 dummy.c      : dummy.prg     harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 fieldbl.c    : fieldbl.prg   harbour.exe
@@ -137,6 +152,8 @@ input.c      : input.prg     harbour.exe
 memvarbl.c   : memvarbl.prg  harbour.exe
 menuto.c     : menuto.prg    harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
+readvar.c    : readvar.prg   harbour.exe
+readkey.c    : readkey.prg   harbour.exe
 setkey.c     : setkey.prg    harbour.exe
 setta.c      : setta.prg     harbour.exe
 stringp.c    : stringp.prg   harbour.exe
@@ -144,10 +161,9 @@ tbcolumn.c   : tbcolumn.prg  harbour.exe
 tbrowse.c    : tbrowse.prg   harbour.exe
 tclass.c     : tclass.prg    harbour.exe
 terror.c     : terror.prg    harbour.exe
+text.c       : text.prg      harbour.exe
 tget.c       : tget.prg      harbour.exe
 tgetlist.c   : tgetlist.prg  harbour.exe
-readvar.c    : readvar.prg   harbour.exe
-readkey.c    : readkey.prg   harbour.exe
 xsavescr.c   : xsavescr.prg  harbour.exe
 wait.c       : wait.prg      harbour.exe
 
