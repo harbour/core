@@ -716,7 +716,7 @@ USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRig
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtRectSize(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, uipBuffSize));
 
-   *uipBuffSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 ) * 2;
+   *uipBuffSize = hb_gt_RectSize( uiBottom - uiTop + 1, uiRight - uiLeft + 1 );
 
    return 0;
 }

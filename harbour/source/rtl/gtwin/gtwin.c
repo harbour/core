@@ -812,6 +812,11 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
    WriteConsoleOutputCharacterA( s_HOutput, ( char * ) str, ( DWORD ) len, coord, &dwWritten );
 }
 
+int hb_gt_RectSize( USHORT rows, USHORT cols )
+{
+   return rows * cols * 2;
+}
+
 void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * dest )
 {
    LPWORD pwattr;

@@ -164,6 +164,7 @@ extern BOOL   hb_gt_IsColor( void );
 extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern int    hb_gt_ReadKey( HB_inkey_enum eventmask );
+extern int    hb_gt_RectSize( USHORT rows, USHORT cols );
 extern void   hb_gt_Replicate( BYTE byChar, ULONG ulLen );
 extern SHORT  hb_gt_Row( void );
 extern void   hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols );

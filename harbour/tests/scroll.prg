@@ -8,8 +8,10 @@
    Copyright 1999 David G. Holm <dholm@jsd-llc.com>
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
+#include "box.ch"
 
 function main()
+local ct
 
    DEVPOS(MAXROW(),0)
    DispBegin()
@@ -22,7 +24,10 @@ function main()
    ?
    DispEnd()
    Pause()
+
+SET COLOR TO "GR+/RB"
    CLS
+   @ 0,0,14,45 BOX B_SINGLE
    @ 0,0  SAY "01234567890123456789012345678901"
    @ 1,0  SAY "01234567890123456789012345678901"
    @ 2,0  SAY "01234567890123456789012345678901"
@@ -36,7 +41,14 @@ function main()
    @ 10,0 SAY "01234567890123456789012345678901"
    @ 11,0 SAY "01234567890123456789012345678901"
    @ 12,0 SAY "01234567890123456789012345678901"
+   @ 13,0 SAY "0         1         2         3 "
    Pause()
+
+//save/restore test
+   cT := SAVESCREEN( 0,0, 13, 31 )   
+   RESTSCREEN( 10,40, 23, 71, cT )   
+   pause()
+   
    Scroll (1, 1, 11, 30, -2, -5)
    pause()
    Scroll (1, 1, 11, 30, 2, 5)
@@ -45,7 +57,8 @@ function main()
    pause()
    Scroll (1, 1, 11, 30, 7, -12)
    pause()
-   Scroll (1, 1, 11, 30)
+   SET COLOR TO "W+/R"
+   Scroll (1, 1, 11, 30, 0, 0 )
    pause()
 
 return nil

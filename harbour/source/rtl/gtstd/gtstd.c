@@ -243,6 +243,11 @@ void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG u
    HB_SYMBOL_UNUSED( ulLen );
 }
 
+int hb_gt_RectSize( USHORT rows, USHORT cols )
+{
+   return rows * cols * 2;
+}
+
 void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));

@@ -1,3 +1,33 @@
+20000416-13:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *config/linux/gcc.cf
+	*fixed to automatically select a proper screen library
+	
+    *include/hbapigt.h	
+    *source/rtl/gtapi.c
+    *source/rtl/gt_tpl/gt_tpl.c
+    *source/rtl/gtcrs/gtcrs.c
+    *source/rtl/gtdos/gtdos.c
+    *source/rtl/gtos2/gtos2.c
+    *source/rtl/gtpca/gtpca.c
+    *source/rtl/gtsln/gtsln.c
+    *source/rtl/gtstd/gtstd.c
+    *source/rtl/gtwin/gtwin.c
+	*number of bytes required for a given rectangle size is
+	calculated in the lowest level function 
+	hb_gt_RectSize( rows, cols ) - some screen drivers can
+	store screen image in more complex method then byte+byte
+
+    *source/rtl/gtcrs/gtcrs.c
+        *full support for scrolling was added
+        *full ASCII character set enabled including box drawing characters
+       (however this don't work under xterm)
+	*save/restore screen are available
+
+    *source/rdd/dbfcdx/dbfcdx1.c
+	* fixed NULL into 0 for string termination character (NULL in gcc
+	compiler is defined as a pointer)      
+
 20000416-12:34 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/lang/msgfr.c

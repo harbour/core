@@ -13,7 +13,7 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -Wall
+CFLAGS = -Wall -g
 
 LD = gcc
 LD_OUT = -o
@@ -40,8 +40,13 @@ LINKLIBS += -l$(HB_GT_LIB)
 endif
 
 # HB_SCREEN_LIB: empty, or one of ncurses, slang
-HB_SCREEN_LIB=ncurses
-# HB_SCREEN_LIB=slang
+ifeq ($(HB_GT_LIB),gtcrs)
+HB_SCREEN_LIB:=ncurses
+else
+ifeq ($(HB_GT_LIB),gtsln)
+HB_SCREEN_LIB:=slang
+endif
+endif
 
 ifneq ($(HB_SCREEN_LIB),)
 LINKLIBS += -l$(HB_SCREEN_LIB)

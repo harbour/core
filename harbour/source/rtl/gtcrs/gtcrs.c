@@ -34,6 +34,7 @@
  */
 
 #include <curses.h>
+#include <unistd.h>
 
 #include "hbapigt.h"
 #include "hbinit.h"
@@ -62,14 +63,11 @@ struct key_map_struc
 
 static struct key_map_struc *s_keymap_table = NULL;
 static unsigned s_attribmap_table[ 256 ]; /* mapping from DOS style attributes */
+static BOOL s_under_buggy_xterm;
+static int s_alternate_char_set;
 
-void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
+static void hb_gt_Initialize_Terminal( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
-
-   s_uiDispCount = 0;
-
-   initscr();
    if( has_colors() )
    {
       int i;
@@ -99,7 +97,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       start_color();
       for( backg=0; backg<COLORS; backg++ )
          for( foreg=0; foreg<COLORS; foreg++ )
-	    init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
+	       init_pair( backg*COLORS+foreg, color_map[foreg], color_map[backg] );
 	    
       for( i=0; i<256; i++  )
       {
@@ -112,6 +110,49 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 	     s_attribmap_table[ i ] |= A_BLINK;  /* 7-th bit is blinking bit */
       }
    }
+
+   cbreak();
+   noecho();
+   nodelay( stdscr, 1 );
+   scrollok( stdscr, TRUE );
+   raw();
+   keypad( stdscr, FALSE );
+   
+   s_under_buggy_xterm = !strncmp( getenv("TERM"), "xterm", 5 );
+   /* NOTE: using A_ALTCHARSET attribute is causing that small letters
+     a-z are not printed under xterm (at least xterm from Linux 
+     RedHat 6.1 distribution)
+   */
+   if( s_under_buggy_xterm )
+   {
+      char * str;
+      
+      str = tigetstr( "enacs" );   /* enable alt character set */
+      if( (str != NULL) && (str != (char *)-1) )
+         write( fileno(stdout), str, strlen(str) );
+
+      str = tigetstr( "smacs" );   /* start alt characters set */
+      if( (str != NULL) && (str != (char *)-1) )
+         write( fileno(stdout), str, strlen(str) );
+
+      s_alternate_char_set = 0;
+   }
+   else
+      s_alternate_char_set = A_ALTCHARSET;
+   
+   bkgdset( ' ' );
+   ripoffline( 0, NULL );
+   
+}
+
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+
+   s_uiDispCount = 0;
+
+   initscr();
+   hb_gt_Initialize_Terminal();
 
     hb_gt_Add_terminfo_keymap( K_ENTER, "kent" );
     hb_gt_Add_terminfo_keymap( K_ENTER, "ind" );
@@ -224,11 +265,6 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
     hb_gt_Add_keymap( K_ALT_ENTER, "\033\n" );
     hb_gt_Add_keymap( K_ALT_EQUALS, "\033=" );
     
-   cbreak();
-   noecho();
-   nodelay( stdscr, 1 );
-   raw();
-   keypad( stdscr, FALSE );
 }
 
 void hb_gt_Exit( void )
@@ -246,7 +282,7 @@ void hb_gt_Exit( void )
       {
          s_keymap_table = s_keymap_table->Next;
          hb_xfree( tmp );
-	 tmp = s_keymap_table;
+	      tmp = s_keymap_table;
       }
    }
 }
@@ -278,7 +314,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
       if( ch == 3 )
       {
          /* Ctrl-C was pressed */
-	 ch = HB_BREAK_FLAG;
+	       ch = HB_BREAK_FLAG;
       }
       else if( s_keymap_table )
       {
@@ -453,16 +489,21 @@ void hb_gt_Puts( USHORT uiRow,
                  ULONG ulLen )
 {
    ULONG i;
+   int attr;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) byAttr, pbyStr, ulLen));
 
+   attr = s_alternate_char_set | s_attribmap_table[ byAttr ];
    move( uiRow, uiCol ); 
-   attron( s_attribmap_table[ byAttr ] );
    for( i = 0; i < ulLen; ++i )
-      addch( pbyStr[ i ] );
-   attroff( s_attribmap_table[ byAttr ] );
+      addch( pbyStr[ i ] | attr );
    if( s_uiDispCount == 0 )
       refresh();
+}
+
+int hb_gt_RectSize( USHORT rows, USHORT cols )
+{
+   return rows * cols * sizeof( chtype );
 }
 
 void hb_gt_GetText( USHORT uiTop,
@@ -471,9 +512,20 @@ void hb_gt_GetText( USHORT uiTop,
                     USHORT uiRight,
                     BYTE * pbyDst )
 {
+   int i;
+   chtype *pBuffer = (chtype *)pbyDst;
+      
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyDst));
 
-   /* TODO */
+   if( s_uiDispCount == 0 )
+      refresh();
+
+   while( uiTop <= uiBottom )
+   {
+    for( i=uiLeft; i<=uiRight; i++, pBuffer++ )
+        *pBuffer = mvinch( uiTop, i );
+      ++uiTop;
+   }
 }
 
 void hb_gt_PutText( USHORT uiTop,
@@ -482,9 +534,20 @@ void hb_gt_PutText( USHORT uiTop,
                     USHORT uiRight,
                     BYTE * pbySrc )
 {
+   int Cols;
+   chtype *pBuffer = (chtype *)pbySrc;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbySrc));
 
-   /* TODO */
+   Cols = uiRight - uiLeft + 1;
+   while( uiTop <= uiBottom )
+   {
+      mvaddchnstr( uiTop, uiLeft, pBuffer, Cols );
+      pBuffer +=Cols;
+      ++uiTop;
+   }
+   if( s_uiDispCount == 0 )
+      refresh();
 }
 
 void hb_gt_SetAttribute( USHORT uiTop,
@@ -493,12 +556,18 @@ void hb_gt_SetAttribute( USHORT uiTop,
                          USHORT uiRight,
                          BYTE byAttr )
 {
+   int Count = uiRight - uiLeft + 1;
+   int newAttr = s_attribmap_table[ byAttr ];
+   short newColor;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
 
-   /* TODO: we want to take a screen that is say bright white on blue,
-      and change the attributes only for a section of the screen
-      to white on black.
-   */
+   newColor = PAIR_NUMBER( newAttr );
+   newAttr &= A_ATTRIBUTES;	/* extract attributes only */
+   while( uiTop <= uiBottom )
+      mvchgat( uiTop++, uiLeft, Count, newAttr, newColor, NULL );
+   if( s_uiDispCount == 0 )
+      refresh();
 }
 
 void hb_gt_Scroll( USHORT uiTop,
@@ -509,17 +578,83 @@ void hb_gt_Scroll( USHORT uiTop,
                    SHORT iRows,
                    SHORT iCols )
 {
-   WINDOW *subw;
-   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr, iRows, iCols));
 
-/* TODO: scrolling left-right */   
-   subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
-   scrollok( subw, TRUE );
-   wscrl( subw, iRows );
-   if( s_uiDispCount == 0 )
+   if( iRows == 0 && iCols == 0 )
+   {
+      /* Clear the specified rectangle */
+      WINDOW *subw;
+
+      subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
+      wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
+      wclear( subw );
       touchwin( stdscr );
-   delwin( subw );
+      wrefresh( subw );
+      delwin( subw );        
+   }
+   else
+   {
+      if( iRows != 0 )
+      {
+         WINDOW *subw;
+      
+         subw = subwin( stdscr, uiBottom-uiTop+1, uiRight-uiLeft+1, uiTop, uiLeft );
+         wbkgdset( subw, ' ' | s_attribmap_table[ byAttr ] );
+         scrollok( subw, TRUE );
+         wscrl( subw, iRows );
+         delwin( subw );
+      }
+   
+      if( iCols != 0 )
+      {
+         chtype *pScreen, *pTmp;
+         int memsize;
+         int RowCount, ColCount;
+         int i, j;
+         int newAttr;
+
+         refresh();
+         
+         RowCount = uiBottom - uiTop + 1;
+         ColCount = uiRight - uiLeft + 1;
+         newAttr  = ' ' | s_attribmap_table[ byAttr ];
+      
+         memsize = hb_gt_RectSize( RowCount, ColCount );
+         pScreen = (chtype *) hb_xgrab( memsize );
+         hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, (BYTE *)pScreen );
+
+         if( iCols > 0 )
+         {
+            pTmp = pScreen;
+            for( i=0; i<RowCount; i++ )      
+            {
+               for( j=ColCount - 1; j>=iCols; j-- )
+                  pTmp[ j ] = pTmp[ j-1 ];
+               for( j=0; j<iCols; j++ )
+                  pTmp[ j ] = newAttr;
+               pTmp += ColCount;
+            }
+         }
+         else
+         {
+            int ColMove  = ColCount + iCols;
+         
+            pTmp = pScreen;
+            for( i=0; i<RowCount; i++ )      
+            {
+               for( j=0; j<ColMove; j++ )
+                  pTmp[ j ] = pTmp[ j-iCols ];
+               for( j=ColMove; j<ColCount; j++ )
+                  pTmp[ j ] = newAttr;
+               pTmp += ColCount;
+            }
+         }
+         hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, (BYTE *)pScreen );
+         hb_xfree( (BYTE *)pScreen );
+      }
+   }
+   if( s_uiDispCount == 0 )
+      refresh();
 }
 
 void hb_gt_DispBegin( void )
@@ -539,10 +674,19 @@ void hb_gt_DispEnd()
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
 {
+   BOOL success;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetMode(%hu, %hu)", uiRows, uiCols));
 
-   /* TODO: How to change the size of the screen? */
-   return TRUE;
+   /* NOTE: Not tested!!!
+      Use it on your own risk!
+   */
+   endwin();
+   success = ( ( resizeterm( uiRows, uiCols) == OK) ? TRUE : FALSE );
+   initscr();
+   hb_gt_Initialize_Terminal();
+   
+   return success;
 }
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
@@ -586,6 +730,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 
    HB_SYMBOL_UNUSED( dFrequency );
    HB_SYMBOL_UNUSED( dDuration );
+   beep();
 }
 
 static void gt_GetMaxRC(int* r, int* c)
@@ -613,7 +758,7 @@ static void gt_SetRC(int r, int c)
 
 char * hb_gt_Version( void )
 {
-   return "Harbour Terminal: Curses";
+   return "Harbour Terminal: ncurses (Linux console)";
 }
 
 USHORT hb_gt_DispCount()

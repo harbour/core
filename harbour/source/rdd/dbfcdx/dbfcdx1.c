@@ -922,7 +922,7 @@ static void hb_cdxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
       while( pNewKey->pItem->item.asString.length > 0 &&
              pNewKey->pItem->item.asString.value[ pNewKey->pItem->item.asString.length - 1 ] == ' ' )
          pNewKey->pItem->item.asString.length--;
-         pNewKey->pItem->item.asString.value[ pNewKey->pItem->item.asString.length ] = NULL;
+         pNewKey->pItem->item.asString.value[ pNewKey->pItem->item.asString.length ] = 0;
    }
    pTag->TagBOF = pTag->TagEOF = FALSE;
    iSeek = hb_cdxPageSeekKey( pTag->RootPage, pNewKey->Tag, pNewKey, TRUE );
@@ -1155,7 +1155,7 @@ static void hb_cdxTagExtNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO P
       if( pTag->KeyLength - d - t > 0 )
          memcpy( &szBuffer[ d ], &pData->cdxu.External.ExtData[ k ],
                  pTag->KeyLength - d - t );
-      szBuffer[ pTag->KeyLength - t ] = NULL;
+      szBuffer[ pTag->KeyLength - t ] = 0;
       pKey = hb_cdxKeyNew();
       pKey->Tag = r;
       pKey->Xtra = r;
@@ -1227,7 +1227,7 @@ static void hb_cdxTagTagLoad( LPTAGINFO pTag )
          break;
    }
 
-   if( pHeader.KeyPool[ strlen( pTag->KeyExpr ) + 1 ] == NULL )
+   if( pHeader.KeyPool[ strlen( pTag->KeyExpr ) + 1 ] == 0 )
       return;
    pTag->ForExpr = ( char * ) hb_xgrab( CDX_MAX_KEY + 1 );
    hb_strncpyUpper( pTag->ForExpr, ( const char * ) pHeader.KeyPool +
@@ -1371,7 +1371,7 @@ static void hb_cdxTagIntNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO p
    {
       v = i * ( pTag->KeyLength + 8 );
       memmove( szBuffer, pData->cdxu.Internal.IntData + v, pTag->KeyLength );
-      szBuffer[ pTag->KeyLength ] = NULL;
+      szBuffer[ pTag->KeyLength ] = 0;
       v += pTag->KeyLength;
       memcpy( &r, &pData->cdxu.Internal.IntData[ v ], 4 );
       r = hb_cdxSwapBytes( r );
@@ -1383,7 +1383,7 @@ static void hb_cdxTagIntNodeBuild( LPTAGINFO pTag, LPCDXDATA pData, LPPAGEINFO p
          v = strlen( szBuffer );
          while( v > 0 && szBuffer[ v - 1 ] == 32 )
             v--;
-         szBuffer[ v ] = NULL;
+         szBuffer[ v ] = 0;
       }
       else
       {
@@ -1424,7 +1424,7 @@ static LONG hb_cdxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey )
       while( stot->pItem->item.asString.length > 0 &&
              stot->pItem->item.asString.value[ stot->pItem->item.asString.length - 1 ] == ' ' )
          stot->pItem->item.asString.length--;
-         stot->pItem->item.asString.value[ stot->pItem->item.asString.length ] = NULL;
+         stot->pItem->item.asString.value[ stot->pItem->item.asString.length ] = 0;
    }
    pTag->TagBOF = pTag->TagEOF = FALSE;
    K = hb_cdxPageSeekKey( pTag->RootPage, stot->Tag, stot, FALSE );
@@ -2037,7 +2037,7 @@ static void hb_cdxSortFree( LPSORTINFO pSort )
    {
       for( usCount = 0; usCount < pSort->ChunkLimit; usCount++ )
       {
-         if( pSort->ChunkList[ usCount ] != NULL )
+         if( pSort->ChunkList[ usCount ] != 0 )
             hb_xfree( ( BYTE * ) pSort->ChunkList[ usCount ] );
       }
       hb_xfree( pSort->ChunkList );
@@ -2108,7 +2108,7 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value )
    }
    while( v >= 0 && pSort->WPch[ v ] == ' ' )
    {
-      pSort->WPch[ v ] = NULL;
+      pSort->WPch[ v ] = 0;
       v--;
    }
    v++;
@@ -2118,7 +2118,7 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value )
       s[ 0 ] = ( char ) strlen( s + 1 );
       memcpy( &pSort->WPch[ v ], s, s[ 0 ] + 1 );
       v += ( SHORT ) ( s[ 0 ] + 1 );
-      pSort->WPch[ v ] = NULL;
+      pSort->WPch[ v ] = 0;
    }
    pSort->LevelPtr = pSort->RootLink;
    pSort->PriorPtr = 0;
@@ -2135,7 +2135,7 @@ static void hb_cdxSortInsertWord( LPSORTINFO pSort, LONG Tag, char * Value )
          EOK++;
       memcpy( &pSort->WPch[ EOK ], s, s[ 0 ] + 1 );
       v = EOK + s[ 0 ] + 1;
-      pSort->WPch[ v ] = NULL;
+      pSort->WPch[ v ] = 0;
       do
          hb_cdxSortStuffKey( pSort, &wx );
       while( pSort->WPch[ pSort->WCur ] != 0 );
@@ -2204,7 +2204,7 @@ static void hb_cdxSortGetNode( LPSORTINFO pSort, char Character, LONG * NewLink 
       px = hb_cdxSortLinkGet( pSort, p );
       px->sortu.A.Character = px->sortu.B.ChrStack[ 0 ];
       memmove( &px->sortu.B.ChrStack[ 0 ], &px->sortu.B.ChrStack[ 1 ], 3 );
-      px->sortu.B.ChrStack[ 3 ] = NULL;
+      px->sortu.B.ChrStack[ 3 ] = 0;
       if( px->sortu.C.ChrFill != 0 )
          px->sortu.A.NUse = SORT_STACK_OF_CHAR;
       else
@@ -2237,7 +2237,7 @@ static void hb_cdxSortGetNode( LPSORTINFO pSort, char Character, LONG * NewLink 
          px = hb_cdxSortLinkGet( pSort, p );
          px->sortu.A.Character = px->sortu.B.ChrStack[ 0 ];
          memmove( &px->sortu.B.ChrStack[ 0 ], &px->sortu.B.ChrStack[ 1 ], 3 );
-         px->sortu.B.ChrStack[ 3 ] = NULL;
+         px->sortu.B.ChrStack[ 3 ] = 0;
          if( px->sortu.C.ChrFill != 0 )
             px->sortu.A.NUse = SORT_STACK_OF_CHAR;
          else
@@ -2296,7 +2296,7 @@ static LPSORTDATA hb_cdxSortLinkGet( LPSORTINFO pSort, LONG Value )
 
 static void hb_cdxSortDisplayWord( LPSORTINFO pSort )
 {
-   pSort->WPch[ 0 ] = NULL;
+   pSort->WPch[ 0 ] = 0;
    hb_cdxSortRecurseDict( pSort, pSort->RootLink, 0 );
 }
 
@@ -2311,12 +2311,12 @@ static void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn )
    if( pSort->WAdr->sortu.A.Character != 0 )
    {
       pSort->WPch[ WCnt ] = pSort->WAdr->sortu.A.Character;
-      pSort->WPch[ WCnt + 1 ] = NULL;
+      pSort->WPch[ WCnt + 1 ] = 0;
    }
    if( pSort->WAdr->sortu.A.NUse == SORT_STACK_OF_CHAR )
    {
       memcpy( &pSort->WPch[ strlen( pSort->WPch ) ], pSort->WAdr->sortu.B.ChrStack, 4 );
-      pSort->WPch[ WCnt + 5 ] = NULL;
+      pSort->WPch[ WCnt + 5 ] = 0;
    }
    if( pSort->WAdr->sortu.A.NUse == SORT_END_OF_WORD )
       hb_cdxSortSendWord( pSort, pSort->WPch );
@@ -2326,7 +2326,7 @@ static void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn )
          hb_cdxSortRecurseDict( pSort, pSort->WAdr->sortu.A.WordArray, WBgn );
       pSort->WAdr = hb_cdxSortLinkGet( pSort, WPtr );
    }
-   pSort->WPch[ WCnt ] = NULL;
+   pSort->WPch[ WCnt ] = 0;
    if( pSort->WAdr->sortu.A.LevelLink != 0 && pSort->WAdr->sortu.A.NUse != SORT_STACK_OF_CHAR )
       hb_cdxSortRecurseDict( pSort, pSort->WAdr->sortu.A.LevelLink, WCnt );
 }
@@ -2342,7 +2342,7 @@ static void hb_cdxSortSendWord( LPSORTINFO pSort, char * Value )
       pce--;
    Tag = atol( pce + 1 );
    OldByte = pce[ 0 ];
-   pce[ 0 ] = NULL;
+   pce[ 0 ] = 0;
    hb_cdxSortOutputWord( pSort, Tag, Value );
    pce[ 0 ] = OldByte;
 }
@@ -2996,7 +2996,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    uiCount = strlen( szTagName );
    while( uiCount > 0 && szTagName[ uiCount - 1 ] == ' ' )
       uiCount--;
-   szTagName[ uiCount ] = NULL;
+   szTagName[ uiCount ] = 0;
    hb_cdxIndexAddTag( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
                       pKeyExp, bType, uiLen, ( char * ) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor :
                       NULL ), pForExp, pArea->lpdbOrdCondInfo ?
