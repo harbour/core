@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-29 18:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+  * hrbdll.bc
+  * hrbdll.vc
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
+    ! Added missing/new files from source/codepage/*.c & source/lang/*.c
+  + source/codepage/cdpesmwi.c
+    + Added Spanish Modern codepage
+
 2004-12-28 11:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/samples/dbf.c
   * harbour/contrib/samples/time.c

@@ -437,8 +437,8 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgpt.obj \
    $(OBJ_DIR)\msgro.obj \
    $(OBJ_DIR)\msgru866.obj \
-   $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgrukoi.obj \
+   $(OBJ_DIR)\msgruwin.obj \
    $(OBJ_DIR)\msgsl437.obj \
    $(OBJ_DIR)\msgsl852.obj \
    $(OBJ_DIR)\msgsliso.obj \
@@ -446,32 +446,47 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgsr852.obj \
    $(OBJ_DIR)\msgsriso.obj \
    $(OBJ_DIR)\msgsrwin.obj \
-   $(OBJ_DIR)\msgzhgb.obj \
-   $(OBJ_DIR)\msgzhb5.obj
+   $(OBJ_DIR)\msgzhb5.obj \
+   $(OBJ_DIR)\msgzhgb.obj
 
 CODEPAGE_LIB_OBJS = \
    $(OBJ_DIR)\cdpeldos.obj \
    $(OBJ_DIR)\cdpelwin.obj \
    $(OBJ_DIR)\cdpesdos.obj \
+   $(OBJ_DIR)\cdpesmwi.obj \
    $(OBJ_DIR)\cdpeswin.obj \
    $(OBJ_DIR)\cdpgedos.obj \
    $(OBJ_DIR)\cdpgewin.obj \
    $(OBJ_DIR)\cdphu852.obj \
    $(OBJ_DIR)\cdphuwin.obj \
-   $(OBJ_DIR)\cdppt850.obj \
-   $(OBJ_DIR)\cdpptiso.obj \
    $(OBJ_DIR)\cdppl852.obj \
    $(OBJ_DIR)\cdppliso.obj \
    $(OBJ_DIR)\cdpplmaz.obj \
    $(OBJ_DIR)\cdpplwin.obj \
+   $(OBJ_DIR)\cdppt850.obj \
+   $(OBJ_DIR)\cdpptiso.obj \
    $(OBJ_DIR)\cdpru866.obj \
-   $(OBJ_DIR)\cdpruwin.obj \
    $(OBJ_DIR)\cdprukoi.obj \
+   $(OBJ_DIR)\cdpruwin.obj \
    $(OBJ_DIR)\cdpsl437.obj \
    $(OBJ_DIR)\cdpsl852.obj \
    $(OBJ_DIR)\cdpsliso.obj \
    $(OBJ_DIR)\cdpslwin.obj \
-   $(OBJ_DIR)\cdpsrwin.obj
+   $(OBJ_DIR)\cdpsrwin.obj \
+   $(OBJ_DIR)\uc1250.obj   \
+   $(OBJ_DIR)\uc1251.obj   \
+   $(OBJ_DIR)\uc1253.obj   \
+   $(OBJ_DIR)\uc1257.obj   \
+   $(OBJ_DIR)\uc737.obj    \
+   $(OBJ_DIR)\uc850.obj    \
+   $(OBJ_DIR)\uc852.obj    \
+   $(OBJ_DIR)\uc866.obj    \
+   $(OBJ_DIR)\uc8859_1.obj \
+   $(OBJ_DIR)\uc8859_2.obj \
+   $(OBJ_DIR)\uc88591b.obj \
+   $(OBJ_DIR)\uckoi8.obj   \
+   $(OBJ_DIR)\uckoi8u.obj  \
+   $(OBJ_DIR)\ucmaz.obj
 
 #
 # MACRO.LIB rules
@@ -2269,11 +2284,11 @@ $(OBJ_DIR)\msghuwin.obj : $(LANG_DIR)\msghuwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
+$(OBJ_DIR)\msgid.obj : $(LANG_DIR)\msgid.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\msgid.obj : $(LANG_DIR)\msgid.c
+$(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
@@ -2313,11 +2328,11 @@ $(OBJ_DIR)\msgru866.obj : $(LANG_DIR)\msgru866.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\msgruwin.obj : $(LANG_DIR)\msgruwin.c
+$(OBJ_DIR)\msgrukoi.obj : $(LANG_DIR)\msgrukoi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\msgrukoi.obj : $(LANG_DIR)\msgrukoi.c
+$(OBJ_DIR)\msgruwin.obj : $(LANG_DIR)\msgruwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
@@ -2372,6 +2387,10 @@ $(OBJ_DIR)\cdpesdos.obj : $(CODEPAGE_DIR)\cdpesdos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\cdpesmwi.obj : $(CODEPAGE_DIR)\cdpesmwi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\cdpeswin.obj : $(CODEPAGE_DIR)\cdpeswin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
@@ -2392,14 +2411,6 @@ $(OBJ_DIR)\cdphuwin.obj : $(CODEPAGE_DIR)\cdphuwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\cdppt850.obj : $(CODEPAGE_DIR)\cdppt850.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\cdpptiso.obj : $(CODEPAGE_DIR)\cdpptiso.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\cdppl852.obj : $(CODEPAGE_DIR)\cdppl852.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
@@ -2416,15 +2427,23 @@ $(OBJ_DIR)\cdpplwin.obj : $(CODEPAGE_DIR)\cdpplwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\cdppt850.obj : $(CODEPAGE_DIR)\cdppt850.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cdpptiso.obj : $(CODEPAGE_DIR)\cdpptiso.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\cdpru866.obj : $(CODEPAGE_DIR)\cdpru866.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\cdpruwin.obj : $(CODEPAGE_DIR)\cdpruwin.c
+$(OBJ_DIR)\cdprukoi.obj : $(CODEPAGE_DIR)\cdprukoi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\cdprukoi.obj : $(CODEPAGE_DIR)\cdprukoi.c
+$(OBJ_DIR)\cdpruwin.obj : $(CODEPAGE_DIR)\cdpruwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
@@ -2445,6 +2464,62 @@ $(OBJ_DIR)\cdpslwin.obj : $(CODEPAGE_DIR)\cdpslwin.c
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\cdpsrwin.obj : $(CODEPAGE_DIR)\cdpsrwin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc1250.obj : $(CODEPAGE_DIR)\uc1250.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc1251.obj : $(CODEPAGE_DIR)\uc1251.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc1253.obj : $(CODEPAGE_DIR)\uc1253.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc1257.obj : $(CODEPAGE_DIR)\uc1257.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc737.obj : $(CODEPAGE_DIR)\uc737.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc850.obj : $(CODEPAGE_DIR)\uc850.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc852.obj : $(CODEPAGE_DIR)\uc852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc866.obj : $(CODEPAGE_DIR)\uc866.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc8859_1.obj : $(CODEPAGE_DIR)\uc8859_1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc8859_2.obj : $(CODEPAGE_DIR)\uc8859_2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uc88591b.obj : $(CODEPAGE_DIR)\uc88591b.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uckoi8.obj : $(CODEPAGE_DIR)\uckoi8.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\uckoi8u.obj : $(CODEPAGE_DIR)\uckoi8u.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ucmaz.obj : $(CODEPAGE_DIR)\ucmaz.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(CODEPAGE_LIB) $(ARFLAGS) -+$@,,
 
