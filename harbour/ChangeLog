@@ -15,7 +15,7 @@
       contrib/htmllib/Makefile.bc
       contrib/htmllib/Makefile
       * Sources and neccessary files to build htmllib-harbour cgi library
-   * include/hbcommon.api
+
 2001-12-25 11:45 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    + source/compiler/harbour.simple
      add a derivative copy of bison.simple v 1.28 which will be used as
