@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 // Testing Harbour classes ON ERROR feature
 
@@ -29,3 +32,4 @@ METHOD MyErrorManager( uParam1 ) CLASS Test
    Alert( __GetMessage() )  // Shows the message that was sent to the object
 
 return nil
+

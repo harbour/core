@@ -1,3 +1,7 @@
+20000214-09:15 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * tests/*
+     ! Fixed missing CVD IDs (again and again).
+
 20000214-07:50 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/mouse/mousedos.c
      ! static variables marked as static.

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "hbclass.ch"
 
 function main()
