@@ -4,7 +4,7 @@ function Main()
 
    local h    := 0
    local cstr := " "
-   local ntmp := 0
+   local ntmp := 1
 
    h := FCreate( "test.txt")
    qout('create handle',h)
@@ -17,13 +17,13 @@ function Main()
    qout('open handle',h)
    qout()
    /* try to read what is there */
-   do while .t.
+   do while ntmp # 0
       ntmp := FRead( h, @cstr, 1)
-      if ntmp == 0
-         exit
+      if ntmp > 0
+         qqout(cstr)
       endif
-      qqout(cstr)
    enddo
+   qout()
 
    FClose( h )
 
