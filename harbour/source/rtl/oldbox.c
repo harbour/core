@@ -33,27 +33,53 @@
  *
  */
 
+#include "hbapi.h"
 #include "hbapigt.h"
+#include "hbapiitm.h"
 
 #ifdef HB_C52_UNDOC
 
 HB_FUNC( __BOX )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
-      hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ),
-                ( BYTE * ) ( ISCHAR( 5 ) ? hb_parc( 5 ) : " " ) );
+   PHB_ITEM pTop    = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pLeft   = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pBottom = hb_param( 3, HB_IT_NUMERIC );
+   PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
+
+   if( pTop && pLeft && pBottom && pRight )
+         hb_gtBox( hb_itemGetNI( pTop ),
+                   hb_itemGetNI( pLeft), 
+                   hb_itemGetNI( pBottom ), 
+                   hb_itemGetNI( pRight ),
+                   ( BYTE * ) ( ISCHAR( 5 ) ? hb_parc( 5 ) : " " ) );
 }
 
 HB_FUNC( __BOXD )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
-      hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   PHB_ITEM pTop    = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pLeft   = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pBottom = hb_param( 3, HB_IT_NUMERIC );
+   PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
+
+   if( pTop && pLeft && pBottom && pRight )
+         hb_gtBoxD( hb_itemGetNI( pTop ),
+                   hb_itemGetNI( pLeft), 
+                   hb_itemGetNI( pBottom ), 
+                   hb_itemGetNI( pRight ) );
 }
 
 HB_FUNC( __BOXS )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
-      hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+   PHB_ITEM pTop    = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pLeft   = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pBottom = hb_param( 3, HB_IT_NUMERIC );
+   PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
+
+  if( pTop && pLeft && pBottom && pRight )
+         hb_gtBoxS( hb_itemGetNI( pTop ),
+                   hb_itemGetNI( pLeft), 
+                   hb_itemGetNI( pBottom ), 
+                   hb_itemGetNI( pRight ) );
 }
 
 #endif
