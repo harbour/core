@@ -84,6 +84,7 @@ HB_FUNC( MEMOLINE )
       {
          case HB_CHAR_HT:
             ulCurLength = ( ( ULONG ) ( ulCurLength / ulTabLength ) * ulTabLength ) + ulTabLength;
+            ulLastSpace = ulCurLength;
             break;
 
          case HB_CHAR_LF:
@@ -162,7 +163,7 @@ HB_FUNC( MEMOLINE )
          for( ulPos = 0; ulPos <= ( ulLineEnd - ulLineBegin ); ulPos++ )
          {
             if( pszString[ ulLineBegin + ulPos ] == HB_CHAR_HT )
-               ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 1;
+               ulSpAdded += ( ( ULONG ) ( ulPos / ulTabLength ) * ulTabLength ) + ulTabLength - ulPos - 2;
             else
                * ( pszLine + ulPos + ulSpAdded ) = * ( pszString + ulLineBegin + ulPos );
 

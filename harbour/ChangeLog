@@ -1,3 +1,8 @@
+2001-07-05 01:29 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rtl/memoline.c
+      * Ignacio's fix for tab character expansion buglet
+
 2001-07-02 23:42 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tget.prg
