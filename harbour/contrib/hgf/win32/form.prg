@@ -5,6 +5,7 @@
 /*
  * Harbour Project source code:
  * Harbour GUI framework for Win32
+ * Class HBForm
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * Copyright 2001 Alexander Kresin <alex@belacy.belgorod.su>
@@ -53,21 +54,16 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-
-#define WM_CLOSE        0x0010
-#define WM_COMMAND      0x0111
-#define WM_DESTROY      0x0002
-#define WM_LBUTTONDOWN  0x0201
-#define WS_VISIBLE      0x10000000
+#include "win32.ch"
 
 static aForms := {}
 
-CLASS TForm FROM HBPersistent
+CLASS HBForm FROM HBWinControl
 
-   DATA      hWnd
    DATA      oMainMenu
 
-   DATA      OnClick  PROPERTY
+   DATA      aControls PROPERTY
+   DATA      OnClick   PROPERTY
 
    CLASSDATA lRegistered
 
@@ -75,24 +71,9 @@ CLASS TForm FROM HBPersistent
    METHOD    Close() INLINE SendMessage( ::hWnd, WM_CLOSE )
    METHOD    Command( nNotifyCode, nId, hWndCtl )
    METHOD    HandleEvent( nMsg, nParam1, nParam2 )
+   METHOD    InsertControl( oControl )
    METHOD    LButtonDown( nKeyFlags, nXPos, nYPos )
    METHOD    ShowModal()
-
-   ACCESS    Caption() INLINE WinGetText( ::hWnd ) PROPERTY
-   ASSIGN    Caption( cNewCaption ) INLINE ;
-                WinSetWindowText( ::hWnd, cNewCaption )
-
-   ACCESS    Top()    INLINE WinGetTop( ::hWnd )    PROPERTY
-   ASSIGN    Top( nNewTop ) INLINE WinSetTop( ::hWnd, nNewTop )
-
-   ACCESS    Left()   INLINE WinGetLeft( ::hWnd )   PROPERTY
-   ASSIGN    Left( nNewLeft ) INLINE WinSetLeft( ::hWnd, nNewLeft )
-
-   ACCESS    Height() INLINE WinGetHeight( ::hWnd ) PROPERTY
-   ASSIGN    Height( nNewHeight ) INLINE WinSetHeight( ::hWnd, nNewHeight )
-
-   ACCESS    Width()  INLINE WinGetWidth( ::hWnd )  PROPERTY
-   ASSIGN    Width( nNewWidth ) INLINE WinSetWidth( ::hWnd, nNewWidth )
 
    ACCESS    Menu() INLINE ::oMainMenu PROPERTY
    ASSIGN    Menu( oNewMenu )
@@ -100,7 +81,7 @@ CLASS TForm FROM HBPersistent
 ENDCLASS
 
 
-METHOD New() CLASS TForm
+METHOD New() CLASS HBForm
 
    DEFAULT ::lRegistered TO .f.
 
@@ -109,15 +90,16 @@ METHOD New() CLASS TForm
       ::lRegistered = .t.
    endif
 
-   ::hWnd  = WinCreateStdWindow( , WS_VISIBLE,, "HB_TFORM", "Harbour TForm" )
+   ::hWnd  = WinCreateStdWindow( , nOr( WS_OVERLAPPEDWINDOW ),,;
+                                 "HB_TFORM", "Harbour TForm" )
 
    AAdd( aForms, Self )
 
 return Self
 
-METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS TForm
+METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS HBForm
 
-   local oMenuItem
+   local oMenuItem, nAt, oControl
 
    if nNotifyCode == 0  // Menu command
       if ::Menu != nil
@@ -126,12 +108,29 @@ METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS TForm
                __ObjSendMsg( Self, oMenuItem:OnClick, oMenuItem )
             endif
          endif
+      else              // Control command
+         nAt = AScan( ::aControls, { | o | o:hWnd == hWndCtl } )
+         if nAt != 0
+            oControl = ::aControls[ nAt ]
+            if oControl:OnClick != nil
+               __ObjSendMsg( Self, oControl:OnClick, oControl )
+            endif
+         endif
       endif
    endif
 
 return nil
 
-METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS TForm
+METHOD InsertControl( oControl ) CLASS HBForm
+
+   DEFAULT ::aControls TO {}
+
+   AAdd( ::aControls, oControl )
+   oControl:Show()
+
+return nil
+
+METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS HBForm
 
    if ::OnClick != nil
       return __ObjSendMsg( Self, ::OnClick, Self, nXPos, nYPos )
@@ -139,7 +138,7 @@ METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS TForm
 
 return nil
 
-METHOD HandleEvent( nMsg, nParam1, nParam2 ) CLASS TForm
+METHOD HandleEvent( nMsg, nParam1, nParam2 ) CLASS HBForm
 
    do case
       case nMsg == WM_COMMAND
@@ -155,14 +154,14 @@ METHOD HandleEvent( nMsg, nParam1, nParam2 ) CLASS TForm
 
 return nil
 
-METHOD ShowModal() CLASS TForm
+METHOD ShowModal() CLASS HBForm
 
    HB_FormShowModal( ::hWnd )
 
 return nil
 
 
-ASSIGN Menu( oNewMenu ) CLASS TForm
+ASSIGN Menu( oNewMenu ) CLASS HBForm
 
    ::oMainMenu = oNewMenu
 
