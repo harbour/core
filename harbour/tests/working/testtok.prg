@@ -4,7 +4,7 @@ procedure main()
 
    for i := 1 to len(a)
       qout( a[i] )
-   next i			/* TOFIX : i is required ?? */
+   next i
 return
 
 function strtoarray(s)
