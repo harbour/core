@@ -8,21 +8,25 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-29 20:15 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/rdd_ads/ace.h
+     + added missing definition for adsGetNumActiveLinks()
+
 2004-01-29 18:45 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
-  * source/vm/debug.c
-    + add wrappers (some 3rd-party-libs still use these ones) for :
-      __VMSTKLCOUNT()
-      __VMPARLLIST()
-      __VMSTKLLIST()
-      __VMVARLGET()
-      __VMVARLSET()
-  * source/vm/hvm.c
-    + add wrappers (some 3rd-party-libs still use these ones) for :
-      __VMVARSLIST()
-      __VMVARSLEN()
-      __VMVARSGET()
-      __VMVARSSET()
-    Thanks Andi!
+   * source/vm/debug.c
+     + add wrappers (some 3rd-party-libs still use these ones) for :
+       __VMSTKLCOUNT()
+       __VMPARLLIST()
+       __VMSTKLLIST()
+       __VMVARLGET()
+       __VMVARLSET()
+   * source/vm/hvm.c
+     + add wrappers (some 3rd-party-libs still use these ones) for :
+       __VMVARSLIST()
+       __VMVARSLEN()
+       __VMVARSGET()
+       __VMVARSSET()
+     Thanks Andi!
 
 2004-01-29 18:30 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/adsfunc.c

@@ -1596,6 +1596,10 @@ UNSIGNED32 ENTRYPOINT AdsGetMilliseconds(
                               UNSIGNED8        *pucFldName,
                               SIGNED32         *plTime );
 
+UNSIGNED32 ENTRYPOINT AdsGetNumActiveLinks(
+                              ADSHANDLE        hDBConn,
+                              UNSIGNED16       *pusNumLinks );
+
 UNSIGNED32 ENTRYPOINT AdsGetNumFields(
                               ADSHANDLE        hTable,
                               UNSIGNED16       *pusCount );
