@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-01-04 19:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * include/filesys.c
+    * When X__WIN32__ is defined FHANDLE is defined as Long
+  * source/rtl/filesys.c
+    % Properly Fix the usage os Native Windows File IO API. harbour apps with native WIN IO api has the same speed as Legacy api usage
+  * source/rtl/console.c
+    ! Minor Changes required to proper work of Windows File IO  Native  API
+  * source/common/hbffind.c
+    ! Corrected error return Values For DJGPP compiler for hb_fsFindNext() and hb_fsFindFirst() functions
+    ! Corrected error return Values For WIN32 for hb_fsFindNext() and hb_fsFindFirst() functions
+     With This Changes to console.c and filesys.c build with X__WIN32__ defined works properly
+
 2002-12-31 11:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * include/hbver.h
     * Updated the build number and the ChangeLog information.

@@ -131,6 +131,37 @@ HB_FILE_VER( "$Id$" )
 
 #endif
 
+/* Internal funtion , Convert Windows Error Values to Dos Error Values */
+#ifdef HB_OS_WIN_32
+int WintoDosError( unsigned long lError)
+{
+   int iReturn;
+   switch( lError ) {
+   case ERROR_ALREADY_EXISTS:
+      iReturn = 5;
+      break;
+   case ERROR_FILE_NOT_FOUND:
+      iReturn = 2;
+      break;
+   case ERROR_PATH_NOT_FOUND:
+      iReturn = 3;
+      break;
+   case  ERROR_TOO_MANY_OPEN_FILES:
+      iReturn = 4;
+      break;
+   case ERROR_INVALID_HANDLE:
+      iReturn = 6;
+      break;
+  default:
+         iReturn=0;
+      break;
+      }
+
+   return iReturn;
+}
+
+#endif
+
 /* ------------------------------------------------------------- */
 
 USHORT hb_fsAttrFromRaw( ULONG raw_attr )
@@ -564,6 +595,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
    {
       PHB_FFIND_INFO info;
+      errno = 0;
 
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
@@ -571,6 +603,15 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
       tzset();
 
       bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
+      #if defined(__DJGPP__) || defined(__RSX32__)
+         if (errno==22)
+            errno=2;
+         if (errno==4)
+            errno=5;
+      #endif
+
+      hb_fsSetError( errno );
+
    }
 
 #elif defined(HB_OS_OS2)
@@ -599,12 +640,14 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
    {
       PHB_FFIND_INFO info;
+      errno = 0;
 
       ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
       info = ( PHB_FFIND_INFO ) ffind->info;
 
       info->hFindFile = FindFirstFile( pszFileName, &info->pFindFileData );
       info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( uiAttr );
+      errno = 0; 
 
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
@@ -634,8 +677,11 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
             }
          }
       }
-      else
+      else {
          bFound = FALSE;
+         errno = WintoDosError( GetLastError() );
+         hb_fsSetError( errno );
+     }
    }
 
 #elif defined(HB_OS_UNIX)
@@ -735,7 +781,16 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 #if defined(HB_OS_DOS)
 
    {
+      errno = 0;
       bFound = ( findnext( &info->entry ) == 0 );
+      #if defined(__DJGPP__) || defined(__RSX32__)
+         if (errno==22)
+            errno=2;
+         if (errno==4)
+            errno=5;
+      #endif
+      hb_fsSetError( errno );
+
    }
 
 #elif defined(HB_OS_OS2)
@@ -749,7 +804,7 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
    {
       bFound = FALSE;
-
+      errno = 0; 
       while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
       {
          if( info->dwAttr == 0 ||
@@ -761,6 +816,12 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
             bFound = TRUE;
             break;
          }
+         else {
+            errno = WintoDosError(GetLastError()) ;
+            hb_fsSetError( errno );
+            break;
+         }
+
       }
    }
 
