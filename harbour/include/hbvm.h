@@ -77,6 +77,9 @@ extern void    hb_vmFunction( USHORT uiParams ); /* executes a function saving i
 extern void    hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
 extern void    hb_vmPushNil( void );            /* in this case it places nil at self */
 extern void    hb_vmPushNumber( double dNumber, int iDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
+extern void    hb_vmPushOne( void ); /* pushes a 0 onto the stack */
+extern void    hb_vmPushZero( void ); /* pushes a 1 onto the stack */
+extern void    hb_vmPushByte( BYTE bNumber ); /* pushes a integer number onto the stack */
 extern void    hb_vmPushInteger( int iNumber ); /* pushes a integer number onto the stack */
 extern void    hb_vmPushLong( long lNumber ); /* pushes a long number onto the stack */
 extern void    hb_vmPushDouble( double lNumber, int iDec ); /* pushes a double number onto the stack */

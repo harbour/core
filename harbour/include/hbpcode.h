@@ -122,6 +122,7 @@ typedef enum
    HB_P_PUSHALIASEDVAR,    /* pushes aliased variable (either a field or a memvar) */
    HB_P_PUSHBLOCK,         /* start of a codeblock definition */
    HB_P_PUSHFIELD,         /* pushes unaliased field */
+   HB_P_PUSHBYTE,          /* places a 1 byte integer number on the virtual machine stack */
    HB_P_PUSHINT,           /* places an integer number on the virtual machine stack */
    HB_P_PUSHLOCAL,         /* pushes the contains of a local variable to the virtual machine stack */
    HB_P_PUSHLOCALREF,      /* pushes a local variable by reference to the virtual machine stack */
@@ -144,7 +145,8 @@ typedef enum
    HB_P_STATICS,           /* defines the number of statics variables for a PRG */
    HB_P_SWAPALIAS,         /* restores the current workarea number from the eval stack */
    HB_P_TRUE,              /* pushes true on the virtual machine stack */
-   HB_P_ZERO               /* places a zero on the virtual machine stack */
+   HB_P_ZERO,              /* places a ZERO on the virtual machine stack */
+   HB_P_ONE                /* places a ONE on the virtual machine stack */
 } HB_PCODE;
 
 #endif /* HB_PCODE_H_ */

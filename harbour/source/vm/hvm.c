@@ -855,8 +855,13 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             w++;
             break;
 
+         case HB_P_ONE:
+            hb_vmPushOne();
+            w++;
+            break;
+
          case HB_P_ZERO:
-            hb_vmPushInteger( 0 );
+            hb_vmPushZero();
             w++;
             break;
 
@@ -865,6 +870,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             hb_stackPush();
             HB_TRACE(HB_TR_INFO, ("(hb_vmPushNil)"));
             w++;
+            break;
+
+         case HB_P_PUSHBYTE:
+            hb_vmPushByte( ( BYTE ) pCode[ w + 1 ] );
+            w += 2;
             break;
 
          case HB_P_PUSHINT:
@@ -2324,15 +2334,15 @@ static void hb_vmArrayPush( void )
       {
          hb_arrayGet( pArray, ulIndex, pArray );
          hb_stackPop();
-      
+
 /* Looks like this without optimization:
-      
+
          HB_ITEM item;
-      
+
          hb_arrayGet( pArray, ulIndex, &item );
          hb_stackPop();
          hb_stackPop();
-      
+
          hb_itemCopy( hb_stack.pPos, &item );
          hb_itemClear( &item );
          hb_stackPush();
@@ -2943,6 +2953,36 @@ void hb_vmPushNumber( double dNumber, int iDec )
 
    else
       hb_vmPushDouble( dNumber, hb_set.HB_SET_DECIMALS );
+}
+
+void hb_vmPushOne( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushOne()"));
+
+   hb_stack.pPos->type = HB_IT_INTEGER;
+   hb_stack.pPos->item.asInteger.value = ( BYTE ) 1;
+   hb_stack.pPos->item.asInteger.length = 10;
+   hb_stackPush();
+}
+
+void hb_vmPushZero( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushZero()"));
+
+   hb_stack.pPos->type = HB_IT_INTEGER;
+   hb_stack.pPos->item.asInteger.value = ( BYTE ) 0;
+   hb_stack.pPos->item.asInteger.length = 10;
+   hb_stackPush();
+}
+
+void hb_vmPushByte( BYTE bNumber )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushInteger(%i)", bNumber));
+
+   hb_stack.pPos->type = HB_IT_INTEGER;
+   hb_stack.pPos->item.asInteger.value = bNumber;
+   hb_stack.pPos->item.asInteger.length = 10;
+   hb_stackPush();
 }
 
 void hb_vmPushInteger( int iNumber )

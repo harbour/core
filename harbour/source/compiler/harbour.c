@@ -2224,27 +2224,49 @@ void hb_compGenPushFunCall( char * szFunName )
 }
 
 /* generates the pcode to push a integer number on the virtual machine stack */
+/*
 void hb_compGenPushInteger( int iNumber )
 {
-   if( iNumber )
-      hb_compGenPCode3( HB_P_PUSHINT, HB_LOBYTE( ( USHORT ) iNumber ), HB_HIBYTE( ( USHORT ) iNumber ) );
-   else
+   if( lNumber == 0 )
       hb_compGenPCode1( HB_P_ZERO );
+   else if ( lNumber == 1 )
+      hb_compGenPCode1( HB_P_ONE );
+   else if ( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
+   {
+      if ( ( ( char * ) &lNumber )[ 1 ] == 0 )
+         hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ] );
+      else
+         hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
+   }
+   else
+   {
+      hb_compGenPCode1( HB_P_PUSHLONG );
+      hb_compGenPCode2( ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
+      hb_compGenPCode2( ( ( char * ) &lNumber )[ 2 ], ( ( char * ) &lNumber )[ 3 ] );
+   }
 }
+*/
 
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( long lNumber )
 {
-   if( lNumber )
+   if( lNumber == 0 )
+      hb_compGenPCode1( HB_P_ZERO );
+   else if ( lNumber == 1 )
+      hb_compGenPCode1( HB_P_ONE );
+   else if ( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
    {
-      hb_compGenPCode1( HB_P_PUSHLONG );
-      hb_compGenPCode1( ( ( char * ) &lNumber )[ 0 ] );
-      hb_compGenPCode1( ( ( char * ) &lNumber )[ 1 ] );
-      hb_compGenPCode1( ( ( char * ) &lNumber )[ 2 ] );
-      hb_compGenPCode1( ( ( char * ) &lNumber )[ 3 ] );
+      if ( ( ( char * ) &lNumber )[ 1 ] == 0 )
+         hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ] );
+      else
+         hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
    }
    else
-      hb_compGenPCode1( HB_P_ZERO );
+   {
+      hb_compGenPCode1( HB_P_PUSHLONG );
+      hb_compGenPCode2( ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ] );
+      hb_compGenPCode2( ( ( char * ) &lNumber )[ 2 ], ( ( char * ) &lNumber )[ 3 ] );
+   }
 }
 
 /* generates the pcode to push a string on the virtual machine stack */

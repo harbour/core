@@ -1,3 +1,36 @@
+20000421-14:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hvm.c
+     + Added support for new PCodes HB_P_PUSHBYTE, and HB_P_PUSHONE
+     + Added void hb_vmPushOne( void ), void hb_vmPushZero( void ) and void hb_vmPushByte( BYTE )
+     * Optimized HB_P_ZERO by using hb_vmPushZero()
+
+   * source/compiler/harbour.c
+     - REMMED not used hb_compGenPushInteger()
+     * Optimized hb_compGenPushLong() to USE HB_P_ZERO, HB_P_ONE, HB_P_PUSHBBYTE, HB_P_PUSHBINT, or , HB_P_PUSHLONG as needed.
+     * Optimized few pairs of hb_compGenPCode1() to use hb_compGenPCode2() instead.
+
+   * source/compiler/genc.c
+     + Added support for PCodes HB_P_PUSHBYTE, and HB_P_PUSHONE
+
+   * source/compiler/hbpcode.c
+     + Added hb_compGenPCode2( BYTE, BYTE )
+
+   * source/compiler/harbour.y
+     * Optimized few pairs of hb_compGenPCode1() to use hb_compGenPCode2() instead.
+
+   * source/include/hbpcode.h
+     + Added PCodes HB_P_PUSHBYTE, and HB_P_PUSHONE
+
+   * source/include/hbvm.h
+     + Added:
+        extern void    hb_vmPushOne( void ); /* pushes a 0 onto the stack */
+        extern void    hb_vmPushZero( void ); /* pushes a 1 onto the stack */
+        extern void    hb_vmPushByte( BYTE bNumber ); /* pushes a integer number onto the stack */
+
+   * include/hbcomp.h
+     - Removed #ifef of GenObj32
+
 20000421-21:56 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * include/hbcomp.h

@@ -331,8 +331,7 @@ Statement  : ExecFlow   CrlfStmnt   { }
                            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         hb_compExprGenPush( $3 );   /* TODO: check if return value agree with declared value */
-                        hb_compGenPCode1( HB_P_RETVALUE );
-                        hb_compGenPCode1( HB_P_ENDPROC );
+                        hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC );
                         if( hb_comp_functions.pLast->bFlags & FUN_PROCEDURE )
                         { /* procedure returns a value */
                            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
@@ -1367,8 +1366,7 @@ RecoverEmpty : RECOVER
                   hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   $<lNumber>$ = hb_comp_functions.pLast->lPCodePos;
                   --hb_comp_wSeqCounter;
-                  hb_compGenPCode1( HB_P_SEQRECOVER );
-                  hb_compGenPCode1( HB_P_POP );
+                  hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP );
                }
            ;
 

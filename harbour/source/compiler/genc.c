@@ -932,6 +932,15 @@ static void hb_compGenCReadable( PFUNCTION pFunc )
             }
             break;
 
+         case HB_P_PUSHBYTE:
+            fprintf( s_yyc, "\tHB_P_PUSHBYTE, %i,",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            if( bVerbose ) fprintf( s_yyc, "\t/* %i */",
+                     pFunc->pCode[ lPCodePos + 1 ] );
+            fprintf( s_yyc, "\n" );
+            lPCodePos += 2;
+            break;
+
          case HB_P_PUSHINT:
             fprintf( s_yyc, "\tHB_P_PUSHINT, %i, %i,",
                      pFunc->pCode[ lPCodePos + 1 ],
@@ -1240,6 +1249,11 @@ static void hb_compGenCReadable( PFUNCTION pFunc )
 
          case HB_P_TRUE:
             fprintf( s_yyc, "\tHB_P_TRUE,\n" );
+            lPCodePos++;
+            break;
+
+         case HB_P_ONE:
+            fprintf( s_yyc, "\tHB_P_ONE,\n" );
             lPCodePos++;
             break;
 

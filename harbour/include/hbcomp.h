@@ -215,6 +215,7 @@ extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL 
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_MACRO_DECL );
 extern void hb_compGenPushFunRef( char *, HB_MACRO_DECL );
 extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );             /* generates 1 byte of pcode */
+extern void hb_compGenPCode2( BYTE, BYTE, HB_MACRO_DECL ); /* generates 2 bytes of pcode */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL ); /* generates 3 bytes of pcode */
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );  /* copy bytes to a pcode buffer */
 
@@ -263,6 +264,7 @@ extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long );
 extern void hb_compGenPushFunRef( char * );
 extern void hb_compGenPCode1( BYTE );             /* generates 1 byte of pcode */
+extern void hb_compGenPCode2( BYTE, BYTE );       /* generates 2 bytes of pcode */
 extern void hb_compGenPCode3( BYTE, BYTE, BYTE ); /* generates 3 bytes of pcode */
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize );  /* copy bytes to a pcode buffer */
 
@@ -318,9 +320,7 @@ extern void hb_compGenJava( PHB_FNAME );       /* generates the Java language ou
 extern void hb_compGenPascal( PHB_FNAME );     /* generates the Pascal language output */
 extern void hb_compGenRC( PHB_FNAME );         /* generates the RC language output */
 extern void hb_compGenPortObj( PHB_FNAME );    /* generates the portable objects */
-#ifdef HARBOUR_OBJ_GENERATION
 extern void hb_compGenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
-#endif
 
 /* variable used by compiler
  */
@@ -343,7 +343,7 @@ extern BOOL        hb_comp_bAutoMemvarAssume;
 extern BOOL        hb_comp_bForceMemvars;
 extern BOOL        hb_comp_bDebugInfo;
 extern char        hb_comp_szPrefix[ 20 ];
-extern BOOL        hb_comp_iGenCOutput;
+extern int         hb_comp_iGenCOutput;
 extern int         hb_comp_iExitLevel;
 extern int         hb_comp_iFunctionCnt;
 extern char        hb_comp_cVarType;
