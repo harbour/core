@@ -217,7 +217,7 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
    switch( pItem->type )
    {
       case IT_STRING:
-         hb_out_func( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+         hb_out_func( ( BYTE * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
          break;
 
       case IT_DATE:
@@ -241,14 +241,14 @@ static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
          break;
       }
       case IT_NIL:
-         hb_out_func( "NIL", 3 );
+         hb_out_func( ( BYTE * ) "NIL", 3 );
          break;
 
       case IT_LOGICAL:
          if( hb_itemGetL( pItem ) )
-            hb_out_func( ".T.", 3 );
+            hb_out_func( ( BYTE * ) ".T.", 3 );
          else
-            hb_out_func( ".F.", 3 );
+            hb_out_func( ( BYTE * ) ".F.", 3 );
          break;
 
       default:
@@ -266,7 +266,7 @@ static void hb_outstd( BYTE * pStr, ULONG ulLen )
    hb_gtPreExt();
 #endif
 
-   if( strlen( pStr ) != ulCount )
+   if( strlen( ( const char * ) pStr ) != ulCount )
       while( ulCount-- ) fputc( *pPtr++, stdout );
    else
       fputs( ( char * ) pStr, stdout );
@@ -296,7 +296,7 @@ static void hb_outerr( BYTE * pStr, ULONG ulLen )
    hb_gtPreExt();
 #endif
 
-   if( strlen( pStr ) != ulCount )
+   if( strlen( ( const char * ) pStr ) != ulCount )
       while( ulCount-- ) fputc( *pPtr++, stderr );
    else
       fputs( ( char * ) pStr, stderr );
@@ -541,7 +541,7 @@ HARBOUR HB_OUTSTD( void ) /* writes a list of values to the standard output devi
    {
       hb_out( uiParam, hb_outstd );
       if( uiParam < uiPCount )
-         hb_outstd( " ", 1 );
+         hb_outstd( ( BYTE * ) " ", 1 );
    }
 }
 
@@ -553,7 +553,7 @@ HARBOUR HB_OUTERR( void ) /* writes a list of values to the standard error devic
    {
       hb_out( uiParam, hb_outerr );
       if( uiParam < uiPCount )
-         hb_outerr( " ", 1 );
+         hb_outerr( ( BYTE * ) " ", 1 );
    }
 }
 
@@ -565,7 +565,7 @@ HARBOUR HB_QQOUT( void ) /* writes a list of values to the current device (scree
    {
       hb_out( uiParam, hb_altout );
       if( uiParam < uiPCount )
-         hb_altout( " ", 1 );
+         hb_altout( ( BYTE * ) " ", 1 );
    }
 }
 
@@ -573,7 +573,7 @@ HARBOUR HB_QOUT( void )
 {
    USHORT uiCount;
 
-   hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
+   hb_altout( ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN - 1 );
 
    if( hb_set.HB_SET_PRINTER && hb_set_printhan >= 0 )
    {
@@ -1054,7 +1054,7 @@ HARBOUR HB_SAVESCREEN( void )
    hb_gtRectSize( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], &uiX );
    pBuffer = hb_xgrab( uiX );
    hb_gtSave( uiCoords[ 0 ], uiCoords[ 1 ], uiCoords[ 2 ], uiCoords[ 3 ], pBuffer );
-   hb_retclen( pBuffer, uiX );
+   hb_retclen( ( char * ) pBuffer, uiX );
    hb_xfree( ( char * ) pBuffer );
 #else
    hb_retc( "" );
@@ -1162,7 +1162,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
    while( input != K_ENTER )
    {
       /* Wait forever, for keyboard events only */
-      input = hb_inkey( 0.0, INKEY_KEYBOARD, 1, 1 );
+      input = hb_inkey( 0.0, ( HB_inkey_enum ) INKEY_KEYBOARD, 1, 1 );
       switch( input )
       {
          case K_BS:
@@ -1172,7 +1172,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
                ulLen--; /* Adjust input count to get rid of last character,
                          then erase it from the screen. */
 #ifdef HARBOUR_USE_GTAPI
-               hb_gtWriteCon( "\x8 \x8", 3L );
+               hb_gtWriteCon( ( BYTE * ) "\x8 \x8", 3L );
 #else
                fputs( "\x8 \x8", stdout );
 #endif
@@ -1183,7 +1183,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
             if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
             {
                s_szAcceptResult[ ulLen ] = input; /* Accept the input */
-               hb_dispout( &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
+               hb_dispout( ( BYTE * ) &s_szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
                ulLen++;  /* Then adjust the input count */
             }
       }

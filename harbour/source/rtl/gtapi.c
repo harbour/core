@@ -241,12 +241,12 @@ int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE
 
 int hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 {
-   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, B_DOUBLE );
+   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) B_DOUBLE );
 }
 
 int hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 {
-   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, B_SINGLE );
+   return hb_gtBox( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) B_SINGLE );
 }
 
 int hb_gtColorSelect( USHORT uiColorIndex )
@@ -713,7 +713,7 @@ int hb_gtWrite( BYTE * fpStr, ULONG length )
    int iRow, iCol, iMaxCol, iMaxRow;
    ULONG size = length;
    BYTE attr = s_Color[ s_uiColorIndex ] & 0xFF;
-   char *fpPointer = fpStr;
+   char *fpPointer = ( char * ) fpStr;
 
    /* TODO: this is doing more work than needed */
 
@@ -769,7 +769,7 @@ int hb_gtWrite( BYTE * fpStr, ULONG length )
    else size = length;
 
    /* Now the text string can be displayed */
-   hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size );
+   hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, ( BYTE * ) fpPointer, size );
 
    /* Finally, save the new cursor position */
    hb_gtSetPos( iRow, iCol );
@@ -796,7 +796,7 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
    USHORT uiMaxRow = hb_gtMaxRow();
    USHORT uiMaxCol = hb_gtMaxCol();
    int ch;
-   char * fpPtr = fpStr;
+   char * fpPtr = ( char * ) fpStr;
    #define STRNG_SIZE 500
    char strng[ STRNG_SIZE ];
 
@@ -868,7 +868,7 @@ int hb_gtWriteCon( BYTE * fpStr, ULONG length )
       if( ldisp || ! length )
       {
          if( nLen )
-            rc = hb_gtWrite( strng, nLen );
+            rc = hb_gtWrite( ( BYTE * ) strng, nLen );
          nLen = 0;
          if( uiRow > uiMaxRow )
          {
