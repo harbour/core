@@ -112,6 +112,7 @@ void hb_rddInitialize( void )
    szDefDriver = ( char * ) hb_xgrab( 1 );
    szDefDriver[ 0 ] = '\0';
    pWorkAreas = ( AREAP ) hb_xgrab( sizeof( AREA ) );
+   memset(pWorkAreas, 0, sizeof(AREA));
    uiWorkAreas = 1;
 }
 
@@ -392,7 +393,7 @@ HARBOUR HB_DBCREATE( void )
       return;
    }
 
-   pInfo.abName = szFileName;
+   pInfo.abName = (PBYTE)szFileName;
    ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], &pInfo );
    pWorkAreas[ uiCurrArea - 1 ].rddID = 0;
 }
@@ -628,8 +629,8 @@ HARBOUR HB_DBUSEAREA( void )
    szAlias = ISCHAR( 4 ) ? hb_parc( 4 ) : szFileName;
 
    pInfo.uiArea = uiCurrArea;
-   pInfo.abName = szFileName;
-   pInfo.atomAlias = szAlias;
+   pInfo.abName = (PBYTE)szFileName;
+   pInfo.atomAlias = (PBYTE)szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
    ( * pFunction2 )( &pWorkAreas[ uiCurrArea - 1 ], &pInfo );

@@ -1,3 +1,8 @@
+19990726-03:25 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/dbcmd.c
+     * memset(pWorkAreas,0,sizeof(AREA)); in rddInit
+     * a couple more (or maybe the same) casts to help msvc.
+
 19990726-20:52 CET Victor Szel <info@szelvesz.hu>
    * tests/working/rtl_test.prg - make use of the preproc
      and thus it's more easy to expand it, and fewer human
