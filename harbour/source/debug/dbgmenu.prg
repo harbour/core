@@ -108,7 +108,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
          MENUITEM " ~Step              F8 " ACTION oDebugger:Step()
          MENUITEM " ~Trace            F10"  ACTION oDebugger:Trace()
          MENUITEM " ~Go                F5"  ACTION oDebugger:Go()
-         MENUITEM " to ~Cursor         F7"  ACTION Alert( "Not implemented yet!" )
+         MENUITEM " to ~Cursor         F7"  ACTION oDebugger:ToCursor()
          MENUITEM " ~Next routine Ctrl-F5"  ACTION Alert( "Not implemented yet!" )
          SEPARATOR
          MENUITEM " s~Peed..."              ACTION oDebugger:Speed()

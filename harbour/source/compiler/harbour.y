@@ -1481,7 +1481,7 @@ Cases      : CASE { hb_compLinePush(); } Expression Crlf
                }
            ;
 
-Otherwise  : OTHERWISE Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
+Otherwise  : OTHERWISE {hb_compLinePushIfDebugger(); } Crlf { hb_comp_functions.pLast->bFlags &= ~ FUN_BREAK_CODE; }
                 EmptyStats
            | Otherwise OTHERWISE { hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
                 EmptyStats

@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-21 18:35 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.y
+      *fixed generation of line number's pcode related to 
+      the debugger
+
+   * source/debug/dbgmenu.prg
+   * source/debug/debugger.prg
+      *added support for 'Run to cursor" command
+      *minor fixes in breakpoints handling (some code
+      lines are not allowed to set a breakpoint and
+      run to cursor)
+
 2004-01-21 15:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.y
       *fixed generation of line number's pcode related to 
