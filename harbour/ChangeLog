@@ -1,3 +1,9 @@
+2001-08-09 00:07 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/seconds.c
+     * changed HB_CLOKS2SECS to make it return a double (like Seconds()) this way
+       profiler is able to show not only seconds spent inside a function but even
+       tenths and hundredths.
+
 2001-08-08 23:52 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * include/hbvmpub.h
    * source/vm/classes.c
