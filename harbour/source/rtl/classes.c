@@ -38,7 +38,6 @@ typedef struct
    WORD    wHashKey;
    PITEM   pClassDatas;  /* Array for ClassDatas */
    PITEM   pInlines;     /* Array for inline codeblocks */
-/*   PITEM    pInitValues;  */ /* Array for Datas init values */
 } CLASS, * PCLASS;
 
 #define BUCKET 4
@@ -48,12 +47,14 @@ extern SYMBOL symEval;
 
 PCLASS  pClasses = 0;
 WORD    wClasses = 0;
-PMETHOD pMethod = 0;
+PMETHOD pMethod  = 0;
 PDYNSYM msgClassName = 0, msgClassH = 0, msgEval = 0, msgClassSel = 0;
 
-HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
+HARBOUR CLASSCREATE() /* cClassName, nDatas, xSuper --> hClass */
 {
-   WORD hSuper = _parni( 3 );                   /* Super class present      */
+   WORD  hSuper = 0;
+   PITEM pSuper = _param( 3, IT_ANY );          /* Super class present      */
+   PITEM pItem;
 
    if( ! pClasses )
       pClasses = ( PCLASS ) _xgrab( sizeof( CLASS ) );
@@ -63,9 +64,22 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
    pClasses[ wClasses ].szName = ( char * ) _xgrab( _parclen( 1 ) + 1 );
    strcpy( pClasses[ wClasses ].szName, _parc( 1 ) );
 
-   if( hSuper )
+
+   if( pSuper )
    {
-      hSuper--;
+      if( IS_NUMERIC( pSuper ) )
+         hSuper = _parni( 3 ) - 1;
+      else if( IS_ARRAY( pSuper ) )
+      {
+         if( hb_arrayLen( pSuper ) != 1 )
+            printf( "\nMultiple inheritance not supported yet" );
+         else
+         {
+            pItem = hb_itemArrayGet( pSuper, 1 );
+            hSuper = (WORD) pItem->value.iNumber - 1;
+            hb_itemRelease( pItem );
+         }
+      }
       pClasses[ wClasses ].wDataFirst = pClasses[ hSuper ].wDatas;
       pClasses[ wClasses ].wDatas     = pClasses[ hSuper ].wDatas + _parni(2);
       pClasses[ wClasses ].wMethods   = pClasses[ hSuper ].wMethods;
@@ -92,7 +106,6 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
 
       pClasses[ wClasses ].pClassDatas = hb_itemArrayNew( 0 );
       pClasses[ wClasses ].pInlines    = hb_itemArrayNew( 0 );
-   /* pClasses[ wClasses ].pInitValues = hb_itemArrayNew( 0 ); */
 
       memset( pClasses[ wClasses ].pMethods, 0, 100 * sizeof( METHOD ) );
    }
@@ -563,7 +576,6 @@ void ReleaseClass( PCLASS pClass )
 
    hb_itemRelease( pClass->pClassDatas );
    hb_itemRelease( pClass->pInlines );
-   /* hb_itemRelease( pClass->pInitValues ); */
 }
 
 void ReleaseClasses( void )

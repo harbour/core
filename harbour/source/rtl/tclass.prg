@@ -70,21 +70,37 @@ return Self
 
 static function Create()
 
-   local Self    := QSelf()
-   local n, nLen := Len( ::aDatas )
-   local hClass
+   local Self := QSelf()
+   local n
+   local nLen
+   local nLenDatas  := Len( ::aDatas )
    local nDataBegin := 0
+   local hClass
    local hSuper
+   local ahSuper := {}
 
    if ::xSuper == NIL
-      hClass := ClassCreate( ::cName, nLen )
+      hClass := ClassCreate( ::cName, nLenDatas )
 
    elseif ValType(::xSuper) == "A"              // Multiple inheritance
-      QOut( "Sorry, not supported yet :-)" )
+      ahSuper := {}
+      nLen := Len( ::xSuper )
+      for n := 1 to nLen
+         aAdd( ahSuper, __InstSuper( Upper( ::xSuper[ n ] ) ) )
+      next n
+
+      hClass := ClassCreate( ::cName, nLenDatas, ahSuper )
+
+      for n := 1 to nLen
+         ClassAdd( hClass, Upper( ::xSuper[ n ] ), ahSuper[ n ], MET_SUPER )
+         nDataBegin += __WDatas( ahSuper[ n ] ) // Calc offset for new DATAs
+      next n
+      ClassAdd( hClass, "SUPER", aTail( ahSuper ), MET_SUPER )
+                                                // Last super is the SUPER
 
    elseif ValType(::xSuper) == "C"              // Single inheritance
       hSuper := __InstSuper( Upper( ::xSuper ) )
-      hClass := ClassCreate( ::cName, nLen, hSuper )
+      hClass := ClassCreate( ::cName, nLenDatas, hSuper )
                                                 // Add class casts
       ClassAdd( hClass, Upper( ::xSuper ), hSuper, MET_SUPER )
       ClassAdd( hClass, "SUPER", hSuper, MET_SUPER )
@@ -94,7 +110,7 @@ static function Create()
 
    ::hClass = hClass
 
-   for n = 1 to nLen
+   for n = 1 to nLenDatas
       ClassAdd( hClass, ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA, ;
                         ::aDatas[ n ][ DAT_INITVAL ] )
       ClassAdd( hClass, "_" + ::aDatas[ n ][ DAT_SYMBOL ], n + nDataBegin, MET_DATA )

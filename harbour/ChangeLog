@@ -1,3 +1,7 @@
+19990601-21:35 CET Eddie Runia
+  * tests/working/multinh.prg, source/rtl/classes.c, source/rtl/tclass.prg
+    first step to multiple inheritance
+
 19990601-18:15 CET Eddie Runia
   * tests/working/inherit.prg, source/rtl/classes.c, source/rtl/tclass.prg
     version correct release (+ super )
