@@ -1,3 +1,7 @@
+19990726-22:35 CET Patrick Mast <harbour@PatrickMast.com>
+   + Build40.bat and Makefile.b40
+     Build and makefile for Borland 4.0
+
 19990726-03:25 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/dbcmd.c
      + memset(pWorkAreas,0,sizeof(AREA)); in rddInit
