@@ -80,17 +80,14 @@ FUNCTION __dbTotal()       ; RETURN NIL
 FUNCTION __dbUpdate()      ; RETURN NIL
 FUNCTION __dbZap()         ; RETURN NIL
 
-FUNCTION __LabelForm()     ; RETURN NIL
-FUNCTION __ReportForm()    ; RETURN NIL
-
-FUNCTION __SetFormat()     ; RETURN NIL
-FUNCTION __TypeFile()      ; RETURN NIL
-
 FUNCTION Browse()          ; RETURN .T.
 FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION IsPrinter()       ; RETURN .T.
 FUNCTION NetName()         ; RETURN ""
-FUNCTION ReadKey()         ; RETURN 0
+FUNCTION __qqPub()         ; RETURN NIL
+FUNCTION __TypeFile()      ; RETURN NIL
+FUNCTION __LabelForm()     ; RETURN NIL
+FUNCTION __ReportForm()    ; RETURN NIL
 
 FUNCTION GetActive()       ; RETURN NIL
 FUNCTION GetApplyKey()     ; RETURN NIL
@@ -102,6 +99,5 @@ FUNCTION ReadFormat()      ; RETURN .F.
 FUNCTION ReadKill()        ; RETURN .F.
 FUNCTION ReadUpdated()     ; RETURN .T.
 FUNCTION Updated()         ; RETURN .T.
-
-FUNCTION __qqPub()         ; RETURN NIL
+FUNCTION __SetFormat()     ; RETURN NIL
 

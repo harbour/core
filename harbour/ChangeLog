@@ -1,3 +1,12 @@
+19991007-01:42 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/filesys.h
+     source/rtl/filesys.c
+     % Only use hb_fsReadLarge() and hb_fsWriteLarge() when the size of an
+       unsigned int is not the same as the size of an unsigned long.
+       (Same logic as for xmem*() functions)
+   * source/rtl/dummy.prg
+     - ReadKey() removed.
+
 19991007-01:16 GMT+1 Victor Szel <info@szelvesz.hu>
    + source/vm/main.c (added)
      source/vm/Makefile

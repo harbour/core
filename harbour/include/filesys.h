@@ -88,7 +88,6 @@ extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
 extern BOOL     hb_fsMkDir      ( BYTE * pDirName );
 extern FHANDLE  hb_fsOpen       ( BYTE * pFilename, USHORT uiFlags );
 extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
-extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
 extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
@@ -96,7 +95,17 @@ extern ULONG    hb_fsTell       ( FHANDLE hFileHandle );
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
 extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
+
+#if UINT_MAX == ULONG_MAX
+   /* NOTE: hb_fsRead/hb_fsWrite can work with ULONG data blocks */
+   #define hb_fsReadLarge   hb_fsRead
+   #define hb_fsWriteLarge  hb_fsWrite
+#else
+   /* NOTE: otherwise, the extended version of the functions
+            will be used to copy and/or set ULONG data blocks */
+extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
+#endif
 
 extern PHB_FNAME hb_fsFNameSplit ( char * szFilename ); /* Split given filename into path, name and extension */
 extern char *    hb_fsFNameMerge ( char * szFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */

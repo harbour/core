@@ -519,6 +519,8 @@ USHORT  hb_fsWrite( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiWritten;
 }
 
+#if UINT_MAX != ULONG_MAX
+
 ULONG   hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 {
    ULONG ulRead = 0L, ulLeftToRead = ulCount;
@@ -604,6 +606,8 @@ ULONG   hb_fsWriteLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount )
 
    return ulWritten;
 }
+
+#endif
 
 ULONG   hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
 {
