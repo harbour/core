@@ -4,7 +4,6 @@
 
 ROOT = ../../
 
-ifeq ($(MAKECMDGOALS),)
 PRG_SOURCES=\
 	ainstest.prg \
 	and_or.prg \
@@ -110,9 +109,6 @@ PRG_SOURCES=\
 	version.prg \
 	while.prg \
 
-else
-PRG_SOURCES:=$(MAKECMDGOALS)
-endif
 
 BAD_PRG_SOURCES=\
 	dupvars.prg \

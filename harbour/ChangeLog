@@ -1,3 +1,8 @@
+19990626-13:12 Ryszard Glab <rglab@imid.med.pl>
+
+* tests/working/Makefile
+ * removed MAKECMDGOALS logic
+ 
 19990626-06:20 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.l
