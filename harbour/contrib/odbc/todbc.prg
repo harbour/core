@@ -155,10 +155,13 @@ METHOD SQLErrorMessage() CLASS TODBC
 RETURN( "Error " + cErrorClass + " - " + cErrorMsg )
 
 // New instance of TODBC
-METHOD New( cODBCStr ) CLASS TODBC
-
+METHOD New( cODBCStr, cUserName, cPassword ) CLASS TODBC
    LOCAL xBuf
    LOCAL nRet
+   
+   IF cUserName != NIL
+     DEFAULT cPassword TO ""
+   ENDIF
 
 //   WHILE .t.
       ::cODBCStr := cODBCStr
@@ -183,9 +186,15 @@ METHOD New( cODBCStr ) CLASS TODBC
 
       SQLAllocCo( ::hEnv, @xBuf )                 // Allocates SQL Connection
       ::hDbc := xBuf
-
-      SQLDriverC( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
-      ::cODBCRes := xBuf
+      
+      IF cUserName == NIL
+        SQLDriverC( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
+        ::cODBCRes := xBuf
+      ELSE
+        IF .not. ( (nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword)) == SQL_SUCCESS )
+          //TODO: Some error here
+        ENDIF
+      ENDIF
 //   ENDDO
 
 RETURN ( Self )
@@ -289,7 +298,6 @@ METHOD Open() CLASS TODBC
 
       // Sets the Dataset state to active and put cursor on first record
       ::Active := .t.
-      ::First()
 
       EXIT
 

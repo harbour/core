@@ -118,6 +118,18 @@ HB_FUNC( SQLDRIVERC ) /* HB_SQLDRIVERCONNECT( hDbc, @ cConnectString, lPrompt ) 
    hb_storc( bBuffer1 , 3 );
    hb_retni( ret );
 }
+HB_FUNC( SQLCONNECT ) /* HB_SQLCONNECT( hDbc, @ cServerName, nNameLength1, @cUserName, nNameLength2, @cPassword, nNameLength3 ) --> nRetCode */
+{
+      RETCODE ret =  SQLConnect( ( HDBC ) hb_parnl( 1 ),
+                             hb_parc( 2 ), 
+			     strlen(hb_parc(2)),
+                             hb_parc( 3 ), 
+			     strlen(hb_parc(3)),
+                             hb_parc( 4 ), 
+			     strlen(hb_parc(4)));
+
+   hb_retni( ret );
+}
 
 HB_FUNC( SQLDISCONN )  /* HB_SQLDISCONNECT( hDbc ) --> nRetCode */
 {

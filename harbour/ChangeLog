@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-17 21:05 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
+  * contrib/odbc/odbc.c
+    + Added SQLConnect function
+  * contrib/odbc/todbc.prg
+    + Method new() now accepts additional parameters username and password. 
+      If TODBC:new() is called with username and password, it uses
+      SQLConnect insted of SQLDriverConnect to establish ODBC conenction.
+
 2002-08-15 17:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * source/rtl/memoedit.prg
     * When User function is Defined , Make ALT+W key exit the Editing windows if not redefined inside the UDF function
