@@ -3008,7 +3008,9 @@ void hb_vmDo( USHORT uiParams )
    if( bProfiler )
       ulClock = ( ULONG ) clock();
 
-   hb_inkeyPoll();           /* Poll the console keyboard */
+   #ifndef HB_GUI
+      hb_inkeyPoll();           /* Poll the console keyboard */
+   #endif
 
    pItem = hb_stackNewFrame( &sStackState, uiParams );
    pSym = pItem->item.asSymbol.value;
