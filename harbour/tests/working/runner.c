@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-/* #if DOS32 */
+/* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
                               0x68, 0x00, 0x00, 0x00, 0x00,
                               0xE8, 0x00, 0x00, 0x00, 0x00,
@@ -16,8 +16,8 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
 
      /* This is the assembler output from : VirtualMachine(pcode,symbols). */
 
-/* #elseif DOS16 */
-/* #elseif MAC */
+/* #elseif INTEL16 */
+/* #elseif MOTOROLA */
 /* #elseif ... */
 /* #endif */
 
@@ -87,8 +87,8 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
 
    BYTE  bCont;
 
-   PSYMBOL  pSymRead = NULL;                    /* Symbols read             */
-   PDYNFUNC pPCode   = NULL;                    /* Functions read           */
+   PSYMBOL  pSymRead;                           /* Symbols read             */
+   PDYNFUNC pDynFunc;                           /* Functions read           */
    PDYNSYM  pDynSym;
 
    if( _pcount() == 0 )
@@ -138,7 +138,7 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
                    ( (BYTE) cLong[2] ) * 0x10000 +
                    ( (BYTE) cLong[3] ) * 0x1000000;
 
-         pPCode = ( PDYNFUNC ) _xgrab( ulFuncs * sizeof( DYNFUNC ) );
+         pDynFunc = ( PDYNFUNC ) _xgrab( ulFuncs * sizeof( DYNFUNC ) );
          for( ul=0; ul < ulFuncs; ul++)        /* Read symbols in .HRB     */
          {
             szIdx = szTemp;
@@ -152,19 +152,20 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
                   bCont = FALSE;
             } while( bCont );
             printf("\nLoading <%s>", szTemp );
-            pPCode[ ul ].szName = (char *) _xgrab( szIdx - szTemp + 1);
-            strcpy( pPCode[ ul ].szName, szTemp );
+            pDynFunc[ ul ].szName = (char *) _xgrab( szIdx - szTemp + 1);
+            strcpy( pDynFunc[ ul ].szName, szTemp );
 
             fread( &cLong, 4, 1, file );        /* Read size of function    */
             ulSize = ( (BYTE) cLong[0] )             +
                      ( (BYTE) cLong[1] ) * 0x100     +
                      ( (BYTE) cLong[2] ) * 0x10000   +
                      ( (BYTE) cLong[3] ) * 0x1000000 + 1;
-            pPCode[ ul ].pCode = _xgrab( ulSize );
-            fread( pPCode[ ul ].pCode, 1, ulSize, file );
+            pDynFunc[ ul ].pCode = _xgrab( ulSize );
+            fread( pDynFunc[ ul ].pCode, 1, ulSize, file );
                                                 /* Read the block           */
 
-            pPCode[ ul ].pAsmCall = CreateFun( pSymRead, pPCode[ ul ].pCode );
+            pDynFunc[ ul ].pAsmCall = CreateFun( pSymRead,
+                                                 pDynFunc[ ul ].pCode );
                                                 /* Create matching dynamic  */
                                                 /* function                 */
          }
@@ -174,9 +175,9 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
          {
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_FUNC )
             {
-               ulPos = FindSymbol( pSymRead[ ul ].szName, pPCode, ulFuncs );
+               ulPos = FindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
-                  pSymRead[ ul ].pFunPtr = pPCode[ ulPos ].pAsmCall->pFunPtr;
+                  pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
                else
                   pSymRead[ ul ].pFunPtr = (void *) SYM_EXTERN;
             }
@@ -223,10 +224,10 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
 
          for( ul = 0; ul < ulFuncs; ul++ )
          {
-            _xfree( pPCode[ ul ].pAsmCall->pAsmData );
-            _xfree( pPCode[ ul ].pAsmCall           );
-            _xfree( pPCode[ ul ].pCode              );
-            _xfree( pPCode[ ul ].szName             );
+            _xfree( pDynFunc[ ul ].pAsmCall->pAsmData );
+            _xfree( pDynFunc[ ul ].pAsmCall           );
+            _xfree( pDynFunc[ ul ].pCode              );
+            _xfree( pDynFunc[ ul ].szName             );
          }
 
          for( ul = 0; ul < ulSymbols; ul++ )
@@ -234,7 +235,7 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
             _xfree( pSymRead[ ul ].szName );
          }
 
-         _xfree( pPCode );
+         _xfree( pDynFunc );
          _xfree( szTemp );
          _xfree( pSymRead );
          fclose( file );
@@ -246,13 +247,13 @@ HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
    }
 }
 
-ULONG FindSymbol( char *szName, PDYNFUNC pPCode, ULONG ulLoaded )
+ULONG FindSymbol( char *szName, PDYNFUNC pDynFunc, ULONG ulLoaded )
 {
    ULONG ulRet;
    BYTE  bFound;
 
    if( ( ulSymEntry < ulLoaded ) &&             /* Is it a normal list ?    */
-       !strcmp( szName, pPCode[ ulSymEntry ].szName ) )
+       !strcmp( szName, pDynFunc[ ulSymEntry ].szName ) )
       ulRet = ulSymEntry++;
    else
    {
@@ -260,7 +261,7 @@ ULONG FindSymbol( char *szName, PDYNFUNC pPCode, ULONG ulLoaded )
       ulRet = 0;
       while( !bFound && ulRet < ulLoaded )
       {
-         if( !strcmp( szName, pPCode[ ulRet ].szName ) )
+         if( !strcmp( szName, pDynFunc[ ulRet ].szName ) )
             bFound = TRUE;
          else
             ulRet++;
@@ -328,15 +329,15 @@ PASM_CALL CreateFun( PSYMBOL pSymbols, PBYTE pCode )
    asmRet->pAsmData = (PBYTE) _xgrab( sizeof( prgFunction ) );
    memcpy( asmRet->pAsmData, prgFunction, sizeof( prgFunction ) );
                                               /* Copy new assembler code in */
-/* #if DOS32 */
+/* #if INTEL32 */
 
    Patch( asmRet->pAsmData,  1, pSymbols );   /* Insert pointer to testsym  */
    Patch( asmRet->pAsmData,  6, pCode);       /* Insert pointer to testcode */
    PatchRelative( asmRet->pAsmData, 11, &VirtualMachine, 15 );
                                       /* Insert pointer to VirtualMachine() */
 
-/* #elseif DOS16 */
-/* #elseif MAC */
+/* #elseif INTEL16 */
+/* #elseif MOTOROLA */
 /* #elseif ... */
 /* #endif */
    return( asmRet );
