@@ -102,6 +102,7 @@ Function main( cFile, p1, p2, p3, p4, p5, p6 )
 
 Local nPos
 Local aDef := {}
+Local cOs:=OS()
 Local allParam
 Default p1 To ""
 Default p2 To ""
@@ -109,6 +110,11 @@ Default p3 To ""
 Default p4 To ""
 Default p5 To ""
 Default p6 To ""
+
+if at("OS/2",cOs)>0
+    lGcc:=.t.
+    lBcc:=.f.
+endif
 allParam:=p1 + p2 +p3+p4 + p5 +p6
 
 allparam:=strtran(allparam,"/","-")
@@ -130,8 +136,13 @@ If Pcount() == 0
    ? "          used it, creates an new make file to build an library"
    ? "          /D  Define an macro"
    ? "          /p  Print all command and depencies"
+if at("OS/2",cOs)>0
+   ? "          /b  Use BCC as C compiler"
+   ? "          /g+ Use GCC as C compiler"
+else
    ? "          /b+ Use BCC as C compiler"
    ? "          /g  Use GCC as C compiler"
+endif
    ? "          /v  Use MSVC as C compiler"
    ? "          /f  Force Recompiltion of all files"
    ? "          /i  Ignore errors returned by Commamnd"
@@ -449,6 +460,7 @@ Enddo
 If Len( aCs ) > 0
    For nPos := 1 To Len( aCs )
       If !Empty( acs[ nPos ] )
+         ctemp1:=Strtran(substr(acs[nPos],at('\',acs[npos])+1), ".c", ".prg" )
          cTemp := Strtran( acs[ nPos ], ".c", ".prg" )
          If File( cTemp )
             Aadd( aPrgs, Strtran( acs[ nPos ], ".c", ".prg" ) )
@@ -456,6 +468,9 @@ If Len( aCs ) > 0
             cTemp := Strtran( acs[ nPos ], ".C", ".PRG" )
                If File( cTemp )
                   Aadd( aPrgs, Strtran( acs[ nPos ], ".C", ".PRG" ) )
+               elseif file(ctemp1)
+                Aadd( aPrgs, strtran( ctemp1, ".c", ".prg" ) )
+
             endif
          Endif
       Endif
@@ -794,7 +809,7 @@ For nPos := 1 To 7
       If At( "$", amacro[ nCount ] ) > 0
          findmacro( amacro[ nCount ], @cRead )
          If At( ".exe", cRead ) > 0 .and. lGcc
-            Fwrite( nLinkhandle, "-o" + cRead + CRLF )
+            Fwrite( nLinkhandle, "-o " + cRead + CRLF )
          Else
             Fwrite( nLinkhandle, cRead + CRLF )
          Endif
@@ -1217,7 +1232,7 @@ endif
   cExt:=substr(cExt,2)
 //Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )) )
 //  Fwrite( nLinkHandle, "OBJFILES = " + if(isupper(cExt),cTest+"."+Strtran( cExt, "PRG", "OBJ" ),cTest+"."+Strtran( cExt, "prg", "obj" ))  )
-    Fwrite( nLinkHandle, "OBJFILES = " + cTest+'.'+exte(cExt,2)    )
+    Fwrite( nLinkHandle, "OBJFILES = " + cTest+'.'+if(lgcc,exte(cExt,3),exte(cExt,2))    )
 if len(aObjs)<1
 
 Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
@@ -1297,7 +1312,7 @@ elseif lVcc
 
 elseif lGcc
  Fwrite( nLinkHandle, "CFLAG1 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/../include")+ " -c -Wall"+CRLF)
- Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L$(HB_LIB_INSTALL)"," -L$(BHC)/../lib")+CRLF)
+ Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/../lib")+CRLF)
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = $(CFLAG2)"+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = "+CRLF)
@@ -1862,7 +1877,7 @@ elseif lVcc
 
 elseif lGcc
  Fwrite( nLinkHandle, "CFLAG1 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/../include")+ " -c -Wall"+CRLF)
- Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L$(HB_LIB_INSTALL)"," -L$(BHC)/../lib")+CRLF)
+ Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/../lib")+CRLF)
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = "+CRLF)

@@ -1,3 +1,7 @@
+2001-07-19 21:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+      *Small changes needed to be more compatible with Gcc under OS/2
+
 2001-07-19 12:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
    * source/compiler/harbour.y
