@@ -90,15 +90,15 @@ void hb_gtInit(void)
     _ColorCount = 5;
     _ScrnBuffer = (ULONG *)hb_xgrab( sizeof( ULONG ) );
     s_uiDispCount = 0;
-    gtInit();
+    hb_gt_Init();
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
     hb_gtSetMode( 50,80 );
-    hb_gtSetPos( gtRow(), gtCol() );
+    hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
 }
 
 void hb_gtExit(void)
 {
-    gtDone();
+    hb_gt_Done();
     hb_xfree( _Color );
     while( s_uiDispCount )
        hb_gtDispEnd();
@@ -244,7 +244,7 @@ int hb_gtDispBegin(void)
 {
     ++s_uiDispCount;
     _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
-    hb_gt_DispBegin((char)_Color[s_uiColorIndex]);
+    hb_gt_DispBegin();
     return(0);
 }
 
@@ -278,7 +278,7 @@ int hb_gtSetColorStr(char * fpColorString)
     {
         c = *fpColorString++;
         if( c > 'A' )
-            c &= 0x5f;			/* convert to upper case */
+            c &= 0x5f;                  /* convert to upper case */
 
         while( c <= '9' && c >= '0' && i < 6 )
         {
@@ -327,7 +327,7 @@ int hb_gtSetColorStr(char * fpColorString)
             case 'W':
                 nColor  = 7;
                 break;
-            case 'X':			/* always sets forground to 'N' */
+            case 'X':                   /* always sets forground to 'N' */
                 nHasX   = 1;
                 break;
             case '*':
@@ -470,7 +470,7 @@ int hb_gtGetColorStr(char * fpColorString)
 
 int hb_gtGetCursor(USHORT * uipCursorShape)
 {
-    int i=gtGetCursorStyle();
+    int i=hb_gt_GetCursorStyle();
     int rc=0;
 
     if(i <= SC_SPECIAL2)
@@ -495,17 +495,17 @@ int hb_gtGetPos(USHORT * uipRow, USHORT * uipCol)
 
 BOOL hb_gtIsColor(void)
 {
-    return gtIsColor();
+    return hb_gt_IsColor();
 }
 
 USHORT hb_gtMaxCol(void)
 {
-    return(gtGetScreenWidth() - 1);
+    return(hb_gt_GetScreenWidth() - 1);
 }
 
 USHORT hb_gtMaxRow(void)
 {
-    return(gtGetScreenHeight() - 1);
+    return(hb_gt_GetScreenHeight() - 1);
 }
 
 int hb_gtPostExt(void)
@@ -552,13 +552,13 @@ int hb_gtRepChar(USHORT uiRow, USHORT uiCol, USHORT uiChar, USHORT uiCount)
 
 int hb_gtRest(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
 {
-    gtPutText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff);
+    hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff);
     return(0);
 }
 
 int hb_gtSave(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * vlpScrBuff)
 {
-    gtGetText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff);
+    hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff);
     return(0);
 }
 
@@ -578,7 +578,7 @@ int hb_gtSetBlink(BOOL bBlink)
 
 int hb_gtSetCursor(USHORT uiCursorShape)
 {
-    gtSetCursorStyle(uiCursorShape);
+    hb_gt_SetCursorStyle(uiCursorShape);
     return(0);
 }
 
@@ -600,7 +600,7 @@ int hb_gtSetPos(USHORT uiRow, USHORT uiCol)
     s_uiCurrentRow = uiRow;
     s_uiCurrentCol = uiCol;
 
-    gtSetPos( uiRow, uiCol );
+    hb_gt_SetPos( uiRow, uiCol );
 
     return(0);
 }
@@ -664,7 +664,7 @@ int hb_gtWrite(char * fpStr, ULONG length)
     else size = length;
 
     /* Now the text string can be displayed */
-    gtPuts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size);
+    hb_gt_Puts( s_uiCurrentRow, s_uiCurrentCol, attr, fpPointer, size);
 
     /* Finally, save the new cursor position */
     hb_gtSetPos (iRow, iCol);
@@ -737,7 +737,7 @@ int hb_gtWriteCon(char * fpStr, ULONG length)
 int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols)
 {
 #ifdef HARBOUR_USE_WIN_GTAPI
-    gtScroll( uiTop, uiLeft, uiBottom, uiRight, _Color[s_uiColorIndex], iRows, iCols );
+   hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, _Color[s_uiColorIndex], iRows, iCols );
 #else
 
    USHORT uiRow = s_uiCurrentRow, uiCol = s_uiCurrentCol, uiSize;
@@ -775,15 +775,15 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
             int iRowPos = iCount + iRows;
 
             /* Blank the scroll region in the current row */
-            gtPuts ( iCount, uiLeft, attr, fpBlank, iLength);
+            hb_gt_Puts ( iCount, uiLeft, attr, fpBlank, iLength);
 
             if ((iRows || iCols) && iRowPos <= uiBottom && iRowPos >= uiTop)
             {
                /* Read the text to be scrolled into the current row */
-               gtGetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff);
+               hb_gt_GetText( iRowPos, iColOld, iRowPos, iColOld + iColSize, fpBuff);
 
                /* Write the scrolled text to the current row */
-               gtPutText ( iCount, iColNew, iCount, iColNew + iColSize, fpBuff);
+               hb_gt_PutText ( iCount, iColNew, iCount, iColNew + iColSize, fpBuff);
             }
          }
       }
@@ -804,7 +804,7 @@ void main(void)
     int iRow, iCol;
 
     /* NOTE: always have to initialze video subsystem */
-    gtInit();
+    hb_gtInit();
 
     /* save screen (doesn't work under DOS) */
     /*

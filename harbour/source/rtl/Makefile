@@ -41,6 +41,7 @@ PRG_SOURCES=\
         error.prg \
         errorsys.prg \
         objfunc.prg \
+        setkey.prg \
         tclass.prg \
 
 LIB=rtl

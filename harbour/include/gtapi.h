@@ -105,27 +105,26 @@ extern int    hb_gtWriteCon(char * fpStr, ULONG length);
 #endif
 
 /* private interface listed below. these are common to all platforms */
-/* TODO: Rename these to hb_gt_*() */
 
-extern void  gtInit(void);
-extern int   gtIsColor(void);
-extern void  gtDone(void);
-extern char  gtGetScreenWidth(void);
-extern char  gtGetScreenHeight(void);
-extern void  gtSetPos(char cRow, char cCol);
-extern char  gtCol(void);
-extern char  gtRow(void);
-extern void  gtScroll(char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz);
-extern void  gtSetCursorStyle(int style);
-extern int   gtGetCursorStyle(void);
-extern void  gtPuts(char cRow, char cCol, char attr, char *str, int len);
-extern void  gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
-extern void  gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
-extern void  gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
-extern void  gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
-extern void  hb_gt_DispBegin(char color);
-extern void  hb_gt_DispEnd(void);
-extern ULONG hb_gt_ScreenBuffer( ULONG buffer );
-extern void  hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
+extern void   hb_gt_Init(void);
+extern int    hb_gt_IsColor(void);
+extern void   hb_gt_Done(void);
+extern char   hb_gt_GetScreenWidth(void);
+extern char   hb_gt_GetScreenHeight(void);
+extern void   hb_gt_SetPos(char cRow, char cCol);
+extern char   hb_gt_Col(void);
+extern char   hb_gt_Row(void);
+extern void   hb_gt_Scroll(char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz);
+extern void   hb_gt_SetCursorStyle(int style);
+extern int    hb_gt_GetCursorStyle(void);
+extern void   hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len);
+extern void   hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
+extern void   hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
+extern void   hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
+extern void   hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
+extern void   hb_gt_DispBegin(void);
+extern void   hb_gt_DispEnd(void);
+extern ULONG  hb_gt_ScreenBuffer( ULONG buffer );
+extern void   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 
 #endif /* HB_GTAPI_H_ */

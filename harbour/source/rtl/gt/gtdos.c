@@ -29,33 +29,32 @@
   ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
 #endif
 
-static void gtxGetXY(char cRow, char cCol, char *attr, char *ch);
-static void gtxPutch(char cRow, char cCol, char attr, char ch);
+static void hb_gt_xGetXY(char cRow, char cCol, char *attr, char *ch);
+static void hb_gt_xPutch(char cRow, char cCol, char attr, char ch);
 
-int gtIsColor(void);
-static char gtGetScreenMode(void);
-static void gtSetCursorSize(char start, char end);
-static void gtGetCursorSize(char *start, char *end);
+static char hb_gt_GetScreenMode(void);
+static void hb_gt_SetCursorSize(char start, char end);
+static void hb_gt_GetCursorSize(char *start, char *end);
 
-void gtInit(void)
+void hb_gt_Init(void)
 {
 }
 
-void gtDone(void)
+void hb_gt_Done(void)
 {
 }
 
-int gtIsColor(void)
+int hb_gt_IsColor(void)
 {
-    return gtGetScreenMode() != 7;
+    return hb_gt_GetScreenMode() != 7;
 }
 
 #if defined(__WATCOMC__) && defined(__386__)
 
-char *gtScreenPtr(char cRow, char cCol)
+char *hb_gt_ScreenPtr(char cRow, char cCol)
 {
     char *ptr;
-    if (gtIsColor())
+    if (hb_gt_IsColor())
     {
         ptr = (char *)(0xB800 << 4);
     }
@@ -63,15 +62,15 @@ char *gtScreenPtr(char cRow, char cCol)
     {
         ptr = (char *)(0xB000 << 4);
     }
-    return ptr + (cRow * gtGetScreenWidth() * 2) + (cCol * 2);
+    return ptr + (cRow * hb_gt_GetScreenWidth() * 2) + (cCol * 2);
 }
 
 #else
 
-char FAR *gtScreenPtr(char cRow, char cCol)
+char FAR *hb_gt_ScreenPtr(char cRow, char cCol)
 {
     char FAR *ptr;
-    if (gtIsColor())
+    if (hb_gt_IsColor())
     {
         ptr = (char FAR *)MK_FP(0xB800, 0x0000);
     }
@@ -79,12 +78,12 @@ char FAR *gtScreenPtr(char cRow, char cCol)
     {
         ptr = (char FAR *)MK_FP(0xB000, 0x0000);
     }
-    return ptr + (cRow * gtGetScreenWidth() * 2) + (cCol * 2);
+    return ptr + (cRow * hb_gt_GetScreenWidth() * 2) + (cCol * 2);
 }
 
 #endif
 
-static char gtGetScreenMode(void)
+static char hb_gt_GetScreenMode(void)
 {
 #if defined(__WATCOMC__) && defined(__386__)
     return *((char *)0x0449);
@@ -93,7 +92,7 @@ static char gtGetScreenMode(void)
 #endif
 }
 
-char gtGetScreenWidth(void)
+char hb_gt_GetScreenWidth(void)
 {
 #if defined(__WATCOMC__) && defined(__386__)
     return *((char *)0x044a);
@@ -102,7 +101,7 @@ char gtGetScreenWidth(void)
 #endif
 }
 
-char gtGetScreenHeight(void)
+char hb_gt_GetScreenHeight(void)
 {
 #if defined(__WATCOMC__) && defined(__386__)
     return (char)(*((char *)0x0484) + 1);
@@ -111,7 +110,7 @@ char gtGetScreenHeight(void)
 #endif
 }
 
-void gtSetPos(char cRow, char cCol)
+void hb_gt_SetPos(char cRow, char cCol)
 {
 #if defined(__TURBOC__)
     _AH = 0x02;
@@ -133,7 +132,7 @@ void gtSetPos(char cRow, char cCol)
 #endif
 }
 
-static void gtSetCursorSize(char start, char end)
+static void hb_gt_SetCursorSize(char start, char end)
 {
 #if defined(__TURBOC__)
     _AH = 0x01;
@@ -153,7 +152,7 @@ static void gtSetCursorSize(char start, char end)
 #endif
 }
 
-static void gtGetCursorSize(char *start, char *end)
+static void hb_gt_GetCursorSize(char *start, char *end)
 {
    char _ch,_cl;
 #if defined(__TURBOC__)
@@ -176,12 +175,12 @@ static void gtGetCursorSize(char *start, char *end)
 #endif
 }
 
-int gtGetCursorStyle(void)
+int hb_gt_GetCursorStyle(void)
 {
     char start, end;
     int rc;
 
-    gtGetCursorSize(&start, &end);
+    hb_gt_GetCursorSize(&start, &end);
 
     if((start == 32) && (end == 32))
     {
@@ -211,28 +210,28 @@ int gtGetCursorStyle(void)
     return(rc);
 }
 
-void gtSetCursorStyle(int style)
+void hb_gt_SetCursorStyle(int style)
 {
     switch(style)
     {
     case SC_NONE:
-        gtSetCursorSize(32, 32);
+        hb_gt_SetCursorSize(32, 32);
         break;
 
     case SC_NORMAL:
-        gtSetCursorSize(6, 7);
+        hb_gt_SetCursorSize(6, 7);
         break;
 
     case SC_INSERT:
-        gtSetCursorSize(4, 7);
+        hb_gt_SetCursorSize(4, 7);
         break;
 
     case SC_SPECIAL1:
-        gtSetCursorSize(0, 7);
+        hb_gt_SetCursorSize(0, 7);
         break;
 
     case SC_SPECIAL2:
-        gtSetCursorSize(0, 3);
+        hb_gt_SetCursorSize(0, 3);
         break;
 
     default:
@@ -240,28 +239,28 @@ void gtSetCursorStyle(int style)
     }
 }
 
-static void gtxGetXY(char cRow, char cCol, char *attr, char *ch)
+static void hb_gt_xGetXY(char cRow, char cCol, char *attr, char *ch)
 {
     char FAR *p;
-    p = gtScreenPtr(cRow, cCol);
+    p = hb_gt_ScreenPtr(cRow, cCol);
     *ch = *p;
     *attr = *(p + 1);
 }
 
-void gtxPutch(char cRow, char cCol, char attr, char ch)
+void hb_gt_xPutch(char cRow, char cCol, char attr, char ch)
 {
     char FAR *p;
-    p = gtScreenPtr(cRow, cCol);
+    p = hb_gt_ScreenPtr(cRow, cCol);
     *p = ch;
     *(p + 1) = attr;
 }
 
-void gtPuts(char cRow, char cCol, char attr, char *str, int len)
+void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
 {
     char FAR *p;
     int i;
 
-    p = gtScreenPtr( cRow, cCol );
+    p = hb_gt_ScreenPtr( cRow, cCol );
     for(i=0; i<len; i++)
     {
         *p++ = *str++;
@@ -269,42 +268,42 @@ void gtPuts(char cRow, char cCol, char attr, char *str, int len)
     }
 }
 
-void gtGetText(char cTop, char cLeft, char cBottom, char right, char *dest)
+void hb_gt_GetText(char cTop, char cLeft, char cBottom, char right, char *dest)
 {
     char x, y;
     for (y = cTop; y <= cBottom, y++ )
     {
         for (x = cLeft; x <= cRight; x++)
         {
-            gtxGetXY(y, x, dest + 1, dest);
+            hb_gt_xGetXY(y, x, dest + 1, dest);
             dest += 2;
         }
     }
 }
 
-void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
+void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
     char x, y;
     for (y = cTop; y <= cBottom; y++)
     {
         for (x = cLeft; x <= cRight; x++)
         {
-            gtxPutch(y, x, *(srce + 1), *srce);
+            hb_gt_xPutch(y, x, *(srce + 1), *srce);
             srce += 2;
         }
     }
 }
 
-void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 }
 
-void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 }
 
   /* returns col */
-char gtCol(void)
+char hb_gt_Col(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
@@ -325,7 +324,7 @@ char gtCol(void)
 }
 
   /* returns row */
-char gtRow(void)
+char hb_gt_Row(void)
 {
 #if defined(__TURBOC__)
     _AH = 0x03;
@@ -350,9 +349,8 @@ void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    uiRows=uiCols=0;
 }
 
-void hb_gt_DispBegin( char color )
+void hb_gt_DispBegin(void)
 {
-   color = '\0';
 }
 
 void hb_gt_DispEnd(void)

@@ -307,8 +307,8 @@ static void hb_outstd( char * fpStr, ULONG len )
 #ifdef HARBOUR_USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      dev_row = gtRow();
-      dev_col = gtCol();
+      dev_row = hb_gt_Row();
+      dev_col = hb_gt_Col();
       hb_gtSetPos( dev_row, dev_col );
    }
 #else
@@ -326,8 +326,8 @@ static void hb_outerr( char * fpStr, ULONG len )
 #ifdef HARBOUR_USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      dev_row = gtRow();
-      dev_col = gtCol();
+      dev_row = hb_gt_Row();
+      dev_col = hb_gt_Col();
       hb_gtSetPos( dev_row, dev_col );
    }
 #else
@@ -991,7 +991,7 @@ HARBOUR HB_SHADOW (void)
       uiAttr = hb_parni(5);
    
    if( hb_pcount() > 3 )
-      gtDrawShadow(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
+      hb_gt_DrawShadow(hb_parni(1)+1,hb_parni(2)+1,hb_parni(3)+1,hb_parni(4)+1,uiAttr);
 #endif
 }
 

@@ -48,7 +48,7 @@ do { \
 #define LOG(x)
 #endif /* #if (defined(HB_LOG) && (HB_LOG != 0)) */
 
-void gtInit(void)
+void hb_gt_Init(void)
 {
   LOG("Initializing");
   HInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -56,13 +56,7 @@ void gtInit(void)
   hb_gt_ScreenBuffer((ULONG)HOutput);
 }
 
-/* TODO: this can very likely be removed */
-HARBOUR GTINIT( void )
-{
-  gtInit();
-}
-
-void gtDone(void)
+void hb_gt_Done(void)
 {
   CloseHandle(HInput);
   HInput = INVALID_HANDLE_VALUE;
@@ -71,13 +65,13 @@ void gtDone(void)
   LOG("Ending");
 }
 
-int gtIsColor(void)
+int hb_gt_IsColor(void)
 {
    /* TODO: need to call something to do this instead of returning TRUE */
    return TRUE;
 }
 
-char gtGetScreenWidth(void)
+char hb_gt_GetScreenWidth(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -86,7 +80,7 @@ char gtGetScreenWidth(void)
   return (char)csbi.dwSize.X;
 }
 
-char gtGetScreenHeight(void)
+char hb_gt_GetScreenHeight(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -95,7 +89,7 @@ char gtGetScreenHeight(void)
   return (char)csbi.dwSize.Y;
 }
 
-void gtSetPos(char cRow, char cCol)
+void hb_gt_SetPos(char cRow, char cCol)
 {
   COORD dwCursorPosition;
 
@@ -107,7 +101,7 @@ void gtSetPos(char cRow, char cCol)
   LOG("..  Called SetConsoleCursorPosition()");
 }
 
-void gtSetCursorStyle(int style)
+void hb_gt_SetCursorStyle(int style)
 {
   CONSOLE_CURSOR_INFO cci;
 
@@ -143,7 +137,7 @@ void gtSetCursorStyle(int style)
     SetConsoleCursorInfo(HOutput, &cci);
 }
 
-int gtGetCursorStyle(void)
+int hb_gt_GetCursorStyle(void)
 {
   CONSOLE_CURSOR_INFO cci;
   int rc;
@@ -181,7 +175,7 @@ int gtGetCursorStyle(void)
   return(rc);
 }
 
-void gtPuts(char cRow, char cCol, char attr, char *str, int len)
+void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
 {
   DWORD dwlen;
   COORD coord;
@@ -193,7 +187,7 @@ void gtPuts(char cRow, char cCol, char attr, char *str, int len)
   FillConsoleOutputAttribute(HOutput, (WORD)attr, (DWORD)len, coord, &dwlen);
 }
 
-void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
+void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 {
   DWORD i, len, width;
   COORD coord;
@@ -231,7 +225,7 @@ void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
   hb_xfree(pstr);
 }
 
-void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
+void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
   DWORD i, len, width;
   COORD coord;
@@ -269,7 +263,7 @@ void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
   hb_xfree(pstr);
 }
 
-void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 /* ptucker */
 
@@ -287,7 +281,7 @@ void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attr
 
 }
 
-void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
+void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute )
 {
 /* ptucker */
 
@@ -309,7 +303,7 @@ void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attrib
 
 }
 
-char gtCol(void)
+char hb_gt_Col(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -318,7 +312,7 @@ char gtCol(void)
   return csbi.dwCursorPosition.X;
 }
 
-char gtRow(void)
+char hb_gt_Row(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -327,7 +321,7 @@ char gtRow(void)
   return csbi.dwCursorPosition.Y;
 }
 
-void gtScroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz )
+void hb_gt_Scroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz )
 {
 /* ptucker */
 
@@ -358,7 +352,7 @@ void gtScroll( char cTop, char cLeft, char cBottom, char cRight, char attribute,
   ScrollConsoleScreenBuffer(HOutput, &Source, &Clip, Target, &FillChar);
 }
 
-void hb_gt_DispBegin( char color )
+void hb_gt_DispBegin(void)
 {
 /* ptucker */
   HANDLE hNewBuffer;
@@ -367,9 +361,9 @@ void hb_gt_DispBegin( char color )
   char * pBuffer;
   USHORT uiX;
 
-  hb_gtRectSize( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, &uiX );
+  hb_gtRectSize( 0,0, hb_gt_GetScreenHeight()-1, hb_gt_GetScreenWidth()-1, &uiX );
   pBuffer = ( char * ) hb_xgrab( uiX );
-  hb_gtSave( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
+  hb_gtSave( 0,0, hb_gt_GetScreenHeight()-1, hb_gt_GetScreenWidth()-1, pBuffer );
 
   hNewBuffer = CreateConsoleScreenBuffer(
                GENERIC_READ    | GENERIC_WRITE,
@@ -378,13 +372,13 @@ void hb_gt_DispBegin( char color )
                CONSOLE_TEXTMODE_BUFFER,
                NULL);
 
-  row = gtRow();
-  col = gtCol();
+  row = hb_gt_Row();
+  col = hb_gt_Col();
   hb_gt_ScreenBuffer( (ULONG)HOutput );
 
   HOutput = hNewBuffer;
-  hb_gtRest( 0,0,  gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
-  gtSetPos( row, col );
+  hb_gtRest( 0,0,  hb_gt_GetScreenHeight()-1, hb_gt_GetScreenWidth()-1, pBuffer );
+  hb_gt_SetPos( row, col );
   hb_xfree( pBuffer );
 }
 
@@ -395,17 +389,17 @@ void hb_gt_DispEnd()
   char row, col;
   USHORT uiX;
 
-  hb_gtRectSize( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, &uiX );
+  hb_gtRectSize( 0,0, hb_gt_GetScreenHeight()-1, hb_gt_GetScreenWidth()-1, &uiX );
   pBuffer = ( char * ) hb_xgrab( uiX );
-  hb_gtSave( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
+  hb_gtSave( 0,0, hb_gt_GetScreenHeight()-1, hb_gt_GetScreenWidth()-1, pBuffer );
 
-  row = gtRow();
-  col = gtCol();
+  row = hb_gt_Row();
+  col = hb_gt_Col();
   CloseHandle( HOutput );
   HOutput = (HANDLE)hb_gt_ScreenBuffer( 0 );
 
-  hb_gtRest( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
-  gtSetPos( row, col );
+  hb_gtRest( 0,0, hb_gt_GetScreenHeight()-1, hb_gt_GetScreenWidth()-1, pBuffer );
+  hb_gt_SetPos( row, col );
   hb_xfree( pBuffer );
 }
 

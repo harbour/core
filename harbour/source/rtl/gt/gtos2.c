@@ -21,23 +21,23 @@
 #define KBDTRF_FINAL_CHAR_IN  FINAL_CHAR_IN
 #endif
 
-static void gtSetCursorSize(char start, char end);
-static void gtGetCursorSize(char *start, char *end);
+static void hb_gt_SetCursorSize(char start, char end);
+static void hb_gt_GetCursorSize(char *start, char *end);
 
-void gtInit(void)
+void hb_gt_Init(void)
 {
 }
 
-void gtDone(void)
+void hb_gt_Done(void)
 {
 }
 
-int gtIsColor(void)
+int hb_gt_IsColor(void)
 {
     return TRUE;
 }
 
-char gtGetScreenWidth(void)
+char hb_gt_GetScreenWidth(void)
 {
     VIOMODEINFO vi;
     vi.cb = sizeof(VIOMODEINFO);
@@ -45,7 +45,7 @@ char gtGetScreenWidth(void)
     return vi.col;
 }
 
-char gtGetScreenHeight(void)
+char hb_gt_GetScreenHeight(void)
 {
     VIOMODEINFO vi;
     vi.cb = sizeof(VIOMODEINFO);
@@ -53,26 +53,26 @@ char gtGetScreenHeight(void)
     return vi.row;
 }
 
-void gtSetPos(char cRow, char cCol)
+void hb_gt_SetPos(char cRow, char cCol)
 {
     VioSetCurPos((USHORT) cRow, (USHORT) cCol, 0);
 }
 
-char gtRow(void)
+char hb_gt_Row(void)
 {
     USHORT x, y;
     VioGetCurPos(&y, &x, 0);
     return x;
 }
 
-char gtCol(void)
+char hb_gt_Col(void)
 {
     USHORT x, y;
     VioGetCurPos(&y, &x, 0);
     return y;
 }
 
-static void gtSetCursorSize(char start, char end)
+static void hb_gt_SetCursorSize(char start, char end)
 {
     VIOCURSORINFO vi;
     vi.yStart = start;
@@ -82,7 +82,7 @@ static void gtSetCursorSize(char start, char end)
     VioSetCurType(&vi, 0);
 }
 
-static void gtGetCursorSize(char *start, char *end)
+static void hb_gt_GetCursorSize(char *start, char *end)
 {
     VIOCURSORINFO vi;
     VioGetCurType(&vi, 0);
@@ -90,12 +90,12 @@ static void gtGetCursorSize(char *start, char *end)
     *end = vi.cEnd;
 }
 
-void gtSetCursorStyle(int style)
+void hb_gt_SetCursorStyle(int style)
 {
     /* TODO: need to implement this */
 }
 
-int gtGetCursorStyle(void)
+int hb_gt_GetCursorStyle(void)
 {
     /* TODO: need to implement this */
     int rc=0;
@@ -103,12 +103,12 @@ int gtGetCursorStyle(void)
     return(rc);
 }
 
-void gtPuts(char cRow, char cCol, char attr, char *str, int len)
+void hb_gt_Puts(char cRow, char cCol, char attr, char *str, int len)
 {
     VioWrtCharStrAtt(str, (USHORT) len, (USHORT) cRow, (USHORT) cCol, (PBYTE) &attr, 0);
 }
 
-void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
+void hb_gt_GetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
 {
     USHORT width;
     char y;
@@ -120,7 +120,7 @@ void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest)
     }
 }
 
-void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
+void hb_gt_PutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
 {
     USHORT width;
     char y;
@@ -132,11 +132,11 @@ void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce)
     }
 }
 
-void gtSetAttribute( char cTop, char cLeft, char cBottom, cRight, char attribute )
+void hb_gt_SetAttribute( char cTop, char cLeft, char cBottom, cRight, char attribute )
 {
 }
 
-void gtDrawShadow( char cTop, char cLeft, char cBottom, cRight, char attribute )
+void hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, cRight, char attribute )
 {
 }
 
@@ -145,9 +145,8 @@ void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    uiRows=uiCols=0;
 }
 
-void hb_gt_DispBegin( char color )
+void hb_gt_DispBegin(void)
 {
-   color = '\0';
 }
 
 void hb_gt_DispEnd(void)

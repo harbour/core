@@ -48,7 +48,7 @@ typedef struct          /* symbol support structure */
    SYMBOLSCOPE cScope;  /* the scope of the symbol */
    PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
    struct _DYNSYM * pDynSym;   /* pointer to its dynamic symbol if defined */
-} SYMBOL, * PSYMBOL;
+} SYMBOL, * PSYMBOL, * SYMBOL_PTR;
 
 /* Harbour Functions scope */
 #define FS_PUBLIC       0
@@ -168,7 +168,8 @@ struct hb_struSymbol
    PSYMBOL value;
 };
 
-typedef struct _HB_ITEM       /* items hold at the virtual machine stack */
+/* items hold at the virtual machine stack */
+typedef struct _HB_ITEM
 {
    WORD type;
    union
@@ -187,8 +188,7 @@ typedef struct _HB_ITEM       /* items hold at the virtual machine stack */
       struct hb_struSymbol  asSymbol;
    } item;
 }
-HB_ITEM, *PHB_ITEM;
-typedef PHB_ITEM HB_ITEM_PTR;
+HB_ITEM, * PHB_ITEM, * HB_ITEM_PTR;
 
 typedef struct _HB_BASEARRAY
 {
@@ -197,9 +197,10 @@ typedef struct _HB_BASEARRAY
    WORD     wHolders;     /* number of holders of this array */
    WORD     wClass;       /* offset to the classes base if it is an object */
    WORD     wSuperCast;   /* is it a super cast ? */
-} BASEARRAY, * PBASEARRAY;
+} BASEARRAY, * PBASEARRAY, * BASEARRAY_PTR;
 
-typedef struct     /* stack managed by the virtual machine */
+/* stack managed by the virtual machine */
+typedef struct
 {
    PHB_ITEM pItems;       /* pointer to the stack items */
    PHB_ITEM pPos;         /* pointer to the latest used item */
@@ -211,18 +212,19 @@ typedef struct     /* stack managed by the virtual machine */
    char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
 } STACK;
 
+/* dynamic symbol structure */
 typedef struct _DYNSYM
 {
    HB_HANDLE hArea;       /* Workarea number */
    HB_HANDLE hMemvar;     /* Index number into memvars ( publics & privates ) array */
    PSYMBOL   pSymbol;     /* pointer to its relative local symbol */
    PHB_FUNC  pFunPtr;     /* Pointer to the function address */
-} DYNSYM, * PDYNSYM;      /* dynamic symbol structure */
+} DYNSYM, * PDYNSYM, * DYNSYM_PTR;      
 
 typedef struct
 {
    PDYNSYM pDynSym;             /* Pointer to dynamic symbol */
-} DYNHB_ITEM, * PDYNHB_ITEM;
+} DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
@@ -232,14 +234,14 @@ typedef struct _HB_CODEBLOCK
    WORD     wLocals;      /* number of referenced local variables */
    PSYMBOL  pSymbols;     /* codeblocks symbols */
    ULONG    lCounter;     /* numer of references to this codeblock */
-} HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
+} HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef struct _HB_VALUE
 {
    HB_ITEM   item;
    ULONG     counter;
    HB_HANDLE hPrevMemvar;
-} HB_VALUE, * HB_VALUE_PTR;
+} HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
 
 extern STACK stack;
 extern SYMBOL symEval;

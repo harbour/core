@@ -95,6 +95,7 @@ typedef int BOOL;
 #endif
 #endif
 typedef HARBOUR ( * PHB_FUNC )( void );
+typedef PHB_FUNC HB_FUNC_PTR;
 
 #ifndef _POSIX_PATH_MAX
    #define _POSIX_PATH_MAX    255

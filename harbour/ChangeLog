@@ -1,8 +1,21 @@
+19990802-16:10 GMT+1 Victor Szel <info@szelvesz.hu>
+   + include/extend.h
+     _PTR flavour of pointer names added.
+   * include/gtapi.h
+     source/rtl/console.c
+     source/rtl/gtapi.c
+     source/rtl/gt/gt*.c
+     gt*() -> hb_gt_*()
+     hb_gt_DispBegin() color removed from the parameter list.
+   + source/rtl/setkey.prg
+     source/rtl/Makefile
+     SetKey() function added.
+
 19990802-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
    % source/hbpp/hbpplib.c
      source/tools/debug.c
      source/tools/stringsx.c - Unused #includes removed
-^  + doc/codestyl.txt - Added. Moved here from source/vm/hvm.c
+   + doc/codestyl.txt - Added. Moved here from source/vm/hvm.c
    * source/rtl/strings.c
      include/extend.h
      source/vm/dynsym.c - hb_strgreater() and hb_strupr() moved.
@@ -48,7 +61,7 @@
    ! include/extend.api - _pcount, _reta removed since not in Clipper.
    ! include/gt.api - _gtInit removed since not in Clipper.
    ! include/vm.api - #include "extend.h" added.
-^  - include/compat.h
+   - include/compat.h
      include/super.h
      include/extra.h
      include/Makefile - Unused header files removed.
