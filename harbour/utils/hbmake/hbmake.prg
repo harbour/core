@@ -150,7 +150,7 @@ else
    cFile := ""
 endif
 
-If empty(cFile) .and. !lEditMode
+If (empty(cFile) .and. !lEditMode) .or. !file(cfile) 
    ? "File not Found"
    Return Nil
 Endif
@@ -171,9 +171,6 @@ Endif
 If Pcount() >= 1
    ProcessParameters(AllParam)
 Endif
-//if !file(cfile)
-//   return nil
-//endif
 if lEditMode
    if lLibrary
       crtlibmakfile( cFile )
@@ -1024,10 +1021,10 @@ cDefHarOpts+=" -v "
 endif
 if ldebug
 cDefHarOpts+=" -b "
- cDefBccLibs  += "debug.lib"
- cDefGccLibs  += "-ldebug"
- cgcclibsos2  += "-ldebug"
- cDeflibGccLibs += "-ldebug"
+ cDefBccLibs  += " debug.lib"
+ cDefGccLibs  += " -ldebug"
+ cgcclibsos2  += " -ldebug"
+ cDeflibGccLibs += " -ldebug"
 endif
 if lSupressline
 cDefHarOpts+=" -l "

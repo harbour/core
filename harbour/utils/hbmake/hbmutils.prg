@@ -354,15 +354,15 @@ Return aReturnLibs
 Function Getlibs( lgcc ,cDir)
      Local lLinux:=at('linux',lower(os()))>0
      Local ainstaledlibs := Getinstaledlibs( If( !llinux, if(!lgcc, cDir+"\*.lib",cDir+"\*.a") , '/usr/lib/harbour/*.a' ),lGcc )
-     Local aLibsDesc     := { { "Harbour Ct3 library - Libct", 'ct' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour Misc library - Libmisc", 'misc' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour html library - Htmllib", 'html' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour Nanfor library - Libnf", 'nf' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour Gt library - Libgt", 'nf' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour Zip library Zlib1", 'zlib1.lib ziparchive' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour Hbole library Hbole", 'hbole' + If( lgcc, '', '.lib' ) + ' ole2' + If( lgcc, '', '.lib' ) }, ;
-                          { "Harbour Mysql library - MySql", 'mysql' + If( lgcc, '', '.lib' ) + ' libmysql' + If( lgcc, '', '.lib' ) + ' mysqlclient' + If( lgcc, '.a', '.lib' ) }, ;
-                          { "Harbour Samples library - Samples", 'samples' + If( lgcc, '', '.lib' ) } }
+     Local aLibsDesc     := { { "Harbour Ct3 library - Libct", 'ct' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Misc library - Libmisc", 'misc' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour html library - Htmllib", 'html' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Nanfor library - Libnf", 'nf' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Gt library - Libgt", 'nf' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Zip library Zlib1", 'zlib1.lib ziparchive' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Hbole library Hbole", 'hbole' + If( lgcc, '.a', '.lib' ) + ' ole2' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Mysql library - MySql", 'mysql' + If( lgcc, '.a', '.lib' ) + ' libmysql' + If( lgcc, '.a', '.lib' ) + ' mysqlclient' + If( lgcc, '.a', '.lib' ) }, ;
+                          { "Harbour Samples library - Samples", 'samples' + If( lgcc, '.a', '.lib' ) } }
      Aeval( ainstaledlibs, { | x | Aadd( aLibsDesc, { "User - " + x +" Library", x } ) } )
 Return aLibsDesc
 
