@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-03-16 10:33 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * If() inline accepts all kind of arguments
+    Changes borrowed from xHarbour.
+
+    WARNING: We don't know for sure if these changes may bring any
+    undesirable side effects, so please do all the tests you can.
+
 2003-03-16 09:50 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * Proper definition for HAVE_POSIX_IO for MSVC compiler.
     This fixes the CurDrive() bug reported by Vicente Aranzana.
