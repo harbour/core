@@ -1,3 +1,14 @@
+20000501-14:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+    * source/compiler/harbour.c
+      * Minor correction to hb_compVariableAdd().
+
+    * source/compiler/hbpcode.c
+      * Enhancements to hb_compStrongType() to support new PUSH/POPALIASEDFIELDNEAR.
+
+    * tests/testwarn.prg
+      + Added code to demonstrate more warnings.
+
 20000501-19:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
@@ -7,7 +18,7 @@
 
    *source/rtl/filesys.c
        * added support for hb_fsCommit() in Unix-like OS
-       
+
    *source/compiler/harbour.c
        * fixed signed/unsigned warnings
 
@@ -20,7 +31,7 @@
    * source/compiler/harbour.c
    * source/vm/hvm.c
      + Added new pcode: HB_P_PUSHBLOCKSHORT
-       This is used for codeblocks which have no parameters, use no locals, 
+       This is used for codeblocks which have no parameters, use no locals,
        and the total size is smaller than 255 bytes. The majority of codeblocks
        falls into this category.
        HB_TEST is now 15K smaller.
@@ -60,7 +71,7 @@
 
    * makefile.bc
      - Removed duplicated and Borland only default language selection.
-       This feature is already built in to HBSETUP.H, so there's no 
+       This feature is already built in to HBSETUP.H, so there's no
        point to duplicate it. Or I'm missing something obvious.
 
 20000501-16:08 GMT+1 Victor Szakats <info@szelvesz.hu>
@@ -88,16 +99,16 @@
       passing no arguments to a codeblock
       * added hb_vmEvalBlockV() for a codeblock evaluation - it is
       using a variable number of arguments
-            
+
    *source/rdd/dbcmd.c
       * fixed bug in defEvalBlock
       * fixed to call hb_vmEvalBlock()
       * some common parts moved into separate functions
-      
+
     *include/hbcomp.h
 	* changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
 	error mentioned by Victor
-	
+
 20000501-15:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/teditor.prg
@@ -119,7 +130,7 @@
      + Developer list updated.
 
    * source/rtl/Makefile
-     ! Fixed back the indentation of the file list from three spaces to 
+     ! Fixed back the indentation of the file list from three spaces to
        one tab.
      + Added memoedit.prg
 

@@ -452,22 +452,31 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    PVAR pVar, pLastVar;
    PFUNCTION pFunc = hb_comp_functions.pLast;
 
-   if ( hb_comp_iWarnings > 2 && hb_comp_szDeclaredFun )
+   /* Dummy Var - Parameter Declaration of Declared Function. */
+   if ( hb_comp_szDeclaredFun )
    {
-      PCOMSYMBOL pSym = hb_compSymbolFind( hb_comp_szDeclaredFun, NULL );
-
-      if ( pSym )
-      {
-         pSym->iParamCount++;
-
-         if ( pSym->cParamTypes )
-            pSym->cParamTypes = ( BYTE * ) hb_xrealloc( pSym->cParamTypes, pSym->iParamCount );
-         else
-            pSym->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
-
-         pSym->cParamTypes[ pSym->iParamCount - 1 ] = hb_comp_cVarType;
-
+      /* Nothing to do since no warnings requested.*/
+      if ( hb_comp_iWarnings < 3 )
          return;
+
+      {
+         /* Find the Declared Function owner of this parameter. */
+         PCOMSYMBOL pSym = hb_compSymbolFind( hb_comp_szDeclaredFun, NULL );
+
+         if ( pSym )
+         {
+            pSym->iParamCount++;
+
+            if ( pSym->cParamTypes )
+               pSym->cParamTypes = ( BYTE * ) hb_xrealloc( pSym->cParamTypes, pSym->iParamCount );
+            else
+               pSym->cParamTypes = ( BYTE * ) hb_xgrab( 1 );
+
+            /* Store declared type of this parameter into the parameters type list. */
+            pSym->cParamTypes[ pSym->iParamCount - 1 ] = hb_comp_cVarType;
+
+            return;
+         }
       }
    }
 
@@ -2899,21 +2908,21 @@ void hb_compCodeBlockEnd( void )
       ++wLocals;
    }
 
-   if( ( pCodeblock->lPCodePos + 3 ) <= 255 && 
+   if( ( pCodeblock->lPCodePos + 3 ) <= 255 &&
        pCodeblock->wParamCount == 0 &&
        wLocals == 0 )
    {
       /* NOTE: 3 = HB_P_PUSHBLOCKSHORT + BYTE( size ) + _ENDBLOCK */
       wSize = ( USHORT ) pCodeblock->lPCodePos + 3;
-      
-      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( BYTE ) wSize, ( BOOL ) 1 );
+
+      hb_compGenPCode2( HB_P_PUSHBLOCKSHORT, ( BYTE ) wSize, ( BOOL ) 0 );
    }
    else
    {
       /* NOTE: 8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
       wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
-      
-      hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 1 );
+
+      hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 0 );
       hb_compGenPCode2( HB_LOBYTE( pCodeblock->wParamCount ), HB_HIBYTE( pCodeblock->wParamCount ), ( BOOL ) 0 );
       hb_compGenPCode2( HB_LOBYTE( wLocals ), HB_HIBYTE( wLocals ), ( BOOL ) 0 );
    }

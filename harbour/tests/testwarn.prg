@@ -11,7 +11,21 @@ DECLARE FUNCTION nMyFunc( cVar AS CHARACTER, nVar AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION cOtherFunc( ) AS CHARACTER
 
-FUNCTION Main()
+DECLARE FUNCTION seconds() AS NUMERIC
+
+DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
+
+Function Main()
+Local n As Numeric
+
+    n := 2
+    n := 'a'
+    n := seconds() + 2
+    n := int( seconds() + 2 )
+
+Return( NIL )
+
+FUNCTION Main1()
 
    LOCAL n AS NUMERIC, cVar AS CHARACTER, a[5,5,5] AS ARRAY
 

@@ -533,7 +533,12 @@ void hb_compStrongType( int iSize )
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'O';
        break;
 
-     /* Blcks */
+     /* Blcoks */
+     /* Nothing to do, handled by HB_P_ENDBLOCK.
+     case HB_P_PUSHBLOCK :
+     case HB_P_PUSHBLOCKSHORT :
+     */
+
      case HB_P_ENDBLOCK :
        /* Override the last value of the block left on the stack. */
        pFunc->pStack[ pFunc->iStackIndex ] = 'B';
@@ -696,18 +701,34 @@ void hb_compStrongType( int iSize )
        /* Question use type "REFERENCE" or the base type of the var */
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
 
-     /* MemVars */
+     case HB_P_PUSHALIASEDFIELDNEAR :
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
 
-     case HB_P_PUSHVARIABLE :
-     case HB_P_PUSHMEMVAR :
-       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
        if ( pSym )
          pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
        else
          pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
 
+       break;
+
+     case HB_P_PUSHFIELD :
+     case HB_P_PUSHALIASEDFIELD :
+     case HB_P_PUSHALIASEDVAR :
+     case HB_P_PUSHVARIABLE :
+     case HB_P_PUSHMEMVAR :
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
+
+       if ( pSym )
+         pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
+       else
+         pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+
+       break;
+
      case HB_P_PUSHMEMVARREF :
+       /* Question use type "REFERENCE" or the base type of the var */
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'R';
+       break;
 
      /* Arrays. */
 
@@ -780,6 +801,28 @@ void hb_compStrongType( int iSize )
      case HB_P_POP :
      case HB_P_POPALIAS :
        pFunc->iStackIndex--;
+       break;
+
+     case HB_P_POPALIASEDFIELDNEAR :
+       pFunc->iStackIndex--;
+
+       if ( pFunc->iStackIndex < 0 )
+          /* TODO Error Message after finalizing all possible pcodes. */
+          break;
+
+       pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] );
+
+       if ( pSym->cType != ' ' )
+       {
+         char szType[2];
+         sprintf( szType, "%c", pSym->cType );
+
+         if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_SUSPECT, pSym->szName, szType );
+         else if ( pSym->cType != pFunc->pStack[ pFunc->iStackIndex ] )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pSym->szName, szType );
+       }
+
        break;
 
      case HB_P_POPFIELD :
