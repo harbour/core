@@ -186,8 +186,16 @@ static void hb_clsRelease( PCLASS pClass )
    HB_TRACE(HB_TR_DEBUG, ("hb_clsRelease(%p)", pClass));
 
    for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ ) /* Release initializers     */
-      if( pMeth->pInitValue && pMeth->uiData > pClass->uiDataFirst )
-         hb_itemRelease( pMeth->pInitValue );
+   {
+      if( pMeth->pInitValue )
+      {
+         // if( pMeth->pFunction == hb___msgGetClsData )  /* is it a ClassData initializer ? */
+         //   hb_itemRelease( pMeth->pInitValue );
+         // else
+          if( pMeth->uiData > pClass->uiDataFirst )
+            hb_itemRelease( pMeth->pInitValue );
+      }
+   }
 
    hb_xfree( pClass->szName );
    hb_xfree( pClass->pMethods );
@@ -636,7 +644,17 @@ HARBOUR HB___CLSINST( void )
          if( pMeth->pInitValue && ! pMeth->bClsDataInitiated )
          {
             if( pMeth->pFunction != hb___msgGetClsData ) /* is a DATA */
-               hb_itemArrayPut( &hb_stack.Return, pMeth->uiData, pMeth->pInitValue );
+            {
+               if( IS_ARRAY( pMeth->pInitValue ) )
+               {
+                  PHB_ITEM pInitValue = hb_arrayClone( pMeth->pInitValue );
+                  hb_itemArrayPut( &hb_stack.Return, pMeth->uiData, pInitValue );
+                  hb_itemRelease( pInitValue );
+               }
+               else
+                  hb_itemArrayPut( &hb_stack.Return, pMeth->uiData,
+                                   pMeth->pInitValue );
+            }
             else  /* it is a ClassData */
             {
                HB_ITEM init;
