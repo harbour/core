@@ -403,7 +403,7 @@ EXTERNAL __XHELP
 EXTERNAL __XRESTSCREEN
 EXTERNAL __XSAVESCREEN
 
-/* Harbour internal functions /*
+/* Harbour internal functions */
 
 EXTERNAL __CLASSADD
 EXTERNAL __CLASSINSTANCE

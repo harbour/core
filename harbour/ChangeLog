@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+ed
+
+2002-01-21 17:25 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/common/hbfhnd.c
      ! was not working for bcc32 since last change. fixed
      Reported by Lorenzo Fiorini
