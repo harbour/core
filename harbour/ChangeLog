@@ -1,3 +1,7 @@
+199908.09-15:24 GMT+3 Alexander Kresin
+  * source/hbpp/hbpp.c
+    * fixed problem with new DATA implementation
+
 19990809-12:20 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
