@@ -41,6 +41,8 @@
  * 4) Support this syntax: nPtr := @Hello()
  */
 
+#include <malloc.h>
+
 #include "compiler.h"
 
 /* Compile using: bison -d -v harbour.y */

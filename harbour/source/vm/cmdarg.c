@@ -34,6 +34,7 @@
  */
 
 #include "extend.h"
+#include "hbmemory.ch"
 
 /* Command line argument management */
 static int     s_argc = 0;
@@ -268,3 +269,100 @@ void hb_cmdargTEST( void )
 
 #endif
 
+/* Check for command line internal arguments */
+void hb_cmdargProcessVM( void )
+{
+   if( hb_cmdargCheck( "INFO" ) )
+   {
+      char * pszVersion = hb_version( 1 );
+      char buffer[ 128 ];
+
+      hb_outerr( pszVersion, 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+      sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
+      hb_outerr( buffer, 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+      hb_xfree( pszVersion );
+   }
+
+   if( hb_cmdargCheck( "BUILD" ) )
+   {
+      hb_outerr( "Harbour Compiler Build Info", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+/*
+      hb_outerr( "---------------------------", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+*/
+#if defined( HARBOUR_STRICT_CLIPPER_COMPATIBILITY )
+      hb_outerr( "* Strict CA-Clipper compatibility: Yes", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+#else
+      hb_outerr( "* Strict CA-Clipper compatibility: No", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+#endif
+
+#if defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_XPP ) || defined( HB_COMPAT_VO )
+      hb_outerr( "  With some support for:", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+#if defined( HB_COMPAT_C53 )
+      hb_outerr( "    CA-Clipper 5.3[a,b]", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+#endif
+
+#if defined( HB_COMPAT_XPP )
+      hb_outerr( "    Alaska XBase++", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+#endif
+
+#if defined( HB_COMPAT_VO )
+      hb_outerr( "    CA-Visual Objects", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+#endif
+
+#endif
+
+#if defined( HARBOUR_USE_GTAPI )
+      hb_outerr( "* GT API: ", 0 );
+#if defined( HARBOUR_USE_STD_GTAPI )
+      hb_outerr( "Standard", 0 );
+#elif defined( HARBOUR_USE_DOS_GTAPI )
+      hb_outerr( "DOS", 0 );
+#elif defined( HARBOUR_USE_OS2_GTAPI )
+      hb_outerr( "OS/2", 0 );
+#elif defined( HARBOUR_USE_WIN_GTAPI )
+      hb_outerr( "Windows", 0 );
+#elif defined( HARBOUR_USE_CRS_GTAPI )
+      hb_outerr( "Unix Curses", 0 );
+#elif defined( HARBOUR_USE_SLN_GTAPI )
+      hb_outerr( "Unix Slang", 0 );
+#endif
+
+#else
+      hb_outerr( "* GT API: No", 0 );
+#endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+#if defined( HARBOUR_OBJ_GENERATION )
+      hb_outerr( "With object file generation", 0 );
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+#endif
+
+      hb_outerr( "* ANSI C: ", 0 );
+#if defined( HARBOUR_STRICT_ANSI_C )
+      hb_outerr( "Strict", 0 );
+#else
+      hb_outerr( "Non Strict", 0 );
+#endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+
+      hb_outerr( "* Debug mode: ", 0 );
+#if defined( HARBOUR_YYDEBUG )
+      hb_outerr( "On", 0 );
+#else
+      hb_outerr( "Off", 0 );
+#endif
+      hb_outerr( hb_consoleGetNewLine(), 0 );
+   }
+}

@@ -59,7 +59,6 @@
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"
-#include "hbmemory.ch"
 
 typedef struct _SYMBOLS
 {
@@ -243,20 +242,7 @@ void hb_vmInit( BOOL bStartMainProc )
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
    /* Check for some internal switches */
-
-   if( hb_cmdargCheck( "INFO" ) )
-   {
-      char * pszVersion = hb_version( 1 );
-      char buffer[ 128 ];
-
-      hb_outerr( pszVersion, 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-      sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
-      hb_outerr( buffer, 0 );
-      hb_outerr( hb_consoleGetNewLine(), 0 );
-
-      hb_xfree( pszVersion );
-   }
+   hb_cmdargProcessVM();
 
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions

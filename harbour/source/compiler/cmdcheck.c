@@ -37,6 +37,11 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ *    hb_compChkEnvironVar()
+ *    hb_compCheckPaths()
+ *    AddSearchPath()
+ *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    PackDateTime()
  *
@@ -80,7 +85,7 @@ static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
          is only stored in 6 bits, 1980 will result in the same bit pattern
          as 2044. The purpose of this value is only used to *differenciate*
          between the dates ( the exact dates are not significant ), so this 
-         can be used here without problems. */
+         can be used here without problems. [vszel] */
 
 /* 76543210765432107654321076543210
    |.......|.......|.......|.......

@@ -375,6 +375,7 @@ extern BOOL     hb_cmdargIsInternal( const char * szArg );
 extern BOOL     hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern char *   hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern int      hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
+extern void     hb_cmdargProcessVM( void );
 
 /* Symbol management */
 extern PHB_SYMB hb_symbolNew( char * szName );

@@ -1,3 +1,20 @@
+19991211-14:51 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    + Missing #include <malloc.h> added.
+  * source/vm/hvm.c
+    source/vm/cmdarg.c
+    include/extend.h
+    + Added //BUILD internal command line switch.
+    * Internal command line switch check moved to cmdarg.c from hvm.c.
+      Contribution by Jose Lalin <dezac@corevia.com>
+  * source/rtl/harbinit.prg
+    + Added documentation by Chen Kedem.
+  * source/compiler/cmdcheck.c
+    * Some functions put under a separate copyright holder (unkown BTW).
+  * source/common/reserved.c
+    * Reapplied some minor changes.
+  ( I could not test any of these, since I cannot build Harbour right now )
+
 19991211-12:47 GMT+1 Antonio Linares <alinares@fivetech.com>
    * updated makefile.b32 for reserved.c file.
 
@@ -124,7 +141,8 @@ NOTE: Add macro.lib to all non-GNU make scripts or batch files.
     include/compiler.h
     + Additional function renaming (prefixing with hb_comp), some functions
       moved to other files. Declarations fixed, some static vars prefixed
-      with s_.
+      with s_. Some functions made static, some declaration moved to 
+      compiler.h.
       hb_Chk*() -> hb_compChk*()
       Print*() -> hb_compPrint*()
       Gen*() -> hb_Gen*()

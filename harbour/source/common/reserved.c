@@ -104,6 +104,7 @@ static const char * s_szReservedFun[] = {
    "WORD"      ,
    "YEAR"
 };
+
 #define RESERVED_FUNCTIONS  sizeof( s_szReservedFun ) / sizeof( char * )
 
 char * hb_compReservedName( char * szName )
@@ -123,9 +124,7 @@ char * hb_compReservedName( char * szName )
          iFound = strncmp( szName, s_szReservedFun[ wNum ], strlen( szName ) );
       ++wNum;
    }
-   if( iFound )
-      return NULL;
-   else
-      return (char *) s_szReservedFun[ wNum - 1 ];
+
+   return iFound == 0 ? ( char * ) s_szReservedFun[ wNum - 1 ] : NULL;
 }
 

@@ -1,4 +1,3 @@
-%pure_parser
 %{
 /*
  * $Id$
