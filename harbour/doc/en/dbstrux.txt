@@ -8,8 +8,8 @@
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: __dbCopyStruct(), COPY STRUCTURE, __dbCopyXStruct(),
- *                       COPY STRUCTURE EXTENDED, __FLEDIT()*,
- *                       __dbStructFilter()
+ *                       COPY STRUCTURE EXTENDED, __dbCreate(), CREATE,
+ *                       CREATE FROM, __FLEDIT(), __dbStructFilter()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -56,6 +56,7 @@
  *      __dbCopyStruct( "OnlyName.DBF", aList )
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __dbCopyStruct() works exactly like CA-Clipper's __dbCopyStruct()
  *  $PLATFORMS$
@@ -69,7 +70,7 @@
  *  $FUNCNAME$
  *      COPY STRUCTURE
  *  $CATEGORY$
- *      Databases
+ *      Command
  *  $ONELINER$
  *      Create a new database based on current database structure
  *  $SYNTAX$
@@ -102,8 +103,9 @@
  *      COPY STRUCTURE TO SomePart FIELDS name, address
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
- *      COPY STRUCTURE works exactly like CA-Clipper's COPY STRUCTURE
+ *      COPY STRUCTURE works exactly as in CA-Clipper
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -131,14 +133,14 @@
  *      __dbCopyXStruct() create a new database named <cFileName> with a
  *      pre-defined structure (also called "structure extended file"):
  *
- *      <table>
- *              Field name  Type  Length  Decimals
- *              ----------------------------------
- *              FIELD_NAME   C      10       0
- *              FIELD_TYPE   C       1       0
- *              FIELD_LEN    N       3       0
- *              FIELD_DEC    N       3       0
- *      </table>
+ *       <table:4>
+ *       Field name   Type   Length   Decimals
+ *
+ *       FIELD_NAME   C      10       0
+ *       FIELD_TYPE   C      1        0
+ *       FIELD_LEN    N      3        0
+ *       FIELD_DEC    N      3        0
+ *       </table>
  *
  *      Each record in the new file contain information about one field in
  *      the original file. CREATE FROM could be used to create a database
@@ -149,15 +151,19 @@
  *      part of the length in the FIELD_DEC according to the following
  *      formula (this is done internally):
  *
+ *      <fixed>
  *      FIELD->FIELD_DEC := int( nLength / 256 )
  *      FIELD->FIELD_LEN := ( nLength % 256 )
+ *      </fixed>
  *
  *      Later if you want to calculate the length of a field you can use
  *      the following formula:
  *
+ *      <fixed>
  *      nLength := IIF( FIELD->FIELD_TYPE == "C", ;
  *                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
  *                      FIELD->FIELD_LEN )
+ *      </fixed>
  *
  *      COPY STRUCTURE EXTENDED command is preprocessed into
  *      __dbCopyXStruct() function during compile time.
@@ -170,6 +176,7 @@
  *      LIST
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __dbCopyXStruct() works exactly like CA-Clipper's __dbCopyXStruct()
  *  $PLATFORMS$
@@ -183,7 +190,7 @@
  *  $FUNCNAME$
  *      COPY STRUCTURE EXTENDED
  *  $CATEGORY$
- *      Databases
+ *      Command
  *  $ONELINER$
  *      Copy current database structure into a definition file
  *  $SYNTAX$
@@ -197,14 +204,14 @@
  *      COPY STRUCTURE EXTENDED create a new database named <cFileName> with
  *      a pre-defined structure (also called "structure extended file"):
  *
- *      <table>
- *              Field name  Type  Length  Decimals
- *              ----------------------------------
- *              FIELD_NAME   C      10       0
- *              FIELD_TYPE   C       1       0
- *              FIELD_LEN    N       3       0
- *              FIELD_DEC    N       3       0
- *      </table>
+ *       <table:4>
+ *       Field name   Type   Length   Decimals
+ *
+ *       FIELD_NAME   C      10       0
+ *       FIELD_TYPE   C      1        0
+ *       FIELD_LEN    N      3        0
+ *       FIELD_DEC    N      3        0
+ *       </table>
  *
  *      Each record in the new file contain information about one field in
  *      the original file. CREATE FROM could be used to create a database
@@ -215,15 +222,19 @@
  *      part of the length in the FIELD_DEC according to the following
  *      formula (this is done internally):
  *
+ *      <fixed>
  *      FIELD->FIELD_DEC := int( nLength / 256 )
  *      FIELD->FIELD_LEN := ( nLength % 256 )
+ *      </fixed>
  *
  *      Later if you want to calculate the length of a field you can use
  *      the following formula:
  *
+ *      <fixed>
  *      nLength := IIF( FIELD->FIELD_TYPE == "C", ;
  *                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
  *                      FIELD->FIELD_LEN )
+ *      </fixed>
  *
  *      COPY STRUCTURE EXTENDED command is preprocessed into
  *      __dbCopyXStruct() function during compile time.
@@ -236,12 +247,259 @@
  *      LIST
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      COPY STRUCTURE EXTENDED works exactly as in CA-Clipper
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
  *      COPY STRUCTURE,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __dbCreate()
+ *  $CATEGORY$
+ *      Databases
+ *  $ONELINER$
+ *      Create structure extended file or use one to create new file
+ *  $SYNTAX$
+ *      __dbCreate( <cFileName>, [<cFileFrom>], [<cRDDName>], [<lNew>],
+ *                  [<cAlias>] ) --> lUsed
+ *  $ARGUMENTS$
+ *      <cFileName> is the target file name to create and then open. (.dbf)
+ *      is the default extension if none is given.
+ *
+ *      <cFileFrom> is an optional structure extended file name from which
+ *      the target file <cFileName> is going to be built. If omitted, a new
+ *      empty structure extended file with the name <cFileName> is created
+ *      and opened in the current work-area.
+ *
+ *      <cRDDName> is RDD name to create target with. If omitted, the
+ *      default RDD is used.
+ *
+ *      <lNew> is an optional logical expression, (.T.) open the target file
+ *      name <cFileName> in the next available unused work-area and making
+ *      it the current work-area, (.F.) open the target file in current
+ *      work-area. Default value is (.F.). The value of <lNew> is ignored if
+ *      <cFileFrom> is not specified.
+ *
+ *      <cAlias> is an optional alias to USE the target file with. If not
+ *      specified, alias is based on the root name of <cFileName>.
+ *  $RETURNS$
+ *      __dbCreate() return (.T.) if there is database in USED in the
+ *      current work-area (this might be the newly selected work-area), or
+ *      (.F.) if there is no database in USED. Note that on success a (.T.)
+ *      would be return, but on failure you are probably end up with a
+ *      run-time error and not a (.F.) value.
+ *  $DESCRIPTION$
+ *      __dbCreate() works in two modes depend on the value of <cFileFrom>:
+ *
+ *      <b>1)</b> If <cFileFrom> is empty or not specified a new empty
+ *      structure extended file with the name <cFileName> is created and
+ *      then opened in the current work-area (<lNew> is ignored). The new
+ *      file has the following structure:
+ *
+ *       <table:4>
+ *       Field name   Type   Length   Decimals
+ *
+ *       FIELD_NAME   C      10       0
+ *       FIELD_TYPE   C      1        0
+ *       FIELD_LEN    N      3        0
+ *       FIELD_DEC    N      3        0
+ *       </table>
+ *
+ *      CREATE command is preprocessed into __dbCopyStruct() function during
+ *      compile time and use this mode.
+ *
+ *      <b>2)</b> If <cFileFrom> is specified, it is opened and assumed to
+ *      be a structure extended file where each record contain at least the
+ *      following fields (in no particular order): FIELD_NAME, FIELD_TYPE,
+ *      FIELD_LEN and FIELD_DEC. Any other field is ignored. From this
+ *      information the file <cFileName> is then create and opened in the
+ *      current or new work-area (according to <lNew>), if this is a new
+ *      work-area it become the current.
+ *
+ *      For prehistoric compatibility reasons, structure extended file
+ *      Character fields which are longer than 255 characters should be
+ *      treated in a special way by writing part of the length in the
+ *      FIELD_DEC according to the following formula:
+ *
+ *      <fixed>
+ *      FIELD->FIELD_DEC := int( nLength / 256 )
+ *      FIELD->FIELD_LEN := ( nLength % 256 )
+ *      </fixed>
+ *
+ *      CREATE FROM command is preprocessed into __dbCopyStruct() function
+ *      during compile time and use this mode.
+ *  $EXAMPLES$
+ *      // CREATE a new structure extended file, append some records and
+ *      // then CREATE FROM this file a new database file
+ *
+ *      __dbCreate( "template" )
+ *      DBAPPEND()
+ *      FIELD->FIELD_NAME := "CHANNEL"
+ *      FIELD->FIELD_TYPE := "N"
+ *      FIELD->FIELD_LEN  := 2
+ *      FIELD->FIELD_DEC  := 0
+ *      DBAPPEND()
+ *      FIELD->FIELD_NAME := "PROGRAM"
+ *      FIELD->FIELD_TYPE := "C"
+ *      FIELD->FIELD_LEN  := 20
+ *      FIELD->FIELD_DEC  := 0
+ *      DBAPPEND()
+ *      FIELD->FIELD_NAME := "REVIEW"
+ *      FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
+ *      FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
+ *      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
+ *      DBCLOSEAREA()
+ *      __dbCreate( "TV_Guide", "template" )
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      __dbCreate() works exactly as in CA-Clipper
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CREATE
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Create empty structure extended file
+ *  $SYNTAX$
+ *      CREATE <xcFileName> [VIA <xcRDDName>] [ALIAS <xcAlias>]
+ *  $ARGUMENTS$
+ *      <xcFileName> is the target file name to create and then open. (.dbf)
+ *      is the default extension if none is given. It can be specified as
+ *      literal file name or as a character expression enclosed in
+ *      parentheses.
+ *
+ *      VIA <xcRDDName> is RDD name to create target with. If omitted, the
+ *      default RDD is used. It can be specified as literal name or as a
+ *      character expression enclosed in parentheses.
+ *
+ *      ALIAS <xcAlias> is an optional alias to USE the target file with. If
+ *      not specified, alias is based on the root name of <xcFileName>.
+ *  $DESCRIPTION$
+ *      CREATE a new empty structure extended file with the name <cFileName>
+ *      and then open it in the current work-area. The new file has the
+ *      following structure:
+ *
+ *       <table:4>
+ *       Field name   Type   Length   Decimals
+ *
+ *       FIELD_NAME   C      10       0
+ *       FIELD_TYPE   C      1        0
+ *       FIELD_LEN    N      3        0
+ *       FIELD_DEC    N      3        0
+ *       </table>
+ *
+ *      CREATE command is preprocessed into __dbCopyStruct() function during
+ *      compile time and use this mode.
+ *  $EXAMPLES$
+ *      // CREATE a new structure extended file, append some records and
+ *      // then CREATE FROM this file a new database file
+ *
+ *      CREATE template
+ *      APPEND BLANK
+ *      FIELD->FIELD_NAME := "CHANNEL"
+ *      FIELD->FIELD_TYPE := "N"
+ *      FIELD->FIELD_LEN  := 2
+ *      FIELD->FIELD_DEC  := 0
+ *      APPEND BLANK
+ *      FIELD->FIELD_NAME := "PROGRAM"
+ *      FIELD->FIELD_TYPE := "C"
+ *      FIELD->FIELD_LEN  := 20
+ *      FIELD->FIELD_DEC  := 0
+ *      APPEND BLANK
+ *      FIELD->FIELD_NAME := "REVIEW"
+ *      FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
+ *      FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
+ *      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
+ *      CLOSE
+ *      CREATE TV_Guide FROM template
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CREATE works exactly as in CA-Clipper
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CREATE FROM
+ *  $CATEGORY$
+ *      Command
+ *  $ONELINER$
+ *      Create new database file from a structure extended file
+ *  $SYNTAX$
+ *      CREATE <xcFileName> FROM <xcFileFrom> [VIA <xcRDDName>] [NEW]
+ *             [ALIAS <xcAlias>]
+ *  $ARGUMENTS$
+ *      <xcFileName> is the target file name to create and then open. (.dbf)
+ *      is the default extension if none is given. It can be specified as
+ *      literal file name or as a character expression enclosed in
+ *      parentheses.
+ *
+ *      FROM <xcFileFrom> is a structure extended file name from which the
+ *      target file <xcFileName> is going to be built. It can be specified
+ *      as literal file name or as a character expression enclosed in
+ *      parentheses.
+ *
+ *      VIA <xcRDDName> is RDD name to create target with. If omitted, the
+ *      default RDD is used. It can be specified as literal name or as a
+ *      character expression enclosed in parentheses.
+ *
+ *      NEW open the target file name <xcFileName> in the next available
+ *      unused work-area and making it the current work-area. If omitted
+ *      open the target file in current work-area.
+ *
+ *      ALIAS <xcAlias> is an optional alias to USE the target file with. If
+ *      not specified, alias is based on the root name of <xcFileName>.
+ *  $DESCRIPTION$
+ *      CREATE FROM open a structure extended file <xcFileFrom> where each
+ *      record contain at least the following fields (in no particular
+ *      order): FIELD_NAME, FIELD_TYPE, FIELD_LEN and FIELD_DEC. Any other
+ *      field is ignored. From this information the file <xcFileName> is
+ *      then create and opened in the current or new work-area (according to
+ *      the NEW clause), if this is a new work-area it become the current.
+ *
+ *      For prehistoric compatibility reasons, structure extended file
+ *      Character fields which are longer than 255 characters should be
+ *      treated in a special way by writing part of the length in the
+ *      FIELD_DEC according to the following formula:
+ *
+ *      <fixed>
+ *      FIELD->FIELD_DEC := int( nLength / 256 )
+ *      FIELD->FIELD_LEN := ( nLength % 256 )
+ *      </fixed>
+ *
+ *      CREATE FROM command is preprocessed into __dbCopyStruct() function
+ *      during compile time and use this mode.
+ *  $EXAMPLES$
+ *      See example in the CREATE command
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      CREATE FROM works exactly as in CA-Clipper
+ *  $PLATFORMS$
+ *  $FILES$
+ *  $SEEALSO$
+ *      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
  *  $END$
  */
 
@@ -259,14 +517,14 @@
  *      structure, which is usually the output from DBSTRUCT(), where each
  *      array element has the following structure:
  *
- *      <table>
- *              Position  Description   dbstruct.ch
- *              -----------------------------------
- *              1         cFieldName    DBS_NAME
- *              2         cFieldType    DBS_TYPE
- *              3         nFieldLength  DBS_LEN
- *              4         nDecimals     DBS_DEC
- *      </table>
+ *       <table:3>
+ *       Position   Description    dbstruct.ch
+ *
+ *       1          cFieldName     DBS_NAME
+ *       2          cFieldType     DBS_TYPE
+ *       3          nFieldLength   DBS_LEN
+ *       4          nDecimals      DBS_DEC
+ *       </table>
  *
  *      <aFieldList> is an array where each element is a field name.
  *      Names could be specified as uppercase or lowercase.
@@ -316,6 +574,7 @@
  *      DBCREATE( "OnlyName.DBF", __FLEDIT( aStruct, aList ) )
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      CA-Clipper have internal undocumented function named __FLEDIT(),
  *      in Harbour we name it __dbStructFilter(). The new name give better
@@ -347,14 +606,14 @@
  *      structure, which is usually the output from DBSTRUCT(), where each
  *      array element has the following structure:
  *
- *      <table>
- *              Position  Description   dbstruct.ch
- *              -----------------------------------
- *              1         cFieldName    DBS_NAME
- *              2         cFieldType    DBS_TYPE
- *              3         nFieldLength  DBS_LEN
- *              4         nDecimals     DBS_DEC
- *      </table>
+ *       <table:3>
+ *       Position   Description    dbstruct.ch
+ *
+ *       1          cFieldName     DBS_NAME
+ *       2          cFieldType     DBS_TYPE
+ *       3          nFieldLength   DBS_LEN
+ *       4          nDecimals      DBS_DEC
+ *       </table>
  *
  *      <aFieldList> is an array where each element is a field name.
  *      Names could be specified as uppercase or lowercase.
@@ -401,6 +660,7 @@
  *      DBCREATE( "OnlyName.DBF", __dbStructFilter( aStruct, aList ) )
  *  $TESTS$
  *  $STATUS$
+ *      R
  *  $COMPLIANCE$
  *      __dbStructFilter() is a Harbour extension, CA-Clipper have internal
  *      undocumented function named __FLEDIT() that does exactly the same.

@@ -1,3 +1,11 @@
+20000404-08:55 GMT+2 Chen Kedem <niki@actcom.co.il>
+   * doc/en/dbstrux.txt
+     + documentation for __dbCreate()
+     + documentation for CREATE
+     + documentation for CREATE FROM
+     * some re-formats
+     ; By this all the functions in source/rdd/dbstrux.prg are documented
+
 20000403-23:30 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *utils/hbdoc/genng.prg
      utils/hbdoc/genhtm.prg
