@@ -326,6 +326,29 @@ function aOData( oObject )
 
 return aData
 
+
+//
+// aData aOMethod( oObject )
+//
+// Return an array containing the names of all the method of oObject.
+//
+function aOMethod( oObject )
+
+   local aInfo   := aSort( oObject:ClassSel() )
+   local aMethod := {}
+   local n       := 1
+   local nLen    := Len( aInfo )
+
+   do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
+      if Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+         aAdd( aMethod, aInfo[ n ] )
+      endif
+      n++
+   enddo
+
+return aMethod
+
+
 //
 // <aData> aOGet( <oObject>, [<aExcept>] )
 //
@@ -362,14 +385,8 @@ return aData
 //
 function aOSet( oObject, aData )
 
-   local n
-   local nLen := Len( aData )
-//  aEval( aData, ;                             // aEval looses memory blocks
-//       {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
-
-   for n:= 1 to nLen
-      oSend( oObject, "_"+aData[n][DATA_SYMBOL], aData[n][DATA_VAL] )
-   next n
+   aEval( aData, ;
+        {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
 
 return oObject
 
