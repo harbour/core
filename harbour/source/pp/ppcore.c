@@ -187,13 +187,16 @@ char * hb_pp_szErrors[] =
    "Memory allocation error",
    "Memory reallocation error",
    "Freeing a NULL memory pointer",
-   "Value out of range in #pragma directive"
+   "Value out of range in #pragma directive",
+   "Can\'t open command definitions file: \'%s\'",
+   "Invalid command definitions file name: \'%s\'"
 };
 
 /* Table with warnings */
 char * hb_pp_szWarnings[] =
 {
-   "1Redefinition or duplicate definition of #define %s"
+   "1Redefinition or duplicate definition of #define %s",
+   "No directives found in: %s%s\n"
 };
 
 void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
@@ -206,99 +209,89 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
 
          if( hb_comp_pFileName->szName )
          {
-            BOOL bOpened = FALSE;
+            char szFileName[ _POSIX_PATH_MAX ];
 
-            if( (* hb_compInclude)( hb_pp_STD_CH, hb_comp_pIncludePath ) )
-            {
-               bOpened = TRUE;
-            }
-            else if( ! hb_comp_pFileName->szExtension )
-            {
-               char szFileName[ _POSIX_PATH_MAX ];
-
+            if( ! hb_comp_pFileName->szExtension )
                hb_comp_pFileName->szExtension = ".ch";
-               hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
-               if( (* hb_compInclude)( szFileName, hb_comp_pIncludePath ) )
-               {
-                  bOpened = TRUE;
-               }
-            }
+            hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
-            if( bOpened )
+            if( (* hb_compInclude)( szFileName, hb_comp_pIncludePath ) )
             {
-                /*
-                printf( "Loading Standard Rules from: \'%s%s\'\n", hb_comp_pFileName->szName, ( hb_comp_pFileName->szExtension ? hb_comp_pFileName->szExtension : "." ) );
-                */
+               /*
+               printf( "Loading Standard Rules from: \'%s\'\n", szFileName );
+               */
 
-                hb_pp_Init();
+               hb_pp_Init();
 
-                hb_pp_ReadRules();
+               hb_pp_ReadRules();
 
-                /*
-                {
-                   COMMANDS * stcmd;
-                   DEFINES * stdef;
+               /*
+               {
+                  COMMANDS * stcmd;
+                  DEFINES * stdef;
 
-                   stcmd = hb_pp_topCommand;
-                   while ( stcmd )
-                   {
-                       printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
-                       stcmd = stcmd->last;
-                   }
+                  stcmd = hb_pp_topCommand;
+                  while ( stcmd )
+                  {
+                      printf( "Command: %s Pattern: %s\n", stcmd->name, stcmd->mpatt );
+                      stcmd = stcmd->last;
+                  }
 
-                   stcmd = hb_pp_topTranslate;
-                   while ( stcmd )
-                   {
-                       printf( "Translate: %s \nPattern: %s\n", stcmd->name, stcmd->mpatt );
-                       stcmd = stcmd->last;
-                   }
+                  stcmd = hb_pp_topTranslate;
+                  while ( stcmd )
+                  {
+                      printf( "Translate: %s \nPattern: %s\n", stcmd->name, stcmd->mpatt );
+                      stcmd = stcmd->last;
+                  }
 
-                   stdef = hb_pp_topDefine;
-                   while ( stdef && s_kolAddDefs > 3 )
-                   {
-                       printf( "Define: %s Value: %s\n", stdef->name, stdef->value );
-                       stdef = stdef->last;
-                       s_kolAddDefs--;
-                   }
-                }
-                */
+                  stdef = hb_pp_topDefine;
+                  while ( stdef && s_kolAddDefs > 3 )
+                  {
+                      printf( "Define: %s Value: %s\n", stdef->name, stdef->value );
+                      stdef = stdef->last;
+                      s_kolAddDefs--;
+                  }
+               }
+               */
 
-                if ( s_kolAddComs || s_kolAddTras || s_kolAddDefs > 3 )
-                {
-                   printf( "Loaded: %i Commands, %i Translates, %i Defines from: %s%s\n", s_kolAddComs, s_kolAddTras, s_kolAddDefs - 3, hb_comp_pFileName->szName, ( hb_comp_pFileName->szExtension ? hb_comp_pFileName->szExtension : "." ) );
-                }
-                else
-                {
-                   printf( "No Directives found in: %s%s\n", hb_comp_pFileName->szName, ( hb_comp_pFileName->szExtension ? hb_comp_pFileName->szExtension : "." ) );
-                }
+               if ( s_kolAddComs || s_kolAddTras || s_kolAddDefs > 3 )
+               {
+                  if( ! hb_comp_bQuiet )
+                     printf( "Loaded: %i Commands, %i Translates, %i Defines from: %s\n", s_kolAddComs, s_kolAddTras, s_kolAddDefs - 3, szFileName );
+               }
+               else
+               {
+                  hb_compGenWarning( hb_pp_szWarnings, 'W', HB_PP_WARN_NO_DIRECTIVES, szFileName, NULL );
+               }
 
-                fclose( hb_comp_files.pLast->handle );
-                hb_xfree( hb_comp_files.pLast->pBuffer );
-                hb_xfree( hb_comp_files.pLast );
-                hb_comp_files.pLast = NULL;
-                hb_comp_files.iFiles = 0;
+               fclose( hb_comp_files.pLast->handle );
+               hb_xfree( hb_comp_files.pLast->pBuffer );
+               hb_xfree( hb_comp_files.pLast );
+               hb_comp_files.pLast = NULL;
+               hb_comp_files.iFiles = 0;
 
-                hb_xfree( ( void * ) hb_comp_pFileName );
-                hb_comp_pFileName = NULL;
+               hb_xfree( ( void * ) hb_comp_pFileName );
+               hb_comp_pFileName = NULL;
 
-                s_kolAddComs = 0;
-                s_kolAddTras = 0;
-                s_kolAddDefs = 0;
+               s_kolAddComs = 0;
+               s_kolAddTras = 0;
+               s_kolAddDefs = 0;
             }
             else
             {
-                printf( "Can\'t open Standard Rules file: \'%s\'\n", hb_pp_STD_CH );
+               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN_RULES, szFileName, NULL );
             }
          }
          else
          {
-            printf( "Invalid Standard Rules file name: \'%s\'\n", hb_pp_STD_CH );
+            hb_compGenError( hb_pp_szErrors, 'F', HB_COMP_ERR_BAD_RULES_FILE_NAME, hb_pp_STD_CH, NULL );
          }
       }
       else
       {
-         printf( "Standard Rules excluded!\n" );
+         if( ! hb_comp_bQuiet )
+            printf( "Standard Rules excluded!\n" );
       }
    }
    else

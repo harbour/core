@@ -136,8 +136,11 @@ extern "C" {
 #define HB_PP_ERR_MEMREALLOC                    12
 #define HB_PP_ERR_MEMFREE                       13
 #define HB_PP_ERR_PRAGMA_BAD_VALUE              14
+#define HB_PP_ERR_CANNOT_OPEN_RULES             15
+#define HB_COMP_ERR_BAD_RULES_FILE_NAME         16
 
 #define HB_PP_WARN_DEFINE_REDEF                 1
+#define HB_PP_WARN_NO_DIRECTIVES                2
 
 extern void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 ); /* generic parsing error management function */
 extern void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2); /* generic parsing warning management function */

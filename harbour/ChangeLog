@@ -1,5 +1,19 @@
+2000-06-05 19:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/pp/ppcore.c
+     * Changed hb_pp_SetRules() to only always default to .CH extension, if file name supplied without extension.
+     ! Converted some printf() messages to standard warnnings and errors.
+
+   * include/hberrors.h
+     + Added:
+		#define HB_PP_ERR_CANNOT_OPEN_RULES             15
+		#define HB_COMP_ERR_BAD_RULES_FILE_NAME         16
+
+		#define HB_PP_WARN_NO_DIRECTIVES                2
+
 2000-06-07 22:42 UTC+0200 JFl&RaC <jfl@mafact.com>,<rac@mafact.com>
- *harbour/source/vm/classes.c
+
+ * harbour/source/vm/classes.c
   -Major modification regarding superobject access
    Now the call to a super object return really one super object instance
   -Major modification regarding access to inherited data (see Maurilio case)
