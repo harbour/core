@@ -1,3 +1,11 @@
+19990926-17:22 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/asort.prg
+    ! The block return type detection code now calls the block with 
+      the nStart item, and not always the first one. This way it has less
+      side effect, since the block is not called with elements which would not
+      be accessed at all normally.
+      So this works now: aSort( { NIL, 20, 10 }, 2,, {|x,y| x < y } )
+
 19990926-14:10 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
