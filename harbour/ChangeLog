@@ -1,3 +1,11 @@
+20000430-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.c
+	*fixed possible memory reallocation error in hb_compNOOPadd()
+	
+    *source/compiler/hbpcode.c
+	*fixed pVar -> pSym
+
 20000430 04:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 *contrib/libgt/doc/gendoc.bat
  contrib/libgt/doc/gendoc.cmd

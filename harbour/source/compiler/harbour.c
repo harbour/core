@@ -1312,7 +1312,7 @@ void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
 {
    pFunc->iNOOPs++;
 
-   if( hb_comp_functions.pLast->pNOOPs )
+   if( pFunc->pNOOPs )
    {
       pFunc->pNOOPs = ( ULONG * ) hb_xrealloc( pFunc->pNOOPs, sizeof( ULONG ) * pFunc->iNOOPs );
       pFunc->pNOOPs[ pFunc->iNOOPs - 1 ] = ulPos;

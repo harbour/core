@@ -439,7 +439,7 @@ void hb_compStrongType( int iSize )
 
        pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
-       if ( pVar )
+       if ( pSym )
           pFunc->pStack[ pFunc->iStackIndex++ ] = pSym->cType;
        else
           pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
