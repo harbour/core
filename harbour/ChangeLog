@@ -1,3 +1,45 @@
+19990824-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * include/hbdefs.h
+    ! ISBYREF() macro changed to call hb_parinfo() instead of hb_param(),
+      it was not working previously since hb_param() was automatically 
+      dereferencing the parameter.
+      FOPEN() parameter checking was not working correctly because of this.
+
+      ( WARNING ! THIS SEEMS TO BE A WORKAROUND FOR SOME OTHER PROBLEM
+        WITH PARAMETERS PASSED BY REFERENCE, PLEASE ALSO NOTE THAT
+        FRead() IS NOT WORKING RIGHT NOW )
+
+  * source/rtl/filesys.c
+    doc/subcodes.txt
+    * Huge cleanup, reformatted, eliminated usage of internal structures, 
+      fixed types, standardized variable names, explicit constants changed
+      to manifest constants, fixed a whole bunch of bugs, simplified code
+      fragments, optimalized variable usage and scope. 65535U -> (USHORT)-1
+    % "return;"s removed
+    * reindented using 3 chars
+    ! FWRITE() and hb_fsWrite() returns 0 instead of 65535 if the write failed.
+    ! FOPEN() runtime error code fixed
+    ! FERASE() return value fixed
+    ! FREAD() will check is the passed buffer size is smaller than the
+      required read length.
+    ! FREAD(): Added warning about the fact, that the buffer returned by
+      hb_parc() will be directly modified. (this is strictly prohibited by 
+      Clipper doc).
+    ! hb_fsCreate() didn't reset the last error code on success.
+    ! hb_fsDelete(), bh_fsRename(), hb_fsLock(), hb_fsCommit() - the not
+      defined platform branch is now setting the last error code.
+    ! hb_fsExtOpen() is now setting the last code the FS_ERROR.
+    % FREADSTR() made much faster
+    ! FREADSTR() uses hb_fsRead() instead of read()
+    ! hb_fsClose() didn't set the last error code.
+    ! I2BIN(), L2BIN() was returning one more character than Clipper
+      (it worked OK when bad parameters were passed).
+    ! BIN2L() returned an int instead of long, this is fixed.
+
+  * source/rtl/math.c
+    * Reformatting finished.
+
 19990824-19:05 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/math.c

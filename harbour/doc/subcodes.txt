@@ -1168,16 +1168,11 @@ start from 3000
  *  $SUBCODE$
  *      BASE/3006
  *  $CATEGORY$
- *      arguments
+ *      (not used yet)
  *  $ONELINER$
- *      Invalid type of argument
  *  $DESCRIPTION$
- *      The passed argument is of invalid type. This function expects a string
- *      with the name of file to open.
  *  $FUNCTION$
- *      FOPEN
  *  $STATUS$
- *      Harbour specific
  *  $SEEALSO$
  *
  *  $END$

@@ -13,13 +13,11 @@
 #include "set.h"
 #include "errorapi.h"
 
-/* The rest of functions is pulled automatically by initsymb.c */
-
 HARBOUR HB_ABS( void )
 {
    if( hb_pcount() == 1 )
    {
-      PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
+      PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 
       if( pNumber ) switch( pNumber->type )
       {
@@ -45,15 +43,10 @@ HARBOUR HB_ABS( void )
             stack.Return.item.asDouble.decimal = pNumber->item.asDouble.decimal;
       }
       else
-      {
-         hb_errRT_BASE(EG_ARG, 1089, NULL, "ABS");
-      }
+         hb_errRT_BASE( EG_ARG, 1089, NULL, "ABS" );
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "ABS");
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ABS" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_EXP( void )
@@ -67,15 +60,10 @@ HARBOUR HB_EXP( void )
          stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
-      {
-         hb_errRT_BASE(EG_ARG, 1096, NULL, "EXP");
-      }
+         hb_errRT_BASE( EG_ARG, 1096, NULL, "EXP" );
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "EXP");
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "EXP" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_INT( void )
@@ -85,15 +73,10 @@ HARBOUR HB_INT( void )
       if( ISNUM( 1 ) )
          hb_retnl( hb_parnd( 1 ) );
       else
-      {
          hb_errRT_BASE( EG_ARG, 1090, NULL, "INT" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INT" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "INT" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_LOG( void )
@@ -111,15 +94,10 @@ HARBOUR HB_LOG( void )
             stack.Return.item.asDouble.length = 99;
       }
       else
-      {
-         hb_errRT_BASE(EG_ARG, 1095, NULL, "LOG");
-      }
+         hb_errRT_BASE( EG_ARG, 1095, NULL, "LOG" );
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "LOG");
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LOG" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns the maximum of two date or numerics */
@@ -173,15 +151,10 @@ HARBOUR HB_MAX( void )
          hb_retds( l1 >= l2 ? hb_pards( 1 ) : hb_pards( 2 ) );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1093, NULL, "MAX" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MAX" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MAX" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns the minimum of two date or numerics */
@@ -235,15 +208,10 @@ HARBOUR HB_MIN( void )
          hb_retds( l1 <= l2 ? hb_pards( 1 ) : hb_pards( 2 ) );
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1092, NULL, "MIN" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MIN" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "MIN" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* TOFIX: In Clipper this is written in Clipper, see the source below, */
@@ -262,36 +230,33 @@ FUNCTION MOD(cl_num, cl_base)
                            cl_num,;
                            IF(cl_result * cl_base < 0, cl_result + cl_base, cl_result) )
 */
-   PHB_ITEM pNumber = hb_param(1, IT_NUMERIC);
+   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
 
    if( pNumber && ISNUM( 2 ) )
    {
       double dNumber = hb_parnd( 1 );
       double dBase = hb_parnd( 2 ); /* dBase! Cool! */
-      double dResult;
 
       if( dBase )
       {
-         dResult = dNumber - ((long)(dNumber / dBase) * dBase);
+         double dResult = dNumber - ( ( long )( dNumber / dBase ) * dBase );
 
          if( dResult * dBase < 0 )
-            hb_retnd(dResult + dBase);
+            hb_retnd( dResult + dBase );
          else
-            hb_retnd(dResult);
+            hb_retnd( dResult );
          /* Always set default number of decimals after computing mod */
          stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
       {
-         hb_retnd(dNumber);
+         hb_retnd( dNumber );
          /* Set the correct number of decimals */
          stack.Return.item.asDouble.decimal = pNumber->item.asDouble.decimal;
       }
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
-   }
 }
 
 double hb_numRound( double dResult, int iDec )
@@ -322,6 +287,7 @@ double hb_numRound( double dResult, int iDec )
    }
 
    szResult = ( char * ) hb_xgrab( iSize + iDec + 1 );
+
    if( szResult )
    {
       sprintf( szResult, "%*.*f", iSize, iDec, dResult );
@@ -344,15 +310,10 @@ HARBOUR HB_ROUND( void )
          stack.Return.item.asDouble.decimal = iDec;
       }
       else
-      {
          hb_errRT_BASE( EG_ARG, 1094, NULL, "ROUND" );
-      }
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROUND" );
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ROUND" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 HARBOUR HB_SQRT( void )
@@ -361,27 +322,22 @@ HARBOUR HB_SQRT( void )
    {
       if( ISNUM( 1 ) )
       {
-         double dNumber = hb_parnd(1);
+         double dNumber = hb_parnd( 1 );
 
          if( dNumber > 0 )
          {
-            hb_retnd( sqrt(dNumber) );
+            hb_retnd( sqrt( dNumber ) );
          }
          else
             /* Clipper doesn't error! */
-            hb_retnd(0);
+            hb_retnd( 0 );
          /* Always set default number of decimals after SQRT() */
          stack.Return.item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
       }
       else
-      {
-         hb_errRT_BASE(EG_ARG, 1097, NULL, "SQRT");
-      }
+         hb_errRT_BASE( EG_ARG, 1097, NULL, "SQRT" );
    }
    else
-   {
-      /* NOTE: Clipper catches this at compile time! */
-      hb_errRT_BASE(EG_ARGCOUNT, 3000, NULL, "SQRT");
-   }
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SQRT" ); /* NOTE: Clipper catches this at compile time! */
 }
 

@@ -344,7 +344,7 @@ USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    errno = 0;
    uiWritten = write( hFileHandle, pBuff, uiCount );
    s_uiErrorLast = errno;
-   if( uiWritten == (USHORT)-1 )
+   if( uiWritten == ( USHORT )-1 )
       uiWritten = 0;
 
 #else
@@ -354,7 +354,7 @@ USHORT  hb_fsWrite  ( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
       errno = 0;
       uiWritten = _write( hFileHandle, pBuff, uiCount );
       s_uiErrorLast = errno;
-      if( uiWritten == (USHORT)-1 )
+      if( uiWritten == ( USHORT )-1 )
          uiWritten = 0;
 
    #else
@@ -718,7 +718,7 @@ HARBOUR HB_FREAD( void )
 {
    ULONG ulRead = 0;
 
-   if( ISNUM( 1 ) && hb_param( 2, IT_STRING | IT_BYREF ) != NULL && ISNUM( 3 ) )
+   if( ISNUM( 1 ) && ISCHAR( 2 ) && ISBYREF( 2 ) && ISNUM( 3 ) )
    {
       ULONG ulToRead = hb_parnl( 3 );
 
@@ -730,9 +730,7 @@ HARBOUR HB_FREAD( void )
                              hb_parc( 2 ),
                              ulToRead );
       }
-      else ulRead = (ULONG) -1;
    }
-   else ulRead = (ULONG) -1;
 
    hb_retnl( ulRead );
 }
@@ -809,7 +807,7 @@ HARBOUR HB_FILE( void )
    if( ISCHAR( 1 ) )
    {
 
-/*TODO: Check if F_OK is defined in all compilers */
+/* TODO: Check if F_OK is defined in all compilers */
 #ifdef OS_UNIX_COMPATIBLE
 
       hb_retl( access( hb_parc( 1 ), F_OK ) == 0 );
@@ -1079,7 +1077,7 @@ char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
    return szFileName;
 }
 
-/*
+/* TOFIX:
 If you call pFileName = hb_fsFNameSplit( "C:FILE.EXT" ) the result is:
    pFileName->szPath      => (null)       must be 'C:'
    pFileName->szName      => 'C:FILE'     must be 'FILE'

@@ -130,7 +130,7 @@ typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 #define ISLOG( n )         ( hb_param( n, IT_LOGICAL ) != NULL )
 #define ISDATE( n )        ( hb_param( n, IT_DATE ) != NULL )
 #define ISMEMO( n )        ( hb_param( n, IT_MEMO ) != NULL )
-#define ISBYREF( n )       ( hb_param( n, IT_BYREF ) != NULL )
+#define ISBYREF( n )       ( hb_parinfo( n ) & IT_BYREF ) /* Intentionally using a different method */
 #define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
 
 #define PCOUNT             hb_parinfo( 0 )
