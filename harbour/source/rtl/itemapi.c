@@ -163,9 +163,12 @@ BOOL hb_evalRelease( PEVALINFO pEvalInfo )
 /* NOTE: Same purpose as hb_evalLaunch(), but simpler, faster and more flexible.
          It can be used to call symbols, functions names, or blocks, the items
          don't need to be duplicated when passed as argument, one line is
-         enough to initiate a call, the number of parameters is not limited. */
+         enough to initiate a call, the number of parameters is not limited.
 
-PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, ... )
+   NOTE: When calling hb_itemDo() with no arguments for the Harbour item being
+         evaluated, you must use '(PHB_ITEM *) 0' as the third parameter. */
+
+PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 {
    PHB_ITEM pResult;
 
@@ -180,10 +183,11 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, ... )
             USHORT uiParam;
             va_list va;
 
-            va_start( va, uiPCount );
+            va_start( va, pItemArg1 );
             hb_vmPushSymbol( pDynSym->pSymbol );
             hb_vmPushNil();
-            for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+            if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
+            for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
                hb_vmPush( va_arg( va, PHB_ITEM ) );
             hb_vmDo( uiPCount );
             va_end( va );
@@ -197,10 +201,11 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, ... )
          USHORT uiParam;
          va_list va;
 
-         va_start( va, uiPCount );
+         va_start( va, pItemArg1 );
          hb_vmPushSymbol( &symEval );
          hb_vmPush( pItem );
-         for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+         if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
          hb_vmDo( uiPCount );
          va_end( va );
@@ -213,10 +218,11 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, ... )
          USHORT uiParam;
          va_list va;
 
-         va_start( va, uiPCount );
+         va_start( va, pItemArg1 );
          hb_vmPushSymbol( pItem->item.asSymbol.value );
          hb_vmPushNil();
-         for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+         if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
          hb_vmDo( uiPCount );
          va_end( va );
@@ -234,9 +240,12 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, ... )
 }
 
 /* NOTE: Same as hb_itemDo(), but even simpler, since the function name can be
-         directly passed as a zero terminated string. */
+         directly passed as a zero terminated string.
 
-PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, ... )
+   NOTE: When calling hb_itemDoC() with no arguments for the Harbour function
+         being called, you must use '(PHB_ITEM *) 0' as the third parameter. */
+
+PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 {
    PHB_ITEM pResult;
 
@@ -249,10 +258,11 @@ PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, ... )
          USHORT uiParam;
          va_list va;
 
-         va_start( va, uiPCount );
+         va_start( va, pItemArg1 );
          hb_vmPushSymbol( pDynSym->pSymbol );
          hb_vmPushNil();
-         for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+         if( uiPCount >= 1 ) hb_vmPush( pItemArg1 );
+         for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
             hb_vmPush( va_arg( va, PHB_ITEM ) );
          hb_vmDo( uiPCount );
          va_end( va );

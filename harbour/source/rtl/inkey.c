@@ -32,6 +32,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.35   David G. Holm               Changed the __CYGWIN__ build to use
+                                        the Unix keyboard input method and
+                                        modified it to not block the VM.
    V 1.21   David G. Holm               Added OS/2 DosSleep()
    V 1.15   David G. Holm               Tested Borland 3.1 hb_releaseCPU()
    V 1.5    Paul Tucker                 ReleaseCPU comments
@@ -78,8 +81,6 @@
 #elif defined(__IBMCPP__)
    #include <bsedos.h>
    #include <conio.h>
-#elif defined(__CYGWIN__)
-   #include <mingw32/conio.h>
 #endif
 #include <time.h>
 
@@ -108,7 +109,7 @@
    ULONG DosSleep( ULONG ulMilliseconds );
 #endif
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
 #include <unistd.h>
 #include <termios.h>
 
@@ -176,7 +177,7 @@ void hb_releaseCPU( void )
       regs.h.ah  = 0;
       regs.h.al ^= 0x80;
    #endif
-#elif defined(OS_UNIX_COMPATIBLE)
+#elif defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
 #else
 #endif
 }
@@ -189,6 +190,10 @@ int hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever
    /* Check or wait for input events */
    if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
    s_inkeyPoll = TRUE;                         /* Force polling */
+   
+/* As soon as a non-blocking way to do Unix input is implemented,
+   the #if test can be eliminated, (leaving the code intact) */
+#if ! defined(OS_UINX_COMPATIBLE) && ! defined(__CYGWIN__)
    while( wait && hb_inkeyNext() == 0 )
    {
       /* Release the CPU between checks */
@@ -198,6 +203,7 @@ int hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever
       if( !forever && clock() >= end_clock ) wait = FALSE;
    }
    /* Get the current input event or 0 */
+#endif
    key = hb_inkeyGet();
    s_inkeyPoll = FALSE;                        /* Stop forced polling */
    s_eventmask = hb_set.HB_SET_EVENTMASK;      /* Restore original input event mask */
@@ -207,6 +213,13 @@ int hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever
 int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer */
 {
    int key;
+#if defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
+   /* This part of the #if block is temporary and needs to be removed when
+      non-blocking Unix-style keyboard input is implemented */
+   char ch;
+   read( STDIN_FILENO, &ch, 1 );
+   key = ch;
+#else
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
    {
@@ -224,6 +237,7 @@ int hb_inkeyGet( void )       /* Extract the next key from the keyboard buffer *
    }
    else key = s_inkeyLast = s_inkeyForce; /* Typeahead support is disabled */
    s_inkeyForce = 0;
+#endif
    return key;
 }
 
@@ -253,7 +267,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
    if( hb_set.HB_SET_TYPEAHEAD || s_inkeyPoll )
    {
       int ch = 0;
-#if defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows)
+#if ( defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__) || defined(_Windows) ) && ! defined(__CYGWIN__)
    /* The reason for including _Windows here is that kbhit() and getch() appear
      to work properly in console mode. For true Windows mode, changes are needed. */
    #if defined(HARBOUR_GCC_OS2)
@@ -404,10 +418,9 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          case 396:  /* Alt + F12 */
             ch = 349 - ch;
       }
-#elif defined(OS_UNIX_COMPATIBLE)
+#elif defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
       /* TODO: */
-      if( ! read( STDIN_FILENO, &ch, 1 ) )
-         return;
+      /* NOTE: The blocking Unix support has been moved to hb_inkeyGet() */
 #else
       /* TODO: Support for other platforms, such as Mac */
 #endif

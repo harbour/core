@@ -1,3 +1,43 @@
+19990914-17:40 EDT David G. Holm <dholm@jsd-llc.com>
+
+  * include/itemapi.h
+  * source/rtl/itemapi.c
+    ! Added a third argument, PBH_ITEM pItemArg1, to the hb_itemDo()
+      and hb_itemDoC() functions to solve a var-arg problem with the
+      OS/2 version of GCC. When calling hb_itemDo() or hb_itemDoC() to
+      evaluate a symbol, function, or code block that does not take
+      any arguments, use '(PHB_ITEM *) 0' as the third argument.
+
+  * config/win32/bcc32.cf
+    ! The GNU make system now works with Borland 32-bit compilers.
+
+  * config/win32/gcc.cf
+    * Removed '-lmoldname' in order to avoid polluting the __CYGWIN__
+      build with __MINGW32__ stuff.
+
+  * source/compiler/harbour.l
+    ! Removed 'extern int _bQuiet', because it conflicts with the
+      'extern BOOL _bQuiet' declaration in include/compiler.h.
+
+  * source/rtl/console.c
+    ! Added __CYGWIN__ to the Unix-style input in HB___ACCEPT()
+
+  * source/rtl/filesys.c
+    ! Removed the alleged Cygwin mode flag fix, which turned out to
+      be an incomptibility between the CYGWIN and MINGW32 libraries.
+
+  * source/rtl/inkey.c
+    ! Applied the Borland Windows fix supplied by Jose Lalin.
+    ! Changed Cygwin support to use the Unix method in order to
+      avoid polluting the __CYGWIN__ build with __MINGW32__ stuff.
+    ! Moved the Unix keyboard input from hb_inkeyPoll() to hb_inkeyGet()
+      in order to stop blocking the VM when it polls the keyboard.
+
+  * tests/working/inkeytst.prg
+    + Display a note regarding Unix-style keyboard input.
+    ! Changed the final keyboard test exit key from ESC to TAB, because
+      Unix-style keyboard input uses ESC as the lead-in for extended keys.
+
 19990915-23:20 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
   * source/hbpp/table.c

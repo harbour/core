@@ -14,6 +14,15 @@
 PROCEDURE main( cSkip, cExtended )
 LOCAL nKey, nMask, cText
  IF EMPTY( cSkip )
+   /* NOTE: When non-blocking Unix-style keyboard input is implemented,
+            remove the next few lines... */
+   ?
+   ? "Note: All but the last test will fail for Harbour builds with Unix-style"
+   ? "      keyboard input. The TYPEAHEAD tests will enter an infinite loop."
+   ? "      To run only the last test, break out of this program and run it"
+   ? "      again with any parameter (for example, INKEYTST X)."
+
+   ?
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
    ? "INKEY(), NEXTKEY(), and LASTKEY() functions."
    ?
@@ -122,7 +131,7 @@ LOCAL nKey, nMask, cText
    ?
  END IF
    ? "For the last test, a loop is started and all keyboard and mouse"
-   ? "events are allowed. Each event will be displayed. Press the ESC"
+   ? "events are allowed. Each event will be displayed. Press the TAB"
    ? "key to exit. Try moving the mouse, holding and releasing the mouse"
    ? "buttons as well as double-clicking the mouse buttons."
    ?
@@ -134,7 +143,7 @@ LOCAL nKey, nMask, cText
       nMask += INKEY_EXTENDED
    END IF
    SET(_SET_EVENTMASK, nMask)
-   WHILE (nKey := INKEY( 0, nMask )) != K_ESC
+   WHILE (nKey := INKEY( 0, nMask )) != K_TAB
       DO CASE
          CASE nKey == K_MOUSEMOVE
             ? "The mouse moved."
@@ -154,7 +163,7 @@ LOCAL nKey, nMask, cText
             ? "A keyboard key was pressed: ", nKey, IF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
       END CASE
    END WHILE
-   ? "The ESC key was pressed. Exiting..."
+   ? "The TAB key ("+LTRIM(STR(nKey))+") was pressed. Exiting..."
 QUIT
 
 PROCEDURE Results()

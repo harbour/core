@@ -71,7 +71,6 @@ int yy_lex_input( char *, int );
 #define YY_INPUT( buf, result, max_size ) result = yy_lex_input( buf, max_size );
 
 /* variables defined in harbour.y */
-extern int _bQuiet;
 extern int _bRestrictSymbolLength;
 extern WORD _wSeqCounter;
 extern WORD _wForCounter;

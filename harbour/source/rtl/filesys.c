@@ -165,15 +165,6 @@ extern int rename( const char *, const char * );
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER)
 
-#ifdef __CYGWIN__
-/* TODO: Get Cygwin fixed so that this bug fix won't be needed */
-static inline int FixCygwinIOflags( int flags )
-{
-   /* Starting with O_CREAT, the Cygwin I/O flags are 1 bit too high */
-   return ( ( flags & 0x1FF00 ) >> 1 ) | ( flags & 0xFF );
-}
-#endif
-
 static int convert_open_flags( USHORT uiFlags )
 {
    /* by default FO_READ + FO_COMPAT is set */
@@ -242,11 +233,6 @@ static int convert_open_flags( USHORT uiFlags )
 /* DEBUG: printf(" SH_DENYNO"); */
    }
 /* DEBUG: printf(" 0x%04x\n", result_flags); */
-#ifdef __CYGWIN__
-/* TODO: Get Cygwin fixed so that this bug fix won't be needed */
-   result_flags = FixCygwinIOflags( result_flags );
-/* DEBUG: printf(" Cygwin fix: 0x%04x\n", result_flags); */
-#endif
 #endif
 
    return result_flags;
@@ -287,11 +273,6 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
    if( uiFlags & FC_SYSTEM )
       *result_flags |= 0;
 /* DEBUG: printf(" 0x%04x, 0x%04x\n", *result_flags, *result_pmode); */
-#ifdef __CYGWIN__
-/* TODO: Get Cygwin fixed so that this bug fix won't be needed */
-   *result_flags = FixCygwinIOflags( *result_flags );
-/* DEBUG: printf(" Cygwin fix: 0x%04x\n", *result_flags); */
-#endif
 }
 
 #endif

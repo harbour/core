@@ -78,6 +78,11 @@
    #include <io.h>
 #endif
 
+#if defined(OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
+   #include <unistd.h>
+   #include <termios.h>
+#endif
+
 #define ACCEPT_BUFFER_LEN 256 /*length of input buffer for ACCEPT command */
 
 #if defined(OS_UNIX_COMPATIBLE)
@@ -1110,12 +1115,28 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
       hb_altout( s_szCrLf, CRLF_BUFFER_LEN - 1 );
       hb_altout( szPrompt, len );
    }
-#ifdef OS_UNIX_COMPATIBLE
+#if defined (OS_UNIX_COMPATIBLE) || defined(__CYGWIN__)
    /* Read the data using fgets(), because hb_inkeyPoll() doesn't support
        Unix compatible operating systems yet. */
-   szResult[ 0 ] = '\0';          /* start with something defined */
-   if( fgets( szResult, ACCEPT_BUFFER_LEN, stdin ) )
-      strtok( szResult, "\n" ); /* strip off the trailing newline if it exists */
+   {
+      /* Set up for echoed canonical input */
+      struct termios ta;
+      tcgetattr( STDIN_FILENO, &ta );
+      ta.c_lflag |= ( ICANON | ECHO );
+      tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
+
+      /* Avoid an undefined variable warning */
+      input = 0;
+
+      /* Get a line of user input */
+      szResult[ 0 ] = '\0';          /* start with something defined */
+      if( fgets( szResult, ACCEPT_BUFFER_LEN, stdin ) )
+         strtok( szResult, "\n" ); /* strip off the trailing newline if it exists */
+
+      /* Restore unechoed non-canonical input */
+      ta.c_lflag &= ~( ICANON | ECHO );
+      tcsetattr( STDIN_FILENO, TCSAFLUSH, &ta );
+   }
 #else
    len = 0;
    input = 0;
