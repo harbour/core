@@ -376,15 +376,9 @@ char * hb_verCompiler( void )
 #elif defined(__BORLANDC__)
 
    {
-      switch( sizeof( int ) )
-      {
-      case 2:
-         strcat( pszCompiler, " (16 bit)" );
-         break;
-      case 4:
-         strcat( pszCompiler, " (32 bit)" );
-         break;
-      }
+      char szSub[ 32 ];
+      sprintf( szSub, " (%i bit)", ( int ) ( sizeof( int ) * 8 ) );
+      strcat( pszCompiler, szSub );
    }
 
 #endif

@@ -1,3 +1,8 @@
+2000-08-02 03:14 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * source/common/hbver.c
+     + Better, generic detection for bits.
+
 2000-08-01-21:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 *contrib/hbzlib/zipfile2.c
     %some enhacements and fixed a bug inside hb___GetFilesNamesFromZip
