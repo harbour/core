@@ -275,6 +275,8 @@ USHORT hb_gtColorSelect( USHORT uiColorIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtColorSelect(%hu)", uiColorIndex));
 
+   /* NOTE: CA-Cl*pper is not checking the limits here. [vszakats] */
+
    if( uiColorIndex <= s_uiColorCount )
    {
       s_uiColorIndex = uiColorIndex;
@@ -360,68 +362,69 @@ USHORT hb_gtPostExt( void )
    return 0;
 }
 
-USHORT hb_gtGetColorStr( char * szColorString )
+/* NOTE: szColorString must be an at least CLR_STRLEN wide by the NG. It seems 
+         that CA-Cl*pper SETCOLOR() will return string lengths up to 131+EOF. 
+         That seems like a 127+1 buffer size, plus lazy overflow checking.
+         [vszakats] */
+
+USHORT hb_gtGetColorStr( char * pszColorString )
 {
-   char * sColors;
-   int k = 0;
-   int i;
+   USHORT uiColorIndex;
+   int iPos = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetColorStr(%s)", szColorString));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetColorStr(%s)", pszColorString));
 
-   sColors = ( char * ) hb_xgrab( s_uiColorCount * 8 + 1 ); /* max possible */
-
-   for( i = 0; i < s_uiColorCount; i++ )
+   /* Go on if there's space left for the largest color string plus EOF */
+   for( uiColorIndex = 0; uiColorIndex < s_uiColorCount && iPos < ( CLR_STRLEN - 8 ); uiColorIndex++ )
    {
-      int j = 0;
-      int nColor = s_Color[ i ] & 7;
+      int nColor = s_Color[ uiColorIndex ] & 7;
+      int j;
 
-      do
+      if( uiColorIndex > 0 )
+         pszColorString[ iPos++ ] = ',';
+
+      for( j = 0; j <= 1; j++ )
       {
-         if( ( s_Color[ i ] & ( j ? 0x8000 : 0x0800 ) ) != 0 )
-            sColors[ k++ ] = 'U';
-         else
+         if( ( s_Color[ uiColorIndex ] & ( j ? 0x8000 : 0x0800 ) ) == 0 )
          {
             if( nColor == 7 )
-                sColors[ k++ ] = 'W';
+                pszColorString[ iPos++ ] = 'W';
             else
             {
                if( nColor == 0 )
-                  sColors[ k++ ] = 'N';
+                  pszColorString[ iPos++ ] = 'N';
                else
                {
                   if( ( nColor & 1 ) != 0 )
-                     sColors[ k++ ] = 'B';
+                     pszColorString[ iPos++ ] = 'B';
 
                   if( ( nColor & 2 ) != 0 )
-                     sColors[ k++ ] = 'G';
+                     pszColorString[ iPos++ ] = 'G';
 
                   if( ( nColor & 4 ) != 0 )
-                     sColors[ k++ ] = 'R';
+                     pszColorString[ iPos++ ] = 'R';
                }
             }
          }
+         else
+            pszColorString[ iPos++ ] = 'U';
+
          if( j == 0 )
          {
-            if( ( s_Color[ i ] & 8 ) != 0 )
-               sColors[ k++ ] = '+';
-            sColors[ k++ ] = '/';
+            if( ( s_Color[ uiColorIndex ] & 0x80 ) != 0 )
+               pszColorString[ iPos++ ] = '*';
+
+            if( ( s_Color[ uiColorIndex ] & 0x08 ) != 0 )
+               pszColorString[ iPos++ ] = '+';
+
+            pszColorString[ iPos++ ] = '/';
          }
-         else
-            if( ( s_Color[ i ] & 128 ) != 0 )
-               sColors[ k++ ] = '*';
 
-         nColor = ( s_Color[ i ] >> 4 ) & 7;
+         nColor = ( s_Color[ uiColorIndex ] >> 4 ) & 7;
       }
-      while( ++j < 2 );
-
-      if( i + 1 < s_uiColorCount )
-         sColors[ k++ ] = ',';
    }
 
-   sColors[ k ] = '\0';
-
-   strcpy( szColorString, sColors );
-   hb_xfree( sColors );
+   pszColorString[ iPos ] = '\0';
 
    return 0;
 }
@@ -466,6 +469,7 @@ USHORT hb_gtSetColorStr( char * szColorString )
          buff[ i++ ] = c;
          c = *szColorString++;
       }
+
       if( i > 0 )
       {
          --i;
@@ -483,7 +487,7 @@ USHORT hb_gtSetColorStr( char * szColorString )
       }
 
       ++nCount;
-      switch ( c )
+      switch( c )
       {
          case 'B':
             nColor |= 1;

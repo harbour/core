@@ -1,3 +1,13 @@
+20000411-23:09 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/gtapi.c
+     % hb_gtGetColorStr() optimized. alloc/free removed, NOTE added, variables
+       renamed. One strcpy() removed. Buffer overflow checked. It should be
+       much faster now.
+     ! hb_gtGetColorStr() fixed so that it will now put both + and * to the
+       first half of the colorspec. This is ugly but that's what CA-Cl*pper 
+       does.
+
 20000411-21:08 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/gtapi.c
