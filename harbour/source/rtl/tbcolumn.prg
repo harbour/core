@@ -58,12 +58,17 @@ function TBColumnNew( cHeading, bBlock )
    oCol:Heading = cHeading
    oCol:block   = bBlock
    do case
-   case nType = "N"
-      nWidth = 10
-   case nType = "L"
-      nWidth = 3
-   case nType = "C"
-      nWidth = Len( Eval( bBlock ) )
+      case nType = "N"
+           nWidth = 10
+
+      case nType = "L"
+           nWidth = 3
+
+      case nType = "C"
+           nWidth = Len( Eval( bBlock ) )
+
+      otherwise
+           nWidth = 0
    endcase
    oCol:Width = If( cHeading != nil, Max( Len( cHeading ), nWidth ), nWidth )
 
