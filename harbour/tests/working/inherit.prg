@@ -48,14 +48,12 @@ function TEmpty()
 
       oEmpty := TClass():New( "TEmpty" )             // Create a new class def
 
-//      oEmpty:AddInline( "New", {|self|self} )      // Can cause crash ?
+      oEmpty:AddInline( "New", {|self|self} )
 
-      oEmpty:AddMethod( "New", @New() )              // Constructor
       oEmpty:AddInline( "Run", {||QOut( "Run!" ) } ) // Test command
 //      oEmpty:AddInline( "Set", {|self,xParam|::Out := xParam } )
       oEmpty:AddInline( "Set", {|self,xParam| oSend(self,"_Out",xParam) } )
-      oEmpty:AddData( "Out", 1 )
-                                                     // Test command
+      oEmpty:AddData( "Out", 1 )                     // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
       oEmpty:Create()
@@ -107,7 +105,7 @@ return oFile:Instance()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-static function New( cFileName, cMode, nBlock )
+ function New( cFileName, cMode, nBlock )
 
    local self := QSelf()                        // Get self
 
@@ -135,7 +133,7 @@ static function New( cFileName, cMode, nBlock )
 return self
 
 
-static function Run( xTxt, lCRLF )
+ function Run( xTxt, lCRLF )
 
    local self := QSelf()
    local xRet
@@ -151,7 +149,7 @@ return xRet
 //
 // Dispose -> Close the file handle
 //
-static function Dispose()
+ function Dispose()
 
    local self := QSelf()
 
@@ -171,7 +169,7 @@ return self
 //
 // Read a single line
 //
-static function Read()
+ function Read()
 
    local self := QSelf()
    local cRet  := ""
@@ -228,7 +226,7 @@ return cRet
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-static function WriteLn( xTxt, lCRLF )
+ function WriteLn( xTxt, lCRLF )
 
    local self := QSelf()
    local cBlock
@@ -251,7 +249,7 @@ static function WriteLn( xTxt, lCRLF )
 return self
 
 
-static function Write( xTxt )
+ function Write( xTxt )
 
    local self := QSelf()
 
@@ -267,7 +265,7 @@ return ::WriteLn( xTxt, .F. )
 //
 // Go to a specified line number
 //
-static function Goto( nLine )
+ function Goto( nLine )
 
    local self   := QSelf()
    local nWhere := 1

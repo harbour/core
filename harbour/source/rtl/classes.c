@@ -68,10 +68,12 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
       pClasses[ wClasses ].wDataFirst = pClasses[ hSuper ].wDatas;
       pClasses[ wClasses ].wDatas     = pClasses[ hSuper ].wDatas + _parni(2);
       pClasses[ wClasses ].wMethods   = pClasses[ hSuper ].wMethods;
+
       pClasses[ wClasses ].pClassDatas =
          hb_arrayClone( pClasses[ hSuper ].pClassDatas );
       pClasses[ wClasses ].pInlines =
          hb_arrayClone( pClasses[ hSuper ].pInlines );
+
       pClasses[ wClasses ].wHashKey = pClasses[ hSuper ].wHashKey;
       pClasses[ wClasses ].pMethods = ( PMETHOD ) _xgrab(
          pClasses[ hSuper ].wHashKey * BUCKET * sizeof( METHOD ) );
@@ -86,13 +88,10 @@ HARBOUR CLASSCREATE() /* cClassName, nDatas, hSuper --> hClass */
       pClasses[ wClasses ].pMethods = ( PMETHOD ) _xgrab( 100 * sizeof( METHOD ) );
       pClasses[ wClasses ].wMethods = 0;
       pClasses[ wClasses ].wHashKey = 25; /* BUCKET = 4 repetitions */
-      pClasses[ wClasses ].pClassDatas = hb_itemNew( 0 );
-      pClasses[ wClasses ].pInlines    = hb_itemNew( 0 );
-/*   pClasses[ wClasses ].pInitValues = hb_itemNew( 0 ); */
 
-      hb_arrayNew( pClasses[ wClasses ].pClassDatas, 0 );
-      hb_arrayNew( pClasses[ wClasses ].pInlines,    0 );
-   /* hb_arrayNew( pClasses[ wClasses ].pInitValues,    0 ); */
+      pClasses[ wClasses ].pClassDatas = hb_itemArrayNew( 0 );
+      pClasses[ wClasses ].pInlines    = hb_itemArrayNew( 0 );
+   /* pClasses[ wClasses ].pInitValues = hb_itemArrayNew( 0 ); */
 
       memset( pClasses[ wClasses ].pMethods, 0, 100 * sizeof( METHOD ) );
    }
@@ -749,7 +748,7 @@ HARBOUR __INSTSUPER( void )             /* ClassH := __InstSuper( <cName> ) */
       {
          PushSymbol( pDynSym->pSymbol );        /* Push function name       */
          PushNil();
-         Do( 0 );                               /* Execute super class      */
+         Function( 0 );                         /* Execute super class      */
 
          if( !IS_OBJECT( &stack.Return ) )
          {

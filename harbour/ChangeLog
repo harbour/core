@@ -1,3 +1,9 @@
+19990531-09:45 CET Eddie Runia
+   * tests/working/inherit.prg
+     newer test program. reported crash was due to static functions ?
+   * source/rtl/classes.c
+     some small improvements
+
 19990531-16:35 CET Matthew Hamilton (upload by Eddie Runia)
    * tests/working/inifiles.prg
      version 2 which creates harbour.new
