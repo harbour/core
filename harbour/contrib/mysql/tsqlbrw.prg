@@ -61,7 +61,7 @@ CLASS TBColumnSQL from TBColumn
 
    DATA  oBrw                 // pointer to Browser containing this column, needed to be able to
                               // retreive field values from Browse instance variable oCurRow
-   DATA  Picture              // From clipper 5.3
+   //DATA  Picture              // From clipper 5.3
    DATA  nFieldNum            // This column maps field num from query
 
    MESSAGE  Block METHOD Block()          // When evaluating code block to get data from source this method

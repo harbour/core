@@ -1,3 +1,11 @@
+2000-11-24 19:22 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * contrib/mysql/tmysql.prg
+      + ::FieldGet() and ::FieldPut() methods now accept a field name as field identifier and not
+        only a field number. This makes easier setting/getting field values.
+        ie oRow:FieldPut(oRow:FieldPos("my field"), xValue)) becomes oRow:FieldPut("my field", xValue)
+   * contrib/mysql/tsqlbrw.prg
+      ! small changes
+
 2000-11-23 00:10 UTC+0100 jfl (mafact) <jfl@mafact.com>
    * source/compiler/harbour.c
      * added missing parenthesis giving a warning error with VC++

@@ -53,8 +53,8 @@ CLASS TMySQLRow
 
    METHOD   New(aRow, aFStruct, cTableName)     // Create a new Row object
 
-   METHOD   FieldGet(nNum)             // Same as clipper ones
-   METHOD   FieldPut(nNum, Value)
+   METHOD   FieldGet(cnField)          // Same as clipper ones, but FieldGet() and FieldPut() accept a string as
+   METHOD   FieldPut(cnField, Value)   // field identifier, not only a number
    METHOD   FieldName(nNum)
    METHOD   FieldPos(cFieldName)
 
@@ -84,7 +84,15 @@ METHOD New(aRow, aFStruct, cTableName) CLASS TMySQLRow
 return Self
 
 
-METHOD FieldGet(nNum) CLASS TMySQLRow
+METHOD FieldGet(cnField) CLASS TMySQLRow
+
+   local nNum
+
+   if ValType(cnField) == "C"
+      nNum := ::FieldPos(cnField)
+   else
+      nNum := cnField
+   endif
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
@@ -100,7 +108,15 @@ METHOD FieldGet(nNum) CLASS TMySQLRow
 return nil
 
 
-METHOD FieldPut(nNum, Value) CLASS TMySQLRow
+METHOD FieldPut(cnField, Value) CLASS TMySQLRow
+
+   local nNum
+
+   if ValType(cnField) == "C"
+      nNum := ::FieldPos(cnField)
+   else
+      nNum := cnField
+   endif
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
@@ -129,20 +145,22 @@ return nil
 // Given a field name returns it's position
 METHOD FieldPos(cFieldName) CLASS TMySQLRow
 
-   local cUpperName, nPos := 1
+   local cUpperName, nPos := 0
 
    cUpperName := Upper(cFieldName)
 
-   /* NOTE: this code block kills harbour if called a few thousand times
    nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
-   */
 
-   while nPos <= Len(::aFieldStruct)
+   /*while ++nPos <= Len(::aFieldStruct)
       if Upper(::aFieldStruct[nPos][MYSQL_FS_NAME]) == cUpperName
          exit
       endif
-      nPos++
    enddo
+
+   // I haven't found field name
+   if nPos > Len(::aFieldStruct)
+      nPos := 0
+   endif*/
 
 return nPos
 
