@@ -51,18 +51,26 @@
  *
  */
 
+//-----------------------------------------------------------------------------
+
 // Language name: Spanish 
 // ISO language code (2 chars): ES 
 // Codepage: 850 
+
+//-----------------------------------------------------------------------------
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
+//-----------------------------------------------------------------------------
+
 #define NUMBER_OF_CHARACTERS  33    
 #define IS_LATIN               1    
 #define ACCENTED_EQUAL         0    
 #define ACCENTED_INTERLEAVED   0    
+
+//-----------------------------------------------------------------------------
 
 static HB_CODEPAGE s_codepage = 
 { 
@@ -82,8 +90,13 @@ static HB_CODEPAGE s_codepage =
   NULL 
 };
 
+//-----------------------------------------------------------------------------
+
 HB_CODEPAGE_INIT( ES );
 
 #ifdef HB_USE_PRAGMA_STARTUP
    #pragma startup hb_codepage_Init_ES
 #endif
+
+//-----------------------------------------------------------------------------
+
