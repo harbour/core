@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+       hb_vmPushLogical()
+       hb_vmPushInteger()
+       hb_vmPushLong()
        hb_vmPushLongConst()
        hb_vmPushDouble()
        hb_vmPushDoubleConst()
