@@ -588,8 +588,8 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
             szEndChar = * ( szText + pField->uiLen );
-            hb_dateDecode( hb_itemGetDL( pItem ), &lDay, &lMonth, &lYear );
-            hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
+            hb_dateDecode( hb_itemGetDL( pItem ), &lYear, &lMonth, &lDay );
+            hb_dateStrPut( ( char * ) szText, lYear, lMonth, lDay );
             * ( szText + pField->uiLen ) = szEndChar;
             AdsSetDate( pArea->hTable, szName, szText, 8 );
             AdsSetDateFormat  ( pucFormat );
@@ -773,9 +773,9 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
       }
       case DBI_LASTUPDATE:
-         hb_itemPutDL( pItem, hb_dateEncode( pArea->lpExtendInfo->bDay,
+         hb_itemPutDL( pItem, hb_dateEncode( pArea->lpExtendInfo->bYear,
                                              pArea->lpExtendInfo->bMonth,
-                                             pArea->lpExtendInfo->bYear ) );
+                                             pArea->lpExtendInfo->bDay ) );
          break;
 
       case DBI_GETRECSIZE:

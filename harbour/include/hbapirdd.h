@@ -100,6 +100,7 @@ extern void    hb_rddShutDown( void );
 #define DBI_GETRECSIZE     7    /* Numeric: Get record size of the file */
 #define DBI_GETLOCKARRAY   8    /* Array: Get an array of locked records */
 #define DBI_TABLEEXT       9    /* String:  Get table file extension */
+#define DBI_FULLPATH       10   /* String: Full path name of opened file */
 
 #define DBI_ISFLOCK        20   /* Get file lock status */
 
@@ -111,7 +112,7 @@ extern void    hb_rddShutDown( void );
 #define DBI_DBFILTER       28   /* Filter expression */
 #define DBI_FOUND          29   /* FOUND flag - alternate to found */
 #define DBI_FCOUNT         30   /* Number of fields */
-#define DBI_LOCKCOUNT      31   /* Get record size of the file */
+#define DBI_LOCKCOUNT      31   /* Locked records */
 #define DBI_VALIDBUFFER    32   /* Is the current buffer valid */
 #define DBI_ALIAS          33   /* Alias name of workarea */
 #define DBI_GETSCOPE       34   /* Locate codeblock */

@@ -50,11 +50,11 @@ int hb_isleapyear( long lYear )
    return (( lYear % 4 == 0 && lYear % 100 != 0 ) || lYear % 400 == 0 )?1:0;
 }
 
-long hb_daysinmonth( long lMonth, long lYear )
+long hb_daysinmonth( long lYear, long lMonth )
 {
    int i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%ld, %ld)", lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%ld, %ld)", lYear, lMonth));
 
    i = hb_isleapyear( lYear );
    if( lMonth > 0 && lMonth < 13 )
@@ -63,40 +63,40 @@ long hb_daysinmonth( long lMonth, long lYear )
    return 0;
 }
 
-long hb_doy( long lDay, long lMonth, long lYear )
+long hb_doy( long lYear, long lMonth, long lDay )
 {
    int i;
    int iDoy = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_doy(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_doy(%ld, %ld, %ld)", lYear, lMonth, lDay));
 
    for( i = 1; i < lMonth; i++ )
-      iDoy += hb_daysinmonth( i, lYear );
+      iDoy += hb_daysinmonth( lYear, i );
    iDoy += lDay;
 
    return iDoy;
 }
 
-long hb_wom( long lDay, long lMonth, long lYear )
+long hb_wom( long lYear, long lMonth, long lDay )
 {
    int iWom;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_wom(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_wom(%ld, %ld, %ld)", lYear, lMonth, lDay));
 
-   iWom = lDay + hb_dateDOW( 1, lMonth, lYear) - 1;
+   iWom = lDay + hb_dateDOW( lYear, lMonth, 1 ) - 1;
    if( iWom > 0 )
-      return ( iWom - hb_dateDOW( lDay, lMonth, lYear ) ) / 7 + 1 ;
+      return ( iWom - hb_dateDOW( lYear, lMonth, lDay ) ) / 7 + 1 ;
    else
       return 0;
 }
 
-long hb_woy( long lDay, long lMonth, long lYear, BOOL bISO )
+long hb_woy( long lYear, long lMonth, long lDay, BOOL bISO )
 {
    int iWeek, n;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_woy(%ld, %ld, %ld, %d)", lDay, lMonth, lYear, (int) bISO));
+   HB_TRACE(HB_TR_DEBUG, ("hb_woy(%ld, %ld, %ld, %d)", lYear, lMonth, lDay, (int) bISO));
 
-   lDay = hb_doy( lDay, lMonth, lYear );
+   lDay = hb_doy( lYear, lMonth, lDay );
    n = ( ( ( 1 - (bISO ? 1 : 0) ) % 7 ) ) - 1;
    lDay += (n>0)?1:0;
    iWeek = lDay / 7;
@@ -147,9 +147,9 @@ HB_FUNC( ISLEAPYEAR )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
       hb_retl( hb_isleapyear( lYear ) );
    }
    else
@@ -163,10 +163,10 @@ HB_FUNC( DAYSINMONTH )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
-      hb_retni( hb_daysinmonth( lMonth, lYear ) );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_retni( hb_daysinmonth( lYear, lMonth ) );
    }
    else
       hb_retni( 0 );
@@ -177,11 +177,11 @@ HB_FUNC( EOM )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
-      lDay = hb_daysinmonth( lMonth, lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      lDay = hb_daysinmonth( lYear, lMonth );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, (int) lDay );
       hb_retds( szDateFormat );
    }
@@ -194,10 +194,10 @@ HB_FUNC( BOM )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, (int) lMonth, 1 );
       hb_retds( szDateFormat );
    }
@@ -210,10 +210,10 @@ HB_FUNC( WOM )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
-      hb_retni( hb_wom( lDay, lMonth, lYear ) );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_retni( hb_wom( lYear, lMonth, lDay ) );
    }
    else
       hb_retni( 0 );
@@ -224,10 +224,10 @@ HB_FUNC( DOY )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
-      hb_retni( hb_doy( lDay, lMonth, lYear ) );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_retni( hb_doy( lYear, lMonth, lDay ) );
    }
    else
       hb_retni( 0 );
@@ -240,10 +240,10 @@ HB_FUNC( WOY )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
-      hb_retni( hb_woy( lDay, lMonth, lYear, ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
+      hb_retni( hb_woy( lYear, lMonth, lDay, ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) );
    }
    else
       hb_retni( 0 );
@@ -254,10 +254,10 @@ HB_FUNC( EOY )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, 12, 31 );
       hb_retds( szDateFormat );
    }
@@ -270,10 +270,10 @@ HB_FUNC( BOY )
    if( ISDATE( 1 ) )
    {
       PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
       char szDateFormat[ 9 ];
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
       sprintf( szDateFormat, "%04i%02i%02i", (int) lYear, 1, 1 );
       hb_retds( szDateFormat );
    }

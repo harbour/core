@@ -274,7 +274,7 @@ extern void     hb_ret( void );             /* post a NIL return value */
 extern void     hb_retc( char * szText );   /* returns a string */
 extern void     hb_retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern void     hb_retds( char * szDate );  /* returns a date, must use yyyymmdd format */
-extern void     hb_retd( long lDay, long lMonth, long lYear ); /* returns a date */
+extern void     hb_retd( long lYear, long lMonth, long lDay ); /* returns a date */
 extern void     hb_retl( int iTrueFalse );  /* returns a logical integer */
 extern void     hb_retnd( double dNumber ); /* returns a double */
 extern void     hb_retni( int iNumber );    /* returns a integer number */

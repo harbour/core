@@ -1240,9 +1240,9 @@ static ERRCODE dbfInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_LASTUPDATE:
-         hb_itemPutDL( pItem, hb_dateEncode( pArea->lpExtendInfo->bDay,
+         hb_itemPutDL( pItem, hb_dateEncode( pArea->lpExtendInfo->bYear,
                                              pArea->lpExtendInfo->bMonth,
-                                             pArea->lpExtendInfo->bYear ) );
+                                             pArea->lpExtendInfo->bDay ) );
          break;
 
       case DBI_GETRECSIZE:
@@ -1560,8 +1560,8 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( HB_IS_DATE( pItem ) )
          {
             szEndChar = * ( szText + pField->uiLen );
-            hb_dateDecode( hb_itemGetDL( pItem ), &lDay, &lMonth, &lYear );
-            hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
+            hb_dateDecode( hb_itemGetDL( pItem ), &lYear, &lMonth, &lDay );
+            hb_dateStrPut( ( char * ) szText, lYear, lMonth, lDay );
             * ( szText + pField->uiLen ) = szEndChar;
             bError = FALSE;
          }

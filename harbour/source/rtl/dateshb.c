@@ -231,9 +231,9 @@ HB_FUNC( YEAR )
 
    if( pDate )
    {
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
 
       hb_retnllen( lYear, 5 );
    }
@@ -255,9 +255,9 @@ HB_FUNC( MONTH )
 
    if( pDate )
    {
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
 
       hb_retnllen( lMonth, 3 );
    }
@@ -279,9 +279,9 @@ HB_FUNC( DAY )
 
    if( pDate )
    {
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
 
       hb_retnllen( lDay, 3 );
    }
@@ -355,11 +355,11 @@ HB_FUNC( DOW )
 
       if( lDate )
       {
-         long lDay, lMonth, lYear;
+         long lYear, lMonth, lDay;
 
-         hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
+         hb_dateDecode( lDate, &lYear, &lMonth, &lDay );
 
-         hb_retnllen( hb_dateDOW( lDay, lMonth, lYear ), 3 );
+         hb_retnllen( hb_dateDOW( lYear, lMonth, lDay ), 3 );
       }
       else
          hb_retnllen( 0, 3 );

@@ -58,9 +58,9 @@ HB_FUNC( CMONTH )
 
    if( pDate )
    {
-      long lDay, lMonth, lYear;
+      long lYear, lMonth, lDay;
 
-      hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
+      hb_dateDecode( hb_itemGetDL( pDate ), &lYear, &lMonth, &lDay );
       hb_retc( hb_dateCMonth( lMonth ) );
    }
    else
@@ -85,10 +85,10 @@ HB_FUNC( CDOW )
 
       if( lDate )
       {
-         long lDay, lMonth, lYear;
+         long lYear, lMonth, lDay;
 
-         hb_dateDecode( lDate, &lDay, &lMonth, &lYear );
-         hb_retc( hb_dateCDOW( hb_dateDOW( lDay, lMonth, lYear ) ) );
+         hb_dateDecode( lDate, &lYear, &lMonth, &lDay );
+         hb_retc( hb_dateCDOW( hb_dateDOW( lYear, lMonth, lDay ) ) );
       }
       else
          hb_retc( "" );

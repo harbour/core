@@ -491,11 +491,11 @@ void hb_retds( char * szDate )
    hb_itemPutDS( &hb_stack.Return, szDate );
 }
 
-void hb_retd( long lDay, long lMonth, long lYear )
+void hb_retd( long lYear, long lMonth, long lDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_retd(%02i, %02i, %04i)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retd(%04i, %02i, %02i)", lYear, lMonth, lDay));
 
-   hb_itemPutDL( &hb_stack.Return, hb_dateEncode( lDay, lMonth, lYear ) );
+   hb_itemPutDL( &hb_stack.Return, hb_dateEncode( lYear, lMonth, lDay ) );
 }
 
 void hb_retl( int iLogical )

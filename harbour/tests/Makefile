@@ -143,6 +143,7 @@ PRG_SOURCES=\
 	testwarn.prg \
 	tstalias.prg \
 	tstcolor.prg \
+        tstdbi.prg \
 	tstdspac.prg \
 	version.prg \
 	while.prg \

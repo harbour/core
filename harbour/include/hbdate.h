@@ -49,12 +49,12 @@ extern char *   hb_dateDaysName [];
 extern double   hb_dateSeconds( void );
 extern char *   hb_dateCMonth( int iMonth );
 extern char *   hb_dateCDOW( int iDay );
-extern long     hb_dateDOW( long lDay, long lMonth, long lYear );
+extern long     hb_dateDOW( long lYear, long lMonth, long lDay );
 extern char *   hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat );
-extern long     hb_dateEncode( long lDay, long lMonth, long lYear );
-extern void     hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
-extern void     hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear );
-extern void     hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear );
+extern long     hb_dateEncode( long lYear, long lMonth, long lDay );
+extern void     hb_dateDecode( long julian, long * plYear, long * plMonth, long * plDay );
+extern void     hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay );
+extern void     hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * plDay );
 extern char *   hb_dateDecStr( char * szDate, long lJulian );
 extern long     hb_dateEncStr( char * szDate );
 

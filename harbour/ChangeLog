@@ -1,3 +1,31 @@
+20000412-11:01 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbdate.h
+   * include/hbapi.h
+   * source/rtl/datec.c
+   * source/rtl/dates.c
+   * source/rtl/dateshb.c
+   * source/tools/dates2.c
+   * source/vm/extend.c
+   * contrib/rdd_ads/ads1.c
+   * source/rdd/dbf1.c
+     * Day/Month/Year parameters reordered to Year/Month/Day to match 
+       international conventions.
+       (hb_retd(), hb_dateDOW(), hb_dateEncode(), hb_dateDecode(),
+        hb_dateStrPut(), hb_dateStrGet())
+
+   ; Next items by Jose Lalin.
+
+   * include/hbapirdd.h
+     + added missing DBI_FULLPATH
+     ! minor formating
+     ! typos fixed, DBI_ definitions changed
+
+   + tests/tstdbi.prg
+   * tests/Makefile
+     + new tests for DbInfo()
+     + new tests for dbRecordInfo() and dbFieldInfo()
+
 20000412-10:06 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/inkey.ch

@@ -58,9 +58,9 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-long hb_dateEncode( long lDay, long lMonth, long lYear )
+long hb_dateEncode( long lYear, long lMonth, long lDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lYear, lMonth, lDay));
 
    /* Perform date validation */
    if( lYear >= 1 && lYear <= 2999 &&
@@ -88,9 +88,9 @@ long hb_dateEncode( long lDay, long lMonth, long lYear )
    return 0;
 }
 
-void hb_dateDecode( long lJulian, long * plDay, long * plMonth, long * plYear )
+void hb_dateDecode( long lJulian, long * plYear, long * plMonth, long * plDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, plDay, plMonth, plYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDecode(%ld, %p, %p, %p)", lJulian, plYear, plMonth, plDay));
 
    if( lJulian > 0 )
    {
@@ -104,23 +104,23 @@ void hb_dateDecode( long lJulian, long * plDay, long * plMonth, long * plYear )
       V = 80 * lJulian / 2447;
       U = V / 11;
 
-      *plDay   = lJulian - ( 2447 * V / 80 );
-      *plMonth = V + 2 - ( U * 12 );
       *plYear  = X + U + ( W - 49 ) * 100;
+      *plMonth = V + 2 - ( U * 12 );
+      *plDay   = lJulian - ( 2447 * V / 80 );
    }
    else
    {
-      *plDay   =
+      *plYear  =
       *plMonth =
-      *plYear  = 0;
+      *plDay   = 0;
    }
 }
 
-void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
+void hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %ld, %ld, %ld)", szDate, lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %ld, %ld, %ld)", szDate, lYear, lMonth, lDay));
 
-   if( lDay && lMonth && lYear )
+   if( lYear && lMonth && lDay )
    {
       szDate[ 0 ] = ( lYear / 1000 ) + '0';
       szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
@@ -137,26 +137,26 @@ void hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear )
       memset( szDate, ' ', 8 );
 }
 
-void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear )
+void hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * plDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, plDay, plMonth, plYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateStrGet(%s, %p, %p, %p)", szDate, plYear, plMonth, plDay));
 
    if( szDate && szDate[ 8 ] == '\0' )
    {
       /* Date string has correct length, so attempt to convert */
-      *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
-      *plMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
       *plYear  = ( ( USHORT ) ( szDate[ 0 ] - '0' ) * 1000 ) +
                  ( ( USHORT ) ( szDate[ 1 ] - '0' ) * 100 ) +
                  ( ( USHORT ) ( szDate[ 2 ] - '0' ) * 10 ) + 
                    ( USHORT ) ( szDate[ 3 ] - '0' );
+      *plMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
+      *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
    }
    else
    {
       /* Date string missing or bad length, so force an empty date */
-      *plDay   =
+      *plYear  =
       *plMonth =
-      *plYear  = 0;
+      *plDay   = 0;
    }
 }
 
@@ -165,12 +165,12 @@ void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * pl
 
 char * hb_dateDecStr( char * szDate, long lJulian )
 {
-   long lDay, lMonth, lYear;
+   long lYear, lMonth, lDay;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateDecStr(%p, %ld)", szDate, lJulian));
 
-   hb_dateDecode( lJulian, &lDay, &lMonth, &lYear );
-   hb_dateStrPut( szDate, lDay, lMonth, lYear );
+   hb_dateDecode( lJulian, &lYear, &lMonth, &lDay );
+   hb_dateStrPut( szDate, lYear, lMonth, lDay );
    szDate[ 8 ] = '\0';
 
    return szDate;
@@ -178,13 +178,13 @@ char * hb_dateDecStr( char * szDate, long lJulian )
 
 long hb_dateEncStr( char * szDate )
 {
-   long lDay, lMonth, lYear;
+   long lYear, lMonth, lDay;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncStr(%s)", szDate));
 
-   hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
+   hb_dateStrGet( szDate, &lYear, &lMonth, &lDay );
 
-   return hb_dateEncode( lDay, lMonth, lYear );
+   return hb_dateEncode( lYear, lMonth, lDay );
 }
 
 /* NOTE: szFormattedDate must be an at least 11 chars wide buffer */
@@ -357,9 +357,9 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
    return szFormattedDate;
 }
 
-long hb_dateDOW( long lDay, long lMonth, long lYear )
+long hb_dateDOW( long lYear, long lMonth, long lDay )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%ld, %ld, %ld)", lDay, lMonth, lYear));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateDOW(%ld, %ld, %ld)", lYear, lMonth, lDay));
 
    if( lMonth < 3 )
    {
