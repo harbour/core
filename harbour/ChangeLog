@@ -1,3 +1,7 @@
+19990624-13:00 WIB Andi Jahja <andij@aonlippo.co.id>
+  * source/rtl/copyfile.c
+   - add run time error
+
 19990623-23:25 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/console.c
     - The non-GT API version of DISPBOX() was creating boxes that
