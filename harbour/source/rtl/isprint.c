@@ -69,7 +69,7 @@
 #if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
 
    #include <stdio.h>
-   #include <malloc.h>
+///   #include <malloc.h>
    #include <winspool.h>
 
    static BOOL IsPrinterError(HANDLE hPrinter);

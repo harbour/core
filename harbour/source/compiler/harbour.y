@@ -33,7 +33,9 @@
  * 2) Support this syntax: nPtr := @Hello()
  */
 
+/* malloc.h has been obsoleted by stdlib.h, which is included via hbcomp.h
 #include <malloc.h>
+*/
 
 #include "hbcomp.h"
 

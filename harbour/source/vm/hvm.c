@@ -66,9 +66,10 @@
  *
  */
 
-#ifndef __MPW__
+/* malloc.h has been obsoleted by stdlib.h, which is included via
+   hbvmpub.h, which is include via hbapi.h
    #include <malloc.h>
-#endif
+*/
 
 #include <math.h>
 #include <time.h>
