@@ -1,3 +1,27 @@
+19991004-01:14 GMT+1 Victor Szel <info@szelvesz.hu>
+  * build16.bat -> make_b16.bat
+    build31.bat -> make_b31.bat
+    build32.bat -> make_b32.bat
+    build40.bat -> make_b40.bat
+    buildvc.bat -> make_vc.bat
+    * Renamed.
+  + buildexe-dos-bcc31.bat
+  + buildexe-dos-djgpp.bat
+  + buildexe-os2-gcc.cmd
+  + buildexe-os2-icc.cmd
+  + buildexe-w32-gcc.bat
+  + buildexe-w32-mingw32.bat
+  + buildexe-w32-msvc.bat
+    + Added these files used in the binary releases, some fixes applied
+      too: /include for harbour.exe, DJGPP -ldbfntx -> -ldbfnt, a note
+      from the MSVC version copied into the others. CVS header added.
+      -o%1.exe added to DJGPP version. Note the long filenames: I could not
+      figure out a better method to identify the batch file, while keeping
+      them in the same dir.
+  * funclist.txt moved to doc/funclist.txt
+  - genbuild.bat
+    - Removed, since it's now obsolete.
+
 19991003-09:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/classes.ch
      + Support for INIT and AS clauses.
