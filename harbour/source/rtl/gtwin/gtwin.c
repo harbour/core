@@ -186,7 +186,9 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       CONSOLE_SCREEN_BUFFER_INFO csbi;
 
       GetConsoleScreenBufferInfo( s_HOriginal, &csbi );
+      csbi.dwSize.X = min( csbi.dwSize.X, 80 );
       csbi.dwSize.Y = min( csbi.dwSize.Y, 50 );
+      csbi.srWindow.Right = min( csbi.srWindow.Right, 79 );
       csbi.srWindow.Bottom = min( csbi.srWindow.Bottom, 49 );
 
       SetConsoleWindowInfo( s_HOriginal, TRUE,  &csbi.srWindow );
