@@ -62,13 +62,13 @@ Method addWindows(aArray,nRow) Class TDBGArray
 local oBrwSets,nSize:=Len(AArray)
 local n:=1
 Local owndsets
-   local nWidth  
+   local nWidth
    local oCol
    if (nsize<maxrow()-2)
       if nRow <> nil
          owndsets:=TDbWindow():New( GetTopPos(nRow), 11, getBottomPos(nRow+nsize+1), maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]" ,"N/W" )
       else
-         owndsets:=TDbWindow():New( 1, 11, 1+nsize, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
+         owndsets:=TDbWindow():New( 1, 11, 2+nsize, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
       endif
    else
       owndsets:=TDbWindow():New( 1, 11, maxrow()-2, maxcol()-5, ::arrayName+"[1.."+alltrim(str(nsize,4))+"]"  ,"N/W")
@@ -76,7 +76,7 @@ Local owndsets
                   ::nCurWindow++
    oWndSets:lFocused:=.t.
    aadd(::aWindows,owndsets)
-   
+
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
 
 oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, owndsets:nRight-1)
@@ -88,7 +88,7 @@ oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, ownd
                           n := iif( nSkip > 0, Min( Len( aArray ), n + nSkip ),;
                           Max( 1, n + nSkip ) ), n - nPos }
    oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::arrayName+"["+alltrim(str(n,4))+"]"} ) )
-   ocol:width:=len(::arrayName+"["+alltrim(str(len(aarray),4))+"]" ) 
+   ocol:width:=len(::arrayName+"["+alltrim(str(len(aarray),4))+"]" )
    ocol:ColorBlock :=    { || { iif( n == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
    oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( aArray[ n ] ), nWidth  - 12 ) } ) )
@@ -103,7 +103,7 @@ oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, ownd
    ::aWindows[::nCurWindow]:ShowModal()
 
 return self
- 
+
 method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) Class TDBGArray
 
    local nSet := oBrwSets:Cargo
