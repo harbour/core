@@ -1,3 +1,7 @@
+19990726-20:20 CET Eddie Runia <eddie@runia.com>
+  * tests/working/hscript/bldguest.bat
+    Better version added. (Old version was meant for working directory)
+
 19990726-20:59 Alexander Kresin
   * source\hbpp\hbpp.c
     * Fixed some bugs with quotes, '??'
