@@ -4,7 +4,6 @@
 
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
-ifneq ($(HB_DOC_INSTALL),)
 
 include $(TOP)$(ROOT)config/global.cf
 
@@ -15,6 +14,5 @@ INSTALL_DIR = $(HB_DOC_INSTALL)$(DOC_SUBDIR)
 
 include $(TOP)$(ROOT)config/install.cf
 
-endif
 endif
 endif

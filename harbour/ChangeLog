@@ -9,6 +9,12 @@
 */
 
 2003-05-09 20:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * config/doc.cf
+    ! Removed an extra layer of "protection" that resulted in an
+      error message when HB_DOC_INSTALL is not defined, instead
+      of a simple "nothing to do" message.
+
+2003-05-09 20:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * Makefile
   + config/doc.cf
   + doc/Makefile
