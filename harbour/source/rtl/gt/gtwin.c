@@ -125,10 +125,13 @@ void hb_gt_Done( void )
       hb_gtDispBegin();  /* must use these versions ! */
       hb_gtDispEnd();
    }
+/* NOTE: There's not need to close these explicitly, moreover if we close them
+         functions using stdout will not show anything.
    CloseHandle( HInput );
    HInput = INVALID_HANDLE_VALUE;
    CloseHandle( HOutput );
    HOutput = INVALID_HANDLE_VALUE;
+*/
    if( HStealth != INVALID_HANDLE_VALUE )
    {
       CloseHandle( HStealth );

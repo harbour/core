@@ -215,8 +215,8 @@ int main( int argc, char * argv[] )
       }
 #else
 #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBLE
-      else
-         hb_errInternal( 9999, "Starting procedure not found", NULL, NULL );
+      else if( ! s_pSymStart )
+         hb_errInternal( 9999, "No starting procedure", NULL, NULL );
 #endif
 #endif
    }

@@ -108,9 +108,9 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
       /* Step through all envvar switches. */
 
-      /* NOTE: CA-Clipper don't need the switches to be separated by any chars
-               at all, Harbour is more strict/standard in this respect, it
-               requires the switches to be separated. */
+      /* NOTE: CA-Clipper doesn't need the switches to be separated by any 
+               chars at all, Harbour is more strict/standard in this respect, 
+               it requires the switches to be separated. */
 
       pszNext = pszEnvVar;
 
@@ -181,7 +181,7 @@ int hb_cmdargNum( const char * pszName )
 
    if( pszValue )
    {
-      int iValue = strlen( pszValue ) > 0 ? atoi( pszValue ) : -1;
+      int iValue = atoi( pszValue );
 
       hb_xfree( pszValue );
 

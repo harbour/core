@@ -150,17 +150,12 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
    if( s_ulMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
       printf( hb_consoleGetNewLine() );
-      printf( "total memory blocks allocated: %lu", s_ulMemoryMaxBlocks );
-      printf( hb_consoleGetNewLine() );
-      printf( "memory maximum size consumed: %ld", s_ulMemoryMaxConsumed );
+      printf( "Total memory allocated: %ld bytes (%lu blocks)", s_ulMemoryMaxConsumed, s_ulMemoryMaxBlocks );
       if( s_ulMemoryBlocks )
       {
          printf( hb_consoleGetNewLine() );
-         printf( "memory blocks not released: %ld", s_ulMemoryBlocks );
-         printf( hb_consoleGetNewLine() );
-         printf( "memory size not released: %ld", s_ulMemoryConsumed );
+         printf( "WARNING! Memory allocated by not released: %ld bytes (%ld blocks)", s_ulMemoryConsumed, s_ulMemoryBlocks );
       }
-      printf( hb_consoleGetNewLine() );
    }
 #endif
 }

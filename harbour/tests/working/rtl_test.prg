@@ -675,6 +675,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( Empty( {}                     ) , .T.                                    )
    TEST_LINE( Empty( {0}                    ) , .F.                                    )
    TEST_LINE( Empty( {|x|x+x}               ) , .F.                                    )
+   TEST_LINE( Empty( ErrorNew()             ) , .F.                                    )
 
    RETURN NIL
 

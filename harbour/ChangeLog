@@ -1,3 +1,25 @@
+19990919-15:34 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/console.c
+    + Support added for //STDERR:x switch form.
+    ! Fixed the redirection, it needed a bit more work, see next two items.
+    % Some variable scopes adjusted. (these were removed with the next change)
+    % fputs()/fputc()/fflush() changed to hb_fsWriteLarge()
+    % Some (BYTE*) casts for BYTE* variables removed.
+  * source/vm/cmdarg.c
+    ! hb_cmdargNum() to not return -1 when the switch was found, but with
+      not parameter.
+  * source/vm/hvm.c
+    ! Fixed constant error message about no starting procedure.
+  * source/rtl/gt/gtwin.c
+    ! Commented out closing of standard input and output, now printf()
+      works after hb_consoleRelease(). (Thanks Paul)
+  * tests/working/rtl_test.prg
+    + Added Empty(ErrorNew()) test.
+  * source/rtl/fm.c
+    * Changed the ending message, since this is not the maximum memory 
+      consumed, but the total. Made it more compact, and meaningful.
+
 19990919-15:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c
@@ -5,7 +27,7 @@
 	
 19990919-14:25 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
-    *soource/rtl/console.c
+    *source/rtl/console.c
         * added two (char *) casts
 
     *source/compiler/harbour.y
