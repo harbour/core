@@ -5,7 +5,7 @@
   * source/rtl/gtsln/gtsln.c
   * source/rtl/gtsln/kbsln.c
   * source/rtl/gtsln/keytrans.c
-		* GTSLN update provided by Marek Paliwoda <paliwoda@inetia.pl>
+    * GTSLN update provided by Marek Paliwoda <paliwoda@inetia.pl>
 
 2001-07-10 01:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
