@@ -101,6 +101,23 @@
 #endif
 #include <time.h>
 
+/* Function for clearing the keyboard buffer on Borland C++ 4.5 */
+#if defined(__BORLANDC__) && ( defined(_Windows) || defined(_WIN32) ) && (__BORLANDC__ == 0x460)
+   #include <windows.h>
+
+   int hb_clearKeyboardBuffer( void )
+   {
+
+      HANDLE in;
+
+      in = GetStdHandle (STD_INPUT_HANDLE);
+      if (in == INVALID_HANDLE_VALUE) return 0;
+
+      FlushConsoleInputBuffer( in );
+   }
+#endif
+
+
 #ifdef __WATCOMC__
    #include <conio.h>
    #include <i86.h>
@@ -298,6 +315,12 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
          ch = getch();
          if( !ch ) /* Is a extended key */
          ch = getch() + 256;
+
+         /* Clears the keyboard buffer */
+         #if (__BORLANDC__ == 0x460)
+           hb_clearKeyboardBuffer();
+         #endif
+
       #else
          /* A key code is available in the BIOS keyboard buffer */
          ch = getch();                  /* Get the key code */

@@ -1,3 +1,7 @@
+19991013-13:52 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/inkey.c
+     + borland c 4.5 fixes as reported by Felipe
+
 19991013-18:37 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/browdb.prg
      * Renamed function to public function DbSkipper()
