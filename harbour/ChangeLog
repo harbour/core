@@ -1,5 +1,13 @@
+19990602-16:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/console.c
+    - OS/2 requires that stdout and stderr be flushed in order to stay
+      synchronized with the GT API
+  * source/rtl/gt/gtos2.c
+     - The gtPuts function was using strlen() on the text buffer instead
+       of using the text length parameter
+
 19990602-14:50 EDT David G. Holm <dholm@jsd-llc.com>
-  * makefile.b31
+ * makefile.b31
     - Added itemapi.h as dependancy for arrays.obj
   * makefile.icc
     - Added new GT string modules

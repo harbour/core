@@ -111,6 +111,7 @@ static void hb_outstd( char * fpStr, WORD uiLen )
    char * fpPtr = fpStr;
    while( uiCount-- )
       printf( "%c", *fpPtr++ );
+   fflush( stdout );
 #ifdef USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
@@ -128,6 +129,7 @@ static void hb_outerr( char * fpStr, WORD uiLen )
    char * fpPtr = fpStr;
    while( uiCount-- )
       fprintf( stderr, "%c", *fpPtr++ );
+   fflush( stderr );
 #ifdef USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {

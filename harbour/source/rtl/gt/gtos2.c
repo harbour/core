@@ -100,7 +100,7 @@ int gtGetCursorStyle(void)
 
 void gtPuts(char x, char y, char attr, char *str, int len)
 {
-    VioWrtCharStrAtt(str, (USHORT) strlen(str), (USHORT) y, (USHORT) x, (PBYTE) &attr, 0);
+    VioWrtCharStrAtt(str, (USHORT) len, (USHORT) y, (USHORT) x, (PBYTE) &attr, 0);
 }
 
 void gtGetText(char x1, char y1, char x2, char y2, char *dest)
