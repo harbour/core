@@ -818,7 +818,7 @@ return Self
 // handles only movement keys and discards all the others
 STATIC procedure BrowseText(oSelf, nPassedKey)
 
-   LOCAL nKey
+   LOCAL nKey,bKeyBlock
 
    while ! oSelf:lExitEdit
 
@@ -830,6 +830,11 @@ STATIC procedure BrowseText(oSelf, nPassedKey)
          nKey := InKey(0)
       else
          nKey = nPassedKey
+      endif
+
+      IF !( ( bKeyBlock := setkey( nKey ) ) == NIL )
+         eval( bKeyBlock )
+         return 
       endif
 
       if nKey == K_ESC
@@ -854,6 +859,7 @@ METHOD Edit(nPassedKey) CLASS HBEditor
    LOCAL nKey
    LOCAL lOldInsert
    LOCAL lDelAppend
+   LOCAL bKeyBlock
    LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit
 
    if ! ::lEditAllow
@@ -873,6 +879,10 @@ METHOD Edit(nPassedKey) CLASS HBEditor
          else
             lSingleKeyProcess := .T.
             nKey := nPassedKey
+         endif
+         IF !( ( bKeyBlock := setkey( nKey ) ) == NIL )
+            eval( bKeyBlock )
+            return Self
          endif
 
          do case
