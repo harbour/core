@@ -60,7 +60,7 @@
 
 char * hb_getenv( const char * name )
 {
-   char * pszBuffer = hb_xgrab( 255 );
+   char * pszBuffer = ( char * ) hb_xgrab( 255 );
 
    #ifdef HB_OS_WIN_32
       DWORD nSize;
