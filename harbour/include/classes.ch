@@ -35,7 +35,7 @@
          oClass = TClass():New( <(ClassName)> [,<(SuperClass)>] ) ;;
      #define _CLASS_NAME_ <ClassName> ;;
      #translate CLSMETH <ClassName> <MethodName>() => @<ClassName>_<MethodName>() ;
-     [ ; #define _Super_ <(SuperClass)> ]
+     [ ; #translate Super : => ::<SuperClass>: ]
 
 #xcommand DATA <DataName1> [,<DataNameN>] => ;
    oClass:AddData( <(DataName1)> ) [; oClass:AddData( <(DataNameN)> ) ]
