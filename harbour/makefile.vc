@@ -31,6 +31,7 @@ OBJ_DIR=obj
 RUNNER_DIR=source\runner
 COMMON_DIR=source\common
 MACOMP_DIR=source\macro
+HBDOC_DIR=utils\hbdoc
 
 #
 # C compiler definition and C flags. These should never have to change.
@@ -58,6 +59,7 @@ PP_EXE=$(BIN_DIR)\hbpp.exe
 RUNNER_EXE=$(BIN_DIR)\hbrun.exe
 RUNNER_DLL=$(BIN_DIR)\runjava.dll
 MACRO_LIB=$(LIB_DIR)\macro.lib
+HBDOC_EXE=($HBDOC_DIR)\hbdoc.exe
 HARBOURFLAGS=-iinclude -n -q
 
 LIBS=$(HARBOUR_LIB) $(MACRO_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(DBFCDX_LIB) $(RUNNER_LIB) $(MACRO_LIB)
@@ -183,6 +185,7 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\chrtotal.obj \
     $(OBJ_DIR)\dates2.obj \
     $(OBJ_DIR)\datesx.obj \
+    $(OBJ_DIR)\dbftools.obj \
     $(OBJ_DIR)\fileread.obj \
     $(OBJ_DIR)\hb_f.obj \
     $(OBJ_DIR)\html.obj \
@@ -288,6 +291,7 @@ all: $(HARBOUR_EXE) \
      $(DBFNTX_LIB) \
      $(DBFCDX_LIB) \
      $(PP_EXE) \
+     $(HBDOC_EXE) \
      $(RUNNER_LIB) \
      $(RUNNER_EXE)
 #     $(RUNNER_DLL)
@@ -321,6 +325,12 @@ $(RUNNER_EXE) : \
 #    -del runjava.obj
 #    -del $(BIN_DIR)\runjava.exp
 #    -del $(BIN_DIR)\runjava.lib
+
+$(HBDOC_EXE) : \
+    $(HBDOC_DIR)\hbdoc.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -w0 -o$(HBDOC_DIR)\ $(HBDOC_DIR)\hbdoc.prg
+    $(CC) -TP $(CFLAGS) $(HBDOC_DIR)\hbdoc.c -o $(HBDOC_DIR)\hbdoc.exe /link $(LIBS)
+    -del hbdoc.obj
 
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harbour.c \
@@ -906,6 +916,9 @@ $(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(TOOLS_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg
