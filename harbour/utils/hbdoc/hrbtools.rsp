@@ -2,6 +2,7 @@
 ..\..\doc\en\binnum.txt
 ..\..\doc\en\browse.txt
 ..\..\doc\en\command.txt
+..\..\doc\en\datetime.txt
 ..\..\doc\en\dir.txt
 ..\..\doc\en\error.txt
 ..\..\doc\en\file.txt
@@ -15,6 +16,7 @@
 ..\..\doc\en\hvm.txt
 ..\..\doc\en\input.txt
 ..\..\doc\en\license.txt
+..\..\doc\en\math.txt
 ..\..\doc\en\memo.txt
 ..\..\doc\en\menu.txt
 ..\..\doc\en\misc.txt

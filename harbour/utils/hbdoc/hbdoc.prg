@@ -123,8 +123,6 @@
    memvar lNorton 
    memvar aWWW    
    memvar lTroff  
-
-STATIC theHandle
 /*
 */
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -152,6 +150,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL nLen          // Length of the token array
    LOCAL oHtm
    LOCAL cTemp
+   PUBLIC theHandle
    PUBLIC aDirList
    PUBLIC aDocInfo     := {}
    PUBLIC aLinkInfo    := {}
@@ -691,115 +690,7 @@ FUNCTION StripNgControls( cString )
    ENDIF
 
 RETURN cString
-#ifdef NANFOR
 
-#define xReadBuffer 4096
-   /****
-*   FT_FUSE(cFile,nMode)   ---> nHandle
-*   Open a File
-*/
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function ft_fuse()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION ft_fuse( cFile, nMode )
-
-   IF nMode == nil
-      nMode := 2
-   ENDIF
-   IF cFile == Nil
-      theHandle:close()
-   ENDIF
-   IF cFile <> Nil
-      IF nMode <> 0
-         theHandle := TFileRead():new( cFile ):open( nMode )
-      ELSE
-         theHandle := TFileRead():new( cFile ):open()
-      ENDIF
-   ENDIF
-RETURN theHandle:nHan
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function ft_FEOF()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION ft_FEOF()
-
-   LOCAL lRETURN := theHandle:lEOF
-RETURN lRETURN
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function FReadLn()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION FReadLn( nH, cLine )
-
-   //     cline:= thehandle:readline()
-   // ENDIF
-   IF theHandle:MoreToRead()
-      cLine := theHandle:ReadLine()
-   ELSE
-
-      FSEEK( theHandle:nHan, 0, 0 )
-      theHandle:lEOF := .f.
-
-      cLine := theHandle:ReadLine()
-   ENDIF
-RETURN cLine
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function FT_FReadLn()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION FT_FReadLn()
-
-   LOCAL cBuffer := ''
-
-   cBuffer := FReadLn( theHandle:nHan, @cBuffer )
-
-RETURN cBuffer
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function FT_FGotop()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION FT_FGotop()
-
-   FSEEK( theHandle:nHan, 0, 0 )
-RETURN        NIL
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function ft_fskip()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION ft_fskip( )
-
-RETURN nil
-
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function FT_MKDIR()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION FT_MKDIR( CDIR )
-
-   MAKEDIR( cdir )
-   RETURN nil
-#ENDIF
 FUNCTION StripFiles( cString )
 
    //

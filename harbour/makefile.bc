@@ -523,7 +523,9 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\os2.obj \
    $(OBJ_DIR)\rtf.obj \
    $(OBJ_DIR)\troff.obj \
-   $(OBJ_DIR)\filerea1.obj
+   $(OBJ_DIR)\fclass1.obj \
+   $(OBJ_DIR)\ffile1.obj \
+   $(OBJ_DIR)\ft_funcs.obj
 
 #
 # Our default target
@@ -1963,7 +1965,9 @@ $(HBDOC_EXE) : $(HBDOC_EXE_OBJS)
    echo. $(OBJ_DIR)\os2.obj >> make.tmp
    echo. $(OBJ_DIR)\rtf.obj >> make.tmp
    echo. $(OBJ_DIR)\troff.obj >> make.tmp
-   echo. $(OBJ_DIR)\fileread.obj >> make.tmp
+   echo. $(OBJ_DIR)\fclass1.obj >> make.tmp
+   echo. $(OBJ_DIR)\ffile1.obj >> make.tmp
+   echo. $(OBJ_DIR)\ft_funcs.obj >> make.tmp
    echo. $(PP_LIB) >> make.tmp
    echo. $(COMMON_LIB) >> make.tmp
    echo. $(VM_LIB) >> make.tmp
@@ -2055,8 +2059,21 @@ $(OBJ_DIR)\troff.c : $(HBDOC_DIR)\troff.prg
 $(OBJ_DIR)\troff.obj : $(OBJ_DIR)\troff.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\filerea1.c : $(HBDOC_DIR)\fileread.prg
+$(OBJ_DIR)\fclass1.c : $(HBDOC_DIR)\fclass1.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
-$(OBJ_DIR)\filerea1.obj : $(OBJ_DIR)\filerea1.c
+$(OBJ_DIR)\fclass1.obj : $(OBJ_DIR)\fclass1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ffile1.c : $(HBDOC_DIR)\ffile1.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ffile1.obj : $(OBJ_DIR)\ffile1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\ft_funcs.c : $(HBDOC_DIR)\ft_funcs.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ft_funcs.obj : $(OBJ_DIR)\ft_funcs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+

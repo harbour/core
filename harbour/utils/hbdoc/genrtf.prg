@@ -161,7 +161,7 @@ FUNCTION ProcessRtf()
 
       //  Open file for input
 
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
+      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
       @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
@@ -455,7 +455,7 @@ FUNCTION ProcessRtf()
 
                   IF !lBlankLine
                                     //ortf:endpar()
-                                    oRtf:WritePar('') //:endpar()
+  //                                  oRtf:WritePar('') //:endpar()
                                     oRtf:WriteParBold( " Examples" )
                   ENDIF
 
@@ -465,7 +465,7 @@ FUNCTION ProcessRtf()
                ELSEIF AT( cTest, cBuffer ) > 0
 
                   IF !lBlankLine
-                                      oRtf:WritePar('') //:endpar()   
+//                                      oRtf:WritePar('') //:endpar()   
                      oRtf:WriteParBold( " Tests" )
                                          oRtf:WritePar('') //:endpar()   
                   ENDIF
@@ -544,10 +544,10 @@ FUNCTION ProcessRtf()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      if At("<par>",cBuffer)>0
-                     strtran(cBuffer,"<par>",'')
-                     strtran(cBuffer,"</par>",'')
-                     cBuffer:=Alltrim(cBuffer)
-                     cbuFfer:='<par><b>'+cBuffer+'</b></par>'
+                         strtran(cBuffer,"<par>",'')
+                         strtran(cBuffer,"</par>",'')
+                         cBuffer:=Alltrim(cBuffer)
+                         cbuFfer:='<par><b>'+cBuffer+'</b></par>'
                      endif
                       procrtfdesc(cbuffer,oRtf,"Syntax")  
 //                      oRtf:WritePar('') //:endpar()
@@ -647,7 +647,7 @@ FUNCTION ProcessRtf()
                      ENDIF
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
-                        oRtf:WritePar('') //:endpar()
+//                        oRtf:WritePar('') //:endpar()
                         oRtf:WriteParBold( "Status" )
                         oRtf:WritePar('') //:endpar()
                         xaddblank:=.T.
@@ -764,6 +764,7 @@ LOCAL lEndPar:= .F.
 
 LOCAL lEndFixed:=.F.
 LOCAL lEndTable:=.F.
+LOCAL lArgBold:=.f.
 default cStyle to "Default"
 if at('<par>',cBuffer)==0 .and. !empty(cBuffer) .and. cstyle<>"Example"
     cBuffer:='<par>'+cBuffer
@@ -788,11 +789,19 @@ if cStyle<>"Example" .and. at("<table>",cBuffer)==0 .and. AT("<fixed>",cBuffer)=
             nPos:=AT(" ",cReturn)
             cOLine:=left(cReturn,nPos-1)
             cReturn:=STRTRAN(cReturn,coLine,"")
-            cReturn:=STRTRAN(cReturn,">","></b>  ")         
-            cReturn:=STRTRAN(cReturn," <","<b> <")
+            if at("@",cOLine)>0 .or. at("()",cOLine)>0 .or. at("<",cOLine)>0 .or. at("_",cOLine)>0
+             lArgBold:=.T.
+            else
+            lArgBold:= .f.
+           endif
 
         //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
-      creturn:='       <par><b>'+cOLine+'</b> '+creturn+'    </par>'
+    if lArgBold
+        cReturn:='       <par><b>'+cOLine+'</b> '+cReturn+'    </par>'
+      else
+            cReturn:='       <par>'+cOLine+' '+cReturn+'    </par>'
+      endif
+
       cbuffer:=cReturn
       endif
  
@@ -826,7 +835,7 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
           if  !empty(cBuffer)
 //             cBuffer:=SUBSTR(cBuffer,2)
              cBuffeR:=Alltrim(cBuffer)
-             oRtf:WritePar("       "+cBuffer,'\fi-426\li426 ')
+             oRtf:WritePar("       "+cBuffer+' ','\fi-426\li426 ')
           endif
 
       ELSEIf cStyle=="Arguments"
@@ -836,7 +845,7 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
          endif
          if  !empty(cBuffer)
                       cBuffeR:=Alltrim(cBuffer)
-             oRtf:WritePar("       "+cBuffer,'\fi-2272\li2272 ')
+             oRtf:WritePar("       "+cBuffer+' ','\fi-2272\li2272 ')
          endif
 
       ELSEIf cStyle=="Syntax"
@@ -846,7 +855,7 @@ If AT('<par>',cBuffer)>0 .and. AT('</par>',cBuffer)>0
           if  !empty(cBuffer)
 //                    cBuffer:=SUBSTR(cBuffer,2)
                                  cBuffeR:=Alltrim(cBuffer)
-             oRtf:WritePar(cBuffer,'\fi-426\li426  ')
+             oRtf:WritePar(cBuffer+' ','\fi-426\li426  ')
           endif
 
 Elseif cStyle=="Default"
@@ -863,18 +872,27 @@ Elseif cStyle=="Default"
 endif
 endif
 If AT('<fixed>',cBuffer)>0 .or. cStyle="Example"
-         if at('<fixed>',cBuffer)=0
-            ortf:WriteParFixed(cBuffer)
+         if at('<fixed>',cBuffer)=0 .or. !empty(cBuffer)
+            cBuffer:=Strtran(cBuffer,"<par>","")
+            cBuffer:=Strtran(cBuffer,"<fixed>","")
+            oRtf:WriteParFixed(cBuffer)
          endif                
     do while !lendFixed
-                cBuffer :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-        if at("</fixed>",cBuffer)>0
+                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+        if at("</fixed>",cLine)>0
           lendfixed:=.t.
-        else
+          cLine:=Strtran(cline,"</fixed>","")
+        endif
+      if At(DELIM,cline)>0 
+        ft_fskip(-1)
+        lEndfixed:=.t.
 
-        oRtf:WriteParFixed(cBuffer)
     endif
+    if at(DELIM,cline)==0
+        oRtf:WriteParFixed(cline)
+        endif
     enddo
+
 end
 if AT('<table>',cBuffer)>0
     do while !lendTable
@@ -991,30 +1009,6 @@ for ncount:=1 to nsize
 next
 nPos:=ascan(a,{|x| Len(x)==max})
 return max
-FUNCTION StrPos(cBuffer)
-LOCAL nPos,x,cChar
-default nPos to 0
-      FOR x:=1 to LEN(cBuffer)
-          cChar:=SubStr(cBuffer,x,1)
-          if cChar>=chr(64) .and. cChar <=Chr(90) .or. cChar>=chr(97) ;
-          .and. cChar <=Chr(122) .or. cChar>=Chr(48)  .and. cChar <=chr(57) ;
-          .or. cChar==chr(60) .or. cchar==CHR(ASC("-")) ;
-          .or. cchar==CHR(ASC("(")) .or. cchar=chr(asc("|")) .or. ;
-          cchar==chr(asc('.')) .or. cchar==chr(asc('*')) .or. ;
-          cchar==chr(asc('#')) .or. cchar==chr(asc('"')) .or. ;
-          cchar==chr(asc('/')) .or. cchar==chr(asc("@")) ;
-          .or. cchar==chr(asc("=")) .or. cchar==chr(asc('Ä')) ;
-          .or. cchar==chr(asc('?')) .or. cchar==chr(asc('!')) ;
-          .or. cchar==chr(asc("<")) .or. cchar==chr(asc('>')) ;
-          .or. cchar==chr(asc('!')) .or. cchar==chr(asc('+'))
-          
-             nPos=x
-
-             Exit
-          ENDIF
-      NEXT
-
-Return nPos
 FUNCTION FormatrtfBuff(cBuffer,cStyle,ongi)
 
 LOCAL cReturn:=''
@@ -1023,33 +1017,47 @@ LOCAL cBuffend:=''
 LOCAL cEnd,cStart ,coline:=''
 LOCAL lEndBuff:=.f.
 LOCAL nPos,nPosEnd
-      cReturn :=cBuffer+' '
-      IF AT('</par>',cReturn)>0 .OR. EMPTY(cBuffer)
-         IF EMPTY(cbuffer)
-         cReturn:=''
-         ENDIF
-         Return cReturn
-      ENDIF
-   IF cStyle != "Syntax" .AND. cStyle !="Arguments"
-       DO WHILE !lEndBuff
+LOCAL lArgBold:=.f.
+      creturn :=cBuffer+' '
+      if at('</par>',creturn)>0 .or. empty(cBuffer)
+         if empty(cbuffer)
+         creturn:=''
+         endif
+         return creturn
+      endif
+   if cStyle != "Syntax" .AND. cStyle !="Arguments" .and. cStyle !="Return"
+       do while !lendBuff
                 cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-      IF AT('</par>',cLine)>0 .OR. EMPTY(cLine)
+      IF AT('</par>',cLine)>0 
          lEndBuff:=.t.
       ENDIF
-      cReturn+=alltrim(cLine)+ ' '
-    enddo                      
-    cReturn:='<par>'+cReturn+' </par>'
-  ELSEIF cStyle=='Syntax'
-      nPos:=AT("-->",cBuffer)
-         cReturn:=Alltrim(cReturn)
-      IF nPos>0
-         cReturn:='<par><b>'+cReturn+' </b></par>'
-    ELSE
-         cReturn:=Alltrim(cReturn)
-         cReturn:='<par> <b>'+cReturn+' </b></par>'
+
+      IF EMPTY(cLine)
+         lEndBuff:=.t.
+
+            ft_fskip(-1)
       ENDIF
-  ELSEIF cStyle=='Arguments'
+      if At(DELIM,cline)>0
+        
+          FT_Fskip(-1)
+        lEndBuff:=.t.
+      endif  
+      if at(DELIM,cLine)=0
+      cReturn+=' '+alltrim(cLine)+ ' '
+      endif
+    enddo
+    creturn:=strtran(creturn,"<par>","")
+    creturn:=strtran(creturn,"</par>","")
+    
+    cReturn:='<par>'+creturn+'    </par>'
+  elseif cStyle=='Syntax'
+
+         cReturn:='<par><b>'+cReturn+' </b></par>'
+
+  ELSEIF cStyle=='Arguments' .or. cStyle=="Return"
+
   nPos:=0
+        cReturn:='<par>'+creturn
     if at("<par>",cReturn)>0
             cReturn:=STRTRAN(cReturn,"<par>","")
             cReturn:=STRTRAN(cReturn,"</par>","")
@@ -1057,20 +1065,43 @@ LOCAL nPos,nPosEnd
             nPos:=AT(" ",cReturn)
             cOLine:=left(cReturn,nPos-1)
             cReturn:=STRTRAN(cReturn,coLine,"")
-            cReturn:=STRTRAN(cReturn,">","></b>  ")         
-            cReturn:=STRTRAN(cReturn," <","<b> <")
+            if at("@",cOLine)>0 .or. at("()",cOLine)>0 .or. at("<",cOLine)>0 .or. at("_",cOLine)>0
+             lArgBold:=.T.
+            else
+            lArgBold:= .f.
+           endif
 
     endif
        DO WHILE !lEndBuff
-                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-      IF AT('</par>',cLine)>0 .OR. EMPTY(cLine)
-         lEndBuff:=.t.
-      ENDIF
-      cReturn+=alltrim(cLine)+ ' '
-    enddo
-      cReturn:='       <par><b>'+cOLine+'</b> '+cReturn+'</par>'
 
+                cLine :=  TRIM(SUBSTR( ReadLN( @lEof ), nCommentLen ) )
+    if aT("</par>",cLine)>0
+                 lEndBuff:=.t.
+    endif
+      IF EMPTY(cLine)
+         lEndBuff:=.t.
+
+                 ft_fskip(-1)
+
+      ENDIF
+      if At(DELIM,cline)>0
+        ft_fskip(-1)
+        lEndBuff:=.t.
+      endif
+      if at(DELIM,cline)=0
+      cReturn+=' '+alltrim(cLine)+ ' '
+      endif
+    enddo
+    creturn:=strtran(creturn,"<par>","")
+    creturn:=strtran(creturn,"</par>","")
+    if lArgBold
+        cReturn:='       <par><b>'+cOLine+'</b> '+cReturn+'    </par>'
+      else
+            cReturn:='       <par>'+cOLine+' '+cReturn+'    </par>'
+      endif
+    lArgBold:=.F.
    ENDIF
+
 Return cReturn
 
 */

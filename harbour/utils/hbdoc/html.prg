@@ -79,8 +79,8 @@ RETURN Self
 
 METHOD WritePar( cPar ) CLASS THTML
 
-   cPar:=STRTRAN(cPar,"<","&lt;")
-   cPar:=STRTRAN(cPar,">","&gt;")
+//   cPar:=STRTRAN(cPar,"<","&lt;")
+//   cPar:=STRTRAN(cPar,">","&gt;")
    FWRITE( Self:nHandle, '<dd>' + Alltrim(cPar) + '</dd>' + CRLF )
 
 RETURN Self
