@@ -230,6 +230,7 @@ static PSYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different mo
 static BYTE     s_byErrorLevel;     /* application exit errorlevel */
 
 static BOOL     s_bDebugging;
+static BOOL     s_bDebugRequest;    /* debugger invoked via the VM */
 static BOOL     s_bDebugShowLines;  /* update source code line on the debugger display */
 static BOOL     s_bDebuggerIsWorking; /* to know when __DBGENTRY is beeing invoked */
 
@@ -4324,7 +4325,14 @@ void hb_vmRequestCancel( void )
 void hb_vmRequestDebug( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestCancel()"));
-   /* TODO: Cause the debugger to be invoked */
+   s_bDebugRequest = TRUE;
+}
+
+HB_FUNC( INVOKEDEBUG )
+{
+   BOOL bRequest = s_bDebugRequest;
+   s_bDebugRequest = FALSE;
+   hb_retl( bRequest );
 }
 
 /* $Doc$

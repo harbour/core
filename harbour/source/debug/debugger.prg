@@ -184,7 +184,7 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  DispEnd()
               else
 */
-              if !s_oDebugger:lGo .or. isAltdPressed()
+              if !s_oDebugger:lGo .or. InvokeDebug()
                  s_oDebugger:lGo := .F.
                  s_oDebugger:SaveAppStatus()
                  s_oDebugger:GoToLine( uParam1 )
