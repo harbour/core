@@ -106,20 +106,6 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
       typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER, 
                                      PULARGE_INTEGER, PULARGE_INTEGER);
 
-      #if defined( __BORLANDC__ )
-         typedef union _LARGE_INTEGER {
-            struct {
-               DWORD LowPart;
-               LONG HighPart;
-            };
-            struct {
-               DWORD LowPart;
-               LONG HighPart;
-            } u;
-            LONGLONG QuadPart;
-         } LARGE_INTEGER;
-      #endif
-
       char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx;
 
@@ -150,9 +136,9 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
                         i64RetVal;
 
          if( pGetDiskFreeSpaceEx( szPath,
-                                  &i64FreeBytesToCaller,
-                                  &i64TotalBytes,
-                                  &i64FreeBytes ) )
+                                  ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                  ( PULARGE_INTEGER ) &i64TotalBytes,
+                                  ( PULARGE_INTEGER ) &i64FreeBytes ) )
          {
             switch( uiType )
             {
@@ -169,17 +155,17 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
                   memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
             }
 
-            dSpace  = ( double ) i64RetVal.HighPart +
-                      ( double ) i64RetVal.HighPart *
+            dSpace  = ( double ) i64RetVal.u.HighPart +
+                      ( double ) i64RetVal.u.HighPart *
                       ( double ) 0xffffffff ;
-            dSpace += ( double ) i64RetVal.LowPart ;
+            dSpace += ( double ) i64RetVal.u.LowPart ;
 
             if( uiType == HB_DISK_USED )
             {
-               dSpace -= ( double ) i64FreeBytes.HighPart +
-                         ( double ) i64FreeBytes.HighPart *
+               dSpace -= ( double ) i64FreeBytes.u.HighPart +
+                         ( double ) i64FreeBytes.u.HighPart *
                          ( double ) 0xffffffff ;
-               dSpace -= ( double ) i64FreeBytes.LowPart  ;
+               dSpace -= ( double ) i64FreeBytes.u.LowPart  ;
             }
          }
       }
@@ -225,6 +211,7 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
 #else
 
    HB_SYMBOL_UNUSED( uiDrive );
+   HB_SYMBOL_UNUSED( uiType );
 
 #endif
 
