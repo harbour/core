@@ -1,3 +1,9 @@
+19990910-18:45 EDT David G. Holm <dholm@jsd-llc.com>
+  * tests/working/rtl_test.prg
+    ! Changed smart stringify token marker in TEST_LINE to regular
+      stringify token marker.
+    * Changed all alias tests to use TEST_LINE instead of TEST_CALL.
+
 19990910-17:00 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/inkey.c
     ! In HARBOUR HB_INKEY( void ), the double seconds variable has to

@@ -50,7 +50,7 @@
 
 #include "error.ch"
 
-#translate TEST_LINE( <x>, <result> ) => TEST_CALL( <(x)>, {|| <x> }, <result> )
+#translate TEST_LINE( <x>, <result> ) => TEST_CALL( #<x>, {|| <x> }, <result> )
 
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  4
@@ -558,37 +558,29 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( scString < 1                    , "E BASE 1073 Argument error < F:S"                )
    TEST_LINE( scString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
 
-/* NOTE: TEST_CALL() should be used here, since CA-Cl*pper can't preprocess
-         the TEST_LINE() variation properly. */
-// TEST_LINE( ("NOTHERE")->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
-// TEST_LINE( (mcString)->NOFIELD             , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
-// TEST_LINE( ({})->NOFIELD                   , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
-// TEST_LINE( ({|| NIL })->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
-// TEST_LINE( (.T.)->NOFIELD                  , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( ("NOTHERE")->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( (mcString)->NOFIELD             , "E BASE 1002 Alias does not exist HELLO F:R"      )
+   TEST_Line( ({})->NOFIELD                   , "E BASE 1065 Argument error & F:S"                )
+   TEST_LINE( ({|| NIL })->NOFIELD            , "E BASE 1065 Argument error & F:S"                )
+   TEST_LINE( (.T.)->NOFIELD                  , "E BASE 1065 Argument error & F:S"                )
+   TEST_LINE( (.F.)->NOFIELD                  , "E BASE 1065 Argument error & F:S"                )
+   TEST_LINE( (NIL)->NOFIELD                  , "E BASE 1065 Argument error & F:S"                )
+   TEST_LINE( (1)->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
+   TEST_LINE( (1.5)->NOFIELD                  , "E BASE 1003 Variable does not exist NOFIELD F:R" )
+   TEST_LINE( (SToD(""))->NOFIELD             , "E BASE 1065 Argument error & F:S"                )
+   TEST_LINE( (ErrorNew())->NOFIELD           , "E BASE 1065 Argument error & F:S"                )
 
-   TEST_CALL( '("NOTHERE")->NOFIELD ', {|| ("NOTHERE")->NOFIELD  }, "E BASE 1002 Alias does not exist NOTHERE F:R"    )
-   TEST_CALL( '(mcString)->NOFIELD  ', {|| (mcString)->NOFIELD   }, "E BASE 1002 Alias does not exist HELLO F:R"      )
-   TEST_CALL( '({})->NOFIELD        ', {|| ({})->NOFIELD         }, "E BASE 1065 Argument error & F:S"                )
-   TEST_CALL( '({|| NIL })->NOFIELD ', {|| ({|| NIL })->NOFIELD  }, "E BASE 1065 Argument error & F:S"                )
-   TEST_CALL( '(.T.)->NOFIELD       ', {|| (.T.)->NOFIELD        }, "E BASE 1065 Argument error & F:S"                )
-   TEST_CALL( '(.F.)->NOFIELD       ', {|| (.F.)->NOFIELD        }, "E BASE 1065 Argument error & F:S"                )
-   TEST_CALL( '(NIL)->NOFIELD       ', {|| (NIL)->NOFIELD        }, "E BASE 1065 Argument error & F:S"                )
-   TEST_CALL( '(1)->NOFIELD         ', {|| (1)->NOFIELD          }, "E BASE 1003 Variable does not exist NOFIELD F:R" )
-   TEST_CALL( '(1.5)->NOFIELD       ', {|| (1.5)->NOFIELD        }, "E BASE 1003 Variable does not exist NOFIELD F:R" )
-   TEST_CALL( '(SToD(""))->NOFIELD  ', {|| (SToD(""))->NOFIELD   }, "E BASE 1065 Argument error & F:S"                )
-   TEST_CALL( '(ErrorNew())->NOFIELD', {|| (ErrorNew())->NOFIELD }, "E BASE 1065 Argument error & F:S"                )
-
-   TEST_CALL( '("NOTHERE")->(Eof()) ', {|| ("NOTHERE")->(Eof())  }, .T.                                               )
-   TEST_CALL( '(mcString)->(Eof())  ', {|| (mcString)->(Eof())   }, .T.                                               )
-   TEST_CALL( '({})->(Eof())        ', {|| ({})->(Eof())         }, .T.                                               )
-   TEST_CALL( '({|| NIL })->(Eof()) ', {|| ({|| NIL })->(Eof())  }, .T.                                               )
-   TEST_CALL( '(.T.)->(Eof())       ', {|| (.T.)->(Eof())        }, .T.                                               )
-   TEST_CALL( '(.F.)->(Eof())       ', {|| (.F.)->(Eof())        }, .T.                                               )
-   TEST_CALL( '(NIL)->(Eof())       ', {|| (NIL)->(Eof())        }, .T.                                               )
-   TEST_CALL( '(1)->(Eof())         ', {|| (1)->(Eof())          }, .T.                                               )
-   TEST_CALL( '(1.5)->(Eof())       ', {|| (1.5)->(Eof())        }, .T.                                               )
-   TEST_CALL( '(SToD(""))->(Eof())  ', {|| (SToD(""))->(Eof())   }, .T.                                               )
-   TEST_CALL( '(ErrorNew())->(Eof())', {|| (ErrorNew())->(Eof()) }, .T.                                               )
+   TEST_LINE( ("NOTHERE")->(Eof())            , .T.                                               )
+   TEST_LINE( (mcString)->(Eof())             , .T.                                               )
+   TEST_LINE( ({})->(Eof())                   , .T.                                               )
+   TEST_LINE( ({|| NIL })->(Eof())            , .T.                                               )
+   TEST_LINE( (.T.)->(Eof())                  , .T.                                               )
+   TEST_LINE( (.F.)->(Eof())                  , .T.                                               )
+   TEST_LINE( (NIL)->(Eof())                  , .T.                                               )
+   TEST_LINE( (1)->(Eof())                    , .T.                                               )
+   TEST_LINE( (1.5)->(Eof())                  , .T.                                               )
+   TEST_LINE( (SToD(""))->(Eof())             , .T.                                               )
+   TEST_LINE( (ErrorNew())->(Eof())           , .T.                                               )
 
    TEST_LINE( NOTHERE->NOFIELD                , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
    TEST_LINE( NOTHERE->("NOFIELD")            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
