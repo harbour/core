@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-10-14 17:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/tget.prg
+    ! fixed get (value and display) involving negative with decimal
+      number whose value is less than 1, in some pictures.
 
 2002-10-14 17:40 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * include/hbcomp.h
@@ -343,7 +347,8 @@
     + Renamed old ChangeLog, due to file size.
   * source/rtl/dbdelim.prg
     ! Code fix to handle the field delimiters, provided by the
-      APPEND FROM code author, Marco Braida <marcobra@elart.it>.2006-02-15 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+      APPEND FROM code author, Marco Braida <marcobra@elart.it>.
+2006-02-15 13:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     ! fixed memory leak I introduced changing Ryszard modifications
 
