@@ -142,12 +142,19 @@ HARBOUR HB_SETCENTURY (void)
    if ( pItem && IS_LOGICAL (pItem)) hb_set_century = pItem->value.iLogical;
    else if ( pItem && IS_STRING (pItem))
    {
-      if (pItem->wLength == 2 && toupper (pItem->value.szText [0]) == 'O'
-      && toupper (pItem->value.szText [1]) == 'N')
-         hb_set_century = TRUE;
-      else if (pItem->wLength == 3 && toupper (pItem->value.szText [0]) == 'O'
-      && toupper (pItem->value.szText [1]) == 'F' && toupper (pItem->value.szText [2]) == 'F')
-         hb_set_century = FALSE;
+      if (pItem->wLength == 2)
+      {
+         if (toupper (pItem->value.szText [0]) == 'O'
+         && toupper (pItem->value.szText [1]) == 'N')
+            hb_set_century = TRUE;
+      }
+      else if (pItem->wLength == 3)
+      {
+         if (toupper (pItem->value.szText [0]) == 'O'
+         && toupper (pItem->value.szText [1]) == 'F'
+         && toupper (pItem->value.szText [2]) == 'F')
+            hb_set_century = FALSE;
+      }
    }
    /*
     * Finally, if the setting changed, adjust the current date format to use
@@ -175,7 +182,7 @@ HARBOUR HB_SETCENTURY (void)
          y_start = 0; /* There is no year in the current format */
          y_stop = 0;
       }
-      else if (y_stop < 0) y_stop = size + 1; /* All digits are year digits */
+      else if (y_stop < 0) y_stop = size; /* All digits are year digits */
       y_size = y_stop - y_start;
       /* Calculate size of new format */
       size -= y_size;

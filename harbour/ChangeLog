@@ -1,3 +1,11 @@
+19990609-11:25 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/set.c
+    - Removed "+ 1" in setting y_stop to default stop point, because it
+      caused _xgrab to allocate 1 byte too few when year was at end.
+  * tests/working/dates.prg
+    - Convert HB_SETCENTURY() test block to function and call it twice:
+      Once with date format "MM/DD/YYYY" and once with "YYYY/MM/DD".
+
 19990608-13:00 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/files.c
     - Changed "#if" for "#include <mingw32/share.h>" from "#if defined(
