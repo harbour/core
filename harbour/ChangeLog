@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+         DBOI_SCOPETOPCLEAR, DBOI_SCOPEBOTTOMCLEAR.
+    * some cleanup.
+  * source/rtl/set.c
+    * Changed default value of SET AUTOPEN TO TRUE.
+  * source/pp/pptable.c
+    + Added command SET AUTOPEN [ ON,OFF ]
   * source/rtl/str.c
     * Added checking of parameters to be Clipper compatible
       Added possibility to omit second parameter, while third exists:
