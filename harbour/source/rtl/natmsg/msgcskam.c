@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: French */
-/* ISO language code (2 chars): FR */
-/* Codepage: ???? */
+/* Language name: Czech */
+/* ISO language code (2 chars): CS */
+/* Codepage: Czech - Kamenickych (CS2) */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "Janvier",
-   "F‚vrier",
-   "Mars",
-   "Avril",
-   "May",
-   "Juin",
-   "Juillet",
-   "Ao–t",
-   "Septembre",
-   "Octobre",
-   "Novembre",
-   "D‚cembre"
+   "leden",
+   "£nor",
+   "b©ezen",
+   "duben",
+   "kvˆten",
+   "‡erven",
+   "‡ervenec",
+   "srpen",
+   "z ©¡",
+   "©¡jen",
+   "listopad",
+   "prosinec"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "Dimanche",
-   "Lundi",
-   "Mardi",
-   "Mercredi",
-   "Jeudi",
-   "Vendredi",
-   "Samedi"
+   "nedˆle",
+   "pondˆl¡",
+   "£ter˜",
+   "st©eda",
+   "‡tvrtek",
+   "p tek",
+   "sobota"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

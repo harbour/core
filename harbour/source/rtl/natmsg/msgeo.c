@@ -37,7 +37,7 @@ char *hb_daysname[ 7 ] =
    "sabato"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

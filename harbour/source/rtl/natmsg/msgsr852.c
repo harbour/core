@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Dutch */
-/* ISO language code (2 chars): NL */
-/* Codepage: ???? */
+/* Language name: Serbian */
+/* ISO language code (2 chars): SR */
+/* Codepage: Latin II - 852 */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "januari",
-   "februari",
-   "maart",
+   "januar",
+   "februar",
+   "mart",
    "april",
-   "mei",
-   "juni",
-   "juli",
-   "augustus",
-   "september",
-   "oktober",
-   "november",
-   "december"
+   "maj",
+   "jun",
+   "jul",
+   "avgust",
+   "septembar",
+   "oktobar",
+   "novembar",
+   "decembar"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "zondag",
-   "maandag",
-   "dinsdag",
-   "woensdag",
-   "donderdag",
-   "vrijdag",
-   "zaterdag"
+   "nedelja",
+   "ponedeljak",
+   "utorak",
+   "sreda",
+   "Ÿetvrtak",
+   "petak",
+   "subota"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

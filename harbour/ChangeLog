@@ -1,3 +1,28 @@
+19990731-08:22 CET Victor Szel <info@szelvesz.hu>
+   * source/rtl/natmsg/*.c
+     GenericErrors renamed to hb_errorsGeneric
+     static removed from the declarations.
+   * source/rtl/msgxxx.c - Small cleanup.
+   * source/rtl/natmsg/*.c
+     source/rtl/msgxxx.c
+     All files and language manifest constants renamed, so that
+     they use the RFC language code.
+     msgr1251 renamed to msgruwin, I may be wrong that
+     codepage 1251 can be called russian windows codepage, but
+     the name could not fit in 8 chars otherwise.
+   * include/error.ch - Small modification.
+   + source/rtl/natmsg.c - msg_tpl.c
+     Added template language file. Contributors should use this to add
+     support for a new language.
+   + source/tools/Makefile
+     source/tools/strfmt.c - StrFormat() added, see the file for
+     documentation. StrFormat("%1 %2", "Hello", "world!") -> "Hello world!"
+   + source/tools/Makefile
+     source/tools/numtxthu.prg - NumToTxtHU() function to convert a
+     number (especially currency) to a text. This is the Hungarian
+     version. ( 115 -> "One hundred fifteen" )
+     !! If you have such a function for your language, please add it, too.
+
 19990731-02:30 EDT David G. Holm <dholm@jsd-llc.com>
    * source/hbpp/hbpplib.c
      ! ParseExpression() expects a null-terminated string.

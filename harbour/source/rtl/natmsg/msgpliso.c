@@ -37,7 +37,7 @@ char *hb_daysname[ 7 ] =
    "Sobota"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "B³±d bez opisu",
    "Nieprawid³owy argument",

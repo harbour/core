@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Korean */
-/* ISO language code (2 chars): KO */
+/* Language name: Basque */
+/* ISO language code (2 chars): EU */
 /* Codepage: ???? */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "1월",
-   "2월",
-   "3월",
-   "4월",
-   "5월",
-   "6월",
-   "7월",
-   "8월",
-   "9월",
-   "10월",
-   "11월",
-   "12월"
+   "Urtarrila",
+   "Otsaila",
+   "Martxoa",
+   "Apirila",
+   "Maitza",
+   "Ekaina",
+   "Uztaila",
+   "Abuztua",
+   "Iraila",
+   "Urria",
+   "Azaroa",
+   "Abendua"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "일요일",
-   "월요일",
-   "화요일",
-   "수요일",
-   "목요일",
-   "금요일",
-   "토요일"
+   "Igandea",
+   "Astelehena",
+   "Asteartea",
+   "Asteazkena",
+   "Osteguna",
+   "Ostirala",
+   "Larunbata"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

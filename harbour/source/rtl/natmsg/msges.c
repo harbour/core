@@ -37,7 +37,7 @@ char *hb_daysname[ 7 ] =
    "S bado"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Error desconocido",
    "Error de argumento",

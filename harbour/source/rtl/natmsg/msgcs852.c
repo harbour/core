@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Serbian */
-/* ISO language code (2 chars): SR */
+/* Language name: Czech */
+/* ISO language code (2 chars): CS */
 /* Codepage: Latin II - 852 */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "januar",
-   "februar",
-   "mart",
-   "april",
-   "maj",
-   "jun",
-   "jul",
-   "avgust",
-   "septembar",
-   "oktobar",
-   "novembar",
-   "decembar"
+   "leden",
+   "£nor",
+   "býezen",
+   "duben",
+   "kvØten",
+   "Ÿerven",
+   "Ÿervenec",
+   "srpen",
+   "z ý¡",
+   "ý¡jen",
+   "listopad",
+   "prosinec"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "nedelja",
-   "ponedeljak",
-   "utorak",
-   "sreda",
-   "Ÿetvrtak",
-   "petak",
-   "subota"
+   "nedØle",
+   "pondØl¡",
+   "£terì",
+   "stýeda",
+   "Ÿtvrtek",
+   "p tek",
+   "sobota"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

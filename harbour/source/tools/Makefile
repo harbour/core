@@ -25,6 +25,7 @@ C_SOURCES=\
 	strcspn.c \
 	strdiff.c \
 	strexpan.c \
+        strfmt.c \
 	stringsx.c \
 	strleft.c \
 	strpbrk.c \
@@ -32,6 +33,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	fileread.prg \
+        numtxthu.prg \
 	stringp.prg \
 
 LIB=tools

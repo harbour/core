@@ -37,7 +37,7 @@ char *hb_daysname[ 7 ] =
    "Sabato"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Errore sconosciuto",
    "Errore di parametri",

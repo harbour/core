@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Czech */
-/* ISO language code (2 chars): CS */
-/* Codepage: Latin II - 852 */
+/* Language name: Korean */
+/* ISO language code (2 chars): KO */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "leden",
-   "£nor",
-   "bıezen",
-   "duben",
-   "kvØten",
-   "Ÿerven",
-   "Ÿervenec",
-   "srpen",
-   "z ı¡",
-   "ı¡jen",
-   "listopad",
-   "prosinec"
+   "1¿ù",
+   "2¿ù",
+   "3¿ù",
+   "4¿ù",
+   "5¿ù",
+   "6¿ù",
+   "7¿ù",
+   "8¿ù",
+   "9¿ù",
+   "10¿ù",
+   "11¿ù",
+   "12¿ù"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "nedØle",
-   "pondØl¡",
-   "£terì",
-   "stıeda",
-   "Ÿtvrtek",
-   "p tek",
-   "sobota"
+   "ÀÏ¿äÀÏ",
+   "¿ù¿äÀÏ",
+   "È­¿äÀÏ",
+   "¼ö¿äÀÏ",
+   "¸ñ¿äÀÏ",
+   "±İ¿äÀÏ",
+   "Åä¿äÀÏ"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

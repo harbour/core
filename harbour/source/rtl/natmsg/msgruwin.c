@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Basque */
-/* ISO language code (2 chars): EU */
-/* Codepage: ???? */
+/* Language name: Russian */
+/* ISO language code (2 chars): RU */
+/* Codepage: Windows-1251 */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = 
+char *hb_monthsname[ 12 ] =
 {
-   "Urtarrila",
-   "Otsaila",
-   "Martxoa",
-   "Apirila",
-   "Maitza",
-   "Ekaina",
-   "Uztaila",
-   "Abuztua",
-   "Iraila",
-   "Urria",
-   "Azaroa",
-   "Abendua"
+   "Январь",
+   "Февраль",
+   "Март",
+   "Апрель",
+   "Май",
+   "Июнь",
+   "Июль",
+   "Август",
+   "Сентябрь",
+   "Октябрь",
+   "Ноябрь",
+   "Декабрь"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "Igandea",
-   "Astelehena",
-   "Asteartea",
-   "Asteazkena",
-   "Osteguna",
-   "Ostirala",
-   "Larunbata"
+   "Воскресенье",
+   "Понедельник",
+   "Вторник",
+   "Среда",
+   "Четверг",
+   "Пятница",
+   "Суббота"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

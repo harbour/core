@@ -1,4 +1,4 @@
-/* 
+/*
  * $Id$
  */
 
@@ -37,7 +37,7 @@ char *hb_daysname[ 7 ] =
    "szombat"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Ismeretlen hiba",
    "Param‚ter hiba",

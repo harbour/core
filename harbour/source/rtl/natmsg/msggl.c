@@ -4,37 +4,37 @@
 
 /* Language Support Module */
 
-/* Language name: Portugese */
-/* ISO language code (2 chars): PT */
-/* Codepage: 866 */
+/* Language name: Galician */
+/* ISO language code (2 chars): GL */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "Январь",
-   "Февраль",
-   "Март",
-   "Апрель",
-   "Май",
-   "Июнь",
-   "Июль",
-   "Август",
-   "Сентябрь",
-   "Октябрь",
-   "Ноябрь",
-   "Декабрь"
+   "Xaneiro",
+   "Febreiro",
+   "Marzal",
+   "Abril",
+   "Maio",
+   "Xunio",
+   "Xullo",
+   "Agosto",
+   "Setembro",
+   "Outubro",
+   "Novembro",
+   "Decembro"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "Воскресенье",
-   "Понедельник",
-   "Вторник",
-   "Среда",
-   "Четверг",
-   "Пятница",
-   "Суббота"
+   "Domingo",
+   "Luns",
+   "Martes",
+   "MВrcores",
+   "Xoves",
+   "Venres",
+   "Sаbado"
 };
 
 char *hb_errorsGeneric[] =

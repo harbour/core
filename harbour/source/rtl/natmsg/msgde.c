@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Catalan */
-/* ISO language code (2 chars): CA */
+/* Language name: German */
+/* ISO language code (2 chars): DE */
 /* Codepage: ???? */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "Xaner",
-   "Febrer",
-   "Mars",
+   "Januar",
+   "Februar",
+   "März",
    "April",
-   "Mallol",
-   "Xuniol",
-   "Xuliol",
-   "Agust",
-   "Setembre",
-   "Octubre",
-   "Novembre",
-   "Decembre"
+   "Mai",
+   "Juni",
+   "Juli",
+   "August",
+   "September",
+   "Oktober",
+   "November",
+   "Dezember"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "Diumenge",
-   "Dilluns",
-   "Dimarts",
-   "Dimecres",
-   "Dijous",
-   "Divendres",
-   "Disabte"
+   "Sonntag",
+   "Montag",
+   "Dienstag",
+   "Mittwoch",
+   "Donnerstag",
+   "Freitag",
+   "Samstag"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

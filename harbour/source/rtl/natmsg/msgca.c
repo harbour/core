@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Russian */
-/* ISO language code (2 chars): RU */
-/* Codepage: 1251 */
+/* Language name: Catalan */
+/* ISO language code (2 chars): CA */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "Январь",
-   "Февраль",
-   "Март",
-   "Апрель",
-   "Май",
-   "Июнь",
-   "Июль",
-   "Август",
-   "Сентябрь",
-   "Октябрь",
-   "Ноябрь",
-   "Декабрь"
+   "Xaner",
+   "Febrer",
+   "Mars",
+   "April",
+   "Mallol",
+   "Xuniol",
+   "Xuliol",
+   "Agust",
+   "Setembre",
+   "Octubre",
+   "Novembre",
+   "Decembre"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "Воскресенье",
-   "Понедельник",
-   "Вторник",
-   "Среда",
-   "Четверг",
-   "Пятница",
-   "Суббота"
+   "Diumenge",
+   "Dilluns",
+   "Dimarts",
+   "Dimecres",
+   "Dijous",
+   "Divendres",
+   "Disabte"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",

@@ -5,58 +5,58 @@
 #include "hbdefs.h"
 #include "hbsetup.h"
 
-#if defined(HARBOUR_LANGUAGE_BAS)
-#include "natmsg/msgbas.c"
-#elif defined(HARBOUR_LANGUAGE_DUT)
-#include "natmsg/msgdut.c"
+#if   defined(HARBOUR_LANGUAGE_EU)
+#include "natmsg/msgeu.c"
+#elif defined(HARBOUR_LANGUAGE_NL)
+#include "natmsg/msgnl.c"
 #elif defined(HARBOUR_LANGUAGE_EO)
 #include "natmsg/msgeo.c"
-#elif defined(HARBOUR_LANGUAGE_GAL)
-#include "natmsg/msggal.c"
-#elif defined(HARBOUR_LANGUAGE_GER)
-#include "natmsg/msgger.c"
-#elif defined(HARBOUR_LANGUAGE_INA)
-#include "natmsg/msgia.c"
+#elif defined(HARBOUR_LANGUAGE_GL)
+#include "natmsg/msggl.c"
+#elif defined(HARBOUR_LANGUAGE_DE)
+#include "natmsg/msgde.c"
+#elif defined(HARBOUR_LANGUAGE_ID)
+#include "natmsg/msgid.c"
 #elif defined(HARBOUR_LANGUAGE_HU852)
 #include "natmsg/msghu852.c"
 #elif defined(HARBOUR_LANGUAGE_HUCWI)
 #include "natmsg/msghucwi.c"
 #elif defined(HARBOUR_LANGUAGE_HUWIN)
 #include "natmsg/msghuwin.c"
-#elif defined(HARBOUR_LANGUAGE_KOR)
-#include "natmsg/msgkor.c"
-#elif defined(HARBOUR_LANGUAGE_POR)
-#include "natmsg/msgpor.c"
-#elif defined(HARBOUR_LANGUAGE_R1251)
-#include "natmsg/msgr1251.c"
+#elif defined(HARBOUR_LANGUAGE_KO)
+#include "natmsg/msgko.c"
+#elif defined(HARBOUR_LANGUAGE_PT)
+#include "natmsg/msgpt.c"
+#elif defined(HARBOUR_LANGUAGE_RUWIN)
+#include "natmsg/msgruwin.c"
 #elif defined(HARBOUR_LANGUAGE_RU886)
 #include "natmsg/msgru886.c"
-#elif defined(HARBOUR_LANGUAGE_SPA)
-#include "natmsg/msgspa.c"
-#elif defined(HARBOUR_LANGUAGE_CAT)
-#include "natmsg/msgcat.c"
-#elif defined(HARBOUR_LANGUAGE_ITA)
-#include "natmsg/msgita.c"
-#elif defined(HARBOUR_LANGUAGE_FRE)
-#include "natmsg/msgfre.c"
-#elif defined(HARBOUR_LANGUAGE_CZ852)
-#include "natmsg/msgcz852.c"
-#elif defined(HARBOUR_LANGUAGE_CZKAM)
-#include "natmsg/msgczkam.c"
-#elif defined(HARBOUR_LANGUAGE_YU852)
-#include "natmsg/msgyu852.c"
+#elif defined(HARBOUR_LANGUAGE_ES)
+#include "natmsg/msges.c"
+#elif defined(HARBOUR_LANGUAGE_CA)
+#include "natmsg/msgca.c"
+#elif defined(HARBOUR_LANGUAGE_IT)
+#include "natmsg/msgit.c"
+#elif defined(HARBOUR_LANGUAGE_FR)
+#include "natmsg/msgfr.c"
+#elif defined(HARBOUR_LANGUAGE_CS852)
+#include "natmsg/msgcs852.c"
+#elif defined(HARBOUR_LANGUAGE_CSKAM)
+#include "natmsg/msgcskam.c"
+#elif defined(HARBOUR_LANGUAGE_SR852)
+#include "natmsg/msgsr852.c"
 #elif defined(HARBOUR_LANGUAGE_PL852)
 #include "natmsg/msgpl852.c"
 #elif defined(HARBOUR_LANGUAGE_PLMAZ)
 #include "natmsg/msgplmaz.c"
 #else
-#include "natmsg/msguk.c"
+#include "natmsg/msgen.c"
 #endif
 
 char *hb_errorNatDescription( ULONG ulGenError )
 {
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
+   if( ulGenError < sizeof(hb_errorsGeneric) / sizeof(hb_errorsGeneric[ 0 ]) )
+      return hb_errorsGeneric[ ulGenError ];
    else
-      return genericErrors[ 0 ];
+      return hb_errorsGeneric[ 0 ];
 }

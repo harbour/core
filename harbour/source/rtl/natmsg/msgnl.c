@@ -4,40 +4,40 @@
 
 /* Language Support Module */
 
-/* Language name: Galician */
-/* ISO language code (2 chars): GL */
+/* Language name: Dutch */
+/* ISO language code (2 chars): NL */
 /* Codepage: ???? */
 
 #include "hbdefs.h"
 
 char *hb_monthsname[ 12 ] =
 {
-   "Xaneiro",
-   "Febreiro",
-   "Marzal",
-   "Abril",
-   "Maio",
-   "Xunio",
-   "Xullo",
-   "Agosto",
-   "Setembro",
-   "Outubro",
-   "Novembro",
-   "Decembro"
+   "januari",
+   "februari",
+   "maart",
+   "april",
+   "mei",
+   "juni",
+   "juli",
+   "augustus",
+   "september",
+   "oktober",
+   "november",
+   "december"
 };
 
 char *hb_daysname[ 7 ] =
 {
-   "Domingo",
-   "Luns",
-   "Martes",
-   "M‚rcores",
-   "Xoves",
-   "Venres",
-   "S bado"
+   "zondag",
+   "maandag",
+   "dinsdag",
+   "woensdag",
+   "donderdag",
+   "vrijdag",
+   "zaterdag"
 };
 
-static char *genericErrors[] =
+char *hb_errorsGeneric[] =
 {
    "Unknown error",
    "Argument error",
