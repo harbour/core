@@ -111,6 +111,7 @@ BOOL OpenInclude( char *, PATHNAMES *, FILE**, BOOL bStandardOnly, char * );
 
 #define ISNAME(c)  (isalnum(c) || (c)=='_' || (c) > 0x7e)
 #define MAX_NAME 255
+#define MAX_EXP 1024
 #define PATTERN_SIZE 2048
 
 #define STATE_INIT 0
@@ -1073,7 +1074,8 @@ int RemoveSlash( char *stroka )
 
 int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int com_or_xcom )
 {
-  char expreal[MAX_NAME], exppatt[MAX_NAME];
+  static char expreal[MAX_EXP];
+  char exppatt[MAX_NAME];
   int lenreal = 0, maxlenreal = STR_SIZE, lenpatt;
   int rezrestr, ipos;
   char *ptr, *ptrtemp;
@@ -1505,7 +1507,7 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
   int kolmarkers;
   int lennew, i;
   char lastchar = '0';
-  char expnew[MAX_NAME];
+  static char expnew[MAX_EXP];
   char *ptr, *ptr2, *ptrOut = ptro;
 
   HB_TRACE(("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
@@ -1960,6 +1962,7 @@ char* PrevSquare( char* ptr, char* bound, int *kolmark )
 {
    int State = STATE_NORMAL;
 
+   HB_TRACE(("PrevSquare(%s, %s, %d)", ptr, bound, *kolmark));
    while( ptr > bound )
    {
       if( State == STATE_QUOTE1 )

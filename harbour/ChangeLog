@@ -1,3 +1,9 @@
+19991027-13:55 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bugs, reported by Antonio Linares and Victor Szel
+    * ( increased size of expnew in Searnrep() and expreal in WorkMarkers() )
+    * Added HB_TRACE to the new function ( PrevSquare() )
+
 19991027-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/fm.c
     ! Fixed to display negative unreleased memory properly.
