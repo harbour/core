@@ -121,11 +121,12 @@ static BOOL s_bTracePragma = FALSE;
 #define STATE_COMMENT 2
 #define STATE_QUOTE1 3
 #define STATE_QUOTE2 4
-#define STATE_ID_END 5
-#define STATE_ID 6
-#define STATE_EXPRES 7
-#define STATE_EXPRES_ID 8
-#define STATE_BRACKET 9
+#define STATE_QUOTE3 5
+#define STATE_ID_END 6
+#define STATE_ID 7
+#define STATE_EXPRES 8
+#define STATE_EXPRES_ID 9
+#define STATE_BRACKET 10
 
 #define IT_EXPR 1
 #define IT_ID 2
@@ -140,6 +141,7 @@ static int  s_Repeate;
 static BOOL s_bReplacePat = TRUE;
 static int  s_numBrackets;
 static char s_groupchar;
+static char s_prevchar = 'A';
 
 int   hb_pp_lInclude = 0;
 int * hb_pp_aCondCompile;
@@ -1799,7 +1801,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
     else if( lenreal && *expreal == '{' )
       {
         hb_pp_Stuff( expreal, ptro, lenreal, 4, lenres );
-      }      
+      }
     else
       {
         hb_pp_Stuff( "{||}", ptro, 4, 4, lenres );
@@ -1886,10 +1888,15 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
             break;
           case STATE_QUOTE1: if(cha=='\'') s_ParseState = STATE_NORMAL; break;
           case STATE_QUOTE2: if(cha=='\"') s_ParseState = STATE_NORMAL; break;
-          case STATE_BRACKET: if(cha==']') s_ParseState = STATE_NORMAL; break;
+          case STATE_QUOTE3: if(cha==']') s_ParseState = STATE_NORMAL; break;
           default:
             switch( cha ) {
-            case '[': s_ParseState = STATE_BRACKET; break;
+            case '[':
+              if( ISNAME(s_prevchar) || s_prevchar == ']' )
+                 s_ParseState = STATE_BRACKET;
+              else s_ParseState = STATE_QUOTE3;
+              break;
+            case ']': s_ParseState = STATE_NORMAL; break;
             case '\"':
               if( s_ParseState != STATE_BRACKET ) s_ParseState = STATE_QUOTE2;
               break;
@@ -1911,6 +1918,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               else if( !State ) maxlen = readed = 0;
               break;
             }
+            if( cha != ' ' && cha != ';' ) s_prevchar = cha;
           }
           if( cha != ' ' && cha != '\t' ) State = 1;
           if( lDropSpaces && State ) lDropSpaces = 0;
