@@ -2619,7 +2619,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
   static char expnew[ MAX_EXP ];
 
   int ifou, isdvig = 0;
-  BOOL rezs;
+  BOOL rezs, bFound = FALSE;
   int kolmarkers;
   int lennew, i;
   char lastchar = '0';
@@ -2628,12 +2628,10 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
   HB_TRACE(HB_TR_DEBUG, ("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
 
   if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
-  while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE, TRUE )) > 0 ) /* ??? */
+  while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE, TRUE )) > 0 )
     {
-      /*
-      printf( "Found: >%s< At: %i In: >%s<\n", exppatt, ifou, ptrOut );
-      */
 
+      bFound = TRUE;
       rezs = FALSE;
       ptr = ptrOut + ifou - 2;
       kolmarkers = 0;
@@ -2717,9 +2715,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
       else if( !s_bReplacePat ) isdvig += ifou;
       ptrOut = ptro + isdvig;
     }
-    /*
-    printf( "No: >%s< In: >%s<\n", exppatt, ptrOut );
-    */
+    if( !bFound && s_Repeate ) s_aIsRepeate[ s_Repeate - 1 ]++;
 }
 
 static int ReplacePattern( char patttype, char * expreal, int lenreal, char * ptro, int lenres )
