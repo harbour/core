@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-19 20:52 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * debug/debugger.prg
+     ! minor fix to BP (breakpoints) settings saved to file
+
+   * debug/dbghelp.prg
+     ! mouse support added to debugger help
+
 2002-10-19 20:34 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * makefile.bc
      + source/vm/maindllp.c added to the makefile
