@@ -463,7 +463,7 @@ HARBOUR HB_ROUND( void )
       {
          int iDec = hb_parni( 2 );
 
-         hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, MAX( iDec, 0 ) );
+         hb_retndlen( hb_numRound( hb_parnd( 1 ), iDec ), 0, HB_MAX_( iDec, 0 ) );
       }
       else
       {

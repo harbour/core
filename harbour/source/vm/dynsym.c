@@ -35,7 +35,7 @@
 
 #include "extend.h"
 
-#define SYM_ALLOCATED ( ( SYMBOLSCOPE ) -1 )
+#define SYM_ALLOCATED ( ( HB_SYMBOLSCOPE ) -1 )
 
 typedef struct
 {

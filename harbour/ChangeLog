@@ -1,3 +1,51 @@
+19991020-12:59 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/hbdefs.h
+     source/pp/hbpplib.c
+     source/rtl/arrays.c
+     source/rtl/math.c
+     source/rtl/samples.c
+     source/rtl/tone.c
+     source/rtl/filesys.c
+     source/rtl/memvars.c
+     source/compiler/harbour.y (HIBYTE(), LOBYTE(), MKLONG(), Ryszard!)
+     source/compiler/genc.c
+     source/compiler/genhrb.c
+     source/compiler/genjava.c
+     source/compiler/genobj32.c
+     * Some global macros renamed to avoid name collision with C extend
+       modules and standard OS makefiles.
+       MAX()      -> HB_MAX_()
+       MIN()      -> HB_MIN_()
+       (the additional underscore is need to avoid name collisions with 
+        Harbour functions HB_MIN() and HB_MAX())
+       LOBYTE()   -> HB_LOBYTE()
+       HIBYTE()   -> HB_HIBYTE()
+       MKSHORT()  -> HB_MKSHORT()
+       MKUSHORT() -> HB_MKUSHORT()
+       MKLONG()   -> HB_MKLONG()
+   * include/hbdefs.h
+     include/hb_vmpub.h
+     source/compiler/harbour.y (Ryszard!)
+     source/vm/dynsym.c
+     source/vm/hvm.c
+     * SYMBOLSCOPE -> HB_SYMBOLSCOPE
+   * include/extend.h
+     source/vm/hvm.c
+     * STACK -> HB_STACK
+   * source/rtl/tbrowse.prg
+     + Configure parameter added back, NOTE added that it's an undoc.
+       feature in Clipper.
+   * source/rtl/browdb.prg
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     + Public dbSkipper() function made STATIC, renamed to Skipped() to be
+       Clipper compatible. Clipper doesn't have any public dbSkipper(), 
+       _dbSkipper() or Skipped() functions.
+     - Non-Clipper compatible function _dbSkipper() removed.
+     * Formatted.
+   * source/rtl/browse.prg
+     ! Small formatting correction.
+
 19991019-19:00 EDT David G. Holm <dholm@jsd-llc.com>
 
    * config/w32/bcc32.cf

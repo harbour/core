@@ -155,10 +155,10 @@ void hb_tone( double dFrequency, double dDuration )
    dDuration = -1.0; /* Exit without delay */
 #endif
 #if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(__MINGW32__)
-   dFrequency = MIN( MAX( 0.0, dFrequency ), 32767.0 );
+   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
 #elif defined(__DJGPP) || defined(__BORLANDC__)
-   dFrequency = MIN( MAX( 0.0, dFrequency ), 32767.0 );
+   dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
 #endif
 #if defined(__BORLANDC__) && ! defined(_Windows) && ! defined(WINNT)
@@ -169,9 +169,9 @@ void hb_tone( double dFrequency, double dDuration )
    while( dDuration > 0.0 )
    {
 #if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(__CYGWIN__) || defined(WINNT)
-      temp = MIN( MAX( 0, dDuration ), ULONG_MAX );
+      temp = HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
 #elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__)
-      temp = MIN( MAX( 0, dDuration ), USHRT_MAX );
+      temp = HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
 #endif
       dDuration -= temp;
       if( temp <= 0 )

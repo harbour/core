@@ -92,30 +92,16 @@ typedef unsigned long ULONG;
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */
 
-#ifndef MAX
-   #define MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
-#endif
-#ifndef MIN
-   #define MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
-#endif
+#define HB_MAX_( a, b )         ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
+#define HB_MIN_( a, b )         ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 
-#ifndef LOBYTE
-   #define LOBYTE( w )          ( ( BYTE ) ( w ) )
-#endif
-#ifndef HIBYTE
-   #define HIBYTE( w )          ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
-#endif
-#ifndef MKSHORT
-   #define MKSHORT( b1, b2 )    ( ( SHORT ) ( ( ( SHORT ) b2 ) << 8 ) | b1 )
-#endif
-#ifndef MKUSHORT
-   #define MKUSHORT( b1, b2 )   ( ( USHORT ) ( ( ( USHORT ) b2 ) << 8 ) | b1 )
-#endif
-#ifndef MKLONG
-   #define MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \
+#define HB_LOBYTE( w )          ( ( BYTE ) ( w ) )
+#define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
+#define HB_MKSHORT( b1, b2 )    ( ( SHORT ) ( ( ( SHORT ) b2 ) << 8 ) | b1 )
+#define HB_MKUSHORT( b1, b2 )   ( ( USHORT ) ( ( ( USHORT ) b2 ) << 8 ) | b1 )
+#define HB_MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \
                                     ( ( ( long ) b3 ) << 16 ) | \
                                     ( ( ( long ) b2 ) <<  8 ) | b1
-#endif
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 
@@ -145,7 +131,7 @@ typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
 typedef LONG HB_HANDLE;     /* handle to memvar value */
-typedef char SYMBOLSCOPE;   /* stores symbol's scope */
+typedef char HB_SYMBOLSCOPE;   /* stores symbol's scope */
 
 /* Some common character constants */
 

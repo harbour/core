@@ -1486,8 +1486,8 @@ HARBOUR HB_BIN2W( void )
       byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
       byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
 
-      hb_retni( MKUSHORT( byBuffer[ 0 ],
-                          byBuffer[ 1 ] ) );
+      hb_retni( HB_MKUSHORT( byBuffer[ 0 ],
+                             byBuffer[ 1 ] ) );
    }
    else
       hb_retni( 0 );
@@ -1506,8 +1506,8 @@ HARBOUR HB_BIN2I( void )
       byBuffer[ 0 ] = ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0;
       byBuffer[ 1 ] = ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0;
 
-      hb_retni( MKSHORT( byBuffer[ 0 ],
-                         byBuffer[ 1 ] ) );
+      hb_retni( HB_MKSHORT( byBuffer[ 0 ],
+                            byBuffer[ 1 ] ) );
    }
    else
       hb_retni( 0 );
@@ -1528,10 +1528,10 @@ HARBOUR HB_BIN2L( void )
       byBuffer[ 2 ] = ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0;
       byBuffer[ 3 ] = ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0;
 
-      hb_retnl( MKLONG( byBuffer[ 0 ],
-                        byBuffer[ 1 ],
-                        byBuffer[ 2 ],
-                        byBuffer[ 3 ] ) );
+      hb_retnl( HB_MKLONG( byBuffer[ 0 ],
+                           byBuffer[ 1 ],
+                           byBuffer[ 2 ],
+                           byBuffer[ 3 ] ) );
    }
    else
       hb_retnl( 0 );

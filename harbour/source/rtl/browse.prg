@@ -41,7 +41,8 @@ function Browse( nTop, nLeft, nBottom, nRight )
 
    local oBrw
    local cOldScreen
-   local n, nKey, nOldCursor
+   local n, nOldCursor
+   local nKey := 0
    local lExit := .f.
    local lGotKey := .f.
    local bAction
@@ -76,8 +77,10 @@ function Browse( nTop, nLeft, nBottom, nRight )
 
    while ! lExit
 
-      while !oBrw:stabilize() .and. NextKey() == 0
-      enddo
+      if nKey == 0
+         while !oBrw:stabilize() .and. NextKey() == 0
+         enddo
+      endif
 
       if NextKey() == 0
 
@@ -156,7 +159,7 @@ static function Statline( oBrw )
    @ nTop, nRight - 27 SAY "Record "
 
    if LastRec() == 0
-      @ nTop, nRight - 20 say "<none>               "
+      @ nTop, nRight - 20 SAY "<none>               "
    elseif RecNo() == LastRec() + 1
       @ nTop, nRight - 40 SAY "         "
       @ nTop, nRight - 20 SAY "                <new>"
@@ -164,7 +167,7 @@ static function Statline( oBrw )
       @ nTop, nRight - 40 SAY iif( Deleted(), "<Deleted>", "         " )
       @ nTop, nRight - 20 SAY PadR( LTrim( Str( RecNo() ) ) + "/" +;
                                     Ltrim( Str( LastRec() ) ), 16 ) +;
-                                    iif( oBrw:hitTop, "<bof>", "     " )
+                              iif( oBrw:hitTop, "<bof>", "     " )
    endif
 
 return nil

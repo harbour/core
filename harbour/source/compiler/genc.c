@@ -424,8 +424,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wSym = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wSym );
                   fprintf( yyc, "\tHB_P_MESSAGE, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wSym )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -491,8 +491,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_PARAMETER, %i, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ),
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ),
                            pFunc->pCode[ lPCodePos + 3 ] );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
@@ -522,8 +522,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_POPALIASEDFIELD, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -537,8 +537,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_POPFIELD, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -591,8 +591,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_POPMEMVAR, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -624,8 +624,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_POPVARIABLE, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName  );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -650,8 +650,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHALIASEDFIELD, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -721,8 +721,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHFIELD, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -837,8 +837,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHMEMVAR, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -853,8 +853,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHMEMVARREF, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -938,8 +938,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wSym );
                   fprintf( yyc, "\tHB_P_PUSHSYM, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wSym )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -954,8 +954,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
                   fprintf( yyc, "\tHB_P_PUSHVARIABLE, %i, %i,",
-                           LOBYTE( wFixPos ),
-                           HIBYTE( wFixPos ) );
+                           HB_LOBYTE( wFixPos ),
+                           HB_HIBYTE( wFixPos ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );
                   fprintf( yyc, "\n" );
                   lPCodePos += 3;
@@ -1001,7 +1001,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   GetSymbol( _pInitFunc->szName, &w );
                   w = FixSymbolPos( w );
                   fprintf( yyc, "\tHB_P_SFRAME, %i, %i,",
-                           LOBYTE( w ), HIBYTE( w ) );
+                           HB_LOBYTE( w ), HB_HIBYTE( w ) );
                   if( _bGenCVerbose ) fprintf( yyc, "\t/* symbol (_INITSTATICS) */" );
                   fprintf( yyc, "\n" );
                }
@@ -1013,8 +1013,8 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                GetSymbol( _pInitFunc->szName, &w );
                w = FixSymbolPos( w );
                fprintf( yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
-                        LOBYTE( w ),
-                        HIBYTE( w ),
+                        HB_LOBYTE( w ),
+                        HB_HIBYTE( w ),
                         pFunc->pCode[ lPCodePos + 3 ],
                         pFunc->pCode[ lPCodePos + 4 ] );
                if( _bGenCVerbose ) fprintf( yyc, "\t/* symbol (_INITSTATICS), %i statics */", pFunc->pCode[ lPCodePos + 3 ] + pFunc->pCode[ lPCodePos + 4 ] * 256 );

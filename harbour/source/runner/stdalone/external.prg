@@ -424,8 +424,6 @@ EXTERNAL ASORT
 //symbols from file: rtl\browdb.prg
 //
 EXTERNAL TBROWSEDB
-EXTERNAL _DBSKIPPER
-EXTERNAL DBSKIPPER
 //
 //symbols from file: rtl\browse.prg
 //

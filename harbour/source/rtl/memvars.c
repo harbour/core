@@ -1662,8 +1662,8 @@ HARBOUR HB___MVSAVE( void )
                      USHORT uiLength = hb_itemGetCLen( pItem ) + 1;
 
                      buffer[ 11 ] = 'C' + 128;
-                     buffer[ 16 ] = LOBYTE( uiLength );
-                     buffer[ 17 ] = HIBYTE( uiLength );
+                     buffer[ 16 ] = HB_LOBYTE( uiLength );
+                     buffer[ 17 ] = HB_HIBYTE( uiLength );
 
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
                      hb_fsWrite( fhnd, ( BYTE * ) hb_itemGetCPtr( pItem ), uiLength );

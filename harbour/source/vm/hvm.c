@@ -70,7 +70,7 @@ typedef struct _SYMBOLS
    PHB_SYMB pModuleSymbols;  /* pointer to a one module own symbol table */
    USHORT   uiModuleSymbols; /* number of symbols on that table */
    struct _SYMBOLS * pNext;  /* pointer to the next SYMBOLS structure */
-   SYMBOLSCOPE hScope;       /* scope collected from all symbols in module used to speed initialization code */
+   HB_SYMBOLSCOPE hScope;    /* scope collected from all symbols in module used to speed initialization code */
 } SYMBOLS, * PSYMBOLS;       /* structure to keep track of all modules symbol tables */
 
 extern HARBOUR HB_SYSINIT( void );
@@ -199,8 +199,8 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 
 /* virtual machine state */
 
-STACK   hb_stack;
-HB_SYMB hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
+HB_STACK hb_stack;
+HB_SYMB  hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static BOOL     s_bDebugging = FALSE;
@@ -3050,7 +3050,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
 
    for( ui = 0; ui < uiModuleSymbols; ui++ ) /* register each public symbol on the dynamic symbol table */
    {
-      SYMBOLSCOPE hSymScope;
+      HB_SYMBOLSCOPE hSymScope;
 
       hSymScope = ( pModuleSymbols + ui )->cScope;
       pNewSymbols->hScope |= hSymScope;
@@ -3111,7 +3111,7 @@ static void hb_vmDoInitStatics( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
 
             if( scope == ( FS_INIT | FS_EXIT ) )
             {
@@ -3145,7 +3145,7 @@ static void hb_vmDoExitFunctions( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
 
             if( scope == FS_EXIT )
             {
@@ -3177,7 +3177,7 @@ static void hb_vmDoInitFunctions( void )
 
          for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
          {
-            SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
+            HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->cScope & ( FS_EXIT | FS_INIT );
 
             if( scope == FS_INIT )
             {

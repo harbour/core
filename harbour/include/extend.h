@@ -214,7 +214,7 @@ typedef struct
    PHB_ITEM pEvalBase;    /* stack frame position for the evaluated codeblock */
    int      iStatics;     /* statics base for the current function call */
    char     szDate[ 9 ];  /* last returned date from _pards() yyyymmdd format */
-} STACK;
+} HB_STACK;
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
@@ -238,8 +238,8 @@ typedef USHORT ERRCODE;
 #define SUCCESS            0
 #define FAILURE            1
 
-extern STACK   hb_stack;
-extern HB_SYMB hb_symEval;
+extern HB_STACK hb_stack;
+extern HB_SYMB  hb_symEval;
 
 /* Extend API */
 extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */

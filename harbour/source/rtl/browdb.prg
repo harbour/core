@@ -33,46 +33,41 @@
  *
  */
 
-function TBrowseDb( nTop, nLeft, nBott, nRight )
+FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
 
-   local oTb := TBrowseNew( nTop, nLeft, nBott, nRight )
+   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   oTb:SkipBlock     := { | n | DbSkipper( n ) }
-   oTb:GoTopBlock    := { || DbGoTop() }
-   oTb:GoBottomBlock := { || DbGoBottom() }
+   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
+   oBrowse:GoTopBlock    := { || dbGoTop() }
+   oBrowse:GoBottomBlock := { || dbGoBottom() }
 
-Return oTb
+   RETURN oBrowse
 
-function _DbSkipper( nRecs )
+STATIC FUNCTION Skipped( nRecs )
 
-return DbSkipper( nRecs )
+   LOCAL nSkipped := 0
 
-function DbSkipper( nRecs )
-
-   local nSkipped := 0
-
-   if LastRec() != 0
-      if nRecs == 0
-         DbSkip( 0 )
-      elseif nRecs > 0 .and. Recno() != LastRec() + 1
-         while nSkipped < nRecs
-            DbSkip( 1 )
-            if Eof()
-               DbSkip( -1 )
-               exit
-            endif
+   IF LastRec() != 0
+      IF nRecs == 0
+         dbSkip( 0 )
+      ELSEIF nRecs > 0 .AND. Recno() != LastRec() + 1
+         WHILE nSkipped < nRecs
+            dbSkip( 1 )
+            IF Eof()
+               dbSkip( -1 )
+               EXIT
+            ENDIF
             ++nSkipped
-         end
-      elseif nRecs < 0
-         while nSkipped > nRecs
-            DbSkip( -1 )
-            if Bof()
+         ENDDO
+      ELSEIF nRecs < 0
+         WHILE nSkipped > nRecs
+            dbSkip( -1 )
+            IF Bof()
                exit
-            endif
+            ENDIF
             --nSkipped
-         end
-      endif
-   endif
+         ENDDO
+      ENDIF
+   ENDIF
 
-return nSkipped
-
+   RETURN nSkipped

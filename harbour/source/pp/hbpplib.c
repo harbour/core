@@ -62,7 +62,7 @@ HARBOUR HB___PREPROCESS( void )
 
       int slen;
 
-      slen = MIN( hb_parclen( 1 ), STR_SIZE - 1 );
+      slen = HB_MIN_( hb_parclen( 1 ), STR_SIZE - 1 );
       memcpy( pText, hb_parc( 1 ), slen );
       pText[ slen ] = 0; /* Preprocessor expects null-terminated string */
       memset( pOut, 0, STR_SIZE );

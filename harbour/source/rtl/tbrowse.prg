@@ -84,14 +84,15 @@ CLASS TBrowse
    METHOD Up()                     // Moves the cursor up one row
 
    METHOD AddColumn( oCol ) INLINE ;
-      AAdd( ::aColumns, oCol ), ::Configure(), Self // Adds a TBColumn object to the TBrowse object
+      AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
 
    METHOD ColCount() INLINE Len( ::aColumns )
    METHOD ColorRect()              // Alters the color of a rectangular group of cells
                                    // Returns the display width of a particular column
    METHOD ColWidth( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ]:Width, nil )
-   METHOD Configure()      VIRTUAL // Reconfigures the internal settings of the TBrowse object
+   METHOD Configure( nMode ) VIRTUAL // Reconfigures the internal settings of the TBrowse object
+                                   // nMode is an undocumented parameter in CA-Cl*pper
    METHOD LeftDetermine()          // Determine leftmost unfrozen column in display
    METHOD DeHilite()               // Dehighlights the current cell
 
@@ -106,7 +107,7 @@ CLASS TBrowse
 
    METHOD InsColumn( nPos, oCol ) INLINE ASize( ::aColumns, Len( ::aColumns + 1 ) ),;
                                   AIns( ::aColumns, nPos ),;
-                                  ::aColumns[ nPos ] := oCol, ::Configure(), oCol
+                                  ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
                                   // Insert a column object in a browse
 
    METHOD Invalidate()     // Forces entire redraw during next stabilization
@@ -153,7 +154,7 @@ METHOD DelColumn( nPos ) CLASS TBrowse
 
    ADel( ::aColumns, nPos )
    ASize( ::aColumns, Len( ::aColumns ) - 1 )
-   ::Configure()
+   ::Configure( 2 )
 
 return oCol
 

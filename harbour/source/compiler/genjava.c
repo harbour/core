@@ -293,16 +293,16 @@ void GenJava( PHB_FNAME pFileName )
             case HB_P_PUSHALIASEDFIELD:
                hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
                wVar = FixSymbolPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
-               hb_fputc( LOBYTE( wVar ), yyc );
-               hb_fputc( HIBYTE( wVar ), yyc );
+               hb_fputc( HB_LOBYTE( wVar ), yyc );
+               hb_fputc( HB_HIBYTE( wVar ), yyc );
                lPCodePos += 3;
                break;
 
             case HB_P_PARAMETER:
                hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
                wVar = FixSymbolPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
-               hb_fputc( LOBYTE( wVar ), yyc );
-               hb_fputc( HIBYTE( wVar ), yyc );
+               hb_fputc( HB_LOBYTE( wVar ), yyc );
+               hb_fputc( HB_HIBYTE( wVar ), yyc );
                hb_fputc( pFunc->pCode[ lPCodePos + 3 ], yyc );
                lPCodePos +=4;
                break;
@@ -361,8 +361,8 @@ void GenJava( PHB_FNAME pFileName )
                   GetSymbol( _pInitFunc->szName, &w );
                   w = FixSymbolPos( w );
                   hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
-                  hb_fputc( LOBYTE( w ), yyc );
-                  hb_fputc( HIBYTE( w ), yyc );
+                  hb_fputc( HB_LOBYTE( w ), yyc );
+                  hb_fputc( HB_HIBYTE( w ), yyc );
                }
                else
                   lPad += 3;
@@ -373,8 +373,8 @@ void GenJava( PHB_FNAME pFileName )
                GetSymbol( _pInitFunc->szName, &w );
                w = FixSymbolPos( w );
                hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
-               hb_fputc( LOBYTE( w ), yyc );
-               hb_fputc( HIBYTE( w ), yyc );
+               hb_fputc( HB_LOBYTE( w ), yyc );
+               hb_fputc( HB_HIBYTE( w ), yyc );
                hb_fputc( pFunc->pCode[ lPCodePos + 3 ], yyc );
                hb_fputc( pFunc->pCode[ lPCodePos + 4 ], yyc );
                lPCodePos += 5;

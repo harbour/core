@@ -274,16 +274,16 @@ void GenPortObj( PHB_FNAME pFileName )
             case HB_P_PUSHALIASEDFIELD:
                fputc( pFunc->pCode[ lPCodePos ], yyc );
                wVar = FixSymbolPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
-               fputc( LOBYTE( wVar ), yyc );
-               fputc( HIBYTE( wVar ), yyc );
+               fputc( HB_LOBYTE( wVar ), yyc );
+               fputc( HB_HIBYTE( wVar ), yyc );
                lPCodePos += 3;
                break;
 
             case HB_P_PARAMETER:
                fputc( pFunc->pCode[ lPCodePos ], yyc );
                wVar = FixSymbolPos( pFunc->pCode[ lPCodePos + 1 ] + 256 * pFunc->pCode[ lPCodePos + 2 ] );
-               fputc( LOBYTE( wVar ), yyc );
-               fputc( HIBYTE( wVar ), yyc );
+               fputc( HB_LOBYTE( wVar ), yyc );
+               fputc( HB_HIBYTE( wVar ), yyc );
                fputc( pFunc->pCode[ lPCodePos + 3 ], yyc );
                lPCodePos +=4;
                break;
@@ -342,8 +342,8 @@ void GenPortObj( PHB_FNAME pFileName )
                   GetSymbol( _pInitFunc->szName, &w );
                   w = FixSymbolPos( w );
                   fputc( pFunc->pCode[ lPCodePos ], yyc );
-                  fputc( LOBYTE( w ), yyc );
-                  fputc( HIBYTE( w ), yyc );
+                  fputc( HB_LOBYTE( w ), yyc );
+                  fputc( HB_HIBYTE( w ), yyc );
                }
                else
                   lPad += 3;
@@ -354,8 +354,8 @@ void GenPortObj( PHB_FNAME pFileName )
                GetSymbol( _pInitFunc->szName, &w );
                w = FixSymbolPos( w );
                fputc( pFunc->pCode[ lPCodePos ], yyc );
-               fputc( LOBYTE( w ), yyc );
-               fputc( HIBYTE( w ), yyc );
+               fputc( HB_LOBYTE( w ), yyc );
+               fputc( HB_HIBYTE( w ), yyc );
                fputc( pFunc->pCode[ lPCodePos + 3 ], yyc );
                fputc( pFunc->pCode[ lPCodePos + 4 ], yyc );
                lPCodePos += 5;

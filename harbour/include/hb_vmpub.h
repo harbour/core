@@ -45,7 +45,7 @@ struct _HB_DYNS;
 typedef struct
 {
    char *      szName;  /* the name of the symbol */
-   SYMBOLSCOPE cScope;  /* the scope of the symbol */
+   HB_SYMBOLSCOPE cScope;  /* the scope of the symbol */
    PHB_FUNC    pFunPtr; /* function address for function symbol table entries */
    struct _HB_DYNS    *pDynSym; /* pointer to its dynamic symbol if defined */
 } HB_SYMB, * PHB_SYMB;
@@ -62,14 +62,14 @@ typedef struct _HB_DYNS
 #define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol, void * Cargo )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
-/* Harbour Functions scope ( SYMBOLSCOPE ) */
-#define FS_PUBLIC       ( ( SYMBOLSCOPE ) 0x00 )
-#define FS_STATIC       ( ( SYMBOLSCOPE ) 0x02 )
-#define FS_INIT         ( ( SYMBOLSCOPE ) 0x08 )
-#define FS_EXIT         ( ( SYMBOLSCOPE ) 0x10 )
+/* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
+#define FS_PUBLIC       ( ( HB_SYMBOLSCOPE ) 0x00 )
+#define FS_STATIC       ( ( HB_SYMBOLSCOPE ) 0x02 )
+#define FS_INIT         ( ( HB_SYMBOLSCOPE ) 0x08 )
+#define FS_EXIT         ( ( HB_SYMBOLSCOPE ) 0x10 )
 #define FS_INITEXIT     ( FS_INIT | FS_EXIT )
-#define FS_MESSAGE      ( ( SYMBOLSCOPE ) 0x20 )
-#define FS_MEMVAR       ( ( SYMBOLSCOPE ) 0x80 )
+#define FS_MESSAGE      ( ( HB_SYMBOLSCOPE ) 0x20 )
+#define FS_MEMVAR       ( ( HB_SYMBOLSCOPE ) 0x80 )
 
 extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 

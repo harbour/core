@@ -212,7 +212,7 @@ void FixElseIfs( void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 void FixReturns( void ); /* fixes all last defined function returns jumps offsets */
 void Function( BYTE bParams ); /* generates the pcode to execute a Clipper function pushing its result */
 PFUNCTION FunctionNew( char *, char );  /* creates and initialises the _FUNC structure */
-void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
+void FunDef( char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 void GenArray( int iElements ); /* instructs the virtual machine to build an array and load elemnst from the stack */
 void GenBreak( void );  /* generate code for BREAK statement */
 void * GenElseIf( void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
@@ -612,8 +612,8 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
            | LINE NUM_INTEGER LITERAL '@' LITERAL Crlf   /* XBase++ style */
            ;
 
-Function   : FunScope FUNCTION  IDENTIFIER { _cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
-           | FunScope PROCEDURE IDENTIFIER { _cVarType = ' '; FunDef( $3, ( SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
+Function   : FunScope FUNCTION  IDENTIFIER { _cVarType = ' '; FunDef( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
+           | FunScope PROCEDURE IDENTIFIER { _cVarType = ' '; FunDef( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
            | FunScope DECLARE_FUN IDENTIFIER Params AsType Crlf { AddSymbol( $3, NULL ); }
            ;
 
@@ -1866,8 +1866,8 @@ int harbour_main( int argc, char * argv[] )
                PCOMSYMBOL pSym;
 
                /* Fix the number of static variables */
-               _pInitFunc->pCode[ 3 ] = LOBYTE( _iStatics );
-               _pInitFunc->pCode[ 4 ] = HIBYTE( _iStatics );
+               _pInitFunc->pCode[ 3 ] = HB_LOBYTE( _iStatics );
+               _pInitFunc->pCode[ 4 ] = HB_HIBYTE( _iStatics );
                _pInitFunc->iStaticsBase = _iStatics;
 
                pSym = AddSymbol( _pInitFunc->szName, NULL );
@@ -2208,8 +2208,8 @@ void AddVar( char * szVarName )
                if( ! pSym )
                   pSym = AddSymbol( yy_strdup( szVarName ), &wPos );
                pSym->cScope |= VS_MEMVAR;
-               GenPCode3( HB_P_PARAMETER, LOBYTE( wPos ), HIBYTE( wPos ) );
-               GenPCode1( LOBYTE( functions.pLast->wParamNum ) );
+               GenPCode3( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ) );
+               GenPCode1( HB_LOBYTE( functions.pLast->wParamNum ) );
 
                /* Add this variable to the local variables list - this will
                 * allow to use the correct positions for real local variables.
@@ -2289,7 +2289,7 @@ void AddVar( char * szVarName )
                }
                if( _bDebugInfo )
                {
-                  GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
+                  GenPCode3( HB_P_LOCALNAME, HB_LOBYTE( wLocal ), HB_HIBYTE( wLocal ) );
                   GenPCodeN( ( BYTE * )szVarName, strlen( szVarName ) );
                   GenPCode1( 0 );
                }
@@ -2656,13 +2656,13 @@ void FieldPCode( BYTE bPCode, char * szVarName )
    if( ! pVar )
       pVar = AddSymbol( szVarName, &wVar );
    pVar->cScope |= VS_MEMVAR;
-   GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
+   GenPCode3( bPCode, HB_LOBYTE( wVar ), HB_HIBYTE( wVar ) );
 }
 
 /*
  * This function creates and initialises the _FUNC structure
  */
-PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
+PFUNCTION FunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
 {
    PFUNCTION pFunc;
 
@@ -2693,7 +2693,7 @@ PFUNCTION FunctionNew( char * szName, SYMBOLSCOPE cScope )
  * cScope    - scope of a function
  * iType     - FUN_PROCEDURE if a procedure or 0
  */
-void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
+void FunDef( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
 {
    PCOMSYMBOL   pSym;
    PFUNCTION pFunc;
@@ -3306,7 +3306,7 @@ ULONG Jump( LONG lOffset )
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
 
-   GenPCode3( HB_P_JUMP, LOBYTE( lOffset ), HIBYTE( lOffset ) );
+   GenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
    return functions.pLast->lPCodePos - 2;
 }
@@ -3318,7 +3318,7 @@ ULONG JumpFalse( LONG lOffset )
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
 
-   GenPCode3( HB_P_JUMPFALSE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
+   GenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
    ValTypeCheck( 'L', WARN_LOGICAL_TYPE, WARN_LOGICAL_SUSPECT );
    ValTypePop( 1 );
@@ -3336,8 +3336,8 @@ void JumpThere( ULONG ulFrom, ULONG ulTo )
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
 
-   pCode[ ( ULONG ) ulFrom ]     = LOBYTE( lOffset );
-   pCode[ ( ULONG ) ulFrom + 1 ] = HIBYTE( lOffset );
+   pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
+   pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
 }
 
 void JumpHere( ULONG ulOffset )
@@ -3351,7 +3351,7 @@ ULONG JumpTrue( LONG lOffset )
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
       GenError( _szCErrors, 'E', ERR_JUMP_TOO_LONG, NULL, NULL );
-   GenPCode3( HB_P_JUMPTRUE, LOBYTE( lOffset ), HIBYTE( lOffset ) );
+   GenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
    ValTypeCheck( 'L', WARN_LOGICAL_TYPE, WARN_LOGICAL_SUSPECT );
    ValTypePop( 1 );
@@ -3366,12 +3366,12 @@ void Line( void ) /* generates the pcode with the currently compiled source code
       if( ( ( functions.pLast->lPCodePos - _ulLastLinePos ) > 3 ) || _bDebugInfo )
       {
          _ulLastLinePos = functions.pLast->lPCodePos;
-         GenPCode3( HB_P_LINE, LOBYTE( iLine ), HIBYTE( iLine ) );
+         GenPCode3( HB_P_LINE, HB_LOBYTE( iLine ), HB_HIBYTE( iLine ) );
       }
       else
       {
-         functions.pLast->pCode[ _ulLastLinePos +1 ] = LOBYTE( iLine );
-         functions.pLast->pCode[ _ulLastLinePos +2 ] = HIBYTE( iLine );
+         functions.pLast->pCode[ _ulLastLinePos +1 ] = HB_LOBYTE( iLine );
+         functions.pLast->pCode[ _ulLastLinePos +2 ] = HB_HIBYTE( iLine );
       }
    }
    _bDontGenLineNum = FALSE;
@@ -3520,7 +3520,7 @@ void VariablePCode( BYTE bPCode, char * szVarName )
    if( ! pSym )
       pSym = AddSymbol( szVarName, &wVar );
    pSym->cScope |= VS_MEMVAR;
-   GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
+   GenPCode3( bPCode, HB_LOBYTE( wVar ), HB_HIBYTE( wVar ) );
 }
 
 /**
@@ -3537,7 +3537,7 @@ void MemvarPCode( BYTE bPCode, char * szVarName )
    if( ! pSym )
       pSym = AddSymbol( szVarName, &wVar );
    pSym->cScope |= VS_MEMVAR;
-   GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
+   GenPCode3( bPCode, HB_LOBYTE( wVar ), HB_HIBYTE( wVar ) );
 }
 
 void Message( char * szMsgName )       /* sends a message to an object */
@@ -3548,7 +3548,7 @@ void Message( char * szMsgName )       /* sends a message to an object */
    if( ! pSym )  /* the symbol was not found on the symbol table */
       pSym = AddSymbol( szMsgName, &wSym );
    pSym->cScope |= FS_MESSAGE;
-   GenPCode3( HB_P_MESSAGE, LOBYTE( wSym ), HIBYTE( wSym ) );
+   GenPCode3( HB_P_MESSAGE, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ) );
 
    ValTypePush( pSym->cType );
 }
@@ -3568,8 +3568,8 @@ void MessageDupl( char * szMsgName )  /* fix a generated message and duplicate t
    bLoGetSym = pFunc->pCode[ _ulMessageFix + 1];
    bHiGetSym = pFunc->pCode[ _ulMessageFix + 2];
 
-   pFunc->pCode[ _ulMessageFix + 1 ] = LOBYTE( wSetSym );
-   pFunc->pCode[ _ulMessageFix + 2 ] = HIBYTE( wSetSym );
+   pFunc->pCode[ _ulMessageFix + 1 ] = HB_LOBYTE( wSetSym );
+   pFunc->pCode[ _ulMessageFix + 2 ] = HB_HIBYTE( wSetSym );
 
    pFunc->lPCodePos -= 3;               /* Remove unnecessary function call  */
    Duplicate();                         /* Duplicate object                  */
@@ -3588,8 +3588,8 @@ void MessageFix( char * szMsgName )  /* fix a generated message to an object */
       pSym = AddSymbol( szMsgName, &wSym );
    pSym->cScope |= FS_MESSAGE;
 
-   pFunc->pCode[ _ulMessageFix + 1 ] = LOBYTE( wSym );
-   pFunc->pCode[ _ulMessageFix + 2 ] = HIBYTE( wSym );
+   pFunc->pCode[ _ulMessageFix + 1 ] = HB_LOBYTE( wSym );
+   pFunc->pCode[ _ulMessageFix + 2 ] = HB_HIBYTE( wSym );
    pFunc->lPCodePos -= 3;        /* Remove unnecessary function call */
 }
 
@@ -3601,13 +3601,13 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
    {
       iVar = GetLocalVarPos( szVarName );
       if( iVar )
-         GenPCode3( HB_P_POPLOCAL, LOBYTE( iVar ), HIBYTE( iVar ) );
+         GenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
       else
       {
          iVar = GetStaticVarPos( szVarName );
          if( iVar )
          {
-            GenPCode3( HB_P_POPSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
+            GenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
             functions.pLast->bFlags |= FUN_USES_STATICS;
          }
          else
@@ -3679,13 +3679,13 @@ void PushId( char * szVarName ) /* generates the pcode to push a variable value 
 
       iVar = GetLocalVarPos( szVarName );
       if( iVar )
-         GenPCode3( HB_P_PUSHLOCAL, LOBYTE( iVar ), HIBYTE( iVar ) );
+         GenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
       else
       {
          iVar = GetStaticVarPos( szVarName );
          if( iVar )
          {
-            GenPCode3( HB_P_PUSHSTATIC, LOBYTE( iVar ), HIBYTE( iVar ) );
+            GenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
             functions.pLast->bFlags |= FUN_USES_STATICS;
          }
          else
@@ -3753,13 +3753,13 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
 
    iVar = GetLocalVarPos( szVarName );
    if( iVar )
-      GenPCode3( HB_P_PUSHLOCALREF, LOBYTE( iVar ), HIBYTE( iVar ) );
+      GenPCode3( HB_P_PUSHLOCALREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
    else
    {
       iVar = GetStaticVarPos( szVarName );
       if( iVar )
       {
-         GenPCode3( HB_P_PUSHSTATICREF, LOBYTE( iVar ), HIBYTE( iVar ) );
+         GenPCode3( HB_P_PUSHSTATICREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
          functions.pLast->bFlags |= FUN_USES_STATICS;
       }
       else
@@ -3821,7 +3821,7 @@ void PushFunCall( char * szFunName )
 void PushInteger( int iNumber )
 {
    if( iNumber )
-      GenPCode3( HB_P_PUSHINT, LOBYTE( ( USHORT ) iNumber ), HIBYTE( ( USHORT ) iNumber ) );
+      GenPCode3( HB_P_PUSHINT, HB_LOBYTE( ( USHORT ) iNumber ), HB_HIBYTE( ( USHORT ) iNumber ) );
    else
       GenPCode1( HB_P_ZERO );
 }
@@ -3848,7 +3848,7 @@ void PushString( char * szText )
 {
    int iStrLen = strlen( szText );
 
-   GenPCode3( HB_P_PUSHSTR, LOBYTE( iStrLen ), HIBYTE( iStrLen ) );
+   GenPCode3( HB_P_PUSHSTR, HB_LOBYTE( iStrLen ), HB_HIBYTE( iStrLen ) );
    GenPCodeN( ( BYTE * ) szText, iStrLen );
 
    ValTypePush( 'C' );
@@ -3884,7 +3884,7 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
       if( iIsFunction && ! GetFuncall( szSymbolName ) )
          AddFunCall( szSymbolName );
    }
-   GenPCode3( HB_P_PUSHSYM, LOBYTE( wSym ), HIBYTE( wSym ) );
+   GenPCode3( HB_P_PUSHSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ) );
 
    ValTypePush( iIsFunction ? pSym->cType : _cVarType );
 }
@@ -3914,7 +3914,7 @@ void Dec( void )
 
 void ArrayDim( int iDimensions )
 {
-   GenPCode3( HB_P_ARRAYDIM, LOBYTE( iDimensions ), HIBYTE( iDimensions ) );
+   GenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( iDimensions ), HB_HIBYTE( iDimensions ) );
 }
 
 void Do( BYTE bParams )
@@ -3993,7 +3993,7 @@ void Function( BYTE bParams )
 
 void GenArray( int iElements )
 {
-   GenPCode3( HB_P_ARRAYGEN, LOBYTE( iElements ), HIBYTE( iElements ) );
+   GenPCode3( HB_P_ARRAYGEN, HB_LOBYTE( iElements ), HB_HIBYTE( iElements ) );
 
    ValTypePop( iElements );	/* pop all items of the array */
    ValTypePush( 'A' );
@@ -4220,19 +4220,19 @@ void CodeBlockEnd()
    /*NOTE:  8 = HB_P_PUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( wLocals ) + _ENDBLOCK */
    wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
 
-   GenPCode3( HB_P_PUSHBLOCK, LOBYTE( wSize ), HIBYTE( wSize ) );
-   GenPCode1( LOBYTE( pCodeblock->wParamCount ) );
-   GenPCode1( HIBYTE( pCodeblock->wParamCount ) );
-   GenPCode1( LOBYTE( wLocals ) );
-   GenPCode1( HIBYTE( wLocals ) );
+   GenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ) );
+   GenPCode1( HB_LOBYTE( pCodeblock->wParamCount ) );
+   GenPCode1( HB_HIBYTE( pCodeblock->wParamCount ) );
+   GenPCode1( HB_LOBYTE( wLocals ) );
+   GenPCode1( HB_HIBYTE( wLocals ) );
 
    /* generate the table of referenced local variables */
    pVar = pCodeblock->pStatics;
    while( wLocals-- )
    {
       wPos = GetVarPos( pFunc->pLocals, pVar->szName );
-      GenPCode1( LOBYTE( wPos ) );
-      GenPCode1( HIBYTE( wPos ) );
+      GenPCode1( HB_LOBYTE( wPos ) );
+      GenPCode1( HB_HIBYTE( wPos ) );
 
       pFree = pVar;
       hb_xfree( ( void * ) pFree->szName );
@@ -4900,7 +4900,7 @@ static ULONG PackDateTime( void )
    nValue = ( BYTE ) oTime->tm_sec; /* 6 bits */
    szString[ 3 ] |= nValue;
 
-   return MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
+   return HB_MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
 }
 
 static BOOL SwitchCmp( char * szString, char * szSwitch )
