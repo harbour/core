@@ -1,3 +1,7 @@
+19990523-11:36 CET Manuel Ruiz
+  * source/rtl/files.c
+    Add HAVE_POSIX_IO for Borland and GCC compilers
+
 19990523-08:00 CET Les Griffith (upload by Eddie Runia)
   * source/rtl/files.c
     Yes, revision 1.2 !
