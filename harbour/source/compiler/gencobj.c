@@ -43,10 +43,10 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
    char szLine[ HB_CFG_LINE_LEN ];
-   char szCommandLine[ _POSIX_PATH_MAX ];
-   char * pszCompiler[ HB_CFG_LINE_LEN ];
-   char * pszOptions[ HB_CFG_LINE_LEN ];
-   char * pszOutPath = "";
+   char szCompiler[ HB_CFG_LINE_LEN ];
+   char szOptions[ HB_CFG_LINE_LEN ];
+   char szCommandLine[ HB_CFG_LINE_LEN * 2 ];
+   char szOutPath[ _POSIX_PATH_MAX ] = "\0";
    FILE * yyc;
    char * pszCfg;
    char * pszEnv;
@@ -116,7 +116,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
             {
                szToken = strtok( NULL, "=" );
                if( szToken ) /* If empty, preserve last value */
-                  sprintf( pszCompiler, "%s", szToken );
+                  sprintf( szCompiler, "%s", szToken );
             }
 
             /* Checks optional switches */
@@ -124,7 +124,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
             {
                szToken = strtok( NULL, "=" );
                if( szToken )
-                  sprintf( pszOptions, "%s", szToken );
+                  sprintf( szOptions, "%s", szToken );
             }
 
             /* Wanna see C compiler output ? */
@@ -171,28 +171,29 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 #endif
       hb_fsFNameMerge( pszTemp, pOut );
 
-      pszOutPath = "-o";
-      strcat( pszOutPath, pszTemp );
+      strcat( szOutPath, "-o" );
+      strcat( szOutPath, pszTemp );
 
       hb_xfree( pOut );
    }
 
-   if( pszCompiler )
+   if( szCompiler )
    {
       if( bVerbose )
       {
          printf( "\n" ) ;
-         sprintf( szCommandLine, "%s %s %s %s", pszCompiler, pszOptions, pszOutPath, szFileName );
+         sprintf( szCommandLine, "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
          printf( "\n" ) ;
       }
       else
       {
 #if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
-         sprintf( szCommandLine, "%s %s %s %s > nul", pszCompiler, pszOptions, pszOutPath, szFileName );
+         sprintf( szCommandLine, "%s %s %s %s > nul", szCompiler, szOptions, szOutPath, szFileName );
 #elif defined( OS_UNIX_COMPATIBLE )
-         sprintf( szCommandLine, "%s %s %s %s > /dev/null", pszCompiler, pszOptions, pszOutPath, szFileName );
+         sprintf( szCommandLine, "%s %s %s %s > /dev/null", szCompiler, szOptions, szOutPath, szFileName );
 #endif
       }
+      //printf( "\n\nLine:[%s]\n", szCommandLine );
 
       /* Compile it! */
       iSuccess = ( system( szCommandLine ) != -1 );
