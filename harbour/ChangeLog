@@ -1,3 +1,13 @@
+2001-02-06 12:11 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/dbgmenu.prg
+     + New CHECKED clause added on menuitems.
+
+   * harbour/source/debug/dbgtmenu.prg
+     + two spaces added on popup menuitems to support check mark.
+
+   * harbour/source/debug/dbgtmitm.prg
+     + New DATA lChecked and METHOD Toggle() added.
+
 2001-02-06 12:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
      * fixed problem with correct movement via CA Clipper created ntx file
