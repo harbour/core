@@ -140,9 +140,9 @@ void HB_EXPORT hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay 
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateStrPut(%p, %ld, %ld, %ld)", szDate, lYear, lMonth, lDay));
 
-   if( lYear && lMonth && lDay )
+   if( lYear >= 0 && lMonth && lDay )
    {
-      szDate[ 0 ] = ( lYear / 1000 ) + '0';
+      szDate[ 0 ] = ( ( lYear % 10000 ) / 1000 ) + '0';
       szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
       szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
       szDate[ 3 ] = ( lYear % 10 ) + '0';
@@ -153,6 +153,8 @@ void HB_EXPORT hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay 
       szDate[ 6 ] = ( lDay / 10 ) + '0';
       szDate[ 7 ] = ( lDay % 10 ) + '0';
    }
+   else if ( lYear || lMonth || lDay )
+      memset( szDate, '0', 8 );
    else
       memset( szDate, ' ', 8 );
 }

@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-08-06 18:21 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
+  * harbour/source/rtl/dates.c
+    ! fixed problem with dates. Now is Clipper compatible 
+      For empty date it returns empty string, for valid
+      when number of years greater equal to 0 it returns formated date
+      and in other case it fills buffers with 0 characters.
+      Borrowed from xHarbour, in changes made by Przemyslaw Czerpak
+      It also fix ( CTOD( "" ) + 30 ) error reported by Randy Portnoff
+
 2004-08-04 10:28 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/odbc/odbc.c
      + New functions has been added: sqlSetStmtOption() and sqlColumns()
