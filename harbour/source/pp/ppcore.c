@@ -1710,170 +1710,231 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
   /* Copying a match pattern to 'exppatt' */
   lenpatt = stroncpy( exppatt, *ptrmp, 4 );
   *ptrmp += 4;
+
   HB_SKIPTABSPACES( *ptrmp );
+
   if( **ptri == ',' )
-    {
-      if( s_numBrackets )
-        {
-          return 0;
-        }
-    }
+  {
+     if( s_numBrackets )
+     {
+        return 0;
+     }
+  }
+
   ptrtemp = *ptrmp;
+
   if( *(exppatt+2) != '2' && *ptrtemp == ']' )
-    {
-      ptrtemp++;
-      HB_SKIPTABSPACES( ptrtemp );
-      while( *ptrtemp == '[' )
-      {
-         nBra = 0;
-         ptrtemp++;
-         while( ( *ptrtemp != ']' || nBra ) && *ptrtemp != '\0')
-         {
-            if( *ptrtemp == '[' ) nBra++;
-            else if( *ptrtemp == ']' ) nBra --;
-            ptrtemp++;
-         }
-         ptrtemp++;
-         HB_SKIPTABSPACES( ptrtemp );
-      }
-    }
-  if( *(exppatt+2) != '2' && *ptrtemp != '\1' && *ptrtemp != ',' &&
-       *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
-    {
-      lenreal = strincpy( expreal, ptrtemp );
-      if( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE )) > 0 )
-        {
-          if( ptrtemp > *ptrmp )
-            {
-              if( ipos == 1 )
-                {
-                  if( s_numBrackets )
-                    {
-                      return 0;
-                    }
-                }
-              else
-                {
-                  maxlenreal = ipos - 1;
-                  lenreal = 0;
-                }
-            }
-          else
-            {
-              lenreal = stroncpy( expreal, *ptri, ipos-1 );
+  {
+     ptrtemp++;
+     HB_SKIPTABSPACES( ptrtemp );
 
-              #if 0
-                 printf( "\nExpr: '%s' ptrtemp: '%s' exppat: '%s'\n", expreal, ptrtemp, exppatt );
-              #endif
+     while( *ptrtemp == '[' )
+     {
+        nBra = 0;
+        ptrtemp++;
 
-              if( ipos > 1 && isExpres( expreal ) )
-                {
-                  /*
-                  printf( "Accepted: >%s<\n", expreal );
-                  */
-                  *ptri += lenreal;
-                }
-              else
-                {
-                  if( s_numBrackets )
-                    {
-                      return 0;
-                    }
-                    else lenreal = 0;
-                }
-            }
-        }
-      else
+        while( ( *ptrtemp != ']' || nBra ) && *ptrtemp != '\0')
         {
-          if( s_numBrackets )
-            {
-              return 0;
-            }
-          else lenreal = 0;
+           if( *ptrtemp == '[' )
+           {
+              nBra++;
+           }
+           else if( *ptrtemp == ']' )
+           {
+              nBra --;
+           }
+           ptrtemp++;
         }
-    }
+        ptrtemp++;
+
+        HB_SKIPTABSPACES( ptrtemp );
+     }
+  }
+
+  if( *(exppatt+2) != '2' && *ptrtemp != '\1' && *ptrtemp != ',' && *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
+  {
+     lenreal = strincpy( expreal, ptrtemp );
+
+     if( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE )) > 0 )
+     {
+        if( ptrtemp > *ptrmp )
+        {
+           if( ipos == 1 )
+           {
+              if( s_numBrackets )
+              {
+                  return 0;
+              }
+           }
+           else
+           {
+              maxlenreal = ipos - 1;
+              lenreal = 0;
+           }
+        }
+        else
+        {
+           /*
+           printf( "\nFound: '%s' Len: %i In: '%s' At: %i \n", expreal, lenreal, *ptri, ipos );
+           */
+
+           lenreal = stroncpy( expreal, *ptri, ipos-1 );
+
+           #if 0
+              printf( "\nExpr: '%s' ptrtemp: '%s' exppat: '%s'\n", expreal, ptrtemp, exppatt );
+           #endif
+
+           if( ipos > 1 && isExpres( expreal ) )
+           {
+              /*
+              printf( "Accepted: >%s<\n", expreal );
+              */
+              *ptri += lenreal;
+           }
+           else
+           {
+              if( s_numBrackets )
+              {
+                 return 0;
+              }
+              else
+              {
+                 lenreal = 0;
+              }
+           }
+        }
+     }
+     else
+     {
+        if( s_numBrackets )
+        {
+           return 0;
+        }
+        else
+        {
+           lenreal = 0;
+        }
+     }
+  }
 
   if( *(exppatt+2) == '4' )       /*  ----  extended match marker  */
-    {
-      if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
-      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
-    }
+  {
+     if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
+     {
+        SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+     }
+  }
   else if( *(exppatt+2) == '3' )  /*  ----  wild match marker  */
-    {
-      lenreal = hb_pp_strocpy( expreal, *ptri );
-      *ptri += lenreal;
-      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
-    }
+  {
+     lenreal = hb_pp_strocpy( expreal, *ptri );
+     *ptri += lenreal;
+     SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+  }
   else if( *(exppatt+2) == '2' )  /*  ---- restricted match marker  */
-    {
-      while( **ptrmp != '>' ) *(exppatt+lenpatt++) = *((*ptrmp)++);
-      *(exppatt+lenpatt) = '\0';
-      (*ptrmp)++;
+  {
+     while( **ptrmp != '>' )
+     {
+         *(exppatt+lenpatt++) = *((*ptrmp)++);
+     }
+     *(exppatt+lenpatt) = '\0';
+     (*ptrmp)++;
 
-      ptr = exppatt + 4;
-      rezrestr = 0;
-      while( *ptr != '\0' )
+     ptr = exppatt + 4;
+     rezrestr = 0;
+     while( *ptr != '\0' )
+     {
+        if( *ptr == '&' )
         {
-          if( *ptr == '&' )
-            {
-              if( **ptri == '&' )
-                {
-                  rezrestr = 1;
-                  /*  (*ptri)++; */
-                  lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
-                  SearnRep( exppatt,expreal,lenreal,ptro,lenres);
-                  break;
-                }
-              else ptr++;
-            }
-          else
-            {
-              HB_SKIPTABSPACES( ptr );
-              /* Comparing real parameter and restriction value */
-              ptrtemp = ptr;
-              if( !strincmp( *ptri, &ptr, !com_or_xcom ) )
-                {
-                  lenreal = stroncpy( expreal, *ptri, (ptr-ptrtemp) );
-                  *ptri += lenreal;
-                  SearnRep( exppatt,expreal,lenreal,ptro,lenres);
-                  rezrestr = 1;
-                  break;
-                }
-              else
-                {
-                  while( *ptr != ',' && *ptr != '\0' ) ptr++;
-                  if( *ptr == ',' ) ptr++;
-                }
-            }
+           if( **ptri == '&' )
+           {
+              rezrestr = 1;
+              /*  (*ptri)++; */
+              lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
+              SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+              break;
+           }
+           else
+           {
+              ptr++;
+           }
         }
-      if( rezrestr == 0 )
-        {  /* If restricted match marker doesn't correspond to real parameter */
-          if( s_numBrackets )
-            {
-              return 0;
-            }
-          else return 0;
+        else
+        {
+           HB_SKIPTABSPACES( ptr );
+           /* Comparing real parameter and restriction value */
+           ptrtemp = ptr;
+           if( !strincmp( *ptri, &ptr, !com_or_xcom ) )
+           {
+              lenreal = stroncpy( expreal, *ptri, (ptr-ptrtemp) );
+              *ptri += lenreal;
+              SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+              rezrestr = 1;
+              break;
+           }
+           else
+           {
+              while( *ptr != ',' && *ptr != '\0' )
+              {
+                 ptr++;
+              }
+              if( *ptr == ',' )
+              {
+                 ptr++;
+              }
+           }
         }
-    }
+     }
+     if( rezrestr == 0 )
+     {
+        /* If restricted match marker doesn't correspond to real parameter */
+        if( s_numBrackets )
+        {
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+     }
+  }
   else if( *(exppatt+2) == '1' )  /*  ---- list match marker  */
-    {
-      if( !lenreal ) lenreal = getExpReal( expreal, ptri, TRUE, maxlenreal, FALSE );
-      if( lenreal )
-         SearnRep( exppatt,expreal,lenreal,ptro,lenres);
-      else return 0;
-    }
-  else                             /*  ---- regular match marker  */
-    {
-      /* Copying a real expression to 'expreal' */
-      if( !lenreal ) lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
+  {
+     if( !lenreal )
+     {
+        lenreal = getExpReal( expreal, ptri, TRUE, maxlenreal, FALSE );
+     }
 
-      /*
-      printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, expreal );
-      */
-      if( lenreal )
-         SearnRep( exppatt,expreal,lenreal,ptro,lenres);
-      else return 0;
-    }
+     if( lenreal )
+     {
+        SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+     }
+     else
+     {
+        return 0;
+     }
+  }
+  else                             /*  ---- regular match marker  */
+  {
+     /* Copying a real expression to 'expreal' */
+     if( !lenreal )
+     {
+        lenreal = getExpReal( expreal, ptri, FALSE, maxlenreal, FALSE );
+     }
+
+     /*
+     printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, expreal );
+     */
+
+     if( lenreal )
+     {
+        SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+     }
+     else
+     {
+        return 0;
+     }
+  }
+
   return 1;
 }
 
@@ -2323,7 +2384,7 @@ static BOOL isExpres( char * stroka )
   return ( l1 <= l2 );
   */
 
-  return ( l1 <= l2 && ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) );
+  return ( l1 <= l2 /*&& ! IsInStr( ( stroka - l2 )[l1-1], ":/+*-%^=(<>[{" ) */ );
 }
 
 static BOOL TestOptional( char *ptr1, char *ptr2 )
@@ -3206,8 +3267,11 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
   }
 
   #if 0
-     printf( "Rule: %i Find: >%s< In: >%s<\n", bRule, szSub, szText );
-     printf( "Pos: %i Len: %i At: >%s<\n", lSubPos, lSubLen, (szText+lPos-lSubLen+1) );
+     if( bRule == 0 && szSub[0] != ';' )
+     {
+        printf( "Rule: %i Find: >%s< In: >%s<\n", bRule, szSub, szText );
+        printf( "Pos: %i Len: %i At: >%s<\n", lPos, lSubLen, (szText+lPos-lSubLen) );
+     }
   #endif
 
   return (lSubPos < lSubLen? 0: lPos - lSubLen + 1);

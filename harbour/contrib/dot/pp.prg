@@ -4235,7 +4235,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
 
      IF nLen == 1
 
-        IF s1 $ "-+!:@"
+        IF s1 $ "-+!:@|" // *** Very ODD Clipper consider '|' a continuation token !!!
            sExp += sToken
            LOOP
         ELSEIF s1 == "&"
@@ -4584,7 +4584,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
            LOOP
         ELSEIF sNext1 == '['
            LOOP
-        ELSEIF sNext1 $ "+-*/:=^!><!$%#"
+        ELSEIF sNext1 $ "+-*/:=^!><!$%#|" // *** Very ODD Clipper consider '|' a continuation token !!!
            sExp           += sNextToken
            sLine          := sNextLine
            #ifdef __HARBOUR__

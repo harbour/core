@@ -1,3 +1,13 @@
+2001-06-21 22:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Added support fort '|' as a continuation token (as in Clipper).
+
+   * include/hbclass.ch
+     - Commented out 3 rules used for VO OO compatibility that are TOO generic, and match unexpected input.
+
+   * source/pp/ppcore.c
+     - Recommented out test for continuation token at the end of an Expression in isExpres() (after correcting cause for prior reinstatment).
+
 2001-06-21 18:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Reinstated test for continuation token at the end of an Expression in isExpress()
@@ -8,7 +18,7 @@
 
 2001-06-21 14:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
-     * Commented out test for continuation token at the end of an Expression in isExpress()
+     * Commented out test for continuation token at the end of an Expression in isExpres()
        /* Clipper does not validate extracted expression like that. This solves problem with:
           SAVE ALL LIKE Patt* TO File
         */

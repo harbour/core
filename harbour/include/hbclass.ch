@@ -251,9 +251,11 @@ DECLARE TClass ;
 /* VO SYNTAX */
 #ifdef HB_CLS_VO
 
+/* *** These rules are TOO generic and should not be used!!!
 #xtranslate  ( <name>{ [<p,...>] }        =>  ( <name>():New( <p> )
 #xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
 #xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
+*/
 
 #xcommand EXPORT <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<ro: READONLY, RO>] => ;
    _HB_MEMBER {[AS <type>] <DataNames>} ;;
