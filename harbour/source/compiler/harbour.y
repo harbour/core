@@ -264,8 +264,10 @@ extern void GenObj32( PHB_FNAME );      /* generates OBJ 32 bits */
 
 /* argument checking */
 void CheckArgs( char *, int );
+static BOOL SwitchCmp( char * szString, char * szSwitch );
 
 void PrintUsage( char * );
+void PrintCredits( void );
 
 #define YYDEBUG        1    /* Parser debug information support */
 
@@ -427,6 +429,7 @@ int iFunctions = 0;
 
 BOOL _bStartProc = TRUE;                 /* holds if we need to create the starting procedure */
 BOOL _bLineNumbers = TRUE;               /* holds if we need pcodes with line numbers */
+BOOL _bCredits = FALSE;                  /* print credits */
 BOOL _bLogo = TRUE;                      /* print logo */
 BOOL _bQuiet = FALSE;                    /* quiet mode */
 BOOL _bSyntaxCheckOnly = FALSE;          /* syntax check only */
@@ -1348,13 +1351,14 @@ int harbour_main( int argc, char * argv[] )
 
    for( iArg = 1; iArg < argc; iArg++ )
    {
-      if( IS_OPT_SEP( argv[ iArg ][ 0 ] ) &&
-          ( argv[ iArg ][ 1 ] == 'q' || argv[ iArg ][ 1 ] == 'Q' ) &&
-            argv[ iArg ][ 2 ] == '0' )
-      {
+      if( SwitchCmp( argv[ iArg ], "Q0" ) )
          _bLogo = FALSE;
-         break;
-      }
+
+      else if( SwitchCmp( argv[ iArg ], "CREDITS" ) ||
+               SwitchCmp( argv[ iArg ], "CREDIT" ) ||
+               SwitchCmp( argv[ iArg ], "CREDI" ) ||
+               SwitchCmp( argv[ iArg ], "CRED" ) )
+         _bCredits = TRUE;
    }
 
    if( _bLogo )
@@ -1362,6 +1366,12 @@ int harbour_main( int argc, char * argv[] )
       printf( "Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
          hb_build, hb_revision, hb_year, hb_month, hb_day );
       printf( "Copyright 1999, http://www.harbour-project.org\n" );
+   }
+
+   if( _bCredits )
+   {
+      PrintCredits();
+      return iStatus;
    }
 
    if( argc > 1 )
@@ -1801,6 +1811,15 @@ void PrintUsage( char * szSelf )
            "\n          /10              restrict symbol length to 10 characters"
 /* TODO:   "\n           @<file>         compile list of modules in <file>" */
            , szSelf );
+}
+
+/*
+ * Prints credits
+*/
+void PrintCredits( void )
+{
+   printf( "\nCredits:  The Harbour Team at www.harbour-project.com"
+           );
 }
 
 /*
@@ -4190,7 +4209,7 @@ void GenPCode1( BYTE byte )
          else if( pOperand2 && pOperand2->cType == ' ' )
             GenWarning( _szCWarnings, 'W', WARN_NUMERIC_SUSPECT, NULL, NULL );
 
-          /* compile time 2nd. operand has to be released */
+         /* compile time 2nd. operand has to be released */
          if( pOperand2 )
          {
             hb_xfree( ( void * ) pOperand2 );
@@ -4235,7 +4254,7 @@ void GenPCode1( BYTE byte )
          else
             cType = pOperand1->cType;
 
-          /* compile time 2nd. operand has to be released */
+         /* compile time 2nd. operand has to be released */
          if( pOperand2 )
          {
             hb_xfree( ( void * ) pOperand2 );
@@ -4279,7 +4298,7 @@ void GenPCode1( BYTE byte )
          else if( pOperand1 && pOperand2 && pOperand1->cType != ' ' && pOperand2->cType == ' ' )
             GenWarning( _szCWarnings, 'W', WARN_OPERAND_SUSPECT, sType1, NULL );
 
-          /* compile time 2nd. operand has to be released */
+         /* compile time 2nd. operand has to be released */
          if( pOperand2 )
          {
             hb_xfree( ( void * ) pOperand2 );
@@ -5168,5 +5187,29 @@ static ULONG PackDateTime( void )
    szString[ 3 ] |= nValue;
 
    return MKLONG( szString[ 3 ], szString[ 2 ], szString[ 1 ], szString[ 0 ] );
+}
+
+static BOOL SwitchCmp( char * szString, char * szSwitch )
+{
+   if( IS_OPT_SEP( *szString ) )
+   {
+      szString++;
+
+      if( strlen( szString ) == strlen( szSwitch ) )
+      {
+         while( *szString != '\0' )
+         {
+            if( toupper( *szString ) != *szSwitch )
+               return FALSE;
+
+            szString++;
+            szSwitch++;
+         }
+
+         return TRUE;
+      }
+   }
+
+   return FALSE;
 }
 
