@@ -320,11 +320,10 @@ void hb_clsReleaseAll( void )
    s_pClasses  = NULL;
 }
 
-/* Check if passed memory block pointer is referenced by some class
-   internal data.
-   This is called from the garbage collector.
-*/
-BOOL hb_clsIsClassRef( void *pBlock )
+/* Mark all internal data as used so it will not be released by the
+ * garbage collector
+ */
+void hb_clsIsClassRef( void )
 {
    USHORT uiClass = s_uiClasses;
    PCLASS pClass = s_pClasses;
@@ -332,29 +331,24 @@ BOOL hb_clsIsClassRef( void *pBlock )
    USHORT uiLimit;
    PMETHOD pMeth;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_clsIsClassRef(%p)", pBlock));
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsIsClassRef()"));
 
    while( uiClass-- )
    {
       if( pClass->pInlines )
-         if( hb_gcItemRef( pClass->pInlines, pBlock ) )
-            return TRUE;
+         hb_gcItemRef( pClass->pInlines );
 
       if( pClass->pClassDatas )
-         if( hb_gcItemRef( pClass->pClassDatas, pBlock ) )
-            return TRUE;
-             
+         hb_gcItemRef( pClass->pClassDatas );
+
       uiLimit = ( USHORT ) ( pClass->uiHashKey * BUCKET );
       pMeth = pClass->pMethods;
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
          if( pMeth->pInitValue )
-            if( hb_gcItemRef( pMeth->pInitValue, pBlock ) )
-               return TRUE;
-               
+            hb_gcItemRef( pMeth->pInitValue );
+
       ++pClass;
    }
-
-   return FALSE;    /* passed block is not referenced in any class */
 }
 
 void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )

@@ -1,3 +1,34 @@
+2000-07-10 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbcomp.h
+        * added a forward declaration to comiple with Watcom C/C++
+        
+    *source/compiler/harbour.c
+        * added missing declaration of hb_compReleaseStrings()
+        
+    *source/rtl/errorapi.c
+        * error objects created during error launching called internally
+        are locked to prevent deallocation by the GC
+
+    *source/rtl/idle.c
+        * changed to call hb_gcCollectAll()
+
+    *include/hbapi.h
+    *source/vm/arrays.c
+    *source/vm/classes.c
+    *source/vm/codebloc.c
+    *source/vm/garbage.c
+    *source/vm/hvm.c
+    *source/vm/memvars.c
+        * changed the implementation of the GC to use a classical mark-sweep
+        algorithm - this means that all garbage memory blocks are released
+        during a single hb_gcCollectAll()
+        * the garbage collector maintains now the separate list of
+        locked items to prevend premature deallocation of items
+        referenced inside of locked items
+        * during sweep phase the items are checked only once to prevent
+        recursive loops
+
 2000-07-09 01:02 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hbcomp.h
      + Added: external BOOL hb_comp_bSimpLex

@@ -107,7 +107,7 @@ void hb_idleState( void )
    {
       s_bIamIdle = TRUE;
       hb_releaseCPU();
-      hb_gcCollect();
+      hb_gcCollectAll();
    
       if( s_pIdleTasks )
       {

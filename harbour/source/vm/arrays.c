@@ -52,8 +52,6 @@
 #include "hbapilng.h"
 #include "hbvm.h"
 
-static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage );
-
 BOOL hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array */
 {
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) hb_gcAlloc( sizeof( HB_BASEARRAY ), hb_arrayReleaseGarbage );
@@ -738,7 +736,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 }
 
 /* This releases array when called from the garbage collector */
-static HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
+HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
 {
    PHB_BASEARRAY pBaseArray = ( PHB_BASEARRAY ) Cargo;
 

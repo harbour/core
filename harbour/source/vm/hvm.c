@@ -350,16 +350,17 @@ void hb_vmQuit( void )
    hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
-   
+
    /* release all known garbage */
    hb_gcCollectAll();
-   
+
    /* release all remaining items */
    while( hb_stack.pPos > hb_stack.pItems )
       hb_stackPop();
    hb_itemClear( &hb_stack.Return );
    hb_arrayRelease( &s_aStatics );
    hb_memvarsRelease();
+   
    hb_stackFree();
 /* hb_dynsymLog(); */
    hb_xexit();
@@ -4356,32 +4357,34 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
 /* The garbage collector interface */
 /* ------------------------------------------------------------------------ */
 
-/* check if passed pointer is referenced on the eval stack (local variables) 
-   Returns TRUE if is referenced otherwise returns FALSE;
-*/
-BOOL hb_vmIsLocalRef( void *pBlock )
+/* Mark all locals as used so they will not be released by the
+ * garbage collector
+ */
+void hb_vmIsLocalRef( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmIsLocalRef()"));
+
    if( hb_stack.pPos > hb_stack.pItems )
    {
       /* the eval stack is not cleared yet */
       HB_ITEM_PTR pItem = hb_stack.pPos - 1;
       while( pItem != hb_stack.pItems )
       {
-         if( hb_gcItemRef( pItem, pBlock ) )
-            return TRUE;
-         else
-            --pItem;
+         if( pItem->type & (HB_IT_BYREF | HB_IT_ARRAY | HB_IT_BLOCK) )
+            hb_gcItemRef( pItem );
+         --pItem;
       }
    }
-   return FALSE;
 }
 
-/* check if passed pointer is referenced in static variables
-   Returns TRUE if is referenced otherwise returns FALSE;
-*/
-BOOL hb_vmIsStaticRef( void *pBlock )
+/* Mark all statics as used so they will not be released by the
+ * garbage collector
+ */
+void hb_vmIsStaticRef( void )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmIsStaticRef()"));
+
    /* statics are stored as an item of array type */
-   return hb_gcItemRef( &s_aStatics, pBlock );
+   hb_gcItemRef( &s_aStatics );
 }
 

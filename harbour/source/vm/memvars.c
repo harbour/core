@@ -306,7 +306,7 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
 
    if( pValue->counter > 0 )
    {
-      /* Notice that Counter can be equal to 0. 
+      /* Notice that Counter can be equal to 0.
       * This can happen if for example PUBLIC variable holds a codeblock
       * with detached variable. When hb_memvarsRelease() is called then
       * detached variable can be released before the codeblock. So if
@@ -1246,7 +1246,7 @@ HB_FUNC( __MVSAVE )
             pDynVar = s_privateStack[ ulBase ];
 
             /* NOTE: Harbour name lengths are not limited, but the .MEM file
-                     structure is not flexible enough to allow for it. 
+                     structure is not flexible enough to allow for it.
                      [vszakats] */
             if( pDynVar->hMemvar )
             {
@@ -1479,12 +1479,12 @@ HB_FUNC( __MVRESTORE )
 /* ----------------------------------------------------------------------- */
 
 
-/* check if passed pointer is referenced in memvar variable
-   Returns TRUE if it is referenced otherwise returns FALSE;
-*/
-BOOL hb_memvarsIsMemvarRef( void *pBlock )
+/* Mark all memvars as used so they will not be released by the
+ * garbage collector
+ */
+void hb_memvarsIsMemvarRef( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsIsMemvarRef(%p)", pBlock));
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarsIsMemvarRef()"));
 
    if( s_globalTable )
    {
@@ -1492,16 +1492,14 @@ BOOL hb_memvarsIsMemvarRef( void *pBlock )
 
       while( ulCnt )
       {
+         /* do not check detached variables - for these variables only
+          * references from the eval stack are meaningfull for the GC
+         */
          if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
-            /* do not check detached variables - for these variables only
-             * references from the eval stack are meaningfull for the GC
-            */
-            if( hb_gcItemRef( &s_globalTable[ ulCnt ].item, pBlock ) )
-               return TRUE;   /* this item is referenced - stop processing */
+            hb_gcItemRef( &s_globalTable[ ulCnt ].item );
          }
          --ulCnt;
       }
    }
-   return FALSE;
 }

@@ -197,6 +197,11 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( IE_ERRTOOMANY, NULL, NULL, NULL );
 
+      /* Lock an item to prevent deallocation by the GC - the error object
+       * can be not assigned to any harbour level variable
+      */
+      hb_gcLockItem( pError );
+
       /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
 
       s_iLaunchCount++;
@@ -214,6 +219,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       else
          pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
+      hb_gcUnlockItem( pError );
       s_iLaunchCount--;
 
       /* Check results */
@@ -300,6 +306,11 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( IE_ERRTOOMANY, NULL, NULL, NULL );
 
+      /* Lock an item to prevent deallocation by the GC - the error object
+       * can be not assigned to any harbour level variable
+      */
+      hb_gcLockItem( pError );
+      
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
       s_iLaunchCount++;
@@ -317,6 +328,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       else
           pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
+      hb_gcUnlockItem( pError );
       s_iLaunchCount--;
 
       /* Check results */

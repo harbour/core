@@ -84,6 +84,8 @@ typedef struct
    int   iFiles;                /* number of files currently opened */
 } FILES;
 
+struct _COMCLASS;    /* forward declaration */
+
 /* Declared Function/Method support structure */
 typedef struct _COMDECLARED
 {

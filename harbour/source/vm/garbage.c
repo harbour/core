@@ -42,31 +42,68 @@
 #include "error.ch"
 
 /* holder of memory block information */
+/* NOTE: USHORT is used intentionally to fill up the structure to
+ * full 16 bytes (on 16/32 bit environment)
+ */
 typedef struct HB_GARBAGE_
 {
   struct HB_GARBAGE_ *pNext;  /* next memory block */
   struct HB_GARBAGE_ *pPrev;  /* previous memory block */
   HB_GARBAGE_FUNC_PTR pFunc;  /* cleanup function called before memory releasing */
-  ULONG status;		      /* block status */
+  USHORT locked;              /* locking counter */
+  USHORT used;                /* used/unused block */
+//  ULONG counter;
 } HB_GARBAGE, *HB_GARBAGE_PTR;
 
 /* status of memory block */
 #define HB_GC_UNLOCKED     0
 #define HB_GC_LOCKED       1  /* do not collect a memory block */
-#define HB_GC_NOTCHECKED   2  /* this item was not checked yet */
-#define HB_GC_CHECKING     4  /* this item is checked currently */
+#define HB_GC_USED_FLAG    2  /* the bit for used/unused flag */
 
 /* pointer to memory block that will be checked in next step */
 static HB_GARBAGE_PTR s_pCurrBlock = NULL;
 /* memory blocks are stored in linked list with a loop */
 
+/* pointer to locked memory blocks */
+static HB_GARBAGE_PTR s_pLockedBlock = NULL;
+
 /* marks if block releasing is requested during garbage collecting */
 static BOOL s_bCollecting = FALSE;
 
+/* flag for used/unused blocks - the meaning of the HB_GC_USED_FLAG bit
+ * is reversed on every collecting attempt
+ */
+static USHORT s_uUsedFlag = HB_GC_USED_FLAG;
+//static ULONG s_ulCounter = 0;
 /* we may use a cache later */
 #define HB_GARBAGE_NEW( ulSize )   ( HB_GARBAGE_PTR )hb_xgrab( ulSize )
 #define HB_GARBAGE_FREE( pAlloc )    hb_xfree( (void *)(pAlloc) )
 
+static void hb_gcLink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
+{
+   if( *pList )
+   {
+      /* add new block at the logical end of list */
+      pAlloc->pNext = *pList;
+      pAlloc->pPrev = (*pList)->pPrev;
+      pAlloc->pPrev->pNext = pAlloc;
+      (*pList)->pPrev = pAlloc;
+   }
+   else
+   {
+      *pList = pAlloc->pNext = pAlloc->pPrev = pAlloc;
+   }
+}
+
+static void hb_gcUnlink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
+{
+   pAlloc->pPrev->pNext = pAlloc->pNext;
+   pAlloc->pNext->pPrev = pAlloc->pPrev;
+   if( *pList == pAlloc )
+      *pList = pAlloc->pNext;
+   if( ( pAlloc->pNext == pAlloc->pPrev ) && ( *pList == pAlloc ) )
+      *pList = NULL;    /* this was the last block */
+}
 
 /* allocates a memory block */
 void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
@@ -76,22 +113,11 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
    pAlloc = HB_GARBAGE_NEW( ulSize + sizeof( HB_GARBAGE ) );
    if( pAlloc )
    {
-      if( s_pCurrBlock )
-      {
-         /* add new block at the logical end of list */
-         pAlloc->pNext = s_pCurrBlock;
-         pAlloc->pPrev = s_pCurrBlock->pPrev;
-         pAlloc->pPrev->pNext = pAlloc;
-         s_pCurrBlock->pPrev = pAlloc;
-      }
-      else
-      {
-         s_pCurrBlock = pAlloc;
-         s_pCurrBlock->pNext = s_pCurrBlock->pPrev = pAlloc;
-      }
-      pAlloc->pFunc = pCleanupFunc;
-      pAlloc->status = HB_GC_UNLOCKED;
-
+      hb_gcLink( &s_pCurrBlock, pAlloc );
+      pAlloc->pFunc  = pCleanupFunc;
+      pAlloc->locked = 0;
+      pAlloc->used   = s_uUsedFlag;
+//pAlloc->counter = ++s_ulCounter;
       return (void *)( pAlloc + 1 );   /* hide the internal data */
    }
    else
@@ -109,12 +135,10 @@ void hb_gcFree( void *pBlock )
       if( !( s_bCollecting && pAlloc == s_pCurrBlock ) )
       {
          /* Don't release the block that is a subject of collecting */
-         pAlloc->pPrev->pNext = pAlloc->pNext;
-         pAlloc->pNext->pPrev = pAlloc->pPrev;
-         if( s_pCurrBlock == pAlloc )
-            s_pCurrBlock = pAlloc->pNext;
-         if( pAlloc->pPrev == pAlloc->pPrev && pAlloc == s_pCurrBlock )
-            s_pCurrBlock = NULL;    /* this was the last block */
+         if( pAlloc->locked )
+            hb_gcUnlink( &s_pLockedBlock, pAlloc );
+         else    
+            hb_gcUnlink( &s_pCurrBlock, pAlloc );
          HB_GARBAGE_FREE( pAlloc );
       }
    }
@@ -134,7 +158,12 @@ void *hb_gcLock( void *pBlock )
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
       --pAlloc;
 
-      pAlloc->status |= HB_GC_LOCKED;
+      if( !pAlloc->locked )
+      {
+         hb_gcUnlink( &s_pCurrBlock, pAlloc );          
+         hb_gcLink( &s_pLockedBlock, pAlloc );
+      }
+      ++pAlloc->locked;
    }
    return pBlock;
 }
@@ -149,7 +178,15 @@ void *hb_gcUnlock( void *pBlock )
       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
       --pAlloc;
 
-      pAlloc->status &= ~( ( ULONG ) HB_GC_LOCKED );
+      if( pAlloc->locked )
+      {
+         if( --pAlloc->locked == 0 )
+         {
+            hb_gcUnlink( &s_pLockedBlock, pAlloc );
+            hb_gcLink( &s_pCurrBlock, pAlloc );          
+            pAlloc->used = s_uUsedFlag;
+         }
+      }
    }
    return pBlock;
 }
@@ -177,124 +214,145 @@ void hb_gcUnlockItem( HB_ITEM_PTR pItem )
       hb_gcUnlock( pItem->item.asBlock.value );
 }
 
-/* Check a single memory block if it can be released
- * The block will be released if it is not locked and there is no
- * references for this block inside some harbour variable (local,
- * memvar or static)
-*/
-void hb_gcCollect( void )
+static void hb_gcReleaseItem( void )
 {
-   if( s_pCurrBlock && !s_bCollecting )
-   {
-      void *pBlock = ( void * )( s_pCurrBlock + 1 ); /* change for real pointer */
-      HB_GARBAGE_PTR pNext = s_pCurrBlock->pNext;
+   HB_GARBAGE_PTR pDelete;
 
-      s_pCurrBlock->status &= ~( (ULONG)HB_GC_NOTCHECKED );
-      if( !( s_pCurrBlock->status & HB_GC_LOCKED ) )
+   /* call a cleanup function */
+   if( s_pCurrBlock->pFunc )
+      ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
+
+   pDelete = s_pCurrBlock;
+   hb_gcUnlink( &s_pCurrBlock, s_pCurrBlock );
+   HB_GARBAGE_FREE( pDelete );
+}
+
+/* Mark a passed item as used so it will be not released by the GC
+*/
+void hb_gcItemRef( HB_ITEM_PTR pItem )
+{
+   if( HB_IS_BYREF( pItem ) )
+      pItem = hb_itemUnRef( pItem );
+
+   if( HB_IS_ARRAY( pItem ) )
+   {
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asArray.value;
+      --pAlloc;
+
+      /* Check this array only if it was not checked yet */
+      if( pAlloc->used == s_uUsedFlag )
       {
-         if( !hb_vmIsLocalRef( pBlock ) )
+         ULONG ulSize = pItem->item.asArray.value->ulLen;
+         /* mark this block as used so it will be no re-checked from
+          * other references
+          */
+         pAlloc->used ^= HB_GC_USED_FLAG;
+
+         /* mark also all array elements */
+         pItem = pItem->item.asArray.value->pItems;
+         while( ulSize )
          {
-            if( !hb_memvarsIsMemvarRef( pBlock ) )
-            {
-               if( !hb_vmIsStaticRef( pBlock ) )
-               {
-                  if( !hb_clsIsClassRef( pBlock ) )
-                  {
-                     /* It is possible that s_pCurrBlock will be requested
-                      * to release from a cleanup function - to prevent it
-                      * we have to use some flag.
-                      */
-                     s_bCollecting = TRUE;
-                     if( s_pCurrBlock->pFunc )
-                        ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
-                     s_pCurrBlock->pPrev->pNext = s_pCurrBlock->pNext;
-                     s_pCurrBlock->pNext->pPrev = s_pCurrBlock->pPrev;
-                     pNext = s_pCurrBlock->pNext;
-                     if( s_pCurrBlock == pNext && pNext->pPrev == pNext->pNext )
-                        pNext = NULL;    /* this was the last block */
-                     HB_GARBAGE_FREE( s_pCurrBlock );
-                     s_bCollecting = FALSE;
-                  }
-               }
-            }
+            hb_gcItemRef( pItem++ );
+            --ulSize;
          }
       }
-      s_pCurrBlock = pNext;
    }
+   else if( HB_IS_BLOCK( pItem ) )
+   {
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asBlock.value;
+      --pAlloc;
+      if( pAlloc->used == s_uUsedFlag )
+         pAlloc->used ^= HB_GC_USED_FLAG;  /* mark this codeblock as used */
+   }
+   /* all other data types don't need the GC */
+}
+
+
+void hb_gcCollect( void )
+{
+   /* TODO: decrease the amount of time spend collecting */
+   hb_gcCollectAll();
 }
 
 /* Check all memory block if they can be released
 */
 void hb_gcCollectAll( void )
 {
-   if( s_pCurrBlock )
+   if( s_pCurrBlock && !s_bCollecting )
    {
-      HB_GARBAGE_PTR pBlock = s_pCurrBlock;
-      
-      do
+      HB_GARBAGE_PTR pAlloc;
+
+      s_bCollecting = TRUE;
+
+      /* Step 1 - mark */
+      /* All blocks are already marked because we are flipping 
+       * the used/unused flag 
+       */
+
+      /* Step 2 - sweep */
+      /* check all known places for blocks they are referring */
+      hb_vmIsLocalRef();
+      hb_vmIsStaticRef();
+      hb_memvarsIsMemvarRef();
+      hb_clsIsClassRef();
+
+      /* check list of locked block for blocks referenced from 
+       * locked block
+      */      
+      if( s_pLockedBlock )
       {
-         pBlock->status |= HB_GC_NOTCHECKED;
-         pBlock = pBlock->pNext;
-      } while (pBlock != s_pCurrBlock);
-
-      do
-      {
-         hb_gcCollect();
-      } while( s_pCurrBlock && (s_pCurrBlock->status & HB_GC_NOTCHECKED) );
-   }
-}
-
-/* Check if passed item <pItem> contains a reference to passed
- * memory pointer <pBlock>
- * Returns TRUE if there is a reference (the pointer cannot be released)
- * or returns FALSE if the item doesn't refer the pointer.
- * Arrays are scanned recursively.
-*/
-BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
-{
-   if( HB_IS_BYREF( pItem ) )
-   {
-      if( HB_IS_MEMVAR( pItem ) )
-         pItem = hb_itemUnRef( pItem );    /* detached variable */
-      else
-         return FALSE;   /* all items should be passed directly */
-   }
-
-   if( HB_IS_ARRAY( pItem ) )
-   {
-      /* NOTE: this checks for objects too */
-      if( pItem->item.asArray.value == ( HB_BASEARRAY_PTR )pBlock )
-         return TRUE;
-      else
-      {
-         HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asArray.value;
-         ULONG ulSize = pItem->item.asArray.value->ulLen;
-
-         --pAlloc;
-         if( !( pAlloc->status & HB_GC_CHECKING ) )
-         {
-            pAlloc->status |= HB_GC_CHECKING;
-            pItem = pItem->item.asArray.value->pItems;
-            while( ulSize-- )
+         pAlloc = s_pLockedBlock;
+         do
+         {  /* it is not very elegant method but it works well */
+            if( pAlloc->pFunc == hb_arrayReleaseGarbage )
             {
-               if( hb_gcItemRef( pItem, pBlock ) )
+               HB_BASEARRAY_PTR pArray = ( HB_BASEARRAY_PTR ) ( pAlloc + 1 );
+               ULONG ulSize = pArray->ulLen;
+               HB_ITEM_PTR pItem;
+             
+               /* mark as used all elements in locked array */
+               pItem = pArray->pItems;
+               while( ulSize )
                {
-                  pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
-                  return TRUE;
+                  hb_gcItemRef( pItem++ );
+                  --ulSize;
                }
-               else
-                  ++pItem;
-            }
-            pAlloc->status &= ~( (ULONG) ( HB_GC_CHECKING ) );
-         }
-      }
-   }
-   else if( HB_IS_BLOCK( pItem ) )
-   {
-      return ( pItem->item.asBlock.value == ( HB_CODEBLOCK_PTR )pBlock );
-   }
+            }    /* it is not very elegant method but it works well */
+            else if( pAlloc->pFunc == hb_codeblockDeleteGarbage )
+            {
+               HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) ( pAlloc + 1 );
+               USHORT ui = 1;
 
-   return FALSE;
+               /* mark as used all detached variables in locked codeblock */
+               while( ui <= pCBlock->uiLocals )
+               {
+                  hb_gcItemRef( &pCBlock->pLocals[ ui ] );
+                  ++ui;
+               }
+            }
+            pAlloc = pAlloc->pNext;
+         } while ( s_pLockedBlock != pAlloc );
+      }
+        
+      /* Step 3 - finalize */
+      /* Release all blocks that are still marked as unused */
+      pAlloc = s_pCurrBlock;
+      do
+      {
+         if( s_pCurrBlock->used == s_uUsedFlag )
+            hb_gcReleaseItem( );
+         else
+            s_pCurrBlock = s_pCurrBlock->pNext;
+      } while ( s_pCurrBlock && (pAlloc != s_pCurrBlock) );
+
+      s_bCollecting = FALSE;
+
+      /* Step 4 - flip flag */
+      /* Reverse used/unused flag so we don't have to mark all blocks
+       * during next collecting
+       */
+      s_uUsedFlag ^= HB_GC_USED_FLAG;
+   }
 }
 
 /* service a single garbage collector step

@@ -182,6 +182,9 @@ extern char * hb_comp_szAnnounce;
 
 extern void yyrestart( FILE * );
 
+/* Simplex requirement */
+extern void hb_compReleaseStrings( void );
+
 /* ************************************************************************* */
 
 int main( int argc, char * argv[] )

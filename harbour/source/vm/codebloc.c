@@ -39,8 +39,6 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 
-static HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage );
-
 /* Creates the codeblock structure
  *
  * pBuffer -> the buffer with pcodes (without HB_P_PUSHBLOCK)
@@ -246,7 +244,7 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
 
 /* Release all allocated memory when called from the garbage collector
  */
-static HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
+HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage )
 {
    HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
 

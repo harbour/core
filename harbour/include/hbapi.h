@@ -527,11 +527,13 @@ extern void   hb_gcLockItem( HB_ITEM_PTR pItem ); /* do not release a memory blo
 extern void   hb_gcUnlockItem( HB_ITEM_PTR pItem ); /* allow to release the item */
 extern void   hb_gcCollect( void ); /* checks if a single memory block can be released */
 extern void   hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
-extern BOOL   hb_gcItemRef( HB_ITEM_PTR pItem, void *pAlloc ); /* checks if passed item refers passed memory block pointer */
-extern BOOL   hb_vmIsLocalRef( void *pAlloc ); /* hvm.c - checks all local variables if they are refering a memory block */ 
-extern BOOL   hb_vmIsStaticRef( void *pAlloc ); /* hvm.c - checks all static variables if they are refering a memory block */
-extern BOOL   hb_memvarsIsMemvarRef( void *pAlloc ); /* memvars.c - checks all memvar variables if they are refering a memory block */
-extern BOOL   hb_clsIsClassRef( void *pAlloc ); /* classes.c - checks all classes if they are refering a memory block */
+extern void   hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */
+extern void   hb_vmIsLocalRef( void ); /* hvm.c - mark all local variables as used */
+extern void   hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
+extern void   hb_memvarsIsMemvarRef( void ); /* memvars.c - mark all memvar variables as used */
+extern void   hb_clsIsClassRef( void ); /* classes.c - mark all class internals as used */
+extern HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage ); /* clear a codeblock before releasing by the GC */
+extern HB_GARBAGE_FUNC( hb_arrayReleaseGarbage ); /* clear an array before releasing by the GC */
 
 /* idle states */
 extern void   hb_idleState( void ); /* services a single idle state */
