@@ -113,7 +113,7 @@ Separator     {SpaceTab}
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_ STATIC_ RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
-%x            OPTIONAL_
+%x            OPTIONAL_ FROMCLASS_
 %s            INDEX
 
 %%
@@ -357,6 +357,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
+
 <INITIAL>"optional"                { BEGIN OPTIONAL_; }
 <OPTIONAL_>{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] ); BEGIN 0; return OPTIONAL; }
 <OPTIONAL_>{Separator}*(.|\n)      { /* end of line or any operator */
@@ -366,6 +367,16 @@ Separator     {SpaceTab}
                                      hb_comp_iState = IDENTIFIER;
                                      return IDENTIFIER;
                                    }
+
+<INITIAL>"from"                     { BEGIN FROMCLASS_; }
+<FROMCLASS_>{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] ); BEGIN 0; return FROMCLASS; }
+<FROMCLASS_>{Separator}*(.|\n)      { /* end of line or any operator */
+                                     if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                                     unput( yytext[ yyleng-1 ] );
+                                     yylval.string = hb_strdup( "FROM" );
+                                     hb_comp_iState = IDENTIFIER;
+                                     return IDENTIFIER;
+                                    }
 
 "do"            BEGIN DO_;
 <DO_>{Separator}+"case"         { /* DO CASE statement */
@@ -1308,37 +1319,40 @@ Separator     {SpaceTab}
                 }
               }
 
-"as num"             { return AS_NUMERIC; }
-"as numeric"         { return AS_NUMERIC; }
+"as array"           { return AS_ARRAY; }
+"as block"           { return AS_BLOCK; }
 "as char"            { return AS_CHARACTER; }
 "as character"       { return AS_CHARACTER; }
 "as string"          { return AS_CHARACTER; }
+"as date"            { return AS_DATE; }
 "as logical"         { return AS_LOGICAL; }
 "as bool"            { return AS_LOGICAL; }
 "as boolean"         { return AS_LOGICAL; }
-"as date"            { return AS_DATE; }
-"as array"           { return AS_ARRAY; }
-"as block"           { return AS_BLOCK; }
+"as num"             { return AS_NUMERIC; }
+"as numeric"         { return AS_NUMERIC; }
 "as object"          { return AS_OBJECT; }
 "as var"             { return AS_VARIANT; }
 "as variant"         { return AS_VARIANT; }
 
-"as num array"       { return AS_NUMERIC_ARRAY; }
-"as numeric array"   { return AS_NUMERIC_ARRAY; }
+"as var array"       { return AS_ARRAY; }
+"as variant array"   { return AS_ARRAY; }
+"as array array"     { return AS_ARRAY_ARRAY; }
+"as block array"     { return AS_BLOCK_ARRAY; }
 "as char array"      { return AS_CHARACTER_ARRAY; }
 "as character array" { return AS_CHARACTER_ARRAY; }
 "as string array"    { return AS_CHARACTER_ARRAY; }
+"as date array"      { return AS_DATE_ARRAY; }
 "as logical array"   { return AS_LOGICAL_ARRAY; }
 "as bool array"      { return AS_LOGICAL_ARRAY; }
 "as boolean array"   { return AS_LOGICAL_ARRAY; }
-"as date array"      { return AS_DATE_ARRAY; }
-"as array array"     { return AS_ARRAY_ARRAY; }
-"as block array"     { return AS_BLOCK_ARRAY; }
+"as num array"       { return AS_NUMERIC_ARRAY; }
+"as numeric array"   { return AS_NUMERIC_ARRAY; }
 "as object array"    { return AS_OBJECT_ARRAY; }
-"as var array"       { return AS_VARIANT; }
-"as variant array"   { return AS_VARIANT; }
 
 "declare function"   { return DECLARE_FUN; }
+"declare class"      { return DECLARE_CLASS; }
+"has method"         { return CLASS_METHOD; }
+"has data"           { return CLASS_DATA; }
 
 %{
 /* ************************************************************************ */

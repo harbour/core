@@ -84,14 +84,33 @@ typedef struct
    int   iFiles;                /* number of files currently opened */
 } FILES;
 
+/* Declared Method support structure */
+typedef struct _COMMETHOD
+{
+   char * szName;               /* the name of the symbol */
+   BYTE   cType;
+   BYTE * cParamTypes;
+   USHORT iParamCount;
+   struct _COMMETHOD * pNext;   /* pointer to the next declared function */
+} COMMETHOD, * PCOMMETHOD;
+
+/* Declared Class support structure */
+typedef struct _COMCLASS
+{
+   char * szName;                  /* the name of the symbol */
+   PCOMMETHOD pMethod;             /* Pointer to linked list of methods */
+   struct _COMCLASS * pNext;   /* pointer to the next declared function */
+} COMCLASS, * PCOMCLASS;
+
 /* locals, static, public variables support */
 typedef struct _VAR
 {
-   char * szName;               /* variable name */
-   char * szAlias;              /* variable alias namespace */
-   int    iUsed;                /* number of times used */
-   BYTE   cType;                /* optional strong typing */
-   struct _VAR * pNext;         /* pointer to next defined variable */
+   char *    szName;               /* variable name */
+   char *    szAlias;              /* variable alias namespace */
+   int       iUsed;                /* number of times used */
+   BYTE      cType;                /* optional strong typing */
+   PCOMCLASS pClass;
+   struct _VAR * pNext;            /* pointer to next defined variable */
 } VAR, * PVAR;
 
 /* pcode chunks bytes size */
@@ -218,6 +237,11 @@ extern PCOMSYMBOL hb_compSymbolGetPos( USHORT );   /* returns a symbol based on 
 extern PCOMDECLARED hb_compDeclaredAdd( char * );
 extern PCOMDECLARED hb_compDeclaredFind( char * );
 
+extern PCOMCLASS hb_compClassAdd( char * );
+extern PCOMCLASS hb_compClassFind( char * );
+extern PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
+extern PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
+
 extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 
 extern void hb_compExternGen( void ); /* generates the symbols for the EXTERN names */
@@ -335,6 +359,10 @@ extern FUNCTIONS     hb_comp_funcalls;
 extern SYMBOLS       hb_comp_symbols;
 extern PCOMDECLARED  hb_comp_pFirstDeclared;
 extern PCOMDECLARED  hb_comp_pLastDeclared;
+extern PCOMCLASS     hb_comp_pFirstClass;
+extern PCOMCLASS     hb_comp_pLastClass;
+extern char *        hb_comp_szClass;
+extern PCOMMETHOD    hb_comp_pLastMethod;
 extern PATHNAMES *   hb_comp_pIncludePath;
 extern PFUNCTION     hb_comp_pInitFunc;
 extern PHB_FNAME     hb_comp_pFileName;
@@ -378,6 +406,8 @@ extern USHORT        hb_comp_wCaseCounter;
 
 extern BOOL          hb_comp_EOL;
 extern char *        hb_comp_szDeclaredFun;
+
+extern char *        hb_comp_szLastMethod;
 
 extern char *        hb_comp_szErrors[];
 extern char *        hb_comp_szWarnings[];

@@ -161,8 +161,9 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING DO WITH SELF LINE
 %token MACROVAR MACROTEXT
-%token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_BLOCK AS_OBJECT AS_VARIANT DECLARE_FUN OPTIONAL
-%token AS_NUMERIC_ARRAY AS_CHARACTER_ARRAY AS_LOGICAL_ARRAY AS_DATE_ARRAY AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_OBJECT_ARRAY AS_VARIANT_ARRAY
+%token AS_ARRAY AS_BLOCK AS_CHARACTER AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE_FUN OPTIONAL
+%token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
+%token DECLARE_CLASS CLASS_METHOD CLASS_DATA FROMCLASS
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -265,7 +266,24 @@ Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunct
                                                                                                                        hb_comp_pLastDeclared->cType = hb_comp_cVarType;
                                                                                                                      hb_comp_szDeclaredFun = NULL;
                                                                                                                      hb_comp_cVarType = ' '; }
+           | DECLARE_CLASS IdentName { hb_comp_pLastClass = hb_compClassAdd( $2 ); } ClassInfo Crlf {}
            ;
+
+ClassInfo  : DecMethod
+	   | ClassInfo DecMethod
+	   | DecData
+	   | ClassInfo DecData
+	   ;
+
+DecMethod  : CLASS_METHOD IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $2 ); } DecParams AsType { hb_comp_pLastMethod->cType = hb_comp_cVarType;
+                                                                                                                             hb_comp_pLastMethod = NULL;
+                                                                                                                             hb_comp_cVarType = ' '; }
+	   ;
+
+DecData    : CLASS_DATA IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $2 ); } AsType { hb_comp_pLastMethod->cType = hb_comp_cVarType;
+                                                                                                                 hb_comp_pLastMethod = NULL;
+                                                                                                                 hb_comp_cVarType = ' '; }
+	   ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
            | STATIC           { $$ = HB_FS_STATIC; }
@@ -308,6 +326,7 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_BLOCK                      { hb_comp_cVarType = 'B'; }
            | AS_OBJECT                     { hb_comp_cVarType = 'O'; }
+           | AS_OBJECT FROMCLASS IdentName { hb_comp_cVarType = '+'; hb_comp_szClass = $3 }
            | AS_VARIANT                    { hb_comp_cVarType = ' '; }
            | AS_NUMERIC_ARRAY              { hb_comp_cVarType = 'n'; }
            | AS_CHARACTER_ARRAY            { hb_comp_cVarType = 'c'; }
@@ -316,7 +335,6 @@ AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_VARIANT_ARRAY              { hb_comp_cVarType = 'A'; }
            ;
 
 AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
@@ -327,7 +345,6 @@ AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_ARRAY_ARRAY                { hb_comp_cVarType = 'a'; }
            | AS_BLOCK_ARRAY                { hb_comp_cVarType = 'b'; }
            | AS_OBJECT_ARRAY               { hb_comp_cVarType = 'o'; }
-           | AS_VARIANT_ARRAY              { hb_comp_cVarType = 'A'; }
            ;
 
 ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }

@@ -1,3 +1,37 @@
+20000510-03:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * include/hbcomp.h
+    + Added new structures COMCLASS and COMMETHOD
+    + Added new element pClass to structure VAR
+    + Added:
+	extern PCOMCLASS hb_compClassAdd( char * );
+	extern PCOMCLASS hb_compClassFind( char * );
+	extern PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
+	extern PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
+
+  * source/compiler/harbour.c
+    + Added:
+	PCOMCLASS hb_compClassAdd( char * );
+	PCOMCLASS hb_compClassFind( char * );
+	PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
+	PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
+    * Modified hb_compVariableAdd() to process params of declared class methods.
+
+  * source/compiler/harbour.l
+    + Added tokens CLASSMETHOD CLASSDATA and FROMCLASS
+
+  * source/compiler/harbour.y
+    + Added support for class declaration syntax:
+      DECLARE CLASS ClassName HAS Method MethodName( ... ) As ... HAS Data PropertyName ...
+    + Added support for declaration of Object of a sdeclared class sysntax:
+      DECLARE oObjectVar AS Object FROM ClassName
+
+  * source/compiler/hbpcode.c
+    + Started support for object methods and properties type checking.
+
+  * tests/testwarn.prg
+    + Added code to demonstrate declarion of classes and objects of a declared class.
+
 20000510-03:45 DST Paul Tucker <ptucker@sympatico.ca>
   * source/compiler/harbour.c
     change param 2 of hb_compFunctionNew() definition to BYTE

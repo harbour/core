@@ -61,6 +61,12 @@ DECLARE FUNCTION int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE FUNCTION TEST AS NUMERIC
 
+DECLARE CLASS    MyClass                       ;
+        Has METHOD   nMyFunc( nVal As Num ) As Num ;
+        Has METHOD   nMyFunc( nVal As Num ) As Num ;
+        Has Data     cMyData    ;
+        Has Method   FinalMethod
+
 FIELD a AS CHAR
 FIELD b AS CHAR
 
@@ -70,8 +76,10 @@ STATIC lGlobal AS LOGICAL
 
 PROCEDURE THEMAIN( optional )
 
-  STATIC lStatic := 0
+  STATIC lStatic := 0, oMyObj As Object From MyClass
   LOCAL cVar AS CHAR := [declare function]
+
+  oMyObj:MyMethod( 2, 3, 4 )
 
   FIELD b AS NUM
   USE TEMP

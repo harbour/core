@@ -171,8 +171,10 @@ static BYTE s_pcode_len[] = {
    1         /* HB_P_ONE,                  */
 };
 
-static BYTE * hb_comp_cParamTypes = NULL;
-static int    hb_comp_iParamCount = -1;
+static BYTE *    hb_comp_cParamTypes = NULL;
+static int       hb_comp_iParamCount = -1;
+static PCOMCLASS hb_comp_pStackClass[8];
+static int       hb_comp_iClasses;
 
 static PVAR hb_compPrivateFind( char * szPrivateName )
 {
@@ -385,6 +387,8 @@ void hb_compStrongType( int iSize )
 
        if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'O' )
           ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == '+' )
+          ;
        else if ( pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
           hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "O", NULL );
        else
@@ -398,7 +402,17 @@ void hb_compStrongType( int iSize )
 
      /* Handles by HB_P_MESSAGE. */
      case HB_P_SENDSHORT :
+        wVar = ( SHORT ) pFunc->pCode[ ulPos + 1 ];
+
+        /* Fall Through - don't add break !!! */
+
      case HB_P_SEND :
+        if ( wVar == 0 )
+          wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
+
+          if ( pFunc->pStack[ pFunc->iStackIndex - ( wVar + 1 ) ] == '+' )
+          {
+          }
         break;
 
      case HB_P_DEC :
@@ -889,6 +903,8 @@ void hb_compStrongType( int iSize )
      /* Objects */
      case HB_P_PUSHSELF :
        pFunc->pStack[ pFunc->iStackIndex++ ] = 'O';
+
+       /* Todo find Self's Class. */
        break;
 
      /* Blcoks */
@@ -1010,7 +1026,13 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          if ( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
+          if ( pVar->cType == '+' )
+          {
+            /* Object of declared class */
+            hb_comp_pStackClass[ hb_comp_iClasses++ ] = pVar->pClass;
+            pFunc->pStack[ pFunc->iStackIndex++ ] = '+';
+          }
+          else if ( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
           else
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
@@ -1046,6 +1068,12 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
+          if ( pVar->cType == '+' )
+          {
+            /* Object of declared class */
+            hb_comp_pStackClass[ hb_comp_iClasses++ ] = pVar->pClass;
+            pFunc->pStack[ pFunc->iStackIndex++ ] = '+';
+          }
           if ( pFunc->pCode[ ulPos ] == HB_P_PUSHSTATICREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
           else
@@ -1128,7 +1156,13 @@ void hb_compStrongType( int iSize )
             /* Mark as used */
             pVar->iUsed |= VU_USED;
 
-            if ( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVARREF )
+            if ( pVar->cType == '+' )
+            {
+               /* Object of declared class */
+               hb_comp_pStackClass[ hb_comp_iClasses++ ] = pVar->pClass;
+               pFunc->pStack[ pFunc->iStackIndex++ ] = '+';
+            }
+            else if ( pFunc->pCode[ ulPos ] == HB_P_PUSHMEMVARREF )
                pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType + VT_OFFSET_BYREF;
             else
                pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType;
@@ -1322,11 +1356,25 @@ void hb_compStrongType( int iSize )
 
      case HB_P_POPVARIABLE :
        pFunc->iStackIndex--;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' )
+       {
+         /* Object of declared class */
+         hb_comp_pStackClass[ --hb_comp_iClasses ] = NULL;
+       }
+
        break;
 
      case HB_P_POPALIASEDVAR :
        /* TODO: check what is aliasedvar? */
        pFunc->iStackIndex--;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' )
+       {
+         /* Object of declared class */
+         hb_comp_pStackClass[ --hb_comp_iClasses ] = NULL;
+       }
+
        break;
 
      case HB_P_POPALIASEDFIELDNEAR :
@@ -1335,6 +1383,8 @@ void hb_compStrongType( int iSize )
           wVar = ( SHORT ) pFunc->pCode[ ulPos + 1 ];
           pSym = hb_compSymbolGetPos( wVar );
        }
+
+       /* Fall through, don't put break!!!*/
 
      case HB_P_POPALIASEDFIELD :
      case HB_P_POPFIELD :
@@ -1360,12 +1410,21 @@ void hb_compStrongType( int iSize )
           pVar = hb_compVariableFind( hb_comp_functions.pFirst->pFields, wVar );
        }
 
+       /* Fall through, don't put break!!!*/
+
      case HB_P_POPMEMVAR :
        pFunc->iStackIndex--;
 
        if ( pFunc->iStackIndex < 0 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' )
+       {
+         /* Object of declared class */
+         hb_comp_pStackClass[ --hb_comp_iClasses ] = NULL;
+         pFunc->pStack[ pFunc->iStackIndex ] = 'O';
+       }
 
        if ( pFunc->pCode[ ulPos ] == HB_P_POPMEMVAR )
           wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
@@ -1490,6 +1549,13 @@ void hb_compStrongType( int iSize )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
 
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' )
+       {
+         /* Object of declared class */
+         hb_comp_pStackClass[ --hb_comp_iClasses ] = NULL;
+         pFunc->pStack[ pFunc->iStackIndex ] = 'O';
+       }
+
        if ( pFunc->pCode[ ulPos ] == HB_P_POPLOCAL )
           wVar = * ( ( SHORT * ) &( pFunc->pCode )[ ulPos + 1 ] );
        else
@@ -1551,6 +1617,13 @@ void hb_compStrongType( int iSize )
        if ( pFunc->iStackIndex < 0 )
           /* TODO Error Message after finalizing all possible pcodes. */
           break;
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == '+' )
+       {
+         /* Object of declared class */
+         hb_comp_pStackClass[ --hb_comp_iClasses ] = NULL;
+         pFunc->pStack[ pFunc->iStackIndex ] = 'O';
+       }
 
        pTmp = hb_comp_functions.pFirst;
        wVar = pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256;
