@@ -8,6 +8,40 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-28 01:10 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    + .NET IL implementation for HB_P_JUMPFALSENEAR, HB_P_JUMPNEAR
+    + Added labels to each IL generated source code line
+    + Added ObjLessEqual( object, object ) for "<=" operator support
+    ! AddObjects() renamed into ObjAdd( object, object ) for "+" operator support.
+
+    Notice: Some "nop" has been added to match Harbour opcodes offsets. We may remove
+    them later on. This code is working ok:
+
+    function Main()
+
+       local n := 11
+
+       if n <= 10
+         ? "less-equal 10"
+       else
+         ? n
+         ? "greater 10"
+       endif
+
+       n = 5
+
+       if n <= 10
+          ? n
+          ? "less-equal 10"
+       else
+          ? "greater "
+       endif
+
+       ? "done!"
+
+   return nil
+
 2003-06-27 16:07 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     ! .NET IL implementation for HB_P_PLUS
