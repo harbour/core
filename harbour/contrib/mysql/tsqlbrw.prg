@@ -190,17 +190,17 @@ static function Skipper(nSkip, oQuery)
    local    i := 0
 
    do case
-   case (nSkip == 0 .or. oQuery:LastRec() == 0)
-      oQuery:Skip( 0 )
+   case (nSkip == 0 .OR. oQuery:LastRec() == 0)
+      oQuery:Skip(0)
 
-   case (nSkip > 0 .and. !oQuery:eof())
+   case (nSkip > 0)
       while ( i < nSkip )           // Skip Foward
 
          if oQuery:eof()
             exit
          endif
 
-         oQuery:Skip( 1 )
+         oQuery:Skip(1)
          i++
 
       enddo
@@ -212,7 +212,7 @@ static function Skipper(nSkip, oQuery)
             exit
          endif
 
-         oQuery:Skip( -1 )
+         oQuery:Skip(-1)
          i--
 
       enddo

@@ -151,7 +151,7 @@ CLASS TBrowse
 
    METHOD Stabilize()               // Performs incremental stabilization
 
-   METHOD DispCell(nColumn, cColor) // Displays a single cell
+   METHOD DispCell(nColumn, nColor) // Displays a single cell
 
    #ifdef HB_COMPAT_C53
    METHOD SetKey(nKey, bBlock)
@@ -437,8 +437,6 @@ METHOD PageDown() CLASS TBrowse
             ::RelativePos += nDown
             ::RefreshAll()
          else
-            ::RowPos := ::RowCount
-            ::RelativePos := ::RowCount
             ::RefreshAll()
          endif
       else
@@ -535,22 +533,11 @@ return Self
 
 METHOD DeHilite() CLASS TBrowse
 
-   local nColor := iif( ::aColumns[ ::ColPos ]:ColorBlock != NIL,;
-                       Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
-                       Eval( ::aColumns[ ::ColPos ]:Block ) )[ 1 ], 1 )
-   local cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
    local nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
    local nCol := ::aColumns[ ::ColPos ]:ColPos
 
    SetPos( nRow, nCol )
-   ::DispCell( ::ColPos, cColor )
-
-   // Logical fields are centered on column width
-   if ValType(Eval(::aColumns[::ColPos]:Block)) == "L"
-      SetPos( nRow, nCol + ::aColumns[::ColPos]:Width / 2)
-   else
-      SetPos( nRow, nCol )
-   endif
+   ::DispCell(::ColPos, 1)
 
 return Self
 
@@ -569,22 +556,11 @@ METHOD Hilite() CLASS TBrowse
    local nCol
 
    if ::AutoLite
-
-      nColor := iif( ::aColumns[ ::ColPos ]:ColorBlock != NIL,;
-                    Eval( ::aColumns[ ::ColPos ]:ColorBlock,;
-                    Eval( ::aColumns[ ::ColPos ]:Block ) )[ 2 ], 2 )
-      cColor := hb_ColorIndex( ::ColorSpec, nColor - 1 )
       nRow := ::nTop + ::RowPos - iif( ::lHeaders, 0, 1 ) + iif( Empty( ::HeadSep ), 0, 1 )
       nCol := ::aColumns[ ::ColPos ]:ColPos
 
       SetPos( nRow, nCol )
-      ::DispCell( ::ColPos, cColor )
-
-      if ValType(Eval(::aColumns[::ColPos]:Block)) == "L"
-         SetPos( nRow, nCol + ::aColumns[::ColPos]:Width / 2)
-      else
-         SetPos( nRow, nCol )
-      endif
+      ::DispCell(::ColPos, 2)
 
    endif
 
@@ -786,14 +762,7 @@ METHOD Stabilize() CLASS TBrowse
          nCol := Col()
 
          if lDisplay
-
-            cColColor := iif( ::aColumns[ n ]:ColorBlock != NIL,;
-                             hb_ColorIndex( ::ColorSpec,;
-                             Eval( ::aColumns[ n ]:ColorBlock,;
-                             Eval( ::aColumns[ n ]:Block ) )[ 1 ] - 1 ),;
-                             ::ColorSpec )
-
-            ::DispCell( n, cColColor )
+            ::DispCell(n, 1)
             SetPos( Row(), nCol + ::aColumns[ n ]:Width )
 
          else
@@ -848,28 +817,39 @@ METHOD ColorRect( aRect, aRectColor ) CLASS TBrowse
 
 return Self
 
-METHOD DispCell( nColumn, cColor ) CLASS TBrowse
+METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
-   LOCAL ftmp := Eval( ::aColumns[ nColumn ]:block )
+   LOCAL ftmp := Eval(::aColumns[nColumn]:block)
    LOCAL nCol := Col()
 
+   local cColor   := iif(::aColumns[nColumn]:ColorBlock != NIL,;
+                         hb_ColorIndex(::ColorSpec, Eval(::aColumns[nColumn]:ColorBlock, ftmp)[nColor] - 1),;
+                         hb_ColorIndex(::ColorSpec, nColor - 1))
+
    do case
-   case valtype( ftmp ) $ "CM"
-      DispOut( Left( ftmp, ::aColumns[ nColumn ]:Width ), cColor )
+      case valtype( ftmp ) $ "CM"
+         DispOut( Left( ftmp, ::aColumns[ nColumn ]:Width ), cColor )
 
-   case valtype( ftmp ) == "N"
-      DispOut( Right( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+      case valtype( ftmp ) == "N"
+         DispOut( Right( Str( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
 
-   case valtype( ftmp ) == "D"
-      DispOut( Right( DToC( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
+      case valtype( ftmp ) == "D"
+         DispOut( Right( DToC( ftmp ), ::aColumns[ nColumn ]:Width ), cColor )
 
-   case valtype( ftmp ) == "L"
-      DispOut( Space( ::aColumns[ nColumn ]:Width / 2 ), ::ColorSpec )
-      DispOut( iif( ftmp, "T","F" ), cColor )
+      case valtype( ftmp ) == "L"
+         DispOut( Space( ::aColumns[ nColumn ]:Width / 2 ), cColor)
+         DispOut( iif( ftmp, "T","F" ), cColor )
 
    endcase
 
-   DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), ::ColorSpec )
+   DispOut( Space( nCol + ::aColumns[ nColumn ]:Width - Col() ), cColor)
+
+   // Logical fields are centered on column width
+   if ValType(ftmp) == "L"
+      SetPos( Row(), nCol + ::aColumns[::ColPos]:Width / 2)
+   else
+      SetPos( Row(), nCol )
+   endif
 
 return Self
 
