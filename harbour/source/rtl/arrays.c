@@ -50,10 +50,11 @@ static char *szArgumentError = "Argument error: incorrect type";
 /*
  * Internal
  */
- 
+
+
 char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
 {
-  char szDate[ 9 ];
+  static char szDate[ 9 ];
   long lDay, lMonth, lYear;
 
   if( IS_ARRAY( pArray ) )
