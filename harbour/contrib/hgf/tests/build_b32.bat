@@ -13,7 +13,7 @@ ECHO Compiling...
 set hdir=..\..\..
 set bcdir=c:\bcc55\bin
 
-%hdir%\bin\harbour %1 /n /i..\include;%hdir%\include %2 %3 > comp.log
+%hdir%\bin\harbour %1 /n /p /i..\include;%hdir%\include %2 %3 > comp.log
 @type comp.log
 IF ERRORLEVEL 1 PAUSE
 IF ERRORLEVEL 1 GOTO EXIT
