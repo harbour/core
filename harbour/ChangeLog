@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-13 16:40 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/eval.c
+     + New function HB_DLLDO() added
+       Executes a Harbour pcode dynamically loaded DLL function or procedure
+       Syntax: HB_DllDo( <cFuncName> [,<params...>] ) --> [<uResult>]
 
 2001-12-13 15:09 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    * include/hbexprb.c
