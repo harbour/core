@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: TEMPFILE.PRG
  * Author....: Glenn Scott
  * CIS ID....: 71620,1521
@@ -84,10 +88,123 @@
  *  $END$
  */
 
-#include "ftint86.ch"
+#ifdef HB_OS_DOS
+  #define FT_TEMPFILE_ORIGINAL
+#endif
 
-#define DOS         33
-#define TEMPNAME    90
+#ifdef HB_OS_DOS_32
+  #undef FT_TEMPFILE_ORIGINAL
+#endif
+
+#ifdef FT_TEMPFILE_ORIGINAL
+
+  #include "ftint86.ch"
+
+  #define DOS         33
+  #define TEMPNAME    90
+
+  FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
+    LOCAL  cRet,aRegs[3]
+
+    cPath := iif( valType(cPath) != "C",           ;
+                     replicate( chr(0),13) ,            ;
+                     cPath += replicate( chr(0), 13 )   ;
+                )
+
+    lHide := iif( valType(lHide) != "L", .f., lHide )
+    /*
+    aRegs[AX]        := MAKEHI( TEMPNAME )
+    aRegs[CX]        := iif( lHide, 2, 0 )
+    aRegs[DS]        := cPath
+    aRegs[DX]        := REG_DS
+
+    FT_INT86( DOS, aRegs )
+    */
+    aRegs:=_ft_tempfil(cPath,lHide)
+    /*  If carry flag is clear, then call succeeded and a file handle is
+     *  sitting in AX that needs to be closed.
+     */
+
+    if !ft_isBitOn( aRegs[3], FLAG_CARRY )
+       if hb_isbyref( @nHandle )
+          nHandle = aRegs[1]
+       else
+          fclose( aRegs[1] )
+       endif
+       cRet := alltrim( strtran( aRegs[2], chr(0) ) )
+    else
+       cRet := ""
+    endif
+
+  RETURN cRet
+
+#else
+
+  #include "common.ch"
+  #include "fileio.ch"
+
+  FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
+  LOCAL nError := 0, cFile
+
+  Default cPath to ".\"
+  Default lHide to .f.
+
+  cPath = alltrim( cPath )
+  if right( cPath ) # "\"
+    cPath += "\"
+  endif
+
+
+  do while .t.
+     cFile = ntoc( int( ft_rand1( 65535 ) ), 16 ) + ntoc( int( ft_rand1( 65535 ) ), 16 )
+
+     nHandle := fopen( cPath + cFile )  // Use this method because
+                                        // the FILE() function can't see
+                                        // the hidden and system files
+
+     if ferror() = 2   // File not found
+
+        nHandle = fcreate( cPath + cFile, if( lHide, FC_HIDDEN, FC_NORMAL ) )
+
+        if ferror() = 5
+           fclose( nHandle )
+           loop
+        endif
+
+        if ferror() # 0
+           nError ++
+           if nError > 10
+              cFile = ""
+              exit
+           endif
+        endif
+        fclose( nHandle )
+
+        nHandle = fopen( cPath + cFile, FO_EXCLUSIVE + FO_READWRITE )
+        if ferror() = 0
+           exit
+        else
+           nError ++
+           if nError > 10
+              cFile = ""
+              exit
+           endif
+        endif
+
+     else
+        fclose( nHandle )
+
+     endif
+
+  enddo
+
+  if !hb_isbyref( @nHandle )
+     fclose( nHandle )
+  endif
+
+  return cFile
+
+#endif
 
 #ifdef FT_TEST
   FUNCTION MAIN( cPath, cHide )
@@ -104,37 +221,4 @@
      endif
   RETURN nil
 #endif
-
-
-
-FUNCTION FT_TEMPFIL( cPath, lHide )
-  LOCAL  cRet,aRegs[3]
-
-  cPath := iif( valType(cPath) != "C",           ;
-                   repl( chr(0),12) ,            ;
-                   cPath += repl( chr(0), 12 )   ;
-              )
-
-  lHide := iif( valType(lHide) != "L", .f., lHide )
-  /*
-  aRegs[AX]        := MAKEHI( TEMPNAME )
-  aRegs[CX]        := iif( lHide, 2, 0 )
-  aRegs[DS]        := cPath
-  aRegs[DX]        := REG_DS
-  
-  FT_INT86( DOS, aRegs )
-  */
-  aRegs:=_ft_tempfil(cPath,lHide)
-  /*  If carry flag is clear, then call succeeded and a file handle is
-   *  sitting in AX that needs to be closed.
-   */
-
-  if !ft_isBitOn( aRegs[3], FLAG_CARRY )
-     fclose( aRegs[1] )
-     cRet := strtran( aRegs[2], chr(0) )
-  else
-     cRet := ""
-  endif
-
-RETURN cRet                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
