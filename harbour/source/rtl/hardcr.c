@@ -61,7 +61,7 @@ char * hb_strHardCR( char * pszString, ULONG ulStringLen )
 
 HB_FUNC( HARDCR )
 {
-   PHB_ITEM pString = hb_param( 1, IT_STRING );
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
 
    if( pString )
    {

@@ -1185,7 +1185,7 @@ static ERRCODE dbfGoToId( AREAP pArea, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("dbfGoToId(%p, %p)", pArea, pItem));
 
-   if( IS_NUMERIC( pItem ) )
+   if( HB_IS_NUMERIC( pItem ) )
    {
       ulRecNo = hb_itemGetNL( pItem );
       if( ulRecNo == 0 )
@@ -1524,7 +1524,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( pField->uiType )
    {
       case 'C':
-         if( IS_STRING( pItem ) )
+         if( HB_IS_STRING( pItem ) )
          {
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
@@ -1536,7 +1536,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'N':
-         if( IS_NUMERIC( pItem ) )
+         if( HB_IS_NUMERIC( pItem ) )
          {
             if( pField->uiDec )
                bError = !hb_ndtoa( hb_itemGetND( pItem ), ( char * ) szText,
@@ -1558,7 +1558,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'D':
-         if( IS_DATE( pItem ) )
+         if( HB_IS_DATE( pItem ) )
          {
             szEndChar = * ( szText + pField->uiLen );
             hb_dateDecode( hb_itemGetDL( pItem ), &lDay, &lMonth, &lYear );
@@ -1569,7 +1569,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'L':
-         if( IS_LOGICAL( pItem ) )
+         if( HB_IS_LOGICAL( pItem ) )
          {
             *szText = hb_itemGetL( pItem ) ? 'T' : 'F';
             bError = FALSE;
@@ -1577,7 +1577,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'M':
-         if( IS_STRING( pItem ) )
+         if( HB_IS_STRING( pItem ) )
          {
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( ( ( LPDBFMEMO ) pField->memo )->uiLen < uiCount )

@@ -54,8 +54,8 @@ HB_FUNC( SETMOUSE )
       hb_mouseSetCursor( hb_parl( 1 ) );
 
    {
-      PHB_ITEM pRow = hb_param( 2, IT_NUMERIC );
-      PHB_ITEM pCol = hb_param( 3, IT_NUMERIC );
+      PHB_ITEM pRow = hb_param( 2, HB_IT_NUMERIC );
+      PHB_ITEM pCol = hb_param( 3, HB_IT_NUMERIC );
 
       if( pRow || pCol )
       {

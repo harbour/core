@@ -43,15 +43,15 @@
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_xquery()
- *    HB_MEMORY()
+ *    MEMORY()
  *
  * See doc/license.txt for licensing terms.
  *
  */
 
 /* NOTE: If you turn this on, the memory subsystem will collect information
-         about several statistical data about memory management, it will show
-         these on exit if memory seem to have leaked.
+         and several statistical data about memory management, it will show
+         these on exit if memory seem to have been leaked.
          This should be normally turned off in a final release 
          [vszakats] */
 #define HB_FM_STATISTICS

@@ -88,11 +88,11 @@
  *                                      Added support for HB_SET_EXTRAFILE.
  *                                      Added support for strings > 64 KB.
  * V 1.38   Ryszard Glab                Changed to use the new definition of
- *                                      HB_INIT_SYMBOLS_* and
+ *                                      HB_INHB_IT_SYMBOLS_* and
  *                                      HB_CALL_ON_STARTUP_* macros.
  * V 1.37   David G. Holm               Added #pragma startup.
  * V 1.36   Ryszard Glab                Changed code that registers local
- *                                      symbol table (it uses HB_INIT_SYMBOLS_*
+ *                                      symbol table (it uses HB_INHB_IT_SYMBOLS_*
  *                                      macros now).
  * V 1.35   Ryszard Glab                Changed to use the new HB_ITEM.
  *                                      Changed to automatically register
@@ -196,9 +196,9 @@ static BOOL set_logical( PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("set_logical(%p)", pItem));
 
-   if( IS_LOGICAL( pItem ) )
+   if( HB_IS_LOGICAL( pItem ) )
       bLogical = hb_itemGetL( pItem );
-   else if( IS_STRING( pItem ) )
+   else if( HB_IS_STRING( pItem ) )
    {
       char * szString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
@@ -221,7 +221,7 @@ static int set_number( PHB_ITEM pItem, int iOldValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("set_number(%p, %d)", pItem, iOldValue));
 
-   if( IS_NUMERIC( pItem ) )
+   if( HB_IS_NUMERIC( pItem ) )
       return hb_itemGetNI( pItem );
    else
       return iOldValue;
@@ -233,7 +233,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 
    HB_TRACE(HB_TR_DEBUG, ("set_string(%p, %s)", pItem, szOldString));
 
-   if( IS_STRING( pItem ) )
+   if( HB_IS_STRING( pItem ) )
    {
       /* Limit size of SET strings to 64K, truncating if source is longer */
       ULONG ulLen = hb_itemGetCLen( pItem );
@@ -472,8 +472,8 @@ HB_FUNC( SET )
 
    if( args > 0 ) set_specifier = ( HB_set_enum ) hb_parni( 1 );
    else set_specifier = HB_SET_INVALID_;
-   if( args > 1 ) pArg2 = hb_param( 2, IT_ANY );
-   if( args > 2 ) pArg3 = hb_param( 3, IT_ANY );
+   if( args > 1 ) pArg2 = hb_param( 2, HB_IT_ANY );
+   if( args > 2 ) pArg3 = hb_param( 3, HB_IT_ANY );
 
    switch ( set_specifier )
    {
@@ -484,10 +484,10 @@ HB_FUNC( SET )
       case HB_SET_ALTFILE    :
          if( hb_set.HB_SET_ALTFILE ) hb_retc( hb_set.HB_SET_ALTFILE );
          else hb_retc( "" );
-         if( args > 1 && ! IS_NIL( pArg2 ) ) hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_ALTFILE = set_string( pArg2, hb_set.HB_SET_ALTFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 && ! IS_NIL( pArg2 ) )
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_text( hb_set.hb_set_althan );
             if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
@@ -515,7 +515,7 @@ HB_FUNC( SET )
          if( args > 1 ) hb_set.HB_SET_CANCEL = set_logical( pArg2 );
          break;
       case HB_SET_COLOR      :
-         hb_retc( hb_conSetColor( args >= 2 && IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : ( char * ) NULL ) );
+         hb_retc( hb_conSetColor( args >= 2 && HB_IS_STRING( pArg2 ) ? hb_itemGetCPtr( pArg2 ) : ( char * ) NULL ) );
          break;
       case HB_SET_CONFIRM    :
          hb_retl( hb_set.HB_SET_CONFIRM );
@@ -526,7 +526,7 @@ HB_FUNC( SET )
          if( args > 1 ) hb_set.HB_SET_CONSOLE = set_logical( pArg2 );
          break;
       case HB_SET_CURSOR     :
-         if( args >= 2 && IS_NUMERIC( pArg2 ) )
+         if( args >= 2 && HB_IS_NUMERIC( pArg2 ) )
             hb_retni( hb_conSetCursor( TRUE, hb_itemGetNI( pArg2 ) ) );
          else
             hb_retni( hb_conSetCursor( FALSE, 0 ) );
@@ -571,7 +571,7 @@ HB_FUNC( SET )
       case HB_SET_DEVICE     :
          if( hb_set.HB_SET_DEVICE ) hb_retc( hb_set.HB_SET_DEVICE );
          else hb_retc( "" );
-         if( args > 1 && ! IS_NIL( pArg2 ) )
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             /* If the print file is not already open, open it in overwrite mode. */
             hb_set.HB_SET_DEVICE = set_string( pArg2, hb_set.HB_SET_DEVICE );
@@ -617,10 +617,10 @@ HB_FUNC( SET )
       case HB_SET_EXTRAFILE  :
          if( hb_set.HB_SET_EXTRAFILE ) hb_retc( hb_set.HB_SET_EXTRAFILE );
          else hb_retc( "" );
-         if( args > 1 && ! IS_NIL( pArg2 ) ) hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_EXTRAFILE = set_string( pArg2, hb_set.HB_SET_EXTRAFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 && ! IS_NIL( pArg2 ) )
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_text( hb_set.hb_set_extrahan );
             if( hb_set.HB_SET_EXTRAFILE && strlen( hb_set.HB_SET_EXTRAFILE ) > 0 )
@@ -698,10 +698,10 @@ HB_FUNC( SET )
       case HB_SET_PRINTFILE  :
          if( hb_set.HB_SET_PRINTFILE ) hb_retc( hb_set.HB_SET_PRINTFILE );
          else hb_retc( "" );
-         if( args > 1 && ! IS_NIL( pArg2 ) ) hb_set.HB_SET_PRINTFILE = set_string( pArg2, hb_set.HB_SET_PRINTFILE );
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) ) hb_set.HB_SET_PRINTFILE = set_string( pArg2, hb_set.HB_SET_PRINTFILE );
          if( args > 2 ) bFlag = set_logical( pArg3 );
          else bFlag = FALSE;
-         if( args > 1 && ! IS_NIL( pArg2 ) )
+         if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_binary( hb_set.hb_set_printhan );
             if( hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )

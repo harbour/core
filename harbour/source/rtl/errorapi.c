@@ -96,7 +96,7 @@ HB_FUNC( __ERRINHANDLER )
 HB_FUNC( ERRORBLOCK )
 {
    HB_ITEM oldError;
-   PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
+   PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
 
    hb_itemClear( &oldError );
    hb_itemCopy( &oldError, &s_errorBlock );
@@ -176,7 +176,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
       /* Check if we have a valid error handler */
 
-      if( hb_itemType( &s_errorBlock ) != IT_BLOCK )
+      if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -227,7 +227,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
 
-         if( hb_itemType( pResult ) != IT_LOGICAL || ( uiFlags & EF_CANSUBSTITUTE ) )
+         if( hb_itemType( pResult ) != HB_IT_LOGICAL || ( uiFlags & EF_CANSUBSTITUTE ) )
             bFailure = TRUE;
          else
          {
@@ -279,7 +279,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
    {
       /* Check if we have a valid error handler */
 
-      if( hb_itemType( &s_errorBlock ) != IT_BLOCK )
+      if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */

@@ -39,7 +39,7 @@
 
 HB_FUNC( ABS )
 {
-   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
 
    if( pNumber )
    {
@@ -48,7 +48,7 @@ HB_FUNC( ABS )
 
       hb_itemGetNLen( pNumber, &iWidth, &iDec );
 
-      if( IS_INTEGER( pNumber ) )
+      if( HB_IS_INTEGER( pNumber ) )
       {
          int iNumber = hb_itemGetNI( pNumber );
 
@@ -57,7 +57,7 @@ HB_FUNC( ABS )
          else
             hb_retni( -iNumber );
       }
-      else if( IS_LONG( pNumber ) )
+      else if( HB_IS_LONG( pNumber ) )
       {
          long lNumber = hb_itemGetNL( pNumber );
 
@@ -66,7 +66,7 @@ HB_FUNC( ABS )
          else
             hb_retnl( -lNumber );
       }
-      else if( IS_DOUBLE( pNumber ) )
+      else if( HB_IS_DOUBLE( pNumber ) )
       {
          double dNumber = hb_itemGetND( pNumber );
 

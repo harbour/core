@@ -509,7 +509,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    /* Get a blank record before testing expression */
    SELF_GOBOTTOM( pArea );
    SELF_SKIP( pArea, 1 );
-   if( hb_itemType( pExpr ) == IT_BLOCK )
+   if( hb_itemType( pExpr ) == HB_IT_BLOCK )
    {
       if( SELF_EVALBLOCK( pArea, pExpr ) == FAILURE )
          return FAILURE;
@@ -528,21 +528,21 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    uiType = hb_itemType( pResult );
    switch( uiType )
    {
-      case IT_INTEGER:
-      case IT_LONG:
-      case IT_DOUBLE:
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
          uiLen = 10;
          break;
 
-      case IT_DATE:
+      case HB_IT_DATE:
          uiLen = 8;
          break;
 
-      case IT_LOGICAL:
+      case HB_IT_LOGICAL:
          uiLen = 1;
          break;
 
-      case IT_STRING:
+      case HB_IT_STRING:
          uiLen = ( hb_itemGetCLen( pResult ) > CDX_MAX_KEY ) ? CDX_MAX_KEY :
                  ( USHORT ) hb_itemGetCLen( pResult );
          break;
@@ -581,7 +581,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    /* Test conditional expression */
    if( pExpr )
    {
-      if( hb_itemType( pExpr ) == IT_BLOCK )
+      if( hb_itemType( pExpr ) == HB_IT_BLOCK )
       {
          if( SELF_EVALBLOCK( pArea, pExpr ) == FAILURE )
             return FAILURE;
@@ -597,7 +597,7 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       }
       uiType = hb_itemType( pResult );
       hb_itemRelease( pResult );
-      if( uiType != IT_LOGICAL )
+      if( uiType != HB_IT_LOGICAL )
          return FAILURE;
    }
 

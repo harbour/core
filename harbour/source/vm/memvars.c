@@ -213,7 +213,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
          memcpy( &pValue->item, pSource, sizeof( HB_ITEM ) );
    }
    else
-      pValue->item.type = IT_NIL;
+      pValue->item.type = HB_IT_NIL;
 
    HB_TRACE(HB_TR_INFO, ("hb_memvarValueNew: memvar item created with handle %i", hValue));
 
@@ -385,7 +385,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       {
          /* value is already created */
          HB_ITEM_PTR pSetItem = &s_globalTable[ pDyn->hMemvar ].item;
-         if( IS_BYREF( pSetItem ) )
+         if( HB_IS_BYREF( pSetItem ) )
             hb_itemCopy( hb_itemUnRef( pSetItem ), pItem );
          else
             hb_itemCopy( pSetItem, pItem );
@@ -418,7 +418,7 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          /* value is already created
           */
          HB_ITEM_PTR pGetItem = &s_globalTable[ pDyn->hMemvar ].item;
-         if( IS_BYREF( pGetItem ) )
+         if( HB_IS_BYREF( pGetItem ) )
             hb_itemCopy( pItem, hb_itemUnRef( pGetItem ) );
          else
             hb_itemCopy( pItem, pGetItem );
@@ -473,7 +473,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       if( pDyn->hMemvar )
       {
          /* value is already created */
-         pItem->type = IT_BYREF | IT_MEMVAR;
+         pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
          pItem->item.asMemvar.offset = 0;
          pItem->item.asMemvar.value = pDyn->hMemvar;
          pItem->item.asMemvar.itemsbase = &s_globalTable;
@@ -498,7 +498,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
                if( pDyn->hMemvar )
                {
                   /* value is already created */
-                  pItem->type = IT_BYREF | IT_MEMVAR;
+                  pItem->type = HB_IT_BYREF | HB_IT_MEMVAR;
                   pItem->item.asMemvar.offset = 0;
                   pItem->item.asMemvar.value = pDyn->hMemvar;
                   pItem->item.asMemvar.itemsbase = &s_globalTable;
@@ -531,7 +531,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetStrValuePtr(%s, %li)", szVarName, pulLen));
 
-   itName.type = IT_STRING;
+   itName.type = HB_IT_STRING;
    itName.item.asString.value  = szVarName;
    itName.item.asString.length = *pulLen;
    pDynVar = hb_memvarFindSymbol( &itName );
@@ -546,9 +546,9 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
          /* variable contains some data
           */
          HB_ITEM_PTR pItem = &s_globalTable[ pDynVar->hMemvar ].item;
-         if( IS_BYREF( pItem ) )
+         if( HB_IS_BYREF( pItem ) )
             pItem = hb_itemUnRef( pItem );   /* it is a PARAMETER variable */
-         if( IS_STRING( pItem ) )
+         if( HB_IS_STRING( pItem ) )
          {
             szValue = pItem->item.asString.value;
             *pulLen = pItem->item.asString.length;
@@ -563,7 +563,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
  * This function creates a value for memvar variable
  *
  * pMemvar - an item that stores the name of variable - it can be either
- *          the IT_SYMBOL (if created by PUBLIC statement) or IT_STRING
+ *          the HB_IT_SYMBOL (if created by PUBLIC statement) or HB_IT_STRING
  *          (if created by direct call to __PUBLIC function)
  * bScope - the scope of created variable - if a variable with the same name
  *          exists already then it's value is hidden by new variable with
@@ -579,9 +579,9 @@ static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, bScope, pValue));
 
    /* find dynamic symbol or creeate one */
-   if( IS_SYMBOL( pMemvar ) )
+   if( HB_IS_SYMBOL( pMemvar ) )
       pDynVar = hb_dynsymGet( pMemvar->item.asSymbol.value->szName );
-   else if( IS_STRING( pMemvar ) )
+   else if( HB_IS_STRING( pMemvar ) )
       pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
    else
       hb_errRT_BASE( EG_ARG, 3008, NULL, "&" );
@@ -607,7 +607,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
             /* new PUBLIC variable - initialize it to .F.
              */
 
-            s_globalTable[ pDynVar->hMemvar ].item.type = IT_LOGICAL;
+            s_globalTable[ pDynVar->hMemvar ].item.type = HB_IT_LOGICAL;
 
             /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized */
             /*       to .T., this is normal Clipper behaviour. [vszakats] */
@@ -645,7 +645,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarRelease(%p)", pMemvar));
 
-   if( IS_STRING( pMemvar ) )
+   if( HB_IS_STRING( pMemvar ) )
    {
       ULONG ulBase = s_privateStackCnt;
 
@@ -916,11 +916,11 @@ HB_FUNC( __MVPUBLIC )
 
       for( i = 1; i <= iCount; i++ )
       {
-         PHB_ITEM pMemvar = hb_param( i, IT_ANY );
+         PHB_ITEM pMemvar = hb_param( i, HB_IT_ANY );
 
          if( pMemvar )
          {
-            if( IS_ARRAY( pMemvar ) )
+            if( HB_IS_ARRAY( pMemvar ) )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
@@ -945,7 +945,7 @@ HB_FUNC( __MVPUBLIC )
 
 HB_FUNC( __QQPUB )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
       hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
@@ -961,11 +961,11 @@ HB_FUNC( __MVPRIVATE )
 
       for( i = 1; i <= iCount; i++ )
       {
-         PHB_ITEM pMemvar = hb_param( i, IT_ANY );
+         PHB_ITEM pMemvar = hb_param( i, HB_IT_ANY );
 
          if( pMemvar )
          {
-            if( IS_ARRAY( pMemvar ) )
+            if( HB_IS_ARRAY( pMemvar ) )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
@@ -996,11 +996,11 @@ HB_FUNC( __MVXRELEASE )
 
       for( i = 1; i <= iCount; i++ )
       {
-         PHB_ITEM pMemvar = hb_param( i, IT_ANY );
+         PHB_ITEM pMemvar = hb_param( i, HB_IT_ANY );
 
          if( pMemvar )
          {
-            if( IS_ARRAY( pMemvar ) )
+            if( HB_IS_ARRAY( pMemvar ) )
             {
                /* we are accepting an one-dimensional array of strings only
                 */
@@ -1027,7 +1027,7 @@ HB_FUNC( __MVRELEASE )
 
    if( iCount )
    {
-      PHB_ITEM pMask = hb_param( 1, IT_STRING );
+      PHB_ITEM pMask = hb_param( 1, HB_IT_STRING );
 
       if( pMask )
       {
@@ -1051,7 +1051,7 @@ HB_FUNC( __MVSCOPE )
 
    if( hb_pcount() )
    {
-      PHB_ITEM pVarName = hb_param( 1, IT_STRING );
+      PHB_ITEM pVarName = hb_param( 1, HB_IT_STRING );
 
       if( pVarName )
          iMemvar = hb_memvarScope( pVarName->item.asString.value, pVarName->item.asString.length + 1 );
@@ -1087,7 +1087,7 @@ HB_FUNC( __MVDBGINFO )
          {
             /* we have to use this variable regardless of its current value
              */
-            HB_ITEM_PTR pName = hb_param( 3, IT_ANY );
+            HB_ITEM_PTR pName = hb_param( 3, HB_IT_ANY );
 
             hb_itemPutC( pName, szName ); /* clear an old value and copy a new one */
             /* szName points directly to a symbol name - it cannot be released
@@ -1108,7 +1108,7 @@ HB_FUNC( __MVDBGINFO )
          {
             /* we have to use this variable regardless of its current value
              */
-            HB_ITEM_PTR pName = hb_param( 3, IT_ANY );
+            HB_ITEM_PTR pName = hb_param( 3, HB_IT_ANY );
 
             hb_itemPutC( pName, "?" ); /* clear an old value and copy a new one */
          }
@@ -1118,7 +1118,7 @@ HB_FUNC( __MVDBGINFO )
 
 HB_FUNC( __MVGET )
 {
-   HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
+   HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
 
    if( pName )
    {
@@ -1182,13 +1182,13 @@ HB_FUNC( __MVGET )
 
 HB_FUNC( __MVPUT )
 {
-   HB_ITEM_PTR pName = hb_param( 1, IT_STRING );
+   HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
    HB_ITEM nil;
    HB_ITEM_PTR pValue = &nil;
 
-   nil.type = IT_NIL;
+   nil.type = HB_IT_NIL;
    if( hb_pcount() >= 2 )
-      pValue = hb_param( 2, IT_ANY );
+      pValue = hb_param( 2, HB_IT_ANY );
 
    if( pName )
    {
@@ -1297,7 +1297,7 @@ HB_FUNC( __MVSAVE )
                   strncpy( ( char * ) buffer, pDynVar->pSymbol->szName, 10 );
                   buffer[ 10 ] = '\0';
 
-                  if( IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
+                  if( HB_IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
                   {
                      /* Store the closing zero byte, too */
                      USHORT uiLength = ( USHORT ) ( hb_itemGetCLen( pItem ) + 1 );
@@ -1309,7 +1309,7 @@ HB_FUNC( __MVSAVE )
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
                      hb_fsWrite( fhnd, ( BYTE * ) hb_itemGetCPtr( pItem ), uiLength );
                   }
-                  else if( IS_NUMERIC( pItem ) )
+                  else if( HB_IS_NUMERIC( pItem ) )
                   {
                      double dNumber = hb_itemGetND( pItem );
                      int iWidth;
@@ -1320,7 +1320,7 @@ HB_FUNC( __MVSAVE )
                      buffer[ 11 ] = 'N' + 128;
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 /* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. [vszakats] */
-                     buffer[ 16 ] = ( BYTE ) iWidth + ( IS_DOUBLE( pItem ) ? iDec + 1 : 0 );
+                     buffer[ 16 ] = ( BYTE ) iWidth + ( HB_IS_DOUBLE( pItem ) ? iDec + 1 : 0 );
 #else
 /* NOTE: This would be the correct method, but Clipper is buggy here. [vszakats] */
                      buffer[ 16 ] = ( BYTE ) iWidth + ( iDec == 0 ? 0 : iDec + 1 );
@@ -1330,7 +1330,7 @@ HB_FUNC( __MVSAVE )
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
                      hb_fsWrite( fhnd, ( BYTE * ) &dNumber, sizeof( dNumber ) );
                   }
-                  else if( IS_DATE( pItem ) )
+                  else if( HB_IS_DATE( pItem ) )
                   {
                      double dNumber = ( double ) hb_itemGetDL( pItem );
 
@@ -1341,7 +1341,7 @@ HB_FUNC( __MVSAVE )
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
                      hb_fsWrite( fhnd, ( BYTE * ) &dNumber, sizeof( dNumber ) );
                   }
-                  else if( IS_LOGICAL( pItem ) )
+                  else if( HB_IS_LOGICAL( pItem ) )
                   {
                      BYTE byLogical[ 1 ];
 

@@ -93,7 +93,7 @@ double hb_strVal( const char * szText, ULONG ulLen )
 /* returns the numeric value of a character string representation of a number  */
 HB_FUNC( VAL )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {

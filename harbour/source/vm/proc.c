@@ -56,7 +56,7 @@ HB_FUNC( PROCNAME )
 
    if( ( iLevel == -1 ) )
    {
-      if( ( pBase + 1 )->type == IT_ARRAY )  /* it is a method name */
+      if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a method name */
       {
          char * szProcName;
 

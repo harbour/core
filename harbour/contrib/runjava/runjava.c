@@ -244,7 +244,7 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
             hb_vmPushSymbol( pSymRead + ul );
             hb_vmPushNil();
             for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-               hb_vmPush( hb_param( i + 2, IT_ANY ) );
+               hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );
                                             /* Push other cmdline params*/
             hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
          }
@@ -253,7 +253,7 @@ JNIEXPORT jlong JNICALL Java_Harbour_Run( JNIEnv *env,
       hb_vmPushSymbol( pSymRead );
       hb_vmPushNil();
       for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-         hb_vmPush( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
+         hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );    /* Push other cmdline params*/
       hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
       pRetVal = hb_itemNew( NULL );

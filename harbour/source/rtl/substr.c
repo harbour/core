@@ -41,7 +41,7 @@
 
 HB_FUNC( SUBSTR )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText && ISNUM( 2 ) )
    {

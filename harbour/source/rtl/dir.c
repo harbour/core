@@ -361,11 +361,11 @@ HB_FUNC( DIRECTORY )
 {
 #if defined(HAVE_POSIX_IO)
 
-   PHB_ITEM pDirSpec = hb_param( 1, IT_STRING );
-   PHB_ITEM pAttributes = hb_param( 2, IT_STRING );
+   PHB_ITEM pDirSpec = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pAttributes = hb_param( 2, HB_IT_STRING );
 
 #if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 1000 )
-   PHB_ITEM pEightDotThree = hb_param( 3, IT_LOGICAL );
+   PHB_ITEM pEightDotThree = hb_param( 3, HB_IT_LOGICAL );
    BOOL     bEightDotThree;
 #elif defined(__WATCOMC__)
    int      iDirnameLen;

@@ -1,3 +1,35 @@
+20000331-23:11 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbver.h
+     * Version bumped.
+
+   * include/extend.api
+   * include/hbapi.h
+   * contrib/runjava/runjava.c
+   * contrib/rdd_ads/ads1.c
+   * source/rtl/*.c
+   * source/vm/*.c
+   * source/rdd/*.c
+   * source/tools/*.c
+   * source/macro/macro.c
+     * IT_ macros prefixed with HB_
+     * IS_ macros prefixed with HB_
+
+   * source/vm/extend.c
+     % Source code made smaller.
+
+   * include/hbapi.h
+   * include/extend.api
+   * source/tools/strfmt.c
+     * PCOUNT, ALENGTH() moved to extend.api
+     - Harbour usage of these macros removed.
+
+   * .cvsignore
+     * Updated
+
+   * contrib/hbclip/readme.txt
+     - Reference to Clipper S87 removed.
+
 20000331-15:50 EST Paul Tucker <ptucker@sympatico.ca>
    * source/macro/macro.c
      * hb_valtypeGet() -> hb_itemTypeStr()

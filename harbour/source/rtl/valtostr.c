@@ -40,7 +40,7 @@ HB_FUNC( HB_VALTOSTR )
 {
    ULONG ulLen;
    BOOL bFreeReq;
-   char * buffer = hb_itemString( hb_param( 1, IT_ANY ), &ulLen, &bFreeReq );
+   char * buffer = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
 
    hb_retclen( buffer, ulLen );
 

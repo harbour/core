@@ -38,6 +38,6 @@
 
 HB_FUNC( VALTYPE )
 {
-   hb_retc( hb_itemTypeStr( hb_param( 1, IT_ANY ) ) );
+   hb_retc( hb_itemTypeStr( hb_param( 1, HB_IT_ANY ) ) );
 }
 

@@ -51,31 +51,31 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 
    if( pItem )
    {
-      if( IS_STRING( pItem ) )
+      if( HB_IS_STRING( pItem ) )
       {
          szText = hb_itemGetCPtr( pItem );
          *pulSize = hb_itemGetCLen( pItem );
       }
-      else if( IS_DATE( pItem ) )
+      else if( HB_IS_DATE( pItem ) )
       {
          char szDate[ 9 ];
 
          szText = hb_dateFormat( hb_pardsbuff( szDate, 1 ), buffer, hb_set.HB_SET_DATEFORMAT );
          *pulSize = strlen( szText );
       }
-      else if( IS_INTEGER( pItem ) )
+      else if( HB_IS_INTEGER( pItem ) )
       {
          sprintf( buffer, "%d", hb_itemGetNI( pItem ) );
          szText = buffer;
          *pulSize = strlen( szText );
       }
-      else if( IS_LONG( pItem ) )
+      else if( HB_IS_LONG( pItem ) )
       {
          sprintf( buffer, "%ld", hb_itemGetNL( pItem ) );
          szText = buffer;
          *pulSize = strlen( szText );
       }
-      else if( IS_DOUBLE( pItem ) )
+      else if( HB_IS_DOUBLE( pItem ) )
       {
          int iDecimal;
 
@@ -99,7 +99,7 @@ HB_FUNC( PADR )
 {
    ULONG ulSize;
    char buffer[ 128 ];
-   char * szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
+   char * szText = hb_itemPadConv( hb_param( 1, HB_IT_ANY ), buffer, &ulSize );
 
    if( szText && ISNUM( 2 ) )
    {
@@ -145,7 +145,7 @@ HB_FUNC( PADL )
 {
    ULONG ulSize;
    char buffer[ 128 ];
-   char * szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
+   char * szText = hb_itemPadConv( hb_param( 1, HB_IT_ANY ), buffer, &ulSize );
 
    if( szText && ISNUM( 2 ) )
    {
@@ -187,7 +187,7 @@ HB_FUNC( PADC )
 {
    ULONG ulSize;
    char buffer[ 128 ];
-   char * szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
+   char * szText = hb_itemPadConv( hb_param( 1, HB_IT_ANY ), buffer, &ulSize );
 
    if( szText && ISNUM( 2 ) )
    {

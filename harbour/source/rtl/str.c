@@ -40,7 +40,7 @@
 HB_FUNC( STR )
 {
    BOOL bValid;
-   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
    PHB_ITEM pWidth  = NULL;
    PHB_ITEM pDec    = NULL;
 
@@ -50,14 +50,14 @@ HB_FUNC( STR )
 
       if( hb_pcount() >= 2 )
       {
-         pWidth = hb_param( 2, IT_NUMERIC );
+         pWidth = hb_param( 2, HB_IT_NUMERIC );
          if( !pWidth )
             bValid = FALSE;
       }
 
       if( hb_pcount() >= 3 )
       {
-         pDec = hb_param( 3, IT_NUMERIC );
+         pDec = hb_param( 3, HB_IT_NUMERIC );
          if( !pDec )
             bValid = FALSE;
       }

@@ -35,7 +35,7 @@
 
 /* this #define HAVE TO be placed before all #include directives
  */
-#define  HB_MACRO_SUPPORT
+#define HB_MACRO_SUPPORT
 
 #include "hbmacro.h"
 #include "hbcomp.h"
@@ -102,7 +102,7 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroCheckParam(%p)", pItem));
 
-   if( ! IS_STRING(pItem) )
+   if( ! HB_IS_STRING(pItem) )
    {
       HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1080, NULL, "&" );
 
@@ -487,7 +487,7 @@ void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
  */
 static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag )
 {
-   if( IS_STRING( pAlias ) && IS_STRING( pVar ) )
+   if( HB_IS_STRING( pAlias ) && HB_IS_STRING( pVar ) )
    {
       /* grab memory for "alias->var"
       */

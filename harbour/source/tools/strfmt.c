@@ -42,7 +42,7 @@ HB_FUNC( STRFORMAT )
    char* pszMask = hb_parc(1);
    ULONG nMaskLen = hb_parclen(1);
    ULONG nMaskPos;
-   ULONG nParNum = PCOUNT;
+   ULONG nParNum = hb_pcount();
    ULONG nLenTable [HB_STRFORMAT_PARNUM_MAX_];
    char* pszVarTable [HB_STRFORMAT_PARNUM_MAX_];
 

@@ -95,14 +95,14 @@ char * hb_nationGetMsg( USHORT uiMsg )
 
 HB_FUNC( ISAFFIRM )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 0 ] );
 }
 
 HB_FUNC( ISNEGATIVE )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == s_szMessages[ _LF_YN - 1 ][ 2 ] );
 }

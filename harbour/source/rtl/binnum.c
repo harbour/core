@@ -38,7 +38,7 @@
 
 HB_FUNC( BIN2W )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
    {
@@ -58,7 +58,7 @@ HB_FUNC( BIN2W )
 
 HB_FUNC( BIN2I )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
    {
@@ -78,7 +78,7 @@ HB_FUNC( BIN2I )
 
 HB_FUNC( BIN2L )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
    {

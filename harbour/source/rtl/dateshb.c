@@ -219,7 +219,7 @@ HB_FUNC( HB_STOD )
 
 HB_FUNC( YEAR )
 {
-   PHB_ITEM pDate = hb_param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
    if( pDate )
    {
@@ -243,7 +243,7 @@ HB_FUNC( YEAR )
 
 HB_FUNC( MONTH )
 {
-   PHB_ITEM pDate = hb_param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
    if( pDate )
    {
@@ -267,7 +267,7 @@ HB_FUNC( MONTH )
 
 HB_FUNC( DAY )
 {
-   PHB_ITEM pDate = hb_param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
    if( pDate )
    {
@@ -331,7 +331,7 @@ HB_FUNC( DATE )
 
 HB_FUNC( DOW )
 {
-   PHB_ITEM pDate = hb_param( 1, IT_DATE );
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
 
    if( pDate )
    {

@@ -56,8 +56,8 @@ static int isEof[10];
 HB_FUNC( HB_FUSE )
 {
 
-   PHB_ITEM arg1_it = hb_param(1,IT_STRING);
-   PHB_ITEM arg2_it = hb_param(2,IT_NUMERIC);
+   PHB_ITEM arg1_it = hb_param(1,HB_IT_STRING);
+   PHB_ITEM arg2_it = hb_param(2,HB_IT_NUMERIC);
    int open_flags;
 
    if ( arg1_it ) {
@@ -100,7 +100,7 @@ HB_FUNC( HB_FRECNO )
 HB_FUNC( HB_FSKIP )
 {
 
-   PHB_ITEM arg1_it = hb_param(1,IT_NUMERIC);
+   PHB_ITEM arg1_it = hb_param(1,HB_IT_NUMERIC);
    int nskip;
 
    if( arg1_it )

@@ -38,40 +38,40 @@
 
 HB_FUNC( EMPTY )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   switch( hb_itemType( pItem ) & ~IT_BYREF )
+   switch( hb_itemType( pItem ) & ~HB_IT_BYREF )
    {
-      case IT_ARRAY:
+      case HB_IT_ARRAY:
          hb_retl( hb_arrayLen( pItem ) == 0 );
          break;
 
-      case IT_STRING:
-      case IT_MEMO:
+      case HB_IT_STRING:
+      case HB_IT_MEMO:
          hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
          break;
 
-      case IT_INTEGER:
+      case HB_IT_INTEGER:
          hb_retl( hb_itemGetNI( pItem ) == 0 );
          break;
 
-      case IT_LONG:
+      case HB_IT_LONG:
          hb_retl( hb_itemGetNL( pItem ) == 0 );
          break;
 
-      case IT_DOUBLE:
+      case HB_IT_DOUBLE:
          hb_retl( hb_itemGetND( pItem ) == 0.0 );
          break;
 
-      case IT_DATE:
+      case HB_IT_DATE:
          hb_retl( hb_itemGetDL( pItem ) == 0 );
          break;
 
-      case IT_LOGICAL:
+      case HB_IT_LOGICAL:
          hb_retl( ! hb_itemGetL( pItem ) );
          break;
 
-      case IT_BLOCK:
+      case HB_IT_BLOCK:
          hb_retl( FALSE );
          break;
 

@@ -76,7 +76,7 @@ ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
 
 HB_FUNC( LTRIM )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {
@@ -103,7 +103,7 @@ HB_FUNC( LTRIM )
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
 HB_FUNC( RTRIM )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {

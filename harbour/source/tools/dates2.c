@@ -146,7 +146,7 @@ HB_FUNC( ISLEAPYEAR )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
@@ -162,7 +162,7 @@ HB_FUNC( DAYSINMONTH )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
@@ -176,7 +176,7 @@ HB_FUNC( EOM )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
@@ -193,7 +193,7 @@ HB_FUNC( BOM )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
@@ -209,7 +209,7 @@ HB_FUNC( WOM )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
@@ -223,7 +223,7 @@ HB_FUNC( DOY )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
@@ -239,7 +239,7 @@ HB_FUNC( WOY )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
 
       hb_dateDecode( hb_itemGetDL( pDate ), &lDay, &lMonth, &lYear );
@@ -253,7 +253,7 @@ HB_FUNC( EOY )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 
@@ -269,7 +269,7 @@ HB_FUNC( BOY )
 {
    if( ISDATE( 1 ) )
    {
-      PHB_ITEM pDate = hb_param( 1, IT_DATE );
+      PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
       long lDay, lMonth, lYear;
       char szDateFormat[ 9 ];
 

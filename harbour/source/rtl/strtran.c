@@ -45,11 +45,11 @@
 /* TOFIX: Will not work with a search string of > 64 KB on some platforms */
 HB_FUNC( STRTRAN )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {
-      PHB_ITEM pSeek = hb_param( 2, IT_STRING );
+      PHB_ITEM pSeek = hb_param( 2, HB_IT_STRING );
 
       if( pSeek )
       {
@@ -72,7 +72,7 @@ HB_FUNC( STRTRAN )
             }
             else if( ulStart > 0 )
             {
-               PHB_ITEM pReplace = hb_param( 3, IT_STRING );
+               PHB_ITEM pReplace = hb_param( 3, HB_IT_STRING );
                ULONG ulReplace;
                ULONG ulCount;
                BOOL bAll;

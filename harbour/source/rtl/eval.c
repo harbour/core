@@ -40,7 +40,7 @@
 
 HB_FUNC( EVAL )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_BLOCK );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_BLOCK );
 
    if( pItem )
    {
@@ -50,7 +50,7 @@ HB_FUNC( EVAL )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pItem );
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       hb_vmDo( uiPCount - 1 );
    }
    else

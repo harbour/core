@@ -48,20 +48,25 @@ typedef PHB_ITEM  ITEM;
 
 /* Compatible defines */
 
-#define UNDEF           IT_NIL
-#define CHARACTER       IT_STRING
-#define NUMERIC         IT_NUMERIC
-#define LOGICAL         IT_LOGICAL
-#define DATE            IT_DATE
-#define ALIAS           IT_ALIAS
-#define MPTR            IT_BYREF        /* or'ed with type when passed by reference */
-#define MEMO            IT_MEMO
+#define UNDEF           HB_IT_NIL
+#define CHARACTER       HB_IT_STRING
+#define NUMERIC         HB_IT_NUMERIC
+#define LOGICAL         HB_IT_LOGICAL
+#define DATE            HB_IT_DATE
+#define ALIAS           HB_IT_ALIAS
+#define MPTR            HB_IT_BYREF        /* or'ed with type when passed by reference */
+#define MEMO            HB_IT_MEMO
 /* NOTE: CA-Cl*pper bug: WORD will conflict with the typedef with the same
          name in clipdefs.h [vszakats] */
-#define WORD            ( IT_INTEGER | IT_LONG )
-#define ARRAY           IT_ARRAY
-#define BLOCK           IT_BLOCK
-#define DOUBLE          IT_DOUBLE
+#define WORD            ( HB_IT_INTEGER | HB_IT_LONG )
+#define ARRAY           HB_IT_ARRAY
+#define BLOCK           HB_IT_BLOCK
+#define DOUBLE          HB_IT_DOUBLE
+
+/* Macros */
+
+#define PCOUNT          hb_pcount()
+#define ALENGTH( n )    hb_parinfa( n, 0 )
 
 /* Functions */
 

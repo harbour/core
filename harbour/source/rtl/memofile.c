@@ -43,7 +43,7 @@
 
 HB_FUNC( MEMOREAD )
 {
-   PHB_ITEM pFileName = hb_param( 1, IT_STRING );
+   PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
 
    if( pFileName )
    {
@@ -85,8 +85,8 @@ HB_FUNC( MEMOREAD )
 
 HB_FUNC( MEMOWRIT )
 {
-   PHB_ITEM pFileName = hb_param( 1, IT_STRING );
-   PHB_ITEM pString = hb_param( 2, IT_STRING );
+   PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
    BOOL bRetVal = FALSE;
 
    if( pFileName && pString )

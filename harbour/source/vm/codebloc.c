@@ -78,7 +78,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
        * The element 0 is used as the counter of references to this table
        */
       pCBlock->pLocals = ( PHB_ITEM ) hb_xgrab( ( uiLocals + 1 ) * sizeof( HB_ITEM ) );
-      pCBlock->pLocals[ 0 ].type = IT_LONG;
+      pCBlock->pLocals[ 0 ].type = HB_IT_LONG;
       pCBlock->pLocals[ 0 ].item.asLong.value = 1;
 
       while( uiLocals-- )
@@ -90,7 +90,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
           */
          pLocal = hb_stack.pBase + 1 + ( *pLocalPosTable++ );
 
-         if( ! IS_MEMVAR( pLocal ) )
+         if( ! HB_IS_MEMVAR( pLocal ) )
          {
             /* Change the value only if this variable is not referenced
              * by another codeblock yet.
@@ -100,7 +100,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
 
             hMemvar = hb_memvarValueNew( pLocal, FALSE );
 
-            pLocal->type = IT_BYREF | IT_MEMVAR;
+            pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
             pLocal->item.asMemvar.itemsbase = hb_memvarValueBaseAddress();
             pLocal->item.asMemvar.offset    = 0;
             pLocal->item.asMemvar.value     = hMemvar;
@@ -131,7 +131,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
       PHB_ITEM pLocal;
 
       pLocal = hb_stack.pBase + 1;
-      if( IS_BLOCK( pLocal ) )
+      if( HB_IS_BLOCK( pLocal ) )
       {
          HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;
 

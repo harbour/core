@@ -120,7 +120,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
    {
       USHORT uiParam = 1;
 
-      if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
+      if( HB_IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
          hb_vmPushSymbol( hb_dynsymFindName( hb_itemGetCPtr( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          hb_vmPushNil();
@@ -131,7 +131,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
          pResult = hb_itemNew( NULL );
          hb_itemCopy( pResult, &hb_stack.Return );
       }
-      else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
+      else if( HB_IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
          hb_vmPushSymbol( &hb_symEval );
          hb_vmPush( pEvalInfo->pItems[ 0 ] );
@@ -192,7 +192,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 
    if( pItem )
    {
-      if( IS_STRING( pItem ) )
+      if( HB_IS_STRING( pItem ) )
       {
          PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
 
@@ -214,7 +214,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
             hb_itemCopy( pResult, &hb_stack.Return );
          }
       }
-      else if( IS_BLOCK( pItem ) )
+      else if( HB_IS_BLOCK( pItem ) )
       {
          USHORT uiParam;
          va_list va;
@@ -231,7 +231,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
          pResult = hb_itemNew( NULL );
          hb_itemCopy( pResult, &hb_stack.Return );
       }
-      else if( IS_SYMBOL( pItem ) )
+      else if( HB_IS_SYMBOL( pItem ) )
       {
          USHORT uiParam;
          va_list va;
@@ -314,7 +314,7 @@ PHB_ITEM hb_itemNew( PHB_ITEM pNull )
    else
    {
       memset( pItem, 0, sizeof( HB_ITEM ) );
-      pItem->type = IT_NIL;
+      pItem->type = HB_IT_NIL;
    }
 
    return pItem;
@@ -328,7 +328,7 @@ PHB_ITEM hb_itemParam( USHORT uiParam )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemParam(%hu)", uiParam));
 
    pNew = hb_itemNew( NULL );
-   pItem = hb_param( uiParam, IT_ANY );
+   pItem = hb_param( uiParam, HB_IT_ANY );
 
    if( pItem )
       hb_itemCopy( pNew, pItem );
@@ -416,7 +416,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
    if( szText == NULL )
       szText = "";
 
-   pItem->type = IT_STRING;
+   pItem->type = HB_IT_STRING;
    pItem->item.asString.length = strlen( szText );
    pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
    strcpy( pItem->item.asString.value, szText );
@@ -443,7 +443,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
       ulLen = 0;
    }
 
-   pItem->type = IT_STRING;
+   pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
    pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
    hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
@@ -461,7 +461,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_STRING;
+   pItem->type = HB_IT_STRING;
    pItem->item.asString.length = ulLen;
    pItem->item.asString.value = szText;
    pItem->item.asString.value[ ulLen ] = '\0';
@@ -475,7 +475,7 @@ char * hb_itemGetC( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetC(%p)", pItem));
 
-   if( pItem && IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       char * szResult = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
       hb_xmemcpy( szResult, pItem->item.asString.value, pItem->item.asString.length );
@@ -494,7 +494,7 @@ char * hb_itemGetCPtr( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetCPtr(%p)", pItem));
 
-   if( pItem && IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
       return pItem->item.asString.value;
    else
       return "";
@@ -504,7 +504,7 @@ ULONG hb_itemGetCLen( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetCLen(%p)", pItem));
 
-   if( pItem && IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
       return pItem->item.asString.length;
    else
       return 0;
@@ -514,7 +514,7 @@ ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyC(%p, %s, %lu)", pItem, szBuffer, ulLen));
 
-   if( pItem && IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
    {
       if( ulLen == 0 )
          ulLen = pItem->item.asString.length;
@@ -551,7 +551,7 @@ char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDS(%p, %s)", szDate));
 
-   if( pItem && IS_DATE( pItem ) )
+   if( pItem && HB_IS_DATE( pItem ) )
       hb_dateDecStr( szDate, pItem->item.asDate.value );
    else
       hb_dateDecStr( szDate, 0 );
@@ -563,7 +563,7 @@ long hb_itemGetDL( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDL(%p)", pItem));
 
-   return ( pItem && IS_DATE( pItem ) ) ? pItem->item.asDate.value : 0;
+   return ( pItem && HB_IS_DATE( pItem ) ) ? pItem->item.asDate.value : 0;
 }
 
 BOOL hb_itemGetL( PHB_ITEM pItem )
@@ -574,16 +574,16 @@ BOOL hb_itemGetL( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_LOGICAL:
+         case HB_IT_LOGICAL:
             return pItem->item.asLogical.value;
 
-         case IT_INTEGER:
+         case HB_IT_INTEGER:
             return pItem->item.asInteger.value != 0;
 
-         case IT_LONG:
+         case HB_IT_LONG:
             return pItem->item.asLong.value != 0;
 
-         case IT_DOUBLE:
+         case HB_IT_DOUBLE:
             return pItem->item.asDouble.value != 0.0;
       }
    }
@@ -599,13 +599,13 @@ double hb_itemGetND( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_DOUBLE:
+         case HB_IT_DOUBLE:
             return pItem->item.asDouble.value;
 
-         case IT_INTEGER:
+         case HB_IT_INTEGER:
             return ( double ) pItem->item.asInteger.value;
 
-         case IT_LONG:
+         case HB_IT_LONG:
             return ( double ) pItem->item.asLong.value;
       }
    }
@@ -621,13 +621,13 @@ int hb_itemGetNI( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_INTEGER:
+         case HB_IT_INTEGER:
             return pItem->item.asInteger.value;
 
-         case IT_LONG:
+         case HB_IT_LONG:
             return ( int ) pItem->item.asLong.value;
 
-         case IT_DOUBLE:
+         case HB_IT_DOUBLE:
             return ( int ) pItem->item.asDouble.value;
       }
    }
@@ -643,16 +643,16 @@ long hb_itemGetNL( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_LONG:
+         case HB_IT_LONG:
             return pItem->item.asLong.value;
 
-         case IT_INTEGER:
+         case HB_IT_INTEGER:
             return ( long ) pItem->item.asInteger.value;
 
-         case IT_DOUBLE:
+         case HB_IT_DOUBLE:
             return ( long ) pItem->item.asDouble.value;
 
-         case IT_DATE:
+         case HB_IT_DATE:
             return pItem->item.asDate.value;
       }
    }
@@ -698,7 +698,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_DATE;
+   pItem->type = HB_IT_DATE;
    pItem->item.asDate.value = hb_dateEncStr( szDate );
 
    return pItem;
@@ -713,7 +713,7 @@ PHB_ITEM hb_itemPutDL( PHB_ITEM pItem, long lJulian )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_DATE;
+   pItem->type = HB_IT_DATE;
    pItem->item.asDate.value = lJulian;
 
    return pItem;
@@ -728,7 +728,7 @@ PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_LOGICAL;
+   pItem->type = HB_IT_LOGICAL;
    pItem->item.asLogical.value = bValue;
 
    return pItem;
@@ -743,7 +743,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_DOUBLE;
+   pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
    pItem->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
    pItem->item.asDouble.value = dNumber;
@@ -760,7 +760,7 @@ PHB_ITEM hb_itemPutNI( PHB_ITEM pItem, int iNumber )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_INTEGER;
+   pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.length = 10;
    pItem->item.asInteger.value = iNumber;
 
@@ -776,7 +776,7 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_LONG;
+   pItem->type = HB_IT_LONG;
    pItem->item.asLong.length = 10;
    pItem->item.asLong.value = lNumber;
 
@@ -820,7 +820,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
    if( iDec < 0 )
       iDec = hb_set.HB_SET_DECIMALS;
 
-   pItem->type = IT_DOUBLE;
+   pItem->type = HB_IT_DOUBLE;
    pItem->item.asDouble.length = iWidth;
    pItem->item.asDouble.decimal = iDec;
    pItem->item.asDouble.value = dNumber;
@@ -840,7 +840,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
    if( iWidth <= 0 || iWidth > 99 )
       iWidth = 10;
 
-   pItem->type = IT_INTEGER;
+   pItem->type = HB_IT_INTEGER;
    pItem->item.asInteger.length = iWidth;
    pItem->item.asInteger.value = iNumber;
 
@@ -859,7 +859,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
    if( iWidth <= 0 || iWidth > 99 )
       iWidth = 10;
 
-   pItem->type = IT_LONG;
+   pItem->type = HB_IT_LONG;
    pItem->item.asLong.length = iWidth;
    pItem->item.asLong.value = lNumber;
 
@@ -875,7 +875,7 @@ PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = IT_POINTER;
+   pItem->type = HB_IT_POINTER;
    pItem->item.asPointer.value = pValue;
 
    return pItem;
@@ -889,17 +889,17 @@ void hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDecimal )
    {
       switch( pItem->type )
       {
-         case IT_DOUBLE:
+         case HB_IT_DOUBLE:
             if( piWidth ) *piWidth = ( int ) pItem->item.asDouble.length;
             if( piDecimal ) *piDecimal = ( int ) pItem->item.asDouble.decimal;
             break;
 
-         case IT_LONG:
+         case HB_IT_LONG:
             if( piWidth ) *piWidth = ( int ) pItem->item.asLong.length;
             if( piDecimal ) *piDecimal = 0;
             break;
 
-         case IT_INTEGER:
+         case HB_IT_INTEGER:
             if( piWidth ) *piWidth = ( int ) pItem->item.asInteger.length;
             if( piDecimal ) *piDecimal = 0;
             break;
@@ -919,10 +919,10 @@ ULONG hb_itemSize( PHB_ITEM pItem )
    {
       switch( pItem->type )
       {
-         case IT_ARRAY:
+         case HB_IT_ARRAY:
             return hb_arrayLen( pItem );
 
-         case IT_STRING:
+         case HB_IT_STRING:
             return pItem->item.asString.length;
       }
    }
@@ -937,34 +937,36 @@ USHORT hb_itemType( PHB_ITEM pItem )
    if( pItem )
       return ( USHORT ) pItem->type;
    else
-      return IT_NIL;
+      return HB_IT_NIL;
 }
 
 char * hb_itemTypeStr( PHB_ITEM pItem )
 {
-   switch( pItem->type & ~IT_BYREF )
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemTypeStr(%p)", pItem));
+
+   switch( pItem->type & ~HB_IT_BYREF )
    {
-      case IT_ARRAY:
+      case HB_IT_ARRAY:
          return ( hb_arrayIsObject( pItem ) ? "O" : "A" );
 
-      case IT_BLOCK:
+      case HB_IT_BLOCK:
          return "B";
 
-      case IT_DATE:
+      case HB_IT_DATE:
          return "D";
 
-      case IT_LOGICAL:
+      case HB_IT_LOGICAL:
          return "L";
 
-      case IT_INTEGER:
-      case IT_LONG:
-      case IT_DOUBLE:
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
          return "N";
 
-      case IT_STRING:
+      case HB_IT_STRING:
          return "C";
 
-      case IT_MEMO:
+      case HB_IT_MEMO:
          return "M";
    }
 
@@ -977,7 +979,7 @@ void hb_itemClear( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemClear(%p)", pItem));
 
-   if( IS_STRING( pItem ) )
+   if( HB_IS_STRING( pItem ) )
    {
       if( pItem->item.asString.value )
       {
@@ -986,18 +988,18 @@ void hb_itemClear( PHB_ITEM pItem )
       }
       pItem->item.asString.length = 0;
    }
-   else if( IS_ARRAY( pItem ) && pItem->item.asArray.value )
+   else if( HB_IS_ARRAY( pItem ) && pItem->item.asArray.value )
    {
       if( --( pItem->item.asArray.value )->uiHolders == 0 )
          hb_arrayRelease( pItem );
    }
-   else if( IS_BLOCK( pItem ) )
+   else if( HB_IS_BLOCK( pItem ) )
       hb_codeblockDelete( pItem );
 
-   else if( IS_MEMVAR( pItem ) )
+   else if( HB_IS_MEMVAR( pItem ) )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
-   pItem->type = IT_NIL;
+   pItem->type = HB_IT_NIL;
 }
 
 /* Internal API, not standard Clipper */
@@ -1014,20 +1016,20 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 
-   if( IS_STRING( pSource ) )
+   if( HB_IS_STRING( pSource ) )
    {
       pDest->item.asString.value = ( char * ) hb_xgrab( pSource->item.asString.length + 1 );
       hb_xmemcpy( pDest->item.asString.value, pSource->item.asString.value, pSource->item.asString.length );
       pDest->item.asString.value[ pSource->item.asString.length ] = '\0';
    }
 
-   else if( IS_ARRAY( pSource ) )
+   else if( HB_IS_ARRAY( pSource ) )
       ( pSource->item.asArray.value )->uiHolders++;
 
-   else if( IS_BLOCK( pSource ) )
+   else if( HB_IS_BLOCK( pSource ) )
       hb_codeblockCopy( pDest, pSource );
 
-   else if( IS_MEMVAR( pSource ) )
+   else if( HB_IS_MEMVAR( pSource ) )
       hb_memvarValueIncRef( pSource->item.asMemvar.value );
 }
 
@@ -1038,9 +1040,9 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
 
-   while( IS_BYREF( pItem ) )
+   while( HB_IS_BYREF( pItem ) )
    {
-      if( IS_MEMVAR( pItem ) )
+      if( HB_IS_MEMVAR( pItem ) )
       {
          HB_VALUE_PTR pValue;
 
@@ -1206,7 +1208,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          /* Be paranoid and use a large amount of padding */
          szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
 
-         if( IS_DOUBLE( pNumber ) || iDec != 0 )
+         if( HB_IS_DOUBLE( pNumber ) || iDec != 0 )
          {
             double dNumber = hb_itemGetND( pNumber );
 
@@ -1233,7 +1235,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
                iBytes = iSize + 1;
             else
             {
-               if( IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
+               if( HB_IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
                   dNumber = hb_numRound( dNumber, iDec );
 
                if( iDec == 0 )
@@ -1244,13 +1246,13 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          }
          else
          {
-            switch( pNumber->type & ~IT_BYREF )
+            switch( pNumber->type & ~HB_IT_BYREF )
             {
-               case IT_INTEGER:
+               case HB_IT_INTEGER:
                   iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
                   break;
 
-               case IT_LONG:
+               case HB_IT_LONG:
                   iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
                   break;
 
@@ -1287,13 +1289,13 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
 
    switch( pItem->type )
    {
-      case IT_STRING:
+      case HB_IT_STRING:
          buffer = hb_itemGetCPtr( pItem );
          * ulLen = hb_itemGetCLen( pItem );
          * bFreeReq = FALSE;
          break;
 
-      case IT_DATE:
+      case HB_IT_DATE:
          {
             char szDate[ 9 ];
 
@@ -1306,9 +1308,9 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          }
          break;
 
-      case IT_DOUBLE:
-      case IT_INTEGER:
-      case IT_LONG:
+      case HB_IT_DOUBLE:
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
          buffer = hb_itemStr( pItem, NULL, NULL );
          if( buffer )
          {
@@ -1323,13 +1325,13 @@ char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          }
          break;
 
-      case IT_NIL:
+      case HB_IT_NIL:
          buffer = "NIL";
          * ulLen = 3;
          * bFreeReq = FALSE;
          break;
 
-      case IT_LOGICAL:
+      case HB_IT_LOGICAL:
          buffer = ( hb_itemGetL( pItem ) ? ".T." : ".F." );
          * ulLen = 3;
          * bFreeReq = FALSE;

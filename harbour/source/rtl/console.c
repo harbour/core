@@ -162,7 +162,7 @@ static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, hb_out_func));
 
-   pItem = hb_param( uiParam, IT_ANY );
+   pItem = hb_param( uiParam, HB_IT_ANY );
    pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
 
    pOutFunc( pszString, ulLen );

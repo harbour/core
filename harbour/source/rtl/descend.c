@@ -51,11 +51,11 @@ void hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
 
 HB_FUNC( DESCEND )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
    if( pItem )
    {
-      if( IS_STRING( pItem ) )
+      if( HB_IS_STRING( pItem ) )
       {
          ULONG ulLen = hb_itemGetCLen( pItem );
          char * szBuffer = ( char * ) hb_xgrab( ulLen );
@@ -63,11 +63,11 @@ HB_FUNC( DESCEND )
          hb_retclen( szBuffer, ulLen );
          hb_xfree( szBuffer );
       }
-      else if( IS_DATE( pItem ) )
+      else if( HB_IS_DATE( pItem ) )
          hb_retnl( 5231808 - hb_itemGetDL( pItem ) );
-      else if( IS_NUMERIC( pItem ) )
+      else if( HB_IS_NUMERIC( pItem ) )
          hb_retnd( -1 * hb_itemGetND( pItem ) );
-      else if( IS_LOGICAL( pItem ) )
+      else if( HB_IS_LOGICAL( pItem ) )
          hb_retl( ! hb_itemGetL( pItem ) );
    }
 }

@@ -38,7 +38,7 @@
 
 HB_FUNC( TYPE )
 {
-   HB_ITEM_PTR pItem = hb_param( 1, IT_STRING );
+   HB_ITEM_PTR pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
       hb_retc( hb_macroGetType( pItem ) );

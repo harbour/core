@@ -40,9 +40,9 @@
 
 HB_FUNC( DO )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( IS_STRING( pItem ) )
+   if( HB_IS_STRING( pItem ) )
    {
       PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
 
@@ -54,13 +54,13 @@ HB_FUNC( DO )
          hb_vmPushSymbol( pDynSym->pSymbol );
          hb_vmPushNil();
          for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
+            hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
          hb_vmDo( uiPCount - 1 );
       }
       else
          hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ) );
    }
-   else if( IS_BLOCK( pItem ) )
+   else if( HB_IS_BLOCK( pItem ) )
    {
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
@@ -68,10 +68,10 @@ HB_FUNC( DO )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pItem );
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       hb_vmDo( uiPCount - 1 );
    }
-   else if( IS_SYMBOL( pItem ) )
+   else if( HB_IS_SYMBOL( pItem ) )
    {
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
@@ -79,7 +79,7 @@ HB_FUNC( DO )
       hb_vmPushSymbol( pItem->item.asSymbol.value );
       hb_vmPushNil();
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       hb_vmDo( uiPCount - 1 );
    }
    else

@@ -52,7 +52,7 @@
 
 HB_FUNC( INT )
 {
-   PHB_ITEM pNumber = hb_param( 1, IT_NUMERIC );
+   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
 
    if( pNumber )
    {

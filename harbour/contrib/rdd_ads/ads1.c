@@ -270,7 +270,7 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("adsGoToId(%p, %p)", pArea, pItem));
 
-   if( IS_NUMERIC( pItem ) )
+   if( HB_IS_NUMERIC( pItem ) )
    {
       ulRecNo = hb_itemGetNL( pItem );
       if( ulRecNo == 0 )
@@ -546,7 +546,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( pField->uiType )
    {
       case 'C':
-         if( IS_STRING( pItem ) )
+         if( HB_IS_STRING( pItem ) )
          {
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
@@ -559,7 +559,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'N':
-         if( IS_NUMERIC( pItem ) )
+         if( HB_IS_NUMERIC( pItem ) )
          {
             if( pField->uiDec )
                bError = !hb_ndtoa( hb_itemGetND( pItem ), ( char * ) szText,
@@ -579,7 +579,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'D':
-         if( IS_DATE( pItem ) )
+         if( HB_IS_DATE( pItem ) )
          {
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
@@ -594,7 +594,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'L':
-         if( IS_LOGICAL( pItem ) )
+         if( HB_IS_LOGICAL( pItem ) )
          {
             *szText = hb_itemGetL( pItem ) ? 'T' : 'F';
             bError = FALSE;
@@ -603,7 +603,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'M':
-         if( IS_STRING( pItem ) )
+         if( HB_IS_STRING( pItem ) )
          {
             uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             AdsSetString( pArea->hTable, szName,
@@ -898,7 +898,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( pOrderInfo->itmOrder )
    {
-      if( IS_NUMERIC( pOrderInfo->itmOrder ) )
+      if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )
       {
          usOrder = (UNSIGNED16) hb_itemGetNI( pOrderInfo->itmOrder );
          if( usOrder )
@@ -909,7 +909,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
             return SUCCESS;
          }
       }
-      else if( IS_STRING( pOrderInfo->itmOrder ) )
+      else if( HB_IS_STRING( pOrderInfo->itmOrder ) )
       {
          ulRetVal = AdsGetIndexHandle( pArea->hTable,
             (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), &phIndex );
@@ -958,7 +958,7 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    UNSIGNED32 ulRetVal;
    HB_TRACE(HB_TR_DEBUG, ("adsOrderDestroy(%p, %p)", pArea, pOrderInfo));
 
-   if( IS_STRING( pOrderInfo->itmOrder ) )
+   if( HB_IS_STRING( pOrderInfo->itmOrder ) )
    {
       ulRetVal = AdsGetIndexHandle( pArea->hTable,
           (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), &phIndex );
@@ -983,12 +983,12 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo));
 
-   if( pOrderInfo->itmOrder && !IS_NIL(pOrderInfo->itmOrder) )
+   if( pOrderInfo->itmOrder && !HB_IS_NIL(pOrderInfo->itmOrder) )
    {
-      if( IS_NUMERIC( pOrderInfo->itmOrder ) )
+      if( HB_IS_NUMERIC( pOrderInfo->itmOrder ) )
          ulRetVal = AdsGetIndexHandleByOrder( pArea->hTable,
             (UNSIGNED16) hb_itemGetNI( pOrderInfo->itmOrder ), &phIndex );
-      else if( IS_STRING( pOrderInfo->itmOrder ) )
+      else if( HB_IS_STRING( pOrderInfo->itmOrder ) )
          ulRetVal = AdsGetIndexHandle( pArea->hTable,
             (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), &phIndex );
       if( ulRetVal != AE_SUCCESS )

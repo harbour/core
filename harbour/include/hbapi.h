@@ -49,57 +49,54 @@ extern "C" {
 #endif
 
 /* items types and type checking macros */
-#define IT_NIL          ( ( USHORT ) 0x0000 )
-#define IT_POINTER      ( ( USHORT ) 0x0001 )
-#define IT_INTEGER      ( ( USHORT ) 0x0002 )
-#define IT_LONG         ( ( USHORT ) 0x0008 )
-#define IT_DOUBLE       ( ( USHORT ) 0x0010 )
-#define IT_DATE         ( ( USHORT ) 0x0020 )
-#define IT_LOGICAL      ( ( USHORT ) 0x0080 )
-#define IT_SYMBOL       ( ( USHORT ) 0x0100 )
-#define IT_ALIAS        ( ( USHORT ) 0x0200 )
-#define IT_STRING       ( ( USHORT ) 0x0400 )
-#define IT_MEMOFLAG     ( ( USHORT ) 0x0800 )
-#define IT_MEMO         ( IT_MEMOFLAG | IT_STRING )
-#define IT_BLOCK        ( ( USHORT ) 0x1000 )
-#define IT_BYREF        ( ( USHORT ) 0x2000 )
-#define IT_MEMVAR       ( ( USHORT ) 0x4000 )
-#define IT_ARRAY        ( ( USHORT ) 0x8000 )
-#define IT_OBJECT       IT_ARRAY
-#define IT_NUMERIC      ( ( USHORT ) ( IT_INTEGER | IT_LONG | IT_DOUBLE ) )
-#define IT_ANY          ( ( USHORT ) 0xFFFF )
+#define HB_IT_NIL       ( ( USHORT ) 0x0000 )
+#define HB_IT_POINTER   ( ( USHORT ) 0x0001 )
+#define HB_IT_INTEGER   ( ( USHORT ) 0x0002 )
+#define HB_IT_LONG      ( ( USHORT ) 0x0008 )
+#define HB_IT_DOUBLE    ( ( USHORT ) 0x0010 )
+#define HB_IT_DATE      ( ( USHORT ) 0x0020 )
+#define HB_IT_LOGICAL   ( ( USHORT ) 0x0080 )
+#define HB_IT_SYMBOL    ( ( USHORT ) 0x0100 )
+#define HB_IT_ALIAS     ( ( USHORT ) 0x0200 )
+#define HB_IT_STRING    ( ( USHORT ) 0x0400 )
+#define HB_IT_MEMOFLAG  ( ( USHORT ) 0x0800 )
+#define HB_IT_MEMO      ( HB_IT_MEMOFLAG | HB_IT_STRING )
+#define HB_IT_BLOCK     ( ( USHORT ) 0x1000 )
+#define HB_IT_BYREF     ( ( USHORT ) 0x2000 )
+#define HB_IT_MEMVAR    ( ( USHORT ) 0x4000 )
+#define HB_IT_ARRAY     ( ( USHORT ) 0x8000 )
+#define HB_IT_OBJECT    HB_IT_ARRAY
+#define HB_IT_NUMERIC   ( ( USHORT ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
+#define HB_IT_ANY       ( ( USHORT ) 0xFFFF )
 
-#define IS_BYREF( p )      ( ( p )->type & IT_BYREF )
-#define IS_OF_TYPE( p, t ) ( ( ( p )->type & ~IT_BYREF ) == t )
-#define IS_ARRAY( p )      IS_OF_TYPE( p, IT_ARRAY )
-#define IS_NIL( p )        IS_OF_TYPE( p, IT_NIL )
-#define IS_BLOCK( p )      IS_OF_TYPE( p, IT_BLOCK )
-#define IS_DATE( p )       IS_OF_TYPE( p, IT_DATE )
-#define IS_DOUBLE( p )     IS_OF_TYPE( p, IT_DOUBLE )
-#define IS_INTEGER( p )    IS_OF_TYPE( p, IT_INTEGER )
-#define IS_LOGICAL( p )    IS_OF_TYPE( p, IT_LOGICAL )
-#define IS_LONG( p )       IS_OF_TYPE( p, IT_LONG )
-#define IS_NUMERIC( p )    ( ( p )->type & IT_NUMERIC )
-#define IS_OBJECT( p )     IS_OF_TYPE( p, IT_OBJECT )
-#define IS_STRING( p )     IS_OF_TYPE( p, IT_STRING )
-#define IS_MEMO( p )       IS_OF_TYPE( p, IT_MEMO )
-#define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
-#define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
-#define IS_POINTER( p )    IS_OF_TYPE( p, IT_POINTER )
+#define HB_IS_OF_TYPE( p, t ) ( ( ( p )->type & ~HB_IT_BYREF ) == t )
+#define HB_IS_BYREF( p )   ( ( p )->type & HB_IT_BYREF )
+#define HB_IS_ARRAY( p )   HB_IS_OF_TYPE( p, HB_IT_ARRAY )
+#define HB_IS_NIL( p )     HB_IS_OF_TYPE( p, HB_IT_NIL )
+#define HB_IS_BLOCK( p )   HB_IS_OF_TYPE( p, HB_IT_BLOCK )
+#define HB_IS_DATE( p )    HB_IS_OF_TYPE( p, HB_IT_DATE )
+#define HB_IS_DOUBLE( p )  HB_IS_OF_TYPE( p, HB_IT_DOUBLE )
+#define HB_IS_INTEGER( p ) HB_IS_OF_TYPE( p, HB_IT_INTEGER )
+#define HB_IS_LOGICAL( p ) HB_IS_OF_TYPE( p, HB_IT_LOGICAL )
+#define HB_IS_LONG( p )    HB_IS_OF_TYPE( p, HB_IT_LONG )
+#define HB_IS_NUMERIC( p ) ( ( p )->type & HB_IT_NUMERIC )
+#define HB_IS_OBJECT( p )  HB_IS_OF_TYPE( p, HB_IT_OBJECT )
+#define HB_IS_STRING( p )  HB_IS_OF_TYPE( p, HB_IT_STRING )
+#define HB_IS_MEMO( p )    HB_IS_OF_TYPE( p, HB_IT_MEMO )
+#define HB_IS_SYMBOL( p )  HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
+#define HB_IS_MEMVAR( p )  HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
+#define HB_IS_POINTER( p ) HB_IS_OF_TYPE( p, HB_IT_POINTER )
 
-#define ISNIL( n )         ( hb_param( n, IT_ANY ) == NULL || IS_NIL( hb_param( n, IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
-#define ISCHAR( n )        ( hb_param( n, IT_STRING ) != NULL )
-#define ISNUM( n )         ( hb_param( n, IT_NUMERIC ) != NULL )
-#define ISLOG( n )         ( hb_param( n, IT_LOGICAL ) != NULL )
-#define ISDATE( n )        ( hb_param( n, IT_DATE ) != NULL )
-#define ISMEMO( n )        ( hb_param( n, IT_MEMO ) != NULL )
-#define ISBYREF( n )       ( hb_parinfo( n ) & IT_BYREF ) /* NOTE: Intentionally using a different method */
-#define ISARRAY( n )       ( hb_param( n, IT_ARRAY ) != NULL )
-#define ISBLOCK( n )       ( hb_param( n, IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
-#define ISPOINTER( n )     ( hb_param( n, IT_POINTER ) != NULL ) /* Not available in CA-Cl*pper. */
-
-#define PCOUNT             hb_pcount()
-#define ALENGTH( n )       hb_parinfa( n, 0 )
+#define ISNIL( n )         ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
+#define ISCHAR( n )        ( hb_param( n, HB_IT_STRING ) != NULL )
+#define ISNUM( n )         ( hb_param( n, HB_IT_NUMERIC ) != NULL )
+#define ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
+#define ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
+#define ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
+#define ISBYREF( n )       ( hb_parinfo( n ) & HB_IT_BYREF ) /* NOTE: Intentionally using a different method */
+#define ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
+#define ISBLOCK( n )       ( hb_param( n, HB_IT_BLOCK ) != NULL ) /* Not available in CA-Cl*pper. */
+#define ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL ) /* Not available in CA-Cl*pper. */
 
 /* forward declarations */
 struct _HB_CODEBLOCK;
@@ -131,6 +128,7 @@ struct hb_struDate
  * performed by the compiler)
  */
 #define HB_DEFAULT_DECIMALS  255
+
 struct hb_struDouble
 {
    USHORT length;
@@ -443,7 +441,7 @@ typedef struct HB_CBVAR_  /* This structure holds local variables declared in a 
    char * szName;
    BYTE bType;
    struct HB_CBVAR_ * pNext;
-} HB_CBVAR, *HB_CBVAR_PTR;
+} HB_CBVAR, * HB_CBVAR_PTR;
 
 typedef struct HB_PCODE_INFO_   /* compiled pcode container */
 {

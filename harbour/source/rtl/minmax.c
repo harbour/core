@@ -40,15 +40,15 @@
 /* returns the maximum of two date or numerics */
 HB_FUNC( MAX )
 {
-   PHB_ITEM p1 = hb_param( 1, IT_ANY );
-   PHB_ITEM p2 = hb_param( 2, IT_ANY );
+   PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM p2 = hb_param( 2, HB_IT_ANY );
 
-   if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
+   if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
    {
       /* NOTE: The order of these if() branches is significant, */
       /*       please, don't change it. [vszakats] */
 
-      if( IS_DOUBLE( p1 ) || IS_DOUBLE( p2 ) )
+      if( HB_IS_DOUBLE( p1 ) || HB_IS_DOUBLE( p2 ) )
       {
          double d1 = hb_itemGetND( p1 );
          double d2 = hb_itemGetND( p2 );
@@ -64,7 +64,7 @@ HB_FUNC( MAX )
          else
             hb_retndlen( d2, 0, iDec2 );
       }
-      else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
+      else if( HB_IS_LONG( p1 ) || HB_IS_LONG( p2 ) )
       {
          long l1 = hb_itemGetNL( p1 );
          long l2 = hb_itemGetNL( p2 );
@@ -79,7 +79,7 @@ HB_FUNC( MAX )
          hb_retni( i1 >= i2 ? i1 : i2 );
       }
    }
-   else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
+   else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
    {
       char szDate[ 9 ];
 
@@ -100,15 +100,15 @@ HB_FUNC( MAX )
 /* returns the minimum of two date or numerics */
 HB_FUNC( MIN )
 {
-   PHB_ITEM p1 = hb_param( 1, IT_ANY );
-   PHB_ITEM p2 = hb_param( 2, IT_ANY );
+   PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM p2 = hb_param( 2, HB_IT_ANY );
 
-   if( IS_NUMERIC( p1 ) && IS_NUMERIC( p2 ) )
+   if( HB_IS_NUMERIC( p1 ) && HB_IS_NUMERIC( p2 ) )
    {
       /* NOTE: The order of these if() branches is significant, */
       /*       please, don't change it. [vszakats] */
 
-      if( IS_DOUBLE( p1 ) || IS_DOUBLE( p2 ) )
+      if( HB_IS_DOUBLE( p1 ) || HB_IS_DOUBLE( p2 ) )
       {
          double d1 = hb_itemGetND( p1 );
          double d2 = hb_itemGetND( p2 );
@@ -124,7 +124,7 @@ HB_FUNC( MIN )
          else
             hb_retndlen( d2, 0, iDec2 );
       }
-      else if( IS_LONG( p1 ) || IS_LONG( p2 ) )
+      else if( HB_IS_LONG( p1 ) || HB_IS_LONG( p2 ) )
       {
          long l1 = hb_itemGetNL( p1 );
          long l2 = hb_itemGetNL( p2 );
@@ -139,7 +139,7 @@ HB_FUNC( MIN )
          hb_retni( i1 <= i2 ? i1 : i2 );
       }
    }
-   else if( IS_DATE( p1 ) && IS_DATE( p2 ) )
+   else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
    {
       char szDate[ 9 ];
 

@@ -329,7 +329,7 @@ HB_FUNC( INKEY )
    double seconds = 0.0;
    HB_inkey_enum event_mask = hb_set.HB_SET_EVENTMASK; /* Default to the SET input event mask */
 
-   if( args == 1 || ( args > 1 && hb_param( 1, IT_NUMERIC ) ) )
+   if( args == 1 || ( args > 1 && hb_param( 1, HB_IT_NUMERIC ) ) )
    {
       /* If only one parameter or if 1st parameter is numeric, then use it
          as the number of seconds to wait for an input event, in seconds. */
@@ -338,7 +338,7 @@ HB_FUNC( INKEY )
       if( seconds * CLOCKS_PER_SEC < 1 ) forever = TRUE;
    }
 
-   if( args > 1 && hb_param( 2, IT_NUMERIC ) )
+   if( args > 1 && hb_param( 2, HB_IT_NUMERIC ) )
    {
       /* If 2nd parameter is numeric, then use it as the input mask */
       event_mask = ( HB_inkey_enum )hb_parni( 2 );

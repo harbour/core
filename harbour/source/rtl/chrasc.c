@@ -72,7 +72,7 @@ HB_FUNC( CHR )
 /* converts a character value to an ASCII code */
 HB_FUNC( ASC )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {

@@ -40,8 +40,8 @@
 
 HB_FUNC( CT_CHARMIX )
 {
-   PHB_ITEM pStr1 = hb_param( 1, IT_STRING );
-   PHB_ITEM pStr2 = hb_param( 2, IT_STRING );
+   PHB_ITEM pStr1 = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pStr2 = hb_param( 2, HB_IT_STRING );
    ULONG ulLen2;
 
    if( pStr1 && pStr2 && ( ulLen2 = hb_itemGetCLen( pStr2 ) ) > 0 )

@@ -330,8 +330,8 @@ static char * NumPicture( char * szPic, ULONG ulPicLen, USHORT * puiPicFlags, do
 
 HB_FUNC( TRANSFORM )
 {
-   PHB_ITEM pExp = hb_param( 1, IT_ANY ); /* Input parameter */
-   PHB_ITEM pPic = hb_param( 2, IT_STRING ); /* Picture string */
+   PHB_ITEM pExp = hb_param( 1, HB_IT_ANY ); /* Input parameter */
+   PHB_ITEM pPic = hb_param( 2, HB_IT_STRING ); /* Picture string */
 
    BOOL bError = FALSE;
 
@@ -347,7 +347,7 @@ HB_FUNC( TRANSFORM )
 
       uiPicFlags = PictFunc( &szPic, &ulPicLen, &ulPicStart ); /* Evaluate picture string */
 
-      if( IS_STRING( pExp ) )
+      if( HB_IS_STRING( pExp ) )
       {
          char * szExp = hb_itemGetCPtr( pExp );
          ULONG  ulExpLen = hb_itemGetCLen( pExp );
@@ -453,7 +453,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
-      else if( IS_NUMERIC( pExp ) )
+      else if( HB_IS_NUMERIC( pExp ) )
       {
          int iOrigWidth;
          int iOrigDec;
@@ -464,7 +464,7 @@ HB_FUNC( TRANSFORM )
             hb_itemGetND( pExp ), &ulResultPos, iOrigWidth, iOrigDec );
       }
 
-      else if( IS_DATE( pExp ) )
+      else if( HB_IS_DATE( pExp ) )
       {
          char szDate[ 9 ];
 
@@ -478,7 +478,7 @@ HB_FUNC( TRANSFORM )
          ulResultPos = strlen( szResult );
       }
 
-      else if( IS_LOGICAL( pExp ) )
+      else if( HB_IS_LOGICAL( pExp ) )
       {
          BOOL bDone = FALSE;
 
@@ -561,11 +561,11 @@ HB_FUNC( TRANSFORM )
    }
    else if( pPic || ISNIL( 2 ) ) /* Picture is an empty string or NIL */
    {
-      if( IS_STRING( pExp ) )
+      if( HB_IS_STRING( pExp ) )
       {
          hb_itemReturn( pExp );
       }
-      else if( IS_NUMERIC( pExp ) )
+      else if( HB_IS_NUMERIC( pExp ) )
       {
          char * szStr = hb_itemStr( pExp, NULL, NULL );
 
@@ -577,14 +577,14 @@ HB_FUNC( TRANSFORM )
          else
             hb_retc( "" );
       }
-      else if( IS_DATE( pExp ) )
+      else if( HB_IS_DATE( pExp ) )
       {
          char szDate[ 9 ];
          char szResult[ 11 ];
 
          hb_retc( hb_dateFormat( hb_itemGetDS( pExp, szDate ), szResult, hb_set.HB_SET_DATEFORMAT ) );
       }
-      else if( IS_LOGICAL( pExp ) )
+      else if( HB_IS_LOGICAL( pExp ) )
       {
          hb_retc( hb_itemGetL( pExp ) ? "T" : "F" );
       }

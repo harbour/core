@@ -39,7 +39,7 @@
 
 HB_FUNC( LEN )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
    /* NOTE: Double safety to ensure that a parameter was really passed,
             compiler checks this, but a direct hb_vmDo() call
@@ -47,12 +47,12 @@ HB_FUNC( LEN )
 
    if( pItem )
    {
-      if( IS_STRING( pItem ) )
+      if( HB_IS_STRING( pItem ) )
       {
          hb_retnl( hb_itemGetCLen( pItem ) );
          return;
       }
-      else if( IS_ARRAY( pItem ) )
+      else if( HB_IS_ARRAY( pItem ) )
       {
          hb_retnl( hb_arrayLen( pItem ) );
          return;

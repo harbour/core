@@ -42,8 +42,8 @@
 
 HB_FUNC( AT )
 {
-   PHB_ITEM pSub = hb_param( 1, IT_STRING );
-   PHB_ITEM pText = hb_param( 2, IT_STRING );
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
 
    if( pText && pSub )
    {

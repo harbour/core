@@ -233,7 +233,7 @@ char * hb_objGetClsName( PHB_ITEM pObject )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetClsName(%p)", pObject));
 
-   if( IS_ARRAY( pObject ) )
+   if( HB_IS_ARRAY( pObject ) )
    {
       if( ! pObject->item.asArray.value->uiClass )
          szClassName = "ARRAY";
@@ -245,33 +245,33 @@ char * hb_objGetClsName( PHB_ITEM pObject )
    {
       switch( pObject->type )
       {
-         case IT_NIL:
+         case HB_IT_NIL:
               szClassName = "NIL";
               break;
 
-         case IT_STRING:
+         case HB_IT_STRING:
               szClassName = "CHARACTER";
               break;
 
-         case IT_BLOCK:
+         case HB_IT_BLOCK:
               szClassName = "BLOCK";
               break;
 
-         case IT_SYMBOL:
+         case HB_IT_SYMBOL:
               szClassName = "SYMBOL";
               break;
 
-         case IT_DATE:
+         case HB_IT_DATE:
               szClassName = "DATE";
               break;
 
-         case IT_INTEGER:
-         case IT_LONG:
-         case IT_DOUBLE:
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DOUBLE:
               szClassName = "NUMERIC";
               break;
 
-         case IT_LOGICAL:
+         case HB_IT_LOGICAL:
               szClassName = "LOGICAL";
               break;
 
@@ -296,7 +296,7 @@ PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_objGetMethod(%p, %p)", pObject, pMessage));
 
-   if( pObject->type == IT_ARRAY )
+   if( pObject->type == HB_IT_ARRAY )
       uiClass = pObject->item.asArray.value->uiClass;
    else
       uiClass = 0;
@@ -404,7 +404,7 @@ HB_FUNC( __CLSADDMSG )
       USHORT   uiMask   = pClass->uiHashKey * BUCKET;
       PMETHOD  pNewMeth;
 
-      if( wType == HB_OO_MSG_INLINE && hb_param( 3, IT_BLOCK ) == NULL )
+      if( wType == HB_OO_MSG_INLINE && hb_param( 3, HB_IT_BLOCK ) == NULL )
       {
          hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG" );
       }
@@ -437,13 +437,13 @@ HB_FUNC( __CLSADDMSG )
                  pNewMeth->pFunction = hb___msgSetData;
               else
               {
-                 PHB_ITEM pInit = hb_param( 5, IT_ANY );
+                 PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
 
                  pNewMeth->pFunction  = hb___msgGetData;
 
-                 if( pInit && ! IS_NIL( pInit ) ) /* Initializer found */
+                 if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                  {
-                    if( IS_ARRAY( pInit ) )
+                    if( HB_IS_ARRAY( pInit ) )
                        pNewMeth->pInitValue = hb_arrayClone( pInit );
                     else
                     {
@@ -464,13 +464,13 @@ HB_FUNC( __CLSADDMSG )
                  pNewMeth->pFunction = hb___msgSetClsData;
               else
               {
-                 PHB_ITEM pInit = hb_param( 5, IT_ANY );
+                 PHB_ITEM pInit = hb_param( 5, HB_IT_ANY );
 
                  pNewMeth->pFunction = hb___msgGetClsData;
 
-                 if( pInit && ! IS_NIL( pInit ) ) /* Initializer found */
+                 if( pInit && ! HB_IS_NIL( pInit ) ) /* Initializer found */
                  {
-                    if( IS_ARRAY( pInit ) )
+                    if( HB_IS_ARRAY( pInit ) )
                        pNewMeth->pInitValue = hb_arrayClone( pInit );
                     else
                     {
@@ -485,7 +485,7 @@ HB_FUNC( __CLSADDMSG )
               pNewMeth->uiData = ( USHORT ) ( hb_arrayLen( pClass->pInlines ) + 1 );
               hb_arraySize( pClass->pInlines, pNewMeth->uiData );
               hb_arraySet(  pClass->pInlines, pNewMeth->uiData,
-                            hb_param( 3, IT_BLOCK ) );
+                            hb_param( 3, HB_IT_BLOCK ) );
               pNewMeth->pFunction = hb___msgEvalInline;
               break;
 
@@ -597,7 +597,7 @@ HB_FUNC( __CLSNEW )
 HB_FUNC( __CLSDELMSG )
 {
    USHORT uiClass = hb_parni( 1 );
-   PHB_ITEM pString = hb_param( 2, IT_STRING );
+   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
 
    if( uiClass && uiClass <= s_uiClasses && pString )
    {
@@ -674,7 +674,7 @@ HB_FUNC( __CLSINST )
          {
             if( pMeth->pFunction != hb___msgGetClsData ) /* is a DATA */
             {
-               if( IS_ARRAY( pMeth->pInitValue ) )
+               if( HB_IS_ARRAY( pMeth->pInitValue ) )
                {
                   PHB_ITEM pInitValue = hb_arrayClone( pMeth->pInitValue );
                   hb_itemArrayPut( &hb_stack.Return, pMeth->uiData, pInitValue );
@@ -688,7 +688,7 @@ HB_FUNC( __CLSINST )
             {
                HB_ITEM init;
                hb_arrayGet( pClass->pClassDatas, pMeth->uiData, &init );
-               if( init.type == IT_NIL )
+               if( init.type == HB_IT_NIL )
                {
                   hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
                   pMeth->bClsDataInitiated = 1;
@@ -709,7 +709,7 @@ HB_FUNC( __CLSINST )
 HB_FUNC( __CLSMODMSG )
 {
    USHORT uiClass = hb_parni( 1 );
-   PHB_ITEM pString = hb_param( 2, IT_STRING );
+   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
 
    if( uiClass && uiClass <= s_uiClasses && pString )
    {
@@ -737,7 +737,7 @@ HB_FUNC( __CLSMODMSG )
 
             if( pFunc == hb___msgEvalInline )      /* INLINE method changed    */
             {
-               PHB_ITEM pBlock = hb_param( 3, IT_BLOCK );
+               PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
 
                if( pBlock == NULL )
                   hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG" );
@@ -763,7 +763,7 @@ HB_FUNC( __CLSMODMSG )
  */
 HB_FUNC( __OBJGETCLSNAME )
 {
-   PHB_ITEM pObject = hb_param( 0, IT_OBJECT );
+   PHB_ITEM pObject = hb_param( 0, HB_IT_OBJECT );
    USHORT uiClass;
 
    if( pObject && pObject->item.asArray.value->uiClass )
@@ -791,8 +791,8 @@ HB_FUNC( __OBJGETCLSNAME )
  */
 HB_FUNC( __OBJHASMSG )
 {
-   PHB_ITEM pObject = hb_param( 1, IT_OBJECT );
-   PHB_ITEM pString = hb_param( 2, IT_STRING );
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
 
    if( pObject && pString )
       hb_retl( hb_objHasMsg( pObject, pString->item.asString.value ) != 0 );
@@ -808,7 +808,7 @@ HB_FUNC( __OBJHASMSG )
  */
 HB_FUNC( __OBJCLONE )
 {
-   PHB_ITEM pSrcObject = hb_param( 1, IT_OBJECT );
+   PHB_ITEM pSrcObject = hb_param( 1, HB_IT_OBJECT );
 
    if( pSrcObject )
    {
@@ -829,8 +829,8 @@ HB_FUNC( __OBJCLONE )
  */
 HB_FUNC( __OBJSENDMSG )
 {
-   PHB_ITEM pObject  = hb_param( 1, IT_OBJECT );
-   PHB_ITEM pMessage = hb_param( 2, IT_STRING );
+   PHB_ITEM pObject  = hb_param( 1, HB_IT_OBJECT );
+   PHB_ITEM pMessage = hb_param( 2, HB_IT_STRING );
 
    if( pMessage && pObject )                /* Object & message passed      */
    {
@@ -844,7 +844,7 @@ HB_FUNC( __OBJSENDMSG )
          hb_vmMessage( pMsg->pSymbol );
                                             /* Push char symbol as message  */
          for( uiParam = 3; uiParam <= hb_pcount(); uiParam++ )   /* Push arguments on stack      */
-            hb_vmPush( hb_param( uiParam, IT_ANY ) );
+            hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
          hb_vmDo( hb_pcount() - 2 );                  /* Execute message              */
       }
    }
@@ -860,7 +860,7 @@ HB_FUNC( __OBJSENDMSG )
  */
 HB_FUNC( __CLSINSTSUPER )
 {
-   PHB_ITEM pString = hb_param( 1, IT_STRING );
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
    BOOL bFound = FALSE;
 
    if( pString )
@@ -875,7 +875,7 @@ HB_FUNC( __CLSINSTSUPER )
          hb_vmPushNil();
          hb_vmFunction( 0 );                         /* Execute super class      */
 
-         if( !IS_OBJECT( &hb_stack.Return ) )
+         if( !HB_IS_OBJECT( &hb_stack.Return ) )
          {
             hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER" );
          }
@@ -1027,7 +1027,7 @@ HB_FUNC( __CLASSSEL )
  */
 static HARBOUR hb___msgClsH( void )
 {
-   if( IS_ARRAY( hb_stack.pBase + 1 ) )
+   if( HB_IS_ARRAY( hb_stack.pBase + 1 ) )
       hb_retni( ( hb_stack.pBase + 1 )->item.asArray.value->uiClass );
    else
       hb_retni( 0 );
@@ -1043,7 +1043,7 @@ static HARBOUR hb___msgClsName( void )
 {
    PHB_ITEM pItemRef;
 
-   if( IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */
+   if( HB_IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */
       pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
    else
       pItemRef = hb_stack.pBase + 1;
@@ -1059,15 +1059,15 @@ static HARBOUR hb___msgClsName( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   USHORT uiClass = IS_ARRAY( hb_stack.pBase + 1 ) ?
+   USHORT uiClass = HB_IS_ARRAY( hb_stack.pBase + 1 ) ?
                  ( hb_stack.pBase + 1 )->item.asArray.value->uiClass : 0;
                                                 /* Get class word           */
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
-   if( ( ! uiClass ) && IS_BYREF( hb_stack.pBase + 1 ) )
+   if( ( ! uiClass ) && HB_IS_BYREF( hb_stack.pBase + 1 ) )
    {                                            /* Variables by reference   */
       PHB_ITEM pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
-      if( IS_ARRAY( pItemRef ) )
+      if( HB_IS_ARRAY( pItemRef ) )
          uiClass = pItemRef->item.asArray.value->uiClass;
    }
 
@@ -1116,7 +1116,7 @@ static HARBOUR hb___msgEvalInline( void )
    hb_vmPush( &block );
    hb_vmPush( hb_stack.pBase + 1 );                     /* Push self                */
    for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
-      hb_vmPush( hb_param( uiParam, IT_ANY ) );
+      hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
    hb_vmDo( hb_pcount() + 1 );                       /* Self is also an argument */
 
    hb_itemClear( &block );                       /* Release block            */
@@ -1130,14 +1130,14 @@ static HARBOUR hb___msgEvalInline( void )
  */
 static HARBOUR hb___msgEval( void )
 {
-   if( IS_BLOCK( hb_stack.pBase + 1 ) )
+   if( HB_IS_BLOCK( hb_stack.pBase + 1 ) )
    {
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( hb_stack.pBase + 1 );                     /* Push block               */
       for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
-         hb_vmPush( hb_param( uiParam, IT_ANY ) );
+         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
       hb_vmDo( hb_pcount() );                       /* Self is also an argument */
    }
    else

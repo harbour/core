@@ -79,7 +79,7 @@ char * hb_strMemotran( char * pszResult, ULONG * ulResultLen, const char * pszSt
 
 HB_FUNC( MEMOTRAN )
 {
-   PHB_ITEM pString = hb_param( 1, IT_STRING );
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
 
    if( pString )
    {

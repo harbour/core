@@ -39,10 +39,10 @@
 
 HB_FUNC( DISPBOX )
 {
-   PHB_ITEM pTop    = hb_param( 1, IT_NUMERIC );
-   PHB_ITEM pLeft   = hb_param( 2, IT_NUMERIC );
-   PHB_ITEM pBottom = hb_param( 3, IT_NUMERIC );
-   PHB_ITEM pRight  = hb_param( 4, IT_NUMERIC );
+   PHB_ITEM pTop    = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pLeft   = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pBottom = hb_param( 3, HB_IT_NUMERIC );
+   PHB_ITEM pRight  = hb_param( 4, HB_IT_NUMERIC );
 
    if( pTop && pLeft && pBottom && pRight )
    {

@@ -93,11 +93,11 @@ HB_FUNC( ARRAY )
 
 HB_FUNC( AADD )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
    {
-      PHB_ITEM pValue = hb_param( 2, IT_ANY );
+      PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
       if( pValue && hb_arrayAdd( pArray, pValue ) )
          hb_itemReturn( pValue );
@@ -121,7 +121,7 @@ HB_FUNC( AADD )
 
 HB_FUNC( ASIZE )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray && ISNUM( 2 ) )
    {
@@ -139,7 +139,7 @@ HB_FUNC( ASIZE )
 
 HB_FUNC( ATAIL )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
       hb_arrayLast( pArray, &hb_stack.Return );
@@ -147,7 +147,7 @@ HB_FUNC( ATAIL )
 
 HB_FUNC( AINS )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
    {
@@ -160,7 +160,7 @@ HB_FUNC( AINS )
 
 HB_FUNC( ADEL )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
    {
@@ -173,11 +173,11 @@ HB_FUNC( ADEL )
 
 HB_FUNC( AFILL )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pArray )
    {
-      PHB_ITEM pValue = hb_param( 2, IT_ANY );
+      PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
       if( pValue )
       {
@@ -196,8 +196,8 @@ HB_FUNC( AFILL )
 
 HB_FUNC( ASCAN )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
-   PHB_ITEM pValue = hb_param( 2, IT_ANY );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
    if( pArray && pValue )
    {
@@ -215,8 +215,8 @@ HB_FUNC( ASCAN )
 
 HB_FUNC( AEVAL )
 {
-   PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
-   PHB_ITEM pBlock = hb_param( 2, IT_BLOCK );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pBlock = hb_param( 2, HB_IT_BLOCK );
 
    if( pArray && pBlock )
    {
@@ -236,8 +236,8 @@ HB_FUNC( AEVAL )
 
 HB_FUNC( ACOPY )
 {
-   PHB_ITEM pSrcArray = hb_param( 1, IT_ARRAY );
-   PHB_ITEM pDstArray = hb_param( 2, IT_ARRAY );
+   PHB_ITEM pSrcArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pDstArray = hb_param( 2, HB_IT_ARRAY );
 
    if( pSrcArray && pDstArray )
    {
@@ -263,7 +263,7 @@ HB_FUNC( ACOPY )
 
 HB_FUNC( ACLONE )
 {
-   PHB_ITEM pSrcArray = hb_param( 1, IT_ARRAY );
+   PHB_ITEM pSrcArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pSrcArray && ! hb_arrayIsObject( pSrcArray ) )
    {

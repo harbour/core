@@ -42,7 +42,7 @@
 
 HB_FUNC( BIN2U )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
    {

@@ -46,10 +46,10 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 
    HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %lu)", pItem, pReturn, ulPos));
 
-   if( pItem->type == IT_SYMBOL )
+   if( pItem->type == HB_IT_SYMBOL )
    {                                            /* Symbol is pushed as text */
       pTemp = hb_itemNew( NULL );               /* Create temporary string */
-      pTemp->type = IT_STRING;
+      pTemp->type = HB_IT_STRING;
       pTemp->item.asString.length = strlen( pItem->item.asSymbol.value->szName ) + 2;
       pTemp->item.asString.value = ( char * ) hb_xgrab( pTemp->item.asString.length + 1 );
 

@@ -83,7 +83,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 /* converts string to lower case */
 HB_FUNC( LOWER )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {
@@ -109,7 +109,7 @@ HB_FUNC( LOWER )
 /* converts string to upper case */
 HB_FUNC( UPPER )
 {
-   PHB_ITEM pText = hb_param( 1, IT_STRING );
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
 
    if( pText )
    {
