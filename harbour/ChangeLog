@@ -1,3 +1,10 @@
+2001-09-27 01:52 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+  * source/rtl/memofile.c
+    * Fixed: MemoWrit added an EOF (0x1A) everytime 
+      (under Windows), Reported by Brian Hays.
+    * Fixed: MemoRead didn't strip the EOF char
+      (under Windows).
+
 2001-09-26 18:38 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
   * source/rtl/dbedit.prg
     * Fixed no-hilighting problem, sent by Wilson Velazquez      

@@ -79,6 +79,8 @@ HB_FUNC( MEMOREAD )
             {
                BYTE byEOF = HB_CHAR_NUL;
 
+               hb_fsSeek( fhnd, ulSize-1, FS_SET );
+
                hb_fsRead( fhnd, &byEOF, sizeof( BYTE ) );
 
                if( byEOF == HB_CHAR_EOF )
@@ -126,8 +128,8 @@ HB_FUNC( MEMOWRIT )
          #if ! defined(OS_UNIX_COMPATIBLE)
          {
             BYTE byEOF = HB_CHAR_EOF;
-
-            hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
+            if ( (ulSize == 0) || ( (( BYTE * ) hb_itemGetCPtr( pString ))[ulSize-1] != HB_CHAR_EOF) )
+               hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
          }
          #endif
 
@@ -137,4 +139,3 @@ HB_FUNC( MEMOWRIT )
 
    hb_retl( bRetVal );
 }
-
