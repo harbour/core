@@ -1,3 +1,8 @@
+20000204-23:10 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/inkey.c
+    * static int s_iMouseCol = 0, s_iMouseRow = 0;
+    (changed SHORT into int accordingly to Dave proposal).
+
 20000204-19:25 GMT-3  Luiz Rafael Culik <culik@sl.conex.net>
     *Source/rdd/dbcmd.c
         * Change some functions docs
@@ -12,10 +17,10 @@
     *source/compiler/harbour.c
 	* fixed initialization of static variable with dimmed array
 	STATIC var[ 2 ]
-	
+
     *source/rtl/inkey.c
 	* fixed s_iMouseCol/s_iMouseRow if compiled with GCC/LINUX
-	
+
 20000204-22:12 GMT+3 Alexander Kresin
    * source/rdd/dbcmd.c
      + added hb_rddGetCurrentWorkAreaPointer() function
@@ -143,8 +148,7 @@
      - Removed debug information from OS/2 builds of Harbour
 
    * doc/whatsnew.txt
-     % Synchronized with updates that were made to the build31 branch
-   * source/pp/pragma.c
+     % Synchronized with updates that were made to the build31 branch   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)

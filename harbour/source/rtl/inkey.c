@@ -99,7 +99,7 @@
    static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
-   static SHORT s_iMouseCol = 0, s_iMouseRow = 0;
+   static int s_iMouseCol = 0, s_iMouseRow = 0;
 #endif
 #endif
 
@@ -1368,4 +1368,3 @@ HARBOUR HB_FKMAX( void )
  *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
  */
-
