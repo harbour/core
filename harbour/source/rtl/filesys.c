@@ -529,7 +529,6 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    pFilename = hb_filecase( hb_strdup( ( char * ) pFilename ) );
 
 #if defined(X__WIN32__)
-
    {
       DWORD dwFlags = 0;
       DWORD dwShare = FILE_SHARE_READ | FILE_SHARE_WRITE;
@@ -588,14 +587,13 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
       s_uiErrorLast = errno;
    }
 
-#elif defined(HAVE_POSIX_IO) && ! defined(__IBMCPP__)
+#elif defined(HAVE_POSIX_IO) && ! defined(__IBMCPP__) && ! defined(_MSC_VER)
 
    errno = 0;
    hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
    s_uiErrorLast = errno;
 
 #elif defined(_MSC_VER)
-
    {
       int iShare = _SH_DENYNO;
 
