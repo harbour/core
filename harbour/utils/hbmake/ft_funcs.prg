@@ -35,7 +35,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include '..\hbdoc\hbdocdef.ch'
+#include 'hbdocdef.ch'
 #include 'common.ch'
 
 #define xReadBuffer 4096

@@ -34,11 +34,11 @@
  *
  */
 
-#include "Getexit.ch"
-#include "InKey.ch"
-#include "Radios.ch"
+#include "getexit.ch"
+#include "inkey.ch"
+#include "radios.ch"
 
-#include "Radiodef.ch"
+#include "radiodef.ch"
 
 FUNCTION RadioGets(bVar, cVar, aChoices, aGetList)
 

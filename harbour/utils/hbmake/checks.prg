@@ -34,10 +34,10 @@
  */
 
 
-#include "Getexit.ch"
-#include "InKey.ch"
-#include "Checks.ch"
-#include "Checkdef.ch"
+#include "getexit.ch"
+#include "inkey.ch"
+#include "checks.ch"
+#include "checkdef.ch"
 
 FUNCTION CheckGetNew(bVar, cVar, cStr)
 

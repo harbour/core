@@ -1,3 +1,16 @@
+2000-12-15 22:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*utils/hbmake/radios.prg
+ utils/hbmake/checks.prg
+ utils/hbmake/pickarry.prg
+ utils/hbmake/pickfile.prg
+ utils/hbmake/prb_stak.prg
+ utils/hbmake/fclass1.prg
+ utils/hbmake/ft_funcs.prg
+ utils/hbmake/ffile1.prg
+    *lower case all include files names to be linux compatible
+ +utils/hbmake/hbdocdef.ch
+    *include file need by the File class engine
+
 2000-12-15 21:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 
 *utils/hbmake/hbmake.prg

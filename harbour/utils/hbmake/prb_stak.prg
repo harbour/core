@@ -42,7 +42,7 @@
 *+
 *+께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께
 
-#include "COMMON.CH"
+#include "common.ch"
 static SCR := {}
 static CNT := 0
 
