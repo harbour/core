@@ -34,19 +34,18 @@
 /* TOFIX: Change this assembler hack to something standard and portable */
 /* TODO: Change the fopen()/fread()/fclose() calls to hb_fs*() */
 
-/* #if INTEL32 */
-static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
-                              0x68, 0x00, 0x00, 0x00, 0x00,
-                              0xE8, 0x00, 0x00, 0x00, 0x00,
-                              0x83, 0xC4, 0x08,
-                              0xC3 };
-     /* push offset pcode
-        push offset symbols
-        call near relative hb_vmExecute
-        add esp, 8
-        ret near                   */
+/* NOTE: This is the assembler output from : hb_vmExecute( pcode, symbols ).  */
 
-     /* This is the assembler output from : hb_vmExecute( pcode, symbols ).  */
+/* #if INTEL32 */
+
+static BYTE prgFunction[] =
+{
+   0x68, 0x00, 0x00, 0x00, 0x00,  /* push offset pcode               */
+   0x68, 0x00, 0x00, 0x00, 0x00,  /* push offset symbols             */
+   0xE8, 0x00, 0x00, 0x00, 0x00,  /* call near relative hb_vmExecute */
+   0x83, 0xC4, 0x08,              /* add esp, 8                      */
+   0xC3                           /* ret near                        */
+};
 
 /* #elseif INTEL16 */
 /* #elseif MOTOROLA */
@@ -59,14 +58,14 @@ typedef union
    BYTE *   pAsmData;                           /* The assembler bytes      */
    PHB_FUNC pFunPtr;                            /* The (dynamic) harbour
                                                    function                 */
-} ASM_CALL, *PASM_CALL;
+} ASM_CALL, * PASM_CALL;
 
 typedef struct
 {
    char *     szName;                           /* Name of the function     */
    PASM_CALL  pAsmCall;                         /* Assembler call           */
    BYTE *     pCode;                            /* P-code                   */
-} HB_DYNF, *PHB_DYNF;
+} HB_DYNF, * PHB_DYNF;
 
 
 #define SYM_NOLINK  0                           /* Symbol does not have to
@@ -103,11 +102,7 @@ static ULONG     s_ulSymEntry = 0;              /* Link enhancement         */
 
 HARBOUR HB___HRBRUN( void )
 {
-   if( hb_pcount() == 0 )
-   {
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN" );
-   }
-   else
+   if( hb_pcount() >= 1 )
    {
       char * szFileName = hb_parc( 1 );
       FILE * file;
@@ -138,7 +133,7 @@ HARBOUR HB___HRBRUN( void )
          int i;
 
          ulSymbols = hb_hrbFileReadLong( file, szFileName );
-         pSymRead = ( PHB_SYMB )hb_xgrab( ulSymbols * sizeof( HB_SYMB ) );
+         pSymRead = ( PHB_SYMB ) hb_xgrab( ulSymbols * sizeof( HB_SYMB ) );
 
          for( ul = 0; ul < ulSymbols; ul++ )       /* Read symbols in .HRB     */
          {
@@ -155,7 +150,7 @@ HARBOUR HB___HRBRUN( void )
             pDynFunc[ ul ].szName = hb_hrbFileReadId( file, szFileName );
 
             ulSize = hb_hrbFileReadLong( file, szFileName );      /* Read size of function    */
-            pDynFunc[ ul ].pCode = ( BYTE * )hb_xgrab( ulSize );
+            pDynFunc[ ul ].pCode = ( BYTE * ) hb_xgrab( ulSize );
             hb_hrbFileRead( file, szFileName, pDynFunc[ ul ].pCode, 1, ulSize );
                                                 /* Read the block           */
 
@@ -178,6 +173,7 @@ HARBOUR HB___HRBRUN( void )
                       !( pSymRead[ ul ].cScope & FS_STATIC ) )
                   {
                      hb_errRT_BASE( EG_ARG, 9999, "Duplicate symbol", pSymRead[ ul ].szName );
+                     return;
                   }
 */
                   pSymRead[ ul ].pFunPtr = pDynFunc[ ulPos ].pAsmCall->pFunPtr;
@@ -205,24 +201,24 @@ HARBOUR HB___HRBRUN( void )
          {
             if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INITEXIT )
             {
-                /* call (_INITSTATICS) function. This function assigns
-                 * literal values to static variables only. There is no need
-                 * to pass any parameters to this function because they
-                 * cannot be used to initialize static variable.
-                 */
-                pSymRead[ ul ].pFunPtr();
+               /* call (_INITSTATICS) function. This function assigns
+                * literal values to static variables only. There is no need
+                * to pass any parameters to this function because they
+                * cannot be used to initialize static variable.
+                */
+               pSymRead[ ul ].pFunPtr();
             }
          }
          for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
          {
             if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_INIT )
             {
-                hb_vmPushSymbol( pSymRead + ul );
-                hb_vmPushNil();
-                for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-                   hb_vmPush( hb_param( i + 2, IT_ANY ) );
-                                                /* Push other cmdline params*/
-                hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
+               hb_vmPushSymbol( pSymRead + ul );
+               hb_vmPushNil();
+               for( i = 0; i < ( hb_pcount() - 1 ); i++ )
+                  hb_vmPush( hb_param( i + 2, IT_ANY ) );
+                                               /* Push other cmdline params*/
+               hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
             }
          }
 
@@ -239,12 +235,12 @@ HARBOUR HB___HRBRUN( void )
          {
             if( ( pSymRead[ ul ].cScope & FS_INITEXIT ) == FS_EXIT )
             {
-                hb_vmPushSymbol( pSymRead + ul );
-                hb_vmPushNil();
-                hb_vmDo( 0 );                        /* Run exit function        */
-                pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & (~FS_EXIT);
-                                                /* Exit function cannot be
-                                                   handled by main in hvm.c */
+               hb_vmPushSymbol( pSymRead + ul );
+               hb_vmPushNil();
+               hb_vmDo( 0 );                        /* Run exit function        */
+               pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & ( ~FS_EXIT );
+                                               /* Exit function cannot be
+                                                  handled by main in hvm.c */
             }
          }
 
@@ -257,9 +253,7 @@ HARBOUR HB___HRBRUN( void )
          }
 
          for( ul = 0; ul < ulSymbols; ul++ )
-         {
             hb_xfree( pSymRead[ ul ].szName );
-         }
 
          hb_xfree( pDynFunc );
          hb_xfree( pSymRead );
@@ -269,10 +263,12 @@ HARBOUR HB___HRBRUN( void )
          hb_itemRelease( pRetVal );
       }
    }
+   else
+      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN" );
 }
 
 
-static ULONG hb_hrbFindSymbol( char *szName, PHB_DYNF pDynFunc, ULONG ulLoaded )
+static ULONG hb_hrbFindSymbol( char * szName, PHB_DYNF pDynFunc, ULONG ulLoaded )
 {
    ULONG ulRet;
 
@@ -300,15 +296,15 @@ static ULONG hb_hrbFindSymbol( char *szName, PHB_DYNF pDynFunc, ULONG ulLoaded )
 
 /* ReadId
    Read the next (zero terminated) identifier */
-static char * hb_hrbFileReadId( FILE *file, char * szFileName )
+static char * hb_hrbFileReadId( FILE * file, char * szFileName )
 {
-   char *szTemp;                                /* Temporary buffer         */
-   char *szIdx;
-   char *szRet;
+   char * szTemp;                                /* Temporary buffer         */
+   char * szIdx;
+   char * szRet;
 
    BOOL  bCont = TRUE;
 
-   szTemp = ( char * )hb_xgrab( 256 );
+   szTemp = ( char * ) hb_xgrab( 256 );
    szIdx  = szTemp;
    do
    {
@@ -327,7 +323,7 @@ static char * hb_hrbFileReadId( FILE *file, char * szFileName )
 }
 
 
-static BYTE hb_hrbFileReadByte( FILE *file, char * szFileName )
+static BYTE hb_hrbFileReadByte( FILE * file, char * szFileName )
 {
    BYTE bRet;
 
@@ -337,7 +333,7 @@ static BYTE hb_hrbFileReadByte( FILE *file, char * szFileName )
 }
 
 
-static long hb_hrbFileReadLong( FILE *file, char * szFileName )
+static long hb_hrbFileReadLong( FILE * file, char * szFileName )
 {
    char cLong[ 4 ];                               /* Temporary long           */
 
@@ -358,18 +354,16 @@ static long hb_hrbFileReadLong( FILE *file, char * szFileName )
 
 /*  hb_hrbFileRead
     Controlled read from file. If errornous -> Break */
-static void hb_hrbFileRead( FILE *file, char * szFileName, char *cBuffer, int iSize, int iCount )
+static void hb_hrbFileRead( FILE * file, char * szFileName, char * cBuffer, int iSize, int iCount )
 {
    if( iCount != ( int ) fread( cBuffer, iSize, iCount, file ) )
-   {                                            /* Read error               */
       hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
-   }
 }
 
 
 /*  hb_hrbFileOpen
     Open an .HRB file  */
-static FILE * hb_hrbFileOpen( char *szFileName )
+static FILE * hb_hrbFileOpen( char * szFileName )
 {
    return fopen( szFileName, "rb" );
 }
@@ -377,7 +371,7 @@ static FILE * hb_hrbFileOpen( char *szFileName )
 
 /*  hb_hrbFileClose
     Close an .HRB file  */
-static void hb_hrbFileClose( FILE *file )
+static void hb_hrbFileClose( FILE * file )
 {
    fclose( file );
 }
@@ -420,7 +414,7 @@ static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 }
 
 /* Patch an address of the dynamic function */
-static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void *Address )
+static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void * Address )
 {
 /* #if 32 bits and low byte first */
 

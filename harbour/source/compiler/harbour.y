@@ -1589,7 +1589,7 @@ int harbour_main( int argc, char * argv[] )
             _pFileName->szExtension = ".ppo";
             hb_fsFNameMerge( szPpoName, _pFileName );
             yyppo = fopen( szPpoName, "w" );
-            if( ! yyin )
+            if( ! yyppo )
             {
                GenError( _szCErrors, 'E', ERR_CREATE_PPO, szPpoName, NULL );
                return iStatus;

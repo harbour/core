@@ -1,3 +1,11 @@
+19990913-13:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/harbour.y
+    ! Stupid bug fixed which always caused an error when using the /p switch.
+      The bug has been introduced today.
+  * source/runner/runlib.c
+    * Formatting/indenting errors fixed.
+
 19990913-12:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * tests/working/rtl_test.prg
@@ -357,7 +365,7 @@
     + Code added to test the :Args feature of error handling, this is commented
       out, since Harbour doesn't support it yet.
   * include/error.api
-    ! Zero bytes (!) removed from some places, so now the comptaibility header
+    ! Zero bytes (!) removed from some places, so now the compatibility header
       files are working fine.
   * source/compiler/harbour.y
     source/rtl/dir.c
@@ -3448,7 +3456,7 @@ NOTE: You have to recompile all PRG code!
       Although not exactly defined in CA-Clipper NG, the example program
       suggest that it works like this. CA-Clipper example generated unreleased
       blocks in Harbour.
-    % Some variable scope optimized.
+    % Some variable scopes optimized.
 
 19990816-12:39 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/rtl/browdb.prg
