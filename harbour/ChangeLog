@@ -1,3 +1,7 @@
+19990604-13:56 CET Thomas Braun (upload Eddie Runia)
+  + source/rtl/natmsg/msgger.c
+    National language message file for German
+
 19990604-11:50 CET Eddie Runia
   * source/compiler/harbour.y
     support for the following syntax added :
