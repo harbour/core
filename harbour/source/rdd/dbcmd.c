@@ -92,6 +92,8 @@ static LPAREANODE s_pCurrArea = NULL;  /* Pointer to a selected and valid area *
 /*
  * Empty method.
  */
+
+#if 0
 static ERRCODE hb_waNull( AREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waNull(%p)", pArea));
@@ -99,6 +101,7 @@ static ERRCODE hb_waNull( AREAP pArea )
 
    return SUCCESS;
 }
+#endif
 
 /*
  * Raise a runtime error if an method is not defined.

@@ -1,3 +1,7 @@
+2001-11-21 12:31 GMT Dave Pearson <davep@davep.org>
+   * source/rdd/dbcmd.c
+     - Removed (using "#if 0...") hb_waNull().
+
 2001-11-21 09:15 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * source/debug/debugger.prg
    * sorce/debug/dbgtarr.prg
