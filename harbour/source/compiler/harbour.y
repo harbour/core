@@ -948,7 +948,7 @@ void EXTERNAL_LINKAGE close_on_exit( void )
   }
 }
 
-int harbour_main( int argc, char * argv[] )
+int main( int argc, char * argv[] )
 {
    int iStatus = 0, iArg = 1;
    char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
