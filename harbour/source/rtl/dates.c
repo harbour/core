@@ -57,14 +57,18 @@
 
 #include <ctype.h>
 #include <time.h>
+
+#include "hbapi.h"
+#include "hbdate.h"
+
+/* NOTE: OS_UNIX_COMPATIBLE can be defined in file included from hbapi.h 
+ * then checking have to be placed after hbapi.h
+*/
 #if defined( OS_UNIX_COMPATIBLE )
    #include <sys/timeb.h>
 #else
    #include <sys\timeb.h>
 #endif
-
-#include "hbapi.h"
-#include "hbdate.h"
 
 long hb_dateEncode( long lYear, long lMonth, long lDay )
 {
