@@ -14,7 +14,6 @@
    * source/rtl/tgetint.prg
    * include/hbextern.ch
      * __ISMV() renamed to __MVEXIST()
-     ! Fix applied to __MVEXIST()
      + __MVEXIST() added to hbextern.ch
 
 2001-12-16 02:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
