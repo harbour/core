@@ -54,6 +54,10 @@
   #endif
 #endif
 
+#ifdef __MPW__
+   #include <fcntl.h>
+#endif
+
 #ifndef O_BINARY
    #define O_BINARY 0   /* O_BINARY not defined on Linux */
 #endif
@@ -663,7 +667,18 @@ HARBOUR HB_FILE( void )
 #ifdef OS_UNIX_COMPATIBLE
            hb_retl( access(hb_parc(1), F_OK) == 0 );
 #else
+  #ifdef __MPW__
+           int hFileHandle;
+
+           if( (hFileHandle = open( hb_parc( 1 ), O_RDONLY )) >= 0 )
+           {
+               close( hFileHandle );
+               hb_retl( 1 );
+           }
+           else hb_retl(0);
+  #else
            hb_retl( access(hb_parc(1), 0) == 0 );
+  #endif
 #endif
         }
         else hb_retl(0);

@@ -146,7 +146,7 @@
    #include <io.h>
  #endif
 #else
- #ifndef MPW_C
+ #ifndef __MPW__
   #include <io.h>
  #endif
 #endif
@@ -156,7 +156,7 @@
 #include <init.h>
 #include <errorapi.h>
 #include <fcntl.h>
-#ifndef MPW_C
+#ifndef __MPW__
  #include <sys/stat.h>
 #endif
 #include <set.h>
@@ -254,7 +254,7 @@ static void close_text (int handle)
 
 static int open_handle (char * file_name, BOOL bMode, char * def_ext)
 {
-#ifdef MPW_C
+#ifdef __MPW__
 /* TODO: not implemented yet */
    return -1;
 #else

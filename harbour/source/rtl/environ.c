@@ -61,7 +61,7 @@ HB_INIT_SYMBOLS_END( Environ__InitSymbols );
 
 HARBOUR HB_OS(void)
 {
-#ifdef MPW_C 
+#ifdef __MPW__
 /* TODO: not implemented yet */
    hb_retc ( "MacOS" );
 #else
@@ -204,7 +204,7 @@ HARBOUR HB_OS(void)
    hb_xfree (hb_os);
 #endif
 
-#endif /* MPW_C */
+#endif /* __MPW__ */
 }
 
 HARBOUR HB_VERSION(void)

@@ -79,7 +79,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
 #define HB_CALL_ON_STARTUP_END( func ) }
 #endif
 
-#if (defined(_MSC_VER) || defined(__IBMCPP__))
+#if (defined(_MSC_VER) || defined(__IBMCPP__) || defined(__MPW__))
 #define HB_INIT_SYMBOLS_BEGIN( func ) \
   static SYMBOL symbols[] = {
 

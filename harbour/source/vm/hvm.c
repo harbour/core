@@ -36,7 +36,7 @@
 /* TODO: Add all the TODO comments. */
 
 #include <limits.h>
-#ifndef MPW_C
+#ifndef __MPW__
  #include <malloc.h>
 #endif
 #include <math.h>
@@ -559,6 +559,11 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               break;
 
          case HB_P_PUSHSTR:
+#ifdef __MPW__
+              wSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+#else
+              wSize =*( (WORD *) &( pCode[ w + 1 ] ) );
+#endif
               wSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               PushString( (char*)pCode + w + 3, wSize );
               w += ( wSize + 3 );

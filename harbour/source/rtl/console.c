@@ -55,8 +55,10 @@
     #include <io.h>
   #endif
 #else
-  #ifndef MPW_C 
+  #ifndef __MPW__
     #include <io.h>
+  #else
+    #include <fcntl.h>
   #endif
 #endif
 #include <gtapi.h>            /* HARBOUR_USE_GTAPI is checked inside gtapi.h, so that
