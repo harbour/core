@@ -1,3 +1,9 @@
+20000426-16:58 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/gtcrs/gtcrs.c
+	* the terminal is no longer scrolled up if something is 
+	  written at MAXROW(),MAXCOL() position
+
 20000426-15:17 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/compiler/genobj32.c
        * compiler version added into OBJ record

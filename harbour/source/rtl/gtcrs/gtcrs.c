@@ -105,7 +105,7 @@ static void hb_gt_Initialize_Terminal( void )
    cbreak();
    noecho();
    nodelay( stdscr, 1 );
-   scrollok( stdscr, TRUE );
+   scrollok( stdscr, FALSE );
    raw();
    keypad( stdscr, FALSE );
 
