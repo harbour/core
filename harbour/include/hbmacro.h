@@ -72,7 +72,7 @@
 #include "hbvm.h"
 #include "hbexprop.h"
 #include "hbpcode.h"
-#include "hbmsetup.h"
+#include "hbmacro.ch"
 
 #if defined(HB_EXTERN_C)
 extern "C" {

@@ -11,6 +11,8 @@ _______________________________________________________________________
           Topic                              Responsible developer(s)
 ===================================          =========================
 
+TEXT/ENDTEXT support                         ???
+
 DBFCDX support                               Ryszard Glab
 
 Fixing internal HVM/RTL handling of string   ???
@@ -18,11 +20,22 @@ items (Clipper passes a pointer to the same
 allocated memory instead of creating
 string copies)
 
-Removed #pragma pack() tricks                ???
+Remove #pragma pack() tricks                 ???
 from rdd .h files.
+
+Rewrite filesys.c to use native platform     ???
+specific file I/O with unlimited number 
+of file handles, while maintaining 
+compatibility with the CA-Cl*pper legacy 
+handle numbering system. This either 
+involves adding a linked list for the 
+translation table, or we should state that 
+only handles 0-4 are number compatible. 
+[Optimization]
 
 Optimize out the need for the PUSHNIL        Ryszard Glab
 opcode before each function call.
+[Optimization]
 
 OO system                                    Jean-Francois Lefebvre (JFL)
    Adding Class Method
@@ -46,7 +59,8 @@ support complete?
 Tasks for v.1 release:
 _______________________________________________________________________
 
-
+Dynamic multi-language compiler/runtime      ???
+support
 
 
 

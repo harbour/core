@@ -25,7 +25,6 @@ C_HEADERS=\
 	hbinit.h     \
 	hbmacro.h    \
 	hbmath.h     \
-	hbmsetup.h   \
 	hbpcode.h    \
 	hbpp.h       \
 	hbrddcdx.h   \
@@ -61,6 +60,7 @@ PRG_HEADERS=\
 	hbgetcmt.ch  \
 	hbinkey.ch   \
 	hblang.ch    \
+	hbmacro.ch   \
 	hbmemory.ch  \
 	hbmemvar.ch  \
 	hboo.ch      \

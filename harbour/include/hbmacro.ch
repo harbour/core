@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for SET() function
+ * Header file for macro related defines
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2001-2002 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,72 +52,15 @@
 
 /* NOTE: This file is also used by C code. */
 
-#ifndef _SET_CH
-#define _SET_CH
+#ifndef HB_MACRO_CH_
+#define HB_MACRO_CH_
 
-#define _SET_EXACT        1
-#define _SET_FIXED        2
-#define _SET_DECIMALS     3
-#define _SET_DATEFORMAT   4
-#define _SET_EPOCH        5
-#define _SET_PATH         6
-#define _SET_DEFAULT      7
+/* runtime settings for macro compiler */
+#define HB_SM_HARBOUR    1    /* extended Harbour features */
+#define HB_SM_XBASE      2    /* extended xbase compatibility */
+#define HB_SM_PREPROC    4    /* enable/disable commands preprocessing */
+#define HB_SM_SHORTCUTS  8    /* enable/disable sortcuts for logical operators */
+#define HB_SM_RT_MACRO   64   /* disable automatic setup of macro flag */
+#define HB_SM_PARSER     128  /* address of macro parser (TODO) */
 
-#define _SET_EXCLUSIVE    8
-#define _SET_SOFTSEEK     9
-#define _SET_UNIQUE       10
-#define _SET_DELETED      11
-
-#define _SET_CANCEL       12
-#define _SET_DEBUG        13
-#define _SET_TYPEAHEAD    14
-
-#define _SET_COLOR        15
-#define _SET_CURSOR       16
-#define _SET_CONSOLE      17
-#define _SET_ALTERNATE    18
-#define _SET_ALTFILE      19
-#define _SET_DEVICE       20
-#define _SET_EXTRA        21
-#define _SET_EXTRAFILE    22
-#define _SET_PRINTER      23
-#define _SET_PRINTFILE    24
-#define _SET_MARGIN       25
-
-#define _SET_BELL         26
-#define _SET_CONFIRM      27
-#define _SET_ESCAPE       28
-#define _SET_INSERT       29
-#define _SET_EXIT         30
-#define _SET_INTENSITY    31
-#define _SET_SCOREBOARD   32
-#define _SET_DELIMITERS   33
-#define _SET_DELIMCHARS   34
-
-#define _SET_WRAP         35
-#define _SET_MESSAGE      36
-#define _SET_MCENTER      37
-#define _SET_SCROLLBREAK  38
-
-#define _SET_EVENTMASK    39  /* CA-Cl*pper 5.3 compatible */
-
-#define _SET_VIDEOMODE    40  /* CA-Cl*pper 5.3 compatible */
-
-#define _SET_MBLOCKSIZE   41  /* CA-Cl*pper 5.3 compatible */
-#define _SET_MFILEEXT     42  /* CA-Cl*pper 5.3 compatible */
-
-#define _SET_STRICTREAD   43  /* CA-Cl*pper 5.3 compatible */
-#define _SET_OPTIMIZE     44  /* CA-Cl*pper 5.3 compatible */
-#define _SET_AUTOPEN      45  /* CA-Cl*pper 5.3 compatible */
-#define _SET_AUTORDER     46  /* CA-Cl*pper 5.3 compatible */
-#define _SET_AUTOSHARE    47  /* CA-Cl*pper 5.3 compatible */
-
-#define _SET_COUNT        47
-
-#define _SET_LANGUAGE     100 /* Harbour extension */
-#define _SET_IDLEREPEAT   101 /* Harbour extension */
-
-#define HB_SET_BASE       100
-#define HB_SET_COUNT      2
-
-#endif /* _SET_CH */
+#endif /* HB_MACRO_CH_ */

@@ -62,7 +62,7 @@
 
 #include <math.h>
 #include "hbcomp.h"
-#include "hbmsetup.h"
+#include "hbmacro.ch"
 
 /* ************************************************************************* */
 

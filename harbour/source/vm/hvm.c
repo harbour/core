@@ -83,10 +83,9 @@
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
-#include "hbmsetup.h"
 
 #ifdef HB_MACRO_STATEMENTS
-  #include "hbpp.h"
+   #include "hbpp.h"
 #endif
 
 /* DEBUG only*/

@@ -1,8 +1,12 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
  * The Debugger Array Inspector
  *
- * Copyright 2001 Ignacio Ortiz de Zuñiga <ignacio@fivetech.com>
+ * Copyright 2001-2002 Ignacio Ortiz de Zuñiga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,9 +62,9 @@ function __dbgShowWorkAreas( oDebugger )
 
    aAlias := {}
    aBrw   := Array(3)
-   n1      := 1
-   n2      := 1
-   n3      := 1
+   n1     := 1
+   n2     := 1
+   n3     := 1
 
    cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
                  "N/W, N/BG, R/W, R/BG" )
@@ -365,3 +369,4 @@ static function UpdateInfo( oDlg, cAlias )
    SELECT (cOldAlias)
 
 return nil
+

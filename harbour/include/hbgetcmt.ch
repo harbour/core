@@ -1,4 +1,3 @@
-
 /*
  * $Id$
  */
@@ -51,9 +50,11 @@
  *
  */
 
+#ifndef HB_GETCMT_CH_
+#define HB_GETCMT_CH_
+
 #include "hbsetup.ch"
-#ifndef  _HBGETCMT_CH
-#define _HBGETCMT_CH
+
 #ifdef HB_COMPAT_C53
 
 #command @ <row>, <col> GET <var>                                       ;
@@ -168,4 +169,5 @@
 
 
 #endif
-#endif
+
+#endif /* HB_GETCMT_CH_ */

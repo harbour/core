@@ -29,7 +29,6 @@
 #include <assert.h>
 
 #include "hbcomp.h"
-#include "hbmsetup.h"
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );

@@ -50,13 +50,11 @@
  *
  */
 
-
-#ifndef HB_ORD_H_
-#define HB_ORD_H_
+#ifndef HB_ORD_CH_
+#define HB_ORD_CH_
 
 #define TOPSCOPE           0
 #define BOTTOMSCOPE        1
-
 
 /* SCOPE commands: */
 
@@ -127,7 +125,7 @@
 #define DBOI_KEYCOUNTRAW        52  /* keycount ignoring any filter             */
 #define DBOI_OPTLEVEL           53  /* Optimization achieved for last query     */
 
-// Ideally should be an entry point that doesn't require an open table
+/* Ideally should be an entry point that doesn't require an open table */
 #define DBOI_STRICTREAD         60  /* Get/set read thru RDD when indexing      */
 #define DBOI_OPTIMIZE           61  /* Get/set use of query optimization        */
 #define DBOI_AUTOOPEN           62  /* Get/set auto open of production index    */
@@ -139,5 +137,4 @@
 #define DBOI_OPTIMIZED_PART     1
 #define DBOI_OPTIMIZED_FULL     2
 
-#endif
-
+#endif /* HB_ORD_CH_ */
