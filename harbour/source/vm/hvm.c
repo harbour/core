@@ -497,7 +497,7 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
    ULONG ulLastOpcode = 0; /* opcodes profiler support */
    ULONG ulPastClock = 0;  /* opcodes profiler support */
 #ifndef HB_GUI
-   unsigned int uiPolls = 0;
+   static unsigned char uiPolls = 0;
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
@@ -528,20 +528,6 @@ void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 #ifndef HB_GUI
       if( ++uiPolls == 1 )      
          hb_inkeyPoll();
-      /*
-      if( hb_set.HB_SET_CANCEL )
-      {
-         static unsigned short s_iCancel = 0;
-
-         if( ++s_iCancel == 65535 )
-         {
-            int ch = hb_gt_ReadKey( hb_set.HB_SET_EVENTMASK );
-
-				if( (ch == s_VMCancelKey) || (ch == s_VMCancelKeyEx) )
-                  hb_vmRequestCancel();/ * Request cancellation * /
-         }
-      }
-      */
 #endif
 
       switch( pCode[ w ] )

@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-21 15:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.y
+      *fixed generation of line number's pcode related to 
+      the debugger
+      
+   * source/debug/dbgmenu.prg
+   * source/debug/debugger.prg
+      *fixed TRACE command
+      *added support for 'Codeblock trace' option
+      * other minor fixes to make the debugger usable
+      
+   Additionally in my previous commit (2004-01-20 19:15)
+   * source/vm/hvm.c
+      *added call for hb_inkeyPoll to the main pcode execution 
+      loop to correctly support Alt-D, Alt-C and Ctrl-C
+      requests (only if HB_GUI is not defined) - it is
+      called every 256 opcodes
+
 2004-01-20 19:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbcomp.h
    * include/hbexprb.c

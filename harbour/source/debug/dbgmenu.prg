@@ -68,6 +68,7 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oMonoDisplay
    local oPublic, oPrivate, oStatic, oLocal, oAll, oSort
    local oCallStack
+   local oCBTrace
 
    MENU oMenu
       MENUITEM " ~File "
@@ -151,7 +152,8 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
             ACTION ( oDebugger:LineNumbers(), oLineNumbers:Toggle() ) CHECKED
          MENUITEM " ~Exchange Screens"      ACTION Alert( "Not implemented yet!" )
          MENUITEM " swap on ~Input"         ACTION Alert( "Not implemented yet!" )
-         MENUITEM " code~Block Trace"       ACTION Alert( "Not implemented yet!" )
+         MENUITEM oCBTrace PROMPT " code~Block Trace" ;
+            ACTION ( oDebugger:CodeblockTrace(), oCBTrace:Toggle() ) CHECKED
          MENUITEM " ~Menu Bar"              ACTION Alert( "Not implemented yet!" )
          MENUITEM oMonoDisplay PROMPT " mono ~Display" ;
             ACTION ( oDebugger:MonoDisplay(), oMonoDisplay:Toggle() )

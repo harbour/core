@@ -128,7 +128,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
    
    IF( s_oDebugger == NIL )
       s_oDebugger := TDebugger():New()
-      public __DbgStatics         // hb_vmStaticName() and hb_vmLocalName()
+      public __DbgStatics
       __DbgStatics := {}
    ENDIF
    
@@ -138,7 +138,9 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       if s_oDebugger:lTrace
          //In TRACE mode (step over procedure)
          IF( s_oDebugger:nTraceLevel < Len( s_oDebugger:aCallStack ) )
-            IF( !(s_oDebugger:lTrace := ! s_oDebugger:IsBreakPoint( uParam1, s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )) )
+            s_oDebugger:lTrace := (! s_oDebugger:IsBreakPoint( uParam1, s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )) .AND.;
+                                  (! InvokeDebug())
+            if s_oDebugger:lTrace
                RETURN
             ENDIF
          ELSE
@@ -151,6 +153,13 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
          s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1, s_oDebugger:aCallStack[1][ CSTACK_MODULE ] )
       endif
 
+      IF( s_oDebugger:lCodeblock )
+         IF( !s_oDebugger:lCBTrace )
+            s_oDebugger:lCodeblock := .F.
+            RETURN
+         ENDIF
+      ENDIF
+      
       s_oDebugger:aCallStack[ 1 ][CSTACK_LINE] := uParam1  
       if !s_oDebugger:lGo .or. InvokeDebug()
          s_oDebugger:lGo := .F.
@@ -170,7 +179,10 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       cProcName := ProcName( 1 )
       nVarIndex := uParam1
       cVarName  := IIF(valtype(uParam2)=='C',uParam2,'NIL')
-/*
+
+      IF Len( s_oDebugger:aCallStack )>0 .AND. valtype( s_oDebugger:aCallStack[ 1, CSTACK_LOCALS ])=='A'
+         AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ], { cVarName, nVarIndex, "Local", cProcName } )
+      endif
       if s_oDebugger:lShowLocals
          if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
                             { | aVar | aVar[ 1 ] == cVarName } ) ) != 0
@@ -178,14 +190,10 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
          else
             AAdd( s_oDebugger:aVars, { cVarName, nVarIndex, "Local", cProcName } )
          endif
+         if s_oDebugger:oBrwVars != nil
+            s_oDebugger:oBrwVars:RefreshAll()
+         endif
       endif
-*/      
-      IF Len( s_oDebugger:aCallStack )>0 .AND. valtype( s_oDebugger:aCallStack[ 1, CSTACK_LOCALS ])=='A'
-         AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_LOCALS ], { cVarName, nVarIndex, "Local", cProcName } )
-      endif
-//      if s_oDebugger:oBrwVars != nil
-//         s_oDebugger:oBrwVars:RefreshAll()
-//      endif
       
    case nMode == HB_DBG_STATICNAME
       nVarIndex := uParam1
@@ -203,7 +211,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
       IF Len( s_oDebugger:aCallStack )>0 .AND. valtype( s_oDebugger:aCallStack[ 1, CSTACK_STATICS ])=='A'
          AAdd( s_oDebugger:aCallStack[ 1 ][ CSTACK_STATICS ], { cVarName, nVarIndex, "Static" } )
       endif
-/*
+
       if s_oDebugger:lShowStatics
          if ( nAt := AScan( s_oDebugger:aVars,; // Is there another var with this name ?
                              { | aVar | aVar[ 1 ] == cVarName } ) ) != 0
@@ -215,7 +223,7 @@ procedure __dbgEntry( nMode, uParam1, uParam2, uParam3 )  // debugger entry poin
             s_oDebugger:oBrwVars:RefreshAll()
          endif
       endif
-*/
+
    case nMode == HB_DBG_ENDPROC   // called from hvm.c hb_vmDebuggerEndProc()
       if Empty( ProcName( 1 ) ) // ending (_INITSTATICS)
          return
@@ -251,6 +259,7 @@ CLASS TDebugger
    DATA   nTraceLevel      //procedure level where TRACE was requested
    DATA   lCodeblock INIT .F.
    DATA   lActive INIT .F.
+   DATA   lCBTrace INIT .T.   //stores if codeblock tracing is allowed
 
    METHOD New()
    METHOD Activate()
@@ -275,7 +284,7 @@ CLASS TDebugger
    METHOD EditVar( nVar )
    METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
-   METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., DispEnd(), ::Exit()
+   METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., ::Exit()
    METHOD GoToLine( nLine )
    METHOD HandleEvent()
    METHOD Hide()
@@ -333,6 +342,7 @@ CLASS TDebugger
    METHOD Trace() INLINE ::lTrace := .t., ::nTraceLevel := Len( ::aCallStack ),;
                          __Keyboard( Chr( 255 ) ) //forces a Step()
 
+   METHOD CodeblockTrace() INLINE ::lCBTrace := ! ::lCBTrace
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
    METHOD LineNumbers()          // Toggles numbering of source code lines
@@ -416,13 +426,13 @@ return Self
 METHOD Activate() CLASS TDebugger
 
    ::SaveAppStatus()
-   ::loadVars()
    IF( ! ::lActive )
       ::lActive := .T.
       ::Show()
       if ::lShowCallStack
          ::ShowCallStack()
       endif
+      ::loadVars()
       ::ShowVars()
 //   ::RestoreAppStatus()
    ENDIF
@@ -1025,14 +1035,14 @@ METHOD HandleEvent() CLASS TDebugger
               endif
 
          case nKey == K_RBUTTONDOWN
-
+/*
          case nKey == K_ESC
               ::RestoreAppStatus()
               s_oDebugger := nil
               s_lExit := .T.
               DispEnd()
               ::Exit()
-
+*/
          case nKey == K_UP .or. nKey == K_DOWN .or. nKey == K_HOME .or. ;
               nKey == K_END .or. nKey == K_ENTER .or. nKey == K_PGDN .or. nKey == K_PGUP
               oWnd := ::aWindows[ ::nCurrentWindow ]
@@ -1862,6 +1872,7 @@ return nil
 
 METHOD SaveAppStatus() CLASS TDebugger
 
+   DispBegin()
    ::cAppImage  := SaveScreen()
    ::nAppRow    := Row()
    ::nAppCol    := Col()

@@ -405,13 +405,13 @@ Statement  : ExecFlow { hb_comp_bDontGenLineNum = TRUE; } CrlfStmnt     { }
                      }
            | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPUBLIC" ); hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; } CrlfStmnt
+                    { hb_compRTVariableGen( "__MVPUBLIC" ); hb_comp_cVarType = ' ';  hb_comp_iVarScope = VS_NONE; } Crlf
            | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } CrlfStmnt
+                    { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; hb_comp_iVarScope = VS_NONE; } Crlf
 
-           | EXIT      { hb_comp_bDontGenLineNum = TRUE; hb_compLoopExit(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
-           | LOOP      { hb_comp_bDontGenLineNum = TRUE; hb_compLoopLoop(); } CrlfStmnt { hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | EXIT { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
+           | LOOP { hb_comp_bDontGenLineNum = !hb_comp_bDebugInfo; } CrlfStmnt { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | EXTERN ExtList Crlf
            | ANNOUNCE IdentName {
                if( hb_comp_szAnnounce == NULL )
