@@ -321,15 +321,19 @@ METHOD EditVar( nVar ) CLASS TDebugger
 
    do case
       case uVarValue == "{ ... }"
-           // It is an array, don't do anything
             if len(::avars[nVar][2])>0
               __DbgArrays(::avars[nVar][2],cVarname)
             else
                Alert("Array is empty")
             endif
+
       case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
-           // It is an object, don't do anything
-            __DbgObject(::avars[nVar][2],cVarname)
+            if ::aVars[ nVar ][ 3 ] == "Local"
+               __DbgObject( __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] ), cVarName )
+            else
+               __DbgObject( ::aVars[ nVar ][ 2 ], cVarName )
+            endif
+
       otherwise
          if ::aVars[ nVar ][ 3 ] == "Local"
             __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
