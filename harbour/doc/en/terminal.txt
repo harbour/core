@@ -12,10 +12,10 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    Documentation for: __WAIT(), __INPUT()
  *
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: ALERT(), __NONOALERT(), __XSaveScreen(), SAVE SCREEN
- *                       __XRestScreen(), RESTORE SCREEN, __TextSave(),
- *                       __TextRestore()
+ * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: ALERT(), __NONOALERT(), OUTSTD(), OUTERR(),
+ *                       __XSaveScreen(), SAVE SCREEN, __XRestScreen(),
+ *                       RESTORE SCREEN, __TextSave(), __TextRestore()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: DEVOUTPICT()
@@ -294,7 +294,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *       @...PROMPT,MENU TO,STDOUT(),__NONOALERT()
+ *       @...PROMPT,MENU TO,OUTSTD(),__NONOALERT()
  *  $END$
  */
 
@@ -577,5 +577,98 @@
  *      Library is rtl
  *  $SEEALSO$
  *      __ACCEPT(),__INPUT()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      OUTSTD()
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Write a list of values to the standard output device
+ *  $SYNTAX$
+ *      OUTSTD( <xExp,...> ) --> NIL
+ *  $ARGUMENTS$
+ *      <xExp,...> is a list of expressions to display. Expressions are any
+ *      mixture of Harbour data types.
+ *  $RETURNS$
+ *      OUTSTD() always returns NIL.
+ *  $DESCRIPTION$
+ *      OUTSTD() write one or more values into the standard output device.
+ *      Character and Memo values are printed as is, Dates are printed
+ *      according to the SET DATE FORMAT, Numeric values are converted to
+ *      strings, Logical values are printed as .T. or .F., NIL are printed
+ *      as NIL, values of any other kind are printed as empty string. There
+ *      is one space separating each two values. Note that Numeric value can
+ *      take varying length when converted into string depending on its
+ *      source (see STR() for detail).
+ *
+ *      OUTSTD() is similar to QQOUT() with the different that QQOUT() send
+ *      its output to the Harbour console stream, which can or can not be
+ *      redirected according with the screen driver, and OUTSTD() send its
+ *      output to the standard output device (STDOUT) and can be redirected.
+ *  $EXAMPLES$
+ *      OUTSTD( "Hello" )            // Result: Hello
+ *
+ *      OUTSTD( 1, .T., NIL, "A" )
+ *      OUTSTD( "B" )                // Result:          1 .T. NIL AB
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      OUTSTD() works exactly as in CA-Clipper
+ *  $PLATFORMS$
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      ?,??,DEVOUT(),DEVOUTPICT(),DISPOUT(),DISPOUTAT(),OUTERR(),QOUT(),QQOUT(),STR()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      OUTERR()
+ *  $CATEGORY$
+ *      Data input and output
+ *  $ONELINER$
+ *      Write a list of values to the standard error device
+ *  $SYNTAX$
+ *      OUTERR( <xExp,...> ) --> NIL
+ *  $ARGUMENTS$
+ *      <xExp,...> is a list of expressions to display. Expressions are any
+ *      mixture of Harbour data types.
+ *  $RETURNS$
+ *      OUTERR() always returns NIL.
+ *  $DESCRIPTION$
+ *      OUTERR() write one or more values into the standard error device.
+ *      Character and Memo values are printed as is, Dates are printed
+ *      according to the SET DATE FORMAT, Numeric values are converted to
+ *      strings, Logical values are printed as .T. or .F., NIL are printed
+ *      as NIL, values of any other kind are printed as empty string. There
+ *      is one space separating each two values. Note that Numeric value can
+ *      take varying length when converted into string depending on its
+ *      source (see STR() for detail).
+ *
+ *      There is an undocumented CA-Clipper command line switch //STDERR
+ *      which can set the file handle to write output from OUTERR(). If not
+ *      specified the default STDERR is used, //STDERR or //STDERR:0 set
+ *      OUTERR() to output to the same file handle as OUTSTD(), //STDERR:n
+ *      set output to file handle n. Like other undocumented features this
+ *      switch is available only if source/rtl/console.c was compiled with
+ *      the HB_C52_UNDOC flag.
+ *  $EXAMPLES$
+ *      // write error log information
+ *      OUTERR( DATE(), TIME(), "Core meltdown detected" )
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      OUTERR() works exactly as in CA-Clipper
+ *  $PLATFORMS$
+ *  $FILES$
+ *      Library is rtl
+ *  $SEEALSO$
+ *      ?,??,DEVOUT(),DEVOUTPICT(),DISPOUT(),DISPOUTAT(),OUTSTD(),QOUT(),QQOUT(),STR()
  *  $END$
  */

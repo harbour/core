@@ -33,13 +33,16 @@
  *
  */
 
-/* NOTE: lAll is basically a dummy parameter, nothing really depends on it. 
+/* NOTE: lAll is basically a dummy parameter, nothing really depends on it.
          [vszakats] */
 
 FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
    LOCAL lOldPrinter
    LOCAL lOldExtra
    LOCAL cOldExtraFile
+   LOCAL cPath
+   LOCAL cName
+   LOCAL cExt
 
    LOCAL oError
 
@@ -61,11 +64,12 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
       lOldPrinter := Set(_SET_PRINTER, .T. )
    ENDIF
    IF !Empty( cToFileName )
-      IF At( ".", cToFileName ) == 0
-         cToFileName := cToFileName + ".txt"
+      hb_FNameSplit( cToFileName, @cPath, @cName, @cExt )
+      IF Empty( cExt )
+         cExt := ".txt"
       ENDIF
       lOldExtra := Set( _SET_EXTRA, .T. )
-      cOldExtraFile := Set( _SET_EXTRAFILE, cToFileName )
+      cOldExtraFile := Set( _SET_EXTRAFILE, hb_FNameMerge( @cPath, @cName, @cExt ) )
    ENDIF
 
    /* Do the job */
@@ -104,3 +108,4 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
    ENDIF
 
    RETURN NIL
+

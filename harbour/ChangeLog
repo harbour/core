@@ -1,3 +1,16 @@
+2000-06-26 08:55 UTC+0300 Chen Kedem <niki@actcom.co.il>
+
+   * source/rdd/dblist.prg
+     ! fixed to handle cToFileName that contain "." in the path
+
+   * source/rtl/right.c
+     ! typo in the header LEFT() --> RIGHT()
+
+   * doc/en/terminal.txt
+     + Documentation for OUTSTD()
+     + Documentation for OUTERR()
+     ! typo in ALERT() $SEEALSO$ STDOUT() --> OUTSTD()
+
 2000-06-25 22:24 UTC+0800 Brian Hays <bhays@abacuslaw.com>
    *doc/en/command.txt
       *began updating OOPs commands docs; This is a work in progress
@@ -22,7 +35,6 @@
      ! Rewrote (again) rules for STRING1 STRING2 STRING3 INDEX. Rules for strings much simpler.
        /* Flex had some problem with $ that caused output of strings. */
 
->>>>>>> 1.2363
 2000-06-25 23:58 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c

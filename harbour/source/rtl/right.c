@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * LEFT() function
+ * RIGHT() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
