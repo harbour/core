@@ -278,7 +278,9 @@ char * _szErrors[] = { "Statement not allowed outside of procedure or function",
 /* Table with parse warnings */
 char * _szWarnings[] = { "Ambiguous reference, assuming memvar: \'%s\'",
                          "Variable \'%s\' declared but not used in function: %s",
-                         "CodeBlock Parameter \'%s\' declared but not used in function: %s"
+                         "CodeBlock Parameter \'%s\' declared but not used in function: %s",
+			 "Incompatible type in variable assignment: %s",
+			 "Suspecious type in variable assignment: %s "
                        };
 
 /* Table with reserved functions names
@@ -405,6 +407,8 @@ PEXTERN pExterns = 0;
 PTR_LOOPEXIT pLoops = 0;
 PATHNAMES *_pIncludePath = NULL;
 
+PSTACK_VAL_TYPE pStackValType = 0;
+char cVarType = ' ';
 %}
 
 %union                  /* special structure used by lex and yacc to share info */
@@ -427,6 +431,7 @@ PATHNAMES *_pIncludePath = NULL;
 %token WHILE EXIT LOOP END FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ EXITLOOP
 %token PRIVATE BEGINSEQ BREAK RECOVER USING DO WITH SELF MEMVAR
+%token AS_NUMERIC AS_CHARACTER AS_LOGICAL AS_DATE AS_ARRAY AS_OBJECT
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -511,7 +516,13 @@ Params     :                                               { $$ = 0; }
            | '(' { iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; }
            ;
 
-ParamList  : IDENTIFIER                            { AddVar( $1 ); $$ = 1; }
+ParamList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
            | ParamList ',' IDENTIFIER              { AddVar( $3 ); $$++; }
            ;
 
@@ -799,7 +810,13 @@ BlockExpList : Expression                            { $$ = 1; }
            | BlockExpList ',' { GenPCode1( _POP ); } Expression  { $$++; }
            ;
 
-BlockList  : IDENTIFIER                           { AddVar( $1 ); $$ = 1; }
+BlockList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
+	   | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
            | BlockList ',' IDENTIFIER             { AddVar( $3 ); $$++; }
            ;
 
@@ -807,7 +824,7 @@ ExpList    : Expression %prec POST                    { $$ = 1; }
            | ExpList { GenPCode1( _POP ); } ',' Expression %prec POST  { $$++; }
            ;
 
-VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf   { SetFrame(); }
+VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = ' '; SetFrame(); }
            | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
            ;
 
@@ -815,15 +832,34 @@ VarList    : VarDef                                  { $$ = 1; }
            | VarList ',' VarDef                      { $$++; }
            ;
 
-VarDef     : IDENTIFIER                              { AddVar( $1 ); }
-           | IDENTIFIER INASSIGN Expression          { AddVar( $1 ); PopId( $1 ); }
-           | IDENTIFIER '[' ExpList ']'              { AddVar( $1 ); DimArray( $3 ); }
+VarDef     : IDENTIFIER                                   { cVarType = ' '; AddVar( $1 ); }
+	   | IDENTIFIER AS_NUMERIC                        { cVarType = 'N'; AddVar( $1 ); }
+	   | IDENTIFIER AS_CHARACTER                      { cVarType = 'C'; AddVar( $1 ); }
+	   | IDENTIFIER AS_LOGICAL                        { cVarType = 'L'; AddVar( $1 ); }
+	   | IDENTIFIER AS_DATE                           { cVarType = 'D'; AddVar( $1 ); }
+	   | IDENTIFIER AS_ARRAY                          { cVarType = 'A'; AddVar( $1 ); }
+	   | IDENTIFIER AS_OBJECT                         { cVarType = 'O'; AddVar( $1 ); }
+           | IDENTIFIER INASSIGN Expression               { cVarType = ' '; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER AS_NUMERIC   INASSIGN Expression  { cVarType = 'N'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER AS_CHARACTER INASSIGN Expression  { cVarType = 'C'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER AS_LOGICAL   INASSIGN Expression  { cVarType = 'L'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER AS_DATE      INASSIGN Expression  { cVarType = 'D'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER AS_ARRAY     INASSIGN Expression  { cVarType = 'A'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER AS_OBJECT    INASSIGN Expression  { cVarType = 'O'; AddVar( $1 ); PopId( $1 ); }
+           | IDENTIFIER '[' ExpList ']'                   { cVarType = ' '; AddVar( $1 ); DimArray( $3 ); }
+           | IDENTIFIER '[' ExpList ']' AS_ARRAY          { cVarType = 'A'; AddVar( $1 ); DimArray( $3 ); }
            ;
 
 FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList Crlf { LineBody(); }
            ;
 
-FieldList  : IDENTIFIER                              { $$=FieldsCount(); AddVar( $1 ); }
+FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCount(); AddVar( $1 ); }
+	   | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; $$=FieldsCount(); AddVar( $1 ); }
+	   | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; $$=FieldsCount(); AddVar( $1 ); }
+	   | IDENTIFIER AS_DATE                    { cVarType = 'D'; $$=FieldsCount(); AddVar( $1 ); }
+	   | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; $$=FieldsCount(); AddVar( $1 ); }
+	   | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; $$=FieldsCount(); AddVar( $1 ); }
+	   | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; $$=FieldsCount(); AddVar( $1 ); }
            | FieldList ',' IDENTIFIER                { AddVar( $3 ); }
            | FieldList IN IDENTIFIER { SetAlias( $3, $<iNumber>1 ); }
            ;
@@ -1602,6 +1638,7 @@ void AddVar( char * szVarName )
    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
    pVar->szName = szVarName;
    pVar->szAlias = NULL;
+   pVar->cType = cVarType;
    pVar->iUsed = 0;
    pVar->pNext = NULL;
 
@@ -2710,8 +2747,17 @@ WORD GetVarPos( PVAR pVars, char * szVarName ) /* returns the order + 1 of a var
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
          if( _iWarnings )
+	 {
+	    PSTACK_VAL_TYPE pNewStackType;
+
             pVars->iUsed = 1;
 
+            pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+            pNewStackType->cType = pVars->cType;
+            pNewStackType->pPrev = pStackValType;
+
+            pStackValType = pNewStackType;
+	 }
          return wVar;
       }
       else
@@ -2778,8 +2824,10 @@ int GetLocalVarPos( char * szVarName ) /* returns the order + 1 of a variable if
 
               pVar = (PVAR) OurMalloc( sizeof(VAR) );
               pVar->szName = szVarName;
+              pVar->cType = ' ';
               pVar->iUsed = 0;
               pVar->pNext  = NULL;
+
               iVar = 1;  /* first variable */
               if( ! pFunc->pStatics )
                 pFunc->pStatics = pVar;
@@ -3035,11 +3083,58 @@ void MessageFix( char * szMsgName )  /* fix a generated message to an object */
 void PopId( char * szVarName ) /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 {
    WORD wVar;
+   PSTACK_VAL_TYPE pVarType, pFree;
 
    if( ( wVar = GetLocalVarPos( szVarName ) ) )
+   {
       GenPCode3( _POPLOCAL, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+      if( _iWarnings )
+      {
+         pVarType = pStackValType;
+
+         if( pStackValType )
+            pStackValType = pStackValType->pPrev;
+
+         pFree = pStackValType;
+
+         if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
+      	    GenWarning( WARN_ASSIGN_SUSPECTED, szVarName, NULL );
+         else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
+      	    GenWarning( WARN_ASSIGN_TYPE, szVarName, NULL );
+
+         if( pVarType )
+            OurFree( pVarType );
+
+         if( pFree )
+            OurFree( pFree );
+      }
+   }
    else if( ( wVar = GetStaticVarPos( szVarName ) ) )
+   {
       GenPCode3( _POPSTATIC, LOBYTE( wVar ), HIBYTE( wVar ) );
+
+      if( _iWarnings )
+      {
+         pVarType = pStackValType;
+
+         if( pStackValType )
+            pStackValType = pStackValType->pPrev;
+
+         pFree = pStackValType;
+
+         if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
+      	    GenWarning( WARN_ASSIGN_SUSPECTED, szVarName, NULL );
+         else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
+      	    GenWarning( WARN_ASSIGN_TYPE, szVarName, NULL );
+
+         if( pVarType )
+            OurFree( pVarType );
+
+         if( pFree )
+            OurFree( pFree );
+      }
+   }
    else
    {
       GenWarning( WARN_AMBIGUOUS_VAR, szVarName, NULL );
@@ -3124,15 +3219,37 @@ void PushIdByRef( char * szVarName ) /* generates the pcode to push a variable b
 
 void PushLogical( int iTrueFalse ) /* pushes a logical value on the virtual machine stack */
 {
+   PSTACK_VAL_TYPE pNewStackType;
+
    if( iTrueFalse )
       GenPCode1( _TRUE );
    else
       GenPCode1( _FALSE );
+
+   if( _iWarnings )
+   {
+      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = 'L';
+      pNewStackType->pPrev = pStackValType;
+
+      pStackValType = pNewStackType;
+   }
 }
 
 void PushNil( void )
 {
    GenPCode1( _PUSHNIL );
+
+   if( _iWarnings )
+   {
+      PSTACK_VAL_TYPE pNewStackType;
+
+      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = 'U';
+      pNewStackType->pPrev = pStackValType;
+
+      pStackValType = pNewStackType;
+   }
 }
 
 /* generates the pcode to push a double number on the virtual machine stack */
@@ -3141,6 +3258,17 @@ void PushDouble( double dNumber, BYTE bDec )
    GenPCode1( _PUSHDOUBLE );
    GenPCodeN( ( BYTE * ) &dNumber, sizeof( double ) );
    GenPCode1( bDec );
+
+   if( _iWarnings )
+   {
+      PSTACK_VAL_TYPE pNewStackType;
+
+      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = 'N';
+      pNewStackType->pPrev = pStackValType;
+
+      pStackValType = pNewStackType;
+   }
 }
 
 /* generates the pcode to push a integer number on the virtual machine stack */
@@ -3150,6 +3278,17 @@ void PushInteger( int iNumber )
       GenPCode3( _PUSHINT, LOBYTE( ( WORD ) iNumber ), HIBYTE( ( WORD ) iNumber ) );
    else
       GenPCode1( _ZERO );
+
+   if( _iWarnings )
+   {
+      PSTACK_VAL_TYPE pNewStackType;
+
+      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = 'N';
+      pNewStackType->pPrev = pStackValType;
+
+      pStackValType = pNewStackType;
+   }
 }
 
 /* generates the pcode to push a long number on the virtual machine stack */
@@ -3165,6 +3304,17 @@ void PushLong( long lNumber )
    }
    else
       GenPCode1( _ZERO );
+
+   if( _iWarnings )
+   {
+      PSTACK_VAL_TYPE pNewStackType;
+
+      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = 'N';
+      pNewStackType->pPrev = pStackValType;
+
+      pStackValType = pNewStackType;
+   }
 }
 
 /* generates the pcode to push a string on the virtual machine stack */
@@ -3174,6 +3324,17 @@ void PushString( char * szText )
 
    GenPCode3( _PUSHSTR, LOBYTE(wStrLen), HIBYTE(wStrLen) );
    GenPCodeN( ( BYTE * ) szText, wStrLen );
+
+   if( _iWarnings )
+   {
+      PSTACK_VAL_TYPE pNewStackType;
+
+      pNewStackType = OurMalloc( sizeof( STACK_VAL_TYPE ) );
+      pNewStackType->cType = 'C';
+      pNewStackType->pPrev = pStackValType;
+
+      pStackValType = pNewStackType;
+   }
 }
 
 /* generates the pcode to push a symbol on the virtual machine stack */

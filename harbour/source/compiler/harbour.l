@@ -61,7 +61,7 @@ extern WORD _wWhileCounter;
 extern WORD _wCaseCounter;
 
 PDEFINE pDefs = 0;                  /* support for #defines */
-int iLine = 1;
+int iLine = 0;
 long lNumber = 0;
 
 #define LOOKUP          0       /* scan from the begining of line */
@@ -1117,6 +1117,14 @@ Separator     {SpaceTab}|{Comment}
                   return IDENTIFIER;
                 }
               }
+
+"as numeric"    { return AS_NUMERIC; }
+"as character"  { return AS_CHARACTER; }
+"as logical"    { return AS_LOGICAL; }
+"as date"       { return AS_DATE; }
+"as array"      { return AS_ARRAY; }
+"as object"     { return AS_OBJECT; }
+
 %{
 /* ************************************************************************ */
 %}

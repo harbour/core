@@ -54,6 +54,12 @@ typedef struct             /* symbol table support structures */
    int    iCount;          /* number of defined symbols */
 } SYMBOLS;
 
+typedef struct _STACK_VAL_TYPE        /* locals, static, public variables support */
+{
+   char cType;                      /* type of stack value */
+   struct _STACK_VAL_TYPE * pPrev;    /* pointer to previous stack value's type */
+} STACK_VAL_TYPE, * PSTACK_VAL_TYPE;
+
 PFUNCTION GetFunction( char * szFunName ); /* locates a previously defined function */
 WORD GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a function on the functions defined list */
 

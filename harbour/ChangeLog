@@ -1,3 +1,18 @@
+19990618-04:35 PST Ron Pinkas <Ron@Profit-Master.com>
+  * hberrors.h
+    +added define WARN_ASSIGN_TYPE and WARN_ASSIGN_SUSPECTED
+
+  * compiler.h
+    +added struct STACK_VAL_TYPE *PSTAC_VAL_TYPE
+
+  * harbour.l
+    +added support for tokens AS NUMERIC, AS CHARACTER, AS LOGICAL, AS DATE, AS ARRAY, AS OBJECT
+    *modified iLine to initialize to 0 rather than 1
+
+  * harbour.y
+    +added support for extended variable declaration with strong typing
+    +added logic to support warnings on incompatible and suspecious variable assignments
+
 19990618-13:40 Alexander Kresin
  updated:
  * source\hbpp\hbppmain.c
@@ -5,11 +20,12 @@
  * source\hbpp\table.c
   Fixed some problems with preprocessor
 
+>>>>>>> 1.316
 19990618-07:50 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.y
  + added deallocation of used structures
- + added yy_strupr and yy_strdup functions to make sure that memory is 
+ + added yy_strupr and yy_strdup functions to make sure that memory is
    properly allocated
 
 * source/compiler/harbour.l
@@ -24,16 +40,16 @@
    You have to define:
    HB_ARCHITECTURE = linux
    HB_COMPILER = gcc
-   
+
 * source/hbpp/hbppint.c
  * added support for Watcom C/C++ compiler
-    
+
 + source/hbpp/makefile.wat
  + makefile for Watcom C/C++ compiler
- 
+
 + source/compiler/makefile.wat
  * changes to link hbpp library into Harbour executable
- 
+
 * source/rtl/console.c
 * source/rtl/dir.c
 * source/rtl/files.c
@@ -41,7 +57,7 @@
  * changed files to make them compile with Watcom C/C++ and GCC on Linux
  * removed PATH_SEPARATOR and replaced it with OS_PATH_DELIMITER
    defined in hbsetup.h
- 
+
 * source/contrib/genobj.c
  * moved this file from source/tools since this is DOS specific code and
    it is not needed for Harbour
@@ -52,7 +68,7 @@
 * Harbour compiles fine on Linux now. However there is still some
   suspicious code in source/rtl/dir.c and source/rtl/files.c files.
   The runner.c is unsupported since it generates DOS specific code.
-  
+
 19990617-20:49 PST Ron Pinkas <Ron@Profit-Master.com>
   * compiler.h
     added member cType to struct VAR
