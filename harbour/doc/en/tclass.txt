@@ -15,26 +15,26 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      TClass()
+ *      HBClass()
  *  $CATEGORY$
  *      Classes
  *  $ONELINER$
- *      TClass() is used in the creation of all classes
+ *      HBClass() is used in the creation of all classes
  *  $SYNTAX$
- *      oClass := TClass():New("TMyClass")   
+ *      oClass := HBClass():New("TMyClass")   
  *        -or-   
- *      TClass() is usually accessed by defining a class with the commands
+ *      HBClass() is usually accessed by defining a class with the commands
  *      defined in hbclass.h:   
- *        CLASS TGetList    // Calls TClass() to create the TGetList class   
+ *        CLASS HBGetList    // Calls HBClass() to create the HBGetList class   
  *           ...     
  *        ENDCLASS   
  *  $ARGUMENTS$
  *      
  *  $RETURNS$
- *      An instance of the TClass Class. This special object's :New()
+ *      An instance of the HBClass Class. This special object's :New()
  *      method can then create the classes you define.   
  *  $DESCRIPTION$
- *      TClass is a class that ...   
+ *      HBClass is a class that ...   
  *      The class methods are as follows:   
  *
  *        New()                 Create a new instance of the class   
@@ -42,7 +42,7 @@
  *      FUNCTION TestObject()
  *      local oObject
  *
- *      oObject := TClass():New("TMyClass")
+ *      oObject := HBClass():New("TMyClass")
  *      oObject:End()
  *
  *     RETURN Nil

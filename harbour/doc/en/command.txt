@@ -86,7 +86,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      TClass(),Object Oriented Programming,DATA,METHOD
+ *      HBClass(),Object Oriented Programming,DATA,METHOD
  *  $END$
  */
 
@@ -317,7 +317,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      TClass(),Object Oriented Programming,DATA,CLASS
+ *      HBClass(),Object Oriented Programming,DATA,CLASS
  *  $END$
  */
 

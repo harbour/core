@@ -31,7 +31,7 @@
  *        (Internally, a class method is a static function and there is no
  *        symbol for it, so it is accessed via its address).   
  *
- ** Class TGetList
+ ** Class HBGetList
  *
  *        Object oriented support for GetLists management.   
  *

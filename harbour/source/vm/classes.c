@@ -98,7 +98,7 @@
  *    To Many enhancement and correction to give a full list :-)
  *    Improved class(y) compatibility
  *    Improved TopClass compatibility
- *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default TObject)
+ *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default HBObject)
  *    Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
  *    outside of Constructors /!\ Could be related to some incompatibility
  *    Added hb_objGetRealClsName to keep a full class tree
@@ -2287,7 +2287,7 @@ HB_FUNC( __CLS_PARAM )
    }
    else
    {
-      PHB_ITEM iTmp = hb_itemPutC( NULL, (char *) "TObject" );
+      PHB_ITEM iTmp = hb_itemPutC( NULL, (char *) "HBObject" );
       array = hb_itemArrayNew( 1 );
       hb_itemArrayPut( array, 1, iTmp );
       hb_itemRelease( iTmp );

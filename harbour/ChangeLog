@@ -1,3 +1,22 @@
+2001-09-11 12:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/vm/classes.c
+     ! Changed one (hopefully) last occurence of TClass to HBClass
+
+   * make_b16.bat
+     make_b32.bat 
+     make_vc.bat
+     makefile.bc
+     makefile.vc 
+     * Some cleanups.
+
+   * doc/en/command.txt
+     doc/en/harbext.txt 
+     doc/en/objfunc.txt
+     doc/en/tclass.txt 
+     doc/es/command.txt
+     ! Classname changes applied to docs.
+
 2001-09-10 23:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/dummy.prg

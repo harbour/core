@@ -3,20 +3,15 @@ rem
 rem $Id$
 rem
 
-rem "echo." intentionally used instead of "echo", to avoid conflicts
-rem with external commands named echo.
-rem using macros for ECHO and DEL to allow overiding such as:
+rem ---------------------------------------------------------------
+rem This is a generic template file, if it doesn't fit your own needs 
+rem please DON'T MODIFY IT.
 rem
-rem    SET ECHO=cmd /c echo
-rem    SET DEL=cmd /c del
-rem
-rem The above might be needed on Windows 2000 and XP.
-rem The macros are referenced in makefile.bc
+rem Instead, make a local copy and modify that one, or make a call to 
+rem this batch file from your customized one. [vszakats]
+rem ---------------------------------------------------------------
 
-SET HB_LEX=FLEX
-
-if "%ECHO%"=="" SET ECHO=echo.
-if "%DEL%"=="" SET DEL=del
+set HB_LEX=FLEX
 
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
@@ -25,10 +20,6 @@ if "%1" == "CLEAN" goto CLEAN
 
    make -fmakefile.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
-   cd contrib\libmisc
-   make -fmakefile.bc %1 %2 %3 >> make_b32.log
-   if errorlevel 1 goto BUILD_ERR
-    cd..\..
 
 :BUILD_OK
 
@@ -55,6 +46,4 @@ if "%1" == "CLEAN" goto CLEAN
    goto EXIT
 
 :EXIT
-
-
 

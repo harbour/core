@@ -49,6 +49,25 @@
 #     See additional notes under RTL.LIB below.
 #
 
+# ---------------------------------------------------------------
+# "echo." intentionally used instead of "echo", to avoid conflicts
+# with external commands named echo.
+# using macros for ECHO and DEL to allow overiding such as:
+#
+#    set ECHO=cmd /c echo
+#    set DEL=cmd /c del
+#
+# The above might be needed on Windows 2000 and XP.
+# The macros are referenced in makefile.bc
+# ---------------------------------------------------------------
+
+!ifndef ECHO
+   ECHO = echo.
+!endif
+!ifndef DEL
+   DEL = del
+!endif
+
 MK_FILE      = makefile.vc
 MK_FLAGS     = $(MAKEFLAGS: =)
 
@@ -75,8 +94,9 @@ HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
+
 !ifdef PDF
-HBPDF_DIR   = contrib\pdflib
+   HBPDF_DIR   = contrib\pdflib
 !endif
 
 #
@@ -87,12 +107,12 @@ AS             = ML
 CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
-!ifdef PDF
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
-!else
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
-!endif
 LDFLAGS        = $(LDFLAGS)
+
+!ifdef PDF
+   HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
+!endif
 
 #
 # Macros to access our library names
@@ -698,11 +718,11 @@ all: zot \
 MK_FLAGS = $(MK_FLAGS:A=)
 
 zot:
-   -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj > nul
-   -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c > nul
-   -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h > nul
-   -@if exist $(BIN_DIR)\*.exe del $(BIN_DIR)\*.exe > nul
-   -@if exist $(BIN_DIR)\*.map del $(BIN_DIR)\*.map > nul
+   -@if exist $(OBJ_DIR)\*.obj $(DEL) $(OBJ_DIR)\*.obj > nul
+   -@if exist $(OBJ_DIR)\*.c $(DEL) $(OBJ_DIR)\*.c > nul
+   -@if exist $(OBJ_DIR)\*.h $(DEL) $(OBJ_DIR)\*.h > nul
+   -@if exist $(BIN_DIR)\*.exe $(DEL) $(BIN_DIR)\*.exe > nul
+   -@if exist $(BIN_DIR)\*.map $(DEL) $(BIN_DIR)\*.map > nul
 
 !else
 
@@ -885,9 +905,9 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\expropta.c \
    $(COMPILER_DIR)\exproptb.c \
    $(COMPILER_DIR)\exproptc.c
-   -echo. > $(OBJ_DIR)\unistd.h
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
    $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
-   -del $(OBJ_DIR)\unistd.h
+   -$(DEL) $(OBJ_DIR)\unistd.h
 
 
 
@@ -974,9 +994,9 @@ $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
    $(CC) $(CLIBFLAGS) -w -Fo$@  $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-   -echo. > $(OBJ_DIR)\unistd.h
+   -$(ECHO) > $(OBJ_DIR)\unistd.h
    $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@  $**
-   -del $(OBJ_DIR)\unistd.h
+   -$(DEL) $(OBJ_DIR)\unistd.h
 
 
 # dummy targets used for prg to c creation

@@ -26,18 +26,25 @@
 # NOTE: BCC_NOSTARTUP must be defined for Borland C++ 5.3 to make it work.
 #
 
+# ---------------------------------------------------------------
+# "echo." intentionally used instead of "echo", to avoid conflicts
+# with external commands named echo.
+# using macros for ECHO and DEL to allow overiding such as:
+#
+#    set ECHO=cmd /c echo
+#    set DEL=cmd /c del
+#
+# The above might be needed on Windows 2000 and XP.
+# The macros are referenced in makefile.bc
+# ---------------------------------------------------------------
+
 .AUTODEPEND
 
-!if $d(ECHO)
-   # ECHO is defined.
-!else
-   ECHO=ECHO.
+!if !$d(ECHO)
+   ECHO = echo.
 !endif
-
-!if $d(DEL)
-   # DEL is defined.
-!else
-   DEL=DEL
+!if !$d(DEL)
+   DEL = del
 !endif
 
 !if $d(B16)
@@ -79,12 +86,7 @@ CFLAGS = -O2 $(CFLAGS)
 # Directory macros. These should never have to change.
 #
 
-!if $(HB_LEX)==SIMPLEX
-   INCLUDE_DIR  = include;source\compiler;source\macro
-!else
-   INCLUDE_DIR  = include
-!endif
-
+INCLUDE_DIR  = include
 COMMON_DIR   = source\common
 COMPILER_DIR = source\compiler
 DEBUG_DIR    = source\debug
@@ -99,8 +101,12 @@ HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
 HBMAKE_DIR   = utils\hbmake
+
+!if $(HB_LEX) == SIMPLEX
+   INCLUDE_DIR  = $(INCLUDE_DIR);source\compiler;source\macro
+!endif
 !if $d(PDF)
-HBPDF_DIR   = contrib\pdflib
+   HBPDF_DIR   = contrib\pdflib
 !endif
 
 #
@@ -109,16 +115,16 @@ HBPDF_DIR   = contrib\pdflib
 
 CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-!if $(HB_LEX)==SIMPLEX
+CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+!if $(HB_LEX) == SIMPLEX
    CLIBFLAGS   = $(CLIBFLAGS) -DSIMPLEX
 !endif
-CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 !if $d(PDF)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
-!else
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+   HARBOURFLAGS   = $(HARBOURFLAGS) -dPDF
 !endif
-LDFLAGS        = $(LDFLAGS)
 
 #
 # Macros to access our library names
@@ -2633,6 +2639,4 @@ $(OBJ_DIR)\prb_stak.c : $(HBMAKE_DIR)\prb_stak.prg
 
 $(OBJ_DIR)\prb_stak.obj : $(OBJ_DIR)\prb_stak.c
    $(CC) $(CLIBFLAGS) -o$@ $**
-
-
 

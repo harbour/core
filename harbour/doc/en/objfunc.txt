@@ -325,7 +325,7 @@
  *      created using the @ operator, see example below.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
- *      oHappy := TClass():New( "THappy" )
+ *      oHappy := HBClass():New( "THappy" )
  *      __objAddMethod( oHappy, "Smile", @MySmile() )
  *      ? oHappy:Smile( 1 )       // :)
  *      ? oHappy:Smile( 2 )       // ;)
@@ -377,7 +377,7 @@
  *      with the name <cInlineName> already exist in <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
- *      oHappy  := TClass():New( "THappy" )
+ *      oHappy  := HBClass():New( "THappy" )
  *      bInline := { | nType | { ":)", ";)", "*SMILE*" }[ nType ] }
  *      __objAddInline( oHappy, "Smile", bInline )
  *      ? oHappy:Smile( 1 )       // :)
@@ -416,7 +416,7 @@
  *      <cDataName> already exist in <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a lHappy DATA
- *      oHappy  := TClass():New( "THappy" )
+ *      oHappy  := HBClass():New( "THappy" )
  *      __objAddData( oHappy, "lHappy" )
  *      oHappy:lHappy := .T.
  *      IF oHappy:lHappy
@@ -464,7 +464,7 @@
  *      created using the @ operator, see example below.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
- *      oHappy := TClass():New( "THappy" )
+ *      oHappy := HBClass():New( "THappy" )
  *      __objAddMethod( oHappy, "Smile", @MySmile() )
  *      ? oHappy:Smile( 1 )       // :)
  *      ? oHappy:Smile( 2 )       // ;)
@@ -529,7 +529,7 @@
  *      mechanism.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
- *      oHappy  := TClass():New( "THappy" )
+ *      oHappy  := HBClass():New( "THappy" )
  *      bMyInline   := { | nType | { ":)", ";)" }[ nType ] }
  *      bYourInline := { | nType | { "*SMILE*", "*WINK*" }[ nType ] }
  *      __objAddInline( oHappy, "Smile", bMyInline )
@@ -576,7 +576,7 @@
  *      __objDelInline() is exactly the same as __objDelMethod().
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
- *      oHappy := TClass():New( "THappy" )
+ *      oHappy := HBClass():New( "THappy" )
  *      __objAddMethod( oHappy, "Smile", @MySmile() )
  *      ? __objHasMethod( oHappy, "Smile" )    // .T.
  *      // remove Smile method
@@ -627,7 +627,7 @@
  *      <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
- *      oHappy := TClass():New( "THappy" )
+ *      oHappy := HBClass():New( "THappy" )
  *      __objAddMethod( oHappy, "Smile", @MySmile() )
  *      ? __objHasMethod( oHappy, "Smile" )    // .T.
  *      // remove Smile method
@@ -677,7 +677,7 @@
  *      with the name <cDataName> does not exist in <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a lHappy DATA
- *      oHappy  := TClass():New( "THappy" )
+ *      oHappy  := HBClass():New( "THappy" )
  *      __objAddData( oHappy, "lHappy" )
  *      ? __objHasData( oHappy, "lHappy" )    // .T.
  *      // remove lHappy DATA
