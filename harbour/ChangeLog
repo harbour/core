@@ -1,3 +1,7 @@
+19990808-10:15 Eddie Runia <eddie@runia.com>
+   * source/rtl/transfrm.c
+     header change
+
 19990708-14:00 Andi Jahja <andij@aonlippo.co.id>
    * source/rtl/file.c
    Change per Paul for MSC
@@ -93,6 +97,9 @@ tests/working :
   + extend2.c
     These are test programs for Harbour extend system
 
+19990707-20:50 Eddie Runia <eddie@runia.com>
+  - tests/working/asctest.prg
+    not an original work
 
 19990707-20:10 Eddie Runia <eddie@runia.com>
   * tests/working/mankala.prg; tests/working/transfrm.prg;
