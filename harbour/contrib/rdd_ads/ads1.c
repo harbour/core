@@ -359,29 +359,6 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
    return uiError;
 }
 
-#if !defined( __GNUC__ )
-int strcasecmp( char _FAR *__s1, char _FAR *__s2 )
-{
-   while( *__s1 && *__s2 )
-   {
-      if( toupper(*__s1) != toupper(*__s2) )
-         return ( toupper(*__s1) - toupper(*__s2) );
-      __s1 ++;
-      __s2 ++;
-   }
-   return ( *__s1 - *__s2 );
-}
-
-int strncasecmp( char _FAR *__s1, char _FAR *__s2, int n )
-{
-   int i;
-   for( i=0;i<n;i++,__s1++,__s2++ )
-      if( toupper(*__s1) != toupper(*__s2) )
-         return ( toupper(*__s1) - toupper(*__s2) );
-   return 0;
-}
-#endif
-
 /*
  * -- ADS METHODS --
  */
@@ -751,12 +728,12 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
       {
          case 'C':
             if( strlen(szFieldType) == 1 || 
-                   !strcasecmp( szFieldType,"char" ) )
+                   !hb_stricmp( szFieldType,"char" ) )
             {
                pFieldInfo.uiType = HB_IT_STRING;
                pFieldInfo.uiLen = uiLen + uiDec * 256;
             }
-            else if( !strcasecmp( szFieldType,"curdouble" ) &&
+            else if( !hb_stricmp( szFieldType,"curdouble" ) &&
                      adsFileType == ADS_ADT )
             {
                pFieldInfo.uiType = HB_IT_LONG;
@@ -780,12 +757,12 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
          case 'D':
             if( strlen(szFieldType) == 1 || 
-                   !strcasecmp( szFieldType,"date" ) )
+                   !hb_stricmp( szFieldType,"date" ) )
             {
                pFieldInfo.uiType = HB_IT_DATE;
                pFieldInfo.uiLen = (adsFileType == ADS_ADT)? 4:8;
             }
-            else if( !strcasecmp( szFieldType,"double" ) )
+            else if( !hb_stricmp( szFieldType,"double" ) )
             {
                pFieldInfo.uiType = HB_IT_LONG;
                pFieldInfo.uiTypeExtended = ADS_DOUBLE;
@@ -835,13 +812,13 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'S':
-            if( !strcasecmp( szFieldType,"shortdate" ) )
+            if( !hb_stricmp( szFieldType,"shortdate" ) )
             {
                pFieldInfo.uiType = HB_IT_MEMO;
                pFieldInfo.uiTypeExtended = ADS_COMPACTDATE;
                pFieldInfo.uiLen = (adsFileType == ADS_ADT)? 9:10;
             }
-            else if( !strcasecmp( szFieldType,"shortint" ) &&
+            else if( !hb_stricmp( szFieldType,"shortint" ) &&
                      adsFileType == ADS_ADT )
             {
                pFieldInfo.uiType = HB_IT_LONG;
@@ -853,14 +830,14 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'T':
-            if( !strcasecmp( szFieldType,"timestamp" ) &&
+            if( !hb_stricmp( szFieldType,"timestamp" ) &&
                      adsFileType == ADS_ADT )
             {
                pFieldInfo.uiType = HB_IT_LONG;
                pFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
                pFieldInfo.uiLen = 8;
             }
-            else if( !strcasecmp( szFieldType,"time" ) &&
+            else if( !hb_stricmp( szFieldType,"time" ) &&
                      adsFileType == ADS_ADT )
             {
                pFieldInfo.uiType = HB_IT_LONG;
@@ -872,13 +849,13 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'I':
-            if( !strcasecmp( szFieldType,"integer" ) )
+            if( !hb_stricmp( szFieldType,"integer" ) )
             {
                pFieldInfo.uiType = HB_IT_LONG;
                pFieldInfo.uiTypeExtended = ADS_INTEGER;
                pFieldInfo.uiLen = 4;
             }
-            else if( !strcasecmp( szFieldType,"image" ) )
+            else if( !hb_stricmp( szFieldType,"image" ) )
             {
                pFieldInfo.uiType = HB_IT_MEMO;
                pFieldInfo.uiTypeExtended = ADS_IMAGE;
@@ -1435,7 +1412,6 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
      strcat((char*)ucfieldDefs, (char*)ucBuffer);
      pField++;
    }
-   printf("\n%s\n",ucfieldDefs );
    uRetVal = AdsCreateTable( 0, pCreateInfo->abName, NULL, adsFileType, adsCharType,
                     adsLockType, adsRights,
                     hb_set.HB_SET_MBLOCKSIZE,

@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source\rdd\dbfcdx\dbfcdx1.c
+    ! minor changes
+    ! fixed preventing reopening of same cdx.
+
+2002-05-08 12:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/pp/pptable.c
+    * Inserted "ifdef HB_EXTENSION" for clause 'MEMORY' in INDEX command
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
+    * "ifdef HB_EXTENSION" is used for memory indexes
+    * some cleanup, tags list is used now instead of index list
+  * contrib/rdd_ads/ads1.c
     * calls of strcasecmp() replaced by hb_stricmp(), functions
       strcasecmp() and strncasecmp() are removed,
       printf() removed from adsCreate()

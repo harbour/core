@@ -134,6 +134,7 @@ typedef HB_PAGEINFO * LPPAGEINFO;
 typedef struct _TAGINFO
 {
    char *     TagName;
+   LONG       TagRoot;
    char *     KeyExpr;
    char *     ForExpr;
    PHB_ITEM   pKeyItem;
@@ -176,7 +177,6 @@ typedef struct _NTXINDEX
 {
    char *    IndexName;
    BOOL      Locked;
-   LONG      TagRoot;
    LONG      NextAvail;
    struct   _NTXAREA * Owner;
    FHANDLE   DiskFile;
@@ -305,8 +305,8 @@ typedef struct _NTXAREA
    *  example.
    */
 
-   LPNTXINDEX lpCurIndex;         /* Pointer to current index */
-   LPNTXINDEX lpNtxIndex;         /* Pointer to indexes array */
+   LPTAGINFO lpCurTag;         /* Pointer to current order */
+   LPTAGINFO lpNtxTag;         /* Pointer to tags list */
 
 } NTXAREA;
 
