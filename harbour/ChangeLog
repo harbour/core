@@ -1,3 +1,8 @@
+19990616-08:00 WIB Andi Jahja
+  + source\rtl\natmsg\msgia.c
+    Language module for Indonesian languange
+    ( First Asian <g> )
+
 19990615-23:00 CET Felipe Coury
   + tests/working/hscript/bld32exe.bat; dir.hs; hb32.bat; hello.hs;
     hscript.prg; makehs.prg; makehtm.prg; multiply.hs readme.txt
