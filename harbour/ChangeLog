@@ -1,3 +1,27 @@
+2001-11-01 05:10 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * harbour/include/hbsetup.h
+      * Wrapped HB_FM_STATISTICS in #ifndef test so it can be
+        turned off by defining
+        HB_FM_STATISTICS_OFF in your make or bat files.
+
+   * harbour/source/rtl/trace.c
+      + added HB_TRACESTRING() which lets prg code trace a
+         string into same trace file/window as C traces
+
+   * harbour/source/vm/hvm.c
+      + added __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
+         Turns on | off tracing of PRG-level function and
+         method calls. Dumps symbol name just before it's called.
+         Implementation follows example of
+         the Profiler; all actions are wrapped in an
+         "if" of a BOOL so there should be no performance
+         hit if it's turned off.
+         This is very useful when debugging GPFs as it will
+         trace all PRG-level calls up until the crash.
+         Uses HB_TRACE so traces are in line with any
+         C-level traces.
+
 2001-11-01 18:30 GMT+1 Martin Vogel <vogel@inttec.de>
 
    + contrib/libct/datetime.prg

@@ -232,6 +232,7 @@ extern void * hb_mthRequested( void ); /* profiler from classes.c */
 extern void hb_mthAddTime( void *, ULONG ); /* profiler from classes.c */
 
 BOOL hb_bProfiler = FALSE; /* profiler status is off */
+BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 
 /* virtual machine state */
 
@@ -3046,6 +3047,9 @@ void hb_vmDo( USHORT uiParams )
          if( bProfiler )
             pMethod = hb_mthRequested();
 
+         if ( hb_bTracePrgCalls )
+            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
+
          pFunc();
 
          if (lPopSuper && pSelfBase->puiClsTree)
@@ -3092,6 +3096,9 @@ void hb_vmDo( USHORT uiParams )
          if( bProfiler && pSym->pDynSym ) {
             pSym->pDynSym->ulRecurse++;
          }
+
+         if ( hb_bTracePrgCalls )
+            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
 
          pFunc();
 
@@ -3205,6 +3212,9 @@ void hb_vmSend( USHORT uiParams )
                if( bProfiler )
                   pMethod = hb_mthRequested();
 
+               if ( hb_bTracePrgCalls )
+                  HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
+
                pFunc();
 
                if (lPopSuper && pSelfBase->puiClsTree)
@@ -3299,6 +3309,9 @@ void hb_vmSend( USHORT uiParams )
          if( bProfiler && pSym->pDynSym ) {
             pSym->pDynSym->ulRecurse++;
          }
+
+         if ( hb_bTracePrgCalls )
+            HB_TRACE(HB_TR_ALWAYS, ("Calling: %s", pSym->szName));
 
          pFunc();
 
@@ -4712,6 +4725,19 @@ HB_FUNC( __SETPROFILER )
    BOOL bOldValue = hb_bProfiler;
 
    hb_bProfiler = hb_parl( 1 );
+
+   hb_retl( bOldValue );
+}
+
+/* $Doc$
+ * $FuncName$     __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
+ * $Description$  Turns on | off tracing of PRG-level function and method calls
+ * $End$ */
+HB_FUNC( __TRACEPRGCALLS )
+{
+   BOOL bOldValue = hb_bTracePrgCalls;
+
+   hb_bTracePrgCalls = hb_parl( 1 );
 
    hb_retl( bOldValue );
 }

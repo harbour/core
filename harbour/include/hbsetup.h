@@ -56,13 +56,13 @@
 #include <limits.h>
 
 /* ***********************************************************************
- * Include settings common for .PRG and .C files 
+ * Include settings common for .PRG and .C files
 */
 #include "hbsetup.ch"
 
 /* ***********************************************************************
  * NOTE: You can select the default language modul used by Harbour, by
- *       defining this to a valid language modul identifier. 
+ *       defining this to a valid language modul identifier.
 */
 
 #ifndef HB_LANG_DEFAULT
@@ -119,9 +119,11 @@
  * Note that if you turn this on, Harbour will be slighlty slower, larger
  * and will consume more memory.
  *
- * By default this is turned on.
+ * By default this is turned on. Define HB_FM_STATISTICS_OFF to turn it off.
 */
-#define HB_FM_STATISTICS
+#ifndef HB_FM_STATISTICS_OFF
+   #define HB_FM_STATISTICS
+#endif
 
 /* ***********************************************************************
  * This symbol defines if we want an ability to create and link OBJ files
@@ -195,7 +197,7 @@
  * that the set of items doesn't change (there're no deleted or new
  * items, just swapping) in this functions.
  * Using this option makes sorting *much* faster, but if you have a
- * problem, or the low level stuff changes, turn it off. [vszakats] 
+ * problem, or the low level stuff changes, turn it off. [vszakats]
 */
 #define HB_ASORT_OPT_ITEMCOPY
 
