@@ -646,6 +646,10 @@ HARBOUR HB_GETE( void )
 /*  $DOC$
  *  $FUNCNAME$
  *      __RUN()
+ *  $CATEGORY$
+ *      DOS
+ *  $ONELINER$
+ *      Run a external program 
  *  $SYNTAX$
  *      __RUN( <cCommand> )
  *  $CATEGORY$
