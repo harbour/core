@@ -1,3 +1,9 @@
+19991018-07:36 GMT+1 Victor Szel <info@szelvesz.hu>
+   + source/rtl/afields.prg
+     source/rtl/Makefile
+     + AFIELDS() function added (by Jose Lalin)
+       WARNING ! Please add new file to non-GNU make systems.
+
 19991018-00:03 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/vm/hvm.c
      + Support for overloading the following operators:

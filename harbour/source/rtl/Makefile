@@ -47,6 +47,7 @@ C_SOURCES=\
 PRG_SOURCES=\
         achoice.prg \
         adir.prg \
+        afields.prg \
         alert.prg \
         asort.prg \
         browdb.prg \
