@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * Harbour Project source code:
  *   This file is meant to be included in CA-Clipper applications
@@ -8,7 +9,6 @@
  *   or platform dependent features.
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,16 +36,16 @@
  */
 
 /*
- *  Extend as needed
+ * Extend as needed
  */
 
 #ifndef __HARBOUR__
 
-#ifndef _HARBOUR_INCLUDED
-#define _HARBOUR_INCLUDED
+#ifndef _HARBOUR_CH
+#define _HARBOUR_CH
 
-#xtranslate HB_OsNewLine() => Chr(13)+Chr(10)
+#xtranslate HB_OsNewLine() => Chr( 13 ) + Chr( 10 )
 
-#endif
+#endif /* _HARBOUR_CH */
 
 #endif

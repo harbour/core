@@ -42,6 +42,7 @@ PRG_HEADERS=\
         error.ch     \
         fileio.ch    \
         getexit.ch   \
+        harbour.ch   \
         hboo.ch      \
         hbclass.ch   \
         hbextern.ch  \
