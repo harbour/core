@@ -1,3 +1,7 @@
+19990726-13:20 CET Victor Szel <info@szelvesz.hu>
+   + source/rtl/gtapi.c
+     Some minor fixes and corrections mainly to gtBox()
+
 19990726-12:50 CET Victor Szel <info@szelvesz.hu>
    + source/rtl/natmsg/msghu.c
      Error descriptions translated.

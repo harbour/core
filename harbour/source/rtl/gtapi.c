@@ -6,6 +6,11 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.40   19990726   vszel     Allowing Top > Bottom and Right > Left
+ *                             cases again. Clipper allows these, too.
+ *                             Cursor positioning fixed to support these cases.
+ *                             uMRow renamed to uiMRow
+ *                             uMCol renamed to uiMCol
  * 1.39   19990726   ptucker   Position cursor inside top-left corner
  *                             after drawing box - compatibility
  * 1.35   19990726   ptucker   Much improved box drawing speed
@@ -86,12 +91,18 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     USHORT uiCol = uiLeft;
     USHORT height, width, tmp;
 
-    USHORT uMRow = hb_gtMaxRow();
-    USHORT uMCol = hb_gtMaxCol();
+    USHORT uiTopBak = uiTop;
+    USHORT uiLeftBak = uiLeft;
 
-    if (uiTop > uMRow || uiBottom > uMRow ||
-       uiLeft > uMCol || uiRight > uMCol ||
-       uiTop > uiBottom || uiLeft > uiRight)
+    USHORT uiMRow = hb_gtMaxRow();
+    USHORT uiMCol = hb_gtMaxCol();
+
+    /* TODO: Would be better to support these cases, Clipper implementation */
+    /*       was quite messy for these cases, which can be considered as */
+    /*       a bug there. */
+
+    if ( uiTop  > uiMRow || uiBottom > uiMRow ||
+         uiLeft > uiMCol || uiRight  > uiMCol )
     {
         return 1;
     }
@@ -161,7 +172,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
 
     hb_gtDispEnd();
 
-    hb_gtSetPos(uiTop + 1, uiLeft + 1);
+    hb_gtSetPos(uiTopBak + 1, uiLeftBak + 1);
 
     return 0;
 }
@@ -469,11 +480,11 @@ int hb_gtPreExt(void)
 
 int hb_gtRectSize(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize)
 {
-    USHORT uMRow = hb_gtMaxRow();
-    USHORT uMCol = hb_gtMaxCol();
+    USHORT uiMRow = hb_gtMaxRow();
+    USHORT uiMCol = hb_gtMaxCol();
 
-    if( uiTop  > uMRow    || uiBottom > uMRow ||
-        uiLeft > uMCol    || uiRight  > uMCol ||
+    if( uiTop  > uiMRow   || uiBottom > uiMRow ||
+        uiLeft > uiMCol   || uiRight  > uiMCol ||
         uiTop  > uiBottom || uiLeft   > uiRight )
     {
         return(1);
