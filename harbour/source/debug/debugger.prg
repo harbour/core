@@ -3134,7 +3134,6 @@ LOCAL lValid
       aCmnd[WP_TYPE] := "?"
    ENDIF
    aCmnd[WP_EXPR] := cCommand
-   ALERT( "command="+cCommand+"=")
    cResult := CreateExpression( cCommand, aCmnd )
    IF( EMPTY(cResult) )
       //valid syntax

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-09 11:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/debug/debugger.prg
+      * removed diagnostic ALERT call
+
 2004-04-09 10:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexpra.c
    * include/hbexprop.h
