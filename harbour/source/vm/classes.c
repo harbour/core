@@ -215,7 +215,15 @@ static void     hb_clsRelease( PCLASS );
        char *   hb_objGetRealClsName( PHB_ITEM pObject, char * szName );
        PHB_FUNC hb_objGetMethod( PHB_ITEM, PHB_SYMB );
        PHB_FUNC hb_objGetMthd( PHB_ITEM pObject, PHB_SYMB pMessage, BOOL lAllowErrFunc );
-       PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );
+       
+       #ifdef _MSC_VER
+          extern "C" { 
+       #endif   	
+         	PMETHOD  hb_objGetpMethod( PHB_ITEM, PHB_SYMB );
+       #ifdef _MSC_VER
+        }
+       #endif   	
+         	
        BOOL     hb_objHasMsg( PHB_ITEM pObject, char * szString );
 
        void *   hb_mthRequested( void );
