@@ -82,8 +82,6 @@ static int    s_iFilenoStderr;
 
 void hb_consoleInitialize( void )
 {
-   int iStderr;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_consoleInitialize()"));
 
 #if defined(OS_UNIX_COMPATIBLE)
@@ -97,22 +95,24 @@ void hb_consoleInitialize( void )
 
    s_uiPRow = s_uiPCol = 0;
 
+   s_iFilenoStdin = fileno( stdin );
+   s_iFilenoStdout = fileno( stdout );
+
+   {
+      int iStderr = hb_cmdargNum( "STDERR" ); /* Undocumented CA-Clipper switch //STDERR:x */
+
+      if( iStderr < 0 )        /* //STDERR not used or invalid */
+         s_iFilenoStderr = fileno( stderr );
+      else if( iStderr == 0 )  /* //STDERR with no parameter or 0 */
+         s_iFilenoStderr = s_iFilenoStdout;
+      else                     /* //STDERR:x */
+         s_iFilenoStderr = iStderr;
+   }
+
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */
 
-   s_iFilenoStdin = fileno( stdin );
-   s_iFilenoStdout = fileno( stdout );
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
-
-   iStderr = hb_cmdargNum( "STDERR" ); /* Undocumented CA-Clipper switch //STDERR:x */
-
-   if( iStderr < 0 )        /* //STDERR not used or invalid */
-      s_iFilenoStderr = fileno( stderr );
-   else if( iStderr == 0 )  /* //STDERR with no parameter or 0 */
-      s_iFilenoStderr = s_iFilenoStdout;
-   else                     /* //STDERR:x */
-      s_iFilenoStderr = iStderr;
-
    hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
 
    s_bInit = TRUE;
@@ -152,28 +152,28 @@ HB_FUNC( HB_OSNEWLINE )
 typedef void hb_out_func_typedef( char *, ULONG );
 
 /* Format items for output, then call specified output function */
-static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
+static void hb_out( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 {
+   PHB_ITEM pItem;
+   char * pszString;
    ULONG ulLen;
    BOOL bFreeReq;
-   PHB_ITEM pItem;
-   char * pString;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_out(%hu, %p)", uiParam, hb_out_func));
 
    pItem = hb_param( uiParam, IT_ANY );
-   pString = hb_itemString( pItem, &ulLen, &bFreeReq );
+   pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
 
-   hb_out_func( pString, ulLen );
+   pOutFunc( pszString, ulLen );
 
    if( bFreeReq )
-      hb_xfree( pString );
+      hb_xfree( pszString );
 }
 
 /* Output an item to STDOUT */
 void hb_outstd( char * pStr, ULONG ulLen )
 {
-   USHORT user_ferror;
+   USHORT uiErrorOld;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_outstd(%s, %lu)", pStr, ulLen));
 
@@ -183,9 +183,9 @@ void hb_outstd( char * pStr, ULONG ulLen )
    if( s_bInit )
       hb_gtPreExt();
 
-   user_ferror = hb_fsError(); /* Save current user file error code */
+   uiErrorOld = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
-   hb_fsSetError( user_ferror ); /* Restore last user file error code */
+   hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
 
    if( s_bInit )
    {
@@ -197,7 +197,7 @@ void hb_outstd( char * pStr, ULONG ulLen )
 /* Output an item to STDERR */
 void hb_outerr( char * pStr, ULONG ulLen )
 {
-   USHORT user_ferror;
+   USHORT uiErrorOld;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_outerr(%s, %lu)", pStr, ulLen));
 
@@ -207,9 +207,9 @@ void hb_outerr( char * pStr, ULONG ulLen )
    if( s_bInit )
       hb_gtPreExt();
 
-   user_ferror = hb_fsError(); /* Save current user file error code */
+   uiErrorOld = hb_fsError(); /* Save current user file error code */
    hb_fsWriteLarge( s_iFilenoStderr, ( BYTE * ) pStr, ulLen );
-   hb_fsSetError( user_ferror ); /* Restore last user file error code */
+   hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
 
    if( s_bInit )
    {
@@ -229,25 +229,25 @@ static void hb_altout( char * pStr, ULONG ulLen )
    if( hb_set.HB_SET_ALTERNATE && hb_set.hb_set_althan != FS_ERROR )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_althan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    if( hb_set.hb_set_extrahan != FS_ERROR )
    {
       /* Print to extra file if valid alternate file */
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_extrahan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
       s_uiPCol += ( USHORT ) ulLen;
    }
 }
@@ -260,9 +260,9 @@ static void hb_devout( char * pStr, ULONG ulLen )
    if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
       s_uiPCol += ( USHORT ) ulLen;
    }
    else
@@ -276,49 +276,8 @@ static void hb_devout( char * pStr, ULONG ulLen )
 static void hb_dispout( char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dispout(%s, %lu)", pStr, ulLen));
+
    hb_gtWrite( ( BYTE * ) pStr, ulLen );
-}
-
-void hb_devpos( SHORT row, SHORT col )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_devpos(%hd, %hd)", row, col));
-
-   /* Position printer if SET DEVICE TO PRINTER and valid printer file
-      otherwise position console */
-   if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
-   {
-      USHORT uiCount, uiProw = ( USHORT ) row, uiPcol = ( USHORT ) col;
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-
-      if( uiProw < s_uiPRow )
-      {
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
-         s_uiPRow = s_uiPCol = 0;
-      }
-
-      for( uiCount = s_uiPRow; uiCount < uiProw; uiCount++ )
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN-1 );
-
-      if( uiProw > s_uiPRow ) s_uiPCol = 0;
-      uiPcol += hb_set.HB_SET_MARGIN;
-
-      for( uiCount = s_uiPCol; uiCount < uiPcol; uiCount++ )
-         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
-
-      s_uiPRow = uiProw;
-      s_uiPCol = uiPcol;
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
-   }
-   else
-      hb_gtSetPos( row, col );
-}
-
-/* NOTE: This should be placed after the hb_devpos() definition. */
-
-HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
-{
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
@@ -366,38 +325,19 @@ HB_FUNC( QOUT )
 
    if( hb_set.HB_SET_PRINTER && hb_set.hb_set_printhan != FS_ERROR )
    {
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       USHORT uiCount;
 
       s_uiPRow++;
+
       uiCount = s_uiPCol = hb_set.HB_SET_MARGIN;
       while( uiCount-- > 0 )
          hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
 
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    HB_FUNCNAME( QQOUT )();
-}
-
-HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
-{
-   if( hb_pcount() >= 1 )
-   {
-      if( ISCHAR( 2 ) )
-      {
-         char szOldColor[ CLR_STRLEN ];
-
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 2 ) );
-
-         hb_out( 1, hb_devout );
-
-         hb_gtSetColorStr( szOldColor );
-      }
-      else
-         hb_out( 1, hb_devout );
-   }
 }
 
 /* TOFIX: CA-Cl*pper will print an eject even if SET DEVICE=SCREEN */
@@ -406,9 +346,9 @@ HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan != FS_ERROR )
    {
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
       hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
    }
 
    s_uiPRow = s_uiPCol = 0;
@@ -416,65 +356,124 @@ HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 
 HB_FUNC( PROW ) /* Returns the current printer row position */
 {
-   hb_retni( s_uiPRow );
+   hb_retni( ( int ) s_uiPRow );
 }
 
 HB_FUNC( PCOL ) /* Returns the current printer row position */
 {
-   hb_retni( s_uiPCol );
+   hb_retni( ( int ) s_uiPCol );
+}
+
+void hb_devpos( SHORT iRow, SHORT iCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_devpos(%hd, %hd)", row, col));
+
+   /* Position printer if SET DEVICE TO PRINTER and valid printer file
+      otherwise position console */
+
+   if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
+   {
+      USHORT uiCount;
+      USHORT uiProw = ( USHORT ) iRow;
+      USHORT uiPcol = ( USHORT ) iCol;
+      USHORT uiErrorOld = hb_fsError(); /* Save current user file error code */
+
+      if( uiProw < s_uiPRow )
+      {
+         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0C\x0D", 2 );
+         s_uiPRow = s_uiPCol = 0;
+      }
+
+      for( uiCount = s_uiPRow; uiCount < uiProw; uiCount++ )
+         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) s_szCrLf, CRLF_BUFFER_LEN - 1 );
+
+      if( uiProw > s_uiPRow )
+         s_uiPCol = 0;
+
+      uiPcol += hb_set.HB_SET_MARGIN;
+
+      for( uiCount = s_uiPCol; uiCount < uiPcol; uiCount++ )
+         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
+
+      s_uiPRow = uiProw;
+      s_uiPCol = uiPcol;
+
+      hb_fsSetError( uiErrorOld ); /* Restore last user file error code */
+   }
+   else
+      hb_gtSetPos( iRow, iCol );
+}
+
+/* NOTE: This should be placed after the hb_devpos() definition. */
+
+HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
+{
+   if( ISNUM( 1 ) && ISNUM( 2 ) )
+      hb_devpos( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
+   if( hb_pcount() == 2 && ISNUM( 1 ) && ISNUM( 2 ) )
    {
       s_uiPRow = ( USHORT ) hb_parni( 1 );
       s_uiPCol = ( USHORT ) hb_parni( 2 );
    }
 }
 
+HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or printer), but is not affected by SET ALTERNATE */
+{
+   if( ISCHAR( 2 ) )
+   {
+      char szOldColor[ CLR_STRLEN ];
+
+      hb_gtGetColorStr( szOldColor );
+      hb_gtSetColorStr( hb_parc( 2 ) );
+
+      hb_out( 1, hb_devout );
+
+      hb_gtSetColorStr( szOldColor );
+   }
+   else if( hb_pcount() >= 1 )
+      hb_out( 1, hb_devout );
+}
+
 HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected by SET ALTERNATE */
 {
-   if( hb_pcount() >= 1 )
+   if( ISCHAR( 2 ) )
    {
-      if( ISCHAR( 2 ) )
-      {
-         char szOldColor[ CLR_STRLEN ];
+      char szOldColor[ CLR_STRLEN ];
 
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 2 ) );
+      hb_gtGetColorStr( szOldColor );
+      hb_gtSetColorStr( hb_parc( 2 ) );
 
-         hb_out( 1, hb_dispout );
+      hb_out( 1, hb_dispout );
 
-         hb_gtSetColorStr( szOldColor );
-      }
-      else
-         hb_out( 1, hb_dispout );
+      hb_gtSetColorStr( szOldColor );
    }
+   else if( hb_pcount() >= 1 )
+      hb_out( 1, hb_dispout );
 }
 
 /* Undocumented Clipper function */
 
 HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
 {
-   if( hb_pcount() >= 3 )
+   /* NOTE: Clipper does no checks here. [vszakats] */
+   hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+
+   if( ISCHAR( 4 ) )
    {
-      /* NOTE: Clipper does no checks here. [vszakats] */
-      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+      char szOldColor[ CLR_STRLEN ];
 
-      if( ISCHAR( 4 ) )
-      {
-         char szOldColor[ CLR_STRLEN ];
+      hb_gtGetColorStr( szOldColor );
+      hb_gtSetColorStr( hb_parc( 4 ) );
 
-         hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 4 ) );
+      hb_out( 3, hb_dispout );
 
-         hb_out( 3, hb_dispout );
-
-         hb_gtSetColorStr( szOldColor );
-      }
-      else
-         hb_out( 3, hb_dispout );
+      hb_gtSetColorStr( szOldColor );
    }
+   else if( hb_pcount() >= 3 )
+      hb_out( 3, hb_dispout );
 }
 

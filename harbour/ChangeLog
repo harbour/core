@@ -1,3 +1,28 @@
+20000326-03:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   - make_tpl.*
+   - bin/bld_tpl.*
+   + make_gnu.*
+   + bin/bld.*
+     + GNU-make starters renamed to better show their purpose.
+     + GNU-make starters modified to work like bld_gnu.*, so that they don't
+       need to be modified, instead they expect the HB_ envvars to be set. Now 
+       they also throw a help screen when something is not set.
+     + BLD.SH bash script added to build Harbour executables.
+     + Other small improvements.
+
+   * source/rtl/console.c
+     % DISPOUT(), DISPOUTAT(), DEVOUT() optimized
+     % DISPOUTAT() made even more CA-Cl*pper compatible.
+     ! SETPRC() made even more CA-Cl*pper compatible.
+     * Some variables renamed.
+   * source/rtl/box.c
+     % Small optimization.
+   * source/rtl/gtapi.c
+     + s_bInit variable added.
+   * utils/hbdoc/Makefile
+     - runner lib removed (again).
+
 20000325-09:22 EST Paul Tucker <ptucker@sympatico.ca>
    * include/hbapigt.h
      source/rtl/gtcrs/gtcrs.c

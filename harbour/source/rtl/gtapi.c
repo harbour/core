@@ -69,6 +69,7 @@
 #include "hbapigt.h"
 #include "hbset.h"
 
+static BOOL   s_bInit = FALSE;
 static SHORT  s_iCurrentRow;
 static SHORT  s_iCurrentCol;
 static USHORT s_uiPreCount;
@@ -107,6 +108,8 @@ void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
    s_uiColorIndex = 0;
    s_uiCursorShape = 0;
 
+   s_bInit = TRUE;
+
    if( hb_cmdargCheck( "INFO" ) )
    {
       hb_outerr( hb_gtVersion(), 0 );
@@ -117,6 +120,8 @@ void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 void hb_gtExit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtExit()"));
+
+   s_bInit = FALSE;
 
    while( hb_gt_DispCount() )
       hb_gt_DispEnd();

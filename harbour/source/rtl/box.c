@@ -35,27 +35,46 @@
 
 #include "hbapi.h"
 #include "hbapigt.h"
+#include "hbapiitm.h"
 
 HB_FUNC( DISPBOX )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISNUM( 4 ) )
+   PHB_ITEM pTop    = hb_param( 1, IT_NUMERIC );
+   PHB_ITEM pLeft   = hb_param( 2, IT_NUMERIC );
+   PHB_ITEM pBottom = hb_param( 3, IT_NUMERIC );
+   PHB_ITEM pRight  = hb_param( 4, IT_NUMERIC );
+
+   if( pTop && pLeft && pBottom && pRight )
    {
+      char * pszColor = ISCHAR( 6 ) ? hb_parc( 6 ) : NULL;
       char szOldColor[ CLR_STRLEN ];
 
-      if( ISCHAR( 6 ) )
+      if( pszColor )
       {
          hb_gtGetColorStr( szOldColor );
-         hb_gtSetColorStr( hb_parc( 6 ) );
+         hb_gtSetColorStr( pszColor );
       }
 
       if( ISCHAR( 5 ) )
-         hb_gtBox( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( BYTE * ) hb_parc( 5 ));
-      else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
-         hb_gtBoxD( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-      else
-         hb_gtBoxS( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+         hb_gtBox( hb_itemGetNI( pTop ),
+                   hb_itemGetNI( pLeft), 
+                   hb_itemGetNI( pBottom ), 
+                   hb_itemGetNI( pRight ), 
+                   ( BYTE * ) hb_parc( 5 ) );
 
-      if( ISCHAR( 6 ) )
+      else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
+         hb_gtBoxD( hb_itemGetNI( pTop ),
+                    hb_itemGetNI( pLeft), 
+                    hb_itemGetNI( pBottom ), 
+                    hb_itemGetNI( pRight ) );
+
+      else
+         hb_gtBoxS( hb_itemGetNI( pTop ),
+                    hb_itemGetNI( pLeft), 
+                    hb_itemGetNI( pBottom ), 
+                    hb_itemGetNI( pRight ) );
+
+      if( pszColor )
          hb_gtSetColorStr( szOldColor );
    }
 }
