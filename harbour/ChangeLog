@@ -1,3 +1,29 @@
+2000-12-10 15:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*makefile.bc
+ hb_slex.bc
+    *Add hbmake to dependencies list
++utils/hbmake
+    *hbmake directoy
++utils/hbmake/hbmake.prg
+    *Harbour make utility main file
++utils/hbmake/radios.prg
+ utils/hbmake/checks.prg
+ utils/hbmake/pickarry.prg
+ utils/hbmake/pickfile.prg
+ utils/hbmake/prb_stak.prg
+ utils/hbmake/radios.ch
+ utils/hbmake/checks.ch
+ utils/hbmake/radiodef.ch
+ utils/hbmake/checkdef.ch
+    *Utilityes  functions need by hbmake
+ *utils/hbmake/fclass1.prg
+ utils/hbmake/ft_funcs.prg
+ utils/hbmake/ffile1.prg
+    Hbdoc File class engine
+ *utils/hbmake/makefile
+    *makefile for GNu compiler
+ utils/hbmake/checks.ch
+
 2000-12-09 14:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rdd/dbfntx/dbfntx1.c
       * More fixes by Alexander

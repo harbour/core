@@ -86,6 +86,7 @@ HBRUN_DIR    = utils\hbrun
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBPP_DIR     = utils\hbpp
+HBMAKE_DIR   = utils\hbmake
 !if $d(PDF)
 HBPDF_DIR   = contrib\pdflib
 !endif
@@ -131,7 +132,7 @@ HBPP_EXE     = $(BIN_DIR)\hbpp.exe
 HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
-
+HBMAKE_EXE   = $(BIN_DIR)\hbmake.exe
 #
 # GT driver list
 #
@@ -606,6 +607,14 @@ HBDOC_EXE_OBJS = \
    $(OBJ_DIR)\genpdf1.obj
 !endif
 
+HBMAKE_EXE_OBJS = \
+   $(OBJ_DIR)\hbmake.obj \
+   $(OBJ_DIR)\checks.obj \
+   $(OBJ_DIR)\pickarry.obj \
+   $(OBJ_DIR)\pickfile.obj \
+   $(OBJ_DIR)\prb_stak.obj \
+   $(OBJ_DIR)\radios.obj 
+
 #
 # Our default target
 #
@@ -627,8 +636,8 @@ all: \
    $(HBRUN_EXE) \
    $(HBPP_EXE) \
    $(HBTEST_EXE) \
-   $(HBDOC_EXE)
-
+   $(HBDOC_EXE) \
+   $(HBMAKE_EXE) 
 #
 # Library dependencies and build rules
 #
@@ -2343,3 +2352,67 @@ $(OBJ_DIR)\genpdf1.obj : $(OBJ_DIR)\genpdf1.c
 $(OBJ_DIR)\pdfhbdoc.obj : $(HBPDF_DIR)\pdfhbdoc.c
    $(CC) $(CLIBFLAGS) -v -y -I$(HBPDF_DIR) -o$@ $**
 !endif
+
+$(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
+
+   echo. $(CFLAGS) > make.tmp
+   echo. -M -e$(HBMAKE_EXE) >> make.tmp
+   echo. $(OBJ_DIR)\hbmake.obj >> make.tmp
+   echo. $(OBJ_DIR)\radios.obj >> make.tmp
+   echo. $(OBJ_DIR)\checks.obj >> make.tmp
+   echo. $(OBJ_DIR)\fclass1.obj >> make.tmp
+   echo. $(OBJ_DIR)\ffile1.obj >> make.tmp
+   echo. $(OBJ_DIR)\ft_funcs.obj >> make.tmp
+   echo. $(OBJ_DIR)\pickarry.obj  >> make.tmp
+   echo. $(OBJ_DIR)\pickfile.obj  >> make.tmp
+   echo. $(OBJ_DIR)\prb_stak.obj  >> make.tmp
+   echo. $(PP_LIB) >> make.tmp
+   echo. $(COMMON_LIB) >> make.tmp
+   echo. $(VM_LIB) >> make.tmp
+   echo. $(RTL_LIB) >> make.tmp
+   echo. $(HB_GT_LIB) >> make.tmp
+   echo. $(LANG_LIB) >> make.tmp
+   echo. $(RDD_LIB) >> make.tmp
+   echo. $(MACRO_LIB) >> make.tmp
+   echo. $(DBFNTX_LIB) >> make.tmp
+   echo. $(DBFCDX_LIB) >> make.tmp
+
+   $(CC) @make.tmp
+   del make.tmp
+
+$(OBJ_DIR)\hbmake.c : $(HBMAKE_DIR)\hbmake.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\hbmake.obj : $(OBJ_DIR)\hbmake.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\radios.c : $(HBMAKE_DIR)\radios.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\radios.obj : $(OBJ_DIR)\radios.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\checks.c : $(HBMAKE_DIR)\checks.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\checks.obj : $(OBJ_DIR)\checks.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pickarry.c : $(HBMAKE_DIR)\pickarry.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\pickarry.obj : $(OBJ_DIR)\pickarry.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\pickfile.c : $(HBMAKE_DIR)\pickfile.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\pickfile.obj : $(OBJ_DIR)\pickfile.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\prb_stak.c : $(HBMAKE_DIR)\prb_stak.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\prb_stak.obj : $(OBJ_DIR)\prb_stak.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
