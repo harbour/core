@@ -131,28 +131,28 @@ typedef MEMOROOT * LPMEMOROOT;
 
 typedef struct _CDXTAG
 {
-   char * szName;                     /* Name of tag */
-   PHB_ITEM pKeyItem;
-   PHB_ITEM pForItem;
-   char *     KeyExpr;
-   char *     ForExpr;
-   USHORT uiType;
-   USHORT uiLen;
-   struct _CDXINDEX * pIndex;
+   char * szName;        /* Name of tag */
+   PHB_ITEM pKeyItem;    /* item with a macro pcode for a tag key expression */
+   PHB_ITEM pForItem;    /* item with a macro pcode for a tag for expression */
+   char *     KeyExpr;   /* a tag key expression as text */
+   char *     ForExpr;   /* a tag for expression as text */
+   USHORT uiType;        /* a type of key expression value */
+   USHORT uiLen;         /* length of the key expression value */
+   struct _CDXINDEX * pIndex;    /* a parent index info */
    // review this ...
    struct    _CDXTAG * pNext;
-   BOOL       AscendKey;
-   BOOL       UniqueKey;
+   BOOL       AscendKey;        /* ascending/descending order flag */
+   BOOL       UniqueKey;        /* unique order flag */
    BOOL       TagChanged;
    BOOL       TagBOF;
    BOOL       TagEOF;
    //BYTE       KeyType;
    BYTE       OptFlags;
-   LONG       TagBlock;
-   LONG       RootBlock;
+   LONG       TagBlock;        /* a page offset where a tag header is stored */
+   LONG       RootBlock;       /* a page offset with the root of keys tree */
    //USHORT     KeyLength;
    USHORT     MaxKeys;
-   LPKEYINFO  CurKeyInfo;
+   LPKEYINFO  CurKeyInfo;    /* current value of key expression */
    LPPAGEINFO RootPage;
 } CDXTAG;
 typedef CDXTAG * LPCDXTAG;

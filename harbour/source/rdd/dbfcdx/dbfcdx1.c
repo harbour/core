@@ -619,46 +619,6 @@ static BOOL hb_cdxPutMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return TRUE;
 }
 
-/* #if 0 is used to suppress 'nested comments' warnings in GCC */
-#if 0
-static void hb_cdxCreateCompoundTag( LPCDXINDEX pIndex )
-{
-   CDXTAGHEADER cdxTagHeader;
-   CDXLEAFHEADER cdxLeafHeader;
-
-   pIndex->pCompound = ( LPCDXTAG ) hb_xgrab( sizeof( CDXTAG ) );
-   pIndex->pCompound->szName = NULL;
-   pIndex->pCompound->uiType = HB_IT_STRING;
-   pIndex->pCompound->uiLen = CDX_MAXTAGNAMELEN;
-   pIndex->pCompound->pKeyItem = pIndex->pCompound->pForItem = NULL;
-   pIndex->pCompound->pIndex = pIndex;
-
-   /* Write header */
-   memset( &cdxTagHeader, 0, sizeof( CDXTAGHEADER ) );
-   cdxTagHeader.lRoot = CDX_PAGELEN * 2;
-   cdxTagHeader.uiKeySize = CDX_MAXTAGNAMELEN;
-   cdxTagHeader.iExprLen = cdxTagHeader.iFilterLen = cdxTagHeader.iFilterPos = 1;
-   cdxTagHeader.bType = 0xE0;
-   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxTagHeader, CDX_PAGELEN );
-
-   /* Append the empty keypool */
-   memset( &cdxTagHeader, 0, sizeof( CDXTAGHEADER ) );
-   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxTagHeader, CDX_PAGELEN );
-printf("\n%hu  %hu\n",sizeof(LONG),sizeof(CDXLEAFHEADER));
-   /* Append the empty root node */
-//   memset( &cdxLeafHeader, 0, sizeof( CDXLEAFHEADER ) );
-//   cdxLeafHeader.uiNodeType = CDX_ROOTTYPE | CDX_LEAFTYPE;
-//   cdxLeafHeader.lLeftNode = cdxLeafHeader.lRightNode = -1;
-//   cdxLeafHeader.uiFreeSpace = CDX_LEAFFREESPACE;
-//   cdxLeafHeader.ulRecNumMask = 0xFFFF;
-//   cdxLeafHeader.bDupByteMask = cdxLeafHeader.bTrailByteMask = 0xF;
-//   cdxLeafHeader.bRecNumLen = 16;
-//   cdxLeafHeader.bDupCntLen = cdxLeafHeader.bTrailCntLen = 4;
-//   cdxLeafHeader.bInfo = 3;
-//   hb_fsWrite( pIndex->hFile, ( BYTE * ) &cdxLeafHeader, CDX_PAGELEN );
-}
-#endif
-
 /*
  * -- DBFCDX METHODS --
  */
@@ -889,240 +849,6 @@ ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
    return SUCCESS;
 }
 */
-
-/*
- * Create new order.
- */
-
-/* #if 0 is used to suppress 'nested comments' warnings in GCC */
-#if 0
-ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
-{
-   USHORT uiType, uiLen;
-   char * szFileName, * szTagName;
-   PHB_ITEM pKeyExp, pForExp, pResult, pError;
-   HB_MACRO_PTR pExpMacro, pForMacro;
-   PHB_FNAME pFileName;
-   DBORDERINFO dbOrderInfo;
-   LPCDXINDEX pIndex;
-   LPCDXTAG pTag;
-   BOOL bNewFile;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_cdxOrderCreate(%p, %p)", pArea, pOrderInfo));
-
-   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
-      return FAILURE;
-
-   /* If we have a codeblock for the expression, use it */
-   if( pOrderInfo->itmCobExpr )
-      pKeyExp = hb_itemNew( pOrderInfo->itmCobExpr );
-   else /* Otherwise, try compiling the key expression string */
-   {
-      if( SELF_COMPILE( ( AREAP ) pArea, ( BYTE * ) pOrderInfo->abExpr->item.asString.value ) == FAILURE )
-         return FAILURE;
-      pKeyExp = hb_itemNew( pArea->valResult );
-   }
-
-   /* Get a blank record before testing expression */
-   SUPER_GOTO( ( AREAP ) pArea, 0 );
-   if( hb_itemType( pKeyExp ) == HB_IT_BLOCK )
-   {
-      if( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyExp ) == FAILURE )
-      {
-         hb_itemRelease( pKeyExp );
-         return FAILURE;
-      }
-      pResult = hb_itemNew( pArea->valResult );
-      pExpMacro = NULL;
-   }
-   else
-   {
-      pExpMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pKeyExp );
-      hb_macroRun( pExpMacro );
-      pResult = hb_itemNew( &hb_stack.Return );
-   }
-   uiType = hb_itemType( pResult );
-   uiLen = 0;
-   switch( uiType )
-   {
-      case HB_IT_INTEGER:
-      case HB_IT_LONG:
-      case HB_IT_DOUBLE:
-      case HB_IT_DATE:
-         uiLen = 8;
-         break;
-
-      case HB_IT_LOGICAL:
-         uiLen = 1;
-         break;
-
-      case HB_IT_STRING:
-         uiLen = ( USHORT ) HB_MAX( hb_itemGetCLen( pResult ), CDX_MAXKEY );
-         break;
-   }
-   hb_itemRelease( pResult );
-
-   /* Make sure uiLen is not 0 */
-   if( uiLen == 0 )
-   {
-      hb_itemRelease( pKeyExp );
-      if( pExpMacro )
-         hb_macroDelete( pExpMacro );
-      pError = hb_errNew();
-      hb_errPutGenCode( pError, EG_DATAWIDTH );
-      hb_errPutSubCode( pError, EDBF_INVALIDKEY );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATAWIDTH ) );
-      SELF_ERROR( ( AREAP ) pArea, pError );
-      hb_errRelease( pError );
-      return FAILURE;
-   }
-
-   /* Check conditional expression */
-   pForExp = NULL;
-   if( pArea->lpdbOrdCondInfo )
-   {
-      /* If we have a codeblock for the conditional expression, use it */
-      if( pArea->lpdbOrdCondInfo->itmCobFor )
-         pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
-      else /* Otherwise, try compiling the conditional expression string */
-      {
-         if( SELF_COMPILE( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
-         {
-            hb_itemRelease( pKeyExp );
-            if( pExpMacro )
-               hb_macroDelete( pExpMacro );
-            return FAILURE;
-         }
-         pForExp = hb_itemNew( pArea->valResult );
-      }
-   }
-
-   /* Test conditional expression */
-   if( pForExp )
-   {
-      if( hb_itemType( pForExp ) == HB_IT_BLOCK )
-      {
-         if( SELF_EVALBLOCK( ( AREAP ) pArea, pForExp ) == FAILURE )
-         {
-            hb_itemRelease( pKeyExp );
-            hb_itemRelease( pForExp );
-            if( pExpMacro )
-               hb_macroDelete( pExpMacro );
-            return FAILURE;
-         }
-         uiType = hb_itemType( pArea->valResult );
-      }
-      else
-      {
-         pForMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pForExp );
-         hb_macroRun( pForMacro );
-         uiType = hb_itemType( &hb_stack.Return );
-      }
-      if( uiType != HB_IT_LOGICAL )
-      {
-         hb_itemRelease( pKeyExp );
-         hb_itemRelease( pForExp );
-         if( pExpMacro )
-            hb_macroDelete( pExpMacro );
-         if( pForMacro )
-            hb_macroDelete( pForMacro );
-         return FAILURE;
-      }
-   }
-   else
-      pForMacro = NULL;
-
-   /* Check file name */
-   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-   szTagName = ( char * ) hb_xgrab( CDX_MAXTAGNAMELEN + 1 );
-   if( strlen( ( char * ) pOrderInfo->abBagName ) == 0 )
-   {
-      pFileName = hb_fsFNameSplit( pArea->szDataFileName );
-      dbOrderInfo.itmResult = hb_itemPutC( NULL, "" );
-      SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &dbOrderInfo );
-      if( pFileName->szDrive )
-         strcpy( szFileName, pFileName->szDrive );
-      else
-         szFileName[ 0 ] = 0;
-      if( pFileName->szPath )
-         strcat( szFileName, pFileName->szPath );
-      strcat( szFileName, pFileName->szName );
-      strncat( szFileName, hb_itemGetCPtr( dbOrderInfo.itmResult ), _POSIX_PATH_MAX -
-               strlen( szFileName ) );
-      hb_itemRelease( dbOrderInfo.itmResult );
-      if( strlen( ( char * ) pOrderInfo->atomBagName ) == 0 )
-         hb_strncpyUpper( szTagName, pFileName->szName, CDX_MAXTAGNAMELEN );
-      else
-         hb_strncpyUpper( szTagName, ( char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
-      hb_xfree( pFileName );
-   }
-   else
-   {
-      strcpy( szFileName, ( char * ) pOrderInfo->abBagName );
-      pFileName = hb_fsFNameSplit( szFileName );
-      if( !pFileName->szExtension )
-      {
-         dbOrderInfo.itmResult = hb_itemPutC( NULL, "" );
-         SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &dbOrderInfo );
-         strncat( szFileName, hb_itemGetCPtr( dbOrderInfo.itmResult ), _POSIX_PATH_MAX -
-                  strlen( szFileName ) );
-         hb_itemRelease( dbOrderInfo.itmResult );
-      }
-      if( strlen( ( char * ) pOrderInfo->atomBagName ) == 0 )
-         hb_strncpyUpper( szTagName, pFileName->szName, CDX_MAXTAGNAMELEN );
-      else
-         hb_strncpyUpper( szTagName, ( char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
-      hb_xfree( pFileName );
-   }
-
-   /* Close all index */
-   SELF_ORDLSTCLEAR( ( AREAP ) pArea );
-
-   pIndex = ( LPCDXINDEX ) hb_xgrab( sizeof( CDXINDEX ) );
-   pIndex->pArea = pArea;
-   pIndex->szFileName = szFileName;
-
-   /* New file? */
-   if( !hb_fsFile( ( BYTE * ) szFileName ) )
-   {
-      pIndex->hFile = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
-      bNewFile = TRUE;
-   }
-   else
-   {
-      printf("TODO: OpenIndex()\n");
-      pIndex->hFile = FS_ERROR;
-      bNewFile = FALSE;
-   }
-
-   pTag = ( LPCDXTAG ) hb_xgrab( sizeof( CDXTAG ) );
-   pTag->szName = szTagName;
-   pTag->uiType = uiType;
-   pTag->uiLen = uiLen;
-   pTag->pKeyItem = pKeyExp;
-   pTag->pForItem = pForExp;
-   pTag->pIndex = pIndex;
-
-   if( bNewFile )
-      hb_cdxCreateCompoundTag( pIndex );
-
-hb_fsClose( pIndex->hFile );
-hb_xfree( pTag->szName );
-hb_xfree( pTag->pKeyItem );
-hb_xfree( pTag );
-hb_xfree( pIndex->szFileName );
-hb_xfree( pIndex->pCompound );
-hb_xfree( pIndex );
-
-
-   /* Free all macros */
-   if( pExpMacro )
-      hb_macroDelete( pExpMacro );
-   if( pForMacro )
-      hb_macroDelete( pForMacro );
-   return SUCCESS;
-}
-#endif
 
 /*
  * Provides information about order management.
@@ -1426,6 +1152,13 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
 
 /* hb_cdxTagxxx */
 /* #include "cdxtag.c" */
+/* Creates a new structure with a tag information 
+ *
+ * PIF = pointer to a parent index structure
+ * ITN = tag name
+ * TagHdr = number of index page where a tag header is stored or -1 if
+ *          allocate a new tag page
+*/
 static LPCDXTAG hb_cdxTagNew( LPCDXINDEX PIF, char * ITN, LONG TagHdr )
 {
    LPCDXTAG pTag;
@@ -1440,6 +1173,7 @@ static LPCDXTAG hb_cdxTagNew( LPCDXINDEX PIF, char * ITN, LONG TagHdr )
    pTag->CurKeyInfo = hb_cdxKeyNew();
    if( TagHdr == -1 )
    {
+      /* this tag is not stored in the file yet - allocate a space for it  */
       pTag->TagBlock = hb_cdxIndexGetAvailPage( PIF );
       hb_cdxIndexGetAvailPage( PIF );
       pTag->TagChanged = TRUE;
@@ -1548,13 +1282,15 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag )
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pTag->pKeyItem );
                hb_vmDo( 0 );
+              hb_itemCopy( pKey->pItem, &hb_stack.Return );
             }
             else
             {
                pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem );
                hb_macroRun( pMacro );
-            }
-            hb_itemCopy( pKey->pItem, &hb_stack.Return );
+               hb_itemCopy( pKey->pItem, hb_stack.pPos - 1 );
+               hb_stackPop();
+          }
             switch( hb_itemType( pKey->pItem ) )
             {
                case HB_IT_STRING:
@@ -2067,28 +1803,45 @@ static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PI
    }
 }
 
+/* Read a tag definition from the index file 
+ *
+ * pTag = structure with a tag information
+ */
 static void hb_cdxTagTagLoad( LPCDXTAG pTag )
 {
    CDXTAGHEADER pHeader;
    HB_MACRO_PTR pMacro;
 
+   /* read the page from a file */
    hb_cdxIndexPageRead( pTag->pIndex, pTag->TagBlock, &pHeader, sizeof( CDXTAGHEADER ) );
    pTag->RootBlock = pHeader.lRoot;
+   /* Return if: 
+    * no root page allocated
+    * invalid root page offset (position inside an index file)
+    * invalid key value length
+    */
    if( pTag->RootBlock == 0 || pTag->RootBlock % CDX_PAGELEN > 0 ||
        pTag->RootBlock > hb_fsSeek( pTag->pIndex->hFile, 0, FS_END ) ||
        pHeader.uiKeySize > CDX_MAXKEY )
       return;
+      
    pTag->uiLen = pHeader.uiKeySize;
    pTag->MaxKeys = ( CDX_PAGELEN - 12 ) / ( pTag->uiLen + 8 );
    pTag->OptFlags = pHeader.bType;
    pTag->UniqueKey = ( pTag->OptFlags & 0x01 );
    pTag->AscendKey = ( pHeader.iDescending == 0 );
    pTag->KeyExpr = ( char * ) hb_xgrab( CDX_MAXKEY + 1 );
+   /* QUESTION: Is UPPER a valid operation here? 
+    * This will break expressions like:
+    * somefield+'smallcaps'+otherfield
+   */
    hb_strncpyUpper( pTag->KeyExpr, ( char * ) pHeader.KeyPool, CDX_MAXKEY );
+   
    if( pTag->OptFlags < 0x80 && pTag->KeyExpr[ 0 ] == 0 )
       return;
    if( pTag->OptFlags & 0x80 )
       return;
+      
    SELF_COMPILE( (AREAP) pTag->pIndex->pArea, ( BYTE * ) pTag->KeyExpr );
    pTag->pKeyItem = pTag->pIndex->pArea->valResult;
    pTag->pIndex->pArea->valResult = NULL;
@@ -2130,7 +1883,9 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
                            (hb_stack.pPos - 1)->item.asString.length;
          break;
    }
+   hb_stackPop();    /* pop macro evaluated value */
 
+   /* Check if there is a FOR expression */
    if( pHeader.KeyPool[ strlen( pTag->KeyExpr ) + 1 ] == 0 )
       return;
    pTag->ForExpr = ( char * ) hb_xgrab( CDX_MAXKEY + 1 );
@@ -2141,7 +1896,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
    pTag->pIndex->pArea->valResult = NULL;
    pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pForItem );
    hb_macroRun( pMacro );
-   if( hb_itemType( &hb_stack.Return ) != HB_IT_LOGICAL )
+   if( hb_itemType( hb_stack.pPos - 1 ) != HB_IT_LOGICAL )
    {
       hb_macroDelete( pMacro );
       hb_itemRelease( pTag->pForItem );
@@ -2149,6 +1904,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
       hb_xfree( pTag->ForExpr );
       pTag->ForExpr = NULL;
    }
+   hb_stackPop();
 }
 
 static void hb_cdxTagSetRoot( LPCDXTAG pTag, LPPAGEINFO PIK )
