@@ -4010,7 +4010,11 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
 
    if( HB_IS_STRING( pAlias ) )
    {
-      char * szAlias = hb_strUpper( pAlias->item.asString.value, pAlias->item.asString.length );
+      /* We make a copy of the string as it may be a pcode string! */
+      char * szAlias = ( char * ) hb_xgrab( pAlias->item.asString.length + 1 );
+
+      hb_xmemcpy( szAlias, pAlias->item.asString.value, pAlias->item.asString.length + 1 );
+      hb_strUpper( szAlias, pAlias->item.asString.length );
 
       if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
       {  /* M->variable */
@@ -4040,7 +4044,7 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
             }
          }
       }
-
+      hb_xfree( ( void * ) szAlias );
    }
    else
       hb_vmPushAliasedField( pSym );
