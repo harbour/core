@@ -52,7 +52,8 @@ PDEFINE pDefs = 0;                  /* support for #defines */
 int iLine = 1;
 long lNumber = 0;
 
-#define LOOKUP  0
+#define LOOKUP          0       /* scan from the begining of line */
+#define OPERATOR        -1
 int _iState = LOOKUP;
 
 void yy_lex_count_lf( void )
@@ -75,7 +76,7 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 String        (\"(([^\"]*)|([\!]*))\")|(\'(([^\']*)|([\!]*))\')
 PseudoFunc    {Identifier}"("+.*")"+
 
-Comment1      "/*"(.*|[\n])"*/"
+Comment1      "/*"([^\*]|[\*][^\/])*"*/"
 Comment2      [\/][\/].*
 Comment       ({Comment1}|{Comment2})
 LineCont      (;.*\n)
@@ -83,7 +84,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 %x            COMMENT3 DEFINE DEFINE_PARAMS DEFINE_EXPR
 %x            IFDEF IFNDEF STRING1 STRING2
-%x            NEXT_ BREAK_ CASE_
+%x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_
 
 %%
 
@@ -153,8 +154,13 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 ;\n            _iState=LOOKUP; ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine );
 
 "begin"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?        return BEGINSEQ;
+%{
+/* ** */
+%}
 "break"        BEGIN BREAK_;
 <BREAK_>{Separator}*\n { /* at the end of line */
+               yy_lex_count_lf();
+               --iLine;
                BEGIN 0;
                unput( yytext[ yyleng-1 ] );
                if( _iState == LOOKUP )
@@ -163,14 +169,14 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                }
                else
                { /* there is another item in line already */
-                 yylval.string = strdup("BrEaK");
+                 yylval.string = strdup("BREAK");
                  return IDENTIFIER;
                }
              }
 <BREAK_>{Separator}*[^_a-zA-Z] { /* there is no identifier after "break" */
                yy_lex_count_lf();
                BEGIN 0;
-               yylval.string = strdup( ((yytext[ yyleng-1 ] =='(')?"BREAK":"BrEaK") );
+               yylval.string = strdup( "BREAK" );
                _iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
@@ -183,6 +189,9 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                return BREAK;
              }
 <BREAK_>.    { BEGIN 0; unput( yytext[ yyleng-1 ] ); }
+%{
+/* ** */
+%}
 "case"       { BEGIN CASE_; }
 <CASE_>{Separator}*[\:\=\|\$\%\*\,\/\[\]\)\}] { /* there is an operator after "case" */
                yy_lex_count_lf();
@@ -192,13 +201,13 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                unput( yytext[ yyleng-1 ] );
                return IDENTIFIER;
              }
-<CASE_>{Separator}*("+="|"-=") { /* operators */
+<CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                yy_lex_count_lf();
                BEGIN 0;
                yylval.string = strdup( "CASE" );
                _iState =IDENTIFIER;
-               unput( yytext[ yyleng-2 ] );
                unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
                return IDENTIFIER;
              }
 <CASE_>{Separator}*(\n|.) { /* not operator */
@@ -218,9 +227,54 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  return IDENTIFIER;
                }
              }
-"do"           return DO;
-"do"{Separator}+"case"             { _iState =DOCASE; return DOCASE; }
-("do"{SpaceTab}+"while")|"while"  { _iState =WHILE; return WHILE; }
+%{
+/* ** */
+%}
+"do"            BEGIN DO_;
+<DO_>{Separator}+"case"         { /* DO CASE statement */
+                BEGIN 0;
+                yy_lex_count_lf();
+                _iState =DOCASE;
+                return DOCASE;
+              }
+<DO_>{Separator}+"while" { /* DO WHILE found -move it to WHILE state */
+                /* NOTE: we cannot decide here if it is DO WHILE <condition>
+                 * or DO while [WITH <args>]
+                 */
+                yy_lex_count_lf();
+                BEGIN 0;
+                _iState =DO;
+                yyless( yyleng-5 );
+              }
+<DO_>{Separator}+[_a-zA-Z]   { /* an identifier DO id WITH */
+                yy_lex_count_lf();
+                BEGIN 0;
+                unput( yytext[ yyleng-1 ] );
+                if( _iState == LOOKUP )
+                { /* it is first item in the line */
+                  _iState =DO;
+                  return DO;
+                }
+                else
+                { /* there is another item in line already */
+                  yylval.string = strdup( "DO" );
+                _iState =IDENTIFIER;
+                  return IDENTIFIER;
+                }
+              }
+<DO_>{Separator}*(.|\n)         { /* end of line or any operator */
+                yy_lex_count_lf();
+                BEGIN 0;
+                if( yytext[ yyleng-1 ] == '\n' )
+                  --iLine;
+                unput( yytext[ yyleng-1 ] );
+                yylval.string = strdup( "DO" );
+                _iState =IDENTIFIER;
+                return IDENTIFIER;
+              }
+%{
+/* ** */
+%}
 "else"         return ELSE;
 "elseif"       _iState =ELSEIF; return ELSEIF;
 "end"/[^(]     return END;
@@ -248,6 +302,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                if( _iState == LOOKUP )
                { /* it is first item in the line */
                  ++iLine;
+                 _iState =NEXT;
                  return NEXT;
                }
                else
@@ -262,7 +317,6 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                BEGIN 0;
                yylval.string = strdup( ((yytext[ yyleng-1 ] =='(')?"NEXT":"nExT") );
                unput( yytext[ yyleng-1 ] );
-               _iState =IDENTIFIER;
                return IDENTIFIER;
              }
 <NEXT_>{Separator}*. { /* an identifier follows NEXT statement */
@@ -286,30 +340,129 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 "step"/[^(]    return STEP;
 "to"           return TO;
 "using"        return USING;
-"with"         return WITH;
-"#"            return NE1;
-"<>"|"!="      return NE2;
-":="           return INASSIGN;
-"=="           return EQ;
+%{
+/* ** */
+%}
+"while"        BEGIN WHILE_;
+<WHILE_>{Separator}*\n      { /* end of line */
+                yy_lex_count_lf();
+                --iLine;
+                BEGIN 0;
+                unput( '\n' );
+                if( _iState == DO )
+                { /* we have DO while - replace it with while() */
+                  unput( ')' ); unput( '(' );
+                }
+                yylval.string = strdup( "WHILE" );
+                return IDENTIFIER;
+              }
+<WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\[\]\)\}] { /* there is an operator after "case" */
+               yy_lex_count_lf();
+               BEGIN 0;
+               yylval.string = strdup( "WHILE" );
+               unput( yytext[ yyleng-1 ] );
+               return IDENTIFIER;
+             }
+<WHILE_>{Separator}*("+="|"-="|"->") { /* operators */
+               yy_lex_count_lf();
+               BEGIN 0;
+               yylval.string = strdup( "WHILE" );
+               unput( yytext[ yyleng-1 ] );
+               unput( yytext[ yyleng-2 ] );
+               return IDENTIFIER;
+             }
+<WHILE_>{Separator}*.      { /* identifiers and literals */
+                yy_lex_count_lf();
+                BEGIN 0;
+                if( _iState == LOOKUP || _iState == DO )
+                { /* it is first item in the line or after DO */
+                  unput( yytext[ yyleng-1 ] );
+                  _iState =WHILE;
+                  return WHILE;
+                }
+                else
+                { /* there is another item in line already */
+                  unput( yytext[ yyleng-1 ] );
+                  yylval.string = strdup( "WHILE" );
+                  return IDENTIFIER;
+                }
+              }
+%{
+/* ** */
+%}
+"with"        BEGIN WITH_;
+<WITH_>{Separator}*\n           { /* at the end of line */
+                yy_lex_count_lf();
+                --iLine;
+                BEGIN 0;
+                unput( '\n' );
+                yylval.string = strdup( "WITH" );
+                return IDENTIFIER;
+              }
+<WITH_>{Separator}*"with"       {
+                yy_lex_count_lf();
+                BEGIN 0;
+                yyless( yyleng-4 );
+                if( _iState == DO )
+                { /* DO with */
+                  _iState =IDENTIFIER;
+                  yylval.string = strdup( "WITH" );
+                  return IDENTIFIER;
+                }
+                else
+                { /* DO WITH with <arg> */
+                  _iState =WITH;
+                  return WITH;
+                }
+              }
+<WITH_>{Separator}*.            {
+                yy_lex_count_lf();
+                BEGIN 0;
+                unput( yytext[ yyleng-1 ] );
+                if( _iState == WHILE || _iState == DO || _iState == IDENTIFIER )
+                { /* DO <ident> WITH <arg> */
+                  _iState =WITH;
+                  return WITH;
+                }
+                else
+                {
+                  yylval.string = strdup( "WITH" );
+                  return IDENTIFIER;
+                }
+              }
+%{
+/* ** */
+%}
+"#"            _iState =NE1; return NE1;
+"="            _iState =OPERATOR; return yytext[ 0 ];
+"+"            _iState =OPERATOR; return yytext[ 0 ];
+"-"            _iState =OPERATOR; return yytext[ 0 ];
+"*"            _iState =OPERATOR; return yytext[ 0 ];
+[\/]           _iState =OPERATOR; return yytext[ 0 ];
+"%"            _iState =OPERATOR; return yytext[ 0 ];
+"$"            _iState =OPERATOR; return yytext[ 0 ];
+"<>"|"!="      _iState =NE2; return NE2;
+":="           _iState =INASSIGN; return INASSIGN;
+"=="           _iState =EQ; return EQ;
 "++"           _iState =INC; return INC;
 "--"           _iState =DEC; return DEC;
-"->"           return ALIAS;
-"<="           return LE;
-">="           return GE;
-"+="           return PLUSEQ;
-"-="           return MINUSEQ;
-"*="           return MULTEQ;
-"/="           return DIVEQ;
-"^="           return EXPEQ;
-"%="           return MODEQ;
-"**"|"^"       return POWER;
+"->"           _iState =ALIAS; return ALIAS;
+"<="           _iState =LE; return LE;
+">="           _iState =GE; return GE;
+"+="           _iState =PLUSEQ; return PLUSEQ;
+"-="           _iState =MINUSEQ; return MINUSEQ;
+"*="           _iState =MULTEQ; return MULTEQ;
+"/="           _iState =DIVEQ; return DIVEQ;
+"^="           _iState =EXPEQ; return EXPEQ;
+"%="           _iState =MODEQ; return MODEQ;
+"**"|"^"       _iState =POWER; return POWER;
 "."[t|y]"."    return TRUE;
 "."[f|n]"."    return FALSE;
 ".and."        return AND;
 ".or."         return OR;
 "!"|".not."    return NOT;
 "::"           unput( ':' ); unput( 'f' ); unput( 'l' ); unput( 'e' ); unput( 'S' );
-[,\;+\-\*\/\{\}\|\#\&\:\<\>\=\[\]\$\%\(\)\@] return yytext[ 0 ];
+[,\;\{\}\|\#\&\:\<\>\[\]\(\)\@] return yytext[ 0 ];
 
 {InvalidNumber} GenError( ERR_NUMERIC_FORMAT, NULL, NULL );
 

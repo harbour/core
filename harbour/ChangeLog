@@ -1,3 +1,14 @@
+19990510-01:19 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.l, source/compiler/harbour.y
+	- corrected syntax check for:  case->  case+=   case-=
+	- DO/WHILE/CASE/WITH is now 100% compatible with Clipper
+	- there is still problem with comments that ends with **/
+	(exactly two asterix and slash)
+
+    * tests/working/keywords.prg
+	- added code to test DO/WHILE/CASE/WITH
+
 19900509-23:30 Eddie Runia
    * source/working/mankala.prg
      Instructions added

@@ -298,6 +298,7 @@ static const char * _szReservedFun[] = {
   "DAY"     ,
   "DELETED" ,
   "DEVPOS"  ,
+  "DO"      ,
   "DOW"     ,
   "DTOC"    ,
   "DTOS"    ,
@@ -842,6 +843,9 @@ DoCase     : DoCaseBegin
              EndCase
 
            | DoCaseBegin
+             EndCase
+
+           | DoCaseBegin
                 Cases
                 Otherwise
              EndCase                   { FixElseIfs( $2 ); }
@@ -927,6 +931,7 @@ RecoverSeq : /* no recover */
 
 DoProc     : DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); Do( 0 ); }
            | DO IDENTIFIER { PushSymbol( $2, 1 ); PushNil(); } WITH ArgList { Do( $5 ); }
+           | WHILE { PushSymbol( "WHILE", 1 ); PushNil(); } WITH ArgList { Do( $4 ); }
            ;
 
 Crlf       : '\n'
@@ -1518,11 +1523,11 @@ int Include( char * szFileName )
       pFile->pPrev = files.pLast;
       files.pLast  = pFile;
    }
-#ifdef __cplusplus
-   yy_switch_to_buffer( (YY_BUFFER_STATE) (pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
-#else
-   yy_switch_to_buffer( (pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) ) );
-#endif
+#ifdef __cplusplus   
+   yy_switch_to_buffer( (YY_BUFFER_STATE) pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
+#else   
+   yy_switch_to_buffer( pFile->pBuffer = yy_create_buffer( yyin, 8192 * 2 ) );
+#endif   
    files.iFiles++;
    return 1;
 }
@@ -1540,19 +1545,19 @@ int yywrap( void )   /* handles the EOF of the currently processed file */
       files.pLast = ( PFILE ) ( ( PFILE ) files.pLast )->pPrev;
       iLine = files.pLast->iLine;
       printf( "\nparsing file %s\n", files.pLast->szFileName );
-#ifdef __cplusplus
+#ifdef __cplusplus      
       yy_delete_buffer( (YY_BUFFER_STATE) ( ( PFILE ) pLast )->pBuffer );
 #else
       yy_delete_buffer( ( ( PFILE ) pLast )->pBuffer );
-#endif
+#endif      
       free( pLast );
       files.iFiles--;
       yyin = files.pLast->handle;
-#ifdef __cplusplus
+#ifdef __cplusplus      
       yy_switch_to_buffer( (YY_BUFFER_STATE) files.pLast->pBuffer );
 #else
       yy_switch_to_buffer( files.pLast->pBuffer );
-#endif
+#endif      
       return 0;      /* we close the currently include file and continue */
    }
 }
