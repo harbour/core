@@ -1,3 +1,19 @@
+19990819-02:23 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * funclist.txt
+     source/rdd/rddsys.prg
+     source/rdd/dbcmd.c
+     source/rdd/dbf0.prg
+     source/rdd/dbf1.c
+     source/rdd/sdf0.prg
+     source/rdd/sdf1.c
+     source/rdd/delim0.prg
+     source/rdd/delim1.c
+     source/rdd/dbfntx/dbfntx0.prg
+     source/rdd/dbfntx/dbfntx1.c
+     tests/working/testrdd.prg
+
+     Added new functions, run-time errors and update function list.
+
 19990818-16:16 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/console.c source/rtl/gtapi.c source/rtl/gt/gtwin.c
      * fixes to my fixes

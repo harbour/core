@@ -63,6 +63,7 @@ static RDDFUNCS sdfTable = { 0,                 /* Super Bof */
                              0,                 /* Super Found */
                              0,                 /* Super GoBottom */
                              0,                 /* Super GoTo */
+                             0,                 /* Super GoToId */
                              0,                 /* Super GoTop */
                              0,                 /* Super Skip */
                              0,                 /* Super AddField */

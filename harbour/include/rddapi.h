@@ -598,9 +598,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_BP   found;
    DBENTRYP_V    goBottom;
    DBENTRYP_L    go;
-#if 0
    DBENTRYP_I    goToId;
-#endif
    DBENTRYP_V    goTop;
 #if 0
    DBENTRYP_SI   seek;

@@ -129,6 +129,12 @@ static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
       return SUCCESS;
 }
 
+static ERRCODE GoToId( AREAP pArea, PHB_ITEM pItem )
+{
+   printf( "Calling DBF: GoToId()\n" );
+   return SUCCESS;
+}
+
 static ERRCODE GoTop( AREAP pArea )
 {
    return SELF_GOTO( pArea, 1 );
@@ -436,6 +442,7 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super Found */
                              GoBottom,
                              GoTo,
+                             GoToId,
                              GoTop,
                              Skip,
                              0,               /* Super AddField */

@@ -28,10 +28,9 @@ ANNOUNCE DBF
 
 init procedure DBFInit
 
-   QOut( "init procedure DBFInit" )
-
    REQUEST _DBF
 
    rddRegister( "DBF", RDT_FULL )
 
 return
+
