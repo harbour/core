@@ -283,6 +283,29 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
                              PVOID                        pv);
 #endif
 
+void hb_vmDoInitRdd( void )
+{
+   PHB_DYNS pDynSym;
+   int i;
+   char * rddName[] = { "DBFDBTINIT",
+                        "DBFFPTINIT",
+                        "DBFNTXINIT",
+                        "DBFCDXINIT",
+                        "RDDINIT",
+                        NULL };
+
+   for ( i = 0; rddName[i]; i++ )
+   {
+      pDynSym = hb_dynsymFind( rddName[i] );
+      if( pDynSym && pDynSym->pSymbol->pFunPtr )
+      {
+         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushNil();
+         hb_vmDo(0);
+      }
+   }
+}
+
 /* application entry point */
 
 void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
@@ -343,6 +366,7 @@ void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
     * because INIT function can use static variables
     */
    hb_vmDoInitStatics();
+   hb_vmDoInitRdd();
    hb_vmDoInitFunctions(); /* process defined INIT functions */
 
    /* This is undocumented CA-Clipper, if there's a function called _APPMAIN
