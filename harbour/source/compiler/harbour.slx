@@ -1023,8 +1023,6 @@ LANGUAGE_RULES_ARE {
    {\
       long lNumber = hb_lex_Hex2L( yytext + 2 );\
 \
-      /* sscanf( yytext, "%lxI", &lNumber );*/\
-\
       if( ( double ) SHRT_MIN <= lNumber && lNumber <= ( double ) SHRT_MAX )\
       {\
          yylval.valInteger.iNumber = lNumber;\

@@ -1335,8 +1335,9 @@ int Reduce( int iToken, BOOL bReal )
    iSize = 0;
 }
 
-void yy_bytes_buffer( char * pBuffer, int iBufSize )
+void * yy_bytes_buffer( char * pBuffer, int iBufSize )
 {
    s_szBuffer = pBuffer;
    iSize = iBufSize;
+   return s_szBuffer;
 }
