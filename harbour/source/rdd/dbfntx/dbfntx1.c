@@ -174,7 +174,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex );
 
 static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
          PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec, char *szForExp,
-         PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique );
+         PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique, BOOL fCustom );
          /* Create Compound Tag with information about index */
 
 static LPPAGEINFO hb_ntxPageNew(LPTAGINFO pParentTag );
@@ -2410,6 +2410,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength;
    sortInfo.nItems = 0;
    sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = sortInfo.pKeyTemp = NULL;
+   if( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fCustom )
+      ulRecCount = 0;
    if( ulRecCount )
    {
       ulRecMax = ulRecCount;
@@ -2605,13 +2607,14 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull )
          strcpy( Header.for_expr , pIndex->CompoundTag->ForExpr );
       Header.unique = pIndex->CompoundTag->UniqueKey;
       Header.descend = !pIndex->CompoundTag->AscendKey;
+      Header.custom = pIndex->CompoundTag->Custom;
       hb_fsWrite( pIndex->DiskFile,(BYTE*)&Header,sizeof(NTXHEADER) );
    }
    else
       hb_fsWrite( pIndex->DiskFile,(BYTE*)&Header,16 );
 }
 
-static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec, char *szForExp, PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique )
+static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_ITEM pKeyExpr, BYTE bKeyType, USHORT uiKeyLen, USHORT uiKeyDec, char *szForExp, PHB_ITEM pForExp, BOOL fAscendKey, BOOL fUnique, BOOL fCustom )
 {
    LPTAGINFO pTag;
 
@@ -2632,6 +2635,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_
    pTag->pForItem = pForExp;
    pTag->AscendKey = fAscendKey;
    pTag->UniqueKey = fUnique;
+   pTag->Custom = fCustom;
    pTag->KeyType = bKeyType;
    pTag->KeyLength = uiKeyLen;
    pTag->KeyDec = uiKeyDec;
@@ -2756,6 +2760,7 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    pTag->pForItem = pForExp;
    pTag->UniqueKey = Header.unique;
    pTag->AscendKey = !Header.descend;
+   pTag->Custom = Header.custom;
    pTag->KeyType = 'C'; /* bKeyType; */
    pTag->KeyLength = Header.key_size;
    pTag->KeyDec = Header.key_dec;
@@ -3462,7 +3467,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    pTag = hb_ntxTagNew( pIndex, szTagName, pOrderInfo->abExpr->item.asString.value,
                         pKeyExp, bType, (USHORT) uiLen, (USHORT) uiDec, (char *) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor : NULL ),
                         pForExp, pArea->lpdbOrdCondInfo ? !pArea->lpdbOrdCondInfo->fDescending : TRUE,
-                        pOrderInfo->fUnique );
+                        pOrderInfo->fUnique, pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->fCustom : FALSE );
    pIndex->CompoundTag = pTag;
 
    pIndex->DiskFile = hb_spCreate( ( BYTE * ) szFileName , FC_NORMAL );

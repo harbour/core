@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rdd/dbfcdx/dbfcdx2.h
+     ! fixed gpf reported by Lorenzo Fiorini
+     + added helper function hb_cdxGoEof
+     + added default tag name when not specified
+   * source/rdd/workarea.c
      ! fixed bof flag in go bottom with no valid records
 
 2002-04-30 20:49 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>

@@ -123,7 +123,6 @@ typedef struct HB_PAGEINFO_STRU
    BOOL      Changed;
    BOOL      NewRoot;
    BOOL      lBusy;
-   BYTE      PageType;
    USHORT    uiKeys;
    SHORT     CurKey;
    char*     buffer;
@@ -146,6 +145,7 @@ typedef struct _TAGINFO
    PHB_ITEM   bottomScope;
    BOOL       AscendKey;
    BOOL       UniqueKey;
+   BOOL       Custom;
    BOOL       TagChanged;
    BOOL       TagBOF;
    BOOL       TagEOF;
@@ -201,10 +201,11 @@ typedef struct _NTXHEADER    /* Header of NTX file */
    USHORT   half_page;
    char     key_expr[ NTX_MAX_KEY ];
    char     unique;
-   char     unknown;
+   char     unknown1;
    char     descend;
-   char     reserve[7];
+   char     unknown2;
    char     for_expr[ NTX_MAX_KEY ];
+   char     custom;
 } NTXHEADER;
 
 typedef NTXHEADER * LPNTXHEADER;
