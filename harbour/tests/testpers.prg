@@ -32,7 +32,7 @@ CLASS Test FROM TPersistent
    DATA   Three
    DATA   Four      PROPERTY
 
-   METHOD Another() INLINE "This value to be saved also" PROPERTY
+   METHOD Another() INLINE { 1, { "One", "Two" }, Date() } PROPERTY
    METHOD More()    VIRTUAL
 
 ENDCLASS
