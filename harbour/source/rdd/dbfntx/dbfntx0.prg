@@ -33,6 +33,7 @@
  *
  */
 
+#include "error.ch"
 #include "rddsys.ch"
 
 ANNOUNCE DBFNTX

@@ -66,7 +66,7 @@ function ReadModal( GetList, nPos )
       oGetList:PostActiveGet()
 
       if ISBLOCK( oGetList:oGet:Reader )
-         Eval( oGet:Reader, oGetList:oGet )
+         Eval( oGetList:oGet:Reader, oGetList:oGet )
       else
          oGetList:Reader()
       endif
@@ -105,7 +105,6 @@ CLASS TGetList
    METHOD GetActive( oGet )
    METHOD ShowScoreBoard()
    METHOD ReadVar( cNewVarName )
-   METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
 
 ENDCLASS
 
@@ -155,7 +154,7 @@ METHOD GetApplyKey( nKey ) CLASS TGetList
 
    if ! ( ( bKeyBlock := Setkey( nKey ) ) == nil )
       ::GetDoSetKey( bKeyBlock )
-      return
+      return nil
    endif
 
    do case
@@ -495,3 +494,7 @@ METHOD ReadVar( cNewVarName ) CLASS TGetList
    endif
 
 return cOldName
+
+FUNCTION ReadExit( lExit )
+   RETURN Set( _SET_EXIT, lExit )
+

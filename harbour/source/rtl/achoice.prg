@@ -133,7 +133,7 @@ function achoice( nTop, nLft, nBtm, nRyt, acItems, xSelect, xUserFunc, nPos, nHi
 
    nNumCols := nRyt - nLft + 1
    nNumRows := nBtm - nTop + 1
-   aeval( acItems, { | x, n | if( ISCHARACTER( x ), aadd( acCopy, padr( x, nNumCols ) ), .F. ) } )
+   aeval( acItems, { | x | if( ISCHARACTER( x ), aadd( acCopy, padr( x, nNumCols ) ), .F. ) } )
    nItems := len( acCopy )
 
    alSelect := array( nItems )

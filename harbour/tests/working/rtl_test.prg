@@ -54,8 +54,8 @@
 
 #ifndef __HARBOUR__
    #ifndef __XPP__
-      #ifndef __FLAGSHIP__
-         #ifndef __VO__
+      #ifndef __FLAGSHIP__ /* QUESTION: is this the correct constant ? */
+         #ifndef __VO__ /* QUESTION: is this the correct constant ? */
             #define __CLIPPER__
          #endif
       #endif

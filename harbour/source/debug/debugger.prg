@@ -179,6 +179,7 @@ return nil
 METHOD HandleEvent() CLASS TDebugger
 
    local nPopup, oWnd
+   local nKey
 
    ::lEnd = .f.
 
@@ -469,7 +470,7 @@ return If( LastKey() != K_ESC, uTemp, uValue )
 
 METHOD IsBreakPoint( nLine ) CLASS TDebugger
 
-return AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == nLine } ) != 0
+return AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == nLine } ) != 0
 
 METHOD GotoLine( nLine ) CLASS TDebugger
 
@@ -511,7 +512,7 @@ return nil
 
 METHOD ToggleBreakPoint() CLASS TDebugger
 
-   local nAt := AScan( ::aBreakPoints, { | aBreak, n | aBreak[ 1 ] == ;
+   local nAt := AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == ;
                        ::oBrwText:nLine } )
 
    if nAt == 0
@@ -619,22 +620,22 @@ METHOD Move() Class TDbWindow
       nkey=inkey(0)
       do case
          case nkey==K_UP
-              if(::ntop !=0,(::ntop--,::nbottom--),nil)
+              if(::ntop != 0,(::ntop--,::nbottom--),nil)
 
          case nkey==K_DOWN
-              if(::nbottom !=maxrow(),(::ntop++,::nbottom++),nil)
+              if(::nbottom != maxrow(),(::ntop++,::nbottom++),nil)
 
          case nkey==K_LEFT
-              if(::nleft!=0,(::nleft--,::nright--),nil)
+              if(::nleft != 0,(::nleft--,::nright--),nil)
 
          case nkey==K_RIGHT
-              if(::nbottom !=maxrow(),(::nleft++,::nright++),nil)
+              if(::nbottom != maxrow(),(::nleft++,::nright++),nil)
 
          case nkey==K_ESC
-              ::ntop:=noldtop
-              ::nleft:=nolfleft
-              ::nbottom:=noldbottom
-              ::nright:=noldright
+              ::ntop := noldtop
+              ::nleft := noldleft
+              ::nbottom := noldbottom
+              ::nright := noldright
       endcase
 
       if ( nkey==K_ESC .or. nkey==K_ENTER)
@@ -688,7 +689,7 @@ ENDCLASS
 
 METHOD New() CLASS TDbMenu
 
-   local n, nCol := 0
+   local nCol := 0
 
    if ::aMenus == nil
       ::aMenus = {}
@@ -770,6 +771,7 @@ return nil
 METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
    local oPopup
+   local nAt
 
    // dispbegin()
    if nPopup != 0
@@ -872,6 +874,7 @@ return nil
 METHOD GoLeft() CLASS TDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
+   local nAt
 
    // DispBegin()
    if ::nOpenPopup != 0
@@ -904,6 +907,7 @@ return nil
 METHOD GoRight() CLASS TDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
+   local nAt
 
    // DispBegin()
    if ::nOpenPopup != 0
@@ -947,7 +951,7 @@ return nil
 
 METHOD ShowPopup( nPopup ) CLASS TDbMenu
 
-   local nAt, oPopup, oMenuItem
+   local nAt, oMenuItem
 
    if ! ::lPopup
       @ 0, ::aItems[ nPopup ]:nCol SAY ;
@@ -976,7 +980,7 @@ return nil
 
 METHOD ProcessKey( nKey ) CLASS TDbMenu
 
-   local nPopuo
+   local nPopup
 
    do case
       case nKey == K_ESC
@@ -1032,6 +1036,8 @@ return Self
 
 METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
 
+   local nAt
+
    @ ::nRow, ::nCol SAY ;
       StrTran( ::cPrompt, "&", "" ) COLOR cClrText
 
@@ -1048,6 +1054,7 @@ static function AltToKey( nKey )
                             K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
                             K_ALT_Y, K_ALT_Z }, nKey )
+   local cKey
 
       if nIndex > 0
          cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 )

@@ -1,3 +1,23 @@
+19991003-03:52 GMT+1 Victor Szel <info@szelvesz.hu>
+  ; Modifications after a test build with the harbour /w2 switch:
+  * tests/working/rtl_test.prg
+    + QUESTION added about __FLAGSHIP__ and __VO__ constant names.
+  * source/rtl/tgetlist.prg
+    funclist.txt
+    ! ReadModal() was buggy when a reader codeblock existed. Fixed.
+    ! ReadExit() converted to function from a method, this way it's Clipper
+      compatible, plus an unused variable warning has been fixed.
+  * source/rtl/tget.prg
+    ! _GET_/__GET was not assigning the passed VALID and WHEN blocks to the
+      get object, this has been fixed, but not tested.
+  * source/rtl/achoice.prg
+    source/rtl/harbinit.prg
+    source/rtl/tget.prg
+    source/rtl/tgetlist.prg
+    source/rdd/dbfntx/dbfntx0.prg (missing #include)
+    source/debug/debugger.prg (mistyped and undeclared variables)
+    ! /w2 warnings fixed.
+
 19991002-22:45 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/extend.h
     source/rtl/strings.c

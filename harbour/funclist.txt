@@ -191,7 +191,7 @@ RDDLIST                 ;R;
 RDDNAME                 ;R;
 RDDREGISTER             ;R;
 RDDSETDEFAULT           ;R;
-READEXIT                ;N;
+READEXIT                ;R;
 READINSERT              ;N;
 READKEY                 ;N;
 READMODAL               ;N;

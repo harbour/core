@@ -784,11 +784,16 @@ return TGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 //---------------------------------------------------------------------------//
 
 function __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
-
-return TGet():New(,, bSetGet, cVarName, cPicture )
+   return _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
 function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+   local oGet := TGet():New(,, bSetGet, cVarName, cPicture )
 
-return TGet():New(,, bSetGet, cVarName, cPicture )
+   uVar := uVar // Suppress unused variable warning
+
+   oGet:bPreBlock := bWhen
+   oGet:bPostBlock := bValid
+
+   return oGet
 
 //---------------------------------------------------------------------------//

@@ -39,7 +39,9 @@ ANNOUNCE SysInit
 
 INIT PROCEDURE ClipInit
 
-   PUBLIC getlist := {}
+   MEMVAR GetList
+
+   PUBLIC GetList := {}
 
    ErrorSys()
 
