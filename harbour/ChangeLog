@@ -1,3 +1,10 @@
+2001-06-06 15:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/tobject.prg
+    * Replaced the old Harbour License and Exception with the
+      new Harbour License and Exception, with permission from
+      JF Lefebvre <jfl@wanadoo.be> (formerly <jfl@mafact.com>).
+
 2001-06-06 14:50 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/rdd_ads/ads.ch
