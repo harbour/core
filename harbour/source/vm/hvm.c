@@ -2379,7 +2379,7 @@ void hb_vmRetValue( void )
    hb_itemCopy( &stack.Return, stack.pPos ); /* copy it */
    hb_itemClear( stack.pPos );               /* now clear it */
 
-   HB_DEBUG( "RetValue\n" );
+   HB_DEBUG( "hb_vmRetValue\n" );
 }
 
 void hb_stackPop( void )

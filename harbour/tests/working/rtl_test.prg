@@ -448,15 +448,15 @@ FUNCTION Main( cPar1 )
    TEST_LINE( lcString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
    TEST_LINE( lcString <> 1                   , "E BASE 1072 Argument error <> F:S"               )
    TEST_LINE( lcString == 1                   , "E BASE 1070 Argument error == F:S"               )
-   TEST_LINE( loObject == loObject            , "E BASE 1070 Argument error == F:S"               )
-   TEST_LINE( {} == {}                        , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( loObject == loObject            , .T.                                               )
+   TEST_LINE( loObject == ErrorNew()          , .F.                                               )
+   TEST_LINE( loObject == TBColumnNew()       , .F.                                               )
+   TEST_LINE( laArray == laArray              , .T.                                               )
+   TEST_LINE( {} == {}                        , .F.                                               )
    TEST_LINE( {|| NIL } == {|| NIL }          , "E BASE 1070 Argument error == F:S"               )
    TEST_LINE( lcString = 1                    , "E BASE 1071 Argument error = F:S"                )
    TEST_LINE( lcString < 1                    , "E BASE 1073 Argument error < F:S"                )
    TEST_LINE( lcString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
-
-/* NOTE: Harbour RDD will GPF if commented out. */
-#ifndef __HARBOUR__
 
 /* NOTE: TEST_CALL() should be used here, since CA-Cl*pper can't preprocess
          the TEST_LINE() variation properly. */
@@ -487,8 +487,6 @@ FUNCTION Main( cPar1 )
    TEST_LINE( 200->({})                       , "{.[0].}"                                         )
    TEST_LINE( 200->({|| NIL })                , "{||...}"                                         )
    TEST_LINE( 200->(.T.)                      , .T.                                               )
-
-#endif
 
    TEST_LINE( loObject:hello                  , "E BASE 1004 No exported method HELLO F:S"        )
    TEST_LINE( loObject:hello := 1             , "E BASE 1005 No exported variable HELLO F:S"      )
@@ -697,6 +695,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( PadR(NIL, 5)                    , ""               )
    TEST_LINE( PadR(.T., 5)                    , ""               )
    TEST_LINE( PadR(10, 5)                     , "10   "          )
+   TEST_LINE( PadR(Year(SToD("19800101")), 5) , "1980 "          )
+   TEST_LINE( PadR(Day(SToD("19800101")), 5)  , "1    "          )
    TEST_LINE( PadR("abcdef", -5)              , ""               )
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
@@ -709,6 +709,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( PadL(NIL, 5)                    , ""               )
    TEST_LINE( PadL(.T., 5)                    , ""               )
    TEST_LINE( PadL(10, 5)                     , "   10"          )
+   TEST_LINE( PadL(Year(SToD("19800101")), 5) , " 1980"          )
+   TEST_LINE( PadL(Day(SToD("19800101")), 5)  , "    1"          )
    TEST_LINE( PadL("abcdef", -5)              , ""               )
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
@@ -721,6 +723,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( PadC(NIL, 5)                    , ""               )
    TEST_LINE( PadC(.T., 5)                    , ""               )
    TEST_LINE( PadC(10, 5)                     , " 10  "          )
+   TEST_LINE( PadC(Year(SToD("19800101")), 5) , "1980 "          )
+   TEST_LINE( PadC(Day(SToD("19800101")), 5)  , "  1  "          )
    TEST_LINE( PadC("abcdef", -5)              , ""               )
    TEST_LINE( PadC("abcdef", 0)               , ""               )
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */

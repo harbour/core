@@ -117,7 +117,7 @@ static BOOL hb_nltoa( LONG lValue, char * szBuffer, USHORT uiLen )
    {
       memset( szBuffer, ' ', uiLen );
       return FALSE;
-   }   
+   }
 
    uiLen--;
    for( iCount = 0; iCount < uiLen; iCount++ )
@@ -166,7 +166,7 @@ static BOOL hb_ndtoa( double dValue, char * szBuffer, USHORT uiLen, USHORT uiDec
    {
       memset( szBuffer, ' ', uiLen );
       return FALSE;
-   }   
+   }
    szEndChar = szBuffer[ uiLen ];
    sprintf( szBuffer, "%*.*f", uiLen, uiDec, dValue );
    szBuffer[ uiLen ] = szEndChar;
@@ -628,7 +628,7 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 static ERRCODE Append( AREAP pArea, BOOL bUnLockAll )
 {
    ULONG lRecCount, lRecNo;
-   
+
    if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
       return FAILURE;
 
@@ -815,10 +815,9 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          szEndChar = * ( szText + pField->uiLen );
          * ( szText + pField->uiLen ) = '\0';
          if( pField->uiDec )
-            hb_itemPutND( pItem, atof( ( char * ) szText ) );
+            hb_itemPutNDLen( pItem, atof( ( char * ) szText ), ( WORD ) pField->uiLen, ( WORD ) pField->uiDec );
          else
-            hb_itemPutNL( pItem, atol( ( char * ) szText ) );
-         hb_itemSetNLen( pItem, ( WORD ) pField->uiLen, ( WORD ) pField->uiDec );
+            hb_itemPutNLLen( pItem, atol( ( char * ) szText ), ( WORD ) pField->uiLen );
          * ( szText + pField->uiLen ) = szEndChar;
          break;
 
@@ -844,7 +843,7 @@ static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             hb_itemPutC( pItem, "" );
          break;
    }
-   
+
    return SUCCESS;
 }
 
@@ -872,7 +871,7 @@ static ERRCODE GetVarLen( AREAP pArea, USHORT uiIndex, ULONG * ulLen )
 static ERRCODE GoBottom( AREAP pArea )
 {
    ULONG lRecCount;
-   
+
    if( SELF_RECCOUNT( pArea, &lRecCount ) == FAILURE )
       return FAILURE;
 
@@ -882,7 +881,7 @@ static ERRCODE GoBottom( AREAP pArea )
 static ERRCODE GoTo( AREAP pArea, ULONG lRecNo )
 {
    ULONG lRecCount;
-   
+
    if( pArea->lpExtendInfo->fRecordChanged &&
        !hb_dbfUpdateRecord(pArea, pArea->lpExtendInfo->lRecNo ) )
       return FAILURE;
@@ -1004,11 +1003,11 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( SUPER_OPEN( pArea, pOpenInfo ) == FAILURE )
       return FAILURE;
-   
+
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
-   
+
    if( pArea->lpFileInfo->hFile == FS_ERROR )
    {
       SELF_CLOSE( pArea );
@@ -1281,14 +1280,14 @@ static ERRCODE ReadDBHeader( AREAP pArea )
    for( uiFields = 0; uiFields < uiDataLen; uiFields += 32 )
       if( szBuffer[ uiFields ] == 0xD )
          break;
-         
+
    uiFields /= 32;
    if( ( uiDataLen / 32 ) < uiFields )
    {
       hb_xfree( szBuffer );
       return FAILURE;
    }
-   
+
    pArea->lpExtendInfo->uiRecordLen = 1;
    SELF_SETFIELDEXTENT( pArea, uiFields );
    pFieldInfo.typeExtended = 0;

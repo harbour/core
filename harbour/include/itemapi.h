@@ -33,6 +33,7 @@
 
 typedef struct
 {
+   USHORT   paramCount;
    PHB_ITEM pItems[ HB_EVAL_PARAM_MAX_ + 1 ];
 } EVALINFO, * PEVALINFO, * EVALINFO_PTR;
 
@@ -40,6 +41,9 @@ extern PHB_ITEM hb_evalLaunch   ( PEVALINFO pEvalInfo );
 extern BOOL     hb_evalNew      ( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 extern BOOL     hb_evalPutParam ( PEVALINFO pEvalInfo, PHB_ITEM pItem );
 extern BOOL     hb_evalRelease  ( PEVALINFO pEvalInfo );
+
+extern PHB_ITEM hb_itemDo       ( PHB_ITEM pItem, USHORT uiPCount, ... );
+extern PHB_ITEM hb_itemDoC      ( char * szFunc, USHORT uiPCount, ... );
 
 extern PHB_ITEM hb_itemArrayGet ( PHB_ITEM pArray, ULONG ulIndex );
 extern PHB_ITEM hb_itemArrayNew ( ULONG ulLen );
@@ -65,6 +69,9 @@ extern PHB_ITEM hb_itemPutL     ( PHB_ITEM pItem, BOOL bValue );
 extern PHB_ITEM hb_itemPutND    ( PHB_ITEM pItem, double dNumber );
 extern PHB_ITEM hb_itemPutNI    ( PHB_ITEM pItem, int iNumber );
 extern PHB_ITEM hb_itemPutNL    ( PHB_ITEM pItem, long lNumber );
+extern PHB_ITEM hb_itemPutNDLen ( PHB_ITEM pItem, double dNumber, WORD wWidth, WORD wDecimal );
+extern PHB_ITEM hb_itemPutNILen ( PHB_ITEM pItem, int iNumber, WORD wWidth );
+extern PHB_ITEM hb_itemPutNLLen ( PHB_ITEM pItem, long lNumber, WORD wWidth );
 extern BOOL     hb_itemRelease  ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemReturn   ( PHB_ITEM pItem );
 extern ULONG    hb_itemSize     ( PHB_ITEM pItem );

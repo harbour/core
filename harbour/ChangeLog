@@ -1,3 +1,39 @@
+19990905-17:48 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/dbf1.c
+    % Uses hb_itemPutN?Len() instead of hb_itemSetNLen(), so it's a bit
+      faster now.
+  * source/rtl/errorapi.c
+    % Now uses hb_itemDo() instead of the Eval API. Eight function calls 
+      substituted with a single one.
+  * source/rtl/extend.c
+    + hb_retn?len() functions now make simple calls to hb_itemPutN?Len()
+      functions.
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    + EVALINFO structure now has a Clipper compatible paramCount member.
+    ! hb_eval*() speed up a bit by using paramCount, and by assigning error
+      return value only on error.
+    ! hb_evalPutParam() now check if pItem is a NULL.
+    ! hb_evalRelease() now sets back the EVALINFO structure to an initial
+      state, just like Clipper.
+    + hb_itemDo() and hb_itemDoC() function added, they do the same as hb_eval()
+      but in a lot more convenient way.
+    + hb_itemPutNDLen(), hb_itemPutNILen(), hb_itemPutNLLen() functions added
+      to make to number lenght setting easier.
+  * source/rtl/do.c
+    ! DO() without any parameter caused a GPF. Fixed.
+  * tests/working/rtl_test.prg
+    + Alias tests enabled. Now an internal occurs in one of them, this will
+      need fixing. Some alias Pop/Push/Swap functions are not checking NULL
+      pointers and are not yet compatible with Clipper in strange situations.
+    + Fixed some result in == test with objects and arrays. Added some more
+      == tests.
+  * source/vm/hvm.c
+    ! Small correction in one debug message.
+  * source/vm/initsymb.c
+    + SETPOSBS added to the list. Since it's a native opcode in Clipper, it
+      always linked in by nature.
+
 19990905-02:47 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/filesys.c
     * casts on access() and in HB_FILE

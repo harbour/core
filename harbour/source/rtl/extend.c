@@ -479,39 +479,17 @@ void hb_retnl( long lNumber )
 
 void hb_retndlen( double dNumber, WORD wWidth, WORD wDecimal )
 {
-   if( wWidth == 0 || wWidth > 99 )
-      wWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
-
-   if( wDecimal == ( ( WORD ) -1 ) || ( wDecimal != 0 && wDecimal >= ( wWidth - 1 ) ) )
-      wDecimal = hb_set.HB_SET_DECIMALS;
-
-   hb_itemClear( &stack.Return );
-   stack.Return.type                   = IT_DOUBLE;
-   stack.Return.item.asDouble.value    = dNumber;
-   stack.Return.item.asDouble.length   = wWidth;
-   stack.Return.item.asDouble.decimal  = wDecimal;
+   hb_itemPutNDLen( &stack.Return, dNumber, wWidth, wDecimal );
 }
 
 void hb_retnilen( int iNumber, WORD wWidth )
 {
-   if( wWidth == 0 || wWidth > 99 )
-      wWidth = 10;
-
-   hb_itemClear( &stack.Return );
-   stack.Return.type                   = IT_INTEGER;
-   stack.Return.item.asInteger.value   = iNumber;
-   stack.Return.item.asInteger.length  = wWidth;
+   hb_itemPutNILen( &stack.Return, iNumber, wWidth );
 }
 
 void hb_retnllen( long lNumber, WORD wWidth )
 {
-   if( wWidth == 0 || wWidth > 99 )
-      wWidth = 10;
-
-   hb_itemClear( &stack.Return );
-   stack.Return.type                   = IT_LONG;
-   stack.Return.item.asLong.value      = lNumber;
-   stack.Return.item.asLong.length     = wWidth;
+   hb_itemPutNLLen( &stack.Return, lNumber, wWidth );
 }
 
 void hb_storc( char * szText, int iParam, ... )

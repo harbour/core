@@ -25,12 +25,17 @@
 /* Harbour Project source code
    http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_itemDo() ( based on HB_DO() by Ryszard Glab )
+      hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
       hb_itemPutNI()
       hb_itemGetNI()
       hb_itemGetCPtr()
       hb_itemGetCLen()
       hb_itemGetNLen()
       hb_itemSetNLen()
+      hb_itemPutNDLen()
+      hb_itemPutNILen()
+      hb_itemPutNLLen()
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 
@@ -43,61 +48,42 @@
 
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   BOOL bResult = FALSE;
+   BOOL bResult;
 
    if( pEvalInfo )
    {
       memset( pEvalInfo, 0, sizeof( EVALINFO ) );
       pEvalInfo->pItems[ 0 ] = pItem;
+      pEvalInfo->paramCount = 0;
       bResult = TRUE;
    }
+   else
+      bResult = FALSE;
 
    return bResult;
 }
+
+/* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
+         added than the maximum (9) .*/
 
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   BOOL bResult = FALSE;
+   BOOL bResult;
 
-   if( pEvalInfo )
+   if( pEvalInfo && pItem && pEvalInfo->paramCount < HB_EVAL_PARAM_MAX_ )
    {
-      WORD w;
-
-      for( w = 1; w < HB_EVAL_PARAM_MAX_ + 1; w++ ) /* note that 0 position is used by the codeblock or function name item */
-      {
-         if( pEvalInfo->pItems[ w ] == NULL )
-         {
-            pEvalInfo->pItems[ w ] = pItem;
-            bResult = TRUE;
-            break;
-         }
-      }
-   }
-
-   return bResult;
-}
-
-BOOL hb_evalRelease( PEVALINFO pEvalInfo )
-{
-   BOOL bResult = FALSE;
-
-   if( pEvalInfo )
-   {
-      WORD w;
-
-      for( w = 0; w < HB_EVAL_PARAM_MAX_ + 1; w++ )
-         /* NOTE: NULL pointer is checked by hb_itemRelease() */
-         hb_itemRelease( pEvalInfo->pItems[ w ] );
-
+      pEvalInfo->pItems[ ++pEvalInfo->paramCount ] = pItem;
       bResult = TRUE;
    }
+   else
+      bResult = FALSE;
 
    return bResult;
 }
 
 PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 {
-   PHB_ITEM pResult = NULL;
+   PHB_ITEM pResult;
 
    if( pEvalInfo )
    {
@@ -107,9 +93,9 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       {
          hb_vmPushSymbol( hb_dynsymGet( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          hb_vmPushNil();
-         while( w < ( HB_EVAL_PARAM_MAX_ + 1 ) && pEvalInfo->pItems[ w ] )
+         while( w <= pEvalInfo->paramCount )
             hb_vmPush( pEvalInfo->pItems[ w++ ] );
-         hb_vmDo( w - 1 );
+         hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
          hb_itemCopy( pResult, &stack.Return );
@@ -118,14 +104,150 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
       {
          hb_vmPushSymbol( &symEval );
          hb_vmPush( pEvalInfo->pItems[ 0 ] );
-         while( w < ( HB_EVAL_PARAM_MAX_ + 1 ) && pEvalInfo->pItems[ w ] )
+         while( w <= pEvalInfo->paramCount )
             hb_vmPush( pEvalInfo->pItems[ w++ ] );
-         hb_vmDo( w - 1 );
+         hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
          hb_itemCopy( pResult, &stack.Return );
       }
+      else
+         pResult = NULL;
    }
+   else
+      pResult = NULL;
+
+   return pResult;
+}
+
+BOOL hb_evalRelease( PEVALINFO pEvalInfo )
+{
+   BOOL bResult;
+
+   if( pEvalInfo )
+   {
+      WORD w;
+
+      for( w = 0; w <= pEvalInfo->paramCount; w++ )
+      {
+         hb_itemRelease( pEvalInfo->pItems[ w ] );
+         pEvalInfo->pItems[ w ] = NULL;
+      }
+
+      pEvalInfo->paramCount = 0;
+      bResult = TRUE;
+   }
+   else
+      bResult = FALSE;
+
+   return bResult;
+}
+
+/* NOTE: Same purpose as hb_evalLaunch(), but simpler, faster and more flexible.
+         It can be used to call symbols, functions names, or blocks, the items
+         don't need to be duplicated when passed as argument, one line is
+         enough to initiate a call, the number of parameters is not limited. */
+
+PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, ... )
+{
+   PHB_ITEM pResult;
+
+   if( pItem )
+   {
+      if( IS_STRING( pItem ) )
+      {
+         PHB_DYNS pDynSym = hb_dynsymGet( hb_itemGetCPtr( pItem ) );
+
+         if( pDynSym )
+         {
+            USHORT uiParam;
+            va_list va;
+
+            va_start( va, uiPCount );
+            hb_vmPushSymbol( pDynSym->pSymbol );
+            hb_vmPushNil();
+            for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+               hb_vmPush( va_arg( va, PHB_ITEM ) );
+            hb_vmDo( uiPCount );
+            va_end( va );
+
+            pResult = hb_itemNew( NULL );
+            hb_itemCopy( pResult, &stack.Return );
+         }
+      }
+      else if( IS_BLOCK( pItem ) )
+      {
+         USHORT uiParam;
+         va_list va;
+
+         va_start( va, uiPCount );
+         hb_vmPushSymbol( &symEval );
+         hb_vmPush( pItem );
+         for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+            hb_vmPush( va_arg( va, PHB_ITEM ) );
+         hb_vmDo( uiPCount );
+         va_end( va );
+
+         pResult = hb_itemNew( NULL );
+         hb_itemCopy( pResult, &stack.Return );
+      }
+      else if( IS_SYMBOL( pItem ) )
+      {
+         USHORT uiParam;
+         va_list va;
+
+         va_start( va, uiPCount );
+         hb_vmPushSymbol( pItem->item.asSymbol.value );
+         hb_vmPushNil();
+         for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+            hb_vmPush( va_arg( va, PHB_ITEM ) );
+         hb_vmDo( uiPCount );
+         va_end( va );
+
+         pResult = hb_itemNew( NULL );
+         hb_itemCopy( pResult, &stack.Return );
+      }
+      else
+         pResult = NULL;
+   }
+   else
+      pResult = NULL;
+
+   return pResult;
+}
+
+/* NOTE: Same as hb_itemDo(), but even simpler, since the function name can be
+         directly passed as a zero terminated string. */
+
+PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, ... )
+{
+   PHB_ITEM pResult;
+
+   if( szFunc )
+   {
+      PHB_DYNS pDynSym = hb_dynsymGet( szFunc );
+
+      if( pDynSym )
+      {
+         USHORT uiParam;
+         va_list va;
+
+         va_start( va, uiPCount );
+         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushNil();
+         for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+            hb_vmPush( va_arg( va, PHB_ITEM ) );
+         hb_vmDo( uiPCount );
+         va_end( va );
+
+         pResult = hb_itemNew( NULL );
+         hb_itemCopy( pResult, &stack.Return );
+      }
+      else
+         pResult = NULL;
+   }
+   else
+      pResult = NULL;
 
    return pResult;
 }
@@ -286,8 +408,8 @@ BOOL hb_itemFreeC( char * szText )
 }
 
 /* NOTE: Clipper is buggy and will not append a trailing zero, although
-         the NG says that it will. Check your buffers, since what may have 
-         worked with Clipper could overrun the buffer with Harbour. 
+         the NG says that it will. Check your buffers, since what may have
+         worked with Clipper could overrun the buffer with Harbour.
          The correct buffer size is 9 bytes: char szDate[ 9 ] */
 
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
@@ -469,6 +591,61 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 
    pItem->type = IT_LONG;
    pItem->item.asLong.length = 10;
+   pItem->item.asLong.value = lNumber;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, WORD wWidth, WORD wDecimal )
+{
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   if( wWidth == 0 || wWidth > 99 )
+      wWidth = ( dNumber > 10000000000.0 ) ? 20 : 10;
+
+   if( wDecimal == ( ( WORD ) -1 ) || ( wDecimal != 0 && wDecimal >= ( wWidth - 1 ) ) )
+      wDecimal = hb_set.HB_SET_DECIMALS;
+
+   pItem->type = IT_DOUBLE;
+   pItem->item.asDouble.length = wWidth;
+   pItem->item.asDouble.decimal = wDecimal;
+   pItem->item.asDouble.value = dNumber;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, WORD wWidth )
+{
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   if( wWidth == 0 || wWidth > 99 )
+      wWidth = 10;
+
+   pItem->type = IT_INTEGER;
+   pItem->item.asInteger.length = wWidth;
+   pItem->item.asInteger.value = iNumber;
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, WORD wWidth )
+{
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   if( wWidth == 0 || wWidth > 99 )
+      wWidth = 10;
+
+   pItem->type = IT_LONG;
+   pItem->item.asLong.length = wWidth;
    pItem->item.asLong.value = lNumber;
 
    return pItem;

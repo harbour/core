@@ -60,6 +60,7 @@ extern HARBOUR HB_RTRIM( void );
 extern HARBOUR HB_SECONDS( void );
 extern HARBOUR HB_SELECT( void );
 extern HARBOUR HB_SETPOS( void );
+extern HARBOUR HB_SETPOSBS( void );
 extern HARBOUR HB_SPACE( void );
 extern HARBOUR HB_SQRT( void );
 extern HARBOUR HB_STR( void );
@@ -125,6 +126,7 @@ static HB_SYMB symbols[] = {
    { "SECONDS"   , FS_PUBLIC, HB_SECONDS      , 0 },
    { "SELECT"    , FS_PUBLIC, HB_SELECT       , 0 },
    { "SETPOS"    , FS_PUBLIC, HB_SETPOS       , 0 },
+   { "SETPOSBS"  , FS_PUBLIC, HB_SETPOSBS     , 0 },
    { "SPACE"     , FS_PUBLIC, HB_SPACE        , 0 },
    { "SQRT"      , FS_PUBLIC, HB_SQRT         , 0 },
    { "STR"       , FS_PUBLIC, HB_STR          , 0 },

@@ -119,9 +119,6 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
    if( pError )
    {
-      EVALINFO eval;
-      PHB_ITEM pBlock;
-      PHB_ITEM pObject;
       PHB_ITEM pResult;
 
       /* Check if we have a valid error handler */
@@ -134,21 +131,11 @@ WORD hb_errLaunch( PHB_ITEM pError )
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( 9999, "Too many recursive error handler calls", NULL, NULL );
 
-      s_iLaunchCount++;
-
       /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
 
-      pBlock = hb_itemNew( NULL );
-      pObject = hb_itemNew( NULL );
+      s_iLaunchCount++;
 
-      hb_itemCopy( pBlock, &s_errorBlock );
-      hb_itemCopy( pObject, pError );
-
-      hb_evalNew( &eval, pBlock );
-      hb_evalPutParam( &eval, pObject );
-
-      pResult = hb_evalLaunch( &eval );
-      hb_evalRelease( &eval );
+      pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
       s_iLaunchCount--;
 
@@ -212,10 +199,6 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
    if( pError )
    {
-      EVALINFO eval;
-      PHB_ITEM pBlock;
-      PHB_ITEM pObject;
-
       /* Check if we have a valid error handler */
 
       if( hb_itemType( &s_errorBlock ) != IT_BLOCK )
@@ -226,21 +209,11 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( 9999, "Too many recursive ERRORBLOCK() calls", NULL, NULL );
 
-      s_iLaunchCount++;
-
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
-      pBlock = hb_itemNew( NULL );
-      pObject = hb_itemNew( NULL );
+      s_iLaunchCount++;
 
-      hb_itemCopy( pBlock, &s_errorBlock );
-      hb_itemCopy( pObject, pError );
-
-      hb_evalNew( &eval, pBlock );
-      hb_evalPutParam( &eval, pObject );
-
-      pResult = hb_evalLaunch( &eval );
-      hb_evalRelease( &eval );
+      pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
       s_iLaunchCount--;
 

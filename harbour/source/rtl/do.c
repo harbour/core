@@ -84,45 +84,53 @@
  */
 HARBOUR HB_DO( void )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
+   int iPCount = hb_pcount();
 
-   if( IS_STRING( pItem ) )
+   if( iPCount >= 1 )
    {
-      PHB_DYNS pDynSym = hb_dynsymGet( pItem->item.asString.value );
+      PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
-      if( pDynSym )
+      if( IS_STRING( pItem ) )
+      {
+         PHB_DYNS pDynSym = hb_dynsymGet( hb_itemGetCPtr( pItem ) );
+
+         if( pDynSym )
+         {
+            int i;
+
+            hb_vmPushSymbol( pDynSym->pSymbol );
+            hb_vmPushNil();
+            for( i = 2; i <= iPCount; i++ )
+               hb_vmPush( hb_param( i, IT_ANY ) );
+            hb_vmDo( iPCount - 1 );
+         }
+         else
+            hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
+      }
+      else if( IS_BLOCK( pItem ) )
       {
          int i;
 
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         for( i = 2; i <= hb_pcount(); i++ )
+         hb_vmPushSymbol( &symEval );
+         hb_vmPush( pItem );
+         for( i = 2; i <= iPCount; i++ )
             hb_vmPush( hb_param( i, IT_ANY ) );
-         hb_vmDo( hb_pcount() - 1 );
+         hb_vmDo( iPCount - 1 );
+      }
+      else if( IS_SYMBOL( pItem ) )
+      {
+         int i;
+
+         hb_vmPushSymbol( pItem->item.asSymbol.value );
+         hb_vmPushNil();
+         for( i = 2; i <= iPCount; i++ )
+            hb_vmPush( hb_param( i, IT_ANY ) );
+         hb_vmDo( iPCount - 1 );
       }
       else
-         hb_errRT_BASE( EG_NOFUNC, 1001, NULL, pItem->item.asString.value );
-   }
-   else if( IS_BLOCK( pItem ) )
-   {
-      int i;
-
-      hb_vmPushSymbol( &symEval );
-      hb_vmPush( pItem );
-      for( i = 2; i <= hb_pcount(); i++ )
-         hb_vmPush( hb_param( i, IT_ANY ) );
-      hb_vmDo( hb_pcount() - 1 );
-   }
-   else if( IS_SYMBOL( pItem ) )
-   {
-      int i;
-
-      hb_vmPushSymbol( pItem->item.asSymbol.value );
-      hb_vmPushNil();
-      for( i = 2; i <= hb_pcount(); i++ )
-         hb_vmPush( hb_param( i, IT_ANY ) );
-      hb_vmDo( hb_pcount() - 1 );
+         hb_errRT_BASE( EG_ARG, 3012, NULL, "DO" );
    }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, "DO" );
 }
+
