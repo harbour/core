@@ -1,3 +1,7 @@
+19990730-08:50 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * added dbfntx support (not nulsys yet)
+
 19990730-12:46 GMT+1 Bruno Cantero <bruno@issnet.net>
    * tests/working/testrdd.prg
      Fixed a bug

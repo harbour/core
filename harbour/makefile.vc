@@ -41,6 +41,7 @@ HARBOUR_LIB=$(LIB_DIR)\harbour.lib
 TERMINAL_LIB=$(LIB_DIR)\terminal.lib
 TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 RDD_LIB=$(LIB_DIR)\rdd.lib
+DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 
 #
@@ -120,20 +121,24 @@ TERMINAL_LIB_OBJS = \
     $(OBJ_DIR)\gtxxx.obj
 
 #
-# OBJ list for rdd.lib. Add new ones as needed
+# OBJ list for rdd's Add new ones as needed
 #
 
 RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd.obj \
-    $(OBJ_DIR)\dbfntx0.obj \
-    $(OBJ_DIR)\dbfntx1.obj \
+    $(OBJ_DIR)\dbf0.obj \
+    $(OBJ_DIR)\dbf1.obj \
     $(OBJ_DIR)\rddsys.obj
+
+DBFNTX_LIB_OBJS = \
+    $(OBJ_DIR)\dbfntx0.obj \
+    $(OBJ_DIR)\dbfntx1.obj
 
 #
 # Our default target
 #
 
-all: $(HARBOUR_EXE) $(HARBOUR_LIB) $(TOOLS_LIB) $(TERMINAL_LIB) $(RDD_LIB)
+all: $(HARBOUR_EXE) $(HARBOUR_LIB) $(TOOLS_LIB) $(TERMINAL_LIB) $(RDD_LIB) $(DBFNTX_LIB)
 
 $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\harboury.c \
@@ -152,7 +157,7 @@ $(HARBOUR_EXE) : \
     -del table.obj
 
 #
-# Library depencies and build rules
+# Library dependencies and build rules
 #
 
 $(HARBOUR_LIB) : $(HARBOUR_LIB_OBJS)
@@ -167,8 +172,11 @@ $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 $(RDD_LIB) : $(RDD_LIB_OBJS)
     lib /OUT:$(RDD_LIB) $(RDD_LIB_OBJS)
 
+$(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
+    lib /OUT:$(DBFNTX_LIB) $(DBFNTX_LIB_OBJS)
+
 #
-# Compiler source depencies and build rules
+# Compiler source dependencies and build rules
 #
 
 $(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
@@ -178,7 +186,7 @@ $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
     flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
-# RTL source depencies below. Add as needed
+# RTL source dependencies below. Add as needed
 #
 
 $(RTL_DIR)\achoice.c : $(RTL_DIR)\achoice.prg
@@ -265,7 +273,7 @@ $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
 $(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\natmsg\msgxxx.c
+$(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
@@ -299,7 +307,7 @@ $(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
-# VM source depencies below. Add as needed
+# VM source dependencies below. Add as needed
 #
 
 $(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
@@ -312,7 +320,7 @@ $(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
-# TOOLS source depencies below. Add as needed
+# TOOLS source dependencies below. Add as needed
 #
 
 $(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
@@ -397,7 +405,7 @@ $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
-# RDD source depencies below. Add as needed
+# RDD and related source dependencies below. Add as needed
 #
 
 $(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
@@ -409,12 +417,21 @@ $(RDD_DIR)\rddsys.c : $(RDD_DIR)\rddsys.prg
 $(OBJ_DIR)\rddsys.obj : $(RDD_DIR)\rddsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(RDD_DIR)\dbfntx0.c : $(RDD_DIR)\dbfntx0.prg
+$(RDD_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
 
-$(OBJ_DIR)\dbfntx0.obj : $(RDD_DIR)\dbfntx0.c
+$(OBJ_DIR)\dbf0.obj : $(RDD_DIR)\dbf0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx1.c
+$(OBJ_DIR)\dbf1.obj : $(RDD_DIR)\dbf1.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(RDD_DIR)\dbfntx\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+
+$(OBJ_DIR)\dbfntx\dbfntx0.obj : $(RDD_DIR)\dbfntx\dbfntx0.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dbfntx\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
