@@ -137,3 +137,7 @@ HARBOUR HB_TANH( void )
       hb_retnd(0);
 }
 
+HARBOUR HB_PI( void )
+{
+   hb_retnd( 3.141592653589793 );
+}
