@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-28 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.c
+      * removed duplicated line causing memory leak 
+      reported by Andi
+
 2004-01-27 19:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
       * fixed generation of pcode in codeblocks with no 

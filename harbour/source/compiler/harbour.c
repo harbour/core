@@ -3885,8 +3885,6 @@ void hb_compCodeBlockEnd( void )
       {
          pBuffer = ( BYTE * ) hb_xgrab( strlen( pVar->szName ) + 4 );
 
-         pBuffer = ( BYTE * ) hb_xgrab( strlen( pVar->szName ) + 4 );
-
          pBuffer[0] = HB_P_LOCALNAME;
          pBuffer[1] = HB_LOBYTE( iLocalPos );
          pBuffer[2] = HB_HIBYTE( iLocalPos );
