@@ -18,7 +18,9 @@ C_HEADERS=\
         hberrors.h   \
         hbpp.h       \
         hbsetup.h    \
+        hbtrace.h    \
         hbver.h      \
+        hbwinapi.h   \
         hb_vmpub.h   \
         init.h       \
         inkey.h      \

@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * Harbour Project source code:
  * This include file determines whether or not to include the Windows API
@@ -35,8 +36,8 @@
  *
  */
 
-#ifndef HB_HBWINAPI_H_
-#define HB_HBWINAPI_H_
+#ifndef HB_WINAPI_H_
+#define HB_WINAPI_H_
 
 #if defined(HARBOUR_USE_WIN_GTAPI) || defined(WINNT)
    #define HARBOUR_USE_WIN
@@ -47,4 +48,4 @@
    #endif
 #endif
 
-#endif
+#endif /* HB_WINAPI_H_ */

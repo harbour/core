@@ -178,9 +178,11 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
          fprintf( yyc, "static " );
 
       if( pFunc == _pInitFunc )        /* Is it (_INITSTATICS) */
-         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )\n{\n   static BYTE pcode[] =\n   {\n" ); /* NOTE: hb_ intentionally in lower case */
+         fprintf( yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
       else
-         fprintf( yyc, "HARBOUR HB_%s( void )\n{\n   static BYTE pcode[] =\n   {\n", pFunc->szName );
+         fprintf( yyc, "HARBOUR HB_%s( void )", pFunc->szName );
+
+      fprintf( yyc, "\n{\n   static BYTE pcode[] =\n   {\n" );
 
       bEndProcRequired = TRUE;
       lPCodePos = 0;

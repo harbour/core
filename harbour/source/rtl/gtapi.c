@@ -748,7 +748,7 @@ USHORT hb_gtWrite( BYTE * fpStr, ULONG length )
       && s_iCurrentRow >= 0 && s_iCurrentRow <= iMaxRow )
    {
       /* Truncate the text if the cursor will end up off the right edge */
-      if( s_iCurrentCol + size > iMaxCol + 1 ) size = iMaxCol - s_iCurrentCol;
+      if( s_iCurrentCol + size > iMaxCol + 1 ) size = iMaxCol - s_iCurrentCol + 1;
       hb_gt_Puts( s_iCurrentRow, s_iCurrentCol, attr, fpStr, size );
    }
    /* Finally, save the new cursor position, even if off-screen */
