@@ -147,6 +147,7 @@ return Self
 METHOD SetFocus() CLASS HBGetList
 
    __GetListSetActive( Self )
+   __GetListLast( Self )
    ::aGetList[ ::nPos ]:SetFocus()
 
    return Self
@@ -367,9 +368,12 @@ METHOD GetPreValidate() CLASS HBGetList
       ::ShowScoreBoard()
       ::lUpdated := lUpdated
 
+/*
       if !( __GetListActive() == Self )
          __GetListSetActive( Self )
       endif
+*/
+      __GetListLast( Self )
    endif
 
    if ::lKillRead
@@ -417,9 +421,12 @@ METHOD GetPostValidate() CLASS HBGetList
       oGet:UpdateBuffer()
       ::lUpdated := lUpdated
 
+/*
       if !( __GetListActive() == Self )
          __GetListSetActive( Self )
       endif
+*/
+      __GetListLast( Self )
 
       if ::lKillRead
          oGet:ExitState := GE_ESCAPE
@@ -447,9 +454,12 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
 
    ::lUpdated := lUpdated
 
+/*
    if !( __GetListActive() == Self )
       __GetListSetActive( Self )
    endif
+*/
+   __GetListLast( Self )
 
    if ::lKillRead
       oGet:ExitState := GE_ESCAPE
@@ -979,9 +989,12 @@ METHOD GUIPostValidate( oGUI ) CLASS HBGetList
 
       ::lUpdated := lSavUpdated
 
+/*
       if !( __GetListActive() == Self )
          __GetListSetActive( Self )
       endif
+*/
+      __GetListLast( Self )
 
       if ::lKillRead
          oGet:ExitState := GE_ESCAPE      // Provokes ReadModal() exit
@@ -1006,9 +1019,12 @@ METHOD GUIPreValidate( oGUI ) CLASS HBGetList
 
       ::lUpdated := lSavUpdated
 
+/*
       if !( __GetListActive() == Self )
          __GetListSetActive( Self )
       endif
+*/
+      __GetListLast( Self )
    endif
 
    if ::lKillRead
