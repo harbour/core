@@ -133,27 +133,28 @@
 
 CLASS TReportForm
 
-   DATA aReportData AS {}
-   DATA aReportTotals AS {}
-   DATA aGroupTotals AS {}
-   DATA nPageNumber
-   DATA nLinesLeft
-   DATA lFirstPass
-   DATA lFormFeeds
-   DATA nMaxLinesAvail
-   DATA cExprBuff
-   DATA cOffsetsBuff
-   DATA cLengthsBuff
+   DATA aReportData AS ARRAY init {}
+   DATA aReportTotals AS ARRAY init {}
+   DATA aGroupTotals AS ARRAY init {}
+   DATA nPageNumber AS NUMERIC
+   DATA nLinesLeft AS NUMERIC
+   DATA lFirstPass AS LOGICAL
+   DATA lFormFeeds AS LOGICAL
+   DATA nMaxLinesAvail AS NUMERIC
+   DATA cExprBuff AS STRING
+   DATA cOffsetsBuff AS STRING
+   DATA cLengthsBuff AS STRING
 
-   METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
-             lRest,lPlain,cHeading,lBEject,lSummary)
+   METHOD NEW( cFrmName AS STRING, lPrinter AS LOGICAL ,cAltFile AS STRING, lNoConsole AS LOGICAL ,bFor AS CODEBLOCK, ;
+               bWhile AS CODEBLOCK, nNext AS NUMERIC, nRecord AS NUMERIC, lRest AS LOGICAL ,lPlain AS LOGICAL, ;
+               cHeading AS STRING ,lBEject AS LOGICAL, lSummary AS LOGICAL )
    METHOD ExecuteReport()
    METHOD ReportHeader()
    METHOD EjectPage()
-   METHOD PrintIt(cString)
-   METHOD LoadReportFile(cFile)
-   METHOD GetExpr( nPointer )
-   METHOD GetColumn( cFieldsBuffer, nOffset )
+   METHOD PrintIt(cString AS STRING)
+   METHOD LoadReportFile(cFile AS STRING)
+   METHOD GetExpr( nPointer AS NUMERIC)
+   METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC)
 
 ENDCLASS
 

@@ -151,8 +151,8 @@ Separator     {SpaceTab}
                     }
                   }
 
-"QOUT(["    { 
-    /* preprocessed TEXT/ENDTEXT line 
+"QOUT(["    {
+    /* preprocessed TEXT/ENDTEXT line
     NOTE: Clipper preprocesses TEXT/ENDTEXT block into a series of QOUT calls
     QOUT("...")<EndOfLine>
     or
@@ -169,16 +169,16 @@ Separator     {SpaceTab}
     from direct calls for qout function
     QOUT([some string]) ; QOUT([some more])
     */
-/* TODO: implement hb_ppInsideTextBlock it is PP 
-    if( hb_ppInsideTextBlock )   
+/* TODO: implement hb_ppInsideTextBlock it is PP
+    if( hb_ppInsideTextBlock )
     {
         BEGIN STRING4START;
         unput( '(' );
     }
     else
-*/    
+*/
         yyless( 4 );    /* len of QOUT */
-        
+
     yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
     hb_comp_iState = IDENTIFIER;
     return IDENTIFIER;
@@ -235,7 +235,7 @@ Separator     {SpaceTab}
     char StopChar = yytext[ 0 ];
     int iFirstPos = 0;
     BEGIN 0;
-    
+
     if( (StopChar == '"') || (StopChar == '\'')  || (StopChar == '[') )
     {
        int i;
@@ -456,7 +456,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"_procreq_"    { 
+"_procreq_"    {
                    yylval.string = hb_compIdentifierNew( "_PROCREQ_", TRUE );
                    hb_comp_iState =IDENTIFIER;
                    return PROCREQ;
@@ -515,7 +515,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"opti"|"optio"|"option"|"optiona"|"optional"    { 
+"opti"|"optio"|"option"|"optiona"|"optional"    {
     yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
     return OPTIONAL;
 }
@@ -659,14 +659,14 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 
-"exit"         { 
+"exit"         {
                    hb_comp_iState =IDENTIFIER;
                    return EXIT;
                }
 %{
 /* ************************************************************************ */
 %}
-"exte"|"exter"|"extern"|"externa"|"external" { 
+"exte"|"exter"|"extern"|"externa"|"external" {
                    yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                    hb_comp_iState =IDENTIFIER;
                    return EXTERN;
@@ -1014,7 +1014,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"publ"("ic"|"i")? { 
+"publ"("ic"|"i")? {
                   yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   hb_comp_iState =IDENTIFIER;
                   return PUBLIC;
@@ -1063,7 +1063,7 @@ Separator     {SpaceTab}
                   yylval.string = hb_compIdentifierNew( hb_strupr( yytext ), TRUE );
                   BEGIN RETURN_;
                 }
-<RETURN_>{Separator}*                
+<RETURN_>{Separator}*
 <RETURN_>[\&_a-zA-Z0-9]   { /* an identifier, numbers or macro */
                  BEGIN 0;
                  unput( yytext[ yyleng-1 ] );
@@ -1269,6 +1269,9 @@ Separator     {SpaceTab}
 "as array of logical"   { return AS_LOGICAL_ARRAY; }
 "as array of numeric"   { return AS_NUMERIC_ARRAY; }
 "as array of object"    { return AS_OBJECT_ARRAY; }
+
+"_hb_class"             { hb_comp_iState = OPERATOR; return DECLARE_CLASS; }
+"_hb_member"            { hb_comp_iState = OPERATOR; return DECLARE_MEMBER; }
 
 %{
 /* ************************************************************************ */

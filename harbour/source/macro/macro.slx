@@ -89,10 +89,6 @@ START_NEW_LINE_IF_ONE_OF_THESE( "\n;" );
 #define _DOT_DOT_  -1001
 
 SELF_CONTAINED_WORDS_ARE {
-                           LEX_WORD( ".T."   ) AS_TOKEN( TRUEVALUE  ),
-                           LEX_WORD( ".Y."   ) AS_TOKEN( TRUEVALUE  ),
-                           LEX_WORD( ".F."   ) AS_TOKEN( FALSEVALUE ),
-                           LEX_WORD( ".N."   ) AS_TOKEN( FALSEVALUE ),
                            LEX_WORD( ".NOT." ) AS_TOKEN( NOT        ),
                            LEX_WORD( ".AND." ) AS_TOKEN( AND        ),
                            LEX_WORD( ".OR."  ) AS_TOKEN( OR         ),
@@ -135,7 +131,11 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "NIL"       ) AS_TOKEN( NIL         ),
                      LEX_WORD( "QSELF"     ) AS_TOKEN( QSELF       ),
                      LEX_WORD( "SELF"      ) AS_TOKEN( _SELF_      ),
-                     LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      )
+                     LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      ),
+                     LEX_WORD( ".F."       ) AS_TOKEN( FALSEVALUE  ),
+                     LEX_WORD( ".N."       ) AS_TOKEN( FALSEVALUE  ),
+                     LEX_WORD( ".T."       ) AS_TOKEN( TRUEVALUE   ),
+                     LEX_WORD( ".Y."       ) AS_TOKEN( TRUEVALUE   )
                    };
 
 /* When reservered words are used as Identifier. */

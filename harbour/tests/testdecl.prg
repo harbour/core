@@ -7,18 +7,26 @@
 
 DECLARE nMyFun() AS NUMERIC
 
+/*
 DECLARE MyClass ;
         NEW AS CLASS MyClass ;
         While AS String ;
         cVar AS String
+*/
 
 DECLARE MyFun( Var1 AS STRING, OPTIONAL Var1 ) AS LOGICAL
 
 DECLARE SomeFunc( OPTIONAL SomeVar AS STRING )
 
-DECLARE SomeFunc( OPTIONAL SomeVar AS STRING, OPTIONAL OtherVar )
+//DECLARE SomeFunc( OPTIONAL SomeVar AS STRING, OPTIONAL OtherVar )
 
-Function Main()
+CLASS MyClass
+   METHOD New() Constructor
+   VAR WHile AS STRING
+   VAR cVar  AS STRING
+END CLASS
+
+INIT Function Main()
 
     MEMVAR Var1, Var2, aVar
     MEMVAR Var3, aVar5, aVar8, Var7
@@ -50,12 +58,6 @@ Function Main()
     ? MyObj:cVar
 
 RETURN NIL
-
-CLASS MyClass
-   METHOD New() Constructor
-   VAR WHile
-   VAR cVar
-END CLASS
 
 METHOD New() CLASS MyClass
 RETURN Self

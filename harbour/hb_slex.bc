@@ -113,6 +113,7 @@ RDD_LIB      = $(LIB_DIR)\rdd.lib
 RTL_LIB      = $(LIB_DIR)\rtl.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
+GTCGI_LIB    = $(LIB_DIR)\gtcgi.lib
 GTDOS_LIB    = $(LIB_DIR)\gtdos.lib
 GTPCA_LIB    = $(LIB_DIR)\gtpca.lib
 GTSTD_LIB    = $(LIB_DIR)\gtstd.lib
@@ -131,6 +132,7 @@ HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 !if $d(B16)
 
 HB_GT_LIBS = \
+   $(GTCGI_LIB) \
    $(GTDOS_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB)
@@ -146,6 +148,7 @@ HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 # TODO: Add GTSLN and GTCRS
 
 HB_GT_LIBS = \
+   $(GTCGI_LIB) \
    $(GTPCA_LIB) \
    $(GTSTD_LIB) \
    $(GTWIN_LIB)
@@ -337,6 +340,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msghu852.obj \
    $(OBJ_DIR)\msghucwi.obj \
    $(OBJ_DIR)\msghuwin.obj \
+   $(OBJ_DIR)\msgid.obj \
    $(OBJ_DIR)\msgis850.obj \
    $(OBJ_DIR)\msgit.obj \
    $(OBJ_DIR)\msgko.obj \
@@ -365,6 +369,7 @@ MACRO_LIB_OBJS = \
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
+   $(OBJ_DIR)\workarea.obj \
    $(OBJ_DIR)\dbf1.obj \
    $(OBJ_DIR)\dbnubs.obj \
    $(OBJ_DIR)\delim1.obj \
@@ -372,6 +377,8 @@ RDD_LIB_OBJS = \
    \
    $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dblist.obj \
+   $(OBJ_DIR)\dbsort.obj \
+   $(OBJ_DIR)\hbdbsort.obj \
    $(OBJ_DIR)\dbstrux.obj \
    $(OBJ_DIR)\dbupdat.obj \
    $(OBJ_DIR)\delim0.obj \
@@ -382,9 +389,12 @@ RDD_LIB_OBJS = \
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 
+#DBFNTX_LIB_OBJS = \
+#   $(OBJ_DIR)\dbfntx1.obj \
+#   \
+#   $(OBJ_DIR)\dbfntx0.obj
+
 DBFNTX_LIB_OBJS = \
-   $(OBJ_DIR)\dbfntx1.obj \
-   \
    $(OBJ_DIR)\dbfntx0.obj
 
 DBFCDX_LIB_OBJS = \
@@ -472,6 +482,14 @@ VM_LIB_OBJS = \
 VM_LIB_OBJS = $(VM_LIB_OBJS) \
    $(OBJ_DIR)\startup.obj
 !endif
+
+#
+# GTCGI.LIB rules
+#
+
+GTCGI_LIB_OBJS = \
+   $(OBJ_DIR)\gtcgi.obj \
+   $(OBJ_DIR)\mousecgi.obj
 
 #
 # GTDOS.LIB rules
@@ -615,6 +633,7 @@ $(PP_LIB)     : $(PP_LIB_OBJS)
 $(RDD_LIB)    : $(RDD_LIB_OBJS)
 $(RTL_LIB)    : $(RTL_LIB_OBJS)
 $(VM_LIB)     : $(VM_LIB_OBJS)
+$(GTCGI_LIB)  : $(GTCGI_LIB_OBJS)
 $(GTDOS_LIB)  : $(GTDOS_LIB_OBJS)
 $(GTPCA_LIB)  : $(GTPCA_LIB_OBJS)
 $(GTSTD_LIB)  : $(GTSTD_LIB_OBJS)
@@ -778,6 +797,10 @@ $(OBJ_DIR)\dbcmd.obj : $(RDD_DIR)\dbcmd.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\workarea.obj : $(RDD_DIR)\workarea.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\dbf0.c : $(RDD_DIR)\dbf0.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -795,6 +818,18 @@ $(OBJ_DIR)\dblist.c : $(RDD_DIR)\dblist.prg
 $(OBJ_DIR)\dblist.obj : $(OBJ_DIR)\dblist.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbsort.c : $(RDD_DIR)\dbsort.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbsort.obj : $(OBJ_DIR)\dbsort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\hbdbsort.obj : $(RDD_DIR)\hbdbsort.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RDD_LIB) $(ARFLAGS) -+$@,,
+
 
 $(OBJ_DIR)\dbnubs.obj : $(RDD_DIR)\dbnubs.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1773,6 +1808,10 @@ $(OBJ_DIR)\msgis850.obj : $(LANG_DIR)\msgis850.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\msgid.obj : $(LANG_DIR)\msgid.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\msgit.obj : $(LANG_DIR)\msgit.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(LANG_LIB) $(ARFLAGS) -+$@,,
@@ -1869,9 +1908,9 @@ $(OBJ_DIR)\dbfntx0.obj : $(OBJ_DIR)\dbfntx0.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DBFNTX_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(DBFNTX_LIB) $(ARFLAGS) -+$@,,
+#$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
+#   $(CC) $(CLIBFLAGS) -o$@ $**
+#   tlib $(DBFNTX_LIB) $(ARFLAGS) -+$@,,
 
 #
 # DBFCDX.LIB dependencies
@@ -1933,6 +1972,18 @@ $(OBJ_DIR)\tbrwtext.c : $(DEBUG_DIR)\tbrwtext.prg
 $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
+
+#
+# GTCGI.LIB dependencies
+#
+
+$(OBJ_DIR)\gtcgi.obj : $(RTL_DIR)\gtcgi\gtcgi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTCGI_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\mousecgi.obj : $(RTL_DIR)\gtcgi\mousecgi.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(GTCGI_LIB) $(ARFLAGS) -+$@,,
 
 #
 # GTDOS.LIB dependencies

@@ -233,7 +233,7 @@ void hb_compStrongType( int iSize )
    PCOMDECLARED pDeclared;
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar = 0;
-   BYTE szType1[32], szType2[32], cType, cSubType1 = 0, cSubType2 = 0;
+   BYTE szType1[64], szType2[64], cType = 0, cSubType1 = 0, cSubType2 = 0;
    BYTE bLast1, bLast2;
 
    /* Make sure we have enough stack space. */
@@ -277,10 +277,10 @@ void hb_compStrongType( int iSize )
 
              if( cSubType1 )
              {
-                if( cSubType1 == 'S' )
-                   sprintf( ( char * ) szType1, "AnyType.SubType[%s]", pFunc->pStackClasses[ pFunc->iStackClasses-- ] );
-                else if( cSubType1 == 's' )
-                   sprintf( ( char * ) szType1, "AnyType.SubType[ARRAY OF %s]", pFunc->pStackClasses[ pFunc->iStackClasses-- ] );
+                if( cSubType1 == 'S' && pFunc->iStackClasses )
+                   sprintf( ( char * ) szType1, "AnyType.SubType[%s]", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
+                else if( cSubType1 == 's' && pFunc->iStackClasses )
+                   sprintf( ( char * ) szType1, "AnyType.SubType[ARRAY OF %s]", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
                 else if( cSubType1 == '-' )
                    strcpy( ( char * ) szType1,  "AnyType.SubType[NIL]" );
                 else
@@ -288,9 +288,9 @@ void hb_compStrongType( int iSize )
              }
              else
              {
-                if( cType1 == 'S' )
+                if( cType1 == 'S' && pFunc->iStackClasses )
                    sprintf( ( char * ) szType1, "%s", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
-                else if( cType1 == 's' )
+                else if( cType1 == 's' && pFunc->iStackClasses )
                    sprintf( ( char * ) szType1, "ARRAY OF %s", pFunc->pStackClasses[ pFunc->iStackClasses-- ]->szName );
                 else if( cType1 == '-' )
                    strcpy( ( char * ) szType1,  "NIL" );
@@ -416,8 +416,8 @@ void hb_compStrongType( int iSize )
                    {
                       if( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
                          sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
-                      else if( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' )
-                         pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
+                      else if( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' && pFunc->iStackClasses )
+                         --pFunc->iStackClasses;
                       else
                          sprintf( ( char * ) szType2, "%c", cFormalType );
                    }
@@ -481,7 +481,7 @@ void hb_compStrongType( int iSize )
        {
           pSym = hb_compSymbolGetPos( pFunc->pCode[ ulPos + 1 ] + pFunc->pCode[ ulPos + 2 ] * 256 );
 
-          if( pSym && pSym->szName && pFunc->iStackClasses > 0 )
+          if( pSym && pSym->szName && pFunc->iStackClasses && pFunc->pStackClasses[ pFunc->iStackClasses - 1 ] )
           {
              if( pFunc->iStackFunctions < 8 )
              {
@@ -616,8 +616,8 @@ void hb_compStrongType( int iSize )
                     }
                     else
                     {
-                       if( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' )
-                          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
+                       if( toupper( pFunc->pStack[ iParamBase + iOffset ] ) == 'S' && pFunc->iStackClasses )
+                          --pFunc->iStackClasses ;
                        else if( cFormalType > ( 'A' + VT_OFFSET_BYREF ) )
                           sprintf( ( char * ) szType2, "@%c", cFormalType - VT_OFFSET_BYREF );
                        else
@@ -640,7 +640,7 @@ void hb_compStrongType( int iSize )
         }
         else if( pFunc->iStackFunctions )
         {
-           pFunc->pStackFunctions[ --pFunc->iStackFunctions ] = NULL;
+           --pFunc->iStackFunctions;
         }
 
         /* Removing all the parameters.*/
@@ -652,7 +652,7 @@ void hb_compStrongType( int iSize )
 
            /*printf( "\nDeclared Method!!! Stack: %i Type: %c\n", pFunc->iStackIndex, pFunc->pStack[ pFunc->iStackIndex - 1 ] );*/
 
-           if( pFunc->pStack[ pFunc->iStackIndex - 1 ] == 'S' && pFunc->iStackClasses < 8 )
+           if( toupper( pFunc->pStack[ pFunc->iStackIndex - 1 ] ) == 'S' && pFunc->iStackClasses < 8 )
            {
               /*printf( "\nNested CLASS!!! Stack: %i Type: %c Class: %s\n", pFunc->iStackIndex, pFunc->pStack[ pFunc->iStackIndex - 1 ], pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pClass->szName );*/
               pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pFunc->pStackFunctions[ pFunc->iStackFunctions ]->pClass;
@@ -1293,13 +1293,18 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          if( pVar->cType == 'S' && pFunc->iStackClasses < 8 )
+          if( pVar->cType >= ( 'A' + VT_OFFSET_VARIANT ) )
+            cType = pVar->cType - VT_OFFSET_VARIANT;
+          else
+            cType = pVar->cType;
+
+          if( toupper( cType ) == 'S' && pFunc->iStackClasses < 8 )
           {
             /* Object of declared class */
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
-            pFunc->pStack[ pFunc->iStackIndex++ ] = 'S';
           }
-          else if( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
+
+          if( pFunc->pCode[ ulPos ] == HB_P_PUSHLOCALREF )
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
           else
              pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
@@ -1311,7 +1316,6 @@ void hb_compStrongType( int iSize )
              pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
 
        break;
-
 
      case HB_P_PUSHSTATICREF :
      case HB_P_PUSHSTATIC :
@@ -1340,7 +1344,12 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          if( toupper( pVar->cType ) == 'S' && pFunc->iStackClasses < 8 )
+          if( pVar->cType >= ( 'A' + VT_OFFSET_VARIANT ) )
+            cType = pVar->cType - VT_OFFSET_VARIANT;
+          else
+            cType = pVar->cType;
+
+          if( toupper( cType ) == 'S' && pFunc->iStackClasses < 8 )
           {
             /* Object of declared class */
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
@@ -1652,8 +1661,8 @@ void hb_compStrongType( int iSize )
        /* Ambigious Variable, will be determined only in Run Time! */
        pFunc->iStackIndex--;
 
-       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
-          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
+       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+          --pFunc->iStackClasses;
 
        break;
 
@@ -1661,8 +1670,8 @@ void hb_compStrongType( int iSize )
        /* Ambigious Variable, will be determined only in Run Time! */
        pFunc->iStackIndex--;
 
-       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
-          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
+       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+          --pFunc->iStackClasses;
 
        break;
 
@@ -1760,8 +1769,14 @@ void hb_compStrongType( int iSize )
                    pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
 
                 /* Will need the Class Handle. */
-                if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
+                cType = pVar->cType;
+                if( cType >= ( 'A' + VT_OFFSET_VARIANT  ) )
+                   cType -= VT_OFFSET_VARIANT;
+
+                if( toupper( cType ) == 'S' && pFunc->iStackClasses )
                    pVar->pClass = pFunc->pStackClasses[ pFunc->iStackClasses - 1 ];
+                else
+                   pVar->pClass = NULL;
 
                 /*printf( "\nSymbol: %s Variable: %s Assigned Type: \'%c\' SubType: %c #%i Stack: %i\n", pSym->szName, pVar->szName, pVar->cType, pVar->cType - 100, wVar, pFunc->iStackIndex );*/
              }
@@ -1829,7 +1844,7 @@ void hb_compStrongType( int iSize )
                    pSym->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
 
                 /* Will need the Class Handle. */
-                if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
+                if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
                    pSym->pClass = pFunc->pStackClasses[ pFunc->iStackClasses - 1 ];
              }
              else
@@ -1884,8 +1899,8 @@ void hb_compStrongType( int iSize )
        }
 
        /* Resetting */
-       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
-          pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
+       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+          --pFunc->iStackClasses;
 
        break;
 
@@ -1930,6 +1945,15 @@ void hb_compStrongType( int iSize )
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
             else
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
+
+            cType = pVar->cType;
+            if( cType >= ( 'A' + VT_OFFSET_VARIANT  ) )
+               cType -= VT_OFFSET_VARIANT;
+
+            if( toupper( cType ) == 'S' && pFunc->iStackClasses )
+               pVar->pClass = pFunc->pStackClasses[ pFunc->iStackClasses - 1 ];
+            else
+               pVar->pClass = NULL;
          }
          else
          {
@@ -1979,12 +2003,12 @@ void hb_compStrongType( int iSize )
             }
             else if( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, ( char * ) szType );
-
-            /* Resetting */
-            if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
-              pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
          }
        }
+
+       /* Resetting */
+       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+         --pFunc->iStackClasses;
 
        break;
 
@@ -2016,6 +2040,15 @@ void hb_compStrongType( int iSize )
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ];
             else
                pVar->cType = pFunc->pStack[ pFunc->iStackIndex ] + VT_OFFSET_VARIANT;
+
+            cType = pVar->cType;
+            if( cType >= ( 'A' + VT_OFFSET_VARIANT  ) )
+               cType -= VT_OFFSET_VARIANT;
+
+            if( toupper( cType ) == 'S' && pFunc->iStackClasses )
+               pVar->pClass = pFunc->pStackClasses[ pFunc->iStackClasses - 1 ];
+            else
+               pVar->pClass = NULL;
 
             /*printf( "\nStack: %c Asc: %i, Var: %c Asc: %i\n", pFunc->pStack[ pFunc->iStackIndex ], pFunc->pStack[ pFunc->iStackIndex ], pVar->cType, pVar->cType );*/
          }
@@ -2066,12 +2099,12 @@ void hb_compStrongType( int iSize )
             }
             else if( isupper( pVar->cType ) && pVar->cType != pFunc->pStack[ pFunc->iStackIndex ] )
                 hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_ASSIGN_TYPE, pVar->szName, ( char * ) szType );
-
-            /* Resetting */
-            if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses > 0 )
-              pFunc->pStackClasses[ --pFunc->iStackClasses ] = NULL;
          }
        }
+
+       /* Resetting */
+       if( toupper( pFunc->pStack[ pFunc->iStackIndex ] ) == 'S' && pFunc->iStackClasses )
+         --pFunc->iStackClasses;
 
        break;
 

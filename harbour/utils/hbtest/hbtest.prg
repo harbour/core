@@ -44,7 +44,7 @@
 /* NOTE: It's worth to make tests with and without the /z switch */
 /* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */
 /* NOTE: Use ":className()" instead of ":className" to make your code work
-         with Xbase++. Xbase++ seem to take differenciate between the 
+         with Xbase++. Xbase++ seem to take differenciate between the
          object method and object variable form. In CA-Clipper and Harbour
          both syntax is accepted. Same goes for ":Eval()" */
 
@@ -265,7 +265,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    PUBLIC maArray   := { 9898 }
 
 #ifndef __XPP__
-   rddSetDefault( "DBFNTX" )
+   rddSetDefault( "DBFCDX" )
 #endif
 
    dbCreate( "!TEMP!.DBF",;

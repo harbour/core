@@ -1,3 +1,47 @@
+2000-09-02 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.bc
+     * Synchronized with makefile.bc
+
+   * include/hbclass.ch
+     + Added: [AS <type>] optional clause to all Methods/Messages syntax.
+     + Added directives to generate class declaration from same class creation code.
+
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+     + Added: char hb_comp_cDataListType;
+
+   * source/compiler/harbour.l
+     + Added support for new _HB_CLASS and _HB_MEMBER alternate class declaration syntax.
+
+   * source/macro/macro.slx
+     ! Moved .T., .Y., .F., and, .N. from self contained words to words.
+
+   * source/compiler/harbour.slx
+     ! Moved .T., .Y., .F., and, .N. from self contained words to words.
+     + Added support for new _HB_CLASS and _HB_MEMBER alternate class declaration syntax.
+
+   * source/compiler/harbour.y
+     ! Improved definition of formal and optional paramter lists.
+     + Added support for alternate class declaration syntax:
+       _HB_CLASS ClassName
+       _HB_MEMBER { [AS ...] Var1, VarN }
+       _HB_MEMBER MethodName( [ [OPTIONAL] [@]FormalParam [AS ...] | @FunPointer() ] ) [ AS ... ]
+       /* This syntax allows the class declaration to be on multiple seperated lines (needed to allow utilization of class creation code.)
+          Tokens _HB_CLASS & _HB_MEMBER are not final, until some discussion with Ryszard. */
+
+   * source/compiler/hbpcode.c
+     * Completed classes strong type support for adaptive type variable.
+
+   * source/rtl/tlabel.prg
+   * source/rtl/treport.prg
+     ! Corrected typos: AS {} -> INIT {} AS ARRAY, AS .T. -> INIT .T. AS LOGICAL etc..
+
+   * tests/testdecl.prg
+     * Changed to demonstrate class creation used as declaration.
+
+   * utils/hbtest/hbtest.prg
+     * Changed DBFNTX -> DBFCDX (was not working because DBFNTX is disabled.
+
 2000-09-02 11:00 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! fixed right most header, footer and column painting. In particular if (space available - space occupied by

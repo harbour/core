@@ -82,11 +82,11 @@
 
 CLASS TLabelForm
 
-   DATA aLabelData AS {}
-   DATA aBandToPrint
-   DATA cBlank AS ""
-   DATA lOneMoreBand AS .T.
-   DATA nCurrentCol              // The current column in the band
+   DATA aLabelData AS ARRAY init {}
+   DATA aBandToPrint AS ARRAY
+   DATA cBlank AS STRING init ""
+   DATA lOneMoreBand AS LOGICAL init .T.
+   DATA nCurrentCol AS NUMERIC // The current column in the band
    METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                           bWhile, nNext, nRecord, lRest, lSample )
    METHOD ExecuteLabel()
