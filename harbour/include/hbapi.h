@@ -261,7 +261,7 @@ extern ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter le
 extern ULONG    hb_parcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
 extern char *   hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern char *   hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter
+extern ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter */
 extern int      hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern int      hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
 extern double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
