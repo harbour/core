@@ -1,3 +1,11 @@
+19990725-00:20 CET Felipe Coury
+   * tests/working/bld32exe.bat
+     changed for RDD
+   + buildrdd.bat; rdd.b32
+     makefiles for RDD
+   * build32.bat
+     changed for RDD
+
 19990724-21:02 GMT+1 Bruno Cantero <bruno@issnet.net>
    + include/set.h
      Added two prototypes

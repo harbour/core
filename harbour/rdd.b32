@@ -1,0 +1,16 @@
+# makefile for Borland C/C++ 32 bits
+# ODBC Harbor Library and Import Library makefile
+
+.path.c   = source\rdd
+.path.h   = source\rdd;include
+.path.lib = libs\b32
+.path.obj = obj
+
+libs\b32\rdd.lib : rddsys.obj dbcmd.obj
+
+dbcmd.obj  : dbcmd.c
+rddsys.obj : rddsys.c
+
+.c.obj :
+  bcc32 -c -O2 -I.\include;.\source\hbpp -o$@ $<
+  tlib .\libs\b32\rdd.lib -+$@,,
