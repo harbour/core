@@ -2862,7 +2862,6 @@ static void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSy
     * NOTE: for performance reason we don't pop the second argument.
     * We can replace the second argument with the return value.
     */
-   hb_itemClear( pObjItem );
    hb_itemCopy( pObjItem, &hb_stack.Return );
 }
 
@@ -2889,7 +2888,6 @@ static void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
     * NOTE: for performance reason we don't pop it and we don't push the
     * return value. We can replace the last element with the new value.
     */
-   hb_itemClear( pObjItem );
    hb_itemCopy( pObjItem, &hb_stack.Return );
 }
 
