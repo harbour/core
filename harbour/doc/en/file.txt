@@ -7,20 +7,11 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
- *    __TYPEFILE() / TYPE documentation
+ *    Documentation for: __TYPEFILE(), TYPE
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    FOPEN()    Documentation
- *    FCLOSE()   Documentation
- *    FWRITE()   Documentation
- *    FSEEK()    Documentation
- *    FREAD()    Documentation
- *    FILE()     Documentation
- *    FREADSTR() Documentation
- *    FRENAME()  Documentation
- *    FERROR()   Documentation
- *    RENAME     Documentation
- *    ERASE      Documentation
+ *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
+ *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE
  *
  * See doc/license.txt for licensing terms.
  *

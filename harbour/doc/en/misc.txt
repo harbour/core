@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
- *    TONE()
+ *    Documentation for: TONE()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -54,7 +54,7 @@
  *      and C compiler Version when the <nMode> parameter is used.
  *  $DESCRIPTION$
  *      This function returns the HARBOUR Version or the Harbour Version+C
- *      compiler Version used to create the Harbour runtime library 
+ *      compiler Version used to create the Harbour runtime library
  *  $EXAMPLES$
  *     ? QOUT(VERSION())    // Displays Harbour version only
  *     ? QOUT(VERSION(NIL)) // Displays Harbour and C Compiler versions
@@ -122,7 +122,7 @@
  *  $CATEGORY$
  *      DOS
  *  $ONELINER$
- *      Run a external program 
+ *      Run a external program
  *  $SYNTAX$
  *      __RUN( <cCommand> )
  *  $CATEGORY$

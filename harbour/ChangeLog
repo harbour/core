@@ -1,3 +1,23 @@
+20000301-10:15 GMT+2 Chen Kedem <niki@actcom.co.il>
+   * doc/en/ARRAY.TXT
+   * doc/en/BINNUM.TXT
+   * doc/en/BROWSE.TXT
+   * doc/en/DIR.TXT
+   * doc/en/ERROR.TXT
+   * doc/en/FILE.TXT
+   * doc/en/HVM.TXT
+   * doc/en/INPUT.TXT
+   * doc/en/MENU.TXT
+   * doc/en/MISC.TXT
+   * doc/en/OBJFUNC.TXT
+   * doc/en/SET.TXT
+   * doc/en/TERMINAL.TXT
+   * doc/en/TGETLIST.TXT
+   * doc/en/VAR.TXT
+     * Modify copyright detail for function/commands I wrote
+     ! NOTE: Individual copyright holder should check his/her doc work
+       to make sure creadits are given to the right person
+
 20000301-03:04 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/pp/*
      include/hbpp.h

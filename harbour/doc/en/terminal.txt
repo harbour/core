@@ -7,22 +7,18 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
- *    HB_HB_COLORINDEX()
+ *    Documentation for: HB_COLORINDEX()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    __WAIT() documentation
- *    __INPUT() documentation
+ *    Documentation for: __WAIT(), __INPUT()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    ALERT() documentation
- *    __NONOALERT() documentation
- *    __XSaveScreen() documentation
- *    __XRestScreen() documentation
- *    __TextSave() documentation
- *    __TextRestore() documentation
+ *    Documentation for: ALERT(), __NONOALERT(), __XSaveScreen(), SAVE SCREEN
+ *                       __XRestScreen(), RESTORE SCREEN, __TextSave(),
+ *                       __TextRestore()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    DEVOUTPICT() documentation
+ *    Documentation for: DEVOUTPICT()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -30,7 +26,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __XSaveScreen()  
+ *      __XSaveScreen()
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
@@ -117,7 +113,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __XRestScreen()  
+ *      __XRestScreen()
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
@@ -161,7 +157,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      RESTORE SCREEN    
+ *      RESTORE SCREEN
  *  $CATEGORY$
  *      Command
  *  $ONELINER$
@@ -437,7 +433,7 @@
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
- *      Stops application 
+ *      Stops application
  *  $SYNTAX$
  *      __INPUT( <cMessage> ) --> <cString>
  *  $ARGUMENTS$
@@ -448,11 +444,11 @@
  *      This function waits for a console input and returns macroed
  *      expression entered.
  *  $EXAMPLES$
- *      
- *      
+ *
+ *
  *  $TESTS$
- *      
- *      
+ *
+ *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -468,7 +464,7 @@
  *  $CATEGORY$
  *     Internal
  *  $ONELINER$
- *     Redirect console output to printer or file and save old settings      
+ *     Redirect console output to printer or file and save old settings
  *  $SYNTAX$
  *      __TextSave( <cFile> ) --> NIL
  *  $ARGUMENTS$
@@ -553,4 +549,3 @@
  *      __ACCEPT(),__INPUT()
  *  $END$
  */
-

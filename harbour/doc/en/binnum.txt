@@ -7,7 +7,8 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
- *    Documentation for all functions
+ *    Documentation for: BIN2W(), BIN2I(), BIN2L(), BIN2U(), I2BIN(), W2BIN(),
+ *                       L2BIN(), U2BIN()
  *
  * See doc/license.txt for licensing terms.
  *

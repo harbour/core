@@ -7,13 +7,13 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- *    __MV*() documentation
- *    MEMVARBLOCK() documentation
- *    TYPE() documentation
+ *    Documentation for: __MVPUBLIC(), __MVPRIVATE(), __MVXRELEASE(),
+ *                       __MVRELEASE(), __MVSCOPE(), __MVCLEAR(),
+ *                       __MVDBGINFO(), __MVGET(), __MVPUT(), MEMVARBLOCK(),
+ *                       TYPE()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    FIELDBLOCK() documentation
- *    FIELDWBLOCK() documentation
+ *    Documentation for: FIELDBLOCK(), FIELDWBLOCK()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -156,7 +156,7 @@
  *  $CATEGORY$
  *    Variable Management
  *  $ONELINER$
- * This function releases PRIVATE variables 
+ * This function releases PRIVATE variables
  *  $SYNTAX$
  *    __MVRELEASE( <skeleton>, <include_exclude_flag> )
  *  $ARGUMENTS$
@@ -309,8 +309,8 @@
  *      It also returns the name of a variable if optional third argument
  *    is passed by reference.
  *
- *      If requested variable doesn't exist (requested position is 
- *    greater then the number of defined variables) then NIL value is 
+ *      If requested variable doesn't exist (requested position is
+ *    greater then the number of defined variables) then NIL value is
  *    returned and variable name is set to "?"
  *
  *      The dynamic symbols table is used to find a PUBLIC variable then
@@ -469,29 +469,29 @@
  *  $ONELINER$
  *      Returns a codeblock that sets/gets a value of memvar variable
  *  $SYNTAX$
- *	MEMVARBLOCK( <cMemvarName> )
+ *      MEMVARBLOCK( <cMemvarName> )
  *  $ARGUMENTS$
- *	<cMemvarName> - a string that contains the name of variable
+ *      <cMemvarName> - a string that contains the name of variable
  *  $RETURNS$
- *	a codeblock that sets/get the value of variable
+ *      a codeblock that sets/get the value of variable
  *  $DESCRIPTION$
- *	This function returns a codeblock that sets/gets the value of
- *	PRIVATE or PUBLIC variable. When this codeblock is evaluated
- *	without any parameters passed then it returns the current value
- *	of given variable. If the second parameter is passed for
- *	the codeblock evaluation then its value is used to set the new
- *	value of given variable - the passed value is also returned
- *	as a value of the codeblock evaluation.
+ *      This function returns a codeblock that sets/gets the value of
+ *      PRIVATE or PUBLIC variable. When this codeblock is evaluated
+ *      without any parameters passed then it returns the current value
+ *      of given variable. If the second parameter is passed for
+ *      the codeblock evaluation then its value is used to set the new
+ *      value of given variable - the passed value is also returned
+ *      as a value of the codeblock evaluation.
  *  $EXAMPLES$
- *	PROCEDURE MAIN()
- *	LOCAL cbSetGet
- *	PUBLIC xPublic
- *	
- *	cbSetGet = MEMVARBLOCK( "xPublic" )
- *	EVAL( cbSetGet, "new value" )
- *	? "Value of xPublic variable", EVAL( cbSetGet )
+ *      PROCEDURE MAIN()
+ *      LOCAL cbSetGet
+ *      PUBLIC xPublic
  *
- *	RETURN
+ *      cbSetGet = MEMVARBLOCK( "xPublic" )
+ *      EVAL( cbSetGet, "new value" )
+ *      ? "Value of xPublic variable", EVAL( cbSetGet )
+ *
+ *      RETURN
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -639,7 +639,7 @@
  *      If there is a call for any non-reserved Harbour function then "UI"
  *      is returned (in other words there is no call for passed UDF function
  *      during a data type determination - this is Clipper compatible
- *      behavior). Additionally if requested user defined function is not 
+ *      behavior). Additionally if requested user defined function is not
  *      linked into executable then "U" is returned.
  *
  *      The data type of expression is checked by invoking a macro compiler
@@ -652,14 +652,14 @@
  *      the type of passed argument of any type. TYPE() requires a string
  *      argument with a valid Harbour expression - the data type of this
  *      expression is returned.
- * 
+ *
  *    Notes:
  *      - Incompatibility with Clipper:
  *          In the following code:
- * 
+ *
  *          PRIVATE lCond := 0
  *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )
- * 
+ *
  *          Clipper will print "UE" - in Harbour the output will be "UI"
  *
  *      - if "UI" is returned then the syntax of the expression is

@@ -7,8 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    __ATPROMPT() documentation
- *    __MENUTO() documentation
+ *    Documentation for: __ATPROMPT(), @...PROMPT, __MENUTO(), MENU TO
  *
  * See doc/license.txt for licensing terms.
  *
@@ -91,7 +90,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __AtPrompt() 
+ *      __AtPrompt()
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$
@@ -155,7 +154,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     @...PROMPT 
+ *     @...PROMPT
  *  $CATEGORY$
  *      Command
  *  $ONELINER$
@@ -218,7 +217,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __MenuTo() 
+ *      __MenuTo()
  *  $CATEGORY$
  *      Data input and output
  *  $ONELINER$

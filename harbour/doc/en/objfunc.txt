@@ -7,7 +7,12 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for all functions
+ *    Documentation for: __objHasData(), __objHasMethod(), __objGetMsgList(),
+ *                       __objGetMethodList(), __objGetValueList(),
+ *                       __ObjSetValueList(), __objAddMethod(),
+ *                       __objAddInline(), __objAddData(), __objModMethod(),
+ *                       __objModInline(), __objDelMethod(), __objDelInline(),
+ *                       __objDelData()
  *
  * See doc/license.txt for licensing terms.
  *

@@ -7,10 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    BROWSE() documentation
- *    DBEDIT() documentation
- *    TBROWSEDB() documentation
- *    DBSKIPPER() documentation
+ *    Documentation for: BROWSE(), DBEDIT(), TBROWSEDB(), DBSKIPPER()
  *
  * See doc/license.txt for licensing terms.
  *

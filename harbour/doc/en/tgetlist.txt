@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    READVAR() documentation
+ *    Documentation for: READVAR()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -59,4 +59,3 @@
  *      @...GET,@...PROMPT,MENU TO,READ,SET KEY,__AtPrompt(),__MenuTo()
  *  $END$
  */
-

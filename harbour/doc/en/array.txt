@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation
+ *    Documentation for: ASORT()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -185,8 +185,8 @@
  *      item in the array will be removed completely. In other words, if an
  *      array element were to be inserted at the fifth subscript position,
  *      the element previously in the fifth position would now be located
- *		  at the sixth position. The length of the array <aArray> will remain
- *		  unchanged.
+ *                at the sixth position. The length of the array <aArray> will remain
+ *                unchanged.
  *  $EXAMPLES$
  *      LOCAL aArray:={"Harbour","is","Power!","!!!"}
  *      AINS(aArray,4)
@@ -551,4 +551,3 @@
  *      ASCAN(),EVAL(),SORT
  *  $END$
  */
-

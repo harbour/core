@@ -7,21 +7,20 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    SET()
- *    __SETCENTURY()
+ *    Documentation for: SET(), __SETCENTURY()
  *
  * Copyright 1999 A White <awhite@user.rose.com>
- *    SETKEY()
- *    HB_SetKeyGet()
- *    HB_SETKEYSAVE()
- *    HB_SetKeyCheck()
- *    SET KEY
+ *    Documentation for: SETKEY(), HB_SetKeyGet(), HB_SETKEYSAVE(),
+ *                       HB_SetKeyCheck(), SET KEY
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    __SetFunction() documentation
+ *    Documentation for: __SetFunction(), SET FUNCTION
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    SETTYPEAHEAD()
+ *    Documentation for: SETTYPEAHEAD()
+ *
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ *    Documentation for: __XHELP()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -472,8 +471,8 @@
  *  $RETURNS$
  *      Current assigned action-block
  *  $DESCRIPTION$
- *      The HB_SetKeyGet() function returns the current code-block assigned to 
- *      a key, and optionally assignes the condition-block to the 
+ *      The HB_SetKeyGet() function returns the current code-block assigned to
+ *      a key, and optionally assignes the condition-block to the
  *      return-parameter
  *  $EXAMPLES$
  *      local bOldF10, bOldF10Cond
@@ -506,11 +505,11 @@
  *  $RETURNS$
  *     Current set-key list
  *  $DESCRIPTION$
- *     HB_SetKeySave() is designed to act like the set() function which 
- *     returns the current state of an environment setting, and optionally 
- *     assigning a new value.  In this case, the "environment setting" is the 
- *     internal set-key list, and the optional new value is either a value 
- *     returned from a previous call to SetKeySave() - to restore that list, 
+ *     HB_SetKeySave() is designed to act like the set() function which
+ *     returns the current state of an environment setting, and optionally
+ *     assigning a new value.  In this case, the "environment setting" is the
+ *     internal set-key list, and the optional new value is either a value
+ *     returned from a previous call to SetKeySave() - to restore that list,
  *     or the value of NIL to clear the current list.
  *  $EXAMPLES$
  *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
@@ -546,8 +545,8 @@
  *      If there is a hot-key association (before checking any condition):
  *      - if there is a condition-block, it is passed one parameter - <nKey>
  *      - when the hot-key code-block is called, it is passed 1 to 4 parameters,
- *      depending on the parameters passed to HB_SetKeyCheck().  Any 
- *      parameters so passed are directly passed to the code-block, with an 
+ *      depending on the parameters passed to HB_SetKeyCheck().  Any
+ *      parameters so passed are directly passed to the code-block, with an
  *      additional parameter being <nKey>
  *  $DESCRIPTION$
  *      HB_SetKeyCheck() is intended as a common interface to the SetKey()
@@ -643,7 +642,7 @@
  *      // Sets typeahead to 12
  *      SetTypeahead( 12 )
  *  $TESTS$
- *      
+ *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -678,6 +677,6 @@
  *  $COMPLIANCE$
  *      __XHELP() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      
+ *
  *  $END$
  */

@@ -7,12 +7,10 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    CLIPINIT() documentation
- *    __SETHELPK() documentation
+ *    Documentation for: CLIPINIT(), __SETHELPK()
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- *    DO() documentation
- *    EVAL() documentation
+ *    Documentation for: DO()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -220,7 +218,7 @@
  *  $COMPLIANCE$
  *      __QUIT() is fully CA-Clipper compliant.
  *  $SEEALSO$
- *      QUIT 
+ *      QUIT
  *  $END$
  */
 
@@ -252,7 +250,7 @@
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
- *       INIT PROCEDURE 
+ *       INIT PROCEDURE
  *  $END$
  */
 

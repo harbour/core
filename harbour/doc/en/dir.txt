@@ -7,8 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    ADIR() documentation
- *    __DIR() documentation
+ *    Documentation for: __DIR(), DIR, ADIR()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -16,7 +15,7 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __Dir()*  
+ *      __Dir()*
  *  $CATEGORY$
  *      File management
  *  $ONELINER$
@@ -106,10 +105,10 @@
  *
  *      // list all PRG files in Harbour Run-Time library
  *      // for DOS compatible operating systems
- *        Dir  "c:\harbour\source\rtl\*.prg" 
+ *        Dir  "c:\harbour\source\rtl\*.prg"
  *
  *      // list all files in the public section on a Unix like machine
- *        Dir  "/pub" 
+ *        Dir  "/pub"
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
@@ -192,11 +191,11 @@
  *      ENDIF
  *  $TESTS$
  *  $STATUS$
- *     R     
+ *     R
  *  $COMPLIANCE$
  *      <aName> is going to be fill with long file name and not necessarily
  *      the 8.3 uppercase name.
- *  
+ *
  *  $SEEALSO$
  *      ARRAY(),DIRECTORY(),SET DEFAULT
  *  $END$

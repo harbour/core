@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    READKEY() documentation
+ *    Documentation for: READKEY()
  *
  * See doc/license.txt for licensing terms.
  *
