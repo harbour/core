@@ -20,7 +20,6 @@
  * source\hbpp\table.c
   Fixed some problems with preprocessor
 
->>>>>>> 1.316
 19990618-07:50 Ryszard Glab <rglab@imid.med.pl>
 
 * source/compiler/harbour.y
