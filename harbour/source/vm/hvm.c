@@ -341,12 +341,7 @@ void hb_vmQuit( void )
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
 
-   while( hb_stack.pPos > hb_stack.pItems )
-      hb_stackPop();
-
-   hb_itemClear( &hb_stack.Return );
-   hb_arrayRelease( &s_aStatics );
-   hb_memvarsRelease();
+   /* release all known items stored in subsystems */
    hb_rddShutDown();
    hb_idleShutDown();
    hb_errExit();
@@ -355,7 +350,15 @@ void hb_vmQuit( void )
    hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_conRelease();             /* releases Console */
    hb_setRelease();             /* releases Sets */
-   hb_gcCollectAll();    /* release all known garbage */
+   
+   /* release all remaining items */
+   while( hb_stack.pPos > hb_stack.pItems )
+      hb_stackPop();
+   hb_itemClear( &hb_stack.Return );
+   hb_arrayRelease( &s_aStatics );
+   hb_memvarsRelease();
+   /* release all known garbage */
+   hb_gcCollectAll();    
    hb_stackFree();
 /* hb_dynsymLog(); */
    hb_xexit();

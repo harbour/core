@@ -207,9 +207,9 @@ void hb_gcCollect( void )
                      s_pCurrBlock->pPrev->pNext = s_pCurrBlock->pNext;
                      s_pCurrBlock->pNext->pPrev = s_pCurrBlock->pPrev;
                      pNext = s_pCurrBlock->pNext;
-                     HB_GARBAGE_FREE( s_pCurrBlock );
                      if( s_pCurrBlock == pNext && pNext->pPrev == pNext->pNext )
                         pNext = NULL;    /* this was the last block */
+                     HB_GARBAGE_FREE( s_pCurrBlock );
                      s_bCollecting = FALSE;
                   }
                }
