@@ -115,6 +115,7 @@ void hb_memvarsRelease( void )
       }
 
       hb_xfree( s_globalTable );
+      s_globalTable = NULL;
    }
 
    if( s_privateStack )

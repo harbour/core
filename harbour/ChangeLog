@@ -1,3 +1,9 @@
+2000-07-03 13:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/vm/memvars.c
+        * the table of memvars is not checked for references from the GC
+        after all memvars are released
+        
 2000-07-03 11:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbpp.h
