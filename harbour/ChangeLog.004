@@ -73,7 +73,6 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	* source/rtl/inkey.c: 
 	Added/corrected a few calls to HB_TRACE().
 
->>>>>>> 1.1294
 19991025-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/memory.prg
      + Using hbmemory.ch
