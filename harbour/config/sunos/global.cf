@@ -8,7 +8,7 @@ HB_GT_LIBS=\
         gtcgi \
         gtcrs \
         gtpca \
-        gtsln \
+#        gtsln \
         gtstd \
 
 ifeq ($(HB_GT_LIB),)

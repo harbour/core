@@ -401,7 +401,12 @@ extern void    HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize ); /* realloca
 extern ULONG   HB_EXPORT hb_xsize( void * pMem );                  /* returns the size of an allocated memory block */
 extern ULONG   hb_xquery( USHORT uiMode );                         /* Query different types of memory information */
 
-#if UINT_MAX == ULONG_MAX
+/* #if UINT_MAX == ULONG_MAX */
+/* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
+   we need these functions only when max(size_t) < max(long)
+   and only on 16bit platforms, so the below condition seems to be
+   more reasonable. */
+#if UINT_MAX > USHRT_MAX
    /* NOTE: memcpy/memset can work with ULONG data blocks */
    #define  hb_xmemcpy  memcpy
    #define  hb_xmemset  memset

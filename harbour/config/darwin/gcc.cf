@@ -14,16 +14,21 @@ LIB_EXT = .a
 CC = $(CCACHE) cc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -fsigned-char -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)
-CFLAGS = -Wall -W -DHB_OS_DARWIN -DHB_BIG_ENDIAN
+
+# -no-cpp-precomp prevents from using buggy precompiled headers
+CPPFLAGS = -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)
+
+# -fno-common enables building .dylib files
+CFLAGS = -fno-common -fsigned-char -Wall -W
 
 # It's to avoid warning message generated when 'long double' is used
 # remove it if you have newer compiler version
-CFLAGS += -DHB_LONG_DOUBLE_OFF
+CFLAGS += -Wno-long-double
 
 ifeq ($(HB_LEX),SIMPLEX)
 CFLAGS += -DSIMPLEX
 endif
+CFLAGS += -DHB_OS_DARWIN
 
 LD = cc
 LD_OUT = -o
@@ -51,12 +56,14 @@ endif
 
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
-LINKLIBS += -l$(HB_GT_LIB)
+
 ifeq ($(HB_MULTI_GT),yes)
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/gtnul/$(ARCH)
 LINKLIBS += -lgtnul
 endif
+
+LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
+LINKLIBS += -l$(HB_GT_LIB)
 
 # HB_SCREEN_LIB: empty, or one of ncurses, slang
 ifeq ($(HB_GT_LIB),gtcrs)

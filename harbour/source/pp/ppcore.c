@@ -130,7 +130,7 @@ static BOOL   OpenInclude( char *, HB_PATHNAMES *, PHB_FNAME, BOOL bStandardOnly
 static BOOL   IsIdentifier( char *szProspect );
 static int    IsMacroVar( char *szText, BOOL isCommand );
 
-#define ISNAME( c )  ( isalnum( ( int ) c ) || ( c ) == '_' || ( c ) > 0x7E )
+#define ISNAME( c )  ( isalnum( c ) || ( c ) == '_' || ( c ) > 0x7E )
 #define MAX_NAME     255
 #define MAX_EXP      2048
 #define PATTERN_SIZE 2048
@@ -607,7 +607,7 @@ int hb_pp_ParseDefine( char * sLine )
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseDefine(%s)", sLine));
 
   HB_SKIPTABSPACES( sLine );
-  if( ISNAME( *sLine ) )
+  if( ISNAME( ( BYTE ) *sLine ) )
     {
       char *cParams = NULL;
 
@@ -624,7 +624,7 @@ int hb_pp_ParseDefine( char * sLine )
           npars = 0;
           while( *sLine && *sLine != ')' )
           {
-             if( ISNAME(*sLine) )
+             if( ISNAME( ( BYTE ) *sLine ) )
              {
                  NextName( &sLine, pars );
                  iLen = strlen( pars );
@@ -846,7 +846,7 @@ static COMMANDS * ComSearch( char * cmdname, COMMANDS * stcmdStart )
 
       for( j=0; (*(stcmd->name+j)==toupper(*(cmdname+j))) &&
               (*(stcmd->name+j)!='\0') &&
-              ((stcmd->com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
+              ((stcmd->com_or_xcom)? 1:(j<4 || ISNAME((BYTE) *(cmdname+j+1)))); j++ );
       if( (*(stcmd->name+j)==toupper(*(cmdname+j))) ||
            ( !stcmd->com_or_xcom && j >= 4 && *(stcmd->name+j)!='\0'
              && *(cmdname+j) == '\0' ) )
@@ -869,7 +869,7 @@ static COMMANDS * TraSearch( char * cmdname, COMMANDS * sttraStart )
     {
       for( j=0; *(sttra->name+j)==toupper(*(cmdname+j)) &&
               *(sttra->name+j)!='\0' &&
-              ((sttra->com_or_xcom)? 1:(j<4 || ISNAME(*(cmdname+j+1)))); j++ );
+              ((sttra->com_or_xcom)? 1:(j<4 || ISNAME((BYTE) *(cmdname+j+1)))); j++ );
       if( *(sttra->name+j)==toupper(*(cmdname+j)) ||
            ( !sttra->com_or_xcom && j >= 4 &&
              *(sttra->name+j)!='\0' && *(cmdname+j) == '\0' ) )
@@ -906,7 +906,7 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
   while( *sLine != '\0' && *sLine != ' ' && *sLine != '\t' && ( *sLine != '<' || ipos == 0 ) && ( *sLine != '=' || ipos == 0 ) && ( *sLine != '(' || ipos == 0 ) )
   {
      /* Ron Pinkas added 2000-01-24 */
-     if( ! ISNAME( *sLine ) )
+     if( ! ISNAME( ( BYTE ) *sLine ) )
      {
         if( *sLine == '[' && ipos )
            break;
@@ -1363,7 +1363,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
               ptri = sLine + isdvig;
               HB_SKIPTABSPACES( ptri );
 
-              if( ISNAME( *ptri ) )
+              if( ISNAME( ( BYTE ) *ptri ) )
               {
                  NextName( &ptri, sToken );
               }
@@ -1371,7 +1371,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
               {
                  /* Ron Pinkas commented 2000-01-24
                  i = 0;
-                 while( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && *ptri != '\"' && *ptri != '\'' && *ptri != '('  && !ISNAME(*ptri) )
+                 while( *ptri != ' ' && *ptri != '\t' && *ptri != '\0' && *ptri != '\"' && *ptri != '\'' && *ptri != '('  && !ISNAME( ( BYTE ) *ptri ) )
                  {
                     *(sToken+i) = *ptri++;
                     i++;
@@ -1561,7 +1561,7 @@ static int WorkPseudoF( char ** ptri, char * ptro, DEFINES * stdef )
               while( (ifou = hb_strAt( parfict, lenfict, ptrb, lenres-(ptrb-ptro) )) > 0 )
               {
                  ptrb = ptrb+ifou-1;
-                 if( !ISNAME(*(ptrb-1)) && !ISNAME(*(ptrb+lenfict)) )
+                 if( !ISNAME(( BYTE ) *(ptrb-1)) && !ISNAME(( BYTE ) *(ptrb+lenfict)) )
                  {
                     hb_pp_Stuff( ptrreal, ptrb, lenreal, lenfict, lenres+(ptro-ptrb) );
                     lenres += lenreal - lenfict;
@@ -1691,7 +1691,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
         if( *ptrmp == '[' && !s_numBrackets && !strtopti )
           strtopti = ptrmp;
         if( !s_numBrackets && strtopti && strtptri != ptri &&
-           ( ISNAME( *ptri ) || *ptri=='&' ) )
+           ( ISNAME( ( BYTE ) *ptri ) || *ptri=='&' ) )
           {
             strtptri = ptri;
             ptrmp = strtopti;
@@ -1722,7 +1722,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
               s_Repeate--;
               if( s_aIsRepeate[ s_Repeate ] )
                 {
-                  if( ISNAME(*ptri) )
+                  if( ISNAME( ( BYTE ) *ptri) )
                     {
                       ptr = ptri;
                       ipos = NextName( &ptr, tmpname );
@@ -2308,7 +2308,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
             State = ( StBr1==0 && StBr2==0 && StBr3==0 )? STATE_ID_END: STATE_BRACKET;
             continue;
          }
-         else if( **ptri == '[' /* ( see below 5-2-2001 && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) )*/ )
+         else if( **ptri == '[' /* ( see below 5-2-2001 && ( State == STATE_EXPRES || ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( ( BYTE ) cLastChar ) ) )*/ )
          {
             char *pString;
 
@@ -2370,7 +2370,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
       {
          break;
       }
-      else if( **ptri == '[' && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) )  /* New String, can't belong to extracted expression. */
+      else if( **ptri == '[' && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( ( BYTE ) cLastChar ) ) )  /* New String, can't belong to extracted expression. */
       {
          break;
       }
@@ -2427,7 +2427,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
          case STATE_ID:
          case STATE_ID_END:
          {
-            if( ( (ISNAME(**ptri) || **ptri=='\\' || **ptri=='&') && State == STATE_ID_END ) || **ptri==',' )
+            if( ( (ISNAME(( BYTE ) **ptri) || **ptri=='\\' || **ptri=='&') && State == STATE_ID_END ) || **ptri==',' )
             {
                if( **ptri == ',' )
                {
@@ -2531,7 +2531,7 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez, BO
                StBr2++;
                State = STATE_BRACKET;
             }
-            else if( ISNAME(**ptri) )
+            else if( ISNAME(( BYTE ) **ptri) )
             {
                State = STATE_EXPRES_ID;
             }
@@ -2955,10 +2955,10 @@ static BOOL ScanMacro( char * expreal, int lenitem, int * pNewLen )
       *pNewLen = lenitem - 1;
       return TRUE;
    }
-   else if( isalpha( (int) expreal[i] ) || expreal[i] == '_' )
+   else if( isalpha( ( BYTE ) expreal[i] ) || expreal[i] == '_' )
    {
       i++;
-      while( ISNAME( expreal[i] ) )
+      while( ISNAME( ( BYTE ) expreal[i] ) )
       {
          i++;
       }
@@ -3350,9 +3350,9 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char
           {
             case '[':
               /* Ron Pinkas modified 2000-06-17
-              if( ISNAME(s_prevchar) || s_prevchar == ']' )
+              if( ISNAME(( BYTE ) s_prevchar) || s_prevchar == ']' )
               */
-              if( ISNAME(s_prevchar) || strchr( ")]}.", s_prevchar ) )
+              if( ISNAME(( BYTE ) s_prevchar) || strchr( ")]}.", s_prevchar ) )
               {
                  s_ParseState = STATE_BRACKET;
               }
@@ -3567,7 +3567,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
               lPos++;
               continue;
            }
-           else if( bRule == FALSE && *(szText+lPos) == '[' && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
+           else if( bRule == FALSE && *(szText+lPos) == '[' && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( ( BYTE ) cLastChar ) )
            {
               State = STATE_QUOTE3;
               lPos++;
@@ -3653,8 +3653,8 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
            lPos++;
 
            if( lSubPos >= lSubLen  && checkword &&
-               ( ( ISNAME(*szSub) && lPos>lSubPos && ISNAME(*(szText+lPos-lSubPos-1)) ) ||
-               ( ISNAME(*(szSub+lSubLen-1)) && ISNAME(*(szText+lPos)) ) ) )
+               ( ( ISNAME(( BYTE ) *szSub) && lPos>lSubPos && ISNAME(( BYTE ) *(szText+lPos-lSubPos-1)) ) ||
+               ( ISNAME(( BYTE ) *(szSub+lSubLen-1)) && ISNAME(( BYTE ) *(szText+lPos)) ) ) )
            {
               lSubPos = 0;
            }
@@ -3794,12 +3794,12 @@ static BOOL truncmp( char ** ptro, char ** ptri, BOOL lTrunc )
   ci = **ptri;
   if( ( ( ci == ' ' || ci == ',' || ci == '[' ||
           ci == ']' || ci == '\1' || ci == '\0' ) &&
-        ( ( !ISNAME(**ptro) && ISNAME(co) ) ||
-          ( !ISNAME(co) ) ) ) )
+        ( ( !ISNAME(( BYTE ) **ptro) && ISNAME(( BYTE ) co) ) ||
+          ( !ISNAME(( BYTE ) co) ) ) ) )
     return FALSE;
-  else if( lTrunc && *ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(**ptro) && ISNAME(co) )
+  else if( lTrunc && *ptro-ptrb >= 4 && ISNAME(( BYTE ) ci) && !ISNAME(( BYTE ) **ptro) && ISNAME(( BYTE ) co) )
     {
-      while( ISNAME(**ptri) ) (*ptri)++;
+      while( ISNAME(( BYTE ) **ptri) ) (*ptri)++;
       return FALSE;
     }
   return TRUE;
@@ -3818,12 +3818,12 @@ static BOOL strincmp( char * ptro, char ** ptri, BOOL lTrunc )
   ci = **ptri;
   if( ( ( ci == ' ' || ci == ',' || ci == '[' ||
           ci == ']' || ci == '\1' || ci == '\0' ) &&
-        ( ( !ISNAME(*ptro) && ISNAME(co) ) ||
-          ( !ISNAME(co) ) ) ) )
+        ( ( !ISNAME(( BYTE ) *ptro) && ISNAME(( BYTE ) co) ) ||
+          ( !ISNAME(( BYTE ) co) ) ) ) )
     return FALSE;
-  else if( lTrunc && ptro-ptrb >= 4 && ISNAME(ci) && !ISNAME(*ptro) && ISNAME(co) )
+  else if( lTrunc && ptro-ptrb >= 4 && ISNAME(( BYTE ) ci) && !ISNAME(( BYTE ) *ptro) && ISNAME(( BYTE ) co) )
     {
-      /*      while( ISNAME(**ptri) ) (*ptri)++; */
+      /*      while( ISNAME(( BYTE ) **ptri) ) (*ptri)++; */
       return FALSE;
     }
   return TRUE;
@@ -3883,7 +3883,7 @@ static int strotrim( char * stroka, BOOL bRule )
         }
         /* Ron Pinkas added 2000-11-05 */
         /* Ron Pinkas 2001-02-14 added bRule logic  (removed array logic). */
-        else if( curc == '[' && bRule == FALSE ) /* && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) ) ) */
+        else if( curc == '[' && bRule == FALSE ) /* && ( strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( ( BYTE ) cLastChar ) ) ) */
         {
            State = STATE_QUOTE3;
         }
@@ -3943,7 +3943,7 @@ static int NextName( char ** sSource, char * sDest )
      printf( "In: >%s<\n", *sSource );
   #endif
 
-  while( **sSource != '\0' && ( !ISNAME(**sSource) || State != STATE_NORMAL ) )
+  while( **sSource != '\0' && ( !ISNAME(( BYTE ) **sSource) || State != STATE_NORMAL ) )
   {
      if( State == STATE_QUOTE1 )
      {
@@ -4042,7 +4042,7 @@ static int NextName( char ** sSource, char * sDest )
         State = STATE_QUOTE2;
      }
      /* Ron Pinkas added 2000-11-08 */
-     else if( **sSource == '[' && s_bArray == FALSE && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
+     else if( **sSource == '[' && s_bArray == FALSE && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( ( BYTE ) cLastChar ) )
      {
         /* Ron Pinkas added 2000-11-08 */
         pString = *sSource;
@@ -4060,7 +4060,7 @@ static int NextName( char ** sSource, char * sDest )
      (*sSource)++;
   }
 
-  while( **sSource != '\0' && ISNAME(**sSource) )
+  while( **sSource != '\0' && ISNAME(( BYTE ) **sSource) )
   {
      *sDest++ = *(*sSource)++;
      lenName++;
@@ -4126,7 +4126,7 @@ static int NextParm( char ** sSource, char * sDest )
      {
         State = STATE_QUOTE2;
      }
-     else if( **sSource == '[' && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
+     else if( **sSource == '[' && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( ( BYTE ) cLastChar ) )
      {
         State = STATE_QUOTE3;
      }
@@ -4196,11 +4196,11 @@ static int NextParm( char ** sSource, char * sDest )
 
 static BOOL IsIdentifier( char *szProspect )
 {
-   if( isalpha( (int) szProspect[0] ) || szProspect[0] == '_' )
+   if( isalpha( ( BYTE ) szProspect[0] ) || szProspect[0] == '_' )
    {
       int i = 1;
 
-      while( ISNAME( szProspect[i] ) )
+      while( ISNAME( ( BYTE ) szProspect[i] ) )
       {
         i++;
       }
@@ -4220,23 +4220,23 @@ static int IsMacroVar( char * szText, BOOL isCommand )
 {
    int len = 0;
 
-   if( isalpha( (int) szText[0] ) || szText[0] == '_' )
+   if( isalpha( ( BYTE ) szText[0] ) || szText[0] == '_' )
    {
       int i = 1;
       
-      while( ISNAME(szText[i]) || isdigit( szText[i] ) || szText[i] == '&' || szText[i] == '.' )
+      while( ISNAME(( BYTE ) szText[i]) || isdigit( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
       {
          i++;
       }
 /*         
-      while( ISNAME( szText[i] ) || szText[i] == '&' )
+      while( ISNAME( ( BYTE ) szText[i] ) || szText[i] == '&' )
       {
          i++;
       }
       if( szText[i] == '.' || szText[i] == '&' )
       {
          i++;
-         while( ISNAME(szText[i]) || isdigit( szText[i] ) || szText[i] == '&' || szText[i] == '.' )
+         while( ISNAME(( BYTE ) szText[i]) || isdigit( ( BYTE ) szText[i] ) || szText[i] == '&' || szText[i] == '.' )
          {
             i++;
          }

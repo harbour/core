@@ -203,12 +203,12 @@ HB_FUNC( DISKSPACE )
          bError = TRUE;
    }
 
-#elif defined(HB_OS_UNIX) && !defined(HB_OS_SUNOS)
+#elif defined(HB_OS_UNIX)
 
    {
       char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : "/";
 #if defined(HB_OS_SUNOS)
-      struct statvfs sf;
+      struct statvfs st;
       if ( statvfs( szName, &st) == 0 )
 #else
       struct statfs st;

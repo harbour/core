@@ -8,6 +8,76 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-19 22:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * changed 'sed' and 'tr' expresions to be compatible with SunOS
+    + added Darwin dynlib support borrowed from xHarbour thanks
+      to Phil Krylov
+
+  * harbour/bin/hb-mkslib.sh
+    * minor modification
+
+  * harbour/bin/postinst.sh
+  * harbour/config/darwin/gcc.cf
+    + Phil's modification for Darwin
+    * removed HB_OS_BSD and HB_BIG_ENDIAN - the first macro is set in
+      hbsetup.h when HB_OS_DARWIN is set, the second one should be
+      automatically detected inside hbdefs.h using C header files.
+
+  * harbour/config/sunos/gcc.cf
+    * removed HB_BIG_ENDIAN macro - the same as above
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/fm.c
+    * changed 16/32 bit hack #if UINT_MAX == ULONG_MAX for hb_xmem*()
+      functions to still not perfect but working on current platforms
+      #if UINT_MAX > USHRT_MAX
+
+  * harbour/include/hbdefs.h
+    + added HB_DBL_LIM_INT24(d) and HB_LIM_INT24(l) macros
+    + try to autodect byte order using information form system C header 
+      files - it whoud work for Linux, BSD/Darwin, SunOS - maybe also
+      for some other *nixes
+    * removed some dangerous casting. [x]Harbour code still depnds on
+      8bytes double - in CDX for binary compatibility IEEE754 double is
+      necessary - if some architectures uses differ type of double value
+      for binary compatibility we will have to create proper conversion
+      functions for HB_{PUT|GET}_{LE|BE}_DOUBLE and HB_ORD2DBL/HB_DBL2ORD
+      macros
+
+  * harbour/include/hbsetup.h
+    * define HB_OS_UNIX when HB_OS_SUNOS set
+
+  * harbour/source/common/hbstr.c
+  * harbour/source/pp/ppcore.c
+    * casting
+
+  * harbour/source/compiler/harbour.c
+    * use HB_LIM_INT*() macros instead of hard coded values
+    * removed some unnecessary if () statement - always true
+
+  * harbour/source/compiler/harbour.l
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/vm/macro.c
+    * use HB_LIM_INT*() macros instead of hard coded values
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! minor fix
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! small fix - the temporary index file was not removed
+    * do not force any name for temporary index files - important
+      in some cases (like DOS and short file names)
+
+  * harbour/source/rtl/diskspac.c
+    ! fixed type in SunOS version
+
+  * harbour/source/rtl/gtsln/Makefile
+    * minor cleanups
+
+  * harbour/utils/hbtest/rt_math.prg
+    * changed to number results to be Clipper compatible.
+
 2004-10-14 21:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
   * harbour/bin/pack_src.sh

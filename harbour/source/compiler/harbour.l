@@ -1730,7 +1730,7 @@ static int yy_ConvertNumber( char * szBuffer )
       yylval.valDouble.szValue = szBuffer;
       return NUM_DOUBLE;
    }
-   else if( SHRT_MIN <= lNumber && lNumber <= SHRT_MAX )
+   else if( HB_LIM_INT16( lNumber ) )
    {
       yylval.valInteger.iNumber = ( int ) lNumber;
       yylval.valInteger.szValue = szBuffer;

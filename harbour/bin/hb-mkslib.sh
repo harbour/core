@@ -65,7 +65,7 @@ do
 	    ;;
     esac
 done
-OBJLST=`find . -name \*.o`
+OBJLST=`find . -name "*.o"`
 cd "${dir}"
 rm -f "${HB_SO_LIB}"
 cd "${OTMPDIR}"

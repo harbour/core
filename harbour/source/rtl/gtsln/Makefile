@@ -15,9 +15,7 @@ include $(TOP)$(ROOT)config/lib.cf
 
 # a workaround of a problem with different include directories 
 # for slang header files between different unix distributions
-DUMMYA  := $(CFLAGS)
 CFLAGS := -I/usr/include/slang -I/usr/local/include \
-	  -I/usr/local/include/slang $(DUMMYA)
+          -I/usr/local/include/slang $(CFLAGS)
 
-#DUMMYB  := $(LDFLAGS)
-#LDFLAGS := -L/usr/lib/slang -L/usr/local/lib -L/usr/local/lib/slang $(DUMMYB)
+#LDFLAGS := -L/usr/lib/slang -L/usr/local/lib -L/usr/local/lib/slang $(LDFLAGS)

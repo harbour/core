@@ -80,7 +80,7 @@ FUNCTION Main_MATH()
    TEST_LINE( Str(Sqrt(@snIntP))              , "         3.16"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1097 Argument error SQRT F:S" */
 #endif
    TEST_LINE( Str(Sqrt(4),21,18)              , " 2.000000000000000000"                )
-   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877293"                ) /* Bug in CA-Cl*pper 5.2e, it returns: " 1.732050807568877000" */
+   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877000"                )
 
    /* ABS() */
 
@@ -352,7 +352,7 @@ FUNCTION Main_MATH()
    TEST_LINE( Str(100.00 / 10.0           )   , "        10.00"                )
    TEST_LINE( Str(sdDate - sdDateE        )   , "   2445785"                   )
    TEST_LINE( Str(sdDate - sdDate         )   , "         0"                   )
-   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052100"         ) /* Bug in CA-Cl*pper, it returns: " 1524157875019052000" */
+   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         ) // real val is 1524157875019052100
 
    /* MOD() */
 

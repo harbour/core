@@ -37,13 +37,17 @@ fi
 
 if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "djgpp" ]
 then
-    if [ "${HB_ARCHITECTURE}" == "bsd" ]; then
+    RANLIB=""
+    MAKE=make
+    AR="ar -cr"
+    if [ "${HB_ARCHITECTURE}" = "bsd" ]; then
         MAKE=gmake
-    else
-        MAKE=make
+    elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
+        # We must build an archive index on Darwin
+        AR="ar -crs"
     fi
     if [ "${HB_ARCHITECTURE}" != "dos" ]; then
-        install -m755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
+        install -m 755 "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib"
     fi
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
     [ "$HB_COMPILER" = "gcc" ] && mk_hblibso "${hb_root}"
@@ -53,11 +57,11 @@ then
     C_USR=${C_USR//-DHB_FM_STATISTICS_OFF/}
     rm -f fm.o
     ${MAKE} -r fm.o
-    ar -cr ${HB_LIB_INSTALL}/libfm.a fm.o
+    ${AR} ${HB_LIB_INSTALL}/libfm.a fm.o
     rm -f fm.o
     if [ "${HB_MT}" = "MT" ]; then
         ${MAKE} -r fm.o 'HB_LIBCOMP_MT=YES'
-        ar -cr ${HB_LIB_INSTALL}/libfmmt.a fm.o
+        ${AR} ${HB_LIB_INSTALL}/libfmmt.a fm.o
         rm -f fm.o
     fi
     )

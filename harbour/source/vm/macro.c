@@ -1097,7 +1097,7 @@ ULONG hb_compGenJump( LONG lOffset, HB_MACRO_DECL )
 {
    /* TODO: We need a longer offset (longer then two bytes)
     */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   if ( ! HB_LIM_INT16( lOffset ) )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
    hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_MACRO_PARAM );
@@ -1109,7 +1109,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset, HB_MACRO_DECL )
 {
    /* TODO: We need a longer offset (longer then two bytes)
     */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   if ( ! HB_LIM_INT16( lOffset ) )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
    hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_MACRO_PARAM );
@@ -1124,7 +1124,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_MACRO_DECL )
 
    /* TODO: We need a longer offset (longer then two bytes)
     */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   if ( ! HB_LIM_INT16( lOffset ) )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
    pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
@@ -1140,7 +1140,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset, HB_MACRO_DECL )
 {
    /* TODO: We need a longer offset (longer then two bytes)
     */
-   if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
+   if ( ! HB_LIM_INT16( lOffset ) )
       hb_macroError( HB_MACRO_TOO_COMPLEX, HB_MACRO_PARAM );
 
    hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ), HB_MACRO_PARAM );

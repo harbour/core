@@ -461,11 +461,18 @@ void HB_EXPORT hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 #endif
 }
 
-#if UINT_MAX != ULONG_MAX
-
 /* hb_xmemcpy and hb_xmemset are only needed when
    unsigned int and unsigned long differ in length */
 
+/* unfortunately it's not true - on 64bit platforms int is 32 bit
+   and long is 64.
+   we need these functions only when max(size_t) < max(long)
+   what could be detected and set in header files. Here check
+   only for hb_xmem* macro definition
+
+   #if UINT_MAX != ULONG_MAX
+*/
+#ifndef hb_xmemcpy
 void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 {
    BYTE * pDest;
@@ -499,7 +506,9 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen )
 
    return pDestArg;
 }
+#endif
 
+#ifndef hb_xmemset
 void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 {
    BYTE * pDest;
@@ -530,7 +539,6 @@ void * hb_xmemset( void * pDestArg, int iFill, ULONG ulLen )
 
    return pDestArg;
 }
-
 #endif
 
 ULONG hb_xquery( USHORT uiMode )

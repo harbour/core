@@ -5870,7 +5870,7 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOO
       ulRec = hb_cdxTagKeyFind( pTag, pKey );
       if ( ( ulRec == 0 && ! fSoftSeek ) || pTag->TagEOF )
          fEOF = TRUE;
-      else if ( fSoftSeek )
+      else /* if ( fSoftSeek ) */
       {
          if ( ! hb_cdxBottomScope( pTag ) )
             fEOF = TRUE;

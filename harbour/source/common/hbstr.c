@@ -412,7 +412,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
 
    HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %ul %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
 
-   while ( ulPos < ulLen && isspace( szNum[ulPos] ) )
+   while ( ulPos < ulLen && isspace( ( BYTE ) szNum[ulPos] ) )
       ulPos++;
 
    if ( szNum[ulPos] == '-' )

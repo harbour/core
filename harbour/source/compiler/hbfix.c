@@ -208,7 +208,7 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
       iVar += pFunc->wParamCount;
       pVar[ 0 ] = HB_LOBYTE( iVar );
       pVar[ 1 ] = HB_HIBYTE( iVar );
-      if( iVar >= -128 && iVar <= 127 )
+      if ( HB_LIM_INT8( iVar ) )
       {
          pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, lPCodePos + 2 );
@@ -236,7 +236,7 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
       iVar += pFunc->wParamCount;
       pVar[ 0 ] = HB_LOBYTE( iVar );
       pVar[ 1 ] = HB_HIBYTE( iVar );
-      if( iVar >= -128 && iVar <= 127 )
+      if ( HB_LIM_INT8( iVar ) )
       {
          pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, lPCodePos + 2 );
