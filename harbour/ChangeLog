@@ -1,3 +1,7 @@
+19990508-00:18 Eddie Runia
+   * source/rtl/classes.c:
+        oSend( <obj>, <cMessage>, <xArg,..> added.
+
 Thu May 07 17:00:00 1999  Victor Szel <info@szelvesz.hu>
 
    * source/rtl/strings.c:

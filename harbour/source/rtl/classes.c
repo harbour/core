@@ -8,6 +8,7 @@
 void Push( PITEM );
 void PushNil( void );
 void PushSymbol( PSYMBOL );
+void Message( PSYMBOL );
 void Do( WORD wParams );
 
 #define MET_METHOD    0
@@ -466,3 +467,28 @@ void ReleaseClasses( void )
    if( pClasses )
       _xfree( pClasses );
 }
+
+
+/* oSend send a message to an object */
+
+HARBOUR OSEND()             /* <xRet> = oSend( <oObj>, <cSymbol>, <xArg,..> */
+{
+   PITEM pObject  = _param( 1, IT_OBJECT );
+   PITEM pMessage = _param( 2, IT_STRING );
+   WORD  w;
+
+   if( pMessage && pObject )                /* Object & message passed      */
+   {
+      Push( pObject );                      /* Push object                  */
+      Message( GetDynSym( pMessage->value.szText )->pSymbol );
+                                            /* Push char symbol as message  */
+      for( w = 3; w <= _pcount(); w++ )     /* Push arguments on stack      */
+         Push( _param( w, IT_ANY ) );
+      Do( _pcount()-2 );                    /* Execute message              */
+   }
+   else
+   {                                        /* TODO: Crash code             */
+   }
+}
+
+

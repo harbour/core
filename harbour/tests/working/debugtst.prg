@@ -108,6 +108,7 @@ function ToChar( xTxt, cSeparator, lDebug )
    local cOut
    local n
    local nLen
+   local aData
 
    cSeparator := Default( cSeparator, " " )
    lDebug     := Default( lDebug,     .F. )
@@ -159,15 +160,17 @@ function ToChar( xTxt, cSeparator, lDebug )
 
       case cValTxt=="O"                         // Object
          if lDebug
-            cOut := xTxt:ClassName() + "(#"+ToChar( xTxt:ClassH() )+"):{"
-            nLen := Len( xTxt )
+            cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
+            aData := aoData( xTxt )
+            nLen  := Len( aData )
             for n := 1 to nLen                     // For each item : Recurse !
-               cOut += ToChar( xTxt[n], cSeparator, lDebug )
+               cOut += aData[n] + ":" + ;
+                       ToChar( oSend( xTxt, aData[n] ), cSeparator, lDebug )
                if n != nLen
                   cOut += cSeparator
                endif
             next n
-            cOut += ";" + ToChar( aoData( xTxt ), ", " ) + "}"
+            cOut += "}"
          else
             cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
          endif
