@@ -1,3 +1,8 @@
+19990730-20:24 CET Victor Szel <info@szelvesz.hu>
+   - buildicc.cmd - Removed.
+   - tests/working/list.txt - Removed, since it was
+     suprseded by /funclist.txt
+
 19990730-20:04 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/inkey.c
      source/rtl/files.c
