@@ -290,12 +290,12 @@ void hb_vmInit( BOOL bStartMainProc )
          if( pDynSym && pDynSym->pSymbol->pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
          else
-            hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
+            hb_errInternal( IE_VMBADSTARTUP, NULL, HARBOUR_START_PROCEDURE, NULL );
       }
 #else
 #ifndef HB_C52_STRICT
       else if( ! s_pSymStart )
-         hb_errInternal( 9999, "No starting procedure", NULL, NULL );
+         hb_errInternal( IE_VMNOSTARTUP, NULL, NULL, NULL );
 #endif
 #endif
    }
@@ -1154,7 +1154,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          default:
             /* TODO: Include to failing pcode in the error message */
-            hb_errInternal( 9999, "Unsupported VM opcode", NULL, NULL );
+            hb_errInternal( IE_VMBADOPCODE, NULL, NULL, NULL );
             break;
       }
 
@@ -1618,7 +1618,7 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
       hb_vmPushLong( ( ULONG ) pItem->item.asSymbol.value->pFunPtr );
    }
    else
-      hb_errInternal( 9999, "Symbol item expected from hb_vmFuncPtr()", NULL, NULL );
+      hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmFuncPtr()", NULL );
 }
 
 /* ------------------------------- */
@@ -2552,7 +2552,7 @@ void hb_vmDo( USHORT uiParams )
    {
       /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
-      hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
+      hb_errInternal( IE_VMNOTSYMBOL, NULL, "hb_vmDo()", NULL );
    }
 
 #if 0
@@ -2560,7 +2560,7 @@ void hb_vmDo( USHORT uiParams )
    {
       /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
-      hb_errInternal( 9999, "Invalid symbol type for self from hb_vmDo()", NULL, NULL );
+      hb_errInternal( IE_VMINVSYMBOL, NULL, "hb_vmDo()", NULL );
    }
 #endif
 
@@ -2645,7 +2645,7 @@ static HARBOUR hb_vmDoBlock( void )
    uiStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
 
    if( ! HB_IS_BLOCK( pBlock ) )
-      hb_errInternal( 9999, "Codeblock expected from hb_vmDoBlock()", NULL, NULL );
+      hb_errInternal( IE_VMNOTCBLOCK, NULL, "hb_vmDoBlock()", NULL );
 
    /* Check for valid count of parameters */
    iParam = pBlock->item.asBlock.paramcnt - hb_pcount();
@@ -3283,7 +3283,7 @@ static double hb_vmPopNumber( void )
          break;
 
       default:
-         hb_errInternal( 9999, "Incorrect item type on the stack trying to pop a number", NULL, NULL );
+         hb_errInternal( IE_VMPOPINVITEM, NULL, "hb_vmPopNumber()", NULL );
          break;
    }
 
@@ -3322,7 +3322,7 @@ static double hb_vmPopDouble( int * piDec )
          break;
 
       default:
-         hb_errInternal( 9999, "Incorrect item type on the stack trying to pop a double", NULL, NULL );
+         hb_errInternal( IE_VMPOPINVITEM, NULL, "hb_vmPopDouble()", NULL );
          break;
    }
 
@@ -3469,7 +3469,7 @@ void hb_stackPop( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackPop()"));
 
    if( --hb_stack.pPos < hb_stack.pItems )
-      hb_errInternal( 9999, "Stack underflow", NULL, NULL );
+      hb_errInternal( IE_STACKUFLOW, NULL, NULL, NULL );
 
    if( hb_stack.pPos->type != HB_IT_NIL )
       hb_itemClear( hb_stack.pPos );
@@ -3480,7 +3480,7 @@ static void hb_stackDec( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDec()"));
 
    if( --hb_stack.pPos < hb_stack.pItems )
-      hb_errInternal( 9999, "Stack underflow", NULL, NULL );
+      hb_errInternal( IE_STACKUFLOW, NULL, NULL, NULL );
 }
 
 static void hb_stackFree( void )

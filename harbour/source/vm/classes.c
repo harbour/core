@@ -503,7 +503,7 @@ HB_FUNC( __CLSADDMSG )
               break;
 
          default:
-              hb_errInternal( 9999, "Invalid method type from __clsAddMsg", NULL, NULL );
+              hb_errInternal( IE_CLSINVMETHOD, NULL, "__clsAddMsg", NULL );
               break;
       }
    }

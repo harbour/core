@@ -3293,7 +3293,7 @@ HB_FUNC( RDDREGISTER )
        * > 1: error
        */
       if( hb_rddRegister( szDriver, hb_parni( 2 ) ) > 1 )
-         hb_errInternal( 9999, "RDD invalid of failed to load", NULL, NULL );
+         hb_errInternal( IE_RDDINVALID, NULL, NULL, NULL );
    }
 }
 

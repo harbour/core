@@ -1,3 +1,17 @@
+20000415-05:12 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/error.ch
+   * source/rdd/dbcmd.c
+   * source/rtl/errorapi.c
+   * source/vm/classes.c
+   * source/vm/fm.c
+   * source/vm/hvm.c
+   * source/vm/itemapi.c
+   * source/vm/memvars.c
+   * source/lang/*.c
+     + All internal error texts converted to support multi-language.
+       Also the internal error code are now correctly set.
+
 20000415-03:32 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * include/error.ch

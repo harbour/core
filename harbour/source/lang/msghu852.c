@@ -164,12 +164,11 @@ static HB_LANG s_lang =
       "No starting procedure", 
       "Unsupported VM opcode", 
       "Symbol item expected from %s",
-      "Invalid symbol type for self from hb_vmDo()", 
-      "Codeblock expected from hb_vmDoBlock()", 
-      "Incorrect item type on the stack trying to pop a number", 
-      "Incorrect item type on the stack trying to pop a double", 
+      "Invalid symbol type for self from %s", 
+      "Codeblock expected from %s", 
+      "Incorrect item type on the stack trying to pop from %s",
       "Stack underflow", 
-      "An item was going to be copied to itself from hb_itemCopy()", 
+      "An item was going to be copied to itself from %s", 
       "Invalid symbol item passed as memvar %s",
    
       /* Texts */

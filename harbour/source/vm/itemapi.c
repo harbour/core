@@ -1035,7 +1035,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
       hb_itemClear( pDest );
 
    if( pDest == pSource )
-      hb_errInternal( 9999, "An item was going to be copied to itself from hb_itemCopy()", NULL, NULL );
+      hb_errInternal( IE_ITEMBADCOPY, NULL, "hb_itemCopy()", NULL );
 
    memcpy( pDest, pSource, sizeof( HB_ITEM ) );
 

@@ -90,7 +90,7 @@ void hb_errForceLink()
 
 HB_FUNC( __ERRINHANDLER )
 {
-   hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+   hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
 }
 
 HB_FUNC( ERRORBLOCK )
@@ -177,12 +177,12 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       /* Check if we have a valid error handler */
 
       if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
-         hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
+         hb_errInternal( IE_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
 
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
-         hb_errInternal( 9999, "Too many recursive error handler calls", NULL, NULL );
+         hb_errInternal( IE_ERRTOOMANY, NULL, NULL, NULL );
 
       /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
 
@@ -241,7 +241,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
          hb_itemRelease( pResult );
 
          if( bFailure )
-            hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+            hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
 
          /* Add one try to the counter. */
 
@@ -249,7 +249,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
             hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
       }
       else
-         hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+         hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
    }
    else
       uiAction = E_RETRY; /* Clipper does this, undocumented */
@@ -280,12 +280,12 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       /* Check if we have a valid error handler */
 
       if( hb_itemType( &s_errorBlock ) != HB_IT_BLOCK )
-         hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
+         hb_errInternal( IE_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
 
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
-         hb_errInternal( 9999, "Too many recursive ERRORBLOCK() calls", NULL, NULL );
+         hb_errInternal( IE_ERRTOOMANY, NULL, NULL, NULL );
 
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
@@ -328,7 +328,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
             consider it as a failure. */
 
          if( ! ( hb_errGetFlags( pError ) & EF_CANSUBSTITUTE ) )
-            hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+            hb_errInternal( IE_ERRRECFAILURE, NULL, NULL, NULL );
       }
    }
    else
@@ -793,7 +793,7 @@ void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
    hb_conOutErr( hb_conNewLine(), 0 );
-   sprintf( buffer, "Unrecoverable error %lu: ", ulIntCode );
+   sprintf( buffer, ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
    hb_conOutErr( buffer, 0 );
    sprintf( buffer, szText != NULL ? szText : ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
    hb_conOutErr( buffer, 0 );
