@@ -14,6 +14,20 @@ DIRS=\
 	libgt \
 	libmisc \
 	rdd_ads \
+	odbc \
+	samples \
+
+else
+ifeq ($(HB_COMPILER),rsxnt)
+
+DIRS=\
+	btree \
+	htmllib \
+	libct \
+	libgt \
+	libmisc \
+	libnf \
+	rdd_ads \
 	samples \
 
 else
@@ -30,6 +44,7 @@ DIRS=\
 	odbc \
 	samples \
 
+endif
 endif
 
 else
@@ -65,7 +80,6 @@ DIRS=\
 	libgt \
 	libmisc \
 	rdd_ads \
-	odbc \
 	samples \
  
 endif

@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2004-01-08 18:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  *  contrib/Makefile
+    + Added a section for rsxnt, which is unable to compile Ole and odbc.
+    - Removed odbc from default section, because it includes the windows.h
+      include file, which is unlikely to exist on non-Windows systems.
+
+  *  contrib/odbc/odbc.c
+    ! Added type overrides for MSVC.
+
 2004-01-08 16:45 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/filesys.c
     ! Usage of fdatasync updated to match current POSIX specification.
