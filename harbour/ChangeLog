@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-24 22:37 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+  * doc/codestyl.txt
+    * Added Documentation item
+
+  + doc/es/codestyl.txt
+    + Documented code style
+
+
 2004-05-23 16:55 UTC+0300 Chen Kedem <niki@actcom.co.il>
 
    * doc/en/lang.txt
