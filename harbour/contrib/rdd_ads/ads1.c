@@ -70,15 +70,11 @@ HB_INIT_SYMBOLS_END( ads1__InitSymbols )
       #pragma data_seg( "XIY" )
    #endif
    #pragma warning( disable: 4152 )
-   static void *hb_vm_auto_ads1__InitSymbols = &ads1__InitSymbols;
+   static void * hb_vm_auto_ads1__InitSymbols = &ads1__InitSymbols;
    #pragma warning( default: 4152 )
    #pragma data_seg()
-
-#else
-
-   #if ! defined(__GNUC__)
-      #pragma startup ads1__InitSymbols
-   #endif
+#elif ! defined(__GNUC__)
+   #pragma startup ads1__InitSymbols
 #endif
 
 static RDDFUNCS adsSuper = { 0 };

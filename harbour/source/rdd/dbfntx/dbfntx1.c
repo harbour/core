@@ -56,15 +56,11 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
       #pragma data_seg( "XIY" )
    #endif
    #pragma warning( disable: 4152 )
-   static void *hb_vm_auto_dbfntx1__InitSymbols = &dbfntx1__InitSymbols;
+   static void * hb_vm_auto_dbfntx1__InitSymbols = &dbfntx1__InitSymbols;
    #pragma warning( default: 4152 )
    #pragma data_seg()
-
-#else
-
-   #if ! defined(__GNUC__)
-      #pragma startup dbfntx1__InitSymbols
-   #endif
+#elif ! defined(__GNUC__)
+   #pragma startup dbfntx1__InitSymbols
 #endif
 
 static RDDFUNCS ntxSuper = { 0 };
