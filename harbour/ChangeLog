@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-06 05:40 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
+  + harbour/contrib/mysql/difer.txt
+    Describe modifications to programs of harbour\contrib\mysql, in Spanish
+  + harbour/contrib/mysql/diffeng.txt
+    Describe modifications to programs of harbour\contrib\mysql, in English
+
+
 2004-10-05 05:39 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
   * harbour/contrib/mysql/tmysql.prg
   * harbour/contrib/mysql/tsqlbrw.prg
