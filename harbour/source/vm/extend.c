@@ -504,14 +504,14 @@ void HB_EXPORT hb_retc( char * szText )
 
 void HB_EXPORT hb_retc_buffer( char * szText )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_retcbuffer(%s, %lu)", szText, ulLen));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retc_buffer(%s)", szText));
 
    hb_itemPutCPtr( &hb_stack.Return, szText, strlen( szText ) );
 }
 
 void HB_EXPORT hb_retc_const( char * szText )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_retcconst(%s)", szText));
+   HB_TRACE(HB_TR_DEBUG, ("hb_retc_const(%s)", szText));
 
    hb_itemPutCConst( &hb_stack.Return, szText );
 }
