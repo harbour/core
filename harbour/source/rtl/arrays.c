@@ -36,6 +36,7 @@ void hb_arrayNew( PITEM pItem, ULONG ulLen ) /* creates a new array */
    pBaseArray->ulLen    = ulLen;
    pBaseArray->wHolders = 1;
    pBaseArray->wClass   = 0;
+   pBaseArray->wSuperCast = FALSE;
 
    for( ul = 0; ul < ulLen; ul++ )
      ( pBaseArray->pItems + ul )->wType = IT_NIL;
@@ -465,11 +466,14 @@ void hb_arrayRelease( PITEM pArray )
       ULONG      ul, ulLen  = hb_arrayLen( pArray );
       PBASEARRAY pBaseArray = ( PBASEARRAY )pArray->value.pBaseArray;
 
-      for ( ul = 0; ul < ulLen; ul ++ )
-        ItemRelease( pBaseArray->pItems + ul );
+      if( !pBaseArray->wSuperCast )
+      {
+         for ( ul = 0; ul < ulLen; ul ++ )
+            ItemRelease( pBaseArray->pItems + ul );
 
-      if( pBaseArray->pItems )
-        _xfree( pBaseArray->pItems );
+         if( pBaseArray->pItems )
+            _xfree( pBaseArray->pItems );
+      }
       _xfree( pBaseArray );
 
       pArray->wType = IT_NIL;

@@ -1,3 +1,10 @@
+19990603-18:30 CET Eddie Runia
+  * source/rtl/classes.c; source/rtl/tclass.prg; source/rtl/arrays.c
+  * include/ctoharb.h; include/extend.h
+    New class module added with lots of commands and alphabetic order.
+    aClone() no longer necessary for super casting
+    ctoharb.h updated so the forward declarations could be removed.
+
 19990603-16:00 CET Eddie Runia
   * source/rtl/classes.c
     wLimit bug resolved

@@ -42,15 +42,15 @@ function TClass()
       ClassAdd( hClass, "_aInlines",  6, MET_DATA )
       ClassAdd( hClass, "aVirtuals",  7, MET_DATA )
       ClassAdd( hClass, "_aVirtuals", 7, MET_DATA )
-      ClassAdd( hClass, "xSuper",     8, MET_DATA )
-      ClassAdd( hClass, "_xSuper",    8, MET_DATA )
+      ClassAdd( hClass, "cSuper",     8, MET_DATA )
+      ClassAdd( hClass, "_cSuper",    8, MET_DATA )
    endif
 
 return ClassInstance( hClass )
 
 //----------------------------------------------------------------------------//
 
-static function New( cClassName, xSuper )
+static function New( cClassName, cSuper )
 
    local Self := QSelf()
 
@@ -60,8 +60,8 @@ static function New( cClassName, xSuper )
    ::aClsDatas = {}
    ::aInlines  = {}
    ::aVirtuals = {}
-   if ValType( xSuper ) $ "CA"
-      ::xSuper = xSuper
+   if ValType( cSuper ) == "C"
+      ::cSuper = cSuper
    endif
 
 return Self
@@ -79,30 +79,14 @@ static function Create()
    local hSuper
    local ahSuper := {}
 
-   if ::xSuper == NIL
+   if ::cSuper == NIL
       hClass := ClassCreate( ::cName, nLenDatas )
 
-   elseif ValType(::xSuper) == "A"              // Multiple inheritance
-      ahSuper := {}
-      nLen := Len( ::xSuper )
-      for n := 1 to nLen
-         aAdd( ahSuper, __InstSuper( Upper( ::xSuper[ n ] ) ) )
-      next n
-
-      hClass := ClassCreate( ::cName, nLenDatas, ahSuper )
-
-      for n := 1 to nLen
-         ClassAdd( hClass, Upper( ::xSuper[ n ] ), ahSuper[ n ], MET_SUPER )
-         nDataBegin += __WDatas( ahSuper[ n ] ) // Calc offset for new DATAs
-      next n
-      ClassAdd( hClass, "SUPER", aTail( ahSuper ), MET_SUPER )
-                                                // Last super is the SUPER
-
-   elseif ValType(::xSuper) == "C"              // Single inheritance
-      hSuper := __InstSuper( Upper( ::xSuper ) )
+   else                                         // Single inheritance
+      hSuper := __InstSuper( Upper( ::cSuper ) )
       hClass := ClassCreate( ::cName, nLenDatas, hSuper )
                                                 // Add class casts
-      ClassAdd( hClass, Upper( ::xSuper ), hSuper, MET_SUPER )
+      ClassAdd( hClass, Upper( ::cSuper ), hSuper, MET_SUPER )
       ClassAdd( hClass, "SUPER", hSuper, MET_SUPER )
 
       nDataBegin := __WDatas( hSuper )          // Get offset for new DATAs

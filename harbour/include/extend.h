@@ -80,6 +80,7 @@ typedef struct
    ULONG ulLen;                /* number of items in the array */
    WORD  wHolders;             /* number of holders of this array */
    WORD  wClass;               /* offset to the classes base if it is an object */
+   WORD  wSuperCast;           /* is it a super cast ? */
 } BASEARRAY, * PBASEARRAY;
 
 typedef struct     /* stack managed by the virtual machine */
