@@ -85,8 +85,8 @@ static ULONG s_globalFirstFree = 0;
 static ULONG s_globalLastFree  = 0;
 static HB_VALUE_PTR s_globalTable = NULL;
 
-#define TABLE_INITHB_VALUE   1   //00
-#define TABLE_EXPANDHB_VALUE  2  //50
+#define TABLE_INITHB_VALUE   100
+#define TABLE_EXPANDHB_VALUE  50
 
 struct mv_PUBLIC_var_info
 {

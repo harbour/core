@@ -171,6 +171,7 @@ typedef struct __FUNC
    int          iStackFunctions;          /* Index into DEclared Functions on Compile Time Stack */
    PCOMCLASS    pStackClasses[ 8 ];       /* Declared Classes on the Compile Time Stack */
    int          iStackClasses;            /* Index into Declared Classes on Compile Time Stack */
+   BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
    struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
    struct __FUNC * pNext;                 /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
@@ -353,7 +354,7 @@ extern void hb_compGenMessageData( char * szMsg );     /* generates an underscor
 extern void hb_compGenPopVar( char * szVarName );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec ); /* Pushes a number on the virtual machine stack */
 extern void hb_compGenPushFunCall( char * );             /* generates the pcode to push function's call */
-extern void hb_compGenPushVar( char * szVarName );       /* generates the pcode to push a variable value to the virtual machine stack */
+extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar );       /* generates the pcode to push a variable value to the virtual machine stack */
 extern void hb_compGenPushVarRef( char * szVarName );    /* generates the pcode to push a variable by reference to the virtual machine stack */
 extern void hb_compGenPushInteger( int iNumber );        /* Pushes a integer number on the virtual machine stack */
 extern void hb_compGenPushLogical( int iTrueFalse );     /* pushes a logical value on the virtual machine stack */
@@ -377,9 +378,10 @@ extern ULONG hb_compSequenceEnd( void );
 extern void hb_compSequenceFinish( ULONG, int );
 
 /* Codeblocks */
-extern void hb_compCodeBlockStart( void );        /* starts a codeblock creation */
+extern void hb_compCodeBlockStart( BOOL );        /* starts a codeblock creation */
 extern void hb_compCodeBlockEnd( void );          /* end of codeblock creation */
 extern void hb_compCodeBlockStop( void );          /* end of fake codeblock */
+extern void hb_compCodeBlockRewind( void );          /* restart of fake codeblock */
 
 /* support for FIELD declaration */
 extern void hb_compFieldSetAlias( char *, int );

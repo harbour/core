@@ -8,6 +8,35 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-01-03 10:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbcomp.h
+   * include/hbexprb.c
+   * include/hbmacro.h
+   * source/compiler/exproptb.c
+   * source/compiler/harbour.c
+   * source/compiler/hbgenerr.c
+   * source/macro/macrob.c
+   * source/vm/macro.c
+      * compiler reports error on the following syntax now (Clipper
+        compatibility):
+         {|| &macrovar <operator> anysymbol}
+        "codeblock contains both macro and declared symbol reference"
+        Notice, that Clipper reports error even in this case:
+        MEMVAR mvar
+        {|| &mvar,mvar}
+         
+   * source/vm/memvars.c
+      * restored initial and expand sizes for memvars table
+
+   * source/pp/ppcore.c
+      * some empty lines added
+        
+2004-12-27 10:37 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/vm/memvars.c
+      * changed algorithm for recycling of unused memvar values
+        - thanks to Przemek
+        
+
 2004-12-31 06:16 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * harbour/source/codepage/cdpesmwi.c
     ! the init values were set to ESWIN instead of ESMWIN

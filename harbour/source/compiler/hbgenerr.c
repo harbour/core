@@ -79,7 +79,7 @@ char * hb_comp_szErrors[] =
    "ANNOUNCEd procedure \'%s\' must be a public symbol",
    "Jump PCode not found",
    "CASE or OTHERWISE does not match DO CASE",
-   "Code block contains both macro and declared symbol references",
+   "Code block contains both macro and declared symbol references \'%s\'",
    "GET contains complex macro",
    "Unterminated inline block in function: \'%s\'",
    "Too many inline blocks %s",
@@ -227,6 +227,7 @@ HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR pExpr )
 void hb_compErrorCodeblock( char * szBlock )
 {
    hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, szBlock, NULL );
+   hb_comp_bError = FALSE; /* clear error flag for this line */
 }
 
 void hb_compErrorMacro( char *szText )

@@ -1401,9 +1401,11 @@ void hb_compGenPopAliasedVar( char * szVarName,
 /* generates the pcode to push a nonaliased variable value to the virtual
  * machine stack
  */
-void hb_compGenPushVar( char * szVarName, HB_MACRO_DECL )
+void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_MACRO_DECL )
 {
    int iVar;
+
+   HB_SYMBOL_UNUSED( bMacroVar );
 
    iVar = hb_compLocalVarGetPos( szVarName, HB_MACRO_PARAM );
    if( iVar )

@@ -179,7 +179,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
 #if defined( HB_MACRO_SUPPORT )
     static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_MACRO_DECL );
 #else
-    static void hb_compExprCodeblockPush( HB_EXPR_PTR );
+    static void hb_compExprCodeblockPush( HB_EXPR_PTR, BOOL );
 #if !defined(SIMPLEX)
     static void hb_compExprCodeblockEarly( HB_EXPR_PTR );
 #endif
@@ -365,11 +365,11 @@ static HB_EXPR_FUNC( hb_compExprUseString )
                if( HB_SUPPORT_HARBOUR ) 
                {
         	         if( bValidMacro )
-                        HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
-                     else
-                     {
-                        hb_compErrorMacro( pSelf->value.asString.string );
-                     }
+                     HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROTEXT );
+                  else
+                  {
+                     hb_compErrorMacro( pSelf->value.asString.string );
+                  }
                }
                else
                {
@@ -423,11 +423,11 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 	    HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
 	    if( !pSelf->value.asCodeblock.isMacro || pSelf->value.asCodeblock.lateEval )
-		hb_compExprCodeblockPush( pSelf );
+		   hb_compExprCodeblockPush( pSelf, TRUE );
 	    else
 	    {
-		/* early evaluation of a macro */
-		hb_compExprCodeblockEarly( pSelf );
+		   /* early evaluation of a macro */
+		   hb_compExprCodeblockEarly( pSelf );
 	    }
 #endif
          }
@@ -465,18 +465,20 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
 #if defined( HB_MACRO_SUPPORT )
 static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 #else
-static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf )
+static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, BOOL bLateEval )
 #endif
 {
     HB_EXPR_PTR pExpr, pNext;
     HB_EXPR_PTR * pPrev;
 
-    HB_EXPR_PCODE0( hb_compCodeBlockStart );
     /* Define requested local variables
      */
 #if defined( HB_MACRO_SUPPORT )
+    HB_EXPR_PCODE0( hb_compCodeBlockStart );
     HB_PCODE_DATA->pLocals = pSelf->value.asCodeblock.pLocals;
 #else
+    HB_EXPR_PCODE1( hb_compCodeBlockStart, bLateEval );
+
     {
        HB_CBVAR_PTR pVar;
 
@@ -520,14 +522,28 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf )
         */
        *pPrev = pExpr;   /* store a new expression into the previous one */
        pExpr->pNext = pNext;  /* restore the link to next expression */
+#if defined( HB_MACRO_SUPPORT )
        if( pNext )
           HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
        else
           HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+#else
+       if( pNext && bLateEval )
+          HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
+       else
+          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+#endif          
        pPrev  = &pExpr->pNext;
        pExpr  = pNext;
     }
+#if defined( HB_MACRO_SUPPORT )
     HB_EXPR_PCODE0( hb_compCodeBlockEnd );
+#else
+    if( bLateEval )
+      HB_EXPR_PCODE0( hb_compCodeBlockEnd );
+    else
+      HB_EXPR_PCODE0( hb_compCodeBlockRewind );
+#endif      
 }
 
 /* This generates a push pcode for early evaluation of a macro
@@ -562,18 +578,9 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 	 	* {|| &variable+1} => &( '{|| &variable+1}' )
 		*/
 		HB_EXPR_PTR pNew;
-		char *szDupl;
-		BOOL bUseTextSubst;
-	
-		HB_EXPR_PCODE0( hb_compCodeBlockStart );
 
-		szDupl = hb_strupr( hb_strdup( pSelf->value.asCodeblock.string ) );
-		if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
-		{
-               hb_compErrorCodeblock( pSelf->value.asCodeblock.string );
-               hb_compErrorMacro( pSelf->value.asCodeblock.string );
-		}
-		hb_xfree( szDupl );
+      hb_compExprCodeblockPush( pSelf, FALSE );
+
 		pNew = hb_compExprNewMacro( hb_compExprNewString(pSelf->value.asCodeblock.string), 0, NULL );
 		HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
 		hb_compExprDelete( pNew );
@@ -1294,7 +1301,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   /* simple macro variable expansion: &variable
                    * 'szMacro' is a variable name
                    */
-                  HB_EXPR_PCODE1( hb_compGenPushVar, pSelf->value.asMacro.szMacro );
+                  HB_EXPR_PCODE2( hb_compGenPushVar, pSelf->value.asMacro.szMacro, TRUE );
                }
                else
                {
@@ -1302,6 +1309,18 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                    * all components should be placed as a string that will
                    * be compiled after text susbstitution
                    */
+#if ! defined( HB_MACRO_SUPPORT )
+
+                  BOOL bUseTextSubst;
+		            char *szDupl;
+		            szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
+
+		            if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
+		            {
+                     hb_compErrorMacro( pSelf->value.asMacro.szMacro );
+		            }
+		            hb_xfree( szDupl );
+#endif                  
                   HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
             }
@@ -1411,7 +1430,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   /* simple macro variable expansion: &variable
                    * 'szMacro' is a variable name
                    */
-                  HB_EXPR_PCODE1( hb_compGenPushVar, pSelf->value.asMacro.szMacro );
+                  HB_EXPR_PCODE2( hb_compGenPushVar, pSelf->value.asMacro.szMacro, TRUE );
                }
                else
                {
@@ -1419,6 +1438,18 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                    * all components should be placed as a string that will
                    * be compiled after text susbstitution
                    */
+#if ! defined( HB_MACRO_SUPPORT )
+
+                  BOOL bUseTextSubst;
+		            char *szDupl;
+		            szDupl = hb_strupr( hb_strdup( pSelf->value.asMacro.szMacro ) );
+
+		            if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
+		            {
+                     hb_compErrorMacro( pSelf->value.asMacro.szMacro );
+		            }
+		            hb_xfree( szDupl );
+#endif                  
                   HB_EXPR_PCODE2( hb_compGenPushString, pSelf->value.asMacro.szMacro, strlen(pSelf->value.asMacro.szMacro) + 1 );
                }
             }
@@ -1952,10 +1983,10 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
             if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
                HB_EXPR_PCODE4( hb_compGenPushAliasedVar, pSelf->value.asSymbol, FALSE, NULL, 0 );
             else
-               HB_EXPR_PCODE1( hb_compGenPushVar, pSelf->value.asSymbol );
+               HB_EXPR_PCODE2( hb_compGenPushVar, pSelf->value.asSymbol, FALSE );
          }
 #else
-         HB_EXPR_PCODE1( hb_compGenPushVar, pSelf->value.asSymbol );
+         HB_EXPR_PCODE2( hb_compGenPushVar, pSelf->value.asSymbol, FALSE );
 #endif
           break;
 
@@ -1974,7 +2005,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
 
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
-         HB_EXPR_PCODE1( hb_compGenPushVar, pSelf->value.asSymbol );
+         HB_EXPR_PCODE2( hb_compGenPushVar, pSelf->value.asSymbol, FALSE );
          HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_POP );
          break;
 

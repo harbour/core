@@ -140,7 +140,7 @@ extern void hb_compGenPopAliasedVar( char * szVarName,
                                      BOOL bPushAliasValue,
                                      char * szAlias,
                                      long lWorkarea, HB_BISON_PTR pMacro );
-extern void hb_compGenPushVar( char * szVarName, HB_BISON_PTR pMacro );
+extern void hb_compGenPushVar( char * szVarName, BOOL bMacroVar, HB_BISON_PTR pMacro );
 extern void hb_compGenPushVarRef( char * szVarName, HB_BISON_PTR pMacro );
 extern void hb_compGenPushAliasedVar( char * szVarName,
                                       BOOL bPushAliasValue,

@@ -1686,16 +1686,23 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
 
   s_numBrackets = 0;
   HB_SKIPTABSPACES( ptri );
-  if( ptrmp == NULL ) { if( *ptri != '\0' ) return -1; }
+  if( ptrmp == NULL ) 
+  { 
+      if( *ptri != '\0' ) 
+         return -1; 
+  }
   else
+  {
     while( *ptri != '\0' && !endTranslation )
-      {
+    {
         HB_SKIPTABSPACES( ptrmp );
         if( *ptrmp == '[' && !s_numBrackets && !strtopti )
+        {
           strtopti = ptrmp;
+        }
         if( !s_numBrackets && strtopti && strtptri != ptri &&
            ( ISNAME( ( BYTE ) *ptri ) || *ptri=='&' ) )
-          {
+        {
             strtptri = ptri;
             ptrmp = strtopti;
             ptr = ptri;
@@ -1708,7 +1715,8 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                 if( ptr )
                     ptrmp = ptr;
               }
-          }
+        }
+          
         switch( *ptrmp ) {
         case '[':
           if( !s_numBrackets ) isWordInside = 0;
@@ -1717,21 +1725,24 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           lastopti[s_Repeate++] = ptrmp;
           ptrmp++;
           if( !CheckOptional( ptrmp, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
+          {
             SkipOptional( &ptrmp );
+          }
           break;
+          
         case ']':
           if( s_Repeate )
             {
               s_Repeate--;
               if( s_aIsRepeate[ s_Repeate ] )
-                {
+              {
                   if( ISNAME( ( BYTE ) *ptri) )
-                    {
+                  {
                       ptr = ptri;
                       ipos = NextName( &ptr, tmpname );
                       ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE, TRUE );
                       if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
-                        {
+                      {
                          ptr = PrevSquare( ptrmp+ipos-2, ptrmp+1, NULL );
                          if( !ptr || CheckOptional( ptrmp+1, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
                            {
@@ -1745,18 +1756,22 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                             }
                             else
                                ptrmp = lastopti[s_Repeate];
-                        }
+                      }
                       else
+                      {
                          ptrmp = lastopti[s_Repeate];
-                    }
+                      }
+                  }
                   else
+                  {
                     ptrmp = lastopti[s_Repeate];
-                }
+                  }
+              }
               else
-                {
+              {
                  if( !isWordInside ) strtopti = NULL;
                  ptrmp++;
-                }
+              }
               s_numBrackets--;
             }
           else
@@ -1765,6 +1780,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
              s_numBrackets--; ptrmp++;
             }
           break;
+          
         case ',':
           if( s_numBrackets == 1 ) isWordInside = 1;
           if( !s_numBrackets ) strtopti = NULL;
@@ -1778,6 +1794,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
               else return -1;
             }
           break;
+          
         case '\1':  /*  Match marker */
           if( !s_numBrackets ) strtopti = NULL;
           if( s_numBrackets == 1 && *(ptrmp+2) == '2' ) isWordInside = 1; /*  restricted match marker  */
@@ -1790,11 +1807,13 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
               else return -1;
             }
           break;
+          
         case '\0':
           if( com_or_tra )
             return -1;
           else endTranslation = TRUE;
           break;
+          
         default:    /*   Key word    */
           if( s_numBrackets == 1 ) isWordInside = 1;
           if( !s_numBrackets ) strtopti = NULL;
@@ -1810,8 +1829,9 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
             }
         }
         HB_SKIPTABSPACES( ptri );
-      };
-
+    };
+  }
+  
   if( *ptrmp != '\0' )
     {
       if( s_Repeate ) { s_Repeate = 0; ptrmp = lastopti[0]; }

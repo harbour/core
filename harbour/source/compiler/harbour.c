@@ -1507,6 +1507,7 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    pFunc->iStackIndex     = 0;
    pFunc->iStackFunctions = 0;
    pFunc->iStackClasses   = 0;
+   pFunc->bLateEval       = TRUE;
 
    return pFunc;
 }
@@ -2690,6 +2691,22 @@ void hb_compGenMessageData( char * szMsg ) /* generates an underscore-symbol nam
    hb_compGenMessage( szResult );
 }
 
+static void hb_compCheckEarlyMacroEval( char *szVarName )
+{
+   int iScope = hb_compVariableScope( szVarName );
+
+   if( iScope == HB_VS_CBLOCAL_VAR ||
+       iScope == HB_VS_STATIC_VAR ||
+       iScope == HB_VS_GLOBAL_STATIC ||
+       iScope == HB_VS_LOCAL_FIELD ||
+       iScope == HB_VS_GLOBAL_FIELD ||
+       iScope == HB_VS_LOCAL_MEMVAR ||
+       iScope == HB_VS_GLOBAL_MEMVAR )
+   {
+      hb_compErrorCodeblock( szVarName );
+   }
+}
+
 /* Check variable in the following order:
  * LOCAL variable
  *    local STATIC variable
@@ -2704,6 +2721,13 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
 {
    int iVar;
 
+   if( ! hb_comp_functions.pLast->bLateEval )
+   {
+      /* pseudo-generation of pcode for a codeblock with macro symbol */
+      hb_compCheckEarlyMacroEval( szVarName );
+      return;
+   }
+   
    iVar = hb_compLocalGetPos( szVarName );
    if( iVar )
    {
@@ -2864,11 +2888,19 @@ void hb_compGenPopAliasedVar( char * szVarName,
 
 /* generates the pcode to push a nonaliased variable value to the virtual
  * machine stack
+ * bMacroVar is TRUE if macro &szVarName context
  */
-void hb_compGenPushVar( char * szVarName )
+void hb_compGenPushVar( char * szVarName, BOOL bMacroVar )
 {
    int iVar;
 
+   if( ! hb_comp_functions.pLast->bLateEval && ! bMacroVar )
+   {
+      /* pseudo-generation of pcode for a codeblock with macro symbol */
+      hb_compCheckEarlyMacroEval( szVarName );
+      return;
+   }
+   
    iVar = hb_compLocalGetPos( szVarName );
    if( iVar )
    {
@@ -2964,6 +2996,13 @@ void hb_compGenPushVarRef( char * szVarName ) /* generates the pcode to push a v
 {
    int iVar;
 
+   if( ! hb_comp_functions.pLast->bLateEval )
+   {
+      /* pseudo-generation of pcode for a codeblock with macro symbol */
+      hb_compCheckEarlyMacroEval( szVarName );
+      return;
+   }
+   
    iVar = hb_compLocalGetPos( szVarName );
    if( iVar )
    {
@@ -3752,13 +3791,14 @@ void hb_compStaticDefEnd( void )
 /*
  * Start a new fake-function that will hold pcodes for a codeblock
 */
-void hb_compCodeBlockStart()
+void hb_compCodeBlockStart( BOOL bLateEval )
 {
    PFUNCTION pBlock;
 
    pBlock       = hb_compFunctionNew( NULL, HB_FS_STATIC );
    pBlock->pOwner       = hb_comp_functions.pLast;
    pBlock->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
+   pBlock->bLateEval = bLateEval;
 
    hb_comp_functions.pLast = pBlock;
 }
@@ -3919,9 +3959,7 @@ void hb_compCodeBlockEnd( void )
 void hb_compCodeBlockStop( void )
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
-   PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
-   USHORT wLocals = 0;     /* number of referenced local variables */
-   USHORT wUsed;
+   PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
    PVAR pVar, pFree;
 
    pCodeblock = hb_comp_functions.pLast;
@@ -3936,22 +3974,11 @@ void hb_compCodeBlockStop( void )
    while( pFunc->pOwner )
       pFunc = pFunc->pOwner;
 
-   pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
-
-   /* Count the number of referenced local variables */
-   pVar = pCodeblock->pStatics;
-   while( pVar )
-   {
-      pVar = pVar->pNext;
-      ++wLocals;
-   }
-
-   wUsed =0;
    pVar = pCodeblock->pLocals;
    while( pVar )
    {
-      if( pVar->iUsed & VU_USED )
-        wUsed = 1;
+      if( hb_comp_iWarnings && pFunc->szName && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
       /* free used variables */
       pFree = pVar;
@@ -3964,6 +3991,27 @@ void hb_compCodeBlockStop( void )
    hb_xfree( ( void * ) pCodeblock->pCode );
    hb_xfree( ( void * ) pCodeblock );
 }
+
+void hb_compCodeBlockRewind()
+{
+   PFUNCTION pCodeblock;   /* pointer to the current codeblock */
+
+   pCodeblock = hb_comp_functions.pLast;
+   pCodeblock->lPCodePos = 0;
+
+   /* Release the NOOP array. */
+   if( pCodeblock->pNOOPs )
+      hb_xfree( ( void * ) pCodeblock->pNOOPs );
+
+   /* Release the Jumps array. */
+   if( pCodeblock->pJumps )
+      hb_xfree( ( void * ) pCodeblock->pJumps );
+
+   /* Compile Time Strong Type Checking Stack is not needed any more. */
+   if ( pCodeblock->pStack )
+      hb_xfree( ( void * ) pCodeblock->pStack );
+}
+
 
 /* ************************************************************************* */
 
