@@ -360,13 +360,24 @@ METHOD GetPreValidate() CLASS HBGetList
 
    local oGet := ::oGet
    local lUpdated, lWhen := .t.
+   local xValue
 
    if oGet:PreBlock != NIL
-      oGet:type := ValType( oGet:VarGet() )
-      lUpdated := ::lUpdated
-      lWhen := Eval( oGet:PreBlock, oGet )
-      oGet:Display()
+      xValue    := oGet:VarGet()
+      oGet:type := ValType( xValue )
+      lUpdated  := ::lUpdated
+
+      lWhen     := Eval( oGet:PreBlock, oGet )
+
+      if ValType( xValue ) != ValType( oGet:VarGet() ) .or.;
+           oGet:VarGet() != xValue
+         oGet:VarPut( oGet:VarGet() )
+      else
+         oGet:Display()
+      endif
+
       ::ShowScoreBoard()
+
       ::lUpdated := lUpdated
 
 /*
@@ -392,6 +403,7 @@ METHOD GetPostValidate() CLASS HBGetList
 
    local oGet := ::oGet
    local lUpdated, lValid := .t.
+   local xValue
 
    if oGet:ExitState == GE_ESCAPE
       return .t.
@@ -414,12 +426,21 @@ METHOD GetPostValidate() CLASS HBGetList
 
    if oGet:PostBlock != NIL
 
+      xValue   := oGet:VarGet()
       lUpdated := ::lUpdated
+
       SetPos( oGet:Row, oGet:Col + IIF( oGet:Buffer == NIL, 0, Len( oGet:Buffer ) ) )
-      lValid := Eval( oGet:PostBlock, oGet )
+      lValid   := Eval( oGet:PostBlock, oGet )
       SetPos( oGet:Row, oGet:Col )
-      ::ShowScoreBoard()
+
+      if ValType( xValue ) != ValType( oGet:VarGet() ) .or.;
+           oGet:VarGet() != xValue
+         oGet:VarPut( oGet:VarGet() )
+      endif
       oGet:UpdateBuffer()
+
+      ::ShowScoreBoard()
+      
       ::lUpdated := lUpdated
 
 /*
@@ -439,16 +460,22 @@ return lValid
 
 METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
 
-   local oGet := ::oGet, lUpdated
+   local oGet := ::oGet, lUpdated, xValue
 
    if oGet:Changed
       oGet:Assign()
       ::lUpdated := .t.
    endif
 
+   xValue   := oGet:VarGet()
    lUpdated := ::lUpdated
 
    Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
+
+   if ValType( xValue ) != ValType( oGet:VarGet() ) .or.;
+        oGet:VarGet() != xValue
+      oGet:VarPut( oGet:VarGet() )
+   endif
 
    ::ShowScoreboard()
    oGet:UpdateBuffer()
@@ -958,37 +985,60 @@ METHOD TBApplyKey( oGet, oTB, nKey, aMsg ) CLASS HBGETLIST
 
 METHOD GUIPostValidate( oGUI ) CLASS HBGetList
    Local oGet := ::oGet
-   Local lSavUpdated
+   Local lUpdated
    Local lValid := .T.
-   Local uOldData, uNewData
-
+   Local xValue
 
    if oGet:exitState == GE_ESCAPE
       return .t.                   // NOTE
    endif
 
+   if oGet:BadDate()
+//      oGet:SetFocus()
+      oGet:TypeOut := .f.
+      ::DateMsg()
+      ::ShowScoreboard()
+      return .f.
+   endif
+
+   if oGet:Changed
+      oGet:UpdateBuffer()
+      ::lUpdated := .t.
+   endif
+
+   oGet:Reset():Display()
+
+/*
    // If editing occurred, assign the new value to the variable
    if !( uOldData == uNewData )
       oGet:VarPut( uNewData )
       ::lUpdated := .T.
    endif
+*/
 
    // Check VALID condition if specified
    if !( oGet:postBlock == NIL )
 
-      lSavUpdated := ::lUpdated
+      xValue   := oGet:VarGet()
+      lUpdated := ::lUpdated
 
       lValid := eval( oGet:postBlock, oGet )
 
       // Reset S'87 compatibility cursor position
       setpos( oGet:Row, oGet:Col )
 
+      if ValType( xValue ) != ValType( oGet:VarGet() ) .or.;
+           oGet:VarGet() != xValue
+         oGet:VarPut( oGet:VarGet() )
+      endif
+      oGet:UpdateBuffer()
+
       ::ShowScoreBoard()
       if ! ( oGUI:ClassName == "TBROWSE" )
          oGUI:Select( oGet:VarGet() )
       endif
 
-      ::lUpdated := lSavUpdated
+      ::lUpdated := lUpdated
 
 /*
       if !( __GetListActive() == Self )
@@ -1008,17 +1058,27 @@ METHOD GUIPostValidate( oGUI ) CLASS HBGetList
 
 METHOD GUIPreValidate( oGUI ) CLASS HBGetList
    Local oGet := ::oGet
-   Local lSavUpdated
+   Local lUpdated
    Local lWhen := .T.
+   Local xValue
 
    if !( oGet:preBlock == NIL )
-      lSavUpdated := ::lUpdated
+      xValue      := oGet:VarGet()
+      oGet:type   := ValType( xValue )
+      lUpdated := ::lUpdated
 
       lWhen := eval( oGet:preBlock, oGet )
 
+      if ValType( xValue ) != ValType( oGet:VarGet() ) .or.;
+           oGet:VarGet() != xValue
+         oGet:VarPut( oGet:VarGet() )
+      else
+         oGet:Display()
+      endif
+
       ::ShowScoreBoard()
 
-      ::lUpdated := lSavUpdated
+      ::lUpdated := lUpdated
 
 /*
       if !( __GetListActive() == Self )
