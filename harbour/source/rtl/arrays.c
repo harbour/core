@@ -535,6 +535,7 @@ PITEM hb_arrayClone( PITEM pSrcArray )
 
       pSrcBaseArray = ( PBASEARRAY )pSrcArray->value.pBaseArray;
       pDstBaseArray = ( PBASEARRAY )pDstArray->value.pBaseArray;
+      pDstBaseArray->wClass = pSrcBaseArray->wClass;
 
       for ( ulCount = 0; ulCount < ulSrcLen; ulCount ++ )
 	{

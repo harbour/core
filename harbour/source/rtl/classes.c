@@ -11,6 +11,7 @@ void PushSymbol( PSYMBOL );
 void Message( PSYMBOL );
 void Do( WORD wParams );
 void hb_arrayDel( PITEM, ULONG );
+PITEM hb_arrayClone( PITEM );
 
 #define MET_METHOD    0
 #define MET_DATA      1
@@ -635,5 +636,18 @@ HARBOUR CLASSDEL()      /* Delete message (only for INLINE and METHOD)      */
          pClass->wMethods--;                    /* Decrease number messages */
       }
    }
+}
+
+HARBOUR OCLONE( void )
+{
+  PITEM pSrcObject  = _param( 1, IT_OBJECT );
+
+  if ( pSrcObject )
+    {
+      PITEM pDstObject = hb_arrayClone( pSrcObject );
+      ItemCopy( &stack.Return, pDstObject ); /* OClone() returns the new object */
+    }
+  else
+    _ret();
 }
 

@@ -1,3 +1,7 @@
+19990515-19:40 CET Eddie Runia
+  * source/rtl/classes.c, source/rtl/arrays.c
+    oClone added (actually : aClone can handle both :-)
+
 19990515-16:20 CET Eddie Runia
   * source/compiler/harbour.y
     Jump optimalization caused return to fail. Optimalization removed.
