@@ -422,7 +422,6 @@ HB_FUNC( TRANSFORM )
          }
 
          /* TODO: maybe replace this 16 with something else */
-//Toninho@fwi    szResult = ( char * ) hb_xgrab( ulPicLen + 16 );   /* Grab enough */
          szResult = ( char * ) hb_xgrab( ulPicLen + (ULONG) iOrigWidth + (ULONG) iOrigDec + 16 );   /* Grab enough */
          *szResult = '\0';
 
@@ -472,7 +471,6 @@ HB_FUNC( TRANSFORM )
          }
 
          pNumber = hb_itemPutNDLen( NULL, dPush, -1, iDec );
-//Toninho@fwi    pWidth = hb_itemPutNI( NULL, iWidth + ( !ulPicLen && iDec > 0 ? iDec + 1 : 0 ) );
          pWidth = hb_itemPutNI( NULL, iWidth + ( ( ulPicLen || iDec == 0 ) ? 0 : ( iDec + 1 ) ) );
          pDec = hb_itemPutNI( NULL, iDec );
 
@@ -514,7 +512,6 @@ HB_FUNC( TRANSFORM )
 
                      if( uiPicFlags & PF_EXCHANG )  /* Exchange . and ,         */
                      {
-//Toninho@fwi                   szResult[ i ] = '.';
                         szResult[ i ] = ',';
                         iCount++;
                      }
@@ -555,7 +552,6 @@ HB_FUNC( TRANSFORM )
                         if( i && szResult[ i - 1 ] == '*' )
                            szResult[ i ] = '*';
                         else
-//Toninho@fwi                      szResult[ i ] = '0';
                            szResult[ i ] = ' ';
                      }
                   }
@@ -826,7 +822,6 @@ HB_FUNC( TRANSFORM )
             hb_xfree( szStr );
          }
          else
-//Toninho@fwi       hb_retc( NULL );
             hb_retc( "" );
       }
       else if( HB_IS_DATE( pValue ) )

@@ -2589,6 +2589,10 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
    double dEnd;
    double dCurrent;
 
+   BOOL lEnd;
+   BOOL lCurrent;
+   BOOL lLogicalPassed = FALSE;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForTest()"));
 
    while( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) )
@@ -2609,7 +2613,7 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
 
    dStep = hb_vmPopNumber();
 
-   while( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) )
+   while( ( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) ) && ( ! HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) ) )
    {
       PHB_ITEM pItem1 = hb_stackItemFromTop( -1 );
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 1, pItem1 );
@@ -2625,9 +2629,15 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
          return;
    }
 
-   dEnd = hb_vmPopNumber();
+   if ( hb_stackItemFromTop( -1 )->type == HB_IT_LOGICAL )
+   {
+      lEnd = hb_vmPopLogical();
+      lLogicalPassed = TRUE;
+   }
+   else
+      dEnd = hb_vmPopNumber();
 
-   while( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) )
+   while( ( ! HB_IS_NUMERIC( hb_stackItemFromTop( -1 ) ) ) && ( ! HB_IS_LOGICAL( hb_stackItemFromTop( -1 ) ) ) )
    {
       PHB_ITEM pItem1 = hb_stackItemFromTop( -1 );
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<", 1, pItem1 );
@@ -2643,12 +2653,38 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
          return;
    }
 
-   dCurrent = hb_vmPopNumber();
+   if ( hb_stackItemFromTop( -1 )->type == HB_IT_LOGICAL )
+   {
+      lCurrent = hb_vmPopLogical();
+   }
+   else
+   {
+      lLogicalPassed = FALSE;
+      dCurrent = hb_vmPopNumber();
+   }
 
-   if( dStep >= 0 )          /* Positive loop. Use LESS */
-      hb_vmPushLogical( dCurrent <= dEnd );
-   else if( dStep < 0 )      /* Negative loop. Use GREATER */
-      hb_vmPushLogical( dCurrent >= dEnd );
+   if( lLogicalPassed )
+   {
+      if( dStep >= 0 )           /* Positive loop. Use LESS */
+      {
+         hb_vmPushLogical( lCurrent <= lEnd );
+      }
+      else if( dStep < 0 )      /* Negative loop. Use GREATER */
+      {
+         hb_vmPushLogical( lCurrent >= lEnd );
+      }
+   }
+   else
+   {
+      if( dStep >= 0 )          /* Positive loop. Use LESS */
+      {
+         hb_vmPushLogical( dCurrent <= dEnd );
+      }
+      else if( dStep < 0 )      /* Negative loop. Use GREATER */
+      {
+         hb_vmPushLogical( dCurrent >= dEnd );
+      }
+   }
 }
 
 /* ------------------------------- */
@@ -3082,9 +3118,17 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias )
       case HB_IT_LONG:
          /* Alias was evaluated from an expression, (nWorkArea)->field
           */
-         hb_rddSelectWorkAreaNumber( pAlias->item.asLong.value );
+         hb_rddSelectWorkAreaNumber( ( int ) pAlias->item.asLong.value );
          pAlias->type = HB_IT_NIL;
          break;
+
+      /*
+       These types were added for Clipper compatibility
+      */
+      case HB_IT_NIL:
+      case HB_IT_BLOCK:
+      case HB_IT_LOGICAL:
+      case HB_IT_ARRAY:
 
       case HB_IT_DOUBLE:
          /* Alias was evaluated from an expression, (nWorkArea)->field
@@ -4165,12 +4209,22 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
    pAlias = hb_stackItemFromTop( -1 );
    iCurrArea = hb_rddGetCurrentWorkAreaNumber();
 
-   /* NOTE: hb_vmSelecWorkarea clears passed item
-    */
-   if( hb_vmSelectWorkarea( pAlias ) == SUCCESS )
-      hb_rddGetFieldValue( pAlias, pSym );
+   /*
+    This was added for Clipper compatibility
+   */
+   if( ( pAlias->type == HB_IT_ARRAY ) || ( pAlias->type == HB_IT_LOGICAL ) || ( pAlias->type == HB_IT_NIL ) || ( pAlias->type == HB_IT_BLOCK ) )
+   {
+      hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 1, pAlias );
+   }
+   else
+   {
+      /* NOTE: hb_vmSelecWorkarea clears passed item
+       */
+      if( hb_vmSelectWorkarea( pAlias ) == SUCCESS )
+         hb_rddGetFieldValue( pAlias, pSym );
 
-   hb_rddSelectWorkAreaNumber( iCurrArea );
+      hb_rddSelectWorkAreaNumber( iCurrArea );
+   }
 }
 
 /* It pops the last item from the stack to use it to select a workarea

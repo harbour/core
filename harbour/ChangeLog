@@ -8,6 +8,21 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-17 23:00 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/rtl/transfrm.c
+    ! Removed some old commented lines
+
+  * contrib/rdd_ads/adsfunc.c
+    ! Update transaction functions
+    ! Add AdsCacheRecords function
+
+  * source/rdd/dbcmd.c
+    ! Modified error handling to allow retry if alias is not exist during
+      DBSelectArea() for Clipper compatibility. (Reported by Giovi Verrua)
+  * source/vm/hvm.c
+    ! More Clipper compatible to handle FOR-NEXT loops.
+      Changes by Andi Jahja, borrow from xharbour
+
 2003-07-17 17:43 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
   * doc/en/memo.txt
     + Added MEMOREAD(), MEMOWRIT() documentation 
