@@ -158,7 +158,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    DEFAULT s_lNoAlert TO __argCheck( "NOALERT" )
 
    IF s_lNoAlert
-      QUIT
+//      QUIT
+      return nil
    ENDIF
 
    aSay := {}
@@ -410,8 +411,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
  *  $RETURNS$
  *      __NONOALERT() always return NIL.
  *  $DESCRIPTION$
- *      The //NOALERT command line switch cause the program to QUIT whenever
- *      it encounter ALERT() function, this function override this behavior
+ *      The //NOALERT command line switch cause Clipper to ignore calls to
+ *      the ALERT() function, this function override this behavior
  *      and always display ALERT() dialog box.
  *  $EXAMPLES$
  *      // make sure alert are been displayed

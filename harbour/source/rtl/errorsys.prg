@@ -87,14 +87,16 @@ STATIC FUNCTION DefError( oError )
 
    ENDDO
 
-   DO CASE
-   CASE aOptions[ nChoice ] == "Break"
-      Break( oError )
-   CASE aOptions[ nChoice ] == "Retry"
-      RETURN .T.
-   CASE aOptions[ nChoice ] == "Default"
-      RETURN .F.
-   ENDCASE
+   IF !Empty( nChoice )
+      DO CASE
+      CASE aOptions[ nChoice ] == "Break"
+         Break( oError )
+      CASE aOptions[ nChoice ] == "Retry"
+         RETURN .T.
+      CASE aOptions[ nChoice ] == "Default"
+         RETURN .F.
+      ENDCASE
+   ENDIF
 
    // "Quit" selected
 

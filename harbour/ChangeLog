@@ -1,3 +1,12 @@
+19991127-15:57 EST Paul Tucker <ptucker@sympatico.ca>
+  * Clipper does _not_ quit if //noalert is specified and alert() is called.
+  * source/rtl/alert.prg
+    * if s_lNoAlert
+       RETURN NIL // Don't quit!
+    * updated comment in __NoNoAlert()
+  * source/rtl/errorsys.prg
+    * check for empty( nChoice ) in case alert returns nil.
+
 19991127-20:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/dummy.prg
   + source/rdd/dbeval.prg
