@@ -673,14 +673,18 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 
       info->hFindFile = FindFirstFile( pszFileName, &info->pFindFileData );
       info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( uiAttr );
-      errno = 0; 
+      errno = 0;
 
       if( info->hFindFile != INVALID_HANDLE_VALUE )
       {
          if( info->dwAttr == 0 ||
            ( info->pFindFileData.dwFileAttributes == 0 ) ||
-           ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
-           ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
+           ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL ) ||
+           ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
+         {
+            bFound = TRUE;
+         }
+         else if ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY  ||
            ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {
             bFound = TRUE;
@@ -688,13 +692,11 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
          else
          {
             bFound = FALSE;
-
             while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
             {
                if( info->dwAttr == 0 ||
                  ( info->pFindFileData.dwFileAttributes == 0 ) ||
-                 ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
-                 ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
+                 ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL )  ||
                  ( info->dwAttr & info->pFindFileData.dwFileAttributes ) )
                {
                   bFound = TRUE;
@@ -834,12 +836,14 @@ BOOL hb_fsFindNext( PHB_FFIND ffind )
 
    {
       bFound = FALSE;
-      errno = 0; 
+      errno = 0;
       while( FindNextFile( info->hFindFile, &info->pFindFileData ) )
       {
          if( info->dwAttr == 0 ||
              ( info->pFindFileData.dwFileAttributes == 0 ) ||
-             ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL ) ||
+             ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL ) ||
+             ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN ) ||
+             ( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM ) ||
              ( info->pFindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY ) ||
              ( info->dwAttr & info->pFindFileData.dwFileAttributes ))
          {

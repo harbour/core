@@ -132,6 +132,7 @@ HB_FUNC( DIRECTORY )
 
    uiMask = HB_FA_ARCHIVE
           | HB_FA_READONLY
+          | HB_FA_NORMAL
           | HB_FA_DEVICE
           | HB_FA_TEMPORARY
           | HB_FA_SPARSE

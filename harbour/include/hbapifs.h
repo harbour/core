@@ -96,15 +96,15 @@ typedef int     FHANDLE;
 #define HB_FA_DIRECTORY         16
 #define HB_FA_ARCHIVE           32
 #define HB_FA_DEVICE            64
-#define HB_FA_TEMPORARY         128
-#define HB_FA_SPARSE            256
-#define HB_FA_REPARSE           512
-#define HB_FA_COMPRESSED        1024
-#define HB_FA_OFFLINE           2048
-#define HB_FA_NOTINDEXED        4096
-#define HB_FA_ENCRYPTED         8192
-#define HB_FA_VOLCOMP           16384   /* volume supports compression. */
-#define HB_FA_NORMAL            HB_FA_ALL
+#define HB_FA_NORMAL            128
+#define HB_FA_TEMPORARY         256
+#define HB_FA_SPARSE            512
+#define HB_FA_REPARSE           1024
+#define HB_FA_COMPRESSED        2048
+#define HB_FA_OFFLINE           4096
+#define HB_FA_NOTINDEXED        8192
+#define HB_FA_ENCRYPTED         16384
+#define HB_FA_VOLCOMP           32768   /* volume supports compression. */
 
 extern BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
 extern USHORT   hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
