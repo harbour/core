@@ -21,7 +21,7 @@ endif
 
 LD = gcc
 LD_OUT = -o
-LDFLAGS = -lm
+LDLIBS = -lm
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
@@ -69,10 +69,11 @@ echo. $(file) >> __link__.tmp
 endef
 
 define link_exe_file
-echo. $(LDFLAGS) $(L_USR) $(LD_OUT)$@ > __link__.tmp
+echo. $(L_USR) $(LD_OUT)$@ > __link__.tmp
 $(foreach file, $^, $(link_file))
 $(foreach file, $(LINKPATHS), $(link_file))
 $(foreach file, $(LINKLIBS), $(link_file))
+echo. $(LDLIBS) >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 
