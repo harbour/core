@@ -61,14 +61,6 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
-#if defined(HB_OS_WIN_32)
-   #if defined(__BORLANDC__)
-      extern HMODULE _hInstance;
-   #else
-      HMODULE _hInstance;
-   #endif
-#endif
-
 HB_FUNC( LIBLOAD )
 {
 #if defined(HB_OS_WIN_32)
@@ -119,23 +111,4 @@ HB_FUNC( HB_LIBDO )
 
       hb_vmDo( uiPCount - 1 );
    }
-}
-
-
-/* It returns TRUE if this function is called from the main app (EXE)
- * and FALSE if it is called from a dynamic library (DLL)
- * -please update the mentioned extensions for other OS-
- */
-
-BOOL hb_StartApp( void )
-{
-#if defined(HB_OS_WIN_32)
-   {
-      return ( BOOL ) ( _hInstance == GetModuleHandle( NULL ) );
-   }
-#else
-   {
-      return TRUE;  /* Warning: this must be changed for other OS */
-   }
-#endif
 }

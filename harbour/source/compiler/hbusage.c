@@ -67,7 +67,7 @@ void hb_compPrintUsage( char * szSelf )
            "\n          %ces[<level>]     set exit severity",
            "\n          %cg<type>         output type generated is <type> (see below)",
            "\n          %cgc[<type>]      output type: C source (.c) (default)",
-           "\n                           <type>: 0=compact, 1=normal, 2=verbose (default)",
+           "\n                           <type>: 0=compact\n                                   1=normal\n                                   2=verbose (default)\n                                   3=no start up code",
            "\n          %cgo              output type: Platform dependant object module",
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",

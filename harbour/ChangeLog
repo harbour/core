@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-12-30 13:47 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/apollo/apollo.c
+     + Added function sx_GetDateJulian()
+     + Added function sx_GetVariant()
+     + Added function sx_SetCentury()
+     + Added function sx_SetDateFormat()
+     + Added function sx_GetLogical()
+     * modified function sx_Replace()
    Note: Replace a logical value with sx_Replace() does not work yet.
    * contrib/apollo/test/apollo.prg
      * Added added functions in the test application.
