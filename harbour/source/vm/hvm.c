@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* The Harbour virtual machine */
 
 /* Please note the following comments we may use everywhere
@@ -97,6 +93,7 @@ typedef struct _SYMBOLS
 } SYMBOLS, * PSYMBOLS;     /* structure to keep track of all modules symbol tables */
 
 void ProcessSymbols( PSYMBOL pSymbols, WORD wSymbols ); /* statics symbols initialization */
+void ProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 void DoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
 void DoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
 void LogSymbols( void );         /* displays all dynamic symbols */
@@ -128,6 +125,14 @@ extern ULONG ulMemoryBlocks;      /* memory blocks used */
 extern ULONG ulMemoryMaxBlocks;   /* maximum number of used memory blocks */
 extern ULONG ulMemoryConsumed;    /* memory size consumed */
 extern ULONG ulMemoryMaxConsumed; /* memory max size consumed */
+
+typedef struct
+{
+   WORD wSymbols;                 /* module local symbol table symbols amount */
+   PSYMBOL pSymbols;              /* module local symbol table address */
+} OBJSYMBOLS, * POBJSYMBOLS;      /* structure used from Harbour generated OBJs */
+
+extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 
 STACK stack;
 int iHBDEBUG = 0;      /* if 1 traces the virtual machine activity */
@@ -166,9 +171,11 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    InitializeSets(); /* initialize Sets */
+   ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
 
    PushSymbol( pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
+
    PushNil();               /* places NIL at self */
 
    for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
@@ -1765,6 +1772,13 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
 {
    PSYMBOLS pNewSymbols, pLastSymbols;
    WORD w;
+   static int iObjChecked = 0;
+
+   if( ! iObjChecked )
+   {
+      iObjChecked = 1;
+      ProcessObjSymbols();   /* to asure Harbour OBJ symbols are processed first */
+   }
 
    pNewSymbols = ( PSYMBOLS ) _xgrab( sizeof( SYMBOLS ) );
    pNewSymbols->pModuleSymbols = pModuleSymbols;
@@ -1789,6 +1803,23 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
       if( ( ( pModuleSymbols + w )->cScope == FS_PUBLIC ) ||
           ( ( pModuleSymbols + w )->cScope & FS_MESSAGE ) )
          NewDynSym( pModuleSymbols + w );
+   }
+}
+
+void ProcessObjSymbols( void )
+{
+   POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;
+
+   static int iDone = 0;
+
+   if( ! iDone )
+   {
+      iDone = 1;
+      while( pObjSymbols < ( POBJSYMBOLS ) ( &HB_LASTSYMBOL - 1 ) )
+      {
+         ProcessSymbols( pObjSymbols->pSymbols, pObjSymbols->wSymbols );
+         pObjSymbols++;
+      }
    }
 }
 
