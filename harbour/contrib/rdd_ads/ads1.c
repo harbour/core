@@ -206,6 +206,42 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
    return SUCCESS;
 }
 
+ERRCODE adsCloseCursor( ADSAREAP pArea )
+{
+   ERRCODE uiError;
+
+   HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor(%p)", pArea));
+
+   if( pArea->hTable )
+   {
+      AdsCloseTable  ( pArea->hTable );
+      uiError = SUPER_CLOSE( (AREAP)pArea );
+      pArea->hTable = 0;
+   }
+
+   /* Free field offset array */
+   if( pArea->pFieldOffset )
+   {
+      hb_xfree( pArea->pFieldOffset );
+      pArea->pFieldOffset = NULL;
+   }
+
+   /* Free buffer */
+   if( pArea->pRecord )
+   {
+      hb_xfree( pArea->pRecord );
+      pArea->pRecord = NULL;
+   }
+
+   /* Free all filenames */
+   if( pArea->szDataFileName )
+   {
+      hb_xfree( pArea->szDataFileName );
+      pArea->szDataFileName = NULL;
+   }
+   return uiError;
+}
+
 static BOOL strcmpNoCase( char * s1, char * s2, int n )
 {
    int i = 0;
@@ -761,34 +797,10 @@ static ERRCODE adsClose( ADSAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("adsClose(%p)", pArea));
 
-   if( pArea->hTable )
-   {
-      AdsCloseTable  ( pArea->hTable );
-      uiError = SUPER_CLOSE( (AREAP)pArea );
-   }
+   adsCloseCursor( pArea );
    if( pArea->hStatement )
       AdsCloseSQLStatement( pArea->hStatement );
 
-   /* Free field offset array */
-   if( pArea->pFieldOffset )
-   {
-      hb_xfree( pArea->pFieldOffset );
-      pArea->pFieldOffset = NULL;
-   }
-
-   /* Free buffer */
-   if( pArea->pRecord )
-   {
-      hb_xfree( pArea->pRecord );
-      pArea->pRecord = NULL;
-   }
-
-   /* Free all filenames */
-   if( pArea->szDataFileName )
-   {
-      hb_xfree( pArea->szDataFileName );
-      pArea->szDataFileName = NULL;
-   }
    return uiError;
 }
 
@@ -800,6 +812,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
    UNSIGNED8 ucBuffer[MAX_STR_LEN+1], ucField[HARBOUR_MAX_RDD_FIELDNAME_LENGTH+1];
    USHORT uiCount, uiLen;
    LPFIELD pField;
+   char cType;
 
    HB_TRACE(HB_TR_DEBUG, ("adsCreate(%p, %p)", pArea, pCreateInfo));
 
@@ -812,6 +825,21 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
      switch ( pField->uiType )
      {
         case HB_IT_DATE:
+            cType = 'D'; break;
+        case HB_IT_LOGICAL:
+            cType = 'L'; break;
+        case HB_IT_MEMO:
+            cType = 'M'; break;
+        case HB_IT_STRING:
+            cType = 'C'; break;
+        case HB_IT_INTEGER:
+        case HB_IT_LONG:
+        case HB_IT_DOUBLE:
+            cType = 'N'; break;
+     }
+     switch ( pField->uiType )
+     {
+        case HB_IT_DATE:
         case HB_IT_LOGICAL:
         case HB_IT_MEMO:
             if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
@@ -819,11 +847,11 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
                 ucField[0]='\0';
                 strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
                                     HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
-                sprintf((char*)ucBuffer,"%s,%c;", ucField, pField->uiType );
+                sprintf((char*)ucBuffer,"%s,%c;", ucField, cType );
             }
             else
                 sprintf((char*)ucBuffer,"%s,%c;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
-                           pField->uiType );
+                           cType );
             break;
         default :
             if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
@@ -831,11 +859,11 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
                 ucField[0]='\0';
                 strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
                                     HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
-                sprintf((char*)ucBuffer,"%s,%c,%d,%d;", ucField, pField->uiType, pField->uiLen, pField->uiDec );
+                sprintf((char*)ucBuffer,"%s,%c,%d,%d;", ucField, cType, pField->uiLen, pField->uiDec );
             }
             else
                 sprintf((char*)ucBuffer,"%s,%c,%d,%d;", (( PHB_DYNS ) pField->sym )->pSymbol->szName,
-                        pField->uiType, pField->uiLen, pField->uiDec );
+                        cType, pField->uiLen, pField->uiDec );
             break;
      }
      strcat((char*)ucfieldDefs, (char*)ucBuffer);
@@ -846,8 +874,11 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
 
    hb_xfree(ucfieldDefs);
    if( uRetVal != AE_SUCCESS )
+   {
+      AdsShowError( "Error" );
       return FAILURE;
-   AdsCloseTable(hTable);
+   }
+   // AdsCloseTable(hTable);
    return SUCCESS;
 }
 

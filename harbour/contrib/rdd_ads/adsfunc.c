@@ -45,6 +45,7 @@
 #include "rddads.h"
 
 #define HARBOUR_MAX_RDD_FILTER_LENGTH     256
+extern ERRCODE adsCloseCursor( ADSAREAP pArea );
 
 int adsFileType = ADS_CDX;
 int adsLockType = ADS_PROPRIETARY_LOCKING;
@@ -659,6 +660,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
    if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
                         && pArea->hStatement && ISCHAR( 1 ) )
    {
+      adsCloseCursor( pArea );
       ulRetVal = AdsExecuteSQLDirect( pArea->hStatement, hb_parc( 1 ), &hCursor );
       if( ulRetVal == AE_SUCCESS )
       {
@@ -672,11 +674,61 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
       }
       else
       {
-         UNSIGNED32 pulErrCode;
-         UNSIGNED8 pucBuf[160];
-         UNSIGNED16 pusBufLen = 160;
-         AdsGetLastError( &pulErrCode, &pucBuf, &pusBufLen);
-         printf( "\nDirect 4: %d %s",pulErrCode,pucBuf );
+         AdsShowError( "ExecuteSQL error:" );
+         hb_retl( 0 );
+      }
+   }
+   else
+      hb_retl( 0 );
+}
+
+HB_FUNC( ADSPREPARESQL )
+{
+   UNSIGNED32 ulRetVal;
+   ADSAREAP pArea;
+
+   if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
+                        && pArea->hStatement && ISCHAR( 1 ) )
+   {
+      adsCloseCursor( pArea );
+      ulRetVal = AdsPrepareSQL( pArea->hStatement, hb_parc( 1 ) );
+      if( ulRetVal == AE_SUCCESS )
+         hb_retl( 1 );
+      else
+      {
+         AdsShowError( "PrepareSQL error:" );
+         hb_retl( 0 );
+      }
+   }
+   else
+      hb_retl( 0 );
+}
+
+HB_FUNC( ADSEXECUTESQL )
+{
+   UNSIGNED32 ulRetVal;
+   ADSHANDLE hCursor = 0;
+   ADSAREAP pArea;
+   DBOPENINFO pInfo;
+
+   if( adsConnectHandle && ( pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer() ) != 0
+                        && pArea->hStatement )
+   {
+      adsCloseCursor( pArea );
+      ulRetVal = AdsExecuteSQL( pArea->hStatement, &hCursor );
+      if( ulRetVal == AE_SUCCESS )
+      {
+         if( hCursor )
+         {
+            pInfo.atomAlias = NULL;
+            pArea->hTable = hCursor;
+            SELF_OPEN( ( AREAP ) pArea, &pInfo );
+         }
+         hb_retl( 1 );
+      }
+      else
+      {
+         AdsShowError( "ExecuteSQL error:" );
          hb_retl( 0 );
       }
    }
