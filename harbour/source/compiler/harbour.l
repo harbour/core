@@ -87,7 +87,10 @@ Identifier    (([a-zA-Z])|([_a-zA-Z][_a-zA-Z0-9]+))
 /*String        (\"(([^\"]*)|([\!]*))\")|(\'(([^\']*)|([\!]*))\')*/
 
 PseudoFunc    {Identifier}"("+.*")"+
-Array         {Identifier}[ \t]*(\[[^\]]*\])+
+
+Array         {Identifier}[ \t]*"["
+ExpArray      ")"[ \t]*"["
+SubArray      "]"[ \t]*"["
 
 Comment1      "/*"([^\*]|[\*][^\/])*"*/"
 Comment2      [\/][\/].*
@@ -146,7 +149,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
 
 <INDEX>\n    { yyerror( "Unterminated Array Index" ); exit(1); }
 
-<INDEX>\[    { return yytext[ 0 ] ; }
+<INDEX>\[    { iIndexSets++; return yytext[ 0 ]; }
 
 <INDEX>\]    {
                 iIndexSets-- ;
@@ -886,65 +889,85 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                  }
               }
 
-<INITIAL>{Array}      { BEGIN INDEX;
-              {
-               int i = 0, iIdentifierLength = 0;
-               char chr;
-
-               /* Other states will know to resume this state. */
-               i_INDEX_STATE = 1;
-
-               while( i < yyleng )
+{Array}     {
+               if( ! i_INDEX_STATE )
                {
-                  chr = *( yytext + i++ );
-                  if( chr == '[' )
-                  {
-                     if( iIdentifierLength )
-                     {
-                        iIndexSets++;
-                     }
-                     else
-                     {
-                        iIdentifierLength = i - 1;
-                        iIndexSets++;
-                     }
-                  }
+                  BEGIN INDEX;
+                  i_INDEX_STATE = 1;
                }
 
-               yyless( iIdentifierLength );
+               unput( '[' );
+               yyleng--;
 
                /* Remove optional white space between Identifier and Index */
-               while( yytext[ iIdentifierLength - 1] < 48 )
-                  iIdentifierLength--;
+               while( yytext[ yyleng - 1 ] < 48 )
+                  yyleng--;
 
-               yyleng = iIdentifierLength;
                yytext[yyleng] = 0;
-               /*printf( "\nINDEX BEGIN Identifier = %s Length = %i IndexSets = %i\n", strupr( strdup( yytext ) ), iIdentifierLength, iIndexSets );*/
-              }
 
-              {
-               PDEFINE pDef = FindDef( yytext );
-               char * szText; int c;
+               {
+                  PDEFINE pDef = FindDef( yytext );
+                  char * szText; int c;
 
-               if( pDef )
-               {
-                  c = strlen( pDef->szValue ) - 1;
-                  szText = pDef->szValue;
-                  while( c >= 0 )
-                     unput( szText[ c-- ] );
+                  if( pDef )
+                  {
+                     c = strlen( pDef->szValue ) - 1;
+                     szText = pDef->szValue;
+                     while( c >= 0 )
+                       unput( szText[ c-- ] );
+                  }
+                  else
+                  {
+                     if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
+                     {
+                        yytext[ 10 ] = 0;
+                        yyleng = 10;
+                     }
+                     yylval.string = strupr( strdup( yytext ) );
+                     printf( "\nIdentifier = '%s'\n", strupr( strdup( yytext ) ) );
+                     _iState = IDENTIFIER;
+                     return IDENTIFIER;
+                  }
                }
-               else
+            }
+
+{ExpArray}  {
+               /* Must be recursive */
+               if( ! i_INDEX_STATE )
                {
-                   if( _iRestrictSymbolLength && strlen( yytext ) > 10 )
-                   {
-                      yytext[ 10 ] = 0;
-                      yyleng = 10;
-                   }
-                   yylval.string = strupr( strdup( yytext ) );
-                   return IDENTIFIER;
+                  BEGIN INDEX;
+                  i_INDEX_STATE = 1;
                }
-              }
-             }
+
+               unput( '[' );
+
+               yyleng = 1;
+               yytext[1] = 0;
+               yylval.string = ')';
+
+               _iState = OPERATOR;
+               return ')';
+            }
+
+{SubArray}  {
+               /* Must be recursive */
+               if( i_INDEX_STATE )
+               {
+                  BEGIN INDEX;
+                  i_INDEX_STATE = 1;
+               }
+
+               iIndexSets--;
+
+               unput( '[' );
+
+               yyleng = 1;
+               yytext[1] = 0;
+               yylval.string = ']';
+
+               _iState = OPERATOR;
+               return ']';
+            }
 
 {LineCont}    ++iLine;
 
@@ -967,6 +990,7 @@ Separator     {SpaceTab}|{Comment}|{LineCont}
                                     yyleng = 10;
                                  }
                                  yylval.string = strupr( strdup( yytext ) );
+                                 /*printf( "\nIdentifier = '%s'\n", strupr( strdup( yytext ) ) );*/
                                  return IDENTIFIER;
                               }
                            }

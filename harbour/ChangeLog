@@ -1514,6 +1514,28 @@ Wed May 05 09:19:23 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
         * ChangeLog:
         Added this file.
+
+May 31, 1999 Ron Pinkas
+        Harbour.l modified {Array} and added {FunArray} and {ExpArray}.
+        To fix support of <INDEX> state to be recusive as well as support:
+        Function()[nIndex].
+
+        /TESTS/WORKING/ArrIndex.prg added this file.
+
+        /TESTS/BROKEN/FuncArr.prg added this file to show:
+
+       // This is NOT working?
+       QOut( aFunc()[1]
+
+       // But this IS working!
+       a := aFunc()
+       QOut( a[1] )
+
+
+
+
+
+
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
