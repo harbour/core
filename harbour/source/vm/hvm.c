@@ -127,7 +127,7 @@ static void    hb_vmSwapAlias( void );           /* swaps items on the eval stac
 /* Execution */
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
 static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
-static void    hb_vmStaticName( USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
+static void    hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
 static void    hb_vmFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
@@ -207,6 +207,7 @@ extern POBJSYMBOLS hb_firstsymbol, hb_lastsymbol;
 HB_SYMB  hb_symEval = { "__EVAL", HB_FS_PUBLIC, hb_vmDoBlock, NULL }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
+static USHORT   s_uiStatics;        /* Number of statics added after processing hb_vmStatics() */
 static PHB_SYMB s_pSymStart = NULL; /* start symbol of the application. MAIN() is not required */
 static PSYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
 static BYTE     s_byErrorLevel;     /* application exit errorlevel */
@@ -651,9 +652,9 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_STATICNAME:
-            hb_vmStaticName( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ),
-                            ( char * ) pCode + w + 3 );
-            w += 3;
+            hb_vmStaticName( pCode[ w + 1 ], pCode[ w + 2 ] + ( pCode[ w + 3 ] * 256 ),
+                            ( char * ) pCode + w + 4 );
+            w += 4;
             while( pCode[ w++ ] );
             break;
 
@@ -3079,7 +3080,7 @@ static void hb_vmLocalName( USHORT uiLocal, char * szLocalName ) /* locals and p
    s_bDebugShowLines = TRUE;
 }
 
-static void hb_vmStaticName( USHORT uiStatic, char * szStaticName ) /* statics vars information for the debugger */
+static void hb_vmStaticName( BYTE bIsGlobal, USHORT uiStatic, char * szStaticName ) /* statics vars information for the debugger */
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStaticName(%hu, %s)", uiStatic, szStaticName));
 
@@ -3087,7 +3088,10 @@ static void hb_vmStaticName( USHORT uiStatic, char * szStaticName ) /* statics v
    s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
-   hb_vmPushLongConst( hb_arrayLen( &s_aStatics ) );
+   if( bIsGlobal )
+      hb_vmPushLongConst( hb_arrayLen( &s_aStatics ) - s_uiStatics );
+   else
+      hb_vmPushLongConst( hb_stack.iStatics + uiStatic );
    hb_vmPushString( szStaticName, strlen( szStaticName ) );
    hb_vmPushLongConst( 1 ); /* 1 for statics, 2 for locals */
    s_bDebuggerIsWorking = TRUE;
@@ -3148,6 +3152,8 @@ static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the g
       pSym->pFunPtr = ( PHB_FUNC ) hb_arrayLen( &s_aStatics );
       hb_arraySize( &s_aStatics, hb_arrayLen( &s_aStatics ) + uiStatics );
    }
+
+   s_uiStatics = uiStatics; /* We need s_uiStatics for processing hb_vmStaticName() */
 }
 
 static void hb_vmEndBlock( void )
@@ -4250,10 +4256,21 @@ HB_FUNC( __VMVARSLIST )
  * $End$ */
 HB_FUNC( __VMVARSGET )
 {
-   hb_itemReturn( s_aStatics.item.asArray.value->pItems +
-                  hb_stack.iStatics + hb_parni( 1 ) - 1 );
+   /* hb_itemReturn( s_aStatics.item.asArray.value->pItems +
+                  hb_stack.iStatics + hb_parni( 1 ) - 1 ); */
+
+   hb_itemReturn( s_aStatics.item.asArray.value->pItems + hb_parni( 1 ) - 1 );
 }
 
+/* $Doc$
+ * $FuncName$     __vmVarSSet(<nStatic>,<uValue>)
+ * $Description$  Sets the value of a specified statics
+ * $End$ */
+HB_FUNC( __VMVARSSET )
+{
+   hb_itemCopy( s_aStatics.item.asArray.value->pItems + hb_parni( 1 ) - 1,
+                * ( hb_stack.pBase + 3 ) );
+}
 
 /* ------------------------------------------------------------------------ */
 /* The garbage collector interface */
