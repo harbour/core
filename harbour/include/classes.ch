@@ -44,17 +44,18 @@
 #xcommand CLASSDATA <DataName1> [,<DataNameN>] => ;
    oClass:AddClassData( <(DataName1)> ) [; oClass:AddClassData( <(DataNameN)> ) ]
 
-#xcommand METHOD <MethodName>( [<params,...>] ) => ;
+#xcommand METHOD <MethodName>( [<params,...>] ) [ CONSTRUCTOR ] => ;
    oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
-
-#xcommand METHOD <MethodName>( [<params,...>] ) CONSTRUCTOR => ;
-   oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <MethodName>(Self [,<params>] ), Self } )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) INLINE <Code,...> => ;
    oClass:AddInline( <(MethodName)>, {|Self [,<params>] | <Code> } )
 
 #xcommand METHOD <MethodName>( [<params,...>] ) VIRTUAL => ;
    oClass:AddVirtual( <(MethodName)> )
+
+#xcommand METHOD <MethodName>( [<params,...>] ) SETGET => ;
+   oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() ) ;;
+   oClass:AddMethod( "_" + <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
 #xcommand MESSAGE <MessageName> METHOD <MethodName>( [<params,...>] ) => ;
    oClass:AddMethod( <(MessageName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
