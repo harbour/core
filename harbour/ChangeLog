@@ -1,3 +1,8 @@
+2001-06-22 11:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/vm/classes.c
+    ! The file <ctype.h> must be included for the toupper() prototype.
+
 2001-06-22 07:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      + Added logic for new Idenitifier Match Marker <!AnyId!> which will only match Identifiers.

@@ -172,9 +172,9 @@
 #include "hbvm.h"
 #include "hboo.ch"
 
+#include <ctype.h>             /* For toupper() */
 
 /* DEBUG only*/
-/*#include <ctype.h>*/
 /*#include <windows.h>*/
 
 typedef struct
