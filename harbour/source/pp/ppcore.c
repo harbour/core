@@ -135,6 +135,8 @@ static BOOL   OpenInclude( char *, PATHNAMES *, PHB_FNAME, BOOL bStandardOnly, c
 #define IT_COMMA      3
 #define IT_ID_OR_EXPR 4
 
+#define HB_PP_MAX_INCLUDES FOPEN_MAX - 5 - 1
+
 static int  s_kolAddDefs = 0;
 static int  s_kolAddComs = 0;
 static int  s_kolAddTras = 0;
@@ -146,6 +148,7 @@ static BOOL s_bReplacePat;
 static int  s_numBrackets;
 static char s_groupchar;
 static char s_prevchar;
+static int  s_iIncludes = 0;
 
 int        hb_pp_nEmptyStrings;
 int *      hb_pp_aCondCompile = NULL;
@@ -171,7 +174,8 @@ char * hb_pp_szErrors[] =
    "Freeing a NULL memory pointer",
    "Value out of range in #pragma directive",
    "Can\'t open command definitions file: \'%s\'",
-   "Invalid command definitions file name: \'%s\'"
+   "Invalid command definitions file name: \'%s\'",
+   "Too many nested #includes, can\'t open: \'%s\'"
 };
 
 /* Table with warnings */
@@ -2905,6 +2909,11 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
   PFILE pFile;
 
   HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
+
+  if( s_iIncludes > HB_PP_MAX_INCLUDES )
+     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, szFileName, NULL );
+  else
+     s_iIncludes++;
 
   if( bStandardOnly )
   {

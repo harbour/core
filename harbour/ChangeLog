@@ -1,3 +1,19 @@
+2000-08-03 18:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/macro/macro.slx
+   * source/compiler/harbour.slx
+     + Added (int) casting to isalpha() parameter calls.
+
+   * source/compiler/hbslex.c
+     * Removed extra empty line.
+
+   * include/hberrors.h
+     + Added #define HB_PP_ERR_TOO_MANY_INCLUDES 17
+
+   * source/pp/ppcore.c
+     + Addded: #define HB_PP_MAX_INCLUDES FOPEN_MAX - 5 - 1 (Victor ?)
+     + Added : "Too many nested #includes, can\'t open: \'%s\'"
+     + Added logic to protect against too many nested includes.
+
 2000-08-04 09:20 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/hbzlib/zlibapi1.c
    * contrib/hbzlib/zipfile2.c

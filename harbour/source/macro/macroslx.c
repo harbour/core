@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 #define HB_MACRO_SUPPORT
 
 #define yylex hb_complex

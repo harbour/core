@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * Harbour Project source code:
  * Compiler SimpLex rules
@@ -924,7 +923,7 @@ LANGUAGE_RULES_ARE {
       yytext = x;\
       yyleng = strlen( yytext );\
 \
-      if( *yytext == '_' || *yytext == '&' || isalpha( *yytext ) )\
+      if( *yytext == '_' || *yytext == '&' || isalpha( (int) *yytext ) )\
       {\
          /* Macro. */\
          if( ( tmpPtr = strrchr( yytext, '&' ) )  != NULL ) /* Right Search. */\
@@ -1112,7 +1111,7 @@ long hb_lex_Hex2L( char* sHex )
    {
       cChar = sHex[ iLen-- ];
 
-      if( isalpha( cChar ) )
+      if( isalpha( (int) cChar ) )
       {
          lVal = cChar - 55;
       }
