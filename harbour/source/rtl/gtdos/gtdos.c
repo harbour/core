@@ -616,7 +616,7 @@ static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
      ch_attr = ( ch << 8 ) | attr;
      puttext( cCol + 1, cRow + 1, cCol + 1, cRow + 1, &ch_attr );
    }
-#elif defined(__DJGPP)
+#elif defined(__DJGPP__)
    {
       ScreenPutChar( ch, attr, cCol, cRow );
    }
@@ -725,7 +725,7 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p", usTop, usLeft, usBottom, usRight, srce));
 
-#if defined(__DJGPP__TEXT)
+#if defined(__DJGPP__TEXT) || defined(__DJGPP__)
    {
      puttext( usLeft + 1, usTop + 1, usRight + 1, usBottom + 1, srce );
    }
