@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <set.h>
 
-/* TODO: search this file for TODO and find 'em! */
+extern STACK stack;
 
 #define HB_ISSPACE(c) ((c) == 9 || (c) == 10 || (c) == 13 || (c) == 32)
 
@@ -955,13 +955,13 @@ HARBOUR STRTRAN( void )
       _retc("");
 }
 
-/* returns an integer value of "numerical string"   */
+/* returns the numeric value of a character string representation of a number  */
 double hb_strVal( char *szText )
 {
    return atof(szText);
 }
 
-/* returns an integer value of "numerical string"   */
+/* returns the numeric value of a character string representation of a number  */
 HARBOUR VAL( void )
 {
    if( _pcount() == 1 )
@@ -969,7 +969,19 @@ HARBOUR VAL( void )
       PITEM pText = _param(1, IT_STRING);
 
       if( pText )
+      {
+         int nWidth, nDec = 0;
+         char * ptr = strchr( pText->value.szText, '.' );
+         if( ptr )
+         {
+            nWidth = ptr - pText->value.szText;
+            nDec = strlen( ptr + 1 );
+         }
+         else nWidth = strlen( pText->value.szText );
          _retnd(hb_strVal(pText->value.szText));
+         stack.Return.wLength = nWidth;
+         stack.Return.wDec    = nDec;
+      }
       else
       {
          PITEM pError = _errNew();
