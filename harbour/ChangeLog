@@ -1,3 +1,7 @@
+2001-06-22 06:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbclass.ch
+     ! Un-Commented out 3 rules used for VO OO and #undefed HB_CLS_VO instead.
+
 2001-06-21 11:19 UTC-0800 Brian Hays <bhays@abacuslaw.com>
 
    * source/rtl/transfrm.c
