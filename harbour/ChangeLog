@@ -1,3 +1,7 @@
+2001-08-04 18:40 GMT -3  Luiz Rafael Culik<culik@sl.conex.net>
+   *utils/hbmake/hbmake.prg
+     * Small fix to the library edit mode of hbmake
+
 2001-08-04 13:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.l
    * source/compiler/harbour.slx

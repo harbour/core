@@ -1877,7 +1877,7 @@ else
 
 For x := 1 To Len( aobjs )
    If x <> Len( aobjs )
-      Fwrite( nLinkHandle,  alltrim(aobjs[ x ]) )
+      Fwrite( nLinkHandle, ' '+ alltrim(aobjs[ x ]) )
    Else
       Fwrite( nLinkHandle," " +  alltrim(aobjs[ x ]) +" $(OB) "+ CRLF )
    Endif
