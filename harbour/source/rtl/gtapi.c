@@ -829,7 +829,7 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
    {
       char * fpBlank = (char *)hb_xgrab (iLength);
       char * fpBuff = (char *)hb_xgrab (iLength * 2);
-*      if (fpBlank && fpBuff)
+      if (fpBlank && fpBuff)
       {
          char attr = _Color[s_uiColorIndex] & 0xff;
 
