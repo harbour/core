@@ -12,6 +12,7 @@ C_SOURCES=\
 	binnum.c     \
 	binnumx.c    \
 	box.c        \
+	cdpapi.c     \
 	chrasc.c     \
 	colorind.c   \
 	console.c    \

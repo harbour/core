@@ -54,6 +54,7 @@
 #define HB_RDDCDX_H_
 
 #include "hbapirdd.h"
+#include "hbapicdp.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -355,6 +356,7 @@ typedef struct _CDXAREA
    BYTE bDay;
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
 
    /*
    *  CDX's additions to the workarea structure

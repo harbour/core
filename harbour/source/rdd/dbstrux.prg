@@ -100,7 +100,7 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    RETURN .T.
 
-FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
+FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
    LOCAL oError
@@ -140,7 +140,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias )
             aField[ DBS_LEN ] := aField[ DBS_LEN ] + aField[ DBS_DEC ] * 256, NIL ) } )
 
          dbCreate( cFileName, aStruct, cRDDName )
-         dbUseArea( lNew, cRDDName, cFileName, cAlias )
+         dbUseArea( lNew, cRDDName, cFileName, cAlias,,,cdpId )
 
       ENDIF
 

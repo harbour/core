@@ -307,8 +307,8 @@ void hb_pp_Table( void )
    static COMMANDS sC___163 = {0,"SELECT","\1A00","dbSelectArea( \1A30 )",&sC___162 };
    static COMMANDS sC___164 = {0,"SELECT","\1A00([\1B10])","dbSelectArea( \1A00(\1B00) )",&sC___163 };
    static COMMANDS sC___165 = {0,"USE","","dbCloseArea()",&sC___164 };
-   static COMMANDS sC___166 = {0,"USE","\1A40 [VIA \1B00] [ALIAS \1C00] [\1D20 NEW>] [\1E20 EXCLUSIVE>] [\1F20 SHARED>] [\1G20 READONLY>] [INDEX \1H40 [, \1I40]]",
-       "dbUseArea( \1D50, \1B00, \1A30, \1C30, if(\1F50 .or. \1E50, !\1E50, NIL), \1G50 ) [; dbSetIndex( \1H30 )] [; dbSetIndex( \1I30 )]",&sC___165 };
+   static COMMANDS sC___166 = {0,"USE","\1A40 [VIA \1B00] [ALIAS \1C00] [\1D20 NEW>] [\1E20 EXCLUSIVE>] [\1F20 SHARED>] [\1G20 READONLY>] [CODEPAGE \1H00] [INDEX \1I40 [, \1J40]]",
+       "dbUseArea( \1D50, \1B00, \1A30, \1C30, if(\1F50 .or. \1E50, !\1E50, NIL), \1G50, \1H30 ) [; dbSetIndex( \1I30 )] [; dbSetIndex( \1J30 )]",&sC___165 };
    static COMMANDS sC___167 = {0,"APPEND","BLANK","dbAppend()",&sC___166 };
    static COMMANDS sC___168 = {0,"PACK","","__dbPack()",&sC___167 };
    static COMMANDS sC___169 = {0,"ZAP","","__dbZap()",&sC___168 };
@@ -349,8 +349,8 @@ void hb_pp_Table( void )
        "DBEval( {|| dbRecall()}, \1A40, \1B40, \1C00, \1D00, \1E50 )",&sC___196 };
    static COMMANDS sC___198 = {0,"DELETE","","dbDelete()",&sC___197 };
    static COMMANDS sC___199 = {0,"RECALL","","dbRecall()",&sC___198 };
-   static COMMANDS sC___200 = {0,"CREATE","\1A40 [FROM \1B40] [VIA \1C00] [ALIAS \1D00] [\1E20 NEW>]",
-       "__dbCreate( \1A30, \1B30, \1C00, \1E50, \1D30 )",&sC___199 };
+   static COMMANDS sC___200 = {0,"CREATE","\1A40 [FROM \1B40] [VIA \1C00] [ALIAS \1D00] [\1E20 NEW>] [CODEPAGE \1F00]",
+       "__dbCreate( \1A30, \1B30, \1C00, \1E50, \1D30, \1F30 )",&sC___199 };
    static COMMANDS sC___201 = {0,"COPY","[STRUCTURE] [EXTENDED] [TO \1A40]","__dbCopyXStruct( \1A30 )",&sC___200 };
    static COMMANDS sC___202 = {0,"COPY","[STRUCTURE] [TO \1A40] [FIELDS \1B10]","__dbCopyStruct( \1A30, { \1B30 } )",&sC___201 };
    static COMMANDS sC___203 = {0,"COPY","[TO \1A40] [DELIMITED [WITH \1B30]] [FIELDS \1C10] [FOR \1D00] [WHILE \1E00] [NEXT \1F00] [RECORD \1G00] [\1H20REST>] [ALL]",

@@ -54,6 +54,7 @@
 #define HB_RDDNTX_H_
 
 #include "hbapirdd.h"
+#include "hbapicdp.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -296,6 +297,7 @@ typedef struct _NTXAREA
    BYTE bDay;
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
 
    /*
    *  NTX's additions to the workarea structure

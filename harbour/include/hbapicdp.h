@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * IS*() string functions
+ * Header file for the CodePages API
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,79 +50,42 @@
  *
  */
 
+#ifndef HB_APICDP_H_
+#define HB_APICDP_H_
+
 #include <ctype.h>
-
 #include "hbapi.h"
-#include "hbapicdp.h"
+#include "hbinit.h"
 
-extern PHB_CODEPAGE s_cdpage;
+/* This hack is needed to force preprocessing if id is also a macro */
+#define HB_CODEPAGE_REQUEST( id )           HB_CODEPAGE_REQUEST_( id )
+#define HB_CODEPAGE_REQUEST_( id )          extern HB_FUNC( HB_CODEPAGE_##id ); \
+                                        void hb_codepage_ForceLink( void ) \
+                                        { \
+                                           HB_FUNCNAME( HB_CODEPAGE_##id )(); \
+                                        }
 
-/* determines if first char of string is letter */
+#define HB_CODEPAGE_ANNOUNCE( id )          HB_FUNC( HB_CODEPAGE_##id ) {}
 
-HB_FUNC( ISALPHA )
+typedef struct _HB_CODEPAGE
 {
-   char * szString = hb_parc( 1 );
+   char *id;
+   int   nChars;
+   char *CharsUpper;
+   char *CharsLower;
+   BOOL  lSort;
+   BYTE *s_chars;
+   BYTE *s_upper;
+   BYTE *s_lower;
+} HB_CODEPAGE, * PHB_CODEPAGE;
 
-   if( szString != NULL )
-   {
-      if( isalpha( ( int ) * szString ) )
-         hb_retl( TRUE );
-      else if( s_cdpage->nChars && 
-           ( strchr( s_cdpage->CharsUpper,* szString ) || strchr( s_cdpage->CharsLower,* szString ) ) )
-         hb_retl( TRUE );
-      else
-         hb_retl( FALSE );
-   }
-   else
-      hb_retl( FALSE );
-}
+extern BOOL hb_cdpRegister( PHB_CODEPAGE );
+extern char * hb_cdpSelectID( char * );
+extern PHB_CODEPAGE hb_cdpSelect( PHB_CODEPAGE );
+extern PHB_CODEPAGE hb_cdpFind( char * );
+extern void hb_cdpTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE );
+extern void hb_cdpnTranslate( char*, PHB_CODEPAGE, PHB_CODEPAGE, unsigned int );
+extern int hb_cdpcmp( char*, char*, int );
 
-/* determines if first char of string is digit */
+#endif /* HB_APICDP_H_ */
 
-HB_FUNC( ISDIGIT )
-{
-   char * szString = hb_parc( 1 );
-
-   if( szString != NULL )
-      hb_retl( isdigit( ( int ) * szString ) );
-   else
-      hb_retl( FALSE );
-}
-
-/* determines if first char of string is upper-case */
-
-HB_FUNC( ISUPPER )
-{
-   char * szString = hb_parc( 1 );
-
-   if( szString != NULL )
-   {
-      if( isupper( ( int ) * szString ) )
-         hb_retl( TRUE );
-      else if( s_cdpage->nChars && strchr( s_cdpage->CharsUpper,* szString ) )
-         hb_retl( TRUE );
-      else
-         hb_retl( FALSE );
-   }
-   else
-      hb_retl( FALSE );
-}
-
-/* determines if first char of string is lower-case */
-
-HB_FUNC( ISLOWER )
-{
-   char * szString = hb_parc( 1 );
-
-   if( szString != NULL )
-   {
-      if( islower( ( int ) * szString ) )
-         hb_retl( TRUE );
-      else if( s_cdpage->nChars && strchr( s_cdpage->CharsLower,* szString ) )
-         hb_retl( TRUE );
-      else
-         hb_retl( FALSE );
-   }
-   else
-      hb_retl( FALSE );
-}

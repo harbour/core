@@ -62,8 +62,10 @@
 #include "hbdate.h"
 #include "hbdbsort.h"
 #include "error.ch"
-
+#include "hbapicdp.h"
 #include <errno.h>
+
+extern PHB_CODEPAGE s_cdpage;
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320
@@ -1034,6 +1036,7 @@ ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case HB_IT_STRING:
          hb_itemPutCL( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                        pField->uiLen );
+         hb_cdpTranslate( pItem->item.asString.value, pArea->cdPage,s_cdpage );
          break;
 
       case HB_IT_LOGICAL:
@@ -1242,6 +1245,8 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                uiSize = pField->uiLen;
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                     hb_itemGetCPtr( pItem ), uiSize );
+            if( HB_IS_STRING( pItem ) )
+               hb_cdpnTranslate( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], s_cdpage, pArea->cdPage, uiSize );
             memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + uiSize,
                     ' ', pField->uiLen - uiSize );
          }
@@ -1738,6 +1743,14 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
+   if( pOpenInfo->cdpId )
+   {
+      pArea->cdPage = hb_cdpFind( pOpenInfo->cdpId );
+      if( !pArea->cdPage )
+         pArea->cdPage = s_cdpage;
+   }
+   else
+      pArea->cdPage = s_cdpage;
    pArea->fShared = pOpenInfo->fShared;
    pArea->fReadonly = pOpenInfo->fReadonly;
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;

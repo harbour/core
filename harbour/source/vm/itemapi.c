@@ -97,6 +97,9 @@
 #include "hbdate.h"
 #include "hbset.h"
 #include "hbmath.h"
+#include "hbapicdp.h"
+
+extern PHB_CODEPAGE s_cdpage;
 
 /* DJGPP can sprintf a float that is almost 320 digits long */
 #define HB_MAX_DOUBLE_LENGTH 320
@@ -1022,17 +1025,20 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    /* One of the strings is empty */
    if( ulMinLen )
    {
-      for( ulCounter = 0; ulCounter < ulMinLen && !iRet; ulCounter++ )
-      {
-         /* Difference found */
-         if( *szFirst != *szSecond )
-            iRet = ( ( BYTE ) *szFirst < ( BYTE ) *szSecond ) ? -1 : 1;
-         else /* TODO : #define some constants */
+      if( s_cdpage->lSort )
+         iRet = hb_cdpcmp( szFirst,szSecond,ulMinLen,s_cdpage );
+      else
+         for( ulCounter = 0; ulCounter < ulMinLen && !iRet; ulCounter++ )
          {
-            szFirst++;
-            szSecond++;
+            /* Difference found */
+            if( *szFirst != *szSecond )
+               iRet = ( ( BYTE ) *szFirst < ( BYTE ) *szSecond ) ? -1 : 1;
+            else /* TODO : #define some constants */
+            {
+               szFirst++;
+               szSecond++;
+            }
          }
-      }
 
       if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulCounter )
       {

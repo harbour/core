@@ -168,6 +168,7 @@ typedef struct
    BYTE * atomAlias;       /* The logical name of the data store */
    BOOL   fShared;         /* Share mode of the data store */
    BOOL   fReadonly;       /* Readonly mode of the data store */
+   BYTE * cdpId;           /* Id of a codepage */
    void * lpdbHeader;      /* Pointer to a header of the data store */
 } DBOPENINFO;
 

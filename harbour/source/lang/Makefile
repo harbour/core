@@ -34,6 +34,7 @@ C_SOURCES=\
 	msgpt.c      \
 	msgro.c      \
 	msgru866.c   \
+	msgrukoi.c   \
 	msgruwin.c   \
 	msgsr852.c   \
 	msgsriso.c   \

@@ -11,6 +11,7 @@ ifeq ($(HB_COMPILER),bcc16)
 # is necessary to use the DJGPP Harbour compiler.
 
 DIRS=\
+	codepage \
 	common \
 	pp \
 	rtl \

@@ -54,6 +54,7 @@
 #define HB_RDDDBF_H_
 
 #include "hbapirdd.h"
+#include "hbapicdp.h"
 
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -161,6 +162,7 @@ typedef struct _DBFAREA
    BYTE bDay;
    ULONG * pLocksPos;            /* List of records locked */
    ULONG ulNumLocksPos;          /* Number of records locked */
+   PHB_CODEPAGE cdPage;          /* Area's codepage pointer  */
 } DBFAREA;
 
 typedef DBFAREA * LPDBFAREA;
