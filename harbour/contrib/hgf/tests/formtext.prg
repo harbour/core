@@ -32,7 +32,6 @@ METHOD New() CLASS TForm2
 
    Super:New()
 
-   ::cName   = "oForm2"
    ::Caption = "Harbour GUI demo"
 
    oMenu = TMenu():New( Self )

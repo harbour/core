@@ -11,36 +11,36 @@ function Main()
    local oMenuItem, oSubItem, oSubItem2
 
    oMenuItem = TMenuItem():New( oMenu )
-   oMenuItem:cCaption = "One"
+   oMenuItem:Caption = "One"
    oMenu:Add( oMenuItem )
 
    oSubItem = TMenuItem():New( oMenuItem )
-   oSubItem:cCaption = "First"
+   oSubItem:Caption = "First"
    oMenuItem:Add( oSubItem )
 
    oSubItem = TMenuItem():New( oMenuItem )
-   oSubItem:cCaption = "Second"
+   oSubItem:Caption = "Second"
    oMenuItem:Add( oSubItem )
 
    oSubItem2 = TMenuItem():New( oSubItem )
-   oSubItem2:cCaption = "Some"
+   oSubItem2:Caption = "Some"
    oSubItem:Add( oSubItem2 )
 
    oSubItem2 = TMenuItem():New( oSubItem )
-   oSubItem2:cCaption = "More"
+   oSubItem2:Caption = "More"
    oSubItem:Add( oSubItem2 )
 
    oMenuItem = TMenuItem():New( oMenu )
-   oMenuItem:cCaption = "Two"
+   oMenuItem:Caption = "Two"
    oMenu:Add( oMenuItem )
 
    oMenuItem = TMenuItem():New( oMenu )
-   oMenuItem:cCaption = "Three"
+   oMenuItem:Caption = "Three"
    oMenu:Add( oMenuItem )
 
-   oForm:oMenu = oMenu
+   oForm:Menu = oMenu
 
-   oForm:cCaption = "Harbour GUI Framework"
+   oForm:Caption = "Harbour GUI Framework"
 
    oForm:ShowModal()
 
