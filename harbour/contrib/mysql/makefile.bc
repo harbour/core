@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+
+# makefile for Borland C/C++ 32 bits
+# Building of mysql.lib - Harbour API to mySQL
+
+INCLUDE_DIR = ..\..\include
+
+BIN_DIR = ..\..\bin\b32
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
+
+$(LIB_DIR)\mysql.lib : \
+   $(OBJ_DIR)\tmysql.obj \
+   $(OBJ_DIR)\tsqlbrw.obj \
+   $(OBJ_DIR)\mysql.obj
+
+$(OBJ_DIR)\tmysql.c      : tmysql.prg
+$(OBJ_DIR)\tmysql.obj    : $(OBJ_DIR)\tmysql.c
+$(OBJ_DIR)\tsqlbrw.c      : tsqlbrw.prg
+$(OBJ_DIR)\tsqlbrw.obj    : $(OBJ_DIR)\tsqlbrw.c
+$(OBJ_DIR)\mysql.obj : mysql.c
+
+.c.obj:
+  bcc32 $(CLIBFLAGS) -c -O2 -I$(INCLUDE_DIR) -DHB_OS_WIN_32_USED -o$@ $<
+  tlib $(LIB_DIR)\mysql.lib -+$@,,
+
+.prg.c:
+  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
+

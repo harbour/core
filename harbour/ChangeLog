@@ -1,3 +1,10 @@
+2000-09-30 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/mysql/mysql.c
+     * minor change for support of Win32
+   + contrib/mysql/make_b32.bat
+   + contrib/mysql/makefile.bc
+     + makefiles added for Borland C
+
 2000-09-30 13:28 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    *source/rtl/tbrowse.prg
       * moved browse init to New() method. TBrowseNew() function is now empty and simply returns
