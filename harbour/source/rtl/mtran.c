@@ -18,13 +18,8 @@ static SYMBOL symbols[] = {
 { "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
 };
 
-HB_INIT_SYMBOLS( Memotran__InitSymbols );
-/*
-void Memotran__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Memotran__InitSymbols );
+HB_INIT_SYMBOLS_END( Memotran__InitSymbols )
 
 char *hb_memotran( char *string, char *hardcr, char *softcr )
 {

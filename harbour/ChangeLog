@@ -1,3 +1,26 @@
+19990630-00:25 Ryszard Glab <rglab@imid.med.pl>
+
+* include/init.h
+ * the HB_INIT_SYMBOLS in now divided into HB_INIT_SYMBOLS_BEGIN and 
+   HB_INIT_SYMBOLS_END to support Borland C compilers.
+   
+* include/hbdefs.h
+ * added missing changes related to  new  HB_ITEM
+
+* source/compiler/harbour.y
+ * corrected line continuation bug (the parse parameters was counted
+   incorrectly)
+ * the compiler generates code to use HB_INIT_SYMBOLS_* macros for
+   symbol table initialization
+ 
+* source/rtl/*.c
+ * corrected some missing code related to new HB_ITEM
+ * changed code that registers local symbol table (it uses
+   HB_INIT_SYMBOLS_* macros now)
+ 
+* source/tools/debug.c
+ * changed code to support new HB_ITEM structure
+
 19990629-05:55 Ryszard Glab <rglab@imid.med.pl>
 
 * Tagged all sources with the name 'release_old_item'

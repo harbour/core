@@ -44,13 +44,8 @@ static SYMBOL symbols[] = {
 }; /* rest of the functions is pulled automatically in initsymb.c */
 
 
-HB_INIT_SYMBOLS( Dates__InitSymbols );
-/*
-void Dates__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols );
+HB_INIT_SYMBOLS_END( Dates__InitSymbols )
 
 double hb__seconds( void )
 {

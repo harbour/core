@@ -15,13 +15,10 @@ static SYMBOL symbols[] = {
 { "DESCEND", FS_PUBLIC, HB_DESCEND, 0 }
 };
 
-HB_INIT_SYMBOLS( Descend__InitSymbols );
-/*
-void Descend__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols );
+HB_INIT_SYMBOLS_END( Descend__InitSymbols )
+
+
 char *hb_strdescend( char *string )
 {
    char *s;

@@ -123,13 +123,8 @@ static SYMBOL symbols[] = {
 };
 
 
-HB_INIT_SYMBOLS( Classes__InitSymbols );
-/*
-void Classes__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols );
+HB_INIT_SYMBOLS_END( Classes__InitSymbols )
 
 /*
  * ClassAdd( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit] )

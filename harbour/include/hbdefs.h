@@ -73,8 +73,8 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 
 #define HB_SYMBOL_UNUSED(symbol) (void)symbol
 
-#define IS_BYREF( p )      ( ( p )->wType & IT_BYREF )
-#define IS_OF_TYPE( p, t ) ( ( ( p )->wType & ~IT_BYREF ) == t )
+#define IS_BYREF( p )      ( ( p )->type & IT_BYREF )
+#define IS_OF_TYPE( p, t ) ( ( ( p )->type & ~IT_BYREF ) == t )
 #define IS_ARRAY( p )      IS_OF_TYPE( p, IT_ARRAY )
 #define IS_NIL( p )        IS_OF_TYPE( p, IT_NIL )
 #define IS_BLOCK( p )      IS_OF_TYPE( p, IT_BLOCK )
@@ -83,7 +83,7 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
 #define IS_INTEGER( p )    IS_OF_TYPE( p, IT_INTEGER )
 #define IS_LOGICAL( p )    IS_OF_TYPE( p, IT_LOGICAL )
 #define IS_LONG( p )       IS_OF_TYPE( p, IT_LONG )
-#define IS_NUMERIC( p )    ( ( p )->wType & IT_NUMERIC )
+#define IS_NUMERIC( p )    ( ( p )->type & IT_NUMERIC )
 #define IS_OBJECT( p )     IS_OF_TYPE( p, IT_ARRAY )
 #define IS_STRING( p )     IS_OF_TYPE( p, IT_STRING )
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )

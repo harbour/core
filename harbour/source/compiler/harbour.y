@@ -956,10 +956,10 @@ IfElse     : ELSE {  _iState =LOOKUP; } Crlf IfStats
            ;
 
 IfElseIf   : ELSEIF Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); }
-                IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); }
+                IfStats { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
 
            | IfElseIf ELSEIF Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); }
-                IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); }
+                IfStats { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>6 ); }
            ;
 
 EndIf      : ENDIF                 { --_wIfCounter; _iState =LOOKUP; }
@@ -994,8 +994,8 @@ EndCase    : ENDCASE              { --_wCaseCounter; _iState =LOOKUP; }
 DoCaseBegin : DOCASE { ++_wCaseCounter; _iState =LOOKUP; } Crlf
            ;
 
-Cases      : CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>4 ); Line(); }
-           | Cases CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
+Cases      : CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( 0, Jump( 0 ) ); JumpHere( $<iNumber>5 ); Line(); }
+           | Cases CASE Expression { _iState =LOOKUP; } Crlf { $<iNumber>$ = JumpFalse( 0 ); Line(); } CaseStmts { $$ = GenElseIf( $1, Jump( 0 ) ); JumpHere( $<iNumber>6 ); Line(); }
            ;
 
 Otherwise  : OTHERWISE { _iState =LOOKUP; } Crlf CaseStmts
@@ -1031,7 +1031,7 @@ EndWhile   : END      { _iState =LOOKUP; }
 ForNext    : FOR IDENTIFIER ForAssign Expression { PopId( $2 ); $<iNumber>$ = functions.pLast->lPCodePos; ++_wForCounter; LoopStart(); }
              TO Expression                       { PushId( $2 ); }
              StepExpr { _iState =LOOKUP; } Crlf  { GenPCode1( HB_P_FORTEST ); $<iNumber>$ = JumpTrue( 0 ); }
-             ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( HB_P_PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>11 ); LoopEnd(); }
+             ForStatements                       { LoopHere(); PushId( $2 ); GenPCode1( HB_P_PLUS ); PopId( $2 ); Jump( $<iNumber>5 - functions.pLast->lPCodePos ); JumpHere( $<iNumber>12 ); LoopEnd(); }
            ;
 
 ForAssign  : '='
@@ -2119,7 +2119,8 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
    /* Generate function that will initialize local symbol table
     */
-   fprintf( yyc, "HB_INIT_SYMBOLS( %s__InitSymbols );\n\n", symbols.pFirst->szName );
+   fprintf( yyc, "HB_INIT_SYMBOLS_BEGIN( %s__InitSymbols );\n", symbols.pFirst->szName );
+   fprintf( yyc, "HB_INIT_SYMBOLS_END( %s__InitSymbols )\n\n", symbols.pFirst->szName );
 
    /* Generate functions data
     */

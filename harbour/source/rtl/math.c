@@ -24,13 +24,8 @@ static SYMBOL symbols[] = {
 { "MOD"  , FS_PUBLIC, HB_MOD  , 0 }
 }; /* The rest of functions is pulled automatically by initsymb.c */
 
-HB_INIT_SYMBOLS( Math__InitSymbols );
-/*
-void Math__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols );
+HB_INIT_SYMBOLS_END( Math__InitSymbols )
 
 HARBOUR HB_ABS( void )
 {

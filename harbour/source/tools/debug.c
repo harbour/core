@@ -43,7 +43,7 @@ HARBOUR HB___STATIC(void)
    WORD  wStatic;
 
    wStatic = hb_parni(1);
-   pStatic = ( ( PBASEARRAY ) aStatics.value.pBaseArray )->pItems +
+   pStatic = aStatics.item.asArray.value->pItems +
              stack.iStatics + wStatic - 1;
    hb_itemReturn( pStatic );
 }
@@ -57,14 +57,14 @@ void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, WORD wPos )
 {
    PHB_ITEM pTemp;
 
-   if( pItem->wType == IT_SYMBOL)
+   if( pItem->type == IT_SYMBOL)
    {                                            /* Symbol is pushed as text */
       pTemp = hb_itemNew(NULL);                 /* Create temporary string  */
-      pTemp->wType   = IT_STRING;
-      pTemp->wLength = strlen( pItem->value.pSymbol->szName )+2;
-      pTemp->value.szText = (char *) hb_xgrab( pTemp->wLength+1 );
+      pTemp->type   = IT_STRING;
+      pTemp->item.asString.length = strlen( pItem->item.asSymbol.value->szName )+2;
+      pTemp->item.asString.value = (char *) hb_xgrab( pTemp->item.asString.length+1 );
 
-      sprintf( pTemp->value.szText, "[%s]", pItem->value.pSymbol->szName );
+      sprintf( pTemp->item.asString.value, "[%s]", pItem->item.asSymbol.value->szName );
 
       hb_itemArrayPut( pReturn, wPos, pTemp );
       ItemRelease( pTemp );                     /* Get rid of temporary str.*/
@@ -121,7 +121,7 @@ HARBOUR HB___AGLOBALSTACK(void)
 WORD StackLen( void )
 {
    PHB_ITEM pItem;
-   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
 
    WORD  nCount = 0;
 
@@ -149,7 +149,7 @@ HARBOUR HB___ASTACK(void)
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
-   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
 
    WORD  wLen  = StackLen();
    WORD  wPos  = 1;
@@ -174,9 +174,9 @@ HARBOUR HB___APARAM(void)
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
-   PHB_ITEM pBase = stack.pItems + stack.pBase->wBase;
+   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
-   WORD  wLen  = pBase->wParams;
+   WORD  wLen  = pBase->item.asSymbol.paramcnt;
    WORD  wPos  = 1;
 
    pReturn = hb_itemArrayNew( wLen );           /* Create a transfer array  */

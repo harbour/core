@@ -39,13 +39,8 @@ static SYMBOL symbols[] = {
 { "SET"         , FS_PUBLIC, HB_SET       , 0   }
 };
 
-HB_INIT_SYMBOLS( Set__InitSymbols );
-/*
-void Set__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Set__InitSymbols );
+HB_INIT_SYMBOLS_END( Set__InitSymbols )
 
 static BOOL set_logical (PHB_ITEM pItem)
 {

@@ -150,13 +150,8 @@ static SYMBOL symbols[] = {
 { "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
 };
 
-HB_INIT_SYMBOLS( Files__InitSymbols );
-/*
-void Files__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols );
+HB_INIT_SYMBOLS_END( Files__InitSymbols )
 
 /* Convert HARBOUR flags to IO subsystem flags */
 

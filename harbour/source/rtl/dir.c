@@ -91,13 +91,8 @@ static SYMBOL symbols[] = {
 { "DIRECTORY", FS_PUBLIC, HB_DIRECTORY, 0 }
 };
 
-HB_INIT_SYMBOLS( Dir__InitSymbols );
-/*
-void Dir__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Dir__InitSymbols );
+HB_INIT_SYMBOLS_END( Dir__InitSymbols )
 
 static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);
 

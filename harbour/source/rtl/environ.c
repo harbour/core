@@ -48,13 +48,8 @@ static SYMBOL symbols[] = {
 { "VERSION", FS_PUBLIC, HB_VERSION, 0 }
 };
 
-HB_INIT_SYMBOLS( Environ__InitSymbols );
-/*
-void Environ__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Environ__InitSymbols );
+HB_INIT_SYMBOLS_END( Environ__InitSymbols )
 
 HARBOUR HB_OS(void)
 {

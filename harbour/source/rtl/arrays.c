@@ -46,13 +46,8 @@ static char *szBoundError    = "Bound error: Array access";
 static char *szArgumentError = "Argument error: incorrect type";
 
 
-HB_INIT_SYMBOLS( Arrays__InitSymbols );
-/*
-void Arrays__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols );
+HB_INIT_SYMBOLS_END( Arrays__InitSymbols )
 
 /*
  * Internal

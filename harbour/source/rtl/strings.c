@@ -67,19 +67,14 @@ static SYMBOL symbols[] = {
 { "STUFF"        , FS_PUBLIC, HB_STUFF  , 0 }
 }; /* The rest of functions is pulled automatically by initsymb.c */
 
-HB_INIT_SYMBOLS( Strings__InitSymbols );
-/*
-void Strings__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols );
+HB_INIT_SYMBOLS_END( Strings__InitSymbols )
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-HB_CALL_ON_STARTUP( Strings_InitInfinity )
+HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
 {
    infinity = -log( 0 );
-   HB_RETURN_ON_STARTUP
+   HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
 }
 #endif
 
@@ -228,7 +223,7 @@ HARBOUR HB_TRIM( void )
       if( pText )
       {
          BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
-         hb_retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength, bAnySpace));
+         hb_retclen(pText->item.asString.value, hb_strRTrimLen(pText->item.asString.value, pText->item.asString.length, bAnySpace));
       }
       else
       {

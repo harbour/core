@@ -80,13 +80,8 @@ static SYMBOL symbols[] = {
 };
 
 
-HB_INIT_SYMBOLS( Console__InitSymbols );
-/*
-void Console__InitSymbols( void )
-{
-   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
-}
-*/
+HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols );
+HB_INIT_SYMBOLS_END( Console__InitSymbols )
 
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
@@ -655,7 +650,7 @@ HARBOUR HB_DISPBOX (void)
       if( left > hb_max_col() ) left = hb_max_col();
       if( bottom > hb_max_row() ) bottom  = hb_max_row();
       if( right > hb_max_col() ) right = hb_max_col();
-      
+
       /* Force the box to be drawn from top left to bottom right */
       if( top > bottom )
       {
@@ -713,7 +708,7 @@ HARBOUR HB_DISPBOX (void)
       if( size < 9 )
          /* ...set the fill character to space */
          Borders[ 8 ] = ' ';
-      
+
       /* Draw the box */
       hb_setpos( top, left );
       printf( "%c", Borders[ 0 ] );       /* Upper left corner */

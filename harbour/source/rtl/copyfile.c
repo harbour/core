@@ -52,7 +52,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    *ulWrittenTotal = 0L;
 
-   while ((fhndSource = hb_fsOpen(szSource, FO_READ)) == FS_ERROR)
+   while ((fhndSource = hb_fsOpen((BYTEP)szSource, FO_READ)) == FS_ERROR)
    {
       if (hb_errorRT_BASE(EG_ARG, 2012, "Open error", szSource) == E_DEFAULT)
       {
@@ -63,7 +63,7 @@ static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal)
 
    if (fhndSource != FS_ERROR)
    {
-      while ((fhndDest = hb_fsCreate(szDest, FC_NORMAL)) == FS_ERROR)
+      while ((fhndDest = hb_fsCreate((BYTEP)szDest, FC_NORMAL)) == FS_ERROR)
       {
          if (hb_errorRT_BASE(EG_ARG, 2012, "Create error", szDest) == E_DEFAULT)
          {
