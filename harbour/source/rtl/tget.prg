@@ -575,9 +575,8 @@ return Self
 
 METHOD Insert( cChar ) CLASS Get
 
-   local cOver
-   local cTmp
-   local nPos
+   local n
+   local nMaxLen := ::nMaxLen
 
    if ::type == "N" .and. ! ::lEdit
       ::pos := 1
@@ -611,19 +610,22 @@ METHOD Insert( cChar ) CLASS Get
       ::Rejected := .f.
    endif
 
-   cOver    := Substr( ::buffer, ::Pos, 1 )
-   ::buffer := Substr( ::buffer, 1, ::Pos-1 ) + cChar + Substr( ::buffer, ::Pos+1 )
-   nPos     := ::Pos + 1
+   if ::lPicComplex
+      // Calculating diferent nMaxLen for ::lPicComplex
 
-   do while nPos <= ::nMaxLen
-      if ::IsEditable( nPos )
-         cTmp     := Substr( ::buffer, nPos, 1 )
-         ::buffer := Substr( ::buffer, 1, nPos - 1 ) + cOver + Substr( ::buffer, nPos + 1 )
-         cOver    := cTmp
-      endif
-      nPos++
-   enddo
-
+      for n := ::Pos to nMaxLen
+         if !::IsEditable( n )
+           exit
+         endif
+      next
+      nMaxLen := n
+      ::buffer := Left( Substr( ::buffer, 1, ::Pos-1 ) + cChar +;
+                  Substr( ::buffer, ::Pos, nMaxLen-1-::Pos ) +;
+                  Substr( ::buffer, nMaxLen ), ::nMaxLen )
+   else
+      ::buffer := Left( Substr( ::buffer, 1, ::Pos-1 ) + cChar + Substr( ::buffer, ::Pos ), ::nMaxLen )
+   endif
+    
    ::Changed := !( ::unTransform() == ::Original )
    ::Assign()
    ::Right( .f. )
@@ -989,33 +991,31 @@ return Self
 
 METHOD _Delete( lDisplay ) CLASS Get
 
+   LOCAL nMaxLen := ::nMaxLen, n
+
    DEFAULT lDisplay TO .t.
 
-   do case
-   case ::type == "C"
-      if ! ::lPicComplex
-         ::buffer := PadR( SubStr( ::buffer, 1, ::Pos - 1 ) + ;
-                     SubStr( ::buffer, ::Pos + 1 ), ::nMaxLen )
-      else
-         ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + " " + ;
-                     SubStr( ::buffer, ::Pos + 1 )
-      endif
+   ::lEdit := .t.
 
-   case ::type == "N"
-      if SubStr( ::buffer, ::Pos, 1 ) == "-"
-         ::minus := .f.
-      endif
-      ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + " " + ;
-                  SubStr( ::buffer, ::Pos + 1 )
+   if ::lPicComplex
+      // Calculating diferent nMaxLen for ::lPicComplex
+      for n := ::Pos to nMaxLen
+         if !::IsEditable( n )
+           exit
+         endif
+      next
+      nMaxLen := n - 1
+   endif
 
-   case ::type == "D"
-      ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + " " + ;
-                  SubStr( ::buffer, ::Pos + 1 )
+   ::buffer := PadR( SubStr( ::buffer, 1, ::Pos - 1 ) + ;
+               SubStr( ::buffer, ::Pos + 1, nMaxLen - ::Pos ) + " " +;
+               SubStr( ::buffer, nMaxLen + 1 ), ::nMaxLen )
 
-   case ::type == "L"
-      ::buffer := " "
-
-   endcase
+   if ::type == "D"
+      ::BadDate := !( DToC( CToD( ::buffer ) ) == ::buffer )
+   else
+      ::BadDate := .f.
+   endif
 
    ::Assign()
 
@@ -1030,6 +1030,8 @@ return Self
 METHOD DeleteAll() CLASS Get
 
    local xValue
+
+   ::lEdit := .t.
 
    do case
    case ::type == "C"
