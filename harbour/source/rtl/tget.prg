@@ -669,7 +669,9 @@ METHOD Untransform( cBuffer ) CLASS Get
       if "E" $ ::cPicFunc
          cBuffer := SubStr( cBuffer, 4, 3 ) + SubStr( cBuffer, 1, 3 ) + SubStr( cBuffer, 7 )
       endif
-      xValue := CToD( cBuffer )
+      if cBuffer != nil
+         xValue := CToD( cBuffer )
+      endif
 
    endcase
 
@@ -1591,7 +1593,7 @@ STATIC FUNCTION IsBadDate( cBuffer, cPicFunc )
       cBuffer := SubStr( cBuffer, 4, 3 ) + SubStr( cBuffer, 1, 3 ) + SubStr( cBuffer, 7 )
    endif
 
-   If !Empty( Ctod( cBuffer ) )
+   If cBuffer == nil .or. ! Empty( Ctod( cBuffer ) )
       return .f.
    Endif
 
