@@ -1,3 +1,10 @@
+2001-08-31 12:15 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
+   * source/bin/bld.bat
+   * source/include/extend.api
+   * source/include/clipdefs.h
+   * source/tests/testget.prg
+     * Return to previous revision due a mistake in last CVS process
+
 2001-08-31 11:32 GMT+1 Antonio Linares <alinares@fivetech.com>
    + harbour/source/vm/mainlgtk.c
      Added Marek Paliwoda's Linux GTK application entry point
