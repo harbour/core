@@ -3203,8 +3203,6 @@ static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
  */
 static void hb_vmPushBlockShort( BYTE * pCode, PHB_SYMB pSymbols )
 {
-   USHORT uiLocals;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushBlockShort(%p, %p)", pCode, pSymbols));
 
    hb_stack.pPos->type = HB_IT_BLOCK;
