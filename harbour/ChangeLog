@@ -1,3 +1,7 @@
+2001-06-09 09:35 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/Classe.c
+     * New scoping for rel. 0.37 !
+
 2001-06-07 18:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
      ! Fixed HB_P_MPOPFIELD was poping assgined value pre-maturely, causing "data type error" from RDD when replacing a field using macro.
