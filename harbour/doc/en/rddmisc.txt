@@ -686,8 +686,12 @@
  *  $ARGUMENTS$
  *      None.
  *  $RETURNS$
- *     RECNO() The record number or indentity
+ *      RECNO() The record number or indentity
  *  $DESCRIPTION$
+ *      This function returns the position of the record pointer in the
+ *      currently selected ot designated work area.
+ *      If the database file is empty and if the RDD is the traditional .DBF
+ *      file,the value of this function will be 1.
  *  $EXAMPLES$
  *      USE Tests NEW
  *      DBGOTOP()
@@ -702,7 +706,7 @@
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
- *      DBGOTO()
+ *      DBGOTO(),DBGOTOP(),DBGOBOTTOM(),LASTREC(),EOF(),BOF()
  *  $END$
  */
 
@@ -712,50 +716,29 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Determine the record length of a database (.dbf) file
+ *      Returns the size of a single record in an active database.
  *  $SYNTAX$
  *      RECSIZE() --> nBytes
  *  $ARGUMENTS$
- *
+ *      None.
  *  $RETURNS$
- *     RECSIZE() returns, as a numeric value, the record length, in bytes, of
- *   the database file open in the current work area.  RECSIZE() returns zero
- *   if no database file is open.
+ *      <nBytes> The record size.
  *  $DESCRIPTION$
- *     RECSIZE() is a database function that determines the length of a record
- *   by summing the lengths of each field then adding one for the DELETED()
- *   status flag.  When this value is multiplied by LASTREC(), the product is
- *   the amount of space occupied by the file's records.
- *
- *     RECSIZE() is useful in programs that perform automatic file backup.
- *   When used in conjunction with DISKSPACE(), the RECSIZE() function can
- *   assist in ensuring that sufficient free space exists on the disk before a
- *   file is stored.
- *
- *     By default, RECSIZE() operates on the currently selected work area.  It
- *   will operate on an unselected work area if you specify it as part of an
- *   aliased expression (see example below).
+ *      This function returns the number os bytes used by a single record
+ *      in the currently selected or designated database file.If no database
+ *      is in use in this work area,the return value from this function
+ *      will be 0.
  *  $EXAMPLES$
- *     The following user-defined function, DbfSize(), uses RECSIZE()
- *      to calculate the size of the current database file:
- *
- *      FUNCTION DbfSize
- *         RETURN ((RECSIZE() * LASTREC()) + HEADER() + 1)
- *
- *     This example illustrates the use of RECSIZE() to determine the
- *      record length of database files open in unselected work areas:
- *
- *      USE Customer NEW
- *      USE Sales NEW
- *      //
- *      ? RECSIZE(), Customer->(RECSIZE())
- *      ? DbfSize(), Customer->(DbfSize())
+ *      USE Tests NEW
+ *      DBGOTOP()
+ *      RECSIZE()            // Returns 1
+ *      DBGOTO(50)
+ *      RECSIZE() 
  *  $TESTS$
- *
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *
+ *      This function is Ca-Clipper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
