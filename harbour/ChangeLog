@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-20 21:56 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/codepage/cdppl852.c
+  * source/codepage/cdppliso.c
+  * source/codepage/cdpplmaz.c
+    ! Minor fix in comment delimiters
+  * source/rdd/dbcmd.c
+    ! COPY TO ... FIELDS is fixed again
+
 2002-11-18 22:35 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbcmd.c
     ! COPY TO ... FIELDS ... is fixed - fields in the result dbf are in the 

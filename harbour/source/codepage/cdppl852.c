@@ -49,8 +49,8 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- *      Polish              CP852          PL852
- *
+ */
+
 /* Language name: Polish */
 /* ISO language code (2 chars): PL */
 /* Codepage: 852 */

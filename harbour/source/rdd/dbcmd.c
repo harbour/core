@@ -3679,9 +3679,9 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
 }
 
 /* move the Field Data between areas by name */
-static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, BOOL bNameMatch, LPAREANODE s )
+static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, LPAREANODE s )
 {
-  USHORT   i, f=1;
+  USHORT   i, f;
   PHB_ITEM fieldValue;
 
   fieldValue = hb_itemNew( NULL );
@@ -3690,15 +3690,14 @@ static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields, BOO
     /* list or field in the list?*/
     if ( !pFields || IsFieldIn( (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName,  pFields ))
     {
-      if ( bNameMatch )
-        f = hb_rddFieldIndex( pAreaTo, (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName );
+      f = hb_rddFieldIndex( pAreaTo, (( PHB_DYNS )(pAreaFrom->lpFields + i)->sym )->pSymbol->szName );
       if ( f )
       {
         LPAREANODE s_curr = s_pCurrArea;
         SELF_GETVALUE( pAreaFrom, i+1, fieldValue );
         if( s )
            s_pCurrArea = s;
-        SELF_PUTVALUE( pAreaTo, f++, fieldValue );
+        SELF_PUTVALUE( pAreaTo, f, fieldValue );
         s_pCurrArea = s_curr;
       }
     }
@@ -3715,7 +3714,6 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   LONG       toGo=lNext;
   BOOL       bFor, bWhile;
   BOOL       keepGoing=TRUE;
-  BOOL       bNameMatch=FALSE;
   AREAP      pAreaFrom;
   AREAP      pAreaTo;
   LPAREANODE pAreaRelease=NULL;
@@ -3756,7 +3754,6 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
 
   if ( cAreaFrom )     /*it's an APPEND FROM*/
   {                    /*make it current*/
-    bNameMatch = TRUE; /*we pass fields by name */
     pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom, FALSE, NULL );
     pAreaFrom =  (AREAP) pAreaRelease->pArea;
   }
@@ -3803,7 +3800,7 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
             SELF_APPEND( ( AREAP ) pAreaTo, FALSE );      /*put a new one on TO Area*/
             if ( cAreaFrom )
                s_pCurrArea = pAreaRelease;
-            rddMoveFields( pAreaFrom, pAreaTo, pFields, bNameMatch,(cAreaFrom)?s_pCurrAreaSaved:NULL ); /*move the data*/
+            rddMoveFields( pAreaFrom, pAreaTo, pFields, (cAreaFrom)?s_pCurrAreaSaved:NULL ); /*move the data*/
          }
          if ( lRec == 0 || pFor )  /*not only one record? Or there's a For clause?*/
             keepGoing = TRUE;
