@@ -52,36 +52,37 @@ typedef struct
 } HB_SYMB, * PHB_SYMB, * HB_SYMB_PTR;
 
 /* Harbour Functions scope (SYMBOLSCOPE) */
-#define FS_PUBLIC	0x00
+#define FS_PUBLIC       0x00
 #define FS_STATIC       0x02
 #define FS_INIT         0x08
 #define FS_EXIT         0x10
 #define FS_INITEXIT     ( FS_INIT | FS_EXIT )
 #define FS_MESSAGE      0x20
 #define FS_MEMVAR       0x80
+#define FS_ALLOCATED    (-1)
 
 extern void VirtualMachine( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void ProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 
 /* items types */
-#define IT_NIL		0x0000
-#define IT_INTEGER	0x0002
-#define IT_LONG		0x0008
-#define IT_DOUBLE	0x0010
-#define IT_DATE     	0x0020
-#define IT_LOGICAL   	0x0080
-#define IT_SYMBOL    	0x0100
-#define IT_ALIAS     	0x0200
-#define IT_STRING    	0x0400
-#define IT_MEMOFLAG  	0x0800
-#define IT_MEMO      	( IT_MEMOFLAG & IT_STRING )
-#define IT_BLOCK     	0x1000
-#define IT_BYREF     	0x2000
-#define IT_MEMVAR    	0x4000
-#define IT_ARRAY     	0x8000
-#define IT_OBJECT    	IT_ARRAY
-#define IT_NUMERIC   	( IT_INTEGER | IT_LONG | IT_DOUBLE )
-#define IT_ANY       	0xFFFF
+#define IT_NIL          0x0000
+#define IT_INTEGER      0x0002
+#define IT_LONG         0x0008
+#define IT_DOUBLE       0x0010
+#define IT_DATE         0x0020
+#define IT_LOGICAL      0x0080
+#define IT_SYMBOL       0x0100
+#define IT_ALIAS        0x0200
+#define IT_STRING       0x0400
+#define IT_MEMOFLAG     0x0800
+#define IT_MEMO         ( IT_MEMOFLAG & IT_STRING )
+#define IT_BLOCK        0x1000
+#define IT_BYREF        0x2000
+#define IT_MEMVAR       0x4000
+#define IT_ARRAY        0x8000
+#define IT_OBJECT       IT_ARRAY
+#define IT_NUMERIC      ( IT_INTEGER | IT_LONG | IT_DOUBLE )
+#define IT_ANY          0xFFFF
 
 /* forward declarations */
 struct _HB_CODEBLOCK;
@@ -244,6 +245,7 @@ extern HB_SYMB symEval;
 extern HB_ITEM errorBlock;
 extern HB_ITEM aStatics;
 
+/* Extend API */
 extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
 extern ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
 extern ULONG    hb_parcsiz( int iParam, ... );
@@ -281,6 +283,7 @@ extern void     hb_xfree( void * pMem );    /* frees memory */
 extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory */
 extern ULONG    hb_xsize( void * pMem ); /* returns the size of an allocated memory block */
 
+/* array management */
 extern void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 extern ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
@@ -297,6 +300,8 @@ extern void     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
 extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 extern void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 
+/* string management */
+
 #define HB_STRGREATER_EQUAL     0
 #define HB_STRGREATER_LEFT      1
 #define HB_STRGREATER_RIGHT     2
@@ -311,18 +316,22 @@ extern ULONG    hb_strAt( char *, long, char *, long );
 extern char *   hb_strUpper( char * szText, long lLen );
 extern char *   hb_strLower( char * szText, long lLen );
 
+/* class management */
 extern PHB_FUNC hb_GetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
 extern char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
 extern ULONG    hb_isMessage( PHB_ITEM, char * );
 
 /* dynamic symbol table management */
-extern PHB_DYNS hb_GetDynSym( char * szName );    /* finds and creates a dynamic symbol if not found */
-extern PHB_DYNS hb_NewDynSym( PHB_SYMB pSymbol );  /* creates a new dynamic symbol based on a local one */
-extern PHB_DYNS hb_FindDynSym( char * szName );   /* finds a dynamic symbol */
-extern void     hb_LogDynSym( void );             /* displays all dynamic symbols */
-extern void     hb_ReleaseDynSym( void );         /* releases the memory of the dynamic symbol table */
-extern PHB_SYMB hb_NewSymbol( char * szName );
+extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
+extern PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol ); /* creates a new dynamic symbol based on a local one */
+extern PHB_DYNS hb_dynsymFind( char * szName );   /* finds a dynamic symbol */
+extern void     hb_dynsymLog( void );             /* displays all dynamic symbols */
+extern void     hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
 
+/* Symbol management */
+extern PHB_SYMB hb_symbolNew( char * szName );
+
+/* Codeblock management */
 extern HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE *, WORD, WORD *, PHB_SYMB );
 extern void     hb_CodeblockDelete( PHB_ITEM );
 extern PHB_ITEM hb_CodeblockGetVar( PHB_ITEM, LONG );

@@ -439,9 +439,9 @@ static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
 
    /* find dynamic symbol or creeate one */
    if( IS_SYMBOL( pMemvar ) )
-      pDynVar =hb_GetDynSym( pMemvar->item.asSymbol.value->szName );
+      pDynVar =hb_dynsymGet( pMemvar->item.asSymbol.value->szName );
    else if( IS_STRING( pMemvar ) )
-      pDynVar =hb_GetDynSym( pMemvar->item.asString.value );
+      pDynVar =hb_dynsymGet( pMemvar->item.asString.value );
    else
       hb_errorRT_BASE( EG_ARG, 3008, NULL, "&" );
 

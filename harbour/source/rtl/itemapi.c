@@ -86,7 +86,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
    {
       if( IS_STRING( pEvalInfo->pItems[ 0 ] ) )
       {
-         PushSymbol( hb_GetDynSym( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
+         PushSymbol( hb_dynsymGet( hb_itemGetC( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
          PushNil();
          while( w < (HB_EVAL_PARAM_MAX_ + 1) && pEvalInfo->pItems[ w ] )
             Push( pEvalInfo->pItems[ w++ ] );

@@ -54,18 +54,33 @@ typedef struct
 
 typedef struct
 {
-   char *        szName;
-   char *        szID;
-   char *        szCodepage;
-   char *        szTextList [ HB_LANG_TEXT_MAX_ ];
-   char *        szMonthNameList [ 12 ];
-   char *        szDayNameList [ 7 ];
-   char *        szErrorDescList [ HB_LANG_ED_MAX_ ];
-   char *        szErrorIntrList [ HB_LANG_EI_MAX_ ];
+   char * szName;
+   char * szID;
+   char * szCodepage;
+   char * szTextList [ HB_LANG_TEXT_MAX_ ];
+   char * szMonthNameList [ 12 ];
+   char * szDayNameList [ 7 ];
+   char * szErrorDescList [ HB_LANG_ED_MAX_ ];
+   char * szErrorIntrList [ HB_LANG_EI_MAX_ ];
    HB_LANGCHAR * langcharList [ 256 ];
 } HB_LANG, * PHB_LANG, * HB_LANG_PTR;
 
+typedef struct _HB_LANGNODE
+{
+   PHB_LANG pLang;
+   struct _HB_LANGNODE * pNext;
+} HB_LANGNODE, * PHB_LANGNODE;
+
+extern PHB_LANGNODE langList;
 extern PHB_LANG langDef;
+
+/* Supported language list management */
+
+extern void     hb_langListAdd          ( PHB_LANG lang );
+extern PHB_LANG hb_langListFind         ( char * szName );
+extern void     hb_langListRelease      ( void );
+
+/* Default language selection and data query */
 
 extern void     hb_langDSet 	  	( PHB_LANG lang );
 extern PHB_LANG hb_langDGet 	  	( void );
@@ -77,5 +92,10 @@ extern char *   hb_langDGetDayName	( ULONG ulIndex );
 extern char *   hb_langDGetMonthName	( ULONG ulIndex );
 extern char *   hb_langDGetErrorDesc	( ULONG ulIndex );
 extern char *   hb_langDGetErrorIntr	( ULONG ulIndex );
+
+/* Single language */
+
+extern PHB_LANG hb_langNew              ( void );
+extern void     hb_langDelete           ( PHB_LANG lang );
 
 #endif /* HB_LANGAPI_H_ */

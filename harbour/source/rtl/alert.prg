@@ -63,16 +63,7 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
 
 #else
 
-   DO CASE
-   CASE ValType(xMessage) $ "CM"
-
-      DO WHILE (nPos := At(';', xMessage)) != 0
-         AAdd(aSay, Left(xMessage, nPos - 1))
-         xMessage := SubStr(xMessage, nPos + 1)
-      ENDDO
-      AAdd(aSay, xMessage)
-
-   CASE ValType(xMessage) == "A"
+   IF ValType(xMessage) == "A"
 
       FOR iEval := 1 TO Len(xMessage)
          IF ValType( xMessage[ iEval ] ) == "C"
@@ -80,13 +71,25 @@ FUNCTION Alert(xMessage, aOptions, cColorNorm, nDelay)
          ENDIF
       NEXT
 
-   CASE ValType(xMessage) == "N" ; xMessage := Str( xMessage )
-   CASE ValType(xMessage) == "D" ; xMessage := DToC( xMessage )
-   CASE ValType(xMessage) == "L" ; xMessage := iif( xMessage, ".T.", ".F." )
-   CASE ValType(xMessage) == "O" ; xMessage := xMessage:className + " Object"
-   CASE ValType(xMessage) == "B" ; xMessage := "{||...}"
-   OTHERWISE                     ; xMessage := "NIL"
-   ENDCASE
+   ELSE
+
+      DO CASE
+      CASE ValType(xMessage) $ "CM" /* Do nothing, just speed up things */
+      CASE ValType(xMessage) == "N" ; xMessage := LTrim( Str( xMessage ) )
+      CASE ValType(xMessage) == "D" ; xMessage := DToC( xMessage )
+      CASE ValType(xMessage) == "L" ; xMessage := iif( xMessage, ".T.", ".F." )
+      CASE ValType(xMessage) == "O" ; xMessage := xMessage:className + " Object"
+      CASE ValType(xMessage) == "B" ; xMessage := "{||...}"
+      OTHERWISE                     ; xMessage := "NIL"
+      ENDCASE
+
+      DO WHILE (nPos := At(';', xMessage)) != 0
+         AAdd(aSay, Left(xMessage, nPos - 1))
+         xMessage := SubStr(xMessage, nPos + 1)
+      ENDDO
+      AAdd(aSay, xMessage)
+
+   ENDIF
 
 #endif
 

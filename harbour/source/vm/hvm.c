@@ -200,7 +200,7 @@ int main( int argc, char * argv[] )
    stack.Return.type = IT_NIL;
 
    StackInit();
-   hb_NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
+   hb_dynsymNew( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
    hb_consoleInitialize();    /* initialize Console */
    hb_MemvarsInit();
@@ -220,7 +220,7 @@ int main( int argc, char * argv[] )
 
 #ifdef HARBOUR_START_PROCEDURE
    {
-     PHB_DYNS pDynSym =hb_FindDynSym( HARBOUR_START_PROCEDURE );
+     PHB_DYNS pDynSym =hb_dynsymFind( HARBOUR_START_PROCEDURE );
      if( pDynSym )
        pSymStart =pDynSym->pSymbol;
      else
@@ -247,12 +247,12 @@ int main( int argc, char * argv[] )
    hb_itemClear( &errorBlock );
    ReleaseClasses();
    ReleaseLocalSymbols();       /* releases the local modules linked list */
-   hb_ReleaseDynSym();          /* releases the dynamic symbol table */
+   hb_dynsymRelease();          /* releases the dynamic symbol table */
    hb_consoleRelease();         /* releases Console */
    hb_setRelease();             /* releases Sets */
    hb_MemvarsRelease();
    StackFree();
-   /* hb_LogDynSym(); */
+   /* hb_dynsymLog(); */
    HB_DEBUG( "Done!\n" );
 
    if( ulMemoryBlocks )
@@ -1392,7 +1392,7 @@ void Minus( void )
 
 void ModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
 {
-   PushSymbol( hb_FindDynSym( "DEBUGGER" )->pSymbol );
+   PushSymbol( hb_dynsymFind( "DEBUGGER" )->pSymbol );
    PushNil();
    PushString( szModuleName, strlen( szModuleName ) );
    Do( 1 );
@@ -1421,7 +1421,7 @@ void Mult( void )
 void OperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char *szSymbol )
 {
    Push( pItem1 );                             /* Push object              */
-   Message( hb_GetDynSym( szSymbol )->pSymbol );  /* Push operation           */
+   Message( hb_dynsymGet( szSymbol )->pSymbol );  /* Push operation           */
    Push( pItem2 );                             /* Push argument            */
    Function( 1 );
 }
@@ -2069,7 +2069,7 @@ void ProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* module sy
          pSymStart = pModuleSymbols + w;  /* first public defined symbol to start execution */
 
       if( (hSymScope == FS_PUBLIC) || (hSymScope & ( FS_MESSAGE | FS_MEMVAR )) )
-         hb_NewDynSym( pModuleSymbols + w );
+         hb_dynsymNew( pModuleSymbols + w );
    }
 }
 

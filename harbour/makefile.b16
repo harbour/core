@@ -13,7 +13,7 @@ PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
               dates2.obj datesx.obj \
-              debug.obj descend.obj devoutp.obj dynsym.obj environ.obj error.obj \
+              debug.obj descend.obj devoutp.obj dynsym.obj environ.obj terror.obj \
               errorapi.obj errorsys.obj extend.obj files.obj fm.obj \
               hardcr.obj initsymb.obj itemapi.obj math.obj memvars.obj \
               mathx.obj mtran.obj objfunc.obj set.obj setcolor.obj stringp.obj \
@@ -41,7 +41,6 @@ descend.obj  : descend.c  extend.h hbdefs.h
 devoutp.obj  : devoutp.c  extend.h hbdefs.h
 dynsym.obj   : dynsym.c   extend.h hbdefs.h
 environ.obj  : environ.c  extend.h hbdefs.h
-error.obj    : error.c    extend.h hbdefs.h
 errorapi.obj : errorapi.c extend.h hbdefs.h
 errorsys.obj : errorsys.c extend.h hbdefs.h
 extend.obj   : extend.c   extend.h hbdefs.h
@@ -61,11 +60,12 @@ stringp.obj  : stringp.c  extend.h hbdefs.h
 strings.obj  : strings.c  extend.h hbdefs.h
 stringsx.obj : stringsx.c extend.h hbdefs.h
 tclass.obj   : tclass.c   extend.h hbdefs.h
+terror.obj   : terror.c   extend.h hbdefs.h
 transfrm.obj : transfrm.c extend.h hbdefs.h
 
 asort.c      : asort.prg     harbour.exe
 devout.c     : devout.prg    harbour.exe
-error.c      : error.prg     harbour.exe
+terror.c     : terror.prg    harbour.exe
 errorsys.c   : errorsys.prg  harbour.exe
 objfunc.c    : objfunc.prg   harbour.exe
 stringp.c    : stringp.prg   harbour.exe

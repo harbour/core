@@ -32,7 +32,7 @@ PHB_ITEM hb_errNew( void )
 {
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
-   PushSymbol( hb_GetDynSym( "ERRORNEW" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "ERRORNEW" )->pSymbol );
    PushNil();
    Do( 0 );
 
@@ -41,40 +41,73 @@ PHB_ITEM hb_errNew( void )
    return pReturn;
 }
 
+/* QUESTION: When does Clipper show this: */
+/*    TODO: Change to internal error: */
+/*    printf("Error recovery failure, ???? (0)") */
+/*    exit(1); */
+
 WORD hb_errLaunch( PHB_ITEM pError )
 {
-   if ( !IS_BLOCK( &errorBlock ) )
+   WORD wRetVal;
+
+   if ( pError )
    {
-      /* TODO: Internal error: */
-      /* "No ERRORBLOCK() for error at: MODULENAME (0)" */
+      /* TODO: Determine if there was a BREAK in error handler. */
+      BOOL bBreak = FALSE;
+      WORD nSequenceLevel = 0;
 
-      exit(1);
+      if ( ! IS_BLOCK( &errorBlock ) )
+      {
+         /* TODO: Change to internal error: */
+         printf( "No ERRORBLOCK() for error at: ???? (0)" );
+         exit( 1 );
+      }
+
+      PushSymbol( &symEval );
+      Push( &errorBlock );
+      Push( pError );
+      Do( 1 );
+
+      /* TODO: Handle the canSubstitute case somehow */
+      /*       Clipper doesn't document the case where canSubstitute is set */
+
+      if ( bBreak )
+      {
+         if ( nSequenceLevel )
+         {
+            wRetVal = E_BREAK;
+         }
+         else
+         {
+            exit( 1 ); /* TODO: quit correctly */
+         }
+      }
+      else if ( IS_LOGICAL( &stack.Return ) )
+         wRetVal = stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
+      else
+         wRetVal = E_DEFAULT;
    }
+   else
+      wRetVal = E_RETRY;
 
-   PushSymbol( &symEval );
-   Push( &errorBlock );
-   Push( pError );
-   Do( 1 );
-
-   if ( !IS_LOGICAL( &stack.Return ) )
-   {
-      /* TODO: Internal error: */
-      /* "Error recovery failure, MODULENAME (0)" */
-
-      exit(1);
-   }
-
-   return stack.Return.item.asLogical.value ? E_RETRY : E_DEFAULT;
+   return wRetVal;
 }
+
+/* TODO:
+PHB_ITEM hb_errLaunchExt( PHB_ITEM pError )
+{
+}
+*/
 
 void hb_errRelease( PHB_ITEM pError )
 {
-   hb_itemRelease( pError );
+   if ( pError )
+      hb_itemRelease( pError );
 }
 
 char * hb_errGetDescription( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "DESCRIPTION" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "DESCRIPTION" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asString.value;
@@ -82,7 +115,7 @@ char * hb_errGetDescription( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
 {
-   PushSymbol( hb_GetDynSym( "_DESCRIPTION" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_DESCRIPTION" )->pSymbol );
    Push( pError );
    PushString( szDescription, strlen( szDescription ) );
    Do( 1 );
@@ -92,7 +125,7 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
 
 char * hb_errGetFileName( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "FILENAME" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "FILENAME" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asString.value;
@@ -100,7 +133,7 @@ char * hb_errGetFileName( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
 {
-   PushSymbol( hb_GetDynSym( "_FILENAME" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_FILENAME" )->pSymbol );
    Push( pError );
    PushString( szFileName, strlen( szFileName ) );
    Do( 1 );
@@ -109,7 +142,7 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
 
 USHORT hb_errGetGenCode( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "GENCODE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "GENCODE" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asInteger.value;
@@ -117,7 +150,7 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 {
-   PushSymbol( hb_GetDynSym( "_GENCODE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_GENCODE" )->pSymbol );
    Push( pError );
    PushInteger( uiGenCode );
    Do( 1 );
@@ -126,7 +159,7 @@ PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
 
 char * hb_errGetOperation( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "OPERATION" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "OPERATION" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asString.value;
@@ -134,7 +167,7 @@ char * hb_errGetOperation( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
 {
-   PushSymbol( hb_GetDynSym( "_OPERATION" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_OPERATION" )->pSymbol );
    Push( pError );
    PushString( szOperation, strlen( szOperation ) );
    Do( 1 );
@@ -143,7 +176,7 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
 
 USHORT hb_errGetOsCode( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "OSCODE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "OSCODE" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asInteger.value;
@@ -151,7 +184,7 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 {
-   PushSymbol( hb_GetDynSym( "_OSCODE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_OSCODE" )->pSymbol );
    Push( pError );
    PushInteger( uiOsCode );
    Do( 1 );
@@ -160,7 +193,7 @@ PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
 
 USHORT hb_errGetSeverity( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "SEVERITY" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "SEVERITY" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asInteger.value;
@@ -168,7 +201,7 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 {
-   PushSymbol( hb_GetDynSym( "_SEVERITY" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_SEVERITY" )->pSymbol );
    Push( pError );
    PushInteger( uiSeverity );
    Do( 1 );
@@ -177,7 +210,7 @@ PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
 
 USHORT hb_errGetSubCode( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "SUBCODE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "SUBCODE" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asInteger.value;
@@ -185,7 +218,7 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 {
-   PushSymbol( hb_GetDynSym( "_SUBCODE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_SUBCODE" )->pSymbol );
    Push( pError );
    PushInteger( uiSubCode );
    Do( 1 );
@@ -194,7 +227,7 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
 
 char * hb_errGetSubSystem( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "SUBSYSTEM" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "SUBSYSTEM" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asString.value;
@@ -202,7 +235,7 @@ char * hb_errGetSubSystem( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 {
-   PushSymbol( hb_GetDynSym( "_SUBSYSTEM" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_SUBSYSTEM" )->pSymbol );
    Push( pError );
    PushString( szSubSystem, strlen( szSubSystem ) );
    Do( 1 );
@@ -211,7 +244,7 @@ PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
 
 USHORT hb_errGetTries( PHB_ITEM pError )
 {
-   PushSymbol( hb_GetDynSym( "TRIES" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "TRIES" )->pSymbol );
    Push( pError );
    Do( 0 );
    return stack.Return.item.asInteger.value;
@@ -219,7 +252,7 @@ USHORT hb_errGetTries( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
 {
-   PushSymbol( hb_GetDynSym( "_TRIES" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_TRIES" )->pSymbol );
    Push( pError );
    PushInteger( uiTries );
    Do( 1 );
@@ -232,7 +265,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   PushSymbol( hb_GetDynSym( "CANRETRY" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "CANRETRY" )->pSymbol );
    Push( pError );
    Do( 0 );
 
@@ -240,7 +273,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   PushSymbol( hb_GetDynSym( "CANSUBSTITUTE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "CANSUBSTITUTE" )->pSymbol );
    Push( pError );
    Do( 0 );
 
@@ -248,7 +281,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
    /* ; */
 
-   PushSymbol( hb_GetDynSym( "CANDEFAULT" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "CANDEFAULT" )->pSymbol );
    Push( pError );
    Do( 0 );
 
@@ -261,21 +294,21 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
 
 PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 {
-   PushSymbol( hb_GetDynSym( "_CANRETRY" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_CANRETRY" )->pSymbol );
    Push( pError );
    PushLogical( uiFlags & EF_CANRETRY );
    Do( 1 );
 
    /* ; */
 
-   PushSymbol( hb_GetDynSym( "_CANSUBSTITUTE" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_CANSUBSTITUTE" )->pSymbol );
    Push( pError );
    PushLogical( uiFlags & EF_CANSUBSTITUTE );
    Do( 1 );
 
    /* ; */
 
-   PushSymbol( hb_GetDynSym( "_CANDEFAULT" )->pSymbol );
+   PushSymbol( hb_dynsymGet( "_CANDEFAULT" )->pSymbol );
    Push( pError );
    PushLogical( uiFlags & EF_CANDEFAULT );
    Do( 1 );

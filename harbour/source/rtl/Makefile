@@ -41,13 +41,15 @@ PRG_SOURCES=\
         alert.prg \
         asort.prg \
         devoutp.prg \
-        error.prg \
         errorsys.prg \
 	menuto.prg \
         objfunc.prg \
         readvar.prg \
         setkey.prg \
         tclass.prg \
+        tbcolumn.prg \
+        tbrowse.prg \
+        terror.prg \
         tget.prg \
         tgetlist.prg \
 

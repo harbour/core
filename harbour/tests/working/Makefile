@@ -6,6 +6,7 @@ ROOT = ../../
 
 LIBS=\
 	tools \
+        debug \
 	rdd \
 	vm \
 	rtl \
@@ -119,6 +120,7 @@ PRG_SOURCES=\
 	t1.prg \
 	test.prg \
 	test_all.prg \
+        testbrw.prg \
 	testcgi.prg \
 	testcopy.prg \
 	testerro.prg \

@@ -63,18 +63,17 @@ function __MenuTo( bBlock, cVariable )
    local bOldError
    local lBlockError
 
-   // Detect if a memver was passed
+   // Detect if a memvar was passed
 
-   bOldError := errorblock( {|| hb_MenuError() } )
+   bOldError := errorblock( {|| __Break( NIL ) } )
    begin sequence
-     eval( bBlock )
+     n := eval( bBlock )
      lBlockError := .F.
    recover
      lBlockError := .T.
      __mvPUBLIC( cVariable )
    end sequence
    errorblock( bOldError )
-
 
    // if no prompts were defined, exit with 0
 
@@ -235,7 +234,11 @@ function __MenuTo( bBlock, cVariable )
 
    return n
 
-static function hb_MenuError()
+// Temp emulation of the BREAK() function.
+// NOTE: xExpr is not handled
+
+static function __Break( xExpr )
 
    break
-   return NIL
+
+   return nil

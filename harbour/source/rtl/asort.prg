@@ -38,16 +38,20 @@
 //
 function aSort( aIn, nStart, nCount, bBlock )
 
-   IF !(ValType(nStart) == "N")
-        nStart := 1
+   IF !( ValType( aIn ) == "A" )
+      RETURN NIL
    ENDIF
 
-   IF !(ValType(nCount) == "N")
-        nCount := Len(aIn) - nStart + 1
+   IF !( ValType( nStart ) == "N" )
+      nStart := 1
    ENDIF
 
-   IF !(ValType(bBlock) == "B")
-        bBlock := {| x, y | x < y }
+   IF !( ValType( nCount ) == "N" )
+      nCount := Len( aIn ) - nStart + 1
+   ENDIF
+
+   IF !( ValType( bBlock ) == "B" )
+      bBlock := {| x, y | x < y }
    ENDIF
 
    IF len( aIn ) > 0

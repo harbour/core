@@ -220,7 +220,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    bEmpty = !dPush && ( iPicFlags & PF_EMPTY ); /* Suppress 0               */
 
-   PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
+   PushSymbol ( hb_dynsymGet( "STR" )->pSymbol );  /* Push STR function        */
    PushNil    ();                               /* Function call. No object */
 
    PushDouble ( dPush, iDecimals );             /* Push value to transform  */

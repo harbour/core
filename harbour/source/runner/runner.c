@@ -74,7 +74,7 @@ typedef struct
 #define SYM_NOT_FOUND 0xFFFFFFFF                /* Symbol not found.
                                                    FindSymbol               */
 
-       HARBOUR   HB_HB_RUN();
+       HARBOUR   HB_MAIN();
 static PASM_CALL CreateFun( PHB_SYMB, BYTE * ); /* Create a dynamic function*/
 static ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 static void      HRB_FileClose( FILE * );
@@ -110,7 +110,7 @@ ULONG ulSymEntry = 0;                           /* Link enhancement         */
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR HB_HB_RUN( void )
+HARBOUR HB_MAIN( void )
 {
    char *szFileName;
 
@@ -171,7 +171,7 @@ HARBOUR HB_HB_RUN( void )
                ulPos = FindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
                {
-/*                  if(    hb_FindDynSym( pSymRead[ ul ].szName ) &&
+/*                  if(    hb_dynsymFind( pSymRead[ ul ].szName ) &&
                       !( pSymRead[ ul ].cScope & FS_STATIC ) )
                   {                           */  /* Exists and NOT static ?  */
 /*                     printf( "\nDuplicate identifier '%s' %i.",
@@ -185,7 +185,7 @@ HARBOUR HB_HB_RUN( void )
             }
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */
-               pDynSym = hb_FindDynSym( pSymRead[ ul ].szName );
+               pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                if( !pDynSym )
                {
                   printf( "\nUnknown or unregistered function '%s'.",

@@ -17,11 +17,3 @@ DIRS=\
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf
-
-#
-# This is for building the stand-alone preprocessor.
-#
-#C_MAIN=hbppmain.c
-#
-#include $(TOP)$(ROOT)config/bin.cf
-#

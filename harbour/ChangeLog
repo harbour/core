@@ -1,3 +1,64 @@
+19990807-22:55 GMT+1 Victor Szel <info@szelvesz.hu>
+   * builddos.bat
+     makedos.env
+     makefile.dos
+     source/compiler/makefile.dos
+     source/makefile.dos
+     source/rdd/dbfntx/makefile.dos
+     source/rdd/makefile.dos
+     source/rtl/makefile.dos
+     source/tools/makefile.dos
+     source/vm/makefile.dos
+     tests/working/biccexe.cmd
+     tests/working/hbdos.bat
+     tests/working/hbicc.cmd
+     tests/working/makefile.dos
+     tests/working/makerunr.dos
+     tests/working/runrdos.bat
+     Removing all makefiles related to IBM C and the non-GNU makefiles
+     for DOS/DJGPP.
+   * source/rtl/error.prg renamed to
+     source/rtl/terror.prg
+     makefile.*
+   * source/hbpp/Makefile
+     - Removed unused parts for making standalone version
+   * source/rtl/Makefile
+     source/tests/working/Makefile
+     source/debug/Makefile
+     source/Makefile
+     + source/rtl/tbrowse.prg
+     + source/rtl/tbcolumn.prg
+     + source/debug/debugger.prg
+     + tests/working/testbrw.prg
+   * source/rtl/alert.prg
+     ! Fixed handling of parameters of other types than string and array.
+   * source/rtl/asort.prg
+     ! Fixed, so that it will now return NIL when the first parameter is not
+       an array, just like Clipper.
+   * source/rtl/errorapi.c
+     ! hb_errLaunch() interprets the non logical return value of the
+       error handler as an E_DEFAULT, some other small improvements.
+   * source/rtl/menuto.prg
+     ! Fixed errorblock return value.
+     ! Fixed deleted assigment to the variable n
+   * source/rdd/dbcmd.c
+     source/rtl/classes.c
+     source/rtl/do.c
+     source/rtl/errorapi.c
+     source/rtl/itemapi.c
+     source/rtl/memvars.c
+     source/rtl/transfrm.c
+     source/runner/runner.c
+     source/vm/dynsym.c
+     source/vm/hvm.c
+     * hb_*DynSym() functions renamed to hb_dynsym*() format.
+   * include/extend.h
+     source/vm/dynsym.c
+     * SYM_ALLOCATED renamed to FS_ALLOCATED and moved to extend.h
+       from dynsym.c (is this right ?)
+   * include/langapi.h
+     + Some new declarations.
+
 19990808-17:25 EDT Paul Tucker <ptucker@sympatico.ca>
    * tests/working/Makefile
      -debugger
@@ -14,7 +75,7 @@
      -hb_gt_ScreenBuffer
    * include/gtapi.h
      -hb_gt_ScreenBuffer
-   * source/rtl/gt/gtwin.c source/rtl/gtdos.c 
+   * source/rtl/gt/gtwin.c source/rtl/gtdos.c
      + Improved or added Dispbegin/end support
      * minor corrections in gtdos
    * source/rtl/gt_tpl.c
@@ -105,12 +166,12 @@
 
 Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/rules.cf:
-	Added the removal of *.core to the clean target.
+        * config/rules.cf:
+        Added the removal of *.core to the clean target.
 
-	* source/hbpp/hbpp.c:
-	* source/hbpp/stdalone/hbpp.c:
-	Fixed two unused variable warnings.
+        * source/hbpp/hbpp.c:
+        * source/hbpp/stdalone/hbpp.c:
+        Fixed two unused variable warnings.
 
 199908.06-22:12 GMT+3 Alexander Kresin
   * include/hbpp.h
@@ -149,6 +210,14 @@ Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + Added support for HB_P_MODULENAME opcode
    * source/vm/hvm.c
      + Added support for HB_P_MODULENAME opcode
+
+19990806-18:00 WIB Andi Jahja
+   * source\rt;\menuto.prg
+     - added error checker
+
+19990806-10:48 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/classes.c
+     ! One cast added back.
 
 19990806-10:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.b32
@@ -349,12 +418,6 @@ Wed Aug 04 12:25:12 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     tests/working/dyssym.prg
     + __DYNSYM*() tests added.
   * include/Makefile
-    include/initsymc.h (renamed from initsymb.h)
-    include/initsymd.h (added)
-    source/vm/initsymb.c
-    source/runner/runner.c
-    Init function extern declarations put into initsymd.h
-ile
     include/initsymc.h (renamed from initsymb.h)
     include/initsymd.h (added)
     source/vm/initsymb.c

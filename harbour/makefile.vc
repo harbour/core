@@ -68,7 +68,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\do.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
-    $(OBJ_DIR)\error.obj \
+    $(OBJ_DIR)\terror.obj \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
@@ -332,10 +332,10 @@ $(RTL_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
 $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(RTL_DIR)\error.c : $(RTL_DIR)\error.prg
+$(RTL_DIR)\terror.c : $(RTL_DIR)\terror.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$(**D)
 
-$(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
+$(OBJ_DIR)\terror.obj : $(RTL_DIR)\terror.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c

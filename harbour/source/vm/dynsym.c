@@ -28,8 +28,6 @@
 
 #include "extend.h"
 
-#define SYM_ALLOCATED   (-1)
-
 typedef struct
 {
    PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
@@ -38,11 +36,11 @@ typedef struct
 static PDYNHB_ITEM pDynItems = 0;              /* Pointer to dynamic items */
 static WORD        wDynSymbols = 0;     /* Number of symbols present */
 static WORD        wClosestDynSym = 0;
-              /* Closest symbol for match. hb_FindDynSym will search for the name. */
+              /* Closest symbol for match. hb_dynsymFind() will search for the name. */
               /* If it cannot find the name, it positions itself to the */
               /* closest symbol.  */
 
-void hb_LogDynSym( void )
+void hb_dynsymLog( void )
 {
    WORD w;
 
@@ -50,12 +48,12 @@ void hb_LogDynSym( void )
       printf( "%i %s\n", w + 1, pDynItems[ w ].pDynSym->pSymbol->szName );
 }
 
-PHB_SYMB hb_NewSymbol( char * szName )      /* Create a new symbol */
+PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
 {
    PHB_SYMB pSymbol = ( PHB_SYMB ) hb_xgrab( sizeof( HB_SYMB ) );
 
    pSymbol->szName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
-   pSymbol->cScope = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
+   pSymbol->cScope = FS_ALLOCATED; /* to know what symbols to release when exiting the app */
    strcpy( pSymbol->szName, szName );
    pSymbol->pFunPtr = NULL;
    pSymbol->pDynSym = NULL;
@@ -63,9 +61,9 @@ PHB_SYMB hb_NewSymbol( char * szName )      /* Create a new symbol */
    return pSymbol;
 }
 
-PHB_DYNS hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
+PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
 {
-   PHB_DYNS pDynSym = hb_FindDynSym( pSymbol->szName ); /* Find position */
+   PHB_DYNS pDynSym = hb_dynsymFind( pSymbol->szName ); /* Find position */
    WORD w;
 
    if( pDynSym )            /* If name exists */
@@ -111,7 +109,7 @@ PHB_DYNS hb_NewDynSym( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
    return pDynSym;
 }
 
-PHB_DYNS hb_GetDynSym( char * szName )  /* finds and creates a symbol if not found */
+PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not found */
 {
    PHB_DYNS pDynSym;
    char * szUprName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
@@ -122,16 +120,16 @@ PHB_DYNS hb_GetDynSym( char * szName )  /* finds and creates a symbol if not fou
    /* if( strlen( szUprName ) > 10 )
       szUprName[ 10 ] = 0; keeps this here for 10 chars /c compatibility mode */
 
-   pDynSym = hb_FindDynSym( szUprName );
+   pDynSym = hb_dynsymFind( szUprName );
    if( ! pDynSym )       /* Does it exists ? */
-      pDynSym = hb_NewDynSym( hb_NewSymbol( szUprName ) );   /* Make new symbol */
+      pDynSym = hb_dynsymNew( hb_symbolNew( szUprName ) );   /* Make new symbol */
 
    hb_xfree( szUprName );                                /* release memory */
 
    return pDynSym;
 }
 
-PHB_DYNS hb_FindDynSym( char * szName )
+PHB_DYNS hb_dynsymFind( char * szName )
 {
    WORD wFirst = 0, wLast = wDynSymbols, wMiddle = wLast / 2;
 
@@ -188,14 +186,14 @@ PHB_DYNS hb_FindDynSym( char * szName )
    return 0;
 }
 
-void hb_ReleaseDynSym( void )
+void hb_dynsymRelease( void )
 {
    WORD w;
 
    for( w = 0; w < wDynSymbols; w++ )
    {
       /* it is a allocated symbol ? */
-      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == (SYMBOLSCOPE)SYM_ALLOCATED )
+      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == FS_ALLOCATED )
       {
          hb_xfree( ( pDynItems + w )->pDynSym->pSymbol->szName );
          hb_xfree( ( pDynItems + w )->pDynSym->pSymbol );
@@ -219,6 +217,6 @@ HARBOUR HB___DYNSYMGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetN
 
 HARBOUR HB___DYNSYMGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
-   hb_retnl( ( LONG ) hb_GetDynSym( hb_parc( 1 ) ) );
+   hb_retnl( ( LONG ) hb_dynsymGet( hb_parc( 1 ) ) );
 }
 

@@ -190,7 +190,7 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    szGetFuncTable = ( char * ) hb_xgrab( strlen( szDriver ) + 14 );
    strcpy( szGetFuncTable, szDriver );
    strcat( szGetFuncTable, "_GETFUNCTABLE" );
-   pGetFuncTable = hb_FindDynSym( szGetFuncTable );
+   pGetFuncTable = hb_dynsymFind( szGetFuncTable );
    hb_xfree( szGetFuncTable );
    if( !pGetFuncTable )
       return 2;              /* Not valid RDD */

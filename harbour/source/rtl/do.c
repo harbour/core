@@ -45,7 +45,7 @@ HARBOUR HB_DO( void )
    {
       PHB_DYNS pDynSym;
 
-      pDynSym =hb_GetDynSym( pItem->item.asString.value );
+      pDynSym =hb_dynsymGet( pItem->item.asString.value );
       if( pDynSym )
       {
          int i;
