@@ -1,3 +1,10 @@
+19990727-22:20 CET Victor Szel <info@szelvesz.hu>
+   + tests/broken/lnlenli1.prg
+   + tests/broken/lnlenli2.prg
+     Test programs added to test how Harbour handles extremly long lines.
+   ! tests/broken/vec2.prg
+     Added RCS line.
+
 19990727-21:00 CET Victor Szel <info@szelvesz.hu>
    + source/compiler/harbour.y - Help screen updated.
      /a,/v added /t deleted, made it even more Clipper like.
