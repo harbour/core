@@ -1,3 +1,14 @@
+2000-09-02 12:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     + Added new kind of Result Marker - OMMIT, singinfied as <-Identifier->
+       /* This allows for custom code based on existance of optional clause, when the value of the clause itself is not needed */
+
+   * include/hbclass.ch
+     * Took advantage of new Ommit Result Marker, changed [<.ctor.> AS CLASS _CLASS_NAME_] to [<-ctor-> AS CLASS _CLASS_NAME_]
+
+   * source/compiler/harbour.y
+     - Removed rules for DummyTrue, used in _HB_MEMBER (no longer needed)
+
 2000-09-02 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * hb_slex.bc
      * Synchronized with makefile.bc

@@ -1207,7 +1207,7 @@ ClassInfo  : DecMethod
            | ClassInfo DecData
            ;
 
-DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' DummyTrue AsType
+DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' AsType
              {
                if( hb_comp_pLastMethod )
                {
@@ -1228,10 +1228,6 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
                hb_comp_cVarType = ' ';
              }
            ;
-
-DummyTrue  : /* nothing */ {}
-	   | TRUEVALUE
-	   ;
 
 DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType
              {
