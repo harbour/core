@@ -29,6 +29,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.11   Patrick Mast                Bumped build to 29 and updated date
+                                        for new public release.
    V 1.12   David G. Holm               Bumped build to 29, reset revision
                                         code to an empty string, and updated
                                         date, anticipating a public release.
@@ -71,6 +73,6 @@
    #define hb_build     29      /* Build number */
    #define hb_year      1999    /* Build year */
    #define hb_month     7       /* Build month */
-   #define hb_day       19      /* Build day */
+   #define hb_day       21      /* Build day */
 
 #endif /* HB_VER_H_ */

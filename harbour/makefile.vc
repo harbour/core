@@ -219,7 +219,7 @@ $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(RTL_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n /iinclude
 
 $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
