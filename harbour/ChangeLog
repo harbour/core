@@ -1,3 +1,8 @@
+19991012-20:41 GMT+1 Victor Szel <info@szelvesz.hu>
+   * tests/rtl_test.prg
+     + Tough FOR/NEXT tests added, many of them will not pass.
+     ! Small fixes.
+
 19991012-20:25 GMT+1 Bruno Cantero <bruno@issnet.net>
 
   * include/rddapi.h

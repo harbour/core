@@ -65,8 +65,8 @@
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  20
 #define TEST_RESULT_COL3_WIDTH  40
-#define TEST_RESULT_COL4_WIDTH  55
-#define TEST_RESULT_COL5_WIDTH  55
+#define TEST_RESULT_COL4_WIDTH  90
+#define TEST_RESULT_COL5_WIDTH  90
 
 STATIC s_nPass
 STATIC s_nFail
@@ -562,9 +562,10 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( {} >= {}                        , "E BASE 1076 Argument error >= F:S"               )
    TEST_LINE( {|| NIL } >= {|| NIL }          , "E BASE 1076 Argument error >= F:S"               )
 
-   //NOTE: These expressions have to be written with no separators!
-   TEST_LINE( mnIntP==10.or.mnIntP=0               , .T.                                               )
-   TEST_LINE( mnIntP==10.and.mnLongP=0             , .F.                                               )
+   // NOTE: These are compiler tests.
+   //       The expressions have to be written with no separators!
+   TEST_LINE( mnIntP==10.OR.mnIntP==0         , .T.                                               )
+   TEST_LINE( mnIntP==10.AND.mnLongP==0       , .F.                                               )
 
    TEST_LINE( NIL + 1                         , "E BASE 1081 Argument error + F:S" )
    TEST_LINE( NIL - 1                         , "E BASE 1082 Argument error - F:S" )
@@ -628,8 +629,6 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( 1.567 .AND. .F.                 , .F.                                       )
    TEST_LINE( scString .AND. .F.              , .F.                                       )
 
-   /* With the shortcut optimalization *OFF* (/z switch) */
-
    TEST_LINE( 1 .OR. 2                        , "E BASE 1066 Argument error conditional " )
    TEST_LINE( .F. .OR. 2                      , 2                                         )
    TEST_LINE( .F. .OR. 1.678                  , 1.678                                     )
@@ -642,6 +641,8 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( scString .OR. .F.               , "HELLO"                                   )
 
    ELSE
+
+   /* With the shortcut optimalization *OFF* (/z switch) */
 
    TEST_LINE( 1 .AND. 2                       , "E BASE 1078 Argument error .AND. F:S"    )
    TEST_LINE( NIL .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
@@ -1663,6 +1664,49 @@ STATIC FUNCTION Long_STRINGS()
 
 STATIC FUNCTION Main_MISC()
 
+   /* FOR/NEXT */
+
+   TEST_LINE( TFORNEXT( .F., .T., NIL )       , "E BASE 1086 Argument error ++ F:S"       )
+   TEST_LINE( TFORNEXT( .T., .F., NIL )       , .T.                                       )
+   TEST_LINE( TFORNEXT( .F., .F., NIL )       , "E BASE 1086 Argument error ++ F:S"       )
+   TEST_LINE( TFORNEXT( 100, 101, NIL )       , 102                                       )
+   TEST_LINE( TFORNEXT( "A", "A", NIL )       , "E BASE 1086 Argument error ++ F:S"       )
+   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E BASE 1075 Argument error > F:S"        )
+   TEST_LINE( TFORNEXT( .F., .T.,   1 )       , "E BASE 1081 Argument error + F:S"        )
+   TEST_LINE( TFORNEXT( .F., .T.,  -1 )       , .F.                                       )
+   TEST_LINE( TFORNEXT( .F., .T., .F. )       , "E BASE 1073 Argument error < F:S"        )
+   TEST_LINE( TFORNEXT( .T., .F.,   1 )       , .T.                                       )
+   TEST_LINE( TFORNEXT( .T., .F.,  -1 )       , "E BASE 1081 Argument error + F:S"        )
+   TEST_LINE( TFORNEXT( .T., .F., .T. )       , "E BASE 1073 Argument error < F:S"        )
+   TEST_LINE( TFORNEXT( 100, 101,   1 )       , 102                                       )
+   TEST_LINE( TFORNEXT( 101, 100,  -1 )       , 99                                        )
+   TEST_LINE( TFORNEXT( "A", "A", "A" )       , "E BASE 1073 Argument error < F:S"        )
+   TEST_LINE( TFORNEXT( "A", "B", "A" )       , "E BASE 1073 Argument error < F:S"        )
+   TEST_LINE( TFORNEXT( "B", "A", "A" )       , "E BASE 1073 Argument error < F:S"        )
+   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E BASE 1075 Argument error > F:S"        )
+
+   TEST_LINE( TFORNEXTX(   1, 10,NIL )        , "FTTTTTTTTTTT"                            )
+   TEST_LINE( TFORNEXTX(  10,  1,NIL )        , "FT"                                      )
+   TEST_LINE( TFORNEXTX(   1, 10,  1 )        , "FTSSTSSTSSTSSTSSTSSTSSTSSTSSTSSTS"       )
+   TEST_LINE( TFORNEXTX(  10,  1, -1 )        , "FTSSTSSTSSTSSTSSTSSTSSTSSTSSTSSTS"       )
+   TEST_LINE( TFORNEXTX(   1, 10, -1 )        , "FTS"                                     )
+   TEST_LINE( TFORNEXTX(  10,  1,  1 )        , "FTS"                                     )
+   TEST_LINE( TFORNEXTX(   1, 10,  4 )        , "FTSSTSSTSSTS"                            )
+   TEST_LINE( TFORNEXTX(  10,  1, -4 )        , "FTSSTSSTSSTS"                            )
+   TEST_LINE( TFORNEXTX(   1, 10, -4 )        , "FTS"                                     )
+   TEST_LINE( TFORNEXTX(  10,  1,  4 )        , "FTS"                                     )
+
+   TEST_LINE( TFORNEXTXF(   1, 10,NIL )       , "F-9999T1T2T3T4T5T6T7T8T9T10T11R11"                                              )
+   TEST_LINE( TFORNEXTXF(  10,  1,NIL )       , "F-9999T10R10"                                                                   )
+   TEST_LINE( TFORNEXTXF(   1, 10,  1 )       , "F-9999T1S1S1T2S2S2T3S3S3T4S4S4T5S5S5T6S6S6T7S7S7T8S8S8T9S9S9T10S10S10T11S11R11" )
+   TEST_LINE( TFORNEXTXF(  10,  1, -1 )       , "F-9999T10S10S10T9S9S9T8S8S8T7S7S7T6S6S6T5S5S5T4S4S4T3S3S3T2S2S2T1S1S1T0S0R0"    )
+   TEST_LINE( TFORNEXTXF(   1, 10, -1 )       , "F-9999T1S1R1"                                                                   )
+   TEST_LINE( TFORNEXTXF(  10,  1,  1 )       , "F-9999T10S10R10"                                                                )
+   TEST_LINE( TFORNEXTXF(   1, 10,  4 )       , "F-9999T1S1S1T5S5S5T9S9S9T13S13R13"                                              )
+   TEST_LINE( TFORNEXTXF(  10,  1, -4 )       , "F-9999T10S10S10T6S6S6T2S2S2T-2S-2R-2"                                           )
+   TEST_LINE( TFORNEXTXF(   1, 10, -4 )       , "F-9999T1S1R1"                                                                   )
+   TEST_LINE( TFORNEXTXF(  10,  1,  4 )       , "F-9999T10S10R10"                                                                )
+
    /* EVAL(), :EVAL */
 
    TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
@@ -2434,8 +2478,8 @@ STATIC FUNCTION TEST_BEGIN( cParam )
                     "     Switches: " + cParam + s_cNewLine +;
                     "===========================================================================" + s_cNewLine )
 
-   fWrite( s_nFhnd, PadL( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
-                    PadL( "No", TEST_RESULT_COL2_WIDTH ) + ". " +;
+   fWrite( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
+                    PadR( "Line", TEST_RESULT_COL2_WIDTH ) + " " +;
                     PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
                     PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
                     PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + s_cNewLine +;
@@ -2566,7 +2610,7 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
       fWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                       PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) +;
+                       PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                        PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                        PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                        PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) )
@@ -2775,6 +2819,53 @@ STATIC FUNCTION TAStr( aArray )
    NEXT
 
    RETURN cString
+
+STATIC FUNCTION TFORNEXT( xFrom, xTo, xStep )
+   LOCAL tmp
+
+   IF xStep == NIL
+      FOR tmp := xFrom TO xTo
+      NEXT
+   ELSE
+      FOR tmp := xFrom TO xTo STEP xStep
+      NEXT
+   ENDIF
+
+   RETURN tmp
+
+STATIC FUNCTION TFORNEXTX( xFrom, xTo, xStep )
+   LOCAL tmp
+   LOCAL cResult := ""
+   LOCAL bFrom := {|| cResult += "F", xFrom }
+   LOCAL bTo   := {|| cResult += "T", xTo   }
+   LOCAL bStep := {|| cResult += "S", xStep }
+
+   IF xStep == NIL
+      FOR tmp := Eval( bFrom ) TO Eval( bTo )
+      NEXT
+   ELSE
+      FOR tmp := Eval( bFrom ) TO Eval( bTo ) STEP Eval( bStep )
+      NEXT
+   ENDIF
+
+   RETURN cResult
+
+STATIC FUNCTION TFORNEXTXF( xFrom, xTo, xStep )
+   LOCAL tmp := -9999
+   LOCAL cResult := ""
+   LOCAL bFrom := {|| cResult += "F" + LTrim( Str( tmp ) ), xFrom }
+   LOCAL bTo   := {|| cResult += "T" + LTrim( Str( tmp ) ), xTo   }
+   LOCAL bStep := {|| cResult += "S" + LTrim( Str( tmp ) ), xStep }
+
+   IF xStep == NIL
+      FOR tmp := Eval( bFrom ) TO Eval( bTo )
+      NEXT
+   ELSE
+      FOR tmp := Eval( bFrom ) TO Eval( bTo ) STEP Eval( bStep )
+      NEXT
+   ENDIF
+
+   RETURN cResult + "R" + LTrim( Str( tmp ) )
 
 #ifdef __HARBOUR__
 
