@@ -7,6 +7,18 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   Note: Replace a logical value with sx_Replace() does not work yet.
+   * contrib/apollo/test/apollo.prg
+     * Added added functions in the test application.
+     * enhanced code
+     * Added and changed defines
+
+2001-12-30 18:00 UTC+0700 Andi Jahja <harbour@cbn.net.id>
+   * utils/hbmake/hbmake.prg
+     * replace filedate() => hbmake_filedate()
+     * replace filetime() => hbmake_filetime()
+
+2001-12-30 16:45 UTC+0700 Andi Jahja <harbour@cbn.net.id>
    * source/vm/dynlibhb.c
      - remove function hb_StartApp() and related _hInstance
    * source/vm/hvm.c
