@@ -8,6 +8,7 @@ ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 HB_DB_DRIVERS=\
 	nulsys \
 	dbfntx \
+	dbfcdx \
 
 ifeq ($(HB_BIN_COMPILE),)
 HB_BIN_COMPILE := $(TOP)$(ROOT)source/compiler/$(ARCH)

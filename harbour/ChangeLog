@@ -1,3 +1,37 @@
+19991010-13:26 GMT+1 Bruno Cantero <bruno@issnet.net>
+
+   * include/rddapi.h
+   * source/rdd/dbcmd.c
+     + Added undocumented parameters:
+       dbCreate( cFileName, aStruct, cRDD, lNew, cAlias, cDelimiter )
+       lNew: if specified, the created file will also be opened. If .F. this will be done
+             in the current workarea; if .T. this will be done in the next available.
+       cAlias: Alias for the workarea.
+       cDelimiter: for the DELIM driver (not implemented yet).
+
+   * source/rdd/dbf1.c
+     * SELF_OPEN(), now generate an error with retry possibility.
+     * SELF_OPENMEMFILE(), now generate an error with retry possibility.
+     * SELF_CREATE(), now generate an error with retry possibility.
+     * SELF_CREATEMEMFILE(), now generate an error with retry possibility.
+     * SELF_INFO(), more values.
+
+   + source/rdd/dbfcdx/Makefile
+   + source/rdd/dbfcdx/dbfcdx0.prg
+   + source/rdd/dbfcdx/dbfcdx1.c
+     + Files for the DBFCDX driver.
+     + .DBT and .FPT file memos.
+
+   * rdd.b32
+   * makefile.vc
+   * config/global.cf
+   * tests/bld_vc.bat
+     * Added new driver.
+
+   * tests/testdbf.prg
+     * Test for undocumented parameters in dbCreate()
+     * Test for the DBFCDX driver.
+
 19991010-13:25 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/console.c

@@ -50,13 +50,14 @@ TOOLS_LIB=$(LIB_DIR)\hbtools.lib
 PP_LIB=$(LIB_DIR)\hbpp.lib
 DEBUG_LIB=$(LIB_DIR)\debug.lib
 DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
+DBFCDX_LIB=$(LIB_DIR)\dbfcdx.lib
 RUNNER_LIB=$(LIB_DIR)\runner.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 PP_EXE=$(BIN_DIR)\hbpp.exe
 RUNNER_EXE=$(BIN_DIR)\hbrun.exe
 HARBOURFLAGS=-iinclude -n -q
 
-LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(RUNNER_LIB)
+LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(DBFCDX_LIB) $(RUNNER_LIB)
 
 #
 # OBJ list for harbour.lib. Add new ones as needed
@@ -190,6 +191,10 @@ DBFNTX_LIB_OBJS = \
     $(OBJ_DIR)\dbfntx0.obj \
     $(OBJ_DIR)\dbfntx1.obj
 
+DBFCDX_LIB_OBJS = \
+    $(OBJ_DIR)\dbfcdx0.obj \
+    $(OBJ_DIR)\dbfcdx1.obj
+
 #
 # OBJ list for runner.lib. Add new ones as needed
 #
@@ -226,6 +231,7 @@ all: $(HARBOUR_EXE) \
      $(PP_LIB) \
      $(DEBUG_LIB) \
      $(DBFNTX_LIB) \
+     $(DBFCDX_LIB) \
      $(PP_EXE) \
      $(RUNNER_LIB) \
      $(RUNNER_EXE)
@@ -295,6 +301,9 @@ $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 
 $(DBFNTX_LIB) : $(DBFNTX_LIB_OBJS)
     lib /OUT:$(DBFNTX_LIB) $(DBFNTX_LIB_OBJS)
+
+$(DBFCDX_LIB) : $(DBFCDX_LIB_OBJS)
+    lib /OUT:$(DBFCDX_LIB) $(DBFCDX_LIB_OBJS)
 
 $(RUNNER_LIB) : $(RUNNER_LIB_OBJS)
     lib /OUT:$(RUNNER_LIB) $(RUNNER_LIB_OBJS)
@@ -813,3 +822,11 @@ $(OBJ_DIR)\dbfntx0.obj : $(RDD_DIR)\dbfntx\dbfntx0.c
 $(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(RDD_DIR)\dbfcdx\dbfcdx0.c : $(RDD_DIR)\dbfcdx\dbfcdx0.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\dbfcdx0.obj : $(RDD_DIR)\dbfcdx\dbfcdx0.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**

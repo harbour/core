@@ -144,7 +144,18 @@ static ERRCODE AddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
 
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )
+   {
       ( ( LPFIELD ) ( pField - 1 ) )->lpfNext = pField;
+      if( ( ( LPFIELD ) ( pField - 1 ) )->uiType == 'C' )
+         pField->uiOffset = ( ( LPFIELD ) ( pField - 1 ) )->uiOffset +
+                            ( ( LPFIELD ) ( pField - 1 ) )->uiLen +
+                            ( ( USHORT ) ( ( LPFIELD ) ( pField - 1 ) )->uiDec << 8 );
+      else
+         pField->uiOffset = ( ( LPFIELD ) ( pField - 1 ) )->uiOffset +
+                            ( ( LPFIELD ) ( pField - 1 ) )->uiLen;
+   }
+   else
+      pField->uiOffset = 1;
    pField->sym = ( void * ) hb_dynsymGet( ( char * ) pFieldInfo->atomName );
    pField->uiType = pFieldInfo->uiType;
    pField->uiTypeExtended = pFieldInfo->typeExtended;
@@ -226,36 +237,35 @@ static ERRCODE FieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITEM p
    LPFIELD pField;
    char szType[ 2 ];
 
-   pField = pArea->lpFields;
-   while( pField && uiIndex > 1 )
+   if( uiIndex > pArea->uiFieldCount )
+      return FAILURE;
+
+   pField = pArea->lpFields + uiIndex - 1;
+   switch( uiType )
    {
-      pField = pField->lpfNext;
-      uiIndex--;
+      case DBS_NAME:
+         hb_itemPutC( pItem, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName );
+         break;
+
+      case DBS_TYPE:
+         szType[ 0 ] = pField->uiType;
+         szType[ 1 ] = '\0';
+         hb_itemPutC( pItem, szType );
+         break;
+
+      case DBS_LEN:
+         hb_itemPutNL( pItem, pField->uiLen );
+         break;
+
+      case DBS_DEC:
+         hb_itemPutNL( pItem, pField->uiDec );
+         break;
+
+      default:
+         return FAILURE;
+
    }
-   if( pField )
-   {
-      switch( uiType )
-      {
-         case DBS_NAME:
-            hb_itemPutC( pItem, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName );
-            return SUCCESS;
-
-         case DBS_TYPE:
-            szType[ 0 ] = pField->uiType;
-            szType[ 1 ] = '\0';
-            hb_itemPutC( pItem, szType );
-            return SUCCESS;
-
-         case DBS_LEN:
-            hb_itemPutNL( pItem, pField->uiLen );
-            return SUCCESS;
-
-         case DBS_DEC:
-            hb_itemPutNL( pItem, pField->uiDec );
-            return SUCCESS;
-      }
-   }
-   return FAILURE;
+   return SUCCESS;
 }
 
 
@@ -263,19 +273,13 @@ static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
 {
    LPFIELD pField;
 
-   pField = pArea->lpFields;
-   while( pField && uiIndex > 1 )
-   {
-      pField = pField->lpfNext;
-      uiIndex--;
-   }
-   if( pField )
-   {
-      strncpy( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
-               HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
-      return SUCCESS;
-   }
-   return FAILURE;
+   if( uiIndex > pArea->uiFieldCount )
+      return FAILURE;
+
+   pField = pArea->lpFields + uiIndex - 1;
+   strncpy( ( char * ) szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
+            HARBOUR_MAX_RDD_FIELDNAME_LENGTH );
+   return SUCCESS;
 }
 
 static ERRCODE Found( AREAP pArea, BOOL * pFound )
@@ -287,31 +291,6 @@ static ERRCODE Found( AREAP pArea, BOOL * pFound )
 static ERRCODE GetRec( AREAP pArea, BYTE ** pBuffer )
 {
    * pBuffer = pArea->lpExtendInfo->bRecord;
-   return SUCCESS;
-}
-
-static ERRCODE GoCold( AREAP pArea )
-{
-   PHB_ITEM pError;
-
-   if( pArea->lpExtendInfo->fReadOnly )
-   {
-      pError = hb_errNew();
-      hb_errPutGenCode( pError, EG_READONLY );
-      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
-      hb_errPutSubCode( pError, 1025 );
-      SELF_ERROR( ( AREAP ) pCurrArea->pArea, pError );
-      hb_errRelease( pError );
-      return FAILURE;
-   }
-   else
-      return SUCCESS;
-}
-
-static ERRCODE GoHot( AREAP pArea )
-{
-   pArea->lpExtendInfo->fRecordChanged = FALSE;
-   pArea->lpFileInfo->fAppend = FALSE;
    return SUCCESS;
 }
 
@@ -438,8 +417,8 @@ static RDDFUNCS defTable = { Bof,
                              GetRec,
                              ( DBENTRYP_SI ) UnSupported,
                              ( DBENTRYP_SVL ) UnSupported,
-                             GoCold,
-                             GoHot,
+                             UnSupported,
+                             UnSupported,
                              ( DBENTRYP_P ) UnSupported,
                              ( DBENTRYP_SI ) UnSupported,
                              UnSupported,
@@ -462,7 +441,9 @@ static RDDFUNCS defTable = { Bof,
                              ( DBENTRYP_UL ) UnSupported,
                              UnSupported,
                              ( DBENTRYP_VP ) UnSupported,
+                             ( DBENTRYP_SVP ) UnSupported,
                              ( DBENTRYP_VP ) UnSupported,
+                             ( DBENTRYP_SVP ) UnSupported,
                              UnSupported,
                              UnSupported,
                              ( DBENTRYP_SVP ) UnSupported
@@ -852,6 +833,21 @@ ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return FAILURE;
 }
 
+void hb_rddShutDown( void )
+{
+   LPRDDNODE pRddNode;
+
+   hb_rddCloseAll();
+   if( szDefDriver )
+      hb_xfree( szDefDriver );
+   while( pRddList )
+   {
+      pRddNode = pRddList;
+      pRddList = pRddList->pNext;
+      hb_xfree( pRddNode );
+   }
+}
+
 /*
  * -- HARBOUR FUNCTIONS --
  */
@@ -997,8 +993,6 @@ HARBOUR HB_DBAPPEND( void )
    if( pCurrArea )
    {
       bNetError = FALSE;
-      if( SELF_GOCOLD( ( AREAP ) pCurrArea->pArea ) == FAILURE )
-         return;
       if( ISLOG( 1 ) )
          bUnLockAll = hb_parl( 1 );
       bNetError = ( SELF_APPEND( ( AREAP ) pCurrArea->pArea, bUnLockAll ) == FAILURE );
@@ -1057,15 +1051,17 @@ HARBOUR HB_DBCOMMITALL( void )
 
 HARBOUR HB_DBCREATE( void )
 {
-   char * szFileName, * szDriver;
+   char * szFileName, * szMemoName, * szDriver, * szAlias;
    PHB_ITEM pStruct, pFieldDesc, pFileExt;
    LPRDDNODE pRddNode;
+   LPAREANODE pAreaNode;
    AREAP pTempArea;
    USHORT uiSize, uiRddID;
    DBOPENINFO pInfo;
    USHORT uiLen;
    PHB_FNAME pFileName;
    char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
+   BOOL bError;
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
@@ -1128,6 +1124,7 @@ HARBOUR HB_DBCREATE( void )
 
    pFileName = hb_fsFNameSplit( szFileName );
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+   szMemoName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
    strcpy( szFileName, hb_parc( 1 ) );
    if( !pFileName->szExtension )
    {
@@ -1138,25 +1135,108 @@ HARBOUR HB_DBCREATE( void )
    }
    pInfo.abName = ( BYTE * ) szFileName;
 
-   if( SELF_CREATE( ( AREAP ) pTempArea, &pInfo ) == SUCCESS &&
-       pTempArea->lpExtendInfo->fHasMemo )
+   bError = ( SELF_CREATE( ( AREAP ) pTempArea, &pInfo ) == FAILURE );
+   if( !bError && pTempArea->lpExtendInfo->fHasMemo )
    {
       pFileExt = hb_itemPutC( NULL, "" );
       SELF_INFO( ( AREAP ) pTempArea, DBI_MEMOEXT, pFileExt );
-      szFileName[ 0 ] = '\0';
+      szMemoName[ 0 ] = '\0';
       if( pFileName->szPath )
-         strcat( szFileName, pFileName->szPath );
-      strcat( szFileName, pFileName->szName );
-      strcat( szFileName, pFileExt->item.asString.value );
-      pInfo.abName = ( BYTE * ) szFileName;
-      SELF_CREATEMEMFILE( ( AREAP ) pTempArea, &pInfo );
+         strcat( szMemoName, pFileName->szPath );
+      strcat( szMemoName, pFileName->szName );
+      strcat( szMemoName, pFileExt->item.asString.value );
+      pInfo.abName = ( BYTE * ) szMemoName;
+      bError = ( SELF_CREATEMEMFILE( ( AREAP ) pTempArea, &pInfo ) == FAILURE );
       hb_itemRelease( pFileExt );
    }
 
    SELF_RELEASE( ( AREAP ) pTempArea );
-   hb_xfree( szFileName );
-   hb_xfree( pFileName );
    hb_xfree( pTempArea );
+   hb_xfree( pFileName );
+
+   if( !bError && ISLOG( 4 ) )
+   {
+      bNetError = FALSE;
+      if( hb_parl( 4 ) )
+         hb_rddSelectFirstAvailable();
+      else if( pCurrArea )  /* If current WorkArea is in use then close it */
+      {
+         SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
+         SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+
+         if( pWorkAreas == pCurrArea )  /* Empty list */
+            pWorkAreas = NULL;
+         else
+         {
+            if( pCurrArea->pPrev )
+               pCurrArea->pPrev->pNext = pCurrArea->pNext;
+            if( pCurrArea->pNext )
+               pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+         }
+
+         hb_xfree( pCurrArea->pArea );
+         hb_xfree( pCurrArea );
+         pCurrArea = NULL;
+      }
+
+      szAlias = hb_parc( 5 );
+      pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+      pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
+      memset( pCurrArea->pArea, 0, pRddNode->uiAreaSize );
+      ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+      ( ( AREAP ) pCurrArea->pArea )->rddID = uiRddID;
+
+      pCurrArea->pPrev = NULL;
+      pCurrArea->pNext = NULL;
+
+      SELF_NEW( ( AREAP ) pCurrArea->pArea );
+
+      pInfo.uiArea = uiCurrArea;
+      pInfo.abName = ( BYTE * ) szFileName;
+      pInfo.atomAlias = ( BYTE * ) szAlias;
+      pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
+      pInfo.fReadonly = FALSE;
+
+      if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
+      {
+         SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+         hb_xfree( pCurrArea->pArea );
+         hb_xfree( pCurrArea );
+         hb_xfree( szFileName );
+         hb_xfree( szMemoName );
+         pCurrArea = NULL;
+         return;
+      }
+
+      ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
+
+      /* Insert the new WorkArea node */
+
+      if( !pWorkAreas )
+         pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
+      else
+      {
+         pAreaNode = pWorkAreas;
+         while( pAreaNode->pNext )
+         {
+            if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+            {
+               /* Insert the new WorkArea node */
+               pCurrArea->pPrev = pAreaNode->pPrev;
+               pCurrArea->pNext = pAreaNode;
+               pAreaNode->pPrev = pCurrArea;
+               if( pCurrArea->pPrev )
+                  pCurrArea->pPrev->pNext = pCurrArea;
+            }
+            pAreaNode = pAreaNode->pNext;
+         }
+         pAreaNode->pNext = pCurrArea; /* Append the new WorkArea node */
+         pCurrArea->pPrev = pAreaNode;
+      }
+   }
+
+   hb_xfree( szFileName );
+   hb_xfree( szMemoName );
 }
 
 HARBOUR HB_DBDELETE( void )
@@ -1546,30 +1626,6 @@ HARBOUR HB_DBUSEAREA( void )
       return;
    }
 
-   if( ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->fHasMemo )
-   {
-      pFileExt = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_MEMOEXT, pFileExt );
-      szFileName[ 0 ] = '\0';
-      if( pFileName->szPath )
-         strcat( szFileName, pFileName->szPath );
-      strcat( szFileName, pFileName->szName );
-      strcat( szFileName, pFileExt->item.asString.value );
-      pInfo.abName = ( BYTE * ) szFileName;
-      hb_itemRelease( pFileExt );
-      if( SELF_OPENMEMFILE( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
-      {
-         SELF_CLOSE( ( AREAP ) pCurrArea->pArea );
-         SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
-         hb_xfree( pCurrArea->pArea );
-         hb_xfree( pCurrArea );
-         hb_xfree( szFileName );
-         hb_xfree( pFileName );
-         pCurrArea = NULL;
-         return;
-      }
-   }
-
    hb_xfree( szFileName );
    hb_xfree( pFileName );
    ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
@@ -1577,24 +1633,23 @@ HARBOUR HB_DBUSEAREA( void )
    /* Insert the new WorkArea node */
 
    if( !pWorkAreas )
-   {
       pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
-      return;
-   }
-
-   pAreaNode = pWorkAreas;
-   while( pAreaNode->pNext )
+   else
    {
-      if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+      pAreaNode = pWorkAreas;
+      while( pAreaNode->pNext )
       {
-         /* Insert the new WorkArea node */
-         pCurrArea->pPrev = pAreaNode->pPrev;
-         pCurrArea->pNext = pAreaNode;
-         pAreaNode->pPrev = pCurrArea;
-         if( pCurrArea->pPrev )
-            pCurrArea->pPrev->pNext = pCurrArea;
+         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+         {
+            /* Insert the new WorkArea node */
+            pCurrArea->pPrev = pAreaNode->pPrev;
+            pCurrArea->pNext = pAreaNode;
+            pAreaNode->pPrev = pCurrArea;
+            if( pCurrArea->pPrev )
+               pCurrArea->pPrev->pNext = pCurrArea;
+         }
+         pAreaNode = pAreaNode->pNext;
       }
-      pAreaNode = pAreaNode->pNext;
    }
    pAreaNode->pNext = pCurrArea; /* Append the new WorkArea node */
    pCurrArea->pPrev = pAreaNode;
@@ -1875,21 +1930,6 @@ HARBOUR HB_RDDSETDEFAULT( void )
    }
 }
 
-void hb_rddShutDown( void )
-{
-   LPRDDNODE pRddNode;
-
-   hb_rddCloseAll();
-   if( szDefDriver )
-      hb_xfree( szDefDriver );
-   while( pRddList )
-   {
-      pRddNode = pRddList;
-      pRddList = pRddList->pNext;
-      hb_xfree( pRddNode );
-   }
-}
-
 HARBOUR HB_RECCOUNT( void )
 {
    ULONG ulRecCount = 0;
@@ -1982,3 +2022,4 @@ HARBOUR HB___RDDSETDEFAULT( void )
       strcpy( szDefDriver, szNewDriver );
    }
 }
+

@@ -5,32 +5,34 @@
 function main()
 
    local aStruct := { { "CHARACTER", "C", 25, 0 }, ;
-		      { "NUMERIC",   "N",  8, 0 }, ;
-		      { "DOUBLE",    "N",  8, 2 }, ;
-		      { "DATE",      "D",  8, 0 }, ;
+                      { "NUMERIC",   "N",  8, 0 }, ;
+                      { "DOUBLE",    "N",  8, 2 }, ;
+                      { "DATE",      "D",  8, 0 }, ;
                       { "LOGICAL",   "L",  1, 0 }, ;
                       { "MEMO1",     "M", 10, 0 }, ;
                       { "MEMO2",     "M", 10, 0 } }
 
-   dbCreate( "testdbf", aStruct )
-   dbUseArea(,, "testdbf" )
-   ? "[" + FIELD->MEMO1 + "]"
-   ? "[" + FIELD->MEMO2 + "]"
+   REQUEST DBFCDX
+
+   dbCreate( "testdbf", aStruct, "DBFCDX", .t., "MYALIAS" )
+
+   ? "[" + MYALIAS->MEMO1 + "]"
+   ? "[" + MYALIAS->MEMO2 + "]"
    ? "-"
-   FIELD->MEMO1 := "Hello world!"
-   FIELD->MEMO2 := "Harbour power"
-   ? "[" + FIELD->MEMO1 + "]"
-   ? "[" + FIELD->MEMO2 + "]"
    dbAppend()
-   FIELD->MEMO1 := "111"
-   FIELD->MEMO2 := "222"
-   ? "[" + FIELD->MEMO1 + "]"
-   ? "[" + FIELD->MEMO2 + "]"
-
-   FIELD->NUMERIC := 90
-   FIELD->DOUBLE := 120.138
-
-   ? "[" + Str(FIELD->DOUBLE) + "]"
-   ? "[" + Str(FIELD->NUMERIC) + "]"
+   MYALIAS->MEMO1 := "Hello world!"
+   MYALIAS->MEMO2 := "Harbour power"
+   ? "[" + MYALIAS->MEMO1 + "]"
+   ? "[" + MYALIAS->MEMO2 + "]"
+   dbAppend()
+   MYALIAS->MEMO1 := "111"
+   MYALIAS->MEMO2 := "222"
+   ? "[" + MYALIAS->MEMO1 + "]"
+   ? "[" + MYALIAS->MEMO2 + "]"
+   MYALIAS->NUMERIC := 90
+   MYALIAS->DOUBLE := 120.138
+   ? "[" + Str( MYALIAS->DOUBLE ) + "]"
+   ? "[" + Str( MYALIAS->NUMERIC ) + "]"
 
 return nil
+

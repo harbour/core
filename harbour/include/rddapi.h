@@ -511,6 +511,7 @@ typedef struct _FIELD
    USHORT  uiLen;            /* Field length */
    USHORT  uiDec;            /* Decimal length */
    USHORT  uiArea;           /* Area this field resides in */
+   USHORT  uiOffset;         /* Offset for this field */
    void *  sym;              /* Symbol that represents the field */
    void *  memo;             /* Pointer to memo data */
    struct _FIELD *lpfNext;   /* The next field in the list */
@@ -589,7 +590,6 @@ typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3 );
 
 #if 0
-typedef USHORT ( * DBENTRYP_SVPB )( AREAP area, USHORT index, void * param, USHORT mode);
 typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
 typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONGP p2);
 typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORTP p2);
@@ -728,13 +728,9 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_V    closeMemFile;
    DBENTRYP_VP   createMemFile;
-#if 0
-   DBENTRYP_SVPB getValueFile;
-#endif
+   DBENTRYP_SVP  getValueFile;
    DBENTRYP_VP   openMemFile;
-#if 0
    DBENTRYP_SVP  putValueFile;
-#endif
 
 
    /* Database file header handling */
@@ -885,7 +881,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define SELF_CLOSEMEMFILE(w)            ((*(w)->lprfsHost->closeMemFile)(w))
 #define SELF_CREATEMEMFILE(w,bp)        ((*(w)->lprfsHost->createMemFile)(w,bp))
-#define SELF_GETVALUEFILE(w,i,bp,b)     ((*(w)->lprfsHost->getValueFile)(w,i,bp,b))
+#define SELF_GETVALUEFILE(w,i,bp)       ((*(w)->lprfsHost->getValueFile)(w,i,bp))
 #define SELF_OPENMEMFILE(w,bp)          ((*(w)->lprfsHost->openMemFile)(w,bp))
 #define SELF_PUTVALUEFILE(w,i,bp)       ((*(w)->lprfsHost->putValueFile)(w,i,bp))
 
@@ -1039,7 +1035,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define SUPER_CLOSEMEMFILE(w)           ((*(SUPERTABLE)->closeMemFile)(w))
 #define SUPER_CREATEMEMFILE(w,bp)       ((*(SUPERTABLE)->createMemFile)(w,bp))
-#define SUPER_GETVALUEFILE(w,i,bp,b)    ((*(SUPERTABLE)->getValueFile)(w,i,bp,b))
+#define SUPER_GETVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->getValueFile)(w,i,bp))
 #define SUPER_OPENMEMFILE(w,bp)         ((*(SUPERTABLE)->openMemFile)(w,bp))
 #define SUPER_PUTVALUEFILE(w,i,bp)      ((*(SUPERTABLE)->putValueFile)(w,i,bp))
 
