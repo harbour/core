@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-01-11 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  * source/rdd/dbf1.c
+    ! Fixed problem with numeric field.
       From Horacio Roldán <harbour_ar@yahoo.com.ar>
 
 2002-01-10 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
