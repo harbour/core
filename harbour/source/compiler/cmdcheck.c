@@ -256,34 +256,23 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
 
                      case 'g' :
                      case 'G' :
-                       if( Args[i][j + 1] && toupper( Args[i][j + 1] ) == 'C' && Args[i][j + 2] && isdigit((int) Args[i][j + 2] ) )
-                       {
-                          Switch[2] = 'C';
-                          Switch[3] = Args[i][j + 2];
-                          Switch[4] = '\0';
-
+                          /* Required argument */
+                          Switch[2] = Args[i][j + 1];
+                          if( isdigit( Args[i][j + 2] ) )
+                          {
+                             /* Optional argument */
+                             Switch[3] = Args[i][j + 2];
+                             Switch[4] = '\0';
+                             j += 3;
+                          }
+                          else
+                          {
+                             /* No optional argument */
+                             Switch[3] = '\0';
+                             j += 2;
+                          }
                           hb_compChkEnvironVar( (char*) Switch );
-
-                          j += 3;
-                          continue;
-                       }
-                       else if( Args[i][j + 1] && toupper( Args[i][j + 1] ) == 'C' )
-                       {
-                          Switch[2] = 'C';
-                          Switch[3] = '\0';
-
-                          hb_compChkEnvironVar( (char*) Switch );
-
-                          j += 2;
-                          continue;
-                       }
-                       else
-                       {
-                          Switch[2] = '\0';
-                          hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, (char*) Switch, NULL );
-                       }
-
-                       break;
+                          break;
 
                      case 'i' :
                      case 'I' :
