@@ -48,6 +48,7 @@
 #include "hbpp.h"
 #include "extend.h"
 #include "itemapi.h"
+#include "errorapi.h"
 #include "hberrors.h"
 
 PATHNAMES * hb_comp_pIncludePath = NULL;
@@ -63,8 +64,8 @@ static jmp_buf s_env;
  */
 HARBOUR HB___PREPROCESS( void )
 {
-  if( ISCHAR( 1 ) )
-    {
+   if( ISCHAR( 1 ) )
+   {
       char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
       char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
       char * ptr = pText;
@@ -79,55 +80,58 @@ HARBOUR HB___PREPROCESS( void )
       HB_SKIPTABSPACES( ptr );
 
       if( setjmp( s_env ) == 0 )
-        {
-          int resParse;
+      {
+         int resParse;
 
-          if( ( resParse = hb_pp_ParseExpression( ptr, pOut ) ) > 0 )
-            {
-              /* Some error here? */
-            }
-          hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
-        }
+         if( ( resParse = hb_pp_ParseExpression( ptr, pOut ) ) > 0 )
+         {
+            /* Some error here? */
+         }
+         hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
+      }
       else
-        {
-          /* an error occured during parsing.
-           * The longjmp was used in GenError()
-           */
-          hb_retc( "ERROR" );
-        }
+      {
+         /* an error occured during parsing.
+          * The longjmp was used in GenError()
+          */
+         hb_retc( "ERROR" );
+      }
 
       hb_xfree( pText );
       hb_xfree( pOut );
-    }
-  else
-    hb_retc( "" );
+   }
+   else
+      hb_retc( "" );
 }
 
-void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
+void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
+   PHB_ITEM pError;
+   char buffer[ 128 ];
 
-  /* TODO: The internal buffers allocated by the preprocessor should be
-   * deallocated here
-   */
-  printf( "Error %c%i  ", cPrefix, iError );
-  printf( _szErrors[ iError - 1 ], szError1, szError2 );
-  printf( hb_consoleGetNewLine() );
-  printf( hb_consoleGetNewLine() );
+   HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", szErrors, cPrefix, iError, szError1, szError2));
 
-  longjmp( s_env, iError );
+   /* TODO: The internal buffers allocated by the preprocessor should be
+    * deallocated here
+    */
+
+   sprintf( buffer, szErrors[ iError - 1 ], szError1, szError2 );
+   pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iError, buffer, NULL, 0, EF_NONE );
+   hb_errLaunch( pError );
+   hb_errRelease( pError );
+
+   longjmp( s_env, iError );
 }
 
-void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2 )
 {
-  HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+   HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
-  /* NOTE:
-   *    All warnings are simply ignored
-   */
-  HB_SYMBOL_UNUSED( _szWarnings );
-  HB_SYMBOL_UNUSED( cPrefix );
-  HB_SYMBOL_UNUSED( iWarning );
-  HB_SYMBOL_UNUSED( szWarning1 );
-  HB_SYMBOL_UNUSED( szWarning2 );
+   /* NOTE: All warnings are simply ignored */
+
+   HB_SYMBOL_UNUSED( szWarnings );
+   HB_SYMBOL_UNUSED( cPrefix );
+   HB_SYMBOL_UNUSED( iWarning );
+   HB_SYMBOL_UNUSED( szWarning1 );
+   HB_SYMBOL_UNUSED( szWarning2 );
 }

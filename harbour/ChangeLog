@@ -1,3 +1,8 @@
+19991122-01:33 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/hbpplib.c
+    ! Standard runtime error is launched from the library version of the
+      preprocessor.
+
 19991122-01:14 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/*
     include/compiler.h
