@@ -1402,6 +1402,10 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
   int StBr1 = 0, StBr2 = 0, StBr3 = 0;
   BOOL rez = FALSE;
 
+  /* Ron Pinkas Begin 2000-06-02 */
+  BOOL bMacro = FALSE;
+  /* Ron Pinkas End */
+
   HB_TRACE(HB_TR_DEBUG, ("getExpReal(%s, %p, %d, %d)", expreal, ptri, prlist, maxrez));
 
   HB_SKIPTABSPACES( *ptri );
@@ -1444,7 +1448,17 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
           }
         else if( IsInStr( **ptri, sZnaki ) )
           {
-            State = STATE_EXPRES;
+            /* Ron Pinkas Begin 2000-06-02 */
+            if( **ptri=='.' && bMacro )
+              {
+                /* Macro terminator '.' */
+                if( *(*ptri+1)==' ' ) State = STATE_ID_END;
+
+                bMacro = FALSE;
+              }
+            else
+            /* Ron Pinkas End */
+               State = STATE_EXPRES;
           }
         else if( **ptri == '(' )
           {
@@ -1461,7 +1475,19 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
             State = STATE_BRACKET;
             StBr3 = 1;
           }
-        else if( **ptri == ' ' ) State = STATE_ID_END;
+        /* Ron Pinkas Begin 2000-06-02 */
+        else if( **ptri == '&' )
+          {
+             bMacro = TRUE;
+          }
+        /* Ron Pinkas End */
+        else if( **ptri == ' ' )
+          {
+             State = STATE_ID_END;
+             /* Ron Pinkas Begin 2000-06-02 */
+             bMacro = FALSE;
+             /* Ron Pinkas End */
+          }
         break;
       case STATE_EXPRES:
       case STATE_EXPRES_ID:
@@ -1497,6 +1523,9 @@ static int getExpReal( char * expreal, char ** ptri, BOOL prlist, int maxrez )
     {
       if( *(expreal-1) == ' ' ) { expreal--; lens--; };
       *expreal = '\0';
+      /*
+      printf( "\nLen=%i \'%s\'\n", lens, expreal-lens);
+      */
     }
   return lens;
 }
@@ -2037,6 +2066,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
               else if( !State ) maxlen = readed = 0;
               break;
 
+            /* Ron Pinkas Begin 2000-06-01 */
             case '@':
               if( sBuffer[ *iBuffer ] != ' ' && sBuffer[ *iBuffer ] != '\t' )
               {
@@ -2045,6 +2075,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                  cha = ' ';
               }
               break;
+            /* Ron Pinkas End */
             }
             if( cha != ' ' && cha != ';' ) s_prevchar = cha;
           }
