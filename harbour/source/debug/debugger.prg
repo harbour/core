@@ -86,7 +86,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  s_oDebugger := TDebugger():New()
                  s_oDebugger:Activate( cModuleName )
               else
-                 s_oDebugger:ShowCode( cModuleName )
+                 if ! s_oDebugger:lTrace
+                    s_oDebugger:ShowCode( cModuleName )
+                 endif
                  s_oDebugger:LoadVars()
               endif
            endif
@@ -138,6 +140,13 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
                  endif
                  return
               endif
+              if s_oDebugger:lTrace
+                 if s_oDebugger:lStopTrace
+                    s_oDebugger:lTrace = .f.
+                    s_oDebugger:lStopTrace = .f.
+                 endif
+                 return
+              endif
               if s_oDebugger:lGo
                  s_oDebugger:lGo := ! s_oDebugger:IsBreakPoint( uParam1 )
               endif
@@ -162,6 +171,9 @@ procedure __dbgEntry( uParam1, uParam2, uParam3 )  // debugger entry point
          if s_oDebugger != nil
             s_oDebugger:EndProc()
             s_oDebugger:LoadVars()
+            if s_oDebugger:lTrace
+               s_oDebugger:lStopTrace = .t.   // reset trace mode on next dbgentry
+            endif
          endif
    endcase
 
@@ -177,10 +189,11 @@ CLASS TDebugger
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
    DATA   aBreakPoints, aCallStack, aColors
    DATA   aLastCommands, nCommand, oGetListCommand
-   DATA   lAnimate, lEnd, lGo, lCaseSensitive, lMonoDisplay, lSortVars
+   DATA   lAnimate, lEnd, lGo, lTrace, lCaseSensitive, lMonoDisplay, lSortVars
    DATA   cSearchString, cPathForFiles, cSettingsFileName
    DATA   nTabWidth, nSpeed
    DATA   lShowPublics, lShowPrivates, lShowStatics, lShowLocals, lAll
+   DATA   lStopTrace
 
    METHOD New()
    METHOD Activate( cModuleName )
@@ -200,6 +213,7 @@ CLASS TDebugger
    METHOD Colors()
    METHOD CommandWindowProcessKey( nKey )
    METHOD EditColor( nColor, oBrwColors )
+   METHOD EditSet( nSet, oBrwSets )
    METHOD EditVar( nVar )
    METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
@@ -254,6 +268,9 @@ CLASS TDebugger
           ::nTabWidth := ::InputBox( "Tab width", ::nTabWidth )
 
    METHOD ToggleBreakPoint()
+
+   METHOD Trace() INLINE ::lTrace := .t., __Keyboard( Chr( 255 ) ) //forces a Step()
+
    METHOD ViewSets()
    METHOD WndVarsLButtonDown( nMRow, nMCol )
    METHOD LineNumbers()          // Toggles numbering of source code lines
@@ -297,6 +314,8 @@ METHOD New() CLASS TDebugger
 
    ::lAnimate          := .f.
    ::lEnd              := .f.
+   ::lTrace            := .f.
+   ::lStopTrace        := .f.
    ::aBreakPoints      := {}
    ::aCallStack        := {}
    ::lGo               := .f.
@@ -568,6 +587,34 @@ METHOD EditColor( nColor, oBrwColors ) CLASS TDebugger
 
 return nil
 
+METHOD EditSet( nSet, oBrwSets ) CLASS TDebugger
+
+   local GetList    := {}
+   local lPrevScore := Set( _SET_SCOREBOARD, .f. )
+   local lPrevExit  := Set( _SET_EXIT, .t. )
+   local cSet       := PadR( ValToStr( Set( nSet ) ), oBrwSets:aColumns[ 2 ]:Width )
+
+   oBrwSets:RefreshCurrent()
+   oBrwSets:ForceStable()
+
+   SetCursor( SC_NORMAL )
+   @ Row(), Col() GET cSet COLOR SubStr( ::ClrModal(), 5 )
+
+   READ
+   SetCursor( SC_NONE )
+
+   Set( _SET_SCOREBOARD, lPrevScore )
+   Set( _SET_EXIT, lPrevExit )
+
+   if LastKey() != K_ESC
+      Set( nSet, &cSet )
+   endif
+
+   oBrwSets:RefreshCurrent()
+   oBrwSets:ForceStable()
+
+return nil
+
 METHOD EditVar( nVar ) CLASS TDebugger
 
    local cVarName   := ::aVars[ nVar ][ 1 ]
@@ -755,6 +802,9 @@ METHOD HandleEvent() CLASS TDebugger
 
          case nKey == K_F9
               ::ToggleBreakPoint()
+
+         case nKey == K_F10
+              ::Trace()
 
          case nKey == K_TAB
               ::NextWindow()
@@ -1441,7 +1491,8 @@ METHOD ViewSets() CLASS TDebugger
 
    oWndSets:bPainted    := { || oBrwSets:ForceStable() }
    oWndSets:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwSets, Len( aSets ),;
-                            oWndSets, "System Settings" ) }
+                            oWndSets, "System Settings",;
+                            { || ::EditSet( n, oBrwSets ) } ) }
 
    SetCursor( SC_NONE )
    oWndSets:ShowModal()
@@ -1507,6 +1558,9 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
       case nKey == K_ENTER
            if bEdit != nil
               Eval( bEdit )
+           endif
+           if LastKey() == K_ENTER
+              KEYBOARD Chr( K_DOWN )
            endif
 
    endcase
