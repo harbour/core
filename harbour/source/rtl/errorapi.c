@@ -66,7 +66,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
       if( ! IS_BLOCK( &errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
-      /* Launch the error handler: "lResult := EVAL( bErrorBlock, oError )" */
+      /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
 
       pBlock = hb_itemNew( NULL );
       pObject = hb_itemNew( NULL );
@@ -82,22 +82,16 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
       /* Check results */
 
-      /* TODO: Determine if there was a BREAK in the error handler. */
-      if( FALSE )
+      if( hb_vmRequestQuery() == HB_QUIT_REQUESTED )
       {
          hb_itemRelease( pResult );
-
-         /* TODO: Detect sequence level properly */
-         if( FALSE )
-         {
-            /* TODO: Initiate a jump to the closest RECOVER statement */
-            wRetVal = E_BREAK;
-         }
-         else
-         {
-            /* TODO: QUIT correctly, without any message */
-            exit( 1 );
-         }
+         hb_errRelease( pError );
+         hb_vmQuit();
+      }
+      else if( hb_vmRequestQuery() == HB_BREAK_REQUESTED )
+      {
+         hb_itemRelease( pResult );
+         wRetVal = E_BREAK;
       }
       else
       {
@@ -107,20 +101,15 @@ WORD hb_errLaunch( PHB_ITEM pError )
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
 
-         if( ! IS_LOGICAL( pResult ) ||
-            ( uiFlags & EF_CANSUBSTITUTE ) )
-         {
+         if( ! IS_LOGICAL( pResult ) || ( uiFlags & EF_CANSUBSTITUTE ) )
             bFailure = TRUE;
-         }
          else
          {
             wRetVal = hb_itemGetL( pResult ) ? E_RETRY : E_DEFAULT;
 
             if( ( wRetVal == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
                 ( wRetVal == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
-            {
                bFailure = TRUE;
-            }
          }
 
          hb_itemRelease( pResult );
@@ -143,7 +132,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
          Since it this case the error handler will return the value
          to be substituted */
 /* NOTE: The item pointer returned should be hb_itemRelease()-d by the
-         caller. */
+         caller if it was not NULL. */
 
 PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 {
@@ -160,7 +149,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( ! IS_BLOCK( &errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
-      /* Launch the error handler: "xResult := EVAL( bErrorBlock, oError )" */
+      /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
       pBlock = hb_itemNew( NULL );
       pObject = hb_itemNew( NULL );
@@ -176,23 +165,16 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       /* Check results */
 
-      /* TODO: Determine if there was a BREAK in the error handler. */
-      if( FALSE )
+      if( hb_vmRequestQuery() == HB_QUIT_REQUESTED )
       {
-         /* TODO: Detect sequence level properly */
-         if( FALSE )
-         {
-            /* TODO: Initiate a jump to the closest RECOVER statement */
-            /* QUESTION: Will Clipper return to the caller in this case ? */
-         }
-         else
-         {
-            hb_itemRelease( pResult );
-            pResult = NULL;
-
-            /* TODO: QUIT correctly, without any message */
-            exit( 1 );
-         }
+         hb_itemRelease( pResult );
+         hb_errRelease( pError );
+         hb_vmQuit();
+      }
+      else if( hb_vmRequestQuery() == HB_BREAK_REQUESTED )
+      {
+         hb_itemRelease( pResult );
+         pResult = NULL;
       }
       else
       {
@@ -200,9 +182,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
             consider it as a failure. */
 
          if( ! ( hb_errGetFlags( pError ) & EF_CANSUBSTITUTE ) )
-         {
             hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
-         }
       }
    }
    else

@@ -74,6 +74,10 @@ FUNCTION Main()
    OutSpec("FClose()"                       , FClose() )
    OutSpec("FClose( fhnd )"                 , FClose( fhnd ) )
    OutSpec("FClose( fhnd )"                 , FClose( fhnd ) )
+   OutSpec("FErase( 'NOT_HERE.$$$' )"       , FErase( 'NOT_HERE.$$$' ) )
+   OutSpec("FErase( 1 )"                    , FErase( 1 ) )
+   OutSpec("FErase( 'NOT_HERE.$$$' )"       , FErase( 'NOT_HERE.$$$' ) )
+   OutSpec("FRename( 'NOT_HERE.$$$', 'A' )" , FRename( 'NOT_HERE.$$$', 'A' ) )
 
    OutSpec("File( cFileName )"              , File( cFileName ) )
 

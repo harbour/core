@@ -427,116 +427,135 @@ void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarni
     }
 }
 
+#define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )
+
 /* Split given filename into path, name and extension */
-PHB_FNAME hb_fsFNameSplit( char *szFilename )
+PHB_FNAME hb_fsFNameSplit( char * szFilename )
 {
-  PHB_FNAME pName = (PHB_FNAME) hb_xgrab( sizeof(HB_FNAME) );
-  int iLen = strlen(szFilename);
-  int iSlashPos;
-  int iDotPos;
-  int iPos;
+   PHB_FNAME pName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
-  pName->szPath = pName->szName = pName->szExtension = NULL;
+   int iLen = strlen( szFilename );
+   int iSlashPos;
+   int iDotPos;
+   int iPos;
 
-  iSlashPos = iLen-1;
-  iPos = 0;
+   pName->szPath =
+   pName->szName =
+   pName->szExtension = NULL;
 
-  while( iSlashPos >= 0 && !IS_PATH_SEP(szFilename[ iSlashPos ]) )
-    --iSlashPos;
+   iSlashPos = iLen - 1;
+   iPos = 0;
 
-  if( iSlashPos == 0 )
-  {
-    /* root path ->  \filename */
-    pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
-    pName->szBuffer[ 1 ] = '\x0';
-    pName->szPath = pName->szBuffer;
-    iPos = 2;  /* first free position after the slash */
-  }
-  else if( iSlashPos > 0 )
-  {
-    /* path with separator ->  path\filename */
-    memcpy( pName->szBuffer, szFilename, iSlashPos );
-    pName->szBuffer[ iSlashPos ] = '\x0';
-    pName->szPath = pName->szBuffer;
-    iPos = iSlashPos + 1;   /* first free position after the slash */
-  }
+   while( iSlashPos >= 0 && !IS_PATH_SEP( szFilename[ iSlashPos ] ) )
+      --iSlashPos;
 
-  iDotPos = iLen-1;
-  while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
-    --iDotPos;
-  if( (iDotPos-iSlashPos) > 1 )
-  {
-    /* the dot was found
-     * and there is at least one character between a slash and a dot
-     */
-    if( iDotPos == iLen-1 )
-    {
-      /* the dot is the last character -use it as extension name */
-      pName->szExtension = pName->szBuffer+iPos;
-      pName->szBuffer[ iPos++ ] = '.';
-      pName->szBuffer[ iPos++ ] = '\x0';
-    }
-    else
-    {
-      pName->szExtension = pName->szBuffer+iPos;
-      /* copy rest of the string with terminating ZERO character */
-      memcpy( pName->szExtension, szFilename+iDotPos+1, iLen-iDotPos );
-      iPos += iLen-iDotPos;
-    }
-  }
-  else
-    /* there is no dot in the filename or it is  '.filename' */
-    iDotPos = iLen;
+   if( iSlashPos == 0 )
+   {
+      /* root path -> \filename */
+      pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
+      pName->szBuffer[ 1 ] = '\0';
+      pName->szPath = pName->szBuffer;
+      iPos = 2; /* first free position after the slash */
+   }
+   else if( iSlashPos > 0 )
+   {
+      /* If we are after a drive letter let's keep the following backslash */
+      if( IS_PATH_SEP( ':' ) &&
+         ( szFilename[ iSlashPos ] == ':' || szFilename[ iSlashPos - 1 ] == ':' ) )
+      {
+         /* path with separator -> d:\path\filename or d:path\filename */
+         memcpy( pName->szBuffer, szFilename, iSlashPos + 1 );
+         pName->szBuffer[ iSlashPos + 1 ] = '\0';
+         iPos = iSlashPos + 2; /* first free position after the slash */
+      }
+      else
+      {
+         /* path with separator -> path\filename */
+         memcpy( pName->szBuffer, szFilename, iSlashPos );
+         pName->szBuffer[ iSlashPos ] = '\0';
+         iPos = iSlashPos + 1; /* first free position after the slash */
+      }
 
-  pName->szName = pName->szBuffer + iPos;
-  memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
-  pName->szName[ iDotPos - iSlashPos - 1 ] = '\x0';
+      pName->szPath = pName->szBuffer;
+   }
 
-  return pName;
+   iDotPos = iLen - 1;
+   while( iDotPos > iSlashPos && szFilename[ iDotPos ] != '.' )
+      --iDotPos;
+
+   if( ( iDotPos - iSlashPos ) > 1 )
+   {
+      /* the dot was found
+       * and there is at least one character between a slash and a dot
+       */
+      if( iDotPos == iLen - 1 )
+      {
+         /* the dot is the last character - use it as extension name */
+         pName->szExtension = pName->szBuffer + iPos;
+         pName->szBuffer[ iPos++ ] = '.';
+         pName->szBuffer[ iPos++ ] = '\0';
+      }
+      else
+      {
+         pName->szExtension = pName->szBuffer + iPos;
+         /* copy rest of the string with terminating ZERO character */
+         memcpy( pName->szExtension, szFilename + iDotPos + 1, iLen - iDotPos );
+         iPos += iLen - iDotPos;
+      }
+   }
+   else
+      /* there is no dot in the filename or it is  '.filename' */
+      iDotPos = iLen;
+
+   pName->szName = pName->szBuffer + iPos;
+   memcpy( pName->szName, szFilename + iSlashPos + 1, iDotPos - iSlashPos - 1 );
+   pName->szName[ iDotPos - iSlashPos - 1 ] = '\0';
+
+   return pName;
 }
 
 /* This function joins path, name and extension into a string with a filename */
-char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
+char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 {
-  if( pFileName->szPath && pFileName->szPath[ 0 ] )
-  {
-    /* we have not empty path specified */
-    int iLen = strlen(pFileName->szPath);
+   if( pFileName->szPath && pFileName->szPath[ 0 ] )
+   {
+      /* we have not empty path specified */
+      int iLen = strlen( pFileName->szPath );
 
-    strcpy( szFileName, pFileName->szPath );
+      strcpy( szFileName, pFileName->szPath );
 
-    /* if the path is a root directory then we don't need to add path separator */
-    if( !(IS_PATH_SEP(pFileName->szPath[ 0 ]) && pFileName->szPath[ 0 ] == '\x0') )
-    {
-      /* add the path separator only in cases:
-       *  when a name doesn't start with it
-       *  when the path doesn't end with it
-       */
-      if( !( IS_PATH_SEP(pFileName->szName[ 0 ]) || IS_PATH_SEP(pFileName->szPath[ iLen-1 ]) ) )
+      /* if the path is a root directory then we don't need to add path separator */
+      if( !( IS_PATH_SEP( pFileName->szPath[ 0 ] ) && pFileName->szPath[ 0 ] == '\0' ) )
       {
-        szFileName[ iLen++ ] = OS_PATH_DELIMITER;
-        szFileName[ iLen ] = '\x0';
+         /* add the path separator only in cases:
+          *  when a name doesn't start with it
+          *  when the path doesn't end with it
+          */
+         if( !( IS_PATH_SEP( pFileName->szName[ 0 ] ) || IS_PATH_SEP( pFileName->szPath[ iLen-1 ] ) ) )
+         {
+            szFileName[ iLen++ ] = OS_PATH_DELIMITER;
+            szFileName[ iLen ] = '\0';
+         }
       }
-    }
-    strcpy( szFileName+iLen, pFileName->szName );
-  }
-  else
-    strcpy( szFileName, pFileName->szName );
+      strcpy( szFileName + iLen, pFileName->szName );
+   }
+   else
+      strcpy( szFileName, pFileName->szName );
 
-  if( pFileName->szExtension )
-  {
-    int iLen = strlen(szFileName);
+   if( pFileName->szExtension )
+   {
+      int iLen = strlen( szFileName );
 
-    if( !(pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
-    {
-      /* add extension separator only when extansion doesn't contain it */
-      szFileName[ iLen++ ] = '.';
-      szFileName[ iLen ] = '\x0';
-    }
-    strcpy( szFileName+iLen, pFileName->szExtension );
-  }
+      if( !( pFileName->szExtension[ 0 ] == '.' || szFileName[ iLen-1 ] == '.') )
+      {
+         /* add extension separator only when extansion doesn't contain it */
+         szFileName[ iLen++ ] = '.';
+         szFileName[ iLen ] = '\0';
+      }
+      strcpy( szFileName + iLen, pFileName->szExtension );
+   }
 
-  return szFileName;
+   return szFileName;
 }
 
 void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on failure */

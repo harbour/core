@@ -38,13 +38,8 @@ typedef struct _COMMANDS
 #define STR_SIZE 8192
 #define BUFF_SIZE 2048
 
-#define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
-
-/* TODO: #define this for various platforms */
-#define PATH_DELIMITER  "/\\"
-#define IS_PATH_SEP( c ) (strchr(PATH_DELIMITER, (c))!=NULL)
-#define OPT_DELIMITER  "/-"
-#define IS_OPT_SEP( c ) (strchr(OPT_DELIMITER, (c))!=NULL)
+#define SKIPTABSPACES( sptr ) while ( *sptr == ' ' || *sptr == '\t' ) ( sptr )++
+#define IS_OPT_SEP( c ) ( strchr( OS_OPT_DELIMITER_LIST, ( c ) ) != NULL )
 
 /* HBPP.C exported functions */
 

@@ -46,8 +46,8 @@
  * in run-time support modules and in user defined modules.
  *   If strict ANSI C compability is required then all symbol tables
  * have to be joined manually by calling special function named
- * <module_name>__InitSymbols
- * (for example for myfirst.prg it will be: 'MYFIRST__InitSymbols'
+ * hb_vm_SymbolInit_<module_name>
+ * (for example for myfirst.prg it will be: 'hb_vm_SymbolInit_MYFIRST'
  * The generation of this function is performed by the macro called
  * HB_CALL_ON_STARTUP that is defined in 'init.h'
  *
@@ -74,9 +74,9 @@
  * By default we are using automatic lookup (symbol not defined)
 */
 #if defined(__WATCOMC__) || defined(__GNUC__)
-  #if !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2)
-    #define HARBOUR_START_PROCEDURE "MAIN"
-  #endif
+   #if !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2)
+      #define HARBOUR_START_PROCEDURE "MAIN"
+   #endif
 #endif
 
 /* ***********************************************************************
@@ -115,7 +115,7 @@
 
 /* Indicate that one of the GTAPIs is defined */
 #if defined(HARBOUR_USE_DOS_GTAPI) || defined(HARBOUR_USE_OS2_GTAPI) || defined(HARBOUR_USE_WIN_GTAPI)
-  #define HARBOUR_USE_GTAPI
+   #define HARBOUR_USE_GTAPI
 #endif
 
 /* ***********************************************************************
@@ -137,22 +137,28 @@
  * Operating system specific definitions
  */
 #ifdef __GNUC__
-  /* The GNU C compiler is used */
-  #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32)
-    /* The DJGPP port of GNU C is used - for DOS platform */
-    #define OS_PATH_LIST_SEPARATOR   ';'
-    #define OS_PATH_DELIMITER '\\'
-    #define OS_DOS_COMPATIBLE
-  #else
-    #define OS_PATH_LIST_SEPARATOR   ':'
-    #define OS_PATH_DELIMITER '/'
-    #define OS_UNIX_COMPATIBLE
-  #endif
+   /* The GNU C compiler is used */
+   #if defined(__DJGPP__) || defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32)
+      /* The DJGPP port of GNU C is used - for DOS platform */
+      #define OS_DOS_COMPATIBLE
+      #define OS_PATH_LIST_SEPARATOR    ';'
+      #define OS_PATH_DELIMITER         '\\'
+      #define OS_PATH_DELIMITER_LIST    "\\/:"
+      #define OS_OPT_DELIMITER_LIST     "/-"
+   #else
+      #define OS_UNIX_COMPATIBLE
+      #define OS_PATH_LIST_SEPARATOR    ':'
+      #define OS_PATH_DELIMITER         '/'
+      #define OS_PATH_DELIMITER_LIST    "/"
+      #define OS_OPT_DELIMITER_LIST     "-"
+   #endif
 #else
-  /* we are assuming here the DOS compatible OS */
-  #define OS_PATH_LIST_SEPARATOR    ';'
-  #define OS_PATH_DELIMITER '\\'
-  #define OS_DOS_COMPATIBLE
+   /* we are assuming here the DOS compatible OS */
+   #define OS_DOS_COMPATIBLE
+   #define OS_PATH_LIST_SEPARATOR    ';'
+   #define OS_PATH_DELIMITER         '\\'
+   #define OS_PATH_DELIMITER_LIST    "\\/:"
+   #define OS_OPT_DELIMITER_LIST     "/-"
 #endif
 
 /* ***********************************************************************
@@ -160,27 +166,27 @@
  */
 
 #ifndef DOS
-#if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
-#define DOS
-#endif
+   #if defined(_QC) || defined(__DOS__) || defined(MSDOS) || defined(__MSDOS__)
+      #define DOS
+   #endif
 #endif
 
 #ifndef OS2
-#if defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
-#define OS2
-#endif
+   #if defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
+      #define OS2
+   #endif
 #endif
 
 #ifndef EMX
-#if defined(__EMX__)
-#define EMX
-#endif
+   #if defined(__EMX__)
+      #define EMX
+   #endif
 #endif
 
 #ifndef WINNT
-#if defined(__NT__)
-#define WINNT
-#endif
+   #if defined(__NT__)
+      #define WINNT
+   #endif
 #endif
 
 #endif /* HB_SETUP_H_ */

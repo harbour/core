@@ -1,3 +1,39 @@
+19990828-14:00 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/filesys.c
+    source/hbpp/stdalone/hbpp.c
+    source/compiler/harbour.y
+    include/hbsetup.h
+    include/hbpp.h
+    ! hb_fsFNameSplit() fixed handling of colon in filenames.
+      (reported by Bruno Cantero)
+  * source/compiler/harbour.y
+    ! Fixed the name format of the generated symbol registration function, 
+      since it was causing a compiler error where the .prg name begun with
+      a number ( for example: 1.prg ). The new format is: hb_vm_SymbolInit_*()
+  * include/ctoharb.h
+    source/rtl/errorapi.c
+    source/vm/hvm.c
+    + hb_errLaunch() and hb_errLaunchSubst() finished
+      (the latter not yet tested).
+      Thanks to Ryszard Glab.
+  * include/ctoharb.h
+    source/vm/hvm.c
+    source/vm/initsymb.c
+    * hb_vmRTSymbolsInit() -> hb_vmSymbolInit_RT
+  * include/hbsetup.h
+    include/hbpp.h
+    + Changed OPT_DELIMITER to OS_OPT_DELIMITER_LIST and moved to hbsetup.h
+      So now it's multiplatform.
+  * source/rtl/mouse/mousedos.c
+    + hb_mouse_IsButtonPressed() added by Luiz Rafael Culik.
+      (small fixes applied, code not tested)
+  * include/hbdefs.h
+    ! LOBYTE(),HIBYTE(),LOWORD() put in #ifndef guards.
+    (reported by Jon Berg)
+  * tests/working/fileio.prg
+    + Some tests added.
+
 19990828-08:40 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * Fixed hb_vmDebuggerEndProc()
@@ -36,7 +72,7 @@
    * source/debug/tbrwtext.prg
      * small fixes.
 
-19990826-06:50 GMT+1 Victor Szel <info@szelvesz.hu>
+19990827-06:50 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/inkey.c
     include/inkey.h
@@ -50,7 +86,7 @@
     * hb_inkeyPoll() now calls hb_inkeyPut() to insert the new code.
     ! INKEY() fixed parameter count checking bug introduced a few hours ago.
 
-19990826-06:00 GMT+1 Victor Szel <info@szelvesz.hu>
+19990827-06:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/mouseapi.h
     source/rtl/mouseapi.c
@@ -67,7 +103,7 @@
       Non-GNU make file users should add the new files source/rtl/mouseapi.c
       and source/rtl/mouse/mousedos.c file to their make system.
 
-19990826-05:00 GMT+1 Victor Szel <info@szelvesz.hu>
+19990827-05:00 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/Makefile
     include/mouseapi.h

@@ -127,8 +127,8 @@ static HB_SYMB symbols[] = {
 /* NOTE: The system symbol table with runtime functions HAVE TO be called 
          last */
 
-void hb_vmRTSymbolsInit( void )
+void hb_vmSymbolInit_RT( void )
 {
-   hb_vmProcessSymbols( symbols, sizeof(symbols) / sizeof( HB_SYMB ) );
+   hb_vmProcessSymbols( symbols, sizeof( symbols ) / sizeof( HB_SYMB ) );
 }
 

@@ -65,9 +65,15 @@ typedef unsigned long DWORD;
 #define FALSE  0
 #define TRUE   1
 
+#ifndef LOBYTE
 #define LOBYTE( w )             ( ( BYTE )( w ) )
+#endif
+#ifndef HIBYTE
 #define HIBYTE( w )             ( ( BYTE )( ( ( WORD )( w ) >> 8 ) & 0xFF ) )
+#endif
+#ifndef LOWORD
 #define LOWORD( l )             ( ( WORD )( l ) )
+#endif
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 #endif /* __IBMCPP__ */

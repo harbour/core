@@ -109,8 +109,6 @@ static LONG     RecoverBase = 0;
 /* Request for some action - stop processing of opcodes
  */
 static WORD wActionRequest  = 0;
-#define  HB_QUIT_REQUESTED    1     /* immediately quit the application */
-#define  HB_BREAK_REQUESTED   2     /* break to nearest RECOVER/END sequence */
 
 /* uncomment it to trace the virtual machine activity */
 /* #define  bHB_DEBUG */
@@ -145,7 +143,7 @@ int main( int argc, char * argv[] )
 #ifdef HARBOUR_OBJ_GENERATION
    hb_vmProcessObjSymbols();  /* initialize Harbour generated OBJs symbols */
 #endif
-   hb_vmRTSymbolsInit();      /* initialize symbol table with runtime support functions */
+   hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
@@ -171,8 +169,20 @@ int main( int argc, char * argv[] )
       hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
    hb_vmDo( argc - 1 );          /* invoke it with number of supplied parameters */
 
+   hb_vmQuit();
+
+   /* This point is never reached */
+
+   return 0;
+}
+
+void hb_vmQuit( void )
+{
    wActionRequest = 0;           /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
+
+   while( stack.pPos > stack.pItems )
+      hb_stackPop();
 
    hb_itemClear( &stack.Return );
    hb_arrayRelease( &aStatics );
@@ -189,7 +199,7 @@ int main( int argc, char * argv[] )
 
    HB_DEBUG( "Done!\n" );
 
-   return byErrorLevel;
+   exit( byErrorLevel );
 }
 
 void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
@@ -903,9 +913,9 @@ void hb_vmArrayPut( void )
 
 static void hb_vmDebuggerEndProc( void )
 {
-   HB_ITEM it;
+   HB_ITEM item;
 
-   hb_itemCopy( &it, &stack.Return ); /* saves the previous returned value */
+   hb_itemCopy( &item, &stack.Return ); /* saves the previous returned value */
 
    bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
@@ -913,8 +923,8 @@ static void hb_vmDebuggerEndProc( void )
    hb_vmDo( 0 );
    bDebugShowLines = TRUE;
 
-   hb_itemCopy( &stack.Return, &it ); /* restores the previous returned value */
-   hb_itemClear( &it );
+   hb_itemCopy( &stack.Return, &item ); /* restores the previous returned value */
+   hb_itemClear( &item );
 }
 
 static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a specific source code line */
@@ -1533,8 +1543,6 @@ void hb_vmNotEqual( void )
 
    else if( pItem1->type != pItem2->type )
       hb_errRT_BASE( EG_ARG, 1072, NULL, "<>" );
-
-
 
    else
       hb_vmPushLogical( TRUE );
@@ -2734,6 +2742,9 @@ HARBOUR HB_ERRORLEVEL(void)
 {
    BYTE byPrevValue = byErrorLevel;
 
+   /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
+            accepts other types also and consider them zero. */
+
    if( hb_pcount() > 0 )
       /* Only replace the error level if a parameter was passed */
       byErrorLevel = hb_parni( 1 );
@@ -2776,6 +2787,11 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    }
    else
       wActionRequest = HB_QUIT_REQUESTED;
+}
+
+WORD hb_vmRequestQuery( void )
+{
+   return wActionRequest;
 }
 
 /* NOTE: This function should normally have a parameter count check. But

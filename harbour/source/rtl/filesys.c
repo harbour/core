@@ -484,7 +484,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
    int iResult = 0;
 
 #if defined(_MSC_VER)
-   ULONG ulPos;
+   ULONG ulOldPos;
 #endif
 
 #if defined(HAVE_POSIX_IO) && !defined(__GNUC__) && !defined(__IBMCPP__)
@@ -505,7 +505,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 #if defined(_MSC_VER)
 
-   ulPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
+   ulOldPos = hb_fsSeek( hFileHandle, ulStart, FS_SET );
 
    switch( uiMode )
    {
@@ -517,7 +517,7 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
          iResult = locking( hFileHandle, _LK_UNLCK, ulLength );
    }
 
-   hb_fsSeek( hFileHandle, ulPos, FS_SET );
+   hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
 
 #else
 
@@ -725,6 +725,7 @@ USHORT  hb_fsIsDrv  ( BYTE nDrive )
 }
 
 /* TODO: Implement hb_fsExtOpen */
+
 FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
                       USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError )
 {
@@ -741,15 +742,11 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 HARBOUR HB_FOPEN( void )
 {
    if( ISCHAR( 1 ) )
-   {
       hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
                            ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ ) );
-   }
    else
-   {
       /* NOTE: Undocumented but existing Clipper Run-time error */
       hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" );
-   }
 }
 
 HARBOUR HB_FCREATE( void )
@@ -1024,10 +1021,10 @@ HARBOUR HB_W2BIN( void )
    HB_I2BIN();
 }
 
-#define IS_PATH_SEP( c ) ( c == OS_PATH_DELIMITER )
+#define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )
 
 /* Split given filename into path, name and extension */
-PHB_FNAME hb_fsFNameSplit( char *szFilename )
+PHB_FNAME hb_fsFNameSplit( char * szFilename )
 {
    PHB_FNAME pName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
@@ -1052,15 +1049,28 @@ PHB_FNAME hb_fsFNameSplit( char *szFilename )
       pName->szBuffer[ 0 ] = OS_PATH_DELIMITER;
       pName->szBuffer[ 1 ] = '\0';
       pName->szPath = pName->szBuffer;
-      iPos = 2;  /* first free position after the slash */
+      iPos = 2; /* first free position after the slash */
    }
    else if( iSlashPos > 0 )
    {
-      /* path with separator -> path\filename */
-      memcpy( pName->szBuffer, szFilename, iSlashPos );
-      pName->szBuffer[ iSlashPos ] = '\0';
+      /* If we are after a drive letter let's keep the following backslash */
+      if( IS_PATH_SEP( ':' ) && 
+         ( szFilename[ iSlashPos ] == ':' || szFilename[ iSlashPos - 1 ] == ':' ) )
+      {
+         /* path with separator -> d:\path\filename or d:path\filename */
+         memcpy( pName->szBuffer, szFilename, iSlashPos + 1 );
+         pName->szBuffer[ iSlashPos + 1 ] = '\0';
+         iPos = iSlashPos + 2; /* first free position after the slash */
+      }
+      else
+      {
+         /* path with separator -> path\filename */
+         memcpy( pName->szBuffer, szFilename, iSlashPos );
+         pName->szBuffer[ iSlashPos ] = '\0';
+         iPos = iSlashPos + 1; /* first free position after the slash */
+      }
+
       pName->szPath = pName->szBuffer;
-      iPos = iSlashPos + 1;   /* first free position after the slash */
    }
 
    iDotPos = iLen - 1;
@@ -1074,7 +1084,7 @@ PHB_FNAME hb_fsFNameSplit( char *szFilename )
        */
       if( iDotPos == iLen - 1 )
       {
-         /* the dot is the last character -use it as extension name */
+         /* the dot is the last character - use it as extension name */
          pName->szExtension = pName->szBuffer + iPos;
          pName->szBuffer[ iPos++ ] = '.';
          pName->szBuffer[ iPos++ ] = '\0';
@@ -1099,7 +1109,7 @@ PHB_FNAME hb_fsFNameSplit( char *szFilename )
 }
 
 /* This function joins path, name and extension into a string with a filename */
-char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
+char * hb_fsFNameMerge( char * szFileName, PHB_FNAME pFileName )
 {
    if( pFileName->szPath && pFileName->szPath[ 0 ] )
    {
@@ -1142,26 +1152,3 @@ char * hb_fsFNameMerge( char *szFileName, PHB_FNAME pFileName )
    return szFileName;
 }
 
-/* TOFIX:
-If you call pFileName = hb_fsFNameSplit( "C:FILE.EXT" ) the result is:
-   pFileName->szPath      => (null)       must be 'C:'
-   pFileName->szName      => 'C:FILE'     must be 'FILE'
-   pFileName->szExtension => '.EXT'       Ok!
-
-If you call pFileName = hb_fsFNameSplit( "C:\FILE.EXT" ) the result is:
-   pFileName->szPath      => 'C:'         must be 'C:\'
-   pFileName->szName      => 'FILE'       Ok!
-   pFileName->szExtension => '.EXT'       Ok!
-
-If you call pFileName = hb_fsFNameSplit( "\FILE.EXT" ) the result is:
-   pFileName->szPath      => '\'          Ok!
-   pFileName->szName      => 'FILE'       Ok!
-   pFileName->szExtension => '.EXT'       Ok!
-
-If you call pFileName = hb_fsFNameSplit( "C:\DIR\FILE.EXT" ) the result
-is:
-   pFileName->szPath      => 'C:\DIR'     Ok!
-   pFileName->szName      => 'FILE'       Ok!
-   pFileName->szExtension => '.EXT'       Ok!
-
-*/

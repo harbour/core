@@ -34,7 +34,13 @@ extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the 
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
 extern void    hb_vmRequestQuit( void );
 extern void    hb_vmRequestBreak( PHB_ITEM pItem );
-extern void    hb_vmRTSymbolsInit( void );   /* initialization of runtime support symbols */
+extern WORD    hb_vmRequestQuery( void );
+extern void    hb_vmQuit( void );            /* Immediately quits the virtual machine */
+extern void    hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
+
+/* Return values of hb_vmRequestQuery() */
+#define HB_QUIT_REQUESTED    	1	     /* immediately quit the application */
+#define HB_BREAK_REQUESTED	2	     /* break to nearest RECOVER/END sequence */
 
 /* PCode functions */
 extern void    hb_vmAnd( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */

@@ -42,7 +42,6 @@
    #pragma inline
 
    #include <dos.h>
-   #include <mouse.h>
 #endif
 
 #include "mouseapi.h"
@@ -200,7 +199,26 @@ BOOL hb_mouse_IsButtonPressed( int iButton )
 {
    /* TODO: */
 
-   HB_SYMBOL_UNUSED( iButton );
+   if( s_bPresent )
+   {
+#ifdef BORLANDC
+      int iReturn = 0;
+
+      asm
+      {
+         mov ax, 5
+         int MOUSE_INTERRUPT
+         mov iReturn, bx
+      }
+
+      /* Convert the button number (1 -> x) to a bitmask and check */
+      /* TODO: Test if this works */
+
+      return ( ( 2 ** ( iButton - 1 ) ) && iReturn );
+#else
+      return FALSE;
+#endif
+   }
 
    return FALSE;
 }
