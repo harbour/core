@@ -1,3 +1,11 @@
+19990820-11:50 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/dir.c
+     * corrected case of iDirnameLen
+   * source/rtl/transfrm.c
+     * added casts as required
+   * makefile.vc
+     - remove HARBOUR_USE_GTAPI
+
 19990820-15:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/strings.c

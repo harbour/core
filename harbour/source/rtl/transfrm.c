@@ -392,7 +392,7 @@ HARBOUR HB_TRANSFORM( void )
 
       if( *szPic == '@' )                       /* Function marker found    */
       {
-         wPicFlags = PictFunc( &szPic, &lPic ); /* Get length of function   */
+         wPicFlags = PictFunc( &szPic, (ULONG*)&lPic ); /* Get length of function   */
          lPicStart = pPic->item.asString.length - lPic;
                                                 /* Get start of template    */
       }
@@ -528,7 +528,7 @@ HARBOUR HB_TRANSFORM( void )
          case IT_INTEGER:
          {
             szResult = NumPicture( szPic + lPicStart, lPic, wPicFlags,
-                    (double) pExp->item.asInteger.value, &lResultPos,
+                    (double) pExp->item.asInteger.value, (ULONG*)&lResultPos,
                      pExp->item.asInteger.length, 0 );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
@@ -537,7 +537,7 @@ HARBOUR HB_TRANSFORM( void )
          case IT_LONG:
          {
             szResult = NumPicture( szPic + lPicStart, lPic, wPicFlags,
-                    (double) pExp->item.asLong.value, &lResultPos,
+                    (double) pExp->item.asLong.value, (ULONG *)&lResultPos,
                      pExp->item.asLong.length, 0 );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
@@ -546,7 +546,7 @@ HARBOUR HB_TRANSFORM( void )
          case IT_DOUBLE:
          {
             szResult = NumPicture( szPic + lPicStart, lPic, wPicFlags,
-                    (double) pExp->item.asDouble.value, &lResultPos,
+                    (double) pExp->item.asDouble.value, (ULONG *)&lResultPos,
                      pExp->item.asDouble.length, pExp->item.asDouble.decimal );
             hb_retclen( szResult, lResultPos);
             hb_xfree( szResult );

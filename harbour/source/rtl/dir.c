@@ -179,7 +179,7 @@ HARBOUR HB_DIRECTORY( void )
    long   fsize;
    time_t ftime;
    char * pos;
-   int    iDirnamelen;
+   int    iDirnameLen;
 
    PHB_ITEM  pdir;
    PHB_ITEM  psubarray;
@@ -216,7 +216,7 @@ HARBOUR HB_DIRECTORY( void )
    {
       strcpy(dirname,".X");
       dirname[1] = OS_PATH_DELIMITER;
-      iDirnamelen =2;
+      iDirnameLen =2;
    }
 
    if (strlen(pattern) > 0)
