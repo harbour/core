@@ -1,3 +1,8 @@
+19990604-12:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * build31.bat
+    - Removed the non-portable fully qualified path that somebody added
+      to the make command instead of adding to their PATH statement.
+
 19990604-17:15 CET Eddie Runia
   * source/compiler/harbour.y; source/vm/hvm.c; include/pcode.h;
     tests/working/funcarr.prg
