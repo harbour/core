@@ -77,7 +77,8 @@ int i_INDEX_STATE = 0;
 void yy_lex_count_lf( void )
 {
   char * pTmp = yytext;
-  while( (pTmp = strchr(pTmp, '\n')) )
+  pTmp = strchr(pTmp, '\n');
+  while( pTmp )
   {
     ++iLine;
     ++pTmp;
@@ -465,62 +466,7 @@ Separator     {SpaceTab}|{Comment}
 %{
 /* ************************************************************************ */
 %}
-"end"          { BEGIN END_; }
-<END_>{Separator}*[\[\(] { /* array, function call */
-               yy_lex_count_lf();
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               if( _iState == LOOKUP )
-               { /* Clipper does not like end[] & end() at the begining of line */
-                 GenError( ERR_ENDIF, NULL, NULL );
-               }
-               yylval.string = yy_strdup( "END" );
-               _iState =IDENTIFIER;
-               unput( yytext[ yyleng-1 ] );
-               return IDENTIFIER;
-             }
-<END_>{Separator}*("->"|"++"|"--") { /* operators */
-               yy_lex_count_lf();
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               if( _iState == LOOKUP )
-               { /* Clipper does not like end-> & end++ at the begining of line */
-                 GenError( ERR_ENDIF, NULL, NULL );
-               }
-               yylval.string = yy_strdup( "END" );
-               _iState =IDENTIFIER;
-               unput( yytext[ yyleng-1 ] );
-               unput( yytext[ yyleng-2 ] );
-               return IDENTIFIER;
-             }
-<END_>{Separator}*[\+\-\:\=\|\$\%\*\,\/\[\]\)\}\^] { /* there is an operator after "end" */
-               yy_lex_count_lf();
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               yylval.string = yy_strdup( "END" );
-               _iState =IDENTIFIER;
-               unput( yytext[ yyleng-1 ] );
-               return IDENTIFIER;
-             }
-<END_>{Separator}*;.*\n      yy_lex_count_lf(); /* ignore any text after ';' */
-<END_>{Separator}*(\n|.) { /* not operator */
-               yy_lex_count_lf();
-               if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               if( yytext[ yyleng-1 ] == '\n' )
-                 --iLine;
-               unput( yytext[ yyleng-1 ] );
-               if( _iState == LOOKUP )
-               { /* it is first item in the line */
-                 _iState =END;
-                 return END;
-               }
-               else
-               { /* there is another item in line already */
-                 yylval.string = yy_strdup( "END" );
-                 _iState =IDENTIFIER;
-                 return IDENTIFIER;
-               }
-             }
-%{
-/* ************************************************************************ */
-%}
+
 "endif"|"endi" { /* ENDIF can be used in one context only */
                  if( _wIfCounter == 0 )
                    GenError( ERR_ENDIF, NULL, NULL );
@@ -536,9 +482,15 @@ Separator     {SpaceTab}|{Comment}
                    GenError( ERR_ENDDO, NULL, NULL );
                  return ENDDO;
                }
+"end"          { /* END can be used in one context only */
+                 if( _wIfCounter == 0 && _wCaseCounter == 0 && _wCaseCounter == 0 )
+                   printf( "END without an IF / CASE /or WHILE" );
+                 return END;
+               }
 %{
 /* ************************************************************************ */
 %}
+
 "exit"         { BEGIN EXIT_; }
 <EXIT_>{Separator}*[\n]    { /* EXIT last item in the line */
                  yy_lex_count_lf();
@@ -1125,12 +1077,14 @@ Separator     {SpaceTab}|{Comment}
                 }
               }
 
-"as numeric"    { return AS_NUMERIC; }
-"as character"  { return AS_CHARACTER; }
-"as logical"    { return AS_LOGICAL; }
-"as date"       { return AS_DATE; }
-"as array"      { return AS_ARRAY; }
-"as object"     { return AS_OBJECT; }
+"as numeric"       { return AS_NUMERIC; }
+"as character"     { return AS_CHARACTER; }
+"as logical"       { return AS_LOGICAL; }
+"as date"          { return AS_DATE; }
+"as array"         { return AS_ARRAY; }
+"as block"         { return AS_BLOCK; }
+"as object"        { return AS_OBJECT; }
+"declare function" { return DECLARE_FUN; }
 
 %{
 /* ************************************************************************ */
@@ -1441,5 +1395,6 @@ int yy_lex_input( char *buffer, int iBufferSize )
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {
+   if( 0 && iBufferSize ) printf( "/* compiler warning */" );
    return PreProcess( yyin, (lPpo)? yyppo:NULL, buffer );
 }

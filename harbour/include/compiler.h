@@ -12,7 +12,7 @@ typedef struct _VAR        /* locals, static, public variables support */
    char *szName;           /* variable name */
    char *szAlias;          /* variable alias namespace */
    int  iUsed;             /* number of times used */
-   char cType;             /* future optional strong typing */
+   char cType;             /* optional strong typing */
    struct _VAR * pNext;    /* pointer to next defined variable */
 } VAR, * PVAR;
 
@@ -42,8 +42,9 @@ typedef struct
 
 typedef struct _COMSYMBOL  /* compiler symbol support structure */
 {
-   char * szName;          /* the name of the symbol */
-   char   cScope;          /* the scope of the symbol */
+   char * szName;              /* the name of the symbol */
+   char   cScope;              /* the scope of the symbol */
+   char   cType;
    struct _COMSYMBOL * pNext;  /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
 
