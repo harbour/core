@@ -298,7 +298,7 @@ row:=row+cSeparator
 nPosSep:=1
 nPosNextSep:=at(cSeparator,row) // seek the first Separator eg. ,
 nPos1Deli:=at(cDelim,row)                // seek the first delimiter "
-nPos2Deli:=at(cDelim,row,nPos1Deli+1)    // seek the second delimiter "
+nPos2Deli:=at(cDelim+cSeparator,row,nPos1Deli+1)    // seek the second delimiter "
 if nPos1Deli > 0 .and. nPos2Deli > 0
    if nPosNextSep>nPos1Deli .and. nPosNextSep<nPos2Deli
       nPosSep:=nPos1Deli
@@ -313,7 +313,7 @@ do while .t.
        exit
     endif
     nPos1Deli:=at(cDelim,row,nPosSep)     // seek the first delimiter "
-    nPos2Deli:=at(cDelim,row,nPos1Deli+1)    // seek the second delimiter "
+    nPos2Deli:=at(cDelim+cSeparator,row,nPos1Deli+1)    // seek the second delimiter "
     if nPos1Deli > 0 .and. nPos2Deli > 0
         if nPosNextSep>nPos1Deli .and. nPosNextSep<nPos2Deli
            nPosSep=nPos1Deli
