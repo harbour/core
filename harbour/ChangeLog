@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-06-07 14:15 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
+  * source/rtl/inkey.c
+    + Added hb_setInkeyLast() (copyright 2002 by Walter Negro) and
+      SETLASTKEY() (copyright 2003 by Przemyslaw Czerpak). Both functions
+      are borrowed from xHarbour.
+  * source/debug/debugger.prg
+    ! Fixed Left and Right keys behaviour in the code window (fix by Lorenzo
+      Fiorini, borrowed from xHarbour).
+    ! Also from xHarbour, but written by myself: 
+    ! Restore LastKey() value on program execution. 
+    ! Fixed Step() behaviour.
+    ! Removed the last dependencies of the debugger on SET_EXACT setting.
+    ! Fixed some issues with the Monitor window.
+
 2004-06-07 13:45 UTC+0300 Phil Krylov <phil@newstar.rinet.ru>
   * source/debug/dbgwa.prg
   * source/debug/dbgtarr.prg

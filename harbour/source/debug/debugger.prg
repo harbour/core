@@ -76,8 +76,7 @@
 #define ALTD_ENABLE    1
 
 
-/* Information structure hold by DATA aCallStack
-*/
+/* Information structure stored in DATA aCallStack */
 #define CSTACK_FUNCTION    1  //function name
 #define CSTACK_LOCALS      2  //an array with local variables
 #define CSTACK_LINE        3  //start line
@@ -85,28 +84,26 @@
 #define CSTACK_STATICS     5  //an array with static variables
 #define CSTACK_LEVEL       6  //eval stack level of the function
 
-/* Information structure hold by aCallStack[n][ CSTACK_LOCALS ]
-{ cLocalName, nLocalIndex, "Local", ProcName( 1 ) }
-*/
+/* Information structure stored in aCallStack[n][ CSTACK_LOCALS ]
+   { cLocalName, nLocalIndex, "Local", ProcName( 1 ), nLevel } */
 #define VAR_NAME        1
 #define VAR_POS         2
 #define VAR_TYPE        3
 #define VAR_FUNCNAME    4
 #define VAR_LEVEL       5  //eval stack level of the function
 
-/* Information structure hold by ::aWatch (watchpoints)
-*/
+/* Information structure stored in ::aWatch (watchpoints) */
 #define WP_TYPE      1  //wp = watchpoint, tr = tracepoint
 #define WP_EXPR      2  //source of an expression
 #define WP_BLOCK     3  //codeblock to retrieve a value
 
-/* Information structure hold by ::aTrace (tracepoints)
-*/
+/* Information structure stored in ::aTrace (tracepoints) */
 #define TR_IDX       1  //index into ::aWatch item storing expression
 #define TR_VALUE     2  //the current value of the expression
 
 static s_oDebugger
 static s_lExit := .F.
+
 memvar __DbgStatics
 
 
@@ -404,7 +401,7 @@ CLASS TDebugger
    METHOD Stack()
    METHOD Static()
 
-   METHOD Step() INLINE ::RestoreAppStatus(), ::Exit()
+   METHOD Step()
 
    METHOD TabWidth() INLINE ;
           ::nTabWidth := ::InputBox( "Tab width", ::nTabWidth )
@@ -412,7 +409,7 @@ CLASS TDebugger
    METHOD ToggleBreakPoint()
 
    METHOD Trace() INLINE ::lTrace := .t., ::nTraceLevel := Len( ::aCallStack ),;
-                         __Keyboard( Chr( 255 ) ) //forces a Step()
+                         ::Step() //forces a Step()
 
    METHOD ToCursor()
    METHOD NextRoutine()
@@ -1032,8 +1029,8 @@ METHOD EditVar( nVar ) CLASS TDebugger
    if LastKey() != K_ESC
       do case
       case cVarStr == "{ ... }"
-      //    aArray := ::VarGetValue( ::aVars[ nVar ] )
-          if Len( aArray ) > 0
+            //aArray := ::VarGetValue( ::aVars[ nVar ] )
+            if Len( uVarValue ) > 0
               __DbgArrays( uVarValue, cVarName )
           else
               Alert( "Array is empty" )
@@ -1068,6 +1065,10 @@ METHOD HandleEvent() CLASS TDebugger
 
    local nPopup, oWnd
    local nKey, nMRow, nMCol, n
+   local nLastKey
+
+   /* Save LastKey() */
+   nLastKey := LastKey()
 
    if ::lAnimate
       if ::nSpeed != 0
@@ -1076,7 +1077,9 @@ METHOD HandleEvent() CLASS TDebugger
       if HB_DBG_INVOKEDEBUG()  //NextKey() == K_ALT_D
          ::lAnimate := .f.
       else
-         KEYBOARD Chr( 255 ) // Forces a Step(). Only 0-255 range is supported
+         ::Step()
+         RETURN nil
+         //KEYBOARD Chr( 255 ) // Forces a Step(). Only 0-255 range is supported
       endif
    endif
 
@@ -1148,17 +1151,18 @@ METHOD HandleEvent() CLASS TDebugger
               endif
 
          case nKey == K_RBUTTONDOWN
-/*
-         case nKey == K_ESC
+
+         /*case nKey == K_ESC
               ::RestoreAppStatus()
               s_oDebugger := nil
               s_lExit := .T.
               DispEnd()
-              ::Exit()
-*/
+              ::Exit()*/
+
          case nKey == K_UP .or. nKey == K_DOWN .or. nKey == K_HOME .or. ;
               nKey == K_END .or. nKey == K_ENTER .or. nKey == K_PGDN .or. ;
-              nKey == K_PGUP .OR. nKey == K_DEL
+              nKey == K_PGUP .or. nKey == K_DEL .or. nKey == K_LEFT .or. ;
+              nKey == K_RIGHT
               oWnd := ::aWindows[ ::nCurrentWindow ]
               oWnd:KeyPressed( nKey )
 
@@ -1186,11 +1190,6 @@ METHOD HandleEvent() CLASS TDebugger
               ::ToCursor()
 
          case nKey == K_F8 .or. nKey == 255
-              // we are starting to run again so reset to the deepest call if
-              // displaying stack
-              if ! ::oBrwStack == nil
-                 ::oBrwStack:GoTop()
-              endif
               ::Step()
 
          case nKey == K_F9
@@ -1218,6 +1217,8 @@ METHOD HandleEvent() CLASS TDebugger
       endcase
    end
 
+   /* Restore LastKey() */   
+   SetLastKey( nLastKey )
 return nil
 
 METHOD Hide() CLASS TDebugger
@@ -1644,6 +1645,9 @@ METHOD ShowVars() CLASS TDebugger
          if ::oWndVars:nBottom - ::oWndVars:nTop > 1
             ::oWndVars:Resize( ,, ::oWndVars:nTop + 1 )
             lRepaint := .t.
+         else
+            /* We still need to redraw window caption, it could have changed */
+            ::oWndVars:Refresh()
          endif
       elseif Len( ::aVars ) > ::oWndVars:nBottom - ::oWndVars:nTop - 1
          ::oWndVars:Resize( ,, ::oWndVars:nTop + Min( Len( ::aVars ) + 1, 7 ) )
@@ -1652,7 +1656,8 @@ METHOD ShowVars() CLASS TDebugger
          ::oWndVars:Resize( ,, ::oWndVars:nTop + Len( ::aVars ) + 1 )
          lRepaint := .t.
       else
-         ::oBrwVars:refreshAll():ForceStable()
+         ::oBrwVars:RefreshAll():ForceStable()
+         ::oWndVars:Refresh()
       endif
       if ! ::oWndVars:lVisible .OR. lRepaint
          ::ResizeWindows( ::oWndVars )
@@ -2925,6 +2930,18 @@ LOCAL oWindow2, nTop, i
 RETURN self
 
 
+METHOD Step() CLASS TDebugger
+  // we are starting to run again so reset to the deepest call if
+  // displaying stack
+  if ! ::oBrwStack == nil
+    ::oBrwStack:GoTop()
+  endif
+  ::RestoreAppStatus()
+  ::Exit()
+RETURN nil
+
+
+
 STATIC FUNCTION CreateExpression( cExpr, aWatch )
 LOCAL nLen
 LOCAL i,j
@@ -2948,12 +2965,12 @@ LOCAL cRet
             DO WHILE( SUBSTR(cExpr,i,1)==" ")
                i++
             ENDDO
-            IF( SUBSTR(cExpr,i,1) = '(' )
+            IF( SUBSTR(cExpr,i,1) == '(' )
                //function call
                j := i+1
                LOOP
             ENDIF
-            IF( SUBSTR(cExpr,i,2) = "->" )
+            IF( SUBSTR(cExpr,i,2) == "->" )
                //alias expressions are not expanded
                i += 2
                DO WHILE( i<=nLen .AND. IsIdentChar(SUBSTR(cExpr,i,1)," ()") )
@@ -3037,34 +3054,33 @@ RETURN cRet
 
 STATIC FUNCTION IsIdentChar( cChar, cSeeAlso )
 
-   IF( ISALPHA(cChar) .OR. ISDIGIT(cChar) .OR. cChar = '_' )
+   IF( ISALPHA(cChar) .OR. ISDIGIT(cChar) .OR. cChar == '_' )
       RETURN .T.
    ENDIF
    
 RETURN IIF(cSeeAlso!=NIL, cChar $ cSeeAlso, .F. )
 
 STATIC PROCEDURE StripUntil( pcLine, i, cChar )
-LOCAL j, n
-LOCAL nLen:=LEN(pcLine)
+  LOCAL j, n
+  LOCAL nLen:=LEN(pcLine)
 
    n := LEN(cChar)
    j := i+n
-   DO WHILE( j<=nLen .AND. SUBSTR(pcLine, j, n) != cChar )
+  DO WHILE j<=nLen .AND. SUBSTR(pcLine, j, n) != cChar
       j++
    ENDDO
-   IF( j <= nLen )
+  IF j <= nLen
       pcLine := LEFT( pcLine, i-1 ) + SUBSTR(pcLine, j+n)
    ENDIF
 
 RETURN
 
 STATIC FUNCTION IsValidStopLine( cLine )
-LOCAL i, c, c2
-LOCAL lSet:=SET(_SET_EXACT,.F.)
+  LOCAL i, c, c2
    
    cLine := UPPER( ALLTRIM( cLine ) )
    i := 1
-   DO WHILE( i <= LEN(cLine) )
+  DO WHILE i <= LEN(cLine)
       c := SUBSTR( cLine, i, 1 )
       c2 := SUBSTR( cLine, i, 2 )
       DO CASE
@@ -3089,24 +3105,25 @@ LOCAL lSet:=SET(_SET_EXACT,.F.)
    ENDDO
    
    cLine := ALLTRIM( cLine )
-   IF( EMPTY(cLine) )
-      SET(_SET_EXACT, lSet)
+  IF EMPTY(cLine)
       RETURN .F.
    ENDIF
    
-   IF( cLine = 'FUNC' .OR.;
-       cLine = 'PROC' .OR.;
-       cLine = 'NEXT' .OR.;
-       cLine = 'END'  .OR.;
-       cLine = 'ELSE' .OR.;
-       cLine = 'LOCA' .OR.;
-       cLine = 'STAT' .OR.;
-       cLine = 'MEMV' )
-       SET(_SET_EXACT, lSet)
+  c := Left( cLine, 4 )
+  IF ( Left( c, 3 ) == 'END' .OR.;
+       c == 'FUNC' .OR.;
+       c == 'PROC' .OR.;
+       c == 'NEXT' .OR.;
+       c == 'ELSE' .OR.;
+       c == 'LOCA' .OR.;
+       c == 'STAT' .OR.;
+       c == 'MEMV' )
+    
        RETURN .F.
    ENDIF
    
 RETURN .T.
+
 
 function __DbgColors()
 

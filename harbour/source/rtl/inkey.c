@@ -57,6 +57,12 @@
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    HB_KEYPUT()
  *
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
+ *    hb_setInkeyLast()
+ *
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ *    SETLASTKEY()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -179,6 +185,17 @@ int hb_inkeyLast( HB_inkey_enum event_mask )      /* Return the value of the las
    hb_inkeyPoll();
 
    return hb_inkeyTranslate( s_inkeyLast, event_mask );
+}
+
+int hb_setInkeyLast( int ch )      /* Force a value to s_inkeyLast and return previous value */
+{
+   int last = s_inkeyLast;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_setInkeyLast()"));
+
+   s_inkeyLast = ch;
+
+   return last;
 }
 
 int hb_inkeyNext( HB_inkey_enum event_mask )      /* Return the next key without extracting it */
@@ -366,6 +383,15 @@ HB_FUNC( NEXTKEY )
 HB_FUNC( LASTKEY )
 {
    hb_retni( hb_inkeyTranslate( s_inkeyLast, ( HB_inkey_enum ) hb_inkeyNext( ISNUM( 1 ) ? ( HB_inkey_enum ) hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) ) );
+}
+
+HB_FUNC( SETLASTKEY )
+{
+  if( ISNUM(1) )
+  {
+    hb_setInkeyLast( hb_parni(1) );
+  }
+  hb_retc( "" );
 }
 
 int hb_inkeyTranslate( int key, HB_inkey_enum event_mask )
