@@ -1,3 +1,7 @@
+20000131-00:05 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/environ.c
+    ! Fixed VERSION() for MINGW32 (it was generating a GPF).
+
 20000130-22:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/mlcount.c
     source/rtl/memoline.c

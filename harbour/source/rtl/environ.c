@@ -123,7 +123,7 @@
 
 HARBOUR HB_OS( void )
 {
-   char *cformat = "%s %d.%02d%c";
+   char * cformat = "%s %d.%02d%c";
 
 #ifdef __MPW__
 /* TODO: not implemented yet */
@@ -178,7 +178,6 @@ HARBOUR HB_OS( void )
 
    OSVERSIONINFO osVer; /* for GetVersionEx() */
    char szBuild[ 128 ] = "";
-   LONG lVersion;
 
    cformat = "%s%s %d.%02d.%04d";
    osVer.dwOSVersionInfoSize = sizeof( osVer );
@@ -190,7 +189,7 @@ HARBOUR HB_OS( void )
          case VER_PLATFORM_WIN32_WINDOWS:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD(osVer.dwBuildNumber);
+            hb_osletter = LOWORD( osVer.dwBuildNumber );
 
             if( hb_osmajor == 4 && hb_osminor == 0 && hb_osletter == 950 )
                hb_os = "Windows 95";
@@ -210,14 +209,16 @@ HARBOUR HB_OS( void )
                hb_os = "Windows 98 SE";
             else
                hb_os = "Windows";
+
             strncpy( szBuild, osVer.szCSDVersion, sizeof( szBuild ) );
             szBuild[ sizeof( szBuild ) - 1 ] = '\0';
+
             break;
 
          case VER_PLATFORM_WIN32_NT:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD(osVer.dwBuildNumber);
+            hb_osletter = LOWORD( osVer.dwBuildNumber );
 
             if( hb_osmajor == 3 && hb_osminor == 10 )
                hb_os = "Windows NT 3.1";
@@ -237,13 +238,14 @@ HARBOUR HB_OS( void )
                int i = 0;
                WORD wServicePack;
 
-               while( osVer.szCSDVersion[ i ] != '\0' && !isdigit( osVer.szCSDVersion[ i ] ) )
+               while( osVer.szCSDVersion[ i ] != '\0' && ( osVer.szCSDVersion[ i ] < '0' || osVer.szCSDVersion[ i ] > '9' ) )
                   i++;
-               wServicePack = (WORD)( atoi( &osVer.szCSDVersion[ i ] ) );
+               wServicePack = ( WORD )( atoi( &osVer.szCSDVersion[ i ] ) );
 
                if( wServicePack )
                   sprintf( szBuild, " SP%i", wServicePack );
             }
+
             /* TODO: Add support for:
                       * NT Stand Alone Server
                       * NT Enterprise Edition
@@ -260,14 +262,14 @@ HARBOUR HB_OS( void )
          case VER_PLATFORM_WIN32s:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD(osVer.dwBuildNumber);
+            hb_osletter = LOWORD( osVer.dwBuildNumber );
             hb_os = "Windows 32s";
             break;
 
          case VER_PLATFORM_WIN32_CE:
             hb_osmajor = osVer.dwMajorVersion;
             hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD(osVer.dwBuildNumber);
+            hb_osletter = LOWORD( osVer.dwBuildNumber );
             hb_os = "Windows CE";
             break;
       }
@@ -365,7 +367,7 @@ HARBOUR HB_OS( void )
    if( ! hb_os ) strcpy( version, "Unknown" );
    else if( hb_osmajor == -1 ) strcpy( version, hb_os );
    else if( hb_osmajor == -2 ) { /* NOP */ }
-#ifdef _WINDOWS_
+#if defined(_WINDOWS_) || defined(__MINGW32__)
    else sprintf( version, cformat, hb_os, szBuild, hb_osmajor, hb_osminor, hb_osletter );
 #else
    else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
