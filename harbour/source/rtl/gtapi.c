@@ -628,6 +628,9 @@ int hb_gtWrite(char * fpStr, ULONG length)
     iCol = s_uiCurrentCol;
     iMaxRow = s_uiMaxRow;
     iMaxCol = s_uiMaxCol;
+
+    length = ( length < hb_gtMaxCol()-iCol+1 ) ? length : hb_gtMaxCol()-iCol+1;
+
     size = length;
     if (iCol + size > iMaxCol)
     {

@@ -1,3 +1,12 @@
+19990812-01:45 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtwin.c
+    * corrections to window sizing between dispbegin buffers - this part
+      is now working as it should.  There is still the problem of
+      writing past the visible screen boundry which will gpf.
+  * source/rtl/gtapi.c
+    * temporarily limit string length in hb_gtwrite (attempting to avoid
+      above problem)
+
 19990811-09:01 GMT+3 Alexander Kresin
   * source/hbpp/hbpp.c
     * fixed some bugs

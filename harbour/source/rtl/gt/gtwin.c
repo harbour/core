@@ -42,6 +42,7 @@ static HANDLE HCursor;  /* When DispBegin is in effect, all cursor related
                            refer to the currently _active_ buffer which could
                            be different than the one being written to.
                          */
+
 #define HB_LOG 0
 
 #if (defined(HB_LOG) && (HB_LOG != 0))
@@ -401,7 +402,6 @@ void hb_gt_DispBegin(void)
                  coDest,               /* upper-left cell to write data to   */
                  &srWin);            /* screen buffer rectangle to read from */
 
-    /* store current handle */
     if( HStealth == INVALID_HANDLE_VALUE )
     {
        HStealth = CreateConsoleScreenBuffer(
@@ -410,8 +410,6 @@ void hb_gt_DispBegin(void)
                   NULL,                               /* Security attribute  */
                   CONSOLE_TEXTMODE_BUFFER,            /* Type of buffer      */
                   NULL);                              /* reserved            */
-
-       hb_gt_SetScreenBuffer( HStealth, HOriginal );
     }
 
     hb_gt_SetScreenBuffer( HStealth, HOutput );
@@ -458,7 +456,8 @@ static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld )
   srWin.Right  = csbi.dwSize.X - 1;
 
   SetConsoleScreenBufferSize(HNew, csbi.dwSize);
-  SetConsoleWindowInfo(HNew, TRUE, &srWin);
+  SetConsoleWindowInfo(HNew, FALSE, &srWin);
+  SetConsoleWindowInfo(HNew, TRUE,  &csbi.srWindow);
 
   return 0;
 }
@@ -524,3 +523,4 @@ void hb_gt_SetBlink( BOOL bBlink )
 {
    bBlink = FALSE;
 }
+
