@@ -51,7 +51,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
    FHANDLE fhndSource;
    FHANDLE fhndDest;
 
-   while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ ) ) == FS_ERROR )
+   while( ( fhndSource = hb_fsOpen( ( BYTE * ) szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {
       USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 

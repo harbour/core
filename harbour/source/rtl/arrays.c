@@ -296,7 +296,7 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
  * This function returns a pointer to an item occupied by the specified
  * array element - it doesn't return an item's value
  */
-PHB_ITEM hb_arrayGetItemPointer( PHB_ITEM pArray, ULONG ulIndex )
+PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) )
    {
@@ -719,7 +719,7 @@ static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
       /* call self recursively to create next dimensions
        */
       while( ulElements )
-         hb_arrayNewRagged( hb_arrayGetItemPointer( pArray, ulElements-- ), iDimension );
+         hb_arrayNewRagged( hb_arrayGetItemPtr( pArray, ulElements-- ), iDimension );
    }
 }
 

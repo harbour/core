@@ -1,3 +1,25 @@
+19990918-17:42 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/set.c
+    * printhan < 0 changed to printhan == FS_ERROR, to not rely on the fact 
+      that FS_ERROR is negative.
+  * source/rtl/console.c
+    ! hb_out - One fsError() save/restore added for non GT mode console output.
+    * *han >= 0 changed to *han != FS_ERROR, to not rely on the fact that 
+      FS_ERROR is negative.
+    - Removed the // commented sections.
+  * source/rtl/copyfile.c
+    ! __COPYFILE() - Made the hb_fsOpen() flags Clipper compatible.
+  * source/rtl/memvars.c
+    ! __MVSAVE() - Made the hb_fsOpen flags Clipper compatible.
+  * source/vm/hvm.c
+    + new printf() info in hb_vmDo() integrated to hb_stackDispLocal().
+      (not tested)
+  * include/extend.h
+    source/rtl/arrays.c
+    source/vm/hvm.c
+    * hb_arrayGetItemPointer() -> hb_arrayGetItemPtr()
+
 19990918-14:59 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/browdb.prg

@@ -970,7 +970,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
       /* call self recursively to create next dimensions
        */
       while( ulElements )
-         hb_vmArrayNew( hb_arrayGetItemPointer( pArray, ulElements-- ), uiDimension );
+         hb_vmArrayNew( hb_arrayGetItemPtr( pArray, ulElements-- ), uiDimension );
    }
 }
 
@@ -1049,7 +1049,6 @@ void hb_vmDo( USHORT uiParams )
    {
       /* QUESTION: Is this call needed ? [vszel] */
       hb_stackDispLocal();
-      printf( "In %s(%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
       hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
    }
 
@@ -1860,21 +1859,21 @@ void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSymbol )
     * by the caller (if IS_OBJECT() && HAS_METHOD() )
     */
    HB_ITEM ItemMsg;
-   
+
    ItemMsg.type = IT_SYMBOL;
    ItemMsg.item.asSymbol.value = hb_dynsymFind( szSymbol )->pSymbol;
    ItemMsg.item.asSymbol.stackbase = stack.pPos - stack.pItems;
 
-   hb_itemClear( &stack.Return );	/* clear return value */
+   hb_itemClear( &stack.Return );       /* clear return value */
    hb_vmPush( &ItemMsg );
    hb_vmPush( pObjItem );                             /* Push object              */
    hb_vmPush( pMsgItem );                             /* Push argument            */
    hb_vmDo( 1 );
-      
+
    /* pop passed arguments - only one here */
-   hb_stackPop();		/* pMsgItem */
-      
-   /* Push return value on the stack 
+   hb_stackPop();               /* pMsgItem */
+
+   /* Push return value on the stack
     * NOTE: for performance reason we don't pop the second argument.
     * We can replace the second argument with the return value.
     */
@@ -1888,16 +1887,16 @@ void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
     * by the caller (if IS_OBJECT() && HAS_METHOD() )
     */
    HB_ITEM ItemMsg;
-   
+
    ItemMsg.type = IT_SYMBOL;
    ItemMsg.item.asSymbol.value = hb_dynsymFind( szSymbol )->pSymbol;
    ItemMsg.item.asSymbol.stackbase = stack.pPos - stack.pItems;
 
-   hb_itemClear( &stack.Return );	/* clear return value */
+   hb_itemClear( &stack.Return );       /* clear return value */
    hb_vmPush( &ItemMsg );
    hb_vmPush( pObjItem );                             /* Push object */
    hb_vmDo( 0 );
-    
+
    /* Pop passed argument.
     * NOTE: for performance reason we don't pop it and we don't push the
     * return value. We can replace the last element with the new value.
@@ -2517,9 +2516,9 @@ void hb_stackDispLocal( void )
    PHB_ITEM pBase;
 
    printf( hb_consoleGetNewLine() );
-   printf( "Virtual Machine Stack Dump:" );
+   printf( "Virtual Machine Stack Dump at %s(%i):", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
    printf( hb_consoleGetNewLine() );
-   printf( "---------------------------" );
+   printf( "--------------------------" );
 
    for( pBase = stack.pBase; pBase <= stack.pPos; pBase++ )
    {
