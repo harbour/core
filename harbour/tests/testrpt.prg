@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 FUNCTION() MAIN
 
     USE Test New

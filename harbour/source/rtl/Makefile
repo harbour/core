@@ -92,6 +92,8 @@ PRG_SOURCES=\
         text.prg     \
         tget.prg     \
         tgetlist.prg \
+        tlabel.prg   \
+        treport.prg  \
         wait.prg     \
         xsavescr.prg \
 

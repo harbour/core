@@ -71,11 +71,12 @@
    #define HB_TR_LEVEL HB_TR_ERROR
 #endif
 
-//#if HB_TR_LEVEL >= HB_TR_DEBUG
-//extern char * hb_tr_file_;
-//extern int hb_tr_line_;
-//#endif
-
+/*
+#if HB_TR_LEVEL >= HB_TR_DEBUG
+   extern char * hb_tr_file_;
+   extern int hb_tr_line_;
+#endif
+*/
 
 #ifdef HB_FM_STATISTICS
 

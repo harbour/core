@@ -1,3 +1,31 @@
+20000213-23:59 GMT+1 Victor Szakats <info@szelvesz.hu>
+   ! makefile.bc
+     ! Fixed again.
+   * source/rtl/Makefile
+     + treport.prg and tlabel.prg added.
+   * tests/testrpt.prg
+     tests/testlbl.prg
+     ! CVS ID added.
+   * include/rptdef.ch
+     include/hbrptlbl.ch
+     include/Makefile
+     source/rtl/tlabel.prg
+     source/rtl/treport.prg
+     ! rptdef.ch renamed to hbrptlbl.ch
+     + hbrptlbl.ch added to Makefile
+     ! Small corrections to hbrptlbl.ch
+     + Indentation fixed.
+     ! .FRM/.LBL changed to lowercase.
+     ! RETURNs without value fixed.
+     ! RG_ changed to RGT_
+     + #include "error.ch" added.
+     ! One mistyped variable name fixed.
+     * "=" changed to ":=" and "=="
+   * source/rtl/fm.c
+     ! // comments changed to /**/
+   * include/hbtrace.h
+     ! Minor correction.
+
 20000213-15:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *makefile.bc
         *added  the treport and tlabel to the makefile
@@ -16,6 +44,7 @@
     +tests/ee.frm
     +tests/ee.lbl
         *report and label files for the examples
+
 20000213-16:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

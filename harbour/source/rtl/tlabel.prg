@@ -33,26 +33,26 @@
  *
  */
 
-#include 'hbclass.ch'
-#include 'inkey.ch'
-#include 'rptdef.ch'
-#define _LF_SAMPLES      2      // "Do you want more samples?"
-#define _LF_YN           12     // "Y/N"
-
+#include "hbclass.ch"
+#include "hbrptlbl.ch"
+#include "error.ch"
+#include "inkey.ch"
 
 CLASS TLabelForm
 
-DATA aLabelData AS {}
-DATA aBandToPrint 
-DATA cBlank AS ""
-DATA lOneMoreBand AS .T.
-DATA nCurrentCol              // The current column in the band
-METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                       bWhile, nNext, nRecord, lRest, lSample )
-METHOD ExecuteLabel()
-METHOD SampleLabels()
-METHOD LoadLabel(cLblFile)
+   DATA aLabelData AS {}
+   DATA aBandToPrint
+   DATA cBlank AS ""
+   DATA lOneMoreBand AS .T.
+   DATA nCurrentCol              // The current column in the band
+   METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+                          bWhile, nNext, nRecord, lRest, lSample )
+   METHOD ExecuteLabel()
+   METHOD SampleLabels()
+   METHOD LoadLabel(cLblFile)
+
 ENDCLASS
+
 METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                        bWhile, nNext, nRecord, lRest, lSample ) CLASS TLabelForm
 
@@ -61,10 +61,11 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    LOCAL cExtraFile, lExtraState       // EXTRA file status
    LOCAL xBreakVal, lBroke := .F.
    LOCAL err
-   Local OldMargin
+   LOCAL OldMargin
    LOCAL nLen
-    ::aBandToPrint:={} // ARRAY(5)
-    ::nCurrentCol := 1 
+
+   ::aBandToPrint:={} // ARRAY(5)
+   ::nCurrentCol := 1
    // Resolve parameters
    IF cLBLName == NIL
       err := ErrorNew()
@@ -75,19 +76,19 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    ELSE
       IF AT( ".", cLBLName ) == 0
-         cLBLName := TRIM( cLBLName ) + ".LBL"
+         cLBLName := TRIM( cLBLName ) + ".lbl"
       ENDIF
 
    ENDIF
- 
+
    IF lPrinter == NIL
       lPrinter := .F.
    ENDIF
- 
+
    IF lSample == NIL
       lSample := .F.
    ENDIF
- 
+
    // Set output devices
    IF lPrinter             // To the printer
       lPrintOn  := SET( _SET_PRINTER, lPrinter )
@@ -95,50 +96,50 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    lConsoleOn := SET( _SET_CONSOLE )
    SET( _SET_CONSOLE, ! ( lNoConsole .OR. !lConsoleOn ) )
- 
+
    IF (!Empty(cAltFile))         // To file
       lExtraState := SET( _SET_EXTRA, .T. )
       cExtraFile  := SET( _SET_EXTRAFILE, cAltFile )
    ENDIF
- 
+
    OldMargin := SET( _SET_MARGIN, 0)
-   
+
    BEGIN SEQUENCE
- 
+
       ::aLabelData := ::LoadLabel( cLBLName )  // Load the (.lbl) into an array
- 
+
       // Add to the left margin if a SET MARGIN has been defined
       ::aLabelData[ LBL_LMARGIN ] := ::aLabelData[ LBL_LMARGIN ] + OldMargin
- 
+
       // Size the ::aBandToPrint array to the number of fields
-//      nLen := LEN( ::aLabelData[ LBL_FIELDS ] )
+      //      nLen := LEN( ::aLabelData[ LBL_FIELDS ] )
 
       ASIZE( ::aBandToPrint, LEN( ::aLabelData[ LBL_FIELDS ]))
       AFILL( ::aBandToPrint, SPACE( ::aLabelData[ LBL_LMARGIN ] ) )
- 
+
       // Create enough space for a blank record
       ::cBlank := SPACE( ::aLabelData[ LBL_WIDTH ] + ::aLabelData[ LBL_SPACES ] )
- 
+
       // Handle sample labels
       IF lSample
          ::SampleLabels()
       ENDIF
- 
+
       // Execute the actual label run based on matching records
       DBEval( { || ::ExecuteLabel() }, bFor, bWhile, nNext, nRecord, lRest )
- 
+
       // Print the last band if there is one
       IF ::lOneMoreBand
          // Print the band
          AEVAL( ::aBandToPrint, { | BandLine | PrintIt( BandLine ) } )
 
       ENDIF
- 
- 
+
+
    RECOVER USING xBreakVal
- 
+
       lBroke := .T.
- 
+
    END SEQUENCE
 
    // Clean up and leave
@@ -147,28 +148,28 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    ::nCurrentCol  := 1
    ::cBlank       := ""
    ::lOneMoreBand :=.T.
- 
+
    // clean up
    SET( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
    SET( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
- 
+
    IF (!Empty(cAltFile))            // Set extrafile back
       SET( _SET_EXTRAFILE, cExtraFile )
       SET( _SET_EXTRA, lExtraState )
    ENDIF
- 
+
    IF lBroke
       BREAK xBreakVal               // continue breaking
    ENDIF
- 
+
    SET( _SET_MARGIN, OldMargin)
-   
+
    RETURN Self
 
-METHOD ExecuteLabel() CLASS TLabelForm
+   METHOD ExecuteLabel() CLASS TLabelForm
    LOCAL nField, nMoreLines, aBuffer := {}, cBuffer
    LOCAL v
- 
+
    // Load the current record into aBuffer
    FOR nField := 1 TO LEN( ::aLabelData[ LBL_FIELDS ] )
 
@@ -196,7 +197,7 @@ METHOD ExecuteLabel() CLASS TLabelForm
    NEXT
 
    ASIZE( aBuffer, LEN( ::aLabelData[ LBL_FIELDS ] ) )
- 
+
    // Add aBuffer to ::aBandToPrint
    FOR nField := 1 TO LEN( ::aLabelData[ LBL_FIELDS ] )
       IF aBuffer[ nField ] == NIL
@@ -205,18 +206,18 @@ METHOD ExecuteLabel() CLASS TLabelForm
          ::aBandToPrint[ nField ] := ::aBandToPrint[ nField ]  + aBuffer[ nField ]
       ENDIF
    NEXT
- 
+
    IF ::nCurrentCol == ::aLabelData[ LBL_ACROSS ]
 
-     // trim
-     FOR nField := 1 TO LEN( ::aBandToPrint )
-       ::aBandToPrint[ nField ] := Trim( ::aBandToPrint[ nField ] )
-     NEXT
+      // trim
+      FOR nField := 1 TO LEN( ::aBandToPrint )
+         ::aBandToPrint[ nField ] := Trim( ::aBandToPrint[ nField ] )
+      NEXT
 
 
       ::lOneMoreBand := .F.
       ::nCurrentCol  := 1
- 
+
       // Print the band
       AEVAL( ::aBandToPrint, { | BandLine | PrintIt( BandLine ) } )
 
@@ -227,27 +228,27 @@ METHOD ExecuteLabel() CLASS TLabelForm
          NEXT
       ENDIF
       IF ::aLabelData[ LBL_LINES ] > 0
- 
+
          // Add the spaces between the label lines
          FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
             PrintIt()
          NEXT
- 
+
       ENDIF
- 
+
       // Clear out the band
       AFILL( ::aBandToPrint, SPACE( ::aLabelData[ LBL_LMARGIN ] ) )
    ELSE
       ::lOneMoreBand := .T.
       ::nCurrentCol :=  ::nCurrentCol + 1
    ENDIF
- 
+
    RETURN Self
 
 METHOD SampleLabels() CLASS TLabelForm
    LOCAL nGetKey, lMoreSamples := .T., nField
    LOCAL aBand := {}
- 
+
    // Create the sample label row
    ASIZE( aBand, ::aLabelData[ LBL_HEIGHT ] )
    AFILL( aBand, SPACE( ::aLabelData[ LBL_LMARGIN ] ) +;
@@ -255,10 +256,10 @@ METHOD SampleLabels() CLASS TLabelForm
               ::aLabelData[ LBL_WIDTH ] ) + ;
               SPACE( ::aLabelData[ LBL_SPACES ] ), ;
               ::aLabelData[ LBL_ACROSS ] ) )
- 
+
    // Prints sample labels
    DO WHILE lMoreSamples
- 
+
       // Print the samples
       AEVAL( aBand, { | BandLine | PrintIt( BandLine ) } )
 
@@ -268,7 +269,7 @@ METHOD SampleLabels() CLASS TLabelForm
             PrintIt()
          NEXT nField
       ENDIF
- 
+
       // Prompt for more
       @ ROW(), 0 SAY NationMsg(_LF_SAMPLES)+" ("+Nationmsg(_LF_YN)+")"
       nGetKey := INKEY(0)
@@ -283,8 +284,8 @@ METHOD SampleLabels() CLASS TLabelForm
          lMoreSamples := .F.
       ENDIF
    ENDDO
-   RETURN Self
 
+   RETURN Self
 
 METHOD LoadLabel( cLblFile ) CLASS TLabelForm
    LOCAL i, j       := 0                  // Counters
@@ -386,9 +387,9 @@ METHOD LoadLabel( cLblFile ) CLASS TLabelForm
             // Compression option
             AADD( aLabel[ LBL_FIELDS, i ], .T. )
 
-       ELSE
+         ELSE
 
-         AADD( aLabel[ LBL_FIELDS ], NIL )
+            AADD( aLabel[ LBL_FIELDS ], NIL )
 
          ENDIF
 
@@ -396,18 +397,18 @@ METHOD LoadLabel( cLblFile ) CLASS TLabelForm
 
       // Close file
       FCLOSE( nHandle )
-      nFileError = FERROR()
+      nFileError := FERROR()
 
    ENDIF
-   RETURN( aLabel )
+   RETURN aLabel
 
 
 
 FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                        bWhile, nNext, nRecord, lRest, lSample )
 
-RETURN TLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                       bWhile, nNext, nRecord, lRest, lSample )
+   RETURN TLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+                          bWhile, nNext, nRecord, lRest, lSample )
 
 STATIC PROCEDURE PrintIt( cString )
 
@@ -424,16 +425,16 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
    LOCAL nPos
    LOCAL aList := {}                  // Define an empty array
    LOCAL lDelimLast := .F.
-  
+
    IF cDelimiter == NIL
       cDelimiter := ","
    ENDIF
 
-   DO WHILE ( LEN(cList) <> 0 )
+   DO WHILE LEN(cList) <> 0
 
       nPos := AT(cDelimiter, cList)
 
-      IF ( nPos == 0 )
+      IF nPos == 0
          nPos := LEN(cList)
       ENDIF
 
@@ -449,8 +450,9 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
    ENDDO
 
-   IF ( lDelimLast )
+   IF lDelimLast
       AADD(aList, "")
    ENDIF
 
    RETURN aList                       // Return the array
+

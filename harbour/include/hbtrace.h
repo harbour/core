@@ -121,7 +121,7 @@
  * filename/linenum information - this is usefull if we want to
  * trace the source of unreleased memory blocks
  */
-#define HB_ECHO_STEALTH( l, x )  do \
+#define HB_ECHO_STEALTH( l, x ) do \
                                 { \
                                    if( hb_tr_level() >= l ) \
                                    { \
