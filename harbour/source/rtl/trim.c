@@ -52,7 +52,7 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
    return ( char * ) szText;
 }
 
-/* returns szText and the new length in lLen */
+/* return length of szText ignoring trailing white space (or true spaces) */
 ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_strRTrimLen(%s, %lu. %d)", szText, ulLen, (int) bAnySpace));

@@ -62,41 +62,41 @@ typedef int    FHANDLE;
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
 
-extern BOOL     hb_fsChDir      ( BYTE * pszDirName );
-extern USHORT   hb_fsChDrv      ( BYTE nDrive );
-extern void     hb_fsClose      ( FHANDLE hFileHandle );
-extern void     hb_fsCommit     ( FHANDLE hFileHandle );
-extern FHANDLE  hb_fsCreate     ( BYTE * pszFileName, USHORT uiAttribute );
-extern FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttribute );
-extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
-extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen );
-extern BYTE     hb_fsCurDrv     ( void );
-extern int      hb_fsDelete     ( BYTE * pszFileName );
-extern BOOL     hb_fsEof        ( FHANDLE hFileHandle );
-extern USHORT   hb_fsError      ( void );
-extern BOOL     hb_fsFile       ( BYTE * pszFileName );
-extern ULONG    hb_fsFSize      ( BYTE * pszFileName, BOOL bUseDirEntry );
+extern BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
+extern USHORT   hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
+extern void     hb_fsClose      ( FHANDLE hFileHandle ); /* close a file */
+extern void     hb_fsCommit     ( FHANDLE hFileHandle ); /* commit updates of a file */
+extern FHANDLE  hb_fsCreate     ( BYTE * pszFileName, USHORT uiAttribute ); /* create a file */
+extern FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttribute ); /* create a temporary file from components */
+extern BYTE *   hb_fsCurDir     ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
+extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
+extern BYTE     hb_fsCurDrv     ( void ); /* retrieve current drive number */
+extern int      hb_fsDelete     ( BYTE * pszFileName ); /* delete a file */
+extern BOOL     hb_fsEof        ( FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
+extern USHORT   hb_fsError      ( void ); /* retrieve file system error */
+extern BOOL     hb_fsFile       ( BYTE * pszFileName ); /* determine if a file exists */
+extern ULONG    hb_fsFSize      ( BYTE * pszFileName, BOOL bUseDirEntry ); /* determine the size of a file */
 extern FHANDLE  hb_fsExtOpen    ( BYTE * pszFileName, BYTE * pDefExt,
-                                  USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
-extern USHORT   hb_fsIsDrv      ( BYTE nDrive );
-extern BOOL     hb_fsIsDevice   ( FHANDLE hFileHandle );
+                                  USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError ); /* open a file using default extension and a list of paths */
+extern USHORT   hb_fsIsDrv      ( BYTE nDrive ); /* determine if a drive number is a valid drive */
+extern BOOL     hb_fsIsDevice   ( FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
 extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
-                                  ULONG ulLength, USHORT uiMode );
-extern BOOL     hb_fsMkDir      ( BYTE * pszDirName );
-extern FHANDLE  hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags );
-extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
-extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
-extern BOOL     hb_fsRmDir      ( BYTE * pszDirName );
-extern int      hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName );
-extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
-extern ULONG    hb_fsTell       ( FHANDLE hFileHandle );
-extern void     hb_fsTempName   ( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix );
-extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
-extern void     hb_fsSetDevRaw  ( FHANDLE hFileHandle );
-extern void     hb_fsSetDevText ( FHANDLE hFileHandle );
-extern void     hb_fsSetError   ( USHORT uiError );
-extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
-extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
+                                  ULONG ulLength, USHORT uiMode ); /* request a lock on a portion of a file */
+extern BOOL     hb_fsMkDir      ( BYTE * pszDirName ); /* create a directory */
+extern FHANDLE  hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags ); /* open a file */
+extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* read contents of a file into a buffer (<=64K) */
+extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* read contents of a file into a buffer (>64K) */
+extern BOOL     hb_fsRmDir      ( BYTE * pszDirName ); /* remove a directory */
+extern int      hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* rename a file */
+extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
+extern ULONG    hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
+extern void     hb_fsTempName   ( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix ); /* create a temporary file name in a buffer */
+extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
+extern void     hb_fsSetDevRaw  ( FHANDLE hFileHandle ); /* change the device mode of a file to raw (binary) */
+extern void     hb_fsSetDevText ( FHANDLE hFileHandle ); /* change the device mode of a file to text */
+extern void     hb_fsSetError   ( USHORT uiError ); /* set the file system error number */
+extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
+extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

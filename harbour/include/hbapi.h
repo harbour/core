@@ -258,10 +258,10 @@ extern HB_SYMB  hb_symEval;
 /* Extend API */
 extern char *   hb_parc( int iParam, ... );  /* retrieve a string parameter */
 extern ULONG    hb_parclen( int iParam, ... ); /* retrieve a string parameter length */
-extern ULONG    hb_parcsiz( int iParam, ... );
+extern ULONG    hb_parcsiz( int iParam, ... ); /* retrieve a by-reference string parameter length, including terminator */
 extern char *   hb_pards( int iParam, ... ); /* retrieve a date as a string yyyymmdd */
 extern char *   hb_pardsbuff( char * szDate, int iParam, ... ); /* retrieve a date as a string yyyymmdd */
-extern ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex );
+extern ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex ); /* retrieve length or element type of an array parameter
 extern int      hb_parinfo( int iParam ); /* Determine the param count or data type */
 extern int      hb_parl( int iParam, ... ); /* retrieve a logical parameter as an int */
 extern double   hb_parnd( int iParam, ... ); /* retrieve a numeric parameter as a double */
@@ -345,16 +345,16 @@ extern void *   hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ); /* set mo
 extern BOOL     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
 extern BOOL     hb_arrayIsObject( PHB_ITEM pArray ); /* retrives if the array is an object */
-extern BOOL     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
-extern BOOL     hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex );
-extern BOOL     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
+extern BOOL     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ); /* add a new item to the end of an array item */
+extern BOOL     hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ); /* insert a nil item into an array, without changing the length */
+extern BOOL     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ); /* delete an array item, without changing length */
 extern BOOL     hb_arraySize( PHB_ITEM pArray, ULONG ulLen ); /* sets the array total length */
-extern BOOL     hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult );
+extern BOOL     hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ); /* retrieve last item in an array */
 extern BOOL     hb_arrayRelease( PHB_ITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
 extern BOOL     hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* sets an array element */
 extern BOOL     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 extern PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ); /* returns pointer to specified element of the array */
-extern ULONG    hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen );
+extern ULONG    hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ); /* copy a string into an array item */
 extern char *   hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
 extern char *   hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string pointer on an array element */
 extern ULONG    hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
@@ -362,15 +362,15 @@ extern BOOL     hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the
 extern int      hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the int value contained on an array element */
 extern long     hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the long numeric value contained on an array element */
 extern double   hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the double value contained on an array element */
-extern char *   hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained on an array element */
-extern long     hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex );
-extern USHORT   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex );
-extern BOOL     hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount );
-extern ULONG    hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount );
-extern BOOL     hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount );
-extern BOOL     hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget );
-extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
-extern BOOL     hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock );
+extern char *   hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ); /* retrieves the date value contained in an array element */
+extern long     hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained in an array element, as a long integer */
+extern USHORT   hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the type of an array item */
+extern BOOL     hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
+extern ULONG    hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* scan an array for a given item, or until code-block item returns TRUE */
+extern BOOL     hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ); /* execute a code-block for every element of an array item */
+extern BOOL     hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ); /* copy items from one array to another */
+extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray ); /* returns a duplicate of an existing array, including all nested items */
+extern BOOL     hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ); /* sorts an array item */
 
 /* string management */
 
@@ -379,22 +379,22 @@ extern BOOL     hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCoun
                           ( c ) == HB_CHAR_LF || \
                           ( c ) == HB_CHAR_CR )
 
-extern int      hb_stricmp( const char * s1, const char * s2 );
-extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen );
-extern char *   hb_strupr( char * pszText );
-extern char *   hb_strdup( const char * pszText );
-extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask );
-extern BOOL     hb_strEmpty( const char * szText, ULONG ulLen );
-extern void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen );
-extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen );
-extern char *   hb_strUpper( char * szText, ULONG ulLen );
-extern char *   hb_strLower( char * szText, ULONG ulLen );
-extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen );
-extern double   hb_strVal( const char * szText, ULONG ulLen );
-extern char *   hb_strLTrim( const char * szText, ULONG * ulLen );
-extern ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace );
+extern int      hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
+extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ); /* compare two string without regards to case, limited by length */
+extern char *   hb_strupr( char * pszText ); /* convert a string in-place to upper-case */
+extern char *   hb_strdup( const char * pszText ); /* returns a pointer to a newly allocated copy of the source string */
+extern BOOL     hb_strMatchRegExp( const char * szString, const char * szMask ); /* compare two strings using a regular expression pattern */
+extern BOOL     hb_strEmpty( const char * szText, ULONG ulLen ); /* returns whether a string contains only white space */
+extern void     hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen ); /* copy a string to a buffer, inverting each character */
+extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ); /* returns an index to a sub-string within another string */
+extern char *   hb_strUpper( char * szText, ULONG ulLen ); /* convert an existing string buffer to upper case */
+extern char *   hb_strLower( char * szText, ULONG ulLen ); /* convert an existing string buffer to lower case */
+extern char *   hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ); /* copy an existing string buffer to another buffer, as upper case */
+extern double   hb_strVal( const char * szText, ULONG ulLen ); /* return the numeric value of a character string representation of a number */
+extern char *   hb_strLTrim( const char * szText, ULONG * ulLen ); /* return a pointer to the first non-white space character */
+extern ULONG    hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace ); /* return length of a string, ignoring trailing white space (or true spaces) */
 
-extern double   hb_numRound( double dResult, int iDec );
+extern double   hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 
 /* class management */
 extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
@@ -402,7 +402,7 @@ extern void     hb_clsReleaseAll( void );    /* releases all defined classes */
 /* object management */
 extern char *   hb_objGetClsName( PHB_ITEM pObject ); /* retrieves an object class name */
 extern PHB_FUNC hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ); /* returns the method pointer of a object class */
-extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString );
+extern ULONG    hb_objHasMsg( PHB_ITEM pObject, char * szString ); /* returns TRUE/FALSE whether szString is an existing message for object */
 
 /* dynamic symbol table management */
 extern PHB_DYNS hb_dynsymGet( char * szName );    /* finds and creates a dynamic symbol if not found */
@@ -414,60 +414,60 @@ extern void     hb_dynsymRelease( void );         /* releases the memory of the 
 extern void     hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
 
 /* Command line and environment argument management */
-extern void     hb_cmdargInit( int argc, char * argv[] );
-extern int      hb_cmdargARGC( void );
-extern char **  hb_cmdargARGV( void );
-extern BOOL     hb_cmdargIsInternal( const char * szArg );
+extern void     hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
+extern int      hb_cmdargARGC( void ); /* retrieve command line argument count */
+extern char **  hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
+extern BOOL     hb_cmdargIsInternal( const char * szArg ); /* determine if a string is an internal setting */
 extern BOOL     hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern char *   hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern int      hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern void     hb_cmdargProcessVM( void );
+extern void     hb_cmdargProcessVM( void ); /* Check for command line internal arguments */
 
 /* Symbol management */
-extern PHB_SYMB hb_symbolNew( char * szName );
+extern PHB_SYMB hb_symbolNew( char * szName ); /* create a new symbol */
 
 /* Codeblock management */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer, USHORT uiLocals, USHORT * pLocalPosTable, PHB_SYMB pSymbols );
+extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer, USHORT uiLocals, USHORT * pLocalPosTable, PHB_SYMB pSymbols ); /* create a code-block */
 extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
-extern void     hb_codeblockDelete( HB_ITEM_PTR pItem );
-extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos );
-extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer );
-extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem );
-extern void     hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource );
+extern void     hb_codeblockDelete( HB_ITEM_PTR pItem ); /* delete a codeblock */
+extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ); /* get local variable referenced in a codeblock */
+extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer ); /* get local variable passed by reference */
+extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem ); /* evaluate a codeblock */
+extern void     hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource ); /* copy a codeblock */
 
 /* memvars subsystem */
-extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar );
-extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void );
-extern void     hb_memvarsInit( void );
-extern void     hb_memvarsRelease( void );
-extern void     hb_memvarValueIncRef( HB_HANDLE hValue );
-extern void     hb_memvarValueDecRef( HB_HANDLE hValue );
-extern void     hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem );
-extern ERRCODE  hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb );
-extern void     hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb );
-extern void     hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb );
-extern ULONG    hb_memvarGetPrivatesBase( void );
-extern void     hb_memvarSetPrivatesBase( ULONG ulBase );
+extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar ); /* create a new global value */
+extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void ); /* retrieve the base address of the values table */
+extern void     hb_memvarsInit( void ); /* initialize the memvar API system */
+extern void     hb_memvarsRelease( void ); /* release the memvar API system */
+extern void     hb_memvarValueIncRef( HB_HANDLE hValue ); /* increase the reference count of a global value */
+extern void     hb_memvarValueDecRef( HB_HANDLE hValue ); /* decrease the reference count of a global value */
+extern void     hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
+extern ERRCODE  hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
+extern void     hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
+extern void     hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
+extern ULONG    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
+extern void     hb_memvarSetPrivatesBase( ULONG ulBase ); /* release PRIVATE variables created after specified base */
 extern void     hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char   * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
-extern int      hb_memvarScope( char * szVarName, ULONG ulLength );
+extern int      hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
 
 /* console I/O subsystem */
-extern void     hb_conInit( void );
-extern void     hb_conRelease( void );
-extern char *   hb_conNewLine( void );
-extern void     hb_conOutStd( char * pStr, ULONG ulLen );
-extern void     hb_conOutErr( char * pStr, ULONG ulLen );
-extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor );
-extern char *   hb_conSetColor( char * szColor );
-extern void     hb_conXSaveRestRelease( void );
+extern void     hb_conInit( void ); /* initialize the console API system */
+extern void     hb_conRelease( void ); /* release the console API system */
+extern char *   hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
+extern void     hb_conOutStd( char * pStr, ULONG ulLen ); /* output an string to STDOUT */
+extern void     hb_conOutErr( char * pStr, ULONG ulLen ); /* output an string to STDERR */
+extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
+extern char *   hb_conSetColor( char * szColor ); /* retrieve and optionally set console color */
+extern void     hb_conXSaveRestRelease( void ); /* release the save/restore API */
 
 /* compiler and macro compiler */
-extern char *   hb_compReservedName( char * szName );
+extern char *   hb_compReservedName( char * szName ); /* determines if a string contains a reserve word */
 
 /* misc */
-extern char *   hb_procname( int iLevel, char * szName );
+extern char *   hb_procname( int iLevel, char * szName ); /* retrieve a procedure name into a buffer */
 
 /* macro compiler */
 
@@ -501,24 +501,24 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    int exprType;        /* type of successfully compiled expression */
 } HB_MACRO, * HB_MACRO_PTR;
 
-extern void   hb_macroGetValue( HB_ITEM_PTR pItem );
-extern void   hb_macroSetValue( HB_ITEM_PTR pItem );
-extern void   hb_macroTextValue( HB_ITEM_PTR pItem );
-extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem );
-extern void   hb_macroRun( HB_MACRO_PTR pMacro );
-extern HB_MACRO_PTR hb_macroCompile( char * szString );
-extern void   hb_macroDelete( HB_MACRO_PTR pMacro );
-extern char * hb_macroTextSubst( char * szString, ULONG *pulStringLen );
-extern BOOL   hb_macroIsIdent( char * szString );
-extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar );
-extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar );
-extern char * hb_macroGetType( HB_ITEM_PTR pItem );
+extern void   hb_macroGetValue( HB_ITEM_PTR pItem ); /* retrieve results of a macro expansion */
+extern void   hb_macroSetValue( HB_ITEM_PTR pItem ); /* assign a value to a macro-expression item */
+extern void   hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
+extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */
+extern void   hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
+extern HB_MACRO_PTR hb_macroCompile( char * szString ); /* compile a string and return a pcode buffer */
+extern void   hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
+extern char * hb_macroTextSubst( char * szString, ULONG *pulStringLen ); /* substitute macro variables occurences within a given string */
+extern BOOL   hb_macroIsIdent( char * szString ); /* determine if a string is a valid function or variable name */
+extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); /* compiles and evaluates an aliased macro expression */
+extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar ); /* compiles and evaluates an aliased macro expression */
+extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 
 /* misc */
-extern char * hb_verPlatform( void );
-extern char * hb_verCompiler( void );
-extern char * hb_verHarbour( void );
-extern void   hb_verBuildInfo( void );
+extern char * hb_verPlatform( void ); /* retrieves a newly allocated buffer containing platform version */
+extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer containing compiler version */
+extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer containing harbour version */
+extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
 
 #if defined(HB_EXTERN_C)
 }

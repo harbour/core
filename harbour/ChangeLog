@@ -1,3 +1,16 @@
+2000-06-17 19:43 UTC+0500 April White <awhite@user.rose.com>
+
+   * include/hbapi.h
+   * include/hbapifs.h
+     + added descriptive comments, from source, to declarations of
+       multiple api calls
+
+   * rtl/trim.c
+     * hb_strRTrimLen - corrected descriptive comment
+       was "returns szText and the new length in lLen"
+       now "return length of szText ignoring trailing white space
+            (or true spaces)"
+
 2000-06-18 18:38 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/lang/msgde.c
