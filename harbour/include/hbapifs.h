@@ -55,7 +55,6 @@
 #define HB_APIFS_H_
 
 #include "hbapi.h"
-#include "hbapifs.h"
 #include "fileio.ch"
 
 #define FS_ERROR F_ERROR

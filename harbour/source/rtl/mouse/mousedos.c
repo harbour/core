@@ -110,7 +110,7 @@ void hb_mouse_Hide( void )
 
    if( s_bPresent )
    {
-#if defined(__DJGPP__)|| defined(__BORLANDC__)
+#if defined(__DJGPP__) || defined(__BORLANDC__)
       union REGS regs;
 
       regs.x.ax = 2;
@@ -127,7 +127,7 @@ int hb_mouse_Col( void )
 
    if( s_bPresent )
    {
-#if defined(__DJGPP__)|| defined(__BORLANDC__)
+#if defined(__DJGPP__) || defined(__BORLANDC__)
       union REGS regs;
 
       regs.x.ax = 3;
@@ -146,7 +146,7 @@ int hb_mouse_Row( void )
 {
    if( s_bPresent )
    {
-#if defined(__DJGPP__)|| defined(__BORLANDC__)
+#if defined(__DJGPP__) || defined(__BORLANDC__)
       union REGS regs;
 
       regs.x.ax = 3;

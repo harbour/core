@@ -1,3 +1,23 @@
+20000312-13:58 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/tools/io.c
+     ! __DOS__ -> DOS
+   * config/linux/gcc.cf
+     config/w32/msvc.cf
+     - Removed -DDEBUG
+   * config/dos/bcc16.cf
+     config/os2/icc.cf
+     config/w32/bcc32.cf
+     - Removed the default HARBOUR_USE_???_GTAPI define switches, to be in
+       sync with the other GNU-make platforms.
+       WARNING! You have to specify this manually like:
+       set C_USR=-DHARBOUR_USE_DOS_GTAPI
+       set C_USR=-DHARBOUR_USE_OS2_GTAPI
+       set C_USR=-DHARBOUR_USE_WIN_GTAPI
+   * include/hbapifs.h
+     - Removed the #include "hbapifs.h".
+   * source/rtl/mouse/mousedos.c
+     * Small formatting.
+
 20000312-07:10 EST Paul Tucker <ptucker@sympatico.ca>
    * contrib/rdd_ads/ads1.c
      added a couple of casts

@@ -12,7 +12,7 @@ LIB_EXT = .lib
 CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -DDEBUG -I. -I$(HB_INC_COMPILE)
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -W0 -Zi  # -W4 for max warnings
 
 LD = cl.exe

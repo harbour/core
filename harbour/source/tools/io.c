@@ -12,7 +12,7 @@
 
 HARBOUR HB_CD( void )
 {
-#if defined(__DOS__)
+#if defined(DOS)
    hb_retni( ISCHAR( 1 ) ? chdir( hb_parc( 1 ) ) : 0 );
 #else
    hb_retni( 0 );
@@ -21,7 +21,7 @@ HARBOUR HB_CD( void )
 
 HARBOUR HB_MD(void)
 {
-#if defined(__DOS__)
+#if defined(DOS)
    hb_retni( ISCHAR( 1 ) ? mkdir( hb_parc( 1 ) ) : 0 );
 #else
    hb_retni( 0 );
@@ -30,7 +30,7 @@ HARBOUR HB_MD(void)
 
 HARBOUR HB_RD( void )
 {
-#if defined(__DOS__)
+#if defined(DOS)
    hb_retni( ISCHAR( 1 ) ? rmdir( hb_parc( 1 ) ) : 0 );
 #else
    hb_retni( 0 );
