@@ -170,7 +170,7 @@ USHORT hb_fsAttrFromRaw( ULONG raw_attr )
 
 #ifdef HB_EXTENSION
    /* NOTE: Literals used since there are errors in early versions
-      of MS header files which define extended FILE_ATTRIBUTE's */
+      of MS header files which define extended FILE_ATTRIBUTE's.
       Note that FILE_ATTRIBUTE_NORMAL is not needed */
    if( raw_attr & 0x00000040 )                   uiAttr |= HB_FA_ENCRYPTED;
    if( raw_attr & FILE_ATTRIBUTE_TEMPORARY )     uiAttr |= HB_FA_TEMPORARY;

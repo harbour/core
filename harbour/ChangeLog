@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       OPCODE usage entries.
+
+2002-01-19 06:11 UTC-0800 Ron Pinkas <ron@ronpinkas.com>
+   * contrib/dot/pp_harb.ch
      + #ifdef __XHARBOUR__ to protect xHarbour fastitem reliance.
 
 2002-01-23 23:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
