@@ -1,3 +1,9 @@
+2001-11-30 22:05 GMT+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/source/vm/arrays.c
+     * Corrected an error I added while creating null item when not needed
+     * removed unneded itemrelease at the end of treatment
+
+
 2001-11-30 00:10 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/arrays.c
      * simplified hb_arrayClone() while keeping logic

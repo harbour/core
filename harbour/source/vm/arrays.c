@@ -64,6 +64,9 @@
  *    hb_arrayFromStack()
  *    hb_arrayFromParams()
  *
+ * Copyright 2001 jfl (mafact) jfl@mafact.com>
+ *    hb_arrayClone() fixed againt unneded itemrelease
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -724,8 +727,6 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayClone(%p, %p)", pSrcArray, pClonedList));
 
-   pDstArray = hb_itemNew( NULL );
-
    if( HB_IS_ARRAY( pSrcArray ) )
    {
       PHB_BASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
@@ -735,6 +736,7 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
       PHB_NESTED_CLONED pCloned;
       BOOL bTop;
 
+      pDstArray = hb_itemNew( NULL );
       hb_arrayNew( pDstArray, ulSrcLen );
 
       if( pClonedList == NULL )
@@ -819,8 +821,11 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
          {
             pClonedList = pClonedList->pNext;
 
-            if( pCloned->pDest != pDstArray )
-               hb_itemRelease( pCloned->pDest );
+    /*  Not needed as we need to keep all the cloned array */
+    /*  including all subarray                             */
+
+    /*      if( pCloned->pDest != pDstArray )     */
+    /*         hb_itemRelease( pCloned->pDest );  */
 
             hb_xfree( pCloned );
 
@@ -829,9 +834,14 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray, PHB_NESTED_CLONED pClonedList )
 
       }
 
+      return pDstArray;
+
+   }
+   else
+   {
+      return hb_itemNew( NULL );
    }
 
-   return pDstArray;
 
 }
 
