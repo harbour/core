@@ -66,8 +66,8 @@ FUNCTION ordSetRelation()  ; RETURN NIL
 FUNCTION ordSkipUnique()   ; RETURN .F.
 #endif
 
-FUNCTION MLCToPos()        ; RETURN 0
-FUNCTION MPosToLC()        ; RETURN 0
+//FUNCTION MLCToPos()        ; RETURN 0
+//FUNCTION MPosToLC()        ; RETURN 0
 
 //FUNCTION __dbApp()         ; RETURN NIL
 //FUNCTION __dbCopy()        ; RETURN NIL

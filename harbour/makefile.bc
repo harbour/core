@@ -228,6 +228,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\minmax.obj \
    $(OBJ_DIR)\mlcount.obj \
    $(OBJ_DIR)\mlpos.obj \
+   $(OBJ_DIR)\mlctopos.obj \
+   $(OBJ_DIR)\mpostolc.obj \
    $(OBJ_DIR)\mod.obj \
    $(OBJ_DIR)\mouseapi.obj \
    $(OBJ_DIR)\mousex.obj \
@@ -1417,6 +1419,14 @@ $(OBJ_DIR)\mlcount.obj : $(RTL_DIR)\mlcount.c
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\mlpos.obj : $(RTL_DIR)\mlpos.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\mpostolc.obj : $(RTL_DIR)\mpostolc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\mlctopos.obj : $(RTL_DIR)\mlctopos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

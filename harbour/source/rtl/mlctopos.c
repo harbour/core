@@ -1,12 +1,8 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
- * MLCOUNT() function
+ * MLCTOPOS() function
  *
- * Copyright 1999 Ignacio Ortiz de Z£niga <ignacio@fivetech.com>
+ * Copyright 2001 Ignacio Ortiz de Z£niga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,17 +48,21 @@
 
 #include "hbapi.h"
 
-HB_FUNC( MLCOUNT )
+HB_FUNC( MLCTOPOS )
 {
    char * pszString    = ISCHAR( 1 ) ? hb_parc( 1 ) : "";
    ULONG  ulLineLength = ISNUM( 2 ) ? hb_parni( 2 ) : 79;
-   ULONG  ulTabLength  = ISNUM( 3 ) ? hb_parni( 3 ) : 4;
+   ULONG  ulLine       = ISNUM( 3 ) ? hb_parnl( 3 ) : 1;
+   ULONG  ulCol        = ISNUM( 4 ) ? hb_parnl( 4 ) : 0;
+   ULONG  ulTabLength  = ISNUM( 5 ) ? hb_parni( 5 ) : 4;
    ULONG  ulLastSpace  = 0;
    ULONG  ulCurLength  = 0;
-   BOOL   bWordWrap    = ISLOG( 4 ) ? hb_parl( 4 ) : TRUE;
+   BOOL   bWordWrap    = ISLOG( 5 ) ? hb_parl( 5 ) : TRUE;
    ULONG  ulLen        = hb_parclen( 1 );
    ULONG  ulLines      = 0;
    ULONG  ulPos;
+   ULONG  ulBegOfLine  = 0;
+   ULONG  ulLastLen    = 0;
 
    if( ulLineLength < 4 || ulLineLength > 254 )
       ulLineLength = 79;
@@ -70,7 +70,7 @@ HB_FUNC( MLCOUNT )
    if( ulTabLength > ulLineLength )
       ulTabLength = ulLineLength - 1;
 
-   for( ulPos = 0; ulPos < ulLen; ulPos++ )
+   for( ulPos = 0; ulPos < ulLen && ulLine > ulLines; ulPos++ )
    {
       switch( pszString[ ulPos ] )
       {
@@ -80,6 +80,8 @@ HB_FUNC( MLCOUNT )
             break;
 
          case HB_CHAR_LF:
+            ulBegOfLine = ulPos - ulCurLength;
+            ulLastLen   = ulCurLength;
             ulCurLength = 0;
             ulLastSpace = 0;
             ulLines++;
@@ -111,11 +113,23 @@ HB_FUNC( MLCOUNT )
 
          ulLines++;
          ulLastSpace = 0;
+         ulBegOfLine = ulPos - ulCurLength;
+         ulLastLen   = ulCurLength ;
       }
    }
 
    if( ulCurLength > 0 )
+   {
       ulLines++;
+      ulBegOfLine = ulPos - ulCurLength;
+      ulLastLen   = ulCurLength ;
+   }
 
-   hb_retnl( ulLines );
+   if ( ulLine == ulLines )
+   {
+     ulLastLen--;   /*Column is zero based*/
+     hb_retnl( ulBegOfLine + ( ( ulCol < ulLastLen ) ? ulCol : ulLastLen ) );
+   }
+   else
+      hb_retnl( ulLen );
 }

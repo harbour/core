@@ -299,6 +299,7 @@ HB_FUNC( TRANSFORM )
          }
       }
 
+
       /* ======================================================= */
       /* Handle NUMERIC values                                   */
       /* ======================================================= */
@@ -317,12 +318,19 @@ HB_FUNC( TRANSFORM )
 
          char *   szStr;
          char     cPic;
+         char *   szPicNum = "9999999999";
 
          PHB_ITEM pNumber;
          PHB_ITEM pWidth;
          PHB_ITEM pDec;
 
          BOOL     bFound = FALSE;
+
+         if ( ulPicLen == 0)
+         {
+            ulPicLen = 10;
+            szPic = szPicNum;
+         }
 
          hb_itemGetNLen( pValue, &iOrigWidth, &iOrigDec );
 
@@ -586,8 +594,8 @@ HB_FUNC( TRANSFORM )
             }
          }
 
-         if( uiPicFlags & PF_EMPTY )
-            memset( szResult, ' ', ulResultPos );
+         /*if( uiPicFlags & PF_EMPTY )
+            memset( szResult, ' ', ulResultPos );*/
 
          hb_retclen( szResult, ( uiPicFlags & PF_WIDTH && ulResultPos > ulParamS ) ? ulParamS : ulResultPos );
          hb_xfree( szResult );
@@ -633,4 +641,3 @@ HB_FUNC( TRANSFORM )
    if( bError )
       hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM", 2, pValue, hb_paramError( 2 ) );
 }
-

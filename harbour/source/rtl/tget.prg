@@ -841,6 +841,7 @@ return .f.
 METHOD Input( cChar ) CLASS Get
 
    local cPic
+   local xVal
 
    do case
    case ::type == "N"

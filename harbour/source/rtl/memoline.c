@@ -77,7 +77,6 @@ HB_FUNC( MEMOLINE )
    ulLineBegin = ulPos;
    ulLineEnd   = 0;
 
-
    while( ulPos < ulLen && ulLines < ulLineNumber )
    {
       switch( pszString[ ulPos ] )
@@ -124,6 +123,8 @@ HB_FUNC( MEMOLINE )
             {
                ulCurLength = ulCurLength - ulLastSpace;
                ulLineEnd   = ulPos - ulCurLength ;
+               //printf("%i", ulCurLength);
+               //printf("%i", ulLineEnd);
             }
          }
          else
@@ -177,4 +178,3 @@ HB_FUNC( MEMOLINE )
    else
       hb_retc( "" );
 }
-
