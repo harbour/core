@@ -58,6 +58,7 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbvm.h"
+#include "hbapiitm.h"
 
 #if defined(HB_OS_WIN_32)
 
@@ -75,12 +76,21 @@ WINAPI DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
    HB_SYMBOL_UNUSED( fdwReason );
    HB_SYMBOL_UNUSED( pvReserved );
 
-   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+   switch( fdwReason )
+   {
+      case DLL_PROCESS_ATTACH:
+           hb_vmInit( FALSE );  /* Don't execute first linked symbol */
+           break;
+
+      case DLL_PROCESS_DETACH:
+           /* hb_vmQuit(); */
+           break;
+   }
 
    return TRUE;
 }
 
-LONG PASCAL _export HBENTRY( char * cProcName )
+LONG PASCAL _export HBDLLENTRY( char * cProcName )
 {
    hb_itemDoC( cProcName, 0, 0 );
 
