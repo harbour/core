@@ -7,8 +7,8 @@
 #
 
 # ---------------------------------------------------------------
-# If you need to set additional compiler/linker options use the 
-# environment variables below, but please DON'T MODIFY THIS FILE 
+# If you need to set additional compiler/linker options use the
+# environment variables below, but please DON'T MODIFY THIS FILE
 # for this purpose.
 # ---------------------------------------------------------------
 
@@ -527,6 +527,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\cmdarg.obj \
    $(OBJ_DIR)\codebloc.obj \
    $(OBJ_DIR)\debug.obj \
+   $(OBJ_DIR)\dynlibhb.obj \
    $(OBJ_DIR)\dynsym.obj \
    $(OBJ_DIR)\estack.obj \
    $(OBJ_DIR)\eval.obj \
@@ -1056,6 +1057,10 @@ $(OBJ_DIR)\codebloc.obj : $(VM_DIR)\codebloc.c
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\debug.obj : $(VM_DIR)\debug.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dynlibhb.obj : $(VM_DIR)\dynlibhb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
