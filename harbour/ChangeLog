@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2002-04-27 17:40 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * source/rtl/dbedit.prg
+    *Fix an bug on dbedit function that was Generating an Recursive call to DBEDIT()
+     functions if the acColumns parameter was defined like below
      aCol[1]:={"Name"+" "+"AddRess"+" "+"phone"}
 
 2002-04-27 00:10 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
