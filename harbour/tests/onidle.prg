@@ -21,11 +21,11 @@ LOCAL nPrev:=SECONDS()
   @ 11,2 SAY "Memory after TEST() and before collecting" + STR( MEMORY(HB_MEM_USED) )
   HB_GCALL()
   @ 12,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
-  nH1 = HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() )} )
-  nH2 = HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) )} )
+  nH1 = HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() ), HB_IDLE_RESET() } )
+  nH2 = HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) ) } )
   nH3 = HB_IDLEADD( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
-  nH4 = HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS()} )
-  
+  nH4 = HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS() } )
+
   INKEY( 30 )
   HB_IDLEDEL( nH3 )
   HB_IDLEDEL( nH2 )
@@ -35,7 +35,7 @@ LOCAL nPrev:=SECONDS()
   @ 13,2 SAY "Memory after idle states" + STR( MEMORY(HB_MEM_USED) )
   HB_GCALL()
   @ 14,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
-  
+
 RETURN 1
 
 PROC TEST()
@@ -54,9 +54,9 @@ LOCAL cb
   c[1] :=a
   c[2] :=b
   c[3] :=c
-  
+
   cb := {|x| x:=cb}
   EVAL( cb )
-  
+
 RETURN
 

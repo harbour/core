@@ -1,3 +1,11 @@
+2000-11-23 13:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/rtl/idle.c
+     + Added HB_IDLE_RESET() and logic to reset Idle Processing upon such explicit request.
+     ! If reoccuring processing of Idle Blocks is requested, hb_releaseCPU() is execusted upon completion of each cycle.
+
+   * tests/onidle.prg
+     + Added HB_IDLE_RESET() to demonstrate explicit request for reoccuring processing of Idle Blocks.
+
 2000-11-23 23:11 UTC+0100 jfl (mafact) <jfl@mafact.com>
    * source/vm/classes.c
      * corrected hb___msgClsParent( void )
