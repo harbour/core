@@ -60,62 +60,55 @@
 
 #include "hbapi.h"
 
-char * hb_getenv( const char * name )
+char * hb_getenv( const char * szName )
 {
+   char * pszBuffer = NULL;
 
-#ifdef HB_OS_WIN_32
-
-   char * pszBuffer = ( char * ) hb_xgrab( 255 );
+#if defined(HB_OS_WIN_32)
 
    {
-      DWORD nSize = GetEnvironmentVariable( name, pszBuffer, 0 );
+      DWORD size = GetEnvironmentVariable( szName, NULL, 0 );
 
-      if( nSize == 0 )
-         pszBuffer[ 0 ] = '\0';
-
-      else
-         GetEnvironmentVariable( name, pszBuffer, 254 );
+      if( size != 0 )
+      {
+         pszBuffer = ( char * ) hb_xgrab( size );
+         GetEnvironmentVariable( szName, pszBuffer, size );
+      }
    }
-
 
 #elif defined(HB_OS_OS2)
 
-   char * pszBuffer = NULL;
-
    {
-   	PSZ EnvValue = "";
-   	ULONG ulrc = DosScanEnv(name, &EnvValue);
-   	
-   	if (ulrc == NO_ERROR) {
-   	   pszBuffer = ( char * ) hb_xgrab( strlen(EnvValue) + 1 );
-   	   strcpy( pszBuffer, (char *) EnvValue);
-   	
-   	} else {
-   	   pszBuffer = ( char * ) hb_xgrab( 1 );
-   	   pszBuffer[ 0 ] = '\0';
-   	
-   	}
-   }	
+      PSZ EnvValue = "";
+
+      if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
+      {
+         pszBuffer = ( char * ) hb_xgrab( strlen( EnvValue ) + 1 );
+         strcpy( pszBuffer, ( char * ) EnvValue );
+      }
+   }
 
 #else
 
-   char * pszBuffer = NULL;
-
    {
-      char * pszTemp = getenv( name );
+      char * pszTemp = getenv( szName );
 
-      if( pszTemp == NULL ) {
-         pszBuffer = ( char * ) hb_xgrab( 1 );
-         pszBuffer[ 0 ] = '\0';
-
-      } else {
-         pszBuffer = ( char * ) hb_xgrab( strlen(pszTemp) + 1 );
-         strcpy( pszBuffer, pszTemp);
-
+      if( pszTemp != NULL )
+      {
+         pszBuffer = ( char * ) hb_xgrab( strlen( pszTemp ) + 1 );
+         strcpy( pszBuffer, pszTemp );
       }
    }
 
 #endif
+
+   /* Return an empty string if some error occured. */
+
+   if( pszBuffer == NULL )
+   {
+      pszBuffer = ( char * ) hb_xgrab( 1 );
+      pszBuffer[ 0 ] = '\0';
+   }
 
    return pszBuffer;
 }

@@ -8,6 +8,9 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-11 18:57 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+   * source/common/hbgete.c
+     % Made it more fail-safe and compact.
 
 2001-12-11 15:09 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
    * source/common/hbgete.c
