@@ -976,7 +976,8 @@ int harbour_main( int argc, char * argv[] )
    char *szPath ="";
    FILENAME *pFileName =NULL;
 
-   printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
+   if( !_iQuiet )
+     printf( "Harbour compiler\nbuild %i Spring 1999\n", BUILD );
 
    if( argc > 1 )
    {
