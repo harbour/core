@@ -65,7 +65,8 @@ FUNCTION MemoEdit(cString,;
    DEFAULT nWindowRow      TO 0
    DEFAULT nWindowColumn   TO nTextBuffColumn
 
-   oEd := TEditor():New(cString, nTop, nLeft, nBottom, nRight, lEditMode, nil, nLineLength, nTabSize)
+   // Original MemoEdit() converts Tabs into spaces
+   oEd := TEditor():New(StrTran(cString, K_TAB, Space(1)), nTop, nLeft, nBottom, nRight, lEditMode, nil, nLineLength, nTabSize)
    oEd:RefreshWindow()
 
    if ! ISLOGICAL(cUserFunction) .OR. cUserFunction == .T.

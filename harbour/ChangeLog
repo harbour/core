@@ -1,3 +1,11 @@
+20000515-23:11 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     + added soft CR handling
+     ! fixed a bug in K_CTRL_Y handling
+   * source/rtl/memoedit.prg
+     * original MemoEdit() changes K_TAB chars to spaces upon loading of text
+
 20000515-23:05 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/teditorl.c
    * source/rtl/padl.c

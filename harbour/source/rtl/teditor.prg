@@ -33,14 +33,14 @@
  *
  */
 
-/* TODO: Very minimal and little tested. To finish and refine */
+/* TODO: Load, Save, GotoLine, SkipLine methods (to be used with debugger)
+         Test to see if it behaves more or less like MemoEdit() */
 
 #include "hbclass.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-
 
 
 CLASS TTextLine
@@ -79,26 +79,33 @@ CLASS TEditor
    DATA  lWordWrap      INIT .F.    // True if word wrapping is active
    DATA  nWordWrapCol   INIT  0     // At which column word wrapping occurs
 
-   METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize)
 
-   METHOD AddLine(cLine, lSoftCR)
-   METHOD InsertLine(cLine, lSoftCR, nRow)
-   METHOD RemoveLine(nRow)
-   METHOD GetLine(nRow)
-   //METHOD SetLine(cLine, lSoftCR, nRow)
+   METHOD New(cString, nTop, nLeft, nBottom,;              // Converts a string to an array of strings splitting input string at EOL boundaries
+              nRight, lEditMode, cUdF, nLineLength,;
+              nTabSize)
 
-   METHOD GetText()                 // Returns aText as a string (for MemoEdit())
-   METHOD RefreshWindow()
-   METHOD RefreshLine()
-   METHOD RefreshColumn()
-   METHOD MoveCursor(nKey)
-   METHOD InsertState(lInsState)    // Changes lInsert value and insertion / overstrike mode of editor
-   METHOD Edit(nPassedKey)
+   METHOD AddLine(cLine, lSoftCR)                           // Add a new Line of text at end of current text
+   METHOD InsertLine(cLine, lSoftCR, nRow)                  // Insert a line of text at a defined row
+   METHOD RemoveLine(nRow)                                  // Remove a line of text
+
+   METHOD GetLine(nRow)                                     // Return line n of text
+   METHOD LineLen(nRow) INLINE Len(::aText[nRow]:cText)     // Return text length of line n
+   METHOD SplitLine(nRow)                                   // If a line of text is longer than nWordWrapCol divides it into multiple lines
+
+   METHOD GetText()                                         // Returns aText as a string (for MemoEdit())
+
+   METHOD RefreshWindow()                                   // Redraw a window
+   METHOD RefreshLine()                                     // Redraw a line
+   METHOD RefreshColumn()                                   // Redraw a column of text
+
+   METHOD MoveCursor(nKey)                                  // Move cursor inside text / window (needs a movement key)
+   METHOD InsertState(lInsState)                            // Changes lInsert value and insertion / overstrike mode of editor
+   METHOD Edit(nPassedKey)                                  // Handles input (can receive a key in which case handles only this key and then exits)
 
 ENDCLASS
 
 
-
+// Creates a new line of text
 METHOD New(cLine, lSoftCR) CLASS TTextLine
 
    ::cText := iif(Empty(cLine), "", cLine)
@@ -108,9 +115,10 @@ return Self
 
 
 // Converts a string to an array of strings splitting input string at EOL boundaries
-STATIC function Text2Array(cString)
+STATIC function Text2Array(cString, nWordWrapCol)
 
    LOCAL cLine, nTokNum, aArray, cEOL, nEOLLen, nRetLen, ncSLen
+   LOCAL nFirstSpace, cSplittedLine
 
    nTokNum := 1
    aArray := {}
@@ -122,14 +130,51 @@ STATIC function Text2Array(cString)
    ncSLen := Len(cString)
 
    while nRetLen < ncSLen
-      cLine := __StrToken(cString, nTokNum++, cEOL)
-      nRetLen += Len(cLine) + iif(nEOLLen > 1, nEOLLen - 1, 1)
-
+      /* TOFIX: Note that __StrToken is not able to cope with delimiters longer than one char */
+      // Dos - OS/2 - Windows have CRLF as EOL
       if nEOLLen > 1
-         AAdd(aArray, StrTran(Right(cLine, Len(cLine) - (nEOLLen - 1)), Chr(9), " "))
+         cLine := StrTran(__StrToken(cString, nTokNum++, cEOL), SubStr(cEOL, 2), "")
       else
-         AAdd(aArray, StrTran(cLine, Chr(9), " "))
+         cLine := __StrToken(cString, nTokNum++, cEOL)
       endif
+      nRetLen += Len(cLine) + nEOLLen
+
+      if !nWordWrapCol == NIL .AND. Len(cLine) > nWordWrapCol
+
+         while !Empty(cLine)
+
+            // Split line at nWordWrapCol boundary
+            if Len(cLine) > nWordWrapCol
+
+               nFirstSpace := nWordWrapCol
+               while SubStr(cLine, --nFirstSpace, 1) <> " " .AND. nFirstSpace > 1
+               enddo
+
+               if nFirstSpace > 1
+                  cSplittedLine := Left(cLine, nFirstSpace)
+               else
+                  cSplittedLine := Left(cLine, nWordWrapCol)
+               endif
+
+               AAdd(aArray, TTextLine():New(cSplittedLine, .T.))
+
+            else
+
+               // remainder of line is shorter than split point
+               cSplittedLine := cLine
+               AAdd(aArray, TTextLine():New(cSplittedLine, .F.))
+
+            endif
+
+            cLine := Right(cLine, Len(cLine) - Len(cSplittedLine))
+         enddo
+
+      else
+
+         AAdd(aArray, TTextLine():New(cLine, .F.))
+
+      endif
+
    enddo
 
 return aArray
@@ -141,14 +186,18 @@ METHOD GetText() CLASS TEditor
    LOCAL cString := ""
    LOCAL cEOL := HB_OSNewLine()
 
-   AEval(::aText, {|cItem| cString += cItem + cEOL })
+   if ::lWordWrap
+      AEval(::aText, {|cItem| cString += cItem:cText + iif(cItem:lSoftCR, "", cEOL) })
+   else
+      AEval(::aText, {|cItem| cString += cItem:cText + cEOL })
+   endif
 
 return cString
 
 
 METHOD New(cString, nTop, nLeft, nBottom, nRight, lEditMode, cUdF, nLineLength, nTabSize) CLASS TEditor
 
-   ::aText := Text2Array(cString)
+   ::aText := Text2Array(cString, nLineLength)
    ::naTextLen := Len(::aText)
 
    // editor window boundaries
@@ -202,8 +251,8 @@ return Self
 // Insert a line of text at a defined row
 METHOD InsertLine(cLine, lSoftCR, nRow) CLASS TEditor
 
-   ::AddLine("", .F.)
-   ::AIns(::aText, nRow)
+   ::AddLine()
+   AIns(::aText, nRow)
    ::aText[nRow] := TTextLine():New(cLine, lSoftCR)
 
 return Self
@@ -230,16 +279,104 @@ METHOD GetLine(nRow) CLASS TEditor
 return Self
 
 
+// Rebuild a long line from multiple short ones (wrapped at soft CR)
+STATIC function GetParagraph(oSelf, nRow)
+
+   local cLine := ""
+
+   while oSelf:aText[nRow]:lSoftCR
+      cLine += oSelf:aText[nRow]:cText
+      // I don't need to increment nRow since I'm removing lines, ie line n is
+      // a different line each time I add it to cLine
+      oSelf:RemoveLine(nRow)
+   enddo
+
+   // Last line, or only one line
+   cLine += oSelf:aText[nRow]:cText
+   oSelf:RemoveLine(nRow)
+
+return cLine
+
+
+// If a line of text is longer than nWordWrapCol divides it into multiple lines,
+// Used during text editing to reflow a paragraph
+METHOD SplitLine(nRow) CLASS TEditor
+
+   local nFirstSpace, cLine, cSplittedLine, nStartRow
+   local nOCol, nORow, lMoveToNextLine, nPosInWord, nI
+
+   // Do something only if Word Wrapping is on
+   if ::lWordWrap .AND. (::LineLen(nRow) > ::nWordWrapCol)
+
+      nOCol := Col()
+      nORow := Row()
+
+      // Move cursor to next line if you will move the word which I'm over to next line
+      // ie, since word wrapping happens at spaces if first space is behind cursor
+      lMoveToNextLine := Rat(" ", RTrim(::GetLine(nRow))) < ::nCol
+      nPosInWord := Len(::GetLine(nRow)) - ::nCol
+
+      nStartRow := nRow
+      cLine := GetParagraph(Self, nRow)
+
+      while !Empty(cLine)
+
+         if Len(cLine) > ::nWordWrapCol
+            nFirstSpace := ::nWordWrapCol
+
+            // Split line at fist space before current position
+            while SubStr(cLine, --nFirstSpace, 1) <> " " .AND. nFirstSpace > 1
+            enddo
+
+            // If there is a space before beginning of line split there
+            if nFirstSpace > 1
+               cSplittedLine := Left(cLine, nFirstSpace)
+            else
+               // else split at current cursor position
+               cSplittedLine := Left(cLine, ::nCol - 1)
+            endif
+
+            ::InsertLine(cSplittedLine, .T., nStartRow++)
+
+         else
+            // remainder of line
+            cSplittedLine := cLine
+            ::InsertLine(cSplittedLine, .F., nStartRow++)
+         endif
+
+         cLine := Right(cLine, Len(cLine) - Len(cSplittedLine))
+      enddo
+
+      if lMoveToNextLine
+         ::MoveCursor(K_DOWN)
+         ::MoveCursor(K_HOME)
+         ::MoVeCursor(K_CTRL_RIGHT)
+         if nPosInWord > 0
+            // from 0 since I have to take into account previous K_CTRL_RIGHT which moves me past end of word
+            for nI := 0 to nPosInWord
+               ::MoveCursor(K_LEFT)
+            next
+         endif
+      else
+         SetPos(nORow, nOCol)
+      endif
+      ::RefreshWindow()
+   endif
+
+return Self
+
+
 // Redraws a screenfull of text
 METHOD RefreshWindow() CLASS TEditor
 
-   LOCAL i, nOCol, nORow
+   LOCAL i, nOCol, nORow, nOCur
 
    nOCol := Col()
    nORow := Row()
+   nOCur := SetCursor(SC_NONE)
 
    for i := 0 to Min(::nNumRows - 1, ::naTextLen - 1)
-      DispOutAt(::nTop + i, ::nLeft, PadR(SubStr(::aText[::nFirstRow + i], ::nFirstCol, ::nNumCols), ::nNumCols, " "))
+      DispOutAt(::nTop + i, ::nLeft, PadR(SubStr(::GetLine(::nFirstRow + i), ::nFirstCol, ::nNumCols), ::nNumCols, " "))
    next
 
    // Clear rest of editor window (needed when deleting lines of text)
@@ -247,6 +384,7 @@ METHOD RefreshWindow() CLASS TEditor
       Scroll(::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight)
    endif
 
+   SetCursor(nOCur)
    SetPos(nORow, nOCol)
 
 return Self
@@ -260,7 +398,7 @@ METHOD RefreshLine() CLASS TEditor
    nOCol := Col()
    nORow := Row()
 
-   DispOutAt(Row(), ::nLeft, PadR(SubStr(::aText[::nRow], ::nFirstCol, ::nNumCols), ::nNumCols, " "))
+   DispOutAt(Row(), ::nLeft, PadR(SubStr(::GetLine(::nRow), ::nFirstCol, ::nNumCols), ::nNumCols, " "))
 
    SetPos(nORow, nOCol)
 
@@ -270,15 +408,17 @@ return Self
 // Refreshes only one screen column of text (for Left() and Right() movements)
 METHOD RefreshColumn() CLASS TEditor
 
-   LOCAL i, nOCol, nORow
+   LOCAL i, nOCol, nORow, nOCur
 
    nOCol := Col()
    nORow := Row()
+   nOCur := SetCursor(SC_NONE)
 
    for i := 0 to Min(::nNumRows - 1, ::naTextLen - 1)
-      DispOutAt(::nTop + i, nOCol, SubStr(::aText[::nFirstRow + i], ::nCol, 1))
+      DispOutAt(::nTop + i, nOCol, SubStr(::GetLine(::nFirstRow + i), ::nCol, 1))
    next
 
+   SetCursor(nOCur)
    SetPos(nORow, nOCol)
 
 return Self
@@ -327,7 +467,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
 
       case (nKey == K_CTRL_PGDN)
          ::nRow := ::naTextLen
-         ::nCol := Max(Len(::aText[::nRow]), 1)
+         ::nCol := Max(::LineLen(::nRow), 1)
          ::nFirstRow := Max(::naTextLen - ::nNumRows + 1, 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
          SetPos(Min(::nBottom, ::naTextLen), Min(::nLeft + ::nCol - 1, ::nRight))
@@ -376,7 +516,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
 
       case (nKey == K_RIGHT)
          if Col() == ::nRight
-            if ::nCol <= iif(::lWordWrap, ::nWordWrapCol, Len(::aText[::nRow]))
+            if ::nCol <= iif(::lWordWrap, ::nWordWrapCol, ::LineLen(::nRow))
                Scroll(::nTop, ::nLeft, ::nBottom, ::nRight,, 1)
                ::nFirstCol++
                ::nCol++
@@ -388,10 +528,11 @@ METHOD MoveCursor(nKey) CLASS TEditor
          endif
 
       case (nKey == K_CTRL_RIGHT)
-         while ::nCol <= Len(::aText[::nRow]) .AND. SubStr(::aText[::nRow], ::nCol, 1) <> " "
+         // NOTE: should be faster without call to ::GetLine()
+         while ::nCol <= iif(::lWordWrap, Min(::nWordWrapCol, ::LineLen(::nRow)), ::LineLen(::nRow)) .AND. SubStr(::aText[::nRow]:cText, ::nCol, 1) <> " "
             ::MoveCursor(K_RIGHT)
          enddo
-         while ::nCol <= Len(::aText[::nRow]) .AND. SubStr(::aText[::nRow], ::nCol, 1) == " "
+         while ::nCol <= iif(::lWordWrap, Min(::nWordWrapCol, ::LineLen(::nRow)), ::LineLen(::nRow)) .AND. SubStr(::aText[::nRow]:cText, ::nCol, 1) == " "
             ::MoveCursor(K_RIGHT)
          enddo
 
@@ -409,10 +550,10 @@ METHOD MoveCursor(nKey) CLASS TEditor
          endif
 
       case (nKey == K_CTRL_LEFT)
-         while ::nCol > 1 .AND. SubStr(::aText[::nRow], ::nCol, 1) <> " "
+         while ::nCol > 1 .AND. SubStr(::aText[::nRow]:cText, ::nCol, 1) <> " "
             ::MoveCursor(K_LEFT)
          enddo
-         while ::nCol > 1 .AND. SubStr(::aText[::nRow], ::nCol, 1) == " "
+         while ::nCol > 1 .AND. SubStr(::aText[::nRow]:cText, ::nCol, 1) == " "
             ::MoveCursor(K_LEFT)
          enddo
 
@@ -431,7 +572,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
 
       case (nKey == K_END)
          // Empty lines have 0 len
-         ::nCol := Max(Len(::aText[::nRow]), 1)
+         ::nCol := Max(::LineLen(::nRow), 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
          SetPos(Row(), Min(::nLeft + ::nCol - 1, ::nRight))
          ::RefreshWindow()
@@ -441,7 +582,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
          if ::nRow > ::naTextLen
             ::nRow := ::naTextLen
          endif
-         ::nCol := Max(Len(::aText[::nRow]), 1)
+         ::nCol := Max(::LineLen(::nRow), 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
          SetPos(Min(::nBottom, ::naTextLen), Min(::nLeft + ::nCol - 1, ::nRight))
          ::RefreshWindow()
@@ -500,45 +641,31 @@ METHOD Edit(nPassedKey) CLASS TEditor
          do case
             case (nKey >= 32 .AND. nKey <= 255)
                // If I'm past EOL I need to add as much spaces as I need to reach ::nCol
-               if ::nCol > Len(::aText[::nRow])
-                  ::aText[::nRow] += Space(::nCol - Len(::aText[::nRow]))
+               if ::nCol > ::LineLen(::nRow)
+                  ::aText[::nRow]:cText += Space(::nCol - ::LineLen(::nRow))
                endif
                // insert char if in insert mode or at end of current line
-               if ::lInsert .OR. (::nCol > Len(::aText[::nRow]))
-                  ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Chr(nKey))
+               if ::lInsert .OR. (::nCol > ::LineLen(::nRow))
+                  ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 0, Chr(nKey))
                else
-                  ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, Chr(nKey))
+                  ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 1, Chr(nKey))
                endif
                ::MoveCursor(K_RIGHT)
                ::RefreshLine()
-
-               // if we need to word wrap a word we simulate a word left + return
-               if ::lWordWrap .AND. (::nCol > ::nWordWrapCol)
-                  ::MoveCursor(K_CTRL_LEFT)
-                  ::MoveCursor(K_CTRL_RIGHT)
-                  lOldInsert := ::lInsert
-                  ::lInsert := .T.
-                  ::Edit(K_RETURN)
-                  ::lInsert := lOldInsert
-                  ::MoveCursor(K_CTRL_RIGHT)
-               endif
+               ::SplitLine(::nRow)
 
             case (nKey == K_RETURN)
                if ::lInsert .OR. ::nRow == ::naTextLen
-                  AAdd(::aText, "")
-                  if ::nRow <= ::naTextLen
-                     AIns(::aText, ::nRow + 1)
-                     if Len(::aText[::nRow]) > 0
-                        // Split current line at cursor position
-                        ::aText[::nRow + 1] := Right(::aText[::nRow], Len(::aText[::nRow]) - ::nCol + 1)
-                        ::aText[::nRow] := Left(::aText[::nRow], ::nCol - 1)
-                     else
-                        ::aText[::nRow + 1] := ""
+                  if ::LineLen(::nRow) > 0
+                     // Split current line at cursor position
+                     ::InsertLine(Right(::aText[::nRow]:cText, ::LineLen(::nRow) - ::nCol + 1), ::aText[::nRow]:lSoftCR, ::nRow + 1)
+                     ::aText[::nRow]:cText := Left(::aText[::nRow]:cText, ::nCol - 1)
+                     if ::lWordWrap
+                        ::aText[::nRow]:lSoftCR := .F.
                      endif
+                  else
+                     ::InsertLine("", .F., ::nRow + 1)
                   endif
-                  // I increment naTextLen only here because now there is a "real" line of text, before
-                  // this point we have only added some "space" to split current line
-                  ::naTextLen++
                endif
                ::MoveCursor(K_DOWN)
                ::MoveCursor(K_HOME)
@@ -547,16 +674,16 @@ METHOD Edit(nPassedKey) CLASS TEditor
                ::InsertState(!::lInsert)
 
             case (nKey == K_DEL)
-               ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 1, "")
+               ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 1, "")
                ::RefreshLine()
-               if Len(::aText[::nRow]) == 0
+               if ::LineLen(::nRow) == 0
                   ::Edit(K_CTRL_Y)
                endif
 
             case (nKey == K_TAB)
                // insert char if in insert mode or at end of current line
-               if ::lInsert .OR. (::nCol == Len(::aText[::nRow]))
-                  ::aText[::nRow] := Stuff(::aText[::nRow], ::nCol, 0, Space(::nTabWidth))
+               if ::lInsert .OR. (::nCol == ::LineLen(::nRow))
+                  ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 0, Space(::nTabWidth))
                endif
                for i := 1 to ::nTabWidth
                   ::MoveCursor(K_RIGHT)
@@ -565,7 +692,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
 
             case (nKey == K_BS)
                // delete previous character
-               ::aText[::nRow] := Stuff(::aText[::nRow], --::nCol, 1, "")
+               ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, --::nCol, 1, "")
                // correct column position for next call to MoveCursor()
                ::nCol++
                ::MoveCursor(K_LEFT)
@@ -573,21 +700,22 @@ METHOD Edit(nPassedKey) CLASS TEditor
 
             case (nKey == K_CTRL_Y)
                if ::naTextLen > 1
-                  // delete current line of text
-                  ADel(::aText, ::nRow)
-                  ASize(::aText, --::naTextLen)
-                  // if we now have less than a screen full of text, adjust nFirstRow position
-                  if ::nFirstRow + ::nNumRows > ::naTextLen
-                     ::nFirstRow := Max(::nFirstRow - 1, 1)
-                     // if we have less lines of text than our current position on scree, up one line
-                     if ::nRow > ::naTextLen
-                        ::nRow := Max(::nRow - 1, 1)
+                  ::RemoveLine(::nRow)
+                  // if we have less lines of text than our current position, up one line
+                  if ::nRow > ::naTextLen
+                     ::nRow := Max(::nRow - 1, 1)
+                     // if our position on screen exceeds text length, up one row
+                     if (::nFirstRow + ::nNumRows - 1) > ::naTextLen
                         SetPos(Max(Row() -1, ::nTop), Col())
+                     endif
+                     // if first line of displayed text is less than length of text
+                     if ::nFirstRow > ::naTextLen
+                        ::nFirstRow := Max(::nFirstRow - 1, 1)
                      endif
                   endif
                   ::RefreshWindow()
                else
-                  ::aText[::nRow] := ""
+                  ::aText[::nRow]:cText := ""
                   ::RefreshLine()
                endif
 
