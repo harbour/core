@@ -167,8 +167,10 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\text.obj \
     $(OBJ_DIR)\tget.obj \
     $(OBJ_DIR)\tgetlist.obj \
+    $(OBJ_DIR)\tlabel.obj \
     $(OBJ_DIR)\tone.obj \
     $(OBJ_DIR)\transfrm.obj \
+    $(OBJ_DIR)\treport.obj \
     $(OBJ_DIR)\type.obj \
     $(OBJ_DIR)\valtype.obj \
     $(OBJ_DIR)\wait.obj \
@@ -859,10 +861,22 @@ $(OBJ_DIR)\tgetlist.c : $(RTL_DIR)\tgetlist.prg
 $(OBJ_DIR)\tgetlist.obj : $(OBJ_DIR)\tgetlist.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\tlabel.c : $(RTL_DIR)\tlabel.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\tlabel.obj : $(OBJ_DIR)\tlabel.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\tone.obj : $(RTL_DIR)\tone.c
     $(CC) -W1 -nologo -I$(INCLUDE_DIR) -DHARBOUR_USE_WIN_GTAPI -c -TP -Fo$@ $**
 
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\treport.c : $(RTL_DIR)\treport.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\treport.obj : $(OBJ_DIR)\treport.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\type.obj : $(RTL_DIR)\type.c

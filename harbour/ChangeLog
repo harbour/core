@@ -1,3 +1,8 @@
+20000216-00:07 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source/rtl/tlabel.prg
+     + source/rtl/treport.prg
+
 20000216-04:17 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/tbrowse.prg
      ! SAY -> DispOutAt()
