@@ -104,7 +104,7 @@ HB_FUNC( HB_DISKSPACE )
          }
          else
          {
-            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, ( EF_CANDEFAULT | EF_CANRETRY ) == E_RETRY, 2, hb_paramError( 1 ), hb_paramError( 2 ) ) )
+            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, ( EF_CANDEFAULT | EF_CANRETRY ), 2, hb_paramError( 1 ), hb_paramError( 2 ) ) == E_RETRY )
                continue;
          }
          break;
@@ -237,7 +237,7 @@ HB_FUNC( HB_DISKSPACE )
 
          if( GetLastError() != 0 )
          {
-            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT | EF_CANRETRY, 2, hb_paramError( 1 ), hb_paramError( 2 ) ) == E_RETRY )
+            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, (EF_CANDEFAULT | EF_CANRETRY), 2, hb_paramError( 1 ), hb_paramError( 2 ) ) == E_RETRY )
                continue;
          }
          break;
@@ -254,7 +254,7 @@ HB_FUNC( HB_DISKSPACE )
       /* Query level 1 info from filesystem */
       while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != 0 )
       {
-         if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT | EF_CANRETRY, 2, hb_paramError( 1 ), hb_paramError( 2 ) ) != E_RETRY )
+         if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, (EF_CANDEFAULT | EF_CANRETRY), 2, hb_paramError( 1 ), hb_paramError( 2 ) ) != E_RETRY )
             break;
       }
 
