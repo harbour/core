@@ -1,3 +1,21 @@
+20000420-20:10 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.c
+     + Added hb_compOptimizeFrames() - Resolves and or removes HB_P_FRAME & HB_P_SFRAME.
+     * Modified hb_compFixReturns() to call hb_compOptimizeFrames()
+
+   * source/compiler/genc.c
+     - Removed the SWITCH LOOP from hb_compGenCCompact()
+
+   * source/compiler/genhrb.c
+     - Removed the SWITCH LOOP from hb_compGenCCompact()
+
+   * source/compiler/genjava.c
+     - Removed the SWITCH LOOP from hb_compGenCCompact()
+
+   * source/compiler/genobj32.c
+     - Removed the SWITCH LOOP from hb_compGenCCompact()
+
 20000420-22:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
 +contrib/nflib/cpmi/farcall.asm
  contrib/nflib/cpmi/alias.asm
@@ -26,8 +44,8 @@
    * source/vm/hvm.c
    * source/vm/arrays.c
      - Removed the hb_arrayError() function.
-     % The hb_arrayError() functionality moved to the only place where it 
-       was used: hb_vmArrayPush() and hb_vmArrayPop(). It should be a bit 
+     % The hb_arrayError() functionality moved to the only place where it
+       was used: hb_vmArrayPush() and hb_vmArrayPop(). It should be a bit
        faster now.
      % Implemented optimization proposed by Ryszard for hb_vmArrayPush().
 
@@ -64,17 +82,17 @@
    * source/compiler/hbusage.c
    * source/compiler/harbour.c
      + Added new -gc output type, namely a simple byte dump.
-       Now -gc0 is the byte dump (this one is used by default when building 
+       Now -gc0 is the byte dump (this one is used by default when building
        Harbour itself, use HARBOURFLAGS to override), -gc1 is the pcode source
-       without comments, and -gc2 is the pcode source with comments, which is 
+       without comments, and -gc2 is the pcode source with comments, which is
        also the default.
-       When using -gc0 instead of -gc1, the size of the /obj dir after a 
+       When using -gc0 instead of -gc1, the size of the /obj dir after a
        Harbour build dropped by almost 25%
        (~1300K, from 5830K to 4506K for BCC55).
-       
+
    * source/compiler/genjava.c
      ! Fixed some fputc() calls to hb_fputc() in GENJAVA
-     % Optimized the GENJAVA output generation. 
+     % Optimized the GENJAVA output generation.
 
 2000-04-20 15:50 GMT-4 David G. Holm <dholm@jsd-llc.com>
   * config/w32/msvc.cf
