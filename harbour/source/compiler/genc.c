@@ -264,6 +264,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    while( pInline )
    {
       hb_comp_inlines.pFirst = pInline->pNext;
+      hb_xfree( ( void * ) pInline->pCode );
       hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
       pInline = hb_comp_inlines.pFirst;
    }
