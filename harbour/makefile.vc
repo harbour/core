@@ -66,6 +66,7 @@
 ECHO = echo.
 !endif
 !ifndef DEL
+# You might need to set 'ECHO=echo.' - but don't set 'DEL=del.' !!!
 DEL = del
 !endif
 
