@@ -233,7 +233,7 @@ void     hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex );
 PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 char *   hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex ); /* retrieves the date value contained on an array element */
-
+ULONG    hb_parinfa( int iParamNum, ULONG uiArrayIndex );
 int      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 char *   hb_str( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
 int      hb_stricmp( const char *s1, const char *s2 );
