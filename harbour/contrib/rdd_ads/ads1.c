@@ -665,7 +665,6 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    UNSIGNED8  szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH + 1 ];
    UNSIGNED16 pusBufLen = HARBOUR_MAX_RDD_FIELDNAME_LENGTH;
    UNSIGNED32 pulLength;
-   BOOL bOnPhantom = FALSE;             /* empty record set may have bof true but eof false and recno 0 */
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -1703,10 +1702,31 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
 
       case DBOI_KEYCOUNT :
-         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_RESPECTFILTERS, &pul32);
          /*
             TODO: This count will be wrong if server doesn't know full filter!
+            TODO: If there are child areas that are not at the top of scope, Skip movement may move them to first related record
          */
+         if ( phIndex )
+         {
+            AdsGetScope  ( phIndex, ADS_BOTTOM, aucBuffer, &pusLen);
+            if ( pusLen )               /* had a scope, walk it. Skips obey filters */
+            {
+               AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+                     (UNSIGNED32 *)&(pArea->ulRecNo) );
+               AdsGotoTop  ( phIndex );
+               AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+
+               while ( AdsSkip ( phIndex, 1 ) != AE_NO_CURRENT_RECORD && !pArea->fEof )
+               {
+                  AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+                  pul32++;
+               }
+               AdsGotoRecord( pArea->hTable, pArea->ulRecNo );
+               AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
+            }
+         }else
+            AdsGetRecordCount( pArea->hTable, ADS_RESPECTFILTERS, &pul32);
+
          hb_itemPutNL(pOrderInfo->itmResult, pul32);
          break;
 
