@@ -16,7 +16,7 @@ GOTO :END
 
 :NOOUTPUT
 echo -O2 -e%1.exe -I..\include %1.c > b32.bc
-echo ..\lib\b32\harbour.lib  ..\lib\b32\terminal.lib >> b32.bc
+echo ..\lib\b32\harbour.lib ..\lib\b32\terminal.lib >> b32.bc
 echo ..\lib\b32\hbgt.lib ..\lib\b32\hbpp.lib >> b32.bc
 echo ..\lib\b32\rdd.lib >> b32.bc
 bcc32 -v @b32.bc
