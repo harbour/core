@@ -374,9 +374,10 @@ HARBOUR FWRITE()
 
         long   bytes=0;
 
-        if( arg1_it && arg2_it && arg3_it )
+        if( arg1_it && arg2_it )
         {
-            bytes = _fsWrite(_parni(1),_parc(2),_parnl(3));
+            bytes = (arg3_it ? _parnl(3) : arg2_it->wLength );         
+            bytes = _fsWrite(_parni(1),_parc(2),bytes);
             last_error = errno;
         }
 
@@ -445,10 +446,12 @@ HARBOUR FSEEK()
         PITEM arg3_it = _param(3,IT_NUMBER);
 
         long bytes=0;
-
-        if( arg1_it && arg2_it && arg3_it )
+        int  pos;
+        
+        if( arg1_it && arg2_it )
         {
-            bytes = _fsSeek(_parni(1),_parnl(2),_parni(3));
+            pos = (arg3_it ? _parni(3) : FS_SET);      
+            bytes = _fsSeek(_parni(1),_parnl(2),pos);
             last_error = errno;
         }
 
