@@ -1,3 +1,17 @@
+2001-09-05 12:24 GMT+1 Antonio Linares <alinares@fivetech.com>
+
+   * harbour/source/rtl/persist.prg
+     TPersistent renamed as HBPersistent
+
+   * harbour/contrib/hgf/win32/tform.prg
+     TPersistent changed for HBPersistent
+
+   * harbour/contrib/hgf/win32/tmenu.prg
+     TPersistent changed for HBPersistent
+
+   * harbour/contrib/hgf/win32/menuitem.prg
+     TPersistent changed for HBPersistent
+
 2001-09-05 11:53 GMT+1 Antonio Linares <alinares@fivetech.com>
 
  * harbour/source/rtl/persist.prg
