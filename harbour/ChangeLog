@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-19 09:10 UTC+0500 April White <awhite@mail.rosecom.ca>
+  ! contrib/btree/hb_BTree.c
+    * struct hb_btree pStrCompare function pointer changed to use the size_t
+      type for the third param, to coincide with ChangeLog 2002-07-14 14:14 UTC+0500
+
 2002-07-19 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gtwin/gtwin.c
   	! Don't test for dead keys when dealing with international characters
