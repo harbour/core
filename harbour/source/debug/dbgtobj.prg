@@ -88,14 +88,16 @@ local oBrwSets,nSize:=Len(AArray)
 Local owndsets
    local nWidth
    local oCol
+   local nMaxElem
+
    if (nsize<maxrow()-2)
       if nRow <> nil
-         owndsets:=TDbWindow():New( nRow, 11, if(nRow+nsize+1<maxrow()-2,nRow+nsize+1,maxrow()-2), maxcol()-5, ::objname +" is of class:" +::TheObj:classname() ,"N/W" )
+         owndsets:=TDbWindow():New( nRow, 5, if(nRow+nsize+1<maxrow()-2,nRow+nsize+1,maxrow()-2), maxcol()-5, ::objname +" is of class:" +::TheObj:classname() ,"N/W" )
       else
-         owndsets:=TDbWindow():New( 1, 11, 1+nsize, maxcol()-5, ::objname +" is of class:" +::TheObj:classname()  ,"N/W")
+         owndsets:=TDbWindow():New( 1, 5, 1+nsize, maxcol()-5, ::objname +" is of class:" +::TheObj:classname()  ,"N/W")
       endif
    else
-      owndsets:=TDbWindow():New( 1, 11, maxrow()-2, maxcol()-5, ::objname +" is of class:" +::TheObj:classname() ,"N/W")
+      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::objname +" is of class:" +::TheObj:classname() ,"N/W")
    endif
                   ::nCurWindow++
    oWndSets:lFocused:=.t.
@@ -113,13 +115,14 @@ Local owndsets
                           ::arrayindex := iif( nSkip > 0, Min( ::arrayindex+nSkip, Len(::arrayreference)),;
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
    oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::ArrayReference[::arrayindex,1]} ))
-//   ocol:width:=maxelem(::AllNames)
+   nMaxElem = maxelem(::AllNames)
+   ocol:width := nMaxElem
    ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
    oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || PadR( ValToStr( ::ArrayReference[ ::arrayindex ,2] ), nWidth  - 12 ) } ) )
    oBrwSets:Cargo := 1 // Actual highligthed row
    ocol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
-//   ocol:width:=15
+   ocol:width:= MaxCol() - 14 - nMaxElem
    oBrwsets:colpos:=2
    ::aWindows[::nCurWindow]:bPainted    := { || oBrwSets:ForceStable() }
    ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
@@ -168,6 +171,14 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
               oBrwSets:GoBottom()
               oBrwSets:ForceStable()
            endif
+
+      case nKey == K_PGUP
+           oBrwSets:PageUp()
+           oBrwSets:ForceStable()
+
+      case nKey == K_PGDN
+           oBrwSets:PageDown()
+           oBrwSets:ForceStable()
 
       Case nKey ==13
             if nSet==oBrwSets:Cargo
@@ -278,11 +289,8 @@ static FUNC maxelem( a )
    LOCAL nSize   := LEN( a )
    LOCAL max     := 0
    LOCAL tam     := 0
-   LOCAL nMax2   := 0
-   LOCAL nPos    := 1
-   LOCAL cString
-
    LOCAL nCount
+
    FOR nCount := 1 TO nSize
       tam := LEN( a[ nCount ] )
       max := IF( tam > max, tam, max )
