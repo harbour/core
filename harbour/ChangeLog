@@ -1,3 +1,7 @@
+2000-08-27 20:10 UTC+0500 April White <awhite@user.rose.com>
+   * source/rtl/setkey.c
+     * bug in setkey() - was not adding hotkey to internal list
+
 2000-08-22 21:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
      * Corrected Reset at <EOF>

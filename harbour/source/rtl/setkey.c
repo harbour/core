@@ -191,18 +191,18 @@ HB_FUNC( SETKEY )
                hb_itemReturn( sk_list_tmp->pAction );
          }
       }
-   }
-   else
-   {
-      /* Set a SETKEY value */
+      else
+      {
+         /* Set a SETKEY value */
 
-      sk_add( TRUE, hb_itemGetNI( pKeyCode ),
-         hb_param( 2, HB_IT_BLOCK ),
+         sk_add( TRUE, hb_itemGetNI( pKeyCode ),
+            hb_param( 2, HB_IT_BLOCK ),
 #if defined( HB_EXTENSION )
-         hb_param( 3, HB_IT_BLOCK ) );
+            hb_param( 3, HB_IT_BLOCK ) );
 #else
-         NULL );
+            NULL );
 #endif
+      }
    }
 }
 
