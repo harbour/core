@@ -8,7 +8,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :BUILD
 
-   make -fmakefile.bc %1 %2 %3 > make_b32.log
+   make -i -fmakefile.bc %1 %2 %3 > make_b32.log
    if errorlevel 1 goto BUILD_ERR
 
 :BUILD_OK
