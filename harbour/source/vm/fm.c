@@ -113,6 +113,7 @@ static PHB_MEMINFO s_pLastBlock = NULL;
 
 void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
 {
+
 #ifdef HB_FM_STATISTICS
 
    void * pMem;
@@ -121,6 +122,9 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
     * function name/line number of code which called hb_xalloc/hb_xgrab
     */
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
+
+   if( ulSize == 0 )
+      hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
    pMem = malloc( ulSize + sizeof( HB_MEMINFO ) + sizeof( ULONG ) );
 
@@ -185,6 +189,9 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xalloc(%lu)", ulSize));
 
+   if( ulSize == 0 )
+      hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
+
    return malloc( ulSize );
 
 #endif
@@ -199,10 +206,10 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
     */
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
-#ifdef HB_FM_STATISTICS
-
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
+
+#ifdef HB_FM_STATISTICS
 
    pMem = malloc( ulSize + sizeof( HB_MEMINFO ) + sizeof( ULONG ) );
 
@@ -334,6 +341,9 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 
    if( ! pMem )
       hb_errInternal( HB_EI_XREALLOCNULL, NULL, NULL, NULL );
+
+   if( ulSize == 0 )
+      hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
 
    pMem = realloc( pMem, ulSize );
 
