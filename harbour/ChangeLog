@@ -1,6 +1,7 @@
 19990621-01:30 CET Victor Szel <info@szelvesz.hu>
   * whatsnew.txt moved to doc/ directory.
   * doc/hrb.faq renamed to hrb_faq.txt
+  + tests/broken/vec1.prg readded.
 
 19990621-00:57 CET Victor Szel <info@szelvesz.hu>
   * include/*.h
@@ -13,7 +14,7 @@
   ! include/extend.api - _param removed since it's
     not standard Clipper.
   ! include/item.api - Fixed obsolete references
-    to Array*() functions since changed to hb_array*()
+    to Array*() functions changed since to hb_array*()
   ! source/rtl/console/hb_setpos() - Fixed one warning.
 
 19990621-00:37 Ryszard Glab <rglab@imid.med.pl>
