@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-11 16:01 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/rdd_sys/ads1.c
+     * NTX compatibility fix in adsOrderListFocus() to keep current order if
+       selected one fails
+
 2004-03-10 10:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfcdx/dbfcdx1.c
     ! Initialization code fixed.
@@ -22,7 +27,6 @@
   * source/rdd/dbfcdx/dbfcdx1.c
     * more synchronization with xHarbour's RDD.
  
-
 2004-03-09 10:15 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * hrbdll.bc
      * Added reference to missing hbrandom.c. Can a MSVC user sync hrbdll.vc?
