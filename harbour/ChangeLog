@@ -1,3 +1,8 @@
+19991007-11:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     * removed symbols.obj from compiler - I thought it needed it, but not so.
+     * shortened filelist for Harbour.exe to $**
+
 19991007-17:00 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

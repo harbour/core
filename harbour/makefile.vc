@@ -219,8 +219,7 @@ DEBUG_LIB_OBJS = \
 # Our default target
 #
 
-all: $(OBJ_DIR)\symbols.obj \
-     $(HARBOUR_EXE) \
+all: $(HARBOUR_EXE) \
      $(HARBOUR_LIB) \
      $(TOOLS_LIB) \
      $(TERMINAL_LIB) \
@@ -231,13 +230,10 @@ all: $(OBJ_DIR)\symbols.obj \
      $(RUNNER_LIB) \
      $(RUNNER_EXE)
 
-$(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
-    masm $** $@ obj\symbols.lst obj\symbols.crf
-
 $(PP_EXE) : \
     $(PP_DIR)\stdalone\hbpp.c
     @if exist obj\hbpp.obj del obj\hbpp.obj
-    $(CC) -TP $(CFLAGS) $(PP_DIR)\stdalone\hbpp.c -o $(BIN_DIR)\hbpp /link $(PP_LIB) 
+    $(CC) -TP $(CFLAGS) $** -o $(BIN_DIR)\hbpp /link $(PP_LIB)
     -del hbpp.obj
 
 $(RUNNER_EXE) : \
@@ -250,6 +246,7 @@ $(RUNNER_EXE) : \
     -del hbrun.obj
 
 $(HARBOUR_EXE) : \
+    $(COMPILER_DIR)\harbour.c \
     $(COMPILER_DIR)\harboury.c \
     $(COMPILER_DIR)\harbourl.c \
     $(COMPILER_DIR)\genobj32.c \
@@ -259,18 +256,13 @@ $(HARBOUR_EXE) : \
     $(COMPILER_DIR)\genjava.c \
     $(COMPILER_DIR)\genpas.c \
     $(COMPILER_DIR)\expropt.c \
-    $(COMPILER_DIR)\harbour.c \
     $(PP_DIR)\hbpp.c \
     $(PP_DIR)\hbppint.c \
     $(PP_DIR)\table.c
-    $(CC) $(CFLAGS) -DHARBOUR_OBJ_GENERATION $(COMPILER_DIR)\harboury.c $(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.c $(COMPILER_DIR)\genobj32.c $(COMPILER_DIR)\genc.c $(COMPILER_DIR)\genhrb.c $(COMPILER_DIR)\genrc.c $(COMPILER_DIR)\genjava.c $(COMPILER_DIR)\genpas.c $(COMPILER_DIR)\expropt.c $(PP_DIR)\hbppint.c $(PP_DIR)\hbpp.c $(PP_DIR)\table.c -o $(BIN_DIR)\harbour
-    @Echo :	Ignore Lnk4033 warning
+    $(CC) $(CFLAGS) -DHARBOUR_OBJ_GENERATION $** -o $(BIN_DIR)\harbour
+    -del harbour.obj
     -del harboury.obj
     -del harbourl.obj
-    -del harbour.obj
-    -del hbppint.obj
-    -del hbpp.obj
-    -del table.obj
     -del genobj32.obj
     -del genc.obj
     -del genhrb.obj
@@ -278,6 +270,9 @@ $(HARBOUR_EXE) : \
     -del genjava.obj
     -del genpas.obj
     -del expropt.obj
+    -del hbpp.obj
+    -del hbppint.obj
+    -del table.obj
 
 #
 # Library dependencies and build rules
@@ -560,6 +555,9 @@ $(OBJ_DIR)\setkey.obj : $(RTL_DIR)\setkey.c
 
 $(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\symbols.obj : $(VM_DIR)\symbols.asm
+    masm $** $@ obj\symbols.lst obj\symbols.crf
 
 $(RTL_DIR)\tbcolumn.c : $(RTL_DIR)\tbcolumn.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
