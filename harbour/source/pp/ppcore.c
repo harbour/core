@@ -995,9 +995,18 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ParseExpression(%s, %s)", sLine, sOutLine));
 
+  #if 0
+     printf( "Line: >%s<\n", sLine );
+  #endif
+
   do
   {
      strotrim( sLine, FALSE );
+
+     #if 0
+        printf( "Trimed: >%s<\n", sLine );
+     #endif
+
      rezDef = 0; rezTra = 0; rezCom = 0;
      isdvig = 0;
 
@@ -1035,6 +1044,10 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
         {   /* Look for macros from #define      */
            while( ( lenToken = NextName( &ptri, sToken ) ) > 0 )
            {
+              #if 0
+                 printf( "Token: >%s< Line: >%s<\n", sToken, sLine );
+              #endif
+
               if( (stdef=DefSearch(sToken,NULL)) != NULL )
               {
                  ptrb = ptri - lenToken;
@@ -1064,8 +1077,10 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
            }
 
            #if 0
-               printf( "Line: >%s<\n", ptri );
-               printf( "Out: >%s<\n", ptro );
+               if( *sOutLine )
+                  printf( "*After #defines: >%s<\n", sOutLine );
+               else
+                  printf( "After #defines: >%s<\n", sLine );
            #endif
 
            /* Look for definitions from #translate    */
@@ -1111,6 +1126,13 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
               stcmd = stcmd->last;
            }
+
+           #if 0
+               if( *sOutLine )
+                  printf( "*After #translate: >%s<\n", sOutLine );
+               else
+                  printf( "After #translate: >%s<\n", sLine );
+           #endif
 
            /* Look for definitions from #command      */
            /* JFL ! Was 3 but insufficient in most cases */
@@ -1216,8 +1238,10 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
   while( rezDef || rezTra || rezCom );
 
   #if 0
-      printf( "*Line: >%s<\n", sLine );
-      printf( "*Out: >%s<\n", sOutLine );
+      if( *sOutLine )
+         printf( "Out: >%s<\n", sOutLine );
+      else
+         printf( "Out: >%s<\n", sLine );
   #endif
 
   return 0;
@@ -2742,12 +2766,6 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   int State = 0;
   char cha, cLast = '\0', symbLast = '\0';
 
-  #if 0
-  /* Ron Pinkas added 2000-06-04 */
-  BOOL bNewLine = TRUE;
-  /* Ron Pinkas end 2000-06-04 */
-  #endif
-
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
   if( *lenBuffer == 0 )
@@ -2879,38 +2897,12 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                 maxlen = readed = 0;
               }
               break;
-
-            #if 0
-            /* Ron Pinkas added 2000-06-01 */
-            case ';':
-              bNewLine = TRUE;
-              break;
-
-            case '@':
-              if( bNewLine && ( sBuffer[ *iBuffer ] == '&' || sBuffer[ *iBuffer ] == '.' || sBuffer[ *iBuffer ] == '-' ) )
-              {
-                buffer[readed++] = cha;
-                s_prevchar = cha;
-                cha = ' ';
-              }
-              break;
-            #endif
-            /* Ron Pinkas end 2000-06-01 */
           }
 
           if( cha != ' ' && cha != ';' )
           {
             s_prevchar = cha;
           }
-
-          #if 0
-          /* Ron Pinkas added 2000-06-04 */
-          if( cha != ' ' && cha != '\t' && cha != ';' )
-          {
-            bNewLine = FALSE;
-          }
-          /* Ron Pinkas end 2000-06-04 */
-          #endif
       }
 
       if( cha != ' ' && cha != '\t' )
@@ -3057,7 +3049,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
               lPos++;
               continue;
            }
-           else if( bRule == FALSE && *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
+           else if( bRule == FALSE && *(szText+lPos) == '[' && strchr( ")]}.", cLastChar ) == NULL && ! ISNAME( cLastChar ) )
            {
               State = STATE_QUOTE3;
               lPos++;
@@ -3282,10 +3274,18 @@ static int strincpy( char * ptro, char * ptri )
 
 static int strotrim( char * stroka, BOOL bRule )
 {
-  char *ptr = stroka, lastc = '0', curc, cLastChar = '\0';
+  char *ptr = stroka, lastc = '0', curc;
   int lens = 0, State = STATE_NORMAL;
 
+  /*
+  char *cLastChar = '\0';
+  */
+
   HB_TRACE(HB_TR_DEBUG, ("strotrim(%s)", stroka));
+
+  #if 0
+     printf( "StrIn: >%s<\n", stroka );
+  #endif
 
   while( ( curc = *stroka ) != '\0' )
   {
@@ -3339,16 +3339,22 @@ static int strotrim( char * stroka, BOOL bRule )
         lastc = curc;
         lens++;
 
+        /*
         if( State == STATE_NORMAL && curc != ' ' )
         {
            cLastChar = curc;
         }
+        */
      }
 
      stroka++;
   }
 
   *ptr = '\0';
+
+  #if 0
+     printf( "Str Out: >%s<\n", stroka - lens );
+  #endif
 
   return lens;
 }
@@ -3441,18 +3447,36 @@ static int NextName( char ** sSource, char * sDest )
            /* END - Ron Pinkas added 2000-11-08 */
         }
      }
+     /* Ron Pinkas added 2001-02-21 */
+     else if( (*sSource)[0] == '.' && toupper( (*sSource)[1] ) == 'A' && toupper( (*sSource)[2] ) == 'N' && toupper( (*sSource)[3] ) == 'D' && (*sSource)[4] == '.' )
+     {
+        (*sSource) += 5;
+        cLastChar = ' ';
+        continue;
+     }
+     else if( (*sSource)[0] == '.' && toupper( (*sSource)[1] ) == 'N' && toupper( (*sSource)[2] ) == 'O' && toupper( (*sSource)[3] ) == 'T' && (*sSource)[4] == '.' )
+     {
+        (*sSource) += 5;
+        cLastChar = ' ';
+        continue;
+     }
+     else if( (*sSource)[0] == '.' && toupper( (*sSource)[1] ) == 'O' && toupper( (*sSource)[2] ) == 'R' && (*sSource)[3] == '.' )
+     {
+        (*sSource) += 4;
+        cLastChar = ' ';
+        continue;
+     }
+     /* End - Ron Pinkas added 2001-02-21 */
      else if( **sSource == '\'' )
      {
         /* Ron Pinkas added 2000-11-08 */
         pString = *sSource;
-
         State = STATE_QUOTE1;
      }
      else if( **sSource == '\"' )
      {
         /* Ron Pinkas added 2000-11-08 */
         pString = *sSource;
-
         State = STATE_QUOTE2;
      }
      /* Ron Pinkas added 2000-11-08 */
@@ -3460,7 +3484,6 @@ static int NextName( char ** sSource, char * sDest )
      {
         /* Ron Pinkas added 2000-11-08 */
         pString = *sSource;
-
         State = STATE_QUOTE3;
      }
      /* END - Ron Pinkas added 2000-11-08 */
