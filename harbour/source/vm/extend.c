@@ -495,11 +495,25 @@ void  HB_EXPORT hb_reta( ULONG ulLen )  /* undocumented hb_reta() */
    hb_arrayNew( &hb_stack.Return, ulLen );
 }
 
-void HB_EXPORT  hb_retc( char * szText )
+void HB_EXPORT hb_retc( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc(%s)", szText));
 
    hb_itemPutC( &hb_stack.Return, szText );
+}
+
+void HB_EXPORT hb_retcbuffer( char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retcbuffer(%s, %lu)", szText, ulLen));
+
+   hb_itemPutCPtr( &hb_stack.Return, szText, ulLen );
+}
+
+void HB_EXPORT hb_retcconst( char * szText )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retcconst(%s)", szText));
+
+   hb_itemPutCConst( &hb_stack.Return, szText );
 }
 
 void  HB_EXPORT hb_retclen( char * szText, ULONG ulLen )
