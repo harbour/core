@@ -1,3 +1,16 @@
+2000-11-04 14:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+
+   * include/hbexpra.c
+   * source/pp/pptable.c
+     ! Excluded Ryszard changes using #if[n]def SIMPLEX from SimpLex version.
+       Ryszard code remains intact for Flex version (including 3 reported bugs).
+
+   * hb_slex.bc
+     + Added -DSIMPLEX when compiling source/pp/pptable.c, source/compiler/expropta.c, and source/macro/macroa.c
+       /* This allow conditional exclusion of Ryszard changes for SimpLex version. */
+
+     /* Todo - have to do same in GNU make */
+
 2000-11-04 11:17 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * makefile.bc
      Added missing dependancy of source/rtl/tgetint.prg

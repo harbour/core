@@ -705,7 +705,7 @@ $(OBJ_DIR)\pplib.obj : $(PP_DIR)\pplib.c
    tlib $(PP_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
+   $(CC) $(CLIBFLAGS) -DSIMPLEX -o$@ $**
    tlib $(PP_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\pragma.obj : $(PP_DIR)\pragma.c
@@ -791,7 +791,7 @@ $(OBJ_DIR)\genhrb.obj : $(COMPILER_DIR)\genhrb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\expropta.obj : $(COMPILER_DIR)\expropta.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
+   $(CC) $(CLIBFLAGS) -DSIMPLEX -o$@ $**
 
 $(OBJ_DIR)\exproptb.obj : $(COMPILER_DIR)\exproptb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1894,7 +1894,7 @@ $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
+   $(CC) $(CLIBFLAGS) -DSIMPLEX -o$@ $**
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\macrob.obj : $(MACRO_DIR)\macrob.c

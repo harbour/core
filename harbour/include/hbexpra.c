@@ -307,6 +307,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             HB_EXPR_PCODE1( hb_compExprDelete, pName );
          }
       }
+
+#ifndef SIMPLEX
+
       else if( ( strcmp( "_GET_", pName->value.asSymbol ) == 0 ) && iCount )
       {
          /* Reserved Clipper function used to handle GET variables
@@ -397,14 +400,18 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             pName->value.asSymbol = hb_compIdentifierNew( "__GET", TRUE );
             if( pArg->ExprType == HB_ET_VARIABLE )
             {
-               /* Change into a variable reference so a set/get codeblock 
+               /* Change into a variable reference so a set/get codeblock
                 * will assign a new value correctly
                 */
                pArg->ExprType = HB_ET_VARREF;
             }
 #endif
       }
+
+#endif
+
    }
+
    else if( pName->ExprType == HB_ET_MACRO )
    {
       /* Signal that macro compiler have to generate a pcode that will
