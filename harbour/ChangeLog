@@ -1,3 +1,10 @@
+2001-09-01 19:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * harbour/contrib/hgf/win32/tmenu.prg
+    METHOD FindItem( nId ) added
+
+  * harbour/contrib/hgf/win32/tmenuitm.prg
+    METHOD FindItem( nId ) added
+
 2001-09-01 09:00 GMT+1 Antonio Linares <alinares@fivetech.com>
   + harbour/contrib/hgf/win32/tests/form2.prg
     Harbour Class TForm inheritance sample
