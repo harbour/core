@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbfntx/dbfntx1.c
+    * WHILE, etc, conditions support implemented (DBFNTX )
+
+2002-01-17 14:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * contrib/Makefile
     + Added platform checks to determine which libraries to build.
 

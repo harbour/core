@@ -60,9 +60,9 @@
 
 #include "hbapi.h"
 
-/* NOTE: Warning, this function _may_ return NULL as a result if 
+/* NOTE: Warning, this function _may_ return NULL as a result if
          the environment variable reading fails form some reason.
-         If the return value is not NULL, the caller must free 
+         If the return value is not NULL, the caller must free
          the pointer. [vszakats] */
 
 char * hb_getenv( const char * szName )
@@ -84,7 +84,7 @@ char * hb_getenv( const char * szName )
 #elif defined(HB_OS_OS2)
 
    {
-      PCSZ EnvValue = "";
+      PSZ EnvValue = "";
 
       if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
       {
