@@ -1,3 +1,6 @@
+19991211-12:47 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * updated makefile.b32 for reserved.c file.
+
 19991211-09:17 GMT+1 Antonio Linares <alinares@fivetech.com>
    + new source/vm/maindll.c (entry point for Windows DLLs)
       * hb_vmInit() call uses a FALSE parameter.

@@ -40,7 +40,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
               memvarbl.obj menuto.obj mlcount.obj mtran.obj msgen.obj \
               natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj \
-              pcount.obj proc.obj pvalue.obj readvar.obj readkey.obj \
+              pcount.obj proc.obj pvalue.obj readvar.obj readkey.obj reserved.obj \
               samples.obj set.obj setta.obj setcolor.obj \
               setkey.obj setta.obj soundex.obj strfmt.obj \
               strings.obj stringp.obj stringsx.obj symbols.obj \
@@ -130,6 +130,7 @@ proc.obj     : proc.c     extend.h hbdefs.h
 pvalue.obj   : pvalue.c   extend.h hbdefs.h
 readkey.obj  : readkey.c  extend.h hbdefs.h
 readvar.obj  : readvar.c  extend.h hbdefs.h
+reserved.obj : reserved.c extend.h hbdefs.h
 samples.obj  : samples.c  extend.h hbdefs.h
 set.obj      : set.c      extend.h hbdefs.h
 setta.obj    : setta.c    extend.h hbdefs.h
