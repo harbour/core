@@ -541,16 +541,12 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\pvalue.obj \
    $(OBJ_DIR)\runner.obj \
    \
-   $(OBJ_DIR)\borinit.obj \
-   $(OBJ_DIR)\borsym.obj \
-   $(OBJ_DIR)\symbols.obj \
-   \
    $(OBJ_DIR)\harbinit.obj
 
-!if ! $d(BCC_NOSTARTUP)
-VM_LIB_OBJS = $(VM_LIB_OBJS) \
-   $(OBJ_DIR)\startup.obj
-!endif
+#!if ! $d(BCC_NOSTARTUP)
+#VM_LIB_OBJS = $(VM_LIB_OBJS) \
+#   $(OBJ_DIR)\startup.obj
+#!endif
 
 #
 # GTCGI.LIB rules

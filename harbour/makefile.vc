@@ -655,16 +655,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\pvalue.obj \
    $(OBJ_DIR)\runner.obj \
    \
-   \
-   \
-   $(OBJ_DIR)\symbols.obj \
-   \
    $(OBJ_DIR)\harbinit.obj
-
-
-
-
-
 
 #
 # GTCGI.LIB rules

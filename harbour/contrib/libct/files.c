@@ -54,7 +54,7 @@
 #define HB_OS_WIN_32_USED
 #include <hbapi.h>
 
-#if defined(HB_OS_DOS) 
+#if defined(HB_OS_DOS)
 static struct ffblk fsOldFiles;
 #endif
 #if defined(HB_OS_OS2) && defined(__GNUC__)
@@ -70,8 +70,8 @@ static struct ffblk fsOldFiles;
 
 #elif defined(HB_OS_DOS)
 
-   #if defined(__DJGPP__) || defined(__RSX32__) 
-      #include <sys/param.h>  
+   #if defined(__DJGPP__) || defined(__RSX32__)
+      #include <sys/param.h>
    #endif
       #include "hb_io.h"
       #include "dos.h"
@@ -94,7 +94,9 @@ static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
 LPTSTR GetDate(FILETIME *rTime);
 LPTSTR GetTime(FILETIME *rTime);
-#include <dir.h>
+#if !defined(_MSC_VER)
+   #include <dir.h>
+#endif
 #endif
 
 #if !defined(FA_ARCH)

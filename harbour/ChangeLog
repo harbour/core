@@ -1,3 +1,20 @@
+2001-12-08 06:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
+   * makefile.bc
+     - removed borinit.obj dependency
+     - removed symbols.obj dependency
+     - removed borsym.obj dependency
+     - remed startup.obj
+     Notes: Have made quite a number of tests and it seems that these
+            modules are not needed.
+
+   * makefile.vc
+     - removed symbols.obj dependency
+     Notes: Have made quite a number of tests and it seems that this
+            module is not needed.
+
+   * contrib/libct/files.c
+     ! dir.h not used when _MSC_VER ( MsVC has no dir.h )
+
 2001-12-08 16:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/rtl/checkbox.prg
     * fixed an smallbug on isdefcolor() function
