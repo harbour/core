@@ -1,3 +1,7 @@
+2000-09-20 10:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/ppcore.c
+     * fixed bug, reported by J. Lefebvre
+
 2000-09-19 10:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Corrected JFL previous change, which commented a fix that solved problem with code like "@&Row,...".

@@ -1608,7 +1608,9 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
   else if( *(exppatt+2) == '1' )  /*  ---- list match marker  */
     {
       if( !lenreal ) lenreal = getExpReal( expreal, ptri, TRUE, maxlenreal, FALSE );
-      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+      if( lenreal )
+         SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+      else return 0;
     }
   else                             /*  ---- regular match marker  */
     {
@@ -1618,7 +1620,9 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
       /*
       printf("Len: %i Pat: %s Exp: %s\n", lenreal, exppatt, expreal );
       */
-      SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+      if( lenreal )
+         SearnRep( exppatt,expreal,lenreal,ptro,lenres);
+      else return 0;
     }
   return 1;
 }
