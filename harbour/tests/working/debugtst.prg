@@ -269,6 +269,49 @@ return nil
 //
 // Generic object import and export function
 //
+// <xArg> is present.
+//
+// Maximum number of arguments passed is limited to 10 !
+//
+// An argument can be one of the following :
+//
+// { <cSymbol>, <xValue> }              Set DATA <cSymbol> to <xValue>
+// { { <cSym1>, <xVal1> }, { <cSym2>, <xVal2> }, ... }
+//                                      Set a whole list symbols to value
+//                                      Normal way of set objects from external
+//                                      sources, like memo files.
+// <oObject>                            Set self according to the DATA
+//                                      contained in <oObject>
+//                                      Can be used to transfer info from
+//                                      one class to another
+//
+// If <xArg> is not present, the current object will be returned as an array
+// for description see aoSet / aoGet.
+//
+// The method aExcept() is called to determine the DATA which should not
+// be returned. Eg. hWnd ( do not copy this DATA from external source )
+//
+// Say we want to copy oSource into oTarget we say :
+//
+// oTarget:Transfer( oSource )
+//
+// If we do not want 'cName' duplicated we have to use aoGet :
+//
+// aNewExcept := aAdd( oSource:aExcept(), "cName" )
+//                              /* Add cName to exception list               */
+// oTarget:Transfer( aoGet( oSource, aNewExcept ) )
+//                              /* Get DATA from oSource with new exceptions */
+//                              /* Transfer DATA to oTarget                  */
+//
+// Copy oSource to a memo field :
+//
+// DbObject->Memo := oSource:Transfer()
+//
+// (Re)create oTarget from the memo field :
+//
+// oTarget := TTarget():New()
+// oTarget:Transfer( DbObject->Memo )
+//
 static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
 
    local self   := QSelf()
@@ -285,11 +328,13 @@ static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
 
          xData := aParam[ n ]
          if ValType( xData ) == "A"
+
             if ValType( xData[1] ) == "A"       // 2D array passed
                xRet := aOSet( self, xData )
             else                                // 1D array passed
                xRet := aOSet( self, {xData} )
             endif
+
          elseif ValType( xData ) == "O"         // Object passed
             xRet := ::Transfer( xData:Transfer() )
          elseif ValType( xData ) != "U"
@@ -310,15 +355,26 @@ return nil
 //
 // Return an array containing the names of all the data items of oObject.
 //
-function aOData( oObject )
+function aOData( oObject, lDataMethod )
 
    local aInfo  := aSort( oObject:ClassSel() )
    local aData  := {}
    local n      := 1
    local nLen   := Len( aInfo )
+   local lFoundDM                               // Found DATA ?
 
+   lDataMethod  := Default( lDataMethod, .T. )
    do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
-      if !Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+
+/* If in range and no set function found yet ( set functions begin with a   */
+/* leading underscore ).                                                    */
+
+      lFoundDM := !Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
+
+/* Find position of matching set function in array with all symbols         */
+
+      if lFoundDM /* == lDataMethod */          // If found -> DATA
+                                                //     else    METHOD
          aAdd( aData, aInfo[ n ] )
       endif
       n++
@@ -334,20 +390,20 @@ return aData
 //
 function aOMethod( oObject )
 
-   local aInfo   := aSort( oObject:ClassSel() )
-   local aMethod := {}
-   local n       := 1
-   local nLen    := Len( aInfo )
+// should become return aOData( oObject, .F. )
+   local aInfo  := aSort( oObject:ClassSel() )
+   local aData  := {}
+   local n      := 1
+   local nLen   := Len( aInfo )
 
    do while n <= nLen .and. Substr( aInfo[ n ], 1, 1 ) != "_"
       if Empty( aScan( aInfo, "_" + aInfo[ n ], n + 1 ) )
-         aAdd( aMethod, aInfo[ n ] )
+         aAdd( aData, aInfo[ n ] )
       endif
       n++
    enddo
 
-return aMethod
-
+return aData
 
 //
 // <aData> aOGet( <oObject>, [<aExcept>] )
@@ -385,9 +441,16 @@ return aData
 //
 function aOSet( oObject, aData )
 
-   aEval( aData, ;
-        {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
+   local n
+   local nLen := Len( aData )
 
+//   aEval( aData, ;                            // Still losing 2 block
+//        {|aItem| oSend( oObject, "_"+aItem[DATA_SYMBOL], aItem[DATA_VAL] ) } )
+
+   for n := 1 to nLen
+      oSend( oObject, "_" + aData[n][DATA_SYMBOL], aData[n][DATA_VAL] )
+                                                // Send the message
+   next n
 return oObject
 
 

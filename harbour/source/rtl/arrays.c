@@ -479,7 +479,6 @@ HARBOUR AEVAL( void )
    {
 	  ArrayEval( pArray, bBlock, _parnl( 3 ), _parnl( 4 ) );
 	  ItemCopy( &stack.Return, pArray ); /* AEval() returns the array itself */
-      ItemRelease( pArray );             /* Release array holders once       */
    }
    else
 	  _ret();
