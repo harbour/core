@@ -142,6 +142,7 @@ typedef struct _TAGINFO
    PHB_ITEM   pForItem;
    PHB_ITEM   topScope;
    PHB_ITEM   bottomScope;
+   BOOL       fTagName;
    BOOL       AscendKey;
    BOOL       UniqueKey;
    BOOL       Custom;
@@ -207,6 +208,7 @@ typedef struct _NTXHEADER    /* Header of NTX file */
    char     descend;
    char     unknown2;
    char     for_expr[ NTX_MAX_KEY ];
+   char     tag_name[ 12 ];
    char     custom;
 } NTXHEADER;
 
