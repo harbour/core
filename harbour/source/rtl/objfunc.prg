@@ -7,7 +7,7 @@
  *
  * Contains additional object oriented functions
  *
- * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ * Copyright (C) 1999 Eddie Runia <eddie@runia.com>
  * Part of the Harbour Project www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -32,9 +32,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
- * Partial Copyright Antonio Linares (alinares@fivetech.com)
- *    partial copyright regarding function : __objGetMsgList
  */
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+
+   The following functions are Copyright 1999 Antonio Linares <alinares@fivetech.com>:
+      __objGetMsgList
+
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
 
 #include "hboo.ch"
 #include "error.ch"

@@ -4,6 +4,7 @@
 
 /* Harbour Project source code
    http://www.Harbour-Project.org/
+
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
       hb_fsSetError()
       hb_fsSetDevMode()
@@ -16,15 +17,12 @@
       HB_DISKCHANGE()
       HB_DISKNAME()
       HB_DISKSPACE() (parts by Luiz Rafael Culik <Culik@sl.conex.net>)
-   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
-*/
 
-/* Harbour Project source code
-   http://www.Harbour-Project.org/
    The following functions are Copyright 1999 Jose Lalin <dezac@corevia.com>:
       hb_fsChDrv()
       hb_fsCurDrv()
       hb_fsIsDrv()
+
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 

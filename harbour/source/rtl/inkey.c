@@ -44,8 +44,10 @@
 
 /* Harbour Project source code
    http://www.Harbour-Project.org/
+
    The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
       HB___KEYPUT()
+
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
 

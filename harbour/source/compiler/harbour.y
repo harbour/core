@@ -4,37 +4,46 @@
  */
 
 /*
- * Harbour compiler (yacc rules and actions)
- * Build 29 summer 1999
- * Usage: bison -d -v harbour.y
- * You may find Bison at www.harbour.project.org
- *
- * Copyright(C) 1999 by Antonio Linares.
- *
- * The generated C output files structure by the function GenCCode()
- * is also under this copyright.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public
- * License along with this program; if not, write to:
- *
- * The Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * You can contact me at: alinares@fivetech.com
- *
- * Partial Copyright (C) 1999 Eddie Runia <eddie@runia.com>
- *   partial copyright regarding generation portable objects
- */
+   Harbour Project source code
+
+   YACC Rules and Actions
+
+   Copyright 1999  Antonio Linares <alinares@fivetech.com>
+   www - http://www.harbour-project.org
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version, with one exception:
+
+   The exception is that if you link the Harbour Runtime Library (HRL)
+   and/or the Harbour Virtual Machine (HVM) with other files to produce
+   an executable, this does not by itself cause the resulting executable
+   to be covered by the GNU General Public License. Your use of that
+   executable is in no way restricted on account of linking the HRL
+   and/or HVM code into it.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+   their web site at http://www.gnu.org/).
+*/
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+
+   The following functions are Copyright 1999 Eddie Runia <eddie@runia.com>:
+      Generation portable objects
+
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
+/* Compile using: bison -d -v harbour.y */
 
 #include <stdio.h>
 #include <stdlib.h>

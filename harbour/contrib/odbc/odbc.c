@@ -1,11 +1,13 @@
 /*
  * $Id$
- *
+ */
+
+/*
    Harbour Project source code
 
    This file contains source for first odbc routines.
 
-   Copyright (C) 1999 Antonio Linares
+   Copyright 1999  Antonio Linares <alinares@fivetech.com>
    www - http://www.harbour-project.org
 
    This program is free software; you can redistribute it and/or modify
@@ -29,7 +31,6 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
-
 */
 
 #include <windows.h>

@@ -1,3 +1,48 @@
+19990911-11:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * contrib/odbc/odbc.c
+    include/classes.ch
+    include/compiler.h
+    include/ctoharb.h
+    include/errorapi.h
+    include/extend.h
+    include/init.h
+    include/itemapi.h
+    include/pcode.h
+    source/compiler/genobj32.c
+    source/compiler/harbour.l
+    source/compiler/harbour.y
+    source/compiler/symbols.asm
+    source/debug/debugger.prg
+    source/rtl/arrays.c
+    source/rtl/classes.c
+    source/rtl/console.c
+    source/rtl/copyfile.c
+    source/rtl/dates.c
+    source/rtl/descend.c
+    source/rtl/errorapi.c
+    source/rtl/errorsys.prg
+    source/rtl/extend.c
+    source/rtl/filesys.c
+    source/rtl/fm.c
+    source/rtl/inkey.c
+    source/rtl/itemapi.c
+    source/rtl/math.c
+    source/rtl/msgxxx.c
+    source/rtl/objfunc.prg
+    source/rtl/setkey.prg
+    source/rtl/strings.c
+    source/rtl/tbcolumn.prg
+    source/rtl/tbrowse.prg
+    source/rtl/tclass.prg
+    source/rtl/terror.prg
+    source/rtl/tget.prg
+    source/rtl/tgetlist.prg
+    source/vm/dynsym.c
+    source/vm/hvm.c
+    * Partial copyright headers formatted, joined where possible, etc.
+    * Copyright header changed to the standard doc/hdr_tpl.txt for 
+      Antonio Linares.
+
 19990911-01:42 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/compiler/harbour.y
     sz_Compare4() Change the length of the first compare to
@@ -27,7 +72,7 @@
       set errorlevel and not generate output.
     + The program header is always (even with /q) printed now, right at startup.
     * "id" -> "prefix"
-    + /m /r /t /u @ command line switches added as todo, checks and 
+    + /m /r /t /u @ command line switches added as todo, checks and
       messages added to the source, commented out lines added to help screen.
   * tests/working/Makefile
     tests/working/statinit.prg
@@ -73,17 +118,17 @@
     ! Compiles even if the YYDEBUG constant is *not* defined, the compiler
       also hides the /y switch from the help screen.
     + Added command line switch /x. The init symbol function name can be
-      set to an explicit value (using /xMyCoolLib) or to an automatically 
+      set to an explicit value (using /xMyCoolLib) or to an automatically
       generated one (using /x). By default no mangling takes place.
   * include/itemapi.h
     source/rtl/itemapi.c
-    + hb_itemPCount(), hb_itemParamPtr(), hb_itemReturnPtr() Item API calls 
-      added, to provide full functionality by the Item API. The longer term 
-      goal would be to make the Item API as the preferred, most complete and 
-      flexible API, and leave the Extend API as a secondary, bit slower, but 
+    + hb_itemPCount(), hb_itemParamPtr(), hb_itemReturnPtr() Item API calls
+      added, to provide full functionality by the Item API. The longer term
+      goal would be to make the Item API as the preferred, most complete and
+      flexible API, and leave the Extend API as a secondary, bit slower, but
       simpler and more compatible option. Also the Item API should make it
       unnecessary to directly access internals, so it should provide a full but
-      controlled access to all those. Only the VM itself should have access to 
+      controlled access to all those. Only the VM itself should have access to
       internals IMO.
   * include/compiler.h
     * Some formatting.
@@ -91,17 +136,17 @@
 19990910-16:00 GMT+2 Ryszard Glab <rglab@imim.med.pl>
 
     *source/vm/hvm.c
-	* string alias is now correctly handled
-	
+        * string alias is now correctly handled
+
     *include/rddapi.h
-	+ added declaration for hb_rddSelectAorkAreaAlias
-	
+        + added declaration for hb_rddSelectAorkAreaAlias
+
 19990910-11:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/working/rtl_test.prg
     + Enabled some alias tests which fail. (Ryszard, could you take a look
       at them ?)
   * source/vm/hvm.c
-    ! hb_vmSwapAlias() - Fixed mistyped variable name, pItem was accessed 
+    ! hb_vmSwapAlias() - Fixed mistyped variable name, pItem was accessed
       instead of pWorkarea. (Is this OK, Ryszard ?)
   * source/rtl/itemapi.c
     ! hb_itemStrCmp() - Fixed a bug, when the character were compared as a
@@ -135,7 +180,7 @@
         generates error when this limit is exceeded
 
     *include/compiler.h
-        * changed WORD to ULONG 
+        * changed WORD to ULONG
 
     *include/hberrors.h
         * new error ERR_JUMP_TOO_LONG
@@ -163,7 +208,7 @@
 
 19990910-01:10 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
-    % One memset() call replaced with a call to the Item API. It's a bit 
+    % One memset() call replaced with a call to the Item API. It's a bit
       slower, but this is only an error handling branch, which is not getting
       called in normal cases anyway.
   * source/rtl/itemapi.c
