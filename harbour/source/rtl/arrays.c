@@ -6,6 +6,35 @@
 #include <extend.h>
 #include <ctoharb.h>
 
+void ProcessSymbols( SYMBOL *, WORD );
+
+HARBOUR ACLONE();
+HARBOUR ACOPY();
+HARBOUR ADEL();
+HARBOUR AEVAL();
+HARBOUR AFILL();
+HARBOUR AINS();
+HARBOUR ARRAY();
+HARBOUR ASCAN();
+HARBOUR ASIZE();
+HARBOUR ASORT();
+HARBOUR ATAIL();
+
+static SYMBOL symbols[] = {
+{ "ACLONE",         FS_PUBLIC, ACLONE        , 0 },
+{ "ACOPY",          FS_PUBLIC, ACOPY         , 0 },
+{ "ADEL",           FS_PUBLIC, ADEL          , 0 },
+{ "AEVAL",          FS_PUBLIC, AEVAL         , 0 },
+{ "AFILL",          FS_PUBLIC, AFILL         , 0 },
+{ "AINS",           FS_PUBLIC, AINS          , 0 },
+{ "ARRAY",          FS_PUBLIC, ARRAY         , 0 },
+{ "ASCAN",          FS_PUBLIC, ASCAN         , 0 },
+{ "ASIZE",          FS_PUBLIC, ASIZE         , 0 },
+{ "ASORT",          FS_PUBLIC, ASORT         , 0 },
+{ "ATAIL",          FS_PUBLIC, ATAIL         , 0 },
+};
+
+
 PHB_ITEM hb_itemNew( PHB_ITEM );
 PHB_ITEM hb_itemArrayPut( PHB_ITEM , ULONG , PHB_ITEM );
 
@@ -14,6 +43,12 @@ extern SYMBOL symEval;
 
 static char *szBoundError    = "Bound error: Array access";
 static char *szArgumentError = "Argument error: incorrect type";
+
+
+void Arrays__InitSymbols( void )
+{
+   ProcessSymbols( symbols, sizeof(symbols)/sizeof( SYMBOL ) );
+}
 
 /*
  * Internal

@@ -1,3 +1,7 @@
+19990606-11:00 CET Eddie Runia
+  * source/rtl/arrays.c; source/vm/initsymb.c; tests/working/run_exp.h
+    Arrays converted to init symbols
+
 19990606-10:15 CET Jose Lalin (upload Eddie Runia)
   + source/rtl/hardcr.c; source/rtl/mtran.c
     new !

@@ -6,6 +6,7 @@
 #include "extend.h"
 #include "types.h"
 
+extern void Arrays__InitSymbols( void );
 extern void Classes__InitSymbols( void );
 extern void Descend__InitSymbols( void );
 extern void HardCR__InitSymbols( void );
@@ -128,6 +129,7 @@ void InitSymbolTable( void )
   /*
    * Place here your <modulename>__InitSymbols functions
    */
+  Arrays__InitSymbols();
   Classes__InitSymbols();
   Descend__InitSymbols();
   HardCR__InitSymbols();

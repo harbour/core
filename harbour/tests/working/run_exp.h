@@ -7,16 +7,6 @@
  * If the discussion has finished, it can be removed from here.
  *
  */
-HARBOUR ARRAY();
-HARBOUR ASIZE();
-HARBOUR ATAIL();
-HARBOUR AINS();
-HARBOUR ADEL();
-HARBOUR AFILL();
-HARBOUR ASCAN();
-HARBOUR AEVAL();
-HARBOUR ACOPY();
-HARBOUR ACLONE();
 HARBOUR __ACCEPT();
 HARBOUR OUTSTD();
 HARBOUR OUTERR();
@@ -51,6 +41,8 @@ HARBOUR BIN2W();
 HARBOUR I2BIN();
 HARBOUR L2BIN();
 HARBOUR W2BIN();
+HARBOUR EXP();
+HARBOUR LOG();
 HARBOUR MOD();
 HARBOUR DEFAULT();
 HARBOUR TOCHAR();
@@ -72,6 +64,7 @@ HARBOUR SPACE();
 HARBOUR STUFF();
 HARBOUR STRTRAN();
 HARBOUR DATETIME();
+HARBOUR DOW();
 HARBOUR __ASTATIC();
 HARBOUR __STATIC();
 HARBOUR __GLOBALSTACKLEN();
@@ -124,6 +117,7 @@ HARBOUR MAXROW();
 HARBOUR MAXCOL();
 HARBOUR SETPRC();
 HARBOUR SCROLL();
+HARBOUR VERSION();
 
 /* Same story.
 
@@ -133,16 +127,6 @@ HARBOUR SCROLL();
 
 static SYMBOL symbols[] = {
 { "HB_RUN",         FS_PUBLIC, HB_RUN        , 0 },
-{ "ARRAY",          FS_PUBLIC, ARRAY         , 0 },
-{ "ASIZE",          FS_PUBLIC, ASIZE         , 0 },
-{ "ATAIL",          FS_PUBLIC, ATAIL         , 0 },
-{ "AINS",           FS_PUBLIC, AINS          , 0 },
-{ "ADEL",           FS_PUBLIC, ADEL          , 0 },
-{ "AFILL",          FS_PUBLIC, AFILL         , 0 },
-{ "ASCAN",          FS_PUBLIC, ASCAN         , 0 },
-{ "AEVAL",          FS_PUBLIC, AEVAL         , 0 },
-{ "ACOPY",          FS_PUBLIC, ACOPY         , 0 },
-{ "ACLONE",         FS_PUBLIC, ACLONE        , 0 },
 { "__ACCEPT",       FS_PUBLIC, __ACCEPT      , 0 },
 { "OUTSTD",         FS_PUBLIC, OUTSTD        , 0 },
 { "OUTERR",         FS_PUBLIC, OUTERR        , 0 },
@@ -177,6 +161,8 @@ static SYMBOL symbols[] = {
 { "I2BIN",          FS_PUBLIC, I2BIN         , 0 },
 { "L2BIN",          FS_PUBLIC, L2BIN         , 0 },
 { "W2BIN",          FS_PUBLIC, W2BIN         , 0 },
+{ "EXP",            FS_PUBLIC, EXP           , 0 },
+{ "LOG",            FS_PUBLIC, LOG           , 0 },
 { "MOD",            FS_PUBLIC, MOD           , 0 },
 { "DEFAULT",        FS_PUBLIC, DEFAULT       , 0 },
 { "TOCHAR",         FS_PUBLIC, TOCHAR        , 0 },
@@ -198,6 +184,7 @@ static SYMBOL symbols[] = {
 { "STUFF",          FS_PUBLIC, STUFF         , 0 },
 { "STRTRAN",        FS_PUBLIC, STRTRAN       , 0 },
 { "DATETIME",       FS_PUBLIC, DATETIME      , 0 },
+{ "DOW",            FS_PUBLIC, DOW           , 0 },
 { "__ASTATIC",      FS_PUBLIC, __ASTATIC     , 0 },
 { "__STATIC",       FS_PUBLIC, __STATIC      , 0 },
 { "__GLOBALSTACKLEN", FS_PUBLIC, __GLOBALSTACKLEN, 0 },
@@ -249,7 +236,8 @@ static SYMBOL symbols[] = {
 { "MAXROW",         FS_PUBLIC, MAXROW        , 0 },
 { "MAXCOL",         FS_PUBLIC, MAXCOL        , 0 },
 { "SETPRC",         FS_PUBLIC, SETPRC        , 0 },
-{ "SCROLL",         FS_PUBLIC, SCROLL        , 0 }
+{ "SCROLL",         FS_PUBLIC, SCROLL        , 0 },
+{ "VERSION",        FS_PUBLIC, VERSION       , 0 }
 };
 
 
