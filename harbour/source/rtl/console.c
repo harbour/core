@@ -583,9 +583,10 @@ HARBOUR HB_SETPOSBS( void )
       USHORT uiCol;
 
       /* NOTE: Clipper does no checks about reaching the border or anything */
-
+#ifdef HARBOUR_USE_GTAPI
       hb_gtGetPos( &uiRow, &uiCol );
       hb_gtSetPos( uiRow, uiCol + 1 );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SETPOSBS" ); /* NOTE: Clipper catches this at compile time! */

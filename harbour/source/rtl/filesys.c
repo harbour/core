@@ -60,6 +60,8 @@
    #endif
    #if defined(__DJGPP__)
       #include <dir.h>
+      #define _getdrive getdisk
+      #define _chdrive  setdisk
    #endif
 
    #if !defined(HAVE_POSIX_IO)
