@@ -24,6 +24,7 @@
   #include <fcntl.h>
   #include <io.h>
   #include <errno.h>
+  #include <direct.h>
 
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO
@@ -251,7 +252,11 @@ void _fsCommit( int handle )
 int _fsMkDir( char * name )
 {
 #if defined(HAVE_POSIX_IO)
+  #ifndef __WATCOMC__
         return mkdir(name,S_IWUSR|S_IRUSR);
+  #else
+	return mkdir( name );
+  #endif
 #else
 	return 0;
 #endif
