@@ -60,7 +60,8 @@ char hb_gt_Row(void)
 static void hb_gt_GetCursorSize(char *start, char *end)
 {
    /* TODO: if your system supports the concept of cursor scan lines, 
-            fill this in */
+            fill this in - otherwise, you need some way to detect the
+            size of the current screen cursor. */
     *start = 0;
     *end = 0;
 }
