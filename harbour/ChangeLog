@@ -1,3 +1,10 @@
+19991111-12:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/vm/dymsym.c
+    % hb_dynsymGet(), hb_dynsymFindName() - Optimized and fixed the uppercase
+      conversion, now it's really faster a bit. (tested)
+  * include/hbsetup.h
+    * Symbol name length changed to 63 from 128.
+
 19991111-10:45 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/fm.c
     ! Two casts added to hb_xrealloc().

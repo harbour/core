@@ -33,6 +33,8 @@
  *
  */
 
+#include <ctype.h>
+
 #include "extend.h"
 
 #define SYM_ALLOCATED ( ( HB_SYMBOLSCOPE ) -1 )
@@ -135,8 +137,20 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGet(%s)", szName));
 
-   /* make a copy as we may get a const string, the turn it to uppercase */
-   pDynSym = hb_dynsymFind( hb_strncpyUpper( szUprName, szName, HB_SYMBOL_NAME_LEN ) );
+   /* make a copy as we may get a const string, then turn it to uppercase */
+   {
+      ULONG ulLen = strlen( szName );
+      char * pDest = szUprName;
+ 
+      if( ulLen > HB_SYMBOL_NAME_LEN )
+         ulLen = HB_SYMBOL_NAME_LEN;
+
+      pDest[ ulLen ] = '\0';
+      while( ulLen-- )
+         *pDest++ = toupper( *szName++ );
+   }
+
+   pDynSym = hb_dynsymFind( szUprName );
    if( ! pDynSym )       /* Does it exists ? */
       pDynSym = hb_dynsymNew( hb_symbolNew( szUprName ) );   /* Make new symbol */
 
@@ -150,8 +164,20 @@ PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFindName(%s)", szName));
 
-   /* make a copy as we may get a const string */
-   pDynSym = hb_dynsymFind( hb_strncpyUpper( szUprName, szName, HB_SYMBOL_NAME_LEN ) );
+   /* make a copy as we may get a const string, then turn it to uppercase */
+   {
+      ULONG ulLen = strlen( szName );
+      char * pDest = szUprName;
+ 
+      if( ulLen > HB_SYMBOL_NAME_LEN )
+         ulLen = HB_SYMBOL_NAME_LEN;
+
+      pDest[ ulLen ] = '\0';
+      while( ulLen-- )
+         *pDest++ = toupper( *szName++ );
+   }
+
+   pDynSym = hb_dynsymFind( szUprName );
 
    return pDynSym;
 }
@@ -280,4 +306,3 @@ HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __d
    else
       hb_retnl( 0L );
 }
-

@@ -161,11 +161,11 @@
  * You can set here the maximum symbol name length handled by Harbour 
  * compiler and runtime. You can override this setting in the make process.
  *
- * By default this value is 128
+ * By default this value is 63
 */
 
 #ifndef HB_SYMBOL_NAME_LEN
-   #define HB_SYMBOL_NAME_LEN   128
+   #define HB_SYMBOL_NAME_LEN   63
 #endif
 
 /* ***********************************************************************
