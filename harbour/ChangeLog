@@ -1,3 +1,7 @@
+19990912-17:11 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/memvars.c
+    * added a few casts
+
 19990912-20:45 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/memvars.c

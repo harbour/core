@@ -1561,7 +1561,7 @@ HARBOUR HB___MVSAVE( void )
                   PHB_ITEM pItem = &s_globalTable[ pDynVar->hMemvar ].item;
 
                   memset( buffer, 0, HB_MEM_REC_LEN );
-                  strcpy( buffer, pDynVar->pSymbol->szName );
+                  strcpy( (char *)buffer, pDynVar->pSymbol->szName );
 
                   if( IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
                   {
@@ -1573,7 +1573,7 @@ HARBOUR HB___MVSAVE( void )
                      buffer[ 17 ] = HIBYTE( uiLength );
 
                      hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-                     hb_fsWrite( fhnd, hb_itemGetCPtr( pItem ), uiLength );
+                     hb_fsWrite( fhnd, (BYTE *)hb_itemGetCPtr( pItem ), uiLength );
                   }
                   else if( IS_NUMERIC( pItem ) )
                   {
@@ -1690,7 +1690,7 @@ HARBOUR HB___MVRESTORE( void )
                   pbyString = ( BYTE * ) hb_xgrab( uiWidth );
 
                   if( hb_fsRead( fhnd, pbyString, uiWidth ) == uiWidth )
-                     pItem = hb_itemPutCL( NULL, pbyString, uiWidth - 1 );
+                     pItem = hb_itemPutCL( NULL, (char *)pbyString, uiWidth - 1 );
 
                   hb_xfree( pbyString );
 
