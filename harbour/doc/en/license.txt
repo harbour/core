@@ -87,8 +87,6 @@
  *      contrib\libmisc\dates2.c (Only the DateTime() function by Jon Berg)
  *      samples\pe\*
  *      source\rtl\philes.c
- *      source\rtl\gtapi.c
- *      source\rtl\setpos.c
  *      source\rtl\binnum.c
  *      source\lang\msgsr852.c
  *      source\lang\msgpl852.c

@@ -1,3 +1,13 @@
+2001-06-20 12:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source\rtl\gtapi.c
+  * source\rtl\setpos.c
+    * Updated from the old Harbour Exception to the new Harbour Exception
+      with permission from Bil Simser <bsimser@home.com>.
+
+  * source\rtl\gtwin\gtwin.c
+    + Added comment about Beep() parameters ignored on non-NT platforms.
+
 2001-06-20 09:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/debug/debugger.prg
      * added code to support PgDn, PgUp in a code window and a vars window
