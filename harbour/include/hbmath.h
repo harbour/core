@@ -87,7 +87,17 @@ extern int hb_getMathError (void);
 extern void hb_resetMathError (void);
 extern int hb_isMathHandler (void);
 
-typedef int (* HB_MATH_HANDLERPROC)(struct exception *err);
+typedef struct _HB_MATH_EXCEPTION
+{
+  int type;
+  char *name;
+  double arg1;
+  double arg2;
+  double retval;
+} HB_MATH_EXCEPTION;
+
+typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION *err);
+
 typedef struct HB_MATH_HANDLERCHAINELEMENT_
 {
   HB_MATH_HANDLERPROC                   handlerproc;

@@ -8,10 +8,10 @@
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  *
- * Functions for user defined math error handlers 
+ * Functions for user defined math error handlers
  * Copyright 2001 IntTec GmbH, Freiburg, Germany,
  *                Author: Martin Vogel <vogel@inttec.de>
- *   
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -92,7 +92,7 @@ static PHB_MATH_HANDLERCHAINELEMENT s_pChain = NULL; /* TODO: make this thread s
 /* install custom math handler */
 HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
 {
-  
+
   PHB_MATH_HANDLERCHAINELEMENT pChain, pNewChainelement;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_installMathHandler (%p)", handlerproc));
@@ -121,7 +121,7 @@ HB_MATH_HANDLERHANDLE hb_installMathHandler (HB_MATH_HANDLERPROC handlerproc)
 /* deinstall custom math handler */
 int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
 {
-  
+
   PHB_MATH_HANDLERCHAINELEMENT pChain;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_deinstallMathHandler (%p)", handle));
@@ -136,7 +136,7 @@ int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
     else
     {
       pChain = s_pChain;
-    
+
       while (pChain != NULL)
       {
         if (pChain->pnext == (PHB_MATH_HANDLERCHAINELEMENT)handle)
@@ -159,7 +159,7 @@ int hb_deinstallMathHandler (HB_MATH_HANDLERHANDLE handle)
 int hb_setMathHandlerStatus (HB_MATH_HANDLERHANDLE handle, int status)
 {
   int oldstatus = HB_MATH_HANDLER_STATUS_NOTFOUND;
-  
+
   HB_TRACE(HB_TR_DEBUG, ("hb_setMathHandlerStatus (%p, %i)", handle, status));
   if (handle != NULL)
   {
@@ -191,18 +191,30 @@ int matherr( struct exception * err )
 
    PHB_MATH_HANDLERCHAINELEMENT pChain = s_pChain;
    int retval = -1;
+   double dretval = 0.0;
+   HB_MATH_EXCEPTION exc;
 
    HB_TRACE(HB_TR_DEBUG, ("matherr(%p)", err));
-   
+
    /* call custom math handlers */
+   exc.type = err->type;
+   exc.name = err->name;
+   exc.arg1 = err->arg1;
+   exc.arg2 = err->arg2;
+   exc.retval = err->retval;
+
    while (pChain != NULL)
    {
      int ret;
      if (pChain->status == HB_MATH_HANDLER_STATUS_ACTIVE)
      {
-       ret = (*(pChain->handlerproc))(err);
-       /* store the maximum return value */
-       retval = (retval <= ret ? ret : retval);
+       ret = (*(pChain->handlerproc))(&exc);
+       /* store the math return value from the handler that returns the largest integer */
+       if (ret > retval)
+       {
+         dretval = exc.retval;
+         retval = ret;
+       }
      }
      pChain = pChain->pnext;
    }
@@ -242,9 +254,10 @@ int matherr( struct exception * err )
    {
      /* default behaviour */
      err->retval = 0.0;
-     return 1;   /* don't print any message and don't set errno */
+     return (1);   /* don't print any message and don't set errno */
    }
-   
+
+   err->retval = dretval;
    return (retval);
 
 }

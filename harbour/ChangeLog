@@ -1,3 +1,18 @@
+2001-07-20 13:10 GMT+2 Martin Vopgel <vogel@inttec.de>
+  * source/rtl/math.c
+  * include/hbmath.h
+    ! Added typedefs for non-matherr-math libraries
+    ! Fixed bug concerning custom math handler return values
+
+  * contrib/libct/ctmath.c
+  * contrib/libct/ctmath.h
+    ! Changes analog to the changes in rtl/math.c
+    ! minor bug fixes and cleanups
+
+  * contrib/libct/makefile.bc
+    ! typo fixed
+
+
 2001-07-20 13:35 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/memofile.c
     ! A bug fixed, which appeared while reading an empty file

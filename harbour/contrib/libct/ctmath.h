@@ -70,6 +70,10 @@ extern int ct_getmatherrstatus (void);
 extern void ct_setmatherrmode (int iMode);
 extern int ct_getmatherrmode (void);
 
+/* functions to bracket CT3 math code */
+void ct_matherrbegin (void);
+void ct_matherrend (void);
+
 /* stati and modes for math error correction */
 #define CT_MATHERR_STATUS_NOTFOUND   HB_MATH_HANDLER_STATUS_NOTFOUND  /* math handler is not installed */
 #define CT_MATHERR_STATUS_INACTIVE   HB_MATH_HANDLER_STATUS_INACTIVE  /* math handler is installed but inactive */
@@ -81,7 +85,7 @@ extern int ct_getmatherrmode (void);
 #define CT_MATHERR_MODE_USERDEFAULT 3   /* error will be thrown, but if user fails, default correction will be used */
 
 /* CT3 math error handler */
-extern int ct_matherr (struct exception * err);
+extern int ct_matherr (HB_MATH_EXCEPTION * pexc);
 
 /* set & get precision */
 extern void ct_setprecision (int iPrecision);

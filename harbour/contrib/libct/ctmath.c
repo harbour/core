@@ -58,43 +58,65 @@
 /* -------------- */
 /* initialization */
 /* -------------- */
-static HB_MATH_HANDLERHANDLE s_ctMathHandler;  /* TODO: make this thread safe */
+static HB_MATH_HANDLERHANDLE s_ctMathHandler = NULL;  /* TODO: make this thread safe */
 
 int ct_math_init (void)
 {
   HB_TRACE(HB_TR_DEBUG, ("ctmath_init()"));
-  s_ctMathHandler = hb_installMathHandler (ct_matherr);
-
-  /* CT3 math handler is inactive by default */
-  hb_setMathHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
-  return;
+  
+  if (hb_isMathHandler())
+  {
+    s_ctMathHandler = hb_installMathHandler (ct_matherr);
+    /* CT3 math handler is inactive by default */
+    hb_setMathHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
+    return (1);
+  }
+  return (0);
 }
 
 int ct_math_exit (void)
 {
   HB_TRACE(HB_TR_DEBUG, ("ctmath_exit()"));
-  hb_deinstallMathHandler (s_ctMathHandler);
-  return;
+  if (hb_isMathHandler())
+  {
+    hb_deinstallMathHandler (s_ctMathHandler);
+  }
+  return (1);
 }
 
+static int s_ct_matherr_status = CT_MATHERR_STATUS_INACTIVE;  /* TODO: make this thread safe */
 void ct_setmatherrstatus (int iStatus)
 {
   HB_TRACE(HB_TR_DEBUG, ("ct_setmatherrstatus (%i)", iStatus));
-  if (s_ctMathHandler != NULL)
-  {
-    hb_setMathHandlerStatus (s_ctMathHandler, iStatus);
-  }
+  s_ct_matherr_status = iStatus;
   return;
 }
 
 int ct_getmatherrstatus (void)
 {
   HB_TRACE(HB_TR_DEBUG, ("ct_getmatherrstatus()"));
-  if (s_ctMathHandler != NULL)
+  return (s_ct_matherr_status);
+}
+
+/* functions to "bracket" CT3 math code */
+void ct_matherrbegin (void)
+{
+  HB_TRACE(HB_TR_DEBUG, ("ct_matherrbegin()"));
+  if (hb_isMathHandler() && (s_ct_matherr_status == CT_MATHERR_STATUS_ACTIVE))
   {
-    return (hb_getMathHandlerStatus (s_ctMathHandler));
+    hb_setMathHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_ACTIVE);
   }
-  return (0);
+  return;
+}
+
+void ct_matherrend (void)
+{
+  HB_TRACE(HB_TR_DEBUG, ("ct_matherrend()"));
+  if (hb_isMathHandler())
+  {
+    hb_setMathHandlerStatus (s_ctMathHandler, CT_MATHERR_STATUS_INACTIVE);
+  }
+  return;
 }
 
 /* ------------------------- */
@@ -107,6 +129,7 @@ void ct_setmatherrmode (int iMode)
   s_ct_matherr_mode = iMode;
   return;
 }
+
 int ct_getmatherrmode (void)
 {
   HB_TRACE(HB_TR_DEBUG, ("ct_getmatherrmode()"));
@@ -144,7 +167,8 @@ int ct_getmatherrmode (void)
  *      CT_ERROR_MATHLIB_TLOSS      total loss of significance will result, such as exp (1000)
  *      CT_ERROR_MATHLIB_PLOSS      partial loss of significance will result, such as sin (10e70)
  *
- *      The CT3 library redirects these errors to its own math handler. 
+ *      The CT3 library redirects these errors within its math routines
+ *      to its own math handler. 
  *      The behaviour of this handler depends on the values of <nStatus>
  *      and <nMode>:
  *
@@ -266,20 +290,20 @@ HB_FUNC (SETMATHERR)
 /* -------------- */
 /*  math handler  */
 /* -------------- */
-int ct_matherr (struct exception * err)
+int ct_matherr (HB_MATH_EXCEPTION * pexc)
 {
 
   int retval = 0;
   int imatherr = ct_getmatherrmode();
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_matherr (%p)", err));
+  HB_TRACE(HB_TR_DEBUG, ("ct_matherr (%p)", pexc));
 
   if ((imatherr == CT_MATHERR_MODE_USER) || (imatherr == CT_MATHERR_MODE_USERDEFAULT))
   {
     PHB_ITEM pMatherrResult, pArg1, pArg2;
     ULONG ulSubCode;
 
-    switch (err->type)
+    switch (pexc->type)
     {
       case DOMAIN:
         /* a domain error has occured, such as sqrt( -1 ) */
@@ -304,15 +328,15 @@ int ct_matherr (struct exception * err)
         ulSubCode = CT_ERROR_MATHLIB; break;
     }
   
-    pArg1 = hb_itemPutND (NULL, err->arg1);
-    pArg2 = hb_itemPutND (NULL, err->arg2);
+    pArg1 = hb_itemPutND (NULL, pexc->arg1);
+    pArg2 = hb_itemPutND (NULL, pexc->arg2);
     pMatherrResult = ct_error_subst (ES_ERROR, EG_NUMERR, ulSubCode,
-                                     NULL, err->name, 0, EF_CANSUBSTITUTE,
+                                     NULL, pexc->name, 0, EF_CANSUBSTITUTE,
                                      2, pArg1, pArg2);
 
     if ((pMatherrResult != NULL) && (HB_IS_NUMERIC (pMatherrResult)))
     {
-      err->retval = hb_itemGetND (pMatherrResult);
+      pexc->retval = hb_itemGetND (pMatherrResult);
       retval = 1;
     }
 
@@ -325,53 +349,53 @@ int ct_matherr (struct exception * err)
       ((imatherr == CT_MATHERR_MODE_DEFAULT) || (imatherr == CT_MATHERR_MODE_USERDEFAULT)))
   {
     /* find some appropiate return values */
-    switch (err->type)
+    switch (pexc->type)
     {
       case DOMAIN:
         /* a domain error has occured, such as sqrt( -1 ) */
-        err->retval = 0.0;
+        pexc->retval = 0.0;
         retval = 1;
         break;
       case SING:
         /* a singularity will result, such as pow( 0, -2 ) */
-        if (err->arg1 < 0)  /* it is just a guess that the resulting singularity
-                               has the same sign as the first argument */
-          err->retval = -DBL_MAX;
+        if (pexc->arg1 < 0)  /* it is just a guess that the resulting singularity
+                                has the same sign as the first argument */
+          pexc->retval = -DBL_MAX;
         else
-          err->retval = DBL_MAX;
+          pexc->retval = DBL_MAX;
         retval = 1;
         break;
       case OVERFLOW:
         /* an overflow will result, such as pow( 10, 100 ) */
-        if (err->arg1 < 0)  /* it is just a guess that the resulting singularity
-                               has the same sign as the first argument */
-          err->retval = -DBL_MAX;
+        if (pexc->arg1 < 0)  /* it is just a guess that the resulting singularity
+                                has the same sign as the first argument */
+          pexc->retval = -DBL_MAX;
         else
-          err->retval = DBL_MAX;
+          pexc->retval = DBL_MAX;
         retval = 1;
         break;
       case UNDERFLOW:
         /* an underflow will result, such as pow( 10, -100 ) */
-        if (err->arg1 < 0)  /* it is just a guess that the resulting singularity
-                               has the same sign as the first argument */
-          err->retval = -DBL_MIN;
+        if (pexc->arg1 < 0)  /* it is just a guess that the resulting singularity
+                                has the same sign as the first argument */
+          pexc->retval = -DBL_MIN;
         else
-          err->retval = DBL_MIN;
+          pexc->retval = DBL_MIN;
         retval = 1;
         break;
       case TLOSS:
         /* total loss of significance will result, such as exp( 1000 ) */
-        err->retval = 1.0;
+        pexc->retval = 1.0;
         retval = 1;
         break;
       case PLOSS:
         /* partial loss of significance will result, such as sin( 10e70 ) */
-        err->retval = 1.0;
+        pexc->retval = 1.0;
         retval = 1;
         break;
       default:
         /* unknown math lib error */
-        err->retval = 0.0;
+        pexc->retval = 0.0;
         retval = 1;
         break;
     }

@@ -106,8 +106,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
-   $(OBJ_DIR)\ct.c \
-   $(OBJ_DIR)\ctmath.c \
+   $(OBJ_DIR)\ct.obj \
+   $(OBJ_DIR)\ctmath.obj \
    $(OBJ_DIR)\ctset.obj \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
