@@ -71,6 +71,7 @@ HB_FILE_VER( "$Id$" )
 
    #if defined(__DJGPP__) || defined(__RSX32__)
       #include <sys/param.h>
+      #include <errno.h>
    #endif
    #if defined(__DJGPP__) || defined(__RSX32__) || defined(__BORLANDC__)
       #include <sys/stat.h>
