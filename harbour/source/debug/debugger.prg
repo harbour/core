@@ -1396,7 +1396,7 @@ LOCAL nlevel, nPos
          //a procedure with debug info
          ::aProcStack[i-nDebugLevel+1] := ::aCallStack[ nPos ]
       ELSE
-         ::aProcStack[i-nDebugLevel+1] := { PROCNAME( i ), ,,,, nLevel }
+         ::aProcStack[i-nDebugLevel+1] := { PROCNAME( i )+"("+NTRIM(PROCLINE(i))+")", ,,,, nLevel }
       ENDIF
    NEXT
 
@@ -3152,7 +3152,6 @@ static function PathToArray( cList )
    local cSep
 
    cSep := HB_OsPathListSeparator()
-
    if ( cList <> NIL )
 
       do while ( nPos := at( cSep, cList ) ) <> 0

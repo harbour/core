@@ -215,22 +215,32 @@ static void hb_macroEvaluate( HB_MACRO_PTR pMacro )
 static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 {
    HB_ITEM_PTR pResult;
-
+   HB_ITEM_PTR pError = NULL;
+   
    HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError(%p)", pMacro));
 
    if( pMacro )
    {
       HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError.(%s)", pMacro->string));
 
-      hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
+      pError = pMacro->pError;
+      hb_macroDelete( pMacro );
    }
 
-   pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 0 );
-
-   if( pResult )
+   if( pError )
    {
-      hb_vmPush( pResult );
-      hb_itemRelease( pResult );
+      hb_errLaunch( pError );
+      hb_errRelease( pError );
+   }
+   else
+   {
+      pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 0 );
+
+      if( pResult )
+      {
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
    }
 }
 
@@ -759,6 +769,16 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
           */
+         if( pDynSym && ((pDynSym->pSymbol->pFunPtr == NULL) || (pDynSym->pSymbol->cScope & HB_FS_STATIC)) )
+         {
+            /* static functions are not allowed in macro */
+            HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOFUNC, 1001,
+                                    NULL, szString,
+                                    0, EF_NONE );
+            hb_errLaunch( pError );
+            hb_errRelease( pError );
+         }
+
          hb_vmPushSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
 
          if( bNewBuffer )
@@ -1112,7 +1132,6 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
 {
    HB_DYNS_PTR pSym;
 
-   HB_SYMBOL_UNUSED( bFunction );
    HB_SYMBOL_UNUSED( bAlias );
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
@@ -1131,7 +1150,23 @@ void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, BOOL bAlias, HB_
       }
    }
    else
-      pSym = hb_dynsymGet( szSymbolName );
+      pSym = hb_dynsymGet( szSymbolName );     
+
+   if( bFunction )
+   {
+      if( pSym && ((pSym->pSymbol->pFunPtr == NULL) || (pSym->pSymbol->cScope & HB_FS_STATIC)) )
+      {
+         /* static functions are not allowed in macro */
+         HB_MACRO_DATA->status |= HB_MACRO_UNKN_SYM;
+         HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* don't run this pcode */
+         if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE) )
+         {
+            HB_MACRO_DATA->pError = hb_errRT_New( ES_ERROR, NULL, EG_NOFUNC, 1001,
+                                    NULL, szSymbolName,
+                                    0, EF_NONE );
+         }
+      }
+   }
 
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
@@ -1390,12 +1425,12 @@ void hb_compGenPushFunCall( char * szFunName, HB_MACRO_DECL )
    {
       /* Abbreviated function name was used - change it for whole name
        */
-      hb_compGenPushSymbol( szFunction, FALSE, FALSE, HB_MACRO_PARAM );
+      hb_compGenPushSymbol( szFunction, TRUE, FALSE, HB_MACRO_PARAM );
    }
    else
    {
       HB_MACRO_DATA->status |= HB_MACRO_UDF; /* this is used in hb_macroGetType */
-      hb_compGenPushSymbol( szFunName, FALSE, FALSE, HB_MACRO_PARAM );
+      hb_compGenPushSymbol( szFunName, TRUE, FALSE, HB_MACRO_PARAM );
    }
 }
 

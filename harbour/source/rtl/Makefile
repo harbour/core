@@ -122,8 +122,8 @@ C_SOURCES=\
 PRG_SOURCES=\
     achoice.prg  \
     adir.prg     \
-    alert.prg    \
     altd.prg     \
+    alert.prg    \
     browdb.prg   \
     browdbx.prg  \
     browse.prg   \

@@ -90,7 +90,7 @@ static USHORT s_uiIdleTask = 0;
 static USHORT s_uiIdleMaxTask = 0;
 
 /* flag to indicate GarbageCollection should be done in idle state. */
-BOOL hb_vm_bCollectGarbage = TRUE;
+static BOOL hb_vm_bCollectGarbage = TRUE;
 
 void hb_releaseCPU( void )
 {
@@ -153,45 +153,35 @@ void hb_idleState( void )
    {
       s_bIamIdle = TRUE;
 
+      hb_releaseCPU();
+
       if( hb_vm_bCollectGarbage )
       {
-         hb_vm_bCollectGarbage = FALSE;
          hb_gcCollectAll();
-         s_bIamIdle = FALSE;
-         return;
+         hb_vm_bCollectGarbage = FALSE;
       }
 
       if( s_pIdleTasks && s_uiIdleTask < s_uiIdleMaxTask )
       {
          hb_vmEvalBlock( s_pIdleTasks[ s_uiIdleTask ] );
          ++s_uiIdleTask;
-         s_bIamIdle = FALSE;
-         return;
+         if( hb_set.HB_SET_IDLEREPEAT && s_uiIdleTask == s_uiIdleMaxTask )
+         {
+            s_uiIdleTask = 0;    /* restart processing of idle tasks */
+            hb_vm_bCollectGarbage = TRUE;
+         }
       }
-
-      if( hb_set.HB_SET_IDLEREPEAT && s_uiIdleTask == s_uiIdleMaxTask )
-      {
-         s_uiIdleTask = 0;
-         hb_vm_bCollectGarbage = TRUE;
-
-         hb_releaseCPU();
-         s_bIamIdle = FALSE;
-         return;
-      }
-
-      hb_releaseCPU();
-
       s_bIamIdle = FALSE;
    }
 }
 
 void hb_idleReset( void )
 {
-   if( s_uiIdleTask == s_uiIdleMaxTask )
+   if( (! hb_set.HB_SET_IDLEREPEAT) && s_uiIdleTask == s_uiIdleMaxTask )
    {
       s_uiIdleTask = 0;
-      hb_vm_bCollectGarbage = TRUE;
    }
+   hb_vm_bCollectGarbage = TRUE;
 }
 
 /* close all active background task on program exit */
@@ -205,6 +195,7 @@ void hb_idleShutDown( void )
       }
       while( s_uiIdleMaxTask );
       hb_xfree( s_pIdleTasks );
+      s_uiIdleTask = 0;
       s_pIdleTasks = NULL;
    }
 }
@@ -212,13 +203,8 @@ void hb_idleShutDown( void )
 /* signal that the user code is in idle state */
 HB_FUNC( HB_IDLESTATE )
 {
+   hb_vm_bCollectGarbage = TRUE;
    hb_idleState();
-
-   if( s_uiIdleTask == s_uiIdleMaxTask )
-   {
-      s_uiIdleTask = 0;
-      hb_vm_bCollectGarbage = TRUE;
-   }
 }
 
 /* add a new background task and return its handle */
@@ -267,6 +253,7 @@ HB_FUNC( HB_IDLEDEL )
          if( ulID == ( ULONG ) pItem->item.asBlock.value )
          {
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
+             hb_itemRelease( pItem );
 
              --s_uiIdleMaxTask;
              if( s_uiIdleMaxTask )
@@ -277,10 +264,13 @@ HB_FUNC( HB_IDLEDEL )
                            sizeof( HB_ITEM_PTR ) * ( s_uiIdleMaxTask - iTask ) );
                 }
                 s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM_PTR ) * s_uiIdleMaxTask );
+                if( s_uiIdleTask >= s_uiIdleMaxTask )
+                   s_uiIdleTask = 0;
              }
              else
              {
                 hb_xfree( s_pIdleTasks );
+                s_uiIdleTask = 0;
                 s_pIdleTasks = NULL;
              }
              bFound = TRUE;

@@ -8,6 +8,31 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-30 16:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbapi.h
+   * source/vm/macro.c
+      * added HB_ITEM_PTR pError member to HB_MACRO structure
+      * fixed bug in macro compiler - calls to static
+        functions are not allowed in macro compiler
+      
+   * source/common/expropt1.c
+   * source/common/hbffind.c
+      *fixed minor warnings reported by Randy Portnoff
+
+   * source/rtl/set.c
+      *SET(_SET_DEBUG) defaults to FALSE (Clipper compatible)
+
+   * source/rtl/idle.c
+      *small optimization of hb_idleState()
+      
+   * source/compiler/harbour.y
+      *the compiler generates line number for DO CASE
+      (if debug info requested - to allow breakpoint)
+      
+   * source/debug/debugger.prg
+      *the debugger shows the line number for modules where
+      no source code is available
+
 2004-03-29 15:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/pp/ppcore.c
     ! Added missing type conversions on calls to hb_xgrab

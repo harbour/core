@@ -592,7 +592,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             nDay = 
             nHour = 
             nMin = 
-            nSec = 
+            nSec = 0;
             raw_attr = 0;
          }
       }

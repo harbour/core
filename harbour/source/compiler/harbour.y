@@ -1446,7 +1446,7 @@ EndCase    : ENDCASE
                }
            ;
 
-DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; } Crlf
+DoCaseStart : DOCASE { ++hb_comp_wCaseCounter; hb_compLinePushIfDebugger();} Crlf
             ;
 
 DoCaseBegin : DoCaseStart            { }

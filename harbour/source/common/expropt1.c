@@ -430,14 +430,15 @@ HB_EXPR_PTR hb_compExprNewMacro( HB_EXPR_PTR pMacroExpr, unsigned char cMacroOp,
           * ? &var      // this is OK
           * ? &var.ext  // this is invalid
           */
-	  char *szDupl;
-	  BOOL bUseTextSubst;
+	      char *szDupl;
+	      BOOL bUseTextSubst;
 	  
-	  szDupl = hb_strupr( hb_strdup( szName ) );
-          if( ! hb_compExprIsValidMacro( szDupl, &bUseTextSubst, NULL ) )
-	    hb_compErrorMacro( szName );
-	  hb_xfree( szDupl );
-
+	      szDupl = hb_strupr( hb_strdup( szName ) );
+         if( ! hb_compExprIsValidMacro( szDupl, &bUseTextSubst, NULL ) )
+         {
+	         hb_compErrorMacro( szName );
+         }
+	      hb_xfree( szDupl );
       }
    }
    else
