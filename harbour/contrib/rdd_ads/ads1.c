@@ -535,7 +535,14 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8 *) &dTemp,
                   8, ADS_DOUBLEKEY, (UNSIGNED16*) &(pArea->fFound) );
       }
-      else
+      else if(hb_itemType( pKey ) & HB_IT_DATE )
+      {
+         char szData[9];
+         hb_itemGetDS(  pKey, (char *) szData );
+         AdsSeekLast( pArea->hOrdCurrent, szData,
+                    8, ADS_STRINGKEY,
+                    (UNSIGNED16*) &(pArea->fFound) );
+      }else
       {
          hb_itemGetNLen( pKey, &uiLen, &uiDec  );
          hb_ndtoa( hb_itemGetND( pKey ), ( char * ) szText, uiLen, uiDec );
@@ -556,6 +563,14 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          AdsSeek( pArea->hOrdCurrent, (UNSIGNED8 *) &dTemp,
                   8, ADS_DOUBLEKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
       }
+      else if(hb_itemType( pKey ) & HB_IT_DATE )
+      {
+         char szData[9];
+         hb_itemGetDS(  pKey, (char *) szData );
+         AdsSeek( pArea->hOrdCurrent, szData,
+                  8, ADS_STRINGKEY, usSeekType, (UNSIGNED16*) &(pArea->fFound) );
+      }
+
 /*
         UNSIGNED8   aucKey[ADS_MAX_KEY_LENGTH];
         UNSIGNED16  usLength;

@@ -7,6 +7,9 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rdd/dbf1.c
+    * Msvc compiler need tmp to be unsigned char * at line 1605/1607
+
 2002-05-07 22:25 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
   * contrib/rdd_ads/ads1.c
     ! fixed problem on Seeking Dates with RDDADS
