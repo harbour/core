@@ -902,6 +902,7 @@ int Reduce( int iToken )
 
    iLastToken = iToken;
 
+   /* No Rules for this token. */
    if( aRuleNodes[ iToken ].iMin == -1 )
    {
       DEBUG_INFO( printf( "Passing through: %i\n", iToken ) );
@@ -928,7 +929,6 @@ int Reduce( int iToken )
          {
             DEBUG_INFO( printf( "Partial Match - Get next Token after Token: %i\n", iToken ) );
 
-            /* Partial Match, try more...*/
             if( iHold )
             {
                 iHold--;
@@ -996,7 +996,7 @@ int Reduce( int iToken )
             }
             if( j < iMatched )
             {
-               DEBUG_INFO( printf( "Rejected Rule - Not an extension or previous - Giving up...\n" ) );
+               DEBUG_INFO( printf( "Rejected Rule - Not an extension of previous - Giving up...\n" ) );
             }
             else
             {
@@ -1426,19 +1426,19 @@ static void GenTrees( void )
    i = 0;
    while( i < 256 )
    {
-      acOmmit[i]            = 0;
-      acNewLine[i]          = 0;
-      acReturn[i]           = 0;
-      aPairNodes[i].iMin    = -1;
-      aPairNodes[i].iMax    = -1;
-      aSelfNodes[i].iMin    = -1;
-      aSelfNodes[i].iMax    = -1;
-      aKeyNodes[i].iMin     = -1;
-      aKeyNodes[i].iMax     = -1;
-      aWordNodes[i].iMin    = -1;
-      aWordNodes[i].iMax    = -1;
-      aRuleNodes[i].iMin    = -1;
-      aRuleNodes[i].iMax    = -1;
+      acOmmit[i]         = 0;
+      acNewLine[i]       = 0;
+      acReturn[i]        = 0;
+      aPairNodes[i].iMin = -1;
+      aPairNodes[i].iMax = -1;
+      aSelfNodes[i].iMin = -1;
+      aSelfNodes[i].iMax = -1;
+      aKeyNodes[i].iMin  = -1;
+      aKeyNodes[i].iMax  = -1;
+      aWordNodes[i].iMin = -1;
+      aWordNodes[i].iMax = -1;
+      aRuleNodes[i].iMin = -1;
+      aRuleNodes[i].iMax = -1;
       i++;
    }
 
