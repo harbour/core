@@ -1363,7 +1363,7 @@ PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
       /* Create a symbol for non-empty names only.
        * NOTE: an empty name is passed for a fake starting function when
        * '-n' switch is used
-      */
+       */
       pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
 
       pSym->szName = szSymbolName;
@@ -1373,18 +1373,18 @@ PCOMSYMBOL hb_compSymbolAdd( char * szSymbolName, USHORT * pwPos )
 
       if( ! hb_comp_symbols.iCount )
       {
- hb_comp_symbols.pFirst = pSym;
- hb_comp_symbols.pLast  = pSym;
+         hb_comp_symbols.pFirst = pSym;
+         hb_comp_symbols.pLast  = pSym;
       }
       else
       {
- ( ( PCOMSYMBOL ) hb_comp_symbols.pLast )->pNext = pSym;
- hb_comp_symbols.pLast = pSym;
+         ( ( PCOMSYMBOL ) hb_comp_symbols.pLast )->pNext = pSym;
+         hb_comp_symbols.pLast = pSym;
       }
       hb_comp_symbols.iCount++;
 
       if( pwPos )
- *pwPos = hb_comp_symbols.iCount -1; /* position number starts form 0 */
+         *pwPos = hb_comp_symbols.iCount -1; /* position number starts form 0 */
    }
    else
       pSym = NULL;
@@ -1399,28 +1399,28 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
 {
    PFUNCTION pFunc;
 
-   pFunc = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
-   pFunc->szName  = szName;
-   pFunc->cScope  = cScope;
-   pFunc->pLocals = NULL;
-   pFunc->pStatics= NULL;
-   pFunc->pFields = NULL;
-   pFunc->pMemvars= NULL;
+   pFunc                  = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
+   pFunc->szName          = szName;
+   pFunc->cScope          = cScope;
+   pFunc->pLocals         = NULL;
+   pFunc->pStatics        = NULL;
+   pFunc->pFields         = NULL;
+   pFunc->pMemvars        = NULL;
    pFunc->pPrivates       = NULL;
-   pFunc->pCode   = NULL;
+   pFunc->pCode           = NULL;
    pFunc->lPCodeSize      = 0;
    pFunc->lPCodePos       = 0;
-   pFunc->pNext   = NULL;
+   pFunc->pNext           = NULL;
    pFunc->wParamCount     = 0;
    pFunc->wParamNum       = 0;
    pFunc->iStaticsBase    = hb_comp_iStaticCnt;
-   pFunc->pOwner  = NULL;
-   pFunc->bFlags  = 0;
-   pFunc->iNOOPs  = 0;
-   pFunc->iJumps  = 0;
-   pFunc->pNOOPs  = NULL;
-   pFunc->pJumps  = NULL;
-   pFunc->pStack  = NULL;
+   pFunc->pOwner          = NULL;
+   pFunc->bFlags          = 0;
+   pFunc->iNOOPs          = 0;
+   pFunc->iJumps          = 0;
+   pFunc->pNOOPs          = NULL;
+   pFunc->pJumps          = NULL;
+   pFunc->pStack          = NULL;
    pFunc->iStackSize      = 0;
    pFunc->iStackIndex     = 0;
    pFunc->iStackFunctions = 0;
@@ -1464,8 +1464,8 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
    {
       /* The name of a function/procedure is already defined */
       if( ( pFunc != hb_comp_functions.pFirst ) || hb_comp_bStartProc )
- /* it is not a starting procedure that was automatically created */
- hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
+         /* it is not a starting procedure that was automatically created */
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_DUPL, szFunName, NULL );
    }
 
    szFunction = hb_compReservedName( szFunName );
@@ -1538,11 +1538,11 @@ PINLINE hb_compInlineAdd( char * szFunName )
       pSym = hb_compSymbolFind( szFunName, NULL );
       if( ! pSym )
       {
- pSym = hb_compSymbolAdd( szFunName, NULL );
+         pSym = hb_compSymbolAdd( szFunName, NULL );
       }
       if( pSym )
       {
- pSym->cScope |= HB_FS_STATIC;
+         pSym->cScope |= HB_FS_STATIC;
       }
    }
    pInline = hb_compInlineNew( szFunName );
@@ -1577,7 +1577,7 @@ void hb_compAnnounce( char * szFunName )
        * have to be a public symbol - check if existing symbol is public
        */
       if( pFunc->cScope & HB_FS_STATIC )
- hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_ANNOUNCE, szFunName, NULL );
+         hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_FUNC_ANNOUNCE, szFunName, NULL );
    }
    else
    {
@@ -1593,13 +1593,13 @@ void hb_compAnnounce( char * szFunName )
 
       if( hb_comp_functions.iCount == 0 )
       {
- hb_comp_functions.pFirst = pFunc;
- hb_comp_functions.pLast  = pFunc;
+         hb_comp_functions.pFirst = pFunc;
+         hb_comp_functions.pLast  = pFunc;
       }
       else
       {
- hb_comp_functions.pLast->pNext = pFunc;
- hb_comp_functions.pLast = pFunc;
+         hb_comp_functions.pLast->pNext = pFunc;
+         hb_comp_functions.pLast = pFunc;
       }
       hb_comp_functions.iCount++;
 
@@ -1718,13 +1718,13 @@ PFUNCTION hb_compFunCallFind( char * szFunctionName ) /* returns a previously ca
    while( pFunc )
    {
       if( ! strcmp( pFunc->szName, szFunctionName ) )
-      return pFunc;
+         return pFunc;
       else
       {
-            if( pFunc->pNext )
-                  pFunc = pFunc->pNext;
-            else
-                  return NULL;
+         if( pFunc->pNext )
+            pFunc = pFunc->pNext;
+         else
+            return NULL;
       }
    }
    return NULL;
@@ -1737,13 +1737,13 @@ PFUNCTION hb_compFunctionFind( char * szFunctionName ) /* returns a previously d
    while( pFunc )
    {
       if( ! strcmp( pFunc->szName, szFunctionName ) )
- return pFunc;
+         return pFunc;
       else
       {
- if( pFunc->pNext )
-    pFunc = pFunc->pNext;
- else
-    return NULL;
+         if( pFunc->pNext )
+            pFunc = pFunc->pNext;
+         else
+            return NULL;
       }
    }
    return NULL;
@@ -1756,13 +1756,13 @@ PINLINE hb_compInlineFind( char * szFunctionName )
    while( pInline )
    {
       if( pInline->szName && strcmp( pInline->szName, szFunctionName ) == 0 )
- return pInline;
+         return pInline;
       else
       {
- if( pInline->pNext )
-    pInline = pInline->pNext;
- else
-    return NULL;
+         if( pInline->pNext )
+            pInline = pInline->pNext;
+         else
+            return NULL;
       }
    }
    return NULL;
@@ -1783,8 +1783,8 @@ PVAR hb_compVariableFind( PVAR pVars, USHORT wOrder ) /* returns variable if def
    USHORT w = 1;
 
    if( pVars )
-       while( pVars->pNext && w++ < wOrder )
-  pVars = pVars->pNext;
+      while( pVars->pNext && w++ < wOrder )
+         pVars = pVars->pNext;
 
    return pVars;
 }
@@ -1797,24 +1797,24 @@ USHORT hb_compVariableGetPos( PVAR pVars, char * szVarName ) /* returns the orde
    {
       if( pVars->szName && ! strcmp( pVars->szName, szVarName ) )
       {
- if ( hb_comp_iWarnings < 3 )
-    pVars->iUsed |= VU_USED;
- /*
- else
-    Handled by hb_compStrongType()
- */
+         if ( hb_comp_iWarnings < 3 )
+            pVars->iUsed |= VU_USED;
+         /*
+           else
+           Handled by hb_compStrongType()
+         */
 
- return wVar;
+         return wVar;
       }
       else
       {
- if( pVars->pNext )
- {
-    pVars = pVars->pNext;
-    wVar++;
- }
- else
-    return 0;
+         if( pVars->pNext )
+         {
+            pVars = pVars->pNext;
+            wVar++;
+         }
+         else
+            return 0;
       }
    }
    return 0;
@@ -1829,7 +1829,7 @@ int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variabl
    {
       /* we are in a function/procedure -we don't need any tricks */
       if( pFunc->pOwner )
- pFunc =pFunc->pOwner;
+         pFunc =pFunc->pOwner;
       iVar = hb_compVariableGetPos( pFunc->pLocals, szVarName );
    }
    else
@@ -1838,112 +1838,112 @@ int hb_compLocalGetPos( char * szVarName ) /* returns the order + 1 of a variabl
       iVar = hb_compVariableGetPos( pFunc->pLocals, szVarName );
       if( iVar == 0 )
       {
- /* this is not a current codeblock parameter
- * we have to check the list of nested codeblocks up to a function
- * where the codeblock is defined
- */
- PFUNCTION pOutBlock = pFunc;   /* the outermost codeblock */
- BOOL bStatic;
+         /* this is not a current codeblock parameter
+          * we have to check the list of nested codeblocks up to a function
+          * where the codeblock is defined
+          */
+         PFUNCTION pOutBlock = pFunc;   /* the outermost codeblock */
+         BOOL bStatic;
 
- pFunc = pFunc->pOwner;
- while( pFunc )
- {
-    bStatic = FALSE;
-    if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
-    {
-       /* we are in a codeblock used to initialize a static variable -
-* skip to a function where this static variable was declared
-*/
-       pFunc = pFunc->pOwner;
-       bStatic = TRUE;
-    }
+         pFunc = pFunc->pOwner;
+         while( pFunc )
+         {
+            bStatic = FALSE;
+            if( ( pFunc->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
+            {
+               /* we are in a codeblock used to initialize a static variable -
+                * skip to a function where this static variable was declared
+                */
+               pFunc = pFunc->pOwner;
+               bStatic = TRUE;
+            }
 
-    iVar = hb_compVariableGetPos( pFunc->pLocals, szVarName );
-    if( iVar )
-    {
-       if( pFunc->pOwner )
-       {
-  /* this variable is defined in a parent codeblock
-  * It is not possible to access a parameter of a codeblock in which
-  * the current codeblock is defined
-  */
-  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTER_VAR, szVarName, NULL );
-  return iVar;
-       }
-       else if( bStatic )
-       {
-  /* local variable was referenced in a codeblock during
-   * initialization of static variable. This cannot be supported
-   * because static variables are initialized at program
-   * startup when there is no local variables yet - hence we
-   * cannot detach this local variable
-   * For example:
-   * LOCAL locvar
-   * STATIC stavar:={ | x | locvar}
-   *
-   * NOTE: Clipper creates such a codeblock however at the
-   * time of codeblock evaluation it generates a runtime error:
-   * 'bound error: array acccess'
-   * Called from: (b)STATICS$(0)
-   */
-  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_ILLEGAL_INIT, "(b)", szVarName );
-  return iVar;
-       }
-       else
-       {
-  /* We want to access a local variable defined in a function
-   * that owns this codeblock. We cannot access this variable in
-   * a normal way because at runtime the stack base will point
-   * to local variables of EVAL function.
-   *  The codeblock cannot have static variables then we can
-   * use this structure to store temporarily all referenced
-   * local variables
-   */
-  /* NOTE: The list of local variables defined in a function
-   * and referenced in a codeblock will be stored in a outer
-   * codeblock only. This makes sure that all variables will be
-   * detached properly - the inner codeblock can be created
-   * outside of a function where it was defined when the local
-   * variables are not accessible.
-   */
-  iVar = -hb_compVariableGetPos( pOutBlock->pStatics, szVarName );
-  if( iVar == 0 )
-  {
-     /* this variable was not referenced yet - add it to the list */
-     PVAR pVar;
+            iVar = hb_compVariableGetPos( pFunc->pLocals, szVarName );
+            if( iVar )
+            {
+               if( pFunc->pOwner )
+               {
+                  /* this variable is defined in a parent codeblock
+                   * It is not possible to access a parameter of a codeblock in which
+                   * the current codeblock is defined
+                   */
+                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTER_VAR, szVarName, NULL );
+                  return iVar;
+               }
+               else if( bStatic )
+               {
+                  /* local variable was referenced in a codeblock during
+                   * initialization of static variable. This cannot be supported
+                   * because static variables are initialized at program
+                   * startup when there is no local variables yet - hence we
+                   * cannot detach this local variable
+                   * For example:
+                   * LOCAL locvar
+                   * STATIC stavar:={ | x | locvar}
+                   *
+                   * NOTE: Clipper creates such a codeblock however at the
+                   * time of codeblock evaluation it generates a runtime error:
+                   * 'bound error: array acccess'
+                   * Called from: (b)STATICS$(0)
+                   */
+                  hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_ILLEGAL_INIT, "(b)", szVarName );
+                  return iVar;
+               }
+               else
+               {
+                  /* We want to access a local variable defined in a function
+                   * that owns this codeblock. We cannot access this variable in
+                   * a normal way because at runtime the stack base will point
+                   * to local variables of EVAL function.
+                   *  The codeblock cannot have static variables then we can
+                   * use this structure to store temporarily all referenced
+                   * local variables
+                   */
+                  /* NOTE: The list of local variables defined in a function
+                   * and referenced in a codeblock will be stored in a outer
+                   * codeblock only. This makes sure that all variables will be
+                   * detached properly - the inner codeblock can be created
+                   * outside of a function where it was defined when the local
+                   * variables are not accessible.
+                   */
+                  iVar = -hb_compVariableGetPos( pOutBlock->pStatics, szVarName );
+                  if( iVar == 0 )
+                  {
+                     /* this variable was not referenced yet - add it to the list */
+                     PVAR pVar;
 
-     pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
-     pVar->szName = szVarName;
-     pVar->cType = ' ';
-     pVar->iUsed = VU_NOT_USED;
-     pVar->pNext  = NULL;
-     pVar->iDeclLine = hb_comp_iLine - 1;
+                     pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
+                     pVar->szName = szVarName;
+                     pVar->cType = ' ';
+                     pVar->iUsed = VU_NOT_USED;
+                     pVar->pNext  = NULL;
+                     pVar->iDeclLine = hb_comp_iLine - 1;
 
-     /* Use negative order to signal that we are accessing a local
-     * variable from a codeblock
-     */
-     iVar = -1;  /* first variable */
-     if( ! pOutBlock->pStatics )
-pOutBlock->pStatics = pVar;
-     else
-     {
-PVAR pLastVar = pOutBlock->pStatics;
+                     /* Use negative order to signal that we are accessing a local
+                      * variable from a codeblock
+                      */
+                     iVar = -1;  /* first variable */
+                     if( ! pOutBlock->pStatics )
+                        pOutBlock->pStatics = pVar;
+                     else
+                     {
+                        PVAR pLastVar = pOutBlock->pStatics;
 
---iVar;   /* this will be at least second variable */
-while( pLastVar->pNext )
-{
-   pLastVar = pLastVar->pNext;
-   --iVar;
-}
-pLastVar->pNext = pVar;
-     }
-  }
-  return iVar;
-       }
-    }
-    pOutBlock = pFunc;
-    pFunc = pFunc->pOwner;
- }
+                        --iVar;   /* this will be at least second variable */
+                        while( pLastVar->pNext )
+                        {
+                           pLastVar = pLastVar->pNext;
+                           --iVar;
+                        }
+                        pLastVar->pNext = pVar;
+                     }
+                  }
+                  return iVar;
+               }
+            }
+            pOutBlock = pFunc;
+            pFunc = pFunc->pOwner;
+         }
       }
    }
    return iVar;
@@ -1971,7 +1971,7 @@ int hb_compStaticGetPos( char * szVarName, PFUNCTION pFunc )
        * where the codeblock is defined
        */
       while( pFunc->pOwner )
- pFunc = pFunc->pOwner;
+         pFunc = pFunc->pOwner;
       iVar = hb_compVariableGetPos( pFunc->pStatics, szVarName );
    }
    if( iVar )
@@ -1996,7 +1996,7 @@ int hb_compFieldGetPos( char * szVarName, PFUNCTION pFunc )
        * where the codeblock is defined
        */
       while( pFunc->pOwner )
- pFunc = pFunc->pOwner;
+         pFunc = pFunc->pOwner;
       iVar = hb_compVariableGetPos( pFunc->pFields, szVarName );
    }
    return iVar;
@@ -2018,7 +2018,7 @@ int hb_compMemvarGetPos( char * szVarName, PFUNCTION pFunc )
        * where the codeblock is defined
        */
       while( pFunc->pOwner )
- pFunc = pFunc->pOwner;
+         pFunc = pFunc->pOwner;
       iVar = hb_compVariableGetPos( pFunc->pMemvars, szVarName );
    }
    return iVar;
@@ -2035,13 +2035,13 @@ PCOMDECLARED hb_compDeclaredFind( char * szDeclaredName )
    while( pSym )
    {
       if( ! strcmp( pSym->szName, szDeclaredName ) )
- return pSym;
+         return pSym;
       else
       {
- if( pSym->pNext )
-    pSym = pSym->pNext;
- else
-    return NULL;
+         if( pSym->pNext )
+            pSym = pSym->pNext;
+         else
+            return NULL;
       }
    }
    return NULL;
@@ -2058,19 +2058,19 @@ PCOMSYMBOL hb_compSymbolFind( char * szSymbolName, USHORT * pwPos )
    {
       if( ! strcmp( pSym->szName, szSymbolName ) )
       {
- if( pwPos )
-    *pwPos = wCnt;
- return pSym;
+         if( pwPos )
+            *pwPos = wCnt;
+         return pSym;
       }
       else
       {
- if( pSym->pNext )
- {
-    pSym = pSym->pNext;
-    ++wCnt;
- }
- else
-    return NULL;
+         if( pSym->pNext )
+         {
+            pSym = pSym->pNext;
+            ++wCnt;
+         }
+         else
+            return NULL;
       }
    }
    return NULL;
@@ -2098,16 +2098,16 @@ USHORT hb_compFunctionGetPos( char * szFunctionName ) /* return 0 if not found o
    while( pFunc )
    {
       if( ! strcmp( pFunc->szName, szFunctionName ) && pFunc != hb_comp_functions.pFirst )
- return wFunction;
+         return wFunction;
       else
       {
- if( pFunc->pNext )
- {
-    pFunc = pFunc->pNext;
-    wFunction++;
- }
- else
-    return 0;
+         if( pFunc->pNext )
+         {
+            pFunc = pFunc->pNext;
+            wFunction++;
+         }
+         else
+            return 0;
       }
    }
    return 0;
@@ -2161,7 +2161,7 @@ static void hb_compPrepareOptimize()
       /* 2nd. Byte might be not used */
       if( hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos - 2 ] == HB_P_NOOP )
       {
- hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
+         hb_compNOOPadd( hb_comp_functions.pLast, hb_comp_functions.pLast->lPCodePos - 2 );
       }
    }
 }
@@ -2263,150 +2263,150 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    {
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
- /*
- case HB_P_JUMPNEAR :
-    break;
+         /*
+           case HB_P_JUMPNEAR :
+           break;
 
- case HB_P_JUMPTRUENEAR :
-    break;
+           case HB_P_JUMPTRUENEAR :
+           break;
 
- case HB_P_JUMPFALSENEAR :
-    break;
+           case HB_P_JUMPFALSENEAR :
+           break;
 
- case HB_P_JUMP :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
-    pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+           case HB_P_JUMP :
+           pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
+           pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
+           pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+           break;
 
- case HB_P_JUMPTRUE :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
-    pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+           case HB_P_JUMPTRUE :
+           pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
+           pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
+           pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+           break;
 
- case HB_P_JUMPFALSE :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
-    pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
- */
+           case HB_P_JUMPFALSE :
+           pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
+           pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
+           pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+           break;
+         */
 
- case HB_P_JUMPFAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
-    pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         case HB_P_JUMPFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPNEAR;
+            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
+            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+            break;
 
- case HB_P_JUMPTRUEFAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
-    pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         case HB_P_JUMPTRUEFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUENEAR;
+            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
+            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+            break;
 
- case HB_P_JUMPFALSEFAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
-    pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         case HB_P_JUMPFALSEFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSENEAR;
+            pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_P_NOOP;
+            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+            break;
 
- case HB_P_SEQBEGIN :
-    bOptimize = FALSE;
-    break;
+         case HB_P_SEQBEGIN :
+            bOptimize = FALSE;
+            break;
 
- case HB_P_SEQEND :
-    bOptimize = FALSE;
-    break;
+         case HB_P_SEQEND :
+            bOptimize = FALSE;
+            break;
 
- default:
+         default:
 /*    printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
-    hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
-    break;
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
+            break;
       }
 
       pCode[ ( ULONG ) ulFrom ] = HB_LOBYTE( lOffset );
 
       if( ! bOptimize  )
- return;
+         return;
 
       /* Check if 3rd. Byte not used. */
       if( pCode[ ( ULONG ) ( ulFrom + 2 ) ] == HB_P_NOOP )
       {
- hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
+         hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
 
- /* Check if 2nd. Byte not used. */
- if( pCode[ ( ULONG ) ulFrom + 1 ] == HB_P_NOOP )
-    hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 1 );
+         /* Check if 2nd. Byte not used. */
+         if( pCode[ ( ULONG ) ulFrom + 1 ] == HB_P_NOOP )
+            hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 1 );
       }
    }
    else if( lOffset >= SHRT_MIN && lOffset <= SHRT_MAX )
    {
       switch( pCode[ ( ULONG ) ( ulFrom - 1 ) ] )
       {
- /*
- case HB_P_JUMPNEAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         /*
+           case HB_P_JUMPNEAR :
+           pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
+           pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+           break;
 
- case HB_P_JUMPTRUENEAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+           case HB_P_JUMPTRUENEAR :
+           pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
+           pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+           break;
 
- case HB_P_JUMPFALSENEAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+           case HB_P_JUMPFALSENEAR :
+           pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
+           pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+           break;
 
- case HB_P_JUMP :
-    break;
+           case HB_P_JUMP :
+           break;
 
- case HB_P_JUMPTRUE :
-    break;
+           case HB_P_JUMPTRUE :
+           break;
 
- case HB_P_JUMPFALSE :
-    break;
- */
+           case HB_P_JUMPFALSE :
+           break;
+         */
 
- case HB_P_JUMPFAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         case HB_P_JUMPFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMP;
+            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+            break;
 
- case HB_P_JUMPTRUEFAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         case HB_P_JUMPTRUEFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPTRUE;
+            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+            break;
 
- case HB_P_JUMPFALSEFAR :
-    pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
-    pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
-    break;
+         case HB_P_JUMPFALSEFAR :
+            pCode[ ( ULONG ) ( ulFrom - 1 ) ] = HB_P_JUMPFALSE;
+            pCode[ ( ULONG ) ( ulFrom + 2 ) ] = HB_P_NOOP;
+            break;
 
- case HB_P_SEQBEGIN :
-    bOptimize = FALSE;
-    break;
+         case HB_P_SEQBEGIN :
+            bOptimize = FALSE;
+            break;
 
- case HB_P_SEQEND :
-    bOptimize = FALSE;
-    break;
+         case HB_P_SEQEND :
+            bOptimize = FALSE;
+            break;
 
- default:
+         default:
 /*    printf( "\rPCode: %i", pCode[ ( ULONG ) ulFrom - 1 ] ); */
-    hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
-    break;
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_NOT_FOUND, NULL, NULL );
+            break;
       }
 
       pCode[ ulFrom ] = HB_LOBYTE( lOffset );
       pCode[ ( ULONG ) ( ulFrom + 1 ) ] = HB_HIBYTE( lOffset );
 
       if( ! bOptimize )
- return;
+         return;
 
       /* Check if 3rd. Byte not used. */
       if( pCode[ ( ULONG ) ulFrom + 2 ] == HB_P_NOOP )
- hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
+         hb_compNOOPadd( hb_comp_functions.pLast, ulFrom + 2 );
    }
    else if( lOffset >= ( -8388608L ) && lOffset <= 8388607L )
    {
@@ -2429,13 +2429,13 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
    {
       if( ( ( hb_comp_functions.pLast->lPCodePos - hb_comp_ulLastLinePos ) > 3 ) || hb_comp_bDebugInfo )
       {
- hb_comp_ulLastLinePos = hb_comp_functions.pLast->lPCodePos;
- hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( hb_comp_iLine-1 ), HB_HIBYTE( hb_comp_iLine-1 ), ( BOOL ) 0 );
+         hb_comp_ulLastLinePos = hb_comp_functions.pLast->lPCodePos;
+         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( hb_comp_iLine-1 ), HB_HIBYTE( hb_comp_iLine-1 ), ( BOOL ) 0 );
       }
       else
       {
- hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( hb_comp_iLine-1 );
- hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( hb_comp_iLine-1 );
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( hb_comp_iLine-1 );
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( hb_comp_iLine-1 );
       }
    }
 
@@ -2465,8 +2465,8 @@ void hb_compLinePushIfDebugger( void )
    {
       if( hb_comp_functions.pLast->bFlags & FUN_BREAK_CODE )
       {
- /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
- hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
+         /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
       }
       hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );  /* clear RETURN flag */
    }
@@ -2481,7 +2481,7 @@ void hb_compLinePushIfInside( void ) /* generates the pcode with the currently c
    {
       if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 )
       {
- hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
+         hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_OUTSIDE, NULL, NULL );
       }
    }
 
@@ -2496,10 +2496,10 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
 {
    BOOL bGenCode;
    /*
-   * NOTE:
-   * Clipper always assumes a memvar variable if undeclared variable
-   * is popped (a value is asssigned to a variable).
-   */
+    * NOTE:
+    * Clipper always assumes a memvar variable if undeclared variable
+    * is popped (a value is asssigned to a variable).
+    */
    if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
       bGenCode = hb_comp_bForceMemvars;    /* harbour compatibility */
    else
@@ -2512,11 +2512,11 @@ static void hb_compGenVariablePCode( BYTE bPCode, char * szVarName )
       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MEMVAR_ASSUMED, szVarName, NULL );
 
       if( bPCode == HB_P_POPVARIABLE )
- bPCode = HB_P_POPMEMVAR;
+         bPCode = HB_P_POPMEMVAR;
       else if( bPCode == HB_P_PUSHVARIABLE )
- bPCode = HB_P_PUSHMEMVAR;
+         bPCode = HB_P_PUSHMEMVAR;
       else
- bPCode = HB_P_PUSHMEMVARREF;
+         bPCode = HB_P_PUSHMEMVARREF;
    }
    else
       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, szVarName, NULL );
@@ -2536,7 +2536,7 @@ void hb_compGenFieldPCode( BYTE bPCode, int wVar, char * szVarName, PFUNCTION pF
        * where the codeblock is defined
        */
       while( pFunc->pOwner )
- pFunc = pFunc->pOwner;
+         pFunc = pFunc->pOwner;
    }
 
    pField = hb_compVariableFind( pFunc->pFields, wVar );
@@ -2546,9 +2546,9 @@ void hb_compGenFieldPCode( BYTE bPCode, int wVar, char * szVarName, PFUNCTION pF
        * Push alias symbol before the field symbol
        */
       if( bPCode == HB_P_POPFIELD )
- bPCode = HB_P_POPALIASEDFIELD;
+         bPCode = HB_P_POPALIASEDFIELD;
       else if( bPCode == HB_P_PUSHFIELD )
- bPCode = HB_P_PUSHALIASEDFIELD;
+         bPCode = HB_P_PUSHALIASEDFIELD;
 
       hb_compGenPushSymbol( hb_strdup( pField->szAlias ), 0 );
    }
@@ -2621,17 +2621,17 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
        */
       if( iVar >= -128 && iVar <= 127 )
       {
- /* local variables used in a coddeblock will not be adjusted
-  * if PARAMETERS statement will be used then it is safe to
-  * use 2 bytes for LOCALNEAR
- */
- if( hb_comp_functions.pLast->szName )
-    hb_compGenPCode3( HB_P_POPLOCALNEAR, ( BYTE ) iVar, 0, ( BOOL ) 1 );
- else
-    hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
+         /* local variables used in a coddeblock will not be adjusted
+          * if PARAMETERS statement will be used then it is safe to
+          * use 2 bytes for LOCALNEAR
+          */
+         if( hb_comp_functions.pLast->szName )
+            hb_compGenPCode3( HB_P_POPLOCALNEAR, ( BYTE ) iVar, 0, ( BOOL ) 1 );
+         else
+            hb_compGenPCode2( HB_P_POPLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
       }
       else
- hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+         hb_compGenPCode3( HB_P_POPLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
    }
    else
    {
@@ -2642,76 +2642,76 @@ void hb_compGenPopVar( char * szVarName ) /* generates the pcode to pop a value 
        * where the static variable was declared
        */
       if( ( hb_comp_functions.pLast->cScope & ( HB_FS_INIT | HB_FS_EXIT ) ) == ( HB_FS_INIT | HB_FS_EXIT ) )
-  pFunc = hb_comp_functions.pLast->pOwner;
+         pFunc = hb_comp_functions.pLast->pOwner;
       else
-  pFunc = hb_comp_functions.pLast;
+         pFunc = hb_comp_functions.pLast;
       iVar = hb_compStaticGetPos( szVarName, pFunc );
       if( iVar )
       {
- /* Static variable declared in current function
-  */
- hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
- pFunc->bFlags |= FUN_USES_STATICS;
+         /* Static variable declared in current function
+          */
+         hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+         pFunc->bFlags |= FUN_USES_STATICS;
       }
       else
       {
- iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pLast );
- if( iVar )
- {
-    /* field declared in current function
-     */
-    hb_compGenFieldPCode( HB_P_POPFIELD, iVar, szVarName, hb_comp_functions.pLast );
- }
- else
- {
-    iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast );
-    if( iVar )
-    {
-       /* Memvar variable declared in current functions
-*/
-       hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
-    }
-    else
-    {
-       if( ! hb_comp_bStartProc )
-  iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst );
-       if( iVar )
-       {
-  /* Global static variable
-   */
-  hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
-  hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
-       }
-       else
-       {
-  if( ! hb_comp_bStartProc )
-     iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst );
-  if( iVar )
-  {
-     /* Global field declaration
-      */
-     hb_compGenFieldPCode( HB_P_POPFIELD, iVar, szVarName, hb_comp_functions.pFirst );
-  }
-  else
-  {
-     if( ! hb_comp_bStartProc )
-iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst );
-     if( iVar )
-     {
-/* Global Memvar variable declaration
- */
-hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
-     }
-     else
-     {
-/* undeclared variable
- */
-hb_compGenVariablePCode( HB_P_POPVARIABLE, szVarName );
-     }
-  }
-       }
-    }
- }
+         iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pLast );
+         if( iVar )
+         {
+            /* field declared in current function
+             */
+            hb_compGenFieldPCode( HB_P_POPFIELD, iVar, szVarName, hb_comp_functions.pLast );
+         }
+         else
+         {
+            iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast );
+            if( iVar )
+            {
+               /* Memvar variable declared in current functions
+                */
+               hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
+            }
+            else
+            {
+               if( ! hb_comp_bStartProc )
+                  iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst );
+               if( iVar )
+               {
+                  /* Global static variable
+                   */
+                  hb_compGenPCode3( HB_P_POPSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+                  hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+               }
+               else
+               {
+                  if( ! hb_comp_bStartProc )
+                     iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst );
+                  if( iVar )
+                  {
+                     /* Global field declaration
+                      */
+                     hb_compGenFieldPCode( HB_P_POPFIELD, iVar, szVarName, hb_comp_functions.pFirst );
+                  }
+                  else
+                  {
+                     if( ! hb_comp_bStartProc )
+                        iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst );
+                     if( iVar )
+                     {
+                        /* Global Memvar variable declaration
+                         */
+                        hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
+                     }
+                     else
+                     {
+                        /* undeclared variable
+                         */
+                        hb_compGenVariablePCode( HB_P_POPVARIABLE, szVarName );
+                     }
+                  }
+               }
+            }
+         }
       }
    }
 }
@@ -2720,48 +2720,48 @@ hb_compGenVariablePCode( HB_P_POPVARIABLE, szVarName );
  * an aliased variable
  */
 void hb_compGenPopAliasedVar( char * szVarName,
-      BOOL bPushAliasValue,
-      char * szAlias,
-      long lWorkarea )
+                              BOOL bPushAliasValue,
+                              char * szAlias,
+                              long lWorkarea )
 {
    if( bPushAliasValue )
    {
       if( szAlias )
       {
- if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
- {  /* M->variable */
-    hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
- }
- else
- {
-    int iCmp = strncmp( szAlias, "MEMVAR", 4 );
-    if( iCmp == 0 )
-  iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
-    if( iCmp == 0 )
-    {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-       hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
-    }
-    else
-    {  /* field variable */
-       iCmp = strncmp( szAlias, "FIELD", 4 );
-       if( iCmp == 0 )
-  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
-       if( iCmp == 0 )
-       {  /* FIELD-> */
-  hb_compGenVarPCode( HB_P_POPFIELD, szVarName );
-       }
-       else
-       {  /* database alias */
-  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
-  hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName );
-       }
-    }
- }
+         if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+         {  /* M->variable */
+            hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
+         }
+         else
+         {
+            int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+            if( iCmp == 0 )
+               iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
+            if( iCmp == 0 )
+            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+               hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName );
+            }
+            else
+            {  /* field variable */
+               iCmp = strncmp( szAlias, "FIELD", 4 );
+               if( iCmp == 0 )
+                  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
+               if( iCmp == 0 )
+               {  /* FIELD-> */
+                  hb_compGenVarPCode( HB_P_POPFIELD, szVarName );
+               }
+               else
+               {  /* database alias */
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
+                  hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName );
+               }
+            }
+         }
       }
       else
       {
- hb_compGenPushLong( lWorkarea );
- hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName );
+         hb_compGenPushLong( lWorkarea );
+         hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName );
       }
    }
    else
@@ -2786,87 +2786,86 @@ void hb_compGenPushVar( char * szVarName )
        */
       if( iVar >= -128 && iVar <= 127 )
       {
- /* local variables used in a coddeblock will not be adjusted
-  * if PARAMETERS statement will be used then it is safe to
-  * use 2 bytes for LOCALNEAR
- */
- if( hb_comp_functions.pLast->szName )
-    hb_compGenPCode3( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, 0, ( BOOL ) 1 );
- else
-    hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
+         /* local variables used in a coddeblock will not be adjusted
+          * if PARAMETERS statement will be used then it is safe to
+          * use 2 bytes for LOCALNEAR
+          */
+         if( hb_comp_functions.pLast->szName )
+            hb_compGenPCode3( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, 0, ( BOOL ) 1 );
+         else
+            hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( BYTE ) iVar, ( BOOL ) 1 );
       }
       else
- hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+         hb_compGenPCode3( HB_P_PUSHLOCAL, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
    }
    else
    {
       iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pLast );
       if( iVar )
       {
- /* Static variable declared in current function
-  */
- hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
- hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+         /* Static variable declared in current function
+          */
+         hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+         hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
       }
       else
       {
- iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pLast );
- if( iVar )
- {
-    /* field declared in current function
-     */
-    hb_compGenFieldPCode( HB_P_PUSHFIELD, iVar, szVarName, hb_comp_functions.pLast );
- }
- else
- {
-    iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast );
-    if( iVar )
-    {
-       /* Memvar variable declared in current functions
-*/
-       hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
-    }
-    else
-    {
-       if( ! hb_comp_bStartProc )
-  iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst );
-       if( iVar )
-       {
-  /* Global static variable
-   */
-  hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
-  hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
-       }
-       else
-       {
-  if( ! hb_comp_bStartProc )
-     iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst );
-  if( iVar )
-  {
-     /* Global field declaration
-      */
-     hb_compGenFieldPCode( HB_P_PUSHFIELD, iVar, szVarName, hb_comp_functions.pFirst );
-  }
-  else
-  {
-     if( ! hb_comp_bStartProc )
-iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst );
-     if( iVar )
-     {
-/* Global Memvar variable declaration
- */
-hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
-     }
-     else
-     {
-/* undeclared variable
- */
-hb_compGenVariablePCode( HB_P_PUSHVARIABLE, szVarName );
-     }
-  }
-       }
-    }
- }
+         iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pLast );
+         if( iVar )
+         {
+            /* field declared in current function
+             */
+            hb_compGenFieldPCode( HB_P_PUSHFIELD, iVar, szVarName, hb_comp_functions.pLast );
+         }
+         else
+         {
+            iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast );
+            if( iVar )
+            {
+               /* Memvar variable declared in current functions
+                */
+               hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
+            }
+            else
+            {
+               if( ! hb_comp_bStartProc )
+                  iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst );
+               if( iVar )
+               {
+                  /* Global static variable
+                   */
+                  hb_compGenPCode3( HB_P_PUSHSTATIC, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+                  hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+               }
+               else
+               {
+                  if( ! hb_comp_bStartProc )
+                     iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst );
+                  if( iVar )
+                  {
+                     /* Global field declaration
+                      */
+                     hb_compGenFieldPCode( HB_P_PUSHFIELD, iVar, szVarName, hb_comp_functions.pFirst );
+                  }
+                  else
+                  {
+                     if( ! hb_comp_bStartProc )
+                        iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst );
+                     if( iVar )
+                     {
+                        /* Global Memvar variable declaration */
+                        hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
+                     }
+                     else
+                     {
+                        /* undeclared variable
+                         */
+                        hb_compGenVariablePCode( HB_P_PUSHVARIABLE, szVarName );
+                     }
+                  }
+               }
+            }
+         }
       }
    }
 }
@@ -2887,69 +2886,69 @@ void hb_compGenPushVarRef( char * szVarName ) /* generates the pcode to push a v
       iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pLast );
       if( iVar )
       {
- /* Static variable declared in current function
-  */
- hb_compGenPCode3( HB_P_PUSHSTATICREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
- hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+         /* Static variable declared in current function
+          */
+         hb_compGenPCode3( HB_P_PUSHSTATICREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+         hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
       }
       else
       {
- iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pLast );
- if( iVar )
- {
-    /* pushing fields by reference is not allowed */
-    hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
- }
- else
- {
-    iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast );
-    if( iVar )
-    {
-       /* Memvar variable declared in current functions
-*/
-       hb_compGenVarPCode( HB_P_PUSHMEMVARREF, szVarName );
-    }
-    else
-    {
-       if( ! hb_comp_bStartProc )
-  iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst );
-       if( iVar )
-       {
-  /* Global static variable
-   */
-  hb_compGenPCode3( HB_P_PUSHSTATICREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
-  hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
-       }
-       else
-       {
-  if( ! hb_comp_bStartProc )
-     iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst );
-  if( iVar )
-  {
-     /* pushing fields by reference is not allowed */
-     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
-  }
-  else
-  {
-     if( ! hb_comp_bStartProc )
-iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst );
-     if( iVar )
-     {
-/* Global Memvar variable declaration
- */
-hb_compGenVarPCode( HB_P_PUSHMEMVARREF, szVarName );
-     }
-     else
-     {
-/* undeclared variable - field cannot be passed by the
- * reference - assume the memvar
- */
-hb_compGenVariablePCode( HB_P_PUSHMEMVARREF, szVarName );
-     }
-  }
-       }
-    }
- }
+         iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pLast );
+         if( iVar )
+         {
+            /* pushing fields by reference is not allowed */
+            hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
+         }
+         else
+         {
+            iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pLast );
+            if( iVar )
+            {
+               /* Memvar variable declared in current functions
+                */
+               hb_compGenVarPCode( HB_P_PUSHMEMVARREF, szVarName );
+            }
+            else
+            {
+               if( ! hb_comp_bStartProc )
+                  iVar = hb_compStaticGetPos( szVarName, hb_comp_functions.pFirst );
+               if( iVar )
+               {
+                  /* Global static variable
+                   */
+                  hb_compGenPCode3( HB_P_PUSHSTATICREF, HB_LOBYTE( iVar ), HB_HIBYTE( iVar ), ( BOOL ) 1 );
+                  hb_comp_functions.pLast->bFlags |= FUN_USES_STATICS;
+               }
+               else
+               {
+                  if( ! hb_comp_bStartProc )
+                     iVar = hb_compFieldGetPos( szVarName, hb_comp_functions.pFirst );
+                  if( iVar )
+                  {
+                     /* pushing fields by reference is not allowed */
+                     hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_REFER, szVarName, NULL );
+                  }
+                  else
+                  {
+                     if( ! hb_comp_bStartProc )
+                        iVar = hb_compMemvarGetPos( szVarName, hb_comp_functions.pFirst );
+                     if( iVar )
+                     {
+                        /* Global Memvar variable declaration
+                         */
+                        hb_compGenVarPCode( HB_P_PUSHMEMVARREF, szVarName );
+                     }
+                     else
+                     {
+                        /* undeclared variable - field cannot be passed by the
+                         * reference - assume the memvar
+                         */
+                        hb_compGenVariablePCode( HB_P_PUSHMEMVARREF, szVarName );
+                     }
+                  }
+               }
+            }
+         }
       }
    }
 }
@@ -2958,52 +2957,52 @@ hb_compGenVariablePCode( HB_P_PUSHMEMVARREF, szVarName );
   * machine stack
   */
 void hb_compGenPushAliasedVar( char * szVarName,
-       BOOL bPushAliasValue,
-       char * szAlias,
-       long lWorkarea )
+                               BOOL bPushAliasValue,
+                               char * szAlias,
+                               long lWorkarea )
 {
    if( bPushAliasValue )
    {
       if( szAlias )
       {
- /* myalias->var
- * FIELD->var
- * MEMVAR->var
- */
- if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
- {  /* M->variable */
-    hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
- }
- else
- {
-    int iCmp = strncmp( szAlias, "MEMVAR", 4 );
-    if( iCmp == 0 )
-  iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
-    if( iCmp == 0 )
-    {  /* MEMVAR-> or MEMVA-> or MEMV-> */
-       hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
-    }
-    else
-    {  /* field variable */
-       iCmp = strncmp( szAlias, "FIELD", 4 );
-       if( iCmp == 0 )
-  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
-       if( iCmp == 0 )
-       {  /* FIELD-> */
-  hb_compGenVarPCode( HB_P_PUSHFIELD, szVarName );
-       }
-       else
-       {  /* database alias */
-  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
-  hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName );
-       }
-    }
- }
+         /* myalias->var
+          * FIELD->var
+          * MEMVAR->var
+          */
+         if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+         {  /* M->variable */
+            hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
+         }
+         else
+         {
+            int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+            if( iCmp == 0 )
+               iCmp = strncmp( szAlias, "MEMVAR", strlen( szAlias ) );
+            if( iCmp == 0 )
+            {  /* MEMVAR-> or MEMVA-> or MEMV-> */
+               hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName );
+            }
+            else
+            {  /* field variable */
+               iCmp = strncmp( szAlias, "FIELD", 4 );
+               if( iCmp == 0 )
+                  iCmp = strncmp( szAlias, "FIELD", strlen( szAlias ) );
+               if( iCmp == 0 )
+               {  /* FIELD-> */
+                  hb_compGenVarPCode( HB_P_PUSHFIELD, szVarName );
+               }
+               else
+               {  /* database alias */
+                  hb_compGenPushSymbol( hb_strdup( szAlias ), 0 );
+                  hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+               }
+            }
+         }
       }
       else
       {
- hb_compGenPushLong( lWorkarea );
- hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName );
+         hb_compGenPushLong( lWorkarea );
+         hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName );
       }
    }
    else
@@ -3064,9 +3063,9 @@ void hb_compGenPushLong( long lNumber )
    else if( ( ( char * ) &lNumber )[ 2 ] == 0 && ( ( char * ) &lNumber )[ 3 ] == 0 )
    {
       if( ( ( char * ) &lNumber )[ 1 ] == 0 )
- hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ], ( BOOL ) 1 );
+         hb_compGenPCode2( HB_P_PUSHBYTE, ( ( char * ) &lNumber )[ 0 ], ( BOOL ) 1 );
       else
- hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ], ( BOOL ) 1 );
+         hb_compGenPCode3( HB_P_PUSHINT, ( ( char * ) &lNumber )[ 0 ], ( ( char * ) &lNumber )[ 1 ], ( BOOL ) 1 );
    }
    else
    {
@@ -3123,12 +3122,12 @@ void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction )
    {
       hb_compSymbolAdd( szSymbolName, &wSym );
       if( iIsFunction )
- hb_compFunCallAdd( szSymbolName );
+         hb_compFunCallAdd( szSymbolName );
    }
    else
    {
       if( iIsFunction && ! hb_compFunCallFind( szSymbolName ) )
- hb_compFunCallAdd( szSymbolName );
+         hb_compFunCallAdd( szSymbolName );
    }
 
    if( wSym > 255 )
@@ -3144,11 +3143,11 @@ static void hb_compCheckDuplVars( PVAR pVar, char * szVarName )
    {
       if( ! strcmp( pVar->szName, szVarName ) )
       {
- hb_compErrorDuplVar( szVarName );
- break;
+         hb_compErrorDuplVar( szVarName );
+         break;
       }
       else
- pVar = pVar->pNext;
+         pVar = pVar->pNext;
    }
 }
 
@@ -3160,84 +3159,84 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
    {
       if( (pFunc->bFlags & FUN_WITH_RETURN) == 0 )
       {
- /* The last statement in a function/procedure was not a RETURN
- * Generate end-of-procedure pcode
- */
- hb_compGenPCode1( HB_P_ENDPROC );
+         /* The last statement in a function/procedure was not a RETURN
+          * Generate end-of-procedure pcode
+          */
+         hb_compGenPCode1( HB_P_ENDPROC );
       }
 
       if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
       {
- int PCount = pFunc->wParamCount;
+         int PCount = pFunc->wParamCount;
 
- /* do not adjust if local parameters are used -remove NOOPs only */
- pFunc->wParamCount = 0;
- /* There was a PARAMETERS statement used.
- * NOTE: This fixes local variables references in a case when
- * there is PARAMETERS statement after a LOCAL variable declarations.
- * All local variables are numbered from 1 - which means use first
- * item from the eval stack. However if PARAMETERS statement is used
- * then there are additional items on the eval stack - the
- * function arguments. Then first local variable is at the position
- * (1 + <number of arguments>). We cannot fix this numbering
- * because the PARAMETERS statement can be used even at the end
- * of function body when all local variables are already created.
- */
+         /* do not adjust if local parameters are used -remove NOOPs only */
+         pFunc->wParamCount = 0;
+         /* There was a PARAMETERS statement used.
+          * NOTE: This fixes local variables references in a case when
+          * there is PARAMETERS statement after a LOCAL variable declarations.
+          * All local variables are numbered from 1 - which means use first
+          * item from the eval stack. However if PARAMETERS statement is used
+          * then there are additional items on the eval stack - the
+          * function arguments. Then first local variable is at the position
+          * (1 + <number of arguments>). We cannot fix this numbering
+          * because the PARAMETERS statement can be used even at the end
+          * of function body when all local variables are already created.
+          */
 
- hb_compFixFuncPCode( pFunc );
- pFunc->wParamCount = PCount;
+         hb_compFixFuncPCode( pFunc );
+         pFunc->wParamCount = PCount;
       }
       else
- hb_compFixFuncPCode( pFunc );
+         hb_compFixFuncPCode( pFunc );
 
       if( pFunc->iNOOPs )
- hb_compOptimizeJumps();
+         hb_compOptimizeJumps();
 
       if( hb_comp_iWarnings )
       {
- PVAR pVar;
+         PVAR pVar;
 
- pVar = pFunc->pLocals;
- while( pVar )
- {
-    if( pVar->szName && pFunc->szName && pFunc->szName[0] && (! ( pVar->iUsed & VU_USED )) )
-    {
-       char szFun[ 256 ];
-       sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
-       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
-    }
+         pVar = pFunc->pLocals;
+         while( pVar )
+         {
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && (! ( pVar->iUsed & VU_USED )) )
+            {
+               char szFun[ 256 ];
+               sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
+            }
 
-    pVar = pVar->pNext;
- }
+            pVar = pVar->pNext;
+         }
 
- pVar = pFunc->pStatics;
- while( pVar )
- {
-    if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
-    {
-       char szFun[ 256 ];
-       sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
-       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
-    }
+         pVar = pFunc->pStatics;
+         while( pVar )
+         {
+            if( pVar->szName && pFunc->szName && pFunc->szName[0] && ! ( pVar->iUsed & VU_USED ) )
+            {
+               char szFun[ 256 ];
+               sprintf( szFun, "%s(%i)", pFunc->szName, pVar->iDeclLine );
+               hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAR_NOT_USED, pVar->szName, szFun );
+            }
 
-    pVar = pVar->pNext;
- }
+            pVar = pVar->pNext;
+         }
 
- /* Check if the function returned some value
- */
- if( (pFunc->bFlags & FUN_WITH_RETURN) == 0 &&
-    (pFunc->bFlags & FUN_PROCEDURE) == 0 )
-    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
-pFunc->szName, NULL );
+         /* Check if the function returned some value
+          */
+         if( (pFunc->bFlags & FUN_WITH_RETURN) == 0 &&
+             (pFunc->bFlags & FUN_PROCEDURE) == 0 )
+            hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
+                               pFunc->szName, NULL );
 
- /* Compile Time Strong Type Checking is not needed any more. */
- if ( pFunc->pStack )
-    hb_xfree( ( void * ) pFunc->pStack );
+         /* Compile Time Strong Type Checking is not needed any more. */
+         if ( pFunc->pStack )
+            hb_xfree( ( void * ) pFunc->pStack );
 
- pFunc->iStackSize = 0;
- pFunc->iStackIndex = 0;
- pFunc->iStackFunctions = 0;
- pFunc->iStackClasses = 0;
+         pFunc->iStackSize      = 0;
+         pFunc->iStackIndex     = 0;
+         pFunc->iStackFunctions = 0;
+         pFunc->iStackClasses   = 0;
       }
    }
 }
@@ -3252,49 +3251,49 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
    if( pFunc == hb_comp_pInitFunc )
    {
       if( pFunc->pCode[ 0 ] == HB_P_STATICS &&
-  pFunc->pCode[ 5 ] == HB_P_SFRAME )
+          pFunc->pCode[ 5 ] == HB_P_SFRAME )
       {
- hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
- pFunc->pCode[ 1 ] = HB_LOBYTE( w );
- pFunc->pCode[ 2 ] = HB_HIBYTE( w );
- pFunc->pCode[ 6 ] = HB_LOBYTE( w );
- pFunc->pCode[ 7 ] = HB_HIBYTE( w );
+         hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+         pFunc->pCode[ 1 ] = HB_LOBYTE( w );
+         pFunc->pCode[ 2 ] = HB_HIBYTE( w );
+         pFunc->pCode[ 6 ] = HB_LOBYTE( w );
+         pFunc->pCode[ 7 ] = HB_HIBYTE( w );
 
- /* Remove the SFRAME pcode if there's no global static
-    initialization: */
+         /* Remove the SFRAME pcode if there's no global static
+            initialization: */
 
- /* NOTE: For some reason this will not work for the static init
-  function, so I'm using an ugly hack instead. [vszakats] */
+         /* NOTE: For some reason this will not work for the static init
+            function, so I'm using an ugly hack instead. [vszakats] */
 /*       if( !( pFunc->bFlags & FUN_USES_STATICS ) ) */
- if( pFunc->pCode[ 8 ] == HB_P_ENDPROC )
- {
-    pFunc->lPCodePos -= 3;
-    memmove( pFunc->pCode + 5, pFunc->pCode + 8, pFunc->lPCodePos - 5 );
- }
- else
- /* Check Global Statics. */
- {
-    /* PVAR pVar = pFunc->pStatics; */
-    PVAR pVar = hb_comp_functions.pFirst->pStatics;
+         if( pFunc->pCode[ 8 ] == HB_P_ENDPROC )
+         {
+            pFunc->lPCodePos -= 3;
+            memmove( pFunc->pCode + 5, pFunc->pCode + 8, pFunc->lPCodePos - 5 );
+         }
+         else
+            /* Check Global Statics. */
+         {
+            /* PVAR pVar = pFunc->pStatics; */
+            PVAR pVar = hb_comp_functions.pFirst->pStatics;
 
-    while( pVar )
-    {
-       /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
+            while( pVar )
+            {
+               /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
 
-       if ( ! ( pVar->iUsed & VU_USED ) && (pVar->iUsed & VU_INITIALIZED) )
-  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
+               if ( ! ( pVar->iUsed & VU_USED ) && (pVar->iUsed & VU_INITIALIZED) )
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
 
-       /* May have been initialized in previous execution of the function.
-       else if ( ( pVar->iUsed & VU_USED ) && ! ( pVar->iUsed & VU_INITIALIZED ) )
-  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
-       */
-       pVar = pVar->pNext;
-    }
- }
+               /* May have been initialized in previous execution of the function.
+                  else if ( ( pVar->iUsed & VU_USED ) && ! ( pVar->iUsed & VU_INITIALIZED ) )
+                  hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
+               */
+               pVar = pVar->pNext;
+            }
+         }
       }
    }
    else if( pFunc->pCode[ 0 ] == HB_P_FRAME &&
-    pFunc->pCode[ 3 ] == HB_P_SFRAME )
+            pFunc->pCode[ 3 ] == HB_P_SFRAME )
    {
       PVAR pLocal;
       int bLocals = 0;
@@ -3304,55 +3303,55 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
       pLocal = pFunc->pLocals;
       while( pLocal )
       {
- pLocal = pLocal->pNext;
- bLocals++;
+         pLocal = pLocal->pNext;
+         bLocals++;
       }
 
       if( bLocals || pFunc->wParamCount )
       {
- if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
- {
-    pFunc->pCode[ 1 ] = ( BYTE )( bLocals ) - ( BYTE )( pFunc->wParamCount );
- }
- else
- {
-    /* Parameters declared with PARAMETERS statement are not
-     * placed in the local variable list.
-     */
-    pFunc->pCode[ 1 ] = ( BYTE )( bLocals );
- }
- pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
- bSkipFRAME = FALSE;
+         if( pFunc->bFlags & FUN_USES_LOCAL_PARAMS )
+         {
+            pFunc->pCode[ 1 ] = ( BYTE )( bLocals ) - ( BYTE )( pFunc->wParamCount );
+         }
+         else
+         {
+            /* Parameters declared with PARAMETERS statement are not
+             * placed in the local variable list.
+             */
+            pFunc->pCode[ 1 ] = ( BYTE )( bLocals );
+         }
+         pFunc->pCode[ 2 ] = ( BYTE )( pFunc->wParamCount );
+         bSkipFRAME = FALSE;
       }
       else
- bSkipFRAME = TRUE;
+         bSkipFRAME = TRUE;
 
       if( pFunc->bFlags & FUN_USES_STATICS )
       {
- hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
- pFunc->pCode[ 4 ] = HB_LOBYTE( w );
- pFunc->pCode[ 5 ] = HB_HIBYTE( w );
- bSkipSFRAME = FALSE;
+         hb_compSymbolFind( hb_comp_pInitFunc->szName, &w );
+         pFunc->pCode[ 4 ] = HB_LOBYTE( w );
+         pFunc->pCode[ 5 ] = HB_HIBYTE( w );
+         bSkipSFRAME = FALSE;
       }
       else
- bSkipSFRAME = TRUE;
+         bSkipSFRAME = TRUE;
 
       /* Remove the frame pcodes if they are not needed */
 
       if( bSkipFRAME && bSkipSFRAME )
       {
- pFunc->lPCodePos -= 6;
- memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->lPCodePos );
+         pFunc->lPCodePos -= 6;
+         memmove( pFunc->pCode, pFunc->pCode + 6, pFunc->lPCodePos );
       }
       else if( bSkipFRAME )
       {
- pFunc->lPCodePos -= 3;
- memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
+         pFunc->lPCodePos -= 3;
+         memmove( pFunc->pCode, pFunc->pCode + 3, pFunc->lPCodePos );
       }
       else if( bSkipSFRAME )
       {
- pFunc->lPCodePos -= 3;
- memmove( pFunc->pCode + 3, pFunc->pCode + 6, pFunc->lPCodePos - 3 );
+         pFunc->lPCodePos -= 3;
+         memmove( pFunc->pCode + 3, pFunc->pCode + 6, pFunc->lPCodePos - 3 );
       }
    }
 }
@@ -3404,90 +3403,90 @@ static void hb_compOptimizeJumps( void )
       /* Adjusting preceding jumps that pooint to code beyond the current NOOP or trailing backward jumps pointing to lower address. */
       for( iJump = 0; iJump < hb_comp_functions.pLast->iJumps ; iJump++ )
       {
- switch( pCode[ pJumps[ iJump ] ] )
- {
-    case HB_P_JUMPNEAR :
-    case HB_P_JUMPFALSENEAR :
-    case HB_P_JUMPTRUENEAR :
-    {
-       ulOffset = pCode[ pJumps[ iJump ] + 1 ];
+         switch( pCode[ pJumps[ iJump ] ] )
+         {
+            case HB_P_JUMPNEAR :
+            case HB_P_JUMPFALSENEAR :
+            case HB_P_JUMPTRUENEAR :
+            {
+               ulOffset = pCode[ pJumps[ iJump ] + 1 ];
 
-       if( ulOffset > 127 )
-       {
-  ulOffset -= 256;
-  bForward = FALSE;
-       }
-       else
-  bForward = TRUE;
-    }
-    break;
+               if( ulOffset > 127 )
+               {
+                  ulOffset -= 256;
+                  bForward = FALSE;
+               }
+               else
+                  bForward = TRUE;
+            }
+            break;
 
-    case HB_P_JUMP :
-    case HB_P_JUMPFALSE :
-    case HB_P_JUMPTRUE :
-    {
-       ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
-       if( ulOffset > SHRT_MAX )
-       {
-  ulOffset -= 65536;
-  bForward = FALSE;
-       }
-       else
-  bForward = TRUE;
-    }
-    break;
+            case HB_P_JUMP :
+            case HB_P_JUMPFALSE :
+            case HB_P_JUMPTRUE :
+            {
+               ulOffset = ( ULONG ) ( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) );
+               if( ulOffset > SHRT_MAX )
+               {
+                  ulOffset -= 65536;
+                  bForward = FALSE;
+               }
+               else
+                  bForward = TRUE;
+            }
+            break;
 
-    default:
-    {
-       ulOffset = ( ULONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536 ) );
-       if( ulOffset > 8388607L )
-       {
-  ulOffset -= 16777216L;
-  bForward = FALSE;
-       }
-       else
-  bForward = TRUE;
-    }
-    break;
- }
+            default:
+            {
+               ulOffset = ( ULONG )( pCode[ pJumps[ iJump ] + 1 ] + ( pCode[ pJumps[ iJump ] + 2 ] * 256 ) + ( pCode[ pJumps[ iJump ] + 3 ] * 65536 ) );
+               if( ulOffset > 8388607L )
+               {
+                  ulOffset -= 16777216L;
+                  bForward = FALSE;
+               }
+               else
+                  bForward = TRUE;
+            }
+            break;
+         }
 
- /* Only interested in forward (positive) jumps. */
- if( bForward )
- {
-    /* Only if points to code beyond the current fix. */
-    if( pJumps[ iJump ] < pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset > pNOOPs[ iNOOP ] )
-    {
-       /* Increasing Shift Counter for this Jump. */
-       piShifts[ iJump ]++;
+         /* Only interested in forward (positive) jumps. */
+         if( bForward )
+         {
+            /* Only if points to code beyond the current fix. */
+            if( pJumps[ iJump ] < pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset > pNOOPs[ iNOOP ] )
+            {
+               /* Increasing Shift Counter for this Jump. */
+               piShifts[ iJump ]++;
 
-       if( pCode[ pJumps[ iJump ] + 1 ] )
-  pCode[ pJumps[ iJump ] + 1 ]--;
-       else
-       {
-  pCode[ pJumps[ iJump ] + 1 ] = 255;
-  pCode[ pJumps[ iJump ] + 2 ]--;
-       }
-    }
- }
- else
- {
-    /* Adjusting all later jumps (if negative) and target prior the current NOOP. */
+               if( pCode[ pJumps[ iJump ] + 1 ] )
+                  pCode[ pJumps[ iJump ] + 1 ]--;
+               else
+               {
+                  pCode[ pJumps[ iJump ] + 1 ] = 255;
+                  pCode[ pJumps[ iJump ] + 2 ]--;
+               }
+            }
+         }
+         else
+         {
+            /* Adjusting all later jumps (if negative) and target prior the current NOOP. */
 
-    /* Only if points to code beyond the current fix. */
-    if(  pJumps[ iJump ] > pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset < pNOOPs[ iNOOP ] )
-    {
-       /* Decreasing Shift Counter for this Jump. */
-       piShifts[ iJump ]--;
+            /* Only if points to code beyond the current fix. */
+            if(  pJumps[ iJump ] > pNOOPs[ iNOOP ] && pJumps[ iJump ] + piShifts[ iJump ] + ulOffset < pNOOPs[ iNOOP ] )
+            {
+               /* Decreasing Shift Counter for this Jump. */
+               piShifts[ iJump ]--;
 
-       if( pCode[ pJumps[ iJump ] + 1 ] < 255 )
-  pCode[ pJumps[ iJump ] + 1 ]++;
-       else
-       {
-  pCode[ pJumps[ iJump ] + 1 ] = 0;
-  pCode[ pJumps[ iJump ] + 2 ]++;
-       }
-    }
- }
+               if( pCode[ pJumps[ iJump ] + 1 ] < 255 )
+                  pCode[ pJumps[ iJump ] + 1 ]++;
+               else
+               {
+                  pCode[ pJumps[ iJump ] + 1 ] = 0;
+                  pCode[ pJumps[ iJump ] + 2 ]++;
+               }
+            }
+         }
       }
    }
 
@@ -3552,8 +3551,8 @@ void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts )
    {
       if( ! bUsualStmts )
       {
- hb_comp_functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
- hb_comp_ulLastLinePos = ulStartPos - 5;
+         hb_comp_functions.pLast->lPCodePos = ulStartPos - 1; /* remove also HB_P_SEQBEGIN */
+         hb_comp_ulLastLinePos = ulStartPos - 5;
       }
    }
 }
@@ -3567,11 +3566,11 @@ void hb_compSequenceFinish( ULONG ulStartPos, int bUsualStmts )
 void hb_compFieldSetAlias( char * szAlias, int iField )
 {
    PVAR pVar;
-
+   
    pVar = hb_comp_functions.pLast->pFields;
    while( iField-- && pVar )
       pVar = pVar->pNext;
-
+   
    while( pVar )
    {
       pVar->szAlias = szAlias;
@@ -3652,14 +3651,14 @@ void hb_compCodeBlockStart()
 {
    PFUNCTION pBlock;
 
-   #if 0
-      if( hb_comp_iWarnings >= 3 )
-      {
-	     /* Not generating yet - will be generated in hb_compCodeBlockEnd() */
- hb_compGenPCode1( HB_P_PUSHBLOCK );
- pBlock->lPCodePos--;
-      }
-   #endif
+#if 0
+   if( hb_comp_iWarnings >= 3 )
+   {
+      /* Not generating yet - will be generated in hb_compCodeBlockEnd() */
+      hb_compGenPCode1( HB_P_PUSHBLOCK );
+      pBlock->lPCodePos--;
+   }
+#endif
 
    pBlock       = hb_compFunctionNew( NULL, HB_FS_STATIC );
    pBlock->pOwner       = hb_comp_functions.pLast;
@@ -3750,7 +3749,7 @@ void hb_compCodeBlockEnd( void )
    while( pVar )
    {
       if( hb_comp_iWarnings && pFunc->szName && pVar->szName && ! ( pVar->iUsed & VU_USED ) )
- hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
       /* free used variables */
       pFree = pVar;
@@ -3771,10 +3770,10 @@ void hb_compCodeBlockEnd( void )
    if ( pCodeblock->pStack )
       hb_xfree( ( void * ) pCodeblock->pStack );
 
-   pCodeblock->iStackSize = 0;
-   pCodeblock->iStackIndex = 0;
+   pCodeblock->iStackSize      = 0;
+   pCodeblock->iStackIndex     = 0;
    pCodeblock->iStackFunctions = 0;
-   pCodeblock->iStackClasses = 0;
+   pCodeblock->iStackClasses   = 0;
 
    hb_xfree( ( void * ) pCodeblock );
 }
@@ -3796,20 +3795,20 @@ static void hb_compInitVars( void )
    hb_comp_symbols.pFirst   = NULL;
    hb_comp_symbols.pLast    = NULL;
    hb_comp_szAnnounce       = NULL;
-   hb_comp_pInitFunc = NULL;
-   hb_comp_bAnyWarning = FALSE;
+   hb_comp_pInitFunc        = NULL;
+   hb_comp_bAnyWarning      = FALSE;
 
-   hb_comp_iLine = 1;
-   hb_comp_iFunctionCnt = 0;
-   hb_comp_iErrorCount = 0;
-   hb_comp_cVarType = ' ';
+   hb_comp_iLine         = 1;
+   hb_comp_iFunctionCnt  = 0;
+   hb_comp_iErrorCount   = 0;
+   hb_comp_cVarType      = ' ';
    hb_comp_ulLastLinePos = 0;
-   hb_comp_iStaticCnt = 0;
-   hb_comp_iVarScope = VS_LOCAL;
+   hb_comp_iStaticCnt    = 0;
+   hb_comp_iVarScope     = VS_LOCAL;
 
-   hb_comp_inlines.iCount   = 0;
-   hb_comp_inlines.pFirst   = NULL;
-   hb_comp_inlines.pLast    = NULL;
+   hb_comp_inlines.iCount = 0;
+   hb_comp_inlines.pFirst = NULL;
+   hb_comp_inlines.pLast  = NULL;
 }
 
 static void hb_compGenOutput( int iLanguage )
@@ -3818,24 +3817,24 @@ static void hb_compGenOutput( int iLanguage )
    switch( iLanguage )
    {
       case LANG_C:
- hb_compGenCCode( hb_comp_pFileName );
- break;
+         hb_compGenCCode( hb_comp_pFileName );
+         break;
 
       case LANG_OBJ32:
- hb_compGenObj32( hb_comp_pFileName );
- break;
+         hb_compGenObj32( hb_comp_pFileName );
+         break;
 
       case LANG_JAVA:
- hb_compGenJava( hb_comp_pFileName );
- break;
+         hb_compGenJava( hb_comp_pFileName );
+         break;
 
       case LANG_PORT_OBJ:
- hb_compGenPortObj( hb_comp_pFileName );
- break;
+         hb_compGenPortObj( hb_comp_pFileName );
+         break;
 
       case LANG_OBJ_MODULE:
- hb_compGenCObj( hb_comp_pFileName );
- break;
+         hb_compGenCObj( hb_comp_pFileName );
+         break;
    }
 }
 
@@ -3848,13 +3847,13 @@ static void hb_compOutputFile( void )
    if( hb_comp_pOutPath )
    {
       if( hb_comp_pOutPath->szPath )
- hb_comp_pFileName->szPath = hb_comp_pOutPath->szPath;
+         hb_comp_pFileName->szPath = hb_comp_pOutPath->szPath;
 
       if( hb_comp_pOutPath->szName )
       {
- hb_comp_pFileName->szName = hb_comp_pOutPath->szName;
- if( hb_comp_pOutPath->szExtension )
-    hb_comp_pFileName->szExtension = hb_comp_pOutPath->szExtension;
+         hb_comp_pFileName->szName = hb_comp_pOutPath->szName;
+         if( hb_comp_pOutPath->szExtension )
+            hb_comp_pFileName->szExtension = hb_comp_pOutPath->szExtension;
       }
    }
 }
@@ -3872,212 +3871,212 @@ int hb_compCompile( char * szPrg, int argc, char * argv[] )
       char szPpoName[ _POSIX_PATH_MAX ];
 
       if( !hb_comp_pFileName->szExtension )
- hb_comp_pFileName->szExtension = ".prg";
+         hb_comp_pFileName->szExtension = ".prg";
 
       hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
       if( hb_comp_bPPO )
       {
- hb_comp_pFileName->szExtension = ".ppo";
- hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
- hb_comp_yyppo = fopen( szPpoName, "w" );
- if( ! hb_comp_yyppo )
- {
-    hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
-    iStatus = EXIT_FAILURE;
- }
+         hb_comp_pFileName->szExtension = ".ppo";
+         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         hb_comp_yyppo = fopen( szPpoName, "w" );
+         if( ! hb_comp_yyppo )
+         {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
+            iStatus = EXIT_FAILURE;
+         }
       }
 
       if( iStatus == EXIT_SUCCESS )
       {
- /* Add /D command line or envvar defines */
- hb_compChkDefines( argc, argv );
+         /* Add /D command line or envvar defines */
+         hb_compChkDefines( argc, argv );
 
- /* Initialize support variables */
- hb_compInitVars();
+         /* Initialize support variables */
+         hb_compInitVars();
 
- if( hb_compInclude( szFileName, NULL ) )
- {
-    BOOL bSkipGen = FALSE ;
+         if( hb_compInclude( szFileName, NULL ) )
+         {
+            BOOL bSkipGen = FALSE ;
 
-    hb_comp_szFile = szFileName;
+            hb_comp_szFile = szFileName;
 
-    if( ! hb_comp_bQuiet )
-    {
-       if( hb_comp_bPPO )
-  printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-       else
-  printf( "Compiling '%s'...\n", szFileName );
-    }
+            if( ! hb_comp_bQuiet )
+            {
+               if( hb_comp_bPPO )
+                  printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+               else
+                  printf( "Compiling '%s'...\n", szFileName );
+            }
 
-    /* Generate the starting procedure frame */
-    if( hb_comp_bStartProc )
-hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
-    else
-    {
-/* Don't pass the name of module if the code for starting procedure
-* will be not generated. The name cannot be placed as first symbol
-* because this symbol can be used as function call or memvar's name.
-*/
-hb_compFunctionAdd( hb_compIdentifierNew( "", TRUE ), HB_FS_PUBLIC, FUN_PROCEDURE );
-    }
+            /* Generate the starting procedure frame */
+            if( hb_comp_bStartProc )
+               hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+            else
+            {
+               /* Don't pass the name of module if the code for starting procedure
+                * will be not generated. The name cannot be placed as first symbol
+                * because this symbol can be used as function call or memvar's name.
+                */
+               hb_compFunctionAdd( hb_compIdentifierNew( "", TRUE ), HB_FS_PUBLIC, FUN_PROCEDURE );
+            }
 
-    yyparse();
+            yyparse();
 
-    /* Close processed file (it is opened in hb_compInclude() function ) */
-    fclose( yyin );
-    hb_comp_files.pLast  = NULL;
+            /* Close processed file (it is opened in hb_compInclude() function ) */
+            fclose( yyin );
+            hb_comp_files.pLast  = NULL;
 
-    if( hb_comp_bPPO && hb_comp_yyppo )
-    {
-       fclose( hb_comp_yyppo );
-       hb_comp_yyppo = NULL;
-    }
+            if( hb_comp_bPPO && hb_comp_yyppo )
+            {
+               fclose( hb_comp_yyppo );
+               hb_comp_yyppo = NULL;
+            }
 
-    /* Saving main file. */
-    pFileName = hb_comp_pFileName;
+            /* Saving main file. */
+            pFileName = hb_comp_pFileName;
 
-    /* Open refernced modules. */
-    while( hb_comp_pAutoOpen )
-    {
-       PAUTOOPEN pAutoOpen = hb_comp_pAutoOpen;
+            /* Open refernced modules. */
+            while( hb_comp_pAutoOpen )
+            {
+               PAUTOOPEN pAutoOpen = hb_comp_pAutoOpen;
 
-       hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
+               hb_comp_pAutoOpen = hb_comp_pAutoOpen->pNext;
 
-       if( ! hb_compFunctionFind( pAutoOpen->szName ) )
-  hb_compAutoOpen( pAutoOpen->szName, &bSkipGen );
+               if( ! hb_compFunctionFind( pAutoOpen->szName ) )
+                  hb_compAutoOpen( pAutoOpen->szName, &bSkipGen );
 
-       hb_xfree( pAutoOpen->szName );
-       hb_xfree( pAutoOpen );
-    }
+               hb_xfree( pAutoOpen->szName );
+               hb_xfree( pAutoOpen );
+            }
 
-    /* Restoring main file. */
-    hb_comp_pFileName = pFileName;
+            /* Restoring main file. */
+            hb_comp_pFileName = pFileName;
 
- /* Begin of finalization phase. */
+            /* Begin of finalization phase. */
 
-    /* fix all previous function returns offsets */
-    hb_compFinalizeFunction();
+            /* fix all previous function returns offsets */
+            hb_compFinalizeFunction();
 
-    hb_compExternGen();       /* generates EXTERN symbols names */
+            hb_compExternGen();       /* generates EXTERN symbols names */
 
-    if( hb_comp_pInitFunc )
-    {
-PCOMSYMBOL pSym;
+            if( hb_comp_pInitFunc )
+            {
+               PCOMSYMBOL pSym;
 
-/* Fix the number of static variables */
-hb_comp_pInitFunc->pCode[ 3 ] = HB_LOBYTE( hb_comp_iStaticCnt );
-hb_comp_pInitFunc->pCode[ 4 ] = HB_HIBYTE( hb_comp_iStaticCnt );
-hb_comp_pInitFunc->iStaticsBase = hb_comp_iStaticCnt;
+               /* Fix the number of static variables */
+               hb_comp_pInitFunc->pCode[ 3 ] = HB_LOBYTE( hb_comp_iStaticCnt );
+               hb_comp_pInitFunc->pCode[ 4 ] = HB_HIBYTE( hb_comp_iStaticCnt );
+               hb_comp_pInitFunc->iStaticsBase = hb_comp_iStaticCnt;
 
-pSym = hb_compSymbolAdd( hb_comp_pInitFunc->szName, NULL );
-pSym->cScope |= hb_comp_pInitFunc->cScope;
-hb_comp_functions.pLast->pNext = hb_comp_pInitFunc;
-hb_comp_functions.pLast = hb_comp_pInitFunc;
-hb_compGenPCode1( HB_P_ENDPROC );
-++hb_comp_functions.iCount;
-    }
+               pSym = hb_compSymbolAdd( hb_comp_pInitFunc->szName, NULL );
+               pSym->cScope |= hb_comp_pInitFunc->cScope;
+               hb_comp_functions.pLast->pNext = hb_comp_pInitFunc;
+               hb_comp_functions.pLast = hb_comp_pInitFunc;
+               hb_compGenPCode1( HB_P_ENDPROC );
+               ++hb_comp_functions.iCount;
+            }
 
-    if( hb_comp_szAnnounce )
-hb_compAnnounce( hb_comp_szAnnounce );
+            if( hb_comp_szAnnounce )
+               hb_compAnnounce( hb_comp_szAnnounce );
 
- /* End of finalization phase. */
+            /* End of finalization phase. */
 
-    if( hb_comp_iErrorCount || hb_comp_bAnyWarning )
-    {
-       if( hb_comp_iErrorCount )
-       {
-  iStatus = EXIT_FAILURE;
-  bSkipGen = TRUE;
-  printf( "\r%i error%s\n\nNo code generated\n", hb_comp_iErrorCount, ( hb_comp_iErrorCount > 1 ? "s" : "" ) );
-       }
-       else if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
-       {
-  iStatus = EXIT_FAILURE;
-       }
-       else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
-       {
-  iStatus = EXIT_FAILURE;
-  bSkipGen = TRUE;
-  printf( "\nNo code generated.\n" );
-       }
-    }
+            if( hb_comp_iErrorCount || hb_comp_bAnyWarning )
+            {
+               if( hb_comp_iErrorCount )
+               {
+                  iStatus = EXIT_FAILURE;
+                  bSkipGen = TRUE;
+                  printf( "\r%i error%s\n\nNo code generated\n", hb_comp_iErrorCount, ( hb_comp_iErrorCount > 1 ? "s" : "" ) );
+               }
+               else if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+               {
+                  iStatus = EXIT_FAILURE;
+               }
+               else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
+               {
+                  iStatus = EXIT_FAILURE;
+                  bSkipGen = TRUE;
+                  printf( "\nNo code generated.\n" );
+               }
+            }
 
-    if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
-    {
-       PFUNCTION pFunc;
-       char * szFirstFunction = NULL;
+            if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
+            {
+               PFUNCTION pFunc;
+               char * szFirstFunction = NULL;
 
-       /* we create the output file name */
-       hb_compOutputFile();
+               /* we create the output file name */
+               hb_compOutputFile();
 
-       if( ! hb_comp_bStartProc )
-  --hb_comp_iFunctionCnt;
+               if( ! hb_comp_bStartProc )
+                  --hb_comp_iFunctionCnt;
 
-       pFunc = hb_comp_functions.pFirst;
-       while( pFunc )
-       {
-  hb_compOptimizeFrames( pFunc );
+               pFunc = hb_comp_functions.pFirst;
+               while( pFunc )
+               {
+                  hb_compOptimizeFrames( pFunc );
 
-  if( szFirstFunction == NULL && pFunc->szName[0] && ! ( pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT ) )
-  {
-     szFirstFunction = pFunc->szName;
-  }
+                  if( szFirstFunction == NULL && pFunc->szName[0] && ! ( pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT ) )
+                  {
+                     szFirstFunction = pFunc->szName;
+                  }
 
-  pFunc = pFunc->pNext;
-       }
+                  pFunc = pFunc->pNext;
+               }
 
-       if( szFirstFunction )
-       {
-  PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
+               if( szFirstFunction )
+               {
+                  PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
 
-  while( pSym )
-  {
-     if( strcmp( pSym->szName, szFirstFunction ) == 0 )
-     {
-pSym->cScope |= HB_FS_FIRST;
-break;
-     }
-     pSym = pSym->pNext;
-  }
-       }
+                  while( pSym )
+                  {
+                     if( strcmp( pSym->szName, szFirstFunction ) == 0 )
+                     {
+                        pSym->cScope |= HB_FS_FIRST;
+                        break;
+                     }
+                     pSym = pSym->pNext;
+                  }
+               }
 
-       if( ! hb_comp_bQuiet )
-  printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
+               if( ! hb_comp_bQuiet )
+                  printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
 
-       hb_compGenOutput( hb_comp_iLanguage );
-    }
- }
- else
- {
-    printf( "Cannot open input file: %s\n", szFileName );
+               hb_compGenOutput( hb_comp_iLanguage );
+            }
+         }
+         else
+         {
+            printf( "Cannot open input file: %s\n", szFileName );
 
-    /* printf( "No code generated\n" ); */
-    iStatus = EXIT_FAILURE;
- }
+            /* printf( "No code generated\n" ); */
+            iStatus = EXIT_FAILURE;
+         }
 
- {
-    PFILE pFile = hb_comp_files.pLast;
+         {
+            PFILE pFile = hb_comp_files.pLast;
 
-    while( pFile )
-    {
-       fclose( pFile->handle );
-       pFile = ( PFILE ) pFile->pPrev;
-    }
- }
+            while( pFile )
+            {
+               fclose( pFile->handle );
+               pFile = ( PFILE ) pFile->pPrev;
+            }
+         }
 
 /*
- while( hb_comp_pExterns )
- {
-    PEXTERN pExtern = hb_comp_pExterns;
+  while( hb_comp_pExterns )
+  {
+  PEXTERN pExtern = hb_comp_pExterns;
 
-    hb_comp_pExterns = hb_comp_pExterns->pNext;
+  hb_comp_pExterns = hb_comp_pExterns->pNext;
 
-    hb_xfree( pExtern->szName );
-    hb_xfree( pExtern );
- }
+  hb_xfree( pExtern->szName );
+  hb_xfree( pExtern );
+  }
 */
- hb_comp_bExternal = FALSE;
+         hb_comp_bExternal = FALSE;
       }
    }
    else
@@ -4100,14 +4099,14 @@ void hb_compAutoOpenAdd( char * szName )
       pAutoOpen->pNext  = NULL;
 
       if( hb_comp_pAutoOpen == NULL )
-  hb_comp_pAutoOpen = pAutoOpen;
+         hb_comp_pAutoOpen = pAutoOpen;
       else
       {
-  pLast = hb_comp_pAutoOpen;
-  while( pLast->pNext )
-      pLast = pLast->pNext;
+         pLast = hb_comp_pAutoOpen;
+         while( pLast->pNext )
+            pLast = pLast->pNext;
 
-  pLast->pNext = pAutoOpen;
+         pLast->pNext = pAutoOpen;
       }
    }
 }
@@ -4125,10 +4124,10 @@ BOOL hb_compAutoOpenFind( char * szName )
    {
       while( pLast->pNext )
       {
- pLast = pLast->pNext;
+         pLast = pLast->pNext;
 
- if( strcmp( pLast->szName, szName ) == 0 )
-    return TRUE;
+         if( strcmp( pLast->szName, szName ) == 0 )
+            return TRUE;
       }
    }
    return FALSE;
@@ -4146,80 +4145,80 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
       char szPpoName[ _POSIX_PATH_MAX ];
 
       if( !hb_comp_pFileName->szExtension )
- hb_comp_pFileName->szExtension = ".prg";
+         hb_comp_pFileName->szExtension = ".prg";
 
       hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
       if( hb_comp_bPPO )
       {
- hb_comp_pFileName->szExtension = ".ppo";
- hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
- hb_comp_yyppo = fopen( szPpoName, "w" );
- if( ! hb_comp_yyppo )
- {
-    hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
-    iStatus = EXIT_FAILURE;
- }
+         hb_comp_pFileName->szExtension = ".ppo";
+         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+         hb_comp_yyppo = fopen( szPpoName, "w" );
+         if( ! hb_comp_yyppo )
+         {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
+            iStatus = EXIT_FAILURE;
+         }
       }
 
       if( iStatus == EXIT_SUCCESS )
       {
- /* Minimal Init. */
- hb_comp_files.iFiles = 0;
- hb_comp_iLine= 1;
+         /* Minimal Init. */
+         hb_comp_files.iFiles = 0;
+         hb_comp_iLine= 1;
 
- if( hb_compInclude( szFileName, NULL ) )
- {
-    if( ! hb_comp_bQuiet )
-    {
-       if( hb_comp_bPPO )
-  printf( "Compiling module '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
-       else
-  printf( "Compiling module '%s'...\n", szFileName );
-    }
+         if( hb_compInclude( szFileName, NULL ) )
+         {
+            if( ! hb_comp_bQuiet )
+            {
+               if( hb_comp_bPPO )
+                  printf( "Compiling module '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+               else
+                  printf( "Compiling module '%s'...\n", szFileName );
+            }
 
-    hb_pp_Init();
+            hb_pp_Init();
 
-    /*
-    yyrestart( yyin );
-    */
+            /*
+              yyrestart( yyin );
+            */
 
-    /* Generate the starting procedure frame */
-    if( hb_comp_bStartProc )
-       hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
+            /* Generate the starting procedure frame */
+            if( hb_comp_bStartProc )
+               hb_compFunctionAdd( hb_strupr( hb_strdup( hb_comp_pFileName->szName ) ), HB_FS_PUBLIC, FUN_PROCEDURE );
 
-    {
-       int i = hb_comp_iExitLevel ;
-       BOOL b = hb_comp_bAnyWarning;
+            {
+               int i = hb_comp_iExitLevel ;
+               BOOL b = hb_comp_bAnyWarning;
 
-       yyparse();
+               yyparse();
 
-       hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
-       hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
-    }
+               hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
+               hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
+            }
 
-    /* Close processed file (it is opened in hb_compInclude() function ) */
-    fclose( yyin );
-    hb_comp_files.pLast = NULL;
+            /* Close processed file (it is opened in hb_compInclude() function ) */
+            fclose( yyin );
+            hb_comp_files.pLast = NULL;
 
-    if( hb_comp_bAnyWarning )
-    {
-       if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
-       {
-  iStatus = EXIT_FAILURE;
-       }
-       else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
-       {
-  iStatus = EXIT_FAILURE;
-  *pbSkipGen = TRUE;
-  printf( "\nNo code generated.\n" );
-       }
-    }
- }
- else
- {
-    printf( "Cannot open %s, assumed external\n", szFileName );
- }
+            if( hb_comp_bAnyWarning )
+            {
+               if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+               {
+                  iStatus = EXIT_FAILURE;
+               }
+               else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
+               {
+                  iStatus = EXIT_FAILURE;
+                  *pbSkipGen = TRUE;
+                  printf( "\nNo code generated.\n" );
+               }
+            }
+         }
+         else
+         {
+            printf( "Cannot open %s, assumed external\n", szFileName );
+         }
       }
    }
    else
