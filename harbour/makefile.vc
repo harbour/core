@@ -48,6 +48,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\codebloc.obj \
     $(OBJ_DIR)\console.obj \
     $(OBJ_DIR)\dates.obj \
+    $(OBJ_DIR)\descend.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
     $(OBJ_DIR)\error.obj \
@@ -139,6 +140,9 @@ $(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dynsym.obj : $(RTL_DIR)\dynsym.c

@@ -121,6 +121,7 @@ void InitSymbolTable( void )
    * Place here your <modulename>__InitSymbols functions
    */
   Classes__InitSymbols();
+  Descend__InitSymbols();
 
   /*
    * The system symbol table with runtime functions HAVE TO be called last

@@ -19,6 +19,7 @@ $(path_lib)\harbour.lib :       $(path_obj)\arrays.obj \
                 $(path_obj)\classes.obj \
                 $(path_obj)\codebloc.obj \
                 $(path_obj)\console.obj \
+                $(path_obj)\descend.obj \
                 $(path_obj)\dates.obj \
                 $(path_obj)\dynsym.obj \
                 $(path_obj)\environ.obj \
@@ -78,6 +79,7 @@ $(path_obj)\classes.obj  : {$(path_c)}classes.c  $(path_h)\extend.h $(path_h)\ty
 $(path_obj)\codebloc.obj : {$(path_c)}codebloc.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\itemapi.h
 $(path_obj)\dates.obj    : {$(path_c)}dates.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\dates.h $(path_h)\set.h
 $(path_obj)\debug.obj    : {$(path_c)}debug.c    $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h $(path_h)\itemapi.h
+$(path_obj)\descend.obj  : {$(path_c)}descend.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\environ.obj  : {$(path_c)}environ.c  $(path_h)\extend.h $(path_h)\types.h
 $(path_obj)\errorapi.obj : {$(path_c)}errorapi.c $(path_h)\extend.h $(path_h)\types.h $(path_h)\ctoharb.h
 $(path_obj)\extend.obj   : {$(path_c)}extend.c   $(path_h)\extend.h $(path_h)\types.h $(path_h)\set.h

@@ -1,3 +1,9 @@
+19990604-18:05 CET Jose Lalin (upload Eddie Runia)
+  * makefile.*
+    descend added
+  * source/rtl/descend.c; tests/working/descend.prg; source/vm/initsymb.c
+    descend added
+
 19990604-12:00 EDT David G. Holm <dholm@jsd-llc.com>
   * build31.bat
     - Removed the non-portable fully qualified path that somebody added

@@ -13,7 +13,7 @@
 PROJECT: harbour.exe harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
-              debug.obj dynsym.obj environ.obj error.obj \
+              debug.obj descend.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj files.obj \
               initsymb.obj itemapi.obj hb_f.obj\
               math.obj mathx.obj objfunc.obj set.obj symbols.obj strings.obj \
@@ -43,6 +43,7 @@ codebloc.obj : codebloc.c extend.h types.h
 dates.obj    : dates.c    extend.h types.h
 datesx.obj   : datesx.c   extend.h types.h
 debug.obj    : debug.c    extend.h types.h
+descend.obj  : descend.c  extend.h types.h
 dynsym.obj   : dynsym.c   extend.h types.h
 environ.obj  : environ.c  extend.h types.h
 error.obj    : error.c    extend.h types.h

@@ -16,7 +16,7 @@ c_opt = -mh -O2 -I.\include -DUSE_GTAPI
 PROJECT: harbour.lib hbtools.lib terminal.lib libs\win16\terminal.lib harbour.exe
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
-              dynsym.obj environ.obj error.obj \
+              descend.obj dynsym.obj environ.obj error.obj \
               errorapi.obj errorsys.obj extend.obj \
               files.obj gtapi.obj initsymb.obj itemapi.obj \
               math.obj objfunc.obj \
@@ -46,6 +46,7 @@ asort.obj    : asort.prg    extend.h types.h init.h pcode.h harbour.exe
 classes.obj  : classes.c    extend.h types.h itemapi.h
 codebloc.obj : codebloc.c   extend.h types.h
 dates.obj    : dates.c      extend.h types.h dates.h set.h
+descend.obj  : descend.c    extend.h types.h
 environ.obj  : environ.c    extend.h types.h
 error.obj    : error.prg    extend.h types.h init.h pcode.h harbour.exe
 errorapi.obj : errorapi.c   extend.h types.h ctoharb.h
