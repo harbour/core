@@ -84,7 +84,11 @@ char * hb_getenv( const char * szName )
 #elif defined(HB_OS_OS2)
 
    {
+   #ifdef __GNUC__
+      PSZ EnvValue = "";
+   #else
       PCSZ EnvValue = "";
+   #endif
 
       if( DosScanEnv( szName, &EnvValue ) == NO_ERROR )
       {
