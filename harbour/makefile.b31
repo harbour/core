@@ -92,8 +92,7 @@ transfrm.obj : transfrm.c extend.h types.h
 harbour.exe : y_tab.obj lexyy.obj lex_tab.obj harbour.obj genobj32.obj
    echo -mh -O2 -ebin\harbour.exe  -Iinclude;source\compiler obj\y_tab.obj > b31.bc
    echo obj\lexyy.obj obj\lex_tab.obj >> b31.bc
-#   echo obj\harbour.obj obj\genobj32.obj >> b31.bc
-   echo obj\genobj32.obj >> b31.bc
+   echo obj\harbour.obj obj\genobj32.obj >> b31.bc
    bcc @b31.bc
 
 fixflex.obj : source\compiler\fixflex.c

@@ -37,7 +37,7 @@ void Do( WORD WParams );      /* invoke the virtual machine */
 HARBOUR DoBlock( void );      /* executes a codeblock */
 void Duplicate( void );       /* duplicates the latest value on the stack */
 void EndBlock( void );        /* copies the last codeblock pushed value into the return value */
-void Equal( void );           /* checks if the two latest values on the stack are equal, removes both and leaves result */
+void Equal( BOOL bExact );    /* checks if the two latest values on the stack are equal, removes both and leaves result */
 void ForTest( void );         /* test for end condition of for */
 void Frame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
 void FuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
@@ -260,7 +260,12 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               return;   /* end of a codeblock - stop evaluation */
 
          case _EQUAL:
-              Equal();
+              Equal( FALSE );
+              w++;
+              break;
+
+         case _EXACTLYEQUAL:
+              Equal( TRUE );
               w++;
               break;
 
@@ -738,7 +743,7 @@ void EndBlock( void )
    HBDEBUG( "EndBlock\n" );
 }
 
-void Equal( void )
+void Equal( BOOL bExact )
 {
    PITEM pItem2 = stack.pPos - 1;
    PITEM pItem1 = stack.pPos - 2;
@@ -760,7 +765,7 @@ void Equal( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2, TRUE );
+      i = hb_itemStrCmp( pItem1, pItem2, bExact );
       StackPop();
       StackPop();
       PushLogical( i == 0 );
@@ -872,7 +877,7 @@ void Greater( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       StackPop();
       StackPop();
       PushLogical( i > 0 );
@@ -915,7 +920,7 @@ void GreaterEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       StackPop();
       StackPop();
       PushLogical( i >= 0 );
@@ -1033,7 +1038,7 @@ void Less( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       StackPop();
       StackPop();
       PushLogical( i < 0 );
@@ -1076,7 +1081,7 @@ void LessEqual( void )
 
    if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
    {
-      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, TRUE );
+      i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
       StackPop();
       StackPop();
       PushLogical( i <= 0 );
@@ -1171,7 +1176,7 @@ void NotEqual( void )
 
    else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      i = hb_itemStrCmp( pItem1, pItem2, TRUE );
+      i = hb_itemStrCmp( pItem1, pItem2, FALSE );
       StackPop();
       StackPop();
       PushLogical( i != 0 );

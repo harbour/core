@@ -676,7 +676,7 @@ Operators  : Expression '='    Expression   { GenPCode1( _EQUAL ); } /* compare 
                        Expression { GenPCode1( AND_ ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
            | Expression OR { if( _iShortCuts ){ Duplicate(); $<iNumber>$ = JumpTrue( 0 ); } }
                        Expression { GenPCode1( OR_ ); if( _iShortCuts ) JumpHere( $<iNumber>3 ); }
-           | Expression EQ     Expression   { GenPCode1( _EQUAL ); }
+           | Expression EQ     Expression   { GenPCode1( _EXACTLYEQUAL ); }
            | Expression NE1    Expression   { GenPCode1( _NOTEQUAL ); }
            | Expression NE2    Expression   { GenPCode1( _NOTEQUAL ); }
            | Expression POWER  Expression   { GenPCode1( _POWER ); }
@@ -1818,6 +1818,11 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
 
             case _EQUAL:
                  fprintf( yyc, "                _EQUAL,\n" );
+                 lPCodePos++;
+                 break;
+
+            case _EXACTLYEQUAL:
+                 fprintf( yyc, "                _EXACTLYEQUAL,\n" );
                  lPCodePos++;
                  break;
 

@@ -1,3 +1,15 @@
+19990513-22:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Put harbour.obj back into the harbour.exe build.
+  * source/compiler/harbour.y
+    - Changed Expression EQ (for ==) to generate new PCODE _EXACTLYEQUAL, again.
+  * source/vm/hvm.c
+    - Modifed the Equal function to take one parameter: BOOL bExact, again.
+    - Modified the handler for PCODE _EQUAL to call Equal( FALSE ), again.
+    - Added new handler for PCODE _EXACTLYEQUAL, which calls Equal( TRUE ), again.
+    - Modified the Equal function to call hb_itemStrCmp with bExact as the new
+      third parameter, again.
+
 19990514-23:45 CET Eddie Runia
   * source/rtl/set.c
     IS_STRING and IS_LOGICAL called without checking for empty pItem.
