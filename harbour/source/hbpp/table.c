@@ -22,8 +22,9 @@ typedef struct
 int koldef = 41;
 DEFINES aDefines[] =
 {
- { "_SET_EXACT",NULL,0,"1" },
- { "_SET_FIXED",NULL,0,"2" },
+ {"__HARBOUR__",NULL,0,"" },
+ {"_SET_EXACT",NULL,0,"1" },
+ {"_SET_FIXED",NULL,0,"2" },
  {"_SET_DECIMALS",NULL,0,"3"},
  {"_SET_DATEFORMAT",NULL,0,"4"},
  {"_SET_EPOCH",NULL,0,"5"},

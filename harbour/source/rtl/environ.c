@@ -2,13 +2,11 @@
  * $Id$
  */
 
-#include <errorapi.h>
-
 #ifdef __IBMCPP__
   #define INCL_DOSMISC
 #endif
 
-#include <extend.h>
+#include <errorapi.h>
 #include <version.h>
 
 #if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__)

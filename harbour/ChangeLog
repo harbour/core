@@ -1,3 +1,28 @@
+19990617-13:00 EDT David G. Holm <dholm@jsd-llc.com>
+  * doc/transfrm.txt
+    - Updated to reflect use of SET DATE FORMAT and SET CENTURY for dates
+    - Added question regarding behaviour difference between Harbour and
+      Clipper for the @E date-related function
+  * source/hbpp/hbppint.c
+    - Removed ParseDefine("__HARBOUR__")
+  * source/hbpp/table.c
+    - Added __HARBOUR__ to aDefines table
+  * source/rtl/environ.c
+    - No #includes are allowed before the #ifdef __IBMCPP__ block
+  * source/rtl/set.c
+    - Renamed HB_SETCENTURY to HB___SETCENTURY
+    - Eliminated HB_SETFIXED
+  * tests/working/dates.prg
+    - Converted HB_SETCENTURY() to __SETCENTURY()
+  * tests/working/dates2.prg
+    - Converted HB_SETCENTURY() to __SETCENTURY()
+  * tests/working/empty.prg
+    - Converted HB_SETCENTURY() to __SETCENTURY()
+  * tests/working/teststr.prg
+    - Converted HB_SETFIXED() to SET (_SET_SETFIXED)
+  * tests/working/transfrm.prg
+    - Converted HB_SETCENTURY() to __SETCENTURY()
+
 Thu Jun 17 11:34:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/Makefile: 

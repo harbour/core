@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include "harb.h"
 
-extern int ParseDefine( char* );
 extern int ParseDirective( char* );
 extern int ParseExpression( char*, char* );
 extern int RdStr(FILE*,char *,int,int,char*,int*,int*);
@@ -53,8 +52,6 @@ void Hbpp_init ( void )
   aDefnew = ( DEFINES * ) _xgrab( sizeof(DEFINES) * 50 );
   aCommnew = ( COMMANDS * ) _xgrab( sizeof(COMMANDS) * INITIAL_ACOM_SIZE );
   aTranslates = ( TRANSLATES * ) _xgrab( sizeof(TRANSLATES) * 50 );
-  
-  ParseDefine( "__HARBOUR__" );
 }
 
 int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )

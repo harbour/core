@@ -9,7 +9,7 @@
 
 function Main()
 
-   SETCENTURY ("ON")                      // SET CENTURY ON
+   __SETCENTURY ("ON")                      // SET CENTURY ON
    SET (_SET_DATEFORMAT, "DD/MM/YYYY")       // SET DATE BRITISH
    QOut( "British date format with century on" )
    QOut( "C 'Hallo'      ", empty( "Hallo"                ) )

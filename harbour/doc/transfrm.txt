@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 Addendum Clipper documentation. Original transform docs are too limited :
 
 /* TODO: Make a real document out of this */
@@ -11,11 +14,10 @@ The following functions mean something :
 @B      Left justified
 @C      CR after positive numbers
 @E      Exchange . and , (Not in US/UK manual, does work !)
-@Z      Return "" if value is 0
+@Z      Return spaces if value is 0
 
 New addition :
 @0      Make a zero padded string out of the number.
-        Accidently written for @Z. Can be useful :-)
 
 The following templates mean something to numbers :
 9       Digit
@@ -57,7 +59,16 @@ A N X   Text
 
 DATES
 
-Set date to british
-Set century on
+Uses SET DATE FORMAT
+Uses SET CENTURY
 
-No sets yet !
+The following functions mean something :
+@E      Use British date format
+	/* QUESTION :
+	        Clipper appears to reverse the MM and DD parts of the
+	        date, regardless of SET DATE FORMAT, because if the
+	        date format is British, using @E displays the date in
+	        American. Harbour always treats @E as British.
+	        
+	        So is Harbour's behaviour a bug fix or a bug?
+	*/

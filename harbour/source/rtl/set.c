@@ -27,13 +27,11 @@ int hb_set_althan;
 int hb_set_printhan;
 
 HARBOUR HB_SET( void );
-HARBOUR HB_SETCENTURY( void );
-HARBOUR HB_SETFIXED( void );
+HARBOUR HB___SETCENTURY( void );
 
 static SYMBOL symbols[] = {
 { "SET"       , FS_PUBLIC, HB_SET       , 0 },
-{ "SETCENTURY", FS_PUBLIC, HB_SETCENTURY, 0 },
-{ "SETFIXED"  , FS_PUBLIC, HB_SETFIXED  , 0 }
+{ "SETCENTURY", FS_PUBLIC, HB___SETCENTURY, 0 },
 };
 
 void Set__InitSymbols( void )
@@ -154,7 +152,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
    return handle;
 }
 
-HARBOUR HB_SETCENTURY (void)
+HARBOUR HB___SETCENTURY (void)
 {
    int digit, count, size, y_size, y_start, y_stop;
    int old_century_setting = hb_set_century;
@@ -227,35 +225,6 @@ HARBOUR HB_SETCENTURY (void)
          if (y_stop < strlen (szDateFormat)) strcat (szNewFormat, szDateFormat + y_stop);
          hb_xfree (szDateFormat);
          hb_set.HB_SET_DATEFORMAT = szNewFormat;
-      }
-   }
-}
-
-HARBOUR HB_SETFIXED (void)
-{
-   PHB_ITEM pItem = hb_param (1, IT_ANY);
-
-   /* Start by returning the current setting */
-   hb_retl (hb_set_fixed);
-   /*
-    * Then change the setting if the parameter is a logical value, or is
-    * either "ON" or "OFF" (regardless of case)
-    */
-   if ( pItem && IS_LOGICAL (pItem)) hb_set_fixed = pItem->value.iLogical;
-   else if ( pItem && IS_STRING (pItem))
-   {
-      if (pItem->wLength == 2)
-      {
-         if (toupper (pItem->value.szText [0]) == 'O'
-          && toupper (pItem->value.szText [1]) == 'N')
-            hb_set_fixed = TRUE;
-      }
-      else if (pItem->wLength == 3)
-      {
-         if (toupper (pItem->value.szText [0]) == 'O'
-          && toupper (pItem->value.szText [1]) == 'F'
-          && toupper (pItem->value.szText [2]) == 'F')
-            hb_set_fixed = FALSE;
       }
    }
 }
