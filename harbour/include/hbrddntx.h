@@ -307,6 +307,7 @@ typedef struct _NTXAREA
 
    LPTAGINFO lpCurTag;         /* Pointer to current order */
    LPTAGINFO lpNtxTag;         /* Pointer to tags list */
+   BOOL fNtxAppend;            /* TRUE if new record is added */
 
 } NTXAREA;
 

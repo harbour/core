@@ -2659,6 +2659,8 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr,
    pTag->KeyDec = uiKeyDec;
    pTag->Owner = PIF;
    pTag->MaxKeys = (NTXBLOCKSIZE-6)/(uiKeyLen+10) - 1;
+   if( pTag->MaxKeys%2 && pTag->MaxKeys>2 )
+      pTag->MaxKeys--;
    pTag->CurKeyInfo = hb_ntxKeyNew( NULL,pTag->KeyLength );
    pTag->stack = (LPTREESTACK) hb_xgrab( sizeof(TREE_STACK) * 32 );
    pTag->stackDepth = 32;
@@ -3178,66 +3180,74 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
 
    if( SUPER_GOCOLD( ( AREAP ) pArea ) == SUCCESS )
    {
-      if( fRecordChanged )
+      if( fRecordChanged || pArea->fNtxAppend )
       {
          lpTagTmp = pArea->lpCurTag;
          pTag = pArea->lpNtxTag;
          while( pTag )
          {
-            pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
-            hb_ntxGetCurrentKey( pTag, pKey );
-            if( pTag->pForItem == NULL || checkLogicalExpr( pTag->pForItem, NULL ) )
-               InIndex = TRUE;
-            else
-               InIndex = FALSE;
-
-            if( fAppend || hb_ntxItemCompare( pKey->key,
-                    pTag->CurKeyInfo->key,
-                    pTag->KeyLength, pTag->KeyLength, TRUE )
-                || InIndex != pTag->InIndex )
+            if( fAppend && pArea->fShared )
             {
-               pArea->lpCurTag = pTag;
-               if( pArea->fShared && !pTag->Memory )
-                  while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
-               if( !fAppend && pTag->InIndex )
-               {
-                  LPKEYINFO pKeyOld = hb_ntxKeyNew( pTag->CurKeyInfo,pTag->KeyLength );
+               pArea->fNtxAppend = 1;
+            }
+            else
+            {
+               pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
+               hb_ntxGetCurrentKey( pTag, pKey );
+               if( pTag->pForItem == NULL || checkLogicalExpr( pTag->pForItem, NULL ) )
+                  InIndex = TRUE;
+               else
+                  InIndex = FALSE;
 
-                  if( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKeyOld, FALSE, FALSE ) )
+               if( pArea->fNtxAppend || fAppend || hb_ntxItemCompare( pKey->key,
+                       pTag->CurKeyInfo->key,
+                       pTag->KeyLength, pTag->KeyLength, TRUE )
+                       || InIndex != pTag->InIndex )
+               {
+                  pArea->lpCurTag = pTag;
+                  if( pArea->fShared && !pTag->Memory )
+                     while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+                  if( !pArea->fNtxAppend && !fAppend && pTag->InIndex )
                   {
-                      printf( "\n\rntxGoCold: Cannot find current key:" );
-                      pTag = pTag->pNext;
-                      continue;
+                     LPKEYINFO pKeyOld = hb_ntxKeyNew( pTag->CurKeyInfo,pTag->KeyLength );
+
+                     if( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKeyOld, FALSE, FALSE ) )
+                     {
+                         printf( "\n\rntxGoCold: Cannot find current key:" );
+                         pTag = pTag->pNext;
+                         continue;
+                     }
+                     pPage = hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
+                     pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
+                     hb_ntxPageKeyDel( pTag, pPage, pPage->CurKey, 1 );
+                     if( pTag->stack[0].ikey < 0 )
+                        hb_ntxTagBalance( pTag,0 );
+                     hb_ntxPageRelease( pTag,pPage );
+                     if( ( !pArea->fShared || pTag->Memory  ) && pTag->keyCount &&
+                           hb_ntxInTopScope( pTag, pKeyOld->key ) &&
+                           hb_ntxInBottomScope( pTag, pKeyOld->key ) )
+                        pTag->keyCount --;
+                     hb_ntxKeyFree( pKeyOld );
                   }
-                  pPage = hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
-                  pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
-                  hb_ntxPageKeyDel( pTag, pPage, pPage->CurKey, 1 );
-                  if( pTag->stack[0].ikey < 0 )
-                     hb_ntxTagBalance( pTag,0 );
-                  hb_ntxPageRelease( pTag,pPage );
-                  if( ( !pArea->fShared || pTag->Memory  ) && pTag->keyCount &&
-                        hb_ntxInTopScope( pTag, pKeyOld->key ) &&
-                        hb_ntxInBottomScope( pTag, pKeyOld->key ) )
-                     pTag->keyCount --;
-                  hb_ntxKeyFree( pKeyOld );
+                  if( InIndex )
+                  {
+                     pKey->Tag = 0;
+                     hb_ntxTagKeyAdd( pTag, pKey );
+                     if( ( !pArea->fShared || pTag->Memory  )&& pTag->keyCount &&
+                           hb_ntxInTopScope( pTag, pKey->key ) &&
+                           hb_ntxInBottomScope( pTag, pKey->key ) )
+                        pTag->keyCount ++;
+                  }
+                  if( pArea->fShared && !pTag->Memory )
+                  {
+                     hb_ntxPageFree( pTag,FALSE );
+                     hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
+                  }
+                  pArea->fNtxAppend = 0;
                }
-               if( InIndex )
-               {
-                  pKey->Tag = 0;
-                  hb_ntxTagKeyAdd( pTag, pKey );
-                  if( ( !pArea->fShared || pTag->Memory  )&& pTag->keyCount &&
-                        hb_ntxInTopScope( pTag, pKey->key ) &&
-                        hb_ntxInBottomScope( pTag, pKey->key ) )
-                     pTag->keyCount ++;
-               }
-               if( pArea->fShared && !pTag->Memory )
-               {
-                  hb_ntxPageFree( pTag,FALSE );
-                  hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
-               }
+               hb_ntxKeyFree( pKey );
             }
             pTag = pTag->pNext;
-            hb_ntxKeyFree( pKey );
          }
          pArea->lpCurTag = lpTagTmp;
       }
