@@ -461,6 +461,23 @@ ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 }
 
 /*
+ * Retrieve information about the current order.
+ * Called by SELF_ORDINFO if uiIndex is not supported.
+ */
+#ifdef HB_COMPAT_C53
+//ERRCODE hb_waorderInfo( AREAP pArea, USHORT index, LPDBORDERINFO param )
+//{
+//   HB_TRACE(HB_TR_DEBUG, ("hb_waOrderInfo(%p, %hu, %p)", pArea, index, param));
+//   HB_SYMBOL_UNUSED( pArea );
+
+//   if ( param->itmResult )
+//      hb_itemRelease( param->itmResult );
+//   hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "ORDERINFO" );
+//   return FAILURE;
+//}
+#endif
+
+/*
  * Clear the WorkArea for use.
  */
 ERRCODE hb_waNewArea( AREAP pArea )

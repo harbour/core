@@ -45,14 +45,9 @@ FUNCTION ordKeyAdd()       ; RETURN .F.
 FUNCTION ordKeyCount()     ; RETURN 0
 FUNCTION ordKeyDel()       ; RETURN .F.
 FUNCTION ordKeyGoto()      ; RETURN .F.
-// FUNCTION ordKeyNo()        ; RETURN 0
 FUNCTION ordKeyVal()       ; RETURN NIL
 FUNCTION ordSetRelation()  ; RETURN NIL
 FUNCTION ordSkipUnique()   ; RETURN .F.
-#endif
-
-#ifdef HB_COMPAT_C53
-FUNCTION dbOrderInfo()     ; RETURN NIL
 #endif
 
 FUNCTION MLCToPos()        ; RETURN 0

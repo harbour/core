@@ -240,7 +240,7 @@ HB_FUNC( ADSKEYCOUNT )
          return;
       }
       else
-         hIndex = (pArea->hOrdCurrent == 0)? pArea->hTable:pArea->hOrdCurrent;
+         hIndex = (pArea->hOrdCurrent == 0) ? pArea->hTable : pArea->hOrdCurrent;
 
       if( hb_pcount() > 2 )
       {

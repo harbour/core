@@ -1415,12 +1415,49 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
    }
    else
       phIndex = pArea->hOrdCurrent;
+
    switch( uiIndex )
    {
       case DBOI_BAGEXT:
          hb_itemPutC( pOrderInfo->itmResult,
                 ((adsFileType==ADS_ADT) ? ".adi" : (adsFileType==ADS_CDX) ? ".cdx" : ".ntx") );
          break;
+      case DBOI_ORDERCOUNT:
+         pusLen = 0;
+         if( pOrderInfo->atomBagName && (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ))
+         {
+            /* if already open, ads fills other info OK.
+               TODO: verify it is already open, or be sure to close it!
+            */
+            AdsOpenIndex  (pArea->hTable,
+                          (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->atomBagName ), NULL, &pusLen);
+
+         }else    /* no specific bag requested; get all current indexes */
+         {
+            AdsGetNumIndexes(pArea->hTable, &pusLen);
+         }
+         hb_itemPutNI(pOrderInfo->itmResult, pusLen);
+         break;
+      case DBOI_CUSTOM :
+         pusLen = 0;
+         AdsIsIndexCustom  (phIndex, &pusLen);
+         hb_itemPutL(pOrderInfo->itmResult, pusLen);
+         break;
+      case DBOI_KEYCOUNT :
+      {
+         UNSIGNED32 pulKey  ;
+         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_RESPECTSCOPES/*usFilterOption*/, &pulKey);
+         hb_itemPutNL(pOrderInfo->itmResult, pulKey);
+         break;
+      }
+      case DBOI_KEYCOUNTRAW :           /* ignore filter or scope */
+      {
+         UNSIGNED32 pulKey  ;
+         AdsGetRecordCount( (phIndex ? phIndex : pArea->hTable), ADS_IGNOREFILTERS/*usFilterOption*/, &pulKey);
+         hb_itemPutNL(pOrderInfo->itmResult, pulKey);
+         break;
+      }
+
       case DBOI_EXPRESSION:
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
          hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
@@ -1447,7 +1484,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          hb_itemPutNI(pOrderInfo->itmResult, usOrder);
          break;
       }
-      case DBOI_RECNO :
+      case DBOI_POSITION :
       {
          UNSIGNED32 pulKey  ;
          if( phIndex )
@@ -1457,7 +1494,10 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          hb_itemPutNL(pOrderInfo->itmResult, pulKey);
          break;
       }
-
+      default:
+         // TODO: This should call SUPER for default handling, but it never gets there
+         //SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
+         break;
    }
    return SUCCESS;
 }
@@ -1521,7 +1561,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
    {
       if( sInfo->scopeValue )
       {
-         AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope,
+         AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) (sInfo->nScope + 1), /*ADS top/bottom are 1,2 instead of 0,1*/
               (UNSIGNED8*) sInfo->scopeValue,
               (UNSIGNED16) strlen( (const char *)sInfo->scopeValue), ADS_STRINGKEY );
       }

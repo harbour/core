@@ -473,7 +473,8 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                hb_vmPushSymbol( &hb_symEval );
                hb_vmPush( pValue );
                hb_vmPush( pBaseArray->pItems + ulStart );
-               hb_vmDo( 1 );
+               hb_vmPushNumber( ( double ) ( ulStart + 1 ), 0 );
+               hb_vmDo( 2 );
 
                if( HB_IS_LOGICAL( &hb_stack.Return ) && hb_stack.Return.item.asLogical.value )
                   return ulStart + 1;                  /* arrays start from 1 */

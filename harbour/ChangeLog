@@ -1,8 +1,33 @@
+2000-11-08 11:28 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * source\vm\arrays.c
+      * added Victor's fix for passing the second parameter to ascan's codeblock.
+
+   * contrib/rdd_ads/ads1.c
+      * fixed adsSetScope -- SET SCOPE was busted
+      * adsOrderInfo
+         +added support for
+         DBOI_ORDERCOUNT
+         DBOI_KEYCOUNT
+         DBOI_CUSTOM
+         DBOI_POSITION  << changed DBOI_RECNO to this!
+
+   * include/hbapirdd.h
+      TEMPORARILY added extra 5.3 DBOI_* constants
+   * contrib/rdd_ads/adsfunc.c
+      * minor editing
+   * source/rtl/dummy.prg
+   * source/rdd/dbcmd.c
+      * moved dbOrderInfo from dummy.prg to dbcmd.c
+      * fixed ordScope parameter checking
+   * source/rdd/workarea.c
+      * added commented-out OrderInfo; waiting for agreement on how to implement it
+
+
 2000-11-08 18:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/macro.c
         *fixed support for field variables in TYPE() function
-        
+
     *tests/dbevalts.prg
     *tests/newrdd.prg
     *tests/testbrdb.prg
@@ -25,8 +50,8 @@
     *source/vm/memvars.c
         * fixed the order of memory deallocations done in the garbage
           collector (this will fix many random core dumps/GPF's)
-        * removed unnecessary reference counter inc/dec operations       
-        
+        * removed unnecessary reference counter inc/dec operations
+
 
 2000-11-07 22:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h

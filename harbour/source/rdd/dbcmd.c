@@ -2387,6 +2387,7 @@ HB_FUNC( ORDKEY )
 }
 
 #ifdef HB_COMPAT_C53
+
 HB_FUNC( ORDKEYNO )
 {
    DBORDERINFO pOrderInfo;
@@ -2400,7 +2401,7 @@ HB_FUNC( ORDKEYNO )
       /* Either or both may be NIL */
 
       pOrderInfo.itmResult = hb_itemPutNL( NULL, 0 );
-      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_RECNO, &pOrderInfo );
+      SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_POSITION, &pOrderInfo );
       hb_retnl( hb_itemGetNL( pOrderInfo.itmResult ) );
       hb_itemRelease( pOrderInfo.itmResult );
    }
@@ -2514,6 +2515,7 @@ HB_FUNC( ORDSETFOCUS )
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDSETFOCUS" );
 }
+
 
 HB_FUNC( RDDLIST )
 {
@@ -2735,8 +2737,7 @@ HB_FUNC( ORDSCOPE )
 
    if( s_pCurrArea )
    {
-      if( hb_pcount() == 0 || !(hb_parinfo( 1 ) & HB_IT_NUMERIC) ||
-         ( hb_pcount() > 1 && hb_parinfo( 2 ) != HB_IT_STRING ) )
+      if( !ISNUM( 1 ) || ( !ISNIL( 2 ) && hb_parinfo( 2 ) != HB_IT_STRING ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDSCOPE" );
          return;
@@ -2751,7 +2752,7 @@ HB_FUNC( ORDSCOPE )
          sInfo.scopeValue = (BYTE*) hb_parc( 2 );
       else
          sInfo.scopeValue = NULL;
-      SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBOPENINFO) &sInfo );
+      SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDSCOPE" );
@@ -3010,6 +3011,49 @@ HB_FUNC( DBINFO )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBINFO" );
+}
+
+HB_FUNC( DBORDERINFO )
+{
+   PHB_ITEM pType, pInfo;
+   BOOL bDeleteItem;
+   DBORDERINFO pOrderInfo;
+
+   if( s_pCurrArea )
+   {
+      pType = hb_param( 1 , HB_IT_NUMERIC );
+      if( pType )
+      {
+
+         pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
+         /* atomBagName may be NIL */
+         pOrderInfo.itmOrder = hb_param( 3, HB_IT_STRING );
+         if( !pOrderInfo.itmOrder )
+            pOrderInfo.itmOrder = hb_param( 3, HB_IT_NUMERIC );
+
+         /*  TODO: 4TH parameter is not supported in current ads code or the structure */
+         pInfo = hb_param( 4 , HB_IT_ANY );  /* Set new value */
+         if( !pInfo )
+         {
+            pInfo = hb_itemNew( NULL );
+            bDeleteItem = TRUE;
+         }
+         else
+            bDeleteItem = FALSE;
+
+         pOrderInfo.itmResult = hb_itemNew( NULL );
+         SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, hb_itemGetNI( pType ), &pOrderInfo );
+         hb_itemReturn(  pOrderInfo.itmResult );
+         hb_itemRelease( pOrderInfo.itmResult );
+
+         if( bDeleteItem )
+            hb_itemRelease( pInfo );
+         return;
+      }
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, "DBORDERINFO" );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBORDERINFO" );
 }
 
 HB_FUNC( DBFIELDINFO )

@@ -117,6 +117,40 @@ extern void    hb_rddShutDown( void );
 #define DBOI_ISDESC        12   /* Get the flag if the order is descending */
 #define DBOI_UNIQUE        13   /* Get the flag if the order has the unique attribute set */
 
+/* 53-level constants */
+#define DBOI_FULLPATH           20  /* Get the order Bag Full Path              */
+#define DBOI_KEYTYPE            24  /* Get the keytype of order                 */
+#define DBOI_KEYSIZE            25  /* Get the keysize of order                 */
+#define DBOI_KEYCOUNT           26  /* Get the number of keys                   */
+#define DBOI_SETCODEBLOCK       27  /* Set codeblock for order key              */
+#define DBOI_KEYDEC             28  /* Get decimals of order key                */
+#define DBOI_HPLOCKING          29  /* High performance index locking           */
+#define DBOI_LOCKOFFSET         35  /* New locking offset                       */
+
+#define DBOI_KEYADD             36  /* Gets/Sets the Key to be added            */
+#define DBOI_KEYDELETE          37  /* Gets/Sets the Key to be deleted          */
+#define DBOI_KEYVAL             38  /* Get current key value                    */
+#define DBOI_SCOPETOP           39  /* Gets/Sets top of scope                   */
+#define DBOI_SCOPEBOTTOM        40  /* Gets/Sets bottom of scope                */
+#define DBOI_SCOPETOPCLEAR      41  /* Clears top scope setting                 */
+#define DBOI_SCOPEBOTTOMCLEAR   42  /* Clears bottom scope setting              */
+
+#define DBOI_CUSTOM             45  /* Custom created order                     */
+#define DBOI_SKIPUNIQUE         46  /* Flag for skip unique                     */
+
+#define DBOI_KEYSINCLUDED       50  /* # of keys included while indexing        */
+/* keyno */
+#define DBOI_KEYGOTO            DBOI_POSITION
+#define DBOI_KEYNORAW           51  /* keyno ignoring any filter                */
+#define DBOI_KEYCOUNTRAW        52  /* keycount ignoring any filter             */
+#define DBOI_OPTLEVEL           53  /* Optimization achieved for last query     */
+
+// Ideally shoud be an entry point that doesn't require an open table
+#define DBOI_STRICTREAD         60  /* Get/set read thru RDD when indexing      */
+#define DBOI_OPTIMIZE           61  /* Get/set use of query optimization        */
+#define DBOI_AUTOOPEN           62  /* Get/set auto open of production index    */
+#define DBOI_AUTOORDER          63  /* Get/set default order: production index  */
+#define DBOI_AUTOSHARE          64  /* Get/set automatic sharing control        */
 
 
 /* Codes for SELF_INFO() */
