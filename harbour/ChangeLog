@@ -1,3 +1,10 @@
+2000-01-25 16:20 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * source/rtl/itemapi.c
+     ! Don't check for infinity when checking for numeric overflow and using
+       a Borland C compiler, because Borland C returns 0 for log(0), which is
+       what is being used to set infinity.
+
 2000-01-25 21:47 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Partial support for editing variables.
