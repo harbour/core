@@ -1,4 +1,8 @@
-2001-02-20 23:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
+2001-02-20 22:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+    * utils/hbpp//hbpp.c
+      - Removed unused variables and function warnned by djgpp
+
+2001-02-20 22:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * make_gnu.bat
      ! Fixed maker to make -r
      * Added %HARBOURDIR% and removed trailing slash from HB_BIN_INSTALL, HB_LIB_INSTALL and HB_INC_INSTALL

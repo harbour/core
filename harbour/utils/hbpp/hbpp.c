@@ -53,13 +53,11 @@
 
 extern int hb_pp_ParseDefine( char * );
 
-static int hb_pp_Parse( FILE * handl_o );
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 static BOOL hb_pp_fopen( char * szFileName );
 
 static char s_szLine[ HB_PP_STR_SIZE ];
-static char s_szOutLine[ HB_PP_STR_SIZE ];
 static int  s_iWarnings = 0;
 static char * hb_buffer;
 
@@ -90,7 +88,6 @@ int main( int argc, char * argv[] )
   char szPpoName[ _POSIX_PATH_MAX ];
   char * szDefText;
   int iArg = 1;
-  unsigned int i;
   BOOL bOutTable = FALSE;
   BOOL bOutNew = FALSE;
   DEFINES * stdef;
