@@ -153,7 +153,7 @@ typedef struct HB_ERROR_INFO_
 } HB_ERROR_INFO, *HB_ERROR_INFO_PTR;
 
 /*  set/get current error handler */
-extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR );
+extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler );
 
 #if defined(HB_EXTERN_C)
 }

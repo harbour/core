@@ -84,13 +84,13 @@ extern "C" {
 
 /* Global functions
  */
-extern void hb_macroError( int, HB_MACRO_DECL );
-extern int hb_compParse( HB_MACRO_PTR );
+extern void hb_macroError( int iError, HB_MACRO_DECL );
+extern int hb_compParse( HB_MACRO_PTR pMacro );
 
-extern void hb_compGenPCode1( BYTE, HB_MACRO_DECL );
-extern void hb_compGenPCode2( BYTE, BYTE, HB_MACRO_DECL );
-extern void hb_compGenPCode3( BYTE, BYTE, BYTE, HB_MACRO_DECL );
-extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, HB_MACRO_DECL );
+extern void hb_compGenPCode1( BYTE byte, HB_MACRO_DECL );
+extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_MACRO_DECL );
+extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_MACRO_DECL );
+extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_MACRO_DECL );
 extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_MACRO_DECL );
 
 /* Size of pcode buffer incrementation

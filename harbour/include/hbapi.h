@@ -411,7 +411,7 @@ extern PHB_DYNS hb_dynsymFind( char * szName );   /* finds a dynamic symbol */
 extern PHB_DYNS hb_dynsymFindName( char * szName ); /* converts to uppercase and finds a dynamic symbol */
 extern void     hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern void     hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
-extern void     hb_dynsymEval( PHB_DYNS_FUNC, void * ); /* enumerates all dynamic symbols */
+extern void     hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo ); /* enumerates all dynamic symbols */
 
 /* Command line and environment argument management */
 extern void     hb_cmdargInit( int argc, char * argv[] );
@@ -427,31 +427,31 @@ extern void     hb_cmdargProcessVM( void );
 extern PHB_SYMB hb_symbolNew( char * szName );
 
 /* Codeblock management */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE *, USHORT, USHORT *, PHB_SYMB );
-extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE *, USHORT );
-extern void     hb_codeblockDelete( PHB_ITEM );
-extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM, LONG );
-extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM, PHB_ITEM );
-extern void     hb_codeblockEvaluate( PHB_ITEM );
-extern void     hb_codeblockCopy( PHB_ITEM, PHB_ITEM );
+extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer, USHORT uiLocals, USHORT * pLocalPosTable, PHB_SYMB pSymbols );
+extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen );
+extern void     hb_codeblockDelete( HB_ITEM_PTR pItem );
+extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos );
+extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer );
+extern void     hb_codeblockEvaluate( HB_ITEM_PTR pItem );
+extern void     hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource );
 
 /* memvars subsystem */
-extern HB_HANDLE hb_memvarValueNew( PHB_ITEM, BOOL );
+extern HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar );
 extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void );
 extern void     hb_memvarsInit( void );
 extern void     hb_memvarsRelease( void );
-extern void     hb_memvarValueIncRef( HB_HANDLE );
-extern void     hb_memvarValueDecRef( HB_HANDLE );
-extern void     hb_memvarSetValue( PHB_SYMB, HB_ITEM_PTR );
-extern ERRCODE  hb_memvarGet( HB_ITEM_PTR, PHB_SYMB );
-extern void     hb_memvarGetValue( HB_ITEM_PTR, PHB_SYMB );
-extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
+extern void     hb_memvarValueIncRef( HB_HANDLE hValue );
+extern void     hb_memvarValueDecRef( HB_HANDLE hValue );
+extern void     hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem );
+extern ERRCODE  hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb );
+extern void     hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb );
+extern void     hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb );
 extern ULONG    hb_memvarGetPrivatesBase( void );
-extern void     hb_memvarSetPrivatesBase( ULONG );
-extern void     hb_memvarNewParameter( PHB_SYMB, HB_ITEM_PTR );
-extern char   * hb_memvarGetStrValuePtr( char *, ULONG * );
+extern void     hb_memvarSetPrivatesBase( ULONG ulBase );
+extern void     hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
+extern char   * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
-extern int      hb_memvarScope( char *, ULONG );
+extern int      hb_memvarScope( char * szVarName, ULONG ulLength );
 
 /* console I/O subsystem */
 extern void     hb_conInit( void );
@@ -464,7 +464,7 @@ extern char *   hb_conSetColor( char * szColor );
 extern void     hb_conXSaveRestRelease( void );
 
 /* compiler and macro compiler */
-extern char *   hb_compReservedName( char * );
+extern char *   hb_compReservedName( char * szName );
 
 /* misc */
 extern char *   hb_procname( int iLevel, char * szName );
@@ -501,18 +501,18 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
    int exprType;        /* type of successfully compiled expression */
 } HB_MACRO, * HB_MACRO_PTR;
 
-extern void   hb_macroGetValue( HB_ITEM_PTR );
-extern void   hb_macroSetValue( HB_ITEM_PTR );
-extern void   hb_macroTextValue( HB_ITEM_PTR );
-extern void   hb_macroPushSymbol( HB_ITEM_PTR );
-extern void   hb_macroRun( HB_MACRO_PTR );
-extern HB_MACRO_PTR hb_macroCompile( char * );
-extern void   hb_macroDelete( HB_MACRO_PTR );
-extern char * hb_macroTextSubst( char *, ULONG * );
-extern BOOL   hb_macroIsIdent( char * );
-extern void   hb_macroPopAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
-extern void   hb_macroPushAliasedValue( HB_ITEM_PTR, HB_ITEM_PTR );
-extern char * hb_macroGetType( HB_ITEM_PTR );
+extern void   hb_macroGetValue( HB_ITEM_PTR pItem );
+extern void   hb_macroSetValue( HB_ITEM_PTR pItem );
+extern void   hb_macroTextValue( HB_ITEM_PTR pItem );
+extern void   hb_macroPushSymbol( HB_ITEM_PTR pItem );
+extern void   hb_macroRun( HB_MACRO_PTR pMacro );
+extern HB_MACRO_PTR hb_macroCompile( char * szString );
+extern void   hb_macroDelete( HB_MACRO_PTR pMacro );
+extern char * hb_macroTextSubst( char * szString, ULONG *pulStringLen );
+extern BOOL   hb_macroIsIdent( char * szString );
+extern void   hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar );
+extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar );
+extern char * hb_macroGetType( HB_ITEM_PTR pItem );
 
 /* misc */
 extern char * hb_verPlatform( void );

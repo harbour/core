@@ -1,3 +1,11 @@
+2000-06-17 17:10 UTC+0500 April White <awhite@user.rose.com>
+
+   * hbapi.h
+   * hbapierr.h
+   * hbmacro.h
+     + added param names (from source file) to declarations for
+       multiple api calls
+
 2000-06-17 19:37 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/common/hbstr.c
