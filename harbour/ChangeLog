@@ -1,3 +1,10 @@
+2000-01-25 21:47 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/debug/debugger.prg
+     * Partial support for editing variables.
+
+   * source/rtl/tgetlist.prg
+     * Added support for non-modal GetLists management.
+
 20000125-10:05 GMT+2 Chen Kedem <niki@actcom.co.il>
   * source/rtl/arrays.c
     - remove documentation stolen from CA-Clipper 5.2 NG from the following
@@ -6,7 +13,7 @@
     - remove $EXAMPLES$ stolen from CA-Clipper 5.2 NG from the following
       function: ACOPY(), ACLONE()
     + ACLONE() : add $COMPLIANCE$ note
-     
+
 2000-01-25 02:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
      * Support for up and down arrows on command window
