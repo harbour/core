@@ -936,7 +936,44 @@ void hb_compDeclaredInit( void )
    _DECL s_001 = { "AADD"    , ' ', 2         , (BYTE*)"A "                   , NULL     , NULL         , NULL   };
    _DECL s_002 = { "ABS"     , 'N', 1         , (BYTE*)"N"                    , NULL     , NULL         , &s_001 };
    _DECL s_003 = { "ACHOICE" , 'N', 9         , (BYTE*)"NNNNc\x7a\x9d\xa8\xa8", NULL     , NULL         , &s_002 };
+   _DECL s_004 = { "ACLONE"  , 'A', 1         , (BYTE*)"A"                    , NULL     , NULL         , &s_003 };
+   _DECL s_005 = { "ACOPY"   , 'A', 5         , (BYTE*)"AA\xa8\xa8\xa8"       , NULL     , NULL         , &s_004 };
+   _DECL s_006 = { "ADEL"    , 'A', 2         , (BYTE*)"AN"                   , NULL     , NULL         , &s_005 };
+   _DECL s_007 = { "ADIR"    , 'N', 6         , (BYTE*)"\x9dAAAAA"            , NULL     , NULL         , &s_006 };
+   _DECL s_008 = { "AEVAL"   , 'A', 4         , (BYTE*)"AB\xa8\xa8"           , NULL     , NULL         , &s_007 };
+   _DECL s_009 = { "AFIELD"  , 'N', 4         , (BYTE*)"AAAA"                 , NULL     , NULL         , &s_008 };
+   _DECL s_010 = { "AFILL"   , 'A', 4         , (BYTE*)"A NN"                 , NULL     , NULL         , &s_009 };
+   _DECL s_011 = { "AINS"    , 'A', 2         , (BYTE*)"AN"                   , NULL     , NULL         , &s_010 };
+   _DECL s_012 = { "ALERT"   , 'N', 4         , (BYTE*)"C\x9b\x9d\xa8"        , NULL     , NULL         , &s_011 };
+   _DECL s_013 = { "ALIAS"   , 'C', 41        , (BYTE*)"\xa8"                 , NULL     , NULL         , &s_012 };
+   _DECL s_014 = { "ALLTRIM" , 'C', 2         , (BYTE*)"C\xa6"                , NULL     , NULL         , &s_013 };
+   _DECL s_015 = { "ARRAY"   , 'A', 2         , (BYTE*)"N\xa8"                , NULL     , NULL         , &s_014 };
+   _DECL s_016 = { "ASC"     , 'N', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_015 };
+   _DECL s_017 = { "ASCAN"   , 'N', 4         , (BYTE*)"A \xa8\xa8"           , NULL     , NULL         , &s_016 };
+   _DECL s_018 = { "ASIZE"   , 'A', 2         , (BYTE*)"AN"                   , NULL     , NULL         , &s_017 };
+   _DECL s_019 = { "ASORT"   , 'A', 4         , (BYTE*)"A\xa8\xa8\x9c"        , NULL     , NULL         , &s_018 };
+   _DECL s_020 = { "AT"      , 'N', 2         , (BYTE*)"CC"                   , NULL     , NULL         , &s_019 };
+   _DECL s_021 = { "ATAIL"   , ' ', 1         , (BYTE*)"A"                    , NULL     , NULL         , &s_020 };
+   _DECL s_022 = { "STRTRAN" , 'C', 5         , (BYTE*)"CC\x9d\xa8\xa8"       , NULL     , NULL         , &s_021 };
+   _DECL s_023 = { "LEN"     , 'N', 1         , (BYTE*)" "                    , NULL     , NULL         , &s_022 };
+   _DECL s_024 = { "SUBSTR"  , 'C', 3         , (BYTE*)"CN\xa8"               , NULL     , NULL         , &s_023 };
+   _DECL s_025 = { "HB_FNAMESPLIT"   , '-', 5 , (BYTE*)"C\x5c\x5c\x5c\x5c"    , NULL     , NULL         , &s_024 };
+   _DECL s_026 = { "DIRECTORY", 'A', 3        , (BYTE*)"C\x9d\xa6"            , NULL     , NULL         , &s_025 };
+   _DECL s_027 = { "UPPER"   , 'C', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_026 };   
+   _DECL s_028 = { "LOWER"   , 'C', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_027 };
+   _DECL s_029 = { "PAD"     , 'A', 3         , (BYTE*)" N\x9d"               , NULL     , NULL         , &s_028 };
+   _DECL s_030 = { "FOPEN"   , 'N', 2         , (BYTE*)"C\xa8\x7a"            , NULL     , NULL         , &s_029 };
+   _DECL s_031 = { "FWRITE"  , 'N', 3         , (BYTE*)"NC\xa8\x7a"           , NULL     , NULL         , &s_030 };
+   _DECL s_032 = { "FCLOSE"  , 'L', 1         , (BYTE*)"N"                    , NULL     , NULL         , &s_031 };
+   _DECL s_033 = { "FREAD"   , 'N', 3         , (BYTE*)"N\Cx5cN"              , NULL     , NULL         , &s_032 };
+   _DECL s_034 = { "FSEEK"   , 'N', 3         , (BYTE*)"NN\xa8"               , NULL     , NULL         , &s_033 };
+   _DECL s_035 = { "FCREATE" , 'N', 2         , (BYTE*)"C\xa8"                , NULL     , NULL         , &s_034 };
 
+   _DECL s_037 = { "GETE"    , 'C', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_036 };
+   _DECL s_038 = { "FILE"    , 'L', 1         , (BYTE*)"C"                    , NULL     , NULL         , &s_037 };
+   _DECL s_039 = { "RAT"     , 'N', 2         , (BYTE*)"CC"                   , NULL     , NULL         , &s_038 };
+   _DECL s_040 = { "LEFT"    , 'C', 2         , (BYTE*)"CN"                   , NULL     , NULL         , &s_039 };
+   _DECL s_041 = { "RIGHT"   , 'C', 2         , (BYTE*)"CN"                   , NULL     , NULL         , &s_040 };
    /* TODO: Rest of Standard Functions. */
 
    /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
@@ -1045,7 +1082,7 @@ void hb_compDeclaredInit( void )
 
    /* ------- */
 
-   hb_comp_pFirstDeclared   = &s_003; /* Change to BOTTOM Function. */
+   hb_comp_pFirstDeclared   = &s_040; /* Change to BOTTOM Function. */
    hb_comp_pLastDeclared    = &s_001;
    hb_comp_pReleaseDeclared = &s_001;
 

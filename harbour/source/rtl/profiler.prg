@@ -397,7 +397,7 @@ Local n
             // If we've got a member name...
             If !empty( aMembers[ nMember ] )
                // Add it to the profile.
-               aadd( ::aProfile, Hb_ProfileMethod():new( cClass + ":" + aMembers[ nMember ], __GetMsgPrf( n, aMembers[ nMember ] ) ) )
+               aadd( ::aProfile, HbProfileMethod():new( cClass + ":" + aMembers[ nMember ], __GetMsgPrf( n, aMembers[ nMember ] ) ) )
             EndIf
 
          Next
