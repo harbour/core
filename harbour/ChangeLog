@@ -1,3 +1,10 @@
+19990628-23:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/tools/hb_f.c
+    * Undid previous type change for x in hb_hbfskip(), because it
+      causes a serious problem in an attempt to avoid a warning.
+      The strange thing is that GCC (DJGPP) doesn't complain either
+      way, even with -pedantic enabled.
+
 19990628-21:50 EDT David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.y
     * Changed fopen() call used to create .PPO files from using
