@@ -1,3 +1,14 @@
+20000124-14:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/memoline.c
+	* fixed 'max' to 'HB_MAX_'
+
+    *source/rtl/mlpos.c
+	* added RCS ID
+	
+    *source/rtl/Makefile
+	* added mlpos.c file
+
 20000124-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y

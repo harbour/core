@@ -35,6 +35,7 @@ C_SOURCES=\
         memoline.c   \
         memvars.c    \
         mlcount.c    \
+	mlpos.c      \
         mouseapi.c   \
         mtran.c      \
         natmsg.c     \

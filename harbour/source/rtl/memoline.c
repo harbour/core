@@ -70,7 +70,7 @@ HARBOUR HB_MEMOLINE( void )
          case HB_CHAR_LF:
             ulCurLength = 0;
             ulLastSpace = 0;
-            ulLineEnd   = max( ulPos - 2, ulLineBegin ) ;
+            ulLineEnd   = HB_MAX_( ulPos - 2, ulLineBegin ) ;
             ulLines++;
             if( ulLines < ulLineNumber )
             {
