@@ -107,7 +107,8 @@ static function FReadLn( nHandle, cBuffer )
    nSaveFPos = FSeek( nHandle, 0, FS_RELATIVE )
    nRead     = FRead( nHandle, @cBuffer, MAX_LINE_LEN )
 
-   if ( nEOL := At( Chr( 13 ) + Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0
+   if ( nEOL := At( Chr( 13 ) + Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0 .and. ;
+      ( nEOL := At( Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0
       // Line overflow or eof
       // ::cLine has the line we need
    else
@@ -146,9 +147,8 @@ static function GoPrevLine( nHandle, cLine, nFileSize )
       cBuff := Space( nMaxRead )
       nNewPos := FSeek( nHandle, -nMaxRead, FS_RELATIVE )
       FRead( nHandle, @cBuff, nMaxRead )
-      nWhereCrLf := RAt( Chr( 13 ) + Chr( 10 ), cBuff )
-
-      if nWhereCrLf == 0
+      if (nWhereCrLf := RAt( Chr( 13 ) + Chr( 10 ), cBuff ) ) == 0 .and. ;
+         (nWhereCrLf := RAt( Chr( 10 ), cBuff ) ) == 0
          nPrev := nNewPos
          cLine = cBuff
       else

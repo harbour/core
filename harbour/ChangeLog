@@ -1,8 +1,12 @@
+19990817-15:36 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/debug/tbrwtext.prg
+     * modified to with with cr/lf or just lf
+
 19990817-21:10 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/errorsys.prg
      * public getlist := {} uncommented.
 
-19990816-12:26 EDT Paul Tucker <ptucker@sympatico.ca>
+19990817-14:26 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/debug/Makefile
      + tbrwtext.prg
 
