@@ -5,6 +5,7 @@
 /*
  * Harbour Project source code:
  * Harbour GUI framework for Win32
+ * Class HBMenu
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * Copyright 2001 Maurilio Longo <maurilio.longo@libero.it>
@@ -53,7 +54,7 @@
 
 #include "hbclass.ch"
 
-CLASS TMenu FROM HBPersistent
+CLASS HBMenu FROM HBPersistent
 
    DATA   nHandle
    DATA   Items    PROPERTY
@@ -64,7 +65,7 @@ CLASS TMenu FROM HBPersistent
 
 ENDCLASS
 
-METHOD New( oForm ) CLASS TMenu
+METHOD New( oForm ) CLASS HBMenu
 
    ::Items   = {}
 
@@ -74,7 +75,7 @@ METHOD New( oForm ) CLASS TMenu
 
 return Self
 
-METHOD Add( oMenuItem ) CLASS TMenu
+METHOD Add( oMenuItem ) CLASS HBMenu
 
    WinAddMenuItem( ::nHandle, oMenuItem:Caption, Len( ::Items ),;
                    nil, oMenuItem:nId, oMenuItem:Enabled )
@@ -84,7 +85,7 @@ METHOD Add( oMenuItem ) CLASS TMenu
 
 return nil
 
-METHOD FindItem( nId ) CLASS TMenu
+METHOD FindItem( nId ) CLASS HBMenu
 
    local oMenuItem, n
 
