@@ -3463,6 +3463,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       hb_macroRun( pExpMacro );
       pResult = pExpr;
       hb_itemCopy( pResult, &hb_stack.Return );
+      hb_stackPop();
    }
 
    uiType = hb_itemType( pResult );
@@ -3553,6 +3554,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          hb_macroRun( pForMacro );
          pResult = pExpr;
          hb_itemCopy( pResult, &hb_stack.Return );
+         hb_stackPop();
       }
       uiType = hb_itemType( pResult );
       if( uiType != HB_IT_LOGICAL )
@@ -3739,6 +3741,23 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             {
             }
             break;
+         case DBOI_ORDERCOUNT:
+            if( pInfo->atomBagName && (char*) hb_itemGetCPtr( pInfo->atomBagName ))
+            {
+               hb_itemPutNL( pInfo->itmResult, 1 );
+            }
+            else
+            {
+               LPTAGINFO current = pArea->lpNtxTag;
+               int i = 0;
+               do
+               {
+                  i ++;
+                  current = current->pNext;
+               } while( current );
+               hb_itemPutNL( pInfo->itmResult, i );
+            }
+            break;
       }
    }
    else
@@ -3762,6 +3781,9 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_SCOPETOPCLEAR :
          case DBOI_SCOPEBOTTOMCLEAR :
             hb_itemClear( pInfo->itmResult );
+            break;
+         case DBOI_ORDERCOUNT:
+            hb_itemPutNL( pInfo->itmResult, 0 );
             break;
          default:
             hb_itemPutC( pInfo->itmResult, "" );

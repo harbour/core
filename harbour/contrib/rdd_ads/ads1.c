@@ -1943,6 +1943,10 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
+   if( !pArea->lpdbOrdCondInfo || ( pArea->lpdbOrdCondInfo->fAll && 
+                                    !pArea->lpdbOrdCondInfo->fAdditive ) )
+      SELF_ORDLSTCLEAR( ( AREAP ) pArea );
+
    if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' )
       ulOptions = ADS_COMPOUND;
    else
@@ -1999,6 +2003,8 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       }
       else
          strcat( (char * ) pucWhile, (char * ) pArea->lpdbOrdCondInfo->abWhile );
+      if ( pArea->hOrdCurrent )
+         hTableOrIndex = pArea->hOrdCurrent;
    }
 
    if ( pArea->lpdbOrdCondInfo )
@@ -2022,6 +2028,20 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       return FAILURE;
    }else
       pArea->hOrdCurrent = phIndex;
+
+   if( pArea->lpdbOrdCondInfo && !pArea->lpdbOrdCondInfo->fAll && 
+                                 !pArea->lpdbOrdCondInfo->fAdditive )
+   {
+      ADSHANDLE ahIndex[50];
+      UNSIGNED16 pusArrayLen = 50;
+
+      SELF_ORDLSTCLEAR( ( AREAP ) pArea );
+      ulRetVal = AdsOpenIndex( pArea->hTable,
+        (UNSIGNED8*) pOrderInfo->abBagName, ahIndex, &pusArrayLen );
+      if( ulRetVal != AE_SUCCESS  && ulRetVal != AE_INDEX_ALREADY_OPEN)
+          return FAILURE;
+      pArea->hOrdCurrent = ahIndex[0];
+   }
 
    return adsGoTop( pArea );
 }
@@ -2517,7 +2537,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
 {
    UNSIGNED16 usDataType = ADS_STRINGKEY ;
-   BOOL bTypeError ;
+   /* BOOL bTypeError ; */
    UNSIGNED8 *pucScope;
    HB_TRACE(HB_TR_DEBUG, ("adsSetScope(%p, %p)", pArea, sInfo));
 
@@ -2534,7 +2554,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
             case ADS_STRING:
                if ( sInfo->scopeValue->type == HB_IT_STRING )
                {
-                  bTypeError = FALSE;
+                  /* bTypeError = FALSE; */
                   pucScope = (UNSIGNED8*) hb_itemGetCPtr( sInfo->scopeValue );
                   AdsSetScope( pArea->hOrdCurrent, (sInfo->nScope + 1), /*ADS top/bottom are 1,2 instead of 0,1*/
                      (UNSIGNED8*) pucScope,
@@ -2547,7 +2567,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
                if ( sInfo->scopeValue->type & HB_IT_NUMERIC )
                {
                   double dTemp;
-                  bTypeError = FALSE;
+                  /* bTypeError = FALSE; */
                   dTemp = hb_itemGetND( sInfo->scopeValue );
                   usDataType = ADS_DOUBLEKEY ;
                   AdsSetScope( pArea->hOrdCurrent, (sInfo->nScope + 1), /*ADS top/bottom are 1,2 instead of 0,1*/
@@ -2561,7 +2581,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
                if ( sInfo->scopeValue->type == HB_IT_DATE )
                {
                   double dTemp;
-                  bTypeError = FALSE;
+                  /* bTypeError = FALSE; */
                   dTemp = hb_itemGetDL( sInfo->scopeValue ) ;
                   usDataType = ADS_DOUBLEKEY ;
                   AdsSetScope( pArea->hOrdCurrent, (sInfo->nScope + 1),
