@@ -914,8 +914,8 @@ HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
           * Arrays, objects and codeblock should be released directly by
           * the garbage collector
           */
-         if( HB_IS_STRING( pItem ) && pItem->item.asString.value && pItem->item.asString.bPcode )
-            hb_xfree( pItem->item.asString.value );
+         if( HB_IS_STRING( pItem ) )
+            hb_itemClear( pItem );
 
          ++pItem;
       }
