@@ -129,7 +129,8 @@ void hb_memvarsRelease( void )
       {
          if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
-            hb_itemClear( &s_globalTable[ ulCnt ].item );
+            hb_itemClear( s_globalTable[ ulCnt ].pVarItem );
+            hb_xfree( s_globalTable[ ulCnt ].pVarItem );
             s_globalTable[ ulCnt ].counter = 0;
          }
       }
@@ -220,14 +221,15 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
    }
 
    pValue = s_globalTable + hValue;
+   pValue->pVarItem = ( HB_ITEM_PTR ) hb_xgrab( sizeof( HB_ITEM ) );
    pValue->counter = 1;
-   pValue->item.type = HB_IT_NIL;
+   pValue->pVarItem->type = HB_IT_NIL;
    if( pSource )
    {
       if( bTrueMemvar )
-         hb_itemCopy( &pValue->item, pSource );
+         hb_itemCopy( pValue->pVarItem, pSource );
       else
-         memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );
+         memcpy( pValue->pVarItem, pSource, sizeof(HB_ITEM) );
    }
 
    if( bTrueMemvar )
@@ -242,14 +244,37 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 
 /* Detach local variable (swap current value with a memvar handle)
 */
-void hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
+HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
 {
-   HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, FALSE );
+   HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachLocal(%p, %d)", pLocal, pLocal->type ));
+   
+   if( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) )
+   {
+      /* Change the value only if this variable is not referenced
+       * by another codeblock yet.
+       * In this case we have to copy the current value to a global memory
+       * pool so it can be shared by codeblocks
+       */
+      HB_ITEM_PTR pItem;
 
-   pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
-   pLocal->item.asMemvar.itemsbase = &s_globalTable;
-   pLocal->item.asMemvar.value     = hMemvar;
+      do
+      {
+         pLocal = hb_itemUnRefOnce( pLocal );
+      }
+      while( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) && ( pLocal != pItem ) );
+   }
+
+	if( ! HB_IS_MEMVAR( pLocal ) )
+   {
+		HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, FALSE );
+
+		pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
+		pLocal->item.asMemvar.itemsbase = &s_globalTable;
+		pLocal->item.asMemvar.value     = hMemvar;
+   }
+   return pLocal;
 }
+
 
 /*
  * This function pushes passed dynamic symbol that belongs to PRIVATE variable
@@ -372,7 +397,8 @@ void hb_memvarValueDecRef( HB_HANDLE hValue )
       */
       if( --pValue->counter == 0 )
       {
-         hb_itemClear( &pValue->item );
+         hb_itemClear( pValue->pVarItem );
+         hb_xfree( pValue->pVarItem );
          hb_memvarRecycle( hValue );
 
          HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
@@ -407,8 +433,9 @@ void hb_memvarValueDecGarbageRef( HB_HANDLE hValue )
       */
       if( --pValue->counter == 0 )
       {
-         if( HB_IS_STRING( &pValue->item ) )
-             hb_itemClear( &pValue->item );
+         if( HB_IS_STRING( pValue->pVarItem ) )
+             hb_itemClear( pValue->pVarItem );
+         hb_xfree( pValue->pVarItem );
          hb_memvarRecycle( hValue );
 
          HB_TRACE(HB_TR_INFO, ("Memvar item (%i) deleted", hValue));
@@ -438,7 +465,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       if( pDyn->hMemvar )
       {
          /* value is already created */
-         HB_ITEM_PTR pSetItem = &s_globalTable[ pDyn->hMemvar ].item;
+         HB_ITEM_PTR pSetItem = s_globalTable[ pDyn->hMemvar ].pVarItem;
          if( HB_IS_BYREF( pSetItem ) )
             hb_itemCopy( hb_itemUnRef( pSetItem ), pItem );
          else
@@ -450,7 +477,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
           */
          hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
       }
-      s_globalTable[ pDyn->hMemvar ].item.type &= ~HB_IT_MEMOFLAG;
+      s_globalTable[ pDyn->hMemvar ].pVarItem->type &= ~HB_IT_MEMOFLAG;
    }
    else
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
@@ -472,7 +499,7 @@ ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       {
          /* value is already created
           */
-         HB_ITEM_PTR pGetItem = &s_globalTable[ pDyn->hMemvar ].item;
+         HB_ITEM_PTR pGetItem = s_globalTable[ pDyn->hMemvar ].pVarItem;
          if( HB_IS_BYREF( pGetItem ) )
             hb_itemCopy( pItem, hb_itemUnRef( pGetItem ) );
          else
@@ -598,7 +625,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen )
       {
          /* variable contains some data
           */
-         HB_ITEM_PTR pItem = &s_globalTable[ pDynVar->hMemvar ].item;
+         HB_ITEM_PTR pItem = s_globalTable[ pDynVar->hMemvar ].pVarItem;
          if( HB_IS_BYREF( pItem ) )
             pItem = hb_itemUnRef( pItem );   /* it is a PARAMETER variable */
          if( HB_IS_STRING( pItem ) )
@@ -660,16 +687,16 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
             /* new PUBLIC variable - initialize it to .F.
              */
 
-            s_globalTable[ pDynVar->hMemvar ].item.type = HB_IT_LOGICAL;
+            s_globalTable[ pDynVar->hMemvar ].pVarItem->type = HB_IT_LOGICAL;
 
             /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized */
             /*       to .T., this is normal Clipper behaviour. [vszakats] */
 
             if( strcmp( pDynVar->pSymbol->szName, "HARBOUR" ) == 0 ||
                  strcmp( pDynVar->pSymbol->szName, "CLIPPER" ) == 0 )
-               s_globalTable[ pDynVar->hMemvar ].item.item.asLogical.value = TRUE;
+               s_globalTable[ pDynVar->hMemvar ].pVarItem->item.asLogical.value = TRUE;
             else
-               s_globalTable[ pDynVar->hMemvar ].item.item.asLogical.value = FALSE;
+               s_globalTable[ pDynVar->hMemvar ].pVarItem->item.asLogical.value = FALSE;
          }
       }
    }
@@ -720,7 +747,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
             {
                if( hb_stricmp( pDynVar->pSymbol->szName, pMemvar->item.asString.value ) == 0 )
                {
-                  hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
+                  hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
                   ulBase = 0;
                }
             }
@@ -730,7 +757,7 @@ static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
       {
          pDynVar = hb_dynsymGet( pMemvar->item.asString.value );
          if( pDynVar && pDynVar->hMemvar )
-            hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
+            hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
       }
    }
    else
@@ -762,10 +789,10 @@ static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
          if( bInclude )
          {
             if( ( szMask[ 0 ] == '*') || hb_strMatchRegExp( pDynVar->pSymbol->szName, szMask ) )
-               hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
+               hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
          }
          else if( ! hb_strMatchRegExp( pDynVar->pSymbol->szName, szMask ) )
-            hb_itemClear( &s_globalTable[ pDynVar->hMemvar ].item );
+            hb_itemClear( s_globalTable[ pDynVar->hMemvar ].pVarItem );
       }
    }
 }
@@ -917,7 +944,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
          hb_dynsymEval( hb_memvarFindPublicByPos, ( void * ) &struPub );
          if( struPub.bFound )
          {
-            pValue =&s_globalTable[ struPub.pDynSym->hMemvar ].item;
+            pValue =s_globalTable[ struPub.pDynSym->hMemvar ].pVarItem;
             *pszName =struPub.pDynSym->pSymbol->szName;
          }
       }
@@ -927,7 +954,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
          {
             HB_DYNS_PTR pDynSym = s_privateStack[ iPos ];
 
-            pValue =&s_globalTable[ pDynSym->hMemvar ].item;
+            pValue =s_globalTable[ pDynSym->hMemvar ].pVarItem;
             *pszName = pDynSym->pSymbol->szName;
          }
       }
@@ -1312,7 +1339,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
    {
       BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( pDynSymbol->pSymbol->szName, pszMask ) );
 
-      PHB_ITEM pItem = &s_globalTable[ pDynSymbol->hMemvar ].item;
+      PHB_ITEM pItem = s_globalTable[ pDynSymbol->hMemvar ].pVarItem;
 
       /* Process it if it matches the passed mask */
       if( bIncludeMask ? bMatch : ! bMatch )
@@ -1614,7 +1641,7 @@ void hb_memvarsIsMemvarRef( void )
          */
          if( s_globalTable[ ulCnt ].counter && s_globalTable[ ulCnt ].hPrevMemvar != ( HB_HANDLE )-1 )
          {
-            hb_gcItemRef( &s_globalTable[ ulCnt ].item );
+            hb_gcItemRef( s_globalTable[ ulCnt ].pVarItem );
          }
       }
    }
@@ -1633,7 +1660,7 @@ HB_HANDLE hb_memvarGetVarHandle( char *szName )
 PHB_ITEM hb_memvarGetValueByHandle( HB_HANDLE hMemvar )
 {
    if( hMemvar && hMemvar < s_globalTableSize )
-      return  &s_globalTable[ hMemvar ].item;
+      return  s_globalTable[ hMemvar ].pVarItem;
    else
       return NULL;
 }

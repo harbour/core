@@ -110,35 +110,18 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
          pLocal = hb_stackItemFromBase( HB_PCODE_MKUSHORT( pLocalPosTable ) );
          pLocalPosTable += 2;
 
-         if( ! HB_IS_MEMVAR( pLocal ) )
-         {
-            /* Change the value only if this variable is not referenced
-             * by another codeblock yet.
-             * In this case we have to copy the current value to a global memory
-             * pool so it can be shared by codeblocks
-             */
-
-            if( HB_IS_BYREF( pLocal ) )
-            {
-               pLocal = hb_itemUnRef( pLocal );
-            }
-
-            hb_memvarDetachLocal( pLocal );
-            memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
-         }
-         else
-         {
-            /* This variable is already detached (by another codeblock)
-             * - copy the reference to a value
-             */
-            /* Increment the reference counter so this value will not be
-             * released if other codeblock will be deleted
-             */
-            memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
-         }
+         pLocal = hb_memvarDetachLocal( pLocal );
+         /* Increment the reference counter so this value will not be
+          * released if other codeblock will be deleted
+          */
+         memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
+         /* Increment the reference counter so this value will not be
+          * released if other codeblock will be deleted
+          */
          hb_memvarValueIncRef( pLocal->item.asMemvar.value );
          ++ui;
       }
+      
    }
    else
    {

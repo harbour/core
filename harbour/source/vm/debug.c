@@ -212,10 +212,6 @@ HB_FUNC( HB_DBG_VMPARLLIST )
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
 
-static void hb_dbgStop()
-{
-}
-
 HB_FUNC( HB_DBG_VMVARLGET )
 {
    int iLevel = hb_parni( 1 ) + 1;
@@ -227,7 +223,6 @@ HB_FUNC( HB_DBG_VMVARLGET )
 
    if( iLocal > SHRT_MAX )
    {
-      hb_dbgStop();
       iLocal -= USHRT_MAX;
       iLocal--;
    }

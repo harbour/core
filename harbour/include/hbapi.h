@@ -293,7 +293,7 @@ typedef struct _HB_CODEBLOCK
 
 typedef struct _HB_VALUE
 {
-   HB_ITEM   item;
+   HB_ITEM_PTR   pVarItem;
    ULONG     counter;
    HB_HANDLE hPrevMemvar;
 } HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
@@ -574,7 +574,7 @@ extern void     hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char   * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
 extern int      hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
-extern void     hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+extern HB_ITEM_PTR     hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */
