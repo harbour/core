@@ -1,10 +1,14 @@
+20000422-06:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+   * source/include/hbvm.h
+     * Corrected comments of hb_vmPushOne(), hb_vmPushZero(), and hb_vmPushByte()
+
 20000422-13:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/gtcrs/gtcrs.c
     *source/rtl/gtcrs/mousecrs.c
 	*fixed arrow keys under xterm
 	*added support for mouse under xterm
-	
+
     *source/compiler/harbour.c
 	*fixed duplicated variable error when PARAMETER variable was
 	also declared as a MEMVAR variable
