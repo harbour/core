@@ -214,6 +214,8 @@ void hb_compStrongType( int iSize )
 
    /* TODO Split under conitions for the different matching possible iSize. */
 
+   /* TODO Subject to Operator Overloading! */
+
    switch ( pFunc->pCode[ ulPos ] )
    {
      /*-----------------4/26/00 0:16AM-------------------
@@ -237,9 +239,17 @@ void hb_compStrongType( int iSize )
        /* Function Type already on stack at this position. */
        break;
 
-     /* Subject to Operator Overloading - Don't expect Numeric! */
      case HB_P_DEC :
      case HB_P_INC :
+       sprintf( szType1, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
+
+       if ( pFunc->pStack[ pFunc->iStackIndex ] == 'N' )
+          ;
+       else if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' )
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_SUSPECT, "N", NULL );
+       else
+          hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_OPERAND_TYPE, szType1, "N" );
+
        break;
 
      case HB_P_JUMPFALSENEAR :
@@ -315,7 +325,7 @@ void hb_compStrongType( int iSize )
        sprintf( szType2, "%c", pFunc->pStack[ pFunc->iStackIndex ] );
 
        if ( pFunc->pStack[ pFunc->iStackIndex ] == ' ' &&  pFunc->pStack[ pFunc->iStackIndex - 1 ] == ' ' )
-          /* Override the last item with the new result type wich is already there */
+          /* Override the last item with the new result type which is already there */
           ;
        else if ( pFunc->pStack[ pFunc->iStackIndex ] == pFunc->pStack[ pFunc->iStackIndex - 1 ] )
           /* Override the last item with the new result type wich is already there */

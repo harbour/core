@@ -1,3 +1,16 @@
+20000429-23:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+    * harbour/source/compiler/harbour.c
+      ! Fixed hb_compVariableAdd() to utilize parameter cValueType for Codeblock local variables, so that correct type is stored.
+
+    * harbour/source/compiler/harbour.y
+      ! Fixed hb_compExprCBVarAdd( $<asExpr>0, $1, $2 ) to hb_compExprCBVarAdd( $<asExpr>0, $1, hb_comp_cVarType ) and
+	hb_compExprCBVarAdd( $<asExpr>0, $3, $4 ) to hb_compExprCBVarAdd( $<asExpr>0, $3, hb_comp_cVarType ) so that
+        correct type is passed.
+      + Added hb_comp_cVarType = ' ' to reset declared type after BlockVar[s] PRIVATE and PUBLIC.
+
+    * harbour/source/compiler/hbpcode.c
+      * Minor corrections to hb_compStrongType()
+
 20000429-02:29 GMT-8 Brian Hays <bhays@abacuslaw.com>
    * nation.txt
    * misc.txt

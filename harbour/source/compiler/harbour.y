@@ -342,10 +342,10 @@ Statement  : ExecFlow   CrlfStmnt   { }
                      }
            | PUBLIC { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PUBLIC; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPUBLIC" ); } CrlfStmnt
+                    { hb_compRTVariableGen( "__MVPUBLIC" ); hb_comp_cVarType = ' '; } CrlfStmnt
            | PRIVATE { hb_compLinePushIfInside(); hb_comp_iVarScope = VS_PRIVATE; }
                      ExtVarList
-                    { hb_compRTVariableGen( "__MVPRIVATE" ); } CrlfStmnt
+                    { hb_compRTVariableGen( "__MVPRIVATE" ); hb_comp_cVarType = ' '; } CrlfStmnt
 
            | EXITLOOP  CrlfStmnt            { hb_compLoopExit(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
            | LOOP  CrlfStmnt                { hb_compLoopLoop(); hb_comp_functions.pLast->bFlags |= FUN_BREAK_CODE; }
@@ -947,8 +947,8 @@ BlockExpList : Expression                { $$ = hb_compExprAddListExpr( $<asExpr
 BlockNoVar : /* empty list */    { $$ = NULL; }
 ;
 
-BlockVarList : IdentName AsType                 { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, $2 ); }
-           | BlockVarList ',' IdentName AsType  { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, $4 ); }
+BlockVarList : IdentName AsType                 { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, hb_comp_cVarType ); hb_comp_cVarType = ' '; }
+           | BlockVarList ',' IdentName AsType  { hb_comp_iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, hb_comp_cVarType ); hb_comp_cVarType = ' '; }
            ;
 
 /* There is a conflict between the use of IF( Expr1, Expr2, Expr3 )

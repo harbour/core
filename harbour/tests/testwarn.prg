@@ -11,7 +11,13 @@ DECLARE FUNCTION nMyFunc( ) AS NUMERIC
 
 FUNCTION Main()
 
+   LOCAL n AS NUMERIC
+
    ? "This is a compiler test."
+
+   n := nMyFunc()
+
+   cVar := {|n AS NUMERIC , c AS CHARACTER, d AS DATE| n := 'A', c := 1, d := 0, .T. }
 
    RETURN NIL
 

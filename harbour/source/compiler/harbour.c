@@ -361,7 +361,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       sprintf( szSize, "%li", ulSize );
       hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_MEMREALLOC, szSize, NULL );
    }
-   
+
    return pResult;
 }
 
@@ -464,6 +464,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    else
       /* variable defined in a codeblock */
       hb_comp_iVarScope = VS_PARAMETER;
+
    hb_compCheckDuplVars( pFunc->pLocals, szVarName, hb_comp_iVarScope );
 
    pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
@@ -472,6 +473,10 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    pVar->cType = hb_comp_cVarType;
    pVar->iUsed = 0;
    pVar->pNext = NULL;
+
+   /* Correct Type was previously stored in the CodeBlock. */
+   if( ! pFunc->szName )
+     pVar->cType = cValueType;
 
    if( hb_comp_iVarScope & VS_MEMVAR )
    {
@@ -1326,9 +1331,6 @@ static void hb_compPrepareOptimize()
 
    hb_comp_functions.pLast->iJumps++;
 
-   //printf( "Preparing for Jump #%i in: %li 3rd Byte=%i", hb_comp_functions.pLast->iJumps, ( ULONG ) ( hb_comp_functions.pLast->lPCodePos - 4 ), hb_comp_functions.pLast->pCode[ hb_comp_functions.pLast->lPCodePos ] );
-   //getchar();
-
    if( hb_comp_functions.pLast->pJumps )
    {
 
@@ -1644,6 +1646,10 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
    hb_comp_bDontGenLineNum = FALSE;
    /* clear RETURN/BREAK flag */
    hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+
+   /* Resting Compile Time Stack */
+   hb_comp_functions.pLast->iStackIndex = 0;
+   hb_comp_functions.pLast->iFunctionIndex = 0;
 }
 
 /* Generates the pcode with the currently compiled source code line
