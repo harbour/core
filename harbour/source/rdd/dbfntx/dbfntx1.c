@@ -3929,6 +3929,7 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
          pError = hb_errNew();
          hb_errPutGenCode( pError, EG_OPEN );
          hb_errPutSubCode( pError, 1003 );
+         hb_errPutOsCode( pError, hb_fsError() );
          hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_OPEN ) );
          hb_errPutFileName( pError, szFileName );
          hb_errPutFlags( pError, EF_CANRETRY | EF_CANDEFAULT );

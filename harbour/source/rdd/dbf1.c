@@ -1796,6 +1796,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( pArea->hDataFile == FS_ERROR )
    {
       hb_xfree( pArea->szDataFileName );
+      pArea->szDataFileName = NULL;
       return FAILURE;
    }
 
