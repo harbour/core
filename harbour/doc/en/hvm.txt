@@ -385,7 +385,7 @@
  *  $FUNCNAME$
  *      __VMVARLGET()
  *  $CATEGORY$
- *      Variable management
+ *      Variable Management
  *  $ONELINER$
  *      Retrive a local variable from a procedure level
  *  $SYNTAX$

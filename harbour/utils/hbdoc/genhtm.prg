@@ -1089,8 +1089,12 @@ FUNCTION ProchtmDesc( cBuffer, oHtm, cStyle )
          ENDIF
          IF !EMPTY( cBuffer )
             //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffer := STRTRAN( cBuffer, "<b>", "bold" )
+            cBuffer := STRTRAN( cBuffer, "</b>", "negrito" )
             cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
             cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+            cBuffer := STRTRAN( cBuffer, "bold", "<b>" )
+            cBuffer := STRTRAN( cBuffer, "negrito", "</b>" )
 
             cBuffeR := ALLTRIM( cBuffer )
             oHtm:WritePar( cBuffer )
@@ -1306,7 +1310,7 @@ FUNCTION GenhtmTable( oHtm )
 
    oHtm:Writetext( "</table>" )
 
-   oHtm:WriteText( "<br>" )
+//   oHtm:WriteText( "<br>" )
    afiTable  := {}
    asitable  := {}
    atitable  := {}

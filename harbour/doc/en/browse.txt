@@ -325,7 +325,7 @@
  *  $FUNCNAME$
  *      dbSkipper()
  *  $CATEGORY$
- *      Data base
+ *      Database
  *  $ONELINER$
  *      Helper function to skip a database
  *  $SYNTAX$

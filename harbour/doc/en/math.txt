@@ -161,7 +161,7 @@
  *  $FUNCNAME$
  *      MAX()
  *  $CATEGORY$
- *      MATH
+ *      Math
  *  $ONELINER$
  *      Returns the maximum of two numbers or dates.
  *  $SYNTAX$
@@ -200,7 +200,7 @@
  *  $FUNCNAME$
  *      MIN()
  *  $CATEGORY$
- *      MATH
+ *      Math
  *  $ONELINER$
  *      Determines the minumum of two numbers or dates.
  *  $SYNTAX$

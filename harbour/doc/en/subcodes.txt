@@ -998,7 +998,7 @@ start from 3000
  *  $SUBCODE$
  *      BASE/2012
  *  $CATEGORY$
- *      files
+ *      Run Time Errors
  *  $ONELINER$
  *      File error
  *  $DESCRIPTION$
@@ -1347,7 +1347,7 @@ start from 3000
  *  $SUBCODE$
  *      TERM/2013
  *  $CATEGORY$
- *      files
+ *      Run Time Errors
  *  $ONELINER$
  *      Create error
  *  $DESCRIPTION$

@@ -775,7 +775,7 @@
  *  $FUNCNAME$
  *      TYPE
  *  $CATEGORY$
- *      Data input and output
+ *      Command
  *  $ONELINER$
  *      Show the content of a file on the console, printer or file
  *  $SYNTAX$

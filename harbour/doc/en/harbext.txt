@@ -12,63 +12,73 @@
  *<b>Language extensions:</b>   </par>
  *--------------------
  *
- ** Class generation and management.   </par>
+ ** Class generation and management.   
  *
  *        Clipper only allowed creation of objects from a few standard
- *        classes.   </par>
+ *        classes.
+ *
  *        In Harbour, you can create your own classes--complete with
  *        Methods, Instance Variables, Class Variables and Inheritance.
  *        Entire applications can be designed and coded in Object Oriented
- *        style.   </par>
+ *        style.   
  *
  ** @<FunctionName>()   </par>
- *        Returns the pointer (address) to a function.   </par>
+ *
+ *        Returns the pointer (address) to a function.   
  *
  *        The returned value is not useful to application-level programming, but
  *        is used at a low level to implement object oriented coding.
  *        (Internally, a class method is a static function and there is no
- *        symbol for it, so it is accessed via its address).   </par>
+ *        symbol for it, so it is accessed via its address).   
  *
- ** Class TGetList   </par>
- *        Object oriented support for GetLists management.   </par>
+ ** Class TGetList
  *
- ** ProcName() support for class Method names.   </par>
- *        Class Methods can be retrieved from the call stack.   </par>
+ *        Object oriented support for GetLists management.   
  *
- ** Memory() has new return values.   </par>
- *        See hbmemory.ch   </par>
+ ** ProcName() support for class Method names.
  *
- ** Transform()  --> new function in format string   </par>
- *        @0      Make a zero padded string out of the number.   </par>
+ *        Class Methods can be retrieved from the call stack.   
  *
- ** SToD()  --> dDate   </par>
- *        New function that converts a yyyymmdd string to a Date value.   </par>
+ ** Memory() has new return values.
+ *
+ *        See hbmemory.ch   
+ *
+ ** Transform()  --> new function in format string
+ *
+ *        @0      Make a zero padded string out of the number.   
+ *
+ ** SToD()  --> dDate
+ *
+ *        New function that converts a yyyymmdd string to a Date value.   
  *
  ** Optional Compile Time STRONG TYPE declaration (and compile time TYPE
- *  MISMATCH warnings)   </par>   </par>
+ *  MISMATCH warnings)      
  *
- *  Example: LOCAL/STATIC Var AS ...   </par>
+ *  Example: LOCAL/STATIC Var AS ...   
  *
- ** The Harbour debugger provides new interesting classes:   </par>
- *  - Class TDbWindow could be the foundation for a generic multiplatform   </par>
- *  - Class TForm   </par>
- *  - Class TDbMenu implement both pulldown and popup menus.   </par>
+ ** The Harbour debugger provides new interesting classes:
  *
+ *  - Class TDbWindow could be the foundation for a generic multiplatform
  *
+ *  - Class TForm
+ *
+ *  - Class TDbMenu implement both pulldown and popup menus.   
  *
  *<b>RTL enhanced functionality:</b>   </par>
- *---------------------------   </par>
+ *---------------------------   
  *
- *- Directory( <cMask>, <cFlags>, <lEightDotThree> )   </par>
+ *- Directory( <cMask>, <cFlags>, <lEightDotThree> )
+ *
  *  The 3rd parameter is a Harbour (optional) parameter and indicates that on
  *  those platforms that support long filenames, that you wish to receive what
  *  would be considered the dos equivalant 8.3 name.
  *  Could affect Adir() and Dir if they were modified to take advantage
- *  of it - currently, they will return long names if the os supports it.   </par>
+ *  of it - currently, they will return long names if the os supports it.   
  *
- *- HB_DiskSpace( <nDrive>, <nType> )   </par>
+ *- HB_DiskSpace( <nDrive>, <nType> )
+ *
  *  The second parameter is a Harbour (optional) parameter and indicates the
- *  type of diskinfo being requested.  See en/diskspac.txt for info.   </par>
+ *  type of diskinfo being requested.  See en/diskspac.txt for info.   
  *
  *  $END$
  */

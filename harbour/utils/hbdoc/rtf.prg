@@ -37,7 +37,7 @@
 
 #include 'hbclass.ch'
 #include 'common.ch'
-
+MEMVAR aWWW,aResult
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Class TRTF
@@ -185,7 +185,7 @@ METHOD WriteParBoldText( cPar, cText ) CLASS TRTF
    FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20\i\b       ' + ALLTRIM( HB_OEMTOANSI( cPar ) ) + ' \b\cf1\f6\fs20\i0\b0\li300 ' + ALLTRIM( HB_OEMTOANSI( cText ) ) + CRLF )
 RETURN Self
 
-METHOD WriteTitle( cTitle, cTopic, cOne ) CLASS TRTF
+METHOD WriteTitle( cTitle, cTopic, cOne ,cCat) CLASS TRTF
 
    LOCAL cTemp
    LOCAL nPos
@@ -207,7 +207,11 @@ METHOD WriteTitle( cTitle, cTopic, cOne ) CLASS TRTF
              '  ${\footnote \pard\fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
              '  K{\footnote \pard\fs20 K ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
              '}' + CRLF
-
+   aadd(aWww,{cTopic,"IDH_"+cTemp,cCat})
+   nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCat)})
+   if nPos==0
+      aadd(aResult,cCat)
+   endif
    FWRITE( Self:nHandle, cWrite )
 
    FWRITE( Self:nHandle, '\pard\cf1\f6\fs30\i0\b\keepn ' + ALLTRIM( HB_OEMTOANSI( cTopic ) ) + CRLF )

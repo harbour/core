@@ -1060,10 +1060,12 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
          ENDIF
          IF !EMPTY( cBuffer )
             //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffer := STRTRAN( cBuffer, "<b>", "bold" )
+            cBuffer := STRTRAN( cBuffer, "</b>", "negrito" )
             cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
             cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
-            cBuffer := STRTRAN( cBuffer, "&lt;b&gt;", "<b>" )
-            cBuffer := STRTRAN( cBuffer, "&lt;/b&gt;", "</b>" )
+            cBuffer := STRTRAN( cBuffer, "bold", "<b>" )
+            cBuffer := STRTRAN( cBuffer, "negrito", "</b>" )
 
             cBuffeR := ALLTRIM( cBuffer )
             oChm:WritePar( cBuffer )
@@ -1276,7 +1278,7 @@ FUNCTION GenChmTable( oChm )
 
    oChm:Writetext( "</table>" )
 
-   oChm:WriteText( "<br>" )
+
    afiTable  := {}
    asitable  := {}
    atitable  := {}

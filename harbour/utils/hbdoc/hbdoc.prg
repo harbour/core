@@ -124,6 +124,7 @@ MEMVAR lChm
 MEMVAR lNorton
 MEMVAR aWWW
 MEMVAR lTroff
+MEMVAR aResult
 STATIC cTitle:=''
 
 /*
@@ -142,6 +143,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    LOCAL aExtensions := { "*.ch", "*.prg", "*.c", "*.asm", "*.txt" }
    LOCAL i
+   Local cLast
    LOCAL nItem
    LOCAL nHpj
    LOCAL cItem:=''
@@ -152,6 +154,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL nPos
    LOCAL ppp
    LOCAL aMetaContents:={}
+   Local aTemp:={}
+   LOCAL lAdded:=.f.
    PUBLIC theHandle
    PUBLIC aDirList
    PUBLIC aDocInfo    := {}
@@ -167,6 +171,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    PUBLIC lChm        := .F.
    PUBLIC lNorton     := .F.
    PUBLIC aWWW        := {}
+   PUBLIC aResult:={}
    PUBLIC lTroff      := .f.
 
    //  The following variables are used to allow one to change the delimiter
@@ -430,7 +435,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
       NEXT
    ELSEIF lRtf
-      nHpj := FCREATE( 'HARBOUR.HPJ' )
+      nHpj := FCREATE( 'harbour.hpj' )
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
       FWRITE( nHpj, 'HCW=1' + CRLF )
       FWRITE( nHpj, 'COMPRESS=60 Hall Zeck' + CRLF )
@@ -441,12 +446,71 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
       FWRITE( nHpj, 'HLP=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
       FWRITE( nHpj, 'ROOT=\' + CURDIR() + "\RTF" + CRLF )
-      FWRITE( nHpj, 'CNT=.\Harbour.cnt' + CRLF )
+      FWRITE( nHpj, 'CNT=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"+ CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
       FWRITE( nHpj, "harbour.rtf" + CRLF )
       FWRITE( nHpj, '[CONFIG]' + CRLF + 'contents()' + CRLF + 'prev()' + CRLF + 'next()' + CRLF + 'BrowseButtons()' + CRLF )
-      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f2' + CRLF )
+      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +'API="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +       'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f2' + CRLF )
       FCLOSE( nHpj )
+      nHpj := FCREATE( lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"  )
+      FWRITE( nHpj, ':Base'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
+      FWRITE( nHpj, ':Title'+cTitle+CRLF)
+      FWRITE( nHpj, ':Index harbour='+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
+      FWRITE( nHpj, '1 Harbour'+CRLF)
+      asort(aWww,,,{|x,y| x[3]+x[1]<y[3]+y[1]})
+      for ppp:=1 to len(aWww)
+          if aWww[ppp,3]=='Document'
+             fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Main"+CRLF)
+          endif
+      Next
+      asort(aWww,,,{|x,y| x[3]+x[1]<y[3]+y[1]})
+      FWRITE( nHpj, '1 Harbour Run Time Error'+CRLF)
+      for ppp:=1 to len(aWww)
+          if aWww[ppp,3]=='Run Time Errors'
+             fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Error"+CRLF)
+          endif
+      Next
+      FWRITE( nHpj, '1 Harbour Runtime functions and Commands by Name'+CRLF)
+      asort(aWww,,,{|x,y| x[1]<y[1]})
+      for ppp:=1 to len(aWww)
+          if aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
+             fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Funca"+CRLF)
+          endif
+      Next
+
+      FWRITE( nHpj, '1 Harbour Runtime functions Category'+CRLF)
+      asort(aWww,,,{|x,y| x[3]<y[3]})
+        SET CONSOLE ON
+      nItem := len(aResult)
+      asort(aResult,,,{|x,y| x<y})
+      for ppp:=1 to nItem
+      ? ppp
+        cLast:=GetNextContent(ppp)
+        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+            WriteContentFile(aWww,cLast,nHpj)
+        endif
+      Next
+
+      FWRITE( nHpj, '1 Harbour Commands'+CRLF)
+      for ppp:=1 to len(aWww)
+          if aWww[ppp,3]=='Command'
+             fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Commands"+CRLF)
+          endif
+      Next
+      FWRITE( nHpj, '1 Harbour OOP commands'+CRLF)
+      for ppp:=1 to len(aWww)
+          if aWww[ppp,3]=='OOP Command'
+             fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Class"+CRLF)
+          endif
+      Next
+      FWRITE( nHpj, '1 The Garbage API'+CRLF)
+      for ppp:=1 to len(aWww)
+          if aWww[ppp,3]=='The garbage collector'
+             fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">API"+CRLF)
+          endif
+      Next
+    fClose(nHpj)
+set console off
    ELSEIF lWWW
 
       asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
@@ -497,7 +561,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       oHtm1:WriteLink( "license", UpperLower( "Harbour License" ) )
       oHtm1:WriteLink( "http://www.gnu.org/copyleft/gpl.html", "GNU License" )
       oHtm1:WriteLink( "compileroptions.htm", "Compiler Options" )
-      oHtm1:WriteLink( "harbourextension.htm", "Harbour Extensions" )
+      oHtm1:WriteLink( "harbourextensions.htm", "Harbour Extensions" )
       oHtm1:WriteLink( "thegarbagecollector.htm", "The Garbage Collector" )
       oHtm1:WriteLink( "theidlestates.htm", "The Idle States" )
       oHtm1:WriteText( "</UL>" )
@@ -510,7 +574,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
         ohtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',cItem)
         for ppp:=1 to len(adocinfo)
 
-          if citem<>adocinfo[ppp,1]
+          if citem<>adocinfo[ppp,1]  .and. cItem <>"Document"
                               citem:=alltrim(rtrim(ltrim(adocinfo[ppp,1])))
                     ohtm1:WriteLink('hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',cItem)
 
@@ -636,6 +700,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
               ohtm:WriteText("</ul>")
 
               citem:=adocinfo[ppp,1]
+              if cItem <>"Document"
              oHtm:Listitem()
              oHtm:AddObject("text/sitemap")
              oHtm:AddParam("Name",adocinfo[ppp,1])
@@ -647,7 +712,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                oHtm:AddParam("Local",lower(aDocInfo[ppp,4]))
                oHtm:EndObject()
                oHtm:WriteChmlink(lower(adocinfo[ppp,4]),adocinfo[ppp,2])
-
+endif
            endif
        next
         if ppp>len(adocinfo)
@@ -1308,3 +1373,44 @@ cReturn:=substr(cVersion,9,4)
 
 RETURN cReturn
 
+Function WriteContentFile(aTop,cCat,nFile)
+Local nCount:=0
+
+Local aTemp:={}
+ascan(aWww,,,{|x,y|x[3]+x[1]<y[3]+y[1]})
+for nCount:=1 to Len(aWww)
+    if Alltrim(aTop[nCount,3])==alltrim(cCat)
+        aadd(aTemp,{aTop[nCount,1],aTop[nCount,2],aTop[nCount,3]})
+    endif
+Next
+asort(aTemp,,,{|x,y| x[1]<y[1]})
+    fWrite( nFile, '2 '+cCat+CRLF)
+for nCount:=1 to Len(aTemp)
+    fWrite( nFile, '3 '+aTemp[nCount,1]+"="+aTemp[nCount,2]+">Funca"+CRLF)
+next
+return nil
+
+
+function GetNextContent(nPos)
+Local cReturn
+if nPos <=Len(aResult)
+cReturn := aResult[nPos]
+endif
+return cReturn
+//         fWrite( nHpj, '2 '+aWww[1,3]+CRLF)
+/*          if aWww[ppp,3] <> cLast .and. aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
+               fWrite( nHpj, '2 '+aWww[ppp,3]+CRLF)
+               lAdded:=.t.              
+          endif
+          if lAdded
+              ppp++
+            if aWww[ppp,3] == cLast .and. aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
+                fWrite( nHpj, '3 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Funca"+CRLF)
+            endif
+            lAdded:=.F.
+          Elseif aWww[ppp,3] == cLast .and. aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
+                         fWrite( nHpj, '3 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Funca"+CRLF)
+          endif
+
+         cLast:=aWww[ppp,3]
+         */
