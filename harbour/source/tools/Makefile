@@ -20,7 +20,6 @@ C_SOURCES=\
         dates2.c \
         dbftools.c \
         hb_f.c \
-        io.c \
         mathx.c \
         strasint.c \
         strcount.c \

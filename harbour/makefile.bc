@@ -2,10 +2,26 @@
 # $Id$
 #
 
-# makefile for Borland C/C++ compilers
+#
+# Makefile for Harbour Project for Borland C/C++ 3.x, 4.x, 5.x compilers
+#
 
+#
+# NOTE: You can use these envvars to configure the make process:
+#       (note that these are all optional)
+#
+#       CFLAGS       - Extra C compiler options for libraries and for 
+#                      executables
+#       CLIBFLAGS    - Extra C compiler options for the libraries
+#       HARBOURFLAGS - Extra Harbour compiler options
+#       HB_GT_LIB    - To override the default GT driver
+#                      (search for HB_GT_LIBS for a list)
+#
+
+#
 # NOTE: "echo." intentionally used instead of "echo", to avoid conflicts
 #       with external commands named echo.
+#
 
 !if $d(B16)
 
@@ -283,7 +299,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\dates2.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
-   $(OBJ_DIR)\io.obj \
    $(OBJ_DIR)\mathx.obj \
    $(OBJ_DIR)\strasint.obj \
    $(OBJ_DIR)\strcount.obj \
@@ -1553,10 +1568,6 @@ $(OBJ_DIR)\html.c : $(TOOLS_DIR)\html.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\html.obj : $(OBJ_DIR)\html.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) -+$@,,
-
-$(OBJ_DIR)\io.obj : $(TOOLS_DIR)\io.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) -+$@,,
 

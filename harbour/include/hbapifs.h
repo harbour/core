@@ -90,7 +90,6 @@ extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
 extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen );
 extern BYTE     hb_fsCurDrv     ( void );
 extern int      hb_fsDelete     ( BYTE * pszFileName );
-extern double   hb_fsDiskSpace  ( USHORT uiDrive, USHORT uiType );
 extern USHORT   hb_fsError      ( void );
 extern BOOL     hb_fsFile       ( BYTE * pszFileName );
 extern ULONG    hb_fsFSize      ( BYTE * pszFileName, BOOL bUseDirEntry );

@@ -3,7 +3,23 @@
 #
 
 #
-# Makefile for Harbour project for Microsoft Visual C (32 bits)
+# Makefile for Harbour Project for Microsoft Visual C (32 bits)
+#
+
+#
+# NOTE: You can use these envvars to configure the make process:
+#       (note that these are all optional)
+#
+#       CFLAGS       - Extra C compiler options for libraries and for 
+#                      executables
+#       CLIBFLAGS    - Extra C compiler options for the libraries
+#       HARBOURFLAGS - Extra Harbour compiler options
+#       HB_GT_LIB    - To override the default GT driver
+#                      (search for HB_GT_LIBS for a list)
+#       DO_HBRUNJAV  - Defines this if you want HBRUNJAV.DLL to be built.
+#                      (you must have a JDK installed for this)
+#
+
 #
 # Notes about this makefile:
 #
@@ -330,7 +346,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\dates2.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\hb_f.obj \
-   $(OBJ_DIR)\io.obj \
    $(OBJ_DIR)\mathx.obj \
    $(OBJ_DIR)\strasint.obj \
    $(OBJ_DIR)\strcount.obj \
@@ -647,8 +662,9 @@ $(HBRUN_EXE) : \
 !ifdef DO_HBRUNJAV
 
 #
-# To compile this you must have a JDK installed
+# HBRUNJAV.DLL rules (to compile this you must have a JDK installed)
 #
+
 $(HBRUNJAV_DLL) : $(HBRUN_DIR)\runjava.c
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(HBRUN_DIR)\runjava.c -o $(HBRUNJAV_DLL) /link-dll $(LIBS)
     -del $(BIN_DIR)\runjava.exp

@@ -1,3 +1,52 @@
+20000322-16:33 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   - include/hbclip.ch
+   + contrib/hbclip/hbclip.ch
+   + contrib/hbclip/hbclip.lib
+   + contrib/hbclip/hbclip.prg
+   + contrib/hbclip/hbcolind.c
+   + contrib/hbclip/hbkeyput.prg
+   + contrib/hbclip/hbshadow.prg
+   + contrib/hbclip/hbstod.c
+   + contrib/hbclip/hbvaltoc.prg
+   + contrib/hbclip/make_clp.bat
+   + contrib/hbclip/readme.txt
+
+     + Harbour Compatibility Library for CA-Clipper 5.x/'87 contribution 
+       started.
+     + STOD(), HB_VALTOSTR(), HB_KEYPUT(), HB_COLORINDEX() functions added.
+     + Some functions from hbclip.ch also added to the library so that the
+       the library (HBCLIP.LIB) can be used with Clipper Summer '87.
+     + Header file from Harbour include dir moved here.
+
+   * makefile.bc
+     makefile.vc
+     + Some user notes added about configuration.
+
+   - source/tools/io.c
+   * include/hbapifs.h
+     source/rtl/diskspac.c
+     source/tools/Makefile
+     tests/tstdspac.prg
+     makefile.bc
+     makefile.vc
+     - Removed the internal function hb_fsDiskSpace() (the reason is that
+       this internal function may actually throw a Harbour runtime error.)
+     - Removed CD(), MD(), RD(), DISK*() from TOOLS.
+
+       You can use these macros to access the removed functions:
+       (This will require HB_COMPAT_C53 and #include "fileio.ch")
+
+       #define CD( d )       DIRCHANGE( d )
+       #define MD( d )       MAKEDIR( d )
+       #define RD( d )       DIRREMOVE( d )
+       #define DISKUSED( d ) DISKSPACE( d, HB_DISK_USED )
+       #define DISKFREE( d ) DISKSPACE( d, HB_DISK_FREE )
+       #define DISKFULL( d ) DISKSPACE( d, HB_DISK_TOTAL )
+
+   * source/rtl/dir.c
+     * Some minor cleanup (CVSd in the previous session)
+
 20000322-13:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/diskspac.c
      ! Workaround for GCC/Win32 (Cygwin and Mingw32).

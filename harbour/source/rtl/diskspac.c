@@ -58,8 +58,13 @@
    #include <dos.h>
 #endif
 
-double hb_fsDiskSpace( USHORT uiDrive, USHORT uiType )
+/* NOTE: The second parameter is a Harbour extension, check fileio.ch for
+         the possible values. */
+
+HB_FUNC( DISKSPACE )
 {
+   USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+   USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
@@ -239,15 +244,6 @@ double hb_fsDiskSpace( USHORT uiDrive, USHORT uiType )
 
 #endif
 
-   return dSpace;
-}
-
-/* NOTE: The second parameter is a Harbour extension, check fileio.ch for
-         the possible values. */
-
-HB_FUNC( DISKSPACE )
-{
-   hb_retnlen( hb_fsDiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, 
-                               ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL ), -1, 0 );
+   hb_retnlen( dSpace, -1, 0 );
 }
 

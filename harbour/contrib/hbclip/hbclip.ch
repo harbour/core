@@ -3,7 +3,7 @@
  */
 
 /*
- * Harbour Project source code:
+ * Harbour Compatibility Library for CA-Cl*pper source code:
  * Header file to help compile Harbour source files with Clipper
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
@@ -48,23 +48,15 @@
 #ifndef HB_CLIP_CH_
 #define HB_CLIP_CH_
 
+/* TODO: Rewrite as much of these in C or Clipper */
+
 #xtranslate HB_ARGCHECK( <s> )                            => ( .F. )
 #xtranslate HB_ARGSTRING( <s> )                           => ""
 #xtranslate HB_ARGC()                                     => 0
 #xtranslate HB_ARGV( <n> )                                => ""
-#xtranslate HB_PVALUE( <n> )                              => NIL
-#xtranslate HB_OSNEWLINE()                                => ( Chr( 13 ) + Chr( 10 ) )
-#xtranslate HB_SHADOW                                     => dbgShadow
-#xtranslate HB_COLORINDEX( <s>[, <n>] )                   => ""
-#xtranslate HB_STOD( <s> )                                => CToD( "" )
 #xtranslate HB_FNAMESPLIT( <s> )                          => NIL
 #xtranslate HB_FNAMEMERGE( <s1>[, <s2>[, <s3>[, <s4>]]] ) => ""
-#xtranslate HB_KEYPUT( <n> )                              => NIL
-#xtranslate HB_ANSITOOEM( <s> )                           => ( s )
-#xtranslate HB_OEMTOANSI( <s> )                           => ( s )
-#xtranslate HB_VALTOSTR( <x> )                            => ""
-#xtranslate HB_TRACESTATE( [<n>] )                        => 0
-#xtranslate HB_TRACELEVEL( [<n>] )                        => 0
+#xtranslate HB_PVALUE( <n> )                              => NIL
 #xtranslate HB_SETKEYGET( [<n>][, <b>] )                  => NIL
 #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
 #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )

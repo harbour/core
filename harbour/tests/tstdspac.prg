@@ -21,6 +21,7 @@
  This test program placed in the public domain
 */
 
+#include "fileio.ch"
 
 proc main( cDisk )
   if empty( cDisk )
@@ -28,8 +29,9 @@ proc main( cDisk )
   Endif
   cDisk := Val( cDisk )
 
-? "Bytes available on disk: " + Transform( diskspace(cDisk),"999,999,999,999")
-? "Bytes available for use: " + Transform( diskfree(cDisk),"999,999,999,999")
-? "             Bytes used: " + Transform( diskused(cDisk),"999,999,999,999")
-? " Total bytes on disk "+PadL(cDisk,2)+": " + Transform( diskFull(cDisk),"999,999,999,999")
+? "Bytes available on disk: " + Transform( diskspace(cDisk, HB_DISK_FREE ),"999,999,999,999")
+? "Bytes available for use: " + Transform( diskspace(cDisk, HB_DISK_AVAIL ),"999,999,999,999")
+? "             Bytes used: " + Transform( diskspace(cDisk, HB_DISK_USED ),"999,999,999,999")
+? " Total bytes on disk "+PadL(cDisk,2)+": " + Transform( diskspace(cDisk, HB_DISK_TOTAL ),"999,999,999,999")
 
+  return
