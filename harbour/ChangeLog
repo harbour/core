@@ -1,3 +1,28 @@
+2001-02-05 10:23 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/include/hbpcode.h
+     + HB_P_STATICNAME opcode added.
+
+   * harbour/source/compiler/genc.c
+     + New hb_p_staticname() function added.
+     * Modified hb_p_statics() function.
+
+   * harbour/source/compiler/harbour.c
+     + HB_P_STATICNAME opcode support.
+
+   * harbour/source/compiler/hbfix.c
+     + hb_p_staticname support.
+
+   * harbour/source/compiler/hbpcode.c
+     + HB_P_STATICNAME support.
+
+   * harbour/source/debug/debugger.prg
+     + statics variables support (not finished yet!)
+
+   * harbour/source/vm/hvm.c
+     + New hb_vmStaticName() added.
+
+   WARNING: All libraries must be rebuilt as opcodes have changed!!!
+
 2001-02-04 22:50 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/debug/debugger.prg
      ! fixed CommandWindowProcessKey() where a K_DOWN on an empty command list was killing
