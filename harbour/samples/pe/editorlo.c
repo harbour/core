@@ -26,7 +26,7 @@
 
   #define CLIPPER  void pascal
   #define FALSE    0
-  #define TRUE     1
+  #define TRUE     !0
 #endif
 
 #define CLIPPER_ACTION(action)  void pascal action( void )

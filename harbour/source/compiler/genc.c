@@ -1633,7 +1633,7 @@ static HB_GENC_FUNC( hb_p_statics )
 
             i = 0;
 
-            while( ( chr = pVar->szName[ i++ ] ) == TRUE )
+            while( ( chr = pVar->szName[ i++ ] ) != 0 )
             {
                if( chr == '\'' || chr == '\\')
                   fprintf( cargo->yyc, " \'\\%c\',", chr );

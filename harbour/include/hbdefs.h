@@ -141,7 +141,7 @@
    #undef FALSE
    #define FALSE  0
    #undef TRUE
-   #define TRUE   1
+   #define TRUE   !0
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 

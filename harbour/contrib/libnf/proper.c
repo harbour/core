@@ -92,8 +92,8 @@ HB_FUNC(FT_PROPER )
   cStr = hb_parc(1);
 
   for( i = 0; i < iLen + 1; i++ ) {
-     if( _ftIsAlpha( cStr[i] ) == TRUE )  {
-        if( fCap == TRUE )
+     if( _ftIsAlpha( cStr[i] ) != 0 )  {
+        if( fCap != 0 )
            cStr[i] = _ftToUpper( cStr[i] );
         else cStr[i] = _ftToLower( cStr[i] );
         }
