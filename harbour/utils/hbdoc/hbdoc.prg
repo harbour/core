@@ -255,7 +255,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    CLEAR SCREEN
    SET CURSOR OFF
-
+    ReadLinkFile( cLinkName )
    cCompiler := fill_Link_info( cLinkName )
 
    //  See if ngi subdirectory is present
@@ -427,7 +427,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
       FWRITE( nHpj, 'TITLE='+cTitle + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
-      FWRITE( nHpj, 'HLP=.\'+ substr(cLinkName,1,AT(".",cLinkName)) +".hlp"+ CRLF )
+      FWRITE( nHpj, 'HLP=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
       FWRITE( nHpj, 'ROOT=' + CURDIR() + "\RTF" + CRLF )
       FWRITE( nHpj, 'CNT=.\Harbour.cnt' + CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
@@ -683,7 +683,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET ALTERNATE TO
 
 */
-ReadLinkFile( cLinkName )
+
    @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
 
    //  Return to caller

@@ -42,8 +42,13 @@
  *      I process contain embedded NULs.
  *  $EXAMPLES$
  *       ? gt_ascpos("the cat sat on the mat", 3) // prints e
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -65,8 +70,13 @@
  *      Sum the ascii value of every character in the passed string
  *      and return the result.
  *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -96,8 +106,13 @@
  *  $EXAMPLES$
  *      ? gt_atDiff("the cat", "the rat")          // prints 5
  *      ? gt_atDiff("the cat", "the ")             // prints 0
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -122,10 +137,14 @@
  *      NOTE:
  *         invalid parameters will return ""
  *  $EXAMPLES$
- *
  *      ? gt_CharEven("abcdefghijklm")             // prints "bdfhjl"
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -152,12 +171,16 @@
  *      NOTE:
  *         invalid parameters will return ""
  *  $EXAMPLES$
- *
  *      ? gt_CharMix("abc", "123")               // prints "a1b2c3"
  *      ? gt_CharMix("abcde", "123")             // prints "a1b2c3de"
  *      ? gt_CharMix("abc", "12345")             // prints "a1b2c345"
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -182,10 +205,14 @@
  *      NOTE:
  *         invalid parameters will return ""
  *  $EXAMPLES$
- *
  *      ? gt_CharOdd("abcdefghijklm")             // prints "acegikm"
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -211,10 +238,14 @@
  *      NOTE:
  *         invalid parameters will return -1
  *  $EXAMPLES$
- *
  *      ? GT_ChrCount("t", "the cat sat on the mat")      // prints 4
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -238,11 +269,15 @@
  *      Return the ascii value of a character in <cChars>
  *      which appears first in <cStr>.
  *  $EXAMPLES$
- *
  *      ? chr(GT_ChrFirst("sa ", "This is a test"))  // prints "s"
  *      ? chr(GT_ChrFirst("et",  "This is a test"))   // prints "t"
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -270,13 +305,17 @@
  *      NOTE:
  *         invalid parameters will return -1
  *  $EXAMPLES$
- *
  *       local cStr1 := "the cat sat on the mat"
  *
  *       ? GT_ChrTotal("tae", cStr1)            // prints 10
  *       ? GT_ChrTotal("zqw", cStr1)            // prints  0
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -306,10 +345,14 @@
  *      NOTE:
  *         invalid parameters will return -1
  *  $EXAMPLES$
- *
  *      ? GT_StrCount("the", "the cat sat on the mat")      // prints 2
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -332,11 +375,15 @@
  *      Return the number of characters in the leading segment of a
  *      string that consists solely of characters NOT in the set.
  *  $EXAMPLES$
- *
  *      ? GT_strcspn("this is a test", "as ")      // prints 3
  *      ? GT_strcspn("this is a test", "elnjpq")   // prints 11
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -367,8 +414,13 @@
  *  $EXAMPLES$
  *      ? gt_strDiff("the cat", "the rat")          // prints "rat"
  *      ? gt_strDiff("the cat", "the ")             // prints ""
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -395,12 +447,16 @@
  *      NOTE:
  *         invalid parameters will return ""
  *  $EXAMPLES$
- *
  *      ? gt_strexpand("abc")                    // prints "a b c"
  *      ? gt_strexpand("abc", 2)                 // prints "a  b  c"
  *      ? gt_strexpand("abc", 2, 'þ')            // prints "aþþbþþc"
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -427,12 +483,16 @@
  *      If no characters in the the search set are found, the function
  *      shall return 0
  *  $EXAMPLES$
- *
  *      ? GT_StrLeft("this is a test", "hsit ")       // prints 8
  *      ? GT_StrLeft("this is a test", "hit a")       // prints 3
  *      ? GT_StrLeft("this is a test", "zxy")         // prints 0
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -456,11 +516,15 @@
  *      Return a string after the first occurance of any character from
  *      the input set <cSet>.
  *  $EXAMPLES$
- *
  *      ? GT_Strpbrk("This is a test", "sa ")  // prints "s is a test"
  *      ? GT_Strpbrk("This is a test", "et")   // prints "test"
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
@@ -487,12 +551,16 @@
  *      If no characters in the the search set are found, the function
  *      shall return 0
  *  $EXAMPLES$
- *
  *      ? GT_StrRight("this is a test", "teas ")       // prints 8
  *      ? GT_StrRight("this is a test", "tes h")       // prints 5
  *      ? GT_StrRight("this is a test", "zxy")         // prints 0
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is libgt
  *  $END$
  */
 
