@@ -80,11 +80,8 @@ HB_FUNC( HARDCR )
       char * pszBuffer = hb_itemGetC( pString );
       ULONG ulStringLen = hb_itemGetCLen( pString );
 
-      hb_retclen( hb_strHardCR( pszBuffer, ulStringLen ), ulStringLen );
-
-      hb_itemFreeC( pszBuffer );
+      hb_retclen_buffer( hb_strHardCR( pszBuffer, ulStringLen ), ulStringLen );
    }
    else
       hb_retc( NULL );
 }
-
