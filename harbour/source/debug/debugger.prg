@@ -855,7 +855,17 @@ METHOD ShowAppScreen() CLASS TDebugger
 
    ::cImage := SaveScreen()
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cAppImage )
-   InKey( 0 )
+
+   if LastKey() == K_LBUTTONDOWN
+      InKey( 0, INKEY_ALL )
+      InKey( 0, INKEY_ALL )
+   else
+      InKey( 0, INKEY_ALL )
+   endif
+
+   while LastKey() == K_MOUSEMOVE
+      InKey( 0, INKEY_ALL )
+   end
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cImage )
 
 return nil
