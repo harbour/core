@@ -1,3 +1,8 @@
+2001-05-16 22:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbfntx/dbfntx1.c
+     * bugs fixed, reported by John M. S. Chiang, related to seek with
+       SOFTSEEK ON
+
 2001-05-16 09:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      * Refined #error messages for OO compile time inegrity checks, as per input from Antonio and Dave.
