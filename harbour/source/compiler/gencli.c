@@ -1348,11 +1348,15 @@ static HB_GENC_FUNC( hb_p_pushfield )
 
 static HB_GENC_FUNC( hb_p_pushbyte )
 {
-   fprintf( cargo->yyc, "\tHB_P_PUSHBYTE, %i,",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */",
-            pFunc->pCode[ lPCodePos + 1 ] );
-   fprintf( cargo->yyc, "\n" );
+   fprintf( cargo->yyc, "   ldc.i4.s   %i\n", pFunc->pCode[ lPCodePos + 1 ] );
+   fprintf( cargo->yyc, "   box        [mscorlib]System.Int32\n" );
+
+   // fprintf( cargo->yyc, "\tHB_P_PUSHBYTE, %i,",
+   //          pFunc->pCode[ lPCodePos + 1 ] );
+   // if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %i */",
+   //          pFunc->pCode[ lPCodePos + 1 ] );
+   // fprintf( cargo->yyc, "\n" );
+
    return 2;
 }
 
