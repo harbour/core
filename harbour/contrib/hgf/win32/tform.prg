@@ -75,12 +75,23 @@ CLASS TForm FROM TPersistent
    METHOD    HandleEvent( nMsg, nParam1, nParam2 )
    METHOD    ShowModal()
 
-   METHOD    Caption() INLINE WinGetText( ::hWnd ) PROPERTY
-
+   ACCESS    Caption() INLINE WinGetText( ::hWnd ) PROPERTY
    ASSIGN    Caption( cNewCaption ) INLINE ;
                 WinSetWindowText( ::hWnd, cNewCaption )
 
-   METHOD    Menu() INLINE ::oMainMenu PROPERTY
+   ACCESS    Top()    INLINE WinGetTop( ::hWnd )    PROPERTY
+   ASSIGN    Top( nNewTop ) INLINE WinSetTop( ::hWnd, nNewTop )
+
+   ACCESS    Left()   INLINE WinGetLeft( ::hWnd )   PROPERTY
+   ASSIGN    Left( nNewLeft ) INLINE WinSetLeft( ::hWnd, nNewLeft )
+
+   ACCESS    Height() INLINE WinGetHeight( ::hWnd ) PROPERTY
+   ASSIGN    Height( nNewHeight ) INLINE WinSetHeight( ::hWnd, nNewHeight )
+
+   ACCESS    Width()  INLINE WinGetWidth( ::hWnd )  PROPERTY
+   ASSIGN    Width( nNewWidth ) INLINE WinSetWidth( ::hWnd, nNewWidth )
+
+   ACCESS    Menu() INLINE ::oMainMenu PROPERTY
    ASSIGN    Menu( oNewMenu )
 
 ENDCLASS
@@ -134,7 +145,7 @@ return nil
 
 METHOD ShowModal() CLASS TForm
 
-   HB_PM_ShowModal( ::hWnd )
+   HB_FormShowModal( ::hWnd )
 
 return nil
 
