@@ -41,7 +41,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbvmpub.h"
-#include "windows.h"
+#define WIN32
 #include "zip.h"
 #if defined(HB_EXTERN_C)
 extern "C" {
@@ -51,6 +51,7 @@ extern uLong hb___filetime(char *f, tm_zip *tmzip, uLong *dt);
 extern char *hb___CheckFile( char * szFile);
 extern int hb___CompressOneFile(char *szFile,char *szFiletoCompress);
 extern int hb___CompressMultipleFile(char *szFile,PHB_ITEM pArray);
+
 #if defined(HB_EXTERN_C)
 }
 #endif

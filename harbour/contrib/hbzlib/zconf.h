@@ -175,7 +175,7 @@
 #    endif
 #  endif
 #  if defined (__BORLANDC__)
-#    if (__BORLANDC__ >= 0x0500) && defined (WIN32)
+#    if (__BORLANDC__<= 1280) && defined (WIN32)
       #include <windows.h>
       #define ZEXPORT __declspec(dllexport) WINAPI
       #define ZEXPORTRVA __declspec(dllexport) WINAPIV
@@ -195,6 +195,12 @@
 #    define ZEXTERN extern __declspec(dllimport)
 #  endif
 #endif
+
+#  if defined (__BORLANDC__)
+        #  if defined (WIN32) && !defined(ZLIB_DLL)
+              #include <windows.h>
+ #    endif
+#  endif
 
 #ifndef ZEXPORT
 #  define ZEXPORT

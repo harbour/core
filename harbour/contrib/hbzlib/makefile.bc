@@ -88,18 +88,18 @@ $(ZLIB_BOR_LIB) = $(ZLIB_BOR_LIB_OBJ)
 $(ZLIB_LIB) : $(ZLIB_LIB_OBJS)
 
 $(OBJ_DIR)\zipfile1.obj : $(ZLIB_DIR)\zipfile1.c
-   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   $(CC) -v -c $(CLIBFLAGS) -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\zlibapi.obj : $(ZLIB_DIR)\zlibapi.c
-   $(CC) -c $(CLIBFLAGS) -o$@ $**
+   $(CC) -c -v $(CLIBFLAGS) -o$@ $**
    tlib $(ZLIB_LIB) $(ARFLAGS) -+$@,,
 
 $(ZLIB_BOR_DEF) : $(ZLIB_DEF_OBJ)
-    $(ID) -a $(LIB_DIR)\zlib.def  $(WINSYS_DIR)\zlib.dll
+    $(ID)  $(LIB_DIR)\zlib.def  $(WINSYS_DIR)\zlib.dll
 
 $(ZLIB_BOR_LIB) : $(ZLIB_BOR_LIB_OBJ)
-    $(IL) -a  $(LIB_DIR)\zlib_bor.lib   $(LIB_DIR)\zlib.def
+    $(IL)  $(LIB_DIR)\zlib_bor.lib   $(LIB_DIR)\zlib.def
 
 $(ZLIB_EXE) : $(ZLIB_EXE_OBJS)
 
