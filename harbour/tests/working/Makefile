@@ -134,6 +134,8 @@ BAD_PRG_SOURCES=\
 	linecont.prg \
 	spawn.prg \
 	spawn2.prg \
+	statics1.prg \
+	statics2.prg \
 	test10.prg \
 	testid.prg \
 

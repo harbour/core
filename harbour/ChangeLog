@@ -1,3 +1,15 @@
+Wed Jul 28 11:54:06 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/dir.c: 
+	Fixed a typo: #if define(USE_NT) => #if defined(USE_NT).
+	
+	* source/rtl/inkey.c: 
+	Added an include of <mingw32/conio.h> when compiling with gcc.
+
+	* include/Makefile: 
+	* tests/working/Makefile: 
+	Updated list of files.
+	
 19990728-14:30 CET Eddie Runia <eddie@runia.com>
   * source/rtl/dir.c
     #include <errno.h> added

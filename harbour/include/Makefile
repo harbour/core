@@ -21,6 +21,7 @@ C_HEADERS=\
 	hbsetup.h \
 	init.h \
 	initsymb.h \
+	inkey.h \
 	itemapi.h \
 	pcode.h \
 	run_exp.h \

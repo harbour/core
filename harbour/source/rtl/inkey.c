@@ -44,6 +44,8 @@
   #include <stdlib.h>
 #elif defined(__IBMCPP__)
   #include <conio.h>
+#elif defined(__GNUC__)
+  #include <mingw32/conio.h>
 #endif
 
 #ifdef __WATCOMC__

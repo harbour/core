@@ -409,7 +409,7 @@ HARBOUR HB_DIRECTORY( void )
          }
 /* some of these are known to work under NT - I picked the letters to use.*/
 /* needs testing on a Novell drive */
-#if define(USE_NT)
+#if defined(USE_NT)
          if (attrib & FA_ENCRYPTED)
             strcat(aatrib,"E");
 //         if (attrib & FA_NORMAL)
