@@ -46,7 +46,7 @@ void hb_compGenRC( PHB_FNAME pFileName )
       pFileName->szExtension = ".rc";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   printf( "\nGenerating Windows resource output to \'%s\'... ", szFileName );
+   printf( "Generating Windows resource output to \'%s\'... ", szFileName );
    fflush( stdout );
 
    printf( "\nNot implemented yet!\n" );

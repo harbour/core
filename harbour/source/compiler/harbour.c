@@ -133,17 +133,11 @@ static PEXTERN hb_comp_pExterns = NULL;
 
 int main( int argc, char * argv[] )
 {
-   int iStatus = 0;
-   BOOL bSkipGen;
+   int iStatus = EXIT_SUCCESS;
+   int i;
+   BOOL bAnyFiles;
 
-   char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
-   char szPpoName[ _POSIX_PATH_MAX ];
-
-   hb_comp_pFileName = NULL;
    hb_comp_pOutPath = NULL;
-
-   /* Initializes hb_comp_pFileName with file name to compile */
-   hb_compChkCompileFileName( argc, argv );
 
    /* First check the environment variables */
    hb_compChkCompilerSwitch( 0, NULL );
@@ -161,86 +155,123 @@ int main( int argc, char * argv[] )
       return iStatus;
    }
 
-   if( hb_comp_pFileName )
+   /* Process all files passed via the command line. */
+
+   bAnyFiles = FALSE;
+
+   for( i = 1; i < argc; i++ )
    {
-      if( !hb_comp_pFileName->szExtension )
-         hb_comp_pFileName->szExtension = ".prg";
-      hb_fsFNameMerge( szFileName, hb_comp_pFileName );
-      if( hb_comp_bPPO )
+      if( !HB_ISOPTSEP( argv[ i ][ 0 ] ) )
       {
-         hb_comp_pFileName->szExtension = ".ppo";
-         hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
-         hb_comp_yyppo = fopen( szPpoName, "w" );
-         if( ! hb_comp_yyppo )
+         if( !bAnyFiles )
          {
-            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
-            return iStatus;
+            hb_compCheckPaths();
+            bAnyFiles = TRUE;
          }
+
+         hb_comp_pFileName = hb_fsFNameSplit( argv[ i ] );
+
+         if( hb_comp_pFileName->szName )
+         {
+            char szFileName[ _POSIX_PATH_MAX ];    /* filename to parse */
+            char szPpoName[ _POSIX_PATH_MAX ];
+
+            if( !hb_comp_pFileName->szExtension )
+               hb_comp_pFileName->szExtension = ".prg";
+
+            hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+
+            if( hb_comp_bPPO )
+            {
+               hb_comp_pFileName->szExtension = ".ppo";
+               hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
+               hb_comp_yyppo = fopen( szPpoName, "w" );
+               if( ! hb_comp_yyppo )
+               {
+                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_CREATE_PPO, szPpoName, NULL );
+                  iStatus = EXIT_FAILURE;
+               }
+            }
+
+            if( iStatus == EXIT_SUCCESS )
+            {
+               /* Initialization of preprocessor arrays */
+               hb_pp_Init();
+               
+               /* Initialize support variables */
+               hb_compInitVars();
+               
+               atexit( close_on_exit );
+               
+               if( hb_compInclude( szFileName, NULL ) )
+               {
+                  BOOL bSkipGen;
+
+                  if( hb_comp_bPPO )
+                     printf( "Compiling '%s' and generating preprocessed output to '%s'...\n", szFileName, szPpoName );
+                  else
+                     printf( "Compiling '%s'...\n", szFileName );
+
+                  /* Start processing */
+                  hb_compYACCMain( hb_comp_pFileName->szName );
+               
+                  bSkipGen = FALSE;
+               
+                  if( hb_comp_bAnyWarning )
+                  {
+                     if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
+                     {
+                        iStatus = EXIT_FAILURE;
+                     }
+                     else if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
+                     {
+                        iStatus = EXIT_FAILURE;
+                        bSkipGen = TRUE;
+                        printf( "\nNo code generated.\n" );
+                     }
+                  }
+
+                  if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
+                  {
+                     /* we create the output file name */
+                     hb_compOutputFile();
+               
+                     if( ! hb_comp_bQuiet )
+                     {
+                        if( ! hb_comp_bStartProc )
+                           --hb_comp_iFunctionCnt;
+                        printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
+                     }
+               
+                     hb_compGenOutput( hb_comp_iLanguage );
+                  }
+               }
+               else
+               {
+                  printf( "Cannot open input file: %s\n", szFileName );
+                  /* printf( "No code generated\n" ); */
+                  iStatus = EXIT_FAILURE;
+               }
+
+               if( hb_comp_bPPO && hb_comp_yyppo )
+                  fclose( hb_comp_yyppo );
+            }
+         }
+         else
+         {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, argv[ argc ], NULL );
+            iStatus = EXIT_FAILURE;
+         }
+            
+         hb_xfree( ( void * ) hb_comp_pFileName );
+
+         if( iStatus != EXIT_SUCCESS )
+            break;
       }
    }
-   else
-   {
+
+   if( !bAnyFiles )
       hb_compPrintUsage( argv[ 0 ] );
-      return iStatus;
-   }
-
-   /* Initialization of preprocessor arrays */
-   hb_pp_Init();
-
-   /* Initialize support variables */
-   hb_compInitVars();
-
-   atexit( close_on_exit );
-
-   if( hb_compInclude( szFileName, NULL ) )
-   {
-      hb_compCheckPaths();
-
-      /*
-       * Start processing
-       */
-      hb_compYACCMain( hb_comp_pFileName->szName );
-
-      bSkipGen = FALSE;
-
-      if( hb_comp_bAnyWarning )
-      {
-         if( hb_comp_iExitLevel == HB_EXITLEVEL_SETEXIT )
-            iStatus = 1;
-         if( hb_comp_iExitLevel == HB_EXITLEVEL_DELTARGET )
-         {
-            iStatus = 1;
-            bSkipGen = TRUE;
-            printf( "\nNo code generated\n" );
-         }
-      }
-
-      if( ! hb_comp_bSyntaxCheckOnly && ! bSkipGen && ( hb_comp_iErrorCount == 0 ) )
-      {
-         /* we create the output file name */
-         hb_compOutputFile();
-
-         if( ! hb_comp_bQuiet )
-         {
-            if( ! hb_comp_bStartProc )
-               --hb_comp_iFunctionCnt;
-            printf( "\rLines %i, Functions/Procedures %i\n", hb_comp_iLine, hb_comp_iFunctionCnt );
-         }
-
-         hb_compGenOutput( hb_comp_iLanguage );
-      }
-
-      if( hb_comp_bPPO )
-         fclose( hb_comp_yyppo );
-   }
-   else
-   {
-      printf( "Cannot open input file: %s\n", szFileName );
-      /* printf( "No code generated\n" ); */
-      iStatus = 1;
-   }
-
-   hb_xfree( ( void * ) hb_comp_pFileName );
 
    if( hb_comp_pOutPath )
       hb_xfree( hb_comp_pOutPath );

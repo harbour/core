@@ -81,7 +81,7 @@ void hb_compPrintUsage( char * szSelf )
 
    int iLine;
 
-   printf( "\nSyntax:  %s <file[.prg]> [options]"
+   printf( "\nSyntax:  %s <file[s][.prg]> [options]"
            "\n", szSelf );
 
    for( iLine = 0; iLine < ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )

@@ -1,3 +1,16 @@
+20000313-15:57 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/cmdcheck.c
+     source/compiler/harbour.c
+     source/compiler/hbusage.c
+     source/compiler/gen*.c
+     include/hbcomp.h
+     + Added processing of multiple .PRG files passed to the Harbour compiler.
+   * contrib/rdd_ads/makefile.vc
+     + Minor changes.
+   * makefile.vc
+     % Optimized MSVC make process, much smaller and faster. 
+       Thanks go to Paul Tucker.
+
 20000313-13:20 GMT+1 Victor Szakats <info@szelvesz.hu>
    * contrib/rdd_ads/adsfunc.c
      ! Two casts added for MSVC.

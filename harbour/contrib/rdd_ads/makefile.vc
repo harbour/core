@@ -6,28 +6,27 @@
 # Directory macros. These should never have to change.
 #
 
-INCLUDE_DIR=..\..\include
-OBJ_DIR=..\..\obj\vc
-LIB_DIR=..\..\lib\vc
-BIN_DIR=..\..\bin\vc
+INCLUDE_DIR = ..\..\include
+OBJ_DIR     = ..\..\obj\vc
+LIB_DIR     = ..\..\lib\vc
+BIN_DIR     = ..\..\bin\vc
 
 #
 # C compiler definition and C flags. These should never have to change.
 #
 
-CC=cl
-CFLAGS=-W1 -nologo -I$(INCLUDE_DIR) -D_Windows
-CLIBFLAGS=$(CFLAGS) -c /TP
-CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
+CC = cl
+CFLAGS = -W1 -nologo -I$(INCLUDE_DIR) -D_Windows
+CLIBFLAGS = $(CFLAGS) -c /TP
+CLIBFLAGSDEBUG = $(CFLAGS) -c -Zi /TP
 
 #
 # Macros to access our library names
 #
 
-ADS_LIB=$(LIB_DIR)\rddads.lib
-HARBOUR_EXE=$(BIN_DIR)\harbour.exe
-HARBOURFLAGS=-iinclude -n -q0 -w -es2 -gc0
-
+ADS_LIB = $(LIB_DIR)\rddads.lib
+HARBOUR_EXE = $(BIN_DIR)\harbour.exe
+HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 
 #
 # OBJ list for ads.lib

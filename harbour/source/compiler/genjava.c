@@ -75,7 +75,7 @@ void hb_compGenJava( PHB_FNAME pFileName )
 
    if( ! hb_comp_bQuiet )
    {
-      printf( "\nGenerating Java source output to \'%s\'... ", szFileName );
+      printf( "Generating Java source output to \'%s\'... ", szFileName );
       fflush( stdout );
    }
 

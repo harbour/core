@@ -469,45 +469,6 @@ void hb_compChkEnvironVar( char * szSwitch )
    }
 }
 
-void hb_compChkCompileFileName( int iArg, char * Args[] )
-{
-   /* If we already have a filename shows a runtime error */
-   /* NOTE:
-      This will be removed if we add support for
-      multiple file name in command line and @file.clp syntax
-   */
-   if( hb_comp_pFileName )
-      hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADPARAM, Args[ iArg ], NULL );
-
-   if( iArg )
-   {
-      int i;
-      int n = 0;
-
-      for( i = 1; i < iArg; i++ )
-      {
-         if( !HB_ISOPTSEP( * Args[ i ] ) )
-         {
-            n++;
-
-            /* NOTE: By now it checks only the first file name
-                     passed and shows a warning for others
-            */
-            if( n > 1 )
-               /* GenWarning() */
-               printf( "Warning: File %s will be ignored\n", hb_strupr( Args[ i ] ) );
-            else
-            {
-               hb_comp_pFileName = hb_fsFNameSplit( Args[ i ] );
-
-               if( ! hb_comp_pFileName->szName )
-                  hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, Args[ iArg ], NULL );
-            }
-         }
-      }
-   }
-}
-
 void hb_compCheckPaths( void )
 {
    char * szInclude = getenv( "INCLUDE" );

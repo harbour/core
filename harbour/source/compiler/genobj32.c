@@ -100,7 +100,7 @@ void hb_compGenObj32( PHB_FNAME pFileName )
 
   if( ! hb_comp_bQuiet )
   {
-    printf( "\nGenerating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
+    printf( "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
     fflush( stdout );
   }
 

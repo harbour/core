@@ -65,7 +65,7 @@ void hb_compGenPortObj( PHB_FNAME pFileName )
 
    if( ! hb_comp_bQuiet )
    {
-      printf( "\nGenerating Harbour Portable Object output to \'%s\'... ", szFileName );
+      printf( "Generating Harbour Portable Object output to \'%s\'... ", szFileName );
       fflush( stdout );
    }
 

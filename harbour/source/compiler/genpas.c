@@ -46,7 +46,7 @@ void hb_compGenPascal( PHB_FNAME pFileName )
       pFileName->szExtension = ".pas";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   printf( "\nGenerating Pascal source output to \'%s\'... ", szFileName );
+   printf( "Generating Pascal source output to \'%s\'... ", szFileName );
    fflush( stdout );
 
    printf( "\nNot implemented yet!\n" );

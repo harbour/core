@@ -61,7 +61,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
    if( ! hb_comp_bQuiet )
    {
-      printf( "\nGenerating C source output to \'%s\'... ", szFileName );
+      printf( "Generating C source output to \'%s\'... ", szFileName );
       fflush( stdout );
    }
 
