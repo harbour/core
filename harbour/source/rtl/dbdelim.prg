@@ -9,6 +9,7 @@
  *
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
+ * APPEND FROM code submitted by Marco Braida <marcobra@elart.it>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +65,24 @@ HB_FILE_VER( "$Id$" )
 PROCEDURE __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest )
    LOCAL index, handle, lWriteSep, cFileName := cFile, nStart, nCount, oErr
    LOCAL cSeparator := ",", cDelim := CHR( 34 )
-
+//------------------
+local Pos:=0
+local nPosFl:=0
+local nDimBuff:=65535
+local cByte :=""
+local lunghezze:={}
+local eol:=chr(13)+chr(10)
+local contacamp:=0
+local primariga:=.t.
+local offset:=0
+local rig:=0
+local cont_r:=""
+local Lfinefile:=.f.
+local nFileLen
+local cCharEol:=HB_OSNewLine()
+local nPosLasteol
+local lcisonoeol
+//------------------
    // Process the delimiter argument.
    IF !EMPTY( cDelimArg )
       IF UPPER( cDelimArg ) == "BLANK"
@@ -179,16 +197,6 @@ PROCEDURE __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nR
       END IF
    ELSE
       // APPEND FROM DELIMITED
-         oErr := ErrorNew()
-         oErr:severity := ES_ERROR
-         oErr:genCode := EG_UNSUPPORTED
-         oErr:subSystem := "DELIM"
-         oErr:subCode := 9999
-         oErr:description := HB_LANGERRMSG( oErr:genCode )
-         oErr:canRetry := .F.
-         oErr:canDefault := .T.
-         Eval(ErrorBlock(), oErr)
-      /*
       handle := FOPEN( cFileName )
       IF handle == -1
          oErr := ErrorNew()
@@ -204,12 +212,57 @@ PROCEDURE __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nR
          Eval(ErrorBlock(), oErr)
       ELSE
          IF EMPTY( bWhile )
-            // This simplifies the looping logic.
-            bWhile := {||.T.}
-         END IF
+             // This simplifies the looping logic.
+             bWhile := {||.T.}
+         ENDIF 
+         // ---------------------------------------
+         // Please fill with the other test here
+         // Marco Braida 2002
+         // marcobra@elart.it
+         // ---------------------------------------
+
+         nFileLen:=FSEEK(handle,0,FS_END)
+	 nDimBuff:=min(nFileLen,nDimBuff)
+	 cByte:=space(nDimBuff)
+	 FSEEK(handle,0)
+//	 cCharEol:=chr(13)
+	 nPosLastEol:=0
+         do while .not. lFineFile
+	    fseek(handle,nPoslastEol,FS_SET)   // forward the pointer
+            //we must not go after the eof
+            if nPosLastEol + nDimBuff > nFileLen
+               // change the buffer size
+               nDimBuff:=nFileLen-nPosLastEol
+               cByte:=space(nDimBuff)
+               Lfinefile:=.t. 
+             endif
+             // fill the buffer
+             cByte:=space(nDimBuff)
+             fread(handle,@cByte,nDimBuff)
+             //we test the last position of the last eol +1 in this buffer
+             nPoslastEol+=rat(cCharEol,cByte)+1
+             //do this if in the buffer there are eol char
+             lcisonoeol:=.t.
+             do while lcisonoeol
+                // the position of the first eol
+                nposfl:=at(cCharEol,cByte) 
+                lcisonoeol:=(nPosfl>0)
+                if lcisonoeol
+                   // cut the row
+                   Pos:=1
+                   cont_r:=substr(cByte,Pos,nposfl-Pos)
+                   appendtodb(cont_r,cDelimArg)
+                   // skipping the line feed and now we are on a good char
+                   pos:=nposfl+2
+                   cont_r:=""
+                   //cut the row  
+                   cByte:=substr(cByte,Pos)
+                endif     
+              enddo
+         enddo
          FCLOSE( handle )
       END IF
-      */
+
    END IF
 RETURN
 
@@ -227,3 +280,49 @@ STATIC FUNCTION ExportVar( handle, xField, cDelim )
          RETURN .F.
    END CASE
 RETURN .T.
+
+
+STATIC FUNCTION appendtodb(row,cDelim)
+local lenrow:=len(row)
+local aStruct:=DBSTRUCT()
+local aMyVal:={}
+local ii:=1
+local npos:=0, nPosNext:=0
+local nDBFFields
+local cBuffer, cUPbuffer
+local vRes
+//if there is one field only there is no Delim and i put...
+row:=row+cDelim
+nPos:=at(cDelim,row)
+aadd( aMyval,substr(row,1,nPos-1) )
+do while .t.
+    nPosNext:=at(cDelim,row,npos+2)
+    if nPosNext=0
+       exit
+    endif
+    aadd( aMyVal,substr(row,npos+1,nPosnext-npos-1) )
+    nPos:=nPosnext    
+    if nPos>lenrow
+       exit
+    endif 
+enddo
+nDBFfields:=min(len(aMyVal),len(aStruct))
+append blank
+
+for ii:=1 to nDBFfields
+   cBuffer:=strtran(aMyval[ii],'"','')
+   DO CASE
+      CASE aStruct[ ii,2 ] == "D"
+         vRes := HB_STOD( cBuffer )
+      CASE aStruct[ ii,2 ] == "L"
+         cUPbuffer:=upper(cBuffer)
+         vRes := iif( cUPBuffer == "T" .or. cUPBuffer== "1" .or. cUPBuffer=="Y",.T.,.F. )
+      CASE aStruct[ ii,2 ] == "N"
+         vRes := VAL( cBuffer )
+      OTHERWISE
+         vRes := cBuffer
+   END CASE
+
+   FIELDPUT(ii,vRes)
+next
+return .T. 
