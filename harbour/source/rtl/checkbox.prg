@@ -53,196 +53,232 @@
 #include "common.ch"
 #include "hbsetup.ch"
 #include "hbclass.ch"
+#include "button.ch"
+
 #ifdef HB_COMPAT_C53
 
 CLASS HBCHECKBOX
-Data Buffer  init .f.
-Data Caption
-Data CapRow
-Data CapCol
-Data Cargo
-Data Col
-Data colorspec
-Data FBlock
-Data HasFocus  init  .f.
-Data Message   init ""
-Data Row
-Data SBlock
-Data Style     init "[û ]"
-Data lCursor
-Data Typeout init   .f.
-DATA ClassName init "CHECKBOX"
-METHOD New(nRow,nCol,cCaption)
-METHOD SetFocus()
-MESSAGE Select()    METHOD _Select()
-METHOD KillFocus()
-METHOD DisPlay()
-METHOD HitTest(nRow,nCol)
-endclass
+
+   Data Buffer  init .f.
+   Data Caption
+   Data CapRow
+   Data CapCol
+   Data Cargo
+   Data Col
+   Data colorspec
+   Data FBlock
+   Data HasFocus  init  .f.
+   Data Message   init ""
+   Data Row
+   Data SBlock
+   Data Style     init "[û ]"
+   Data lCursor
+   Data Typeout   init   .f.
+   DATA ClassName init "CHECKBOX"
+
+   METHOD New(nRow,nCol,cCaption)
+   METHOD SetFocus()
+   MESSAGE Select()    METHOD _Select()
+   METHOD KillFocus()
+   METHOD DisPlay()
+   METHOD HitTest(nRow,nCol)
+
+ENDCLASS
 
 METHOD  New(nRow,nCol,cCaption)
-Local cColor:=''
-Local oCheck
+   Local cColor:=''
+   Local oCheck
 
-::Buffer    := .f.
-::Caption   := cCaption
-::CapRow    := nRow
-::CapCol    := nCol+3+1
+   ::Buffer    := .f.
+   ::Caption   := cCaption
+   ::CapRow    := nRow
+   ::CapCol    := nCol+3+1
+   ::Col       := nCol
 
-::Col       := nCol
-   if ( isdefcolor() )
+   if IsDefColor()
       ::ColorSpec:="W/N,W+/N,W/N,W+/N"
+
    else
       cColor := SetColor()
      ::ColorSpec:= __guicolor(cColor, 5) + "," + ;
-      __guicolor(cColor, 2) + "," + __guicolor(cColor, 1) + ;
-     "," + __guicolor(cColor, 4)
+         __guicolor(cColor, 2) + "," + __guicolor(cColor, 1) + ;
+         "," + __guicolor(cColor, 4)
+
    endif
 
-::HasFocus  := .f.
-::Message   := ""
-::Row       := nRow
+   ::HasFocus  := .f.
+   ::Message   := ""
+   ::Row       := nRow
 
-::Style     := "[û ]"
+   ::Style     := "[û ]"
 
-::Typeout   := .f.
+   ::Typeout   := .f.
 
 
-return Self
+   return Self
 
 METHOD  SetFocus() CLASS HBCHECKBOX
 
-   if ( !::HasFocus .AND. ISBLOCK( ( ::lCursor := setcursor(0), ;
-         ::HasFocus := .T., ::display(), ::FBlock ) ) )
+   if !::HasFocus .AND. ISBLOCK( ( ::lCursor := setcursor(0), ;
+         ::HasFocus := .T., ::display(), ::FBlock ) )
       eval(::FBlock)
    endif
-   RETURN Self
 
-Method _Select(lState)    CLASS HBCHECKBOX
+   return Self
 
+METHOD _Select(lState) CLASS HBCHECKBOX
+   Local lStatus := ::Buffer
 
-   local lStatus := ::Buffer
-   if ( ISLOGICAL( lState ) )
+   if ISLOGICAL( lState )
       ::Buffer := lState
+
    else
       ::Buffer := !::Buffer
+
    endif
-   if ( lStatus != ::Buffer .AND. ISBLOCK( ( ::display(), ;
-         ::SBlock ) ) )
+
+   if lStatus != ::Buffer .AND. ISBLOCK( ( ::display(), ::SBlock ) )
       eval(::SBlock)
    endif
-   RETURN Self
 
-Method KillFocus() CLASS HBCHECKBOX
+   return Self
 
-   if ( ::HasFocus )
+METHOD KillFocus() CLASS HBCHECKBOX
+
+   if ::HasFocus
       ::HasFocus := .F.
-      if ( ISBLOCK( ::FBlock ) )
+
+      if ISBLOCK( ::FBlock )
          eval(::FBlock)
       endif
-      qself():display()
+
+      ::display()
+
       setcursor(::lCursor)
-   endif
-   RETURN Self
 
-method HITTESt( Arg1, Arg2 )  CLASS HBCHECKBOX
+   endif
 
-   local Local1, Local2
-   if ( Arg1 != ::Row )
-   elseif ( Arg2 < ::Col )
-   elseif ( Arg2 < ::Col + 3 )
-      return -2049
+   return Self
+
+METHOD HitTest( nMouseRow, nMouseCol )  CLASS HBCHECKBOX
+   Local nPosAccel, nLenCaption
+
+   if nMouseRow != ::Row
+   elseif nMouseCol < ::Col
+   elseif nMouseCol < ::Col + 3
+      return HTCLIENT
    endif
-   Local2 := Len(::Caption)
-   if ( ( Local1 := At("&", ::Caption) ) == 0 )
-   elseif ( Local1 < Local2 )
-      Local2--
+
+   nLenCaption := Len(::Caption)
+
+   if ( nPosAccel := At("&", ::Caption) ) == 0
+   elseif nPosAccel < nLenCaption
+      nLenCaption--
    endif
-   if ( Arg1 != ::Caprow )
-   elseif ( Arg2 < ::CapCol )
-   elseif ( Arg2 < ::CapCol + Local2 )
-      return -1025
+
+   if nMouseRow != ::CapRow
+   elseif nMouseCol < ::CapCol
+   elseif nMouseCol < ::CapCol + nLenCaption
+      return HTCAPTION
    endif
+
    return 0
 
-Method Display()   CLASS HBCHECKBOX
-
-
-   local cColor := SetColor(), nCurRow:= Row(), nCurCol:= Col(), ;
+METHOD Display()   CLASS HBCHECKBOX
+   Local cColor := SetColor(), nCurRow:= Row(), nCurCol:= Col(), ;
       cOldStyle := ::Style, cCaption, nPos
 
-   dispbegin()
-   if ( ::HasFocus )
+   DispBegin()
+
+   if ::HasFocus
       set color to (__guicolor(::ColorSpec, 2))
    else
       set color to (__guicolor(::ColorSpec, 1))
    endif
 
-      SetPos(::Row, ::Col + 1)
-      if ( ::Buffer )
-         ?? SubStr(cOldStyle, 2, 1)
-      else
-         ?? SubStr(cOldStyle, 3, 1)
-      endif
-      set color to (__guicolor(::ColorSpec, 3))
-      SetPos(::Row, ::Col)
-      ?? Left(cOldStyle, 1)
-      SetPos(::Row, ::Col + 2)
-      ?? right(cOldStyle, 1)
+   SetPos(::Row, ::Col + 1)
+   if ::Buffer
+      ?? SubStr(cOldStyle, 2, 1)
+   else
+      ?? SubStr(cOldStyle, 3, 1)
+   endif
 
-   if ( !Empty(cCaption := ::Caption) )
-      if ( ( nPos := At("&", cCaption) ) == 0 )
-      elseif ( nPos == Len(cCaption) )
+   set color to (__guicolor(::ColorSpec, 3))
+
+   SetPos(::Row, ::Col)
+   ?? Left(cOldStyle, 1)
+
+   SetPos(::Row, ::Col + 2)
+   ?? right(cOldStyle, 1)
+
+   if !Empty(cCaption := ::Caption)
+      if ( nPos := At("&", cCaption) ) == 0
+      elseif nPos == Len(cCaption)
          nPos := 0
       else
          cCaption := stuff(cCaption, nPos, 1, "")
       endif
+
       SetPos(::CapRow, ::CapCol)
       ?? cCaption
-      if ( nPos != 0 )
+
+      if nPos != 0
          set color to (__guicolor(::ColorSpec, 4))
          SetPos(::CapRow, ::CapCol + nPos - 1)
          ?? SubStr(cCaption, nPos, 1)
       endif
+
    endif
-   dispend()
+   DispEnd()
 
    set color to (cColor)
    SetPos(nCurRow, nCurCol)
-   RETURN Self
+
+   return Self
 
 
 
-function __GUICOLOR( cPair, nPos )
-   local ccolor := cPair, nPosition:=0, nCommaPos:=0
-   ccolor:=hb_colorindex(cpair,npos-1)
-return ccolor
+static function __GUICOLOR( cPair, nPos )
+   Local cColor := cPair, nPosition:=0, nCommaPos:=0
 
-function _CHECKBOX_( Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7)
-LOCAL oCheck
+   cColor := hb_ColorIndex( cPair, nPos-1 )
+   return cColor
 
-   oCheck := hbcheckbox():new(Row(), Col(), Arg2)
-   if ( !( ISNIL( oCheck ) ) )
-      oCheck:select(Arg1)
-      oCheck:caption :=Arg2
-      if arg4!=nil
-      oCheck:colorspec :=Arg4
+static function _CHECKBOX_( lState, cCaption, cMessage, cColor, FBlock, SBlock, cStyle)
+   Local oCheck
+
+   oCheck := HBCHECKBOX():New(Row(), Col(), cCaption)
+
+   if !ISNIL( oCheck )
+
+      oCheck:Select( lState )
+      oCheck:Caption := cCaption
+
+      if !( cColor == nil )
+         oCheck:ColorSpec := cColor
       endif
-      oCheck:message:=Arg3
-      if arg7 !=NIL
-      oCheck:style:=Arg7
+
+      oCheck:Message := cMessage
+
+      if !( cStyle == NIL )
+         oCheck:Style := cStyle
       endif
-      oCheck:fblock:=Arg5
-      oCheck:sblock:=Arg6
+
+      oCheck:FBlock := FBlock
+      oCheck:SBlock := SBlock
 
    endif
    return oCheck
 
-function IsDefColor()
-   local cColor:=SETCOLOR()
-   Return ( ccolor== "W/N,N/W,N/N,N/N,N/W")
-function Checkbox(nr,ncol,cCaption)
-default cCaption to ''
-return HBCHECKBOX():new(nr, nCol, cCaption)
+static function IsDefColor()
+   Local cColor:=SETCOLOR()
+
+   Return ( cColor == "W/N,N/W,N/N,N/N,N/W" )
+
+function Checkbox( nR, nCol, cCaption)
+
+   Default cCaption to ''
+
+   return HBCHECKBOX():New( nR, nCol, cCaption)
 
 #endif
