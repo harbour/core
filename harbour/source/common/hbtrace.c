@@ -108,7 +108,9 @@ int hb_tr_level( void )
 
          for( i = 0; i < HB_TR_LAST; ++i )
          {
-            if( strcmp( env, s_slevel[ i ] ) == 0 )
+            /* 17/04/2000 - maurilio.longo@libero.it
+               SET HB_TR_LEVEL=hb_tr_debug is valid under OS/2 and environment variable value returned is lower case */
+            if( stricmp( env, s_slevel[ i ] ) == 0 )
             {
                s_level = i;
                break;

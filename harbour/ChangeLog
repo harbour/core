@@ -1,3 +1,11 @@
+20000417-23:01 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/common/hbtrace.c
+     * test between HB_TR_LEVEL environment variable returned values and defined ones have to be
+       made irrespective of case, I mean stricmp() instead of strcmp()
+   * config/os2/gcc.cf
+     ! last time, I promise !!
+
 2000-04-17 14:40 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * doc/en/set.txt

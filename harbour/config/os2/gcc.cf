@@ -53,6 +53,7 @@ endef
 # We have to use a script to overcome the AR limit of max 850 characters
 # in commmand line
 define create_library
+IF EXIST $@ $(RM) $@
 echo CREATE $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
 echo SAVE >> __lib__.tmp
@@ -63,6 +64,6 @@ endef
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
 AR = ar
 ARFLAGS =
-AR_RULE = IF EXIST $@ $(RM) $@ & $(create_library) & $(RM) __lib__.tmp
+AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf
