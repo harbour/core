@@ -964,6 +964,30 @@ ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInf
 
          break;
 
+      case DBOI_NUMBER:
+         if (pArea->lpIndexes)
+            hb_itemPutNI( pOrderInfo->itmResult, pArea->lpIndexes->uiTag );
+         else
+            hb_itemPutNI( pOrderInfo->itmResult, 0 );
+         break;
+
+      case DBOI_ORDERCOUNT:
+         uiTag = 0;
+         if (pArea->lpIndexes)
+         {
+            pTag = pArea->lpIndexes->TagList;
+            while( pTag )
+            {
+               uiTag++;
+               pTag = pTag->pNext;
+            }
+         }
+         hb_itemPutNI( pOrderInfo->itmResult, uiTag );
+         break;
+
+      default:
+         return SUPER_ORDINFO( ( AREAP ) pArea, uiIndex, pOrderInfo );
+
    }
    return SUCCESS;
 }

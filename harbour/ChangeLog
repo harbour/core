@@ -1,3 +1,8 @@
+2001-10-22 13:42 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     + added support for DBOI_NUMBER, for indexord() support
+     + added support for DBOI_ORDERCOUNT, for ordlistadd() support
+
 2001-10-22 01:28 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
    * utils\hbmake\hbmake.prg
      * corrected a couple of typos.
