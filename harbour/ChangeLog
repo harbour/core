@@ -1,3 +1,7 @@
+2001-02-07 18:25 GMT+1 Antonio Linares <alinares@alinares.com>
+   * harbour/source/debug/dbgtarr.prg
+     ! some minor fixes.
+
 2001-02-07 18:21 GMT+1 Antonio Linares <alinares@alinares.com>
    * harbour/source/debug/debugger.prg
      + Implementing statics variables support (not finished yet).
