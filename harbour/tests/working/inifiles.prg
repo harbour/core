@@ -1,11 +1,16 @@
 function Main()
    local i := TIniFile():New('harbour.ini')
+
    qout(i:readstring('test', 'hello', 'not found'))
    qout(i:readstring('not', 'there', 'not found'))
 
    i:writestring('not', 'there', 'there now!')
    qout(i:readstring('not', 'there', 'not found'))
 
+   i:WriteString('', 'not', 'in section!')
+
+   i:Filename := 'harbour.new'
+   i:Commit() // saves file
 return nil
 
 function TIniFile()
@@ -20,6 +25,7 @@ function TIniFile()
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
       oClass:AddMethod( "ReadString", @ReadString() )
       oClass:AddMethod( "WriteString", @WriteString() )
+      oClass:AddMethod( "Commit", @Commit() )
 
       oClass:Create()                     // builds this class
    endif
@@ -64,7 +70,7 @@ static function New(cFileName)
                if Left(cLine, 1) == '[' // new section
                   if (nPos := At(']', cLine)) > 1
                      cLine := substr(cLine, 2, nPos - 2);
-           
+
                   else
                      cLine := substr(cLine, 2)
                   endif
@@ -72,13 +78,16 @@ static function New(cFileName)
                   AAdd(::Contents, { cLine, { /* this will be CurrArray */ } } )
                   CurrArray := ::Contents[Len(::Contents)][2]
 
-               elseif Left(cLine, 1) <> ';' // comment
+               elseif Left(cLine, 1) == ';' // preserve comments
+                  AAdd( CurrArray, { NIL, cLine } )
+
+               else
                   if (nPos := At('=', cLine)) > 0
                      cIdent := Left(cLine, nPos - 1)
                      cLine := SubStr(cLine, nPos + 1)
-                  
+
                      AAdd( CurrArray, { cIdent, cLine } )
-     
+
                   else
                      AAdd( CurrArray, { cLine, '' } )
                   endif
@@ -107,22 +116,32 @@ static function ReadString(cSection, cIdent, cDefault)
    endif
 return cResult
 
-
 static procedure WriteString(cSection, cIdent, cString)
    local Self := QSelf()
-   local j, i
+   local a, j, i
 
    if Empty(cIdent)
       outerr('Must specifier an identifier')
 
    elseif Empty(cSection)
-      j := AScan( ::Contents, {|x| x[1] == cIdent} )
+      j := AScan( ::Contents, {|x| x[1] == cIdent .and. ValType(x[2]) == 'C'} )
 
       if j > 0
          ::Contents[j][2] := cString
 
       else
-         AAdd(::Contents, {cIdent, cString})
+//         a := aClone(::Contents)
+         a := ::Contents
+
+         /* QUESTION: Doing this directly on ::Contents didn't work!
+                      Contents[1] ended up as NIL! Any ideas?
+         */
+         AAdd(a, nil)
+         AIns(a, 1)
+         a[1] := {cIdent, cString}
+
+         ::Contents := a
+//         ::Contents := aClone(a)
       endif
 
    elseif (i := AScan( ::Contents, {|x| x[1] == cSection})) > 0
@@ -136,11 +155,42 @@ static procedure WriteString(cSection, cIdent, cString)
       endif
 
    else
-      AAdd( ::Contents, {cSection, { {cIdent, cString} }} )
-//      AAdd( ::Contents[Len(::Contents)][2], {cIdent, cString} )
-
-      /* QUESTION: Why didn't this work?
-                    AAdd( ::Contents, {cSection, {cIdent, cString}} )
-      */
+      AAdd( ::Contents, {cSection, {{cIdent, cString}}} )
    endif
-return 
+return
+
+static procedure Commit()
+   local Self := QSelf()
+   local i, j, hFile
+
+   qout('Writing to file ' + ::Filename)
+   hFile := fcreate(::Filename)
+
+   for i := 1 to Len(::Contents)
+      if ::Contents[i][1] == NIL
+         fwrite(hFile, ::Contents[i][2] + Chr(13) + Chr(10))
+
+      elseif ValType(::Contents[i][2]) == 'A'
+         fwrite(hFile, '[' + ::Contents[i][1] + ']' + Chr(13) + Chr(10))
+         for j := 1 to Len(::Contents[i][2])
+
+            if ::Contents[i][2][j][1] == NIL
+               fwrite(hFile, ::Contents[i][2][j][2] + Chr(13) + Chr(10))
+
+            else
+               fwrite(hFile, ::Contents[i][2][j][1] + '=' +;
+                      ::Contents[i][2][j][2] + Chr(13) + Chr(10))
+            endif
+         next j
+         fwrite(hFile, Chr(13) + Chr(10))
+
+      elseif ValType(::Contents[i][2]) == 'C'
+         fwrite(hFile, ::Contents[i][1] + '=' + ::Contents[i][2] + Chr(13) +;
+                       Chr(10))
+
+      endif
+   next i
+   fclose(hFile)
+return
+
+ 

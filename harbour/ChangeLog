@@ -1,4 +1,8 @@
-19990531-14:30 CET Matthew Hamilton
+19990531-16:35 CET Matthew Hamilton (upload by Eddie Runia)
+   * tests/working/inifiles.prg
+     version 2 which creates harbour.new
+
+19990531-14:30 CET Matthew Hamilton (upload by Eddie Runia)
    * tests/working/harbour.ini, tests/working/inifiles.prg
      added
 
