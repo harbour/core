@@ -92,6 +92,10 @@ BOOL WINAPI HB_EXPORT DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason, PVOID
 /* module symbols initialization */
 void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
 {
+   /* notice hb_vmProcessDllSymbols() must be used, and not
+    * hb_vmProcessSymbols(), as some special symbols pointers
+    * adjustments are required
+    */
    FARPROC pProcessSymbols = GetProcAddress( GetModuleHandle( NULL ),
                                              "_hb_vmProcessDllSymbols" );
    if( pProcessSymbols )
@@ -103,7 +107,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
 
 void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
-   FARPROC pExecute = GetProcAddress( GetModuleHandle( NULL ), "_hb_vmDllExecute" );
+   FARPROC pExecute = GetProcAddress( GetModuleHandle( NULL ), "_hb_vmExecute" );
 
    if( pExecute )
       ( ( VM_DLL_EXECUTE ) pExecute ) ( pCode, pSymbols );
