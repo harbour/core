@@ -1,7 +1,12 @@
+2000-06-25 22:24 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   *doc/en/command.txt
+      *began updating OOPs commands docs; This is a work in progress
+       until we find out if we can borrow some existing docs.
+
 2000-06-25 22:14 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/compiler/harbour.l
      + Added rule for orphan "]"
-     * Monor improvments to INDEX
+     * Minor improvments to INDEX
 
    * source/compiler/hbgenerr.c
      * Minor improvements
@@ -17,6 +22,7 @@
      ! Rewrote (again) rules for STRING1 STRING2 STRING3 INDEX. Rules for strings much simpler.
        /* Flex had some problem with $ that caused output of strings. */
 
+>>>>>>> 1.2363
 2000-06-25 23:58 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
