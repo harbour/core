@@ -71,6 +71,8 @@
          ADDITION: Same goes for DevPos(), always use SetPod() instead.
          [vszakats] */
 
+/* TODO: :ColorRect() support */
+
 /* TODO: :firstScrCol() --> nScreenCol
          Determines screen column where the first table column is displayed.
          Xbase++ compatible method */
@@ -1278,11 +1280,8 @@ METHOD Moved() CLASS TBrowse
       ::lHitTop := .F.
       ::lHitBottom := .F.
 
-      if ::AutoLite
-         ::DeHilite()
-      else
-         ::PosCursor()
-      endif
+      ::DeHilite()
+
       ::stable := .F.
    endif
 

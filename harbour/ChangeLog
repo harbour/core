@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-15 05:25 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     ! :Moved() fixed to always DeHilite() (independently from 
+       the autolite value). This is in sync with C52 docs
+       (see autolite .ng), and testing has shown it to be 
+       compatible. Only :stabilize should be affected by the 
+       autolite setting.
+     + TODO: added about missing ColorRect functionality.
+
 2004-02-15 05:12 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg
