@@ -1303,7 +1303,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
 
      kolpass++;
 
-     if( kolpass > 20 && rezDef )
+     if( kolpass > 750 && rezDef )
      {
         hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_RECURSE, NULL, NULL );
         break;

@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-26 19:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/pp/ppcore.c
+    ! Increase the loop limit used to detect cyclic #defines from 20 to 750.
+
 2002-06-26 18:41 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
   * source/rtl/tget.prg
     !Fixed minus property value, did not work correctly
