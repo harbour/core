@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-07 10:35 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/debug/debugger.prg
+     * Changes implemented by Davor Siklic
+       * Now debugger properly initialize from init.cld
+       * Private, Static, Local, Private monitoring are properly stored and
+         read from the init.cld
+       * OSShell work in Linux
+       * Method InputBox get focus now
+
 2002-07-07 01:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/transfrm.c
     ! Fix with numeric values and pictures with spaces and pictures with
