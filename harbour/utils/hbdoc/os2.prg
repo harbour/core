@@ -88,12 +88,15 @@ CLASS TOs2
    DATA nHandle
    DATA aLinkRef
    DATA nRef
-   DATA aHeadRef 
+   DATA aHeadRef
+   DATA aIndRef 
    METHOD New( cFile )
    METHOD WritePar( cPar )
+   METHOD WritePar2( cPar,ctag )
    METHOD WriteLink( cLink )
    METHOD ScanLink( cLink )
-   METHOD ScanRef( cRef )    
+   METHOD ScanRef( cRef )
+   METHOD ScanInd( cRef )    
    METHOD WriteJumpLink( cLink, cName, cText )
    METHOD CLOSE()
    METHOD WriteText( cPar )
@@ -108,6 +111,7 @@ METHOD New( cFile ) CLASS TOs2
    IF Self:aLinkRef == NIL
       Self:aLinkRef := {}
       Self:aHeadRef := {}
+      Self:aIndRef := {}
       Self:nRef     := 1
    ENDIF
 
@@ -133,11 +137,102 @@ METHOD WritePar( cPar ) CLASS TOs2
 
 RETURN Self
 
-METHOD WriteText( cPar ) CLASS TOs2
+METHOD WritePar2( cBuffer,cTag,cStyle ) CLASS TOs2
+   Local aLines:={} 
+   LOCAL nPos,cLine:=''
+   Default cStyle to "Default"
+if at("-",cBuffer)>0
+?cBuffer
+Endif
+      cBuffer   := STRTRAN( cBuffer, '<b>', ':hp2.' )
+      cBuffer   := STRTRAN( cBuffer, '</b>', ':ehp2.' )
+      cBuffer   := STRTRAN( cBuffer, '<par>', '' )
+      cBuffer   := STRTRAN( cBuffer, '</par>', '' )
+      cBuffer   := self:DostoOs2Text(cBuffer)
+if at("&minus.",cBuffer)>0
+    ?cBuffer
+Endif
 
-   FWRITE( Self:nHandle, cPar + CRLF )
+      aLines:=FormatStringBuffer(cBuffer)
+if at("&minus.",cBuffer)>0
+    ?cBuffer
+Endif
+
+      For nPos:=1 to LEN(aLines)
+        cLine:=aLines[nPos]
+        If nPos==1
+            If !empty(cLine) .and. cStyle <>"Syntax"
+                FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+        Else
+
+            If !empty(cLine) .and. cStyle <>"Syntax"
+                FWRITE( Self:nHandle, cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle, ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+        Endif
+      NEXT
+/*
+if cStyle=="Syntax"
+    ? cBuffer
+endif    
+         DO WHILE !lendPar
+            IF nPos == 0
+               cLine := SUBSTR( cBuffer, 1, 231 )
+               nPos  := RAT( " ", cLine )
+               IF nPos > 0                 
+                  cLine := SUBSTR( cBuffer, 1, nPos )
+               ENDIF
+            If !empty(cLine) .and. cStyle <>"Syntax"
+                FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+            if nLen<255
+                lEndpar:=.T.
+                exit
+            endif
+            ELSE
+               cLine :=  SUBSTR( cBuffer, curPos, 231 )
+
+               IF AT( '</par>', cLine ) > 0
+                  lEndPar := .T.
+                  cLine   := STRTRAN( cLine, " </par>", "" )
+               ENDIF
+               nPos := RAT( " ", cLine )
+               IF nPos > 0
+                  cLine :=  SUBSTR( cBuffer, curpos, nPos )
+                  nPos -= 1  
+               ELSE
+                  IF cLine == "</par>"
+                     cLine := ''
+                  ENDIF
+
+            ENDIF
+            If !empty(cLine) .and. cStyle <>"Syntax"
+                FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
+            elseIf !empty(cLine) .and. cStyle =="Syntax"
+                FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
+            Endif
+            
+            ENDIF
+
+            curPos += nPos
+? Curpos
+         ENDDO
+*/   
+
+
 
 RETURN Self
+
+METHOD WriteText( cPar ) CLASS TOs2
+   FWRITE( Self:nHandle, cPar + CRLF )
+RETURN Self
+
 
 METHOD WriteParBold( cPar ,lMarg) CLASS TOs2
 DEFAULT lMarg to .t.
@@ -155,25 +250,38 @@ METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
    LOCAL nPos
    LOCAL cWrite
    LOCAL nItem
-   LOCAL nrItem
+   LOCAL nrItem,nIItem
    LOCAL cRefCateg
-   
+   LOCAL cIndCateg   
    cTopic := ALLTRIM( cTopic )
-   cRefCateg:=ALLTRIM(left(cCategory,5 )) 
+   cRefCateg:=SetCateg(cCategory )
+   cIndCateg:=SetInd(cCategory)
+
    IF Self:Scanlink( cTopic ) == 0
       nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic )} )
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic) } )
    ENDIF
-   FWRITE( Self:nHandle, ':h1 res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic + CRLF )
+//   FWRITE( Self:nHandle, ':h1 res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic + CRLF )
+   If Self:ScanInd(cIndCateg)==0
+      niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg )} )
+      FWRITE( Self:nHandle, ':h1 ' + ::aIndRef[niItem] + "."+ UPPER( cCategory ) + CRLF)
+   ELSE             // Just in case that nItem>0 so the Link is already referenced
+      niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg) } )
+   ENDIF
+   IF niItem>0
+      FWRITE( Self:nHandle, ':h2 '+ 'id=' + ::aIndRef[niItem] +' res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic  + CRLF  )
+   Endif 
    If Self:ScanRef(cRefCateg)==0
       nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg )} )
-      FWRITE( Self:nHandle, ':i1 id=' + ::aHeadRef[nrItem] + " global." + UPPER( cCategory ) + CRLF )
+      FWRITE( Self:nHandle, ':i1 id=' + ::aHeadRef[nrItem] + "."+ UPPER( cCategory ) + CRLF)
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg) } )
    ENDIF
+
    if nritem>0
-      FWRITE( Self:nHandle, ':i2 refid=' + ::aHeadRef[nrItem] + " global." + UPPER( cTopic ) + CRLF )
+
+      FWRITE( Self:nHandle, ':i2 refid=' + ::aHeadRef[nrItem] + "." + UPPER( cTopic ) + CRLF )
    Endif
    cTopic := ::DosToOs2Text(cTopic)
    cTitle := ::DosToOs2Text(cTitle)
@@ -237,18 +345,37 @@ METHOD ScanRef( cLink ) CLASS TOs2
 
 RETURN nItem
 
+METHOD ScanInd( cLink ) CLASS TOs2
+
+   LOCAL nItem
+   LOCAL nReturn
+
+   nItem := ASCAN( Self:aIndRef, { | a | Upper(a)== upper(cLink) } )
+
+   IF nItem == 0
+      AADD( Self:aIndRef,  upper(cLink))
+   ENDIF
+
+RETURN nItem
+
 METHOD DosToOs2Text( cText ) CLASS TOs2
 
    LOCAL cReturn
 
    cReturn := STRTRAN( cText, '&', "&amp." )
+
    cReturn := STRTRAN( cReturn, '"', "&cdq." )
-   cReturn := STRTRAN( cReturn, ':', "&colon." )
+   if at(":hp2.",cReturn)==0 .or. at(":ehp2.",cReturn)==0
+       cReturn := STRTRAN( cReturn, ':', "&colon." )
+    endif
    cReturn := STRTRAN( cReturn, ',', "&comma." )
+
    cReturn := STRTRAN( cReturn, '_', "&us." )
    cReturn := STRTRAN( cReturn, '~', "&tilde." )
    cReturn := STRTRAN( cReturn, '|', "&splitvbar." )
+
    cReturn := STRTRAN( cReturn, '/', "&slash." )
+   cReturn := STRTRAN( cReturn,"<&slash.par>","</par>")
    cReturn := STRTRAN( cReturn, ';', "&semi." )
    cReturn := STRTRAN( cReturn, ')', "&rpar." )
    cReturn := STRTRAN( cReturn, ']', "&rbrk.." )
@@ -258,8 +385,6 @@ METHOD DosToOs2Text( cText ) CLASS TOs2
    cReturn := STRTRAN( cReturn, '{', "&lbrc." )
    cReturn := STRTRAN( cReturn, '=', "&eq." )
    cReturn := STRTRAN( cReturn, '$', "&dollar." )
-   cReturn := STRTRAN( cReturn, "<", "&lt." )
-   cReturn := STRTRAN( cReturn, ">", "&gt." )
    cReturn := STRTRAN( cReturn, "-", "&minus." )
 RETURN cReturn
 
@@ -286,4 +411,47 @@ METHOD WriteJumpLink( cLink, cText ) CLASS TOs2
 
 RETURN Self
 
+Static function SetCateg(cRef)
+Local cReturn
+cReturn:=Alltrim(left(cRef,5))
+cReturn+="X"
+Return cReturn
+Static function SetInd(cRef)
+Local cReturn
+cReturn:=Alltrim(left(cRef,4))
+cReturn+="Y"
+Return cReturn
+
+Static FUNCTION FormatStringBuffer(cBuffer)
+Local nLen,nPos,aLine:={}
+Local cLine:=''
+nLen:=Len(cBuffer)
+? nLen
+WHILE nLen>230
+    If nLen>230
+        cLine:=Substr(cBuffer,1,230)
+        nPos:=RAT(" ",cLine)
+        IF nPos>0
+            cLine:=Substr(cBuffer,1,nPos)
+            cBuffer:=Strtran(cBuffer,cLine,"")
+            AADD(aLine,alltrim(cLine))
+            nLen:=Len(cBuffer)
+        Endif
+       if at('&minus.',cLine)>0
+        nPos:=RAT(".",cLine)
+        IF nPos>0
+            cLine:=Substr(cBuffer,1,nPos)
+            cBuffer:=Strtran(cBuffer,cLine,"")
+            AADD(aLine,alltrim(cLine))
+            nLen:=Len(cBuffer)
+        Endif
+       Endif
+    Endif
+ENDDO
+IF nLen<=230
+    aadd(aLine,ALLTRIM(cBuffer))
+ENDIF
+RETURN aLine
 *+ EOF: OS2.PRG
+
+

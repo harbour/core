@@ -240,7 +240,7 @@ FUNCTION ProcessOs2()
                ENDIF
                IF .NOT. EMPTY( cSeeAlso )
                   oOs2:WriteText( ".br")
-                  oOs2:WriteParBold( "See Also&colon." )
+                  oOs2:WriteParBold( "See Also:" )
                   FOR nAlso := 1 TO LEN( aAlso )
 
                      IF nAlso == 1
@@ -374,14 +374,14 @@ FUNCTION ProcessOs2()
 
                IF AT( cSyn, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
-                  oOs2:WriteParBold( " Syntax" )
+                  oOs2:WriteParBold( "Syntax" )
 
                   nMode     := D_SYNTAX
                   lAddBlank := .T.
 end
                ELSEIF AT( cConstruct, cBuffer ) > 0
                      IF GetItem( cBuffer, nCurdoc )
-                  oOs2:WriteParBold( " Constructor syntax" )
+                  oOs2:WriteParBold( "Constructor syntax" )
 
                   nMode     := D_SYNTAX
                   lAddBlank := .T.
@@ -389,8 +389,8 @@ end
                ELSEIF AT( cArg, cBuffer ) > 0
                      IF GetItem( cBuffer, nCurdoc )
                   IF !lBlankLine
-
-                     oOs2:WriteParBold( " Arguments" )
+                     oOs2:WriteText( ".br" )
+                     oOs2:WriteParBold( "Arguments" )
 
                   ENDIF
 
@@ -404,7 +404,7 @@ end
                      oOs2:WriteText( ".br" )
                   ENDIF
 
-                  oOs2:WriteParBold( " Returns" )
+                  oOs2:WriteParBold( "Returns" )
 
                   nMode     := D_RETURN
                   lAddBlank := .T.
@@ -416,7 +416,7 @@ end
                   IF !lBlankLine
                      oOs2:WriteText( ".br" )
                   ENDIF
-                  oOs2:WriteParBold( " Description" )
+                  oOs2:WriteParBold( "Description" )
 
                   nMode     := D_DESCRIPTION
                   lAddBlank := .T.
@@ -427,7 +427,7 @@ end
                      oOs2:WriteText( ".br" )                    //:endpar()
                   ENDIF
 
-                  oOs2:WriteParBold( " Data" )
+                  oOs2:WriteParBold( "Data" )
                   nMode     := D_DATALINK
                   lAddBlank := .T.
 
@@ -436,7 +436,7 @@ end
                ELSEIF AT( cDatanolink, cBuffer ) > 0
                                  IF GetItem( cBuffer, nCurdoc )
                   IF !lIsDataLink
-                     oOs2:WriteParBold( " Data" )
+                     oOs2:WriteParBold( "Data" )
 
                   ENDIF
                   nMode     := D_NORMAL
@@ -446,7 +446,7 @@ end
                ELSEIF AT( cMethodslink, cBuffer ) > 0
                IF GetItem( cBuffer, nCurdoc )
 
-                  oOs2:WriteParBold( " Method" )
+                  oOs2:WriteParBold( "Method" )
                   nMode     := D_METHODLINK
                   lAddBlank := .T.
 
@@ -455,7 +455,7 @@ end
                ELSEIF AT( cMethodsnolink, cBuffer ) > 0
                IF GetItem( cBuffer, nCurdoc )
                   IF !lIsMethodLink
-                     oOs2:WriteParBold( " Methods" )
+                     oOs2:WriteParBold( "Methods" )
                   ENDIF
 
                   nMode     := D_NORMAL
@@ -466,7 +466,7 @@ end
                   IF !lBlankLine
                      oOs2:WriteText( ".br" )
                   ENDIF
-                  oOs2:WriteParBold( " Examples" )
+                  oOs2:WriteParBold( "Examples" )
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
                   end
@@ -476,7 +476,7 @@ end
                      oOs2:WriteText( ".br" )
                   ENDIF
 
-                  oOs2:WriteParBold( " Tests" )
+                  oOs2:WriteParBold( "Tests" )
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
                      end
@@ -489,7 +489,7 @@ end
                   IF !lBlankLine
                      oOs2:WriteText( ".br" )
                   ENDIF
-                  oOs2:WriteParBold( " Compliance" )
+                  oOs2:WriteParBold( "Compliance" )
                   nMode     := D_COMPLIANCE
                   lAddBlank := .T.
                   end
@@ -498,7 +498,7 @@ end
                   IF !lBlankLine
                      oOs2:WriteText( ".br" )
                   ENDIF
-                  oOs2:WriteParBold( " Platforms" )
+                  oOs2:WriteParBold( "Platforms" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                   end
@@ -507,7 +507,7 @@ end
                   IF !lBlankLine
                      oOs2:WriteText( ".br" )
                   ENDIF
-                  oOs2:WriteParBold( " Files" )
+                  oOs2:WriteParBold( "Files" )
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -517,7 +517,7 @@ end
                   IF !lBlankLine
                      oOs2:WriteText( ".br" )
                   ENDIF
-                  oOs2:WriteParBold( " Function" )
+                  oOs2:WriteParBold( "Function" )
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -766,11 +766,12 @@ FUNCTION Formatos2Buff( cBuffer, cStyle, ongi )
       cReturn := '<par>' + creturn + '    </par>'
 
    ELSEIF cStyle == 'Syntax'
-      cReturn := '<par> ' + cReturn + ' </par>'
+      cReturn := '<par>' + Alltrim(cReturn) + '</par>'
+
    ELSEIF cStyle == 'Arguments'
       nPos := 0
-      ? 'Estou em formatos2buff'
-      ?  AT( "<par>", cReturn )
+
+      
       IF AT( "<par>", cReturn ) > 0
          cReturn := STRTRAN( cReturn, "<par>", "" )
          cReturn := STRTRAN( cReturn, "</par>", "" )
@@ -1033,7 +1034,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
    DEFAULT cStyle TO "Default"
    lendfixed := .F.
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example"
+   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example" 
       cBuffer := '<par>' + cBuffer
    ENDIF
    IF EMPTY( cBuffer )
@@ -1043,10 +1044,10 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
    IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
       IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) = 0 .AND. !EMPTY( cbuffer )
          IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
-? " Estou Aqui"
+
             IF cStyle == "Arguments"
                creturn := cBuffer
-                ? " Estou Aqui 2"
+
                cReturn := STRTRAN( cReturn, "<par>", "" )
                cReturn := STRTRAN( cReturn, "</par>", "" )
                cReturn := ALLTRIM( cReturn )
@@ -1061,9 +1062,9 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
                IF lArgBold
-                  cReturn := '<par><b>' + cOLine + '</b> ' + cReturn + '    </par>'
+                  cReturn := '<par><b>' + cOLine + '</b> ' + cReturn + '  </par>'
                ELSE
-                  cReturn := '<par>' + cOLine + ' ' + cReturn + '    </par>'
+                  cReturn := '<par>' + cOLine + ' ' + cReturn + '  </par>'
                ENDIF
 
                cbuffer := cReturn
@@ -1091,6 +1092,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
       ENDIF
 
       IF cStyle == "Description" .OR. cStyle == "Compliance"
+      /*
          nIdentLevel := 5
          nPos        := 0
 
@@ -1124,61 +1126,76 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
             ENDIF
 
             IF !EMPTY( cLine )
-            if AT("<b>",cLine)>0 .or. AT("</b>",cLine)>0
-              cLine   := STRTRAN( cLine, '<b>', '' )
-              cLine   := STRTRAN( cLine, '</b>', '' )
-              oOs2:WriteParBold(cLine,.f.)
-            Else
-              IF LEFT(CLINE,LEN(SPACE(nidentLevel ))) ==SPACE(nidentLevel )
-               oos2:WriteText( cLine )
-            Else
-             oos2:WriteText(SPACE(nidentLevel )+ cLine )
-            endif
-            Endif
+                if AT("<b>",cLine)>0 .or. AT("</b>",cLine)>0
+                      cLine   := STRTRAN( cLine, '<b>', '' )
+                      cLine   := STRTRAN( cLine, '</b>', '' )
+                      oOs2:WriteParBold(cLine,.f.)
+                Else
+                      oos2:WriteText(SPACE(nidentLevel )+ cLine )
+                Endif
             oOs2:WriteTExt(".br")
             ENDIF
             curPos += nPos
          ENDDO
-
+*/
+         nIdentLevel := 6
+         nPos        := 0
+/*         IF AT( '</par>', cBuffer ) > 0
+            cBuffer := STRTRAN( cBuffer, "</par>", "" )
+         ENDIF*/
+         IF !EMPTY( cBuffer )
+            //             cBuffer:=SUBSTR(cBuffer,2)
+/*            cBuffer := STRTRAN( cBuffer, "<", "&lt;" )
+            cBuffer := STRTRAN( cBuffer, ">", "&gt;" )
+*/
+            cBuffeR := ALLTRIM( cBuffer )
+            oos2:WritePar2( cBuffer,":p." )
+         ENDIF
 
       ELSEIF cStyle == "Arguments"
-      cBuffer   := STRTRAN( cBuffer, ':', "&colon." )
+/*      cBuffer   := STRTRAN( cBuffer, ':', "&colon." )
       cBuffer   := STRTRAN( cBuffer, '<b>', 'hp2.' )
       cBuffer   := STRTRAN( cBuffer, '</b>', 'ehp2.' )
          IF AT( '</par>', cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF
 
-      cBuffer := STRTRAN( cBuffer, "<", "&lt." )
-      cBuffer := STRTRAN( cBuffer, ">", "&gt." )
 
          IF !EMPTY( cBuffer )
             cBuffer := SUBSTR( cBuffer, 2 )
-              cBuffer   := STRTRAN( cBuffer, 'hp2.', ':hp2.' )
-              cBuffer   := STRTRAN( cBuffer, 'ehp2.', ':ehp2.' )
 
             oos2:writetext(cbuffer+CRLF+'.br')
 
-/*a            oOs2:writeText( cBuffer+CRLF+".br") */
+            oOs2:writeText( cBuffer+CRLF+".br") 
+         ENDIF
+         */
+         IF !EMPTY( cBuffer )
+            //             cBuffer:=SUBSTR(cBuffer,2)
+            cBuffeR := ALLTRIM( cBuffer )
+            oos2:WritePar2( cBuffer,":p." )
          ENDIF
 
+
       ELSEIF cStyle == "Syntax"
-         IF AT( '</par>', cBuffer ) > 0
+/*         IF AT( '</par>', cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
-         ENDIF
+         ENDIF*/
          IF !EMPTY( cBuffer )
-            cBuffer := SUBSTR( cBuffer, 2 )
+/*            cBuffer := SUBSTR( cBuffer, 2 )
             oOs2:WriteParBold( cBuffer,.f.)
             oOs2:writeText('.br')
-            oOs2:writeText('.br')
+            oOs2:writeText('.br')*/
+//            ? cBuffer
+            cBuffer:=Alltrim(cBuffer)
+            oos2:WritePar2( cBuffer,":p.","Syntax" )
          ENDIF
       ELSEIF cStyle == "Default"
-         IF AT( '</par>', cBuffer ) > 0
+/*         IF AT( '</par>', cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
-         ENDIF
+         ENDIF*/
          IF !EMPTY( cBuffer )
-            cBuffer := SUBSTR( cBuffer, 2 )
-            oOs2:WritePar( cBuffer )
+            cBuffer := alltrim( cBuffer )
+            oOs2:WritePar2( cBuffer ,":p.")
          ENDIF
 
       ENDIF

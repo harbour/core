@@ -308,38 +308,35 @@ FUNCTION ProcessChm()
                ENDIF
                cFileName := ""
 
-               //  Strip off any other non-alphabetic/numeric characters
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" 
                      cFileName += cChar
                   ENDIF
                NEXT
 
                //  See if file name is present already. If so then modify
 
-               cFileName := LEFT( cFileName, 21 )
+               cFileName := LEFT( cFileName, 36 )
                nEnd      := 1
                nCount    := 0
                DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".htm" } )
+                  nEnd := ASCAN( aDocInfo, { | a | lower(a[ 4 ]) == lower(cFileName) + ".htm" } )
                   IF nEnd > 0
 
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
+                     IF LEN( cFileName ) = 36
+                        cFileName := STUFF( cFileName, 36, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
                      ENDIF
                      nCount ++
                   ENDIF
                ENDDO
-               //  Add on the extension
-
-               cFileName := LEFT( cFileName, 21 ) + ".htm"
+               cFileName := LEFT( cFileName, 36 ) + ".htm"
                IF lDoc
                   oChm := THTML():NewChm( 'chm\' + cFileName ,,cFuncName)
                ENDIF

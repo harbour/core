@@ -311,14 +311,14 @@ FUNCTION ProcessWww()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" .or. cchar ="@"
                      cFileName += cChar
                   ENDIF
                NEXT
 
                //  See if file name is present already. If so then modify
 
-               cFileName := LEFT( cFileName, 21 )
+               cFileName := LEFT( cFileName, 36 )
                nEnd      := 1
                nCount    := 0
                DO WHILE nEnd > 0
@@ -328,8 +328,8 @@ FUNCTION ProcessWww()
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 21
-                        cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
+                     IF LEN( cFileName ) = 36
+                        cFileName := STUFF( cFileName, 36, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
                      ENDIF
@@ -338,7 +338,7 @@ FUNCTION ProcessWww()
                ENDDO
                //  Add on the extension
 
-               cFileName := LEFT( cFileName, 21 ) + ".htm"
+               cFileName := LEFT( cFileName, 36 ) + ".htm"
                IF lDoc
                   oHtm := THTML():New( 'htm\' + cFileName )
                ENDIF
@@ -405,13 +405,13 @@ FUNCTION ProcessWww()
                //  Now start writing out what we know
 
                IF lData
-                  oHtm:WriteText( "<H1>DATA " + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oHtm:WriteText( "<H1>DATA " + ALLTRIM(  cFuncName ) + "</H1>" )
                   oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ELSEIF lMethod
-                  oHtm:WriteText( "<H1> METHOD " + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oHtm:WriteText( "<H1> METHOD " + ALLTRIM( cFuncName ) + "</H1>" )
                   oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ELSE
-                  oHtm:WriteText( "<H1>" + ALLTRIM( PAD( cFuncName, 21 ) ) + "</H1>" )
+                  oHtm:WriteText( "<H1>" + ALLTRIM(  cFuncName ) + "</H1>" )
                   AADD( aWWW, { cFuncName, LEFT( cFileName, AT( ".", cFileName ) - 1 ) } )
                   oHtm:WriteText( "<p>" + cOneline + "</p>" + hb_osnewline() )
                ENDIF

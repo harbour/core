@@ -357,7 +357,7 @@ FUNCTION ProcessRtf()
                ELSEIF lMethod
                   oRtf:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Method " + cFuncName )
                ELSE
-                  oRtf:WriteTitle( PAD( cFuncName, 40 ), cFuncName, cOneLine )
+                  oRtf:WriteTitle(  cFuncName, cFuncName, cOneLine )
                   //               oRtf:WriteParBold( cOneLine )
                   //               oRtf:WriteParBox(  cBar  )
                ENDIF

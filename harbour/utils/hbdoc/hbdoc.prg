@@ -455,14 +455,14 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
           ohtm:=THTML():new('htm\hb'+strtran(citem," ","")+'.htm',aMetaContents)
           ohtm:WriteText('<h2>'+adocinfo[1,1]+'</h2><br>')
-          ohtm:WriteText("<pre><ul>")
+          ohtm:WriteText("<table>")
   
       for ppp:=1 to len(adocinfo)
       
-           if citem ==adocinfo[ppp,1] 
-               oHtm:Writelink(adocinfo[ppp,4],pad(adocinfo[ppp,2],21)+adocinfo[ppp,3])
+           if citem ==adocinfo[ppp,1]
+               oHtm:WritelinkTable(adocinfo[ppp,4],adocinfo[ppp,2],adocinfo[ppp,3])
            else
-           ohtm:WriteText("</ul></pre>")
+           ohtm:WriteText("</table>")
            ohtm:close()
            citem:=adocinfo[ppp,1]
            aMetaContents:={}
@@ -473,14 +473,15 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
 //                    oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem)
            ohtm:WriteText('<h2>'+adocinfo[ppp,1]+'</h2><br>')
-           ohtm:WriteText("<pre><ul>")
-           oHtm:Writelink(adocinfo[ppp,4],pad(adocinfo[ppp,2],21)+adocinfo[ppp,3])
+           ohtm:WriteText("<table>")
+           oHtm:WritelinkTable(adocinfo[ppp,4],adocinfo[ppp,2],adocinfo[ppp,3])
            endif
            next
         if ppp>len(adocinfo)
         exit
         endif
       enddo
+           ohtm:WriteText("</table>")
         ohtm:close()
            aMetaContents:={}
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
@@ -528,6 +529,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
       FWRITE( nHpj, 'Compatibility=1.1 or later'+CRLF)
       FWRITE( nHpj, 'Auto Index=Yes'+CRLF)
+      FWRITE( nHpj,'Full-text search=Yes'+CRLF)
       FWRITE( nHpj, 'Language=0x416 Português (brasileiro)' + CRLF )
       FWRITE( nHpj, 'Contents file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
       FWRITE( nHpj, 'Compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
@@ -549,6 +551,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           ohtm:=THTML():NewContent('chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc")
           ohtm:WriteText('<!--Sitemap 1.0-->')
           ohtm:Addobject("text/site properties")
+          oHtm:AddParam("FrameName","Ajuda")
           ohtm:EndObject()
           ohtm:WriteText("<ul>")
           oHtm:ListItem()
@@ -568,6 +571,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           oHtm:AddParam("Local","license.htm")
           oHtm:EndObject()
           OHTM:WriteChmLink('license.htm',"Harbour License")
+          if Alltrim(cLinkName)=='harbour.lnk'
           oHtm:ListItem()
           oHtm:AddObject("text/sitemap")
           oHtm:AddParam("Name","GNU License")
@@ -586,7 +590,13 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           oHtm:AddParam("Local","harbourextensions.htm")
           oHtm:EndObject()
           OHTM:WriteChmLink('harbourextensions.htm',"Harbour Extensions")
+          endif
       oHtm:WriteText( "</UL>" )
+      ohtm:ListItem()
+    oHtm:AddObject("text/sitemap")
+    ohtm:addParam("Name","Harbour Functions by Categorie")
+    oHtm:Endobject()
+
         asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
        do while .t.
           citem:=adocinfo[1,1]

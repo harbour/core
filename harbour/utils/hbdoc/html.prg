@@ -54,6 +54,7 @@ CLASS THTML
    METHOD WritePar( cPar )
    METHOD WriteParBold( cPar )
    METHOD WriteLink( cLink ,cName)
+   METHOD WriteLinkTable( cLink ,cName)
    METHOD WriteChmLink( cLink ,cName)
    METHOD WriteText( cText )
    METHOD WriteMetaTag(cTag,cDescription)
@@ -80,19 +81,20 @@ METHOD New( cFile,aMetaContents ) CLASS THTML
    ENDIF
    nX := Self:nHandle
    FWRITE( Self:nHandle, "<HTML>" + CRLF )
+   FWRITE( Self:nHandle, "<HEAD>" + CRLF )
    if Valtype(aMetaContents) <> NIL .and. Valtype(aMetaContents)=="A"
    For nCount:=1 to len(aMetaContents)
       Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
    NEXT
     Endif
-   FWRITE( Self:nHandle, "<BODY>" + CRLF )
+
 
 RETURN Self
 
 METHOD WriteTitle( cTitle ) CLASS THTML
 
    FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '</HEAD>' + CRLF  )
-
+   FWRITE( Self:nHandle, "<BODY>" + CRLF )
 RETURN Self
 
 METHOD WritePar( cPar ) CLASS THTML
@@ -145,6 +147,34 @@ METHOD WriteLink( cLink, cName ) CLASS THTML
       cTemp := SUBSTR( cLink, 1, nPos - 1 )
       endif
    ELSE
+     if AT(".htm",cLink)=0
+      cTemp := ALLTRIM( cLink ) + '.htm'
+        else
+     cTemp := ALLTRIM( cLink ) 
+      endif
+   ENDIF
+   IF cName != Nil
+      cLink := cName
+   ENDIF
+   cTemp := STRTRAN( cTemp, " ", "" )
+
+   FWRITE( Self:nHandle, "<LI><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></LI>" + CRLF )
+
+RETURN Self
+
+METHOD WriteLinkTable( cLink, cName,cInfo ) CLASS THTML
+
+   LOCAL nPos
+   LOCAL cTemp := ''
+
+   nPos := AT( "()", cLink )
+   IF nPos > 0
+      if AT(".htm",cLink)=0
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
+      else
+      cTemp := SUBSTR( cLink, 1, nPos - 1 )
+      endif
+   ELSE
          if AT(".htm",cLink)=0
       cTemp := ALLTRIM( cLink ) + '.htm'
         else
@@ -155,7 +185,7 @@ METHOD WriteLink( cLink, cName ) CLASS THTML
       cLink := cName
    ENDIF
    cTemp := STRTRAN( cTemp, " ", "" )
-   FWRITE( Self:nHandle, "<LI><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></LI>" + CRLF )
+   FWRITE( Self:nHandle, "<tr><td><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></td><td>" +cinfo +'</td></tr>'+ CRLF )
 
 RETURN Self
 
