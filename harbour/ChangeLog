@@ -1,3 +1,8 @@
+19990719-16:15 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * Minor change to catch last color parameter
+       that may be empty
+
 19990719-15:55 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/gtapi.c
      * Added support for 'numeric' color strings

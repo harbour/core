@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.29   19990719   ptucker   Minor change to catch last color parameter
+ *                             that may be empty
  * 1.28   19990719   ptucker   Added support for numeric color strings
  *                             like "1/7,8/15"
  * 1.26   19990719   ptucker   Changed call in hb_gtinit() to pass the
@@ -190,7 +192,6 @@ int hb_gtSetColorStr(char * fpColorString)
     int nPos = 0, nSkip = 0, nCount=-1, i=0, y;
     int nBack = 0, nColor = 0, nHasX=0;
 
-    buff[0] = '\0';
     do
     {
         if( ( c=*fpColorString++  ) > 'A' )
@@ -263,9 +264,9 @@ int hb_gtSetColorStr(char * fpColorString)
                 nHasX = 1;
                 break;
             case ',':
+            case '\0':
                 if(!nCount)
                    nBack = _Color[nPos];
-            case '\0':
                 nCount = -1;
                 if( nPos == _ColorCount )
                 {
