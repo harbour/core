@@ -1,3 +1,9 @@
+20000318-12:45 EST Paul Tucker <ptucker@sympatico.ca>
+   * contrib/rdd_ads/ads1.c
+     * added cast in strlen()
+   * make_vc.bat
+     * account for .dll's in copy/delete
+
 20000318-19:38 GMT+3 Alexander Kresin
    * include/hbapirdd.h
    * contrib/rdd_ads/ads.ch   
