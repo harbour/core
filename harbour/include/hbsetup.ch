@@ -38,8 +38,8 @@
 #ifndef HB_SETUP_CH_
 #define HB_SETUP_CH_
 
-/* NOTE: You can select here, which features you to include of the different
-         Clipper implementations. */
+/* NOTE: You can select here, which features you want to include of the 
+         different Clipper implementations. */
 
 #define HB_EXTENSION              /* Enable Harbour extensions */
 
@@ -53,7 +53,15 @@
 /* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 
-//Added by RaC&JfL
+/* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is 
+         set to 10 explicitly and not through the HB_C52_STRICT option 
+         [vszakats] */
+
+/* Turn on short names support for the class engine */
+#ifdef HB_C52_STRICT
+   #define HB_SHORTNAMES
+#endif
+
 #define HB_CLS_MASKHIDDEN         /* Disallow heritence of hidden variables */
 
 #endif /* HB_SETUP_CH_ */

@@ -297,6 +297,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\tmenuitm.obj \
    $(OBJ_DIR)\tpopup.obj \
    $(OBJ_DIR)\treport.obj \
+   $(OBJ_DIR)\ttextlin.obj \
    $(OBJ_DIR)\ttopbar.obj \
    $(OBJ_DIR)\typefile.obj \
    $(OBJ_DIR)\wait.obj
@@ -385,6 +386,7 @@ PP_LIB_OBJS = \
 DEBUG_LIB_OBJS = \
    $(OBJ_DIR)\dbgmenu.obj \
    $(OBJ_DIR)\dbgtmenu.obj \
+   $(OBJ_DIR)\dbgtmitm.obj \
    $(OBJ_DIR)\dbgtwin.obj \
    $(OBJ_DIR)\debugger.obj \
    $(OBJ_DIR)\tbrwtext.obj
@@ -1551,6 +1553,13 @@ $(OBJ_DIR)\trim.obj : $(RTL_DIR)\trim.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\ttextlin.c : $(RTL_DIR)\ttextlin.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\ttextlin.obj : $(OBJ_DIR)\ttextlin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ttopbar.c : $(RTL_DIR)\ttopbar.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -1772,6 +1781,13 @@ $(OBJ_DIR)\dbgtmenu.c : $(DEBUG_DIR)\dbgtmenu.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\dbgtmenu.obj : $(OBJ_DIR)\dbgtmenu.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbgtmitm.c : $(DEBUG_DIR)\dbgtmitm.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\dbgtmitm.obj : $(OBJ_DIR)\dbgtmitm.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DEBUG_LIB) $(ARFLAGS) -+$@,,
 

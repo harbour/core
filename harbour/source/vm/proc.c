@@ -46,50 +46,13 @@
 
 #include "hbapi.h"
 
-char * hb_procname( int iLevel, char * szName ); //Added by RAC&JF
-
-//Modified by RAC&JF
 HB_FUNC( PROCNAME )
 {
-   int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   char sName[255];
+   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
 
-   // Added by RAC&JF
-   // Extracted to an internal function to allow us to call it from a c hb_internal
-   hb_procname( iLevel, &sName );
-   hb_retc( ( char *) &sName );
+   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName ) );
 }
 
-/*
-HB_FUNC( PROCNAME )
-{
-   int iLevel = hb_parni( 1 ) + 1;  // we are already inside ProcName()
-   PHB_ITEM pBase = hb_stack.pBase;
-
-   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
-      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
-
-   if( ( iLevel == -1 ) )
-   {
-      if( ( pBase + 1 )->type == HB_IT_ARRAY )  // it is a method name
-      {
-         char * szProcName;
-
-         szProcName = ( char * ) hb_xgrab( strlen( hb_objGetClsName( pBase + 1 ) ) + 1 +
-                                strlen( pBase->item.asSymbol.value->szName ) + 1 );
-         strcpy( szProcName, hb_objGetClsName( pBase + 1 ) );
-         strcat( szProcName, ":" );
-         strcat( szProcName, pBase->item.asSymbol.value->szName );
-         hb_retc( szProcName );
-         hb_xfree( ( void * ) szProcName );
-      }
-      else
-         hb_retc( pBase->item.asSymbol.value->szName );
-   }
-   else
-      hb_retc( "" );
-}
-*/
 HB_FUNC( PROCLINE )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
@@ -116,8 +79,9 @@ HB_FUNC( PROCFILE )
 
 #endif
 
+/* NOTE: szName size must be an at least:
+         HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 [vszakats] */
 
-//Added by RAC&JF  because we need it from classes.c
 char * hb_procname( int iLevel, char * szName )
 {
    PHB_ITEM pBase = hb_stack.pBase;
@@ -125,7 +89,7 @@ char * hb_procname( int iLevel, char * szName )
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
-   if( ( iLevel == -1 ) )
+   if( iLevel == -1 )
    {
       if( ( pBase + 1 )->type == HB_IT_ARRAY )  /* it is a method name */
       {
@@ -139,6 +103,6 @@ char * hb_procname( int iLevel, char * szName )
    else
       strcpy( szName, "" );
 
-   return( szName );
+   return szName;
 }
 

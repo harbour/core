@@ -1,3 +1,60 @@
+2000-05-29 02:47 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * doc/whatsnew.txt
+     + Class features added.
+
+   * source/compiler/harbour.y 
+     - One TODO removed.
+
+   * source/rtl/ttopbar.prg
+   * source/debug/dbgtmenu.prg
+     % __AltToKey() - minor optimization (one variable removed).
+
+   * include/hbclass.ch
+   * include/hbextern.ch 
+   * include/hboo.ch
+   * include/hbsetup.ch 
+   * source/rtl/objfunc.prg
+   * source/rtl/tclass.prg 
+   * source/vm/classes.c
+     * Some variables, macros and functions renamed, some types changed
+       (unsigned -> ULONG, USHORT -> BOOL)
+     * Formatted, non-ANSI comments fixed.
+     * Some optimisations and fixes (szName not allocated).
+     % Functions returning NIL converted to PROCEDURES.
+     % LOCAL Self := QSelf() line removed.
+     + HB_SHORTNAMEs is now defined when HB_C52_STRICT is turned on.
+
+   + source/debug/dbgtmitm.prg
+   * source/debug/dbgtmenu.prg
+   * source/debug/Makefile
+   + source/rtl/ttextlin.prg
+   * source/rtl/teditor.prg
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     * Two classes in one file separated to two files to compile with 
+       STRICT, SHORTNAMES mode.
+
+   * source/rtl/tgetlist.prg
+   * source/rtl/tbrowse.prg
+   * source/rtl/tbcolumn.prg
+     * Restored the previous high level CLASS versions (the fixes where kept),
+       since it should now work with 10 chars mode.
+     ! Some fixed to make it work in 10 chars mode.
+     ; Now Harbour will compile with 10 chars mode, but note that it still 
+       won't link.
+
+   * source/vm/proc.c 
+   * include/hbapi.h 
+     * hb_procname() declaration moved to the central header.
+
+   * source/rtl/setkey.c
+     ! HB_SETKEYARRAY() fixed for the case when the second parameter was NIL.
+
+   * contrib/hbclip/hbclip.ch
+     + HB_SETKEYARRAY() added.
+
 2000-05-28 21:50 GMT -3 Luiz Rafaek Culik <culik@sl.conex.net>
  
   *contrib\hbzlib\zlibapi.c
@@ -21,9 +78,10 @@
    * source/compiler/harbour.l
      ! Fixed the compiler to not generate reference to the "Self"
        variable but use the native "QSelf()" instead in the "::" operator.
-       Note that HBCLASS.CH still declared Self, but this is no more
-       a requirement. This way :: operator is a bit faster. If the "Self"
-       variable would be removed from HBCLASS.CH, it would be even faster.
+       Note that HBCLASS.CH still declares Self, but this is no more 
+       a requirement. This way :: operator is a bit faster, and the pcode is 
+       smaller. If the "Self" variable would be removed from HBCLASS.CH, it 
+       would be even faster.
 
 2000-05-28 22:16 UTC+0200   Jfl&RaC <jfl@mafact.com>
 

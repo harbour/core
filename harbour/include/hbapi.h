@@ -462,7 +462,10 @@ extern char *   hb_conSetColor( char * szColor );
 extern void     hb_conXSaveRestRelease( void );
 
 /* compiler and macro compiler */
-extern char * hb_compReservedName( char * );
+extern char *   hb_compReservedName( char * );
+
+/* misc */
+extern char *   hb_procname( int iLevel, char * szName );
 
 /* macro compiler */
 

@@ -6,6 +6,7 @@
 
 Version 0.34 Build 34 (2000-??-??)
 
+- OO engine enhanced (multiple inheritance, scoping, forwarding and delegating)
 - Linux/Unix ncurses screen output and xterm mouse input support
 - MEMOEDIT support started
 - CONTRIBs better separated from core Harbour (TOOLS moved there)

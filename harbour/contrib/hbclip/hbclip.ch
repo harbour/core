@@ -58,6 +58,7 @@
 #xtranslate HB_SETKEYGET( [<n>][, <b>] )                  => NIL
 #xtranslate HB_SETKEYSAVE( [<a>] )                        => ( {} )
 #xtranslate HB_SETKEYCHECK( <n>[, <x1>[, <x2>[, <x3>]]] ) => ( .F. )
+#xtranslate HB_SETKEYARRAY( <a>[, <b> ] )                 => AEval( <a>, {| tmp | SetKey( tmp, <b> ) } )
 
 /* Strong typing */
 

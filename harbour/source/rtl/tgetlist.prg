@@ -33,17 +33,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 2000 Jose Lalin <dezac@corevia.com>
- *    Rewritten using the lower-level Harbour class creation way.
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
+#include "hbclass.ch"
 #include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
@@ -58,74 +48,69 @@
 
 #define K_UNDO          K_CTRL_U
 
-function TGetList( GetList )
+CLASS TGetList
 
-   LOCAL oClass := TClass():New( "TGETLIST" )
+   DATA aGetList
+   DATA oGet, nPos
+   DATA bFormat
+   DATA lUpdated
+   DATA lKillRead
+   DATA lBumpTop, lBumpBot
+   DATA nLastExitState
+   DATA nLastPos
+   DATA oActiveGet
+   DATA cReadProcName, nReadProcLine
+   DATA cVarName
+   DATA lHasFocus
 
-   oClass:AddData( "aGetList",         GetList )
-   oClass:AddData( "oGet",             IF( GetList == NIL, NIL, GetList[ 1 ] ) )
-   oClass:AddData( "nPos",             1 )
-   oClass:AddData( "bFormat" )
-   oClass:AddData( "lUpdated",         .f. )
-   oClass:AddData( "lKillRead",        .f. )
-   oClass:AddData( "lBumpTop",         .f. )
-   oClass:AddData( "lBumpBot",         .f. )
-   oClass:AddData( "nLastExitState",   0 )
-   oClass:AddData( "nLastPos",         0 )
-   oClass:AddData( "oActiveGet" )
-   oClass:AddData( "cReadProcName",    "" )
-   oClass:AddData( "nReadProcLine" )
-   oClass:AddData( "cVarName" )
-   oClass:AddData( "lHasFocus",        .f. )
+   METHOD New( GetList )
+   METHOD Settle( nPos )
+   METHOD Reader()
+   METHOD GetApplyKey( nKey )
+   METHOD GetPreValidate()
+   METHOD GetPostValidate()
+   METHOD GetDoSetKey( bKeyBlock )
+   METHOD PostActiveGet()
+   METHOD GetReadVar()
+   METHOD SetFormat( bFormat )
+   METHOD KillRead( lKill )
+   METHOD GetActive( oGet )
+   METHOD DateMsg()
+   METHOD ShowScoreBoard()
+   METHOD ReadUpdated( lUpdated )
+   METHOD ReadVar( cNewVarName )
+   METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
+   METHOD SetFocus()
+   METHOD Updated() INLINE ::lUpdated
 
-   oClass:AddMethod( "New",             @New() )
-   oClass:AddMethod( "Settle",          @Settle() )
-   oClass:AddMethod( "Reader",          @Reader() )
-   oClass:AddMethod( "GetApplyKey",     @GetApplyKey() )
-   oClass:AddMethod( "GetPreValidate",  @GetPreValidate() )
-   oClass:AddMethod( "GetPostValidate", @GetPostValidate() )
-   oClass:AddMethod( "GetDoSetKey",     @GetDoSetKey() )
-   oClass:AddMethod( "PostActiveGet",   @PostActiveGet() )
-   oClass:AddMethod( "GetReadVar",      @GetReadVar() )
-   oClass:AddMethod( "SetFormat",       @SetFormat() )
-   oClass:AddMethod( "KillRead",        @KillRead() )
-   oClass:AddMethod( "GetActive",       @GetActive() )
-   oClass:AddMethod( "DateMsg",         @DateMsg() )
-   oClass:AddMethod( "ShowScoreBoard",  @ShowScoreBoard() )
-   oClass:AddMethod( "ReadUpdated",     @ReadUpdated() )
-   oClass:AddMethod( "ReadVar",         @ReadVar() )
-   oClass:AddMethod( "ReadExit",        @ReadExit() )
-   oClass:AddMethod( "SetFocus",        @SetFocus() )
-   oClass:AddMethod( "Updated",         @Updated() )
+ENDCLASS
 
-   oClass:Create()
+METHOD New( GetList ) CLASS TGetList
 
-return oClass:Instance()
-
-//--------------------------------------------------------------------------//
-static function New( GetList )
-
-   LOCAL Self := QSelf()
-
-   ::aGetList := GetList
+   ::aGetList       := GetList
+   ::lKillRead      := .f.
+   ::lBumpTop       := .f.
+   ::lBumpBot       := .f.
+   ::nLastExitState := 0
+   ::nLastPos       := 0
+   ::cReadProcName  := ""
+   ::lUpdated       := .f.
+   ::nPos           := 1
+   ::oGet           := iif( ISARRAY( GetList ) .AND. Len( GetList ) >= 1, GetList[ 1 ], NIL )
+   ::lHasFocus      := .F.
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function SetFocus()
-
-   LOCAL Self := QSelf()
+METHOD SetFocus() CLASS TGetList
 
    __GetListSetActive( Self )
    ::aGetList[ ::nPos ]:SetFocus()
 
-return Self
+   return Self
 
-//--------------------------------------------------------------------------//
-static function Reader()
+METHOD Reader() CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL oGet := ::oGet
+   local oGet := ::oGet
 
    if ::GetPreValidate()
 
@@ -150,11 +135,9 @@ static function Reader()
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function GetApplyKey( nKey )
+METHOD GetApplyKey( nKey ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL cKey, bKeyBlock, oGet := ::oGet
+   local cKey, bKeyBlock, oGet := ::oGet
 
    if ! ( ( bKeyBlock := Setkey( nKey ) ) == NIL )
       ::GetDoSetKey( bKeyBlock )
@@ -268,12 +251,10 @@ static function GetApplyKey( nKey )
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function GetPreValidate()
+METHOD GetPreValidate() CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL oGet  := ::oGet
-   LOCAL lUpdated, lWhen := .t.
+   local oGet := ::oGet
+   local lUpdated, lWhen := .t.
 
    if oGet:PreBlock != NIL
       lUpdated := ::lUpdated
@@ -294,12 +275,10 @@ static function GetPreValidate()
 
 return lWhen
 
-//--------------------------------------------------------------------------//
-static function GetPostValidate()
+METHOD GetPostValidate() CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL oGet := ::oGet
-   LOCAL lUpdated, lValid := .t.
+   local oGet := ::oGet
+   local lUpdated, lValid := .t.
 
    if oGet:ExitState == GE_ESCAPE
       return .t.
@@ -337,11 +316,9 @@ static function GetPostValidate()
 
 return lValid
 
-//--------------------------------------------------------------------------//
-static function GetDoSetKey( bKeyBlock )
+METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL oGet := ::oGet, lUpdated
+   local oGet := ::oGet, lUpdated
 
    if oGet:Changed
       oGet:Assign()
@@ -363,11 +340,9 @@ static function GetDoSetKey( bKeyBlock )
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function Settle( nPos )
+METHOD Settle( nPos ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL nExitState
+   local nExitState
 
    if nPos == NIL
       nPos := ::nPos
@@ -437,10 +412,7 @@ static function Settle( nPos )
 
 return nPos
 
-//--------------------------------------------------------------------------//
-static function PostActiveGet()
-
-   LOCAL Self := QSelf()
+METHOD PostActiveGet() CLASS TGetList
 
    ::GetActive( ::oGet )
    ::ReadVar( ::GetReadVar() )
@@ -448,13 +420,11 @@ static function PostActiveGet()
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function GetReadVar()
+METHOD GetReadVar() CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL oGet := ::oGet
-   LOCAL cName := Upper( oGet:Name )
-   LOCAL n
+   local oGet := ::oGet
+   local cName := Upper( oGet:Name )
+   local n
 
    if oGet:Subscript != NIL
       for n := 1 TO Len( oGet:Subscript )
@@ -464,21 +434,17 @@ static function GetReadVar()
 
 return cName
 
-//--------------------------------------------------------------------------//
-static function SetFormat( bFormat )
+METHOD SetFormat( bFormat ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL bSavFormat := ::bFormat
+   local bSavFormat := ::bFormat
 
    ::bFormat := bFormat
 
 return bSavFormat
 
-//--------------------------------------------------------------------------//
-static function KillRead( lKill )
+METHOD KillRead( lKill ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL lSavKill := ::lKillRead
+   local lSavKill := ::lKillRead
 
    if PCount() > 0
       ::lKillRead := lKill
@@ -486,11 +452,9 @@ static function KillRead( lKill )
 
 return lSavKill
 
-//--------------------------------------------------------------------------//
-static function GetActive( oGet )
+METHOD GetActive( oGet ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL oOldGet := ::oActiveGet
+   local oOldGet := ::oActiveGet
 
    if PCount() > 0
       ::oActiveGet := oGet
@@ -498,11 +462,9 @@ static function GetActive( oGet )
 
 return oOldGet
 
-//--------------------------------------------------------------------------//
-static function ShowScoreboard()
+METHOD ShowScoreboard() CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL nRow, nCol, nOldCursor
+   local nRow, nCol, nOldCursor
 
    if Set( _SET_SCOREBOARD )
 
@@ -520,12 +482,10 @@ static function ShowScoreboard()
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function DateMsg()
+METHOD DateMsg() CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL nRow
-   LOCAL nCol
+   local nRow
+   local nCol
 
    if Set( _SET_SCOREBOARD )
 
@@ -545,11 +505,9 @@ static function DateMsg()
 
 return Self
 
-//--------------------------------------------------------------------------//
-static function ReadVar( cNewVarName )
+METHOD ReadVar( cNewVarName ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL cOldName := ::cVarName
+   local cOldName := ::cVarName
 
    if ISCHARACTER( cNewVarName )
       ::cVarName := cNewVarName
@@ -557,26 +515,12 @@ static function ReadVar( cNewVarName )
 
 return cOldName
 
-//--------------------------------------------------------------------------//
-static function ReadUpdated( lUpdated )
+METHOD ReadUpdated( lUpdated ) CLASS TGetList
 
-   LOCAL Self := QSelf()
-   LOCAL lSavUpdated := ::lUpdated
+   local lSavUpdated := ::lUpdated
 
    if PCount() > 0
       ::lUpdated := lUpdated
    endif
 
 return lSavUpdated
-
-//--------------------------------------------------------------------------//
-static function ReadExit( lNew )
-return Set( _SET_EXIT, lNew )
-
-//--------------------------------------------------------------------------//
-static function Updated()
-
-   LOCAL Self := QSelf()
-
-return ::lUpdated
-

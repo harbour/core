@@ -42,17 +42,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-
-CLASS TTextLine
-
-   DATA  cText       // A line of text
-   DATA  lSoftCR     // true if line doesn't end with a HB_OSNewLine() char (word wrapping)
-
-   METHOD New(cLine, lSoftCR)
-
-ENDCLASS
-
-
 CLASS TEditor
 
    DATA  cFile       INIT ""     // name of file being edited
@@ -103,16 +92,6 @@ CLASS TEditor
    METHOD Edit(nPassedKey)                                  // Handles input (can receive a key in which case handles only this key and then exits)
 
 ENDCLASS
-
-
-// Creates a new line of text
-METHOD New(cLine, lSoftCR) CLASS TTextLine
-
-   ::cText := iif(Empty(cLine), "", cLine)
-   ::lSoftCR := iif(Empty(lSoftCR), .F., lSoftCR)
-
-return Self
-
 
 // Converts a string to an array of strings splitting input string at EOL boundaries
 STATIC function Text2Array(cString, nWordWrapCol)

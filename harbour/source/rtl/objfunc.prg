@@ -233,10 +233,8 @@ FUNCTION __objDelData( oObject, cSymbol )
 
    RETURN oObject
 
-
-//Added by R‚C&JfL
 FUNCTION __objDerivedFrom( oObject, xSuper )
-   Local lRetVal, cClassName
+   Local cClassName
 
    IF !ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
@@ -250,7 +248,5 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   lRetVal := __ClsParent( oObject:ClassH, cClassName )
-
-   RETURN lRetVal
+   RETURN __ClsParent( oObject:ClassH, cClassName )
 

@@ -380,14 +380,7 @@ static function __AltToKey( nKey )
                             K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
                             K_ALT_Y, K_ALT_Z }, nKey )
-   local cKey
 
-      if nIndex > 0
-         cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 )
-      else
-         cKey := ""
-      endif
-
-return cKey
+return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
 
 #endif

@@ -144,6 +144,7 @@ PRG_SOURCES=\
 	tmenuitm.prg \
 	tpopup.prg   \
 	treport.prg  \
+	ttextlin.prg \
 	ttopbar.prg  \
 	typefile.prg \
 	wait.prg     \

@@ -205,10 +205,10 @@ HB_FUNC( SETKEY )
 HB_FUNC( HB_SETKEYARRAY )
 {
    PHB_ITEM pKeyCodeArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pAction = hb_param( 2, HB_IT_BLOCK );
 
-   if( pKeyCodeArray )
+   if( pKeyCodeArray && pAction )
    {
-      PHB_ITEM pAction = hb_param( 2, HB_IT_BLOCK );
       PHB_ITEM pIsActive = hb_param( 3, HB_IT_BLOCK );
       ULONG nLen = hb_arrayLen( pKeyCodeArray );
       ULONG nPos;

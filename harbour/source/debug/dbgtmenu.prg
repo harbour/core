@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The Debugger
+ * The Debugger (TDbMenu class)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -382,37 +382,6 @@ METHOD ProcessKey( nKey ) CLASS TDbMenu
 
 return nil
 
-CLASS TDbMenuItem
-
-   DATA  nRow, nCol
-   DATA  cPrompt
-   DATA  bAction
-
-   METHOD New( cPrompt, bAction )
-   METHOD Display( cClrText, cClrHotKey )
-
-ENDCLASS
-
-METHOD New( cPrompt, bAction ) CLASS TDbMenuItem
-
-   ::cPrompt := cPrompt
-   ::bAction := bAction
-
-return Self
-
-METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
-
-   local nAt
-
-   DispOutAt(  ::nRow, ::nCol ,;
-      StrTran( ::cPrompt, "~", "" ), cClrText )
-
-   DispOutAt( ::nRow, ::nCol + ;
-     ( nAt := At( "~", ::cPrompt ) ) - 1,;
-     SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
-
-return nil
-
 function __dbgAltToKey( nKey )
 
    local nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
@@ -420,12 +389,5 @@ function __dbgAltToKey( nKey )
                             K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
                             K_ALT_Y, K_ALT_Z }, nKey )
-   local cKey
 
-      if nIndex > 0
-         cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 )
-      else
-         cKey := ""
-      endif
-
-return cKey
+return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
