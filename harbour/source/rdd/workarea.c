@@ -134,9 +134,9 @@ ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
    }
 
    /* Update Bof and Eof flags */
-   if( lToSkip < 0 )
+   if( lSkip < 0 )
       pArea->fEof = FALSE;
-   else if( lToSkip > 0 )
+   else /* ( lSkip > 0 ) */
       pArea->fBof = FALSE;
 
    return SUCCESS;
@@ -147,7 +147,7 @@ ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
  */
 ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
 {
-   BOOL bTop, bBottom, bOutOfRange, bDeleted;
+   BOOL fTop, fBottom, fOutOfRange, fDeleted;
    PHB_ITEM pResult;
    ERRCODE uiError;
 
@@ -156,21 +156,21 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
    if( !hb_set.HB_SET_DELETED && pArea->dbfi.itmCobExpr == NULL )
       return SUCCESS;
 
+   /* Since lToSkip is passed to SkipRaw, it should never request more than
+      a single skip.
+      The implied purpose of hb_waSkipFilter is to get off of a "bad" record
+      after a skip was performed, NOT to skip lToSkip filtered records.
+   */
    lUpDown = ( lUpDown > 0  ?  1 : -1 );
-      /* Since lToSkip is passed to SkipRaw, it should never request more than
-         a single skip.
-         The implied purpose of hb_waSkipFilter is to get off of a "bad" record
-         after a skip was performed, NOT to skip lToSkip filtered records.
-      */
 
-   bTop = pArea->fTop;
-   bBottom = pArea->fBottom;
-   bOutOfRange = FALSE;
+   fTop = pArea->fTop;
+   fBottom = pArea->fBottom;
+   fOutOfRange = FALSE;
    while( TRUE )
    {
       if( pArea->fBof || pArea->fEof )
       {
-         bOutOfRange = TRUE;
+         fOutOfRange = TRUE;
          break;
       }
 
@@ -180,7 +180,8 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
          pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
          if( HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult ) )
          {
-            SELF_SKIPRAW( pArea, lUpDown );
+            if ( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
+               return FAILURE;
             continue;
          }
       }
@@ -188,25 +189,29 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
       /* SET DELETED */
       if( hb_set.HB_SET_DELETED )
       {
-         SELF_DELETED( pArea, &bDeleted );
-         if( bDeleted )
+         SELF_DELETED( pArea, &fDeleted );
+         if( fDeleted )
          {
-            SELF_SKIPRAW( pArea, lUpDown );
+            if ( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
+               return FAILURE;
             continue;
          }
       }
       break;
    }
-   if( bOutOfRange )
+
+#if 0
+   if( fOutOfRange )
    {
       /*
          TODO: these calls to SELF_GOTO are redundant; in most cases
          we are already at EOF from the skips above, and GO 0 is not necessary.
          We should take a closer look at these. --BH
       */
-      if( bTop && lUpDown > 0 )
+
+      if( fTop && lUpDown > 0 )
          uiError = SELF_GOTO( pArea, 0 );
-      else if( bBottom && lUpDown < 0 )
+      else if( fBottom && lUpDown < 0 )
          uiError = SELF_GOTO( pArea, 0 );
       else if( lUpDown < 0 )
       {
@@ -220,8 +225,22 @@ ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
          pArea->fBof = FALSE;
       }
    }
+#else
+   /*
+    * The only one situation when we should repos is backward skipping
+    * if we are not on BOTTOM position (it's not SKIPFILTER called
+    * from GOBOTTOM).
+    */
+   if( pArea->fBof && lUpDown < 0 && !fBottom )
+   {
+      uiError = SELF_GOTOP( pArea );
+      pArea->fBof = TRUE;
+   }
+#endif
    else
+   {
       uiError = SUCCESS;
+   }
 
    return uiError;
 }
@@ -312,7 +331,14 @@ ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
          case 'N':
             pFieldInfo.uiType = HB_IT_LONG;
+            /* DBASE documentation defines maximum numeric field size as 20
+             * but Clipper alows to create longer fileds so I remove this
+             * limit, Druzus
+             */
+            /*
             if( uiLen > 20 )
+            */
+            if( uiLen > 255 )
                return FAILURE;
             else
                pFieldInfo.uiDec = uiDec;
@@ -906,7 +932,7 @@ ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
    {
       if ( uiIndex++ == uiRelNo )
       {
-         strcpy(pBuf, hb_itemGetCPtr( lpdbRelations->abKey) );
+         strcpy(pBuf, lpdbRelations->abKey->item.asString.value );
          break;
          /* TODO: Verify buffer size is big enough ?? */
       }

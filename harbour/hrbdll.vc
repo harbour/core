@@ -128,6 +128,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\gtapiu.obj \
   $(OBJ_DIR)\gx.obj \
   $(OBJ_DIR)\hardcr.obj \
+  $(OBJ_DIR)\hbrandom.obj \
   $(OBJ_DIR)\hbffind.obj \
   $(OBJ_DIR)\idle.obj \
   $(OBJ_DIR)\inkey.obj \
@@ -1034,6 +1035,9 @@ $(OBJ_DIR)\gx.obj : $(RTL_DIR)\gx.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
+   $(CC) $(CLIBFLAGS) /Fo$@ $**
+
+$(OBJ_DIR)\hbrandom.obj : $(RTL_DIR)\hbrandom.c
    $(CC) $(CLIBFLAGS) /Fo$@ $**
 
 $(OBJ_DIR)\idle.obj : $(RTL_DIR)\idle.c

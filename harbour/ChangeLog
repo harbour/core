@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-03-09 22:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * hrbdll.vc
+    * file has been updated due to adding source/rtl/hbrandom.c.
+  * include/hbapiitm.h
+  * source/rdd/itemapi.c
+  * source/rdd/dbf1.c
+  * source/rdd/workarea.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+    * more synchronization with xHarbour's RDD.
+ 
+
 2004-03-09 10:15 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * hrbdll.bc
      * Added reference to missing hbrandom.c. Can a MSVC user sync hrbdll.vc?
