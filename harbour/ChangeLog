@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-10 12:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/vm/itemapi.c
+      ! Recognition of infinite numbers in DJGPP compiler.
+
+  * bin/bld.bat
+    * Add -lm in DJGPP compiler, for include libm.a (math library).
+      This library it's necessary for new handler of math errors.
+
+  * source/debug/Makefile
+    + Add dbghelp.prg
+
 2002-07-10 12:02 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/debug/debugger.prg
     * variables window works now.
