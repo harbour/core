@@ -462,12 +462,21 @@ METHOD GotoLine(nRow) CLASS HBEditor
       else
          // I need to move cursor if is past requested line number and if requested line is
          // inside first screen of text otherwise ::nFirstRow would be wrong
-         if nRow < ::nNumRows .AND. (::nTop + nRow) < ::Row()
-            ::SetPos(::nTop + nRow, ::Col())
+         if ::nFirstRow > 1
+            if nRow < ::nNumRows .AND. (::nTop + nRow) < ::Row()
+               ::SetPos(::nTop + nRow, ::Col())
+            endif
+         else
+            if nRow <= ::nNumRows
+               ::SetPos(::nTop + nRow - 1, ::Col())
+            endif
          endif
 
          ::nRow := nRow
-         ::nFirstRow := Max(1, nRow - (::Row() - ::nTop))
+
+         if ! ( ::nFirstRow == 1 .and. nRow <= ::nNumRows )
+            ::nFirstRow := Max( 1, nRow - (::Row() - ::nTop))
+         endif
 
          ::RefreshWindow()
       endif
@@ -576,6 +585,7 @@ METHOD RefreshWindow() CLASS HBEditor
    LOCAL nOCol
    LOCAL nORow
    LOCAL nOCur
+   local cOldColor
 
    nOCol := ::Col()
    nORow := ::Row()
@@ -587,7 +597,9 @@ METHOD RefreshWindow() CLASS HBEditor
 
    // Clear rest of editor window (needed when deleting lines of text)
    if ::naTextLen < ::nNumRows
+      cOldColor = SetColor( ::cColorSpec )
       Scroll(::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight)
+      SetColor( cOldColor )
    endif
 
    SetCursor(nOCur)
