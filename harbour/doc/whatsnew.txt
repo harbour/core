@@ -4,6 +4,22 @@
 
 ----------------------------------------------------------------------
 
+- Final cleanups on global macro and symbol names.
+- DISKSPACE() enhancements
+- Microsoft C++ 8.x compiler support
+- 10 character symbol support finalized
+- VAL() made fully compatible
+- Source files split to several smaller files
+- GT API selection is now at link time instead of compile time
+- Make and build files further cleaned up, enhanced, optimized, synchronized
+  etc...
+- Compiler and platform detection enhanced, some hacks removed,
+  multiplatform cleanups and fixes.
+- Warning levels upped, warnings fixed, code quality raised
+- Version numbering standardized
+- Multiple source file support in Harbour command line
+- HBCLIP and RUNJAVA contribution dirs added
+
 Build 0.32 2000-03-07
 
 - New Borland make files

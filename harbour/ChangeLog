@@ -1,3 +1,27 @@
+20000401-04:57 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/environ.c
+   * include/hbapi.h
+     % Reorganized. Now the motto is that each target platform should first 
+       detect the version of the native platform version, then if applicable
+       (only in DOS currently) detect the host OS.
+       This way the source is *far* more clean, and consistent between
+       platforms and compilers.
+     + Added WinNT detection for the DOS platform.
+     * #ifdef mess removed.
+     + C callable version added (hb_os())
+     * Some variables renamed.
+     ; Tested with BCC55, BCC31, CYGWIN, MINGW32, MSC8 (compile only),
+       MSVC on W2KRC2, WNTSP4, W95, W95B, W98, MSDOS62
+     ; Please test it with DJGPP, WATCOM, Linux/GCC, OS2/GCC, OS2/ICC,
+       and BCC31 under OS/2.
+
+   * source/rtl/inkey.c
+     * Comment for W2K corrected.
+
+   * doc/whatsnew.txt
+     + Added some items for the next release.
+
 20000331-21:35 EST Paul Tucker <ptucker@sympatico.ca>
   * makefile.bc
     + Added dbgtmenu dbgtwin.c &.prg to the debug library rules.

@@ -153,7 +153,7 @@ void hb_releaseCPU( void )
 #elif defined(HB_OS_OS2)
    DosSleep( 25 ); /* Duration is in milliseconds */
 #elif defined(HB_OS_DOS)
-/* NOTE: there is a bug under NT 4 (2000 unknown) -  if the app is running
+/* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
    in protected mode, time slices will _not_ be released - you must switch
    to real mode first, execute the following, and switch back.
 

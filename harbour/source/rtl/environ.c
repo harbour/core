@@ -38,10 +38,10 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    Support for determining the window version by
+ *    Support for determining the windows version
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Support for determining many windows flavours by 
+ *    Support for determining many windows flavours
  *
  * See doc/license.txt for licensing terms.
  *
@@ -75,7 +75,7 @@
    #include <stdlib.h>
 #endif
 
-#if defined(__GNUC__) && !defined(__DJGPP__) && ! defined(__MINGW32__)
+#if defined(HB_OS_UNIX)
    #include <sys/utsname.h>
 #endif
 
@@ -94,255 +94,234 @@
    #endif
 #endif
 
-HB_FUNC( OS )
+/* NOTE: OS() function, as a primary goal will detect the version number
+         of the target platform. As an extra it may also detect the host OS.
+         The latter is mainly an issue in DOS, where the host OS can be OS/2
+         WinNT/2K, Win3x, Win9x, DOSEMU, Desqview, etc. [vszakats] */
+
+#define HB_OS_BUFFER_LEN 80
+
+char * hb_os( void )
 {
-   char * cformat = "%s %d.%02d%c";
+   char * pszOS;
 
-#if defined(__MPW__)
-/* TODO: not implemented yet */
-   hb_retc( "MacOS" );
-#else
-   int hb_osmajor = -1, hb_osminor = -1, hb_osletter = -1;
-   char * hb_os = NULL;
-   char version[ 128 ];
-#if defined(__IBMCPP__)
+   HB_TRACE(HB_TR_DEBUG, ("hb_os(%hu)", uiMode));
 
-   unsigned long aulQSV[ QSV_MAX ] = { 0 };
-   APIRET rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
-   if( ! rc )
+   pszOS = ( char * ) hb_xgrab( HB_OS_BUFFER_LEN );
+
+#if defined(HB_OS_DOS)
+
    {
-      hb_osmajor  = aulQSV[ QSV_VERSION_MAJOR ] / 10;
-      hb_osminor  = aulQSV[ QSV_VERSION_MINOR ];
-      hb_osletter = ( aulQSV[ QSV_VERSION_REVISION ] > 0 && aulQSV[ QSV_VERSION_REVISION ] < 26 ) ? '@' + aulQSV[ QSV_VERSION_REVISION ] : 0;
-   }
-   hb_os = "OS/2";
+      union REGS regs;
 
-#else
+      regs.h.ah = 0x30;
+      INT_86( 0x21, &regs, &regs );
 
-#if defined(__GNUC__) && !defined(__DJGPP__) && !defined(__MINGW32__)
+      sprintf( pszOS, "DOS %d.%02d", regs.h.al, regs.h.ah );
 
-   struct utsname un;
+      /* Host OS detection: Windows 2.x, 3.x, 95/98 */
 
-   uname( &un );
-
-   #if defined(HARBOUR_GCC_OS2)
-      sprintf( version, "%s %s", un.sysname, un.version );
-   #else
-      sprintf( version, "%s %s", un.sysname, un.release );
-   #endif
-
-   hb_os      = "";
-   hb_osmajor = -2;
-
-#else
-
-/* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
-#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
-
-#if defined(HB_OS_WIN_32)
-
-   OSVERSIONINFO osVer; /* for GetVersionEx() */
-   char szBuild[ 128 ] = "";
-
-   cformat = "%s%s %d.%02d.%04d";
-   osVer.dwOSVersionInfoSize = sizeof( osVer );
-
-   if( GetVersionEx( &osVer ) )
-   {
-      switch( osVer.dwPlatformId )
       {
-         case VER_PLATFORM_WIN32_WINDOWS:
-            hb_osmajor = osVer.dwMajorVersion;
-            hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD( osVer.dwBuildNumber );
+         #if defined(__BORLANDC__) || defined(_MSC_VER)
+            regs.x.ax = 0x1600;
+         #else
+            regs.w.ax = 0x1600;
+         #endif
+         INT_86( 0x2F, &regs, &regs );
 
-            if( hb_osmajor == 4 && hb_osminor == 0 && hb_osletter == 950 )
-               hb_os = "Windows 95";
-            else if( hb_osmajor == 4 && hb_osminor > 0 &&
-                  hb_osletter > 950 && hb_osletter <= 1080 )
-               hb_os = "Windows 95 SP1";
-            else if( hb_osmajor == 4 && hb_osminor < 10 &&
-                  hb_osletter > 1080 )
-               hb_os = "Windows 95 OSR2"; /* Formerly: "Windows 95 SP2" */
-            else if( hb_osmajor == 4 && hb_osminor == 10 &&
-                  hb_osletter == 1998 )
-               hb_os = "Windows 98";
-            else if( hb_osmajor == 4 && hb_osminor == 10 &&
-                 hb_osletter > 1998 && hb_osletter < 2183 )
-               hb_os = "Windows 98 SP1";
-            else if( hb_osmajor > 4 && hb_osletter >= 2183 )
-               hb_os = "Windows 98 SE";
+         if( regs.h.al != 0x00 && regs.h.al != 0x80 )
+         {
+            char szHost[ 128 ] = "";
+
+            if( regs.h.al == 0x01 || regs.h.al == 0xFF )
+               sprintf( szHost, " (Windows 2.x)" );
             else
-               hb_os = "Windows";
+               sprintf( szHost, " (Windows %d.%02d)", regs.h.al, regs.h.ah );
 
-            strncpy( szBuild, osVer.szCSDVersion, sizeof( szBuild ) );
-            szBuild[ sizeof( szBuild ) - 1 ] = '\0';
+            strcat( pszOS, szHost );
+         }
+      }
 
-            break;
+      /* Host OS detection: Windows NT/2000 */
 
-         case VER_PLATFORM_WIN32_NT:
-            hb_osmajor = osVer.dwMajorVersion;
-            hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD( osVer.dwBuildNumber );
+      {
+         #if defined(__BORLANDC__) || defined(_MSC_VER)
+            regs.x.ax = 0x3306;
+         #else
+            regs.w.ax = 0x3306;
+         #endif
+         INT_86( 0x21, &regs, &regs );
 
-            if( hb_osmajor == 3 && hb_osminor == 10 )
-               hb_os = "Windows NT 3.1";
-            else if( hb_osmajor == 3 && hb_osminor == 50 )
-               hb_os = "Windows NT 3.5";
-            else if( hb_osmajor == 3 && hb_osminor == 51 )
-               hb_os = "Windows NT 3.51";
-            else if( hb_osmajor == 4 )
-               hb_os = "Windows NT 4";
-            else if( hb_osmajor == 5 )
-               hb_os = "Windows 2000";
+         #if defined(__BORLANDC__) || defined(_MSC_VER)
+            if( regs.x.bx == 0x3205 )
+         #else
+            if( regs.w.bx == 0x3205 )
+         #endif
+               strcat( pszOS, " (Windows NT/2000)" );
+      }
+
+      /* Host OS detection: OS/2 */
+
+      {
+         regs.h.ah = 0x30;
+         INT_86( 0x21, &regs, &regs );
+
+         if( regs.h.al >= 10 )
+         {
+            char szHost[ 128 ] = "";
+
+            if( regs.h.al == 20 && regs.h.ah > 20 )
+               sprintf( szHost, " (OS/2 %d.%02d)", regs.h.ah / 10, regs.h.ah % 10 );
             else
-               hb_os = "Windows NT";
+               sprintf( szHost, " (OS/2 %d.%02d)", regs.h.al / 10, regs.h.ah );
 
-            if( osVer.szCSDVersion )
-            {
-               int i = 0;
-               WORD wServicePack;
-
-               while( osVer.szCSDVersion[ i ] != '\0' && ( osVer.szCSDVersion[ i ] < '0' || osVer.szCSDVersion[ i ] > '9' ) )
-                  i++;
-               wServicePack = ( WORD )( atoi( &osVer.szCSDVersion[ i ] ) );
-
-               if( wServicePack )
-                  sprintf( szBuild, " SP%i", wServicePack );
-            }
-
-            /* TODO: Add support for:
-                      * NT Stand Alone Server
-                      * NT Enterprise Edition
-                      * NT Terminal Server
-                      * NT Primary Domain Controller
-                      * NT Backup Domain Controller
-
-               It can be done with:
-                RegOpenKey( "System\CurrentControlSet\Control\ProductOptions", ... )
-                RegQueryValueEx( "ProductType", ..., szBuffer )
-            */
-            break;
-
-         case VER_PLATFORM_WIN32s:
-            hb_osmajor = osVer.dwMajorVersion;
-            hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD( osVer.dwBuildNumber );
-            hb_os = "Windows 32s";
-            break;
-
-         case VER_PLATFORM_WIN32_CE:
-            hb_osmajor = osVer.dwMajorVersion;
-            hb_osminor = osVer.dwMinorVersion;
-            hb_osletter = LOWORD( osVer.dwBuildNumber );
-            hb_os = "Windows CE";
-            break;
+            strcat( pszOS, szHost );
+         }
       }
    }
-#else
-#if defined(_MSC_VER)
-      if( _osmode == _WIN_MODE )
-      {
-         hb_os = "Windows";
-         hb_osmajor = _osmajor;
-         hb_osminor = _osminor;
-         hb_osletter = 0;
-      }
-#else
-      /* detect Windows */
-      _AX = 0x160A;
-      geninterrupt( 0x2F );
-      if( _AX == 0 )
-      {
-         hb_osmajor = _BX / 256;
-         hb_osminor = _BX % 256;
-         hb_osletter = 0;
-         hb_os = "Windows";
-      }
-#endif /* _MSC_VER */
-      else
-      {
-         hb_os = "DOS";
-         hb_osmajor = _osmajor;
-         hb_osminor = _osminor;
-         hb_osletter = 0;
-      }
 
-#endif /* defined(_WINDOWS_) */
+#elif defined(HB_OS_OS2)
 
-#else
-
-   union REGS regs;
-
-   /* detect OS/2 */
-   regs.h.ah = 0x30;
-
-   INT_86( 0x21, &regs, &regs );
-
-   if( regs.h.al >= 10 )
    {
-      hb_os = "OS/2";
-      if( regs.h.al == 20 && regs.h.ah > 20 )
-      {
-         hb_osmajor = regs.h.ah / 10;
-         hb_osminor = regs.h.ah % 10;
-      }
+      unsigned long aulQSV[ QSV_MAX ] = { 0 };
+      APIRET rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
+
+      if( rc == 0 )
+         sprintf( pszOS, "OS/2 %d.%02d%c",
+            aulQSV[ QSV_VERSION_MAJOR ] / 10,
+            aulQSV[ QSV_VERSION_MINOR ],
+            ( aulQSV[ QSV_VERSION_REVISION ] > 0 && aulQSV[ QSV_VERSION_REVISION ] < 26 ) ? '@' + aulQSV[ QSV_VERSION_REVISION ] : 0 );
       else
-      {
-         hb_osmajor = regs.h.al / 10;
-         hb_osminor = regs.h.ah;
-      }
-      hb_osletter = 0;
+         sprintf( pszOS, "OS/2" );
    }
-   else
+
+#elif defined(HB_OS_WIN_32)
+
    {
-      hb_osmajor = _osmajor;
-      hb_osminor = _osminor;
-      regs.w.ax = 0x160A;
+      OSVERSIONINFO osVer;
 
-      INT_86( 0x2F, &regs, &regs );
+      char * pszName;
+      char szBuild[ 128 ] = "";
+      int iVerMajor;
+      int iVerMinor;
+      int iVerLetter;
 
-      if( regs.w.ax == 0 )
+      osVer.dwOSVersionInfoSize = sizeof( osVer );
+
+      if( GetVersionEx( &osVer ) )
       {
-         hb_os = "Windows";
-         hb_osmajor = regs.w.bx / 256;
-         hb_osminor = regs.w.bx % 256;
-         hb_osletter = 0;
+         iVerMajor = osVer.dwMajorVersion;
+         iVerMinor = osVer.dwMinorVersion;
+         iVerLetter = LOWORD( osVer.dwBuildNumber );
+
+         switch( osVer.dwPlatformId )
+         {
+            case VER_PLATFORM_WIN32_WINDOWS:
+
+               if( iVerMajor == 4 && iVerMinor == 0 && iVerLetter == 950 )
+                  pszName = "Windows 95";
+               else if( iVerMajor == 4 && iVerMinor > 0 &&
+                     iVerLetter > 950 && iVerLetter <= 1080 )
+                  pszName = "Windows 95 SP1";
+               else if( iVerMajor == 4 && iVerMinor < 10 &&
+                     iVerLetter > 1080 )
+                  pszName = "Windows 95 OSR2"; /* Formerly: "Windows 95 SP2" */
+               else if( iVerMajor == 4 && iVerMinor == 10 &&
+                     iVerLetter == 1998 )
+                  pszName = "Windows 98";
+               else if( iVerMajor == 4 && iVerMinor == 10 &&
+                    iVerLetter > 1998 && iVerLetter < 2183 )
+                  pszName = "Windows 98 SP1";
+               else if( iVerMajor > 4 && iVerLetter >= 2183 )
+                  pszName = "Windows 98 SE";
+               else
+                  pszName = "Windows";
+
+               strncpy( szBuild, osVer.szCSDVersion, sizeof( szBuild ) );
+               szBuild[ sizeof( szBuild ) - 1 ] = '\0';
+
+               break;
+
+            case VER_PLATFORM_WIN32_NT:
+
+               if( iVerMajor == 3 && iVerMinor == 10 )
+                  pszName = "Windows NT 3.1";
+               else if( iVerMajor == 3 && iVerMinor == 50 )
+                  pszName = "Windows NT 3.5";
+               else if( iVerMajor == 3 && iVerMinor == 51 )
+                  pszName = "Windows NT 3.51";
+               else if( iVerMajor == 4 )
+                  pszName = "Windows NT 4";
+               else if( iVerMajor == 5 )
+                  pszName = "Windows 2000";
+               else
+                  pszName = "Windows NT";
+
+               if( osVer.szCSDVersion )
+               {
+                  int i = 0;
+                  int iServicePack;
+
+                  while( osVer.szCSDVersion[ i ] != '\0' && ( osVer.szCSDVersion[ i ] < '0' || osVer.szCSDVersion[ i ] > '9' ) )
+                     i++;
+
+                  iServicePack = atoi( &osVer.szCSDVersion[ i ] );
+
+                  if( iServicePack )
+                     sprintf( szBuild, " SP%i", iServicePack );
+               }
+
+               break;
+
+            case VER_PLATFORM_WIN32s:
+               pszName = "Windows 32s";
+               break;
+
+            case VER_PLATFORM_WIN32_CE:
+               pszName = "Windows CE";
+               break;
+
+            default:
+               pszName = "Windows";
+               break;
+         }
       }
       else
       {
-         hb_os = "DOS";
-         hb_osletter = 0;
+         iVerMajor = osVer.dwMajorVersion;
+         iVerMinor = osVer.dwMinorVersion;
+         iVerLetter = LOWORD( osVer.dwBuildNumber );
+         pszName = "Windows";
       }
+
+      sprintf( pszOS, "%s%s %d.%02d.%04d", pszName, szBuild, iVerMajor, iVerMinor, iVerLetter );
    }
-#endif /* __TURBOC__ or __BORLANDC__ or _MSC_VER 0r __DJGPP__ */
-#if defined(__DJGPP__)
-   hb_os = hb_xgrab( strlen( _os_flavor ) + 1 );
-   strcpy( hb_os, _os_flavor );
-   hb_osmajor = _osmajor;
-   hb_osminor = _osminor;
-   hb_osletter = 0;
-#endif
 
-   /* TODO: detect other OSes */
+#elif defined(HB_OS_UNIX)
 
-#endif /* __GNUC__ */
-#endif /* __IBMCPP__ */
+   {
+      struct utsname un;
 
-   if( ! hb_os ) strcpy( version, "Unknown" );
-   else if( hb_osmajor == -1 ) strcpy( version, hb_os );
-   else if( hb_osmajor == -2 ) { /* NOP */ }
-#if defined(_WINDOWS_) || defined(__MINGW32__)
-   else sprintf( version, cformat, hb_os, szBuild, hb_osmajor, hb_osminor, hb_osletter );
+      uname( &un );
+
+      sprintf( pszOS, "%s %s", un.sysname, un.release );
+   }
+
+#elif defined(HB_OS_MAC)
+
+   {
+      strcpy( pszOS, "MacOS compatible" );
+   }
+
 #else
-   else sprintf( version, cformat, hb_os, hb_osmajor, hb_osminor, hb_osletter );
-#endif
-   hb_retc( version );
-#if defined(__DJGPP__)
-   hb_xfree( hb_os );
+
+   {
+      strcpy( pszOS, "(unknown)" );
+   }
+
 #endif
 
-#endif /* __MPW__ */
+   return pszOS;
 }
 
 /* The caller must free the returned buffer. */
@@ -357,7 +336,7 @@ char * hb_version( USHORT uiMode )
 {
    char * pszVersion;
 
-/*   HB_TRACE(("hb_version(%hu)", uiMode));  */
+   HB_TRACE(HB_TR_DEBUG, ("hb_version(%hu)", uiMode));
 
    pszVersion = ( char * ) hb_xgrab( HB_VERSION_BUFFER_LEN );
 
@@ -489,10 +468,17 @@ char * hb_version( USHORT uiMode )
    return pszVersion;
 }
 
+HB_FUNC( OS )
+{
+   char * pszString = hb_os();
+   hb_retc( pszString );
+   hb_xfree( pszString );
+}
+
 HB_FUNC( VERSION )
 {
-   char * pszVersion = hb_version( hb_pcount() > 0 ? 1 : 0 );
-   hb_retc( pszVersion );
-   hb_xfree( pszVersion );
+   char * pszString = hb_version( hb_pcount() > 0 ? 1 : 0 );
+   hb_retc( pszString );
+   hb_xfree( pszString );
 }
 
