@@ -7,6 +7,22 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Fixed minor bugs reported bu Chen
+    + XTOC() function, implemented by Walter
+  + contrib/libct/tab.c
+  + contrib/libct/tests/tab.prg
+    + TABPACK() and TABEXPAND() functions
+  * contrib/libct/charonly.c
+  * contrib/libct/charrepl.c
+  * contrib/libct/remove.c
+    * bug fixes, functions crashed when zero-length-strings were passed as parameters
+
+2002-02-18 15:35 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * source\common\hbgete.c
+    ! Type fix for IBM OS/2 C++ compiler (works with GCC also).
+
+2002-02-18 14:01 UTC+0100 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
      ! fixed columns footing handling
    * source/rtl/tbcolumn.prg
      ! fixed columns footing handling

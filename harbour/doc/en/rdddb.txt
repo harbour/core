@@ -30,15 +30,15 @@
  *      [<lRest>] ) --> NIL
  *  $ARGUMENTS$
  *      <bBlock> Operation that is to be performed
-
+ *
  *      <bFor> Code block for the For condition
-
+ *
  *      <bWhile> Code block for the WHILE condition
-
+ *
  *      <nNext> Number of NEXT records  to process
-
+ *
  *      <nRecord> Record number to work on exactly
-
+ *
  *      <lRest> Toggle to rewind record pointer
  *  $RETURNS$
  *      DBEVAL() always returns NIL
@@ -81,8 +81,8 @@
  *  $RETURNS$
  *      <cWorkArea> Name of alias
  *  $DESCRIPTION$
- *      This function returns the same alias name ofthe currently selected work
- *      area.
+ *      This function returns the same alias name ofthe currently selected
+ *      work area.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *
@@ -113,7 +113,7 @@
  *  $ONELINER$
  *      Appends a new record to a database file.
  *  $SYNTAX$
- *      DbAppend(<lLock>]) --> NIL
+ *      DbAppend( [<lLock>] ) --> NIL
  *  $ARGUMENTS$
  *      <lLock> Toggle to release record locks
  *  $RETURNS$
@@ -167,7 +167,7 @@
  *  $ONELINER$
  *      Clears the current filter condiction in a work area
  *  $SYNTAX$
- *      DbClearFilTer() -> NIL
+ *      DbClearFilTer() --> NIL
  *  $RETURNS$
  *      DbClearFilTer() always returns NIL
  *  $DESCRIPTION$
@@ -206,7 +206,7 @@
  *  $ONELINER$
  *      Close all open files in all work areas.
  *  $SYNTAX$
- *      DbCloseAll() -> NIL
+ *      DbCloseAll() --> NIL
  *  $RETURNS$
  *      DBCLOSEALL() always return NIL
  *  $DESCRIPTION$
@@ -248,7 +248,7 @@
  *  $ONELINER$
  *      Close a database file in a work area.
  *  $SYNTAX$
- *      DbCloseArea() -> NIL
+ *      DbCloseArea() --> NIL
  *  $RETURNS$
  *      DbCloseArea() always returns NIL.
  *  $DESCRIPTION$
@@ -377,9 +377,9 @@
  *  $ONELINER$
  *      Resume a pending LOCATE
  *  $SYNTAX$
- *      __DbCONTINUE()   -> NIL
+ *      __DbCONTINUE() --> NIL
  *  $RETURNS$
- *      __DbCONTINUE()  Always return nil
+ *      __DbCONTINUE() Always return NIL
  *  $DESCRIPTION$
  *      __DBCONTINUE is a database command that searches from the current record
  *      position for the next record meeting the most recent LOCATE condition
@@ -447,13 +447,13 @@
  *  $ONELINER$
  *      Creates an empty database from a array.
  *  $SYNTAX$
- *      DBCREATE(<cDatabase>, <aStruct>,[<cDriver>],[<lOpen>],
- *      [<cAlias>]) --> NIL
+ *      DBCREATE( <cDatabase>, <aStruct>, [<cDriver>], [<lOpen>],
+ *                [<cAlias>] ) --> NIL
  *  $ARGUMENTS$
  *      <cDatabase> Name of database to be create
  *
- *      <aStruct>   Name of a multidimensional array that contains the a database
- *                  structure
+ *      <aStruct>   Name of a multidimensional array that contains the
+ *                  database structure
  *
  *      <cDriver>   Name of the RDD
  *
@@ -492,14 +492,17 @@
  *      database was created via this function. However, a file containing
  *      fields longer than 256 bytes is not compatible with any interpreter.
  *
- *      The <cDriver> parameter specifies the name of the Replaceable Da-
- *      tabase Driver to use to create the database. If it is not specified, then the
- *      Replaceable Database Driver in the current work area is tised.
+ *      The <cDriver> parameter specifies the name of the Replaceable
+ *      Database Driver to use to create the database. If it is not
+ *      specified, then the Replaceable Database Driver in the current work
+ *      area is used.
+ *
  *      The <lOpenNew> parameter specifies if the already created database is
  *      to be opened, and where.  If NIL, the file is not opened. If True,
  *      it is opened in a New area, and if False it is opened in the current
  *      area (closing any file already occupying that area).
- *      The <cAlias> parameter specifies the alias name for the new opened database
+ *      The <cAlias> parameter specifies the alias name for the new opened
+ *      database.
  *  $EXAMPLES$
  *      function main()
  *
@@ -733,12 +736,13 @@
  *  $RETURNS$
  *      DBRECALL() always returns NIL.
  *  $DESCRIPTION$
- *      This function unmarks those records marked for deletion nd reactivates
- *      them in the aliased or selected work area.If a record is DELETED and
- *      the DELETED setting is on, the record will still be visible for a
- *      DBRECALL() provided that the database record pointer has not been
- *      skipped.Once a record marked for deletion with the DELETE setting ON
- *      has been skipped, it no longer canbe brought back with DBRECALL().
+ *      This function unmarks those records marked for deletion and
+ *      reactivates them in the aliased or selected work area. If a record
+ *      is DELETED and the DELETED setting is on, the record will still be
+ *      visible for a DBRECALL() provided that the database record pointer
+ *      has not been skipped. Once a record marked for deletion with the
+ *      DELETE setting ON has been skipped, it no longer can be brought back
+ *      with DBRECALL().
  *  $EXAMPLES$
  *      USE Test NEW
  *      DBGOTO(10)
@@ -776,7 +780,8 @@
  *      by <xIdentity> in the active data set.If the lock is successful
  *      the function will return a logical true (.T.) value;otherwise
  *      a logical false (.F.) will be returned.If <xIdentity> is not
- *      passed it will be assumed to lock the current active record/data item.
+ *      passed it will be assumed to lock the current active record/data
+ *      item.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      LOCAL x:=0
@@ -898,24 +903,26 @@
  *  $RETURNS$
  *      DBSEEK() returns logical true (.T.) if found, otherwise false
  *  $DESCRIPTION$
- *      This function searches for the first record in a database file whose index
- *      key matches <expKey>. If the item is found, the function will return a logical
- *      true (.T.), the value of FOUND() wilI be a logical true (.T.), and the value of
- *      EOF() wilI be a logical false (.F.). If no item is found. then the function will
- *      return a logical false, the value of FOUND( ) will be a logical false (.F.), and
- *      the value of EOF( ) will be a logical true (.T.).
+ *      This function searches for the first record in a database file whose
+ *      index key matches <expKey>. If the item is found, the function will
+ *      return a logical true (.T.), the value of FOUND() wilI be a logical
+ *      true (.T.), and the value of EOF() wilI be a logical false (.F.). If
+ *      no item is found. then the function will return a logical false, the
+ *      value of FOUND( ) will be a logical false (.F.), and the value of
+ *      EOF( ) will be a logical true (.T.).
  *
- *      This function always "rewinds" the database pointer and starts the search from
- *      the top of the file.
+ *      This function always "rewinds" the database pointer and starts the
+ *      search from the top of the file.
  *
- *      If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true (.T.)
- *      the value of FOUND() wilI be a logical false and EOF() will he a logical
- *      false if there is an item in the index key with a greater value than the key
- *      expression <expKey>; at this point the record pointer will position itself on that
- *      record. However, if there is no greater key in the index,EOF() will return a
- *      logical true (.T.) value. If <lSoftSeek> is not passed, the function will look
- *      to the internal status of SOFTSEEK before performing the operation. The default
- *      of <lSoftSeek> is a logical false (.F.)
+ *      If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true
+ *      (.T.) the value of FOUND() wilI be a logical false and EOF() will be
+ *      false if there is an item in the index key with a greater value than
+ *      the key expression <expKey>; at this point the record pointer will
+ *      position itself on that record. However, if there is no greater key
+ *      in the index,EOF() will return a logical true (.T.) value. If
+ *      <lSoftSeek> is not passed, the function will look to the internal
+ *      status of SOFTSEEK before performing the operation. The default of
+ *      <lSoftSeek> is a logical false (.F.)
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      USE Tests New INDEX Tests
@@ -969,8 +976,8 @@
  *
  *      DBSELECTAREA(0) will select the next avaliable and unused work area.
  *      Up to 255 work areas are supported.Each work area has its own alias
- *      and record pointer, as well as its own FOUND(),DBFILTER(),DBRSELECT(),
- *      and DBRELATION() function values.
+ *      and record pointer, as well as its own FOUND(), DBFILTER(),
+ *      DBRSELECT() and DBRELATION() function values.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      LOCAL nId
@@ -1001,19 +1008,19 @@
  *  $CATEGORY$
  *      Database
  *  $ONELINER$
- *      Establishes the name of replaceable daabas driver for a selected work area
+ *      Establishes the RDD name for the selected work area
  *  $SYNTAX$
- *      DBSETDRIVER([<cDriver>]) --> cCurrentDriver
+ *      DBSETDRIVER( [<cDriver>] ) --> cCurrentDriver
  *  $ARGUMENTS$
  *      <cDriver> Optional database driver name
  *  $RETURNS$
  *      DBSETDRIVER() returns the name of active driver
  *  $DESCRIPTION$
  *      This function returns the name of the current database driver for the
- *      selected work area. The default will be "DBFNTX". If specified,<cDriver>
- *      contains the name of the database driver that should be used to activate
- *      and manage the work area.If the specified driver is not avaliable,this
- *      function will have no effect.
+ *      selected work area. The default will be "DBFNTX". If specified,
+ *      <cDriver> contains the name of the database driver that should be
+ *      used to activate and manage the work area.If the specified driver is
+ *      not avaliable,this function will have no effect.
  *  $EXAMPLES$
  *      DBSETDRIVER("ADS")
  *  $STATUS$
@@ -1043,15 +1050,15 @@
  *  $DESCRIPTION$
  *      This function moves the record pointer <nRecords> in the selected or
  *      aliased work area.The default value for <nRecords> will be 1.
- *      A DBSKIP(0) will flush and refresh the internal database bufer and make
- *      any changes made to the record visible without moving the record pointer
- *      in either direction.
+ *      A DBSKIP(0) will flush and refresh the internal database bufer and
+ *      make any changes made to the record visible without moving the record
+ *      pointer in either direction.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      USE Tests NEW
  *      DBGOTOP()
  *      WHILE !EOF()
- *        ? Tests->Id,Tests->Name
+ *        ? Tests->Id, Tests->Name
  *        DBSKIP()
  *      ENDDO
  *      USE
@@ -1083,16 +1090,16 @@
  *  $RETURNS$
  *      DBSETFILTER() always returns NIL.
  *  $DESCRIPTION$
- *      This function masks a database so that only those records that meet the
- *      condition prescribed by the expression in the code block <bCondition>
- *      and literally expressed as <cCondition> are visible.
+ *      This function masks a database so that only those records that meet
+ *      the condition prescribed by the expression in the code block
+ *      <bCondition> and literally expressed as <cCondition> are visible.
  *      If <cCondition> is not passed to this function,then the DBFILTER()
- *      function will return an empty string showing no filter in that work area
- *      which in fact,would be not correct.
+ *      function will return an empty string showing no filter in that work
+ *      area which in fact,would be not correct.
  *  $EXAMPLES$
  *      FUNCTION Main()
  *      USE Tests NEW
- *      DBSETFILTER({|| Tests->Id <100},"Tests->Id <100")
+ *      DBSETFILTER( {|| Tests->Id <100 }, "Tests->Id <100" )
  *      DBGOTOP()
  *
  *  $STATUS$
@@ -1158,9 +1165,9 @@
  *  $RETURNS$
  *      DBUNLOCK() always returns NIL.
  *  $DESCRIPTION$
- *      This function releases the file or record lock in the currently selected
- *      or aliased work area.It will not unlock an associated lock in a related data-
- *      bases.
+ *      This function releases the file or record lock in the currently
+ *      selected or aliased work area.It will not unlock an associated lock
+ *      in a related databases.
  *  $EXAMPLES$
  *      nId:=10
  *      USE TestId INDEX TestId NEW
@@ -1251,8 +1258,8 @@
  *      the database <cName> will be opened in the next available and unused
  *      work area. The default value of <lNewArea> is a logical false (.F.).
  *      If used, <cDriver> is the name of the database driver associated with
- *      the file <cName> that is opened. The default for this will be the value
- *      of DBSETDRlVER().
+ *      the file <cName> that is opened. The default for this will be the
+ *      value of DBSETDRlVER().
  *
  *      IF used, <xcAlias> contains the alias name for that work area, If not
  *      specified, the root name of the database specified in <cName> will be
@@ -1260,10 +1267,10 @@
  *
  *      If <lShared> is set to a logical true (.T.) value, the database that
  *      is specified in <cName> will be opened by the user EXCLUSIVELY. Thus
- *      locking it from all other nodes or users on the network. If <lShared> is
- *      set to a logical false (.F.) value, then the database will be in SHARED
- *      mode. If <lShared> is not passed, then the function will turn to the
- *      internal setting of SET EXCLUSIVE to determine a setting.
+ *      locking it from all other nodes or users on the network. If <lShared>
+ *      is set to a logical false (.F.) value, then the database will be in
+ *      SHARED mode. If <lShared> is not passed, then the function will turn
+ *      to the internal setting of SET EXCLUSIVE to determine a setting.
  *
  *      If <lReadOnly> is specified, the file will be set to READ ONLY mode.
  *      If it is not specified, the file will he opened in normal read-write
@@ -1289,19 +1296,21 @@
  *  $ONELINER$
  *      Remove all records from the current database file
  *  $SYNTAX$
- *      __DbZap()  -> NIL
+ *      __DbZap() --> NIL
  *  $RETURNS$
- *      __DbZap()   will always return nil
+ *      __DbZap()   will always return NIL
  *  $DESCRIPTION$
- *      __DbZap( is a database command that permanently removes all records from
- *   files open in the current work area.  This includes the current database
- *   file, index files, and associated memo file.  Disk space previously
- *   occupied by the ZAPped files is released to the operating system.
- *   __DbZap() performs the same operation as DELETE ALL followed by PACK but is
- *   almost  instantaneous.
+ *      __DbZap() is a database command that permanently removes all records
+ *      from files open in the current work area.  This includes the current
+ *      database file, index files, and associated memo file. Disk space
+ *      previously occupied by the ZAPped files is released to the operating
+ *      system.
  *
- *   To ZAP in a network environment, the current database file must be USEd
- *   EXCLUSIVEly.
+ *      __DbZap() performs the same operation as DELETE ALL followed by PACK
+ *      but is almost instantaneous.
+ *
+ *      To ZAP in a network environment, the current database file must be
+ *      USEd EXCLUSIVEly.
  *
  *  $EXAMPLES$
  *      This example demonstrates a typical ZAP operation in a network

@@ -19,11 +19,11 @@
  * $ONELINER$
  *      Return the current operating system.
  *  $SYNTAX$
- *      OS()   --> <cOperatingSystem>
+ *      OS() --> <cOperatingSystem>
  *  $CATEGORY$
  *      DOS
  *  $RETURNS$
- *     <cOperatinSystem>  -> The Current operating system.
+ *     <cOperatinSystem> The Current operating system.
  *  $DESCRIPTION$
  *      This function will return the current operating system.
  *  $EXAMPLES$
@@ -32,7 +32,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compatible.
+ *      This function is CA-Clipper compatible.
  *  $PLATFORMS$
  *      All
  *  $FILES$

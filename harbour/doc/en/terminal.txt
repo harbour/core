@@ -424,7 +424,7 @@
  *  $ONELINER$
  *      Displays a value to a device using a picture template
  *  $SYNTAX$
- *      DEVOUTPICT(<xExp>,<cPicture>[,<cColorString>]) --> NIL
+ *      DEVOUTPICT( <xExp>, <cPicture>, [<cColorString>] ) --> NIL
  *  $ARGUMENTS$
  *      <xExp> is any valid expression.
  *
@@ -689,7 +689,7 @@
  *      None
  *  $DESCRIPTION$
  *      This command issue an form-feed command to the printer.If the printer
- *      is not properly hooked up to the computer,an error will not be 
+ *      is not properly hooked up to the computer,an error will not be
  *      generated and the command will be ignored.
  *
  *      Once completed,the values of PROW() and PCOL(),the row and column
@@ -704,7 +704,7 @@
  *      CurPos:=0
  *      While !Eof()
  *      ? Clientes->nome,Clientes->endereco
- *      Curpos++     
+ *      Curpos++
  *      if Curpos >59
  *          Curpos:=0
  *          Eject

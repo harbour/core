@@ -136,7 +136,7 @@
  *      Fill pre-defined arrays with file/directory information
  *  $SYNTAX$
  *      ADIR( [<cFileMask>], [<aName>], [<aSize>], [<aDate>],
- *            [<aTime>], [<aAttr>] ) -> nDirEnries
+ *            [<aTime>], [<aAttr>] ) --> nDirEnries
  *  $ARGUMENTS$
  *      <cFileMask> File mask to include in the function return. It could
  *      contain path and standard wildcard characters as supported by your

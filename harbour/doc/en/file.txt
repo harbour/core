@@ -190,7 +190,7 @@
  *     This function is CA-Clipper compliant, but also extends the possible
  *     buffer size to strings greater than 65K (depending on platform).
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $END$
@@ -244,7 +244,7 @@
  *      This function is not CA-Clipper compatile since
  *      it can writes strings greather the 64K
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
  *  $END$
@@ -303,7 +303,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper compatible
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *     FCLOSE(),FERASE(),FOPEN(),FWRITE()
  *  $END$
@@ -337,7 +337,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
  *  $END$
@@ -383,7 +383,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper Compatible
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *     FERROR(),FRENAME()
  *  $END$
@@ -437,7 +437,7 @@
  *  $COMPLIANCE$
  *     This function is CA-Clipper compliant
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *     ERASE,FERASE(),FERROR(),FILE(),RENAME
  *  $END$
@@ -553,7 +553,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Clipper compatible.
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      SET DEFAULT,SET PATH,SET()
  *  $END$
@@ -605,7 +605,7 @@
  *      This function is not CA-Clipper compliant since may read
  *      strings greather the 65K depending of platform.
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $END$
@@ -643,7 +643,7 @@
  *  $COMPLIANCE$
  *      This command is CA-Clipper compatible
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
  *  $END$
@@ -707,7 +707,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible   
+ *      This command is CA-Clipper compatible
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),ERASE
  *  $END$
@@ -724,27 +724,27 @@
  *      __TYPEFILE( <cFile>, [<lPrint>] ) --> NIL
  *  $ARGUMENTS$
  *      <cFile> is a name of the file to display. If the file have an
- *      extension, it must be specified (there is no default value).   
+ *      extension, it must be specified (there is no default value).
  *
  *      <lPrint> is an optional logical value that specifies whether the
  *      output should go only to the screen (.F.) or to both the screen and
- *      printer (.T.), the default is (.F.).   
+ *      printer (.T.), the default is (.F.).
  *  $RETURNS$
- *      __TYPEFILE() always return NIL.   
+ *      __TYPEFILE() always return NIL.
  *  $DESCRIPTION$
  *      __TYPEFILE() function type the content of a text file on the screen
  *      with an option to send this information also to the printer. The
- *      file is displayed as is without any headings or formating.   
+ *      file is displayed as is without any headings or formating.
  *
  *      If <cFile> contain no path, __TYPEFILE() try to find the file first
  *      in the SET DEFAULT directory and then in search all of the SET PATH
- *      directories. If <cFile> can not be found a run-time error occur.   
+ *      directories. If <cFile> can not be found a run-time error occur.
  *
- *      Use SET CONSOLE OFF to suppress screen output.                     
- *      You can pause the output using Ctrl-S, press any key to resume.   
+ *      Use SET CONSOLE OFF to suppress screen output.
+ *      You can pause the output using Ctrl-S, press any key to resume.
  *
  *      __TYPEFILE() function is used in the preprocessing of the TYPE
- *      command.  
+ *      command.
  *  $EXAMPLES$
  *      The following examples assume a file name MyText.DAT exist in all
  *      specified paths, a run-time error would displayed if it does not
@@ -763,9 +763,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()   
+ *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
  *  $END$
@@ -784,30 +784,30 @@
  *      <xcFile> is a name of the file to display. If the file have an
  *      extension, it must be specified (there is no default value).
  *      It can be specified as literal file name or as a character
- *      expression enclosed in parentheses.   
+ *      expression enclosed in parentheses.
  *
  *      TO PRINTER is an optional keyword that specifies that the output
- *      should go to both the screen and printer.   
+ *      should go to both the screen and printer.
  *
  *      TO FILE <xcDestFile> copy the source <xcFile> also to a file. If no
  *      extension is given (.txt) is added to the output file name.
  *      <xcDestFile> can be specified as literal file name or as a character
- *      expression enclosed in parentheses.   
+ *      expression enclosed in parentheses.
  *  $DESCRIPTION$
  *      TYPE command type the content of a text file on the screen
  *      with an option to send this information also to the printer or to
  *      an alternate file. The file is displayed as is without any headings
- *      or formating.   
+ *      or formating.
  *
  *      If <xcFile> contain no path, TYPE try to find the file first in the
  *      SET DEFAULT directory and then in search all of the SET PATH
- *      directories. If <xcFile> can not be found a run-time error occur.   
+ *      directories. If <xcFile> can not be found a run-time error occur.
  *
  *      If <xcDestFile> contain no path it is created in the SET DEFAULT
- *      directory.   
+ *      directory.
  *
- *      Use SET CONSOLE OFF to suppress screen output.   
- *      You can pause the output using Ctrl-S, press any key to resume.   
+ *      Use SET CONSOLE OFF to suppress screen output.
+ *      You can pause the output using Ctrl-S, press any key to resume.
  *  $EXAMPLES$
  *      The following examples assume a file name MyText.DAT exist in all
  *      specified paths, a run-time error would displayed if it does not
@@ -829,7 +829,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      TYPE works exactly like CA-Clipper's TYPE   
+ *      TYPE works exactly like CA-Clipper's TYPE
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
  *  $END$
@@ -845,31 +845,31 @@
  *  $SYNTAX$
  *      CURDIR( [<cDrive>] )  --> cPath
  *  $ARGUMENTS$
- *      <cDir> OS drive letter   
+ *      <cDir> OS drive letter
  *  $RETURNS$
- *      <cPath> Name of directory   
+ *      <cPath> Name of directory
  *  $DESCRIPTION$
  *      This function yields the name of the current OS directory on a
  *      specified drive.If <cDrive> is not speficied,the currently logged
- *      drive will be used.   
+ *      drive will be used.
 
  *      This function should not return the leading and trailing
- *      (back)slashes.   
+ *      (back)slashes.
 
  *      If an error has been detected by the function,or the current OS
  *      directory is the root,the value of the function will be a NULL
- *      byte.   
+ *      byte.
  *  $EXAMPLES$
  *      ? Curdir()
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper Compatible   
+ *      This function is Ca-Clipper Compatible
  *  $PLATFORMS$
- *      ALL   
+ *      ALL
  *  $FILES$
- *      Library is Rtl
+ *      Library is rtl
  *  $SEEALSO$
  *      FILE()
  *  $END$
@@ -921,7 +921,7 @@
  *      <lIsEof> .T. if the file handle is at end-of-file, otherwise .F.
  *  $DESCRIPTION$
  *      This function checks an open file handle to see if it is at E-O-F.
- 
+
  *      If the file handle is missing, not numeric, or not open, then this
  *      function returns .T. and sets the value returned by FERROR() to -1
  *      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
@@ -956,8 +956,8 @@
  *  $ARGUMENTS$
  *      <cDirectory>  The name of the directory you want to remove.
  *  $RETURNS$
- *      <nError> 0 if directory was successfully removed, otherwise 
- *      the number of the last error. 
+ *      <nError> 0 if directory was successfully removed, otherwise
+ *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to remove the specified directory in <cDirectory>
  *      If this function fail, the it will return the last OS error code number.
@@ -994,8 +994,8 @@
  *  $ARGUMENTS$
  *      <cDirectory>  The name of the directory you want do change into.
  *  $RETURNS$
- *      <nError> 0 if directory was successfully changed, otherwise 
- *      the number of the last error. 
+ *      <nError> 0 if directory was successfully changed, otherwise
+ *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to change the current directory to the one
  *      specidied in <cDirectory>.If this function fail, the it will return
@@ -1033,7 +1033,7 @@
  *      <cDirectory>  The name of the directory you want to create.
  *  $RETURNS$
  *      <nError> 0 if directory was successfully changed, otherwise
- *      the number of the last error. 
+ *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to create a new directory with the name contained
  *      in <cDirectory>.If this function fail, the it will return the last OS
