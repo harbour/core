@@ -1,3 +1,7 @@
+2001-09-03 17:19 GMT Dave Pearson <davep@davep.org>
+  * source/rtl/Makefile
+    * Added persist.org to PRG_SOURCES.
+	
 2001-09-03 16:56 GMT Dave Pearson <davep@davep.org>
   * source/rtl/isprint.c
     * Added missing comment close.
