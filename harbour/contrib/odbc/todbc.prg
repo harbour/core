@@ -288,7 +288,7 @@ METHOD ExecSQL() CLASS TODBC
       // SQL statement is mandatory
       IF empty( ::cSQL )
 
-         lRet := .F.
+         nRet := SQL_ERROR 
          EXIT
 
       ENDIF
@@ -300,6 +300,7 @@ METHOD ExecSQL() CLASS TODBC
       nRet    := SQLExecDir( ::hStmt, ::cSQL )
 
       ::Close()
+      EXIT
 
    ENDDO
 

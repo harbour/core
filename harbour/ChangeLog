@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2001-07-23 21:29 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/tbrowse.prg
+     + TOFIX added, about missing AutoLite support (neede9:26 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
 
    + contrib/libct/alt/ctcolton.c
      original implementation of COLORTON() in C by Viktor Szakats <viktor.szakats@syenar.hu>
