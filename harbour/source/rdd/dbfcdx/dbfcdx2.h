@@ -54,7 +54,7 @@
 
 static LPCDXKEYINFO hb_cdxKeyNew( void );
 static void hb_cdxKeyFree( LPCDXKEYINFO pKey );
-static int hb_cdxKeyCompare( LPCDXKEYINFO pKey1, LPCDXKEYINFO pKey2, USHORT * EndPos, BOOL Exact );
+static int hb_cdxKeyCompare( LPCDXKEYINFO pKey1, LPCDXKEYINFO pKey2, BOOL Exact );
 
 static LPCDXTAG hb_cdxTagNew( LPCDXINDEX PIF, char * ITN, LONG TagHdr );
 static void hb_cdxTagFree( LPCDXTAG pTag );
@@ -105,6 +105,7 @@ static void hb_cdxPageDeleteNodeKey( LPCDXPAGEINFO pPage );
 static LPCDXINDEX hb_cdxIndexNew( AREAP pArea );
 static void hb_cdxIndexFree( LPCDXINDEX pIndex );
 static LONG hb_cdxIndexGetAvailPage( LPCDXINDEX pIndex );
+static void hb_cdxIndexPutAvailPage( LPCDXPAGEINFO pPage );
 static void hb_cdxIndexResetAvailPage( LPCDXINDEX pIndex );
 static void hb_cdxIndexPageRead( LPCDXINDEX pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
 static void hb_cdxIndexPageWrite( LPCDXINDEX pIndex, LONG lPos, void * pBuffer, USHORT uiSize );
@@ -155,7 +156,7 @@ static USHORT hb_cdxIndexUnLockWrite ( LPCDXINDEX pIndex, LPCDXTAG pTag );
 static void hb_cdxIndexDelTag( LPCDXINDEX pIndex, char * szTagName );
 
 static int hb_cdxKeyValCompare( LPCDXTAG pTag, char * pKeyVal1, BYTE keyLen1,
-      char * pKeyVal2, BYTE keyLen2, USHORT * pEndPos, BOOL Exact );
+      char * pKeyVal2, BYTE keyLen2, BOOL Exact );
 static void hb_cdxMacroRun( AREAP pArea, HB_MACRO_PTR pMacro );
 static ERRCODE cdxError( CDXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char * filename, USHORT uiFlags );
 static void hb_cdxIndexReindex( LPCDXINDEX pIndex );
@@ -169,7 +170,7 @@ static BYTE hb_cdxPageKeyLeafInsert( LPCDXPAGEINFO pPage, LPCDXKEYINFO pKey, BOO
 static BYTE hb_cdxPageKeyInsert( LPCDXPAGEINFO pPage, LPCDXKEYINFO pKey, BOOL bAddAfter );
 static void hb_cdxPageCalcLeafSpace( LPCDXPAGEINFO pPage );
 static SHORT hb_cdxPageCalcLeafKeySpace( LPCDXPAGEINFO pPage,
-      LPCDXKEYINFO pKeyPrev, LPCDXKEYINFO pKey, LPCDXKEYINFO pKeyNext );
+      LPCDXKEYINFO pKeyPrev, LPCDXKEYINFO pKey, LPCDXKEYINFO pKeyNext);
 static BYTE hb_cdxPageKeyLeafBalance( LPCDXPAGEINFO pPage );
 static BYTE hb_cdxPageKeyIntBalance( LPCDXPAGEINFO pPage );
 static BYTE hb_cdxPageRootSplit( LPCDXPAGEINFO pPage );
@@ -181,7 +182,6 @@ static void hb_cdxPagePoolFree( LPCDXINDEX pIndex, int nPagesLeft );
 static void hb_cdxPagePoolFreeTag( LPCDXTAG pTag, int nPagesLeft );
 static void hb_cdxPagePoolFlush( LPCDXINDEX pIndex );
 static void hb_cdxPagePoolFlushTag( LPCDXTAG pTag );
-static void hb_cdxPagePoolCheck( LPCDXTAG pTag );
 static void hb_cdxPageRealFree( LPCDXPAGEINFO pPage );
 
 static void hb_cdxKeyListFree( LPCDXKEYINFO pKeyList );
@@ -190,5 +190,8 @@ static LPCDXKEYINFO hb_cdxKeyListGetLast ( LPCDXKEYINFO pKeyList );
 
 #define FAST_GOCOLD(A) ( ((CDXAREAP) (A))->fRecordChanged ? ( SELF_GOCOLD( (A) ) ) : SUCCESS )
 
-static void hb_cdxDoGPF ( void );
+static void hb_cdxErrInternal ( char * szMsg );
+#ifndef HB_CDX_DBGCODE_OFF
+static void hb_cdxPagePoolCheck( LPCDXTAG pTag );
 static void hb_cdxPageLeafCheckKeys( LPCDXPAGEINFO pPage );
+#endif
