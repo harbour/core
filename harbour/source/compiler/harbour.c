@@ -89,7 +89,7 @@ PCOMCLASS     hb_comp_pLastClass;
 char *        hb_comp_szFromClass;
 PCOMDECLARED  hb_comp_pLastMethod;
 
-int           hb_comp_iLine;                             /* currently processed line number */
+int           hb_comp_iLine;                             /* currently processed line number (globaly) */
 PFUNCTION     hb_comp_pInitFunc;
 PHB_FNAME     hb_comp_pFileName = NULL;
 
@@ -1933,17 +1933,57 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
 {
    if( hb_comp_bLineNumbers && ! hb_comp_bDontGenLineNum )
    {
-      if( ( ( hb_comp_functions.pLast->lPCodePos - hb_comp_ulLastLinePos ) > 3 ) || hb_comp_bDebugInfo )
+      int iLine = hb_comp_iLine;
+
+      if( hb_comp_files.iFiles == 1 )
       {
-         hb_comp_ulLastLinePos = hb_comp_functions.pLast->lPCodePos;
-         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( hb_comp_iLine ), HB_HIBYTE( hb_comp_iLine ), ( BOOL ) 0 );
+         iLine = hb_comp_files.pLast->iLine ;
       }
       else
       {
-         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( hb_comp_iLine );
-         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( hb_comp_iLine );
+         PFILE tmpFile = hb_comp_files.pLast;
+         while( tmpFile->pPrev )
+         {
+                tmpFile = tmpFile->pPrev;
+         }
+         if( tmpFile )
+         {
+            iLine = tmpFile->iLine;
+         }
+      }
+
+      if( yytext[0] == '\n' )
+      {
+         if( hb_pp_nEmptyStrings )
+         {
+            iLine -= ( hb_pp_nEmptyStrings + 2 );
+         }
+         else
+         {
+            iLine--;
+         }
+      }
+      else
+      {
+         iLine--;
+      }
+
+      #if 0
+         printf( "\nLine: %i Empty: %i >%s<\n",  iLine, hb_pp_nEmptyStrings, yytext );
+      #endif
+
+      if( ( ( hb_comp_functions.pLast->lPCodePos - hb_comp_ulLastLinePos ) > 3 ) || hb_comp_bDebugInfo )
+      {
+         hb_comp_ulLastLinePos = hb_comp_functions.pLast->lPCodePos;
+         hb_compGenPCode3( HB_P_LINE, HB_LOBYTE( iLine ), HB_HIBYTE( iLine ), ( BOOL ) 0 );
+      }
+      else
+      {
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +1 ] = HB_LOBYTE( iLine );
+         hb_comp_functions.pLast->pCode[ hb_comp_ulLastLinePos +2 ] = HB_HIBYTE( iLine );
       }
    }
+
    if( hb_comp_functions.pLast->bFlags & FUN_BREAK_CODE )
    {
       /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
@@ -3769,9 +3809,9 @@ int hb_compAutoOpen( char * szPrg, BOOL * pbSkipGen )
             {
                int i = hb_comp_iExitLevel ;
                BOOL b = hb_comp_bAnyWarning;
-          
+
                yyparse();
-          
+
                hb_comp_iExitLevel = ( i > hb_comp_iExitLevel ? i : hb_comp_iExitLevel );
                hb_comp_bAnyWarning = ( b ? b : hb_comp_bAnyWarning );
             }

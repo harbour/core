@@ -1,3 +1,16 @@
+2000-06-22 03:30 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+   * include/hbclass.ch
+     ! Uncommented  #xtranslate that was not pre-processing correctly, before recent fixes to ppcore.c and now works correctly.
+
+   * source/compiler/harbour.c
+     ! Fixed hb_compLinePush() to generate correct Run-Time Line Numbers.
+
+   * source/pp/ppcomp.c
+     - Removed one // comment.
+
+   * source/pp/ppcore.c
+     * Increased MAX_EXP to 2048 as requested by Brian Hays.
+
 2000-06-21 21:35 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
      ! getExpReal() Fixed silly typo introduced this morning in previous fix, that broke the PP.

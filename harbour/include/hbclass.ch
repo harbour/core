@@ -99,8 +99,7 @@
 #xtranslate := <name>{ [<p,...>] }        => := <name>():New( <p> )
 #xtranslate  = <name>{ [<p,...>] }        =>  = <name>():New( <p> )
 
-// This rule is generating preprocess matching errors.
-// #xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
+#xtranslate  , <name>{ [<p,...>] }        =>  , <name>():New( <p> )
 
 #xtranslate    EXPORTED:       =>      nScope := HB_OO_CLSTP_EXPORTED
 #xtranslate    VISIBLE:        =>      nScope := HB_OO_CLSTP_EXPORTED

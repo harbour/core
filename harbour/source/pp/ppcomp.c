@@ -229,7 +229,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   *( sOut + lens ) = '\0';
 
   hb_comp_files.pLast->iLine += hb_pp_nEmptyStrings;
-  //hb_pp_nEmptyStrings = 0;
+
+  #if 0
+     printf( "Line: %i >%s<\n", hb_comp_files.pLast->iLine, sOut );
+  #endif
 
   if( handl_o )
      hb_pp_WrStr( handl_o, sOut );
