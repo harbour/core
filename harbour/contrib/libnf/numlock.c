@@ -80,17 +80,17 @@
 HB_FUNC(FT_NUMLOCK)
 {
 #if defined(HB_OS_DOS)
-   {
 
    hb_retl( ( int ) ( status_byte & 0x20 ) );
 
-   if ( PCOUNT )
+   if ( hb_pcount() )
+   {
       if ( ISLOG(1) )
          status_byte = ( status_byte | 0x20 );
       else
          status_byte = ( status_byte & 0xDF );
-
-   return;
    }
+   return;
+
 #endif
 }
