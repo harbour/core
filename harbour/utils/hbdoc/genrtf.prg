@@ -1,3 +1,4 @@
+
 /*
  * $Id$
  */
@@ -81,6 +82,9 @@ FUNCTION ProcessRtf()
 #define D_INCLUDE 6
 #define D_ONELINE 7
 #define D_STATUS  8
+#define D_DATALINK 10
+#define D_METHODLINK 11
+#define D_EXAMPLE 12
    LOCAL i
    LOCAL j
    LOCAL nFiles      := LEN( aDirList )
@@ -91,7 +95,8 @@ FUNCTION ProcessRtf()
    LOCAL nEnd
    LOCAL nCount
    LOCAL xAddBlank
-
+   LOCAL nNumTopics :=0
+   LOCAL nCurTopics :=1
    LOCAL cBar       := "컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�"
    LOCAL nMode
    LOCAL cFuncName
@@ -101,12 +106,17 @@ FUNCTION ProcessRtf()
    LOCAL nLineCnt
    LOCAL cSeeAlso
    LOCAL cTemp
+   LOCAL cTempx
    LOCAL cChar
    LOCAL lBlankLine := .F.                 // Blank line encountered and sent out
    LOCAL lAddBlank  := .F.                 // Need to add a blank line if next line is not blank
-
+   LOCAL lFirstArg := .T.
+   LOCAL lData := .F.
+   LOCAL lMethod := .F.
    LOCAL oRtf
    LOCAL nReadHandle
+   LOCAL lPar
+   LOCAL lWrite :=.f.
    LOCAL cDoc      := DELIM + "DOC" + DELIM                   // DOC keyword
    LOCAL cEnd      := DELIM + "END" + DELIM                   // END keyword
    LOCAL cFunc     := DELIM + "FUNCNAME" + DELIM              // FUNCNAME keyword
@@ -127,8 +137,22 @@ FUNCTION ProcessRtf()
    LOCAL cFiles    := DELIM + 'FILES' + DELIM
    LOCAL cSubCode  := DELIM + 'SUBCODE' + DELIM
    LOCAL cFunction := DELIM + 'FUNCTION' +DELIM
+   LOCAL cConstruct := DELIM + 'CONSTRUCTOR' + DELIM
+   LOCAL cDatalink  := DELIM + 'DATALINK' + DELIM
+   LOCAL cDatanolink  := DELIM + 'DATANOLINK' + DELIM
+   LOCAL cMethodslink := DELIM + 'METHODSLINK' + DELIM
+   LOCAL cMethodsNolink := DELIM + 'METHODSNOLINK' + DELIM
+   LOCAL cData      := DELIM +"DATA"+ DELIM
+   LOCAL cMethod    := DELIM +'METHOD' +DELIM
+   LOCAL cClassDoc  := DELIM+ "CLASSDOC" + DELIM
+   lFirstArg:=.T.
+   lData := .F.
+   lMethod := .F.
+   lIsDataLink := .F.
+   lIsMethodLink := .F.
 
-
+   lWrite:=.f.
+   cTempx:=''
    //
    //  Entry Point
    //
@@ -136,7 +160,7 @@ FUNCTION ProcessRtf()
    @ INFILELINE, 20 SAY "Extracting: "
    @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
-
+   oRtf := tRtf():new( "rtf\Harbour.rtf" ):WriteHeader()
    FOR i := 1 TO nFiles
 
       //  Open file for input
@@ -158,6 +182,9 @@ FUNCTION ProcessRtf()
       ENDIF
       lEof := .F.
       lDoc := .F.
+      lData:= .F.
+      lMethod := .F. 
+      lPar:=.T.
       //  First find the author
 
       DO WHILE .NOT. lEof
@@ -171,8 +198,8 @@ FUNCTION ProcessRtf()
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
-         IF AT( cDoc, cBuffer ) > 0
-            IF lDoc
+         IF AT( cDoc, cBuffer ) > 0 .or.  AT( cClassDoc, cBuffer ) > 0
+            IF lDoc 
                write_error( cDoc + " encountered during extraction of Doc" ;
                             + " at line" + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ENDIF
@@ -182,8 +209,9 @@ FUNCTION ProcessRtf()
             nLineCnt ++
             cCategory := cFuncName := cSeeAlso := ""
             nMode     := D_IGNORE
+
          ELSEIF AT( cEnd, cBuffer ) > 0
-            IF .NOT. lDoc
+            IF .NOT. lDoc 
                write_error( cEnd + " encountered outside of Doc area at line" ;
                             + STR( nLinecnt, 5, 0 ),,,, aDirList[ i, F_NAME ] )
             ELSE
@@ -198,15 +226,17 @@ FUNCTION ProcessRtf()
                   cFuncName := "Unknown"
                ENDIF
                AADD( aDocInfo, { cCategory, cFuncName, cOneLine, cFileName } )
+
                //  Now close down this little piece
-               lDoc := .F.
-               IF .NOT. EMPTY( cSeeAlso )
-                  oRtf:WritePar(""):EndPar()
+               IF .NOT. EMPTY( cSeeAlso ) 
+                  oRtf:WritePar("") //:endpar()
                   oRtf:WriteParBold( "See Also" )
                   ProcRtfalso( oRtf, cSeealso )
-               ENDIF
-
-               oRtf:Close()
+               Endif
+               lDoc := .F.
+                  if i<nfiles
+                  oRtf:EndPage()
+                  endif
                nMode := D_IGNORE
             ENDIF
 
@@ -215,8 +245,6 @@ FUNCTION ProcessRtf()
 
          //  Act on the input
          IF lDoc
-            //  1) function name
-
             IF AT( cFunc, cBuffer ) > 0 .OR. AT( cComm, cBuffer ) > 0 .OR. AT( cSubCode, cBuffer ) >0
                cBuffer := ReadLN( @lEof )
                nLineCnt ++
@@ -272,11 +300,29 @@ FUNCTION ProcessRtf()
 
                cFileName := LEFT( cFileName, 21 ) + ".rtf"
 
-               oRtf := TRTF():new( "rtf\" + cFileName ):WriteHeader()
                IF oRtf:nHandle < 1
                   ? "Error creating", cFileName, ".rtf"
                   write_error( "Error creating",,,, cFileName + ".rtf" )
                ENDIF
+            ELSEIF AT( cdata, cBuffer ) > 0 .OR. AT( cmethod, cBuffer ) > 0
+                   if AT( cdata, cBuffer ) > 0
+                      lData := .T.
+                      lMethod := .F.
+                   ELSEIF AT( cmethod, cBuffer ) > 0
+                      lMethod := .T.
+                      lData:= .F.
+                   ENDIF
+               cBuffer := ReadLN( @lEof )
+               nLineCnt ++
+               //  Save the function name
+               cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
+               @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
+               @ MODULELINE, 33 SAY cFuncName
+
+               nMode := D_NORMAL
+  
+               //  2) Category
+
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0
                cBuffer := ReadLN( @lEof )
@@ -297,9 +343,15 @@ FUNCTION ProcessRtf()
 
                nMode := D_ONELINE
                //  Now start writing out what we know
+               if lData
+                    oRtf:WriteJumpTitle( left(cFilename,At('.',cFilename)-1)+ cFuncName, "Data "+cFuncName )
+               Elseif lMethod
+                    oRtf:WriteJumpTitle( left(cFilename,At('.',cFilename)-1)+cFuncName, "Method " +cFuncName )
+               Else
                oRtf:WriteTitle( PAD( cFuncName, 21 ), cFuncName )
-               oRtf:WriteParBold( cOneLine )
-               oRtf:WritePar(  cBar  ):EndPar()
+               oRtf:WriteParBold( cOneLine,.t. )
+               oRtf:WriteParBold(  cBar,.t.  )
+               ENDIF
                //  4) all other stuff
 
             ELSE
@@ -309,7 +361,16 @@ FUNCTION ProcessRtf()
                   oRtf:WriteParBold( " Syntax" )
 
                   nMode     := D_SYNTAX
+
                   lAddBlank := .T.
+               ELSEIF AT( cConstruct, cBuffer ) > 0
+
+                     oRtf:WriteParBold( " Constructor syntax" )
+
+                  nMode     := D_SYNTAX
+                  lAddBlank := .T.
+
+
 
                ELSEIF AT( cArg, cBuffer ) > 0
 
@@ -321,46 +382,87 @@ FUNCTION ProcessRtf()
 
                   nMode     := D_ARG
                   lAddBlank := .T.
-
+                  lPar:=.t.
                ELSEIF AT( cRet, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                     oRtf:WritePar( "" ) //:endpar()
                   ENDIF
 
                   oRtf:WriteParBold( " Returns" )
 
                   nMode     := D_ARG
                   lAddBlank := .T.
-
+                           lPar:=.t.
                ELSEIF AT( cDesc, cBuffer ) > 0
-
-                  IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
-                  ENDIF
+                  oRtf:WritePar('') //:endpar()
                   oRtf:WriteParBold( " Description" )
+                  oRtf:WritePar('') //:endpar()
+                  nMode     := D_NORMAL
+
+                  lAddBlank := .T.
+                  lPar:= .T.
+               ELSEIF AT( cdatalink, cBuffer ) > 0
+                  IF !lBlankLine
+                     oRtf:WritePar( "" ) //:endpar()
+                  ENDIF
+        
+                  oRtf:WriteParBold( " Data" )
+                  nMode     := D_DATALINK
+                  lAddBlank := .T.
+
+                  lIsDataLink := .T.
+
+               ELSEIF AT( cDatanolink, cBuffer ) > 0
+                  if !lIsDataLink
+                    oRtf:WriteParBold( " Data" )
+  
+                  endif
+                  nMode     := D_NORMAL
+                  lAddBlank := .T.
+                  lEndDatalink:=.T.
+                  lPar:= .T.
+               ELSEIF AT(  cMethodslink, cBuffer ) > 0
+
+                  oRtf:WriteParBold( " Method" )
+                  nMode     := D_METHODLINK
+                  lAddBlank := .T.
+
+                  lIsMethodLink := .T.
+                  
+               ELSEIF AT(  cMethodsnolink, cBuffer ) > 0
+                  if !lIsMethodLink
+                  oRtf:WriteParBold( " Methods" )
+                  endif
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+                  lPar:= .T.
+
 
                ELSEIF AT( cExam, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                                    //ortf:endpar()
+                                    oRtf:WritePar('') //:endpar()
+                                    oRtf:WriteParBold( " Examples" )
                   ENDIF
-                  oRtf:WriteParBold( " Examples" )
-                  nMode     := D_NORMAL
+
+                  nMode     := D_EXAMPLE
                   lAddBlank := .T.
+
                ELSEIF AT( cTest, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                                      oRtf:WritePar('') //:endpar()   
+                     oRtf:WriteParBold( " Tests" )
+                                         oRtf:WritePar('') //:endpar()   
                   ENDIF
 
-                  oRtf:WriteParBold( " Tests" )
+                  
                   nMode     := D_NORMAL
                   lAddBlank := .T.
-
+                  lPar:= .T.
                ELSEIF AT( cStatus, cBuffer ) > 0
 
                   nMode := D_STATUS
@@ -368,40 +470,52 @@ FUNCTION ProcessRtf()
                ELSEIF AT( cCompl, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                    //ortf:endpar()   
+                    oRtf:WritePar('') //:endpar()   
+                    oRtf:WriteParBold( " Compliance" )
+                    oRtf:WritePar('') //:endpar()   
                   ENDIF
-                  oRtf:WritePar( "" ):EndPar()
-                  oRtf:WriteParBold( " Compliance" )
+
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+                  lPar:= .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                    //ortf:endpar()   
+                    oRtf:WritePar('') //:endpar()
+                    oRtf:WriteParBold( " Platforms" )
+                    oRtf:WritePar('') //:endpar()   
                   ENDIF
-                  oRtf:WriteParBold( " Platforms" )
+
                   nMode     := D_NORMAL
                   lAddBlank := .T.
+                  lPar:= .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                        oRtf:WritePar('') //:endpar()
+                                       oRtf:WriteParBold( " Files" )
+                        oRtf:WritePar('') //:endpar()
                   ENDIF
-                  oRtf:WriteParBold( " Files" )
 
-                  nMode     := D_NORMAL
+
+                  lPar:= .T.
+                        nMode     := D_NORMAL
                   lAddBlank := .T.
 
                ELSEIF AT( cFunction, cBuffer ) > 0
 
                   IF !lBlankLine
-                     oRtf:WritePar( "" ):EndPar()
+                  oRtf:WritePar('') //:endpar()
+                                                            oRtf:WriteParBold( " Functions" )
+                                                            oRtf:WritePar('') //:endpar()
                   ENDIF
-                  oRtf:WriteParBold( " Functions" )
+
 
                   nMode     := D_NORMAL
                   lAddBlank := .T.
-
+                                    lPar:= .T.
                ELSEIF AT( cSee, cBuffer ) > 0
                   nMode := D_SEEALSO
                ELSEIF AT( cInc, cBuffer ) > 0
@@ -419,13 +533,13 @@ FUNCTION ProcessRtf()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
-                        oRtf:WritePar( "" ):EndPar()
+                        oRtf:WritePar( "" ) //:endpar()
                         lAddBlank := .F.
                      ENDIF
                      /*    nNonBlank:=FirstNB(cBuffer)
                         cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
-                     oRtf:WritePar( cBuffer ):EndPar()
-                     oRtf:WritePar(""):EndPar()
+                     oRtf:WritePar( cBuffer ) //:endpar()
+                     oRtf:WritePar("") //:endpar()
 
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
@@ -434,23 +548,78 @@ FUNCTION ProcessRtf()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
-                        oRtf:WritePar( "" ):EndPar()
+                        oRtf:WritePar( "" ) //:endpar()
                         lAddBlank := .F.
                      ENDIF
-                     cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
-                     cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
-                     oRtf:WritePar( StripNgControls( cBuffer ) ):EndPar()
-                  ELSEIF nMode = D_NORMAL
+                     IF AT("<",Alltrim(cBuffer))> 0
+                        nPos := AT("<",ALLTRIM(cBuffer))
+                        if  nPos>0
+                            oRtf:WriteParBoldText( substr(cBuffer,1,at(">",cbuffer)+1 ),substr(cBuffer,At(">",cBuffer)+1)+" ")
+                       endif
+
+                     ELSE
+                             oRtf:WriteParText(   ALLTRIM(cBuffer)  )
+                     ENDIF 
+                  ELSEIF nMode = D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF lAddBlank
-                        oRtf:WritePar( "" ):EndPar()
                         lAddBlank := .F.
                      ENDIF
-                     oRtf:WritePar( StripNgControls( cBuffer ) ):EndPar()
+                     cTemp:=Substr(cBuffer,1,AT(":",cBuffer)-1)
+                     cBuffer:=Substr(cBuffer,AT(":",cBuffer)+1)
+                     oRtf:WriteJumpLink(Left(cfilename,At('.',cFilename)-1)+alltrim(cTemp),cTemp,cBuffer)
+
+
+
+                  ELSEIF nMode = D_METHODLINK
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                     IF lAddBlank
+                        lAddBlank := .F.
+                     ENDIF
+                     cTemp:=Substr(cBuffer,1,AT("()",cBuffer)+1)
+                     cName:=Substr(cBuffer,1,AT("()",cBuffer)-1)
+                     cBuffer:=Substr(cBuffer,AT("()",cBuffer)+2)
+                     oRtf:WriteJumpLink(Left(cfilename,At('.',cFilename)-1)+alltrim(cTemp) ,cTemp,cBuffer)
+
+                  ELSEIF nMode = D_NORMAL
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+                      if !lBlankLine
+                        if lPar
+                          oRtf:WritePar(cBuffer+" ")
+                          lPar:=.f.
+                        else
+                          oRtf:WriteParText(" "+alltrim(cBuffer))
+                        endif
+                      Endif
+                      if lBlankline
+                        //ortf:endpar()
+                        ortf:writepar('') //:endpar()
+                        lPar:=.T.
+                     endif
+                  ELSEIF nMode = D_EXAMPLE
+                     IF LEN( cBuffer ) > LONGLINE
+                        write_error( "General", cBuffer, nLineCnt, ;
+                                     LONGLINE, aDirList[ i, F_NAME ] )
+                     ENDIF
+                     lBlankLine := EMPTY( cBuffer )
+
+                     IF lAddBlank
+                        oRtf:WritePar( "" ) //:endpar()
+                        lAddBlank := .F.
+                     ENDIF
+                     oRtf:WritePar(  cBuffer  ) //:endpar()
 
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
@@ -460,27 +629,20 @@ FUNCTION ProcessRtf()
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )
                         IF !lBlankLine
-                           oRtf:WritePar( "" ):EndPar()
+                           oRtf:WritePar( "" ) //:endpar()
                         ENDIF
-                        oRtf:WritePar( " Header File: " ;
-                                       + ALLTRIM( cBuffer ) ):EndPar()
                      ENDIF
                   ELSEIF nMode = D_STATUS
                      IF !EMPTY( cBuffer )
-                        oRtf:WritePar(""):EndPar()
+                        oRtf:WritePar('') //:endpar()
                         oRtf:WriteParBold( "Status" )
-                        oRtf:WritePar(""):EndPar()
+                        oRtf:WritePar('') //:endpar()
                         xaddblank:=.T.
                      ELSE
-                        oRtf:WritePar(""):EndPar()
+                        oRtf:WritePar("") //:endpar()
                         xAddBlank:=.T.
                      ENDIF
                      ProcStatusRtf( oRtf, cBuffer )
-                     IF !xAddBlank
-                         oRtf:WritePar(""):EndPar()
-                         xaddblank:=.T.
-                     ENDIF
-                     xAddBlank:=.F.
                   ELSE
 
                      //  unknown data from somewhere
@@ -490,15 +652,18 @@ FUNCTION ProcessRtf()
                                   LONGONELINE, aDirList[ i, F_NAME ] )
 
                   ENDIF
+                 endif
                ENDIF
-            ENDIF
+//            ENDIF
+
          ENDIF
+         ? filesize(ortf:nhandle)
+
       ENDDO
       //  Close down the input file
-
       FT_FUSE()
    NEXT
-
+                    ortf:close()
 RETURN NIL
 
 FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
@@ -510,7 +675,7 @@ FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
    LOCAL xTemp
    LOCAL tPos
    nLen := LEN( cSeeAlso )
-   WHILE .t.
+   WHILE .T.
       nPos := AT( ",", cSeeAlso )
 
       IF nPos > 0
@@ -568,13 +733,19 @@ RETURN nil
 
 FUNCTION ProcStatusRTF( nWriteHandle, cBuffer )
    IF LEN( ALLTRIM(cBuffer) ) >1
-      nWriteHandle:WritePar( cBuffer ):EndPar()
+      nWriteHandle:WritePar( cBuffer ) //:endpar()
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
-      nWriteHandle:WritePar( "   Ready" ):EndPar()
+      nWriteHandle:WritePar( "      Ready" ) //:endpar()
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
-      nWriteHandle:WritePar( "   Started" ):EndPar()
+      nWriteHandle:WritePar( "      Started" ) //:endpar()
    ELSE
-      nWriteHandle:WritePar( "   Not Started" ):EndPar()
+      nWriteHandle:WritePar( "      Not Started" ) //:endpar()
    ENDIF
 RETURN nil
 
+func filesize(cfile)
+  
+  nretval := fseek(cfile,0,2)
+  
+
+return nretval

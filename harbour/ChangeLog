@@ -1,3 +1,22 @@
+20000301-14:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+   *doc/en/ARRAY.TXT
+      *added Copyright header
+      *small changes to the docs
+   *doc/en/FILE.TXT
+      *small changes to the docs
+   *source/tools/rtf.prg
+   *source/tools/os2.prg
+   *source/tools/html.prg
+      *Some changes to generate a better output
+   *utils/hbdoc/hbdoc.prg
+      *Changes to reflect the new file outputs
+   *utils/hbdoc/genrtf.prg
+   *utils/hbdoc/genhtm.prg
+   *utils/hbdoc/genos2.prg
+      *Changes to reflect the changes of the classes
+   *utils/hbdoc/hrb.rsp
+   *utils/hbdoc/hrbtools.rsp
+      *Change to use the new docs dir
 20000301-14:34 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/console.c
      source/rtl/oldclear.c

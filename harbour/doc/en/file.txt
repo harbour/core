@@ -51,7 +51,7 @@
  *   accessibility of the file in a network environment.
  *
  *  $RETURNS$
- *      FOPEN() returns a DOS file handle
+ *      <nHandle> a DOS file handle
  *  $DESCRIPTION$
  *      This function opens a file expressed as <cFile> and returns a DOS
  *      file handle to be used with other low-level file functions.The
@@ -165,7 +165,7 @@
  *      <cBufferVar>  Character expression passed by reference
  *      <nBytes>      Number of bytes to read.
  *  $RETURNS$
- *      FREAD() returns the number of bytes successfyly read from the file
+ *      <nBytes> the number of bytes successfyly read from the file
  *      <nHandle>
  *  $DESCRIPTION$
  *      This function reads the characters from a DOS file whose file handle
@@ -219,7 +219,7 @@
  *     <cBuffer>  Character expression to be written.
  *     <nBytes>   The number of bytes to write.
  *  $RETURNS$
- *      FWRITE() returns the number of bytes successfully written.
+ *      <nBytesWritten> the number of bytes successfully written.
  *  $DESCRIPTION$
  *      This function writes the contents of <cBuffer> to the file designa-
  *      ted by its file handle <nHandle>. If used, <nBytes> is the number of
@@ -411,7 +411,7 @@
  *     <cOldFile> Old filenarne to he changed
  *     <cNewFile> New filename
  *  $RETURNS$
- *     FRENAME() returns If sucessful, a 0 will he returned otherwise,
+ *     <nSuccess> If sucessful, a 0 will he returned otherwise,
  *     a -1 will be returned.
  *  $DESCRIPTION$
  *      This function renames the specified file <cOldFile> to <cNewFile>.
@@ -463,7 +463,7 @@
  *     <nOffset> The number of bytes to move.
  *     <nOrigin> The relative position in the file.
  *  $RETURNS$
- *      FSEEK() return the current position relative to begin-of-file
+ *      <nPosition> the current position relative to begin-of-file
  *  $DESCRIPTION$
  *      This function sets the file pointer in the file whose DOS file
  *      handle is <nHandle> and moves the file pointer by <expN2> bytes
@@ -531,7 +531,8 @@
  *  $ARGUMENTS$
  *      <cFileSpec> Dos Skeleton or file name to find.
  *  $RETURNS$
- *      FILE() return a logical true (.T.) or logical false (.F.).
+ *      <lExists> a logical true (.T.) if the file exists or logical
+ *      false (.F.).
  *  $DESCRIPTION$
  *      This function return a logical true (.T.) if the given filename
  *      <cFileSpec> exist.
@@ -571,7 +572,7 @@
  *
  *      <nBytes>  Number of bytes to read.
  *  $RETURNS$
- *      FREADSTR() return an characted expression
+ *      <cString> an characted expression
  *  $DESCRIPTION$
  *      This function returns a character string of <nBytes> bytes from a
  *      file whose DOS file handle is <nHandle>.

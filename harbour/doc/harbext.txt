@@ -63,6 +63,6 @@
  *  Could affect Adir() and Dir if they were modified to take advantage
  *  of it - currently, they will return long names if the os supports it.
  *
- **  $END$
+ *  $END$
  */
 

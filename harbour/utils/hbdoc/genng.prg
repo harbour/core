@@ -468,7 +468,7 @@ FUNCTION ProcessiNg()
                      IF !EMPTY( cBuffer )
                         oNgi:WriteParBold( "Status" )
                      ENDIF
-                     ProcStatusWww( oNgi, cBuffer )
+                     ProcStatusNg( oNgi, cBuffer )
 
                   ELSE
 
@@ -727,3 +727,19 @@ FUNCTION ProcNgiAlso2( cSeealso )
       ENDIF
    NEXT
 RETURN aAlso
+
+FUNCTION ProcStatusng( nWriteHandle, cBuffer )
+   IF LEN( ALLTRIM( cBuffer ) ) >1
+      nWriteHandle:WritePar( cBuffer)
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
+      nWriteHandle:WritePar( "   Ready" )
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
+      nWriteHandle:WritePar( "   Started" )
+   ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "C"
+      nWriteHandle:WritePar( "   Clipper" )
+   ELSE
+      nWriteHandle:WritePar( "   Not Started" )
+   ENDIF
+
+RETURN nil
+

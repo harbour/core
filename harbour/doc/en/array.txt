@@ -9,6 +9,9 @@
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: ASORT()
  *
+ * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: ARRAY(),AADD(),ACLONE(),ACOPY(),ASIZE()
+ *    ATAIL(),AINS(),ADEL(),AFILL(),ASCAN(),AEVAL()
  * See doc/license.txt for licensing terms.
  *
  */
@@ -25,7 +28,7 @@
  *  $ARGUMENTS$
  *      <nElements> is the number of elements in the specified dimension.
  *  $RETURNS$
- *      ARRAY() returns an array of specified dimensions.
+ *      <aArray> an array of specified dimensions.
  *  $DESCRIPTION$
  *      This function returns an uninitialized array with the length of
  *      <nElements>. Nested arrays are uninitialized within the same array
@@ -69,8 +72,8 @@
  *
  *      <xValue> Element to add to array <aArray>
  *  $RETURNS$
- *      The value of <xValue> if specified, otherwise this function
- *      returns a NIL value.
+ *      <Value> if specified <xValue>,<xValue> will return , otherwise
+ *      this function  returns a NIL value.
  *  $DESCRIPTION$
  *      This function dynamically increases the length of the array
  *      named <aArray> by one element and stores the value of <xValue> to
@@ -106,7 +109,7 @@
  *
  *      <nLen> Numeric value representing the new size of <aArray>
  *  $RETURNS$
- *      ASIZE() returns an array pointer reference to <aTarget>.
+ *      <aTarget> an array pointer reference to <aTarget>.
  *  $DESCRIPTION$
  *      This function will dynamically increase or decrease the size
  *      of <aArray> by adjusting the length of the array to <nLen> subscript
@@ -143,7 +146,7 @@
  *  $ARGUMENTS$
  *      <aArray> is the array.
  *  $RETURNS$
- *      Atail() return the expression of the last element in the array.
+ *      <Element> the expression of the last element in the array.
  *  $DESCRIPTION$
  *      This function return the value of the last element in the array named
  *      <aArray>. This function does not alter the size of the array or any of
@@ -176,7 +179,7 @@
  *
  *      <nPos> Subscript position in <aArray>
  *  $RETURNS$
- *      AINS() returns a array pointer reference to <aTarget>.
+ *      <aTarget> an array pointer reference. 
  *  $DESCRIPTION$
  *      This function inserts a NIL value in the array named <aArray>
  *      at the <nPos>th position.
@@ -215,7 +218,7 @@
  *
  *      <nPos>   Subscript of the element to be removed.
  *  $RETURNS$
- *      ADEL() Returns an array pointer reference to <aTarget>.
+ *      <aTarget> an array pointer reference.
  *  $DESCRIPTION$
  *      This function deletes the element found at <nPos> subscript
  *      position in the array <aArray>. All elements in the array
@@ -259,7 +262,7 @@
  *
  *      <nCount> Number of subscript to be filled
  *  $RETURNS$
- *      AFILL() returns an array pointer  to <aTarget>.
+ *      <aTarget> an array pointer.
  *  $DESCRIPTION$
  *      This function will fill each element of an array named <aArray> with
  *      the value <xValue>. If specified, <nStart> denotes the beginning
@@ -360,7 +363,7 @@
  *
  *      <nCount> The number of elements to process.
  *  $RETURNS$
- *      AEVAL() returns an array pointer reference.
+ *      <aArray> an array pointer reference.
  *  $DESCRIPTION$
  *      This function will evaluate and process the subscript elements
  *      in <aArray>. A code block passed as <bBlock> defines the
@@ -410,7 +413,7 @@
  *      <nTargetPos> the starting subscript position in <aTarget> to copy
  *      elements to.
  *  $RETURNS$
- *      ACOPY() returns an array pointer reference
+ *      <aTarget> an array pointer reference
  *  $DESCRIPTION$
  *      This function copies array elements from <aSource> to <aTarget>.
  *      <nStart> is the beginning element to be copied from <aSource>; the
@@ -459,7 +462,7 @@
  *  $ARGUMENTS$
  *      <aSource> Name of the array to be cloned.
  *  $RETURNS$
- *      ACLONE() A new array pointer reference complete with nested array
+ *      <aDuplicate> A new array pointer reference complete with nested array
  *      values.
  *  $DESCRIPTION$
  *      This function makes a complete copy of the array expressed as
@@ -508,7 +511,7 @@
  *      {| x, y | x < y }. The code block should accept two parameters and
  *      must return .T. if the sort is in order, .F. if not.
  *  $RETURNS$
- *      ASORT() return reference to the now sorted <aArray> or NIL if the
+ *      <aArray> reference to the now sorted <aArray> or NIL if the
  *      passed <aArray> is not an array.
  *  $DESCRIPTION$
  *      ASORT() sort all or part of a given array. If <bSort> is omitted,

@@ -141,7 +141,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  LOCAL variables:
    // NG/EH input
 
-   LOCAL aExtensions := { "*.prg", "*.c", "*.asm", "*.ch" , "*.txt" }
+   LOCAL aExtensions := { "*.ch","*.prg", "*.c", "*.asm" , "*.txt" }
    LOCAL i
    LOCAL j
    LOCAL nItem,nHpj,nPos
@@ -419,47 +419,21 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lRtf
       nHpj := FCREATE( 'HARBOUR.HPJ' )
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
-
-      FWRITE( nHpj, 'COMPRESS=HIGH' + CRLF )
-
+      FWRITE(nHpj, 'HCW=1'+CRLF)
+      FWRITE( nHpj, 'COMPRESS=60 Hall Zeck' + CRLF )
+      FWRITE( nHpj, 'LCID=0x416 0x0 0x0 ;Português (brasileiro)'+CRLF)
       FWRITE( nHpj, 'REPORT=Yes' + CRLF )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
       FWRITE( nHpj, 'TITLE=Harbour Winhelp' + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
       FWRITE( nHpj, 'HLP=.\harbour.hlp' + CRLF )
       FWRITE( nHpj, 'ROOT=' + CURDIR() + "\RTF" + CRLF )
+      FWRITE( nHpj, 'CNT=.\Harbour.cnt'+CRLF)
       FWRITE( nHpj, '[FILES]' + CRLF )
-      FOR i := 1 TO LEN( aDocInfo )
-
-         //  Find match
-
-         nItem := 1
-         IF nItem > 0
-
-            IF i = 1 .OR. .NOT. ( ALLTRIM( aDocInfo[ i - 1, 1 ] ) == ALLTRIM( aDocInfo[ i, 1 ] ) )
-               //  Make the first copy
-
-               FWRITE( nHpj, ALLTRIM( aDocInfo[ i, 4 ] ) + CRLF )
-
-            ELSE
-               //  This may be slow but I don't have to worry about line length
-               FWRITE( nHpj, ALLTRIM( aDocInfo[ i, 4 ] ) + CRLF )
-            ENDIF
-            aLinkInfo[ nItem, 3 ] = .T.
-         ELSE
-            //  Write the error message
-            SET ALTERNATE TO
-            SET ALTERNATE OFF
-            SET CONSOLE ON
-            write_error( "Category not found: " + aDocInfo[ i, 1 ],,,, aDocInfo[ i, 4 ] )
-            @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]
-            SET ALTERNATE TO "assembl.bat" ADDITIVE
-            SET ALTERNATE ON
-            SET CONSOLE OFF
-         ENDIF
-
-      NEXT
+      FWRITE( nHpj, "harbour.rtf"+CRLF)
+      FWRITE( nHpj, '[CONFIG]'+CRLF+'contents()'+CRLF+'prev()'+CRLF+'next()'+CRLF+'BrowseButtons()'+CRLF)
+      FWRITE( nHpj, '[WINDOWS]'+CRLF+'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f3'+CRLF+'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f3'+CRLF)
+      FCLOSE( nHpj )
    ELSEIF lWWW
       oHtm := THTML():New( "htm\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
@@ -502,7 +476,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       oHtm:WriteText("<ul>")
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
-         IF AT( "()", cTemp ) == 0 .OR. UPPER(Left(ctemp,4)) =="BASE" .OR. UPPER(LEFT(cTemp,4))=="TERM" .OR. UPPER(LEFT(cTemp,5))=="TOOLS"
+         IF AT( "()", cTemp ) == 0 .And. UPPER(Left(ctemp,4)) =="BASE" .OR. UPPER(LEFT(cTemp,4))=="TERM" .OR. UPPER(LEFT(cTemp,5))=="TOOLS"
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT

@@ -34,9 +34,9 @@
  */
 
 #include 'hbclass.ch'
-
+#include 'common.ch'
 #define CRLF HB_OSNewLine()
-
+Static nX:=0
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Class THTML
@@ -58,13 +58,16 @@ CLASS THTML
 ENDCLASS
 
 METHOD New( cFile ) CLASS THTML
+   If Nx >0
+      FCLOSE(NX)
+   ENDIF
 
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
-
-   FWRITE( Self:nHandle, "<HEAD>" + CRLF )
+         nX := Self:nHandle
+   FWRITE( Self:nHandle, "<BODY>" + CRLF )
 
 RETURN Self
 
@@ -87,11 +90,20 @@ METHOD WriteText( cPar ) CLASS THTML
 
 RETURN Self
 
-METHOD WriteParBold( cPar ) CLASS THTML
+METHOD WriteParBold( cPar,lEndDl,lPar ) CLASS THTML
+   DEFAULT lEnddl to .T.
+   DEFAULT lPar to .T.
+   If lEndDl .and. lPar
+     FWRITE( Self:nHandle,"</P></dd>"+CRLF+ "</DL>"+CRLF+"<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
+   ELSEif !lPar .and. !lEnddl
+     FWRITE( Self:nHandle,'<DL>'+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
+   ELSEif !lPar .and. lEnddl
+     FWRITE( Self:nHandle,"</PRE></dd>"+CRLF+"</DL>"+CRLF+ "<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
+   ELSEif lPar .and. !lEnddl
+     FWRITE( Self:nHandle,"</P></dd>"+CRLF+"<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
 
-   FWRITE( Self:nHandle, "</DL>"+CRLF+"<DL>"+CRLF+"<dt><b>" + Alltrim(cPar) + '</b></dt>' + CRLF )
-
-RETURN Self
+   ENDIF
+RETURN  Self
 
 METHOD CLOSE() CLASS THTML
 
@@ -117,6 +129,7 @@ METHOD WriteLink( cLink ,cName ) CLASS THTML
    ENDIF
 
    FWRITE( Self:nHandle, "<LI><a href=" + Lower(cTemp) + ">" + cLink + "</a></LI>" + CRLF )
+
 
 RETURN Self
 

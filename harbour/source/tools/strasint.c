@@ -31,3 +31,5 @@ int _GT_Internal_StringAsInt(char *String, int Start, int End)
      }
    return(Value);
 }
+\page
+}

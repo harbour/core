@@ -36,7 +36,7 @@
 #define CRLF HB_OSNewLine()
 
 #include 'hbclass.ch'
-
+#include 'common.ch'
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Class TRTF
@@ -50,11 +50,16 @@ CLASS TRTF
    METHOD WriteHeader()
    METHOD New( cFile )
    METHOD WritePar( cPar )
+   METHOD WriteParText( cPar )
    METHOD WriteLink( clink )
+   METHOD WriteJumpLink( clink )
    METHOD Close()
-   METHOD WriteParBold( cPar )
+   METHOD WriteParBold( cPar ,lCenter)
+   METHOD WriteParBoldText( cPar ,cText)
    METHOD WriteTitle( cTitle, cTopic )
+   METHOD WriteJumpTitle( cTitle, cTopic )
    METHOD EndPar()
+   METHOD EndPage()
 ENDCLASS
 
 METHOD NEW( cFile ) CLASS TRTF
@@ -66,7 +71,7 @@ RETURN Self
 
 METHOD WriteHeader() CLASS TRTF
 
-   LOCAL cHeader := '{\rtf1\ansi\pard\plain\fs20' + CRLF + ;
+   LOCAL cHeader := '{\rtf1\ansi\pard\fs20' + CRLF + ;
       '\deff5{\fonttbl' + CRLF + ;
       '{\f0\froman Tms Rmn;}' + CRLF + ;
       '{\f1\fdecor Symbol;}' + CRLF + ;
@@ -112,18 +117,36 @@ RETURN Self
 METHOD WritePar( cPar ) CLASS TRTF
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle, '\pard{\cf1\fs30 ' + HB_OEMTOANSI("    ")+ HB_OEMTOANSI(cPar ))
+   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20' + HB_OEMTOANSI(cPar )+CRLF)
 RETURN Self
-
+METHOD WriteParText( cPar ) CLASS TRTF
+   cPar:=StrTran(cPar,"{","\{")
+   cPar:=StrTran(cPar,"}","\}")
+   FWRITE( Self:nHandle,  HB_OEMTOANSI(cPar )+CRLF)
+RETURN Self
 METHOD EndPar() CLASS TRTF
-   FWRITE( Self:nHandle, ' }\par' + CRLF )
+   FWRITE( Self:nHandle, '\par' + CRLF )
 RETURN Self
 
-METHOD WriteParBold( cPar ) CLASS TRTF
+METHOD WriteParBold( cPar,lCenter ) CLASS TRTF
+   DEFAULT lCenter to .F.
+   cPar:=StrTran(cPar,"{","\{")
+   cPar:=StrTran(cPar,"}","\}")
+   if lCenter
+       FWRITE( Self:nHandle, '\par \pard\qc\cf1\f6\fs30\i\b ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
+   else
+       FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs30\i\b ' +  ALLTRIM(HB_OEMTOANSI( cPar ))  + CRLF )
+   Endif
+RETURN Self
+
+METHOD WriteParBoldText( cPar,cText ) CLASS TRTF
 
    cPar:=StrTran(cPar,"{","\{")
    cPar:=StrTran(cPar,"}","\}")
-   FWRITE( Self:nHandle, '\pard{\plain\cf1\f2\fs30\i\b\qc ' +  ALLTRIM(HB_OEMTOANSI( cPar )) + ' }\par' + CRLF )
+   cText:=StrTran(cText,"{","\{")
+   cText:=StrTran(cText,"}","\}")
+
+   FWRITE( Self:nHandle, '\par \pard\cf1\f6\fs20\i\b       ' +  ALLTRIM(HB_OEMTOANSI( cPar )) + ' \b\cf1\f6\fs20\i ' +ALLTRIM(HB_OEMTOANSI(cText)) + CRLF )
 RETURN Self
 
 METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
@@ -143,10 +166,37 @@ METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
 
    cTopic := ALLTRIM( HB_OEMTOANSI(cTopic ))
 
-   cWrite := '{\f2' + CRLF + ;
-             '  #{\footnote \pard\plain \fs20 # ' + "IDH_"+cTemp + ' }' + CRLF + ;
-             '  ${\footnote \pard\plain \fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
-             '  K{\footnote \pard\plain \fs20 K ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
+   cWrite := '{\f6' + CRLF + ;
+             '  #{\footnote \pard\fs20 # ' + "IDH_"+cTemp + ' }' + CRLF + ;
+             '  ${\footnote \pard\fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
+             '  K{\footnote \pard\fs20 K ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
+             '}' + CRLF
+
+   FWRITE( Self:nHandle, cWrite )
+
+   FWRITE( Self:nHandle, '\pard\qc\cf1\f6\fs30\i\b ' +  ALLTRIM(HB_OEMTOANSI( cTopic )) +  CRLF )
+RETURN Self
+
+METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TRTF
+
+   LOCAL cTemp
+   LOCAL nPos
+   LOCAL cWrite
+
+   nPos := AT( "()", cTitle )
+
+   IF nPos > 0
+      cTemp := ALLTRIM( HB_OEMTOANSI(STRTRAN( cTitle, "()", "xx" ) ))
+   ELSE
+      cTemp := HB_OEMTOANSI(ALLTRIM( cTitle ))
+      cTemp :=STRTRAN( cTemp,"@", "x" )
+   ENDIF
+
+   cTopic := ALLTRIM( HB_OEMTOANSI(cTopic ))
+
+   cWrite := '{\f6' + CRLF + ;
+             '  #{\footnote \pard\fs20 # ' + "IDH_"+cTemp + ' }' + CRLF + ;
+             '  ${\footnote \pard\fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
              '}' + CRLF
 
    FWRITE( Self:nHandle, cWrite )
@@ -154,12 +204,14 @@ METHOD WriteTitle( cTitle, cTopic ) CLASS TRTF
    Self:WriteParBold( cTopic )
 
 RETURN Self
+METHOD EndPage() CLASS TRTF
+   FWRITE( Self:nHandle,"\par "+CRLF+ '\page' + CRLF )
+Return Self
 
 METHOD CLOSE() CLASS TRTF
-
    FWRITE( Self:nHandle, '\page' + CRLF )
 
-   FWRITE( Self:nHandle, '}' + CRLF )
+//   FWRITE( Self:nHandle, '}' + CRLF )
 
    FCLOSE( Self:nHandle )
 
@@ -167,7 +219,12 @@ RETURN Self
 
 METHOD WriteLink( cLink ) CLASS TRTF
 
-   FWRITE( Self:nHandle, '\pard{\cf1\fs30 {\f2\uldb ' + ALLTRIM( HB_OEMTOANSI(cLink) ) + '}{\v\f2 ' + "IDH_"+IF(AT( "()",cLink)>0 , ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "()", "xx" ) )),ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "@", "x" )) )) + '} }\par' + CRLF )
+   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb '+ ALLTRIM( HB_OEMTOANSI(cLink) ) + '}{\v\f6 ' + "IDH_"+IF(AT( "()",cLink)>0 , ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "()", "xx" ) )),ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "@", "x" )) )) + '}' + CRLF )
+
+RETURN Self
+METHOD WriteJumpLink( cLink,cName,cText ) CLASS TRTF
+
+   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\ul '+ ALLTRIM( HB_OEMTOANSI(cName) ) + '}{\v\f6 ' + "IDH_"+IF(AT( "()",cLink)>0 , ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "()", "xx" ) )),ALLTRIM( HB_OEMTOANSI(STRTRAN( cLink, "@", "x" )) )) + '}'+cText+  CRLF )
 
 RETURN Self
 
