@@ -1,3 +1,8 @@
+2000-09-19 10:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * config/c.cf
+   * source/compiler/makefile.
+     * Modified to use harbour.sly rather than harbour.y when using SimpLex.
+
 2000-09-18 09:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
    * source/compiler/harbour.sly
