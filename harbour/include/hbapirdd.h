@@ -472,6 +472,7 @@ typedef struct _DBRELINFO
 {
    PHB_ITEM           itmCobExpr;   /* Block representation of the relational SEEK key */
    PHB_ITEM           abKey;        /* String representation of the relational SEEK key */
+   BOOL               isScoped;     /* Is this relation scoped */
    struct _AREA      *lpaParent;    /* The parent of this relation */
    struct _AREA      *lpaChild;     /* The parents children */
    struct _DBRELINFO *lpdbriNext;   /* Next child or parent */

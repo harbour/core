@@ -1,3 +1,13 @@
+2000-08-13 15:58 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * contrib/rdd_ads/ads1.c
+   * include/hbapirdd.h
+   * source/rdd/dbcmd.c
+   * source/pp/pptable.c
+     Scoped relations implemented in RDD ADS. Added extra parameter to
+     dbSetRelation() - forth, it is .T., in case of using scoped relation.
+     Changed syntax of SET RELATION command, it is now:
+      SET RELATION [ADDITIVE] [SCOPED] TO ... INTO ...
+
 2000-08-13 06:55 GMT + 1 Antonio Linares <alinares@fivetech.com>
    * source/vm/mainwin.c
      Enhanced so it now process command line arguments.

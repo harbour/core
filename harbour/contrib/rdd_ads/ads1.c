@@ -909,7 +909,11 @@ static ERRCODE adssetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
       return FAILURE;
    if( !lpdbRelations->abKey )
       return FAILURE;
-   ulRetVal = AdsSetRelation( pArea->hTable, hIndex,
+   if( lpdbRelations->isScoped )
+      ulRetVal = AdsSetScopedRelation( pArea->hTable, hIndex,
+          (UNSIGNED8*) hb_itemGetCPtr( lpdbRelations->abKey ) );
+   else
+      ulRetVal = AdsSetRelation( pArea->hTable, hIndex,
           (UNSIGNED8*) hb_itemGetCPtr( lpdbRelations->abKey ) );
    if ( ulRetVal != AE_SUCCESS )
       return FAILURE;
