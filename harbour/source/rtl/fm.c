@@ -57,7 +57,7 @@
          about several statistical data about memory management, it will show
          these on exit if memory seem to have leaked.
          This should be normally turned off in a final release */
-//#define HB_FM_STATISTICS
+#define HB_FM_STATISTICS
 
 /* NOTE: The following #include "hbwinapi.h" must
          be ahead of any other #include statements! */
