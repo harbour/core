@@ -203,16 +203,19 @@ int hb_gt_Init_Terminal( int phase )
    struct termios newTTY;
    unsigned char *p;
    int ret = 0;
+   char * tmp;
 
    /* first time init phase - we don't want this after
       return from system command ( see run.c )      */
    if( phase == 0 )
    {
       /* an uncertain way to check if we run under linux console */
-      s_linuxConsole = ( ! strncmp( getenv( "TERM" ), "linux", 5 ) );
+      s_linuxConsole = ( ! strncmp( ( tmp = hb_getenv( "TERM" ) ), "linux", 5 ) );
+      hb_xfree( ( void * ) tmp );
 
       /* an uncertain way to check if we run under linux xterm */
-      s_underXTerm = ( strstr( getenv( "TERM" ), "xterm" ) != NULL );
+      s_underXTerm = ( strstr( ( tmp = hb_getenv( "TERM" ) ), "xterm" ) != NULL );
+      hb_xfree( ( void * ) tmp );
 
 #ifdef __linux__
       /* for Linux console */
@@ -221,12 +224,13 @@ int hb_gt_Init_Terminal( int phase )
 #endif
 
       /* get Dead key definition */
-      if( ( p = getenv( hb_DeadKeyEnvName ) ) )
+      if( ( p = hb_getenv( hb_DeadKeyEnvName ) ) && p[ 0 ] != '\0' )
       {
         int len = strlen( p );
         if( len > 0 )
            hb_DeadKey = ( int ) *p;
       }
+      hb_xfree( ( void * ) p );
 
       /* number of keys dealing with a Dead key */
       s_convKDeadKeys[ 0 ] = 0;

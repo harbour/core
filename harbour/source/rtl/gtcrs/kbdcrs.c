@@ -86,6 +86,7 @@ static int s_mouse_event_len;
 void hb_gt_keyboard_Init( void )
 {
    int i;
+   char * tmp;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Initialize_Keyboard()"));
 
@@ -93,7 +94,8 @@ void hb_gt_keyboard_Init( void )
    for( i = 0; i < HB_HASH_KEY; i++ )
       s_keymap_table[ i ] = NULL;
 
-   s_under_xterm = ( strncmp( getenv("TERM"), "xterm", 5 ) == 0 );
+   s_under_xterm = ( strncmp( ( tmp = hb_getenv("TERM") ), "xterm", 5 ) == 0 );
+   hb_xfree( ( void * ) tmp );
    if( s_under_xterm )
    {
       /* NOTE: under xterm \E[M is used as a leading code for a mouse event
@@ -387,4 +389,3 @@ static void hb_gt_Add_terminfo_keymap( int InkeyCode, char * capname )
    if( ( code != NULL ) && ( code != ( char * ) -1 ) )
       hb_gt_Add_keymap( InkeyCode, code );
 }
-

@@ -169,6 +169,7 @@ static void sigwinch_handler( int sig )
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    BOOL gt_Inited = FALSE;
+   char * tmp;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -207,10 +208,12 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
                s_sCursorStyle = SC_UNAVAIL;
 
             /* an uncertain way to check if we run under linux console */
-            s_linuxConsole = ( strncmp( getenv( "TERM" ), "linux", 5 ) == 0 );
+            s_linuxConsole = ( strncmp( ( tmp = hb_getenv( "TERM" ) ), "linux", 5 ) == 0 );
+            hb_xfree( ( void * ) tmp );
 
             /* an uncertain way to check if we run under xterm */
-            s_underXTerm = ( strstr( getenv( "TERM" ), "xterm" ) != NULL );
+            s_underXTerm = ( strstr( ( tmp = hb_getenv( "TERM" ) ), "xterm" ) != NULL );
+            hb_xfree( ( void * ) tmp );
 
             /* NOTE: this driver is implemented in a way that it is
                imposible to get intensity/blinking background mode.
@@ -652,7 +655,7 @@ void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight,
 
       /* this is probably not compatible with Clipper */
       hb_gt_DispBegin();
-      
+
       hb_gtGetPos( &usSaveRow, &usSaveCol );
 
       for( iCount = ( iRows >= 0 ? usTop : usBottom );
@@ -996,7 +999,7 @@ USHORT hb_gt_HorizLine( SHORT Row, SHORT Left, SHORT Right, BYTE byChar, BYTE by
          Left = 0;
       else if( Left >= hb_gt_GetScreenWidth() )
          Left = hb_gt_GetScreenWidth() - 1;
-   
+
       if( Right < 0 )
          Right = 0;
       else if( Right >= hb_gt_GetScreenWidth() )
@@ -1235,7 +1238,7 @@ static void hb_gt_build_conv_tabs()
    }
 
    /* init national chars */
-   if( ( p = getenv( hb_NationCharsEnvName ) ) )
+   if( ( p = hb_getenv( hb_NationCharsEnvName ) && p[ 0 ] != '\0' ) )
    {
       unsigned char Pos, Msk;
 
@@ -1269,6 +1272,7 @@ static void hb_gt_build_conv_tabs()
       ch=getc( stdin );
 */
    }
+   hb_xfree( ( void * ) p );
 }
 
 /* *********************************************************************** */

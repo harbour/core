@@ -126,7 +126,7 @@ static void hb_gt_terminal_Init( void )
    nodelay( stdscr, TRUE );
    keypad( stdscr, FALSE );
 
-   s_under_xterm = ( strncmp( getenv( "TERM" ), "xterm", 5 ) == 0 );
+   s_under_xterm = ( strncmp( hb_getenv( "TERM" ), "xterm", 5 ) == 0 );
    if( s_under_xterm )
    {
      /* Alternate characters set will be enabled only by request because
@@ -810,7 +810,7 @@ BOOL hb_gt_Resume()
    hb_gt_terminal_Init();
    hb_mouse_Init();
    hb_gt_keyboard_Init();
-   
+
    return TRUE;
 }
 

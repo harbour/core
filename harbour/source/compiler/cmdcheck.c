@@ -52,7 +52,7 @@
 extern int hb_pp_ParseDefine( char * );
 
 /* TODO: Add support for this compiler switches
-   -r -t || getenv( "TMP" )
+   -r -t || hb_getenv( "TMP" )
 */
 
 
@@ -384,12 +384,15 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
       /* NOTE: CLIPPERCMD enviroment variable
                is overriden if HARBOURCMD exists
       */
-      char * szStrEnv = getenv( "HARBOURCMD" );
+      char * szStrEnv = hb_getenv( "HARBOURCMD" );
 
-      if( ! szStrEnv )
-         szStrEnv = getenv( "CLIPPERCMD" );
+      if( szStrEnv[ 0 ] == '\0' )
+      {
+         hb_xfree( ( void * ) szStrEnv );
+         szStrEnv = hb_getenv( "CLIPPERCMD" );
+      }
 
-      if( szStrEnv )
+      if( szStrEnv[ 0 ] != '\0' )
       {
          char * szSwitch = strtok( szStrEnv, " " );
 
@@ -402,6 +405,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
             szSwitch = strtok( NULL, " " );
          }
       }
+      hb_xfree( ( void * ) szStrEnv );
    }
 }
 
@@ -774,12 +778,13 @@ void hb_compChkEnvironVar( char * szSwitch )
 
 void hb_compChkPaths( void )
 {
-   char * szInclude = getenv( "INCLUDE" );
+   char * szInclude = hb_getenv( "INCLUDE" );
 
    if( szInclude )
    {
       hb_fsAddSearchPath( szInclude, &hb_comp_pIncludePath );
    }
+   hb_xfree( ( void * ) szInclude );
 }
 
 static void hb_compChkDefineSwitch( char * pszSwitch )
@@ -822,12 +827,15 @@ void hb_compChkDefines( int iArg, char * Args[] )
    {
       /* NOTE: CLIPPERCMD enviroment variable is overriden
                if HARBOURCMD exists */
-      char * szStrEnv = getenv( "HARBOURCMD" );
+      char * szStrEnv = hb_getenv( "HARBOURCMD" );
 
-      if( ! szStrEnv )
-         szStrEnv = getenv( "CLIPPERCMD" );
+      if( szStrEnv[ 0 ] == '\0' )
+      {
+         hb_xfree( ( void * ) szStrEnv );
+         szStrEnv = hb_getenv( "CLIPPERCMD" );
+      }
 
-      if( szStrEnv )
+      if( szStrEnv[ 0 ] != '\0' )
       {
          char * szSwitch = strtok( szStrEnv, " " );
 
@@ -838,6 +846,7 @@ void hb_compChkDefines( int iArg, char * Args[] )
             szSwitch = strtok( NULL, " " );
          }
       }
+      hb_xfree( ( void * ) szStrEnv );
    }
 
    /* Check the command line options */

@@ -100,9 +100,10 @@ HB_FUNC( GETENV )
             hb_strupr( pszName );
          #endif
 
-         szValue = getenv( pszName );
+         szValue = hb_getenv( pszName );
 
          hb_retc( szValue ? szValue : ( ( ISCHAR( 2 ) ? hb_parc( 2 ) : "" ) ) );
+         hb_xfree( ( void * ) szValue );
       }
       else
          hb_retc( "" );
@@ -119,4 +120,3 @@ HB_FUNC( GETE )
 {
    HB_FUNCNAME( GETENV )();
 }
-

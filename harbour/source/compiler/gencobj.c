@@ -69,7 +69,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
 
    /* Set up things  */
 #if defined(__MSDOS__) || defined(__WIN32__) || defined(_Windows)
-   pszEnv = getenv( "PATH" );
+   pszEnv = hb_getenv( "PATH" );
 #elif defined( OS_UNIX_COMPATIBLE )
    pszEnv = szDefaultUnixPath;
 #endif
@@ -91,29 +91,29 @@ void hb_compGenCObj( PHB_FNAME pFileName )
          return;
 #endif
       }
-      
+
       while( fgets( szLine, HB_CFG_LINE_LEN, yyc ) != NULL )
       {
          ULONG ulLen;
          char * szStr = szLine;
          char * szToken;
-         
+
          /* Trim left */
          while( HB_ISSPACE( *szStr ) )
             szStr++;
-         
+
          /* Trim right */
          ulLen = strlen( szStr );
          while( ulLen && HB_ISSPACE( szStr[ ulLen - 1 ] ) )
             ulLen--;
-         
+
          szStr[ ulLen ] = '\0';
          /* TODO: Check for comments within macros, i.e: CC=bcc32 #comment */
-         
+
          if( szStr )
          {
             szToken = strtok( szStr, "=" );
-            
+
             if( szToken )
             {
                /* Checks compiler name */
@@ -123,7 +123,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
                   if( szToken ) /* If empty, preserve last value */
                      sprintf( szCompiler, "%s", szToken );
                }
-               
+
                /* Checks optional switches */
                if( szToken && ! hb_stricmp( szToken, "CFLAGS" ) )
                {
@@ -131,7 +131,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
                   if( szToken )
                      sprintf( szOptions, "%s", szToken );
                }
-               
+
                /* Wanna see C compiler output ? */
                if( szToken && ! hb_stricmp( szToken, "VERBOSE" ) )
                {
@@ -139,7 +139,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
                   if( szToken && ! hb_stricmp( szToken, "YES" ) )
                      bVerbose = TRUE;
                }
-               
+
                /* Delete intermediate C file ? */
                if( szToken && ! hb_stricmp( szToken, "DELTMP" ) )
                {
@@ -147,14 +147,19 @@ void hb_compGenCObj( PHB_FNAME pFileName )
                   if( szToken && ! hb_stricmp( szToken, "NO" ) )
                      bDelTmp = FALSE;
                }
-               
+
             }
          }
       }
-      
+      #ifndef OS_UNIX_COMPATIBLE
+         hb_xfree( ( void * ) pszEnv );
+      #endif
+
       fclose( yyc );
    }
-   
+
+
+
    if( ! hb_comp_bQuiet )
    {
       printf( "Building object module output for \'%s\'...", szFileName );

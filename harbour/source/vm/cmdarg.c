@@ -90,6 +90,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 {
    int i;
    char * pszEnvVar;
+   char * tmp;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargGet(%s, %d)", pszName, (int) bRetValue));
 
@@ -120,12 +121,16 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
    /* Check the environment variable */
 
-   pszEnvVar = getenv( "HARBOUR" );
+   pszEnvVar = hb_getenv( "HARBOUR" );
 
-   if( pszEnvVar == NULL )
-      pszEnvVar = getenv( "CLIPPER" );
+   if( pszEnvVar[ 0 ] == '\0' )
+   {
+      hb_xfree( ( void * ) pszEnvVar );
+      pszEnvVar = hb_getenv( "CLIPPER" );
+   }
+   tmp = pszEnvVar;
 
-   if( pszEnvVar != NULL )
+   if( pszEnvVar != NULL && pszEnvVar[ 0 ] != '\0' )
    {
       char * pszNext;
 
@@ -187,6 +192,8 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
          pszEnvVar = pszNext;
       }
    }
+
+   hb_xfree( ( void * ) tmp );
 
    return NULL;
 }
@@ -301,4 +308,3 @@ void hb_cmdargProcessVM( void )
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
 }
-

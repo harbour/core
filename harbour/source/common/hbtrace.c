@@ -111,7 +111,7 @@ int hb_tr_level( void )
 
       s_level = HB_TR_DEFAULT;
 
-      out = getenv( "HB_TR_OUTPUT" );
+      out = hb_getenv( "HB_TR_OUTPUT" );
       if( out != NULL && out[ 0 ] != '\0' )
       {
          s_fp = fopen( out, "w" );
@@ -122,7 +122,9 @@ int hb_tr_level( void )
       else
          s_fp = stderr;
 
-      env = getenv( "HB_TR_LEVEL" );
+      hb_xfree( ( void * ) out );
+
+      env = hb_getenv( "HB_TR_LEVEL" );
       if( env != NULL && env[ 0 ] != '\0' )
       {
          int i;
@@ -138,12 +140,15 @@ int hb_tr_level( void )
             }
          }
       }
+      hb_xfree( ( void * ) env );
 
-      env = getenv( "HB_TR_FLUSH" );
+      env = hb_getenv( "HB_TR_FLUSH" );
       if( env != NULL && env[ 0 ] != '\0' )
          s_flush = 1;
       else
          s_flush = 0;
+
+      hb_xfree( ( void * ) env );
 
    }
 
@@ -216,4 +221,3 @@ void hb_tr_trace( char * fmt, ... )
 
    }
 }
-
