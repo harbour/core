@@ -1,6 +1,7 @@
 #include "pcode.h"
 #include <stdio.h>
 
+
 /* #if DOS32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
                               0x68, 0x00, 0x00, 0x00, 0x00,
@@ -37,9 +38,14 @@ typedef struct
 #define SYM_FUNC    1              /* Defined function                  */
 #define SYM_EXTERN  2              /* Previously defined function       */
 
-PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
+#define SYM_NOT_FOUND 0xFFFFFFFF   /* Symbol not found. FindSymbol      */
 
-HARBOUR Runner();
+PASM_CALL CreateFun( PSYMBOL, PBYTE );   /* Create a dynamic function*/
+HARBOUR HB_RUN();
+void PushSymbol( PSYMBOL );
+void PushNil( void );
+void Do( WORD );
+ULONG FindSymbol( char *, PDYNFUNC, ULONG );
 
 #include "run_exp.h"
 /*
@@ -52,12 +58,9 @@ HARBOUR Runner();
  *
  */
 
-/* Same story.
-
-   All the function pointers of the internal functions
-   Including Runner itself, since the first symbol gets executed by Harbour ;-)
-*/
 #include <init.h>
+
+ULONG ulSymEntry = 0;                           /* Link enhancement         */
 
 /*
    Runner
@@ -68,7 +71,7 @@ HARBOUR Runner();
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HARBOUR Runner( void )
+HARBOUR HB_RUN( void )                          /* HB_Run( <cFile> )        */
 {
    char  cLong[4];                              /* Temporary long           */
    char *szFileName;
@@ -80,7 +83,7 @@ HARBOUR Runner( void )
    ULONG ulSymbols;                             /* Number of symbols        */
    ULONG ulFuncs;                               /* Number of functions      */
    ULONG ulSize;                                /* Size of function         */
-   ULONG ul, ul2;
+   ULONG ul, ulPos;
 
    BYTE  bCont;
 
@@ -101,7 +104,6 @@ HARBOUR Runner( void )
                      ( (BYTE) cLong[1] ) * 0x100   +
                      ( (BYTE) cLong[2] ) * 0x10000 +
                      ( (BYTE) cLong[3] ) * 0x1000000;
-         printf("\nNumber of symbols=%li\n", ulSymbols );
 
          pSymRead = _xgrab( ulSymbols * sizeof( SYMBOL ) );
 
@@ -122,7 +124,6 @@ HARBOUR Runner( void )
 
             pSymRead[ ul ].szName = (char *) _xgrab( szIdx - szTemp + 1 );
             strcpy( pSymRead[ ul ].szName, szTemp );
-            printf("\nName = %s.", pSymRead[ ul].szName );
 
             fread( szTemp, 2, 1, file );
 
@@ -136,7 +137,6 @@ HARBOUR Runner( void )
                    ( (BYTE) cLong[1] ) * 0x100   +
                    ( (BYTE) cLong[2] ) * 0x10000 +
                    ( (BYTE) cLong[3] ) * 0x1000000;
-         printf("\nNumber of functions=%li\n", ulFuncs );
 
          pPCode = ( PDYNFUNC ) _xgrab( ulFuncs * sizeof( DYNFUNC ) );
          for( ul=0; ul < ulFuncs; ul++)        /* Read symbols in .HRB     */
@@ -151,7 +151,7 @@ HARBOUR Runner( void )
                else
                   bCont = FALSE;
             } while( bCont );
-            printf("\nName = %s.", szTemp );
+            printf("\nLoading <%s>", szTemp );
             pPCode[ ul ].szName = (char *) _xgrab( szIdx - szTemp + 1);
             strcpy( pPCode[ ul ].szName, szTemp );
 
@@ -160,7 +160,6 @@ HARBOUR Runner( void )
                      ( (BYTE) cLong[1] ) * 0x100     +
                      ( (BYTE) cLong[2] ) * 0x10000   +
                      ( (BYTE) cLong[3] ) * 0x1000000 + 1;
-            printf("\nSize of function=%li\n", ulSize );
             pPCode[ ul ].pCode = _xgrab( ulSize );
             fread( pPCode[ ul ].pCode, 1, ulSize, file );
                                                 /* Read the block           */
@@ -170,15 +169,18 @@ HARBOUR Runner( void )
                                                 /* function                 */
          }
 
-         ul2 = 0;
-         for( ul = 0; ul < ulSymbols; ul++ )    /* Quick & Dirty linking    */
+         ulSymEntry = 0;
+         for( ul = 0; ul < ulSymbols; ul++ )    /* Linker                   */
          {
-
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_FUNC )
-            {                                   /* Internal function        */
-               pSymRead[ ul ].pFunPtr = pPCode[ ul2++ ].pAsmCall->pFunPtr;
+            {
+               ulPos = FindSymbol( pSymRead[ ul ].szName, pPCode, ulFuncs );
+               if( ulPos != SYM_NOT_FOUND )
+                  pSymRead[ ul ].pFunPtr = pPCode[ ulPos ].pAsmCall->pFunPtr;
+               else
+                  pSymRead[ ul ].pFunPtr = (void *) SYM_EXTERN;
             }
-            else if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
+            if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */
                pDynSym = FindDynSym( pSymRead[ ul ].szName );
                if( !pDynSym )
@@ -191,7 +193,33 @@ HARBOUR Runner( void )
             }
          }
 
-         pSymRead[ 0 ].pFunPtr();               /* Run the thing !!!        */
+         ProcessSymbols( pSymRead, ulSymbols );
+
+         for( ul = 0; ul < ulSymbols; ul++ )    /* Check INIT functions     */
+         {
+            if( pSymRead[ ul ].cScope & FS_INIT )
+            {
+                PushSymbol( pSymRead + ul );
+                PushNil();
+                Do( 0 );                        /* Run init function        */
+            }
+         }
+
+         PushSymbol( pSymRead );
+         PushNil();
+         Do( 0 );                               /* Run the thing !!!        */
+
+         for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
+         {
+            if( pSymRead[ ul ].cScope & FS_EXIT )
+            {
+                PushSymbol( pSymRead + ul );
+                PushNil();
+                Do( 0 );                        /* Run exit function        */
+                pSymRead[ ul ].cScope = pSymRead[ ul ].cScope & (~FS_EXIT);
+                      /* Exit function cannot be handled by main() in hvm.c */
+            }
+         }
 
          for( ul = 0; ul < ulFuncs; ul++ )
          {
@@ -216,6 +244,31 @@ HARBOUR Runner( void )
          printf( "\nCannot open %s\n", szFileName );
       }
    }
+}
+
+ULONG FindSymbol( char *szName, PDYNFUNC pPCode, ULONG ulLoaded )
+{
+   ULONG ulRet;
+   BYTE  bFound;
+
+   if( ( ulSymEntry < ulLoaded ) &&             /* Is it a normal list ?    */
+       !strcmp( szName, pPCode[ ulSymEntry ].szName ) )
+      ulRet = ulSymEntry++;
+   else
+   {
+      bFound = FALSE;
+      ulRet = 0;
+      while( !bFound && ulRet < ulLoaded )
+      {
+         if( !strcmp( szName, pPCode[ ulRet ].szName ) )
+            bFound = TRUE;
+         else
+            ulRet++;
+      }
+      if( !bFound )
+         ulRet = SYM_NOT_FOUND;
+   }
+   return( ulRet );
 }
 
 /* Patch an address of the dynamic function */
@@ -266,7 +319,7 @@ void PatchRelative( PBYTE pCode, ULONG ulOffset, void *Address, ULONG ulNext )
    be create dynamically at run-time.
 
    If a .PRG contains 10 functions, 10 dynamic functions are created which
-   are all the same :-) except for 1 pointer.
+   are all the same :-) except for 2 pointers.
 */
 PASM_CALL CreateFun( PSYMBOL pSymbols, PBYTE pCode )
 {

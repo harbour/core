@@ -3363,7 +3363,7 @@ char * strupr( char * p )
 
 void GenPortObj( char *szFileName, char *szName )
 {
-   PFUNCTION pFunc = functions.pFirst, pFTemp;
+   PFUNCTION pFunc = functions.pFirst;
    PCOMSYMBOL pSym = symbols.pFirst;
    WORD w, wLen, wSym, wVar;
    LONG lPCodePos;
@@ -3372,6 +3372,7 @@ void GenPortObj( char *szFileName, char *szName )
    char chr;
    FILE * yyc;             /* file handle for C output */
 
+   szName = szName;
    if( ! ( yyc = fopen( szFileName, "wb" ) ) )
    {
      printf( "Error opening file %s\n", szFileName );
@@ -3412,13 +3413,13 @@ void GenPortObj( char *szFileName, char *szName )
 
       /* specify the function address if it is a defined function or a
          external called function */
-      if( ( pFTemp = GetFunction( pSym->szName ) ) ) /* is it a defined function ? */
+      if( GetFunction( pSym->szName ) ) /* is it a defined function ? */
       {
          fputc( SYM_FUNC, yyc );
       }
       else
       {
-         if( ( pFTemp = GetFuncall( pSym->szName ) ) )
+         if( GetFuncall( pSym->szName ) )
          {
             fputc( SYM_EXTERN, yyc );
          }
