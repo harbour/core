@@ -1575,6 +1575,11 @@ static HB_GENC_FUNC( hb_p_sframe )
 
 static HB_GENC_FUNC( hb_p_statics )
 {
+   PFUNCTION pInitStatics = hb_comp_functions.pFirst;
+   PVAR pVar;
+   USHORT wVar = 0, i;
+   char chr;
+
    fprintf( cargo->yyc, "\tHB_P_STATICS, %i, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ],
@@ -1582,7 +1587,60 @@ static HB_GENC_FUNC( hb_p_statics )
             pFunc->pCode[ lPCodePos + 4 ] );
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* symbol (_INITSTATICS), %i statics */", pFunc->pCode[ lPCodePos + 3 ] + pFunc->pCode[ lPCodePos + 4 ] * 256 );
    fprintf( cargo->yyc, "\n" );
+
+   if( hb_comp_bDebugInfo )
+   {
+      if( pInitStatics->szName[0] == 0 ) /* is _INITSTATICS ? */
+      {
+         pVar = pInitStatics->pStatics; /* first static variable */
+
+         while( pVar )
+         {
+            fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i,",
+                     HB_LOBYTE( wVar + 1 ), HB_HIBYTE( wVar + 1 ) );
+
+            if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", pVar->szName );
+            fprintf( cargo->yyc, "\n" );
+
+            i = 0;
+
+            while( chr = pVar->szName[ i++ ] )
+               if( chr == '\'' || chr == '\\')
+                  fprintf( cargo->yyc, " \'\\%c\',", chr );
+               else
+                  fprintf( cargo->yyc, " \'%c\',", chr );
+
+            fprintf( cargo->yyc, " 0,\n" );
+            pVar = pVar->pNext;
+            wVar++;
+         }
+      }
+   }
+
    return 5;
+}
+
+static HB_GENC_FUNC( hb_p_staticname )
+{
+   ULONG ulStart = lPCodePos;
+
+   fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i,",
+            pFunc->pCode[ lPCodePos + 1 ],
+            pFunc->pCode[ lPCodePos + 2 ] );
+   if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 3 );
+   fprintf( cargo->yyc, "\n" );
+   lPCodePos += 3;
+   while( pFunc->pCode[ lPCodePos ] )
+   {
+      char chr = pFunc->pCode[ lPCodePos++ ];
+      if( chr == '\'' || chr == '\\')
+         fprintf( cargo->yyc, " \'\\%c\',", chr );
+      else
+         fprintf( cargo->yyc, " \'%c\',", chr );
+   }
+   fprintf( cargo->yyc, " 0,\n" );
+
+   return lPCodePos - ulStart + 1;
 }
 
 static HB_GENC_FUNC( hb_p_swapalias )
@@ -1758,6 +1816,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_seqrecover,
    hb_p_sframe,
    hb_p_statics,
+   hb_p_staticname,
    hb_p_swapalias,
    hb_p_true,
    hb_p_zero,
@@ -1811,4 +1870,3 @@ static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
    if( nChar != 0)
       fprintf( yyc, "\n" );
 }
-
