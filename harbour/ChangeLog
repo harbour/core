@@ -1,3 +1,7 @@
+19990723-06:39 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/transfrm.c
+     * changed GetDynSym to hb_GetDynSym (again)
+
 19990723-12:07 Antonio Linares <alinares@fivetech.com>
    * terminal.b32
      * Fixed for Win32 console mode Harbour apps
