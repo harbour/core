@@ -135,8 +135,13 @@ static int convert_open_flags( USHORT uiFlags )
 
    result_flags |= O_BINARY;
 
+#if defined(_MSC_VER)
+   if( uiFlags == 0 )
+      result_flags = O_RDONLY;
+#else
    if( uiFlags == 0 )
       result_flags |= O_RDONLY | SH_COMPAT;
+#endif
 
    /* read & write flags */
    if( uiFlags & FO_WRITE )
@@ -145,6 +150,7 @@ static int convert_open_flags( USHORT uiFlags )
    if( uiFlags & FO_READWRITE )
       result_flags |= O_RDWR;
 
+#if ! defined(_MSC_VER)
    /* shared flags */
    if( uiFlags & FO_EXCLUSIVE )
       result_flags |= SH_DENYRW;
@@ -160,6 +166,7 @@ static int convert_open_flags( USHORT uiFlags )
 
    if( uiFlags & FO_SHARED )
       result_flags |= SH_DENYNO;
+#endif
 
    return result_flags;
 }
@@ -218,8 +225,28 @@ FHANDLE hb_fsOpen   ( BYTE * pFilename, USHORT uiFlags )
 
    #if defined(_MSC_VER)
 
+      int iShare = -1;
+
+      if( uiFlags & FO_EXCLUSIVE )
+         iShare = _SH_DENYRW;
+
+      if( uiFlags & FO_DENYWRITE )
+         iShare = _SH_DENYWR;
+
+      if( uiFlags & FO_DENYREAD )
+         iShare = _SH_DENYRD;
+
+      if( uiFlags & FO_DENYNONE )
+         iShare = _SH_DENYNO;
+
+      if( uiFlags & FO_SHARED )
+         iShare = _SH_DENYNO;
+
       errno = 0;
-      hFileHandle = _open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
+      if( iShare )
+         hFileHandle = _sopen( ( char * ) pFilename, convert_open_flags( uiFlags ), iShare );
+      else
+         hFileHandle = _open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
       s_uiErrorLast = errno;
 
    #else

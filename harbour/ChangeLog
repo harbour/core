@@ -1,3 +1,7 @@
+19990826-03:25 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rtl/filesys.c
+     + Changed hb_fsOpen for support shared files (MSVC)
+
 19990825-23:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/compiler/harbour.y
