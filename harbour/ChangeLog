@@ -1,3 +1,7 @@
+19990712-13:56 Antonio Linares <alinares@fivetech.com>
+  * include\classes.ch
+    * Added support for CONSTRUCTOR and INLINE Methods
+
 19990712-10:52 Alexander Kresin
   * source\hbpp\hbpp.c
     * fixed some bugs of #translate implementation
@@ -15,12 +19,12 @@
 19990711-20:25 Ryszard Glab <rglab@imid.med.pl>
 * include/init.h
  * all functions and variables declared in this file have to be 'static'
- 
+
 * source/vm/initsymb.c
- * added again #ifdef HARBOUR_STRICT_ANSI_C to call functions for 
-   symbols table initialization only when strict ANSI C compiler 
-   is used. 
-   
+ * added again #ifdef HARBOUR_STRICT_ANSI_C to call functions for
+   symbols table initialization only when strict ANSI C compiler
+   is used.
+
 * include/extend.h
  + added HB_VALUE structure for storing memvars and detached locals
  + added hb_struMemvar used in HB_ITEM structure
@@ -54,7 +58,7 @@
 
 * source/rtl/Makefile
  + added memvars.c file
- 
+
 - tests/working/codebl2.c
  - removed this file because its code is now in codebl.prg file
 

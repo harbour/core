@@ -33,6 +33,12 @@
 #xcommand METHOD <MethodName>( [<params,...>] ) => ;
    oClass:AddMethod( <(MethodName)>, @<MethodName>() )
 
+#xcommand METHOD <MethodName>( [<params,...>] ) CONSTRUCTOR => ;
+   oClass:AddInline( <(MethodName)>, {|Self,<params>| <MethodName>(Self,<params>), Self } )
+
+#xcommand METHOD <MethodName>( [<params,...>] ) INLINE <Code,...> => ;
+   oClass:AddInline( <(MethodName)>, {|Self,<params>| <Code> } )
+
 #xcommand ENDCLASS => endif ;;
                       return oClass:Instance()
 
