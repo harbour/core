@@ -379,8 +379,8 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 #if defined(HB_OS_DOS)
 
    {
-
-      strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
+      ffind->szName[0] = '\0';
+      strncat( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
       ffind->size = info->entry.ff_fsize;
 
       raw_attr = info->entry.ff_attrib;
@@ -412,7 +412,8 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 
       stat( info->entry.achName, &sStat );
 
-      strncpy( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
+      ffind->szName[0] = '\0';
+      strncat( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
       ffind->size = sStat.st_size;
 
       raw_attr = info->entry.attrFile;
@@ -437,7 +438,8 @@ static void hb_fsFindFill( PHB_FFIND ffind )
 #elif defined(HB_OS_WIN_32)
 
    {
-      strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
+      ffind->szName[0] = '\0';
+      strncat( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
 
       if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
          ffind->size = 0;
@@ -487,7 +489,8 @@ static void hb_fsFindFill( PHB_FFIND ffind )
       stat( info->entry->d_name, &sStat );
 
 
-      strncpy( ffind->szName, info->entry->d_name, 256 );
+      ffind->szName[0] = '\0';
+      strncat( ffind->szName, info->entry->d_name, 256 );
 
       ffind->size = sStat.st_size;
 

@@ -1315,9 +1315,9 @@ static void hb_cdxTagEmptyIndex( LPCDXTAG pTag )
    pData.cdxu.External.RecNumBits = 24 - uiBitCount * 2;
    pData.cdxu.External.RecNumMask = hb_cdxMakeMask( pData.cdxu.External.RecNumBits );
    pData.cdxu.External.FreeSpace = CDX_EXTERNAL_SPACE;
-   pData.cdxu.External.DupCntBits = pData.cdxu.External.TrlCntBits = uiBitCount;
-   pData.cdxu.External.DupCntMask = hb_cdxMakeMask( pData.cdxu.External.DupCntBits );
-   pData.cdxu.External.TrlCntMask = hb_cdxMakeMask( pData.cdxu.External.TrlCntBits );
+   pData.cdxu.External.DupCntBits = pData.cdxu.External.TrlCntBits = (BYTE)uiBitCount;
+   pData.cdxu.External.DupCntMask = (BYTE)hb_cdxMakeMask( pData.cdxu.External.DupCntBits );
+   pData.cdxu.External.TrlCntMask = (BYTE)hb_cdxMakeMask( pData.cdxu.External.TrlCntBits );
 
    hb_cdxIndexPageWrite( pTag->pIndex, pTag->RootBlock, &pData, sizeof( CDXDATA ) );
 }
@@ -1645,9 +1645,9 @@ static void hb_cdxTagExtNodeWrite( LPCDXTAG pTag, LONG PN, LPCDXDATA pData,
       */
    }
    PIK->Space = CDX_EXTERNAL_SPACE;
-   PIK->DCBits = PIK->TCBits = uiBitCount;
-   PIK->DCMask = hb_cdxMakeMask( PIK->DCBits );
-   PIK->TCMask = hb_cdxMakeMask( PIK->TCBits );
+   PIK->DCBits = PIK->TCBits = (BYTE)uiBitCount;
+   PIK->DCMask = (BYTE)hb_cdxMakeMask( PIK->DCBits );
+   PIK->TCMask = (BYTE)hb_cdxMakeMask( PIK->TCBits );
    sr = cd = kcnt = 0;
    lm = sizeof( pData->cdxu.Internal.IntData ) / 2;
    q = NULL;
@@ -3158,7 +3158,7 @@ static void hb_cdxSortSwapRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn )
          hb_cdxSortSwapRecurseDict( pSort, pSort->WAdr->sortu.A.WordArray, WBgn );
       pSort->WAdr = hb_cdxSortLinkGet( pSort, WPtr );
    }
-   pSort->WPch[ 0 ] = WCnt;
+   pSort->WPch[ 0 ] = (BYTE)WCnt;
    if( pSort->WAdr->sortu.A.LevelLink != 0 &&
           SORT_GET_NUSE( pSort->WAdr->sortu.A.NUse) != SORT_STACK_OF_CHAR )
       hb_cdxSortSwapRecurseDict( pSort, pSort->WAdr->sortu.A.LevelLink, WCnt );
@@ -3518,7 +3518,7 @@ static void hb_cdxSortStuffKey( LPSORTINFO pSort, LPSORTDATA * wx, BOOL fTag )
       if( pSort->PriorPtr > 0 )
       {
          x = hb_cdxSortLinkGet( pSort, pSort->PriorPtr );
-         x->sortu.A.WordArray = p1;
+         x->sortu.A.WordArray = (USHORT)p1;
       }
       v = pSort->WPch[0] - pSort->WCur - 1;
       if( v > 0 )
@@ -3561,10 +3561,10 @@ static void hb_cdxSortGetNode( LPSORTINFO pSort, BYTE Character,
       hb_cdxSortLinkNew( pSort, &r );
       c = px->sortu.A.Character;
       qx = hb_cdxSortLinkGet( pSort, q );
-      qx->sortu.A.WordArray = r;
+      qx->sortu.A.WordArray = (USHORT)r;
       rx = hb_cdxSortLinkGet( pSort, r );
       rx->sortu.A.Character = c;
-      rx->sortu.A.WordArray = p;
+      rx->sortu.A.WordArray = (USHORT)p;
       px = hb_cdxSortLinkGet( pSort, p );
       px->sortu.A.Character = px->sortu.B.ChrStack[ 0 ];
       memmove( &px->sortu.B.ChrStack[ 0 ], &px->sortu.B.ChrStack[ 1 ], 3 );
@@ -3613,10 +3613,10 @@ static void hb_cdxSortGetNode( LPSORTINFO pSort, BYTE Character,
          hb_cdxSortLinkNew( pSort, &r );
          c = px->sortu.A.Character;
          qx = hb_cdxSortLinkGet( pSort, q );
-         qx->sortu.A.WordArray = r;
+         qx->sortu.A.WordArray = (USHORT)r;
          rx = hb_cdxSortLinkGet( pSort, r );
          rx->sortu.A.Character = c;
-         rx->sortu.A.WordArray = p;
+         rx->sortu.A.WordArray = (USHORT)p;
          px = hb_cdxSortLinkGet( pSort, p );
          px->sortu.A.Character = px->sortu.B.ChrStack[ 0 ];
          memmove( &px->sortu.B.ChrStack[ 0 ], &px->sortu.B.ChrStack[ 1 ], 3 );
@@ -3663,17 +3663,17 @@ static void hb_cdxSortGetNode( LPSORTINFO pSort, BYTE Character,
       {
          qx = hb_cdxSortLinkGet( pSort, q );
          if( q == pSort->PriorPtr )
-            qx->sortu.A.WordArray = r;
+            qx->sortu.A.WordArray = (USHORT)r;
          else
-            qx->sortu.A.LevelLink = r;
+            qx->sortu.A.LevelLink = (USHORT)r;
       }
       else
       {
          p = px->sortu.A.LevelLink;
-         px->sortu.A.LevelLink = r;
+         px->sortu.A.LevelLink = (USHORT)r;
       }
       rx = hb_cdxSortLinkGet( pSort, r );
-      rx->sortu.A.LevelLink = p;
+      rx->sortu.A.LevelLink = (USHORT)p;
       rx->sortu.A.Character = Character;
       if( fTag )
          rx->sortu.A.NUse |= SORT_NOT_KEY;
@@ -3736,7 +3736,7 @@ static void hb_cdxSortRecurseDict( LPSORTINFO pSort, LONG WPtr, LONG WBgn )
          hb_cdxSortRecurseDict( pSort, pSort->WAdr->sortu.A.WordArray, WBgn );
       pSort->WAdr = hb_cdxSortLinkGet( pSort, WPtr );
    }
-   pSort->WPch[ 0 ] = WCnt;
+   pSort->WPch[ 0 ] = (BYTE)WCnt;
    if( pSort->WAdr->sortu.A.LevelLink != 0 &&
           SORT_GET_NUSE( pSort->WAdr->sortu.A.NUse) != SORT_STACK_OF_CHAR )
       hb_cdxSortRecurseDict( pSort, pSort->WAdr->sortu.A.LevelLink, WCnt );
@@ -3802,11 +3802,11 @@ static void hb_cdxSortAddToNode( LPSORTINFO pSort, USHORT Lvl, LONG Tag,
          }
          pSort->NodeList[ 0 ]->cdxu.External.FreeSpace = CDX_EXTERNAL_SPACE;
          pSort->NodeList[ 0 ]->cdxu.External.DupCntBits =
-            pSort->NodeList[ 0 ]->cdxu.External.TrlCntBits = bitcnt;
+            pSort->NodeList[ 0 ]->cdxu.External.TrlCntBits = (BYTE)bitcnt;
          pSort->NodeList[ 0 ]->cdxu.External.DupCntMask =
-            hb_cdxMakeMask( pSort->NodeList[ 0 ]->cdxu.External.DupCntBits );
+            (BYTE)hb_cdxMakeMask( pSort->NodeList[ 0 ]->cdxu.External.DupCntBits );
          pSort->NodeList[ 0 ]->cdxu.External.TrlCntMask =
-            hb_cdxMakeMask( pSort->NodeList[ 0 ]->cdxu.External.TrlCntBits );
+            (BYTE)hb_cdxMakeMask( pSort->NodeList[ 0 ]->cdxu.External.TrlCntBits );
       }
       pSort->NodeList[ Lvl ]->Left_Ptr = -1;
       pSort->NodeList[ Lvl ]->Rght_Ptr = hb_cdxIndexGetAvailPage( pSort->CurTag->pIndex );
@@ -5311,7 +5311,7 @@ ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer )
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxSysName(%p, %p)", pArea, pBuffer));
    HB_SYMBOL_UNUSED( pArea );
 
-   strncpy( ( char * ) pBuffer, "DBFCDX", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+   strncpy( ( char * ) pBuffer, "DBFCDX", 7  /* HARBOUR_MAX_RDD_DRIVERNAME_LENGTH */ );
    return SUCCESS;
 }
 
@@ -6054,7 +6054,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
 
    hb_xfree( szFileName );
 
-   if ( strlen(( const char * ) pOrderInfo->atomBagName) > 0 )
+   if ( pOrderInfo->atomBagName && strlen(( const char * ) pOrderInfo->atomBagName) > 0 )
       hb_strncpyUpper( szTagName, ( const char * ) pOrderInfo->atomBagName, CDX_MAXTAGNAMELEN );
    uiCount = strlen( szTagName );
    while( uiCount > 0 && szTagName[ uiCount - 1 ] == ' ' )

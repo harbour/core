@@ -3009,7 +3009,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
              pArea->fFound = TRUE;
              return retvalue;
            }
-           strncpy( pKey2->key,pKey->item.asString.value,pTag->KeyLength );
+           strncpy( pKey2->key, pKey->item.asString.value, pTag->KeyLength );
            break;
         case HB_IT_INTEGER:
         case HB_IT_LONG:
@@ -3313,7 +3313,7 @@ static ERRCODE ntxSysName( NTXAREAP pArea, BYTE * pBuffer )
    HB_TRACE(HB_TR_DEBUG, ("ntxSysName(%p, %p)", pArea, pBuffer));
    HB_SYMBOL_UNUSED( pArea );
 
-   strncpy( ( char * ) pBuffer, "DBFNTX", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+   strncpy( ( char * ) pBuffer, "DBFNTX", 7 /* HARBOUR_MAX_RDD_DRIVERNAME_LENGTH */ );
    return SUCCESS;
 }
 
@@ -3876,7 +3876,8 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
       return FAILURE;
    }
    pIndex->IndexName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
-   strncpy( pIndex->IndexName, szFileName, _POSIX_PATH_MAX );
+   pIndex->IndexName[0] = '\0';
+   strncat( pIndex->IndexName, szFileName, _POSIX_PATH_MAX );
 
    if( pArea->lpNtxTag )
    {

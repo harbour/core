@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-21 12:30 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+  * source/rdd/dbfcdx/dbfcdx1.c
+    ! added some long needed typecasts.
+    ! corrected for index on/to without a tag
+  * source/rdd/dbfntx/dbfntx1.c
+  * source/rdd/dbfcdx/dbfcdx1.c
+  * source/common/hbffind.c
+  * source/common/hbfsapi.c
+    ! some strncpy changes.
+
 2002-10-21 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   + tests/vidtest.prg by Brian Dukes <bdukes@yellowthingy.co.uk>
   * source/rdd/dbcmd.c

@@ -57,17 +57,19 @@
 
 HB_FUNC( DEFPATH )
 {
-   char buffer[ _POSIX_PATH_MAX ];
+   char buffer[ _POSIX_PATH_MAX +1 ];
    char delimiter[ 2 ] = ":";
    int size = 0;
+
+   buffer[0] = '\0';
 
    if( hb_set.HB_SET_DEFAULT )
    {
       /* Leave enough space to append a path delimiter */
-      strncpy( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
-      size = sizeof( buffer ) - 2;
+      strncat( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
+      size = sizeof( buffer ) - 2; /* ? */
+      buffer[ size ] = '\0';
    }
-   buffer[ size ] = '\0';
    size = strlen( buffer );
 
    HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));

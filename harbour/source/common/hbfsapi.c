@@ -136,7 +136,8 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
    if( pszAt )
    {
       pFileName->szPath = pszPos;
-      strncpy( pszPos, pszFileName, pszAt - pszFileName + 1 );
+      pszPos[0] = '\0';
+      strncat( pszPos, pszFileName, pszAt - pszFileName + 1 );
       pszPos += pszAt - pszFileName + 1;
       *pszPos++ = '\0';
       pszFileName = pszAt + 1;
@@ -152,7 +153,8 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
    if( pszAt && pszAt != pszFileName )
    {
       pFileName->szName = pszPos;
-      strncpy( pszPos, pszFileName, pszAt - pszFileName );
+      pszPos[0] = '\0';
+      strncat( pszPos, pszFileName, pszAt - pszFileName );
       pszPos += pszAt - pszFileName;
       *pszPos++ = '\0';
 
@@ -181,7 +183,8 @@ PHB_FNAME hb_fsFNameSplit( char * pszFileName )
    if( pFileName->szPath && ( pszAt = strchr( pFileName->szPath, ':' ) ) != NULL )
    {
       pFileName->szDrive = pszPos;
-      strncpy( pszPos, pFileName->szPath, pszAt - pFileName->szPath + 1 );
+      pszPos[0] = '\0';
+      strncat( pszPos, pFileName->szPath, pszAt - pFileName->szPath + 1 );
       pszPos += pszAt - pFileName->szPath + 1;
       *pszPos = '\0';
    }
