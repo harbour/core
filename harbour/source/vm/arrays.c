@@ -209,8 +209,10 @@ BOOL hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex )
 
          hb_itemClear( pBaseArray->pItems + ( ulIndex - 1 ) );
 
-         for( ulIndex--; ulIndex < ulLen; ulIndex++ )       /* move items */
+         for( ulIndex--; ulIndex < ulLen - 1; ulIndex++ )       /* move items */
+         {
             hb_itemCopy( pBaseArray->pItems + ulIndex, pBaseArray->pItems + ( ulIndex + 1 ) );
+         }
 
          hb_itemClear( pBaseArray->pItems + ( ulLen - 1 ) );
       }

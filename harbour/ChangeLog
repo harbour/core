@@ -1,3 +1,7 @@
+2001-06-24 11:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/arrays.c
+     ! Fixed but in hb_arrayDel() which caused a GPF by accessing an item beyond the array end.
+
 2001-06-23 21:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/rdd_ads/ads1.c
      - Removed 2 sets of parentheses in type casts where it was not needed.
