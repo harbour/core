@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 11:37 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/rtl/isprint.c
+     ! Fixed DJGPP warning for DOS branch.
+
+   * source/rtl/fstemp.c
+     ! One unused #include added. Well, it was used.
+
 2001-12-15 10:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbcolumn.prg

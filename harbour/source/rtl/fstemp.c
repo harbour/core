@@ -54,6 +54,8 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
+#include <errno.h>
+
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
 static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )

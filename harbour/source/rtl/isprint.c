@@ -108,6 +108,9 @@ HB_FUNC( ISPRINTER )
       /* TODO: Proper COM port checking */
       bIsPrinter = TRUE;
    }
+   else
+      bIsPrinter = FALSE;
+   
 
 #elif defined(HB_OS_WIN_32) && !defined(__RSXNT__)
 
