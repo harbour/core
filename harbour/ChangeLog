@@ -1,3 +1,7 @@
+19990801-21:58 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbcmd.c
+     Fixed a GPF with MSVC, thaks Paul
+
 19990801-21:40 GMT+1 Victor Szel <info@szelvesz.hu>
    ! source/compiler/harbour.y
      source/hbpp/hbpplib.c

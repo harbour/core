@@ -314,6 +314,7 @@ static RDDFUNCS defTable = { Bof,
 
 ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, PBYTE szDrvName )
 {
+   char * szSuperName;
    LPRDDNODE pRddNode;
    USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
@@ -322,13 +323,18 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
       return FAILURE;
 
    /* Copy the pSuperTable into pTable */
-   if( !szDrvName )
+   if( !szDrvName || !( uiCount = strlen( ( const char * ) szDrvName ) ) )
       memcpy( pTable, &defTable, sizeof( RDDFUNCS ) );
    else
    {
-      szDrvName = ( PBYTE ) hb_strUpper( ( char * ) szDrvName, strlen( ( const char * ) szDrvName ) );
-      if( !( pRddNode = hb_FindRddNode( (char *)szDrvName ) ) )
+      szSuperName = ( char * ) hb_xgrab( uiCount + 1 );
+      strcpy( szSuperName, ( char * ) szDrvName );
+      szSuperName = hb_strUpper( szSuperName, uiCount );
+      if( !( pRddNode = hb_FindRddNode( szSuperName ) ) )
+      {
+         hb_xfree( szSuperName );
          return FAILURE;
+      }
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
 
