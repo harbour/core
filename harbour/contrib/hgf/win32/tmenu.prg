@@ -51,13 +51,12 @@
  *
  */
 
-
 #include "hbclass.ch"
 
-CLASS TMenu
+CLASS TMenu FROM TPersistent
 
    DATA   nHandle
-   DATA   aItems
+   DATA   Items    PROPERTY
 
    METHOD New( oForm )      // Creates a new menu
    METHOD Add( oMenuItem )  // Adds a menuitem
@@ -67,18 +66,23 @@ ENDCLASS
 
 METHOD New( oForm ) CLASS TMenu
 
-   ::aItems  = {}
-   ::nHandle = WinCreateMenu( oForm:hWnd )
+   Super:New()
+
+   ::Items   = {}
+
+   if oForm != nil
+      ::nHandle = WinCreateMenu( oForm:hWnd )
+   endif
 
 return Self
 
 METHOD Add( oMenuItem ) CLASS TMenu
 
-   WinAddMenuItem( ::nHandle, oMenuItem:cCaption, Len( ::aItems ),;
-                   nil, oMenuItem:nId, oMenuItem:lEnabled )
+   WinAddMenuItem( ::nHandle, oMenuItem:Caption, Len( ::Items ),;
+                   nil, oMenuItem:nId, oMenuItem:Enabled )
 
    oMenuItem:oParent = Self
-   AAdd( ::aItems, oMenuItem )
+   AAdd( ::Items, oMenuItem )
 
 return nil
 
@@ -86,11 +90,11 @@ METHOD FindItem( nId ) CLASS TMenu
 
    local oMenuItem, n
 
-   for n = 1 to Len( ::aItems )
-      if ( oMenuItem := ::aItems[ n ] ):nId == nId
+   for n = 1 to Len( ::Items )
+      if ( oMenuItem := ::Items[ n ] ):nId == nId
          return oMenuItem
       else
-         if oMenuItem:aItems != nil
+         if oMenuItem:Items != nil
             if ( oMenuItem := oMenuItem:FindItem( nId ) ) != nil
                return oMenuItem
             endif
