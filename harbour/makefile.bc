@@ -425,6 +425,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\pvalue.obj \
    $(OBJ_DIR)\runner.obj \
    \
+   $(OBJ_DIR)\borinit.obj \
    $(OBJ_DIR)\borsym.obj \
    $(OBJ_DIR)\startup.obj \
    $(OBJ_DIR)\symbols.obj \
@@ -889,6 +890,10 @@ $(OBJ_DIR)\pvalue.obj : $(VM_DIR)\pvalue.c
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\runner.obj : $(VM_DIR)\runner.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\borinit.obj : $(VM_DIR)\borinit.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
