@@ -319,12 +319,16 @@ METHOD BuildCommandWindow() CLASS TDebugger
 
    ::oWndCommand := TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
                                     "Command" )
+
    ::oWndCommand:bGotFocus   := { || ::oGetListCommand:SetFocus(), SetCursor( SC_NORMAL ) }
    ::oWndCommand:bLostFocus  := { || SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := { | nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    := { || DispOutAt( ::oWndCommand:nBottom - 1,;
                              ::oWndCommand:nLeft + 1, "> ", ::oWndCommand:cColor ),;
-                        oGet:ColorDisp( Replicate( __DbgColors()[ 2 ] + ",", 5 ) ) }
+                        oGet:ColorDisp( Replicate( __DbgColors()[ 2 ] + ",", 5 ) ),;
+                        hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1,;
+                        ::oWndCommand:nBottom - 2, ::oWndCommand:nRight - 1,;
+                        If( ::lMonoDisplay, 15, HB_ColorToN( __DbgColors()[ 2 ] ) ) ) }
    AAdd( ::aWindows, ::oWndCommand )
 
    ::aLastCommands := {}
@@ -546,52 +550,54 @@ METHOD EditVar( nVar ) CLASS TDebugger
 
    uVarValue := ::InputBox( cVarName, ValToStr( uVarValue ) )
 
-   do case
-      case uVarValue == "{ ... }"
-            cVarType = ::aVars[ nVar ][ 3 ]
+   if LastKey() != K_ESC
+      do case
+         case uVarValue == "{ ... }"
+               cVarType = ::aVars[ nVar ][ 3 ]
 
+               do case
+                  case cVarType == "Local"
+                     aArray = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
+
+                  case cVarType == "Static"
+                     aArray = __vmVarSGet( ::aVars[ nVar ][ 2 ] )
+
+                  otherwise
+                     aArray = ::aVars[ nVar ][ 2 ]
+               endcase
+
+               if Len( aArray ) > 0
+                  __DbgArrays( aArray, cVarName )
+               else
+                  Alert( "Array is empty" )
+               endif
+
+         case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
+              do case
+                 case cVarType == "Local"
+                    __DbgObject( __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] ), cVarName )
+
+                 case cVarType == "Static"
+                    __DbgObject( __vmVarSGet( ::aVars[ nVar ][ 2 ] ), cVarName )
+
+                 otherwise
+                    __DbgObject( ::aVars[ nVar ][ 2 ], cVarName )
+              endcase
+
+         otherwise
             do case
                case cVarType == "Local"
-                  aArray = __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] )
+                  __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
 
                case cVarType == "Static"
-                  aArray = __vmVarSGet( ::aVars[ nVar ][ 2 ] )
+                  __vmVarSSet( ::aVars[ nVar ][ 2 ], &uVarValue )
 
                otherwise
-                  aArray = ::aVars[ nVar ][ 2 ]
+                  ::aVars[ nVar ][ 2 ] := &uVarValue
+                  &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
             endcase
-
-            if Len( aArray ) > 0
-               __DbgArrays( aArray, cVarName )
-            else
-               Alert( "Array is empty" )
-            endif
-
-      case Upper( SubStr( uVarValue, 1, 5 ) ) == "CLASS"
-            do case
-               case cVarType == "Local"
-                  __DbgObject( __vmVarLGet( nProcLevel, ::aVars[ nVar ][ 2 ] ), cVarName )
-
-               case cVarType == "Static"
-                  __DbgObject( __vmVarSGet( ::aVars[ nVar ][ 2 ] ), cVarName )
-
-               otherwise
-                  __DbgObject( ::aVars[ nVar ][ 2 ], cVarName )
-            endcase
-
-      otherwise
-         do case
-            case cVarType == "Local"
-               __vmVarLSet( nProcLevel, ::aVars[ nVar ][ 2 ], &uVarValue )
-
-            case cVarType == "Static"
-               __vmVarSSet( ::aVars[ nVar ][ 2 ], &uVarValue )
-
-            otherwise
-               ::aVars[ nVar ][ 2 ] := &uVarValue
-               &( ::aVars[ nVar ][ 1 ] ) := ::aVars[ nVar ][ 2 ]
-         endcase
-   endcase
+      endcase
+   endif
 
    ::oBrwVars:RefreshCurrent()
    ::oBrwVars:ForceStable()
@@ -815,7 +821,7 @@ METHOD ShowCallStack() CLASS TDebugger
       ::oBrwText:Resize(,,, ::oBrwText:nRight - 16)
       ::oWndCode:SetFocus( .t. )
       ::oWndStack := TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
-                                     "Stack" )
+                                     "Calls" )
       AAdd( ::aWindows, ::oWndStack )
       ::oBrwStack := TBrowseNew( 2, MaxCol() - 14, MaxRow() - 7, MaxCol() - 1 )
       ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
