@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-05-20 16:20 UTC+0100 J.lefebvre (Mafact) <jfl@mafact.com>
+ * contrib/htmllib
+   + make_b32.bat (not tested !!!!)
+   + make_vc.bat  (ok)
+   + makefile.vc
+
+
 2002-05-20 14:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * contrib/rdd_ads/ads1.c
     ! Bug fixed in adsSysName() for that case when file isn't opened yet in
