@@ -620,7 +620,7 @@ int hb_gtSetSnowFlag(BOOL bNoSnow)
 
 int hb_gtWrite(char * fpStr, ULONG length)
 {
-    int iRow, iCol, iMaxCol, iMaxRow, iTemp;
+    int iRow, iCol, iMaxCol, iMaxRow;
     ULONG size = length;
     char attr=_Color[s_uiColorIndex] & 0xff,
          *fpPointer = fpStr;
@@ -652,6 +652,8 @@ int hb_gtWrite(char * fpStr, ULONG length)
        position to account for the prescroll */
     if (iRow > iMaxRow)
     {
+       int iTemp;
+
        hb_gtScroll(0, 0, iMaxRow, iMaxCol, iRow - iMaxRow, 0);
        iTemp = s_uiCurrentRow - (iRow - iMaxRow);
        if (iTemp < 0)
