@@ -52,7 +52,11 @@
 
 PROCEDURE DevOutPict( xValue, cPicture, cColor )
 
-   DevOut( Transform( xValue, cPicture ), cColor )
+   if valtype(xValue) $ "CNDLM"
+
+      DevOut( Transform( xValue, cPicture ), cColor )
+
+   endif
 
    RETURN
 
