@@ -1,3 +1,9 @@
+20000205-17:00 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/compiler/hbusage.c
+     + The command line help screen uses the platform dependent switch
+       character when listing options.
+     + 1999 -> 1999-2000
+
 20000205-13:06 GMT+1 Victor Szakats <info@szelvesz.hu>
    * tests/db_brows.prg
      ! UPDATED() removed, since it's now defined in the RTL.
