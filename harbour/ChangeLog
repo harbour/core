@@ -1,3 +1,9 @@
+2000-10-25 13:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/ppcore.c
+     * fixed problem, reported by John Skelton
+   * utils/hbpp/hbpp.c
+     * it was broken, table of predefined commands wasn't set.
+
 2000-10-23 23:29 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/mysql/*.prg
       * changes / fixes as needed :-)
