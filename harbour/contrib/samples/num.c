@@ -62,7 +62,7 @@
 */
 HB_FUNC( CEILING )
 {
-   hb_retnl( ceil( hb_parnd( 1 ) ) );
+   hb_retnl( (long) ceil( hb_parnd( 1 ) ) );
 }
 
 /* DtoR( <nDegrees> ) --> nRadians
@@ -78,7 +78,7 @@ HB_FUNC( DTOR )
 */
 HB_FUNC( FLOOR )
 {
-   hb_retnl( floor( hb_parnd( 1 ) ) );
+   hb_retnl( (long) floor( hb_parnd( 1 ) ) );
 }
 
 /* NumAsLog10( <nNumber> ) --> nLog10 

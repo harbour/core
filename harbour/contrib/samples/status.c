@@ -106,13 +106,13 @@ HB_FUNC( STATUSUPDATE )
       lCurrent = ( ++lCurrent > 4 ? 1 : lCurrent );
       hb_itemArrayPut( pArray, ST_CURRENT, hb_itemPutNL( pCurrent, lCurrent ) );
 
-      hb_gtGetColorStr( szOldColor );
+      hb_gtGetColorStr( (char*) szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, ST_COLOR ) );
-
-      hb_gtWriteAt( hb_arrayGetNL( pArray, ST_ROW ), hb_arrayGetNL( pArray, ST_COL ),
+      hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, ST_ROW ),
+                    (USHORT) hb_arrayGetNL( pArray, ST_COL ),
                     ( BYTE * ) szDisplay + lCurrent - 1, 1 );
 
-      hb_gtSetColorStr( szOldColor );
+      hb_gtSetColorStr( (char*) szOldColor );
       hb_itemRelease( pCurrent );
    }
 }

@@ -143,20 +143,25 @@ HB_FUNC( GAUGEDISPLAY )
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BACKCOLOR ) );
 
-      hb_gtBox( hb_arrayGetNL( pArray, B_TOP ), hb_arrayGetNL( pArray, B_LEFT ),
-                hb_arrayGetNL( pArray, B_BOTTOM ), hb_arrayGetNL( pArray, B_RIGHT ),
-                ( BYTE * ) szStr );
+      hb_gtBox( (SHORT)  hb_arrayGetNL( pArray, B_TOP ),
+                (SHORT)  hb_arrayGetNL( pArray, B_LEFT ),
+                (SHORT)  hb_arrayGetNL( pArray, B_BOTTOM ),
+                (SHORT)  hb_arrayGetNL( pArray, B_RIGHT ),
+                (BYTE *) szStr );
 
-      hb_gtBox( hb_arrayGetNL( pArray, B_TOP ), hb_arrayGetNL( pArray, B_LEFT ),
-                hb_arrayGetNL( pArray, B_BOTTOM ), hb_arrayGetNL( pArray, B_RIGHT ),
-                B_BOXLINES );
+      hb_gtBox( (SHORT)  hb_arrayGetNL( pArray, B_TOP ),
+                (SHORT)  hb_arrayGetNL( pArray, B_LEFT ),
+                (SHORT)  hb_arrayGetNL( pArray, B_BOTTOM ),
+                (SHORT)  hb_arrayGetNL( pArray, B_RIGHT ),
+                (BYTE *) B_BOXLINES );
 
       if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
-         hb_gtWriteAt( hb_arrayGetNL( pArray, B_TOP ), iCenter, ( BYTE * ) "[      ]", 8 );
+         hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
+                       iCenter, ( BYTE * ) "[      ]", 8 );
 
       hb_gtSetColorStr( szOldColor );
 
-      hb_gaugeUpdate( pArray, hb_arrayGetNL( pArray, B_PERCENT ) );
+      hb_gaugeUpdate( pArray, (float) hb_arrayGetNL( pArray, B_PERCENT ) );
 
       hb_itemReturn( pArray );
    }
@@ -170,7 +175,7 @@ HB_FUNC( GAUGEUPDATE )
 
    if( pArray )
    {
-      hb_gaugeUpdate( pArray, ISNUM( 2 ) ? hb_parnd( 2 ) : 0 );
+      hb_gaugeUpdate( pArray, ISNUM( 2 ) ? (float) hb_parnd( 2 ) : 0 );
 
       hb_itemReturn( pArray );
    }
@@ -191,12 +196,13 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BARCOLOR ) );
 
    fPercent = ( fPercent < 0 ? 0 : ( fPercent > 1 ? 1 : fPercent ) );
-   iCols    = fPercent * iRatio;
+   iCols    = (int) (fPercent * iRatio);
 
    if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
    {
       sprintf( szPct, "%3.0f\%", fPercent * 100 );
-      hb_gtWriteAt( hb_arrayGetNL( pArray, B_TOP ), iCenter + 2, szPct, 4 );
+      hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
+                    (USHORT) iCenter + 2, (BYTE *) szPct, 4 );
    }
 
    hb_gtBox( hb_arrayGetNL( pArray, B_TOP ) + 1, hb_arrayGetNL( pArray, B_LEFT ) + 1,
@@ -206,8 +212,8 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    iMax = hb_arrayGetNL( pArray, B_BOTTOM ) - hb_arrayGetNL( pArray, B_TOP ) - 1;
    for( iRow = 1; iRow <= iMax; iRow++ )
    {
-      hb_gtRepChar( iRow + hb_arrayGetNL( pArray, B_TOP ),
-                    hb_arrayGetNL( pArray, B_LEFT ) + 1,
+      hb_gtRepChar( (USHORT) (iRow + hb_arrayGetNL( pArray, B_TOP )),
+                    (USHORT) (hb_arrayGetNL( pArray, B_LEFT ) + 1),
                     ( BYTE ) * hb_arrayGetCPtr( pArray, B_BARCHAR ), iCols );
    }
 

@@ -516,7 +516,7 @@ HB_FUNC( ASIN )
     double dInput = hb_parnd(1);
     double dResult;
 
-    if (abs(dInput) > 1.0)
+    if (fabs(dInput) > 1.0)
     {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -617,7 +617,7 @@ HB_FUNC( ACOS )
     double dInput = hb_parnd(1);
     double dResult;
 
-    if (abs(dInput) > 1.0)
+    if (fabs(dInput) > 1.0)
     {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -1191,4 +1191,4 @@ HB_FUNC( DTOR )
 }
 
 
- 
+

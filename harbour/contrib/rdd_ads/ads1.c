@@ -2090,7 +2090,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
                if ( sInfo->scopeValue->type == HB_IT_STRING )
                {
                   bTypeError = FALSE;
-                  pucScope = hb_itemGetCPtr( sInfo->scopeValue );
+                  pucScope = (UNSIGNED8*) hb_itemGetCPtr( sInfo->scopeValue );
                   AdsSetScope( pArea->hOrdCurrent, (sInfo->nScope + 1), /*ADS top/bottom are 1,2 instead of 0,1*/
                      (UNSIGNED8*) pucScope,
                      (UNSIGNED16) strlen( (const char *) pucScope ), usDataType );

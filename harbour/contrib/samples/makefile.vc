@@ -1,0 +1,138 @@
+#
+# $Id$
+#
+
+#
+# Makefile for Harbour Project for Microsoft Visual C (32 bits)
+#
+
+#
+# NOTE: You can use these envvars to configure the make process:
+#       (note that these are all optional)
+#
+#       CFLAGS       - Extra C compiler options for libraries and for 
+#                      executables
+#       C_USR        - Extra C compiler options for libraries and for 
+#                      executables (GNU make compatible envvar)
+#       CLIBFLAGS    - Extra C compiler options for the libraries
+#       HARBOURFLAGS - Extra Harbour compiler options
+#       PRG_USR      - Extra Harbour compiler options
+#                      (GNU make compatible envvar)
+#
+
+#
+# Notes about this makefile:
+#
+# 1. To add new files to a dependancy list, add an obj name to one of the
+#    OBJ lists for the appropriate library.
+#    NOTE: put .prg related obj's last in the lib list.
+#
+# 2. This is a recursive script.  If you change the name of this file,
+#    be sure to change MK_FILE (a few lines down) to the new name as well.
+#
+# 3. Recurrsion rules are quite simple:
+#     If you specifiy /a on the command line, files in the obj\vc dir
+#     will be deleted, and when nmake recurses, it's without the /a flag
+#
+#     If a .prg.obj rule is fired, nmake will execute this script with
+#     a specific target as a parameter immediatley after compiling a given
+#     set of prg files.
+#      ie: Harbour $<
+#          nmake /fmakefile.vc obj\vc\rtl.lib2
+#     which will simply get make to re-evaluate the dependancy list for the
+#     lib, and as a result, it will execute the C compiler using the .c.obj
+#     rule below to create the obj's for the prg's that were created just
+#     prior to the recurrsive call. Once the obj's are created, the
+#     recurrsion is complete.
+#     See additional notes under RTL.LIB below.
+#
+
+MK_FILE      = makefile.vc
+MK_FLAGS     = $(MAKEFLAGS: =)
+
+OBJ_DIR     = ..\..\obj\vc
+LIB_DIR     = ..\..\lib\vc
+BIN_DIR     = ..\..\bin\vc
+
+#
+# Directory macros. These should never have to change.
+#
+
+INCLUDE_DIR  = ..\..\include
+TOOLS_DIR    = .
+
+#
+# C compiler definition and C flags. These should never have to change.
+#
+
+AS             = masm
+CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+LDFLAGS        = $(LDFLAGS)
+
+#
+# Macros to access our library names
+#
+
+TOOLS_LIB    = $(LIB_DIR)\samples.lib
+
+HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
+
+#
+# Rules
+#
+
+.SUFFIXES: .prg .lib .c .obj .asm
+
+# override builtin
+
+.c.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+#
+#
+#
+
+LIBLIST = \
+   $(TOOLS_LIB)
+
+#
+# TOOLS.LIB rules
+#
+
+{$(TOOLS_DIR)}.c{$(OBJ_DIR)}.obj::
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+
+{$(TOOLS_DIR)}.prg{$(OBJ_DIR)}.obj::
+   $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+   $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(TOOLS_LIB)2
+
+TOOLS_LIB_OBJS = \
+    $(OBJ_DIR)\environ.obj \
+    $(OBJ_DIR)\date.obj   \
+    $(OBJ_DIR)\dbf.obj    \
+    $(OBJ_DIR)\gauge.obj  \
+    $(OBJ_DIR)\num.obj    \
+    $(OBJ_DIR)\stack.obj   \
+    $(OBJ_DIR)\status.obj \
+    $(OBJ_DIR)\time.obj
+
+#
+# Our default target
+#
+
+all: \
+   $(TOOLS_LIB)
+
+#
+# Library dependencies and build rules
+#
+
+$(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
+   lib /out:$@ $**
+
+# dummy targets used for prg to c creation
+
+$(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
