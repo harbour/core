@@ -370,6 +370,14 @@ Separator     {SpaceTab}
                 hb_comp_iState =DO;
                 yyless( yyleng-5 );
               }
+<DO_>{Separator}+"whil" { /* DO WHILE found -move it to WHILE state */
+                /* NOTE: we cannot decide here if it is DO WHILE <condition>
+                 * or DO while [WITH <args>]
+                 */
+                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                hb_comp_iState =DO;
+                yyless( yyleng-5 );
+              }
 <DO_>{Separator}+[_a-zA-Z\&]   { /* an identifier 'DO id WITH' or 'DO &id WITH' */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
@@ -1172,7 +1180,7 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"while"        BEGIN WHILE_;
+"while"|"whil"  BEGIN WHILE_;
 <WHILE_>{Separator}*\n      { /* end of line */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                 unput( '\n' );

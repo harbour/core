@@ -1,3 +1,8 @@
+20000424-19:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.l
+	* fixed recognition of WHILE abbreviation (WHIL)
+
 20000424-19:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/hbfix.c
