@@ -1,3 +1,9 @@
+19990904-18:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/tone.c
+    ! Added missing '&& ! defined(_Windows)' checks to the
+      __BORLANDC__ checks that didn't already have them and
+      weren't already preceded by a 'defined(_Windows)' check.
+
 19990904-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     ! hb_arrayScan() fixed. (Thanks Antonio)

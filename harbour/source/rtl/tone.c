@@ -30,6 +30,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.8    David G. Holm               Added '&& ! defined(_Windows)'
+                                        check to all __BORLANDC__ checks.
    V 1.6    David G. Holm               Added Win32 Beep(), thanks to
                                         Chen Kedem.
    V 1.4    David G. Holm               Upper limit for frequency for OS/2
@@ -156,7 +158,7 @@ void hb_tone( double frequency, double duration )
 #endif
    while( duration > 0.0 )
    {
-#if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(WINNT)
+#if defined(HARBOUR_GCC_OS2) || defined(_Windows)
       temp = MIN( MAX ( 0, duration ), ULONG_MAX );
 #elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__)
       temp = MIN( MAX ( 0, duration ), USHRT_MAX );
@@ -176,12 +178,12 @@ void hb_tone( double frequency, double duration )
          DosBeep( ( USHORT ) frequency, temp );
 #elif defined(WINNT)
          Beep( ( ULONG ) frequency, temp );
-#elif defined(_Windows)
+#elif defined(_Windows) && ! defined(_Windows)
          /* Bad news for non-NT Windows platforms: Beep() ignores
             both parameters and either generates the default sound
             event or the standard system beep. */
          Beep( ( ULONG ) frequency, temp );
-#elif defined(__DJGPP__) || defined(__BORLANDC__)
+#elif defined(__DJGPP__) || ( defined(__BORLANDC__) && ! defined(_Windows) )
          /* Note: delay() in <dos.h> for DJGPP does not work and
                   delay() in <dos.h> for BORLANDC is not multi-
                   tasking friendly. */
@@ -191,7 +193,7 @@ void hb_tone( double frequency, double duration )
 #endif
        }
    }
-#if defined(__BORLANDC__)
+#if defined(__BORLANDC__) && ! defined(_Windows)
    nosound();
 #elif defined(__DJGPP__)
    sound( 0 );
