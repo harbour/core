@@ -1,3 +1,9 @@
+19990731-08:05 WIB Andi Jahja <andij@aonlippo.co.id>
+   + source/rtl/menu.prg
+     __AtPrompt()
+     __MenuTo()
+   + tests/working/testmenu.prg - Test Program
+
 19990731-00:05 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/files.c - __CYGWIN__ defines changes rolled back,
      to fix the new DOS/DJGPP errors.
