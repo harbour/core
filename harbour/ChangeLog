@@ -1,3 +1,8 @@
+19990819-12:30 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/strings.c
+    ! hb_itemStr() possible error fixed when item.asDouble was
+      accessed without making sure whether the item is a double.
+
 19990819-00:15 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtapi.c
     + hb_gtPreExt()

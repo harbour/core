@@ -1234,14 +1234,36 @@ HARBOUR HB_VAL( void )
 /* TODO: Move it to itemapi.c */
 char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 {
-   char * szResult = 0;
+   char * szResult = NULL;
 
    if( pNumber )
    {
       /* Default to the width and number of decimals specified by the item,
          with a limit of 20 integer places and 9 decimal places */
-      int iWidth = pNumber->item.asDouble.length;
-      int iDec   = pNumber->item.asDouble.decimal;
+      int iWidth;
+      int iDec;
+
+      if ( IS_DOUBLE( pNumber ) )
+      {
+         iWidth = pNumber->item.asDouble.length;
+         iDec   = pNumber->item.asDouble.decimal;
+      }
+      else if ( IS_INTEGER( pNumber ) )
+      {
+         iWidth = pNumber->item.asInteger.length;
+         iDec   = 0;
+      }
+      else if ( IS_LONG( pNumber ) )
+      {
+         iWidth = pNumber->item.asLong.length;
+         iDec   = 0;
+      }
+      else
+      {
+         iWidth = 0;
+         iDec   = 0;
+      }
+
       if( iWidth > 20 )
          iWidth = 20;
       if( iDec > 9 )
@@ -1301,12 +1323,12 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          }
          else switch( pNumber->type & ~IT_BYREF )
          {
-            case IT_LONG:
-                 iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
-                 break;
-
             case IT_INTEGER:
                  iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
+                 break;
+
+            case IT_LONG:
+                 iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
                  break;
 
             default:
@@ -1318,7 +1340,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          if( iBytes > iSize )
          {
             memset( szResult, '*', iSize );
-            szResult[ iSize ] = 0;
+            szResult[ iSize ] = '\0';
          }
       }
    }
