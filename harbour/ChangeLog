@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-08-08 00:40 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+     ! minor change to previous fix in dbCloseArea
+
 2002-08-07 17:58 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * include/hbapirdd.h
    * source/rdd/dbcmd.c
