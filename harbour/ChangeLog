@@ -1,3 +1,8 @@
+2001-11-16 17:35 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     + Added new function __VMVARSLEN() --> nStatics
+       It returns the total amount of used statics variables
+
 2001-11-16 05:15 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * contrib/libnf/getver.c
      ! HB_FUNC(_FT_TEMPFIL), initialize cPath #if !defined(HB_OS_DOS)
@@ -31,7 +36,7 @@
      * Marked uiPort as HB_SYMBOL_UNUSED for unsupported platforms in
        PRINTSTAT() and PRINTREADY(). This removes a couple of warnings
        when building the library on unsupported platforms.
-	
+
 2001-11-16 00:13 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! fixed bug with filters and set delete on
