@@ -51,6 +51,14 @@
  *
  */
 
+ /*
+ 2002-01-28 21:30 UTC+0100 Patrick Mast <email@patrickmast.com>
+   * contrib/mysql/tmysql
+     + Added DateTime field
+     * Added more info on Alert message for Unknown type
+     * Modified ClipValue2SQL() to process empty strings
+ */
+
 #include "hbclass.ch"
 #include "common.ch"
 #include "dbstruct.ch"
@@ -233,7 +241,8 @@ METHOD FieldType(nNum) CLASS TMySQLRow
             cType := "M"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
-              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE     .OR.;
+              ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
             cType := "C"
 
          case ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE
@@ -492,8 +501,12 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
                     ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE
                   // char field
 
+               case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
+                  // DateTime field
+
                otherwise
-                  Alert("Unknown type from SQL Server" + Str(::aFieldStruct[i][MYSQL_FS_TYPE]))
+
+                  Alert("Unknown type from SQL Server Field: " + LTrim(Str(i))+" is type "+LTrim(Str(::aFieldStruct[i][MYSQL_FS_TYPE])))
 
             endcase
          next
@@ -576,9 +589,11 @@ METHOD Update(oRow) CLASS TMySQLTable
    if oRow:cTable == ::cTable
 
       for i := 1 to Len(oRow:aRow)
-
+         msginfo( i )
          if oRow:aDirty[i]
+            msginfo( ClipValue2SQL(oRow:aRow[i]) ,"ClipValue2SQL")
             cUpdateQuery += oRow:aFieldStruct[i][MYSQL_FS_NAME] + "=" + ClipValue2SQL(oRow:aRow[i]) + ","
+            msginfo( cUpdateQuery ,"cUpdateQuery" )
          endif
       next
 
@@ -670,19 +685,20 @@ METHOD GetBlankRow() CLASS TMySQLTable
    for i := 1 to ::FCount()
 
       do case
-      case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE .OR.;
+      case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_STRING_TYPE     .OR.;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_VAR_STRING_TYPE .OR.;
-           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE       .OR.;
+           ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATETIME_TYPE
          aRow[i] := ""
 
-      case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE .OR.;
+      case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_SHORT_TYPE      .OR.;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONG_TYPE
          aRow[i] := 0
 
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
          aRow[i] := .F.
 
-      case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE .OR.;
+      case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE     .OR.;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE
          aRow[i] := 0.0
 
@@ -804,8 +820,8 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
          ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumblob "  + Eval(cNN, aStruct[i]) + ","
 
       case aStruct[i][DBS_TYPE] == "I"
-         ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint " + Eval(cNN, aStruct[i]) + "," 
-      
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " mediumint " + Eval(cNN, aStruct[i]) + ","
+
       otherwise
          ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + ","
 
@@ -818,7 +834,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
    if cUniquekey != NIL
         ::cCreateQuery += ' UNIQUE '+cUniquekey +' ('+cUniqueKey+'),'
    endif
-        
+
 
    // remove last comma from list
    ::cCreateQuery := Left(::cCreateQuery, Len(::cCreateQuery) -1) + ");"
@@ -995,7 +1011,7 @@ METHOD TableStruct(cTable) CLASS TMySQLServer
             case aField[MSQL_FS_TYPE] == MYSQL_MEDIUM_BLOB_TYPE
                aSField[DBS_TYPE] := "B"
                aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
-              
+
             case aField[MSQL_FS_TYPE] == FIELD_TYPE_INT24
                aSField[DBS_TYPE] := "I"
                aSField[DBS_LEN] := aField[MSQL_FS_LENGTH]
@@ -1033,9 +1049,13 @@ static function ClipValue2SQL(Value)
          endif
 
       case Valtype(Value) $ "CM"
-         cValue := "'"
-         Value:=DATATOSQL(value)
-         cValue+= value+ "'"
+         IF Empty( Value)
+            cValue="''"
+         ELSE
+            cValue := "'"
+            Value:=DATATOSQL(value)
+            cValue+= value+ "'"
+         ENDIF
 
       case Valtype(Value) == "L"
          cValue := AllTrim(Str(iif(Value == .F., 0, 1)))
@@ -1046,4 +1066,3 @@ static function ClipValue2SQL(Value)
    endcase
 
 return cValue
-
