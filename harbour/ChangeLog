@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-14 14:52 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/getsys.prg
+    ! Fixed RETURN in Accelerator() and HitTest()
+
 2002-06-14 13:49 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/getlist.prg
     + Add __GetListLast() for support to the functions Update() and
