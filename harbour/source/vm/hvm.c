@@ -89,7 +89,7 @@
 #endif
 
 /* DEBUG only*/
-/*#include <windows.h>*/
+/* #include <windows.h> */
 
 typedef struct _SYMBOLS
 {
@@ -2644,7 +2644,7 @@ static void hb_vmArrayPush( void )
    PHB_ITEM pArray;
    ULONG ulIndex;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayAt()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPush()"));
 
    pIndex = hb_stackItemFromTop( -1 );
    pArray = hb_stackItemFromTop( -2 );
@@ -2725,9 +2725,7 @@ static void hb_vmArrayPush( void )
          }
       }
       else
-      {
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
-      }
    }
    else
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
@@ -2746,6 +2744,9 @@ static void hb_vmArrayPop( void )
    pArray = hb_stackItemFromTop( -2 );
    pIndex = hb_stackItemFromTop( -1 );
 
+   if( HB_IS_BYREF( pArray ) )
+      pArray = hb_itemUnRef( pArray );
+
    if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
    else if( HB_IS_LONG( pIndex ) )
@@ -2758,13 +2759,36 @@ static void hb_vmArrayPop( void )
       return;
    }
 
+#ifndef HB_C52_STRICT
+   if( HB_IS_STRING( pArray ) )
+   {
+      if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
+      {
+         if( pArray->item.asString.bStatic || *( pArray->item.asString.puiHolders ) > 1 )
+            hb_itemPutC( pArray, pArray->item.asString.value );
+
+         pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
+
+         hb_stackPop();
+         hb_stackPop();
+         hb_stackPop();    /* remove the value from the stack just like other POP operations */
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
+                        2, pArray, pIndex );
+
+      return;
+   }
+#endif
+
    if( HB_IS_ARRAY( pArray ) )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
          pValue->type &= ~HB_IT_MEMOFLAG;
          hb_arraySet( pArray, ulIndex, pValue );
-         hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
+         /* This is no longer needed as we manage the array by reference */
+         /* hb_itemCopy( pArray, pValue );  places pValue at pArray position */
          hb_stackPop();
          hb_stackPop();
          hb_stackPop();    /* remove the value from the stack just like other POP operations */
