@@ -55,7 +55,9 @@
 #include "common.ch"
 #include "hbclass.ch"
 #include "inkey.ch"
+
 #pragma -es0
+
 Class TDBGobject
 //export:
 data aWindows
@@ -66,16 +68,20 @@ data pItems
 Data ArrayReference
 Data ArrayIndex
 Data AllNames
+data lEditable
 Method new
 method addWindows
 method doget
 method SetsKeyPressed
 endclass
 
-method new(aArray,pArName) class tdbgObject
+method new(aArray,pArName,lEditable) class tdbgObject
 Local nPos
 local aTempvars:=   __objGetValueList(aArray)
 Local aTempMethods:=  __objGetMethodList(aArray)
+
+DEFAULT lEditable TO .t.
+
 ::pItems:={}
 ::AllNames:={}
 for nPos :=1 to len(aTempvars)
@@ -95,8 +101,10 @@ next
 ::nCurWindow:=0
 ::ArrayReference:={}
 ::ArrayIndex:=1
+::lEditable = lEditable
 
 ::addWindows(::pItems)
+
 Return Self
 
 Method addWindows(aArray,nRow) class tdbgObject
@@ -132,8 +140,9 @@ Local owndsets
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := ::arrayindex,;
                           ::arrayindex := iif( nSkip > 0, Min( ::arrayindex+nSkip, Len(::arrayreference)),;
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
-   oBrwSets:AddColumn( ocol:=     TBColumnNew("", { || ::ArrayReference[::arrayindex,1]} ))
    nMaxElem := maxelem(::AllNames)
+   oBrwSets:AddColumn( ocol := TBColumnNew( "",;
+                    { || PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxElem ) } ) )
    ocol:width := nMaxElem
    ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
@@ -222,10 +231,14 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
                   Alert("Value cannot be edited")
 
               else
-                 oBrwSets:RefreshCurrent()
-                 cTemp:=::doget(oBrwsets,::arrayreference,nSet)
-                 oBrwSets:RefreshCurrent()
-                 oBrwSets:ForceStable()
+                 if ::lEditable
+                    oBrwSets:RefreshCurrent()
+                    cTemp:=::doget(oBrwsets,::arrayreference,nSet)
+                    oBrwSets:RefreshCurrent()
+                    oBrwSets:ForceStable()
+                 else
+                    Alert( "Value cannot be edited" )
+                 endif
 
                endif
 
@@ -332,5 +345,5 @@ static FUNC maxelem( a )
 
 RETURN max
 
-function __DbgObject(aArray,pArName)
-return TDBGObject():New(aArray,pArName)
+function __DbgObject(aArray,pArName,lEditable)
+return TDBGObject():New(aArray,pArName,lEditable)
