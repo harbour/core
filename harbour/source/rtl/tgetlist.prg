@@ -105,6 +105,7 @@ CLASS TGetList
    METHOD GetActive( oGet )
    METHOD ShowScoreBoard()
    METHOD ReadVar( cNewVarName )
+   METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
 
 ENDCLASS
 
