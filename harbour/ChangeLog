@@ -1,3 +1,28 @@
+20000531-23:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*bin/bld.bat
+    *changed HB_LIB_INSTALL to HB_INC_INSTALL on harbour /i command line
+     switch
++doc/en/eval.txt
+    *Documentation for Eval() function
+*doc/en/set.txt
+     +Document for SET BELL command
+*doc/en/string.txt
+     +Documentation for PADR(),PADC(),PADL(),TRIM(),RTRIM(),ALLTRIM(),
+     REPLICATE(),SPACE()
+*utils/hbdoc/genng.prg
+ utils/hbdoc/genhtm.prg
+     *Small change to allow multiple tables in a doc
+*contrib/hbzlib/zipfile1.c
+    *small change to hb_unzipfile() function
+*contrib/hbzlib/zipfile2.c
+    *Small changes
+*contrib/hbzlib/hbzip.h
+    *some Declaration changes
++contrib/hbzlib/unzip.h
+    *missing header files required by zipfile2.c
++contrib/hbzlib/doc/zip.txt
+    +Documentation of the zip functions
+
 2000-05-31 23:57 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/vm/itemapi.c
