@@ -1,3 +1,7 @@
+19990720-09:30 CET Eddie Runia <eddie@runia.com>
+  * tests/working/run_all.bat
+    %1 exchanged for test_all
+
 19990719-17:55 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gtapi.c
     - removed temp init line now that init order is fixed.
