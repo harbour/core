@@ -35,7 +35,6 @@
 #include "setcurs.ch"
 #include "getexit.ch"
 #include "inkey.ch"
-#include "set.ch"
 
 #define GET_CLR_UNSELECTED	0
 #define GET_CLR_ENHANCED        1

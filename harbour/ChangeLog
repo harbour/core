@@ -1,3 +1,14 @@
+20000129-19:15 GMT+1 Victor Szel <info@szelvesz.hu>
+  * bin/bld_tpl.*
+    ! Added macro lib.
+    ! Fix for os2 platform.
+  * source/rtl/tget.prg
+    - Removed #include "set.ch" since it's included by default (via std.ch)
+  * source/rtl/Makefile
+    source/rtl/memoline.c
+    source/rtl/filesys.c
+    * Some minor formatting fixes.
+
 20000129-14:30  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
     *source/rtl/oemansi.c
         *Added documentation to HB_oemtoansi() and Hb_ansitooem() 

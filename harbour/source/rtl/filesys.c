@@ -2143,6 +2143,7 @@ HARBOUR HB_FILE( void )
 {
    hb_retl( ISCHAR( 1 ) ? hb_fsFile( ( BYTE * ) hb_parc( 1 ) ) : FALSE );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FREADSTR()
@@ -2464,7 +2465,9 @@ HARBOUR HB_FSETDEVMOD( void )
 }
 
 #endif
-/*            HARBOUR COMMAND THAT ARE PREPROCESSED IN FUNTION */
+
+/* HARBOUR COMMANDS THAT ARE PREPROCESSED INTO FUNCTIONS */
+
 /*  $DOC$
  *  $FUNCNAME$
  *     RENAME 
