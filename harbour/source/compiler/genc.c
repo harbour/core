@@ -54,6 +54,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    PCOMCLASS    pClass;
    FILE * yyc; /* file handle for C output */
    PINLINE pInline = hb_comp_inlines.pFirst;
+   BOOL bIsStatic ;
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".c";
@@ -89,15 +90,33 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       /* write functions prototypes for PRG defined functions */
       while( pFunc )
       {
+         bIsStatic = FALSE;
          if( pFunc->cScope & HB_FS_STATIC || pFunc->cScope & HB_FS_INIT || pFunc->cScope & HB_FS_EXIT )
-            fprintf( yyc, "static " );
+            if ( pFunc->cScope & HB_FS_STATIC )
+            {
+               bIsStatic = TRUE;
+               fprintf( yyc, "HB_FUNC_STATIC( %s );\n", pFunc->szName );
+            }
+            else
+            {
+               if ( ( pFunc->cScope & HB_FS_INIT ) && !( pFunc == hb_comp_pInitFunc ) )
+                  fprintf( yyc, "HB_FUNC_INIT( %s );\n", pFunc->szName );
+               else
+               {
+                  if ( ( pFunc->cScope & HB_FS_EXIT ) && !( pFunc == hb_comp_pInitFunc ) )
+                     fprintf( yyc, "HB_FUNC_EXIT( %s );\n", pFunc->szName );
+                  else
+                     fprintf( yyc, "static " );
+               }
+            }
          else
             fprintf( yyc, "       " );
 
          if( pFunc == hb_comp_pInitFunc )
             fprintf( yyc, "HARBOUR hb_INITSTATICS( void );\n" ); /* NOTE: hb_ intentionally in lower case */
          else
-            fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
+            if ( ( ! bIsStatic ) && !( pFunc->cScope & HB_FS_INIT ) && !( pFunc->cScope & HB_FS_EXIT ) )
+               fprintf( yyc, "HB_FUNC( %s );\n", pFunc->szName );
          pFunc = pFunc->pNext;
       }
 
@@ -211,13 +230,23 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       while( pFunc )
       {
+         bIsStatic = FALSE;
          if( pFunc->cScope != HB_FS_PUBLIC )
-            fprintf( yyc, "static " );
+            bIsStatic = TRUE;
 
          if( pFunc == hb_comp_pInitFunc )        /* Is it STATICS$ */
-            fprintf( yyc, "HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
+            fprintf( yyc, "static HARBOUR hb_INITSTATICS( void )" ); /* NOTE: hb_ intentionally in lower case */
          else
-            fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
+            if ( ( ! bIsStatic ) && !( pFunc->cScope & HB_FS_INIT ) && !( pFunc->cScope & HB_FS_EXIT ) )
+               fprintf( yyc, "HB_FUNC( %s )", pFunc->szName );
+            else
+               if ( pFunc->cScope & HB_FS_INIT )
+                  fprintf( yyc, "HB_FUNC_INIT( %s )", pFunc->szName );
+               else
+                  if ( pFunc->cScope & HB_FS_EXIT )
+                     fprintf( yyc, "HB_FUNC_EXIT( %s )", pFunc->szName );
+                   else
+                      fprintf( yyc, "HB_FUNC_STATIC( %s )", pFunc->szName );
 
          fprintf( yyc, "\n{\n   static const BYTE pcode[] =\n   {\n" );
 

@@ -199,7 +199,10 @@ typedef PHB_FUNC HB_FUNC_PTR;
          are also prefixed with HB_. [vszakats] */
 
 #define HB_FUNCNAME( funcname ) HB_FUN_##funcname
-#define HB_FUNC( funcname )     HARBOUR HB_FUN_##funcname ( void )
+#define HB_FUNC( funcname )        HARBOUR HB_FUN_##funcname ( void ) */
+#define HB_FUNC_STATIC( funcname ) static HARBOUR HB_FUN_##funcname ( void )
+#define HB_FUNC_INIT( funcname )   static HARBOUR HB_FUN_##funcname ( void )
+#define HB_FUNC_EXIT( funcname )   static HARBOUR HB_FUN_##funcname ( void )
 
 /* */
 
