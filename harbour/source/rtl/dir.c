@@ -40,6 +40,7 @@
 /*
  * ChangeLog:
  *
+ * 1.66   20000312   ptucker   Borland use _chmod for attribs
  * 1.53   19990917   dholm     Moved normal hb_itemReturn() and ...Release()
  *                             calls out of the MSC, IBM & MingW32 #if block.
  * 1.49   19990915   dholm     Added __MINGW32__ support
@@ -222,6 +223,10 @@ static USHORT osToHarbourMask( USHORT usMask )
    HB_TRACE(HB_TR_DEBUG, ("osToHarbourMask(%hu)", usMask));
 
    usRetMask = usMask;
+
+   /* probably access denied when requesting mode */
+   if( usMask == (USHORT) -1 )
+      return 0;
 
 #if defined(OS_UNIX_COMPATIBLE)
    /* The use of any particular FA_ define here is meaningless */
@@ -619,15 +624,20 @@ HARBOUR HB_DIRECTORY( void )
                    if( pos )
                       strcpy( filename, ++pos );
                }
-            #elif defined(__BORLANDC__) 
-               attrib = _rtl_chmod( fullfile, 0 );
+            #elif defined(__BORLANDC__)
+              /* NOTE: _chmod( f, 0 ) => Get attribs
+                       _chmod( f, 1, n ) => Set attribs
+                 chmod() though, _will_ change the attributes
+              */
+              attrib = (USHORT)_chmod( fullfile, 0,0 );
             #elif defined(__DJGPP__)
-               attrib = _chmod( fullfile, 0 );
+               attrib = (USHORT)_chmod( fullfile, 0 );
             #else
                attrib = 0;
             #endif
 
             attrib = osToHarbourMask( attrib );
+
             if( attrib & FA_DIREC )
             {
                /* MS says size for a Directory is undefined.

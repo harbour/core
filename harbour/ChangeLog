@@ -1,3 +1,7 @@
+20000312-04:55 EST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/dir.c
+     use _chmod( f,0 ) to get attribs.
+
 20000312-03:40 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbdefs.h
      include/hbinit.h
