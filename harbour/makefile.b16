@@ -16,7 +16,7 @@
 PROJECT: harbour.lib libs\b16\terminal.lib libs\win16\terminal.lib harbour.exe
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
-              dates2.obj datesx.obj \
+              dates2.obj datesx.obj cmdarg.obj \
               debug.obj descend.obj devoutp.obj dynsym.obj environ.obj terror.obj \
               errorapi.obj errorsys.obj harbinit.obj extend.obj files.obj fm.obj \
               hardcr.obj initsymb.obj itemapi.obj math.obj memofile.obj memvars.obj \
@@ -36,6 +36,7 @@ console.obj  : console.c  extend.h hbdefs.h
 arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
 classes.obj  : classes.c  extend.h hbdefs.h
+cmdarg.obj   : cmdarg.c   extend.h hbdefs.h
 codebloc.obj : codebloc.c extend.h hbdefs.h
 dates.obj    : dates.c    extend.h hbdefs.h
 dates2.obj   : dates2.c   extend.h hbdefs.h

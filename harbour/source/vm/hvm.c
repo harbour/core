@@ -33,6 +33,18 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB_WORD()
+ *    HB___XHELP()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #ifndef __MPW__
    #include <malloc.h>
 #endif
@@ -68,7 +80,7 @@ static void    hb_vmSwapAlias( void );       /* swaps items on the eval stack an
 static ERRCODE hb_vmSelectWorkarea( PHB_ITEM ); /* select the workarea using a given item or a substituted value */
 
 static void    hb_vmDoInitStatics( void ); /* executes all _INITSTATICS functions */
-static void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
+static void    hb_vmDoInitFunctions( void ); /* executes all defined PRGs INIT functions */
 static void    hb_vmDoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
@@ -145,9 +157,9 @@ static USHORT s_uiActionRequest = 0;
 
 int main( int argc, char * argv[] )
 {
-   int i;
-
    HB_DEBUG( "main\n" );
+
+   hb_cmdargInit( argc, argv );
 
    /* initialize internal data structures */
    aStatics.type = IT_NIL;
@@ -165,29 +177,71 @@ int main( int argc, char * argv[] )
 #endif
    hb_vmSymbolInit_RT();      /* initialize symbol table with runtime support functions */
 
+   /* Check for some internal switches */
+
+   if( hb_cmdargCheck( "INFO" ) )
+   {
+      char * pszVersion = hb_version( 1 );
+
+      printf( pszVersion );
+      printf( hb_consoleGetNewLine() );
+
+      hb_xfree( pszVersion );
+   }
+
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
     * because INIT function can use static variables
     */
    hb_vmDoInitStatics();
-   hb_vmDoInitFunctions( argc, argv ); /* process defined INIT functions */
+   hb_vmDoInitFunctions(); /* process defined INIT functions */
 
-#ifdef HARBOUR_START_PROCEDURE
+   /* This is undocumented CA-Clipper, if there's a function called _APPMAIN
+      it will be executed first. */
    {
-      PHB_DYNS pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
+      PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );
 
       if( pDynSym )
          s_pSymStart = pDynSym->pSymbol;
+#ifdef HARBOUR_START_PROCEDURE
       else
-         hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
-   }
-#endif
+      {
+         pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
 
-   hb_vmPushSymbol( s_pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
-   hb_vmPushNil();               /* places NIL at self */
-   for( i = 1; i < argc; i++ )   /* places application parameters on the stack */
-      hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
-   hb_vmDo( argc - 1 );          /* invoke it with number of supplied parameters */
+         if( pDynSym )
+            s_pSymStart = pDynSym->pSymbol;
+         else
+            hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
+      }
+#else
+#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBLE
+      else
+         hb_errInternal( 9999, "Starting procedure not found", NULL, NULL );
+#endif
+#endif
+   }
+
+   if( s_pSymStart )
+   {
+      int i;
+      int iArgCount;
+
+      hb_vmPushSymbol( s_pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
+      hb_vmPushNil();                 /* places NIL at self */
+
+      iArgCount = 0;
+      for( i = 1; i < argc; i++ )     /* places application parameters on the stack */
+      {
+         /* Filter out any parameters beginning with //, like //INFO */
+         if( ! hb_cmdargIsInternal( argv[ i ] ) )
+         {
+            hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
+            iArgCount++;
+         }
+      }
+
+      hb_vmDo( iArgCount ); /* invoke it with number of supplied parameters */
+   }
 
    hb_vmQuit();
 
@@ -2849,7 +2903,7 @@ static void hb_vmDoExitFunctions( void )
    } while( pLastSymbols );
 }
 
-static void hb_vmDoInitFunctions( int argc, char * argv[] )
+static void hb_vmDoInitFunctions( void )
 {
    PSYMBOLS pLastSymbols = s_pSymbols;
 
@@ -2866,15 +2920,27 @@ static void hb_vmDoInitFunctions( int argc, char * argv[] )
 
             if( scope == FS_INIT )
             {
+               int argc = hb_cmdargARGC();
+               char ** argv = hb_cmdargARGV();
+
                int i;
+               int iArgCount;
 
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
 
+               iArgCount = 0;
                for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
-                  hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
+               {
+                  /* Filter out any parameters beginning with //, like //INFO */
+                  if( ! hb_cmdargIsInternal( argv[ i ] ) )
+                  {
+                     hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
+                     iArgCount++;
+                  }
+               }
 
-               hb_vmDo( argc - 1 );
+               hb_vmDo( iArgCount );
             }
          }
       }
@@ -3181,7 +3247,7 @@ void hb_vmRequestCancel( void )
 
 HARBOUR HB___XHELP( void )
 {
-   PHB_DYNS pDynSym = hb_dynsymFindName( "HELP" );
+   PHB_DYNS pDynSym = hb_dynsymFind( "HELP" );
 
    if( pDynSym )
    {

@@ -147,12 +147,20 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
 #ifdef HB_FM_STATISTICS
-   if( s_ulMemoryBlocks )
+   if( s_ulMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
-      printf( "\n\ntotal memory blocks allocated: %lu\n", s_ulMemoryMaxBlocks );
-      printf( "memory maximum size consumed: %ld\n", s_ulMemoryMaxConsumed );
-      printf( "memory blocks not released: %ld\n", s_ulMemoryBlocks );
-      printf( "memory size not released: %ld\n", s_ulMemoryConsumed );
+      printf( hb_consoleGetNewLine() );
+      printf( "total memory blocks allocated: %lu", s_ulMemoryMaxBlocks );
+      printf( hb_consoleGetNewLine() );
+      printf( "memory maximum size consumed: %ld", s_ulMemoryMaxConsumed );
+      if( s_ulMemoryBlocks )
+      {
+         printf( hb_consoleGetNewLine() );
+         printf( "memory blocks not released: %ld", s_ulMemoryBlocks );
+         printf( hb_consoleGetNewLine() );
+         printf( "memory size not released: %ld", s_ulMemoryConsumed );
+      }
+      printf( hb_consoleGetNewLine() );
    }
 #endif
 }

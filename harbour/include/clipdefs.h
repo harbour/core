@@ -62,6 +62,7 @@ typedef SHORTP  PSHORT;
 typedef USHORT* USHORTP;
 typedef USHORTP PUSHORT;
 
+typedef unsigned int WORD;
 typedef WORD*   WORDP;
 typedef WORDP   PWORD;
 
@@ -71,6 +72,7 @@ typedef LONGP   PLONG;
 typedef ULONG*  ULONGP;
 typedef ULONGP  PULONG;
 
+typedef unsigned long DWORD;
 typedef DWORD*  DWORDP;
 typedef DWORDP  PDWORD;
 

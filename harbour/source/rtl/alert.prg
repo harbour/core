@@ -37,6 +37,8 @@
 //   This is fixed.
 // ; nDelay parameter is a Harbour addition.
 
+STATIC s_lNoAlert := NIL
+
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nChoice
    LOCAL aSay, nPos, nWidth, nOpWidth, nInitRow, nInitCol, iEval
@@ -55,13 +57,11 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    /*        if it is not, the console mode is choosed here */
    LOCAL lConsole := .F.
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-// TODO: Enable this when we have a function for querying the command line
-//       parameters.
-// IF "//NOALERT" $ /* Upper( cCommandLine ) */
-//    QUIT
-// ENDIF
-#endif
+   DEFAULT s_lNoAlert TO __argCheck( "NOALERT" )
+
+   IF s_lNoAlert
+      QUIT
+   ENDIF
 
    aSay := {}
 
@@ -277,3 +277,11 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    ENDIF
 
    RETURN nChoice
+
+/* Undocumented CA-Clipper functions */
+
+PROCEDURE __NONOALERT()
+
+   s_lNoAlert := .F.
+
+   RETURN

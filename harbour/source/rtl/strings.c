@@ -44,6 +44,7 @@
  *    hb_strEmpty()
  *    hb_strMatchDOS()
  *    hb_STRZERO()
+ *    hb_strnicmp()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -99,27 +100,73 @@ BOOL hb_strEmpty( char * szText, ULONG ulLen )
    return bRetVal;
 }
 
-int hb_stricmp( const char *s1, const char *s2 )
+int hb_stricmp( const char * s1, const char * s2 )
 {
-   int rc = 0, c1, c2;
-   ULONG l1, l2, count;
+   int rc = 0;
+   ULONG l1 = strlen( s1 );
+   ULONG l2 = strlen( s2 );
+   ULONG count;
 
-   l1 = strlen( s1 );
-   l2 = strlen( s2 );
-   if( l1 < l2 ) count = l1;
-   else count = l2;
+   if( l1 < l2 )
+      count = l1;
+   else
+      count = l2;
+
    while( rc == 0 && count > 0 )
    {
+      char c1 = toupper( *s1++ );
+      char c2 = toupper( *s2++ );
+
+      if( c1 != c2 )
+         rc = ( c1 < c2 ? -1 : 1 );
+
       count--;
-      c1 = toupper( *s1++ );
-      c2 = toupper( *s2++ );
-      if( c1 != c2 ) rc = ( c1 < c2 ? -1 : 1 );
    }
+
    if( rc == 0 && l1 != l2 )
    {
-      if( l1 < l2 ) rc = -1;
-      else rc = 1;
+      if( l1 < l2 )
+         rc = -1;
+      else
+         rc = 1;
    }
+
+   return rc;
+}
+
+int hb_strnicmp( const char * s1, const char * s2, ULONG count )
+{
+   int rc = 0;
+   ULONG l1 = strlen( s1 );
+   ULONG l2 = strlen( s2 );
+
+   if( l1 > count )
+      l1 = count;
+
+   if( l1 < l2 )
+      count = l1;
+   else
+      count = l2;
+
+   while( rc == 0 && count > 0 )
+   {
+      char c1 = toupper( *s1++ );
+      char c2 = toupper( *s2++ );
+
+      if( c1 != c2 )
+         rc = ( c1 < c2 ? -1 : 1 );
+
+      count--;
+   }
+
+   if( rc == 0 && l1 != l2 )
+   {
+      if( l1 < l2 )
+         rc = -1;
+      else
+         rc = 1;
+   }
+
    return rc;
 }
 
@@ -512,7 +559,7 @@ HARBOUR HB_PADC( void )
       hb_retc( "" );
 }
 
-ULONG hb_strAt( char *szSub, ULONG ulSubLen, char *szText, ULONG ulLen )
+ULONG hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen )
 {
    if( ulSubLen )
    {

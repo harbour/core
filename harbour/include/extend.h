@@ -317,6 +317,7 @@ extern PHB_ITEM hb_arrayClone( PHB_ITEM pArray );
 #define HB_STRGREATER_RIGHT     2
 
 extern int      hb_stricmp( const char * s1, const char * s2 );
+extern int      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen );
 extern int      hb_strgreater( char * szText1, char * szText2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
@@ -345,6 +346,15 @@ extern PHB_DYNS hb_dynsymFindName( char * szName );   /* converts to uppercase a
 extern void     hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern void     hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
 extern void     hb_dynsymEval( PHB_DYNS_FUNC, void * );   /* enumerates all dynamic symbols */
+
+/* Command line and environment argument management */
+extern void     hb_cmdargInit( int argc, char * argv[] );
+extern int      hb_cmdargARGC( void );
+extern char **  hb_cmdargARGV( void );
+extern BOOL     hb_cmdargIsInternal( const char * szArg );
+extern BOOL     hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
+extern char *   hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern int      hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 
 /* Symbol management */
 extern PHB_SYMB hb_symbolNew( char * szName );
@@ -377,6 +387,9 @@ extern char *   hb_consoleGetNewLine( void );
 
 extern void     hb_tone( double dFrequency, double dDuration );
 extern char *   hb_setColor( char * );
+
+/* misc */
+extern char *   hb_version( USHORT uiMode );
 
 /* Please leave these at the bottom of this file */
 

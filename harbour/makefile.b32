@@ -20,7 +20,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj asort.obj \
               browdb.obj \
               classes.obj codebloc.obj copyfile.obj \
               dates.obj dates2.obj datesx.obj debug.obj debugger.obj descend.obj devoutp.obj \
-              dir.obj do.obj dynsym.obj environ.obj terror.obj \
+              dir.obj do.obj dynsym.obj environ.obj terror.obj cmdarg.obj \
               errorapi.obj errorsys.obj harbinit.obj extend.obj fileread.obj filesys.obj fm.obj \
               hardcr.obj hb_f.obj hvm.obj initsymb.obj inkey.obj itemapi.obj \
               langapi.obj math.obj mathx.obj memofile.obj memvars.obj menuto.obj mtran.obj msges.obj \
@@ -35,6 +35,7 @@ arrays.obj   : arrays.c   extend.h hbdefs.h
 asort.obj    : asort.c    extend.h hbdefs.h
 browdb.obj   : browdb.c   extend.h hbdefs.h
 classes.obj  : classes.c  extend.h hbdefs.h
+cmdarg.obj   : cmdarg.c   extend.h hbdefs.h
 codebloc.obj : codebloc.c extend.h hbdefs.h
 copyfile.obj : copyfile.c extend.h hbdefs.h
 dates.obj    : dates.c    extend.h hbdefs.h

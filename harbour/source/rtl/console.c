@@ -124,7 +124,10 @@ void hb_consoleInitialize( void )
 
    s_iFilenoStdout = fileno( stdout );
    hb_fsSetDevMode( s_iFilenoStdout, FM_BINARY );
-   s_iFilenoStderr = fileno( stderr );
+   if( hb_cmdargCheck( "STDERR" ) ) /* Undocumented CA-Clipper switch */
+      s_iFilenoStderr = s_iFilenoStdout;
+   else
+      s_iFilenoStderr = fileno( stderr );
    hb_fsSetDevMode( s_iFilenoStderr, FM_BINARY );
 
 #ifdef HARBOUR_USE_GTAPI

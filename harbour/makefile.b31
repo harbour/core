@@ -18,7 +18,7 @@ c_opt = -mh -O2 -I.\include -DHARBOUR_USE_GTAPI
 
 PROJECT: harbour.lib hbtools.lib terminal.lib libs\win16\terminal.lib
 
-harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
+harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj cmdarg.obj \
               dates.obj descend.obj devoutp.obj dir.obj dynsym.obj environ.obj \
               terror.obj errorapi.obj errorsys.obj harbinit.obj extend.obj \
               filesys.obj gtapi.obj hardcr.obj initsymb.obj itemapi.obj \
@@ -79,6 +79,7 @@ transfrm.obj : transfrm.c   extend.h hbdefs.h ctoharb.h set.h dates.h
 gtdos.obj    : source\rtl\gt\gtdos.c     extend.h hbdefs.h gtapi.h
 msguk.obj    : source\rtl\natmsg\msguk.c extend.h hbdefs.h
 
+cmdarg.obj   : source\vm\cmdarg.c   extend.h hbdefs.h
 debug.obj    : source\vm\debug.c    extend.h hbdefs.h ctoharb.h itemapi.h
 dynsym.obj   : source\vm\dynsym.c   extend.h hbdefs.h
 initsymb.obj : source\vm\initsymb.c extend.h hbdefs.h

@@ -64,6 +64,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\asort.obj \
     $(OBJ_DIR)\browdb.obj \
     $(OBJ_DIR)\classes.obj \
+    $(OBJ_DIR)\cmdarg.obj \
     $(OBJ_DIR)\codebloc.obj \
     $(OBJ_DIR)\console.obj \
     $(OBJ_DIR)\copyfile.obj \
@@ -530,6 +531,9 @@ $(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
 #
 # VM source dependencies below. Add as needed
 #
+
+$(OBJ_DIR)\cmdarg.obj : $(VM_DIR)\cmdarg.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\debug.obj : $(VM_DIR)\debug.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**

@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
+        cmdarg.c \
         debug.c \
 	dynsym.c \
 	hvm.c \

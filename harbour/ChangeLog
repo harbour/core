@@ -1,3 +1,54 @@
+19990919-06:21 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/vm/hvm.c
+    + Added support for CA-Clipper undocumented _APPMAIN starting function,
+      if this is defined, Harbour will start it first, overriding the default
+      starting proc.
+    ! Fixed the case when no PUBLIC functions were declared with no
+      explicit starting procedure. Now it will silently exit (STRICT mode)
+      or show a proper unrecoverable error message, instead of a possible GPF, 
+    * __XHELP() - hb_dynsymFindName() changed to hb_dynsymFind()
+  * source/rtl/environ.c
+    include/extend.h
+    + hb_version() added, separated from HB_VERSION(), to make it callable 
+      from C, too. //INFO needed it.
+  * source/rtl/console.c
+    + Added undocumented //STDERR feature, when specified it will redirect
+      all stderr output to stdout.
+  * source/rtl/alert.prg
+    + ALERT() now handles the //NOALERT switch.
+      The NOALERT feature is now always turned on, not only in STRICT mode.
+    + __NONOALERT() undocumented Clipper function added.
+  * source/rtl/hvm.c
+  + source/rtl/cmdarg.c
+    source/rtl/Makefile
+    include/extend.h
+    makefile.*
+    makefile.vc (with extra care taken to retain the alphabetical order :-))
+    + Internal command line and environment variable support added.
+      //INFO //F:30 //TEMPPATH:"C:\TEMP", SET HARBOUR=F30;X00,
+      SET CLIPPER=E0 INFO, now can be queried from Harbour runtime.
+    + API added to reach the above functionality.
+    + Harbour argument handling functions added:
+      __ARGC()
+      __ARGV()
+      __ARGCHECK()
+      __ARGGET()
+    ! Now the internal parameters (//INFO) are no more passed to the Harbour 
+      MAIN and INIT functions.
+    + Harbour now prints the version when //INFO switch is speficied.
+  * source/rtl/fm.c
+    + Will always print some memory info when the //INFO switch was specified.
+  * include/clipdefs.h
+    + Added WORD, DWORD typedefs.
+  * source/rtl/strings.c
+    include/extend.h
+    + hb_strnicmp() added.
+    % hb_stricmp() formatted, variable scopes adjusted, int type changed to 
+      char.
+  * source/rtl/classes.c
+    * Small modification.
+
 19990918-17:42 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/set.c

@@ -756,7 +756,7 @@ HARBOUR HB___CLSINSTSUPER( void )
 
          for( uiClass = 0; ! bFound && uiClass < s_uiClasses; uiClass++ )
          {                                      /* Locate the entry         */
-            if( !hb_stricmp( pString->item.asString.value, s_pClasses[ uiClass ].szName ) )
+            if( hb_stricmp( pString->item.asString.value, s_pClasses[ uiClass ].szName ) == 0 )
             {
                hb_retni( uiClass + 1 );               /* Entry + 1 = hb___msgClsH    */
                bFound = TRUE;

@@ -281,17 +281,21 @@ HARBOUR HB_OS( void )
 #endif /* __MPW__ */
 }
 
-HARBOUR HB_VERSION( void )
-{
-   char hb_ver[ 80 ];
+/* The caller must free the returned buffer. */
 
-   sprintf( hb_ver, "Harbour %d.%d Intl. (Build %d%s)  (%04d.%02d.%02d)",
+#define HB_VERSION_BUFFER_LEN 80
+
+char * hb_version( USHORT uiMode )
+{
+   char * pszVersion = hb_xgrab( HB_VERSION_BUFFER_LEN );
+
+   sprintf( pszVersion, "Harbour %d.%d Intl. (Build %d%s)  (%04d.%02d.%02d)",
       hb_major, hb_minor, hb_build, hb_revision, hb_year, hb_month, hb_day );
 
-   if( hb_pcount() == 1 )
+   if( uiMode != 0 )
    {
       /* Optionally include the Compiler name and version, if available. */
-      char * compiler = (char *) 0;
+      char * compiler = ( char * ) NULL;
       int version = 0;
 
    #if defined(__IBMCPP__)
@@ -327,21 +331,28 @@ HARBOUR HB_VERSION( void )
    #endif
       if( compiler )
       {
-         strncat( hb_ver, " (", sizeof( hb_ver ) );
-         strncat( hb_ver, compiler, sizeof( hb_ver ) );
+         strncat( pszVersion, " (", HB_VERSION_BUFFER_LEN );
+         strncat( pszVersion, compiler, HB_VERSION_BUFFER_LEN );
          if( version )
          {
             char buf[ 40 ];
             sprintf( buf, "(%d)", version );
-            strncat( hb_ver, " ", sizeof( hb_ver ) );
-            strncat( hb_ver, buf, sizeof( hb_ver ) );
+            strncat( pszVersion, " ", HB_VERSION_BUFFER_LEN );
+            strncat( pszVersion, buf, HB_VERSION_BUFFER_LEN );
          }
-         strncat( hb_ver, ")", sizeof( hb_ver ) );
-         hb_ver[ sizeof( hb_ver ) - 1 ] = '\0';
+         strncat( pszVersion, ")", HB_VERSION_BUFFER_LEN );
+         pszVersion[ HB_VERSION_BUFFER_LEN - 1 ] = '\0';
       }
    }
 
-   hb_retc( hb_ver );
+   return pszVersion;
+}
+
+HARBOUR HB_VERSION( void )
+{
+   char * pszVersion = hb_version( hb_pcount() > 0 ? 1 : 0 );
+   hb_retc( pszVersion );
+   hb_xfree( pszVersion );
 }
 
 HARBOUR HB_GETENV( void )
