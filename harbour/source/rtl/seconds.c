@@ -53,7 +53,9 @@
 #include "hbapi.h"
 
 #include <time.h>
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_BSD)
+   #include <sys/time.h>
+#elif defined( OS_UNIX_COMPATIBLE )
    #include <sys/timeb.h>
 #else
    #include <sys\timeb.h>
@@ -65,11 +67,20 @@ double hb_dateSeconds( void )
    #define timeb _timeb
    #define ftime _ftime
 #endif
+#if defined(HB_OS_BSD)
+   struct timeval oTime;
+   struct timezone oZone;
+#else
    struct timeb tb;
    struct tm * oTime;
+#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
 
+#if defined(HB_OS_BSD)
+   gettimeofday( &oTime, &oZone );
+   return ( ( double ) oTime.tv_sec + ( double ) oTime.tv_usec / 1000.0 );
+#else
    ftime( &tb );
    oTime = localtime( &tb.time );
 
@@ -77,6 +88,7 @@ double hb_dateSeconds( void )
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
           ( ( double ) tb.millitm / 1000 );
+#endif
 }
 
 HB_FUNC( SECONDS )
@@ -92,3 +104,6 @@ HB_FUNC( HB_CLOCKS2SECS )
 }
 
 #endif
+
+
+

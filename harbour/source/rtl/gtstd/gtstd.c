@@ -70,7 +70,9 @@
 /* Add time function for BEL flood throttling.. */
 
 #include <time.h>
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_BSD )
+   #include <sys/time.h>
+#elif defined( OS_UNIX_COMPATIBLE )
    #include <sys/timeb.h>
 #else
    #include <sys\timeb.h>
@@ -524,6 +526,12 @@ static int gtstd_get_seconds( void )
    #define timeb _timeb
    #define ftime _ftime
 #endif
+#if defined(HB_OS_BSD)
+   struct timeval oTime;
+   struct timezone oZone;
+   gettimeofday( &oTime, &oZone );
+   return ( oTime.tv_sec );
+#else
    struct timeb tb;
    struct tm * oTime;
 
@@ -531,6 +539,7 @@ static int gtstd_get_seconds( void )
    oTime = localtime( &tb.time );
 
    return ( (int) oTime->tm_sec );
+#endif
 }
 
 void hb_gt_Tone( double dFrequency, double dDuration )
@@ -767,3 +776,5 @@ BOOL hb_gt_Resume()
 {
    return TRUE;
 }
+
+

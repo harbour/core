@@ -1,0 +1,75 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .o
+EXE_EXT =
+LIB_PREF = lib
+LIB_EXT = .a
+
+CC = gcc
+CC_IN = -c
+CC_OUT = -o
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+ifeq ($(HB_LEX),SIMPLEX)
+CFLAGS = -Wall -g -DHB_OS_BSD -DSIMPLEX
+else
+CFLAGS = -Wall -g -DHB_OS_BSD
+endif
+
+LD = gcc
+LD_OUT = -o
+
+# Add all libraries specified in CONTRIBS and LIBS.
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(ARCH))
+LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(ARCH))
+else
+LINKPATHS += -L$(HB_LIB_COMPILE)
+endif
+LINKLIBS += -Wl,--start-group
+LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(lib))
+LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(ARCH))
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
+endif
+
+# Add the specified GT driver library
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
+LINKLIBS += -l$(HB_GT_LIB)
+endif
+
+# HB_SCREEN_LIB: empty, or one of ncurses, slang
+ifeq ($(HB_GT_LIB),gtcrs)
+HB_SCREEN_LIB:=ncurses
+else
+ifeq ($(HB_GT_LIB),gtsln)
+HB_SCREEN_LIB:=slang
+endif
+endif
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKPATHS += -L/usr/local/lib
+LINKLIBS += -l$(HB_SCREEN_LIB)
+endif
+
+LINKLIBS += -lm -Wl,--end-group
+
+LDFLAGS +=  $(LINKPATHS)
+
+AR = ar
+ARFLAGS = $(A_USR)
+AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
+
+include $(TOP)$(ROOT)config/rules.cf
+
+
+
+
+
