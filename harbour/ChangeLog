@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-15 14:02 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * hrbdll.bc
+      + added references to cdphu852.c cdphuwin.c and errorint.c
+   Could a MSVC user update hrbdll.vc
+
 2004-02-15 16:35 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * src/rtl/tbrowse.prg

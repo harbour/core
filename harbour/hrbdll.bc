@@ -134,6 +134,7 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\dummy.obj \
   $(OBJ_DIR)\empty.obj \
   $(OBJ_DIR)\errorapi.obj \
+  $(OBJ_DIR)\errorint.obj \
   $(OBJ_DIR)\errorsys.obj \
   $(OBJ_DIR)\fieldbl.obj \
   $(OBJ_DIR)\file.obj \
@@ -405,6 +406,8 @@ HARBOUR_DLL_OBJS = \
   $(OBJ_DIR)\cdpeswin.obj \
   $(OBJ_DIR)\cdpgedos.obj \
   $(OBJ_DIR)\cdpgewin.obj \
+  $(OBJ_DIR)\cdphu852.obj \
+  $(OBJ_DIR)\cdphuwin.obj \
   $(OBJ_DIR)\cdppl852.obj \
   $(OBJ_DIR)\cdppliso.obj \
   $(OBJ_DIR)\cdpplmaz.obj \
@@ -693,6 +696,7 @@ $(HARBOUR_DLL)  : \
   echo. $(OBJ_DIR)\dummy.obj             + >> hdll.tmp
   echo. $(OBJ_DIR)\empty.obj             + >> hdll.tmp
   echo. $(OBJ_DIR)\errorapi.obj          + >> hdll.tmp
+  echo. $(OBJ_DIR)\errorint.obj          + >> hdll.tmp
   echo. $(OBJ_DIR)\errorsys.obj          + >> hdll.tmp
   echo. $(OBJ_DIR)\fieldbl.obj           + >> hdll.tmp
   echo. $(OBJ_DIR)\file.obj              + >> hdll.tmp
@@ -1569,6 +1573,9 @@ $(OBJ_DIR)\empty.obj : $(RTL_DIR)\empty.c
 $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
+$(OBJ_DIR)\errorint.obj : $(RTL_DIR)\errorint.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -2355,6 +2362,12 @@ $(OBJ_DIR)\cdpgedos.obj : $(CODEPAGE_DIR)\cdpgedos.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\cdpgewin.obj : $(CODEPAGE_DIR)\cdpgewin.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cdphu852.obj : $(CODEPAGE_DIR)\cdphu852.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
+$(OBJ_DIR)\cdphuwin.obj : $(CODEPAGE_DIR)\cdphuwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\cdppl852.obj : $(CODEPAGE_DIR)\cdppl852.c
