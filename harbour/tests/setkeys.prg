@@ -31,6 +31,7 @@
    their web site at http://www.gnu.org/).
 
    V 1.0  A White                 Initial version, submitted to Harbour Project
+   V 1.1  A White                 Add a Help() function to test default F1
 */
 
   #include "inkey.ch"
@@ -83,7 +84,7 @@
 
     hb_SetKeyArray( { 49, 50, 52, 53 }, {|x| qout( chr( x ) ) } )
     do while ( n := inkey( 0 ) ) != K_ESC
-      if hb_SetKeyCheck( n )
+      if hb_SetKeyCheck( n, procname(),procline(), readvar() )
         qqout( " hit hot" )
       else
         qout( chr( n ) )
@@ -96,3 +97,12 @@
 
     return
 
+  Procedure Help( cProc, nLine, cVar )
+    local nX := col(), nY := row()
+
+    @ 19, 19 say "Pcount: " ; ?? pcount()
+    @ 20, 10 say "Proc  : " ; ?? cProc
+    @ 21, 10 say "Line  : " ; ?? nLine
+    @ 22, 10 say "Var   : " ; ?? cVar
+
+    SetPos( nX, nY )

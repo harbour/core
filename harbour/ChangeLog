@@ -1,3 +1,14 @@
+2000-12-02 01:15 UTC+0500 April <awhite@user.rose.com>
+   * source/rtl/xhelp.prg
+     * added code to push the params passed to xhelp back onto the stack
+       (fixes default K_F1 set key)
+   * tests/setkeys.prg
+     * added Help() and display contents of params received
+       * NOTE: using hb_SetKeyCheck() with only one param [key] will not
+         pass proper values to default Help() - it's pcount will be 3, but
+         cProc will be [key], and nLine and cVar will be NIL
+         use hb_SetKeyCheck( n, procname(),procline(), readvar() )
+
 2000-12-02 01:13 UTC+0100 jfl (mafact) <jfl@mafact.com>
    * include/hbclass.ch
      * more work in progress about :class message

@@ -42,10 +42,21 @@ HB_FUNC( __XHELP )
 
    if( pDynSym )
    {
+      /* awhite: push the existing params after the dyn symbol */
+
+      USHORT uiPCount = hb_pcount();
+      USHORT uiParam;
+
+      hb_vmPushSymbol( pDynSym->pSymbol );
+      hb_vmPushNil();
+      for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
+         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+      hb_vmDo( uiPCount );
+/*
       hb_vmPushSymbol( pDynSym->pSymbol );
       hb_vmPushNil();
       hb_vmDo( 0 );
-
+*/
       /* NOTE: Leave the return value as it is. */
    }
 }
