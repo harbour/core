@@ -14,7 +14,8 @@ PROJECT: harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib harbour.exe
 
 harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj datesx.obj \
               debug.obj dynsym.obj environ.obj error.obj \
-              errorapi.obj errorsys.obj extend.obj files.obj gtapi.obj itemapi.obj \
+              errorapi.obj errorsys.obj extend.obj files.obj gtapi.obj \
+              initsymb.obj itemapi.obj \
               math.obj mathx.obj objfunc.obj set.obj symbols.obj strings.obj \
               stringp.obj \
               stringsx.obj strcmp.obj tclass.obj transfrm.obj
@@ -46,6 +47,7 @@ errorsys.obj : errorsys.c extend.h types.h
 extend.obj   : extend.c   extend.h types.h
 files.obj    : extend.c   extend.h types.h
 gtapi.obj    : extend.c   extend.h types.h
+initsymb.obj : initsymb.c extend.h types.h
 itemapi.obj  : itemapi.c  extend.h types.h
 math.obj     : math.c     extend.h types.h
 mathx.obj    : mathx.c    extend.h types.h

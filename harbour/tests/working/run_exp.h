@@ -8,7 +8,6 @@
  *
  */
 HARBOUR ARRAY();
-HARBOUR AADD();
 HARBOUR ASIZE();
 HARBOUR ATAIL();
 HARBOUR AINS();
@@ -26,8 +25,6 @@ HARBOUR ERRORSYS();
 HARBOUR ERRORNEW();
 HARBOUR EVAL();
 HARBOUR VALTYPE();
-HARBOUR UPPER();
-HARBOUR VAL();
 HARBOUR ASORT();
 HARBOUR CLASSCREATE();
 HARBOUR CLASSADD();
@@ -38,14 +35,7 @@ HARBOUR OSEND();
 HARBOUR CLASSMOD();
 HARBOUR CLASSDEL();
 HARBOUR OCLONE();
-HARBOUR CTOD();
-HARBOUR DTOC();
-HARBOUR DTOS();
 HARBOUR STOD();
-HARBOUR DAY();
-HARBOUR MONTH();
-HARBOUR YEAR();
-HARBOUR TIME();
 HARBOUR HB_SETCENTURY();
 HARBOUR SET();
 HARBOUR OS();
@@ -67,14 +57,9 @@ HARBOUR BIN2W();
 HARBOUR I2BIN();
 HARBOUR L2BIN();
 HARBOUR W2BIN();
-HARBOUR ABS();
 HARBOUR EXP();
-HARBOUR INT();
 HARBOUR LOG();
-HARBOUR MAX();
-HARBOUR MIN();
 HARBOUR MOD();
-HARBOUR SQRT();
 HARBOUR ISDATA();
 HARBOUR ISMETHOD();
 HARBOUR AODATA();
@@ -97,28 +82,17 @@ HARBOUR ISDIGIT();
 HARBOUR ISUPPER();
 HARBOUR ISLOWER();
 HARBOUR LTRIM();
-HARBOUR RTRIM();
 HARBOUR TRIM();
 HARBOUR ALLTRIM();
 HARBOUR PADR();
 HARBOUR PAD();
 HARBOUR PADL();
 HARBOUR PADC();
-HARBOUR AT();
 HARBOUR RAT();
-HARBOUR CHR();
-HARBOUR ASC();
-HARBOUR LEFT();
 HARBOUR RIGHT();
-HARBOUR SUBSTR();
-HARBOUR LOWER();
-HARBOUR UPPER();
-HARBOUR REPLICATE();
 HARBOUR SPACE();
 HARBOUR STUFF();
 HARBOUR STRTRAN();
-HARBOUR VAL();
-HARBOUR STR();
 HARBOUR TCLASS();
 HARBOUR TRANSFORM();
 HARBOUR DATETIME();
@@ -142,7 +116,6 @@ HARBOUR TANH();
 HARBOUR STRDUMP();
 HARBOUR STRTOKEN();
 HARBOUR ROT13();
-HARBOUR PCOUNT();
 
 /* Same story.
 
@@ -153,7 +126,6 @@ HARBOUR PCOUNT();
 static SYMBOL symbols[] = {
 { "HB_RUN",         FS_PUBLIC, HB_RUN        , 0 },
 { "ARRAY",          FS_PUBLIC, ARRAY         , 0 },
-{ "AADD",           FS_PUBLIC, AADD          , 0 },
 { "ASIZE",          FS_PUBLIC, ASIZE         , 0 },
 { "ATAIL",          FS_PUBLIC, ATAIL         , 0 },
 { "AINS",           FS_PUBLIC, AINS          , 0 },
@@ -171,8 +143,6 @@ static SYMBOL symbols[] = {
 { "ERRORNEW",       FS_PUBLIC, ERRORNEW      , 0 },
 { "EVAL",           FS_PUBLIC, EVAL          , 0 },
 { "VALTYPE",        FS_PUBLIC, VALTYPE       , 0 },
-{ "UPPER",          FS_PUBLIC, UPPER         , 0 },
-{ "VAL",            FS_PUBLIC, VAL           , 0 },
 { "ASORT",          FS_PUBLIC, ASORT         , 0 },
 { "CLASSCREATE",    FS_PUBLIC, CLASSCREATE   , 0 },
 { "CLASSADD",       FS_PUBLIC, CLASSADD      , 0 },
@@ -183,14 +153,7 @@ static SYMBOL symbols[] = {
 { "CLASSMOD",       FS_PUBLIC, CLASSMOD      , 0 },
 { "CLASSDEL",       FS_PUBLIC, CLASSDEL      , 0 },
 { "OCLONE",         FS_PUBLIC, OCLONE        , 0 },
-{ "CTOD",           FS_PUBLIC, CTOD          , 0 },
-{ "DTOC",           FS_PUBLIC, DTOC          , 0 },
-{ "DTOS",           FS_PUBLIC, DTOS          , 0 },
 { "STOD",           FS_PUBLIC, STOD          , 0 },
-{ "DAY",            FS_PUBLIC, DAY           , 0 },
-{ "MONTH",          FS_PUBLIC, MONTH         , 0 },
-{ "YEAR",           FS_PUBLIC, YEAR          , 0 },
-{ "TIME",           FS_PUBLIC, TIME          , 0 },
 { "HB_SETCENTURY",  FS_PUBLIC, HB_SETCENTURY , 0 },
 { "SET",            FS_PUBLIC, SET           , 0 },
 { "OS",             FS_PUBLIC, OS            , 0 },
@@ -212,14 +175,9 @@ static SYMBOL symbols[] = {
 { "I2BIN",          FS_PUBLIC, I2BIN         , 0 },
 { "L2BIN",          FS_PUBLIC, L2BIN         , 0 },
 { "W2BIN",          FS_PUBLIC, W2BIN         , 0 },
-{ "ABS",            FS_PUBLIC, ABS           , 0 },
 { "EXP",            FS_PUBLIC, EXP           , 0 },
-{ "INT",            FS_PUBLIC, INT           , 0 },
 { "LOG",            FS_PUBLIC, LOG           , 0 },
-{ "MAX",            FS_PUBLIC, MAX           , 0 },
-{ "MIN",            FS_PUBLIC, MIN           , 0 },
 { "MOD",            FS_PUBLIC, MOD           , 0 },
-{ "SQRT",           FS_PUBLIC, SQRT          , 0 },
 { "ISDATA",         FS_PUBLIC, ISDATA        , 0 },
 { "ISMETHOD",       FS_PUBLIC, ISMETHOD      , 0 },
 { "AODATA",         FS_PUBLIC, AODATA        , 0 },
@@ -242,28 +200,17 @@ static SYMBOL symbols[] = {
 { "ISUPPER",        FS_PUBLIC, ISUPPER       , 0 },
 { "ISLOWER",        FS_PUBLIC, ISLOWER       , 0 },
 { "LTRIM",          FS_PUBLIC, LTRIM         , 0 },
-{ "RTRIM",          FS_PUBLIC, RTRIM         , 0 },
 { "TRIM",           FS_PUBLIC, TRIM          , 0 },
 { "ALLTRIM",        FS_PUBLIC, ALLTRIM       , 0 },
 { "PADR",           FS_PUBLIC, PADR          , 0 },
 { "PAD",            FS_PUBLIC, PAD           , 0 },
 { "PADL",           FS_PUBLIC, PADL          , 0 },
 { "PADC",           FS_PUBLIC, PADC          , 0 },
-{ "AT",             FS_PUBLIC, AT            , 0 },
 { "RAT",            FS_PUBLIC, RAT           , 0 },
-{ "CHR",            FS_PUBLIC, CHR           , 0 },
-{ "ASC",            FS_PUBLIC, ASC           , 0 },
-{ "LEFT",           FS_PUBLIC, LEFT          , 0 },
 { "RIGHT",          FS_PUBLIC, RIGHT         , 0 },
-{ "SUBSTR",         FS_PUBLIC, SUBSTR        , 0 },
-{ "LOWER",          FS_PUBLIC, LOWER         , 0 },
-{ "UPPER",          FS_PUBLIC, UPPER         , 0 },
-{ "REPLICATE",      FS_PUBLIC, REPLICATE     , 0 },
 { "SPACE",          FS_PUBLIC, SPACE         , 0 },
 { "STUFF",          FS_PUBLIC, STUFF         , 0 },
 { "STRTRAN",        FS_PUBLIC, STRTRAN       , 0 },
-{ "VAL",            FS_PUBLIC, VAL           , 0 },
-{ "STR",            FS_PUBLIC, STR           , 0 },
 { "TCLASS",         FS_PUBLIC, TCLASS        , 0 },
 { "TRANSFORM",      FS_PUBLIC, TRANSFORM     , 0 },
 { "DATETIME",       FS_PUBLIC, DATETIME      , 0 },
@@ -286,6 +233,5 @@ static SYMBOL symbols[] = {
 { "TANH",           FS_PUBLIC, TANH          , 0 },
 { "STRDUMP",        FS_PUBLIC, STRDUMP       , 0 },
 { "STRTOKEN",       FS_PUBLIC, STRTOKEN      , 0 },
-{ "ROT13",          FS_PUBLIC, ROT13         , 0 },
-{ "PCOUNT",         FS_PUBLIC, PCOUNT        , 0 }
+{ "ROT13",          FS_PUBLIC, ROT13         , 0 }
 };

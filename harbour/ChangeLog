@@ -1,3 +1,9 @@
+19990519-20:00 CET Eddie Runia
+  * tests/working/run_exp.h
+    shortened because InitSymbols
+  * makefile.b16 / .b32 / .icc
+    initsymb.c added
+
 19990519-18:00 CET Eddie Runia
   * docs/hrb.faq
     add some documentation and FAQ list for the .HRB output
@@ -5,13 +11,13 @@
 19990519-12:50 CET Eddie Runia
   * source/compiler/harbour.y
     Some clean up
-  * source/tests/broken/runner.c | run_exp.h | stub.bat
+  * tests/broken/runner.c | run_exp.h | stub.bat
     removed
-  * source/tests/working/runner.c | run_exp.h | stub.bat
+  * tests/working/runner.c | run_exp.h | stub.bat
     added runner code
-  * source/tests/working/spawn.prg
+  * tests/working/spawn.prg
     spawn example program
-  * source/tests/working/readhrb.prg + readhrb.lnk
+  * tests/working/readhrb.prg + readhrb.lnk
     Clipper program to read .HRB files
 
 19990518-23:15 David G. Holm <dholm@jsd-llc.com>
