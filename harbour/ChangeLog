@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     * Added declaration for FM api functons
+   * source/vm/fm.c
+     include/hbapi.h
+     * FM api  functions marked as exported
+
 2001-12-30 13:47 UTC+0100 Patrick Mast <email@patrickmast.com>
    * contrib/apollo/apollo.c
      + Added function sx_GetDateJulian()

@@ -1623,8 +1623,8 @@ function fileisnewer(cFile,as)
 local nCount := 0
 IF !lextended
 For nCount:=1 to len(aPrgs)
-         adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
-                   as[nCount], filedate( as[nCount] ), filetime( as[nCount] )}
+         adir := { cFile,, hbmake_filedate( cFile ), hbmake_filetime( cFile ), ;
+                   as[nCount], hbmake_filedate( as[nCount] ), hbmake_filetime( as[nCount] )}
          if empty( adir[ 7 ] )
             adir[ 2 ] := .t.
          else
@@ -1632,8 +1632,8 @@ For nCount:=1 to len(aPrgs)
          endif
 next
 else
-         adir := { cFile,, filedate( cFile ), filetime( cFile ), ;
-                   as, filedate( as ), filetime( as )}
+         adir := { cFile,, hbmake_filedate( cFile ), hbmake_filetime( cFile ), ;
+                   as, hbmake_filedate( as ), hbmake_filetime( as )}
          if empty( adir[ 7 ] )
             adir[ 2 ] := .t.
          else
