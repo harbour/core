@@ -43,7 +43,7 @@
 
 typedef PHB_ITEM  ITEM;
 #ifndef CLIPPERDEFS
-typedef double    XDOUBLE;
+   typedef double    XDOUBLE;
 #endif
 
 /* Compatible defines */
@@ -56,6 +56,8 @@ typedef double    XDOUBLE;
 #define ALIAS           IT_ALIAS
 #define MPTR            IT_BYREF        /* or'ed with type when passed by reference */
 #define MEMO            IT_MEMO
+/* NOTE: CA-Cl*pper bug: WORD will conflict with the typedef with the same
+         name in clipdefs.h [vszakats] */
 #define WORD            ( IT_INTEGER | IT_LONG )
 #define ARRAY           IT_ARRAY
 #define BLOCK           IT_BLOCK
@@ -92,3 +94,4 @@ typedef double    XDOUBLE;
 #define _stornl         hb_stornl
 
 #endif /* _EXTEND_API */
+

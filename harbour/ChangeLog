@@ -1,3 +1,18 @@
+20000322-02:25 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * include/fileio.ch
+     include/hbapi.h
+     include/hbapifs.h
+     source/rtl/diskspac.c
+     source/tools/io.c
+     * hb_DiskSpace() renamed to hb_fsDiskSpace() and moved the FS API header.
+     * HB_DISK_* constants moved to fileio.ch
+     + Added a new parameter to the Harbour level DISKSPACE() function to 
+       enable access to the new features. This is a Harbour extenstion.
+     ! DISKSPACE() (and the IO.C versions) use hb_retnlen() instead of 
+       hb_retnd().
+     ! CD(), RD(), MD() are now using the FS API, so they are now working
+       on more platforms.
+
 20000321-19:58 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/diskspac.c
      * Borland does not see the unnamed struct that is part of ULARGE_INT.
@@ -23,7 +38,7 @@
      * DiskSpace() calls hb_diskSpace()
    * source/tools/io.c
      * DiskFree(), DiskUsed, DiskFull() now call hb_DiskSpace()
-   * include/hbapi.c
+   * include/hbapi.h
      + #define HB_DISK_....
      + declaration for hb_DiskSpace()
    ! Disk...() functions return a double.
@@ -208,7 +223,8 @@
      source/rtl/stuff.c
      source/rtl/word.c
      - Superfluous #includes removed.
-20000320-23:00 GMT-3 Luiz Rafael Culik  <culik@sl.conex.net>
+
+20000320-23:00 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     samples/cccppc/*.*
     ! Removed contents from the CCCPPC dir
 

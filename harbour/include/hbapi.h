@@ -97,13 +97,6 @@
 #define PCOUNT             hb_pcount()
 #define ALENGTH( n )       hb_parinfa( n, 0 )
 
-/* used by DiskSpace(), etc. */
-#define HB_DISK_FREE   1
-#define HB_DISK_AVAIL  2
-#define HB_DISK_TOTAL  4
-#define HB_DISK_USED   8
-extern double hb_DiskSpace( USHORT, USHORT );
-
 /* forward declarations */
 struct _HB_CODEBLOCK;
 struct _HB_BASEARRAY;

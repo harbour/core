@@ -58,7 +58,7 @@
    #include <dos.h>
 #endif
 
-double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
+double hb_fsDiskSpace( USHORT uiDrive, USHORT uiType )
 {
    double dSpace = 0.0;
 
@@ -93,6 +93,7 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
                      ( double ) disk.bytes_per_sector );
             break;
       }
+
       if( uiType == HB_DISK_USED )
          dSpace -= ( double ) disk.avail_clusters *
                    ( double ) disk.sectors_per_cluster *
@@ -157,15 +158,15 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
 
             dSpace  = ( double ) i64RetVal.u.HighPart +
                       ( double ) i64RetVal.u.HighPart *
-                      ( double ) 0xffffffff ;
-            dSpace += ( double ) i64RetVal.u.LowPart ;
+                      ( double ) 0xFFFFFFFF;
+            dSpace += ( double ) i64RetVal.u.LowPart;
 
             if( uiType == HB_DISK_USED )
             {
                dSpace -= ( double ) i64FreeBytes.u.HighPart +
                          ( double ) i64FreeBytes.u.HighPart *
-                         ( double ) 0xffffffff ;
-               dSpace -= ( double ) i64FreeBytes.u.LowPart  ;
+                         ( double ) 0xFFFFFFFF;
+               dSpace -= ( double ) i64FreeBytes.u.LowPart;
             }
          }
       }
@@ -218,8 +219,12 @@ double hb_DiskSpace( USHORT uiDrive, USHORT uiType )
    return dSpace;
 }
 
+/* NOTE: The second parameter is a Harbour extension, check fileio.ch for
+         the possible values. */
 
 HB_FUNC( DISKSPACE )
 {
-   hb_retnd( hb_DiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, HB_DISK_AVAIL ));
+   hb_retnlen( hb_fsDiskSpace( ISNUM( 1 ) ? hb_parni( 1 ) : 0, 
+                               ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL ), -1, 0 );
 }
+
