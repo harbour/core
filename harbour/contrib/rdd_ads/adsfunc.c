@@ -1264,7 +1264,7 @@ UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
 }  /* ShowPercentage */
 
 
-HB_FUNC( ADSREGCALLBACK    )
+HB_FUNC( ADSREGCALLBACK )
 {
    UNSIGNED32 ulRetVal;
 
@@ -1295,7 +1295,7 @@ HB_FUNC( ADSREGCALLBACK    )
 
 }
 
-HB_FUNC( ADSCLRCALLBACK  )
+HB_FUNC( ADSCLRCALLBACK )
 {
    if ( itmCobCallBack )
    {
@@ -1375,7 +1375,7 @@ HB_FUNC( ADSGETNUMOPENTABLES )
 
 HB_FUNC( ADSSHOWERROR )
 {
-   char * pucTitle;
+   UNSIGNED8* pucTitle;
    if( ISCHAR( 1 ) )
    {
       pucTitle = (UNSIGNED8*) hb_parc( 1 );

@@ -2407,7 +2407,7 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
             bMax = ( lpTmpPage->node.extNode.keyPool[ lpTmpPage->ReqByte - 2 ]
                          >> ( 16 - lpTmpPage->TCBits ) ) & lpTmpPage->TCMask;
             bMax = iLen - 6 - HB_MAX( pPtr[ iKeys * iLen - 1 ], bMax );
-            for ( j = 0; j < bMax && 
+            for ( j = 0; j < bMax &&
                          pPtr[ ( iKeys - 1 ) * iLen + j ] == pbKey[ j ]; j++ );
             iSize -= j;
             iMaxReq = lpTmpPage->ReqByte;
@@ -2418,7 +2418,7 @@ static int hb_cdxPageKeyLeafBalance( LPCDXPAGE pPage, SHORT iChildRet )
                ul = ( ul << 8 ) | 0xFF;
             }
             iSize += iKeys * iMaxReq;
-            iSize = lpTmpPage->iFree - iSize - 
+            iSize = lpTmpPage->iFree - iSize -
                      ( iMaxReq - lpTmpPage->ReqByte ) * lpTmpPage->iKeys;
             if ( iSize < 0 )
                fIns = TRUE;
@@ -2690,7 +2690,7 @@ static int hb_cdxPageKeyIntBalance( LPCDXPAGE pPage, SHORT iChildRet )
          iMin = 1;
       if ( iMax > pPage->TagParent->MaxKeys )
          iMax = pPage->TagParent->MaxKeys;
-      for ( i = iBlncKeys - 1; i >= 0 && 
+      for ( i = iBlncKeys - 1; i >= 0 &&
                   childs[i]->iKeys >= iMin && childs[i]->iKeys <= iMax; i-- )
       {
          iKeys -= childs[i]->iKeys;
@@ -4673,7 +4673,7 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOO
 
    if ( ! pTag )
    {
-      hb_cdxErrorRT( pArea, EG_NOORDER, 1020, NULL, EF_CANDEFAULT );
+      hb_cdxErrorRT( pArea, EG_NOORDER, 1201, NULL, EF_CANDEFAULT );
       return FAILURE;
    }
    else

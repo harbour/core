@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-19 12:48 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * contrib/rdd_ads/adsfunc.c
+     ! fixed casting in adsShowError()
+   * contrib/rdd_ads/ads1.c
+     ! adsSeek() now raises a runtime error 1201 if no index is active
+     ! adsOrderListAdd() sets order to 0 if an invalid or non-existent tag is provided
+       The above two were added to keep Clipper compatibility
+     + Added 5th param to commonError() in order to provide uiFlags, like other RDD's 
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfntx/dbfntx1.c
+     ! Fixed error code returned by hb_cdxSeek() and ntxSeek() to 1201 (was 1020)
+       so it returns same error code as Clipper
+
 2004-02-17 9:22 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/adsfunc.c
      + Forgot to mention Brian Hays' implicit record locking fix/workaround is also

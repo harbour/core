@@ -3066,7 +3066,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       return FAILURE;
    if ( ! pArea->lpCurTag )
    {
-     commonError( pArea, EG_NOORDER, 1020, NULL, EF_CANDEFAULT );
+     commonError( pArea, EG_NOORDER, 1201, NULL, EF_CANDEFAULT );
      return FAILURE;
    }
    else
