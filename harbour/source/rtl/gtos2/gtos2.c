@@ -37,6 +37,9 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_ReadKey()
+ *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    hb_gt_Tone()
  *
@@ -52,18 +55,16 @@
 /* NOTE: User programs should never call this layer directly! */
 
 #define INCL_VIO
+#define INCL_DOSPROCESS
 #define INCL_NOPMAPI
 
 #include <string.h>
 #include <os2.h>
+#include <bsedos.h>
+#include <conio.h>
 
 #include "hbapigt.h"
-
-#if defined(HARBOUR_GCC_OS2)
-   ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );
-#else
-   #include <dos.h>
-#endif
+#include "inkey.ch"
 
 static char hb_gt_GetCellSize( void );
 static void hb_gt_SetCursorSize( char start, char end, int visible );
@@ -106,20 +107,6 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_ReadKey(%d)", (int) event_mask));
 
-#if defined(HARBOUR_GCC_OS2)
-
-   /* Read from the keyboard with no echo, no wait, and no SIGSEV on Ctrl-C */
-   ch = _read_kbd( 0, 0, 0 );
-   if( ch == 0 )
-   {
-      /* It's a function key lead-in, so read the function key scan code */
-      ch = _read_kbd( 0, 0, 0 );
-      if( ch != -1 ) ch += 256;      /* If it's really a scan code, offset it */
-   }
-   /* _read_kbd() returns -1 for no key, the switch statement will handle
-      this. */
-#else
-
    if( kbhit() )
    {
       /* A key code is available in the BIOS keyboard buffer, so read it */
@@ -136,13 +123,12 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             the actual function key and then offset it by 256,
             unless extended keyboard events are allowed, in which
             case offset it by 512 */
-         if( s_eventmask & INKEY_EXTENDED ) ch = getch() + 512;
+         if( eventmask & INKEY_EXTENDED ) ch = getch() + 512;
          else ch = getch() + 256;
       }
    }
    else
       ch = 0;
-#endif
 
    /* Perform key translations */
    switch( ch )
@@ -603,11 +589,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 
    while( dDuration > 0.0 )
    {
-#if defined(HB_TONE_OS2_GCC)
-      ULONG temp = ( ULONG ) HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
-#else
       USHORT temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
-#endif
 
       dDuration -= temp;
       if( temp <= 0 )
@@ -618,11 +600,7 @@ void hb_gt_Tone( double dFrequency, double dDuration )
       }
       else
       {
-#if defined(HB_TONE_OS2_GCC)
-         DosBeep( ( ULONG ) dFrequency, temp );
-#else
          DosBeep( ( USHORT ) dFrequency, temp );
-#endif
       }
    }
 }

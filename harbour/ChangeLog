@@ -1,3 +1,19 @@
+2000-03-20 21:55 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * config/os2/icc.cf
+   * config/w32/bcc32.cf
+     + Added HB_GT_LIB support
+
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtwin/gtwin.c
+     + Added Copyright notice for hb_gt_ReadKey()
+     + Added missing conditionals and includes to gtos2.c for ICC
+     + Added hb_gt_Version() to gtos2.c
+     - Removed GCC conditionals and includes from gtos2.c, because
+       gtos2.c doesn't support GCC for screen output, so there is
+       little point in including keyboard input or sound suport.
+
 20000321-02:00 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    + source/vm/runner.c

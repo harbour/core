@@ -43,6 +43,9 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_ReadKey()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -280,7 +283,12 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             /* Save the keyboard state and ASCII key code */
             DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
-            if( ch < 0 )
+            if( ch == 224 )
+            {
+               /* Strip extended key lead-in codes */
+               ch = 0;
+            }
+            else if( ch < 0 )
             {
                /* Process international key codes */
                ch += 256;
