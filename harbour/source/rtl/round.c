@@ -57,6 +57,9 @@
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  *    INT()
  *
+ * Copyright 2003 Vicente Aranzana <varanzana@gruposp.com>
+ * hb_numRound()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -84,44 +87,24 @@ HB_FUNC( INT )
       hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT", 1, hb_paramError( 1 ) );
 }
 
-double hb_numRound( double dResult, int iDec )
+double hb_numRound( double doValue, int nPrecision )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_numRound(%lf, %d)", dResult, iDec));
+	static const double doBase = 10.0f;
+	double doComplete5, doComplete5i;
 
-   if( dResult != 0.0 )
-   {
-      if( iDec == 0 )
-      {
-         if( dResult < 0.0 )
-            dResult = ceil( dResult - 0.5 );
-         else
-            dResult = floor( dResult + 0.5 );
-      }
-      else if( iDec < 0 )
-      {
-         double dAdjust = pow( 10, -iDec );
+	HB_TRACE(HB_TR_DEBUG, ("hb_numRound(%lf, %d)", doValue, iPrecision));
 
-         if( dResult < 0.0 )
-            dResult = ceil( ( dResult / dAdjust ) - 0.5 );
-         else
-            dResult = floor( ( dResult / dAdjust ) + 0.5 );
+	doComplete5 = doValue * pow(doBase, (double) (nPrecision + 1));
 
-         dResult *= dAdjust;
-      }
-      else
-      {
-         double dAdjust = pow( 10, iDec );
+	if(doValue < 0.0f)
+		doComplete5 -= 5.0f;
+	else
+		doComplete5 += 5.0f;
 
-         if( dResult > 0.0 )
-            dResult = ceil( ( dResult * dAdjust ) + 0.5 );
-         else
-            dResult = floor( ( dResult * dAdjust ) - 0.5 );
+	doComplete5 /= doBase;
+	modf(doComplete5, &doComplete5i);
 
-         dResult /= dAdjust;
-      }
-   }
-
-   return dResult;
+	return doComplete5i / pow(doBase, (double) nPrecision);
 }
 
 HB_FUNC( ROUND )
