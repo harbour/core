@@ -1,3 +1,21 @@
+19990619-00:52 Ryszard Glab <rglab@imid.med.pl>
+
+* config/linux/gcc.cf
+ * added default gcc library libm
+ * added location of libm library (I have assumed /usr/lib)
+ 
+* source/include/hbsetup.h
+ + the order of static variables initialisation is not determined in 
+   gcc on Linux. This requires the definition of HARBOUR_START_PROCEDURE
+   The dafault is 'MAIN'
+
+- tests/working/next.prg 
+ - removed because it is contained in keywords.prg
+ 
+* tests/working/Makefile
+ -removed reference to next.prg
+ 
+
 19990618-23:17 CET Patrick Mast
   * Release of Build #27
   * version.h, updated build version

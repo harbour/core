@@ -15,11 +15,14 @@
  *
  * The list of compilers that require it:
  * - Watcom C/C++ 10.0
+ * - GCC on Linux
  *
  * By default we are using automatic lookup (symbol not defined)
 */
-#ifdef __WATCOMC__
-  #define HARBOUR_START_PROCEDURE "MAIN"
+#if defined(__WATCOMC__) || defined(__GNUC__)
+  #if !defined(__DJGPP__)
+    #define HARBOUR_START_PROCEDURE "MAIN"
+  #endif
 #endif
 
 /* This symbol defines if we want an ability to create and link OBJ files

@@ -122,7 +122,7 @@ HARBOUR HB_DIRECTORY( void )
    char   ddate[9];
    char   ttime[9];
    int    attrib;
-   char   aatrib[7];
+   char   aatrib[8];
    char   string[_POSIX_PATH_MAX+1];
    char * pos;
    long   fsize;
@@ -262,8 +262,23 @@ HARBOUR HB_DIRECTORY( void )
          while(0==getchar());
 */
 
-#if defined(__GNUC__) || defined(__DJGPP__)
-	 aatrib[0] = '\0';
+#if defined(__GNUC__) || !defined(__DJGPP__)
+/* GNU C on Linux or on other UNIX */
+	 aatrib[ 0 ] = '\0';
+	 if( S_ISREG(statbuf.st_mode) )
+	   strcat( aatrib, "A" );
+	 if( S_ISDIR(statbuf.st_mode) )
+	   strcat( aatrib, "D" );
+	 if( S_ISLNK(statbuf.st_mode) )
+	   strcat( aatrib, "L" );
+	 if( S_ISCHR(statbuf.st_mode) )
+	   strcat( aatrib, "C" );
+	 if( S_ISBLK(statbuf.st_mode) )
+	   strcat( aatrib, "B" );
+	 if( S_ISFIFO(statbuf.st_mode) )
+	   strcat( aatrib, "F" );
+	 if( S_ISSOCK(statbuf.st_mode) )
+	   strcat( aatrib, "K" );
 #else
          /* TODO: seems to not clear on root entries ? */
          attrib = _chmod(fullfile,0);

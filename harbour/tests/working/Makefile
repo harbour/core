@@ -59,7 +59,6 @@ PRG_SOURCES=\
 	mathtest.prg \
 	mtran.prg \
 	multiarg.prg \
-	next.prg \
 	nums.prg \
 	objarr.prg \
 	objasign.prg \

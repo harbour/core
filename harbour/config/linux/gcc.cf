@@ -20,6 +20,7 @@ ifdef HB_LIB_DIR
 LDFLAGS = -L$(HB_LIB_DIR)
 endif
 LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
+LINKLIBS += -L/usr/lib -lm
 # LINKLIBS += -lm
 
 AR = ar
