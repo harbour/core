@@ -400,13 +400,13 @@ If nHandle < 0
 Endif
 cBuffer := Trim( Substr( ReadLN( @lEof ), 1 ) )
 
-Aadd( aDefines, { "HMAKEDIR", If( lgcc, GetMakeDir(), GetMakeDir() + "\.." ) } )
+Aadd( aDefines, { "HMAKEDIR",  GetMakeDir() } )
 If lBcc
-   Aadd( aDefines, { "MAKEDIR", GetBccDir() + "\.." } )
+   Aadd( aDefines, { "MAKEDIR", GetBccDir() } )
 Elseif lGcc
    Aadd( aDefines, { "MAKEDIR", GetGccDir() } )
 Elseif lVcc
-   Aadd( aDefines, { "MAKEDIR", GetVccDir() + "\.." } )
+   Aadd( aDefines, { "MAKEDIR", GetVccDir() } )
 
 Endif
 While !leof
@@ -647,6 +647,9 @@ Local cPath := ""
 Local cExe  := HB_ARGV( 0 )
 
 cPath := Left( cexe, Rat( "\", cexe ) - 1 )
+cPath := Left( cPath, Rat( "\", cPath ) - 1 )
+
+
 Return cPath
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -668,7 +671,7 @@ Local nPos
 For nPos := 1 To Len( aEnv )
    If File( aenv[ nPos ] + '\bcc32.exe' ) .or. File( Upper( aenv[ nPos ] ) + '\BCC32.EXE' )
       cPath := aenv[ nPos ]
-
+      cPath:=left(cPath,rat('\',cPath)-1)
       Exit
    Endif
 Next
@@ -694,7 +697,7 @@ Local nPos
 For nPos := 1 To Len( aEnv )
    If File( aenv[ nPos ] + '\cl.exe' ) .or. File( Upper( aenv[ nPos ] ) + '\cl.EXE' )
       cPath := aenv[ nPos ]
-
+      cPath:=left(cPath,rat('\',cPath)-1)
       Exit
    Endif
 Next
@@ -724,6 +727,7 @@ else
     For nPos := 1 To Len( aEnv )
        If File( aenv[ nPos ] + '\gcc.exe' ) .or. File( Upper( aenv[ nPos ] ) + '\GCC.EXE' )
           cPath := aenv[ nPos ]
+          cPath:=left(cPath,rat('\',cPath)-1)
           Exit
        Endif
     Next
@@ -772,11 +776,21 @@ If cTemp == "!endif"
 Endif
 cTemp := Trim( Substr( ReadLN( @lEof ), 1 ) )
 cTemp := Strtran( cTemp, "!ifndef ", "" )
+cTemp :=strtran(cTemp,"\..","")
+cTemp :=strtran(cTemp,"/..","")
+
+if at("\..",cTemp)>0
+   cTemp:=substr(cTemp,1,at("\..",cTemp)-1)
+elseif at("/..",cTemp)>0
+   cTemp:=substr(cTemp,1,at("/..",cTemp)-1)
+endif
+*/
 aSet  := listasarray2( ctemp, "=" )
 nPos  := Ascan( adefines, { | x, y | x[ 1 ] == aset[ 1 ] } )
 If nPos = 0
+
    cRead    := Alltrim( Strtran( aset[ 2 ], "$(", "" ) )
-   cRead    := Strtran( cRead, ")\..", "" )
+   cRead    := Strtran( cRead, ")", "" )
    nMakePos := Ascan( aDefines, { | x, y | x[ 1 ] == cRead } )
    If nMakePos > 0
       Aadd( aDefines, { aset[ 1 ], aDefines[ nMakePos, 2 ] } )
@@ -1089,12 +1103,20 @@ Local nPos
 Local cRead
 Local aSet     := {}
 Local nMakePos
-
+if at("\..",cTemp)>0
+   cTemp:=substr(cTemp,1,at("\..",cTemp)-1)
+elseif at("/..",cTemp)>0
+   cTemp:=substr(cTemp,1,at("/..",cTemp)-1)
+endif
+*/
+cTemp :=if(at("..\",cTemp)>0,strtran(cTemp,"..\",""),)
+cTemp :=if(at("../",cTemp)>0,strtran(cTemp,"../",""),)
+*/
 aSet := listasarray2( ctemp, "=" )
 nPos := Ascan( adefines, { | x, y | x[ 1 ] == aset[ 1 ] } )
 If nPos = 0
    cRead    := Alltrim( Strtran( aset[ 2 ], "$(", "" ) )
-   cRead    := Strtran( cRead, ")\..", "" )
+   cRead    := Strtran( cRead, ")", "" )
    nMakePos := Ascan( aDefines, { | x, y | x[ 1 ] == cRead } )
    If nMakePos = 0
       Aadd( aDefines, { aset[ 1 ], aset[ 2 ] } )
@@ -1183,7 +1205,7 @@ Local getlist      := {}
 Local cTopFile     := ""
 Local cDefBccLibs  := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib gtwin.lib"
 Local cDefGccLibs  := "-lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
-Local cDefGccLibsOs2  := "-lvm -lrtl -lgtos2 -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
+Local cgcclibsos2  := "-lvm -lrtl -lgtos2 -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon"
 Local cDeflibGccLibs := "-Wl,--start-group -lvm -lrtl -lgtstd -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon -lm -Wl,--end-group"
 Local cscreen      := Savescreen( 0, 0, Maxrow(), Maxcol() )
 local citem:=""
@@ -1195,11 +1217,11 @@ nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
 Fwrite( nLinkHandle, "!ifndef BCB" + CRLF )
-Fwrite( nLinkHandle, "BCB = $(MAKEDIR)\.." + CRLF )
+Fwrite( nLinkHandle, "BCB = $(MAKEDIR)" + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle,  CRLF )
 Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
-Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)\.." + CRLF )
+Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle, " " + CRLF )
 Cls
@@ -1270,11 +1292,11 @@ Elseif lGcc
 
    Aadd( aCommands, { ".prg.c:", "harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
 else
-   Aadd( aCommands, { ".cpp.o:", "$(BCB)\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
+   Aadd( aCommands, { ".cpp.o:", "$(BCB)\bin\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
-   Aadd( aCommands, { ".c.o:", "$(BCB)\gcc -I$(BHC)/../include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
+   Aadd( aCommands, { ".c.o:", "$(BCB)\bin\gcc -I$(BHC)/include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\harbour -n -I$(BHC)/../include $(HARBOURFLAGS)  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)/include $(HARBOURFLAGS)  -o$* $**" } )
 
 endif
 
@@ -1426,7 +1448,7 @@ elseif lGcc
       if  cOs=="Linux"
           Fwrite( nLinkHandle, "LIBFILES = " +cDeflibGccLibs + CRLF )
       elseif cOs=="OS/2"
-          Fwrite( nLinkHandle, "LIBFILES = " + cDefGccLibsOs2 + CRLF )
+          Fwrite( nLinkHandle, "LIBFILES = " + cgcclibsos2 + CRLF )
       else
           Fwrite( nLinkHandle, "LIBFILES = " +cDefgccLibs + CRLF )
       endif
@@ -1459,8 +1481,8 @@ elseif lVcc
  Fwrite( nLinkHandle, "ALLLIB = $(LIBFILES) comdlg32.lib shell32.lib user32.lib gdi32.lib"+CRLF)
 
 elseif lGcc
- Fwrite( nLinkHandle, "CFLAG1 = "+if(at("Linux",cOs)>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/../include")+ " -c -Wall"+CRLF)
- Fwrite( nLinkHandle, "CFLAG2 = "+if(at("Linux",cOs)>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/../lib")+CRLF)
+ Fwrite( nLinkHandle, "CFLAG1 = "+if(at("Linux",cOs)>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/include")+ " -c -Wall"+CRLF)
+ Fwrite( nLinkHandle, "CFLAG2 = "+if(at("Linux",cOs)>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/lib")+CRLF)
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = $(CFLAG2)"+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = "+CRLF)
@@ -1733,12 +1755,12 @@ nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
 Fwrite( nLinkHandle, "!ifndef BCB" + CRLF )
-Fwrite( nLinkHandle, "BCB = $(MAKEDIR)\.." + CRLF )
+Fwrite( nLinkHandle, "BCB = $(MAKEDIR)" + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle,  CRLF )
 
 Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
-Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)\.." + CRLF )
+Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle, " " + CRLF )
 Cls
@@ -1796,17 +1818,17 @@ If lBcc
 
 Elseif lGcc
    if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or. cOs=="Linux"
-   Aadd( aCommands, { ".cpp.o:", "$(BCB)/gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
+   Aadd( aCommands, { ".cpp.o:", "gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
-   Aadd( aCommands, { ".c.o:", "$(BCB)/gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
+   Aadd( aCommands, { ".c.o:", "gcc -I$(HB_INC_INSTALL) $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)/harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "harbour -n -I$(HB_INC_INSTALL) -I.  -o$* $**" } )
 else
-   Aadd( aCommands, { ".cpp.o:", "$(BCB)\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
+   Aadd( aCommands, { ".cpp.o:", "$(BCB)\bin\gcc $(CFLAG1) $(CFLAG2) -o$* $*" } )
 
-   Aadd( aCommands, { ".c.o:", "$(BCB)\gcc -I$(BHC)/../include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
+   Aadd( aCommands, { ".c.o:", "$(BCB)\bin\gcc -I$(BHC)/include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
-   Aadd( aCommands, { ".prg.c:", "$(BHC)\harbour -n -I$(BHC)/../include $(HARBOURFLAGS)  -o$* $**" } )
+   Aadd( aCommands, { ".prg.c:", "$(BHC)\bin\harbour -n -I$(BHC)/include $(HARBOURFLAGS)  -o$* $**" } )
 
 endif
 
@@ -2031,12 +2053,16 @@ elseif lVcc
  Fwrite( nLinkHandle, "ALLLIB = "+CRLF)
 
 elseif lGcc
- Fwrite( nLinkHandle, "CFLAG1 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/../include")+ " -c -Wall"+CRLF)
- Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/../lib")+CRLF)
+ Fwrite( nLinkHandle, "CFLAG1 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-I$(HB_INC_INSTALL)"," -I$(BHC)/include")+ " -c -Wall"+CRLF)
+ Fwrite( nLinkHandle, "CFLAG2 = "+if(at("linux",Getenv("HB_ARCHITECTURE"))>0 ,"-L $(HB_LIB_INSTALL)"," -L $(BHC)/lib")+CRLF)
  Fwrite( nLinkHandle, "RFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "LFLAGS = "+CRLF)
  Fwrite( nLinkHandle, "IFLAGS = "+CRLF)
- Fwrite( nLinkHandle, "LINKER = $(BCB)\ar -M <"+CRLF)
+ if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
+    Fwrite( nLinkHandle, "LINKER = ar -M <"+CRLF)
+ else
+    Fwrite( nLinkHandle, "LINKER = $(BCB)\ar -M <"+CRLF)
+ endif
  Fwrite( nLinkHandle, " "+CRLF)
  Fwrite( nLinkHandle, "ALLOBJ = $(OBJFILES) "+CRLF)
  Fwrite( nLinkHandle, "ALLRES = $(RESFILES) "+CRLF)
@@ -2083,7 +2109,11 @@ elseif lGcc
         Fwrite( nLinkHandle, "#BUILD"+CRLF)
         Fwrite( nLinkHandle, " "+CRLF)
         Fwrite( nLinkHandle, "$(PROJECT): $(CFILES) $(OBJFILES) "+CRLF)
-        Fwrite( nLinkHandle, "    $(BCB)\$(LINKER) @&&!"+CRLF)
+        if at("linux",Getenv("HB_ARCHITECTURE"))>0 .or.  cOs=="Linux"
+           Fwrite( nLinkHandle, "    $(LINKER) @&&!"+CRLF)
+        else
+           Fwrite( nLinkHandle, "    $(BCB)\$(LINKER) @&&!"+CRLF)
+        endif
         Fwrite( nLinkHandle, "    $(PROJECT) "+CRLF)
         Fwrite( nLinkHandle, "    $(ALLOBJ)  "+CRLF)
 
@@ -2311,12 +2341,20 @@ While at("!endif",cRead)==0
 
    cTemp := Strtran( cTemp, "!ifdef ", "" )
    if at('=',cRead)>0
+/*      cRead :=if(at("..\",cRead)>0,strtran(cRead,"..\",""), )
+      cRead :=if(at("../",cRead)>0,strtran(cRead,"../",""),)*/
+if at("\..",cRead)>0
+   cRead:=substr(cRead,1,at("\..",cRead)-1)
+elseif at("/..",cRead)>0
+   cRead:=substr(cRead,1,at("/..",cRead)-1)
+endif
+
       aSet  := listasarray2( cRead, "=" )
       nPos  := Ascan( adefines, { | x, y | x[ 1 ] == cTemp } )
 
       If nPos > 0
          cRead    := Alltrim( Strtran( aset[ 1 ], "$(", "" ) )
-         cRead    := Strtran( cRead, ")\..", "" )
+         cRead    := Strtran( cRead, ")", "" )
          nMakePos := Ascan( amaCros, { | x, y | x[ 1 ] == cRead } )
          If nMakePos == 0
             Aadd( amacros, { aset[ 1 ], aset[ 2 ] } )
