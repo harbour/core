@@ -1,3 +1,7 @@
+2001-08-05 22:58 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/vm/memvars.c
+    + Two functions added: hb_memvarGetVarHandle() and hb_memvarGetValueByHandle()
+
 2001-08-05 14:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.h

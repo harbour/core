@@ -1577,3 +1577,21 @@ void hb_memvarsIsMemvarRef( void )
       }
    }
 }
+
+HB_HANDLE hb_memvarGetVarHandle( char *szName )
+{
+   PHB_DYNS pDyn;
+
+   if( ( pDyn = hb_dynsymFind( szName ) ) != NULL )
+      return  pDyn->hMemvar;
+   else
+      return 0; /* invalid handle */
+}  
+
+PHB_ITEM hb_memvarGetValueByHandle( HB_HANDLE hMemvar )
+{
+   if( hMemvar && hMemvar < s_globalTableSize )
+      return  &s_globalTable[ hMemvar ].item;
+   else
+      return NULL;
+}
