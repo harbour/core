@@ -1,3 +1,7 @@
+19990726-18:12 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * makefile.dos, source/makefile.dos and source/rdd/makefile.dos
+     Added RDD support
+
 Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/Makefile: 
