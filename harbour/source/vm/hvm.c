@@ -246,7 +246,7 @@ ULONG _System OS2TermHandler(PEXCEPTIONREPORTRECORD       p1,
 
 /* application entry point */
 
-void hb_vmInit( BOOL bStartMainProc )
+void HB_EXPORT hb_vmInit( BOOL bStartMainProc )
 {
 
 #if defined(HB_OS_OS2)
@@ -358,7 +358,7 @@ void hb_vmInit( BOOL bStartMainProc )
 #endif
 }
 
-void hb_vmQuit( void )
+void HB_EXPORT hb_vmQuit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
 
@@ -397,7 +397,7 @@ void hb_vmQuit( void )
    exit( s_byErrorLevel );
 }
 
-void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
+void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 {
    LONG w = 0;
    BOOL bCanRecover = FALSE;
@@ -4272,7 +4272,7 @@ static void hb_vmPopStatic( USHORT uiStatic )
 
 /* ----------------------------------------------- */
 
-void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* module symbols initialization */
+void HB_EXPORT hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* module symbols initialization */
 {
    PSYMBOLS pNewSymbols;
    USHORT ui;
@@ -4644,13 +4644,7 @@ HB_FUNC( __TRACEPRGCALLS )
 
 /* hvm support for pcode DLLs */
 
-#if defined(__BORLANDC__)
-   void _export hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols,
-                                        USHORT uiModuleSymbols )
-#else
-   void hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols,
-                                USHORT uiModuleSymbols )
-#endif
+void HB_EXPORT hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols )
 {
    PSYMBOLS pNewSymbols;
    USHORT ui;
@@ -4693,13 +4687,4 @@ HB_FUNC( __TRACEPRGCALLS )
              hb_dynsymNew( ( pModuleSymbols + ui ) );
       }
    }
-}
-
-#if defined(__BORLANDC__)
-   void _export hb_vmDllExecute( const BYTE * pCode, PHB_SYMB pSymbols )
-#else
-   void hb_vmDllExecute( const BYTE * pCode, PHB_SYMB pSymbols )
-#endif
-{
-   hb_vmExecute( pCode, pSymbols );
 }
