@@ -387,7 +387,7 @@ static ERRCODE adsFieldName( ADSAREAP pArea, USHORT uiIndex, void * szName )
    if( uiIndex > pArea->uiFieldCount )
       return FAILURE;
 
-   AdsGetFieldName( pArea->hTable, uiIndex, szName, &pusBufLen );
+   AdsGetFieldName( pArea->hTable, uiIndex, (UCHAR*)szName, &pusBufLen );
    return SUCCESS;
 }
 
@@ -542,7 +542,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                uiCount = pField->uiLen;
             memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
             memset( szText + uiCount, ' ', pField->uiLen - uiCount );
-            AdsSetString( pArea->hTable, szName, hb_itemGetCPtr( pItem ), uiCount );
+            AdsSetString( pArea->hTable, szName, (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
          break;
@@ -571,7 +571,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( IS_DATE( pItem ) )
          {
             AdsGetDateFormat  ( pucFormat, &pusLen );
-            AdsSetDateFormat  ( "YYYYMMDD" );
+            AdsSetDateFormat  ( (UCHAR*)"YYYYMMDD" );
             szEndChar = * ( szText + pField->uiLen );
             hb_dateDecode( hb_itemGetDL( pItem ), &lDay, &lMonth, &lYear );
             hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
@@ -596,7 +596,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          {
             uiCount = hb_itemGetCLen( pItem );
             AdsSetString( pArea->hTable, szName,
-               hb_itemGetCPtr( pItem ), uiCount );
+               (UCHAR*)hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
          break;
@@ -680,28 +680,28 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo)
             if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
             {
                 ucField[0]='\0';
-                strncat(ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
                                     HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
-                sprintf(ucBuffer,"%s,%c;", ucField, pField->uiType );
+                sprintf((char*)ucBuffer,"%s,%c;", ucField, pField->uiType );
             }
             else
-                sprintf(ucBuffer,"%s,%c;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                sprintf((char*)ucBuffer,"%s,%c;", ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
                            pField->uiType );
             break;
         default :
             if(strlen((( PHB_DYNS ) pField->sym )->pSymbol->szName) > HARBOUR_MAX_RDD_FIELDNAME_LENGTH )
             {
                 ucField[0]='\0';
-                strncat(ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                strncat((char*)ucField, (( PHB_DYNS ) pField->sym )->pSymbol->szName,
                                     HARBOUR_MAX_RDD_FIELDNAME_LENGTH);
-                sprintf(ucBuffer,"%s,%c,%d,%d;", ucField, pField->uiType, pField->uiLen, pField->uiDec );
+                sprintf((char*)ucBuffer,"%s,%c,%d,%d;", ucField, pField->uiType, pField->uiLen, pField->uiDec );
             }
             else
-                sprintf(ucBuffer,"%s,%c,%d,%d;", (( PHB_DYNS ) pField->sym )->pSymbol->szName,
+                sprintf((char*)ucBuffer,"%s,%c,%d,%d;", (( PHB_DYNS ) pField->sym )->pSymbol->szName,
                         pField->uiType, pField->uiLen, pField->uiDec );
             break;
      }
-     strcat(ucfieldDefs, ucBuffer);
+     strcat((char*)ucfieldDefs, (char*)ucBuffer);
      pField++;
    }
    pArea->lpDataInfo->hFile = FS_ERROR;
@@ -883,7 +883,7 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
      *pucName = '\0';
    else
      AdsGetIndexName( pArea->hOrdCurrent, pucName, &pusLen);
-   pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pucName );
+   pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, (char*)pucName );
 
    if( pOrderInfo->itmOrder )
    {
@@ -931,7 +931,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' ) ulOptions = ADS_COMPOUND;
    ulRetVal = AdsCreateIndex( pArea->hTable, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, hb_itemGetCPtr( pItem ), "", "",
+           pOrderInfo->atomBagName, (UCHAR*)hb_itemGetCPtr( pItem ), (UCHAR*)"", (UCHAR*)"",
            ulOptions, &phIndex);
    if ( ulRetVal != AE_SUCCESS )
    {
@@ -993,19 +993,19 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          break;
       case DBOI_EXPRESSION:
          AdsGetIndexExpr( phIndex, aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
          break;
       case DBOI_CONDITION:
          AdsGetIndexCondition( phIndex, aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
          break;
       case DBOI_NAME:
          AdsGetIndexName( phIndex, aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
          break;
       case DBOI_BAGNAME:
          AdsGetIndexFilename  ( phIndex,ADS_BASENAME , aucBuffer, &pusLen);
-         hb_itemPutC( pOrderInfo->itmResult, aucBuffer );
+         hb_itemPutC( pOrderInfo->itmResult, (char*)aucBuffer );
          break;
       case DBOI_NUMBER :
       {
@@ -1178,56 +1178,56 @@ static ERRCODE adsReadDBHeader( ADSAREAP pArea )
 static RDDFUNCS adsTable = {  adsBof,
                              adsEof,
                              adsFound,
-                             adsGoBottom,
-                             adsGoTo,
-                             adsGoToId,
-                             adsGoTop,
-                             adsSeek,
+                             ( DBENTRYP_V ) adsGoBottom,
+                             ( DBENTRYP_UL ) adsGoTo,
+                             ( DBENTRYP_I ) adsGoToId,
+                             ( DBENTRYP_V ) adsGoTop,
+                             ( DBENTRYP_BIB ) adsSeek,
                              adsSkip,
                              adsSkipFilter,
-                             adsSkipRaw,
-                             adsAddField,
-                             adsAppend,
+                             ( DBENTRYP_L ) adsSkipRaw,
+                             ( DBENTRYP_VF ) adsAddField,
+                             ( DBENTRYP_B ) adsAppend,
                              adsCreateFields,
-                             adsDeleteRec,
-                             adsDeleted,
-                             adsFieldCount,
+                             ( DBENTRYP_V ) adsDeleteRec,
+                             ( DBENTRYP_BP ) adsDeleted,
+                             ( DBENTRYP_SP ) adsFieldCount,
                              adsFieldDisplay,
                              adsFieldInfo,
-                             adsFieldName,
+                             ( DBENTRYP_SVP ) adsFieldName,
                              adsFlush,
-                             adsGetRec,
-                             adsGetValue,
-                             adsGetVarLen,
+                             ( DBENTRYP_PP ) adsGetRec,
+                             ( DBENTRYP_SI ) adsGetValue,
+                             ( DBENTRYP_SVL ) adsGetVarLen,
                              adsGoCold,
                              adsGoHot,
                              adsPutRec,
-                             adsPutValue,
-                             adsRecAll,
-                             adsRecCount,
+                             ( DBENTRYP_SI ) adsPutValue,
+                             ( DBENTRYP_V ) adsRecAll,
+                             ( DBENTRYP_ULP ) adsRecCount,
                              adsRecInfo,
-                             adsRecNo,
+                             ( DBENTRYP_I ) adsRecNo,
                              adsSetFieldsExtent,
                              adsAlias,
-                             adsClose,
-                             adsCreate,
-                             adsInfo,
+                             ( DBENTRYP_V ) adsClose,
+                             ( DBENTRYP_VP ) adsCreate,
+                             ( DBENTRYP_SI ) adsInfo,
                              adsNewArea,
-                             adsOpen,
+                             ( DBENTRYP_VP ) adsOpen,
                              adsRelease,
-                             adsStructSize,
+                             ( DBENTRYP_SP ) adsStructSize,
                              adsSysName,
                              adsEval,
-                             adsPack,
-                             adsZap,
-                             adsOrderListAdd,
-                             adsOrderListClear,
-                             adsOrderListFocus,
-                             adsOrderListRebuild,
+                             ( DBENTRYP_V ) adsPack,
+                             ( DBENTRYP_V ) adsZap,
+                             ( DBENTRYP_OI ) adsOrderListAdd,
+                             ( DBENTRYP_V ) adsOrderListClear,
+                             ( DBENTRYP_OI ) adsOrderListFocus,
+                             ( DBENTRYP_V ) adsOrderListRebuild,
                              adsOrderCondition,
-                             adsOrderCreate,
-                             adsOrderDestroy,
-                             adsOrderInfo,
+                             ( DBENTRYP_VOC ) adsOrderCreate,
+                             ( DBENTRYP_OI ) adsOrderDestroy,
+                             ( DBENTRYP_OII ) adsOrderInfo,
                              adsClearFilter,
                              adsClearLocate,
                              adsFilterText,
@@ -1236,15 +1236,15 @@ static RDDFUNCS adsTable = {  adsBof,
                              adsCompile,
                              adsError,
                              adsEvalBlock,
-                             adsRawLock,
-                             adsLock,
-                             adsUnLock,
+                             ( DBENTRYP_VSP ) adsRawLock,
+                             ( DBENTRYP_VL ) adsLock,
+                             ( DBENTRYP_UL ) adsUnLock,
                              adsCloseMemFile,
                              adsCreateMemFile,
                              adsGetValueFile,
                              adsOpenMemFile,
                              adsPutValueFile,
-                             adsReadDBHeader,
+                             ( DBENTRYP_V ) adsReadDBHeader,
                              adsWriteDBHeader,
                              adsWhoCares
                            };

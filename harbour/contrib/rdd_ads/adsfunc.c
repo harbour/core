@@ -135,7 +135,7 @@ HARBOUR HB_ADSBLOB2FILE( void )
    }
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   ulRetVal = AdsBinaryToFile(  pArea->hTable, szFieldName, szFileName);
+   ulRetVal = AdsBinaryToFile(  pArea->hTable, (UCHAR*)szFieldName, (UCHAR*)szFileName);
    if ( ulRetVal == AE_SUCCESS )
      hb_retl( 1 );
    else
@@ -163,7 +163,7 @@ HARBOUR HB_ADSFILE2BLOB( void )
       usBinaryType = ADS_BINARY;
 
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
-   ulRetVal = AdsFileToBinary(  pArea->hTable, szFieldName, usBinaryType, szFileName);
+   ulRetVal = AdsFileToBinary(  pArea->hTable, (UCHAR*)szFieldName, usBinaryType, (UCHAR*)szFileName);
    if ( ulRetVal == AE_SUCCESS )
      hb_retl( 1 );
    else
@@ -182,7 +182,7 @@ HARBOUR HB_ADSKEYNO( void )
    if( pArea )
    {
       if( hb_pcount() > 0 )
-      {   
+      {
          if( ISNUM( 1 ) )
          {
             ordNum = hb_parni( 1 );
@@ -190,7 +190,7 @@ HARBOUR HB_ADSKEYNO( void )
          }
          else
          {
-            ordName = hb_parc( 1 );
+            ordName = (UCHAR*)hb_parc( 1 );
             AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
          }
          AdsGetKeyNum  ( hIndex, ADS_IGNOREFILTERS, &pulKey);
@@ -232,7 +232,7 @@ HARBOUR HB_ADSKEYCOUNT( void )
          }
          else
          {
-            ordName = hb_parc( 1 );
+            ordName = (UCHAR*)hb_parc( 1 );
             AdsGetIndexHandle( pArea->hTable, ordName, &hIndex );
          }
       }
