@@ -26,7 +26,21 @@ C_SOURCES=\
 	cdpsl852.c    \
 	cdpsliso.c    \
 	cdpslwin.c    \
-	cdpsrwin.c
+	cdpsrwin.c    \
+	uc1250.c      \
+	uc1251.c      \
+	uc1253.c      \
+	uc1257.c      \
+	uc737.c       \
+	uc850.c       \
+	uc852.c       \
+	uc866.c       \
+	uc8859_1.c    \
+	uc88591b.c    \
+	uc8859_2.c    \
+	uckoi8.c      \
+	uckoi8u.c     \
+	ucmaz.c       \
 
 LIBNAME=codepage
 

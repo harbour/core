@@ -1090,8 +1090,8 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
          ( pExpr->ExprType == HB_ET_CODEBLOCK ) ||
          ( pExpr->ExprType == HB_ET_SELF ) ||
          ( pExpr->ExprType == HB_ET_ARRAY ) )
-         {
-            hb_compExprErrorType( pExpr, HB_MACRO_PARAM );
+   {
+      hb_compExprErrorType( pExpr, HB_MACRO_PARAM );
    }
    return pSelf;
 }
@@ -1123,55 +1123,55 @@ HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 
 BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
-	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-	HB_EXPR_PTR pSub  = pParms->value.asList.pExprList;
-	HB_EXPR_PTR pText = pSub->pNext;
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pSub  = pParms->value.asList.pExprList;
+   HB_EXPR_PTR pText = pSub->pNext;
    HB_EXPR_PTR pReduced;
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
    {
    	if( pSub->value.asString.string[0] == '\0' )
       {
-      	pReduced = hb_compExprNewLong( 1 );
+         pReduced = hb_compExprNewLong( 1 );
       }
       else
       {
-      	pReduced = hb_compExprNewLong( hb_strAt( pSub->value.asString.string, pSub->ulLength, pText->value.asString.string, pText->ulLength ) );
+         pReduced = hb_compExprNewLong( hb_strAt( pSub->value.asString.string, pSub->ulLength, pText->value.asString.string, pText->ulLength ) );
       }
 
-		hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
+      hb_compExprFree( pSelf->value.asFunCall.pFunName, HB_MACRO_PARAM );
       hb_compExprFree( pSelf->value.asFunCall.pParms, HB_MACRO_PARAM );
 
       memcpy( pSelf, pReduced, sizeof( HB_EXPR ) );
       hb_compExprClear( pReduced );
-		return TRUE;
+      return TRUE;
    }
-	else
-		return FALSE;
+   else
+      return FALSE;
 }
 
 BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
-	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
-   HB_EXPR_PTR pExpr = NULL;
-   /* try to change it into a string */
 
+   /* try to change it into a string */
    if( pArg->ExprType == HB_ET_NUMERIC )
    {
-            /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
-                     CHR() cases where the passed parameter is a constant which
-                     can be divided by 256 but it's not zero, in this case it
-                     will return an empty string instead of a Chr(0). [vszakats] */
+      /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
+               CHR() cases where the passed parameter is a constant which
+               can be divided by 256 but it's not zero, in this case it
+               will return an empty string instead of a Chr(0). [vszakats] */
 
-  		pExpr = hb_compExprNew( HB_ET_STRING );
- 		pExpr->ValType = HB_EV_STRING;
-   	if( pArg->value.asNum.NumType == HB_ET_LONG )
+      HB_EXPR_PTR pExpr = hb_compExprNew( HB_ET_STRING );
+
+      pExpr->ValType = HB_EV_STRING;
+      if( pArg->value.asNum.NumType == HB_ET_LONG )
       {
-			BYTE bVal;
-			bVal = ( pArg->value.asNum.lVal % 256 );
-               
-			if( bVal == 0 && pArg->value.asNum.lVal != 0 )
+         BYTE bVal;
+         bVal = ( pArg->value.asNum.lVal % 256 );
+
+         if( bVal == 0 && pArg->value.asNum.lVal != 0 )
          {
            	pExpr->value.asString.string = ( char * ) hb_xgrab( 1 );
            	pExpr->value.asString.string[ 0 ] = '\0';
@@ -1183,7 +1183,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
             pExpr->value.asString.string = ( char * ) hb_xgrab( 2 );
             pExpr->value.asString.string[ 0 ] = bVal;
             pExpr->value.asString.string[ 1 ] = '\0';
-  	         pExpr->value.asString.dealloc = TRUE;
+            pExpr->value.asString.dealloc = TRUE;
      	      pExpr->ulLength = 1;
          }
       }
@@ -1208,7 +1208,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 
 BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
-	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 	
    if( pArg->ExprType == HB_ET_STRING || pArg->ExprType == HB_ET_ARRAY )
@@ -1220,13 +1220,13 @@ BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
       return TRUE;
-	}
-	return FALSE;
+   }
+   return FALSE;
 }
 
 BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
 {
-	HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 	
    if( pArg->ExprType == HB_ET_STRING )
@@ -1238,6 +1238,6 @@ BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_MACRO_DECL )
       memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
       hb_compExprClear( pExpr );
       return TRUE;
-	}
-	return FALSE;
+   }
+   return FALSE;
 }

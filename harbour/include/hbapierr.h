@@ -56,9 +56,7 @@
 #include "hbapi.h"
 #include "error.ch"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* Error codes (returned from hb_errLaunch()) */
 
@@ -173,8 +171,6 @@ typedef struct HB_ERROR_INFO_
 /*  set/get current error handler */
 extern HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_APIERR_H_ */

@@ -62,6 +62,7 @@ FUNCTION __dbCopyXStruct( cFileName )
    LOCAL nOldArea
    LOCAL oError
    LOCAL aStruct
+   local cTmpAlias
 
    IF Empty( aStruct := dbStruct() )
       RETURN .F.
@@ -70,9 +71,10 @@ FUNCTION __dbCopyXStruct( cFileName )
    nOldArea := Select()
 
    BEGIN SEQUENCE
+      cTmpAlias := __rddGetTempAlias()
 
       dbSelectArea( 0 )
-      __dbCreate( cFileName, NIL, NIL, .F., NIL )
+      __dbCreate( cFileName, NIL, NIL, .F., cTmpAlias )
 
       AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
          ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), NIL ) } )
@@ -84,7 +86,7 @@ FUNCTION __dbCopyXStruct( cFileName )
                                   FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
 
    /* NOTE: CA-Cl*pper has a bug, where only a plain RECOVER statement is
-            used here (without the USING keyword), so oError will always be 
+            used here (without the USING keyword), so oError will always be
             NIL. */
    RECOVER USING oError
    END SEQUENCE
@@ -104,6 +106,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
    LOCAL oError
+   local cTmpAlias
 
    DEFAULT lNew TO .F.
 
@@ -124,7 +127,9 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
 
       ELSE
 
-         dbUseArea( lNew,, cFileFrom ) 
+         cTmpAlias := __rddGetTempAlias()
+
+         dbUseArea( lNew,, cFileFrom, cTmpAlias )
 
          dbEval( {|| AAdd( aStruct, { Rtrim(FIELD->FIELD_NAME) ,;
                                       Rtrim(FIELD->FIELD_TYPE) ,;
@@ -137,10 +142,11 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDDName, lNew, cAlias, cdpId )
          ENDIF
 
          AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_DEC ] != 0, ;
-            aField[ DBS_LEN ] := aField[ DBS_LEN ] + aField[ DBS_DEC ] * 256, NIL ) } )
+            ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256, ;
+              aField[ DBS_DEC ] := 0 ), NIL ) } )
 
          dbCreate( cFileName, aStruct, cRDDName )
-         dbUseArea( lNew, cRDDName, cFileName, cAlias,,,cdpId )
+         dbUseArea( lNew, cRDDName, cFileName, cAlias,,, cdpId )
 
       ENDIF
 

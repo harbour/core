@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "ES", 
-   NUMBER_OF_CHARACTERS,
+   CPID_850, UNITB_850, NUMBER_OF_CHARACTERS,
    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", 
    "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
    IS_LATIN, 

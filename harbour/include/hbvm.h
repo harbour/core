@@ -55,9 +55,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* Harbour virtual machine init/exit functions */
 extern void HB_EXPORT hb_vmInit( BOOL bStartMainProc );
@@ -113,8 +111,6 @@ extern void    hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type
 
 extern ULONG hb_vmFlagEnabled( ULONG flag);
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_VM_H_ */

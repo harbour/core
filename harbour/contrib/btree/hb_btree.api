@@ -53,9 +53,7 @@
 #ifndef HB_BTREE_API
 #define HB_BTREE_API
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #include "hb_btree.ch"
 
@@ -74,8 +72,6 @@ const BYTE * hb_BTreeKey( struct hb_BTree * pBTree );
 LONG hb_BTreeData( struct hb_BTree * pBTree );
 PHB_ITEM hb_BTreeDataItem( struct hb_BTree * pBTree );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif

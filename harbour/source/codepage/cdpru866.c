@@ -58,7 +58,8 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-static HB_CODEPAGE s_codepage = { "RU866",32,
+static HB_CODEPAGE s_codepage = { "RU866",
+    CPID_866, UNITB_866, 32,
     "€‚ƒ„…†‡‰‹‘’“”•–—™›"," ΅Ά£¤¥¦§¨©ª«¬­®―ΰαβγδεζηθικλμνξο",
     0,0,0,0,NULL,NULL,NULL,NULL,0,NULL };
 

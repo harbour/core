@@ -60,9 +60,7 @@
 
 #include "hbvmpub.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #define HB_MAX_MACRO_ARGS 16
 
@@ -108,6 +106,7 @@ extern "C" {
 #define HB_IS_NUMERIC( p ) ( ( p )->type & HB_IT_NUMERIC )
 #define HB_IS_NUMINT( p )  ( ( p )->type & HB_IT_NUMINT )
 #define HB_IS_COMPLEX( p ) ( ( p )->type & HB_IT_COMPLEX )
+#define HB_IS_BADITEM( p ) ( ( p )->type & HB_IT_COMPLEX && ( p )->type & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) )
 
 #if defined(__GNUC__)
 #  define HB_ITEM_NIL      { HB_IT_NIL, {} }
@@ -293,9 +292,9 @@ typedef struct _HB_CODEBLOCK
 
 typedef struct _HB_VALUE
 {
-   HB_ITEM_PTR   pVarItem;
-   ULONG     counter;
-   HB_HANDLE hPrevMemvar;
+   HB_ITEM_PTR pVarItem;
+   HB_COUNTER  counter;
+   HB_HANDLE   hPrevMemvar;
 } HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
 
 typedef struct _HB_NESTED_CLONED
@@ -574,7 +573,7 @@ extern void     hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern char   * hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen );
 extern void     hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue );
 extern int      hb_memvarScope( char * szVarName, ULONG ulLength ); /* retrieve scope of a dynamic variable symbol */
-extern HB_ITEM_PTR     hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+extern HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
 
 /* console I/O subsystem */
 extern void     hb_conInit( void ); /* initialize the console API system */
@@ -695,8 +694,6 @@ extern char * hb_getenv( const char * name );
 /* Dummy define for start */
 #define HB_I_( x ) x
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_APIEXT_H_ */

@@ -486,30 +486,9 @@ ERRCODE hb_waAlias( AREAP pArea, BYTE * szAlias )
 }
 
 /*
- * Close the table in the WorkArea.
+ * Close the table in the WorkArea - helper function
  */
-short hb_waCloseAux ( AREAP pArea, int nChildArea );
-
-ERRCODE hb_waClose( AREAP pArea )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_waClose(%p)", pArea));
-
-   /* Clear items */
-   SELF_CLEARFILTER( pArea );
-   SELF_CLEARREL( pArea );
-   SELF_CLEARLOCATE( pArea );
-
-   if( pArea->uiParents > 0 )
-   {
-      /* Clear relations that has this area as a child */
-      hb_rddIterateWorkAreas ( hb_waCloseAux, pArea->uiArea );
-   }
-
-   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
-   return SUCCESS;
-}
-
-short hb_waCloseAux ( AREAP pArea, int nChildArea )
+static short hb_waCloseAux( AREAP pArea, int nChildArea )
 {
    USHORT uiPrevArea, uiArea;
    LPDBRELINFO lpdbRelation, lpdbRelPrev, lpdbRelTmp;
@@ -548,6 +527,28 @@ short hb_waCloseAux ( AREAP pArea, int nChildArea )
       }
    }
    return 1;
+}
+
+/*
+ * Close the table in the WorkArea.
+ */
+ERRCODE hb_waClose( AREAP pArea )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_waClose(%p)", pArea));
+
+   /* Clear items */
+   SELF_CLEARFILTER( pArea );
+   SELF_CLEARREL( pArea );
+   SELF_CLEARLOCATE( pArea );
+
+   if( pArea->uiParents > 0 )
+   {
+      /* Clear relations that has this area as a child */
+      hb_rddIterateWorkAreas ( hb_waCloseAux, pArea->uiArea );
+   }
+
+   ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
+   return SUCCESS;
 }
 
 /*

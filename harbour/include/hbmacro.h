@@ -74,9 +74,7 @@
 #include "hbpcode.h"
 #include "hbmacro.ch"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* flags for compilation process
  */
@@ -155,8 +153,6 @@ extern void hb_compGenPushString( char * szText, ULONG ulStrLen, HB_BISON_PTR pM
 extern void hb_compCodeBlockStart( HB_BISON_PTR pMacro );
 extern void hb_compCodeBlockEnd( HB_BISON_PTR pMacro );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_MACRO_H_ */

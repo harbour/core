@@ -53,11 +53,10 @@
 #ifndef HB_DBSORT_H_
 #define HB_DBSORT_H_
 
+#define HB_EXTERNAL_RDDDBF_USE
 #include "hbrdddbf.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /*
  *  DBQUICKSORT
@@ -90,8 +89,6 @@ extern void hb_dbQSortExit( LPDBQUICKSORT pQuickSort );
 extern BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, USHORT uiCount );
 extern void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_DBSORT_H_ */

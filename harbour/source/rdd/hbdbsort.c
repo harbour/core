@@ -50,7 +50,6 @@
  *
  */
 
-#define HB_EXTERNAL_RDDDBF_USE
 #include "hbdbsort.h"
 
 BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, USHORT uiRecordLen )

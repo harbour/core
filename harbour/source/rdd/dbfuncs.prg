@@ -56,8 +56,8 @@ FUNCTION DBCLEARFIL()
 FUNCTION DBSETDRIVE(cDriver)
    Return DBSETDRIVER(cDriver)
 
-FUNCTION DBSETRELAT(xArea,bRelation,cRelation)
-   Return DBSETRELATION(xArea,bRelation,cRelation)
+FUNCTION DBSETRELAT(xArea,bRelation,cRelation,lScoped)
+   Return DBSETRELATION(xArea,bRelation,cRelation,lScoped)
 
 FUNCTION DBRLOCKLIS()
     Return DBRLOCKLIST()

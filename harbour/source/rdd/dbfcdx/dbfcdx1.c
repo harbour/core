@@ -4953,7 +4953,6 @@ static BOOL hb_cdxCurKeyRefresh( CDXAREAP pArea, LPCDXTAG pTag )
          /* not found, create new key from DBF and if differs seek again */
          if ( !fBuf || memcmp( buf, pKey->val, pKey->len ) != 0 )
          {
-            fBuf = TRUE;
             memcpy( buf, pKey->val, pKey->len );
             hb_cdxTagKeyFind( pTag, pKey );
          }
@@ -5797,6 +5796,9 @@ static ERRCODE hb_cdxGoBottom( CDXAREAP pArea )
    if ( ! pTag )
       return SUPER_GOBOTTOM( ( AREAP ) pArea );
 
+   if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+      SELF_FORCEREL( ( AREAP ) pArea );
+
    hb_cdxIndexLockRead( pTag->pIndex );
 
    hb_cdxTagGoBottom( pTag );
@@ -5838,6 +5840,9 @@ static ERRCODE hb_cdxGoTop( CDXAREAP pArea )
    pTag = hb_cdxGetActiveTag( pArea );
    if ( ! pTag )
       return SUPER_GOTOP( ( AREAP ) pArea );
+
+   if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+      SELF_FORCEREL( ( AREAP ) pArea );
 
    hb_cdxIndexLockRead( pTag->pIndex );
 
@@ -5881,6 +5886,9 @@ static ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL fSoftSeek, PHB_ITEM pKeyItm, BOO
       ERRCODE retval = SUCCESS;
       BOOL  fEOF = FALSE, fLast;
       ULONG ulRec;
+
+      if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+         SELF_FORCEREL( ( AREAP ) pArea );
 
       pArea->fTop = pArea->fBottom = FALSE;
       pArea->fEof = FALSE;
@@ -6426,7 +6434,7 @@ static ERRCODE hb_cdxPack( CDXAREAP pArea )
 
    if ( SUPER_PACK( ( AREAP ) pArea ) == SUCCESS )
    {
-      return hb_cdxOrderListRebuild( pArea );
+      return SELF_ORDLSTREBUILD( ( AREAP ) pArea );
    }
    else
       return FAILURE;
@@ -6445,10 +6453,9 @@ static ERRCODE hb_cdxZap ( CDXAREAP pArea )
    if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   hb_cdxOrderListRebuild( pArea );
    if ( SUPER_ZAP( ( AREAP ) pArea ) == SUCCESS )
    {
-      return hb_cdxOrderListRebuild( pArea );
+      return SELF_ORDLSTREBUILD( ( AREAP ) pArea );
    }
    else
       return FAILURE;
@@ -7494,6 +7501,9 @@ static ERRCODE hb_cdxClearScope( CDXAREAP pArea )
 
    if ( pTag )
    {
+      /* resolve any pending scope relations first */
+      if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+         SELF_FORCEREL( ( AREAP ) pArea );
       hb_cdxTagClearScope( pTag, 0);
       hb_cdxTagClearScope( pTag, 1);
    }
@@ -7528,6 +7538,10 @@ static ERRCODE hb_cdxScopeInfo( CDXAREAP pArea, USHORT nScope, PHB_ITEM pItem )
    {
       PHB_ITEM *pScope;
 
+      /* resolve any pending scope relations first */
+      if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+         SELF_FORCEREL( ( AREAP ) pArea );
+
       pScope = ( pTag->UsrAscend ? nScope == 0 : nScope != 0 ) ?
                         &(pTag->topScope) : &(pTag->bottomScope);
       if ( *pScope )
@@ -7556,6 +7570,10 @@ static ERRCODE hb_cdxSetScope( CDXAREAP pArea, LPDBORDSCOPEINFO sInfo )
 
    if ( pTag )
    {
+      /* resolve any pending scope relations first */
+      if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+         SELF_FORCEREL( ( AREAP ) pArea );
+
       if ( !sInfo->scopeValue )
       {
          hb_cdxTagClearScope( pTag, sInfo->nScope );

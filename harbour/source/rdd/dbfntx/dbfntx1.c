@@ -116,7 +116,6 @@
  * ntxSetScope()
  */
 
-#include <math.h>
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
@@ -127,26 +126,38 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbrddntx.h"
-#include "hbapicdp.h"
+#ifndef HB_CDP_SUPPORT_OFF
+   #include "hbapicdp.h"
+#endif
 
-extern PHB_CODEPAGE hb_cdp_page;
+#include <math.h>
+#ifdef HB_OS_BSD
+#include <unistd.h>  /* We need mkstemp() */
+#endif
+
 #define __PRG_SOURCE__ __FILE__
-extern USHORT hb_rddFieldIndex( AREAP pArea, char * szName );
 
-
-HB_FUNC( _DBFNTX );
-HB_FUNC( DBFNTX_GETFUNCTABLE );
-
+#ifndef __XHARBOUR__
+   #define HB_VM_STACK hb_stack
+#endif
 #ifdef HB_PCODE_VER
    #undef HB_PRG_PCODE_VER
    #define HB_PRG_PCODE_VER HB_PCODE_VER
 #endif
 
+extern USHORT hb_rddFieldIndex( AREAP pArea, char * szName );
+
+HB_FUNC( _DBFNTX );
+HB_FUNC( DBFNTX_GETFUNCTABLE );
+
 HB_INIT_SYMBOLS_BEGIN( dbfntx1__InitSymbols )
 { "_DBFNTX",             HB_FS_PUBLIC, {HB_FUNCNAME( _DBFNTX )},             0 },
 { "DBFNTX_GETFUNCTABLE", HB_FS_PUBLIC, {HB_FUNCNAME( DBFNTX_GETFUNCTABLE)} , 0 }
 HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
-#if defined(_MSC_VER)
+
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup dbfntx1__InitSymbols
+#elif defined(_MSC_VER)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
       #pragma comment( linker, "/Merge:.CRT=.data" )
@@ -155,8 +166,6 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
    #endif
    static HB_$INITSYM hb_vm_auto_dbfntx1__InitSymbols = dbfntx1__InitSymbols;
    #pragma data_seg()
-#elif ! defined(__GNUC__)
-   #pragma startup dbfntx1__InitSymbols
 #endif
 
 static RDDFUNCS ntxSuper;
@@ -165,7 +174,7 @@ static RDDFUNCS ntxSuper;
 static LPKEYINFO hb_ntxKeyNew( LPKEYINFO pKeyFrom, int keylen );
 static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, int keylen, BOOL* result, BOOL bSoftSeek );
 static BOOL hb_ntxIsRecBad( NTXAREAP pArea, LONG ulRecNo );
-static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO pKey, int keylen, BOOL bExact, BOOL lSeek );
+static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO pKey, int keylen, BOOL bExact, int lSeek );
 static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno );
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey );
 static void hb_ntxTagKeyGoTo( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue );
@@ -216,7 +225,7 @@ static ULONG* hb_ntxKeysInPage( ULONG ulRecCount, USHORT maxkeys )
   }
   while( dSum < recCount );
 
-  lpArray = (ULONG*) hb_xgrab( sizeof(int) * (iLevel+2) );
+  lpArray = (ULONG*) hb_xgrab( sizeof(ULONG) * (iLevel+2) );
   lpArray[0] = (ULONG)iLevel;
   for( i=1; i<=iLevel; i++ )
      lpArray[i] = 0;
@@ -275,12 +284,12 @@ static void hb_IncString( NTXAREAP pArea, char* s, int slen )
       if( nsymb < 255 )
       {
          UINT n1, i;
-         if( pArea->cdPage->lSort && ( n1 = (UINT)pArea->cdPage->s_chars[ nsymb ] ) != 0 )
+         if( pArea->cdPage->lSort && ( n1 = (UINT) pArea->cdPage->s_chars[ nsymb ] ) != 0 )
          {
             n1 ++;
             for( i=0; i<255; i++ )
             {
-               if( n1 == (UINT)pArea->cdPage->s_chars[ i ] )
+               if( n1 == (UINT) pArea->cdPage->s_chars[ i ] )
                {
                   *ptr = (char) i;
                   break;
@@ -291,6 +300,38 @@ static void hb_IncString( NTXAREAP pArea, char* s, int slen )
          }
          else
             *ptr = (char) ++nsymb;
+         break;
+      }
+   }
+}
+
+static void hb_DecString( NTXAREAP pArea, char* s, int slen )
+{
+   char *ptr;
+   UINT nsymb;
+
+   for( ptr=s+slen-1;ptr>=s;ptr-- )
+   {
+      nsymb = (UINT) *ptr;
+      if( nsymb > 0 )
+      {
+         UINT n1, i;
+         if( pArea->cdPage->lSort && ( n1 = (UINT) pArea->cdPage->s_chars[ nsymb ] ) != 0 )
+         {
+            n1 --;
+            for( i=0; i<255; i++ )
+            {
+               if( n1 == (UINT) pArea->cdPage->s_chars[ i ] )
+               {
+                  *ptr = (char) i;
+                  break;
+               }
+            }
+            if( i >= 255 )
+               *ptr = (char) --nsymb;
+         }
+         else
+            *ptr = (char) --nsymb;
          break;
       }
    }
@@ -340,7 +381,7 @@ static BOOL checkLogicalExpr( PHB_ITEM pForItem, PHB_ITEM pItem )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pForItem );
       hb_vmSend( 0 );
-      hb_itemCopy( pItem, &hb_stack.Return );
+      hb_itemCopy( pItem, &(HB_VM_STACK.Return) );
    }
    else
    {
@@ -374,9 +415,12 @@ static void hb__ntxTagKeyCount( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG* ulKeyCo
 static BOOL hb_ntxInTopScope( LPTAGINFO pTag, char* key )
 {
    if( pTag->topScope )
-      return ( hb_ntxItemCompare( pTag->topScope->item.asString.value,
-                  key, pTag->topScope->item.asString.length,
-                  pTag->KeyLength,0,pTag->Owner->Owner->cdPage ) <= 0 );
+   {
+      int i = hb_ntxItemCompare( pTag->topScope->item.asString.value,
+                                 key, pTag->topScope->item.asString.length,
+                                 pTag->KeyLength,0,pTag->Owner->Owner->cdPage );
+      return pTag->AscendKey ? i <= 0 : i >= 0;
+   }
    else
       return TRUE;
 }
@@ -384,9 +428,12 @@ static BOOL hb_ntxInTopScope( LPTAGINFO pTag, char* key )
 static BOOL hb_ntxInBottomScope( LPTAGINFO pTag, char* key )
 {
    if( pTag->bottomScope )
-      return ( hb_ntxItemCompare( pTag->bottomScope->item.asString.value,
-                  key, pTag->bottomScope->item.asString.length,
-                  pTag->KeyLength,0,pTag->Owner->Owner->cdPage ) >= 0 );
+   {
+      int i = hb_ntxItemCompare( pTag->bottomScope->item.asString.value,
+                                 key, pTag->bottomScope->item.asString.length,
+                                 pTag->KeyLength,0,pTag->Owner->Owner->cdPage );
+      return pTag->AscendKey ? i >= 0 : i <= 0;
+   }
    else
       return TRUE;
 }
@@ -397,7 +444,7 @@ static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
 
    if( pTag->Owner->Owner->fShared && !pTag->Memory )
    {
-      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_SHARED | FLX_WAIT ) );
       pTag->Owner->Locked = TRUE;
    }
 
@@ -434,7 +481,7 @@ static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
 
       hb_ntxGetCurrentKey( pTag,pKey );
       pTag->stackLevel = 0;
-      seekRes = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, FALSE );
+      seekRes = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, 0 );
       hb_ntxKeyFree( pKey );
       if( !seekRes )
       {
@@ -475,7 +522,7 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
 
    if( pTag->Owner->Owner->fShared && !pTag->Memory )
    {
-      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_SHARED | FLX_WAIT ) );
       pTag->Owner->Locked = TRUE;
    }
    else if( pTag->keyCount )
@@ -496,7 +543,7 @@ static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
          pTag->CurKeyInfo->Tag = pTag->CurKeyInfo->Xtra = pTag->TagEOF = 0;
          pTag->stackLevel = 0;
          lRecno = ( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ),
-                      pKey, (int)pTag->KeyLength, FALSE, TRUE ) <= 0 )? pTag->CurKeyInfo->Xtra:0;
+                      pKey, (int)pTag->KeyLength, FALSE, 1 ) <= 0 )? pTag->CurKeyInfo->Xtra:0;
          hb_ntxKeyFree( pKey );
          if( lRecno )
          {
@@ -591,7 +638,7 @@ static USHORT hb_ntxGetKeyType( LPTAGINFO pTag )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmSend( 0 );
-      return hb_itemType( &hb_stack.Return );
+      return hb_itemType( &(HB_VM_STACK.Return) );
    }
    else
    {
@@ -631,7 +678,7 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, int keylen, BOOL *
    pTag->CurKeyInfo->Tag = pTag->CurKeyInfo->Xtra = 0;
    pTag->TagBOF = pTag->TagEOF = *result = FALSE;
    pTag->stackLevel = 0;
-   K = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, keylen, FALSE, (bSoftSeek)? 2:1 );
+   K = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, keylen, FALSE, bSoftSeek ? 2 : 1 );
    if( K == 0 )
    {
       *result = TRUE;
@@ -685,7 +732,7 @@ static int hb_ntxPageKeySearch( LPTAGINFO pTag, LPPAGEINFO pPage, char* key, SHO
    }
 }
 
-static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO pKey, int keylen, BOOL bExact, BOOL lSeek )
+static int hb_ntxTagFindCurrentKey( LPTAGINFO pTag, LPPAGEINFO pPage, LPKEYINFO pKey, int keylen, BOOL bExact, int lSeek )
 {
    int k, kChild;
    LPNTXITEM p;
@@ -791,10 +838,11 @@ static USHORT hb_ntxPageFindCurrentKey( LPPAGEINFO pPage, ULONG ulRecno )
 static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
 {
    char szBuffer[ NTX_MAX_KEY ];
-   PHB_CODEPAGE cdpTmp = hb_cdp_page;
    PHB_ITEM pItem;
-
+#ifndef HB_CDP_SUPPORT_OFF
+   PHB_CODEPAGE cdpTmp = hb_cdp_page;
    hb_cdp_page = pTag->Owner->Owner->cdPage;
+#endif
    if( pTag->nField )
    {
       pItem = hb_itemNew( NULL );
@@ -805,7 +853,7 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pTag->pKeyItem );
       hb_vmSend( 0 );
-      pItem = &hb_stack.Return;
+      pItem = &(HB_VM_STACK.Return);
    }
    else
    {
@@ -839,7 +887,9 @@ static void hb_ntxGetCurrentKey( LPTAGINFO pTag, LPKEYINFO pKey )
    else if( hb_itemType( pTag->pKeyItem ) != HB_IT_BLOCK )
       hb_stackPop();
    pKey->Xtra = pTag->Owner->Owner->ulRecNo;
+#ifndef HB_CDP_SUPPORT_OFF
    hb_cdp_page = cdpTmp;
+#endif
 }
 
 static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
@@ -859,7 +909,7 @@ static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
              ( KEYITEM( pPage, pPage->CurKey ) )->page ) ) )
          lCurrrentKey = TRUE;
       else
-         hb_ntxPageRelease( pTag,pPage );
+         hb_ntxPageRelease( pTag, pPage );
    }
 
    if( !lCurrrentKey )
@@ -876,7 +926,7 @@ static BOOL hb_ntxTagGoToNextKey( LPTAGINFO pTag, BOOL lContinue )
       else
          hb_ntxGetCurrentKey( pTag,pKey );
       pTag->stackLevel = 0;
-      seekRes = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, FALSE );
+      seekRes = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, 0 );
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
@@ -975,7 +1025,7 @@ static BOOL hb_ntxTagGoToPrevKey( LPTAGINFO pTag, BOOL lContinue )
       else
          hb_ntxGetCurrentKey( pTag, pKey );
       pTag->stackLevel = 0;
-      seekRes = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, FALSE );
+      seekRes = hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, 0 );
       hb_ntxKeyFree( pKey );
       if( seekRes )
       {
@@ -1108,7 +1158,7 @@ static void hb_ntxTagKeyGoTo( LPTAGINFO pTag, BYTE bTypRead, BOOL * lContinue )
    {
       if( pTag->Owner->Owner->fShared && !pTag->Owner->Locked && !pTag->Memory )
       {
-         while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+         while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_SHARED | FLX_WAIT ) );
          wasLocked = pTag->Owner->Locked;
          pTag->Owner->Locked = TRUE;
       }
@@ -1179,7 +1229,11 @@ static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exa
       return -1;
 
    iLimit = ( ilen1 > ilen2 ) ? ilen2 : ilen1;
+#ifndef HB_CDP_SUPPORT_OFF
    iResult = (cdpage->lSort)? hb_cdpcmp( s1, s2, (ULONG)iLimit, cdpage, NULL ):memcmp( s1, s2, iLimit );
+#else
+   iResult = memcmp( s1, s2, iLimit );
+#endif
    if( !iResult )
    {
       if( ( iResult = ilen1 - ilen2 ) != 0 )
@@ -1214,6 +1268,7 @@ static void hb_ntxPageSave( LPTAGINFO pTag, LPPAGEINFO pPage )
    ( ( LPNTXBUFFER ) pPage->buffer )->item_count = pPage->uiKeys;
    hb_fsSeek( pTag->Owner->DiskFile, pPage->Page, FS_SET );
    hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) pPage->buffer, NTXBLOCKSIZE );
+   pTag->Owner->fFlush = TRUE;
    pPage->Changed = FALSE;
 }
 
@@ -1226,7 +1281,9 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, ULONG ulOffset )
    if( !ulOffset )
    {
       if( pTag->Owner->Owner->fShared && !pTag->Memory )
+      {
          hb_ntxHeaderRead( pTag->Owner );
+      }
       ulOffset = pTag->RootBlock;
    }
    if( pTag->Memory )
@@ -1868,7 +1925,7 @@ typedef SWAPPAGE * LPSWAPPAGE;
 
 typedef struct _PAGEITEM
 {
-   ULONG    rec_no;
+   UINT32   rec_no;
    char     key[ 1 ];
 } PAGEITEM;
 
@@ -1878,7 +1935,7 @@ struct _SORTITEM;
 typedef struct _SORTITEM
 {
    struct _SORTITEM *  pNext;
-   ULONG    rec_no;
+   UINT32   rec_no;
    char     key[ 1 ];
 } SORTITEM;
 
@@ -1907,7 +1964,7 @@ typedef NTXSORTINFO * LPNTXSORTINFO;
 static void hb_ntxSwapPageSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, USHORT nPart )
 {
    LPSORTITEM pKey = pSortInfo->pKeyFirst;
-   USHORT itemLength = sizeof( ULONG ) + pTag->KeyLength;
+   USHORT itemLength = sizeof( UINT32 ) + pTag->KeyLength;
    USHORT numKeys = 0, maxKeys = 512/itemLength, numAllkeys = 0;
    LPSWAPPAGE pSwapPage = (LPSWAPPAGE) ( pSortInfo->swappages + sizeof(SWAPPAGE)*nPart );
    LPPAGEITEM ptr;
@@ -1949,8 +2006,12 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
       }
       else if( pSortInfo->pKey1 )
       {
+#ifndef HB_CDP_SUPPORT_OFF
          result = (hb_cdp_page->lSort)?
-              hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, (ULONG)KeyLength, hb_cdp_page, NULL ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
+	              hb_cdpcmp( pKeyNew->key, pSortInfo->pKey1->key, (ULONG)KeyLength, hb_cdp_page, NULL ):memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
+#else
+         result = memcmp( pKeyNew->key, pSortInfo->pKey1->key, KeyLength );
+#endif
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result >= 0 )
@@ -1974,8 +2035,12 @@ static void hb_ntxKeysSort( LPNTXSORTINFO pSortInfo, LPSORTITEM* pKeyFirst, LPSO
          pKey = *pKeyFirst;
       while( pKey )
       {
+#ifndef HB_CDP_SUPPORT_OFF
          result = (hb_cdp_page->lSort)?
-              hb_cdpcmp( pKeyNew->key, pKey->key, (ULONG)KeyLength, hb_cdp_page, NULL ):memcmp( pKeyNew->key, pKey->key, KeyLength );
+	              hb_cdpcmp( pKeyNew->key, pKey->key, (ULONG)KeyLength, hb_cdp_page, NULL ):memcmp( pKeyNew->key, pKey->key, KeyLength );
+#else
+         result = memcmp( pKeyNew->key, pKey->key, KeyLength );
+#endif
          if( fDescend && result )
             result = ( result > 0 )? -1:1;
          if( result < 0 )
@@ -2085,7 +2150,10 @@ static void hb_ntxWritePage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, char* buff
       /* printf( "\nhb_ntxWritePage-1A" ); */
    }
    else
+   {
       hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
+      pTag->Owner->fFlush = TRUE;
+   }
 }
 
 static void hb_ntxRootPage( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTITEM pKey, ULONG* lpArray, USHORT level )
@@ -2137,9 +2205,13 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
 {
    char *key1, *key2;
    short int nPage, iPage;
-   int result = 0;
+   int result = 0; /* TODO: It's something wrong here, result was
+                      not initialized. I forced initialization
+                      but this code should be cleaned. Alex please do
+                      that. Best regards, Przemek.
+                    */
    BOOL fDescend = !pTag->AscendKey;
-   USHORT itemLength = sizeof( ULONG ) + pTag->KeyLength;
+   USHORT itemLength = sizeof( UINT32 ) + pTag->KeyLength;
    LPSORTITEM pKey = *ppKey;
    LPSWAPPAGE pSwapPage = (LPSWAPPAGE) ( pSortInfo->swappages );
 
@@ -2192,7 +2264,7 @@ static BOOL hb_ntxGetSortedKey( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo, LPSORTI
       /* printf( "\nSortedKey - 2 %d %d %c%c%c%c%c%c",nPage,*rec_no,key1[0],key1[1],key1[2],key1[3],key1[4],key1[5] ); */
       if( ++(pSwapPage->curkey) == pSwapPage->numkeys )
       {
-         USHORT pageItemLength = sizeof( ULONG ) + pTag->KeyLength;
+         USHORT pageItemLength = sizeof( UINT32 ) + pTag->KeyLength;
          USHORT maxKeys = 512/pageItemLength, nRead;
 
          if( pSwapPage->numReadkeys >= pSwapPage->numAllkeys )
@@ -2245,17 +2317,23 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
          pTag->pages[ul].buffer = pTag->pages[0].buffer + ul*NTXBLOCKSIZE;
    }
    else
+   {
       hb_fsSeek( pTag->Owner->DiskFile, 1024, FS_SET );
+   }
    pSortInfo->Tag = 0;
    pSortInfo->pageBuffers = (char**) hb_xgrab( sizeof( char* ) * lpArray[0] );
    for( i = 0; i < (USHORT)lpArray[0]; i++ )
+   {
       pSortInfo->pageBuffers[i] = NULL;
+   }
    pSortInfo->pageBuffers[0] = (char*) hb_xgrab( NTXBLOCKSIZE );
    memset( pSortInfo->pageBuffers[0], 0, NTXBLOCKSIZE );
    itemlist = ( LPNTXBUFFER ) pSortInfo->pageBuffers[0];
    for( i = 0; i < pTag->MaxKeys+1; i++ )
+   {
       itemlist->item_offset[i] = 2 + 2 * ( pTag->MaxKeys + 1 ) +
-            i * ( pTag->KeyLength + 8 );
+                                 i * ( pTag->KeyLength + 8 );
+   }
    buffer = pSortInfo->pageBuffers[0];
 
    if( !pKey )
@@ -2269,7 +2347,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
    {
       BOOL lKeys = FALSE;
       LPSORTITEM pKeyRoot = (LPSORTITEM) hb_xgrab( pSortInfo->itemLength );
-      USHORT pageItemLength = sizeof( ULONG ) + pTag->KeyLength;
+      USHORT pageItemLength = sizeof( UINT32 ) + pTag->KeyLength;
       USHORT maxKeysSwapPage = 512/pageItemLength, nRead;
       LPSWAPPAGE pSwapPage;
 
@@ -2327,7 +2405,7 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
    {
       while( pKey )
       {
-         for( i = 0; ( i < maxKeys  || numKey == pSortInfo->ulKeyCount-1 ) && pKey != 0; i++, numKey++, pKey = pKey->pNext )
+         for( i = 0; ( i < maxKeys  || numKey == pSortInfo->ulKeyCount-1 ) && pKey; i++, numKey++, pKey = pKey->pNext )
          {
             /* printf( "\nhb_ntxBufferSave - 2 ( i=%d maxKeys=%d )",i,maxKeys ); */
             item = (NTXITEM *)( buffer + itemlist->item_offset[i] );
@@ -2380,17 +2458,22 @@ static void hb_ntxBufferSave( LPTAGINFO pTag, LPNTXSORTINFO pSortInfo )
       pTag->RootBlock = 1024;
 }
 
-static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf, LPDBORDERCONDINFO lpdbOrdCondInfo )
+static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, SHORT* numRecinBuf, LPDBORDERCONDINFO lpdbOrdCondInfo, ULONG ulRecNo )
 {
-   if( ( !lpdbOrdCondInfo || lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )
+   if( *numRecinBuf >= 0 )
    {
       if( *numRecinBuf == 10 )
          *numRecinBuf = 0;
       if( *numRecinBuf == 0 )
-         hb_fsReadLarge( pArea->hDataFile, readBuffer, pArea->uiRecordLen  * 10 );
-
+      {
+         ULONG ulBufLen = pArea->uiRecordLen  * 10;
+         hb_fsSeek( pArea->hDataFile,
+             pArea->uiHeaderLen + pArea->uiRecordLen * ( ulRecNo - 1 ), FS_SET );
+         hb_fsReadLarge( pArea->hDataFile, readBuffer, ulBufLen );
+      }
       pArea->pRecord = readBuffer + (*numRecinBuf) * pArea->uiRecordLen;
       pArea->fDeleted = ( pArea->pRecord[ 0 ] == '*' );
+      pArea->ulRecNo = ulRecNo;
       (*numRecinBuf) ++;
       return TRUE;
    }
@@ -2400,7 +2483,6 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
          return FALSE;
       if( lpdbOrdCondInfo->lRecno )
       {
-         SELF_GOTO( ( AREAP ) pArea, (ULONG)lpdbOrdCondInfo->lRecno );
          lpdbOrdCondInfo->lNextCount = -1;
          return TRUE;
       }
@@ -2421,15 +2503,11 @@ static BOOL hb_ntxReadBuf( NTXAREAP pArea, BYTE* readBuffer, USHORT* numRecinBuf
    return TRUE;
 }
 
-/* DJGPP can sprintf a float that is almost 320 digits long */
-#define HB_MAX_DOUBLE_LENGTH 320
-
 static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
 {
-
-   ULONG ulRecNo = 0, ulRecCount, ulKeyNo = 0, lStep = 0, ulRecMax = 0;
+   ULONG ulRecNo, ulRecCount, ulKeyNo = 0, lStep = 0, ulRecMax;
    USHORT uiCurLen;
-   char szBuffer[ HB_MAX_DOUBLE_LENGTH + 1 ];
+   char szBuffer[ NTX_MAX_KEY ];
    char * pszTempName = NULL;
    NTXAREAP pArea = pIndex->Owner;
    LPTAGINFO pTag;
@@ -2438,27 +2516,31 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    BOOL bWhileOk;
    NTXSORTINFO sortInfo;
    BYTE* readBuffer;
-   USHORT numRecinBuf = 0, nParts = 0;
+   SHORT numRecinBuf = -1;
+   USHORT nParts = 0;
    BYTE * pRecordTmp = NULL;
    BOOL fValidBuffer = FALSE;
+   LPTAGINFO pSaveTag = pArea->lpCurTag;
+#ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTmp = hb_cdp_page;
+   hb_cdp_page = pArea->cdPage;
+#endif
 
    ulRecCount = pArea->ulRecCount;
    pTag = pIndex->CompoundTag;
    pItem = hb_itemNew( NULL );
-   hb_cdp_page = pArea->cdPage;
 
    memset( &sortInfo, 0, sizeof( sortInfo ) );
    readBuffer = (BYTE*) hb_xgrab( pArea->uiRecordLen * 10 );
    /* itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength; */
-   sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( ULONG ) + pTag->KeyLength;
+   sortInfo.itemLength = sizeof( LPSORTITEM ) + sizeof( UINT32 ) + pTag->KeyLength;
    sortInfo.nItems = 0;
    sortInfo.pKey1 = sortInfo.pKey2 = sortInfo.pKeyFirst = sortInfo.pKeyTemp = NULL;
    if( pArea->lpdbOrdCondInfo && pArea->lpdbOrdCondInfo->fCustom )
       ulRecCount = 0;
+   ulRecMax = ulRecCount;
    if( ulRecCount )
    {
-      ulRecMax = ulRecCount;
       sortInfo.sortBuffer = (BYTE*) hb_xalloc( ulRecCount * sortInfo.itemLength );
       if( !sortInfo.sortBuffer )
       {
@@ -2490,25 +2572,57 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
    else
       sortInfo.sortBuffer = NULL;
 
-   if( ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )
+   if( !hb_set.HB_SET_STRICTREAD && !pArea->lpdbRelations &&
+       ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) )
    {
       pRecordTmp = pArea->pRecord;
       fValidBuffer = pArea->fValidBuffer;
       pArea->fValidBuffer = TRUE;
-      hb_fsSeek( pArea->hDataFile, pArea->uiHeaderLen, FS_SET );
+      numRecinBuf = 0;
    }
-   else if( pArea->lpdbRelations || pArea->lpdbOrdCondInfo->fUseCurrent )
-      SELF_GOTOP( ( AREAP ) pArea );
+   else
+   {
+      if ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
+      {
+         pArea->lpCurTag = NULL;
+         SELF_GOTOP( ( AREAP ) pArea );
+      }
+      else if ( pArea->lpdbOrdCondInfo->lRecno )
+      {
+         SELF_GOTO( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->lRecno );
+      }
+      else if ( pArea->lpdbOrdCondInfo->fUseCurrent )
+      {
+         if ( pArea->lpdbOrdCondInfo->lStartRecno )
+         {
+            SELF_GOTO( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->lStartRecno );
+         }
+         else
+         {
+            SELF_GOTOP( ( AREAP ) pArea );
+         }
+      }
+      else if ( pArea->lpdbOrdCondInfo->fRest || pArea->lpdbOrdCondInfo->lNextCount )
+      {
+         if ( pArea->lpdbOrdCondInfo->lStartRecno )
+         {
+            SELF_GOTO( ( AREAP ) pArea, pArea->lpdbOrdCondInfo->lStartRecno );
+         }
+      }
+      else
+      {
+         pArea->lpCurTag = NULL;
+         SELF_GOTOP( ( AREAP ) pArea );
+      }
+   }
+
+   bWhileOk = TRUE;
    for( ulRecNo = 1; ulRecNo <= ulRecCount; ulRecNo++)
    {
-      if( !hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf, pArea->lpdbOrdCondInfo ) )
+      if( !hb_ntxReadBuf( pArea, readBuffer, &numRecinBuf, pArea->lpdbOrdCondInfo, ulRecNo ) )
          break;
-      if( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll )
-         pArea->ulRecNo = ulRecNo;
       if( pTag->pForItem != NULL )
          bWhileOk = checkLogicalExpr( pTag->pForItem, pItem );
-      else
-         bWhileOk = TRUE;
       if( bWhileOk )
       {
          ulKeyNo ++;
@@ -2517,7 +2631,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          {
             if( nParts == 1 )
             {
-               BYTE szTempName[ _POSIX_PATH_MAX ];
+               BYTE szTempName[ _POSIX_PATH_MAX + 1 ];
                sortInfo.tempHandle = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szTempName );
                if( sortInfo.tempHandle == FS_ERROR )
                   hb_errInternal( HB_EI_ERRUNRECOV, "Cannot create temp file", "hb_ntxIndexCreate", NULL );
@@ -2540,7 +2654,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pTag->pKeyItem );
             hb_vmSend( 0 );
-            hb_itemCopy( pItem, &hb_stack.Return );
+            hb_itemCopy( pItem, &(HB_VM_STACK.Return) );
          }
          else
          {
@@ -2552,7 +2666,7 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
          switch( hb_itemType( pItem ) )
          {
             case HB_IT_STRING:
-               uiCurLen = (USHORT) hb_itemGetCLen( pItem );
+               uiCurLen = (USHORT) pItem->item.asString.length;
                if(uiCurLen > NTX_MAX_KEY )
                   uiCurLen = NTX_MAX_KEY ;
                if( pTag->KeyLength != uiCurLen )
@@ -2581,10 +2695,8 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
                printf( "ntxCreateOrder" );
          }
       }
-      if( pArea->lpdbOrdCondInfo || pArea->lpdbRelations )
+      if( pArea->lpdbOrdCondInfo )
       {
-         if( !pArea->lpdbOrdCondInfo->fAll || pArea->lpdbRelations )
-            SELF_SKIP( ( AREAP ) pArea, 1 );
          if( pArea->lpdbOrdCondInfo->lStep )
          {
             lStep ++;
@@ -2596,27 +2708,30 @@ static ERRCODE hb_ntxIndexCreate( LPNTXINDEX pIndex )
             hb_vmPushSymbol( &hb_symEval );
             hb_vmPush( pArea->lpdbOrdCondInfo->itmCobEval );
             hb_vmSend( 0 );
+            if( ! hb_itemGetL( &(HB_VM_STACK.Return) ) )
+               break;
          }
       }
-      /*
-       else if( pArea->lpdbRelations )
+      if( numRecinBuf < 0 )
          SELF_SKIP( ( AREAP ) pArea, 1 );
-      */
    }
    hb_ntxSortKeyEnd( pTag, &sortInfo );
-   if( ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ) && !pArea->lpdbRelations )
+   if( numRecinBuf >= 0 )
    {
       pArea->pRecord = pRecordTmp;
       pArea->fValidBuffer = fValidBuffer;
    }
+   pArea->lpCurTag = pSaveTag;
+
    if( sortInfo.nSwappages )
       sortInfo.nSwappages = nParts - 1;
 
    /* Building index file with previously sorted keys */
    hb_ntxBufferSave( pTag, &sortInfo );
 
+#ifndef HB_CDP_SUPPORT_OFF
    hb_cdp_page = cdpTmp;
-
+#endif
    if( pszTempName )
    {  /*  Close temporary swap file, delete it and free name buffer */
       hb_fsClose( sortInfo.tempHandle );
@@ -2640,13 +2755,15 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull )
       return;
    hb_fsSeek( pIndex->DiskFile , 0 , 0 );
    memset( (void*) &Header, 0, sizeof( NTXHEADER ) );
-   Header.type = 6;
+   Header.type = 0x06 | ( pIndex->CompoundTag->ForExpr ? 0x01 : 0x00 ) |
+                 ( pIndex->Owner->bLockType == HB_SET_DBFLOCK_CL53 ? 0x20 : 0 );
    Header.version = 1;
    Header.root = pIndex->CompoundTag->RootBlock;
    Header.next_page = pIndex->NextAvail;
    Header.item_size = pIndex->CompoundTag->KeyLength+8;
    Header.key_size = pIndex->CompoundTag->KeyLength;
    Header.key_dec = pIndex->CompoundTag->KeyDec;
+
    if( bFull )
    {
       Header.max_item = pIndex->CompoundTag->MaxKeys;
@@ -2655,7 +2772,8 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull )
       if( pIndex->CompoundTag->ForExpr )
          strcpy( Header.for_expr , pIndex->CompoundTag->ForExpr );
       if( pIndex->CompoundTag->fTagName )
-         strcpy( Header.tag_name , pIndex->CompoundTag->TagName );
+         strncpy( Header.tag_name , pIndex->CompoundTag->TagName, NTX_MAX_TAGNAME );
+
       Header.unique = pIndex->CompoundTag->UniqueKey;
       Header.descend = !pIndex->CompoundTag->AscendKey;
       Header.custom = pIndex->CompoundTag->Custom;
@@ -2665,6 +2783,8 @@ static void hb_ntxHeaderSave( LPNTXINDEX pIndex, BOOL bFull )
    }
    else
       hb_fsWrite( pIndex->DiskFile,(BYTE*)&Header,16 );
+
+   pIndex->fFlush = TRUE;
 }
 
 static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, BOOL fTagName, char *szKeyExpr,
@@ -2699,6 +2819,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, BOOL fTagName, char *
    pTag->KeyType = bKeyType;
    pTag->KeyLength = uiKeyLen;
    pTag->KeyDec = uiKeyDec;
+   /* Please check me - it was: (NTXBLOCKSIZE-6)/(uiKeyLen+10) - 1 */
    pTag->MaxKeys = (NTXBLOCKSIZE-3)/(uiKeyLen+10) - 1;
    if( pTag->MaxKeys%2 && pTag->MaxKeys>2 )
       pTag->MaxKeys--;
@@ -2780,7 +2901,7 @@ static ERRCODE hb_ntxHeaderRead( LPNTXINDEX pIndex )
    return SUCCESS;
 }
 
-static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
+static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN )
 {
    NTXHEADER Header;
    LPTAGINFO pTag;
@@ -2815,14 +2936,14 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    if( Header.tag_name[0] > 20 )
    {
       pTag->fTagName = TRUE;
-      pTag->TagName = (char *) hb_xgrab( strlen( Header.tag_name ) + 1 );
-      hb_strncpyUpper( pTag->TagName, Header.tag_name, strlen( Header.tag_name ) );
+      pTag->TagName = (char *) hb_xgrab( NTX_MAX_TAGNAME + 1 );
+      hb_strncpyUpper( pTag->TagName, Header.tag_name, NTX_MAX_TAGNAME );
    }
    else
    {
       pTag->fTagName = FALSE;
-      pTag->TagName = (char *) hb_xgrab( strlen( ITN ) + 1 );
-      hb_strncpyUpper( pTag->TagName, ITN, strlen( ITN ) );
+      pTag->TagName = (char *) hb_xgrab( NTX_MAX_TAGNAME + 1 );
+      hb_strncpyUpper( pTag->TagName, ITN, NTX_MAX_TAGNAME );
    }
    pTag->KeyExpr = (char *) hb_xgrab( NTX_MAX_KEY );
    strcpy( pTag->KeyExpr, Header.key_expr );
@@ -2882,7 +3003,7 @@ static LPTAGINFO ntxFindIndex( NTXAREAP pArea , PHB_ITEM lpOrder )
    {
       do
       {
-         if( !hb_stricmp( current->TagName , hb_itemGetCPtr( lpOrder ) ) )
+         if( !hb_stricmp( current->TagName , lpOrder->item.asString.value ) )
             return current;
          current = current->pNext;
       } while( current );
@@ -2915,7 +3036,7 @@ static BOOL hb_ntxOrdKeyAdd( LPTAGINFO pTag )
    {
       pKey->Tag = 0;
       if( pTag->Owner->Owner->fShared && !pTag->Memory )
-         while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+         while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_WAIT ) );
       hb_ntxTagKeyAdd( pTag, pKey );
       if( pTag->Owner->Owner->fShared && !pTag->Memory )
       {
@@ -2941,11 +3062,11 @@ static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag )
    pKey = hb_ntxKeyNew( NULL,pTag->KeyLength );
    hb_ntxGetCurrentKey( pTag, pKey );
    if( pTag->Owner->Owner->fShared && !pTag->Memory )
-      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+      while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_WAIT ) );
    pTag->stackLevel = 0;
    if( hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) &&
          hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) &&
-         !hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, FALSE ) )
+         !hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKey, (int)pTag->KeyLength, FALSE, 0 ) )
    {
       LPPAGEINFO pPage = hb_ntxPageLoad( pTag,pTag->CurKeyInfo->Tag );
       pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
@@ -2973,21 +3094,21 @@ static ERRCODE ntxGoBottom( NTXAREAP pArea )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
    if ( !pArea->lpCurTag || !pArea->lpNtxTag )
-     SUPER_GOBOTTOM( ( AREAP ) pArea );
+      SUPER_GOBOTTOM( ( AREAP ) pArea );
    else
    {
-     LPTAGINFO pTag;
+      LPTAGINFO pTag;
 
-     pTag = pArea->lpCurTag;
-     if( pTag->bottomScope )
-     {
-        ntxSeek( pArea, 0, pTag->bottomScope, 1 );
-        if( pArea->fEof )
-           return SUCCESS;
-     }
-     else
-        hb_ntxTagKeyGoTo( pTag, BTTM_RECORD, NULL );
-     SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
+      pTag = pArea->lpCurTag;
+      if( pTag->bottomScope )
+      {
+         ntxSeek( pArea, TRUE, pTag->bottomScope, TRUE );
+         if ( pArea->fEof )
+            return SUCCESS;
+      }
+      else
+         hb_ntxTagKeyGoTo( pTag, BTTM_RECORD, NULL );
+      SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
    }
    return SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
 }
@@ -3020,7 +3141,7 @@ static ERRCODE ntxGoTop( NTXAREAP pArea )
 
      if( pTag->topScope )
      {
-        ntxSeek( pArea, 1, pTag->topScope, 0 );
+        ntxSeek( pArea, TRUE, pTag->topScope, FALSE );
         if( pTag->TagEOF )
         {
            hb_ntxGoEof( pArea );
@@ -3036,7 +3157,7 @@ static ERRCODE ntxGoTop( NTXAREAP pArea )
 
 static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast )
 {
-   ERRCODE  retvalue;
+   ERRCODE  retvalue = 0xFFFF;
    BOOL     result;
    HB_TRACE(HB_TR_DEBUG, ("ntxSeek(%p, %d, %p, %d)", pArea, bSoftSeek, pKey, bFindLast));
 
@@ -3070,7 +3191,9 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
            }
            keylen = ( ((USHORT)pKey->item.asString.length)<pTag->KeyLength)? pKey->item.asString.length:pTag->KeyLength;
            memcpy( pKey2->key, pKey->item.asString.value, keylen );
+#ifndef HB_CDP_SUPPORT_OFF
            hb_cdpnTranslate( pKey2->key, hb_cdp_page, pArea->cdPage, keylen );
+#endif
            break;
         case HB_IT_INTEGER:
         case HB_IT_LONG:
@@ -3098,7 +3221,7 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
      if( pArea->fShared && !pTag->Memory )
      {
-        while( !hb_fsLock( pArea->lpCurTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+        while( !hb_fsLock( pArea->lpCurTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_SHARED | FLX_WAIT ) );
         pArea->lpCurTag->Owner->Locked = TRUE;
      }
      lRecno = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result, bSoftSeek );
@@ -3107,9 +3230,11 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
         LONG lRecnoLast;
 
         pArea->fEof = pArea->fBof = FALSE;
-        hb_IncString( pArea, pKey2->key, keylen );
-        lRecnoLast = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result, 0 );
-        hb_ntxKeyFree( pKey2 );
+        if( pTag->AscendKey )
+           hb_IncString( pArea, pKey2->key, keylen );
+        else
+           hb_DecString( pArea, pKey2->key, keylen );
+        lRecnoLast = hb_ntxTagKeyFind( pTag, pKey2, keylen, &result, FALSE );
         if( lRecnoLast > 0 )
         {
            BOOL lContinue = FALSE;
@@ -3120,21 +3245,13 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
               hb_ntxTagKeyGoTo( pTag, PREV_RECORD, &lContinue );
            while( hb_ntxIsRecBad( pArea, pTag->CurKeyInfo->Xtra ) );
            retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-           pArea->fFound = TRUE;
         }
         else
         {
            hb_ntxTagKeyGoTo( pTag, BTTM_RECORD, NULL );
            retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-           pArea->fFound = TRUE;
         }
-        if( pArea->fShared && !pTag->Memory )
-        {
-           hb_ntxPageFree( pTag,FALSE );
-           hb_fsLock( pArea->lpCurTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
-           pArea->lpCurTag->Owner->Locked = FALSE;
-        }
-        return retvalue;
+        pArea->fFound = TRUE;
      }
      if( pArea->fShared && !pTag->Memory )
      {
@@ -3142,60 +3259,60 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
         hb_fsLock( pArea->lpCurTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
         pArea->lpCurTag->Owner->Locked = FALSE;
      }
-     pArea->fEof = pTag->TagEOF;
-     pArea->fBof = pTag->TagBOF;
-     hb_ntxKeyFree( pKey2 );
-     if ( lRecno > 0 && result )
+     if( retvalue == 0xFFFF )
      {
-        retvalue = SELF_GOTO( ( AREAP ) pArea, lRecno );
-        pArea->fFound = TRUE;
-        return retvalue;
-     }
-     else
-     {
-        pArea->fFound = FALSE;
-        if ( lRecno > 0 && !result && bSoftSeek && !pTag->TagEOF )
+        pArea->fEof = pTag->TagEOF;
+        pArea->fBof = pTag->TagBOF;
+        if ( lRecno > 0 && result )
         {
-           SELF_GOTO( ( AREAP ) pArea, lRecno );
-           if( pTag->bottomScope )
-           {
-              hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
-              if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
-                 pArea->fEof = pTag->TagEOF = TRUE;
-           }
-           return SUCCESS;
+           retvalue = SELF_GOTO( ( AREAP ) pArea, lRecno );
+           pArea->fFound = TRUE;
         }
         else
-           return hb_ntxGoEof( pArea );
+        {
+           pArea->fFound = FALSE;
+           if ( lRecno > 0 && !result && bSoftSeek && !pTag->TagEOF )
+           {
+              retvalue = SELF_GOTO( ( AREAP ) pArea, lRecno );
+              if( pTag->bottomScope )
+              {
+                 hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
+                 if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
+                 {
+                    pArea->fEof = pTag->TagEOF = TRUE;
+                 }
+              }
+           }
+        }
      }
+     if ( retvalue == 0xFFFF )
+     {
+        retvalue = hb_ntxGoEof( pArea );
+     }
+     hb_ntxKeyFree( pKey2 );
+     return retvalue;
    }
 }
 
 static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
 {
+   LPTAGINFO pTag = pArea->lpCurTag;
+   BOOL lContinue = FALSE;
+   ULONG ulRecNo = pArea->ulRecNo;
+
    HB_TRACE(HB_TR_DEBUG, ("ntxSkipRaw(%p, %ld)", pArea, lToSkip));
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
-   if ( ! pArea->lpCurTag )
-     SUPER_SKIPRAW( ( AREAP ) pArea, lToSkip );
-   else
+   if ( ! pArea->lpCurTag || lToSkip == 0 )
+      return SUPER_SKIPRAW( ( AREAP ) pArea, lToSkip );
+
+   if ( lToSkip > 0 )
    {
-     LPTAGINFO pTag = pArea->lpCurTag;
-     BOOL lContinue = FALSE;
-     ULONG ulRecNo = pArea->ulRecNo;
-
-     if ( pArea->fBof && !pArea->fEof )
-        SELF_GOTOP( ( AREAP ) pArea );
-
-     if ( lToSkip == 0 )
-       SUPER_SKIPRAW( ( AREAP ) pArea, 0 );
-     else if ( lToSkip > 0 )
-     {
-       if ( !pArea->fEof )
-       {
-          while ( !pTag->TagEOF && lToSkip-- > 0 )
-          {
+      if ( !pArea->fEof )
+      {
+         while ( !pTag->TagEOF && lToSkip-- > 0 )
+         {
             hb_ntxTagKeyGoTo( pTag, NEXT_RECORD, &lContinue );
             if( !pTag->TagEOF )
             {
@@ -3203,58 +3320,59 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
                {
                   ntxSeek( pArea, 1, pTag->topScope, 0 );
                }
-               else if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
+               if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
                {
                   pTag->TagEOF = TRUE;
                }
             }
-          }
-          pArea->ulRecNo = ulRecNo;
-          if ( !pTag->TagEOF )
-          {
+         }
+         pArea->ulRecNo = ulRecNo;
+         if ( !pTag->TagEOF )
+         {
             if( pTag->CurKeyInfo->Tag )
                SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-          }
-          else
-          {
+         }
+         else
+         {
             hb_ntxGoEof( pArea );
-          }
-       }
-     }
-     else /* ( lToSkip < 0 ) */
-     {
-       if ( pArea->fEof )
-       {
+         }
+      }
+   }
+   else /* ( lToSkip < 0 ) */
+   {
+      if ( pArea->fEof )
+      {
          SELF_GOBOTTOM( ( AREAP ) pArea );
          lToSkip++;
-       }
-       pTag->TagBOF = FALSE;
-       while ( !pTag->TagBOF && lToSkip++ < 0 )
-       {
+      }
+      pTag->TagBOF = FALSE;
+      while ( !pTag->TagBOF && lToSkip++ < 0 )
+      {
          hb_ntxTagKeyGoTo( pTag, PREV_RECORD, &lContinue );
-         if( !hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) )
+         if ( !pTag->TagBOF )
          {
-            ntxSeek( pArea, 1, pTag->topScope, 0 );
-            pTag->TagBOF = TRUE;
+            if( !hb_ntxInTopScope( pTag, pTag->CurKeyInfo->key ) )
+            {
+               pTag->TagBOF = TRUE;
+            }
+            else if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
+            {
+               ntxSeek( pArea, 1, pTag->bottomScope, 1 );
+            }
          }
-         else if( !hb_ntxInBottomScope( pTag, pTag->CurKeyInfo->key ) )
-         {
-            ntxSeek( pArea, 1, pTag->bottomScope, 1 );
-         }
-       }
-       pArea->ulRecNo = ulRecNo;
-       if ( !pTag->TagBOF )
-       {
+      }
+      pArea->ulRecNo = ulRecNo;
+      if ( !pTag->TagBOF )
+      {
          if( pTag->CurKeyInfo->Tag )
             SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
-       }
-       else
-       {
+      }
+      else
+      {
          pTag->TagBOF = FALSE;
          SELF_GOTOP( ( AREAP ) pArea );
          pArea->fBof = pTag->TagBOF = TRUE;
-       }
-     }
+      }
    }
    return SUCCESS;
 }
@@ -3299,13 +3417,14 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                {
                   pArea->lpCurTag = pTag;
                   if( pArea->fShared && !pTag->Memory )
-                     while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK ) );
+                     while( !hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_LOCK | FLX_WAIT ) );
+                  pTag->Owner->Locked = TRUE;
                   if( !pArea->fNtxAppend && !fAppend && pTag->InIndex )
                   {
                      LPKEYINFO pKeyOld = hb_ntxKeyNew( pTag->CurKeyInfo,pTag->KeyLength );
 
                      pTag->stackLevel = 0;
-                     if( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKeyOld, (int)pTag->KeyLength, FALSE, FALSE ) )
+                     if( hb_ntxTagFindCurrentKey( pTag, hb_ntxPageLoad( pTag,0 ), pKeyOld, (int)pTag->KeyLength, FALSE, 0 ) )
                      {
                          printf( "\n\rntxGoCold: Cannot find current key:" );
                          pTag = pTag->pNext;
@@ -3336,6 +3455,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                   {
                      hb_ntxPageFree( pTag,FALSE );
                      hb_fsLock( pTag->Owner->DiskFile, NTX_LOCK_OFFSET, 1, FL_UNLOCK );
+                     pTag->Owner->Locked = FALSE;
                   }
                }
                hb_ntxKeyFree( pKey );
@@ -3376,6 +3496,38 @@ static ERRCODE ntxGoHot( NTXAREAP pArea )
    }
    else
       return FAILURE;
+}
+
+/*
+ * Flush _system_ buffers to disk
+ */
+static ERRCODE ntxFlush( NTXAREAP pArea )
+{
+   LPTAGINFO pTag;
+   ERRCODE uiError;
+
+   HB_TRACE(HB_TR_DEBUG, ("ntxFlush(%p)", pArea));
+
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
+
+   uiError = SUPER_FLUSH( ( AREAP ) pArea );
+
+   if ( hb_set.HB_SET_HARDCOMMIT )
+   {
+      pTag = pArea->lpNtxTag;
+      while( pTag )
+      {
+         if( !pTag->Memory && pTag->Owner->fFlush )
+         {
+            hb_fsCommit( pTag->Owner->DiskFile );
+            pTag->Owner->fFlush = FALSE;
+         }
+         pTag = pTag->pNext;
+      }
+   }
+
+   return uiError;
 }
 
 /*
@@ -3451,16 +3603,18 @@ static ERRCODE ntxZap( NTXAREAP pArea )
             hb_fsSeek( pTag->Owner->DiskFile, NTXBLOCKSIZE, FS_SET );
             hb_fsWrite( pTag->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
             hb_fsWrite( pTag->Owner->DiskFile, NULL, 0 );
+            pTag->Owner->fFlush = TRUE;
          }
 
          pTag = pTag->pNext;
       }
+
       pArea->lpCurTag = pTagTmp;
       hb_xfree( buffer );
       return SELF_GOTOP( ( AREAP ) pArea );
    }
    else
-     return FAILURE;
+      return FAILURE;
 }
 
 static ERRCODE ntxOrderCondition( NTXAREAP area, LPDBORDERCONDINFO pOrdCondInfo )
@@ -3484,6 +3638,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    LPTAGINFO pTag;
    PHB_FNAME pFileName;
    DBORDERINFO pExtInfo;
+   BOOL fTagName;
    BYTE bType;
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderCreate(%p, %p)", pArea, pOrderInfo));
@@ -3528,7 +3683,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       pExpMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pExpr );
       hb_macroRun( pExpMacro );
       pResult = pExpr;
-      hb_itemCopy( pResult, &hb_stack.Return );
+      hb_itemCopy( pResult, hb_stackItemFromTop( -1 ) );
       hb_stackPop();
    }
 
@@ -3619,7 +3774,7 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          pForMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pExpr );
          hb_macroRun( pForMacro );
          pResult = pExpr;
-         hb_itemCopy( pResult, &hb_stack.Return );
+         hb_itemCopy( pResult, hb_stackItemFromTop( -1 ) );
          hb_stackPop();
       }
       uiType = hb_itemType( pResult );
@@ -3664,24 +3819,29 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
       }
    }
 
-   if( pOrderInfo->atomBagName )
+   if( pOrderInfo->atomBagName && strlen( ( const char * ) pOrderInfo->atomBagName ) > 0 )
    {
       int iTagNameLen = strlen( ( const char * ) pOrderInfo->atomBagName );
       if( iTagNameLen > 10 )
          iTagNameLen = 10;
       szTagName = ( char * ) hb_xgrab( iTagNameLen + 1 );
       hb_strncpyUpper( szTagName, ( const char * ) pOrderInfo->atomBagName, iTagNameLen );
+      fTagName = TRUE;
    }
    else
    {
-      szTagName = ( char * ) hb_xgrab( strlen( pFileName->szName ) + 1 );
-      hb_strncpyUpper( szTagName, pFileName->szName, strlen( pFileName->szName ) );
+      int iTagNameLen = strlen( pFileName->szName );
+      if( iTagNameLen > 10 )
+         iTagNameLen = 10;
+      szTagName = ( char * ) hb_xgrab( iTagNameLen + 1 );
+      hb_strncpyUpper( szTagName, pFileName->szName, iTagNameLen );
+      fTagName = FALSE;
    }
    hb_xfree( pFileName );
 
    pIndex = hb_ntxIndexNew( pArea );
    pIndex->IndexName = szFileName;
-   pTag = hb_ntxTagNew( pIndex, szTagName, (pOrderInfo->atomBagName)? 1:0, pOrderInfo->abExpr->item.asString.value,
+   pTag = hb_ntxTagNew( pIndex, szTagName, fTagName, pOrderInfo->abExpr->item.asString.value,
                         pKeyExp, bType, (USHORT) uiLen, (USHORT) uiDec, (char *) ( pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->abFor : NULL ),
                         pForExp, pArea->lpdbOrdCondInfo ? !pArea->lpdbOrdCondInfo->fDescending : TRUE,
                         pOrderInfo->fUnique, pArea->lpdbOrdCondInfo ? pArea->lpdbOrdCondInfo->fCustom : FALSE,
@@ -3766,14 +3926,14 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_EXPRESSION:
             hb_itemPutC( pInfo->itmResult , pTag->KeyExpr );
             break;
-         case DBOI_NUMBER:
-            hb_itemPutNI( pInfo->itmResult, pTag->TagRoot );
-            break;
          case DBOI_BAGNAME:
             hb_itemPutC( pInfo->itmResult, pTag->Owner->IndexName );
             break;
          case DBOI_NAME:
             hb_itemPutC( pInfo->itmResult, pTag->TagName );
+            break;
+         case DBOI_NUMBER:
+            hb_itemPutNI( pInfo->itmResult, pTag->TagRoot );
             break;
          case DBOI_KEYCOUNT:
             hb_itemPutNL( pInfo->itmResult, hb_ntxTagKeyCount( pTag ) );
@@ -3822,7 +3982,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             }
             break;
          case DBOI_ORDERCOUNT:
-            if( pInfo->atomBagName && (char*) hb_itemGetCPtr( pInfo->atomBagName ))
+            if( pInfo->atomBagName && (char*) hb_itemGetCPtr( pInfo->atomBagName ) )
             {
                hb_itemPutNL( pInfo->itmResult, 1 );
             }
@@ -3871,6 +4031,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_SCOPEBOTTOMCLEAR :
             hb_itemClear( pInfo->itmResult );
             break;
+         case DBOI_NUMBER:
          case DBOI_ORDERCOUNT:
             hb_itemPutNL( pInfo->itmResult, 0 );
             break;
@@ -3897,8 +4058,8 @@ static ERRCODE ntxScopeInfo( NTXAREAP pArea, USHORT nScope, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxScopeInfo(%p, %hu, %p)", pArea, nScope, pItem));
 
-   if( !pArea->lpCurTag || ( nScope == 0 && !pArea->lpCurTag->topScope ) ||
-            ( nScope == 1 && !pArea->lpCurTag->bottomScope ) )
+   if( !pArea->lpCurTag || ( (nScope) ? !pArea->lpCurTag->bottomScope :
+                                        !pArea->lpCurTag->topScope ) )
       hb_itemClear( pItem );
    else
    {
@@ -3913,12 +4074,15 @@ static ERRCODE ntxScopeInfo( NTXAREAP pArea, USHORT nScope, PHB_ITEM pItem )
          case HB_IT_INTEGER:
          case HB_IT_LONG:
          case HB_IT_DOUBLE:
-            hb_itemPutND( pItem, hb_strVal(
-              hb_itemGetCPtr( (nScope)? pTag->bottomScope:pTag->topScope ),
-              hb_itemGetCLen( (nScope)? pTag->bottomScope:pTag->topScope ) ) );
+            if ( nScope )
+               hb_itemPutND( pItem, hb_strVal( pTag->bottomScope->item.asString.value,
+                                               pTag->bottomScope->item.asString.length ) );
+            else
+               hb_itemPutND( pItem, hb_strVal( pTag->topScope->item.asString.value,
+                                               pTag->topScope->item.asString.length ) );
             break;
         case HB_IT_DATE:
-           hb_itemPutDS( pItem, hb_itemGetCPtr( (nScope)? pTag->bottomScope:pTag->topScope ) );
+           hb_itemPutDS( pItem, (nScope)? pTag->bottomScope->item.asString.value:pTag->topScope->item.asString.value );
            break;
       }
    }
@@ -3941,9 +4105,8 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
-   szFileName[ 0 ] = '\0';
-   strcpy( szFileName, hb_itemGetCPtr( pOrderInfo->atomBagName ) );
+   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+   hb_strncpy( szFileName, hb_itemGetCPtr( pOrderInfo->atomBagName ), _POSIX_PATH_MAX );
    if( strlen( szFileName ) == 0 )
    {
       hb_xfree( szFileName );
@@ -3954,15 +4117,19 @@ static ERRCODE ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    {
       pExtInfo.itmResult = hb_itemPutC( NULL, "" );
       SELF_ORDINFO( ( AREAP ) pArea, DBOI_BAGEXT, &pExtInfo );
-      strcat( szFileName, hb_itemGetCPtr( pExtInfo.itmResult ) );
+      hb_strncat( szFileName, hb_itemGetCPtr( pExtInfo.itmResult ), _POSIX_PATH_MAX );
       hb_itemRelease( pExtInfo.itmResult );
    }
    pIndex = hb_ntxIndexNew( pArea );
 
    /* Index file could be opened with FO_READ only in exclusive readonly mode
-      to allow locking in other modes  */
-   uiFlags =  !pArea->fShared && pArea->fReadonly  ? FO_READ : FO_READWRITE;
-   uiFlags |= pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+      to allow locking in other modes
+      Alexander, it's not proper solution. It will cause that you cannot open
+      readonly files in exclusive mode. Shared locks should be used instead
+      this hack for readonly mode.
+    */
+   uiFlags = ( pArea->fReadonly ? FO_READ : FO_READWRITE ) |
+             ( pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE );
 
    do
    {
@@ -4059,13 +4226,16 @@ static ERRCODE ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("ntxOrderListFocus(%p, %p)", pArea, pOrderInfo));
 
-   hb_itemPutC( pOrderInfo->itmResult, (pArea->lpCurTag)? pArea->lpCurTag->TagName:"" );
+   pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult,
+                           (pArea->lpCurTag) ? pArea->lpCurTag->TagName : "" );
 
    if( pOrderInfo->itmOrder )
    {
       if( hb_itemType( pOrderInfo->itmOrder ) != HB_IT_STRING &&
                   hb_itemGetNI( pOrderInfo->itmOrder ) == 0 )
+      {
          pArea->lpCurTag = NULL;
+      }
       else
       {
          pTag = ntxFindIndex( pArea, pOrderInfo->itmOrder );
@@ -4101,6 +4271,7 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
       {
          hb_fsSeek( pTag->Owner->DiskFile, NTXBLOCKSIZE, FS_SET );
          hb_fsWrite( pTag->Owner->DiskFile, NULL, 0 );
+         pTag->Owner->fFlush = TRUE;
       }
       pTag->RootBlock = 0;
       pTag->keyCount = pTag->Owner->NextAvail = 0;
@@ -4110,8 +4281,7 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
       {
          hb_ntxHeaderSave( pTag->Owner, TRUE );
          hb_fsSeek( pTag->Owner->DiskFile , 0 , 0 );
-         pTag->TagBlock =
-              hb_fsSeek( pTag->Owner->DiskFile, 0, SEEK_END ) - 1024;
+         pTag->TagBlock = hb_fsSeek( pTag->Owner->DiskFile, 0, SEEK_END ) - 1024;
       }
 
       pTag = pTag->pNext;
@@ -4136,8 +4306,11 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo )
    {
       LPTAGINFO pTag = pArea->lpCurTag;
       USHORT nKeyType = hb_ntxGetKeyType( pTag );
-      PHB_ITEM *ppItem = (sInfo->nScope)? &(pTag->bottomScope):&(pTag->topScope);
+      PHB_ITEM *ppItem;
+      USHORT nScope = sInfo->nScope;
       char szBuffer[ NTX_MAX_KEY ];
+
+      ppItem = (nScope) ? &(pTag->bottomScope) : &(pTag->topScope);
 
       pTag->keyCount = 0;
       if( !sInfo->scopeValue )
@@ -4154,7 +4327,9 @@ static ERRCODE ntxSetScope( NTXAREAP pArea, LPDBORDSCOPEINFO sInfo )
                   if( *ppItem == NULL )
                      *ppItem = hb_itemNew( NULL );
                   hb_itemCopy( *ppItem, sInfo->scopeValue );
+#ifndef HB_CDP_SUPPORT_OFF
                   hb_cdpnTranslate( (*ppItem)->item.asString.value, hb_cdp_page, pArea->cdPage, (*ppItem)->item.asString.length );
+#endif
                }
                break;
             case HB_IT_INTEGER:
@@ -4201,7 +4376,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxFieldDisplay,
                              ntxFieldInfo,
                              ntxFieldName,
-                             ntxFlush,
+                             ( DBENTRYP_V ) ntxFlush,
                              ntxGetRec,
                              ntxGetValue,
                              ntxGetVarLen,
@@ -4278,7 +4453,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxWhoCares
                            };
 
-HB_FUNC(_DBFNTX ){;}
+HB_FUNC(_DBFNTX ) {;}
 
 HB_FUNC( DBFNTX_GETFUNCTABLE )
 {

@@ -380,7 +380,7 @@ static BOOL hb_fptFileLockSh( FPTAREAP pArea, BOOL fWait )
  */
 static BOOL hb_fptFileUnLock( FPTAREAP pArea )
 {
-   return hb_fsLock( pArea->hMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
+   return !pArea->fShared || hb_fsLock( pArea->hMemoFile, FPT_LOCKPOS, FPT_LOCKSIZE, FL_UNLOCK );
 }
 
 /*
@@ -2071,7 +2071,7 @@ static ERRCODE hb_fptGetVarLen( FPTAREAP pArea, USHORT uiIndex, ULONG * pLength 
    if( pArea->fHasMemo && pArea->hMemoFile != FS_ERROR &&
        pArea->lpFields[ uiIndex - 1 ].uiType == HB_IT_MEMO )
    {
-      ERRCODE uiError = SUCCESS;
+      ERRCODE uiError;
       BOOL bLocked, bDeleted;
 #if defined( HB_FPT_USE_READLOCK )
       ULONG ulOffset;

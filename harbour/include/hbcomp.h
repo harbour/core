@@ -70,9 +70,7 @@
 #include "hbpcode.h"
 #include "hbhash.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* compiler related declarations */
 
@@ -555,9 +553,7 @@ extern ULONG          hb_comp_Supported;
   #define HB_COMP_ISSUPPORTED(flag)    ( hb_comp_Supported & (flag) )
 #endif
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_COMP_H_ */
 

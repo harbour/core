@@ -8,6 +8,161 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-28 10:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/hbgtmk.sh
+  * harbour/make_rpm.sh
+  * harbour/bin/pack_src.sh
+    * updated for recent changes in make process
+
+  * harbour/contrib/Makefile
+    * added odbc lib for Linux compilation
+
+  * harbour/contrib/btree/Makefile
+    * changed lib name from hb_btree to hbtree
+
+  * harbour/contrib/btree/hb_btree.api
+  * harbour/contrib/btree/hb_btree.c
+    * fixed GCC compilation in HB_TR_DEBUG mode
+
+  * harbour/contrib/hbzlib/hbzip.h
+  * harbour/contrib/hbzlib/include/hbzip.h
+  * harbour/include/hbapi.h
+  * harbour/include/hbapicdp.h
+  * harbour/include/hbapierr.h
+  * harbour/include/hbapifs.h
+  * harbour/include/hbapigt.h
+  * harbour/include/hbapiitm.h
+  * harbour/include/hbapilng.h
+  * harbour/include/hbapirdd.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbdate.h
+  * harbour/include/hbdbsort.h
+  * harbour/include/hberrors.h
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/include/hbhash.h
+  * harbour/include/hbinit.h
+  * harbour/include/hbmacro.h
+  * harbour/include/hbpp.h
+  * harbour/include/hbrdddel.h
+  * harbour/include/hbrddntx.h
+  * harbour/include/hbrddsdf.h
+  * harbour/include/hbrddwrk.h
+  * harbour/include/hbset.h
+  * harbour/include/hbstack.h
+  * harbour/include/hbtrace.h
+  * harbour/include/hbvm.h
+  * harbour/include/hbvmpub.h
+    * changed #if defined (HB_EXTERN_C) to HB_EXTERN_BEGIN / HB_EXTERN_END
+      macros for easier manipulation with different ABI
+    * added HB_IS_BADITEM() macro for debugging
+    * synced CDP with xHarbour - added basic Unicode support
+    * synced RDD with xHarbour
+
+  * harbour/source/codepage/Makefile
+  * harbour/source/codepage/cdp_tpl.c
+  * harbour/source/codepage/cdpeldos.c
+  * harbour/source/codepage/cdpelwin.c
+  * harbour/source/codepage/cdpesdos.c
+  * harbour/source/codepage/cdpeswin.c
+  * harbour/source/codepage/cdpgedos.c
+  * harbour/source/codepage/cdpgewin.c
+  * harbour/source/codepage/cdphu852.c
+  * harbour/source/codepage/cdphuwin.c
+  * harbour/source/codepage/cdppl852.c
+  * harbour/source/codepage/cdppliso.c
+  * harbour/source/codepage/cdpplmaz.c
+  * harbour/source/codepage/cdpplwin.c
+  * harbour/source/codepage/cdppt850.c
+  * harbour/source/codepage/cdpptiso.c
+  * harbour/source/codepage/cdpru866.c
+  * harbour/source/codepage/cdprukoi.c
+  * harbour/source/codepage/cdpruwin.c
+  * harbour/source/codepage/cdpsl437.c
+  * harbour/source/codepage/cdpsl852.c
+  * harbour/source/codepage/cdpsliso.c
+  * harbour/source/codepage/cdpslwin.c
+  * harbour/source/codepage/cdpsrwin.c
+  + harbour/source/codepage/uc1250.c
+  + harbour/source/codepage/uc1251.c
+  + harbour/source/codepage/uc1253.c
+  + harbour/source/codepage/uc1257.c
+  + harbour/source/codepage/uc737.c
+  + harbour/source/codepage/uc850.c
+  + harbour/source/codepage/uc852.c
+  + harbour/source/codepage/uc866.c
+  + harbour/source/codepage/uc88591b.c
+  + harbour/source/codepage/uc8859_1.c
+  + harbour/source/codepage/uc8859_2.c
+  + harbour/source/codepage/uckoi8.c
+  + harbour/source/codepage/uckoi8u.c
+  + harbour/source/codepage/ucmaz.c
+  * harbour/source/rtl/cdpapi.c
+    * synced HB CDP API with xHarbour - added basic Unicode support
+
+  * harbour/source/common/expropt2.c
+
+  * harbour/source/common/hbstr.c
+    * removed unnecessary initialization to avoid BCC warnings
+
+  * harbour/source/compiler/harbour.c
+    * formatting
+      hb_compCodeBlockStop() looks like work in progress or is has
+      some old unused code - Ryszard, can you look at it?
+
+  * harbour/source/macro/macro.y
+    * removed hack for GCC and old Bison versions
+
+  * harbour/source/pp/ppcore.c
+    * removed unnecessary initialization to avoid BCC warnings
+
+  * harbour/source/pp/pptable.c
+    + added some sets for RDD synchronization with xHarbour
+
+  * harbour/source/rdd/dbcmd.c
+    + added __RDDGETTEMPALIAS
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbfuncs.prg
+  * harbour/source/rdd/dbnubs.c
+  * harbour/source/rdd/dbstrux.prg
+  * harbour/source/rdd/hbdbsort.c
+  * harbour/source/rdd/rddord.prg
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    * synchronized with xHarbour - still dbcmd.c has to be synced yet
+    ! fixed all known bugs
+    Alexander, please look at DBFNTX - I hope all is correct.
+
+  * harbour/source/vm/codebloc.c
+    * formatting
+
+  * harbour/source/vm/fm.c
+    + added HB_PARANOID_MEM_CHECK to force reallocations in hb_xrealloc
+      and fill allocated and freed memory with HB_MEMFILER (0xff by default)
+      It's for debugging only.
+
+  * harbour/source/vm/hvm.c
+    ! fixed hb_vmTopNumber() declaration for BCC
+    * use hb_gcCollectAll() at HVM exit instead of hb_gcReleaseAll() to
+      report allocated and not freed items - It could caused that some
+      programs begin to report memory leaks.
+
+  * harbour/source/vm/itemapi.c
+    * check for HB_IS_BADITEM inside hb_itemClear() when compiled with
+      HB_PARANOID_MEM_CHECK for debugging
+
+  * harbour/source/vm/memvars.c
+    * formatting
+    ! fixed pItem initialization in hb_memvarDetachLocal()
+      BTW - is this really necessary? I copy it form hb_itemUnRef()
+      but in fact it cannot detect all possible item reference cycles
+      if they appear - can they appear?
+
 2004-12-27 10:37 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/vm/memvars.c
       * changed algorithm for recycling of unused memvar values

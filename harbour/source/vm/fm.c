@@ -84,12 +84,21 @@
 #include "hbapierr.h"
 #include "hbmemory.ch"
 
+/* #define HB_PARANOID_MEM_CHECK */
+
+#ifndef HB_FM_STATISTICS
+#  undef HB_PARANOID_MEM_CHECK
+#endif
+
 #if defined(HB_FM_STATISTICS) && !defined(HB_TR_LEVEL)
    #define HB_TR_LEVEL HB_TR_ERROR
 #endif
 
 #ifdef HB_FM_STATISTICS
 
+#ifndef HB_MEMFILER
+#  define HB_MEMFILER  0xff
+#endif
 #define HB_MEMINFO_SIGNATURE 0x19730403
 
 typedef struct _HB_MEMINFO
@@ -188,6 +197,9 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
    if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 
+#ifdef HB_PARANOID_MEM_CHECK
+   memset( ( char * ) pMem + HB_MEMINFO_SIZE, HB_MEMFILER, ulSize );
+#endif
    return ( void * ) ( ( BYTE * ) pMem + HB_MEMINFO_SIZE );
 
 #else
@@ -270,6 +282,9 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
    if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 
+#ifdef HB_PARANOID_MEM_CHECK
+   memset( ( char * ) pMem + HB_MEMINFO_SIZE, HB_MEMFILER, ulSize );
+#endif
    return ( void * ) ( ( BYTE * ) pMem + HB_MEMINFO_SIZE );
 
 #else
@@ -311,7 +326,23 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 
    HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulMemSize, 0 );
 
+#ifdef HB_PARANOID_MEM_CHECK
+   pMem = malloc( ulSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
+   if ( pMem )
+   {
+      if ( ulSize > ulMemSize )
+      {
+         memcpy( pMem, pMemBlock, ulMemSize + HB_MEMINFO_SIZE );
+         memset( ( char * ) pMem + HB_MEMINFO_SIZE + ulMemSize, HB_MEMFILER, ulSize - ulMemSize );
+      }
+      else
+         memcpy( pMem, pMemBlock, ulSize + HB_MEMINFO_SIZE );
+   }
+   memset( pMemBlock, HB_MEMFILER, ulMemSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
+   free( pMemBlock );
+#else
    pMem = realloc( pMemBlock, ulSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
+#endif
 
    s_lMemoryConsumed += ( ulSize - ulMemSize );
    if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
@@ -386,6 +417,9 @@ void HB_EXPORT hb_xfree( void * pMem )            /* frees fixed memory */
       pMemBlock->ulSignature = 0;
       HB_PUT_LONG( ( ( BYTE * ) pMem ) + pMemBlock->ulSize, 0 );
 
+#ifdef HB_PARANOID_MEM_CHECK
+      memset( pMemBlock, HB_MEMFILER, pMemBlock->ulSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
+#endif
       free( ( void * ) pMemBlock );
    }
    else

@@ -233,12 +233,7 @@ HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
    
    if( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) )
    {
-      /* Change the value only if this variable is not referenced
-       * by another codeblock yet.
-       * In this case we have to copy the current value to a global memory
-       * pool so it can be shared by codeblocks
-       */
-      HB_ITEM_PTR pItem;
+      HB_ITEM_PTR pItem = pLocal;
 
       do
       {
@@ -247,13 +242,18 @@ HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
       while( HB_IS_BYREF( pLocal ) && ! HB_IS_MEMVAR( pLocal ) && ( pLocal != pItem ) );
    }
 
-	if( ! HB_IS_MEMVAR( pLocal ) )
+   /* Change the value only if this variable is not referenced
+    * by another codeblock yet.
+    * In this case we have to copy the current value to a global memory
+    * pool so it can be shared by codeblocks
+    */
+   if ( ! HB_IS_MEMVAR( pLocal ) )
    {
-		HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, FALSE );
+      HB_HANDLE hMemvar = hb_memvarValueNew( pLocal, FALSE );
 
-		pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
-		pLocal->item.asMemvar.itemsbase = &s_globalTable;
-		pLocal->item.asMemvar.value     = hMemvar;
+      pLocal->type = HB_IT_BYREF | HB_IT_MEMVAR;
+      pLocal->item.asMemvar.itemsbase = &s_globalTable;
+      pLocal->item.asMemvar.value     = hMemvar;
    }
    return pLocal;
 }

@@ -55,9 +55,7 @@
 
 #include "hbdefs.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 struct _HB_DYNS;
 
@@ -107,8 +105,6 @@ typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
 extern void HB_EXPORT hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_VMPUB_H_ */

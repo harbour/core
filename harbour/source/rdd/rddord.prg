@@ -51,6 +51,7 @@
  */
 
 #include "common.ch"
+#include "dbinfo.ch"
 
 /* NOTE: The fifth parameters (cOrderName) is undocumented. */
 
@@ -105,4 +106,29 @@ FUNCTION ORDSETFOCU( xOrder, cFile )
    RETURN ORDSETFOCUS( xOrder, cFile )
 
 FUNCTION ORDSETRELA( xArea, bRelation, cRelation )
-   RETURN ORDSETRELATION( xArea, bRelation, cRelation, .T. )
+   RETURN ORDSETRELATION( xArea, bRelation, cRelation )
+
+FUNCTION ORDWILDSEEK( cPattern, lCont, lBack )
+   LOCAL lFound := .F.
+
+   IF VALTYPE( lCont ) != "L"
+      lCont := .F.
+   ENDIF
+   IF VALTYPE( lBack ) != "L"
+      lBack := .F.
+   ENDIF
+
+   IF ! lCont
+      IF lBack
+         DBGOBOTTOM()
+      ELSE
+         DBGOTOP()
+      ENDIF
+      lFound := WildMatch( cPattern, ORDKEYVAL() )
+   ENDIF
+
+   IF ! lFound
+      lFound := DBORDERINFO( IIF( lBack, DBOI_SKIPWILDBACK, DBOI_SKIPWILD ),,, cPattern )
+   ENDIF
+
+   RETURN lFound

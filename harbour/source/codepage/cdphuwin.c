@@ -51,8 +51,8 @@
  */
 
 /* Language name: <Your language> */
-/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
-/* Codepage: <Your codepage> */
+/* ISO language code (2 chars): HU */
+/* Codepage: 1250 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -83,7 +83,8 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "HUWIN", NUMBER_OF_CHARACTERS,
+static HB_CODEPAGE s_codepage = { "HUWIN",
+    CPID_1250, UNITB_1250, NUMBER_OF_CHARACTERS,
     "AÁBCDEÉFGHIÍJKLMNOÓÖÕPQRSTUÚÜÛVWXYZ","aábcdeéfghiíjklmnoóöõpqrstuúüûvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 

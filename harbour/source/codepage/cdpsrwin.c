@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "SRWIN",
-   NUMBER_OF_CHARACTERS,
+   CPID_1251, UNITB_1251, NUMBER_OF_CHARACTERS,
    "ΐΑΒΓΔ€ΕΖΗΘ£ΚΛΜΝΞΟΠΡÒΣΤΥΦΧΨ",
    "ΰαβγδεζηθΌκλμνξοπρςστυφχψ",
    IS_LATIN,

@@ -58,9 +58,7 @@
 #include "hberrors.h"
 #include "hbver.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 struct _DEFINES;
 typedef struct _DEFINES
@@ -129,9 +127,7 @@ extern COMMANDS * hb_pp_topTranslate;
 
 extern void hb_pp_ParsePragma( char * szline );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_PP_H_ */
 

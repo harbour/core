@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: German WIN*/
+/* Language name: German */
 /* ISO language code (2 chars): DE (please look it up in /doc/lang_id.txt) */
-/* Codepage: DE */
+/* Codepage: ISO-8859-1 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -84,7 +84,8 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "DEWIN",NUMBER_OF_CHARACTERS,
+static HB_CODEPAGE s_codepage = { "DEWIN",
+    CPID_8859_1, UNITB_8859_1, NUMBER_OF_CHARACTERS,
     "AÄBCDEFGHIJKLMNOÖPQRSßTUÜVWXYZ","aäbcdefghijklmnoöpqrsßtuüvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 

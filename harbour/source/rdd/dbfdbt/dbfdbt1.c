@@ -270,12 +270,18 @@ static BOOL hb_dbtFileLockEx( DBTAREAP pArea )
 {
    BOOL fRet;
 
-   do
+   if ( !pArea->fShared )
    {
-      fRet = hb_fsLock( pArea->hMemoFile, DBT_LOCKPOS, DBT_LOCKSIZE,
-                        FL_LOCK | FLX_EXCLUSIVE | FLX_WAIT );
-   } while ( !fRet );
-
+      fRet = TRUE;
+   }
+   else
+   {
+      do
+      {
+         fRet = hb_fsLock( pArea->hMemoFile, DBT_LOCKPOS, DBT_LOCKSIZE,
+                           FL_LOCK | FLX_EXCLUSIVE | FLX_WAIT );
+      } while ( !fRet );
+   }
    return fRet;
 }
 
@@ -286,12 +292,18 @@ static BOOL hb_dbtFileLockSh( DBTAREAP pArea )
 {
    BOOL fRet;
 
-   do
+   if ( !pArea->fShared )
    {
-      fRet = hb_fsLock( pArea->hMemoFile, DBT_LOCKPOS, DBT_LOCKSIZE,
-                        FL_LOCK | FLX_SHARED | FLX_WAIT );
-   } while ( !fRet );
-
+      fRet = TRUE;
+   }
+   else
+   {
+      do
+      {
+         fRet = hb_fsLock( pArea->hMemoFile, DBT_LOCKPOS, DBT_LOCKSIZE,
+                           FL_LOCK | FLX_SHARED | FLX_WAIT );
+      } while ( !fRet );
+   }
    return fRet;
 }
 
@@ -300,7 +312,7 @@ static BOOL hb_dbtFileLockSh( DBTAREAP pArea )
  */
 static BOOL hb_dbtFileUnLock( DBTAREAP pArea )
 {
-   return hb_fsLock( pArea->hMemoFile, DBT_LOCKPOS, DBT_LOCKSIZE, FL_UNLOCK );
+   return !pArea->fShared || hb_fsLock( pArea->hMemoFile, DBT_LOCKPOS, DBT_LOCKSIZE, FL_UNLOCK );
 }
 
 /*
@@ -320,11 +332,13 @@ static ULONG hb_dbtGetMemoLen( DBTAREAP pArea, USHORT uiIndex )
    ulBlock = 0;
    do
    {
-      hb_fsRead( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE );
       uiIndex = 0;
-      while( uiIndex < DBT_BLOCKSIZE && pBlock[ uiIndex ] != 0x1A )
-         uiIndex++;
-      ulBlock += uiIndex;
+      if ( hb_fsRead( pArea->hMemoFile, pBlock, DBT_BLOCKSIZE ) == DBT_BLOCKSIZE )
+      {
+         while( uiIndex < DBT_BLOCKSIZE && pBlock[ uiIndex ] != 0x1A )
+            uiIndex++;
+         ulBlock += uiIndex;
+      }
    } while( uiIndex == DBT_BLOCKSIZE );
    return ulBlock;
 }

@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: Spanish WIN */
+/* Language name: Spanish */
 /* ISO language code (2 chars): ES (please look it up in /doc/lang_id.txt) */
-/* Codepage: ES */
+/* Codepage: ISO-8859-1 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -84,7 +84,8 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ESWIN", NUMBER_OF_CHARACTERS,
+static HB_CODEPAGE s_codepage = { "ESWIN",
+    CPID_8859_1, UNITB_8859_1, NUMBER_OF_CHARACTERS,
     "AÁBCDEÉFGHIÍJKLMNÑOÓPQRSTUÚÜVWXYZ", "aábcdeéfghiíjklmnñoópqrstuúüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0,NULL, NULL,NULL,NULL,0,NULL };
 

@@ -55,9 +55,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /* value types seen at language level
  */
@@ -413,8 +411,6 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr );
 
 #endif
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif  /* HB_EXPROP_H_ */

@@ -125,6 +125,9 @@ void hb_pp_Table( void )
    static DEFINES sD___54 = {"_SET_DIRCASE",NULL,-1,"103", &sD___53 };
    static DEFINES sD___55 = {"_SET_DIRSEPARATOR",NULL,-1,"104", &sD___54 };
    static DEFINES sD___56 = {"_SET_EOF",NULL,-1,"105", &sD___55 };
+   static DEFINES sD___57 = {"_SET_HARDCOMMIT",NULL,-1,"106", &sD___56 };
+   static DEFINES sD___58 = {"_SET_FORCEOPT",NULL,-1,"107", &sD___57 };
+   static DEFINES sD___59 = {"_SET_DBFLOCKSCHEME",NULL,-1,"108", &sD___58 };
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };
@@ -442,8 +445,12 @@ void hb_pp_Table( void )
    static COMMANDS sC___257 = {0,"SET","AUTORDER TO","Set( _SET_AUTORDER, 0 )",&sC___256 };
    static COMMANDS sC___258 = {0,"SET","STRICTREAD \1A20 ON,OFF,&>","Set(_SET_STRICTREAD,\1A30 )",&sC___257 };
    static COMMANDS sC___259 = {0,"SET","STRICTREAD (\1A00)","Set(_SET_STRICTREAD,\1A00 )",&sC___258 };
+   static COMMANDS sC___260 = {0,"SET","HARDCOMMIT \1A20 ON,OFF,&>","Set(_SET_HARDCOMMIT,\1A30 )",&sC___259 };
+   static COMMANDS sC___261 = {0,"SET","HARDCOMMIT (\1A00)","Set(_SET_HARDCOMMIT,\1A00 )",&sC___260 };
+   static COMMANDS sC___262 = {0,"SET","DBFLOCKSCHEME TO \1A00","Set(_SET_DBFLOCKSCHEME, \1A00 )",&sC___261 };
+   static COMMANDS sC___263 = {0,"SET","DBFLOCKSCHEME TO","Set(_SET_DBFLOCKSCHEME, 0 )",&sC___262 };
 
-   hb_pp_topDefine = &sD___56;
-   hb_pp_topCommand = &sC___259;
+   hb_pp_topDefine = &sD___59;
+   hb_pp_topCommand = &sC___263;
    hb_pp_topTranslate = NULL;
 }

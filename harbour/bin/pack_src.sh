@@ -268,6 +268,12 @@ $hb_collect contrib/libct/*.[ch]
 $hb_collect contrib/libct/*.prg
 $hb_collect contrib/libct/*.ch
 
+# CONTRIB\LIBNF
+$hb_collect contrib/libnf/Makefile
+$hb_collect contrib/libnf/*.[ch]
+$hb_collect contrib/libnf/*.prg
+$hb_collect contrib/libnf/*.ch
+
 # CONTRIB\DOT
 $hb_collect contrib/dot/*.prg
 $hb_collect contrib/dot/*.ch
@@ -280,6 +286,15 @@ $hb_collect contrib/odbc/*.ch
 $hb_collect contrib/odbc/*.prg
 $hb_collect contrib/odbc/*.txt
 
+# CONTRIB\BTREE
+$hb_collect contrib/btree/[mM]akefile*
+$hb_collect contrib/btree/*.[ch]
+$hb_collect contrib/btree/*.api
+$hb_collect contrib/btree/*.ch
+$hb_collect contrib/btree/*.prg
+$hb_collect contrib/btree/*.bat
+$hb_collect contrib/btree/doc/*.txt
+
 # CONTRIB\HTMLLIB
 $hb_collect contrib/htmllib/[mM]akefile*
 $hb_collect contrib/htmllib/*.ch
@@ -290,19 +305,18 @@ $hb_collect contrib/htmllib/*.bat
 $hb_collect contrib/libgt/[Mm]akefile*
 $hb_collect contrib/libgt/*.[ch]
 $hb_collect contrib/libgt/*.bat
-
-# CONTRIB\LIBGT\DOC
 $hb_collect contrib/libgt/doc/gen*
 $hb_collect contrib/libgt/doc/lib*
-
-# CONTRIB\LIBGT\DOC\EN
-$hb_collect contrib/libgt/doc/*.txt
+$hb_collect contrib/libgt/doc/en/*.txt
 
 # CONTRIB\LIBMISC
 $hb_collect contrib/libmisc/[mM]akefile*
 $hb_collect contrib/libmisc/*.[ch]
 $hb_collect contrib/libmisc/*.ch
 $hb_collect contrib/libmisc/*.prg
+$hb_collect contrib/libmisc/doc/gen*
+$hb_collect contrib/libmisc/doc/lib*
+$hb_collect contrib/libmisc/doc/en/*.txt
 
 # CONTRIB\SAMPLES
 $hb_collect contrib/samples/[mM]akefile*

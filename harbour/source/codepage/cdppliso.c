@@ -84,7 +84,8 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "PLISO",NUMBER_OF_CHARACTERS,
+static HB_CODEPAGE s_codepage = { "PLISO",
+    CPID_8859_2, UNITB_8859_2, NUMBER_OF_CHARACTERS,
     "A¡BCÆDEÊFGHIJKL£MNÑOÓPQRS¦TUVWXYZ¬¯","a±bcædeêfghijkl³mnñoópqrs¶tuvwxyz¼¿",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 

@@ -11,37 +11,67 @@
 # ---------------------------------------------------------------
 
 ######################################################################
+# Conditional build:
+# --with static      - link all binaries with static libs
+# --with adsrdd      - build ads RDD
+# --with mysql       - build mysql lib (unused)
+# --with pgsql       - build pgsql lib (unused)
+# --with odbc        - build build odbc lib
+# --without nf       - do not build nanforum lib
+# --without x11      - do not build GTXVT and GTXWC
+# --without gpm      - build GTSLN and GTCRS without GPM support
+# --without gtsln    - do not build GTSLN
+######################################################################
+
+######################################################################
 ## Definitions.
 ######################################################################
 
-%define platform %(release=$(rpm -q --queryformat='.%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
+# please add your distro suffix if it not belong to the one recognized below
+# and remember that order checking can be important
+
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandrake-release 2>/dev/null) && echo "mdk$release"|tr -d ".")
 %if "%{platform}" == ""
-  %define platform %(release=$(rpm -q --queryformat='.%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
+%if "%{platform}" == ""
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' fedora-release 2>/dev/null) && echo "fc$release"|tr -d ".")
+%if "%{platform}" == ""
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' suse-release 2>/dev/null) && echo "sus$release"|tr -d ".")
+%if "%{platform}" == ""
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' conectiva-release 2>/dev/null) && echo "cl$release"|tr -d ".")
+%if "%{platform}" == ""
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' aurox-release 2>/dev/null) && echo "aur$release"|tr -d ".")
+%if "%{platform}" == ""
+%define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
+%endif
+%endif
+%endif
+%endif
+%endif
 %endif
 
 %define name     harbour
 %define dname    Harbour
 %define version  0.44.0
 %define releasen 0
-%define prefix   /usr
 %define hb_pref  hb
-%define hb_gt    crs
-%define hb_gpm   yes
-%define hb_mt    no
-%define hb_mgt   no
-%define hb_lnkso yes
-%define hb_libs  vm pp rtl rdd dbfdbt dbffpt dbfcdx dbfntx macro common lang codepage gtnul gtcrs gtsln gtcgi gtstd gtpca odbc ct debug profiler
+%define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
 %define hb_cflag export C_USR="-DHB_FM_STATISTICS_OFF -O2"
-%define hb_arch  export HB_ARCHITECTURE=linux
-%define hb_cmt   export HB_MT=%{hb_mt}
-%define hb_cgt   export HB_GT_LIB=gt%{hb_gt}
-%define hb_cgpm  export HB_GPM_MOUSE=%{hb_gpm}
-%define hb_cmgt  export HB_MULTI_GT=%{hb_mgt}
-%define hb_bdir  export HB_BIN_INSTALL=%{prefix}/bin
-%define hb_idir  export HB_INC_INSTALL=%{prefix}/include/%{name}
-%define hb_ldir  export HB_LIB_INSTALL=%{prefix}/lib/%{name}
-%define hb_env   %{hb_cc} ; %{hb_cflag} ; %{hb_arch} ; %{hb_cmt} ; %{hb_cgt} ; %{hb_cgpm} ; %{hb_cmgt} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir}
+%define hb_lflag export L_USR=%{?_with_static:-static}
+%define hb_mt    export HB_MT=no
+%define hb_mgt   export HB_MULTI_GT=no
+%define hb_gt    export HB_GT_LIB=gtcrs
+%define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
+%define hb_sln   export HB_WITHOUT_GTSLN=%{?_without_gtsln:yes}
+%define hb_x11   export HB_WITHOUT_X11=%{?_without_x11:yes}
+%define hb_bdir  export HB_BIN_INSTALL=%{_bindir}
+%define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
+%define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
+%define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
+%define hb_cmrc  export HB_COMMERCE=no
+%define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_mgt} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_cmrc}
+
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
@@ -51,17 +81,17 @@
 Summary:        Free software Clipper compatible compiler
 Summary(pl):    Darmowy kompilator kompatybilny z jЙzykiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
+Summary(ru):    Свободный компилятор, совместимый с языком Clipper.
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}%{platform}
-Prefix:         %{prefix}
 Copyright:      GPL (plus exception)
 Group:          Development/Languages
 Vendor:         %{hb_host}
 URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
 Packager:       PrzemysЁaw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
-BuildPrereq:    gcc binutils bash bison ncurses ncurses-devel slang-devel gpm-devel
+BuildPrereq:    gcc binutils bash bison ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{version}
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root
@@ -81,8 +111,13 @@ zbiory nagЁСwkowe, wirtualn╠ maszynЙ oraz dokumentacjЙ.
 
 %description -l pt_BR
 %{dname} ┌ um compilador Clipper compativel para multiplas plataformas.
-Esse pacote contem um compilador ,um pr┌-processador, arquivos de cabe┤alho
-uma maquina virtual e documenta┤фo
+Esse pacote contem um compilador, um pr┌-processador, arquivos de cabe┤alho
+uma maquina virtual e documenta┤фo.
+
+%description -l ru
+%{dname} - многоплатформенный компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит компилятор, препроцессор, файлы заголовков, виртуальную
+машину и документацию.
 
 
 ######################################################################
@@ -92,6 +127,7 @@ uma maquina virtual e documenta┤фo
 %package lib
 Summary:        Shared runtime libaries for %{dname} compiler
 Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
+Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
 Group:          Development/Languages
 Provides:       lib%{name}.so lib%{name}mt.so
 
@@ -108,7 +144,12 @@ dla programСw konsolidowanych dynamicznie.
 %description -l pt_BR lib
 %{dname} ┌ um compilador compativel com o Clipper.
 Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
-linkados dinamicamente
+linkados dinamicamente.
+
+%description -l ru lib
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит совместно используемые библиотеки %{dname},
+необходимые для работы динамически скомпонованных программ.
 
 
 ######################################################################
@@ -118,6 +159,7 @@ linkados dinamicamente
 %package static
 Summary:        Static runtime libaries for %{dname} compiler
 Summary(pl):    Statyczne bilioteki dla kompilatora %{dname}
+Summary(ru):    Статические библиотеки для компилятора %{dname}
 Group:          Development/Languages
 Requires:       %{name} = %{version}
 
@@ -136,6 +178,38 @@ niezbЙdne do statycznej konsolidacji programСw.
 Esse pacote %{dname} provem as bibliotecas  de run time staticas para linkagem
 dos os programas
 
+%description -l ru static
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит статические библиотеки компилятора %{dname},
+необходимые для статической компоновки программ.
+
+
+%package contrib
+Summary:        Contrib runtime libaries for %{dname} compiler
+Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
+Summary(pt_BR): Libs contrib para %{dname}
+Summary(ru):    Библиотеки из дерева contrib для компилятора %{dname}
+Group:          Development/Languages
+Requires:       %{name} = %{version}
+
+%description contrib
+%{dname} is a Clipper compatible compiler.
+This package provides %{dname} contrib libraries for program linking.
+
+%description -l pl contrib
+%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+Ten pakiet udostЙpnia statyczne bilioteki z drzewa contrib dla
+kompilatora %{dname}.
+
+%description -l pt_BR contrib
+%{dname} ┌ um compilador compativel com o clippe.
+Esse pacote %{dname} provem as bibliotecas contrib para linkagem
+dos programas.
+
+%description -l ru contrib
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
+
 
 ######################################################################
 ## PP
@@ -144,6 +218,7 @@ dos os programas
 %package pp
 Summary:        Clipper/Harbour/xBase compatible Pre-Processor, DOT prompt and interpreter
 Summary(pl):    Kompatybilny z Clipper/Harbour/xBase Preprocesor i interpreter
+Summary(ru):    Совместимый с Clipper/Harbour/xBase препроцессор и интерпретатор
 Copyright:      GPL
 Group:          Development/Languages
 Requires:       %{name} = %{version}
@@ -182,6 +257,18 @@ uma da outra.
    Voce pode escrever seus proprios scritps em .prg ao adicionar as seus arquivos
    .prg #!/usr/bin/pprun
 
+%description -l ru pp
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит препроцессор %{dname}, который состоит из трех тесно
+связанных частей.
+1. 100%-совместимый с Clipper препроцессор (с некоторыми расширениями).
+2. DOT Prompt, в котором можно использовать большинство конструкций Clipper.
+3. Кроме того, PP - ограниченный интерпретатор Clipper. За исключением
+   нескольких описанных ограничений, он может выполнять большинство
+   конструкций Harbour. Можно создавать собственные xBase-скрипты путем
+   добавления в начало .prg-файла строки:
+      #!/usr/bin/pprun
+
 
 ######################################################################
 ## Preperation.
@@ -198,12 +285,7 @@ rm -rf $RPM_BUILD_ROOT
 %build
 %{hb_env}
 
-make
-
-# build CT lib
-pushd contrib/libct
-    make
-popd
+make -r
 
 ######################################################################
 ## Install.
@@ -215,7 +297,9 @@ popd
 
 %{hb_env}
 
-_DEFAULT_INC_DIR=$HB_INC_INSTALL
+export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
+export _DEFAULT_INC_DIR=$HB_INC_INSTALL
+export _DEFAULT_LIB_DIR=$HB_LIB_INSTALL
 export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
 export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
 export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
@@ -223,329 +307,17 @@ export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
 mkdir -p $HB_BIN_INSTALL
 mkdir -p $HB_INC_INSTALL
 mkdir -p $HB_LIB_INSTALL
-mkdir -p $RPM_BUILD_ROOT/usr/lib
 
-make -i install
+make -r -i install
 
-# install CT lib
-pushd contrib/libct
-    make -i install
-popd
-
-# build fm lib with memory statistic
-pushd source/vm
-    TMP_C_USR=$C_USR
-    C_USR=${C_USR//-DHB_FM_STATISTICS_OFF/-DHB_PARANOID_MEM_CHECK}
-    rm -f fm.o
-    make fm.o
-    ar -r $HB_LIB_INSTALL/libfm.a fm.o
-    rm -f fm.o
-    if [ $HB_MT = "MT" ]; then
-        make fm.o 'HB_LIBCOMP_MT=YES'
-        ar -r $HB_LIB_INSTALL/libfmmt.a fm.o
-        rm -f fm.o
-    fi
-    C_USR=$TMP_C_USR
-popd
+[ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
+[ "%{?_with_odbc:1}" ]     || rm -f $HB_LIB_INSTALL/libhbodbc.a
+[ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
 
 # Keep the size of the binaries to a minimim.
 strip $HB_BIN_INSTALL/harbour
 # Keep the size of the libraries to a minimim.
 strip --strip-debug $HB_LIB_INSTALL/*
-
-install -m755 bin/hb-mkslib.sh $HB_BIN_INSTALL/hb-mkslib
-
-pushd $HB_LIB_INSTALL
-LIBS=""
-LIBSMT=""
-for l in %{hb_libs}
-do
-    case $l in
-        debug|profiler) ;;
-        *)
-            ls="lib${l}.a"
-            if [ -f lib${l}mt.a ]
-            then
-                lm="lib${l}mt.a"
-            else
-                lm="${ls}"
-            fi
-            if [ "${HB_MULTI_GT}" = "yes" ] || \
-               [ "${l#gt}" = "${l}" ] || \
-               [ "${l}" == "${HB_GT_LIB}" ]
-            then
-                if [ -f $ls ]
-                then
-                    LIBS="$LIBS $ls"
-                fi
-                if [ -f $lm ]
-                then
-                    LIBSMT="$LIBSMT $lm"
-                fi
-            fi
-            ;;
-    esac
-done
-$HB_BIN_INSTALL/hb-mkslib lib%{name}-%{version}.so $LIBS
-[ $HB_MT != "MT" ] || $HB_BIN_INSTALL/hb-mkslib lib%{name}mt-%{version}.so $LIBSMT
-for l in lib%{name}-%{version}.so lib%{name}mt-%{version}.so
-do
-    if [ -f $l ]
-    then
-        ll=${l%%-%{version}.so}.so
-        ln -s $l $ll && ln -s %{name}/$l $RPM_BUILD_ROOT/usr/lib/$ll
-    fi
-done
-#export LD_LIBRARY_PATH="$HB_LIB_INSTALL:$LD_LIBRARY_PATH"
-popd
-
-# Add a harbour compiler wrapper.
-cat > $HB_BIN_INSTALL/%{hb_pref}-build <<EOF
-#!/bin/bash
-
-if [ \$# == 0 ]; then
-    echo "syntax: \$0 [<options,...>] <file>[.prg|.o]
-
-\"%{hb_pref}cc\", \"%{hb_pref}cmp\", \"%{hb_pref}lnk\" and \"%{hb_pref}mk\" parameters:
-    -o<outputfilename>      # output file name
-\"%{hb_pref}lnk\" and \"%{hb_pref}mk\" parameters:
-    -static             # link with static %{dname} libs
-    -fullstatic         # link with all static libs
-    -shared             # link with shared libs (default)
-    -mt                 # link with multi-thread libs
-    -gt<hbgt>           # link with <hbgt> GT driver, can be repeated to
-                        # link with more GTs. The first one will be
-                        #      the default at runtime
-    -fmstat             # link with the memory statistics lib
-    -nofmstat           # do not link with the memory statistics lib (default)
-    -main=<main_func>   # set the name of main program function/procedure.
-                        # if not set then 'MAIN' is used or if it doesn't
-                        # exist the name of first public function/procedure
-                        # in first linked object module (link)
-"
-    exit 1
-elif [ "\$*" == "mk-links" ]; then
-    DIR="\${0%/*}"
-    NAME="\${0##*/}"
-    if [ "\${DIR}" != "\${NAME}" ]; then
-        for n in %{hb_pref}cc %{hb_pref}cmp %{hb_pref}mk %{hb_pref}lnk gharbour harbour-link; do
-            ln -sf "\${NAME}" "\${DIR}/\${n}"
-        done
-    fi
-    exit
-fi
-
-## default parameters
-HB_STATIC="no"
-HB_MT=""
-HB_GT="%{hb_gt}"
-HB_MG="%{hb_mgt}"
-
-HB_GT_REQ=""
-HB_FM_REQ=""
-HB_MAIN_FUNC=""
-_TMP_FILE_="/tmp/hb-build-\$USER-\$\$.c"
-
-## parse params
-P=( "\$@" ); n=0; DIROUT="."; FILEOUT=""
-while [ \$n -lt \${#P[@]} ]; do
-    v=\${P[\$n]}; p=""
-    case "\$v" in
-        -o*)
-            d="\${v#-o}"; p="\${v}"
-            if [ -d "\${d}" ]; then
-                DIROUT="\${d%/}"
-            elif [ -d "\${d%/*}" ]; then
-                DIROUT="\${d%/*}"; FILEOUT="\${d##*/}"; p="-o\${d%.*}"
-            elif [ -n "\${d}" ]; then
-                FILEOUT="\${d}"; p="-o\${d%.*}"
-            fi ;;
-        -static)     HB_STATIC="yes" ;;
-        -fullstatic) HB_STATIC="full" ;;
-        -shared)     HB_STATIC="no" ;;
-        -mt)         HB_MT="MT" ;;
-        -gt*)        HB_GT_REQ="\${HB_GT_REQ} \${v#-gt}" ;;
-        -fmstat)     HB_FM_REQ="STAT" ;;
-        -nofmstat)   HB_FM_REQ="NOSTAT" ;;
-        -main=*)     HB_MAIN_FUNC="\${v#*=}" ;;
-        -*)          p="\${v}" ;;
-        *)           [ -z \${FILEOUT} ] && FILEOUT="\${v##*/}"; p="\${v}" ;;
-    esac
-    [ -n "\$p" ] && PP[\$n]="\$p"
-    n=\$[\$n + 1]
-done
-P=( "\${PP[@]}" )
-
-case "\${HB_MT}" in
-    [Mm][Tt]|[Yy][Ee][Ss]|1)  HB_MT="MT";;
-    *)  HB_MT="";;
-esac
-
-SYSTEM_LIBS="-lm -lncurses -lslang -lgpm"
-# use pthread system library for MT programs
-if [ "\${HB_MT}" = "MT" ]; then
-    SYSTEM_LIBS="-lpthread \${SYSTEM_LIBS}"
-fi
-
-HB_GT_STAT=""
-[ -z "\${HB_GT_REQ}" ] && HB_GT_REQ="\${HB_GT}"
-if [ "\${HB_MG}" != "yes" ]; then
-    [ "\${HB_STATIC}" = "yes" ] && HB_GT_STAT=\`echo \${HB_GT_REQ}|tr A-Z a-z\`
-    HB_GT_REQ=""
-else
-    HB_GT_REQ=\`echo \${HB_GT_REQ}|tr a-z A-Z\`
-fi
-HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr a-z A-Z\`
-
-# set environment variables
-%{hb_arch}
-%{hb_cc}
-[ -z "\${HB_BIN_INSTALL}" ] && %{hb_bdir}
-[ -z "\${HB_INC_INSTALL}" ] && %{hb_idir}
-[ -z "\${HB_LIB_INSTALL}" ] && %{hb_ldir}
-
-# be sure that %{name} binaries are in your path
-export PATH="\${HB_BIN_INSTALL}:\${PATH}"
-
-HB_PATHS="-I\${HB_INC_INSTALL}"
-GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
-LINK_OPT=""
-if [ "\${HB_STATIC}" = "full" ]; then
-    LINK_OPT="\${LINK_OPT} -static"
-    HB_STATIC="yes"
-fi
-
-HARBOUR_LIBS=""
-if [ "\${HB_STATIC}" = "yes" ]; then
-    libs="%{hb_libs}"
-else
-    l="%{name}"
-    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.so" ] && l="\${l}mt"
-    [ -f "\${HB_LIB_INSTALL}/lib\${l}.so" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-    libs="debug profiler"
-fi
-for l in \${libs}
-do
-    if [ "\${HB_MG}" = "yes" ] || [ "\${l#gt}" = "\${l}" ] || [ "\${l}" == "gt\${HB_GT_STAT}" ]; then
-        [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-        [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-    fi
-done
-HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
-l="fm"
-[ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ]; then
-    if [ "\${HB_STATIC}" = "yes" ] && [ "\${HB_FM_REQ}" = "STAT" ]; then
-        HARBOUR_LIBS="-l\${l} \${HARBOUR_LIBS}"
-    else
-        HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-    fi
-fi
-
-FOUTC="\${DIROUT}/\${FILEOUT%.*}.c"
-FOUTO="\${DIROUT}/\${FILEOUT%.*}.o"
-FOUTE="\${DIROUT}/\${FILEOUT%.[Pp][Rr][Gg]}"
-FOUTE="\${FOUTE%.[oc]}"
-
-hb_cc()
-{
-    harbour "\$@" \${HB_PATHS} && [ -f "\${FOUTC}" ]
-}
-
-hb_link()
-{
-    if [ -n "\${HB_MAIN_FUNC}" ]; then
-        HB_MAIN_FUNC="@\${HB_MAIN_FUNC}"
-    elif [ -f "\${FOUTO}" ]; then
-        HB_MAIN_FUNC=\`hb_lnk_main "\${FOUTO}"\`
-    fi
-    if [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_FM_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
-        hb_lnk_request > \${_TMP_FILE_} && \\
-        gcc "\$@" "\${_TMP_FILE_}" \${LINK_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
-    else
-        gcc "\$@" \${LINK_OPT} \${GCC_PATHS} \${HARBOUR_LIBS} \${SYSTEM_LIBS} -o "\${FOUTE}"
-    fi
-}
-
-hb_cmp()
-{
-    hb_cc "\$@" && \\
-    gcc -g -c "\${FOUTC}" -o "\${FOUTO}" \${GCC_PATHS} && \\
-    rm -f "\${FOUTC}"
-}
-
-hb_lnk_request()
-{
-    echo "#include \\"hbapi.h\\""
-    if [ "\${HB_STATIC}" = "yes" ] || [ -n "\${HB_FM_REQ}" ]; then
-        for gt in \${HB_GT_REQ}; do
-            echo "extern HB_FUNC( HB_GT_\${gt} );"
-        done
-        if [ -n "\${HB_FM_REQ}" ]; then
-            echo "extern HB_FUNC( HB_FM_\${HB_FM_REQ} );"
-        fi
-        echo "void hb_lnk_ForceLink_build( void )"
-        echo "{"
-        for gt in \${HB_GT_REQ}; do
-            echo "   HB_FUNCNAME( HB_GT_\${gt} )();"
-        done
-        if [ -n "\${HB_FM_REQ}" ]; then
-            echo "   HB_FUNCNAME( HB_FM_\${HB_FM_REQ} )();"
-        fi
-        echo "}"
-    fi
-    gt="\${HB_GT_REQ%%%% *}"
-    if [ -n "\$gt" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
-        echo "#include \\"hbinit.h\\""
-        echo "extern char * s_defaultGT;"
-        echo "extern char * s_pszLinkedMain;"
-        echo "HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )"
-        if [ -n "\$gt" ]; then
-            echo "   s_defaultGT = \\"\$gt\\";"
-        fi
-        if [ -n "\${HB_MAIN_FUNC}" ]; then
-            echo "   s_pszLinkedMain = \\"\${HB_MAIN_FUNC}\\";"
-        fi
-        echo "HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )"
-    fi
-}
-
-hb_lnk_main()
-{
-#    (nm \$1 -g -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* T HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
-    (nm \$1 -n --defined-only|sed -e '/HB_FUN_/ ! d' -e 's/^[0-9a-fA-F]* [Tt] HB_FUN_//'|head -1|grep -v '^MAIN\$')2>/dev/null
-}
-
-hb_cleanup()
-{
-    rm -f "\${_TMP_FILE_}"
-}
-
-trap hb_cleanup EXIT &>/dev/null
-
-## get basename
-HB="\${0##*/}"
-
-case "\${HB}" in
-    *cc)
-        hb_cc "\${P[@]}"
-        ;;
-    *cmp|gharbour)
-        hb_cmp "\${P[@]}"
-        ;;
-    *lnk|harbour-link)
-        hb_link "\${P[@]}"
-        ;;
-    *mk)
-        hb_cmp "\${P[@]}" && \\
-        hb_link "\${FOUTO}" && \\
-        strip "\${FOUTE}" && \\
-        rm -f "\${FOUTO}"
-        ;;
-esac
-EOF
-chmod 755 $HB_BIN_INSTALL/%{hb_pref}-build
-$HB_BIN_INSTALL/%{hb_pref}-build mk-links
 
 mkdir -p $RPM_BUILD_ROOT/etc/harbour
 #install -m644 source/rtl/gtcrs/hb-charmap.def $RPM_BUILD_ROOT/etc/harbour/hb-charmap.def
@@ -565,15 +337,16 @@ install -m644 rp_dot.ch $HB_INC_INSTALL/
 popd
 
 # check if we should rebuild tools with shared libs
-if [ "%{hb_lnkso}" = yes ]
+if [ "%{!?_with_static:1}" ]
 then
-    export L_USR="-L${HB_LIB_INSTALL} -l%{name} -lncurses -lslang -lgpm"
+    unset HB_GTALLEG
+    export L_USR="-L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
 
     for utl in hbmake hbrun hbpp hbdoc
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}"
-        make install
+        make -r install
         strip ${HB_BIN_INSTALL}/${utl}
         popd
     done
@@ -585,7 +358,7 @@ rm -f ${HB_BIN_INSTALL}/hbdoc ${HB_BIN_INSTALL}/hbtest
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
 This RPM distribution of %{dname} includes extra commands to make compiling
-and linking with harbour a little easier. There are compiler and linker
+and linking with %{dname} a little easier. There are compiler and linker
 wrappers called "%{hb_pref}cc", "%{hb_pref}cmp", "%{hb_pref}lnk" and "%{hb_pref}mk".
 
 "%{hb_pref}cc" is a wrapper to the harbour compiler only. It only sets environment
@@ -724,40 +497,66 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/es/
 
 %dir /etc/harbour
-/etc/harbour.cfg
-#/etc/harbour/hb-charmap.def
-%{prefix}/bin/harbour
-%{prefix}/bin/hb-mkslib
-%{prefix}/bin/%{hb_pref}-build
-%{prefix}/bin/%{hb_pref}cc
-%{prefix}/bin/%{hb_pref}cmp
-%{prefix}/bin/%{hb_pref}lnk
-%{prefix}/bin/%{hb_pref}mk
-%{prefix}/bin/gharbour
-%{prefix}/bin/harbour-link
-#%{prefix}/bin/hbtest
-%{prefix}/bin/hbrun
-%{prefix}/bin/hbpp
-%{prefix}/bin/hbmake
-%dir %{prefix}/include/%{name}
-%{prefix}/include/%{name}/*
+%verify(not md5 mtime) %config /etc/harbour.cfg
+#%verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
+%{_bindir}/harbour
+%{_bindir}/hb-mkslib
+%{_bindir}/%{hb_pref}-build
+%{_bindir}/%{hb_pref}cc
+%{_bindir}/%{hb_pref}cmp
+%{_bindir}/%{hb_pref}lnk
+%{_bindir}/%{hb_pref}mk
+%{_bindir}/gharbour
+%{_bindir}/harbour-link
+#%{_bindir}/hbtest
+%{_bindir}/hbrun
+%{_bindir}/hbpp
+%{_bindir}/hbmake
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/*
 
 %files static
 %defattr(-,root,root,755)
-%dir %{prefix}/lib/%{name}
-%{prefix}/lib/%{name}/*.a
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/libcodepage.a
+%{_libdir}/%{name}/libcommon.a
+%{_libdir}/%{name}/libdb*.a
+%{_libdir}/%{name}/libdebug.a
+%{_libdir}/%{name}/libfm*.a
+%{_libdir}/%{name}/libgt*.a
+%{_libdir}/%{name}/liblang.a
+%{_libdir}/%{name}/libmacro*.a
+%{_libdir}/%{name}/libnulsys*.a
+%{_libdir}/%{name}/libpp*.a
+%{_libdir}/%{name}/librdd*.a
+%{_libdir}/%{name}/librtl*.a
+%{_libdir}/%{name}/libsamples.a
+%{_libdir}/%{name}/libvm*.a
+
+%files contrib
+%defattr(-,root,root,755)
+%dir %{_libdir}/%{name}
+%{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
+%{!?_without_nf: %{_libdir}/%{name}/libnf*.a}
+%{?_with_adsrdd: %{_libdir}/%{name}/librddads*.a}
+#%{?_with_mysql: %{_libdir}/%{name}/libmysql*.a}
+#%{?_with_pgsql: %{_libdir}/%{name}/libpgsql*.a}
+%{_libdir}/%{name}/libhbbtree.a
+%{_libdir}/%{name}/libhtml.a
+%{_libdir}/%{name}/libmisc.a
+%{_libdir}/%{name}/libct.a
 
 %files lib
 %defattr(-,root,root,755)
-%dir %{prefix}/lib/%{name}
-%{prefix}/lib/%{name}/*.so
-%{prefix}/lib/*.so
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/*.so
+%{_libdir}/*.so
 
 %files pp
 %defattr(-,root,root,755)
 %doc contrib/dot/pp.txt
-%{prefix}/bin/pp
-%{prefix}/bin/pprun
+%{_bindir}/pp
+%{_bindir}/pprun
 
 ######################################################################
 ## Spec file Changelog.

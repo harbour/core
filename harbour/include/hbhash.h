@@ -55,9 +55,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #define HB_HASH_FUNC( hbfunc )   ULONG hbfunc( void *Value, void *Cargo )
 typedef HB_HASH_FUNC( HB_HASH_FUNC_ );
@@ -90,8 +88,6 @@ extern BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, void *pValue ); /* add a 
 extern void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, void *pValue ); /* return the pointer to item's value or NULL if not found */
 extern HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, ULONG ulNewSize ); /* resize the hash table */
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_HASH_H_ */

@@ -14,16 +14,16 @@
 
 # ssh is not necessary for anonymous access on SourceForge
 # export CVS_RSH=ssh
-export CVSROOT=":pserver:anonymous@cvs.harbour-project.sourceforge.net:/cvsroot/harbour"
+export CVSROOT=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/harbour-project"
 export PROJECT=harbour
 
 test_reqrpm()
 {
-    rpm -q "$1" &> /dev/null
+    rpm -q --whatprovides "$1" &> /dev/null
 }
 
 TOINST_LST=""
-for i in cvs gcc binutils bash bison ncurses ncurses-devel slang-devel gpm-devel
+for i in cvs gcc binutils bash bison ncurses ncurses-devel
 do
     test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
 done

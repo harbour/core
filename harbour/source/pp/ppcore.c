@@ -624,7 +624,6 @@ int hb_pp_ParseDefine( char * sLine )
           sLine++; 
           HB_SKIPTABSPACES( sLine );
 
-          i = 0;
           npars = 0;
           while( *sLine && *sLine != ')' )
           {
@@ -695,7 +694,7 @@ int hb_pp_ParseDefine( char * sLine )
                iPar = strlen( tmp );
             memcpy( pars, tmp, iPar );
             pars[ iPar ] = '\0';
-            iPos = iOldPos = 0;
+            iOldPos = 0;
             while( (iPos = md_strAt( pars+1, iPar-1, sLine+iOldPos, TRUE, FALSE, FALSE )) )
             {
                if( sLine[iOldPos+iPos] != '\001' )

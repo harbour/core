@@ -60,9 +60,7 @@
 
 #include "hbvmpub.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #ifndef HB_NO_DEFAULT_STACK_MACROS
     #define HB_STACK_MACROS
@@ -152,8 +150,6 @@ extern void hb_stackRemove( LONG lUntilPos );
 extern HB_ITEM_PTR hb_stackNewFrame( HB_STACK_STATE * pStack, USHORT uiParams );
 extern void hb_stackOldFrame( HB_STACK_STATE * pStack );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_STACK_H_ */

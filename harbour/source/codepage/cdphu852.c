@@ -83,7 +83,8 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "HU852", NUMBER_OF_CHARACTERS,
+static HB_CODEPAGE s_codepage = { "HU852",
+    CPID_852, UNITB_852, NUMBER_OF_CHARACTERS,
     "AµBCDEêFGHI÷JKLMNO‡ôäPQRSTUÈöÎVWXYZ","a†bcdeÇfghi°jklmno¢îãpqrstu£Å˚vwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 

@@ -55,9 +55,7 @@
 
 #include "hbapirdd.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /*
  * -- DELIMITED METHODS --
@@ -159,8 +157,6 @@ extern "C" {
 #define hb_delimExists                               NULL
 #define hb_delimWhoCares                             NULL
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_RDDDEL_H_ */

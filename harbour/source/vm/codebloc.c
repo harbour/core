@@ -111,9 +111,6 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
          pLocalPosTable += 2;
 
          pLocal = hb_memvarDetachLocal( pLocal );
-         /* Increment the reference counter so this value will not be
-          * released if other codeblock will be deleted
-          */
          memcpy( pCBlock->pLocals + ui, pLocal, sizeof( HB_ITEM ) );
          /* Increment the reference counter so this value will not be
           * released if other codeblock will be deleted
@@ -121,7 +118,6 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
          hb_memvarValueIncRef( pLocal->item.asMemvar.value );
          ++ui;
       }
-      
    }
    else
    {

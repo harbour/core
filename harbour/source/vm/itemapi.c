@@ -1126,6 +1126,11 @@ void HB_EXPORT hb_itemClear( PHB_ITEM pItem )
    else if( HB_IS_MEMVAR( pItem ) )
       hb_memvarValueDecRef( pItem->item.asMemvar.value );
 
+#if defined( HB_FM_STATISTICS ) && defined( HB_PARANOID_MEM_CHECK )
+   else if( HB_IS_BADITEM( pItem ) )
+      hb_errInternal( HB_EI_VMPOPINVITEM, NULL, "hb_itemClear()", NULL );
+#endif
+
    pItem->type = HB_IT_NIL;
 }
 
@@ -1212,8 +1217,9 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
    
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRef(%p)", pItem));
 
-   do {
-     pItem = hb_itemUnRefOnce( pItem );
+   do
+   {
+      pItem = hb_itemUnRefOnce( pItem );
    }
    while( HB_IS_BYREF( pItem ) && (pRef != pItem) );
 

@@ -3919,8 +3919,8 @@ void hb_compCodeBlockEnd( void )
 void hb_compCodeBlockStop( void )
 {
    PFUNCTION pCodeblock;   /* pointer to the current codeblock */
-   PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
-   USHORT wLocals = 0;   /* number of referenced local variables */
+   PFUNCTION pFunc;        /* pointer to a function that owns a codeblock */
+   USHORT wLocals = 0;     /* number of referenced local variables */
    USHORT wUsed;
    PVAR pVar, pFree;
 
@@ -3960,7 +3960,7 @@ void hb_compCodeBlockStop( void )
       hb_xfree( ( void * ) pFree );
    }
 
-   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 0 );
+   hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, FALSE );
    hb_xfree( ( void * ) pCodeblock->pCode );
    hb_xfree( ( void * ) pCodeblock );
 }

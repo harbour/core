@@ -83,6 +83,8 @@
 #include "inkey.ch"
 #include "hbdebug.ch"
 
+#include "hbmemory.ch"
+
 #ifdef HB_MACRO_STATEMENTS
    #include "hbpp.h"
 #endif
@@ -196,7 +198,7 @@ static void    hb_vmPopLocal( SHORT iLocal );     /* pops the stack latest value
 static void    hb_vmPopStatic( USHORT uiStatic ); /* pops the stack latest value onto a static */
 
 /* Take the value from stack top without POP */
-static double  hb_vmTopNumber();                  /* pops the stack latest value and returns its numeric value */
+static double  hb_vmTopNumber( void );            /* take the stack latest value and returns its numeric value */
 
 /* misc */
 static void    hb_vmDoInitStatics( void );        /* executes all _INITSTATICS functions */
@@ -488,8 +490,13 @@ void HB_EXPORT hb_vmQuit( void )
    hb_memvarsRelease();    /* clear all PUBLIC variables */
 
    /* release all known garbage */
-   hb_gcReleaseAll();
-   /* hb_gcCollectAll(); */
+   /* hb_gcReleaseAll(); */
+
+   /* release all known garbage */
+   if ( hb_xquery( HB_MEM_USEDMAX ) ) /* check if fmstat is ON */
+      hb_gcCollectAll();
+   else
+      hb_gcReleaseAll();
 
    hb_memvarsFree();    /* free memory allocated for memvars table */
    hb_stackFree();

@@ -55,9 +55,7 @@
 
 #include "hbapirdd.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /*
  * -- METHODS --
@@ -130,7 +128,7 @@ extern ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO pRelInfo );
 extern ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param );
 #define hb_waOrderCreate                   ( DBENTRYP_VOC ) hb_waUnsupported
 #define hb_waOrderDestroy                   ( DBENTRYP_OI ) hb_waUnsupported
-//#define hb_waOrderInfo                            ( DBENTRYP_OII ) hb_waNull
+/* #define hb_waOrderInfo                            ( DBENTRYP_OII ) hb_waNull */
 extern ERRCODE hb_waOrderInfo( AREAP pArea, USHORT index, LPDBORDERINFO param );
 extern ERRCODE hb_waClearFilter( AREAP pArea );
 extern ERRCODE hb_waClearLocate( AREAP pArea );
@@ -162,8 +160,6 @@ extern ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock );
 
 #define hb_waWhoCares                      ( DBENTRYP_SVP ) hb_waUnsupported
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_RDDWRK_H_ */

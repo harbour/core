@@ -16,6 +16,6 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	hb_btree.ch
 
-LIBNAME=hb_btree
+LIBNAME=hbbtree
 
 include $(TOP)$(ROOT)config/lib.cf

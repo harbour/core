@@ -55,9 +55,7 @@
 
 #include "hbapi.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #define HB_EVAL_PARAM_MAX_ 9
 
@@ -143,8 +141,6 @@ extern PHB_ITEM hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a s
 extern char *   hb_itemPadConv  ( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeReq );
 extern void     hb_itemSwap     ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_APIITM_H_ */

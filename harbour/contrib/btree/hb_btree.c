@@ -186,9 +186,7 @@ see ChangeLog 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
 
 #include "hb_btree.api"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #if !defined( DEBUG ) && !defined( NDEBUG )
   #define NDEBUG
@@ -199,13 +197,15 @@ extern "C" {
 
 #if defined( __GNUC__ )
 
-  #if 1
+  #if 0
     #define STRINGIFY_2( n )  #n
     #define STRINGIFY_1( n )  STRINGIFY_2( n )
     #define SRCLINENO         __FUNCTION__ " (" STRINGIFY_1( __LINE__ ) ")"
     #define FILESRCLINENO     __FILE__ "." SRCLINENO
-  #else
+  #elif 0
     #define SRCLINENO  __FUNCTION__
+  #else
+    #define SRCLINENO  "%s (%d)", __FUNCTION__, __LINE__
   #endif
 
 #else
@@ -2017,6 +2017,4 @@ HB_INIT_SYMBOLS_BEGIN( hb_BTree_Initialize_Terminate )
   { "hb_BTree_Terminate" , HB_FS_EXIT, {hb_BTree_Terminate} , NULL },
 HB_INIT_SYMBOLS_END( hb_BTree_Initialize_Terminate )
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END

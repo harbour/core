@@ -4104,3 +4104,13 @@ ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
       return SUCCESS;
    }
 }
+
+HB_FUNC( __RDDGETTEMPALIAS )
+{
+   char szAliasTmp[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+
+   if ( hb_rddGetTempAlias( szAliasTmp ) == FAILURE )
+      hb_ret();
+   else
+      hb_retc( szAliasTmp );
+}

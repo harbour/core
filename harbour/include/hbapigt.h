@@ -325,8 +325,6 @@ extern void   hb_setkeyExit( void );
 
 /* none as of yet */
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_APIGT_H_ */

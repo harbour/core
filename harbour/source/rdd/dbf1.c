@@ -799,6 +799,8 @@ static ERRCODE hb_dbfGoTo( DBFAREAP pArea, ULONG ulRecNo )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
+   if( pArea->lpdbPendingRel && pArea->lpdbPendingRel->isScoped )
+      SELF_FORCEREL( ( AREAP ) pArea );
    /* Reset parent rel struct */
    pArea->lpdbPendingRel = NULL;
 

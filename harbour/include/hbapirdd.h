@@ -57,9 +57,7 @@
 #include "dbinfo.ch"   /* Constants for SELF_ORDINFO, SELF_INFO(), SELF_RECINFO() */
 #include "dbstruct.ch" /* Constants for SELF_FIELDINFO() */
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
@@ -90,6 +88,7 @@ extern void    hb_rddShutDown( void );
 #define EDBCMD_USE_BADPARAMETER           1005
 #define EDBCMD_REL_BADPARAMETER           1006
 #define EDBCMD_FIELDNAME_BADPARAMETER     1009
+#define EDBCMD_BADALIAS                   1010
 #define EDBCMD_DUPALIAS                   1011
 #define EDBCMD_DBCMDBADPARAMETER          1014
 #define EDBCMD_BADPARAMETER               1015
@@ -558,15 +557,15 @@ typedef USHORT ( * DBENTRYP_SVL  )( AREAP area, USHORT index, ULONG * param );
 typedef USHORT ( * DBENTRYP_SSI  )( AREAP area, USHORT p1, USHORT p2, PHB_ITEM p3 );
 typedef USHORT ( * DBENTRYP_ISI  )( AREAP area, PHB_ITEM p1, USHORT p2, PHB_ITEM p3 );
 typedef USHORT ( * DBENTRYP_BIB  )( AREAP area, BOOL p1, PHB_ITEM p2, BOOL p3 );
-typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2);
-typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2);
-typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORT * p2);
+typedef USHORT ( * DBENTRYP_VPL  )( AREAP area, void * p1, LONG p2 );
+typedef USHORT ( * DBENTRYP_VPLP )( AREAP area, void * p1, LONG * p2 );
+typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, LONG p1, USHORT * p2 );
 
 /* this methods DO USE take a Workarea but an RDDNODE */
 
 typedef USHORT ( * DBENTRYP_I0   )( void );
-typedef USHORT ( * DBENTRYP_I1   )( PHB_ITEM p1);
-typedef USHORT ( * DBENTRYP_I2   )( PHB_ITEM p1, PHB_ITEM p2);
+typedef USHORT ( * DBENTRYP_I1   )( PHB_ITEM p1 );
+typedef USHORT ( * DBENTRYP_I2   )( PHB_ITEM p1, PHB_ITEM p2 );
 /*--------------------* Virtual Method Table *----------------------*/
 
 typedef struct _RDDFUNCS
@@ -723,6 +722,7 @@ typedef struct _RDDNODE
    char szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ]; /* Name of RDD */
    USHORT uiType;                                        /* Type of RDD */
    RDDFUNCS pTable;                                      /* Table of functions */
+   RDDFUNCS pSuperTable;                                 /* Table of super functions */
    USHORT uiAreaSize;                                    /* Size of the WorkArea */
    struct _RDDNODE * pNext;                              /* Next RDD in the list */
 } RDDNODE;
@@ -882,7 +882,7 @@ typedef RDDNODE * LPRDDNODE;
 #define SELF_TABLEEXT(w, fp)            ((*(w)->lprfsHost->info)(w, DBI_TABLEEXT, fp))
 
 
-   /* non WorkArea functions       */
+/* non WorkArea functions */
 #define SELF_EXIT(r)                    ((*(r)->pTable.exit)())
 #define SELF_DROP(r, i)                 ((*(r)->pTable.drop)(i))
 #define SELF_EXISTS(r, it, ii)          ((*(r)->pTable.exists)(it,ii))
@@ -1013,7 +1013,7 @@ typedef RDDNODE * LPRDDNODE;
 #define SUPER_GETLOCKS(w, g)            ((*(SUPERTABLE)->info)(w, DBI_GETLOCKARRAY, g))
 #define SUPER_RAWLOCK(w, i, l)          ((*(SUPERTABLE)->rawlock)(w, i, l))
 #define SUPER_LOCK(w, sp)               ((*(SUPERTABLE)->lock)(w, sp))
-#define SUPER_UNLOCK(w,l)                 ((*(SUPERTABLE)->unlock)(w,l))
+#define SUPER_UNLOCK(w,l)               ((*(SUPERTABLE)->unlock)(w,l))
 
 
 /* Memofile functions */
@@ -1033,17 +1033,17 @@ typedef RDDNODE * LPRDDNODE;
 
 /* Info operations */
 
-#define SUPER_RECSIZE(w, lp)          ((*(SUPERTABLE)->info)(w, DBI_GETRECSIZE, lp))
-#define SUPER_HEADERSIZE(w, fp)       ((*(SUPERTABLE)->info)(w, DBI_GETHEADERSIZE, fp))
-#define SUPER_LUPDATE(w, fp)          ((*(SUPERTABLE)->info)(w, DBI_LASTUPDATE, fp ))
-#define SUPER_SETDELIM(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_SETDELIMITER, fp))
-#define SUPER_GETDELIM(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
-#define SUPER_TABLEEXT(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
+#define SUPER_RECSIZE(w, lp)            ((*(SUPERTABLE)->info)(w, DBI_GETRECSIZE, lp))
+#define SUPER_HEADERSIZE(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_GETHEADERSIZE, fp))
+#define SUPER_LUPDATE(w, fp)            ((*(SUPERTABLE)->info)(w, DBI_LASTUPDATE, fp ))
+#define SUPER_SETDELIM(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_SETDELIMITER, fp))
+#define SUPER_GETDELIM(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
+#define SUPER_TABLEEXT(w, fp)           ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
-   /* non WorkArea functions       */
-#define SUPER_EXIT()                 ((*(SUPERTABLE)->exit)())
-#define SUPER_DROP(i)                ((*(SUPERTABLE)->drop)(i))
-#define SUPER_EXISTS(it, ii)         ((*(SUPERTABLE)->exists)(it, ii))
+/* non WorkArea functions */
+#define SUPER_EXIT()                    ((*(SUPERTABLE)->exit)())
+#define SUPER_DROP(i)                   ((*(SUPERTABLE)->drop)(i))
+#define SUPER_EXISTS(it, ii)            ((*(SUPERTABLE)->exists)(it, ii))
 
 /*
  *  PROTOTYPES
@@ -1059,8 +1059,6 @@ extern ERRCODE hb_rddIterateWorkAreas ( WACALLBACK pCallBack, int data );
 USHORT hb_rddFieldIndex( AREAP pArea, char * szName);
 ERRCODE hb_rddGetTempAlias( char * szAliasTmp );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_APIRDD_H_ */

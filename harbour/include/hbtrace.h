@@ -55,9 +55,7 @@
 
 #include "hbsetup.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 /*
  * Tracing levels.
@@ -224,8 +222,6 @@ extern int    hb_tracelevel( int new_level );
 extern int    hb_tr_level( void );
 extern void   hb_tr_trace( char * fmt, ... );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_TRACE_H_ */

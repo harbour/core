@@ -55,9 +55,7 @@
 
 #include "hbsetup.h"
 
-#if defined(HB_EXTERN_C)
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 extern double   hb_dateSeconds( void );
 extern void     hb_dateToday( int * piYear, int * piMonth, int * piDay );
@@ -73,8 +71,6 @@ extern void     hb_dateStrGet( const char * szDate, int * piYear, int * piMonth,
 extern char *   hb_dateDecStr( char * szDate, long lJulian );
 extern long     hb_dateEncStr( char * szDate );
 
-#if defined(HB_EXTERN_C)
-}
-#endif
+HB_EXTERN_END
 
 #endif /* HB_DATE_H_ */

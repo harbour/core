@@ -565,7 +565,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 		char *szDupl;
 		BOOL bUseTextSubst;
 	
-    	HB_EXPR_PCODE0( hb_compCodeBlockStart );
+		HB_EXPR_PCODE0( hb_compCodeBlockStart );
 
 		szDupl = hb_strupr( hb_strdup( pSelf->value.asCodeblock.string ) );
 		if( !hb_compExprIsValidMacro( szDupl, &bUseTextSubst, HB_MACRO_PARAM ) )
@@ -577,7 +577,7 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf )
 		pNew = hb_compExprNewMacro( hb_compExprNewString(pSelf->value.asCodeblock.string), 0, NULL );
 		HB_EXPR_USE( pNew, HB_EA_PUSH_PCODE );
 		hb_compExprDelete( pNew );
-    	HB_EXPR_PCODE0( hb_compCodeBlockStop );
+		HB_EXPR_PCODE0( hb_compCodeBlockStop );
     }
 
 }

@@ -87,10 +87,6 @@
    #endif
 #endif
 
-#ifdef __GNUC__
-#undef __GNUC__
-#endif
-
 /* yacc/lex related definitions
  */
 #undef YYPARSE_PARAM

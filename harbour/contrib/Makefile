@@ -53,6 +53,7 @@ ifeq ($(HB_ARCHITECTURE),linux)
 
 DIRS +=\
 	rdd_ads \
+	odbc \
 
 endif
 endif
