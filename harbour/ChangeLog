@@ -1,3 +1,10 @@
+2001-06-12 19:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/net.c
+    * Changed the OS/2 GCC gethostname() usage to generic EMX usage by
+      replacing four includes with include <emx/syscalls.h>, which can
+      also be used by RSXNT.
+
 2001-06-12 09:20 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
      * OnError error corrected (Tkx Brian)
