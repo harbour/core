@@ -34,13 +34,10 @@ int hb_set_printhan;
 HARBOUR HB_SET( void );
 HARBOUR HB___SETCENTURY( void );
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Set__InitSymbols )
 { "__SETCENTURY", FS_PUBLIC, HB___SETCENTURY, 0 },
 { "SET"         , FS_PUBLIC, HB_SET       , 0   }
-};
-
-HB_INIT_SYMBOLS_BEGIN( Set__InitSymbols );
-HB_INIT_SYMBOLS_END( Set__InitSymbols )
+HB_INIT_SYMBOLS_END( Set__InitSymbols );
 #pragma startup Set__InitSymbols
 
 static BOOL set_logical (PHB_ITEM pItem)

@@ -96,7 +96,7 @@ HARBOUR HB_OMODMETHOD( void );
 
 /* Exported symbols of both classes.c and objfunc.prg */
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols )
 { "AODATA"        , FS_PUBLIC, HB_AODATA         , 0 },
 { "AOGET"         , FS_PUBLIC, HB_AOGET          , 0 },
 { "AOMETHOD"      , FS_PUBLIC, HB_AOMETHOD       , 0 },
@@ -120,11 +120,7 @@ static SYMBOL symbols[] = {
 { "OMODINLINE"    , FS_PUBLIC, HB_OMODINLINE     , 0 },
 { "OMODMETHOD"    , FS_PUBLIC, HB_OMODMETHOD     , 0 },
 { "OSEND"         , FS_PUBLIC, HB_OSEND          , 0 }
-};
-
-
-HB_INIT_SYMBOLS_BEGIN( Classes__InitSymbols );
-HB_INIT_SYMBOLS_END( Classes__InitSymbols )
+HB_INIT_SYMBOLS_END( Classes__InitSymbols );
 #pragma startup Classes__InitSymbols
 
 /*

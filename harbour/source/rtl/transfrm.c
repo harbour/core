@@ -18,11 +18,9 @@
 
 HARBOUR HB_TRANSFORM( void );
 
-static SYMBOL symbols[] = {
-{ "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
-};
 
-HB_INIT_SYMBOLS_BEGIN( Transfrm__InitSymbols );
+HB_INIT_SYMBOLS_BEGIN( Transfrm__InitSymbols )
+{ "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
 HB_INIT_SYMBOLS_END( Transfrm__InitSymbols )
 #pragma startup Transfrm__InitSymbols
 

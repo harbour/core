@@ -2070,7 +2070,10 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
    }
 
    /* writes the symbol table */
-   fprintf( yyc, "\nstatic SYMBOL symbols[] = { " );
+/*   fprintf( yyc, "\nstatic SYMBOL symbols[] = { " ); */
+   /* Generate the wrapper that will initialize local symbol table
+    */
+   fprintf( yyc, "\n\nHB_INIT_SYMBOLS_BEGIN( %s__InitSymbols )\n", symbols.pFirst->szName );
 
    if( ! _iStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
@@ -2111,16 +2114,12 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       }
 
       if( pSym != symbols.pLast )
-         fprintf( yyc, ",\n                            " );
+         fprintf( yyc, ",\n" );
 
       pSym = pSym->pNext;
    }
-   fprintf( yyc, " };\n\n" );
-
-   /* Generate function that will initialize local symbol table
-    */
-   fprintf( yyc, "HB_INIT_SYMBOLS_BEGIN( %s__InitSymbols );\n", symbols.pFirst->szName );
-   fprintf( yyc, "HB_INIT_SYMBOLS_END( %s__InitSymbols )\n\n", symbols.pFirst->szName );
+/*   fprintf( yyc, " };\n\n" ); */
+   fprintf( yyc, "\nHB_INIT_SYMBOLS_END( %s__InitSymbols );\n", symbols.pFirst->szName );
    fprintf( yyc, "#pragma startup %s__InitSymbols\n\n", symbols.pFirst->szName );
 
    /* Generate functions data

@@ -43,15 +43,12 @@ HARBOUR HB_GETENV(void);
 HARBOUR HB_OS(void);
 HARBOUR HB_VERSION(void);
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Environ__InitSymbols )
 { "__RUN"  , FS_PUBLIC, HB___RUN  , 0 },
 { "GETENV" , FS_PUBLIC, HB_GETENV , 0 },
 { "OS"     , FS_PUBLIC, HB_OS     , 0 },
 { "VERSION", FS_PUBLIC, HB_VERSION, 0 }
-};
-
-HB_INIT_SYMBOLS_BEGIN( Environ__InitSymbols );
-HB_INIT_SYMBOLS_END( Environ__InitSymbols )
+HB_INIT_SYMBOLS_END( Environ__InitSymbols );
 #pragma startup Environ__InitSymbols
 
 HARBOUR HB_OS(void)

@@ -14,12 +14,10 @@
 
 HARBOUR HB_MEMOTRAN(void);
 
-static SYMBOL symbols[] = {
-{ "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
-};
 
-HB_INIT_SYMBOLS_BEGIN( Memotran__InitSymbols );
-HB_INIT_SYMBOLS_END( Memotran__InitSymbols )
+HB_INIT_SYMBOLS_BEGIN( Memotran__InitSymbols )
+{ "MEMOTRAN", FS_PUBLIC, HB_MEMOTRAN, 0 }
+HB_INIT_SYMBOLS_END( Memotran__InitSymbols );
 #pragma startup Memotran__InitSymbols
 
 char *hb_memotran( char *string, char *hardcr, char *softcr )

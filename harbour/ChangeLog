@@ -1,3 +1,36 @@
+19990704-16:20 Ryszard Glab <rglab@imid.med.pl>
+
+* include/init.h
+ * changed definitions of HB_INIT_SYMBOLS_* and HB_CALL_ON_STARTUP_*
+   to make it more consistent. The symbol table should be defined now:
+   HB_INIT_SYMBOLS_BEGIN( moduleName__InitSymbols )
+   { "FIRST", FS_PUBLIC, HB_FIRST, 0},
+   /* more symbols */
+   HB_INIT_SYMBOLS_END( moduleName__InitSymbols );
+
+* source/compiler/harbour.y
+ * changed generated C code to support new HB_INIT_SYMBOLS_* macros
+    
+* source/rtl/arrays.c
+* source/rtl/classes.c
+* source/rtl/console.c
+* source/rtl/dates.c
+* source/rtl/descend.c
+* source/rtl/dir.c
+* source/rtl/environ.c
+* source/rtl/files.c
+* source/rtl/hardcr.c
+* source/rtl/math.c
+* source/rtl/mtran.c
+* source/rtl/set.c
+* source/rtl/strings.c
+* source/rtl/transfrm.c
+ * changed to use he new definition of HB_INIT_SYMBOLS_* and
+   HB_CALL_ON_STARTUP_* macros
+   
+* tests/working/box.prg
+ * changed "BOX.CH" to lowercase (Linux is case-sensitive OS)
+
 19990702-09:08 Alexander Kresin
   * source\hbpp\hbpp.c
     * Changed logic for fixing some problems

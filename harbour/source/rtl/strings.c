@@ -51,7 +51,7 @@ HARBOUR HB_TRIM( void );
 HARBOUR HB_UPPER( void );
 HARBOUR HB_VAL( void );
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols )
 { "ALLTRIM"      , FS_PUBLIC, HB_ALLTRIM, 0 },
 { "ISALPHA"      , FS_PUBLIC, HB_ISALPHA, 0 },
 { "ISDIGIT"      , FS_PUBLIC, HB_ISDIGIT, 0 },
@@ -65,18 +65,14 @@ static SYMBOL symbols[] = {
 { "RIGHT"        , FS_PUBLIC, HB_RIGHT  , 0 },
 { "STRTRAN"      , FS_PUBLIC, HB_STRTRAN, 0 },
 { "STUFF"        , FS_PUBLIC, HB_STUFF  , 0 }
-}; /* The rest of functions is pulled automatically by initsymb.c */
-
-HB_INIT_SYMBOLS_BEGIN( Strings__InitSymbols );
-HB_INIT_SYMBOLS_END( Strings__InitSymbols )
+HB_INIT_SYMBOLS_END( Strings__InitSymbols );
 #pragma startup Strings__InitSymbols
+/* The rest of functions is pulled automatically by initsymb.c */
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
-{
    infinity = -log( 0 );
-}
-HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
+HB_CALL_ON_STARTUP_END( Strings_InitInfinity );
 #pragma startup Strings_InitInfinity
 #endif
 

@@ -20,13 +20,12 @@ HARBOUR HB_MOD( void );
 HARBOUR HB_ROUND( void );
 HARBOUR HB_SQRT( void );
 
-static SYMBOL symbols[] = {
-{ "MOD"  , FS_PUBLIC, HB_MOD  , 0 }
-}; /* The rest of functions is pulled automatically by initsymb.c */
 
-HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols );
-HB_INIT_SYMBOLS_END( Math__InitSymbols )
+HB_INIT_SYMBOLS_BEGIN( Math__InitSymbols )
+{ "MOD"  , FS_PUBLIC, HB_MOD  , 0 }
+HB_INIT_SYMBOLS_END( Math__InitSymbols );
 #pragma startup Math__InitSymbols
+/* The rest of functions is pulled automatically by initsymb.c */
 
 HARBOUR HB_ABS( void )
 {

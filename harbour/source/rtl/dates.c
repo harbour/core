@@ -39,14 +39,12 @@ HARBOUR HB_STOD( void );
 HARBOUR HB_TIME( void );
 HARBOUR HB_YEAR( void );
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols )
 { "STOD",    FS_PUBLIC, HB_STOD,    0 }
-}; /* rest of the functions is pulled automatically in initsymb.c */
-
-
-HB_INIT_SYMBOLS_BEGIN( Dates__InitSymbols );
-HB_INIT_SYMBOLS_END( Dates__InitSymbols )
+HB_INIT_SYMBOLS_END( Dates__InitSymbols );
 #pragma startup Dates__InitSymbols
+/* rest of the functions is pulled automatically in initsymb.c */
+
 
 double hb__seconds( void )
 {

@@ -1,6 +1,6 @@
 // Testing Harbour device management.
 
-#include "BOX.CH"
+#include "box.ch"
 function Main()
 
    dispbox( 1, 1, 5, 5, B_SINGLE + 'X', 'color not supported')

@@ -21,7 +21,7 @@ HARBOUR HB_ASIZE(void);
 HARBOUR HB_ASORT(void);
 HARBOUR HB_ATAIL(void);
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols )
 { "ACLONE",         FS_PUBLIC, HB_ACLONE        , 0 },
 { "ACOPY",          FS_PUBLIC, HB_ACOPY         , 0 },
 { "ADEL",           FS_PUBLIC, HB_ADEL          , 0 },
@@ -33,8 +33,8 @@ static SYMBOL symbols[] = {
 { "ASIZE",          FS_PUBLIC, HB_ASIZE         , 0 },
 { "ASORT",          FS_PUBLIC, HB_ASORT         , 0 },
 { "ATAIL",          FS_PUBLIC, HB_ATAIL         , 0 },
-};
-
+HB_INIT_SYMBOLS_END( Arrays__InitSymbols );
+#pragma startup Arrays__InitSymbols
 
 PHB_ITEM hb_itemNew( PHB_ITEM );
 PHB_ITEM hb_itemArrayPut( PHB_ITEM , ULONG , PHB_ITEM );
@@ -45,10 +45,6 @@ extern SYMBOL symEval;
 static char *szBoundError    = "Bound error: Array access";
 static char *szArgumentError = "Argument error: incorrect type";
 
-
-HB_INIT_SYMBOLS_BEGIN( Arrays__InitSymbols );
-HB_INIT_SYMBOLS_END( Arrays__InitSymbols )
-#pragma startup Arrays__InitSymbols
 
 /*
  * Internal

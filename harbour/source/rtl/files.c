@@ -131,7 +131,7 @@ HARBOUR HB_I2BIN( void );
 HARBOUR HB_L2BIN( void );
 HARBOUR HB_W2BIN( void );
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols )
 { "BIN2I"   , FS_PUBLIC, HB_BIN2I   , 0 },
 { "BIN2L"   , FS_PUBLIC, HB_BIN2L   , 0 },
 { "BIN2W"   , FS_PUBLIC, HB_BIN2W   , 0 },
@@ -148,10 +148,7 @@ static SYMBOL symbols[] = {
 { "I2BIN"   , FS_PUBLIC, HB_I2BIN   , 0 },
 { "L2BIN"   , FS_PUBLIC, HB_L2BIN   , 0 },
 { "W2BIN"   , FS_PUBLIC, HB_W2BIN   , 0 }
-};
-
-HB_INIT_SYMBOLS_BEGIN( Files__InitSymbols );
-HB_INIT_SYMBOLS_END( Files__InitSymbols )
+HB_INIT_SYMBOLS_END( Files__InitSymbols );
 #pragma startup Files__InitSymbols
 
 /* Convert HARBOUR flags to IO subsystem flags */

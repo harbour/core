@@ -87,12 +87,9 @@
 
 HARBOUR HB_DIRECTORY(void);
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Dir__InitSymbols )
 { "DIRECTORY", FS_PUBLIC, HB_DIRECTORY, 0 }
-};
-
-HB_INIT_SYMBOLS_BEGIN( Dir__InitSymbols );
-HB_INIT_SYMBOLS_END( Dir__InitSymbols )
+HB_INIT_SYMBOLS_END( Dir__InitSymbols );
 #pragma startup Dir__InitSymbols
 
 static  BOOL  hb_strMatchDOS (char *pszString, char *pszMask);

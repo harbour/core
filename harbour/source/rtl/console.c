@@ -57,7 +57,7 @@ HARBOUR HB_SETPRC( void );
 HARBOUR HB_QOUT( void );
 HARBOUR HB_QQOUT( void );
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
 { "__ACCEPT" , FS_PUBLIC, HB___ACCEPT , 0 },
 { "__EJECT"  , FS_PUBLIC, HB___EJECT  , 0 },
 { "DEVOUT"   , FS_PUBLIC, HB_DEVOUT   , 0 },
@@ -77,18 +77,13 @@ static SYMBOL symbols[] = {
 { "SETPRC"   , FS_PUBLIC, HB_SETPRC   , 0 },
 { "QOUT"     , FS_PUBLIC, HB_QOUT     , 0 },
 { "QQOUT"    , FS_PUBLIC, HB_QQOUT    , 0 }
-};
-
-
-HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols );
-HB_INIT_SYMBOLS_END( Console__InitSymbols )
+HB_INIT_SYMBOLS_END( Console__InitSymbols );
 #pragma startup Console__InitSymbols
 
 static unsigned short dev_row, dev_col, p_row, p_col;
 static char CrLf [ CRLF_BUFFER_LEN ];
 
 HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
-{
 #if defined(OS_DOS_COMPATIBLE)
    CrLf [0] = 13;
    CrLf [1] = 10;
@@ -107,8 +102,7 @@ HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
    dev_col = 0;
 #endif
    p_row = p_col = 0;
-   HB_CALL_ON_STARTUP_END( InitializeConsole )
-}
+HB_CALL_ON_STARTUP_END( InitializeConsole );
 #pragma startup InitializeConsole
 
 USHORT hb_max_row( void )

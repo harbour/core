@@ -11,12 +11,9 @@ extern STACK stack;
 
 HARBOUR HB_DESCEND(void);
 
-static SYMBOL symbols[] = {
+HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols )
 { "DESCEND", FS_PUBLIC, HB_DESCEND, 0 }
-};
-
-HB_INIT_SYMBOLS_BEGIN( Descend__InitSymbols );
-HB_INIT_SYMBOLS_END( Descend__InitSymbols )
+HB_INIT_SYMBOLS_END( Descend__InitSymbols );
 #pragma Descend__InitSymbols
                             
 char *hb_strdescend( char *string )
