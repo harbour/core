@@ -606,8 +606,10 @@ static RDDFUNCS dbfSuper = { 0 };
 #define dbfStructSize                           NULL
 #define dbfSysName                              NULL
 #define dbfClearFilter                          NULL
+#define dbfClearLocate                          NULL
 #define dbfFilterText                           NULL
 #define dbfSetFilter                            NULL
+#define dbfSetLocate                            NULL
 #define dbfError                                NULL
 #define dbfWhoCares                             NULL
 
@@ -1752,8 +1754,10 @@ static RDDFUNCS dbfTable = { dbfBof,
                              dbfStructSize,
                              dbfSysName,
                              dbfClearFilter,
+                             dbfClearLocate,
                              dbfFilterText,
                              dbfSetFilter,
+                             dbfSetLocate,
                              dbfError,
                              dbfRawLock,
                              dbfLock,

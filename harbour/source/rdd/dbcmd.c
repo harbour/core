@@ -82,6 +82,7 @@ HARBOUR HB_DBCLOSEALL( void );
 HARBOUR HB_DBCLOSEAREA( void );
 HARBOUR HB_DBCOMMIT( void );
 HARBOUR HB_DBCOMMITALL( void );
+HARBOUR HB___DBCONTINUE( void );
 HARBOUR HB_DBCREATE( void );
 HARBOUR HB_DBDELETE( void );
 HARBOUR HB_DBF( void );
@@ -89,6 +90,7 @@ HARBOUR HB_DBFILTER( void );
 HARBOUR HB_DBGOBOTTOM( void );
 HARBOUR HB_DBGOTO( void );
 HARBOUR HB_DBGOTOP( void );
+HARBOUR HB___DBLOCATE( void );
 HARBOUR HB_DBRECALL( void );
 HARBOUR HB_DBRLOCK( void );
 HARBOUR HB_DBRLOCKLIST( void );
@@ -193,9 +195,50 @@ static ERRCODE defClearFilter( AREAP pArea )
    return SUCCESS;
 }
 
+static ERRCODE defClearLocate( AREAP pArea )
+{
+   if( pArea->dbsi.itmCobFor )
+   {
+      hb_itemRelease( pArea->dbsi.itmCobFor );
+      pArea->dbsi.itmCobFor = NULL;
+   }
+   if( pArea->dbsi.lpstrFor )
+   {
+      hb_itemRelease( pArea->dbsi.lpstrFor );
+      pArea->dbsi.lpstrFor = NULL;
+   }
+   if( pArea->dbsi.itmCobWhile )
+   {
+      hb_itemRelease( pArea->dbsi.itmCobWhile );
+      pArea->dbsi.itmCobWhile = NULL;
+   }
+   if( pArea->dbsi.lpstrWhile )
+   {
+      hb_itemRelease( pArea->dbsi.lpstrWhile );
+      pArea->dbsi.lpstrWhile = NULL;
+   }
+   if( pArea->dbsi.lNext )
+   {
+      hb_itemRelease( pArea->dbsi.lNext );
+      pArea->dbsi.lNext = NULL;
+   }
+   if( pArea->dbsi.itmRecID )
+   {
+      hb_itemRelease( pArea->dbsi.itmRecID );
+      pArea->dbsi.itmRecID = NULL;
+   }
+   if( pArea->dbsi.fRest )
+   {
+      hb_itemRelease( pArea->dbsi.fRest );
+      pArea->dbsi.fRest = NULL;
+   }
+   return SUCCESS;
+}
+
 static ERRCODE defClose( AREAP pArea )
 {
    SELF_CLEARFILTER( pArea );
+   SELF_CLEARLOCATE( pArea );
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
    return SUCCESS;
 }
@@ -321,7 +364,6 @@ static ERRCODE defNewArea( AREAP pArea )
    pArea->lpFileInfo->hFile = FS_ERROR;
    pArea->lpExtendInfo = ( LPDBEXTENDINFO ) hb_xgrab( sizeof( DBEXTENDINFO ) );
    memset( pArea->lpExtendInfo, 0, sizeof( DBEXTENDINFO ) );
-   pArea->dbsi.fIgnoreFilter = TRUE;
    return SUCCESS;
 }
 
@@ -396,11 +438,31 @@ static ERRCODE defSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
    return SUCCESS;
 }
 
+static ERRCODE defSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
+{
+   if( pArea->dbsi.itmCobFor )
+      hb_itemRelease( pArea->dbsi.itmCobFor );
+   pArea->dbsi.itmCobFor = pScopeInfo->itmCobFor;
+   if( pArea->dbsi.itmCobWhile )
+      hb_itemRelease( pArea->dbsi.itmCobWhile );
+   pArea->dbsi.itmCobWhile = pScopeInfo->itmCobWhile;
+   if( pArea->dbsi.lNext )
+      hb_itemRelease( pArea->dbsi.lNext );
+   pArea->dbsi.lNext = pScopeInfo->lNext;
+   if( pArea->dbsi.itmRecID )
+      hb_itemRelease( pArea->dbsi.itmRecID );
+   pArea->dbsi.itmRecID = pScopeInfo->itmRecID;
+   if( pArea->dbsi.fRest )
+      hb_itemRelease( pArea->dbsi.fRest );
+   pArea->dbsi.fRest = pScopeInfo->fRest;
+   return SUCCESS;
+}
+
 static ERRCODE defSkip( AREAP pArea, LONG lToSkip )
 {
    BOOL bExit;
 
-   if( pArea->dbfi.fFilter || !pArea->dbsi.fIgnoreFilter || hb_set.HB_SET_DELETED )
+   if( pArea->dbfi.fFilter || hb_set.HB_SET_DELETED )
    {
       if( lToSkip > 0 )
       {
@@ -601,8 +663,10 @@ static RDDFUNCS defTable = { defBof,
                              defStructSize,
                              defSysName,
                              defClearFilter,
+                             defClearLocate,
                              defFilterText,
                              defSetFilter,
+                             defSetLocate,
                              defError,
                              ( DBENTRYP_VSP ) defUnSupported,
                              ( DBENTRYP_VL ) defUnSupported,
@@ -1225,6 +1289,38 @@ HARBOUR HB_DBCOMMITALL( void )
    }
 }
 
+HARBOUR HB___DBCONTINUE()
+{
+   BOOL bEof;
+
+   if( !pCurrArea )
+   {
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBCONTINUE" );
+      return;
+   }
+
+   if( !( ( AREAP ) pCurrArea->pArea )->dbsi.itmCobFor )
+      return;
+   ( ( AREAP ) pCurrArea->pArea )->fFound = FALSE;
+   SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
+   SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+   if( bEof )
+      return;
+   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPush( ( ( AREAP ) pCurrArea->pArea )->dbsi.itmCobFor );
+   hb_vmDo( 0 );
+   ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
+   while( !bEof && !( ( AREAP ) pCurrArea->pArea )->fFound )
+   {
+      SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      hb_vmPushSymbol( &hb_symEval );
+      hb_vmPush( ( ( AREAP ) pCurrArea->pArea )->dbsi.itmCobFor );
+      hb_vmDo( 0 );
+      ( ( AREAP ) pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
+   }
+}
+
 HARBOUR HB_DBCREATE( void )
 {
    char * szDriver, * szFileName;
@@ -1527,6 +1623,206 @@ HARBOUR HB_DBGOTOP( void )
       SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBGOTOP" );
+}
+
+HARBOUR HB___DBLOCATE()
+{
+   PHB_ITEM pFor, pFor2, pWhile, pNext, pRecord, pRest;
+   DBSCOPEINFO pScopeInfo;
+   ULONG lNext;
+   BOOL bEof, bFor, bWhile;
+
+   if( !pCurrArea )
+   {
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "DBSETFILTER" );
+      return;
+   }
+
+   memset( &pScopeInfo, 0, sizeof( DBSCOPEINFO ) );
+   pFor2 = hb_param( 1, IT_BLOCK );
+   pWhile = hb_param( 2, IT_BLOCK );
+   pNext = hb_param( 3, IT_NUMERIC );
+   pRecord = hb_param( 4, IT_NUMERIC );
+   pRest = hb_param( 5, IT_LOGICAL );
+   if( !pWhile )
+   {
+      pWhile = hb_itemPutL( NULL, TRUE );
+      pScopeInfo.itmCobWhile = pWhile;
+   }
+   else
+   {
+      pRest = hb_itemPutL( NULL, TRUE );
+      pScopeInfo.fRest = pRest;
+   }
+   if( !pFor2 )
+      pFor = hb_itemPutL( NULL, TRUE );
+   else
+   {
+      pFor = hb_itemNew( NULL );
+      hb_itemCopy( pFor, pFor2 );
+   }
+   if( !pRest )
+   {
+      pRest = hb_itemPutL( NULL, FALSE );
+      pScopeInfo.fRest = pRest;
+   }
+   pScopeInfo.itmCobFor = pFor;
+   SELF_SETLOCATE( ( AREAP ) pCurrArea->pArea, &pScopeInfo );
+   ( ( AREAP ) pCurrArea->pArea )->fFound = FALSE;
+   if( pRecord )
+   {
+      SELF_GOTOID( ( AREAP ) pCurrArea->pArea, pRecord );
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      if( bEof )
+         return;
+      if( hb_itemType( pWhile ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pWhile );
+         hb_vmDo( 0 );
+         bWhile = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bWhile = hb_itemGetL( pWhile );
+      if( hb_itemType( pFor ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pFor );
+         hb_vmDo( 0 );
+         bFor = hb_itemGetL( &hb_stack.Return );
+         ( ( AREAP ) pCurrArea->pArea )->fFound = ( bWhile && bFor );
+      }
+      else
+         ( ( AREAP ) pCurrArea->pArea )->fFound = ( bWhile && hb_itemGetL( pFor ) );
+   }
+   else if( pNext )
+   {
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      lNext = hb_parnl( 3 );
+      if( bEof || lNext <= 0 )
+         return;
+      if( hb_itemType( pWhile ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pWhile );
+         hb_vmDo( 0 );
+         bWhile = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bWhile = hb_itemGetL( pWhile );
+      if( hb_itemType( pFor ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pFor );
+         hb_vmDo( 0 );
+         bFor = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bFor = hb_itemGetL( pFor );
+      while( !bEof && lNext-- > 0 && bWhile && !bFor )
+      {
+         SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
+         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         if( hb_itemType( pWhile ) == IT_BLOCK )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pWhile );
+            hb_vmDo( 0 );
+            bWhile = hb_itemGetL( &hb_stack.Return );
+         }
+         else
+            bWhile = hb_itemGetL( pWhile );
+         if( hb_itemType( pFor ) == IT_BLOCK )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pFor );
+            hb_vmDo( 0 );
+            bFor = hb_itemGetL( &hb_stack.Return );
+         }
+         else
+            bFor = hb_itemGetL( pFor );
+      }
+      ( ( AREAP ) pCurrArea->pArea )->fFound = bFor;
+   }
+   else if( hb_itemGetL( pRest ) )
+   {
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      if( bEof )
+         return;
+      if( hb_itemType( pWhile ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pWhile );
+         hb_vmDo( 0 );
+         bWhile = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bWhile = hb_itemGetL( pWhile );
+      if( hb_itemType( pFor ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pFor );
+         hb_vmDo( 0 );
+         bFor = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bFor = hb_itemGetL( pFor );
+      while( !bEof && bWhile && !bFor )
+      {
+         SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
+         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         if( hb_itemType( pWhile ) == IT_BLOCK )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pWhile );
+            hb_vmDo( 0 );
+            bWhile = hb_itemGetL( &hb_stack.Return );
+         }
+         else
+            bWhile = hb_itemGetL( pWhile );
+         if( hb_itemType( pFor ) == IT_BLOCK )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pFor );
+            hb_vmDo( 0 );
+            bFor = hb_itemGetL( &hb_stack.Return );
+         }
+         else
+            bFor = hb_itemGetL( pFor );
+      }
+      ( ( AREAP ) pCurrArea->pArea )->fFound = bFor;
+   }
+   else
+   {
+      SELF_GOTOP( ( AREAP ) pCurrArea->pArea );
+      SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+      if( bEof )
+         return;
+      if( hb_itemType( pFor ) == IT_BLOCK )
+      {
+         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPush( pFor );
+         hb_vmDo( 0 );
+         bFor = hb_itemGetL( &hb_stack.Return );
+      }
+      else
+         bFor = hb_itemGetL( pFor );
+      while( !bEof && !bFor )
+      {
+         SELF_SKIP( ( AREAP ) pCurrArea->pArea, 1 );
+         SELF_EOF( ( AREAP ) pCurrArea->pArea, &bEof );
+         if( hb_itemType( pFor ) == IT_BLOCK )
+         {
+            hb_vmPushSymbol( &hb_symEval );
+            hb_vmPush( pFor );
+            hb_vmDo( 0 );
+            bFor = hb_itemGetL( &hb_stack.Return );
+         }
+         else
+            bFor = hb_itemGetL( pFor );
+      }
+      ( ( AREAP ) pCurrArea->pArea )->fFound = bFor;
+   }
 }
 
 HARBOUR HB_DBRECALL( void )

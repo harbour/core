@@ -61,7 +61,6 @@ FUNCTION MLPos()           ; RETURN 0
 FUNCTION MPosToLC()        ; RETURN 0
 
 FUNCTION __dbApp()         ; RETURN NIL
-FUNCTION __dbContinue()    ; RETURN NIL
 FUNCTION __dbCopy()        ; RETURN NIL
 FUNCTION __dbCopyStruct()  ; RETURN NIL
 FUNCTION __dbCopyXStruct() ; RETURN NIL
@@ -69,7 +68,6 @@ FUNCTION __dbCreate()      ; RETURN NIL
 FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
 FUNCTION __dbList()        ; RETURN NIL
-FUNCTION __dbLocate()      ; RETURN NIL
 FUNCTION __dbPack()        ; RETURN NIL
 FUNCTION __dbSDF()         ; RETURN NIL
 FUNCTION __dbSort()        ; RETURN NIL

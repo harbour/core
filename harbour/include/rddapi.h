@@ -579,6 +579,7 @@ typedef USHORT ( * DBENTRYP_VP   )( AREAP area, LPDBOPENINFO param );
 typedef USHORT ( * DBENTRYP_VF   )( AREAP area, LPDBFIELDINFO param );
 typedef USHORT ( * DBENTRYP_VL   )( AREAP area, LPDBLOCKINFO param );
 typedef USHORT ( * DBENTRYP_VFI  )( AREAP area, LPDBFILTERINFO param );
+typedef USHORT ( * DBENTRYP_VLO  )( AREAP area, LPDBSCOPEINFO param );
 typedef USHORT ( * DBENTRYP_SP   )( AREAP area, USHORT * param );
 typedef USHORT ( * DBENTRYP_P    )( AREAP area, BYTE * param );
 typedef USHORT ( * DBENTRYP_PP   )( AREAP area, BYTE ** param );
@@ -699,8 +700,8 @@ typedef struct _RDDFUNCS
    /* Filters and Scope Settings */
 
    DBENTRYP_V    clearFilter;
-#if 0
    DBENTRYP_V    clearLocate;
+#if 0
    DBENTRYP_V    clearScope;
    DBENTRYP_VPLP countScope;
 #endif
@@ -709,8 +710,8 @@ typedef struct _RDDFUNCS
    DBENTRYP_SI   scopeInfo;
 #endif
    DBENTRYP_VFI  setFilter;
+   DBENTRYP_VLO  setLocate;
 #if 0
-   DBENTRYP_VP   setLocate;
    DBENTRYP_VP   setScope;
    DBENTRYP_VPL  skipScope;
 

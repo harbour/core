@@ -107,5 +107,25 @@ function main()
    ? "dbFilter() => " + dbFilter()
    ? ""
 
+   ? "Open test.dbf and LOCATE FOR TESTDBF->SALARY > 145000"
+   ? "Press any key..."
+   InKey( 0 )
+   dbUseArea( ,, "test", "TESTDBF" )
+   locate for TESTDBF->SALARY > 145000
+   do while TESTDBF->( Found() )
+      ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->SALARY
+      continue
+   enddo
+   ? ""
+   ? "LOCATE FOR TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'"
+   ? "Press any key..."
+   InKey( 0 )
+   dbUseArea( ,, "test", "TESTDBF" )
+   locate for TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'
+   do while TESTDBF->( Found() )
+      ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->MARRIED
+      continue
+   enddo
+
 return nil
 

@@ -1,3 +1,16 @@
+19991017-13:04 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rtl/dummy.prg
+    - __dbLocate() and __dbContinue() functions removed.
+
+  * include/rddapi.h
+    source/rdd/dbcmd.c
+    source/rdd/dbf1.c
+    source/rdd/dbfcdx/dbfcdx1.c
+    + Added support for __dbLocate() and __dbContinue() functions.
+
+  * tests/testdbf.prg
+    * Now use test.dbf file and test __dbLocate() and __dbContinue() functions.
+
 19991017-12:57 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/environ.c
      + GETE() undocumented Clipper function added.
