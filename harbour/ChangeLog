@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * contrib/libnf/page.prg
+  * contrib/libnf/popadder.prg
+  * contrib/libnf/pvid.prg
+  * contrib/libnf/scancode.prg
+  * contrib/libnf/setdate.prg
+  * contrib/libnf/settime.prg
+  * contrib/libnf/sysmem.prg
+  * contrib/libnf/tempfile.prg
   * contrib/libnf/vidcur.prg
   * contrib/libnf/vidmode.prg
     ! All include file names must be in lower case for Un*x type systems.

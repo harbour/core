@@ -11,7 +11,9 @@ DIRS=\
 	libct \
 	libgt \
 	libmisc \
+	libnf \
 	rdd_ads \
+	samples \
 
 
 else
@@ -23,6 +25,8 @@ DIRS=\
 	libct \
 	libgt \
 	libmisc \
+	libnf \
+	samples \
 
 else
 
@@ -31,6 +35,8 @@ DIRS=\
 	libct \
 	libgt \
 	libmisc \
+	libnf \
+	samples \
 
 endif
 endif
