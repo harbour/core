@@ -276,7 +276,7 @@ ULONG hb_strAt(char *szSub, long lSubLen, char *szText, long lLen)
 {
    if( lSubLen )
    {
-      if( lLen > lSubLen )
+      if( lLen >= lSubLen )
       {
          long lPos = 0, lSubPos = 0;
 

@@ -1,3 +1,8 @@
+19990602-18:20 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/strings.c
+    - Changed if( lLen > lSubLen ) to if( lLen >= lSubLen )
+      Reported by "Alexander S.Kresin" <alex@belacy.belgorod.su>
+
 19990602-16:00 EDT David G. Holm <dholm@jsd-llc.com>
   + tests/broken/codebloc.prg
     - Output doesn't match Clipper. Clipper outputs NIL and 42, 
