@@ -154,6 +154,7 @@ typedef struct _TAGINFO
    LONG       blockNext;
    USHORT     keyPrev;
    USHORT     keyNext;
+   ULONG      keyCount;
    LPKEYINFO  CurKeyInfo;
    LPPAGEINFO RootPage;
    BOOL       InIndex;

@@ -133,6 +133,8 @@ static ERRCODE hb_ntxPageKeyInsert( LPPAGEINFO pPage, char* key, int pos );
 static int hb_ntxItemCompare( char* s1, char* s2, int ilen1, int ilen2, BOOL Exact );
 static ERRCODE hb_ntxPageAddPageKeyAdd( LPPAGEINFO pPage, char* key, int pos );
 
+#define KEYITEM(P,N) ( (NTXITEM*)( (P)->buffer+ *((USHORT*)((P)->buffer+(N)*2+2)) ) )
+
 static void commonError( NTXAREAP pArea, USHORT uiGenCode, USHORT uiSubCode, char* filename, USHORT uiFlags )
 {
    PHB_ITEM pError;
@@ -236,6 +238,22 @@ static BOOL checkLogicalExpr( PHB_ITEM pForItem, PHB_ITEM pItem )
    return res;
 }
 
+static void hb__ntxTagKeyCount( LPPAGEINFO pPage, ULONG* ulKeyCount )
+{
+   LPNTXITEM p;
+   int i;
+
+   *ulKeyCount += pPage->uiKeys;
+   for( i=0;i<pPage->uiKeys+1;i++ )
+   {
+      p = KEYITEM( pPage, i );
+      if( p->page )
+         hb__ntxTagKeyCount( hb_ntxPageLoad( pPage->TagParent->Owner,p->page ),
+                                    ulKeyCount );
+   }
+   hb_ntxPageRelease( pPage );
+}
+
 static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
 {
    HB_SYMBOL_UNUSED( pTag );
@@ -244,8 +262,39 @@ static ULONG hb_ntxTagKeyNo( LPTAGINFO pTag )
 
 static ULONG hb_ntxTagKeyCount( LPTAGINFO pTag )
 {
-   HB_SYMBOL_UNUSED( pTag );
-   return 0;
+   LPPAGEINFO pPage;
+   LPNTXITEM p;
+   ULONG ulKeyCount = 0;
+   int i;
+
+   if( pTag->Owner->Owner->fShared )
+   {
+      while( !hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_LOCK ) );
+      pTag->Owner->Locked = TRUE;
+   }
+   else if( pTag->keyCount )
+      return pTag->keyCount    
+
+   pPage = hb_ntxPageLoad( pTag->Owner,0 );
+   ulKeyCount += pPage->uiKeys;
+   for( i=0;i<pPage->uiKeys+1;i++ )
+   {
+      p = KEYITEM( pPage, i );
+      if( p->page )
+         hb__ntxTagKeyCount( hb_ntxPageLoad( pTag->Owner,p->page ),
+                                 &ulKeyCount );
+   }
+   hb_ntxPageRelease( pPage );
+
+   if( pTag->Owner->Owner->fShared )
+   {
+      hb_ntxPageFree( pTag->RootPage,FALSE );
+      hb_fsLock( pTag->Owner->DiskFile, 0, 512, FL_UNLOCK );
+      pTag->Owner->Locked = FALSE;
+   }
+   else
+      pTag->keyCount = ulKeyCount;
+   return ulKeyCount;
 }
 
 static void hb_ntxClearScope( LPTAGINFO pTag, USHORT nScope )
@@ -366,8 +415,6 @@ static LONG hb_ntxTagKeyFind( LPTAGINFO pTag, LPKEYINFO pKey, BOOL * result )
       pTag->TagEOF = TRUE;
    return 0;
 }
-
-#define KEYITEM(P,N) ( (NTXITEM*)( (P)->buffer+ *((USHORT*)((P)->buffer+(N)*2+2)) ) )
 
 static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LPKEYINFO pKey, BOOL bExact, BOOL lSeek )
 {
@@ -737,9 +784,9 @@ static BOOL hb_ntxPageReadTopKey( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG ulOffs
       }
       else
       {
-         strcpy( pChildPage->TagParent->CurKeyInfo->key, p->key );
-         pChildPage->TagParent->CurKeyInfo->Xtra = p->rec_no;
-         pChildPage->TagParent->CurKeyInfo->Tag = pChildPage->Page;
+         strcpy( pTag->CurKeyInfo->key, p->key );
+         pTag->CurKeyInfo->Xtra = p->rec_no;
+         pTag->CurKeyInfo->Tag = pChildPage->Page;
          hb_ntxPageRelease( pChildPage );
          return TRUE;
       }
@@ -758,16 +805,15 @@ static BOOL hb_ntxPageReadBottomKey( LPTAGINFO pTag, LPPAGEINFO pPage, ULONG ulO
       hb_ntxPageRelease( pPage );
    if( pChildPage != NULL && pChildPage->uiKeys )
    {
-      p = KEYITEM( pChildPage, pChildPage->uiKeys );
-      ulOffset = p->page;
+      ulOffset = ( KEYITEM( pChildPage, pChildPage->uiKeys ) )->page;
       if( ulOffset )
          return hb_ntxPageReadBottomKey( pTag,pChildPage,ulOffset );
       else
       {
          p = KEYITEM( pChildPage, pChildPage->uiKeys-1 );
-         strcpy( pChildPage->TagParent->CurKeyInfo->key, p->key );
-         pChildPage->TagParent->CurKeyInfo->Xtra = p->rec_no;
-         pChildPage->TagParent->CurKeyInfo->Tag = pChildPage->Page;
+         strcpy( pTag->CurKeyInfo->key, p->key );
+         pTag->CurKeyInfo->Xtra = p->rec_no;
+         pTag->CurKeyInfo->Tag = pChildPage->Page;
          hb_ntxPageRelease( pChildPage );
          return TRUE;
       }
@@ -2666,9 +2712,15 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
                   pPage = hb_ntxPageLoad( pTag->Owner,pTag->CurKeyInfo->Tag );
                   pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
                   hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
+                  if( !pArea->fShared && pTag->keyCount )
+                     pTag->keyCount --;
                }
                if( InIndex )
+               {
                   hb_ntxPageKeyAdd( hb_ntxPageLoad( pTag->Owner,0 ), pKey->key, FALSE );
+                  if( !pArea->fShared && pTag->keyCount )
+                     pTag->keyCount ++;
+               }
                if( pArea->fShared )
                {
                   hb_ntxPageFree( pTag->RootPage,FALSE );
