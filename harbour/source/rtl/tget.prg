@@ -269,7 +269,7 @@ METHOD ParsePict( cPicture ) CLASS Get
       else
          ::lCleanZero := .f.
       endif
-      ::cPicFunc := StrTran(::cPicFunc, "Z", "")
+      ::cPicFunc := StrTran( ::cPicFunc, "Z", "" )
 
       if ::cPicFunc == "@"
          ::cPicFunc := ""
@@ -307,11 +307,15 @@ METHOD ParsePict( cPicture ) CLASS Get
 
          cNum := Str( ::VarGet() )
          if ( nAt := At( iif( ::lDecRev, ",", "." ), cNum ) ) > 0
-            ::cPicMask := Replicate( '9', nAt - 1 ) + iif( ::lDecRev, ",", "." )
-            ::cPicMask += Replicate( '9', Len( cNum ) - Len( ::cPicMask ) )
+            ::cPicMask := Replicate( "9", nAt - 1 ) + iif( ::lDecRev, ",", "." )
+            ::cPicMask += Replicate( "9", Len( cNum ) - Len( ::cPicMask ) )
          else
-            ::cPicMask := Replicate( '9', Len( cNum ) )
+            ::cPicMask := Replicate( "9", Len( cNum ) )
          endif
+
+      case ::type == "C" .and. ::cPicFunc == "@9"
+         ::cPicMask := Replicate( "9", Len( ::VarGet() ) )
+         ::cPicFunc := ""
 
       endcase
 
@@ -340,7 +344,7 @@ METHOD ParsePict( cPicture ) CLASS Get
       endif
    endif
 
-return ::cPicFunc + ' ' + ::cPicMask
+return ::cPicFunc + " " + ::cPicMask
 
 //---------------------------------------------------------------------------//
 
