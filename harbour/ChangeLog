@@ -5,7 +5,9 @@
 
 2000-10-10 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
    * include/hberrors.h
+   * source/compiler/hbgenerr.c
    * source/pp/pplib.c
+   * source/util/hbpp/hbpp.c
      % Changed the two char * parameters for hb_compGenError()
        and hb_compGenWarning() to const char *.
    * source/pp/ppcore.c

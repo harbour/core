@@ -529,7 +529,7 @@ static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
   pPath->szPath = szPath;
 }
 
-void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
+void hb_compGenError( char * _szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
@@ -541,7 +541,7 @@ void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szErr
   exit( EXIT_FAILURE );
 }
 
-void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 

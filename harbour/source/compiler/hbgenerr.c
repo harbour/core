@@ -124,7 +124,7 @@ char * hb_comp_szWarnings[] =
    "4Suspecious return type: \'%s\' expected: \'%s\'"
 };
 
-void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
+void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
    int iLine = hb_comp_iLine - 1;
 
@@ -146,7 +146,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
       exit( EXIT_FAILURE );
 }
 
-void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2)
 {
    char * szText = szWarnings[ iWarning - 1 ];
    int iLine = hb_comp_iLine - 1;
