@@ -53,54 +53,136 @@
 
 /*
  * Copyright 2001 Patrick Mast <email@patrickmast.com>
+ *
+ * 2001-07-15 16:23 GMT+1
  *    Added: Added the <lOnlyUsed> parameter. If profiler is used like
  *           this Profiler(.t.), the profiler.txt will only be filled
  *           with used classes and/or functions.
+ *
+ *  2001-07-16 13:00 GMT+1
+ *    - Removed <lOnlyUsed> parameter
+ *    + Added <cFile> parameter.
+ *    + Added <lAll> parameter
+ *    + Added Cunsumed time in seconds
+ *    * Replaced MemoWrit() function with more controllable f* functions
+ *    + profiler() returns a array with profiler info
+ *
+ *      Profiler()
+ *       => Writes NO info to file, returns Array of profiler info.
+ *          Array only contains USED functions/classes.
+ * 
+ *      Profiler(,.t.)
+ *       => Writes NO info to file, returns Array of profiler info.
+ *          Array only contains ALL functions/classes.
+ *
+ *      Profiler("profiler.txt")
+ *       => Writes profiler info to <profiler.txt> and returns Array of
+ *          profiler info. Array only contains USED functions/classes.
+ *
+ *      Profiler("profiler.txt", .t.)
+ *       => Writes ALL profiler info to <profiler.txt> and returns Array of
+ *          profiler info. Array contains ALL functions/classes.
  */
 
 #define CRLF HB_OsNewLine()
 
-Function Profiler(lOnlyUsed)
+Function Profiler(cFile, lAll)
 LOCAL n, m, cClass, aFunProcInfo, aInfo, aMethodInfo
-LOCAL cText := "          *** Harbour profiler report ***" + CRLF + CRLF + ;
-               "   FUNCTIONS/PROCEDURES      CALLS      CONSUMED TIME" + CRLF + ;
-               "=====================================================" + CRLF
+LOCAL hFile, aProf:={}, cText:=""
 
-   if ValType(lOnlyUsed)#"L" // Put ONLY USED classes/functions in profiler report?
-      lOnlyUsed:=.f.
+   if Upper(ValType(lAll))#"L" // Put ALL classes/functions in profiler report?
+      lAll:=.f.
    endif
 
    for n = __DynSCount() to 1 step - 1 // Number of dynamic symbols on the global
                                        // symbol table. Their names are ordered
                                        // in reverse order.
       if __DynSIsFun( n )              // Is this symbol a function or a procedure ?
+
          aFunProcInfo = __DynSGetPrf( n ) // We get its profiler info
-         IF !lOnlyUsed .or. aFunProcInfo[ 1 ]>0
-            cText += "      " + PadR( __DynSGetName( n ), 20 ) + ;
-                     Str( aFunProcInfo[ 1 ], 7 ) + Str( aFunProcInfo[ 2 ], 17 ) + CRLF
-         ENDIF
+
+         if lAll .or. aFunProcInfo[ 1 ]>0
+
+            if !Empty(cFile)
+               cText += "      " +;
+                        PadR( __DynSGetName( n ), 20 ) + ;
+                        Str( aFunProcInfo[ 1 ], 7 )    + ;
+                        Str( aFunProcInfo[ 2 ], 14 )   + ;
+                        Str( aFunProcInfo[ 2 ]/1000, 11,2 ) + CRLF
+            endif
+
+            Aadd(aProf, {"F"                , ;
+                         __DynSGetName( n ) , ;
+                         aFunProcInfo[ 1 ]  , ;
+                         aFunProcInfo[ 2 ]  , ;
+                         aFunProcInfo[ 2 ]/1000 } )
+
+         endif
       endif
    next
 
-   cText += CRLF + ;
-            "   CLASSES                   CALLS      CONSUMED TIME" + CRLF + ;
-            "=====================================================" + CRLF
+   if !Empty( cFile )
+      cText += CRLF + CRLF + ;
+               "                                     --- CONSUMED TIME ---" + CRLF + ;
+               "   CLASSES                   CALLS   CLOCK TICKS   SECONDS" + CRLF + ;
+               "==========================================================" + CRLF
+   endif
 
    n = 1
    while ! Empty( cClass := __ClassName( n ) )
+
       cText += CRLF + "   CLASS " + cClass + CRLF
       aInfo = ASort( __ClassSel( n ) ) // Retrieves all Class datas and methods names
+
       for m = 1 to Len( aInfo )
+
          if !Empty( aInfo[ m ] )  // why __ClassSel() returns empty strings ?
+
             aMethodInfo = __GetMsgPrf( n, aInfo[ m ] ) // We get its profiler info
-            if !lOnlyUsed .or. aMethodInfo[ 1 ]>0
-               cText += "      " + PadR( aInfo[ m ], 20 ) + Str( aMethodInfo[ 1 ], 7 ) + Str( aMethodInfo[ 2 ], 17 ) + CRLF
+
+            if lAll .or. aMethodInfo[ 1 ]>0
+
+               if !Empty(cFile)
+                  cText += "      " +;
+                           PadR( aInfo[ m ], 20 )      + ;
+                           Str( aMethodInfo[ 1 ], 7 )  + ;
+                           Str( aMethodInfo[ 2 ], 14 ) + ;
+                           Str( aMethodInfo[ 2 ]/1000, 11,2 ) + CRLF
+               endif
+
+               Aadd(aProf, {"C"              , ;
+                            aInfo[ m ]       , ;
+                            aMethodInfo[ 1 ] , ;
+                            aMethodInfo[ 2 ] , ;
+                            aMethodInfo[ 2 ]/1000 } )
+
             endif
          endif
       next
       n++
    end
 
-   MemoWrit( "profiler.txt", cText )
 
-RETURN NIL
+   if !Empty(cFile)
+
+      cText := "              *** Harbour profiler report ***"              + CRLF + CRLF + ;
+               "                                     --- CONSUMED TIME ---" + CRLF + ;
+               "   FUNCTIONS/PROCEDURES      CALLS   CLOCK TICKS   SECONDS" + CRLF + ;
+               "==========================================================" + CRLF + cText
+
+      hFile := FCreate( cFile )
+      if hFile == -1
+         Alert( "ERROR! creating '"+ cFile +"' , O/S Error: " + Str( FError(), 2 ) )
+      endif
+
+      if FWrite(hFile, cText) == len(cText)
+         Fclose(hFile)
+      else
+         Alert("ERROR! writing '"+ cFile +"'")
+         Fclose(hFile)
+      endif
+
+   endif
+
+
+RETURN aProf

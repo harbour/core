@@ -1,3 +1,28 @@
+2001-07-16 13:00 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * source/rtl/profiler.prg
+     - Removed <lOnlyUsed> parameter
+     + Added <cFile> parameter.
+     + Added <lAll> parameter
+     + Added Cunsumed time in seconds
+     * Replaced MemoWrit() function with more controllable f* functions
+     + profiler() returns a array with profiler info
+
+       Profiler()
+        => Writes NO info to file, returns Array of profiler info.
+           Array only contains USED functions/classes.
+
+       Profiler(,.t.)
+        => Writes NO info to file, returns Array of profiler info.
+           Array only contains ALL functions/classes.
+
+       Profiler("profiler.txt")
+        => Writes profiler info to <profiler.txt> and returns Array of
+           profiler info. Array only contains USED functions/classes.
+
+       Profiler("profiler.txt", .t.)
+        => Writes ALL profiler info to <profiler.txt> and returns Array of
+           profiler info. Array contains ALL functions/classes.
+
 2001-07-16 03:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/hvm.c
    * source/vm/macro.c
