@@ -1,3 +1,55 @@
+19990719-03:10 EDT David G. Holm <dholm@jsd-llc.com>
+  * config/os2/icc.cf
+    + Added /Gs+ option to enable runtime stack checking
+  * include/dates.h
+    + Added prototype for hb_dow()
+  * include/gtapi.h
+    + Added prototype for hb_gtExit()
+  * include/set.h
+    + Added prototype for hb_setColor()
+    * Changed hb_set.HB_SET_COLOR from char * to char[64]
+  * source/compiler/harbour.y
+    * Replaced _StdFunc table with new table supplied by Jose Lalin,
+      while keeping the entry for SET that Paul Tucker had CVSed
+  * source/hbpp/hbpp.c
+    * Made mpatt and rpatt buffers in ParseCommand() static.
+  * source/hbpp/hbppint.c
+    * Allocate sBuffer in Hp_Parse() using _xgrab() (and
+      release with _xfree() before exiting)
+  * source/rtl/console.c
+    + Added call to hb_gtInit() to InitializeConsole()
+    - Removed all gt...() calls from InitializeConsole()
+  * source/rtl/gtapi.c
+    + Added gt...() calls that used to be in InitializeConsole()
+      to hb_gtInit() and also added a call to gtInit()
+    * Renamed hb_gtexit() to hb_gtExit() to match Harbour style
+    * Converted three // style comments to /* style comments */
+  * source/rtl/set.c
+    * Simplified handling of HB_SET_COLOR by just calling hb_setColor()
+    * Made changes related to hb_set.HB_SET_COLOR now being char[64]
+  * source/rtl/setcolor.c
+    + Added #include <set.h>
+    * Replaced gt prototypes with #include <gtapi.h>
+    * Changed hb_SetColor() to hb_setColor() to match Harbour style
+    * Changed hb_setColor() to use hb_set.HB_SET_COLOR instead of
+      allocating a buffer and requiring the caller to free the buffer
+    + Added conditional logic for not using the GT API
+  * source/rtl/gt/gtwin.c
+    - Removed call to hb_gtInit()
+  * source/tools/dates2.c
+    + Added #include <dates.h>
+    ! Added missing semicolon to HB_INIT_SYMBOLS_END()
+    - Removed prototypes for hb_dow() and hb_dateDecode()
+  * tests/working/Makefile
+    - Removed strings4.prg
+    + Added tstcolor.prg
+  * tests/working/empty.prg
+    - Removed call to empty() with no parameters, because
+      it now results in a compile error
+  - tests/working/string4.prg
+    - Removed this test program, because Harbour now checks for
+      the correct number of arguments when compiling
+
 19990719-00:55 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/set.c
     * Trap for NIL param in Set( _SET_SETCOLOR, NIL )

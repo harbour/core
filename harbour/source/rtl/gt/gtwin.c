@@ -51,7 +51,6 @@ void gtInit(void)
   LOG("Initializing");
   HInput = GetStdHandle(STD_INPUT_HANDLE);
   HOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-  hb_gtInit();  /* in ..\gtapi.c */
 }
 
 HARBOUR GTINIT( void )

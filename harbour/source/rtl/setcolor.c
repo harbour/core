@@ -24,23 +24,40 @@
 
 #include "pcode.h"
 #include <init.h>
+#include <set.h>
+#ifdef HARBOUR_USE_GTAPI
+ #include <gtapi.h>
+#else
+ static char old_string[ sizeof( hb_set.HB_SET_COLOR ) ];
+#endif
 
-int hb_gtSetColorStr(char * fpColorString);
-int hb_gtGetColorStr(char * fpColorString);
-void hb_gtexit(void);
+/* From strings.c */
+char *hb_strUpper(char *szText, long lLen);
 
-char *hb_SetColor( char *sColor )
+char *hb_setColor( char *sColor )
 {
-    char *color;
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtGetColorStr( hb_set.HB_SET_COLOR );
+#else
+   strncpy (old_string, hb_set.HB_SET_COLOR, sizeof( hb_set.HB_SET_COLOR ) );
+   old_string[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
+#endif
 
-    color = (char *)hb_xgrab( 256 );
-    hb_gtGetColorStr( color );
-
-    if( sColor )
-       hb_gtSetColorStr( sColor );
-
-    /* The caller is responsible for releasing this */
-    return (char *)hb_xrealloc( color, strlen( color )+1 );
+   if( sColor )
+   {
+   #ifdef HARBOUR_USE_GTAPI  
+      hb_gtSetColorStr( sColor );
+   #else
+      strncpy (hb_set.HB_SET_COLOR, sColor, sizeof( hb_set.HB_SET_COLOR ) );
+      hb_set.HB_SET_COLOR[ sizeof( hb_set.HB_SET_COLOR ) - 1 ] = 0;
+      hb_strUpper( hb_set.HB_SET_COLOR, strlen( hb_set.HB_SET_COLOR ) );
+   #endif
+  }
+#ifdef HARBOUR_USE_GTAPI  
+   return hb_set.HB_SET_COLOR;
+#else
+   return old_string;
+#endif
 }
 
 HARBOUR HB_SETCOLOR( void );
@@ -56,15 +73,14 @@ HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 
 HARBOUR HB_SETCOLOR( void )
 {
-    char *color;
-
-    hb_retc( color = hb_SetColor( hb_pcount() == 1 ? hb_parc(1) : NULL ) );
-    hb_xfree( color );
+    hb_retc( hb_setColor( hb_pcount() ? hb_parc(1) : NULL ) );
 }
 
 /* TODO: This is a temporary fix  - Call it on exit if you use SetColor() */
 
 HARBOUR HB_GTEXIT( void )
 {
-   hb_gtexit();
+#ifdef HARBOUR_USE_GTAPI
+   hb_gtExit();
+#endif
 }

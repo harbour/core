@@ -49,6 +49,7 @@
 /* Public interface. These should never change, only be added to. */
 
 void   hb_gtInit(void);
+void   hb_gtExit(void);
 int    hb_gtBox(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char * fpBoxString);
 int    hb_gtBoxD(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);
 int    hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight);

@@ -6,12 +6,18 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.25   19990718   dholm     Moved calls to various gtFunctions out of
+ *                             InitializeConsole() in console.c and put
+ *                             them in hb_gtInit() in this module. Use
+ *                             hb_set.HB_SET_COLOR to initialize the GT
+ *                             API color string. Converted // comments.
  * 1.24   19990718   ptucker   corrected returned color strings so ordering
  *                             is the same as clipper.
  * 1.23   19990718   ptucker   implimented surface for gtGet/SetColorStr()
  *                             changed to allow unlimited color pairs.
  */
 
+#include <set.h>
 #include <gtapi.h>
 
 /* TODO: functions not implemented yet
@@ -25,7 +31,6 @@ static USHORT s_uiCurrentRow = 0;
 static USHORT s_uiCurrentCol = 0;
 static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
-static char   s_szColorStr[CLR_STRLEN] = {"W/N, N/W, N/N, N/N, N/W"};
 
 int *_Color;
 int _ColorCount;
@@ -34,12 +39,14 @@ int _ColorCount;
 
 void hb_gtInit(void)
 {
+    gtInit();
+    hb_gtSetPos( gtWhereY(), gtWhereX() );
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
-    hb_gtSetColorStr( s_szColorStr );
+    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 }
 
-void hb_gtexit(void)
+void hb_gtExit(void)
 {
     hb_xfree( _Color );
 }
@@ -210,7 +217,7 @@ int hb_gtSetColorStr(char * fpColorString)
             case '*':
                 nBack  |= 128;
                 break;
-            case 'I':			// =N/W
+            case 'I':			/* =N/W */
                 if( npos == _ColorCount )
                 {
                    _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(npos +1) );
@@ -220,7 +227,7 @@ int hb_gtSetColorStr(char * fpColorString)
                 nBack = nColor = 0;
                 nSkip = 1;
                 break;
-            case 'X':			// always sets forground to 'N'
+            case 'X':			/* always sets forground to 'N' */
                 nColor=0;
                 break;
             case ',':
@@ -251,7 +258,7 @@ int hb_gtGetColorStr(char * fpColorString)
     char *sColors;
     int i,j=0,k = 0, nColor;
 
-    sColors = (char *)hb_xgrab( _ColorCount * 8 + 1 ); // max possible
+    sColors = (char *)hb_xgrab( _ColorCount * 8 + 1 ); /* max possible */
 
     for( i=0; i<_ColorCount; i++ )
     {

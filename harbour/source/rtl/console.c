@@ -138,10 +138,8 @@ HB_CALL_ON_STARTUP_BEGIN( InitializeConsole )
 #endif
 
 #ifdef HARBOUR_USE_GTAPI
-   gtInit();
-   dev_row = gtWhereY();
-   dev_col = gtWhereX();
-   hb_gtSetPos( dev_row, dev_col );
+   hb_gtInit();
+   hb_gtGetPos( &dev_row, & dev_col);
 #else
    dev_row = 0;
    dev_col = 0;

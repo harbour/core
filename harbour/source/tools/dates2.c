@@ -42,6 +42,7 @@
 #include <itemapi.h>
 #include <ctype.h>
 #include <time.h>
+#include <dates.h>
 
 HARBOUR HB_ADAYS(void);
 HARBOUR HB_AMONTHS(void);
@@ -67,15 +68,10 @@ HB_INIT_SYMBOLS_BEGIN( Dates2__InitSymbols )
 { "ISLEAPYEAR",    FS_PUBLIC, HB_ISLEAPYEAR    , 0 },
 { "WOM",           FS_PUBLIC, HB_WOM           , 0 },
 { "WOY",           FS_PUBLIC, HB_WOY           , 0 }
-HB_INIT_SYMBOLS_END( Dates2__InitSymbols )
+HB_INIT_SYMBOLS_END( Dates2__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup Dates2__InitSymbols
 #endif
-
-
-/* In dates.c module */
-void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
-long hb_dow( long d, long m, long y );
 
 /* In msgxxx.c modules */
 extern char *hb_monthsname[];

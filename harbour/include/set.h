@@ -29,6 +29,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.47   David G. Holm               Changed hb_set.HB_SET_COLOR to be a
+                                        fixed 64 byte buffer. Added prototype
+                                        for hb_setColor()
    V 1.14   David G. Holm               Removed the obsolete hb_set_fixed
                                         and HB_SETFIXED(), which I should
                                         have done when I took HB_SETFIXED()
@@ -62,6 +65,7 @@
 
 HARBOUR HB_SET (void);
 HARBOUR HB_SETCENTURY (void);
+char * hb_setColor (char *);
 void hb_setInitialize (void);
 void hb_setRelease (void);
 
@@ -134,7 +138,7 @@ typedef struct
    char *HB_SET_ALTFILE;    /* Character */
    BOOL HB_SET_BELL;        /* Logical */
    BOOL HB_SET_CANCEL;      /* Logical */
-   char *HB_SET_COLOR;      /* Character */
+   char HB_SET_COLOR[ 64 ]; /* Character */
    BOOL HB_SET_CONFIRM;     /* Logical */
    BOOL HB_SET_CONSOLE;     /* Logical */
    HB_cursor_enum  HB_SET_CURSOR;      /* Numeric */

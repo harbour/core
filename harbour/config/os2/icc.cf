@@ -13,7 +13,7 @@ CC = icc
 CC_IN = /C+ /Tp
 CC_OUT = /Fo
 CPPFLAGS = /I$(GRANDP) /I$(HB_INC_COMPILE) /DHARBOUR_USE_GTAPI /DHARBOUR_USE_OS2_GTAPI
-CFLAGS = /W2 /Se /Sd+ /Ti+
+CFLAGS = /Gs+ /W2 /Se /Sd+ /Ti+
 
 LD = icc
 LD_OUT = /Fe

@@ -142,7 +142,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
 
 int Hp_Parse( FILE* handl_i, FILE* handl_o )
 {
- char sBuffer[BUFF_SIZE];           /* File read buffer */
+ char *sBuffer = (char *)_xgrab( BUFF_SIZE );           /* File read buffer */
  char *ptr;
  int lContinue = 0;
  int iBuffer = 10, lenBuffer = 10;
@@ -177,6 +177,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
    }
   }
  }
+ _xfree( sBuffer );
  return 0;
 }
 

@@ -383,8 +383,8 @@ int TraSearch(char *cmdname, int ncmd)
 
 int ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
 {
+ static char mpatt[STR_SIZE], rpatt[STR_SIZE];
  char cmdname[MAX_NAME];
- char mpatt[STR_SIZE], rpatt[STR_SIZE];
  int mlen,rlen;
  int ipos, rez;
 

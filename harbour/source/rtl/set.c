@@ -29,6 +29,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.48   David G. Holm               Simplified SET_COLOR handling.
+                                        Made changes to deal with the 
+                                        hb_set.HB_SET_COLOR string having
+                                        a fixed 64 byte size.
    V 1.46   Paul Tucker                 Modifed SetColor handling.
    V 1.43   David G. Holm               Removed the obsolete hb_set_fixed,
                                         which I should have done when I took
@@ -173,7 +177,6 @@ BOOL hb_set_century;
 int hb_set_althan;
 int hb_set_extrahan;
 int hb_set_printhan;
-char *hb_SetColor( char *sColor );
 
 HARBOUR HB_SET( void );
 HARBOUR HB___SETCENTURY( void );
@@ -666,13 +669,7 @@ HARBOUR HB_SET (void)
          if (args > 1) hb_set.HB_SET_CANCEL = set_logical (pArg2);
          break;
       case HB_SET_COLOR      :
-/*
-         if (hb_set.HB_SET_COLOR) hb_retc (hb_set.HB_SET_COLOR);
-         else hb_retc ("");
-         if (args > 1) hb_set.HB_SET_COLOR = set_string (pArg2, hb_set.HB_SET_COLOR);
-*/
-         if (hb_set.HB_SET_COLOR) hb_xfree(hb_set.HB_SET_COLOR );
-         hb_retc( hb_set.HB_SET_COLOR = hb_SetColor( args>1 ? IS_NIL(pArg2) ? "" : pArg2->item.asString.value : (char *)0));
+         hb_retc( hb_setColor( args ? pArg2->item.asString.value : (char *)0) );
          break;
       case HB_SET_CONFIRM    :
          hb_retl (hb_set.HB_SET_CONFIRM);
@@ -899,8 +896,8 @@ void hb_setInitialize (void)
    hb_set.HB_SET_ALTFILE = 0;      /* NULL pointer */
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
-   hb_set.HB_SET_COLOR = (char*)hb_xgrab (20UL);
-   memcpy (hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", 20);
+   strncpy (hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", sizeof ( hb_set.HB_SET_COLOR ) );
+   hb_set.HB_SET_COLOR[ sizeof ( hb_set.HB_SET_COLOR ) - 1 ] = 0;
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
    hb_set.HB_SET_CURSOR = SC_NORMAL;
@@ -951,8 +948,6 @@ void hb_setRelease (void)
 
    if (hb_set.HB_SET_ALTFILE)
       hb_xfree (hb_set.HB_SET_ALTFILE);
-   if (hb_set.HB_SET_COLOR)
-      hb_xfree (hb_set.HB_SET_COLOR);
    if (hb_set.HB_SET_DATEFORMAT)
       hb_xfree (hb_set.HB_SET_DATEFORMAT);
    if (hb_set.HB_SET_DEFAULT)

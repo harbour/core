@@ -89,7 +89,6 @@ PRG_SOURCES=\
 	strings.prg \
 	strings2.prg \
 	strings3.prg \
-	strings4.prg \
 	strip.prg \
 	syserror.prg \
 	t1.prg \
@@ -108,6 +107,7 @@ PRG_SOURCES=\
 	testtok.prg \
 	testvars.prg \
 	testwarn.prg \
+	tstcolor.prg \
 	transfrm.prg \
 	val.prg \
 	version.prg \
