@@ -1,3 +1,7 @@
+19991111-10:45 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/fm.c
+    ! Two casts added to hb_xrealloc().
+
 19991111-06:02 GMT+1 Victor Szel <info@szelvesz.hu>
   + source/rtl/dbedit.prg
     source/rtl/dummy.prg

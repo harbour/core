@@ -249,9 +249,9 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       ( ( PHB_MEMINFO ) pMem )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pMem;
 
    if( s_pFirstBlock == pMemBlock )
-      s_pFirstBlock = pMem;
+      s_pFirstBlock = ( PHB_MEMINFO ) pMem;
    if( s_pLastBlock == pMemBlock )
-      s_pLastBlock = pMem;
+      s_pLastBlock = ( PHB_MEMINFO ) pMem;
 
    return ( char * ) pMem + sizeof( HB_MEMINFO );
 
