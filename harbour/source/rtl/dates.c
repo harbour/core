@@ -61,15 +61,6 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-/* NOTE: OS_UNIX_COMPATIBLE can be defined in file included from hbapi.h 
- * then checking have to be placed after hbapi.h
-*/
-#if defined( OS_UNIX_COMPATIBLE )
-   #include <sys/timeb.h>
-#else
-   #include <sys\timeb.h>
-#endif
-
 long hb_dateEncode( long lYear, long lMonth, long lDay )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dateEncode(%ld, %ld, %ld)", lYear, lMonth, lDay));

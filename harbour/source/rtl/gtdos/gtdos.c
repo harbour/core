@@ -79,7 +79,6 @@
 
 #if defined(__DJGPP__)
    #include <pc.h>
-   #define outport outportw
    #include <sys\exceptn.h>
    #include <sys\farptr.h>
 #elif defined(_MSC_VER)
@@ -1178,7 +1177,13 @@ USHORT hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar,
 #define INT_VIDEO    0x10
 
 #if defined(__DJGPP__)
-   #define POKE_BYTE( s, o, b )  /* Do nothing */
+   #define POKE_BYTE( s, o, b ) /* Do nothing */
+   #define outport outportw     /* Use correct function name */
+#elif defined(__RSX32__)
+   #define inportb( p ) 0       /* Return 0 */
+   #define outport( p, w )      /* Do nothing */
+   #define outportb( p, b )     /* Do nothing */
+   #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
 #else
    #define POKE_BYTE( s, o, b )  (*((BYTE FAR *)MK_FP((s),(o)) )=(BYTE)(b))
 #endif
