@@ -1136,14 +1136,15 @@ HB_FUNC( DBCOMMIT )
 
 HB_FUNC( DBCOMMITALL )
 {
-   LPAREANODE pAreaNode;
+   LPAREANODE pAreaNode = s_pCurrArea;
 
-   pAreaNode = s_pWorkAreas;
-   while( pAreaNode )
+   s_pCurrArea = s_pWorkAreas;
+   while( s_pCurrArea )
    {
-      SELF_FLUSH( ( AREAP ) pAreaNode->pArea );
-      pAreaNode = pAreaNode->pNext;
+      SELF_FLUSH( ( AREAP ) s_pCurrArea->pArea );
+      s_pCurrArea = s_pCurrArea->pNext;
    }
+   s_pCurrArea = pAreaNode;
 }
 
 HB_FUNC( __DBCONTINUE )
@@ -1862,14 +1863,15 @@ HB_FUNC( DBUNLOCK )
 
 HB_FUNC( DBUNLOCKALL )
 {
-   LPAREANODE pTempArea;
+   LPAREANODE pTempArea = s_pCurrArea;
 
-   pTempArea = s_pWorkAreas;
-   while( pTempArea )
+   s_pCurrArea = s_pWorkAreas;
+   while( s_pCurrArea )
    {
-      SELF_UNLOCK( ( AREAP ) pTempArea->pArea, 0 );
-      pTempArea = pTempArea->pNext;
+      SELF_UNLOCK( ( AREAP ) s_pCurrArea->pArea, 0 );
+      s_pCurrArea = s_pCurrArea->pNext;
    }
+   s_pCurrArea = pTempArea;
 }
 
 HB_FUNC( DBUSEAREA )

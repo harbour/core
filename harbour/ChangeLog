@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! reverted changes to hb_dbfGoTo
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed bug with bof flag
+
 2002-02-04 22:20 UTC-0300 Luiz Rafael Culik <culik@sl.conex.net
    * utils/hbmake/hbmake.prg
      * Minor fix
