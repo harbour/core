@@ -124,6 +124,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\memvars.obj \
     $(OBJ_DIR)\menuto.obj \
     $(OBJ_DIR)\mlcount.obj \
+    $(OBJ_DIR)\mlpos.obj \
     $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\natmsg.obj \
@@ -181,11 +182,15 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\datesx.obj \
     $(OBJ_DIR)\fileread.obj \
     $(OBJ_DIR)\hb_f.obj \
+    $(OBJ_DIR)\html.obj \
     $(OBJ_DIR)\io.obj \
     $(OBJ_DIR)\mathx.obj \
     $(OBJ_DIR)\nconvert.obj \
+    $(OBJ_DIR)\ng.obj \
     $(OBJ_DIR)\numtxten.obj \
     $(OBJ_DIR)\numtxthu.obj \
+    $(OBJ_DIR)\os2.obj \
+    $(OBJ_DIR)\rtf.obj \
     $(OBJ_DIR)\strasint.obj \
     $(OBJ_DIR)\strcount.obj \
     $(OBJ_DIR)\strcspn.obj \
@@ -196,7 +201,12 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\stringsx.obj \
     $(OBJ_DIR)\strleft.obj \
     $(OBJ_DIR)\strpbrk.obj \
-    $(OBJ_DIR)\strright.obj
+    $(OBJ_DIR)\strright.obj \
+    $(OBJ_DIR)\troff.obj
+
+#
+# OBJ list for macro.lib. Add new ones as needed
+#
 
 MACRO_LIB_OBJS = \
     $(OBJ_DIR)\macrol.obj \
@@ -636,6 +646,9 @@ $(OBJ_DIR)\menuto.obj : $(RTL_DIR)\menuto.c
 $(OBJ_DIR)\mlcount.obj : $(RTL_DIR)\mlcount.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\mlpos.obj : $(RTL_DIR)\mlpos.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -892,6 +905,12 @@ $(OBJ_DIR)\fileread.obj : $(TOOLS_DIR)\fileread.c
 $(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(TOOLS_DIR)\html.c : $(TOOLS_DIR)\html.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\html.obj : $(TOOLS_DIR)\html.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\io.obj : $(TOOLS_DIR)\io.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -904,6 +923,12 @@ $(TOOLS_DIR)\nconvert.c : $(TOOLS_DIR)\nconvert.prg
 $(OBJ_DIR)\nconvert.obj : $(TOOLS_DIR)\nconvert.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(TOOLS_DIR)\ng.c : $(TOOLS_DIR)\ng.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\ng.obj : $(TOOLS_DIR)\ng.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(TOOLS_DIR)\numtxten.c : $(TOOLS_DIR)\numtxten.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
@@ -914,6 +939,18 @@ $(TOOLS_DIR)\numtxthu.c : $(TOOLS_DIR)\numtxthu.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\numtxthu.obj : $(TOOLS_DIR)\numtxthu.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(TOOLS_DIR)\os2.c : $(TOOLS_DIR)\os2.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\os2.obj : $(TOOLS_DIR)\os2.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(TOOLS_DIR)\rtf.c : $(TOOLS_DIR)\rtf.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\rtf.obj : $(TOOLS_DIR)\rtf.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strasint.obj : $(TOOLS_DIR)\strasint.c
@@ -950,6 +987,12 @@ $(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(TOOLS_DIR)\troff.c : $(TOOLS_DIR)\troff.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\troff.obj : $(TOOLS_DIR)\troff.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #

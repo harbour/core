@@ -1,3 +1,11 @@
+20000126-23:59 EST Paul Tucker <ptucker@sympatico.ca>
+  * makefile.vc
+    + source/tools/ng.prg
+    + source/tools/os2.prg
+    + source/tools/html.prg
+    + source/tools/rtf.prg
+    + source/tools/troff.prg
+
 20000126-21:41 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * include/hbver.c
      * Bumped build to 31 and updated date
