@@ -104,12 +104,13 @@ CLASS TDebugger
    DATA   cImage
    DATA   lEnd
    DATA   cAppImage, nAppRow, nAppCol, cAppColors, nAppCursor
-   DATA   aBreakPoints, aCallStack
+   DATA   aBreakPoints, aCallStack, aLastCommands, nCommand
    DATA   lGo
    DATA   cClrDialog
 
    METHOD New()
    METHOD Activate( cModuleName )
+   METHOD EnableCommand()
    METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
    METHOD Go() INLINE ::RestoreAppStatus(), ::lGo := .t., DispEnd(), ::Exit()
@@ -134,44 +135,6 @@ CLASS TDebugger
 
 ENDCLASS
 
-static function EnableCommand( oWndCommand )
-
-   local lExit := .f.
-   local cCommand, cResult
-
-   Set( _SET_SCOREBOARD, .f. )
-   SetKey( K_TAB, { || lExit := .t., SetKey( K_TAB, nil ),;
-                    __Keyboard( Chr( K_ESC ) + Chr( K_TAB ) ) } )
-
-   while ! lExit
-      @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 1 SAY "> " ;
-         COLOR oWndCommand:cColor
-      cCommand = Space( oWndCommand:nRight - oWndCommand:nLeft - 3 )
-      cResult = ""
-      @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 3 GET cCommand ;
-         COLOR oWndCommand:cColor + "," + oWndCommand:cColor + "," + ;
-         oWndCommand:cColor
-      READ
-
-      if LastKey() == K_ENTER
-         oWndCommand:ScrollUp( 1 )
-         if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
-            cResult = &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) )
-         else
-            cResult = "Command error"
-         endif
-         @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 1 SAY ;
-            Space( oWndCommand:nRight - oWndCommand:nLeft - 1 ) ;
-            COLOR oWndCommand:cColor
-         @ oWndCommand:nBottom - 1, oWndCommand:nLeft + 3 SAY cResult ;
-            COLOR oWndCommand:cColor
-         oWndCommand:ScrollUp( 1 )
-
-      endif
-   end
-
-return nil
-
 METHOD New() CLASS TDebugger
 
    ::aWindows       = {}
@@ -181,8 +144,10 @@ METHOD New() CLASS TDebugger
    ::oWndCode       = TDbWindow():New( 1, 0, MaxRow() - 6, MaxCol(),, "BG+/B" )
    ::oWndCommand    = TDbWindow():New( MaxRow() - 5, 0, MaxRow() - 1, MaxCol(),;
                                        "Command", "BG+/B" )
-   ::oWndCommand:bGotFocus  = { || EnableCommand( ::oWndCommand ) }
+   ::oWndCommand:bGotFocus  = { || ::EnableCommand() }
    ::oWndCommand:bLostFocus = { || SetCursor( 0 ) }
+   ::aLastCommands = {}
+   ::nCommand = 0
 
    ::lEnd           = .f.
    ::aBreakPoints   = {}
@@ -206,6 +171,54 @@ METHOD Activate( cModuleName ) CLASS TDebugger
    ::ShowCallStack()
    ::ShowVars()
    ::RestoreAppStatus()
+
+return nil
+
+METHOD EnableCommand() CLASS TDebugger
+
+   local lExit := .f.
+   local cCommand, cResult
+   local bRestoreKeys := { || SetKey( K_SH_TAB, nil ), SetKey( K_TAB, nil ),;
+                              SetKey( K_UP, nil ) }
+
+   Set( _SET_SCOREBOARD, .f. )
+   SetKey( K_SH_TAB, { || lExit := .t., Eval( bRestoreKeys ),;
+                  __Keyboard( Chr( K_ESC ) + Chr( K_SH_TAB ) ) } )
+   SetKey( K_TAB, { || lExit := .t., Eval( bRestoreKeys ),;
+                    __Keyboard( Chr( K_ESC ) + Chr( K_TAB ) ) } )
+   SetKey( K_UP, { || If( ::nCommand > 0, ( GetList[ 1 ]:VarPut( ::aLastCommands[ ;
+                   ::nCommand ] ), GetList[ 1 ]:Display(),;
+                   If( ::nCommand > 1, ::nCommand--, nil ) ), nil ) } )
+
+   while ! lExit
+      @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY "> " ;
+         COLOR ::oWndCommand:cColor
+      cCommand = Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 3 )
+      cResult = ""
+      @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 GET cCommand ;
+         COLOR Replicate( ::oWndCommand:cColor + ",", 5 )
+      SetCursor( 1 )
+      READ
+      SetCursor( 0 )
+
+      if LastKey() == K_ENTER
+         AAdd( ::aLastCommands, cCommand )
+         ::nCommand++
+         ::oWndCommand:ScrollUp( 1 )
+         if SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+            cResult = ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+         else
+            cResult = "Command error"
+         endif
+         @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1 SAY ;
+            Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ) ;
+            COLOR ::oWndCommand:cColor
+         @ ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 SAY cResult ;
+            COLOR ::oWndCommand:cColor
+         ::oWndCommand:ScrollUp( 1 )
+
+      endif
+   end
 
 return nil
 
@@ -661,14 +674,30 @@ static function SetsKeyPressed( nKey, oBrwSets, nSets, oWnd )
       case nKey == K_UP
            if oBrwSets:Cargo > 1
               oBrwSets:Cargo--
+              SetsUp( oBrwSets )
            endif
-           SetsUp( oBrwSets )
 
       case nKey == K_DOWN
            if oBrwSets:Cargo < nSets
               oBrwSets:Cargo++
+              SetsDown( oBrwSets )
            endif
-           SetsDown( oBrwSets )
+
+      case nKey == K_HOME
+           if oBrwSets:Cargo > 1
+              oBrwSets:Cargo = 1
+              oBrwSets:GoTop()
+              oBrwSets:RefreshAll()
+              oBrwSets:ForceStable()
+           endif
+
+      case nKey == K_END
+           if oBrwSets:Cargo < nSets
+              oBrwSets:Cargo = nSets
+              oBrwSets:GoBottom()
+              oBrwSets:RefreshAll()
+              oBrwSets:ForceStable()
+           endif
    endcase
 
    if nSet != oBrwSets:Cargo
@@ -1408,6 +1437,9 @@ static function ValToStr( uVal )
    local cResult := "U"
 
    do case
+      case uVal == nil
+           cResult = "NIL"
+
       case cType == "A"
            cResult = "{ ... }"
 
