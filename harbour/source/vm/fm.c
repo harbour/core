@@ -262,7 +262,10 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
 
 #else
 
-   pMem = malloc( ulSize );
+   #define ALIGN_SIZE       sizeof (double)
+   #define RESERVE_SIZE     (((sizeof (ulSize) + (ALIGN_SIZE - 1)) \
+                                             / ALIGN_SIZE) * ALIGN_SIZE)
+   pMem = malloc( ulSize + RESERVE_SIZE );
 
    if( ! pMem )
       hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );

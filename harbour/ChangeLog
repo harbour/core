@@ -7,6 +7,13 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+       /n1 = no implicit proc and no startup proc
+       /n- = generates implicit procedure
+       Note: Previously, Harbour did not create (implicit )starting procedure
+             when we did not supply /n, fixed. Now compiling prg without /n
+             creates (implicit) starting procedure.
+   * source/compiler/genc.c
+     ! Change routine for embedding HB_FS_FIRST to generated C-codes
        to conform with the new startup generation routines
    * source/compiler/harbour.c
      + BOOL hb_comp_bNoStartUp = FALSE, initialization for option to create
