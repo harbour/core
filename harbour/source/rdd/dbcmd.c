@@ -1306,6 +1306,7 @@ HB_FUNC( DBCREATE )
       return;
    }
 
+   hb_xfree( szFileName );
    if( !bOpen )
    {
       hb_rddReleaseCurrentArea();
@@ -1327,7 +1328,9 @@ HB_FUNC( DBCREATE )
       ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = lprfsHost;
       ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
       SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
-      pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+      //pInfo.abName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+      szFileName = ( BYTE * )  hb_xgrab( _POSIX_PATH_MAX + 1 );
+      pInfo.abName = szFileName;
       strcpy( ( char * ) pInfo.abName, szSavedFileName );
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       ( ( AREAP ) s_pCurrArea->pArea )->uiArea = s_uiCurrArea;
@@ -1338,9 +1341,10 @@ HB_FUNC( DBCREATE )
       }
       else
          hb_retl( TRUE );
-      hb_xfree( pInfo.abName );
+      //hb_xfree( pInfo.abName );
+      hb_xfree( szFileName );
    }
-   hb_xfree( szFileName );
+   //hb_xfree( szFileName );
 }
 
 HB_FUNC( DBDELETE )
@@ -3647,5 +3651,4 @@ HB_FUNC( __DBCOPY )
                      ISCHAR( 8 ) ? hb_parc( 8 ) : NULL ); /* RDD */
   }
 }
-
 
