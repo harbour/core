@@ -21,6 +21,7 @@
     * hb_arrayGetCPtr() now calls hb_itemGetCPtr() instead of using redundant
       code.
     + hb_arrayGetC() added keep it in sync with the Item API.
+    + hb_arrayCopyC() added keep it in sync with the Item API.
     % Further simplified the hb_arrayGet*()/hb_arraySet()/+some more functions.
   * source/rdd/dbcmd.c
     funclist.txt
