@@ -402,6 +402,7 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    {
       case FM_BINARY:
          _setmode( hFileHandle, _O_BINARY );
+         break;
 
       case FM_TEXT:
          _setmode( hFileHandle, _O_TEXT );

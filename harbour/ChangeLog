@@ -1,4 +1,21 @@
-19990914-17:40 EDT David G. Holm <dholm@jsd-llc.com>
+19990916-02:25 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/compiler/symbols.asm (removed)
+    source/vm/symbols.asm (added)
+    makefile.b31
+    * Moved to VM since it belongs there.
+  * source/rtl/filesys.c
+    ! Added missing break; to hb_fsSetDevMode()/_MSC_VER branch.
+  * source/tools/hb_f.c
+    source/vm/*.c
+    source/compiler/*.c
+    source/compiler/harbour.l
+    source/compiler/harbour.y   
+    * Copyright text changed to the newer version.
+  * source/compiler/harbour.y
+    ! One buggy error message text fixed (%i format specifier removed).
+
+19990915-17:40 EDT David G. Holm <dholm@jsd-llc.com>
 
   * include/itemapi.h
   * source/rtl/itemapi.c
