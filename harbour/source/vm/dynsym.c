@@ -188,6 +188,16 @@ PHB_DYNS hb_dynsymFind( char * szName )
    return 0;
 }
 
+void hb_dynsymEval( PHB_DYNS_FUNC pFunction )
+{
+   BOOL bCont = TRUE;
+   WORD i;
+
+   for( i=0; i < wDynSymbols && bCont; i++ )
+      bCont =(pFunction)( pDynItems[ i ].pDynSym );
+}
+
+
 void hb_dynsymRelease( void )
 {
    WORD w;

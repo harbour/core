@@ -32,13 +32,6 @@
 /* Harbour virtual machine functions */
 extern void    hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 extern void    hb_vmProcessSymbols( PHB_SYMB pSymbols, WORD wSymbols ); /* statics symbols initialization */
-#ifdef HARBOUR_OBJ_GENERATION
-extern void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
-#endif
-extern void    hb_vmDoInitStatics( void ); /* executes all _INITSTATICS functions */
-extern void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
-extern void    hb_vmDoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
-extern void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
 /* PCode functions */
 extern void    hb_vmAnd( void );             /* performs the logical AND on the latest two values, removes them and leaves result on the stack */

@@ -300,6 +300,7 @@ extern PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol ); /* creates a new dynamic symbo
 extern PHB_DYNS hb_dynsymFind( char * szName );   /* finds a dynamic symbol */
 extern void     hb_dynsymLog( void );             /* displays all dynamic symbols */
 extern void     hb_dynsymRelease( void );         /* releases the memory of the dynamic symbol table */
+extern void     hb_dynsymEval( PHB_DYNS_FUNC );   /* enumerates all dynamic symbols */
 
 /* Symbol management */
 extern PHB_SYMB hb_symbolNew( char * szName );
@@ -322,7 +323,6 @@ extern void     hb_memvarValueDecRef( HB_HANDLE );
 extern void     hb_memvarSetValue( PHB_SYMB, HB_ITEM_PTR );
 extern void     hb_memvarGetValue( HB_ITEM_PTR, PHB_SYMB );
 extern void     hb_memvarGetRefer( HB_ITEM_PTR, PHB_SYMB );
-extern void     hb_memvarNewSymbol( PHB_SYMB );
 extern ULONG    hb_memvarGetPrivatesBase( void );
 extern void     hb_memvarSetPrivatesBase( ULONG );
 

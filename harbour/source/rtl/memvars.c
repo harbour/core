@@ -552,6 +552,8 @@ static void hb_memvarReleaseWithMask( char *szMask, BOOL bInclude )
    }
 }
 
+/* This function checks the scope of passed variable
+ */
 static int hb_memvarScope( char *szVarName, ULONG ulLength )
 {
    int iMemvar = MV_ERROR;
@@ -594,6 +596,18 @@ static int hb_memvarScope( char *szVarName, ULONG ulLength )
 
    return iMemvar;
 }
+
+static HB_DYNS_FUNC( hb_memvarClear )
+{
+   if( pDynSymbol->hMemvar )
+   {
+      _globalTable[ pDynSymbol->hMemvar ].counter = 1;
+      hb_memvarValueDecRef( pDynSymbol->hMemvar );
+      pDynSymbol->hMemvar =0;
+   }
+   return TRUE;
+}
+
 
 /* ************************************************************************** */
 
@@ -886,7 +900,7 @@ HARBOUR HB___MVRELEASE( void )
 
          if( pMask->item.asString.value[ 0 ] == '*' )
             bIncludeVar =TRUE;   /* delete all memvar variables */
-         hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );	 
+         hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
       }
    }
 }
@@ -964,4 +978,38 @@ HARBOUR HB___MVSCOPE( void )
       }
    }
    hb_retni( iMemvar );
+}
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *    __MVCLEAR()
+ *  $CATEGORY$
+ *    Variable management
+ *  $ONELINER$
+ *    This function releases all PRIVATE and PUBLIC variables
+ *  $SYNTAX$
+ *    __MVCLEAR()
+ *  $ARGUMENTS$
+ *
+ *  $RETURNS$
+ *    Nothing
+ *  $DESCRIPTION$
+ *      This function releases all PRIVATE and PUBLIC variables.
+ *    It is used to implement CLEAR MEMORY statement.
+ *    The memory occupied by all visible variables are released - any
+ *    attempt to access the variable will result in a runtime error.
+ *    You have to reuse PRIVATE or PUBLIC statement to create again
+ *    the variable that was cleared by this function.
+ *  $STATUS$
+ *
+ *  $COMPLIANCE$
+ *
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+HARBOUR HB___MVCLEAR( void )
+{
+   hb_dynsymEval( hb_memvarClear );
 }

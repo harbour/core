@@ -313,7 +313,7 @@ char * _szCErrors[] = { "Statement not allowed outside of procedure or function"
                        "Incorrect number of arguments: %s %s",
                        "Invalid lvalue",
                        "Invalid use of \'@\' (pass by reference): \'%s\'",
-                       "PARAMETERS cannot be used with local parameters"
+                        "Formal parameters already declared"
                      };
 
 /* Table with parse warnings */
@@ -981,9 +981,9 @@ VarDefs    : LOCAL { iVarScope = VS_LOCAL; Line(); } VarList Crlf { cVarType = '
            | STATIC { StaticDefStart() } VarList Crlf { StaticDefEnd( $<iNumber>3 ); }
            | PARAMETERS { if( functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                              GenError( _szCErrors, 'E', ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
-                          else
-                             functions.pLast->wParamNum=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); }
-                             MemvarList Crlf
+			  else
+			     functions.pLast->wParamNum=0; iVarScope = (VS_PRIVATE | VS_PARAMETER); }
+			     MemvarList Crlf
            ;
 
 VarList    : VarDef                                  { $$ = 1; }
@@ -1881,13 +1881,13 @@ void AddVar( char * szVarName )
             break;
           case (VS_PARAMETER | VS_PRIVATE):
             {
-                BOOL bNewParameter = FALSE;
+	        BOOL bNewParameter = FALSE;
 
                 if( ++functions.pLast->wParamNum > functions.pLast->wParamCount )
-                {
-                   functions.pLast->wParamCount =functions.pLast->wParamNum;
-                   bNewParameter = TRUE;
-                }
+		{
+		   functions.pLast->wParamCount =functions.pLast->wParamNum;
+		   bNewParameter = TRUE;
+		}
 
                 pSym =GetSymbol( szVarName, &wPos ); /* check if symbol exists already */
                 if( ! pSym )
@@ -1896,15 +1896,15 @@ void AddVar( char * szVarName )
                 GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
                 GenPCode1( LOBYTE(functions.pLast->wParamNum) );
 
-                /* Add this variable to the local variables list - this will
-                 * allow to use the correct positions for real local variables.
-                 * The name of variable have to be hidden because we should
-                 * not find this name on the local variables list.
-                 * We have to use the new structure because it is used in
-                 * memvars list already.
-                 */
-                if( bNewParameter )
-                {
+		/* Add this variable to the local variables list - this will
+		 * allow to use the correct positions for real local variables.
+		 * The name of variable have to be hidden because we should
+		 * not find this name on the local variables list.
+		 * We have to use the new structure because it is used in
+		 * memvars list already.
+		 */
+		if( bNewParameter )
+		{
                    pVar = ( PVAR ) OurMalloc( sizeof( VAR ) );
                    pVar->szName = yy_strdup( szVarName );
                    pVar->szAlias = NULL;
@@ -1974,7 +1974,7 @@ void AddVar( char * szVarName )
                  if( _bDebugInfo )
                  {
                     GenPCode3( HB_P_LOCALNAME, LOBYTE( wLocal ), HIBYTE( wLocal ) );
-                    GenPCodeN( szVarName, strlen( szVarName ) );
+                    GenPCodeN( (BYTE *)szVarName, strlen( szVarName ) );
                     GenPCode1( 0 );
                  }
               }
@@ -2329,9 +2329,9 @@ void FunDef( char * szFunName, SYMBOLSCOPE cScope, int iType )
    if( _bDebugInfo )
    {
       GenPCode1( HB_P_MODULENAME );
-      GenPCodeN( files.pLast->szFileName, strlen( files.pLast->szFileName ) );
+      GenPCodeN( (BYTE *)files.pLast->szFileName, strlen( files.pLast->szFileName ) );
       GenPCode1( ':' );
-      GenPCodeN( szFunName, strlen( szFunName ) );
+      GenPCodeN( (BYTE *)szFunName, strlen( szFunName ) );
       GenPCode1( 0 );
    }
 }
@@ -2701,7 +2701,6 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
                  }
                  fprintf( yyc, " 0,\n" );
                  lPCodePos++;
-                 break;
                  break;
 
             case HB_P_MESSAGE:
@@ -4954,6 +4953,7 @@ void CodeBlockEnd()
   pFunc = pCodeblock->pOwner;
   while( pFunc->pOwner )
     pFunc = pFunc->pOwner;
+  pFunc->bFlags |= ( pCodeblock->bFlags & FUN_USES_STATICS );
 
   /* generate a proper codeblock frame with a codeblock size and with
    * a number of expected parameters

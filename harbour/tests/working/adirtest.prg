@@ -14,7 +14,6 @@ FUNCTION Main()
 STATIC FUNCTION TestIt( cSpec )
 
    LOCAL a := ADIR( cSpec )
-
    LOCAL a1 := Array(a)
    LOCAL a2 := 10
    LOCAL a3 := Array(a - 1)

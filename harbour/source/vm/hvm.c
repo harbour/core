@@ -73,15 +73,21 @@ HARBOUR HB_ERRORLEVEL( void );
 HARBOUR HB_PCOUNT( void );
 HARBOUR HB_PVALUE( void );
 
-static void    AliasPop( void );        /* pops the workarea number form the eval stack */
-static void    AliasPush( void );       /* pushes the current workarea number */
-static void    AliasSwap( void );       /* swaps items on the eval stack and pops the workarea number */
-static void    PopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
-static void    PopField( PHB_SYMB );      /* pops an unaliased field from the eval stack */
-static void    PushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
-static void    PushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
+static void    hb_vmAliasPop( void );        /* pops the workarea number form the eval stack */
+static void    hb_vmAliasPush( void );       /* pushes the current workarea number */
+static void    hb_vmAliasSwap( void );       /* swaps items on the eval stack and pops the workarea number */
+static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
+static void    hb_vmPopField( PHB_SYMB );      /* pops an unaliased field from the eval stack */
+static void    hb_vmPushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
+static void    hb_vmPushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
+
+static void    hb_vmDoInitStatics( void ); /* executes all _INITSTATICS functions */
+static void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
+static void    hb_vmDoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
+static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
 #ifdef HARBOUR_OBJ_GENERATION
+static void    hb_vmProcessObjSymbols ( void ); /* process Harbour generated OBJ symbols */
 
 typedef struct
 {
@@ -426,19 +432,19 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_POPALIAS:
-              AliasPop();
+              hb_vmAliasPop();
               w++;
               break;
 
          case HB_P_POPALIASEDFIELD:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              PopAliasedField( pSymbols + wParams );
+              hb_vmPopAliasedField( pSymbols + wParams );
               w += 3;
               break;
 
          case HB_P_POPFIELD:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              PopField( pSymbols + wParams );
+              hb_vmPopField( pSymbols + wParams );
               w += 3;
               break;
 
@@ -464,13 +470,13 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_PUSHALIAS:
-              AliasPush();
+              hb_vmAliasPush();
               w++;
               break;
 
          case HB_P_PUSHALIASEDFIELD:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              PushAliasedField( pSymbols + wParams );
+              hb_vmPushAliasedField( pSymbols + wParams );
               w += 3;
               break;
 
@@ -492,7 +498,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHFIELD:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              PushField( pSymbols + wParams );
+              hb_vmPushField( pSymbols + wParams );
               w += 3;
               break;
 
@@ -561,7 +567,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_SWAPALIAS:
-              AliasSwap();
+              hb_vmAliasSwap();
               w++;
               break;
 
@@ -610,7 +616,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 /* Pops the item from the eval stack and uses it to select the current
  * workarea
  */
-static void AliasPop( void )
+static void hb_vmAliasPop( void )
 {
    PHB_ITEM pItem;
 
@@ -620,7 +626,7 @@ static void AliasPop( void )
    {
       case IT_INTEGER:
          /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using AliasPush()
+          * or it was saved on the stack using hb_vmAliasPush()
           * or was evaluated from an expression, (nWorkArea)->field
           */
          /* TODO: synchronize it with RDD API
@@ -653,12 +659,12 @@ static void AliasPop( void )
          break;
    }
 
-   HB_DEBUG( "AliasPop\n" );
+   HB_DEBUG( "hb_vmAliasPop\n" );
 }
 
 /* pushes current workarea number on the eval stack
  */
-static void AliasPush( void )
+static void hb_vmAliasPush( void )
 {
    stack.pPos->type = IT_INTEGER;
    /* TODO: synchronize it with RDD API
@@ -667,13 +673,13 @@ static void AliasPush( void )
    stack.pPos->item.asInteger.length  = 10;
    stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
-   HB_DEBUG( "AliasPush\n" );
+   HB_DEBUG( "hb_vmAliasPush\n" );
 }
 
 /* Swaps two last items on the eval stack - the last item after swaping
  * is popped as current workarea number
  */
-static void AliasSwap( void )
+static void hb_vmAliasSwap( void )
 {
    HB_ITEM_PTR pItem = stack.pPos -1;
    HB_ITEM_PTR pWorkArea = stack.pPos -2;
@@ -685,7 +691,7 @@ static void AliasSwap( void )
    pItem->type =IT_NIL;
    hb_stackDec();
 
-   HB_DEBUG( "AliasSwap\n" );
+   HB_DEBUG( "hb_vmAliasSwap\n" );
 }
 
 
@@ -1566,13 +1572,13 @@ long hb_vmPopDate( void )
    }
 }
 
-static void PopAliasedField( PHB_SYMB pSym )
+static void hb_vmPopAliasedField( PHB_SYMB pSym )
 {
    HB_SYMBOL_UNUSED( pSym );
    /* TODO: pop the proper value */
    hb_stackPop();    /* field */
    hb_stackPop();    /* alias */
-   HB_DEBUG( "PopAliasedField\n" );
+   HB_DEBUG( "hb_vmPopAliasedField\n" );
 }
 
 double hb_vmPopDouble( WORD *pwDec )
@@ -1607,12 +1613,12 @@ double hb_vmPopDouble( WORD *pwDec )
    return d;
 }
 
-static void PopField( PHB_SYMB pSym )
+static void hb_vmPopField( PHB_SYMB pSym )
 {
    HB_SYMBOL_UNUSED( pSym );
    /* TODO: pop the proper value */
    hb_stackPop();
-   HB_DEBUG( "PopField\n" );
+   HB_DEBUG( "hb_vmPopField\n" );
 }
 
 void hb_vmPopLocal( SHORT iLocal )
@@ -1728,7 +1734,7 @@ void hb_vmPower( void )
     hb_vmPushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
 }
 
-static void PushAliasedField( PHB_SYMB pSym )
+static void hb_vmPushAliasedField( PHB_SYMB pSym )
 {
    HB_SYMBOL_UNUSED( pSym );
    /* TODO: push the proper value */
@@ -1737,7 +1743,7 @@ static void PushAliasedField( PHB_SYMB pSym )
    stack.pPos->item.asInteger.length  = 10;
    stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
-   HB_DEBUG( "PushAliasedField\n" );
+   HB_DEBUG( "hb_vmPushAliasedField\n" );
 }
 
 void hb_vmPushLogical( BOOL bValue )
@@ -1748,7 +1754,7 @@ void hb_vmPushLogical( BOOL bValue )
    HB_DEBUG( "hb_vmPushLogical\n" );
 }
 
-static void PushField( PHB_SYMB pSym )
+static void hb_vmPushField( PHB_SYMB pSym )
 {
    HB_SYMBOL_UNUSED( pSym );
    /* TODO: push the proper value */
@@ -1757,7 +1763,7 @@ static void PushField( PHB_SYMB pSym )
    stack.pPos->item.asInteger.length  = 10;
    stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
-   HB_DEBUG( "PushField\n" );
+   HB_DEBUG( "hb_vmPushField\n" );
 }
 
 void hb_vmPushLocal( SHORT iLocal )
@@ -2162,7 +2168,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* modu
 }
 
 #ifdef HARBOUR_OBJ_GENERATION
-void hb_vmProcessObjSymbols( void )
+static void hb_vmProcessObjSymbols( void )
 {
    POBJSYMBOLS pObjSymbols = ( POBJSYMBOLS ) &HB_FIRSTSYMBOL;
 
@@ -2180,7 +2186,7 @@ void hb_vmProcessObjSymbols( void )
 }
 #endif
 
-void hb_vmReleaseLocalSymbols( void )
+static void hb_vmReleaseLocalSymbols( void )
 {
    PSYMBOLS pDestroy;
 
@@ -2197,7 +2203,7 @@ void hb_vmReleaseLocalSymbols( void )
  * this function. These two bits cannot be marked at the same
  * time for normal user defined functions.
  */
-void hb_vmDoInitStatics( void )
+static void hb_vmDoInitStatics( void )
 {
    PSYMBOLS pLastSymbols = pSymbols;
    WORD w;
@@ -2227,7 +2233,7 @@ void hb_vmDoInitStatics( void )
    } while( pLastSymbols );
 }
 
-void hb_vmDoExitFunctions( void )
+static void hb_vmDoExitFunctions( void )
 {
    PSYMBOLS pLastSymbols = pSymbols;
    WORD w;
@@ -2251,7 +2257,7 @@ void hb_vmDoExitFunctions( void )
    } while( pLastSymbols );
 }
 
-void hb_vmDoInitFunctions( int argc, char * argv[] )
+static void hb_vmDoInitFunctions( int argc, char * argv[] )
 {
    PSYMBOLS pLastSymbols = pSymbols;
    WORD w;
