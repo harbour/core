@@ -1,3 +1,10 @@
+19990718-13:06 EDT Paul Tucker <ptucker@sympatico.ca>
+  + source/rtl/setcolor.c
+    * my first cvs upload
+    * I'll work on adding this to the various makefiles
+      as well as the required support code in gtapi.c
+      (not posted yet)
+
 19990718-18:05 CET Patrick Mast <harbour@PatrickMast.com>
   * Release of Build #28
   * version.h, updated build version
