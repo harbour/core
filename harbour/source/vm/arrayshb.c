@@ -189,7 +189,7 @@ HB_FUNC( ADEL )
    {
       long int ulPos = 1;
 
-      if( ISNUM( 2 ) )
+      if( ISNUM( 2 ) && hb_parnl( 2 ) )
          ulPos = hb_parnl( 2 );
 
       hb_arrayDel( pArray, ulPos );

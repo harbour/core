@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-10 09:45 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/vm/arrayshb.c
+    ! More clipper compatible on ADel().
+
 2003-09-09 14:16 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
      ! Bug fixed in preprocessor, reported by Randy Portnoff.
