@@ -259,7 +259,7 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("adsGoToId(%p, %p)", pArea, pItem));
 
-   if( pItem->type & IT_NUMERIC )
+   if( IS_NUMERIC( pItem ) )
    {
       ulRecNo = hb_itemGetNL( pItem );
       if( ulRecNo == 0 )
@@ -289,14 +289,14 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
 
    if( bFindLast )
    {
-      AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*)pKey->item.asString.value,
-                    (UNSIGNED16) pKey->item.asString.length, ADS_STRINGKEY,
+      AdsSeekLast( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
+                    (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY,
                     (UNSIGNED16*) &(pArea->fFound) );
    }
    else
    {
-      AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*)pKey->item.asString.value,
-                   (UNSIGNED16) pKey->item.asString.length, ADS_STRINGKEY,
+      AdsSeek( pArea->hOrdCurrent, (UNSIGNED8*) hb_itemGetCPtr( pKey ),
+                   (UNSIGNED16) hb_itemGetCLen( pKey ), ADS_STRINGKEY,
                    usSeekType, (UNSIGNED16*) &(pArea->fFound) );
    }
    AdsIsFound( pArea->hTable, (UNSIGNED16 *)&(pArea->fFound) );
@@ -535,20 +535,20 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    switch( pField->uiType )
    {
       case 'C':
-         if( pItem->type & IT_STRING )
+         if( IS_STRING( pItem ) )
          {
-            uiCount = pItem->item.asString.length;
+            uiCount = hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
-            memcpy( szText, pItem->item.asString.value, uiCount );
+            memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
             memset( szText + uiCount, ' ', pField->uiLen - uiCount );
-            AdsSetString  ( pArea->hTable, szName, pItem->item.asString.value, uiCount );
+            AdsSetString( pArea->hTable, szName, hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
          break;
 
       case 'N':
-         if( pItem->type & IT_NUMERIC )
+         if( IS_NUMERIC( pItem ) )
          {
             if( pField->uiDec )
                bError = !hb_ndtoa( hb_itemGetND( pItem ), ( char * ) szText,
@@ -568,12 +568,12 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'D':
-         if( pItem->type & IT_DATE )
+         if( IS_DATE( pItem ) )
          {
             AdsGetDateFormat  ( pucFormat, &pusLen );
             AdsSetDateFormat  ( "YYYYMMDD" );
             szEndChar = * ( szText + pField->uiLen );
-            hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
+            hb_dateDecode( hb_itemGetDL( pItem ), &lDay, &lMonth, &lYear );
             hb_dateStrPut( ( char * ) szText, lDay, lMonth, lYear );
             * ( szText + pField->uiLen ) = szEndChar;
             AdsSetDate( pArea->hTable, szName, szText, 8 );
@@ -583,24 +583,20 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case 'L':
-         if( pItem->type & IT_LOGICAL )
+         if( IS_LOGICAL( pItem ) )
          {
-            if( pItem->item.asLogical.value )
-               *szText = 'T';
-            else
-               *szText = 'F';
+            *szText = hb_itemGetL( pItem ) ? 'T' : 'F';
             bError = FALSE;
-            AdsSetLogical( pArea->hTable, szName,
-               pItem->item.asLogical.value );
+            AdsSetLogical( pArea->hTable, szName, hb_itemGetL( pItem ) );
          }
          break;
 
       case 'M':
-         if( pItem->type & IT_STRING )
+         if( IS_STRING( pItem ) )
          {
-            uiCount = pItem->item.asString.length;
-            AdsSetString  ( pArea->hTable, szName,
-                 pItem->item.asString.value, uiCount );
+            uiCount = hb_itemGetCLen( pItem );
+            AdsSetString( pArea->hTable, szName,
+               hb_itemGetCPtr( pItem ), uiCount );
             bError = FALSE;
          }
          break;
@@ -762,11 +758,9 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
       }
       case DBI_LASTUPDATE:
-         hb_itemClear( pItem );
-         pItem->type = IT_DATE;
-         pItem->item.asDate.value = hb_dateEncode( pArea->lpExtendInfo->bDay,
-                                                   pArea->lpExtendInfo->bMonth,
-                                                   pArea->lpExtendInfo->bYear );
+         hb_itemPutDL( pItem, hb_dateEncode( pArea->lpExtendInfo->bDay,
+                                             pArea->lpExtendInfo->bMonth,
+                                             pArea->lpExtendInfo->bYear ) );
          break;
 
       case DBI_GETRECSIZE:
@@ -936,8 +930,8 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
    if( !pOrderInfo->abBagName || *(pOrderInfo->abBagName) == '\0' ) ulOptions = ADS_COMPOUND;
-   ulRetVal = AdsCreateIndex  ( pArea->hTable, pOrderInfo->abBagName,
-           pOrderInfo->atomBagName, pItem->item.asString.value, "", "",
+   ulRetVal = AdsCreateIndex( pArea->hTable, pOrderInfo->abBagName,
+           pOrderInfo->atomBagName, hb_itemGetCPtr( pItem ), "", "",
            ulOptions, &phIndex);
    if ( ulRetVal != AE_SUCCESS )
    {
@@ -1272,3 +1266,4 @@ HARBOUR HB_ADS_GETFUNCTABLE( void )
    else
       hb_retni( FAILURE );
 }
+

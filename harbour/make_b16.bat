@@ -17,6 +17,7 @@ if "%1" == "CLEAN" goto CLEAN
    echo Y | del bin\*.exe > nul
    echo Y | del obj\b16\*.* > nul
    echo Y | del lib\b16\*.* > nul
+   echo Y | del make_b16.log > nul
    goto EXIT
 
 :EXIT

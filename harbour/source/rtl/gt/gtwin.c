@@ -7,7 +7,6 @@
  * Video subsystem for Win32 compilers
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> (functions marked ptucker)
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -1,12 +1,29 @@
+20000302-20:44 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * contrib/rdd_ads/ads1.c
+     ! All direct item accesses changed to Item API calls.
+   * source/compiler/cmdcheck.c
+     makefile.bc
+     makefile.vc
+     ! Fixed OBJ32 support.
+       (Note that for some unknown reason the linker GPF on Harbour executables
+        when the OBJ generation is turned on, and the .OBJ format is also 
+        rejected by the linker. Tested with BCC53 and BCC55)
+   * source/compiler/genobj32.c
+     + Stub added for non OBJ32 support mode.
+   * make*.bat
+     + They also delete the .LOG file on CLEAN.
+   * source/gt/*
+     * Minor formatting.
+
 20000302-17:45 GMT+1 Victor Szakats <info@szelvesz.hu>
    * tests/regress/*
      % Modified to take advantage of the code inclusion feature of the PP.
    * source/rdd/dbcmd.c
      ! All direct item accesses changed to Item API calls.
      ! Fixed direct item string buffer access in DBSETDRIVER()
-     % Variable scopes and some other minor thing optimized.
+     % Variable scopes and some other minor things optimized.
      + Static variables prefixed with "s_"
-     % LASTREC() is now the same speed as RECCOUNT() (minor enh.)
+     % LASTREC() is now of the same speed as RECCOUNT() (minor enh.)
      ! DBSETDRIVER(), RDDSETDEFAULT(), __RDDSETDEFAULT() synchronized.
      ! DBSETDRIVER(), RDDSETDEFAULT(), __RDDSETDEFAULT(), RDDREGISTER(),
        DBCREATE()
@@ -18,6 +35,7 @@
    * source/rtl/arrays.c
      include/hbapi.h
      + Added hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
+       Same as above.
    * source/rtl/arrays.c
      source/rtl/descend.c
      source/rtl/empty.c
@@ -30,7 +48,7 @@
      source/rtl/dates.c
      ! All direct item accesses changed to Item API calls.
    * source/rtl/do.c
-     ! One direct item accesses changed to Item API calls.
+     ! One direct item access changed to Item API calls.
    * doc/en/misc.txt
      ! One copyright fixed.
    * source/rtl/alert.prg

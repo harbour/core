@@ -283,10 +283,12 @@ void hb_compChkEnvironVar( char * szSwitch )
                       hb_comp_iLanguage = LANG_C;
                       break;
 
+#ifdef HARBOUR_OBJ_GENERATION
                    case 'f':
                    case 'F':
                       hb_comp_iLanguage = LANG_OBJ32;
                       break;
+#endif
 
                    case 'j':
                    case 'J':

@@ -18,6 +18,7 @@ if "%1" == "CLEAN" goto CLEAN
    echo Y | del bin\*.tds > nul
    echo Y | del obj\b32\*.* > nul
    echo Y | del lib\b32\*.* > nul
+   echo Y | del make_b32.log > nul
    goto EXIT
 
 :EXIT

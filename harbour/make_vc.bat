@@ -17,6 +17,7 @@ if "%1" == "CLEAN" goto CLEAN
    echo Y | del bin\*.exe > nul
    echo Y | del obj\vc\*.* > nul
    echo Y | del lib\vc\*.* > nul
+   echo Y | del make_vc.log > nul
    goto EXIT
 
 :EXIT

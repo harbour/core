@@ -416,7 +416,7 @@ $(HARBOUR_EXE) : \
     $(PP_DIR)\hbpp.c \
     $(PP_DIR)\hbppint.c \
     $(PP_DIR)\table.c
-    $(CC) $(CFLAGS) -w -DHARBOUR_OBJ_GENERATION $** -o $(HARBOUR_EXE)
+    $(CC) $(CFLAGS) -w $** -o $(HARBOUR_EXE)
     -del harbour.obj
     -del harboury.obj
     -del harbourl.obj

@@ -38,6 +38,18 @@
 #include "hbpcode.h"
 #include "hberrors.h"
 
+#ifndef HARBOUR_OBJ_GENERATION
+
+void hb_compGenObj32( PHB_FNAME pFileName )
+{
+   HB_SYMBOL_UNUSED( pFileName );
+
+   printf( "\nThis feature is not included in this build." );
+   fflush( stdout );
+}
+
+#else
+
 static ULONG GetSymbolsSize( void );
 static PCOMSYMBOL GetFirstSymbol( void );
 static char * GetSymbolName( ULONG ulPos );
@@ -730,3 +742,6 @@ static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs )
 
   putbyte( 256 - bCheckSum, hObjFile );
 }
+
+#endif /* HARBOUR_OBJ_GENERATION */
+

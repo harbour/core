@@ -41,6 +41,9 @@
  *    Support for #pragma directive and related functions
  *    See doc/pragma.txt
  *
+ * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ *    __DATE__, __TIME__ support
+ *
  * See doc/license.txt for licensing terms.
  *
  */

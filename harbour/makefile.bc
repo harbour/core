@@ -70,6 +70,7 @@ HARBOUR_EXE_OBJS  = $(OBJ_DIR)\harbour.obj \
                     $(OBJ_DIR)\hbgenerr.obj \
                     $(OBJ_DIR)\hbpcode.obj \
                     $(OBJ_DIR)\genc.obj \
+                    $(OBJ_DIR)\genobj32.obj \
                     $(OBJ_DIR)\genjava.obj \
                     $(OBJ_DIR)\genpas.obj \
                     $(OBJ_DIR)\genrc.obj \
@@ -355,6 +356,7 @@ $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
    echo $(OBJ_DIR)\hbgenerr.obj >> make.tmp
    echo $(OBJ_DIR)\hbpcode.obj >> make.tmp
    echo $(OBJ_DIR)\genc.obj >> make.tmp
+   echo $(OBJ_DIR)\genobj32.obj >> make.tmp
    echo $(OBJ_DIR)\genjava.obj >> make.tmp
    echo $(OBJ_DIR)\genpas.obj >> make.tmp
    echo $(OBJ_DIR)\genrc.obj >> make.tmp
@@ -393,6 +395,9 @@ $(OBJ_DIR)\hbpcode.obj : $(COMPILER_DIR)\hbpcode.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genc.obj : $(COMPILER_DIR)\genc.c
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+
+$(OBJ_DIR)\genobj32.obj : $(COMPILER_DIR)\genobj32.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
 
 $(OBJ_DIR)\genjava.obj : $(COMPILER_DIR)\genjava.c
