@@ -1,3 +1,9 @@
+19990623-22:05 EDT David G. Holm <dholm@jsd-llc.com>
+  Code has been added to the following two modules to return the
+  correct number of decimal places for floating point results.
+  * source/rtl/descend.c
+  * source/rtl/math.c
+
 19990623-21:50 EDT David G. Holm <dholm@jsd-llc.com>
   Oops! I accidentally left the HB_USE_STRICMP and HB_USE_STRCASECMP
   stuff in these two files. It's really gone now...
@@ -87,7 +93,7 @@
 
 19990623-01:00 CET Victor Szel <info@szelvesz.hu>
   ! source/rtl/asort.prg
-    Added patch posted by 
+    Added patch posted by
     Dave Pearson <davep@hagbard.demon.co.uk>
     quicksort() is STATIC now.
   + source/rtl/types.h
@@ -98,9 +104,9 @@
 * source/compiler/harbour.l
     * removed some unnecessary rules
     * added the very begginning of MEMVAR support
-    
+
 * include/compiler.h
-    + added pMemvars member to _FUNC structure    
+    + added pMemvars member to _FUNC structure
 
 19990622-14:00 CET Victor Szel <info@szelvesz.hu>
   * source/rdd/rdd.api moved to /include
@@ -108,22 +114,22 @@
 19990621-19:09 CET Victor Szel <info@szelvesz.hu>
   ! source/rtl/asort.prg
     source/rtl/objfunc.prg
-    Got rid of the references to Default() 
+    Got rid of the references to Default()
   + Added msgcz852.c, msgczkam.c, msgyu852.c to
     source/rtl/natmsg/
     source/rtl/msgxxx.c
     posted by Davor Siklic <siki@uhkt.cz>
   + Added cgi.ch to tests/working/hscript/, too.
   + source/rtl/environ.c
-    Added patch posted by 
+    Added patch posted by
     Dave Pearson <davep@hagbard.demon.co.uk>
 
 19990622-00:22 Ryszard Glab <rglab@imid.med.pl>
     * config/prg.cf
     * config/test.cf
-	* corrected to support creation of  executables that don't contain
-	extension
-	
+        * corrected to support creation of  executables that don't contain
+        extension
+
 19990621-19:00 CET Ad Franse
   + source/rdd/rdd.api
   + include/compat.h; include/super.h; include/compat.h
@@ -131,11 +137,11 @@
 
 Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* include/Makefile: 
-	Got rid of cgi.ch.
-	
-	* source/compiler/Makefile: 
-	Got rid of all ^M characters.
+        * include/Makefile:
+        Got rid of cgi.ch.
+
+        * source/compiler/Makefile:
+        Got rid of all ^M characters.
 
 19990621-13:27 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
@@ -165,7 +171,7 @@ Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     the copyright message at the beginning, as the
     final text gets done, we should put similar header
     to each file.
-  ! include/hbsetup.h - USE_GTAPI was mistakenly 
+  ! include/hbsetup.h - USE_GTAPI was mistakenly
     left defined.
   + include/errorapi.h
     include/error.api
@@ -185,7 +191,7 @@ Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
   * include/*.h
     Some code beatifying.
   * include/types.h/_PCOUNT renamed back to PCOUNT
-  + IT_MEMOFLAG and IT_MEMO types added to 
+  + IT_MEMOFLAG and IT_MEMO types added to
     include/extend.h and include/types.h
   * TEST.CH moved from /include to tests/working
   ! include/gt.api - _gtBox double define fixed.
@@ -200,8 +206,8 @@ Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  * changed invocation of 'echo' command to overcome problems with
    too small space for environment variables.
    Note also that it is possible that you will have to increase this
-   space at DOS startup (for example add 
-   SHELL=c:\command.com c:\ /E:2048 /P 
+   space at DOS startup (for example add
+   SHELL=c:\command.com c:\ /E:2048 /P
    to config.sys)
  * removed some variables that can be expanded directly
 
@@ -238,7 +244,7 @@ Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 * makefile.gcc, readmake.txt, tests/tests.mk
  - removed from repository - replaced by GNU make (gcc.cf)
- 
+
 19990620-23:40 CET Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     Finished the required modifications for the PCODE
@@ -284,7 +290,7 @@ Mon Jun 21 12:14:15 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
  * source\hbpp\hbpp.c
  * source\hbpp\harb.h
   Fixed some problems with preprocessor
-  
+
 19990620-15:50 CET Victor Szel <info@szelvesz.hu>
   * hb_gtBox() rewritten.
     It's now 100% Clipper compatible, fill character

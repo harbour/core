@@ -5,6 +5,8 @@
 #include <extend.h>
 #include <ctype.h>
 
+extern STACK stack;
+
 HARBOUR HB_DESCEND(void);
 
 static SYMBOL symbols[] = {
@@ -41,11 +43,14 @@ HARBOUR HB_DESCEND( void )
          else if( IS_DATE( pItem ) )
             hb_retnl( 5231808 - pItem->value.lDate );
          else if( IS_INTEGER( pItem ) )
-            hb_retnd( -1 * pItem->value.iNumber );
+            hb_retni( -1 * pItem->value.iNumber );
          else if( IS_LONG( pItem ) )
-            hb_retnd( -1 * pItem->value.lNumber );
+            hb_retnl( -1 * pItem->value.lNumber );
          else if( IS_DOUBLE( pItem ) )
+         {
             hb_retnd( -1 * pItem->value.dNumber );
+            stack.Return.wDec = pItem->wDec;
+         }
          else if( IS_LOGICAL( pItem ) )
             hb_retl( !pItem->value.iLogical );
          else

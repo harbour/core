@@ -62,6 +62,7 @@ HARBOUR HB_ABS( void )
                hb_retnd( pNumber->value.dNumber );
             else
                hb_retnd( -pNumber->value.dNumber );
+            stack.Return.wDec = pNumber->wDec;
       }
       else
       {
@@ -187,6 +188,7 @@ HARBOUR HB_MAX( void )
          {
             double d1 = hb_parnd(1), d2 = hb_parnd(2);
             hb_retnd(d1 > d2? d1: d2);
+            stack.Return.wDec = (d1 > d2? p1->wDec : p2->wDec);
          }
       }
       else
@@ -225,6 +227,7 @@ HARBOUR HB_MIN( void )
          {
             double d1 = hb_parnd(1), d2 = hb_parnd(2);
             hb_retnd(d1 < d2? d1: d2);
+            stack.Return.wDec = (d1 < d2? p1->wDec : p2->wDec);
          }
       }
       else
