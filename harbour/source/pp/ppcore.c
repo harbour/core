@@ -3248,6 +3248,36 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
            {
               kolFig--;
            }
+           else if( szText[lPos] == '.' && szSub[0] != '.' )
+           {
+              if( toupper( szText[lPos + 1] ) == 'T' && szText[lPos + 2] == '.' )
+              {
+                 lPos += 3;
+              }
+              else if( toupper( szText[lPos + 1] ) == 'F' && szText[lPos + 2] == '.' )
+              {
+                 lPos += 3;
+              }
+              else if( toupper( szText[lPos + 1] ) == 'O' && toupper( szText[lPos + 2] ) == 'R' && szText[lPos + 4] == '.' )
+              {
+                 lPos += 4;
+              }
+              else if( toupper( szText[lPos + 1] ) == 'A' && toupper( szText[lPos + 2] ) == 'N' && toupper( szText[lPos + 3] ) == 'D' && szText[lPos + 4] == '.' )
+              {
+                 lPos += 5;
+              }
+              else if( toupper( szText[lPos + 1] ) == 'N' && toupper( szText[lPos + 2] ) == 'O' && toupper( szText[lPos + 3] ) == 'T' && szText[lPos + 4] == '.' )
+              {
+                 lPos += 5;
+              }
+              else
+              {
+                 lPos++;
+              }
+
+              lSubPos = 0;
+              continue;
+           }
         }
 
         if( !lSubPos && checkPrth &&

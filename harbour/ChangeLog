@@ -1,6 +1,10 @@
+2001-07-12 16:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     ! Fixed bug of translating text within logical tokens (.T., .F., .OR., .AND., and .NOT.) by adding skip logic to md_strAt().
+
 2001-07-12 00:40 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/Classe.c
-     - Hb_ClsScope() Corrected 
+     - Hb_ClsScope() Corrected
      - hb_getRrealclsName() enhanced to keep a better trace of Class tree
    * harbour/source/vm/hvm.c
      - hb_Vmdo() & hb_VmSend() enhanced to keep trace of Class tree
