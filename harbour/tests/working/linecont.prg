@@ -64,12 +64,19 @@ b ;
 1;
 ,;
 2;
-][ ;
- 1 ]
+];  
+[ ;
+ 3 ]
 
  a :=TEST1(); TEST2()
 
- a :=TEST1()+ ; TEST2()
+// a :=TEST1()+ ; TEST2() //In Clipper: Incomplete statement ...
+
+ a :=;
+; /////// comment
+; /* another comment */
+;
+ 55
 
 RETURN nil
 

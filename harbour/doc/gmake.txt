@@ -147,9 +147,19 @@ For MSVC on Win95/WinNT:
 For GCC on Linux:
   HB_ARCHITECTURE   linux
   HB_COMPILER       gcc
-  
-These are the only two supported compilers right now (guess which ones
-I own).
+
+For DJGPP (GCC port for DOS)
+  HB_ARCHITECTURE   dos
+  HB_COMPILER       djgpp
+
+For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
+  HB_ARCHITECTURE   dos
+  HB_COMPILER       watcom
+  Note: It is possible that you will have to increase the space reserved for
+        DOS environment variables in order to successfuly run make utility
+        (Add for example:
+	 SHELL=C:\COMMAND.COM C:\ E=2048 /P
+	 to your CONFIG.SYS )
 
 If you issue a "make install", it will try to install your header,
 executable and library files into directories given by

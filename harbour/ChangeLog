@@ -1,3 +1,20 @@
+19990626-06:20 Ryszard Glab <rglab@imid.med.pl>
+
+* source/compiler/harbour.l
+ * corrected line continuation bugs
+ - removed yy_lex_count_lf function since this is handled by 
+   preprocessor now
+ * restored the END rule
+
+* tests/working/linecont.prg
+ * moved from tests/broken to tests/working
+
+* tests/working/Makefile
+ + added linecont.prg to BAD_PRG_SOURCES section
+
+* doc/gmake.txt
+ * updated list of supported compilers
+
 19990625-20:15 EDT David G. Holm <dholm@jsd-llc.com>
   * tests/working/inifiles.prg
     - Added an error message that displays when the specified section
