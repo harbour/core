@@ -3480,7 +3480,7 @@ HB_FUNC( DBSETRELATION )
 
    if( s_pCurrArea )
    {
-      char* szAlias;
+      char* szAlias = NULL;
       DBRELINFO  dbRelations;
       LPAREANODE s_pArea = NULL, pAreaNode;
       USHORT uiChildArea;
