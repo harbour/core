@@ -1,3 +1,10 @@
+2001-08-02 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.txt
+     * Corrected typos.
+
+   * include/hbpcode.h
+     * Corrected comments for HB_P_MACROLIST and HB_P_MACROLISTEND
+
 2001-07-31 10:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/arrayshb.c
      + Added HB_FUNC( HB_AEXPRESSION )

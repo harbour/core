@@ -1,9 +1,9 @@
 PP has 3 personalities which are tied tightly together.
 
 1. What is supposed to be 100% Clipper compatible Pre-Processor. Executing
-   PP followed by a source file name will create <filename.pp$> which is
-   the equivalent of the Clipper <filename.ppo> file. In this mode there
-   are few optional switches.
+   PP followed by a source file name  and the -P switch, will create
+   <filename.pp$> which is the equivalent of the Clipper <filename.ppo> file.
+   In this mode there are few optional switches.
 
    PP filename[.ext] [-U][-DM][-DE][-DP][-CCH]
 
@@ -47,7 +47,7 @@ PP has 3 personalities which are tied tightly together.
 
      e. The executed module is compiled with -n option (for now).
 
-  This will create rp_dot.pp$ compilation tace file.
+  This will create rp_dot.pp$ compilation trace file.
 
 3. Finally, PP is a limited Harbour Interpreter. Subject to those same few
    limitations it can execute most of Harbour syntax. Executing PP followed
