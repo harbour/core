@@ -1,3 +1,8 @@
+19991010-13:36 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/vm/hvm.c
+     ! HB_P_NOOP - Caused an infinite loop, fixed.
+     % hb_vmPlus(), hb_vmMinus() - Two returns from inside removed.
+
 19991010-13:26 GMT+1 Bruno Cantero <bruno@issnet.net>
 
    * include/rddapi.h

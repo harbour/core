@@ -959,6 +959,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_NOOP:
             /* Intentionally do nothing */
+            w += 1;
             break;
 
          default:
@@ -1059,7 +1060,6 @@ static void hb_vmPlus( void )
             pItem2->item.asString.value = NULL;
          }
          hb_stackPop();
-         return;
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+" );
@@ -1160,7 +1160,6 @@ static void hb_vmMinus( void )
             pItem2->item.asString.value = NULL;
          }
          hb_stackPop();
-         return;
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-" );
