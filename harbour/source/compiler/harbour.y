@@ -730,7 +730,7 @@ MethParams : /* empty */                       { $$ = 0; }
            ;
 
 ObjectData : IdSend IDENTIFIER                     { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
-           | VarAt ':' IDENTIFIER                  { ArrayAt(); $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
+           | VarAtSend IDENTIFIER                  { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
            | ObjFunCall IDENTIFIER                 { $$ = $2; _ulMessageFix = functions.pLast->lPCodePos; Message( $2 ); Function( 0 ); }
            | ObjFunArray  ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
            | ObjectMethod ':' IDENTIFIER           { $$ = $3; _ulMessageFix = functions.pLast->lPCodePos; Message( $3 ); Function( 0 ); }
@@ -739,12 +739,15 @@ ObjectData : IdSend IDENTIFIER                     { $$ = $2; _ulMessageFix = fu
            ;
 
 ObjectMethod : IdSend IDENTIFIER { Message( $2 ); } '(' MethParams ')' { Function( $5 ); }
-           | VarAt ':' MethCall { Function( $3 ); ArrayAt(); }
+           | VarAtSend MethCall { Function( $2 ); }
            | ObjFunCall MethCall                   { Function( $2 ); }
            | ObjFunArray  ':' MethCall             { Function( $3 ); }
            | ObjectData   ':' MethCall             { Function( $3 ); }
 	   | ObjectArr MethCall                    { Function( $2 ); }
            | ObjectMethod ':' MethCall             { Function( $3 ); }
+           ;
+
+VarAtSend  : VarAt ':'                             { ArrayAt(); }
            ;
 
 ObjectArr  : ObjectData ArrayIndex ':'              { ArrayAt(); }

@@ -1,3 +1,7 @@
+19991009-22:19 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/compiler/harbour.y
+     * a[ b ]:c expressions fixed.
+
 19991007-19:40 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/mankala.prg -> samples/misc/mankala.prg
      tests/guess.prg -> samples/misc/guess.prg
@@ -19,7 +23,7 @@
        They are currently not invoked by the mainstream make process, but
        can be invoked manually.
    * tests/testcgi.prg
-     % Got rid of s_cNewLine, so the HTML class no longer requires this 
+     % Got rid of s_cNewLine, so the HTML class no longer requires this
        variable.
 
 19991008-20:00 CET Eddie Runia <eddie@runia.com>
@@ -37,7 +41,7 @@
     *source/rdd/dbcmd.c
 	* removed all direct modifications of memory buffers returned
 	by hb_parc() function
-	
+
 19991008-06:31 EDT Paul Tucker <ptucker@sympatico.ca>
    * source\compiler\genc.c
      + && !defined(_MSC_VER) on generation of #pragma startup
