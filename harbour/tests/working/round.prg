@@ -9,7 +9,7 @@
 function main()
 local n, value := -5
 
-   for n := 1 to 10000
+   for n := 1 to 100
       OUTSTD(NewLine)
       OUTSTD(value)
       OUTSTD(round(value, 3))

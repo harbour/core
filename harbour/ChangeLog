@@ -1,3 +1,9 @@
+19990617-12:40 CET Eddie Runia
+  * source/rtl/dir.c
+    hb_chmod should be _chmod
+  * tests/working/round.prg
+    loop shortened to 100 (I thought the program has crashed, while testalling)
+
 19990617-12:20 CET Eddie Runia
   * source/compiler/harbour.y
     GetLocalVarPos : OurMalloc( sizeof(PVAR) ) should be sizeof(VAR)

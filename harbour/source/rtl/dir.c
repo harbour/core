@@ -263,7 +263,7 @@ HARBOUR HB_DIRECTORY( void )
 	 aatrib[0] = '\0';
 #else
          /* TODO: seems to not clear on root entries ? */
-         attrib = hb_chmod(fullfile,0);
+         attrib = _chmod(fullfile,0);
          if (attrib & FA_ARCH)
             strcat(aatrib,"A");
          if (attrib & FA_DIREC)
