@@ -213,12 +213,16 @@ char * hb_verPlatform( void )
                   pszName = "Windows 95";
                else if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion == 10 )
                   pszName = "Windows 98";
+               else
+                  pszName = "Windows ME";
 
                break;
 
             case VER_PLATFORM_WIN32_NT:
 
-               if( osVer.dwMajorVersion == 5 )
+               if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
+                  pszName = "Windows XP";
+               else if( osVer.dwMajorVersion == 5 )
                   pszName = "Windows 2000";
                else
                   pszName = "Windows NT";

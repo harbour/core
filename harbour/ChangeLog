@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-15 16:04 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/common/hbver.c
+     ! Displays Windows XP properly
+     ! Displays Windows ME properly (well, hopefully because I
+       couldn't test this, if anyone has ME, please test it.) 
+
 2001-12-15 15:53 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rdd/dbfcdx/dbfcdx1.c
