@@ -1,3 +1,7 @@
+2000-11-27 17:14 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+      * changed ::RelativePos into ::LastRetrieved (seems more descriptive to me)
+
 2000-11-27 17:07 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
       ! fixed ::Stabilize() method (problems when past eof())
