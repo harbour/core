@@ -66,7 +66,7 @@ typedef struct     /* items hold at the virtual machine stack */
    WORD wBase;     /* stack frame number of items position for a function call */
    PSYMBOL pSymbols; /* codeblocks symbols */
    WORD wLine;     /* currently processed PRG line number */
-   WORD  wParams;  /* number of received parameters for a function call */
+   WORD wParams;   /* number of received parameters for a function call */
 } ITEM, * PITEM;
 
 typedef struct
