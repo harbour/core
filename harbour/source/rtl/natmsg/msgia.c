@@ -2,21 +2,40 @@
  * $Id$
  */
 
-/* Indonesian language module */
-/* Codepage: N/A           */
+/* Language Support Module */
+
+/* Language name: Indonesian */
+/* ISO language code (2 chars): ID */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Januari", "Februari", "Maret",
-   "April", "Mei", "Juni", "Juli",
-   "Agustus", "September", "Oktober",
-   "Nopember", "Desember" };
+char *hb_monthsname[ 12 ] =
+{
+   "Januari",
+   "Februari",
+   "Maret",
+   "April",
+   "Mei",
+   "Juni",
+   "Juli",
+   "Agustus",
+   "September",
+   "Oktober",
+   "Nopember",
+   "Desember"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Minggu", "Senin", "Selasa",
-   "Rabu", "Kamis", "Jumat",
-   "Sabtu" };
+char *hb_daysname[ 7 ] =
+{
+   "Minggu",
+   "Senin",
+   "Selasa",
+   "Rabu",
+   "Kamis",
+   "Jumat",
+   "Sabtu"
+};
 
 static char *genericErrors[] =
 {
@@ -71,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

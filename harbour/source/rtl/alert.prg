@@ -16,7 +16,7 @@
 // ; Clipper defines a clipped window for Alert()
 // ; Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
 //   This is fixed.
-// ; nDelay function is a Harbour addition.
+// ; nDelay parameter is a Harbour addition.
 
 FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
    LOCAL nChoice
@@ -29,12 +29,12 @@ FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
    LOCAL nOldCursor
    LOCAL cOldScreen
 
-   /* TOFIX: Clipper decides at runtime, wether the GT is linked, */
-   /*        if it is not, the console mode is selected here */
+   /* TOFIX: Clipper decides at runtime, whether the GT is linked, */
+   /*        if it is not, the console mode is choosed here */
    LOCAL lConsole := .F.
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-// IF "//NOALERT" $ /* cCommandLine */
+// IF "//NOALERT" $ /* Upper(cCommandLine) */
 //    QUIT
 // ENDIF
 #endif
@@ -194,7 +194,7 @@ FUNCTION Alert(cMessage, aOptions, cColorNorm, nDelay)
 
    ELSE
 
-      /* Restore screen */
+      /* Restore status */
       RestScreen( nInitRow, nInitCol, nInitRow + Len(aSay) + 3, nInitCol + nWidth + 1, cScreen )
       SetCursor(nOldCursor)
       SetPos(nOldRow, nOldCol)

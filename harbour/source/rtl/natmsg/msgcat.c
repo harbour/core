@@ -2,23 +2,40 @@
  * $Id$
  */
 
-/*
- * Language support unit for Catalan
- *
- */
+/* Language Support Module */
+
+/* Language name: Catalan */
+/* ISO language code (2 chars): CA */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Xaner", "Febrer", "Mars",
-   "April", "Mallol", "Xuniol", "Xuliol",
-   "Agust", "Setembre", "Octubre",
-   "Novembre", "Decembre" };
+char *hb_monthsname[ 12 ] =
+{
+   "Xaner",
+   "Febrer",
+   "Mars",
+   "April",
+   "Mallol",
+   "Xuniol",
+   "Xuliol",
+   "Agust",
+   "Setembre",
+   "Octubre",
+   "Novembre",
+   "Decembre"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Diumenge", "Dilluns", "Dimarts",
-   "Dimecres", "Dijous", "Divendres",
-   "Disabte" };
+char *hb_daysname[ 7 ] =
+{
+   "Diumenge",
+   "Dilluns",
+   "Dimarts",
+   "Dimecres",
+   "Dijous",
+   "Divendres",
+   "Disabte"
+};
 
 static char *genericErrors[] =
 {
@@ -73,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

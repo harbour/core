@@ -23,10 +23,11 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdio.h>
+
 #include "pcode.h"
 #include "errorapi.h"
 #include "init.h"
-#include <stdio.h>
 
 /* #if INTEL32 */
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
@@ -110,7 +111,7 @@ extern void Transfrm__InitSymbols( void );
 
 static void InitRunnerTable( void )
 {
-#include <initsymb.h>                           /* Include default symbols  */
+#include "initsymb.h"                           /* Include default symbols  */
 }
 #if !defined( __GNUC__ )
    #pragma startup InitRunnerTable

@@ -2,17 +2,40 @@
  * $Id$
  */
 
+/* Language Support Module */
+
+/* Language name: Dutch */
+/* ISO language code (2 chars): NL */
+/* Codepage: ???? */
+
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "januari", "februari", "maart",
-   "april", "mei", "juni", "juli",
-   "augustus", "september", "oktober",
-   "november", "december" };
+char *hb_monthsname[ 12 ] =
+{
+   "januari",
+   "februari",
+   "maart",
+   "april",
+   "mei",
+   "juni",
+   "juli",
+   "augustus",
+   "september",
+   "oktober",
+   "november",
+   "december"
+};
 
-char *hb_daysname[ 7 ] = {
-   "zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag",
-   "zaterdag" };
+char *hb_daysname[ 7 ] =
+{
+   "zondag",
+   "maandag",
+   "dinsdag",
+   "woensdag",
+   "donderdag",
+   "vrijdag",
+   "zaterdag"
+};
 
 static char *genericErrors[] =
 {
@@ -67,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

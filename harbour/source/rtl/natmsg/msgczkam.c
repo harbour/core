@@ -2,8 +2,11 @@
  * $Id$
  */
 
-/* Czech language module (2 char. ISO language code: CZ) */
-/* Codepage: Czech - Kamenickych (CS2)  */
+/* Language Support Module */
+
+/* Language name: Czech */
+/* ISO language code (2 chars): CS */
+/* Codepage: Czech - Kamenickych (CS2) */
 
 #include "hbdefs.h"
 
@@ -87,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

@@ -1,3 +1,28 @@
+19990731-03:33 CET Victor Szel <info@szelvesz.hu>
+   ! source/vm/hvm.c - Fixed some error codes.
+     (.OR., .AND., PVALUE)
+   * hb_ErrorNatDescription -> hb_errorNatDescription
+     source/vm/hvm.c
+     source/rtl/natmsg/*.c
+     source/rtl/errorapi.c
+     source/rtl/arrays.c
+     include/errorapi.h
+   + source/rtl/natmsg/*.c - Standardized, reformatted,
+     ISO codes filled.
+   + source/rtl/msgxxx.c
+     source/rtl/natmsg/msghu852.c (former msghu.c)
+     source/rtl/natmsg/msghucwi.c
+     source/rtl/natmsg/msghuwin.c
+     Support for two additional Hungarian codepages.
+   % source/rtl/natmsg/*.c
+     source/rtl/msgxxx.c
+     hb_errorNatDescription() moved from natmsg/*.c to msgxxx.c
+     so there's only one copy of it now.
+   - source/rtl/natmsg/makefile.dos - Removed since it was not used at all.
+   + doc/lang_id.txt - Standard RFC language code list.
+   ! source/rtl/alert.prg - Some typo fixed.
+   * source/rtl/runner/runner.c - #include <> -> #include ""
+
 19990731-08:05 WIB Andi Jahja <andij@aonlippo.co.id>
    + source/rtl/menu.prg
      __AtPrompt()

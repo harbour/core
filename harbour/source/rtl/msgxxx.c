@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 #include "hbdefs.h"
 #include "hbsetup.h"
 
@@ -16,8 +17,12 @@
 #include "natmsg/msgger.c"
 #elif defined(HARBOUR_LANGUAGE_INA)
 #include "natmsg/msgia.c"
-#elif defined(HARBOUR_LANGUAGE_HU)
-#include "natmsg/msghu.c"
+#elif defined(HARBOUR_LANGUAGE_HU852)
+#include "natmsg/msghu852.c"
+#elif defined(HARBOUR_LANGUAGE_HUCWI)
+#include "natmsg/msghucwi.c"
+#elif defined(HARBOUR_LANGUAGE_HUWIN)
+#include "natmsg/msghuwin.c"
 #elif defined(HARBOUR_LANGUAGE_KOR)
 #include "natmsg/msgkor.c"
 #elif defined(HARBOUR_LANGUAGE_POR)
@@ -47,3 +52,11 @@
 #else
 #include "natmsg/msguk.c"
 #endif
+
+char *hb_errorNatDescription( ULONG ulGenError )
+{
+   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
+      return genericErrors[ ulGenError ];
+   else
+      return genericErrors[ 0 ];
+}

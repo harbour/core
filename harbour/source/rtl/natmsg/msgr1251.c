@@ -2,18 +2,40 @@
  * $Id$
  */
 
+/* Language Support Module */
+
+/* Language name: Russian */
+/* ISO language code (2 chars): RU */
+/* Codepage: 1251 */
+
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Январь", "Февраль", "Март",
-   "Апрель", "Май", "Июнь", "Июль",
-   "Август", "Сентябрь", "Октябрь",
-   "Ноябрь", "Декабрь" };
+char *hb_monthsname[ 12 ] =
+{
+   "Январь",
+   "Февраль",
+   "Март",
+   "Апрель",
+   "Май",
+   "Июнь",
+   "Июль",
+   "Август",
+   "Сентябрь",
+   "Октябрь",
+   "Ноябрь",
+   "Декабрь"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Воскресенье", "Понедельник", "Вторник",
-   "Среда", "Четверг", "Пятница",
-   "Суббота" };
+char *hb_daysname[ 7 ] =
+{
+   "Воскресенье",
+   "Понедельник",
+   "Вторник",
+   "Среда",
+   "Четверг",
+   "Пятница",
+   "Суббота"
+};
 
 static char *genericErrors[] =
 {
@@ -68,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

@@ -2,23 +2,40 @@
  * $Id$
  */
 
-/*
- * Language support unit for Galician
- *
- */
+/* Language Support Module */
+
+/* Language name: Galician */
+/* ISO language code (2 chars): GL */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Xaneiro", "Febreiro", "Marzal",
-   "Abril", "Maio", "Xunio", "Xullo",
-   "Agosto", "Setembro", "Outubro",
-   "Novembro", "Decembro" };
+char *hb_monthsname[ 12 ] =
+{
+   "Xaneiro",
+   "Febreiro",
+   "Marzal",
+   "Abril",
+   "Maio",
+   "Xunio",
+   "Xullo",
+   "Agosto",
+   "Setembro",
+   "Outubro",
+   "Novembro",
+   "Decembro"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Domingo", "Luns", "Martes",
-   "M‚rcores", "Xoves", "Venres",
-   "S bado" };
+char *hb_daysname[ 7 ] =
+{
+   "Domingo",
+   "Luns",
+   "Martes",
+   "M‚rcores",
+   "Xoves",
+   "Venres",
+   "S bado"
+};
 
 static char *genericErrors[] =
 {
@@ -73,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

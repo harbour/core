@@ -2,20 +2,40 @@
  * $Id$
  */
 
-/* Korea language module */
+/* Language Support Module */
+
+/* Language name: Korean */
+/* ISO language code (2 chars): KO */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "1월", "2월", "3월",
-   "4월", "5월", "6월", "7월",
-   "8월", "9월", "10월",
-   "11월", "12월" };
+char *hb_monthsname[ 12 ] =
+{
+   "1월",
+   "2월",
+   "3월",
+   "4월",
+   "5월",
+   "6월",
+   "7월",
+   "8월",
+   "9월",
+   "10월",
+   "11월",
+   "12월"
+};
 
-char *hb_daysname[ 7 ] = {
-   "일요일", "월요일", "화요일",
-   "수요일", "목요일", "금요일",
-   "토요일" };
+char *hb_daysname[ 7 ] =
+{
+   "일요일",
+   "월요일",
+   "화요일",
+   "수요일",
+   "목요일",
+   "금요일",
+   "토요일"
+};
 
 static char *genericErrors[] =
 {
@@ -70,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

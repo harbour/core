@@ -104,7 +104,7 @@ WORD hb_errorRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
 void     hb_errorInternal( ULONG ulCode );
 */
 /* Reads error description in national language */
-char *hb_ErrorNatDescription( ULONG ulGenCode );
+char *hb_errorNatDescription( ULONG ulGenCode );
 
 #endif /* HB_ERRORAPI_H_ */
 

@@ -180,12 +180,12 @@ int iHB_DEBUG = 0;      /* if 1 traces the virtual machine activity */
 
 STACK stack;
 SYMBOL symEval = { "__EVAL", FS_PUBLIC, DoBlock, 0 }; /* symbol to evaluate codeblocks */
-PSYMBOL pSymStart;     /* start symbol of the application. MAIN() is not required */
+PSYMBOL pSymStart;        /* start symbol of the application. MAIN() is not required */
 HB_ITEM aStatics;         /* Harbour array to hold all application statics variables */
 HB_ITEM errorBlock;       /* errorblock */
-PSYMBOLS pSymbols = 0; /* to hold a linked list of all different modules symbol tables */
-BOOL bQuit = FALSE;    /* inmediately exit the application */
-BYTE bErrorLevel = 0;  /* application exit errorlevel */
+PSYMBOLS pSymbols = 0;    /* to hold a linked list of all different modules symbol tables */
+BOOL bQuit = FALSE;       /* inmediately exit the application */
+BYTE bErrorLevel = 0;     /* application exit errorlevel */
 
 #define HB_DEBUG( x )     if( iHB_DEBUG ) printf( x )
 #define HB_DEBUG2( x, y ) if( iHB_DEBUG ) printf( x, y )
@@ -650,7 +650,7 @@ void And( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, NULL, ".AND.");
+      hb_errorRT_BASE(EG_ARG, 1078, NULL, ".AND.");
    }
 }
 
@@ -1404,7 +1404,7 @@ void Or( void )
    }
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, NULL, ".OR.");
+      hb_errorRT_BASE(EG_ARG, 1079, NULL, ".OR.");
    }
 }
 
@@ -1544,7 +1544,7 @@ int PopLogical( void )
       return stack.pPos->item.asLogical.value;
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_ErrorNatDescription(EG_CONDITION));
+      hb_errorRT_BASE(EG_ARG, 1066, NULL, hb_errorNatDescription(EG_CONDITION));
       return 0;
    }
 }
@@ -2333,6 +2333,6 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
       hb_itemReturn( pBase + 1 + wParam );
    else
    {
-      hb_errorRT_BASE(EG_ARG, 1082, NULL, "PVALUE");
+      hb_errorRT_BASE(EG_ARG, 9999, NULL, "PVALUE");
    }
 }

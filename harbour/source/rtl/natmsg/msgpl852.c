@@ -2,21 +2,40 @@
  * $Id$
  */
 
-/* Polish language module - Polskoj©zyczny moduˆ dla Harbour  */
+/* Language Support Module - Polskoj©zyczny moduˆ dla Harbour */
+
+/* Language name: Polish */
+/* ISO language code (2 chars): PL */
 /* Codepage: Latin II - 852 */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Styczeä", "Luty", "Marzec",
-   "Kwiecieä", "Maj", "Czerwiec", "Lipiec",
-   "Sierpieä", "Wrzesieä", "Pa«dziernik",
-   "Listopad", "Grudzieä" };
+char *hb_monthsname[ 12 ] =
+{
+   "Styczeä",
+   "Luty",
+   "Marzec",
+   "Kwiecieä",
+   "Maj",
+   "Czerwiec",
+   "Lipiec",
+   "Sierpieä",
+   "Wrzesieä",
+   "Pa«dziernik",
+   "Listopad",
+   "Grudzieä"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Niedziela", "Poniedziaˆek", "Wtorek",
-   "—roda", "Czwartek", "Pi¥tek",
-   "Sobota" };
+char *hb_daysname[ 7 ] =
+{
+   "Niedziela",
+   "Poniedziaˆek",
+   "Wtorek",
+   "—roda",
+   "Czwartek",
+   "Pi¥tek",
+   "Sobota"
+};
 
 static char *genericErrors[] =
 {
@@ -71,12 +90,3 @@ static char *genericErrors[] =
    "wymagana jest tablica",
    "wymagany typ: logiczny"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}
-

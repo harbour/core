@@ -2,8 +2,11 @@
  * $Id$
  */
 
-/* Serbian language module (2 char. ISO language code: YU) */
-/* Codepage: Latin II -  852 */
+/* Language Support Module */
+
+/* Language name: Serbian */
+/* ISO language code (2 chars): SR */
+/* Codepage: Latin II - 852 */
 
 #include "hbdefs.h"
 
@@ -87,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

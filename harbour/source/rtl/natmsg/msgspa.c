@@ -2,18 +2,40 @@
  * $Id$
  */
 
+/* Language Support Module */
+
+/* Language name: Spanish */
+/* ISO language code (2 chars): ES */
+/* Codepage: ???? */
+
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Enero", "Febrero", "Marzo",
-   "Abril", "Mayo", "Junio", "Julio",
-   "Agosto", "Septiembre", "Octubre",
-   "Noviembre", "Diciembre" };
+char *hb_monthsname[ 12 ] =
+{
+   "Enero",
+   "Febrero",
+   "Marzo",
+   "Abril",
+   "Mayo",
+   "Junio",
+   "Julio",
+   "Agosto",
+   "Septiembre",
+   "Octubre",
+   "Noviembre",
+   "Diciembre"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Domingo", "Lunes", "Martes",
-   "Mi‚rcoles", "Jueves", "Viernes",
-   "S bado" };
+char *hb_daysname[ 7 ] =
+{
+   "Domingo",
+   "Lunes",
+   "Martes",
+   "Mi‚rcoles",
+   "Jueves",
+   "Viernes",
+   "S bado"
+};
 
 static char *genericErrors[] =
 {
@@ -68,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

@@ -1,20 +1,41 @@
 /*
- * Language support unit for Esperanto
- * Codepage: N/A
+ * $Id$
  */
+
+/* Language Support Module */
+
+/* Language name: Esperanto */
+/* ISO language code (2 chars): EO */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Jaunaro", "Februaro", "Marto",
-   "Aprilo", "Majo", "Junio", "Julio",
-   "A–gusto", "Septembro", "Oktobro",
-   "Novembro", "Decembro" };
+char *hb_monthsname[ 12 ] =
+{
+   "Jaunaro",
+   "Februaro",
+   "Marto",
+   "Aprilo",
+   "Majo",
+   "Junio",
+   "Julio",
+   "A–gusto",
+   "Septembro",
+   "Oktobro",
+   "Novembro",
+   "Decembro"
+};
 
-char *hb_daysname[ 7 ] = {
-   "dimanco", "lundo", "mardo",
-   "merkredo", "jaudo", "vendredo",
-   "sabato" };
+char *hb_daysname[ 7 ] =
+{
+   "dimanco",
+   "lundo",
+   "mardo",
+   "merkredo",
+   "jaudo",
+   "vendredo",
+   "sabato"
+};
 
 static char *genericErrors[] =
 {
@@ -69,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}

@@ -2,22 +2,40 @@
  * $Id$
  */
 
-/*
- * Language support unit for Basque
- */
+/* Language Support Module */
+
+/* Language name: Basque */
+/* ISO language code (2 chars): EU */
+/* Codepage: ???? */
 
 #include "hbdefs.h"
 
-char *hb_monthsname[ 12 ] = {
-   "Urtarrila", "Otsaila", "Martxoa",
-   "Apirila", "Maitza", "Ekaina", "Uztaila",
-   "Abuztua", "Iraila", "Urria",
-   "Azaroa", "Abendua" };
+char *hb_monthsname[ 12 ] = 
+{
+   "Urtarrila",
+   "Otsaila",
+   "Martxoa",
+   "Apirila",
+   "Maitza",
+   "Ekaina",
+   "Uztaila",
+   "Abuztua",
+   "Iraila",
+   "Urria",
+   "Azaroa",
+   "Abendua"
+};
 
-char *hb_daysname[ 7 ] = {
-   "Igandea", "Astelehena", "Asteartea",
-   "Asteazkena", "Osteguna", "Ostirala",
-   "Larunbata" };
+char *hb_daysname[ 7 ] =
+{
+   "Igandea",
+   "Astelehena",
+   "Asteartea",
+   "Asteazkena",
+   "Osteguna",
+   "Ostirala",
+   "Larunbata"
+};
 
 static char *genericErrors[] =
 {
@@ -72,11 +90,3 @@ static char *genericErrors[] =
    "not an array",
    "conditional"
 };
-
-char *hb_ErrorNatDescription( ULONG ulGenError )
-{
-   if( ulGenError < sizeof(genericErrors)/sizeof(char*) )
-      return genericErrors[ ulGenError ];
-   else
-      return genericErrors[ 0 ];
-}
