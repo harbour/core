@@ -132,7 +132,7 @@ PHB_ITEM hb_errNew( void )
    hb_vmPushNil();
    hb_vmDo( 0 );
 
-   hb_itemCopy( pReturn, &stack.Return );
+   hb_itemCopy( pReturn, &hb_stack.Return );
 
    return pReturn;
 }
@@ -286,7 +286,7 @@ char * hb_errGetDescription( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetCPtr( &stack.Return );
+   return hb_itemGetCPtr( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
@@ -305,7 +305,7 @@ char * hb_errGetFileName( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetCPtr( &stack.Return );
+   return hb_itemGetCPtr( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
@@ -324,7 +324,7 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetNI( &stack.Return );
+   return hb_itemGetNI( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
@@ -343,7 +343,7 @@ char * hb_errGetOperation( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetCPtr( &stack.Return );
+   return hb_itemGetCPtr( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
@@ -362,7 +362,7 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetNI( &stack.Return );
+   return hb_itemGetNI( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
@@ -381,7 +381,7 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetNI( &stack.Return );
+   return hb_itemGetNI( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
@@ -400,7 +400,7 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetNI( &stack.Return );
+   return hb_itemGetNI( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
@@ -419,7 +419,7 @@ char * hb_errGetSubSystem( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetCPtr( &stack.Return );
+   return hb_itemGetCPtr( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
@@ -438,7 +438,7 @@ USHORT hb_errGetTries( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   return hb_itemGetNI( &stack.Return );
+   return hb_itemGetNI( &hb_stack.Return );
 }
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
@@ -461,7 +461,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if( hb_itemGetL( &stack.Return ) )
+   if( hb_itemGetL( &hb_stack.Return ) )
       uiFlags |= EF_CANRETRY;
 
    /* ; */
@@ -470,7 +470,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if( hb_itemGetL( &stack.Return ) )
+   if( hb_itemGetL( &hb_stack.Return ) )
       uiFlags |= EF_CANSUBSTITUTE;
 
    /* ; */
@@ -479,7 +479,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if( hb_itemGetL( &stack.Return ) )
+   if( hb_itemGetL( &hb_stack.Return ) )
       uiFlags |= EF_CANDEFAULT;
 
    /* ; */

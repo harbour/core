@@ -1304,7 +1304,7 @@ HARBOUR HB_DBSTRUCT( void )
    PHB_ITEM pItem, pData;
    USHORT uiFields, uiCount;
 
-   hb_arrayNew( &stack.Return, 0 );
+   hb_arrayNew( &hb_stack.Return, 0 );
 
    if( pCurrArea )
    {
@@ -1322,7 +1322,7 @@ HARBOUR HB_DBSTRUCT( void )
          hb_arraySet( pItem, 3, pData );
          SELF_FIELDINFO( ( AREAP ) pCurrArea->pArea, uiCount, DBS_DEC, pData );
          hb_arraySet( pItem, 4, pData );
-         hb_arrayAdd( &stack.Return, pItem );
+         hb_arrayAdd( &hb_stack.Return, pItem );
       }
       hb_itemRelease( pItem );
       hb_itemRelease( pData );
@@ -1750,9 +1750,9 @@ HARBOUR HB_LOCK( void )
 HARBOUR HB_LUPDATE( void )
 {
    if( !pCurrArea )
-      hb_itemPutDS( &stack.Return, "" );
+      hb_itemPutDS( &hb_stack.Return, "" );
    else
-      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_LASTUPDATE, &stack.Return );
+      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_LASTUPDATE, &hb_stack.Return );
 }
 
 HARBOUR HB_NETERR( void )
@@ -1770,14 +1770,14 @@ HARBOUR HB_RDDLIST( void )
    LPRDDNODE pRddNode;
 
    hb_rddCheck();
-   hb_arrayNew( &stack.Return, 0 );
+   hb_arrayNew( &hb_stack.Return, 0 );
    pName = hb_itemNew( NULL );
    pRddNode = pRddList;
    uiType = hb_parni( 1 );       /* 0 all types of RDD's */
    while( pRddNode )
    {
       if( ( uiType == 0 ) || ( pRddNode->uiType == uiType ) )
-         hb_arrayAdd( &stack.Return, hb_itemPutC( pName, pRddNode->szName ) );
+         hb_arrayAdd( &hb_stack.Return, hb_itemPutC( pName, pRddNode->szName ) );
       pRddNode = pRddNode->pNext;
    }
    hb_itemRelease( pName );

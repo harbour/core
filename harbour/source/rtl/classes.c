@@ -604,14 +604,14 @@ HARBOUR HB___CLSINST( void )
       USHORT  uiLimit = pClass->uiHashKey * BUCKET;
       PMETHOD pMeth  = pClass->pMethods;                /* Initialize DATA          */
 
-      hb_arrayNew( &stack.Return, pClass->uiDatas );
-      stack.Return.item.asArray.value->uiClass = uiClass;
+      hb_arrayNew( &hb_stack.Return, pClass->uiDatas );
+      hb_stack.Return.item.asArray.value->uiClass = uiClass;
 
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
          if( pMeth->pInitValue )
          {
             if( pMeth->pFunction != hb___msgGetClsData ) /* is a DATA */
-               hb_itemArrayPut( &stack.Return, pMeth->uiData, pMeth->pInitValue );
+               hb_itemArrayPut( &hb_stack.Return, pMeth->uiData, pMeth->pInitValue );
             else  /* it is a ClassData */
                hb_arraySet( pClass->pClassDatas, pMeth->uiData, pMeth->pInitValue );
          }
@@ -732,7 +732,7 @@ HARBOUR HB___OBJCLONE( void )
    {
       PHB_ITEM pDstObject = hb_arrayClone( pSrcObject );
 
-      hb_itemCopy( &stack.Return, pDstObject );
+      hb_itemCopy( &hb_stack.Return, pDstObject );
       hb_itemRelease( pDstObject );
    }
    else
@@ -793,7 +793,7 @@ HARBOUR HB___CLSINSTSUPER( void )
          hb_vmPushNil();
          hb_vmFunction( 0 );                         /* Execute super class      */
 
-         if( !IS_OBJECT( &stack.Return ) )
+         if( !IS_OBJECT( &hb_stack.Return ) )
          {
             hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER" );
          }
@@ -883,8 +883,8 @@ HARBOUR HB___CLS_INCDATA( void )
  */
 static HARBOUR hb___msgClsH( void )
 {
-   if( IS_ARRAY( stack.pBase + 1 ) )
-      hb_retni( ( stack.pBase + 1 )->item.asArray.value->uiClass );
+   if( IS_ARRAY( hb_stack.pBase + 1 ) )
+      hb_retni( ( hb_stack.pBase + 1 )->item.asArray.value->uiClass );
    else
       hb_retni( 0 );
 }
@@ -899,10 +899,10 @@ static HARBOUR hb___msgClsName( void )
 {
    PHB_ITEM pItemRef;
 
-   if( IS_BYREF( stack.pBase + 1 ) )            /* Variables by reference   */
-      pItemRef = hb_itemUnRef( stack.pBase + 1 );
+   if( IS_BYREF( hb_stack.pBase + 1 ) )            /* Variables by reference   */
+      pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
    else
-      pItemRef = stack.pBase + 1;
+      pItemRef = hb_stack.pBase + 1;
 
    hb_retc( hb_objGetClsName( pItemRef ) );
 }
@@ -915,14 +915,14 @@ static HARBOUR hb___msgClsName( void )
  */
 static HARBOUR hb___msgClsSel( void )
 {
-   USHORT uiClass = IS_ARRAY( stack.pBase + 1 ) ?
-                 ( stack.pBase + 1 )->item.asArray.value->uiClass : 0;
+   USHORT uiClass = IS_ARRAY( hb_stack.pBase + 1 ) ?
+                 ( hb_stack.pBase + 1 )->item.asArray.value->uiClass : 0;
                                                 /* Get class word           */
    PHB_ITEM pReturn = hb_itemNew( NULL );
 
-   if( ( ! uiClass ) && IS_BYREF( stack.pBase + 1 ) )
+   if( ( ! uiClass ) && IS_BYREF( hb_stack.pBase + 1 ) )
    {                                            /* Variables by reference   */
-      PHB_ITEM pItemRef = hb_itemUnRef( stack.pBase + 1 );
+      PHB_ITEM pItemRef = hb_itemUnRef( hb_stack.pBase + 1 );
       if( IS_ARRAY( pItemRef ) )
          uiClass = pItemRef->item.asArray.value->uiClass;
    }
@@ -963,14 +963,14 @@ static HARBOUR hb___msgClsSel( void )
 static HARBOUR hb___msgEvalInline( void )
 {
    HB_ITEM block;
-   USHORT uiClass = ( stack.pBase + 1 )->item.asArray.value->uiClass;
+   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
    USHORT uiParam;
 
    hb_arrayGet( s_pClasses[ uiClass - 1 ].pInlines, s_pMethod->uiData, &block );
 
    hb_vmPushSymbol( &hb_symEval );
    hb_vmPush( &block );
-   hb_vmPush( stack.pBase + 1 );                     /* Push self                */
+   hb_vmPush( hb_stack.pBase + 1 );                     /* Push self                */
    for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
       hb_vmPush( hb_param( uiParam, IT_ANY ) );
    hb_vmDo( hb_pcount() + 1 );                       /* Self is also an argument */
@@ -986,12 +986,12 @@ static HARBOUR hb___msgEvalInline( void )
  */
 static HARBOUR hb___msgEval( void )
 {
-   if( IS_BLOCK( stack.pBase + 1 ) )
+   if( IS_BLOCK( hb_stack.pBase + 1 ) )
    {
       USHORT uiParam;
 
       hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( stack.pBase + 1 );                     /* Push block               */
+      hb_vmPush( hb_stack.pBase + 1 );                     /* Push block               */
       for( uiParam = 1; uiParam <= hb_pcount(); uiParam++ )
          hb_vmPush( hb_param( uiParam, IT_ANY ) );
       hb_vmDo( hb_pcount() );                       /* Self is also an argument */
@@ -1016,10 +1016,10 @@ static HARBOUR hb___msgEval( void )
  */
 static HARBOUR hb___msgGetClsData( void )
 {
-   USHORT uiClass = ( stack.pBase + 1 )->item.asArray.value->uiClass;
+   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
 
    if( uiClass && uiClass <= s_uiClasses )
-      hb_arrayGet( s_pClasses[ uiClass - 1 ].pClassDatas, s_pMethod->uiData, &stack.Return );
+      hb_arrayGet( s_pClasses[ uiClass - 1 ].pClassDatas, s_pMethod->uiData, &hb_stack.Return );
 }
 
 
@@ -1030,14 +1030,14 @@ static HARBOUR hb___msgGetClsData( void )
  */
 static HARBOUR hb___msgGetData( void )
 {
-   PHB_ITEM pObject = stack.pBase + 1;
+   PHB_ITEM pObject = hb_stack.pBase + 1;
    USHORT uiIndex = s_pMethod->uiData;
 
    if( uiIndex > ( USHORT ) hb_arrayLen( pObject ) )
                                                 /* Resize needed            */
       hb_arraySize( pObject, uiIndex );         /* Make large enough        */
 
-   hb_arrayGet( pObject, uiIndex, &stack.Return );
+   hb_arrayGet( pObject, uiIndex, &hb_stack.Return );
 }
 
 
@@ -1048,7 +1048,7 @@ static HARBOUR hb___msgGetData( void )
  */
 static HARBOUR hb___msgSuper( void )
 {
-   PHB_ITEM   pObject    = stack.pBase + 1;
+   PHB_ITEM   pObject    = hb_stack.pBase + 1;
    PHB_ITEM   pSuper     = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
    PBASEARRAY pNewBase   = ( PBASEARRAY ) hb_xgrab( sizeof( BASEARRAY ) );
    USHORT     uiSuperCls = s_pMethod->uiData;     /* Get handle of superclass */
@@ -1063,7 +1063,7 @@ static HARBOUR hb___msgSuper( void )
    pNewBase->uiHolders  = 1;                    /* New item is returned     */
    pNewBase->bSuperCast = TRUE;                 /* Do not dispose pItems !! */
                                                 /* A bit dirty, but KISS.   */
-   hb_itemCopy( &stack.Return, pSuper );
+   hb_itemCopy( &hb_stack.Return, pSuper );
    hb_itemRelease( pSuper );
 }
 
@@ -1075,14 +1075,14 @@ static HARBOUR hb___msgSuper( void )
  */
 static HARBOUR hb___msgSetClsData( void )
 {
-   USHORT uiClass = ( stack.pBase + 1 )->item.asArray.value->uiClass;
-   PHB_ITEM pReturn = stack.pBase + 2;
+   USHORT uiClass = ( hb_stack.pBase + 1 )->item.asArray.value->uiClass;
+   PHB_ITEM pReturn = hb_stack.pBase + 2;
 
    if( uiClass && uiClass <= s_uiClasses )
    {
       hb_arraySet( s_pClasses[ uiClass - 1 ].pClassDatas,
                    s_pMethod->uiData, pReturn );
-      hb_itemCopy( &stack.Return, pReturn );
+      hb_itemCopy( &hb_stack.Return, pReturn );
    }
 }
 
@@ -1094,8 +1094,8 @@ static HARBOUR hb___msgSetClsData( void )
  */
 static HARBOUR hb___msgSetData( void )
 {
-   PHB_ITEM pObject = stack.pBase + 1;
-   PHB_ITEM pReturn = stack.pBase + 2;
+   PHB_ITEM pObject = hb_stack.pBase + 1;
+   PHB_ITEM pReturn = hb_stack.pBase + 2;
    USHORT   uiIndex = s_pMethod->uiData;
 
    /* Resize needed ? */
@@ -1104,7 +1104,7 @@ static HARBOUR hb___msgSetData( void )
       hb_arraySize( pObject, uiIndex );
 
    hb_arraySet( pObject, uiIndex, pReturn );
-   hb_itemCopy( &stack.Return, pReturn );
+   hb_itemCopy( &hb_stack.Return, pReturn );
 }
 
 

@@ -236,7 +236,7 @@ typedef USHORT ERRCODE;
 #define SUCCESS            0
 #define FAILURE            1
 
-extern STACK   stack;
+extern STACK   hb_stack;
 extern HB_SYMB hb_symEval;
 
 /* Extend API */

@@ -467,7 +467,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
                hb_vmPush( pBaseArray->pItems + ulStart );
                hb_vmDo( 1 );
 
-               if( IS_LOGICAL( &stack.Return ) && stack.Return.item.asLogical.value )
+               if( IS_LOGICAL( &hb_stack.Return ) && hb_stack.Return.item.asLogical.value )
                   return ulStart + 1;                  /* arrays start from 1 */
             }
          }
@@ -749,7 +749,7 @@ HARBOUR HB_ARRAY( void )
       }
 
       if( ! bError )
-         hb_arrayNewRagged( &stack.Return, 1 );
+         hb_arrayNewRagged( &hb_stack.Return, 1 );
    }
 }
 
@@ -802,7 +802,7 @@ HARBOUR HB_ATAIL( void )
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
    if( pArray )
-      hb_arrayLast( pArray, &stack.Return );
+      hb_arrayLast( pArray, &hb_stack.Return );
 }
 
 HARBOUR HB_AINS( void )

@@ -211,8 +211,8 @@ char * hb_dateDecStr( char * szDate, long lJulian )
    long lDay, lMonth, lYear;
 
    hb_dateDecode( lJulian, &lDay, &lMonth, &lYear );
-   hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
-   stack.szDate[ 8 ] = '\0';
+   hb_dateStrPut( hb_stack.szDate, lDay, lMonth, lYear );
+   hb_stack.szDate[ 8 ] = '\0';
 
    return szDate;
 }

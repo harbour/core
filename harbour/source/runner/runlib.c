@@ -271,7 +271,7 @@ HARBOUR HB___HRBRUN( void )
             hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
             pRetVal = hb_itemNew( NULL );
-            hb_itemCopy( pRetVal, &stack.Return );
+            hb_itemCopy( pRetVal, &hb_stack.Return );
 
             for( ul = 0; ul < ulSymbols; ul++ )    /* Check EXIT functions     */
             {

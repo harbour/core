@@ -198,7 +198,7 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 
 /* virtual machine state */
 
-STACK   stack;
+STACK   hb_stack;
 HB_SYMB hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
 
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
@@ -240,7 +240,7 @@ void hb_vmInit( void )
 
    /* initialize internal data structures */
    s_aStatics.type = IT_NIL;
-   stack.Return.type = IT_NIL;
+   hb_stack.Return.type = IT_NIL;
 
    hb_xinit();
    hb_errInit();
@@ -328,10 +328,10 @@ void hb_vmQuit( void )
    s_uiActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
 
-   while( stack.pPos > stack.pItems )
+   while( hb_stack.pPos > hb_stack.pItems )
       hb_stackPop();
 
-   hb_itemClear( &stack.Return );
+   hb_itemClear( &hb_stack.Return );
    hb_arrayRelease( &s_aStatics );
    hb_rddShutDown();
    hb_errExit();
@@ -531,7 +531,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_LINE:
-            stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             if( s_bDebugging && s_bDebugShowLines )
                hb_vmDebuggerShowLine( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
             w += 3;
@@ -539,7 +539,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PARAMETER:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarSetValue( pSymbols + uiParams, stack.pBase + 1 + pCode[ w + 3 ] );
+            hb_memvarSetValue( pSymbols + uiParams, hb_stack.pBase + 1 + pCode[ w + 3 ] );
             HB_DEBUG( "(hb_vmPopParameter)\n" );
             w += 4;
             break;
@@ -597,31 +597,31 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             /*
              * 1) clear the storage for value returned by BREAK statement
              */
-            stack.pPos->type = IT_NIL;
+            hb_stack.pPos->type = IT_NIL;
             hb_stackPush();
             /*
              * 2) store the address of RECOVER or END opcode
              */
-            stack.pPos->type = IT_LONG;
-            stack.pPos->item.asLong.value = w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            hb_stack.pPos->type = IT_LONG;
+            hb_stack.pPos->item.asLong.value = w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_stackPush();
             /*
              * 3) store current RECOVER base
              */
-            stack.pPos->type = IT_LONG;
-            stack.pPos->item.asLong.value = s_lRecoverBase;
+            hb_stack.pPos->type = IT_LONG;
+            hb_stack.pPos->item.asLong.value = s_lRecoverBase;
             hb_stackPush();
             /*
              * 4) store current bCanRecover flag - in a case of nested sequences
              * in the same procedure/function
              */
-            stack.pPos->type = IT_LOGICAL;
-            stack.pPos->item.asLogical.value = bCanRecover;
+            hb_stack.pPos->type = IT_LOGICAL;
+            hb_stack.pPos->item.asLogical.value = bCanRecover;
             hb_stackPush();
             /*
              * set new recover base
              */
-            s_lRecoverBase = stack.pPos - stack.pItems;
+            s_lRecoverBase = hb_stack.pPos - hb_stack.pItems;
             /*
              * we are now inside a valid SEQUENCE envelope
              */
@@ -639,19 +639,19 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              * 4) Restore previous recovery state
              */
             hb_stackDec();
-            bCanRecover = stack.pPos->item.asLogical.value;
-            stack.pPos->type = IT_NIL;
+            bCanRecover = hb_stack.pPos->item.asLogical.value;
+            hb_stack.pPos->type = IT_NIL;
             /*
              * 3) Restore previous RECOVER base
              */
             hb_stackDec();
-            s_lRecoverBase = stack.pPos->item.asLong.value;
-            stack.pPos->type = IT_NIL;
+            s_lRecoverBase = hb_stack.pPos->item.asLong.value;
+            hb_stack.pPos->type = IT_NIL;
             /*
              * 2) Remove RECOVER address
              */
             hb_stackDec();
-            stack.pPos->type = IT_NIL;
+            hb_stack.pPos->type = IT_NIL;
             /* 1) Discard the value returned by BREAK statement - there
              * was no RECOVER clause or there was no BREAK statement
              */
@@ -670,19 +670,19 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              * 4) Restore previous recovery state
              */
             hb_stackDec();
-            bCanRecover = stack.pPos->item.asLogical.value;
-            stack.pPos->type = IT_NIL;
+            bCanRecover = hb_stack.pPos->item.asLogical.value;
+            hb_stack.pPos->type = IT_NIL;
             /*
              * 3) Restore previous RECOVER base
              */
             hb_stackDec();
-            s_lRecoverBase = stack.pPos->item.asLong.value;
-            stack.pPos->type = IT_NIL;
+            s_lRecoverBase = hb_stack.pPos->item.asLong.value;
+            hb_stack.pPos->type = IT_NIL;
             /*
              * 2) Remove RECOVER address
              */
             hb_stackDec();
-            stack.pPos->type = IT_NIL;
+            hb_stack.pPos->type = IT_NIL;
             /*
              * 1) Leave the value returned from BREAK  - it will be popped
              * in next executed opcode
@@ -732,7 +732,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHNIL:
-            stack.pPos->type = IT_NIL;
+            hb_stack.pPos->type = IT_NIL;
             hb_stackPush();
             HB_DEBUG( "(hb_vmPushNil)\n" );
             w++;
@@ -773,7 +773,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_PUSHSELF:
-            hb_vmPush( stack.pBase + 1 );
+            hb_vmPush( hb_stack.pBase + 1 );
             w++;
             break;
 
@@ -798,7 +798,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             /* It pushes the current value of the given field onto the eval stack
              */
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_rddGetFieldValue( stack.pPos, pSymbols + uiParams );
+            hb_rddGetFieldValue( hb_stack.pPos, pSymbols + uiParams );
             hb_stackPush();
             HB_DEBUG( "hb_vmPushField\n" );
             w += 3;
@@ -826,7 +826,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHMEMVAR:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarGetValue( stack.pPos, pSymbols + uiParams );
+            hb_memvarGetValue( hb_stack.pPos, pSymbols + uiParams );
             hb_stackPush();
             HB_DEBUG( "(hb_vmPushMemvar)\n" );
             w += 3;
@@ -834,7 +834,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHMEMVARREF:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_memvarGetRefer( stack.pPos, pSymbols + uiParams );
+            hb_memvarGetRefer( hb_stack.pPos, pSymbols + uiParams );
             hb_stackPush();
             HB_DEBUG( "(hb_vmPushMemvarRef)\n" );
             w += 3;
@@ -853,11 +853,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                    * in a current workarea - if it is not a field (FAILURE)
                    * then try the memvar variable
                    */
-                  if( hb_rddFieldGet( stack.pPos, pVarSymb ) == SUCCESS )
+                  if( hb_rddFieldGet( hb_stack.pPos, pVarSymb ) == SUCCESS )
                      hb_stackPush();
                   else
                   {
-                     if( hb_memvarGet( stack.pPos, pVarSymb ) == SUCCESS )
+                     if( hb_memvarGet( hb_stack.pPos, pVarSymb ) == SUCCESS )
                         hb_stackPush();
                      else
                      {
@@ -912,8 +912,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              */
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_stackDec();
-            hb_rddPutFieldValue( stack.pPos, pSymbols + uiParams );
-            hb_itemClear( stack.pPos );
+            hb_rddPutFieldValue( hb_stack.pPos, pSymbols + uiParams );
+            hb_itemClear( hb_stack.pPos );
             HB_DEBUG( "hb_vmPopField\n" );
             w += 3;
             break;
@@ -931,8 +931,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_POPMEMVAR:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
             hb_stackDec();
-            hb_memvarSetValue( pSymbols + uiParams, stack.pPos );
-            hb_itemClear( stack.pPos );
+            hb_memvarSetValue( pSymbols + uiParams, hb_stack.pPos );
+            hb_itemClear( hb_stack.pPos );
             HB_DEBUG( "(hb_vmPopMemvar)\n" );
             w += 3;
             break;
@@ -948,9 +948,9 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              * variable if this variable doesn't exist)
              */
             hb_stackDec();
-            if( hb_rddFieldPut( stack.pPos, pSymbols + uiParams ) == FAILURE )
-               hb_memvarSetValue( pSymbols + uiParams, stack.pPos );
-            hb_itemClear( stack.pPos );
+            if( hb_rddFieldPut( hb_stack.pPos, pSymbols + uiParams ) == FAILURE )
+               hb_memvarSetValue( pSymbols + uiParams, hb_stack.pPos );
+            hb_itemClear( hb_stack.pPos );
             HB_DEBUG( "(hb_vmPopVariable)\n" );
             w += 3;
             break;
@@ -980,12 +980,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * remove all items placed on the stack after BEGIN code
                 */
-               while( stack.pPos > stack.pItems + s_lRecoverBase )
+               while( hb_stack.pPos > hb_stack.pItems + s_lRecoverBase )
                   hb_stackPop();
                /*
                 * reload the address of recovery code
                 */
-               w = stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
+               w = hb_stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
                /*
                 * leave the SEQUENCE envelope on the stack - it will
                 * be popped either in RECOVER or END opcode
@@ -1011,20 +1011,20 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
 static void hb_vmNegate( void )
 {
-   if( IS_INTEGER( stack.pPos - 1 ) )
+   if( IS_INTEGER( hb_stack.pPos - 1 ) )
    {
-      ( stack.pPos - 1 )->item.asInteger.value = -( stack.pPos - 1 )->item.asInteger.value;
-      ( stack.pPos - 1 )->item.asInteger.length = 10;
+      ( hb_stack.pPos - 1 )->item.asInteger.value = -( hb_stack.pPos - 1 )->item.asInteger.value;
+      ( hb_stack.pPos - 1 )->item.asInteger.length = 10;
    }
-   else if( IS_LONG( stack.pPos - 1 ) )
+   else if( IS_LONG( hb_stack.pPos - 1 ) )
    {
-      ( stack.pPos - 1 )->item.asLong.value = -( stack.pPos - 1 )->item.asLong.value;
-      ( stack.pPos - 1 )->item.asLong.length = 10;
+      ( hb_stack.pPos - 1 )->item.asLong.value = -( hb_stack.pPos - 1 )->item.asLong.value;
+      ( hb_stack.pPos - 1 )->item.asLong.length = 10;
    }
-   else if( IS_DOUBLE( stack.pPos - 1 ) )
+   else if( IS_DOUBLE( hb_stack.pPos - 1 ) )
    {
-      ( stack.pPos - 1 )->item.asDouble.value = -( stack.pPos - 1 )->item.asDouble.value;
-      ( stack.pPos - 1 )->item.asDouble.length = ( stack.pPos - 1 )->item.asDouble.value >= 10000000000.0 ? 20 : 10;
+      ( hb_stack.pPos - 1 )->item.asDouble.value = -( hb_stack.pPos - 1 )->item.asDouble.value;
+      ( hb_stack.pPos - 1 )->item.asDouble.length = ( hb_stack.pPos - 1 )->item.asDouble.value >= 10000000000.0 ? 20 : 10;
    }
    else
    {
@@ -1041,8 +1041,8 @@ static void hb_vmNegate( void )
 
 static void hb_vmPlus( void )
 {
-   PHB_ITEM pItem1 = stack.pPos - 2;
-   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
@@ -1112,8 +1112,8 @@ static void hb_vmPlus( void )
 
 static void hb_vmMinus( void )
 {
-   PHB_ITEM pItem2 = stack.pPos - 1;
-   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
 
    if( IS_NUMERIC( pItem2 ) && IS_NUMERIC( pItem1 ) )
    {
@@ -1165,7 +1165,7 @@ static void hb_vmMinus( void )
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-" );
    }
-   else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "-" ) )
       hb_vmOperatorCall( pItem1, pItem2, "-" );
 
    else
@@ -1184,7 +1184,7 @@ static void hb_vmMinus( void )
 
 static void hb_vmMult( void )
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       int iDec2, iDec1;
       double d2 = hb_vmPopDouble( &iDec2 );
@@ -1208,9 +1208,9 @@ static void hb_vmMult( void )
 
 static void hb_vmDivide( void )
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
-      BOOL bIntegerOperands = !IS_DOUBLE( stack.pPos - 1 ) && !IS_DOUBLE( stack.pPos - 2 );
+      BOOL bIntegerOperands = !IS_DOUBLE( hb_stack.pPos - 1 ) && !IS_DOUBLE( hb_stack.pPos - 2 );
       int iDec1, iDec2;
       double d2 = hb_vmPopDouble( &iDec2 );
       double d1 = hb_vmPopDouble( &iDec1 );
@@ -1251,7 +1251,7 @@ static void hb_vmDivide( void )
 
 static void hb_vmModulus( void )
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       int iDec1, iDec2;
       double d2 = hb_vmPopDouble( &iDec2 );
@@ -1288,7 +1288,7 @@ static void hb_vmModulus( void )
 
 static void hb_vmPower( void )
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       int iDec1, iDec2;
       double d2 = hb_vmPopDouble( &iDec2 );
@@ -1314,17 +1314,17 @@ static void hb_vmPower( void )
 
 static void hb_vmInc( void )
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) )
    {
       int iDec;
       double dNumber = hb_vmPopDouble( &iDec );
       hb_vmPushNumber( ++dNumber, iDec );
    }
-   else if( IS_DATE( stack.pPos - 1 ) )
+   else if( IS_DATE( hb_stack.pPos - 1 ) )
       hb_vmPushDate( hb_vmPopDate() + 1 );
 
-   else if( IS_OBJECT( stack.pPos - 1 ) && hb_objHasMsg( stack.pPos - 1, "++" ) )
-      hb_vmOperatorCallUnary( stack.pPos - 1, "++" );
+   else if( IS_OBJECT( hb_stack.pPos - 1 ) && hb_objHasMsg( hb_stack.pPos - 1, "++" ) )
+      hb_vmOperatorCallUnary( hb_stack.pPos - 1, "++" );
 
    else
    {
@@ -1341,17 +1341,17 @@ static void hb_vmInc( void )
 
 static void hb_vmDec( void )
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) )
    {
       int iDec;
       double dNumber = hb_vmPopDouble( &iDec );
       hb_vmPushNumber( --dNumber, iDec );
    }
-   else if( IS_DATE( stack.pPos - 1 ) )
+   else if( IS_DATE( hb_stack.pPos - 1 ) )
       hb_vmPushDate( hb_vmPopDate() - 1 );
 
-   else if( IS_OBJECT( stack.pPos - 1 ) && hb_objHasMsg( stack.pPos - 1, "--" ) )
-      hb_vmOperatorCallUnary( stack.pPos - 1, "--" );
+   else if( IS_OBJECT( hb_stack.pPos - 1 ) && hb_objHasMsg( hb_stack.pPos - 1, "--" ) )
+      hb_vmOperatorCallUnary( hb_stack.pPos - 1, "--" );
 
    else
    {
@@ -1368,7 +1368,7 @@ static void hb_vmDec( void )
 
 static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes the symbol from the satck */
 {
-   PHB_ITEM pItem = stack.pPos - 1;
+   PHB_ITEM pItem = hb_stack.pPos - 1;
 
    if( IS_SYMBOL( pItem ) )
    {
@@ -1385,8 +1385,8 @@ static void hb_vmFuncPtr( void )  /* pushes a function address pointer. Removes 
 
 static void hb_vmEqual( BOOL bExact )
 {
-   PHB_ITEM pItem2 = stack.pPos - 1;
-   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
@@ -1465,8 +1465,8 @@ static void hb_vmEqual( BOOL bExact )
 
 static void hb_vmNotEqual( void )
 {
-   PHB_ITEM pItem2 = stack.pPos - 1;
-   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
 
    if( IS_NIL( pItem1 ) && IS_NIL( pItem2 ) )
    {
@@ -1536,37 +1536,37 @@ static void hb_vmNotEqual( void )
 
 static void hb_vmLess( void )
 {
-   if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
+   if( IS_STRING( hb_stack.pPos - 2 ) && IS_STRING( hb_stack.pPos - 1 ) )
    {
-      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( hb_stack.pPos - 2, hb_stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i < 0 );
    }
 
-   else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   else if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 < dNumber2 );
    }
 
-   else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
+   else if( IS_DATE( hb_stack.pPos - 1 ) && IS_DATE( hb_stack.pPos - 2 ) )
    {
       LONG lDate2 = hb_vmPopDate();
       LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 < lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
+   else if( IS_LOGICAL( hb_stack.pPos - 1 ) && IS_LOGICAL( hb_stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 < bLogical2 );
    }
 
-   else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "<" ) )
-      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<" );
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "<" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "<" );
 
    else
    {
@@ -1584,37 +1584,37 @@ static void hb_vmLess( void )
 
 static void hb_vmLessEqual( void )
 {
-   if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
+   if( IS_STRING( hb_stack.pPos - 2 ) && IS_STRING( hb_stack.pPos - 1 ) )
    {
-      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( hb_stack.pPos - 2, hb_stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i <= 0 );
    }
 
-   else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   else if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 <= dNumber2 );
    }
 
-   else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
+   else if( IS_DATE( hb_stack.pPos - 1 ) && IS_DATE( hb_stack.pPos - 2 ) )
    {
       LONG lDate2 = hb_vmPopDate();
       LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 <= lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
+   else if( IS_LOGICAL( hb_stack.pPos - 1 ) && IS_LOGICAL( hb_stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 <= bLogical2 );
    }
 
-   else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "<=" ) )
-      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "<=" );
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, "<=" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, "<=" );
 
    else
    {
@@ -1632,37 +1632,37 @@ static void hb_vmLessEqual( void )
 
 static void hb_vmGreater( void )
 {
-   if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
+   if( IS_STRING( hb_stack.pPos - 2 ) && IS_STRING( hb_stack.pPos - 1 ) )
    {
-      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( hb_stack.pPos - 2, hb_stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i > 0 );
    }
 
-   else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   else if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 > dNumber2 );
    }
 
-   else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
+   else if( IS_DATE( hb_stack.pPos - 1 ) && IS_DATE( hb_stack.pPos - 2 ) )
    {
       LONG lDate2 = hb_vmPopDate();
       LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 > lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
+   else if( IS_LOGICAL( hb_stack.pPos - 1 ) && IS_LOGICAL( hb_stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 > bLogical2 );
    }
 
-   else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, ">" ) )
-      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">" );
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, ">" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, ">" );
 
    else
    {
@@ -1680,37 +1680,37 @@ static void hb_vmGreater( void )
 
 static void hb_vmGreaterEqual( void )
 {
-   if( IS_STRING( stack.pPos - 2 ) && IS_STRING( stack.pPos - 1 ) )
+   if( IS_STRING( hb_stack.pPos - 2 ) && IS_STRING( hb_stack.pPos - 1 ) )
    {
-      int i = hb_itemStrCmp( stack.pPos - 2, stack.pPos - 1, FALSE );
+      int i = hb_itemStrCmp( hb_stack.pPos - 2, hb_stack.pPos - 1, FALSE );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( i >= 0 );
    }
 
-   else if( IS_NUMERIC( stack.pPos - 1 ) && IS_NUMERIC( stack.pPos - 2 ) )
+   else if( IS_NUMERIC( hb_stack.pPos - 1 ) && IS_NUMERIC( hb_stack.pPos - 2 ) )
    {
       double dNumber2 = hb_vmPopNumber();
       double dNumber1 = hb_vmPopNumber();
       hb_vmPushLogical( dNumber1 >= dNumber2 );
    }
 
-   else if( IS_DATE( stack.pPos - 1 ) && IS_DATE( stack.pPos - 2 ) )
+   else if( IS_DATE( hb_stack.pPos - 1 ) && IS_DATE( hb_stack.pPos - 2 ) )
    {
       LONG lDate2 = hb_vmPopDate();
       LONG lDate1 = hb_vmPopDate();
       hb_vmPushLogical( lDate1 >= lDate2 );
    }
 
-   else if( IS_LOGICAL( stack.pPos - 1 ) && IS_LOGICAL( stack.pPos - 2 ) )
+   else if( IS_LOGICAL( hb_stack.pPos - 1 ) && IS_LOGICAL( hb_stack.pPos - 2 ) )
    {
       BOOL bLogical2 = hb_vmPopLogical();
       BOOL bLogical1 = hb_vmPopLogical();
       hb_vmPushLogical( bLogical1 >= bLogical2 );
    }
 
-   else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, ">=" ) )
-      hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, ">=" );
+   else if( IS_OBJECT( hb_stack.pPos - 2 ) && hb_objHasMsg( hb_stack.pPos - 2, ">=" ) )
+      hb_vmOperatorCall( hb_stack.pPos - 2, hb_stack.pPos - 1, ">=" );
 
    else
    {
@@ -1728,8 +1728,8 @@ static void hb_vmGreaterEqual( void )
 
 static void hb_vmInstring( void )
 {
-   PHB_ITEM pItem1 = stack.pPos - 2;
-   PHB_ITEM pItem2 = stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
@@ -1757,7 +1757,7 @@ static void hb_vmInstring( void )
 
 static void hb_vmForTest( void )        /* Test to check the end point of the FOR */
 {
-   if( IS_NUMERIC( stack.pPos - 1 ) )
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) )
    {
       int iDec;
       double dStep;
@@ -1786,7 +1786,7 @@ static void hb_vmForTest( void )        /* Test to check the end point of the FO
 
 static void hb_vmNot( void )
 {
-   PHB_ITEM pItem = stack.pPos - 1;
+   PHB_ITEM pItem = hb_stack.pPos - 1;
 
    if( IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
@@ -1805,8 +1805,8 @@ static void hb_vmNot( void )
 
 static void hb_vmAnd( void )
 {
-   PHB_ITEM pItem2 = stack.pPos - 1;
-   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
 
    HB_DEBUG( "And\n" );
 
@@ -1823,8 +1823,8 @@ static void hb_vmAnd( void )
 
 static void hb_vmOr( void )
 {
-   PHB_ITEM pItem2 = stack.pPos - 1;
-   PHB_ITEM pItem1 = stack.pPos - 2;
+   PHB_ITEM pItem2 = hb_stack.pPos - 1;
+   PHB_ITEM pItem1 = hb_stack.pPos - 2;
 
    if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
    {
@@ -1843,8 +1843,8 @@ static void hb_vmOr( void )
 
 static void hb_vmArrayAt( void )
 {
-   PHB_ITEM pIndex = stack.pPos - 1;
-   PHB_ITEM pArray = stack.pPos - 2;
+   PHB_ITEM pIndex = hb_stack.pPos - 1;
+   PHB_ITEM pArray = hb_stack.pPos - 2;
    ULONG ulIndex;
 
    if( IS_INTEGER( pIndex ) )
@@ -1879,7 +1879,7 @@ static void hb_vmArrayAt( void )
       hb_stackPop();
       hb_stackPop();
 
-      hb_itemCopy( stack.pPos, &item );
+      hb_itemCopy( hb_stack.pPos, &item );
       hb_itemClear( &item );
       hb_stackPush();
    }
@@ -1887,9 +1887,9 @@ static void hb_vmArrayAt( void )
 
 static void hb_vmArrayPut( void )
 {
-   PHB_ITEM pValue = stack.pPos - 1;
-   PHB_ITEM pIndex = stack.pPos - 2;
-   PHB_ITEM pArray = stack.pPos - 3;
+   PHB_ITEM pValue = hb_stack.pPos - 1;
+   PHB_ITEM pIndex = hb_stack.pPos - 2;
+   PHB_ITEM pArray = hb_stack.pPos - 3;
    ULONG ulIndex;
 
    if( IS_INTEGER( pIndex ) )
@@ -1926,7 +1926,7 @@ static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Ar
    while( uiDimensions-- )
       hb_stackPop();
 
-   hb_itemCopy( stack.pPos, &itArray );
+   hb_itemCopy( hb_stack.pPos, &itArray );
    hb_itemClear( &itArray );
    hb_stackPush();
 }
@@ -1939,12 +1939,12 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
    itArray.type = IT_NIL;
    hb_arrayNew( &itArray, ulElements );
    for( ulPos = 0; ulPos < ulElements; ulPos++ )
-      hb_itemCopy( itArray.item.asArray.value->pItems + ulPos, stack.pPos - ulElements + ulPos );
+      hb_itemCopy( itArray.item.asArray.value->pItems + ulPos, hb_stack.pPos - ulElements + ulPos );
 
    for( ulPos = 0; ulPos < ulElements; ulPos++ )
       hb_stackPop();
 
-   hb_itemCopy( stack.pPos, &itArray );
+   hb_itemCopy( hb_stack.pPos, &itArray );
    hb_itemClear( &itArray );
    hb_stackPush();
 }
@@ -1955,7 +1955,7 @@ static void hb_vmArrayGen( ULONG ulElements ) /* generates an ulElements Array a
 static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 {
    ULONG ulElements;
-   HB_ITEM_PTR pDim = stack.pPos - uiDimension;
+   HB_ITEM_PTR pDim = hb_stack.pPos - uiDimension;
 
    /* use the proper type of number of elements */
    switch( pDim->type & ~IT_BYREF )
@@ -1999,11 +1999,11 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
 
 void hb_vmMessage( PHB_SYMB pSymMsg ) /* sends a message to an object */
 {
-   hb_itemCopy( stack.pPos, stack.pPos - 1 ); /* moves the object forward */
-   hb_itemClear( stack.pPos - 1 );
-   ( stack.pPos - 1 )->type = IT_SYMBOL;
-   ( stack.pPos - 1 )->item.asSymbol.value = pSymMsg;
-   ( stack.pPos - 1 )->item.asSymbol.stackbase = ( stack.pPos - 1 ) - stack.pItems;
+   hb_itemCopy( hb_stack.pPos, hb_stack.pPos - 1 ); /* moves the object forward */
+   hb_itemClear( hb_stack.pPos - 1 );
+   ( hb_stack.pPos - 1 )->type = IT_SYMBOL;
+   ( hb_stack.pPos - 1 )->item.asSymbol.value = pSymMsg;
+   ( hb_stack.pPos - 1 )->item.asSymbol.stackbase = ( hb_stack.pPos - 1 ) - hb_stack.pItems;
    hb_stackPush();
 
    HB_DEBUG2( "Message: %s\n", pSymMsg->szName );
@@ -2018,9 +2018,9 @@ static void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSy
 
    ItemMsg.type = IT_SYMBOL;
    ItemMsg.item.asSymbol.value = hb_dynsymFind( szSymbol )->pSymbol;
-   ItemMsg.item.asSymbol.stackbase = stack.pPos - stack.pItems;
+   ItemMsg.item.asSymbol.stackbase = hb_stack.pPos - hb_stack.pItems;
 
-   hb_itemClear( &stack.Return );       /* clear return value */
+   hb_itemClear( &hb_stack.Return );       /* clear return value */
    hb_vmPush( &ItemMsg );
    hb_vmPush( pObjItem );                             /* Push object              */
    hb_vmPush( pMsgItem );                             /* Push argument            */
@@ -2034,7 +2034,7 @@ static void hb_vmOperatorCall( PHB_ITEM pObjItem, PHB_ITEM pMsgItem, char * szSy
     * We can replace the second argument with the return value.
     */
    hb_itemClear( pObjItem );
-   hb_itemCopy( pObjItem, &stack.Return );
+   hb_itemCopy( pObjItem, &hb_stack.Return );
 }
 
 static void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
@@ -2046,9 +2046,9 @@ static void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
 
    ItemMsg.type = IT_SYMBOL;
    ItemMsg.item.asSymbol.value = hb_dynsymFind( szSymbol )->pSymbol;
-   ItemMsg.item.asSymbol.stackbase = stack.pPos - stack.pItems;
+   ItemMsg.item.asSymbol.stackbase = hb_stack.pPos - hb_stack.pItems;
 
-   hb_itemClear( &stack.Return );       /* clear return value */
+   hb_itemClear( &hb_stack.Return );       /* clear return value */
    hb_vmPush( &ItemMsg );
    hb_vmPush( pObjItem );                             /* Push object */
    hb_vmDo( 0 );
@@ -2058,7 +2058,7 @@ static void hb_vmOperatorCallUnary( PHB_ITEM pObjItem, char * szSymbol )
     * return value. We can replace the last element with the new value.
     */
    hb_itemClear( pObjItem );
-   hb_itemCopy( pObjItem, &stack.Return );
+   hb_itemCopy( pObjItem, &hb_stack.Return );
 }
 
 /* ------------------------------- */
@@ -2130,8 +2130,8 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias )
  */
 static void hb_vmSwapAlias( void )
 {
-   HB_ITEM_PTR pItem = stack.pPos - 1;
-   HB_ITEM_PTR pWorkArea = stack.pPos - 2;
+   HB_ITEM_PTR pItem = hb_stack.pPos - 1;
+   HB_ITEM_PTR pWorkArea = hb_stack.pPos - 2;
 
    hb_vmSelectWorkarea( pWorkArea );
 
@@ -2148,13 +2148,13 @@ static void hb_vmSwapAlias( void )
 
 void hb_vmDo( USHORT uiParams )
 {
-   PHB_ITEM pItem = stack.pPos - uiParams - 2;   /* procedure name */
+   PHB_ITEM pItem = hb_stack.pPos - uiParams - 2;   /* procedure name */
    PHB_SYMB pSym = pItem->item.asSymbol.value;
-   LONG wStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
-   LONG wItemIndex = pItem - stack.pItems;
-   PHB_ITEM pSelf = stack.pPos - uiParams - 1;   /* NIL, OBJECT or BLOCK */
+   LONG wStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
+   LONG wItemIndex = pItem - hb_stack.pItems;
+   PHB_ITEM pSelf = hb_stack.pPos - uiParams - 1;   /* NIL, OBJECT or BLOCK */
    PHB_FUNC pFunc;
-   int iStatics = stack.iStatics;              /* Return iStatics position */
+   int iStatics = hb_stack.iStatics;              /* Return iStatics position */
    BOOL bDebugPrevState = s_bDebugging;
 
    s_bDebugging = FALSE;
@@ -2177,7 +2177,7 @@ void hb_vmDo( USHORT uiParams )
 
    pItem->item.asSymbol.lineno = 0;
    pItem->item.asSymbol.paramcnt = uiParams;
-   stack.pBase = stack.pItems + pItem->item.asSymbol.stackbase;
+   hb_stack.pBase = hb_stack.pItems + pItem->item.asSymbol.stackbase;
    pItem->item.asSymbol.stackbase = wStackBase;
 
    HB_DEBUG2( "Do with %i params\n", uiParams );
@@ -2217,11 +2217,11 @@ void hb_vmDo( USHORT uiParams )
          hb_errInternal( 9999, "Invalid function pointer (%s) from hb_vmDo()", pSym->szName, NULL );
    }
 
-   while( stack.pPos > stack.pItems + wItemIndex )
+   while( hb_stack.pPos > hb_stack.pItems + wItemIndex )
       hb_stackPop();
 
-   stack.pBase = stack.pItems + wStackBase;
-   stack.iStatics = iStatics;
+   hb_stack.pBase = hb_stack.pItems + wStackBase;
+   hb_stack.iStatics = iStatics;
 
    if( s_bDebugging )
       hb_vmDebuggerEndProc();
@@ -2231,8 +2231,8 @@ void hb_vmDo( USHORT uiParams )
 
 static HARBOUR hb_vmDoBlock( void )
 {
-   PHB_ITEM pBlock = stack.pBase + 1;
-   USHORT uiStackBase = stack.pBase - stack.pItems; /* as the stack memory block could change */
+   PHB_ITEM pBlock = hb_stack.pBase + 1;
+   USHORT uiStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
    USHORT uiLine;
    int iParam;
 
@@ -2247,23 +2247,23 @@ static HARBOUR hb_vmDoBlock( void )
 
    /* set the current line number to a line where the codeblock was defined
     */
-   uiLine = stack.pBase->item.asSymbol.lineno;
-   stack.pBase->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
+   uiLine = hb_stack.pBase->item.asSymbol.lineno;
+   hb_stack.pBase->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
 
    hb_codeblockEvaluate( pBlock );
 
    /* restore stack pointers */
-   stack.pBase = stack.pItems + uiStackBase;
-   stack.pBase->item.asSymbol.lineno = uiLine;
+   hb_stack.pBase = hb_stack.pItems + uiStackBase;
+   hb_stack.pBase->item.asSymbol.lineno = uiLine;
 
    HB_DEBUG( "End of DoBlock\n" );
 }
 
 void hb_vmFunction( USHORT uiParams )
 {
-   hb_itemClear( &stack.Return );
+   hb_itemClear( &hb_stack.Return );
    hb_vmDo( uiParams );
-   hb_itemCopy( stack.pPos, &stack.Return );
+   hb_itemCopy( hb_stack.pPos, &hb_stack.Return );
    hb_stackPush();
 }
 
@@ -2292,7 +2292,7 @@ static void hb_vmFrame( BYTE bLocals, BYTE bParams )
    {
       int i;
 
-      for( i = 0; i < ( iTotal - stack.pBase->item.asSymbol.paramcnt ); i++ )
+      for( i = 0; i < ( iTotal - hb_stack.pBase->item.asSymbol.paramcnt ); i++ )
          hb_vmPushNil();
    }
 
@@ -2302,7 +2302,7 @@ static void hb_vmFrame( BYTE bLocals, BYTE bParams )
 static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a function */
 {
    /* _INITSTATICS is now the statics frame. Statics() changed it! */
-   stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", FS_INIT | FS_EXIT, _INITSTATICS } for each PRG */
+   hb_stack.iStatics = ( int ) pSym->pFunPtr; /* pSym is { "$_INITSTATICS", FS_INIT | FS_EXIT, _INITSTATICS } for each PRG */
    HB_DEBUG( "SFrame\n" );
 }
 
@@ -2327,16 +2327,16 @@ static void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics arr
 static void hb_vmEndBlock( void )
 {
    hb_stackDec();                               /* make the last item visible */
-   hb_itemCopy( &stack.Return, stack.pPos ); /* copy it */
-   hb_itemClear( stack.pPos );               /* and now clear it */
+   hb_itemCopy( &hb_stack.Return, hb_stack.pPos ); /* copy it */
+   hb_itemClear( hb_stack.pPos );               /* and now clear it */
    HB_DEBUG( "EndBlock\n" );
 }
 
 static void hb_vmRetValue( void )
 {
    hb_stackDec();                               /* make the last item visible */
-   hb_itemCopy( &stack.Return, stack.pPos ); /* copy it */
-   hb_itemClear( stack.pPos );               /* now clear it */
+   hb_itemCopy( &hb_stack.Return, hb_stack.pPos ); /* copy it */
+   hb_itemClear( hb_stack.pPos );               /* now clear it */
 
    HB_DEBUG( "hb_vmRetValue\n" );
 }
@@ -2345,7 +2345,7 @@ static void hb_vmDebuggerEndProc( void )
 {
    HB_ITEM item;
 
-   hb_itemCopy( &item, &stack.Return ); /* saves the previous returned value */
+   hb_itemCopy( &item, &hb_stack.Return ); /* saves the previous returned value */
 
    s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
@@ -2353,7 +2353,7 @@ static void hb_vmDebuggerEndProc( void )
    hb_vmDo( 0 );
    s_bDebugShowLines = TRUE;
 
-   hb_itemCopy( &stack.Return, &item ); /* restores the previous returned value */
+   hb_itemCopy( &hb_stack.Return, &item ); /* restores the previous returned value */
    hb_itemClear( &item );
 }
 
@@ -2373,7 +2373,7 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
 
 void hb_vmPush( PHB_ITEM pItem )
 {
-   hb_itemCopy( stack.pPos, pItem );
+   hb_itemCopy( hb_stack.pPos, pItem );
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPush\n" );
@@ -2381,7 +2381,7 @@ void hb_vmPush( PHB_ITEM pItem )
 
 void hb_vmPushNil( void )
 {
-   stack.pPos->type = IT_NIL;
+   hb_stack.pPos->type = IT_NIL;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushNil\n" );
@@ -2389,8 +2389,8 @@ void hb_vmPushNil( void )
 
 void hb_vmPushLogical( BOOL bValue )
 {
-   stack.pPos->type = IT_LOGICAL;
-   stack.pPos->item.asLogical.value = bValue;
+   hb_stack.pPos->type = IT_LOGICAL;
+   hb_stack.pPos->item.asLogical.value = bValue;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushLogical\n" );
@@ -2413,9 +2413,9 @@ void hb_vmPushNumber( double dNumber, int iDec )
 
 void hb_vmPushInteger( int iNumber )
 {
-   stack.pPos->type = IT_INTEGER;
-   stack.pPos->item.asInteger.value = iNumber;
-   stack.pPos->item.asInteger.length = 10;
+   hb_stack.pPos->type = IT_INTEGER;
+   hb_stack.pPos->item.asInteger.value = iNumber;
+   hb_stack.pPos->item.asInteger.length = 10;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushInteger\n" );
@@ -2423,9 +2423,9 @@ void hb_vmPushInteger( int iNumber )
 
 void hb_vmPushLong( long lNumber )
 {
-   stack.pPos->type = IT_LONG;
-   stack.pPos->item.asLong.value = lNumber;
-   stack.pPos->item.asLong.length = 10;
+   hb_stack.pPos->type = IT_LONG;
+   hb_stack.pPos->item.asLong.value = lNumber;
+   hb_stack.pPos->item.asLong.length = 10;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushLong\n" );
@@ -2433,10 +2433,10 @@ void hb_vmPushLong( long lNumber )
 
 void hb_vmPushDouble( double dNumber, int iDec )
 {
-   stack.pPos->type = IT_DOUBLE;
-   stack.pPos->item.asDouble.value = dNumber;
-   stack.pPos->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
-   stack.pPos->item.asDouble.decimal = ( iDec > 9 ) ? 9 : iDec;
+   hb_stack.pPos->type = IT_DOUBLE;
+   hb_stack.pPos->item.asDouble.value = dNumber;
+   hb_stack.pPos->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
+   hb_stack.pPos->item.asDouble.decimal = ( iDec > 9 ) ? 9 : iDec;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushDouble\n" );
@@ -2444,8 +2444,8 @@ void hb_vmPushDouble( double dNumber, int iDec )
 
 void hb_vmPushDate( LONG lDate )
 {
-   stack.pPos->type = IT_DATE;
-   stack.pPos->item.asDate.value = lDate;
+   hb_stack.pPos->type = IT_DATE;
+   hb_stack.pPos->item.asDate.value = lDate;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushDate\n" );
@@ -2458,9 +2458,9 @@ void hb_vmPushString( char * szText, ULONG length )
    hb_xmemcpy( szTemp, szText, length );
    szTemp[ length ] = '\0';
 
-   stack.pPos->type = IT_STRING;
-   stack.pPos->item.asString.length = length;
-   stack.pPos->item.asString.value = szTemp;
+   hb_stack.pPos->type = IT_STRING;
+   hb_stack.pPos->item.asString.length = length;
+   hb_stack.pPos->item.asString.value = szTemp;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushString\n" );
@@ -2468,9 +2468,9 @@ void hb_vmPushString( char * szText, ULONG length )
 
 void hb_vmPushSymbol( PHB_SYMB pSym )
 {
-   stack.pPos->type = IT_SYMBOL;
-   stack.pPos->item.asSymbol.value = pSym;
-   stack.pPos->item.asSymbol.stackbase = stack.pPos - stack.pItems;
+   hb_stack.pPos->type = IT_SYMBOL;
+   hb_stack.pPos->item.asSymbol.value = pSym;
+   hb_stack.pPos->item.asSymbol.stackbase = hb_stack.pPos - hb_stack.pItems;
    hb_stackPush();
 
    HB_DEBUG2( "hb_vmPushSymbol: %s\n", pSym->szName );
@@ -2486,10 +2486,10 @@ static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 {
    USHORT uiLocals;
 
-   stack.pPos->type = IT_BLOCK;
+   hb_stack.pPos->type = IT_BLOCK;
 
    uiLocals = pCode[ 5 ] + ( pCode[ 6 ] * 256 );
-   stack.pPos->item.asBlock.value =
+   hb_stack.pPos->item.asBlock.value =
          hb_codeblockNew( pCode + 7 + uiLocals * 2, /* pcode buffer         */
          uiLocals,                                  /* number of referenced local variables */
          ( USHORT * ) ( pCode + 7 ),                /* table with referenced local variables */
@@ -2497,13 +2497,13 @@ static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 
    /* store the statics base of function where the codeblock was defined
     */
-   stack.pPos->item.asBlock.statics = stack.iStatics;
+   hb_stack.pPos->item.asBlock.statics = hb_stack.iStatics;
    /* store the number of expected parameters
     */
-   stack.pPos->item.asBlock.paramcnt = pCode[ 3 ] + ( pCode[ 4 ] * 256 );
+   hb_stack.pPos->item.asBlock.paramcnt = pCode[ 3 ] + ( pCode[ 4 ] * 256 );
    /* store the line number where the codeblock was defined
     */
-   stack.pPos->item.asBlock.lineno = stack.pBase->item.asSymbol.lineno;
+   hb_stack.pPos->item.asBlock.lineno = hb_stack.pBase->item.asSymbol.lineno;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushBlock\n" );
@@ -2513,9 +2513,9 @@ static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
  */
 static void hb_vmPushAlias( void )
 {
-   stack.pPos->type = IT_INTEGER;
-   stack.pPos->item.asInteger.value = hb_rddGetCurrentWorkAreaNumber();
-   stack.pPos->item.asInteger.length = 10;
+   hb_stack.pPos->type = IT_INTEGER;
+   hb_stack.pPos->item.asInteger.value = hb_rddGetCurrentWorkAreaNumber();
+   hb_stack.pPos->item.asInteger.length = 10;
    hb_stackPush();
 
    HB_DEBUG( "hb_vmPushAlias\n" );
@@ -2527,7 +2527,7 @@ static void hb_vmPushAlias( void )
  */
 static void hb_vmPushAliasedField( PHB_SYMB pSym )
 {
-   PHB_ITEM pAlias = stack.pPos - 1;
+   PHB_ITEM pAlias = hb_stack.pPos - 1;
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
 
    /* NOTE: hb_vmSelecWorkarea clears passed item
@@ -2547,17 +2547,17 @@ static void hb_vmPushLocal( SHORT iLocal )
       PHB_ITEM pLocal;
 
       /* local variable or local parameter */
-      pLocal = stack.pBase + 1 + iLocal;
+      pLocal = hb_stack.pBase + 1 + iLocal;
       if( IS_BYREF( pLocal ) )
-         hb_itemCopy( stack.pPos, hb_itemUnRef( pLocal ) );
+         hb_itemCopy( hb_stack.pPos, hb_itemUnRef( pLocal ) );
       else
-         hb_itemCopy( stack.pPos, pLocal );
+         hb_itemCopy( hb_stack.pPos, pLocal );
    }
    else
       /* local variable referenced in a codeblock
-       * stack.pBase+1 points to a codeblock that is currently evaluated
+       * hb_stack.pBase+1 points to a codeblock that is currently evaluated
        */
-      hb_itemCopy( stack.pPos, hb_codeblockGetVar( stack.pBase + 1, ( LONG ) iLocal ) );
+      hb_itemCopy( hb_stack.pPos, hb_codeblockGetVar( hb_stack.pBase + 1, ( LONG ) iLocal ) );
 
    hb_stackPush();
 
@@ -2566,11 +2566,11 @@ static void hb_vmPushLocal( SHORT iLocal )
 
 static void hb_vmPushLocalByRef( SHORT iLocal )
 {
-   stack.pPos->type = IT_BYREF;
+   hb_stack.pPos->type = IT_BYREF;
    /* we store its stack offset instead of a pointer to support a dynamic stack */
-   stack.pPos->item.asRefer.value = iLocal;
-   stack.pPos->item.asRefer.offset = stack.pBase - stack.pItems +1;
-   stack.pPos->item.asRefer.itemsbase = &stack.pItems;
+   hb_stack.pPos->item.asRefer.value = iLocal;
+   hb_stack.pPos->item.asRefer.offset = hb_stack.pBase - hb_stack.pItems +1;
+   hb_stack.pPos->item.asRefer.itemsbase = &hb_stack.pItems;
    hb_stackPush();
 
    HB_DEBUG2( "hb_vmPushLocalByRef %i\n", iLocal );
@@ -2578,12 +2578,12 @@ static void hb_vmPushLocalByRef( SHORT iLocal )
 
 static void hb_vmPushStatic( USHORT uiStatic )
 {
-   PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems + stack.iStatics + uiStatic - 1;
+   PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
 
    if( IS_BYREF( pStatic ) )
-      hb_itemCopy( stack.pPos, hb_itemUnRef( pStatic ) );
+      hb_itemCopy( hb_stack.pPos, hb_itemUnRef( pStatic ) );
    else
-      hb_itemCopy( stack.pPos, pStatic );
+      hb_itemCopy( hb_stack.pPos, pStatic );
    hb_stackPush();
 
    HB_DEBUG2( "hb_vmPushStatic %i\n", uiStatic );
@@ -2591,11 +2591,11 @@ static void hb_vmPushStatic( USHORT uiStatic )
 
 static void hb_vmPushStaticByRef( USHORT uiStatic )
 {
-   stack.pPos->type = IT_BYREF;
+   hb_stack.pPos->type = IT_BYREF;
    /* we store the offset instead of a pointer to support a dynamic stack */
-   stack.pPos->item.asRefer.value = uiStatic - 1;
-   stack.pPos->item.asRefer.offset = stack.iStatics;
-   stack.pPos->item.asRefer.itemsbase = &s_aStatics.item.asArray.value->pItems;
+   hb_stack.pPos->item.asRefer.value = uiStatic - 1;
+   hb_stack.pPos->item.asRefer.offset = hb_stack.iStatics;
+   hb_stack.pPos->item.asRefer.itemsbase = &s_aStatics.item.asArray.value->pItems;
    hb_stackPush();
 
    HB_DEBUG2( "hb_vmPushStaticByRef %i\n", uiStatic );
@@ -2603,15 +2603,15 @@ static void hb_vmPushStaticByRef( USHORT uiStatic )
 
 static void hb_vmDuplicate( void )
 {
-   hb_itemCopy( stack.pPos, stack.pPos - 1 );
+   hb_itemCopy( hb_stack.pPos, hb_stack.pPos - 1 );
    hb_stackPush();
 }
 
 static void hb_vmDuplTwo( void )
 {
-   hb_itemCopy( stack.pPos, stack.pPos - 2 );
+   hb_itemCopy( hb_stack.pPos, hb_stack.pPos - 2 );
    hb_stackPush();
-   hb_itemCopy( stack.pPos, stack.pPos - 2 );
+   hb_itemCopy( hb_stack.pPos, hb_stack.pPos - 2 );
    hb_stackPush();
 }
 
@@ -2623,12 +2623,12 @@ static BOOL hb_vmPopLogical( void )
 {
    HB_DEBUG( "hb_vmPopLogical\n" );
 
-   if( IS_LOGICAL( stack.pPos - 1 ) )
+   if( IS_LOGICAL( hb_stack.pPos - 1 ) )
    {
       hb_stackDec();
 
-      stack.pPos->type = IT_NIL;
-      return stack.pPos->item.asLogical.value;
+      hb_stack.pPos->type = IT_NIL;
+      return hb_stack.pPos->item.asLogical.value;
    }
    else
    {
@@ -2645,15 +2645,15 @@ static long hb_vmPopDate( void )
 
    hb_stackDec();
 
-   stack.pPos->type = IT_NIL;
-   return stack.pPos->item.asDate.value;
+   hb_stack.pPos->type = IT_NIL;
+   return hb_stack.pPos->item.asDate.value;
 }
 
 /* NOTE: Type checking should be done by the caller. */
 
 static double hb_vmPopNumber( void )
 {
-   PHB_ITEM pItem = stack.pPos - 1;
+   PHB_ITEM pItem = hb_stack.pPos - 1;
    double dNumber;
 
    hb_stackDec();
@@ -2677,7 +2677,7 @@ static double hb_vmPopNumber( void )
          break;
    }
 
-   stack.pPos->type = IT_NIL;
+   hb_stack.pPos->type = IT_NIL;
 
    HB_DEBUG( "hb_vmPopNumber\n" );
 
@@ -2692,21 +2692,21 @@ static double hb_vmPopDouble( int * piDec )
 
    hb_stackDec();
 
-   switch( stack.pPos->type & ~IT_BYREF )
+   switch( hb_stack.pPos->type & ~IT_BYREF )
    {
       case IT_INTEGER:
-         dNumber = ( double ) stack.pPos->item.asInteger.value;
+         dNumber = ( double ) hb_stack.pPos->item.asInteger.value;
          *piDec = 0;
          break;
 
       case IT_LONG:
-         dNumber = ( double ) stack.pPos->item.asLong.value;
+         dNumber = ( double ) hb_stack.pPos->item.asLong.value;
          *piDec = 0;
          break;
 
       case IT_DOUBLE:
-         dNumber = stack.pPos->item.asDouble.value;
-         *piDec = stack.pPos->item.asDouble.decimal;
+         dNumber = hb_stack.pPos->item.asDouble.value;
+         *piDec = hb_stack.pPos->item.asDouble.decimal;
          break;
 
       default:
@@ -2714,7 +2714,7 @@ static double hb_vmPopDouble( int * piDec )
          break;
    }
 
-   stack.pPos->type = IT_NIL;
+   hb_stack.pPos->type = IT_NIL;
 
    HB_DEBUG( "hb_vmPopDouble\n" );
 
@@ -2727,7 +2727,7 @@ static double hb_vmPopDouble( int * piDec )
 static void hb_vmPopAlias( void )
 {
    hb_stackDec();
-   hb_vmSelectWorkarea( stack.pPos );
+   hb_vmSelectWorkarea( hb_stack.pPos );
 
    HB_DEBUG( "hb_vmPopAlias\n" );
 }
@@ -2739,8 +2739,8 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
 {
    int iCurrArea = hb_rddGetCurrentWorkAreaNumber();
 
-   if( hb_vmSelectWorkarea( stack.pPos - 1 ) == SUCCESS )
-      hb_rddPutFieldValue( stack.pPos - 2, pSym );
+   if( hb_vmSelectWorkarea( hb_stack.pPos - 1 ) == SUCCESS )
+      hb_rddPutFieldValue( hb_stack.pPos - 2, pSym );
 
    hb_rddSelectWorkAreaNumber( iCurrArea );
    hb_stackDec();    /* alias - it was cleared in hb_vmSelectWorkarea */
@@ -2756,20 +2756,20 @@ static void hb_vmPopLocal( SHORT iLocal )
    if( iLocal >= 0 )
    {
       /* local variable or local parameter */
-      PHB_ITEM pLocal = stack.pBase + 1 + iLocal;
+      PHB_ITEM pLocal = hb_stack.pBase + 1 + iLocal;
 
       if( IS_BYREF( pLocal ) )
-         hb_itemCopy( hb_itemUnRef( pLocal ), stack.pPos );
+         hb_itemCopy( hb_itemUnRef( pLocal ), hb_stack.pPos );
       else
-         hb_itemCopy( pLocal, stack.pPos );
+         hb_itemCopy( pLocal, hb_stack.pPos );
    }
    else
       /* local variable referenced in a codeblock
-       * stack.pBase+1 points to a codeblock that is currently evaluated
+       * hb_stack.pBase+1 points to a codeblock that is currently evaluated
        */
-      hb_itemCopy( hb_codeblockGetVar( stack.pBase + 1, iLocal ), stack.pPos );
+      hb_itemCopy( hb_codeblockGetVar( hb_stack.pBase + 1, iLocal ), hb_stack.pPos );
 
-   hb_itemClear( stack.pPos );
+   hb_itemClear( hb_stack.pPos );
 
    HB_DEBUG( "hb_vmPopLocal\n" );
 }
@@ -2779,14 +2779,14 @@ static void hb_vmPopStatic( USHORT uiStatic )
    PHB_ITEM pStatic;
 
    hb_stackDec();
-   pStatic = s_aStatics.item.asArray.value->pItems + stack.iStatics + uiStatic - 1;
+   pStatic = s_aStatics.item.asArray.value->pItems + hb_stack.iStatics + uiStatic - 1;
 
    if( IS_BYREF( pStatic ) )
-      hb_itemCopy( hb_itemUnRef( pStatic ), stack.pPos );
+      hb_itemCopy( hb_itemUnRef( pStatic ), hb_stack.pPos );
    else
-      hb_itemCopy( pStatic, stack.pPos );
+      hb_itemCopy( pStatic, hb_stack.pPos );
 
-   hb_itemClear( stack.pPos );
+   hb_itemClear( hb_stack.pPos );
 
    HB_DEBUG( "hb_vmPopStatic\n" );
 }
@@ -2797,22 +2797,22 @@ static void hb_vmPopStatic( USHORT uiStatic )
 
 static void hb_stackPop( void )
 {
-   if( --stack.pPos < stack.pItems )
+   if( --hb_stack.pPos < hb_stack.pItems )
       hb_errInternal( 9999, "Stack underflow", NULL, NULL );
 
-   if( stack.pPos->type != IT_NIL )
-      hb_itemClear( stack.pPos );
+   if( hb_stack.pPos->type != IT_NIL )
+      hb_itemClear( hb_stack.pPos );
 }
 
 static void hb_stackDec( void )
 {
-   if( --stack.pPos < stack.pItems )
+   if( --hb_stack.pPos < hb_stack.pItems )
       hb_errInternal( 9999, "Stack underflow", NULL, NULL );
 }
 
 static void hb_stackFree( void )
 {
-   hb_xfree( stack.pItems );
+   hb_xfree( hb_stack.pItems );
    HB_DEBUG( "hb_stackFree\n" );
 }
 
@@ -2821,39 +2821,39 @@ static void hb_stackPush( void )
    LONG CurrIndex;   /* index of current top item */
    LONG TopIndex;    /* index of the topmost possible item */
 
-   CurrIndex = stack.pPos - stack.pItems;
-   TopIndex  = stack.wItems - 1;
+   CurrIndex = hb_stack.pPos - hb_stack.pItems;
+   TopIndex  = hb_stack.wItems - 1;
 
    /* enough room for another item ? */
    if( !( TopIndex > CurrIndex ) )
    {
       LONG BaseIndex;   /* index of stack base */
 
-      BaseIndex = stack.pBase - stack.pItems;
+      BaseIndex = hb_stack.pBase - hb_stack.pItems;
 
       /* no, make more headroom: */
       /* hb_stackDispLocal(); */
-      stack.pItems = ( PHB_ITEM ) hb_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
-                                ( stack.wItems + STACK_EXPANDHB_ITEMS ) );
+      hb_stack.pItems = ( PHB_ITEM ) hb_xrealloc( hb_stack.pItems, sizeof( HB_ITEM ) *
+                                ( hb_stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
       /* fix possibly invalid pointers: */
-      stack.pPos = stack.pItems + CurrIndex;
-      stack.pBase = stack.pItems + BaseIndex;
-      stack.wItems += STACK_EXPANDHB_ITEMS;
+      hb_stack.pPos = hb_stack.pItems + CurrIndex;
+      hb_stack.pBase = hb_stack.pItems + BaseIndex;
+      hb_stack.wItems += STACK_EXPANDHB_ITEMS;
       /* hb_stackDispLocal(); */
    }
 
    /* now, push it: */
-   stack.pPos++;
-   stack.pPos->type = IT_NIL;
+   hb_stack.pPos++;
+   hb_stack.pPos->type = IT_NIL;
 }
 
 static void hb_stackInit( void )
 {
-   stack.pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * STACK_INITHB_ITEMS );
-   stack.pBase  = stack.pItems;
-   stack.pPos   = stack.pItems;     /* points to the first stack item */
-   stack.wItems = STACK_INITHB_ITEMS;
+   hb_stack.pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * STACK_INITHB_ITEMS );
+   hb_stack.pBase  = hb_stack.pItems;
+   hb_stack.pPos   = hb_stack.pItems;     /* points to the first stack item */
+   hb_stack.wItems = STACK_INITHB_ITEMS;
    HB_DEBUG( "hb_stackInit\n" );
 }
 
@@ -2863,11 +2863,11 @@ static void hb_stackDispLocal( void )
    PHB_ITEM pBase;
 
    printf( hb_consoleGetNewLine() );
-   printf( "Virtual Machine Stack Dump at %s(%i):", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
+   printf( "Virtual Machine Stack Dump at %s(%i):", hb_stack.pBase->item.asSymbol.value->szName, hb_stack.pBase->item.asSymbol.lineno );
    printf( hb_consoleGetNewLine() );
    printf( "--------------------------" );
 
-   for( pBase = stack.pBase; pBase <= stack.pPos; pBase++ )
+   for( pBase = hb_stack.pBase; pBase <= hb_stack.pPos; pBase++ )
    {
       printf( hb_consoleGetNewLine() );
 
@@ -2889,7 +2889,7 @@ static void hb_stackDispLocal( void )
             break;
 
          case IT_DATE:
-            printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, stack.szDate ) );
+            printf( "DATE = \"%s\" ", hb_itemGetDS( pBase, hb_stack.szDate ) );
             break;
 
          case IT_DOUBLE:
@@ -2925,13 +2925,13 @@ static void hb_stackDispLocal( void )
 
 void hb_stackDispCall( void )
 {
-   PHB_ITEM pBase = stack.pBase;
+   PHB_ITEM pBase = hb_stack.pBase;
 
-   while( pBase != stack.pItems )
+   while( pBase != hb_stack.pItems )
    {
       char buffer[ 128 ];
 
-      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
       if( ( pBase + 1 )->type == IT_ARRAY )
          sprintf( buffer, "Called from %s:%s(%i)", hb_objGetClsName( pBase + 1 ),
@@ -3312,10 +3312,10 @@ HARBOUR HB_WORD( void )
 HARBOUR HB_PROCNAME( void )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PHB_ITEM pBase = stack.pBase;
+   PHB_ITEM pBase = hb_stack.pBase;
 
-   while( ( iLevel-- > 0 ) && pBase != stack.pItems )
-      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
    if( ( iLevel == -1 ) )
    {
@@ -3341,10 +3341,10 @@ HARBOUR HB_PROCNAME( void )
 HARBOUR HB_PROCLINE( void )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
-   PHB_ITEM pBase = stack.pBase;
+   PHB_ITEM pBase = hb_stack.pBase;
 
-   while( ( iLevel-- > 0 ) && pBase != stack.pItems )
-      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
    if( iLevel == -1 )
       hb_retni( pBase->item.asSymbol.lineno );
@@ -3369,7 +3369,7 @@ HARBOUR HB_PCOUNT( void )
    if( hb_pcount() == 0 )
    {
       /* Skip current function */
-      PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+      PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
 
       hb_retni( pBase->item.asSymbol.paramcnt );
    }
@@ -3380,7 +3380,7 @@ HARBOUR HB_PCOUNT( void )
 HARBOUR HB_PVALUE( void )                               /* PValue( <nArg> )         */
 {
    USHORT uiParam = hb_parni( 1 );                  /* Get parameter            */
-   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
 
    if( uiParam && uiParam <= pBase->item.asSymbol.paramcnt )     /* Valid number             */
@@ -3404,7 +3404,7 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
    if( s_lRecoverBase )
    {
       if( pItem )
-         hb_itemCopy( stack.pItems + s_lRecoverBase + HB_RECOVER_VALUE, pItem );
+         hb_itemCopy( hb_stack.pItems + s_lRecoverBase + HB_RECOVER_VALUE, pItem );
 
       s_uiActionRequest = HB_BREAK_REQUESTED;
    }
@@ -3434,7 +3434,7 @@ void hb_vmRequestCancel( void )
       char buffer[ 128 ];
 
       hb_outerr( hb_consoleGetNewLine(), 0 );
-      sprintf( buffer, "Cancelled at: %s (%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
+      sprintf( buffer, "Cancelled at: %s (%i)", hb_stack.pBase->item.asSymbol.value->szName, hb_stack.pBase->item.asSymbol.lineno );
       hb_outerr( buffer, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
@@ -3470,7 +3470,7 @@ HARBOUR HB___VMVARSGET( void )
 {
    PHB_ITEM pStatics = hb_arrayClone( &s_aStatics );
 
-   hb_itemCopy( &stack.Return, pStatics );
+   hb_itemCopy( &hb_stack.Return, pStatics );
    hb_itemRelease( pStatics );
 }
 
@@ -3482,7 +3482,7 @@ HARBOUR HB___VMVARSLIST( void )
 {
    USHORT uiStatic = hb_parni( 1 );
    PHB_ITEM pStatic = s_aStatics.item.asArray.value->pItems +
-                      stack.iStatics + uiStatic - 1;
+                      hb_stack.iStatics + uiStatic - 1;
 
    hb_itemReturn( pStatic );
 }

@@ -1,3 +1,28 @@
+19991006-12:10 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/extend.h
+     rdd/dbcmd.c
+     rtl/arrays.c
+     rtl/classes.c
+     rtl/codebloc.c
+     rtl/dates.c
+     rtl/errorapi.c
+     rtl/extend.c
+     rtl/itemapi.c
+     runner/runlib.c
+     vm/debug.c
+     vm/hvm.c
+     * stack -> hb_stack
+       Global variable name renamed to protect non-Harbour namespace.
+   * doc/funclist.txt
+     + Updated (as per Chen Kedem)
+   * tests/funcarr.prg
+     tests/inherit.prg
+     tests/objarr.prg
+     tests/objasign.prg
+     ! Debug function name changes applied (reported by David)
+   * source/rtl/environ.c
+     ! Indentation fix (old one).
+
 19991006-10:44 GMT+1 Victor Szel <info@szelvesz.hu>
    * ChangeLog
      ! Fixed deleted entries, missing entries, conflict markers, 

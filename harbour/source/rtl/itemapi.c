@@ -120,7 +120,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
          hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &hb_stack.Return );
       }
       else if( IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
       {
@@ -131,7 +131,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
          hb_vmDo( pEvalInfo->paramCount );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &hb_stack.Return );
       }
       else
          pResult = NULL;
@@ -200,7 +200,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
             va_end( va );
 
             pResult = hb_itemNew( NULL );
-            hb_itemCopy( pResult, &stack.Return );
+            hb_itemCopy( pResult, &hb_stack.Return );
          }
       }
       else if( IS_BLOCK( pItem ) )
@@ -218,7 +218,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
          va_end( va );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &hb_stack.Return );
       }
       else if( IS_SYMBOL( pItem ) )
       {
@@ -235,7 +235,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
          va_end( va );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &hb_stack.Return );
       }
       else
          pResult = NULL;
@@ -277,7 +277,7 @@ PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
          va_end( va );
 
          pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, &stack.Return );
+         hb_itemCopy( pResult, &hb_stack.Return );
       }
       else
          pResult = NULL;
@@ -586,7 +586,7 @@ long hb_itemGetNL( PHB_ITEM pItem )
 PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 {
    if( pItem )
-      hb_itemCopy( &stack.Return, pItem );
+      hb_itemCopy( &hb_stack.Return, pItem );
 
    return pItem;
 }
@@ -595,7 +595,7 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemReturnPtr( void )
 {
-   return &stack.Return;
+   return &hb_stack.Return;
 }
 
 PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )

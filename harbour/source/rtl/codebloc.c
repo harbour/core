@@ -90,7 +90,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
           * TODO: If Harbour will support threads in the future then we need
           * to implement some kind of semaphores here.
           */
-         pLocal = stack.pBase + 1 + ( *pLocalPosTable++ );
+         pLocal = hb_stack.pBase + 1 + ( *pLocalPosTable++ );
 
          if( ! IS_MEMVAR( pLocal ) )
          {
@@ -132,7 +132,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( BYTE * pBuffer,
        */
       PHB_ITEM pLocal;
 
-      pLocal = stack.pBase + 1;
+      pLocal = hb_stack.pBase + 1;
       if( IS_BLOCK( pLocal ) )
       {
          HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;
@@ -215,11 +215,11 @@ void  hb_codeblockDelete( HB_ITEM_PTR pItem )
  */
 void hb_codeblockEvaluate( HB_ITEM_PTR pItem )
 {
-   int iStatics = stack.iStatics;
+   int iStatics = hb_stack.iStatics;
 
-   stack.iStatics = pItem->item.asBlock.statics;
+   hb_stack.iStatics = pItem->item.asBlock.statics;
    hb_vmExecute( pItem->item.asBlock.value->pCode, pItem->item.asBlock.value->pSymbols );
-   stack.iStatics = iStatics;
+   hb_stack.iStatics = iStatics;
 }
 
 /* Get local variable referenced in a codeblock

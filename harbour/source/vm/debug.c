@@ -70,7 +70,7 @@ static USHORT hb_stackLenGlobal( void )
    PHB_ITEM pItem;
    USHORT uiCount = 0;
 
-   for( pItem = stack.pItems; pItem++ <= stack.pPos; uiCount++ );
+   for( pItem = hb_stack.pItems; pItem++ <= hb_stack.pPos; uiCount++ );
 
    return uiCount;
 }
@@ -95,7 +95,7 @@ HARBOUR HB___VMSTKGLIST( void )
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
 
-   for( pItem = stack.pItems; pItem <= stack.pPos; pItem++ )
+   for( pItem = hb_stack.pItems; pItem <= hb_stack.pPos; pItem++ )
       AddToArray( pItem, pReturn, uiPos++ );
 
    hb_itemReturn( pReturn );
@@ -110,11 +110,11 @@ HARBOUR HB___VMSTKGLIST( void )
 static USHORT StackLen( void )
 {
    PHB_ITEM pItem;
-   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
 
    USHORT uiCount = 0;
 
-   for( pItem = pBase; pItem < stack.pBase; pItem++, uiCount++ );
+   for( pItem = pBase; pItem < hb_stack.pBase; pItem++, uiCount++ );
 
    return uiCount;
 }
@@ -139,13 +139,13 @@ HARBOUR HB___VMSTKLLIST( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
-   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
 
    USHORT uiLen = StackLen();
    USHORT uiPos = 1;
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */
-   for( pItem = pBase; pItem < stack.pBase; pItem++ )
+   for( pItem = pBase; pItem < hb_stack.pBase; pItem++ )
       AddToArray( pItem, pReturn, uiPos++ );
    hb_itemReturn( pReturn );
    hb_itemRelease( pReturn );
@@ -163,7 +163,7 @@ HARBOUR HB___VMPARLLIST( void )
 {
    PHB_ITEM pReturn;
    PHB_ITEM pItem;
-   PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
+   PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
                                                 /* Skip function + self     */
    USHORT uiLen = pBase->item.asSymbol.paramcnt;
    USHORT uiPos = 1;
@@ -207,10 +207,10 @@ HARBOUR HB___VMPARLLIST( void )
 HARBOUR HB___VMVARLGET( void )
 {
    int iLevel = hb_parni( 1 ) + 1;
-   PHB_ITEM pBase = stack.pBase;
+   PHB_ITEM pBase = hb_stack.pBase;
 
-   while( ( iLevel-- > 0 ) && pBase != stack.pItems )
-      pBase = stack.pItems + pBase->item.asSymbol.stackbase;
+   while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
+      pBase = hb_stack.pItems + pBase->item.asSymbol.stackbase;
 
    hb_itemReturn( pBase + 1 + hb_parni( 2 ) );
 }

@@ -157,11 +157,11 @@ HARBOUR HB_OS( void )
       switch( osVer.dwPlatformId )
       {
          case VER_PLATFORM_WIN32_WINDOWS:
-             hb_osmajor = osVer.dwMajorVersion;
-             hb_osminor = osVer.dwMinorVersion;
-             hb_osletter = osVer.dwBuildNumber;
-             hb_os = "Windows 95/98";
-             break;
+            hb_osmajor = osVer.dwMajorVersion;
+            hb_osminor = osVer.dwMinorVersion;
+            hb_osletter = osVer.dwBuildNumber;
+            hb_os = "Windows 95/98";
+            break;
 
          case VER_PLATFORM_WIN32_NT:
             hb_osmajor = osVer.dwMajorVersion;

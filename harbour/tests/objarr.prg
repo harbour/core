@@ -55,9 +55,9 @@ Function Main
    QOut( "To the power 3   : ", ToChar( o:x ) )
 
    QOut( "Global stack" )
-   Debug( __aGlobalStack() )
+   Debug( __vmStkGList() )
    QOut( "Statics")
-   Debug( __aStatic() )
+   Debug( __vmVarSList() )
 return NIL
 
 Function TNumber()                              // Very simple class
