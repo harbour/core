@@ -1,3 +1,39 @@
+2001-09-24 08:45 GMT+1 Antonio Linares <alinares@fivetech.com>
+   - contrib/hgf/gtk/tform.prg
+   + contrib/hgf/gtk/form.prg
+     * tform.prg module renamed as form.prg
+
+   - contrib/hgf/gtk/tmenu.prg
+   + contrib/hgf/gtk/menu.prg
+     * tmenu.prg module renamed as menu.prg
+
+   + contrib/hgf/gtk/dispatch.c
+     * GTK c level to PRG level dispatcher
+
+   + contrib/hgf/gtk/msginfo.c
+     * GTK MsgInfo() implementation
+
+   + contrib/hgf/gtk/creabutt.c
+     * pushbuttons low level creation.
+
+   + contrib/hgf/gtk/winctrl.prg
+     * Class HBWinControl
+
+   + contrib/hgf/gtk/general.prg
+     * some low level functions
+
+   + contrib/hgf/gtk/button.prg
+     * Class HBButton
+
+   * harbour/contrib/hgf/gtk/Makefile
+   * harbour/contrib/hgf/gtk/creamenu.c
+   * harbour/contrib/hgf/gtk/creawin.c
+   * harbour/contrib/hgf/gtk/harbgtk.ch
+   * harbour/contrib/hgf/gtk/harbgtk.h
+   * harbour/contrib/hgf/gtk/menuitem.prg
+   * harbour/contrib/hgf/gtk/shared.ch
+     * some changes
+
 2001-09-21 11:30 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * contrib/rdd_ads/ads1.c
      ! Uploaded a fix, posted by Brian Hays
@@ -28,8 +64,8 @@
 2001-09-13 06:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/vm/arrays.c
-     ! hb_arraySize() fixed. Now it will do nothing if the passed size 
-       equals with the size of passed array. Caused mem. alloc. error 
+     ! hb_arraySize() fixed. Now it will do nothing if the passed size
+       equals with the size of passed array. Caused mem. alloc. error
        with empty arrays. Reported by Brian Hays.
 
 2001-09-11 10:37 GMT Dave Pearson <davep@davep.org>
@@ -37,23 +73,23 @@
      * Renamed classes from HB_* to HB*.
    * tests/testprof.prg
      * Updated the code to use the new class names.
-	
+
 2001-09-11 12:11 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/vm/classes.c
      ! Changed one (hopefully) last occurence of TClass to HBClass
 
    * make_b16.bat
-     make_b32.bat 
+     make_b32.bat
      make_vc.bat
      makefile.bc
-     makefile.vc 
+     makefile.vc
      * Some cleanups.
 
    * doc/en/command.txt
-     doc/en/harbext.txt 
+     doc/en/harbext.txt
      doc/en/objfunc.txt
-     doc/en/tclass.txt 
+     doc/en/tclass.txt
      doc/es/command.txt
      ! Classname changes applied to docs.
 
@@ -66,55 +102,55 @@
    * source/vm/classes.c
      ! Small correction to CVS header.
 
-   * contrib/libmisc/fileread.prg 
+   * contrib/libmisc/fileread.prg
      contrib/odbc/todbc.prg
-     include/hbclass.ch 
-     include/hbextern.ch 
-     samples/guestbk/inifiles.prg 
-     samples/guestbk/testcgi.prg 
-     source/debug/debugger.prg 
-     source/debug/tbrwtext.prg 
+     include/hbclass.ch
+     include/hbextern.ch
+     samples/guestbk/inifiles.prg
+     samples/guestbk/testcgi.prg
+     source/debug/debugger.prg
+     source/debug/tbrwtext.prg
      source/rtl/checkbox.prg
-     source/rtl/dummy.prg 
+     source/rtl/dummy.prg
      source/rtl/getlist.prg
-     source/rtl/getsys.prg 
+     source/rtl/getsys.prg
      source/rtl/listbox.prg
-     source/rtl/memoedit.prg 
+     source/rtl/memoedit.prg
      source/rtl/pushbtn.prg
-     source/rtl/radiobtn.prg 
-     source/rtl/radiogrp.prg 
+     source/rtl/radiobtn.prg
+     source/rtl/radiogrp.prg
      source/rtl/scrollbr.prg
      source/rtl/strings.c
      source/rtl/tclass.prg
-     source/rtl/teditor.prg 
+     source/rtl/teditor.prg
      source/rtl/terror.prg
-     source/rtl/tget.prg 
+     source/rtl/tget.prg
      source/rtl/tgetlist.prg
-     source/rtl/tlabel.prg 
+     source/rtl/tlabel.prg
      source/rtl/tmenuitm.prg
-     source/rtl/tobject.prg 
+     source/rtl/tobject.prg
      source/rtl/tpopup.prg
-     source/rtl/treport.prg 
+     source/rtl/treport.prg
      source/rtl/ttextlin.prg
-     source/rtl/ttopbar.prg 
+     source/rtl/ttopbar.prg
      tests/clasinit.prg
-     tests/classes.prg 
+     tests/classes.prg
      tests/clsdata.prg
-     tests/debugtst.prg 
+     tests/debugtst.prg
      tests/dynobj.prg
-     tests/inherit.prg 
+     tests/inherit.prg
      tests/inifiles.prg
-     tests/inline.prg 
+     tests/inline.prg
      tests/objarr.prg
-     tests/objasign.prg 
+     tests/objasign.prg
      tests/objects.prg
-     tests/overload.prg 
+     tests/overload.prg
      tests/rtfclass.prg
-     tests/stripem.prg 
+     tests/stripem.prg
      tests/testcgi.prg
-     tests/testhtml.prg 
+     tests/testhtml.prg
      tests/tstmacro.prg
-     utils/hbtest/rt_misc.prg 
+     utils/hbtest/rt_misc.prg
      * Changed class names to avoid possible namespace collisions.
        TClass      -> HBClass
        TObject     -> HBObject
@@ -123,7 +159,7 @@
        TTextLine   -> HBTextLine
        TLabelForm  -> HBLabelForm
        TReportForm -> HBReportForm
-       TGet        -> removed (If someone used it anywhere please change 
+       TGet        -> removed (If someone used it anywhere please change
                                it to "Get")
        TRadioGroup -> HBRadioGroup
        TScrollBar  -> HBScrollBar
@@ -145,7 +181,7 @@
 
    * source/rtl/scrollbr.prg
      ! Fixed incorrect #include "class.ch".
-     ! Public variable (is it really needed ?) prefixed with "hb_p_" 
+     ! Public variable (is it really needed ?) prefixed with "hb_p_"
        and MEMVAR declaration added.
 
    * source/rtl/strings.c
