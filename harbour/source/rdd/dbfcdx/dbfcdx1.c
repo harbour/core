@@ -3699,7 +3699,8 @@ static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
             pTag = pArea->lpIndexes->TagList;
             for( uiTag = 0; pTag; uiTag++ )
             {
-               if ( !strcmp( pTag->szName, hb_itemGetCPtr( pOrderInfo->itmOrder ) ) )
+               //if ( !strcmp( pTag->szName, hb_itemGetCPtr( pOrderInfo->itmOrder ) ) )
+               if ( !hb_stricmp( pTag->szName, hb_itemGetCPtr( pOrderInfo->itmOrder ) ) )
                   break;
                pTag = pTag->pNext;
             }
@@ -4181,10 +4182,11 @@ ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
    //HB_SYMBOL_UNUSED( pArea );
    //HB_SYMBOL_UNUSED( pOrderInfo );
 
-   if ( ! pTag )
+   if ( ! pArea->lpIndexes )
       return SUCCESS;
 
-   pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->szName );
+   if ( pTag )
+      pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult, pTag->szName );
 
    if ( pOrderInfo->itmOrder )
    {

@@ -1,3 +1,8 @@
+2001-10-19 18:42 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed ordSetFocus related, if the previos order was 0, it did nothing
+     ! fixed ordSetFocus related, was comparing case sensitive 
+
 2001-10-19 07:50 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
 *source/compiler/harbour.c
    *Fixed some warings reported by Dave Person
