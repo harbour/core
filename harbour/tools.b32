@@ -1,0 +1,67 @@
+# makefile for Borland C/C++ 16 bits
+
+.path.c   = mylib
+.path.h   = include
+.path.l   = source\compiler
+.path.y   = source\compiler
+.path.exe = bin
+.path.lib = libs\b32
+.path.obj = obj
+.path.prg = mylib
+
+PROJECT: tools.lib 
+
+Tools.lib :     mouse.obj        md.obj           attrib.obj      \
+   cd.obj           rd.obj          f_eplx81.obj   f_impctl.obj \
+   f_tesprn.obj   f_acolor.obj      f_errton.obj   nettryui.obj  \
+   f_escpri.obj   nconvert.obj      f_mensa.obj   \
+   pathx.obj          nettry.obj    encrypt.obj  uncrypt.obj shutdown.obj
+
+mouse.obj : mouse.c
+md.obj : md.c
+attrib.obj : attrib.c 
+cd.obj : cd.c 
+rd.obj : rd.c 
+shutdown.obj : shutdown.c
+f_eplx81.obj :  f_eplx81.prg
+f_impctl.obj  : f_impctl.prg
+f_tesprn.obj  : f_tesprn.prg
+f_acolor.obj  : f_acolor.prg
+f_errton.obj  : f_errton.prg
+nettryui.obj  : nettryui.prg
+f_escpri.obj  : f_escpri.prg
+nconvert.obj  : nconvert.prg
+f_mensa.obj  : f_mensa.prg
+pathx.obj  : pathx.prg
+nettry.obj :  nettry.prg
+encrypt.obj  : encrypt.prg
+uncrypt.obj  : uncrypt.prg
+
+
+.prg.c:
+  bin\harbour32 $< /n
+
+.c.obj:
+  bcc32  -c  -O2  -I.\include -o$@ $<
+  tlib .\libs\b32\tools.lib -+$@,,
+
+
+mouse.obj : mouse.c
+md.obj : md.c
+attrib.obj : attrib.c 
+cd.obj : cd.c 
+rd.obj : rd.c 
+
+f_eplx81.obj :   f_eplx81.prg
+f_impctl.obj :  f_impctl.prg
+f_tesprn.obj :  f_tesprn.prg
+f_acolor.obj :  f_acolor.prg
+f_errton.obj :  f_errton.prg
+nettryui.obj :  nettryui.prg
+f_escpri.obj :  f_escpri.prg
+nconvert.obj :  nconvert.prg
+f_mensa.obj :  f_mensa.prg
+pathx.obj :  pathx.prg
+nettry.obj :  nettry.prg
+encrypt.obj :  encrypt.prg
+uncrypt.obj :  uncrypt.prg

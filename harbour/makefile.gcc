@@ -1,0 +1,23 @@
+# Tell emacs that this is a -*- makefile -*-
+
+.PHONY: COMPILER VM RTL TESTS
+
+all: COMPILER VM RTL TESTS
+
+COMPILER: 
+	make -w --directory=SOURCE/COMPILER -f MAKEFILE.GCC
+
+VM: 
+	make -w --directory=SOURCE/VM -f MAKEFILE.GCC
+
+RTL: 
+	make -w --directory=SOURCE/RTL -f MAKEFILE.GCC
+
+TESTS: 
+	make -w --directory=TESTS/WORKING -f MAKEFILE.GCC
+
+clean:
+	make -w --directory=SOURCE/COMPILER -f MAKEFILE.GCC clean
+	make -w --directory=SOURCE/VM -f MAKEFILE.GCC clean
+	make -w --directory=SOURCE/RTL -f MAKEFILE.GCC clean
+	make -w --directory=TESTS -f MAKEFILE.GCC clean

@@ -1,0 +1,72 @@
+# makefile for Borland C/C++ 32 bits
+
+.path.c   = source\compiler;source\vm;source\rtl;source\tools
+.path.h   = include
+.path.l   = source\compiler
+.path.y   = source\compiler
+.path.exe = bin
+.path.lib = libs\b32
+.path.obj = obj
+.path.prg = source\rtl
+
+PROJECT: harbour.lib libs\b32\terminal.lib libs\win32\terminal.lib harbour.exe
+
+harbour.lib : arrays.obj classes.obj codebloc.obj dates.obj datesx.obj dynsym.obj \
+              environ.obj error.obj \
+              errorapi.obj errorsys.obj extend.obj files.obj itemapi.obj math.obj \
+              mathx.obj set.obj strings.obj stringsx.obj strcmp.obj tclass.obj transfrm.obj
+
+libs\b32\terminal.lib : console.obj
+
+libs\win32\terminal.lib : console.obj
+
+console.obj  : console.c  extend.h types.h
+  bcc32 -c -O2 -I.\include -o$@ source\rtl\console.c
+  tlib .\libs\b32\terminal.lib -+$@,,
+  bcc32 -c -O2 -DWINDOWS -I.\include -o$@ source\rtl\console.c
+  tlib .\libs\win32\terminal.lib -+$@,,
+   
+arrays.obj   : arrays.c   extend.h types.h
+classes.obj  : classes.c  extend.h types.h
+codebloc.obj : codebloc.c extend.h types.h
+dates.obj    : dates.c    extend.h types.h
+datesx.obj   : datesx.c   extend.h types.h
+dynsym.obj   : dynsym.c   extend.h types.h
+environ.obj  : environ.c  extend.h types.h
+error.obj    : error.c    extend.h types.h
+errorapi.obj : errorapi.c extend.h types.h
+errorsys.obj : errorsys.c extend.h types.h
+extend.obj   : extend.c   extend.h types.h
+files.obj    : extend.c   extend.h types.h
+itemapi.obj  : itemapi.c  extend.h types.h
+math.obj     : math.c     extend.h types.h
+mathx.obj    : mathx.c    extend.h types.h
+set.obj      : set.c      extend.h types.h
+strcmp.obj   : strcmp.c   extend.h types.h
+strings.obj  : strings.c  extend.h types.h
+stringsx.obj : stringsx.c extend.h types.h
+tclass.obj   : tclass.c   extend.h types.h
+transfrm.obj : transfrm.c extend.h types.h
+
+error.c      : error.prg     harbour.exe
+errorsys.c   : errorsys.prg  harbour.exe
+tclass.c     : tclass.prg    harbour.exe
+
+.prg.c:
+  bin\harbour $< /n /osource\rtl
+
+.c.obj:
+  bcc32 -c -O2 -I.\include -o$@ $<
+  tlib .\libs\b32\harbour.lib -+$@,,
+
+harbour.exe : y_tab.c lexyy.c
+   bcc32  -O2 -ebin\harbour.exe -Iinclude;source\compiler \
+      source\compiler\y_tab.c source\compiler\lexyy.c
+   del y_tab.obj
+   del lexyy.obj
+
+y_tab.c : harbour.y
+   bison -d -v -y -osource\compiler\y_tab.c source\compiler\harbour.y
+
+lexyy.c : harbour.l
+   flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l

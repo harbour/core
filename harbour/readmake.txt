@@ -1,0 +1,36 @@
+This makefile tree provides an easy method to build 
+the entire Harbour project.  The development environment 
+was Cygnus win32 B19 developers distribution, which 
+means GNU Make and GCC.  The root makefile will build
+the Harbour compiler, the VM, the RTL, and all tests found
+in the TESTS/WORKING dir.  There is also a MAKEFILE.GCC in
+TESTS/BROKEN, but it is not called by the root makefile.
+
+I have left all the MAKEFILE names as MAKEFILE.GCC.
+
+Using the makefiles for development:  Say you've just written
+a new RTL function in C.  Just type 
+	make -f MAKEFILE.GCC
+in the RTL directory and it will compile it for you, and if
+the compile succeeds, add it to libharbour.a.
+
+Say you've just written a new test function in Harbour, in the
+TESTS directory.  Just type
+	make -f MAKEFILE.GCC
+and it will harbour it, gcc it, and link it (along with any other
+uncompiled tests) into an EXE file.
+
+Say you just want to work with one Harbour test called FOO.PRG.
+Do this:
+	make -f MAKEFILE.GCC foo.exe
+
+
+Because of how my system unpacks a build, I assumed that all
+of the original files have uppercase filenames.  Therefore
+I put in workarounds for .C instead of .c, .PRG instead of .prg,
+etc.  Hopefully this won't cause much trouble if you happen to
+change all filenames to lowercase on your system.
+
+
+-- Ross Presser 4/24/1999
+

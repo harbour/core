@@ -1,0 +1,60 @@
+#
+# Makefile for Harbour project for Microsoft Visual C
+#
+COMPILER_DIR=source\compiler
+RTL_DIR=source\rtl
+VM_DIR=source\vm
+INCLUDE_DIR=include
+BIN_DIR=bin
+LIB_DIR=libs\vc
+OBJ_DIR=obj
+CC=cl
+CFLAGS=-w -I$(INCLUDE_DIR)
+CLIBFLAGS=$(CFLAGS) -c
+
+HARBOUR_LIB=$(LIB_DIR)\harbour.lib
+HARBOUR_EXE=$(BIN_DIR)\harbour.exe
+
+LIB_OBJS = $(OBJ_DIR)\arrays.obj $(OBJ_DIR)\classes.obj $(OBJ_DIR)\console.obj \
+    $(OBJ_DIR)\dates.obj $(OBJ_DIR)\dynsym.obj $(OBJ_DIR)\extend.obj \
+    $(OBJ_DIR)\files.obj $(OBJ_DIR)\strings.obj
+
+all: $(HARBOUR_LIB) $(HARBOUR_EXE)
+
+$(HARBOUR_LIB) : $(LIB_OBJS)
+    lib /OUT:$(HARBOUR_LIB) $(LIB_OBJS)
+
+$(HARBOUR_EXE) : $(COMPILER_DIR)\y_tab.c $(COMPILER_DIR)\lexyy.c
+    $(CC) $(CFLAGS) $(COMPILER_DIR)\y_tab.c $(COMPILER_DIR)\lexyy.c -o $(BIN_DIR)\harbour
+    -del y_tab.obj
+    -del lexyy.obj
+
+$(COMPILER_DIR)\y_tab.c : $(COMPILER_DIR)\harbour.y
+    bison -d -v $(COMPILER_DIR)\harbour.y -o $(COMPILER_DIR)\y_tab.c
+
+$(COMPILER_DIR)\lexyy.c : $(COMPILER_DIR)\harbour.l
+    flex -i -o$(COMPILER_DIR)\lexyy.c $(COMPILER_DIR)\harbour.l
+
+$(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\files.obj : $(RTL_DIR)\files.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
