@@ -1,3 +1,7 @@
+19990729-19:38 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/console.c
+      * several fixes at SAVESCREEN, RESTSCREEN and SETCURSOR
+
 19990729-18:50 GMT+1 Bruno Cantero <bruno@issnet.net>
    + source/rdd/dbf0.prg, source/rdd/dbf1.c
      Added RDD DBF
