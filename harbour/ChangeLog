@@ -1,3 +1,11 @@
+2001-03-04 16:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     * Completed management of Variable Scoping.
+     * Modified rest of Error Handlers to check type of :Args (Harbour bug).
+
+   * contrib/dot/test.prg
+     + Added test of private value after function call
+
 2001-03-02 23:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/macro/macroslx.c
      + Added copyright notice with the Harbour Exception.

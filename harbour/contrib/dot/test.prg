@@ -39,7 +39,10 @@ PROCEDURE Main
 
    ? FIELD->First
 
+   cLocal := "in main"
    ? Test()
+   ? cLocal
+   ? cName
 
    ? cFromTest
    ? TestPrv

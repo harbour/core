@@ -174,8 +174,8 @@ STATIC s_sIncludeFile := NIL
 
 STATIC nRow, nCol
 
-STATIC nProcId := 0, aProcedures := {}, s_xRet, nIfLevel := 0, ;
-       aProcStack := {}, s_nProcStack := 0
+STATIC s_nProcId := 0, s_aProcedures := {}, s_xRet, s_nIfLevel := 0, ;
+       s_aProcStack := {}, s_nProcStack := 0
 
 STATIC s_asPrivates := {}, s_asPublics := {}, s_asLocals := {}, s_asStatics := {}
 
@@ -293,20 +293,30 @@ PROCEDURE ExecuteProcedure( aProc )
    LOCAL nBlock, nBlocks := Len( aProc[2] ), oErr
    LOCAL nVar, nVars
 
-   /* Saving and Releasing Locals of upper level. */
    IF s_nProcStack > 0
-      nVars := Len( s_asLocals )
-      aAdd( aProcStack[s_nProcStack], Array( nVars, 2 ) )
+      /* Saving Privates of upper level. */
+      nVars := Len( s_asPrivates )
+      aAdd( s_aProcStack[s_nProcStack], Array( nVars, 2 ) )
       FOR nVar := 1 TO nVars
-         aProcStack[s_nProcStack][4][nVar][1] := s_asLocals[nVar]
-         aProcStack[s_nProcStack][4][nVar][2] := &( s_asLocals[nVar] )
-         //Alert( "Released upper local: " + s_asLocals[nVar] + " in " + aProcStack[s_nProcStack][1] )
+         s_aProcStack[s_nProcStack][3][nVar][1] := s_asPrivates[nVar]
+         s_aProcStack[s_nProcStack][3][nVar][2] := &( s_asPrivates[nVar] )
+         //Alert( "Saved upper Private: " + s_asPrivates[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
+      NEXT
+      aSize( s_asPrivates, 0 )
+
+      /* Saving and Releasing Locals of upper level. */
+      nVars := Len( s_asLocals )
+      aAdd( s_aProcStack[s_nProcStack], Array( nVars, 2 ) )
+      FOR nVar := 1 TO nVars
+         s_aProcStack[s_nProcStack][4][nVar][1] := s_asLocals[nVar]
+         s_aProcStack[s_nProcStack][4][nVar][2] := &( s_asLocals[nVar] )
+         //Alert( "Released upper local: " + s_asLocals[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
          __MXRelease( s_asLocals[nVar] )
       NEXT
       aSize( s_asLocals, 0 )
    ENDIF
 
-   aAdd( aProcStack, { aProc[1], 0, {} } )
+   aAdd( s_aProcStack, { aProc[1], 0 } )
    s_nProcStack++
 
    FOR nBlock := 1 TO nBlocks
@@ -316,7 +326,7 @@ PROCEDURE ExecuteProcedure( aProc )
 
          BEGIN SEQUENCE
 
-            aProcStack[ Len( aProcStack ) ][2] := aProc[2][nBlock][3] // Line No.
+            s_aProcStack[ Len( s_aProcStack ) ][2] := aProc[2][nBlock][3] // Line No.
             Eval( aProc[2][nBlock][2] )
 
          RECOVER USING oErr
@@ -326,31 +336,39 @@ PROCEDURE ExecuteProcedure( aProc )
    NEXT
 
    /* Releasing Privates created by the Procedure */
-   nVars := Len( aProcStack[s_nProcStack][3] )
+   nVars := Len( s_asPrivatess )
    FOR nVar := 1 TO nVars
-      //Alert( "Released: " + aProcStack[s_nProcStack][3][nVar] + " in " + aProcStack[s_nProcStack][1] )
-      __MXRelease( aProcStack[s_nProcStack][3][nVar] )
+      //Alert( "Released private: " + s_asPrivates[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
+      __MXRelease( s_asPrivates[nVar] )
    NEXT
-   aSize( aProcStack[s_nProcStack][3], 0 )
+   aSize( s_asPrivates, 0 )
 
    /* Releasing Locals created by the Procedure */
    nVars := Len( s_asLocals )
    FOR nVar := 1 TO nVars
-      //Alert( "Released local: " + s_asLocals[nVar] + " in " + aProcStack[s_nProcStack][1] )
+      //Alert( "Released local: " + s_asLocals[nVar] + " in " + s_aProcStack[s_nProcStack][1] )
       __MXRelease( s_asLocals[nVar] )
    NEXT
    aSize( s_asLocals, 0 )
 
    s_nProcStack--
-   aSize( aProcStack, s_nProcStack )
+   aSize( s_aProcStack, s_nProcStack )
 
    IF s_nProcStack > 0
-      /* Restoring Locals of parrent. */
-      nVars := Len( aProcStack[s_nProcStack][4] )
+      /* Restoring Privates of parrent. */
+      nVars := Len( s_aProcStack[s_nProcStack][3] )
       FOR nVar := 1 TO nVars
-         aAdd( s_asLocals, aProcStack[s_nProcStack][4][nVar][1] )
-         __QQPub( aProcStack[s_nProcStack][4][nVar][1] )
-         &( aProcStack[s_nProcStack][4][nVar][1] ) := aProcStack[s_nProcStack][4][nVar][2]
+         aAdd( s_asPrivates, s_aProcStack[s_nProcStack][3][nVar][1] )
+         __QQPub( s_aProcStack[s_nProcStack][3][nVar][1] )
+         &( s_aProcStack[s_nProcStack][3][nVar][1] ) := s_aProcStack[s_nProcStack][3][nVar][2]
+      NEXT
+
+      /* Restoring Locals of parrent. */
+      nVars := Len( s_aProcStack[s_nProcStack][4] )
+      FOR nVar := 1 TO nVars
+         aAdd( s_asLocals, s_aProcStack[s_nProcStack][4][nVar][1] )
+         __QQPub( s_aProcStack[s_nProcStack][4][nVar][1] )
+         &( s_aProcStack[s_nProcStack][4][nVar][1] ) := s_aProcStack[s_nProcStack][4][nVar][2]
       NEXT
    ENDIF
 
@@ -573,9 +591,9 @@ PROCEDURE CompileLine( sPPed, nLine )
             sSymbol := SubStr( sBlock, 1, 12 )
          ENDIF
 
-         aAdd( aProcedures[ nProcId ][2], { nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
+         aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
 
-         nIfLevel += nIncrease
+         s_nIfLevel += nIncrease
 
          sTemp  := RTrim( SubStr( sTemp, nNext + 1 ) )
          ExtractLeadingWS( @sTemp )
@@ -592,8 +610,8 @@ PROCEDURE CompileLine( sPPed, nLine )
 
          IF sBlock = "PROC"
             sSymbol := Upper( LTrim( SubStr( sBlock, At( ' ', sBlock ) ) ) )
-            aSize( aProcedures, ++nProcId )
-            aProcedures[nProcId] := { sSymbol, {} }
+            aSize( s_aProcedures, ++s_nProcId )
+            s_aProcedures[s_nProcId] := { sSymbol, {} }
          ELSE
             IF sBlock = "__"
                sSymbol := Upper( SubStr( sBlock, 3, 12 ) )
@@ -611,9 +629,9 @@ PROCEDURE CompileLine( sPPed, nLine )
                sSymbol := SubStr( sBlock, 1, 12 )
             ENDIF
 
-            aAdd( aProcedures[ nProcId ][2], { nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
+            aAdd( s_aProcedures[ s_nProcId ][2], { s_nIfLevel - nOffset, &( "{|| " + sBlock + " }" ), nLine } )
 
-            nIfLevel += nIncrease
+            s_nIfLevel += nIncrease
          ENDIF
       ENDIF
 
@@ -630,7 +648,7 @@ FUNCTION PP_ProcName( nLevel )
    ENDIF
 
    IF nLevel >= 0 .AND. nLevel < s_nProcStack
-      RETURN aProcStack[ s_nProcStack - nLevel ][1]
+      RETURN s_aProcStack[ s_nProcStack - nLevel ][1]
    ENDIF
 
 RETURN ""
@@ -644,7 +662,7 @@ FUNCTION PP_ProcLine( nLevel )
    ENDIF
 
    IF nLevel >= 0 .AND. nLevel < s_nProcStack
-      RETURN aProcStack[ s_nProcStack - nLevel ][2]
+      RETURN s_aProcStack[ s_nProcStack - nLevel ][2]
    ENDIF
 
 RETURN ""
@@ -660,10 +678,8 @@ PROCEDURE PP_Privates( aVars )
          __QQPUB( aVars[nVar] )
          &( aVars[nVar] ) := NIL
          aAdd( s_asPrivates, aVars[nVar] )
-         aAdd( aProcStack[ Len(aProcStack ) ][3], aVars[nVar] )
       ELSE
-         /* Save upper level val */
-         &( aVars[nVar] ) := NIL
+         Alert( "Private redeclaration: " + aVars[nVar] )
       ENDIF
    NEXT
 
@@ -731,11 +747,11 @@ PROCEDURE PP_Run( cFile )
    ProcessFile( cFile )
 
    ErrorBlock( {|oError| RP_Run_Err( oError ) } )
-   ExecuteProcedure( aProcedures[1] )
+   ExecuteProcedure( s_aProcedures[1] )
 
    bCompile := .F.
 
-   aSize( aProcedures, 0 )
+   aSize( s_aProcedures, 0 )
 
    #ifdef __CLIPPER__
       Memory(-1)
@@ -759,7 +775,7 @@ PROCEDURE RP_Dot_Err( oError )
 
    LOCAL Counter, xArg, sArgs := ""
 
-   IF oError:Args != NIL
+   IF ValType( oErr:Args ) == 'A'
       sArgs := " - Arguments: "
 
       FOR Counter := 1 TO Len( oError:Args )
@@ -810,7 +826,7 @@ PROCEDURE RP_Comp_Err( oError )
 
    LOCAL Counter, xArg, sArgs := ""
 
-   IF oError:Args != NIL
+   IF ValType( oErr:Args ) == 'A'
       sArgs := " - Arguments: "
 
       FOR Counter := 1 TO Len( oError:Args )
@@ -901,10 +917,10 @@ FUNCTION RP_Run_Err( oErr )
    ENDIF
 
    IF oErr:SubCode == 1001
-      nProc := aScan( aProcedures, {|aProc| aProc[1] == ProcName(2 + 2) } )
+      nProc := aScan( s_aProcedures, {|aProc| aProc[1] == ProcName(2 + 2) } )
       IF nProc > 0
          s_xRet := NIL
-         ExecuteProcedure( aProcedures[nProc] )
+         ExecuteProcedure( s_aProcedures[nProc] )
          RETURN ( s_xRet )
       ENDIF
    ENDIF
