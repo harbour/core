@@ -3113,7 +3113,8 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
         }
         else
         {
-           retvalue = SELF_GOTO( ( AREAP ) pArea, lRecno );
+           hb_ntxTagKeyGoTo( pTag, BTTM_RECORD, NULL );
+           retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
            pArea->fFound = TRUE;
            return retvalue;
         }

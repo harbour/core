@@ -81,7 +81,7 @@ static HB_LANG s_lang =
       "Сентябрь",
       "Октябрь",
       "Ноябрь",
-      "Декабрь"
+      "Декабрь",
 
       /* Day names */
 
@@ -91,7 +91,7 @@ static HB_LANG s_lang =
       "Среда",
       "Четверг",
       "Пятница",
-      "Суббота"
+      "Суббота",
 
       /* CA-Cl*pper compatible natmsg items */
 
@@ -160,7 +160,7 @@ static HB_LANG s_lang =
       "доступ к массиву",
       "присвоение массива",
       "не массив",
-      "сравнение"
+      "сравнение",
 
 
       /* Internal error names */
@@ -190,7 +190,7 @@ static HB_LANG s_lang =
       "Переполнение буфера памяти",
       "hb_xgrab requested to allocate zero bytes",
       "hb_xrealloc requested to resize to zero bytes",
-      "hb_xalloc requested to allocate zero bytes"
+      "hb_xalloc requested to allocate zero bytes",
 
       /* Texts */
 
