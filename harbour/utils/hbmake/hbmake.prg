@@ -1102,6 +1102,9 @@ Local cExt:=""
 Local cDrive:=""
 local cPath:=""
 Local cTest:=""
+Local cUserdef:=space(40)
+Local cUserInclude:=space(40)
+
 nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
@@ -1143,7 +1146,15 @@ ATTENTION( "Harbour Options", 5 )
 @  7, 43 Get lSupressline checkbox "Suppress line number information"
 @  8,  1 Get lGenppo checkbox "Generate pre-processed output"
 @  8, 43 Get lCompMod checkbox "compile module only"
+@  9,  1 Say "User Defines " get cUserDef pict "@s20"
+@  9, 43 Say "User include Path" get cUserInclude pict "@s20"
 Read
+if !empty(cUserDef)
+      cDefHarOpts+= " -D"+cUserDef +" "
+endif
+if !empty(cUserInclude)
+      cDefHarOpts+= " -I"+cUserInclude +" "
+endif
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
 lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )
@@ -1569,6 +1580,7 @@ Local aOrder := listasarray2( aBuildOrder[ 2 ], " " )
 local lEnd
 Local cErrText:=""
 Local xItem
+Local nObjPos
 For nCount := 1 To Len( aOrder )
 if !lextended
    If aOrder[ nCount ] == "$(CFILES)"
@@ -1580,7 +1592,8 @@ if !lextended
       For nFiles := 1 To Len( aPrgs )
          xItem := substr(aPrgs[ nFiles ],rat(if(lgcc,'/','\'),aPrgs[ nFiles ])+1)
          nPos := Ascan( aCs, { | x | x:=substr(x,rat(if(lgcc,'/','\'),x)+1),Left( x, At( ".", x ) ) == Left(xItem, At( ".", xItem ) ) } )
-         if  fileisnewer(aprgs[nFiles], aobjs[Ascan( aobjs, { | x | x:=substr(x,rat(if(lgcc,'/','\'),x)+1),Left( x, At( ".", x ) ) == Left(xItem, At( ".", xItem ) ) } )])
+         nObjPos:=Ascan( aobjs, { | x | x:=substr(x,rat(if(lgcc,'/','\'),x)+1),Left( x, At( ".", x ) ) == Left(xItem, At( ".", xItem ) ) } )
+         if  fileisnewer(aprgs[nFiles], aobjs[nObjPos])
             If nPos > 0
                aadd(aCtocompile,acs[nPos])
                cComm := Strtran( cComm, "o$*", "o" + aCs[ nPos ] )
@@ -1776,7 +1789,7 @@ Local aOutC         := {}
 Local aSrcC         := Directory( "*.c" )
 Local cOs          := "Win32"
 Local cCompiler    := "BCC"
-Local cfwhpath     := space(40)
+Local cfwhpath     := left(cfile,at('.',cfile)-1) + space(40)
 
 
 
@@ -1799,6 +1812,8 @@ Local cDrive:=""
 local cPath:=""
 Local cTest:=""
 local cLast:=''
+Local cUserdef:=space(40)
+Local cUserInclude:=space(40)
 nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
@@ -1823,7 +1838,7 @@ ATTENTION( "Enviroment options", 0 )
 @  1, 23 Say "Select C Compiler"
 @  1, 40 Get cCompiler radio { "BCC", "MSVC", "GCC" }
 Read
-   @  4,  1 Say "Library name with our extention" Get cfwhpath
+   @  4,  1 Say "Library name with our extention" Get cfwhpath pict "@s15"
    @  4,55   Say "Obj Files Dir" get cObjDir
 ATTENTION( "Harbour Options", 5 )
 
@@ -1833,7 +1848,16 @@ ATTENTION( "Harbour Options", 5 )
 @  7, 43 Get lSupressline checkbox "Suppress line number information"
 @  8,  1 Get lGenppo checkbox "Generate pre-processed output"
 @  8, 43 Get lCompMod checkbox "compile module only"
+@  9,  1 Say "User Defines " get cUserDef pict "@s20"
+@  9, 43 Say "User include Path" get cUserInclude pict "@s20"
 Read
+if !empty(cUserDef)
+      cDefHarOpts+= " -D"+cUserDef +" "
+endif
+if !empty(cUserInclude)
+      cDefHarOpts+= " -I"+cUserInclude +" "
+endif
+
 lBcc := If( At( "BCC", cCompiler ) > 0, .t., .f. )
 lVcc := If( At( "MSVC", cCompiler ) > 0, .t., .f. )
 lGcc := If( At( "GCC", cCompiler ) > 0, .t., .f. )

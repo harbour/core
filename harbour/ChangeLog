@@ -1,3 +1,7 @@
+2001-11-11 20:10 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   * utils/hbmake/hbmake.prg
+     * Fixed an small bug on FileisNewer() function
+
 2001-11-11 08:00 GMT+0700 Andi Jahja <harbour@cbn.net.id>
    * source/rdd/dbfcdx/dbfcdx1.c
      ! add type casts as required by MsVC
