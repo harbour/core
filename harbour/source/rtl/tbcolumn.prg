@@ -48,7 +48,9 @@ CLASS TBColumn
    DATA FootSep    // Footing separator character
    DATA Heading    // Column heading
    DATA HeadSep    // Heading separator character
+   DATA Picture    // Column picture string
    DATA Width      // Column display width
+
    DATA ColPos     // Temporary column position on screen
 
    METHOD New( cHeading, bBlock )    // Constructor

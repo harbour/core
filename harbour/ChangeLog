@@ -1,3 +1,12 @@
+2000-11-18 11:11 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+      * drawing headers and footers is not needed if columns on screen don't change,
+        before this change they were redrawn every time first row changed.
+      ! fixed wrong redrawing of TBrowse if a down on last row was issued followed by
+        an horizontal movement requiring an ::Invalidate()
+   * source/rtl/tbcolumns.prg
+      + added missing picture ivar.
+
 2000-11-17 20:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/hvm/macro.c
