@@ -1,3 +1,11 @@
+19990816-12:39 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + source/rtl/browdb.prg
+     * source code for TBrowseDb()
+   * source/rtl/tbrowse.prg
+     * removed source code for TBrowseDb()
+   * harbour/makefile.b32
+     * browdb module added.
+
 19990816-12:03 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      * Enhanced ProcName() returned information.
