@@ -59,7 +59,7 @@ BOOL bDebug = FALSE;
 int hb_pp_Internal( FILE * handl_o, char * sOut )
 {
   PFILE pFile;
-  char * ptr, * ptrOut;
+  char * ptr, * ptrOut, * tmpPtr;
   int lContinue;
   int lens, rdlen;
   int lLine = 0, i;
@@ -78,6 +78,10 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                   &( pFile->iBuffer ) ) ) >= 0 )
      {
         lens += rdlen;
+
+        #if 0
+          printf( "Len: %i Last: %i >%s<\n", rdlen, s_szLine[ lens - 1 ], s_szLine );
+        #endif
 
         if( s_szLine[ lens - 1 ] == ';' )
         {
@@ -170,11 +174,11 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
      }
 
      if( rdlen < 0 )
-       {
+     {
         if( hb_comp_files.iFiles == 1 )
            return 0;      /* we have reached the main EOF */
         else
-          {  /* we close the currently include file and continue */
+        {  /* we close the currently include file and continue */
            fclose( hb_comp_files.pLast->handle );
            hb_xfree( hb_comp_files.pLast->pBuffer );
            hb_xfree( hb_comp_files.pLast->szFileName );
@@ -185,8 +189,14 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
            hb_comp_files.iFiles--;
            lLine = 1;
            hb_pp_nEmptyStrings = 0;
-          }
-       }
+        }
+
+        /* Ron Pinkas added 2000-06-22 */
+        s_szLine[0] = '\0';
+        break;
+       /* Ron Pinkas end 2000-06-22 */
+     }
+
      if( *s_szLine ) break;
   }
 
@@ -201,11 +211,11 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
      /* Ron Pinkas end 2000-06-14 */
 
      /* Ron Pinkas added 2000-06-14 */
-     ptr = s_szLine;
-     HB_SKIPTABSPACES( ptr );
+     tmpPtr = s_szLine;
+     HB_SKIPTABSPACES( tmpPtr );
 
      /* Last Opened file ended without CR - adding CR to the #line directive. */
-     if( *ptr != '\0' )
+     if( *tmpPtr != '\0' )
      {
         *ptrOut++ = '\n';
         *ptrOut = '\0';
