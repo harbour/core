@@ -1,3 +1,9 @@
+19990923-11:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/extend.c
+    ! Fixed hb_stor*() functions to handle arrays with the -1 parameter like
+      in CA-Clipper. Thanks to Janica Lubos <janica@fornax.elf.stuba.sk>
+
 19990923-10:55 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * include/gtapi.h
