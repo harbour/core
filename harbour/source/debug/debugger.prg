@@ -970,13 +970,14 @@ return nil
 METHOD VarGetValue( aVar ) CLASS TDebugger
 LOCAL nProcLevel, uValue
 LOCAL cProc
+LOCAL cType:=LEFT(aVar[ VAR_TYPE ], 1)
 
-   IF( aVar[ VAR_TYPE ] = "L" )
+   IF( cType == "L" )
       nProcLevel := hb_dbg_procLevel() - aVar[ VAR_LEVEL ]
       cProc := aVar[ VAR_FUNCNAME ]
       uValue := hb_dbg_vmVarLGet( nProcLevel, aVar[ VAR_POS ] )
       
-   ELSEIF( aVar[ VAR_TYPE ] = "S" )
+   ELSEIF( cType == "S" )
       uValue := hb_dbg_vmVarSGet( aVar[VAR_LEVEL], aVar[ VAR_POS ] )
 
    ELSE
@@ -990,13 +991,14 @@ RETURN uValue
 METHOD VarSetValue( aVar, uValue ) CLASS TDebugger
 LOCAL nProcLevel
 LOCAL cProc
+LOCAL cType:=LEFT(aVar[ VAR_TYPE ], 1)
 
-   IF( aVar[ VAR_TYPE ] = "L" )
+   IF( cType == "L" )
       nProcLevel := hb_dbg_procLevel() - aVar[VAR_LEVEL]   //skip debugger stack
       cProc := aVar[ VAR_FUNCNAME ]
       hb_dbg_vmVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
       
-   ELSEIF( aVar[ VAR_TYPE ] = "S" )
+   ELSEIF( cType == "S" )
       hb_dbg_vmVarSSet( aVar[VAR_LEVEL], aVar[ VAR_POS ], uValue )
 
    ELSE
@@ -1515,7 +1517,7 @@ METHOD LoadVars() CLASS TDebugger // updates monitored variables
          for n := 1 to Len( aVars )
             cName := aVars[ n ][ VAR_NAME ]
             m := AScan( aBVars,; // Is there another var with this name ?
-                        { | aVar | aVar[ VAR_NAME ] == cName .AND. aVar[VAR_TYPE]=='S'} )
+                        { | aVar | aVar[ VAR_NAME ] == cName .AND. LEFT(aVar[VAR_TYPE],1)=='S'} )
             IF( m > 0 )
                aBVars[ m ] := aVars[ n ]
             ELSE
@@ -1652,15 +1654,16 @@ return nil
 
 METHOD VarGetInfo( aVar ) CLASS TDebugger
 LOCAL uValue
+LOCAL cType:=LEFT(aVar[VAR_TYPE],1)
 
    uValue := ::VarGetValue( aVar )
    do case
-   case aVar[ VAR_TYPE ] = "L"
+   case cType== "L"
       return aVar[ VAR_NAME ] + " <Local, " + ;
                   ValType( uValue ) + ;
                   ">: " + ValToStr( uValue )
 
-   case aVar[ VAR_TYPE ] = "S"
+   case cType== "S"
       return aVar[ VAR_NAME ] + " <Static, " + ;
                   ValType( uValue ) + ;
                   ">: " + ValToStr( uValue )
@@ -2936,26 +2939,32 @@ LOCAL cRet
          lSpace := .T.
          i++
                   
-      ELSEIF( c = '&' )    //skip macro expression
+      ELSEIF( c == '&' )    //skip macro expression
          i++
          DO WHILE( i<=nLen .AND. IsIdentChar(SUBSTR(cExpr,i,1)," ()") )
             i++
          ENDDO
       
-      ELSEIF( c = ':' )    //skip send operator
+      ELSEIF( c == '.' )    //skip logical values
+         i++
+         IF( SUBSTR(cExpr,i,1) $ "TtFf" .AND. SUBSTR(cExpr,i+1,1) == '.' )
+            i +=2
+         ENDIF
+         
+      ELSEIF( c == ':' )    //skip send operator
          i++
          DO WHILE( i<=nLen .AND. IsIdentChar(SUBSTR(cExpr,i,1)) )
             i++
          ENDDO
       
-      ELSEIF( c = "'" .OR. c = '"' )   //STRING
+      ELSEIF( c == "'" .OR. c == '"' )   //STRING
          i++
          DO WHILE( i<=nLen .AND. SUBSTR(cExpr,i,1)!=c )
             i++
          ENDDO
          i++
 
-      ELSEIF( c = "[" )
+      ELSEIF( c == "[" )
          IF( lSpace )   
             //STRING
             i++
@@ -3011,6 +3020,7 @@ RETURN
 
 STATIC FUNCTION IsValidStopLine( cLine )
 LOCAL i, c, c2
+LOCAL lSet:=SET(_SET_EXACT,.F.)
    
    cLine := UPPER( ALLTRIM( cLine ) )
    i := 1
@@ -3040,6 +3050,7 @@ LOCAL i, c, c2
    
    cLine := ALLTRIM( cLine )
    IF( EMPTY(cLine) )
+      SET(_SET_EXACT, lSet)
       RETURN .F.
    ENDIF
    
@@ -3051,6 +3062,7 @@ LOCAL i, c, c2
        cLine = 'LOCA' .OR.;
        cLine = 'STAT' .OR.;
        cLine = 'MEMV' )
+       SET(_SET_EXACT, lSet)
        RETURN .F.
    ENDIF
    
@@ -3113,15 +3125,16 @@ LOCAL lValid
 
    cCommand := ALLTRIM( cCommand )
    aCmnd := { NIL, NIL, NIL }
-   IF( cCommand = "??" )
+   IF( LEFT(cCommand,2) == "??" )
       cCommand := SUBSTR( cCommand, 3 )
       aCmnd[WP_TYPE] := "??"
       
-   ELSEIF( cCommand = "?" )
+   ELSEIF( LEFT(cCommand,1) == "?" )
       cCommand := SUBSTR( cCommand, 2 )
       aCmnd[WP_TYPE] := "?"
    ENDIF
    aCmnd[WP_EXPR] := cCommand
+   ALERT( "command="+cCommand+"=")
    cResult := CreateExpression( cCommand, aCmnd )
    IF( EMPTY(cResult) )
       //valid syntax

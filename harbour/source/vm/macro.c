@@ -152,10 +152,15 @@ static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString )
    iResult = hb_macroYYParse( pMacro );
    if( s_macroAlloc )
    {
-      HB_MEXPR_PTR pMExpr;
+      HB_MEXPR_PTR pMExpr = s_macroAlloc;
       do
       {
-         hb_compExprKill( &s_macroAlloc->Expression, pMacro );
+         hb_compExprKill( &pMExpr->Expression, pMacro );
+         pMExpr = pMExpr->pPrev;
+      }
+      while( pMExpr );
+      do
+      {
          pMExpr = s_macroAlloc->pPrev;
          hb_xfree( s_macroAlloc );
          s_macroAlloc = pMExpr;

@@ -8,6 +8,19 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-08 17:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * include/hbexpra.c
+   * source/compiler/expropta.c
+   * source/macro/macroa.c
+   * source/vm/macro.c
+      * fixed bug cousing that some memory was deallocated
+      more then once
+
+   * source/debug/debugger.prg
+      * fixed support for .T./.F. in command window
+      * fixed issues when the application was using
+      SET EXACT ON
+
 2004-04-06 15:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * include/hbvm.h
