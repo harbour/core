@@ -1280,6 +1280,7 @@ HB_FUNC( DBCREATE )
 
    if( SELF_CREATE( ( AREAP ) s_pCurrArea->pArea, &pInfo ) == FAILURE )
    {
+      hb_xfree( szFileName );
       hb_rddReleaseCurrentArea();
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
       return;
@@ -1287,6 +1288,7 @@ HB_FUNC( DBCREATE )
 
    if( !bOpen )
    {
+      hb_xfree( szFileName );
       hb_rddReleaseCurrentArea();
       hb_rddSelectWorkAreaNumber( uiPrevArea );
    }
