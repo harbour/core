@@ -589,11 +589,8 @@ METHOD Update(oRow) CLASS TMySQLTable
    if oRow:cTable == ::cTable
 
       for i := 1 to Len(oRow:aRow)
-         msginfo( i )
          if oRow:aDirty[i]
-            msginfo( ClipValue2SQL(oRow:aRow[i]) ,"ClipValue2SQL")
             cUpdateQuery += oRow:aFieldStruct[i][MYSQL_FS_NAME] + "=" + ClipValue2SQL(oRow:aRow[i]) + ","
-            msginfo( cUpdateQuery ,"cUpdateQuery" )
          endif
       next
 
