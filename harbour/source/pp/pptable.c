@@ -124,6 +124,7 @@ void hb_pp_Table( void )
    static DEFINES sD___53 = {"_SET_FILECASE",NULL,-1,"102", &sD___52 };
    static DEFINES sD___54 = {"_SET_DIRCASE",NULL,-1,"103", &sD___53 };
    static DEFINES sD___55 = {"_SET_DIRSEPARATOR",NULL,-1,"104", &sD___54 };
+   static DEFINES sD___56 = {"_SET_EOF",NULL,-1,"105", &sD___55 };
 
    static COMMANDS sC___1 = {0,"NOTE","\1A30",NULL,NULL };
    static COMMANDS sC___2 = {0,"DO","WHILE \1A00","while \1A00",&sC___1 };
@@ -433,7 +434,7 @@ void hb_pp_Table( void )
    static COMMANDS sC___249 = {0,"SET","DIRSEPARATOR \1A30","Set(_SET_DIRSEPARATOR, \1A10 )",&sC___248 };
    static COMMANDS sC___250 = {0,"SET","DIRSEPARATOR ( \1A00 )","Set(_SET_DIRSEPARATOR, \1A00 )",&sC___249 };
 
-   hb_pp_topDefine = &sD___55;
+   hb_pp_topDefine = &sD___56;
    hb_pp_topCommand = &sC___250;
    hb_pp_topTranslate = NULL;
 }

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for the Set API
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -127,7 +127,8 @@ typedef enum
    HB_SET_IDLEREPEAT    = 101,
    HB_SET_FILECASE      = 102,
    HB_SET_DIRCASE       = 103,
-   HB_SET_DIRSEPARATOR  = 104
+   HB_SET_DIRSEPARATOR  = 104,
+   HB_SET_EOF           = 105
 
 } HB_set_enum;
 
@@ -158,6 +159,7 @@ typedef struct
    char *  HB_SET_DELIMCHARS;
    BOOL    HB_SET_DELIMITERS;
    char *  HB_SET_DEVICE;
+   BOOL    HB_SET_EOF;
    int     HB_SET_EPOCH;
    BOOL    HB_SET_ESCAPE;
    HB_inkey_enum  HB_SET_EVENTMASK;

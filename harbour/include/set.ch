@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Header file for SET() function
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -119,6 +119,7 @@
 #define _SET_FILECASE     102 /* Harbour extension */
 #define _SET_DIRCASE      103 /* Harbour extension */
 #define _SET_DIRSEPARATOR 104 /* Harbour extension */
+#define _SET_EOF          105 /* Harbour extension */
 
 #define HB_SET_BASE       100
 #define HB_SET_COUNT      2

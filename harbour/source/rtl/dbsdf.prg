@@ -54,6 +54,7 @@
 #include "hbcommon.ch"
 #include "fileio.ch"
 #include "error.ch"
+#include "set.ch"
 
 HB_FILE_VER( "$Id$" )
 
@@ -156,7 +157,9 @@ PROCEDURE __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest 
             END IF
             SKIP
          END WHILE
-         AppendEOF( handle )
+         IF SET(_SET_EOF)
+            AppendEOF( handle )
+         END IF
          FCLOSE( handle )
       END IF
    ELSE

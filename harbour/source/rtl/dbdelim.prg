@@ -7,7 +7,7 @@
  * Copies the contents of a database to a delimited text file.
  * Appends the contents of a delimited text file to a database.
  *
- * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2001-2003 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  * APPEND FROM code submitted by Marco Braida <marcobra@elart.it>
  *
@@ -55,6 +55,7 @@
 #include "hbcommon.ch"
 #include "fileio.ch"
 #include "error.ch"
+#include "set.ch"
 
 HB_FILE_VER( "$Id$" )
 
@@ -193,7 +194,9 @@ local lcisonoeol
             END IF
             SKIP
          END WHILE
-         AppendEOF( handle )
+         IF SET(_SET_EOF)
+            AppendEOF( handle )
+         END IF
          FCLOSE( handle )
       END IF
    ELSE

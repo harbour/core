@@ -8,6 +8,18 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-28 22:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * include/hbset.h
+  * include/set.ch
+  * source/pp/pptable.c
+  * source/rtl/dbdelim.prg
+  * source/rtl/dbsdf.prg
+  * source/rtl/set.c
+    + New SET value named _SET_EOF. Defaults to FALSE on UN*X, but defaults
+      to TRUE on everything else. If set to FALSE, then CHR(26) does not get
+      written when using COPY TO DELIMITED, COPY TO SDF, or when closing any
+      of the various text files that are created using various SET values.
+
 2003-07-21 11:10 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * source/rtl/transfrm.c
     ! Fixed the problem with @E and negative numbers. 
