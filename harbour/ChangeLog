@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-27 09:13 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/compiler/gencli.c
+    ! .NET IL implementation for HB_P_FRAME
+
+  Notice: HB_P_FRAME is generated for declaring locals and params. On IL
+  only locals are declared. Params are declared on the same (function) method
+  declaration. Strong typing is not supported yet.
+
+  To test it simply declare several locals, compile using /gi and check the
+  .IL created file.
+
 2003-06-25 08:32 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     ! object type use implementation for QOUT()
