@@ -102,7 +102,7 @@ extern void   hb_gt_DrawShadow( char cTop, char cLeft, char cBottom, char cRight
 extern void   hb_gt_DispBegin( void );
 extern void   hb_gt_DispEnd( void );
 extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
-extern BOOL   hb_gt_GetBlink(void);
-extern void   hb_gt_SetBlink(BOOL bBlink);
+extern BOOL   hb_gt_GetBlink( void );
+extern void   hb_gt_SetBlink( BOOL bBlink );
 
 #endif /* HB_GTAPI_H_ */

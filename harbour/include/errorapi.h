@@ -95,7 +95,10 @@ extern PHB_ITEM hb_errPutSubSystem      ( PHB_ITEM pError, char * szSubSystem );
 extern PHB_ITEM hb_errPutTries          ( PHB_ITEM pError, USHORT uiTries );
 extern void     hb_errRelease           ( PHB_ITEM pError );
 
-/* Error launchers */
+/* Harbour additions */
+
+extern void     hb_errInit              ( void );
+extern void     hb_errExit              ( void );
 
 extern PHB_ITEM hb_errLaunchSubst       ( PHB_ITEM pError );
 

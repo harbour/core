@@ -41,6 +41,14 @@ return
 
 //----------------------------------------------------------------------------//
 
+procedure ErrorSys
+
+   ErrorBlock( { | oError | DefError( oError ) } )
+
+return
+
+//----------------------------------------------------------------------------//
+
 static function DefError( oError )
    LOCAL cMessage
 
@@ -110,14 +118,6 @@ static function DefError( oError )
    QUIT
 
    RETURN .F.
-
-//----------------------------------------------------------------------------//
-
-procedure ErrorSys
-
-   ErrorBlock( { | oError | DefError( oError ) } )
-
-return
 
 // [vszel]
 

@@ -46,7 +46,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00,
         add esp, 8
         ret near                   */
 
-     /* This is the assembler output from : hb_vmExecute(pcode,symbols).  */
+     /* This is the assembler output from : hb_vmExecute( pcode, symbols ).  */
 
 /* #elseif INTEL16 */
 /* #elseif MOTOROLA */
@@ -114,9 +114,9 @@ HARBOUR HB___HRBRUN( void )
 
       /* Open as binary */
 
-      while ((file = hb_hrbFileOpen( szFileName )) == NULL)
+      while ( ( file = hb_hrbFileOpen( szFileName ) ) == NULL )
       {
-         if ( hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
+         if( hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, 0, EF_CANDEFAULT | EF_CANRETRY ) == E_DEFAULT )
          {
             break;
          }
@@ -140,17 +140,17 @@ HARBOUR HB___HRBRUN( void )
          ulSymbols = hb_hrbFileReadLong( file, szFileName );
          pSymRead = ( PHB_SYMB )hb_xgrab( ulSymbols * sizeof( HB_SYMB ) );
 
-         for( ul=0; ul < ulSymbols; ul++)       /* Read symbols in .HRB     */
+         for( ul = 0; ul < ulSymbols; ul++ )       /* Read symbols in .HRB     */
          {
             pSymRead[ ul ].szName  = hb_hrbFileReadId( file, szFileName );
             pSymRead[ ul ].cScope  = hb_hrbFileReadByte( file, szFileName );
-            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) (ULONG) hb_hrbFileReadByte( file, szFileName );
+            pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
             pSymRead[ ul ].pDynSym = NULL;
          }
 
          ulFuncs = hb_hrbFileReadLong( file, szFileName );            /* Read number of functions */
          pDynFunc = ( PHB_DYNF ) hb_xgrab( ulFuncs * sizeof( HB_DYNF ) );
-         for( ul=0; ul < ulFuncs; ul++)         /* Read symbols in .HRB     */
+         for( ul = 0; ul < ulFuncs; ul++ )         /* Read symbols in .HRB     */
          {
             pDynFunc[ ul ].szName = hb_hrbFileReadId( file, szFileName );
 
@@ -168,7 +168,7 @@ HARBOUR HB___HRBRUN( void )
          s_ulSymEntry = 0;
          for( ul = 0; ul < ulSymbols; ul++ )    /* Linker                   */
          {
-            if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_FUNC )
+            if( ( ( ULONG ) pSymRead[ ul ].pFunPtr ) == SYM_FUNC )
             {
                ulPos = hb_hrbFindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
@@ -185,7 +185,7 @@ HARBOUR HB___HRBRUN( void )
                else
                   pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) SYM_EXTERN;
             }
-            if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
+            if( ( ( ULONG ) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */
                pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                if( !pDynSym )
@@ -218,7 +218,7 @@ HARBOUR HB___HRBRUN( void )
             {
                 hb_vmPushSymbol( pSymRead + ul );
                 hb_vmPushNil();
-                for( i = 0; i < (hb_pcount() - 1); i++ )
+                for( i = 0; i < ( hb_pcount() - 1 ); i++ )
                    hb_vmPush( hb_param( i + 2, IT_ANY ) );
                                                 /* Push other cmdline params*/
                 hb_vmDo( hb_pcount() - 1 );            /* Run init function        */
@@ -227,7 +227,7 @@ HARBOUR HB___HRBRUN( void )
 
          hb_vmPushSymbol( pSymRead );
          hb_vmPushNil();
-         for( i = 0; i < (hb_pcount() - 1); i++ )
+         for( i = 0; i < ( hb_pcount() - 1 ); i++ )
             hb_vmPush( hb_param( i + 2, IT_ANY ) );    /* Push other cmdline params*/
          hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
 
@@ -318,7 +318,7 @@ static char * hb_hrbFileReadId( FILE *file, char * szFileName )
          bCont = FALSE;
    } while( bCont );
 
-   szRet = (char *) hb_xgrab( szIdx - szTemp + 1 );
+   szRet = ( char * ) hb_xgrab( szIdx - szTemp + 1 );
    strcpy( szRet, szTemp );
    hb_xfree( szTemp );
 
@@ -330,7 +330,7 @@ static BYTE hb_hrbFileReadByte( FILE *file, char * szFileName )
 {
    BYTE bRet;
 
-   hb_hrbFileRead( file, szFileName, &bRet, 1, 1);
+   hb_hrbFileRead( file, szFileName, &bRet, 1, 1 );
 
    return bRet;
 }
@@ -338,20 +338,20 @@ static BYTE hb_hrbFileReadByte( FILE *file, char * szFileName )
 
 static long hb_hrbFileReadLong( FILE *file, char * szFileName )
 {
-   char cLong[4];                               /* Temporary long           */
+   char cLong[ 4 ];                               /* Temporary long           */
 
    hb_hrbFileRead( file, szFileName, cLong, 4, 1 );
 
-   if( cLong[3] )                               /* Convert to long if ok    */
+   if( cLong[ 3 ] )                             /* Convert to long if ok    */
    {
       hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
       return 0;
    }
    else
-      return ( (BYTE) cLong[0] )             +
-             ( (BYTE) cLong[1] ) * 0x100     +
-             ( (BYTE) cLong[2] ) * 0x10000   +
-             ( (BYTE) cLong[3] ) * 0x1000000 ;
+      return ( ( BYTE ) cLong[ 0 ] )             +
+             ( ( BYTE ) cLong[ 1 ] ) * 0x100     +
+             ( ( BYTE ) cLong[ 2 ] ) * 0x10000   +
+             ( ( BYTE ) cLong[ 3 ] ) * 0x1000000 ;
 }
 
 
@@ -359,7 +359,7 @@ static long hb_hrbFileReadLong( FILE *file, char * szFileName )
     Controlled read from file. If errornous -> Break */
 static void hb_hrbFileRead( FILE *file, char * szFileName, char *cBuffer, int iSize, int iCount )
 {
-   if( iCount != (int) fread( cBuffer, iSize, iCount, file ) )
+   if( iCount != ( int ) fread( cBuffer, iSize, iCount, file ) )
    {                                            /* Read error               */
       hb_errRT_BASE_Ext1( EG_READ, 9999, NULL, szFileName, 0, EF_NONE );
    }
@@ -399,15 +399,15 @@ static void hb_hrbFileClose( FILE *file )
 */
 static PASM_CALL hb_hrbAsmCreateFun( PHB_SYMB pSymbols, BYTE * pCode )
 {
-   PASM_CALL asmRet = (PASM_CALL) hb_xgrab( sizeof( ASM_CALL ) );
+   PASM_CALL asmRet = ( PASM_CALL ) hb_xgrab( sizeof( ASM_CALL ) );
 
-   asmRet->pAsmData = (BYTE * ) hb_xgrab( sizeof( prgFunction ) );
+   asmRet->pAsmData = ( BYTE * ) hb_xgrab( sizeof( prgFunction ) );
    memcpy( asmRet->pAsmData, prgFunction, sizeof( prgFunction ) );
                                               /* Copy new assembler code in */
 /* #if INTEL32 */
 
-   hb_hrbAsmPatch( asmRet->pAsmData,  1, pSymbols );   /* Insert pointer to testsym  */
-   hb_hrbAsmPatch( asmRet->pAsmData,  6, pCode);       /* Insert pointer to testcode */
+   hb_hrbAsmPatch( asmRet->pAsmData, 1, pSymbols );   /* Insert pointer to testsym */
+   hb_hrbAsmPatch( asmRet->pAsmData, 6, pCode );      /* Insert pointer to testcode */
    hb_hrbAsmPatchRelative( asmRet->pAsmData, 11, &hb_vmExecute, 15 );
                                       /* Insert pointer to hb_vmExecute() */
 
@@ -423,10 +423,10 @@ static void hb_hrbAsmPatch( BYTE * pCode, ULONG ulOffset, void *Address )
 {
 /* #if 32 bits and low byte first */
 
-   pCode[ ulOffset     ] = ( (ULONG) Address       ) & 0xFF;
-   pCode[ ulOffset + 1 ] = ( (ULONG) Address >>  8 ) & 0xFF;
-   pCode[ ulOffset + 2 ] = ( (ULONG) Address >> 16 ) & 0xFF;
-   pCode[ ulOffset + 3 ] = ( (ULONG) Address >> 24 ) & 0xFF;
+   pCode[ ulOffset     ] = ( ( ULONG ) Address       ) & 0xFF;
+   pCode[ ulOffset + 1 ] = ( ( ULONG ) Address >>  8 ) & 0xFF;
+   pCode[ ulOffset + 2 ] = ( ( ULONG ) Address >> 16 ) & 0xFF;
+   pCode[ ulOffset + 3 ] = ( ( ULONG ) Address >> 24 ) & 0xFF;
 
 /* #elseif 16 bits and low byte first */
 /* #elseif 32 bits and high byte first */
@@ -440,9 +440,9 @@ static void hb_hrbAsmPatchRelative( BYTE * pCode, ULONG ulOffset,
                                     void * Address, ULONG ulNext )
 {
 /* #if 32 bits and low byte first */
-   ULONG ulBase = (ULONG) pCode + ulNext;
+   ULONG ulBase = ( ULONG ) pCode + ulNext;
                                 /* Relative to next instruction */
-   ULONG ulRelative = (ULONG) Address - ulBase;
+   ULONG ulRelative = ( ULONG ) Address - ulBase;
 
    pCode[ ulOffset     ] = ( ulRelative       ) & 0xFF;
    pCode[ ulOffset + 1 ] = ( ulRelative >>  8 ) & 0xFF;

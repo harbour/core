@@ -63,14 +63,14 @@ typedef struct _HB_DYNS
 #define HB_DYNS_FUNC( hbfunc )   BOOL hbfunc( PHB_DYNS pDynSymbol )
 typedef HB_DYNS_FUNC( PHB_DYNS_FUNC );
 
-/* Harbour Functions scope (SYMBOLSCOPE) */
-#define FS_PUBLIC       ((SYMBOLSCOPE)0x00)
-#define FS_STATIC       ((SYMBOLSCOPE)0x02)
-#define FS_INIT         ((SYMBOLSCOPE)0x08)
-#define FS_EXIT         ((SYMBOLSCOPE)0x10)
+/* Harbour Functions scope ( SYMBOLSCOPE ) */
+#define FS_PUBLIC       ( ( SYMBOLSCOPE ) 0x00 )
+#define FS_STATIC       ( ( SYMBOLSCOPE ) 0x02 )
+#define FS_INIT         ( ( SYMBOLSCOPE ) 0x08 )
+#define FS_EXIT         ( ( SYMBOLSCOPE ) 0x10 )
 #define FS_INITEXIT     ( FS_INIT | FS_EXIT )
-#define FS_MESSAGE      ((SYMBOLSCOPE)0x20)
-#define FS_MEMVAR       ((SYMBOLSCOPE)0x80)
+#define FS_MESSAGE      ( ( SYMBOLSCOPE ) 0x20 )
+#define FS_MEMVAR       ( ( SYMBOLSCOPE ) 0x80 )
 
 extern void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols );  /* invokes the virtual machine */
 

@@ -38,24 +38,24 @@
 #endif
 
 /* items types */
-#define IT_NIL          ((WORD) 0x0000)
-#define IT_INTEGER      ((WORD) 0x0002)
-#define IT_LONG         ((WORD) 0x0008)
-#define IT_DOUBLE       ((WORD) 0x0010)
-#define IT_DATE         ((WORD) 0x0020)
-#define IT_LOGICAL      ((WORD) 0x0080)
-#define IT_SYMBOL       ((WORD) 0x0100)
-#define IT_ALIAS        ((WORD) 0x0200)
-#define IT_STRING       ((WORD) 0x0400)
-#define IT_MEMOFLAG     ((WORD) 0x0800)
+#define IT_NIL          ( ( WORD ) 0x0000 )
+#define IT_INTEGER      ( ( WORD ) 0x0002 )
+#define IT_LONG         ( ( WORD ) 0x0008 )
+#define IT_DOUBLE       ( ( WORD ) 0x0010 )
+#define IT_DATE         ( ( WORD ) 0x0020 )
+#define IT_LOGICAL      ( ( WORD ) 0x0080 )
+#define IT_SYMBOL       ( ( WORD ) 0x0100 )
+#define IT_ALIAS        ( ( WORD ) 0x0200 )
+#define IT_STRING       ( ( WORD ) 0x0400 )
+#define IT_MEMOFLAG     ( ( WORD ) 0x0800 )
 #define IT_MEMO         ( IT_MEMOFLAG & IT_STRING )
-#define IT_BLOCK        ((WORD) 0x1000)
-#define IT_BYREF        ((WORD) 0x2000)
-#define IT_MEMVAR       ((WORD) 0x4000)
-#define IT_ARRAY        ((WORD) 0x8000)
+#define IT_BLOCK        ( ( WORD ) 0x1000 )
+#define IT_BYREF        ( ( WORD ) 0x2000 )
+#define IT_MEMVAR       ( ( WORD ) 0x4000 )
+#define IT_ARRAY        ( ( WORD ) 0x8000 )
 #define IT_OBJECT       IT_ARRAY
 #define IT_NUMERIC      ( IT_INTEGER | IT_LONG | IT_DOUBLE )
-#define IT_ANY          ((WORD) 0xFFFF)
+#define IT_ANY          ( ( WORD ) 0xFFFF )
 
 /* forward declarations */
 struct _HB_CODEBLOCK;
@@ -128,7 +128,7 @@ struct hb_struRefer
 struct hb_struString
 {
    ULONG length;
-   char *value;
+   char * value;
 };
 
 struct hb_struSymbol
@@ -186,7 +186,7 @@ typedef struct
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
 {
-   BYTE*    pCode;        /* codeblock pcode */
+   BYTE *   pCode;        /* codeblock pcode */
    PHB_ITEM pLocals;      /* table with referenced local variables */
    WORD     wLocals;      /* number of referenced local variables */
    PHB_SYMB pSymbols;     /* codeblocks symbols */
@@ -202,7 +202,6 @@ typedef struct _HB_VALUE
 
 extern STACK stack;
 extern HB_SYMB symEval;
-extern HB_ITEM errorBlock;
 extern HB_ITEM aStatics;
 
 /* Extend API */
@@ -246,6 +245,7 @@ extern void *   hb_xrealloc( void * pMem, ULONG lSize ); /* reallocates memory *
 extern ULONG    hb_xsize( void * pMem );                 /* returns the size of an allocated memory block */
 
 /* array management */
+extern BOOL     hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign ); /* Checks if the passed parameters are valid, launches runtim error if needed */
 extern void     hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ); /* creates a new array */
 extern void     hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ); /* retrieves an item */
 extern ULONG    hb_arrayLen( PHB_ITEM pArray ); /* retrives the array len */
@@ -268,13 +268,13 @@ extern void     hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue );
 #define HB_STRGREATER_LEFT      1
 #define HB_STRGREATER_RIGHT     2
 
-extern int      hb_stricmp( const char *s1, const char *s2 );
+extern int      hb_stricmp( const char * s1, const char * s2 );
 extern int      hb_strgreater( char * sz1, char * sz2 );
 extern void     hb_strupr( char * szText );
 extern BOOL     hb_strMatchRegExp( char * szString, char * szMask );
 extern BOOL     hb_strEmpty( char * szText, ULONG ulLen );
 extern char *   hb_strDescend( char * szText, ULONG ulLen );
-extern ULONG    hb_strAt(char *szSub, ULONG ulSubLen, char *szText, ULONG ulLen);
+extern ULONG    hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen );
 extern char *   hb_strUpper( char * szText, ULONG ulLen );
 extern char *   hb_strLower( char * szText, ULONG ulLen );
 extern char *   hb_strDescend( char * szText, ULONG ulLen );
@@ -329,3 +329,4 @@ extern char *   hb_consoleGetNewLine( void );
 extern char *   hb_setColor( char * );
 
 #endif /* HB_EXTEND_H_ */
+

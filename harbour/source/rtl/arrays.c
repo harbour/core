@@ -33,11 +33,40 @@
  * Internal
  */
 
+BOOL hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign )
+{
+   BOOL bRetVal;
+
+   if( IS_ARRAY( pArray ) )
+   {
+      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+         bRetVal = FALSE;
+      else
+      {
+         bRetVal = TRUE;
+         if( bAssign )
+            hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
+         else
+            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
+      }
+   }
+   else
+   {
+      bRetVal = TRUE;
+      if( bAssign )
+         hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
+      else
+         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
+   }
+
+   return bRetVal;
+}
+
 char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
       {
          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
 
@@ -64,7 +93,7 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
       {
          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
 
@@ -93,7 +122,7 @@ double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
       {
          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
 
@@ -162,7 +191,7 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
          hb_itemCopy( pItem, pArray->item.asArray.value->pItems + ( ulIndex - 1 ) );
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
@@ -175,7 +204,7 @@ char * hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
       {
          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
 
@@ -195,7 +224,7 @@ ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
       {
          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
 
@@ -215,7 +244,7 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
       {
          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
          return pItem->type;
@@ -252,7 +281,7 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
 {
    if( IS_ARRAY( pArray ) )
    {
-      if( ulIndex <= hb_arrayLen( pArray ) )
+      if( ulIndex > 0 && ulIndex <= hb_arrayLen( pArray ) )
          hb_itemCopy( pArray->item.asArray.value->pItems + ( ulIndex - 1 ), pItem );
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );

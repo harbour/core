@@ -27,7 +27,7 @@
 
 #include <limits.h>
 #ifndef __MPW__
- #include <malloc.h>
+   #include <malloc.h>
 #endif
 #include <math.h>
 
@@ -52,13 +52,13 @@ typedef struct _SYMBOLS
 extern HARBOUR HB_ERRORSYS( void );
 extern HARBOUR HB_ERRORNEW( void );
 
-static void    hb_vmAliasPop( void );        /* pops the workarea number form the eval stack */
-static void    hb_vmAliasPush( void );       /* pushes the current workarea number */
-static void    hb_vmAliasSwap( void );       /* swaps items on the eval stack and pops the workarea number */
+static void    hb_vmPopAlias( void );        /* pops the workarea number form the eval stack */
 static void    hb_vmPopAliasedField( PHB_SYMB );  /* pops an aliased field from the eval stack*/
 static void    hb_vmPopField( PHB_SYMB );      /* pops an unaliased field from the eval stack */
+static void    hb_vmPushAlias( void );       /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB );     /* pushes an aliased field on the eval stack */
 static void    hb_vmPushField( PHB_SYMB );     /* pushes an unaliased field on the eval stack */
+static void    hb_vmSwapAlias( void );       /* swaps items on the eval stack and pops the workarea number */
 
 static void    hb_vmDoInitStatics( void ); /* executes all _INITSTATICS functions */
 static void    hb_vmDoInitFunctions( int argc, char * argv[] ); /* executes all defined PRGs INIT functions */
@@ -88,19 +88,18 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 
 STACK    stack;
 HB_SYMB  symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
-HB_ITEM  errorBlock;       /* errorblock */
 HB_ITEM  aStatics;         /* Harbour array to hold all application statics variables */
 
-static BOOL     bDebugging = FALSE;
-static BOOL     bDebugShowLines = FALSE; /* update source code line on the debugger display */
-static PHB_SYMB pSymStart;        /* start symbol of the application. MAIN() is not required */
-static PSYMBOLS pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
-static BYTE     byErrorLevel = 0; /* application exit errorlevel */
+static BOOL     s_bDebugging = FALSE;
+static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
+static PHB_SYMB s_pSymStart = NULL;        /* start symbol of the application. MAIN() is not required */
+static PSYMBOLS s_pSymbols = NULL;  /* to hold a linked list of all different modules symbol tables */
+static BYTE     s_byErrorLevel = 0; /* application exit errorlevel */
 
 /* Stores the position on the stack of current SEQUENCE envelope or 0 if no
  * SEQUENCE is active
  */
-static LONG     RecoverBase = 0;
+static LONG     s_lRecoverBase = 0;
 #define  HB_RECOVER_STATE     -1
 #define  HB_RECOVER_BASE      -2
 #define  HB_RECOVER_ADDRESS   -3
@@ -108,7 +107,7 @@ static LONG     RecoverBase = 0;
 
 /* Request for some action - stop processing of opcodes
  */
-static WORD wActionRequest  = 0;
+static WORD s_wActionRequest = 0;
 
 /* uncomment it to trace the virtual machine activity */
 /* #define  bHB_DEBUG */
@@ -131,10 +130,10 @@ int main( int argc, char * argv[] )
 
    /* initialize internal data structures */
    aStatics.type     = IT_NIL;
-   errorBlock.type   = IT_NIL;
    stack.Return.type = IT_NIL;
 
    hb_xinit();
+   hb_errInit();
    hb_stackInit();
    hb_dynsymNew( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();        /* initialize Sets */
@@ -157,13 +156,13 @@ int main( int argc, char * argv[] )
       PHB_DYNS pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
 
       if( pDynSym )
-         pSymStart = pDynSym->pSymbol;
+         s_pSymStart = pDynSym->pSymbol;
       else
          hb_errInternal( 9999, "Can\'t locate the starting procedure: \'%s\'", HARBOUR_START_PROCEDURE, NULL );
    }
 #endif
 
-   hb_vmPushSymbol( pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
+   hb_vmPushSymbol( s_pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */
    hb_vmPushNil();               /* places NIL at self */
    for( i = 1; i < argc; i++ )   /* places application parameters on the stack */
       hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
@@ -178,7 +177,7 @@ int main( int argc, char * argv[] )
 
 void hb_vmQuit( void )
 {
-   wActionRequest = 0;           /* EXIT procedures should be processed */
+   s_wActionRequest = 0;         /* EXIT procedures should be processed */
    hb_vmDoExitFunctions();       /* process defined EXIT functions */
 
    while( stack.pPos > stack.pItems )
@@ -186,7 +185,7 @@ void hb_vmQuit( void )
 
    hb_itemClear( &stack.Return );
    hb_arrayRelease( &aStatics );
-   hb_itemClear( &errorBlock );
+   hb_errExit();
    hb_clsReleaseAll();
    hb_vmReleaseLocalSymbols();  /* releases the local modules linked list */
    hb_dynsymRelease();          /* releases the dynamic symbol table */
@@ -199,7 +198,7 @@ void hb_vmQuit( void )
 
    HB_DEBUG( "Done!\n" );
 
-   exit( byErrorLevel );
+   exit( s_byErrorLevel );
 }
 
 void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
@@ -361,7 +360,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_LINE:
               stack.pBase->item.asSymbol.lineno = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              if( bDebugging && bDebugShowLines )
+              if( s_bDebugging && s_bDebugShowLines )
                  hb_vmDebuggerShowLine( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
@@ -422,7 +421,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
          case HB_P_PARAMETER:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               hb_vmPopParameter( pSymbols + wParams, pCode[ w+3 ] );
-              w +=4;
+              w += 4;
               break;
 
          case HB_P_PLUS:
@@ -436,7 +435,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_POPALIAS:
-              hb_vmAliasPop();
+              hb_vmPopAlias();
               w++;
               break;
 
@@ -474,7 +473,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_PUSHALIAS:
-              hb_vmAliasPush();
+              hb_vmPushAlias();
               w++;
               break;
 
@@ -492,7 +491,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                * +7 -> start of table with referenced local variables
                */
               hb_vmPushBlock( pCode + w, pSymbols );
-              w += (pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ));
+              w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               break;
 
          case HB_P_PUSHDOUBLE:
@@ -560,7 +559,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PUSHSTR:
               wSize = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-              hb_vmPushString( (char*)pCode + w + 3, wSize );
+              hb_vmPushString( ( char * ) pCode + w + 3, wSize );
               w += ( wSize + 3 );
               break;
 
@@ -571,7 +570,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_SWAPALIAS:
-              hb_vmAliasSwap();
+              hb_vmSwapAlias();
               w++;
               break;
 
@@ -592,31 +591,31 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * 1) clear the storage for value returned by BREAK statement
                 */
-               stack.pPos->type =IT_NIL;
+               stack.pPos->type = IT_NIL;
                hb_stackPush();
                /*
                 * 2) store the address of RECOVER or END opcode
                 */
-               stack.pPos->type =IT_LONG;
-               stack.pPos->item.asLong.value =w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               stack.pPos->type = IT_LONG;
+               stack.pPos->item.asLong.value = w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
                hb_stackPush();
                /*
                 * 3) store current RECOVER base
                 */
-               stack.pPos->type =IT_LONG;
-               stack.pPos->item.asLong.value =RecoverBase;
+               stack.pPos->type = IT_LONG;
+               stack.pPos->item.asLong.value = s_lRecoverBase;
                hb_stackPush();
                /*
                 * 4) store current bCanRecover flag - in a case of nested sequences
                 * in the same procedure/function
                 */
-               stack.pPos->type =IT_LOGICAL;
-               stack.pPos->item.asLogical.value =bCanRecover;
+               stack.pPos->type = IT_LOGICAL;
+               stack.pPos->item.asLogical.value = bCanRecover;
                hb_stackPush();
                /*
                 * set new recover base
                 */
-               RecoverBase =stack.pPos - stack.pItems;;
+               s_lRecoverBase = stack.pPos - stack.pItems;
                /*
                 * we are now inside a valid SEQUENCE envelope
                 */
@@ -634,19 +633,19 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                * 4) Restore previous recovery state
                */
               hb_stackDec();
-              bCanRecover =stack.pPos->item.asLogical.value;
-              stack.pPos->type =IT_NIL;
+              bCanRecover = stack.pPos->item.asLogical.value;
+              stack.pPos->type = IT_NIL;
               /*
                * 3) Restore previous RECOVER base
                */
               hb_stackDec();
-              RecoverBase =stack.pPos->item.asLong.value;
-              stack.pPos->type =IT_NIL;
+              s_lRecoverBase = stack.pPos->item.asLong.value;
+              stack.pPos->type = IT_NIL;
               /*
                * 2) Remove RECOVER address
                */
               hb_stackDec();
-              stack.pPos->type =IT_NIL;
+              stack.pPos->type = IT_NIL;
               /* 1) Discard the value returned by BREAK statement - there
                * was no RECOVER clause or there was no BREAK statement
                */
@@ -665,19 +664,19 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                * 4) Restore previous recovery state
                */
               hb_stackDec();
-              bCanRecover =stack.pPos->item.asLogical.value;
-              stack.pPos->type =IT_NIL;
+              bCanRecover = stack.pPos->item.asLogical.value;
+              stack.pPos->type = IT_NIL;
               /*
                * 3) Restore previous RECOVER base
                */
               hb_stackDec();
-              RecoverBase =stack.pPos->item.asLong.value;
-              stack.pPos->type =IT_NIL;
+              s_lRecoverBase = stack.pPos->item.asLong.value;
+              stack.pPos->type = IT_NIL;
               /*
                * 2) Remove RECOVER address
                */
               hb_stackDec();
-              stack.pPos->type =IT_NIL;
+              stack.pPos->type = IT_NIL;
               /*
                * 1) Leave the value returned from BREAK  - it will be popped
                * in next executed opcode
@@ -717,9 +716,9 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
       }
 
-      if( wActionRequest )
+      if( s_wActionRequest )
       {
-         if( wActionRequest & HB_BREAK_REQUESTED )
+         if( s_wActionRequest & HB_BREAK_REQUESTED )
          {
             if( bCanRecover )
             {
@@ -730,129 +729,27 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
                /*
                 * remove all items placed on the stack after BEGIN code
                 */
-               while( stack.pPos > stack.pItems + RecoverBase )
+               while( stack.pPos > stack.pItems + s_lRecoverBase )
                   hb_stackPop();
                /*
                 * reload the address of recovery code
                 */
-               w = stack.pItems[ RecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
+               w = stack.pItems[ s_lRecoverBase + HB_RECOVER_ADDRESS ].item.asLong.value;
                /*
                 * leave the SEQUENCE envelope on the stack - it will
                 * be popped either in RECOVER or END opcode
                 */
-               wActionRequest = 0;
+               s_wActionRequest = 0;
             }
             else
                break;
          }
-         else if( wActionRequest & HB_QUIT_REQUESTED )
+         else if( s_wActionRequest & HB_QUIT_REQUESTED )
             break;
       }
    }
    hb_memvarSetPrivatesBase( ulPrivateBase );
 }
-
-/* Pops the item from the eval stack and uses it to select the current
- * workarea
- */
-static void hb_vmAliasPop( void )
-{
-   PHB_ITEM pItem;
-
-   hb_stackDec();
-   pItem = stack.pPos;
-   switch( pItem->type & ~IT_BYREF )
-   {
-      case IT_INTEGER:
-         /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmAliasPush()
-          * or was evaluated from an expression, (nWorkArea)->field
-          */
-         hb_rddSelectWorkAreaNumber( pItem->item.asInteger.value );
-         pItem->type = IT_NIL;
-         break;
-
-      case IT_SYMBOL:
-         /* Alias was specified using alias identifier, for example: al->field
-          */
-         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
-         pItem->type = IT_NIL;
-         break;
-
-      case IT_STRING:
-         /* Alias was evaluated from an expression, for example: (cVar)->field
-          */
-         /* TODO: synchronize it with RDD API
-         hb_SelectWorkAreaAlias( pItem->item.asString.value );
-         */
-         hb_itemClear( pItem );
-         break;
-
-      default:
-         hb_itemClear( pItem );
-         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
-         break;
-   }
-
-   HB_DEBUG( "hb_vmAliasPop\n" );
-}
-
-/* pushes current workarea number on the eval stack
- */
-static void hb_vmAliasPush( void )
-{
-   stack.pPos->type = IT_INTEGER;
-   stack.pPos->item.asInteger.value   = hb_rddGetCurrentWorkAreaNumber();
-   stack.pPos->item.asInteger.length  = 10;
-   hb_stackPush();
-   HB_DEBUG( "hb_vmAliasPush\n" );
-}
-
-/* Swaps two last items on the eval stack - the last item after swaping
- * is popped as current workarea number
- */
-static void hb_vmAliasSwap( void )
-{
-   HB_ITEM_PTR pItem = stack.pPos -1;
-   HB_ITEM_PTR pWorkArea = stack.pPos -2;
-
-   switch( pWorkArea->type & ~IT_BYREF )
-   {
-      case IT_INTEGER:
-         /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmAliasPush()
-          * or was evaluated from an expression, (nWorkArea)->field
-          */
-         hb_rddSelectWorkAreaNumber( pWorkArea->item.asInteger.value );
-         break;
-
-      case IT_SYMBOL:
-         /* Alias was specified using alias identifier, for example: al->field
-          */
-         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
-         break;
-
-      case IT_STRING:
-         /* Alias was evaluated from an expression, for example: (cVar)->field
-          */
-         /* TODO: synchronize it with RDD API
-         hb_rddSelectWorkAreaAlias( pWorkArea->item.asString.value );
-         */
-         hb_itemClear( pWorkArea );
-         break;
-
-      default:
-         hb_itemClear( pWorkArea );
-         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
-         break;
-   }
-   memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
-   pItem->type =IT_NIL;
-   hb_stackDec();
-
-   HB_DEBUG( "hb_vmAliasSwap\n" );
-}
-
 
 void hb_vmAnd( void )
 {
@@ -877,7 +774,6 @@ void hb_vmArrayAt( void )
    PHB_ITEM pIndex = stack.pPos - 1;
    PHB_ITEM pArray = stack.pPos - 2;
    ULONG ulIndex;
-   HB_ITEM item;
 
    if( IS_INTEGER( pIndex ) )
       ulIndex = pIndex->item.asInteger.value;
@@ -889,15 +785,23 @@ void hb_vmArrayAt( void )
       ulIndex = pIndex->item.asDouble.value;
 
    else
+   {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
+      return;
+   }
 
-   hb_arrayGet( pArray, ulIndex, &item );
-   hb_stackPop();
-   hb_stackPop();
+   if( ! hb_arrayError( pArray, ulIndex, FALSE ) )
+   {
+      HB_ITEM item;
 
-   hb_itemCopy( stack.pPos, &item );
-   hb_itemClear( &item );
-   hb_stackPush();
+      hb_arrayGet( pArray, ulIndex, &item );
+      hb_stackPop();
+      hb_stackPop();
+
+      hb_itemCopy( stack.pPos, &item );
+      hb_itemClear( &item );
+      hb_stackPush();
+   }
 }
 
 void hb_vmArrayPut( void )
@@ -917,12 +821,18 @@ void hb_vmArrayPut( void )
       ulIndex = pIndex->item.asDouble.value;
 
    else
+   {
       hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
+      return;
+   }
 
-   hb_arraySet( pArray, ulIndex, pValue );
-   hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
-   hb_stackPop();
-   hb_stackPop();
+   if( ! hb_arrayError( pArray, ulIndex, TRUE ) )
+   {
+      hb_arraySet( pArray, ulIndex, pValue );
+      hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
+      hb_stackPop();
+      hb_stackPop();
+   }
 }
 
 static void hb_vmDebuggerEndProc( void )
@@ -931,11 +841,11 @@ static void hb_vmDebuggerEndProc( void )
 
    hb_itemCopy( &item, &stack.Return ); /* saves the previous returned value */
 
-   bDebugShowLines = FALSE;
+   s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmDo( 0 );
-   bDebugShowLines = TRUE;
+   s_bDebugShowLines = TRUE;
 
    hb_itemCopy( &stack.Return, &item ); /* restores the previous returned value */
    hb_itemClear( &item );
@@ -943,12 +853,12 @@ static void hb_vmDebuggerEndProc( void )
 
 static void hb_vmDebuggerShowLine( WORD wLine ) /* makes the debugger shows a specific source code line */
 {
-   bDebugShowLines = FALSE;
+   s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushInteger( wLine );
    hb_vmDo( 1 );
-   bDebugShowLines = TRUE;
+   s_bDebugShowLines = TRUE;
 }
 
 void hb_vmDec( void )
@@ -1011,15 +921,27 @@ void hb_vmDivide( void )
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1340, NULL, "/" );
 
-         hb_vmPush( pResult );
-
-         hb_itemRelease( pResult );
+         if( pResult )
+         {
+            hb_vmPush( pResult );
+            hb_itemRelease( pResult );
+         }
       }
       else
          hb_vmPushNumber( d1 / d2, hb_set.HB_SET_DECIMALS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1084, NULL, "/" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1084, NULL, "/" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 void hb_vmDo( WORD wParams )
@@ -1031,9 +953,9 @@ void hb_vmDo( WORD wParams )
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    PHB_FUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
-   BOOL bDebugPrevState = bDebugging;
+   BOOL bDebugPrevState = s_bDebugging;
 
-   bDebugging = FALSE;
+   s_bDebugging = FALSE;
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -1065,24 +987,24 @@ void hb_vmDo( WORD wParams )
       else
          pFunc = hb_objGetMethod( pSelf, pSym );
 
-      if( ! pFunc )
+      if( pFunc )
+         pFunc();
+      else
       {
          if( pSym->szName[ 0 ] == '_' )
             hb_errRT_BASE( EG_NOVARMETHOD, 1005, NULL, pSym->szName + 1 );
          else
             hb_errRT_BASE( EG_NOMETHOD, 1004, NULL, pSym->szName );
       }
-
-      pFunc();
    }
    else                     /* it is a function */
    {
       pFunc = pSym->pFunPtr;
 
-      if( ! pFunc )
+      if( pFunc )
+         pFunc();
+      else
          hb_errInternal( 9999, "Invalid function pointer (%s) from hb_vmDo()", pSym->szName, NULL );
-
-      pFunc();
    }
 
    while( stack.pPos > stack.pItems + wItemIndex )
@@ -1091,10 +1013,10 @@ void hb_vmDo( WORD wParams )
    stack.pBase = stack.pItems + wStackBase;
    stack.iStatics = iStatics;
 
-   if( bDebugging )
+   if( s_bDebugging )
       hb_vmDebuggerEndProc();
 
-   bDebugging = bDebugPrevState;
+   s_bDebugging = bDebugPrevState;
 }
 
 HARBOUR hb_vmDoBlock( void )
@@ -1107,7 +1029,7 @@ HARBOUR hb_vmDoBlock( void )
       hb_errInternal( 9999, "Codeblock expected from hb_vmDoBlock()", NULL, NULL );
 
    /* Check for valid count of parameters */
-   iParam =pBlock->item.asBlock.paramcnt -hb_pcount();
+   iParam = pBlock->item.asBlock.paramcnt - hb_pcount();
    /* add missing parameters */
    while( iParam-- > 0 )
      hb_vmPushNil();
@@ -1115,7 +1037,7 @@ HARBOUR hb_vmDoBlock( void )
    /* set pBaseCB to point to local variables of a function where
     * the codeblock was defined
     */
-   stack.pBase->item.asSymbol.lineno =pBlock->item.asBlock.lineno;
+   stack.pBase->item.asSymbol.lineno = pBlock->item.asBlock.lineno;
 
    hb_codeblockEvaluate( pBlock );
 
@@ -1200,7 +1122,7 @@ void hb_vmEqual( BOOL bExact )
       hb_vmPushLogical( hb_vmPopLogical() == hb_vmPopLogical() );
 
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
-      hb_vmPushLogical( hb_vmPopDouble(&wDec) == hb_vmPopDouble(&wDec) );
+      hb_vmPushLogical( hb_vmPopDouble( &wDec ) == hb_vmPopDouble( &wDec ) );
 
    else if( IS_OBJECT( pItem1 ) && hb_objHasMsg( pItem1, "==" ) )
       hb_vmOperatorCall( pItem1, pItem2, "==" );
@@ -1401,12 +1323,11 @@ void hb_vmInstring( void )
 {
    PHB_ITEM pItem1 = stack.pPos - 2;
    PHB_ITEM pItem2 = stack.pPos - 1;
-   int   iResult;
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      iResult = hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
-                          pItem2->item.asString.value, pItem2->item.asString.length );
+      int iResult = hb_strAt( pItem1->item.asString.value, pItem1->item.asString.length,
+                              pItem2->item.asString.value, pItem2->item.asString.length );
       hb_stackPop();
       hb_stackPop();
       hb_vmPushLogical( iResult == 0 ? FALSE : TRUE );
@@ -1599,7 +1520,7 @@ void hb_vmMinus( void )
       double dNumber2 = hb_vmPopDouble( &wDec2 );
       double dNumber1 = hb_vmPopDouble( &wDec1 );
 
-      hb_vmPushNumber( dNumber1 - dNumber2, (wDec1 > wDec2) ? wDec1 : wDec2 );
+      hb_vmPushNumber( dNumber1 - dNumber2, ( wDec1 > wDec2 ) ? wDec1 : wDec2 );
    }
    else if( IS_DATE( pItem2 ) && IS_DATE( pItem1 ) )
    {
@@ -1629,7 +1550,7 @@ void hb_vmMinus( void )
 
          memcpy( pItem1->item.asString.value + ulLen, pItem2->item.asString.value, pItem2->item.asString.length );
          ulLen += pItem2->item.asString.length;
-         memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen);
+         memset( pItem1->item.asString.value + ulLen, ' ', pItem1->item.asString.length - ulLen );
          pItem1->item.asString.value[ pItem1->item.asString.length ] = '\0';
 
          if( pItem2->item.asString.value )
@@ -1646,18 +1567,28 @@ void hb_vmMinus( void )
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_objHasMsg( stack.pPos - 2, "-" ) )
       hb_vmOperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
    else
-      hb_errRT_BASE( EG_ARG, 1082, NULL, "-" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 void hb_vmModuleName( char * szModuleName ) /* PRG and function name information for the debugger */
 {
-   bDebugging = TRUE;
-   bDebugShowLines = FALSE;
+   s_bDebugging = TRUE;
+   s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushString( szModuleName, strlen( szModuleName ) );
    hb_vmDo( 1 );
-   bDebugShowLines = TRUE;
+   s_bDebugShowLines = TRUE;
 }
 
 void hb_vmModulus( void )
@@ -1675,9 +1606,11 @@ void hb_vmModulus( void )
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%" );
 
-         hb_vmPush( pResult );
-
-         hb_itemRelease( pResult );
+         if( pResult )
+         {
+            hb_vmPush( pResult );
+            hb_itemRelease( pResult );
+         }
       }
       else
          /* NOTE: Clipper always returns the result of modulus
@@ -1685,7 +1618,17 @@ void hb_vmModulus( void )
          hb_vmPushNumber( fmod( d1, d2 ), hb_set.HB_SET_DECIMALS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1085, NULL, "%" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1085, NULL, "%" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 void hb_vmMult( void )
@@ -1702,7 +1645,17 @@ void hb_vmMult( void )
       hb_vmPushNumber( d1 * d2, wDec1 + wDec2 );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1083, NULL, "*" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1083, NULL, "*" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 void hb_vmOperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char *szSymbol )
@@ -1785,7 +1738,17 @@ void hb_vmPlus( void )
       hb_vmOperatorCall( pItem1, pItem2, "+" );
 
    else
-      hb_errRT_BASE( EG_ARG, 1081, NULL, "+" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 
    HB_DEBUG( "Plus\n" );
 }
@@ -1802,8 +1765,53 @@ long hb_vmPopDate( void )
    else
    {
       hb_errInternal( 9999, "Incorrect item value trying to Pop a date value", NULL, NULL );
-      return 0;
+      return 0; /* To suppress compiler warning */
    }
+}
+
+/* Pops the item from the eval stack and uses it to select the current
+ * workarea
+ */
+static void hb_vmPopAlias( void )
+{
+   PHB_ITEM pItem;
+
+   hb_stackDec();
+   pItem = stack.pPos;
+   switch( pItem->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using hb_vmPushAlias()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         hb_rddSelectWorkAreaNumber( pItem->item.asInteger.value );
+         pItem->type = IT_NIL;
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
+         pItem->type = IT_NIL;
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_SelectWorkAreaAlias( pItem->item.asString.value );
+         */
+         hb_itemClear( pItem );
+         break;
+
+      default:
+         hb_itemClear( pItem );
+         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
+         break;
+   }
+
+   HB_DEBUG( "hb_vmPopAlias\n" );
 }
 
 static void hb_vmPopAliasedField( PHB_SYMB pSym )
@@ -1815,7 +1823,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
    {
       case IT_INTEGER:
          /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmAliasPush()
+          * or it was saved on the stack using hb_vmPushAlias()
           * or was evaluated from an expression, (nWorkArea)->field
           */
          hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
@@ -1841,7 +1849,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
       default:
          hb_itemClear( pAlias );
          hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
-         break;
+         return;
    }
 
    hb_rddPutFieldValue( stack.pPos - 2, pSym );
@@ -1920,17 +1928,17 @@ void hb_vmPopLocal( SHORT iLocal )
 
 BOOL hb_vmPopLogical( void )
 {
-   hb_stackDec();
-
-   if( IS_LOGICAL( stack.pPos ) )
+   if( IS_LOGICAL( stack.pPos - 1 ) )
    {
+      hb_stackDec();
+
       stack.pPos->type = IT_NIL;
       return stack.pPos->item.asLogical.value;
    }
    else
    {
       hb_errRT_BASE( EG_ARG, 1066, NULL, hb_langDGetErrorDesc( EG_CONDITION ) );
-      return 0;
+      return FALSE;
    }
 }
 
@@ -2013,7 +2021,28 @@ void hb_vmPower( void )
       hb_vmPushNumber( pow( d1, d2 ), hb_set.HB_SET_DECIMALS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1088, NULL, "^" );
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1088, NULL, "^" );
+
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
+}
+
+/* pushes current workarea number on the eval stack
+ */
+static void hb_vmPushAlias( void )
+{
+   stack.pPos->type = IT_INTEGER;
+   stack.pPos->item.asInteger.value   = hb_rddGetCurrentWorkAreaNumber();
+   stack.pPos->item.asInteger.length  = 10;
+   hb_stackPush();
+   HB_DEBUG( "hb_vmPushAlias\n" );
 }
 
 static void hb_vmPushAliasedField( PHB_SYMB pSym )
@@ -2025,7 +2054,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
    {
       case IT_INTEGER:
          /* Alias was used as integer value, for example: 4->field
-          * or it was saved on the stack using hb_vmAliasPush()
+          * or it was saved on the stack using hb_vmPushAlias()
           * or was evaluated from an expression, (nWorkArea)->field
           */
          hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
@@ -2051,7 +2080,7 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
       default:
          hb_itemClear( pAlias );
          hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
-         break;
+         return;
    }
 
    hb_rddGetFieldValue( pAlias, pSym );
@@ -2091,7 +2120,7 @@ void hb_vmPushLocal( SHORT iLocal )
       /* local variable referenced in a codeblock
        * stack.pBase+1 points to a codeblock that is currently evaluated
        */
-     hb_itemCopy( stack.pPos, hb_codeblockGetVar( stack.pBase + 1, (LONG)iLocal ) );
+     hb_itemCopy( stack.pPos, hb_codeblockGetVar( stack.pBase + 1, ( LONG ) iLocal ) );
 
    hb_stackPush();
    HB_DEBUG2( "hb_vmPushLocal %i\n", iLocal );
@@ -2150,8 +2179,8 @@ void hb_vmPushStatic( WORD wStatic )
    PHB_ITEM pStatic;
 
    pStatic = aStatics.item.asArray.value->pItems + stack.iStatics + wStatic - 1;
-   if( IS_BYREF(pStatic) )
-      hb_itemCopy( stack.pPos, hb_itemUnRef(pStatic) );
+   if( IS_BYREF( pStatic ) )
+      hb_itemCopy( stack.pPos, hb_itemUnRef( pStatic ) );
    else
       hb_itemCopy( stack.pPos, pStatic );
    hb_stackPush();
@@ -2174,7 +2203,7 @@ void hb_vmPushString( char * szText, ULONG length )
 {
    char * szTemp = ( char * ) hb_xgrab( length + 1 );
 
-   memcpy (szTemp, szText, length);
+   memcpy( szTemp, szText, length );
    szTemp[ length ] = '\0';
 
    stack.pPos->type                 = IT_STRING;
@@ -2216,7 +2245,7 @@ void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
    stack.pPos->item.asBlock.value =
          hb_codeblockNew( pCode + 7 + wLocals*2, /* pcode buffer         */
          wLocals,                                /* number of referenced local variables */
-         (WORD *)( pCode + 7 ),                  /* table with referenced local variables */
+         ( WORD * )( pCode + 7 ),                  /* table with referenced local variables */
          pSymbols );
 
    /* store the statics base of function where the codeblock was defined
@@ -2315,7 +2344,7 @@ void hb_stackPush( void )
 
       /* no, make more headroom: */
       /* hb_stackDispLocal(); */
-      stack.pItems = (PHB_ITEM)hb_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
+      stack.pItems = ( PHB_ITEM ) hb_xrealloc( stack.pItems, sizeof( HB_ITEM ) *
                                 ( stack.wItems + STACK_EXPANDHB_ITEMS ) );
 
       /* fix possibly invalid pointers: */
@@ -2446,6 +2475,52 @@ void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or r
    HB_DEBUG2( "Statics %li\n", hb_arrayLen( &aStatics ) );
 }
 
+/* Swaps two last items on the eval stack - the last item after swaping
+ * is popped as current workarea number
+ */
+static void hb_vmSwapAlias( void )
+{
+   HB_ITEM_PTR pItem = stack.pPos -1;
+   HB_ITEM_PTR pWorkArea = stack.pPos -2;
+
+   switch( pWorkArea->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using hb_vmPushAlias()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         hb_rddSelectWorkAreaNumber( pWorkArea->item.asInteger.value );
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_rddSelectWorkAreaAlias( pWorkArea->item.asString.value );
+         */
+         hb_itemClear( pWorkArea );
+         break;
+
+      default:
+         hb_itemClear( pWorkArea );
+         hb_errRT_BASE( EG_BADALIAS, 9999, NULL, NULL );
+         return;
+   }
+
+   memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
+   pItem->type = IT_NIL;
+   hb_stackDec();
+
+   HB_DEBUG( "hb_vmSwapAlias\n" );
+}
+
 void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* module symbols initialization */
 {
    PSYMBOLS pNewSymbols, pLastSymbols;
@@ -2468,11 +2543,11 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* modu
    pNewSymbols->pNext = NULL;
    pNewSymbols->hScope = 0;
 
-   if( ! pSymbols )
-      pSymbols = pNewSymbols;
+   if( s_pSymbols == NULL )
+      s_pSymbols = pNewSymbols;
    else
    {
-      pLastSymbols = pSymbols;
+      pLastSymbols = s_pSymbols;
       while( pLastSymbols->pNext ) /* locates the latest processed group of symbols */
          pLastSymbols = pLastSymbols->pNext;
       pLastSymbols->pNext = pNewSymbols;
@@ -2480,12 +2555,12 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, WORD wModuleSymbols ) /* modu
 
    for( w = 0; w < wModuleSymbols; w++ ) /* register each public symbol on the dynamic symbol table */
    {
-      hSymScope =( pModuleSymbols + w )->cScope;
-      pNewSymbols->hScope |=hSymScope;
-      if( ( ! pSymStart ) && ( hSymScope == FS_PUBLIC ) )
-         pSymStart = pModuleSymbols + w;  /* first public defined symbol to start execution */
+      hSymScope = ( pModuleSymbols + w )->cScope;
+      pNewSymbols->hScope |= hSymScope;
+      if( ( ! s_pSymStart ) && ( hSymScope == FS_PUBLIC ) )
+         s_pSymStart = pModuleSymbols + w;  /* first public defined symbol to start execution */
 
-      if( (hSymScope == FS_PUBLIC) || (hSymScope & ( FS_MESSAGE | FS_MEMVAR )) )
+      if( ( hSymScope == FS_PUBLIC ) || ( hSymScope & ( FS_MESSAGE | FS_MEMVAR ) ) )
          hb_dynsymNew( pModuleSymbols + w );
    }
 }
@@ -2513,32 +2588,33 @@ static void hb_vmReleaseLocalSymbols( void )
 {
    PSYMBOLS pDestroy;
 
-   while( pSymbols )
+   while( s_pSymbols )
    {
-      pDestroy = pSymbols;
-      pSymbols = pSymbols->pNext;
+      pDestroy = s_pSymbols;
+      s_pSymbols = s_pSymbols->pNext;
       hb_xfree( pDestroy );
    }
 }
 
 /* This calls all _INITSTATICS functions defined in the application.
- * We are using a special symbol's scope (FS_INIT | FS_EXIT) to mark
+ * We are using a special symbol's scope ( FS_INIT | FS_EXIT ) to mark
  * this function. These two bits cannot be marked at the same
  * time for normal user defined functions.
  */
 static void hb_vmDoInitStatics( void )
 {
-   PSYMBOLS pLastSymbols = pSymbols;
+   PSYMBOLS pLastSymbols = s_pSymbols;
    WORD w;
    SYMBOLSCOPE scope;
 
-   do {
-      if( (pLastSymbols->hScope & (FS_INIT | FS_EXIT)) == (FS_INIT | FS_EXIT) )
+   do
+   {
+      if( ( pLastSymbols->hScope & ( FS_INIT | FS_EXIT ) ) == ( FS_INIT | FS_EXIT ) )
       {
          for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
          {
-            scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
-            if( scope == (FS_INIT | FS_EXIT) )
+            scope = ( pLastSymbols->pModuleSymbols + w )->cScope & ( FS_EXIT | FS_INIT );
+            if( scope == ( FS_INIT | FS_EXIT ) )
             {
                /* _INITSTATICS procedure cannot call any function and it
                * cannot use any local variable then it is safe to call
@@ -2558,22 +2634,23 @@ static void hb_vmDoInitStatics( void )
 
 static void hb_vmDoExitFunctions( void )
 {
-   PSYMBOLS pLastSymbols = pSymbols;
+   PSYMBOLS pLastSymbols = s_pSymbols;
    WORD w;
    SYMBOLSCOPE scope;
 
-   do {
+   do
+   {
       if( pLastSymbols->hScope & FS_EXIT )
       {  /* only if module contains some EXIT functions */
          for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
          {
-            scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+            scope = ( pLastSymbols->pModuleSymbols + w )->cScope & ( FS_EXIT | FS_INIT );
             if( scope == FS_EXIT )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + w );
                hb_vmPushNil();
                hb_vmDo( 0 );
-               if( wActionRequest )
+               if( s_wActionRequest )
                   /* QUIT or BREAK was issued - stop processing
                   */
                   return;
@@ -2586,16 +2663,17 @@ static void hb_vmDoExitFunctions( void )
 
 static void hb_vmDoInitFunctions( int argc, char * argv[] )
 {
-   PSYMBOLS pLastSymbols = pSymbols;
+   PSYMBOLS pLastSymbols = s_pSymbols;
    WORD w;
    SYMBOLSCOPE scope;
 
-   do {
+   do
+   {
       if( pLastSymbols->hScope & FS_INIT )
       {  /* only if module contains some INIT functions */
          for( w = 0; w < pLastSymbols->wModuleSymbols; w++ )
          {
-            scope =( pLastSymbols->pModuleSymbols + w )->cScope & (FS_EXIT | FS_INIT);
+            scope = ( pLastSymbols->pModuleSymbols + w )->cScope & ( FS_EXIT | FS_INIT );
             if( scope == FS_INIT )
             {
                int i;
@@ -2652,7 +2730,7 @@ HARBOUR HB_LEN( void )
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEN" ); /* NOTE: Clipper catches this at compile time! */
 }
 
-HARBOUR HB_EMPTY(void)
+HARBOUR HB_EMPTY( void )
 {
    if( hb_pcount() == 1 )
    {
@@ -2770,22 +2848,7 @@ HARBOUR HB_WORD( void )
 
 }
 
-HARBOUR HB_ERRORBLOCK( void )
-{
-   HB_ITEM oldError;
-   PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
-
-   oldError.type = IT_NIL;
-   hb_itemCopy( &oldError, &errorBlock );
-
-   if( pNewErrorBlock )
-      hb_itemCopy( &errorBlock, pNewErrorBlock );
-
-   hb_itemCopy( &stack.Return, &oldError );
-   hb_itemClear( &oldError );
-}
-
-HARBOUR HB_PROCNAME(void)
+HARBOUR HB_PROCNAME( void )
 {
    int iLevel = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
@@ -2813,7 +2876,7 @@ HARBOUR HB_PROCNAME(void)
       hb_retc( "" );
 }
 
-HARBOUR HB_PROCLINE(void)
+HARBOUR HB_PROCLINE( void )
 {
    int iLevel  = hb_parni( 1 ) + 1;  /* we are already inside ProcName() */
    PHB_ITEM pBase = stack.pBase;
@@ -2829,29 +2892,29 @@ HARBOUR HB_PROCLINE(void)
 
 void hb_vmRequestQuit( void )
 {
-   wActionRequest = HB_QUIT_REQUESTED;
+   s_wActionRequest = HB_QUIT_REQUESTED;
 }
 
-HARBOUR HB___QUIT(void)
+HARBOUR HB___QUIT( void )
 {
    hb_vmRequestQuit();
 }
 
-HARBOUR HB_ERRORLEVEL(void)
+HARBOUR HB_ERRORLEVEL( void )
 {
-   BYTE byPrevValue = byErrorLevel;
+   BYTE byPrevValue = s_byErrorLevel;
 
    /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
             accepts other types also and consider them zero. */
 
    if( hb_pcount() > 0 )
       /* Only replace the error level if a parameter was passed */
-      byErrorLevel = hb_parni( 1 );
+      s_byErrorLevel = hb_parni( 1 );
 
    hb_retni( byPrevValue );
 }
 
-HARBOUR HB_PCOUNT(void)
+HARBOUR HB_PCOUNT( void )
 {
    if( hb_pcount() == 0 )
    {
@@ -2864,7 +2927,7 @@ HARBOUR HB_PCOUNT(void)
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "PCOUNT" ); /* NOTE: Clipper catches this at compile time! */
 }
 
-HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )         */
+HARBOUR HB_PVALUE( void )                               /* PValue( <nArg> )         */
 {
    WORD  wParam = hb_parni( 1 );                  /* Get parameter            */
    PHB_ITEM pBase = stack.pItems + stack.pBase->item.asSymbol.stackbase;
@@ -2878,19 +2941,19 @@ HARBOUR HB_PVALUE(void)                                /* PValue( <nArg> )      
 
 void hb_vmRequestBreak( PHB_ITEM pItem )
 {
-   if( RecoverBase )
+   if( s_lRecoverBase )
    {
       if( pItem )
-         hb_itemCopy( stack.pItems + RecoverBase + HB_RECOVER_VALUE, pItem );
-      wActionRequest = HB_BREAK_REQUESTED;
+         hb_itemCopy( stack.pItems + s_lRecoverBase + HB_RECOVER_VALUE, pItem );
+      s_wActionRequest = HB_BREAK_REQUESTED;
    }
    else
-      wActionRequest = HB_QUIT_REQUESTED;
+      s_wActionRequest = HB_QUIT_REQUESTED;
 }
 
 WORD hb_vmRequestQuery( void )
 {
-   return wActionRequest;
+   return s_wActionRequest;
 }
 
 /* NOTE: This function should normally have a parameter count check. But

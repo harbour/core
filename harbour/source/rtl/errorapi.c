@@ -30,9 +30,11 @@
       hb_errGetFlags()
       hb_errPutFlags()
       hb_errRT_New()
+      hb_errRT_New_Subst()
       HB___ERRRT_BASE()
       hb_errRT_BASE()
       hb_errRT_BASE_Ext1()
+      hb_errRT_BASE_Subst()
       hb_errInternal()
    See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
 */
@@ -47,9 +49,10 @@
    go into an infinite loop, this is an emulated version of the Clipper
    "Unrecoverable error 650: Processor stack fault" internal error, but
    better shows what is really the problem */
-#define ERROR_LAUNCH_MAX 8
+#define HB_ERROR_LAUNCH_MAX 8
 
-static int s_iLaunchCount = 0;
+static int     s_iLaunchCount = 0;
+static HB_ITEM s_errorBlock;
 
 extern HARBOUR HB_ERRORNEW( void );
 
@@ -58,6 +61,31 @@ extern HARBOUR HB_ERRORNEW( void );
 void hb_errForceLink()
 {
    HB_ERRORNEW();
+}
+
+HARBOUR HB_ERRORBLOCK( void )
+{
+   HB_ITEM oldError;
+   PHB_ITEM pNewErrorBlock = hb_param( 1, IT_BLOCK );
+
+   hb_itemClear( &oldError );
+   hb_itemCopy( &oldError, &s_errorBlock );
+
+   if( pNewErrorBlock )
+      hb_itemCopy( &s_errorBlock, pNewErrorBlock );
+
+   hb_itemReturn( &oldError );
+   hb_itemClear( &oldError );
+}
+
+void hb_errInit( void )
+{
+   hb_itemClear( &s_errorBlock );
+}
+
+void hb_errExit( void )
+{
+   hb_itemClear( &s_errorBlock );
 }
 
 PHB_ITEM hb_errNew( void )
@@ -86,12 +114,12 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
       /* Check if we have a valid error handler */
 
-      if( ! IS_BLOCK( &errorBlock ) )
+      if( ! IS_BLOCK( &s_errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
 
-      if( s_iLaunchCount == ERROR_LAUNCH_MAX )
+      if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( 9999, "Too many recursive error handler calls", NULL, NULL );
 
       s_iLaunchCount++;
@@ -101,7 +129,7 @@ WORD hb_errLaunch( PHB_ITEM pError )
       pBlock = hb_itemNew( NULL );
       pObject = hb_itemNew( NULL );
 
-      hb_itemCopy( pBlock, &errorBlock );
+      hb_itemCopy( pBlock, &s_errorBlock );
       hb_itemCopy( pObject, pError );
 
       hb_evalNew( &eval, pBlock );
@@ -178,12 +206,12 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 
       /* Check if we have a valid error handler */
 
-      if( ! IS_BLOCK( &errorBlock ) )
+      if( ! IS_BLOCK( &s_errorBlock ) )
          hb_errInternal( 9999, "No ERRORBLOCK() for error", NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
 
-      if( s_iLaunchCount == ERROR_LAUNCH_MAX )
+      if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( 9999, "Too many recursive ERRORBLOCK() calls", NULL, NULL );
 
       s_iLaunchCount++;
@@ -193,7 +221,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       pBlock = hb_itemNew( NULL );
       pObject = hb_itemNew( NULL );
 
-      hb_itemCopy( pBlock, &errorBlock );
+      hb_itemCopy( pBlock, &s_errorBlock );
       hb_itemCopy( pObject, pError );
 
       hb_evalNew( &eval, pBlock );
@@ -252,7 +280,6 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
    hb_vmPush( pError );
    hb_vmPushString( szDescription, strlen( szDescription ) );
    hb_vmDo( 1 );
-
    return pError;
 }
 
@@ -456,8 +483,7 @@ PHB_ITEM hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags )
 
 /* Wrappers for hb_errLaunch() */
 
-static WORD hb_errRT_New
-(
+static WORD hb_errRT_New(
    USHORT uiSeverity,
    char * szSubSystem,
    ULONG  ulGenCode,
@@ -465,8 +491,7 @@ static WORD hb_errRT_New
    char * szDescription,
    char * szOperation,
    USHORT uiOsCode,
-   USHORT uiFlags
-)
+   USHORT uiFlags )
 {
    PHB_ITEM pError = hb_errNew();
    WORD wRetVal;
@@ -487,8 +512,7 @@ static WORD hb_errRT_New
    return wRetVal;
 }
 
-static PHB_ITEM hb_errRT_New_Subst
-(
+static PHB_ITEM hb_errRT_New_Subst(
    USHORT uiSeverity,
    char * szSubSystem,
    ULONG  ulGenCode,
@@ -496,8 +520,7 @@ static PHB_ITEM hb_errRT_New_Subst
    char * szDescription,
    char * szOperation,
    USHORT uiOsCode,
-   USHORT uiFlags
-)
+   USHORT uiFlags )
 {
    PHB_ITEM pError = hb_errNew();
    PHB_ITEM pRetVal;

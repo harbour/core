@@ -35,47 +35,320 @@
 */
 
 /* TRANSFORM() tests written by Eddie Runia <eddie@runia.com> */
+/* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
 
 /* NOTE: Always compile with /n switch */
+/* NOTE: It's worth to make tests with and without the /z switch */
+/* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */
+
 /* TODO: Add checks for string parameters with embedded NUL character */
 /* TODO: Add test cases for other string functions */
 /* TODO: Incorporate tests from test/working/string*.prg */
+/* TODO: String overflow on + and - tests */
+/* TODO: Tests with MEMO type ? */
+/* TODO: Tests with Log(0) type of invalid values */
 
 #include "error.ch"
 
-#translate TEST_LINE( <x>, <result> ) => TEST_CALL(<(x)>, {|| <x> }, <result>)
+#translate TEST_LINE( <x>, <result> ) => TEST_CALL( <(x)>, {|| <x> }, <result> )
 
-STATIC snPass
-STATIC snFail
-STATIC scFileName
-STATIC snFhnd
-STATIC scNewLine
-STATIC snCount
-STATIC slShowAll
+STATIC s_nPass
+STATIC s_nFail
+STATIC s_cFileName
+STATIC s_nFhnd
+STATIC s_cNewLine
+STATIC s_nCount
+STATIC s_lShowAll
+STATIC s_lShortcut
 
 FUNCTION Main( cPar1 )
+
+   /* NOTE: Some basic values we may need for some tests.
+            ( passing by reference, avoid preprocessor bugs, etc. ) */
+
+   LOCAL lcString := "HELLO"
+   LOCAL lcStringE := ""
+   LOCAL lcStringZ := "A" + Chr(0) + "B"
+   LOCAL lnIntZ := 0
+   LOCAL lnDoubleZ := 0.0
+   LOCAL lnIntP := 10
+   LOCAL lnLongP := 100000
+   LOCAL lnDoubleP := 10.567
+   LOCAL lnIntN := -10
+   LOCAL lnLongN := -100000
+   LOCAL lnDoubleN := -10.567
+   LOCAL lnDoubleI := Log( 0 )
+   LOCAL ldDateE := SToD("")
+   LOCAL llFalse := .F.
+   LOCAL llTrue := .T.
+   LOCAL loObject := ErrorNew()
+   LOCAL luNIL := NIL
+   LOCAL lbBlock := {|| NIL }
+   LOCAL laArray := { 9898 }
+
+   MEMVAR mxNotHere
+   MEMVAR mcString
+   MEMVAR mcStringE
+   MEMVAR mcStringZ
+   MEMVAR mnIntZ
+   MEMVAR mnDoubleZ
+   MEMVAR mnIntP
+   MEMVAR mnLongP
+   MEMVAR mnDoubleP
+   MEMVAR mnDoubleI
+   MEMVAR mnIntN
+   MEMVAR mnLongN
+   MEMVAR mnDoubleN
+   MEMVAR mdDateE
+   MEMVAR mlFalse
+   MEMVAR mlTrue
+   MEMVAR moObject
+   MEMVAR muNIL
+   MEMVAR mbBlock
+   MEMVAR maArray
+
+   /* NOTE: mxNotHere intentionally not declared */
+   PRIVATE mcString := "HELLO"
+   PRIVATE mcStringE := ""
+   PRIVATE mcStringZ := "A" + Chr(0) + "B"
+   PRIVATE mnIntZ := 0
+   PRIVATE mnDoubleZ := 0.0
+   PRIVATE mnIntP := 10
+   PRIVATE mnLongP := 100000
+   PRIVATE mnDoubleP := 10.567
+   PRIVATE mnDoubleI := Log( 0 )
+   PRIVATE mnIntN := -10
+   PRIVATE mnLongN := -100000
+   PRIVATE mnDoubleN := -10.567
+   PRIVATE mdDateE := SToD("")
+   PRIVATE mlFalse := .F.
+   PRIVATE mlTrue := .T.
+   PRIVATE moObject := ErrorNew()
+   PRIVATE muNIL := NIL
+   PRIVATE mbBlock := {|| NIL }
+   PRIVATE maArray := { 9898 }
+
+   /* Initialize test */
+
+/* TODO: Need to add this, when multi language support will be available
+         to make sure all error messages comes in the original English
+         language. */
+/* SET LANGID TO EN */
 
    IF cPar1 == NIL
       cPar1 := ""
    ENDIF
 
-   /* Initialize test */
-
-// SET LANGID TO EN
-
    TEST_BEGIN( cPar1 )
+
+/* NOTE: CA-Cl*pper PP fails on these
+   TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( "1" .AND. .F.                   , .F.                                       )
+   TEST_LINE( "A" > 1                         , "E BASE 1075 Argument error > F:S"                )
+*/
 
    /* (operators) */
 
    TEST_LINE( 1 + NIL                         , "E BASE 1081 Argument error + F:S" )
    TEST_LINE( 1 - NIL                         , "E BASE 1082 Argument error - F:S" )
+
+   TEST_LINE( "A" - "B"                       , "AB"                               )
+   TEST_LINE( "A  " - "B"                     , "AB  "                             )
+   TEST_LINE( "A  " - "B "                    , "AB   "                            )
+   TEST_LINE( "A  " - " B"                    , "A B  "                            )
+   TEST_LINE( "   " - "B "                    , "B    "                            )
+
    TEST_LINE( 1 / NIL                         , "E BASE 1084 Argument error / F:S" )
    TEST_LINE( 1 * NIL                         , "E BASE 1083 Argument error * F:S" )
-// PP fails to preprocess this line, so it's temporarly commented out
+   TEST_LINE( 1 ** NIL                        , "E BASE 1088 Argument error ^ F:S" )
+/* NOTE: Harbour PP fails to process this line, so it's temporarly commented out */
 #ifndef __HARBOUR__
    TEST_LINE( 1 ^ NIL                         , "E BASE 1088 Argument error ^ F:S" )
 #endif
    TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
+
+   TEST_LINE( -(0)                            , 0                                  )
+   TEST_LINE( -(10)                           , -10                                )
+   TEST_LINE( -(10.505)                       , -10.505                            )
+   TEST_LINE( -(100000)                       , -100000                            )
+   TEST_LINE( -(-10)                          , 10                                 )
+   TEST_LINE( -("1")                          , "E BASE 1080 Argument error - F:S" )
+
+/* NOTE: Harbour PP fails to process this line, so it's temporarly commented out */
+#ifndef __HARBOUR__
+   TEST_LINE( "AA" $ 1                        , "E BASE 1109 Argument error $ F:S" )
+#endif
+   TEST_LINE( lcString $ 1                     , "E BASE 1109 Argument error $ F:S" )
+   TEST_LINE( 1 $ "AA"                        , "E BASE 1109 Argument error $ F:S" )
+
+   IF TEST_OPT_Z()
+
+   /* With the shortcut optimalization *ON* */
+
+   TEST_LINE( 1 .AND. 2                       , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( NIL .AND. NIL                   , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( lcString .AND. lcString         , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( .T. .AND. 1                     , 1                                         )
+   TEST_LINE( .T. .AND. 1.567                 , 1.567                                     )
+   TEST_LINE( .T. .AND. lcString              , "HELLO"                                   )
+   TEST_LINE( .T. .AND. SToD("")              , SToD("        ")                          )
+   TEST_LINE( .T. .AND. NIL                   , NIL                                       )
+   TEST_LINE( .T. .AND. {}                    , "{.[0].}"                                 )
+   TEST_LINE( .T. .AND. {|| NIL }             , "{||...}"                                 )
+   TEST_LINE( .F. .AND. 1                     , .F.                                       )
+   TEST_LINE( .F. .AND. 1.567                 , .F.                                       )
+   TEST_LINE( .F. .AND. lcString              , .F.                                       )
+   TEST_LINE( .F. .AND. SToD("")              , .F.                                       )
+   TEST_LINE( .F. .AND. NIL                   , .F.                                       )
+   TEST_LINE( .F. .AND. {}                    , .F.                                       )
+   TEST_LINE( .F. .AND. {|| NIL }             , .F.                                       )
+   TEST_LINE( 1 .AND. .F.                     , .F.                                       )
+   TEST_LINE( 1.567 .AND. .F.                 , .F.                                       )
+   TEST_LINE( lcString .AND. .F.              , .F.                                       )
+
+   /* With the shortcut optimalization *OFF* (/z switch) */
+
+   TEST_LINE( 1 .OR. 2                        , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( .F. .OR. 2                      , 2                                         )
+   TEST_LINE( .F. .OR. 1.678                  , 1.678                                     )
+   TEST_LINE( .F. .OR. lcString               , "HELLO"                                   )
+   TEST_LINE( .T. .OR. 2                      , .T.                                       )
+   TEST_LINE( .T. .OR. 1.678                  , .T.                                       )
+   TEST_LINE( .T. .OR. lcString               , .T.                                       )
+   TEST_LINE( 1 .OR. .F.                      , 1                                         )
+   TEST_LINE( 1.0 .OR. .F.                    , 1.0                                       )
+   TEST_LINE( lcString .OR. .F.               , "HELLO"                                   )
+
+   ELSE
+
+   TEST_LINE( 1 .AND. 2                       , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( NIL .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( lcString .AND. lcString         , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. 1                     , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. 1.567                 , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. lcString              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. SToD("")              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. {}                    , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .T. .AND. {|| NIL }             , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. 1                     , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. 1.567                 , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. lcString              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. SToD("")              , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. NIL                   , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. {}                    , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( .F. .AND. {|| NIL }             , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( 1 .AND. .F.                     , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( 1.567 .AND. .F.                 , "E BASE 1078 Argument error .AND. F:S"    )
+   TEST_LINE( lcString .AND. .F.              , "E BASE 1078 Argument error .AND. F:S"    )
+
+   TEST_LINE( 1 .OR. 2                        , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .F. .OR. 2                      , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .F. .OR. 1.678                  , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .F. .OR. lcString               , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .T. .OR. 2                      , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .T. .OR. 1.678                  , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( .T. .OR. lcString               , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( 1 .OR. .F.                      , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( 1.0 .OR. .F.                    , "E BASE 1079 Argument error .OR. F:S"     )
+   TEST_LINE( lcString .OR. .F.               , "E BASE 1079 Argument error .OR. F:S"     )
+
+   ENDIF
+
+   TEST_LINE( .NOT. .T.                       , .F.                                       )
+   TEST_LINE( .NOT. .F.                       , .T.                                       )
+   TEST_LINE( .NOT. 1                         , "E BASE 1077 Argument error .NOT. F:S"    )
+
+   TEST_LINE( iif( "A", ":T:", ":F:" )        , "E BASE 1066 Argument error conditional " )
+   TEST_LINE( iif( .T., ":T:", ":F:" )        , ":T:"                                     )
+   TEST_LINE( iif( .F., ":T:", ":F:" )        , ":F:"                                     )
+
+   TEST_LINE( lcString++                      , "E BASE 1086 Argument error ++ F:S"       )
+   TEST_LINE( lcString--                      , "E BASE 1087 Argument error -- F:S"       )
+
+   TEST_LINE( mxNotHere                       , "E BASE 1003 Variable does not exist MXNOTHERE F:R" )
+
+   TEST_LINE( laArray[ 0 ]                    , "E BASE 1132 Bound error array access "           )
+   TEST_LINE( laArray[ 0 ] := 1               , "E BASE 1133 Bound error array assign "           )
+   TEST_LINE( laArray[ 1000 ]                 , "E BASE 1132 Bound error array access "           )
+   TEST_LINE( laArray[ 1000 ] := 1            , "E BASE 1133 Bound error array assign "           )
+   TEST_LINE( laArray[ -1 ]                   , "E BASE 1132 Bound error array access "           )
+   TEST_LINE( laArray[ -1 ] := 1              , "E BASE 1133 Bound error array assign "           )
+   TEST_LINE( laArray[ "1" ]                  , "E BASE 1068 Argument error array access F:S"     )
+   TEST_LINE( laArray[ "1" ] := 1             , "E BASE 1069 Argument error array assign "        )
+
+   TEST_LINE( lcString > 1                    , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( lcString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( lcString <> 1                   , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( lcString == 1                   , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( {|| NIL } == {|| NIL }          , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( lcString = 1                    , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( lcString < 1                    , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( lcString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
+
+/* NOTE: Harbour RDD will GPF if commented out. */
+#ifndef __HARBOUR__
+
+/* NOTE: TEST_CALL() should be used here, since CA-Cl*pper can't preprocess
+         the TEST_LINE() variation properly. */
+/* TEST_LINE( ("NOTHERE")->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    ) */
+   TEST_CALL( '("NOTHERE")->NOFIELD', {|| ("NOTHERE")->NOFIELD }, "E BASE 1002 Alias does not exist NOTHERE F:R" )
+   TEST_LINE( NOTHERE->NOFIELD                , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( 200->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
+#endif
+
+   TEST_LINE( loObject:hello                  , "E BASE 1004 No exported method HELLO F:S"        )
+   TEST_LINE( loObject:hello := 1             , "E BASE 1005 No exported variable HELLO F:S"      )
+
+   /* LEN() */
+
+   TEST_LINE( Len( NIL )                      , "E BASE 1111 Argument error LEN F:S"   )
+   TEST_LINE( Len( 123 )                      , "E BASE 1111 Argument error LEN F:S"   )
+   TEST_LINE( Len( "" )                       , 0                                      )
+   TEST_LINE( Len( "123" )                    , 3                                      )
+   TEST_LINE( Len( laArray )                  , 1                                      )
+#ifdef __HARBOUR__
+   TEST_LINE( Len( Space( 3000000000 ) )      , 3000000000                             )
+#else
+   TEST_LINE( Len( Space( 40000 ) )           , 40000                                  )
+#endif
+
+   /* EMPTY() */
+
+   TEST_LINE( Empty( @lcString              ) , .T.                                    ) /* Bug in CA-Cl*pper ? */
+   TEST_LINE( Empty( @lcStringE             ) , .T.                                    )
+   TEST_LINE( Empty( @lnIntP                ) , .T.                                    ) /* Bug in CA-Cl*pper ? */
+   TEST_LINE( Empty( @lnIntZ                ) , .T.                                    )
+   TEST_LINE( Empty( "Hallo"                ) , .F.                                    )
+   TEST_LINE( Empty( ""                     ) , .T.                                    )
+   TEST_LINE( Empty( "  "                   ) , .T.                                    )
+   TEST_LINE( Empty( " "+Chr(0)             ) , .F.                                    )
+   TEST_LINE( Empty( " "+Chr(13)+Chr(9)     ) , .T.                                    )
+   TEST_LINE( Empty( "  A"                  ) , .F.                                    )
+   TEST_LINE( Empty( " x "                  ) , .F.                                    )
+   TEST_LINE( Empty( " x"+Chr(0)            ) , .F.                                    )
+   TEST_LINE( Empty( " "+Chr(13)+"x"+Chr(9) ) , .F.                                    )
+   TEST_LINE( Empty( 0                      ) , .T.                                    )
+   TEST_LINE( Empty( -0                     ) , .T.                                    )
+   TEST_LINE( Empty( 0.0                    ) , .T.                                    )
+   TEST_LINE( Empty( 70000-70000            ) , .T.                                    )
+   TEST_LINE( Empty( 1.5*1.5-2.25           ) , .T.                                    )
+   TEST_LINE( Empty( 10                     ) , .F.                                    )
+   TEST_LINE( Empty( 10.0                   ) , .F.                                    )
+   TEST_LINE( Empty( 70000+70000            ) , .F.                                    )
+   TEST_LINE( Empty( 1.5*1.5*2.25           ) , .F.                                    )
+   TEST_LINE( Empty( SToD("18241010")       ) , .F.                                    )
+   TEST_LINE( Empty( SToD("18250231")       ) , .T.                                    )
+   TEST_LINE( Empty( SToD("99999999")       ) , .T.                                    )
+   TEST_LINE( Empty( SToD("        ")       ) , .T.                                    )
+   TEST_LINE( Empty( SToD("")               ) , .T.                                    )
+   TEST_LINE( Empty( .T.                    ) , .F.                                    )
+   TEST_LINE( Empty( .F.                    ) , .T.                                    )
+   TEST_LINE( Empty( NIL                    ) , .T.                                    )
+   TEST_LINE( Empty( {1}                    ) , .F.                                    )
+   TEST_LINE( Empty( {}                     ) , .T.                                    )
+   TEST_LINE( Empty( {0}                    ) , .F.                                    )
+   TEST_LINE( Empty( {|x|x+x}               ) , .F.                                    )
 
    /* ABS() */
 
@@ -170,6 +443,14 @@ FUNCTION Main( cPar1 )
    TEST_LINE( RAt("ABCDEFG", "ABCDEF")        , 0                )
    TEST_LINE( RAt("FI", "ABCDEF")             , 0                )
 
+   /* REPLICATE() */
+
+#ifdef __HARBOUR__
+   TEST_LINE( Replicate("XXX", 2000000000)    , "E BASE 1234 String overflow REPLICATE F:S" )
+#else
+   TEST_LINE( Replicate("XXX", 30000)         , "E BASE 1234 String overflow REPLICATE F:S" )
+#endif
+
    /* SUBSTR() */
 
    TEST_LINE( SubStr("abcdef", 0, -1)         , ""               )
@@ -254,6 +535,8 @@ FUNCTION Main( cPar1 )
    TEST_LINE( PadC("abcdef", 10)              , "  abcdef  "     )
    TEST_LINE( PadC("abcdef", 10, "1")         , "11abcdef11"     )
    TEST_LINE( PadC("abcdef", 10, "12")        , "11abcdef11"     )
+
+   /* STUFF() */
 
    TEST_LINE( Stuff("ABCDEF", 0, 0, NIL)      , ""               )
    TEST_LINE( Stuff("ABCDEF", 0, 0, "xyz")    , "xyzABCDEF"      )
@@ -525,8 +808,10 @@ FUNCTION Main( cPar1 )
    TEST_LINE( Transform( 150       , "99,99"       )       , " 1,50"                       )
    TEST_LINE( Transform( 41        , "@Z 9999"     )       , "  41"                        )
    TEST_LINE( Transform( 0         , "@Z 9999"     )       , "    "                        )
-   TEST_LINE( Transform( 41        , "@0 9999"     )       , "  41"                        )
-   TEST_LINE( Transform( 0         , "@0 9999"     )       , "   0"                        )
+#ifdef __HARBOUR__
+   TEST_LINE( Transform( 41        , "@0 9999"     )       , "0041"                        ) /* Extension in Harbour, in CA-Cl*pper it should return: "  41" */
+   TEST_LINE( Transform( 0         , "@0 9999"     )       , "0000"                        ) /* Extension in Harbour, in CA-Cl*pper it should return: "   0" */
+#endif
    TEST_LINE( Transform( 41        , "@B 9999"     )       , "41  "                        )
    TEST_LINE( Transform( 41        , "@B 99.9"     )       , "41.0"                        )
    TEST_LINE( Transform( 7         , "@B 99.9"     )       , "7.0 "                        )
@@ -570,7 +855,7 @@ FUNCTION Main( cPar1 )
 
 #define TEST_RESULT_COL1_WIDTH  4
 #define TEST_RESULT_COL2_WIDTH  30
-#define TEST_RESULT_COL3_WIDTH  40
+#define TEST_RESULT_COL3_WIDTH  55
 #define TEST_RESULT_COL4_WIDTH  40
 
 STATIC FUNCTION TEST_BEGIN( cParam )
@@ -578,42 +863,51 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    IF "OS/2" $ cOs .OR. ;
       "DOS"  $ cOs
-      scNewLine := Chr( 13 ) + Chr( 10 )
+      s_cNewLine := Chr( 13 ) + Chr( 10 )
    ELSE
-      scNewLine := Chr( 10 )
+      s_cNewLine := Chr( 10 )
    ENDIF
 
-   slShowAll := "/ALL" $ Upper( cParam )
+   s_lShowAll := "/ALL" $ Upper( cParam )
 
-/*
-#ifdef __HARBOUR__
-     scFileName := "rtl_test.hb"
-#else
-     scFileName := "rtl_test.cl"
-#endif
-*/
+   /* Detect presence of shortcutting optimalization */
 
-   snFhnd := 1 /* FHND_STDOUT */
-   scFileName := "(stdout)"
+   s_lShortcut := .T.
+   IF .T. .OR. Eval( {|| s_lShortcut := .F. } )
+      /* Do nothing */
+   ENDIF
 
-   snCount := 0
-   snPass := 0
-   snFail := 0
+   /* Decide about output filename */
 
-   fWrite( snFhnd, "   Version: " + Version() + scNewLine +;
-                   "        OS: " + OS() + scNewLine +;
-                   "Date, Time: " + DToS( Date() ) + " " + Time() + scNewLine +;
-                   "    Output: " + scFileName + scNewLine +;
-                   "  Switches: " + cParam + scNewLine +;
-                   "===========================================================================" + scNewLine +;
-                   scNewLine )
+   DO CASE
+   CASE "HARBOUR" $ Upper( Version() )     ; s_cFileName := "rtl_test.hb"
+   CASE "CLIPPER (R)" $ Upper( Version() ) .AND. ;
+        "5.3" $ Version()                  ; s_cFileName := "rtl_test.c53"
+   CASE "CLIPPER (R)" $ Upper( Version() ) ; s_cFileName := "rtl_test.c5x"
+   ENDCASE
 
-   fWrite( snFhnd, PadL( "No", TEST_RESULT_COL1_WIDTH ) + ". " +;
-                   PadR( "TestCall()", TEST_RESULT_COL2_WIDTH ) + " -> " +;
-                   PadR( "Result", TEST_RESULT_COL3_WIDTH ) + " | " +;
-                   PadR( "Expected", TEST_RESULT_COL4_WIDTH ) +;
-                   " [! *FAIL* !]" + scNewLine )
-   fWrite( snFhnd, "---------------------------------------------------------------------------" + scNewLine )
+   s_nFhnd := 1 /* FHND_STDOUT */
+   s_cFileName := "(stdout)"
+
+   s_nCount := 0
+   s_nPass := 0
+   s_nFail := 0
+
+   fWrite( s_nFhnd, "      Version: " + Version() + s_cNewLine +;
+                    "           OS: " + OS() + s_cNewLine +;
+                    "   Date, Time: " + DToS( Date() ) + " " + Time() + s_cNewLine +;
+                    "       Output: " + s_cFileName + s_cNewLine +;
+                    "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + s_cNewLine +;
+                    "     Switches: " + cParam + s_cNewLine +;
+                    "===========================================================================" + s_cNewLine +;
+                    s_cNewLine )
+
+   fWrite( s_nFhnd, PadL( "No", TEST_RESULT_COL1_WIDTH ) + ". " +;
+                    PadR( "TestCall()", TEST_RESULT_COL2_WIDTH ) + " -> " +;
+                    PadR( "Result", TEST_RESULT_COL3_WIDTH ) + " | " +;
+                    PadR( "Expected", TEST_RESULT_COL4_WIDTH ) +;
+                    " [! *FAIL* !]" + s_cNewLine )
+   fWrite( s_nFhnd, "---------------------------------------------------------------------------" + s_cNewLine )
 
    RETURN NIL
 
@@ -623,61 +917,83 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    LOCAL bOldError
    LOCAL lFailed
 
-   bOldError := ErrorBlock( {|oError| Break( oError ) } )
+   s_nCount++
 
-   BEGIN SEQUENCE
-      xResult := Eval( bBlock )
-   RECOVER USING oError
-      xResult := ErrorMessage( oError )
-   END SEQUENCE
+   IF ValType( cBlock ) == "C"
 
-   ErrorBlock( bOldError )
+      bOldError := ErrorBlock( {|oError| Break( oError ) } )
 
-   snCount++
+      BEGIN SEQUENCE
+         xResult := Eval( bBlock )
+      RECOVER USING oError
+         xResult := ErrorMessage( oError )
+      END SEQUENCE
 
-   lFailed := !( ValType( xResult ) == ValType( xResultExpected ) ) .OR. ;
-              !( xResult == xResultExpected )
+      ErrorBlock( bOldError )
 
-   IF slShowAll .OR. lFailed
-
-      fWrite( snFhnd, Str( snCount, TEST_RESULT_COL1_WIDTH ) + ". " +;
-                      PadR( StrTran( cBlock, Chr(0), "." ), TEST_RESULT_COL2_WIDTH ) + " -> " +;
-                      PadR( StrTran( XToStr( xResult ), Chr(0), "." ), TEST_RESULT_COL3_WIDTH ) + " | " +;
-                      PadR( StrTran( XToStr( xResultExpected ), Chr(0), "." ), TEST_RESULT_COL4_WIDTH ) )
-
-      IF lFailed
-         fWrite( snFhnd, " ! *FAIL* !" )
+      IF !( ValType( xResult ) == ValType( xResultExpected ) )
+         IF ValType( xResultExpected) == "C" .AND. ValType( xResult ) $ "ABM"
+            lFailed := !( XToStr( xResult ) == xResultExpected )
+         ELSE
+            lFailed := .T.
+         ENDIF
+      ELSE
+         lFailed := !( xResult == xResultExpected )
       ENDIF
 
-      fWrite( snFhnd, scNewLine )
+   ELSE
+
+      lFailed := .T.
+      cBlock := "!! Preprocessor error. Test skipped !!"
+      xResult := NIL
+
+   ENDIF
+
+   IF s_lShowAll .OR. lFailed
+
+      fWrite( s_nFhnd, Str( s_nCount, TEST_RESULT_COL1_WIDTH ) + ". " +;
+                       PadR( StrTran( cBlock, Chr(0), "." ), TEST_RESULT_COL2_WIDTH ) + " -> " +;
+                       PadR( StrTran( XToStr( xResult ), Chr(0), "." ), TEST_RESULT_COL3_WIDTH ) + " | " +;
+                       PadR( StrTran( XToStr( xResultExpected ), Chr(0), "." ), TEST_RESULT_COL4_WIDTH ) )
+
+      IF lFailed
+         fWrite( s_nFhnd, " ! *FAIL* !" )
+      ENDIF
+
+      fWrite( s_nFhnd, s_cNewLine )
    ENDIF
 
    IF lFailed
-      snFail++
+      s_nFail++
    ELSE
-      snPass++
+      s_nPass++
    ENDIF
 
    RETURN NIL
 
+STATIC FUNCTION TEST_OPT_Z()
+   RETURN s_lShortCut
+
 STATIC FUNCTION TEST_END()
 
-   fWrite( snFhnd, scNewLine +;
-                   "===========================================================================" + scNewLine +;
-                   "Test calls passed: " + Str( snPass ) + scNewLine +;
-                   "Test calls failed: " + Str( snFail ) + scNewLine +;
-                   scNewLine )
+   fWrite( s_nFhnd, s_cNewLine +;
+                    "===========================================================================" + s_cNewLine +;
+                    "Test calls passed: " + Str( s_nPass ) + s_cNewLine +;
+                    "Test calls failed: " + Str( s_nFail ) + s_cNewLine +;
+                    "                   ----------" + s_cNewLine +;
+                    "            Total: " + Str( s_nPass + s_nFail ) + s_cNewLine +;
+                    s_cNewLine )
 
-   IF snFail != 0
+   IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         fWrite( snFhnd, "WARNING ! Failures detected using CA-Clipper." + scNewLine +;
-                         "Please fix those expected results which are not bugs in CA-Clipper itself." + scNewLine )
+         fWrite( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + s_cNewLine +;
+                          "Please fix those expected results which are not bugs in CA-Clipper itself." + s_cNewLine )
       ELSE
-         fWrite( snFhnd, "WARNING ! Failures detected" + scNewLine )
+         fWrite( s_nFhnd, "WARNING ! Failures detected" + s_cNewLine )
       ENDIF
    ENDIF
 
-   ErrorLevel( iif( snFail != 0, 1, 0 ) )
+   ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
 
    RETURN NIL
 
@@ -687,13 +1003,13 @@ STATIC FUNCTION XToStr( xValue )
    DO CASE
    CASE cType == "C" ; RETURN '"' + xValue + '"'
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
-   CASE cType == "D" ; RETURN DToC( xValue )
+   CASE cType == "D" ; RETURN 'SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN "{||...}"
-   CASE cType == "A" ; RETURN "{...}"
-   CASE cType == "M" ; RETURN xValue
+   CASE cType == "B" ; RETURN '{||...}'
+   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
+   CASE cType == "M" ; RETURN 'M:"' + xValue + '"'
    ENDCASE
 
    RETURN ""

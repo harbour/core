@@ -187,22 +187,19 @@ static BOOL set_logical( PHB_ITEM pItem )
 {
    BOOL logical = FALSE;
 
-   if( IS_LOGICAL( pItem ) ) logical = pItem->item.asLogical.value;
+   if( IS_LOGICAL( pItem ) )
+      logical = pItem->item.asLogical.value;
    else if( IS_STRING( pItem ) )
    {
-      if( pItem->item.asString.length >= 2 )
-      {
-         if( toupper( pItem->item.asString.value[ 0 ] ) == 'O'
-         && toupper( pItem->item.asString.value[ 1 ] ) == 'N' )
-            logical = TRUE;
-      }
-      else if( pItem->item.asString.length >= 3 )
-      {
-         if( toupper( pItem->item.asString.value[ 0 ] ) == 'O'
-         && toupper( pItem->item.asString.value[ 1 ] ) == 'F'
-         && toupper( pItem->item.asString.value[ 2 ] ) == 'F' )
-            logical = FALSE;
-      }
+      if( pItem->item.asString.length >= 2
+       && toupper( pItem->item.asString.value[ 0 ] ) == 'O'
+       && toupper( pItem->item.asString.value[ 1 ] ) == 'N' )
+         logical = TRUE;
+      else if( pItem->item.asString.length >= 3
+       && toupper( pItem->item.asString.value[ 0 ] ) == 'O'
+       && toupper( pItem->item.asString.value[ 1 ] ) == 'F'
+       && toupper( pItem->item.asString.value[ 2 ] ) == 'F' )
+         logical = FALSE;
    }
 
    return logical;
@@ -337,40 +334,39 @@ static int open_handle( char * file_name, BOOL bMode, char * def_ext, HB_set_enu
  */
 HARBOUR HB___SETCENTURY( void )
 {
-   int count, digit, size, y_size, y_start, y_stop;
    int old_century_setting = hb_set_century;
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-   char * szDateFormat, * szNewFormat;
 
-   /* Start by returning the current setting */
-   hb_retl( hb_set_century );
    /*
-    * Then change the setting if the parameter is a logical value, or is
+    * Change the setting if the parameter is a logical value, or is
     * either "ON" or "OFF" (regardless of case)
     */
-   if( pItem && IS_LOGICAL( pItem ) ) hb_set_century = pItem->item.asLogical.value;
-   else if( pItem && IS_STRING( pItem ) )
+   if( ISLOG( 1 ) )
+      hb_set_century = hb_parl( 1 );
+   else if( ISCHAR( 1 ) )
    {
-      if( pItem->item.asString.length >= 2 )
-      {
-         if( toupper( pItem->item.asString.value[ 0 ] ) == 'O'
-         && toupper( pItem->item.asString.value[ 1 ] ) == 'N' )
-            hb_set_century = TRUE;
-      }
-      else if( pItem->item.asString.length >= 3 )
-      {
-         if( toupper ( pItem->item.asString.value[ 0 ] ) == 'O'
-         && toupper ( pItem->item.asString.value[ 1 ] ) == 'F'
-         && toupper ( pItem->item.asString.value[ 2 ] ) == 'F' )
-            hb_set_century = FALSE;
-      }
+      char * szString = hb_parc( 1 );
+      ULONG ulLen = hb_parclen( 1 );
+
+      if( ulLen >= 2
+       && toupper( szString[ 0 ] ) == 'O'
+       && toupper( szString[ 1 ] ) == 'N' )
+         hb_set_century = TRUE;
+      else if( ulLen >= 3
+       && toupper( szString[ 0 ] ) == 'O'
+       && toupper( szString[ 1 ] ) == 'F'
+       && toupper( szString[ 2 ] ) == 'F' )
+         hb_set_century = FALSE;
    }
+
    /*
     * Finally, if the setting changed, adjust the current date format to use
     * the correct number of year digits.
     */
    if( old_century_setting != hb_set_century )
    {
+      int count, digit, size, y_size, y_start, y_stop;
+      char * szDateFormat, * szNewFormat;
+
       /* Convert to upper case and determine where year is */
       y_start = y_stop = -1;
       szDateFormat = hb_set.HB_SET_DATEFORMAT;
@@ -412,6 +408,9 @@ HARBOUR HB___SETCENTURY( void )
          hb_set.HB_SET_DATEFORMAT = szNewFormat;
       }
    }
+
+   /* Return the previous setting */
+   hb_retl( old_century_setting );
 }
 
 /* $DOC$

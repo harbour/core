@@ -56,7 +56,9 @@
 #define PF_LEFT    0x0001   /* @B */
 #define PF_CREDIT  0x0002   /* @C */
 #define PF_DEBIT   0x0004   /* @X */
+#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 #define PF_ZERO    0x0008   /* @0 */
+#endif
 #define PF_PARNEG  0x0010   /* @( */
 #define PF_REMAIN  0x0020   /* @R */
 #define PF_UPPER   0x0040   /* @! */
@@ -114,9 +116,11 @@ static WORD PictFunc( char **szPict, ULONG *pulPicLen )
          case '(':
             wPicFlags |= PF_PARNEG;
             break;
+#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
          case '0':
             wPicFlags |= PF_ZERO;
             break;
+#endif
          case 'B':
             wPicFlags |= PF_LEFT;
             break;
@@ -228,18 +232,23 @@ static char * NumPicture( char *szPic, ULONG ulPic, WORD wPicFlags, double dValu
       szStr  = pItem->item.asString.value;
       iCount = 0;
 
-      if( wPicFlags & PF_ZERO )                 /* Pad with Zero's          */
+#ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+      /* Pad with Zero's */
+      if( wPicFlags & PF_ZERO )
       {
          for( i = 0; szStr[ i ] == ' ' && i < iWidth; i++ )
             szStr[ i ] = '0';
       }
+#endif
+
+      /* Suppress empty value */
       if( bEmpty && pItem->item.asString.length )
-                                                /* Suppress empty value     */
       {
          szStr[ pItem->item.asString.length - 1 ] = ' ';
       }
 
-      if( wPicFlags & PF_LEFT )                 /* Left align               */
+      /* Left align */
+      if( wPicFlags & PF_LEFT )
       {
          for( i = 0; szStr[ i ] == ' ' && i <= iWidth; i++ );
                                                 /* Find first non-space     */

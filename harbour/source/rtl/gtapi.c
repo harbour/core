@@ -132,14 +132,16 @@ int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
    if( uiTop  > uiMRow || uiBottom > uiMRow ||
        uiLeft > uiMCol || uiRight  > uiMCol )
    {
-       return 1;
+      return 1;
    }
 
    /* For full compatibility, pad box string with last char if too short */
 
    cPadChar = ' ';
-   for( tmp = 0; *pbyFrame && tmp < 9; tmp++ ) cPadChar = pszBox[ tmp ] = *pbyFrame++;
-   while( tmp < 8 ) pszBox[ tmp++ ] = cPadChar;
+   for( tmp = 0; *pbyFrame && tmp < 9; tmp++ )
+      cPadChar = pszBox[ tmp ] = *pbyFrame++;
+   while( tmp < 8 )
+      pszBox[ tmp++ ] = cPadChar;
    pszBox[ tmp ] = '\0';
 
    /* Ensure that box is drawn from top left to bottom right. */
@@ -178,27 +180,27 @@ int hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
    {
       hb_gtRepChar( uiRow, uiCol, pszBox[ 1 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) );
       if( height > 1 )
-          hb_gtRepChar( uiBottom, uiCol, pszBox[ 5 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) );
+         hb_gtRepChar( uiBottom, uiCol, pszBox[ 5 ], uiRight - uiLeft + ( height > 1 ? -1 : 1 ) );
    }
 
    if( pszBox[ 8 ] && height > 2 && width > 2 )
    {
-       for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
-       {
-           uiCol = uiLeft;
-           hb_gtWriteAt( uiRow, uiCol++, pszBox + 7, sizeof( BYTE ) );
-           hb_gtRepChar( uiRow, uiCol  , pszBox[ 8 ], uiRight - uiLeft - 1 );
-           hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) );
-       }
+      for( uiRow = uiTop + 1; uiRow < uiBottom; uiRow++ )
+      {
+         uiCol = uiLeft;
+         hb_gtWriteAt( uiRow, uiCol++, pszBox + 7, sizeof( BYTE ) );
+         hb_gtRepChar( uiRow, uiCol  , pszBox[ 8 ], uiRight - uiLeft - 1 );
+         hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) );
+      }
    }
    else
    {
-       for( uiRow = ( width > 1 ? uiTop + 1 : uiTop ); uiRow < ( width > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
-       {
-           hb_gtWriteAt( uiRow, uiLeft, pszBox + 7, sizeof( BYTE ) );
-           if( width > 1 )
-               hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) );
-       }
+      for( uiRow = ( width > 1 ? uiTop + 1 : uiTop ); uiRow < ( width > 1 ? uiBottom : uiBottom + 1 ); uiRow++ )
+      {
+         hb_gtWriteAt( uiRow, uiLeft, pszBox + 7, sizeof( BYTE ) );
+         if( width > 1 )
+            hb_gtWriteAt( uiRow, uiRight, pszBox + 3, sizeof( BYTE ) );
+      }
    }
 
 /* speed issue for now */
@@ -222,9 +224,9 @@ int hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
 int hb_gtColorSelect(USHORT uiColorIndex)
 {
    if( uiColorIndex > s_ColorCount )
-       return 1;
+      return 1;
    else
-       s_uiColorIndex = uiColorIndex;
+      s_uiColorIndex = uiColorIndex;
 
    return 0;
 }
@@ -533,7 +535,7 @@ int hb_gtGetCursor( USHORT * uipCursorShape )
 
    if( i <= SC_SPECIAL2 )
    {
-      * uipCursorShape = i;
+      *uipCursorShape = i;
    }
    else
    {
@@ -594,15 +596,15 @@ int hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
    USHORT uiMCol = s_uiMaxCol;
 
    if( uiBottom > uiMRow )
-       uiBottom = uiMRow;
+      uiBottom = uiMRow;
    if( uiRight > uiMCol )
-       uiRight = uiMCol;
+      uiRight = uiMCol;
 
    if( uiTop  > uiMRow   || uiBottom > uiMRow ||
        uiLeft > uiMCol   || uiRight  > uiMCol ||
        uiTop  > uiBottom || uiLeft   > uiRight )
    {
-       return 1;
+      return 1;
    }
 
    *uipBuffSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 ) * 2;

@@ -1,3 +1,59 @@
+19990831-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/arrays.c
+    include/extend.h
+    ! Fixed handling of zero array index, it was allowed previously.
+      (hb_arrayGet*(), hb_arraySet())
+    + Added hb_arrayError() which checks the pArray and ulIndex, if it's not
+      valid, it throws a runtime error.
+  * source/vm/hvm.c
+    ! Fixed where operations followed the hb_err*() call.
+      (hb_vmArrayAt(), hb_vmArrayPut(), hb_vmDo(), ...)
+    ! hb_vmPopLogical() was decrementing the stack but was only clearing it
+      when it was logical type. Leak fixed. (Is this correct ?)
+    * hb_vmAliasPop() -> hb_vmPopAlias()
+      hb_vmAliasPush() -> hb_vmPushAlias()
+      hb_vmAliasSwap() -> hb_vmSwapAlias()
+      Renamed to be consistent with the pcode name and with the others.
+  * tests/working/rtl_test.prg
+    tests/working/empty.prg (removed)
+    tests/working/strsub.prg (removed)
+    + Added many new tests, comments, enhancement.
+    + EMPTY.PRG, STRSUB.PRG incorporated.
+    ! Some TRANSFORM() test results changed (@0)
+  * source/rtl/devoutp.prg
+    % One local variable eliminated.
+  * source/vm/hvm.c
+    + Added value substitution for errors 1081, 1082, 1083, 1084, 1085, 1088
+  * source/rtl/transfrm.c
+    + Put all stuff related to the @0 picture clause between 
+      #ifndef HARBOUR_STRICT_CLIPPER_COMPATIBILITY guards, since this was
+      not in original Clipper, that's why the tests failed.
+  * source/rtl/set.c
+    ! Fixed "ON"/"OFF" error where OFF was not recognized, this bug was 
+      introduced yesterday.
+    % Some variables scopes optimalized, some internals changed to standard
+      interface calls.
+  * source/rtl/errorapi.c
+    source/vm/hvm.c
+    include/extend.h
+    + Moved ERRORBLOCK() and errorBlock variable to errorapi.c, hb_errInit()
+      hb_errExit() added. All that is a *bit* slower, since only "official"
+      API calls are being used.
+  * source/runner/runlib.c
+    source/rtl/gtapi.c
+    source/vm/dynsym.c
+    source/vm/hvm.c
+    include/vm.api
+    include/fm.api
+    include/hbpp.h
+    include/gtapi.h
+    include/extend.h
+    include/hb_vmpub.h
+    include/hbdefs.h
+    * Formatting errors corrected.
+    + static variables prefixed with "s_"
+
 19990831-02:37 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/rddapi.h
      source/rdd/dbcmd.c

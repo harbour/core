@@ -76,6 +76,5 @@
  */
 
 FUNCTION DEVOUTPICT( xValue, cPicture, cColor )
-   LOCAL cText := TRANSFORM( xValue, cPicture )
-   DEVOUT( cText, cColor )
+   DEVOUT( TRANSFORM( xValue, cPicture ), cColor )
 RETURN NIL

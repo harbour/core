@@ -13,13 +13,13 @@
 
 /* Functions */
 
-#define _xalloc         hb_xalloc
-#define _xgrab          hb_xgrab
-#define _xfree          hb_xfree
+#define _xalloc                 hb_xalloc
+#define _xgrab                  hb_xgrab
+#define _xfree                  hb_xfree
 
 /* Nant*cket Clipper Summer 87 compatible */
 
-#define _exmgrab        hb_xgrab
-#define _exmback(p, s)  hb_xfree( p )
+#define _exmgrab                hb_xgrab
+#define _exmback( p, s )        hb_xfree( p )
 
 #endif /* HB_FM_API_ */

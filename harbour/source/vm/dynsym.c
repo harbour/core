@@ -28,16 +28,16 @@
 
 #include "extend.h"
 
-#define SYM_ALLOCATED ((SYMBOLSCOPE)-1)
+#define SYM_ALLOCATED ( ( SYMBOLSCOPE ) -1 )
 
 typedef struct
 {
    PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
 } DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
 
-static PDYNHB_ITEM pDynItems = NULL;    /* Pointer to dynamic items */
-static WORD        wDynSymbols = 0;     /* Number of symbols present */
-static WORD        wClosestDynSym = 0;
+static PDYNHB_ITEM s_pDynItems = NULL;    /* Pointer to dynamic items */
+static WORD        s_wDynSymbols = 0;     /* Number of symbols present */
+static WORD        s_wClosestDynSym = 0;
               /* Closest symbol for match. hb_dynsymFind() will search for the name. */
               /* If it cannot find the name, it positions itself to the */
               /* closest symbol.  */
@@ -46,8 +46,8 @@ void hb_dynsymLog( void )
 {
    WORD w;
 
-   for( w = 0; w < wDynSymbols; w++ )   /* For all dynamic symbols */
-      printf( "%i %s\n", w + 1, pDynItems[ w ].pDynSym->pSymbol->szName );
+   for( w = 0; w < s_wDynSymbols; w++ )   /* For all dynamic symbols */
+      printf( "%i %s\n", w + 1, s_pDynItems[ w ].pDynSym->pSymbol->szName );
 }
 
 PHB_SYMB hb_symbolNew( char * szName )      /* Create a new symbol */
@@ -78,26 +78,26 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic symbol */
       return pDynSym;                /* Return pointer to DynSym */
    }
 
-   if( wDynSymbols == 0 )   /* Do we have any symbols ? */
-      pDynSym = pDynItems[ 0 ].pDynSym;     /* Point to first symbol */
+   if( s_wDynSymbols == 0 )   /* Do we have any symbols ? */
+      pDynSym = s_pDynItems[ 0 ].pDynSym;     /* Point to first symbol */
                             /* *<1>* Remember we already got this one */
    else
    {                        /* We want more symbols ! */
-      pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( pDynItems, ( wDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
+      s_pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( s_pDynItems, ( s_wDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
 
-      if( wClosestDynSym <= wDynSymbols )   /* Closest < current !! */
+      if( s_wClosestDynSym <= s_wDynSymbols )   /* Closest < current !! */
       {                                     /* Here it goes :-) */
          WORD w;
 
-         for( w = 0; w < ( wDynSymbols - wClosestDynSym ); w++ )
-            memcpy( &pDynItems[ wDynSymbols - w ],
-                    &pDynItems[ wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
+         for( w = 0; w < ( s_wDynSymbols - s_wClosestDynSym ); w++ )
+            memcpy( &s_pDynItems[ s_wDynSymbols - w ],
+                    &s_pDynItems[ s_wDynSymbols - w - 1 ], sizeof( DYNHB_ITEM ) );
       }                                     /* Insert element in array */
       pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
-      pDynItems[ wClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
+      s_pDynItems[ s_wClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
    }
 
-   wDynSymbols++;                   /* Got one more symbol */
+   s_wDynSymbols++;                   /* Got one more symbol */
    pDynSym->pSymbol = pSymbol;
    pDynSym->hMemvar = 0;
    pDynSym->hArea   = 0;
@@ -134,21 +134,21 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
 
 PHB_DYNS hb_dynsymFind( char * szName )
 {
-   if( ! pDynItems )
+   if( s_pDynItems == NULL )
    {
-      pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
-      pDynItems->pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
+      s_pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
+      s_pDynItems->pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
-      pDynItems->pDynSym->hMemvar = 0;
-      pDynItems->pDynSym->pSymbol = NULL;
-      pDynItems->pDynSym->pFunPtr = NULL;
+      s_pDynItems->pDynSym->hMemvar = 0;
+      s_pDynItems->pDynSym->pSymbol = NULL;
+      s_pDynItems->pDynSym->pFunPtr = NULL;
       return NULL;
    }
    else
    {        /* Classic Tree Insert Sort Mechanism
              *
              * Insert Sort means the new item is entered alphabetically into
-             * the array. In this case pDynItems !
+             * the array. In this case s_pDynItems !
              *
              * 1) We start in the middle of the array.
              * 2a) If the symbols are equal -> we have found the symbol !!
@@ -164,26 +164,26 @@ PHB_DYNS hb_dynsymFind( char * szName )
              */
 
       WORD wFirst = 0;
-      WORD wLast = wDynSymbols;
+      WORD wLast = s_wDynSymbols;
       WORD wMiddle = wLast / 2;
 
-      wClosestDynSym = wMiddle;                   /* Start in the middle      */
+      s_wClosestDynSym = wMiddle;                   /* Start in the middle      */
 
       while( wFirst < wLast )
       {
-         switch( hb_strgreater( pDynItems[ wMiddle ].pDynSym->pSymbol->szName, szName ) )
+         switch( hb_strgreater( s_pDynItems[ wMiddle ].pDynSym->pSymbol->szName, szName ) )
          {
             case HB_STRGREATER_EQUAL:  /* they are equals */
-                 return pDynItems[ wMiddle ].pDynSym;
+                 return s_pDynItems[ wMiddle ].pDynSym;
 
             case HB_STRGREATER_LEFT:  /* pMiddle is greater */
                  wLast = wMiddle;
-                 wClosestDynSym = wMiddle;
+                 s_wClosestDynSym = wMiddle;
                  break;
 
             case HB_STRGREATER_RIGHT:  /* szName is greater */
                  wFirst = wMiddle + 1;
-                 wClosestDynSym = wFirst;
+                 s_wClosestDynSym = wFirst;
                  break;
          }
          wMiddle = wFirst + ( ( wLast - wFirst ) / 2 );
@@ -197,8 +197,8 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction )
    BOOL bCont = TRUE;
    WORD i;
 
-   for( i = 0; i < wDynSymbols && bCont; i++ )
-      bCont = (pFunction)( pDynItems[ i ].pDynSym );
+   for( i = 0; i < s_wDynSymbols && bCont; i++ )
+      bCont = ( pFunction )( s_pDynItems[ i ].pDynSym );
 }
 
 
@@ -206,29 +206,29 @@ void hb_dynsymRelease( void )
 {
    WORD w;
 
-   for( w = 0; w < wDynSymbols; w++ )
+   for( w = 0; w < s_wDynSymbols; w++ )
    {
       /* it is a allocated symbol ? */
-      if( ( pDynItems + w )->pDynSym->pSymbol->cScope == (SYMBOLSCOPE)SYM_ALLOCATED )
+      if( ( s_pDynItems + w )->pDynSym->pSymbol->cScope == SYM_ALLOCATED )
       {
-         hb_xfree( ( pDynItems + w )->pDynSym->pSymbol->szName );
-         hb_xfree( ( pDynItems + w )->pDynSym->pSymbol );
+         hb_xfree( ( s_pDynItems + w )->pDynSym->pSymbol->szName );
+         hb_xfree( ( s_pDynItems + w )->pDynSym->pSymbol );
       }
 
-      hb_xfree( ( pDynItems + w )->pDynSym );
+      hb_xfree( ( s_pDynItems + w )->pDynSym );
    }
 
-   hb_xfree( pDynItems );
+   hb_xfree( s_pDynItems );
 }
 
 HARBOUR HB___DYNSCOUNT( void ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
-   hb_retnl( wDynSymbols );
+   hb_retnl( s_wDynSymbols );
 }
 
 HARBOUR HB___DYNSGETNAME( void ) /* Get name of symbol: cSymbol = __dynsymGetName( dsIndex ) */
 {
-   hb_retc( pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
+   hb_retc( s_pDynItems[ hb_parnl( 1 ) - 1 ].pDynSym->pSymbol->szName );
 }
 
 HARBOUR HB___DYNSGETINDEX( void ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
