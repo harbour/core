@@ -9,6 +9,12 @@
 */
 
 
+2003-04-04 11:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/pp/ppcore.c
+     * Handling of '*' comment now is more Clipper compatible
+   * include/hbver.h
+     * changed version information
+
 2003-04-03 18:34 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
    * source/common/hbgete.c
      ! fixed warning on OS/2 GCC

@@ -2961,7 +2961,7 @@ static void pp_rQuotes( char * expreal, char * sQuotes )
     }
 }
 
-int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, char * sBuffer, int * lenBuffer, int * iBuffer )
+int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lContinue, char * sBuffer, int * lenBuffer, int * iBuffer )
 {
 #ifndef __WATCOMC__
   extern BOOL hb_pp_bInline;
@@ -2969,6 +2969,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
   int readed = 0;
   int State = 0;
   char cha, cLast = '\0', symbLast = '\0';
+  BOOL lDropSpaces = lContinue;
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_RdStr(%p, %s, %d, %d, %s, %p, %p)", handl_i, buffer, maxlen, lDropSpaces, sBuffer, lenBuffer, iBuffer));
 
@@ -3096,7 +3097,7 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
                 s_ParseState = STATE_COMMENT;
                 readed--;
               }
-              else if( !State )
+              else if( !State && !lContinue )
               {
                 maxlen = readed = 0;
               }
