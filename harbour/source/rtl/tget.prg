@@ -69,9 +69,7 @@ CLASS TGet
    METHOD Input(cChar)
    METHOD PutMask(cBuffer, lEdit)
 
-   METHOD Display() INLINE DevPos( ::Row, ::Col ), DevOut( ::buffer ),;
-                           DevPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) ),;
-                           Self
+   METHOD Display()
 
 //   METHOD ColorDisp(cColorSpec)  VIRTUAL
 //   METHOD hitTest(nRow, nCol)    VIRTUAL
@@ -181,6 +179,17 @@ METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS tGet
    endif
 
    ::buffer := ::PutMask(::VarGet(), .f. )
+
+return Self
+
+//---------------------------------------------------------------------------//
+
+METHOD Display() CLASS TGet
+
+   local cClrInverse := StrToken( SetColor(), 2, "," )
+
+   @ ::Row, ::Col SAY ::buffer COLOR cClrInverse
+   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
