@@ -12,10 +12,10 @@
 !endif
 
 .path.asm = source\vm
-.path.c   = source\compiler;source\common;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
-.path.h   = include
-.path.l   = source\compiler
-.path.y   = source\compiler
+.path.c   = source\compiler;source\common;source\macro;source\vm;source\rtl;source\tools;source\rtl\gt;source\rtl\natmsg;source\pp;source\rdd
+.path.h   = include;source\macro
+.path.l   = source\compiler;source\macro
+.path.y   = source\compiler;source\macro
 .path.exe = bin
 .path.lib = lib\b32
 .path.obj = obj;source\compiler
@@ -35,7 +35,8 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               harbinit.obj hardcr.obj hbfsapi.obj hbstr.obj \
               hbtrace.obj hb_f.obj hvm.obj initexit.obj \
               initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
-              langapi.obj len.obj mainstd.obj mainwin.obj math.obj \
+              langapi.obj len.obj \
+              macro.obj macrol.obj macroy.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
               memvarbl.obj menuto.obj mlcount.obj mtran.obj msgen.obj \
               natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj \
@@ -103,6 +104,9 @@ isprint.obj  : isprint.c  extend.h hbdefs.h
 itemapi.obj  : itemapi.c  extend.h hbdefs.h
 langapi.obj  : langapi.c  extend.h hbdefs.h
 len.obj      : len.c      extend.h hbdefs.h
+macro.obj    : macro.c    extend.h hbdefs.h
+macrol.obj   : macrol.c   extend.h hbdefs.h
+macroy.obj   : macroy.c   extend.h hbdefs.h
 mainstd.obj  : mainstd.c  extend.h hbdefs.h
 mainwin.obj  : mainwin.c  extend.h hbdefs.h
 math.obj     : math.c     extend.h hbdefs.h
@@ -194,15 +198,24 @@ xsavescr.c   : xsavescr.prg  harbour.exe
   bin\harbour $< /n /osource\rtl\ /iinclude
 
 .c.obj:
-  bcc32 $(BCC_OPT) -c -Iinclude -o$@ -DHARBOUR_USE_WIN_GTAPI $<
+  bcc32 $(BCC_OPT) -c -Iinclude;source\macro -o$@ -DHARBOUR_USE_WIN_GTAPI $<
   tlib lib\b32\harbour.lib -+$@,,
 
-harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj genobj32.obj expropt.obj harbour.obj hbfsapi.obj hbstr.obj compiler.h hbppint.c hbpp.c table.c
+harbour.exe : cmdcheck.c harboury.c harbourl.c hbfunchk.c hbgenerr.c hbpcode.c \
+              hbusage.c genc.obj genhrb.obj genjava.obj genrc.obj genpas.obj \
+              genobj32.obj expropt.obj harbour.obj hbfsapi.obj hbstr.obj compiler.h \
+              hbppint.c hbpp.c reserved.c table.c
    echo $(BCC_OPT) > temp.bld
    echo -ebin\harbour.exe >> temp.bld
    echo -Iinclude;source\compiler >> temp.bld
+   echo source\common\reserved.c >> temp.bld
+   echo source\compiler\cmdcheck.c >> temp.bld
    echo source\compiler\harboury.c >> temp.bld
    echo source\compiler\harbourl.c >> temp.bld
+   echo source\compiler\hbfunchk.c >> temp.bld
+   echo source\compiler\hbgenerr.c >> temp.bld
+   echo source\compiler\hbpcode.c >> temp.bld
+   echo source\compiler\hbusage.c >> temp.bld
    echo source\compiler\genobj32.obj >> temp.bld
    echo source\compiler\genc.obj >> temp.bld
    echo source\compiler\genhrb.obj >> temp.bld
@@ -224,8 +237,14 @@ harbour.exe : harboury.c harbourl.c genc.obj genhrb.obj genjava.obj genrc.obj ge
 harboury.c : harbour.y
    bison -d -v -y -osource\compiler\harboury.c source\compiler\harbour.y
 
+macroy.c : macro.y
+   bison -d -v -y -osource\macro\macroy.c source\macro\macro.y
+
 harbourl.c : harbour.l
    flex -i -8 -osource\compiler\harbourl.c source\compiler\harbour.l
+
+macrol.c : macro.l
+   flex -i -8 -osource\macro\macrol.c source\macro\macro.l
 
 genobj32.obj : genobj32.c
    bcc32 $(BCC_OPT) -c -Iinclude -osource\compiler\genobj32.obj \

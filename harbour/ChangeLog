@@ -1,3 +1,8 @@
+19991209-23:04 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * updated makefile.b32
+   * updated hbclass.ch
+     (first step towards classes missing messages routing method)
+
 19991209-17:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *config/rules.cf
@@ -91,7 +96,7 @@ NOTE: source/macro/macro.c file includes source/compiler/expropt.c
 
     *source/compiler/cmdcheck.c
 	* replaced strupr with hb_strupr
-		
+
 NOTE: All PRG sources HAVE TO be recompiled!!!
 
 NOTE: Add macro.lib to all non-GNU make scripts or batch files.
@@ -99,7 +104,7 @@ NOTE: Add macro.lib to all non-GNU make scripts or batch files.
 19991209-01:05 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/*
     include/compiler.h
-    + Additional function renaming (prefixing with hb_comp), some functions 
+    + Additional function renaming (prefixing with hb_comp), some functions
       moved to other files. Declarations fixed, some static vars prefixed
       with s_.
       hb_Chk*() -> hb_compChk*()
@@ -174,7 +179,7 @@ NOTE: Add macro.lib to all non-GNU make scripts or batch files.
     + Optimized two functions:
       % hb_compGenPushLogical() and
       % hb_compGenPushFunCall (NOTE: Check them, please)
-      
+
   + source/compiler/hbcmdchk.c
     + Compiler command line checking
       + hb_ChkCompilerSwitch()

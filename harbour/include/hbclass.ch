@@ -93,6 +93,9 @@
 #xcommand MESSAGE <MessageName>() METHOD <MethodName>( [<params,...>] ) => ;
    oClass:AddMethod( <(MessageName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
+#xcommand ERROR HANDLER <MethodName>( [<params,...>] ) => ;
+   oClass:AddMethod( "Error", CLSMETH _CLASS_NAME_ <MethodName>() )
+
 #xcommand ENDCLASS => oClass:Create() ;;
                       endif ;;
                       return oClass:Instance()
