@@ -2710,7 +2710,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, BOOL fTagName, char *
    pTag->KeyType = bKeyType;
    pTag->KeyLength = uiKeyLen;
    pTag->KeyDec = uiKeyDec;
-   pTag->MaxKeys = (NTXBLOCKSIZE-6)/(uiKeyLen+10) - 1;
+   pTag->MaxKeys = (NTXBLOCKSIZE-3)/(uiKeyLen+10) - 1;
    if( pTag->MaxKeys%2 && pTag->MaxKeys>2 )
       pTag->MaxKeys--;
    pTag->CurKeyInfo = hb_ntxKeyNew( NULL,pTag->KeyLength );
