@@ -801,7 +801,7 @@ static int hb_memvarCount( int iScope )
    {
       int iPublicCnt = 0;
 
-      hb_dynsymEval( hb_memvarCountPublics, (void *) &iPublicCnt );
+      hb_dynsymEval( hb_memvarCountPublics, ( void * ) &iPublicCnt );
       return iPublicCnt;
    }
    else
@@ -853,7 +853,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
          /* enumerate existing dynamic symbols and fill this structure
           * with info for requested PUBLIC variable
           */
-         hb_dynsymEval( hb_memvarFindPublicByPos, (void *) &struPub );
+         hb_dynsymEval( hb_memvarFindPublicByPos, ( void * ) &struPub );
          if( struPub.bFound )
          {
             pValue =&s_globalTable[ struPub.pDynSym->hMemvar ].item;
@@ -1269,10 +1269,11 @@ HARBOUR HB___MVSAVE( void )
          /* Walk through all visible memory variables */
 
          ULONG ulBase = s_privateStackCnt;
-         PHB_DYNS pDynVar;
 
          while( ulBase > s_privateStackBase )
          {
+            PHB_DYNS pDynVar;
+
             --ulBase;
             pDynVar = s_privateStack[ ulBase ];
 

@@ -196,7 +196,7 @@ void hb_pp_Init( void )
       stdef = hb_pp_topDefine;
       if( stdef->pars ) hb_xfree( stdef->pars );
       if( stdef->value ) hb_xfree( stdef->value );
-      hb_xfree( stdef->name );
+      if( stdef->name ) hb_xfree( stdef->name );
       hb_pp_topDefine = stdef->last;
       hb_xfree( stdef );
       s_kolAddDefs--;

@@ -33,6 +33,9 @@
  *
  */
 
+/* NOTE: This is only a container source file, don't put real program
+         code here. */
+
 #include "hbsetup.h"
 
 #if   defined(HARBOUR_LANGUAGE_EU)

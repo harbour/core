@@ -45,6 +45,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 
 /* NOTE: The second parameter is a Harbour extension. In CA-Cl*pper the 
          function will return an empty string if called with more than one
@@ -52,10 +53,12 @@
 
 HARBOUR HB_GETENV( void )
 {
-   if( ISCHAR( 1 ) )
+   PHB_ITEM pName = hb_param( 1, IT_STRING );
+
+   if( pName )
    {
-      char * szName = hb_parc( 1 );
-      ULONG ulName = hb_parclen( 1 );
+      char * szName = hb_itemGetCPtr( pName );
+      ULONG ulName = hb_itemGetCLen( pName );
 
       while( ulName && szName[ ulName - 1 ] == '=' )
       {

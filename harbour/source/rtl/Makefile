@@ -28,6 +28,8 @@ C_SOURCES=\
         filesys.c    \
         fkmax.c      \
         fnsplit.c    \
+        fssize.c     \
+        fstemp.c     \
         getenv.c     \
         gtapi.c      \
         gtxxx.c      \

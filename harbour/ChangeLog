@@ -1,3 +1,40 @@
+20000318-02:37 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/vm/memvars.c
+     % One variable scope adjusted.
+   * make_b32.bat
+     + It now cleans the .MAP files, too.
+   * source/pp/ppcore.c
+     ! Fixed GPF on reinitialization of #undefd macro in hb_pp_Init().
+   * source/vm/main.c
+     source/vm/mainstd.c
+     * Anti-cmdline wildcard expansion stuff moved to the native main
+       function from the container.
+   * source/rtl/gtxxx.c
+     source/rtl/mousexxx.c
+     source/rtl/msgxxx.c
+     source/vm/main.c
+     + NOTE added.
+   * source/rtl/getenv.c
+     % GETENV() slightly optimized.
+   + source/rtl/fssize.c
+   + source/rtl/fstemp.c
+   * include/hbapifs.h
+     include/hbextern.ch
+     source/rtl/Makefile
+     makefile.bc
+     makefile.vc
+     + Added these new FS API calls:
+       - hb_fsSize() to get the size of a file either by reading the directory
+       record, or the real size with seek.
+       - hb_fsTempName() to get a temporary filename.
+       - hb_fsCreateTemp() to create a temporary file.
+     + Added these Harbour functions:
+       HB_FSIZE()
+       HB_FTEMPNAME()
+       HB_FTEMPCREATE()
+     + Added hb_fsFLock() and hb_fsFUnLock() macros.
+       Thanks to Jose Lalin
+
 2000-03-17 19:10 GMT-5 David G. Holm <dholm@jsd-llc.com>
    * doc/gmake.txt
      + Documented the need to have "CYGWIN" set to "noglob" to

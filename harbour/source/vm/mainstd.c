@@ -36,6 +36,10 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
+#ifdef __MINGW32__
+int _CRT_glob = 0;
+#endif
+
 int main( int argc, char * argv[] )
 {
    HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
@@ -49,3 +53,13 @@ int main( int argc, char * argv[] )
 
    return 0;
 }
+
+#ifdef __DJGPP__
+char ** __crt0_glob_function( char * _arg )
+{
+   /* This function disables command line wildcard expansion. */
+   HB_SYMBOL_UNUSED( _arg );
+
+   return 0;
+}
+#endif

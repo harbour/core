@@ -119,6 +119,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\filesys.obj \
    $(OBJ_DIR)\fkmax.obj \
    $(OBJ_DIR)\fnsplit.obj \
+   $(OBJ_DIR)\fssize.obj \
+   $(OBJ_DIR)\fstemp.obj \
    $(OBJ_DIR)\getenv.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gx.obj \
@@ -922,6 +924,14 @@ $(OBJ_DIR)\fkmax.obj : $(RTL_DIR)\fkmax.c
    tlib $(RTL_LIB) -+$@,,
 
 $(OBJ_DIR)\fnsplit.obj : $(RTL_DIR)\fnsplit.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\fssize.obj : $(RTL_DIR)\fssize.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(RTL_LIB) -+$@,,
+
+$(OBJ_DIR)\fstemp.obj : $(RTL_DIR)\fstemp.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) -+$@,,
 

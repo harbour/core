@@ -76,37 +76,43 @@ typedef int    FHANDLE;
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
 
-extern BOOL     hb_fsChDir      ( BYTE * pDirName );
+extern BOOL     hb_fsChDir      ( BYTE * pszDirName );
 extern USHORT   hb_fsChDrv      ( BYTE nDrive );
 extern void     hb_fsClose      ( FHANDLE hFileHandle );
 extern void     hb_fsCommit     ( FHANDLE hFileHandle );
-extern FHANDLE  hb_fsCreate     ( BYTE * pFilename, USHORT uiAttribute );
+extern FHANDLE  hb_fsCreate     ( BYTE * pszFileName, USHORT uiAttribute );
+extern FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttribute );
 extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
 extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen );
 extern BYTE     hb_fsCurDrv     ( void );
-extern int      hb_fsDelete     ( BYTE * pFilename );
+extern int      hb_fsDelete     ( BYTE * pszFileName );
 extern USHORT   hb_fsError      ( void );
-extern BOOL     hb_fsFile       ( BYTE * pFilename );
-extern FHANDLE  hb_fsExtOpen    ( BYTE * pFilename, BYTE * pDefExt,
+extern BOOL     hb_fsFile       ( BYTE * pszFileName );
+extern ULONG    hb_fsFSize      ( BYTE * pszFileName, BOOL bUseDirEntry );
+extern FHANDLE  hb_fsExtOpen    ( BYTE * pszFileName, BYTE * pDefExt,
                                   USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError );
 extern USHORT   hb_fsIsDrv      ( BYTE nDrive );
 extern BOOL     hb_fsIsDevice   ( FHANDLE hFileHandle );
 extern BOOL     hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart,
                                   ULONG ulLength, USHORT uiMode );
-extern BOOL     hb_fsMkDir      ( BYTE * pDirName );
-extern FHANDLE  hb_fsOpen       ( BYTE * pFilename, USHORT uiFlags );
+extern BOOL     hb_fsMkDir      ( BYTE * pszDirName );
+extern FHANDLE  hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags );
 extern USHORT   hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 extern ULONG    hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
-extern BOOL     hb_fsRmDir      ( BYTE * pDirName );
-extern int      hb_fsRename     ( BYTE * pOldName, BYTE * pNewName );
+extern BOOL     hb_fsRmDir      ( BYTE * pszDirName );
+extern int      hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName );
 extern ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode );
 extern ULONG    hb_fsTell       ( FHANDLE hFileHandle );
+extern void     hb_fsTempName   ( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix );
 extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode );
 extern void     hb_fsSetDevRaw  ( FHANDLE hFileHandle );
 extern void     hb_fsSetDevText ( FHANDLE hFileHandle );
 extern void     hb_fsSetError   ( USHORT uiError );
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount );
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount );
+
+#define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
+#define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
 /* Filename support */
 typedef struct

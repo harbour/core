@@ -183,6 +183,8 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\filesys.obj \
    $(OBJ_DIR)\fkmax.obj \
    $(OBJ_DIR)\fnsplit.obj \
+   $(OBJ_DIR)\fssize.obj \
+   $(OBJ_DIR)\fstemp.obj \
    $(OBJ_DIR)\getenv.obj \
    $(OBJ_DIR)\gtapi.obj \
    $(OBJ_DIR)\gx.obj \

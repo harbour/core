@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Terminal low-level module includer for GNU compilers
+ * HB_FSIZE() function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 2000 Jose Lalin <dezac@corevia.com>
+ *                Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,23 +34,54 @@
  *
  */
 
-/* NOTE: This is only a container source file, don't put real program
-         code here. */
-
-#include "hbsetup.h"
-
-#if   defined(HARBOUR_USE_PCA_GTAPI)
-   #include "gt/gtpca.c"
-#elif defined(HARBOUR_USE_DOS_GTAPI)
-   #include "gt/gtdos.c"
-#elif defined(HARBOUR_USE_OS2_GTAPI)
-   #include "gt/gtos2.c"
-#elif defined(HARBOUR_USE_WIN_GTAPI)
-   #include "gt/gtwin.c"
-#elif defined(HARBOUR_USE_CRS_GTAPI)
-   #include "gt/gtcrs.c"
-#elif defined(HARBOUR_USE_SLN_GTAPI)
-   #include "gt/gtsln.c"
+#if defined( OS_UNIX_COMPATIBLE )
+   #include <sys/stat.h>
 #else
-   #include "gt/gtstd.c"
+   #include <sys\stat.h>
 #endif
+
+#include "hbapi.h"
+#include "hbapifs.h"
+
+ULONG hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
+{
+   if( bUseDirEntry )
+   {
+      struct stat statbuf;
+
+      if( stat( ( char * ) pszFileName, &statbuf ) == 0 )
+      {
+         errno = 0;
+
+         hb_fsSetError( 0 );
+         return ( ULONG ) statbuf.st_size;
+      }
+   }
+   else
+   {
+      FHANDLE hFileHandle = hb_fsOpen( pszFileName, 0 );
+      
+      if( hFileHandle )
+      {
+         ULONG ulPos;
+      
+         ulPos = hb_fsSeek( hFileHandle, 0, SEEK_END );
+         hb_fsClose( hFileHandle );
+      
+         errno = 0;
+      
+         hb_fsSetError( 0 );
+         return ulPos;
+      }
+   }
+      
+   hb_fsSetError( FS_ERROR );
+   return 0;
+}
+
+HARBOUR HB_HB_FSIZE( void )
+{
+   hb_retnl( ISCHAR( 1 ) ? hb_fsFSize( hb_parc( 1 ), 
+                                       ISLOG( 2 ) ? hb_parl( 2 ) : TRUE ) : 0 );
+}
+

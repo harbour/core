@@ -1018,4 +1018,8 @@ EXTERNAL TOCHAR
 EXTERNAL DEBUG
 //------------------------------------------------------------
 
+EXTERNAL HB_FSIZE
+EXTERNAL HB_FTEMPNAME
+EXTERNAL HB_FTEMPCREATE
+
 #endif /* HB_EXTERN_CH_ */
