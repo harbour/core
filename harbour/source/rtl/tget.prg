@@ -213,7 +213,9 @@ METHOD ParsePict( cPicture ) CLASS Get
    cNum := ""
 
    if Left( cPicture, 1 ) == "@"
+
       nAt := At( " ", cPicture )
+
       if nAt == 0
          ::cPicFunc := cPicture
          ::cPicMask := ""
@@ -221,6 +223,7 @@ METHOD ParsePict( cPicture ) CLASS Get
          ::cPicFunc := SubStr( cPicture, 1, nAt - 1 )
          ::cPicMask := SubStr( cPicture, nAt + 1 )
       endif
+
       if ( nAt := At( "S", ::cPicFunc ) ) > 0
          for nFor := nAt + 1 to Len( ::cPicFunc )
             if ! IsDigit( SubStr( ::cPicFunc, nFor, 1 ) )
@@ -231,9 +234,12 @@ METHOD ParsePict( cPicture ) CLASS Get
          next
          ::nDispLen := Val(cNum)
          ::cPicFunc := SubStr( ::cPicFunc, 1, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
-         if ::cPicFunc == "@"
-            ::cPicFunc := ""
-         endif
+      endif
+
+      ::cPicFunc := StrTran(::cPicFunc, "Z", "")
+
+      if ::cPicFunc == "@"
+         ::cPicFunc := ""
       endif
    else
       ::cPicFunc := ""
@@ -1126,7 +1132,7 @@ return Self
 //---------------------------------------------------------------------------//
 
 /* The METHOD ColorSpec and MESSAGE _ColorSpec allow to replace the
- * property ColorSpec for a function to control the content and 
+ * property ColorSpec for a function to control the content and
  * to carry out certain actions to normalize the data.
  * The particular case is that the function receives a single color and
  * be used for GET_CLR_UNSELECTED and GET_CLR_ENHANCED.
@@ -1141,7 +1147,7 @@ METHOD ColorSpec( cColorSpec ) CLASS Get
       cClrUnSel := iif( !Empty( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ),;
                                 hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ),;
                                 hb_ColorIndex( SetColor(), GET_CLR_UNSELECTED ) )
-   
+
       cClrEnh   := iif( !Empty( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ),;
                                 hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ),;
                                 cClrUnSel )
@@ -1155,10 +1161,10 @@ return ::cColorSpec
 //---------------------------------------------------------------------------//
 
 /* The METHOD Picture and MESSAGE _Picture allow to replace the
- * property Picture for a function to control the content and 
+ * property Picture for a function to control the content and
  * to carry out certain actions to normalize the data.
- * The particular case is that the Picture is loaded later on 
- * to the creation of the object, being necessary to carry out 
+ * The particular case is that the Picture is loaded later on
+ * to the creation of the object, being necessary to carry out
  * several tasks to adjust the internal data of the object.
  */
 
@@ -1179,4 +1185,3 @@ METHOD Picture( cPicture ) CLASS Get
    endif
 
 return ::cPicture
-
