@@ -7,6 +7,19 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+    * Minor modification on VarPut() method proposed by Walter Negro
+
+2002-02-04 13:12 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/vm/runner.c
+    * warnings and bug fixed
+
+2002-02-02 11:40 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/compiler/genhrb.c
+  * source/vm/runner.c
+    * Creating/checking signature and version number for .hrb file.
+      It is: \192 + 'H' + 'R' + 'B'
+      then 2 byte version number, currently - 2
+  * include/hbrddntx.h
   * source/rdd/dbfntx/dbfntx1.c
     * some fixes and additions - DESCENDING clause works now.
 
