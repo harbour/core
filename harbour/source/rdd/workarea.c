@@ -236,7 +236,8 @@ ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    ulSize = hb_strRTrimLen( ( char * ) pFieldInfo->atomName, ulSize, TRUE );
    if( !ulSize )
       return FAILURE;
-   pFieldInfo->atomName[ulSize] = '\0';
+   /* This line writes to the protected memory
+    pFieldInfo->atomName[ulSize] = '\0'; */
 
    pField = pArea->lpFields + pArea->uiFieldCount;
    if( pArea->uiFieldCount > 0 )

@@ -233,11 +233,12 @@ HB_FUNC( __HRBGETFU )
    if( hb_pcount() > 1 && ISNUM( 1 ) && ISCHAR( 2 ) )
    {
       PHRB_BODY pHrbBody = (PHRB_BODY) hb_parnl( 1 );
-      char * szName = hb_strupr( hb_parc( 2 ) );
       ULONG ulPos = 0;
 
       if( pHrbBody )
       {
+         char * szName = hb_strupr( hb_strdup( hb_parc( 2 ) ) );
+
          while( ulPos < pHrbBody->ulSymbols )
          {
             if( !strcmp( szName, pHrbBody->pSymRead[ ulPos ].szName ) )
@@ -248,6 +249,7 @@ HB_FUNC( __HRBGETFU )
             hb_retnl( (LONG) ( pHrbBody->pSymRead + ulPos ) );
          else
             hb_retnl( 0 );
+         hb_xfree( szName );
       }
       else
          hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBGETFU", 0 );
