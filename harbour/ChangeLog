@@ -1,3 +1,8 @@
+19990618-20:55 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dir.c
+    - Corrected #if test GNU C on Unix/Linux test to use && ! instead of || !
+      in order to force DJGPP to use DOS functions instead of Unix functions
+
 19990619-00:52 Ryszard Glab <rglab@imid.med.pl>
 
 * config/linux/gcc.cf

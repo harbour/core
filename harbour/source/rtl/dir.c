@@ -262,7 +262,7 @@ HARBOUR HB_DIRECTORY( void )
          while(0==getchar());
 */
 
-#if defined(__GNUC__) || !defined(__DJGPP__)
+#if defined(__GNUC__) && !defined(__DJGPP__)
 /* GNU C on Linux or on other UNIX */
 	 aatrib[ 0 ] = '\0';
 	 if( S_ISREG(statbuf.st_mode) )
