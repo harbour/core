@@ -1,3 +1,7 @@
+19990627-09:00 "Paul Tucker" <ptucker@sympatico.ca>
+ * source/hbpp/hbpp.c
+   - change lines from 1246 to 1257 
+
 19990626-13:35 Ryszard Glab <rglab@imid.med.pl>
 
 * source/rtl/copyfile.c

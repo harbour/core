@@ -1247,11 +1247,13 @@ int md_strAt(char *szSub, int lSubLen, char *szText)
        {
          State = STATE_QUOTE2;
          lPos++;
+         continue;
        }
        else if ( *(szText+lPos) == '\'' )
        {
          State = STATE_QUOTE1;
          lPos++;
+         continue;
        }
        if( toupper(*(szText + lPos)) == toupper(*(szSub + lSubPos)) )
        {
