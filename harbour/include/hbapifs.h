@@ -131,6 +131,7 @@ extern void     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* ch
 extern void     hb_fsSetError   ( USHORT uiError ); /* set the file system error number */
 extern USHORT   hb_fsWrite      ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
 extern ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
+extern FHANDLE  hb_fsPOpen( BYTE * pFilename, BYTE * pMode );
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

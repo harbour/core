@@ -195,21 +195,31 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    FHANDLE handle;
    PHB_FNAME pFilename;
    char path[ _POSIX_PATH_MAX + 1 ];
-
+   BOOL bPipe = FALSE;
    HB_TRACE(HB_TR_DEBUG, ("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
 
    user_ferror = hb_fsError(); /* Save the current user file error code */
    /* Create full filename */
 
-   pFilename = hb_fsFNameSplit( file_name );
 
-   if( ! pFilename->szPath && hb_set.HB_SET_DEFAULT )
-      pFilename->szPath = hb_set.HB_SET_DEFAULT;
-   if( ! pFilename->szExtension && def_ext )
-      pFilename->szExtension = def_ext;
+     #if defined(OS_UNIX_COMPATIBLE)
+      if( ( bPipe = ( set_specifier == HB_SET_PRINTFILE && \
+                      (char) *file_name == '|' ) ) ) {
+         file_name++;
+	 bAppend = FALSE;
+      }
+   #endif
+   if( ! bPipe ) {
+      pFilename = hb_fsFNameSplit( file_name );
 
-   hb_fsFNameMerge( path, pFilename );
-   hb_xfree( pFilename );
+      if( ! pFilename->szPath && hb_set.HB_SET_DEFAULT )
+         pFilename->szPath = hb_set.HB_SET_DEFAULT;
+      if( ! pFilename->szExtension && def_ext )
+         pFilename->szExtension = def_ext;
+
+      hb_fsFNameMerge( path, pFilename );
+      hb_xfree( pFilename );
+   }
 
    /* Open the file either in append (bAppend) or truncate mode (!bAppend), but
       always use binary mode */
@@ -221,40 +231,45 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    {
       BOOL bCreate = FALSE;
 
-      if( bAppend )
-      {  /* Append mode */
-         if( hb_fsFile( ( BYTE * ) path ) )
-         {  /* If the file already exists, open it (in read-write mode, in
-               case of non-Unix and text modes). */
-            handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
-            if( handle != FS_ERROR )
-            {  /* Position to EOF */
-            #if ! defined(OS_UNIX_COMPATIBLE)
-               /* Non-Unix needs special binary vs. text file handling */
-               if( set_specifier == HB_SET_PRINTFILE )
-               {  /* PRINTFILE is binary and needs no special handling. */
-            #endif
-                  hb_fsSeek( handle, 0, FS_END );
-            #if ! defined(OS_UNIX_COMPATIBLE)
-               }
-               else
-               {  /* All other files are text files and may have an EOF
-                     ('\x1A') character at the end (non-UNIX only). */
-                  char cEOF = '\0';
-                  hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
-                  hb_fsRead( handle, ( BYTE * ) &cEOF, 1 );   /* Read the last char. */
-                  if( cEOF == '\x1A' )             /* If it's an EOF, */
-                     hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */
-               }
-            #endif
-            }
-         }
-         else bCreate = TRUE; /* Otherwise create a new file. */
-      }
-      else bCreate = TRUE; /* Always create a new file for overwrite mode. */
+      if( bPipe )
+         handle = hb_fsPOpen( ( BYTE * ) file_name, ( BYTE * ) "w" );
+      else
+      {
+         if( bAppend )
+         {  /* Append mode */
+            if( hb_fsFile( ( BYTE * ) path ) )
+            {  /* If the file already exists, open it (in read-write mode, in
+                  case of non-Unix and text modes). */
+               handle = hb_fsOpen( ( BYTE * ) path, FO_READWRITE | FO_DENYWRITE );
+               if( handle != FS_ERROR )
+               {  /* Position to EOF */
+               #if ! defined(OS_UNIX_COMPATIBLE)
+                  /* Non-Unix needs special binary vs. text file handling */
+                  if( set_specifier == HB_SET_PRINTFILE )
+                  {  /* PRINTFILE is binary and needs no special handling. */
+               #endif
+                     hb_fsSeek( handle, 0, FS_END );
+               #if ! defined(OS_UNIX_COMPATIBLE)
+                  }
+                  else
+                  {  /* All other files are text files and may have an EOF
+                        ('\x1A') character at the end (non-UNIX only). */
+                     char cEOF = '\0';
+                     hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
+                     hb_fsRead( handle, ( BYTE * ) &cEOF, 1 );   /* Read the last char. */
+                     if( cEOF == '\x1A' )             /* If it's an EOF, */
+                        hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */
+                  }
+               #endif
+                }
+             }
+            else bCreate = TRUE; /* Otherwise create a new file. */
+          }
+         else bCreate = TRUE; /* Always create a new file for overwrite mode. */
 
-      if( bCreate )
-         handle = hb_fsCreate( ( BYTE * ) path, FC_NORMAL );
+         if( bCreate )
+            handle = hb_fsCreate( ( BYTE * ) path, FC_NORMAL );
+      }
 
       if( handle == FS_ERROR )
       {

@@ -1025,10 +1025,10 @@ cDefHarOpts+=" -v "
 endif
 if ldebug
 cDefHarOpts+=" -b "
- cDefBccLibs  += " debug.lib"
- cDefGccLibs  += " -ldebug"
- cgcclibsos2  += " -ldebug"
- cDeflibGccLibs += " -ldebug"
+ cDefBccLibs  += " debug.lib "
+ cDefGccLibs  += " -ldebug "
+ cgcclibsos2  += " -ldebug "
+ cDeflibGccLibs += " -ldebug "
 endif
 if lSupressline
 cDefHarOpts+=" -l "
@@ -2097,7 +2097,7 @@ For nPos := 1 To 7
       If At( "$", amacro[ nCount ] ) > 0
              if (amacro[ nCount ] = "$(PROJECT)") .and. lGcc 
              Findmacro(amacro[ nCount ], @cRead )
-             fwrite(nLinkHandle,"CREATE " + "lib"+cRead+CRLF)
+             fwrite(nLinkHandle,"CREATE " + " lib"+cRead+CRLF)
 	     cLib:="lib"+cRead	
          elseif (amacro[ nCount ] =="$(ALLOBJ)")
              findmacro( amacro[ nCount ], @cRead )

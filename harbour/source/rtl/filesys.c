@@ -98,6 +98,10 @@
 #include "hbapifs.h"
 #include "hb_io.h"
 
+#if defined(OS_UNIX_COMPATIBLE)
+   #include <unistd.h>
+#endif
+
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
@@ -238,7 +242,7 @@ static USHORT s_uiErrorLast = 0;
 /* Convert HARBOUR flags to IO subsystem flags */
 
 #if defined(HB_FS_FILE_IO)
-
+extern char **environ;
 static int convert_open_flags( USHORT uiFlags )
 {
    /* by default FO_READ + FO_COMPAT is set */
@@ -360,6 +364,63 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
 /*
  * FILESYS.API FUNCTIONS --
  */
+
+FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
+{
+   FHANDLE hFileHandle;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsPOpen(%p, %s)", pFilename, pMode));
+
+#if defined(OS_UNIX_COMPATIBLE)
+   {
+      FHANDLE hPipeHandle[2];
+      pid_t pid;
+      BOOL bRead;
+
+      bRead = ( *pMode == 'r' );
+      errno = 0;
+      if( pipe( hPipeHandle ) == 0 ) {
+         if( ( pid = fork() ) != -1 ) {
+            if( pid != 0 ) {
+              if( bRead ) {
+	          close( hPipeHandle[ 1 ] );
+	          hFileHandle = hPipeHandle[ 0 ];
+	       } else {
+	          close( hPipeHandle[ 0 ] );
+	          hFileHandle = hPipeHandle[ 1 ];
+	       }
+	    } else {
+               char *argv[4];
+	       argv[0] = "sh";
+               argv[1] = "-c";
+               argv[2] = ( char * ) pFilename;
+               argv[3] = ( char * ) 0;
+	       if( bRead ) {
+	          close( hPipeHandle[ 0 ] );
+		  dup2( hPipeHandle[ 1 ], 1 );
+	       } else {
+	          close( hPipeHandle[ 1 ] );
+	          dup2( hPipeHandle[ 0 ], 0 );
+	       }
+               execve("/bin/sh", argv, environ);
+	       exit(1);
+	    }
+	 } else {
+	    close( hPipeHandle[0] );
+	    close( hPipeHandle[1] );
+	 }
+      }
+      s_uiErrorLast = errno;
+   }
+#else
+
+   hFileHandle = FS_ERROR;
+   s_uiErrorLast = FS_ERROR;
+
+#endif
+
+   return hFileHandle;
+}
 
 FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 {
