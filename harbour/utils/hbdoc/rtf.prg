@@ -34,7 +34,7 @@
  */
 
 #define CRLF HB_OSNewLine()
-
+#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
 #include 'hbclass.ch'
 #include 'common.ch'
 MEMVAR aWWW,aResult
@@ -57,6 +57,7 @@ CLASS TRTF
    METHOD WriteParBox( cPar )
    METHOD WriteLink( clink )
    METHOD WriteJumpLink( clink )
+   METHOD WritekLink( aLink )
    METHOD WriteJumpLink1( cLink, cName, cText )
    METHOD CLOSE()
    METHOD WriteParBold( cPar, lCenter )
@@ -206,8 +207,10 @@ METHOD WriteTitle( cTitle, cTopic, cOne ,cCat) CLASS TRTF
    cWrite := '{\f6' + CRLF + ;
              '  #{\footnote \pard\fs20 # ' + "IDH_" + cTemp + ' }' + CRLF + ;
              '  ${\footnote \pard\fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
-             '  K{\footnote \pard\fs20 K ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
+             '  K{\footnote \pard\fs20 K ' + UPPERLOWER(ALLTRIM( cTopic ))+";" + UPPERLOWER(ALLTRIM( cCat ))+ ' }' + CRLF + ;
+             '  A{\footnote \pard\fs20 A ' + UPPERLOWER(ALLTRIM( cTopic )) +' }' + CRLF + ;
              '}' + CRLF
+             /*" ; " + UPPERLOWER(cCat) +" , " +UPPERLOWER(ALLTRIM( strtran(cTopic,"()","" )))+ */
    aadd(aWww,{cTopic,"IDH_"+cTemp,cCat})
    nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCat)})
    if nPos==0
@@ -267,6 +270,8 @@ METHOD WriteLink( cLink ) CLASS TRTF
    FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb ' + ALLTRIM( HB_OEMTOANSI( cLink ) ) + '}{\v\f6 ' + "IDH_" + IF( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + '}' + CRLF )
 
 RETURN Self
+
+
 METHOD WriteJumpLink( cLink, cName, cText ) CLASS TRTF
 
    FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb ' + ALLTRIM( HB_OEMTOANSI( cName ) ) + '}{\v\f6 ' + "IDH_" + IF( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + '}' + cText + CRLF )
@@ -276,6 +281,22 @@ RETURN Self
 METHOD WriteJumpLink1( cLink, cName, cText ) CLASS TRTF
 
    FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\ul ' + ALLTRIM( HB_OEMTOANSI( cName ) ) + '}{\v\f6 ' + "IDH_" + IF( AT( "()", cLink ) > 0, ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "()", "xx" ) ) ), ALLTRIM( HB_OEMTOANSI( STRTRAN( cLink, "@", "x" ) ) ) ) + '}' + cText + CRLF )
+
+RETURN Self
+
+METHOD WritekLink( aLink ) CLASS TRTF
+Local cItem:=' '
+Local nPos:=0
+Local nSize:=Len(aLink)
+For nPos:=1 to nSize
+    if nPos==nSize
+        cItem+= aLink[nPos]
+    else
+        cItem+= aLink[nPos]
+        cItem+=";"
+    endif
+next
+   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb Related Topic }'+'{\v\f6 !ALink(" '+cItem + '", 2) }'+ CRLF )
 
 RETURN Self
 

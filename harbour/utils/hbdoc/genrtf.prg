@@ -153,6 +153,7 @@ FUNCTION ProcessRtf()
    LOCAL cMethod        := DELIM + 'METHOD' + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
    LOCAL cTable         := DELIM + "TABLE" + DELIM
+   Local aAlso:={}
    lFirstArg     := .T.
    lData         := .F.
    lMethod       := .F.
@@ -240,7 +241,13 @@ FUNCTION ProcessRtf()
                IF .NOT. EMPTY( cSeeAlso )
                   oRtf:WritePar( "" )   //:endpar()
                   oRtf:WriteParBold( "See Also" )
-                  ProcRtfalso( oRtf, cSeealso )
+                  oRtf:WritePar( "" )   //:endpar()
+                  aAlso:=ListAsArray2(cSeeAlso,",")
+                  if Len(aAlso) <3
+                    ProcRtfalso( oRtf, cSeealso )
+                  else
+                  oRtf:WriteKLink(aAlso)
+                  endif  
                ENDIF
                lDoc := .F.
 
@@ -388,7 +395,7 @@ FUNCTION ProcessRtf()
                      ENDIF
 
                      oRtf:WriteParBold( " Constructor syntax" )
-
+                        oRtf:WritePar( "" )
                      nMode     := D_SYNTAX
                      lAddBlank := .T.
 
