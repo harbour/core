@@ -245,7 +245,7 @@ void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
             }
             else
             {
-                printf( "Can\'t open standard rule file: \'%s\'\n", hb_pp_STD_CH );
+                printf( "Can\'t open standard rule file: \'%s\'\n", szFileName );
             }
          }
       }
