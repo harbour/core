@@ -26,6 +26,8 @@ DIRS=\
 	libmisc \
 	libnf \
 	rdd_ads \
+	ole \
+	odbc \
 	samples \
 
 endif
@@ -62,6 +64,8 @@ DIRS=\
 	libct \
 	libgt \
 	libmisc \
+	rdd_ads \
+	odbc \
 	samples \
  
 endif

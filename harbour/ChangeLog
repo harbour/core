@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-08 14:24 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * Makefile
+  * contrib/Makefile
+    * Makefiles are changed to build some contribution libraries.
+  * source/vm/classes.c
+    * hb_objSendMsg() function added ( borrowed from xHarbour ).
+      It makes it more easy to set/get values of object variables,
+      execute object methods from the C level.
+
 2003-10-07 12:06 UTC+0200 Chen Kedem <niki@actcom.co.il>
   * doc/whatsnew.txt
     * Update build 43 release date

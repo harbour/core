@@ -1824,6 +1824,38 @@ HB_FUNC( __OBJCLONE )
    }
 }
 
+void hb_objSendMsg( PHB_ITEM pObj, char *sMsg, ULONG ulArg, ... )
+{
+   PHB_DYNS pMsgSym = hb_dynsymFindName( sMsg );
+
+   if( pMsgSym )
+   {
+      hb_vmPushSymbol( pMsgSym->pSymbol );
+      hb_vmPush( pObj );
+
+      if( ulArg )
+      {
+         unsigned long i;
+
+         va_list ap;
+
+         va_start( ap, ulArg );
+
+         for( i = 0; i < ulArg; i++ )
+         {
+            hb_vmPush( va_arg( ap, PHB_ITEM ) );
+         }
+
+         va_end( ap );
+      }
+
+      hb_vmSend( (USHORT) ulArg );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMsg()", 0 );
+   }
+}
 
 /*
  * <xRet> = __objSendMsg( <oObj>, <cSymbol>, <xArg,..>

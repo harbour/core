@@ -9,7 +9,7 @@ DIRS=\
 	include \
 	source \
 	utils \
-#	tests \
+	contrib \
 #	samples \
 
 include $(ROOT)config/dir.cf
