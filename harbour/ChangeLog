@@ -1,3 +1,7 @@
+2001-11-16 21:31 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed bug opening empty files with set delete on
+
 2001-11-16 17:35 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/hvm.c
      + Added new function __VMVARSLEN() --> nStatics
