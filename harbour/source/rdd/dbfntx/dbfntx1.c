@@ -1269,7 +1269,9 @@ static int hb_ntxPageKeyAdd( LPPAGEINFO pPage, PHB_ITEM pKey, int level, BOOL is
    /* printf( "\nntxPageKeyAdd - 0 ( %d / %d )",level,pPage->TagParent->uiPages ); */
    if( pPage->uiKeys == 0 )
    {
-      pPage->uiKeys=1;
+      if( pPage->TagParent->Owner->NextAvail == pPage->Page )
+         pPage->TagParent->Owner->NextAvail = 0;
+      pPage->uiKeys = 1;
       pPage->Changed = TRUE;
       pPage->pKeys->Xtra = pPage->TagParent->Owner->Owner->ulRecNo;
       pPage->pKeys->pItem = hb_itemNew( pKey );
@@ -2068,13 +2070,12 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
          return SELF_GOTO( ( AREAP ) pArea, lRecno );
        }
        else
-       {
+       {       
          lpCurIndex = pArea->lpCurIndex;
          pArea->lpCurIndex = NULL;
          SELF_GOBOTTOM( ( AREAP ) pArea );
          retvalue = SELF_SKIPRAW( ( AREAP ) pArea, 1 );
          pArea->lpCurIndex = lpCurIndex;
-         pArea->fBof = FALSE;
          return retvalue;
        }
      }
@@ -2772,6 +2773,8 @@ static ERRCODE ntxClose( NTXAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("ntxClose(%p)", pArea));
 
+   if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
+      return FAILURE;
    ntxOrderListClear( pArea );
    return SUPER_CLOSE( ( AREAP ) pArea );
 }
