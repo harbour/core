@@ -148,6 +148,12 @@
 
 #endif /* HB_DONT_DEFINE_BASIC_TYPES */
 
+/* type of reference counter */
+typedef ULONG HB_COUNTER;
+
+/* type for memory pointer diff */
+typedef ULONG HB_PTRDIFF;
+
 #define HB_MAX( a, b )          ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) )
 #define HB_MIN( a, b )          ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
 

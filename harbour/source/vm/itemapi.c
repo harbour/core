@@ -223,8 +223,8 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, char * szText )
       pItem->item.asString.length = strlen( szText );
       pItem->item.asString.value = ( char * ) hb_xgrab( pItem->item.asString.length + 1 );
       pItem->item.asString.bStatic = 0;
-      pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      * ( pItem->item.asString.u.puiHolders ) = 1;
+      pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+      * ( pItem->item.asString.u.pulHolders ) = 1;
       strcpy( pItem->item.asString.value, szText );
    }
 
@@ -289,8 +289,8 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen )
       pItem->item.asString.length = ulLen;
       pItem->item.asString.value = ( char * ) hb_xgrab( ulLen + 1 );
       pItem->item.asString.bStatic = 0;
-      pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      * ( pItem->item.asString.u.puiHolders ) = 1;
+      pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+      * ( pItem->item.asString.u.pulHolders ) = 1;
       hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
       pItem->item.asString.value[ ulLen ] = '\0';
    }
@@ -312,8 +312,8 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
    pItem->item.asString.value = szText;
    pItem->item.asString.value[ ulLen ] = '\0';
    pItem->item.asString.bStatic = 0;
-   pItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-   * ( pItem->item.asString.u.puiHolders ) = 1;
+   pItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+   * ( pItem->item.asString.u.pulHolders ) = 1;
 
    return pItem;
 }
@@ -872,18 +872,18 @@ void hb_itemClear( PHB_ITEM pItem )
          pItem->item.asString.value = NULL;
       else
       {
-         if( --*( pItem->item.asString.u.puiHolders ) == 0 )
+         if( --*( pItem->item.asString.u.pulHolders ) == 0 )
          {
             hb_xfree( pItem->item.asString.value );
             pItem->item.asString.value = NULL;
-            hb_xfree( pItem->item.asString.u.puiHolders );
+            hb_xfree( pItem->item.asString.u.pulHolders );
          }
       }
       pItem->item.asString.length = 0;
    }
    else if( HB_IS_ARRAY( pItem ) && pItem->item.asArray.value )
    {
-      if( --( pItem->item.asArray.value )->uiHolders == 0 )
+      if( --( pItem->item.asArray.value )->ulHolders == 0 )
          hb_arrayRelease( pItem );
    }
    else if( HB_IS_BLOCK( pItem ) )
@@ -912,11 +912,11 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    if( HB_IS_STRING( pSource ) )
    {
       if( !pSource->item.asString.bStatic )
-         ++*( pSource->item.asString.u.puiHolders );
+         ++*( pSource->item.asString.u.pulHolders );
    }
    else if( HB_IS_ARRAY( pSource ) )
    {
-      ( pSource->item.asArray.value )->uiHolders++;
+      ( pSource->item.asArray.value )->ulHolders++;
    }
    else if( HB_IS_BLOCK( pSource ) )
    {

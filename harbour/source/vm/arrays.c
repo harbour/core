@@ -92,7 +92,7 @@ BOOL HB_EXPORT hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) /* creates a new array
       pBaseArray->pItems = NULL;
 
    pBaseArray->ulLen      = ulLen;
-   pBaseArray->uiHolders  = 1;
+   pBaseArray->ulHolders  = 1;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
 
@@ -860,7 +860,7 @@ PHB_ITEM hb_arrayFromStack( USHORT uiLen )
       pBaseArray->pItems = NULL;
 
    pBaseArray->ulLen      = uiLen;
-   pBaseArray->uiHolders  = 1;
+   pBaseArray->ulHolders  = 1;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
 
@@ -890,7 +890,7 @@ PHB_ITEM hb_arrayFromParams( PHB_ITEM *pBase )
       pBaseArray->pItems = NULL;
 
    pBaseArray->ulLen      = uiPCount;
-   pBaseArray->uiHolders  = 1;
+   pBaseArray->ulHolders  = 1;
    pBaseArray->uiClass    = 0;
    pBaseArray->uiPrevCls  = 0;
 

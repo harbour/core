@@ -2915,7 +2915,7 @@ static void hb_vmArrayPush( void )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
       {
-         if( pArray->item.asArray.value->uiHolders > 1 )
+         if( pArray->item.asArray.value->ulHolders > 1 )
          {
             /* this is a temporary copy of an array - we can overwrite
              * it with no problem
@@ -2977,7 +2977,7 @@ static void hb_vmArrayPop( void )
    {
       if( ulIndex > 0 && ulIndex <= pArray->item.asString.length )
       {
-         if( pArray->item.asString.bStatic || *( pArray->item.asString.u.puiHolders ) > 1 )
+         if( pArray->item.asString.bStatic || *( pArray->item.asString.u.pulHolders ) > 1 )
             hb_itemPutC( pArray, pArray->item.asString.value );
 
          pArray->item.asString.value[ ulIndex - 1 ] = hb_itemGetNI( pValue );
@@ -4139,8 +4139,8 @@ void hb_vmPushString( char * szText, ULONG length )
 
       pStackTopItem->item.asString.value  = szTemp;
       pStackTopItem->item.asString.bStatic = 0;
-      pStackTopItem->item.asString.u.puiHolders = ( USHORT * ) hb_xgrab( sizeof( USHORT ) );
-      *( pStackTopItem->item.asString.u.puiHolders ) = 1;
+      pStackTopItem->item.asString.u.pulHolders = ( HB_COUNTER * ) hb_xgrab( sizeof( HB_COUNTER ) );
+      *( pStackTopItem->item.asString.u.pulHolders ) = 1;
    }
    hb_stackPush();
 }

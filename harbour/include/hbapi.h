@@ -204,8 +204,8 @@ struct hb_struString
    SHORT bStatic;        /* it is a static string from pcode or from a C string */
    union
    {
-      char   value[1];
-      USHORT * puiHolders; /* number of holders of this string */
+      char         value[1];
+      HB_COUNTER * pulHolders; /* number of holders of this string */
    } u;
 };
 
@@ -241,23 +241,23 @@ typedef struct _HB_ITEM
 
 typedef struct _HB_BASEARRAY
 {
-   PHB_ITEM pItems;       /* pointer to the array items */
-   ULONG    ulLen;        /* number of items in the array */
-   USHORT   uiHolders;    /* number of holders of this array */
-   USHORT   uiClass;      /* offset to the classes base if it is an object */
-   USHORT   uiPrevCls;    /* for fixing after access super */
-   USHORT * puiClsTree;   /* remember array of super called ID Tree  */
+   PHB_ITEM    pItems;       /* pointer to the array items */
+   ULONG       ulLen;        /* number of items in the array */
+   HB_COUNTER  ulHolders;    /* number of holders of this array */
+   USHORT      uiClass;      /* offset to the classes base if it is an object */
+   USHORT      uiPrevCls;    /* for fixing after access super */
+   USHORT *    puiClsTree;   /* remember array of super called ID Tree  */
 } HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
 {
-   BYTE *   pCode;        /* codeblock pcode */
-   PHB_ITEM pLocals;      /* table with referenced local variables */
-   USHORT   uiLocals;     /* number of referenced local variables */
-   PHB_SYMB pSymbols;     /* codeblocks symbols */
-   ULONG    ulCounter;    /* numer of references to this codeblock */
-   BOOL     dynBuffer;    /* is pcode buffer allocated dynamically */
+   BYTE *      pCode;        /* codeblock pcode */
+   PHB_ITEM    pLocals;      /* table with referenced local variables */
+   USHORT      uiLocals;     /* number of referenced local variables */
+   PHB_SYMB    pSymbols;     /* codeblocks symbols */
+   HB_COUNTER  ulCounter;    /* numer of references to this codeblock */
+   BOOL        dynBuffer;    /* is pcode buffer allocated dynamically */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef struct _HB_VALUE

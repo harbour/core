@@ -6,7 +6,7 @@ ROOT = ../../
 
 C_SOURCES=\
 
-C_MAIN=endian.c
+C_MAIN=bldtest.c
 
 LIBS=\
 

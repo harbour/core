@@ -97,7 +97,7 @@ HB_FUNC( FREAD )
       PHB_ITEM pItem = hb_itemUnRef( hb_stackItemFromBase( 2 ) );
 
       if( pItem->item.asString.bStatic ||
-          ( * pItem->item.asString.u.puiHolders ) > 1 )
+          ( * pItem->item.asString.u.pulHolders ) > 1 )
          // Warning: Don't use hb_itemPutC() here, as it fails if 1 byte buffer used
          // cause 1 byte length strings optimization
          hb_itemPutCPtr( pItem, hb_strdup( hb_parc( 2 ) ), hb_parclen( 2 ) );
