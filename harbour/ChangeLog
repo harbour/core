@@ -1,3 +1,7 @@
+19990720-14:35 CET Matthew Hamilton
+  * tests/working/inifiles.prg
+    New version installed
+
 19990720-09:55 CET Eddie Runia <eddie@runia.com>
   * source/rtl/files.c
     #include <errno.h> added for __BORLANDC__
