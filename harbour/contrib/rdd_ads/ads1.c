@@ -437,7 +437,21 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    pArea->fValidBuffer = FALSE;
    pArea->fFound = FALSE;
 
-   if( ulRecNo > 0  && ulRecNo <= pArea->ulRecCount )
+   /* -----------------7/19/2001 3:04PM-----------------
+     The following call is a necessary workaround for ACE32.DLL
+     prior to 6.1.  There were bugs where
+     AdsGotoRecord() can FAIL to move the record pointer
+     after some sequences of setting/clearing relations.
+     A call to AdsGetRecordNum() before it clears the problem.  -BH
+    --------------------------------------------------*/
+   AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
+         (UNSIGNED32 *)&(pArea->ulRecNo) );
+
+   if ( pArea->ulRecNo == ulRecNo && ulRecNo > 0 && !pArea->fEof)  /* just refresh current record */
+   {        /* if it was at eof, and another station or handle added a record, it needs to GoTo or AtEof stays True. */
+      AdsRefreshRecord(pArea->hTable);
+   }
+   else if( ulRecNo > 0  && ulRecNo <= pArea->ulRecCount )
    {
       pArea->ulRecNo = ulRecNo;
       pArea->fBof = pArea->fEof = FALSE;
@@ -468,8 +482,6 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
    if( HB_IS_NUMERIC( pItem ) )
    {
       ulRecNo = hb_itemGetNL( pItem );
-//      if( ulRecNo == 0 )              // bh: Go 0 must go to eof!
-//         ulRecNo = pArea->ulRecNo;
       return adsGoTo( pArea, ulRecNo );
    }
    else
@@ -481,12 +493,11 @@ static ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 
 static ERRCODE adsGoTop( ADSAREAP pArea )
 {
-   UNSIGNED32 ulRetVal;
    HB_TRACE(HB_TR_DEBUG, ("adsGoTop(%p)", pArea));
 
    pArea->fTop = TRUE;
    pArea->fBottom = FALSE;
-   ulRetVal = AdsGotoTop  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
+   AdsGotoTop  ( (pArea->hOrdCurrent) ? pArea->hOrdCurrent : pArea->hTable );
 
    hb_adsCheckBofEof( pArea );
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
@@ -662,13 +673,21 @@ static ERRCODE adsAddField( ADSAREAP pArea, LPDBFIELDINFO pFieldInfo )
 
 static ERRCODE adsAppend( ADSAREAP pArea, BOOL bUnLockAll )
 {
+   UNSIGNED32 ulRetVal;
+
    HB_SYMBOL_UNUSED( bUnLockAll );
    HB_TRACE(HB_TR_DEBUG, ("adsAppend(%p, %d)", pArea, (int) bUnLockAll));
 
-   AdsAppendRecord  ( pArea->hTable );
-   pArea->ulRecCount++;
-   hb_adsCheckBofEof( pArea );
-   return SUCCESS;
+   ulRetVal = AdsAppendRecord( pArea->hTable );
+   if ( ulRetVal == AE_SUCCESS )
+   {
+      pArea->ulRecCount++;
+      pArea->fBof = FALSE ;
+      pArea->fEof = FALSE ;
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
 }
 
 #define  adsCreateFields          NULL
@@ -1151,16 +1170,20 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          AdsGetNumLocks(pArea->hTable, &uiIndex);
          if(uiIndex)
          {
-           UNSIGNED32 *puLocks;
-           puLocks = (UNSIGNED32 *) hb_xgrab( (uiIndex + 1) * sizeof( UNSIGNED32 ) );
-           AdsGetAllLocks(pArea->hTable, puLocks, &uiIndex);
+            UNSIGNED32 *puLocks;
+            puLocks = (UNSIGNED32 *) hb_xgrab( (uiIndex + 1) * sizeof( UNSIGNED32 ) );
+            AdsGetAllLocks(pArea->hTable, puLocks, &uiIndex);
 
-           if(uiIndex)
-             for(uiCount=0; uiCount < uiIndex; uiCount++)
-                hb_arrayAdd( pItem, hb_itemPutNL( NULL, puLocks[ uiCount ] ) );
-
-           hb_xfree(puLocks);
+            if(uiIndex)
+            {
+               hb_arraySize( pItem, uiIndex );
+               for(uiCount=0; uiCount < uiIndex; uiCount++)
+                  hb_itemPutNL( hb_arrayGetItemPtr( pItem, (ULONG) uiCount+1 ),
+                                puLocks[ uiCount ] );
+            }
+            hb_xfree(puLocks);
          }
+
          break;
       }
 
@@ -1467,8 +1490,21 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
       }
       else if( HB_IS_STRING( pOrderInfo->itmOrder ) )
       {
+         /* ADS can't handle a space-padded string--we have to trim it */
+         UNSIGNED8 pucTagName[ADS_MAX_TAG_NAME + 1];
+         ULONG i;
+         char * pSrc = hb_itemGetCPtr( pOrderInfo->itmOrder );
+         ULONG ulLen = hb_strRTrimLen( pSrc,
+                        hb_itemGetCLen( pOrderInfo->itmOrder ), FALSE );
+
+         if( ulLen > ADS_MAX_TAG_NAME )
+            ulLen = ADS_MAX_TAG_NAME;
+
+         strncpy( pucTagName, pSrc, ulLen);
+         pucTagName[ulLen] = '\0';
+
          ulRetVal = AdsGetIndexHandle( pArea->hTable,
-            (UNSIGNED8*) hb_itemGetCPtr( pOrderInfo->itmOrder ), &phIndex );
+                     pucTagName, &phIndex );
       }
       if( ulRetVal != AE_SUCCESS )
          return FAILURE;
@@ -2055,14 +2091,11 @@ static ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG lRecNo )
       case FILE_UNLOCK:
          if( !pArea->fShared )
             return TRUE;
-         hb_adsUnLockAllRecords( pArea );
-         if( pArea->fFLocked )
-         {
-            ulRetVal = AdsUnlockTable  ( pArea->hTable );
-            if ( ulRetVal != AE_SUCCESS )
-               return FAILURE;
+         ulRetVal = AdsUnlockTable  ( pArea->hTable );
+         if ( ulRetVal == AE_SUCCESS || ulRetVal == AE_TABLE_NOT_LOCKED  || ulRetVal == AE_TABLE_NOT_SHARED  )
             pArea->fFLocked = FALSE;
-         }
+         else
+            return FAILURE;
          break;
    }
    return SUCCESS;
@@ -2070,18 +2103,51 @@ static ERRCODE adsRawLock( ADSAREAP pArea, USHORT uiAction, ULONG lRecNo )
 
 static ERRCODE adsLock( ADSAREAP pArea, LPDBLOCKINFO pLockInfo )
 {
+   USHORT   uiAction ;
+   BOOL     bUnlocked = FALSE;
+   ULONG    ulRecNo;
+
    HB_TRACE(HB_TR_DEBUG, ("adsLock(%p, %p)", pArea, pLockInfo));
 
    if( pLockInfo->itmRecID == 0 )
    {
       hb_adsUnLockAllRecords( pArea );
+      bUnlocked = TRUE;
 
       /* Get current record */
       AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS,
-         (UNSIGNED32 *)&(pArea->ulRecNo) );
-      pLockInfo->itmRecID = hb_itemPutNL( NULL, pArea->ulRecNo );
+            (UNSIGNED32 *)&(pArea->ulRecNo) );
+      ulRecNo = pArea->ulRecNo;
    }
-   if( adsRawLock( pArea, pLockInfo->uiMethod, hb_itemGetNL( pLockInfo->itmRecID ) ) == SUCCESS )
+   else
+      ulRecNo = (ULONG) hb_itemGetNL(pLockInfo->itmRecID) ;
+
+
+   switch ( pLockInfo->uiMethod )
+   {
+      case DBLM_EXCLUSIVE :
+         if ( !bUnlocked )
+            hb_adsUnLockAllRecords( pArea );
+
+         uiAction = REC_LOCK ;
+         break;
+
+      case DBLM_MULTIPLE :
+         uiAction = REC_LOCK ;
+         break;
+
+      case DBLM_FILE :
+         uiAction = FILE_LOCK ;
+         break;
+
+      default  :
+         /* This should probably throw a real error... */
+         AdsShowError( (UNSIGNED8 *) "Error in pLockInfo->uiMethod" );
+         pLockInfo->fResult = FALSE;
+         return FAILURE;
+   }
+
+   if( adsRawLock( pArea, uiAction, ulRecNo ) == SUCCESS )
       pLockInfo->fResult = TRUE;
    else
       pLockInfo->fResult = FALSE;
@@ -2094,9 +2160,12 @@ static ERRCODE adsUnLock( ADSAREAP pArea, ULONG lRecNo )
    HB_TRACE(HB_TR_DEBUG, ("adsUnLock(%p, %lu)", pArea, lRecNo));
 
    if( lRecNo == 0 )
-      hb_adsUnLockAllRecords( pArea );
+   {
+      adsRawLock( pArea, FILE_UNLOCK, lRecNo );
+   }
    else
       adsRawLock( pArea, REC_UNLOCK, lRecNo );
+
    return SUCCESS;
 }
 

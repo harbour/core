@@ -1095,7 +1095,10 @@ HB_FUNC( DBAPPEND )
    {
       bUnLockAll = ISLOG( 1 ) ? hb_parl( 1 ) : TRUE;
       s_bNetError = FALSE;
-      SELF_APPEND( ( AREAP ) s_pCurrArea->pArea, bUnLockAll );
+      if( SELF_APPEND( ( AREAP ) s_pCurrArea->pArea, bUnLockAll ) == FAILURE )
+      {
+         s_bNetError = TRUE;           /* Temp fix! What about other types of errors? */
+      }
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBAPPEND" );
@@ -1843,6 +1846,7 @@ HB_FUNC( DBTABLEEXT )
 
 HB_FUNC( DBUNLOCK )
 {
+
    if( s_pCurrArea )
       SELF_UNLOCK( ( AREAP ) s_pCurrArea->pArea, 0 );
    else
@@ -2295,10 +2299,11 @@ HB_FUNC( ORDCONDSET )
       lpdbOrdCondInfo->lRecno      = hb_parnl( 9 );
       lpdbOrdCondInfo->fRest       = hb_parl( 10 );
       lpdbOrdCondInfo->fDescending = hb_parl( 11 );
-      lpdbOrdCondInfo->fAdditive   = hb_parl( 12 );
-      lpdbOrdCondInfo->fUseCurrent = hb_parl( 13 );
-      lpdbOrdCondInfo->fCustom     = hb_parl( 14 );
-      lpdbOrdCondInfo->fNoOptimize = hb_parl( 15 );
+      /* 12th parameter is always nil */
+      lpdbOrdCondInfo->fAdditive   = hb_parl( 13 );
+      lpdbOrdCondInfo->fUseCurrent = hb_parl( 14 );
+      lpdbOrdCondInfo->fCustom     = hb_parl( 15 );
+      lpdbOrdCondInfo->fNoOptimize = hb_parl( 16 );
 
       if( !lpdbOrdCondInfo->itmCobWhile )
          lpdbOrdCondInfo->fRest = TRUE;

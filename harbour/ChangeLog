@@ -1,7 +1,52 @@
+2001-08-20 11:55 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * contrib/rdd_ads/ads1.c
+      * fixed subIndexing.
+      * optimized DBI_GETLOCKARRAY and fixed memory leak
+      * adsOrderListFocus() failed on space-padded strings
+      * adsGoTo: if on same record, refresh. Fixed issues that arose
+         from minor bugs in ADS when using relations in versions
+         prior to 6.1
+      * adsAppend() added error handling
+      * fixed file lock/unlock, and record locking to support
+         dbrlock lock list maintenance (and memory leak when
+         no recno was passed to dbrlock())
+
+   * contrib/rdd_ads/adsfunc.c
+      * adssetServerType now returns any error numbers
+      + added AdsRefreshRecord, AdsIsTableLocked, AdsIsRecordLocked
+
+   * source/rdd/dbcmd.c
+      * Set NetErr flag to True for failed dbAppend()
+      * fixed ordCondSet parameters. See pptable.c below.
+
+   + contrib/libgt/bitflags.c
+      + Dave Pearson's bitflags.c, which I ported to Harbour.
+        Has functions to use a Harbour string for storing On/Off
+        bit flags.
+
+   * contrib/libgt/doc/en/ht_gt.txt
+      + added docs from Dave Pearson's bitflags.c
+
+   * source/pp/pptable.c
+      * Alexander Kresin's fix for 5.3 compatible parameters
+      for INDEX ON and ordCondSet().
+      WARNING! IF you had hard-coded calls to this function,
+      and used any parameters after the 11th one,
+      you have to change your code! Or, if you have a header
+      that translates INDEX ON for clauses USECURRENT, ADDITIVE,
+      CUSTOM or NOOPTIMIZE, these parameters are shifted back
+      now.
+      The parameter list was incorrectly handled before because
+      of the 12th parameter that is always NIL.
+      See Harbour Archives, subject "XINDEX warning" for details
+
+
+
 2001-08-21 06:47 GMT Dave Pearson <davep@davep.org>
   * source/rtl/gtcrs/gtcrs.c
     * Fixed incorrectly named variable (Row -> uRow) in hb_gt_VertLine().
-	
+
 2001-08-21 23:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * include/hbapigt.h
@@ -41,7 +86,7 @@
     *source/compiler/exproptb.c
     *source/compiler/genc.c
     *source/compiler/hbpcode.c
-        * fixed bug in "&macro" and &macro() syntax 
+        * fixed bug in "&macro" and &macro() syntax
 
 2001-08-20 14:02 GMT Dave Pearson <davep@davep.org>
    * config/test.cf

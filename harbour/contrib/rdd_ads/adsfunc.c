@@ -89,12 +89,13 @@ HB_FUNC( ADSSETFILETYPE )
 HB_FUNC( ADSSETSERVERTYPE )
 {
    int servType;
+   UNSIGNED32 ulRetVal = 999999;
    if( hb_pcount() > 0 )
    {
       servType = hb_parni( 1 );
-      if( servType>0 && servType<3 )
-         AdsSetServerType( servType );
+      ulRetVal = AdsSetServerType( servType );
    }
+   hb_retnl( ulRetVal );
 }
 
 HB_FUNC( ADSSETDATEFORMAT  )
@@ -137,13 +138,13 @@ HB_FUNC( ADSISSERVERLOADED )
    UNSIGNED16 pbLoaded = 0;
    UNSIGNED32 ulRetVal;
 
-   hb_retnl( 0 );
    if( ISCHAR( 1 ) )
    {
       ulRetVal = AdsIsServerLoaded( (UNSIGNED8*) hb_parc(1), &pbLoaded);
-      if ( ulRetVal == AE_SUCCESS )
-         hb_retnl( pbLoaded );
+      if ( ulRetVal != AE_SUCCESS )
+         pbLoaded = 0;
    }
+   hb_retnl( pbLoaded );
 }
 
 //HB_FUNC( ADSGETCONNECTIONTYPE )
@@ -168,6 +169,45 @@ HB_FUNC( ADSISSERVERLOADED )
 //   hb_retnl( pusConnectType );
 //}
 
+
+HB_FUNC( ADSISTABLELOCKED )
+{
+   UNSIGNED32 ulRetVal ;
+   UNSIGNED16 pbLocked = FALSE;
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+      ulRetVal = AdsIsTableLocked( pArea->hTable, &pbLocked );
+
+   if( !pArea || ulRetVal != AE_SUCCESS )
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISTABLELOCKED" );
+
+   hb_retl( pbLocked );
+}
+
+HB_FUNC( ADSISRECORDLOCKED )
+{
+   UNSIGNED32 ulRetVal ;
+   UNSIGNED32 ulRec;
+   UNSIGNED16 pbLocked = FALSE;
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+   {
+      if ( ISNUM( 1 ) )
+         ulRec = hb_parnl( 1 );
+      else
+         ulRec = pArea->ulRecNo;
+
+      ulRetVal = AdsIsRecordLocked( pArea->hTable, ulRec, &pbLocked );
+   }
+   if( !pArea || ulRetVal != AE_SUCCESS )
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDLOCKED" );
+
+   hb_retl( pbLocked );
+}
 
 HB_FUNC( ADSLOCKING )
 {
@@ -893,6 +933,17 @@ HB_FUNC( ADSWRITEALLRECORDS )
    hb_retnl( AdsWriteAllRecords() );
 }
 
+HB_FUNC( ADSREFRESHRECORD )
+{
+   ADSAREAP pArea;
+
+   pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
+   if( pArea )
+      AdsRefreshRecord( pArea->hTable );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHRECORD" );
+}
+
 HB_FUNC( ADSCOPYTABLE )
 {
    ADSAREAP pArea;
@@ -1049,3 +1100,5 @@ HB_FUNC( ADSGETCONNECTIONHANDLE )
 {
    hb_retni( adsConnectHandle );
 }
+
+
