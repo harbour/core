@@ -1,3 +1,15 @@
+2001-06-06 15:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * utils/hbmake/fclass1.prg
+  * utils/hbmake/ffile1.prg
+  * utils/hbmake/ft_funcs.prg
+  * utils/hbmake/hbdocdef.ch
+  * utils/hbmake/hbmake.prg
+  * utils/hbmake/radios.prg
+    * Replaced the old Harbour License and Exception with the
+      new Harbour License and Exception, with permission from
+      Luiz Rafael Culik Guimaraes <culik@nh.conex.com.br>
+
 2001-06-06 15:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/tobject.prg
