@@ -3111,10 +3111,14 @@ WORD JumpFalse( int iOffset )
       debug_msg( "\n***---JampFalse()\n", NULL );
 
       if( pStackValType )
+      {
          pStackValType = pStackValType->pPrev;
+      }
 
       if( pFree )
+      {
          OurFree( pFree );
+      }
    }
 
    return functions.pLast->lPCodePos - 2;
@@ -3161,10 +3165,14 @@ WORD JumpTrue( int iOffset )
       debug_msg( "\n***---JampTrue() \n", NULL );
 
       if( pStackValType )
+      {
          pStackValType = pStackValType->pPrev;
+      }
 
       if( pFree )
+      {
          OurFree( pFree );
+      }
    }
 
    return functions.pLast->lPCodePos - 2;
@@ -3264,7 +3272,6 @@ void MessageFix( char * szMsgName )  /* fix a generated message to an object */
 void PopId( char * szVarName ) /* generates the pcode to pop a value from the virtual machine stack onto a variable */
 {
    int iVar;
-   PSTACK_VAL_TYPE pVarType, pFree;
 
    iVar = GetLocalVarPos( szVarName );
    if( iVar )
@@ -3317,7 +3324,9 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
 
       /* compile time variable has to be released */
       if( pVarType )
+      {
          OurFree( pVarType );
+      }
 
       debug_msg( "\n***--- Var at PopId()\n", NULL );
 
@@ -3326,12 +3335,18 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
       debug_msg( "\n***--- Value at PopId()\n", NULL );
 
       if( pStackValType )
+      {
          pStackValType = pStackValType->pPrev;
+      }
       else
+      {
 	 debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
+      }
 
       if( pFree )
+      {
          OurFree( pFree );
+      }
    }
 }
 
@@ -3677,7 +3692,9 @@ void Do( BYTE bParams )
             debug_msg( "\n***Do() Compile time stack overflow\n", NULL );
 
       	 if( pFree )
+         {
       	    OurFree( pFree );
+         }
       }
 
       /* releasing the compile time Nil symbol terminator */
@@ -3689,16 +3706,23 @@ void Do( BYTE bParams )
 	 debug_msg( "\n***Do(2) Compile time stack overflow\n", NULL );
 
       if ( pFree )
+      {
          OurFree( pFree );
+      }
 
       /* releasing the compile time procedure value */
       pFree = pStackValType;
       debug_msg( "\n***---Do() \n", NULL );
 
       if( pStackValType )
+      {
          pStackValType = pStackValType->pPrev;
+      }
+
       if ( pFree )
+      {
          OurFree( pFree );
+      }
    }
 }
 
@@ -3805,7 +3829,9 @@ void Function( BYTE bParams )
 	    debug_msg( "\n***Function() parameter %i Compile time stack overflow\n", i );
 
       	 if( pFree )
+         {
       	    OurFree( pFree );
+         }
       }
 
       /* releasing the compile time Nil symbol terminator */
@@ -3813,10 +3839,14 @@ void Function( BYTE bParams )
       debug_msg( "\n***---NIL at Function()\n", NULL );
 
       if( pStackValType )
+      {
          pStackValType = pStackValType->pPrev;
+      }
 
       if ( pFree )
+      {
          OurFree( pFree );
+      }
    }
 }
 
@@ -3841,7 +3871,9 @@ void GenArray( WORD wElements )
             debug_msg( "\n***GenArray() Compile time stack overflow\n", NULL );
 
 	 if ( pFree )
+         {
 	    OurFree( pFree );
+         }
       }
 
       if( wElements == 0 )
@@ -3896,7 +3928,9 @@ void GenPCode1( BYTE byte )
             debug_msg( "\n***HB_P_ARRAYPUT Compile time stack overflow\n", NULL );
 
          if( pFree )
+         {
       	    OurFree( pFree );
+         }
 
 	 /* Releasing compile time array element index value */
          pFree = pStackValType;
@@ -3908,7 +3942,9 @@ void GenPCode1( BYTE byte )
             debug_msg( "\n***HB_P_ARRAYPUT2 Compile time stack overflow\n", NULL );
 
          if( pFree )
+         {
       	    OurFree( pFree );
+         }
       }
       else if( byte == HB_P_POP || byte == HB_P_RETVALUE || byte == HB_P_FORTEST || byte == HB_P_ARRAYAT )
       {
@@ -3923,7 +3959,9 @@ void GenPCode1( BYTE byte )
             debug_msg( "\n***pCode: %i Compile time stack overflow\n", byte );
 
          if( pFree )
+         {
       	    OurFree( pFree );
+         }
       }
       else if( byte == HB_P_MULT || byte == HB_P_DIVIDE || byte == HB_P_MODULUS || byte == HB_P_POWER || byte == HB_P_NEGATE )
       {
@@ -3964,7 +4002,9 @@ void GenPCode1( BYTE byte )
 
          /* compile time 2nd. operand has to be released */
 	 if( pOperand2 )
+         {
 	    OurFree( pOperand2 );
+         }
 
 	 /* compile time 1st. operand has to be released *but* result will be pushed and assumed numeric type */
 	 pStackValType = pOperand1;
@@ -4007,7 +4047,9 @@ void GenPCode1( BYTE byte )
 
          /* compile time 2nd. operand has to be released */
 	 if( pOperand2 )
+         {
 	    OurFree( pOperand2 );
+         }
 
 	 /* compile time 1st. operand has to be released *but* result will be pushed and type as calculated */
 	 /* Resetting */
@@ -4048,8 +4090,10 @@ void GenPCode1( BYTE byte )
 	    GenWarning( WARN_OPERAND_SUSPECT, sType1, NULL );
 
          /* compile time 2nd. operand has to be released */
-	 if( pOperand2 )
-	    OurFree( pOperand2 );
+         if( pOperand2 )
+         {
+            OurFree( pOperand2 );
+         }
 
 	 /* compile time 1st. operand has to be released *but* result will be pushed and of type logical */
 	 if( pOperand1 )
@@ -4252,8 +4296,6 @@ void CodeBlockEnd()
 
   if( _iWarnings )
   {
-     PSTACK_VAL_TYPE pNewStackType;
-
      if( pStackValType )
      	/* reusing the place holder of the result value */
      	pStackValType->cType = 'B';

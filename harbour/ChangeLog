@@ -1,3 +1,9 @@
+19990621-13:27 CET Victor Szel <info@szelvesz.hu>
+  * source/compiler/harbour.y
+    GCC warning fixed.
+  * source/contrib/genobj.c removed, as
+    suggested by "Antonio Linares" <alinares@fivetech.com>
+
 19990621-13:27 Alexander Kresin
  updated:
  * source\hbpp\hbpp.c
