@@ -138,7 +138,7 @@ PITEM hb_itemArrayNew( ULONG ulLen )
 {
    PITEM pItem = hb_itemNew(0);
 
-   Array(pItem, ulLen);
+   hb_arrayNew(pItem, ulLen);
 
    return pItem;
 }
@@ -147,14 +147,14 @@ PITEM hb_itemArrayGet( PITEM pArray, ULONG ulIndex )
 {
    PITEM pItem = hb_itemNew(0);
 
-   ArrayGet(pArray, ulIndex, pItem);
+   hb_arrayGet(pArray, ulIndex, pItem);
 
    return pItem;
 }
 
 PITEM hb_itemArrayPut( PITEM pArray, ULONG ulIndex, PITEM pItem )
 {
-   ArraySet(pArray, ulIndex, pItem);
+   hb_arraySet(pArray, ulIndex, pItem);
    return pArray;
 }
 
@@ -373,7 +373,7 @@ ULONG hb_itemSize( PITEM pItem )
    {
       switch( pItem->wType )
       {
-         case IT_ARRAY:    return ArrayLen(pItem);
+         case IT_ARRAY:    return hb_arrayLen(pItem);
          case IT_STRING:   return pItem->wLength;
       }
    }

@@ -52,16 +52,16 @@ typedef struct     /* items hold at the virtual machine stack */
    WORD wLength;   /* length of the item */
    WORD wDec;      /* decimal places in a numeric double item */
    union {         /* different things may be holded here */
-      char * szText;   /* string values */
-      int iNumber;     /* int values */
-      long lNumber;    /* long values */
-      double dNumber;  /* double values */
-      int iLogical;    /* logical values */
-      long lDate;      /* date values */
-      PSYMBOL pSymbol; /* functions call symbol */
-      BYTE * pCodeblock;/* pointer to a codeblock structure */
-      WORD wItem;      /* variable by reference, stack offset */
-      void * pBaseArray; /* array base */
+	  char * szText;   /* string values */
+	  int iNumber;     /* int values */
+	  long lNumber;    /* long values */
+	  double dNumber;  /* double values */
+	  int iLogical;    /* logical values */
+	  long lDate;      /* date values */
+	  PSYMBOL pSymbol; /* functions call symbol */
+	  BYTE * pCodeblock;/* pointer to a codeblock structure */
+	  WORD wItem;      /* variable by reference, stack offset */
+	  void * pBaseArray; /* array base */
    } value;
    WORD wBase;     /* stack frame number of items position for a function call */
    WORD wLine;     /* currently processed PRG line number */
@@ -141,14 +141,16 @@ void _xfree( void * pMem );    /* frees memory */
 void ItemCopy( PITEM pDest, PITEM pSource );
 void ItemRelease( PITEM pItem );
 
-void Array( PITEM pItem, ULONG ulLen ); /* creates a new array */
-void ArrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* retrieves an item */
-int  ArrayLen( PITEM pArray ); /* retrives the array len */
-void ArraySet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* sets an array element */
-void ArraySize( PITEM pArray, ULONG ulLen ); /* sets the array total length */
-void ArrayRelease( PITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
-char * ArrayGetString( PITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
-ULONG ArrayGetStringLen( PITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
+void hb_arrayNew( PITEM pItem, ULONG ulLen ); /* creates a new array */
+void hb_arrayGet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* retrieves an item */
+int  hb_arrayLen( PITEM pArray ); /* retrives the array len */
+void hb_arraySet( PITEM pArray, ULONG ulIndex, PITEM pItem ); /* sets an array element */
+void hb_arraySize( PITEM pArray, ULONG ulLen ); /* sets the array total length */
+void hb_arrayRelease( PITEM pArray ); /* releases an array - don't call it - use ItemRelease() !!! */
+char *hb_arrayGetString( PITEM pArray, ULONG ulIndex ); /* retrieves the string contained on an array element */
+ULONG hb_arrayGetStringLen( PITEM pArray, ULONG ulIndex ); /* retrieves the string length contained on an array element */
+int  hb_arrayGetType( PITEM pArray, ULONG ulIndex );
+void hb_arrayDel( PITEM pArray, ULONG ulIndex );
 
 int  hb_itemStrCmp( PITEM pFirst, PITEM pSecond, BOOL bForceExact ); /* our string compare */
 BOOL hb_strempty( char * szText, ULONG ulLen );

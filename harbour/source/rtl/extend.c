@@ -46,7 +46,7 @@ char * _parc( WORD wParam, ... )
       if( IS_ARRAY( pItem ) )
       {
          if( wArrayIndex )
-            return ArrayGetString( pItem, wArrayIndex );
+            return hb_arrayGetString( pItem, wArrayIndex );
          else
             return "";
       }
@@ -76,7 +76,7 @@ ULONG _parclen( WORD wParam, ... )
       if( IS_ARRAY( pItem ) )
       {
          if( wArrayIndex )
-            return ArrayGetStringLen( pItem, wArrayIndex );
+            return hb_arrayGetStringLen( pItem, wArrayIndex );
          else
             return 0;
       }
@@ -265,9 +265,9 @@ int _parinfa( int iParamNum, ULONG uiArrayIndex )
    if( pArray )
    {
       if( ! uiArrayIndex )
-         return ArrayLen( pArray );
+         return hb_arrayLen( pArray );
       else
-         return ArrayGetType( pArray, uiArrayIndex );
+         return hb_arrayGetType( pArray, uiArrayIndex );
    }
    else
       return 0; /* QUESTION: should we raise an error here ? */
@@ -298,7 +298,7 @@ void _ret( void )
 
 void _reta( ULONG ulLen )  /* undocumented _reta() */
 {
-   Array( &stack.Return, ulLen );
+   hb_arrayNew( &stack.Return, ulLen );
 }
 
 void _retc( char * szText )
