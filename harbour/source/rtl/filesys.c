@@ -186,6 +186,11 @@
    #include <sys/wait.h>
 #endif
 
+#if defined( __DJGPP__ )
+   #define _getdrive()   ( getdisk() + 1 )
+   #define _chdrive(n)   setdisk( (n) - 1 )
+#endif
+
 #ifndef O_BINARY
    #define O_BINARY     0       /* O_BINARY not defined on Linux */
 #endif

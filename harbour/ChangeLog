@@ -9,6 +9,14 @@
 */
 
 
+2004-01-13 08:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/include/hbfixdj.h
+    + I missed to add this file in my last commit - it's borrowed from
+      xHarbour.
+  * harbour/source/rtl/filesys.c
+    ! fixed DJGPP compilation I broke
+
+
 2004-01-12 18:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/hbgtmk.sh
   * harbour/make_rpm.sh
