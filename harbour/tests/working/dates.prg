@@ -22,18 +22,18 @@ local cNewLine := CHR( 10 )
    OUTSTD (HB_SETCENTURY ())
    OUTSTD (cNewLine, "")
 
-   OUTSTD (cNewLine,  "dDate = CToD( '02/04/1999' ) => ", dDate := CToD( "02/04/1999" ))
+   OUTSTD (cNewLine,  "dDate = CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" ))
 
-   OUTSTD (cNewLine,  "ValType( dDate ) = ", ValType( dDate ))
+   OUTSTD (cNewLine,  "ValType( dDate ) =", ValType( dDate ))
 
-   OUTSTD (cNewLine,  "Day( dDate ) = ", Day( dDate ))
-   OUTSTD (cNewLine,  "Month( dDate ) = ", Month( dDate ))
-   OUTSTD (cNewLine,  "Year( dDate ) = ", Year( dDate ), cNewLine)
+   OUTSTD (cNewLine,  "Day( dDate ) =", Day( dDate ))
+   OUTSTD (cNewLine,  "Month( dDate ) =", Month( dDate ))
+   OUTSTD (cNewLine,  "Year( dDate ) =", Year( dDate ), cNewLine)
 
-   OUTSTD (cNewLine,  "dDate + 5 = ", dDate2 := dDate + 5)
-   OUTSTD (cNewLine,  "dDate - 5 = ", dDate - 5, cNewLine )
+   OUTSTD (cNewLine,  "dDate + 5 =", dDate2 := dDate + 5)
+   OUTSTD (cNewLine,  "dDate - 5 =", dDate - 5, cNewLine )
 
-   OUTSTD (cNewLine,  "dDate2 - dDate = ", dDate2 - dDate)
+   OUTSTD (cNewLine,  "dDate2 - dDate =", dDate2 - dDate)
    
    OUTSTD (cNewLine, "")
    OUTSTD (cNewLine, dDate, DTOS (dDate))

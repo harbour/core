@@ -35,6 +35,7 @@ HARBOUR __ACCEPT( void ) /* Internal Clipper function used in ACCEPT command  */
 static void hb_outstd( WORD wParam )
 {
    char * szText;
+   PITEM pItem = _param( wParam, IT_ANY );
    ULONG ulLenText;
    char szBuffer [11];
 
@@ -45,7 +46,7 @@ static void hb_outstd( WORD wParam )
            break;
 
       case IT_INTEGER:
-           printf( "%10i", _parni( wParam ) );
+           printf( "%*i", pItem->wLength, pItem->value.iNumber );
            break;
 
       case IT_NIL:
@@ -60,7 +61,7 @@ static void hb_outstd( WORD wParam )
            break;
 
       case IT_LONG:
-           printf( "%10li", _parnl( wParam ) );
+           printf( "%*li", pItem->wLength, pItem->value.iNumber );
            break;
 
       case IT_STRING:
@@ -75,7 +76,10 @@ static void hb_outstd( WORD wParam )
            break;
 
       case IT_DOUBLE:
-           printf( "%14.4f", _parnd( wParam ) );
+           if( pItem->wDec )
+              printf( "%*.*f", pItem->wLength, pItem->wDec, pItem->value.dNumber );
+           else
+              printf( "%*ld", pItem->wLength, (long)pItem->value.dNumber );
            break;
 
       default:

@@ -11,14 +11,41 @@
    #define _OPTIMIZE_DTOS
 #endif
 
+extern STACK stack;
+
 long hb_dateEncode( long lDay, long lMonth, long lYear )
 {
+   BOOL bValid = FALSE;
    long lFactor = ( lMonth < 3 ) ? -1: 0;
 
-   return ( 1461 * ( lFactor + 4800 + lYear ) / 4 ) +
-          ( ( lMonth - 2 - ( lFactor * 12 ) ) * 367 ) / 12 -
-          ( 3 * ( ( lYear + 4900 + lFactor ) / 100 ) / 4 ) +
-          lDay - 32075;
+   /* Perform date validation */
+   if (lMonth >= 1 && lMonth <= 12 && lDay >= 1
+   && lYear >= 1 & lYear <= 2999)
+   {
+      /* Month, year, and lower day limits are simple, 
+         but upper day limit is dependent upon month and leap year */
+      BOOL bLeapYear = FALSE;
+      int aiDayLimit [12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+      if( lYear % 4 == 0 )
+      {
+         /* Check for leap year (every year that is evenly divisible by 4,
+            except for centuries, which must be evenly divisible by 400 */
+         if( lYear % 100 == 0 )
+         {
+            if( lYear % 400 == 0) bLeapYear = TRUE; /* Leap century */
+         }
+         else bLeapYear = TRUE; /* Leap year */
+         
+         if( bLeapYear ) aiDayLimit[ 1 ] = 29;
+      }
+      if( lDay <= (long)aiDayLimit[ (int)lMonth - 1 ] ) bValid = TRUE;
+   }
+   if( bValid )
+      return ( 1461 * ( lFactor + 4800 + lYear ) / 4 ) +
+             ( ( lMonth - 2 - ( lFactor * 12 ) ) * 367 ) / 12 -
+             ( 3 * ( ( lYear + 4900 + lFactor ) / 100 ) / 4 ) +
+             lDay - 32075;
+   else return ( 0 );
 }
 
 void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
@@ -32,14 +59,13 @@ void hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear )
   julian -= ( ( 1461 * X ) / 4 ) - 31;
   V = 80 * julian / 2447;
   U = V / 11;
-  * plDay   = julian - ( 2447 * V / 80 );
-  * plMonth = V + 2 - ( U * 12 );
-  * plYear  = X + U + ( W - 49 ) * 100;
+  if( plDay )   * plDay   = julian - ( 2447 * V / 80 );
+  if( plMonth ) * plMonth = V + 2 - ( U * 12 );
+  if( plYear )  * plYear  = X + U + ( W - 49 ) * 100;
 }
 
 HARBOUR CTOD( void )
 {
-   BOOL bValid = FALSE;
    char * szDate = _parc( 1 );
    int d_value = 0, m_value = 0, y_value = 0;
    int d_pos = 0, m_pos = 0, y_pos = 0;
@@ -114,34 +140,8 @@ HARBOUR CTOD( void )
          else y_value += ((digit * 100) + 100);
       }
    }
-   /* Perform date validation before converting to date */
-   if (szDate && m_value >= 1 && m_value <= 12 && d_value >= 1
-   && y_value >= 0 & y_value <= 2999)
-   {
-      /* Month, year, and lower day limits are easy, 
-         but upper day limit is dependent upon month and leap year */
-      BOOL bLeapYear = FALSE;
-      int d_limit [12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-      if( y_value % 4 == 0 )
-      {
-         /* Check for leap year (every year that is evenly divisible by 4,
-            except for centuries, which must be evenly divisible by 400 */
-         if( y_value % 100 == 0 )
-         {
-            if( y_value % 400 == 0) bLeapYear = TRUE; /* Leap century */
-         }
-         else bLeapYear = TRUE; /* Leap year */
-         
-         if( bLeapYear ) d_limit[ 1 ] = 29;
-      }
-      if( d_value <= d_limit[ m_value - 1 ] ) bValid = TRUE;
-   }
-   if( bValid )
-   {
-      sprintf (szDateFormat, "%04i%02i%02i", y_value, m_value, d_value);
-      _retds( szDateFormat );
-   }
-   else _retds( "" );
+   sprintf (szDateFormat, "%04i%02i%02i", y_value, m_value, d_value);
+   _retds( szDateFormat );
 }
 
 char * hb_dtoc (char * szDate, char * szDateFormat)
@@ -276,9 +276,20 @@ char * hb_dtoc (char * szDate, char * szDateFormat)
    }
    else 
    {
-      /* Not a valid date string, so return a blank date */
-      format_count = size;
-      strncpy( szDateFormat, "          ", format_count );
+      /* Not a valid date string, so return a blank date with separators */
+      format_count = size; /* size is either 8 or 10 */
+      strncpy( szDateFormat, hb_set.HB_SET_DATEFORMAT, size );
+      for (digit_count = 0; digit_count < size; digit_count++)
+         switch (szDateFormat [digit_count])
+         {
+            case 'D':
+            case 'd':
+            case 'M':
+            case 'm':
+            case 'Y':
+            case 'y':
+               szDateFormat [digit_count] = ' ';
+         }
    }
    szDateFormat [format_count] = 0;
    return (szDateFormat);
@@ -339,6 +350,7 @@ HARBOUR DAY( void )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lDay );
+      stack.Return.wLength = 3;
    }
    else
    {
@@ -358,6 +370,7 @@ HARBOUR MONTH( void )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lMonth );
+      stack.Return.wLength = 3;
    }
    else
    {
@@ -377,6 +390,7 @@ HARBOUR YEAR( void )
    {
       hb_dateDecode( pDate->value.lDate, &lDay, &lMonth, &lYear );
       _retni( lYear );
+      stack.Return.wLength = 5;
    }
    else
    {

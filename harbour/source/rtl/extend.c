@@ -106,7 +106,7 @@ char * _pards( WORD wParam, ... )
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
-         return "";
+         return "        ";
 
       else if( IS_DATE( pItem ) && pItem->value.lDate > 0 )
       {
@@ -127,9 +127,9 @@ char * _pards( WORD wParam, ... )
          return stack.szDate; /* this guaranties good behavior when multithreading */
       }
       else
-         return "";
+         return "        ";
    }
-   return "";
+   return "        ";
 }
 
 int _parl( WORD wParam, ... )
@@ -326,10 +326,16 @@ void _retds( char * szDate ) /* szDate must have yyyymmdd format */
 {
    long lDay, lMonth, lYear;
 
-   lDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
-   lMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
-   lYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
-            ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
+   if( szDate && strlen( szDate ) == 8 )
+   {
+      /* Date string has correct length, so attempt to convert */
+      lDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
+      lMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
+      lYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
+               ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
+   }
+   else lDay = lMonth = lYear = 0; /* Date string missing or bad length,
+                                      so force an empty date */
 
    ItemRelease( &stack.Return );
 
@@ -338,17 +344,15 @@ void _retds( char * szDate ) /* szDate must have yyyymmdd format */
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
-   if( szDate && strlen( szDate ) == 8 )
-      stack.Return.value.lDate = hb_dateEncode( lDay, lMonth, lYear );
-   else
-      stack.Return.value.lDate = 0;
+   stack.Return.value.lDate = hb_dateEncode( lDay, lMonth, lYear );
 }
 
 void _retnd( double dNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_DOUBLE;
-   stack.Return.wLength = sizeof( double ); /* QUESTION: Is this correct ? */
+   stack.Return.wLength = 13;
+   stack.Return.wDec    = 2;
    stack.Return.value.dNumber = dNumber;
 }
 
@@ -356,7 +360,8 @@ void _retni( int iNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_INTEGER;
-   stack.Return.wLength = sizeof( int ); /* QUESTION: Is this correct ? */
+   stack.Return.wLength = 10;
+   stack.Return.wDec    = 0;
    stack.Return.value.iNumber = iNumber;
 }
 
@@ -364,7 +369,7 @@ void _retl( int iTrueFalse )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_LOGICAL;
-   stack.Return.wLength = 1; /* QUESTION: Is this correct ? */
+   stack.Return.wLength = 3;
    stack.Return.value.iLogical = iTrueFalse;
 }
 
@@ -372,7 +377,8 @@ void _retnl( long lNumber )
 {
    ItemRelease( &stack.Return );
    stack.Return.wType   = IT_LONG;
-   stack.Return.wLength = sizeof( LONG ); /* QUESTION: Is this correct ? */
+   stack.Return.wLength = 10;
+   stack.Return.wDec    = 0;
    stack.Return.value.lNumber = lNumber;
 }
 
@@ -446,10 +452,16 @@ void _stords( char * szDate, WORD wParam, ... ) /* szDate must have yyyymmdd for
    WORD wArrayIndex = 0;
    long lDay, lMonth, lYear;
 
-   lDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
-   lMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
-   lYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
-            ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
+   if( szDate && strlen( szDate ) == 8 )
+   {
+      /* Date string is valid length, so attempt conversion */
+      lDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
+      lMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
+      lYear  = ( ( szDate[ 0 ] - '0' ) * 1000 ) + ( ( szDate[ 1 ] - '0' ) * 100 ) +
+               ( ( szDate[ 2 ] - '0' ) * 10 ) + ( szDate[ 3 ] - '0' );
+   }
+   else lDay = lMonth = lYear = 0; /* Date string missing or bad length,
+                                      so force an empty date */
 
    va_start( va, wParam );
    wArrayIndex = va_arg( va, int );
@@ -496,6 +508,7 @@ void _storl( int iLogical, WORD wParam, ... )
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
          pItemRef->wType = IT_LOGICAL;
+         pItemRef->wLength = 3;
          pItemRef->value.iLogical = iLogical;
       }
    }
@@ -523,7 +536,9 @@ void _storni( int iValue, WORD wParam, ... )
       {
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_INTEGER;
+         pItemRef->wType   = IT_INTEGER;
+         pItemRef->wLength = 10;
+         pItemRef->wDec    = 0;
          pItemRef->value.iNumber = iValue;
       }
    }
@@ -551,7 +566,9 @@ void _stornl( long lValue, WORD wParam, ... )
       {
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_LONG;
+         pItemRef->wType   = IT_LONG;
+         pItemRef->wLength = 10;
+         pItemRef->wDec    = 0;
          pItemRef->value.lNumber = lValue;
       }
    }
@@ -579,7 +596,9 @@ void _stornd( double dValue, WORD wParam, ... )
       {
          pItemRef = stack.pItems + pItem->value.wItem;
          ItemRelease( pItemRef );
-         pItemRef->wType = IT_DOUBLE;
+         pItemRef->wType   = IT_DOUBLE;
+         pItemRef->wLength = 13;
+         pItemRef->wDec    = 2;
          pItemRef->value.dNumber = dValue;
       }
    }

@@ -1,3 +1,26 @@
+19990518-17:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/console.c
+    - Use pItem->wLength and pItem->wDec when printing numbers.
+  * source/rtl/dates.c
+    - Moved date validation to hb_dateEncode function.
+    - hb_dtoc now puts date separators in an empty date.
+    - DAY function now sets stack.Return.wLength to 3.
+    - MONTH function now sets stack.Return.wLength to 3.
+    - YEAR function now sets stack.Return.wLength to 5.
+  * source/rtl/extend.c
+    - Set stack.Return.wLength and stack.Return.wDec for numbers.
+    - _retds() now returns 8 spaces for invalid dates.
+  * source/rtl/math.c
+    - ABS returns same numeric type as parameter.
+    - INT returns same numeric type as parameter, but for IT_DOUBLE, the
+      value is truncated, wLength is set to 10, and wDec is set to 0.
+  * tests/working/dates.prg
+    - Removed trailing spaces in strings in OUTSDT calls with multiple items,
+      because OUTSTD provides a leading space for all items but the first.
+  * tests/working/mathtest.prg
+    - Added QOUT(454.14) and QOUT(INT(454)) to debug INT problem with
+      Borland C++ 3.1, which lead to change to INT in source/rtl/math.c
+
 19990518-15:20 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/set.c
     - Fixed memory leak in HB_SETCENTURY
