@@ -1,0 +1,102 @@
+Message: 18   Date: Fri, 14 May 1999 20:14:57 -0600
+   From: "Bil Simser" <bsimser@xxxx.xxxx
+Subject: gt API for DOS, Windows and OS/2
+
+I'm finally done and none the sooner. Attached you'll find my
+implementation of the gt API functions for Harbour.
+
+gt API functions
+----------------
+Using the gt API requires two steps.
+The gt API interface is kept in gtapi.c. This houses the gt API and
+does not have any platform or compiler specific information. This file
+should (read:will) never change except to add new _gt functions. This
+file will be used by Harbour or Harbour functions and must be linked
+into the RTL.
+
+The second step requires you to link in your platform specific
+implementation of the _gt functions. These are functions named with
+gtxxxxxx convention and are called by the _gt functions in gtapi.c.
+I've provided the following files to implement the console functions:
+
+gtdos.c - DOS implemenation
+gtwin.c - Windows 95/NT implementation
+gtos2.c - OS/2 implementation
+gtxxx.c - Generic template for implementation
+
+If you wish to port the gt functions to another platform, just take the
+gtxxx.c and populate it with calls to your OSes functions. Call the file
+something appropriate (gtmac.c, gtnext.c or whatever) and add it to
+that platforms makefile.
+
+The API supports a dozen or so compilers on three platforms. You only
+have to change the gtxxx.c files to implement your platform.
+
+The API needs to be initialized for Windows to setup the Input and Output
+handles. These are done in _gtInit() and should always be called. Not sure
+how this will be implemented (if at all) into Harbour but it needs to happen
+or else you won't see any output under Windows.
+
+There's a test section at the end of gtapi.c. I didn't want to keep
+rebuilding
+
+Harbour to build a PRG test and PRGs shouldn't call the _gt functions
+directly anyway. Just compile gtapi.c alone with a #define of TEST to see
+the output (or build a PRG test if you want).
+
+You must include gtapi.c and one of the platform implementation files
+to compile sucessfully!
+
+There are exceptions for various compilers in the platform implementation
+files so if you're using a compiler that doesn't support certain routines
+or syntax just stick in your changes and surround it with an
+#if defined(__XXX__) call.
+
+This is a complete set of gt functions as defined by Clipper. That is
+there are no new _gt functions added. But this is not a complete
+implementation. I do not know what _gtBegin or _gtEnd will do for
+instance. Yes, they buffer the display but what does that really mean
+under the covers? Perhaps someone needs to implement a screen buffer
+to write to in order to achive this but the issue that immediately comes
+to mind is how to initialize the size of this buffer?
+
+The files are attached but I will NOT be checking them into cvs for the
+following reasons:
+
+1. There is already a gtapi.c file and under no circumstances will I ever
+overwrite someones code. If the author wants to remove his file and check
+this in then be my guest.
+
+2. This is my vision of how "I" think the gt API should be implemented.
+Perhaps it isn't Antonio's or anyone elses so review it and if you feel
+that it deserves being put into Harbour I'll leave that up to you.
+
+TODO:
+The following functions are not implemented in gtapi.c:
+_gtPostExt
+_gtPreExt
+_gtScroll
+_gtSetBlink
+_gtSetMode
+
+The following functions don't work in gtapi.c:
+_gtSave
+_gtRestore
+
+You get garbage on the screen in DOS mode. Two Harbour functions are
+included in the gtapi.c file, ROW() and COL() to get started.
+
+You also may notice that I didn't include any NanFor document headers or
+even any cvs macros. The jury is still out on that so I'll leave that to the
+reader.
+
+I release this to anyone who wants it. If you feel you don't like the
+implementation and want to pursue a different approach, please do.
+By not checking this in I'm not forcing anyone to use it.
+If however you do feel it's a good start
+(or a better start than what we have)
+the please check it in and start writing those other terminal functions
+(DEVPOS, etc.)
+
+By: Bil
+
