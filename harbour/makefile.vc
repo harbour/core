@@ -15,6 +15,7 @@
 
 COMPILER_DIR=source\compiler
 RTL_DIR=source\rtl
+TOOLS_DIR=source\tools
 VM_DIR=source\vm
 INCLUDE_DIR=include
 BIN_DIR=bin
@@ -27,7 +28,7 @@ OBJ_DIR=obj
 
 CC=cl
 CFLAGS=-w -I$(INCLUDE_DIR)
-CLIBFLAGS=$(CFLAGS) -c
+CLIBFLAGS=$(CFLAGS) -c -Zi /TP
 
 #
 # Macros to access our library names
@@ -43,46 +44,74 @@ HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 #
 
 HARBOUR_LIB_OBJS = \
-    $(OBJ_DIR)\arrays.obj
+    $(OBJ_DIR)\arrays.obj \
+    $(OBJ_DIR)\asort.obj \
     $(OBJ_DIR)\classes.obj \
     $(OBJ_DIR)\codebloc.obj \
     $(OBJ_DIR)\console.obj \
-    $(OBJ_DIR)\dates.obj \
     $(OBJ_DIR)\descend.obj \
+    $(OBJ_DIR)\dates.obj \
+    $(OBJ_DIR)\dir.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
     $(OBJ_DIR)\error.obj \
     $(OBJ_DIR)\errorapi.obj \
     $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
+    $(OBJ_DIR)\files.obj \
+    $(OBJ_DIR)\gtapi.obj \
     $(OBJ_DIR)\hardcr.obj \
+    $(OBJ_DIR)\hvm.obj \
     $(OBJ_DIR)\initsymb.obj \
     $(OBJ_DIR)\itemapi.obj \
     $(OBJ_DIR)\math.obj \
+    $(OBJ_DIR)\msguk.obj \
     $(OBJ_DIR)\mtran.obj \
+    $(OBJ_DIR)\objfunc.obj \
     $(OBJ_DIR)\set.obj \
-    $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\strcmp.obj \
+    $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\tclass.obj \
-    $(OBJ_DIR)\transform.obj
+    $(OBJ_DIR)\transfrm.obj
 
 #
 # OBJ list for hbtools.lib. Add new ones as needed
 #
 
 TOOLS_LIB_OBJS = \
+    $(OBJ_DIR)\asciisum.obj \
+    $(OBJ_DIR)\ascpos.obj \
+    $(OBJ_DIR)\atdiff.obj \
+    $(OBJ_DIR)\chareven.obj \
+    $(OBJ_DIR)\charmix.obj \
+    $(OBJ_DIR)\charodd.obj \
+    $(OBJ_DIR)\chrcount.obj \
+    $(OBJ_DIR)\chrfirst.obj \
+    $(OBJ_DIR)\chrtotal.obj \
     $(OBJ_DIR)\debug.obj \
     $(OBJ_DIR)\genobj.obj \
+    $(OBJ_DIR)\hb_f.obj \
+    $(OBJ_DIR)\io.obj \
     $(OBJ_DIR)\mathx.obj \
+    $(OBJ_DIR)\strasint.obj \
+    $(OBJ_DIR)\strcount.obj \
+    $(OBJ_DIR)\strcspn.obj \
+    $(OBJ_DIR)\strdiff.obj \
+    $(OBJ_DIR)\strexpan.obj \
+    $(OBJ_DIR)\stringp.obj \
     $(OBJ_DIR)\stringsx.obj \
-    $(OBJ_DIR)\datesx.obj
+    $(OBJ_DIR)\strleft.obj \
+    $(OBJ_DIR)\strpbrk.obj \
+    $(OBJ_DIR)\strright.obj
 
 #
 # OBJ list for terminal.lib. Add new ones as needed
 #
 
 TERMINAL_LIB_OBJS = \
-    $(OBJ_DIR)\console.obj
+    $(OBJ_DIR)\console.obj \
+    $(OBJ_DIR)\gtapi.obj \
+    $(OBJ_DIR)\gtwin.obj
 
 #
 # Our default target
@@ -116,11 +145,11 @@ $(TERMINAL_LIB) : $(TERMINAL_LIB_OBJS)
 # Compiler source depencies and build rules
 #
 
-$(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
-    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\harboury.c
-
-$(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
-    flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
+#$(COMPILER_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+#    bison -d -v $(COMPILER_DIR)\harbour.y -o$(COMPILER_DIR)\harboury.c
+#
+#$(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
+#    flex -i -o$(COMPILER_DIR)\harbourl.c $(COMPILER_DIR)\harbour.l
 
 #
 # RTL source depencies below. Add as needed
@@ -129,7 +158,7 @@ $(COMPILER_DIR)\harbourl.c : $(COMPILER_DIR)\harbour.l
 $(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
+$(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
@@ -147,13 +176,10 @@ $(OBJ_DIR)\dates.obj : $(RTL_DIR)\dates.c
 $(OBJ_DIR)\descend.obj : $(RTL_DIR)\descend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\dynsym.obj : $(RTL_DIR)\dynsym.c
+$(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
-$(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
@@ -162,10 +188,19 @@ $(OBJ_DIR)\errorapi.obj : $(RTL_DIR)\errorapi.c
 $(OBJ_DIR)\errorsys.obj : $(RTL_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\error.obj : $(RTL_DIR)\error.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\initsymb.obj : $(RTL_DIR)\initsymb.c
+$(OBJ_DIR)\files.obj : $(RTL_DIR)\files.c
+    $(CC) $(CLIBFLAGS) /TC -Fo$@ $**
+
+$(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\hardcr.obj : $(RTL_DIR)\hardcr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
@@ -174,35 +209,122 @@ $(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
 $(OBJ_DIR)\math.obj : $(RTL_DIR)\math.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
+$(OBJ_DIR)\msguk.obj : $(RTL_DIR)\natmsg\msguk.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
+$(OBJ_DIR)\mtran.obj : $(RTL_DIR)\mtran.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\objfunc.obj : $(RTL_DIR)\objfunc.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\set.obj : $(RTL_DIR)\set.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\strcmp.obj : $(RTL_DIR)\strcmp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
+$(OBJ_DIR)\strings.obj : $(RTL_DIR)\strings.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\stringp.obj : $(RTL_DIR)\stringp.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\transform.obj : $(RTL_DIR)\transform.c
+$(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\debug.obj : $(RTL_DIR)\debug.c
+$(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gt\gtwin.c
+    $(CC) $(CLIBFLAGS) /TC -Fo$@ $**
+
+#
+# VM source depencies below. Add as needed
+#
+
+$(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\genobj.obj : $(RTL_DIR)\genobj.c
+$(OBJ_DIR)\hvm.obj : $(VM_DIR)\hvm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\mathx.obj : $(RTL_DIR)\mathx.c
+$(OBJ_DIR)\initsymb.obj : $(VM_DIR)\initsymb.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\stringsx.obj : $(RTL_DIR)\stringsx.c
+#
+# TOOLS source depencies below. Add as needed
+#
+
+$(OBJ_DIR)\asciisum.obj : $(TOOLS_DIR)\asciisum.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\datesx.obj : $(RTL_DIR)\datesx.c
+$(OBJ_DIR)\ascpos.obj : $(TOOLS_DIR)\ascpos.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
+$(OBJ_DIR)\atdiff.obj : $(TOOLS_DIR)\atdiff.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\chareven.obj : $(TOOLS_DIR)\chareven.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\charmix.obj : $(TOOLS_DIR)\charmix.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\charodd.obj : $(TOOLS_DIR)\charodd.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\chrcount.obj : $(TOOLS_DIR)\chrcount.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\chrfirst.obj : $(TOOLS_DIR)\chrfirst.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\chrtotal.obj : $(TOOLS_DIR)\chrtotal.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\debug.obj : $(TOOLS_DIR)\debug.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\genobj.obj : $(TOOLS_DIR)\genobj.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\hb_f.obj : $(TOOLS_DIR)\hb_f.c
+    $(CC) $(CLIBFLAGS) /TC -Fo$@ $**
+
+$(OBJ_DIR)\io.obj : $(TOOLS_DIR)\io.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\mathx.obj : $(TOOLS_DIR)\mathx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strasint.obj : $(TOOLS_DIR)\strasint.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strcount.obj : $(TOOLS_DIR)\strcount.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strcspn.obj : $(TOOLS_DIR)\strcspn.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strdiff.obj : $(TOOLS_DIR)\strdiff.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strexpan.obj : $(TOOLS_DIR)\strexpan.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\stringsx.obj : $(TOOLS_DIR)\stringsx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strleft.obj : $(TOOLS_DIR)\strleft.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+

@@ -62,6 +62,8 @@ PSYMBOL NewSymbol( char * szName )      /* Create a new symbol */
    pSymbol->szName = ( char * ) _xgrab( strlen( szName ) + 1 );
    pSymbol->cScope = SYM_ALLOCATED; /* to know what symbols to release when exiting the app */
    strcpy( pSymbol->szName, szName );
+   pSymbol->pFunPtr = NULL;
+   pSymbol->pDynSym = NULL;
 
    return pSymbol;
 }

@@ -1,3 +1,12 @@
+19990616-21:15 CET Matteo Baccan
+  * makefile.vc
+    correct updated version added
+  * source/vm/dynsym.c
+    NULL pointer assignment added
+  * source/rtl/environ.c
+    _WIN32 define added
+
+
 19990616-13:45 EDT David G. Holm <dholm@jsd-llc.com>
   * source/hbpp/hbppint.c
     - Added extern declaration for strocpy()

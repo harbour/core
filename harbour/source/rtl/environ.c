@@ -72,7 +72,7 @@ HARBOUR HB_OS(void)
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(__MSC__)
 
-#if defined(_Windows)
+#if defined(_Windows) || defined(_WIN32)
    /* TODO: Determine the Windows type (32s/95/98/NT) and version */
    hb_os = "Windows";
 #else
