@@ -94,8 +94,8 @@ METHOD New() CLASS TDbMenu
    ::nRight       := 0
    ::aItems       := {}
    ::cClrPopup    := __DbgColors()[  8 ]
-   ::cClrHotKey   := __DbgColors()[ 10 ]
-   ::cClrHilite   := __DbgColors()[ 11 ]
+   ::cClrHotKey   := __DbgColors()[  9 ]
+   ::cClrHilite   := __DbgColors()[ 10 ]
    ::cClrHotFocus := __DbgColors()[ 11 ]
    ::nOpenPopup   := 0
 

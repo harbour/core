@@ -92,14 +92,15 @@ Local owndsets
 
    if (nsize<maxrow()-2)
       if nRow <> nil
-         owndsets:=TDbWindow():New( nRow, 5, if(nRow+nsize+1<maxrow()-2,nRow+nsize+1,maxrow()-2), maxcol()-5, ::objname +" is of class:" +::TheObj:classname() ,"N/W" )
+         owndsets:=TDbWindow():New( nRow, 5, if(nRow+nsize+1<maxrow()-2,nRow+nsize+1,maxrow()-2), maxcol()-5, ::objname +" is of class: " +::TheObj:classname() ,"N/W" )
       else
-         owndsets:=TDbWindow():New( 1, 5, 1+nsize, maxcol()-5, ::objname +" is of class:" +::TheObj:classname()  ,"N/W")
+         owndsets:=TDbWindow():New( 1, 5, 2+nsize, maxcol()-5, ::objname +" is of class: " +::TheObj:classname()  ,"N/W")
       endif
    else
-      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::objname +" is of class:" +::TheObj:classname() ,"N/W")
+      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::objname +" is of class: " +::TheObj:classname() ,"N/W")
    endif
-                  ::nCurWindow++
+
+   ::nCurWindow++
    oWndSets:lFocused:=.t.
    aadd(::aWindows,owndsets)
 
@@ -119,7 +120,13 @@ Local owndsets
    ocol:width := nMaxElem
    ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze:=1
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "" ,{ || If( ::ArrayReference[ ::arrayIndex, 2 ] != "Method", PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ), nWidth  - 12 ), "Method" ) } ) )
+
+   oBrwSets:AddColumn( ocol:=TBColumnNew( "", { || If( ValType( ;
+   ::ArrayReference[ ::ArrayIndex, 2 ] ) == "C" .and. ;
+   ::ArrayReference[ ::ArrayIndex, 2 ] == "Method",;
+   "Method", PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ),;
+   nWidth  - 12 ) ) } ) )
+
    oBrwSets:Cargo := 1 // Actual highligthed row
    ocol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    ocol:width:= MaxCol() - 14 - nMaxElem
@@ -127,7 +134,7 @@ Local owndsets
    ::aWindows[::nCurWindow]:bPainted    := { || oBrwSets:ForceStable() }
    ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
                             ::aWindows[::nCurWindow],::objname ,Len(::Arrayreference),::pitems) }
-   ::aWindows[::nCurwindow]:cCaption := ::objname +" is of class:" +::TheObj:classname()
+   ::aWindows[::nCurwindow]:cCaption := ::objname +" is of class: " +::TheObj:classname()
 
    SetCursor( SC_NONE )
    ::aWindows[::nCurWindow]:ShowModal()
