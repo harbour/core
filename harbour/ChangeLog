@@ -7,6 +7,21 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! fixed columns footing handling
+   * source/rtl/tbcolumn.prg
+     ! fixed columns footing handling
+
+2002-02-18 10:42 UTC+0200 Chen Kedem <niki@actcom.co.il>
+
+       Ex: 
+     + AT() : Add note about Harbour extension in the $COMPLIANCE$ section
+     ! Minor samples corrections
+     * Line formating
+
+   * doc/en/dir.txt
+       This allows that the string-number conversions are same for program 
+   * doc/en/misc.txt
+   * doc/en/rdddb.txt
    * doc/en/terminal.txt
    * doc/en/tlabel.txt
    * doc/en/treport.txt
