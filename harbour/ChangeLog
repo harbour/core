@@ -1,3 +1,9 @@
+19990730-13:00 EDT Paul Tucker <ptucker@sympatico.ca>
+   * as submitted by Matteo Baccan
+   * makefile.vc
+     + added missing dates2 to tools.lib
+     * corrected output of dbfntx?.obj
+
 19990730-15:33 CET Victor Szel <info@szelvesz.hu>
    + source/rtl/descend.c
      source/rtl/hardcr.c
@@ -20,12 +26,12 @@
    ! source/hbpp/hbppmain.c - Definition of pFileName
      changed scope and name to _pFileName, so that
      OpenInclude() can use it. (not tested)
-   ! source/rtl/alert.prg - 
+   ! source/rtl/alert.prg -
      Added left out original author info.
      Added missing #includes.
    ! source/rtl/Makefile - Added alert.prg
    ! source/rdd/Makefile - Added new RDD stuff.
-   ! source/hbpp/preproc.c/HB_PREPROCESS() 
+   ! source/hbpp/preproc.c/HB_PREPROCESS()
      Fixed unterminated result string problem.
      Fixed return value inconsistencies.
      Fixed to not use internals.
@@ -1271,7 +1277,7 @@ Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      +added 'PushFunCall' function to push the name of function. This
       function checks if passed name is an abbreviation of reserved
       function. If the abbreviation is used then the full name is pushed.
-     
+
 19990719-18:33 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
      * enhanced methods amount meanwhile DictRealloc() is built.
@@ -1283,7 +1289,7 @@ Wed Jul 21 15:36:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/compiler/harbour.y
      -removed call for non ANSI C 'stricmp'
      *changed to support abbreviated functions' names
-     
+
 19990719-11:40 EDT Paul Tucker <ptucker@sympatico.ca>
     *source/rtl/gtapi.c
      * Changed call in hb_gtinit() to pass the
@@ -1509,7 +1515,7 @@ Fri Jul 16 17:53:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 	possible for me to find out what was wrong with GTwin (which is,
 	noone was calling gtInit()).
 	
-	* source/rtl/console.c: 
+	* source/rtl/console.c:
 	Call gtInit() as the first console initialization. This finally
 	made it possible to have a working GT on Win32 with gcc (it should
 	work with other compilers too).
@@ -1517,7 +1523,7 @@ Fri Jul 16 17:53:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19990716-20:43 Alexander Kresin
   * source\hbpp\hbpp.c
     * Problem with C++ Builder resolved
-    
+
 19990716-18:10 CET Eddie Runia <eddie@runia.com>
   + tests/working/clasname.prg
     Test program for clasname implemented. Warning : Just a partial

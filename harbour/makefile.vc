@@ -97,6 +97,7 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\chrcount.obj \
     $(OBJ_DIR)\chrfirst.obj \
     $(OBJ_DIR)\chrtotal.obj \
+    $(OBJ_DIR)\dates2.obj \
     $(OBJ_DIR)\datesx.obj \
     $(OBJ_DIR)\debug.obj \
     $(OBJ_DIR)\hb_f.obj \
@@ -452,9 +453,9 @@ $(OBJ_DIR)\delim1.obj : $(RDD_DIR)\delim1.c
 $(RDD_DIR)\dbfntx\dbfntx0.c : $(RDD_DIR)\dbfntx\dbfntx0.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(**D) $** -n
 
-$(OBJ_DIR)\dbfntx\dbfntx0.obj : $(RDD_DIR)\dbfntx\dbfntx0.c
+$(OBJ_DIR)\dbfntx0.obj : $(RDD_DIR)\dbfntx\dbfntx0.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\dbfntx\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
+$(OBJ_DIR)\dbfntx1.obj : $(RDD_DIR)\dbfntx\dbfntx1.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
