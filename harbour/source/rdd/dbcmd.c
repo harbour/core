@@ -2822,9 +2822,9 @@ HB_FUNC( ORDLISTADD )
             SELF_ORDLSTFOCUS( ( AREAP ) s_pCurrArea->pArea, &pOrderInfo );
             hb_itemRelease( pOrderInfo.itmOrder );
             SELF_GOTOP( ( AREAP ) s_pCurrArea->pArea );
-         }
-         hb_itemRelease( pOrderInfo.itmResult );
+         }        
       }
+      hb_itemRelease( pOrderInfo.itmResult );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDLISTADD" );

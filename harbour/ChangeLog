@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-20 12:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/dbcmd.c
+    ! Fixed a small bug in ordListAdd() function - there was a memory leak if
+      the index name is wrong.
+
 2004-10-20 09:41 UTC+0200 Chen Kedem <niki@actcom.co.il>
    * makefile.bc
      + Add the missing Greek language and codepage files
