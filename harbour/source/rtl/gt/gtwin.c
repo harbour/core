@@ -81,7 +81,7 @@ char hb_gt_GetScreenWidth(void)
 
   LOG("GetScreenWidth");
   GetConsoleScreenBufferInfo(HOutput, &csbi);
-  return (char)csbi.dwSize.X;
+  return (char)csbi.dwMaximumWindowSize.X;
 }
 
 char hb_gt_GetScreenHeight(void)
@@ -90,7 +90,7 @@ char hb_gt_GetScreenHeight(void)
 
   LOG("GetScreenHeight");
   GetConsoleScreenBufferInfo(HOutput, &csbi);
-  return (char)csbi.dwSize.Y;
+  return (char)csbi.dwMaximumWindowSize.Y;
 }
 
 void hb_gt_SetPos(char cRow, char cCol)
