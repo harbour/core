@@ -1,3 +1,14 @@
+2001-06-12 11:59 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * contrib/rdd_ads/ads1.c
+      * fixed subIndexing.
+
+   * source/rdd/dbcmd.c
+      * Fixed __dbLocate.
+         When it skipped to EOF, it didn't exit immediately and
+         evaluated the FOR condition on the phantom record. If it passed that
+         test, Found() was set to True even at EOF!
+
 2001-06-12 19:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/net.c

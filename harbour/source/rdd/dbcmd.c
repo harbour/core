@@ -1388,12 +1388,13 @@ HB_FUNC( __DBLOCATE )
       return;
    }
 
+   ( ( AREAP ) s_pCurrArea->pArea )->fFound = FALSE;
    memset( &pScopeInfo, 0, sizeof( DBSCOPEINFO ) );
-   pFor = hb_param( 1, HB_IT_BLOCK );
-   pWhile = hb_param( 2, HB_IT_BLOCK );
-   pNext = hb_param( 3, HB_IT_NUMERIC );
-   pRecord = hb_param( 4, HB_IT_NUMERIC );
-   pRest = hb_param( 5, HB_IT_LOGICAL );
+   pFor     = hb_param( 1, HB_IT_BLOCK );
+   pWhile   = hb_param( 2, HB_IT_BLOCK );
+   pNext    = hb_param( 3, HB_IT_NUMERIC );
+   pRecord  = hb_param( 4, HB_IT_NUMERIC );
+   pRest    = hb_param( 5, HB_IT_LOGICAL );
    pNewRest = NULL;
    if( pWhile )
    {
@@ -1445,14 +1446,19 @@ HB_FUNC( __DBLOCATE )
       while( !( ( AREAP ) s_pCurrArea->pArea )->fEof && lNext-- > 0 && bWhile && !bFor )
       {
          SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
-         if( hb_itemType( pWhile ) == HB_IT_BLOCK )
-            bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
+         if( ( ( AREAP ) s_pCurrArea->pArea )->fEof  )
+            bFor = FALSE;
          else
-            bWhile = TRUE;
-         if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
-            bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
-         else
-            bFor = hb_itemGetL( pNewFor );
+         {
+            if( hb_itemType( pWhile ) == HB_IT_BLOCK )
+               bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
+            else
+               bWhile = TRUE;
+            if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
+               bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
+            else
+               bFor = hb_itemGetL( pNewFor );
+         }
       }
       ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }
@@ -1471,14 +1477,19 @@ HB_FUNC( __DBLOCATE )
       while( !( ( AREAP ) s_pCurrArea->pArea )->fEof && bWhile && !bFor )
       {
          SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
-         if( hb_itemType( pWhile ) == HB_IT_BLOCK )
-            bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
+         if( ( ( AREAP ) s_pCurrArea->pArea )->fEof  )
+            bFor = FALSE;
          else
-            bWhile = TRUE;
-         if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
-            bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
-         else
-            bFor = hb_itemGetL( pNewFor );
+         {
+            if( hb_itemType( pWhile ) == HB_IT_BLOCK )
+               bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
+            else
+               bWhile = TRUE;
+            if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
+               bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
+            else
+               bFor = hb_itemGetL( pNewFor );
+         }
       }
       ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }
@@ -1494,10 +1505,15 @@ HB_FUNC( __DBLOCATE )
       while( !( ( AREAP ) s_pCurrArea->pArea )->fEof && !bFor )
       {
          SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
-         if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
-            bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
+         if( ( ( AREAP ) s_pCurrArea->pArea )->fEof  )
+            bFor = FALSE;
          else
-            bFor = hb_itemGetL( pNewFor );
+         {
+            if( hb_itemType( pNewFor ) == HB_IT_BLOCK )
+               bFor = hb_itemGetL( hb_vmEvalBlock( pNewFor ) );
+            else
+               bFor = hb_itemGetL( pNewFor );
+         }
       }
       ( ( AREAP ) s_pCurrArea->pArea )->fFound = bFor;
    }

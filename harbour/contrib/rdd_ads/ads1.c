@@ -1479,6 +1479,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    PHB_ITEM   pExprItem = pOrderInfo->abExpr;
    UNSIGNED16 pus16     = 0;
    UNSIGNED8  pucWhile[ (ADS_MAX_KEY_LENGTH * 2) + 3 ];
+   UNSIGNED16 pusLen   = ADS_MAX_KEY_LENGTH;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOrderCreate(%p, %p)", pArea, pOrderInfo));
 
@@ -1508,7 +1509,8 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
             secondary bags before creating temp indexes with USECURRENT
          */
          AdsGetKeyType(pArea->hOrdCurrent, &pus16);
-         strcpy(pucWhile, (UCHAR*)hb_itemGetCPtr( pExprItem ) );
+         AdsGetIndexExpr( pArea->hOrdCurrent, pucWhile, &pusLen);
+         pucWhile[pusLen] = 0;
          if ( pus16 == ADS_STRING )     /* add quotation marks around the key */
          {
             strcat(pucWhile, "<=\"");
