@@ -284,7 +284,7 @@ extern int    hb_inkeyNext( HB_inkey_enum event_mask );           /* Return the 
 extern void   hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern void   hb_inkeyReset( BOOL allocate ); /* Reset the Harbour keyboard buffer */
 extern int    hb_inkeyTranslate( int key, HB_inkey_enum event_make ); /* Translation extended codes to normal codes, if needed */
-extern void	  hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
+extern void   hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
 
 /* Mouse related declarations */
 

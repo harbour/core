@@ -2231,7 +2231,7 @@ HB_FUNC( FIELDPUT )
    if( s_pCurrArea && uiIndex )
    {
       pItem = hb_param( 2, HB_IT_ANY );
-      if( SELF_PUTVALUE( ( AREAP ) s_pCurrArea->pArea, uiIndex, pItem ) == SUCCESS )
+      if( ! HB_IS_NIL( pItem ) && ( SELF_PUTVALUE( ( AREAP ) s_pCurrArea->pArea, uiIndex, pItem ) == SUCCESS ) )
          hb_itemReturn( pItem );
    }
 }
