@@ -1,5 +1,13 @@
 20000522-09:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
+   * contrib/hbclip.ch
+     ! Updated to reflect latest sysntax.
+
+   * tests/testwarn.ch
+     ! Updated translate segment to reflect latest sysntax.
+
+20000522-09:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
    * include/hbextern.ch
      + Added HB_STRUCTURE to list of Externals
 
