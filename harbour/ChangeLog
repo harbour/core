@@ -1,3 +1,10 @@
+19990815-19:59 GMT+3 Alexander Kresin
+  * source/rtl/tbrowse.prg
+  * tests/working/testbrw.prg
+    * added functionality - some methods implemented, added support of
+      footing, head separator, footer separator, freeze.
+      Now it seems almost complete.
+    
 19990815-17:40 GMT+1 Victor Szel <info@szelvesz.hu>
   * bldodbc.bat
     hbodbc.b32
