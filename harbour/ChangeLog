@@ -1,3 +1,7 @@
+19991026-09:43 GMT+3 Alexander Kresin
+  * source/pp/hbpp.c
+    * Fixed bugs, reported by Antonio Linares and Victor Szel
+
 19991025-23:35 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/filesys.c
      * add casts on xgrab/free

@@ -91,6 +91,7 @@ int pp_RdStr(FILE*,char *,int,int,char*,int*,int*);
 int pp_WrStr(FILE*,char *);
 int pp_strAt(char *, int, char*, int);
 int md_strAt(char *, int, char*, int, int);
+char* PrevSquare( char* , char*, int* );
 int IsInStr ( char, char*);
 void pp_Stuff (char*, char*, int, int, int);
 int strocpy (char*, char* );
@@ -900,9 +901,9 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
             if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
               {
                 ptr = strtopti+ipos-2;
-                while( *ptr != '[' && *ptr != ']' ) ptr--;
-                if( *ptr != ']' )
-                  ptrmp = ptr;
+                ptr = PrevSquare( ptr, strtopti, NULL );
+                if( ptr )
+                    ptrmp = ptr;
               }
           }
         switch ( *ptrmp ) {
@@ -927,16 +928,22 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
                       ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE );
                       if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
                         {
-                          ptrmp = lastopti[Repeate];
-                          ptrmp++;
-                          Repeate++;
-                          SkipOptional( &ptrmp );
-                          numBrackets++;
-                          ptrmp++;
-                          strtptri = ptri;
+                         ptr = PrevSquare( ptrmp+ipos-2, ptrmp+1, NULL );
+                         if( !ptr || CheckOptional( ptrmp+1, ptri, ptro, lenres, com_or_tra, com_or_xcom ) )
+                           {
+                             ptrmp = lastopti[Repeate];
+                             ptrmp++;
+                             Repeate++;
+                             SkipOptional( &ptrmp );
+                             numBrackets++;
+                             ptrmp++;
+                             strtptri = ptri;
+                            }
+                            else
+                               ptrmp = lastopti[Repeate];
                         }
                       else
-                        ptrmp = lastopti[Repeate];
+                         ptrmp = lastopti[Repeate];
                     }
                   else
                     ptrmp = lastopti[Repeate];
@@ -1509,13 +1516,8 @@ void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
       rezs = 0;
       ptr = ptrOut + ifou - 2;
       kolmarkers = 0;
-      while ( ptr >= ptrOut )
-        {
-          if ( (*ptr == '[' || *ptr == ']') && *(ptr-1) != '\\' ) break;
-          if  ( *ptr == '\1' ) kolmarkers++;
-          ptr--;
-        }
-      if ( *ptr == '[' && *(ptr-1) != '\\' )
+      ptr = PrevSquare( ptr, ptrOut, &kolmarkers );      
+      if ( ptr )
         {
           if( Repeate ) aIsRepeate[ Repeate - 1 ]++;
           if( !lReplacePat ) return;
@@ -1952,6 +1954,33 @@ int md_strAt(char *szSub, int lSubLen, char *szText, int checkword, int checkPrt
         }
     }
   return (lSubPos < lSubLen? 0: lPos - lSubLen + 1);
+}
+
+char* PrevSquare( char* ptr, char* bound, int *kolmark )
+{
+   int State = STATE_NORMAL;
+
+   while( ptr > bound )
+   {
+      if( State == STATE_QUOTE1 )
+      {
+         if( *ptr == '\'' )  State = STATE_NORMAL;
+      }
+      else if( State == STATE_QUOTE2 )
+      {
+         if( *ptr == '\"' )  State = STATE_NORMAL;
+      }
+      else
+      {
+         if( *ptr == '\"' && *(ptr-1) != '\\' ) State = STATE_QUOTE2;
+         else if( *ptr == '\'' && *(ptr-1) != '\\' ) State = STATE_QUOTE1;
+         else if( kolmark && *ptr == '\1' ) (*kolmark)++;
+         else if( ( *ptr == '[' || *ptr == ']' ) && *(ptr-1) != '\\' )
+            break;
+      }
+      ptr--;
+   }
+   return ( *ptr == '[' && State == STATE_NORMAL )? ptr:NULL;
 }
 
 int IsInStr ( char symb, char* s )
