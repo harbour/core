@@ -366,6 +366,10 @@ METHOD GetPreValidate() CLASS HBGetList
       oGet:Display()
       ::ShowScoreBoard()
       ::lUpdated := lUpdated
+
+      if !( __GetListActive() == Self )
+         __GetListSetActive( Self )
+      endif
    endif
 
    if ::lKillRead
@@ -413,6 +417,10 @@ METHOD GetPostValidate() CLASS HBGetList
       oGet:UpdateBuffer()
       ::lUpdated := lUpdated
 
+      if !( __GetListActive() == Self )
+         __GetListSetActive( Self )
+      endif
+
       if ::lKillRead
          oGet:ExitState := GE_ESCAPE
          lValid := .t.
@@ -438,6 +446,10 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
    oGet:UpdateBuffer()
 
    ::lUpdated := lUpdated
+
+   if !( __GetListActive() == Self )
+      __GetListSetActive( Self )
+   endif
 
    if ::lKillRead
       oGet:ExitState := GE_ESCAPE
@@ -967,6 +979,10 @@ METHOD GUIPostValidate( oGUI ) CLASS HBGetList
 
       ::lUpdated := lSavUpdated
 
+      if !( __GetListActive() == Self )
+         __GetListSetActive( Self )
+      endif
+
       if ::lKillRead
          oGet:ExitState := GE_ESCAPE      // Provokes ReadModal() exit
          lValid := .T.
@@ -989,6 +1005,10 @@ METHOD GUIPreValidate( oGUI ) CLASS HBGetList
       ::ShowScoreBoard()
 
       ::lUpdated := lSavUpdated
+
+      if !( __GetListActive() == Self )
+         __GetListSetActive( Self )
+      endif
    endif
 
    if ::lKillRead
