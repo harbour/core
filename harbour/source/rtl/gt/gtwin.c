@@ -237,7 +237,7 @@ char gtWhereX(void)
     return dwCursorPosition.X;
 }
 
-char gtWhereX(void)
+char gtWhereY(void)
 {
     COORD dwCursorPosition;
     GetConsoleCursorPosition(HOutput, &dwCursorPosition);
