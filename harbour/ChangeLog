@@ -1,6 +1,6 @@
 19991108-07:38 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
-     * Arrays used for DATA ... INIT values properly initalized.
+     * Arrays used for DATA ... INIT values, properly initalized.
 
 19991107-19:24 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbcmd.c
