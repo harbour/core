@@ -44,7 +44,7 @@
  * Modification history:
  * ---------------------
  *
- *    V1.00 
+ *    V1.00
  *    2000/01/05 Initial Version. Based on Leo Letendre FT_DOC
  *
  *    2000/01/06 Added the ProccAlso Function
@@ -72,9 +72,9 @@
  *    2000/01/16 Added Code to generate Norton Guide Source code
  *
  *    V1.04
- *    2000/01/17 Added Code to generate TROFF files 
+ *    2000/01/17 Added Code to generate TROFF files
  *    2000/01/18 Added Cleanup procedure when Generating Norton Guide
- *               
+ *
  *    V1.05
  *    2000/01/22 Added Code to generate OS2 IPF files
  *
@@ -188,8 +188,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    // nSec1=SECONDS()
    //  Delete log file if present
 
-   IF FILE( "HBDOC.LOG" )
-      DELETE FILE "HBDOC.LOG"
+   IF FILE( "hbdocerr.log" )
+      DELETE FILE "hbdocerr.log"
    ENDIF
 
    //  See if flag is there
@@ -230,16 +230,16 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       ? ""
       ? "Syntax:  hbdoc [options] <linkname> [<ifile>]"
       ? ""
-      ? "Options:  -txt Create an ASCII file instead of a Norton Guide"
-      ? "          -con Create an ASCII file without formfeeds"
-      ? "          -hpc Helpc source file"
-      ? "          -ngi Adds the -NG switch to EHC command for compile for"
+      ? "Options:  /txt Create an ASCII file instead of a Norton Guide"
+      ? "          /con Create an ASCII file without formfeeds"
+      ? "          /hpc Helpc source file"
+      ? "          /ngi Adds the -NG switch to EHC command for compile for"
       ? "               DOS/Windows/Linux."
-      ? "          -rtf Winhelp source code for Windows"
-      ? "          -os2 OS/2 help source code For OS/2"
-      ? "          -htm Generate HTML output"
-      ? "          -trf Gerenate Linux TROFF code"
-      ? "          -doc Create continuous ASCII file w/o author information"
+      ? "          /rtf Winhelp source code for Windows"
+      ? "          /os2 OS/2 help source code For OS/2"
+      ? "          /htm Generate HTML output"
+      ? "          /trf Gerenate Linux TROFF code"
+      ? "          /doc Create continuous ASCII file w/o author information"
       ? " "
       ? "Notes:  - Only one option can be specified at a time."
       ? "        - <linkname> is the name of the Norton Guide Link file."
@@ -356,7 +356,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    @ MODULELINE,  0 CLEAR TO MODULELINE, MAXCOL()
    @ LINELINE,  0 CLEAR TO LINELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Sorting input files"         
+   @ INFILELINE, 30 SAY "Sorting input files"
 
    ASORT( aDocInfo,,, { | a, b | UPPER( a[ 1 ] + " " + a[ 2 ] ) < UPPER( b[ 1 ] + " " + b[ 2 ] ) } )
 
@@ -364,19 +364,19 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    IF lnorton
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "HelpC" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "HelpC" ) ;
          + " input files"
    ELSEIF lRTF
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;
          + " input files"
    ELSEIF lWww
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;
          + " input files"
    ELSEIF lNgi
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "NG" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "NG" ) ;
          + " input files"
    ELSEIF lTroff
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "TROFF" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "TROFF" ) ;
          + " input files"
 
    ENDIF
@@ -416,7 +416,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             SET CONSOLE ON
             write_error( "Category not found: " + aDocInfo[ i, 1 ],,,, aDocInfo[ i, 4 ] )
             @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]         
+            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]
             SET ALTERNATE TO "assembl.bat" ADDITIVE
             SET ALTERNATE ON
             SET CONSOLE OFF
@@ -460,7 +460,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             SET CONSOLE ON
             write_error( "Category not found: " + aDocInfo[ i, 1 ],,,, aDocInfo[ i, 4 ] )
             @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]         
+            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]
             SET ALTERNATE TO "assembl.bat" ADDITIVE
             SET ALTERNATE ON
             SET CONSOLE OFF
@@ -479,7 +479,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       oHtm:WritePar( "" )
       oHtm:WritePar( "Functions A-M" )
       ASORT( awww,,,{|x,y| x[1]<y[1] })
-             
+
       FOR nPos := 1 TO LEN( aWww )
          cTemp := aWww[ nPos,1 ]
          IF LEFT( cTemp, 1 ) >= "A" .AND. LEFT( cTemp, 1 ) < "N" .AND. AT( "()", cTemp ) > 0
@@ -495,14 +495,14 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       NEXT
       oHtm:WritePar( "Commands" )
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos,1 ]         
-         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options"        
+         cTemp := aWww[ nPos,1 ]
+         IF AT( "()", cTemp ) == 0 .AND. ctemp <> "LICENSE" .AND. cTemp <> "OVERVIEW" .and. cTemp<>"Compiler Options"
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
       NEXT
       oHtm:WritePar( "Run Time Error" )
       FOR nPos := 1 TO LEN( aWww )
-         cTemp := aWww[ nPos,1 ]         
+         cTemp := aWww[ nPos,1 ]
          IF AT( "()", cTemp ) == 0 .AND. Left(ctemp,4) =="BASE" .AND. left(cTemp,4)=="TERM" .and. left(cTemp,5)=="TOOLS"
             oHtm:WriteLink( Lower(aWww[ nPos ,2]),UpperLower(aWww[nPos,1]))
          ENDIF
@@ -562,11 +562,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       ENDIF
 
       @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 30 SAY "Writing summary file"         
+      @ INFILELINE, 30 SAY "Writing summary file"
 
    ENDIF
 
-   SET ALTERNATE TO "FT_DOC.LOG"
+   SET ALTERNATE TO "hbdoc.log"
    SET ALTERNATE ON
    SET CONSOLE OFF
    FOR i := 1 TO LEN( aDocInfo )
@@ -576,7 +576,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Send out list of authors
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Sorting Author file"         
+   @ INFILELINE, 30 SAY "Sorting Author file"
 
    FOR i := 1 TO LEN( aAuthorList )
 
@@ -614,7 +614,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                            UPPER( a[ 3 ] ) < UPPER( b[ 3 ] ) ) } )
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Writing Author file"         
+   @ INFILELINE, 30 SAY "Writing Author file"
 
    IF LEN( aAuthorList ) > 1
       i     := 2
@@ -653,7 +653,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    SET ALTERNATE OFF
    SET ALTERNATE TO
 
-   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
+   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"
 
    //  Return to caller
 
@@ -734,9 +734,9 @@ STATIC FUNCTION ProcessFiles
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
 
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -746,16 +746,16 @@ STATIC FUNCTION ProcessFiles
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -771,7 +771,7 @@ STATIC FUNCTION ProcessFiles
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -826,7 +826,7 @@ STATIC FUNCTION ProcessFiles
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -1256,7 +1256,7 @@ RETURN aDirList
 *+
 STATIC FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
 
-   //  This routine will send error messages to the error log - HBDOC.LOG
+   //  This routine will send error messages to the error log - hbdocerr.log
    //
    //  Calling parameters: cDesc - Description of info being written
    //                      cBadLine - The offending line - IF NIL then just
@@ -1270,7 +1270,7 @@ STATIC FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
    //  Entry point
    //
    //  Point output to the log file
-   SET ALTERNATE TO "HBDOC.LOG" ADDITIVE
+   SET ALTERNATE TO "hbdocerr.log" ADDITIVE
    SET CONSOLE OFF
    SET ALTERNATE ON
 
@@ -1385,8 +1385,8 @@ STATIC FUNCTION ASCIIFiles
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -1396,16 +1396,16 @@ STATIC FUNCTION ASCIIFiles
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -1419,7 +1419,7 @@ STATIC FUNCTION ASCIIFiles
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
 
          //  check to see if we are in doc mode or getting out of doc mode
@@ -1489,7 +1489,7 @@ STATIC FUNCTION ASCIIFiles
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -2213,8 +2213,8 @@ STATIC FUNCTION ProcessRtf
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -2224,16 +2224,16 @@ STATIC FUNCTION ProcessRtf
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -2247,7 +2247,7 @@ STATIC FUNCTION ProcessRtf
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -2281,7 +2281,7 @@ STATIC FUNCTION ProcessRtf
                //  Now close down this little piece
                lDoc := .F.
                IF .NOT. EMPTY( cSeeAlso )
-                  oRtf:WritePar(""):EndPar()  
+                  oRtf:WritePar(""):EndPar()
                   oRtf:WriteParBold( "See Also" )
                   ProcRtfalso( oRtf, cSeealso )
                ENDIF
@@ -2303,7 +2303,7 @@ STATIC FUNCTION ProcessRtf
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -2506,7 +2506,7 @@ STATIC FUNCTION ProcessRtf
                         cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
                      oRtf:WritePar( cBuffer ):EndPar()
                      oRtf:WritePar(""):EndPar()
-                     
+
                   ELSEIF nMode = D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         write_error( "Arguments", cBuffer, nLineCnt, ;
@@ -2531,7 +2531,7 @@ STATIC FUNCTION ProcessRtf
                         lAddBlank := .F.
                      ENDIF
                      oRtf:WritePar( StripNgControls( cBuffer ) ):EndPar()
-                     
+
                   ELSEIF nMode = D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
@@ -2580,7 +2580,7 @@ STATIC FUNCTION ProcessRtf
    NEXT
 
 RETURN NIL
-                     
+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 *+    Function ProcRtfAlso()
@@ -2748,8 +2748,8 @@ STATIC FUNCTION ProcessWww
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -2759,16 +2759,16 @@ STATIC FUNCTION ProcessWww
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -2782,7 +2782,7 @@ STATIC FUNCTION ProcessWww
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -2837,7 +2837,7 @@ STATIC FUNCTION ProcessWww
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -3202,7 +3202,7 @@ RETURN nil
 *+
 FUNCTION ProcStatusWww( nWriteHandle, cBuffer )
    IF LEN( ALLTRIM( cBuffer ) ) >1
-      nWriteHandle:WritePar( cBuffer) 
+      nWriteHandle:WritePar( cBuffer)
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
       nWriteHandle:WritePar( "   Ready" )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "S"
@@ -3328,8 +3328,8 @@ STATIC FUNCTION ProcessNgi
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -3339,16 +3339,16 @@ STATIC FUNCTION ProcessNgi
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -3362,7 +3362,7 @@ STATIC FUNCTION ProcessNgi
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -3425,7 +3425,7 @@ STATIC FUNCTION ProcessNgi
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -3501,7 +3501,7 @@ STATIC FUNCTION ProcessNgi
                //  Now start writing out what we know
                oNgi:WriteTitle( PAD( cFuncName, 21 ) + cOneLine, cFuncName )
                oNgi:WritePar( cOneLine )
-               oNgi:WritePar(  cBar ) 
+               oNgi:WritePar(  cBar )
                //  4) all other stuff
 
             ELSE
@@ -3748,12 +3748,12 @@ FUNCTION ProcNgiInput()
       Ft_FUse()
    NEXT
 
-   @ INFILELINE, 21 SAY "Extracting: "         
+   @ INFILELINE, 21 SAY "Extracting: "
 
    FOR x := 1 TO LEN( afuncsam )
       cFile := afuncsam[ x ]
 
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+      @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
       Ft_FUse( "ngi\" + cFile )
       aAlso := {}
@@ -3792,7 +3792,7 @@ FUNCTION ProcNgiInput()
    FOR x := 1 TO LEN( AFUNCSN_ )
       cFile := afuncsn_[ x ]
 
-      @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+      @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
       Ft_FUse( "ngi\" + cFile )
       aAlso := {}
@@ -3840,7 +3840,7 @@ FUNCTION ProcNgiInput()
       cFile := acfiles[ x ]
       IF LEFT( cFile, AT( '.', cFile ) - 1 ) <> "LICENSE" .AND. LEFT( cFile, AT( '.', cFile ) - 1 ) <> "OVERVIEW"
 
-         @ INFILELINE, 33 SAY PAD( cfile, 47 )         
+         @ INFILELINE, 33 SAY PAD( cfile, 47 )
 
          Ft_FUse( "ngi\" + acfiles[ x ] )
          aAlso := {}
@@ -4013,8 +4013,8 @@ STATIC FUNCTION ProcessTroff
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
 
    FOR i := 1 TO nFiles
@@ -4024,16 +4024,16 @@ STATIC FUNCTION ProcessTroff
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -4047,7 +4047,7 @@ STATIC FUNCTION ProcessTroff
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -4110,7 +4110,7 @@ STATIC FUNCTION ProcessTroff
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
@@ -4437,8 +4437,8 @@ STATIC FUNCTION ProcessOs2
    //  Entry Point
    //
    //  Put up information labels
-   @ INFILELINE, 20 SAY "Extracting: "          
-   @ MODULELINE, 20 SAY "Documenting: "         
+   @ INFILELINE, 20 SAY "Extracting: "
+   @ MODULELINE, 20 SAY "Documenting: "
    //  loop through all of the files
    oOs2 := tOS2():new( "ipf\Harbour.ipf" )
    FOR i := 1 TO nFiles
@@ -4448,16 +4448,16 @@ STATIC FUNCTION ProcessOs2
       nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 3 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
+      @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )
       @ MODULELINE, 33 CLEAR TO LINELINE, MAXCOL()
-      @ LINELINE, 27   SAY "Line:"                                  
+      @ LINELINE, 27   SAY "Line:"
 
       nLineCnt := 0
 
       IF nReadHandle < 0
          write_error( "Can't open file: (Dos Error " + STR( FERROR() ) + ")",,,, aDirList[ i, F_NAME ] )
          @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]         
+         @ ERRORLINE, 20 SAY "Can't open file: (Dos Error " + STR( FERROR() ) + ") File=" + aDirList[ i, F_NAME ]
          LOOP
       ENDIF
       lEof := .F.
@@ -4471,7 +4471,7 @@ STATIC FUNCTION ProcessOs2
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
          IF nLineCnt % 10 = 0
-            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
+            @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
 
@@ -4533,7 +4533,7 @@ STATIC FUNCTION ProcessOs2
                //  Save the function name
                cFuncName := UPPER( ALLTRIM( SUBSTR( cBuffer, nCommentLen ) ) )
                @ MODULELINE, 33 CLEAR TO MODULELINE, MAXCOL()
-               @ MODULELINE, 33 SAY cFuncName         
+               @ MODULELINE, 33 SAY cFuncName
 
                nMode := D_NORMAL
 
