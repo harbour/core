@@ -110,8 +110,12 @@ HB_FUNC( MEMOREAD )
 HB_FUNC( MEMOWRIT )
 {
    PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pString = hb_param( 2, HB_IT_STRING );
-   BOOL bRetVal = FALSE;
+   PHB_ITEM pString   = hb_param( 2, HB_IT_STRING );
+   BOOL bWriteEof     = TRUE;      /* write Eof !, by default is .T. */
+   BOOL bRetVal       = FALSE;
+
+   if( hb_parinfo(0) == 3 && ISLOG( 3 ) )
+       bWriteEof = hb_parl( 3 );
 
    if( pFileName && pString )
    {
@@ -127,9 +131,12 @@ HB_FUNC( MEMOWRIT )
          /* NOTE: CA-Clipper will not return .F. when the EOF could not be written. [vszakats] */
          #if ! defined(OS_UNIX_COMPATIBLE)
          {
-            BYTE byEOF = HB_CHAR_EOF;
+            if( bWriteEof )  /* if true, then write EOF */
+            {
+               BYTE byEOF = HB_CHAR_EOF;
 
-            hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
+               hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
+            }
          }
          #endif
 

@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-07-17 17:34 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
+  * source/rtl/memofile.c
+    + Added an optional 3rd parameter to MEMOWRIT(), <lWriteEof>, to decide 
+      at run-time if EOF char should be written.
+
 2003-07-16 13:00 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
   * contrib/rdd_ads/ads1.c
     ! Changes in adsPutValue for speed(). Tested with
