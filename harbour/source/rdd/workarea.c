@@ -609,7 +609,7 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
       return SUCCESS;
    }
 
-   if( !pEvalInfo->dbsci.itmCobWhile && 
+   if( !pEvalInfo->dbsci.itmCobWhile &&
          (!pEvalInfo->dbsci.fRest || !hb_itemGetL( pEvalInfo->dbsci.fRest ) ) &&
          !pEvalInfo->dbsci.lNext )
       SELF_GOTOP( pArea );
@@ -719,14 +719,19 @@ ERRCODE hb_waSyncChildren( AREAP pArea )
 ERRCODE hb_waClearRel( AREAP pArea )
 {
    LPDBRELINFO lpdbRelation, lpdbRelPrev;
+   int iCurrArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waClearRel(%p)", pArea ));
+
+   iCurrArea = hb_rddGetCurrentWorkAreaNumber();
 
    /* Free all relations */
    lpdbRelation = pArea->lpdbRelations;
    while( lpdbRelation )
    {
+      hb_rddSelectWorkAreaNumber( lpdbRelation->lpaChild->uiArea);
       SELF_CHILDEND( lpdbRelation->lpaChild, lpdbRelation );
+      hb_rddSelectWorkAreaNumber( iCurrArea );
 
       if( lpdbRelation->itmCobExpr )
       {
