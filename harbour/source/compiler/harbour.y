@@ -1076,6 +1076,11 @@ ExpList    : ExpList3 ',' Argument    { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 IfInline   : IIF PareExpList3         { $$ = hb_compExprNewIIF( $2 ); }
+           | IF  ExpList1 ',' Argument ','
+             { $<asExpr>$ = hb_compExprAddListExpr( $2, $4 ); }
+             Argument ')'
+             { $$ = hb_compExprNewIIF( hb_compExprAddListExpr( $<asExpr>6, $7 ) ); }
+           ;
 
 IfInlineAlias : IfInline ALIASOP      { $$ = $1; }
 ;
