@@ -42,10 +42,11 @@ LEX_HEADERS=\
 endif
 
 C_SOURCES=\
+	$(C_EXTRA) \
 	macroa.c \
 	macrob.c \
 	macroc.c \
-	$(C_EXTRA)
+
 
 LIBNAME=macro
 

@@ -1,3 +1,15 @@
+20000802-12:58 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/compiler/simplex.c
+     + added missing id tag
+   * source/macro/macroslx.c
+     + added #define yylex hb_complex to make it compile under OS/2 GCC. PLEASE NOTE that I DON'T KNOW
+       why it works and why it is required here but not in hbslex.c. hbtest has one failure less than compiled
+       with flex so I shouldn't be creating problems with this change.
+   * source/macro/Makefile
+     * changed while trying to make macroslx.c works.
+   * config/c.cf
+     * changed while trying to make macroslx.c works.
+
 2000-08-01 20:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
      + Added: #define HB_PP_ERR_INCLUDE_SELF                  17

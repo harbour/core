@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Copyright 2000 Ron Pinkas <ron@profit-master.com>
  * www - http://www.Profit-Master.com
  *
