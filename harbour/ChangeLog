@@ -1,3 +1,7 @@
+19990908-08:24 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * makefile.b32
+    * strfmt.c and strfmt.obj were missing.
+
 19990908-08:09 GMT+1 Antonio Linares <alinares@fivetech.com>
   * rdd.b32
     * Fixed missing '\' on the C output file path.
