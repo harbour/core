@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 PROCEDURE MAIN( cLine, cDelim )
 
    LOCAL a, i
