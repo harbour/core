@@ -4,6 +4,10 @@
 
 /*
  *  GTAPI.C: Generic Terminal for Harbour
+ *
+ * Latest mods:
+ * 1.23   19990718   ptucker   implimented surface for gtGet/SetColorStr()
+ *                             changed to allow unlimited color pairs.
  */
 
 #include <gtapi.h>
@@ -21,11 +25,21 @@ static USHORT s_uiDispCount  = 0;
 static USHORT s_uiColorIndex = 0;
 static char   s_szColorStr[CLR_STRLEN] = {"W/N, N/W, N/N, N/N, N/W"};
 
+int *_Color;
+int _ColorCount;
+
 /* gt API functions */
 
 void hb_gtInit(void)
 {
-    gtInit();
+    _Color = (int *)hb_xgrab(5*sizeof(int));
+    _ColorCount = 5;
+    hb_gtSetColorStr( s_szColorStr );
+}
+
+void hb_gtexit(void)
+{
+    hb_xfree( _Color );
 }
 
 int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char* pbyFrame)
@@ -122,7 +136,7 @@ int hb_gtBoxS(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight)
 
 int hb_gtColorSelect(USHORT uiColorIndex)
 {
-    if(uiColorIndex > CLR_LASTCOLOR)
+    if(uiColorIndex > _ColorCount )
     {
         return(1);
     }
@@ -155,28 +169,132 @@ int hb_gtDispEnd(void)
 
 int hb_gtSetColorStr(char * fpColorString)
 {
-    if (strlen(fpColorString) > CLR_STRLEN)
+    char c;
+    int npos = 0, nSkip = 0;
+    int nBack = 0, nColor = 0, nHasX=0;
+
+    do
     {
-        return(1);
+        if( ( c=*fpColorString++  ) > 'A' )
+            c &= 0x5f;			/* convert to upper case */
+
+        if( nSkip && !( c=='\0' || c==','  ))
+            continue;
+
+        nSkip = 0;
+
+        switch (c) {
+            case '/':
+                nBack  |= nColor;
+            case 'N':
+                nColor  = 0;
+                break;
+            case 'B':
+            case 'U':
+                nColor |= 1;
+                break;
+            case 'G':
+                nColor |= 2;
+                break;
+            case 'R':
+                nColor |= 4;
+                break;
+            case 'W':
+                nColor |= 7;
+                break;
+            case '+':
+                nBack  |= 8;
+                break;
+            case '*':
+                nBack  |= 128;
+                break;
+            case 'I':			// =N/W
+                if( npos == _ColorCount )
+                {
+                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(npos +1) );
+                   ++ _ColorCount;
+                }
+                _Color[npos++] = ( 112 | ( nBack & 136 ));
+                nBack = nColor = 0;
+                nSkip = 1;
+                break;
+            case 'X':			// always sets forground to 'N'
+                nColor=0;
+                break;
+            case ',':
+            case '\0':
+                if( npos == _ColorCount )
+                {
+                   _Color = (int *)hb_xrealloc( _Color, sizeof(int)*(npos +1) );
+                   ++ _ColorCount;
+                }
+                if( nHasX )
+                {
+                   nBack &= 136;
+                   nHasX = 0;
+                }
+
+                _Color[npos++] = ( nColor << 4 ) | nBack;
+                nColor=nBack=0;
+                break;
+        }
     }
-    else
-    {
-        strcpy(s_szColorStr, fpColorString);
-    }
+    while( c );
 
     return(0);
 }
 
 int hb_gtGetColorStr(char * fpColorString)
 {
-    if (fpColorString)
+    char *sColors;
+    int i,j=0,k = 0, nColor;
+
+    sColors = (char *)hb_xgrab( _ColorCount * 8 + 1 ); // max possible
+
+    for( i=0; i<_ColorCount; i++ )
     {
-        strcpy(fpColorString, s_szColorStr);
+        j = 0;
+        nColor = _Color[i] & 7;
+        do
+        {
+            if( nColor == 7 )
+                sColors[k++] = 'W';
+            else
+            {
+                if( nColor == 0 )
+                    sColors[k++] = 'N';
+                else
+                {
+                    if( nColor & 4 )
+                        sColors[k++] = 'R';
+
+                    if( nColor & 2 )
+                        sColors[k++] = 'G';
+
+                    if( nColor & 1 )
+                        sColors[k++] = 'B';
+                }
+            }
+            if( j == 0 )
+            {
+                if( _Color[i] & 8 )
+                    sColors[k++] = '+';
+                sColors[k++] = '/';
+            }
+            else
+                if( _Color[i] & 128 )
+                    sColors[k++] = '*';
+
+            nColor = (_Color[i] >> 4) & 7;
+        }
+        while( ++j < 2 );
+        if( i+1 < _ColorCount )
+           sColors[k++] = ',';
     }
-    else
-    {
-        return(1);
-    }
+    sColors[k++] = '\0';
+
+    strcpy( fpColorString, sColors );
+    hb_xfree( sColors );
 
     return(0);
 }

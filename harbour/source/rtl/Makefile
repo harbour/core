@@ -24,6 +24,7 @@ C_SOURCES=\
         memvars.c \
         mtran.c \
         set.c \
+        setcolor.c \
         strcmp.c \
         strings.c \
         transfrm.c \

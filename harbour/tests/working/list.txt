@@ -16,6 +16,7 @@
 ; 1999.28.01   Status update for Bil's html file and Antonio's Mail List 
 ;	       suggestions. New Matthew Hamilton  updates. SET  work has
 ;              started! Now LIST.TXT is Y2K compatible<g> (Thanks Jose!)
+; 1999.18.07   ptucker 'S'tarted SetColor()
 AADD;N
 ABS;R
 ACHOICE;N
@@ -210,7 +211,7 @@ SELECT;S
 SET;S
 SETBLINK;N
 SETCANCEL;N
-SETCOLOR;N
+SETCOLOR;S
 SETCURSOR;N
 SETKEY;N
 SETMODE;N

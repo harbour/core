@@ -43,6 +43,7 @@ $(path_lib)\harbour.lib : \
                 $(path_obj)\mtran.obj \
                 $(path_obj)\objfunc.obj \
                 $(path_obj)\set.obj \
+                $(path_obj)\setcolor.obj \
                 $(path_obj)\strcmp.obj \
                 $(path_obj)\strings.obj \
                 $(path_obj)\tclass.obj \
@@ -114,6 +115,7 @@ $(path_obj)\memvars.obj  : {$(path_c)}memvars.c  $(path_h)\extend.h $(path_h)\hb
 $(path_obj)\mathx.obj    : {$(path_c)}mathx.c    $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\mtran.obj    : {$(path_c)}mtran.c    $(path_h)\extend.h $(path_h)\hbdefs.h
 $(path_obj)\set.obj      : {$(path_c)}set.c      $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
+$(path_obj)\setcolor.obj : {$(path_c)}setcolor.c $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\init.h $(path_h)\pcode.h
 $(path_obj)\strcmp.obj   : {$(path_c)}strcmp.c   $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h
 $(path_obj)\strings.obj  : {$(path_c)}strings.c  $(path_h)\extend.h $(path_h)\hbdefs.h $(path_h)\set.h $(path_h)\errorapi.h $(path_h)\error.ch
 $(path_obj)\stringsx.obj : {$(path_c)}stringsx.c $(path_h)\extend.h $(path_h)\hbdefs.h

@@ -1,3 +1,28 @@
+19990718-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtwin.c
+    * call hb_gtinit from gtinit
+  * source/rtl/gtapi.c
+    * changed gtSetColorStr and gtGetColorStr to support
+      clipper compatible color strings.
+  * source/rtl/set.c
+    * changed _SET_COLOR support to tie in to SetColor()
+  * source/rtl/setcolor.c
+    * cleaned up - added HB_GTEXIT till proper exit
+      support is working
+  + tests/working/tstcolor.prg
+    test for SetColor()
+  * makefile.b16
+    makefile.b31
+    makefile.b32
+    makefile.icc
+    source/rtl/makefile
+    * added setcolor
+  * makefile.vc
+    * added setcolor
+    * changed -o$(RTL_DIR) -o$(**D)
+    * added missing datesx and copyfile
+    * removed duplicate errorsys from harbour.lib obj list
+
 19990718-20:45 CET Eddie Runia <eddie@runia.com>
   - source/rdd/rdd.api
     And removed again

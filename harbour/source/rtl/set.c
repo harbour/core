@@ -29,6 +29,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.46   Paul Tucker                 Modifed SetColor handling.
    V 1.43   David G. Holm               Removed the obsolete hb_set_fixed,
                                         which I should have done when I took
                                         HB_SETFIXED() out in V 1.27.
@@ -172,6 +173,7 @@ BOOL hb_set_century;
 int hb_set_althan;
 int hb_set_extrahan;
 int hb_set_printhan;
+char *hb_SetColor( char *sColor );
 
 HARBOUR HB_SET( void );
 HARBOUR HB___SETCENTURY( void );
@@ -433,7 +435,7 @@ HARBOUR HB___SETCENTURY (void)
  *                   bright green, "BG+" for bright cyan, "R+" for bright red,
  *                   "RB+" for bright magenta, "GR+" for yellow, and "W+" for
  *                   bright white. Special codes are "I" for inverse video,
- *                   "U" for underline on a monochrome monitor (black on a
+ *                   "U" for underline on a monochrome monitor (blue on a
  *                   color monitor), and "X" for blank. The default color is
  *                   "W/N,N/W,N,N,N/W".
  *              _SET_CONFIRM     <lFlag> | <cOnOff>
@@ -664,9 +666,13 @@ HARBOUR HB_SET (void)
          if (args > 1) hb_set.HB_SET_CANCEL = set_logical (pArg2);
          break;
       case HB_SET_COLOR      :
+/*
          if (hb_set.HB_SET_COLOR) hb_retc (hb_set.HB_SET_COLOR);
          else hb_retc ("");
          if (args > 1) hb_set.HB_SET_COLOR = set_string (pArg2, hb_set.HB_SET_COLOR);
+*/
+         if (hb_set.HB_SET_COLOR) hb_xfree(hb_set.HB_SET_COLOR );
+         hb_retc( hb_set.HB_SET_COLOR = hb_SetColor( args>1 ? pArg2->item.asString.value : (char *)0));
          break;
       case HB_SET_CONFIRM    :
          hb_retl (hb_set.HB_SET_CONFIRM);

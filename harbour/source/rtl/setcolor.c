@@ -27,12 +27,28 @@
 
 int hb_gtSetColorStr(char * fpColorString);
 int hb_gtGetColorStr(char * fpColorString);
-void hb_gtInit(void);
+void hb_gtexit(void);
+
+char *hb_SetColor( char *sColor )
+{
+    char *color;
+
+    color = (char *)hb_xgrab( 256 );
+    hb_gtGetColorStr( color );
+
+    if( sColor )
+       hb_gtSetColorStr( sColor );
+
+    /* The caller is responsible for releasing this */
+    return (char *)hb_xrealloc( color, strlen( color )+1 );
+}
 
 HARBOUR HB_SETCOLOR( void );
+HARBOUR HB_GTEXIT( void );
 
 HB_INIT_SYMBOLS_BEGIN( SETCOLOR__InitSymbols )
-{ "SETCOLOR", FS_PUBLIC, HB_SETCOLOR, 0 }
+{ "SETCOLOR", FS_PUBLIC, HB_SETCOLOR, 0 },
+{ "GTEXIT", FS_PUBLIC, HB_GTEXIT, 0 }
 HB_INIT_SYMBOLS_END( SETCOLOR__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup SETCOLOR__InitSymbols
@@ -42,10 +58,13 @@ HARBOUR HB_SETCOLOR( void )
 {
     char *color;
 
-    color = (char *)hb_xgrab(200);
-    hb_gtGetColorStr( color );
-    hb_retc( color );
+    hb_retc( color = hb_SetColor( hb_pcount() == 1 ? hb_parc(1) : NULL ) );
     hb_xfree( color );
-    if( hb_pcount() == 1 )
-       hb_gtSetColorStr( hb_parc(1) );
+}
+
+/* TODO: This is a temporary fix  - Call it on exit if you use SetColor() */
+
+HARBOUR HB_GTEXIT( void )
+{
+   hb_gtexit();
 }

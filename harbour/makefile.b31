@@ -19,8 +19,8 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj copyfile.obj \
               error.obj errorapi.obj errorsys.obj extend.obj \
               files.obj gtapi.obj hardcr.obj initsymb.obj itemapi.obj \
               math.obj memvars.obj mtran.obj msguk.obj objfunc.obj \
-              set.obj strings.obj strcmp.obj symbols.obj tclass.obj \
-              transfrm.obj
+              set.obj setcolor.obj strings.obj strcmp.obj symbols.obj \
+              tclass.obj transfrm.obj
 
 hbtools.lib : dates2.obj datesx.obj debug.obj hb_f.obj io.obj mathx.obj \
               stringp.obj stringsx.obj \
@@ -64,6 +64,7 @@ memvars.obj  : memvars.c    extend.h hbdefs.h
 mtran.obj    : mtran.c      extend.h hbdefs.h
 objfunc.obj  : objfunc.prg  extend.h hbdefs.h init.h pcode.h
 set.obj      : set.c        extend.h hbdefs.h set.h
+setcolor.obj : setcolor.c   extend.h hbdefs.h init.h pcode.h
 strcmp.obj   : strcmp.c     extend.h hbdefs.h set.h
 strings.obj  : strings.c    extend.h hbdefs.h set.h
 symbols.obj  : symbols.asm
