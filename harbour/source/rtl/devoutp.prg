@@ -30,6 +30,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.4    Paul Tucker                 Second param to Devout should be
+                                        the color.
    V 1.3    David G. Holm               Added my email address.
    V 1.2    David G. Holm               Removed "(C)" from Copyright and
                                         updated previous version comments.
@@ -75,5 +77,5 @@
 
 FUNCTION DEVOUTPICT( xValue, cPicture, cColor )
    LOCAL cText := TRANSFORM( xValue, cPicture )
-   DEVOUT( cText, cPicture )
+   DEVOUT( cText, cColor )
 RETURN NIL

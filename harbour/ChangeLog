@@ -1,4 +1,8 @@
 19990723-06:39 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/devoutp.prg
+     * second param to devout() is color, not picture
+
+19990723-06:39 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/transfrm.c
      * changed GetDynSym to hb_GetDynSym (again)
 
