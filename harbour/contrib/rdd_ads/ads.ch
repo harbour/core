@@ -70,6 +70,11 @@
 
 #command SET SERVER LOCAL   => AdsSetServerType ( 1 )
 #command SET SERVER REMOTE  => AdsSetServerType ( 2 )
+/* Server type constants for ORing with AdsSetServerType() */
+#define ADS_LOCAL_SERVER         1
+#define ADS_REMOTE_SERVER        2
+#define ADS_AIS_SERVER           4
+
 
 #command SET AXS LOCKING <x:ON,OFF>                                   ;
       => AdsLocking( if( upper( <(x)> ) == "ON", .t., .f. )  )
@@ -86,7 +91,7 @@
       =>  Set( _SET_DELETED, <(x)> )                                  ;
           ;AdsSetDeleted( if( upper( <(x)> ) == "ON", .t., .f. ) )
 #command SET DELETED (<x>)                                            ;
-      =>  Set( _SET_DELE, <x> ); AdsSetDeleted( <x> )
+      =>  Set( _SET_DELETED, <x> ); AdsSetDeleted( <x> )
 
 #command SET EPOCH TO <year>                                          ;
       => Set( _SET_EPOCH, <year> ); AdsSetEpoch( <year> )

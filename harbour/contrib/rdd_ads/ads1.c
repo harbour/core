@@ -425,6 +425,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    else /* GoTo Phantom record */
    {
       ulRecNo = 0;
+      AdsAtEOF( pArea->hTable, (UNSIGNED16 *)&(pArea->fEof) );
       if ( !pArea->fEof )
          ulRetVal = AdsGotoRecord( pArea->hTable, ulRecNo );
          // don't do a GO 0 if already at EOF because we can't skip -1 off of it if you do

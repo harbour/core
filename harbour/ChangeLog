@@ -1,3 +1,17 @@
+2001-05-24 01:09 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+
+   * source/rdd/dbcmd.c
+      * fixed dbSetIndex/ordListAdd to set the order and go top IF
+         it's the first bag
+
+   * contrib/rdd_ads/ads.ch
+      + added #define ADS_LOCAL_SERVER, ADS_REMOTE_SERVER,
+            ADS_AIS_SERVER  for "ORing" options
+      * fixed _SET_DELETED typo
+
+   * contrib/rdd_ads/ads1.c
+      * Fixed EOF flag when doing a GO 0
+
 2001-05-23 21:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      ! Corrected few minor typos.
