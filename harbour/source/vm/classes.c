@@ -2399,7 +2399,8 @@ HB_FUNC( __CLSGETPROPERTIES )
       {
          PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
 
-         if( pMessage && ( pClass->pMethods[ uiAt ].bIsPersistent == TRUE ) ) /* Hash Entry used ? */
+         if( ( pMessage != NULL ) &&
+             ( pClass->pMethods[ uiAt ].bIsPersistent == ( BOOL ) TRUE ) ) /* Hash Entry used ? */
          {
             PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
                                                 /* Add to array */
