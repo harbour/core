@@ -118,10 +118,9 @@ HB_FUNC(WINCREATEWINDOW)
 HB_FUNC( WINCREATESTDWINDOW )
 {
    ULONG lFrame = hb_parnl( 3 );
-   HWND hWndClient, hWndFrame;
+   HWND hWndClient;
 
-   hb_retnl( ( LONG ) hWndFrame =
-             WinCreateStdWindow( ( HWND ) hb_parnl( 1 ), /* hWndParent */
+   hb_retnl( ( LONG ) WinCreateStdWindow( ( HWND ) hb_parnl( 1 ), /* hWndParent */
                                  hb_parnl( 2 ),          /* style */
                                  &lFrame,                /* lFrame */
                                  hb_parc( 4 ),           /* cClassName */

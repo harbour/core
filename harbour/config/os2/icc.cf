@@ -21,7 +21,13 @@ LD_OUT = /Fe
 LDFLAGS = /C- /B"/NOIgnoreCase"
 ifeq ($(HB_MAIN),)
 else
+ifeq ($(C_MAIN),)
+ifeq ($(HB_GT_LIB),os2pm)
+LDFLAGS +=/B"/PMtype:PM" $(TOP)$(ROOT)source/vm/$(ARCH)/mainpm.obj
+else
 LDFLAGS += $(TOP)$(ROOT)source/vm/$(ARCH)/main.obj
+endif
+endif
 endif
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(ARCH)/$(lib)$(LIB_EXT))
@@ -39,8 +45,16 @@ endif
 endif
 
 # Add the specified GT driver library
+ifeq ($(C_MAIN),)
 ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(HB_GT_LIB),os2pm)
+# Special handling for PM mode
+LINKLIBS += $(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+LINKLIBS += $(TOP)$(ROOT)source/rtl/gtos2/$(ARCH)/gtos2.lib
+else
 LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+endif
+endif
 endif
 
 # HB_SCREEN_LIB: empty, or one of ncurses, slang

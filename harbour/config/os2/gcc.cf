@@ -23,6 +23,13 @@ LD = gcc
 LDFLAGS =
 LD_OUT = -o $(SPACE)
 
+ifeq ($(C_MAIN),)
+ifeq ($(HB_GT_LIB),os2pm)
+# If building a PM program, override the main object.
+LDFLAGS +=$(TOP)$(ROOT)source/vm/$(ARCH)/mainpm.o
+endif
+endif
+
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(ARCH))
@@ -42,12 +49,29 @@ endif
 
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
+ifeq ($(C_MAIN),)
+ifeq ($(HB_GT_LIB),os2pm)
+# Special handling for PM mode
+LINKPATHS += -L$(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(ARCH)
+LINKLIBS += -l$(HB_GT_LIB)
+LINKPATHS += -L$(TOP)$(ROOT)source/rtl/gtos2/$(ARCH)
+LINKLIBS += -lgtos2
+else
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
+endif
+endif
 endif
 
 #LINKLIBS += -Wl,-)
 LDFLAGS += $(LINKPATHS)
+
+ifeq ($(C_MAIN),)
+ifeq ($(HB_GT_LIB),os2pm)
+# Override the default link rule in order to add a call to emxbind
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(L_USR) $(LINKLIBS) & emxbind -ep $@
+endif
+endif
 
 # Note: The empty line directly before 'endef' HAVE TO exist!
 # It causes that every echo command will be separated by LF

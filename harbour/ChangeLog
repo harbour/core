@@ -1,3 +1,23 @@
+2001-08-30 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * config/os2/gcc.cf
+  * config/os2/icc.cf
+    + Automatically deal with different linker requirements for
+      Presentation Manager programs and VIO programs.
+
+  * contrib/hgf/os2/os2pm.c
+    ! Removed hWndFrame variable from HB_FUNC( WINCREATESTDWINDOW ),
+      because it isn't needed and causes problems in C++ mode.
+
+  * doc/gmake.txt
+    + Added mention of w32/bcc32.
+    + Added mention of os2/gcc and os2/icc with the new os2pm.
+
+  * source/vm/Makefile
+    ! Always build both main and mainpm for OS/2 builds, because
+      the choice of which to use is a program link-time choice,
+      not a Harbour build-time choice.
+
 2001-08-30 19:00 GMT+1 Ignacio Ortiz <ignacio@fivetech.com>
    * source/rtl/memoline.c
    * source/rtl/mlcount.c

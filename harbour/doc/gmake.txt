@@ -23,7 +23,8 @@ directory. There are no rules in the Makefiles, to keep them
 platform-independent. The rules themselves are included from the
 "appropriate" configuration file.
 
-For example, this could be the Makefile for the VM library:
+For example, the following was the Makefile for an early version
+of the VM library:
 
 --  Cut here  ---------------------------------------
 #
@@ -172,18 +173,32 @@ For GCC on Linux:
         In which case you'll also need to export HB_SCREEN_LIB with
         the name of the appropriate screen library.
 
-For GCC on OS/2:
+For GCC on OS/2 for VIO mode:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
         you must also point LIBRARY_PATH to the EMX library directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       gcc
   HB_GT_LIB         gtos2
 
-For IBM Visual Age C++ on OS/2:
+For GCC on OS/2 for PM mode:
+  Note: Harbour does not get built in PM mode, but  Harbour programs do.
+  Note: You must point C_INCLUDE_PATH to the EMX include directory and
+        you must also point LIBRARY_PATH to the EMX library directory.
+  HB_ARCHITECTURE   os2
+  HB_COMPILER       gcc
+  HB_GT_LIB         os2pm
+
+For IBM Visual Age C++ on OS/2 for PM mode:
+  Note: Harbour does not get built in PM mode, but Harbour programs do.
   Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       icc
-  HB_GT_LIB         gtos2
+  HB_GT_LIB         os2pm
+
+For Borland C++ 5.5
+  HB_ARCHITECTURE   w32
+  HB_COMPILER       bcc32
+  HB_GT_LIB         gtwin
 
 For Borland C++ 3.x
   HB_ARCHITECTURE   dos
