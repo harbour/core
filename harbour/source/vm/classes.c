@@ -2622,3 +2622,22 @@ HB_FUNC( __CLSGETPROPERTIES )
 
    hb_itemRelease( hb_itemReturn( pReturn ) );
 }
+
+/* Real dirty function, though very usefull under certain circunstances:
+ * It allows to change the class handle of an object into another class handle,
+ * so the object behaves like a different Class of object.
+ * Based on objects.lib SetClsHandle() */
+
+HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
+{
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   USHORT uiPrevClassHandle = 0;
+
+   if( pObject )
+   {
+      uiPrevClassHandle = pObject->item.asArray.value->uiClass;
+      pObject->item.asArray.value->uiClass = ( USHORT ) hb_parnl( 2 );
+   }
+
+   hb_retnl( uiPrevClassHandle );
+}
