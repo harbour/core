@@ -264,6 +264,7 @@ STATIC FUNCTION Main_HVM()
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
    TEST_LINE( NIL:className                   , "NIL"       )
+#endif                                                      )
    TEST_LINE( "":className                    , "CHARACTER" )
    TEST_LINE( 0:className                     , "NUMERIC"   )
    TEST_LINE( SToD( "" ):className            , "DATE"      )
@@ -271,7 +272,10 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( {|| nil }:className             , "BLOCK"     )
    TEST_LINE( {}:className                    , "ARRAY"     )
    TEST_LINE( ErrorNew():className            , "ERROR"     )
+/* Harbour compiler not yet handles these */
+#ifndef __HARBOUR__
    TEST_LINE( NIL:classH                      , 0           )
+#endif
    TEST_LINE( "":classH                       , 0           )
    TEST_LINE( 0:classH                        , 0           )
    TEST_LINE( SToD( "" ):classH               , 0           )
@@ -279,7 +283,6 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( {|| nil }:classH                , 0           )
    TEST_LINE( {}:classH                       , 0           )
    TEST_LINE( ErrorNew():classH > 0           , .T.         )
-#endif                                                      )
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__

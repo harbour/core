@@ -1,3 +1,12 @@
+19991117-01:37 GMT+1 Victor Szel <info@szelvesz.hu>
+  * config/w32/mingw32.cf
+    - Removed -DDEBUG preprocessor option.
+      If you want to compile with debug, add -DDEBUG to the
+      C_USR environment variable.
+  * tests/rtl_test.prg
+    + Some tests enabled which are now supported by the compiler.
+      (expr):CLASSNAME, (expr):CLASSH
+
 19991116-19:25 EDT David G. Holm <dholm@jsd-llc.com>
 
     * config/dos/djgpp.cf

@@ -12,7 +12,7 @@ LIB_EXT = .a
 CC = gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -DDEBUG -I. -I$(HB_INC_COMPILE) -mno-cygwin
+CPPFLAGS = -I. -I$(HB_INC_COMPILE) -mno-cygwin
 CFLAGS = -Wall
 
 LD = gcc
