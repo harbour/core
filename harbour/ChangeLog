@@ -1,3 +1,7 @@
+19990727-19:18 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbfntx1.c
+     Fixed a bug
+
 19990727-19:08 GMT+1 Bruno Cantero <bruno@issnet.net>
    * source/rtl/natmsg/*.c
      Added #include <hbdefs.h> to these files
