@@ -1,3 +1,20 @@
+20000426-00:22 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/rtl/xsavescr.c
+   * ChangeLog
+     ! Fixed NOTE and ChangeLog entry
+
+   * makefile.bc
+     ! -DHB_OBJ_... default switch removed.
+
+   * source/rtl/transform.c
+     + PF_STRING
+     + support for @S picture
+     ! Now five more HBTESTs pass.
+
+   * source/vm/hvm.c
+     ! windows.h inclusion standardized.
+
 2000-04-25 17:40 GMT-4 David G. Holm <dholm@jsd-llc.com>
 
   * include/hbcomp.h
@@ -101,6 +118,7 @@
    * source/rtl/Makefile
    * makefile.bc
    * makefile.vc
+     % __SAVESCREEN()/__RESTSCREEN() rewritten in C.
 
 20000425-03:49 GMT+1 Victor Szakats <info@szelvesz.hu>
 

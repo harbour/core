@@ -42,6 +42,8 @@ LIB_DIR = lib\b16
 !else
 
 CC = bcc32
+# NOTE: Using TASM for some reason, this should be normally TASM32.
+#       I'll leave it to TASM until a better solution is found
 AS = tasm
 
 BIN_DIR = bin\b32
@@ -81,7 +83,7 @@ HBPP_DIR     = utils\hbpp
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) -DHARBOUR_OBJ_GENERATION
+CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)

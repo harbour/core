@@ -49,8 +49,7 @@
  *
  */
 
-/* NOTE: Temporary name [vszakats] */
-#ifdef HB_INCLUDE_WINEXCHANDLER
+#if defined(HARBOUR_OBJ_GENERATION) || defined(HB_INCLUDE_WINEXCHANDLER)
    #define HB_OS_WIN_32_USED
 #endif
 
@@ -68,11 +67,6 @@
 #include "hbvm.h"
 #include "hbpcode.h"
 #include "hbset.h"
-
-#ifdef HB_OS_WIN_32
-  /* do not include it on U*ix and pure DOS */
-  #include <windows.h>
-#endif
 
 typedef struct _SYMBOLS
 {
@@ -4123,3 +4117,4 @@ WINBASEAPI LONG WINAPI UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * Ex
 }
 
 #endif
+

@@ -65,6 +65,7 @@
 #define PF_EXCHANG 0x0100   /* @E. Also means exchange . and , */
 #define PF_EMPTY   0x0200   /* @Z */
 #define PF_NUMDATE 0x0400   /* Internal flag. Ignore decimal dot */
+#define PF_STRING  0x0800   /* @S */
 
 /*
    PictFunc -> Analyze function flags and return binary flags bits
@@ -124,6 +125,9 @@ static USHORT PictFunc( char ** pszPic, ULONG * pulPicLen, ULONG * pulPicStart )
                break;
             case 'R':
                uiPicFlags |= PF_REMAIN;
+               break;
+            case 'S':
+               uiPicFlags |= PF_STRING;
                break;
             case 'X':
                uiPicFlags |= PF_DEBIT;
@@ -359,6 +363,23 @@ HB_FUNC( TRANSFORM )
          /* Grab enough */
          szResult = ( char * ) hb_xgrab( ulExpLen + ulPicLen );
          ulResultPos = 0;
+
+         /* [jlalin] */
+         if( uiPicFlags & PF_STRING )
+         {
+            char * szPic2 = hb_itemGetCPtr( pPic );
+            int ulLen = atol( szPic2 + 2 );
+
+            if( ulLen & ( ulLen <= ulExpLen ) )
+            {
+               memcpy( szResult, szExp, ulLen );
+               szResult[ ulLen ] = '\0';
+               ulExpPos  = ulLen - 1;
+            }
+
+            if( uiPicFlags & PF_UPPER )
+               hb_strupr( szResult );
+         }
 
          /* Support date function for strings */
          if( uiPicFlags & PF_DATE )
