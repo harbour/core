@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-06 18:38 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/achoice.prg
+    ! Fix, if no UDF is set, pressing an alpha key it
+      go to first item finding this letter without respecting
+      upper and lowercase.
+    Reported by Luiz Culik.
+
 2002-11-06 00:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
   * makefile.nt
