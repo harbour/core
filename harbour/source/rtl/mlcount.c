@@ -76,6 +76,7 @@ HB_FUNC( MLCOUNT )
       {
          case HB_CHAR_HT:
             ulCurLength = ( ( ULONG ) ( ulCurLength / ulTabLength ) * ulTabLength ) + ulTabLength;
+            ulLastSpace = ulCurLength;
             break;
 
          case HB_CHAR_LF:
