@@ -1,19 +1,26 @@
-//
-// $Id$
-//
+#include "setcurs.ch"
 
-//
+#define ALTD_DISABLE   0
+#define ALTD_ENABLE    1
 
-procedure main()
+static s_oDebugger
+static s_lExit := .F.
 
-   local s := " " + chr(0) + "  mab  " + chr(0) + " "
+function AltD( nAction )
+   static s_lEnabled := .t.
 
-   StrDump( s )
-   QOut( s )
+   do case
+      case nAction == nil
+           if s_lEnabled
+              s_lExit := .f.
+              __dbgEntry( ProcLine( 2 ) )
+           endif
 
-   qout( '"' + ltrim(s) + '"' )
-   qout( '"' + rtrim(s) + '"' )
-   qout( '"' + alltrim(s) + '"' )
+      case nAction == ALTD_DISABLE
+           s_lEnabled := .f.
 
-return
+      case nAction == ALTD_ENABLE
+           s_lEnabled := .t.
+   endcase
 
+return nil

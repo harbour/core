@@ -61,10 +61,13 @@ typedef enum
    HB_P_DUPLTWO,           /* places a copy of the latest two virtual machine stack value on to the stack */
    HB_P_INC,               /* increments the latest value on the virtual machine stack */
    HB_P_INSTRING,          /* checks if the second latest value on the stack is a substring of the latest one */
-   HB_P_JUMP,              /* jumps to a relative offset */
-   HB_P_JUMPFAR,           /* jumps to a relative offset */
+   HB_P_JUMPSHORT,         /* jumps to a relative offset 1 Byte */
+   HB_P_JUMP,              /* jumps to a relative offset 2 Bytes */
+   HB_P_JUMPFAR,           /* jumps to a relative offset 3 Bytes */
+   HB_P_JUMPSHORTFALSE,    /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPFALSE,         /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPFARFALSE,      /* checks a logic expression of the stack and jumps to a relative offset */
+   HB_P_JUMPSHORTTRUE,     /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPTRUE,          /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_JUMPFARTRUE,       /* checks a logic expression of the stack and jumps to a relative offset */
    HB_P_LESSEQUAL,         /* checks if the second latest value on the stack is less equal that the latest one, leaves the result only */

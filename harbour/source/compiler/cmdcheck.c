@@ -85,7 +85,7 @@ static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
          the exact date/time info from the resulting ULONG. Since the year
          is only stored in 6 bits, 1980 will result in the same bit pattern
          as 2044. The purpose of this value is only used to *differenciate*
-         between the dates ( the exact dates are not significant ), so this 
+         between the dates ( the exact dates are not significant ), so this
          can be used here without problems. [vszakats] */
 
 /* 76543210765432107654321076543210
@@ -143,7 +143,7 @@ void hb_compChkCompilerSwitch( int iArg, char * Args[] )
          if( HB_ISOPTSEP( * Args[ i ] ) )
             hb_compChkEnvironVar( Args[ i ] );
       }
-   } 
+   }
    else
    /* Chech the environment variables */
    {
@@ -247,7 +247,7 @@ void hb_compChkEnvironVar( char * szSwitch )
 
                       default:
                          hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
-                   }              
+                   }
                 }
                 else
                    hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
@@ -268,11 +268,11 @@ void hb_compChkEnvironVar( char * szSwitch )
                          case '1':
                             hb_comp_bGenCVerbose = TRUE;
                             break;
-                      
+
                          case '0':
                             hb_comp_bGenCVerbose = FALSE;
                             break;
-                      
+
                          default:
                             hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                       }
@@ -328,6 +328,20 @@ void hb_compChkEnvironVar( char * szSwitch )
                       pPath = pDelim + 1;
                    }
                    AddSearchPath( pPath, &hb_comp_pIncludePath );
+                }
+                break;
+
+             case 'j':
+             case 'J':
+                switch( *( s + 1 ) )
+                {
+                   case '0':
+                      hb_comp_iJumpOptimize = 0;
+                      break;
+
+                   case '1':
+                      hb_comp_iJumpOptimize = 1;
+                      break;
                 }
                 break;
 
@@ -476,7 +490,7 @@ void hb_compChkPaths( void )
 
 static void hb_compChkDefineSwitch( char * pszSwitch )
 {
-   if( pszSwitch && HB_ISOPTSEP( pszSwitch[ 0 ] ) && 
+   if( pszSwitch && HB_ISOPTSEP( pszSwitch[ 0 ] ) &&
       ( pszSwitch[ 1 ] == 'd' || pszSwitch[ 1 ] == 'D' ) )
    {
       char * szDefText = hb_strdup( pszSwitch + 2 );
@@ -497,7 +511,7 @@ void hb_compChkDefines( int iArg, char * Args[] )
 {
    /* Chech the environment variables */
    {
-      /* NOTE: CLIPPERCMD enviroment variable is overriden 
+      /* NOTE: CLIPPERCMD enviroment variable is overriden
                if HARBOURCMD exists */
       char * szStrEnv = getenv( "HARBOURCMD" );
 
@@ -521,9 +535,9 @@ void hb_compChkDefines( int iArg, char * Args[] )
    {
       int i;
 
-      /* Check all switches in command line They start with an OS_OPT_DELIMITER 
+      /* Check all switches in command line They start with an OS_OPT_DELIMITER
          char */
       for( i = 0; i < iArg; i++ )
          hb_compChkDefineSwitch( Args[ i ] );
-   } 
+   }
 }

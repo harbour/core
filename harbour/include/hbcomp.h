@@ -102,21 +102,25 @@ typedef struct _VAR
 /* structure to hold a Clipper defined function */
 typedef struct __FUNC
 {
-   char * szName;               /* name of a defined Clipper function */
-   char   cScope;               /* scope of a defined Clipper function */
-   BYTE   bFlags;               /* some flags we may need */
-   USHORT wParamCount;          /* number of declared parameters */
-   USHORT wParamNum;            /* current parameter number */
-   PVAR   pLocals;              /* pointer to local variables list */
-   PVAR   pStatics;             /* pointer to static variables list */
-   PVAR   pFields;              /* pointer to fields variables list */
-   PVAR   pMemvars;             /* pointer to memvar variables list */
-   BYTE * pCode;                /* pointer to a memory block where pcode is stored */
-   ULONG  lPCodeSize;           /* total memory size for pcode */
-   ULONG  lPCodePos;            /* actual pcode offset */
-   int    iStaticsBase;         /* base for this function statics */
-   struct __FUNC * pOwner;      /* pointer to the function/procedure that owns the codeblock */
-   struct __FUNC * pNext;       /* pointer to the next defined function */
+   char * szName;                   /* name of a defined Clipper function */
+   char   cScope;                   /* scope of a defined Clipper function */
+   BYTE   bFlags;                   /* some flags we may need */
+   USHORT wParamCount;              /* number of declared parameters */
+   USHORT wParamNum;                /* current parameter number */
+   PVAR   pLocals;                  /* pointer to local variables list */
+   PVAR   pStatics;                 /* pointer to static variables list */
+   PVAR   pFields;                  /* pointer to fields variables list */
+   PVAR   pMemvars;                 /* pointer to memvar variables list */
+   BYTE * pCode;                    /* pointer to a memory block where pcode is stored */
+   ULONG  lPCodeSize;               /* total memory size for pcode */
+   ULONG  lPCodePos;                /* actual pcode offset */
+   int    iStaticsBase;             /* base for this function statics */
+   ULONG  * pNOOPs;                 /* pointer to the NOOP array */
+   ULONG  * pJumps;                 /* pointer to the Jumps array */
+   int    iNOOPs;                   /* NOOPs Counter */
+   int    iJumps;                   /* Jumps Counter */
+   struct __FUNC * pOwner;          /* pointer to the function/procedure that owns the codeblock */
+   struct __FUNC * pNext;           /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
 
 /* structure to control all Clipper defined functions */
@@ -357,6 +361,7 @@ extern BOOL        hb_comp_bCredits;
 extern BOOL        hb_comp_bLogo;
 extern BOOL        hb_comp_bSyntaxCheckOnly;
 extern int         hb_comp_iLanguage;
+extern int         hb_comp_iJumpOptimize;
 
 extern USHORT      hb_comp_wSeqCounter;
 extern USHORT      hb_comp_wForCounter;

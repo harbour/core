@@ -141,7 +141,7 @@ HB_GT_LIBS = \
 
 !if !$d(HB_GT_LIB)
 HB_GT_LIB = $(GTWIN_LIB)
-!endif
+!endif                  
 
 !endif
 

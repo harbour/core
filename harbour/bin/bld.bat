@@ -165,6 +165,8 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
    if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
    if "%HB_COMPILER%" == "msvc"    cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA %CFLAGS% -I..\include %1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\%HB_GT_LIB%.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib user32.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
+
+   if "%HB_GT_LIB%" == "gtwin" set HB_GT_LIB=
    goto END
 
 :A_OS2

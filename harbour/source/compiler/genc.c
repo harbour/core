@@ -45,6 +45,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
    ULONG lPCodePos;
    char chr;
    BOOL bEndProcRequired;
+   LONG lOffset;
 
    FILE * yyc;             /* file handle for C output */
 
@@ -355,74 +356,135 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                lPCodePos++;
                break;
 
+            case HB_P_JUMPSHORT:
+            /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
+               {
+                  lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+
+                  if ( lOffset > 127 )
+                     lOffset -= 256;
+
+                  fprintf( yyc, "\tHB_P_JUMPSHORT, %i,",
+                            pFunc->pCode[ lPCodePos + 1 ] );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+                  fprintf( yyc, "\n" );
+               }
+               lPCodePos += 2;
+               break;
+
             case HB_P_JUMP:
             /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
                {
-                  w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                  lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+
+                  if ( lOffset > SHRT_MAX )
+                     lOffset -= 65536;
+
                   fprintf( yyc, "\tHB_P_JUMP, %i, %i,",
                             pFunc->pCode[ lPCodePos + 1 ],
                             pFunc->pCode[ lPCodePos + 2 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
                   fprintf( yyc, "\n" );
                }
-               lPCodePos += 3;
-               break;
-
-            case HB_P_JUMPFALSE:
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( yyc, "\tHB_P_JUMPFALSE, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
-               fprintf( yyc, "\n" );
-               lPCodePos += 3;
-               break;
-
-            case HB_P_JUMPTRUE:
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( yyc, "\tHB_P_JUMPTRUE, %i, %i,",
-                        pFunc->pCode[ lPCodePos + 1 ],
-                        pFunc->pCode[ lPCodePos + 2 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 3 ) );
-               fprintf( yyc, "\n" );
                lPCodePos += 3;
                break;
 
             case HB_P_JUMPFAR:
             /* if( 1 ) ( lPCodePos + 3 ) < pFunc->lPCodePos ) */
                {
-                  LONG lPos = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+                  lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
+                  if ( lOffset > 8388607L )
+                     lOffset -= 16777216;
+
                   fprintf( yyc, "\tHB_P_JUMPFAR, %i, %i, %i,",
                             pFunc->pCode[ lPCodePos + 1 ],
                             pFunc->pCode[ lPCodePos + 2 ],
                             pFunc->pCode[ lPCodePos + 3 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 4;
+               break;
+
+            case HB_P_JUMPSHORTFALSE:
+               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+
+                if ( lOffset > 127 )
+                   lOffset -= 256;
+
+               fprintf( yyc, "\tHB_P_JUMPSHORTFALSE, %i,",
+                        pFunc->pCode[ lPCodePos + 1 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+               fprintf( yyc, "\n" );
+               lPCodePos += 2;
+               break;
+
+            case HB_P_JUMPFALSE:
+               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+
+                if ( lOffset > SHRT_MAX )
+                   lOffset -= 65536;
+
+               fprintf( yyc, "\tHB_P_JUMPFALSE, %i, %i,",
+                        pFunc->pCode[ lPCodePos + 1 ],
+                        pFunc->pCode[ lPCodePos + 2 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+               fprintf( yyc, "\n" );
+               lPCodePos += 3;
                break;
 
             case HB_P_JUMPFARFALSE:
                {
-                  LONG lPos = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+                  lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
+                  if ( lOffset > 8388607L )
+                     lOffset -= 16777216;
+
                   fprintf( yyc, "\tHB_P_JUMPFARFALSE, %i, %i, %i,",
                            pFunc->pCode[ lPCodePos + 1 ],
                            pFunc->pCode[ lPCodePos + 2 ],
                            pFunc->pCode[ lPCodePos + 3 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 4;
                break;
 
+            case HB_P_JUMPSHORTTRUE:
+               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] );
+               if ( lOffset > 127 )
+                  lOffset -= 256;
+
+               fprintf( yyc, "\tHB_P_JUMPSHORTTRUE, %i,",
+                        pFunc->pCode[ lPCodePos + 1 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+               fprintf( yyc, "\n" );
+               lPCodePos += 2;
+               break;
+
+            case HB_P_JUMPTRUE:
+               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 );
+               if ( lOffset > SHRT_MAX )
+                  lOffset -= 65536;
+
+               fprintf( yyc, "\tHB_P_JUMPTRUE, %i, %i,",
+                        pFunc->pCode[ lPCodePos + 1 ],
+                        pFunc->pCode[ lPCodePos + 2 ] );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
+               fprintf( yyc, "\n" );
+               lPCodePos += 3;
+               break;
+
             case HB_P_JUMPFARTRUE:
                {
-                  LONG lPos = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+                  lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
+                  if ( lOffset > 8388607L )
+                     lOffset -= 16777216;
+
                   fprintf( yyc, "\tHB_P_JUMPFARTRUE, %i, %i, %i,",
                            pFunc->pCode[ lPCodePos + 1 ],
                            pFunc->pCode[ lPCodePos + 2 ],
                            pFunc->pCode[ lPCodePos + 3 ] );
-                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lPos, lPCodePos + ( lPos ? lPos : 4 ) );
+                  if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, ( LONG ) ( lPCodePos + lOffset ) );
                   fprintf( yyc, "\n" );
                }
                lPCodePos += 4;
@@ -1099,12 +1161,12 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
                break;
 
             case HB_P_SEQBEGIN:
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
                fprintf( yyc, "\tHB_P_SEQBEGIN, %i, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
                         pFunc->pCode[ lPCodePos + 2 ],
                         pFunc->pCode[ lPCodePos + 3 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 4 ) );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, lPCodePos + lOffset );
                fprintf( yyc, "\n" );
                lPCodePos += 4;
                break;
@@ -1112,12 +1174,12 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
             case HB_P_SEQEND:
                if( hb_comp_bGenCVerbose ) fprintf( yyc, "/* %05li */ ", lPCodePos );
                else fprintf( yyc, "\t" );
-               w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536;
+               lOffset = ( LONG ) ( pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256 + pFunc->pCode[ lPCodePos + 3 ] * 65536 );
                fprintf( yyc, "HB_P_SEQEND, %i, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
                         pFunc->pCode[ lPCodePos + 2 ],
                         pFunc->pCode[ lPCodePos + 3 ] );
-               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %i (abs: %05li) */", w, lPCodePos + ( w ? w : 4 ) );
+               if( hb_comp_bGenCVerbose ) fprintf( yyc, "\t/* %li (abs: %05li) */", lOffset, lPCodePos + lOffset );
                fprintf( yyc, "\n" );
                lPCodePos += 4;
                break;

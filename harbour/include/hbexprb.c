@@ -648,11 +648,11 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
             HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
 
             HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-            lPosFalse = HB_EXPR_PCODE1( hb_compGenJumpFalse, -1 );
+            lPosFalse = HB_EXPR_PCODE1( hb_compGenJumpFalse, 0 );
             pExpr =pExpr->pNext;
 
             HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-            lPosEnd = HB_EXPR_PCODE1( hb_compGenJump, -1 );
+            lPosEnd = HB_EXPR_PCODE1( hb_compGenJump, 0 );
             pExpr =pExpr->pNext;
 
             HB_EXPR_PCODE1( hb_compGenJumpHere, lPosFalse );
@@ -1993,7 +1993,7 @@ static HB_EXPR_FUNC( hb_compExprUseOr )
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
-            lEndPos = HB_EXPR_PCODE1( hb_compGenJumpTrue, -1 );
+            lEndPos = HB_EXPR_PCODE1( hb_compGenJumpTrue, 0 );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_OR );
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );
@@ -2063,7 +2063,7 @@ static HB_EXPR_FUNC( hb_compExprUseAnd )
 
             HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_DUPLICATE );
-            lEndPos = HB_EXPR_PCODE1( hb_compGenJumpFalse, -1 );
+            lEndPos = HB_EXPR_PCODE1( hb_compGenJumpFalse, 0 );
             HB_EXPR_USE( pSelf->value.asOperator.pRight, HB_EA_PUSH_PCODE );
             HB_EXPR_PCODE1( hb_compGenPCode1, HB_P_AND );
             HB_EXPR_PCODE1( hb_compGenJumpHere, lEndPos );

@@ -89,10 +89,7 @@ extern "C" {
 #define HB_COMP_ERR_BAD_MACRO                   42
 #define HB_COMP_ERR_INVALID_SEND                43
 #define HB_COMP_ERR_FUNC_ANNOUNCE               44
-#define HB_COMP_ERR_INVALID_JUMP                45
-#define HB_COMP_ERR_INVALID_JUMPTRUE            46
-#define HB_COMP_ERR_INVALID_JUMPFALSE           47
-#define HB_COMP_ERR_JUMP_NOT_FOUND              48
+#define HB_COMP_ERR_JUMP_NOT_FOUND              45
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

@@ -362,10 +362,11 @@ void hb_vmQuit( void )
 void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 {
    BYTE bCode;
-   USHORT w = 0;
+   LONG w = 0;
    USHORT uiParams;
    BOOL bCanRecover = FALSE;
    ULONG ulPrivateBase;
+   LONG lOffset;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmExecute(%p, %p)", pCode, pSymbols));
 
@@ -623,7 +624,12 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
              * 2) store the address of RECOVER or END opcode
              */
             hb_stack.pPos->type = HB_IT_LONG;
-            hb_stack.pPos->item.asLong.value = w + pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if ( lOffset > 8388607L )
+               lOffset = ( lOffset - 16777216 );
+
+            hb_stack.pPos->item.asLong.value = w + lOffset;
             hb_stackPush();
             /*
              * 3) store current RECOVER base
@@ -679,7 +685,11 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             /*
              * skip outside of SEQUENCE structure
              */
-            w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if ( lOffset > 8388607L )
+               lOffset = ( lOffset - 16777216 );
+
+            w += lOffset;
             break;
 
          case HB_P_SEQRECOVER:
@@ -712,46 +722,123 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          /* Jumps */
 
+         case HB_P_JUMPSHORT:
+
+            lOffset = pCode[ w + 1 ];
+            if ( lOffset > 127 )
+               lOffset -= 256 ;
+            /*
+            if( lOffset )
+               w += lOffset;
+            else
+               w += 2;
+            */
+            w += lOffset;
+            break;
+
          case HB_P_JUMP:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            if( uiParams )
-               w += uiParams;
+
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            if ( lOffset > SHRT_MAX )
+               lOffset -= 65536;
+            /*
+            if( lOffset )
+               w += lOffset;
             else
                w += 3;
+            */
+            w += lOffset;
             break;
 
          case HB_P_JUMPFAR:
-            uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
-            if( uiParams )
-               w += uiParams;
+            lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            if ( lOffset > 8388607L )
+               lOffset -= 16777216L;
+
+            /*
+            if( lOffset )
+               w += lOffset;
             else
                w += 4;
+            */
+
+            w += lOffset;
+            break;
+
+         case HB_P_JUMPSHORTFALSE:
+            if( ! hb_vmPopLogical() )
+            {
+               lOffset = pCode[ w + 1 ];
+               if ( lOffset > 127 )
+                  lOffset -= 256;
+
+               w += lOffset;
+            }
+            else
+               w += 2;
             break;
 
          case HB_P_JUMPFALSE:
             if( ! hb_vmPopLogical() )
-               w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               if ( lOffset > SHRT_MAX )
+                  lOffset -= 65536;
+
+               w += lOffset;
+            }
             else
                w += 3;
             break;
 
          case HB_P_JUMPFARFALSE:
             if( ! hb_vmPopLogical() )
-               w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+               if ( lOffset > 8388607L )
+                  lOffset -= 16777216L;
+
+               w += lOffset;
+            }
             else
                w += 4;
             break;
 
+         case HB_P_JUMPSHORTTRUE:
+            if( hb_vmPopLogical() )
+            {
+               lOffset = pCode[ w + 1 ];
+               if ( lOffset > 127 )
+                  lOffset -= 256;
+
+               w += lOffset;
+            }
+            else
+               w += 2;
+            break;
+
          case HB_P_JUMPTRUE:
             if( hb_vmPopLogical() )
-               w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+               if ( lOffset > SHRT_MAX )
+                  lOffset -= 65536;
+
+               w += lOffset;
+            }
             else
                w += 3;
             break;
 
          case HB_P_JUMPFARTRUE:
             if( hb_vmPopLogical() )
-               w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+            {
+               lOffset = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + ( pCode[ w + 3 ] * 65536 );
+               if ( lOffset > 8388607L )
+                  lOffset -= 16777216L;
+
+               w += lOffset;
+            }
             else
                w += 4;
             break;

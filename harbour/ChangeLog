@@ -1,3 +1,47 @@
+20000419-05:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/hvm.c
+     + Added PCodes HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE
+
+   * source/compiler/harbour.c
+     + Added hb_compOptimizeJumps() - Jumps Optimizer.
+     + Added hb_compSort_ULONG() Call back function for qsort - used in the Jump Optimizer.
+     + Added support for new elements of _FUNC.
+     * Modified hb_compGen*Jump*() to support Short Normal and Far Jumps.
+
+   * source/include/hbexprb.c
+     * Reverted handling of .OR. .AND. and IIF() to use default (FAR) JUMPs - note the use of (0) when calling hb_compGenJump*().
+
+   * source/compiler/genc.c
+     + Added support for HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE
+
+   * source/compiler/cmdcheck.c
+     + Added support for new switch -J[0|1] default is J1 which enables the Jump Optimizer - Use -J0 to disable.
+
+   * source/compiler/hbgenerr.c
+     - Removed following errors:
+        "Jump offset too long for HB_P_JUMP needed HB_P_JUMPFAR",
+        "Jump offset too long for HB_P_JUMPTRUE needed HB_P_JUMPFARTRUE",
+        "Jump offset too long for HB_P_JUMPFALSE needed HB_P_JUMPFARFALSE",
+
+     * Changed "HB_P_JUMPx not found when fixing offset" to "Jump PCode not found"
+
+   * source/include/hberrors.h
+     - Removed following defines:
+   	#define HB_COMP_ERR_INVALID_JUMPTRUE            46
+   	#define HB_COMP_ERR_INVALID_JUMPFALSE           47
+   	#define HB_COMP_ERR_JUMP_NOT_FOUND              48
+
+   * source/include/hberrors.h
+     + Added following to __FUNC
+   	ULONG  * pNOOPs;                 /* pointer to the NOOP array */
+   	ULONG  * pJumps;                 /* pointer to the Jumps array */
+   	int    iNOOPs;                   /* NOOPs Counter */
+   	int    iJumps;                   /* Jumps Counter */
+
+   * source/include/hbpcode.h
+     + Added HB_P_JAMPSHORT, HB_P_JAMPSHORTFALSE and HB_P_JAMPSHORTTRUE
+
 20000418-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapigt.h
@@ -14,8 +58,8 @@
          modules - this will allow to use native (optimized) method
          of box drawing (xterm!)
         *full implementation of low level hb_gt_Replicate()
-        *added hb_gt_HorizLine() and hb_gt_VertLine() - this can be 
-         extended by definition of HB_LINE() or 
+        *added hb_gt_HorizLine() and hb_gt_VertLine() - this can be
+         extended by definition of HB_LINE() or
          @ row,left,right LINE command (this will get line drawing
          support on platforms where @ ... BOX command is not suitable)
 
@@ -24,7 +68,7 @@
 
     *source/rtl/gtcrs/gtcrs.c
         *support for box drawing added for xterm
-        NOTE: Only 
+        NOTE: Only
         @ y1,x1 TO y2,x2
         and
         @ y1,x1 TO y2,x2 DOUBLE
@@ -33,10 +77,10 @@
         used in current font
         (Well I am not so familiar with it then this needs some
         more work - I can be wrong here :)
-   
+
    If you want a single method of box drawing for all platforms use
    @ y1,x1 TO y2,x2
-   
+
 
 20000418-00:42 DST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
