@@ -164,7 +164,7 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
       nCount := -1
    ELSE
       // Followed by the FOR clause or the ALL clause.
-      nStart := 1
+      nStart := 0
       nCount := -1
    END IF
    IF EMPTY( bFor )
@@ -191,7 +191,11 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
       ELSE
          IF nStart > -1
             // Only reposition if a starting record was specified or implied.
-            GO (nStart)
+            IF nStart == 0
+               GO TOP
+            ELSE
+               GO (nStart)
+            END IF
          END IF
          IF EMPTY( bWhile )
             // This simplifies the looping logic.
