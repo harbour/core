@@ -105,7 +105,7 @@ PROCEDURE THEMAIN( optional )
   DO Optional WITH 1
   DO Optional WITH "something"
 
-  FOR Conter := Optional TO 10
+  FOR Counter := Optional TO 10
     ? "For with End"
   End
 
@@ -137,7 +137,7 @@ PROCEDURE SOMEPROC()
 
   PRIVATE TEST AS NUMERIC
 
-  M->TEST := 1          
+  M->TEST := 1
 
   FOR M->TEST := 1 TO M->TEST + 10
     ? "Incorrect warnings for FOR/NEXT"
@@ -145,7 +145,7 @@ PROCEDURE SOMEPROC()
 
   REPLACE a WITH 1
 
-  M->public_var := 0    
+  M->public_var := 0
 
   b := 0
 
@@ -260,17 +260,4 @@ FUNCTION Hex2Dec( lVar AS LOGICAL )
    ENDIF
 
 RETURN NIL
-
-Function nMyFunc( nParam )
-
-return nParam * 2
-
-function optional(one, two, three, four, five, six, seven, eight, nine, ten)
-return
-
-function cotherfunc(one, two, three, four, five, six, seven, eight, nine, ten)
-return
-
-function extfun(one, two, three, four, five, six, seven, eight, nine, ten)
-return
 
