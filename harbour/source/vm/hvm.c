@@ -57,6 +57,7 @@ void Mult( void );            /* multiplies the latest two values on the stack, 
 void Negate( void );          /* negates (-) the latest value on the stack */
 void Not( void );             /* changes the latest logical value on the stack */
 void NotEqual( void );        /* checks if the two latest values on the stack are not equal, removes both and leaves result */
+void OperatorCall( PITEM, PITEM, char *); /* call an overloaded operator */
 void Or( void );              /* performs the logical OR on the latest two values, removes them and leaves result on the stack */
 void Plus( void );            /* sums the latest two values on the stack, removes them and leaves the result */
 long PopDate( void );         /* pops the stack latest value and returns its date value as a LONG */
@@ -117,6 +118,8 @@ void CodeblockCopy( PITEM, PITEM );
 void CodeblockDetach( PCODEBLOCK );
 
 static void ForceLink( void );
+
+ULONG hb_isMessage( PITEM, char * );
 
 #define STACK_INITITEMS   100
 #define STACK_EXPANDITEMS  20
@@ -777,6 +780,9 @@ void Equal( BOOL bExact )
    else if( IS_NUMERIC( pItem1 ) && IS_NUMERIC( pItem2 ) )
       PushLogical( PopDouble() == PopDouble() );
 
+   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem1, "==" ) )
+      OperatorCall( pItem1, pItem2, "==" );
+
    else if( pItem1->wType != pItem2->wType )
    {
       printf( "types not match on equal operation\n" );
@@ -1188,6 +1194,9 @@ void NotEqual( void )
    else if( IS_LOGICAL( pItem1 ) && IS_LOGICAL( pItem2 ) )
       PushLogical( PopLogical() != PopLogical() );
 
+   else if( IS_OBJECT( pItem1 ) && hb_isMessage( pItem1, "!=" ) )
+      OperatorCall( pItem1, pItem2, "!=" );
+
    else if( pItem1->wType != pItem2->wType )
    {
       printf( "types not match on equal operation\n" );
@@ -1239,6 +1248,14 @@ void Mult( void )
    double d1 = PopDouble();
 
    PushNumber( d1 * d2 );
+}
+
+void OperatorCall( PITEM pItem1, PITEM pItem2, char *szSymbol )
+{
+   Push( pItem1 );                             /* Push object              */
+   Message( GetDynSym( szSymbol )->pSymbol );  /* Push operation           */
+   Push( pItem2 );                             /* Push argument            */
+   Function( 1 );
 }
 
 void Or( void )

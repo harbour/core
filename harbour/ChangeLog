@@ -1,3 +1,7 @@
+19990515-12:50 CET Eddie Runia
+  * tests/working/overload.prg; source/rtl/hvm.c
+    overloading basis
+
 19990515-10:20 CET Eddie Runia
   * tests/working/*.bat  make and build files added
 
