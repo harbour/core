@@ -1,3 +1,13 @@
+2001-08-27 18:10 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   + contrib/hgf/win32
+     * New directory added
+   + contrib/hgf/win32/win32.c
+     * Win32 GUI layer
+   + contrib/hgf/win32/tform.prg
+   + contrib/hgf/win32/tmenu.prg
+   + contrib/hgf/win32/tmenuitm.prg
+     * copied from contrib/os2pm with minor changes
+
 2001-08-25 03:05 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/dot/pp.prg
       * added note: This is being expanded independently from Harbour
