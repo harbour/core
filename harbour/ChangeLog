@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-02-12 10:00 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  + source/codepage/cdpgedos.c
+    + German dos codepage, provided by Guenther Steiner <byte-one@aon.at>
+  * source/codepage/Makefile
+  * makefile.bc
+  * makefile.vc
+  * makefile.nt
+    * cdpgedos.c added
+
 2003-02-10 23:20 UTC+1 jf Lefebvre (mafact) <jfl@mafact.com>
   * source\compiler\harbour.y
     Missing external declaration 'hb_compLocalGetPos'
