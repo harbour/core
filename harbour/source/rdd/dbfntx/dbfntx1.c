@@ -744,11 +744,11 @@ static void hb_ntxTagKeyRead( LPTAGINFO pTag, BYTE bTypRead )
    {
       if( bTypRead == PREV_RECORD)
       {
-         pTag->TagBOF = TRUE; pTag->TagEOF = FALSE; 
+         pTag->TagBOF = TRUE; pTag->TagEOF = FALSE;
       }
       else
       {
-         pTag->TagBOF = TRUE; pTag->TagEOF = TRUE; 
+         pTag->TagBOF = TRUE; pTag->TagEOF = TRUE;
       }
    }
    if( pTag->TagBOF || pTag->TagEOF )
@@ -778,7 +778,7 @@ static int hb_ntxItemCompare( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL Exact )
          iLimit = ( pKey1->item.asString.length >
                     pKey2->item.asString.length ) ?
                     pKey2->item.asString.length : pKey1->item.asString.length;
-         if( ( iResult = memcmp( pKey1->item.asString.value, 
+         if( ( iResult = memcmp( pKey1->item.asString.value,
                                pKey2->item.asString.value, iLimit ) ) != 0 )
             break;
          else
@@ -2168,72 +2168,85 @@ static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll )
       return FAILURE;
 }
 
-static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
+static ERRCODE ntxGoCold( NTXAREAP pArea )
 {
    LPNTXINDEX lpIndex, lpIndexTmp;
    LPKEYINFO pKey, pKeyOld;
    LPTAGINFO pTag;
    LPPAGEINFO pPage;
-   PHB_ITEM pItemNew;
+   BOOL fRecordChanged = pArea->fRecordChanged;
 
-   HB_TRACE(HB_TR_DEBUG, ("ntxPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
+   HB_TRACE(HB_TR_DEBUG, ("ntxGoCold(%p)", pArea));
 
-   pItemNew = hb_itemNew( pItem );
-   hb_itemClear( pItem );
-
-   lpIndex = pArea->lpNtxIndex;
-   lpIndexTmp = pArea->lpCurIndex;
-   while( lpIndex )
+   if( SUPER_GOCOLD( ( AREAP ) pArea ) == SUCCESS )
    {
-      pTag = lpIndex->CompoundTag;
-      hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
-      lpIndex = lpIndex->pNext;
-   }
-
-   /* printf( "\n\rntxPutValue - 1:  |%s|",pItemNew->item.asString.value ); */
-
-   SUPER_PUTVALUE( ( AREAP ) pArea, uiIndex, pItemNew);
-   hb_itemRelease( pItemNew );
-
-   pKey = hb_ntxKeyNew( NULL );
-   pKeyOld = hb_ntxKeyNew( NULL );
-   lpIndex = pArea->lpNtxIndex;
-   while( lpIndex )
-   {
-      pTag = lpIndex->CompoundTag;
-      hb_ntxGetCurrentKey( pTag, pKey );
-      if( hb_ntxItemCompare( pKey->pItem, pTag->CurKeyInfo->pItem, TRUE ) )
+      if( fRecordChanged )
       {
-         pArea->lpCurIndex = lpIndex;
-         hb_itemCopy( pKeyOld->pItem, pTag->CurKeyInfo->pItem );
-         pKeyOld->Xtra = pTag->CurKeyInfo->Xtra;
-         pKeyOld->Tag = NTX_IGNORE_REC_NUM;
-         if( pArea->fShared )
-            while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
-         if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
+         pKey = hb_ntxKeyNew( NULL );
+         pKeyOld = hb_ntxKeyNew( NULL );
+         lpIndexTmp = pArea->lpCurIndex;
+         lpIndex = pArea->lpNtxIndex;
+         while( lpIndex )
          {
-             printf( "\n\rntxPutValue: Cannot find current key:" );
-             lpIndex = lpIndex->pNext;
-             continue;
+            pTag = lpIndex->CompoundTag;
+            hb_ntxGetCurrentKey( pTag, pKey );
+            if( hb_ntxItemCompare( pKey->pItem, pTag->CurKeyInfo->pItem, TRUE ) )
+            {
+               pArea->lpCurIndex = lpIndex;
+               hb_itemCopy( pKeyOld->pItem, pTag->CurKeyInfo->pItem );
+               pKeyOld->Xtra = pTag->CurKeyInfo->Xtra;
+               pKeyOld->Tag = NTX_IGNORE_REC_NUM;
+               if( pArea->fShared )
+                  while( !hb_fsLock( lpIndex->DiskFile, 0, 512, FL_LOCK ) );
+               if( hb_ntxTagFindCurrentKey( hb_ntxPageLoad( 0 ), pKeyOld->Tag, pKeyOld, FALSE, FALSE, 1 ) )
+               {
+                   printf( "\n\rntxGoCold: Cannot find current key:" );
+                   lpIndex = lpIndex->pNext;
+                   continue;
+               }
+               pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
+               pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
+               hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
+               hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pKey->pItem, 0, FALSE );
+               if( pArea->fShared )
+               {
+                  hb_ntxPageFree( pTag->RootPage,TRUE );
+                  pTag->RootPage = NULL;
+                  hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
+               }
+            }
+            lpIndex = lpIndex->pNext;
          }
-         pPage = hb_ntxPageLoad( pTag->CurKeyInfo->Tag );
-         pPage->CurKey =  hb_ntxPageFindCurrentKey( pPage,pTag->CurKeyInfo->Xtra ) - 1;
-         hb_ntxPageKeyDel( pPage, pPage->CurKey, 1 );
-         hb_ntxPageKeyAdd( hb_ntxPageLoad( 0 ), pKey->pItem, 0, FALSE );
-         if( pArea->fShared )
-         {
-            hb_ntxPageFree( pTag->RootPage,TRUE );
-            pTag->RootPage = NULL;
-            hb_fsLock( lpIndex->DiskFile, 0, 512, FL_UNLOCK );
-         }
+         hb_ntxKeyFree( pKeyOld );
+         hb_ntxKeyFree( pKey );
+         pArea->lpCurIndex = lpIndexTmp;
       }
-      lpIndex = lpIndex->pNext;
+      return SUCCESS;
    }
-   hb_ntxKeyFree( pKeyOld );
-   hb_ntxKeyFree( pKey );
-   pArea->lpCurIndex = lpIndexTmp;
+   else
+      return FAILURE;
+}
 
-   return SUCCESS;
+static ERRCODE ntxGoHot( NTXAREAP pArea )
+{
+   LPNTXINDEX lpIndex;
+   LPTAGINFO pTag;
+
+   HB_TRACE(HB_TR_DEBUG, ("ntxGoHot(%p)", pArea));
+
+   if( SUPER_GOHOT( ( AREAP ) pArea ) == SUCCESS )
+   {
+      lpIndex = pArea->lpNtxIndex;
+      while( lpIndex )
+      {
+         pTag = lpIndex->CompoundTag;
+         hb_ntxGetCurrentKey( pTag, pTag->CurKeyInfo );
+         lpIndex = lpIndex->pNext;
+      }
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
 }
 
 /*
@@ -2745,7 +2758,7 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
       hb_ntxIndexCreate( lpIndex );
 
       hb_fsSeek( lpIndex->DiskFile , 0 , 0 );
-      lpIndex->CompoundTag->TagBlock = 
+      lpIndex->CompoundTag->TagBlock =
               hb_fsSeek( lpIndex->DiskFile, 0, SEEK_END ) - 1024;
 
       lpIndex = lpIndex->pNext;
@@ -2845,10 +2858,10 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxGetRec,
                              ntxGetValue,
                              ntxGetVarLen,
-                             ntxGoCold,
-                             ntxGoHot,
+                             ( DBENTRYP_V ) ntxGoCold,
+                             ( DBENTRYP_V ) ntxGoHot,
                              ntxPutRec,
-                             ( DBENTRYP_SI ) ntxPutValue,
+                             ntxPutValue,
                              ntxRecall,
                              ntxRecCount,
                              ntxRecInfo,

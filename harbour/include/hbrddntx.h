@@ -317,10 +317,10 @@ static ERRCODE ntxAppend( NTXAREAP pArea, BOOL bUnLockAll );
 #define ntxGetRec                NULL
 #define ntxGetValue              NULL
 #define ntxGetVarLen             NULL
-#define ntxGoCold                NULL
-#define ntxGoHot                 NULL
+static ERRCODE ntxGoCold( NTXAREAP pArea );
+static ERRCODE ntxGoHot( NTXAREAP pArea );
 #define ntxPutRec                NULL
-static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
+#define ntxPutValue              NULL
 #define ntxRecall                NULL
 #define ntxRecCount              NULL
 #define ntxRecInfo               NULL

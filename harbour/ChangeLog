@@ -1,3 +1,12 @@
+2001-05-16 10:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * include/hbrddntx.h
+   * source/rddntx/dbfntx1.c
+     + added ntxGoHot()
+     + added ntxGoCold()
+     - removed ntxPutValue()
+     * corrected index updating - now it is done with ntxGoHot() and
+       ntxGoCold(), as it should be.
+
 2001-05-15 20:15 UTC+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
      * minor modif to hb___msgClsSel() as indicated by Chen
