@@ -51,6 +51,7 @@ function TBColumnNew( cHeading, bBlock )
 
    oCol:Heading = cHeading
    oCol:block   = bBlock
+   oCol:Width   = If( cHeading != nil, Len( cHeading ), 10 )
 
 return oCol
 

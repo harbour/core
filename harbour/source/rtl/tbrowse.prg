@@ -46,6 +46,7 @@ CLASS TBrowse
    DATA rowPos        // Current cursor row position
    DATA skipBlock     // Code block used to reposition data source
    DATA stable        // Indicates if the TBrowse object is stable
+   DATA StabLevel     // Stabilize() progressive level
 
    METHOD New()                    // Constructor
    METHOD Down()           VIRTUAL // Moves the cursor down one row
@@ -93,7 +94,7 @@ CLASS TBrowse
    METHOD SetColumn( nColumn, oCol ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                                 ::aColumns[ nColumn ] := oCol, nil ), oCol // Replaces one TBColumn object with another
 
-   METHOD Stabilize()      VIRTUAL // Performs incremental stabilization
+   METHOD Stabilize()              // Performs incremental stabilization
 
 ENDCLASS
 
@@ -113,6 +114,7 @@ METHOD New() CLASS TBrowse
    ::ColSep    = " "
    ::FootSep   = ""
    ::HeadSep   = ""
+   ::StabLevel = 0
 
 return Self
 
@@ -125,6 +127,28 @@ METHOD DelColumn( nPos ) CLASS TBrowse
    ::Configure( 2 )
 
 return oCol
+
+METHOD Stabilize() CLASS TBrowse
+
+   local n, lDisplay := .t.
+
+   @ ::nTop, ::nLeft SAY PadC( ::aColumns[ 1 ]:Heading, ::nRight - ::nLeft ) ;
+      COLOR ::ColorSpec
+
+   for n = 1 to ::nBottom - ::nTop
+      if lDisplay
+         @ ::nTop + n, ::nLeft SAY ;
+            PadC( SubStr( Eval( ::aColumns[ 1 ]:Block ), 1, ::aColumns[ 1 ]:Width ),;
+                  ::nRight - ::nLeft ) ;
+            COLOR ::ColorSpec
+      else
+         @ ::nTop + n, ::nLeft SAY Space( ::nRight - ::nLeft ) ;
+            COLOR ::ColorSpec
+      endif
+      lDisplay = Eval( ::SkipBlock, 1 ) != 0
+   next
+
+return .t.
 
 function TBrowseNew( nTop, nLeft, nBottom, nRight )
 
