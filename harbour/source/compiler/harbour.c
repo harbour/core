@@ -654,6 +654,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
                      wLocal++;
                   }
                   pLastVar->pNext = pVar;
+                  wLocal++;
                }
                if( hb_comp_iVarScope == VS_PARAMETER )
                {
