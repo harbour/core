@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+   * source/rtl/saverest.c
+       instructions.
+
+2002-01-29 10:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/extend.c
+     + New functions hb_retcbuffer() and hb_retcconst() added
+
+   * source/vm/itemapi.c
      + New function hb_itemPutCConst() added
 
    * include/hbapi.h

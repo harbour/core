@@ -85,7 +85,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
    end
 
    while nLine <= nLines
-      cLine  := MemoLine( cObjectText,, nLine )
+      cLine  := MemoLine( cObjectText, 254, nLine )
 
       do case
          case Upper( LTrim( __StrToken( cLine, 1 ) ) ) == "OBJECT"
@@ -133,7 +133,7 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
       uNewValue := __objSendMsg( oNew, aProperties[ n ] )
       cType  := ValType( uValue )
 
-      if cType == ValType( uNewValue ) .AND. ! uValue == uNewValue
+      if cType != ValType( uNewValue ) .OR. ! uValue == uNewValue
 
          do case
             case cType == "A"

@@ -14,9 +14,9 @@ ID = impdef
 #       I'll leave it to TASM until a better solution is found
 AS = tasm
 
-BIN_DIR = ..\..\..\bin
-OBJ_DIR = ..\..\..\obj\b32
-LIB_DIR = ..\..\..\lib\b32
+BIN_DIR = ..\..\bin
+OBJ_DIR = ..\..\obj\b32
+LIB_DIR = ..\..\lib\b32
 
 COMMON_LIB   = $(LIB_DIR)\common.lib
 DBFCDX_LIB   = $(LIB_DIR)\dbfcdx.lib
@@ -45,11 +45,11 @@ ARFLAGS = /P32
 # Directory macros. These should never have to change.
 #
 
-INCLUDE_DIR  = ..\..\..\include;.;\temp\ziparchive
+INCLUDE_DIR  = ..\..\include;.
 ZLIB_DIR     = .
 WINSYS_DIR   = \WINDOWS\SYSTEM
 CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)  -DWIN32
-CLIBFLAGS  = $(CFLAGS) 
+CLIBFLAGS  = $(CFLAGS)
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2  -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        = $(LDFLAGS)
@@ -59,7 +59,7 @@ LDFLAGS        = $(LDFLAGS)
 #
 
 ZLIB_LIB   = $(LIB_DIR)\zlib1.lib
-ZLIB_EXE   = $(ZLIB_DIR)\x\test.exe
+ZLIB_EXE   = $(ZLIB_DIR)\test.exe
 
 
 ZLIB_BOR_LIB = $(LIB_DIR)\ziparchive.lib
@@ -74,8 +74,8 @@ ZLIB_EXE_OBJS =  \
 all: \
    $(ZLIB_LIB) \
    $(ZLIB_EXE_OBJS) \
-   $(ZLIB_EXE) 
-     
+   $(ZLIB_EXE)
+
 
 $(ZLIB_LIB) = $(ZLIB_LIB_OBJS)
 
@@ -102,7 +102,7 @@ $(ZLIB_EXE) : $(ZLIB_EXE_OBJS)
    echo. $(CFLAGS)  > make.tmp
    echo. -M -e$(ZLIB_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
-   echo. $(OBJ_DIR)\test.obj >> make.tmp 
+   echo. $(OBJ_DIR)\test.obj >> make.tmp
    echo. $(ZLIB_LIB) >> make.tmp
    echo. $(ZLIB_BOR_LIB) >> make.tmp
    echo. $(PP_LIB) >> make.tmp
