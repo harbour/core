@@ -1,3 +1,11 @@
+2000-11-10 11:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.sly
+     + Added support for early macro of expansion declared symbol for simple macro expression within CodeBlock (Like Clipper).
+
+   * source/rtl/tgetint.prg
+     ! Corrected creation of bSetGet if uVar == NIL, to avoid compile error:
+       "Code block contains both macro and declared symbol references".
+
 2000-11-09 23:30 GMT -3 (for) Harrier <culik@sl.conex.net>
   *source/rdd/rddcpy.c
     *Some fix suggested by Victor

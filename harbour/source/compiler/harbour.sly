@@ -118,7 +118,9 @@ static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
 static HB_EXPR_PTR pArrayIndexAsList = NULL, pGetArgList = NULL, pBaseArrayName = NULL;
+
 static BOOL bTrancuateBaseArray = FALSE, bBlock = FALSE, bBlockMacro = FALSE, bBlockDeclared = FALSE;
+static HB_EXPR_PTR pBlockSimple;
 
 extern int    hb_compLocalGetPos( char * szVarName ); /* returns the order + 1 of a local variable */
 extern int    hb_compStaticGetPos( char *, PFUNCTION );   /* return if passed name is a static variable */
@@ -503,9 +505,9 @@ ArrayAtAlias : ArrayAt ALIASOP      { $$ = $1; }
  */
 Variable    : IdentName         {
                                   $$ = hb_compExprNewVar( $1 );
-                                  if( bBlock && ( hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast ) ) )
+                                  if( bBlock )
 				  {
-                                     bBlockDeclared = TRUE;
+                                     bBlockDeclared = ( bBlockDeclared || hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast ) );
 				  }
                                 }
 ;
@@ -515,9 +517,15 @@ VarAlias    : IdentName ALIASOP      { $$ = hb_compExprNewAlias( $1 ); }
 
 /* Macro variables
  */
-MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 ); if( bBlock ) bBlockMacro = TRUE }
-            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1 ); if( bBlock ) bBlockMacro = TRUE; }
-;
+MacroVar    : MACROVAR        { $$ = hb_compExprNewMacro( NULL, '&', $1 );
+                                if( bBlock )
+				{
+				   bBlockDeclared = bBlockDeclared || hb_compLocalGetPos( $1 ) || hb_compStaticGetPos( $1, hb_comp_functions.pLast );
+                                   bBlockMacro = TRUE;
+				}
+                              }
+            | MACROTEXT       { $$ = hb_compExprNewMacro( NULL, 0, $1 ); }
+	    ;
 
 MacroVarAlias  : MacroVar ALIASOP   { $$ = $1; }
 ;
@@ -1046,10 +1054,20 @@ CodeBlock  : '{' '|' { bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock() } B
                      {
                        if( bBlockMacro )
 		       {
-                          if( bBlockDeclared )
+			  if( pBlockSimple && pBlockSimple->ExprType == HB_ET_MACRO && pBlockSimple->value.asMacro.SubType == HB_ET_MACRO_VAR )
+			  {
+			     HB_EXPR_PTR pMacroVar, pBlockString;
+
+			     pMacroVar    = hb_compExprNewVar( pBlockSimple->value.asMacro.szMacro );
+			     pBlockString = hb_compExprNewString( "{||" );
+			     pBlockString = hb_compExprSetOperand( hb_compExprNewPlus( pBlockString ), pMacroVar );
+			     pBlockString = hb_compExprSetOperand( hb_compExprNewPlus( pBlockString ), hb_compExprNewString( "}" ) );
+		             $<asExpr>$   = hb_compExprNewMacro( pBlockString, 0, NULL );
+			  }
+                          else if( bBlockDeclared )
 			  {
                              hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, NULL, NULL );
-                             $$ = $<asExpr>3;
+                             $<asExpr>$ = $<asExpr>3;
 			  }
 			  else
 			  {
@@ -1068,10 +1086,20 @@ CodeBlock  : '{' '|' { bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock() } B
                      {
                        if( bBlockMacro )
 		       {
-                          if( bBlockDeclared )
+			  if( pBlockSimple && pBlockSimple->ExprType == HB_ET_MACRO && pBlockSimple->value.asMacro.SubType == HB_ET_MACRO_VAR )
+			  {
+			     HB_EXPR_PTR pMacroVar, pBlockString;
+
+			     pMacroVar    = hb_compExprNewVar( pBlockSimple->value.asMacro.szMacro );
+			     pBlockString = hb_compExprNewString( "{||" );
+			     pBlockString = hb_compExprSetOperand( hb_compExprNewPlus( pBlockString ), pMacroVar );
+			     pBlockString = hb_compExprSetOperand( hb_compExprNewPlus( pBlockString ), hb_compExprNewString( "}" ) );
+		             $<asExpr>$   = hb_compExprNewMacro( pBlockString, 0, NULL );
+			  }
+                          else if( bBlockDeclared )
 			  {
                              hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, NULL, NULL );
-                             $$ = $<asExpr>3;
+                             $<asExpr>$ = $<asExpr>3;
 			  }
 			  else
 			  {
@@ -1089,8 +1117,8 @@ CodeBlock  : '{' '|' { bBlock = TRUE; $<asExpr>$ = hb_compExprNewCodeBlock() } B
 
 /* NOTE: This uses $-2 then don't use BlockExpList in other context
  */
-BlockExpList : Expression                  { $$ = hb_compExprAddListExpr( $<asExpr>-2, $1 ); }
-             | BlockExpList ',' Expression { $$ = hb_compExprAddListExpr( $<asExpr>-2, $3 ); }
+BlockExpList : Expression                  { pBlockSimple = $1;   $$ = hb_compExprAddListExpr( $<asExpr>-2, $1 ); }
+             | BlockExpList ',' Expression { pBlockSimple = NULL; $$ = hb_compExprAddListExpr( $<asExpr>-2, $3 ); }
              ;
 
 /* NOTE: This is really not needed however it allows the use of $-2 item
