@@ -212,7 +212,7 @@ Function GetSourceDirMacros()
        Endif
      Enddo
      For nCounter := 1 To Len( aStru )
-        Aadd( amacros, { "SRC" + Strzero( nCounter, 2, 0 ), Strtran( astru[ nCounter ], cDir, '' ) } )
+        Aadd( amacros, { "SRC" + Strzero( nCounter, 2, 0 ), Strtran( astru[ nCounter ], cDir, '' ),.f. } )
      Next
 Return amacros
 

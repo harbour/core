@@ -22,9 +22,6 @@ items (Clipper passes a pointer to the same
 allocated memory instead of creating
 string copies)
 
-Finish HbMake                                Luiz Rafael Culik
-
-
 Map Harbour functions 10 chars to be         Luiz Rafael Culik
 compatible with Caclipper
 

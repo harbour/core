@@ -113,14 +113,14 @@ Local nPos
 Local aDef := {}
 Local cOs:=OS()
 Local allParam
-Local oProfile := HBProfile():new()
+
 Default p1 To ""
 Default p2 To ""
 Default p3 To ""
 Default p4 To ""
 Default p5 To ""
 Default p6 To ""
-   __setProfiler( .T. )
+
 if at("OS/2",cOs)>0
     lGcc:=.t.
     lLinux:=.t.
@@ -224,10 +224,6 @@ if at("-EL",allparam)>0 .or. at("-ELX",allparam)>0
       endif
       lLibrary:=.T.
       crtlibmakfile( cFile )
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
-
       Return nil
    Endif
 
@@ -239,10 +235,6 @@ if at("-E",allparam)>0 .or. at("-EX",allparam)>0
          allparam:=strtran(allparam,"-E","")
       endif
       crtmakfile( cFile )
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
-
       Return nil
    Endif
 
@@ -335,10 +327,6 @@ if at("-EL",allparam)>0 .or. at("-ELX",allparam)>0
       endif
       lLibrary:=.T.
       crtlibmakfile( cFile )
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
-
       Return nil
    Endif
 
@@ -351,10 +339,6 @@ if at("-E",allparam)>0
          allparam:=strtran(allparam,"-E","")
       endif
       crtmakfile( cFile )
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
-
       Return nil
    Endif
 
@@ -399,10 +383,6 @@ CompUpdatedfiles()
 endif
 outstd(cLinkComm)
 ! ( cLinkcomm )
-         oProfile:gather()
-         
-         HBProfileReportToFile():new( oProfile:callSort() ):generate( {|o| o:nCalls > 0 } )
-
 Return nil
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
@@ -1197,7 +1177,7 @@ Fwrite( nLinkHandle, "!ifndef BHC" + CRLF )
 Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle, " " + CRLF )
-amacros:=GetSourceDirMacros()
+
 
 Cls
 Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
@@ -1235,6 +1215,7 @@ if !empty(cobjDir)
       dirchange('..')
    endif
 endif
+amacros:=GetSourceDirMacros()
 if lGcc
 cObjDir:=alltrim(cObjDir)
 if !empty(cObjDir)
@@ -1400,11 +1381,19 @@ for x:=1 to len(amacros)
          nPos:=ascan(aprgs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
       AEVAL(aprgs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,aprgs[b]:=strtran(a,cpath,"$("+amacros[x,1]+')\'),)})
-      Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
+       if !amacros[x,3]
+            Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
+            amacros[x,3]:=.t.
+        endfif
       endif
       nPos:=ascan(acs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
-      AEVAL(acs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,acs[b]:=strtran(a,cpath,"$("+amacros[x,1]+if(lgcc,")/",')\')),)})
+       if !amacros[x,3]
+         AEVAL(acs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,acs[b]:=strtran(a,cpath,"$("+amacros[x,1]+if(lgcc,")/",')\')),)})
+            Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
+            amacros[x,3]:=.t.
+        endfif
+
       endif
       nPos:=ascan(aObjs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
@@ -1868,7 +1857,7 @@ Local cExt:=""
 Local cDrive:=""
 local cPath:=""
 Local cTest:=""
-
+local cLast:=''
 nLinkHandle := Fcreate( cFile )
 Fwrite( nLinkHandle, "#BCC" + CRLF )
 Fwrite( nLinkHandle, "VERSION=BCB.01" + CRLF )
@@ -1882,7 +1871,7 @@ Fwrite( nLinkHandle, "BHC = $(HMAKEDIR)" + CRLF )
 Fwrite( nLinkHandle, "!endif" + CRLF )
 Fwrite( nLinkHandle, " " + CRLF )
 
-amacros:=GetSourceDirMacros()
+
 
 Cls
 Setcolor( 'w/b+,w/b,w+/b,w/b+,w/b,w+/b' )
@@ -1911,6 +1900,7 @@ if !empty(cobjDir)
       dirchange('..')
    endif
 endif
+amacros:=GetSourceDirMacros()
 if lGcc
    cObjDir:=alltrim(cObjDir)
    if !empty(cObjDir)
@@ -2030,14 +2020,22 @@ endif
 for x:=1 to len(amacros)
    if !empty(amacros[x,2])       
          cItem := amacros[x,2]
+         
          nPos:=ascan(aprgs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
       AEVAL(aprgs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,aprgs[b]:=strtran(a,cpath,"$("+amacros[x,1]+')\'),)})
-      Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
+      if !amacros[x,3]
+            Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
+            amacros[x,3]:=.t.
+      endif
       endif
       nPos:=ascan(acs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
-      AEVAL(acs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,acs[b]:=strtran(a,cpath,"$("+amacros[x,1]+if(lgcc,")/",')\')),)})
+            AEVAL(acs,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,acs[b]:=strtran(a,cpath,"$("+amacros[x,1]+if(lgcc,")/",')\')),)})
+            if !amacros[x,3]
+                  Fwrite( nLinkHandle, amacros[x,1] + ' = ' +left(amacros[x,2],len(amacros[x,2])-1) +" " + CRLF )
+                  amacros[x,3]:=.t.
+            endif
       endif
       nPos:=ascan(aObjs,{|z| hb_FNAMESPLIT(z,@cPath ,@cTest, @cExt , @cDrive),cpath==citem})
       if nPos>0
@@ -2051,7 +2049,7 @@ for x:=1 to len(amacros)
       if nPos>0
          if !empty(cObjDir)
             AEVAL(aObjsc,{|a,b| hb_FNAMESPLIT(a,@cPath ,@cTest, @cExt , @cDrive),if(cPath==citem,aObjsc[b]:=strtran(a,cpath,"$("+amacros[x,1]+if(lgcc,")/",')\')),)})
-         endif
+          endif
       endif
       endif
 
