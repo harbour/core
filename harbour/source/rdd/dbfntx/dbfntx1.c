@@ -1602,7 +1602,7 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
         else
         {
            pPagePair = hb_ntxPageLoad( pTag, KEYITEM( pPageParent, pairkey )->page );
-           if( pPageParent->uiKeys == 1 &&
+           if( pPageParent->uiKeys == 1 && pPage->uiKeys && pPagePair->uiKeys &&
                  ( pPage->uiKeys + pPagePair->uiKeys ) > pTag->MaxKeys - 2 )
            {
               hb_ntxPageRelease( pTag,pPageParent );
@@ -1633,7 +1633,7 @@ static void hb_ntxTagBalance( LPTAGINFO pTag, int level )
          else
          {
            pPagePair = hb_ntxPageLoad( pTag, KEYITEM( pPageParent, pairkey )->page );
-           if( pPageParent->uiKeys == 1 &&
+           if( pPageParent->uiKeys == 1 && pPage->uiKeys  && pPagePair->uiKeys &&
                  ( pPage->uiKeys + pPagePair->uiKeys ) > pTag->MaxKeys - 2 )
            {
               hb_ntxPageRelease( pTag,pPageParent );
