@@ -18,5 +18,5 @@ Later on add HBCLIP.LIB to your link script.
 Optionally you may want to #include "hbclip.ch" to 
 your source files.
 
-Victor Szakats <info@szelvesz.hu>
+Viktor Szakats <viktor.szakats@syenar.hu>
 

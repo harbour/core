@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    Rewritten in C
  *
  * See doc/license.txt for licensing terms.

@@ -52,7 +52,7 @@
 
 /* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
          the debugger output may interfere with the applications output
-         redirection, and is also slower. [vszel] */
+         redirection, and is also slower. [vszakats] */
 
 #include "hbclass.ch"
 #include "common.ch"

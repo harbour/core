@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    GETE()
  *
  * See doc/license.txt for licensing terms.
@@ -64,7 +64,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-/* NOTE: The second parameter is a Harbour extension. In CA-Cl*pper the 
+/* NOTE: The second parameter is a Harbour extension. In CA-Cl*pper the
          function will return an empty string if called with more than one
          parameter. [vszakats] */
 

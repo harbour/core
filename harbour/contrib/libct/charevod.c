@@ -8,7 +8,7 @@
  *     - CHAREVEN()
  *     - CHARODD()
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ * Copyright 2000-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *
  * Merged into one file for optimization and some small corrections:
  * (c) 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany

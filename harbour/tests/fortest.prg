@@ -4,7 +4,8 @@
 
 // Testing Harbour For Next loops for Clipper compatibility
 
-// ; Donated to the public domain by Victor Szakats <info@szelvesz.hu>
+// ; Donated to the public domain by
+//   Viktor Szakats <viktor.szakats@syenar.hu>
 
 // TODO: add test for "step 0"
 

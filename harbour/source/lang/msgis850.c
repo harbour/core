@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (IS850)
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu> (English, from msgen.c)
+ * Copyright 2000 Viktor Szakats <viktor.szakats@syenar.hu> (English, from msgen.c)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (Icelandic)
  * www - http://www.harbour-project.org
  *
@@ -44,16 +44,16 @@ static HB_LANG s_lang =
 {
    {
       /* Identification */
-   
+
       "IS850",                     /* ID */
       "Icelandic",                 /* Name (in English) */
       "÷slenska",                  /* Name (in native language) */
       "IS",                        /* RFC ID */
       "850",                       /* Codepage */
       "$Revision$ $Date$",         /* Version */
-   
+
       /* Month names */
-   
+
       "Jan£ar",
       "Febr£ar",
       "Mars",
@@ -66,9 +66,9 @@ static HB_LANG s_lang =
       "Okt¢ber",
       "N¢vember",
       "Desember",
-   
+
       /* Day names */
-   
+
       "Sunnudagur",
       "M†nudagur",
       "Ëri–judagur",
@@ -76,9 +76,9 @@ static HB_LANG s_lang =
       "Fimmtudagur",
       "Fîstudagur",
       "Laugardagur",
-   
+
       /* CA-Cl*pper compatible natmsg items */
-   
+
       "Gagnagrunnar      Skr†artal    S°–ast Breytt   Stër–",
       "Viltu fleyri pr¢fanir?",
       "Blads°–a",
@@ -92,9 +92,9 @@ static HB_LANG s_lang =
       " - ",
       "J/N",
       "‡GILD EXPRESSION",
-   
+
       /* Error description names */
-   
+
       "Unknown error",
       "Argument error",
       "Bound error",
@@ -146,35 +146,35 @@ static HB_LANG s_lang =
       "array dimension",
       "not an array",
       "conditional",
-   
+
       /* Internal error names */
-   
+
       "Unrecoverable error %lu: ",
       "Error recovery failure",
-      "No ERRORBLOCK() for error", 
-      "Too many recursive error handler calls", 
+      "No ERRORBLOCK() for error",
+      "Too many recursive error handler calls",
       "RDD invalid or failed to load",
-      "Invalid method type from %s", 
-      "hb_xgrab can't allocate memory", 
-      "hb_xrealloc called with a NULL pointer", 
-      "hb_xrealloc called with an invalid pointer", 
-      "hb_xrealloc can't reallocate memory", 
-      "hb_xfree called with an invalid pointer", 
-      "hb_xfree called with a NULL pointer", 
+      "Invalid method type from %s",
+      "hb_xgrab can't allocate memory",
+      "hb_xrealloc called with a NULL pointer",
+      "hb_xrealloc called with an invalid pointer",
+      "hb_xrealloc can't reallocate memory",
+      "hb_xfree called with an invalid pointer",
+      "hb_xfree called with a NULL pointer",
       "Can\'t locate the starting procedure: \'%s\'",
-      "No starting procedure", 
-      "Unsupported VM opcode", 
+      "No starting procedure",
+      "Unsupported VM opcode",
       "Symbol item expected from %s",
-      "Invalid symbol type for self from %s", 
-      "Codeblock expected from %s", 
+      "Invalid symbol type for self from %s",
+      "Codeblock expected from %s",
       "Incorrect item type on the stack trying to pop from %s",
-      "Stack underflow", 
-      "An item was going to be copied to itself from %s", 
+      "Stack underflow",
+      "An item was going to be copied to itself from %s",
       "Invalid symbol item passed as memvar %s",
       "Memory buffer overflow",
-   
+
       /* Texts */
-   
+
       "YYYY-MM-DD",
       "J",
       "N"

@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_itemPCount()
  *    hb_itemParamPtr()
  *    hb_itemReturnPtr()

@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_arrayIsObject()
  *    hb_arrayCopyC()
  *    hb_arrayGetC()
@@ -62,7 +62,7 @@
  * Copyright 2001 Ron Pinkas <ron@profit-master.com>
  *    hb_arrayClone()
  *    hb_arrayFromStack()
- *    hb_arrayfromParams()
+ *    hb_arrayFromParams()
  *
  * See doc/license.txt for licensing terms.
  *

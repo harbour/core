@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    _NATSORTVER()
  *    _NATMSGVER()
  *
@@ -51,8 +51,8 @@
 #include "hbapiitm.h"
 #include "hbapilng.h"
 
-/* NOTE: Ad-hoc names mostly taken from various Clipper source files. 
-         These should be named properly if exported outside this file. 
+/* NOTE: Ad-hoc names mostly taken from various Clipper source files.
+         These should be named properly if exported outside this file.
          [vszakats] */
 
 #define _DIR_HEADER             1       /* "Database Files    # Records    Last Update     Size" */
@@ -101,7 +101,7 @@ HB_FUNC( NATIONMSG )
       hb_retc( "" );
 }
 
-/* NOTE: Intentionally using one leading underscore, like in Clipper. 
+/* NOTE: Intentionally using one leading underscore, like in Clipper.
          [vszakats] */
 
 HB_FUNC( _NATSORTVER )
@@ -112,7 +112,7 @@ HB_FUNC( _NATSORTVER )
    hb_retc( "NATSORT (Harbour)" );
 }
 
-/* NOTE: Intentionally using one leading underscore, like in Clipper. 
+/* NOTE: Intentionally using one leading underscore, like in Clipper.
          [vszakats] */
 
 HB_FUNC( _NATMSGVER )

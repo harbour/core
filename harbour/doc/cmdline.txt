@@ -91,4 +91,4 @@ Exceptions:
 
   "//" should always be used on the command line.
 
-Victor Szakats <info@szelvesz.hu>
+Viktor Szakats <viktor.szakats@syenar.hu>

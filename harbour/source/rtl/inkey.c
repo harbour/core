@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    HB_KEYPUT()
  *
  * See doc/license.txt for licensing terms.
@@ -109,7 +109,7 @@ static int hb_inkeyFetch( void ) /* Extract the next key from the keyboard buffe
    else
       key = s_inkeyLast = s_inkeyForce;           /* Typeahead support is disabled */
    s_inkeyForce = 0;
-   
+
    return key;
 }
 
@@ -145,12 +145,12 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          */
          clock_t end_clock;
          struct tms tm;
-         
+
          end_clock = times( &tm ) + ( clock_t ) ( dSeconds * 100 );
          while( hb_inkeyNext( event_mask ) == 0 && (times( &tm ) < end_clock) )
 #else
          clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
-         
+
          while( hb_inkeyNext( event_mask ) == 0 && clock() < end_clock )
 #endif
          {

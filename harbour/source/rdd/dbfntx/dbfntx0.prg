@@ -49,7 +49,7 @@ return
 
 /* NOTE: Commented out, because in Harbour the INIT order is not guaranteed,
          so it can happen that this error handler will be installed *before*
-         the default error, but it this case it will not work. [vszel] */
+         the default error, but it this case it will not work. [vszakats] */
 
 /*
 

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * TYPE() function
  *
- * Copyright 1999 Ryszard Glab
+ * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -44,7 +44,7 @@
  *    hb_verPlatform() (support for determining many windows flavours)
  *    hb_verCompiler() (support for determining some compiler version/revision)
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu>
+ * Copyright 2000-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_verPlatform() (support for detecting Windows NT on DOS)
  *    hb_verPlatform() (rearrangment and cleanup)
  *

@@ -32,5 +32,5 @@ To build Harbour using non-GNU make with MSVC:
 To build a final executable, see above, but use BIN/BLD*.* 
 instead of MAKE*.*
 
-Victor Szakats <info@szelvesz.hu>
+Viktor Szakats <viktor.szakats@syenar.hu>
 

@@ -6,21 +6,14 @@
  * Harbour Project source code:
  * ASORT() function
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu>
- *                Jose Lalin <dezac@corevia.com>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ *                     Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * The exception is that if you link the Harbour Runtime Library (HRL)
- * and/or the Harbour Virtual Machine (HVM) with other files to produce
- * an executable, this does not by itself cause the resulting executable
- * to be covered by the GNU General Public License. Your use of that
- * executable is in no way restricted on account of linking the HRL
- * and/or HVM code into it.
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,9 +21,33 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -45,14 +62,14 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-/* NOTE: If this is defined the item copying is optimized, in a way that 
+/* NOTE: If this is defined the item copying is optimized, in a way that
          instead of calling the official hb_itemCopy(), the item structures
-         will be directly copied with memcpy(), this means that the related 
-         data areas (string space for example) will never be moved. This can be 
-         safely done here, because it's guaranteed by the nature of sorting 
-         that the set of items doesn't change (there're no deleted or new 
-         items, just swapping) in this functions. 
-         Using this option makes sorting *much* faster, but if you have a 
+         will be directly copied with memcpy(), this means that the related
+         data areas (string space for example) will never be moved. This can be
+         safely done here, because it's guaranteed by the nature of sorting
+         that the set of items doesn't change (there're no deleted or new
+         items, just swapping) in this functions.
+         Using this option makes sorting *much* faster, but if you have a
          problem, or the low level stuff changes, turn it off. [vszakats] */
 #define HB_ASORT_OPT_ITEMCOPY
 
@@ -103,10 +120,10 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
    LONG p;
 
    HB_ITEM pivot;
-   
+
    /* select pivot and exchange with 1st element */
    p = lb + ( ( ub - lb ) / 2 );
-   
+
 #ifdef HB_ASORT_OPT_ITEMCOPY
    memcpy( &pivot, pItems + p, sizeof( HB_ITEM ) );
    if( p != lb )
@@ -134,13 +151,13 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
             hb_vmPush( pItems + i );
             hb_vmPush( &pivot );
             hb_vmDo( 2 );
-            
+
             if( ( HB_IS_LOGICAL( &hb_stack.Return ) ? hb_stack.Return.item.asLogical.value : hb_itemIsLess( pItems + i, &pivot ) ) )
                i++;
             else
                break;
          }
-         
+
          while( j >= i )
          {
             hb_vmPushSymbol( &hb_symEval );
@@ -148,7 +165,7 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
             hb_vmPush( &pivot );
             hb_vmPush( pItems + j );
             hb_vmDo( 2 );
-            
+
             if( ( HB_IS_LOGICAL( &hb_stack.Return ) ? hb_stack.Return.item.asLogical.value : hb_itemIsLess( &pivot, pItems + j ) ) )
                j--;
             else
@@ -160,7 +177,7 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
          /* Do native compare when no codeblock is supplied */
          while( i < j && hb_itemIsLess( pItems + i, &pivot ) )
             i++;
-         
+
          while( j >= i && hb_itemIsLess( &pivot, pItems + j ) )
             j--;
       }
@@ -171,7 +188,7 @@ static LONG hb_arraySortQuickPartition( PHB_ITEM pItems, LONG lb, LONG ub, PHB_I
       /* Swap the items */
       {
          HB_ITEM temp;
-      
+
 #ifdef HB_ASORT_OPT_ITEMCOPY
          memcpy( &temp, pItems + j, sizeof( HB_ITEM ) );
          memcpy( pItems + j, pItems + i, sizeof( HB_ITEM ) );
@@ -243,19 +260,19 @@ BOOL hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM
          ulStart = *pulStart;
       else
          ulStart = 1;
-      
+
       if( ulStart <= ulLen )
       {
          if( pulCount && *pulCount >= 1 && ( *pulCount <= ulLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulLen - ulStart + 1;
-      
+
          if( ulStart + ulCount > ulLen )             /* check range */
             ulCount = ulLen - ulStart + 1;
-      
+
          ulEnd = ulCount + ulStart - 2;
-      
+
          /* Optimize when only one or no element is to be sorted */
          if( ulCount > 1 )
             hb_arraySortQuick( pBaseArray->pItems, ulStart - 1, ulEnd, pBlock );
@@ -275,12 +292,12 @@ HB_FUNC( ASORT )
    {
       ULONG ulStart = hb_parnl( 2 );
       ULONG ulCount = hb_parnl( 3 );
-      
+
       hb_arraySort( pArray,
                     ISNUM( 2 ) ? &ulStart : NULL,
                     ISNUM( 3 ) ? &ulCount : NULL,
                     hb_param( 4, HB_IT_BLOCK ) );
-         
+
       hb_itemReturn( pArray ); /* ASort() returns the array itself */
    }
 }

@@ -6,7 +6,7 @@
  * Copyright 2000 Alejandro de Gárate <alex_degarate@hotmail.com>
  * Documentación en Español de: HB_LANGSELECT(), HB_LANGNAME()
  *
- * Copyright 2000 Victor Szakatz
+ * Copyright 2000-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * Documentación en Inglés de: HB_LANGSELECT(), HB_LANGNAME()
  *
  * Vea doc/license.txt por los términos de la licencia.

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (HE862)
  *
- * Copyright 2000 Victor Szakats <info@szelvesz.hu> (English, from msgen.c)
+ * Copyright 2000 Viktor Szakats <viktor.szakats@syenar.hu> (English, from msgen.c)
  * Copyright 2000 Chen Kedem <niki@actcom.co.il> (Hebrew)
  * www - http://www.harbour-project.org
  *

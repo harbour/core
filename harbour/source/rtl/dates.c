@@ -60,7 +60,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_dateFormat()
  *
- * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_dateEncStr()
  *    hb_dateDecStr()
  *    hb_dateStrPut()
@@ -166,7 +166,7 @@ void hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * p
       /* Date string has correct length, so attempt to convert */
       *plYear  = ( ( USHORT ) ( szDate[ 0 ] - '0' ) * 1000 ) +
                  ( ( USHORT ) ( szDate[ 1 ] - '0' ) * 100 ) +
-                 ( ( USHORT ) ( szDate[ 2 ] - '0' ) * 10 ) + 
+                 ( ( USHORT ) ( szDate[ 2 ] - '0' ) * 10 ) +
                    ( USHORT ) ( szDate[ 3 ] - '0' );
       *plMonth = ( ( szDate[ 4 ] - '0' ) * 10 ) + ( szDate[ 5 ] - '0' );
       *plDay   = ( ( szDate[ 6 ] - '0' ) * 10 ) + ( szDate[ 7 ] - '0' );
@@ -389,7 +389,7 @@ long hb_dateDOW( long lYear, long lMonth, long lDay )
    else
       lMonth++;
 
-   return ( lDay + 26 * lMonth / 10 + 
+   return ( lDay + 26 * lMonth / 10 +
             lYear + lYear / 4 - lYear / 100 + lYear / 400 + 6 ) % 7 + 1;
 }
 
