@@ -156,6 +156,7 @@ TOOLS_LIB_OBJS = \
    \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\datetime.obj \
 
 #
 # Our default target
@@ -211,6 +212,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
    -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
+   -@if exist $(OBJ_DIR)\datetime.* del $(OBJ_DIR)\datetime.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #

@@ -53,6 +53,7 @@ C_SOURCES = \
 PRG_SOURCES= \
 	ct.prg \
         ctmisc.prg \
+	datetime.prg \
 
 LIBNAME=libct
 

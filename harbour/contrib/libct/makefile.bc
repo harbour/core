@@ -137,6 +137,7 @@ TOOLS_LIB_OBJS = \
    \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\datetime.obj \
 
 #
 # Our default target
@@ -345,3 +346,9 @@ $(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\datetime.c : $(TOOLS_DIR)\datetime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\datetime.obj : $(OBJ_DIR)\datetime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

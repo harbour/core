@@ -1,3 +1,18 @@
+2001-11-01 18:30 GMT+1 Martin Vogel <vogel@inttec.de>
+
+   + contrib/libct/datetime.prg
+     + some date functions (bom,eom,boq,eoq,boy,eoy,stod)
+       provided by Marek Horodyski <homar@altkom.com.pl>
+
+   * contrib/libct/Makefile
+   * contrib/libct/makefile.bc
+   * contrib/libct/makefile.vc
+   * contrib/libct/ctflist.txt
+     * changes according to the above
+
+   * contrib/libct/token2.c
+     * some typos corrected
+
 2001-11-01 17:05 GMT+1 Antonio Linares <alinares@fivetech.com>
    * contrib/rdd_ads/ads1.c
      type cast required for msvc

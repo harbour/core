@@ -105,7 +105,7 @@ static TOKEN_ENVIRONMENT sTokEnvNew (void)
 }
 
 /* -------------------------------------------------------------------- */
-/* add a tokenizing position to a token environment
+/* add a tokenizing position to a token environment                     */
 /* -------------------------------------------------------------------- */
 
 static int sTokEnvAddPos (TOKEN_ENVIRONMENT env, TOKEN_POSITION *pPos)
@@ -231,7 +231,8 @@ static int sTokEnvSetPtr (TOKEN_ENVIRONMENT env, size_t sCnt)
 /* decrement tokenizing pointer by one                                  */
 /* -------------------------------------------------------------------- */
 
-static int sTokEnvDecPtr (TOKEN_ENVIRONMENT env)
+/* sTokEnvDecPtr currently not used ! */
+/* static int sTokEnvDecPtr (TOKEN_ENVIRONMENT env)
 {
 
   if (env[1].sStartPos <= 0)
@@ -244,7 +245,7 @@ static int sTokEnvDecPtr (TOKEN_ENVIRONMENT env)
     return (1);
   }
 
-}
+}  */
 
 /* -------------------------------------------------------------------- */
 /* get value of tokenizing pointer                                      */
@@ -488,7 +489,7 @@ HB_FUNC (TOKENINIT)
       if (pc == NULL)
         break;
  
-    } /* while (1);
+    } /* while (1); */
 
     /* save token environment to 4th parameter OR to the static */
     if (ISBYREF (4))
