@@ -145,9 +145,9 @@ Separator     {SpaceTab}
 ".and."[ \t]*"["                     { BEGIN STRING3;                    return AND;      }
 ".or."[ \t]*"["                      { BEGIN STRING3;                    return OR;       }
 ("!"|".not.")[ \t]*"["               { BEGIN STRING3;                    return NOT;      }
-(","|"{"|"<"|">"|"(")[ \t]*"["   { BEGIN STRING3; hb_comp_iState = OPERATOR; yyleng = 1; yytext[1] = 0; return yytext[ 0 ]; }
-
-<INITIAL>\[    BEGIN STRING3;
+(","|"{"|"<"|">"|"(")[ \t]*"["       { BEGIN STRING3; hb_comp_iState = OPERATOR; yyleng = 1; yytext[1] = 0; return yytext[ 0 ]; }
+("retu"|"retur"|"return")[ \t]*"["   { BEGIN STRING3; hb_comp_iState = RETURN; return RETURN; }
+<INITIAL>\[                          { BEGIN STRING3; }
 
 <STRING1>[^'^\n]*   { hb_compGenError( hb_comp_szErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
 <STRING2>[^\"^\n]*  { hb_compGenError( hb_comp_szErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
@@ -1003,9 +1003,9 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "qself"{SpaceTab}*[(]{SpaceTab}*[)] return SELF;
-"recover"      hb_comp_iState =RECOVER; return RECOVER;
-"retu"|"retur"|"return"  hb_comp_iState =RETURN; return RETURN;
-"static"       hb_comp_iState =STATIC; return STATIC;
+"recover"      hb_comp_iState = RECOVER; return RECOVER;
+"retu"|"retur"|"return"  hb_comp_iState = RETURN; return RETURN;
+"static"       hb_comp_iState = STATIC; return STATIC;
 "step"/[^(]    return STEP;
 "to"           return TO;
 "using"        return USING;
