@@ -3748,8 +3748,8 @@ FUNCTION NextToken( sLine )
         ELSEIF s2 == "[["
            nClose := AT( ']]', sLine )
            IF nClose == 0
-              Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine + "[" + Str( ProcLine() ) + "]"  )
-              sReturn := "[["
+              //Alert( "ERROR! [NextToken()] Unterminated '[[' at: " + sLine + "[" + Str( ProcLine() ) + "]"  )
+              sReturn := "["  // Clipper does NOT consider '[[' a single token
            ELSE
               sReturn := Left( sLine, nClose + 2 )
            ENDIF
@@ -4723,6 +4723,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    LOCAL nOptionalAt, nMarkerAt, aMarkers := {}, Counter, nType, aResult := {}, sTemp, aModifiers, aValues
    LOCAL aRP, nAt, sResult, nCloseAt, sMarker, nCloseOptionalAt, sPad, nResults, nMarker, nMP, nMatches, nOffset
    LOCAL nWord, nWords, cChar
+   LOCAL nLen, s1, s2, s3
 
    /*
    nMarkerID
@@ -4765,30 +4766,91 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
    ENDIF
 
    DO WHILE ! ( Left( sRule, 1 ) == '' )
-
       //? "Scaning: " + sRule
 
-      IF Left( sRule, 1 ) == '\'
+      nLen := Len( sRule )
 
+      s1 := Left( sRule, 1 )
+      IF nLen >= 2
+         s2 := Left( sRule, 2 )
+      ENDIF
+      IF nLen >= 3
+         s3 := Upper( Left( sRule, 3 ) )
+      ENDIF
+
+      BEGIN SEQUENCE
+
+         IF nLen >= 5
+            IF s1 == '.' .AND. Upper( SubStr( sRule, 2, 3 ) ) == 'AND' .AND. SubStr( sRule, 5, 1 ) == '.'
+               sTemp := ".AND."
+               BREAK
+            ELSEIF s1 = '.' .AND. Upper( SubStr( sRule, 2, 3 ) ) == 'NOT' .AND. SubStr( sRule, 5, 1 ) == '.'
+               sTemp := "!"
+               /* Skip the unaccounted letters ( .NOT. <-> ! ) */
+               sRule := SubStr( sRule, 4 )
+               BREAK
+            ENDIF
+         ENDIF
+
+         IF nLen >= 4 .AND. s1 == '.' .AND. Upper( SubStr( sRule, 2, 2 ) ) == 'OR' .AND. SubStr( sRule, 4, 1 ) == '.'
+            sTemp := ".OR."
+            BREAK
+         ENDIF
+
+         IF nLen >= 3 .AND. s3 $ ".T.\.F."
+            sTemp := s3
+            BREAK
+         ENDIF
+
+         IF nLen >= 2
+            IF s2 $ "++\--\->\:=\==\!=\<>\>=\<=\+=\-=\*=\^=\**\/=\%=\??"
+               sTemp := s2
+               BREAK
+            ENDIF
+         ENDIF
+
+         IF nLen >= 1
+            IF s1 == '\'
+               sTemp := SubStr( sRule, 2, 1 )
+               sRule   := SubStr( sRule, 2 )
+               BREAK
+            ELSEIF s1 == '_' .OR. IsAlpha( s1 )
+               sTemp := Upper( RTrim( NextToken( sRule ) ) ) // Not by refernce because of SubStr() below!!!
+               BREAK
+            ELSEIF s1 == ']' .AND. nOptional == 0
+               sTemp := ']'
+               BREAK
+            ELSEIF s1 $ ".+-*/:=^!&(){}@,|>#%?"
+               sTemp := s1
+               BREAK
+            ENDIF
+         ENDIF
+
+      END SEQUENCE
+
+      IF sTemp != NIL
          IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
+            //TraceLog( "ORPHAN ANCHOR: " + sAnchor )
 
             aMatch := { 0, nOptional, sAnchor, NIL, NIL }
             //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
             aAdd( aRule[2], aMatch )
 
-            //sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
+            /* Next dependant optional will be marked as trailing. */
+            IF nOptional > 0
+               nOptional := ( -nOptional )
+            ENDIF
          ENDIF
 
-         sAnchor := SubStr( sRule, 2, 1 )
-         sRule   := SubStr( sRule, 3 )
+         sAnchor := sTemp // Next Anchor
+         sRule   := SubStr( sRule, Len( sAnchor ) + 1 )
          ExtractLeadingWS( @sRule )
-         LOOP
 
-      ELSEIF Left( sRule, 1 ) == '<'
+         sTemp := NIL // Resetting.
+         LOOP
+      ENDIF
+
+      IF s1 == '<'
          nId++
 
          DO CASE
@@ -4803,19 +4865,16 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                   sRule := SubStr( sRule, nNext + 2 )
                   ExtractLeadingWS( @sRule )
 
-                  aMatch := { nId, nOptional, sAnchor, cType, aWords }
+                  aMatch := { nId, nOptional, sAnchor, cType, NIL }
+                  //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+                  aAdd( aRule[2], aMatch )
+
                   /* Next dependant optional will be marked as trailing. */
                   IF nOptional > 0
                      nOptional := ( -nOptional )
                   ENDIF
-                  //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-                  aAdd( aRule[2], aMatch )
 
                   sAnchor := NIL
-                  aWords  := NIL
-                  cType   := NIL
-
                   LOOP
                ELSE
                   Alert( "ERROR! Unblanced MP: '<*' at: " + sRule )
@@ -4833,19 +4892,16 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                   sRule := SubStr( sRule, nNext + 2 )
                   ExtractLeadingWS( @sRule )
 
-                  aMatch := { nId, nOptional, sAnchor, cType, aWords }
+                  aMatch := { nId, nOptional, sAnchor, cType, NIL }
+                  //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+                  aAdd( aRule[2], aMatch )
+
                   /* Next dependant optional will be marked as trailing. */
                   IF nOptional > 0
                      nOptional := ( -nOptional )
                   ENDIF
-                  //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-                  aAdd( aRule[2], aMatch )
 
                   sAnchor := NIL
-                  aWords  := NIL
-                  cType   := NIL
-
                   LOOP
                ELSE
                   Alert( "ERROR! Unbalanced MP: '<(' at: " + sRule )
@@ -4853,9 +4909,9 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                ENDIF
 
             OTHERWISE
+               cType := NIL // Reset - not known yet.
                sRule := SubStr( sRule, 2 )
                ExtractLeadingWS( @sRule )
-
          ENDCASE
 
          nCloseAt := At('>', sRule )
@@ -4882,7 +4938,6 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             cType := ':'
 
             //? "LIST"
-
             sMarker := Left( sRule, nNext - 1 )
             ExtractLeadingWS( @sMarker )
             aAdd( aMarkers, sMarker )
@@ -4891,9 +4946,7 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             ExtractLeadingWS( @sRule )
 
             aWords := {}
-
             DO WHILE ! ( Left( sRule, 1 ) == '>' )
-
                nNext := At( ',', sRule )
                IF nNext > 0 .AND. nNext < At( '>', sRule )
                   //? "Added: " + Left( sRule, nNext - 1 )
@@ -4930,37 +4983,33 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
             ExtractLeadingWS( @sRule )
 
             aMatch := { nId, nOptional, sAnchor, cType, aWords }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+            aAdd( aRule[2], aMatch )
+
+            aWords := NIL // Reset.
+
             /* Next dependant optional will be marked as trailing. */
             IF nOptional > 0
                nOptional := ( -nOptional )
             ENDIF
-            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-            aAdd( aRule[2], aMatch )
          ELSE
             Alert( "ERROR! Unbalanced MP: '<' at: " + sRule )
             RETURN .F.
          ENDIF
 
          sAnchor := NIL
-         aWords  := NIL
-         cType   := NIL
-
          LOOP
 
-      ELSEIF Left( sRule, 1 ) == '['
+      ELSEIF s1 == '['
 
          IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
+            //TraceLog( "ORPHAN ANCHOR: " + sAnchor )
 
             aMatch := { 0, nOptional, sAnchor, NIL, NIL }
             //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
             aAdd( aRule[2], aMatch )
 
-            sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
+            // No need to negate nOptional, because we start a new optional group below...
          ENDIF
 
          nOptional := Abs( nOptional )
@@ -4969,323 +5018,72 @@ FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
 
          sRule := SubStr( sRule, 2 )
          ExtractLeadingWS( @sRule )
+
+         sAnchor := NIL
          LOOP
 
-      ELSEIF Left( sRule, 1 ) == ']'
+      ELSEIF s1 == ']'
 
          IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
+            //TraceLog( "ORPHAN ANCHOR: " + sAnchor )
 
             aMatch := { 0, nOptional, sAnchor, NIL, NIL }
             //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
             aAdd( aRule[2], aMatch )
 
-            sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
+            // No need to negate nOptional, because we close optional group below...
          ENDIF
 
-         IF nOptional == 0
-            sAnchor := ']'
+         IF nOptional > 0
+            nOptional--
+            nOptional := (-nOptional)
          ELSE
-           IF nOptional > 0
-              nOptional--
-              nOptional := (-nOptional)
-           ELSE
-              nOptional++
-           ENDIF
+            nOptional++
          ENDIF
 
          sRule := SubStr( sRule, 2 )
          ExtractLeadingWS( @sRule )
-         LOOP
 
-      ELSEIF Left( sRule, 2 ) == ":=" .OR. Left( sRule, 2 ) == "=="
-
-         IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
-
-            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
-            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-            aAdd( aRule[2], aMatch )
-
-            //sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
-         ENDIF
-
-         sAnchor := Left( sRule, 2 )
-         sRule   := SubStr( sRule, 3 )
-         ExtractLeadingWS( @sRule )
-         LOOP
-
-      ELSEIF Left( sRule, 1 ) $ "():="
-
-         IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
-
-            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
-            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-            aAdd( aRule[2], aMatch )
-
-            //sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
-         ENDIF
-
-         sAnchor := Left( sRule, 1 )
-         sRule   := SubStr( sRule, 2 )
-         ExtractLeadingWS( @sRule )
-         LOOP
-
-      ELSEIF ( cChar := Left( sRule, 1 ) ) == '_' .OR. IsAlpha( cChar )
-
-         IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
-
-            aMatch := { 0, nOptional, sAnchor, NIL, NIL }
-            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-            aAdd( aRule[2], aMatch )
-
-            //sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
-         ENDIF
-
-         sAnchor := Upper( RTrim( NextToken( @sRule ) ) )
+         sAnchor := NIL
          LOOP
 
       ELSE
 
+         // Some token sneaked in ...
+         TraceLog( "*** " + sRule )
+         Alert( "*** " + sRule )
+
          IF ! ( sAnchor == NIL )
-            //? "ORPHAN ANCHOR: " + sAnchor
+            //TraceLog( "ORPHAN ANCHOR: " + sAnchor )
 
             aMatch := { 0, nOptional, sAnchor, NIL, NIL }
+            //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+            aAdd( aRule[2], aMatch )
+
             /* Next dependant optional will be marked as trailing. */
             IF nOptional > 0
                nOptional := ( -nOptional )
             ENDIF
-           //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
-            aAdd( aRule[2], aMatch )
 
             sAnchor := NIL
-            aWords  := NIL
-            cType   := NIL
-         ENDIF
-
-         nNext := At( ' ', sRule ) // Tabs converted to spaces by ProcessFile()
-
-         nOffset := 0
-         IF nNext == 0
-            nOptionalAt := At( '[', sRule )
-            WHILE nOPtionalAt > 1 .AND. SubStr( sRule, nOffset + nOptionalAt - 1, 1 ) == '\'
-               nOffset     += nOptionalAt
-               nOptionalAt := At( '[', SubStr( sRule, nOffset + 1 ) )
-            ENDDO
-            IF nOptionalAt > 0
-               nOptionalAt += nOffset
-            ENDIF
-         ELSE
-            nOptionalAt := At( '[', sRule )
-            WHILE nOPtionalAt > 1 .AND. nOptionalAt <= nNext .AND. SubStr( sRule, nOffset + nOptionalAt - 1, 1 ) == '\'
-               nOffset     += nOptionalAt
-               nNext--
-               nOptionalAt := At( '[', SubStr( sRule, nOffset + 1 ) )
-            ENDDO
-            IF nOptionalAt > 0
-               nOptionalAt += nOffset
-            ENDIF
-
-            IF nOPtionalAt > 0
-               IF nOptionalAt > nNext
-                  nOptionalAt := 0
-               ELSE
-                  nNext := 0
-               ENDIF
-            ENDIF
-         ENDIF
-
-         nAt := IIF( nNext == 0, nOptionalAt, nNext )
-
-         nOffset := 0
-         IF nAt == 0
-            nMarkerAt := At( '<', sRule )
-            WHILE nMarkerAt > 0
-               IF nMarkerAt > 1 .AND. SubStr( sRule, nOffset + nMarkerAt - 1, 1 ) == '\'
-                  nOffset   += nMarkerAt
-                  nMarkerAt := At( '<', SubStr( sRule, nOffset +  1 ) )
-               ELSEIF nMarkerAt > 0 .AND. SubStr( sRule, nOffset + nMarkerAt + 1, 1 ) $ ">=" // ignore <= and <>
-                  nOffset   += nMarkerAt + 1
-                  nMarkerAt := At( '<', SubStr( sRule, nOffset + 1 ) )
-               ELSE
-                  EXIT
-               ENDIF
-            ENDDO
-            IF nMarkerAt > 0
-               nMarkerAt += nOffset
-            ENDIF
-         ELSE
-            nMarkerAt := At( '<', sRule )
-            WHILE nMarkerAt > 0
-               IF nMarkerAt > 1 .AND. nOffset + nMarkerAt < nAt .AND. SubStr( sRule, nOffset + nMarkerAt - 1, 1 ) == '\'
-                  nOffset   += nMarkerAt
-                  nMarkerAt := At( '<', SubStr( sRule, nOffset +  1 ) )
-               ELSEIF nMarkerAt > 0 .AND. nOffset + nMarkerAt < nAt .AND. SubStr( sRule, nOffset + nMarkerAt + 1, 1 ) $ ">=" // ignore <= and <>
-                  nOffset   += nMarkerAt + 1
-                  nMarkerAt := At( '<', SubStr( sRule, nOffset + 1 ) )
-               ELSE
-                  EXIT
-               ENDIF
-            ENDDO
-            IF nMarkerAt > 0
-               nMarkerAt += nOffset
-            ENDIF
-
-            IF nMarkerAt > 0
-               IF nMarkerAt > nAt
-                  nMarkerAt := 0
-               ELSE
-                  nAt         := 0
-                  nOptionalAt := 0
-                  nNext       := 0
-               ENDIF
-            ENDIF
-         ENDIF
-
-         nAt := IIF( nAt == 0, nMarkerAt, nAt )
-
-         nOffset := 0
-         IF nAt == 0
-            nCloseOptionalAt := At( ']', sRule )
-            WHILE nCloseOptionalAt > 1 .AND. SubStr( sRule, nOffset + nCloseOptionalAt - 1, 1 ) == '\'
-               nOffset          += nCloseOptionalAt
-               nCloseOptionalAt := At( ']', SubStr( sRule, nOffset + 1 ) )
-            ENDDO
-            IF nCloseOptionalAt > 0
-               nCloseOptionalAt += nOffset
-            ENDIF
-         ELSE
-            nCloseOptionalAt := At( ']', sRule )
-            WHILE nCloseOptionalAt > 1 .AND. nOffset + nCloseOptionalAt <= nAt .AND. SubStr( sRule, nOffset + nCloseOptionalAt - 1, 1 ) == '\'
-               nOffset          += nCloseOptionalAt
-               nCloseOptionalAt := At( ']', SubStr( sRule, nOffset + 1 ) )
-            ENDDO
-            IF nCloseOptionalAt > 0
-               nCloseOptionalAt += nOffset
-            ENDIF
-
-            IF nCloseOptionalAt > 0
-               IF nCloseOptionalAt > nAt
-                  nCloseOptionalAt := 0
-               ELSE
-                  nAt         := 0
-                  nOptionalAt := 0
-                  nNext       := 0
-                  nMarkerAt   := 0
-               ENDIF
-            ENDIF
-         ENDIF
-
-         IF nNext > 0
-            nNext := nAt
-         ELSEIF nOptionalAt > 0
-            nOPtionalAt := nAt
-         ELSEIF nMarkerAt > 0
-            nMarkerAt := nAt
-         ENDIF
-
-         //? sRule
-         //? "MP scan:", nAt, nNext, nMarkerAt, nOptionalAt, nCloseOptionalAt
-         //WAIT
-
-         IF nNext > 0
-
-            sAnchor := Upper( Left( sRule, nNext - 1 ) )
-            DropTrailingWS( @sAnchor )
-            //? "ANCHOR: " + sAnchor
-
-            sRule := SubStr( sRule, nNext + 1 )
-            ExtractLeadingWS( @sRule )
-
-         ELSEIF nOptionalAt > 0
-
-            sAnchor := Upper( Left( sRule, nOptionalAt - 1 ) )
-            DropTrailingWS( @sAnchor )
-            //? "ANCHOR: " + sAnchor
-
-            nOptional := Abs( nOptional )
-            nOptional++
-            sRule := SubStr( sRule, nOptionalAt + 1 )
-            ExtractLeadingWS( @sRule )
-
-         ELSEIF nMarkerAt > 0
-
-            sAnchor := Upper( Left( sRule, nMarkerAt - 1 ) )
-            DropTrailingWS( @sAnchor )
-            //? "ANCHOR: " + sAnchor
-
-            sRule := SubStr( sRule, nMarkerAt )
-            ExtractLeadingWS( @sRule )
-
-         ELSEIF nCloseOptionalAt > 0
-            //? "Closing"
-            sAnchor := Upper( Left( sRule, nCloseOptionalAt - 1 ) )
-            DropTrailingWS( @sAnchor )
-            //? "ANCHOR: " + sAnchor
-
-            IF ! ( sAnchor == NIL )
-               aMatch := { 0, nOptional, sAnchor, NIL, NIL }
-               //? "Orphan:", aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-               //WAIT
-
-               aAdd( aRule[2], aMatch )
-
-               sAnchor := NIL
-               aWords  := NIL
-               cType   := NIL
-            ENDIF
-
-            IF nOptional > 0
-               nOptional--
-               nOptional := (-nOptional)
-            ELSE
-               nOptional++
-            ENDIF
-
-            sRule := SubStr( sRule, nCloseOptionalAt + 1 )
-            ExtractLeadingWS( @sRule )
-
-         ELSE
-
-            sAnchor := Upper( sRule )
-            DropTrailingWS( @sAnchor )
-            //? "ANCHOR: " + sAnchor
-
-            sRule := ''
-
+            LOOP
          ENDIF
 
       ENDIF
 
    ENDDO
 
-   IF ! ( cType == NIL  .AND. sAnchor == NIL )
-
-      aMatch := { 0, nOptional, sAnchor, cType, NIL }
-      /* nOptional would be minused, but will not be used anymore! */
+   IF sAnchor != NIL
+      aMatch := { 0, 0, sAnchor, NIL, NIL }
       //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
-
       aAdd( aRule[2], aMatch )
+
+      // No need to negate nOptional, because last token, and nOptional must equal 0 here!
    ENDIF
 
    IF nOptional <> 0
       TraceLog( aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5] )
-      Alert( "ERROR! Internal logic failure, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
+      Alert( "ERROR! Unclosed Optional group, nOptional = " + Str( nOptional, 3 ) + " [" + Str( ProcLine(0), 4 ) + "]" )
       BREAK
    ENDIF
 
@@ -7114,8 +6912,8 @@ FUNCTION InitClsResults()
   aAdd( aTransResults, { { {   0, ':Super' } }, { -1} , { }  } )
 
   /* Commands Results*/
-  aAdd( aCommResults, { { {   0, '_HB_CLASS ' }, {   0,   1 }, {   0, ' ; ' }, {   0,   6 }, {   0, ' function ' }, {   0,   1 }, {   0, '() ; static s_oClass ; local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ; if s_oClass == NIL ; s_oClass := IIF(' }, {   0,   2 }, {   0, ', ' }, {   0,   2 }, {   0, ' ,TClass():new( ' }, {   0,   1 }, {   0, ' , __HB_CLS_PAR ( ' }, {   4,   4 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ) ) ; #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ ' }, {   0,   1 }, {   0, ' ; #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ; #xtranslate CLSMETH ' }, {   0,   1 }, {   0, ' <MethodName> => @' }, {   0,   1 }, {   0, '_<MethodName> ; #xtranslate  DECLCLASS ' }, {   0,   1 }, {   0, ' => ; ' }, ;
-      {   5, ' ; #translate Super( ' }, {   5,   5 }, {   5, ' ) : => ::' }, {   5,   5 }, {   5, ': ' }, {   4, ' ; #translate Super( ' }, {   4,   4 }, {   4, ' ) : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; #translate Super() : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; #translate Super : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; REQUEST ' }, {   4,   4 }, {   5, ' ,' }, {   5,   5 } }, { -1,  1, -1,  1, -1,  1, -1,  6, -1,  4, -1,  4, -1,  4, -1,  4, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
+  aAdd( aCommResults, { { {   0, '_HB_CLASS ' }, {   0,   1 }, {   0, ' ; ' }, {   0,   6 }, {   0, ' function ' }, {   0,   1 }, {   0, '() ; static s_oClass ; local MetaClass,nScope := HB_OO_CLSTP_EXPORTED ; if s_oClass == NIL ; s_oClass := IIF(' }, {   0,   2 }, {   0, ', ' }, {   0,   2 }, {   0, ' ,TClass():new( ' }, {   0,   1 }, {   0, ' , __HB_CLS_PAR ( ' }, {   4,   4 }, {   5, ' ,' }, {   5,   5 }, {   0, ' ) ) ) ; #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ ' }, {   0,   1 }, {   0, ' ; #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ; #xtranslate CLSMETH ' }, {   0,   1 }, {   0, ' <MethodName> => @' }, {   0,   1 }, {   0, '_<MethodName> ; #xtranslate  DECLCLASS ' }, {   0,   1 }, {   0, ' => ; ' }, {   5, ' ; #translate Super( ' }, {   5,   5 }, {   5, ' ) : => ::' }, {   5,   5 }, {   5, ': ' }, {   4, ' ; #translate Super( ' }, {   4,   4 }, {   4, ' ) : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; #translate Super() : => ::' }, {   4,   4 }, {   4, ': ' }, ;
+      {   4, ' ; #translate Super : => ::' }, {   4,   4 }, {   4, ': ' }, {   4, ' ; REQUEST ' }, {   4,   4 }, {   5, ' ,' }, {   5,   5 } }, { -1,  1, -1,  1, -1,  1, -1,  6, -1,  4, -1,  4, -1,  4, -1,  4, -1,  1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1,  1, -1, -1,  1, -1, -1,  1, -1, -1,  1, -1,  1} , { NIL, NIL, NIL, NIL, NIL, NIL}  } )
   aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
   aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddMultiData( ' }, {   0,   2 }, {   0, ', ' }, {   0,   3 }, {   0, ', HBCLSCHOICE( ' }, {   0,   4 }, {   0, ', ' }, {   0,   5 }, {   0, ', ' }, {   0,   6 }, {   0, ' ) + iif( ' }, {   0,   7 }, {   0, ', HB_OO_CLSTP_READONLY, 0 ), {' }, {   0,   1 }, {   0, '}, __HB_CLS_NOINI )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  6, -1,  6, -1,  6, -1,  6, -1,  4, -1} , { NIL, NIL, NIL, NIL, NIL, NIL, NIL}  } )
   aAdd( aCommResults, { { {   0, '_HB_MEMBER {' }, {   2, 'AS ' }, {   2,   2 }, {   0, ' ' }, {   0,   1 }, {   0, '} ; s_oClass:AddInline( ' }, {   0,   1 }, {   0, ', {|Self| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, ' }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ; s_oClass:AddInline( "_" + ' }, {   0,   1 }, {   0, ', {|Self, param| Self:' }, {   0,   3 }, {   0, ':' }, {   0,   1 }, {   0, ' := param }, HB_OO_CLSTP_EXPORTED )' } }, { -1, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1,  4, -1,  1, -1,  1, -1} , { NIL, NIL, NIL}  } )
