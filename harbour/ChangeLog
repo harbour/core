@@ -8,6 +8,14 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-11-13 12:25 UTC+0100 Antonio Linares <alinares@fivetech.com>
+  * include/hbexprb.c
+    ! strings as bytes arrays management (assignment)
+    ! changes borrowed from xHarbour
+
+  * source/vm/hvm.c
+    ! strings as bytes arrays management (assignment)
+
 2002-11-12 14:32 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/vm/hvm.c
     + strings as bytes arrays management implemented
