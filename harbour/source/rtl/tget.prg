@@ -1269,6 +1269,7 @@ METHOD DeleteAll() CLASS Get
       ::minus  := .f.
    case ::type == "D"
       xValue := CToD( "" )
+      ::BadDate := .f. 
    case ::type == "L"
       xValue := .f.
    endcase
