@@ -42,41 +42,6 @@
 extern "C" {
 #endif
 
-/* DBF header */
-
-typedef struct _DBFHEADER
-{
-   BYTE   bVersion;
-   BYTE   bYear;
-   BYTE   bMonth;
-   BYTE   bDay;
-   ULONG  ulRecCount;
-   USHORT uiHeaderLen;
-   USHORT uiRecordLen;
-   BYTE   bReserved1[ 16 ];
-   BYTE   bHasTags;
-   BYTE   bReserved2[ 3 ];
-} DBFHEADER;
-
-typedef DBFHEADER * LPDBFHEADER;
-
-
-
-typedef struct _DBFFIELD
-{
-   BYTE bName[ 11 ];
-   BYTE bType;
-   BYTE bReserved1[ 4 ];
-   BYTE bLen;
-   BYTE bDec;
-   BYTE bReserved2[ 13 ];
-   BYTE bHasTag;
-} DBFFIELD;
-
-typedef DBFFIELD * LPDBFFIELD;
-
-
-
 /* DBF errors */
 
 #define EDBF_OPEN_DBF                              1001
@@ -105,9 +70,11 @@ typedef DBFFIELD * LPDBFFIELD;
 #define DBF_LOCKPOS                          1000000000L
 
 
+
 /* DBT's */
 
 #define DBT_BLOCKSIZE                                512
+
 
 
 /*

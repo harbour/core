@@ -465,11 +465,9 @@ DBFNTX_LIB_OBJS = \
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFCDX_LIB)2
 
-#DBFCDX_LIB_OBJS = \
-#   $(OBJ_DIR)\dbfcdx1.obj \
-#   \
-#   $(OBJ_DIR)\dbfcdx0.obj
 DBFCDX_LIB_OBJS = \
+   $(OBJ_DIR)\dbfcdx1.obj \
+   \
    $(OBJ_DIR)\dbfcdx0.obj
 
 #

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * RDD initialization
+ * DBF structures
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * www - http://www.harbour-project.org
@@ -33,19 +33,52 @@
  *
  */
 
-// Standard Harbour RDDSys system
+#ifndef HB_DBF_H_
+#define HB_DBF_H_
 
-ANNOUNCE RDDSYS
+#include "hbapirdd.h"
 
-init procedure RddInit
+#if defined(HB_EXTERN_C)
+extern "C" {
+#endif
 
-   REQUEST DBFCDX
+/* DBF header */
 
-   /* NOTE: Using this internal version of this functions, since at this
-            point the DBFCDX RDD may not be registered, depending on the
-            execution order of INIT procedures. */
+typedef struct _DBFHEADER
+{
+   BYTE   bVersion;
+   BYTE   bYear;
+   BYTE   bMonth;
+   BYTE   bDay;
+   ULONG  ulRecCount;
+   USHORT uiHeaderLen;
+   USHORT uiRecordLen;
+   BYTE   bReserved1[ 16 ];
+   BYTE   bHasTags;
+   BYTE   bReserved2[ 3 ];
+} DBFHEADER;
 
-   __rddSetDefault( "DBFCDX" )
+typedef DBFHEADER * LPDBFHEADER;
 
-return
 
+
+/* DBF fields */
+
+typedef struct _DBFFIELD
+{
+   BYTE bName[ 11 ];
+   BYTE bType;
+   BYTE bReserved1[ 4 ];
+   BYTE bLen;
+   BYTE bDec;
+   BYTE bReserved2[ 13 ];
+   BYTE bHasTag;
+} DBFFIELD;
+
+typedef DBFFIELD * LPDBFFIELD;
+
+#if defined(HB_EXTERN_C)
+}
+#endif
+
+#endif /* HB_DBF_H_ */

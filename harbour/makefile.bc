@@ -397,12 +397,9 @@ NULSYS_LIB_OBJS = \
 DBFNTX_LIB_OBJS = \
    $(OBJ_DIR)\dbfntx0.obj
 
-#DBFCDX_LIB_OBJS = \
-#   $(OBJ_DIR)\dbfcdx1.obj \
-#   \
-#   $(OBJ_DIR)\dbfcdx0.obj
-
 DBFCDX_LIB_OBJS = \
+   $(OBJ_DIR)\dbfcdx1.obj \
+   \
    $(OBJ_DIR)\dbfcdx0.obj
 
 #
@@ -1916,9 +1913,9 @@ $(OBJ_DIR)\dbfcdx0.obj : $(OBJ_DIR)\dbfcdx0.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(DBFCDX_LIB) $(ARFLAGS) -+$@,,
 
-#$(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
-#   $(CC) $(CLIBFLAGS) -o$@ $**
-#   tlib $(DBFCDX_LIB) $(ARFLAGS) -+$@,,
+$(OBJ_DIR)\dbfcdx1.obj : $(RDD_DIR)\dbfcdx\dbfcdx1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(DBFCDX_LIB) $(ARFLAGS) -+$@,,
 
 #
 # DEBUG.LIB dependencies

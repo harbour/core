@@ -662,6 +662,16 @@ ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 }
 
 /*
+ *  Function for getting current workarea pointer
+ */
+void * hb_rddGetCurrentWorkAreaPointer( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaPointer()"));
+
+   return s_pCurrArea->pArea;
+}
+
+/*
  * Obtain the current value of a field.
  */
 ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
@@ -1102,6 +1112,8 @@ HB_FUNC( DBCREATE )
    pStruct = hb_param( 2 , HB_IT_ARRAY );
    if( pStruct )
       uiLen = ( USHORT ) hb_arrayLen( pStruct );
+   else
+      uiLen = 0;
 
    if( ( strlen( szFileName ) == 0 ) || !pStruct || uiLen == 0 )
    {
@@ -1129,10 +1141,10 @@ HB_FUNC( DBCREATE )
       }
    }
 
+   uiPrevArea = s_uiCurrArea;
    if( !ISLOG( 4 ) )
    {
       bOpen = FALSE;
-      uiPrevArea = s_uiCurrArea;
       hb_rddSelectFirstAvailable();
    }
    else
@@ -2834,14 +2846,16 @@ HB_FUNC( __DBARRANGE )
          dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
          ulSize = 0;
          for( uiCount = 1; uiCount <= dbSortInfo.uiItemCount; uiCount++ )
+         {
             if( hb_arrayGetCLen( pFields, uiCount ) > ulSize )
                ulSize = hb_arrayGetCLen( pFields, uiCount );
+         }
          szFieldLine = ( char * ) hb_xgrab( ulSize + 1 );
          for( uiCount = 0; uiCount < dbSortInfo.uiItemCount; uiCount++ )
          {
             dbSortInfo.lpdbsItem[ uiCount ].uiFlags = 0;
-            ulSize = hb_arrayGetCLen( pFields, uiCount + 1 );
-            hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount + 1 ), ulSize );
+            hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount + 1 ),
+                             hb_arrayGetCLen( pFields, uiCount + 1 ) );
             szPos = strchr( szFieldLine, '/' );
             if( szPos )
             {
@@ -2858,7 +2872,6 @@ HB_FUNC( __DBARRANGE )
                    ( * ( szPos + 2 ) != 0 && * ( szPos + 3 ) == 'C' ) ) )
                   dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_CASE;
                * szPos = 0;
-               ulSize = szFieldLine - szPos;
             }
             else
                dbSortInfo.lpdbsItem[ uiCount ].uiFlags |= SF_ASCEND;

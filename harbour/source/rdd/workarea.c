@@ -688,6 +688,7 @@ ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelText(%p, %hu, %p)", pArea, uiRelNo, pExpr));
    HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiRelNo );
    HB_SYMBOL_UNUSED( pExpr );
 
    printf( "\nTODO: hb_waRelText()\n" );

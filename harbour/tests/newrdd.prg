@@ -1,3 +1,7 @@
+//
+// $Id$
+//
+
 function Main()
 
    local nI, aArray

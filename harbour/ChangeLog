@@ -1,3 +1,26 @@
+2000-09-02 00:08 GMT+1 Bruno Cantero <bruno@issnet.net>
+   + include/hbdbf.h
+   + include/hbrddcdx.h
+   * makefile.bc
+   * makefile.vc
+   * source/rdd/dbfcdx/Makefile
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/rddsys.prg
+      + Added DBFCDX files to makefiles and reactivate it.
+        By now is the default driver (rddsys.prg).
+ 
+   * include/hbrdddbf.h
+   * source/rdd/dbcmd.c
+   * source/rdd/workarea.c
+   * source/rdd/hbdbsort.c
+      * Fixed some warnings.
+
+   * tests/newrdd.prg
+      + Added CVS header Id.
+
+   * tests/testcdx.prg
+      * Test FPT memos.
+
 2000-09-01 13:55 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
      ! fixed hilighting and dehilighting of cells if field is logical; that is logical cells value

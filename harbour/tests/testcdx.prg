@@ -8,18 +8,38 @@ function Main()
                       { "NUMERIC",   "N",  8, 0 }, ;
                       { "DOUBLE",    "N",  8, 2 }, ;
                       { "DATE",      "D",  8, 0 }, ;
+                      { "MEMO",      "M", 10, 0 }, ;
                       { "LOGICAL",   "L",  1, 0 } }
 
-   REQUEST DBFCDX
+   CLS
+   dbUseArea( .T., "DBFCDX", "test", "TESTDBF", .T., .F. )
+   dbCreate( "testcdx", aStruct, "DBFCDX", .T., "TESTCDX" )
 
-   rddSetDefault( "DBFCDX" )
+   ? "RddName:", RddName()
+   ? "Press any key to continue..."
+   InKey( 0 )
+   Select( "TESTDBF" )
+   SET FILTER TO TESTDBF->SALARY > 140000
+   TESTDBF->( dbGoTop() )
+   while !TESTDBF->( Eof() )
+      TESTCDX->( dbAppend() )
+      TESTCDX->NUMERIC = TESTDBF->SALARY
+      TESTCDX->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
+                       TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
+                       TESTDBF->STREET
+      TESTDBF->( dbSkip() )
+   end
 
-   FErase( "testcdx.cdx" )
-   dbCreate( "testcdx", aStruct, "DBFCDX" )
-   dbUseArea( ,, "testcdx", "MYALIAS" )
-   ordCreate( "testcdx", "1Tag ", "FIELD->Character", { || FIELD->Character }, .F. )
-   ordCreate( "testcdx", "2Tag ", "FIELD->Character", { || FIELD->Character }, .F. )
-   ? MYALIAS->CHARACTER
+   ? TESTCDX->( RecCount() )
+   TESTCDX->( dbGoTop() )
+   ? TESTCDX->( Eof() )
+   while !TESTCDX->( Eof() )
+      ? TESTCDX->( RecNo() ), TESTCDX->NUMERIC
+      ? TESTCDX->MEMO
+      TESTCDX->( dbSkip() )
+      ? "Press any key to continue..."
+      InKey( 0 )
+   end
+
 
 return nil
-

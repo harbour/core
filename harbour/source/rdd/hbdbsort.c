@@ -136,8 +136,8 @@ static BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, ULONG ulRecNo1, ULONG ul
 
       /* Compare buffers */
       if( bIgnoreCase )
-         iResult = stricmp( ( const char * ) pQuickSort->pCmpBufferA,
-                            ( const char * ) pQuickSort->pCmpBufferB );
+         iResult = hb_stricmp( ( const char * ) pQuickSort->pCmpBufferA,
+                               ( const char * ) pQuickSort->pCmpBufferB );
       else
          iResult = strcmp( ( const char * ) pQuickSort->pCmpBufferA,
                            ( const char * ) pQuickSort->pCmpBufferB );
