@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Text file browser class
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999, 2000 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,11 +36,10 @@
 #include "hbclass.ch"
 #include "common.ch"
 #include "fileio.ch"
+#include "inkey.ch"
 
-#define MAX_LINE_LEN      256
-#define FTELL( nHandle )  FSEEK( nHandle, 0, FS_RELATIVE )
 
-CLASS TBrwText FROM TBrowse
+CLASS TBrwText FROM TEditor
 
    DATA   cFileName // the name of the browsed file
    DATA   nHandle   // To hold the handle of the browsed file
@@ -48,197 +47,95 @@ CLASS TBrwText FROM TBrowse
    DATA   cLine     // Currently selected text line
    DATA   nLine
 
-   METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors )
-   METHOD GotoLine( nLine )
+   METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColors)
+
+   METHOD GoTop()
+   METHOD GoBottom()
+   METHOD Up()
+   METHOD Down()
+   METHOD PageUp()
+   METHOD PageDown()
+
+   METHOD RefreshAll()
+   METHOD RefreshCurrent()
+   METHOD ForceStable()
+
+   METHOD GotoLine(n)
+   METHOD GetLine(nRow)
 
 ENDCLASS
 
-METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors ) CLASS TBrwText
 
-   DEFAULT nTop    TO 0
-   DEFAULT nLeft   TO 0
-   DEFAULT nRight  TO MaxCol()
-   DEFAULT nBottom TO MaxRow()
+METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColors) CLASS TBrwText
+
    DEFAULT cColors TO SetColor()
 
-   Super:New()
-
-   ::nTop      := nTop
-   ::nLeft     := nLeft
-   ::nBottom   := nBottom
-   ::nRight    := nRight
-   ::ColorSpec := cColors
    ::cFileName := cFileName
-   ::nHandle   := FOpen( cFileName, FO_READ )
-   ::nFileSize := FSeek( ::nHandle, 0, FS_RELATIVE )
-   ::cLine     := Space( ::nRight - ::nLeft - 2 )
+   ::cLine     := Space( nRight - nLeft - 2 )
    ::nLine     := 1
-   ::Autolite  := .T.
 
-   ::AddColumn( TbColumnNew( "", { || Alltrim( Str( ::nLine ) ) + ": " + ::cLine } ) )
-   ::GoTopBlock    := {|| GoFirstLine( Self ) }
-   ::GoBottomBlock := {|| GoLastLine( Self ) }
-   ::SkipBlock     := {| nLines | Skipper( Self, nLines ) }
+   Super:New("", nTop, nLeft, nBottom, nRight, .T.)
+   Super:SetColor(cColors)
+   Super:LoadFile(cFileName)
 
-   ::GoTop()
+return Self
 
-   return Self
 
-METHOD GotoLine( nLine ) CLASS TBrwText
+METHOD GoTop() CLASS TBrwText
+   ::MoveCursor(K_CTRL_PGUP)
+return Self
 
-   IF nLine > ::nLine
-      DO WHILE ::nLine < nLine
-         ::Down()
-      ENDDO
-      ::ForceStable()
-   ELSE
-      DO WHILE ::nLine > nLine
-         ::Up()
-      ENDDO
-      ::ForceStable()
-   ENDIF
 
-   RETURN NIL
+METHOD GoBottom() CLASS TBrwText
+   ::MoveCursor(K_CTRL_PGDN)
+return Self
 
-STATIC PROCEDURE GoFirstLine( oBrw )
 
-   LOCAL cLine
+METHOD Up() CLASS TBrwText
+   ::MoveCursor(K_UP)
+return Self
 
-   FSeek( oBrw:nHandle, 0, FS_SET )
-   FReadLn( oBrw:nHandle, @cLine )
-   oBrw:cLine := cLine
-   oBrw:nLine := 1
-   FSeek( oBrw:nHandle, 0, FS_SET )
 
-   RETURN
+METHOD Down() CLASS TBrwText
+   ::MoveCursor(K_DOWN)
+return Self
 
-STATIC PROCEDURE GoLastLine( oBrw )
 
-   LOCAL cLine := oBrw:cLine
+METHOD PageUp() CLASS TBrwText
+   ::MoveCursor(K_PGUP)
+return Self
 
-   FSeek( oBrw:nHandle, -1, FS_END )
-   GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
-   oBrw:cLine := cLine
 
-   RETURN
+METHOD PageDown() CLASS TBrwText
+   ::MoveCursor(K_PGDN)
+return Self
 
-STATIC FUNCTION Skipper( oBrw, nLines )
 
-   LOCAL nSkipped := 0
-   LOCAL cLine := oBrw:cLine
+METHOD RefreshAll() CLASS TBrwText
+   ::RefreshWindow()
+return Self
 
-   // Skip down
-   IF nLines > 0
-      DO WHILE nSkipped != nLines .AND. GoNextLine( oBrw:nHandle, @cLine )
-         nSkipped++
-      ENDDO
-      oBrw:cLine := cLine
-   // Skip Up
-   ELSE
-      DO WHILE nSkipped != nLines .AND. GoPrevLine( oBrw:nHandle, @cLine, oBrw:nFileSize )
-         nSkipped--
-      ENDDO
-      oBrw:cLine := cLine
-   ENDIF
+METHOD RefreshCurrent() CLASS TBrwText
+return Self
 
-   oBrw:nLine += nSkipped
+METHOD ForceStable() CLASS TBrwText
+return Self
 
-   RETURN nSkipped
 
-STATIC FUNCTION FReadLn( nHandle, cBuffer )
+METHOD GotoLine(n) CLASS TBrwText
 
-   LOCAL nEOL      // End Of Line Postion
-   LOCAL nRead     // Number of characters read
-   LOCAL nSaveFPos // Saved File Postion
+   ::RefreshLine()
+   Super:GotoLine(n)
 
-   cBuffer := Space( MAX_LINE_LEN )
+   ::Hilite()
+   ::RefreshLine()
+   ::DeHilite()
 
-   // First save current file pointer
-   nSaveFPos := FSeek( nHandle, 0, FS_RELATIVE )
-   nRead     := FRead( nHandle, @cBuffer, MAX_LINE_LEN )
+return Self
 
-   IF ( nEOL := At( Chr( 13 ) + Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0 .AND. ;
-      ( nEOL := At( Chr( 10 ), SubStr( cBuffer, 1, nRead ) ) ) == 0
-      // Line overflow or eof
-      // ::cLine has the line we need
-   ELSE
-      // Copy up to EOL
-      cBuffer := SubStr( cBuffer, 1, nEOL - 1 )
-      // Position file pointer to next line
-      FSeek( nHandle, nSaveFPos + nEOL + 1, FS_SET )
-   ENDIF
 
-   RETURN nRead != 0
+METHOD GetLine(nRow) CLASS TBrwText
 
-STATIC FUNCTION GoPrevLine( nHandle, cLine, nFileSize )
+return AllTrim(Str(nRow)) + ": " + Super:GetLine(nRow)
 
-   LOCAL nOrigPos    // Original File Pointer Position
-   LOCAL nMaxRead    // Maximum Line Length
-   LOCAL nNewPos     // New File Pointer Position
-   LOCAL lMoved      // Pointer Moved
-   LOCAL cBuff       // Line buffer
-   LOCAL nWhereCrLf  // Position of CRLF
-   LOCAL nPrev       // Previous File Pointer Position
-
-   // Save Original file position
-   nOrigPos := FSEEK( nHandle, 0, FS_RELATIVE )
-
-   IF nOrigPos == 0
-      lMoved := FALSE
-   ELSE
-      lMoved := TRUE
-
-      IF nOrigPos != nFileSize
-         // Skip over preceeding CR / LF
-         FSeek( nHandle, -2, FS_RELATIVE )
-      ENDIF
-      nMaxRead := Min( MAX_LINE_LEN, FTELL( nHandle ) )
-
-      // Capture the line into a buffer, strip off the CRLF
-      cBuff := Space( nMaxRead )
-
-      nNewPos := FSeek( nHandle, -nMaxRead, FS_RELATIVE )
-      FRead( nHandle, @cBuff, nMaxRead )
-
-      IF ( nWhereCrLf := RAt( Chr( 13 ) + Chr( 10 ), cBuff ) ) == 0 .AND. ;
-         ( nWhereCrLf := RAt( Chr( 10 ), cBuff ) ) == 0
-         nPrev := nNewPos
-         cLine := cBuff
-      ELSE
-         nPrev := nNewPos + nWhereCrLf + 1
-         cLine := SubStr( cBuff, nWhereCrLf + 2 )
-      ENDIF
-
-      // Move to the beginning of the line
-      FSeek( nHandle, nPrev, FS_SET )
-   ENDIF
-
-   RETURN lMoved
-
-STATIC FUNCTION GoNextLine( nHandle, cLine )
-
-   LOCAL nSavePos      // Save File pointer position
-   LOCAL cBuff := ""   // Line Buffer
-   LOCAL lMoved        // Pointer Moved
-   LOCAL nNewPos       // New File Pointer Position
-
-   // Save the file pointer position
-   nSavePos := FTELL( nHandle )
-
-   // Find the end of the current line
-   FSeek( nHandle, Len( cLine ) + 2, FS_RELATIVE )
-
-   nNewPos := FTELL( nHandle )
-
-   // Read in the next line
-   IF FReadLn( nHandle, @cBuff )
-      lMoved := .T.
-      cLine := cBuff
-      FSeek( nHandle, nNewPos, FS_SET )
-   ELSE
-      lMoved := .F.
-      FSeek( nHandle, nSavePos, FS_SET )
-   ENDIF
-
-   RETURN lMoved
 

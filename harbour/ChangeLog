@@ -1,3 +1,19 @@
+20000712-22:03 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+
+   * source/rtl/teditor.prg
+     + Added a bunch of new methods and in particular full support for a soft cursor,
+       teditor does not rely upon position of hardware cursor anymore.
+     + Added color support
+     * made a few changes to use it as a base for tbrwtext class
+   * source/debug/tbrwtext.prg
+     * changed to use teditor as base class and not tbrowse. This makes it possible to single step
+       inside normal size source code files. Try to single step inside dbu using previous version
+       and you will understand me ;-)
+   * source/debug/debugger.prg
+     * a few changes to accomodate for new tbrwtext class
+
+   Please note that there is not (yet) support for highlighting of breakpoints.
+
 2000-07-12 14:05 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rdd/dbcmd.c

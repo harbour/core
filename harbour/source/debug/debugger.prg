@@ -518,8 +518,7 @@ METHOD ShowCallStack() CLASS TDebugger
 
    if ::oWndStack == nil
       ::oWndCode:nRight -= 16
-      ::oBrwText:nRight -= 16
-      ::oBrwText:aColumns[ 1 ]:Width -= 16
+      ::oBrwText:Resize(,,, ::oBrwText:nRight - 16)
       ::oWndCode:SetFocus( .t. )
       ::oWndStack := TDbWindow():New( 1, MaxCol() - 15, MaxRow() - 6, MaxCol(),;
                                      "Stack", "BG+/B" )
@@ -568,7 +567,7 @@ METHOD ShowVars() CLASS TDebugger
       n := 1
 
       ::oWndCode:nTop += 5
-      ::oBrwText:nTop += 5
+      ::oBrwText:Resize(::oBrwText:nTop + 5)
       ::oBrwText:RefreshAll()
       ::oWndCode:SetFocus( .t. )
       ::oWndVars := TDbWindow():New( 1, 0, 5,;
@@ -615,7 +614,7 @@ return ""
 
 static function CompareLine( Self )
 
-return { | a | a[ 1 ] == Self:oBrwText:nLine }
+return { | a | a[ 1 ] == Self:oBrwText:nRow }  // it was nLine
 
 METHOD ShowCode( cModuleName ) CLASS TDebugger
 
@@ -639,8 +638,8 @@ METHOD ShowCode( cModuleName ) CLASS TDebugger
       ::oBrwText := TBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1,;
                    ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, ::cPrgName, "BG+/B, N/BG, W+/R, W+/BG" )
 
-      ::oBrwText:aColumns[ 1 ]:ColorBlock := { || iif( AScan( ::aBreakPoints,;
-         CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
+      //::oBrwText:aColumns[ 1 ]:ColorBlock := { || iif( AScan( ::aBreakPoints,;
+      //   CompareLine( Self ) ) != 0, { 3, 4 }, { 1, 2 } ) }
 
       ::oBrwText:ForceStable()
       ::oWndCode:SetCaption( ::cPrgName )
@@ -731,10 +730,10 @@ return nil
 METHOD ToggleBreakPoint() CLASS TDebugger
 
    local nAt := AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == ;
-                       ::oBrwText:nLine } )
+                       ::oBrwText:nRow } ) // it was nLine
 
    if nAt == 0
-      AAdd( ::aBreakPoints, { ::oBrwText:nLine, ::cPrgName } )
+      AAdd( ::aBreakPoints, { ::oBrwText:nRow, ::cPrgName } )     // it was nLine
    else
       ADel( ::aBreakPoints, nAt )
       ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
