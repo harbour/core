@@ -31,6 +31,8 @@
 #if defined(__BORLANDC__)
   #include <sys\stat.h>
   #include <io.h>
+  #include <fcntl.h>
+  #include <share.h>
   
   #if !defined(HAVE_POSIX_IO)
   #define HAVE_POSIX_IO

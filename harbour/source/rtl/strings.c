@@ -1010,21 +1010,32 @@ HARBOUR VAL( void )
 char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
 {
    char * szResult = 0;
+
    if( pNumber )
    {
       /* Default to the width and number of decimals specified by the item,
          with a limit of 9 decimal places */
       int iWidth = pNumber->wLength;
       int iDec   = pNumber->wDec;
-      if( iDec > 9 ) iDec = 9;
-      if( hb_set_fixed ) iDec = hb_set.HB_SET_DECIMALS;
+
+      if( iDec > 9 )
+         iDec = 9;
+      if( hb_set_fixed )
+         iDec = hb_set.HB_SET_DECIMALS;
 
       if( pWidth )
       {
          /* If the width parameter is specified, override the default value
             and set the number of decimals to zero */
-         iWidth = _parnl(2);
-         if( iWidth < 1 ) iWidth = 10; /* If 0 or negative, use default */
+         if( IS_INTEGER( pWidth ) )
+            iWidth = pWidth->value.iNumber;
+         else if( IS_LONG( pWidth ) )
+            iWidth = (int) pWidth->value.lNumber;
+         else if( IS_DOUBLE( pWidth ) )
+            iWidth = (int) pWidth->value.dNumber;
+
+         if( iWidth < 1 )
+            iWidth = 10;                   /* If 0 or negative, use default */
          iDec = 0;
       }
 
@@ -1033,22 +1044,39 @@ char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
          /* This function does not include the decimal places in the width,
             so the width must be adjusted downwards, if the decimal places
             parameter is greater than 0  */
-         iDec = _parnl(3);
-         if( iDec < 0 ) iDec = 0;
-         else if( iDec > 0 ) iWidth -= (iDec + 1);
+         if( IS_INTEGER( pDec ) )
+            iDec = pDec->value.iNumber;
+         else if( IS_LONG( pDec ) )
+            iDec = (int) pDec->value.lNumber;
+         else if( IS_DOUBLE( pDec ) )
+            iDec = (int) pDec->value.dNumber;
+
+         if( iDec < 0 )
+            iDec = 0;
+         else if( iDec > 0 )
+            iWidth -= (iDec + 1);
       }
 
       if( iWidth )
       {
          /* We at least have a width value */
-         int iBytes, iSize = (iDec ? iWidth + 1 + iDec : iWidth);
+         int iBytes;
+         int iSize = (iDec ? iWidth + 1 + iDec : iWidth);
          
          /* Be paranoid and use a large amount of padding */
          szResult = (char *)_xgrab( iWidth + iDec + 64 );
 
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
-            double dNumber = _parnd( 1 );
+            double dNumber;
+
+            if( IS_INTEGER( pNumber ) )
+               dNumber = (double) pNumber->value.iNumber;
+            else if( IS_LONG( pNumber ) )
+               dNumber = (double) pNumber->value.lNumber;
+            else if( IS_DOUBLE( pNumber ) )
+               dNumber = pNumber->value.dNumber;
+
             if( iDec > 0 )
                iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
             else
@@ -1088,24 +1116,31 @@ HARBOUR STR( void )
    if( _pcount() > 0 && _pcount() < 4 )
    {
       BOOL bValid = TRUE;
-      PITEM pNumber = _param( 1, IT_NUMERIC ), pWidth = 0, pDec = 0;
-      if( !pNumber ) bValid = FALSE;
+      PITEM pNumber = _param( 1, IT_NUMERIC );
+      PITEM pWidth  = 0;
+      PITEM pDec    = 0;
+
+      if( !pNumber )
+         bValid = FALSE;
       else
       {
          if( _pcount() > 1 )
          {
             pWidth = _param( 2, IT_NUMERIC );
-            if( !pWidth) bValid = FALSE;
+            if( !pWidth)
+               bValid = FALSE;
          }
          if( _pcount() > 2 )
          {
             pDec = _param( 3, IT_NUMERIC );
-            if( !pDec ) bValid = FALSE;
+            if( !pDec )
+               bValid = FALSE;
          }
       }
       if( bValid )
       {
          char * szResult = hb_str( pNumber, pWidth, pDec );
+
          if( szResult )
          {
             _retc( szResult );

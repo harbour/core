@@ -1,3 +1,9 @@
+19990523-14:05 CET Eddie Runia
+  * source/rtl/files.c
+    #include added for Borland
+  * source/rtl/strings.c
+    str error fixed
+
 19990523-12:50 CET Eddie Runia
   * source/rtl/transfrm.c
     Modified for by reference. (Forgot I was Captain of that)
