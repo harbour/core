@@ -13,19 +13,6 @@
 # Directory macros. These should never have to change.
 #
 
-#------------------------------
-#Patrick Mast 14 July 1999
-#Changed output for PRG's that needed to be compiled with Harbour
-#Deleted 'Classes.Prg' lines. (No need for them)
-#Added parameter -n for compiling asort.prg
-#Added parameter -n for compiling errorsys.prg
-#Deleted 'GenObj.c' lines (No need for them)
-#Changed 'Stringp.c' line $(RTL_DIR) should be  $(TOOLS_DIR)
-#------------------------------
-#Patrick Mast 18 July 1999
-#Put 'Errorsys.prg' lines back in
-#------------------------------
-
 COMPILER_DIR=source\compiler
 RTL_DIR=source\rtl
 HBPP_DIR=source\hbpp
@@ -41,7 +28,7 @@ OBJ_DIR=obj
 #
 
 CC=cl
-CFLAGS=-w -I$(INCLUDE_DIR)
+CFLAGS=-w -I$(INCLUDE_DIR) -DHARBOUR_USE_GTAPI -DHARBOUR_USE_WIN_GTAPI
 CLIBFLAGS=$(CFLAGS) -c /TP
 CLIBFLAGSDEBUG=$(CFLAGS) -c -Zi /TP
 
@@ -72,6 +59,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\error.obj \
     $(OBJ_DIR)\errorapi.obj \
+    $(OBJ_DIR)\errorsys.obj \
     $(OBJ_DIR)\extend.obj \
     $(OBJ_DIR)\files.obj \
     $(OBJ_DIR)\gtapi.obj \
@@ -88,8 +76,8 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\strcmp.obj \
     $(OBJ_DIR)\strings.obj \
     $(OBJ_DIR)\tclass.obj \
-    $(OBJ_DIR)\transfrm.obj
-#    $(OBJ_DIR)\classes.obj
+    $(OBJ_DIR)\transfrm.obj \
+    $(OBJ_DIR)\classes.obj
 
 #
 # OBJ list for hbtools.lib. Add new ones as needed
@@ -127,7 +115,7 @@ TOOLS_LIB_OBJS = \
 TERMINAL_LIB_OBJS = \
     $(OBJ_DIR)\console.obj \
     $(OBJ_DIR)\gtapi.obj \
-    $(OBJ_DIR)\gtwin.obj
+    $(OBJ_DIR)\gtxxx.obj
 
 #
 # Our default target
@@ -195,9 +183,9 @@ $(OBJ_DIR)\asort.obj : $(RTL_DIR)\asort.c
 
 #$(RTL_DIR)\classes.c : $(RTL_DIR)\classes.prg
 #    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RTL_DIR) $**
-#
-#$(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
-#    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\codebloc.obj : $(RTL_DIR)\codebloc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
@@ -289,8 +277,8 @@ $(OBJ_DIR)\tclass.obj : $(RTL_DIR)\tclass.c
 $(OBJ_DIR)\transfrm.obj : $(RTL_DIR)\transfrm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\gtwin.obj : $(RTL_DIR)\gt\gtwin.c
-    $(CC) $(CLIBFLAGS) /TC -Fo$@ $**
+$(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 #
 # VM source depencies below. Add as needed
@@ -389,4 +377,3 @@ $(OBJ_DIR)\strpbrk.obj : $(TOOLS_DIR)\strpbrk.c
 
 $(OBJ_DIR)\strright.obj : $(TOOLS_DIR)\strright.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
-
