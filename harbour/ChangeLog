@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-21 23:41 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/achoice.prg
+    ! Reduce redundant code.
+    ! Fix default values of nBottom and nRight out of range.
+    ! Add control of value of nBottom and nRight.
+  * source/rtl/tget.prg
+    ! Fix ::Changed property to conform UPDATE() behaviour with that Clipper.
+
+      Fixed by Andi Jahja in xHarbour
+
 2002-10-21 12:30 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbfcdx/dbfcdx1.c
     ! added some long needed typecasts.
