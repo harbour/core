@@ -1,3 +1,12 @@
+19990620-15:50 CET Victor Szel <info@szelvesz.hu>
+  * hb_gtBox() rewritten.
+    It's now 100% Clipper compatible, fill character
+    supported, undocumented frame string padding supported.
+    Leaves the cursor at the same place as Clipper does.
+    Handling of empty or short frame string parameter
+    fixed. Bit slower.
+    source/compiler/gtapi.c
+
 19990620-02:40 Ryszard Glab <rglab@imid.med.pl>
 
 * config/bin.cf
