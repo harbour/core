@@ -78,7 +78,7 @@ endif
 LDFLAGS = $(LINKPATHS)
 
 AR = tlib
-ARFLAGS =
+ARFLAGS = $(A_USR)
 AROBJS = $(foreach file, $^, -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
 

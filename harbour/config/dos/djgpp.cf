@@ -74,7 +74,7 @@ $(foreach file, $(LINKLIBS), $(link_file))
 endef
 
 AR = ar
-ARFLAGS =
+ARFLAGS = $(A_USR)
 AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)

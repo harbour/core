@@ -4,6 +4,9 @@
 
 #include "hbclass.ch"
 
+MEMVAR cStr, cStr_1, cVar_1, aVar, oVar, OtherVar, SomeVar, Private
+MEMVAR cMainPrivate, GlobalPrivate, BornInRunTimeVar, Public
+
 Function Main( )
 
         PRIVATE cStr := 'cVar', cStr_1 := 'cVar_1', aVar := { 'cVar_1' }, oVar

@@ -41,7 +41,7 @@ endif
 LDFLAGS = $(LINKPATHS)
 
 AR = lib.exe
-ARFLAGS =
+ARFLAGS = $(A_USR)
 AR_RULE = $(AR) $(ARFLAGS) /out:$@ $^ || $(RM) $@
 
 include $(TOP)$(ROOT)config/rules.cf

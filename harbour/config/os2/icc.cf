@@ -51,7 +51,7 @@ LINKLIBS += $(HB_SCREEN_LIB)
 endif
 
 AR = ilib
-ARFLAGS = /NOE /NOIgnoreCase
+ARFLAGS = /NOE /NOIgnoreCase $(A_USR)
 AROBJS = $(foreach file, $^, -+$(file))
 AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
 

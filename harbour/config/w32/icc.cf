@@ -62,7 +62,7 @@ del __lib__.tmp
 endef
 
 AR = ilib
-ARFLAGS =
+ARFLAGS = $(A_USR)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

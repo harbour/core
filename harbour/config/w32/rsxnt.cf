@@ -76,7 +76,7 @@ endif
 LDFLAGS += $(LINKPATHS)
 
 AR = ar
-ARFLAGS =
+ARFLAGS = $(A_USR)
 AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
 
 include $(TOP)$(ROOT)config/rules.cf

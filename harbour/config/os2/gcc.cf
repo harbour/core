@@ -67,7 +67,7 @@ endef
 
 # Under OS/2 || isn't a command separator (inside a shell, that is); correct separator is &
 AR = ar
-ARFLAGS =
+ARFLAGS = $(A_USR)
 AR_RULE = $(create_library) & $(RM) __lib__.tmp
 
 include $(TOP)$(ROOT)config/rules.cf
