@@ -1,3 +1,7 @@
+2000-08-01 06:30 UTC+0700 Jose Lalin <dezac@corevia.com>
+   * source/compiler/hbgenerr.c
+     Bug fixes as reported by Andi Jahja
+
 2000-07-31 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/simplex.c
    * source/macro/macro.slx

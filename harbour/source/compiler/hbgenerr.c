@@ -129,7 +129,8 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
    if( cPrefix != 'F' && hb_comp_bError )
       return;
 
-   printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
+  if( hb_comp_files.pLast && hb_comp_files.pLast->szFileName )
+    printf( "\r%s(%i) ", hb_comp_files.pLast->szFileName, iLine );
 
    printf( "Error %c%04i  ", cPrefix, iError );
    printf( szErrors[ iError - 1 ], szError1, szError2 );
