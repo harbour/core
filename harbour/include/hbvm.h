@@ -72,6 +72,9 @@ extern void    hb_vmMessage( PHB_SYMB pSymMsg ); /* sends a message to an object
 /* Execution */
 extern void    hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
 extern void    hb_vmFunction( USHORT uiParams ); /* executes a function saving its result */
+extern PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlockItem ); /* executes passed codeblock with no arguments */
+/* executes passed codeblock with variable number of arguments */
+extern PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlockItem, USHORT uiArgCount, ... ); 
 
 /* Push */
 extern void    hb_vmPush( PHB_ITEM pItem );     /* pushes a generic item onto the stack */

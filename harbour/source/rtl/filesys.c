@@ -936,6 +936,48 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
       hb_fsSeek( hFileHandle, ulOldPos, FS_SET );
    }
 
+#elif defined(__GNUC__) && defined(HB_OS_UNIX)
+   errno = 0;
+   {
+      /* TODO: check for append locks (SEEK_END)
+       */
+      struct flock lock_info;
+      
+      switch( uiMode )
+      {
+         case FL_LOCK:
+            {
+               lock_info.l_type   = F_WRLCK;
+               lock_info.l_start  = ulStart;
+               lock_info.l_len    = ulLength;
+               lock_info.l_whence = SEEK_SET;   /* start from the beginning of the file */
+               lock_info.l_pid    = getpid();
+               iResult = fcntl( hFileHandle, F_SETLK, &lock_info );
+               if( iResult < 0 )
+                  iResult = FALSE;      /* lock failed */
+               else
+                  iResult = TRUE;      /* lock was successful */
+            }
+            break;
+
+         case FL_UNLOCK:
+            {
+               lock_info.l_type   = F_UNLCK;   /* unlock */
+               lock_info.l_start  = ulStart;
+               lock_info.l_len    = ulLength;
+               lock_info.l_whence = SEEK_SET;
+               lock_info.l_pid    = getpid();
+               iResult = fcntl( hFileHandle, F_SETLK, &lock_info );
+               if( iResult < 0 )
+                  iResult = 0;      /* lock failed */
+            }
+            break;
+
+         default:
+            iResult = 0;
+      } 
+   }
+   s_uiErrorLast = errno;
 #else
 
    iResult = 1;
@@ -950,7 +992,11 @@ void    hb_fsCommit( FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCommit(%p)", hFileHandle));
 
-#if defined(HB_FS_FILE_IO) && !defined(HB_OS_OS2)
+#if defined(__WATCOMC__)
+   
+   _dos_commit( hFileHandle );
+   
+#elif defined(HB_FS_FILE_IO) && !defined(HB_OS_OS2) && !defined(HB_OS_UNIX)
 
    {
       int dup_handle;
@@ -976,6 +1022,12 @@ void    hb_fsCommit( FHANDLE hFileHandle )
       s_uiErrorLast = errno;
    }
 
+#elif defined(HB_OS_UNIX)
+   /* NOTE: close() functions releases all lock regardles if it is an
+    * original or duplicated file handle
+   */
+   s_uiErrorLast = FS_ERROR;
+   
 #else
 
    s_uiErrorLast = FS_ERROR;

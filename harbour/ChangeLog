@@ -1,3 +1,28 @@
+20000501-15:45 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+   *source/rtl/filesys.c
+      * added support for file locks under Unix compatible OS
+      TODO: check the append locks
+      * commit operation cannot be performed by closing a
+      duplicated file handle - it releases all locks for
+      this file on Unix compatible OS
+
+   *source/vm/hvm.c
+   *include/hbvm.h
+      * added hb_vmEvalBlock() for a codeblock evaluation - it is
+      passing no arguments to a codeblock
+      * added hb_vmEvalBlockV() for a codeblock evaluation - it is
+      using a variable number of arguments
+            
+   *source/rdd/dbcmd.c
+      * fixed bug in defEvalBlock
+      * fixed to call hb_vmEvalBlock()
+      * some common parts moved into separate functions
+      
+    *include/hbcomp.h
+	* changed 'BYTE iJumps' into 'ULONG iJumps' to stop reallocation
+	error mentioned by Victor
+	
 20000501-15:37 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/teditor.prg

@@ -115,8 +115,8 @@ typedef struct __FUNC
    int    iStaticsBase;             /* base for this function statics */
    ULONG  * pNOOPs;                 /* pointer to the NOOP array */
    ULONG  * pJumps;                 /* pointer to the Jumps array */
-   int    iNOOPs;                   /* NOOPs Counter */
-   BYTE   iJumps;                   /* Jumps Counter */
+   ULONG  iNOOPs;                   /* NOOPs Counter */
+   ULONG  iJumps;                   /* Jumps Counter */
    BYTE   pStack[512];              /* Compile Time Stack */
    SHORT  iStackIndex;              /* Compile Time Stack Index */
    struct __FUNC * pOwner;          /* pointer to the function/procedure that owns the codeblock */

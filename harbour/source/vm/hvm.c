@@ -2806,6 +2806,46 @@ static HARBOUR hb_vmDoBlock( void )
    hb_stack.pBase->item.asSymbol.lineno = uiLine;
 }
 
+/* Evaluates a passed codeblock item with no arguments passed to a codeblock
+*/
+HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlock(%p)", pBlock));
+  
+   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPush( pBlock );
+   hb_vmDo( 0 );
+   return &hb_stack.Return;
+}
+
+/* Evaluates a codeblock item using passed additional arguments
+ * pBlock = an item of codeblock type to evaluate
+ * uiArgCount = number of arguments passed to a codeblock
+ * ... = the list of arguments of type PHB_ITEM
+ *
+ *for example:
+ * retVal = hb_vmEvalBlockV( pBlock, 2, pParam1, pParam2 );
+*/
+HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, USHORT uiArgCount, ... )
+{
+   va_list va;
+   USHORT i;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEvalBlockV(%p, %hu, ...)", pBlock, uiArgCount));
+
+   hb_vmPushSymbol( &hb_symEval );
+   hb_vmPush( pBlock );
+
+   va_start( va, uiArgCount );
+   for( i=1; i<= uiArgCount; i++ )
+      hb_vmPush( va_arg( va, PHB_ITEM ) );
+   va_end( va );
+   
+   hb_vmDo( uiArgCount );
+
+   return &hb_stack.Return;
+}
+
 void hb_vmFunction( USHORT uiParams )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFunction(%hu)", uiParams));

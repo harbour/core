@@ -296,29 +296,21 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
       {
          if( pEvalInfo->dbsci.itmCobWhile )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pEvalInfo->dbsci.itmCobWhile );
-            hb_vmDo( 0 );
-            bWhile = hb_itemGetL( &hb_stack.Return );
+            bWhile = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) );
          }
          else
             bWhile = TRUE;
 
          if( pEvalInfo->dbsci.itmCobFor )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pEvalInfo->dbsci.itmCobFor );
-            hb_vmDo( 0 );
-            bFor = hb_itemGetL( &hb_stack.Return );
+            bFor = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobFor ) );
          }
          else
             bFor = TRUE;
 
          if( bWhile && bFor )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pEvalInfo->itmBlock );
-            hb_vmDo( 0 );
+            hb_vmEvalBlock( pEvalInfo->itmBlock );
          }
       }
       return SUCCESS;
@@ -338,10 +330,7 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
       if( pEvalInfo->dbsci.itmCobWhile )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pEvalInfo->dbsci.itmCobWhile );
-         hb_vmDo( 0 );
-         bWhile = hb_itemGetL( &hb_stack.Return );
+         bWhile = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) );
          if( !bWhile )
             break;
       }
@@ -350,19 +339,14 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
       if( pEvalInfo->dbsci.itmCobFor )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pEvalInfo->dbsci.itmCobFor );
-         hb_vmDo( 0 );
-         bFor = hb_itemGetL( &hb_stack.Return );
+         bFor = hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobFor ) );
       }
       else
          bFor = TRUE;
 
       if( bFor && bWhile )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pEvalInfo->itmBlock );
-         hb_vmDo( 0 );
+         hb_vmEvalBlock( pEvalInfo->itmBlock );
       }
       SELF_SKIP( pArea, 1 );
       SELF_EOF( pArea, &bEof );
@@ -373,9 +357,11 @@ static ERRCODE defEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
 static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 {
+   PHB_ITEM pResult;
+   
    HB_TRACE(HB_TR_DEBUG, ("defEvalBlock(%p, %p)", pArea, pBlock));
 
-   if( !pBlock && !HB_IS_BLOCK( pBlock ) )
+   if( !pBlock || !HB_IS_BLOCK( pBlock ) )
    {
       PHB_ITEM pError;
 
@@ -387,12 +373,10 @@ static ERRCODE defEvalBlock( AREAP pArea, PHB_ITEM pBlock )
       return FAILURE;
    }
 
-   hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( pBlock );
-   hb_vmDo( 0 );
+   pResult = hb_vmEvalBlock( pBlock );
    if( !pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
-   hb_itemCopy( pArea->valResult, &hb_stack.Return );
+   hb_itemCopy( pArea->valResult, pResult );
 
    return SUCCESS;
 }
@@ -691,11 +675,8 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
          /* SET FILTER TO */
          if( pArea->dbfi.fFilter )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pArea->dbfi.itmCobExpr );
-            hb_vmDo( 0 );
-            if( HB_IS_LOGICAL( &hb_stack.Return ) &&
-                !hb_itemGetL( &hb_stack.Return ) )
+            PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
+            if( HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult ) )
             {
                SELF_SKIPRAW( pArea, 1 );
                continue;
@@ -726,11 +707,8 @@ static ERRCODE defSkipFilter( AREAP pArea, LONG lUpDown )
          /* SET FILTER TO */
          if( pArea->dbfi.fFilter )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pArea->dbfi.itmCobExpr );
-            hb_vmDo( 0 );
-            if( HB_IS_LOGICAL( &hb_stack.Return ) &&
-                !hb_itemGetL( &hb_stack.Return ) )
+            PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
+            if( HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult ) )
             {
                SELF_SKIPRAW( pArea, 1 );
                continue;
@@ -1059,6 +1037,74 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    }
    return SUCCESS;
 }
+
+/* closes (if requested) and releases the current area preparing it
+ * to be used with a new database
+*/
+void hb_rddReleaseCurrentArea( BOOL bClose )
+{
+   if( bClose )
+      SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
+   SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
+
+   if( s_pWorkAreas == s_pCurrArea )
+   {
+      s_pWorkAreas = s_pCurrArea->pNext;
+      if( s_pWorkAreas )
+         s_pWorkAreas->pPrev = NULL;
+   }
+   else
+   {
+      if( s_pCurrArea->pPrev )
+         s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
+      if( s_pCurrArea->pNext )
+         s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
+   }
+
+   hb_xfree( s_pCurrArea->pArea );
+   hb_xfree( s_pCurrArea );
+   s_pCurrArea = NULL;
+}
+
+/* Prepares a new area node
+*/
+LPAREANODE hb_rddNewAreaNode( LPRDDNODE pRddNode, USHORT uiRddID )
+{
+   LPAREANODE pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+
+   if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
+   {
+      USHORT uiSize;
+      
+      uiSize = sizeof( AREA );    /* Default Size Area */
+      pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
+      memset( pCurrArea->pArea, 0, uiSize );
+      ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+
+      /* Need more space? */
+      SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
+      if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
+         pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
+
+      pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
+   }
+   else
+   {
+      pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
+      memset( pCurrArea->pArea, 0, pRddNode->uiAreaSize );
+      ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+   }
+
+   ( ( AREAP ) pCurrArea->pArea )->rddID = uiRddID;
+
+   pCurrArea->pPrev = NULL;
+   pCurrArea->pNext = NULL;
+
+   SELF_NEW( ( AREAP ) pCurrArea->pArea );
+   
+   return pCurrArea;
+}
+
 
 /*
  *  Function for getting current workarea pointer
@@ -1568,26 +1614,7 @@ HB_FUNC( DBCLOSEAREA )
    if( !s_pCurrArea )
       return;
 
-   SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
-   SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
-
-   if( s_pWorkAreas == s_pCurrArea )
-   {
-      s_pWorkAreas = s_pCurrArea->pNext;
-      if( s_pWorkAreas )
-         s_pWorkAreas->pPrev = NULL;
-   }
-   else
-   {
-      if( s_pCurrArea->pPrev )
-         s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
-      if( s_pCurrArea->pNext )
-         s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
-   }
-
-   hb_xfree( s_pCurrArea->pArea );
-   hb_xfree( s_pCurrArea );
-   s_pCurrArea = NULL;
+   hb_rddReleaseCurrentArea( TRUE );   /* close before releasing */
 }
 
 HB_FUNC( DBCOMMIT )
@@ -1627,18 +1654,13 @@ HB_FUNC( __DBCONTINUE )
    SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
    if( bEof )
       return;
-   hb_vmPushSymbol( &hb_symEval );
-   hb_vmPush( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor );
-   hb_vmDo( 0 );
-   ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
+      
+   ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( hb_vmEvalBlock( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor ) );
    while( !bEof && !( ( AREAP ) s_pCurrArea->pArea )->fFound )
    {
       SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
       SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
-      hb_vmPushSymbol( &hb_symEval );
-      hb_vmPush( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor );
-      hb_vmDo( 0 );
-      ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( &hb_stack.Return );
+      ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( hb_vmEvalBlock( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor ) );
    }
 }
 
@@ -1714,60 +1736,14 @@ HB_FUNC( DBCREATE )
          hb_rddSelectFirstAvailable();
       else if( s_pCurrArea )  /* If current WorkArea is in use then close it */
       {
-         SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
-         SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
-
-         if( s_pWorkAreas == s_pCurrArea )
-         {
-            s_pWorkAreas = s_pCurrArea->pNext;
-            if( s_pWorkAreas )
-               s_pWorkAreas->pPrev = NULL;
-         }
-         else
-         {
-            if( s_pCurrArea->pPrev )
-               s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
-            if( s_pCurrArea->pNext )
-               s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
-         }
-
-         hb_xfree( s_pCurrArea->pArea );
-         hb_xfree( s_pCurrArea );
-         s_pCurrArea = NULL;
+         hb_rddReleaseCurrentArea( TRUE );   /* close before releasing */
       }
    }
 
    /* Create a new WorkArea node */
 
-   s_pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+   s_pCurrArea = hb_rddNewAreaNode( pRddNode, uiRddID );
 
-   if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
-   {
-      uiSize = sizeof( AREA );    /* Default Size Area */
-      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
-      memset( s_pCurrArea->pArea, 0, uiSize );
-            ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
-
-      /* Need more space? */
-      SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiSize );
-      if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-         s_pCurrArea->pArea = ( AREAP ) hb_xrealloc( s_pCurrArea->pArea, uiSize );
-
-      pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
-   }
-   else
-   {
-      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( s_pCurrArea->pArea, 0, pRddNode->uiAreaSize );
-              ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
-   }
-
-   ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
-
-   s_pCurrArea->pPrev = NULL;
-   s_pCurrArea->pNext = NULL;
-
-   SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
    if( SELF_CREATEFIELDS( ( AREAP ) s_pCurrArea->pArea, pStruct ) == FAILURE )
    {
       SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
@@ -2029,19 +2005,13 @@ HB_FUNC( __DBLOCATE )
          return;
       if( hb_itemType( pWhile ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pWhile );
-         hb_vmDo( 0 );
-         bWhile = hb_itemGetL( &hb_stack.Return );
+         bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
       }
       else
          bWhile = hb_itemGetL( pWhile );
       if( hb_itemType( pFor ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pFor );
-         hb_vmDo( 0 );
-         bFor = hb_itemGetL( &hb_stack.Return );
+         bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
          ( ( AREAP ) s_pCurrArea->pArea )->fFound = ( bWhile && bFor );
       }
       else
@@ -2055,19 +2025,13 @@ HB_FUNC( __DBLOCATE )
          return;
       if( hb_itemType( pWhile ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pWhile );
-         hb_vmDo( 0 );
-         bWhile = hb_itemGetL( &hb_stack.Return );
+         bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
       }
       else
          bWhile = hb_itemGetL( pWhile );
       if( hb_itemType( pFor ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pFor );
-         hb_vmDo( 0 );
-         bFor = hb_itemGetL( &hb_stack.Return );
+         bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
       }
       else
          bFor = hb_itemGetL( pFor );
@@ -2077,19 +2041,13 @@ HB_FUNC( __DBLOCATE )
          SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
          if( hb_itemType( pWhile ) == HB_IT_BLOCK )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pWhile );
-            hb_vmDo( 0 );
-            bWhile = hb_itemGetL( &hb_stack.Return );
+            bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
          }
          else
             bWhile = hb_itemGetL( pWhile );
          if( hb_itemType( pFor ) == HB_IT_BLOCK )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pFor );
-            hb_vmDo( 0 );
-            bFor = hb_itemGetL( &hb_stack.Return );
+            bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
          }
          else
             bFor = hb_itemGetL( pFor );
@@ -2103,19 +2061,13 @@ HB_FUNC( __DBLOCATE )
          return;
       if( hb_itemType( pWhile ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pWhile );
-         hb_vmDo( 0 );
-         bWhile = hb_itemGetL( &hb_stack.Return );
+         bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
       }
       else
          bWhile = hb_itemGetL( pWhile );
       if( hb_itemType( pFor ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pFor );
-         hb_vmDo( 0 );
-         bFor = hb_itemGetL( &hb_stack.Return );
+         bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
       }
       else
          bFor = hb_itemGetL( pFor );
@@ -2125,19 +2077,13 @@ HB_FUNC( __DBLOCATE )
          SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
          if( hb_itemType( pWhile ) == HB_IT_BLOCK )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pWhile );
-            hb_vmDo( 0 );
-            bWhile = hb_itemGetL( &hb_stack.Return );
+            bWhile = hb_itemGetL( hb_vmEvalBlock( pWhile ) );
          }
          else
             bWhile = hb_itemGetL( pWhile );
          if( hb_itemType( pFor ) == HB_IT_BLOCK )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pFor );
-            hb_vmDo( 0 );
-            bFor = hb_itemGetL( &hb_stack.Return );
+            bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
          }
          else
             bFor = hb_itemGetL( pFor );
@@ -2152,10 +2098,7 @@ HB_FUNC( __DBLOCATE )
          return;
       if( hb_itemType( pFor ) == HB_IT_BLOCK )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pFor );
-         hb_vmDo( 0 );
-         bFor = hb_itemGetL( &hb_stack.Return );
+         bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
       }
       else
          bFor = hb_itemGetL( pFor );
@@ -2165,10 +2108,7 @@ HB_FUNC( __DBLOCATE )
          SELF_EOF( ( AREAP ) s_pCurrArea->pArea, &bEof );
          if( hb_itemType( pFor ) == HB_IT_BLOCK )
          {
-            hb_vmPushSymbol( &hb_symEval );
-            hb_vmPush( pFor );
-            hb_vmDo( 0 );
-            bFor = hb_itemGetL( &hb_stack.Return );
+            bFor = hb_itemGetL( hb_vmEvalBlock( pFor ) );
          }
          else
             bFor = hb_itemGetL( pFor );
@@ -2486,7 +2426,7 @@ HB_FUNC( DBUSEAREA )
    char * szDriver, * szFileName;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
-   USHORT uiSize, uiRddID, uiLen;
+   USHORT uiRddID, uiLen;
    ULONG ulLen;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
@@ -2500,26 +2440,7 @@ HB_FUNC( DBUSEAREA )
       hb_rddSelectFirstAvailable();
    else if( s_pCurrArea )  /* If current WorkArea is in use then close it */
    {
-      SELF_CLOSE( ( AREAP ) s_pCurrArea->pArea );
-      SELF_RELEASE( ( AREAP ) s_pCurrArea->pArea );
-
-      if( s_pWorkAreas == s_pCurrArea )
-      {
-         s_pWorkAreas = s_pCurrArea->pNext;
-         if( s_pWorkAreas )
-            s_pWorkAreas->pPrev = NULL;
-      }
-      else
-      {
-         if( s_pCurrArea->pPrev )
-            s_pCurrArea->pPrev->pNext = s_pCurrArea->pNext;
-         if( s_pCurrArea->pNext )
-            s_pCurrArea->pNext->pPrev = s_pCurrArea->pPrev;
-      }
-
-      hb_xfree( s_pCurrArea->pArea );
-      hb_xfree( s_pCurrArea );
-      s_pCurrArea = NULL;
+      hb_rddReleaseCurrentArea( TRUE );   /* close before releasing */
    }
 
    hb_rddCheck();
@@ -2568,35 +2489,7 @@ HB_FUNC( DBUSEAREA )
 
    /* Create a new WorkArea node */
 
-   s_pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
-
-   if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
-   {
-      uiSize = sizeof( AREA );    /* Default Size Area */
-      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
-      memset( s_pCurrArea->pArea, 0, uiSize );
-      ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
-
-      /* Need more space? */
-      SELF_STRUCTSIZE( ( AREAP ) s_pCurrArea->pArea, &uiSize );
-      if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-         s_pCurrArea->pArea = ( AREAP ) hb_xrealloc( s_pCurrArea->pArea, uiSize );
-
-      pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
-   }
-   else
-   {
-      s_pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( s_pCurrArea->pArea, 0, pRddNode->uiAreaSize );
-      ( ( AREAP ) s_pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
-   }
-
-   ( ( AREAP ) s_pCurrArea->pArea )->rddID = uiRddID;
-
-   s_pCurrArea->pPrev = NULL;
-   s_pCurrArea->pNext = NULL;
-
-   SELF_NEW( ( AREAP ) s_pCurrArea->pArea );
+   s_pCurrArea = hb_rddNewAreaNode( pRddNode, uiRddID );
 
    szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
    strcpy( szFileName, hb_parc( 3 ) );
