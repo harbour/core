@@ -59,12 +59,8 @@ HB_INIT_SYMBOLS_END( Arrays__InitSymbols );
 #pragma startup Arrays__InitSymbols
 #endif
 
-PHB_ITEM hb_itemNew( PHB_ITEM );
-PHB_ITEM hb_itemArrayPut( PHB_ITEM , ULONG , PHB_ITEM );
-
 extern STACK  stack;
 extern SYMBOL symEval;
-
 
 /*
  * Internal
@@ -551,7 +547,8 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
           PushSymbol( &symEval );
           Push( bBlock );
           Push( pItem );
-          Do( 1 );
+          PushNumber( (double)(ulStart + 1), 0 );
+          Do( 2 );
         }
     }
   else

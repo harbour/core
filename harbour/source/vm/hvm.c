@@ -47,6 +47,7 @@
 #include "hbsetup.h"    /* main configuration file */
 #include "extend.h"
 #include "errorapi.h"
+#include "itemapi.h"
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"

@@ -10,6 +10,7 @@ PRG_SOURCES=\
 	array16.prg \
 	arrayidx.prg \
 	arrays.prg \
+        arreval.prg \
 	arrindex.prg \
 	atest.prg \
 	box.prg \
