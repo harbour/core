@@ -68,7 +68,7 @@
 #if defined(_Windows) || defined(WINNT)
    #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
-   #if defined(__MINGW32__)
+   #if defined(__GNUC__) || defined(__MINGW32__)
       #define HB_DONT_DEFINE_BASIC_TYPES
    #endif
 #endif

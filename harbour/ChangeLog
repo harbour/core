@@ -1,3 +1,9 @@
+Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rtl/dates.c: 
+	Fixed an include guard so that HB_DONT_DEFINE_BASIC_TYPES is
+	defined for both gcc and mingw32.
+
 19991014-18:17 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/compiler/genc.c
      ! Fixed pcode generation with /gc0 switch for MODULENAME opcode.
