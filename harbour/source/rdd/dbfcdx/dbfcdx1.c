@@ -313,16 +313,7 @@ static ERRCODE cdxCreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
    BOOL bError;
    PHB_ITEM pError = NULL;
 
-   if( !pArea->lpFileInfo->pNext )
-   {
-      lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( lpMemInfo, 0, sizeof( FILEINFO ) );
-      lpMemInfo->hFile = FS_ERROR;
-      pArea->lpFileInfo->pNext = lpMemInfo;
-   }
-   else
-      lpMemInfo = pArea->lpFileInfo->pNext;
-
+   lpMemInfo = pArea->lpFileInfo->pNext;
    do
    {
       lpMemInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
@@ -395,7 +386,7 @@ static ERRCODE cdxInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    if( uiIndex == DBI_MEMOEXT )
    {
-      hb_itemPutC( pItem, ".FPT" );
+      hb_itemPutC( pItem, ".fpt" );
       return SUCCESS;
    }
 
@@ -410,16 +401,7 @@ static ERRCODE cdxOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_ITEM pError = NULL;
    BOOL bRetry;
 
-   if( !pArea->lpFileInfo->pNext )
-   {
-      lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( lpMemInfo, 0, sizeof( FILEINFO ) );
-      lpMemInfo->hFile = FS_ERROR;
-      pArea->lpFileInfo->pNext = lpMemInfo;
-   }
-   else
-      lpMemInfo = pArea->lpFileInfo->pNext;
-
+   lpMemInfo = pArea->lpFileInfo->pNext;
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    do

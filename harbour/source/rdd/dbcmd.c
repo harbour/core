@@ -136,7 +136,6 @@ static BOOL bNetError = FALSE;       /* Error on Networked environments */
 static LPAREANODE pWorkAreas = NULL; /* WorkAreas */
 static LPAREANODE pCurrArea = NULL;  /* Pointer to a selectd and valid area */
 
-
 /*
  * -- BASIC RDD METHODS --
  */
@@ -347,12 +346,17 @@ static ERRCODE defRelease( AREAP pArea )
    LPFILEINFO pFileInfo;
 
    if( pArea->lpFields )
+   {
       hb_xfree( pArea->lpFields );
+      pArea->uiFieldCount = 0;
+   }
 
    while( pArea->lpFileInfo )
    {
       pFileInfo = pArea->lpFileInfo;
       pArea->lpFileInfo = pArea->lpFileInfo->pNext;
+      if( pFileInfo->szFileName )
+         hb_xfree( pFileInfo->szFileName );
       hb_xfree( pFileInfo );
    }
 
@@ -1223,21 +1227,20 @@ HARBOUR HB_DBCOMMITALL( void )
 
 HARBOUR HB_DBCREATE( void )
 {
-   char * szFileName, * szMemoName, * szDriver, * szAlias;
-   PHB_ITEM pStruct, pFieldDesc, pFileExt;
+   char * szDriver, * szFileName;
+   USHORT uiSize, uiLen, uiRddID;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
-   AREAP pTempArea;
-   USHORT uiSize, uiRddID;
    DBOPENINFO pInfo;
-   USHORT uiLen;
    PHB_FNAME pFileName;
+   PHB_ITEM pStruct, pFieldDesc, pFileExt;
    char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
-   BOOL bError;
+   BOOL bError = FALSE;
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
-   if( ( strlen( szFileName ) == 0 ) || !pStruct || !pStruct->item.asArray.value->ulLen )
+   if( ( strlen( szFileName ) == 0 ) || !pStruct ||
+       !pStruct->item.asArray.value->ulLen )
    {
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, "DBCREATE" );
       return;
@@ -1277,58 +1280,10 @@ HARBOUR HB_DBCREATE( void )
       return;
    }
 
-   uiSize = sizeof( AREA );    /* Default Size Area */
-   pTempArea = ( AREAP ) hb_xgrab( uiSize );
-   memset( pTempArea, 0, uiSize );
-
-   pTempArea->lprfsHost = &pRddNode->pTable;
-
-   /* Need more space? */
-   SELF_STRUCTSIZE( ( AREAP ) pTempArea, &uiSize );
-   if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
-      pTempArea = ( AREAP ) hb_xrealloc( pTempArea, uiSize );
-
-   pRddNode->uiAreaSize = uiSize; /* Update the size of WorkArea */
-   pTempArea->rddID = uiRddID;
-
-   SELF_NEW( ( AREAP ) pTempArea );
-   SELF_CREATEFIELDS( ( AREAP ) pTempArea, pStruct );
-
-   pFileName = hb_fsFNameSplit( szFileName );
-   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
-   szMemoName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
-   strcpy( szFileName, hb_parc( 1 ) );
-   if( !pFileName->szExtension )
+   if( !ISLOG( 4 ) )
+      hb_rddSelectFirstAvailable();
+   else
    {
-      pFileExt = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pTempArea, DBI_TABLEEXT, pFileExt );
-      strcat( szFileName, pFileExt->item.asString.value );
-      hb_itemRelease( pFileExt );
-   }
-   pInfo.abName = ( BYTE * ) szFileName;
-
-   bError = ( SELF_CREATE( ( AREAP ) pTempArea, &pInfo ) == FAILURE );
-   if( !bError && pTempArea->lpExtendInfo->fHasMemo )
-   {
-      pFileExt = hb_itemPutC( NULL, "" );
-      SELF_INFO( ( AREAP ) pTempArea, DBI_MEMOEXT, pFileExt );
-      szMemoName[ 0 ] = '\0';
-      if( pFileName->szPath )
-         strcat( szMemoName, pFileName->szPath );
-      strcat( szMemoName, pFileName->szName );
-      strcat( szMemoName, pFileExt->item.asString.value );
-      pInfo.abName = ( BYTE * ) szMemoName;
-      bError = ( SELF_CREATEMEMFILE( ( AREAP ) pTempArea, &pInfo ) == FAILURE );
-      hb_itemRelease( pFileExt );
-   }
-
-   SELF_RELEASE( ( AREAP ) pTempArea );
-   hb_xfree( pTempArea );
-   hb_xfree( pFileName );
-
-   if( !bError && ISLOG( 4 ) )
-   {
-      bNetError = FALSE;
       if( hb_parl( 4 ) )
          hb_rddSelectFirstAvailable();
       else if( pCurrArea )  /* If current WorkArea is in use then close it */
@@ -1350,65 +1305,172 @@ HARBOUR HB_DBCREATE( void )
          hb_xfree( pCurrArea );
          pCurrArea = NULL;
       }
+   }
 
-      szAlias = hb_parc( 5 );
-      pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+   /* Create a new WorkArea node */
+ 
+   pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
+
+   if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
+   {
+      uiSize = sizeof( AREA );    /* Default Size Area */
+      pCurrArea->pArea = ( AREAP ) hb_xgrab( uiSize );
+      memset( pCurrArea->pArea, 0, uiSize );
+            ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+
+      /* Need more space? */
+      SELF_STRUCTSIZE( ( AREAP ) pCurrArea->pArea, &uiSize );
+      if( uiSize > sizeof( AREA ) )   /* Size of Area changed */
+         pCurrArea->pArea = ( AREAP ) hb_xrealloc( pCurrArea->pArea, uiSize );
+
+      pRddNode->uiAreaSize = uiSize;  /* Update the size of WorkArea */
+   }
+   else
+   {
       pCurrArea->pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
       memset( pCurrArea->pArea, 0, pRddNode->uiAreaSize );
-      ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
-      ( ( AREAP ) pCurrArea->pArea )->rddID = uiRddID;
+              ( ( AREAP ) pCurrArea->pArea )->lprfsHost = &pRddNode->pTable;
+   }
 
-      pCurrArea->pPrev = NULL;
-      pCurrArea->pNext = NULL;
+   ( ( AREAP ) pCurrArea->pArea )->rddID = uiRddID;
 
-      SELF_NEW( ( AREAP ) pCurrArea->pArea );
+   pCurrArea->pPrev = NULL;
+   pCurrArea->pNext = NULL;
 
-      pInfo.uiArea = uiCurrArea;
+   SELF_NEW( ( AREAP ) pCurrArea->pArea );
+   SELF_CREATEFIELDS( ( AREAP ) pCurrArea->pArea, pStruct );
+
+   pFileName = hb_fsFNameSplit( szFileName );
+   szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+   strcpy( szFileName, hb_parc( 1 ) );
+   if( !pFileName->szExtension )
+   {
+      pFileExt = hb_itemPutC( NULL, "" );
+      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
+      strcat( szFileName, pFileExt->item.asString.value );
+      hb_itemRelease( pFileExt );
+   }
+   hb_xfree( pFileName );
+   pInfo.abName = ( BYTE * ) szFileName;
+   pInfo.atomAlias = ( BYTE * ) hb_parc( 5 );
+   pInfo.uiArea = uiCurrArea;
+
+   ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
+
+   /* Insert the new WorkArea node */
+
+   if( !pWorkAreas )
+      pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
+   else
+   {
+      pAreaNode = pWorkAreas;
+      while( pAreaNode )
+      {
+         if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
+         {
+            /* Insert the new WorkArea node */
+            pCurrArea->pPrev = pAreaNode->pPrev;
+            pCurrArea->pNext = pAreaNode;
+            pAreaNode->pPrev = pCurrArea;
+            if( pCurrArea->pPrev )
+               pCurrArea->pPrev->pNext = pCurrArea;
+            break;
+         }
+         if( pAreaNode->pNext )
+            pAreaNode = pAreaNode->pNext;
+         else
+         {
+            /* Append the new WorkArea node */
+            pAreaNode->pNext = pCurrArea;
+            pCurrArea->pPrev = pAreaNode;
+            break;
+         }
+      }
+   }
+
+   ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->szFileName = szFileName;
+   ( ( AREAP ) pCurrArea->pArea )->atomAlias = hb_dynsymGet( ( char * ) pInfo.atomAlias );
+   if( ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea )
+   {
+      hb_errRT_DBCMD( EG_DUPALIAS, 1011, NULL, ( char * ) pInfo.atomAlias );
+      bError = TRUE;
+   }
+
+   if( !bError )
+      bError = ( SELF_CREATE( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE );
+
+   if( !bError )
+      ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea = pInfo.uiArea;
+
+   if( !bError && ( ( AREAP ) pCurrArea->pArea )->lpExtendInfo->fHasMemo )
+   {
+      pFileExt = hb_itemPutC( NULL, "" );
+      SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_MEMOEXT, pFileExt );
+      pFileName = hb_fsFNameSplit( ( char * ) pInfo.abName );
+      szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+      szFileName[ 0 ] = '\0';
+      if( pFileName->szPath )
+         strcat( szFileName, pFileName->szPath );
+      strcat( szFileName, pFileName->szName );
+      strcat( szFileName, pFileExt->item.asString.value );
       pInfo.abName = ( BYTE * ) szFileName;
-      pInfo.atomAlias = ( BYTE * ) szAlias;
+      hb_xfree( pFileName );
+      hb_itemRelease( pFileExt );
+      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext =
+                              ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+      memset( ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext, 0,
+              sizeof( FILEINFO ) );
+      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext->hFile = FS_ERROR;
+      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->pNext->szFileName = szFileName;
+      bError = ( SELF_CREATEMEMFILE( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE );
+   }
+
+   ( ( PHB_DYNS ) ( ( AREAP ) pCurrArea->pArea )->atomAlias )->hArea = 0;
+   SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+   if( !ISLOG( 4 ) || bError )
+   {
+      if( pWorkAreas == pCurrArea )  /* Empty list */
+         pWorkAreas = NULL;
+      else
+      {
+         if( pCurrArea->pPrev )
+            pCurrArea->pPrev->pNext = pCurrArea->pNext;
+         if( pCurrArea->pNext )
+            pCurrArea->pNext->pPrev = pCurrArea->pPrev;
+      }
+
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
+      pCurrArea = NULL;
+   }
+   else
+   {
+      SELF_NEW( ( AREAP ) pCurrArea->pArea );
+      szFileName = hb_parc( 1 );
+      pFileName = hb_fsFNameSplit( szFileName );
+      szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
+      strcpy( szFileName, hb_parc( 1 ) );
+      if( !pFileName->szExtension )
+      {
+         pFileExt = hb_itemPutC( NULL, "" );
+         SELF_INFO( ( AREAP ) pCurrArea->pArea, DBI_TABLEEXT, pFileExt );
+         strcat( szFileName, pFileExt->item.asString.value );
+          hb_itemRelease( pFileExt );
+      }
+      hb_xfree( pFileName );
+      pInfo.abName = ( BYTE * ) szFileName;
       pInfo.fShared = !hb_set.HB_SET_EXCLUSIVE;
       pInfo.fReadonly = FALSE;
-
+      ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
+      ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->szFileName = szFileName;
       if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
       {
          SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
          hb_xfree( pCurrArea->pArea );
          hb_xfree( pCurrArea );
-         hb_xfree( szFileName );
-         hb_xfree( szMemoName );
          pCurrArea = NULL;
-         return;
-      }
-
-      ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
-
-      /* Insert the new WorkArea node */
-
-      if( !pWorkAreas )
-         pWorkAreas = pCurrArea;  /* The new WorkArea node is the first */
-      else
-      {
-         pAreaNode = pWorkAreas;
-         while( pAreaNode->pNext )
-         {
-            if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
-            {
-               /* Insert the new WorkArea node */
-               pCurrArea->pPrev = pAreaNode->pPrev;
-               pCurrArea->pNext = pAreaNode;
-               pAreaNode->pPrev = pCurrArea;
-               if( pCurrArea->pPrev )
-                  pCurrArea->pPrev->pNext = pCurrArea;
-            }
-            pAreaNode = pAreaNode->pNext;
-         }
-         pAreaNode->pNext = pCurrArea; /* Append the new WorkArea node */
-         pCurrArea->pPrev = pAreaNode;
       }
    }
-
-   hb_xfree( szFileName );
-   hb_xfree( szMemoName );
 }
 
 HARBOUR HB_DBDELETE( void )
@@ -1716,10 +1778,9 @@ HARBOUR HB_DBUNLOCKALL( void )
 HARBOUR HB_DBUSEAREA( void )
 {
    char * szDriver, * szFileName, * szAlias;
-   USHORT uiLen;
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
-   USHORT uiSize, uiRddID;
+   USHORT uiSize, uiRddID, uiLen;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pFileExt;
@@ -1820,25 +1881,13 @@ HARBOUR HB_DBUSEAREA( void )
       strcat( szFileName, pFileExt->item.asString.value );
       hb_itemRelease( pFileExt );
    }
+   hb_xfree( pFileName );
    pInfo.uiArea = uiCurrArea;
    pInfo.abName = ( BYTE * ) szFileName;
    pInfo.atomAlias = ( BYTE * ) szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
 
-   if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
-   {
-      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
-      hb_xfree( pCurrArea->pArea );
-      hb_xfree( pCurrArea );
-      hb_xfree( szFileName );
-      hb_xfree( pFileName );
-      pCurrArea = NULL;
-      return;
-   }
-
-   hb_xfree( szFileName );
-   hb_xfree( pFileName );
    ( ( AREAP ) pCurrArea->pArea )->uiArea = uiCurrArea;
 
    /* Insert the new WorkArea node */
@@ -1848,7 +1897,7 @@ HARBOUR HB_DBUSEAREA( void )
    else
    {
       pAreaNode = pWorkAreas;
-      while( pAreaNode->pNext )
+      while( pAreaNode )
       {
          if( ( ( AREAP ) pAreaNode->pArea )->uiArea > uiCurrArea )
          {
@@ -1858,12 +1907,29 @@ HARBOUR HB_DBUSEAREA( void )
             pAreaNode->pPrev = pCurrArea;
             if( pCurrArea->pPrev )
                pCurrArea->pPrev->pNext = pCurrArea;
+            break;
          }
-         pAreaNode = pAreaNode->pNext;
+         if( pAreaNode->pNext )
+            pAreaNode = pAreaNode->pNext;
+         else
+         {
+            /* Append the new WorkArea node */
+            pAreaNode->pNext = pCurrArea;
+            pCurrArea->pPrev = pAreaNode;
+            break;
+         }
       }
    }
-   pAreaNode->pNext = pCurrArea; /* Append the new WorkArea node */
-   pCurrArea->pPrev = pAreaNode;
+
+   ( ( AREAP ) pCurrArea->pArea )->lpFileInfo->szFileName = szFileName;
+   if( SELF_OPEN( ( AREAP ) pCurrArea->pArea, &pInfo ) == FAILURE )
+   {
+      SELF_RELEASE( ( AREAP ) pCurrArea->pArea );
+      hb_xfree( pCurrArea->pArea );
+      hb_xfree( pCurrArea );
+      pCurrArea = NULL;
+      return;
+   }
 }
 
 HARBOUR HB_DELETED( void )
@@ -2222,15 +2288,16 @@ HARBOUR HB___RDDSETDEFAULT( void )
 {
    char * szNewDriver;
    USHORT uiLen;
+   char cDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
 
    hb_rddCheck();
    hb_retc( szDefDriver );
    szNewDriver = hb_parc( 1 );
    if( ( uiLen = strlen( szNewDriver ) ) > 0 )
    {
-      hb_strUpper( szNewDriver, uiLen ); /* TOFIX: Direct access to hb_parc() buffer ! */
+      hb_strncpyUpper( cDriverBuffer, szNewDriver, uiLen ); 
       szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
-      strcpy( szDefDriver, szNewDriver );
+      strcpy( szDefDriver, cDriverBuffer );
    }
 }
 

@@ -159,6 +159,7 @@ struct _AREA;
 typedef struct _FILEINFO
 {
    FHANDLE hFile;
+   char *  szFileName;         /* Name of file */
    ULONG * pLocksPos;          /* List of records locked */
    ULONG   lNumLocksPos;       /* Number of records locked */
    BOOL    fFileLocked;        /* TRUE if entire file is locked */

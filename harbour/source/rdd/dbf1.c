@@ -691,9 +691,7 @@ static ERRCODE dbfClose( AREAP pArea )
 {
    if( pArea->lpFileInfo->hFile != FS_ERROR )
    {
-     if( SELF_GOCOLD( pArea ) == FAILURE )
-        return FAILURE;
-
+      SELF_GOCOLD( pArea );
       SELF_RAWLOCK( pArea, FILE_UNLOCK, 0 );
       SELF_FLUSH( pArea );
       hb_fsClose( pArea->lpFileInfo->hFile );
@@ -766,16 +764,7 @@ static ERRCODE dbfCreateMemFile( AREAP pArea, LPDBOPENINFO pCreateInfo )
    PHB_ITEM pError = NULL;
    BYTE * pBuffer;
 
-   if( !pArea->lpFileInfo->pNext )
-   {
-      lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( lpMemInfo, 0, sizeof( FILEINFO ) );
-      lpMemInfo->hFile = FS_ERROR;
-      pArea->lpFileInfo->pNext = lpMemInfo;
-   }
-   else
-      lpMemInfo = pArea->lpFileInfo->pNext;
-
+   lpMemInfo = pArea->lpFileInfo->pNext;
    do
    {
       lpMemInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
@@ -1078,11 +1067,11 @@ static ERRCODE dbfInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_TABLEEXT:
-         hb_itemPutC( pItem, ".DBF" );
+         hb_itemPutC( pItem, ".dbf" );
          break;
 
       case DBI_MEMOEXT:
-         hb_itemPutC( pItem, ".DBT" );
+         hb_itemPutC( pItem, ".dbt" );
          break;
 
       case DBI_GETLOCKARRAY:
@@ -1186,15 +1175,18 @@ static ERRCODE dbfOpen( AREAP pArea, LPDBOPENINFO pOpenInfo )
       pOpenInfo->abName = ( BYTE * ) szFileName;
       hb_itemRelease( pFileExt );
       hb_xfree( pFileName );
+
+      pArea->lpFileInfo->pNext = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
+      memset( pArea->lpFileInfo->pNext, 0, sizeof( FILEINFO ) );
+      pArea->lpFileInfo->pNext->hFile = FS_ERROR;
+      pArea->lpFileInfo->pNext->szFileName = szFileName;
+
       if( SELF_OPENMEMFILE( pArea, pOpenInfo ) == FAILURE )
       {
          SELF_CLOSE( pArea );
-         hb_xfree( szFileName );
          return FAILURE;
       }
-      hb_xfree( szFileName );
    }
-
    return SELF_GOTOP( pArea );
 }
 
@@ -1206,16 +1198,7 @@ static ERRCODE dbfOpenMemFile( AREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_ITEM pError = NULL;
    BOOL bRetry;
 
-   if( !pArea->lpFileInfo->pNext )
-   {
-      lpMemInfo = ( LPFILEINFO ) hb_xgrab( sizeof( FILEINFO ) );
-      memset( lpMemInfo, 0, sizeof( FILEINFO ) );
-      lpMemInfo->hFile = FS_ERROR;
-      pArea->lpFileInfo->pNext = lpMemInfo;
-   }
-   else
-      lpMemInfo = pArea->lpFileInfo->pNext;
-
+   lpMemInfo = pArea->lpFileInfo->pNext;
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    do
