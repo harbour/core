@@ -113,6 +113,7 @@ Separator     {SpaceTab}
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_ DECLARE_
 %x            MEMVAR_ PARAM_ PRIVATE_ PUBLIC_ STATIC_ RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
+%x            OPTIONAL_
 %s            INDEX
 
 %%
@@ -356,6 +357,16 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
+<INITIAL>"optional"                { BEGIN OPTIONAL_; }
+<OPTIONAL_>{Separator}+[_a-zA-Z\&] { unput( yytext[ yyleng-1 ] ); BEGIN 0; return OPTIONAL; }
+<OPTIONAL_>{Separator}*(.|\n)      { /* end of line or any operator */
+                                     if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                                     unput( yytext[ yyleng-1 ] );
+                                     yylval.string = hb_strdup( "OPTIONAL" );
+                                     hb_comp_iState = IDENTIFIER;
+                                     return IDENTIFIER;
+                                   }
+
 "do"            BEGIN DO_;
 <DO_>{Separator}+"case"         { /* DO CASE statement */
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -1328,7 +1339,6 @@ Separator     {SpaceTab}
 "as variant array"   { return AS_VARIANT; }
 
 "declare function"   { return DECLARE_FUN; }
-"optional"           { return OPTIONAL;}
 
 %{
 /* ************************************************************************ */
