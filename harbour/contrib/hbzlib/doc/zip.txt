@@ -78,11 +78,13 @@
  * $ONELINER$
  *      Unzip a compressed file
  * $SYNTAX$
- *      HB_UNZIPFILE( <cFile> , <bBlock> ) ---> lCompress
+ *      HB_UNZIPFILE( <cFile> , <bBlock> , <lWithPath>) ---> lCompress
  * $ARGUMENTS$
  *      <cFile>   Name of the zip file
  *
  *      <bBlock>  Code block to execute while compressing
+ *
+ *      <lWithPath> Toggle to create directory if needed
  *
  * $RETURNS$
  *      <lCompress>  .T. if all file was successfuly restored,otherwise .f.

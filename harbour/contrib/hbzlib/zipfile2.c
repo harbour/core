@@ -53,8 +53,9 @@
 #define CASESENSITIVITY (0)
 #define WRITEBUFFERSIZE (8192)
 extern int err;
-        uLong uiCounter;
-        unzFile szUnzipFile=NULL;
+extern int Size_Buf;
+uLong uiCounter;
+unzFile szUnzipFile=NULL;
 
 void hb____ChangeFileDate(char *filename,uLong dosdate,tm_unz tmu_date)
 {
@@ -236,9 +237,9 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 	char* filename_withoutpath;
 	char* p;
         char NewFileToWrite[256];
-    FHANDLE fout;
-    BYTE * buf;
-    uInt size_buf;
+    FHANDLE nFileHandle;
+    BYTE * szBuffer;
+
 	
 	unz_file_info file_info;
 
@@ -250,9 +251,9 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 		return err;
 	}
 
-    size_buf = WRITEBUFFERSIZE;
-    buf = (void*) hb_xalloc(size_buf);
-    if (buf==NULL)
+    Size_Buf = WRITEBUFFERSIZE;
+    szBuffer = (void*) hb_xalloc(Size_Buf);
+    if (szBuffer==NULL)
     {
         return UNZ_INTERNALERROR;
     }
@@ -290,8 +291,10 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
                         }
                 if(pBlock !=NULL){
                    PHB_ITEM pFileName=hb_itemPutC(NULL, (char *)write_filename);
-                   hb_vmEvalBlockV( pBlock, 1, pFileName );
+                   PHB_ITEM pFilePos=hb_itemPutNI(NULL,uiCounter);
+                   hb_vmEvalBlockV( pBlock, 2, pFileName, pFilePos );
                    hb_itemRelease(pFileName);
+                   hb_itemRelease(pFilePos);
                 }
 
 
@@ -303,11 +306,11 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 
 		if ((skip==0) && (err==UNZ_OK))
 		{
-                        fout=hb_fsCreate((char *) write_filename,FC_NORMAL);
+                        nFileHandle=hb_fsCreate((char *) write_filename,FC_NORMAL);
 
 
             /* some zipfile don't contain directory alone before file */
-            if ((fout==-1) && ((popt_extract_without_path)) && 
+            if ((nFileHandle==-1) && ((popt_extract_without_path)) && 
                                 (filename_withoutpath!=(char*)filename_inzip))
             {
                 char c=*(filename_withoutpath-1);
@@ -315,24 +318,24 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
                 hb___MakeDir((char *)write_filename);
                 *(filename_withoutpath-1)=c;
 
-                 fout=hb_fsCreate((char *)write_filename,FC_NORMAL);
+                 nFileHandle=hb_fsCreate((char *)write_filename,FC_NORMAL);
             }
 
 		}
 
-		if (fout!=NULL)
+                if (nFileHandle!=NULL)
                 {
 
 			do
 			{
-                                err = unzReadCurrentFile(szUnzipFile,buf,size_buf);
+                                err = unzReadCurrentFile(szUnzipFile,szBuffer,Size_Buf);
 				if (err<0)	
 				{
 
 					break;
 				}
 				if (err>0)
-                                        if (hb_fsWrite(fout,buf,err)==0)
+                                        if (hb_fsWrite(nFileHandle,szBuffer,err)==0)
 					{
 
                         err=UNZ_ERRNO;
@@ -340,7 +343,7 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
 					}
 			}
 			while (err>0);
-                        hb_fsClose(fout);
+                        hb_fsClose(nFileHandle);
 			if (err==0) 
                                 hb____ChangeFileDate(write_filename,file_info.dosDate,
 					             file_info.tmu_date);
@@ -358,8 +361,43 @@ int hb___ExtractCurrentFile(unzFile szUnzipFile,BOOL popt_extract_without_path,B
             unzCloseCurrentFile(szUnzipFile); /* don't lose the error */       
 	}
 
-    hb_xfree((void*)buf);    
+    hb_xfree((void*)szBuffer);    
     return err;
 }
 
 
+int hb___GetNumbersofFilestoUnzip(char *szFile)
+{
+int iNumbersOfFiles;
+
+        const char *szZipFileName=NULL;
+        char szFilename_Try[512];
+        unz_global_info szGlobalUnzipInfo;
+                if (szZipFileName == NULL)
+                {
+                    szZipFileName = szFile;
+                }
+
+        if (szZipFileName!=NULL)
+	{
+                strcpy(szFilename_Try,szZipFileName);
+                szUnzipFile = unzOpen(szZipFileName);
+                if (szUnzipFile==NULL)
+		{
+                        strcat(szFilename_Try,".zip");
+                        szUnzipFile = unzOpen(szFilename_Try);
+		}
+	}
+
+        if (szUnzipFile==NULL)
+	{
+		exit (1);
+	}
+        err = unzGetGlobalInfo (szUnzipFile,&szGlobalUnzipInfo);
+        if (err==ZIP_OK)                                {
+        iNumbersOfFiles=szGlobalUnzipInfo.number_entry;;
+}
+        unzCloseCurrentFile(szUnzipFile);
+
+        return iNumbersOfFiles;  /* to avoid warning */
+}
