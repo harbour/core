@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-15 12:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+   * source/rdd/dbf1.c
+   * source/rdd/dbfntx/dbfntx1.c
+     ! Bug fixed in hb_IncString(), reported by Przemyslaw Czerpak - 
+       now this function respects the national sorting rules.
+     ! Bug fixed in hb_ntxTagKeyNo(), reported by Przemyslaw Czerpak - 
+       index unlocking wasn't present in some occasions.
+     ! Bug fixed with scoping, reported by Giovi Verrua.
+
 2003-09-11 11:30 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
   * harbour/harbour.spec
     * small fix in auto platform detection (thanks to Tomaz Zupan)

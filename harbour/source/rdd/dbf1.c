@@ -812,10 +812,12 @@ ERRCODE hb_dbfSkip( DBFAREAP pArea, LONG lToSkip )
    }
 
    /* Update Bof and Eof flags */
+   /*
    if( lToSkip < 0 )
       pArea->fEof = FALSE;
    else if( lToSkip > 0 )
       pArea->fBof = FALSE;
+   */
    return uiError;
 }
 
