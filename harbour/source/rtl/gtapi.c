@@ -98,11 +98,12 @@ void hb_gtInit(void)
 
 void hb_gtExit(void)
 {
+    while( s_uiDispCount )
+       hb_gtDispEnd();
+
     hb_gt_Done();
 /* ptucker */
     hb_xfree( _Color );
-    while( s_uiDispCount )
-       hb_gtDispEnd();
 }
 
 int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char* pbyFrame)

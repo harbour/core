@@ -75,6 +75,7 @@ void hb_gt_Done(void)
     CHAR_INFO *pCharInfo;       /* buffer to store info from ReadConsoleOutput */
     SMALL_RECT srWin;                         /* source rectangle to read from */
     CONSOLE_SCREEN_BUFFER_INFO csbi;
+    CONSOLE_CURSOR_INFO cci;
 
     srWin.Top    = srWin.Left = 0;
     srWin.Bottom = (coBuf.Y = hb_gt_GetScreenHeight()) -1;
@@ -90,6 +91,7 @@ void hb_gt_Done(void)
                  coDest,               /* upper-left cell to write data to   */
                  &srWin);            /* screen buffer rectangle to read from */
 
+    GetConsoleCursorInfo(HCursor, &cci);
     GetConsoleScreenBufferInfo(HOutput, &csbi);
     HOutput = HOriginal;
     SetConsoleScreenBufferSize(HOutput, coBuf);
@@ -104,6 +106,7 @@ void hb_gt_Done(void)
     hb_xfree(pCharInfo);
 
     SetConsoleActiveScreenBuffer(HOutput);
+    SetConsoleCursorInfo(HOutput, &cci);
   }
   CloseHandle(HInput);
   HInput = INVALID_HANDLE_VALUE;
