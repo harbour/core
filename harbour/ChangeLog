@@ -1,3 +1,12 @@
+2000-05-24 10:35 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/gtdos/gtdos.c
+  + tests/videotst.prg
+  + doc/en/setmode.txt
+  + doc/es/setmode.txt
+    Implementation, test, and documentation for GTDOS SETMODE(),
+    supplied by "Alejandro de Garate" <alex_degarate@hotmail.com>.
+
 20000523-22:47 DST Paul Tucker <ptucker@sympatico.ca>
   * source/compiler/harbour.y
     * added cast to xgrab call

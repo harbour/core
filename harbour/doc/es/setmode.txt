@@ -1,0 +1,72 @@
+/*
+ * $Id$
+ */
+/*
+ * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
+ *    Documentation for: SETMODE()
+ *
+ * See doc/license.txt for licensing terms.
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SETMODE()
+ *  $CATEGORY$
+ *      Entorno
+ *  $ONELINER$
+ *      Cambia el modo de video a un n£mero especificado de filas y columnas
+ *  $SYNTAX$
+ *      SETMODE( <nFil>, <nCol> ) --> lSatisfactorio
+ *  $ARGUMENTS$
+ *      <nFil> es el n£mero de filas para el modo de video deseado.
+ *
+ *      <nCol> es el n£mero de columnas para el modo de video deseado.
+ *
+ *  $RETURNS$
+ *      SETMODE() devuelve verdadero si el cambio en el modo de video fue
+ *      satisfactorio, de otra manera devuelve falso.
+ *
+ *  $DESCRIPTION$
+ *      SETMODE() es una funci¢n que cambia el modo de video (dependiendo de
+ *      la combination de tarjeta de video y monitor), para que coincida con
+ *      el n£mero de filas y columnas especificado.
+ *      N¢tese que s¢lo hay realmente unas pocas combinaciones de pares de
+ *      filas/columnas que produzcan el cambio en el modo de video.
+ *      Los siguientes estan disponibles para D.O.S:
+ *          12 filas x 40 columnas            12 filas x 80 columnas
+ *          25 filas x 40 columnas            25 filas x 80 columnas
+ *          28 filas x 40 columnas            28 filas x 80 columnas
+ *          50 filas x 40 columnas            43 filas x 80 columnas
+ *                                            50 filas x 80 columnas
+ *      Algunas modos s¢lo estan disponibles para monitor color y/o VGA.
+ *      Cualquier cambio producido en el tama¤o de la pantalla es actualizado
+ *      en los valores devueltos por MAXROW() y MAXCOL().
+ *
+ *  $EXAMPLES$
+ *   þ  El primer ejemplo cambia al modo de visualizacion de 12 lineas:
+ *
+ *      IF SETMODE( 12, 40)
+ *         ? "Oye hombre, eres tu chicato ?"
+ *      ELSE
+ *         ? "Mam  tr eme los anteojos !"
+ *      ENDIF
+ *
+ *   þ  El pr¢ximo ejemplo cambia al modo de visualizacion de 50 lineas:
+ *      IF SETMODE( 50, 80)
+ *         ? "Este maravilloso modo de video ha sido seteado"
+ *      ELSE
+ *         ? "Oye Manuel que este monitor no est  hecho de goma !"
+ *      ENDIF
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Algunos de estos modos no estan disponibles en Clipper
+ *  $PLATFORMS$
+ *      DOS
+ * $FILES$
+ *      El Achivo fuente es gtdos.c
+ *  $SEEALSO$
+ *      MAXCOL(), MAXROW()
+ *  $END$
+ */
