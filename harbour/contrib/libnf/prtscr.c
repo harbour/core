@@ -66,7 +66,7 @@ HB_FUNC(FT_PRTSCR)
 #if defined(HB_OS_DOS)
    {
 
-   if ( PCOUNT && ISLOG( 1 ) )
+   if ( hb_pcount() && ISLOG( 1 ) )
    {      
       if ( hb_parl( 1 ) )
           pbyte = 0;
