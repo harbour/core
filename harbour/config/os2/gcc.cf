@@ -13,7 +13,7 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -DDEBUG -I. -I$(HB_INC_COMPILE) -DHARBOUR_GCC_OS2
-CFLAGS = -Wall -g
+CFLAGS = -Wall
 
 LD = gcc
 LD_OUT = -o $(SPACE)

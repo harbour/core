@@ -41,6 +41,7 @@
  *    stored in next element of the array.
  */
 
+#include <math.h>
 #include "compiler.h"
 
 /* memory allocation
@@ -4298,23 +4299,27 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
             if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
             {
                unsigned char bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
+               double dVal = 0.0;
 
                switch( bType )
                {
                   case HB_ET_LONG:
                   {
-                     double dVal = pLeft->value.asNum.lVal / pRight->value.asNum.lVal;
+                     if( pRight->value.asNum.lVal )
+                        dVal = ( double )pLeft->value.asNum.lVal / ( double )pRight->value.asNum.lVal;
 
-                     if( ( double )LONG_MIN <= dVal && dVal <= ( double )LONG_MAX )
+                     if( fmod( dVal, 1.0 ) == 0.0 )
                      {
-                        pSelf->value.asNum.lVal = pLeft->value.asNum.lVal / pRight->value.asNum.lVal;
+                        /* Return integer results as long */
+                        pSelf->value.asNum.lVal = dVal;
                         pSelf->value.asNum.bDec = 0;
                         pSelf->value.asNum.NumType = HB_ET_LONG;
                      }
                      else
                      {
+                        /* Return non-integer results as double */
                         pSelf->value.asNum.dVal = dVal;
-                        pSelf->value.asNum.bDec = 0;
+                        pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
                         pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                      }
                   }
@@ -4322,9 +4327,11 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
 
                   case HB_ET_DOUBLE:
                   {
-                     pSelf->value.asNum.dVal = pLeft->value.asNum.dVal / pRight->value.asNum.dVal;
+                     if( pRight->value.asNum.dVal != 0.0 )
+                        dVal = pLeft->value.asNum.dVal / pRight->value.asNum.dVal;
+                     pSelf->value.asNum.dVal = dVal;
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
-                     pSelf->value.asNum.bDec = pLeft->value.asNum.bDec + pRight->value.asNum.bDec;
+                     pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
                   }
                   break;
 
@@ -4332,16 +4339,29 @@ static HB_EXPR_FUNC( hb_compExprUseDiv )
                   {
                      if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
                      {
-                        pSelf->value.asNum.dVal = pLeft->value.asNum.dVal / ( double ) pRight->value.asNum.lVal;
-                        pSelf->value.asNum.bDec = pLeft->value.asNum.bDec;
+                        if( pRight->value.asNum.lVal )
+                           dVal = pLeft->value.asNum.dVal / ( double ) pRight->value.asNum.lVal;
+                        pSelf->value.asNum.dVal = dVal;
+                        pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
                      }
                      else
                      {
-                        pSelf->value.asNum.dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
-                        pSelf->value.asNum.bDec = pRight->value.asNum.bDec;
+                        if( pRight->value.asNum.dVal != 0.0 )
+                           dVal = ( double ) pLeft->value.asNum.lVal / pRight->value.asNum.dVal;
+                        pSelf->value.asNum.dVal = dVal;
+                        pSelf->value.asNum.bDec = 2; /* TODO: See NOTE 1 */
                      }
                      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
                   }
+                  /* TODO: NOTE 1
+                     Clipper manages to print the default number of decimal
+                     digits for optimized division results. Should we add a
+                     "marker value" that tells Harbour to print the default
+                     number of decimal digits? For example: pSelf->value.
+                     asNum.bDec = HB_DEC_DEFAULT and then have Harbour check
+                     for HB_DEC_DEFAULT when formatting numbers and print
+                     the current default number of decimal digits.
+                  */
                }
                pSelf->ExprType = HB_ET_NUMERIC;
                pSelf->ValType  = HB_EV_NUMERIC;

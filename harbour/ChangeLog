@@ -1,3 +1,26 @@
+19991116-19:25 EDT David G. Holm <dholm@jsd-llc.com>
+
+    * config/dos/djgpp.cf
+    * config/os2/gcc.cf
+    * config/w32/gcc.cf
+      - Removed -g compiler option and -DDEBUG preprocessor option
+        If you want to compile with debug, add -g and -DDEBUG to the
+        C_USR environment variable.
+
+   * source/compiler/expropt.c
+     ! Corrected the division optimization to return 0 for any attempt
+       to divide by 0.
+     ! Corrected the division optimization to only return a long when the
+       result of dividing long values is a whole value instead of returning
+       a long when the result is within the range of a long (the result of
+       dividing a long by a long will always be within the range of a long).
+     % Changed the double results to return 2 decimal places after division
+       optimization, which still isn't correct (see the source code for
+       TODO: NOTE 1), but is more accurate than returning 0 decimal places.
+
+   * source/compiler/harbour.y
+     - Removed one of two occurrences of ExprEqual (on line 209).
+
 19991117-01:03 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbver.h
     * Version number updated to reflect the deep changes.
@@ -18,7 +41,9 @@
         * new expression optimizer
 	* start of introducing new functions' naming scheme 'hb_comp'
         * nonprintable characters (CR/LF/TAB, etc.) are inserted into
+
         generated C code using hexdecimal numbers instead of quoted char
+
 	(they can appear as a result of expression optimization)
        
     * source/pp/hbpp.c
@@ -28,18 +53,30 @@
 	* changes to support new functions' naming scheme 'hb_comp'
 	
     *include/pcode.h
+
         *HB_P_ARRAYAAT  -> HB_P_ARRAYPUSH
+
          HB_P_ARRAYAPUT -> HB_P_ARRAYPOP - it removes value from the stack
+
 	 This is compatible with the handling of usual variables
 
+
      *source/debug/debugger.prg
+
         * corrected the following syntax:
+
                 something <operator> other := another
+
         for example:
+
         ? 2 + a:=5 -1
+
         This syntax is not allowed in Clipper and in new Harbour rules too
+
         It should be used:
+
         ? 2 + (a:=5) -1
+
 
     * doc/compiler.txt
 	* added description of incompatibility with Clipper in object

@@ -206,7 +206,7 @@ USHORT hb_comp_wCaseCounter  = 0;
 %type <asExpr>  PareExpList PareExpListAlias
 %type <asExpr>  Expression SimpleExpression LValue
 %type <asExpr>  EmptyExpression
-%type <asExpr>  ExprAssign ExprOperEq ExprEqual ExprPreOp ExprPostOp
+%type <asExpr>  ExprAssign ExprOperEq ExprPreOp ExprPostOp
 %type <asExpr>  ExprEqual ExprMath ExprBool ExprRelation
 %type <asExpr>  ArrayIndex IndexList
 %type <asExpr>  DimIndex DimList
