@@ -217,7 +217,7 @@ void hb_compStrongType( int iSize )
    ULONG ulPos = pFunc->lPCodePos - iSize;
    SHORT wVar;
    int iVar;
-   char szType1[2], szType2[2];
+   char szType1[32], szType2[32];
    BYTE bLast1, bLast2;
 
    /* TODO Split under conitions for the different matching possible iSize. */
