@@ -1515,7 +1515,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
    IF AT( '<table>', cBuffer ) > 0
       DO WHILE !lendTable
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         IF AT( "</table>", cLine ) > 0
+         IF AT( "</table>", cLine ) > 0 .or. AT( "</TABLE>", cLine ) > 0
             lendTable := .t.
          ELSE
             IF LFstTableItem

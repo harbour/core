@@ -124,6 +124,7 @@ MEMVAR lNorton
 MEMVAR aWWW
 MEMVAR lTroff
 STATIC cTitle:=''
+
 /*
 */
 
@@ -140,23 +141,15 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    LOCAL aExtensions := { "*.ch", "*.prg", "*.c", "*.asm", "*.txt" }
    LOCAL i
-   LOCAL j
    LOCAL nItem
    LOCAL nHpj
    LOCAL cItem:=''
-   LOCAL nPos
+
    LOCAL cCompiler     // Compiler type
-   // Include norton compatable switch for EH
-   LOCAL lDone         // Done with a loop
-   LOCAL cMi           // Name params
-   LOCAL cLName        // Name params
-   LOCAL cFName        // Name params
-   LOCAL aName         // Tokenized name
-   LOCAL nLen          // Length of the token array
    LOCAL oHtm
    LOCAL oHtm1
    LOCAL ppp
-   LOCAL cTemp
+   LOCAL aMetaContents:={}
    PUBLIC theHandle
    PUBLIC aDirList
    PUBLIC aDocInfo    := {}
@@ -255,7 +248,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    CLEAR SCREEN
    SET CURSOR OFF
-    ReadLinkFile( cLinkName )
+   ReadLinkFile( cLinkName )
    cCompiler := fill_Link_info( cLinkName )
 
    //  See if ngi subdirectory is present
@@ -440,9 +433,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
             do while .t.
           citem:=adocinfo[1,1]
-//          citem:=
- //     oHtm1:WriteLink('hb'+strtran(adocinfo[1,1]," ","")+'.htm',cItem)
-          ohtm:=THTML():new('htm\hb'+citem+'.htm')
+          AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
+          aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
+          ohtm:=THTML():new('htm\hb'+strtran(citem," ","")+'.htm',aMetaContents)
           ohtm:WriteText('<h2>'+adocinfo[1,1]+'</h2><br>')
           ohtm:WriteText("<ul>")
   
@@ -454,7 +447,13 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
            ohtm:WriteText("</ul>")
            ohtm:close()
            citem:=adocinfo[ppp,1]
-           ohtm:=THTML():new('htm\hb'+strtran(adocinfo[ppp,1]," ","")+'.htm')
+           aMetaContents:={}
+          AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
+          aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
+
+           ohtm:=THTML():new('htm\hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',aMetaContents)
+
+//                    oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem)
            ohtm:WriteText('<h2>'+adocinfo[ppp,1]+'</h2><br>')
            ohtm:WriteText("<ul>")
            oHtm:Writelink(adocinfo[ppp,4],UpperLower(adocinfo[ppp,2]))
@@ -465,7 +464,12 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
         endif
       enddo
         ohtm:close()
-      oHtm1 := THTML():New( "htm\harbour.htm" )
+           aMetaContents:={}
+          AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
+          aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
+
+      oHtm1 := THTML():New( "htm\harbour.htm" ,aMetaContents)
+//          oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,Harbour Documentation")
       oHtm1:WriteTitle( "Harbour Reference Guide" )
       oHtm1:WriteText( "<H1>Harbour Reference Guide</H1>" )
       oHtm1:WriteText( "<H2>HARBOUR</H2>" + hb_osnEwline() + '<UL>' )
@@ -1153,7 +1157,6 @@ STATIC FUNCTION ReadLinkFile( cFile )
 
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    Local cLine
    Local cVer:=''
    LOCAL aLocDoc   := {}

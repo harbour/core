@@ -48,18 +48,21 @@ CLASS THTML
 
    DATA nHandle
    DATA cFile
-   METHOD New( cFile )
+   METHOD New( cFile ,aMetaContents)
    METHOD WriteTitle( cTitle )
    METHOD WritePar( cPar )
    METHOD WriteParBold( cPar )
    METHOD WriteLink( cLink )
    METHOD WriteText( cText )
+   METHOD WriteMetaTag(cTag,cDescription)
    METHOD CLOSE()
 
 ENDCLASS
 
-METHOD New( cFile ) CLASS THTML
-
+METHOD New( cFile,aMetaContents ) CLASS THTML
+    
+   Local nCount
+   ? Valtype(aMetaContents)
    IF Nx > 0
       FCLOSE( NX )
    ENDIF
@@ -69,6 +72,12 @@ METHOD New( cFile ) CLASS THTML
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
    nX := Self:nHandle
+   FWRITE( Self:nHandle, "<HTML>" + CRLF )
+   if Valtype(aMetaContents) <> NIL .and. Valtype(aMetaContents)=="A"
+   For nCount:=1 to len(aMetaContents)
+      Self:WriteMetaTag(aMetaContents[nCount,1],aMetaContents[nCount,2])
+   NEXT
+    Endif
    FWRITE( Self:nHandle, "<BODY>" + CRLF )
 
 RETURN Self
@@ -111,7 +120,7 @@ RETURN Self
 METHOD CLOSE() CLASS THTML
 
    FWRITE( Self:nHandle, "</body>" + CRLF )
-
+   FWRITE( Self:nHandle, "</html>" + CRLF )
    FCLOSE( Self:nHandle )
 
 RETURN Self
@@ -142,5 +151,9 @@ METHOD WriteLink( cLink, cName ) CLASS THTML
    FWRITE( Self:nHandle, "<LI><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></LI>" + CRLF )
 
 RETURN Self
+
+METHOD WriteMetaTag(cTag,cDescription) Class THtml
+    fWrite(Self:nHandle,'<META NAME="'+cTag+'" CONTENT="'+cDescription+'">'+CRLF)
+return Self
 
 *+ EOF: HTML.PRG

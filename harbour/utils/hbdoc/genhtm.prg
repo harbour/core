@@ -257,6 +257,11 @@ FUNCTION ProcessWww()
                      oHtm:WriteText( "</DL>" )
                      oHtm:Close()
                   ENDIF
+               Elseif empty(cSeeAlso)
+                  IF lDoc
+                     oHtm:WriteText( "</DL>" )
+                     oHtm:Close()
+                  ENDIF
 
                ENDIF
                lDoc      := .F.
