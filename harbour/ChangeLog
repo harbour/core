@@ -1,3 +1,28 @@
+19990602-12:00 WIB Andi Jahja <andij@aonlippo.co.id>
+  + gt.b32 - make file for gt functions
+  + bldgt32.bat - batch file for hbgt.lib
+  * tests\working\bld32exe.bat - to include hbgt.lib
+  * tests\working\testgt.prg - test program for hbgt.lib
+  + some function from PD gt.lib ported to Harbour :
+    - source\tools\ascpos.c
+    - source\tools\atdiff.c
+    - source\tools\chareven.c
+    - source\tools\charodd.c
+    - source\tools\chrcount.c
+    - source\tools\chrtotal.c
+    - source\tools\charmix.c
+    - source\tools\asciisum.c
+    - source\tools\chrfirst.c
+    - source\tools\strasint.c
+    - source\tools\strcount.c
+    - source\tools\strcspn.c
+    - source\tools\strdiff.c
+    - source\tools\strexpan.c
+    - source\tools\strleft.c
+    - source\tools\strpbrk.c
+    - source\tools\strright.c
+  + doc\vm.txt - description of Harbour Virtual Machine
+  
 19990602-12:30 CET Eddie Runia
    * source/rtl/arrays.c
      memory leakage in arrayClone plugged
