@@ -1,5 +1,7 @@
 dos
 dos/*
+freebsd
+freebsd/*
 linux
 linux/*
 os2
@@ -16,3 +18,4 @@ obj
 obj/*
 lib
 lib/*
+

@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
     * comment this line pDstObject->item.asArray.value->puiClsTree = NULL;
+      because it's redundant with arrayClone().
+      see Changelog below.
+
+2002-03-02 13:25 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source\vm\arrays.c
     * Fixed hb_arrayClone()
     + Add line 777, was token from __objClone() and xHarbour.
       Thanks, Ron.
@@ -1838,6 +1843,7 @@ ed
      * Cleaned up the new Win32 API branches.
 
 2001-12-21 12:54 UTC+0100 Antonio Linares <alinares@fivetech.com>
+
 
    * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
