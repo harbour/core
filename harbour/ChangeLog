@@ -1,3 +1,14 @@
+19990602-13:05 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Added the new gt functions (which have nothing to do with the GT API)
+    - All Harbour library source modules are now dependent upon the proper
+      include files.
+  * source/rtl/console.c
+    - The GT API and dev_row, dev_col synchronization now also includes
+      OUTSTD() and OUTERR().
+  * source/rtl/gtapi.c
+    - Corrected error in column overflow handling in _gtWrite()
+
 19990602-18:40 CET Eddie Runia
   * tests/working/run_exp.h
     gt_string functions added

@@ -337,7 +337,7 @@ int _gtWrite(char * fpStr, USHORT uiLen)
     {
        /* Column movement overflows onto next row */
        iRow++;
-       iCol = 0;
+       iCol -= (iMaxCol + 1);
     }
     /* If needed, prescroll the display to the new position and adjust the current row
        position to account for the prescroll */

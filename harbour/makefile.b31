@@ -23,49 +23,76 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj dates.obj \
               set.obj strings.obj strcmp.obj symbols.obj tclass.obj transfrm.obj
 
 hbtools.lib : datesx.obj debug.obj genobj.obj io.obj mathx.obj \
-              stringp.obj stringsx.obj
+              stringp.obj stringsx.obj \
+              asciisum.obj ascpos.obj atdiff.obj \
+              chareven.obj charmix.obj charodd.obj \
+              chrcount.obj chrfirst.obj chrtotal.obj \
+              strasint.obj strcount.obj strcspn.obj \
+              strdiff.obj strexpan.obj strleft.obj \
+              strpbrk.obj strright.obj
 
 terminal.lib : console.obj gtdos.obj
 
 libs\win16\terminal.lib : console.obj
 
-console.obj  : console.c  extend.h types.h
+console.obj  : console.c  extend.h types.h ctoharb.h dates.h gtapi.h set.h
   bcc -c $(c_opt) -o$@ source\rtl\console.c
   tlib .\libs\b16\terminal.lib -+$@,,
 #  bcc -c -DWINDOWS $(c_opt) -o$@ source\rtl\console.c
 #  tlib .\libs\win16\terminal.lib -+$@,,
    
-arrays.obj   : arrays.c   extend.h types.h
-asort.obj    : asort.prg  extend.h types.h harbour.exe
-classes.obj  : classes.c  extend.h types.h
-codebloc.obj : codebloc.c extend.h types.h
-dates.obj    : dates.c    extend.h types.h dates.h set.h
-datesx.obj   : source\tools\datesx.c   extend.h types.h
-debug.obj    : source\tools\debug.c   extend.h types.h
-dynsym.obj   : source\vm\dynsym.c   extend.h types.h
-environ.obj  : environ.c  extend.h types.h
-error.obj    : error.prg  extend.h types.h init.h harbour.exe
-errorapi.obj : errorapi.c extend.h types.h
-errorsys.obj : errorsys.prg extend.h types.h init.h harbour.exe
-extend.obj   : extend.c   extend.h types.h
-files.obj    : extend.c   extend.h types.h
-genobj.obj   : source\tools\genobj.c   extend.h types.h
-gtapi.obj    : gtapi.c    extend.h types.h gtapi.h
-gtdos.obj    : source\rtl\gt\gtdos.c extend.h types.h gtapi.h
-io.obj       : source\tools\io.c   extend.h types.h
-initsymb.obj : source\vm\initsymb.c extend.h types.h
-itemapi.obj  : itemapi.c  extend.h types.h
-math.obj     : math.c     extend.h types.h
-mathx.obj    : source\tools\mathx.c    extend.h types.h
-objfunc.obj  : objfunc.prg extend.h types.h init.h harbour.exe
-set.obj      : set.c      extend.h types.h set.h
-strcmp.obj   : strcmp.c   extend.h types.h
-stringp.obj  : source\tools\stringp.prg extend.h types.h init.h harbour.exe
-strings.obj  : strings.c  extend.h types.h
-stringsx.obj : source\tools\stringsx.c extend.h types.h
+arrays.obj   : arrays.c     extend.h types.h ctoharb.h
+asort.obj    : asort.prg    extend.h types.h init.h pcode.h harbour.exe
+classes.obj  : classes.c    extend.h types.h itemapi.h
+codebloc.obj : codebloc.c   extend.h types.h
+dates.obj    : dates.c      extend.h types.h dates.h set.h
+environ.obj  : environ.c    extend.h types.h
+error.obj    : error.prg    extend.h types.h init.h pcode.h harbour.exe
+errorapi.obj : errorapi.c   extend.h types.h ctoharb.h
+errorsys.obj : errorsys.prg extend.h types.h init.h pcode.h harbour.exe
+extend.obj   : extend.c     extend.h types.h set.h
+files.obj    : extend.c     extend.h types.h
+gtapi.obj    : gtapi.c      extend.h types.h gtapi.h
+itemapi.obj  : itemapi.c    extend.h types.h ctoharb.h itemapi.h set.h
+math.obj     : math.c       extend.h types.h
+objfunc.obj  : objfunc.prg  extend.h types.h init.h pcode.h harbour.exe
+set.obj      : set.c        extend.h types.h set.h
+strcmp.obj   : strcmp.c     extend.h types.h set.h
+strings.obj  : strings.c    extend.h types.h set.h
 symbols.obj  : symbols.asm
-tclass.obj   : tclass.prg extend.h types.h init.h harbour.exe
-transfrm.obj : transfrm.c extend.h types.h
+tclass.obj   : tclass.prg   extend.h types.h init.h pcode.h harbour.exe
+transfrm.obj : transfrm.c   extend.h types.h ctoharb.h set.h
+
+gtdos.obj    : source\rtl\gt\gtdos.c    extend.h types.h gtapi.h
+
+dynsym.obj   : source\vm\dynsym.c   extend.h types.h
+initsymb.obj : source\vm\initsymb.c extend.h types.h
+
+datesx.obj   : source\tools\datesx.c    extend.h types.h
+debug.obj    : source\tools\debug.c     extend.h types.h ctoharb.h itemapi.h
+genobj.obj   : source\tools\genobj.c    extend.h types.h
+io.obj       : source\tools\io.c        extend.h types.h
+mathx.obj    : source\tools\mathx.c     extend.h types.h
+stringp.obj  : source\tools\stringp.prg extend.h types.h init.h pcode.h harbour.exe
+stringsx.obj : source\tools\stringsx.c  extend.h types.h
+
+asciisum.obj : source\tools\asciisum.c  extend.h types.h
+ascpos.obj   : source\tools\ascpos.c    extend.h types.h
+atdiff.obj   : source\tools\atdiff.c    extend.h types.h
+chareven.obj : source\tools\chareven.c  extend.h types.h
+charmix.obj  : source\tools\charmix.c   extend.h types.h
+charodd.obj  : source\tools\charodd.c   extend.h types.h
+chrcount.obj : source\tools\chrcount.c  extend.h types.h
+chrfirst.obj : source\tools\chrfirst.c  extend.h types.h
+chrtotal.obj : source\tools\chrtotal.c  extend.h types.h
+strasint.obj : source\tools\strasint.c  extend.h types.h
+strcount.obj : source\tools\strcount.c  extend.h types.h
+strcspn.obj  : source\tools\strcspn.c   extend.h types.h
+strdiff.obj  : source\tools\strdiff.c   extend.h types.h
+strexpan.obj : source\tools\strexpan.c  extend.h types.h
+strleft.obj  : source\tools\strleft.c   extend.h types.h
+strpbrk.obj  : source\tools\strpbrk.c   extend.h types.h
+strright.obj : source\tools\strright.c  extend.h types.h
 
 {source\tools}.prg{obj}.obj:
   bin\harbour $< /n /osource\tools

@@ -114,7 +114,9 @@ static void hb_outstd( char * fpStr, WORD uiLen )
 #ifdef USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      _gtGetPos( &dev_row, &dev_col );
+      dev_row = gtWhereY();
+      dev_col = gtWhereX();
+      _gtSetPos( dev_row, dev_col );
    }
 #endif;
 }
@@ -129,7 +131,9 @@ static void hb_outerr( char * fpStr, WORD uiLen )
 #ifdef USE_GTAPI
    if( isatty( fileno( stdout ) ) )
    {
-      _gtGetPos( &dev_row, &dev_col );
+      dev_row = gtWhereY();
+      dev_col = gtWhereX();
+      _gtSetPos( dev_row, dev_col );
    }
 #endif;
 }
