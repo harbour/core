@@ -1,3 +1,7 @@
+2000-10-25 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * source/pp/ppcore.c
+     ! Neither Cygwin nor IBM VAC++ supports sys_errlist.
+
 2000-10-25 13:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/pp/ppcore.c
      * fixed problem, reported by John Skelton

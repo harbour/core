@@ -443,7 +443,13 @@ int hb_pp_ParseDirective( char * sLine )
             if( errno == 0 || errno == EMFILE )
               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
             else
+            {
+            #if defined(__CYGWIN__) || defined(__IBMCPP__)
+              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
+            #else
               hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, sys_errlist[ errno ] );
+            #endif
+            }
           }
         }
 
