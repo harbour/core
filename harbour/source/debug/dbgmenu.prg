@@ -53,10 +53,11 @@
 #include "hbclass.ch"
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
-#xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> [ ACTION <uAction,...> ] ;
+#xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;
+          [ IDENT <nIdent> ] [ ACTION <uAction,...> ] ;
    [ <checked: CHECK, CHECKED> ] => ;
    [ <oMenuItem> := ] TDbMenu():AddItem( TDbMenuItem():New( <cPrompt>,;
-   [{|Self|<uAction>}] ,[<.checked.>] ) )
+   [{|Self|<uAction>}] ,[<.checked.>], [<nIdent>] ) )
 #xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
 
@@ -69,12 +70,13 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
    local oPublic, oPrivate, oStatic, oLocal, oAll, oSort
    local oCallStack
    local oCBTrace
+   local oPPo
 
    MENU oMenu
       MENUITEM " ~File "
       MENU
          MENUITEM " ~Open..."         ACTION oDebugger:Open()
-         MENUITEM " ~Resume"          ACTION oDebugger:NotSupported()
+         MENUITEM " ~Resume"          ACTION oDebugger:Resume()
          MENUITEM " O~S Shell"        ACTION oDebugger:OSShell()
          SEPARATOR
          MENUITEM " e~Xit    Alt-X "  ACTION oDebugger:Exit(), oDebugger:Hide(), __Quit()
@@ -116,10 +118,10 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Point "
       MENU
-         MENUITEM " ~Watchpoint..."         ACTION oDebugger:AddWatchpoint()
-         MENUITEM " ~Tracepoint..."         ACTION oDebugger:NotSupported()
+         MENUITEM " ~Watchpoint..."         ACTION oDebugger:WatchpointAdd()
+         MENUITEM " ~Tracepoint..."         ACTION oDebugger:TracepointAdd()
          MENUITEM " ~Breakpoint   F9 "      ACTION oDebugger:ToggleBreakPoint()
-         MENUITEM " ~Delete..."             ACTION oDebugger:DelWatchpoint()
+         MENUITEM " ~Delete..."             ACTION oDebugger:WatchpointDel()
       ENDMENU
 
       MENUITEM " ~Monitor "
@@ -147,7 +149,8 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
       MENUITEM " ~Options "
       MENU
-         MENUITEM " ~Preprocessed Code"     ACTION oDebugger:NotSupported()
+         MENUITEM oPPo PROMPT " ~Preprocessed Code" IDENT "PPO";
+            ACTION (IIF( oDebugger:OpenPPO(), oPPo:Toggle(), NIL))
          MENUITEM oLineNumbers PROMPT " ~Line Numbers" ;
             ACTION ( oDebugger:LineNumbers(), oLineNumbers:Toggle() ) CHECKED
          MENUITEM " ~Exchange Screens"      ACTION oDebugger:NotSupported()

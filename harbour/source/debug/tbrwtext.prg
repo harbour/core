@@ -72,6 +72,9 @@ CLASS TBrwText FROM HBEditor
 
    DATA  lLineNumbers   // If .T. source code lines are preceded by their number
 
+   ACCESS colorSpec INLINE ::cColorSpec
+   ASSIGN colorSpec(cClr) INLINE ::cColorSpec:=cClr
+
    METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cColor)
 
    METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a HBEditor like a TBrowse

@@ -245,6 +245,10 @@ static LONG     s_lRecoverBase;
 #define  HB_RECOVER_ADDRESS   -3
 #define  HB_RECOVER_VALUE     -4
 
+/* Stores level of procedures call stack
+*/
+static ULONG   s_ulProcLevel = 0;
+
 int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex = 0;
 PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
@@ -3258,7 +3262,8 @@ void hb_vmDo( USHORT uiParams )
    /*
    printf( "\VmDo nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
    */
-
+   s_ulProcLevel++;
+   
    if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
@@ -3420,6 +3425,7 @@ void hb_vmDo( USHORT uiParams )
       hb_vmDebuggerEndProc();
 
    s_bDebugging = bDebugPrevState;
+   s_ulProcLevel--;
 }
 
 void hb_vmSend( USHORT uiParams )
@@ -3440,6 +3446,7 @@ void hb_vmSend( USHORT uiParams )
    printf( "\n VmSend nItems: %i Params: %i Extra %i\n", hb_stack.pPos - hb_stack.pBase, uiParams, hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] );
    */
 
+   s_ulProcLevel++;
    if( hb_vm_iExtraParamsIndex && HB_IS_SYMBOL( pItem = hb_stackItemFromTop( -( uiParams + hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex - 1] + 2 ) ) ) && pItem->item.asSymbol.value == hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] )
    {
       uiParams += hb_vm_aiExtraParams[--hb_vm_iExtraParamsIndex];
@@ -3648,6 +3655,7 @@ void hb_vmSend( USHORT uiParams )
    }
 
    s_bDebugging = bDebugPrevState;
+   s_ulProcLevel--;
 }
 
 static HARBOUR hb_vmDoBlock( void )
@@ -5014,13 +5022,17 @@ ULONG hb_vmFlagEnabled( ULONG flags )
 	return s_VMFlags & (flags);
 }
 
+/* ------------------------------------------------------------------------ */
+/* The debugger support functions */
+/* ------------------------------------------------------------------------ */
+
 void hb_vmRequestDebug( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestDebug()"));
    s_bDebugRequest = TRUE;
 }
 
-HB_FUNC( INVOKEDEBUG )
+HB_FUNC( HB_DBG_INVOKEDEBUG )
 {
    BOOL bRequest = s_bDebugRequest;
    s_bDebugRequest = FALSE;
@@ -5031,7 +5043,7 @@ HB_FUNC( INVOKEDEBUG )
  * $FuncName$     <aStat> __vmVarSList()
  * $Description$  Return the statics array. Please aClone before assignments
  * $End$ */
-HB_FUNC( __VMVARSLIST )
+HB_FUNC( HB_DBG_VMVARSLIST )
 {
    PHB_ITEM pStatics = hb_arrayClone( &s_aStatics, NULL );
 
@@ -5043,7 +5055,7 @@ HB_FUNC( __VMVARSLIST )
  * $FuncName$     <nStatics> __vmVarSLen()
  * $Description$  Return the statics array length.
  * $End$ */
-HB_FUNC( __VMVARSLEN )
+HB_FUNC( HB_DBG_VMVARSLEN )
 {
    hb_retnl( s_aStatics.item.asArray.value->ulLen );
 }
@@ -5052,7 +5064,7 @@ HB_FUNC( __VMVARSLEN )
  * $FuncName$     <xStat> __vmVarSGet(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
-HB_FUNC( __VMVARSGET )
+HB_FUNC( HB_DBG_VMVARSGET )
 {
    /* hb_itemReturn( s_aStatics.item.asArray.value->pItems +
                   hb_stack.iStatics + hb_parni( 1 ) - 1 ); */
@@ -5064,10 +5076,15 @@ HB_FUNC( __VMVARSGET )
  * $FuncName$     __vmVarSSet(<nStatic>,<uValue>)
  * $Description$  Sets the value of a specified statics
  * $End$ */
-HB_FUNC( __VMVARSSET )
+HB_FUNC( HB_DBG_VMVARSSET )
 {
    hb_itemCopy( s_aStatics.item.asArray.value->pItems + hb_parni( 1 ) - 1,
                 * ( hb_stack.pBase + 3 ) );
+}
+
+HB_FUNC( HB_DBG_PROCLEVEL )
+{
+   hb_retnl( s_ulProcLevel - 1 );   /* Don't count self */
 }
 
 /* ------------------------------------------------------------------------ */

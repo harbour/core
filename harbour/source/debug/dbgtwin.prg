@@ -84,7 +84,8 @@ CLASS TDbWindow  // Debugger windows and dialogs
    METHOD ShowModal()
    METHOD LButtonDown( nMRow, nMCol )
    METHOD LDblClick( nMRow, nMCol )
-   METHOD LoadColors() INLINE ::cColor := __DbgColors()[ 1 ]
+   METHOD LoadColors() 
+
    METHOD Move()
    METHOD KeyPressed( nKey )
    METHOD Refresh()
@@ -335,3 +336,14 @@ METHOD KeyPressed( nKey ) CLASS TDbWindow
    endif
 
 return nil
+
+METHOD LoadColors() CLASS TDbWindow
+LOCAL aClr:=__DbgColors()
+
+   ::cColor := aClr[ 1 ]
+   IF( ::Browser!=NIL )
+      ::Browser:ColorSpec := aClr[ 2 ] + "," + aClr[ 5 ] + "," + aClr[ 3 ]
+   ENDIF
+   
+RETURN nil
+

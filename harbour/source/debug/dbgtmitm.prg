@@ -63,6 +63,7 @@ CLASS TDbMenuItem
    DATA cPrompt
    DATA bAction
    DATA lChecked
+   DATA Ident
 
    METHOD New( cPrompt, bAction, lChecked )
    METHOD Display( cClrText, cClrHotKey )
@@ -70,7 +71,7 @@ CLASS TDbMenuItem
 
 ENDCLASS
 
-METHOD New( cPrompt, bAction, lChecked ) CLASS TDbMenuItem
+METHOD New( cPrompt, bAction, lChecked, nIdent ) CLASS TDbMenuItem
 
    DEFAULT lChecked TO .f.
 

@@ -8,6 +8,31 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-01-26 11:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+   * source/compiler/harbour.c
+      *fixed generation of codeblock's pcode with debugging info
+      
+   * source/debug/dbgmenu.prg
+   * source/debug/dbgtmenu.prg
+   * source/debug/dbgtmitm.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/debugger.prg
+   * source/debug/tbrwtext.prg
+      *added Tracepoint support
+      *added support for PPO files
+      *added monitoring of local variables used in a codeblock
+      *local variables are displayed correctly when the
+      callstack window is browsed
+      *other minor fixes
+      
+   * source/vm/debug.c
+      *renamed '__vm*' functions to 'hb_dbg_*'
+      *fixed support for local variables inside of codeblock
+      
+   * source/vm/hvm.c
+      *added 'hb_dbg_ProcLevel' function which return the 
+      size of procedure stack calls (the debugger support)
+
 2004-01-25 10:11 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile.nt
    * makefile.vc

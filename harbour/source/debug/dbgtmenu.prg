@@ -82,6 +82,7 @@ CLASS TDbMenu  /* debugger menu */
    METHOD EvalAction()
    METHOD GetHotKeyPos( nKey )
    METHOD GetItemOrdByCoors( nRow, nCol )
+   METHOD GetItemByIdent( uIdent )
    METHOD GoBottom()
    METHOD GoDown() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoRight()
    METHOD GoLeft()
@@ -263,6 +264,19 @@ METHOD GetItemOrdByCoors( nRow, nCol ) CLASS TDbMenu
    next
 
 return 0
+
+METHOD GetItemByIdent( uIdent ) CLASS TDbMenu
+
+   local n
+
+   for n := 1 to Len( ::aItems )
+      if VALTYPE(::aItems[ n ]:Ident) == VALTYPE(uIdent) .AND.;
+         ::aItems[n]:Ident == uIdent
+         return ::aItems[ n ]
+      endif
+   next
+
+return NIL
 
 METHOD GoBottom() CLASS TDbMenu
 

@@ -720,24 +720,6 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
                   pLastVar->pNext = pVar;
                }
-/*
-               if( hb_comp_bDebugInfo )
-               {
-                  BYTE * pBuffer = ( BYTE * ) hb_xgrab( strlen( szVarName ) + 5 );
-                  int iVar = hb_compStaticGetPos( szVarName, pFunc );
-
-                  pBuffer[0] = HB_P_STATICNAME;
-                  pBuffer[1] = (hb_compVariableScope( szVarName )==HB_VS_GLOBAL_STATIC)?1:0;
-                  pBuffer[2] = HB_LOBYTE( iVar );
-                  pBuffer[3] = HB_HIBYTE( iVar );
-
-                  memcpy( ( BYTE * ) ( & ( pBuffer[4] ) ), szVarName, strlen( szVarName ) + 1 );
-
-                  hb_compGenPCodeN( pBuffer, strlen( szVarName ) + 5 , 0 );
-
-                  hb_xfree( pBuffer );
-               }
-*/
             }
             break;
 
@@ -3788,21 +3770,11 @@ void hb_compCodeBlockStart()
 {
    PFUNCTION pBlock;
 
-#if 0
-   if( hb_comp_iWarnings >= 3 )
-   {
-      /* Not generating yet - will be generated in hb_compCodeBlockEnd() */
-      hb_compGenPCode1( HB_P_PUSHBLOCK );
-      pBlock->lPCodePos--;
-   }
-#endif
-
    pBlock       = hb_compFunctionNew( NULL, HB_FS_STATIC );
    pBlock->pOwner       = hb_comp_functions.pLast;
    pBlock->iStaticsBase = hb_comp_functions.pLast->iStaticsBase;
 
    hb_comp_functions.pLast = pBlock;
-/*   hb_compLinePushIfDebugger(); */
 }
 
 void hb_compCodeBlockEnd( void )
@@ -3811,7 +3783,9 @@ void hb_compCodeBlockEnd( void )
    PFUNCTION pFunc;/* pointer to a function that owns a codeblock */
    USHORT wSize;
    USHORT wLocals = 0;   /* number of referenced local variables */
+   USHORT wLocalsCnt, wLocalsLen;
    USHORT wPos;
+   int iLocalPos;
    PVAR pVar, pFree;
 
    if( hb_comp_functions.pLast &&
@@ -3840,13 +3814,17 @@ void hb_compCodeBlockEnd( void )
     */
 
    /* Count the number of referenced local variables */
+   wLocalsLen = 0;
    pVar = pCodeblock->pStatics;
    while( pVar )
    {
+      if( hb_comp_bDebugInfo )
+         wLocalsLen += (4 + strlen(pVar->szName));
       pVar = pVar->pNext;
       ++wLocals;
    }
-
+   wLocalsCnt = wLocals;
+   
    if( ( pCodeblock->lPCodePos + 3 ) <= 255 &&  pCodeblock->wParamCount == 0 && wLocals == 0 )
    {
       /* NOTE: 3 = HB_P_PUSHBLOCKSHORT + BYTE( size ) + _ENDBLOCK */
@@ -3860,7 +3838,8 @@ void hb_compCodeBlockEnd( void )
       wSize = ( USHORT ) pCodeblock->lPCodePos + 8 + wLocals * 2;
       if( hb_comp_bDebugInfo )
       {
-         wSize += (3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( hb_comp_functions.pLast->szName ));
+         wSize += (3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( pFunc->szName ));
+         wSize += wLocalsLen;
       }
 
       hb_compGenPCode3( HB_P_PUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), ( BOOL ) 0 );
@@ -3874,24 +3853,47 @@ void hb_compCodeBlockEnd( void )
    {
       wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
       hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), ( BOOL ) 0 );
-
-      pFree = pVar;
-
       pVar = pVar->pNext;
-      hb_xfree( ( void * ) pFree );
    }
 
    if( hb_comp_bDebugInfo )
    {
       BYTE * pBuffer;
 
-      pBuffer = ( BYTE * ) hb_xgrab( 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( hb_comp_functions.pLast->szName ) );
+      pBuffer = ( BYTE * ) hb_xgrab( 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( pFunc->szName ) );
       pBuffer[0] = HB_P_MODULENAME;
       memcpy( ( BYTE * ) ( &( pBuffer[1] ) ), ( BYTE * ) hb_comp_files.pLast->szFileName, strlen( hb_comp_files.pLast->szFileName ) );
       pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 1 ] = ':';
-      memcpy( ( BYTE * ) ( &( pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 2 ] ) ), ( BYTE * ) hb_comp_functions.pLast->szName, strlen( hb_comp_functions.pLast->szName ) + 1 );
-      hb_compGenPCodeN( pBuffer, 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( hb_comp_functions.pLast->szName ), 0 );
+      memcpy( ( BYTE * ) ( &( pBuffer[ strlen( hb_comp_files.pLast->szFileName ) + 2 ] ) ), ( BYTE * ) pFunc->szName, strlen( pFunc->szName ) + 1 );
+      hb_compGenPCodeN( pBuffer, 3 + strlen( hb_comp_files.pLast->szFileName ) + strlen( pFunc->szName ), 0 );
       hb_xfree( pBuffer );
+
+      /* generate the name of reference local variables */
+      pVar = pCodeblock->pStatics;
+      iLocalPos = -1;
+      while( wLocalsCnt-- )
+      {
+         pBuffer = ( BYTE * ) hb_xgrab( strlen( pVar->szName ) + 4 );
+
+         pBuffer = ( BYTE * ) hb_xgrab( strlen( pVar->szName ) + 4 );
+
+         pBuffer[0] = HB_P_LOCALNAME;
+         pBuffer[1] = HB_LOBYTE( iLocalPos );
+         pBuffer[2] = HB_HIBYTE( iLocalPos );
+         iLocalPos--;
+
+         memcpy( ( BYTE * ) ( & ( pBuffer[3] ) ), pVar->szName, strlen( pVar->szName ) + 1 );
+
+         hb_compGenPCodeN( pBuffer, strlen( pVar->szName ) + 4 , 0 );
+
+         hb_xfree( pBuffer );
+
+         pFree = pVar;
+
+         pVar = pVar->pNext;
+         hb_xfree( ( void * ) pFree );
+      }
+
    }
 
    hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, ( BOOL ) 0 );
