@@ -1,3 +1,14 @@
+20000421-00:54 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbapi.h
+   * source/vm/hvm.c
+   * source/vm/arrays.c
+     - Removed the hb_arrayError() function.
+     % The hb_arrayError() functionality moved to the only place where it 
+       was used: hb_vmArrayPush() and hb_vmArrayPop(). It should be a bit 
+       faster now.
+     % Implemented optimization proposed by Ryszard for hb_vmArrayPush().
+
 20000421-00:34 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/compiler/genc.c

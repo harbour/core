@@ -39,7 +39,6 @@
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_arrayIsObject()
- *    hb_arrayError()
  *    hb_arrayCopyC()
  *    hb_arrayGetC()
  *
@@ -223,37 +222,6 @@ BOOL hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex )
    }
    else
       return FALSE;
-}
-
-BOOL hb_arrayError( PHB_ITEM pArray, ULONG ulIndex, BOOL bAssign )
-{
-   BOOL bError;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayError(%p, %lu, %d)", pArray, ulIndex, (int) bAssign));
-
-   if( HB_IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         bError = FALSE;
-      else
-      {
-         bError = TRUE;
-         if( bAssign )
-            hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
-         else
-            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-      }
-   }
-   else
-   {
-      bError = TRUE;
-      if( bAssign )
-         hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
-      else
-         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
-   }
-
-   return bError;
 }
 
 BOOL hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )

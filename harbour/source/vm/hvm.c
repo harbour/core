@@ -2299,13 +2299,10 @@ static void hb_vmArrayPush( void )
 
    if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
-
    else if( HB_IS_LONG( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asLong.value;
-
    else if( HB_IS_DOUBLE( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asDouble.value;
-
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
@@ -2321,18 +2318,31 @@ static void hb_vmArrayPush( void )
       return;
    }
 
-   if( ! hb_arrayError( pArray, ulIndex, FALSE ) )
+   if( HB_IS_ARRAY( pArray ) )
    {
-      HB_ITEM item;
-
-      hb_arrayGet( pArray, ulIndex, &item );
-      hb_stackPop();
-      hb_stackPop();
-
-      hb_itemCopy( hb_stack.pPos, &item );
-      hb_itemClear( &item );
-      hb_stackPush();
+      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      {
+         hb_arrayGet( pArray, ulIndex, pArray );
+         hb_stackPop();
+      
+/* Looks like this without optimization:
+      
+         HB_ITEM item;
+      
+         hb_arrayGet( pArray, ulIndex, &item );
+         hb_stackPop();
+         hb_stackPop();
+      
+         hb_itemCopy( hb_stack.pPos, &item );
+         hb_itemClear( &item );
+         hb_stackPush();
+*/
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
    }
+   else
+      hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ) );
 }
 
 static void hb_vmArrayPop( void )
@@ -2350,27 +2360,31 @@ static void hb_vmArrayPop( void )
 
    if( HB_IS_INTEGER( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asInteger.value;
-
    else if( HB_IS_LONG( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asLong.value;
-
    else if( HB_IS_DOUBLE( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asDouble.value;
-
    else
    {
       hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
       return;
    }
 
-   if( ! hb_arrayError( pArray, ulIndex, TRUE ) )
+   if( HB_IS_ARRAY( pArray ) )
    {
-      hb_arraySet( pArray, ulIndex, pValue );
-      hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
-      hb_stackPop();
-      hb_stackPop();
-      hb_stackPop();    /* remove the value from the stack just like other POP operations */
+      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      {
+         hb_arraySet( pArray, ulIndex, pValue );
+         hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
+         hb_stackPop();
+         hb_stackPop();
+         hb_stackPop();    /* remove the value from the stack just like other POP operations */
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
    }
+   else
+      hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ) );
 }
 
 static void hb_vmArrayDim( USHORT uiDimensions ) /* generates an uiDimensions Array and initialize those dimensions from the stack values */
