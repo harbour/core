@@ -1,3 +1,10 @@
+Mon Jun 07 20:42:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/dir.cf: 
+	* config/global.cf: 
+	* config/install.cf: 
+	Made a mistake in my previous commit. This one works.
+
 Mon Jun 07 20:20:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* config/bin.cf: 
@@ -1686,14 +1693,6 @@ Thu May 20 16:03:24 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
       NB! Not needed for 32-bit compilers.
 
 Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
-<<<<<<< ChangeLog
-=======
-
-        * Makefile:
-        Added obj to the list of directories.
->>>>>>> 1.78
-
-<<<<<<< ChangeLog
         * Makefile:
         Added obj to the list of directories.
 
@@ -1722,33 +1721,6 @@ Tue May 11 18:53:43 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
         * obj/Makefile:
         Added these two Makefiles.
 
-=======
-        * source/Makefile:
-        Added rdd to the list of directories.
-
-        * source/rtl/Makefile:
-        Added gtapi.c to the list of C sources.
-
-        * source/rtl/gtapi.c:
-        Got rid of two warnings with gcc.
-
-        * source/rtl/environ.c:
-        Made sure it compiles with gcc.
-        There was a missing #endif.
-
-        * source/tools/stringp.prg:
-        * tests/working/debugtst.prg:
-        Replaced Debug() with HBDebug(), otherwise the generated C source
-        collides with the macro DEBUG.
-
-        * source/vm/hvm.c:
-        Corrected a comment.
-
-        * source/rdd/Makefile:
-        * obj/Makefile:
-        Added these two Makefiles.
-
->>>>>>> 1.78
 19990511-19:20 Eddie Runia
   * source/rtl/classes.c
     (Default) parameter self added to INLINE methods

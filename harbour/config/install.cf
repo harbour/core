@@ -3,7 +3,7 @@
 #
 
 install:: first
-ifeq (Windows,$(findstring Windows,$(OS)))
+ifeq ($(SHLVL),)
 	@cmd /c FOR %f IN ($(INSTALL_OBJS)) DO @COPY %f $(INSTALL_DIR)
 else  # ! Windows
 	@if [ ! -d $(INSTALL_DIR) ]; \

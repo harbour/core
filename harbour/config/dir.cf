@@ -5,7 +5,7 @@
 all : first
 
 first clean install ::
-ifeq (Windows,$(findstring Windows,$(OS)))
+ifeq ($(SHLVL),)
 	@cmd /c FOR /D %d IN ($(DIRS)) DO @$(MAKE) -C %d $@
 else  # ! Windows
 	@for d in $(DIRS); do \

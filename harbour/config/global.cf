@@ -7,7 +7,7 @@ all : first
 GRANDP = ../../
 ARCH = $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
-ifeq (Windows,$(findstring Windows,$(OS)))
+ifeq ($(SHLVL),)
 ARCH_DIR = $(subst /,\\,$(ARCH))\\
 else  # ! Windows
 ARCH_DIR = $(ARCH)/
@@ -16,12 +16,12 @@ endif
 include $(TOP)$(ROOT)config/$(ARCH).cf
 
 dirbase::
-ifeq (Windows,$(findstring Windows,$(OS)))
+ifeq ($(SHLVL),)
 	-$(MD) $(HB_ARCHITECTURE)
 	-$(MD) $(ARCH_DIR) >NUL
 else  # ! Windows
-	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE) ]; \
-	 [ -d $(ARCH_DIR) ] || $(MD) $(ARCH_DIR) ]
+	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
+	 [ -d $(ARCH) ] || $(MD) $(ARCH)
 endif
 
 clean::
