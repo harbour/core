@@ -130,21 +130,53 @@ return oCol
 
 METHOD Stabilize() CLASS TBrowse
 
-   local n, lDisplay := .t.
+   local n, nRow, lDisplay := .t.
+   local nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
+   local nColsWidth := 0  // Total width of visible columns plus ColSep
+   local nColsVisible := 0 // Number of columns that fit on the browse width
+   local lHeaders := .f. // Are there column headers to paint ?
 
-   @ ::nTop, ::nLeft SAY PadC( ::aColumns[ 1 ]:Heading, ::nRight - ::nLeft ) ;
-      COLOR ::ColorSpec
+   // Calculate how many columns fit on the browse width including ColSeps
+   while nColsWidth < nWidth .and. nColsVisible < Len( ::aColumns )
+      nColsWidth += ::aColumns[ ++nColsVisible ]:Width
+      nColsWidth += Len( ::ColSep )
+   end
 
-   for n = 1 to ::nBottom - ::nTop
-      if lDisplay
-         @ ::nTop + n, ::nLeft SAY ;
-            PadC( SubStr( Eval( ::aColumns[ 1 ]:Block ), 1, ::aColumns[ 1 ]:Width ),;
-                  ::nRight - ::nLeft ) ;
-            COLOR ::ColorSpec
-      else
-         @ ::nTop + n, ::nLeft SAY Space( ::nRight - ::nLeft ) ;
-            COLOR ::ColorSpec
+   // Are there any column header to paint ?
+   for n = 1 to Len( ::aColumns )
+      if ! Empty( ::aColumns[ n ]:Heading )
+         lHeaders = .t.
+         exit
       endif
+   next
+
+   if lHeaders
+      SetPos( ::nTop, ::nLeft )
+      DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+      for n = 1 to Len( ::aColumns )
+         DevOut( ::aColumns[ n ]:Heading, ::ColorSpec )
+         if ::ColSep != nil
+            DevOut( ::ColSep, ::ColorSpec )
+         endif
+      next
+      DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+   endif
+
+   for nRow := If( lHeaders, 1, 0 ) to ::nBottom - ::nTop
+      SetPos( ::nTop + nRow, ::nLeft )
+      DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+      for n = 1 to nColsVisible
+         if lDisplay
+            DevOut( PadR( Eval( ::aColumns[ n ]:block ),;
+                    ::aColumns[ n ]:Width ), ::ColorSpec )
+         else
+            DevOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
+         endif
+         if ::ColSep != nil
+            DevOut( ::ColSep, ::ColorSpec )
+         endif
+      next
+      DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
       lDisplay = Eval( ::SkipBlock, 1 ) != 0
    next
 
