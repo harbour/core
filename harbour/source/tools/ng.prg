@@ -55,9 +55,10 @@ CLASS TNortonGuide
    METHOD Close()
    METHOD WriteParBold( cPar )
    METHOD WriteTitle(  cTopic , cTitle )
+
 ENDCLASS
 
-METHOD NEW( cFile ) CLASS TNortonGuide
+METHOD new( cFile ) class TNortonGuide
 
    IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
@@ -66,7 +67,7 @@ METHOD NEW( cFile ) CLASS TNortonGuide
 
 RETURN Self
 
-METHOD WritePar( cPar,lconv ) CLASS TNortonGuide
+METHOD WritePar( cPar,lconv ) class TNortonGuide
    DEFAULT lConv to .T.
    IF lConv
      FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
@@ -74,17 +75,17 @@ METHOD WritePar( cPar,lconv ) CLASS TNortonGuide
      FWRITE( Self:nHandle, cPar  + CRLF )
    ENDIF
 RETURN Self
-METHOD WriteParBox( cPar ) CLASS TNortonGuide
+METHOD WriteParBox( cPar ) class TNortonGuide
      FWRITE( Self:nHandle, cPar   )
 RETURN Self
 
-METHOD WriteParBold( cPar ) CLASS TNortonGuide
+METHOD WriteParBold( cPar ) class TNortonGuide
    Self:WritePar("")
    FWRITE( Self:nHandle, '^b' + HB_OEMTOANSI( cPar ) + '^b^' + CRLF )
    Self:WritePar("")
 RETURN Self
 
-METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
+METHOD WriteTitle( cTopic, cTitle ) class TNortonGuide
 
    LOCAL cTemp
    LOCAL nPos
@@ -98,13 +99,13 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
 
 RETURN Self
 
-METHOD CLOSE() CLASS TNortonGuide
+METHOD CLOSE() class TNortonGuide
 
    FCLOSE( Self:nHandle )
 
 RETURN Self
 
-METHOD WriteLink( cLink ) CLASS TNortonGuide
+METHOD WriteLink( cLink ) class TNortonGuide
 
    FWRITE( Self:nHandle, cLink )
 

@@ -617,12 +617,15 @@ HB_FUNC( DIRECTORY )
                    if( pos )
                       strcpy( filename, ++pos );
                }
-            #elif defined(__BORLANDC__)
+
+            #elif defined(__BORLANDC__) || (__BORLANDC__ >= 1280)
               /* NOTE: _chmod( f, 0 ) => Get attribs
                        _chmod( f, 1, n ) => Set attribs
-                 chmod() though, _will_ change the attributes
-              */
-              attrib = (USHORT)_chmod( fullfile, 0,0 );
+                 chmod() though, _will_ change the attributes */
+               attrib = (USHORT)_rtl_chmod( fullfile, 0,0 );
+            #elif defined(__BORLANDC__)
+               attrib = (USHORT)_chmod( fullfile, 0,0 );
+
             #elif defined(__DJGPP__)
                attrib = (USHORT)_chmod( fullfile, 0 );
             #else

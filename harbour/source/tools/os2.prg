@@ -33,7 +33,7 @@
  *
  */
 
-#define CRLF chr(13)+chr(10)
+#define CRLF hb_osnewline()
 
 #include 'hbclass.ch'
 
@@ -53,10 +53,14 @@ CLASS TOs2
    METHOD WritePar(cPar)
    METHOD WriteLink(cLink)
    METHOD ScanLink(cLink)
+   
+   METHOD WriteJumpLink( cLink,cName,cText )
    METHOD Close()
+   METHOD WriteText(cPar)
    METHOD WriteParBold(cPar)
    METHOD WriteTitle(cTopic, cTitle )
    METHOD DostoOs2Text(cText)
+   METHOD WriteJumpTitle( cTitle, cTopic ) 
 ENDCLASS
 
 METHOD New( cFile ) CLASS TOs2
@@ -84,9 +88,15 @@ RETURN Self
 
 METHOD WritePar( cPar ) CLASS TOs2
 
-   FWRITE( Self:nHandle, ".br"+CRLF+Self:DostoOs2Text( cPar ) + CRLF )
+   FWRITE( Self:nHandle, Self:DostoOs2Text( cPar ) + CRLF )
 
 RETURN Self
+
+method WriteText(cPar) CLASS TOs2
+
+   FWRITE( Self:nHandle, cPar  + CRLF )
+
+Return Self
 
 METHOD WriteParBold( cPar ) CLASS TOs2
 
@@ -167,4 +177,27 @@ METHOD DosToOs2Text(cText) CLASS TOs2
    cReturn := STRTRAN(cReturn,',',"&comma.")
 
 Return cReturn
+
+METHOD WriteJumpTitle( cTitle, cTopic ) class TOs2
+
+   LOCAL cTemp
+   LOCAL nPos
+   LOCAL cWrite
+
+   nPos := AT( "()", cTitle )
+
+   cTopic := ALLTRIM( HB_OEMTOANSI(cTopic ))
+
+   cWrite := ':fn id='+cTopic+'.'
+
+   FWRITE( Self:nHandle, cWrite )
+
+   Self:WriteParBold( cTopic )
+
+RETURN Self
+METHOD WriteJumpLink( cLink,cText ) class TOs2
+
+   FWRITE( Self:nHandle, "       :link refid="+aLLTRIM( HB_OEMTOANSI(cLink) ) +"reftype=fn."+ cLink+":elink." +cText+  CRLF )
+
+RETURN Self
 
