@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef _COLOR_CH
 #define _COLOR_CH
 

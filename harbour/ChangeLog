@@ -1,3 +1,21 @@
+19990803-16:50 GMT+1 Victor Szel <info@szelvesz.hu>
+  * config/win32/gcc.cf
+    config/os2/gcc.cf (not tested)
+    ! Fixed rddtest linking failure, with method by Ryszard
+      (also used in config/dos/djgpp.cf)
+  * make_tpl.bat
+    + C_USR, list of available commands, HB_*_INSTALL.
+  * include/error.ch
+    include/rddsys.ch
+    include/set.ch
+    include/fileio.ch
+    include/color.ch
+    include/setcurs.ch
+    Added a note that these files are also used in C files.
+  * include/inkey.ch
+    + Added missing K_ definitions.
+    * Converted so it can now be used in C.
+
 Tue Aug 03 11:20:17 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/rddapi.h: 

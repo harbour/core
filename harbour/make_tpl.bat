@@ -7,7 +7,23 @@ rem For further information about the GNU make system please
 rem check doc/gmake.txt
 rem ---------------------------------------------------------------
 
+rem ---------------------------------------------------------------
+rem Usage: make_tpl <command>
+rem 
+rem The following commands are currently supported:
+rem  - all (default)
+rem  - clean
+rem  - install
+rem ---------------------------------------------------------------
+
 rem Under OS/2 you may rename this file to have a .CMD extension
+
+rem ---------------------------------------------------------------
+rem Configuration for "install" command:
+
+set HB_BIN_INSTALL=bin\
+set HB_LIB_INSTALL=lib\
+set HB_INC_INSTALL=include\
 
 rem ---------------------------------------------------------------
 rem The following HB_ARCHITECTURE values are currently supported:
@@ -36,6 +52,11 @@ rem    - gcc
 rem    - icc
 
 set HB_COMPILER=djgpp
+
+rem ---------------------------------------------------------------
+rem Fine tuning of C compiler parameters for "all" command:
+
+set C_USR= 
 
 rem ---------------------------------------------------------------
 rem Start the GNU make system

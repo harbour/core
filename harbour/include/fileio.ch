@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* NOTE: This file is also used by C code. */
+
 /*
    Harbour Project source code
 

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef _RDDSYS_CH
 #define _RDDSYS_CH
 

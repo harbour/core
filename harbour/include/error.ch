@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef _ERROR_CH
 #define _ERROR_CH
 

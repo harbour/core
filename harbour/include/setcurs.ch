@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef _SETCURS_CH
 #define _SETCURS_CH
 
