@@ -424,14 +424,20 @@ HB_FUNC( SET )
             hb_retni( hb_conSetCursor( FALSE, 0 ) );
          break;
       case HB_SET_DATEFORMAT :
-         if( hb_set.HB_SET_DATEFORMAT ) hb_retc( hb_set.HB_SET_DATEFORMAT );
-         else hb_retc( "" );
+         if( hb_set.HB_SET_DATEFORMAT )
+            hb_retc( hb_set.HB_SET_DATEFORMAT );
+         else
+            hb_retc( "" );
+
          if( args > 1 )
          {
             BOOL flag = FALSE;
-            int ch, i, year = 0;
+            unsigned int i;
+            int ch, year = 0;
+
             hb_set.HB_SET_DATEFORMAT = set_string( pArg2, hb_set.HB_SET_DATEFORMAT );
-            for( i = 0; i < strlen(hb_set.HB_SET_DATEFORMAT); i++ )
+
+            for( i = 0; i < strlen( hb_set.HB_SET_DATEFORMAT ); i++ )
             {
                ch = hb_set.HB_SET_DATEFORMAT[i];
                if( !flag && ( ch == 'Y' || ch == 'y' ) )
@@ -439,10 +445,9 @@ HB_FUNC( SET )
                else if( year )
                   flag = TRUE; /* Indicate non-consecutive. */
             }
-            if( year >= 4 )
-               flag = TRUE;
-            else
-               flag = FALSE;
+
+            flag = ( year >= 4 );
+
             if( flag != hb_set.hb_set_century )
             {
                /* CENTURY is not controlled directly by SET, so there is no

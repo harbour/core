@@ -436,7 +436,7 @@ ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr )
 BOOL hb_compExprCheckMacroVar( char * szText )
 {
    char * pTmp = szText;
-   BOOL bTextSubst = FALSE;
+   BOOL bTextSubst;
    BOOL bMacroText = FALSE;
 
    while( ( pTmp = strchr( pTmp, '&' ) ) != NULL )

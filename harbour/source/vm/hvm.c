@@ -3170,7 +3170,7 @@ void hb_vmSend( USHORT uiParams )
    {
 
       BOOL lPopSuper = FALSE ;
-      PHB_BASEARRAY pSelfBase = NULL;
+      PHB_BASEARRAY pSelfBase;
       USHORT uiClass;
 
       if( ! ( pSym == &( hb_symEval ) && HB_IS_BLOCK( pSelf ) ) )
@@ -3186,7 +3186,7 @@ void hb_vmSend( USHORT uiParams )
               /*
               printf( "\n VmSend Method: %s \n", pSym->szName );
               */
-              uiClass=pSelfBase->uiClass;
+              uiClass = pSelfBase->uiClass;
 
               pSelfBase->uiClass = pSelfBase->uiPrevCls;
               pSelfBase->uiPrevCls = 0 ;

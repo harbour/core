@@ -65,18 +65,20 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+
 #if defined(HB_OS_WIN_32) && !defined(__RSXNT__) && !defined(__CYGWIN__)
-#include <stdio.h>
-#include <malloc.h>
-#include <winspool.h>
-BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize);
-BOOL IsPrinterError(HANDLE hPrinter);
-BOOL GetJobs(HANDLE hPrinter,
-                JOB_INFO_2 **ppJobInfo,
-                int *pcJobs,
-                DWORD *pStatus) ;
-#define MAXBUFFERSIZE 250
+   #include <stdio.h>
+   #include <malloc.h>
+   #include <winspool.h>
+   BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize);
+   BOOL IsPrinterError(HANDLE hPrinter);
+   BOOL GetJobs(HANDLE hPrinter,
+                   JOB_INFO_2 **ppJobInfo,
+                   int *pcJobs,
+                   DWORD *pStatus) ;
+   #define MAXBUFFERSIZE 250
 #endif
+
 /* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
          by Xbase++. [vszakats] */
 
@@ -84,7 +86,7 @@ HB_FUNC( ISPRINTER )
 {
    char * pszDOSPort = ( ISCHAR( 1 ) && hb_parclen( 1 ) >= 4 ) ? hb_parc( 1 ) : "LPT1";
    USHORT uiPort = atoi( pszDOSPort + 3 );
-   BOOL bIsPrinter = FALSE;
+   BOOL bIsPrinter;
 
 #if defined(HB_OS_DOS)
 
@@ -106,16 +108,20 @@ HB_FUNC( ISPRINTER )
       /* TODO: Proper COM port checking */
       bIsPrinter = TRUE;
    }
-#elif defined(HB_OS_WIN_32) && !defined(__RSXNT__)
-{
-   char DefaultPrinter[80];
-   DWORD pdwBufferSize=80;
-   HANDLE hPrinter;
-   DPGetDefaultPrinter((LPTSTR)&DefaultPrinter,&pdwBufferSize);
-   OpenPrinter(DefaultPrinter, &hPrinter, NULL);
-   bIsPrinter=!IsPrinterError(hPrinter);
 
-}
+#elif defined(HB_OS_WIN_32) && !defined(__RSXNT__)
+
+   {
+      char DefaultPrinter[ 80 ];
+      DWORD pdwBufferSize = 80;
+      HANDLE hPrinter;
+
+      DPGetDefaultPrinter( ( LPTSTR ) &DefaultPrinter, &pdwBufferSize);
+      OpenPrinter( DefaultPrinter, &hPrinter, NULL );
+      bIsPrinter = ! IsPrinterError( hPrinter );
+
+      HB_SYMBOL_UNUSED( uiPort );
+   }
 
 #else
 
@@ -133,13 +139,18 @@ HB_FUNC( ISPRINTER )
       bIsPrinter = ( fhnd != FS_ERROR );
       hb_fsClose( fhnd );
    }
+   else
+      bIsPrinter = FALSE;
 
 #endif
 
    hb_retl( bIsPrinter );
 }
+
 /** The code below does the check for the printer */
+
 #if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
+
 BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 {
   BOOL bFlag;
@@ -149,27 +160,27 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
   DWORD dwNeeded = 0;
   DWORD dwReturned = 0;
 
-  // What version of Windows are you running?
+  /* What version of Windows are you running? */
   osv.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
   GetVersionEx(&osv);
 
-  // If Windows 95 or 98, use EnumPrinters...
+  /* If Windows 95 or 98, use EnumPrinters... */
   if (osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
   {
-    // The first EnumPrinters() tells you how big our buffer should
-    // be in order to hold ALL of PRINTER_INFO_2. Note that this will
-    // usually return FALSE. This only means that the buffer (the 4th
-    // parameter) was not filled in. You don't want it filled in here...
+    /* The first EnumPrinters() tells you how big our buffer should
+       be in order to hold ALL of PRINTER_INFO_2. Note that this will
+       usually return FALSE. This only means that the buffer (the 4th
+       parameter) was not filled in. You don't want it filled in here... */
     EnumPrinters(PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned);
     if (dwNeeded == 0)
       return FALSE;
 
-    // Allocate enough space for PRINTER_INFO_2...
+    /* Allocate enough space for PRINTER_INFO_2... */
     ppi2 = (PRINTER_INFO_2 *)GlobalAlloc(GPTR, dwNeeded);
     if (!ppi2)
       return FALSE;
 
-    // The second EnumPrinters() will fill in all the current information...
+    /* The second EnumPrinters() will fill in all the current information... */
     bFlag = EnumPrinters(PRINTER_ENUM_DEFAULT, NULL, 2, (LPBYTE)ppi2, dwNeeded, &dwNeeded, &dwReturned);
     if (!bFlag)
     {
@@ -177,7 +188,7 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
       return FALSE;
     }
 
-    // If given buffer too small, set required size and fail...
+    /* If given buffer too small, set required size and fail... */
     if ((DWORD)lstrlen(ppi2->pPrinterName) >= *pdwBufferSize)
     {
       *pdwBufferSize = (DWORD)lstrlen(ppi2->pPrinterName) + 1;
@@ -185,52 +196,52 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
       return FALSE;
     }
 
-    // Copy printer name into passed-in buffer...
+    /* Copy printer name into passed-in buffer... */
     lstrcpy(pPrinterName, ppi2->pPrinterName);
 
-    // Set buffer size parameter to min required buffer size...
+    /* Set buffer size parameter to min required buffer size... */
     *pdwBufferSize = (DWORD)lstrlen(ppi2->pPrinterName) + 1;
   }
 
-  // If Windows NT, use the GetDefaultPrinter API for Windows 2000,
-  // or GetProfileString for version 4.0 and earlier...
+  /* If Windows NT, use the GetDefaultPrinter API for Windows 2000,
+     or GetProfileString for version 4.0 and earlier... */
   else if (osv.dwPlatformId == VER_PLATFORM_WIN32_NT)
   {
 #if(WINVER >= 0x0500)
-    if (osv.dwMajorVersion >= 5) // Windows 2000 or later
+    if (osv.dwMajorVersion >= 5) /* Windows 2000 or later */
     {
       bFlag = GetDefaultPrinter(pPrinterName, pdwBufferSize);
       if (!bFlag)
         return FALSE;
     }
 
-    else // NT4.0 or earlier
+    else /* NT4.0 or earlier */
 #endif
     {
-      // Retrieve the default string from Win.ini (the registry).
-      // String will be in form "printername,drivername,portname".
+      /* Retrieve the default string from Win.ini (the registry).
+         String will be in form "printername,drivername,portname". */
       if (GetProfileString("windows", "device", ",,,", cBuffer, MAXBUFFERSIZE) <= 0)
         return FALSE;
 
-      // Printer name precedes first "," character...
+      /* Printer name precedes first "," character... */
       strtok(cBuffer, ",");
 
-      // If given buffer too small, set required size and fail...
+      /* If given buffer too small, set required size and fail... */
       if ((DWORD)lstrlen(cBuffer) >= *pdwBufferSize)
       {
         *pdwBufferSize = (DWORD)lstrlen(cBuffer) + 1;
         return FALSE;
       }
 
-      // Copy printer name into passed-in buffer...
+      /* Copy printer name into passed-in buffer... */
       lstrcpy(pPrinterName, cBuffer);
 
-      // Set buffer size parameter to min required buffer size...
+      /* Set buffer size parameter to min required buffer size... */
       *pdwBufferSize = (DWORD)lstrlen(cBuffer) + 1;
     }
   }
 
-  // Cleanup...
+  /* Cleanup... */
   if (ppi2)
     GlobalFree(ppi2);
 
@@ -313,8 +324,8 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
    DWORD               cByteNeeded,
                         nReturned,
                         cByteUsed;
-    JOB_INFO_2          *pJobStorage = NULL;
-    PRINTER_INFO_2       *pPrinterInfo = NULL;
+    JOB_INFO_2          *pJobStorage;
+    PRINTER_INFO_2       *pPrinterInfo;
 
    /* Get the buffer size needed. */
        if (!GetPrinter(hPrinter, 2, NULL, 0, &cByteNeeded))
@@ -337,7 +348,6 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
        {
            /* Failure to access the printer. */
            free(pPrinterInfo);
-           pPrinterInfo = NULL;
            return FALSE;
        }
 
@@ -354,7 +364,6 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
            if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
            {
                free(pPrinterInfo);
-               pPrinterInfo = NULL;
                return FALSE;
            }
        }
@@ -364,7 +373,6 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
        {
            /* Failure to allocate Job storage space. */
            free(pPrinterInfo);
-           pPrinterInfo = NULL;
            return FALSE;
        }
 
@@ -382,8 +390,6 @@ BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
        {
            free(pPrinterInfo);
            free(pJobStorage);
-           pJobStorage = NULL;
-           pPrinterInfo = NULL;
            return FALSE;
        }
 

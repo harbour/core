@@ -1,3 +1,15 @@
+2001-11-04 18:14 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/hbexpra.c
+   * include/hbexprc.c
+   * source/rtl/set.c
+   * source/rtl/isprint.c
+   * source/vm/classes.c
+   * source/vm/hvm.c
+     ! Fixed BCC551 warnings. (One more warning is left, due to some 
+       define messes)
+     ! Non-ansi comments fixed.
+
 2001-11-04 17:25 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/vm/classes.c
      __ClsAddMsg() case HB_OO_MSG_ONERROR modifed to use hb_parnl( 3 )

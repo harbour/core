@@ -371,7 +371,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
    char * szCallerNameMsg;
    char * szCallerNameObject;
    char * szSelfNameMsg;
-   char * szSelfNameObject;
+/* char * szSelfNameObject; */
    char * szSelfNameRealClass;
 
    if ( (( uiScope & HB_OO_CLSTP_PROTECTED ) ) ||
@@ -380,7 +380,7 @@ void hb_clsScope( PHB_ITEM pObject, PMETHOD pMethod )
       )
     {
 
-      szSelfNameObject    = hb_objGetClsName( pObject );
+    /*szSelfNameObject    = hb_objGetClsName( pObject );*/
       szSelfNameMsg       = pMessage->pSymbol->szName  ;
       szSelfNameRealClass = hb_objGetRealClsName( pObject, pMessage->pSymbol->szName );
 

@@ -491,18 +491,20 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             pVar = pParms->value.asList.pExprList->pNext;
             if( pVar->ExprType == HB_ET_STRING )
             {
-               USHORT i = 0;
+               ULONG i = 0;
                char *szVar = pVar->value.asString.string;
 
                /* NOTE: Clipper strips a string at the first '[' character too
                 */
                while( ++i < pVar->ulLength )
+               {
                   if( szVar[ i ] == '[' )
                   {
                      szVar[ i ] = 0;
                      pVar->ulLength = i;
                      break;
                   }
+               }
             }
          }
          else if( pArg->ExprType == HB_ET_MACRO )
