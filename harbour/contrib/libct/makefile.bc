@@ -274,7 +274,7 @@ $(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\ctcrypt.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\ctcrypt.obj : $(TOOLS_DIR)\exponent.c
+$(OBJ_DIR)\exponent.obj : $(TOOLS_DIR)\exponent.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
