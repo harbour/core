@@ -54,16 +54,19 @@
 
 
 #include "hbclass.ch"
+#include "os2pm.ch"
+
 
 CLASS TMenu
 
-   DATA   nHandle
-   DATA   aItems
+   DATA   nHandle          // Handle of this SUBMENU (be it top level or drop down)
+   DATA   aItems           // Items inside this menu
 
    METHOD New( oForm )
    METHOD Add( oMenuItem )
 
 ENDCLASS
+
 
 METHOD New( oForm ) CLASS TMenu
 
@@ -72,11 +75,14 @@ METHOD New( oForm ) CLASS TMenu
 
 return Self
 
+
 METHOD Add( oMenuItem ) CLASS TMenu
 
-   WinAddMenuItem( ::nHandle, oMenuItem:cCaption, Len( ::aItems ),;
-                   nil, oMenuItem:nId, oMenuItem:lActive )
+   WinAddMenuItem( ::nHandle, oMenuItem:cCaption, MIT_END,;
+                   oMenuItem:nHandle, oMenuItem:nId, oMenuItem:lEnabled )
 
    AAdd( ::aItems, oMenuItem )
 
 return nil
+
+

@@ -60,14 +60,14 @@
 CLASS TForm
 
    DATA      hWnd
-   DATA     oMainMenu
+   DATA      oMainMenu
 
    CLASSDATA lRegistered
 
    METHOD   New()
    METHOD   ShowModal()
-   METHOD   cCaption() INLINE WinGetText( ::hWnd )
 
+   METHOD   cCaption() INLINE WinGetText( ::hWnd )
    METHOD   _cCaption( cNewCaption ) INLINE ;
                WinSetWindowText( ::hWnd, cNewCaption )
 

@@ -56,9 +56,8 @@
 
 #define INCL_BASE
 #define INCL_PM
-
-
 #include <os2.h>
+
 #include "hbapi.h"
 
 
@@ -68,12 +67,32 @@ HAB hb_pm_GetHab( void );
 HB_FUNC( WINREGISTERCLASS )
 {
 
-   hb_retl( WinRegisterClass( hb_pm_GetHab(),   /* anchor block handle */
-                              hb_parc( 1 ),     /* Class Name */
-                              ( PFNWP ) WinDefWindowProc,  /* default Class procedure */
-                              hb_parnl( 2 ),     /* style */
-                              hb_parnl( 3 ) ) ); /* extra bytes */
+   hb_retl( WinRegisterClass( hb_pm_GetHab(),               /* anchor block handle */
+                              hb_parc( 1 ),                 /* Class Name */
+                              ( PFNWP ) WinDefWindowProc,   /* default Class procedure */
+                              hb_parnl( 2 ),                /* style */
+                              hb_parnl( 3 ) ) );            /* extra bytes */
 }
+
+
+HB_FUNC(WINCREATEWINDOW)
+{
+   hb_retnl((LONG) WinCreateWindow( (HWND) hb_parnl(1),               /* hWnd parent  */
+                                    (PCSZ) hb_parc(2),                /* pszClass     */
+                                    (PCSZ) hb_parc(3),                /* pszName      */
+                                    (ULONG) hb_parnl(4),              /* flStyle      */
+                                    (LONG) hb_parnl(5),               /* x            */
+                                    (LONG) hb_parnl(6),               /* y            */
+                                    (LONG) hb_parnl(7),               /* cx           */
+                                    (LONG) hb_parnl(8),               /* cy           */
+                                    (HWND) hb_parnl(9),               /* hwndOwner    */
+                                    (HWND) hb_parnl(10),              /* hwndInsertBehind */
+                                    (ULONG) hb_parnl(11),             /* id           */
+                                    (PVOID) hb_parnl(12),              /* pCtlData,    */
+                                    (PVOID) hb_parnl(13)));            /* pPresParams  */
+
+}
+
 
 HB_FUNC( WINCREATESTDWINDOW )
 {
@@ -82,17 +101,18 @@ HB_FUNC( WINCREATESTDWINDOW )
 
    hb_retnl( ( LONG ) hWndFrame =
              WinCreateStdWindow( ( HWND ) hb_parnl( 1 ), /* hWndParent */
-                                 hb_parnl( 2 ), /* style */
-                                 &lFrame,       /* lFrame */
-                                 hb_parc( 4 ),  /* cClassName */
-                                 hb_parc( 5 ),  /* cCaption */
-                                 hb_parnl( 6 ), /* lStyleClient */
-                                 hb_parnl( 7 ), /* hModule */
-                                 hb_parnl( 8 ), /* nId */
-                       ( PHWND ) &hWndClient ) ); /* Window client handle */
+                                 hb_parnl( 2 ),          /* style */
+                                 &lFrame,                /* lFrame */
+                                 hb_parc( 4 ),           /* cClassName */
+                                 hb_parc( 5 ),           /* cCaption */
+                                 hb_parnl( 6 ),          /* lStyleClient */
+                                 hb_parnl( 7 ),          /* hModule */
+                                 hb_parnl( 8 ),          /* nId */
+                       ( PHWND ) &hWndClient ) );        /* Window client handle */
 
    hb_stornl( ( LONG ) hWndClient, 9 );
 }
+
 
 HB_FUNC( HB_PM_SHOWMODAL )
 {
@@ -105,8 +125,8 @@ HB_FUNC( HB_PM_SHOWMODAL )
    }
 }
 
-/* nOr() is a very used function */
 
+/* nOr() is a very used function */
 HB_FUNC( NOR )
 {
    LONG lRet = 0;
@@ -161,7 +181,8 @@ HB_FUNC( GETHAB )
 HB_FUNC( WINCREATEMENU )
 {
    hb_retnl( ( LONG ) WinCreateMenu( ( HWND ) hb_parnl( 1 ),
-             ( PVOID ) hb_parnl( 2 ) ) );
+             (PVOID) NULL /*( PVOID ) hb_parnl( 2 )*/ ) );
+
 }
 
 

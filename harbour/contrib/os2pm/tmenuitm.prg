@@ -55,26 +55,50 @@
 
 #include "common.ch"
 #include "hbclass.ch"
+#include "os2pm.ch"
+
 
 CLASS TMenuItem
 
-   DATA   cCaption
-   DATA   cAction
-   DATA   nId
-   DATA   lActive
+   DATA   cCaption         // Specifies the text of the menu item
+   DATA   OnClick          // A character description of the method to invoke
+   DATA   nId              // Command value to send to the container form
+   DATA   lEnabled         // Specifies whether the menu item is enabled
 
-   CLASSDATA nIdStart
+   DATA   aItems           // Contains the menu items in the submenu of the menu item
+   DATA   oParent          // Identifies the parent menu item of this menu item
+   DATA   nHandle          // The handle of _this_ menu item
 
-   METHOD New()
+   CLASSDATA nIdStart      // start value for commands value to assign to menu items
+
+   METHOD New( oOwner )    // Creates a new menu item
+   METHOD Add( oMenuItem ) // Adds a new drop down menu item
 
 ENDCLASS
 
-METHOD New() CLASS TMenuItem
+
+METHOD New( oOwner ) CLASS TMenuItem
 
    DEFAULT ::nIdStart TO 110
 
    ::cCaption = ""
    ::nId      = ::nIdStart++
-   ::lActive  = .t.
+   ::lEnabled = .t.
+   ::oParent  = oOwner
+   ::nHandle := WinCreateMenu( ::oParent:nHandle )
+   ::aItems  := {}
 
 return Self
+
+
+METHOD Add( oMenuItem ) CLASS TMenuItem
+
+   WinAddMenuItem( ::nHandle, oMenuItem:cCaption, MIT_END,;
+                   nil, oMenuItem:nId, oMenuItem:lEnabled )
+
+   AAdd( ::aItems, oMenuItem )
+
+return nil
+
+
+
