@@ -840,8 +840,8 @@ static HB_GENC_FUNC( hb_p_macrosymbol )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROSYMBOL, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-   return 2;
+   fprintf( cargo->yyc, "\tHB_P_MACROSYMBOL,\n" );
+   return 1;
 }
 
 static HB_GENC_FUNC( hb_p_macrotext )
@@ -849,8 +849,8 @@ static HB_GENC_FUNC( hb_p_macrotext )
    HB_SYMBOL_UNUSED( pFunc );
    HB_SYMBOL_UNUSED( lPCodePos );
 
-   fprintf( cargo->yyc, "\tHB_P_MACROTEXT, %i,\n", pFunc->pCode[ lPCodePos + 1 ] );
-   return 2;
+   fprintf( cargo->yyc, "\tHB_P_MACROTEXT,\n" );
+   return 1;
 }
 
 static HB_GENC_FUNC( hb_p_message )

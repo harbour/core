@@ -88,8 +88,8 @@ static BYTE s_pcode_len[] = {
    2,        /* HB_P_MACROPUSHINDEX,       */
    2,        /* HB_P_MACROPUSHPARE,        */
    2,        /* HB_P_MACROPUSHALIASED,     */
-   2,        /* HB_P_MACROSYMBOL,          */
-   2,        /* HB_P_MACROTEXT,            */
+   1,        /* HB_P_MACROSYMBOL,          */
+   1,        /* HB_P_MACROTEXT,            */
    3,        /* HB_P_MESSAGE,              */
    1,        /* HB_P_MINUS,                */
    1,        /* HB_P_MODULUS,              */

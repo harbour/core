@@ -1074,6 +1074,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
              */
             if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
                HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROSYMBOL );
+               
             else if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
             {
                if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST )
@@ -1124,7 +1125,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                }
             }
 
-            if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL ||
+            if( ( pSelf->value.asMacro.SubType != HB_ET_MACRO_SYMBOL ) &&
                 ( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED && ! ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ARGLIST ) ) )
             {
                /* Always add add byte to pcode indicating requested macro compiler flag. */
