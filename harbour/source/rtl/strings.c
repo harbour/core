@@ -51,7 +51,6 @@
  */
 
 #include <ctype.h>
-#include <math.h>
 
 #include "extend.h"
 #include "dates.h"
@@ -63,21 +62,6 @@
                           ( c ) == HB_CHAR_LF || \
                           ( c ) == HB_CHAR_CR || \
                           ( c ) == ' ' )
-
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-
-#include "init.h"
-
-static double s_dInfinity = 0;
-
-HB_CALL_ON_STARTUP_BEGIN( Strings_InitInfinity )
-   s_dInfinity = -log( 0 );
-HB_CALL_ON_STARTUP_END( Strings_InitInfinity )
-#if ! defined(__GNUC__)
-#pragma startup Strings_InitInfinity
-#endif
-
-#endif
 
 BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 {

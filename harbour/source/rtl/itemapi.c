@@ -64,6 +64,8 @@
  *
  */
 
+#include <math.h> /* For log() */
+
 #include "extend.h"
 #include "itemapi.h"
 #include "ctoharb.h"
@@ -1147,13 +1149,19 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
             double dNumber = hb_itemGetND( pNumber );
+            static double s_dInfinity = 0;
+            static double s_bInfinityInit = FALSE;
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+            if( ! s_bInfinityInit )
+            {
+               s_dInfinity = -log( 0 );
+               s_bInfinityInit = TRUE;
+            }
+
             if( pNumber->item.asDouble.length == 99 || dNumber == s_dInfinity || dNumber == -s_dInfinity )
                /* Numeric overflow */
                iBytes = iSize + 1;
             else
-#endif
             {
                if( IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
                   dNumber = hb_numRound( dNumber, iDec );
