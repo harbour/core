@@ -1714,6 +1714,7 @@ static ERRCODE dbfZap( AREAP pArea )
 {
    PHB_ITEM pError;
    DBOPENINFO pInfo;
+   ULONG ulRecCount;
 
    if( !pArea->lpExtendInfo->fExclusive )
    {
@@ -1729,10 +1730,25 @@ static ERRCODE dbfZap( AREAP pArea )
    if( SELF_GOCOLD( pArea ) == FAILURE || pArea->lpExtendInfo->fReadOnly )
       return FAILURE;
 
-   /*
-   TODO: truncate dbf and memo files.
-   */
+   /* Test if can write into file */
+   SELF_RECCOUNT( pArea, &ulRecCount );
+   if( !hb_dbfUpdateHeader( pArea, ulRecCount ) )
+      return FAILURE;
 
+   hb_dbfUnLockAllRecords( pArea );
+   hb_fsClose( pArea->lpFileInfo->hFile );
+   pInfo.abName = ( BYTE * ) pArea->lpFileInfo->szFileName;
+   SELF_CREATE( pArea, &pInfo );
+   hb_fsClose( pArea->lpFileInfo->hFile );
+   pArea->lpFileInfo->hFile = hb_fsOpen( pInfo.abName, FO_READWRITE | FO_EXCLUSIVE );
+   if( pArea->lpExtendInfo->fHasMemo )
+   {
+      hb_fsClose( pArea->lpFileInfo->pNext->hFile );
+      pInfo.abName = ( BYTE * ) pArea->lpFileInfo->pNext->szFileName;
+      SELF_CREATEMEMFILE( pArea, &pInfo );
+      hb_fsClose( pArea->lpFileInfo->pNext->hFile );
+      pArea->lpFileInfo->pNext->hFile = hb_fsOpen( pInfo.abName, FO_READWRITE | FO_EXCLUSIVE );
+   }
    return SELF_GOTOP( pArea );
 }
 

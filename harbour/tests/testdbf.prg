@@ -25,8 +25,8 @@ function main()
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
    MYALIAS->( dbAppend() )
-   MYALIAS->MEMO1 := "111"
-   MYALIAS->MEMO2 := "222"
+   MYALIAS->MEMO1 := "This is a test for field MEMO1."
+   MYALIAS->MEMO2 := "This is a test for field MEMO2."
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
    MYALIAS->NUMERIC := 90
@@ -34,11 +34,45 @@ function main()
    ? "[" + Str( MYALIAS->DOUBLE ) + "]"
    ? "[" + Str( MYALIAS->NUMERIC ) + "]"
 
-   dbCloseAll()
-
    ? ""
    ? "Press any key..."
    InKey( 0 )
+
+   ? ""
+   ? "Append 50 records with memos..."
+   for nI := 1 to 50
+      MYALIAS->( dbAppend() )
+      MYALIAS->MEMO1 := "This is a very long string. " + ;
+                        "This may seem silly however strings like this are still " + ;
+                        "used. Not by good programmers though, but I've seen " + ;
+                        "stuff like this used for Copyright messages and other " + ;
+                        "long text. What is the point to all of this you'd say. " + ;
+                        "Well I am coming to the point right now, the constant " + ;
+                        "string is limited to 256 characters and this string is " + ;
+                        "a lot bigger. Do you get my drift ? If there is somebody " + ;
+                        "who has read this line upto the very end: Esto es un " + ;
+                        "sombrero grande rid¡culo." + Chr( 13 ) + Chr( 10 ) + ;
+                        "/" + Chr( 13 ) + Chr( 10 ) + "[;-)" + Chr( 13 ) + Chr( 10 )+ ;
+                        "\"
+   next
+   dbCommit()
+
+   ? "Records before ZAP:", MYALIAS->( LastRec() )
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[1][2], ;
+      Directory( "testdbf.fpt" )[1][2]
+   MYALIAS->( __dbZap() )
+   dbCommit()
+   ? "Records after ZAP:", MYALIAS->( LastRec() )
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[1][2], ;
+      Directory( "testdbf.fpt" )[1][2]
+   ? "Value of fields MEMO1, MEMO2, DOUBLE and NUMERIC:"
+   ? "[" + MYALIAS->MEMO1 + "]"
+   ? "[" + MYALIAS->MEMO2 + "]"
+   ? "[" + Str( MYALIAS->DOUBLE ) + "]"
+   ? "[" + Str( MYALIAS->NUMERIC ) + "]"
+   ? "Press any key..."
+   InKey( 0 )
+   dbCloseAll()
 
    dbCreate( "testdbf", aStruct, "DBFCDX", .t., "MYALIAS" )
 

@@ -1,3 +1,8 @@
+19991026-12:49 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbf1.c
+    tests/testdbf.prg
+    * __dbZap() function finished. Test added for this function.
+
 19991026-11:35 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/tget.prg
     % New() will evaluate the setget only once instead of three times.
