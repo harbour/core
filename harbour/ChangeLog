@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-05-15 22:25 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+  * contrib/mysql/mysql.c
+    ! Fixed an bug on SQLFETCHR() when the select command is used with an empty table
+
+2002-05-15 19:26 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rdd_ads/ads1.c
+    ! fixed a bug in adsSetScope() for date scopes, changes was posted
+      by Carlos Mora.
   * contrib/rdd_ads/adsmgmt.c
     ! UINT, which is not defined in gcc system, is changed to unsigned int,
       fixed one warning
