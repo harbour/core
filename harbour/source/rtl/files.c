@@ -5,7 +5,7 @@
 #include <extend.h>
 #include <string.h>
 
-#if defined(__GNUC__) && !defined(__DJGPP__)
+#if defined(__CYGNUS__)
   #include <mingw32/share.h>
 #endif
 

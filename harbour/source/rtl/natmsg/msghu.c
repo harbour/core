@@ -6,7 +6,7 @@
 /* Codepage: 852 */
 
 /* TODO: Decide which codepage to use, and how to implement the whole
-/*       codepage issue */
+         codepage issue */
 
 char *hb_monthsname[ 12 ] =
 {

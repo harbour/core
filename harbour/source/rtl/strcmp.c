@@ -45,10 +45,12 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    else
    {
       if( lLenFirst != lLenSecond )     /* Both empty ?                 */
+      {
          if( hb_set.HB_SET_EXACT || bForceExact )
             iRet = (lLenFirst < lLenSecond) ? -1 : 1;
          else
             iRet = (lLenSecond == 0) ? 0 : -1;
+      }
       else
          iRet = 0;                      /* Both empty => Equal !        */
    }
