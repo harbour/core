@@ -45,42 +45,41 @@
  * ---------------------
  *
  *    V1.00 
- *    1/05/2000 Initial Version. Based on Leo Letendre FT_DOC
+ *    2000/01/05 Initial Version. Based on Leo Letendre FT_DOC
  *
- *    1/06/2000 Added the ProccAlso Function
+ *    2000/01/06 Added the ProccAlso Function
  *
- *    1/08/2000  Fixed the Line between the Title and the Text
+ *    2000/01/08 Fixed the Line between the Title and the Text
  *               Functions Description is now in font Arial size 12
  *    V1.01
- *    1/09/2000  Added RTF Source output Format
+ *    2000/01/09 Added RTF Source output Format
  *
- *    1/11/2000  Remove the code to add the Author name and Source file
- *                Name to the output file.
+ *    2000/01/11 Remove the code to add the Author name and Source file
+ *               Name to the output file.
  *
- *     V1.02
- *    1/12/2000  Added suport for WWW output Format
- *              Striped out the "<" and ">" delimeter for WWW outPut,
- *              since the "<>" are HTML Command delimeters
- *              Output files names are in lower case to Linux Compatibility
+ *    V1.02
+ *    2000/01/12 Added suport for WWW output Format
+ *               Striped out the "<" and ">" delimeter for WWW outPut,
+ *               since the "<>" are HTML Command delimeters
+ *               Output files names are in lower case to Linux Compatibility
  *
- *    1/13/2000  Added the link for the  HARBOUR GPL LICENSE
- *    1/14/2000  Fixed a bug on generating the HTML file
- *    1/15/2000  Strip out the  for Norton guides controls characters
+ *    2000/01/13 Added the link for the  HARBOUR GPL LICENSE
+ *    2000/01/14 Fixed a bug on generating the HTML file
+ *    2000/01/15 Strip out the  for Norton guides controls characters
  *               when generating HTML and RTF output
  *
  *    V1.03
- *    1/16/2000  Added Code to generate Norton Guide Source code
+ *    2000/01/16 Added Code to generate Norton Guide Source code
  *
  *    V1.04
- *    1/17/2000  Added Code to generate TROFF files 
- *
- *    1/18/2000  Added Cleanup procedure when Generating Norton Guide
+ *    2000/01/17 Added Code to generate TROFF files 
+ *    2000/01/18 Added Cleanup procedure when Generating Norton Guide
  *               
  *    V1.05
- *    1/22/2000 Added Code to generate OS2 IPF files
+ *    2000/01/22 Added Code to generate OS2 IPF files
  *
  *    V1.06
- *    1/25/2000 Fixed some error that was not generating a valid RTF File
+ *    2000/01/25 Fixed some error that was not generating a valid RTF File
  *    Removed Call TO HB_OEMTOANSI() on the rountines to generate the .Ngi
  *    and Rtf files.
  *    Added support to generate the Docs from .Txt files, See doc\Subcodes.txt
@@ -167,7 +166,7 @@ STATIC theHandle
 FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    //  LOCAL variables:
-   LOCAL aExtensions := { "*.PRG", "*.C", "*.ASM", "*.CH" , "*.TXT" }
+   LOCAL aExtensions := { "*.prg", "*.c", "*.asm", "*.ch" , "*.txt" }
    LOCAL i
    LOCAL j
    LOCAL nItem
@@ -189,8 +188,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    // nSec1=SECONDS()
    //  Delete log file if present
 
-   IF FILE( "DOCERR.LOG" )
-      DELETE FILE "DOCERR.LOG"
+   IF FILE( "HBDOC.LOG" )
+      DELETE FILE "HBDOC.LOG"
    ENDIF
 
    //  See if flag is there
@@ -226,7 +225,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Get the linkfile name and get the info in it
 
    IF cLinkName = NIL
-      ? "Harbour Doc Extractor"
+      ?? "Harbour Doc Extractor"
       ? "Copyright 1999-2000, http://www.harbour-project.org"
       ? ""
       ? "Syntax:  hbdoc [options] <linkname> [<ifile>]"
@@ -245,7 +244,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       ? "Notes:  - Only one option can be specified at a time."
       ? "        - <linkname> is the name of the Norton Guide Link file."
       ? "        - <iFile> is a file containing a list of files to process"
-      ? "          otherwise *.prg, *.c, *.asm and *.ch are used."
+      ? "          otherwise *.prg, *.c, *.asm, *.ch and *.txt are used."
       RETURN NIL
    ENDIF
 
@@ -1257,7 +1256,7 @@ RETURN aDirList
 *+
 STATIC FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
 
-   //  This routine will send error messages to the error log - DOCERR.LOG
+   //  This routine will send error messages to the error log - HBDOC.LOG
    //
    //  Calling parameters: cDesc - Description of info being written
    //                      cBadLine - The offending line - IF NIL then just
@@ -1271,7 +1270,7 @@ STATIC FUNCTION write_error( cDescrip, cBadLine, nLineCnt, nMax, cFile )
    //  Entry point
    //
    //  Point output to the log file
-   SET ALTERNATE TO "DOCERR.LOG" ADDITIVE
+   SET ALTERNATE TO "HBDOC.LOG" ADDITIVE
    SET CONSOLE OFF
    SET ALTERNATE ON
 
