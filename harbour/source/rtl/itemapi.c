@@ -4,7 +4,7 @@
 
 /*
    Harbour Project source code
-   
+
    The Item API
 
    Copyright 1999  Antonio Linares <alinares@fivetech.com>
@@ -42,6 +42,7 @@
       hb_itemReturnPtr()
       hb_itemDo() ( based on HB_DO() by Ryszard Glab )
       hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
+      hb_itemPutDL()
       hb_itemPutNI()
       hb_itemGetNI()
       hb_itemGetCPtr()
@@ -559,6 +560,19 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 
    pItem->type = IT_DATE;
    pItem->item.asDate.value = hb_dateEncStr( szDate );
+
+   return pItem;
+}
+
+PHB_ITEM hb_itemPutDL( PHB_ITEM pItem, long lJulian )
+{
+   if( pItem )
+      hb_itemClear( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = IT_DATE;
+   pItem->item.asDate.value = lJulian;
 
    return pItem;
 }

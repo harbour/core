@@ -9,9 +9,15 @@ STATIC bBlock2 := {|| cMyPubVar }
 
 FUNCTION Main()
 
-   ? "This is a compiler test, so if you see this, the test was successful."
+   PUBLIC cMyPubVar := "Printed from a PUBLIC var from a codeblock assigned to a static variable."
+
+   Eval( bBlock1 )
+   ? Eval( bBlock2 )
 
    RETURN NIL
 
 FUNCTION Hello()
+
+   ? "Printed from a codeblock assigned to a static variable."
+
    RETURN NIL

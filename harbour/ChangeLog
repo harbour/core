@@ -1,3 +1,24 @@
+19990912-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
+
+    + __MVSAVE()/__MVRESTORE() .MEM file saving and restoring support added, 
+      Clipper compatible, with extensions to __MVRESTORE() to only restore
+      varnames with a specified mask.
+
+  * source/rtl/itemapi.c
+    include/itemapi.h
+    + hb_itemPutDL() added to set a date directly with a Julian date value.
+
+  * source/rtl/filesys.c
+    ! hb_fsIsDrv() fixed bug when the original drive is not restored.
+      Thanks go to Jose Lalin for finding this.
+
+  * tests/working/statinit.prg
+    + More meaningful messages are printed.
+
+  * source/rtl/extend.c
+    ! hb_parcsiz() now only works for parameters passed by reference, just like
+      in CA-Cl*pper.
+
 19990912-15:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *include/errorapi.h

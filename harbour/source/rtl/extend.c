@@ -144,8 +144,9 @@ ULONG hb_parclen( int iParam, ... )
    return 0;
 }
 
-/* Same as _parclen() but returns the length including the */
-/* terminating zero byte */
+/* NOTE: Similar to _parclen() but returns the length including the
+         terminating zero byte, and it only works for parameters passed by
+         reference. */
 
 ULONG hb_parcsiz( int iParam, ... )
 {
@@ -158,22 +159,27 @@ ULONG hb_parcsiz( int iParam, ... )
       else
          pItem = stack.pBase + 1 + iParam;
 
+      /* NOTE: hb_parcsiz() will only work for strings passed by reference.
+               CA-Cl*pper works like this. */
+
       if( IS_BYREF( pItem ) )
+      {
          pItem = hb_itemUnRef( pItem );
 
-      if( IS_STRING( pItem ) )
-         return pItem->item.asString.length + 1;
+         if( IS_STRING( pItem ) )
+            return pItem->item.asString.length + 1;
 
-      else if( IS_ARRAY( pItem ) )
-      {
-         va_list va;
-         ULONG ulArrayIndex;
+         else if( IS_ARRAY( pItem ) )
+         {
+            va_list va;
+            ULONG ulArrayIndex;
 
-         va_start( va, iParam );
-         ulArrayIndex = va_arg( va, ULONG );
-         va_end( va );
+            va_start( va, iParam );
+            ulArrayIndex = va_arg( va, ULONG );
+            va_end( va );
 
-         return hb_arrayGetCLen( pItem, ulArrayIndex ) + 1;
+            return hb_arrayGetCLen( pItem, ulArrayIndex ) + 1;
+         }
       }
    }
 

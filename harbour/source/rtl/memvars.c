@@ -34,11 +34,28 @@
    their web site at http://www.gnu.org/).
 
 */
-#include <ctype.h>      /* for toupper() function */
+
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      HB___MVSAVE()
+      HB___MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
+                        Clipper function (FReadMen()) to read .MEM files)
+      HB___MSAVE()
+      HB___MRESTORE()
+
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
+#include <limits.h> /* for __MVSAVE()/__MVRESTORE() */
+#include <ctype.h> /* for toupper() function */
 
 #include "extend.h"
 #include "itemapi.h"
 #include "errorapi.h"
+#include "dates.h" /* for __MVSAVE()/__MVRESTORE() */
+#include "filesys.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "error.ch"
 #include "memvars.ch"
 
@@ -59,7 +76,8 @@ static HB_VALUE_PTR s_globalTable = NULL;
 #define TABLE_INITHB_VALUE   100
 #define TABLE_EXPANDHB_VALUE  50
 
-struct mv_PUBLIC_var_info {
+struct mv_PUBLIC_var_info
+{
    int iPos;
    BOOL bFound;
    HB_DYNS_PTR pDynSym;
@@ -606,7 +624,7 @@ static int hb_memvarScope( char * szVarName, ULONG ulLength )
       memcpy( szName, szVarName, ulLength );
       pDynVar = hb_dynsymFind( hb_strUpper( szName, ulLength - 1 ) );
       if( pDynVar )
-         iMemvar =hb_memvarScopeGet( pDynVar );
+         iMemvar = hb_memvarScopeGet( pDynVar );
       else
          iMemvar = MV_NOT_FOUND;
       hb_xfree( szName );
@@ -714,7 +732,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
             HB_DYNS_PTR pDynSym = s_privateStack[ iPos ];
 
             pValue =&s_globalTable[ pDynSym->hMemvar ].item;
-            *pszName =pDynSym->pSymbol->szName;
+            *pszName = pDynSym->pSymbol->szName;
          }
       }
    }
@@ -1043,7 +1061,7 @@ HARBOUR HB___MVRELEASE( void )
             bIncludeVar = TRUE;
 
          if( pMask->item.asString.value[ 0 ] == '*' )
-            bIncludeVar =TRUE;   /* delete all memvar variables */
+            bIncludeVar = TRUE;   /* delete all memvar variables */
          hb_memvarReleaseWithMask( pMask->item.asString.value, bIncludeVar );
       }
    }
@@ -1310,7 +1328,7 @@ HARBOUR HB___MVDBGINFO( void )
       }
       else
       {
-         pValue =hb_itemNew( NULL );
+         pValue = hb_itemNew( NULL );
          hb_itemReturn( pValue );      /* return NIL value */
          hb_itemRelease( pValue );
 
@@ -1481,14 +1499,277 @@ HARBOUR HB___MVPUT( void )
    }
 }
 
+#define HB_MEM_REC_LEN          32
+#define HB_MEM_NUM_LEN          8
+
 HARBOUR HB___MVSAVE( void )
 {
-   /* TODO: */
+   if( ISCHAR( 1 ) && ISCHAR( 2 ) && ISLOG( 3 ) )
+   {
+      PHB_FNAME pFileName;
+      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      FHANDLE fhnd;
+
+      /* Generate filename */
+
+      pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+
+      if( pFileName->szExtension == NULL )
+         pFileName->szExtension = ".mem";
+
+      hb_fsFNameMerge( szFileName, pFileName );
+      hb_xfree( pFileName );
+
+      /* Create .MEM file */
+
+      while( ( fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL ) ) == FS_ERROR )
+      {
+         WORD wResult = hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+
+         if( wResult == E_DEFAULT || wResult == E_BREAK )
+            break;
+      }
+
+      if( fhnd != FS_ERROR )
+      {
+         char * pszMask = hb_parc( 2 );
+         BOOL bIncludeMask = hb_parl( 3 );
+         BYTE buffer[ HB_MEM_REC_LEN ];
+
+         /* Walk through all visible memory variables */
+
+         ULONG ulBase = s_privateStackCnt;
+         PHB_DYNS pDynVar;
+
+         while( ulBase > s_privateStackBase )
+         {
+            --ulBase;
+            pDynVar = s_privateStack[ ulBase ];
+
+            if( pDynVar->hMemvar )
+            {
+               BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( pDynVar->pSymbol->szName, pszMask ) );
+
+               /* Process it if it matches the passed mask */
+               if( bIncludeMask ? bMatch : ! bMatch )
+               {
+                  PHB_ITEM pItem = &s_globalTable[ pDynVar->hMemvar ].item;
+
+                  memset( buffer, 0, HB_MEM_REC_LEN );
+                  strcpy( buffer, pDynVar->pSymbol->szName );
+
+                  if( IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
+                  {
+                     /* Store the closing zero byte, too */
+                     USHORT uiLength = hb_itemGetCLen( pItem ) + 1;
+
+                     buffer[ 11 ] = 'C' + 128;
+                     buffer[ 16 ] = LOBYTE( uiLength );
+                     buffer[ 17 ] = HIBYTE( uiLength );
+
+                     hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
+                     hb_fsWrite( fhnd, hb_itemGetCPtr( pItem ), uiLength );
+                  }
+                  else if( IS_NUMERIC( pItem ) )
+                  {
+                     double dNumber = hb_itemGetND( pItem );
+                     int iWidth;
+                     int iDec;
+
+                     hb_itemGetNLen( pItem, &iWidth, &iDec );
+
+                     buffer[ 11 ] = 'N' + 128;
+                     buffer[ 16 ] = ( BYTE ) iWidth + ( iDec ? iDec + 1 : 0 );
+                     buffer[ 17 ] = ( BYTE ) iDec;
+
+                     hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
+                     hb_fsWrite( fhnd, ( BYTE * ) &dNumber, sizeof( dNumber ) );
+                  }
+                  else if( IS_DATE( pItem ) )
+                  {
+                     double dNumber = ( double ) hb_itemGetNL( pItem );
+
+                     buffer[ 11 ] = 'D' + 128;
+                     buffer[ 16 ] = sizeof( dNumber );
+                     buffer[ 17 ] = 0;
+
+                     hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
+                     hb_fsWrite( fhnd, ( BYTE * ) &dNumber, sizeof( dNumber ) );
+                  }
+                  else if( IS_LOGICAL( pItem ) )
+                  {
+                     BYTE byLogical[ 1 ];
+
+                     buffer[ 11 ] = 'L' + 128;
+                     buffer[ 16 ] = sizeof( BYTE );
+                     buffer[ 17 ] = 0;
+
+                     byLogical[ 0 ] = hb_itemGetL( pItem ) ? 1 : 0;
+
+                     hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
+                     hb_fsWrite( fhnd, byLogical, sizeof( BYTE ) );
+                  }
+               }
+            }
+         }
+
+         buffer[ 0 ] = '\x1A';
+         hb_fsWrite( fhnd, buffer, 1 );
+
+         hb_fsClose( fhnd );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2008, NULL, "__MSAVE" );
 }
+
+/* NOTE: There's an extension in Harbour, which makes it possible to only
+         load (or not load) variables names with a specific name mask. */
 
 HARBOUR HB___MVRESTORE( void )
 {
-   /* TODO: */
+   if( ISCHAR( 1 ) && ISLOG( 2 ) )
+   {
+      PHB_FNAME pFileName;
+      char szFileName[ _POSIX_PATH_MAX + 1 ];
+      FHANDLE fhnd;
+
+      BOOL bAdditive = hb_parl( 2 );
+
+      /* Clear all memory variables if not ADDITIVE */
+
+      if( ! bAdditive )
+         hb_dynsymEval( hb_memvarClear, NULL );
+
+      /* Generate filename */
+
+      pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
+
+      if( pFileName->szExtension == NULL )
+         pFileName->szExtension = ".mem";
+
+      hb_fsFNameMerge( szFileName, pFileName );
+      hb_xfree( pFileName );
+
+      /* Open .MEM file */
+
+      while( ( fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ /* | FO_SHARED */ ) ) == FS_ERROR )
+      {
+         WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
+
+         if( wResult == E_DEFAULT || wResult == E_BREAK )
+            break;
+      }
+
+      if( fhnd != FS_ERROR )
+      {
+         char * pszMask = ISCHAR( 3 ) ? hb_parc( 3 ) : "*";
+         BOOL bIncludeMask = ISCHAR( 4 ) ? hb_parl( 4 ) : TRUE;
+         BYTE buffer[ HB_MEM_REC_LEN ];
+
+         while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
+         {
+            PHB_ITEM pName = hb_itemPutC( NULL, ( char * ) buffer );
+            USHORT uiType = ( USHORT ) ( buffer[ 11 ] - 128 );
+            USHORT uiWidth = ( USHORT ) buffer[ 16 ];
+            USHORT uiDec = ( USHORT ) buffer[ 17 ];
+            PHB_ITEM pItem = NULL;
+
+            switch( uiType )
+            {
+               case 'C':
+               {
+                  BYTE * pbyString;
+
+                  uiWidth += uiDec * 256;
+                  pbyString = ( BYTE * ) hb_xgrab( uiWidth );
+
+                  if( hb_fsRead( fhnd, pbyString, uiWidth ) == uiWidth )
+                     pItem = hb_itemPutCL( NULL, pbyString, uiWidth - 1 );
+
+                  hb_xfree( pbyString );
+
+                  break;
+               }
+
+               case 'N':
+               {
+                  BYTE pbyNumber[ HB_MEM_NUM_LEN ];
+
+                  if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
+                  {
+                     double dNumber = * ( double * ) &pbyNumber;
+
+                     if( uiWidth >= 1 && uiDec )
+                        pItem = hb_itemPutNDLen( NULL, dNumber, uiWidth - ( uiDec + 1 ), uiDec );
+
+                     else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
+                        pItem = hb_itemPutNILen( NULL, ( int ) dNumber, uiWidth );
+
+                     else if( LONG_MIN <= dNumber && dNumber <= LONG_MAX )
+                        pItem = hb_itemPutNLLen( NULL, ( long ) dNumber, uiWidth );
+
+                     else
+                        pItem = hb_itemPutNDLen( NULL, dNumber, uiWidth, 0 );
+                  }
+
+                  break;
+               }
+
+               case 'D':
+               {
+                  BYTE pbyNumber[ HB_MEM_NUM_LEN ];
+
+                  if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
+                     pItem = hb_itemPutDL( NULL, ( long ) ( * ( double * ) &pbyNumber ) );
+
+                  break;
+               }
+
+               case 'L':
+               {
+                  BYTE pbyLogical[ 1 ];
+
+                  if( hb_fsRead( fhnd, pbyLogical, 1 ) == 1 )
+                     pItem = hb_itemPutL( NULL, pbyLogical[ 0 ] != 0 );
+
+                  break;
+               }
+            }
+
+            if( pItem )
+            {
+               BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( hb_itemGetCPtr( pName ), pszMask ) );
+
+               /* Process it if it matches the passed mask */
+               if( bIncludeMask ? bMatch : ! bMatch )
+               {
+                  /* the first parameter is a string with not empty variable name */
+                  HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName );
+
+                  if( pDynVar )
+                     /* variable was declared somwhere - assign a new value */
+                     hb_memvarSetValue( pDynVar->pSymbol, pItem );
+                  else
+                     /* attempt to assign a value to undeclared variable create the PRIVATE one */
+                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), VS_PRIVATE, pItem );
+
+                  hb_itemReturn( pItem );
+               }
+
+               hb_itemRelease( pItem );
+            }
+
+            hb_itemRelease( pName );
+         }
+
+         hb_fsClose( fhnd );
+      }
+      else
+         hb_retl( FALSE );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE" );
 }
 
 /* CA-Clipper 5.2e compatibility functions. */

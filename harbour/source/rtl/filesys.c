@@ -883,9 +883,10 @@ USHORT  hb_fsIsDrv( BYTE nDrive )
    else
    {
       uiResult = 0;
-      _chdrive( uiSave );
       s_uiErrorLast = FS_ERROR;
    }
+
+   _chdrive( uiSave );
 
 #else
 
