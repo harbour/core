@@ -1,3 +1,8 @@
+2001-12-05 20:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/seconds.c
+    ! Bug fix for FreeBSD 4.4 port.
+
 2001-12-05 16:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * doc/gmake.txt

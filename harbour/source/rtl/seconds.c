@@ -68,27 +68,33 @@ double hb_dateSeconds( void )
    #define ftime _ftime
 #endif
 #if defined(HB_OS_BSD)
-   struct timeval oTime;
-   struct timezone oZone;
+   struct timeval tv;
+   struct timezone tz;
 #else
    struct timeb tb;
-   struct tm * oTime;
 #endif
+   time_t seconds;
+   time_t fraction;
+   struct tm * oTime;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
 
 #if defined(HB_OS_BSD)
-   gettimeofday( &oTime, &oZone );
-   return ( ( double ) oTime.tv_sec + ( double ) oTime.tv_usec / 1000.0 );
+   gettimeofday( &tv, &tz );
+   seconds = tv.tv_sec;
+   fraction = tv.tv_usec;
 #else
    ftime( &tb );
-   oTime = localtime( &tb.time );
+   seconds = tb.time;
+   fraction = tb.millitm;
+#endif
+
+   oTime = localtime( &seconds );
 
    return ( oTime->tm_hour * 3600 ) +
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
-          ( ( double ) tb.millitm / 1000 );
-#endif
+          ( ( double ) fraction / 1000 );
 }
 
 HB_FUNC( SECONDS )
@@ -104,6 +110,8 @@ HB_FUNC( HB_CLOCKS2SECS )
 }
 
 #endif
+
+
 
 
 
