@@ -1,3 +1,10 @@
+2001-12-03 15:00 GTM+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/include/clipdefs.h
+     #ifndef HB_OS_WIN_32 used instead of __HARBOUR__
+
+   * harbour/include/extend.api
+     #ifndef HB_OS_WIN_32 used instead of __HARBOUR__
+
 2001-12-03 11:20 GTM+1 Antonio Linares <alinares@fivetech.com>
    * harbour/include/clipdefs.h
      #ifndef used to avoid Windows.h collisions
