@@ -18,9 +18,9 @@
    #define hb_major 	0	/* Major version number */
    #define hb_minor 	0	/* Minor version number */
    #define hb_revision 	"b"	/* Revision letter */
-   #define hb_build 	26	/* Build number */
+   #define hb_build 	27	/* Build number */
    #define hb_year 	1999	/* Build year */
    #define hb_month 	6	/* Build month */
-   #define hb_day       12	/* Build day */
+   #define hb_day       18	/* Build day */
 
 #endif /* VERSION_H_ */

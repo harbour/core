@@ -1,3 +1,7 @@
+19990618-23:17 CET Patrick Mast
+  * Release of Build #27
+  * version.h, updated build version
+
 19990618-19:39 CET Patrick Mast
   * tests\working\hscript\bld32exe.bat
     changed line 17 : echo ..\runner.obj >> b32.bc
