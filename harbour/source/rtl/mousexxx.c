@@ -35,10 +35,14 @@
 
 #include "hbsetup.h"
 
-#if   defined(HARBOUR_USE_DOS_MSAPI)
+#if   defined(HARBOUR_USE_STD_GTAPI)
+   #include "mouse/mousestd.c"
+#elif defined(HARBOUR_USE_DOS_GTAPI)
    #include "mouse/mousedos.c"
-#elif defined(HARBOUR_USE_OS2_MSAPI)
+#elif defined(HARBOUR_USE_OS2_GTAPI)
    #include "mouse/mouseos2.c"
-#elif defined(HARBOUR_USE_WIN_MSAPI)
+#elif defined(HARBOUR_USE_WIN_GTAPI)
    #include "mouse/mousewin.c"
+#else
+   #include "mouse/mousestd.c"
 #endif

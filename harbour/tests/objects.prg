@@ -32,11 +32,11 @@ function TAny()         /* builds a class */
 
    if hClass == nil
       hClass = __clsNew( "TANY", 3 )                 // cClassName, nDatas
-      __clsAddMsg( hClass, "cName",      1, MET_DATA )  // retrieve data
-      __clsAddMsg( hClass, "_cName",     1, MET_DATA )  // assign data. Note the '_'
-      __clsAddMsg( hClass, "New",   @New(), MET_METHOD )
-      __clsAddMsg( hClass, "Test", @Test(), MET_METHOD )
-      __clsAddMsg( hClass, "DoNothing",  0, MET_VIRTUAL )
+      __clsAddMsg( hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
+      __clsAddMsg( hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
+      __clsAddMsg( hClass, "New",   @New(), HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass, "Test", @Test(), HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass, "DoNothing",  0, HB_OO_MSG_VIRTUAL )
    endif
 
    /* warning: we are not defining datas names and methods yet */

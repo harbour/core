@@ -15,8 +15,6 @@
 // Placed in the public domain
 //
 
-#include "hboo.ch"
-
 function Main()
 
    local oForm := TForm():New()

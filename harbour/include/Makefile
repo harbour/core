@@ -48,6 +48,7 @@ PRG_HEADERS=\
         hboo.ch      \
         hbclass.ch   \
         hbextern.ch  \
+        hbmemory.ch  \
         hbmemvar.ch  \
         hbsetup.ch   \
         inkey.ch     \

@@ -682,31 +682,21 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
       else
          ulTarget = 1;
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
       if( ulSrcLen > 0 )
-#else
-      if( ulStart <= ulSrcLen )
-#endif
       {
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
          if( ulStart > ulSrcLen )
             ulStart = ulSrcLen;
-#endif
+
          if( pulCount && ( *pulCount <= ulSrcLen - ulStart ) )
             ulCount = *pulCount;
          else
             ulCount = ulSrcLen - ulStart + 1;
 
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
          if( ulDstLen > 0 )
-#else
-         if( ulTarget <= ulDstLen )
-#endif
          {
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
             if( ulTarget > ulDstLen )
                ulTarget = ulDstLen;
-#endif
+
             if( ulCount > ulDstLen - ulTarget )
                ulCount = ulDstLen - ulTarget + 1;
 

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Video subsystem template
+ * Video subsystem for plain ANSI C stream IO
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,120 +39,77 @@
 
 #include "gtapi.h"
 
+static SHORT  s_iRow;
+static SHORT  s_iCol;
+static USHORT s_uiMaxRow;
+static USHORT s_uiMaxCol;
+static USHORT s_uiCursorStyle;
+static BOOL   s_bBlink;
+
 void hb_gt_Init( void )
 {
-   /* TODO: Is anything required to initialize the video subsystem? */
+   s_iRow = 0;
+   s_iCol = 0;
+#if defined(HB_OS_UNIX_COMPATIBLE)
+   s_uiMaxRow = 24;
+#else
+   s_uiMaxRow = 25;
+#endif
+   s_uiMaxCol = 80;
+   s_uiCursorStyle = SC_NONE;
+   s_bBlink = FALSE;
 }
 
 void hb_gt_Done( void )
 {
-   /* TODO: */
+   ;
 }
 
 BOOL hb_gt_IsColor( void )
 {
-   /* TODO: How to detect this? */
-   return TRUE;
+   return FALSE;
 }
 
 USHORT hb_gt_GetScreenWidth( void )
 {
-   /* TODO: How many columns on screen? */
-   return 0;
+   return s_uiMaxCol;
 }
 
 USHORT hb_gt_GetScreenHeight( void )
 {
-   /* TODO: How many rows on screen? */
-   return 0;
+   return s_uiMaxRow;
 }
 
 void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 {
-   /* TODO: How to reposition the cursor? */
-
-   HB_SYMBOL_UNUSED( uiRow );
-   HB_SYMBOL_UNUSED( uiCol );
+   s_iCol = ( SHORT ) uiCol;
+   s_iRow = ( SHORT ) uiRow;
 }
 
 USHORT hb_gt_Col( void )
 {
-   /* TODO: What Column is the cursor on? */
-   return 0;
+   return s_iCol;
 }
 
 USHORT hb_gt_Row( void )
 {
-   /* TODO: What Row is the cursor on? */
-   return 0;
+   return s_iRow;
 }
 
 USHORT hb_gt_GetCursorStyle( void )
 {
-   /* TODO: What shape is the cursor? */
-   USHORT uiStyle = 0;
-/*
-   char start, end;
-
-   if( !visible )
-   {
-      uiStyle = SC_NONE;
-   }
-   else
-   {
-*/
-      /* example from the dos driver */
-/*
-      hb_gt_GetCursorSize( &start, &end )
-
-      if( start == 32 && end == 32 )
-         uiStyle = SC_NONE;
-
-      else if( start == 6 && end == 7 )
-         uiStyle = SC_NORMAL;
-
-      else if( start == 4 && end == 7 )
-         uiStyle = SC_INSERT;
-
-      else if( start == 0 && end == 7 )
-         uiStyle = SC_SPECIAL1;
-
-      else if( start == 0 && end == 3 )
-         uiStyle = SC_SPECIAL2;
-   }
-*/
-   return uiStyle;
+   return s_uiCursorStyle;
 }
 
-void hb_gt_SetCursorStyle( USHORT uiStyle )
+void hb_gt_SetCursorStyle( USHORT uiCursorStyle )
 {
-   /* TODO: How to set the shape of the cursor? */
-   /* see ..\..\..\tests\working\cursrtst.prg for an explanation */
-   switch( uiStyle )
-   {
-   case SC_NONE:
-      /* TODO: turn it off */
-      break;
-
-   case SC_NORMAL:
-      break;
-
-   case SC_INSERT:
-      break;
-
-   case SC_SPECIAL1:
-      break;
-
-   case SC_SPECIAL2:
-      break;
-
-   default:
-      break;
-   }
+   s_uiCursorStyle = uiCursorStyle;
 }
 
 void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
 {
+   /* TODO: */
+
    HB_SYMBOL_UNUSED( uiRow );
    HB_SYMBOL_UNUSED( uiCol );
    HB_SYMBOL_UNUSED( byAttr );
@@ -171,6 +128,8 @@ void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 
 void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
 {
+   /* TODO: */
+
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
@@ -180,11 +139,6 @@ void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 
 void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
 {
-   /* TODO: we want to take a screen that is say bright white on blue,
-            and change the attributes only for a section of the screen
-            to white on black.
-   */
-
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
@@ -194,6 +148,8 @@ void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT ui
 
 void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols )
 {
+   /* TODO: */
+
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
@@ -204,33 +160,23 @@ void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
 
 void hb_gt_DispBegin( void )
 {
-   /* TODO: Is there a way to change screen buffers?
-            ie: can we write somewhere without it going to the screen
-            and then update the screen from this buffer at a later time?
-            We will initially want to copy the current screen to this buffer.
-   */
+   ; /* Do nothing */
 }
 
 void hb_gt_DispEnd()
 {
-   /* TODO: here we flush the buffer, and restore normal screen writes */
+   ; /* Do nothing */
 }
 
-BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+BOOL hb_gt_SetMode( USHORT uiMaxRow, USHORT uiMaxCol )
 {
-   /* TODO: How to change the size of the screen? */
-
-   HB_SYMBOL_UNUSED( uiRows );
-   HB_SYMBOL_UNUSED( uiCols );
+   s_uiMaxRow = uiMaxRow;
+   s_uiMaxCol = uiMaxCol;
 }
 
 void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 {
-   /* TODO: this will write character c nlength times to the screen.
-            Note that it is not used yet
-            If there is no native function that supports this, it is
-            already handled in a generic way by higher level functions.
-   */
+   /* TODO: */
 
    HB_SYMBOL_UNUSED( byChar );
    HB_SYMBOL_UNUSED( ulLen );
@@ -238,16 +184,10 @@ void hb_gt_Replicate( BYTE byChar, ULONG ulLen )
 
 BOOL hb_gt_GetBlink()
 {
-   /* TODO: under dos, the background 'intensity' bit can be switched
-            from intensity to 'blinking'
-            does this work under your platform?
-   */
-   return FALSE;
+   return s_bBlink;
 }
 
 void hb_gt_SetBlink( BOOL bBlink )
 {
-   /* TODO: set the bit if it's supported */
-
-   HB_SYMBOL_UNUSED( bBlink );
+   s_bBlink = bBlink;
 }

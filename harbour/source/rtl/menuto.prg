@@ -72,7 +72,7 @@ function __MenuTo( bBlock, cVariable )
 
    // Detect if a memvar was passed
 
-   if __mvSCOPE( cVariable ) <= MV_ERROR
+   if __mvSCOPE( cVariable ) <= HB_MV_ERROR
       __mvPUBLIC( cVariable )
       lDeclared := .T.
    else

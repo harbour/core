@@ -424,29 +424,6 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
    }
 }
 
-void hb_gt_DrawShadow( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
-{
-   USHORT x, y;
-
-   for( y = usTop; y <= usBottom; y++ )
-   {
-      BYTE scratchattr;
-      BYTE ch;
-
-      hb_gt_xGetXY( y, usRight, &scratchattr, &ch );
-      hb_gt_xPutch( y, usRight, attr, ch );
-
-      if( y == usBottom )
-      {
-         for( x = usLeft; x <= usRight; x++ )
-         {
-            hb_gt_xGetXY( y, x, &scratchattr, &ch );
-            hb_gt_xPutch( y, x, attr, ch );
-         }
-      }
-   }
-}
-
 USHORT hb_gt_Col( void )
 {
 #if defined(__TURBOC__)

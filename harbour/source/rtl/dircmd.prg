@@ -70,7 +70,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
    LOCAL fhnd
    LOCAL buffer
    LOCAL nRecCount := 0
-   LOCAL dLastUpdate := SToD( "" )
+   LOCAL dLastUpdate := hb_SToD( "" )
 
    IF ( fhnd := fOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
 
@@ -81,9 +81,9 @@ STATIC PROCEDURE PutDBF( aDirEntry )
            Bin2W( Left( buffer, 1 ) ) == 131 )
 
          nRecCount := Bin2L( SubStr( buffer, 5, 4 ) )
-         dLastUpdate := SToD( StrZero( Bin2W( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
-                              StrZero( Bin2W( SubStr( buffer, 3, 1 ) ), 2 ) +;
-                              StrZero( Bin2W( SubStr( buffer, 4, 1 ) ), 2 ) )
+         dLastUpdate := hb_SToD( StrZero( Bin2W( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
+                                 StrZero( Bin2W( SubStr( buffer, 3, 1 ) ), 2 ) +;
+                                 StrZero( Bin2W( SubStr( buffer, 4, 1 ) ), 2 ) )
 
       ENDIF
 

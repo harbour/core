@@ -5,6 +5,7 @@
 // and BREAK statement
 //
 MEMVAR oMemvar
+MEMVAR mPrivate
 
 PROCEDURE MAIN
 LOCAL oLocal

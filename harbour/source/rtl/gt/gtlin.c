@@ -197,17 +197,6 @@ void hb_gt_SetAttribute( USHORT uiTop,
   */
 }
 
-void hb_gt_DrawShadow( USHORT uiTop,
-		       USHORT uiLeft,
-		       USHORT uiBottom,
-		       USHORT uiRight,
-		       BYTE byAttr )
-{
-  HB_TRACE(("hb_gt_DrawShadow(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
-
-  /* TODO: similar to above - see gtwin.c for an idea */
-}
-
 void hb_gt_Scroll( USHORT uiTop,
 		   USHORT uiLeft,
 		   USHORT uiBottom,

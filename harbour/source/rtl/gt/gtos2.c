@@ -294,14 +294,6 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
       VioWrtNAttr( &attr, width, y, usLeft, 0 );
 }
 
-void hb_gt_DrawShadow( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
-{
-/* Chen Kedem <niki@actcom.co.il> */
-
-   hb_gt_SetAttribute( usBottom + 1, usLeft + 1, usBottom + 1, usRight + 1, attr );
-   hb_gt_SetAttribute( usTop + 1, usRight + 1, usBottom + 1, usRight + 1, attr );
-}
-
 void hb_gt_DispBegin( void )
 {
    /* TODO: Is there a way to change screen buffers?

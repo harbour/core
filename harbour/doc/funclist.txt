@@ -9,9 +9,9 @@
 ;
 ; Where:
 ; <state> - R[eady], S[tarted], N[ot Started]
-; <platform> - dos[-bcc31][+T]
-;              dos[-djgpp][+T]
-;              dos[-watcom][+T]
+; <platform> - dos[-bcc31]
+;              dos[-djgpp]
+;              dos[-watcom]
 ;              w32[-bcc32][+T]
 ;              w32[-gcc][+T]
 ;              w32[-icc][+T]
@@ -159,7 +159,7 @@ ISALPHA                 ;R;
 ISCOLOR                 ;S;
 ISDIGIT                 ;R;
 ISLOWER                 ;R;
-ISPRINTER               ;N;
+ISPRINTER               ;S;dos
 ISUPPER                 ;R;
 L2BIN                   ;R;
 LASTKEY                 ;S;
@@ -188,7 +188,7 @@ MOD                     ;R;
 MONTH                   ;R;
 MPOSTOLC                ;N;
 NETERR                  ;R;
-NETNAME                 ;N;
+NETNAME                 ;S;w32+T
 NEXTKEY                 ;S;
 NOSNOW                  ;R;
 OS                      ;S;
@@ -283,9 +283,9 @@ __CopyFile              ;R;
 __dbApp                 ;N;
 __dbContinue            ;N;
 __dbCopy                ;N;
-__dbCopyStruct          ;N;
-__dbCopyXStruct         ;N;
-__dbCreate              ;N;
+__dbCopyStruct          ;R;
+__dbCopyXStruct         ;R;
+__dbCreate              ;R;
 __dbDelim               ;N;
 __dbJoin                ;N;
 __dbList                ;N;

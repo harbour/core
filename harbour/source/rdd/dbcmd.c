@@ -897,65 +897,81 @@ ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
       bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
    else
    {
-      /* generate an error with retry possibility
-       * (user created error handler can open a missing database)
-       */
-      USHORT uiAction = E_RETRY;
-      HB_ITEM_PTR pError;
+      char * szName = pSymAlias->pDynSym->pSymbol->szName;
 
-      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
-                             NULL, pSymAlias->szName, 0, EF_CANRETRY );
-
-      bResult = FAILURE;
-      while( uiAction == E_RETRY )
+      if( strlen( szName ) == 1 && toupper( szName[ 0 ] ) >= 'A' && toupper( szName[ 0 ] ) <= 'K' )
+         bResult = hb_rddSelectWorkAreaNumber( toupper( szName[ 0 ] ) - 'A' + 1 );
+      else
       {
-         uiAction = hb_errLaunch( pError );
-         if( uiAction == E_RETRY )
-            if( pSymAlias->pDynSym->hArea )
-            {
-               bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
-               uiAction = E_DEFAULT;
-            }
+         /* generate an error with retry possibility
+          * (user created error handler can open a missing database)
+          */
+         USHORT uiAction = E_RETRY;
+         HB_ITEM_PTR pError;
+
+         pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
+                                NULL, pSymAlias->szName, 0, EF_CANRETRY );
+
+         bResult = FAILURE;
+         while( uiAction == E_RETRY )
+         {
+            uiAction = hb_errLaunch( pError );
+            if( uiAction == E_RETRY )
+               if( pSymAlias->pDynSym->hArea )
+               {
+                  bResult = hb_rddSelectWorkAreaNumber( pSymAlias->pDynSym->hArea );
+                  uiAction = E_DEFAULT;
+               }
+         }
+         hb_errRelease( pError );
       }
-      hb_errRelease( pError );
    }
    return bResult;
 }
 
 ERRCODE hb_rddSelectWorkAreaAlias( char * szName )
 {
-   PHB_DYNS pSymArea;
    ERRCODE bResult;
+   ULONG ulLen = strlen( szName );
 
-   pSymArea = hb_dynsymFindName( szName );
-   if( pSymArea && pSymArea->hArea )
-      bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
+   if( ulLen >= 1 && toupper( szName[ 0 ] ) > '0' && toupper( szName[ 0 ] ) <= '9' )
+      bResult = hb_rddSelectWorkAreaNumber( atoi( szName ) );
+   else if( ulLen == 1 && toupper( szName[ 0 ] ) >= 'A' && toupper( szName[ 0 ] ) <= 'K' )
+      bResult = hb_rddSelectWorkAreaNumber( toupper( szName[ 0 ] ) - 'A' + 1 );
    else
    {
-      /* generate an error with retry possibility
-       * (user created error handler can open a missing database)
-       */
-      USHORT uiAction = E_RETRY;
-      HB_ITEM_PTR pError;
+      PHB_DYNS pSymArea;
 
-      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
-                             NULL, szName, 0, EF_CANRETRY );
-
-      bResult = FAILURE;
-      while( uiAction == E_RETRY )
+      pSymArea = hb_dynsymFindName( szName );
+      if( pSymArea && pSymArea->hArea )
+         bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
+      else
       {
-         uiAction = hb_errLaunch( pError );
-         if( uiAction == E_RETRY )
+         /* generate an error with retry possibility
+          * (user created error handler can open a missing database)
+          */
+         USHORT uiAction = E_RETRY;
+         HB_ITEM_PTR pError;
+
+         pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, 1002,
+                                NULL, szName, 0, EF_CANRETRY );
+
+         bResult = FAILURE;
+         while( uiAction == E_RETRY )
          {
-            pSymArea = hb_dynsymFindName( szName );
-            if( pSymArea && pSymArea->hArea )
+            uiAction = hb_errLaunch( pError );
+            if( uiAction == E_RETRY )
             {
-               bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
-               uiAction = E_DEFAULT;
+               pSymArea = hb_dynsymFindName( szName );
+               if( pSymArea && pSymArea->hArea )
+               {
+                  bResult = hb_rddSelectWorkAreaNumber( pSymArea->hArea );
+                  uiAction = E_DEFAULT;
+               }
             }
          }
+         hb_errRelease( pError );
       }
-      hb_errRelease( pError );
    }
 
    return bResult;
@@ -1364,7 +1380,7 @@ HARBOUR HB_DBCREATE( void )
    uiLen = hb_parclen( 3 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), uiLen ); 
+      hb_strncpyUpper( cDriverBuffer, hb_parc( 3 ), uiLen );
       szDriver = cDriverBuffer;
    }
    else
@@ -1406,7 +1422,7 @@ HARBOUR HB_DBCREATE( void )
    }
 
    /* Create a new WorkArea node */
- 
+
    pCurrArea = ( LPAREANODE ) hb_xgrab( sizeof( AREANODE ) );
 
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
@@ -1901,11 +1917,23 @@ HARBOUR HB_DBSELECTAREA( void )
 
    if( ISCHAR( 1 ) )
    {
+      ULONG ulLen;
+
       szAlias = hb_parc( 1 );
-      if( ( uiNewArea = hb_rddSelect( szAlias ) ) == 0 )
+
+      ulLen = strlen( szAlias );
+
+      if( ulLen >= 1 && szAlias[ 0 ] >= '0' && szAlias[ 0 ] <= '9' )
+         uiNewArea = atoi( szAlias );
+      else if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
+         uiNewArea = toupper( szAlias[ 0 ] ) - 'A' + 1;
+      else
       {
-         hb_errRT_BASE( EG_NOALIAS, 1002, NULL, szAlias );
-         return;
+         if( ( uiNewArea = hb_rddSelect( szAlias ) ) == 0 )
+         {
+            hb_errRT_BASE( EG_NOALIAS, 1002, NULL, szAlias );
+            return;
+         }
       }
    }
    else
@@ -2146,7 +2174,7 @@ HARBOUR HB_DBUSEAREA( void )
    {
       if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
          uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
-      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), uiLen ); 
+      hb_strncpyUpper( szDriverBuffer, hb_parc( 2 ), uiLen );
       szDriver = szDriverBuffer;
    }
    else
@@ -2338,13 +2366,13 @@ HARBOUR HB_FIELDPOS( void )
    if( pCurrArea )
    {
       char szName[ HARBOUR_MAX_RDD_FIELDNAME_LENGTH ];
-      
+
       hb_strncpyUpper( szName, hb_parc( 1 ), hb_parclen( 1 ) );
       uiCount = 0;
       pField = ( ( AREAP ) pCurrArea->pArea )->lpFields;
       while( pField )
       {
-         ++uiCount;      
+         ++uiCount;
          if( strcmp( szName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName ) == 0 )
          {
             hb_retni( uiCount );
@@ -2501,7 +2529,7 @@ HARBOUR HB_RDDREGISTER( void )
    uiLen = hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen ); 
+      hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen );
       /*
        * hb_rddRegister returns:
        *
@@ -2522,7 +2550,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
 
    hb_rddCheck();
    hb_retc( szDefDriver );
-   
+
    uiLen = hb_parclen( 1 );
    if( uiLen > 0 )
    {
@@ -2598,9 +2626,14 @@ HARBOUR HB_RLOCK( void )
 HARBOUR HB_SELECT( void )
 {
    char * szAlias;
+   ULONG ulLen;
 
    szAlias = hb_parc( 1 );
-   if( strlen( szAlias ) > 0 )
+   ulLen = strlen( szAlias );
+
+   if( ulLen == 1 && toupper( szAlias[ 0 ] ) >= 'A' && toupper( szAlias[ 0 ] ) <= 'K' )
+      hb_retni( toupper( szAlias[ 0 ] ) - 'A' + 1 );
+   else if( ulLen > 0 )
       hb_retni( hb_rddSelect( szAlias ) );
    else
       hb_retni( uiCurrArea );
@@ -2612,7 +2645,7 @@ HARBOUR HB_USED( void )
 }
 
 /* NOTE: Same as dbSetDriver() and rddSetDefault(), but doesn't
-         throw any error if the driver doesn't exist, this is 
+         throw any error if the driver doesn't exist, this is
          required in the RDDSYS INIT function, since it's not guaranteed
          that the RDD is already registered at that point. */
 
@@ -2627,7 +2660,7 @@ HARBOUR HB___RDDSETDEFAULT( void )
    szNewDriver = hb_parc( 1 );
    if( ( uiLen = strlen( szNewDriver ) ) > 0 )
    {
-      hb_strncpyUpper( cDriverBuffer, szNewDriver, uiLen ); 
+      hb_strncpyUpper( cDriverBuffer, szNewDriver, uiLen );
       szDefDriver = ( char * ) hb_xrealloc( szDefDriver, uiLen + 1 );
       strcpy( szDefDriver, cDriverBuffer );
    }

@@ -65,6 +65,10 @@ typedef int    FHANDLE;
 #define FL_LOCK       0x0000   /* Lock a region   */
 #define FL_UNLOCK     0x0001   /* Unlock a region */
 
+/* File inheritance flags */
+#define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle     */
+#define FO_PRIVATE    0x0080   /* Spawned processes can not inherit this file handle */
+
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
 #define FXO_APPEND    0x0200   /* Create (append if exists)   */

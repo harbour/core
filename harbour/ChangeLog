@@ -1,3 +1,188 @@
+19991025-12:37 GMT+1 Victor Szel <info@szelvesz.hu>
+   + source/tools/ctcrypt.c
+   + source/tools/ctchrmix.c
+     + CA-Tools compatible CRYPT() function added. (named CT_CRYPT())
+     + CA-Tools compatible CHARMIX() function added. (named CT_CHARMIX())
+   * source/rtl/fm.c
+     ! hb_xfree() fixed, so that it will not GPF when a NULL pointer is
+       passed.
+     % Some cleanup, one variable eliminated and code optimized out when
+       the STATISTICS mode is turned off.
+     ! Non-STATISTICS mode fixed in hb_xquery()
+   * source/rdd/dbcmd.c
+     ! hb_rddSelectWorkAreaAlias() fixed to handle workarea numbers as strings
+       (exm: "1") and single character workarea aliases ("A"-"K")
+     ! hb_rddSelectWorkAreaSymbol() fixed to handle the single character
+       workarea aliases ("A"-"K")
+       Bruno, please review these.
+     ! SELECT(), DBSELECTAREA() fixed handling of workarea numbers passed as
+       strings, and workarea numbers passed as single characters ("A"-"K")
+   * include/gtapi.h
+     source/rtl/console.c
+     source/rtl/gtapi.c
+     source/rtl/gt/*.c
+     % hb_gt_DrawShadow() moved to the high level API, the whole process
+       got cleaned up. Simpler, less redundant and more compatible now.
+     ! hb_gtDrawShadow() off-screen situations fixed.
+     * All functions with "ptucker" mark moved to the copyright section.
+     + HB_SYMBOL_UNUSED() added to gt_tpl.c
+     - hb_gt_GetCursorSize() removed from the template gt_tpl.c
+   * source/rtl/gt/gtwin.c
+     * Small cleanups, variable names standardized, scopes adjusted.
+     ! Fixed Scroll() in fill mode for Win9x OS.
+   * source/rtl/oldclear.c
+     source/rtl/oldbox.c
+     ! #ifdef HARBOUR_USE_GTAPI guards added.
+   * include/hboo.ch
+     source/rtl/classes.c
+     source/rtl/objfunc.prg
+     source/rtl/tclass.prg
+     source/tools/stringp.prg
+     tests/dynobj.prg
+     tests/objects.prg
+     tests/overload.prg
+     * #define names prefixed with HB_ to avoid collision with user programs.
+       Some other slight changes applied to the name prefixes.
+   + include/hbmemory.ch
+     include/Makefile
+     source/rtl/fm.c
+     source/vm/hvm.c
+     + New header file for MEMORY() parameters.
+     + #include "hbmemory.ch" added
+     + Using HB_MEM_ constants.
+   * include/hbmemvar.ch
+     source/debug/debugger.prg
+     source/rtl/memvarbl.prg
+     source/rtl/menuto.prg
+     source/rtl/memvars.c
+     * #define names prefixed with HB_ to avoid collision with user programs.
+   * source/rtl/memvarbl.prg
+     ! Non-STRICT COMPATIBLE branch removed.
+     - #include "hbsetup.ch" removed
+   * tests/begin.prg
+     tests/inherit.prg (bugfix)
+     tests/statinit.prg
+     tests/strip.prg (bugfix)
+     tests/tstcolor.prg (bugfix from today)
+     ! Warning and bug fixed showed by the /w switch.
+   * source/tools/charmix.c
+     source/tools/chareven.c
+     source/tools/charmix.c
+     ! GT_CHARMIX(), GT_CHAREVEN(), GT_CHARODD()
+       Fixed to use hb_retclen() instead of hb_retc().
+   * include/hbdefs.h
+     + Cleaner namings for some macro arguments.
+     + HB_MKULONG() macro added.
+   + source/rdd/dbstrux.prg
+     source/rdd/Makefile
+     source/rtl/dummy.prg
+     doc/funclist.txt
+     + __DBCOPYSTRUCT(), __DBCOPYXSTRUCT(), __DBCREATE() functions added.
+       WARNING ! Please update non-GNU make files.
+   * source/rtl/dir.c
+     ! DIRECTORY() *very* small compatibility fix for the order of returned 
+       attribute chars.
+   * source/vm/hvm.c
+     ! hb_vmForTest() error handler value substitution support added.
+   * source/rtl/browdb.prg
+     * Small formatting.
+   * source/rtl/tget.prg
+     source/rtl/memoline.c
+     source/rtl/mlcount.c
+     * Typo (char with different codepage) corrected.
+   * source/rtl/tget.prg
+     ! SAY/DevPos() converted to SetPos(), DispOutAt().
+     + End() made more compatible.
+     % Display() optimized, variable removed, cursor setting removed.
+   * source/rtl/tgetlist.prg
+     % Cursor setting on/off removed from ShowScoreBoard().
+   * source/rtl/strings.c
+     ! UPPER(), LOWER() were modifying the item buffer directly. Fixed.
+     ! UPPER(), LOWER() some internal item access changed to Item API calls.
+     + UPPER(), LOWER(), LEFT(), SUBSTR(), VAL(), AT(), ALLTRIM(), LTRIM(),
+       RTRIM()/TRIM(), STRTRAN() value substitution on error added.
+     ! SUBSTR() made compatible in a rare error case. (SubStr(C,N,C))
+     ! AT() GPFd on passed types other than string.
+     ! Fixed the small difference between RTRIM() and TRIM(), they are
+       100% identical since the same pcode is generated for both in Clipper.
+     ; Now all error substitutions are covered in STRINGS.C
+     * ALLTRIM() is now launching a Clipper 5.3 compatible error by default
+       instead of returning an empty string.
+     ! hb_strAt() now returns 0 when an empty string is searched, this matches
+       the Clipper behaviour, but the regression test was fooled by the 
+       (buggy) compiler optimalization.
+   * tests/rtl_test.prg
+     tests/strings3.prg
+     + UPPER(), LOWER(), TRIM(), RTRIM(), LTRIM(), ALLTRIM() regression tests
+       added. Some Upper() tests are failing. Some STRTRAN() fail tests added,
+       Clipper 5.2e STRTRAN() error recovering bug discovered.
+     + SUBSTR(), LEFT(), RIGHT(), AT(), RAT(), VAL() tests added for
+       error conditions.
+     * ALLTRIM() error condition results updated to reflect the change above.
+     * "" $ and AT("", test results corrected, CA-Cl*pper behaviour documented.
+     + STRINGS3.PRG moved to RTL_TEST (some)
+     + ACOPY() expected test results adjusted accordging to the stricter ACOPY()
+       compatibility.
+   * source/rtl/arrays.c
+     ! hb_arrayCopy()/ACOPY() is now 100% Clipper compatible, the STRICT option
+       removed, it's always strict now.
+   * source/rtl/binnum.c
+     + BIN2U(), U2BIN(), W2BIN() XBase++ compatible functions added. All 
+       guarded with HB_COMPAT_XPP (defined by default) (not tested)
+   * source/rtl/dates.c
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     + STOD() put between HB_COMPAT_XPP guards, since it belongs to XBase++
+       and is not part of base Clipper.
+     + HB_STOD() Harbour extension function added, same as STOD() but with 
+       consistent naming.
+   * source/rtl/dircmd.prg
+     * STOD() -> HB_STOD()
+   * source/rtl/mouse/mousewin.c
+     + hb_mouse_CountButton() added for Win32.
+   * source/rtl/mouseapi.c
+     source/rtl/filesys.c
+     + Clipper 5.3 functions put between HB_COMPAT_C53 guards.
+     + One function added to the proper Copyright holder.
+   * include/hbsetup.h
+     source/rtl/mousexxx.c
+     * HARBOUR_USE_MSAPI setup #define removed, from now on the USE_GTAPI 
+       setting will choose the mouse driver, too, since the mouse handling
+       is highly related to the output (GT) driver.
+     + HARBOUR_USE_STD_GTAPI #define added as a start for the std stream IO
+       GT API, which is currently called "non-GT" mode.
+   * source/rtl/console.c
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     source/rtl/tbrowse.prg
+     source/rtl/tget.prg
+     tests/rtl_test.prg
+     * __COLORINDEX() function renamed to HB_COLORINDEX()
+   + source/rtl/isprint.c
+   + source/rtl/net.c
+     source/rtl/Makefile
+     source/rtl/dummy.prg
+     doc/funclist.txt
+     + ISPRINTER() function first draft.
+     + NETNAME() implemented for the Win32 platform. Implementation note
+       for DOS added.
+       WARNING ! Please update non-GNU make files.
+   * include/fileio.ch
+     include/filesys.h
+     ! FO_INHERITED and FO_PRIVATE flags moved to the .H file for better 
+       Clipper compatibility.
+   * source/rtl/tone.c
+     * __DJGPP -> __DJGPP__ (cosmetic only __DJGPP was also valid)
+   * source/rtl/mouse/mousetpl.c
+     ! Small correction (0->FALSE)
+   + source/rtl/gt/gtstd.c
+   + source/rtl/mouse/mousestd.c
+     source/rtl/gtxxx.c
+     source/rtl/mousexxx.c
+     + Standard ANSI C GT/MOUSE drivers added. GT needs some more work.
+   * source/rtl/inkey.c
+     % Win32 local variables made static, name prefixed with "s_"
+
 19991022-16:21 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/strings.c
      ! REPLICATE(), SPACE() error value substitution support added.
@@ -148,91 +333,91 @@
 
 Thu Oct 21 14:09:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/gt/gtlin.c:
-	A first, very basic, implementation of GT for Linux using
-	curses. At this point, all I have tested is that tests/hello.prg
-	works acceptably well when compiled with -DHARBOUR_USE_LIN_GTAPI.
-	There are LOTS of functionality missing still.
+        * source/rtl/gt/gtlin.c:
+        A first, very basic, implementation of GT for Linux using
+        curses. At this point, all I have tested is that tests/hello.prg
+        works acceptably well when compiled with -DHARBOUR_USE_LIN_GTAPI.
+        There are LOTS of functionality missing still.
 
 Thu Oct 21 14:02:53 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/linux/gcc.cf:
-	Added linking against ncurses.
+        * config/linux/gcc.cf:
+        Added linking against ncurses.
 
-	* include/gtapi.h:
-	Added hb_gtReadKey() and hb_gt_ReadKey() functions.
+        * include/gtapi.h:
+        Added hb_gtReadKey() and hb_gt_ReadKey() functions.
 
-	* include/hbsetup.h:
-	* source/rtl/gtxxx.c:
-	Made sure LIN_GTAPI is taken into account.
+        * include/hbsetup.h:
+        * source/rtl/gtxxx.c:
+        Made sure LIN_GTAPI is taken into account.
 
-	* source/rtl/console.c:
-	* source/rtl/filesys.c:
-	* source/rtl/gtapi.c:
-	* source/rtl/inkey.c:
-	* source/rtl/gt/gtwin.c:
-	Fixed several warnings.
+        * source/rtl/console.c:
+        * source/rtl/filesys.c:
+        * source/rtl/gtapi.c:
+        * source/rtl/inkey.c:
+        * source/rtl/gt/gtwin.c:
+        Fixed several warnings.
 
 Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/common/hbtrace.c:
-	Modified the TRACE function so that it does no superfluous copying
-	anymore.
+        * source/common/hbtrace.c:
+        Modified the TRACE function so that it does no superfluous copying
+        anymore.
 
-	* source/compiler/Makefile:
-	* source/runner/stdalone/Makefile:
-	* tests/Makefile:
-	Added the common library to the list of dependencies.
+        * source/compiler/Makefile:
+        * source/runner/stdalone/Makefile:
+        * tests/Makefile:
+        Added the common library to the list of dependencies.
 
-	* source/pp/hbpp.c:
-	* source/pp/hbppint.c:
-	* source/pp/hbpplib.c:
-	* source/pp/table.c:
-	* source/pp/stdalone/hbpp.c:
-	Made sure tracing is enabled only when both HB_DO_TRACE and
-	HB_REALLY_DO_TRACE are defined; this way, the user can just set
-	HB_DO_TRACE to enable tracing in harbour, but not see all the
-	tracing output while compiling harbour itself.
+        * source/pp/hbpp.c:
+        * source/pp/hbppint.c:
+        * source/pp/hbpplib.c:
+        * source/pp/table.c:
+        * source/pp/stdalone/hbpp.c:
+        Made sure tracing is enabled only when both HB_DO_TRACE and
+        HB_REALLY_DO_TRACE are defined; this way, the user can just set
+        HB_DO_TRACE to enable tracing in harbour, but not see all the
+        tracing output while compiling harbour itself.
 
-	* source/rtl/arrays.c:
-	* source/rtl/classes.c:
-	* source/rtl/codebloc.c:
-	* source/rtl/console.c:
-	* source/rtl/copyfile.c:
-	* source/rtl/dates.c:
-	* source/rtl/descend.c:
-	* source/rtl/dir.c:
-	* source/rtl/environ.c:
-	* source/rtl/errorapi.c:
-	* source/rtl/extend.c:
-	* source/rtl/filesys.c:
-	* source/rtl/fm.c:
-	* source/rtl/gtapi.c:
-	* source/rtl/hardcr.c:
-	* source/rtl/inkey.c:
-	* source/rtl/itemapi.c:
-	* source/rtl/langapi.c:
-	* source/rtl/math.c:
-	* source/rtl/memvars.c:
-	* source/rtl/mouseapi.c:
-	* source/rtl/mtran.c:
-	* source/rtl/natmsg.c:
-	* source/rtl/samples.c:
-	* source/rtl/set.c:
-	* source/rtl/setcolor.c:
-	* source/rtl/strings.c:
-	* source/rtl/tone.c:
-	* source/rtl/transfrm.c:
-	Added tracing to all functions.
+        * source/rtl/arrays.c:
+        * source/rtl/classes.c:
+        * source/rtl/codebloc.c:
+        * source/rtl/console.c:
+        * source/rtl/copyfile.c:
+        * source/rtl/dates.c:
+        * source/rtl/descend.c:
+        * source/rtl/dir.c:
+        * source/rtl/environ.c:
+        * source/rtl/errorapi.c:
+        * source/rtl/extend.c:
+        * source/rtl/filesys.c:
+        * source/rtl/fm.c:
+        * source/rtl/gtapi.c:
+        * source/rtl/hardcr.c:
+        * source/rtl/inkey.c:
+        * source/rtl/itemapi.c:
+        * source/rtl/langapi.c:
+        * source/rtl/math.c:
+        * source/rtl/memvars.c:
+        * source/rtl/mouseapi.c:
+        * source/rtl/mtran.c:
+        * source/rtl/natmsg.c:
+        * source/rtl/samples.c:
+        * source/rtl/set.c:
+        * source/rtl/setcolor.c:
+        * source/rtl/strings.c:
+        * source/rtl/tone.c:
+        * source/rtl/transfrm.c:
+        Added tracing to all functions.
 
 19991021-15:35 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *include/extend.h
     *source/rtl/memvars.c
     *source/vm/hvm.c
-	* new function hb_memvarNewParameter() used to create a variable
-	listed on PARAMETER statement (corrected bug - private variables
-	are created instead of reusing existing ones)
+        * new function hb_memvarNewParameter() used to create a variable
+        listed on PARAMETER statement (corrected bug - private variables
+        are created instead of reusing existing ones)
 
 19991021-16:02 GMT+3 Alexander Kresin
   * contrib/odbc/todbc.prg
@@ -292,39 +477,39 @@ Thu Oct 21 11:56:55 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Wed Oct 20 19:28:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/Makefile:
-	* source/common/Makefile:
-	* source/common/hbtrace.c:
-	* include/hbtrace.h:
-	Added a common/ library where all "common" stuff should be
-	implemented. For starters, I placed here a rudimentary tracing
-	facility. Basically, all functions should be of the form:
+        * source/Makefile:
+        * source/common/Makefile:
+        * source/common/hbtrace.c:
+        * include/hbtrace.h:
+        Added a common/ library where all "common" stuff should be
+        implemented. For starters, I placed here a rudimentary tracing
+        facility. Basically, all functions should be of the form:
 
-	int foo(char* name /* other parameters */)
-	{
-	  HB_TRACE(("foo(%s)", name));
+        int foo(char* name /* other parameters */)
+        {
+          HB_TRACE(("foo(%s)", name));
 
-	  /* implementation */
-	}
+          /* implementation */
+        }
 
-	If harbour is compiled with HB_DO_TRACE defined, then this will
-	generate a trace on stderr of all functions being called (caution:
-	it generates LOTS of output!!!). If HB_DO_TRACE is not defined,
-	the HB_TRACE() lines are defined out and there is no performance
-	hit.
+        If harbour is compiled with HB_DO_TRACE defined, then this will
+        generate a trace on stderr of all functions being called (caution:
+        it generates LOTS of output!!!). If HB_DO_TRACE is not defined,
+        the HB_TRACE() lines are defined out and there is no performance
+        hit.
 
-	* include/hbdefs.h:
-	Included hbtrace.h.
+        * include/hbdefs.h:
+        Included hbtrace.h.
 
-	* source/pp/hbpp.c:
-	* source/pp/hbppint.c:
-	* source/pp/hbpplib.c:
-	* source/pp/stdalone/Makefile:
-	* source/pp/stdalone/hbpp.c:
-	Added tracing calls as a "proof of concept".
+        * source/pp/hbpp.c:
+        * source/pp/hbppint.c:
+        * source/pp/hbpplib.c:
+        * source/pp/stdalone/Makefile:
+        * source/pp/stdalone/hbpp.c:
+        Added tracing calls as a "proof of concept".
 
-	* source/rtl/gt/gtwin.c:
-	Fixed two minor typos.
+        * source/rtl/gt/gtwin.c:
+        Fixed two minor typos.
 
 19991020-21:30 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/achoice.prg
@@ -3733,7 +3918,8 @@ NOTE: You have to recompile all PRG sources!
   * ChangeLog
     ChangeLog.003
     * Old ChangeLog renamed to ChangeLog.003
-    * New ChangeLog created.   * source/pp/pragma.c
+    * New ChangeLog created.
+   * source/pp/pragma.c
    * contrib/dot/pp_harb.ch
    * tests/inline_c.prg
      * STOPDUMP renamed as ENDDUMP (with Ron permission)

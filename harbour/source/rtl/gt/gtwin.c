@@ -73,11 +73,12 @@ typedef WORD far * LPWORD;
 #endif /* __GNUC__ */
 
 static BOOL hb_gt_SetScreenBuffer( HANDLE HNew, HANDLE HOld );
+
 static HANDLE HOsave;
 /* static HANDLE HSsave; */
 static HANDLE HDOutput  = INVALID_HANDLE_VALUE;
 /* static HANDLE HDStealth = INVALID_HANDLE_VALUE; */
-HANDLE hb_gtHInput    = INVALID_HANDLE_VALUE;
+       HANDLE hb_gtHInput = INVALID_HANDLE_VALUE;
 static HANDLE HOutput   = INVALID_HANDLE_VALUE;
 static HANDLE HStealth  = INVALID_HANDLE_VALUE; /* DispBegin buffer */
 static HANDLE HOriginal;                      /* used to restore before quit */
@@ -107,7 +108,7 @@ void hb_gt_Init( void )
    HOriginal = HOutput = HCursor = CreateFile( "CONOUT$",     /* filename    */
                        GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
                        FILE_SHARE_READ | FILE_SHARE_WRITE,    /* share mode  */
-                       NULL,                          /* security attributes */
+                       NULL,                                  /* security attributes */
                        OPEN_EXISTING,                         /* create mode */
                        0, 0 );
 }
@@ -173,21 +174,22 @@ USHORT hb_gt_GetScreenHeight( void )
    return max( csbi.dwSize.Y, 25 );
 }
 
-void hb_gt_SetPos( USHORT cRow, USHORT cCol )
+void hb_gt_SetPos( USHORT uiRow, USHORT uiCol )
 {
    COORD dwCursorPosition;
 
-   HB_TRACE(("hb_gt_SetPos(%hu, %hu)", cRow, cCol));
+   HB_TRACE(("hb_gt_SetPos(%hu, %hu)", uiRow, uiCol));
 
-   dwCursorPosition.X = ( SHORT ) cCol;
-   dwCursorPosition.Y = ( SHORT ) cRow;
+   dwCursorPosition.X = ( SHORT ) uiCol;
+   dwCursorPosition.Y = ( SHORT ) uiRow;
+
    SetConsoleCursorPosition( HCursor, dwCursorPosition );
 }
 
 USHORT hb_gt_GetCursorStyle( void )
 {
    CONSOLE_CURSOR_INFO cci;
-   int rc;
+   USHORT uiCursorShape;
 
    HB_TRACE(("hb_gt_GetCursorStyle()"));
 
@@ -195,33 +197,33 @@ USHORT hb_gt_GetCursorStyle( void )
 
    if( ! cci.bVisible )
    {
-      rc = SC_NONE;
+      uiCursorShape = SC_NONE;
    }
    else
    {
       switch( cci.dwSize )
       {
          case 50:
-            rc = SC_INSERT;   /* half block in clipper */
+            uiCursorShape = SC_INSERT;   /* half block in clipper */
             break;
 
          case 99:
-            rc = SC_SPECIAL1; /* full block in clipper */
+            uiCursorShape = SC_SPECIAL1; /* full block in clipper */
             break;
 
          case 66:
-            rc = SC_SPECIAL2; /* upper half block in clipper */
+            uiCursorShape = SC_SPECIAL2; /* upper half block in clipper */
             break;
             /* TODO: cannot tell if the block is upper or lower for cursor */
             /* Answer: Supposed to be upper third, but ms don't support it. */
 
          default:
-            rc = SC_NORMAL;  /* anything else, we'll call it normal */
+            uiCursorShape = SC_NORMAL;  /* anything else, we'll call it normal */
             break;
       }
    }
 
-   return rc;
+   return uiCursorShape;
 }
 
 void hb_gt_SetCursorStyle( USHORT style )
@@ -231,68 +233,77 @@ void hb_gt_SetCursorStyle( USHORT style )
    HB_TRACE(("hb_gt_SetCursorStyle(%hu)", style));
 
    GetConsoleCursorInfo( HCursor, &cci );
-   cci.bVisible = 1; /* always visible unless explicitly request off */
+
    switch( style )
    {
       case SC_NONE:
-         cci.bVisible = 0;
+         cci.bVisible = FALSE;
          break;
 
       case SC_INSERT:
+         cci.bVisible = TRUE;
          cci.dwSize = 50;
          break;
 
       case SC_SPECIAL1:
+         cci.bVisible = TRUE;
          cci.dwSize = 99;
          break;
 
       case SC_SPECIAL2:
+         cci.bVisible = TRUE;
          cci.dwSize = 66;
          /* In their infinite wisdom, MS doesn't support cursors that
             don't start at the bottom of the cell */
          break;
+
       case SC_NORMAL:
       default:            /* traps for invalid values */
+         cci.bVisible = TRUE;
          cci.dwSize = 25; /* this was 12, but when used in full screen dos window
-                            cursor state is erratic  - doesn't turn off, etc. */
+                             cursor state is erratic  - doesn't turn off, etc. */
          break;
    }
+
    SetConsoleCursorInfo( HCursor, &cci );
 }
 
-void hb_gt_Puts( USHORT cRow, USHORT cCol, BYTE attr, BYTE *str, ULONG len )
+void hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE attr, BYTE * str, ULONG len )
 {
-   DWORD dwlen;
+   DWORD dwWritten;
    COORD coord;
 
-   HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", cRow, cCol, (int) attr, str, len));
+   HB_TRACE(("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", uiRow, uiCol, (int) attr, str, len));
 
-   coord.X = ( DWORD ) cCol;
-   coord.Y = ( DWORD ) cRow;
-   FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwlen );
-   WriteConsoleOutputCharacterA( HOutput, ( char * ) str, ( DWORD ) len, coord, &dwlen );
+   coord.X = ( DWORD ) uiCol;
+   coord.Y = ( DWORD ) uiRow;
+
+   FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), ( DWORD ) len, coord, &dwWritten );
+   WriteConsoleOutputCharacterA( HOutput, ( char * ) str, ( DWORD ) len, coord, &dwWritten );
 }
 
-void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE * dest )
+void hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * dest )
 {
-   DWORD len;
-   COORD coord;
    LPWORD pwattr;
    BYTE * pstr;
-   USHORT width, i, y;
+   USHORT width;
 
-   HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, dest));
+   HB_TRACE(("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, dest));
 
-   width = ( usRight - usLeft + 1 );
+   width = ( uiRight - uiLeft + 1 );
    pwattr = ( LPWORD ) hb_xgrab( width * sizeof( *pwattr ) );
    pstr = ( BYTE * ) hb_xgrab( width );
 
-   for( y = usTop; y <= usBottom; y++ )
+   for( ; uiTop <= uiBottom; uiTop++ )
    {
-      coord.X = ( DWORD ) usLeft;
-      coord.Y = ( DWORD ) y;
-      ReadConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &len );
-      ReadConsoleOutputAttribute( HOutput, pwattr, width, coord, &len );
+      COORD coord;
+      USHORT i;
+      DWORD dwWritten;
+
+      coord.X = ( DWORD ) uiLeft;
+      coord.Y = ( DWORD ) uiTop;
+      ReadConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &dwWritten );
+      ReadConsoleOutputAttribute( HOutput, pwattr, width, coord, &dwWritten );
       for( i = 0; i < width; i++ )
       {
          *dest = *( pstr + i );
@@ -306,22 +317,24 @@ void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
    hb_xfree( pwattr );
 }
 
-void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE * srce )
+void hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * srce )
 {
-   DWORD len;
-   COORD coord;
    LPWORD pwattr;
    BYTE * pstr;
-   USHORT width, i, y;
+   USHORT width;
 
-   HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRight, srce));
+   HB_TRACE(("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, srce));
 
-   width = ( usRight - usLeft + 1 );
+   width = ( uiRight - uiLeft + 1 );
    pwattr = ( LPWORD ) hb_xgrab( width * sizeof( *pwattr ) );
    pstr = ( BYTE * ) hb_xgrab( width );
 
-   for( y = usTop; y <= usBottom; y++ )
+   for( ; uiTop <= uiBottom; uiTop++ )
    {
+      COORD coord;
+      USHORT i;
+      DWORD dwWritten;
+
       for( i = 0; i < width; i++ )
       {
          *( pstr + i ) = *srce;
@@ -329,54 +342,36 @@ void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight
          *( pwattr + i ) = ( ( WORD )( ( BYTE ) *srce ) & 0xFF );
          srce++;
       }
-      coord.X = ( DWORD ) usLeft;
-      coord.Y = ( DWORD ) y;
-      WriteConsoleOutputAttribute( HOutput, pwattr, width, coord, &len );
-      WriteConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &len );
+      coord.X = ( DWORD ) uiLeft;
+      coord.Y = ( DWORD ) uiTop;
+      WriteConsoleOutputAttribute( HOutput, pwattr, width, coord, &dwWritten );
+      WriteConsoleOutputCharacterA( HOutput, ( char * ) pstr, width, coord, &dwWritten );
    }
 
    hb_xfree( pstr );
    hb_xfree( pwattr );
 }
 
-void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
+void hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE attr )
 {
 /* ptucker */
 
-   DWORD len;
-   COORD coord;
-   USHORT width, y;
-
-   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRight, (int) attr));
-
-   width = ( usRight - usLeft + 1 );
-
-   coord.X = ( DWORD ) usLeft;
-
-   for( y = usTop; y <= usBottom; y++ )
-   {
-      coord.Y = y;
-      FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), width, coord, &len );
-   }
-}
-
-void hb_gt_DrawShadow( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr )
-{
-/* ptucker */
-
-   DWORD len;
    COORD coord;
    USHORT width;
 
-   HB_TRACE(("hb_gt_DrawShadow(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRight, (int) attr));
+   HB_TRACE(("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) attr));
 
-   width = ( usRight - usLeft + 1 );
+   width = uiRight - uiLeft + 1;
 
-   coord.X = ( DWORD ) usLeft;
-   coord.Y = ( DWORD ) usBottom;
+   coord.X = ( DWORD ) uiLeft;
 
-   FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), width, coord, &len );
-   hb_gt_SetAttribute( usTop, usRight, usBottom, usRight, attr );
+   for( ; uiTop <= uiBottom; uiTop++ )
+   {
+      DWORD dwWritten;
+
+      coord.Y = uiTop;
+      FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), width, coord, &dwWritten );
+   }
 }
 
 USHORT hb_gt_Col( void )
@@ -386,6 +381,7 @@ USHORT hb_gt_Col( void )
    HB_TRACE(("hb_gt_Col()"));
 
    GetConsoleScreenBufferInfo( HCursor, &csbi );
+
    return csbi.dwCursorPosition.X;
 }
 
@@ -396,40 +392,53 @@ USHORT hb_gt_Row( void )
    HB_TRACE(("hb_gt_Row()"));
 
    GetConsoleScreenBufferInfo( HCursor, &csbi );
+
    return csbi.dwCursorPosition.Y;
 }
 
-void hb_gt_Scroll( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE attr, SHORT sVert, SHORT sHoriz )
+void hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE attr, SHORT iVert, SHORT iHoriz )
 {
 /* ptucker */
 
-   SMALL_RECT Source, Clip;
-   COORD      Target;
-   CHAR_INFO  FillChar;
+   HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", uiTop, uiLeft, uiBottom, uiRight, (int) attr, iVert, iHoriz));
 
-   HB_TRACE(("hb_gt_Scroll(%hu, %hu, %hu, %hu, %d, %hd, %hd)", usTop, usLeft, usBottom, usRight, (int) attr, sVert, sHoriz));
-
-   Source.Top    = usTop;
-   Source.Left   = usLeft;
-   Source.Bottom = usBottom;
-   Source.Right  = usRight;
-
-   memcpy( &Clip, &Source, sizeof( Clip ) );
-
-   if( ( sHoriz | sVert ) == 0 ) /* both zero? */
+   if( ( iHoriz | iVert ) == 0 ) /* both zero? */
    {
-      Target.Y = usBottom+1;  /* set outside the clipping region */
-      Target.X = usRight+1;
+      COORD coord;
+      USHORT width = uiRight - uiLeft + 1;
+
+      coord.X = ( DWORD ) uiLeft;
+
+      for( ; uiTop <= uiBottom; uiTop++ )
+      {
+         DWORD dwWritten;
+
+         coord.Y = uiTop;
+         FillConsoleOutputAttribute( HOutput, ( WORD )( attr & 0xFF ), width, coord, &dwWritten );
+         FillConsoleOutputCharacter( HOutput, ' ', width, coord, &dwWritten );
+      }
    }
    else
    {
-      Target.Y = usTop-sVert;
-      Target.X = usLeft-sHoriz;
-   }
-   FillChar.Char.AsciiChar = ' ';
-   FillChar.Attributes = ( WORD )( attr & 0xFF );
+      SMALL_RECT Source, Clip;
+      COORD      Target;
+      CHAR_INFO  FillChar;
 
-   ScrollConsoleScreenBuffer( HOutput, &Source, &Clip, Target, &FillChar );
+      Source.Top    = uiTop;
+      Source.Left   = uiLeft;
+      Source.Bottom = uiBottom;
+      Source.Right  = uiRight;
+
+      memcpy( &Clip, &Source, sizeof( SMALL_RECT ) );
+
+      Target.Y = uiTop - iVert;
+      Target.X = uiLeft - iHoriz;
+
+      FillChar.Char.AsciiChar = ' ';
+      FillChar.Attributes = ( WORD )( attr & 0xFF );
+
+      ScrollConsoleScreenBuffer( HOutput, &Source, &Clip, Target, &FillChar );
+   }
 }
 
 void hb_gt_DispBegin( void )
@@ -550,7 +559,7 @@ BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
    /* console window first, then the buffer */
    if( ( DWORD ) csbi.dwSize.X * csbi.dwSize.Y > ( DWORD ) uiCols * uiRows )
    {
-      if( !SetConsoleWindowInfo( HOutput, TRUE, &srWin ) || 
+      if( !SetConsoleWindowInfo( HOutput, TRUE, &srWin ) ||
           !SetConsoleScreenBufferSize( HOutput, coBuf ) )
          bRetVal = FALSE;
    }
@@ -600,13 +609,13 @@ void hb_gt_SetBlink( BOOL bBlink )
    HB_SYMBOL_UNUSED( bBlink );
 }
 
-void hb_gt_DebugScreen( BOOL activate )
+void hb_gt_DebugScreen( BOOL bActivate )
 {
-   HB_TRACE(("hb_gt_DebugScreen(%d)", (int) activate));
+   HB_TRACE(("hb_gt_DebugScreen(%d)", (int) bActivate));
 
    /* ptucker */
    /* TODO: This is not used and is still a work in progress */
-   if( activate )
+   if( bActivate )
    {
       if( HDOutput == INVALID_HANDLE_VALUE )
       {

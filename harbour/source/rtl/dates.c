@@ -60,6 +60,7 @@
  *    hb_dateDecStr()
  *    hb_dateStrPut()
  *    hb_dateStrGet()
+ *    HB_HB_STOD()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -549,9 +550,21 @@ HARBOUR HB_DTOS( void )
 #endif
 }
 
+#ifdef HB_COMPAT_XPP
+
+/* NOTE: XBase++ compatible function */
 /* NOTE: XBase++ checks for the parameter count at compile time */
 
 HARBOUR HB_STOD( void )
+{
+   hb_retds( hb_parc( 1 ) );
+}
+
+#endif
+
+/* NOTE: Harbour extension, exactly the same as STOD(). */
+
+HARBOUR HB_HB_STOD( void )
 {
    hb_retds( hb_parc( 1 ) );
 }

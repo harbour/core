@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for low-level object engine
+ * Header file for MEMORY() function
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
@@ -35,23 +35,29 @@
 
 /* NOTE: This file is also used by C code. */
 
-#ifndef HB_OO_CH_
-#define HB_OO_CH_
+#ifndef HB_MEMORY_CH_
+#define HB_MEMORY_CH_
 
-/* Message types */
-#define HB_OO_MSG_METHOD        0
-#define HB_OO_MSG_DATA          1
-#define HB_OO_MSG_CLASSDATA     2
-#define HB_OO_MSG_INLINE        3
-#define HB_OO_MSG_VIRTUAL       4
-#define HB_OO_MSG_SUPER         5
+/* Parameters for Memory() function */
 
-/* Data */
-#define HB_OO_DATA_SYMBOL       1
-#define HB_OO_DATA_VALUE        2
+/* Standard */
+#define HB_MEM_CHAR             0   /* Free Variable Space (KB)           */
+#define HB_MEM_BLOCK            1   /* Largest String (KB)                */
+#define HB_MEM_RUN              2   /* RUN Memory (KB)                    */
 
-/* ClassData */
-#define HB_OO_CLSD_SYMBOL       1
-#define HB_OO_CLSD_VALUE        2
+/* CA-Cl*pper undocumented */
+#define HB_MEM_VM               3   /* Virtual Memory (KB)                */
+#define HB_MEM_EMS              4   /* Free Expanded Memory (KB) (?)      */
+#define HB_MEM_FM             101   /* Fixed Memory/Heap (KB) (?)         */
+#define HB_MEM_FMSEGS         102   /* Segments in Fixed Memory/Heap (?)  */
+#define HB_MEM_SWAP           103   /* Free Swap Memory (KB)              */
+#define HB_MEM_CONV           104   /* Free Conventional (KB)             */
+#define HB_MEM_EMSUSED        105   /* Used Expanded Memory (KB) (?)      */
 
-#endif /* HB_OO_CH_ */
+/* Harbour extensions */
+#define HB_MEM_USED          1001   /* Memory used (bytes)                */
+#define HB_MEM_USEDMAX       1002   /* Maximum memory used (bytes)        */
+#define HB_MEM_STACKITEMS    1003   /* Total items on the stack           */
+#define HB_MEM_STACK         1004   /* Total memory size used by the stack (bytes) */
+
+#endif /* HB_MEMORY_CH_ */

@@ -23,6 +23,7 @@ C_SOURCES=\
         gtapi.c \
         hardcr.c \
         inkey.c \
+        isprint.c \
         itemapi.c \
         langapi.c \
         math.c \
@@ -33,6 +34,7 @@ C_SOURCES=\
         mouseapi.c \
         mtran.c \
         natmsg.c \
+        net.c \
         oldbox.c \
         oldclear.c \
         samples.c \

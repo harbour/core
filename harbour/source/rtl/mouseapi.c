@@ -163,6 +163,8 @@ void hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight
 
 /* HARBOUR callable interface */
 
+#ifdef HB_COMPAT_C53
+
 HARBOUR MPRESENT( void )
 {
    hb_retl( hb_mouseIsPresent() );
@@ -304,3 +306,5 @@ HARBOUR MSETBOUNDS( void )
 
    hb_mouseSetBounds( iTop, iLeft, iBottom, iRight );
 }
+
+#endif

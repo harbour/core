@@ -63,24 +63,25 @@ STATIC FUNCTION Skipped( nRecs )
    IF LastRec() != 0
       IF nRecs == 0
          dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. Recno() != LastRec() + 1
-         WHILE nSkipped < nRecs
+      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+         DO WHILE nSkipped < nRecs
             dbSkip( 1 )
             IF Eof()
                dbSkip( -1 )
                EXIT
             ENDIF
-            ++nSkipped
+            nSkipped++
          ENDDO
       ELSEIF nRecs < 0
-         WHILE nSkipped > nRecs
+         DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
                EXIT
             ENDIF
-            --nSkipped
+            nSkipped--
          ENDDO
       ENDIF
    ENDIF
 
    RETURN nSkipped
+

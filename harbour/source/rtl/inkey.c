@@ -89,9 +89,9 @@
 #ifdef HARBOUR_USE_WIN
    #define INPUT_BUFFER_LEN 128
    extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
-   DWORD cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
-   DWORD cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
-   INPUT_RECORD irInBuf[INPUT_BUFFER_LEN];
+   static DWORD s_cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
+   static DWORD s_cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
+   static INPUT_RECORD s_irInBuf[ INPUT_BUFFER_LEN ];
 #endif
 
 #include "extend.h"
@@ -308,43 +308,43 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
       int ch = 0;
 #if defined(_Windows) || defined(WINNT)
       /* Check for events only when the event buffer is exhausted. */
-      if( cNumRead <= cNumIndex )
+      if( s_cNumRead <= s_cNumIndex )
       {
          /* Check for keyboard input */
-         cNumRead = 0;
-         GetNumberOfConsoleInputEvents( hb_gtHInput, &cNumRead );
-         if( cNumRead )
+         s_cNumRead = 0;
+         GetNumberOfConsoleInputEvents( hb_gtHInput, &s_cNumRead );
+         if( s_cNumRead )
          {
             /* Read keyboard input */
             ReadConsoleInput(
                hb_gtHInput,      /* input buffer handle    */
-               irInBuf,          /* buffer to read into    */
+               s_irInBuf,        /* buffer to read into    */
                INPUT_BUFFER_LEN, /* size of read buffer    */
-               &cNumRead);       /* number of records read */
+               &s_cNumRead);     /* number of records read */
             /* Set up to process the first input event */
-            cNumIndex = 0;
+            s_cNumIndex = 0;
          }
       }
       /* Only process one keyboard event at a time. */
-      if( cNumRead > cNumIndex )
+      if( s_cNumRead > s_cNumIndex )
       {
          /* Only process keyboard events for now... */
-         if( irInBuf[cNumIndex].EventType == KEY_EVENT )
+         if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
          {
             /* Only process key down events */
-            if( irInBuf[cNumIndex].Event.KeyEvent.bKeyDown )
+            if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
             {
                /* Save the keyboard state and ASCII key code */
-               DWORD dwState = irInBuf[cNumIndex].Event.KeyEvent.dwControlKeyState;
-               ch = irInBuf[cNumIndex].Event.KeyEvent.uChar.AsciiChar;
+               DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+               ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
                if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
                {
                   /* Process non-ASCII key codes */
                   WORD wKey;
                   if( s_eventmask & INKEY_EXTENDED )
-                     wKey = irInBuf[cNumIndex].Event.KeyEvent.wVirtualKeyCode;
+                     wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
                   else
-                     wKey = irInBuf[cNumIndex].Event.KeyEvent.wVirtualScanCode;
+                     wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
                   /* Discard standalone state key presses for normal mode only */
                   if( ( s_eventmask & INKEY_EXTENDED ) == 0 ) switch( wKey )
                   {
@@ -615,16 +615,16 @@ printf("\nhb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch)
 
 WORD wKey;
 if( s_eventmask & INKEY_EXTENDED )
-   wKey = irInBuf[cNumIndex].Event.KeyEvent.wVirtualKeyCode;
+   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
 else
-   wKey = irInBuf[cNumIndex].Event.KeyEvent.wVirtualScanCode;
+   wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
 printf("\nhb_inkeyPoll: wKey is %d", wKey);
                }
 */
             }
          }
          /* Set up to process the next input event (if any) */
-         cNumIndex++;
+         s_cNumIndex++;
       }
 #elif defined(OS_DOS_COMPATIBLE) || defined(HARBOUR_GCC_OS2) || defined(__IBMCPP__)
    /* The reason for including _Windows here is that kbhit() and getch() appear

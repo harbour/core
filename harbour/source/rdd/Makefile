@@ -13,6 +13,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
         dbf0.prg \
+        dbstrux.prg \
         sdf0.prg \
         delim0.prg \
         rddord.prg \

@@ -2,8 +2,6 @@
 // $Id$
 //
 
-#include "hboo.ch"
-
 //
 // DynObj
 //

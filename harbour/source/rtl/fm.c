@@ -65,6 +65,7 @@
 
 #include "extend.h"
 #include "errorapi.h"
+#include "hbmemory.ch"
 
 #ifdef HB_FM_STATISTICS
 static ULONG s_ulMemoryBlocks = 0;      /* memory blocks used */
@@ -82,18 +83,16 @@ void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL
    pMem = malloc( ulSize + sizeof( ULONG ) );
 
    if( ! pMem )
-   {
       return pMem;
-   }
 
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
 
 #ifdef HB_FM_STATISTICS
    s_ulMemoryConsumed    += ulSize;
-   if( s_ulMemoryConsumed > s_ulMemoryMaxConsumed )
+   if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
       s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
    s_ulMemoryBlocks++;
-   if( s_ulMemoryBlocks > s_ulMemoryMaxBlocks )
+   if( s_ulMemoryMaxBlocks < s_ulMemoryBlocks )
       s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
 #endif
 
@@ -109,18 +108,16 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    pMem = malloc( ulSize + sizeof( ULONG ) );
 
    if( ! pMem )
-   {
       hb_errInternal( 9999, "hb_xgrab can't allocate memory", NULL, NULL );
-   }
 
    * ( ( ULONG * ) pMem ) = ulSize;  /* we store the block size into it */
 
 #ifdef HB_FM_STATISTICS
    s_ulMemoryConsumed    += ulSize;
-   if( s_ulMemoryConsumed > s_ulMemoryMaxConsumed )
+   if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
       s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
    s_ulMemoryBlocks++;
-   if( s_ulMemoryBlocks > s_ulMemoryMaxBlocks )
+   if( s_ulMemoryMaxBlocks < s_ulMemoryBlocks )
       s_ulMemoryMaxBlocks = s_ulMemoryBlocks;
 #endif
 
@@ -129,18 +126,20 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
 
 void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 {
+#ifdef HB_FM_STATISTICS
    ULONG ulMemSize;
+#endif
    void * pResult;
 
    HB_TRACE(("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
+#ifdef HB_FM_STATISTICS
    ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+#endif
    pResult = realloc( ( char * ) pMem - sizeof( ULONG ), ulSize + sizeof( ULONG ) );
 
    if( ! pResult )
-   {
       hb_errInternal( 9999, "hb_xrealloc can't reallocate memory", NULL, NULL );
-   }
 
    * ( ( ULONG * ) pResult ) = ulSize;  /* we store the block size into it */
 
@@ -149,7 +148,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
       s_ulMemoryBlocks--;
 
    s_ulMemoryConsumed += ( ulSize - ulMemSize );
-   if( s_ulMemoryConsumed > s_ulMemoryMaxConsumed )
+   if( s_ulMemoryMaxConsumed < s_ulMemoryConsumed )
       s_ulMemoryMaxConsumed = s_ulMemoryConsumed;
 #endif
 
@@ -158,21 +157,19 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
-   ULONG ulMemSize;
-
    HB_TRACE(("hb_xfree(%p)", pMem));
 
-   ulMemSize = * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
-
    if( pMem )
+   {
+#ifdef HB_FM_STATISTICS
+      s_ulMemoryConsumed -= * ( ULONG * ) ( ( char * ) pMem - sizeof( ULONG ) );
+      s_ulMemoryBlocks--;
+#endif
+
       free( ( char * ) pMem - sizeof( ULONG ) );
+   }
    else
       hb_errInternal( 9999, "hb_xfree called with a null pointer", NULL, NULL );
-
-#ifdef HB_FM_STATISTICS
-   s_ulMemoryConsumed -= ulMemSize;
-   s_ulMemoryBlocks--;
-#endif
 }
 
 ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
@@ -290,7 +287,7 @@ ULONG hb_xquery( USHORT uiMode )
 
    switch( uiMode )
    {
-   case 0:              /*               (Free Variable Space [KB])          */
+   case HB_MEM_CHAR:       /*               (Free Variable Space [KB])          */
       #if defined(_Windows) || defined(WINNT)
       {
          MEMORYSTATUS memorystatus;
@@ -302,7 +299,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 1:              /*               (Largest String [KB])               */
+   case HB_MEM_BLOCK:      /*               (Largest String [KB])               */
       #if defined(_Windows) || defined(WINNT)
       {
          MEMORYSTATUS memorystatus;
@@ -314,7 +311,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 2:              /*               (RUN Memory [KB])                   */
+   case HB_MEM_RUN:        /*               (RUN Memory [KB])                   */
       #if defined(_Windows) || defined(WINNT)
       {
          MEMORYSTATUS memorystatus;
@@ -326,7 +323,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 3:              /* UNDOCUMENTED! (Virtual Memory [KB])               */
+   case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB])               */
       #if defined(_Windows) || defined(WINNT)
       {
          MEMORYSTATUS memorystatus;
@@ -338,7 +335,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 4:              /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?)     */
+   case HB_MEM_EMS:        /* UNDOCUMENTED! (Free Expanded Memory [KB]) (?)     */
       #if defined(_Windows) || defined(WINNT)
          ulResult = 0;
       #else
@@ -346,7 +343,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 101:            /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?)        */
+   case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?)        */
       #if defined(_Windows) || defined(WINNT)
       {
          MEMORYSTATUS memorystatus;
@@ -358,7 +355,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 102:            /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
+   case HB_MEM_FMSEGS:     /* UNDOCUMENTED! (Segments in Fixed Memory/Heap) (?) */
       #if defined(_Windows) || defined(WINNT)
          ulResult = 1;
       #else
@@ -366,7 +363,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 103:            /* UNDOCUMENTED! (Free Swap Memory [KB])             */
+   case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB])             */
       #if defined(_Windows) || defined(WINNT)
       {
          MEMORYSTATUS memorystatus;
@@ -378,7 +375,7 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 104:            /* UNDOCUMENTED! (Free Conventional [KB])            */
+   case HB_MEM_CONV:       /* UNDOCUMENTED! (Free Conventional [KB])            */
       #if defined(_Windows) || defined(WINNT)
          ulResult = 0;
       #else
@@ -386,23 +383,31 @@ ULONG hb_xquery( USHORT uiMode )
       #endif
       break;
 
-   case 105:            /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?)     */
+   case HB_MEM_EMSUSED:    /* UNDOCUMENTED! (Used Expanded Memory [KB]) (?)     */
       ulResult = 0;
       break;
 
-   case 1001:           /* Harbour extension (Memory used [bytes])           */
+   case HB_MEM_USED:       /* Harbour extension (Memory used [bytes])           */
+#ifdef HB_FM_STATISTICS
       ulResult = s_ulMemoryConsumed;
+#else
+      ulResult = 0;
+#endif
       break;
 
-   case 1002:           /* Harbour extension (Maximum memory used [bytes])   */
+   case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes])   */
+#ifdef HB_FM_STATISTICS
       ulResult = s_ulMemoryMaxConsumed;
+#else
+      ulResult = 0;
+#endif
       break;
 
-   case 1003:           /* Harbour extension (Total items on the stack)      */
+   case HB_MEM_STACKITEMS: /* Harbour extension (Total items on the stack)      */
       ulResult = hb_stack.wItems;
       break;
 
-   case 1004:           /* Harbour extension (Total memory size used by the stack [bytes]) */
+   case HB_MEM_STACK:      /* Harbour extension (Total memory size used by the stack [bytes]) */
       ulResult = hb_stack.wItems * sizeof( HB_ITEM );
       break;
 

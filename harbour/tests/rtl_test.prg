@@ -703,6 +703,16 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( scString $ 1                    , "E BASE 1109 Argument error $ F:S" )
    TEST_LINE( 1 $ "AA"                        , "E BASE 1109 Argument error $ F:S" )
 
+   TEST_LINE( !   scStringE $ "XE"            , .T. )
+   TEST_LINE( ! ( scStringE $ "XE" )          , .T. )
+   TEST_LINE(     scStringE $ "XE"            , .F. )
+   TEST_LINE( !   "X" $ "XE"                  , .F. )
+   TEST_LINE( ! ( "X" $ "XE" )                , .F. )
+   TEST_LINE(     "X" $ "XE"                  , .T. )
+
+   TEST_LINE( scStringE $ "bcde"              , .F. )
+   TEST_LINE( ( "" ) $ "bcde"                 , .F. )
+   TEST_LINE(   ""   $ "bcde"                 , .F. ) /* Bug in CA-Cl*ppers compiler optimalizer, it will return .T. */
    TEST_LINE( "d" $ "bcde"                    , .T. )
    TEST_LINE( "D" $ "BCDE"                    , .T. )
    TEST_LINE( "a" $ "bcde"                    , .F. )
@@ -875,6 +885,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( Len( 123 )                      , "E BASE 1111 Argument error LEN F:S"   )
    TEST_LINE( Len( "" )                       , 0                                      )
    TEST_LINE( Len( "123" )                    , 3                                      )
+   TEST_LINE( Len( "123"+Chr(0)+"456 " )      , 8                                      )
    TEST_LINE( Len( saArray )                  , 1                                      )
 #ifdef __HARBOUR__
    TEST_LINE( Len( Space( 3000000000 ) )      , 3000000000                             )
@@ -930,7 +941,7 @@ STATIC FUNCTION Main_MATH()
 
    TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG F:S"   )
    TEST_LINE( Str(Log(-1))                    , "***********************"              )
-   TEST_LINE( Str(Log(0))                     , "***********************"              )
+//   TEST_LINE( Str(Log(0))                     , "***********************"              )
    TEST_LINE( Str(Log(1))                     , "         0.00"                        )
    TEST_LINE( Str(Log(12))                    , "         2.48"                        )
    TEST_LINE( Str(Log(snIntP))                , "         2.30"                        )
@@ -1214,6 +1225,11 @@ STATIC FUNCTION Main_MATH()
 STATIC FUNCTION Main_STRINGS()
    LOCAL xLocal
 
+   /* VAL() */
+
+   TEST_LINE( Val( NIL )                      , "E BASE 1098 Argument error VAL F:S"   )
+   TEST_LINE( Val( 10 )                       , "E BASE 1098 Argument error VAL F:S"   )
+
    /* CHR() */
 
    TEST_LINE( Chr( NIL )                      , "E BASE 1104 Argument error CHR F:S"   )
@@ -1257,25 +1273,16 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Asc( @scString )                , 72                                   ) /* Bug in CA-Cl*pper, it returns: "E BASE 1107 Argument error ASC F:S" */
 #endif
 
-   /* ALLTRIM() */
-
-/* These lines will cause CA-Cl*pper 5.2e to trash memory and later crash, it was fixed in 5.3 */
-#ifdef __HARBOUR__
-   TEST_LINE( AllTrim( NIL )                  , ""               ) /* CA-Cl*pper 5.2e/5.3 is not giving the same result for this one. */
-   TEST_LINE( AllTrim( 100 )                  , ""               ) /* CA-Cl*pper 5.2e/5.3 is not giving the same result for this one. */
-#endif
-   TEST_LINE( AllTrim("HELLO")                , "HELLO"          )
-#ifdef __HARBOUR__
-   TEST_LINE( AllTrim(@scString)              , "HELLO"          ) /* CA-Cl*pper bug, it will terminate the program on this line. */
-#endif
-
    /* ISDIGIT() */
 
    TEST_LINE( IsDigit()                       , .F.              )
    TEST_LINE( IsDigit( 100 )                  , .F.              )
-   TEST_LINE( IsDigit( @scString )            , .F.              )
+#ifdef __HARBOUR__
+   TEST_LINE( IsDigit( @scString )            , .F.              ) /* Bug in CA-Cl*pper, it will always return .F. */
+#endif
    TEST_LINE( IsDigit( "" )                   , .F.              )
    TEST_LINE( IsDigit( "A" )                  , .F.              )
+   TEST_LINE( IsDigit( "AA" )                 , .F.              )
    TEST_LINE( IsDigit( "-" )                  , .F.              )
    TEST_LINE( IsDigit( "." )                  , .F.              )
    TEST_LINE( IsDigit( "0" )                  , .T.              )
@@ -1290,10 +1297,11 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( IsAlpha()                       , .F.              )
    TEST_LINE( IsAlpha( 100 )                  , .F.              )
 #ifdef __HARBOUR__
-   TEST_LINE( IsAlpha( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will return .F. */
+   TEST_LINE( IsAlpha( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will always return .F. */
 #endif
    TEST_LINE( IsAlpha( "" )                   , .F.              )
    TEST_LINE( IsAlpha( "A" )                  , .T.              )
+   TEST_LINE( IsAlpha( "AA" )                 , .T.              )
    TEST_LINE( IsAlpha( "-" )                  , .F.              )
    TEST_LINE( IsAlpha( "." )                  , .F.              )
    TEST_LINE( IsAlpha( "0" )                  , .F.              )
@@ -1319,11 +1327,12 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( IsUpper()                       , .F.              )
    TEST_LINE( IsUpper( 100 )                  , .F.              )
 #ifdef __HARBOUR__
-   TEST_LINE( IsUpper( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will return .F. */
+   TEST_LINE( IsUpper( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will always return .F. */
 #endif
    TEST_LINE( IsUpper( "" )                   , .F.              )
    TEST_LINE( IsUpper( "6" )                  , .F.              )
    TEST_LINE( IsUpper( "A" )                  , .T.              )
+   TEST_LINE( IsUpper( "AA" )                 , .T.              )
    TEST_LINE( IsUpper( "a" )                  , .F.              )
    TEST_LINE( IsUpper( "K" )                  , .T.              )
    TEST_LINE( IsUpper( "Z" )                  , .T.              )
@@ -1335,10 +1344,13 @@ STATIC FUNCTION Main_STRINGS()
 
    TEST_LINE( IsLower()                       , .F.              )
    TEST_LINE( IsLower( 100 )                  , .F.              )
-   TEST_LINE( IsLower( @scString )            , .F.              )
+#ifdef __HARBOUR__
+   TEST_LINE( IsLower( @scString )            , .F.              ) /* Bug in CA-Cl*pper, it will always return .F. */
+#endif
    TEST_LINE( IsLower( "" )                   , .F.              )
    TEST_LINE( IsLower( "6" )                  , .F.              )
    TEST_LINE( IsLower( "A" )                  , .F.              )
+   TEST_LINE( IsLower( "AA" )                 , .F.              )
    TEST_LINE( IsLower( "a" )                  , .T.              )
    TEST_LINE( IsLower( "K" )                  , .F.              )
    TEST_LINE( IsLower( "Z" )                  , .F.              )
@@ -1346,19 +1358,164 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( IsLower( "™" )                  , .F.              )
    TEST_LINE( IsLower( "”" )                  , .F.              )
 
-   /* TODO: Add these: */
+   /* ALLTRIM() */
+
+/* These lines will cause CA-Cl*pper 5.2e to trash memory and later crash, it was fixed in 5.3 */
+#ifndef __CLIPPER__
+   TEST_LINE( AllTrim( NIL )                  , "E BASE 2022 Argument error ALLTRIM F:S" ) /* CA-Cl*pper 5.2e/5.3 is not giving the same result for this one. */
+   TEST_LINE( AllTrim( 100 )                  , "E BASE 2022 Argument error ALLTRIM F:S" ) /* CA-Cl*pper 5.2e/5.3 is not giving the same result for this one. */
+#endif
+#ifdef __HARBOUR__
+   TEST_LINE( AllTrim(@scString)              , "HELLO"          ) /* CA-Cl*pper bug, it will terminate the program on this line. */
+#endif
+   TEST_LINE( AllTrim(scString)               , "HELLO"          )
+   TEST_LINE( AllTrim("HELLO")                , "HELLO"          )
+   TEST_LINE( AllTrim( "" )                   , ""               )
+   TEST_LINE( AllTrim( "UA   " )              , "UA"             )
+   TEST_LINE( AllTrim( "   UA" )              , "UA"             )
+   TEST_LINE( AllTrim( "   UA  " )            , "UA"             )
+   TEST_LINE( AllTrim( " "+Chr(0)+" UA  " )   , ""+Chr(0)+" UA"  )
+   TEST_LINE( AllTrim( " "+Chr(9)+" UA  " )   , "UA"             )
+   TEST_LINE( AllTrim( " "+Chr(9)+"U"+Chr(9)) , "U"+Chr(9)+""    )
+   TEST_LINE( AllTrim( " "+Chr(9)+Chr(9))     , ""               )
+   TEST_LINE( AllTrim( Chr(10)+"U"+Chr(10))   , "U"+Chr(10)+""   )
+   TEST_LINE( AllTrim( Chr(13)+"U"+Chr(13))   , "U"+Chr(13)+""   )
+   TEST_LINE( AllTrim( "A"+Chr(10))           , "A"+Chr(10)+""   )
+   TEST_LINE( AllTrim( "A"+Chr(13))           , "A"+Chr(13)+""   )
+   TEST_LINE( AllTrim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), ""+Chr(0)+"ABC"+Chr(0)+"" )
 
    /* TRIM() */
+
+   TEST_LINE( Trim( 100 )                     , "E BASE 1100 Argument error TRIM F:S" )
+   TEST_LINE( Trim( NIL )                     , "E BASE 1100 Argument error TRIM F:S" )
+#ifdef __HARBOUR__
+   TEST_LINE( Trim(@scString)                 , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
+#endif
+   TEST_LINE( Trim(scString)                  , "HELLO"                   )
+   TEST_LINE( Trim("HELLO")                   , "HELLO"                   )
+   TEST_LINE( Trim( "" )                      , ""                        )
+   TEST_LINE( Trim( "UA   " )                 , "UA"                      )
+   TEST_LINE( Trim( "   UA" )                 , "   UA"                   )
+   TEST_LINE( Trim( "   UA  " )               , "   UA"                   )
+   TEST_LINE( Trim( " "+Chr(0)+" UA  " )      , " "+Chr(0)+" UA"          )
+   TEST_LINE( Trim( " "+Chr(9)+" UA  " )      , " "+Chr(9)+" UA"          )
+   TEST_LINE( Trim( " "+Chr(9)+"U"+Chr(9))    , " "+Chr(9)+"U"+Chr(9)+""  )
+   TEST_LINE( Trim( " "+Chr(9)+Chr(9))        , " "+Chr(9)+""+Chr(9)+""   )
+   TEST_LINE( Trim( Chr(10)+"U"+Chr(10))      , ""+Chr(10)+"U"+Chr(10)+"" )
+   TEST_LINE( Trim( Chr(13)+"U"+Chr(13))      , ""+Chr(13)+"U"+Chr(13)+"" )
+   TEST_LINE( Trim( "A"+Chr(10))              , "A"+Chr(10)+""            )
+   TEST_LINE( Trim( "A"+Chr(13))              , "A"+Chr(13)+""            )
+   TEST_LINE( Trim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), "  "+Chr(0)+"ABC"+Chr(0)+"" )
+
    /* RTRIM() */
+
+   TEST_LINE( RTrim( 100 )                    , "E BASE 1100 Argument error TRIM F:S" )
+   TEST_LINE( RTrim( NIL )                    , "E BASE 1100 Argument error TRIM F:S" )
+#ifdef __HARBOUR__
+   TEST_LINE( RTrim(@scString)                , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
+#endif
+   TEST_LINE( RTrim(scString)                 , "HELLO"                   )
+   TEST_LINE( RTrim("HELLO")                  , "HELLO"                   )
+   TEST_LINE( RTrim( "" )                     , ""                        )
+   TEST_LINE( RTrim( "UA   " )                , "UA"                      )
+   TEST_LINE( RTrim( "   UA" )                , "   UA"                   )
+   TEST_LINE( RTrim( "   UA  " )              , "   UA"                   )
+   TEST_LINE( RTrim( " "+Chr(0)+" UA  " )     , " "+Chr(0)+" UA"          )
+   TEST_LINE( RTrim( " "+Chr(9)+" UA  " )     , " "+Chr(9)+" UA"          )
+   TEST_LINE( RTrim( " "+Chr(9)+"U"+Chr(9))   , " "+Chr(9)+"U"+Chr(9)+""  )
+   TEST_LINE( RTrim( " "+Chr(9)+Chr(9))       , " "+Chr(9)+""+Chr(9)+""   )
+   TEST_LINE( RTrim( Chr(10)+"U"+Chr(10))     , ""+Chr(10)+"U"+Chr(10)+"" )
+   TEST_LINE( RTrim( Chr(13)+"U"+Chr(13))     , ""+Chr(13)+"U"+Chr(13)+"" )
+   TEST_LINE( RTrim( "A"+Chr(10))             , "A"+Chr(10)+""            )
+   TEST_LINE( RTrim( "A"+Chr(13))             , "A"+Chr(13)+""            )
+   TEST_LINE( RTrim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), "  "+Chr(0)+"ABC"+Chr(0)+"" )
+
    /* LTRIM() */
-   /* UPPER() */
-   /* LOWER() */
+
+   TEST_LINE( LTrim( 100 )                    , "E BASE 1101 Argument error LTRIM F:S" )
+   TEST_LINE( LTrim( NIL )                    , "E BASE 1101 Argument error LTRIM F:S" )
+#ifdef __HARBOUR__
+   TEST_LINE( LTrim(@scString)                , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
+#endif
+   TEST_LINE( LTrim(scString)                 , "HELLO"                   )
+   TEST_LINE( LTrim("HELLO")                  , "HELLO"                   )
+   TEST_LINE( LTrim( "" )                     , ""                        )
+   TEST_LINE( LTrim( "UA   " )                , "UA   "                   )
+   TEST_LINE( LTrim( "   UA" )                , "UA"                      )
+   TEST_LINE( LTrim( "   UA  " )              , "UA  "                    )
+   TEST_LINE( LTrim( " "+Chr(0)+" UA  " )     , ""+Chr(0)+" UA  "         )
+   TEST_LINE( LTrim( " "+Chr(9)+" UA  " )     , "UA  "                    )
+   TEST_LINE( LTrim( " "+Chr(9)+"U"+Chr(9))   , "U"+Chr(9)+""             )
+   TEST_LINE( LTrim( " "+Chr(9)+Chr(9))       , ""                        )
+   TEST_LINE( LTrim( Chr(10)+"U"+Chr(10))     , "U"+Chr(10)+""            )
+   TEST_LINE( LTrim( Chr(13)+"U"+Chr(13))     , "U"+Chr(13)+""            )
+   TEST_LINE( LTrim( "A"+Chr(10))             , "A"+Chr(10)+""            )
+   TEST_LINE( LTrim( "A"+Chr(13))             , "A"+Chr(13)+""            )
+   TEST_LINE( LTrim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), ""+Chr(0)+"ABC"+Chr(0)+"  " )
+
    /* STRTRAN() */
+
+   /* TODO: STRTRAN() */
+
+/* NOTE: It seems like CA-Cl*pper 5.x is not aware of the BREAK return value of
+         the error handler, so the error is thrown, but we can't catch it.
+         This bug is fixed in CA-Clipper 5.3 [vszel] */
+#ifndef __CLIPPER__
+   TEST_LINE( StrTran()                       , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran( NIL )                  , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran( 100 )                  , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+   TEST_LINE( StrTran( "AA", 1 )              , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */
+#endif
+   TEST_LINE( StrTran( "AA", "A" )            , "" )
+   TEST_LINE( StrTran( "AA", "A", "1" )       , "11" )
+   TEST_LINE( StrTran( "AA", "A", "1", "2" )  , "11" )
+
+   /* UPPER() */
+
+   TEST_LINE( Upper( scString )               , "HELLO"                                )
+#ifdef __HARBOUR__
+   TEST_LINE( Upper( @scString )              , "HELLO"                                ) /* Bug in CA-Cl*pper, it will return argument error */
+#endif
+   TEST_LINE( Upper( 100 )                    , "E BASE 1102 Argument error UPPER F:S" )
+   TEST_LINE( Upper( "" )                     , ""                                     )
+   TEST_LINE( Upper( " " )                    , " "                                    )
+   TEST_LINE( Upper( "2" )                    , "2"                                    )
+   TEST_LINE( Upper( "{" )                    , "{"                                    )
+   TEST_LINE( Upper( Chr(0) )                 , ""+Chr(0)+""                           )
+   TEST_LINE( Upper( "aAZAZa" )               , "AAZAZA"                               )
+   TEST_LINE( Upper( "AazazA" )               , "AAZAZA"                               )
+   TEST_LINE( Upper( "Aaz"+Chr(0)+"zA" )      , "AAZ"+Chr(0)+"ZA"                      )
+   TEST_LINE( Upper( "z" )                    , "Z"                                    )
+   TEST_LINE( Upper( " µ" )                   , " µ"                                   )
+   TEST_LINE( Upper( "H rbor 8-) µ" )         , "H RBOR 8-) µ"                         )
+
+   /* LOWER() */
+
+   TEST_LINE( Lower( scString )               , "hello"                                )
+#ifdef __HARBOUR__
+   TEST_LINE( Lower( @scString )              , "hello"                                ) /* Bug in CA-Cl*pper, it will return argument error */
+#endif
+   TEST_LINE( Lower( 100 )                    , "E BASE 1103 Argument error LOWER F:S" )
+   TEST_LINE( Lower( "" )                     , ""                                     )
+   TEST_LINE( Lower( " " )                    , " "                                    )
+   TEST_LINE( Lower( "2" )                    , "2"                                    )
+   TEST_LINE( Lower( "{" )                    , "{"                                    )
+   TEST_LINE( Lower( Chr(0) )                 , ""+Chr(0)+""                           )
+   TEST_LINE( Lower( "aAZAZa" )               , "aazaza"                               )
+   TEST_LINE( Lower( "AazazA" )               , "aazaza"                               )
+   TEST_LINE( Lower( "Aaz"+Chr(0)+"zA" )      , "aaz"+Chr(0)+"za"                      )
+   TEST_LINE( Lower( "z" )                    , "z"                                    )
+   TEST_LINE( Lower( " µ" )                   , " µ"                                   )
+   TEST_LINE( Lower( "H rbor 8-) µ" )         , "h rbor 8-) µ"                         )
 
    /* AT() */
 
-   TEST_LINE( At("", "")                      , 1                )
-   TEST_LINE( At("", "ABCDEF")                , 1                )
+   TEST_LINE( At(90, 100)                     , "E BASE 1108 Argument error AT F:S" )
+   TEST_LINE( At("", 100)                     , "E BASE 1108 Argument error AT F:S" )
+   TEST_LINE( At(100, "")                     , "E BASE 1108 Argument error AT F:S" )
+   TEST_LINE( At("", "")                      , 0                ) /* Bug in CA-Cl*ppers compiler optimalizer, it will return 1 */
+   TEST_LINE( At("", "ABCDEF")                , 0                ) /* Bug in CA-Cl*ppers compiler optimalizer, it will return 1 */
+   TEST_LINE( At(scStringE, "ABCDEF")         , 0                )
    TEST_LINE( At("ABCDEF", "")                , 0                )
    TEST_LINE( At("AB", "AB")                  , 1                )
    TEST_LINE( At("AB", "AAB")                 , 2                )
@@ -1376,6 +1533,9 @@ STATIC FUNCTION Main_STRINGS()
 
    /* RAT() */
 
+   TEST_LINE( RAt(90, 100)                    , 0                )
+   TEST_LINE( RAt("", 100)                    , 0                )
+   TEST_LINE( RAt(100, "")                    , 0                )
    TEST_LINE( RAt("", "")                     , 0                )
    TEST_LINE( RAt("", "ABCDEF")               , 0                )
    TEST_LINE( RAt("ABCDEF", "")               , 0                )
@@ -1429,6 +1589,10 @@ STATIC FUNCTION Main_STRINGS()
 
    /* SUBSTR() */
 
+   TEST_LINE( SubStr(100     , 0, -1)         , "E BASE 1110 Argument error SUBSTR F:S" )
+   TEST_LINE( SubStr("abcdef", 1, "a")        , "E BASE 1110 Argument error SUBSTR F:S" )
+   TEST_LINE( SubStr("abcdef", "a")           , "E BASE 1110 Argument error SUBSTR F:S" )
+   TEST_LINE( SubStr("abcdef", "a", 1)        , "E BASE 1110 Argument error SUBSTR F:S" )
    TEST_LINE( SubStr("abcdef", 0, -1)         , ""               )
    TEST_LINE( SubStr("abcdef", 0, 0)          , ""               )
    TEST_LINE( SubStr("abcdef", 0, 1)          , "a"              )
@@ -1455,10 +1619,15 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( SubStr("abcdef", -10, 7)        , "abcdef"         )
    TEST_LINE( SubStr("abcdef", -10, 15)       , "abcdef"         )
    TEST_LINE( SubStr("abcdef", -10)           , "abcdef"         )
-   TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d"   )
+   TEST_LINE( SubStr("ab" + Chr(0) + "def", 2, 3) , "b" + Chr(0) + "d" )
+   TEST_LINE( SubStr("abc" + Chr(0) + "def", 3, 1) , "c" )
+   TEST_LINE( SubStr("abc" + Chr(0) + "def", 4, 1) , "" + Chr(0) + "" )
+   TEST_LINE( SubStr("abc" + Chr(0) + "def", 5, 1) , "d" )
 
    /* LEFT() */
 
+   TEST_LINE( Left(100     , -10)             , "E BASE 1124 Argument error LEFT F:S" )
+   TEST_LINE( Left("abcdef", "A")             , "E BASE 1124 Argument error LEFT F:S" )
    TEST_LINE( Left("abcdef", -10)             , ""               )
    TEST_LINE( Left("abcdef", -2)              , ""               )
    TEST_LINE( Left("abcdef", 0)               , ""               )
@@ -1468,6 +1637,8 @@ STATIC FUNCTION Main_STRINGS()
 
    /* RIGHT() */
 
+   TEST_LINE( Right(100     , -10)            , ""               )
+   TEST_LINE( Right("abcdef", "A")            , ""               )
    TEST_LINE( Right("abcdef", -10)            , ""               )
    TEST_LINE( Right("abcdef", -2)             , ""               )
    TEST_LINE( Right("abcdef", 0)              , ""               )
@@ -1492,6 +1663,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( Pad(@scString, 10)              , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( Pad(scString, @snIntP)          , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+   TEST_LINE( Pad("abcdef", "A")              , ""               )
    TEST_LINE( Pad("abcdef", -5)               , ""               )
    TEST_LINE( Pad("abcdef", 0)                , ""               )
    TEST_LINE( Pad("abcdef", 5)                , "abcde"          )
@@ -1515,6 +1687,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadR(@scString, 10)             , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadR(scString, @snIntP)         , "HELLO     "     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+   TEST_LINE( PadR("abcdef", "A")             , ""               )
    TEST_LINE( PadR("abcdef", -5)              , ""               )
    TEST_LINE( PadR("abcdef", 0)               , ""               )
    TEST_LINE( PadR("abcdef", 5)               , "abcde"          )
@@ -1538,6 +1711,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadL(@scString, 10)             , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadL(scString, @snIntP)         , "     HELLO"     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+   TEST_LINE( PadL("abcdef", "A")             , ""               )
    TEST_LINE( PadL("abcdef", -5)              , ""               )
    TEST_LINE( PadL("abcdef", 0)               , ""               )
    TEST_LINE( PadL("abcdef", 5)               , "abcde"          ) /* QUESTION: CA-Cl*pper "bug", should return: "bcdef" ? */
@@ -1561,6 +1735,7 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( PadC(@scString, 10)             , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
    TEST_LINE( PadC(scString, @snIntP)         , "  HELLO   "     ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
+   TEST_LINE( PadC("abcdef", "A")             , ""               )
    TEST_LINE( PadC("abcdef", -5)              , ""               )
    TEST_LINE( PadC("abcdef", 0)               , ""               )
    TEST_LINE( PadC("abcdef", 2)               , "ab"             ) /* QUESTION: CA-Cl*pper "bug", should return: "cd" ? */
@@ -2140,7 +2315,7 @@ STATIC FUNCTION Main_MISC()
 
    TEST_LINE( NationMsg()                     , "Invalid argument" )
    TEST_LINE( NationMsg("A")                  , "" )
-   TEST_LINE( NationMsg(-1)                   , "" )
+   TEST_LINE( NationMsg(-1)                   , "" ) /* CA-Cl*pper bug: 5.3 may return trash. */
    TEST_LINE( NationMsg(0)                    , "" )
    TEST_LINE( NationMsg(1)                    , "Database Files    # Records    Last Update     Size" )
    TEST_LINE( NationMsg(2)                    , "Do you want more samples?"                           )
@@ -2156,7 +2331,7 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
    TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
    TEST_LINE( NationMsg(14)                   , "" )
-   TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" */
+   TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 
 /* These will cause a GPF in CA-Cl*pper (5.2e) */
 #ifndef __CLIPPER__
@@ -2336,44 +2511,44 @@ STATIC FUNCTION Main_MISC()
 
 #ifdef __HARBOUR__
 
-   /* __COLORINDEX() */
+   /* HB_COLORINDEX() */
 
-   TEST_LINE( __ColorIndex()                  , ""               )
-   TEST_LINE( __ColorIndex("", -1)            , ""               )
-   TEST_LINE( __ColorIndex("", 0)             , ""               )
-   TEST_LINE( __ColorIndex("W/R", -1)         , ""               )
-   TEST_LINE( __ColorIndex("W/R", 0)          , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R", 1)          , ""               )
-   TEST_LINE( __ColorIndex("W/R", 2)          , ""               )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 0)     , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 1)     , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 2)     , ""               )
-   TEST_LINE( __ColorIndex("W/R,GR/0", 3)     , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 0)    , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 1)    , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 2)    , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0", 3)    , ""               )
-   TEST_LINE( __ColorIndex("W/R,GR/0 ", 0)    , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R,GR/0 ", 1)    , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R,GR/0 ", 2)    , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ", 0)   , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ", 1)   , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ", 2)   , ""               )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 0)  , "W/R"            )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 1)  , "GR/0"           )
-   TEST_LINE( __ColorIndex("W/R, GR/0 ,", 2)  , ""               )
-   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 0) , "W/R"            )
-   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 1) , "GR/0"           )
-   TEST_LINE( __ColorIndex(" W/R, GR/0 ,", 2) , ""               )
-   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 0), "W/R"            )
-   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 1), "GR/0"           )
-   TEST_LINE( __ColorIndex(" W/R , GR/0 ,", 2), ""               )
-   TEST_LINE( __ColorIndex(" W/R ,   ,", 1)   , ""               )
-   TEST_LINE( __ColorIndex(" W/R ,,", 1)      , ""               )
-   TEST_LINE( __ColorIndex(",,", 0)           , ""               )
-   TEST_LINE( __ColorIndex(",,", 1)           , ""               )
-   TEST_LINE( __ColorIndex(",,", 2)           , ""               )
-   TEST_LINE( __ColorIndex(",  ,", 2)         , ""               )
+   TEST_LINE( hb_ColorIndex()                  , ""               )
+   TEST_LINE( hb_ColorIndex("", -1)            , ""               )
+   TEST_LINE( hb_ColorIndex("", 0)             , ""               )
+   TEST_LINE( hb_ColorIndex("W/R", -1)         , ""               )
+   TEST_LINE( hb_ColorIndex("W/R", 0)          , "W/R"            )
+   TEST_LINE( hb_ColorIndex("W/R", 1)          , ""               )
+   TEST_LINE( hb_ColorIndex("W/R", 2)          , ""               )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0", 0)     , "W/R"            )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0", 1)     , "GR/0"           )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0", 2)     , ""               )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0", 3)     , ""               )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0", 0)    , "W/R"            )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0", 1)    , "GR/0"           )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0", 2)    , ""               )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0", 3)    , ""               )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0 ", 0)    , "W/R"            )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0 ", 1)    , "GR/0"           )
+   TEST_LINE( hb_ColorIndex("W/R,GR/0 ", 2)    , ""               )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0 ", 0)   , "W/R"            )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0 ", 1)   , "GR/0"           )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0 ", 2)   , ""               )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0 ,", 0)  , "W/R"            )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0 ,", 1)  , "GR/0"           )
+   TEST_LINE( hb_ColorIndex("W/R, GR/0 ,", 2)  , ""               )
+   TEST_LINE( hb_ColorIndex(" W/R, GR/0 ,", 0) , "W/R"            )
+   TEST_LINE( hb_ColorIndex(" W/R, GR/0 ,", 1) , "GR/0"           )
+   TEST_LINE( hb_ColorIndex(" W/R, GR/0 ,", 2) , ""               )
+   TEST_LINE( hb_ColorIndex(" W/R , GR/0 ,", 0), "W/R"            )
+   TEST_LINE( hb_ColorIndex(" W/R , GR/0 ,", 1), "GR/0"           )
+   TEST_LINE( hb_ColorIndex(" W/R , GR/0 ,", 2), ""               )
+   TEST_LINE( hb_ColorIndex(" W/R ,   ,", 1)   , ""               )
+   TEST_LINE( hb_ColorIndex(" W/R ,,", 1)      , ""               )
+   TEST_LINE( hb_ColorIndex(",,", 0)           , ""               )
+   TEST_LINE( hb_ColorIndex(",,", 1)           , ""               )
+   TEST_LINE( hb_ColorIndex(",,", 2)           , ""               )
+   TEST_LINE( hb_ColorIndex(",  ,", 2)         , ""               )
 
 #endif
 
@@ -2392,6 +2567,9 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( FKLabel( 25 )                   , "F25"            )
    TEST_LINE( FKLabel( 40 )                   , "F40"            )
    TEST_LINE( FKLabel( 41 )                   , ""               )
+
+   /* NOTE: BIN2*() functions are quite untable in CA-Cl*pper when the passed
+      parameter is smaller than the required length. */
 
    /* BIN2I() */
 
@@ -2412,8 +2590,8 @@ STATIC FUNCTION Main_MISC()
    /* BIN2W() */
 
 #ifndef __CLIPPER__
-   TEST_LINE( BIN2W()                         , 0                )
-   TEST_LINE( BIN2W(100)                      , 0                )
+   TEST_LINE( BIN2W()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( BIN2W(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
    TEST_LINE( BIN2W("")                       , 0                )
    TEST_LINE( BIN2W("AB")                     , 16961            )
@@ -2428,8 +2606,8 @@ STATIC FUNCTION Main_MISC()
    /* BIN2L() */
 
 #ifndef __CLIPPER__
-   TEST_LINE( BIN2L()                                    , 0                )
-   TEST_LINE( BIN2L(100)                                 , 0                )
+   TEST_LINE( BIN2L()                                    , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( BIN2L(100)                                 , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
    TEST_LINE( BIN2L("")                                  , 0                )
    TEST_LINE( BIN2L("ABCD")                              , 1145258561       )
@@ -2655,31 +2833,31 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  0    )) , ".........."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3    )) , "CDE......."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3, 20    )) , "CDEFGHIJ.."     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21        )) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21        )) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  0    )) , ".........."     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3    )) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20    )) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3    )) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20    )) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,NIL,  1)) , "ABCDEFGHIJ"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  0,  1)) , ".........."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  0)) , "ABC......."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  2)) , ".ABC......"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3,  8)) , ".......ABC"     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........A" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1,  3, 20)) , ".........A"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  1, 20,  1)) , "ABCDEFGHIJ"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,NIL,  3)) , "..CDEFGHIJ"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  0,  3)) , ".........."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  0)) , "CDE......."     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  2)) , ".CDE......"     )
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3,  8)) , ".......CDE"     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........C" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3,  3, 20)) , ".........C"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(),  3, 20,  3)) , "..CDEFGHIJ"     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,NIL, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,NIL, 21)) , ".........J"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
    TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  0, 21)) , ".........."     )
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  0)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: "J........." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  2)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".J........" */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  8)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".......J.." */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
-   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it returns: ".........J" */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  0)) , "J........."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  2)) , ".J........"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3,  8)) , ".......J.."     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21,  3, 20)) , ".........J"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
+   TEST_LINE( TAStr(aCopy(TARng(),TANew(), 21, 20, 21)) , ".........J"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
 
    /* ASORT() */
 

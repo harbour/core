@@ -401,12 +401,12 @@ static BYTE * HarbourMaskToAttributes( USHORT usMask, BYTE * byAttrib )
    *cAttrib = '\0';
    if( usMask & FA_RDONLY )
       strcat( cAttrib, "R" );
-   if( usMask & FA_DIREC )
-      strcat( cAttrib, "D" );
    if( usMask & FA_HIDDEN )
       strcat( cAttrib, "H" );
    if( usMask & FA_SYSTEM )
       strcat( cAttrib, "S" );
+   if( usMask & FA_DIREC )
+      strcat( cAttrib, "D" );
    if( usMask & FA_ARCH )
       strcat( cAttrib, "A" );
    if( usMask & FA_LABEL )

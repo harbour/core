@@ -70,10 +70,6 @@
 #define FO_DENYNONE   0x0040   /* Do not deny any further attempts to open the file  */
 #define FO_SHARED     FO_DENYNONE
 
-/* File inheritance flags */
-#define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle     */
-#define FO_PRIVATE    0x0080   /* Spawned processes can not inherit this file handle */
-
 /* File seek mode flags */
 #define FS_SET        0x0000   /* Seek from beginning of file    */
 #define FS_RELATIVE   0x0001   /* Seek from current file poitner */

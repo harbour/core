@@ -161,7 +161,7 @@ function Read()
    if ::hFile == -1
       QOut( "DosFile:Read : No file open" )
    elseif ::cMode != "R"
-      QOut( "File ", cFileName, " not open for reading" )
+      QOut( "File ", ::cFileName, " not open for reading" )
    elseif !::lEoF
 
       if Len(::cBlock) == 0                     // Read new block
@@ -214,7 +214,7 @@ function WriteLn( xTxt, lCRLF )
    if ::hFile == -1
       QOut( "DosFile:Write : No file open" )
    elseif ::cMode != 'W'
-      QOut( "File ",cFileName," not opened for writing" )
+      QOut( "File ", ::cFileName," not opened for writing" )
    else
       cBlock := ToChar( xTxt )                  // Convert to string
       if Default( lCRLF, .T. )
@@ -240,7 +240,7 @@ function Goto( nLine )
    if Empty(::hFile)
       QOut( "DosFile:Goto : No file open" )
    elseif  ::cMode != "R"
-      QOut( "File ", cName, " not open for reading" )
+      QOut( "File ", ::cFileName, " not open for reading" )
    else
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning
@@ -251,7 +251,7 @@ function Goto( nLine )
          ::Run()
       enddo
    endif
-return !lEoF
+return !::lEoF
 
 
 

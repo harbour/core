@@ -147,8 +147,8 @@ return __objGetMsgList( oObject, .F. )
 // Basically the same as __objGetMsgList except that it returns a 2D array
 // containing :
 //
-// [x][DATA_SYMBOL]  Symbol name
-// [x][DATA_VALUE]   Value of DATA
+// [x][HB_OO_DATA_SYMBOL]  Symbol name
+// [x][HB_OO_DATA_VALUE]   Value of DATA
 //
 // aExcept is an optional list of DATA you do not want to collect
 //
@@ -195,7 +195,7 @@ function __objSetValueList( oObject, aData )
    endif
 
    aEval( aData,;
-        {|aItem| __objSendMsg( oObject, "_" + aItem[DATA_SYMBOL], aItem[DATA_VALUE] ) } )
+        {| aItem | __objSendMsg( oObject, "_" + aItem[ HB_OO_DATA_SYMBOL ], aItem[ HB_OO_DATA_VALUE ] ) } )
 
 return oObject
 
@@ -214,7 +214,7 @@ function __objAddMethod( oObject, cSymbol, nFuncPtr )
    endif
 
    if !__objHasMsg( oObject, cSymbol )
-      __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, MET_METHOD )
+      __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD )
    else
       __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
    endif
@@ -235,7 +235,7 @@ function __objAddInline( oObject, cSymbol, bInline )
    endif
 
    if !__objHasMsg( oObject, cSymbol )
-      __clsAddMsg( oObject:ClassH, cSymbol, bInline, MET_INLINE )
+      __clsAddMsg( oObject:ClassH, cSymbol, bInline, HB_OO_MSG_INLINE )
    else
       __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
    endif
@@ -261,8 +261,8 @@ function __objAddData( oObject, cSymbol )
       !__objHasMsg( oObject, "_" + cSymbol )
 
       nSeq := __cls_IncData( oObject:ClassH )         // Allocate new Seq#
-      __clsAddMsg( oObject:ClassH, cSymbol,       nSeq, MET_DATA )
-      __clsAddMsg( oObject:ClassH, "_" + cSymbol, nSeq, MET_DATA )
+      __clsAddMsg( oObject:ClassH, cSymbol,       nSeq, HB_OO_MSG_DATA )
+      __clsAddMsg( oObject:ClassH, "_" + cSymbol, nSeq, HB_OO_MSG_DATA )
    else
       __errRT_BASE(EG_ARG, 3103, "Already existing symbol in class", ProcName( 0 ) )
    endif

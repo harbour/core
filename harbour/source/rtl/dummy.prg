@@ -68,9 +68,6 @@ FUNCTION MPosToLC()        ; RETURN 0
 
 FUNCTION __dbApp()         ; RETURN NIL
 FUNCTION __dbCopy()        ; RETURN NIL
-FUNCTION __dbCopyStruct()  ; RETURN NIL
-FUNCTION __dbCopyXStruct() ; RETURN NIL
-FUNCTION __dbCreate()      ; RETURN NIL
 FUNCTION __dbDelim()       ; RETURN NIL
 FUNCTION __dbJoin()        ; RETURN NIL
 FUNCTION __dbList()        ; RETURN NIL
@@ -90,8 +87,6 @@ FUNCTION __dbTransRec()    ; RETURN NIL
 FUNCTION __FLEdit          ; RETURN {}
 
 FUNCTION dbEdit()          ; RETURN NIL
-FUNCTION IsPrinter()       ; RETURN .T.
-FUNCTION NetName()         ; RETURN ""
 FUNCTION __TypeFile()      ; RETURN NIL
 FUNCTION __LabelForm()     ; RETURN NIL
 FUNCTION __ReportForm()    ; RETURN NIL

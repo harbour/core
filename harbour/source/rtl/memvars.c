@@ -529,7 +529,7 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
    HB_TRACE(("hb_memvarNewParameter(%p, %p)", pSymbol, pValue));
 
-   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, MV_PRIVATE, pValue );
+   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_MV_PRIVATE, pValue );
 }
 
 
@@ -690,11 +690,11 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
    HB_TRACE(("hb_memvarScopeGet(%p)", pDynVar));
 
    if( pDynVar->hMemvar == 0 )
-      return MV_UNKNOWN;
+      return HB_MV_UNKNOWN;
    else
    {
       ULONG ulBase = s_privateStackCnt;    /* start from the top of the stack */
-      int iMemvar = MV_PUBLIC;
+      int iMemvar = HB_MV_PUBLIC;
 
       while( ulBase )
       {
@@ -702,9 +702,9 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
          if( pDynVar == s_privateStack[ ulBase ] )
          {
             if( ulBase >= s_privateStackBase )
-               iMemvar = MV_PRIVATE_LOCAL;
+               iMemvar = HB_MV_PRIVATE_LOCAL;
             else
-               iMemvar = MV_PRIVATE_GLOBAL;
+               iMemvar = HB_MV_PRIVATE_GLOBAL;
             ulBase = 0;
          }
       }
@@ -716,7 +716,7 @@ static int hb_memvarScopeGet( PHB_DYNS pDynVar )
  */
 static int hb_memvarScope( char * szVarName, ULONG ulLength )
 {
-   int iMemvar = MV_ERROR;
+   int iMemvar = HB_MV_ERROR;
    char * szName;
 
    HB_TRACE(("hb_memvarScope(%s, %lu)", szVarName, ulLength));
@@ -731,7 +731,7 @@ static int hb_memvarScope( char * szVarName, ULONG ulLength )
       if( pDynVar )
          iMemvar = hb_memvarScopeGet( pDynVar );
       else
-         iMemvar = MV_NOT_FOUND;
+         iMemvar = HB_MV_NOT_FOUND;
       hb_xfree( szName );
    }
 
@@ -759,7 +759,7 @@ static HB_DYNS_FUNC( hb_memvarClear )
  */
 static HB_DYNS_FUNC( hb_memvarCountPublics )
 {
-   if( hb_memvarScopeGet( pDynSymbol ) == MV_PUBLIC )
+   if( hb_memvarScopeGet( pDynSymbol ) == HB_MV_PUBLIC )
       ( * ( ( int * )Cargo ) )++;
 
    return TRUE;
@@ -771,7 +771,7 @@ static int hb_memvarCount( int iScope )
 {
    HB_TRACE(("hb_memvarCount(%d)", iScope));
 
-   if( iScope == MV_PUBLIC )
+   if( iScope == HB_MV_PUBLIC )
    {
       int iPublicCnt = 0;
 
@@ -789,7 +789,7 @@ static HB_DYNS_FUNC( hb_memvarFindPublicByPos )
 {
    BOOL bCont = TRUE;
 
-   if( hb_memvarScopeGet( pDynSymbol ) == MV_PUBLIC )
+   if( hb_memvarScopeGet( pDynSymbol ) == HB_MV_PUBLIC )
    {
       struct mv_PUBLIC_var_info *pStruPub = (struct mv_PUBLIC_var_info *) Cargo;
       if( pStruPub->iPos-- == 0 )
@@ -818,7 +818,7 @@ static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, char * *pszName
    if( iPos > 0 )
    {
       --iPos;
-      if( iScope == MV_PUBLIC )
+      if( iScope == HB_MV_PUBLIC )
       {
          struct mv_PUBLIC_var_info struPub;
 
@@ -1208,12 +1208,12 @@ HARBOUR HB___MVRELEASE( void )
  *    <cVarName> = a string with a variable name to check
  *  $RETURNS$
  *    The symbolic values are defined in include/hbmemvar.ch
- *    MV_NOT_FOUND      =variable is not declared (not found in symbol table)
- *    MV_UNKNOWN        =if variable doesn't exist (but found in symbol table)
- *    MV_ERROR          =if information cannot be obtained (memory error or argument error)
- *    MV_PUBLIC         =for public variables
- *    MV_PRIVATE_GLOBAL =for private variables declared outside of current function/procedure
- *    MV_PRIVATE_LOCAL  =for private variables declared in current function/procedure
+ *    HB_MV_NOT_FOUND      =variable is not declared (not found in symbol table)
+ *    HB_MV_UNKNOWN        =if variable doesn't exist (but found in symbol table)
+ *    HB_MV_ERROR          =if information cannot be obtained (memory error or argument error)
+ *    HB_MV_PUBLIC         =for public variables
+ *    HB_MV_PRIVATE_GLOBAL =for private variables declared outside of current function/procedure
+ *    HB_MV_PRIVATE_LOCAL  =for private variables declared in current function/procedure
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
@@ -1223,19 +1223,19 @@ HARBOUR HB___MVRELEASE( void )
  *    PRIVATE mPrivateGlobal
  *
  *      CallProc()
- *       ? __mvScope( "mPrivateLocal" )      //MV_UNKNOWN
+ *       ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
  *
  *    RETURN
  *
  *    PROCEDURE CallProc()
  *    PRIVATE mPrivateLocal
  *
- *       ? __mvScope( "mPublic" )            //MV_PUBLIC
- *       ? __mvScope( "mPrivateGlobal" )     //MV_PRIVATE_GLOBAL
- *       ? __mvScope( "mPrivateLocal" )      //MV_PRIVATE_LOCAL
- *       ? __mvScope( "mFindMe" )            //MV_NOT_FOUND
+ *       ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
+ *       ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
+ *       ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
+ *       ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
  *
- *       IF( __mvScope( "mPublic" ) > MV_ERROR )
+ *       IF( __mvScope( "mPublic" ) > HB_MV_ERROR )
  *          ? "Variable exists"
  *       ELSE
  *          ? "Variable not created yet"
@@ -1255,7 +1255,7 @@ HARBOUR HB___MVRELEASE( void )
  */
 HARBOUR HB___MVSCOPE( void )
 {
-   int iMemvar = MV_ERROR;
+   int iMemvar = HB_MV_ERROR;
 
    if( hb_pcount() )
    {
@@ -1315,8 +1315,8 @@ HARBOUR HB___MVCLEAR( void )
  *  $ARGUMENTS$
  *     <nScope> = the scope of variables for which an information is asked
  *           Supported values (defined in hbmemvar.ch)
- *           MV_PUBLIC
- *           MV_PRIVATE (or any other value)
+ *           HB_MV_PUBLIC
+ *           HB_MV_PRIVATE (or any other value)
  *     <nPosition> = the position of asked variable on the list of variables
  *        with specified scope - it should start from position 1
  *     <cVarName> = the value is filled with a variable name if passed by
@@ -1349,9 +1349,9 @@ HARBOUR HB___MVCLEAR( void )
  *
  *  LOCAL nCount, i, xValue, cName
  *
- *  nCount =_mvDBGINFO( MV_PUBLIC )
+ *  nCount =_mvDBGINFO( HB_MV_PUBLIC )
  *  FOR i:=1 TO nCount
- *     xValue =__mvDBGINFO( MV_PUBLIC, i, @cName )
+ *     xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
  *     ? i, cName, xValue
  *  NEXT
  *
@@ -1360,24 +1360,24 @@ HARBOUR HB___MVCLEAR( void )
  *  #include <hbmemvar.ch>
  *  PROCEDURE MAIN()
  *
- *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
  *    PUBLIC cPublic:='cPublic in MAIN'
  *
- *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
  *    PRIVATE cPrivate:='cPrivate in MAIN'
  *
- *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
  *    CountMemvars()
  *
  *    ? 'Back in Main'
- *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
  *
  *  RETURN
@@ -1388,23 +1388,23 @@ HARBOUR HB___MVCLEAR( void )
  *  PRIVATE ccPrivate:='ccPrivate'
  *
  *    ? 'In CountMemvars'
- *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
  *    PRIVATE cPublic:='cPublic'
  *
- *    ? 'PUBLIC=', __mvDBGINFO( MV_PUBLIC )
- *    ? 'PRIVATE=', __mvDBGINFO( MV_PRIVATE )
+ *    ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
+ *    ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
  *
- *    nCnt =__mvDBGINFO( MV_PRIVATE ) +1
+ *    nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
  *    FOR i:=1 TO nCnt
- *        xVal =__mvDBGINFO( MV_PRIVATE, i, @cName )
+ *        xVal =__mvDBGINFO( HB_MV_PRIVATE, i, @cName )
  *        ? i, '=', cName, xVal
  *    NEXT
  *
- *    nCnt =__mvDBGINFO( MV_PUBLIC ) +1
+ *    nCnt =__mvDBGINFO( HB_MV_PUBLIC ) +1
  *    FOR i:=1 TO nCnt
- *        xVal =__mvDBGINFO( MV_PUBLIC, i, @cName )
+ *        xVal =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
  *        ? i, '=', cName, xVal
  *    NEXT
  *

@@ -60,7 +60,7 @@ HARBOUR HB_GT_CHAREVEN( void )
     for (i = 1; i <= len; i += 2)
       s2[(i - 1)/2] = s1[i] & 0x7f;
 
-    hb_retc(s2);
+    hb_retclen(s2, len);
     hb_xfree(s2);                     /* free alloc'ed mem */
   } else {
     hb_retc((char *) NULL);           /* parameter mismatch - error NullStr */

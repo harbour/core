@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Get Class
  *
- * Copyright 1999 Ignacio Ortiz de Zúniga <ignacio@fivetech.com>
+ * Copyright 1999 Ignacio Ortiz de Z£niga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -72,28 +72,28 @@ CLASS TGet
    MESSAGE Delete()    METHOD _delete()
    METHOD DeleteAll()
 
-   METHOD insert(cChar)
-   METHOD overstrike(cChar)
+   METHOD insert( cChar )
+   METHOD overstrike( cChar )
 
-   METHOD IsEditable(nPos)
-   METHOD Input(cChar)
-   METHOD PutMask(cBuffer, lEdit)
+   METHOD IsEditable( nPos )
+   METHOD Input( cChar )
+   METHOD PutMask( cBuffer, lEdit )
 
    METHOD Display()
 
-//   METHOD ColorDisp(cColorSpec)  VIRTUAL
-//   METHOD hitTest(nRow, nCol)    VIRTUAL
-//   METHOD delEnd()               VIRTUAL
-//   METHOD delLeft()              VIRTUAL
-//   METHOD delRight()             VIRTUAL
-//   METHOD delWordLeft()          VIRTUAL
-//   METHOD delWordRight()         VIRTUAL
+//   METHOD ColorDisp( cColorSpec ) VIRTUAL
+//   METHOD hitTest( nRow, nCol )   VIRTUAL
+//   METHOD delEnd()                VIRTUAL
+//   METHOD delLeft()               VIRTUAL
+//   METHOD delRight()              VIRTUAL
+//   METHOD delWordLeft()           VIRTUAL
+//   METHOD delWordRight()          VIRTUAL
 
 ENDCLASS
 
 //---------------------------------------------------------------------------//
 
-METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS TGet
+METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor ) CLASS TGet
 
    local cChar
    local nAt, nFor
@@ -125,27 +125,27 @@ METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS TGet
    ::rejected   := .f.
    ::row        := nRow
    ::subscript  := Nil
-   ::type       := Valtype(::VarGet())
+   ::type       := Valtype( ::VarGet() )
    ::typeout    := .f.
 
    // Existe function en picture
 
-   if Left(cPicture, 1) == "@"
-      nAt := At(" ", cPicture)
+   if Left( cPicture, 1 ) == "@"
+      nAt := At( " ", cPicture )
       if nAt == 0
          ::cPicFunc := cPicture
          ::cPicMask := ""
       else
-         ::cPicFunc := Substr(cPicture, 1, nAt-1)
-         ::cPicMask := Substr(cPicture, nAt+1)
+         ::cPicFunc := SubStr( cPicture, 1, nAt - 1 )
+         ::cPicMask := SubStr( cPicture, nAt + 1 )
       endif
-      if (nAt := At("S", ::cPicFunc)) > 0
-         for nFor := nAt+1 to len(::cPicFunc)
-            if !IsDigit(Substr(::cPicFunc, nFor, 1))
+      if ( nAt := At( "S", ::cPicFunc ) ) > 0
+         for nFor := nAt + 1 to Len( ::cPicFunc )
+            if !IsDigit( SubStr( ::cPicFunc, nFor, 1 ) )
                exit
             endif
          next
-         ::cPicFunc := Substr(::cPicFunc,1,nAt-1)+Substr(::cPicFunc, nFor)
+         ::cPicFunc := SubStr( ::cPicFunc, 1, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
          if ::cPicFunc == "@"
             ::cPicFunc := ""
          endif
@@ -157,38 +157,38 @@ METHOD New(nRow, nCol, bVarBlock, cVarName, cPicture, cColor) CLASS TGet
 
    // Si es fecha y no tiene plantilla ponersela
 
-   if ::type == "D" .and. Empty(::cPicMask)
-      ::cPicMask := Set(_SET_DATEFORMAT)
-      ::cPicMask := StrTran(::cPicmask, "y", "9")
-      ::cPicMask := StrTran(::cPicmask, "m", "9")
-      ::cPicMask := StrTran(::cPicmask, "d", "9")
+   if ::type == "D" .and. Empty( ::cPicMask )
+      ::cPicMask := Set( _SET_DATEFORMAT )
+      ::cPicMask := StrTran( ::cPicmask, "y", "9" )
+      ::cPicMask := StrTran( ::cPicmask, "m", "9" )
+      ::cPicMask := StrTran( ::cPicmask, "d", "9" )
    endif
 
    // Si es numero y no tiene plantilla ponersela
 
-   if ::type == "N" .and. Empty(::cPicMask)
+   if ::type == "N" .and. Empty( ::cPicMask )
       ::cPicMask := "9999999999"
    endif
 
    // Comprobar si tiene la , y el . cambiado (Solo en Xbase++)
 
-   ::lDecRev := (","$(transform(1.1,"9.9")))
+   ::lDecRev := "," $ transform( 1.1, "9.9" )
 
    // Comprobar si tiene caracteres embebidos no modificables en la plantilla
 
    ::lPicComplex := .f.
 
-   if !empty(::cPicMask)
-      For nFor := 1 to len(::cPicMask)
-         cChar := Substr(::cPicMask, nFor, 1)
-         if !cChar$"!ANX9#"
+   if !Empty( ::cPicMask )
+      For nFor := 1 to Len( ::cPicMask )
+         cChar := SubStr( ::cPicMask, nFor, 1 )
+         if !cChar $ "!ANX9#"
             ::lPicComplex := .t.
             exit
          endif
       Next
    endif
 
-   ::buffer := ::PutMask(::VarGet(), .f. )
+   ::buffer := ::PutMask( ::VarGet(), .f. )
 
 return Self
 
@@ -196,11 +196,7 @@ return Self
 
 METHOD Display() CLASS TGet
 
-   local cClrInverse := __ColorIndex( SetColor(), CLR_ENHANCED )
-   local nOldCursor  := SetCursor( 0 )
-
-   @ ::Row, ::Col SAY ::buffer COLOR cClrInverse
-   SetCursor( nOldCursor )
+   DispOutAt( ::Row, ::Col, ::buffer, hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
 
 return Self
 
@@ -208,8 +204,15 @@ return Self
 
 METHOD End() CLASS TGet
 
+   local nLastCharPos
+
    if ::HasFocus
-      ::Pos := ::nMaxLen
+      nLastCharPos := Min( Len( RTrim( ::buffer ) ) + 1, ::nMaxLen )
+      if ::Pos != nLastCharPos
+         ::Pos := nLastCharPos
+      else
+         ::Pos := ::nMaxLen
+      endif
       ::Clear := .f.
       SetPos( ::Row, ::Col + ::Pos - 1 )
    endif
@@ -233,7 +236,7 @@ return nil
 METHOD Reset() CLASS TGet
 
    if ::hasfocus
-      ::buffer := ::PutMask(::VarGet())
+      ::buffer := ::PutMask( ::VarGet() )
       ::pos    := 1
    endif
 
@@ -244,7 +247,7 @@ return Self
 METHOD Undo() CLASS TGet
 
    if ::hasfocus
-      ::buffer := ::PutMask(::original)
+      ::buffer := ::PutMask( ::original )
       ::pos    := 1
    endif
 
@@ -257,28 +260,28 @@ METHOD SetFocus() CLASS TGet
    ::hasfocus   := .t.
    ::rejected   := .f.
    ::typeout    := .f.
-   ::buffer     := ::PutMask(::VarGet(), .f. )
+   ::buffer     := ::PutMask( ::VarGet(), .f. )
    ::changed    := .f.
-   ::clear      := ("K"$::cPicFunc .or. ::type == "N")
-   ::nMaxLen    := Len(::buffer)
+   ::clear      := ( "K" $ ::cPicFunc .or. ::type == "N")
+   ::nMaxLen    := Len( ::buffer )
    ::pos        := 1
    ::lEdit      := .f.
 
    if ::type == "N"
-      ::decpos := At(iif(::lDecRev,",", "."), ::buffer)
-      ::minus  := ("-"$::buffer .or. "("$::buffer)
+      ::decpos := At( iif( ::lDecRev, ",", "." ), ::buffer )
+      ::minus  := ( "-" $ ::buffer .or. "(" $ ::buffer )
    else
       ::decpos := Nil
       ::minus  := .f.
    endif
 
    if ::type == "D"
-      ::BadDate := (At("  ", DToC(CToD(::buffer))) != 0 )
+      ::BadDate := ( At( "  ", DToC( CToD( ::buffer ) ) ) != 0 )
    else
       ::BadDate := .f.
    endif
 
-   DevPos( ::Row, ::Col + ::Pos - 1 )
+   SetPos( ::Row, ::Col + ::Pos - 1 )
 
 return Self
 
@@ -297,9 +300,9 @@ return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD VarPut(xValue) CLASS TGet
+METHOD VarPut( xValue ) CLASS TGet
 
-   Eval(::block, xValue)
+   Eval( ::block, xValue )
 
 return xValue
 
@@ -307,11 +310,11 @@ return xValue
 
 METHOD VarGet() CLASS TGet
 
-return Eval(::block)
+return Eval( ::block )
 
 //---------------------------------------------------------------------------//
 
-METHOD Untransform(cBuffer) CLASS TGet
+METHOD Untransform( cBuffer ) CLASS TGet
 
    local xValue
    local cChar
@@ -322,45 +325,45 @@ METHOD Untransform(cBuffer) CLASS TGet
    do case
    case ::type == "C"
 
-      if "R"$::cPicFunc
-         for nFor := 1 to len(::cPicMask)
-            cChar := Substr(::cPicMask, nFor, 1)
-            if !cChar$"ANX9#!"
-               cBuffer := Substr(cBuffer, 1, nFor-1)+ Chr(1)+ Substr(cBuffer, nFor+1)
+      if "R" $ ::cPicFunc
+         for nFor := 1 to Len( ::cPicMask )
+            cChar := SubStr( ::cPicMask, nFor, 1 )
+            if !cChar $ "ANX9#!"
+               cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
             endif
          next
-         cBuffer := StrTran(cBuffer, Chr(1), "")
+         cBuffer := StrTran( cBuffer, Chr( 1 ), "" )
       endif
 
       xValue := cBuffer
 
-   case ::type = "N"
-      if "E"$::cPicFunc .or. ::lDecRev
-         cBuffer := StrTran(cBuffer,".","")
-         cBuffer := StrTran(cBuffer,",",".")
+   case ::type == "N"
+      if "E" $ ::cPicFunc .or. ::lDecRev
+         cBuffer := StrTran( cBuffer, ".", "" )
+         cBuffer := StrTran( cBuffer, ",", "." )
       else
-         cBuffer := StrTran(cBuffer,",","")
+         cBuffer := StrTran( cBuffer, ",", "" )
       endif
-      cBuffer := StrTran(cBuffer,"$","")
-      cBuffer := StrTran(cBuffer,"*","")
-      cBuffer := StrTran(cBuffer,"-","")
-      cBuffer := StrTran(cBuffer,"(","")
-      cBuffer := StrTran(cBuffer,")","")
-      cBuffer := Alltrim(cBuffer)
-      xValue  := Val(cBuffer)
+      cBuffer := StrTran( cBuffer, "$", "" )
+      cBuffer := StrTran( cBuffer, "*", "" )
+      cBuffer := StrTran( cBuffer, "-", "" )
+      cBuffer := StrTran( cBuffer, "(", "" )
+      cBuffer := StrTran( cBuffer, ")", "" )
+      cBuffer := Alltrim( cBuffer )
+      xValue  := Val( cBuffer )
       if ::minus
-         xValue := -(xValue)
+         xValue := -xValue
       endif
 
-   case ::type = "L"
-      cBuffer := Upper(cBuffer)
-      xValue := ("T"$cBuffer .or. "Y"$cBuffer)
+   case ::type == "L"
+      cBuffer := Upper( cBuffer )
+      xValue := "T" $ cBuffer .or. "Y" $ cBuffer
 
-   case ::type = "D"
-      if "E"$::cPicFunc
-         cBuffer := Substr(cBuffer, 4, 3)+Substr(cBuffer, 1, 3)+Substr(cBuffer, 8)
+   case ::type == "D"
+      if "E" $ ::cPicFunc
+         cBuffer := SubStr( cBuffer, 4, 3 ) + SubStr( cBuffer, 1, 3 ) + SubStr( cBuffer, 8 )
       endif
-      xValue := Ctod(cBuffer)
+      xValue := CToD( cBuffer )
 
    endcase
 
@@ -368,7 +371,7 @@ return xValue
 
 //---------------------------------------------------------------------------//
 
-METHOD overstrike(cChar) CLASS TGet
+METHOD overstrike( cChar ) CLASS TGet
 
    if ::type == "N" .and. !::lEdit
       ::pos := 1
@@ -382,10 +385,10 @@ METHOD overstrike(cChar) CLASS TGet
 
    if !::lEdit
 
-      ::buffer := ::PutMask(::VarGet(), .t. )
+      ::buffer := ::PutMask( ::VarGet(), .t. )
       ::lEdit := .t.
 
-      do while !::IsEditable(::pos) .and. ::pos <= ::nMaxLen
+      do while !::IsEditable( ::pos ) .and. ::pos <= ::nMaxLen
          ::pos++
       enddo
 
@@ -395,32 +398,32 @@ METHOD overstrike(cChar) CLASS TGet
 
    endif
 
-   cChar := ::Input(cChar)
+   cChar := ::Input( cChar )
 
    if cChar == ""
       ::Rejected := .t.
       return Self
    endif
 
-   ::buffer := Substr(::buffer, 1, ::Pos-1) + cChar + Substr(::buffer, ::Pos+1)
+   ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos + 1 )
    ::Changed := ( ::unTransform() != ::Original )
    ::Assign()
    ::Right()
 
    if ::type == "D"
-      ::BadDate := (At("  ", DToC(CToD(::buffer))) != 0 )
+      ::BadDate := ( At("  ", DToC( CToD( ::buffer ) ) ) != 0 )
    else
       ::BadDate := .f.
    endif
 
    ::Display()
-   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
+   SetPos( ::Row, ::Col + iif( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
 //---------------------------------------------------------------------------//
 
-METHOD Insert(cChar) CLASS TGet
+METHOD Insert( cChar ) CLASS TGet
 
    if ::type == "N" .and. !::lEdit
       ::pos := 1
@@ -433,7 +436,7 @@ METHOD Insert(cChar) CLASS TGet
    endif
 
    if !::lEdit
-      ::buffer := ::PutMask(::VarGet(), .t. )
+      ::buffer := ::PutMask( ::VarGet(), .t. )
       ::lEdit := .t.
    endif
 
@@ -444,19 +447,19 @@ METHOD Insert(cChar) CLASS TGet
       return Self
    endif
 
-   ::buffer  := Left(Substr(::buffer, 1, ::Pos-1) + cChar + Substr(::buffer, ::Pos), ::nMaxLen)
+   ::buffer  := Left( SubStr( ::buffer, 1, ::Pos - 1 ) + cChar + SubStr( ::buffer, ::Pos ), ::nMaxLen )
    ::Changed := ( ::unTransform() != ::Original )
    ::Assign()
    ::Right()
 
    if ::type == "D"
-      ::BadDate := (At("  ", DToC(CToD(::buffer))) != 0 )
+      ::BadDate := ( At( "  ", DToC( CToD( ::buffer ) ) ) != 0 )
    else
       ::BadDate := .f.
    endif
 
    ::Display()  // Kwon,Oh-Chul
-   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
+   SetPos( ::Row, ::Col + iif( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
@@ -480,7 +483,7 @@ METHOD _Right() CLASS TGet
 
    nPos := ::Pos + 1
 
-   Do While !::IsEditable(nPos) .and. nPos <= ::nMaxLen
+   Do While !::IsEditable( nPos ) .and. nPos <= ::nMaxLen
       nPos++
    Enddo
 
@@ -490,7 +493,7 @@ METHOD _Right() CLASS TGet
       ::TypeOut := .t.
    endif
 
-   DevPos( ::Row, ::Col + ::Pos - 1 )
+   SetPos( ::Row, ::Col + ::Pos - 1 )
 
 return Self
 
@@ -514,7 +517,7 @@ METHOD _Left() CLASS TGet
 
    nPos := ::Pos - 1
 
-   Do While !::IsEditable(nPos) .and. nPos > 0
+   Do While !::IsEditable( nPos ) .and. nPos > 0
       nPos--
    Enddo
 
@@ -524,7 +527,7 @@ METHOD _Left() CLASS TGet
       ::TypeOut := .t.
    endif
 
-   DevPos( ::Row, ::Col + ::Pos - 1 )
+   SetPos( ::Row, ::Col + ::Pos - 1 )
 
 return Self
 
@@ -548,7 +551,7 @@ METHOD WordLeft() CLASS TGet
 
    nPos := ::Pos - 1
 
-   Do While Substr(::buffer, nPos, 1) != " " .and. nPos > 0
+   Do While SubStr( ::buffer, nPos, 1 ) != " " .and. nPos > 0
       nPos--
    Enddo
 
@@ -578,7 +581,7 @@ METHOD WordRight() CLASS TGet
 
    nPos := ::Pos + 1
 
-   Do While Substr(::buffer, nPos, 1) != " " .and. nPos <= ::nMaxLen
+   Do While SubStr( ::buffer, nPos, 1 ) != " " .and. nPos <= ::nMaxLen
       nPos++
    Enddo
 
@@ -597,18 +600,18 @@ return Self
    endif
 
    ::Clear  := .f.
-   ::buffer := ::PutMask(::UnTransform(), .t. )
-   ::pos    := ::decpos+1
+   ::buffer := ::PutMask( ::UnTransform(), .t. )
+   ::pos    := ::decpos + 1
 
 return .t.
 
 //---------------------------------------------------------------------------//
 
-METHOD IsEditable(nPos) CLASS TGet
+METHOD IsEditable( nPos ) CLASS TGet
 
    local cChar
 
-   if empty(::cPicMask)
+   if Empty( ::cPicMask )
       return .t.
    endif
 
@@ -616,24 +619,24 @@ METHOD IsEditable(nPos) CLASS TGet
       return .f.
    endif
 
-   cChar := Substr(::cPicMask, nPos, 1)
+   cChar := SubStr( ::cPicMask, nPos, 1 )
 
    do case
    case ::type == "C"
-      return (cChar$"!ANX9#")
+      return cChar $ "!ANX9#"
    case ::type == "N"
-      return (cChar$"9#$*")
+      return cChar $ "9#$*"
    case ::type == "D"
-      return (cChar == "9")
+      return cChar == "9"
    case ::type == "L"
-      return (cChar$"TFYN")
+      return cChar $ "TFYN"
    endcase
 
 return .f.
 
 //---------------------------------------------------------------------------//
 
-METHOD Input(cChar) CLASS TGet
+METHOD Input( cChar ) CLASS TGet
 
    do case
    case ::type == "N"
@@ -646,35 +649,35 @@ METHOD Input(cChar) CLASS TGet
       case cChar == "."
          ::toDecPos()
          return ""
-      case !(cChar$"0123456789")
+      case !( cChar $ "0123456789" )
          return ""
       endcase
 
    case ::type == "D"
-      if !(cChar$"0123456789")
+      if !( cChar $ "0123456789" )
          return ""
       endif
 
    case ::type == "L"
-      if !(Upper(cChar)$"YNTF")
+      if !( Upper( cChar ) $ "YNTF" )
          return ""
       endif
 
    endcase
 
-   if !Empty(::cPicFunc)
-      cChar := Transform(cChar, ::cPicFunc)
+   if !Empty( ::cPicFunc )
+      cChar := Transform( cChar, ::cPicFunc )
    endif
 
-   if !Empty(::cPicMask)
-      cChar := Transform(cChar, Substr(::cPicMask, ::pos, 1))
+   if !Empty( ::cPicMask )
+      cChar := Transform( cChar, SubStr( ::cPicMask, ::pos, 1 ) )
    endif
 
 return cChar
 
 //---------------------------------------------------------------------------//
 
-METHOD PutMask(xValue, lEdit) CLASS TGet
+METHOD PutMask( xValue, lEdit ) CLASS TGet
 
    local cChar, cBuffer
    local nFor, nLen, nAt
@@ -682,23 +685,23 @@ METHOD PutMask(xValue, lEdit) CLASS TGet
    DEFAULT xValue TO ::VarGet()
    DEFAULT lEdit  TO ::hasfocus
 
-   cBuffer := Transform(xValue, Alltrim(::cPicFunc+" "+::cPicMask))
+   cBuffer := Transform( xValue, Alltrim( ::cPicFunc + " " + ::cPicMask ) )
 
-   if lEdit .and. ::type == "N" .and. !Empty(::cPicMask)
-      nLen := len(cBuffer)
+   if lEdit .and. ::type == "N" .and. !Empty( ::cPicMask )
+      nLen := Len( cBuffer )
       for nFor := 1 to nLen
-         cChar := Substr(::cPicMask, nFor, 1)
-         if cChar$",." .and. Substr(cBuffer, nFor, 1) != cChar
-            cBuffer := Substr(cBuffer, 1, nFor-1) + cChar + Substr(cBuffer, nFor+1)
+         cChar := SubStr( ::cPicMask, nFor, 1 )
+         if cChar $ ",." .and. SubStr( cBuffer, nFor, 1 ) != cChar
+            cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next
-      if (nAt := At(" ", cBuffer)) > 0
-         cBuffer := Strtran(cBuffer, "0", " ", nAt)
+      if ( nAt := At( " ", cBuffer ) ) > 0
+         cBuffer := StrTran( cBuffer, "0", " ", nAt )
       endif
       if ::lDecRev
-         cBuffer := Strtran(cBuffer, ",", Chr(1))
-         cBuffer := Strtran(cBuffer, ".", ",")
-         cBuffer := Strtran(cBuffer, Chr(1), ".")
+         cBuffer := StrTran( cBuffer, ",", Chr( 1 ) )
+         cBuffer := StrTran( cBuffer, ".", "," )
+         cBuffer := StrTran( cBuffer, Chr( 1 ), "." )
       endif
    endif
 
@@ -725,23 +728,23 @@ METHOD _Delete() CLASS TGet
    do case
    case ::type == "C"
       if !::lPicComplex
-         ::buffer := Padr(Substr(::buffer, 1, ::Pos-1) + ;
-                     Substr(::buffer, ::Pos+1), ::nMaxLen)
+         ::buffer := Padr( SubStr( ::buffer, 1, ::Pos - 1 ) + ;
+                     SubStr( ::buffer, ::Pos + 1 ), ::nMaxLen )
       else
-         ::buffer := Substr(::buffer, 1, ::Pos-1) +" "+ ;
-                     Substr(::buffer, ::Pos+1)
+         ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + " " + ;
+                     SubStr( ::buffer, ::Pos + 1 )
       endif
 
    case ::type == "N"
-      if Substr(::buffer, ::Pos, 1) == "-"
+      if SubStr( ::buffer, ::Pos, 1 ) == "-"
          ::minus := .f.
       endif
-      ::buffer := Substr(::buffer, 1, ::Pos-1) +" "+ ;
-                  Substr(::buffer, ::Pos+1)
+      ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + " " + ;
+                  SubStr( ::buffer, ::Pos + 1 )
 
    case ::type == "D"
-      ::buffer := Substr(::buffer, 1, ::Pos-1) +" "+ ;
-                  Substr(::buffer, ::Pos+1)
+      ::buffer := SubStr( ::buffer, 1, ::Pos - 1 ) + " " + ;
+                  SubStr( ::buffer, ::Pos + 1 )
 
    case ::type == "L"
       ::buffer := " "
@@ -750,7 +753,7 @@ METHOD _Delete() CLASS TGet
 
    ::Assign()
    ::Display()
-   SetPos( ::Row, ::Col + If( ::Pos != nil, ::Pos - 1, 0 ) )
+   SetPos( ::Row, ::Col + iif( ::Pos != nil, ::Pos - 1, 0 ) )
 
 return Self
 
@@ -762,16 +765,16 @@ METHOD DeleteAll() CLASS TGet
 
    do case
    case ::type == "C"
-      xValue := Space(::nMaxlen)
+      xValue := Space( ::nMaxlen )
    case ::type == "N"
       xValue := 0
    case ::type == "D"
-      xValue := Dtoc("")
+      xValue := DToC( "" )
    case ::type == "L"
       xValue := .f.
    endcase
 
-   ::buffer := ::PutMask(xValue,.t.)
+   ::buffer := ::PutMask( xValue, .t. )
    ::Pos    := 1
    ::Assign()
 

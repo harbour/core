@@ -99,6 +99,28 @@
  *                             changed to allow unlimited color pairs.
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ *    hb_gtInit()
+ *    hb_gtExit()
+ *    hb_gtDispBegin()
+ *    hb_gtDispEnd()
+ *    hb_gtPreExt()
+ *    hb_gtPostExt()
+ *    hb_gtGetColorStr()
+ *    hb_gtSetColorStr()
+ *    hb_gtSetMode()
+ *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    hb_gtDrawShadow()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #include <ctype.h>
 #include "set.h"
 #include "gtapi.h"
@@ -124,9 +146,7 @@ static int    s_ColorCount;
 
 void hb_gtInit( void )
 {
-   HB_TRACE(("hb_gtInit()")); 
-
-/* ptucker */
+   HB_TRACE(("hb_gtInit()"));
 
    s_Color = ( int * ) hb_xgrab( 5 * sizeof( int ) );
    s_ColorCount = 5;
@@ -137,9 +157,7 @@ void hb_gtInit( void )
 
 void hb_gtExit( void )
 {
-   HB_TRACE(("hb_gtExit()")); 
-
-/* ptucker */
+   HB_TRACE(("hb_gtExit()"));
 
    while( s_uiDispCount )
       hb_gtDispEnd();
@@ -150,7 +168,7 @@ void hb_gtExit( void )
 
 int hb_gtReadKey( void )
 {
-   HB_TRACE(("hb_gtReadKey()")); 
+   HB_TRACE(("hb_gtReadKey()"));
 
 #if defined(OS_UNIX_COMPATIBLE)
    return hb_gt_ReadKey();
@@ -174,7 +192,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
    USHORT uiMaxRow;
    USHORT uiMaxCol;
 
-   HB_TRACE(("hb_gtBox(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyFrame)); 
+   HB_TRACE(("hb_gtBox(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, pbyFrame));
 
    uiTopBak = uiTop;
    uiLeftBak = uiLeft;
@@ -293,8 +311,6 @@ USHORT hb_gtDispBegin( void )
 {
    HB_TRACE(("hb_gtDispBegin()"));
 
-/* ptucker */
-
    if( s_uiPreCount == 0 )
    {
       ++s_uiDispCount;
@@ -317,8 +333,6 @@ USHORT hb_gtDispEnd( void )
 {
    HB_TRACE(("hb_gtDispEnd()"));
 
-/* ptucker */
-
    if( s_uiPreCount == 0 )
    {
       hb_gt_DispEnd();
@@ -333,8 +347,6 @@ USHORT hb_gtDispEnd( void )
 USHORT hb_gtPreExt( void )
 {
    HB_TRACE(("hb_gtPreExt()"));
-
-/* ptucker */
 
    /* an external (printf...) write is about to take place */
 
@@ -365,8 +377,6 @@ USHORT hb_gtPostExt( void )
 {
    HB_TRACE(("hb_gtPostExt()"));
 
-/* ptucker */
-
    if( s_uiPreCNest == 1 )
    {
       USHORT uidc = s_uiPreCount;
@@ -392,7 +402,6 @@ USHORT hb_gtGetColorStr( char * fpColorString )
 
    HB_TRACE(("hb_gtGetColorStr(%s)", fpColorString));
 
-/* ptucker */
    sColors = ( char * ) hb_xgrab( s_ColorCount * 8 + 1 ); /* max possible */
 
    for( i = 0; i < s_ColorCount; i++ )
@@ -463,8 +472,6 @@ USHORT hb_gtSetColorStr( char * fpColorString )
    int nCount = -1, i = 0, y;
 
    HB_TRACE(("hb_gtSetColorStr(%s)", fpColorString));
-
-/* ptucker */
 
    if( !fpColorString )
       return 1;
@@ -694,28 +701,28 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 
 BOOL hb_gtIsColor( void )
 {
-   HB_TRACE(("hb_gtIsColor()")); 
+   HB_TRACE(("hb_gtIsColor()"));
 
    return hb_gt_IsColor();
 }
 
 USHORT hb_gtMaxCol( void )
 {
-   HB_TRACE(("hb_gtMaxCol()")); 
+   HB_TRACE(("hb_gtMaxCol()"));
 
    return hb_gt_GetScreenWidth() - 1;
 }
 
 USHORT hb_gtMaxRow( void )
 {
-   HB_TRACE(("hb_gtMaxRow()")); 
+   HB_TRACE(("hb_gtMaxRow()"));
 
    return hb_gt_GetScreenHeight() - 1;
 }
 
 USHORT hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * uipBuffSize )
 {
-   HB_TRACE(("hb_gtRectSize(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, uipBuffSize)); 
+   HB_TRACE(("hb_gtRectSize(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, uipBuffSize));
 
    *uipBuffSize = ( uiBottom - uiTop + 1 ) * ( uiRight - uiLeft + 1 ) * 2;
 
@@ -788,7 +795,6 @@ USHORT hb_gtSetMode( USHORT uiRows, USHORT uiCols )
 {
    HB_TRACE(("hb_gtSetMode(%hu, %hu)", uiRows, uiCols));
 
-/* ptucker */
    return hb_gt_SetMode( uiRows, uiCols ) ? 0 : 1;
 }
 
@@ -956,6 +962,33 @@ USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
    hb_gt_Scroll( uiTop, uiLeft, uiBottom, uiRight, s_Color[ s_uiColorIndex ], iRows, iCols );
    return 0;
 }
+
+/* NOTE: It would be better if the clipping was done by the low level API */
+
+USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
+{
+   USHORT uiMaxRow = hb_gtMaxRow();
+   USHORT uiMaxCol = hb_gtMaxCol();
+
+   uiLeft += 2;
+   uiBottom++;
+
+   /* Draw the bottom edge */
+
+   if( uiBottom <= uiMaxRow && uiLeft <= uiMaxCol )
+      hb_gt_SetAttribute( uiBottom, uiLeft, uiBottom, HB_MIN_( uiRight, uiMaxCol ), byAttr );
+
+   uiRight++;
+   uiTop++;
+
+   /* Draw the right edge */
+
+   if( uiTop <= uiMaxRow && uiRight <= uiMaxCol )
+      hb_gt_SetAttribute( uiTop, uiRight, uiBottom, HB_MIN_( uiRight + 1, uiMaxCol ), byAttr );
+
+   return 0;
+}
+
 
 #ifdef TEST
 void main( void )

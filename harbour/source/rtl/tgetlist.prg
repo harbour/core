@@ -476,12 +476,10 @@ METHOD ShowScoreboard() CLASS TGetList
    local nRow, nCol, nOldCursor
 
    if Set( _SET_SCOREBOARD )
-      nOldCursor = SetCursor( 0 )
       nRow = Row()
       nCol = Col()
       DispOutAt( SCORE_ROW, SCORE_COL, If( Set( _SET_INSERT ), "Ins", "   " ) )
       SetPos( nRow, nCol )
-      SetCursor( nOldCursor )
    endif
 
 return nil

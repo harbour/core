@@ -5,61 +5,8 @@
 #include "set.ch"
 
 function main
-local cStr := "This is " + CHR(0) + " a test."
+local cStr := "   " + CHR (0) + "ABC" + CHR (0) + "   "
 local cTest, nI, nJ, crlf := CHR(13)+CHR(10)
-
-   // Test various string operators.
-   OUTSTD (LEN(cStr))
-   OUTSTD (cStr)
-   OUTSTD (UPPER (cStr))
-   OUTSTD (LOWER (cStr))
-   OUTSTD (crlf)
-   OUTSTD (ASC (SUBSTR (cStr, 8)))
-   OUTSTD (ASC (SUBSTR (cStr, 9)))
-   OUTSTD (ASC (SUBSTR (cStr, 10)))
-   OUTSTD (crlf)
-   OUTSTD (crlf)
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD (LEFT (cStr, 8))
-   OUTSTD("<")
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD (RIGHT (cStr, 8))
-   OUTSTD("<")
-   OUTSTD (crlf)
-   OUTSTD (ISDIGIT ("9"))
-   OUTSTD (crlf)
-   OUTSTD (ISDIGIT ("9A"))
-   OUTSTD (crlf)
-   OUTSTD (ISDIGIT ("AA"))
-   OUTSTD (crlf)
-   OUTSTD (ISDIGIT ("A"))
-   OUTSTD (crlf)
-   OUTSTD (crlf)
-   cTest := "   " + CHR (0) + "ABC" + CHR (0) + "   "
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD(LTRIM (cTest))
-   OUTSTD("<")
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD(TRIM (cTest))
-   OUTSTD("<")
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD(ALLTRIM (cTest))
-   OUTSTD("<")
-   OUTSTD (crlf)
-   OUTSTD (crlf)
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD (REPLICATE ("!", 32))
-   OUTSTD("<")
-   OUTSTD (crlf)
-   OUTSTD (">")
-   OUTSTD (SPACE (32))
-   OUTSTD("<")
 
    // Test string copying.
    cTest := cStr

@@ -64,6 +64,7 @@
 #include "pcode.h"
 #include "set.h"
 #include "inkey.h"
+#include "hbmemory.ch"
 
 typedef struct _SYMBOLS
 {
@@ -264,7 +265,7 @@ void hb_vmInit( void )
 
       hb_outerr( pszVersion, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
-      sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( 1 ), hb_xquery( 3 ), hb_xquery( 4 ) );
+      sprintf( buffer, "DS avail=%luKB  OS avail=%luKB  EMM avail=%luKB", hb_xquery( HB_MEM_BLOCK ), hb_xquery( HB_MEM_VM ), hb_xquery( HB_MEM_EMS ) );
       hb_outerr( buffer, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
@@ -1780,27 +1781,37 @@ static void hb_vmInstring( void )
 
 static void hb_vmForTest( void )        /* Test to check the end point of the FOR */
 {
-   if( IS_NUMERIC( hb_stack.pPos - 1 ) )
+   int iDec;
+   double dStep;
+   BOOL bEqual;
+
+   while( ! IS_NUMERIC( hb_stack.pPos - 1 ) )
    {
-      int iDec;
-      double dStep;
-      BOOL bEqual;
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<" );
 
-      dStep = hb_vmPopDouble( &iDec );
-
-      /* NOTE: step of zero will cause endless loop, as in Clipper */
-
-      if( dStep > 0 )           /* Positive loop. Use LESS */
-         hb_vmLess();
-      else if( dStep < 0 )      /* Negative loop. Use GREATER */
-         hb_vmGreater();
-
-      bEqual = hb_vmPopLogical();    /* Logical should be on top of stack */
-      hb_vmPushNumber( dStep, iDec );   /* Push the step expression back on the stack */
-      hb_vmPushLogical( bEqual );
+      if( pResult )
+      {
+         hb_stackPop();
+         hb_vmPush( pResult );
+         hb_itemRelease( pResult );
+      }
+      else
+         /* NOTE: Return from the inside. */
+         return;
    }
-   else
-      hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
+
+   dStep = hb_vmPopDouble( &iDec );
+
+   /* NOTE: step of zero will cause endless loop, as in Clipper */
+
+   if( dStep > 0 )           /* Positive loop. Use LESS */
+      hb_vmLess();
+   else if( dStep < 0 )      /* Negative loop. Use GREATER */
+      hb_vmGreater();
+
+   bEqual = hb_vmPopLogical();    /* Logical should be on top of stack */
+   hb_vmPushNumber( dStep, iDec );   /* Push the step expression back on the stack */
+   hb_vmPushLogical( bEqual );
 }
 
 /* ------------------------------- */
@@ -3421,7 +3432,7 @@ HARBOUR HB_PROCLINE( void )
       hb_retni( 0 );
 }
 
-/* NOTE: Clipper undocumented function, which always returns an empty 
+/* NOTE: Clipper undocumented function, which always returns an empty
          string. */
 
 HARBOUR HB_PROCFILE( void )

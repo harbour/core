@@ -58,6 +58,7 @@
  *    hb_fsCurDrv()
  *    hb_fsIsDrv()
  *    hb_fsIsDevice()
+ *    HB_FSETDEVMOD()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -1401,6 +1402,8 @@ HARBOUR HB_FREADSTR( void )
       hb_retc( "" );
 }
 
+#ifdef HB_COMPAT_C53
+
 /* NOTE: This function should not return the leading and trailing */
 /*       (back)slashes. */
 
@@ -1484,6 +1487,8 @@ HARBOUR HB_DIRREMOVE( void )
    s_uiErrorLast = uiErrorOld;
 }
 
+#endif
+
 HARBOUR HB_DISKSPACE( void )
 {
    ULONG ulSpaceFree = 0;
@@ -1517,6 +1522,8 @@ HARBOUR HB_DISKSPACE( void )
    hb_retnl( ( LONG ) ulSpaceFree );
 }
 
+#ifdef HB_COMPAT_C53
+
 /* NOTE: Clipper 5.3 undocumented */
 
 HARBOUR HB_ISDISK()
@@ -1530,6 +1537,8 @@ HARBOUR HB_ISDISK()
    s_uiErrorLast = uiErrorOld;
 }
 
+/* NOTE: Clipper 5.3 only */
+
 HARBOUR HB_DISKCHANGE( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
@@ -1540,6 +1549,8 @@ HARBOUR HB_DISKCHANGE( void )
 
    s_uiErrorLast = uiErrorOld;
 }
+
+/* NOTE: Clipper 5.3 only */
 
 HARBOUR HB_DISKNAME( void )
 {
@@ -1552,6 +1563,8 @@ HARBOUR HB_DISKNAME( void )
 
    s_uiErrorLast = uiErrorOld;
 }
+
+#endif
 
 #define IS_PATH_SEP( c ) ( strchr( OS_PATH_DELIMITER_LIST, ( c ) ) != NULL )
 
@@ -1754,6 +1767,8 @@ HARBOUR HB_HB_FNAMEMERGE( void )
    hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
 }
 
+#ifdef HB_COMPAT_C53
+
 /* NOTE: Clipper 5.3 undocumented */
 
 HARBOUR HB_FSETDEVMOD( void )
@@ -1761,3 +1776,5 @@ HARBOUR HB_FSETDEVMOD( void )
    if( ISNUM( 1 ) && ISNUM( 2 ) )
       hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
 }
+
+#endif

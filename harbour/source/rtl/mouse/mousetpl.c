@@ -51,7 +51,7 @@ BOOL hb_mouse_IsPresent( void )
 {
    /* TODO: */
 
-   return 0;
+   return FALSE;
 }
 
 void hb_mouse_Show( void )

@@ -33,7 +33,6 @@
  *
  */
 
-#include "hbsetup.ch"
 #include "hbmemvar.ch"
 
 #include "common.ch"
@@ -82,12 +81,8 @@
 
 FUNCTION MEMVARBLOCK( cMemvar )
 
-   IF ISCHARACTER( cMemvar ) .AND. __mvSCOPE( cMemvar ) > MV_ERROR
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+   IF ISCHARACTER( cMemvar ) .AND. __mvSCOPE( cMemvar ) > HB_MV_ERROR
       RETURN {| x | iif( x == NIL, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
-#else
-      RETURN {| x | iif( PCount() == 0, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
-#endif
    ENDIF
 
    RETURN NIL

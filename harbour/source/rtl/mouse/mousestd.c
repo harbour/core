@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Harbour Mouse Subsystem for Windows
+ * Mouse subsystem for plain ANSI C stream IO (stub)
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,89 +33,56 @@
  *
  */
 
-#define WIN32_LEAN_AND_MEAN
-
-#if defined(__GNUC__)
-#define HB_DONT_DEFINE_BASIC_TYPES
-#endif /* __GNUC__ */
-
-#include <windows.h>
 #include "mouseapi.h"
 
-#if defined(__IBMCPP__)
-   #undef WORD                            /* 2 bytes unsigned */
-   typedef unsigned short int WORD;
-#else
-   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
-      #undef WORD                            /* 2 bytes unsigned */
-      typedef unsigned short int WORD;
-
-      #undef DWORD                           /* 4 bytes unsigned */
-      typedef unsigned long DWORD;
-   #endif
-#endif
-
-#if ! defined(__GNUC__)
-#ifdef __CYGWIN__
-typedef WORD far * LPWORD;
-#endif
-#endif /* __GNUC__ */
+/* NOTE: This file is a simple stub for those platforms which don't have
+         any kind of mouse support. */
 
 /* C callable low-level interface */
 
 void hb_mouse_Init( void )
 {
-   /* TODO: */
+   ;
 }
 
 void hb_mouse_Exit( void )
 {
-   /* TODO: */
+   ;
 }
 
 BOOL hb_mouse_IsPresent( void )
 {
-   /* TODO: */
-
-   return 0;
+   return FALSE;
 }
 
 void hb_mouse_Show( void )
 {
-   /* TODO: */
+   ;
 }
 
 void hb_mouse_Hide( void )
 {
-   /* TODO: */
+   ;
 }
 
 int hb_mouse_Col( void )
 {
-   /* TODO: */
-
    return 0;
 }
 
 int hb_mouse_Row( void )
 {
-   /* TODO: */
-
    return 0;
 }
 
 void hb_mouse_SetPos( int iRow, int iCol )
 {
-   /* TODO: */
-
    HB_SYMBOL_UNUSED( iRow );
    HB_SYMBOL_UNUSED( iCol );
 }
 
 BOOL hb_mouse_IsButtonPressed( int iButton )
 {
-   /* TODO: */
-
    HB_SYMBOL_UNUSED( iButton );
 
    return FALSE;
@@ -123,17 +90,11 @@ BOOL hb_mouse_IsButtonPressed( int iButton )
 
 int hb_mouse_CountButton( void )
 {
-   DWORD dwCount = 0;
-
-   GetNumberOfConsoleMouseButtons( &dwCount );
-
-   return dwCount;
+   return 0;
 }
 
 void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
 {
-   /* TODO: */
-
    HB_SYMBOL_UNUSED( iTop );
    HB_SYMBOL_UNUSED( iLeft );
    HB_SYMBOL_UNUSED( iBottom );
@@ -142,8 +103,6 @@ void hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
 
 void hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
 {
-   /* TODO: */
-
    HB_SYMBOL_UNUSED( piTop );
    HB_SYMBOL_UNUSED( piLeft );
    HB_SYMBOL_UNUSED( piBottom );

@@ -56,6 +56,7 @@ extern USHORT hb_gtColorSelect( USHORT uiColorIndex );
 extern USHORT hb_gtDispBegin( void );
 extern USHORT hb_gtDispCount( void );
 extern USHORT hb_gtDispEnd( void );
+extern USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr );
 extern USHORT hb_gtGetBlink( BOOL * pbBlink );
 extern USHORT hb_gtGetColorStr( char * pszColorString );
 extern USHORT hb_gtGetCursor( USHORT * puiCursorShape );
@@ -99,7 +100,6 @@ extern void   hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr
 extern void   hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst );
 extern void   hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc );
 extern void   hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr );
-extern void   hb_gt_DrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr );
 extern void   hb_gt_DispBegin( void );
 extern void   hb_gt_DispEnd( void );
 extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );

@@ -368,14 +368,14 @@ METHOD ShowVars() CLASS TDebugger
       ::oBrwVars:ForceStable() ), nil ), If( nKey == K_UP, ( ::oBrwVars:Up(),;
       ::oBrwVars:ForceStable() ), nil ) }
 
-      nCount = __mvDBGINFO( MV_PUBLIC )
+      nCount = __mvDBGINFO( HB_MV_PUBLIC )
       for i = 1 to nCount
-         xValue = __mvDBGINFO( MV_PUBLIC, i, @cName )
+         xValue = __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
          AAdd( ::aVars, { cName, "Public" } )
       next
-      nCount = __mvDBGINFO( MV_PRIVATE )
+      nCount = __mvDBGINFO( HB_MV_PRIVATE )
       for i = 1 to nCount
-         xValue = __mvDBGINFO( MV_PRIVATE, i, @cName )
+         xValue = __mvDBGINFO( HB_MV_PRIVATE, i, @cName )
          AAdd( ::aVars, { cName, "Private" } )
       next
 

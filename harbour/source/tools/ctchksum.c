@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CHECKSUM() CA-Tools function
+ * CT_CHECKSUM() CA-Tools function
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org

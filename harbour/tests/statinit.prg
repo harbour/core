@@ -4,6 +4,8 @@
 
 // ; Donated to the public domain by Victor Szel <info@szelvesz.hu>
 
+MEMVAR cMyPubVar
+
 STATIC bBlock1 := {|| Hello() }
 STATIC bBlock2 := {|| cMyPubVar }
 

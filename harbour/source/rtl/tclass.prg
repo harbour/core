@@ -59,37 +59,37 @@ FUNCTION TClass()
    IF s_hClass == NIL
       s_hClass := __clsNew( "TCLASS", 10 )
 
-      __clsAddMsg( s_hClass, "New"         , @New()         , MET_METHOD )
-      __clsAddMsg( s_hClass, "Create"      , @Create()      , MET_METHOD )
-      __clsAddMsg( s_hClass, "AddData"     , @AddData()     , MET_METHOD )
-      __clsAddMsg( s_hClass, "AddClassData", @AddClassData(), MET_METHOD )
-      __clsAddMsg( s_hClass, "AddInline"   , @AddInline()   , MET_METHOD )
-      __clsAddMsg( s_hClass, "AddMethod"   , @AddMethod()   , MET_METHOD )
-      __clsAddMsg( s_hClass, "AddVirtual"  , @AddVirtual()  , MET_METHOD )
-      __clsAddMsg( s_hClass, "Instance"    , @Instance()    , MET_METHOD )
-      __clsAddMsg( s_hClass, "SetInit"     , @SetInit()     , MET_METHOD )
-      __clsAddMsg( s_hClass, "SetType"     , @SetType()     , MET_METHOD )
+      __clsAddMsg( s_hClass, "New"         , @New()         , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "Create"      , @Create()      , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddData"     , @AddData()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddClassData", @AddClassData(), HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddInline"   , @AddInline()   , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddMethod"   , @AddMethod()   , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "AddVirtual"  , @AddVirtual()  , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "Instance"    , @Instance()    , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "SetInit"     , @SetInit()     , HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "SetType"     , @SetType()     , HB_OO_MSG_METHOD )
 
-      __clsAddMsg( s_hClass, "hClass"      ,  1, MET_DATA )
-      __clsAddMsg( s_hClass, "_hClass"     ,  1, MET_DATA )
-      __clsAddMsg( s_hClass, "cName"       ,  2, MET_DATA )
-      __clsAddMsg( s_hClass, "_cName"      ,  2, MET_DATA )
-      __clsAddMsg( s_hClass, "aDatas"      ,  3, MET_DATA )
-      __clsAddMsg( s_hClass, "_aDatas"     ,  3, MET_DATA )
-      __clsAddMsg( s_hClass, "aMethods"    ,  4, MET_DATA )
-      __clsAddMsg( s_hClass, "_aMethods"   ,  4, MET_DATA )
-      __clsAddMsg( s_hClass, "aClsDatas"   ,  5, MET_DATA )
-      __clsAddMsg( s_hClass, "_aClsDatas"  ,  5, MET_DATA )
-      __clsAddMsg( s_hClass, "aInlines"    ,  6, MET_DATA )
-      __clsAddMsg( s_hClass, "_aInlines"   ,  6, MET_DATA )
-      __clsAddMsg( s_hClass, "aVirtuals"   ,  7, MET_DATA )
-      __clsAddMsg( s_hClass, "_aVirtuals"  ,  7, MET_DATA )
-      __clsAddMsg( s_hClass, "cSuper"      ,  8, MET_DATA )
-      __clsAddMsg( s_hClass, "_cSuper"     ,  8, MET_DATA )
-      __clsAddMsg( s_hClass, "uInit"       ,  9, MET_DATA )
-      __clsAddMsg( s_hClass, "_uInit"      ,  9, MET_DATA )
-      __clsAddMsg( s_hClass, "cType"       , 10, MET_DATA )
-      __clsAddMsg( s_hClass, "_cType"      , 10, MET_DATA )
+      __clsAddMsg( s_hClass, "hClass"      ,  1, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_hClass"     ,  1, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "cName"       ,  2, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_cName"      ,  2, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aDatas"      ,  3, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aDatas"     ,  3, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aMethods"    ,  4, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aMethods"   ,  4, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aClsDatas"   ,  5, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aClsDatas"  ,  5, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aInlines"    ,  6, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aInlines"   ,  6, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "aVirtuals"   ,  7, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_aVirtuals"  ,  7, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "cSuper"      ,  8, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_cSuper"     ,  8, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "uInit"       ,  9, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_uInit"      ,  9, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "cType"       , 10, HB_OO_MSG_DATA )
+      __clsAddMsg( s_hClass, "_cType"      , 10, HB_OO_MSG_DATA )
    ENDIF
 
    RETURN __clsInst( s_hClass )
@@ -133,8 +133,8 @@ STATIC FUNCTION Create()
       hSuper := __clsInstSuper( Upper( ::cSuper ) )
       hClass := __clsNew( ::cName, nLenDatas, hSuper )
                                                 // Add class casts
-      __clsAddMsg( hClass, Upper( ::cSuper ), hSuper, MET_SUPER )
-      __clsAddMsg( hClass, "__SUPER", hSuper, MET_SUPER )
+      __clsAddMsg( hClass, Upper( ::cSuper ), hSuper, HB_OO_MSG_SUPER )
+      __clsAddMsg( hClass, "__SUPER", hSuper, HB_OO_MSG_SUPER )
 
       nDataBegin := __cls_CntData( hSuper )          // Get offset for new DATAs
       nClassBegin := __cls_CntClsData( hSuper )      // Get offset for new ClassData
@@ -143,35 +143,35 @@ STATIC FUNCTION Create()
    ::hClass := hClass
 
    FOR n := 1 TO nLenDatas
-      __clsAddMsg( hClass, ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin, MET_DATA, ;
-                           ::aDatas[ n ][ DATA_VALUE ] )
-      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ DATA_SYMBOL ], n + nDataBegin,;
-                   MET_DATA )
+      __clsAddMsg( hClass, ::aDatas[ n ][ HB_OO_DATA_SYMBOL ], n + nDataBegin, HB_OO_MSG_DATA, ;
+                           ::aDatas[ n ][ HB_OO_DATA_VALUE ] )
+      __clsAddMsg( hClass, "_" + ::aDatas[ n ][ HB_OO_DATA_SYMBOL ], n + nDataBegin,;
+                   HB_OO_MSG_DATA )
    NEXT
 
    nLen := Len( ::aMethods )
    FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aMethods[ n ][ 1 ], ::aMethods[ n ][ 2 ], MET_METHOD )
+      __clsAddMsg( hClass, ::aMethods[ n ][ 1 ], ::aMethods[ n ][ 2 ], HB_OO_MSG_METHOD )
    NEXT
 
    nLen := Len( ::aClsDatas )
    FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aClsDatas[ n ][ CLASSDATA_SYMBOL ], n + nClassBegin,;
-                   MET_CLASSDATA, ::aClsDatas[ n ][ CLASSDATA_VALUE ] )
-      __clsAddMsg( hClass, "_" + ::aClsDatas[ n ][ CLASSDATA_SYMBOL ],;
-                   n + nClassBegin, MET_CLASSDATA )
+      __clsAddMsg( hClass, ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ], n + nClassBegin,;
+                   HB_OO_MSG_CLASSDATA, ::aClsDatas[ n ][ HB_OO_CLSD_VALUE ] )
+      __clsAddMsg( hClass, "_" + ::aClsDatas[ n ][ HB_OO_CLSD_SYMBOL ],;
+                   n + nClassBegin, HB_OO_MSG_CLASSDATA )
    NEXT
 
    nLen := Len( ::aInlines )
    FOR n := 1 TO nLen
       __clsAddMsg( hClass, ::aInlines[ n ][ 1 ], ::aInlines[ n ][ 2 ],;
-                MET_INLINE )
+                HB_OO_MSG_INLINE )
    NEXT
-//    __clsAddMsg( hClass, Upper( ::cName ), {| self | self }, MET_INLINE ) // QUESTION: Useful ?
+//    __clsAddMsg( hClass, Upper( ::cName ), {| self | self }, HB_OO_MSG_INLINE ) // QUESTION: Useful ?
 
    nLen := Len( ::aVirtuals )
    FOR n := 1 TO nLen
-      __clsAddMsg( hClass, ::aVirtuals[ n ], n, MET_VIRTUAL )
+      __clsAddMsg( hClass, ::aVirtuals[ n ], n, HB_OO_MSG_VIRTUAL )
    NEXT
 
    RETURN NIL

@@ -374,12 +374,12 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
  *
  * <hClass>    Class handle
  * <cMessage>  Message
- * <pFunction> MET_METHOD    : Pointer to function
- *             MET_DATA      : Index number in array
- *             MET_CLASSDATA : Index number in array
- *             MET_INLINE    : Code block
- *             MET_SUPER     : Handle of super class
- * <nType>     see MET_*
+ * <pFunction> HB_OO_MSG_METHOD    : Pointer to function
+ *             HB_OO_MSG_DATA      : Index number in array
+ *             HB_OO_MSG_CLASSDATA : Index number in array
+ *             HB_OO_MSG_INLINE    : Code block
+ *             HB_OO_MSG_SUPER     : Handle of super class
+ * <nType>     see HB_OO_MSG_*
  * <xInit>     Optional initializer for DATA
  */
 HARBOUR HB___CLSADDMSG( void )
@@ -395,7 +395,7 @@ HARBOUR HB___CLSADDMSG( void )
       USHORT   uiMask   = pClass->uiHashKey * BUCKET;
       PMETHOD  pNewMeth;
 
-      if( wType == MET_INLINE && hb_param( 3, IT_BLOCK ) == NULL )
+      if( wType == HB_OO_MSG_INLINE && hb_param( 3, IT_BLOCK ) == NULL )
       {
          hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSADDMSG" );
       }
@@ -418,11 +418,11 @@ HARBOUR HB___CLSADDMSG( void )
 
       switch( wType )
       {
-         case MET_METHOD:
+         case HB_OO_MSG_METHOD:
               pNewMeth->pFunction = ( PHB_FUNC ) hb_parnl( 3 );
               break;
 
-         case MET_DATA:
+         case HB_OO_MSG_DATA:
               pNewMeth->uiData = hb_parnl( 3 );
               if( pMessage->pSymbol->szName[ 0 ] == '_' )
                  pNewMeth->pFunction = hb___msgSetData;
@@ -440,7 +440,7 @@ HARBOUR HB___CLSADDMSG( void )
               }
               break;
 
-         case MET_CLASSDATA:
+         case HB_OO_MSG_CLASSDATA:
               pNewMeth->uiData = hb_parnl( 3 );
 
               if( ( USHORT ) hb_arrayLen( pClass->pClassDatas ) < pNewMeth->uiData )
@@ -462,7 +462,7 @@ HARBOUR HB___CLSADDMSG( void )
               }
               break;
 
-         case MET_INLINE:
+         case HB_OO_MSG_INLINE:
               pNewMeth->uiData = hb_arrayLen( pClass->pInlines ) + 1;
               hb_arraySize( pClass->pInlines, pNewMeth->uiData );
               hb_arraySet(  pClass->pInlines, pNewMeth->uiData,
@@ -470,11 +470,11 @@ HARBOUR HB___CLSADDMSG( void )
               pNewMeth->pFunction = hb___msgEvalInline;
               break;
 
-         case MET_VIRTUAL:
+         case HB_OO_MSG_VIRTUAL:
               pNewMeth->pFunction = hb___msgVirtual;
               break;
 
-         case MET_SUPER:
+         case HB_OO_MSG_SUPER:
               pNewMeth->uiData    = hb_parnl( 3 );
               pNewMeth->pFunction = hb___msgSuper;
               break;

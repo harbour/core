@@ -18,7 +18,9 @@
 // This test program placed in the public domain
 //
 
+#include "color.ch"
 #include "set.ch"
+
 proc main
    Local cColor := "r+/bg*,rg*/ng+,w/n,b+/w,rg/b,w+/n*"
 

@@ -58,7 +58,7 @@
  *    HB_ISCOLOR()
  *    HB_NOSNOW()
  *    HB___ACCEPTSTR()
- *    HB___COLORINDEX()
+ *    HB_HB_COLORINDEX()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -1019,11 +1019,11 @@ HARBOUR HB___SHADOW( void )
 #ifdef HARBOUR_USE_GTAPI
    if( hb_pcount() >= 4 )
    {
-      hb_gt_DrawShadow( hb_parni( 1 ) + 1,
-                        hb_parni( 2 ) + 1,
-                        hb_parni( 3 ) + 1,
-                        hb_parni( 4 ) + 1,
-                        ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
+      hb_gtDrawShadow( hb_parni( 1 ),
+                       hb_parni( 2 ),
+                       hb_parni( 3 ),
+                       hb_parni( 4 ),
+                       ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
    }
 #endif
 }
@@ -1191,13 +1191,13 @@ HARBOUR HB___ACCEPTSTR( void )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __ColorIndex
+ *      hb_ColorIndex
  *  $CATEGORY$
  *      GT
  *  $ONELINER$
  *      Extract one color from a full Clipper colorspec string.
  *  $SYNTAX$
- *      __ColorIndex( <cColorSpec>, <nIndex> )
+ *      hb_ColorIndex( <cColorSpec>, <nIndex> )
  *  $ARGUMENTS$
  *      <cColorSpec> is a Clipper color list
  *      <nIndex> is the position of the color item to be extracted, the first
@@ -1211,7 +1211,7 @@ HARBOUR HB___ACCEPTSTR( void )
  *      a given item from this list. You may use the manifest constants
  *      defined in color.ch to extract common Clipper colors.
  *  $EXAMPLES$
- *      ? __ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
+ *      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
  *  $TESTS$
  *      see in rtl_test.prg for a comprehensive regression test suit.
  *  $STATUS$
@@ -1223,7 +1223,7 @@ HARBOUR HB___ACCEPTSTR( void )
  *  $END$
  */
 
-HARBOUR HB___COLORINDEX( void )
+HARBOUR HB_HB_COLORINDEX( void )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {

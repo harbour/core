@@ -177,7 +177,7 @@ int hb_strnicmp( const char * s1, const char * s2, ULONG count )
    return rc;
 }
 
-static BOOL  hb_strMatchDOS( char *pszString, char *pszMask )
+static BOOL  hb_strMatchDOS( char * pszString, char * pszMask )
 {
    HB_TRACE(("hb_strMatchDOS(%s, %s)", pszString, pszMask));
 
@@ -225,7 +225,7 @@ static BOOL  hb_strMatchDOS( char *pszString, char *pszMask )
 /* TODO: Replace it with a code that supports real regular expressions
  *
  */
-BOOL hb_strMatchRegExp( char *szString, char *szMask )
+BOOL hb_strMatchRegExp( char * szString, char * szMask )
 {
    HB_TRACE(("hb_strMatchRegExp(%s, %s)", szString, szMask));
 
@@ -267,7 +267,7 @@ HARBOUR HB_ISLOWER( void )
 
 /* trims from the left, and returns a new pointer to szText */
 /* also returns the new length in lLen */
-char *hb_strLTrim( char *szText, ULONG *lLen )
+char * hb_strLTrim( char * szText, ULONG * lLen )
 {
    HB_TRACE(("hb_strLTrim(%s, %p)", szText, lLen));
 
@@ -291,19 +291,27 @@ HARBOUR HB_LTRIM( void )
       if( pText )
       {
          ULONG lLen = pText->item.asString.length;
-         char *szText = hb_strLTrim( pText->item.asString.value, &lLen );
+         char * szText = hb_strLTrim( pText->item.asString.value, &lLen );
 
          hb_retclen( szText, lLen );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1101, NULL, "LTRIM" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1101, NULL, "LTRIM" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LTRIM" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* returns szText and the new length in lLen */
-ULONG hb_strRTrimLen( char *szText, ULONG lLen, BOOL bAnySpace )
+ULONG hb_strRTrimLen( char * szText, ULONG lLen, BOOL bAnySpace )
 {
    HB_TRACE(("hb_strRTrimLen(%s, %lu. %d)", szText, lLen, (int) bAnySpace));
 
@@ -337,15 +345,20 @@ HARBOUR HB_RTRIM( void )
          hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
       }
       else
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-         /* Clipper doesn't error, but only in RTRIM. TRIM() throws an error, though */
-         hb_retc( "" );
-#else
-         hb_errRT_BASE( EG_ARG, 1100, NULL, "RTRIM" );
-#endif
+      {
+         /* NOTE: "TRIM" is right here */
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1100, NULL, "TRIM" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "RTRIM" ); /* NOTE: Clipper catches this at compile time! */
+      /* NOTE: "TRIM" is right here */
+      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TRIM" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* NOTE: The second parameter is a Harbour extension */
@@ -353,20 +366,7 @@ HARBOUR HB_RTRIM( void )
 /* synonymn for RTRIM */
 HARBOUR HB_TRIM( void )
 {
-   if( hb_pcount() >= 1 && hb_pcount() <= 2 )
-   {
-      PHB_ITEM pText = hb_param( 1, IT_STRING );
-
-      if( pText )
-      {
-         BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
-         hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
-      }
-      else
-         hb_errRT_BASE( EG_ARG, 1100, NULL, "TRIM" );
-   }
-   else
-      hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "TRIM" ); /* NOTE: Clipper catches this at compile time! */
+   HB_RTRIM();
 }
 
 /* NOTE: The second parameter is a Harbour extension */
@@ -377,7 +377,7 @@ HARBOUR HB_ALLTRIM( void )
 {
    if( ISCHAR( 1 ) )
    {
-      char *szText = hb_parc( 1 );
+      char * szText = hb_parc( 1 );
       BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
       ULONG lLen;
 
@@ -388,8 +388,16 @@ HARBOUR HB_ALLTRIM( void )
       hb_retclen( szText, lLen );
    }
    else
-#ifdef HB_COMPATIBILITY_CLIPPER_53
-      hb_errRT_BASE( EG_ARG, 2022, NULL, "ALLTRIM" );
+#ifdef HB_COMPAT_C53
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 2022, NULL, "ALLTRIM" ); /* NOTE: This appeared in CA-Cl*pper 5.3 */
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 #else
       hb_retc( "" );
 #endif
@@ -449,7 +457,7 @@ HARBOUR HB_PADR( void )
 {
    ULONG ulSize;
    char buffer[ 128 ];
-   char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
+   char * szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
    if( szText && ISNUM( 2 ) )
    {
@@ -457,7 +465,7 @@ HARBOUR HB_PADR( void )
 
       if( lLen > ( LONG ) ulSize )
       {
-         char *szResult = ( char * ) hb_xgrab( lLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
          LONG lPos;
          char cPad;
 
@@ -503,7 +511,7 @@ HARBOUR HB_PADL( void )
 
       if( lLen > ( LONG ) ulSize )
       {
-         char *szResult = ( char * ) hb_xgrab( lLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
          LONG lPos = lLen - ( LONG ) ulSize;
          char cPad;
 
@@ -537,7 +545,7 @@ HARBOUR HB_PADC( void )
 {
    ULONG ulSize;
    char buffer[ 128 ];
-   char *szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
+   char * szText = hb_itemPadConv( hb_param( 1, IT_ANY ), buffer, &ulSize );
 
    if( szText && ISNUM( 2 ) )
    {
@@ -545,7 +553,7 @@ HARBOUR HB_PADC( void )
 
       if( lLen > ( LONG ) ulSize )
       {
-         char *szResult = ( char * ) hb_xgrab( lLen + 1 );
+         char * szResult = ( char * ) hb_xgrab( lLen + 1 );
          char cPad;
          LONG w, lPos = ( lLen - ( LONG ) ulSize ) / 2;
 
@@ -580,31 +588,26 @@ ULONG hb_strAt( char * szSub, ULONG ulSubLen, char * szText, ULONG ulLen )
 {
    HB_TRACE(("hb_strAt(%s, %lu, %s, %lu)", szSub, ulSubLen, szText, ulLen));
 
-   if( ulSubLen )
+   if( ulSubLen > 0 && ulLen >= ulSubLen )
    {
-      if( ulLen >= ulSubLen )
-      {
-         ULONG ulPos = 0, ulSubPos = 0;
+      ULONG ulPos = 0, ulSubPos = 0;
 
-         while( ulPos < ulLen && ulSubPos < ulSubLen )
+      while( ulPos < ulLen && ulSubPos < ulSubLen )
+      {
+         if( *( szText + ulPos ) == *( szSub + ulSubPos ) )
          {
-            if( *( szText + ulPos ) == *( szSub + ulSubPos ) )
-            {
-               ulSubPos++;
-               ulPos++;
-            }
-            else if( ulSubPos )
-               ulSubPos = 0;
-            else
-               ulPos++;
+            ulSubPos++;
+            ulPos++;
          }
-         return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
+         else if( ulSubPos )
+            ulSubPos = 0;
+         else
+            ulPos++;
       }
-      else
-         return 0;
+      return ( ulSubPos < ulSubLen ) ? 0 : ( ulPos - ulSubLen + 1 );
    }
    else
-      return 1;
+      return 0;
 }
 
 /* locates a substring in a string */
@@ -616,12 +619,21 @@ HARBOUR HB_AT( void )
       PHB_ITEM pSub = hb_param( 1, IT_STRING );
       PHB_ITEM pText = hb_param( 2, IT_STRING );
 
-      if( IS_STRING( pText ) && IS_STRING( pSub ) )
+      if( pText && pSub )
       {
-         hb_retnl( hb_strAt( pSub->item.asString.value, pSub->item.asString.length, pText->item.asString.value, pText->item.asString.length ) );
+         hb_retnl( hb_strAt( pSub->item.asString.value, pSub->item.asString.length,
+                             pText->item.asString.value, pText->item.asString.length ) );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1108, NULL, "AT" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1108, NULL, "AT" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AT" ); /* NOTE: Clipper catches this at compile time! */
@@ -640,8 +652,8 @@ HARBOUR HB_RAT( void )
 
       if( lPos >= 0 )
       {
-         char *szSub = hb_parc( 1 );
-         char *szText = hb_parc( 2 );
+         char * szSub = hb_parc( 1 );
+         char * szText = hb_parc( 2 );
          BOOL bFound = FALSE;
 
          while( lPos >= 0 && !bFound )
@@ -751,7 +763,15 @@ HARBOUR HB_LEFT( void )
          hb_retclen( pText->item.asString.value, lLen );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1124, NULL, "LEFT" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1124, NULL, "LEFT" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LEFT" ); /* NOTE: Clipper catches this at compile time! */
@@ -807,12 +827,27 @@ HARBOUR HB_SUBSTR( void )
          {
             LONG lLen;
 
-            if( ISNUM( 3 ) )
+            if( hb_pcount() >= 3 )
             {
-               lLen = hb_parnl( 3 );
+               if( ISNUM( 3 ) )
+               {
+                  lLen = hb_parnl( 3 );
 
-               if( lLen > ( LONG ) pText->item.asString.length - lPos )
-                  lLen = ( LONG ) pText->item.asString.length - lPos;
+                  if( lLen > ( LONG ) pText->item.asString.length - lPos )
+                     lLen = ( LONG ) pText->item.asString.length - lPos;
+               }
+               else
+               {
+                  PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
+
+                  if( pResult )
+                  {
+                     hb_itemReturn( pResult );
+                     hb_itemRelease( pResult );
+                     /* NOTE: Exit from inside */
+                     return;
+                  }
+               }
             }
             else
                lLen = ( LONG ) pText->item.asString.length - lPos;
@@ -826,14 +861,22 @@ HARBOUR HB_SUBSTR( void )
             hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1110, NULL, "SUBSTR" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1110, NULL, "SUBSTR" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SUBSTR" ); /* NOTE: Clipper catches this at compile time! */
 }
 
 /* converts szText to lower case. Does not create a new string! */
-char *hb_strLower( char *szText, ULONG ulLen )
+char * hb_strLower( char * szText, ULONG ulLen )
 {
    ULONG i;
 
@@ -854,12 +897,23 @@ HARBOUR HB_LOWER( void )
 
       if( pText )
       {
-         ULONG ulLen = pText->item.asString.length;
+         char * pszBuffer = hb_itemGetC( pText );
+         ULONG ulLen = hb_itemGetCLen( pText );
 
-         hb_retclen( hb_strLower( pText->item.asString.value, ulLen ), ulLen );
+         hb_retclen( hb_strLower( pszBuffer, ulLen ), ulLen );
+
+         hb_itemFreeC( pszBuffer );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1103, NULL, "LOWER" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1103, NULL, "LOWER" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "LOWER" ); /* NOTE: Clipper catches this at compile time! */
@@ -867,7 +921,7 @@ HARBOUR HB_LOWER( void )
 
 void hb_strupr( char * szText )
 {
-   char *p;
+   char * p;
 
    HB_TRACE(("hb_strupr(%s)", szText));
 
@@ -876,7 +930,7 @@ void hb_strupr( char * szText )
 }
 
 /* converts szText to upper case. Does not create a new string! */
-char *hb_strUpper( char *szText, ULONG ulLen )
+char * hb_strUpper( char * szText, ULONG ulLen )
 {
    ULONG i;
 
@@ -890,9 +944,9 @@ char *hb_strUpper( char *szText, ULONG ulLen )
 
 /* This function copies and converts szText to upper case.
  */
-char *hb_strncpyUpper( char * pDest, char *pSource, ULONG ulLen )
+char * hb_strncpyUpper( char * pDest, char * pSource, ULONG ulLen )
 {
-   char *pStart = pDest;
+   char * pStart = pDest;
 
    HB_TRACE(("hb_strncpyUpper(%s, %s, %lu)", pDest, pSource, ulLen));
 
@@ -913,12 +967,23 @@ HARBOUR HB_UPPER( void )
 
       if( pText )
       {
-         ULONG ulLen = pText->item.asString.length;
+         char * pszBuffer = hb_itemGetC( pText );
+         ULONG ulLen = hb_itemGetCLen( pText );
 
-         hb_retclen( hb_strUpper( pText->item.asString.value, ulLen ), ulLen );
+         hb_retclen( hb_strUpper( pszBuffer, ulLen ), ulLen );
+
+         hb_itemFreeC( pszBuffer );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1102, NULL, "UPPER" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1102, NULL, "UPPER" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "UPPER" ); /* NOTE: Clipper catches this at compile time! */
@@ -940,9 +1005,9 @@ HARBOUR HB_REPLICATE( void )
 
             if( ( double ) ( ( double ) ulLen * ( double ) lTimes ) < ( double ) ULONG_MAX )
             {
-               char *szText = hb_parc( 1 );
-               char *szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
-               char *szPtr = szResult;
+               char * szText = hb_parc( 1 );
+               char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
+               char * szPtr = szResult;
                LONG i;
 
                for( i = 0; i < lTimes; i++ )
@@ -995,7 +1060,7 @@ HARBOUR HB_SPACE( void )
 
          if( lLen > 0 )
          {
-            char *szResult = ( char * ) hb_xgrab( lLen + 1 );
+            char * szResult = ( char * ) hb_xgrab( lLen + 1 );
 
             /* NOTE: String overflow could never occure since a string can */
             /*       be as large as ULONG_MAX, and the maximum length that */
@@ -1029,7 +1094,7 @@ HARBOUR HB_STUFF( void )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) && ISNUM( 3 ) && ISCHAR( 4 ) )
    {
-      char *szText = hb_parc( 1 );
+      char * szText = hb_parc( 1 );
       ULONG ulText = hb_parclen( 1 );
       ULONG ulPos = hb_parnl( 2 );
       ULONG ulDel = hb_parnl( 3 );
@@ -1081,12 +1146,12 @@ HARBOUR HB_STRTRAN( void )
 
       if( pSeek )
       {
-         char *szText = pText->item.asString.value;
+         char * szText = pText->item.asString.value;
 
          if( pSeek->item.asString.length && pSeek->item.asString.length <= pText->item.asString.length )
          {
-            char *szSeek = pSeek->item.asString.value;
-            char *szReplace;
+            char * szSeek = pSeek->item.asString.value;
+            char * szReplace;
             ULONG ulStart;
 
             ulStart = ( ISNUM( 4 ) ? hb_parnl( 4 ) : 1 );
@@ -1152,8 +1217,8 @@ HARBOUR HB_STRTRAN( void )
 
                   if( ulFound )
                   {
-                     char *szResult = ( char * ) hb_xgrab( ulLength + 1 );
-                     char *szPtr = szResult;
+                     char * szResult = ( char * ) hb_xgrab( ulLength + 1 );
+                     char * szPtr = szResult;
 
                      ulFound = 0;
                      i = 0;
@@ -1199,14 +1264,30 @@ HARBOUR HB_STRTRAN( void )
             hb_retclen( szText, pText->item.asString.length );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
-      hb_errRT_BASE( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+
+      if( pResult )
+      {
+         hb_itemReturn( pResult );
+         hb_itemRelease( pResult );
+      }
+   }
 }
 
 /* returns the numeric value of a character string representation of a number  */
-double hb_strVal( char *szText )
+double hb_strVal( char * szText )
 {
    HB_TRACE(("hb_strVal(%s)", szText));
 
@@ -1240,7 +1321,15 @@ HARBOUR HB_VAL( void )
          hb_retnlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1098, NULL, "VAL" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1098, NULL, "VAL" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VAL" ); /* NOTE: Clipper catches this at compile time! */

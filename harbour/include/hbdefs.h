@@ -98,11 +98,14 @@ typedef unsigned long ULONG;
 
 #define HB_LOBYTE( w )          ( ( BYTE ) ( w ) )
 #define HB_HIBYTE( w )          ( ( BYTE ) ( ( ( USHORT ) ( w ) >> 8 ) & 0xFF ) )
-#define HB_MKSHORT( b1, b2 )    ( ( SHORT ) ( ( ( SHORT ) b2 ) << 8 ) | b1 )
-#define HB_MKUSHORT( b1, b2 )   ( ( USHORT ) ( ( ( USHORT ) b2 ) << 8 ) | b1 )
-#define HB_MKLONG( b1, b2, b3, b4 ) ( ( ( long ) b4 ) << 24 ) | \
-                                    ( ( ( long ) b3 ) << 16 ) | \
-                                    ( ( ( long ) b2 ) <<  8 ) | b1
+#define HB_MKSHORT( lo, hi )    ( ( SHORT ) ( ( ( SHORT ) hi ) << 8 ) | lo )
+#define HB_MKUSHORT( lo, hi )   ( ( USHORT ) ( ( ( USHORT ) hi ) << 8 ) | lo )
+#define HB_MKLONG( b1, b2, b3, b4 )  ( ( ( LONG ) b4 ) << 24 ) | \
+                                     ( ( ( LONG ) b3 ) << 16 ) | \
+                                     ( ( ( LONG ) b2 ) <<  8 ) | b1
+#define HB_MKULONG( b1, b2, b3, b4 ) ( ( ( ULONG ) b4 ) << 24 ) | \
+                                     ( ( ( ULONG ) b3 ) << 16 ) | \
+                                     ( ( ( ULONG ) b2 ) <<  8 ) | b1
 
 #define HB_SYMBOL_UNUSED( symbol ) ( void ) symbol
 

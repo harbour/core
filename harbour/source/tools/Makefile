@@ -15,6 +15,8 @@ C_SOURCES=\
 	chrfirst.c \
 	chrtotal.c \
         ctchksum.c \
+        ctchrmix.c \
+        ctcrypt.c \
         dates2.c \
 	datesx.c \
 	hb_f.c \

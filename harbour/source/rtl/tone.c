@@ -160,7 +160,7 @@ void hb_tone( double dFrequency, double dDuration )
 #if defined(HARBOUR_GCC_OS2) || defined(OS2) || defined(WINNT) || defined(_Windows) || defined(__MINGW32__)
    dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * 1000.0 / 18.2; /* milliseconds */
-#elif defined(__DJGPP) || defined(__BORLANDC__)
+#elif defined(__DJGPP__) || defined(__BORLANDC__)
    dFrequency = HB_MIN_( HB_MAX_( 0.0, dFrequency ), 32767.0 );
    dDuration = dDuration * CLOCKS_PER_SEC / 18.2 ; /* clocks */
 #endif

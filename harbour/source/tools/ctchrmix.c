@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Terminal low-level module includer for GNU compilers
+ * CT_CHARMIX() CA-Tools compatible function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,18 +33,39 @@
  *
  */
 
-#include "hbsetup.h"
+#include "extend.h"
+#include "itemapi.h"
 
-#if   defined(HARBOUR_USE_STD_GTAPI)
-   #include "gt/gtstd.c"
-#elif defined(HARBOUR_USE_DOS_GTAPI)
-   #include "gt/gtdos.c"
-#elif defined(HARBOUR_USE_OS2_GTAPI)
-   #include "gt/gtos2.c"
-#elif defined(HARBOUR_USE_WIN_GTAPI)
-   #include "gt/gtwin.c"
-#elif defined(HARBOUR_USE_LIN_GTAPI)
-   #include "gt/gtlin.c"
-#else
-   #include "gt/gtstd.c"
-#endif
+/* NOTE: CA-Tools will hang if the second parameter is an empty string */
+
+HARBOUR HB_CT_CHARMIX( void )
+{
+   PHB_ITEM pStr1 = hb_param( 1, IT_STRING );
+   PHB_ITEM pStr2 = hb_param( 2, IT_STRING );
+   ULONG ulLen2;
+
+   if( pStr1 && pStr2 && ( ulLen2 = hb_itemGetCLen( pStr2 ) ) > 0 )
+   {
+      ULONG ulLen1 = hb_itemGetCLen( pStr1 );
+      char * pszStr1 = hb_itemGetCPtr( pStr1 );
+      char * pszStr2 = hb_itemGetCPtr( pStr2 );
+      char * pszResult = ( char * ) hb_xgrab( 2 * ulLen1 );
+      ULONG ulPos1 = 0;
+      ULONG ulPos2 = 0;
+      ULONG ulPosResult = 0;
+
+      while( ulPos1 < ulLen1 )
+      {
+         pszResult[ ulPosResult++ ] = pszStr1[ ulPos1++ ];
+         pszResult[ ulPosResult++ ] = pszStr2[ ulPos2++ ];
+
+         if( ulPos2 == ulLen2 )
+            ulPos2 = 0;
+      }
+
+      hb_retclen( pszResult, 2 * ulLen1 );
+      hb_xfree( pszResult );
+   }
+   else
+      hb_retc( "" );
+}
