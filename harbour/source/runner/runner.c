@@ -1,4 +1,3 @@
-#include "pcode.h"
 
 #define FILE _FILE
 #include <stdio.h>
@@ -162,7 +161,7 @@ HARBOUR HB_HB_RUN( void )
             {                                   /* External function        */
                pDynSym = FindDynSym( pSymRead[ ul ].szName );
                if( !pDynSym )
-               {                                
+               {
                   printf( "\nUnknown or unregistered function '%s'.",
                           pSymRead[ ul ].szName );
                   exit( 1 );

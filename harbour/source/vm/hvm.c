@@ -261,116 +261,116 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
    HB_DEBUG( "VirtualMachine\n" );
 
-   while( ( bCode = pCode[ w ] ) != _ENDPROC && ! bQuit )
+   while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC && ! bQuit )
    {
       switch( bCode )
       {
-         case AND_:
+         case HB_P_AND:
               And();
               w++;
               break;
 
-         case _ARRAYAT:
+         case HB_P_ARRAYAT:
               ArrayAt();
               w++;
               break;
 
-         case _ARRAYPUT:
+         case HB_P_ARRAYPUT:
               ArrayPut();
               w++;
               break;
 
-         case _DEC:
+         case HB_P_DEC:
               Dec();
               w++;
               break;
 
-         case _DIVIDE:
+         case HB_P_DIVIDE:
               Div();
               w++;
               break;
 
-         case _DO:
+         case HB_P_DO:
               Do( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _DUPLICATE:
+         case HB_P_DUPLICATE:
               Duplicate();
               w++;
               break;
 
-         case _DUPLTWO:
+         case HB_P_DUPLTWO:
               DuplTwo();
               w++;
               break;
 
-         case _ENDBLOCK:
+         case HB_P_ENDBLOCK:
               EndBlock();
               HB_DEBUG( "EndProc\n" );
               return;   /* end of a codeblock - stop evaluation */
 
-         case _EQUAL:
+         case HB_P_EQUAL:
               Equal( FALSE );
               w++;
               break;
 
-         case _EXACTLYEQUAL:
+         case HB_P_EXACTLYEQUAL:
               Equal( TRUE );
               w++;
               break;
 
-         case _FALSE:
+         case HB_P_FALSE:
               PushLogical( 0 );
               w++;
               break;
 
-         case _FORTEST:
+         case HB_P_FORTEST:
               ForTest();
               w++;
               break;
 
-         case _FRAME:
+         case HB_P_FRAME:
               Frame( pCode[ w + 1 ], pCode[ w + 2 ] );
               w += 3;
               break;
 
-         case _FUNCPTR:
+         case HB_P_FUNCPTR:
               FuncPtr();
               w++;
               break;
 
-         case _FUNCTION:
+         case HB_P_FUNCTION:
               Function( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _GENARRAY:
+         case HB_P_GENARRAY:
               GenArray( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _GREATER:
+         case HB_P_GREATER:
               Greater();
               w++;
               break;
 
-         case _GREATEREQUAL:
+         case HB_P_GREATEREQUAL:
               GreaterEqual();
               w++;
               break;
 
-         case _INC:
+         case HB_P_INC:
               Inc();
               w++;
               break;
 
-         case _INSTRING:
+         case HB_P_INSTRING:
               Instring();
               w++;
               break;
 
-         case _JUMP:
+         case HB_P_JUMP:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               if( wParams )
                  w += wParams;
@@ -378,107 +378,107 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
                  w += 3;
               break;
 
-         case _JUMPFALSE:
+         case HB_P_JUMPFALSE:
               if( ! PopLogical() )
                  w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               else
                  w += 3;
               break;
 
-         case _JUMPTRUE:
+         case HB_P_JUMPTRUE:
               if( PopLogical() )
                  w += pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               else
                  w += 3;
               break;
 
-         case _LESS:
+         case HB_P_LESS:
               Less();
               w++;
               break;
 
-         case _LESSEQUAL:
+         case HB_P_LESSEQUAL:
               LessEqual();
               w++;
               break;
 
-         case _LINE:
+         case HB_P_LINE:
               Line( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _MESSAGE:
+         case HB_P_MESSAGE:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               Message( pSymbols + wParams );
               w += 3;
               break;
 
-         case _MINUS:
+         case HB_P_MINUS:
               Minus();
               w++;
               break;
 
-         case _MODULUS:
+         case HB_P_MODULUS:
               Modulus();
               w++;
               break;
 
-         case _MULT:
+         case HB_P_MULT:
               Mult();
               w++;
               break;
 
-         case _NEGATE:
+         case HB_P_NEGATE:
               Negate();
               w++;
               break;
 
-         case _NOT:
+         case HB_P_NOT:
               Not();
               w++;
               break;
 
-         case _NOTEQUAL:
+         case HB_P_NOTEQUAL:
               NotEqual();
               w++;
               break;
 
-         case OR_:
+         case HB_P_OR:
               Or();
               w++;
               break;
 
-         case _PLUS:
+         case HB_P_PLUS:
               Plus();
               w++;
               break;
 
-         case _POP:
+         case HB_P_POP:
               StackPop();
               w++;
               break;
 
-         case _POPDEFSTAT:
+         case HB_P_POPDEFSTAT:
               PopDefStat( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _POPLOCAL:
+         case HB_P_POPLOCAL:
               PopLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _POPSTATIC:
+         case HB_P_POPSTATIC:
               PopStatic( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _POWER:
+         case HB_P_POWER:
               Power();
               w++;
               break;
 
-         case _PUSHBLOCK:
+         case HB_P_PUSHBLOCK:
               /* +0    -> _pushblock
                * +1 +2 -> size of codeblock
                * +3 +4 -> number of expected parameters
@@ -493,83 +493,87 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               w += wSize;
               break;
 
-         case _PUSHDOUBLE:
+         case HB_P_PUSHDOUBLE:
               PushDouble( * ( double * ) ( &pCode[ w + 1 ] ), ( WORD ) * ( BYTE * ) &pCode[ w + 1 + sizeof( double ) ] );
               w += 1 + sizeof( double ) + 1;
               break;
 
-         case _PUSHINT:
+         case HB_P_PUSHINT:
               PushInteger( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _PUSHLOCAL:
+         case HB_P_PUSHLOCAL:
               PushLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _PUSHLOCALREF:
+         case HB_P_PUSHLOCALREF:
               PushLocalByRef( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _PUSHLONG:
+         case HB_P_PUSHLONG:
               PushLong( * ( long * ) ( &pCode[ w + 1 ] ) );
               w += 5;
               break;
 
-         case _PUSHNIL:
+         case HB_P_PUSHNIL:
               PushNil();
               w++;
               break;
 
-         case _PUSHSELF:
+         case HB_P_PUSHSELF:
               Push( stack.pBase + 1 );
               w++;
               break;
 
-         case _PUSHSTATIC:
+         case HB_P_PUSHSTATIC:
               PushStatic( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;
 
-         case _PUSHSTR:
+         case HB_P_PUSHSTR:
               wSize =*( (WORD *) &( pCode[ w + 1 ] ) );
               PushString( (char*)pCode + w + 3, wSize );
               w += ( wSize + 3 );
               break;
 
-         case _PUSHSYM:
+         case HB_P_PUSHSYM:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               PushSymbol( pSymbols + wParams );
               w += 3;
               break;
 
-         case _RETVALUE:
+         case HB_P_RETVALUE:
               RetValue();
               w++;
               break;
 
-         case _SFRAME:
+         case HB_P_SFRAME:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               SFrame( pSymbols + wParams );
               w += 3;
               break;
 
-         case _STATICS:
+         case HB_P_STATICS:
               wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
               Statics( pSymbols + wParams );
               w += 3;
               break;
 
-         case _TRUE:
+         case HB_P_TRUE:
               PushLogical( 1 );
               w++;
               break;
 
-         case _ZERO:
+         case HB_P_ZERO:
               PushInteger( 0 );
               w++;
+              break;
+
+         case HB_P_NOOP:
+              /* Intentionally do nothing */
               break;
 
          default:

@@ -1,5 +1,15 @@
 19990620-21:40 CET Victor Szel <info@szelvesz.hu>
-  * CGI.CH moved to /tests/working/
+  * source/compiler/harbour.y
+    source/compiler/genobj32.c
+    source/vm/hvm.c
+    source/runner/runner.c
+    tests/working/runner.c
+    include/pcode.h
+    All PCODE constants prefixed with HB_P_
+    NOOP opcode added
+    Reference to pcode.h was removed from runner.c
+
+19990620-21:40 CET Victor Szel <info@szelvesz.hu>
   * source/rtl/console.c missed those hb_ prefixes...
 
 19990620-21:00 CET Victor Szel <info@szelvesz.hu>

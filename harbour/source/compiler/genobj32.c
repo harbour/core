@@ -105,7 +105,7 @@ static ULONG GetPCodesSize( void )
 
   while( pFunction )
     {
-      ulTotal += pFunction->lPCodePos + 1; /* _ENDPROC !!! */
+      ulTotal += pFunction->lPCodePos + 1; /* HB_P_ENDPROC !!! */
       pFunction = pFunction->pNext;
     }
   return ulTotal;
@@ -451,7 +451,7 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, WORD w
 	  putbyte( * ( prgCode + ul ), hObjFile );
 	  bCheckSum += * ( prgCode + ul );
 	}
-      ulPCodeOffset += pFunction->lPCodePos + 1; /* _ENDPROC !!! */
+      ulPCodeOffset += pFunction->lPCodePos + 1; /* HB_P_ENDPROC !!! */
       pFunction = pFunction->pNext;
     }
 
@@ -519,8 +519,8 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, WORD wSymLen, WORD wSym
 	  putbyte( pFunction->pCode[ w ], hObjFile );
 	  bCheckSum += pFunction->pCode[ w ];
 	}
-      putbyte( _ENDPROC, hObjFile );
-      bCheckSum += _ENDPROC;
+      putbyte( HB_P_ENDPROC, hObjFile );
+      bCheckSum += HB_P_ENDPROC;
       pFunction = pFunction->pNext;
     }
 
