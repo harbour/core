@@ -40,7 +40,7 @@
 #endif /* __GNUC__ */
 
 #include <windows.h>
-#include "hbapimou.h"
+#include "hbapigt.h"
 
 #if defined(__IBMCPP__)
    #undef WORD                            /* 2 bytes unsigned */

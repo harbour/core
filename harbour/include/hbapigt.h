@@ -33,6 +33,21 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    Keyboard related declarations
+ *    Cursor declarations
+ *
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
+ *    Mouse related declarations
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #ifndef HB_APIGT_H_
 #define HB_APIGT_H_
 
@@ -127,5 +142,63 @@ extern BOOL   hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 extern BOOL   hb_gt_GetBlink( void );
 extern void   hb_gt_SetBlink( BOOL bBlink );
 extern void   hb_gt_Replicate( BYTE byChar, ULONG ulLen );
+
+/* Keyboard related declarations */
+
+typedef enum
+{
+   INKEY_MOVE           = 1,    /* Mouse Events */
+   INKEY_LDOWN          = 2,    /* Mouse Left Click Down */
+   INKEY_LUP            = 4,    /* Mouse Left Click Up */
+   INKEY_RDOWN          = 8,    /* Mouse Right Click Down */
+   INKEY_RUP            = 16,   /* Mouse Right Click Up */
+   INKEY_KEYBOARD       = 128,  /* Keyboard Events */
+   INKEY_ALL            = 159,  /* All Mouse and Keyboard Events */
+   INKEY_EXTENDED       = 256   /* Extended Keyboard Events */
+} HB_inkey_enum;
+
+/* Harbour keyboard support functions */
+extern int    hb_inkey ( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever ); /* Wait for keyboard input */
+extern int    hb_inkeyGet( void );            /* Extract the next key from the Harbour keyboard buffer */
+extern void   hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */
+extern int    hb_inkeyLast( void );           /* Return the value of the last key that was extracted */
+extern int    hb_inkeyNext( void );           /* Return the next key without extracting it */
+extern void   hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
+extern void   hb_inkeyReset( BOOL allocate ); /* Reset the Harbour keyboard buffer */
+
+/* TOFIX: This should go somewhere else. */
+extern void   hb_releaseCPU( void );          /* Attempt to release a CPU time slice */
+
+/* Mouse related declarations */
+
+/* Public interface. These should never change, only be added to. */
+
+extern void   hb_mouseInit( void );
+extern void   hb_mouseExit( void );
+extern BOOL   hb_mouseIsPresent( void );
+extern BOOL   hb_mouseGetCursor( void );
+extern void   hb_mouseSetCursor( BOOL bVisible );
+extern int    hb_mouseCol( void );
+extern int    hb_mouseRow( void );
+extern void   hb_mouseSetPos( int iRow, int iCol );
+extern BOOL   hb_mouseIsButtonPressed( int iButton );
+extern int    hb_mouseCountButton( void );
+extern void   hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight );
+extern void   hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
+
+/* Private interface listed below. these are common to all platforms */
+
+extern void   hb_mouse_Init( void );
+extern void   hb_mouse_Exit( void );
+extern BOOL   hb_mouse_IsPresent( void );
+extern void   hb_mouse_Show( void );
+extern void   hb_mouse_Hide( void );
+extern int    hb_mouse_Col( void );
+extern int    hb_mouse_Row( void );
+extern void   hb_mouse_SetPos( int iRow, int iCol );
+extern BOOL   hb_mouse_IsButtonPressed( int iButton );
+extern int    hb_mouse_CountButton( void );
+extern void   hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight );
+extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
 
 #endif /* HB_APIGT_H_ */

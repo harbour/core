@@ -46,7 +46,6 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbapimou.h"
 #include "hbapigt.h"
 
 static BOOL   s_bPresent;

@@ -13,7 +13,6 @@ C_HEADERS=\
         hbapigt.h    \
         hbapiitm.h   \
         hbapilng.h   \
-        hbapimou.h   \
         hbapirdd.h   \
         hbcomp.h     \
         hbdate.h     \
@@ -21,7 +20,6 @@ C_HEADERS=\
         hberrors.h   \
         hbexprop.h   \
         hbinit.h     \
-        hbinkey.h    \
         hbmacro.h    \
         hbpcode.h    \
         hbpp.h       \

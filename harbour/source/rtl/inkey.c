@@ -111,8 +111,8 @@
 #include "hbvm.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
+#include "hbapigt.h"
 #include "hbset.h"
-#include "hbinkey.h"
 #include "inkey.ch"
 #include "hbinit.h"
 

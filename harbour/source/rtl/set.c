@@ -195,8 +195,8 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbapigt.h"
 #include "hbset.h"
-#include "hbinkey.h"
 
 HB_SET_STRUCT hb_set;
 

@@ -1,3 +1,19 @@
+20000311-18:52 GMT+1 Victor Szakats <info@szelvesz.hu>
+   - include/hbinkey.h
+   - include/hbapimou.h
+   * include/hbapigt.h
+     include/Makefile
+     include/hbset.h
+     source/rtl/mouse/*
+     source/rtl/mouseapi.c
+     source/rtl/console.c
+     source/rtl/inkey.c
+     source/rtl/tone.c
+     source/rtl/set.c
+     source/vm/hvm.c
+     * Mouse and keyboard related declaration moved to the central IO header
+       hbapigt.h. This is a step to a common/modular IO interface.
+
 20000311-17:54 GMT+1 Victor Szakats <info@szelvesz.hu>
    - include/hbcursor.h
    - include/hbbox.h
@@ -23,7 +39,7 @@
      + TOFIX added for __EJECT() since in Clipper it always prints a eject,
        regardless of the SET DEVICE setting.
      % SAVESCREEN() optimized.
-     ! RESTSCREEM() fixed to check the fifth parameter, like in CA-Cl*pper.
+     ! RESTSCREEN() fixed to check the fifth parameter, like in CA-Cl*pper.
    * source/rtl/console.c
      % hb_gtSetPos() small optim.
    * source/rtl/dir.c

@@ -56,9 +56,9 @@
 #include "hbapiitm.h"
 #include "hbapilng.h"
 #include "hbapirdd.h"
+#include "hbapigt.h"
 #include "hbpcode.h"
 #include "hbset.h"
-#include "hbinkey.h"
 
 typedef struct _SYMBOLS
 {

@@ -80,7 +80,7 @@
 #endif
 
 #include "hbapi.h"
-#include "hbinkey.h" /* For hb_releaseCPU() */
+#include "hbapigt.h" /* For hb_releaseCPU() */
 
 #if defined(HARBOUR_GCC_OS2)
    ULONG DosBeep( ULONG ulFrequency, ULONG ulDuration );

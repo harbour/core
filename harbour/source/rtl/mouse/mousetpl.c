@@ -33,7 +33,7 @@
  *
  */
 
-#include "hbapimou.h"
+#include "hbapigt.h"
 
 /* C callable low-level interface */
 

@@ -85,7 +85,6 @@
 #include "hbdefs.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
-#include "hbinkey.h"
 
 typedef enum
 {

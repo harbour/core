@@ -68,13 +68,10 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbapigt.h"
 #include "hbdate.h"
 #include "hbset.h"
-#include "hbinkey.h"
 #include "inkey.ch"
-#include "hbapigt.h"            /* HARBOUR_USE_GTAPI is checked inside hbapigt.h, so that
-                                 we can always get the border styles */
-#include "hbapimou.h"
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
