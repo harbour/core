@@ -124,15 +124,6 @@
 /*#define HARBOUR_MAIN_WIN*/
 
 /* ***********************************************************************
- * You can select here, what type of main entry will be used in the
- * application (main() or WinMain()).
- *
- * By default the standard C main() function will be used.
-*/
-/*#define HARBOUR_MAIN_STD*/
-/*#define HARBOUR_MAIN_WIN*/
-
-/* ***********************************************************************
  * You can set here the maximum symbol name length handled by Harbour
  * compiler and runtime. You can override this setting in the make process.
  *

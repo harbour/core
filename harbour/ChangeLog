@@ -1,3 +1,8 @@
+20000509-00:35 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbsetup.h
+     ! Removed doubled part.
+
 20000508-00:20 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.l
