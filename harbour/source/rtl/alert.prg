@@ -151,6 +151,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    LOCAL nOldDispCount
    LOCAL nCount
+   LOCAL nMRow, nMCol
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
    /*        if it is not, the console mode is choosen here */
@@ -292,6 +293,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
          nKey := Inkey( nDelay )
 
          DO CASE
+
          CASE nKey == 0
 
             EXIT
@@ -345,6 +347,21 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
          nKey := Inkey( nDelay )
 
          DO CASE
+         CASE nKey == K_LBUTTONDOWN
+            nMRow = MRow()
+            nMCol = MCol()
+            FOR nEval := 1 TO Len( aOptionsOK )
+               if nMRow == nInitRow + Len( aSay ) + 2 .and. ;
+                  nMCol >= aPos[ nEval ] .and. nMCol <= aPos[ nEval ] + ;
+                  Len( " " + aOptionsOK[ nEval ] + " " ) - 1
+                  nChoice = nEval
+                  EXIT
+               endif
+            NEXT
+            if nChoice == nEval
+               EXIT
+            endif
+
          CASE nKey == K_ENTER .OR. ;
               nKey == K_SPACE .OR. ;
               nKey == 0
@@ -430,4 +447,3 @@ PROCEDURE __NONOALERT()
    s_lNoAlert := .F.
 
    RETURN
-

@@ -1152,7 +1152,7 @@ HARBOUR HB___KEYPUT( void )
 
 HARBOUR HB_MCOL( void )
 {
-   hb_retnl( s_yRowPos );
+   hb_retnl( s_xRowPos );
 }
 
 /*  $DOC$
@@ -1185,7 +1185,7 @@ HARBOUR HB_MCOL( void )
 
 HARBOUR HB_MROW( void )
 {
-   hb_retnl( s_xRowPos );
+   hb_retnl( s_yRowPos );
 }
 
 /*  $DOC$
