@@ -321,7 +321,7 @@ USHORT hb_gtPreExt( void )
          /* call platform depend layer to flush all pending outputs and
          * to prepare screen for direct updating
          */
-         hb_gt_PreExt(); 
+         hb_gt_PreExt();
       }
 
       s_uiPreCNest = 1;
@@ -340,7 +340,7 @@ USHORT hb_gtPostExt( void )
    {
       /* call platform depend layer to restore all settings */
       hb_gt_PostExt();
-      
+
       while( s_uiPreCount-- )
          hb_gt_DispBegin();
 
@@ -433,6 +433,89 @@ USHORT hb_gtGetColorStr( char * pszColorString )
    pszColorString[ iPos ] = '\0';
 
    return 0;
+}
+
+USHORT hb_gtColorToN( char * szColorString )
+{
+   char c;
+   USHORT nColor = 0;
+   int nFore = 0;
+   BOOL bHasI = FALSE;
+   BOOL bHasU = FALSE;
+   BOOL bHasX = FALSE;
+   BOOL bSlash = FALSE;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtColorToN(%s)", szColorString));
+
+   while( c = *szColorString++ )
+   {
+      c = toupper( c );
+
+      switch( c )
+      {
+         case 'B':
+            nColor |= 1;
+            break;
+
+         case 'G':
+            nColor |= 2;
+            break;
+
+         case 'I':
+            bHasI   = TRUE;
+            break;
+
+         case 'N':
+            nColor  = 0;
+            break;
+
+         case 'R':
+            nColor |= 4;
+            break;
+
+         case 'U':
+            bHasU   = TRUE;
+            break;
+
+         case 'W':
+            nColor  = 7;
+            break;
+
+         case 'X':                   /* always sets forground to 'N' */
+            bHasX   = TRUE;
+            break;
+
+         case '*':
+            nFore  |= 128;
+            break;
+
+         case '+':
+            nFore  |= 8;
+            break;
+
+         case '/':
+            if( bHasU )
+            {
+               bHasU = FALSE;
+               nFore |= 0x0800;  /* foreground underline bit */
+            }
+            else if( bHasX )
+            {
+               nColor = 0;
+               bHasX = FALSE;
+            }
+            else if( bHasI )
+            {
+               nColor = 7;
+               bHasI = FALSE;
+            }
+            nFore |= nColor;
+            bSlash = TRUE;
+            break;
+      }
+   }
+
+   return nColor;
 }
 
 USHORT hb_gtSetColorStr( char * szColorString )
@@ -647,7 +730,7 @@ USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
    return 0;
 }
 
-/* NOTE: Should be exactly the same as hb_gtSetPosContext(), but without the 
+/* NOTE: Should be exactly the same as hb_gtSetPosContext(), but without the
          additional third parameter. */
 
 USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
@@ -680,7 +763,7 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
    return 0;
 }
 
-/* NOTE: Should be exactly the same as hb_gtSetPos(), but with the additional 
+/* NOTE: Should be exactly the same as hb_gtSetPos(), but with the additional
          parameter. */
 
 USHORT hb_gtSetPosContext( SHORT iRow, SHORT iCol, SHORT iMethod )
@@ -747,7 +830,7 @@ USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtRepChar(%hu, %hu, %d, %hu)", uiRow, uiCol, (int) byChar, uiCount));
 
-   hb_gt_Replicate( uiRow, uiCol, ( BYTE ) s_pColor[ s_uiColorIndex ], 
+   hb_gt_Replicate( uiRow, uiCol, ( BYTE ) s_pColor[ s_uiColorIndex ],
                     byChar, uiCount );
 
    return 0;
@@ -1056,7 +1139,7 @@ USHORT hb_gtSuspend( void )
    /* call platform depend layer to flush all pending outputs and
     * to prepare screen for outside output
     */
-   hb_gt_Suspend(); 
+   hb_gt_Suspend();
 
    return 0;
 }
@@ -1067,7 +1150,7 @@ USHORT hb_gtResume( void )
 
    /* call platform depend layer to restore all settings */
    hb_gt_Resume();
-      
+
    while( s_uiPreCount-- )
       hb_gt_DispBegin();
 
