@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-04-28 23:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/rtl/tget.prg
+    ! numbers editing bug (side effect from previous change) fixed
+
+    When typing a number, the second digit was overwriting the previous one.
+
 2003-04-28 21:00 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/debug/debugger.prg
     ! aCallStack properly set when using trace mode (K_F10)
