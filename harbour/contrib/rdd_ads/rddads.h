@@ -90,7 +90,7 @@ typedef struct _ADSAREA_
    BOOL fValidBuffer;            /* State of buffer */
    BOOL fRecordChanged;          /* Record changed */
    BOOL fShared;                 /* Shared file */
-   BOOL fReadOnly;               /* Read only file */
+   BOOL fReadonly;               /* Read only file */
    BOOL fFLocked;                /* TRUE if file is locked */
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;

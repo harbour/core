@@ -74,7 +74,7 @@ extern ERRCODE hb_waFieldName( AREAP pArea, USHORT uiIndex, void * szName );
 #define hb_waGoHot                                          hb_waUnsupported
 #define hb_waPutRec                          ( DBENTRYP_P ) hb_waUnsupported
 #define hb_waPutValue                       ( DBENTRYP_SI ) hb_waUnsupported
-#define hb_waRecAll                                         hb_waUnsupported
+#define hb_waRecall                                         hb_waUnsupported
 #define hb_waRecCount                      ( DBENTRYP_ULP ) hb_waUnsupported
 #define hb_waRecInfo                       ( DBENTRYP_ISI ) hb_waUnsupported
 #define hb_waRecNo                           ( DBENTRYP_I ) hb_waUnsupported

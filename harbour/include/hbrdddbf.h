@@ -126,7 +126,7 @@ typedef struct _DBFAREA
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
    BOOL fShared;                 /* Shared file */
-   BOOL fReadOnly;               /* Read only file */
+   BOOL fReadonly;               /* Read only file */
    USHORT * pFieldOffset;        /* Pointer to field offset array */
    BYTE * pRecord;               /* Buffer of record data */
    BOOL fValidBuffer;            /* State of buffer */
@@ -187,7 +187,7 @@ extern ERRCODE hb_dbfGoCold( DBFAREAP pArea );
 extern ERRCODE hb_dbfGoHot( DBFAREAP pArea );
 extern ERRCODE hb_dbfPutRec( DBFAREAP pArea, BYTE * pBuffer );
 extern ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-extern ERRCODE hb_dbfRecAll( DBFAREAP pArea );
+extern ERRCODE hb_dbfRecall( DBFAREAP pArea );
 extern ERRCODE hb_dbfRecCount( DBFAREAP pArea, ULONG * pRecCount );
 #define hb_dbfRecInfo                              NULL
 extern ERRCODE hb_dbfRecNo( DBFAREAP pArea, PHB_ITEM pRecNo );

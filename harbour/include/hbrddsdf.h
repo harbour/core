@@ -74,7 +74,7 @@ extern "C" {
 #define hb_sdfGoHot                                NULL
 #define hb_sdfPutRec                               NULL
 #define hb_sdfPutValue                             NULL
-#define hb_sdfRecAll                               NULL
+#define hb_sdfRecall                               NULL
 #define hb_sdfRecCount                             NULL
 #define hb_sdfRecInfo                              NULL
 #define hb_sdfRecNo                                NULL

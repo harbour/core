@@ -1003,7 +1003,7 @@ static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    {
       return FAILURE;
    }
- 
+
    SELF_ORDSETCOND( pArea, NULL );
    return SELF_GOTOP( pArea );
 }
@@ -1027,7 +1027,7 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          }
          hb_itemPutC( pInfo->itmResult, "" );
          break;
-      case DBOI_EXPRESSION:  
+      case DBOI_EXPRESSION:
          if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
@@ -1039,7 +1039,7 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          }
          hb_itemPutC( pInfo->itmResult, "" );
          break;
-      case DBOI_NUMBER:  
+      case DBOI_NUMBER:
          if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
@@ -1051,7 +1051,7 @@ static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo )
          }
          /* TODO: Raise recoverable error */
          break;
-      case DBOI_BAGNAME:  
+      case DBOI_BAGNAME:
          if( pArea->lpIndexInfo )
          {
             pIndex = ntxFindIndex( pArea , pInfo->itmOrder );
@@ -1170,7 +1170,7 @@ static ERRCODE ntxClose( AREAP pArea )
 #define ntxGoHot                 NULL
 #define ntxPutRec                NULL
 #define ntxPutValue              NULL
-#define ntxRecAll                NULL
+#define ntxRecall                NULL
 #define ntxRecCount              NULL
 #define ntxRecInfo               NULL
 #define ntxRecNo                 NULL
@@ -1254,7 +1254,7 @@ static RDDFUNCS ntxTable = { ntxBof,
                              ntxGoHot,
                              ntxPutRec,
                              ntxPutValue,
-                             ntxRecAll,
+                             ntxRecall,
                              ntxRecCount,
                              ntxRecInfo,
                              ntxRecNo,

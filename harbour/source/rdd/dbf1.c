@@ -99,7 +99,7 @@ static RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,
                              ( DBENTRYP_V ) hb_dbfGoHot,
                              ( DBENTRYP_P ) hb_dbfPutRec,
                              ( DBENTRYP_SI ) hb_dbfPutValue,
-                             ( DBENTRYP_V ) hb_dbfRecAll,
+                             ( DBENTRYP_V ) hb_dbfRecall,
                              ( DBENTRYP_ULP ) hb_dbfRecCount,
                              ( DBENTRYP_ISI ) hb_dbfRecInfo,
                              ( DBENTRYP_I ) hb_dbfRecNo,
@@ -818,7 +818,7 @@ ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   if( pArea->fReadOnly )
+   if( pArea->fReadonly )
    {
       pError = hb_errNew();
       hb_errPutGenCode( pError, EG_READONLY );
@@ -1097,7 +1097,7 @@ ERRCODE hb_dbfGoHot( DBFAREAP pArea )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfGoHot(%p)", pArea));
 
-   if( pArea->fReadOnly )
+   if( pArea->fReadonly )
    {
       pError = hb_errNew();
       hb_errPutGenCode( pError, EG_READONLY );
@@ -1277,9 +1277,9 @@ ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 /*
  * Undelete the current record.
  */
-ERRCODE hb_dbfRecAll( DBFAREAP pArea )
+ERRCODE hb_dbfRecall( DBFAREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_dbfRecAll(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_dbfRecall(%p)", pArea));
 
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
@@ -1659,7 +1659,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
    pArea->fShared = pOpenInfo->fShared;
-   pArea->fReadOnly = pOpenInfo->fReadonly;
+   pArea->fReadonly = pOpenInfo->fReadonly;
    uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
    uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
    pError = NULL;

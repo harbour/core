@@ -101,7 +101,7 @@ static RDDFUNCS cdxTable = { ( DBENTRYP_BP ) hb_cdxBof,
                              ( DBENTRYP_V ) hb_cdxGoHot,
                              ( DBENTRYP_P ) hb_cdxPutRec,
                              ( DBENTRYP_SI ) hb_cdxPutValue,
-                             ( DBENTRYP_V ) hb_cdxRecAll,
+                             ( DBENTRYP_V ) hb_cdxRecall,
                              ( DBENTRYP_ULP ) hb_cdxRecCount,
                              ( DBENTRYP_ISI ) hb_cdxRecInfo,
                              ( DBENTRYP_I ) hb_cdxRecNo,
@@ -1152,7 +1152,7 @@ static int hb_cdxKeyCompare( LPKEYINFO pKey1, LPKEYINFO pKey2, USHORT * EndPos, 
 
 /* hb_cdxTagxxx */
 /* #include "cdxtag.c" */
-/* Creates a new structure with a tag information 
+/* Creates a new structure with a tag information
  *
  * PIF = pointer to a parent index structure
  * ITN = tag name
@@ -1803,7 +1803,7 @@ static void hb_cdxTagExtNodeBuild( LPCDXTAG pTag, LPCDXDATA pData, LPPAGEINFO PI
    }
 }
 
-/* Read a tag definition from the index file 
+/* Read a tag definition from the index file
  *
  * pTag = structure with a tag information
  */
@@ -1815,7 +1815,7 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
    /* read the page from a file */
    hb_cdxIndexPageRead( pTag->pIndex, pTag->TagBlock, &pHeader, sizeof( CDXTAGHEADER ) );
    pTag->RootBlock = pHeader.lRoot;
-   /* Return if: 
+   /* Return if:
     * no root page allocated
     * invalid root page offset (position inside an index file)
     * invalid key value length
@@ -1824,24 +1824,24 @@ static void hb_cdxTagTagLoad( LPCDXTAG pTag )
        pTag->RootBlock > hb_fsSeek( pTag->pIndex->hFile, 0, FS_END ) ||
        pHeader.uiKeySize > CDX_MAXKEY )
       return;
-      
+
    pTag->uiLen = pHeader.uiKeySize;
    pTag->MaxKeys = ( CDX_PAGELEN - 12 ) / ( pTag->uiLen + 8 );
    pTag->OptFlags = pHeader.bType;
    pTag->UniqueKey = ( pTag->OptFlags & 0x01 );
    pTag->AscendKey = ( pHeader.iDescending == 0 );
    pTag->KeyExpr = ( char * ) hb_xgrab( CDX_MAXKEY + 1 );
-   /* QUESTION: Is UPPER a valid operation here? 
+   /* QUESTION: Is UPPER a valid operation here?
     * This will break expressions like:
     * somefield+'smallcaps'+otherfield
    */
    hb_strncpyUpper( pTag->KeyExpr, ( char * ) pHeader.KeyPool, CDX_MAXKEY );
-   
+
    if( pTag->OptFlags < 0x80 && pTag->KeyExpr[ 0 ] == 0 )
       return;
    if( pTag->OptFlags & 0x80 )
       return;
-      
+
    SELF_COMPILE( (AREAP) pTag->pIndex->pArea, ( BYTE * ) pTag->KeyExpr );
    pTag->pKeyItem = pTag->pIndex->pArea->valResult;
    pTag->pIndex->pArea->valResult = NULL;
@@ -3585,7 +3585,7 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
       }
       hb_xfree( pFileName );
    }
-   uiFlags =  pAreaCdx->fReadOnly  ? FO_READ : FO_READWRITE;
+   uiFlags =  pAreaCdx->fReadonly  ? FO_READ : FO_READWRITE;
    uiFlags |= pAreaCdx->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
 
    do

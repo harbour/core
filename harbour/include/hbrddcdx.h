@@ -283,7 +283,7 @@ typedef struct _CDXAREA
    BOOL fHasMemo;                /* WorkArea with Memo fields */
    BOOL fHasTags;                /* WorkArea with MDX or CDX index */
    BOOL fShared;                 /* Shared file */
-   BOOL fReadOnly;               /* Read only file */
+   BOOL fReadonly;               /* Read only file */
    USHORT * pFieldOffset;        /* Pointer to field offset array */
    BYTE * pRecord;               /* Buffer of record data */
    BOOL fValidBuffer;            /* State of buffer */
@@ -357,7 +357,7 @@ extern ERRCODE hb_cdxGetVarLen( CDXAREAP pArea, USHORT uiIndex, ULONG * pLength 
 #define hb_cdxGoHot                                NULL
 #define hb_cdxPutRec                               NULL
 extern ERRCODE hb_cdxPutValue( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
-#define hb_cdxRecAll                               NULL
+#define hb_cdxRecall                               NULL
 #define hb_cdxRecCount                             NULL
 #define hb_cdxRecInfo                              NULL
 #define hb_cdxRecNo                                NULL

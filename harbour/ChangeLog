@@ -1,3 +1,24 @@
+
+2000-11-01 15:00 UTC+0800 Brian Hays <bhays@abacuslaw.com>
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/rddads.h
+   * include/hbrddcdx.h
+   * include/hbrdddbf.h
+   * include/hbrdddel.h
+   * include/hbrddsdf.h
+   * include/hbrddwrk.h
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/delim1.c
+   * source/rdd/sdf1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfntx/dbfntx1.c
+      * Global replaces to fix RecAll/Recall and ReadOnly/Readonly
+        inconsistencies.
+
+        RDD AUTHORS !!!!  This may break your code!
+        I did several tests and all seems fine.
+
 2000-11-01 04:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
 
    * source/compiler/harbour.slx

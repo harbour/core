@@ -74,7 +74,7 @@ extern "C" {
 #define hb_delimGoHot                                NULL
 #define hb_delimPutRec                               NULL
 #define hb_delimPutValue                             NULL
-#define hb_delimRecAll                               NULL
+#define hb_delimRecall                               NULL
 #define hb_delimRecCount                             NULL
 #define hb_delimRecInfo                              NULL
 #define hb_delimRecNo                                NULL

@@ -850,9 +850,9 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    return SUCCESS;
 }
 
-static ERRCODE adsRecAll( ADSAREAP pArea )
+static ERRCODE adsRecall( ADSAREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("adsRecAll(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("adsRecall(%p)", pArea));
 
    AdsRecallRecord  ( pArea->hTable );
    return SUCCESS;
@@ -1105,8 +1105,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       }
       pArea->hTable    = hTable;
       pArea->fShared   = pOpenInfo->fShared;
-      // bh: why can't the compiler see this??
-      // pArea->fReadOnly = pOpenInfo->fReadOnly;
+      pArea->fReadonly = pOpenInfo->fReadonly;
    }
 
    SELF_FIELDCOUNT( ( AREAP ) pArea, &uiFields );
@@ -1199,7 +1198,7 @@ static ERRCODE adsPack( ADSAREAP pArea )
       return FAILURE;
    }
 
-   if( pArea->fReadOnly )
+   if( pArea->fReadonly )
       return FAILURE;
 
    AdsPackTable  ( pArea->hTable );
@@ -1657,7 +1656,7 @@ static RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
                              ( DBENTRYP_V ) adsGoHot,
                              ( DBENTRYP_P ) adsPutRec,
                              ( DBENTRYP_SI ) adsPutValue,
-                             ( DBENTRYP_V ) adsRecAll,
+                             ( DBENTRYP_V ) adsRecall,
                              ( DBENTRYP_ULP ) adsRecCount,
                              ( DBENTRYP_ISI ) adsRecInfo,
                              ( DBENTRYP_I ) adsRecNo,
