@@ -29,9 +29,7 @@
  */
 
 //#define SHOW_LEX_TOKENS
-/*
-#define DEBUG_LEX
-*/
+//#define DEBUG_LEX
 
 #ifdef DEBUG_LEX
    #undef DEBUG_INFO(x)
@@ -281,6 +279,9 @@ LANGUAGE_RULES_ARE {
                      IF_SEQUENCE_IS( '^'         	, 0            , 0            , 0          ) REDUCE_TO( POWER               , 0           ),
                      IF_SEQUENCE_IS( '!'         	, 0            , 0            , 0          ) REDUCE_TO( NOT                 , 0           ),
 
+		     /* Return only last CR in a sequence.  */
+                     IF_SEQUENCE_IS( '\n'         	, '\n'         , 0            , 0          ) REDUCE_TO( '\n'                , 0           ),
+
 		     /* Strong Types */
                      IF_SEQUENCE_IS( _AS_        	, _ARRAY_      , 0            , 0          ) REDUCE_TO( AS_ARRAY            , 0           ),
                      IF_SEQUENCE_IS( _AS_        	, _BLOCK_      , 0            , 0          ) REDUCE_TO( AS_BLOCK            , 0           ),
@@ -509,8 +510,8 @@ LANGUAGE_RULES_ARE {
                      IF_SEQUENCE_IS( RETURN           	, INASSIGN     , 0            , 0          ) REDUCE_TO( HB_RETURN_ID        , INASSIGN    ),
                      IF_SEQUENCE_IS( RETURN           	, INC          , '\n'         , 0          ) REDUCE_TO( HB_RETURN_ID        , _INC_CR     ),
                      IF_SEQUENCE_IS( RETURN           	, DEC          , '\n'         , 0          ) REDUCE_TO( HB_RETURN_ID        , _DEC_CR     ),
-                     IF_SEQUENCE_IS( RETURN           	, INC          , ';'         , 0          ) REDUCE_TO( HB_RETURN_ID         , _INC_CR     ),
-                     IF_SEQUENCE_IS( RETURN           	, DEC          , ';'         , 0          ) REDUCE_TO( HB_RETURN_ID         , _DEC_CR     ),
+                     IF_SEQUENCE_IS( RETURN           	, INC          , ';'          , 0          ) REDUCE_TO( HB_RETURN_ID         , _INC_CR    ),
+                     IF_SEQUENCE_IS( RETURN           	, DEC          , ';'          , 0          ) REDUCE_TO( HB_RETURN_ID         , _DEC_CR    ),
                      IF_SEQUENCE_IS( RETURN         	, ALIASOP      , 0            , 0          ) REDUCE_TO( HB_RETURN_ID        , ALIASOP     ),
                      IF_SEQUENCE_IS( RETURN           	, PLUSEQ       , 0            , 0          ) REDUCE_TO( HB_RETURN_ID        , PLUSEQ      ),
                      IF_SEQUENCE_IS( RETURN           	, MINUSEQ      , 0            , 0          ) REDUCE_TO( HB_RETURN_ID        , MINUSEQ     ),
@@ -960,7 +961,7 @@ LANGUAGE_RULES_ARE {
 	 iTexts++;\
          CONVERT_NUMBER();\
 \
-         DEBUG_INFO( printf(  "Element \"%s\" is %i yylval.string = >%s<\n", sToken, iRet, yylval.string ) );\
+         DEBUG_INFO( printf(  "Element \"%s\" is %i\n", sToken, iRet ) );\
        }\
     }
 

@@ -84,7 +84,7 @@ typedef struct _LEX_PAIR
    int   iToken;
 } LEX_PAIR;                    /* support structure for KEYS and WORDS */
 
-/* Abouve are NOT overidable !!! Need to precede the Language Definitions. */
+/* Above are NOT overidable !!! Need to precede the Language Definitions. */
 
 /* --------------------------------------------------------------------------------- */
 
@@ -100,7 +100,7 @@ typedef struct _LEX_PAIR
 #define LEX_CASE(x)
 
 /*
- * Can be used to indicate hoe many chars needed to qualify as an abbreviation for Key Words.
+ * Can be used to indicate how many chars needed to qualify as an abbreviation for Key Words.
  *
 #define LEX_ABBREVIATE_KEYS
 #define LEX_ABBREVIATE_WORDS
@@ -172,7 +172,7 @@ static int  iReduce = 0;
 /* yylex */
 static char * tmpPtr;
 static char sToken[TOKEN_SIZE];
-static int  iLen;
+static int  iLen = 0;
 static char chr, cPrev = 0;
 static int  iKey, iWord, iMatch, iRemove, iScan, iWordLen, iPush, iTexts = 0;
 static char szLexBuffer[ YY_BUF_SIZE ];
@@ -191,7 +191,7 @@ char * yytext;
 int yyleng;
 
 /* NewLine Support. */
-static BOOL bNewLine = TRUE;
+static BOOL bNewLine = TRUE, bStart = TRUE;
 
 static int iSelfs = (int) ( sizeof( aSelfs  ) / LEX_WORD_SIZE );
 static int iKeys  = (int) ( sizeof( aKeys   ) / LEX_WORD_SIZE );
@@ -212,18 +212,8 @@ int Reduce( int iToken, BOOL bReal );
 #define IF_TOKEN_READY()  if( iReturn )
 #define IF_TOKEN_ON_HOLD()  if( iHold )
 #define REDUCE( x ) Reduce( (x), TRUE )
-#define RESET_LEX() { iLen = 0; iMatched = 0; iHold = 0; iReturn = 0; }
+#define RESET_LEX() { iLen = 0; iMatched = 0; iHold = 0; iReturn = 0; bNewLine = TRUE; bStart = TRUE; }
 #define FORCE_REDUCE() Reduce( 0, TRUE )
-
-
-#define CHECK_NEW_LINE() \
-                        if( bNewLine )\
-                        {\
-                           NEW_LINE_ACTION();\
-                           \
-                           iTexts = 0;\
-                        }
-
 
 #define HOLD_TOKEN(x, y) \
                       /* Last In, First Out */ \
@@ -259,10 +249,9 @@ int Reduce( int iToken, BOOL bReal );
             tmpPtr = (char*) szNewLine; \
             while ( *tmpPtr && chr != *tmpPtr ) \
             { \
-                tmpPtr++; \
+               tmpPtr++; \
             } \
-            \
-            /* NewLine Found. */\
+            /* NewLine Found?. */\
             if( *tmpPtr )
 
 #define IF_BEGIN_PAIR(chr) \
@@ -329,13 +318,15 @@ int Reduce( int iToken, BOOL bReal );
                         /* Terminate current token and check it. */ \
                         sToken[ iLen ] = '\0'; \
                         \
+                        /* Last charcter read. */\
+                        chr = chrSelf;\
+                        \
                         goto CheckToken; \
                      } \
                      else \
                      { \
                         DEBUG_INFO( printf( "Reducing Self >%s<\n", sSelf ) ); \
                         \
-                        CHECK_NEW_LINE();\
                         bNewLine = FALSE;\
                         \
                         RETURN_TOKEN( REDUCE( aSelfs[iSelf].iToken ), sSelf ); \
@@ -401,7 +392,7 @@ int Reduce( int iToken, BOOL bReal );
             iReturn--; \
             iRet = aiReturn[iReturn]; \
             \
-            DEBUG_INFO( printf(  "Returning Ready: %i yytext = \"%s\"\n", iRet, yytext ) ); \
+            DEBUG_INFO( printf(  "Returning Ready: %i\n", iRet ) ); \
             \
             LEX_RETURN(iRet, NULL);
 
@@ -439,6 +430,17 @@ int Reduce( int iToken, BOOL bReal );
                RESET_LEX();\
                return -1; \
             }\
+            else if( iRet < 256 )\
+            {\
+               IF_NEWLINE( (char) iRet )\
+               {\
+                  bNewLine = TRUE;\
+               }\
+               else\
+               {\
+                  bNewLine = FALSE;\
+               }\
+            }\
             \
             DEBUG_INFO( printf(  "Reducing Held: %i Pos: %i\n", iRet, iHold ) ); \
             \
@@ -462,18 +464,10 @@ int Reduce( int iToken, BOOL bReal );
         } \
         else \
         { \
-            if( x < 256 ) \
-            { \
-               IF_NEWLINE( iRet ) \
-               { \
-                  /* Signify NewLine. */ \
-                  bNewLine = TRUE; \
-               } \
-            } \
-            \
-            DEBUG_INFO( printf(  "Returning: %i yytext = \"%s\"\n", x, yytext ) ); \
+            DEBUG_INFO( printf(  "Returning: %i\n", x ) ); \
             \
             INTERCEPT_ACTION(x)\
+            \
             return x; \
         }
 
@@ -825,6 +819,21 @@ int yylex( void /*YYSTYPE * yylval*/ )
        }
        else
        {
+          if( iMatched )
+          {
+              /* Returning Pending Rule Match Tokens without further tests. */ \
+              iMatch = 0; \
+              while( iMatch < iMatched ) \
+              { \
+                 DEBUG_INFO( printf(  "Returning Pending Match Tokens at: <EOF>\n" ) ); \
+                 \
+                 aiReturn[ iReturn++ ] = aiMatched[ iMatch ]; \
+                 iMatch++; \
+              } \
+              iMatched = 0;\
+              goto Start;\
+          }
+
           DEBUG_INFO( printf(  "Returning: <EOF>\n" ) );
 
           return -1;
@@ -848,12 +857,22 @@ int yylex( void /*YYSTYPE * yylval*/ )
 
             IF_OMMIT(chr)
             {
-               /* No need to check whit space. */
+                if ( iLen )
+                {
+                   /* Terminate current token and check it. */
+                   sToken[ iLen ] = '\0';
+
+                   DEBUG_INFO( printf(  "Token: \"%s\" Ommited: \'%c\'\n", sToken, chr ) );
+
+                   goto CheckToken;
+                }
+                else
+                {
+                   continue;
+                }
             }
-            else
-            {
-               CHECK_SELF_CONTAINED(chr);
-            }
+
+            CHECK_SELF_CONTAINED(chr);
 
             /* Soft Pair Terminator ? */
             if ( cTerm && chr == cTerm )
@@ -927,6 +946,9 @@ int yylex( void /*YYSTYPE * yylval*/ )
                             /* Resetting. */
                             cTerm = 0;
 
+                            /* Last charcter read. */
+                            chr = chrPair;
+
                             goto on_error;
                         }
                         /* Terminator found. */
@@ -941,6 +963,11 @@ int yylex( void /*YYSTYPE * yylval*/ )
 
                             /* TODO: Move Action to Pair Definition! */
                             yylval.string = hb_strdup( sPair );
+
+                            /* Last charcter read. */
+                            chr = chrPair;
+
+                            bNewLine = FALSE;
 
                             /* LITERAL */
                             RETURN_TOKEN( REDUCE( aPairs[ iPair ].iToken ), NULL );
@@ -993,24 +1020,11 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 {
                     DEBUG_INFO( printf(  "Reducing NewLine '%c'\n", chr ) );
 
+                    bNewLine = TRUE;
+                    iTexts = 0;
+                    NEW_LINE_ACTION();
+
                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
-                }
-            }
-
-            IF_OMMIT(chr)
-            {
-                if ( iLen )
-                {
-                   /* Terminate current token and check it. */
-                   sToken[ iLen ] = '\0';
-
-                   DEBUG_INFO( printf(  "Token: \"%s\" Ommited: \'%c\'\n", sToken, chr ) );
-
-                   goto CheckToken;
-                }
-                else
-                {
-                   continue;
                 }
             }
 
@@ -1043,7 +1057,6 @@ int yylex( void /*YYSTYPE * yylval*/ )
                 {
                     DEBUG_INFO( printf(  "Reducing Delimiter: '%c'\n", chr ) );
 
-                    CHECK_NEW_LINE();
                     bNewLine = FALSE;
 
                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
@@ -1085,8 +1098,6 @@ int yylex( void /*YYSTYPE * yylval*/ )
 
     CheckToken:
         {
-            CHECK_NEW_LINE()
-
             #ifdef LEX_ABBREVIATE_KEYS
                iWordLen = strlen( sToken );
 
@@ -1107,13 +1118,15 @@ int yylex( void /*YYSTYPE * yylval*/ )
                    if( strcmp( sToken, aKeys[ iKey++ ].sWord ) == 0 )
                 #endif
                 {
-                    bNewLine = FALSE;
-
                     DEBUG_INFO( printf(  "Reducing Key Word: %s\n", sToken ) );
+
+                    bNewLine = FALSE;
 
                     RETURN_TOKEN( REDUCE( aKeys[ iKey - 1 ].iToken ), sToken );
                 }
             }
+
+            bNewLine = FALSE;
 
             #ifdef LEX_ABBREVIATE_WORDS
                iWordLen = strlen( sToken );
@@ -1133,17 +1146,13 @@ int yylex( void /*YYSTYPE * yylval*/ )
                    if( strcmp( sToken, aWords[ iWord++ ].sWord ) == 0 )
                 #endif
                 {
-                    bNewLine = FALSE;
-
                     DEBUG_INFO( printf(  "Reducing Word: %s\n", sToken ) );
 
                     RETURN_TOKEN( REDUCE( aWords[ iWord - 1 ].iToken ), sToken );
                 }
             }
 
-            bNewLine = FALSE;
-
-            DEBUG_INFO( printf(  "Reducing Element: \"%s\" yytext = \"%s\"\n", sToken, yytext ) );
+            DEBUG_INFO( printf(  "Reducing Element: \"%s\"\n", sToken ) );
 
             /* "Returns" the Token as iRet. */
             ELEMENT_TOKEN( sToken )

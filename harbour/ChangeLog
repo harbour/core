@@ -1,9 +1,16 @@
+2000-07-08 15:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  * source\compiler\simplex.c
+    * Improved handling of WhiteSpace, NewLine, and Eof.
+
+  * source\compiler\harbour.slx
+    + Added rule to return only last CR in sequence of empty lines.
+
 2000-07-08 10:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
         * fixed possible endless loop during the garbage collecting
         (this time for real :-)
-        
+
 2000-07-07 17:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
   - include\harbour.slx
   - source\compiler\harbourl.c
