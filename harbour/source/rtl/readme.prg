@@ -80,13 +80,23 @@
  *
  * --- DISCLAIMER ---
  *
- * Participants of The Harbour Project assume no responsibility for errors or omissions in these materials.
+ * Participants of The Harbour Project assume no responsibility for errors or
+ * omissions in these materials.
  *
- * THESE MATERIALS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+ * THESE MATERIALS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
  *
- * Participants of The Harbour Project further do not warrant the accuracy or completeness of the code, information, text, output or any other items contained within these materials. Participants of The Harbour Project shall not be liable for any special, direct, indirect, incidental, or consequential damages, including without limitation, lost revenues or lost profits, which may result from the use or mis-use of these materials.
+ * Participants of The Harbour Project further do not warrant the accuracy or
+ * completeness of the code, information, text, output or any other items
+ * contained within these materials. Participants of The Harbour Project
+ * shall not be liable for any special, direct, indirect, incidental, or
+ * consequential damages, including without limitation, lost revenues or
+ * lost profits, which may result from the use or mis-use of these materials.
  *
- * The information in The Harbour Project is subject to change without notice and does not represent any future commitment by the participants of The Harbour Project.
+ * The information in The Harbour Project is subject to change without notice
+ * and does not represent any future commitment by the participants of The
+ * Harbour Project.
  *
  * The Harbour Project
  *

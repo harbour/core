@@ -125,6 +125,7 @@ STATIC lAuthor := .T.                   // Include author in output of ascii out
 STATIC lRtf    := .F.
 STATIC oRtf
 STATIC oHtm
+STATIC oOs2,oTroff,oNgi,xTemp
 STATIC lNgi    := .F.
 STATIC lOs2    := .F.
 STATIC lWww    := .F.
@@ -169,7 +170,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL aExtensions := { "*.prg", "*.c", "*.asm", "*.ch" , "*.txt" }
    LOCAL i
    LOCAL j
-   LOCAL nItem
+   LOCAL nItem,nHpj,nPos,nAlso
    LOCAL cBatName
    LOCAL nSec1
    LOCAL cCompiler     // Compiler type
@@ -181,6 +182,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL cFName        // Name params
    LOCAL aName         // Tokenized name
    LOCAL nLen          // Length of the token array
+   LOCAL cTemp
    //
    //  Entry Point
    //
@@ -390,7 +392,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    ? "@Echo OFF"
    ? "ECHO Assembling input files"
-   lfirst := .t.
+
    IF lNorton
       FOR i := 1 TO LEN( aDocInfo )
 
@@ -403,7 +405,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
                //  Make the first copy
                ? "ECHO Creating", aLinkinfo[ nItem, 2 ]
                ? "COPY hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " HarDoc.hdf  > NUL"
-               lfirst := .f.
+
             ELSE
                //  This may be slow but I don't have to worry about line length
                ? "TYPE hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> HarDoc.hdf "
@@ -971,7 +973,7 @@ STATIC FUNCTION ProcessFiles
                      FWRITE( nWriteHandle, CRLF )
                   ENDIF
                   FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Compilance" + CRLF )
+                  FWRITE( nWriteHandle, " Compliance" + CRLF )
 
                   FWRITE( nWriteHandle, ".endpar" + CRLF )
 
@@ -983,7 +985,7 @@ STATIC FUNCTION ProcessFiles
                      FWRITE( nWriteHandle, CRLF )
                   ENDIF
                   FWRITE( nWriteHandle, ".par bold on" + CRLF )
-                  FWRITE( nWriteHandle, " Plataforms" + CRLF )
+                  FWRITE( nWriteHandle, " Platforms" + CRLF )
                   FWRITE( nWriteHandle, ".endpar" + CRLF )
 
                   nMode     := D_NORMAL
@@ -1682,7 +1684,7 @@ STATIC FUNCTION ASCIIFiles
                      nDocCnt ++
                   ENDIF
 
-                  FWRITE( nWriteHandle, " Compilance:" + CRLF )
+                  FWRITE( nWriteHandle, " Compliance:" + CRLF )
                   nDocCnt ++
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -1696,7 +1698,7 @@ STATIC FUNCTION ASCIIFiles
                      nDocCnt ++
                   ENDIF
 
-                  FWRITE( nWriteHandle, " Plataforms:" + CRLF )
+                  FWRITE( nWriteHandle, " Platforms:" + CRLF )
                   nDocCnt ++
                   nMode     := D_NORMAL
                   lAddBlank := .T.
@@ -2107,7 +2109,7 @@ RETURN cBuffer
 FUNCTION FT_FGotop()
 
    FSEEK( theHandle:nHan, 0, 0 )
-RETURN
+RETURN        NIL
 
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
@@ -2192,6 +2194,7 @@ STATIC FUNCTION ProcessRtf
    LOCAL cBuffer
    LOCAL nEnd
    LOCAL nCount
+   LOCAL xAddBlank
 
    LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
    LOCAL nMode
@@ -2451,7 +2454,7 @@ STATIC FUNCTION ProcessRtf
                      oRtf:WritePar( "" ):EndPar()
                   ENDIF
                   oRtf:WritePar( "" ):EndPar()
-                  oRtf:WriteParBold( " Compilance" )
+                  oRtf:WriteParBold( " Compliance" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
@@ -2459,7 +2462,7 @@ STATIC FUNCTION ProcessRtf
                   IF !lBlankLine
                      oRtf:WritePar( "" ):EndPar()
                   ENDIF
-                  oRtf:WriteParBold( " Plataforms" )
+                  oRtf:WriteParBold( " Platforms" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
@@ -2985,7 +2988,7 @@ STATIC FUNCTION ProcessWww
                   IF !lBlankLine
                      oHtm:WritePar( "" )
                   ENDIF
-                  oHtm:WriteParBold( " Compilance" )
+                  oHtm:WriteParBold( " Compliance" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
@@ -2993,7 +2996,7 @@ STATIC FUNCTION ProcessWww
                   IF !lBlankLine
                      oHtm:WritePar( "" )
                   ENDIF
-                  oHtm:WriteParBold( " Plataforms" )
+                  oHtm:WriteParBold( " Platforms" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
@@ -3306,7 +3309,7 @@ STATIC FUNCTION ProcessNgi
    LOCAL lDone
    LOCAL cBuffer
    LOCAL nEnd
-   LOCAL nCount
+   LOCAL nCount   ,nAlso
 
    LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
    LOCAL nMode
@@ -3572,7 +3575,7 @@ STATIC FUNCTION ProcessNgi
                   IF !lBlankLine
                      oNgi:WritePar( "" )
                   ENDIF
-                  oNgi:WriteParBold( " Compilance" )
+                  oNgi:WriteParBold( " Compliance" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
@@ -3580,7 +3583,7 @@ STATIC FUNCTION ProcessNgi
                   IF !lBlankLine
                      oNgi:WritePar( "" )
                   ENDIF
-                  oNgi:WriteParBold( " Plataforms" )
+                  oNgi:WriteParBold( " Platforms" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
@@ -3710,7 +3713,9 @@ FUNCTION ProcNgiInput()
    LOCAL aFuncsn_ := {}
    LOCAL acfiles  := {}
    LOCAL aComms   := {}
-   LOCAL cName
+   LOCAL cName,cT,cTs,cFile
+   LOCAL x,nPos,nAlso,y
+
    LOCAL nXhandle := FCREATE( 'ngi\funcam.txt' )
    LOCAL nYhandle := FCREATE( 'ngi\funcn_.txt' )
    LOCAL xY       := "!Short:"
@@ -3891,7 +3896,7 @@ FUNCTION ProcNgiAlso2( cSeealso )
    LOCAL nPos
    LOCAL cTemp   := ''
    LOCAL c
-   LOCAL nLEN
+   LOCAL nLEN,nAlso
    LOCAL cReturn
    LOCAL xAlso   := {}
    LOCAL hPos    := 0
@@ -4256,7 +4261,7 @@ STATIC FUNCTION ProcessTroff
                   IF !lBlankLine
                      oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
                   ENDIF
-                  otroff:WriteParBold( " Compilance" )
+                  otroff:WriteParBold( " Compliance" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
@@ -4264,7 +4269,7 @@ STATIC FUNCTION ProcessTroff
                   IF !lBlankLine
                      oTroff:WriteText( ".sp" + CRLF + ".in 0.4i" )
                   ENDIF
-                  otroff:WriteParBold( " Plataforms" )
+                  otroff:WriteParBold( " Platforms" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
@@ -4360,7 +4365,7 @@ STATIC FUNCTION ProcessTroff
 
       FT_FUSE()
    NEXT
-
+RETURN NIL
 *+±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±
 *+
 *+    Function ProcTroffAlso()
@@ -4414,7 +4419,7 @@ STATIC FUNCTION ProcessOs2
    LOCAL lDone
    LOCAL cBuffer
    LOCAL nEnd
-   LOCAL nCount
+   LOCAL nCount,nAlso
 
    LOCAL cBar       := "ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ"
    LOCAL nMode
@@ -4676,7 +4681,7 @@ STATIC FUNCTION ProcessOs2
                   IF !lBlankLine
                      oOs2:WritePar( "" )
                   ENDIF
-                  oOs2:WriteParBold( " Compilance" )
+                  oOs2:WriteParBold( " Compliance" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cPlat, cBuffer ) > 0
@@ -4684,7 +4689,7 @@ STATIC FUNCTION ProcessOs2
                   IF !lBlankLine
                      oOs2:WritePar( "" )
                   ENDIF
-                  oOs2:WriteParBold( " Plataforms" )
+                  oOs2:WriteParBold( " Platforms" )
                   nMode     := D_NORMAL
                   lAddBlank := .T.
                ELSEIF AT( cFiles, cBuffer ) > 0
