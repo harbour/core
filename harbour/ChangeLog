@@ -1,3 +1,12 @@
+2000-07-10-22:20 Luiz Rafael Culik <culik@sl.conex.net>
+  *contrib/hbzlib/zipfile2.c
+     +hb___GetNumbersofFilestoUnzip(char *szFile) internal function that returns
+     the number of files inside a zip file
+  *contrib/hbzlib/hbzip.h
+     *Added declaration of hb___GetNumbersofFilestoUnzip(char *szFile)
+  *Contrib/hbzlib/zipfile1.c
+     +HB_GETUNZIPFILE() function to return the number of files to extract.
+
 2000-07-10 19:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/garbage.c
