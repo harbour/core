@@ -86,10 +86,10 @@
 #define F_ERROR       ( -1 )   /* Unspecified error */
 
 /* DISKSPACE() types */
+#define HB_DISK_AVAIL 0
 #define HB_DISK_FREE  1
-#define HB_DISK_AVAIL 2
-#define HB_DISK_TOTAL 4
-#define HB_DISK_USED  8
+#define HB_DISK_USED  2
+#define HB_DISK_TOTAL 3
 
 #endif /* _FILEIO_CH */
 

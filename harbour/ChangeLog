@@ -1,3 +1,12 @@
+20000322-19:35 EST Paul Tucker <ptucker@sympatico.ca>
+   * include/fileio.ch
+   * source/rtl/dskspac.c
+     * Changed and reordered HB_DISK_ defines to be in the range 0-3
+   * source/rtl/dskspac.c
+     * cap uiType to HB_DISK_TOTAL for out of range types.
+   * doc/en/diskspac.txt
+     * updated
+
 2000-03-22 17:25 GMT-5 David G. Holm <dholm@jsd-llc.com>
    + source/rtl/gtpca/kbdos2.gcc
      + Added hb_gt_ReadKey() support for os2/gcc platform

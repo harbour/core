@@ -67,6 +67,8 @@ HB_FUNC( DISKSPACE )
    USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
 
+   uiType = min( uiType, HB_DISK_TOTAL );
+
 #if defined(HB_OS_DOS) || defined(__WATCOMC__)
 
    struct diskfree_t disk;
@@ -84,15 +86,15 @@ HB_FUNC( DISKSPACE )
    {
       switch( uiType )
       {
-         case HB_DISK_FREE:
          case HB_DISK_AVAIL:
+         case HB_DISK_FREE:
             dSpace = ( double ) disk.avail_clusters *
                      ( double ) disk.sectors_per_cluster *
                      ( double ) disk.bytes_per_sector;
             break;
 
-         case HB_DISK_TOTAL:
          case HB_DISK_USED:
+         case HB_DISK_TOTAL:
             dSpace = ( double ) disk.total_clusters *
                      ( double ) disk.sectors_per_cluster *
                      ( double ) disk.bytes_per_sector );
@@ -153,16 +155,16 @@ HB_FUNC( DISKSPACE )
          {
             switch( uiType )
             {
-               case HB_DISK_FREE:
-                  memcpy( &i64RetVal, &i64FreeBytes, sizeof( ULARGE_INTEGER ) );
-                  break;
-
                case HB_DISK_AVAIL:
                   memcpy( &i64RetVal, &i64FreeBytesToCaller, sizeof( ULARGE_INTEGER ) );
                   break;
 
-               case HB_DISK_TOTAL:
+               case HB_DISK_FREE:
+                  memcpy( &i64RetVal, &i64FreeBytes, sizeof( ULARGE_INTEGER ) );
+                  break;
+
                case HB_DISK_USED:
+               case HB_DISK_TOTAL:
                   memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
             }
 
@@ -220,15 +222,15 @@ HB_FUNC( DISKSPACE )
          {
             switch( uiType )
             {
-               case HB_DISK_FREE:
                case HB_DISK_AVAIL:
+               case HB_DISK_FREE:
                   dSpace = ( double ) dwNumberOfFreeClusters *
                            ( double ) dwSectorsPerCluster *
                            ( double ) dwBytesPerSector;
                   break;
 
-               case HB_DISK_TOTAL:
                case HB_DISK_USED:
+               case HB_DISK_TOTAL:
                   dSpace  = ( double ) dwTotalNumberOfClusters *
                             ( double ) dwSectorsPerCluster *
                             ( double ) dwBytesPerSector;
