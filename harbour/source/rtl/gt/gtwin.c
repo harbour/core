@@ -333,7 +333,7 @@ char hb_gt_Col(void)
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
   LOG("WhereX");
-  GetConsoleScreenBufferInfo(HOutput, &csbi);
+  GetConsoleScreenBufferInfo(HCursor, &csbi);
   return csbi.dwCursorPosition.X;
 }
 
@@ -342,7 +342,7 @@ char hb_gt_Row(void)
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
   LOG("WhereY");
-  GetConsoleScreenBufferInfo(HOutput, &csbi);
+  GetConsoleScreenBufferInfo(HCursor, &csbi);
   return csbi.dwCursorPosition.Y;
 }
 

@@ -1,3 +1,7 @@
+19990811-18:00 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gt/gtwin.c
+    * hb_gt_getRow/Col were using the wrong screen handle.
+
 19990811-14:30 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/console.c
     * set binary mode on stanard files before intializing gt system.
