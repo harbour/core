@@ -1,3 +1,19 @@
+20000403-01:26 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/vm/itemapi.c
+     ! hb_itemStr() 9 character limit on decimals removed.
+       Now seven more tests pass.
+
+   * source/vm/hvm.c
+     ! hb_vmPushDouble() 9 character limit on decimals removed.
+       Now newly added tests pass.
+
+   * utils/hbtest/rt_str.prg
+     + New STR() tests added.
+
+   * utils/hbtest/hbtest.prg
+     + Shows the percentage of the passes compared to the number of tests.
+
 20000402-23:44 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/gtos2/gtos2.c

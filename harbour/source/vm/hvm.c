@@ -1189,7 +1189,7 @@ static void hb_vmNegate( void )
    else if( HB_IS_DOUBLE( pItem ) )
    {
       pItem->item.asDouble.value = -pItem->item.asDouble.value;
-      pItem->item.asDouble.length = pItem->item.asDouble.value >= 10000000000.0 ? 20 : 10;
+      pItem->item.asDouble.length = ( pItem->item.asDouble.value >= 10000000000.0 || pItem->item.asDouble.value <= -10000000000.0 ) ? 20 : 10;
    }
    else
    {
@@ -2820,11 +2820,11 @@ void hb_vmPushDouble( double dNumber, int iDec )
 
    hb_stack.pPos->type = HB_IT_DOUBLE;
    hb_stack.pPos->item.asDouble.value = dNumber;
-   hb_stack.pPos->item.asDouble.length = ( dNumber > 10000000000.0 ) ? 20 : 10;
+   hb_stack.pPos->item.asDouble.length = ( dNumber > 10000000000.0 || dNumber <= -10000000000.0 ) ? 20 : 10;
    if( iDec == HB_DEFAULT_DECIMALS )
       hb_stack.pPos->item.asDouble.decimal = hb_set.HB_SET_DECIMALS;
    else
-      hb_stack.pPos->item.asDouble.decimal = ( iDec > 9 ) ? 9 : iDec;
+      hb_stack.pPos->item.asDouble.decimal = iDec;
    hb_stackPush();
 }
 

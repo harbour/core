@@ -1155,8 +1155,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    if( pNumber )
    {
       /* Default to the width and number of decimals specified by the item,
-         with a limit of 20 integer places and 9 decimal places, plus one
-         space for the sign. */
+         with a limit of 20 integer places, plus one space for the sign. */
       int iWidth;
       int iDec;
 
@@ -1164,8 +1163,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
       if( iWidth > 20 )
          iWidth = 20;
-      if( iDec > 9 )
-         iDec = 9;
+
       if( hb_set.HB_SET_FIXED )
          iDec = hb_set.HB_SET_DECIMALS;
 
@@ -1176,7 +1174,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          int iWidthPar = hb_itemGetNI( pWidth );
 
          if( iWidthPar < 1 )
-            iWidth = 10;                   /* If 0 or negative, use default */
+            iWidth = 10;                  /* If 0 or negative, use default */
          else
             iWidth = iWidthPar;
 
