@@ -8,6 +8,17 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-11 21:35 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.h
+   * source/rdd/dbfcdx/dbfcdx2.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+        ! fixed bug reported by Richard Chidiak
+        + added function hb_cdxMacroRun
+        ! fixed bug reported by Peter Rees.
+        * changed index creation and updating:
+          some spaces in keys aren't compressed now, so ADS can read
+          the indexes. (it couldn't with some special keys)
+
 2002-10-07 13:22 UTC-0300 Gustavo Junior Alves <alves@coslinux.com.br>
   * source/rtl/filesys.c
     * Fix to compile on MSVC - Thanks to Andi Jahja <andijahja@harbour-id.net>
