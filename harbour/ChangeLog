@@ -1,3 +1,12 @@
+20000402-21:40 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+
+   * utils/hbdoc/MakeFile
+     ! gnu make error (missing tab)
+	* source/common/hbver.c
+	  ! failing under OS/2 GCC
+	* source/rtl/gtos2/gtos2.c
+	  + added DispBegin() and DispEnd() support. It should work with VA C++ also
+	
 20000402-20:01 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/hbtest.prg
@@ -93,7 +102,7 @@
    * makefile.bc
    * makefile.vc
      * CA-Cl*pper compatbility internal and undocumented functions moved
-       to a separate file.  
+       to a separate file.
 
    * source/debug/debugger.prg
      % static scope adjusted.
@@ -217,8 +226,8 @@
 
    * source/rtl/environ.c
    * include/hbapi.h
-     % OS() function reorganized. Now the motto is that each target platform 
-       should first detect the version of the native platform version, then if 
+     % OS() function reorganized. Now the motto is that each target platform
+       should first detect the version of the native platform version, then if
        applicable (only in DOS currently) detect the host OS.
        This way the source is *far* more clean, and consistent between
        platforms and compilers.
@@ -333,7 +342,7 @@
    * source/vm/fm.c
    * source/rtl/gtstd/gtstd.c
      * Console related functions all prefixed with hb_con
-       
+
        hb_consoleInitialize -> hb_conInit
        hb_consoleRelease    -> hb_conRelease
        hb_consoleGetNewLine -> hb_conNewLine

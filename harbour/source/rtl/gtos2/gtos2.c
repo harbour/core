@@ -54,29 +54,45 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+
+#define INCL_BASE
 #define INCL_VIO
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
+#include <os2.h>
 
-/* 25/03/2000 - maurilio.longo@libero.it
-   OS/2 GCC hasn't got ToolKit headers available */
+/* convert 16:16 adress to 0:32 */
+#define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
+
 #if defined(HARBOUR_GCC_OS2)
-#include <stdlib.h>
+	/* 25/03/2000 - maurilio.longo@libero.it
+   OS/2 GCC hasn't got ToolKit headers available */
+   #include <stdlib.h>
 #else
-#include <bsedos.h>
+   #include <bsedos.h>
 #endif
 #include <conio.h>
 
 #include "hbapigt.h"
 #include "inkey.ch"
 
+
 static char hb_gt_GetCellSize( void );
-static void hb_gt_SetCursorSize( char start, char end, int visible );
+
+static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol );
+static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch );
+static void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch );
+
 /*
 static void hb_gt_GetCursorSize( char * start, char * end );
 */
 
 static USHORT s_uiDispCount;
+
+/* pointer to offscreen video buffer */
+static PULONG LVBptr;
+/* length of video buffer */
+static USHORT LVBlength;
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
@@ -84,7 +100,15 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    s_uiDispCount = 0;
 
-   /* TODO: Is anything required to initialize the video subsystem? */
+   if (VioGetBuf(LVBptr, &LVBlength, 0) == NO_ERROR) {
+   	LVBptr = SELTOFLAT(LVBptr);
+	} else {
+		LVBptr = NULL;
+	}   	
+
+   /* TODO: Is anything required to initialize the video subsystem?
+            I (Maurilio Longo) think that we should set correct codepage
+   */
 }
 
 void hb_gt_Done( void )
@@ -479,38 +503,103 @@ void hb_gt_SetCursorStyle( USHORT style )
    }
 }
 
+
+static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_ScreenPtr(%hu, %hu)", cRow, cCol));
+
+   return (char *) (LVBptr + ( cRow * hb_gt_GetScreenWidth() * 2 ) + ( cCol * 2 ));
+}
+
+
+static void hb_gt_xGetXY( USHORT cRow, USHORT cCol, BYTE * attr, BYTE * ch )
+{
+	char * p;
+	
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xGetXY(%hu, %hu, %p, %p", cRow, cCol, ch, attr));
+	
+	p = hb_gt_ScreenPtr( cRow, cCol );
+   *ch = *p;
+   *attr = *( p + 1 );
+}
+
+
+void hb_gt_xPutch( USHORT cRow, USHORT cCol, BYTE attr, BYTE ch )
+{
+	char * p;
+	
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xPutch(%hu, %hu, %d, %d", cRow, cCol, (int) attr, (int) ch));
+	
+   p = hb_gt_ScreenPtr( cRow, cCol );
+   *p = ch;
+   *( p + 1 ) = attr;
+}
+
+
 void hb_gt_Puts( USHORT usRow, USHORT usCol, BYTE attr, BYTE * str, ULONG len )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Puts(%hu, %hu, %d, %p, %lu)", usRow, usCol, (int) attr, str, len));
+	
+	if(s_uiDispCount > 0) {
+		char *p;
+     	int i;
 
-   VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
+     	p = hb_gt_ScreenPtr( usRow, usCol );
+     	for( i = 0; i < len; i++ ) {
+	    	*p++ = *str++;
+    		*p++ = attr;
+     	}
+	} else {
+   	VioWrtCharStrAtt( ( char * ) str, ( USHORT ) len, usRow, usCol, ( BYTE * ) &attr, 0 );
+   }
 }
 
 void hb_gt_GetText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *dest )
 {
-   USHORT width, y;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, dest));
 
-   width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
-   for( y = usTop; y <= usBottom; y++ )
-   {
-      VioReadCellStr( dest, &width, y, usLeft, 0 );
-      dest += width;
+   if(s_uiDispCount > 0) {
+		USHORT x, y;
+		
+		for( y = usTop; y <= usBottom; y++ ) {
+			for( x = usLeft; x <= usRight; x++ ) {
+        		hb_gt_xGetXY( y, x, dest + 1, dest );
+        		dest += 2;
+      	}
+      }
+   } else {
+		USHORT width, y;
+		
+   	width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
+   	for( y = usTop; y <= usBottom; y++ )
+   	{
+      	VioReadCellStr( dest, &width, y, usLeft, 0 );
+      	dest += width;
+   	}
    }
 }
 
 void hb_gt_PutText( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT usRight, BYTE *srce )
 {
-   USHORT width, y;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_PutText(%hu, %hu, %hu, %hu, %p)", usTop, usLeft, usBottom, usRigth, srce));
 
-   width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
-   for( y = usTop; y <= usBottom; y++ )
-   {
-      VioWrtCellStr( srce, width, y, usLeft, 0 );
-      srce += width;
+	if(s_uiDispCount > 0) {
+   	USHORT x, y;
+		
+		for( y = usTop; y <= usBottom; y++ ) {
+    		for( x = usLeft; x <= usRight; x++ ) {
+        		hb_gt_xPutch( y, x, *( srce + 1 ), *srce );
+        		srce += 2;
+      	}
+   	}
+   } else {
+		USHORT width, y;
+		
+   	width = ( USHORT ) ( ( usRight - usLeft + 1 ) * 2 );
+   	for( y = usTop; y <= usBottom; y++ ) {
+      	VioWrtCellStr( srce, width, y, usLeft, 0 );
+      	srce += width;
+   	}
    }
 }
 
@@ -521,40 +610,60 @@ void hb_gt_SetAttribute( USHORT usTop, USHORT usLeft, USHORT usBottom, USHORT us
       TODO: work with DispBegin DispEnd
    */
 
-   USHORT width, y;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_SetAttribute(%hu, %hu, %hu, %hu, %d)", usTop, usLeft, usBottom, usRigth, (int) attr));
 
-   /*
-      assume top level check that coordinate are all valid and fall
-      within visible screen, else if width cannot be fit on current line
-      it is going to warp to the next line
-   */
-   width = ( USHORT ) ( usRight - usLeft + 1 );
-   for( y = usTop; y <= usBottom; y++ )
-      VioWrtNAttr( &attr, width, y, usLeft, 0 );
+	if(s_uiDispCount > 0) {
+		
+		USHORT x, y;
+		
+		for( y = usTop; y <= usBottom; y++ ) {
+      	
+      	BYTE scratchattr;
+      	BYTE ch;
+
+      	for( x = usLeft; x <= usRight; x++ ) {
+         	hb_gt_xGetXY( y, x, &scratchattr, &ch );
+         	hb_gt_xPutch( y, x, attr, ch );
+      	}
+   	}
+	} else {
+   	
+   	USHORT width, y;
+
+   	/*
+      	assume top level check that coordinate are all valid and fall
+      	within visible screen, else if width cannot be fit on current line
+      	it is going to warp to the next line
+   	*/
+   	width = ( USHORT ) ( usRight - usLeft + 1 );
+   	for( y = usTop; y <= usBottom; y++ )
+      	VioWrtNAttr( &attr, width, y, usLeft, 0 );
+	}
 }
 
 void hb_gt_DispBegin( void )
 {
+   /* 02/04/2000 - maurilio.longo@libero.it
+ 		added support for DispBegin() and DispEnd() functions.
+ 		OS/2 has an off screen buffer for every vio session. When a program calls DispBegin()
+ 		every function dealing with screen writes/reads uses this buffer. DispEnd() resyncronizes
+ 		off screen buffer with screen
+ 	*/
+
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
-
+	
+	/* pointer to the only one available screen buffer is set on startup,
+      we only need to keep track of nesting */
    ++s_uiDispCount;
-
-   /* TODO: Is there a way to change screen buffers?
-            ie: can we write somewhere without it going to the screen
-            and then update the screen from this buffer at a later time?
-            We will initially want to copy the current screen to this buffer.
-   */
 }
 
 void hb_gt_DispEnd( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
-   --s_uiDispCount;
-
-   /* TODO: here we flush the buffer, and restore normal screen writes */
+   if (--s_uiDispCount == 0) {
+   	VioShowBuf(0, LVBlength, 0);   /* refresh everything */
+   }
 }
 
 BOOL hb_gt_SetMode( USHORT uiRows, USHORT uiCols )

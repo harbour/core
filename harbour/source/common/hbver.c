@@ -56,8 +56,11 @@
          be ahead of any and all #include statements!
 */
 
-#if defined(__IBMCPP__)
+/* 02/04/2000 - maurilio.longo@libero.it
+	DosXXX apis are needed by GCC as well */
+#if defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
    #define INCL_DOSMISC
+   #include <os2.h>
 #endif
 
 #define HB_OS_WIN_32_USED
@@ -105,7 +108,7 @@ char * hb_verPlatform( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_verPlatform()"));
 
-   /* NOTE: Must be larger than 128, which is the maximum size of 
+   /* NOTE: Must be larger than 128, which is the maximum size of
             osVer.szCSDVersion (Win32). [vszakats] */
    pszPlatform = ( char * ) hb_xgrab( 256 );
 
