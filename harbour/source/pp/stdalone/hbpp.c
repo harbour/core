@@ -53,9 +53,9 @@
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
 
-static int  s_nline = 0;
-static char s_szLine[ STR_SIZE ];
-static char s_szOutLine[ STR_SIZE ];
+static int  s_iline = 0;
+static char s_szLine[ HB_PP_STR_SIZE ];
+static char s_szOutLine[ HB_PP_STR_SIZE ];
 static int  s_iWarnings = 0;
 
 PATHNAMES * hb_comp_pIncludePath = NULL;
@@ -81,7 +81,7 @@ int main( int argc, char * argv[] )
 
   while( iArg < argc )
     {
-      if( IS_OPT_SEP(argv[ iArg ][ 0 ]))
+      if( HB_ISOPTSEP(argv[ iArg ][ 0 ]))
         {
           switch( argv[ iArg ][ 1 ] )
             {
@@ -89,15 +89,15 @@ int main( int argc, char * argv[] )
             case 'D':   /* defines a #define from the command line */
               {
                 i = 0;
-                szDefText = strodup( argv[ iArg ] + 2 );
-                while( i < strolen( szDefText ) && szDefText[ i ] != '=' )
+                szDefText = hb_pp_strodup( argv[ iArg ] + 2 );
+                while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
                   i++;
                 if( szDefText[ i ] != '=' )
-                  AddDefine( szDefText, 0 );
+                  hb_pp_AddDefine( szDefText, 0 );
                 else
                   {
                     szDefText[ i ] = 0;
-                    AddDefine( szDefText, szDefText + i + 1 );
+                    hb_pp_AddDefine( szDefText, szDefText + i + 1 );
                   }
                 free( szDefText );
               }
@@ -182,7 +182,7 @@ int main( int argc, char * argv[] )
         char * pPath;
         char * pDelim;
 
-        pPath = szInclude = strodup( szInclude );
+        pPath = szInclude = hb_pp_strodup( szInclude );
         while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
           {
             *pDelim = '\0';
@@ -195,7 +195,7 @@ int main( int argc, char * argv[] )
 
   hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
-  Hp_Parse( handl_i, handl_o, NULL );
+  hb_pp_Parse( handl_i, handl_o, NULL );
   fclose( handl_i );
   fclose( handl_o );
 
@@ -209,20 +209,20 @@ int main( int argc, char * argv[] )
   return 0;
 }
 
-int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
+int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 {
-  char sBuffer[ BUFF_SIZE ];           /* File read buffer */
+  char sBuffer[ HB_PP_BUFF_SIZE ];           /* File read buffer */
   char * ptr;
   int lContinue = 0;
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen;
 
-  HB_TRACE(HB_TR_DEBUG, ("Hp_parse(%p, %p)", handl_i, handl_o));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p)", handl_i, handl_o));
 
-  while( ( rdlen = pp_RdStr( handl_i, s_szLine + lens, STR_SIZE - lens, lContinue,
-                             sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
+  while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
+                                sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
-      if( ! hb_pp_lInclude ) s_nline++;
+      if( ! hb_pp_lInclude ) s_iline++;
       lens += rdlen;
 
       if( s_szLine[ lens - 1 ] == ';' )
@@ -242,18 +242,18 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 
       if( *s_szLine != '\0' && !lContinue )
         {
-          printf( "\r  line %i", s_nline );
+          printf( "\r  line %i", s_iline );
           ptr = s_szLine;
-          SKIPTABSPACES( ptr );
+          HB_SKIPTABSPACES( ptr );
           if( *ptr == '#' )
             {
-              if( ParseDirective( ptr + 1 ) == 0 )
+              if( hb_pp_ParseDirective( ptr + 1 ) == 0 )
                 *s_szLine = '\0';
             }
           else
             {
               if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
-                ParseExpression( ptr, s_szOutLine );
+                hb_pp_ParseExpression( ptr, s_szOutLine );
               else
                 *s_szLine = '\0';
             }
@@ -261,8 +261,8 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 
       if( ! hb_pp_lInclude )
         {
-          if( lContinue ) pp_WrStr( handl_o, "\n" );
-          else pp_WrStr( handl_o, s_szLine );
+          if( lContinue ) hb_pp_WrStr( handl_o, "\n" );
+          else hb_pp_WrStr( handl_o, s_szLine );
         }
     }
 
@@ -334,10 +334,10 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       fprintf( handl_o, "{%d,\"%s\",", stcmd2->com_or_xcom, stcmd2->name );
       if( stcmd2->mpatt != NULL )
         {
-          len_mpatt = strocpy( s_szLine, stcmd2->mpatt );
+          len_mpatt = hb_pp_strocpy( s_szLine, stcmd2->mpatt );
           while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_mpatt ) ) > 0 )
             {
-              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_mpatt );
+              hb_pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_mpatt );
               len_mpatt++;
             }
           fprintf( handl_o, "\"%s\",", s_szLine );
@@ -346,10 +346,10 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
         fprintf( handl_o, "NULL," );
       if( stcmd2->value != NULL )
         {
-          len_value = strocpy( s_szLine, stcmd2->value );
+          len_value = hb_pp_strocpy( s_szLine, stcmd2->value );
           while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_value ) ) > 0 )
             {
-              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_value );
+              hb_pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_value );
               len_value++;
             }
           if( len_mpatt + len_value > 80 )
@@ -386,10 +386,10 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
       fprintf( handl_o, "{%d,\"%s\",", stcmd2->com_or_xcom, stcmd2->name );
       if( stcmd2->mpatt != NULL )
         {
-          len_mpatt = strocpy( s_szLine, stcmd2->mpatt );
+          len_mpatt = hb_pp_strocpy( s_szLine, stcmd2->mpatt );
           while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_mpatt ) ) > 0 )
             {
-              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_mpatt );
+              hb_pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_mpatt );
               len_mpatt++;
             }
           fprintf( handl_o, "\"%s\",", s_szLine );
@@ -398,10 +398,10 @@ static void OutTable( DEFINES * endDefine, COMMANDS * endCommand )
         fprintf( handl_o, "NULL," );
       if( stcmd2->value != NULL )
         {
-          len_value = strocpy( s_szLine, stcmd2->value );
+          len_value = hb_pp_strocpy( s_szLine, stcmd2->value );
           while( ( ipos = hb_strAt( "\1", 1, s_szLine, len_value ) ) > 0 )
             {
-              pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_value );
+              hb_pp_Stuff( "\\1", s_szLine + ipos - 1, 2, 1, len_value );
               len_value++;
             }
           if( len_mpatt + len_value > 80 )
@@ -453,7 +453,7 @@ void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szErr
 {
   HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
-  printf( "\r(%i) ", s_nline );
+  printf( "\r(%i) ", s_iline );
   printf( "Error %c%04i  ", cPrefix, iError );
   printf( _szErrors[ iError - 1 ], szError1, szError2 );
   printf( "\n\n" );
@@ -471,7 +471,7 @@ void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * 
 
       if( (szText[ 0 ] - '0') <= s_iWarnings )
         {
-          printf( "\r(%i) ", s_nline );
+          printf( "\r(%i) ", s_iline );
           printf( "Warning %c%04i  ", cPrefix, iWarning );
           printf( szText + 1, szWarning1, szWarning2 );
           printf( "\n" );

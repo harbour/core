@@ -33,7 +33,7 @@
  *
  */
 
-/* Definitions shared by harbour.y and preprocessor */
+/* Definitions related to the preprocessor */
 
 #ifndef HB_PP_H_
 #define HB_PP_H_
@@ -41,7 +41,9 @@
 #include "hbdefs.h"
 #include "hbfsapi.h"
 
-typedef struct _PATHNAMES { /* the list of pathnames to search with #include */
+/* the list of pathnames to search with #include */
+typedef struct _PATHNAMES 
+{
   char * szPath;
   struct _PATHNAMES *pNext;
 } PATHNAMES;
@@ -51,7 +53,7 @@ typedef struct _DEFINES
 {
   char * name;
   char * pars;
-  int npars;
+  int    npars;
   char * value;
   struct _DEFINES * last;
 } DEFINES;
@@ -66,29 +68,27 @@ typedef struct _COMMANDS
   struct _COMMANDS * last;
 } COMMANDS;
 
-#define STR_SIZE 8192
-#define BUFF_SIZE 2048
+#define HB_PP_STR_SIZE  8192
+#define HB_PP_BUFF_SIZE 2048
 
-#define SKIPTABSPACES( sptr ) while( *sptr == ' ' || *sptr == '\t' ) ( sptr )++
-#define IS_OPT_SEP( c ) ( strchr( OS_OPT_DELIMITER_LIST, ( c ) ) != NULL )
+#define HB_SKIPTABSPACES( sptr ) while( *sptr == ' ' || *sptr == '\t' ) ( sptr )++
 
 /* HBPP.C exported functions */
 
-extern int Hp_Parse( FILE *, FILE *, char * );
-extern int ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
-extern int ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
-extern int pp_WrStr( FILE *, char * );
-extern int pp_RdStr( FILE *, char *, int, int, char *, int *, int * );
-extern void pp_Stuff( char *, char *, int, int, int );
-extern int strolen( char * );
-extern int strocpy( char *, char * );
-extern char * strodup( char * );
-extern DEFINES * AddDefine( char *, char * );         /* Add new #define to a linked list */
+extern int    hb_pp_Parse( FILE *, FILE *, char * );
+extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
+extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
+extern int    hb_pp_WrStr( FILE *, char * );
+extern int    hb_pp_RdStr( FILE *, char *, int, BOOL, char *, int *, int * );
+extern void   hb_pp_Stuff( char *, char *, int, int, int );
+extern int    hb_pp_strocpy( char *, char * );
+extern char * hb_pp_strodup( char * );
+extern DEFINES * hb_pp_AddDefine( char *, char * );         /* Add new #define to a linked list */
 
 /* HBPPINT.C exported functions */
 
-extern void Hbpp_init( void );
-extern int PreProcess( FILE *, FILE *, char * );
+extern void   hb_pp_Init( void );
+extern int    hb_pp_Internal( FILE *, FILE *, char * );
 
 /* HBPP.C exported variables */
 
@@ -111,6 +111,7 @@ extern void *   hb_xrealloc( void * pMem, ULONG lSize );   /* reallocates memory
 extern void     hb_xfree( void * pMem );    /* frees memory */
 
 extern ULONG    hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen );
+extern void     hb_strupr( char * szText );
 
 #include "compiler.h"
 

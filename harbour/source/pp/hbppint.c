@@ -50,10 +50,10 @@
 
 static int  s_iBuffer;
 static int  s_lenBuffer;
-static char s_szLine[ STR_SIZE ];
-static char s_szOutLine[ STR_SIZE ];
+static char s_szLine[ HB_PP_STR_SIZE ];
+static char s_szOutLine[ HB_PP_STR_SIZE ];
 
-void Hbpp_init( void )
+void hb_pp_Init( void )
 {
   HB_TRACE(HB_TR_DEBUG, ("Hbpp_init()"));
 
@@ -62,9 +62,9 @@ void Hbpp_init( void )
   hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 }
 
-int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
+int hb_pp_Internal( FILE * handl_i, FILE * handl_o, char * sOut )
 {
-  static char sBuffer[ BUFF_SIZE ];           /* File read buffer */
+  static char sBuffer[ HB_PP_BUFF_SIZE ];           /* File read buffer */
   char *ptr, *ptrOut = sOut;
   int lContinue = 0;
   int lens = 0, rdlen;
@@ -75,8 +75,8 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
 
   HB_SYMBOL_UNUSED( handl_o );
 
-  while( ( rdlen = pp_RdStr( handl_i, s_szLine + lens, STR_SIZE - lens, lContinue,
-                             sBuffer, &s_lenBuffer, &s_iBuffer ) ) >= 0 )
+  while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
+                                sBuffer, &s_lenBuffer, &s_iBuffer ) ) >= 0 )
     {
       if( ! hb_pp_lInclude )
         nline++;
@@ -104,17 +104,17 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
           if( *s_szLine != '\0' )
             {
               ptr = s_szLine;
-              SKIPTABSPACES( ptr );
+              HB_SKIPTABSPACES( ptr );
               if( *ptr == '#' )
                 {
-                  if( ( rezParse = ParseDirective( ptr + 1 ) ) == 0 )
+                  if( ( rezParse = hb_pp_ParseDirective( ptr + 1 ) ) == 0 )
                     *s_szLine = '\0';
                 }
               else
                 {
                   if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
                     {
-                      if( ( rezParse = ParseExpression( ptr, s_szOutLine ) ) > 0 )
+                      if( ( rezParse = hb_pp_ParseExpression( ptr, s_szOutLine ) ) > 0 )
                         {
                           printf( "\nError number %u in line %u\n", rezParse, nline );
                         }
@@ -128,26 +128,26 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
     }
   if( rdlen < 0 ) return 0;
 
-  lens = strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
+  lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
 
   return lens;
 }
 
-int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
+int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
 {
-  char * sBuffer = ( char * ) hb_xgrab( BUFF_SIZE );           /* File read buffer */
+  char * sBuffer = ( char * ) hb_xgrab( HB_PP_BUFF_SIZE );           /* File read buffer */
   char * ptr;
   char szLine[ 16 ];
   int lContinue = 0;
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen, iLine = 0;
 
-  HB_TRACE(HB_TR_DEBUG, ("Hp_Parse(%p, %p)", handl_i, handl_o));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p)", handl_i, handl_o));
 
-  while( ( rdlen = pp_RdStr( handl_i, s_szLine + lens, STR_SIZE - lens, lContinue,
-                             sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
+  while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
+                                sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
       lens += rdlen;
       iLine++;
@@ -172,10 +172,10 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
           if( *s_szLine != '\0' )
             {
               ptr = s_szLine;
-              SKIPTABSPACES( ptr );
+              HB_SKIPTABSPACES( ptr );
               if( *ptr == '#' )
                 {
-                  ParseDirective( ptr + 1 );
+                  hb_pp_ParseDirective( ptr + 1 );
                   *s_szLine = '\0';
                 }
               else

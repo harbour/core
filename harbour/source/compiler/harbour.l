@@ -118,7 +118,7 @@ Separator     {SpaceTab}
 %%
 
 
-"&"("'"|\"|\[) { hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL ); }
+"&"("'"|\"|\[) { hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL ); }
 
 '              BEGIN STRING1;
 \"             BEGIN STRING2;
@@ -149,9 +149,9 @@ Separator     {SpaceTab}
 
 <INITIAL>\[    BEGIN STRING3;
 
-<STRING1>[^'^\n]*   { hb_compGenError( hb_comp_szCErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-<STRING2>[^\"^\n]*  { hb_compGenError( hb_comp_szCErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
-<STRING3>[^\]]*\n   { hb_compGenError( hb_comp_szCErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING1>[^'^\n]*   { hb_compGenError( hb_comp_szErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING2>[^\"^\n]*  { hb_compGenError( hb_comp_szErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
+<STRING3>[^\]]*\n   { hb_compGenError( hb_comp_szErrors, 'E', ERR_STRING_TERMINATOR, yytext, NULL ); BEGIN 0; }
 
 <STRING1>[^']*'   { if( i_INDEX_STATE )
                        BEGIN INDEX;
@@ -189,7 +189,7 @@ Separator     {SpaceTab}
                     return LITERAL;
                   }
 
-<INDEX>\n    { hb_compGenError( hb_comp_szCErrors, 'E', ERR_UNTERM_ARRAY_INDEX, NULL, NULL ); }
+<INDEX>\n    { hb_compGenError( hb_comp_szErrors, 'E', ERR_UNTERM_ARRAY_INDEX, NULL, NULL ); }
 
 <INDEX>\[    { iIndexSets++; return yytext[ 0 ]; }
 
@@ -258,7 +258,7 @@ Separator     {SpaceTab}
 /*
 <BREAK_>{Separator}*[\[] {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 */
 %}
@@ -311,7 +311,7 @@ Separator     {SpaceTab}
 <CASE_>{Separator}*[\[] { /* array */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like case[] at all */
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <CASE_>{Separator}*("+="|"-="|"->") { /* operators */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -393,19 +393,19 @@ Separator     {SpaceTab}
 %}
 "else"         { /* ELSE can be used in one context only */
                  if( hb_comp_wIfCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_UNMATCHED_ELSE, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_UNMATCHED_ELSE, NULL, NULL );
                  hb_comp_iState =ELSE;
                  return ELSE;
                }
 "elseif"       { /* ELSEIF can be used in one context only */
                  if( hb_comp_wIfCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_UNMATCHED_ELSEIF, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_UNMATCHED_ELSEIF, NULL, NULL );
                  hb_comp_iState =ELSEIF;
                  return ELSEIF;
                }
 "end"{Separator}+"sequ"("ence"|"enc"|"en"|"e")?  {
                  if( hb_comp_wSeqCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_ENDIF, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDIF, NULL, NULL );
                  return END;
                }
 %{
@@ -414,17 +414,17 @@ Separator     {SpaceTab}
 
 "endif"|"endi" { /* ENDIF can be used in one context only */
                  if( hb_comp_wIfCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_ENDIF, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDIF, NULL, NULL );
                  return ENDIF;
                }
 "endc"("ase"|"as"|"a")? { /* ENDCASE can be used in one context only */
                  if( hb_comp_wCaseCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_ENDCASE, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDCASE, NULL, NULL );
                  return ENDCASE;
                }
 "enddo"|"endd" { /* ENDDO can be used in one context only */
                  if( hb_comp_wWhileCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_ENDDO, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDDO, NULL, NULL );
                  return ENDDO;
                }
 %{
@@ -435,7 +435,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like end[] & end() at the begining of line */
-                 hb_compGenError( hb_comp_szCErrors, 'E', ERR_ENDIF, NULL, NULL );
+                 hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDIF, NULL, NULL );
                }
                yylval.string = yy_strdup( "END" );
                hb_comp_iState =IDENTIFIER;
@@ -446,7 +446,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like end-> & end++ at the begining of line */
-                 hb_compGenError( hb_comp_szCErrors, 'E', ERR_ENDIF, NULL, NULL );
+                 hb_compGenError( hb_comp_szErrors, 'E', ERR_ENDIF, NULL, NULL );
                }
                yylval.string = yy_strdup( "END" );
                hb_comp_iState =IDENTIFIER;
@@ -487,7 +487,7 @@ Separator     {SpaceTab}
                  if( hb_comp_iState == LOOKUP )
                  { /* it is first item in the line */
                    if( hb_comp_wForCounter == 0 && hb_comp_wWhileCounter == 0 )
-                     hb_compGenError( hb_comp_szCErrors, 'E', ERR_UNMATCHED_EXIT, "EXIT", NULL );
+                     hb_compGenError( hb_comp_szErrors, 'E', ERR_UNMATCHED_EXIT, "EXIT", NULL );
                    hb_comp_iState =EXITLOOP;
                    return EXITLOOP;
                  }
@@ -611,7 +611,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like FOR() at the begining of line */
-                 hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
+                 hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
                }
                yylval.string = yy_strdup( "FOR" );
                hb_comp_iState =IDENTIFIER;
@@ -636,14 +636,14 @@ Separator     {SpaceTab}
                return FUNCTION;
              }
 <FUNCTION_>{Separator}*[^_a-zA-Z] { /* Clipper needs FUNCTION in one context only */
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"FUNCTION":yytext), NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"FUNCTION":yytext), NULL );
              }
 %{
 /* ************************************************************************ */
 %}
 "iif"          {
                  if( hb_comp_iState == FUNCTION || hb_comp_iState == PROCEDURE )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, "IIF", NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, "IIF", NULL );
                  else
                    BEGIN IIF_;
                /* Note: In Clipper:
@@ -660,14 +660,14 @@ Separator     {SpaceTab}
                return IIF;
              }
 <IIF_>{Separator}*[^\(] {
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"IIF":yytext), NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, ((yytext[ yyleng-1 ]=='\n')?"IIF":yytext), NULL );
              }
 %{
 /* ************************************************************************ */
 %}
 "if"           {
                  if( hb_comp_iState == FUNCTION || hb_comp_iState == PROCEDURE )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, "IF", NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, "IF", NULL );
                  else
                    BEGIN IF_;
               }
@@ -681,16 +681,16 @@ Separator     {SpaceTab}
                return hb_comp_iState;
              }
 <IF_>{Separator}*[\)\[\]\/\^\*\%\=\$\@] {
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*"->" {
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*[\n] {
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, "IF", NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, "IF", NULL );
              }
 <IF_>{Separator}*("++"|"--")/[\n] {
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX2, yytext, "IF" );
              }
 <IF_>{Separator}*. {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -722,7 +722,7 @@ Separator     {SpaceTab}
                return IDENTIFIER;
              }
 <IN_>{Separator}*[0-9]      {
-                hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
+                hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <IN_>{Separator}*.      {
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -795,7 +795,7 @@ Separator     {SpaceTab}
                  if( hb_comp_iState == LOOKUP )
                  { /* it is first item in the line */
                    if( hb_comp_wWhileCounter == 0 && hb_comp_wForCounter == 0 )
-                     hb_compGenError( hb_comp_szCErrors, 'E', ERR_UNMATCHED_EXIT, "LOOP", NULL );
+                     hb_compGenError( hb_comp_szErrors, 'E', ERR_UNMATCHED_EXIT, "LOOP", NULL );
                    hb_comp_iState =LOOP;
                    return LOOP;
                  }
@@ -850,7 +850,7 @@ Separator     {SpaceTab}
                if( hb_comp_iState == LOOKUP )
                { /* it is first item in the line */
                  if( hb_comp_wForCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                  hb_comp_iState =NEXT;
                  return NEXT;
                }
@@ -865,7 +865,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like NEXT[] & NEXT() at the begining of line */
-                 hb_compGenError( hb_comp_szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
+                 hb_compGenError( hb_comp_szErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                }
                yylval.string = yy_strdup( "NEXT" );
                hb_comp_iState =IDENTIFIER;
@@ -876,7 +876,7 @@ Separator     {SpaceTab}
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                if( hb_comp_iState == LOOKUP )
                { /* Clipper does not like next-> & next++ at the begining of line */
-                 hb_compGenError( hb_comp_szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
+                 hb_compGenError( hb_comp_szErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                }
                yylval.string = yy_strdup( "NEXT" );
                hb_comp_iState =IDENTIFIER;
@@ -896,7 +896,7 @@ Separator     {SpaceTab}
                if( hb_comp_iState == LOOKUP )
                {
                  if( hb_comp_wForCounter == 0 )
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_NEXTFOR, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_NEXTFOR, NULL, NULL );
                  hb_comp_iState =NEXT;
                  return NEXT;
                }
@@ -1027,7 +1027,7 @@ Separator     {SpaceTab}
 <WHILE_>{Separator}*[\[] { /* array */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                /* Clipper does not like while[] at all */
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <WHILE_>{Separator}*[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -1091,7 +1091,7 @@ Separator     {SpaceTab}
               }
 <WITH_>{Separator}*[\[] { /* array */
                /* Clipper does not like with[] at all */
-               hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, yytext, NULL );
+               hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, yytext, NULL );
              }
 <WITH_>{Separator}*.            {
                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
@@ -1154,7 +1154,7 @@ Separator     {SpaceTab}
 
 {InvalidNumber} BEGIN INVALIDNUM_; yylval.string = yy_strupr( yy_strdup( yytext ) );
 <INVALIDNUM_>("."|{Separator}+) {
-                   hb_compGenError( hb_comp_szCErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );
+                   hb_compGenError( hb_comp_szErrors, 'E', ERR_NUMERIC_FORMAT, NULL, NULL );
                  }
 <INVALIDNUM_>.   {
                     unput( yytext[ yyleng-1 ] );
@@ -1294,7 +1294,7 @@ int yy_lex_input( char *buffer, int iBufferSize )
 {
    HB_SYMBOL_UNUSED( iBufferSize );
 
-   return PreProcess( yyin, hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
+   return hb_pp_Internal( yyin, hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
 }
 
 static int yy_ConvertNumber( char * szBuffer )

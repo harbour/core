@@ -33,6 +33,8 @@
  *
  */
 
+#include <ctype.h> /* Needed by hb_strupr() */
+
 #include "extend.h"
 
 ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen )
@@ -61,3 +63,10 @@ ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG u
       return 0;
 }
 
+void hb_strupr( char * szText )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", szText));
+
+   for(; *szText; szText++ )
+      *szText = toupper( *szText );
+}

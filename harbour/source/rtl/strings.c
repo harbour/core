@@ -809,16 +809,6 @@ HARBOUR HB_LOWER( void )
    }
 }
 
-void hb_strupr( char * szText )
-{
-   char * p;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", szText));
-
-   for( p = szText; *p; p++ )
-      *p = toupper( *p );
-}
-
 /* converts szText to upper case. Does not create a new string! */
 char * hb_strUpper( char * szText, ULONG ulLen )
 {

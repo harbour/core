@@ -150,7 +150,7 @@ static BOOL hb_comp_bExternal   = FALSE;
 static PEXTERN hb_comp_pExterns = NULL;
 
 /* Table with parse errors */
-char * hb_comp_szCErrors[] =
+char * hb_comp_szErrors[] =
 {
    "Statement not allowed outside of procedure or function",
    "Redefinition of procedure or function: \'%s\'",
@@ -199,7 +199,7 @@ char * hb_comp_szCErrors[] =
 /* NOTE: The first character stores the warning's level that triggers this
  * warning. The warning's level is set by -w<n> command line option.
  */
-char * hb_comp_szCWarnings[] =
+char * hb_comp_szWarnings[] =
 {
    "1Ambiguous reference: \'%s\'",
    "1Ambiguous reference, assuming memvar: \'%s\'",
@@ -333,11 +333,11 @@ int main( int argc, char * argv[] )
       hb_comp_pFileName = NULL;
       s_pOutPath = NULL;
 
-      Hbpp_init();  /* Initialization of preprocessor arrays */
+      hb_pp_Init();  /* Initialization of preprocessor arrays */
       /* Command line options */
       for( iArg = 1; iArg < argc; iArg++ )
       {
-         if( IS_OPT_SEP( argv[ iArg ][ 0 ] ) )
+         if( HB_ISOPTSEP( argv[ iArg ][ 0 ] ) )
          {
             switch( argv[ iArg ][ 1 ] )
             {
@@ -368,11 +368,11 @@ int main( int argc, char * argv[] )
                      while( i < strlen( szDefText ) && szDefText[ i ] != '=' )
                         i++;
                      if( szDefText[ i ] != '=' )
-                        AddDefine( szDefText, 0 );
+                        hb_pp_AddDefine( szDefText, 0 );
                      else
                      {
                         szDefText[ i ] = '\0';
-                        AddDefine( szDefText, szDefText + i + 1 );
+                        hb_pp_AddDefine( szDefText, szDefText + i + 1 );
                      }
                      free( szDefText );
                   }
@@ -400,11 +400,11 @@ int main( int argc, char * argv[] )
                            break;
 
                         default:
-                           hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
+                           hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
                      }
                   }
                   else
-                     hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
+                     hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
 
                   break;
                case 'g':
@@ -427,7 +427,7 @@ int main( int argc, char * argv[] )
                               break;
 
                            default:
-                              hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
+                              hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
                         }
                         break;
 
@@ -549,7 +549,7 @@ int main( int argc, char * argv[] )
                   {  /*there is -w<0,1,2,3> probably */
                      hb_comp_iWarnings = argv[ iArg ][ 2 ] - '0';
                      if( hb_comp_iWarnings < 0 || hb_comp_iWarnings > 3 )
-                        hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
+                        hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
                   }
                   break;
 
@@ -580,7 +580,7 @@ int main( int argc, char * argv[] )
                   break;
 
                default:
-                  hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
+                  hb_compGenError( hb_comp_szErrors, 'F', ERR_BADOPTION, argv[ iArg ], NULL );
                   break;
             }
          }
@@ -590,13 +590,13 @@ int main( int argc, char * argv[] )
          else
          {
             if( hb_comp_pFileName )
-               hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADPARAM, argv[ iArg ], NULL );
+               hb_compGenError( hb_comp_szErrors, 'F', ERR_BADPARAM, argv[ iArg ], NULL );
             else
             {
                hb_comp_pFileName = hb_fsFNameSplit( argv[ iArg ] );
 
                if( ! hb_comp_pFileName->szName )
-                  hb_compGenError( hb_comp_szCErrors, 'F', ERR_BADFILENAME, argv[ iArg ], NULL );
+                  hb_compGenError( hb_comp_szErrors, 'F', ERR_BADFILENAME, argv[ iArg ], NULL );
             }
          }
       }
@@ -613,7 +613,7 @@ int main( int argc, char * argv[] )
             hb_comp_yyppo = fopen( szPpoName, "w" );
             if( ! hb_comp_yyppo )
             {
-               hb_compGenError( hb_comp_szCErrors, 'F', ERR_CREATE_PPO, szPpoName, NULL );
+               hb_compGenError( hb_comp_szErrors, 'F', ERR_CREATE_PPO, szPpoName, NULL );
                return iStatus;
             }
          }
@@ -822,7 +822,7 @@ int isatty( int handle )
 
 static BOOL SwitchCmp( char * szString, char * szSwitch )
 {
-   if( IS_OPT_SEP( *szString ) )
+   if( HB_ISOPTSEP( *szString ) )
    {
       szString++;
 
@@ -934,7 +934,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
    void * pMem = malloc( ulSize );
 
    if( ! pMem )
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_MEMALLOC, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMALLOC, NULL, NULL );
 
    return pMem;
 }
@@ -944,7 +944,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
    void * pResult = realloc( pMem, ulSize );
 
    if( ! pResult )
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_MEMREALLOC, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMREALLOC, NULL, NULL );
 
    return pResult;
 }
@@ -954,7 +954,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
    if( pMem )
       free( pMem );
    else
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_MEMFREE, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_MEMFREE, NULL, NULL );
 }
 
 char * yy_strupr( char * p )
@@ -1152,10 +1152,10 @@ void hb_compFunCallCheck( char * szFuncCall, int iArgs )
          else
             sprintf( szMsg, "\nPassed: %i, expected: %i - %i", iArgs, f[ iPos ].iMinParam, f[ iPos ].iMaxParam );
 
-         hb_compGenError( hb_comp_szCErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, szMsg );
+         hb_compGenError( hb_comp_szErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, szMsg );
 
          /* Clipper way */
-         /* hb_compGenError( hb_comp_szCErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, NULL ); */
+         /* hb_compGenError( hb_comp_szErrors, 'E', ERR_CHECKING_ARGS, szFuncCall, NULL ); */
       }
    }
 }
@@ -1222,7 +1222,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
       /* Variable declaration is outside of function/procedure body.
          In this case only STATIC and PARAMETERS variables are allowed. */
       --hb_comp_iLine;
-      hb_compGenError( hb_comp_szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTSIDE, NULL, NULL );
       return;
    }
 
@@ -1233,7 +1233,7 @@ void hb_compVariableAdd( char * szVarName, char cValueType )
    if( ( hb_comp_functions.pLast->bFlags & FUN_STATEMENTS ) && !( hb_comp_iVarScope == VS_FIELD || ( hb_comp_iVarScope & VS_MEMVAR ) ) )
    {
       --hb_comp_iLine;
-      hb_compGenError( hb_comp_szCErrors, 'E', ERR_FOLLOWS_EXEC, ( hb_comp_iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', ERR_FOLLOWS_EXEC, ( hb_comp_iVarScope == VS_LOCAL ? "LOCAL" : "STATIC" ), NULL );
    }
 
    /* When static variable is added then hb_comp_functions.pLast points to function
@@ -1509,7 +1509,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* The name of a function/procedure is already defined */
       if( ( pFunc != hb_comp_functions.pFirst ) || hb_comp_bStartProc )
          /* it is not a starting procedure that was automatically created */
-         hb_compGenError( hb_comp_szCErrors, 'F', ERR_FUNC_DUPL, szFunName, NULL );
+         hb_compGenError( hb_comp_szErrors, 'F', ERR_FUNC_DUPL, szFunName, NULL );
    }
 
    szFunction = RESERVED_FUNC( szFunName );
@@ -1518,7 +1518,7 @@ void hb_compFunctionAdd( char * szFunName, HB_SYMBOLSCOPE cScope, int iType )
       /* We are ignoring it when it is the name of PRG file and we are
        * not creating implicit starting procedure
        */
-      hb_compGenError( hb_comp_szCErrors, 'E', ERR_FUNC_RESERVED, szFunction, szFunName );
+      hb_compGenError( hb_comp_szErrors, 'E', ERR_FUNC_RESERVED, szFunction, szFunName );
    }
 
    hb_comp_iFunctionCnt++;
@@ -1775,7 +1775,7 @@ static int hb_compLocalVarGetPos( char * szVarName ) /* returns the order + 1 of
                   * It is not possible to access a parameter of a codeblock in which
                   * the current codeblock is defined
                   */
-                  hb_compGenError( hb_comp_szCErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
+                  hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTER_VAR, szVarName, NULL );
                   return iVar;
                }
                else
@@ -1990,7 +1990,7 @@ ULONG hb_compGenJump( LONG lOffset )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode3( HB_P_JUMP, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
@@ -2002,7 +2002,7 @@ ULONG hb_compGenJumpFalse( LONG lOffset )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode3( HB_P_JUMPFALSE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
@@ -2017,7 +2017,7 @@ void hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
 
    pCode[ ( ULONG ) ulFrom ]     = HB_LOBYTE( lOffset );
    pCode[ ( ULONG ) ulFrom + 1 ] = HB_HIBYTE( lOffset );
@@ -2033,7 +2033,7 @@ ULONG hb_compGenJumpTrue( LONG lOffset )
    /* TODO: We need a longer offset (longer then two bytes)
     */
    if( lOffset < ( LONG ) SHRT_MIN || lOffset > ( LONG ) SHRT_MAX )
-      hb_compGenError( hb_comp_szCErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
+      hb_compGenError( hb_comp_szErrors, 'F', ERR_JUMP_TOO_LONG, NULL, NULL );
    hb_compGenPCode3( HB_P_JUMPTRUE, HB_LOBYTE( lOffset ), HB_HIBYTE( lOffset ) );
 
    return hb_comp_functions.pLast->lPCodePos - 2;
@@ -2058,7 +2058,7 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
    if( hb_comp_functions.pLast->bFlags & FUN_BREAK_CODE )
    {
       /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
-      hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_UNREACHABLE, NULL, NULL );
+      hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_UNREACHABLE, NULL, NULL );
    }
    hb_comp_bDontGenLineNum = FALSE;
    /* clear RETURN/BREAK flag */
@@ -2077,7 +2077,7 @@ void hb_compLinePushIfDebugger( void )
       if( hb_comp_functions.pLast->bFlags & FUN_BREAK_CODE )
       {
          /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
-         hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_UNREACHABLE, NULL, NULL );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_UNREACHABLE, NULL, NULL );
       }
       hb_comp_functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );  /* clear RETURN flag */
    }
@@ -2094,7 +2094,7 @@ void hb_compLinePushIfInside( void ) /* generates the pcode with the currently c
       hb_comp_bExternal = FALSE;
       if( ! hb_comp_bStartProc && hb_comp_functions.iCount <= 1 )
       {
-         hb_compGenError( hb_comp_szCErrors, 'E', ERR_OUTSIDE, NULL, NULL );
+         hb_compGenError( hb_comp_szErrors, 'E', ERR_OUTSIDE, NULL, NULL );
       }
    }
 
@@ -2166,10 +2166,10 @@ static void hb_compVariableGenPCode( BYTE bPCode, char * szVarName )
          /* -v switch was used -> assume it is a memvar variable
           */
          iType = VS_MEMVAR;
-         hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_MEMVAR_ASSUMED, szVarName, NULL );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_MEMVAR_ASSUMED, szVarName, NULL );
       }
       else
-         hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_AMBIGUOUS_VAR, szVarName, NULL );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_AMBIGUOUS_VAR, szVarName, NULL );
    }
 
    if( iType == VS_FIELD )
@@ -2184,7 +2184,7 @@ static void hb_compVariableGenPCode( BYTE bPCode, char * szVarName )
             bPCode = HB_P_PUSHALIASEDFIELD;
          else
             /* pushing fields by reference is not allowed */
-            hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
          /*
           * Push alias symbol before the field symbol
           */
@@ -2198,7 +2198,7 @@ static void hb_compVariableGenPCode( BYTE bPCode, char * szVarName )
             bPCode = HB_P_PUSHFIELD;
          else if( bPCode == HB_P_PUSHMEMVARREF )
             /* pushing fields by reference is not allowed */
-            hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
+            hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_REFER, szVarName, NULL );
       }
    }
    else if( iType == VS_MEMVAR )
@@ -2567,7 +2567,7 @@ static void hb_compFixReturns( void ) /* fixes all last defined function returns
       while( pVar )
       {
          if( pVar->szName && hb_comp_functions.pLast->szName && hb_comp_functions.pLast->szName[0] && ! pVar->iUsed )
-            hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
 
          pVar = pVar->pNext;
       }
@@ -2576,7 +2576,7 @@ static void hb_compFixReturns( void ) /* fixes all last defined function returns
       while( pVar )
       {
          if( pVar->szName && hb_comp_functions.pLast->szName && hb_comp_functions.pLast->szName[0] && ! pVar->iUsed )
-            hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
+            hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_VAR_NOT_USED, pVar->szName, hb_comp_functions.pLast->szName );
 
          pVar = pVar->pNext;
       }
@@ -2585,7 +2585,7 @@ static void hb_compFixReturns( void ) /* fixes all last defined function returns
        */
       if( (hb_comp_functions.pLast->bFlags & FUN_WITH_RETURN) == 0 &&
           (hb_comp_functions.pLast->bFlags & FUN_PROCEDURE) == 0 )
-         hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_FUN_WITH_NO_RETURN,
+         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_FUN_WITH_NO_RETURN,
                      hb_comp_functions.pLast->szName, NULL );
    }
 }
@@ -2856,7 +2856,7 @@ void hb_compCodeBlockEnd( void )
    while( pVar )
    {
       if( hb_comp_iWarnings && pFunc->szName && pVar->szName && ! pVar->iUsed )
-         hb_compGenWarning( hb_comp_szCWarnings, 'W', WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
+         hb_compGenWarning( hb_comp_szWarnings, 'W', WARN_BLOCKVAR_NOT_USED, pVar->szName, pFunc->szName );
 
       /* free used variables */
       pFree = pVar;
@@ -2873,60 +2873,60 @@ void hb_compCodeBlockEnd( void )
 HB_EXPR_PTR hb_compErrorLValue( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_LVALUE, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_LVALUE, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorType( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_TYPE, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_TYPE, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorIndex( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_INDEX, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_INDEX, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorBound( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_BOUND, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_BOUND, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorSyntax( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_SYNTAX, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_SYNTAX, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorAlias(  HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_INVALID_ALIAS, szDesc, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_INVALID_ALIAS, szDesc, NULL );
    return pExpr;
 }
 
 HB_EXPR_PTR hb_compErrorStatic( char * szVarName, HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_ILLEGAL_INIT, szVarName, szDesc );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_ILLEGAL_INIT, szVarName, szDesc );
    return pExpr;
 }
 
 void hb_compErrorDuplVar( char * szVarName )
 {
-   hb_compGenError( hb_comp_szCErrors, 'E', ERR_VAR_DUPL, szVarName, NULL );
+   hb_compGenError( hb_comp_szErrors, 'E', ERR_VAR_DUPL, szVarName, NULL );
 }
 
 HB_EXPR_PTR hb_compWarnMeaningless( HB_EXPR_PTR pExpr )
 {
    char * szDesc = hb_compExprDescription( pExpr );
-   hb_compGenWarning(  hb_comp_szCWarnings, 'W', WARN_MEANINGLESS, szDesc, NULL );
+   hb_compGenWarning(  hb_comp_szWarnings, 'W', WARN_MEANINGLESS, szDesc, NULL );
    return pExpr;
 }

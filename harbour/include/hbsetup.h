@@ -200,6 +200,8 @@
    #define _POSIX_PATH_MAX    255
 #endif
 
+#define HB_ISOPTSEP( c ) ( strchr( OS_OPT_DELIMITER_LIST, ( c ) ) != NULL )
+
 /* ***********************************************************************
  * Platform detection
  */

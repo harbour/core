@@ -65,24 +65,24 @@ HARBOUR HB___PREPROCESS( void )
 {
   if( ISCHAR( 1 ) )
     {
-      char * pText = ( char * ) hb_xgrab( STR_SIZE );
-      char * pOut = ( char * ) hb_xgrab( STR_SIZE );
+      char * pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
+      char * pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
       char * ptr = pText;
 
       int slen;
 
-      slen = HB_MIN_( hb_parclen( 1 ), STR_SIZE - 1 );
+      slen = HB_MIN_( hb_parclen( 1 ), HB_PP_STR_SIZE - 1 );
       memcpy( pText, hb_parc( 1 ), slen );
       pText[ slen ] = 0; /* Preprocessor expects null-terminated string */
-      memset( pOut, 0, STR_SIZE );
+      memset( pOut, 0, HB_PP_STR_SIZE );
 
-      SKIPTABSPACES( ptr );
+      HB_SKIPTABSPACES( ptr );
 
       if( setjmp( s_env ) == 0 )
         {
           int resParse;
 
-          if( ( resParse = ParseExpression( ptr, pOut ) ) > 0 )
+          if( ( resParse = hb_pp_ParseExpression( ptr, pOut ) ) > 0 )
             {
               /* Some error here? */
             }

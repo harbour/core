@@ -330,8 +330,8 @@ extern USHORT hb_comp_wIfCounter;
 extern USHORT hb_comp_wWhileCounter;
 extern USHORT hb_comp_wCaseCounter;
 
-extern char * hb_comp_szCErrors[];
-extern char * hb_comp_szCWarnings[];
+extern char * hb_comp_szErrors[];
+extern char * hb_comp_szWarnings[];
 
 
 HB_EXPR_PTR hb_compExprNewEmpty( void );

@@ -1,3 +1,27 @@
+19991122-01:14 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/*
+    include/compiler.h
+    * Renamed two global variables
+      hb_comp_szCErrors   -> hb_comp_szErrors
+      hb_comp_szCWarnings -> hb_comp_szWarnings
+  * include/hbsetup.h
+    include/hbpp.h
+    * IS_OPT_SEP() macro renamed to HB_ISOPTSEP() and moved to the right place.
+  * source/pp/*
+    include/hbpp.h
+    source/compiler/harbour.l
+    source/compiler/harbour.c
+    * Variable renaming, prefixing, scope optimizing.
+    * Global functions prefixed with 
+    * Some ints changed to BOOL.
+    ! Non-ANSI comment removed.
+    % stroupper() changed to hb_strupr(), stroupper() removed.
+    % strolen() changed to strlen(), strolen() removed.
+  + source/common/hbstr.c (added)
+    source/rtl/strings.c
+    * hb_strupr() moved to the common library.
+    % hb_strupr() Local variable optimized out.
+
 19991121-23:23 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/pp/*
     include/hbpp.h

@@ -55,7 +55,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      hb_compGenError( hb_comp_szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 

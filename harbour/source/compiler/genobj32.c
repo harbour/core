@@ -82,7 +82,7 @@ void GenObj32( PHB_FNAME pFileName )
 
   if( ! ( hObjFile = fopen( szFileName, "wb" ) ) )
     {
-      hb_compGenError( hb_comp_szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
     }
 
