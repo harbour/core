@@ -258,13 +258,11 @@ char * hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate )
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetDS(%p, %lu, %s)", pArray, ulIndex, szDate));
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-      hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
+      return hb_itemGetDS( pArray->item.asArray.value->pItems + ulIndex - 1, szDate );
    else
       /* NOTE: Intentionally calling it with a bad parameter in order to get
                the default value from hb_itemGetDS(). [vszakats] */
-      hb_itemGetDS( NULL, szDate );
-
-   return szDate;
+      return hb_itemGetDS( NULL, szDate );
 }
 
 long hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
@@ -275,21 +273,8 @@ long hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex )
       return hb_itemGetDL( pArray->item.asArray.value->pItems + ulIndex - 1 );
    else
       /* NOTE: Intentionally calling it with a bad parameter in order to get
-               the default value from hb_itemGetDS(). [vszakats] */
+               the default value from hb_itemGetDL(). [vszakats] */
       return hb_itemGetDL( NULL );
-}
-
-BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetBool(%p, %lu)", pArray, ulIndex));
-
-   if( HB_IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return hb_itemGetL( pArray->item.asArray.value->pItems + ulIndex - 1 );
-   }
-
-   return FALSE;
 }
 
 /*
@@ -300,13 +285,10 @@ PHB_ITEM hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayGetItemPtr(%p, %lu)", pArray, ulIndex));
 
-   if( HB_IS_ARRAY( pArray ) )
-   {
-      if( ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
-         return pArray->item.asArray.value->pItems + ( ulIndex - 1 );
-   }
-
-   return NULL;
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+      return pArray->item.asArray.value->pItems + ulIndex - 1;
+   else
+      return NULL;
 }
 
 BOOL hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex )
@@ -751,13 +733,9 @@ HB_GARBAGE_FUNC( hb_arrayReleaseGarbage )
           * Arrays, objects and codeblock should be released directly by 
           * the garbage collector
           */
-         if( HB_IS_STRING( pItem ) )
-         {
-            if( pItem->item.asString.value )
-            {
-               hb_xfree( pItem->item.asString.value );
-            }
-         }
+         if( HB_IS_STRING( pItem ) && pItem->item.asString.value )
+            hb_xfree( pItem->item.asString.value );
+
          ++pItem;
       }
       hb_xfree( pBaseArray->pItems );

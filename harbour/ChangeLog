@@ -1,3 +1,22 @@
+2000-07-29 17:25 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * utils/hbtest/*
+     + Added check for :Arg variable of returned error objects.
+       Note that currently Harbour doesn't support the :Arg var, so many 
+       tests will fail which looked OK until now.
+
+   * source/vm/itemapi.c
+     % Small optimizations.
+     * One buffer size changed to 512 from 500, to be the power of 2.
+
+   * source/vm/arrays.c
+     - hb_arrayGetBool() removed, since it was the same as hb_arrayGetL(), but 
+       had no prototype in hbapi.h.
+
+   * source/rtl/gtapi.c
+     * TRACE call fix in hb_gtSetPos()
+     ! NOTE made more clear.
+
 2000-07-29 07:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
   * source/compiler/harbour.slx
     + Added 2 rules to support DECLARE MACROVAR and DECLARE MACRO TEXT

@@ -647,12 +647,15 @@ USHORT hb_gtGetPos( SHORT * piRow, SHORT * piCol )
    return 0;
 }
 
+/* NOTE: Should be exactly the same as hb_gtSetPosContext(), but without the 
+         additional third parameter. */
+
 USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
 {
    USHORT uiMaxRow;
    USHORT uiMaxCol;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPosContext(%hd, %hd, %hd)", iRow, iCol, iMethod));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetPos(%hd, %hd)", iRow, iCol));
 
    uiMaxRow = hb_gt_GetScreenHeight();
    uiMaxCol = hb_gt_GetScreenWidth();
@@ -677,7 +680,7 @@ USHORT hb_gtSetPos( SHORT iRow, SHORT iCol )
    return 0;
 }
 
-/* NOTE: Exactly the same as hb_gtSetPos(), but with the additional 
+/* NOTE: Should be exactly the same as hb_gtSetPos(), but with the additional 
          parameter. */
 
 USHORT hb_gtSetPosContext( SHORT iRow, SHORT iCol, SHORT iMethod )
@@ -862,7 +865,7 @@ USHORT hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pStr, ULONG ulLength )
    return 0;
 }
 
-#define WRITECON_BUFFER_SIZE 500
+#define WRITECON_BUFFER_SIZE 512
 
 USHORT hb_gtWriteCon( BYTE * pStr, ULONG ulLength )
 {

@@ -579,18 +579,19 @@ char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDS(%p, %s)", szDate));
 
    if( pItem && HB_IS_DATE( pItem ) )
-      hb_dateDecStr( szDate, pItem->item.asDate.value );
+      return hb_dateDecStr( szDate, pItem->item.asDate.value );
    else
-      hb_dateDecStr( szDate, 0 );
-
-   return szDate;
+      return hb_dateDecStr( szDate, 0 );
 }
 
 long hb_itemGetDL( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemGetDL(%p)", pItem));
 
-   return ( pItem && HB_IS_DATE( pItem ) ) ? pItem->item.asDate.value : 0;
+   if( pItem && HB_IS_DATE( pItem ) )
+      return pItem->item.asDate.value;
+   else
+      return 0;
 }
 
 BOOL hb_itemGetL( PHB_ITEM pItem )
@@ -836,15 +837,13 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
       iDec = hb_set.HB_SET_DECIMALS;
 
    if( iDec > 0 )
-      pItem = hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
+      return hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
    else if( SHRT_MIN <= dNumber && dNumber <= SHRT_MAX )
-      pItem = hb_itemPutNILen( pItem, ( int ) dNumber, iWidth );
+      return hb_itemPutNILen( pItem, ( int ) dNumber, iWidth );
    else if( LONG_MIN <= dNumber && dNumber <= LONG_MAX )
-      pItem = hb_itemPutNLLen( pItem, ( long ) dNumber, iWidth );
+      return hb_itemPutNLLen( pItem, ( long ) dNumber, iWidth );
    else
-      pItem = hb_itemPutNDLen( pItem, dNumber, iWidth, 0 );
-
-   return pItem;
+      return hb_itemPutNDLen( pItem, dNumber, iWidth, 0 );
 }
 
 PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
@@ -1152,7 +1151,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    ULONG ulLenSecond;
    ULONG ulMinLen;
    ULONG ulCounter;
-   int   iRet = 0; /* Current status */
+   int iRet = 0; /* Current status */
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemStrCmp(%p, %p, %d)", pFirst, pSecond, (int) bForceExact));
 
@@ -1185,6 +1184,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
             szSecond++;
          }
       }
+
       if( hb_set.HB_SET_EXACT || bForceExact || ulLenSecond > ulCounter )
       {
          /* Force an exact comparison */
