@@ -1446,6 +1446,13 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", (char*) pDirname));
 
+   pDirname = hb_strdup ( ( char * ) pDirname );
+
+   if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      pDirname = hb_strLower( pDirname, strlen( pDirname ) );
+   else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER)
+      pDirname = hb_strUpper( pDirname, strlen( pDirname ) );
+
 #if defined(HB_OS_WIN_32)
 
    bResult = CreateDirectory( ( char * ) pDirname, NULL );
@@ -1470,6 +1477,8 @@ BOOL    hb_fsMkDir( BYTE * pDirname )
 
 #endif
 
+   hb_xfree( pDirname );
+
    return bResult;
 }
 
@@ -1478,6 +1487,13 @@ BOOL    hb_fsChDir( BYTE * pDirname )
    BOOL bResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsChDir(%s)", (char*) pDirname));
+
+   pDirname = hb_strdup ( ( char * ) pDirname );
+
+   if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      pDirname = hb_strLower( pDirname, strlen( pDirname ) );
+   else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER)
+      pDirname = hb_strUpper( pDirname, strlen( pDirname ) );
 
 #if defined(HB_OS_WIN_32)
 
@@ -1497,6 +1513,8 @@ BOOL    hb_fsChDir( BYTE * pDirname )
 
 #endif
 
+   hb_xfree( pDirname );
+
    return bResult;
 }
 
@@ -1505,6 +1523,13 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
    BOOL bResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsRmDir(%s)", (char*) pDirname));
+
+   pDirname = hb_strdup ( ( char * ) pDirname );
+
+   if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_LOWER )
+      pDirname = hb_strLower( pDirname, strlen( pDirname ) );
+   else if( hb_set.HB_SET_DIRCASE == HB_SET_CASE_UPPER)
+      pDirname = hb_strUpper( pDirname, strlen( pDirname ) );
 
 #if defined(HB_OS_WIN_32)
 
@@ -1523,6 +1548,8 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
    s_uiErrorLast = FS_ERROR;
 
 #endif
+
+   hb_xfree( pDirname );
 
    return bResult;
 }
