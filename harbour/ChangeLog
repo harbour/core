@@ -1,3 +1,8 @@
+20000512-08:00 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+  * source/compiler/harbour.y
+    + Added support for END to be used with FOR loops.
+
 20000512-13:31 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    + source/rtl/stringsx.c

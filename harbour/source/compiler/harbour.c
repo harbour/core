@@ -552,7 +552,10 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
    if ( cValueType == '+' )
    {
       //printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szClass );
+
       pVar->pClass = hb_compClassFind( hb_comp_szClass );
+      if( ! pVar->pClass )
+         hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szClass, szVarName );
    }
 
    if ( hb_comp_iVarScope & VS_PARAMETER )
@@ -800,7 +803,7 @@ PCOMCLASS hb_compClassAdd( char * szClassName )
 {
    PCOMCLASS pClass;
 
-   printf( "\nDeclaring Class: %s\n", szClassName );
+   //printf( "\nDeclaring Class: %s\n", szClassName );
 
    if ( hb_comp_iWarnings < 3 )
       return NULL;

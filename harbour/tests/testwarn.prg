@@ -76,7 +76,7 @@ STATIC lGlobal AS LOGICAL
 
 PROCEDURE THEMAIN( optional )
 
-  STATIC lStatic := 0, oMyObj As Object From MyClass
+  STATIC lStatic := 0, oMyObj As Object From WrongClass
   LOCAL cVar AS CHAR := [declare function]
 
   oMyObj:MyMethod( 2, 3, 4 )
@@ -88,6 +88,10 @@ PROCEDURE THEMAIN( optional )
   MEMVAR Var1 AS NUM
 
   PRIVATE TEST AS CHAR
+
+  FOR Conter := 1 TO 10
+    ? "For with End"
+  NEXT
 
   IF optional
      ? 'Ok'

@@ -1382,7 +1382,9 @@ StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
            ;
 
 ForStatements : EmptyStats NEXT                     { --hb_comp_wForCounter; }
-           | EmptyStats NEXT IdentName             { --hb_comp_wForCounter; }
+           | EmptyStats NEXT IdentName              { --hb_comp_wForCounter; }
+           | EmptyStats END                         { --hb_comp_wForCounter; }
+           | EmptyStats END IdentName               { --hb_comp_wForCounter; }
            ;
 
 BeginSeq   : BEGINSEQ { ++hb_comp_wSeqCounter; $<lNumber>$ = hb_compSequenceBegin(); } Crlf { hb_compLinePush(); }
