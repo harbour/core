@@ -1035,20 +1035,58 @@ static ERRCODE adsClearFilter( ADSAREAP pArea )
 #define  adsClearScope            NULL
 #define  adsCountScope            NULL
 #define  adsFilterText            NULL
-#define  adsScopeInfo             NULL
+
+static ERRCODE adsScopeInfo( ADSAREAP pArea, USHORT nScope, PHB_ITEM pItem )
+{
+   UNSIGNED8 pucScope[ ADS_MAX_KEY_LENGTH+1 ];
+   UNSIGNED16 pusBufLen = ADS_MAX_KEY_LENGTH;
+   UNSIGNED32 ulRetVal;
+
+   HB_TRACE(HB_TR_DEBUG, ("adsScopeInfo(%p, %hu, %p)", pArea, nScope, pItem));
+
+   if( pArea->hOrdCurrent )
+   {
+      ulRetVal = AdsGetScope( pArea->hOrdCurrent, (UNSIGNED16) nScope, pucScope, &pusBufLen );
+      if ( ulRetVal != AE_SUCCESS )
+         return FAILURE;
+      hb_itemPutCL( pItem, ( char * ) pucScope, pusBufLen );
+   }
+   return SUCCESS;
+}
 
 static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsSetFilter(%p, %p)", pArea, pFilterInfo));
 
    AdsSetFilter( pArea->hTable, (UNSIGNED8*) hb_itemGetCPtr( pFilterInfo->abFilterText ) );
-   printf( "\r\nadsSetfilter - after" );
 
    return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
 }
 
 #define  adsSetLocate             NULL
-#define  adsSetScope              NULL
+
+static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
+{
+   UNSIGNED32 ulRetVal;
+
+   HB_TRACE(HB_TR_DEBUG, ("adsSetScope(%p, %p)", pArea, sInfo));
+
+   if( pArea->hOrdCurrent )
+   {
+      if( sInfo->scopeValue )
+      {
+         ulRetVal = AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope,
+              (UNSIGNED8*) sInfo->scopeValue,
+              (UNSIGNED16) strlen( sInfo->scopeValue), ADS_STRINGKEY );
+      }
+      else
+         AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope );
+      return SUCCESS;
+   }
+   else
+      return FAILURE;
+}
+
 #define  adsSkipScope             NULL
 #define  adsCompile               NULL
 #define  adsError                 NULL
@@ -1257,10 +1295,10 @@ static RDDFUNCS adsTable = { adsBof,
                              adsClearScope,
                              adsCountScope,
                              adsFilterText,
-                             adsScopeInfo,
+                             ( DBENTRYP_SI ) adsScopeInfo,
                              ( DBENTRYP_VFI ) adsSetFilter,
                              adsSetLocate,
-                             adsSetScope,
+                             ( DBENTRYP_VP ) adsSetScope,
                              adsSkipScope,
                              adsCompile,
                              adsError,

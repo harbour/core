@@ -346,7 +346,19 @@ typedef struct
 
 typedef DBSCOPEINFO * LPDBSCOPEINFO;
 
+/*
+*  DBORDSCOPEINFO
+*  -----------
+*  The Order Scope Info structure
+*/
 
+typedef struct
+{
+   USHORT nScope;        /* scope operation: TOPSCOPE/ENDSCOPE */
+   BYTE * scopeValue;
+} DBORDSCOPEINFO;
+
+typedef DBORDSCOPEINFO * LPDBORDSCOPEINFO;
 
 /*
 *  DBFILTERINFO

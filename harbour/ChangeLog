@@ -1,3 +1,13 @@
+20000318-19:38 GMT+3 Alexander Kresin
+   * include/hbapirdd.h
+   * contrib/rdd_ads/ads.ch   
+   * contrib/rdd_ads/ads1.c
+     * Internal scope functions adsScopeInfo() and adsSetScope() added
+   * source/rdd/dbcmd.c
+     * OrdScope() function implemented 
+   * source/rtl/dummy.prg
+     - Ordscope() removed
+
 20000318-17:17 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/rtl/seconds.c
      % #include <dos.h> removed.
@@ -48,8 +58,8 @@
      % Removed some (__DJGPP__ || __CYGWIN__ || HARBOUR_GCC_OS2) constructs
        already guarded with (__GNUC__ && !__MINGW32__). Is there any other
        special GNUC variant we should be aware of when #including <io.h> ?
-     % Removed __CYGWIN__ branch for isatty() in GTAPI.C. I couldn't find a 
-       reason why it was there since isatty() is defined and works OK (returns 
+     % Removed __CYGWIN__ branch for isatty() in GTAPI.C. I couldn't find a
+       reason why it was there since isatty() is defined and works OK (returns
        TRUE for 1 and 2) in Cygwin.
      ; Now there's only four __CYGWIN__ checks in Harbour.
    * source/rtl/gt/gtdos.c

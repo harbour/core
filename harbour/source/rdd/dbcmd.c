@@ -3460,3 +3460,33 @@ HARBOUR HB_DBSETDRIVER( void )
    }
 }
 
+HARBOUR HB_ORDSCOPE( void )
+{
+   PHB_ITEM pscopeValue;
+
+   if( s_pCurrArea )
+   {
+      DBORDSCOPEINFO sInfo;
+
+      if( hb_pcount() == 0 || !(hb_parinfo( 1 ) & IT_NUMERIC) ||
+         ( hb_pcount() > 1 && hb_parinfo( 2 ) != IT_STRING ) )
+      {
+         hb_errRT_DBCMD( EG_ARG, 1006, NULL, "ORDSCOPE" );
+         return;
+      }
+      sInfo.nScope = hb_parni( 1 );
+      pscopeValue = hb_itemPutC( NULL, "" );
+      SELF_SCOPEINFO( ( AREAP ) s_pCurrArea->pArea, sInfo.nScope, pscopeValue );
+      hb_retc( hb_itemGetCPtr( pscopeValue ) );
+      hb_itemRelease( pscopeValue );
+
+      if( hb_pcount() > 1 )
+         sInfo.scopeValue = (BYTE*) hb_parc( 2 );
+      else
+         sInfo.scopeValue = NULL;
+      SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBOPENINFO) &sInfo );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ORDSCOPE" );
+
+}

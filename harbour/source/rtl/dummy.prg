@@ -44,7 +44,6 @@ FUNCTION ordKeyDel()       ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyGoto()      ; RETURN .F. /* 5.3 */
 FUNCTION ordKeyNo()        ; RETURN 0   /* 5.3 */
 FUNCTION ordKeyVal()       ; RETURN NIL /* 5.3 */
-FUNCTION ordScope()        ; RETURN NIL /* 5.3 */
 FUNCTION ordSetRelation()  ; RETURN NIL /* 5.3 */
 FUNCTION ordSkipUnique()   ; RETURN .F. /* 5.3 */
 

@@ -52,6 +52,10 @@
 #define ADS_AOF_REMOVE_RECORD    2
 #define ADS_AOF_TOGGLE_RECORD    3
 
+/* For retrieving scope settings */
+#define ADS_TOP                  1
+#define ADS_BOTTOM               2
+
 #command SET FILETYPE TO <x:NTX,CDX,ADT>                              ;
       => AdsSetFileType( if( upper( <(x)> ) == "NTX", 1,              ;
                          if( upper( <(x)> ) == "CDX", 2, 3 ) ) )
