@@ -49,12 +49,14 @@ PRG_SOURCES=\
         browdb.prg \
         devoutp.prg \
         dircmd.prg \
+        dummy.prg \
         errorsys.prg \
         fieldbl.prg \
         harbinit.prg \
 	memvarbl.prg \
 	menuto.prg \
         objfunc.prg \
+        readkey.prg \
         readvar.prg \
         rddord.prg \
         setfunc.prg \

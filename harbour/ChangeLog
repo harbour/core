@@ -1,3 +1,31 @@
+19991006-14:35 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/dummy.prg
+     source/rtl/Makefile
+     source/rtl/rddord.prg
+     include/hbextern.ch
+     source/runner/stdalone/external.prg
+     + All not yet implemented function skeletons added or moved to dummy.prg
+       so that the number of unresolved externals will be reduced, and we can
+       have a better view about what is left to do. Also updating EXTERNAL.PRG
+       and HBEXTERN.CH will not be needed so frequently.
+   * doc/funclist.txt
+     source/rtl/readkey.prg
+     source/rtl/Makefile
+     + READKEY() added.
+   * doc/funclist.txt
+     + ORDCONDSET() added to the TODO list.
+   * source/runner/stdalone/external.prg
+     include/hbextern.ch
+     + MEMOLINE()/MLCOUNT() added.
+   * tests/run_tsta.bat -> tests/run_test.bat
+     * Renamed.
+     + Comments.
+   * tests/run_b32.bat -> tests/bld_b32o.bat
+     ! Small fix.
+     * Renamed.
+
+      !! WARNING !! Please modify non-GNU make files.
+
 19991006-13:19 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/memoline.c
      source/rtl/mlcount.c

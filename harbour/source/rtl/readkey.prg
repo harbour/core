@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Old style order management functions
+ * READKEY() function
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,44 +33,27 @@
  *
  */
 
-#include "common.ch"
+#include "inkey.ch"
 
-/* NOTE: The fifth parameters (cOrderName) is undocumented. */
+FUNCTION ReadKey()
+   LOCAL nKey := LastKey()
 
-FUNCTION dbCreateIndex( cOrderBagName, cKeyExpr, bKeyExpr, lUnique, cOrderName )
-   RETURN ordCreate( cOrderBagName, cOrderName, cKeyExpr, bKeyExpr, lUnique )
+   DO CASE
+   CASE nKey == K_UP        ; nKey :=  4 // NOTE: NG says 5 incorrectly
+   CASE nKey == K_DOWN      ; nKey :=  5 // NOTE: NG says 2 incorrectly
+   CASE nKey == K_PGUP      ; nKey :=  6
+   CASE nKey == K_PGDN      ; nKey :=  7
+   CASE nKey == K_CTRL_PGUP ; nKey := 34 // NOTE: NG says 31 incorrectly
+   CASE nKey == K_CTRL_PGDN ; nKey := 35 // NOTE: NG says 30 incorrectly
+   CASE nKey == K_ESC       ; nKey := 12
+   CASE nKey == K_CTRL_W    ; nKey := 14
+   CASE nKey == K_ENTER     ; nKey := 15
+   CASE nKey >= K_SPACE     ; nKey := 15
+   OTHERWISE                ; RETURN 0
+   ENDCASE
 
-FUNCTION dbSetIndex( cIndexName )
-   RETURN ordListAdd( cIndexName )
-
-FUNCTION dbClearIndex()
-   RETURN ordListClear()
-
-FUNCTION dbReindex()
-   RETURN ordListRebuild()
-
-FUNCTION dbSetOrder( nOrderNum )
-
-   IF ISCHARACTER( nOrderNum ) .AND. !Empty( Val( nOrderNum ) )
-      nOrderNum := Val( nOrderNum )
+   IF Updated()
+      nKey += 256
    ENDIF
 
-   ordSetFocus( nOrderNum )
-
-   RETURN NIL
-
-FUNCTION IndexExt()
-   RETURN ordBagExt()
-
-FUNCTION IndexKey( nOrder )
-
-   IF !ISNUMBER( nOrder )
-      RETURN ordKey( nOrder )
-   ENDIF
-
-   IF Used()
-      RETURN ordKey( nOrder )
-   ENDIF
-
-   RETURN ""
-
+   RETURN nKey
