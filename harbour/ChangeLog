@@ -1,3 +1,8 @@
+19991011-13:42 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * Finally fixed. Victor changed a wrong one I posted and
+       then all the stack underflow mess started. Everything is ok now.
+
 19991011-10:40 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/vm/hvm.c
      ! __vmVarSList() <-> __vmVarSGet(), the function names were mistakenly
