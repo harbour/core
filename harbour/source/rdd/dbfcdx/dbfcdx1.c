@@ -164,8 +164,8 @@ static RDDFUNCS cdxTable = { ( DBENTRYP_BP ) hb_cdxBof,
                              ( DBENTRYP_VP ) hb_cdxOpenMemFile,
                              ( DBENTRYP_SVP ) hb_cdxPutValueFile,
                              ( DBENTRYP_V ) hb_cdxReadDBHeader,
-                             ( DBENTRYP_V ) hb_cdxWriteDBHeader,
-                             ( DBENTRYP_SVP ) hb_cdxWhoCares
+                             ( DBENTRYP_V ) hb_cdxWriteDBHeader /*, */
+                             /*( DBENTRYP_SVP ) hb_cdxWhoCares  */
                            };
 
 /*
@@ -3466,7 +3466,7 @@ static void hb_cdxSortSendWord( LPSORTINFO pSort, BYTE * Value )
 
    uiLen = ( USHORT ) Value[0];
    Value++;
-   pce = Value + uiLen - 8;
+   pce = (char *) (Value + uiLen - 8) ;
    Tag = ( long ) hb_cdxSorttoND( (BYTE *) pce, 8 );
    hb_cdxSortOutputWord( pSort, Tag, Value, uiLen-8 );
 }

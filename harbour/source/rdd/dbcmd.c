@@ -3290,8 +3290,8 @@ static LPAREANODE GetTheOtherArea( char *szDriver, char * szFileName, BOOL creat
     {
        pFileExt = hb_itemPutC( NULL, "" );
        SELF_INFO( ( AREAP ) pAreaNode->pArea, DBI_TABLEEXT, pFileExt );
-       strncat( pInfo.abName, hb_itemGetCPtr( pFileExt ), _POSIX_PATH_MAX -
-                strlen( pInfo.abName ) );
+       strncat( (char *) pInfo.abName, hb_itemGetCPtr( pFileExt ), _POSIX_PATH_MAX -
+                strlen( (char *) pInfo.abName ) );
        hb_itemRelease( pFileExt );
     }
     hb_xfree( pFileName );

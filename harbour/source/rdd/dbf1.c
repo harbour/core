@@ -1439,7 +1439,7 @@ ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCreate(%p, %p)", pArea, pCreateInfo));
 
-   pArea->szDataFileName = hb_xgrab( strlen(pCreateInfo->abName)+1 );
+   pArea->szDataFileName = (char *) hb_xgrab( strlen( (char * ) pCreateInfo->abName)+1 );
    strcpy( pArea->szDataFileName, ( char * ) pCreateInfo->abName );
    uiSize = pArea->uiFieldCount * sizeof( DBFFIELD );
    pBuffer = ( DBFFIELD * ) hb_xgrab( uiSize );
@@ -1654,7 +1654,7 @@ ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfOpen(%p, %p)", pArea, pOpenInfo));
 
-   pArea->szDataFileName = hb_xgrab( strlen(pOpenInfo->abName)+1 );
+   pArea->szDataFileName = (char *) hb_xgrab( strlen( (char * ) pOpenInfo->abName)+1 );
    strcpy( pArea->szDataFileName, ( char * ) pOpenInfo->abName );
    pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
    if( ( ( PHB_DYNS ) pArea->atomAlias )->hArea )
@@ -2483,11 +2483,11 @@ ERRCODE hb_dbfDrop( PHB_ITEM pItemTable )
   BYTE   * pBuffer;
   char szFileName[ _POSIX_PATH_MAX + 1 ];
 
-  pBuffer = hb_itemGetCPtr( pItemTable );
-  strcpy( szFileName, pBuffer );
+  pBuffer = (BYTE *) hb_itemGetCPtr( pItemTable );
+  strcpy( (char *) szFileName, (char *) pBuffer );
   if ( !strchr( szFileName, '.' ))
     strcat( szFileName, DBF_TABLEEXT );
-  return hb_fsDelete( szFileName );
+  return hb_fsDelete( (unsigned char *) szFileName );
 }
 
 /* returns 1 if exists, 0 else */
@@ -2496,11 +2496,11 @@ BOOL hb_dbfExists( PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
   char szFileName[ _POSIX_PATH_MAX + 1 ];
   BYTE * pBuffer;
 
-  pBuffer = hb_itemGetCPtr( pItemIndex != NULL ? pItemIndex : pItemTable );
-  strcpy( szFileName, pBuffer );
+  pBuffer = (BYTE *) hb_itemGetCPtr( pItemIndex != NULL ? pItemIndex : pItemTable );
+  strcpy( (char *) szFileName, (char *) pBuffer );
   if ( pItemTable && !strchr( szFileName, '.' ))
     strcat( szFileName, DBF_TABLEEXT );
-  return hb_fsFile( szFileName );
+  return hb_fsFile( (unsigned char *) szFileName );
 }
 
 

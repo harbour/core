@@ -1,3 +1,13 @@
+2001-21-03 23:10 GMT+1 JFL (Mafact) <jfl@mafact.com>
+    *source/rdd/dbcmd.c
+    *source/rdd/dbf1.c
+       * Fixed many type casting needed by VC++
+    *source/rdd/dbfcdx/dbfcdx1.c
+       * Fixed many type casting needed by VC++
+       - Rem on line 168
+             one reference to hb_cdxWhoCares who doesn't exist
+             from static RDDFUNCS cdxTable = { ... }
+
 2001-03-21 21:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h
@@ -404,9 +414,9 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
 
       USE test
       IF ! File( "test" + IndexExt() )
-   	INDEX on FIELD->First TO First
+        INDEX on FIELD->First TO First
       ELSE
-   	SET INDEX TO First
+        SET INDEX TO First
       ENDIF
 
       GO TOP
@@ -414,9 +424,9 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
       cName := FIELD->First + FIELD->Last
 
       IF cName == FIELD->First + FIELD->Last
-  	? "Ok"
+        ? "Ok"
       ELSE
-  	? "Err"
+        ? "Err"
       ENDIF
 
       DO CASE
