@@ -5,7 +5,7 @@
      include/Makefile
      source/rtl/console.c
      source/rtl/gtapi.c
-     * Two header files merged to the mainstream GT header.
+     * Two header files merged into the mainstream GT header.
      ! B_* box #defines renamed to _B_* to be CA-Cl*pper compatible.
    * include/hbapigt.h
      source/rtl/gt/*.c
@@ -26,6 +26,8 @@
      ! RESTSCREEM() fixed to check the fifth parameter, like in CA-Cl*pper.
    * source/rtl/console.c
      % hb_gtSetPos() small optim.
+   * source/rtl/dir.c
+     ! chmod() changed back to _rtl_chmod().
   
 20000311-19:16 GMT+3 Alexander Kresin
    + contrib/rdd_ads/make_vc.bat

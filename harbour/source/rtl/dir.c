@@ -620,7 +620,7 @@ HARBOUR HB_DIRECTORY( void )
                       strcpy( filename, ++pos );
                }
             #elif defined(__BORLANDC__) 
-               attrib = chmod( fullfile, 0 );
+               attrib = _rtl_chmod( fullfile, 0 );
             #elif defined(__DJGPP__)
                attrib = _chmod( fullfile, 0 );
             #else
