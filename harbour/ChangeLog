@@ -1,3 +1,18 @@
+2001-07-26 02:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbexpra.c
+     + Added logic to optimize 2nd parameter of __DBLIST().
+       Scan it if array, and optiimize elements that are codeblocks containg macros to the core value of such macro.
+
+   * source/rdd/dblist.prg
+     + Added logic to scan abEval for Strings, parse and convert them to codeblocks.
+     + Added HB_aTokens()
+
+   /* This should complete support for:
+
+      cFields := "Field1,Field2,..."
+      LIST &cFields*/ ...
+   */
+
 2001-07-24 20:45  GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +doc/es/math.txt
       *Math docs translated to spanish. Thanks for Ricardo Ramírez R.
@@ -18,7 +33,7 @@
 
    * contrib/libct/pos.1
      * fixed error and warning about mixture of pointers to signed and unsigned char
-	
+
 2001-07-23 20:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/macro.c
      ! Corrected a compiler warning.

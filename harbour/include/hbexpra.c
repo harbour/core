@@ -329,7 +329,92 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms )
             HB_EXPR_PCODE1( hb_compExprDelete, pName );
          }
       }
+      else if( ( strcmp( "__DBLIST", pName->value.asSymbol ) == 0 ) && iCount >= 10 )
+      {
+         HB_EXPR_PTR pArray = pParms->value.asList.pExprList->pNext;
 
+         if( pArray->ExprType == HB_ET_ARRAY )
+         {
+             HB_EXPR_PTR pElem = pArray->value.asList.pExprList;
+             HB_EXPR_PTR pPrev = NULL, pNext;
+
+             while( pElem )
+             {
+                /* The {|| &cMacro } block is now &( "{||" + cMacro + "}" ) due to early macro expansion in compiler. */
+                if( pElem->ExprType == HB_ET_MACRO )
+                {
+                   HB_EXPR_PTR pMacro = pElem->value.asMacro.pExprList;
+
+                   if( pMacro &&
+                       pMacro->ExprType == HB_EO_PLUS &&
+                       pMacro->value.asOperator.pLeft->ExprType == HB_EO_PLUS &&
+                       pMacro->value.asOperator.pLeft->value.asOperator.pRight->ExprType == HB_ET_VARIABLE
+                     )
+                   {
+                      /* Saving the next array element so the list can be relinked after we substitute the macro block. */
+                      pNext = pElem->pNext;
+
+                      /* Instead we only want the macro variable, {|| &cMacro } -> &( "{||" + cMacro + "}" ) -> cMacro */
+                      hb_compExprClear( pElem );
+                      pElem = pMacro->value.asOperator.pLeft->value.asOperator.pRight;
+                      if( pPrev )
+                      {
+                         /* Previous element should point to the new element. */
+                         pPrev->pNext = pElem;
+                      }
+                      else
+                      {
+                         /* Top of array should point to the new first element. */
+                         pArray->value.asList.pExprList = pElem;
+                      }
+                      pElem->pNext = pNext;
+                   }
+                }
+                /* Search for {|| &(cMacro) }. */
+                else if( pElem->ExprType == HB_ET_CODEBLOCK )
+                {
+                   HB_EXPR_PTR pBlock = pElem->value.asList.pExprList;
+
+                   /* Search for macros {|| &cMacro }. */
+                   if( pBlock->ExprType == HB_ET_MACRO )
+                   {
+                      /* Saving the next array element so the list can be relinked after we substitute the macro block. */
+                      pNext = pElem->pNext;
+
+                      /* Instead we only want the core expression. */
+                      hb_compExprClear( pElem );
+                      if( pBlock->value.asMacro.pExprList ) /* &( exp ) -> exp */
+                      {
+                         pElem = pBlock->value.asMacro.pExprList;
+                      }
+                      else if( pBlock->value.asMacro.cMacroOp ) /* simple macro in Flex build {|| &cMacro}, because harbour.y does not support early macros yet*/
+                      {
+                         pElem = hb_compExprNewVar( pBlock->value.asMacro.szMacro );
+                      }
+                      else /* {|| &cMacro.suffix } -> cMacro + "suffix" */
+                      {
+                         pElem = hb_compExprNewString( pBlock->value.asMacro.szMacro );
+                      }
+
+                      if( pPrev )
+                      {
+                         /* Previous element should point to the new element. */
+                         pPrev->pNext = pElem;
+                      }
+                      else
+                      {
+                         /* Top of array should point to the new first element. */
+                         pArray->value.asList.pExprList = pElem;
+                      }
+                      pElem->pNext = pNext;
+                   }
+                }
+
+                pPrev = pElem;
+                pElem = pElem->pNext;
+             }
+         }
+      }
 #ifndef SIMPLEX
 
       else if( ( strcmp( "_GET_", pName->value.asSymbol ) == 0 ) && iCount )

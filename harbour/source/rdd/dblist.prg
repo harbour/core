@@ -48,12 +48,19 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
+ * HB_aTokens()
+ *
+*/
 
 /* NOTE: lAll is basically a dummy parameter, nothing really depends on it.
          [vszakats] */
 
 FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
+
    LOCAL lOldPrinter
    LOCAL lOldExtra
    LOCAL cOldExtraFile
@@ -65,8 +72,35 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
 
    LOCAL bOutBlock
 
-   /* Choose the output style */
+   LOCAL nLen := Len( abEval ), nIndex, asMacros, nMacros, nMacroIndex
 
+   // Scan for strings instead of blocks - These are macros that need to be compiled into blocks.
+   FOR nIndex := 1 TO nLen
+     IF ValType( abEval[ nIndex ] ) == 'C'
+        ? abEval[ nIndex ]
+        // Macro may be a comma seperated list.
+        asMacros := HB_aTokens( abEval[ nIndex ], ',' )
+        nMacros  := Len( asMacros )
+
+        // Array has to be sized to allow dor the extra blocks
+        nLen += ( nMacros - 1 )
+        aSize( abEval, nLen )
+
+        // We will use the place holder of the string for the first new block.
+        abEval[ nIndex ] := &( "{||" + asMacros[ 1 ] + "}" )
+
+        // We will now push all subsequent blocks 1 at a time and insert the new block inplace.
+        FOR nMacroIndex := 2 TO nMacros
+           aIns( abEval, nIndex + nMacroIndex - 1 )
+           abEval[ nIndex + nMacroIndex - 1 ] := &( "{||" + asMacros[ nMacroIndex ] + "}" )
+        NEXT
+
+        // The loop counter should skip the new elements.
+        nIndex += ( nMacros - 1 )
+     ENDIF
+   NEXT
+
+   /* Choose the output style */
    IF lOff
       bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ),;
                        aEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
@@ -124,5 +158,60 @@ FUNCTION __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToP
       Break( oError )
    ENDIF
 
-   RETURN NIL
+RETURN NIL
 
+FUNCTION HB_aTokens( cLine, cDelimiter )
+
+   LOCAL aTokens := {}
+
+   #ifdef __HARBOUR__
+
+      IF cDelimiter == NIL
+         cDelimiter := ' '
+      ENDIF
+
+      HB_INLINE( aTokens, cLine, Asc( cDelimiter ) )
+      {
+         PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+         PHB_ITEM pLine  = hb_param( 2, HB_IT_STRING );
+         char cDelimiter = (char) hb_parni(3);
+         size_t i, iOffset = 0, iIndex = 1;
+
+         for( i = 0; i < pLine->item.asString.length; i++ )
+         {
+            if( pLine->item.asString.value[i] == cDelimiter )
+            {
+               hb_arraySize( pArray, iIndex );
+               hb_storclen( pLine->item.asString.value + iOffset, i - iOffset, 1, iIndex );
+               iOffset = i + 1;
+               iIndex++;
+            }
+         }
+         if( iOffset < pLine->item.asString.length - 1 )
+         {
+            hb_arraySize( pArray, iIndex );
+            hb_storclen( pLine->item.asString.value + iOffset, pLine->item.asString.length - iOffset, 1, iIndex );
+         }
+      }
+
+   #else
+
+      LOCAL nLen := Len( cLine ), i, nOffset := 1
+
+      IF cDelimiter == NIL
+         cDelimiter := ' '
+      ENDIF
+
+      FOR i := 1 to nLen
+         IF SubStr( cLine, i, 1 ) == cDelimiter
+            aAdd( aTokens, SubStr( cLine, nOffset, i - nOffset ) )
+            nOffset := i + 1
+         ENDIF
+      NEXT
+      IF nOffset < nLen - 1
+         aAdd( aTokens, SubStr( cLine, nOffset ) )
+      ENDIF
+
+   #endif
+
+RETURN aTokens
