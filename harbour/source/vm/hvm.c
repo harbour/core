@@ -256,6 +256,8 @@ static LONG     s_lRecoverBase;
 int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex = 0;
 PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
+int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_vm_iExtraElements = 0;
+
 /* Request for some action - stop processing of opcodes
  */
 static USHORT   s_uiActionRequest;
@@ -581,7 +583,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ARRAYGEN:
-            hb_vmArrayGen( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            hb_vmArrayGen( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) + hb_vm_iExtraElements );
+            hb_vm_iExtraElements = 0;
             w += 3;
             break;
 
@@ -1227,7 +1230,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
-            hb_macroGetValue( hb_stackItemFromTop( -1 ), FALSE );
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), 0 );
             w++;
             break;
 
@@ -1236,7 +1239,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
-            hb_macroGetValue( hb_stackItemFromTop( -1 ), TRUE );
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHARG );
             w++;
 
             if( hb_vm_iExtraParamsIndex && hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex - 1] == NULL )
@@ -1274,6 +1277,34 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                   w += 3;
                }
             }
+            break;
+
+         case HB_P_MACROLIST:
+            hb_vm_aiExtraElements[hb_vm_iExtraElementsIndex++] = 0;
+            w++;
+            break;
+
+         case HB_P_MACROPUSHLIST:
+            /* compile and run - leave the result on the stack */
+            /* the topmost element on the stack contains a macro
+             * string for compilation
+             */
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHLIST );
+            w++;
+            break;
+
+         case HB_P_MACROLISTEND:
+            hb_vm_iExtraElements = hb_vm_aiExtraElements[--hb_vm_iExtraElementsIndex];
+            w++;
+            break;
+
+         case HB_P_MACROPUSHINDEX:
+            /* compile and run - leave the result on the stack */
+            /* the topmost element on the stack contains a macro
+             * string for compilation
+             */
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), 0 );
+            w++;
             break;
 
          case HB_P_MACROPUSHALIASED:
@@ -2843,7 +2874,7 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias )
          /* expand '&' operator if exists */
             char *cAlias;
             BOOL bNewString;
-            
+
             cAlias = hb_macroExpandString( pAlias->item.asString.value, pAlias->item.asString.length, &bNewString );
             bSuccess = hb_rddSelectWorkAreaAlias( cAlias );
             if( bNewString )

@@ -528,11 +528,34 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
             HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, 0, 0, ( BOOL ) 1 );
          else
          {
+            BOOL bMacroList = FALSE;
+
+            /* Find out if macro is used as on of the elements- if so generate a prefix HB_P_MACROLIST. */
+            while( pElem )
+            {
+               if( pElem->ExprType == HB_ET_MACRO )
+               {
+                   pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;
+                   bMacroList = TRUE;
+               }
+               pElem = pElem->pNext;
+            }
+
+            if( bMacroList )
+            {
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROLIST );
+            }
+            pElem = pSelf->value.asList.pExprList;
             while( pElem )
             {
                HB_EXPR_USE( pElem, HB_EA_PUSH_PCODE );
                pElem = pElem->pNext;
             }
+            if( bMacroList )
+            {
+               HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROLISTEND );
+            }
+
             HB_EXPR_GENPCODE3( hb_compGenPCode3, HB_P_ARRAYGEN, HB_LOBYTE( pSelf->ulLength ), HB_HIBYTE( pSelf->ulLength ), ( BOOL ) 1 );
          }
       }
@@ -926,7 +949,13 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
       case HB_EA_PUSH_PCODE:
          {
             HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+
+            if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
+            {
+                pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_INDEX;
+            }
             HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
+
             HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_ARRAYPUSH );
          }
          break;
@@ -1007,6 +1036,14 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHARG );
                   HB_EXPR_USE( pSelf->value.asMacro.pFunCall->value.asFunCall.pFunName, HB_EA_PUSH_PCODE );
                }
+               else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_LIST )
+               {
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHLIST );
+               }
+               else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_INDEX )
+               {
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHINDEX );
+               }
                else
                {
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
@@ -1063,12 +1100,12 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
          if( pSelf->value.asMacro.pExprList )
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMacro.pExprList );
 
-#if defined( HB_MACRO_SUPPORT )           
+#if defined( HB_MACRO_SUPPORT )
          if( pSelf->value.asMacro.szMacro );
             HB_XFREE( pSelf->value.asMacro.szMacro );
-#else            
+#else
          /* NOTE: This will be released during releasing of symbols' table */
-#endif         
+#endif
          break;
    }
    return pSelf;

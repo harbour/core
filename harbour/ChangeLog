@@ -1,3 +1,36 @@
+2001-07-22 14:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
+     * Changed 2nd parameter to BYTE iContext in hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
+
+   * include/hbexprop.h
+     + Added #define  HB_ET_MACRO_LIST    16   /* &variable used as in literal arrays or parentesised expressions. */
+     + Added #define  HB_ET_MACRO_INDEX   32   /* &variable used as arrays index. */
+
+   * include/hbexprb.c
+     + Added macro list support logic to hb_compExprUseArray()
+     + Added generation of HB_P_MACROLIST,  HB_P_MACROPUSHLIST, HB_P_MACROLISTEND, and HB_P_MACROPUSHINDEX in hb_compExprUseMacro()
+
+       /* HB_P_MACROLIST and HB_P_MACROLISTEND are only generated as an enevelope if array contains a one or more macro element
+          which will generate an HB_P_MACROPUSHLIST. */
+
+   * include/hbpcode.h
+   * source/compiler/genc.c
+   * source/compiler/hbfix.c
+   * source/compiler/hbpcode.c
+     + Added: new opcodes HB_P_MACROLIST, HB_P_MACROPUSHLIST, HB_P_MACROLISTEND, and HB_P_MACROPUSHINDEX.
+
+   * source/vm/hvm.c
+   * source/vm/macro.c
+     + Added: support for new opcodes HB_P_MACROLIST, HB_P_MACROPUSHLIST, HB_P_MACROLISTEND, and HB_P_MACROPUSHINDEX.
+
+       /* HB_P_MACROPUSHINDEX not completed yet.*/
+
+   /* NOTE: This implements macro as literal array arguments list syntax <{ &cMacro }>.
+           ( &Cmacro ) and Array[ &cMacro ] are not completed yet.
+
+      *** All prgs must be recompiled due to new opcodes !!!
+   */
+
 2001-07-22 18:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rtl/radiobtn.prg
       *Added an 'LOCAL cColor' to compile without warning
@@ -24,7 +57,6 @@
     source/rtl/makefile
       *Added radiobtn.prg and radiogrp.prg to dependencie list
 
-
 2001-07-22 20:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbapi.h
@@ -40,7 +72,7 @@
         area := "MyAlias"
         ? &cAlias->someFile
         ? &cAlias->( someExpr )
-    
+
 2001-07-22 08:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *source/rtl/getsys.prg
        *Now if an get has an message it will display properly
@@ -60,13 +92,13 @@
         *fixed support for &alias->( expression )
         *removed global variables that were breaking modularity of the code
         *fixed support for syntax: SomeFun( &macro + someValue )
-        
+
     *source/compiler/harbour.y
         *removed access to internal HB_EXPR structure data
-    
+
     *source/rtl/checkbox.prg
         * added 'LOCAL oCheck' to compile without warnings
-    
+
     *source/rtl/gtsln/gtsln.c
         *fixed to support (at least) SLang version 1.3.8
 

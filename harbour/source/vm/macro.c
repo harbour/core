@@ -425,9 +425,10 @@ char * hb_macroTextSubst( char * szString, ULONG *pulStringLen )
  * a parameter.
  * PUSH operation
  */
-void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
+void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 {
    extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
+   extern int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex;
    extern PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
@@ -449,7 +450,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
       struMacro.bShortCuts    = hb_comp_bShortCuts;
       struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
       struMacro.status        = HB_MACRO_CONT;
-      struMacro.iListElements = ( bArg ? 0 : -1 );
+      struMacro.iListElements = ( iContext ? 0 : -1 );
 
       #ifdef HB_MACRO_STATEMENTS
          slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );
@@ -470,7 +471,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
 
       iStatus = hb_macroParse( &struMacro, szString );
 
-      if( bArg && hb_vm_iExtraParamsIndex == HB_MAX_MACRO_ARGS )
+      if( iContext && ( hb_vm_iExtraParamsIndex == HB_MAX_MACRO_ARGS ) || ( hb_vm_iExtraElementsIndex >= HB_MAX_MACRO_ARGS ) )
       {
          hb_macroSyntaxError( &struMacro );
       }
@@ -485,10 +486,18 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BOOL bArg )
       {
          hb_macroEvaluate( &struMacro );
 
-         if( bArg && struMacro.iListElements > 0 )
+         if( iContext && struMacro.iListElements > 0 )
          {
-            hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex] = struMacro.iListElements;
-            hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex++] = NULL;
+
+            if( iContext == HB_P_MACROPUSHARG )
+            {
+               hb_vm_aiExtraParams[hb_vm_iExtraParamsIndex] = struMacro.iListElements;
+               hb_vm_apExtraParamsSymbol[hb_vm_iExtraParamsIndex++] = NULL;
+            }
+            else if( iContext == HB_P_MACROPUSHLIST )
+            {
+               hb_vm_aiExtraElements[hb_vm_iExtraElementsIndex - 1] += struMacro.iListElements;
+            }
          }
       }
       else

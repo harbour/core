@@ -84,6 +84,8 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_MACROPOPALIASED,      */
    1,        /* HB_P_MACROPUSH,            */
    1,        /* HB_P_MACROPUSHARG,         */
+   1,        /* HB_P_MACROPUSLIST,         */
+   1,        /* HB_P_MACROPUSINDEX,        */
    1,        /* HB_P_MACROPUSHALIASED,     */
    1,        /* HB_P_MACROSYMBOL,          */
    1,        /* HB_P_MACROTEXT,            */
@@ -163,7 +165,9 @@ static BYTE s_pcode_len[] = {
    1,        /* HB_P_SWAPALIAS,            */
    1,        /* HB_P_TRUE,                 */
    1,        /* HB_P_ZERO,                 */
-   1         /* HB_P_ONE,                  */
+   1,        /* HB_P_ONE,                  */
+   1,        /* HB_P_MACROLIST,            */
+   1         /* HB_P_MACROLISTEND,         */
 };
 
 static PVAR hb_compPrivateFind( char * szPrivateName )

@@ -797,6 +797,24 @@ static HB_GENC_FUNC( hb_p_macropusharg )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_macropushlist )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHLIST,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_macropushindex )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHINDEX,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_macropushaliased )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -1738,6 +1756,24 @@ static HB_GENC_FUNC( hb_p_dummy )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_macrolist )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MACROLIST,\n" );
+   return 1;
+}
+
+static HB_GENC_FUNC( hb_p_macrolistend )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MACROLISTEND,\n" );
+   return 1;
+}
+
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
@@ -1784,6 +1820,8 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_macropopaliased,
    hb_p_macropush,
    hb_p_macropusharg,
+   hb_p_macropushlist,
+   hb_p_macropushindex,
    hb_p_macropushaliased,
    hb_p_macrosymbol,
    hb_p_macrotext,
@@ -1863,7 +1901,9 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_swapalias,
    hb_p_true,
    hb_p_zero,
-   hb_p_one
+   hb_p_one,
+   hb_p_macrolist,
+   hb_p_macrolistend
 };
 
 static void hb_compGenCReadable( PFUNCTION pFunc, FILE * yyc )
