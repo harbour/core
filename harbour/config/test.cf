@@ -5,7 +5,7 @@
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/prg.cf
 
-first : dirbase ^^^d^e^s^c^e^n^d^^^
+first:: dirbase ^^^d^e^s^c^e^n^d^^^
 
 ^^^d^e^s^c^e^n^d^^^ :
 	@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(PRG_EXES)

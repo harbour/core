@@ -22,8 +22,17 @@ LINKPATHS = -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(
 else
 LINKPATHS = -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
+ifneq ($(HB_DB_DRIVER),)
+LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rdd/$(HB_DB_DRIVER)/$(ARCH)
+LINKPATHS += -LIBPATH:$(TOP)$(ROOT)source/rdd/$(ARCH)
+endif
+
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
-# LINKLIBS += -lm
+ifneq ($(HB_DB_DRIVER),)
+LINKLIBS += $(HB_DB_DRIVER)$(LIB_EXT)
+LINKLIBS += rdd$(LIB_EXT)
+endif
+
 LDFLAGS = $(LINKPATHS)
 
 AR = lib.exe

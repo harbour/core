@@ -17,7 +17,7 @@ endif
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 
-first : dirbase descend
+first:: dirbase descend
 
 descend :
 	@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(EXE_NAME)

@@ -7,5 +7,5 @@ include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/dir.cf
 
 all : first
 
-first clean install ::
+first clean install::
 	$(DIR_RULE)

@@ -1,3 +1,32 @@
+Thu Jul 29 14:46:51 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* source/rdd/Makefile: 
+	* source/rdd/dbfntx/Makefile: 
+	Now there is a subdirectory for each database driver. For now,
+	only dbfntx/ is supported. The Makefile in rdd/ walks into each
+	subdirectory.
+	
+	* source/rdd/dbfntx0.prg: 
+	* source/rdd/dbfntx1.c: 
+	* source/rdd/dbfntx/dbfntx0.prg: 
+	* source/rdd/dbfntx/dbfntx1.c: 
+	Moved these files from rdd/ to rdd/dbfntx/.
+
+	* config/bin.cf: 
+	* config/dir.cf: 
+	* config/header.cf: 
+	* config/lib.cf: 
+	* config/test.cf: 
+	* config/dos/djgpp.cf: 
+	* config/linux/gcc.cf: 
+	* config/os2/gcc.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/msvc.cf: 
+	Added support for the new separate directories for the database
+	driver. The user must define an environment variable HB_DB_DRIVER
+	with the appropriate driver he wants to use. For example, defining
+	it to 'dbfntx' will pick up that driver.
+
 19990729-18:39 CET Victor Szel <info@szelvesz.hu>
   - source/rdd/dbcmd.c
     now redundant declarations removed. (again)
