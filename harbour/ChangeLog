@@ -1,3 +1,14 @@
+2001-05-13 22:10 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * harbour/include/hboo.ch
+     + added #define to allow a better control of __objGetMsgList()
+     #define HB_MSGLISTALL   0
+     #define HB_MSGLISTCLASS 1
+     #define HB_MSGLISTPURE  2
+   * harbour/source/rtl/objfunc.prg
+     * Modified __objGetMsgList()
+   * harbour/source/vm/classes.c
+     * Modified hb___msgClsSel() to be used by __objGetMsgList()
+
 2001-05-13 09:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbclass.ch
      % Removed many redundant rules (recently added for OO integrity checks).

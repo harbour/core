@@ -49,6 +49,11 @@
 #ifndef HB_OO_CH_
 #define HB_OO_CH_
 
+// Used by ObjFunc.prg (__objGetMsgList) and Classes.c (hb___msgClsSel())
+#define HB_MSGLISTALL   0
+#define HB_MSGLISTCLASS 1
+#define HB_MSGLISTPURE  2
+
 /* Method or Data attribute (nScope)*/
 #define HB_OO_CLSTP_EXPORTED    1 /* No comment, default */
 #define HB_OO_CLSTP_PROTECTED   2 /* Only usable from one of the object's method (even sublclassed object) */

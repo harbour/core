@@ -71,7 +71,13 @@ FUNCTION __objHasMethod( oObject, cSymbol )
    RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
           !__objHasMsg( oObject, "_" + cSymbol )
 
-FUNCTION __objGetMsgList( oObject, lDataMethod, lClassOnly )
+
+// nCLassType can be 0, 1 or 2 see hbOO.ch
+//#define HB_MSGLISTALL   0
+//#define HB_MSGLISTCLASS 1
+//#define HB_MSGLISTPURE  2
+
+FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
    LOCAL aInfo
    LOCAL aData
    LOCAL n
@@ -85,11 +91,11 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, lClassOnly )
       lDataMethod := .T.
    ENDIF
 
-   IF !ISLOGICAL( lClassOnly  )
-      lClassOnly  := .F.
+   IF !ISNUMBER( nClassType  )
+      nClasstype  := HB_MSGLISTALL
    ENDIF
 
-   aInfo := ASort( oObject:ClassSel(lClassOnly) )
+   aInfo := ASort( oObject:ClassSel(nClassType) )
    aData := {}
    n     := 1
    nLen  := Len( aInfo )
