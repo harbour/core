@@ -6,8 +6,8 @@
 #include <extend.h>
 #include <set.h>
 
-HB_set_struct HB_set;
-BOOL HB_set_century;
+HB_set_struct hb_set;
+BOOL hb_set_century;
 
 static BOOL set_logical (PITEM pItem)
 {
@@ -27,13 +27,12 @@ static int set_number (PITEM pItem, int old_value)
    return (number);
 }
 
-static char * set_string (PITEM pItem, char * old_str, int size_limit)
+static char * set_string (PITEM pItem, char * old_str)
 {
    char * string;
    if (IS_STRING (pItem))
    {
       int size = pItem->wLength;
-      if (size_limit > 0 && size > size_limit) size = size_limit;
       if (old_str) string = _xrealloc (old_str, size + 1);
       else string = _xgrab (size + 1);
       memcpy (string, pItem->value.szText, size);
@@ -43,20 +42,71 @@ static char * set_string (PITEM pItem, char * old_str, int size_limit)
    return (string);
 }
 
-HARBOUR __SETCENTURY (void)
+HARBOUR HB_SETCENTURY (void)
 {
+   int digit, count, size, y_size, y_start, y_stop;
+   int old_century_setting = hb_set_century;
+   BOOL year;
    PITEM pItem = _param (1, IT_ANY);
+   char *szDateFormat, *szNewFormat;
 
-   _retl (HB_set_century);   
-   if (IS_LOGICAL (pItem)) HB_set_century = pItem->value.iLogical;
+   /* Start by returning the current setting */
+   _retl (hb_set_century);
+   /* 
+    * Then change the setting if the parameter is a logical value, or is
+    * either "ON" or "OFF" (regardless of case)
+    */
+   if (IS_LOGICAL (pItem)) hb_set_century = pItem->value.iLogical;
    else if (IS_STRING (pItem))
    {
       if (pItem->wLength == 2 && toupper (pItem->value.szText [0]) == 'O'
       && toupper (pItem->value.szText [1]) == 'N')
-         HB_set_century = TRUE;
+         hb_set_century = TRUE;
       else if (pItem->wLength == 3 && toupper (pItem->value.szText [0]) == 'O'
       && toupper (pItem->value.szText [1]) == 'F' && toupper (pItem->value.szText [2]) == 'F')
-         HB_set_century = FALSE;
+         hb_set_century = FALSE;
+   }
+   /*
+    * Finally, if the setting changed, adjust the current date format to use
+    * the correct number of year digits.
+    */
+   if (old_century_setting != hb_set_century)
+   {
+      /* Convert to upper case and determine where year is */
+      y_start = y_stop = -1;
+      szDateFormat = hb_set.HB_SET_DATEFORMAT;
+      size = strlen (szDateFormat);
+      for (count = 0; count < size; count++)
+      {
+         digit = toupper (szDateFormat [count]);
+         if (digit == 'Y') 
+         {
+            if (y_start == -1) y_start = count;
+         }
+         else if (y_start > -1 && y_stop == -1) y_stop = count;
+         szDateFormat [count] = digit;
+      }
+      /* Determine size of year in current format */
+      if (y_start < 0)
+      {
+         y_start = 0; /* There is no year in the current format */
+         y_stop = 0;
+      }
+      else if (y_stop < 0) y_stop = size + 1; /* All digits are year digits */
+      y_size = y_stop - y_start;
+      /* Calculate size of new format */
+      size -= y_size;
+      if (hb_set_century) size += 4;
+      else size += 2;
+      /* Create the new date format */
+      szNewFormat = _xgrab (size + 1);
+      if (y_start > 0) memcpy (szNewFormat, szDateFormat, y_start);
+      szNewFormat [y_start] = 0;
+      strcat (szNewFormat, "YY");
+      if (hb_set_century) strcat (szNewFormat, "YY");
+      strcat (szNewFormat, szDateFormat + y_stop);
+      _xfree (szDateFormat);
+      hb_set.HB_SET_DATEFORMAT = szNewFormat;
    }
 }
 
@@ -70,230 +120,230 @@ HARBOUR SET (void)
 
    switch (set_specifier)
    {
-      case _SET_ALTERNATE  :
-         _retl (HB_set._SET_ALTERNATE);
-         if (args > 1) HB_set._SET_ALTERNATE = set_logical (pArg2);
+      case HB_SET_ALTERNATE  :
+         _retl (hb_set.HB_SET_ALTERNATE);
+         if (args > 1) hb_set.HB_SET_ALTERNATE = set_logical (pArg2);
          break;
-      case _SET_ALTFILE    :
-         if (HB_set._SET_ALTFILE) _retc (HB_set._SET_ALTFILE);
+      case HB_SET_ALTFILE    :
+         if (hb_set.HB_SET_ALTFILE) _retc (hb_set.HB_SET_ALTFILE);
          else _retc ("");
-         if (args > 1) HB_set._SET_ALTFILE = set_string (pArg2, HB_set._SET_ALTFILE, 0);
+         if (args > 1) hb_set.HB_SET_ALTFILE = set_string (pArg2, hb_set.HB_SET_ALTFILE);
          break;
-      case _SET_BELL       :
-         _retl (HB_set._SET_BELL);
-         if (args > 1) HB_set._SET_BELL = set_logical (pArg2);
+      case HB_SET_BELL       :
+         _retl (hb_set.HB_SET_BELL);
+         if (args > 1) hb_set.HB_SET_BELL = set_logical (pArg2);
          break;
-      case _SET_CANCEL     :
-         _retl (HB_set._SET_CANCEL);
-         if (args > 1) HB_set._SET_CANCEL = set_logical (pArg2);
+      case HB_SET_CANCEL     :
+         _retl (hb_set.HB_SET_CANCEL);
+         if (args > 1) hb_set.HB_SET_CANCEL = set_logical (pArg2);
          break;
-      case _SET_COLOR      :
-         if (HB_set._SET_COLOR) _retc (HB_set._SET_COLOR);
+      case HB_SET_COLOR      :
+         if (hb_set.HB_SET_COLOR) _retc (hb_set.HB_SET_COLOR);
          else _retc ("");
-         if (args > 1) HB_set._SET_COLOR = set_string (pArg2, HB_set._SET_COLOR, 0);
+         if (args > 1) hb_set.HB_SET_COLOR = set_string (pArg2, hb_set.HB_SET_COLOR);
          break;
-      case _SET_CONFIRM    :
-         _retl (HB_set._SET_CONFIRM);
-         if (args > 1) HB_set._SET_CONFIRM = set_logical (pArg2);
+      case HB_SET_CONFIRM    :
+         _retl (hb_set.HB_SET_CONFIRM);
+         if (args > 1) hb_set.HB_SET_CONFIRM = set_logical (pArg2);
          break;
-      case _SET_CONSOLE    :
-         _retl (HB_set._SET_CONSOLE);
-         if (args > 1) HB_set._SET_CONSOLE = set_logical (pArg2);
+      case HB_SET_CONSOLE    :
+         _retl (hb_set.HB_SET_CONSOLE);
+         if (args > 1) hb_set.HB_SET_CONSOLE = set_logical (pArg2);
          break;
-      case _SET_CURSOR     :
-         _retni (HB_set._SET_CURSOR);
-         if (args > 1) HB_set._SET_CURSOR = set_number (pArg2, HB_set._SET_CURSOR);
+      case HB_SET_CURSOR     :
+         _retni (hb_set.HB_SET_CURSOR);
+         if (args > 1) hb_set.HB_SET_CURSOR = set_number (pArg2, hb_set.HB_SET_CURSOR);
          break;
-      case _SET_DATEFORMAT :
-         if (HB_set._SET_DATEFORMAT) _retc (HB_set._SET_DATEFORMAT);
+      case HB_SET_DATEFORMAT :
+         if (hb_set.HB_SET_DATEFORMAT) _retc (hb_set.HB_SET_DATEFORMAT);
          else _retc ("");
-         if (args > 1) HB_set._SET_DATEFORMAT = set_string (pArg2, HB_set._SET_DATEFORMAT, 10);
+         if (args > 1) hb_set.HB_SET_DATEFORMAT = set_string (pArg2, hb_set.HB_SET_DATEFORMAT);
          break;
-      case _SET_DEBUG      :
-         _retl (HB_set._SET_DEBUG);
-         if (args > 1) HB_set._SET_DEBUG = set_logical (pArg2);
+      case HB_SET_DEBUG      :
+         _retl (hb_set.HB_SET_DEBUG);
+         if (args > 1) hb_set.HB_SET_DEBUG = set_logical (pArg2);
          break;
-      case _SET_DECIMALS   :
-         _retni (HB_set._SET_DECIMALS);
-         if (args > 1) HB_set._SET_DECIMALS = set_number (pArg2, HB_set._SET_DECIMALS);
+      case HB_SET_DECIMALS   :
+         _retni (hb_set.HB_SET_DECIMALS);
+         if (args > 1) hb_set.HB_SET_DECIMALS = set_number (pArg2, hb_set.HB_SET_DECIMALS);
          break;
-      case _SET_DEFAULT    :
-         if (HB_set._SET_DEFAULT) _retc (HB_set._SET_DEFAULT);
+      case HB_SET_DEFAULT    :
+         if (hb_set.HB_SET_DEFAULT) _retc (hb_set.HB_SET_DEFAULT);
          else _retc ("");
-         if (args > 1) HB_set._SET_DEFAULT = set_string (pArg2, HB_set._SET_DEFAULT, 0);
+         if (args > 1) hb_set.HB_SET_DEFAULT = set_string (pArg2, hb_set.HB_SET_DEFAULT);
          break;
-      case _SET_DELETED    :
-         _retl (HB_set._SET_DELETED);
-         if (args > 1) HB_set._SET_DELETED = set_logical (pArg2);
+      case HB_SET_DELETED    :
+         _retl (hb_set.HB_SET_DELETED);
+         if (args > 1) hb_set.HB_SET_DELETED = set_logical (pArg2);
          break;
-      case _SET_DELIMCHARS :
-         if (HB_set._SET_DELIMCHARS) _retc (HB_set._SET_DELIMCHARS);
+      case HB_SET_DELIMCHARS :
+         if (hb_set.HB_SET_DELIMCHARS) _retc (hb_set.HB_SET_DELIMCHARS);
          else _retc ("");
-         if (args > 1) HB_set._SET_DELIMCHARS = set_string (pArg2, HB_set._SET_DELIMCHARS, 0);
+         if (args > 1) hb_set.HB_SET_DELIMCHARS = set_string (pArg2, hb_set.HB_SET_DELIMCHARS);
          break;
-      case _SET_DELIMITERS :
-         _retl (HB_set._SET_DELIMITERS);
-         if (args > 1) HB_set._SET_DELIMITERS = set_logical (pArg2);
+      case HB_SET_DELIMITERS :
+         _retl (hb_set.HB_SET_DELIMITERS);
+         if (args > 1) hb_set.HB_SET_DELIMITERS = set_logical (pArg2);
          break;
-      case _SET_DEVICE     :
-         if (HB_set._SET_DEVICE) _retc (HB_set._SET_DEVICE);
+      case HB_SET_DEVICE     :
+         if (hb_set.HB_SET_DEVICE) _retc (hb_set.HB_SET_DEVICE);
          else _retc ("");
-         if (args > 1) HB_set._SET_DEVICE = set_string (pArg2, HB_set._SET_DEVICE, 0);
+         if (args > 1) hb_set.HB_SET_DEVICE = set_string (pArg2, hb_set.HB_SET_DEVICE);
          break;
-      case _SET_EPOCH      :
-         _retni (HB_set._SET_EPOCH);
-         if (args > 1) HB_set._SET_EPOCH = set_number (pArg2, HB_set._SET_EPOCH);
+      case HB_SET_EPOCH      :
+         _retni (hb_set.HB_SET_EPOCH);
+         if (args > 1) hb_set.HB_SET_EPOCH = set_number (pArg2, hb_set.HB_SET_EPOCH);
          break;
-      case _SET_ESCAPE     :
-         _retl (HB_set._SET_ESCAPE);
-         if (args > 1) HB_set._SET_ESCAPE = set_logical (pArg2);
+      case HB_SET_ESCAPE     :
+         _retl (hb_set.HB_SET_ESCAPE);
+         if (args > 1) hb_set.HB_SET_ESCAPE = set_logical (pArg2);
          break;
-      case _SET_EVENTMASK  :
-         _retni (HB_set._SET_EVENTMASK);
-         if (args > 1) HB_set._SET_EVENTMASK = set_number (pArg2, HB_set._SET_EVENTMASK);
+      case HB_SET_EVENTMASK  :
+         _retni (hb_set.HB_SET_EVENTMASK);
+         if (args > 1) hb_set.HB_SET_EVENTMASK = set_number (pArg2, hb_set.HB_SET_EVENTMASK);
          break;
-      case _SET_EXACT      :
-         _retl (HB_set._SET_EXACT);
-         if (args > 1) HB_set._SET_EXACT = set_logical (pArg2);
+      case HB_SET_EXACT      :
+         _retl (hb_set.HB_SET_EXACT);
+         if (args > 1) hb_set.HB_SET_EXACT = set_logical (pArg2);
          break;
-      case _SET_EXCLUSIVE  :
-         _retl (HB_set._SET_EXCLUSIVE);
-         if (args > 1) HB_set._SET_EXCLUSIVE = set_logical (pArg2);
+      case HB_SET_EXCLUSIVE  :
+         _retl (hb_set.HB_SET_EXCLUSIVE);
+         if (args > 1) hb_set.HB_SET_EXCLUSIVE = set_logical (pArg2);
          break;
-      case _SET_EXIT       :
-         _retl (HB_set._SET_EXIT);
-         if (args > 1) HB_set._SET_EXIT = set_logical (pArg2);
+      case HB_SET_EXIT       :
+         _retl (hb_set.HB_SET_EXIT);
+         if (args > 1) hb_set.HB_SET_EXIT = set_logical (pArg2);
          break;
-      case _SET_EXTRA      :
-         _retl (HB_set._SET_EXTRA);
-         if (args > 1) HB_set._SET_EXTRA = set_logical (pArg2);
+      case HB_SET_EXTRA      :
+         _retl (hb_set.HB_SET_EXTRA);
+         if (args > 1) hb_set.HB_SET_EXTRA = set_logical (pArg2);
          break;
-      case _SET_EXTRAFILE  :
-         if (HB_set._SET_EXTRAFILE) _retc (HB_set._SET_EXTRAFILE);
+      case HB_SET_EXTRAFILE  :
+         if (hb_set.HB_SET_EXTRAFILE) _retc (hb_set.HB_SET_EXTRAFILE);
          else _retc ("");
-         if (args > 1) HB_set._SET_EXTRAFILE = set_string (pArg2, HB_set._SET_EXTRAFILE, 0);
+         if (args > 1) hb_set.HB_SET_EXTRAFILE = set_string (pArg2, hb_set.HB_SET_EXTRAFILE);
          break;
-      case _SET_FIXED      :
-         _retl (HB_set._SET_FIXED);
-         if (args > 1) HB_set._SET_FIXED = set_logical (pArg2);
+      case HB_SET_FIXED      :
+         _retl (hb_set.HB_SET_FIXED);
+         if (args > 1) hb_set.HB_SET_FIXED = set_logical (pArg2);
          break;
-      case _SET_INSERT     :
-         _retl (HB_set._SET_INSERT);
-         if (args > 1) HB_set._SET_INSERT = set_logical (pArg2);
+      case HB_SET_INSERT     :
+         _retl (hb_set.HB_SET_INSERT);
+         if (args > 1) hb_set.HB_SET_INSERT = set_logical (pArg2);
          break;
-      case _SET_INTENSITY  :
-         _retl (HB_set._SET_INTENSITY);
-         if (args > 1) HB_set._SET_INTENSITY = set_logical (pArg2);
+      case HB_SET_INTENSITY  :
+         _retl (hb_set.HB_SET_INTENSITY);
+         if (args > 1) hb_set.HB_SET_INTENSITY = set_logical (pArg2);
          break;
-      case _SET_MARGIN     :
-         _retni (HB_set._SET_MARGIN);
-         if (args > 1) HB_set._SET_MARGIN = set_number (pArg2, HB_set._SET_MARGIN);
+      case HB_SET_MARGIN     :
+         _retni (hb_set.HB_SET_MARGIN);
+         if (args > 1) hb_set.HB_SET_MARGIN = set_number (pArg2, hb_set.HB_SET_MARGIN);
          break;
-      case _SET_MCENTER    :
-         _retl (HB_set._SET_MCENTER);
-         if (args > 1) HB_set._SET_MCENTER = set_logical (pArg2);
+      case HB_SET_MCENTER    :
+         _retl (hb_set.HB_SET_MCENTER);
+         if (args > 1) hb_set.HB_SET_MCENTER = set_logical (pArg2);
          break;
-      case _SET_MESSAGE    :
-         _retni (HB_set._SET_MESSAGE);
-         if (args > 1) HB_set._SET_MESSAGE = set_number (pArg2, HB_set._SET_MESSAGE);
+      case HB_SET_MESSAGE    :
+         _retni (hb_set.HB_SET_MESSAGE);
+         if (args > 1) hb_set.HB_SET_MESSAGE = set_number (pArg2, hb_set.HB_SET_MESSAGE);
          break;
-      case _SET_PATH       :
-         if (HB_set._SET_PATH) _retc (HB_set._SET_PATH);
-         if (args > 1) HB_set._SET_PATH = set_string (pArg2, HB_set._SET_PATH, 0);
+      case HB_SET_PATH       :
+         if (hb_set.HB_SET_PATH) _retc (hb_set.HB_SET_PATH);
+         if (args > 1) hb_set.HB_SET_PATH = set_string (pArg2, hb_set.HB_SET_PATH);
          else _retc ("");
          break;
-      case _SET_PRINTER    :
-         _retl (HB_set._SET_PRINTER);
-         if (args > 1) HB_set._SET_PRINTER = set_logical (pArg2);
+      case HB_SET_PRINTER    :
+         _retl (hb_set.HB_SET_PRINTER);
+         if (args > 1) hb_set.HB_SET_PRINTER = set_logical (pArg2);
          break;
-      case _SET_PRINTFILE  :
-         if (HB_set._SET_PRINTFILE) _retc (HB_set._SET_PRINTFILE);
+      case HB_SET_PRINTFILE  :
+         if (hb_set.HB_SET_PRINTFILE) _retc (hb_set.HB_SET_PRINTFILE);
          else _retc ("");
-         if (args > 1) HB_set._SET_PRINTFILE = set_string (pArg2, HB_set._SET_PRINTFILE, 0);
+         if (args > 1) hb_set.HB_SET_PRINTFILE = set_string (pArg2, hb_set.HB_SET_PRINTFILE);
          break;
-      case _SET_SCOREBOARD :
-         _retl (HB_set._SET_SCOREBOARD);
-         if (args > 1) HB_set._SET_SCOREBOARD = set_logical (pArg2);
+      case HB_SET_SCOREBOARD :
+         _retl (hb_set.HB_SET_SCOREBOARD);
+         if (args > 1) hb_set.HB_SET_SCOREBOARD = set_logical (pArg2);
          break;
-      case _SET_SCROLLBREAK:
-         _retl (HB_set._SET_SCROLLBREAK);
-         if (args > 1) HB_set._SET_SCROLLBREAK = set_logical (pArg2);
+      case HB_SET_SCROLLBREAK:
+         _retl (hb_set.HB_SET_SCROLLBREAK);
+         if (args > 1) hb_set.HB_SET_SCROLLBREAK = set_logical (pArg2);
          break;
-      case _SET_SOFTSEEK   :
-         _retl (HB_set._SET_SOFTSEEK);
-         if (args > 1) HB_set._SET_SOFTSEEK = set_logical (pArg2);
+      case HB_SET_SOFTSEEK   :
+         _retl (hb_set.HB_SET_SOFTSEEK);
+         if (args > 1) hb_set.HB_SET_SOFTSEEK = set_logical (pArg2);
          break;
-      case _SET_TYPEAHEAD  :
-         _retni (HB_set._SET_TYPEAHEAD);
-         if (args > 1) HB_set._SET_TYPEAHEAD = set_logical (pArg2);
+      case HB_SET_TYPEAHEAD  :
+         _retni (hb_set.HB_SET_TYPEAHEAD);
+         if (args > 1) hb_set.HB_SET_TYPEAHEAD = set_logical (pArg2);
          break;
-      case _SET_UNIQUE     :
-         _retl (HB_set._SET_UNIQUE);
-         if (args > 1) HB_set._SET_UNIQUE = set_logical (pArg2);
+      case HB_SET_UNIQUE     :
+         _retl (hb_set.HB_SET_UNIQUE);
+         if (args > 1) hb_set.HB_SET_UNIQUE = set_logical (pArg2);
          break;
-      case _SET_WRAP       :
-         _retl (HB_set._SET_WRAP);
-         if (args > 1) HB_set._SET_WRAP = set_logical (pArg2);
+      case HB_SET_WRAP       :
+         _retl (hb_set.HB_SET_WRAP);
+         if (args > 1) hb_set.HB_SET_WRAP = set_logical (pArg2);
          break;
    }
 }
 
-void HB_init_set (void)
+void InitializeSets (void)
 {
-   HB_set_century = FALSE;
-   HB_set._SET_ALTERNATE = FALSE;
-   HB_set._SET_ALTFILE = 0;      /* NULL pointer */
-   HB_set._SET_BELL = FALSE;
-   HB_set._SET_CANCEL = TRUE;
-   HB_set._SET_COLOR = _xgrab (20);
-   memcpy (HB_set._SET_COLOR, "W/N,N/W,N/N,N/N,N/W", 20);
-   HB_set._SET_CONFIRM = FALSE;
-   HB_set._SET_CONSOLE = TRUE;
-   HB_set._SET_CURSOR = SC_NORMAL;
-   HB_set._SET_DATEFORMAT = _xgrab (9);
-   memcpy (HB_set._SET_DATEFORMAT, "mm/dd/yy", 9);
-   HB_set._SET_DEBUG = FALSE;
-   HB_set._SET_DECIMALS = 2;
-   HB_set._SET_DEFAULT = _xgrab (1);
-   *HB_set._SET_DEFAULT = 0;
-   HB_set._SET_DELETED = FALSE;
-   HB_set._SET_DELIMCHARS = _xgrab (3);
-   memcpy (HB_set._SET_DELIMCHARS, "::", 3);
-   HB_set._SET_DELIMITERS = FALSE;
-   HB_set._SET_DEVICE = _xgrab (7);
-   memcpy (HB_set._SET_DEVICE, "SCREEN", 7);
-   HB_set._SET_EPOCH = 1900;
-   HB_set._SET_ESCAPE = 1;
-   HB_set._SET_EVENTMASK = INKEY_KEYBOARD;
-   HB_set._SET_EXACT = FALSE;
-   HB_set._SET_EXCLUSIVE = TRUE;
-   HB_set._SET_EXIT = FALSE;
-   HB_set._SET_EXTRA = FALSE;    /* TODO: What is this for? */
-   HB_set._SET_EXTRAFILE = 0;    /* TODO: What is this for? */
-   HB_set._SET_FIXED = FALSE;
-   HB_set._SET_INSERT = FALSE;
-   HB_set._SET_INTENSITY = TRUE;
-   HB_set._SET_MARGIN = 0;
-   HB_set._SET_MCENTER = FALSE;
-   HB_set._SET_MESSAGE = 0;
-   HB_set._SET_PATH = _xgrab (1);
-   *HB_set._SET_PATH = 0;
-   HB_set._SET_PRINTER = FALSE;
-   HB_set._SET_PRINTFILE = 0;    /* NULL pointer */
-   HB_set._SET_SCOREBOARD = TRUE;
-   HB_set._SET_SCROLLBREAK = TRUE;
-   HB_set._SET_SOFTSEEK = FALSE;
-   HB_set._SET_TYPEAHEAD = 50;
-   HB_set._SET_UNIQUE = FALSE;
-   HB_set._SET_WRAP = FALSE;
+   hb_set_century = FALSE;
+   hb_set.HB_SET_ALTERNATE = FALSE;
+   hb_set.HB_SET_ALTFILE = 0;      /* NULL pointer */
+   hb_set.HB_SET_BELL = FALSE;
+   hb_set.HB_SET_CANCEL = TRUE;
+   hb_set.HB_SET_COLOR = _xgrab (20);
+   memcpy (hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", 20);
+   hb_set.HB_SET_CONFIRM = FALSE;
+   hb_set.HB_SET_CONSOLE = TRUE;
+   hb_set.HB_SET_CURSOR = SC_NORMAL;
+   hb_set.HB_SET_DATEFORMAT = _xgrab (9);
+   memcpy (hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9);
+   hb_set.HB_SET_DEBUG = FALSE;
+   hb_set.HB_SET_DECIMALS = 2;
+   hb_set.HB_SET_DEFAULT = _xgrab (1);
+   *hb_set.HB_SET_DEFAULT = 0;
+   hb_set.HB_SET_DELETED = FALSE;
+   hb_set.HB_SET_DELIMCHARS = _xgrab (3);
+   memcpy (hb_set.HB_SET_DELIMCHARS, "::", 3);
+   hb_set.HB_SET_DELIMITERS = FALSE;
+   hb_set.HB_SET_DEVICE = _xgrab (7);
+   memcpy (hb_set.HB_SET_DEVICE, "SCREEN", 7);
+   hb_set.HB_SET_EPOCH = 1900;
+   hb_set.HB_SET_ESCAPE = 1;
+   hb_set.HB_SET_EVENTMASK = INKEY_KEYBOARD;
+   hb_set.HB_SET_EXACT = FALSE;
+   hb_set.HB_SET_EXCLUSIVE = TRUE;
+   hb_set.HB_SET_EXIT = FALSE;
+   hb_set.HB_SET_EXTRA = FALSE;    /* TODO: What is this for? */
+   hb_set.HB_SET_EXTRAFILE = 0;    /* TODO: What is this for? */
+   hb_set.HB_SET_FIXED = FALSE;
+   hb_set.HB_SET_INSERT = FALSE;
+   hb_set.HB_SET_INTENSITY = TRUE;
+   hb_set.HB_SET_MARGIN = 0;
+   hb_set.HB_SET_MCENTER = FALSE;
+   hb_set.HB_SET_MESSAGE = 0;
+   hb_set.HB_SET_PATH = _xgrab (1);
+   *hb_set.HB_SET_PATH = 0;
+   hb_set.HB_SET_PRINTER = FALSE;
+   hb_set.HB_SET_PRINTFILE = 0;    /* NULL pointer */
+   hb_set.HB_SET_SCOREBOARD = TRUE;
+   hb_set.HB_SET_SCROLLBREAK = TRUE;
+   hb_set.HB_SET_SOFTSEEK = FALSE;
+   hb_set.HB_SET_TYPEAHEAD = 50;
+   hb_set.HB_SET_UNIQUE = FALSE;
+   hb_set.HB_SET_WRAP = FALSE;
 }
 
 void ReleaseSets (void)
 {
-   _xfree (HB_set._SET_COLOR);
-   _xfree (HB_set._SET_DATEFORMAT);
-   _xfree (HB_set._SET_DEFAULT);
-   _xfree (HB_set._SET_DELIMCHARS);
-   _xfree (HB_set._SET_DEVICE);
-   _xfree (HB_set._SET_PATH);
+   _xfree (hb_set.HB_SET_COLOR);
+   _xfree (hb_set.HB_SET_DATEFORMAT);
+   _xfree (hb_set.HB_SET_DEFAULT);
+   _xfree (hb_set.HB_SET_DELIMCHARS);
+   _xfree (hb_set.HB_SET_DEVICE);
+   _xfree (hb_set.HB_SET_PATH);
 }

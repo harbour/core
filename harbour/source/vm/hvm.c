@@ -167,7 +167,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    stack.Return.wType = IT_NIL;
    StackInit();
    NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
-   HB_init_set(); /* initialize Sets */
+   InitializeSets(); /* initialize Sets */
    DoInitFunctions( argc, argv ); /* process defined INIT functions */
 
    PushSymbol( pSymStart ); /* pushes first FS_PUBLIC defined symbol to the stack */

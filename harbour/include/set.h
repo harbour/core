@@ -8,8 +8,8 @@
 #include <types.h>
 
 HARBOUR SET (void);
-HARBOUR __SETCENTURY (void);
-void HB_init_set (void);
+HARBOUR HB_SETCENTURY (void);
+void InitializeSets (void);
 void ReleaseSets (void);
 
 typedef enum
@@ -34,91 +34,91 @@ typedef enum
 
 typedef enum
 {
-   _SET_ALTERNATE   = 1,
-   _SET_ALTFILE     = 2,
-   _SET_BELL        = 3,
-   _SET_CANCEL      = 4,
-   _SET_COLOR       = 5,
-   _SET_CONFIRM     = 6,
-   _SET_CONSOLE     = 7,
-   _SET_CURSOR      = 8,
-   _SET_DATEFORMAT  = 9,
-   _SET_DEBUG       = 10,
-   _SET_DECIMALS    = 11,
-   _SET_DEFAULT     = 12,
-   _SET_DELETED     = 13,
-   _SET_DELIMCHARS  = 14,
-   _SET_DELIMITERS  = 15,
-   _SET_DEVICE      = 16,
-   _SET_EPOCH       = 17,
-   _SET_ESCAPE      = 18,
-   _SET_EVENTMASK   = 19,
-   _SET_EXACT       = 20,
-   _SET_EXCLUSIVE   = 21,
-   _SET_EXIT        = 22,
-   _SET_EXTRA       = 23,
-   _SET_EXTRAFILE   = 24,
-   _SET_FIXED       = 25,
-   _SET_INSERT      = 26,
-   _SET_INTENSITY   = 27,
-   _SET_MARGIN      = 28,
-   _SET_MCENTER     = 29,
-   _SET_MESSAGE     = 30,
-   _SET_PATH        = 31,
-   _SET_PRINTER     = 32,
-   _SET_PRINTFILE   = 33,
-   _SET_SCOREBOARD  = 34,
-   _SET_SCROLLBREAK = 35,
-   _SET_SOFTSEEK    = 36,
-   _SET_TYPEAHEAD   = 37,
-   _SET_UNIQUE      = 38,
-   _SET_WRAP        = 39
+   HB_SET_ALTERNATE   = 1,
+   HB_SET_ALTFILE     = 2,
+   HB_SET_BELL        = 3,
+   HB_SET_CANCEL      = 4,
+   HB_SET_COLOR       = 5,
+   HB_SET_CONFIRM     = 6,
+   HB_SET_CONSOLE     = 7,
+   HB_SET_CURSOR      = 8,
+   HB_SET_DATEFORMAT  = 9,
+   HB_SET_DEBUG       = 10,
+   HB_SET_DECIMALS    = 11,
+   HB_SET_DEFAULT     = 12,
+   HB_SET_DELETED     = 13,
+   HB_SET_DELIMCHARS  = 14,
+   HB_SET_DELIMITERS  = 15,
+   HB_SET_DEVICE      = 16,
+   HB_SET_EPOCH       = 17,
+   HB_SET_ESCAPE      = 18,
+   HB_SET_EVENTMASK   = 19,
+   HB_SET_EXACT       = 20,
+   HB_SET_EXCLUSIVE   = 21,
+   HB_SET_EXIT        = 22,
+   HB_SET_EXTRA       = 23,
+   HB_SET_EXTRAFILE   = 24,
+   HB_SET_FIXED       = 25,
+   HB_SET_INSERT      = 26,
+   HB_SET_INTENSITY   = 27,
+   HB_SET_MARGIN      = 28,
+   HB_SET_MCENTER     = 29,
+   HB_SET_MESSAGE     = 30,
+   HB_SET_PATH        = 31,
+   HB_SET_PRINTER     = 32,
+   HB_SET_PRINTFILE   = 33,
+   HB_SET_SCOREBOARD  = 34,
+   HB_SET_SCROLLBREAK = 35,
+   HB_SET_SOFTSEEK    = 36,
+   HB_SET_TYPEAHEAD   = 37,
+   HB_SET_UNIQUE      = 38,
+   HB_SET_WRAP        = 39
 } HB_set_enum;
 
 typedef struct
 {
-   BOOL _SET_ALTERNATE;   /* Logical */
-   char *_SET_ALTFILE;    /* Character */
-   BOOL _SET_BELL;        /* Logical */
-   BOOL _SET_CANCEL;      /* Logical */
-   char *_SET_COLOR;      /* Character */
-   BOOL _SET_CONFIRM;     /* Logical */
-   BOOL _SET_CONSOLE;     /* Logical */
-   HB_cursor_enum  _SET_CURSOR;      /* Numeric */
-   char *_SET_DATEFORMAT; /* Character */
-   BOOL _SET_DEBUG;       /* Logical */
-   int  _SET_DECIMALS;    /* Numeric */
-   char *_SET_DEFAULT;    /* Character */
-   BOOL _SET_DELETED;     /* Logical */
-   char *_SET_DELIMCHARS; /* Character */
-   BOOL _SET_DELIMITERS;  /* Logical */
-   char * _SET_DEVICE;    /* Character */
-   int  _SET_EPOCH;       /* Numeric */
-   BOOL _SET_ESCAPE;      /* Logical */
-   HB_inkey_enum  _SET_EVENTMASK;   /* Numeric */
-   BOOL _SET_EXACT;       /* Logical */
-   BOOL _SET_EXCLUSIVE;   /* Logical */
-   BOOL _SET_EXIT;        /* Logical */
-   BOOL _SET_EXTRA;       /* Logical */   /* QUESTION: What does this do? */
-   char *_SET_EXTRAFILE;  /* Character */ /* QUESTION: What does this do? */
-   BOOL _SET_FIXED;       /* Logical */
-   BOOL _SET_INSERT;      /* Logical */
-   BOOL _SET_INTENSITY;   /* Logical */
-   int  _SET_MARGIN;      /* Numeric */
-   BOOL _SET_MCENTER;     /* Logical */
-   int  _SET_MESSAGE;     /* Numeric */
-   char *_SET_PATH;       /* Character */
-   BOOL _SET_PRINTER;     /* Logical */
-   char *_SET_PRINTFILE;  /* Character */
-   BOOL _SET_SCOREBOARD;  /* Logcial */
-   int  _SET_SCROLLBREAK; /* Logical */ /* QUESTION: What does this do? */
-   BOOL _SET_SOFTSEEK;    /* Logical */
-   int  _SET_TYPEAHEAD;   /* Numeric */
-   BOOL _SET_UNIQUE;      /* Logical */
-   BOOL _SET_WRAP;        /* Logical */
+   BOOL HB_SET_ALTERNATE;   /* Logical */
+   char *HB_SET_ALTFILE;    /* Character */
+   BOOL HB_SET_BELL;        /* Logical */
+   BOOL HB_SET_CANCEL;      /* Logical */
+   char *HB_SET_COLOR;      /* Character */
+   BOOL HB_SET_CONFIRM;     /* Logical */
+   BOOL HB_SET_CONSOLE;     /* Logical */
+   HB_cursor_enum  HB_SET_CURSOR;      /* Numeric */
+   char *HB_SET_DATEFORMAT; /* Character */
+   BOOL HB_SET_DEBUG;       /* Logical */
+   int  HB_SET_DECIMALS;    /* Numeric */
+   char *HB_SET_DEFAULT;    /* Character */
+   BOOL HB_SET_DELETED;     /* Logical */
+   char *HB_SET_DELIMCHARS; /* Character */
+   BOOL HB_SET_DELIMITERS;  /* Logical */
+   char * HB_SET_DEVICE;    /* Character */
+   int  HB_SET_EPOCH;       /* Numeric */
+   BOOL HB_SET_ESCAPE;      /* Logical */
+   HB_inkey_enum  HB_SET_EVENTMASK;   /* Numeric */
+   BOOL HB_SET_EXACT;       /* Logical */
+   BOOL HB_SET_EXCLUSIVE;   /* Logical */
+   BOOL HB_SET_EXIT;        /* Logical */
+   BOOL HB_SET_EXTRA;       /* Logical */   /* QUESTION: What does this do? */
+   char *HB_SET_EXTRAFILE;  /* Character */ /* QUESTION: What does this do? */
+   BOOL HB_SET_FIXED;       /* Logical */
+   BOOL HB_SET_INSERT;      /* Logical */
+   BOOL HB_SET_INTENSITY;   /* Logical */
+   int  HB_SET_MARGIN;      /* Numeric */
+   BOOL HB_SET_MCENTER;     /* Logical */
+   int  HB_SET_MESSAGE;     /* Numeric */
+   char *HB_SET_PATH;       /* Character */
+   BOOL HB_SET_PRINTER;     /* Logical */
+   char *HB_SET_PRINTFILE;  /* Character */
+   BOOL HB_SET_SCOREBOARD;  /* Logcial */
+   int  HB_SET_SCROLLBREAK; /* Logical */ /* QUESTION: What does this do? */
+   BOOL HB_SET_SOFTSEEK;    /* Logical */
+   int  HB_SET_TYPEAHEAD;   /* Numeric */
+   BOOL HB_SET_UNIQUE;      /* Logical */
+   BOOL HB_SET_WRAP;        /* Logical */
 }  HB_set_struct;
 
-extern HB_set_struct HB_set;
-extern BOOL HB_set_century;
+extern HB_set_struct hb_set;
+extern BOOL hb_set_century;
 
 #endif

@@ -38,12 +38,12 @@ HARBOUR CTOD( void )
    char * szDate = _parc( 1 );
    int d_value = 0, m_value = 0, y_value = 0;
    int d_pos = 0, m_pos = 0, y_pos = 0;
-   int count, digit;
+   int count, digit, size = strlen (hb_set.HB_SET_DATEFORMAT);
    char szDateFormat[ 9 ];
 
-   for( count = 0; count < strlen (HB_set._SET_DATEFORMAT); count++)
+   for( count = 0; count < size; count++)
    {
-      switch (HB_set._SET_DATEFORMAT [count])
+      switch (hb_set.HB_SET_DATEFORMAT [count])
       {
          case 'D':
          case 'd':
@@ -73,7 +73,8 @@ HARBOUR CTOD( void )
             }
       }
    }
-   for( count = 0; count < strlen (szDate); count++)
+   size = strlen (szDate);
+   for( count = 0; count < size; count++)
    {
       digit = szDate [count];
       if (isdigit (digit))
@@ -100,8 +101,8 @@ HARBOUR CTOD( void )
    }
    if (y_value < 100)
    {
-      count = HB_set._SET_EPOCH % 100;
-      digit = HB_set._SET_EPOCH / 100;
+      count = hb_set.HB_SET_EPOCH % 100;
+      digit = hb_set.HB_SET_EPOCH / 100;
       if (y_value >= count) y_value += (digit * 100);
       else y_value += ((digit * 100) + 100);
    }
@@ -111,159 +112,131 @@ HARBOUR CTOD( void )
 
 char * hb_dtoc (char * szDate, char * szDateFormat)
 {
-   /* NOTE: szDateFormat must point to a buffer of at least 11 bytes */
-   int d_digits = 0, m_digits = 0, y_digits = 0;
-   int d_pos = 0, m_pos = 0, y_pos = 0;
-   int add_sep, count, digit, delim_1, delim_2, delim_count;
-   char szTemp [5];
+   /*
+    * NOTE: szDateFormat must point to a buffer of at least 11 bytes
+     */
+   int digit, digit_count, format_count, size;
+   BOOL used_d, used_m, used_y;
+   char *szPtr;
 
-   delim_count = 0;
-   delim_1 = delim_2 = '.';
-   for( count = 0; count < strlen (HB_set._SET_DATEFORMAT); count++)
+   /*
+     * Determine the maximum size of the formatted date string
+     */
+   size = min (10, strlen (hb_set.HB_SET_DATEFORMAT));
+
+   format_count = 0;
+   used_d = used_m = used_y = FALSE;
+   szPtr = hb_set.HB_SET_DATEFORMAT;
+   while (format_count < size)
    {
-      digit = HB_set._SET_DATEFORMAT [count];
+      digit = toupper (*szPtr);
+      szPtr++;
+      digit_count = 1;
+      while (toupper (*szPtr) == digit && format_count < size)
+      {
+         szPtr++;
+         if (format_count + digit_count < size) digit_count++;
+      }
       switch (digit)
       {
          case 'D':
-         case 'd':
-            d_digits++;
-            if (d_pos == 0)
+            switch (digit_count)
             {
-               if (m_pos == 0 && y_pos == 0) d_pos = 1;
-               else if (m_pos == 0 || y_pos == 0) d_pos = 2;
-               else d_pos = 3;
+               case 4:
+                  if (!used_d && format_count < size)
+                  {
+                     szDateFormat [format_count++] = '0';
+                     digit_count--;
+                  }
+               case 3:
+                  if (!used_d && format_count < size)
+                  {
+                     szDateFormat [format_count++] = '0';
+                     digit_count--;
+                  }
+               case 2:
+                  if (!used_d && format_count < size)
+                  {
+                     szDateFormat [format_count++] = szDate [6];
+                     digit_count--;
+                  }
+               default:
+                  if (!used_d && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [7];
+                     digit_count--;
+                  }
+                  while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
             }
+            used_d = TRUE;
             break;
          case 'M':
-         case 'm':
-            m_digits++;
-            if (m_pos == 0)
+            switch (digit_count)
             {
-               if (d_pos == 0 && y_pos == 0) m_pos = 1;
-               else if (d_pos == 0 || y_pos == 0) m_pos = 2;
-               else m_pos = 3;
+               case 4:
+                  if (!used_m && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = '0';
+                     digit_count--;
+                  }
+               case 3:
+                  if (!used_m && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = '0';
+                     digit_count--;
+                  }
+               case 2:
+                  if (!used_m && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [4];
+                     digit_count--;
+                  }
+               default:
+                  if (!used_m && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [5];
+                     digit_count--;
+                  }
+                  while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
             }
+            used_m = TRUE;
             break;
          case 'Y':
-         case 'y':
-            y_digits++;
-            if (y_pos == 0)
+            switch (digit_count)
             {
-               if (m_pos == 0 && d_pos == 0) y_pos = 1;
-               else if (m_pos == 0 || d_pos == 0) y_pos = 2;
-               else y_pos = 3;
+               case 4:
+                  if (!used_y && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [0];
+                     digit_count--;
+                  }
+               case 3:
+                  if (!used_y && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [1];
+                     digit_count--;
+                  }
+               case 2:
+                  if (!used_y && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [2];
+                     digit_count--;
+                  }
+               default:
+                  if (!used_y && format_count < size) 
+                  {
+                     szDateFormat [format_count++] = szDate [3];
+                     digit_count--;
+                  }
+                  while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
             }
+            used_y = TRUE;
             break;
          default:
-            delim_count++;
-            if (delim_count == 1) delim_1 = digit;
-            else if (delim_count == 2) delim_2 = digit;
-            break;
+            while (digit_count-- > 0 && format_count < size) szDateFormat [format_count++] = digit;
       }
    }
-   *szDateFormat = 0;
-   for (count = 0; count < 3; count++)
-   {
-      /* Insert a converted date element. */
-      add_sep = 0;
-      if (d_pos == 1 && d_digits > 0)
-      {
-         add_sep = 1;
-         while (d_digits > 2)
-         {
-            strcat (szDateFormat, "0");
-            d_digits--;
-         }
-         if (d_digits == 1)
-         {
-            szTemp [0] = szDate [7];
-            szTemp [1] = 0;
-         }
-         else
-         {
-            szTemp [0] = szDate [6];
-            szTemp [1] = szDate [7];
-            szTemp [2] = 0;
-         }
-         strcat (szDateFormat, szTemp);
-      }
-      if (m_pos == 1 && m_digits > 0)
-      {
-         add_sep = 1;
-         while (m_digits > 2)
-         {
-            strcat (szDateFormat, "0");
-            m_digits--;
-         }
-         if (m_digits == 1)
-         {
-            szTemp [0] = szDate [5];
-            szTemp [1] = 0;
-         }
-         else
-         {
-            szTemp [0] = szDate [4];
-            szTemp [1] = szDate [5];
-            szTemp [2] = 0;
-         }
-         strcat (szDateFormat, szTemp);
-      }
-      if (y_pos == 1 && y_digits > 0)
-      {
-         add_sep = 1;
-         while (y_digits > 4)
-         {
-            strcat (szDateFormat, "0");
-            y_digits--;
-         }
-         if (y_digits == 1)
-         {
-            szTemp [0] = szDate [3];
-            szTemp [1] = 0;
-         }
-         else if (y_digits == 2)
-         {
-            szTemp [0] = szDate [2];
-            szTemp [1] = szDate [3];
-            szTemp [2] = 0;
-         }
-         else if (y_digits == 3)
-         {
-            szTemp [0] = szDate [1];
-            szTemp [1] = szDate [2];
-            szTemp [2] = szDate [3];
-            szTemp [3] = 0;
-         }
-         else
-         {
-            szTemp [0] = szDate [0];
-            szTemp [1] = szDate [1];
-            szTemp [2] = szDate [2];
-            szTemp [3] = szDate [3];
-            szTemp [4] = 0;
-         }
-         strcat (szDateFormat, szTemp);
-      }
-      /* Insert a date field separator. */
-      if (add_sep && delim_1)
-      {
-         szTemp [0] = delim_1;
-         szTemp [1] = 0;
-         strcat (szDateFormat, szTemp);
-         delim_1 = 0;
-      }
-      else if (add_sep && delim_2)
-      {
-         szTemp [0] = delim_2;
-         szTemp [1] = 0;
-         strcat (szDateFormat, szTemp);
-         delim_2 = 0;
-      }
-      /* Get ready for the next date element. */
-      d_pos--;
-      m_pos--;
-      y_pos--;
-   }
+   szDateFormat [format_count] = 0;
    return (szDateFormat);
 }
 
