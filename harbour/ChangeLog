@@ -1,3 +1,13 @@
+2000-06-07 21:51 UTC+0100 Lubos Janica <janica@fornax.sk>
+    * source/rdd/dbfntx1.c
+     Begin of implementation ntx driver. It's not working !
+       + static ERRCODE ntxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
+       + static ERRCODE ntxOrderInfo( AREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo );      
+       + static ERRCODE ntxOrderListAdd( AREAP pArea, LPDBORDERINFO pOrderInfo );
+       + static ERRCODE ntxOrderListClear( AREAP pArea );
+       + static ERRCODE ntxClose( AREAP pArea );
+       + some internal funcitons
+
 2000-06-07 16:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
 
     *include/hbcomp.c
