@@ -55,18 +55,9 @@
    #define INCL_DOSMISC
 #endif
 
-/* NOTE: The following #ifdef block #including <windows.h> must
-         be ahead of any and all #include statements! */
-
-#if defined(_Windows) || defined(_WIN32) || defined(__MINGW32__)
-   #if !defined(__CYGWIN__)
-      #define WIN32_LEAN_AND_MEAN
-      #include <windows.h>
-      #if defined(__MINGW32__)
-         #define HB_DONT_DEFINE_BASIC_TYPES
-      #endif
-   #endif
-#endif
+/* NOTE: The following #include "wincheck.h" must
+         be ahead of any other #include statements! */
+#include "wincheck.h"
 
 #if defined(__BORLANDC__) && defined(_Windows) && ! defined(VER_PLATFORM_WIN32_WINDOWS)
    #define VER_PLATFORM_WIN32_WINDOWS 1
@@ -145,7 +136,7 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_Windows) || defined(_WIN32) || defined(__MINGW32__)
+#if defined(_Windows) || defined(WINNT)
 
 /* NOTE: Support for determining the window version by Luiz Rafael Culik
    Culik@sl.conex.net
@@ -299,9 +290,9 @@ char * hb_version( USHORT uiMode )
    if( uiMode != 0 )
    {
       /* Optionally include the Compiler name and version, if available. */
-      char * compiler = ( char * ) NULL;
-      int version = 0;
-      int revision = 0;
+      char * compiler;
+      int version;
+      int revision;
 
    #if defined(__IBMC__) || defined(__IBMCPP__)
 
@@ -322,24 +313,19 @@ char * hb_version( USHORT uiMode )
    #elif defined(__BORLANDC__)
 
       compiler = "Borland C++";
-      if( __BORLANDC__ == 1040 )
-      {
+      #if (__BORLANDC__ == 1040)
          /* Version 3.1 */
          version = 3;
          revision = 1;
-      }
-      else if( __BORLANDC__ >= 1280 )
-      {
+      #elif (__BORLANDC__ >= 1280)
          /* Version 5.x */
          version = __BORLANDC__ >> 8;
          revision = ( __BORLANDC__ & 0xff ) >> 4;
-      }
-      else
-      {
+      #else
          /* Version 4.x */
          version = __BORLANDC__ >> 8;
          revision = ( __BORLANDC__ - 1 & 0xff) >> 4;
-      }
+      #endif
 
    #elif defined(__TURBOC__)
 
@@ -395,6 +381,12 @@ char * hb_version( USHORT uiMode )
 
       version = __GNUC__;
       revision = __GNUC_MINOR__;
+
+   #else
+
+      compiler = ( char * ) NULL;
+      version = 0;
+      revision = 0;
 
    #endif
 

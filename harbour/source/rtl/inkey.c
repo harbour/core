@@ -82,17 +82,16 @@
    #define INCL_NOPMAPI
 #endif
 
-#if defined(_Windows) || defined(WINNT)
-   #define WIN32_LEAN_AND_MEAN
-   #include <windows.h>
+/* NOTE: The following #include "wincheck.h" must
+         be ahead of any other #include statements! */
+#include "wincheck.h"
+
+#ifdef HARBOUR_USE_WIN
    #define INPUT_BUFFER_LEN 128
    extern HANDLE hb_gtHInput; /* This variable is located in source/rtl/gt/gtwin.c */
    DWORD cNumRead = 0;   /* Ok to use DWORD here, because this is specific... */
    DWORD cNumIndex = 0;  /* ...to the Windows API, which defines DWORD, etc.  */
    INPUT_RECORD irInBuf[INPUT_BUFFER_LEN];
-   #if defined(__GNUC__)
-      #define HB_DONT_DEFINE_BASIC_TYPES
-   #endif
 #endif
 
 #include "extend.h"
@@ -272,7 +271,7 @@ int hb_inkeyLast( void )      /* Return the value of the last key that was extra
 
 int hb_inkeyNext( void )      /* Return the next key without extracting it */
 {
-   int key = 0;
+   int key;
    hb_inkeyPoll();
    if( hb_set.HB_SET_TYPEAHEAD )
    {
@@ -321,7 +320,7 @@ void hb_inkeyPoll( void )     /* Poll the console keyboard to stuff the Harbour 
                /* Save the keyboard state and ASCII key code */
                DWORD dwState = irInBuf[cNumIndex].Event.KeyEvent.dwControlKeyState;
                ch = irInBuf[cNumIndex].Event.KeyEvent.uChar.AsciiChar;
-               if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED ) ) )
+               if( ch == 0 || ( dwState & ( ENHANCED_KEY | LEFT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED ) ) )
                {
                   /* Process non-ASCII key codes */
                   WORD wKey;
@@ -373,6 +372,7 @@ printf("\nhb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch)
                         {
                            /* Alt key held */
                            if( wKey == 1 ) ch = K_ALT_ESC; /* Esc */
+                           else if( wKey == 15 ) ch = K_ALT_TAB; /* Tab */
                            else if( wKey <= 12 ) ch = wKey + 374; /* Numeric row */
                            else if( wKey == 28 ) ch = KP_ALT_ENTER; /* Num Pad Enter */
                            else if( wKey <= 52 ) ch = wKey + 256; /* Alpha rows */
@@ -480,14 +480,26 @@ printf("\nhb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch)
                         else if( bShift )
                         {
                            /* Shift key held */
-                           if( wKey == 1 ) ch = K_ESC; /* Esc */
-                           else if( wKey == 28 ) ch = K_ENTER; /* Num Pad Enter */
-                           else if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
+                           if( wKey == 53 && bEnhanced ) ch = '/'; /* Num Pad / */
                            else if( wKey >= 59 && wKey <= 68 ) ch = 49 - wKey; /* F1 - F10 */
-                           else if( wKey == 76 ) ch = '5'; /* Num Pad 5 */
-                           else if( wKey == 87 || wKey == 88 ) ch = 45 - wKey; /* F11, F12 */
                            else switch( wKey )
                            {
+                              case 1: /* Esc */
+                                 ch = K_ESC;
+                                 break;
+                              case 15: /* Tab */
+                                 ch = K_SH_TAB;
+                                 break;
+                              case 28: /* Num Pad Enter */
+                                 ch = K_ENTER;
+                                 break;
+                              case 76: /* Num Pad 5 */
+                                 ch = '5';
+                                 break;
+                              case 87: /* F11 */
+                              case 88: /* F12 */
+                                 ch = 45 - wKey;
+                                 break;
                               case 82: /* Ins */
                                  ch = K_INS;
                                  break;
@@ -518,8 +530,11 @@ printf("\nhb_inkeyPoll: wKey is %d, dwState is %d, ch is %d", wKey, dwState, ch)
                               case 75: /* Left */
                                  ch = K_LEFT;
                                  break;
-                              default:
-                                 ch = wKey + 128;
+                              default: /* Any thing not explicitly translated */
+                                 if( ch == 0 )
+                                    /* Only provide a translation for those key
+                                       codes that don't have a default one. */
+                                    ch = wKey + 128;
                            }
                         }
                         else

@@ -107,13 +107,9 @@
    #define INCL_DOSERRORS
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-   #define WIN32_LEAN_AND_MEAN
-   #include <windows.h>
-   #if defined(__MINGW32__)
-      #define HB_DONT_DEFINE_BASIC_TYPES
-   #endif
-#endif
+/* NOTE: The following #include "wincheck.h" must
+         be ahead of any other #include statements! */
+#include "wincheck.h"
 
 #include <ctype.h>
 #include "extend.h"

@@ -1,3 +1,23 @@
+19991019-19:00 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * config/w32/bcc32.cf
+     ! I finally found out what I did wrong with regards to using BCC32
+       with the GNU Make System. I had accidentally set it up for the
+       DOS GT API instead of for the Windows GT API!
+
+   + include/wincheck.h
+   * source/rtl/dates.c
+   * source/rtl/dir.c
+   * source/rtl/environ.c
+   * source/rtl/inkey.c
+     ! All source files that need to conditinally include the Windows API
+       now use the new include file "wincheck.h" in order to eliminate
+       inconsistent inclusion of "windows.h". If "windows.h" ends up being
+       included, then the new manifest constant HARBOUR_USE_WIN is defined.
+
+   * source/rtl/inkey.c
+     ! Added Windows Console Mode translations for Alt+Tab and Shift+Tab.
+
 19991019-11:55 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/tbrowse.prg
      ! Fixed the header/footer separator to be drawn until the border.
