@@ -1780,8 +1780,8 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
       while( pTemp->pNext != NULL )
          pTemp = ( HB_FUNCALLS_PTR ) pTemp->pNext;
 
-      pTemp->pNext = ( struct HB_FUNCALLS * ) hb_xgrab( sizeof( HB_FUNCALLS ) );
-      pTemp = pTemp->pNext;
+      pTemp->pNext = ( HB_FUNCALLS_PTR ) hb_xgrab( sizeof( HB_FUNCALLS ) );
+      pTemp = ( HB_FUNCALLS_PTR ) pTemp->pNext;
    }
    else
    {
