@@ -118,12 +118,16 @@ char * hb_pards( WORD wParam, ... )
       pItem = stack.pBase + 1 + wParam;
       if( pItem->type & IT_BYREF )
          pItem = stack.pItems + pItem->item.asRefer.value;
+         
+      if( IS_ARRAY( pItem ) )
+      {
+         if( wArrayIndex )
+            return strcpy( stack.szDate, hb_arrayGetDate( pItem, wArrayIndex ) );
+         else
+            return "        ";
+      }         
 
-      if( IS_ARRAY( pItem ) && wArrayIndex )
-         /* TODO: implement wArrayIndex use when retrieving an array element */
-         return "        ";
-
-      else if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
+        else if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
       {
          hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
 

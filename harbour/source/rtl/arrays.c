@@ -7,6 +7,7 @@
 #include <errorapi.h>
 #include <ctoharb.h>
 #include <init.h>
+#include <dates.h>
 
 HARBOUR HB_AADD(void);
 HARBOUR HB_ACLONE(void);
@@ -49,6 +50,51 @@ static char *szArgumentError = "Argument error: incorrect type";
 /*
  * Internal
  */
+ 
+char * hb_arrayGetDate( PHB_ITEM pArray, ULONG ulIndex )
+{
+  char szDate[ 9 ];
+  long lDay, lMonth, lYear;
+
+  if( IS_ARRAY( pArray ) )
+    {
+      if( ulIndex <= ( unsigned )hb_arrayLen( pArray ) )
+        {
+          PHB_ITEM pItem = pArray->item.asArray.value->pItems + ulIndex - 1;
+
+          if( IS_DATE( pItem ) && pItem->item.asDate.value > 0 )
+            {
+              hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
+
+              szDate[ 0 ] = ( lYear / 1000 ) + '0';
+              szDate[ 1 ] = ( ( lYear % 1000 ) / 100 ) + '0';
+              szDate[ 2 ] = ( ( lYear % 100 ) / 10 ) + '0';
+              szDate[ 3 ] = ( lYear % 10 ) + '0';
+
+              szDate[ 4 ] = ( lMonth / 10 ) + '0';
+              szDate[ 5 ] = ( lMonth % 10 ) + '0';
+
+              szDate[ 6 ] = ( lDay / 10 ) + '0';
+              szDate[ 7 ] = ( lDay % 10 ) + '0';
+              szDate[ 8 ] = 0;
+
+              return szDate;
+           }
+          else
+            return "        ";
+        }
+      else
+        {
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
+        }
+    }
+  else
+    {
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
+    }
+  return "        ";
+}
+ 
  
  
 BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
