@@ -297,6 +297,7 @@ static HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL,                       /* HB_P_MACROPUSHARG,         */
    NULL,                       /* HB_P_MACROPUSHLIST,        */
    NULL,                       /* HB_P_MACROPUSHINDEX,       */
+   NULL,                       /* HB_P_MACROPUSHPARE,        */
    NULL,                       /* HB_P_MACROPUSHALIASED,     */
    NULL,                       /* HB_P_MACROSYMBOL,          */
    NULL,                       /* HB_P_MACROTEXT,            */

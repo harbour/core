@@ -1,3 +1,27 @@
+2001-07-23 04:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbexprop.h
+     + Added #define  HB_ET_MACRO_PARE    64
+
+   * source/vm/hvm.c
+   * source/vm/macro.c
+   * source/macro/macro.y
+   * include/hbexprb.c
+     + Added support for HB_P_MACROPUSHPARE aand HB_P_MACROPUSHINDEX
+
+   * include/hbmacro.h
+     + Added #define HB_MACRO_GEN_PARE     16  /* generate parentesized list */
+
+   * source/common/expropt1.c
+   * source/common/expropt2.c
+
+   * include/hbpcode.h
+   * source/compiler/genc.c
+   * source/compiler/hbfix.c
+   * source/compiler/hbpcode.c
+     + Added new opcode HB_P_MACROPUSHPARE
+
+   /* This should complete macro list support for ( &cMacro ) and aArray[ &cMacro ] syntaxes. */
+
 2001-07-22 14:30 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbapi.h
      * Changed 2nd parameter to BYTE iContext in hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )

@@ -258,6 +258,8 @@ PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
 int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex = 0, hb_vm_iExtraElements = 0;
 
+int hb_vm_iExtraIndex;
+
 /* Request for some action - stop processing of opcodes
  */
 static USHORT   s_uiActionRequest;
@@ -1303,7 +1305,44 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
-            hb_macroGetValue( hb_stackItemFromTop( -1 ), 0 );
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHINDEX );
+
+            if( hb_vm_iExtraIndex )
+            {
+               HB_ITEM *aExtraItems = hb_xgrab( sizeof( HB_ITEM ) * hb_vm_iExtraIndex );
+               int i;
+
+               /* Storing and removing the extra indexes. */
+               for ( i = hb_vm_iExtraIndex - 1; i >= 0; i-- )
+               {
+                  hb_itemCopy( aExtraItems + i, hb_stackItemFromTop(-1) );
+                  hb_stackPop();
+               }
+
+               /* First index is still on stack.*/
+               hb_vmArrayPush();
+
+               /* Now process each of the additional index including the last one (we will skip the HB_P_ARRAYPUSH which is know to follow . */
+               for ( i = 0; i < hb_vm_iExtraIndex; i++ )
+               {
+                  hb_vmPush( aExtraItems + i );
+                  hb_vmArrayPush();
+               }
+
+               hb_xfree( aExtraItems );
+
+               w++; // To force skip the HB_P_ARRAYPUSH (was already processed above).
+            }
+
+            w++;
+            break;
+
+         case HB_P_MACROPUSHPARE:
+            /* compile and run - leave the result on the stack */
+            /* the topmost element on the stack contains a macro
+             * string for compilation
+             */
+            hb_macroGetValue( hb_stackItemFromTop( -1 ), HB_P_MACROPUSHPARE );
             w++;
             break;
 

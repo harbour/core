@@ -102,6 +102,7 @@ typedef enum
 #define  HB_ET_MACRO_ARGLIST  8   /* &variable used as a function call argument */
 #define  HB_ET_MACRO_LIST    16   /* &variable used as in literal arrays or parentesised expressions. */
 #define  HB_ET_MACRO_INDEX   32   /* &variable used as arrays index. */
+#define  HB_ET_MACRO_PARE    64   /* &variable used as arrays index. */
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully

@@ -83,6 +83,7 @@ extern "C" {
 #define HB_MACRO_GEN_POP      2   /* generate POP pcodes */
 #define HB_MACRO_GEN_ALIASED  4   /* force aliased variable */
 #define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from TYPE() function) */
+#define HB_MACRO_GEN_PARE     16  /* generate parentesized list */
 #define HB_MACRO_DEALLOCATE   128 /* macro structure is allocated on the heap */
 
 /* values returned from compilation process

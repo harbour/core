@@ -429,6 +429,8 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
 {
    extern int hb_vm_aiExtraParams[HB_MAX_MACRO_ARGS], hb_vm_iExtraParamsIndex;
    extern int hb_vm_aiExtraElements[HB_MAX_MACRO_ARGS], hb_vm_iExtraElementsIndex;
+   extern int hb_vm_iExtraIndex;
+
    extern PHB_SYMB hb_vm_apExtraParamsSymbol[HB_MAX_MACRO_ARGS];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
@@ -451,6 +453,11 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
       struMacro.uiNameLen     = HB_SYMBOL_NAME_LEN;
       struMacro.status        = HB_MACRO_CONT;
       struMacro.iListElements = ( iContext ? 0 : -1 );
+
+      if( iContext == HB_P_MACROPUSHPARE )
+      {
+         struMacro.Flags |= HB_MACRO_GEN_PARE;
+      }
 
       #ifdef HB_MACRO_STATEMENTS
          slen = HB_MIN( strlen( szString ), HB_PP_STR_SIZE - 1 );
@@ -497,6 +504,10 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext )
             else if( iContext == HB_P_MACROPUSHLIST )
             {
                hb_vm_aiExtraElements[hb_vm_iExtraElementsIndex - 1] += struMacro.iListElements;
+            }
+            else if( iContext == HB_P_MACROPUSHINDEX )
+            {
+               hb_vm_iExtraIndex = struMacro.iListElements;
             }
          }
       }

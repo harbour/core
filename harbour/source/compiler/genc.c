@@ -815,6 +815,15 @@ static HB_GENC_FUNC( hb_p_macropushindex )
    return 1;
 }
 
+static HB_GENC_FUNC( hb_p_macropushpare )
+{
+   HB_SYMBOL_UNUSED( pFunc );
+   HB_SYMBOL_UNUSED( lPCodePos );
+
+   fprintf( cargo->yyc, "\tHB_P_MACROPUSHPARE,\n" );
+   return 1;
+}
+
 static HB_GENC_FUNC( hb_p_macropushaliased )
 {
    HB_SYMBOL_UNUSED( pFunc );
@@ -1822,6 +1831,7 @@ static HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_macropusharg,
    hb_p_macropushlist,
    hb_p_macropushindex,
+   hb_p_macropushpare,
    hb_p_macropushaliased,
    hb_p_macrosymbol,
    hb_p_macrotext,

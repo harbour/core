@@ -738,6 +738,14 @@ static HB_EXPR_FUNC( hb_compExprUseList )
    {
       case HB_EA_REDUCE:
          {
+            if( hb_compExprListLen( pSelf ) == 1 )
+            {
+               if( pSelf->value.asList.pExprList->ExprType == HB_ET_MACRO )
+               {
+                  pSelf->value.asList.pExprList->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+               }
+            }
+
             HB_EXPR_PCODE1( hb_compExprReduceList, pSelf );
             /* NOTE: if the list contains a single expression then the list
              * is not reduced to this expression - if you need that reduction
@@ -776,6 +784,11 @@ static HB_EXPR_FUNC( hb_compExprUseList )
             {
                while( pExpr )
                {
+                  if( pExpr->ExprType == HB_ET_MACRO )
+                  {
+                      pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+                  }
+
                   if( pExpr->pNext )
                      HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
                   else
@@ -796,6 +809,11 @@ static HB_EXPR_FUNC( hb_compExprUseList )
 
             while( pExpr )
             {
+               if( pExpr->ExprType == HB_ET_MACRO )
+               {
+                   pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
+               }
+
                HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
                pExpr = pExpr->pNext;
             }
@@ -1044,6 +1062,10 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                {
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHINDEX );
                }
+               else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_PARE )
+               {
+                  HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSHPARE );
+               }
                else
                {
                   HB_EXPR_GENPCODE1( hb_compGenPCode1, HB_P_MACROPUSH );
@@ -1101,7 +1123,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             HB_EXPR_PCODE1( hb_compExprDelete, pSelf->value.asMacro.pExprList );
 
 #if defined( HB_MACRO_SUPPORT )
-         if( pSelf->value.asMacro.szMacro );
+         if( pSelf->value.asMacro.szMacro )
             HB_XFREE( pSelf->value.asMacro.szMacro );
 #else
          /* NOTE: This will be released during releasing of symbols' table */
