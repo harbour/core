@@ -1,3 +1,15 @@
+2000-11-23 13:32 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/teditor.prg
+      ! fixed K_DEL handling
+   * source/rtl/idle.c
+      ! fixed / changed to release cpu only if there are no pending keys. Works ok
+        under OS/2. Please test under win32 (linux still lacks system call to release cpu).
+        Note: since I can enter hb_IdleState() while waiting a certain amount of time to
+              elapse (ie. Inkey(.1)) I cannot keep calling idle tasks but I have to exit
+              hb_IdleState() every time an idle task has ended its execution. If I have
+              time left to wait I'll reenter hb_IdleState() immediatly (executing next
+              idle task).
+
 2000-11-21 18:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcomp.c
      * Corrected 1 compiler warning.

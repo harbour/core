@@ -795,6 +795,7 @@ METHOD Edit(nPassedKey) CLASS TEditor
    LOCAL nKey
    LOCAL lOldInsert
    LOCAL lKeepGoing := .T.
+   LOCAL lDelAppend
 
    if ! ::lEditAllow
       BrowseText(Self)
@@ -850,10 +851,19 @@ METHOD Edit(nPassedKey) CLASS TEditor
                ::InsertState(!::lInsert)
 
             case nKey == K_DEL
+               // If I'm on last char of a line and there are more lines, append next line to current one
+               lDelAppend := ::nCol > ::LineLen(::nRow)
                ::aText[::nRow]:cText := Stuff(::aText[::nRow]:cText, ::nCol, 1, "")
-               ::RefreshLine()
-               if ::LineLen(::nRow) == 0
-                  ::Edit(K_CTRL_Y)
+               if lDelAppend
+                  if ::nRow < ::naTextLen
+                     ::aText[::nRow]:cText += ::GetLine(::nRow + 1)
+                     ::RemoveLine(::nRow + 1)
+                     ::RefreshWindow()
+                  else
+                     ::RefreshLine()
+                  endif
+               else
+                  ::RefreshLine()
                endif
 
             case nKey == K_TAB

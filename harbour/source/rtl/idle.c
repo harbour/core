@@ -63,6 +63,10 @@ static USHORT s_uiIdleMaxTask = 0;
 /* flag to prevent recursive calls of hb_idleState() */
 static BOOL s_bIamIdle = FALSE;
 
+
+int hb_inkeyNext( void );      /* Return the next key without extracting it */
+
+
 static void hb_releaseCPU( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("releaseCPU()"));
@@ -72,8 +76,16 @@ static void hb_releaseCPU( void )
 #if defined(HB_OS_WIN_32)
    /* Forfeit the remainder of the current time slice. */
    Sleep( 0 );
+
 #elif defined(HB_OS_OS2)
-   DosSleep( 25 ); /* Duration is in milliseconds */
+   /* 23/nov/2000 - maurilio.longo@libero.it
+      Minimum time slice under OS/2 is 32 milliseconds, passed 1 will be rounded to 32 and
+      will give a chance to threads of lower priority to get executed.
+      Passing 0 causes current thread to give up its time slice only if there are threads of
+      equal priority waiting to be dispatched. Note: certain versions of OS/2 kernel have a
+      bug which causes DosSleep(0) not to work as expected.  */
+   DosSleep( 1 ); /* Duration is in milliseconds */
+
 #elif defined(HB_OS_DOS)
 
    /* NOTE: there is a bug under NT 4 and 2000 -  if the app is running
@@ -109,14 +121,19 @@ void hb_idleState( void )
    {
       s_bIamIdle = TRUE;
       hb_gcCollectAll();
-      hb_releaseCPU();
 
       if( s_pIdleTasks )
       {
          hb_vmEvalBlock( s_pIdleTasks + s_uiIdleTask );
+
          if( ++s_uiIdleTask == s_uiIdleMaxTask )
             s_uiIdleTask = 0;
       }
+
+      if (hb_inkeyNext() == 0) {
+         hb_releaseCPU();
+      }
+
       s_bIamIdle = FALSE;
    }
 }
