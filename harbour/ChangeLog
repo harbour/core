@@ -1,3 +1,12 @@
+2000-07-22 23:30 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     ! Optimized handling of Hex Numbers.
+     + Added hash support for literal strings.
+     * Increased aTexts[] to 1024
+
+   * source/compiler/simplex.c
+     ! Removed todo of pair action.
+
 2000-07-22 23:08 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/compiler/harbour.c
    * source/compiler/harbour.y

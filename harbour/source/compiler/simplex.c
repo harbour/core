@@ -176,10 +176,6 @@ static int  iSize = 0;
 static int  iRet;
 static BOOL bTmp;
 
-#ifdef LEX_ABBREVIATE_KEYS
-   static char sAbbreviate[TOKEN_SIZE];
-#endif
-
 /* Lex emulation */
 char * yytext;
 int yyleng;
@@ -985,9 +981,6 @@ int yylex( void )
 
                                /* Resetting. */
                                cTerm = 0;
-
-                               /* TODO: Move Action to Pair Definition! */
-                               yylval.string = hb_strdup( sPair );
 
                                /* Last charcter read. */
                                chr = chrPair;

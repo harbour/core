@@ -51,7 +51,9 @@
    #define YY_BUF_SIZE HB_PP_STR_SIZE
 
 static int iTexts = 0;
-static char * aTexts[64];
+static char * aTexts[1024];
+
+long hb_lex_Hex2L( char* sHex );
 
 /* -----------------------------------------------------  Language Definitions. ---------------------------------------------------- */
 
@@ -60,17 +62,22 @@ ACCEPT_TOKEN_AND_DROP_DELIMITER_IF_ONE_OF_THESE( " \t" );
 ACCEPT_TOKEN_AND_RETURN_DELIMITER_IF_ONE_OF_THESE( "|,()[]{}^%*/+-:=!<>#@$" );
 DELIMITER_BELONGS_TO_TOKEN_IF_ONE_OF_THESE( "" );
 
+/* Custom Action can be requested by setting reduction to LEX_CUSTOM_ACTION or lower. */
+
+/* Intermediate Token neede to be expanded. */
+#define HB_LIT_ACT    -1000
+
 /* Stream Pairs. */
 DEFINE_STREAM_AS_ONE_OF_THESE {
-                                START_WITH('\'') END_WITH('\'') STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(LITERAL),
-                                START_WITH('"')  END_WITH('"' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(LITERAL),
-                                START_WITH('[')  END_WITH(']' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(LITERAL),
+                                START_WITH('\'') END_WITH('\'') STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH('"')  END_WITH('"' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH('[')  END_WITH(']' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
                               };
 
 START_NEW_LINE_IF_ONE_OF_THESE( "\n;" );
 
 /* Intermediate Token neede to be expanded. */
-#define _DOT_DOT_     -1000
+#define _DOT_DOT_  -1001
 
 SELF_CONTAINED_WORDS_ARE {
                            LEX_WORD( ".T."   ) AS_TOKEN( TRUEVALUE  ),
@@ -100,9 +107,9 @@ SELF_CONTAINED_WORDS_ARE {
                          };
 
 /* Intermediate Key Words when ambigious. */
-#define BEGIN_      1001
-#define PROCREQ_    1002
-#define WITH_       1003
+#define BEGIN_    1001
+#define PROCREQ_  1002
+#define WITH_     1003
 
 /* Key Words. */
 LANGUAGE_KEY_WORDS_ARE {
@@ -143,34 +150,34 @@ LANGUAGE_KEY_WORDS_ARE {
                        };
 
 /* Intermediate Words when ambigious. */
-#define _IF_        3001
-#define _USING_     3002
-#define _SEQUENCE_  3003
-#define _OF_        3004
-#define QSELF       3005
-#define _LINE_      3006
-#define _AS_        3007
-#define _ARRAY_     3008
-#define _BLOCK_     3009
-#define _CHARACTER_ 3010
-#define _STRING_    3011
-#define _CLASS_     3012
-#define _STRUCTURE_ 3013
-#define _DATE_      3014
-#define _LOGICAL_   3015
-#define _BOOL_      3016
-#define _NUMERIC_   3017
-#define _NUM_       3018
-#define _OBJECT_    3019
-#define _OBJ_       3020
-#define _VARIANT_   3021
-#define _VAR_       3022
-#define _FIELD_     3023
-#define _FIELD      3024
-#define _CASE_      3025
-#define _WHILE_     3026
-#define _WITH_      3027
-#define _SELF_      3028
+#define _IF_        2001
+#define _USING_     2002
+#define _SEQUENCE_  2003
+#define _OF_        2004
+#define QSELF       2005
+#define _LINE_      2006
+#define _AS_        2007
+#define _ARRAY_     2008
+#define _BLOCK_     2009
+#define _CHARACTER_ 2010
+#define _STRING_    2011
+#define _CLASS_     2012
+#define _STRUCTURE_ 2013
+#define _DATE_      2014
+#define _LOGICAL_   2015
+#define _BOOL_      2016
+#define _NUMERIC_   2017
+#define _NUM_       2018
+#define _OBJECT_    2019
+#define _OBJ_       2020
+#define _VARIANT_   2021
+#define _VAR_       2022
+#define _FIELD_     2023
+#define _FIELD      2024
+#define _CASE_      2025
+#define _WHILE_     2026
+#define _WITH_      2027
+#define _SELF_      2028
 
 /* Words. */
 LANGUAGE_WORDS_ARE {
@@ -215,74 +222,71 @@ LANGUAGE_WORDS_ARE {
                      LEX_WORD( "_FIELD"    ) AS_TOKEN( _FIELD      )
                    };
 
-/* Custom Action can be requested by setting reduction to LEX_CUSTOM_ACTION or lower. */
-#define HB_MISSING_DEC -65
-
 /* When reservered words are used as Identifier. */
-#define HB_EXTERN_ID        -1001
-#define HB_AS_ID            -1002
-#define HB_OF_ID            -1003
-#define HB_ARRAY_ID         -1004
-#define HB_VARIANT_ID       -1005
-#define HB_VAR_ID           -1006
-#define HB_BLOCK_ID         -1007
-#define HB_CHARACTER_ID     -1008
-#define HB_STRING_ID        -1009
-#define HB_CLASS_ID         -1010
-#define HB_STRUCTURE_ID     -1011
-#define HB_DATE_ID          -1012
-#define HB_LOGICAL_ID       -1013
-#define HB_BOOL_ID          -1014
-#define HB_NUMEIC_ID        -1015
-#define HB_NUM_ID           -1016
-#define HB_OBJECT_ID        -1017
-#define HB_OBJ_ID           -1018
-#define HB_PUBLIC_ID        -1019
-#define HB_OTHERWISE_ID     -1020
-#define HB_MEMVAR_ID        -1021
-#define HB_WHILE_ID         -1022
-#define HB_LOOP_ID          -1023
-#define HB_FOR_ID           -1024
-#define HB_NEXT_ID          -1025
-#define HB_FIELD_ID         -1026
-#define HB_PARAMETERS_ID    -1027
-#define HB_PRIVATE_ID       -1028
-#define HB_EXIT_ID          -1029
-#define HB_BEGIN_ID         -1030
-#define HB_SEQUENCE_ID      -1031
-#define HB_BREAK_ID         -1032
-#define HB_RECOVER_ID       -1033
-#define HB_USING_ID         -1034
-#define HB_CASE_ID          -1035
-#define HB_DO_ID            -1036
-#define HB_WITH_ID          -1037
-#define HB_DECLARE_ID       -1038
-#define HB_PROCREQ_ID       -1039
-#define HB_SELF_ID          -1040
-#define HB_IF_ID            -1041
-#define HB_IIF_ID           -1042
-#define HB_OPTIONAL_ID      -1043
-#define HB_IN_ID            -1044
-#define HB__FIELD_ID        -1045
-#define HB_LINE_ID          -1046
-#define HB_INIT_ID          -1047
-#define HB_PROCEDURE_ID     -1048
-#define HB_FUNCTION_ID      -1049
-#define HB_STATIC_ID        -1050
-#define HB_LOCAL_ID         -1051
-#define HB_QSELF_ID         -1052
-#define HB_RETURN_ID        -1053
-#define HB_END_ID           -1054
+#define HB_EXTERN_ID      -1002
+#define HB_AS_ID          -1003
+#define HB_OF_ID          -1004
+#define HB_ARRAY_ID       -1005
+#define HB_VARIANT_ID     -1006
+#define HB_VAR_ID         -1007
+#define HB_BLOCK_ID       -1008
+#define HB_CHARACTER_ID   -1009
+#define HB_STRING_ID      -1010
+#define HB_CLASS_ID       -1011
+#define HB_STRUCTURE_ID   -1012
+#define HB_DATE_ID        -1013
+#define HB_LOGICAL_ID     -1014
+#define HB_BOOL_ID        -1015
+#define HB_NUMEIC_ID      -1016
+#define HB_NUM_ID         -1017
+#define HB_OBJECT_ID      -1018
+#define HB_OBJ_ID         -1019
+#define HB_PUBLIC_ID      -1020
+#define HB_OTHERWISE_ID   -1021
+#define HB_MEMVAR_ID      -1022
+#define HB_WHILE_ID       -1023
+#define HB_LOOP_ID        -1024
+#define HB_FOR_ID         -1025
+#define HB_NEXT_ID        -1026
+#define HB_FIELD_ID       -1027
+#define HB_PARAMETERS_ID  -1028
+#define HB_PRIVATE_ID     -1029
+#define HB_EXIT_ID        -1030
+#define HB_BEGIN_ID       -1031
+#define HB_SEQUENCE_ID    -1032
+#define HB_BREAK_ID       -1033
+#define HB_RECOVER_ID     -1034
+#define HB_USING_ID       -1035
+#define HB_CASE_ID        -1036
+#define HB_DO_ID          -1037
+#define HB_WITH_ID        -1038
+#define HB_DECLARE_ID     -1039
+#define HB_PROCREQ_ID     -1040
+#define HB_SELF_ID        -1041
+#define HB_IF_ID          -1042
+#define HB_IIF_ID         -1043
+#define HB_OPTIONAL_ID    -1044
+#define HB_IN_ID          -1045
+#define HB__FIELD_ID      -1046
+#define HB_LINE_ID        -1047
+#define HB_INIT_ID        -1048
+#define HB_PROCEDURE_ID   -1049
+#define HB_FUNCTION_ID    -1050
+#define HB_STATIC_ID      -1051
+#define HB_LOCAL_ID       -1052
+#define HB_QSELF_ID       -1053
+#define HB_RETURN_ID      -1054
+#define HB_END_ID         -1055
 
 /* Intermediate Reductions when still ambigious or need further reductions. */
-#define _WHILE_WITH         4001
-#define _ID_ARRAY           4002
-#define _MACRO_ARRAY        4003
-#define _TEXT_ARRAY         4004
-#define _CASE_WITH          4005
-#define _WHL_ID_CR          4006
-#define _INC_CR             4007
-#define _DEC_CR             4008
+#define _WHILE_WITH       3001
+#define _ID_ARRAY         3002
+#define _MACRO_ARRAY      3003
+#define _TEXT_ARRAY       3004
+#define _CASE_WITH        3005
+#define _WHL_ID_CR        3006
+#define _INC_CR           3007
+#define _DEC_CR           3008
 
 LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '^'         , 0           , 0      , 0          ) REDUCE_TO( POWER             , 0             ),
@@ -1007,9 +1011,9 @@ LANGUAGE_RULES_ARE {
    /* Hex Number */\
    else if( yytext[0] == '0' && yytext[1] == 'X' )\
    {\
-      long lNumber = 0;\
+      long lNumber = hb_lex_Hex2L( yytext + 2 );\
 \
-      sscanf( yytext, "%lxI", &lNumber );\
+      /* sscanf( yytext, "%lxI", &lNumber );*/\
 \
       if( ( double ) SHRT_MIN <= lNumber && lNumber <= ( double ) SHRT_MAX )\
       {\
@@ -1086,9 +1090,9 @@ LANGUAGE_RULES_ARE {
 \
    switch ( x )\
    {\
-      case HB_MISSING_DEC :\
-         printf( "Missing decimals: %s\n", sToken );\
-         x = NUM_INTEGER;\
+      case HB_LIT_ACT :\
+         yylval.string = hb_compIdentifierNew( sPair, TRUE );\
+         x = LITERAL;\
          break;\
 \
       case HB_EXTERN_ID :\
@@ -1433,4 +1437,40 @@ int yy_lex_input( char *buffer, int iBufferSize )
    HB_SYMBOL_UNUSED( iBufferSize );
 
    return hb_pp_Internal( hb_comp_bPPO ? hb_comp_yyppo : NULL, buffer );
+}
+
+long hb_lex_Hex2L( char* sHex )
+{
+   int i, iExp = 0, iLen = strlen( sHex ) - 1;
+   long lVal, lSum = 0;
+   char cChar;
+
+   while( iLen >= 0 )
+   {
+      cChar = sHex[ iLen-- ];
+
+      if( isalpha( cChar ) )
+      {
+         lVal = cChar - 55;
+      }
+      else
+      {
+         lVal = cChar - 48;
+      }
+
+      if( lVal )
+      {
+	 i = 0;
+	 while( i++ < iExp )
+	 {
+	    lVal *= 16;
+	 }
+
+         lSum += lVal;
+      }
+
+      iExp++;
+   }
+
+   return lSum;
 }
