@@ -4065,7 +4065,7 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
   LOCAL  sNextLine, sNextToken, sLastToken, sJustToken, sJustNext, cLastChar
   LOCAL  s1, s2, s4, s5, sNext1, sNext2, sNext4, sNext5, nLen, nNextLen
   LOCAL  sWorkLine, sPrimaryStopper, nStoppers, nStopper, sStopLine, sStopper, ;
-         sMultiStopper, nSpaceAt, sNextStopper
+         sMultiStopper, nSpaceAt, sNextStopper, cChar
 
   IF Empty( sLine )
      RETURN NIL
@@ -4171,6 +4171,13 @@ STATIC FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor, bX )
 
         //? "EXP <(>: " + sExp
         RETURN sExp
+
+     CASE cType == '!'
+        IF IsAlpha( cChar := Left( sLine, 1 ) ) .OR. cChar == '_'
+           RETURN NextToken( @sLine )
+        ELSE
+           RETURN NIL
+        ENDIF
 
      CASE cType == NIL
         RETURN "-"
@@ -5283,6 +5290,33 @@ STATIC FUNCTION CompileRule( sRule, aRules, aResults, bX, bUpper )
                   LOOP
                ELSE
                   Alert( "ERROR! Unbalanced MP: '<(' at: " + sRule )
+                  RETURN .F.
+               ENDIF
+
+            CASE SubStr( sRule, 2, 1 ) == '!'
+               cType := '!'
+               nNext := At( '!>', sRule )
+               IF nNext > 0
+                  sMarker := SubStr( sRule, 3, nNext - 3 )
+                  ExtractLeadingWS( @sMarker )
+                  aAdd( aMarkers, sMarker )
+
+                  sRule := SubStr( sRule, nNext + 2 )
+                  ExtractLeadingWS( @sRule )
+
+                  aMatch := { nId, nOptional, sAnchor, cType, NIL }
+                  //? aMatch[1], aMatch[2], aMatch[3], aMatch[4], aMatch[5]
+                  aAdd( aRule[2], aMatch )
+
+                  /* Next dependant optional will be marked as trailing. */
+                  IF nOptional > 0
+                     nOptional := ( -nOptional )
+                  ENDIF
+
+                  sAnchor := NIL
+                  LOOP
+               ELSE
+                  Alert( "ERROR! Unbalanced MP: '<!' at: " + sRule )
                   RETURN .F.
                ENDIF
 
