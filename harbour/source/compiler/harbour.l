@@ -161,12 +161,24 @@ Separator     {SpaceTab}
     NOTE: Clipper allows for [[nested]] only if it is preprocessed from
     TEXT/ENDTEXT block - in normal code the preprocesor uses the first
     closing ] as a string terminator.
+    However we have to get some information from the preprocessor about
+    TEXT/ENDTEXT block start/end condition to distinguish code:
+    TEXT
+    some string]) ; qout([some more
+    ENDTEXT
+    from direct calls for qout function
+    QOUT([some string]) ; QOUT([some more])
     */
-    BEGIN STRING4START;
-    unput( '(' );
+    if( 0 /* TODO: hb_ppInsideTextBlock */ )
+    {
+        BEGIN STRING4START;
+        unput( '(' );
+    }
+    else
+        yyless( 4 );    /* len of QOUT */
+        
     yylval.string = hb_compIdentifierNew( "QOUT", TRUE );
     hb_comp_iState = IDENTIFIER;
-
     return IDENTIFIER;
 }
 
@@ -204,22 +216,79 @@ Separator     {SpaceTab}
                        return LITERAL;
                     }
 
-<STRING3>[^\]\n]*\]  { BEGIN 0;
-                      yytext[--yyleng] = '\0';
-                      yylval.string = hb_compIdentifierNew( yytext, TRUE );
-                      hb_comp_iState = LITERAL;
+<STRING3>.*\n  {
+    /* Preprocessed strings can contain embeded ] chars, for example
+    #translate TEST_STRING( <x> ) => #<x>
+    ? TEST_STRING( "['']" ) is preprocessed into ["['']"] so the string
+    terminator is "] pair
+    ? TEST_STRING( ['""'] ) is preprocessed into [['""']] so the string
+    terminator is ]] pair
+    There is however a single problem: any string with nested []
+    created by the preprocessor is compiled correctly in Clipper but
+    the same string passed directly in the code is compiled until
+    the first closing bracket is found! We are not following it here
+    because at this moment there is no possibility to distinguish
+    strings created by the preprocessor.
+    */
+    char StopChar = yytext[ 0 ];
+    int iFirstPos = 0;
+    BEGIN 0;
+    
+    if( (StopChar == '"') || (StopChar == '\'')  || (StopChar == '[') )
+    {
+       int i = 0;
+       if( StopChar == '[' )
+           StopChar = ']';
+       for( i = 0; i < yyleng-1; ++i )
+       {
+           if( (yytext[ i ] == StopChar) && yytext[ i + 1 ] == ']' )
+           {
+               /* "] or '] terminator was found */
+               yyless( i+2 );
+               yytext[ i+1 ] = '\0';
+               yylval.string = hb_compIdentifierNew( yytext, TRUE );
+               hb_comp_iState = LITERAL;
 
-                      return LITERAL;
-                    }
+               return LITERAL;
+           }
+           else if( (yytext[ i ] == ']') && iFirstPos == 0 )
+               iFirstPos = i;
+       }
+       if( iFirstPos > 0 )
+       {
+           yyless( iFirstPos+1 );
+           yytext[ iFirstPos+1 ] = '\0';
+           yylval.string = hb_compIdentifierNew( yytext, TRUE );
+           hb_comp_iState = LITERAL;
 
-<STRING3>[^\]\n]*\n { BEGIN 0;
-                      unput( '\n' );
-                      yytext[--yyleng] = '\0';
-                      hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
-                      hb_comp_iState = LOOKUP;
+           return LITERAL;
+       }
+    }
+    else
+    {
+        /* look for the first closing ] character */
+        int i;
+        for( i = 0; i < yyleng - 1; ++i )
+        {
+            if( yytext[ i ] == ']' )
+            {
+               yyless( i+1 );
+               yytext[ i ] = '\0';
+               yylval.string = hb_compIdentifierNew( yytext, TRUE );
+               hb_comp_iState = LITERAL;
 
-                      return LITERAL;
-                    }
+               return LITERAL;
+            }
+        }
+    }
+    /* If we are here then the terminator was not found - report an error */
+    unput( '\n' );
+    yytext[--yyleng] = '\0';
+    hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_STRING_TERMINATOR, yytext, NULL );
+    hb_comp_iState = LOOKUP;
+
+    return LITERAL;
+}
 
 <STRING4START>\(   { BEGIN STRING4; return( '(' ); }
 <STRING4START>.    { BEGIN 0; unput( yytext[ yyleng-1 ] ); }
@@ -655,14 +724,18 @@ Separator     {SpaceTab}
                }
 <FOR_>{Separator}*[\(] { /* function call */
                BEGIN 0;
-               if( hb_comp_iState == LOOKUP )
-               { /* Clipper does not like FOR() at the begining of line */
-                 hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, yytext, NULL );
-               }
-               yylval.string = hb_compIdentifierNew( "FOR", TRUE );
-               hb_comp_iState =IDENTIFIER;
                unput( yytext[ yyleng-1 ] );
-               return IDENTIFIER;
+               if( hb_comp_iState == LOOKUP )
+               { /* Clipper always assume FOR (somevar):=1 TO ... here */
+                   hb_comp_iState =FOR;
+                   return FOR;
+               }
+               else
+               {
+                   yylval.string = hb_compIdentifierNew( "FOR", TRUE );
+                   hb_comp_iState =IDENTIFIER;
+                   return IDENTIFIER;
+               }
              }
 <FOR_>.|\n { /* there is no identifier after "FOR" */
                BEGIN 0;

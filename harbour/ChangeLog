@@ -1,3 +1,25 @@
+2000-08-12 15:20 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/pp/ppcode.c
+        * fixed '\`' into '`' to stop warning in GCC
+        
+    *source/compiler/harbour.l
+        * fixed handling of TEXT/ENDTEXT - it is not active now 
+        'if( 0 )' since it requires more support from the preprocessor.
+        The preprocessor have to set some flag when text block is
+        processed to suppres errorneous compilation if normal 
+        (not preprocessed) code in case of:
+        QOUT([some]) ; QOUT([string])
+        * added support for nested '[]' string delimiters that can
+        be created by the preprocessor        
+        * fixed handling of 'FOR(' syntax - it is now fully
+        Clipper compatible.
+
+    *source/compiler/harbour.y
+        * fixed handling of FOR (expression):=... TO ... syntax
+        ( Clipper compiles:  FOR (a:=1,b:=2,i):=1 TO 10 )
+        although it needs some more work.
+    
 2000-07-29 03:00 UTC+0500 April White <awhite@user.rose.com>
    + doc/en/
      + (re)added hbvm.txt, hbapiitm.txt, hbapirdd.txt, hbmacro.txt,

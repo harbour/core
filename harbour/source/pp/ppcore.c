@@ -2612,7 +2612,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
                  lPos++;
                  continue;
                }
-             else if( ( *(szText+lPos) == '\'' || *(szText+lPos) == '\`' ) && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
+             else if( ( *(szText+lPos) == '\'' || *(szText+lPos) == '`' ) && ( lPos == 0 || *(szText+lPos-1) != '\\' ) )
                {
                  State = STATE_QUOTE1;
                  lPos++;

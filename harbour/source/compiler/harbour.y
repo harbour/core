@@ -125,6 +125,9 @@ static PTR_LOOPEXIT hb_comp_pLoops = NULL;
 static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
 char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
+
+static void hb_compDebugStart( void ) { };
+
 %}
 
 %union                  /* special structure used by lex and yacc to share info */
@@ -716,6 +719,7 @@ LValue      : IdentName                     { $$ = hb_compExprNewVar( $1 ); }
             | MacroExpr
             | ObjectData
             | VariableAt
+            | PareExpList        { $$ = hb_compExprListStrip( $1, NULL ); }
             ;
 
 /* NOTE: PostOp can be used in one context only - it uses $0 rule
@@ -1443,6 +1447,7 @@ EndWhile   : END
 ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                {
                   hb_compLinePush();
+                  hb_compDebugStart();
                   ++hb_comp_wForCounter;              /* 5 */
                   $<asExpr>$ = hb_compExprGenStatement( hb_compExprAssign( $2, $4 ) );
                }
