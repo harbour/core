@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-05-18 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/cdpapi.c
+    ! Corrected the function names reported by to HB_TRACE statements,
+      as pointed out by Chen Kedem <niki@synel.co.il>.
+
 2004-05-18 16:12 UTC+0300 Chen Kedem <niki@actcom.co.il>
 
    * doc/en/lang.txt

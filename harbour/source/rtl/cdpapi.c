@@ -81,7 +81,7 @@ static int hb_cdpFindPos( char * pszID )
 
 BOOL  hb_cdpRegister( PHB_CODEPAGE cdpage )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_codepageRegister(%p)", cdpage));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdpRegister(%p)", cdpage));
 
    if( cdpage )
    {
@@ -243,7 +243,7 @@ PHB_CODEPAGE  hb_cdpSelect( PHB_CODEPAGE cdpage )
 {
    PHB_CODEPAGE cdpOld = hb_cdp_page;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_langSelect(%p)", cdpage));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cdpSelect(%p)", cdpage));
 
    if( cdpage )
    {
