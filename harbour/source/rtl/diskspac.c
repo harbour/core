@@ -102,7 +102,7 @@ HB_FUNC( DISKSPACE )
          case HB_DISK_TOTAL:
             dSpace = ( double ) disk.total_clusters *
                      ( double ) disk.sectors_per_cluster *
-                     ( double ) disk.bytes_per_sector );
+                     ( double ) disk.bytes_per_sector;
             break;
       }
 
