@@ -6,6 +6,8 @@
  * Harbour Project source code:
  *   CT3 Number and bit manipulation functions: - NTOC()
  *                                              - CTON()
+ *                                              - BITTOC()
+ *                                              - CTOBIT()
  *
  * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://www.harbour-project.org
@@ -52,6 +54,7 @@
  */
 
 #include "common.ch"
+#define WORLD   '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -83,6 +86,7 @@ FUNCTION NTOC( xNum, nBase, nLenght, cPad )
 LOCAL cNum
 
 Default cPad to "0"
+Default nBase to 10
 
 IF VALTYPE( xNum ) == "C"
    xNum = ALLTRIM( xNum )
@@ -95,7 +99,7 @@ ENDIF
 
 cNum = B10TOBN( xNum, @nBase )
 
-IF ISNUMBER( nLenght ) .AND. LEN( cNum ) < nLenght
+IF ISNUMBER( nLenght ) .AND. ISCHARACTER( cPad ) .AND. LEN( cNum ) < nLenght
    cNum = REPLICATE( cPad, nLenght - LEN( cNum ) ) + cNum
 ENDIF
 
@@ -129,33 +133,130 @@ RETURN cNum
  */
 
 FUNCTION CTON( xNum, nBase, lMode )
-LOCAL i, nNum:=0, cWorld := '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+LOCAL i, nNum:=0
 
 Default lMode TO .F.
+Default nBase TO 10
 
 xNum = ALLTRIM(xNum)
 
-FOR i=LEN( xNum ) TO 1 STEP -1
-   nNum += (nBase ** i) * AT(SUBSTR(xNum,i,1),cWorld)
-NEXT
+IF nBase >= 2 .AND. nBase <= 36
 
-IF lMode
-  IF nNum > 32767
-    nNum = nNum - 65536
-  ENDIF
+   FOR i=1 TO LEN( xNum )
+      nNum += (nBase ** (i-1)) * ( AT( SUBSTR( xNum, -i, 1 ), WORLD ) - 1 )
+   NEXT
+
+   IF lMode
+      IF nNum > 32767
+         nNum = nNum - 65536
+      ENDIF
+   ENDIF
+
 ENDIF
 
 RETURN nNum
 
 
-STATIC FUNCTION B10TOBN( xNum, nBase )
-LOCAL nParcial, cWorld := '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-IF xNum > 0
+STATIC FUNCTION B10TOBN( nNum, nBase )
+IF nNum > 0
    
-   nParcial = xNum % nBase
-   RETURN B10TOBN( INT(xNum/nBase), @nBase ) + SUBSTR( cWorld, nParcial, 1 )
+   RETURN B10TOBN( INT( nNum / nBase), @nBase ) +;
+          SUBSTR( WORLD, ( nNum % nBase ) + 1, 1 )
 
 ENDIF
 RETURN ""
+
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      BITTOC()
+ *  $CATEGORY$
+ *      CT3 number and bit manipulation functions
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      BITTOC (<nInteger>, <cBitPattern>[,<lMode>]) -> <cBitString>
+ *  $ARGUMENTS$
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is numconv.prg, library is libct.
+ *  $SEEALSO$
+ *      CTOBIT()
+ *  $END$
+ */
+
+FUNCTION BITTOC( nInteger, cBitPattern, lMode )
+
+  LOCAL cBinary, nI, cString := ''
+
+  Default lMode TO .F.
+
+
+  cBitPattern := RIGHT( cBitPattern, 16 )
+  cBinary = NTOC( nInteger, 2, 16 )
+
+  FOR nI = 1 TO 16
+     
+     IF SUBSTR( cBinary, -nI, 1 ) == '1'
+
+        cString = SUBSTR( cBitPattern, -nI, 1 ) + cString
+
+     ELSEIF lMode
+           
+        cString = ' ' + cString
+
+     ENDIF
+
+  NEXT
+
+RETURN RIGHT( cString, LEN( cBitPattern ) )
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      CTOBIT()
+ *  $CATEGORY$
+ *      CT3 number and bit manipulation functions
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      CTOBIT (<cBitString>, <cBitPattern>) -> <nWord>
+ *  $ARGUMENTS$
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is numconv.prg, library is libct.
+ *  $SEEALSO$
+ *      BITTOC()
+ *  $END$
+ */
+
+FUNCTION CTOBIT( cCharString, cBitPattern )
+
+  LOCAL nI, cString := ''
+
+  cCharString = RIGHT( cCharString, 16 )
+  cBitPattern = RIGHT( cBitPattern, 16 )
+
+  FOR nI = 1 TO LEN( cBitPattern )
+
+     cString = IF( AT(SUBSTR( cBitPattern, -nI, 1), cCharString) > 0, '1', '0') + cString
+
+  NEXT
+
+RETURN CTON( cString, 2 )
 
