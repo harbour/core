@@ -74,60 +74,60 @@ int PreProcess( FILE * handl_i, FILE * handl_o, char * sOut )
   int rezParse;
 
   HB_TRACE(("PreProcess(%p, %p, %s)",
-	    handl_i, handl_o, sOut));
+            handl_i, handl_o, sOut));
 
   HB_SYMBOL_UNUSED( handl_o );
 
   while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
-			     sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
+                             sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
       if( ! lInclude )
-	nline++;
+        nline++;
       lens += rdlen;
 
       if( sLine[ lens - 1 ] == ';' )
-	{
-	  lContinue = 1;
-	  lens--;
-	  lens--;
-	  while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
-	  sLine[ ++lens ] = ' ';
-	  sLine[ ++lens ] = '\0';
+        {
+          lContinue = 1;
+          lens--;
+          lens--;
+          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
+          sLine[ ++lens ] = ' ';
+          sLine[ ++lens ] = '\0';
 
-	  *ptrOut++ = '\n';
-	}
+          *ptrOut++ = '\n';
+        }
       else
-	{
-	  lContinue = 0;
-	  lens = 0;
-	}
+        {
+          lContinue = 0;
+          lens = 0;
+        }
 
       if( !lContinue )
-	{
-	  if( *sLine != '\0' )
-	    {
-	      ptr = sLine;
-	      SKIPTABSPACES( ptr );
-	      if( *ptr == '#' )
-		{
-		  if( ( rezParse = ParseDirective( ptr + 1 ) ) == 0 )
-		    *sLine = '\0';
-		}
-	      else
-		{
-		  if( nCondCompile == 0 || aCondCompile[ nCondCompile - 1 ] )
-		    {
-		      if( ( rezParse = ParseExpression( ptr, sOutLine ) ) > 0 )
-			{
-			  printf( "\nError number %u in line %u\n", rezParse, nline );
-			}
-		    }
-		  else
-		    *sLine = '\0';
-		}
-	    }
-	  break;
-	}
+        {
+          if( *sLine != '\0' )
+            {
+              ptr = sLine;
+              SKIPTABSPACES( ptr );
+              if( *ptr == '#' )
+                {
+                  if( ( rezParse = ParseDirective( ptr + 1 ) ) == 0 )
+                    *sLine = '\0';
+                }
+              else
+                {
+                  if( nCondCompile == 0 || aCondCompile[ nCondCompile - 1 ] )
+                    {
+                      if( ( rezParse = ParseExpression( ptr, sOutLine ) ) > 0 )
+                        {
+                          printf( "\nError number %u in line %u\n", rezParse, nline );
+                        }
+                    }
+                  else
+                    *sLine = '\0';
+                }
+            }
+          break;
+        }
     }
   if( rdlen < 0 ) return 0;
 
@@ -152,40 +152,40 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o )
   HB_TRACE(("Hp_Parse(%p, %p)", handl_i, handl_o));
 
   while( ( rdlen = pp_RdStr( handl_i, sLine + lens, STR_SIZE - lens, lContinue,
-			     sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
+                             sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
       lens += rdlen;
 
       if( sLine[ lens - 1 ] == ';' )
-	{
-	  lContinue = 1;
-	  lens--;
-	  lens--;
-	  while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
-	  sLine[ ++lens ] = ' ';
-	  sLine[ ++lens ] = '\0';
-	}
+        {
+          lContinue = 1;
+          lens--;
+          lens--;
+          while( sLine[ lens ] == ' ' || sLine[ lens ] == '\t' ) lens--;
+          sLine[ ++lens ] = ' ';
+          sLine[ ++lens ] = '\0';
+        }
       else
-	{
-	  lContinue = 0;
-	  lens = 0;
-	}
+        {
+          lContinue = 0;
+          lens = 0;
+        }
 
       if( !lContinue )
-	{
-	  if( *sLine != '\0' )
-	    {
-	      ptr = sLine;
-	      SKIPTABSPACES( ptr );
-	      if( *ptr == '#' )
-		{
-		  ParseDirective( ptr + 1 );
-		  *sLine = '\0';
-		}
-	      else
-		GenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, NULL, NULL );
-	    }
-	}
+        {
+          if( *sLine != '\0' )
+            {
+              ptr = sLine;
+              SKIPTABSPACES( ptr );
+              if( *ptr == '#' )
+                {
+                  ParseDirective( ptr + 1 );
+                  *sLine = '\0';
+                }
+              else
+                GenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, NULL, NULL );
+            }
+        }
     }
 
   hb_xfree( sBuffer );

@@ -39,36 +39,38 @@
 #include <stdarg.h>
 #include "hbtrace.h"
 
-char* hb_tr_file_ = "";
-int   hb_tr_line_ = 0;
+char * hb_tr_file_ = "";
+int    hb_tr_line_ = 0;
 
-void hb_tr_trace(char* fmt, ...)
+void hb_tr_trace( char * fmt, ...)
 {
-  char buf[1024];
-  char file[256];
-  int i, j;
+   char buf[ 1024 ];
+   char file[ 256 ];
+   int i, j;
+   va_list ap;
 
-  va_list ap;
-  va_start(ap, fmt);
-  vsprintf(buf, fmt, ap);
-  va_end(ap);
+   va_start( ap, fmt );
+   vsprintf( buf, fmt, ap );
+   va_end( ap );
 
-  for (i = 0; hb_tr_file_[i] != '\0'; ++i) {
-    if (hb_tr_file_[i] != '.' &&
-        hb_tr_file_[i] != '/' &&
-        hb_tr_file_[i] != '\\')
-      break;
-  }
-  for (j = 0; hb_tr_file_[i] != '\0'; ++i, ++j) {
-    file[j] = hb_tr_file_[i];
-  }
-  file[j] = '\0';
+   for( i = 0; hb_tr_file_[ i ] != '\0'; ++i )
+   {
+      if( hb_tr_file_[ i ] != '.' &&
+          hb_tr_file_[ i ] != '/' &&
+          hb_tr_file_[ i ] != '\\' )
+         break;
+   }
 
-  fprintf(stderr, "%s:%d: %s\n",
-	  file, hb_tr_line_, buf);
+   for( j = 0; hb_tr_file_[ i ] != '\0'; ++i, ++j )
+      file[ j ] = hb_tr_file_[ i ];
 
-  hb_tr_file_ = "";
-  hb_tr_line_ = 0;
+   file[ j ] = '\0';
+
+   fprintf( stderr, "%s:%d: %s\n", file, hb_tr_line_, buf );
+
+   hb_tr_file_ = "";
+   hb_tr_line_ = 0;
 }
 
-#endif  /* #if defined(HB_DO_TRACE) */
+#endif /* #if defined(HB_DO_TRACE) */
+

@@ -70,22 +70,22 @@ HARBOUR HB___PREPROCESS( void )
       SKIPTABSPACES( ptr );
 
       if( setjmp( s_env ) == 0 )
-	{
-	  int resParse;
-	 
-	  if( ( resParse = ParseExpression( ptr, pOut ) ) > 0 )
-	    {
-	      /* Some error here? */
-	    }
-	  hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
-	}
+        {
+          int resParse;
+
+          if( ( resParse = ParseExpression( ptr, pOut ) ) > 0 )
+            {
+              /* Some error here? */
+            }
+          hb_retc( pText ); /* Preprocessor returns parsed line in input buffer */
+        }
       else
-	{
-	  /* an error occured during parsing.
-	   * The longjmp was used in GenError()
-	   */
-	  hb_retc( "ERROR" );
-	}
+        {
+          /* an error occured during parsing.
+           * The longjmp was used in GenError()
+           */
+          hb_retc( "ERROR" );
+        }
 
       hb_xfree( pText );
       hb_xfree( pOut );
@@ -97,7 +97,7 @@ HARBOUR HB___PREPROCESS( void )
 void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
   HB_TRACE(("GenError(%p, %c, %d, %s, %s)",
-	    _szErrors, cPrefix, iError, szError1, szError2));
+            _szErrors, cPrefix, iError, szError1, szError2));
 
   /* TODO: The internal buffers allocated by the preprocessor should be
    * deallocated here
@@ -113,7 +113,7 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
 void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
   HB_TRACE(("GenWarning(%p, %c, %d, %s, %s)",
-	    _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+            _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
   /* NOTE:
    *    All warnings are simply ignored

@@ -38,22 +38,22 @@
 
 #if defined(HB_DO_TRACE)
 
-extern char* hb_tr_file_;
-extern int   hb_tr_line_;
+extern char * hb_tr_file_;
+extern int    hb_tr_line_;
 
-void hb_tr_trace(char* fmt, ...);
+void hb_tr_trace( char* fmt, ... );
 
-#define HB_TRACE(x) \
+#define HB_TRACE( x ) \
 do { \
   hb_tr_file_ = __FILE__; \
   hb_tr_line_ = __LINE__; \
   hb_tr_trace x ; \
-} while (0)
+} while( 0 )
 
 #else
 
-#define HB_TRACE(x)
+#define HB_TRACE( x )
 
-#endif  /* #if defined(HB_DO_TRACE) */
+#endif /* #if defined(HB_DO_TRACE) */
 
 #endif /* HB_TRACE_H_ */

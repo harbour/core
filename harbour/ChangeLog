@@ -1,3 +1,13 @@
+19991021-01:48 GMT+1 Victor Szel <info@szelvesz.hu>
+   * include/hbtrace.h
+     ! TRACE() fixed to HB_TRACE() (that was a bit late :)
+     * Some formatting.
+   * source/common/hbtrace.c
+     * Formatting.
+   * source/pp/*.c
+     source/pp/stdalone/*.c
+     * Tabs removed.
+
 19991020-19:40 EDT David G. Holm <dholm@jsd-llc.com>
 
    * include/hbtrace.h
