@@ -1,9 +1,9 @@
-2000-01-01 23:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-01-01 23:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * source/compiler/harbour.c
      * Minor correction in hb_compInlineAdd()
 
-2000-01-01 22:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-01-01 22:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * include/hberrors.h
    * source/compiler/hbgenerr.c
@@ -49,7 +49,7 @@
       * fixed dbEval to not Go Top when a While expression is passed
 
 
-2000-12-28 20:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-28 20:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/eval.c
      * Minor formatting.
 
@@ -97,7 +97,7 @@
     used to separate multiple macros
     *Fixed bug when -p switch is used
 
-2000-12-14 17:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-14 17:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/eval.c
      * Removed unneeded hb_stackItemFromBase(1), reverted to use pItem obtained by hb_param()
 
@@ -105,13 +105,13 @@
    * source/vm/estack.c
      + added missing semicolons (lines 374 and 416)
 
-2000-12-12 17:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-12 17:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/eval.c
      + Corrected support for block passed by reference.
 
      /* Ryszard, is there any reason to use hb_stackItemFromBase(1) instead of pItem? */
 
-2000-12-12 17:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-12 17:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * makefile.bc
    * hb_slex.bc
      * Changed to include new source\vm\estack.c
@@ -256,7 +256,7 @@ NOTE! some modules still use a direct access to the eval stack
    * contrib/rdd_ads/doc/en/readme.txt
       * BH added compatibility notes
 
-2000-12-04 19:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-04 19:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/tget.prg
      ! Corrected 2 bugs when New Method called without any parameters.
 
@@ -271,7 +271,7 @@ NOTE! some modules still use a direct access to the eval stack
        causing unneeded skipping being requested to data source.
        I hope these last changes have fixed TBrowse class. Please test it extensively.
 
-2000-12-03 15:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-03 15:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      ! Optimized __GETA() support, and changed it to be implementated identical to Clipper.
        /* Clipper passes a bGet Block which refrences the Base Array Variable and not the Variable itself.
@@ -285,7 +285,7 @@ NOTE! some modules still use a direct access to the eval stack
    * tests/testget.prg
      + Added additional test.
 
-2000-12-03 10:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-03 10:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      + Added support for whaite space between = and > in #[x]command/[x]translate rules.
 
@@ -309,13 +309,13 @@ NOTE! some modules still use a direct access to the eval stack
      * :Create now accept the metaclass object
      * :instance() return an object with it's :class initiated
 
-2000-12-01 01:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-12-01 01:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      ! Minor optimization.
    * source/rtl/tgetint.prg
      * Corrected typo
 
-2000-11-30 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-30 18:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbmacro.h
    * source/macro/macro.y
    * source/vm/macro.c
@@ -355,11 +355,11 @@ NOTE! some modules still use a direct access to the eval stack
      + Added MEMVAR declarations for all PRIVATE variables, so that it
        will compile without warnings when using the GNU Make System.
 
-2000-11-30 10:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-30 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      ! Commented out support for Self: as SELF, treat as any other Identifier, until we finalize SELF support.
 
-2000-11-30 07:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-30 07:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/pptable.c
      - Removed #ifdef SIMPLEX recently added by Ryszard, SimpLex was using same 5 paramters as Cliiper.
 
@@ -392,7 +392,7 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/tclass.prg
      * some work in progress about :class message
 
-2000-11-29 13:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-29 13:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      * Exported: hb_compFieldGetPos() and hb_compMemvarGetPos()
 
@@ -457,7 +457,7 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/set.c
      % Changed hb_vm_bIdleRepeat to hb_set.HB_SET_IDLEREPEAT.
 
-2000-11-27 08:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-27 08:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbapi.h
    * source/rtl/idle.c
      + Added hb_idleReset()
@@ -498,21 +498,21 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/tbrowse.prg
       ! fixed ::Stabilize() method (problems when past eof())
 
-2000-11-26 21:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-26 21:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
    * source/pp/ppcomp.c
    * source/pp/ppcore.c
      + Added error support for Input buffer overflow .
 
-2000-11-26 18:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-26 18:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.slx
      + Added Error message if NUMERALS_PER_LINE is exhausted, and set it to 3000 (just below apparent parser limitation)
 
-2000-11-26 10:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-26 10:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      + Added support for ',' within Array Index in NextParm()
 
-2000-11-24 21:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-24 21:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.y
    * source/compiler/harbour.sly
      + Added support for MacroExpr as FunCall
@@ -521,7 +521,7 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rdd/rddcpy.c
         * added missing explicit cast needed by VC++
 
-2000-11-24 12:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-24 12:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hbset.h
    * include/set.ch
    * source/pp/pptable.c
@@ -552,7 +552,7 @@ NOTE! some modules still use a direct access to the eval stack
      * added missing parenthesis giving a warning error with VC++
 
 
-2000-11-23 13:15 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-23 13:15 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/idle.c
      + Added HB_IDLE_RESET() and logic to reset Idle Processing upon such explicit request.
      ! If reoccuring processing of Idle Blocks is requested, hb_releaseCPU() is execusted upon completion of each cycle.
@@ -565,7 +565,7 @@ NOTE! some modules still use a direct access to the eval stack
      * corrected hb___msgClsParent( void )
        where some pointer was badly deallocated
 
-2000-11-23 11:11 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-23 11:11 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/idle.c
      ! Added Reset Logic to HB_IDLESTATE()
 
@@ -575,7 +575,7 @@ NOTE! some modules still use a direct access to the eval stack
         *added forward declaration of _CDXTAG structure to compile
         in some C++ compilers (Watcom C++)
 
-2000-11-23 10:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-23 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/idle.c
    * source/rtl/inkey.c
      ! Improved granularity of Idle Processing:
@@ -597,7 +597,7 @@ NOTE! some modules still use a direct access to the eval stack
               time left to wait I'll reenter hb_IdleState() immediatly (executing next
               idle task).
 
-2000-11-21 18:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-21 18:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcomp.c
      * Corrected 1 compiler warning.
 
@@ -622,7 +622,7 @@ NOTE! some modules still use a direct access to the eval stack
      + Added Sleep(0) for 32bit Windows mode to forfeit the
        remainder of the current time slice in hb_releaseCPU().
 
-2000-11-21 08:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-21 08:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcomp.c
    * source/compiler/harbour.c
      * Corrected compiler warnings.
@@ -678,7 +678,7 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/tbrowse.prg
       ! fixed redrawing of header and footer separator (it was shorter than needed)
 
-2000-11-16 02:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-16 02:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      ! Fixed jump optimization for HB_P_SEQBEGIN and HB_P_SEQEND
 
@@ -686,7 +686,7 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/gtwin/gtwin.c
      ! Fix for handling of function keys with no state key modifiers.
 
-2000-11-14 02:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-14 02:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected few pre-processor bugs.
      ! Corrected DOT multi-line support.
@@ -745,7 +745,7 @@ NOTE! some modules still use a direct access to the eval stack
     *source/vm/memvars.c
         *added initialization of items created on the stack
 
-2000-11-11 23:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-11 23:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected few pre-processor bugs.
 
@@ -759,7 +759,7 @@ NOTE! some modules still use a direct access to the eval stack
    * source/rtl/teditor.prg
       ! error in cursor handling when K_CTRL_PGDN or K_CTRL_END key was pressed.
 
-2000-11-10 11:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-10 11:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      + Added support for early macro expansion of declared symbol for simple macro expression within CodeBlock (Like Clipper).
 
@@ -771,23 +771,23 @@ NOTE! some modules still use a direct access to the eval stack
   *source/rdd/rddcpy.c
     *Some fix suggested by Victor
 
-2000-11-09 11:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-09 11:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Added parameter BOOL bRule to md_strAt() to differentiate between searching a Rule Text or an Expression.
        /* [...] should be searched within Rule, but _not_ within an Expression. */
 
-2000-11-09 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-09 09:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Fixed typo in NextName()
 
-2000-11-09 01:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-09 01:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Fixed STATE_QUOT3 ([]) support in getExpReal() and added STATE_QUOT3 support to NextParm() NextName() and md_strAt()
 
    /* Before this fix #define and #translate were activated within [] strings - Fixed!
       Now strings delimiter conversion should be complete. */
 
-2000-11-08 24:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-08 24:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
    * utils/hbpp/hbpp.c
      + Added missing type case for C++ compilers.
@@ -850,7 +850,7 @@ NOTE! some modules still use a direct access to the eval stack
         * removed unnecessary reference counter inc/dec operations
 
 
-2000-11-07 22:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-07 22:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * include/hberrors.h
      + Added: #define HB_COMP_ERR_BLOCK                       47
    * source/compiler/hbgenerr.c
@@ -879,7 +879,7 @@ NOTE! some modules still use a direct access to the eval stack
         *__GET uses macro operator if no initial value is passed and
          there is no set/get block
 
-2000-11-06 22:10 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-06 22:10 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/cmdcheck.c
    * utils/hbpp/hbpp.c
      + Added support for complex Command Line #defines
@@ -893,7 +893,7 @@ NOTE! some modules still use a direct access to the eval stack
      removing every direct use of stacked PHB_ITEM after .VmPush()
      or accessing them by hb_stack.pBase + n.
 
-2000-11-05 14:40 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-05 14:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      ! Fixed droped redundant spaces in [] strings, by adding STATE_QUOTE3 to strotrim().
      ! Fixed conversion of string delimiters in getExpReal()
@@ -925,7 +925,7 @@ NOTE! some modules still use a direct access to the eval stack
        from address to address when stack growth.
        __clsinstsuper() caused GPF
 
-2000-11-04 14:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-04 14:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * include/hbexpra.c
    * source/pp/pptable.c
@@ -938,7 +938,7 @@ NOTE! some modules still use a direct access to the eval stack
 
      /* Todo - have to do same in GNU make */
 
-2000-11-04 11:17 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-04 11:17 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * makefile.bc
      Added missing dependancy of source/rtl/tgetint.prg
 
@@ -1004,11 +1004,11 @@ NOTE! some modules still use a direct access to the eval stack
           This will break current Simplex implementation !!!
 
 
-2000-11-03 16:05 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-03 16:05 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/pptable.c
      * Changed {|u| to {|_1| and := u to := _1 in bSetGet of _GET_(...) to avoid unexpected result with @ X,Y GET u
 
-2000-11-03 15:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-03 15:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      + Added rule to accept Get and GetA as FunCall
 
@@ -1028,19 +1028,19 @@ NOTE! some modules still use a direct access to the eval stack
    * source/lang/msgko.c
       Charles,Kwon update as requested ...
 
-2000-11-02 20:35 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-02 20:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Corrected minor bug with [] string delimiters.
 
    * contrib/dot/rp_dot.ch
      + Added rule for EXIT
 
-2000-11-02 15:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-02 15:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/rtl/tget.prg
    * include/hbextern.ch
      + Re-added _GET_() until support of __GET() and __GETA() added to harbour.y
 
-2000-11-02 15:20 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-02 15:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.sly
      + Added support for extended parameters to __GET() and __GETA()
      ! Corrected 2nd parameter of __GETA() to reflect only the Base Array Name.
@@ -1088,7 +1088,7 @@ NOTE! some modules still use a direct access to the eval stack
     utils/hbdoc/hbdoc.prg
      *Small Changes
 
-2000-11-01 17:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-01 17:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * source/compiler/harbour.sly
      ! Optimized _GET_ support.
@@ -1120,7 +1120,7 @@ NOTE! some modules still use a direct access to the eval stack
         RDD AUTHORS !!!!  This may break your code!
         I did several tests and all seems fine.
 
-2000-11-01 04:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-11-01 04:25 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
    * source/compiler/harbour.slx
      + Added support for pseudo function _GET_(...)
@@ -1145,7 +1145,7 @@ NOTE! some modules still use a direct access to the eval stack
    * contrib/mysql/tsqlbrw.prg
      * changes / fixes.
 
-2000-10-27 08:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+2000-10-27 08:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
 
     * source/compiler/genc.c
     * source/compiler/genhrb.c
