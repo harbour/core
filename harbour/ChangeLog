@@ -1,3 +1,7 @@
+2001-10-11 21:45 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  ! source/pp/pptable.c
+     * Rule corrected
+
 2001-10-10 23:50 GMT+1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
        Fixed hb_clsIsParent for same class as parent ...
