@@ -287,48 +287,10 @@ typedef void hb_out_func_typedef( char *, ULONG );
 /* Format items for output, then call specified output function */
 static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
 {
+   ULONG ulLen;
    PHB_ITEM pItem = hb_param( uiParam, IT_ANY );
-
-   switch( pItem->type )
-   {
-      case IT_STRING:
-         hb_out_func( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
-         break;
-
-      case IT_DATE:
-      {
-         char szBuffer[ 11 ];
-         hb_dtoc( hb_pards( uiParam ), szBuffer, hb_set.HB_SET_DATEFORMAT );
-         hb_out_func( szBuffer, strlen( szBuffer ) );
-         break;
-      }
-
-      case IT_DOUBLE:
-      case IT_INTEGER:
-      case IT_LONG:
-      {
-         char * szText = hb_itemStr( pItem, NULL, NULL ); /* Let hb_itemStr() do the hard work */
-         if( szText )
-         {
-            hb_out_func( szText, strlen( szText ) );
-            hb_xfree( szText );
-         }
-         break;
-      }
-      case IT_NIL:
-         hb_out_func( "NIL", 3 );
-         break;
-
-      case IT_LOGICAL:
-         if( hb_itemGetL( pItem ) )
-            hb_out_func( ".T.", 3 );
-         else
-            hb_out_func( ".F.", 3 );
-         break;
-
-      default:
-         break;
-   }
+   char * pString = hb_itemString( pItem, &ulLen );
+   hb_out_func( pString, ulLen );
 }
 
 /* Output an item to STDOUT */

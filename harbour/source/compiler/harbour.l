@@ -1299,8 +1299,6 @@ static int yy_ConvertNumber( char * szBuffer )
    char * ptr;
 
    yylval.dNum.dNumber = atof( szBuffer );
-   yylval.string = yy_strdup( yytext );
-
    ptr = strchr( szBuffer, '.' );
    if( ptr )
    {

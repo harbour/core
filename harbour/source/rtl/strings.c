@@ -38,7 +38,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_stricmp()
+ *    hb_stricmp() and HB_HB_VALTOSTR().
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    hb_strEmpty()
@@ -63,9 +63,6 @@
                           ( c ) == HB_CHAR_LF || \
                           ( c ) == HB_CHAR_CR || \
                           ( c ) == ' ' )
-
-/* DJGPP can sprintf a float that is almost 320 digits long */
-#define HB_MAX_DOUBLE_LENGTH 320
 
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
 
@@ -1201,125 +1198,6 @@ HARBOUR HB_VAL( void )
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "VAL" ); /* NOTE: Clipper catches this at compile time! */
 }
 
-/* converts a numeric to a string with optional width & precision.
-   This function should be used by any function that wants to format numeric
-   data for displaying, printing, or putting in a database.
-
-   Note: The caller is responsible for calling hb_xfree to free the results buffer,
-         but ONLY if the return value is not a NULL pointer!
-*/
-/* TODO: Move it to itemapi.c */
-char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
-{
-   char * szResult = NULL;
-
-   if( pNumber )
-   {
-      /* Default to the width and number of decimals specified by the item,
-         with a limit of 20 integer places and 9 decimal places */
-      int iWidth;
-      int iDec;
-
-      hb_itemGetNLen( pNumber, &iWidth, &iDec );
-
-      if( iWidth > 20 )
-         iWidth = 20;
-      if( iDec > 9 )
-         iDec = 9;
-      if( hb_set.HB_SET_FIXED )
-         iDec = hb_set.HB_SET_DECIMALS;
-
-      if( pWidth )
-      {
-         /* If the width parameter is specified, override the default value
-            and set the number of decimals to zero */
-         int iWidthPar = hb_itemGetNI( pWidth );
-
-         if( iWidthPar < 1 )
-            iWidth = 10;                   /* If 0 or negative, use default */
-         else
-            iWidth = iWidthPar;
-
-         iDec = 0;
-      }
-
-      if( pDec )
-      {
-         /* This function does not include the decimal places in the width,
-            so the width must be adjusted downwards, if the decimal places
-            parameter is greater than 0  */
-         int iDecPar = hb_itemGetNI( pDec );
-
-         if( iDecPar < 0 )
-            iDec = 0;
-         else if( iDecPar > 0 )
-         {
-            iDec = iDecPar;
-            iWidth -= ( iDec + 1 );
-         }
-      }
-
-      if( iWidth )
-      {
-         /* We at least have a width value */
-         int iBytes;
-         int iSize = ( iDec ? iWidth + 1 + iDec : iWidth );
-
-         /* Be paranoid and use a large amount of padding */
-         szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
-
-         if( IS_DOUBLE( pNumber ) || iDec != 0 )
-         {
-            double dNumber = hb_itemGetND( pNumber );
-
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-            if( pNumber->item.asDouble.length == 99 || dNumber == s_dInfinity || dNumber == -s_dInfinity )
-               /* Numeric overflow */
-               iBytes = iSize + 1;
-            else
-#endif
-            {
-               if( IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
-                  dNumber = hb_numRound( dNumber, iDec );
-
-               if( iDec == 0 )
-                  iBytes = sprintf( szResult, "%*.0f", iSize, dNumber );
-               else
-                  iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
-            }
-         }
-         else
-         {
-            switch( pNumber->type & ~IT_BYREF )
-            {
-               case IT_INTEGER:
-                  iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
-                  break;
-
-               case IT_LONG:
-                  iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
-                  break;
-
-               default:
-                  iBytes = 0;
-                  szResult[ 0 ] = '\0';  /* null string */
-                  break;
-            }
-         }
-
-         /* Set to asterisks in case of overflow */
-         if( iBytes > iSize )
-         {
-            memset( szResult, '*', iSize );
-            szResult[ iSize ] = '\0';
-         }
-      }
-   }
-
-   return szResult;
-}
-
-
 /*  $DOC$
  *  $FUNCNAME$
  *      STR
@@ -1616,4 +1494,46 @@ int hb_strgreater( char * szText1, char * szText2 )
       return HB_STRGREATER_LEFT;
 
    return HB_STRGREATER_EQUAL;
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      HB_VALTOSTR
+ *  $CATEGORY$
+ *      Strings
+ *  $ONELINER$
+ *      Converts any scalar type to a string.
+ *  $SYNTAX$
+ *      HB_VALTOSTR( <xValue> )
+ *  $ARGUMENTS$
+ *      <xValue> is any scalar argument.
+ *  $RETURNS$
+ *      A string representation of <xValue> using default conversions.
+ *  $DESCRIPTION$
+ *      HB_VALTOSTR can be used to convert any scalar value to a string.
+ *  $EXAMPLES$
+ *      ? HB_VALTOSTR( 4 )
+ *      ? HB_VALTOSTR( "String" )
+ *  $TESTS$
+ *      ? HB_VALTOSTR( 4 ) == "         4"
+ *      ? HB_VALTOSTR( 4.0 / 2 ) == "         2.00"
+ *      ? HB_VALTOSTR( "String" ) == "String"
+ *      ? HB_VALTOSTR( CTOD( "01/01/2001" ) ) == "01/01/01"
+ *      ? HB_VALTOSTR( NIL ) == "NIL"
+ *      ? HB_VALTOSTR( .F. ) == ".F."
+ *      ? HB_VALTOSTR( .T. ) == ".T."
+ *  $STATUS$
+ *      C
+ *  $COMPLIANCE$
+ *      HB_VALTOSTR is a Harbour enhancement.
+ *  $SEEALSO$
+ *      STR(), VAL()
+ *  $END$
+ */
+
+HARBOUR HB_HB_VALTOSTR( void )
+{
+   ULONG ulLen;
+   char * pointer = hb_itemString( hb_param( 1, IT_ANY ), &ulLen );
+   hb_retclen( pointer, ulLen );
 }

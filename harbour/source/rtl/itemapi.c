@@ -57,6 +57,9 @@
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    hb_itemStrCmp()
  *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_itemStr(), hb_itemString(), and hb_itemValToStr().
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -67,6 +70,9 @@
 #include "errorapi.h"
 #include "dates.h"
 #include "set.h"
+
+/* DJGPP can sprintf a float that is almost 320 digits long */
+#define HB_MAX_DOUBLE_LENGTH 320
 
 BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
@@ -958,4 +964,183 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
    }
 
    return iRet;
+}
+
+/* converts a numeric to a string with optional width & precision.
+   This function should be used by any function that wants to format numeric
+   data for displaying, printing, or putting in a database.
+
+   Note: The caller is responsible for calling hb_xfree to free the results
+         buffer, but ONLY if the return value is not a NULL pointer! (If a NULL
+         pointer is returned, then there was a conversion error.)
+*/
+char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
+{
+   char * szResult = NULL;
+
+   if( pNumber )
+   {
+      /* Default to the width and number of decimals specified by the item,
+         with a limit of 20 integer places and 9 decimal places, plus one
+         space for the sign. */
+      int iWidth;
+      int iDec;
+
+      hb_itemGetNLen( pNumber, &iWidth, &iDec );
+
+      if( iWidth > 20 )
+         iWidth = 20;
+      if( iDec > 9 )
+         iDec = 9;
+      if( hb_set.HB_SET_FIXED )
+         iDec = hb_set.HB_SET_DECIMALS;
+
+      if( pWidth )
+      {
+         /* If the width parameter is specified, override the default value
+            and set the number of decimals to zero */
+         int iWidthPar = hb_itemGetNI( pWidth );
+
+         if( iWidthPar < 1 )
+            iWidth = 10;                   /* If 0 or negative, use default */
+         else
+            iWidth = iWidthPar;
+
+         iDec = 0;
+      }
+
+      if( pDec )
+      {
+         /* This function does not include the decimal places in the width,
+            so the width must be adjusted downwards, if the decimal places
+            parameter is greater than 0  */
+         int iDecPar = hb_itemGetNI( pDec );
+
+         if( iDecPar < 0 )
+            iDec = 0;
+         else if( iDecPar > 0 )
+         {
+            iDec = iDecPar;
+            iWidth -= ( iDec + 1 );
+         }
+      }
+
+      if( iWidth )
+      {
+         /* We at least have a width value */
+         int iBytes;
+         int iSize = ( iDec ? iWidth + 1 + iDec : iWidth );
+
+         /* Be paranoid and use a large amount of padding */
+         szResult = ( char * ) hb_xgrab( HB_MAX_DOUBLE_LENGTH );
+
+         if( IS_DOUBLE( pNumber ) || iDec != 0 )
+         {
+            double dNumber = hb_itemGetND( pNumber );
+
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+            if( pNumber->item.asDouble.length == 99 || dNumber == s_dInfinity || dNumber == -s_dInfinity )
+               /* Numeric overflow */
+               iBytes = iSize + 1;
+            else
+#endif
+            {
+               if( IS_DOUBLE( pNumber ) && iDec < pNumber->item.asDouble.decimal )
+                  dNumber = hb_numRound( dNumber, iDec );
+
+               if( iDec == 0 )
+                  iBytes = sprintf( szResult, "%*.0f", iSize, dNumber );
+               else
+                  iBytes = sprintf( szResult, "%*.*f", iSize, iDec, dNumber );
+            }
+         }
+         else
+         {
+            switch( pNumber->type & ~IT_BYREF )
+            {
+               case IT_INTEGER:
+                  iBytes = sprintf( szResult, "%*i", iWidth, pNumber->item.asInteger.value );
+                  break;
+
+               case IT_LONG:
+                  iBytes = sprintf( szResult, "%*li", iWidth, pNumber->item.asLong.value );
+                  break;
+
+               default:
+                  iBytes = 0;
+                  szResult[ 0 ] = '\0';  /* null string */
+                  break;
+            }
+         }
+
+         /* Set to asterisks in case of overflow */
+         if( iBytes > iSize )
+         {
+            memset( szResult, '*', iSize );
+            szResult[ iSize ] = '\0';
+         }
+      }
+   }
+
+   return szResult;
+}
+
+char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen )
+{
+   static char buffer[ 32 ]; /* NOTE: Not re-entrant. Probably not thread safe. */
+   char * pointer;
+   switch( pItem->type )
+   {
+      case IT_STRING:
+         pointer = hb_itemGetCPtr( pItem );
+         * ulLen = hb_itemGetCLen( pItem );
+         break;
+      case IT_DATE:
+         {
+            char szDate[ 9 ];
+            hb_dateDecStr( szDate, pItem->item.asDate.value );
+            hb_dtoc( szDate, buffer, hb_set.HB_SET_DATEFORMAT );
+            pointer = buffer;
+            * ulLen = strlen( buffer );
+         }
+         break;
+      case IT_DOUBLE:
+      case IT_INTEGER:
+      case IT_LONG:
+         pointer = hb_itemStr( pItem, NULL, NULL );
+         if( pointer )
+         {
+            strncpy( buffer, pointer, sizeof( buffer ) );
+            buffer[ sizeof( buffer ) - 1 ] = '\0';
+            hb_xfree( pointer );
+            pointer = buffer;
+            * ulLen = strlen( buffer );
+         }
+         break;
+      case IT_NIL:
+         strcpy( buffer, "NIL" );
+         pointer = buffer;
+         * ulLen = 3;
+         break;
+      case IT_LOGICAL:
+         if( hb_itemGetL( pItem ) )
+            strcpy( buffer, ".T." );
+         else
+            strcpy( buffer, ".F." );
+         pointer = buffer;
+         * ulLen = 3;
+         break;
+      default:
+         buffer[ 0 ] = '\0';
+         pointer = buffer;
+         * ulLen = 0;
+   }
+   return pointer;
+}
+
+PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
+{
+   ULONG ulLen;
+   char * pointer = hb_itemString( pItem, &ulLen );
+   return hb_itemPutCL( NULL, pointer, ulLen );
 }

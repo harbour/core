@@ -1,3 +1,40 @@
+19991013-19:05 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * include/itemapi.h
+     + Added a prototype for hb_itemString().
+     + Added a prototype for hb_itemValToStr().
+
+   * source/compiler/harbour.l
+     ! Removed yy_strdup() call from yy_ConvertNumber().
+
+   * source/rtl/console.c
+     - Removed the string conversion code from hb_out().
+     + Added a call to hb_itemString() to hb_out().
+
+   * source/rtl/dates.c
+     ! Corrected two erroneous instances of 'hb_stack.szDate' in
+       hb_dateDecStr() to use the 'szDate' parameter instead.
+
+   * source/rtl/itemapi.c
+     + Moved hb_itemStr() from source/rtl/strings.c
+     + New function hb_itemString() converts practically any value
+       to a string (this is a modification of the string conversion
+       code that used to be in hb_out() in source/rtl/console.c).
+     + New function hb_itemValToStr(), suggested by Antonio Linares.
+
+   * source/rtl/strings.c
+     - Moved hb_itemStr() to source/rtl/itemapi.c
+     + New function HB_HB_VALTOSTR(), suggested by Antonio Linares.
+
+   * tests/rtl_test.prg
+     + Added several HB_VALTOSTR() tests.
+
+
+       Note: hb_itemStr() is not re-entrant and probably not thread-safe.
+             I'm not sure how to correct for that without requiring that
+             the caller free up strings allocated by this function, which
+             I would very much like to avoid. Any ideas?
+
 19991013-13:46 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
           + added MACROOP (last session also added MACROALIAS)

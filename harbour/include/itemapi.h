@@ -97,6 +97,8 @@ extern int      hb_itemStrCmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForce
 extern void     hb_itemCopy     ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
 extern void     hb_itemClear    ( PHB_ITEM pItem );
 extern PHB_ITEM hb_itemUnRef    ( PHB_ITEM pItem ); /* de-references passed variable */
-extern char *   hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert number to string */
+extern char *   hb_itemStr      ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
+extern char *   hb_itemString   ( PHB_ITEM pItem, ULONG * ulLen ); /* Convert any scalar to a string */
+extern PHB_ITEM hb_itemValToStr ( PHB_ITEM pItem ); /* Convert any scalar to a string */
 
 #endif /* HB_ITEMAPI_H_ */

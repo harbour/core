@@ -146,6 +146,7 @@ FUNCTION Main( cPar1, cPar2 )
    Main_MATH()
    Main_STRINGS()
 #ifdef __HARBOUR__
+   New_STRINGS()
    Long_STRINGS()
 #endif
    Main_MISC()
@@ -1653,6 +1654,16 @@ STATIC FUNCTION Main_STRINGS()
    RETURN NIL
 
 #ifdef __HARBOUR__
+STATIC FUNCTION New_STRINGS()
+   TEST_LINE( HB_VALTOSTR( 4 )                   , "         4"    )
+   TEST_LINE( HB_VALTOSTR( 4.0 / 2 )             , "         2.00" )
+   TEST_LINE( HB_VALTOSTR( "String" )            , "String"        )
+   TEST_LINE( HB_VALTOSTR( CTOD( "2001/01/01" ) ), "2001.01.01"    )
+   TEST_LINE( HB_VALTOSTR( NIL )                 , "NIL"           )
+   TEST_LINE( HB_VALTOSTR( .F. )                 , ".F."           )
+   TEST_LINE( HB_VALTOSTR( .T. )                 , ".T."           )
+   RETURN NIL
+
 STATIC FUNCTION Long_STRINGS()
 
    TEST_LINE( RIGHT( SPACE( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 )
