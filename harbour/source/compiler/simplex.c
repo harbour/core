@@ -32,9 +32,12 @@
 #include <string.h>
 #include <limits.h>
 
-/* These are NOT overidable (yet). */
+/* NOT overidable (yet). */
 #define MAX_MATCH 4
-#define TOKEN_SIZE 64
+
+#ifndef TOKEN_SIZE
+   #define TOKEN_SIZE 64
+#endif
 
 /* Language Definitions Readability. */
 #define SELF_CONTAINED_WORDS_ARE LEX_WORD const aSelfs[] =
@@ -56,20 +59,37 @@
 #define START_WITH(x) { x,
 #define END_WITH(x) x,
 #define STOP_IF_ONE_OF_THESE(x) x,
-#define AND_IGNORE_DELIMITERS(x) x,
+#define TEST_LEFT(x) x,
 #define AS_PAIR_TOKEN(x) x }
 #define STREAM_EXCEPTION( sPair, chrPair) \
         if( chrPair ) \
+        { \
            printf(  "Exception: %c for stream at: \"%s\"\n", chrPair, sPair ); \
+        } \
         else \
+        { \
            printf(  "Exception: <EOF> for stream at: \"%s\"\n", chrPair, sPair ); \
+        } \
 
 /* Pairs. */
-static char sPair[ 2048 ];
-static char cTerm;
-static BOOL bExclusive;
+#ifndef MAX_STREAM
+   #define MAX_STREAM 2048
+#endif
+#ifndef MAX_STREAM_STARTER
+   #define MAX_STREAM_STARTER 2
+#endif
+#ifndef MAX_STREAM_TERMINATOR
+   #define MAX_STREAM_TERMINATOR 2
+#endif
+#ifndef MAX_STREAM_EXCLUSIONS
+   #define MAX_STREAM_EXCLUSIONS 2
+#endif
+
+static char sPair[ MAX_STREAM ];
+static char * sStart, * sTerm;
 static char * sExclude;
-static int iPairToken;
+static BOOL   bTestLeft;
+static int iPairToken = 0;
 
 /* Self Contained Words. */
 static char sSelf[ TOKEN_SIZE ];
@@ -82,10 +102,10 @@ typedef struct _LEX_WORD
 
 typedef struct _LEX_PAIR
 {
-   char  cStart;
-   char  cTerm;
-   char  sExclude[4];
-   BOOL  bExclusive;
+   char  sStart[MAX_STREAM_STARTER];
+   char  sTerm[MAX_STREAM_TERMINATOR];
+   char  sExclude[MAX_STREAM_EXCLUSIONS];
+   BOOL  bTestLeft;
    int   iToken;
 } LEX_PAIR;                    /* support structure for Streams (Pairs). */
 
@@ -110,6 +130,8 @@ typedef struct _LEX_PAIR
 #define ELEMENT_TOKEN(x) -1
 #define DEBUG_INFO(x)
 #define LEX_CASE(x)
+#define STREAM_OPEN(x)
+#define STREAM_APPEND(x) sPair[ iPairLen++ ] = x
 
 #include SLX_RULES
 
@@ -233,23 +255,77 @@ int Reduce( int iToken, BOOL bReal );
             if( *tmpPtr )
 
 #define IF_BEGIN_PAIR(chr) \
-         {  register int iPair = 0;\
+         {\
+            register int iPair = 0, iStartLen; \
+            register char chrStart; \
+            int iLastPair = 0, iLastLen = 0; \
+            \
+            DEBUG_INFO( printf( "Checking %i Streams for %c At: >%s<\n", iPairs, chr, szBuffer - 1 ) ); \
             \
             while( iPair < iPairs ) \
             { \
-               if( chr == aPairs[iPair].cStart ) \
+               chrStart = LEX_CASE(chr);\
+               \
+               if( chrStart == aPairs[iPair].sStart[0] ) \
                { \
-                  /* Terminator to look for. */ \
-                  cTerm      =          aPairs[iPair].cTerm; \
-                  bExclusive =          aPairs[iPair].bExclusive; \
-                  sExclude   = (char *) aPairs[iPair].sExclude; \
-                  iPairToken =          aPairs[iPair].iToken; \
-                  break; \
+                  iStartLen = 1; \
+                  \
+                  if( aPairs[iPair].sStart[1] ) \
+                  { \
+                     chrStart = LEX_CASE( *szBuffer ); \
+                     \
+                     while( aPairs[iPair].sStart[iStartLen] ) \
+                     { \
+                        if( chrStart != aPairs[iPair].sStart[iStartLen] ) \
+                        { \
+                           break; \
+                        } \
+                        \
+                        iStartLen++; \
+                        \
+                        /* Peek at Next Character. */ \
+                        chrStart = LEX_CASE( *( szBuffer + iStartLen - 1 ) ); \
+                     } \
+                  } \
+                  \
+                  /* Match */ \
+                  if( aPairs[iPair].sStart[iStartLen] == '\0' ) \
+                  { \
+                     if( iStartLen > iLastLen ) \
+                     { \
+                        iLastPair = iPair + 1; \
+                        iLastLen  = iStartLen; \
+                     } \
+                  } \
                } \
                iPair++; \
             } \
-            bTmp = ( iPair < iPairs ); \
             \
+            bTmp = FALSE; \
+            \
+            if( iLastPair ) \
+            { \
+               iLastPair--; \
+               STREAM_OPEN( aPairs[iLastPair].sStart )\
+               { \
+                  bTmp = TRUE; \
+                  \
+                  /* Last charcter read. */\
+                  chr = chrStart; \
+                  \
+                  /* Moving to next postion after the Stream Start position. */ \
+                  szBuffer += ( iLastLen - 1 ); \
+                  \
+                  /* Terminator to look for. */ \
+                  sStart     = (char *) aPairs[iLastPair].sStart; \
+                  sTerm      = (char *) aPairs[iLastPair].sTerm; \
+                  sExclude   = (char *) aPairs[iLastPair].sExclude; \
+                  bTestLeft  =          aPairs[iLastPair].bTestLeft; \
+                  iPairToken =          aPairs[iLastPair].iToken; \
+                  \
+                  DEBUG_INFO( printf( "Looking for Stream Terminator: >%s< Exclusions >%s<\n", sTerm, sExclude ) ); \
+               } \
+            } \
          } \
          /* Begin New Pair. */ \
          if( bTmp )
@@ -870,6 +946,9 @@ YY_DECL
     {
         if ( iSize && *szBuffer )
         {
+            if( iPairToken )
+               goto ProcessStream;
+
             cPrev = chr;
 
             /* Get next character. */
@@ -878,159 +957,154 @@ YY_DECL
 
             IF_OMMIT(chr)
             {
-                if ( iLen )
-                {
-                   /* Terminate current token and check it. */
-                   sToken[ iLen ] = '\0';
+               if ( iLen )
+               {
+                  /* Terminate current token and check it. */
+                  sToken[ iLen ] = '\0';
 
-                   DEBUG_INFO( printf(  "Token: \"%s\" Ommited: \'%c\'\n", sToken, chr ) );
+                  DEBUG_INFO( printf(  "Token: \"%s\" Ommited: \'%c\'\n", sToken, chr ) );
 
-                   goto CheckToken;
-                }
-                else
-                {
-                   continue;
-                }
+                  goto CheckToken;
+               }
+               else
+               {
+                  continue;
+               }
             }
 
             CHECK_SELF_CONTAINED(chr);
 
-            /* Soft Pair Terminator ? */
-            if ( cTerm && chr == cTerm )
-            {
-                /* Reset. */
-                cTerm = 0;
-
-                /* Terminate current token and check it. */
-                sToken[ iLen++ ] = chr;
-                sToken[ iLen ] = '\0';
-
-                DEBUG_INFO( printf(  "Pair at %c = %s\n", chr, sToken ) );
-
-                goto CheckToken;
-            }
-
             /* New Pair ? */
             IF_BEGIN_PAIR( chr )
             {
-                if( iLen )
-                {
-                    /* Resume here on next call. */
-                    szBuffer--;
-                    iSize++;
-                    cTerm = 0;
-                    /* So cPrev will remain intact. */
-                    chr = cPrev;
+               if( iLen )
+               {
+                  DEBUG_INFO( printf( "Holding Stream Mode: '%c' Buffer = >%s<\n", chr, szBuffer ) );
 
-                    DEBUG_INFO( printf(  "Pushed back: '%c' Buffer = >%s<\n", chr, szBuffer ) );
+                  /* Terminate and Check Token to the left. */
+                  sToken[ iLen ] = '\0';
 
-                    /* Terminate and Check Token to the left. */
-                    sToken[ iLen ] = '\0';
+                  DEBUG_INFO( printf(  "Token: \"%s\" before New Pair at: \'%c\'\n", sToken, chr ) );
 
-                    DEBUG_INFO( printf(  "Token: \"%s\" before New Pair at: \'%c\'\n", sToken, chr ) );
+                  goto CheckToken ;
+               }
 
-                    goto CheckToken ;
-                }
+               ProcessStream :
 
-                bIgnoreWords = FALSE;
+               bIgnoreWords = FALSE;
 
-                IF_BELONG_LEFT( chr )
-                {
-                    DEBUG_INFO( printf(  "Reducing Left '%c'\n", chr ) );
-                    cTerm = 0;
-                    RETURN_TOKEN( REDUCE( (int) chr ), NULL );
-                }
+               if( bTestLeft )
+               {
+                  IF_BELONG_LEFT( chr )
+                  {
+                     DEBUG_INFO( printf(  "Reducing Left '%c'\n", chr ) );
+                     iPairToken = 0;
+                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
+                  }
+               }
 
-                /* Soft ? */
-                if ( bExclusive )
-                {
-                    {
-                        register int iPairLen = 0;
-                        register char chrPair;
+               {  register int iPairLen = 0;
+                  register char chrPair;
 
-                        /* Look for the terminator. */
-                        while ( *szBuffer )
+                  /* Look for the terminator. */
+                  while ( *szBuffer )
+                  {
+                     /* Next Character. */
+                     chrPair = *szBuffer++ ;
+
+                     /* Terminator ? */
+                     if( chrPair == sTerm[0] )
+                     {
+                        register int iTermLen = 1;
+
+                        if( sTerm[1] )
                         {
-                            /* Next Character. */
-                            chrPair = *szBuffer++ ;
+                           register char chrTerm = LEX_CASE( *szBuffer );
 
-                            /* Check if exception. */
-                            IF_ABORT_PAIR( chrPair )
-                            {
-                               sPair[ iPairLen ] = '\0';
+                           while( sTerm[iTermLen] )
+                           {
+                              if( chrTerm != sTerm[iTermLen] )
+                              {
+                                 /* Last charcter read. */
+                                 chr = chrTerm;
+                                 break;
+                              }
 
-                               STREAM_EXCEPTION( sPair, chrPair);
+                              iTermLen++;
 
-                               /* Resetting. */
-                               cTerm = 0;
-
-                               /* Last charcter read. */
-                               chr = chrPair;
-
-                               goto on_error;
-                            }
-                            /* Terminator found. */
-                            else if( chrPair == cTerm )
-                            {
-                               sPair[ iPairLen ] = '\0';
-
-                               DEBUG_INFO( printf(  "Returning Pair = >%s<\n", sPair ) );
-
-                               /* Resetting. */
-                               cTerm = 0;
-
-                               /* Last charcter read. */
-                               chr = chrPair;
-
-                               if( bNewLine )
-                               {
-                                  bNewLine = FALSE;
-                                  NEW_LINE_ACTION();
-                               }
-
-                               if( iPairToken < LEX_CUSTOM_ACTION )
-                               {
-                                  iRet = iPairToken;
-                                  iRet = CUSTOM_ACTION( iRet );
-                                  if( iRet )
-                                  {
-                                     RETURN_TOKEN( REDUCE( iRet ), NULL );
-                                  }
-                                  else
-                                  {
-                                     goto Start;
-                                  }
-                               }
-                               else
-                               {
-                                  RETURN_TOKEN( REDUCE( iPairToken ), NULL );
-                               }
-                            }
-                            else
-                            {
-                               /* Accumulating. */
-                               sPair[ iPairLen++ ] = chrPair;
-                            }
+                              /* Peek at Next Character. */ \
+                              chrTerm = LEX_CASE( *( szBuffer + iTermLen - 1 ) );
+                           }
                         }
-                    }
 
-                    /* EOF */
-                    STREAM_EXCEPTION( sPair, NULL );
+                        /* Match */ \
+                        if( sTerm[iTermLen] == '\0' ) \
+                        { \
+                           /* Moving to next postion after the Stream Terminator. */ \
+                           szBuffer += ( iTermLen - 1 ); \
 
-                    /* Resetting. */
-                    cTerm = 0;
+                           sPair[ iPairLen ] = '\0';
 
-                    goto on_error;
-                }
-                else
-                {
-                    DEBUG_INFO( printf(  "Opened Pair, looking for: %c\n", cTerm ) );
+                           DEBUG_INFO( printf(  "Returning Pair = >%s<\n", sPair ) );
 
-                    sToken[iLen++] = chr;
+                           if( bNewLine )
+                           {
+                              bNewLine = FALSE;
+                              NEW_LINE_ACTION();
+                           }
 
-                    /* Scan next charcter. */
-                    continue;
-                }
+                           /* Resetting. */
+                           iRet = iPairToken;
+                           iPairToken = 0;
+
+                           if( iRet < LEX_CUSTOM_ACTION )
+                           {
+                              iRet = CUSTOM_ACTION( iRet );
+                              if( iRet )
+                              {
+                                 RETURN_TOKEN( REDUCE( iRet ), NULL );
+                              }
+                              else
+                              {
+                                 goto Start;
+                              }
+                           }
+                           else
+                           {
+                              RETURN_TOKEN( REDUCE( iRet ), NULL );
+                           }
+                        }
+                     }
+
+                     /* Check if exception. */
+                     IF_ABORT_PAIR( chrPair )
+                     {
+                        sPair[ iPairLen ] = '\0';
+
+                        STREAM_EXCEPTION( sPair, chrPair);
+
+                        /* Resetting. */
+                        iPairToken = 0;
+
+                        /* Last charcter read. */
+                        chr = chrPair;
+
+                        goto Start;
+                     }
+                     else
+                     {
+                        STREAM_APPEND( chrPair );
+                     }
+                  }
+               }
+
+               /* EOF */
+               STREAM_EXCEPTION( sPair, NULL );
+
+               /* Resetting. */
+               iPairToken = 0;
+
+               goto Start;
             }
             /* End Pairs. */
 
@@ -1132,9 +1206,6 @@ YY_DECL
                 }
             }
         }
-
-    on_error:
-        continue;
 
     CheckToken:
         {

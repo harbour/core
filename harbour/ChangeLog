@@ -1,3 +1,33 @@
+2000-08-15 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+  * source/compiler/simplex.c
+    + Added support for multi-charcters Stream Start and Stream End delimiters.
+    + Added overidable MACROs STREAM_OPEN(x), STREAM_APPEND(x)
+    ! Removed Hardcoded limits, changed to overidable #defines: MAX_STREAM, MAX_STREAM_STARTER, MAX_STREAM_TERMINATOR,
+      MAX_STREAM_EXCLUSIONS
+
+  * source/macro/macroslx.c
+    + Added:
+	#define MAX_STREAM                               2048 /* Max length of in-line LITERAL */
+	#define MAX_STREAM_STARTER                          2
+	#define MAX_STREAM_TERMINATOR                       2
+	#define MAX_STREAM_EXCLUSIONS                       2
+
+  * source/compiler/hbslex.c
+    + Added:
+      	#define MAX_STREAM                               2048 /* Max length of in-line LITERAL */
+      	#define MAX_STREAM_STARTER                          7 /* "QOUT([" */
+      	#define MAX_STREAM_TERMINATOR                       4 /* "])\n"   */
+      	#define MAX_STREAM_EXCLUSIONS                       2
+
+  * source/macro/macro.slx
+    * Replaced AND_IGNORE_DELIMITERS() with TEST_LEFT()
+
+  * source/compiler/harbour.slx
+    + Added: #define NUMERALS_PER_LINE 512
+    * Replaced AND_IGNORE_DELIMITERS() with TEST_LEFT()
+    + Added support for TEXT ENDTEXT (pending some more work in PP), nested [[]] strings and double delimiters stringified strings.
+    + Added MACROs STREAM_OPEN( sStarter ) and STREAM_APPEND(x)
+
 2000-08-15 21:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
 
    *utils/hbdoc/hbdoc.prg
@@ -9,11 +39,10 @@
     *include/hbexprc.c
     *source/compiler/exproptc.c
         *fixed unused variable warning
-        
+
     source/compiler/harbour.l
         *fixed some warnings reported by BCC
         *some final optimization
-
 
 2000-08-15 14:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    * doc/en/cmdline.txt

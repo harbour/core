@@ -78,9 +78,9 @@ DELIMITER_BELONGS_TO_TOKEN_IF_ONE_OF_THESE( "" );
 
 /* Stream Pairs. */
 DEFINE_STREAM_AS_ONE_OF_THESE {
-                                START_WITH('\'') END_WITH('\'') STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
-                                START_WITH('"')  END_WITH('"' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
-                                START_WITH('[')  END_WITH(']' ) STOP_IF_ONE_OF_THESE("\n") AND_IGNORE_DELIMITERS(TRUE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH("\'")     END_WITH("\'")   STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH("\"")     END_WITH("\"" )  STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(FALSE) AS_PAIR_TOKEN(HB_LIT_ACT),
+                                START_WITH("[")      END_WITH("]" )   STOP_IF_ONE_OF_THESE("\n") TEST_LEFT(TRUE ) AS_PAIR_TOKEN(HB_LIT_ACT)
                               };
 
 START_NEW_LINE_IF_ONE_OF_THESE( "\n;" );
