@@ -1,3 +1,17 @@
+2001-06-18 14:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * doc/class_tp.txt
+  * include/hbrddcdx.h
+  * include/hbrdddel.h
+  * source/rtl/gt_tpl/gt_tpl.c
+  * source/rtl/gt_tpl/mousetpl.c
+  * source/rtl/gtdos/gtdos.c
+  * source/rtl/gtwin/mousewin.c
+  * tests/setkeys.prg
+    * Updated from the old Harbour Exception to the new Harbour Exception
+      either with permission from the various copyright holders or because
+      the author is anonymous.
+
 2001-06-18 14:10 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libmisc/stringp.prg
