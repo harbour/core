@@ -1,3 +1,6 @@
+2000-06-23 22:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+    *contrib/samples/gauge.c
+        *Fixed a small bug on Gaugenew()
 
 2000-06-23 21:11 UTC+0200 JFL & RAC <jflb@mafact.com>
     *source/vm/classes.c
