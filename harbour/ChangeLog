@@ -1,3 +1,48 @@
+19990910-01:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/arrays.c
+    % One memset() call replaced with a call to the Item API. It's a bit 
+      slower, but this is only an error handling branch, which is not getting
+      called in normal cases anyway.
+  * source/rtl/itemapi.c
+    % hb_itemGetDS(), hb_itemPutDS() now uses the new date API call. Simpler.
+      and the low level date handling memset(sz,' ',8) calls could be removed.
+  * source/rtl/extend.c
+    % hb_pards() uses the new date API call, so it's even simpler now.
+  * source/rtl/dates.c
+    include/dates.h
+    + New simpler date API functions added:
+      hb_dateDecStr() == hb_dateStrGet() + hb_dateEncode()
+      hb_dateEncStr() == hb_dateDecode() + hb_dateStrPut()
+  * source/rtl/errorapi.c
+    + Added support for the :Tries variable, now Harbour will increment it on
+      every retry.
+    * A bunch of internal item access changed to Item API calls. This also
+      fixed a possible problem with accessing Integer member without making
+      sure that the type is an INTEGER.
+    + "Internal error" text changed to "Unrecoverable error".
+  * source/rtl/strings.c
+    ! ASC(), CHR() error value substitution added.
+    ! CHR() added a HARBOUR_STRICT_CLIPPER_COMPATIBILITY branch, where Harbour
+      will handle the value 256/512/... like Clipper.
+  * tests/working/rtl_test.prg
+    + ASC(), CHR() tests added.
+    + Detected preprocessor errors are always displayed.
+  * include/external.ch
+    source/rtl/tget.prg
+    source/runner/stdalone/external.prg
+    * __GET synonym for _GET_ added. Clipper really uses this function name
+      _GET_ is always converted to __GET internally by the compiler.
+  * source/tools/Makefile
+    source/vm/Makefile
+    source/tools/debug.c
+    source/vm/debug.c
+    makefile.b31
+    makefile.vc
+    * DEBUG.C moved to the Harbour VM, since it's used from the debugger.
+      Please check the non GNU makefile, since I could not test them.
+  * source/rtl/terror.prg
+    + Reformatted.
+
 19990909-21:30 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/arrays.c
     ! hb_arrayCopy() fixed. Now it has two methods, one strictly compatible,
@@ -13,7 +58,7 @@
     + CVS header added.
   * include/extend.h
     ! Some Clipper compatibility include files moved to the bottom, it's
-      better now, but it still doesn't work when 
+      better now, but it still doesn't work when
       HARBOUR_STRICT_CLIPPER_COMPATIBILITY is defined.
   * source/rtl/tget.prg
     source/debug/debugger.prg

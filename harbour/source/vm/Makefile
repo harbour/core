@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
+        debug.c \
 	dynsym.c \
 	hvm.c \
 	initsymb.c \

@@ -405,6 +405,7 @@ EXTERNAL TCLASS
 //symbols from file: rtl\tget.prg
 //
 EXTERNAL GETNEW
+EXTERNAL __GET
 EXTERNAL _GET_
 //
 //symbols from file: rtl\tgetlist.prg

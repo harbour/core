@@ -35,6 +35,16 @@
  *     hb_dow(), HB_DOW()
 */
 
+/* Harbour Project source code
+   http://www.Harbour-Project.org/
+   The following functions are Copyright 1999 Victor Szel <info@szelvesz.hu>:
+      hb_dateEncStr()
+      hb_dateDecStr()
+      hb_dateStrPut()
+      hb_dateStrGet()
+   See doc/hdr_tpl.txt, Version 1.2 or later, for licensing terms.
+*/
+
 #include "extend.h"
 #include "errorapi.h"
 #include "itemapi.h"
@@ -181,6 +191,29 @@ void hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * pl
       *plDay   =
       *plMonth =
       *plYear  = 0;
+}
+
+/* This function always closes the date with a zero byte, so it needs a
+   9 character long buffer. */
+
+char * hb_dateDecStr( char * szDate, long lJulian )
+{
+   long lDay, lMonth, lYear;
+
+   hb_dateDecode( lJulian, &lDay, &lMonth, &lYear );
+   hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
+   stack.szDate[ 8 ] = '\0';
+
+   return szDate;
+}
+
+long hb_dateEncStr( char * szDate )
+{
+   long lDay, lMonth, lYear;
+
+   hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
+
+   return hb_dateEncode( lDay, lMonth, lYear );
 }
 
 HARBOUR HB_CTOD( void )

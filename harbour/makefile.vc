@@ -64,6 +64,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\console.obj \
     $(OBJ_DIR)\copyfile.obj \
     $(OBJ_DIR)\dates.obj \
+    $(OBJ_DIR)\debug.obj \
     $(OBJ_DIR)\descend.obj \
     $(OBJ_DIR)\devoutp.obj \
     $(OBJ_DIR)\dir.obj \
@@ -120,7 +121,6 @@ TOOLS_LIB_OBJS = \
     $(OBJ_DIR)\chrtotal.obj \
     $(OBJ_DIR)\dates2.obj \
     $(OBJ_DIR)\datesx.obj \
-    $(OBJ_DIR)\debug.obj \
     $(OBJ_DIR)\fileread.obj \
     $(OBJ_DIR)\hb_f.obj \
     $(OBJ_DIR)\io.obj \
@@ -498,6 +498,9 @@ $(OBJ_DIR)\tbrwtext.obj : $(DEBUG_DIR)\tbrwtext.c
 # VM source dependencies below. Add as needed
 #
 
+$(OBJ_DIR)\debug.obj : $(VM_DIR)\debug.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
 $(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
@@ -542,9 +545,6 @@ $(OBJ_DIR)\dates2.obj : $(TOOLS_DIR)\dates2.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\datesx.obj : $(TOOLS_DIR)\datesx.c
-    $(CC) $(CLIBFLAGS) -Fo$@ $**
-
-$(OBJ_DIR)\debug.obj : $(TOOLS_DIR)\debug.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(TOOLS_DIR)\fileread.c : $(TOOLS_DIR)\fileread.prg

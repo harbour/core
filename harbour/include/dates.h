@@ -18,5 +18,7 @@ extern long     hb_dateEncode( long lDay, long lMonth, long lYear );
 extern void     hb_dateDecode( long julian, long * plDay, long * plMonth, long * plYear );
 extern void     hb_dateStrPut( char * szDate, long lDay, long lMonth, long lYear );
 extern void     hb_dateStrGet( const char * szDate, long * plDay, long * plMonth, long * plYear );
+extern char *   hb_dateDecStr( char * szDate, long lJulian );
+extern long     hb_dateEncStr( char * szDate );
 
 #endif /* HB_DATES_H_ */

@@ -416,16 +416,9 @@ BOOL hb_itemFreeC( char * szText )
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
    if( pItem && IS_DATE( pItem ) )
-   {
-      long lDay, lMonth, lYear;
-
-      hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-      hb_dateStrPut( szDate, lDay, lMonth, lYear );
-   }
+      hb_dateDecStr( szDate, pItem->item.asDate.value );
    else
-      memset( szDate, ' ', 8 );
-
-   szDate[ 8 ] = '\0';
+      hb_dateDecStr( szDate, 0 );
 
    return szDate;
 }
@@ -526,17 +519,13 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char * szDate )
 {
-   long lDay, lMonth, lYear;
-
    if( pItem )
       hb_itemClear( pItem );
    else
       pItem = hb_itemNew( NULL );
 
-   hb_dateStrGet( szDate, &lDay, &lMonth, &lYear );
-
    pItem->type = IT_DATE;
-   pItem->item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
+   pItem->item.asDate.value = hb_dateEncStr( szDate );
 
    return pItem;
 }

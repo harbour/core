@@ -76,6 +76,7 @@ STATIC scStringZ
 STATIC snIntZ
 STATIC snDoubleZ
 STATIC snIntP
+STATIC snIntP1
 STATIC snLongP
 STATIC snDoubleP
 STATIC snIntN
@@ -290,6 +291,15 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( SToD("")         <= SToD("")         , .T.                                               )
    TEST_LINE( SToD("")         <= SToD("19800101") , .T.                                               )
    TEST_LINE( SToD("19800101") <= SToD("")         , .F.                                               )
+   TEST_LINE( ""               <= "AAA"            , .T.                                               )
+   TEST_LINE( "AAA"            <= ""               , .T.                                               )
+   TEST_LINE( "AAA"            <= "AA"             , .T.                                               )
+   TEST_LINE( "AAA"            <= Chr(255)         , .T.                                               )
+   TEST_LINE( Chr(150)         <= Chr(255)         , .T.                                               )
+   TEST_LINE( "A"              <= "a"              , .T.                                               )
+   TEST_LINE( "A"              <= "Z"              , .T.                                               )
+   TEST_LINE( "Z"              <= " "              , .F.                                               )
+   TEST_LINE( Chr(0)           <= " "              , .T.                                               )
    TEST_LINE( 2                <  1                , .F.                                               )
    TEST_LINE( 1                <  2                , .T.                                               )
    TEST_LINE( 2.0              <  2                , .F.                                               )
@@ -302,6 +312,15 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( SToD("")         <  SToD("")         , .F.                                               )
    TEST_LINE( SToD("")         <  SToD("19800101") , .T.                                               )
    TEST_LINE( SToD("19800101") <  SToD("")         , .F.                                               )
+   TEST_LINE( ""               <  "AAA"            , .T.                                               )
+   TEST_LINE( "AAA"            <  ""               , .F.                                               )
+   TEST_LINE( "AAA"            <  "AA"             , .F.                                               )
+   TEST_LINE( "AAA"            <  Chr(255)         , .T.                                               )
+   TEST_LINE( Chr(150)         <  Chr(255)         , .T.                                               )
+   TEST_LINE( "A"              <  "a"              , .T.                                               )
+   TEST_LINE( "A"              <  "Z"              , .T.                                               )
+   TEST_LINE( "Z"              <  "A"              , .F.                                               )
+   TEST_LINE( Chr(0)           <  " "              , .T.                                               )
    TEST_LINE( 2                >= 1                , .T.                                               )
    TEST_LINE( 1                >= 2                , .F.                                               )
    TEST_LINE( 2.0              >= 2                , .T.                                               )
@@ -314,6 +333,15 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( SToD("")         >= SToD("")         , .T.                                               )
    TEST_LINE( SToD("")         >= SToD("19800101") , .F.                                               )
    TEST_LINE( SToD("19800101") >= SToD("")         , .T.                                               )
+   TEST_LINE( ""               >= "AAA"            , .F.                                               )
+   TEST_LINE( "AAA"            >= ""               , .T.                                               )
+   TEST_LINE( "AAA"            >= "AA"             , .T.                                               )
+   TEST_LINE( "AAA"            >= Chr(255)         , .F.                                               )
+   TEST_LINE( Chr(150)         >= Chr(255)         , .F.                                               )
+   TEST_LINE( "A"              >= "a"              , .F.                                               )
+   TEST_LINE( "A"              >= "Z"              , .F.                                               )
+   TEST_LINE( "Z"              >= "A"              , .T.                                               )
+   TEST_LINE( Chr(0)           >= " "              , .F.                                               )
    TEST_LINE( 2                >  1                , .T.                                               )
    TEST_LINE( 1                >  2                , .F.                                               )
    TEST_LINE( 2.0              >  2                , .F.                                               )
@@ -326,6 +354,15 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( SToD("")         >  SToD("")         , .F.                                               )
    TEST_LINE( SToD("")         >  SToD("19800101") , .F.                                               )
    TEST_LINE( SToD("19800101") >  SToD("")         , .T.                                               )
+   TEST_LINE( ""               >  "AAA"            , .F.                                               )
+   TEST_LINE( "AAA"            >  ""               , .F.                                               )
+   TEST_LINE( "AAA"            >  "AA"             , .F.                                               )
+   TEST_LINE( "AAA"            >  Chr(255)         , .F.                                               )
+   TEST_LINE( Chr(150)         >  Chr(255)         , .F.                                               )
+   TEST_LINE( "A"              >  "a"              , .F.                                               )
+   TEST_LINE( "A"              >  "Z"              , .F.                                               )
+   TEST_LINE( "Z"              >  "A"              , .T.                                               )
+   TEST_LINE( Chr(0)           >  " "              , .F.                                               )
 
    TEST_LINE( NIL + 1                         , "E BASE 1081 Argument error + F:S" )
    TEST_LINE( NIL - 1                         , "E BASE 1082 Argument error - F:S" )
@@ -891,6 +928,49 @@ STATIC FUNCTION Main_MATH()
    RETURN NIL
 
 STATIC FUNCTION Main_STRINGS()
+
+   /* CHR() */
+
+   TEST_LINE( Chr( NIL )                      , "E BASE 1104 Argument error CHR F:S"   )
+   TEST_LINE( Chr( "A" )                      , "E BASE 1104 Argument error CHR F:S"   )
+   TEST_LINE( Chr( "ADDDDDD" )                , "E BASE 1104 Argument error CHR F:S"   )
+   TEST_LINE( Chr( -10000000.0 )              , "€"                                    )
+   TEST_LINE( Chr( -100000 )                  , "`"                                    )
+   TEST_LINE( Chr( -65 )                      , "¿"                                    )
+   TEST_LINE( Chr( snIntP1 )                  , "A"                                    )
+#ifdef __HARBOUR__
+   TEST_LINE( Chr( @snIntP1 )                 , "A"                                    ) /* Bug in CA-Cl*pper, it returns: "E BASE 1104 Argument error CHR F:S" */
+#endif
+   TEST_LINE( Chr( 0 )                        , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 0.1 )                      , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( -0.1 )                     , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 66.4 )                     , "B"                                    )
+   TEST_LINE( Chr( 66.5 )                     , "B"                                    )
+   TEST_LINE( Chr( 66.6 )                     , "B"                                    )
+   TEST_LINE( Chr( 255 )                      , "ÿ"                                    )
+   TEST_LINE( Chr( 256 )                      , ""                                     )
+   TEST_LINE( Chr( 257 )                      , ""                                    )
+   TEST_LINE( Chr( 512 )                      , ""                                     )
+   TEST_LINE( Chr( 1023 )                     , "ÿ"                                    )
+   TEST_LINE( Chr( 1024 )                     , ""                                     )
+   TEST_LINE( Chr( 1025 )                     , ""                                    )
+   TEST_LINE( Chr( 1000 )                     , "è"                                    )
+   TEST_LINE( Chr( 100000 )                   , " "                                    )
+   TEST_LINE( Chr( 100000.0 )                 , " "                                    )
+
+   /* ASC() */
+
+   TEST_LINE( Asc( NIL )                      , "E BASE 1107 Argument error ASC F:S" )
+   TEST_LINE( Asc( 100 )                      , "E BASE 1107 Argument error ASC F:S" )
+   TEST_LINE( Asc( 20000 )                    , "E BASE 1107 Argument error ASC F:S" )
+   TEST_LINE( Asc( "HELLO" )                  , 72                                   )
+   TEST_LINE( Asc( Chr(0) )                   , 0                                    )
+   TEST_LINE( Asc( "a" )                      , 97                                   )
+   TEST_LINE( Asc( "A" )                      , 65                                   )
+   TEST_LINE( Asc( scString )                 , 72                                   )
+#ifdef __HARBOUR__
+   TEST_LINE( Asc( @scString )                , 72                                   ) /* Bug in CA-Cl*pper, it returns: "E BASE 1107 Argument error ASC F:S" */
+#endif
 
    /* ALLTRIM() */
 
@@ -1659,7 +1739,11 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( aSize( NIL, -1 )                , NIL                                        )
    TEST_LINE( aSize( {}, -1 )                 , "{.[0].}"                                  )
    TEST_LINE( aSize( { 1 }, -1 )              , "{.[0].}"                                  )
+#ifdef __HARBOUR__
+   TEST_LINE( aSize( { 1 }, 5000 )            , "{.[5000].}"                               )
+#else
    TEST_LINE( aSize( { 1 }, 5000 )            , "{.[1].}"                                  )
+#endif
    TEST_LINE( aSize( ErrorNew(), -1 )         , "ERROR Object"                             )
    TEST_LINE( aSize( ErrorNew(), 100 )        , "ERROR Object"                             )
    TEST_LINE( aAdd( NIL, NIL )                , "E BASE 1123 Argument error AADD F:S"      )
@@ -1875,6 +1959,7 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    snIntZ    := 0
    snDoubleZ := 0.0
    snIntP    := 10
+   snIntP1   := 65
    snLongP   := 100000
    snDoubleP := 10.567 /* Use different number of decimals than the default */
    snIntN    := -10
@@ -1942,6 +2027,7 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
    LOCAL xResult
    LOCAL oError
    LOCAL bOldError
+   LOCAL lPPError
    LOCAL lFailed
    LOCAL lSkipped
 
@@ -1949,6 +2035,9 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
    IF !( ValType( cBlock ) == "C" )
       cBlock := "!! Preprocessor error !!"
+      lPPError := .T.
+   ELSE
+      lPPError := .F.
    ENDIF
 
    lSkipped := aScan( s_aSkipList, s_nCount ) > 0
@@ -1982,7 +2071,7 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
    ENDIF
 
-   IF s_lShowAll .OR. lFailed .OR. lSkipped
+   IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
 
       fWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
                        Str( s_nCount, TEST_RESULT_COL2_WIDTH ) + ". " +;

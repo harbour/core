@@ -177,6 +177,11 @@ WORD hb_errLaunch( PHB_ITEM pError )
 
          if( bFailure )
             hb_errInternal( 9999, "Error recovery failure", NULL, NULL );
+
+         /* Add one try to the counter. */
+
+         if( wRetVal == E_RETRY )
+            hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
       }
    }
    else
@@ -258,7 +263,8 @@ char * hb_errGetDescription( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "DESCRIPTION" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asString.value;
+
+   return hb_itemGetCPtr( &stack.Return );
 }
 
 PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
@@ -267,6 +273,7 @@ PHB_ITEM hb_errPutDescription( PHB_ITEM pError, char * szDescription )
    hb_vmPush( pError );
    hb_vmPushString( szDescription, strlen( szDescription ) );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -275,7 +282,8 @@ char * hb_errGetFileName( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "FILENAME" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asString.value;
+
+   return hb_itemGetCPtr( &stack.Return );
 }
 
 PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
@@ -284,6 +292,7 @@ PHB_ITEM hb_errPutFileName( PHB_ITEM pError, char * szFileName )
    hb_vmPush( pError );
    hb_vmPushString( szFileName, strlen( szFileName ) );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -292,7 +301,8 @@ USHORT hb_errGetGenCode( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "GENCODE" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asInteger.value;
+
+   return hb_itemGetNI( &stack.Return );
 }
 
 PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
@@ -301,6 +311,7 @@ PHB_ITEM hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode )
    hb_vmPush( pError );
    hb_vmPushInteger( uiGenCode );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -309,7 +320,8 @@ char * hb_errGetOperation( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "OPERATION" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asString.value;
+
+   return hb_itemGetCPtr( &stack.Return );
 }
 
 PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
@@ -318,6 +330,7 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, char * szOperation )
    hb_vmPush( pError );
    hb_vmPushString( szOperation, strlen( szOperation ) );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -326,7 +339,8 @@ USHORT hb_errGetOsCode( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "OSCODE" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asInteger.value;
+
+   return hb_itemGetNI( &stack.Return );
 }
 
 PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
@@ -335,6 +349,7 @@ PHB_ITEM hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode )
    hb_vmPush( pError );
    hb_vmPushInteger( uiOsCode );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -343,7 +358,8 @@ USHORT hb_errGetSeverity( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "SEVERITY" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asInteger.value;
+
+   return hb_itemGetNI( &stack.Return );
 }
 
 PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
@@ -352,6 +368,7 @@ PHB_ITEM hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity )
    hb_vmPush( pError );
    hb_vmPushInteger( uiSeverity );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -360,7 +377,8 @@ USHORT hb_errGetSubCode( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "SUBCODE" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asInteger.value;
+
+   return hb_itemGetNI( &stack.Return );
 }
 
 PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
@@ -369,6 +387,7 @@ PHB_ITEM hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode )
    hb_vmPush( pError );
    hb_vmPushInteger( uiSubCode );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -377,7 +396,8 @@ char * hb_errGetSubSystem( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "SUBSYSTEM" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asString.value;
+
+   return hb_itemGetCPtr( &stack.Return );
 }
 
 PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
@@ -386,6 +406,7 @@ PHB_ITEM hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem )
    hb_vmPush( pError );
    hb_vmPushString( szSubSystem, strlen( szSubSystem ) );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -394,7 +415,8 @@ USHORT hb_errGetTries( PHB_ITEM pError )
    hb_vmPushSymbol( hb_dynsymGet( "TRIES" )->pSymbol );
    hb_vmPush( pError );
    hb_vmDo( 0 );
-   return stack.Return.item.asInteger.value;
+
+   return hb_itemGetNI( &stack.Return );
 }
 
 PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
@@ -403,6 +425,7 @@ PHB_ITEM hb_errPutTries( PHB_ITEM pError, USHORT uiTries )
    hb_vmPush( pError );
    hb_vmPushInteger( uiTries );
    hb_vmDo( 1 );
+
    return pError;
 }
 
@@ -416,7 +439,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if( stack.Return.item.asLogical.value )
+   if( hb_itemGetL( &stack.Return ) )
       uiFlags |= EF_CANRETRY;
 
    /* ; */
@@ -425,7 +448,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if( stack.Return.item.asLogical.value )
+   if( hb_itemGetL( &stack.Return ) )
       uiFlags |= EF_CANSUBSTITUTE;
 
    /* ; */
@@ -434,7 +457,7 @@ USHORT hb_errGetFlags( PHB_ITEM pError )
    hb_vmPush( pError );
    hb_vmDo( 0 );
 
-   if( stack.Return.item.asLogical.value )
+   if( hb_itemGetL( &stack.Return ) )
       uiFlags |= EF_CANDEFAULT;
 
    /* ; */
@@ -571,7 +594,7 @@ void hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, cha
 void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
 {
    printf( hb_consoleGetNewLine() );
-   printf( "Internal error %lu: ", ulIntCode );
+   printf( "Unrecoverable error %lu: ", ulIntCode );
    printf( szText != NULL ? szText : hb_langDGetErrorIntr( ulIntCode ), szPar1, szPar2 );
    printf( hb_consoleGetNewLine() );
 

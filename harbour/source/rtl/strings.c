@@ -589,15 +589,35 @@ HARBOUR HB_CHR( void )
    {
       if( ISNUM( 1 ) )
       {
-         char chr[ 2 ];
+         char szChar[ 2 ];
 
          /* Believe it or not, clipper does this! */
-         chr[ 0 ] = hb_parnl( 1 ) % 256;
-         chr[ 1 ] = '\0';
-         hb_retclen( chr, 1 );
+
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+         long lValue = hb_parnl( 1 );
+
+         szChar[ 0 ] = lValue % 256;
+         szChar[ 1 ] = '\0';
+
+         hb_retclen( szChar, lValue != 0 && szChar[ 0 ] == '\0' ? 0 : 1 );
+#else
+         /* Believe it or not, clipper does this! */
+         szChar[ 0 ] = hb_parnl( 1 ) % 256;
+         szChar[ 1 ] = '\0';
+
+         hb_retclen( szChar, 1 );
+#endif
       }
       else
-         hb_errRT_BASE( EG_ARG, 1104, NULL, "CHR" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1104, NULL, "CHR" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CHR" ); /* NOTE: Clipper catches this at compile time! */
@@ -618,7 +638,15 @@ HARBOUR HB_ASC( void )
             hb_retni( 0 );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1107, NULL, "ASC" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1107, NULL, "ASC" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "ASC" ); /* NOTE: Clipper catches this at compile time! */
@@ -1180,12 +1208,12 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
          {
             double dNumber = hb_itemGetND( pNumber );
 
-            #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
             if( pNumber->item.asDouble.length == 99 || dNumber == s_dInfinity || dNumber == -s_dInfinity )
                /* Numeric overflow */
                iBytes = iSize + 1;
             else
-            #endif
+#endif
             {
                if( iDec < IS_DOUBLE( pNumber ) ? pNumber->item.asDouble.decimal : 0 )
                   dNumber = hb_numRound( dNumber, iDec );

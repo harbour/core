@@ -772,6 +772,10 @@ return TGet():New( nRow, nCol, bVarBlock, cVarName, cPicture, cColor )
 
 //---------------------------------------------------------------------------//
 
+function __GET( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
+
+return TGet():New(,, bSetGet, cVarName, cPicture )
+
 function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
 
 return TGet():New(,, bSetGet, cVarName, cPicture )

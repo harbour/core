@@ -74,12 +74,12 @@ transfrm.obj : transfrm.c   extend.h hbdefs.h ctoharb.h set.h dates.h
 gtdos.obj    : source\rtl\gt\gtdos.c     extend.h hbdefs.h gtapi.h
 msguk.obj    : source\rtl\natmsg\msguk.c extend.h hbdefs.h
 
+debug.obj    : source\vm\debug.c    extend.h hbdefs.h ctoharb.h itemapi.h
 dynsym.obj   : source\vm\dynsym.c   extend.h hbdefs.h
 initsymb.obj : source\vm\initsymb.c extend.h hbdefs.h
 
 dates2.obj   : source\tools\dates2.c    extend.h hbdefs.h
 datesx.obj   : source\tools\datesx.c    extend.h hbdefs.h
-debug.obj    : source\tools\debug.c     extend.h hbdefs.h ctoharb.h itemapi.h
 hb_f.obj     : source\tools\hb_f.c      extend.h hbdefs.h filesys.api filesys.h fileio.ch
 io.obj       : source\tools\io.c        extend.h hbdefs.h
 mathx.obj    : source\tools\mathx.c     extend.h hbdefs.h

@@ -169,6 +169,9 @@ ULONG hb_parcsiz( int iParam, ... )
    return 0;
 }
 
+/* NOTE: Using stack.szDate as a temporary date buffer guaranties
+         good behavior when multithreading. */
+
 char * hb_pards( int iParam, ... )
 {
    if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
@@ -184,15 +187,8 @@ char * hb_pards( int iParam, ... )
          pItem = hb_itemUnRef( pItem );
 
       if( IS_DATE( pItem ) )
-      {
-         long lDay, lMonth, lYear;
+         return hb_dateDecStr( stack.szDate, pItem->item.asDate.value );
 
-         hb_dateDecode( pItem->item.asDate.value, &lDay, &lMonth, &lYear );
-         hb_dateStrPut( stack.szDate, lDay, lMonth, lYear );
-         stack.szDate[ 8 ] = '\0';
-
-         return stack.szDate; /* this guaranties good behavior when multithreading */
-      }
       else if( IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -202,13 +198,11 @@ char * hb_pards( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         hb_arrayGetDS( pItem, ulArrayIndex, stack.szDate );
-
-         return stack.szDate; /* this guaranties good behavior when multithreading */
+         return hb_arrayGetDS( pItem, ulArrayIndex, stack.szDate );
       }
    }
 
-   return "        "; /* 8 spaces */
+   return hb_dateDecStr( stack.szDate, 0 );
 }
 
 int hb_parl( int iParam, ... )
