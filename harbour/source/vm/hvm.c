@@ -2951,8 +2951,8 @@ static void hb_vmPopAlias( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPopAlias()"));
 
+   hb_vmSelectWorkarea( hb_stack.pPos-1 ); /* it clears the passed item */
    hb_stackDec();
-   hb_vmSelectWorkarea( hb_stack.pPos );
 }
 
 /* Pops the alias to use it to select a workarea and next pops a value

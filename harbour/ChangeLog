@@ -1,3 +1,11 @@
+19991118-12:50 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/vm/hvm.c
+	* corrected code in hb_vmPopAlias() - the stack pointer was 
+	decreased before the call to hb_vmSelectWorkarea - later
+	the error recovery code was overwriting the alias item which
+	caused unreleased memory
+	
 19991118-06:05 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     + source\common\hbfsapi.c  (reported missing by Matteo)
