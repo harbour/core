@@ -112,8 +112,8 @@ FUNCTION NTOCOLOR( nColor, lChar )
 
   if valtype( nColor ) == "N" .and. nColor > 0 .and. nColor < 256
 
-     nColorFore = INT( nColor / 16 )
-     nColorBack = nColor % 16
+     nColorFore = nColor % 16
+     nColorBack = INT( nColor / 16 )
 
      if !lChar
 
