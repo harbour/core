@@ -527,8 +527,8 @@ return nil
 
 METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
 
-   local cCommand, cResult, oE
-   local bLastHandler, lDisplay
+   local cCommand, cResult
+   local lDisplay
 
    do case
       case nKey == K_UP
@@ -562,29 +562,13 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
               ::oWndCommand:ScrollUp( 1 )
            endif
 
-           bLastHandler = ErrorBlock( { | objErr | Break( objErr ) } )
-
            do case
               case Empty( cCommand )
                  lDisplay = .f.
 
-              case SubStr( LTrim( cCommand ), 1, 3 ) == "?? "
-                 begin sequence
-                    ::Inspect( AllTrim( SubStr( LTrim( cCommand ), 4 ) ),;
-                               &( AllTrim( SubStr( LTrim( cCommand ), 4 ) ) ) )
-                    lDisplay = .f.
-                 recover using oE
-                    cResult = "Command error: " + oE:description
-                    lDisplay = .t.
-                 end sequence
-
-              case SubStr( LTrim( cCommand ), 1, 2 ) == "? "
-                 begin sequence
-                    cResult = ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
-                 recover using oE
-                    cResult = "Command error: " + oE:description
-                 end sequence
-                 lDisplay = .t.
+              case SubStr( LTrim( cCommand ), 1, 3 ) == "?? " .or. ;
+                       SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+                 lDisplay := !Empty( cResult := DoCommand( Self,cCommand ) )
 
               case Upper( SubStr( LTrim( cCommand ), 1, 3 ) ) == "DOS"
                  ::OsShell()
@@ -611,8 +595,6 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
                  lDisplay = .t.
 
            endcase
-
-           ErrorBlock( bLastHandler )
 
            DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1,;
               Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ),;
@@ -1933,3 +1915,56 @@ static function ArrayBrowseSkip( nPos, oBrwSets, n )
 return iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
        iif( oBrwSets:cargo[ 1 ] + nPos > Len(oBrwSets:cargo[ 2 ][ 1 ]), ;
        Len(oBrwSets:cargo[ 2 ][ 1 ]) - oBrwSets:cargo[ 1 ], nPos ) )
+
+static function DoCommand( o,cCommand )
+   local bLastHandler, cResult, nLocals := len( o:aCallStack[1][2] )
+   local nProcLevel := 1, oE, i, vtmp
+
+   if nLocals > 0
+      while ProcName( nProcLevel ) != o:aCallStack[1][2][1][4]
+         nProcLevel++
+      enddo
+      for i := 1 to nLocals
+         __mvPrivate( o:aCallStack[1][2][i][1] )
+         __mvPut( o:aCallStack[1][2][i][1], ;
+              __vmVarLGet( nProcLevel, o:aCallStack[1][2][i][2] ) )
+      next
+   endif
+
+   bLastHandler := ErrorBlock({ |objErr| BREAK (objErr) })
+
+   if SubStr( LTrim( cCommand ), 1, 3 ) == "?? "
+
+      begin sequence
+         o:Inspect( AllTrim( SubStr( LTrim( cCommand ), 4 ) ),;
+                    &( AllTrim( SubStr( LTrim( cCommand ), 4 ) ) ) )
+         cResult := ""
+      recover using oE
+         cResult = "Command error: " + oE:description
+      end sequence   
+
+   elseif SubStr( LTrim( cCommand ), 1, 2 ) == "? "
+
+      begin sequence
+          cResult := ValToStr( &( AllTrim( SubStr( LTrim( cCommand ), 3 ) ) ) )
+
+      recover using oE
+          cResult := "Command error: " + oE:description
+
+      end sequence
+
+   else
+      cResult := "Command error"
+
+   endif
+
+   ErrorBlock(bLastHandler)
+
+   for i := 1 to nLocals
+      vtmp := __mvGet( o:aCallStack[1][2][i][1] )
+      if vtmp != __vmVarLGet( nProcLevel, o:aCallStack[1][2][i][2] )
+         __vmVarLSet( nProcLevel, o:aCallStack[1][2][i][2], vtmp )
+      endif
+   next
+
+Return cResult
