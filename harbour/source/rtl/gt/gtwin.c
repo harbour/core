@@ -7,6 +7,8 @@
  *
  *  This module is based (somewhat) on VIDMGR by
  *   Andrew Clarke and modified for the Harbour project
+ *
+ *  User programs should never call this layer directly!
  */
 
 #include <stdlib.h>
@@ -51,6 +53,7 @@ void gtInit(void)
   LOG("Initializing");
   HInput = GetStdHandle(STD_INPUT_HANDLE);
   HOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+  hb_gt_ScreenBuffer((ULONG)HOutput);
 }
 
 /* TODO: this can very likely be removed */
@@ -110,38 +113,34 @@ void gtSetCursorStyle(int style)
 
   LOG("SetCursorStyle");
   GetConsoleCursorInfo(HOutput, &cci);
+  cci.bVisible = 1; /* always visible unless explicitly request off */
   switch (style)
     {
     case SC_NONE:
       cci.bVisible = 0;
-      SetConsoleCursorInfo(HOutput, &cci);
       break;
 
     case SC_NORMAL:
-      cci.bVisible = 1;
       cci.dwSize = 12;
-      SetConsoleCursorInfo(HOutput, &cci);
       break;
 
     case SC_INSERT:
-      cci.bVisible = 1;
       cci.dwSize = 99;
-      SetConsoleCursorInfo(HOutput, &cci);
       break;
 
     case SC_SPECIAL1:
-      cci.bVisible = 1;
-      cci.dwSize = 49;
-      SetConsoleCursorInfo(HOutput, &cci);
+      cci.dwSize = 49;  /* supposed to be upper half, but this will do */
       break;
 
     case SC_SPECIAL2:
       /* TODO: Why wasn't this implemented ? */
+      /* because in their infinite wisdom, MS doesn't support this...*/
       break;
 
     default:
       break;
     }
+    SetConsoleCursorInfo(HOutput, &cci);
 }
 
 int gtGetCursorStyle(void)
@@ -173,6 +172,7 @@ int gtGetCursorStyle(void)
 	  break;
 
 	  /* TODO: cannot tell if the block is upper or lower for cursor */
+          /* Answer: Supposed to be upper third, but ms don't support it. */
         default:
 	  rc=SC_SPECIAL2;
         }
@@ -330,6 +330,7 @@ char gtRow(void)
 void gtScroll( char cTop, char cLeft, char cBottom, char cRight, char attribute, char vert, char horiz )
 {
 /* ptucker */
+
   SMALL_RECT Source, Clip;
   COORD      Target;
   CHAR_INFO  FillChar;
@@ -355,4 +356,88 @@ void gtScroll( char cTop, char cLeft, char cBottom, char cRight, char attribute,
   FillChar.Attributes = (WORD)attribute;
 
   ScrollConsoleScreenBuffer(HOutput, &Source, &Clip, Target, &FillChar);
+}
+
+void hb_gt_DispBegin( char color )
+{
+/* ptucker */
+  HANDLE hNewBuffer;
+  COORD dwWriteCoord = {0, 0};
+  char row, col;
+  char * pBuffer;
+  USHORT uiX;
+
+  hb_gtRectSize( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, &uiX );
+  pBuffer = ( char * ) hb_xgrab( uiX );
+  hb_gtSave( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
+
+  hNewBuffer = CreateConsoleScreenBuffer(
+               GENERIC_READ    | GENERIC_WRITE,
+               FILE_SHARE_READ | FILE_SHARE_WRITE,
+               NULL,
+               CONSOLE_TEXTMODE_BUFFER,
+               NULL);
+
+  row = gtRow();
+  col = gtCol();
+  hb_gt_ScreenBuffer( (ULONG)HOutput );
+
+  HOutput = hNewBuffer;
+  hb_gtRest( 0,0,  gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
+  gtSetPos( row, col );
+  hb_xfree( pBuffer );
+}
+
+void hb_gt_DispEnd()
+{
+/* ptucker */
+  char * pBuffer;
+  char row, col;
+  USHORT uiX;
+
+  hb_gtRectSize( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, &uiX );
+  pBuffer = ( char * ) hb_xgrab( uiX );
+  hb_gtSave( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
+
+  row = gtRow();
+  col = gtCol();
+  CloseHandle( HOutput );
+  HOutput = (HANDLE)hb_gt_ScreenBuffer( 0 );
+
+  hb_gtRest( 0,0, gtGetScreenHeight()-1, gtGetScreenWidth()-1, pBuffer );
+  gtSetPos( row, col );
+  hb_xfree( pBuffer );
+}
+
+void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+{
+/* ptucker */
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  SMALL_RECT srRect;
+  COORD coordScreen;
+
+  GetConsoleScreenBufferInfo(HOutput, &csbi);
+  coordScreen = GetLargestConsoleWindowSize(HOutput);
+
+  /* new console window size and scroll position */
+  srRect.Right  = (SHORT) (min(uiCols, coordScreen.X) - 1);
+  srRect.Bottom = (SHORT) (min(uiRows, coordScreen.Y) - 1);
+  srRect.Left   = srRect.Top = (SHORT) 0;
+
+  /* new console buffer size */
+  coordScreen.X = uiCols;
+  coordScreen.Y = uiRows;
+
+  /* if the current buffer is larger than what we want, resize the */
+  /* console window first, then the buffer */
+  if ((DWORD) csbi.dwSize.X * csbi.dwSize.Y > (DWORD) uiCols * uiRows )
+  {
+    SetConsoleWindowInfo(HOutput, TRUE, &srRect);
+    SetConsoleScreenBufferSize(HOutput, coordScreen);
+  }
+  else if ((DWORD) csbi.dwSize.X * csbi.dwSize.Y < (DWORD) uiCols * uiRows )
+  {
+    SetConsoleScreenBufferSize(HOutput, coordScreen);
+    SetConsoleWindowInfo(HOutput, TRUE, &srRect);
+  }
 }

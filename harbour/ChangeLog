@@ -1,3 +1,20 @@
+19990802-02:30 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     ! hb_gtDispbegin/end and hb_gtSetMode now supported for gtwin
+     + hb_gt_ScreenBuffer - internal function for use by hb_gt_DispBegin/End
+   * source/rtl/gtos2.c source/rtl/gtdos.c
+     + dummy hb_gt_DispBegin, hb_gt_DispEnd and hb_gt_SetMode  (for now)
+   * source/rtl/gtwin.c
+     + hb_gt_DispBegin, hb_gt_DispEnd and hb_gt_SetMode
+     * couple of comments in gtSetCursor along with a minor change
+       due to cursor not always turning on when app quit.
+   * source/rtl/inkey.c
+     * updated a comment.
+   * include/gtapi.h
+     + hb_gt_DispBegin hb_gt_DispEnd hb_gt_ScreenBuffer hb_gt_SetMode
+   * makefile.vc
+     + added do
+   
 19990802-06:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/tools/strfmt.c

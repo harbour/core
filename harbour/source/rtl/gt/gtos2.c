@@ -139,3 +139,17 @@ void gtSetAttribute( char cTop, char cLeft, char cBottom, cRight, char attribute
 void gtDrawShadow( char cTop, char cLeft, char cBottom, cRight, char attribute )
 {
 }
+
+void hb_gt_SetMode( USHORT uiRows, USHORT uiCols )
+{
+   uiRows=uiCols=0;
+}
+
+void hb_gt_DispBegin( char color )
+{
+   color = '\0';
+}
+
+void hb_gt_DispEnd(void)
+{
+}

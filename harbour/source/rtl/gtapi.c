@@ -6,7 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
- * 1.46   19990801   ptucker   simplified hb_gtScroll if WIN_GTAPI
+ * 1.47   19990802   ptucker   DispBegin/End and SetMode for gtWin
+ * 1.46   19990801   ptucker   simplified hb_gtScroll if gtWin
  * 1.44   19990730   ptucker   simplified gtputs and gtSetAttribute
  *                             corrected gtGetCursorStyle for !cci.bVisible
  *                             return SC_NONE - other cases should be handled
@@ -79,22 +80,41 @@ int *_Color;           /* masks: 0x0007     Background
                         */
 int _ColorCount;
 
+ULONG *_ScrnBuffer;
+
 /* gt API functions */
 
 void hb_gtInit(void)
 {
     _Color = (int *)hb_xgrab(5*sizeof(int));
     _ColorCount = 5;
+    _ScrnBuffer = (ULONG *)hb_xgrab( sizeof( ULONG ) );
+    s_uiDispCount = 0;
     gtInit();
-    hb_gtSetMode( 80,50 ); /* though semi-inactive, should be called for now */
-    hb_gtSetPos( gtRow(), gtCol() );
     hb_gtSetColorStr( hb_set.HB_SET_COLOR );
+    hb_gtSetMode( 50,80 );
+    hb_gtSetPos( gtRow(), gtCol() );
 }
 
 void hb_gtExit(void)
 {
     gtDone();
     hb_xfree( _Color );
+    while( s_uiDispCount )
+       hb_gtDispEnd();
+    hb_xfree( _ScrnBuffer );
+}
+
+/* this gets called from gtwin/gtdos, etc. */
+/* otherwise it has to be duplicated in each driver */
+ULONG hb_gt_ScreenBuffer( ULONG NewBuffer)
+{
+   ULONG Previous = _ScrnBuffer[s_uiDispCount];
+
+   if( NewBuffer )
+      _ScrnBuffer[s_uiDispCount] = NewBuffer;
+
+   return Previous;
 }
 
 int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char* pbyFrame)
@@ -149,7 +169,7 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
     /* Draw the box or line as specified */
     height = uiBottom - uiTop + 1;
     width  = uiRight - uiLeft + 1;
-    hb_gtDispBegin();
+/*     hb_gtDispBegin(); */
 
     if( height > 1 && width > 1 )
     {
@@ -188,7 +208,8 @@ int hb_gtBox (USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, char
         }
     }
 
-    hb_gtDispEnd();
+/*    speed issue for now */
+/*    hb_gtDispEnd(); */
 
     hb_gtSetPos(uiTopBak + 1, uiLeftBak + 1);
 
@@ -221,8 +242,9 @@ int hb_gtColorSelect(USHORT uiColorIndex)
 
 int hb_gtDispBegin(void)
 {
-    /* TODO: need to add buffering here */
-    s_uiDispCount++;
+    ++s_uiDispCount;
+    _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
+    hb_gt_DispBegin((char)_Color[s_uiColorIndex]);
     return(0);
 }
 
@@ -233,8 +255,9 @@ USHORT hb_gtDispCount(void)
 
 int hb_gtDispEnd(void)
 {
-    /* TODO: need to add buffering here */
-    s_uiDispCount--;
+    hb_gt_DispEnd();
+    --s_uiDispCount;
+    _ScrnBuffer = (ULONG *)hb_xrealloc( _ScrnBuffer, sizeof( ULONG ) * (s_uiDispCount+1) );
     return(0);
 }
 
@@ -561,8 +584,7 @@ int hb_gtSetCursor(USHORT uiCursorShape)
 
 int hb_gtSetMode(USHORT uiRows, USHORT uiCols)
 {
-   HB_SYMBOL_UNUSED( uiRows );
-   HB_SYMBOL_UNUSED( uiCols );
+    hb_gt_SetMode( uiRows, uiCols );
     s_uiMaxRow = hb_gtMaxRow();
     s_uiMaxCol = hb_gtMaxCol();
     return(0);

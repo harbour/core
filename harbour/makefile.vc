@@ -62,6 +62,7 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\descend.obj \
     $(OBJ_DIR)\devoutp.obj \
     $(OBJ_DIR)\dir.obj \
+    $(OBJ_DIR)\do.obj \
     $(OBJ_DIR)\dynsym.obj \
     $(OBJ_DIR)\environ.obj \
     $(OBJ_DIR)\error.obj \
@@ -298,6 +299,9 @@ $(OBJ_DIR)\devoutp.obj : $(RTL_DIR)\devoutp.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\dir.obj : $(RTL_DIR)\dir.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\do.obj : $(RTL_DIR)\do.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\environ.obj : $(RTL_DIR)\environ.c

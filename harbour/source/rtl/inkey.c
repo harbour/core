@@ -120,6 +120,10 @@ void hb_releaseCPU( void )
    in protected mode, time slices will _not_ be released - you must switch
    to real mode first, execute the following, and switch back.
 
+   It just occurred to me that this is actually by design.  Since MS doesn't
+   want you to do this from a console app, their solution was to not allow
+   the call to work in protected mode - screw the rest of the planet <g>.
+
    returns zero on failure. (means not supported)
  */
 /*

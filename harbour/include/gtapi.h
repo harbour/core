@@ -122,5 +122,9 @@ void gtGetText(char cTop, char cLeft, char cBottom, char cRight, char *dest);
 void gtPutText(char cTop, char cLeft, char cBottom, char cRight, char *srce);
 void gtSetAttribute( char cTop, char cLeft, char cBottom, char cRight, char attribute );
 void gtDrawShadow( char cTop, char cLeft, char cBottom, char cRight, char attribute );
+void hb_gt_DispBegin(char color);
+void hb_gt_DispEnd(void);
+ULONG hb_gt_ScreenBuffer( ULONG buffer );
+void hb_gt_SetMode( USHORT uiRows, USHORT uiCols );
 
 #endif /* HB_GTAPI_H_ */
