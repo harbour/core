@@ -1,3 +1,25 @@
+2000-03-16 02:30 GMT-5 David G. Holm <dholm@ sd-llc.com>
+   * include/hbapigt.h
+   * include/hbsetup.h
+   * source/rtl/console.c
+   * source/rtl/gtapi.c
+   * source/rtl/gtxxx.c
+   * source/rtl/gt/gt_tpl.c
+   * source/rtl/gt/gtcrs.c
+   * source/rtl/gt/gtdos.c
+   * source/rtl/gt/gtos2.c
+   * source/rtl/gt/gtsln.c
+   * source/rtl/gt/gtstd.c
+   * source/rtl/gt/gtwin.c
+     - Removed all occurrences of HARBOUR_USE_GTAPI from console.c.
+     + Added hb_gtAdjustPos() to console.c, gtapi.c and hbapigt.h.
+     + Added hb_gt_AdjustPos() to all gt/ sources and hbapigt.h.
+     + Added rudimentary PC ANSI.SYS low-level driver (gtpca.c,
+       which is missing stuff such as scrolling screen regions).
+     + Added HB_GT_PCA to hbsetup.h and gtxxx.c (in fact, I replaced
+       HB_GT_STD with HB_GT_PCA in gtxxx.c, because the default case
+       is to use HB_GT_STD).
+
 20000316-02:04 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/pp/ppcore.c
      ! C++ comment changed to ANSI C

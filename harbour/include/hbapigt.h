@@ -81,9 +81,10 @@ typedef enum
 
 /* Public interface. These should never change, only be added to. */
 
-extern void   hb_gtInit( void );
+extern void   hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gtExit( void );
 extern int    hb_gtReadKey( void );
+extern void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
 extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBoxString );
 extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
@@ -119,9 +120,10 @@ extern USHORT hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen );
 
 /* Private interface listed below. these are common to all platforms */
 
-extern void   hb_gt_Init( void );
+extern void   hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern BOOL   hb_gt_IsColor( void );
 extern void   hb_gt_Done( void );
+extern BOOL   hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen );
 extern int    hb_gt_ReadKey( void );
 extern USHORT hb_gt_GetScreenWidth( void );
 extern USHORT hb_gt_GetScreenHeight( void );

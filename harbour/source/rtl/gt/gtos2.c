@@ -53,7 +53,7 @@ static void hb_gt_SetCursorSize( char start, char end, int visible );
 static void hb_gt_GetCursorSize( char * start, char * end );
 */
 
-void hb_gt_Init( void )
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -65,6 +65,18 @@ void hb_gt_Done( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Done()"));
 
    /* TODO: */
+}
+
+BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+{
+   USHORT x, y;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos()"));
+
+   VioGetCurPos( &y, &x, 0 );
+   hb_gtSetPos( ( SHORT ) y, ( SHORT ) x );
+
+   return TRUE;
 }
 
 int hb_gt_ReadKey( void )

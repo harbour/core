@@ -130,7 +130,7 @@ static void hb_gt_CtrlBrkRestore( void )
 }
 #endif
 
-void hb_gt_Init( void )
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -176,6 +176,33 @@ int hb_gt_ReadKey( void )
    /* TODO: */
 
    return 0;
+}
+
+BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos()"));
+
+#if defined(__TURBOC__)
+   {
+     _AH = 0x03;
+     _BH = 0;
+     geninterrupt( 0x10 );
+     hb_gtSetPos( _DH, _DL );
+   }
+#else
+   {
+     union REGS regs;
+     regs.h.ah = 0x03;
+     regs.h.bh = 0;
+#if defined(__WATCOMC__) && defined(__386__)
+     int386( 0x10, &regs, &regs );
+#else
+     int86( 0x10, &regs, &regs );
+#endif
+     hb_gtSetPos( regs.h.dh, regs.h.dl );
+   }
+#endif
+   return TRUE;
 }
 
 BOOL hb_gt_IsColor( void )

@@ -35,8 +35,8 @@
 
 #include "hbsetup.h"
 
-#if   defined(HARBOUR_USE_STD_GTAPI)
-   #include "gt/gtstd.c"
+#if   defined(HARBOUR_USE_PCA_GTAPI)
+   #include "gt/gtpca.c"
 #elif defined(HARBOUR_USE_DOS_GTAPI)
    #include "gt/gtdos.c"
 #elif defined(HARBOUR_USE_OS2_GTAPI)

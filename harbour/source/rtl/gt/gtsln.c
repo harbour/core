@@ -39,7 +39,7 @@
 
 #include "hbapigt.h"
 
-void hb_gt_Init( void )
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -68,6 +68,56 @@ int hb_gt_ReadKey( void )
    /* TODO: */
 
    return 0;
+}
+
+BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+{
+   USHORT row = SLsmg_get_row();
+   USHORT col = SLsmg_get_column();
+   ULONG ulCount;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
+
+   for( ulCount = 0; ulCount < ulLen; ulCount++ )
+   {
+      switch( *pStr++  )
+      {
+         case HB_CHAR_BEL:
+            break;
+
+         case HB_CHAR_BS:
+            if( col )
+               col--;
+            else
+            {
+               col = SLtt_Screen_Cols - 1;
+               if( row )
+                  row--;
+            }
+            break;
+
+         case HB_CHAR_LF:
+            if( row < SLtt_Screen_Rows - 1 )
+               row++;
+            break;
+
+         case HB_CHAR_CR:
+            col = 0;
+            break;
+
+         default:
+            if( col < SLtt_Screen_Cols - 1 )
+               col++;
+            else
+            {
+               col = 0;
+               if( row < SLtt_Screen_Rows - 1 )
+                  row++;
+            }
+      }
+   }
+   hb_gt_SetPos( row, col );
+   return TRUE;
 }
 
 BOOL hb_gt_IsColor( void )

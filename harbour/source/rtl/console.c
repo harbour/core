@@ -100,6 +100,7 @@ static USHORT s_uiPRow;
 static USHORT s_uiPCol;
 static char   s_szCrLf[ CRLF_BUFFER_LEN ];
 static char   s_szAcceptResult[ ACCEPT_BUFFER_LEN ];
+static int    s_iFilenoStdin;
 static int    s_iFilenoStdout;
 static int    s_iFilenoStderr;
 
@@ -125,6 +126,7 @@ void hb_consoleInitialize( void )
    /* Some compilers open stdout and stderr in text mode, but
       Harbour needs them to be open in binary mode. */
 
+   s_iFilenoStdin = fileno( stdin );
    s_iFilenoStdout = fileno( stdout );
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
 
@@ -140,7 +142,7 @@ void hb_consoleInitialize( void )
    hb_fsSetDevMode( s_iFilenoStderr, FD_BINARY );
 
    hb_mouseInit();
-   hb_gtInit();
+   hb_gtInit( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
    hb_gtSetCursor( SC_NORMAL );
 
    s_bInit = TRUE;
@@ -173,64 +175,6 @@ HARBOUR HB_HB_OSNEWLINE( void )
 {
    hb_retc( s_szCrLf );
 }
-
-#ifndef HARBOUR_USE_GTAPI
-static void adjust_pos( char * pStr, ULONG ulLen )
-{
-   USHORT max_row;
-   USHORT max_col;
-   SHORT row;
-   SHORT col;
-   ULONG ulCount;
-
-   HB_TRACE(HB_TR_DEBUG, ("adjust_pos(%s, %lu)", pStr, ulLen ));
-
-   max_row = hb_gtMaxRow();
-   max_col = hb_gtMaxCol();
-   hb_gtGetPos( &row, &col );
-
-   for( ulCount = 0; ulCount < ulLen; ulCount++ )
-   {
-      switch( *pStr++  )
-      {
-         case HB_CHAR_BEL:
-            break;
-
-         case HB_CHAR_BS:
-            if( col )
-               col--;
-            else
-            {
-               col = max_col;
-               if( row )
-                  row--;
-            }
-            break;
-
-         case HB_CHAR_LF:
-            if( row < max_row )
-               row++;
-            break;
-
-         case HB_CHAR_CR:
-            col = 0;
-            break;
-
-         default:
-            if( col < max_col )
-               col++;
-            else
-            {
-               col = 0;
-               if( row < max_row )
-                  row++;
-            }
-      }
-   }
-
-   hb_gtSetPos( row, col );
-}
-#endif
 
 typedef void hb_out_func_typedef( char *, ULONG );
 
@@ -272,15 +216,7 @@ void hb_outstd( char * pStr, ULONG ulLen )
 
    if( s_bInit )
    {
-#ifdef HARBOUR_USE_GTAPI
-      #ifndef __CYGWIN__
-      if( isatty( s_iFilenoStdout ) )
-      #endif
-         /* TOFIX: Violation of API calling rules! */
-         hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
-#else
-      adjust_pos( pStr, ulLen );
-#endif
+      hb_gtAdjustPos( s_iFilenoStdout, pStr, ulLen );
       hb_gtPostExt();
    }
 }
@@ -304,15 +240,7 @@ void hb_outerr( char * pStr, ULONG ulLen )
 
    if( s_bInit )
    {
-#ifdef HARBOUR_USE_GTAPI
-      #ifndef __CYGWIN__
-      if( isatty( s_iFilenoStdout ) )
-      #endif
-         /* TOFIX: Violation of API calling rules! */
-         hb_gtSetPos( hb_gt_Row(), hb_gt_Col() );
-#else
-      adjust_pos( pStr, ulLen );
-#endif
+      hb_gtAdjustPos( s_iFilenoStderr, pStr, ulLen );
       hb_gtPostExt();
    }
 }
@@ -323,16 +251,7 @@ static void hb_altout( char * pStr, ULONG ulLen )
    HB_TRACE(HB_TR_DEBUG, ("hb_altout(%s, %lu)", pStr, ulLen));
 
    if( hb_set.HB_SET_CONSOLE )
-   {
-#ifdef HARBOUR_USE_GTAPI
       hb_gtWriteCon( ( BYTE * ) pStr, ulLen );
-#else
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen );
-#endif
-   }
 
    if( hb_set.HB_SET_ALTERNATE && hb_set.hb_set_althan != FS_ERROR )
    {
@@ -375,16 +294,8 @@ static void hb_devout( char * pStr, ULONG ulLen )
    }
    else
    {
-#ifdef HARBOUR_USE_GTAPI
       /* Otherwise, display to console */
-      /* TOFIX: Violation of API calling rules! */
-      hb_gtWriteAt( hb_gt_Row(), hb_gt_Col(), ( BYTE * ) pStr, ulLen );
-#else
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen );
-#endif
+      hb_gtWrite( ( BYTE * ) pStr, ulLen );
    }
 }
 
@@ -392,18 +303,7 @@ static void hb_devout( char * pStr, ULONG ulLen )
 static void hb_dispout( char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dispout(%s, %lu)", pStr, ulLen));
-
-#ifdef HARBOUR_USE_GTAPI
-   /* TOFIX: Violation of API calling rules! */
-   hb_gtWriteAt( hb_gt_Row(), hb_gt_Col(), ( BYTE * ) pStr, ulLen );
-#else
-   {
-      USHORT user_ferror = hb_fsError(); /* Save current user file error code */
-      hb_fsWriteLarge( s_iFilenoStdout, ( BYTE * ) pStr, ulLen );
-      hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      adjust_pos( pStr, ulLen );
-   }
-#endif
+   hb_gtWrite( ( BYTE * ) pStr, ulLen );
 }
 
 void hb_devpos( SHORT row, SHORT col )

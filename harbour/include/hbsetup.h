@@ -149,6 +149,9 @@
 
 /* Short version are also good */
 
+#ifdef HB_GT_PCA
+   #define HARBOUR_USE_PCA_GTAPI
+#endif
 #ifdef HB_GT_STD
    #define HARBOUR_USE_STD_GTAPI
 #endif
@@ -174,7 +177,8 @@
     defined(HARBOUR_USE_OS2_GTAPI) || \
     defined(HARBOUR_USE_WIN_GTAPI) || \
     defined(HARBOUR_USE_CRS_GTAPI) || \
-    defined(HARBOUR_USE_SLN_GTAPI)
+    defined(HARBOUR_USE_SLN_GTAPI) || \
+    defined(HARBOUR_USE_PCA_GTAPI)
    #define HARBOUR_USE_GTAPI
 #endif
 

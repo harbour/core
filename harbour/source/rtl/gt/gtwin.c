@@ -118,9 +118,12 @@ static BOOL WINAPI hb_gt_CtrlHandler( DWORD dwCtrlType )
    return bHandled;
 }
 
-void hb_gt_Init( void )
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init(): %d, %d, %d", iFilenoStdin, iFilenoStdout, iFilenoStderr));
+   HB_SYMBOL_UNUSED( iFilenoStdin );
+   HB_SYMBOL_UNUSED( iFilenoStdout );
+   HB_SYMBOL_UNUSED( iFilenoStderr );
 
    /* Add Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
@@ -218,6 +221,21 @@ int hb_gt_ReadKey( void )
    /* TODO: */
 
    return 0;
+}
+
+BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+{
+   CONSOLE_SCREEN_BUFFER_INFO csbi;
+   HB_SYMBOL_UNUSED( pStr );
+   HB_SYMBOL_UNUSED( ulLen );
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Adjust(): %s, %l", pStr, ulLen));
+
+   GetConsoleScreenBufferInfo( s_HActive, &csbi );
+
+   hb_gtSetPos( csbi.dwCursorPosition.Y, csbi.dwCursorPosition.X );
+   
+   return TRUE;
 }
 
 BOOL hb_gt_IsColor( void )

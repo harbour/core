@@ -42,7 +42,7 @@ static void gt_GetRC(int* r, int* c);
 static void gt_SetRC(int r, int c);
 
 
-void hb_gt_Init( void )
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -72,6 +72,57 @@ int hb_gt_ReadKey( void )
    }
 
    return ch;
+}
+
+BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+{
+   int row, col, max_row, max_col;
+   ULONG ulCount;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
+
+   gt_GetRC( &row, &col );
+   gt_GetMaxRC( &max_row, &max_col );
+   for( ulCount = 0; ulCount < ulLen; ulCount++ )
+   {
+      switch( *pStr++  )
+      {
+         case HB_CHAR_BEL:
+            break;
+
+         case HB_CHAR_BS:
+            if( col )
+               col--;
+            else
+            {
+               col = max_col;
+               if( row )
+                  row--;
+            }
+            break;
+
+         case HB_CHAR_LF:
+            if( row < max_row )
+               row++;
+            break;
+
+         case HB_CHAR_CR:
+            col = 0;
+            break;
+
+         default:
+            if( col < max_col )
+               col++;
+            else
+            {
+               col = 0;
+               if( row < max_row )
+                  row++;
+            }
+      }
+   }
+   hb_gtSetRC( row, col );
+   return TRUE;
 }
 
 BOOL hb_gt_IsColor( void )

@@ -47,9 +47,8 @@ static USHORT s_uiMaxCol;
 static USHORT s_uiCursorStyle;
 static BOOL   s_bBlink;
 static int    s_iFilenoStdout;
-static int    s_iFilenoStderr;
 
-void hb_gt_Init( void )
+void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
@@ -63,7 +62,7 @@ void hb_gt_Init( void )
    s_uiMaxCol = 80;
    s_uiCursorStyle = SC_NORMAL;
    s_bBlink = FALSE;
-   s_iFilenoStdout = fileno( stdout );
+   s_iFilenoStdout = iFilenoStdout;
    hb_fsSetDevMode( s_iFilenoStdout, FD_BINARY );
 }
 
@@ -79,6 +78,56 @@ int hb_gt_ReadKey( void )
    /* TODO: */
 
    return 0;
+}
+
+BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
+{
+   USHORT row = s_iRow;
+   USHORT col = s_iCol;
+   ULONG ulCount;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
+
+   for( ulCount = 0; ulCount < ulLen; ulCount++ )
+   {
+      switch( *pStr++  )
+      {
+         case HB_CHAR_BEL:
+            break;
+
+         case HB_CHAR_BS:
+            if( col )
+               col--;
+            else
+            {
+               col = s_uiMaxCol;
+               if( row )
+                  row--;
+            }
+            break;
+
+         case HB_CHAR_LF:
+            if( row < s_uiMaxRow )
+               row++;
+            break;
+
+         case HB_CHAR_CR:
+            col = 0;
+            break;
+
+         default:
+            if( col < s_uiMaxCol )
+               col++;
+            else
+            {
+               col = 0;
+               if( row < s_uiMaxRow )
+                  row++;
+            }
+      }
+   }
+   hb_gt_SetPos( row, col );
+   return TRUE;
 }
 
 BOOL hb_gt_IsColor( void )
@@ -114,7 +163,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol )
 
    if( iRow < iDevRow || iCol < iDevCol )
    {
-      fputs( hb_consoleGetNewLine(), stdout );
+      fputs( szCrLf, stdout );
       iDevCol = 0;
       iDevRow++;
    }
@@ -122,7 +171,7 @@ void hb_gt_SetPos( SHORT iRow, SHORT iCol )
       iDevCol = 0;
 
    for( iCount = iDevRow; iCount < iRow; iCount++ )
-      fputs( hb_consoleGetNewLine(), stdout );
+      fputs( szCrLf, stdout );
    for( iCount = iDevCol; iCount < iCol; iCount++ )
       fputc( ' ', stdout );
 

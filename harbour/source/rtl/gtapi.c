@@ -34,71 +34,6 @@
  */
 
 /*
- * ChangeLog:
- *
- * 1.83   19991006   ptucker   Enable dispbegin/end calls in gtBox
- * 1.81   19991005   dholm     Made the hb_gtWrite(), hb_gtWriteAt(), and
- *                             hb_gtWriteCon() functions and the cursor
- *                             positioning more compatible with Clipper.
- * 1.66   19990830   vszel     Reformatted using Harbour standard. Some
- *                             small cleanups.
- * 1.65   19990830   ptucker   Handle nesting of gtPre/PostExt - corrected
- *                             s_uiPreCount handling in gtDispEnd
- * 1.63   19990811   ptucker   Implimented gtPre and PostExt to be used when
- *                             writing to screen via printf.
- * 1.58   19990811   ptucker   changes to gtWriteCon and gtWrite to improve
- *                             speed.
- * 1.56   19990811   ptucker   Corrected initial MaxRow/col
- * 1.53   19990807   ptucker   Modified Dispbegin/end support
- * 1.47   19990802   ptucker   DispBegin/End and SetMode for gtWin
- * 1.46   19990801   ptucker   simplified hb_gtScroll if gtWin
- * 1.44   19990730   ptucker   simplified gtputs and gtSetAttribute
- *                             corrected gtGetCursorStyle for !cci.bVisible
- *                             return SC_NONE - other cases should be handled
- *                             by the switch that follows.
- *                             changed 'case 8:' in gtWriteCon to check
- *                             against uiCol instead of uiRow
- * 1.43   19990729   ptucker   Corrected a number of calls so params are
- *                             in top,left,bottom,right or row,col order.
- *                             removed call to gtrectsize in gtputtext.
- *                             This should be handled by the caller.
- * 1.41   19990728   ptucker   Minor correction for inverted coords
- * 1.40   19990726   vszel     Allowing Top > Bottom and Right > Left
- *                             cases again. Clipper allows these, too.
- *                             Cursor positioning fixed to support these cases.
- *                             uMRow renamed to uiMRow
- *                             uMCol renamed to uiMCol
- * 1.39   19990726   ptucker   Position cursor inside top-left corner
- *                             after drawing box - compatibility
- * 1.35   19990726   ptucker   Much improved box drawing speed
- *                             Modifed some if statments to test for != 0
- * 1.34   19990721   ptucker   Corrected _Color mask descriptions
- * 1.33   19990721   ptucker   Improved Clipper color compatibility
- * 1.31   19990720   ptucker   Implimented color selection in gtWrite and
- *                             gtScroll
- * 1.30   19990719   ptucker   Removed temp init hack
- *                             call gtDone from hb_gtExit
- * 1.29   19990719   ptucker   Minor change to catch last color parameter
- *                             that may be empty
- * 1.28   19990719   ptucker   Added support for numeric color strings
- *                             like "1/7,8/15"
- * 1.26   19990719   ptucker   Changed call in hb_gtinit() to pass the
- *                             literal initial color setting in case
- *                             the GT system is initialised prior to Set.
- *                             Skipped color params in a string now keep
- *                             their previous value.  ie ",,,r/b"
- * 1.25   19990718   dholm     Moved calls to various gtFunctions out of
- *                             InitializeConsole() in console.c and put
- *                             them in hb_gtInit() in this module. Use
- *                             hb_set.HB_SET_COLOR to initialize the GT
- *                             API color string. Converted // comments.
- * 1.24   19990718   ptucker   corrected returned color strings so ordering
- *                             is the same as clipper.
- * 1.23   19990718   ptucker   implimented surface for gtGet/SetColorStr()
- *                             changed to allow unlimited color pairs.
- */
-
-/*
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
@@ -119,6 +54,15 @@
  * See doc/license.txt for licensing terms.
  *
  */
+
+#if defined(__GNUC__) && ! defined(__MINGW32__)
+   #include <unistd.h>
+   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+      #include <io.h>
+   #endif
+#else
+   #include <io.h>
+#endif
 
 #include <ctype.h>
 
@@ -144,14 +88,14 @@ static int    s_ColorCount;
 
 /* gt API functions */
 
-void hb_gtInit( void )
+void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtInit()"));
 
    s_Color = ( int * ) hb_xgrab( 5 * sizeof( int ) );
    s_ColorCount = 5;
 
-   hb_gt_Init();
+   hb_gt_Init( s_iFilenoStdin, s_iFilenoStdout, s_iFilenoStderr );
    hb_gtSetColorStr( hb_set.HB_SET_COLOR );
 
    s_iCurrentRow = hb_gt_Row();
@@ -174,6 +118,23 @@ int hb_gtReadKey( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtReadKey()"));
 
    return hb_gt_ReadKey();
+}
+
+void hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtAdjustPos()"));
+
+   #ifndef __CYGWIN__
+   /* If the output is going to a file instead of to the console,
+      then there is no need to adjust the cursor position. */
+   if( isatty( iHandle ) )
+   #endif
+      if( hb_gt_AdjustPos( ( BYTE * ) pStr, ulLen ) );
+      {
+         /* Adjust the console cursor position to match the device driver */
+         s_iCurrentRow = hb_gt_Row();
+         s_iCurrentCol = hb_gt_Col();
+      }
 }
 
 USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame )
