@@ -125,6 +125,8 @@ HARBOUR_LIB_OBJS = \
     $(OBJ_DIR)\menuto.obj \
     $(OBJ_DIR)\mlcount.obj \
     $(OBJ_DIR)\mlpos.obj \
+    $(OBJ_DIR)\mouseapi.obj \
+    $(OBJ_DIR)\mousexxx.obj \
     $(OBJ_DIR)\msgxxx.obj \
     $(OBJ_DIR)\mtran.obj \
     $(OBJ_DIR)\natmsg.obj \
@@ -648,6 +650,12 @@ $(OBJ_DIR)\mlcount.obj : $(RTL_DIR)\mlcount.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\mlpos.obj : $(RTL_DIR)\mlpos.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\mouseapi.obj : $(RTL_DIR)\mouseapi.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
+
+$(OBJ_DIR)\mousexxx.obj : $(RTL_DIR)\mousexxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\msgxxx.obj : $(RTL_DIR)\msgxxx.c

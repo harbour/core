@@ -1,3 +1,8 @@
+20000207-20:56 EST Paul Tucker <ptucker@sympatico.ca>
+   * makefile.vc
+     + source\rtl\mouseapi.c
+     + source\rtl\mousexxx.c
+
 20000207-22:13 GMT+1 Victor Szakats <info@szelvesz.hu>
    * makefile.b32
      Makefile
