@@ -1,3 +1,9 @@
+19990524-16:45 CET Les Griffith (upload Eddie Runia)
+  * tests/working/iotest2.prg
+    Test program fReadStr
+  * tests/broken/exittest.prg
+    Anyone up for a challenge ;-)
+
 19990524-16:40 CET Eddie Runia
   * include/hbsetup.h
     WATCOM if added
