@@ -41,6 +41,7 @@ HARBOUR MONTH( void );
 HARBOUR PCOUNT( void );
 HARBOUR REPLICATE( void );
 HARBOUR RTRIM( void );
+HARBOUR SECONDS( void );
 HARBOUR SPACE( void );
 HARBOUR SQRT( void );
 HARBOUR STR( void );
@@ -104,7 +105,7 @@ static SYMBOL symbols[] = {
     { "ROUND"     , FS_PUBLIC, NULL         , 0 },
     { "ROW"       , FS_PUBLIC, NULL         , 0 },
     { "RTRIM"     , FS_PUBLIC, RTRIM        , 0 },
-    { "SECONDS"   , FS_PUBLIC, NULL         , 0 },
+    { "SECONDS"   , FS_PUBLIC, SECONDS      , 0 },
     { "SELECT"    , FS_PUBLIC, NULL         , 0 },
     { "SETPOS"    , FS_PUBLIC, NULL         , 0 },
     { "SPACE"     , FS_PUBLIC, SPACE        , 0 },

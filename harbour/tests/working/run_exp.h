@@ -118,6 +118,7 @@ HARBOUR MAXCOL();
 HARBOUR SETPRC();
 HARBOUR SCROLL();
 HARBOUR VERSION();
+HARBOUR HB_SETFIXED();
 
 /* Same story.
 
@@ -237,7 +238,8 @@ static SYMBOL symbols[] = {
 { "MAXCOL",         FS_PUBLIC, MAXCOL        , 0 },
 { "SETPRC",         FS_PUBLIC, SETPRC        , 0 },
 { "SCROLL",         FS_PUBLIC, SCROLL        , 0 },
-{ "VERSION",        FS_PUBLIC, VERSION       , 0 }
+{ "VERSION",        FS_PUBLIC, VERSION       , 0 },
+{ "HB_SETFIXED",    FS_PUBLIC, HB_SETFIXED   , 0 }
 };
 
 

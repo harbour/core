@@ -1,3 +1,11 @@
+19990608-13:25 CET Eddie Runia
+   * source/vm/initsymb.c
+     SECONDS added
+   * tests/working/runner.c
+     _FILEs removed.
+   * tests/working/run_exp.h
+     HB_SETFIXED added
+
 19990608-11:45 CET Eddie Runia
    * source/tools/debug.c
      even though it makes no difference hb_arrayClone is used in statics(),

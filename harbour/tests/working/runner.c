@@ -1,6 +1,5 @@
 #include "pcode.h"
 
-#define FILE _FILE
 #include <stdio.h>
 
 /* #if INTEL32 */
@@ -50,19 +49,17 @@ PASM_CALL CreateFun( PSYMBOL, PBYTE );          /* Create a dynamic function*/
 void      Do( WORD );
 ULONG     FindSymbol( char *, PDYNFUNC, ULONG );
 HARBOUR   HB_RUN();
-void      HRB_FileClose( _FILE * );
-void      HRB_FileRead ( char *, int, int, _FILE * );
-_FILE    *HRB_FileOpen ( char * );
+void      HRB_FileClose( FILE * );
+void      HRB_FileRead ( char *, int, int, FILE * );
+FILE     *HRB_FileOpen ( char * );
 void      Push( PHB_ITEM );
 void      PushNil( void );
 void      PushSymbol( PSYMBOL );
-BYTE      ReadByte( _FILE * );
-char     *ReadId  ( _FILE * );
-long      ReadLong( _FILE * );
+BYTE      ReadByte( FILE * );
+char     *ReadId  ( FILE * );
+long      ReadLong( FILE * );
 
-#undef  FILE
 #include "run_exp.h"
-#define FILE _FILE
 
 /*
  *
