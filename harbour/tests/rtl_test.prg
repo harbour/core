@@ -1195,9 +1195,6 @@ STATIC FUNCTION Main_MATH()
    TEST_LINE( Str(Val("15.001 ")          )   , "15.0010"                      )
    TEST_LINE( Str(Val("100000000")        )   , "100000000"                    )
    TEST_LINE( Str(Val("5000000000")       )   , "5000000000"                   )
-   TEST_LINE( Str(Year(SToD("19990905"))  )   , " 1999"                        )
-   TEST_LINE( Str(Month(SToD("19990905")) )   , "  9"                          )
-   TEST_LINE( Str(Day(SToD("19990905"))   )   , "  5"                          )
    TEST_LINE( Str(10                      )   , "        10"                   )
    TEST_LINE( Str(15.0                    )   , "        15.0"                 )
    TEST_LINE( Str(10.1                    )   , "        10.1"                 )
@@ -1235,6 +1232,7 @@ STATIC FUNCTION Main_DATE()
 #endif
    TEST_LINE( Year(sdDate)                    , 1980                                   )
    TEST_LINE( Year(sdDateE)                   , 0                                      )
+   TEST_LINE( Str(Year(SToD("19990905")))     , " 1999"                                )
 
    /* MONTH() */
 
@@ -1245,6 +1243,7 @@ STATIC FUNCTION Main_DATE()
 #endif
    TEST_LINE( Month(sdDate)                   , 1                                      )
    TEST_LINE( Month(sdDateE)                  , 0                                      )
+   TEST_LINE( Str(Month(SToD("19990905")))    , "  9"                                  )
 
    /* DAY() */
 
@@ -1255,6 +1254,7 @@ STATIC FUNCTION Main_DATE()
 #endif
    TEST_LINE( Day(sdDate)                     , 1                                      )
    TEST_LINE( Day(sdDateE)                    , 0                                      )
+   TEST_LINE( Str(Day(SToD("19990905")))      , "  5"                                  )
 
    /* TIME() */
 
