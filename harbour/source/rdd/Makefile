@@ -5,10 +5,12 @@
 ROOT = ../../
 
 C_SOURCES=\
-        dbcmd.c \
+	dbcmd.c \
+	dbfntx1.c \
 
 PRG_SOURCES=\
-        rddsys.prg \
+	dbfntx0.prg \
+	rddsys.prg \
 
 LIB=rdd
 

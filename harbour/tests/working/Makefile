@@ -63,6 +63,7 @@ PRG_SOURCES=\
 	memvar.prg \
 	mtran.prg \
 	multiarg.prg \
+	newcopy.prg \
 	nums.prg \
 	objarr.prg \
 	objasign.prg \
@@ -87,6 +88,8 @@ PRG_SOURCES=\
 	set_test.prg \
 	statfun.prg \
 	statics.prg \
+	statics1.prg \
+	statics2.prg \
 	strcmp.prg \
 	strdelim.prg \
 	strings.prg \
@@ -109,13 +112,21 @@ PRG_SOURCES=\
 	testmem.prg \
 	teststr.prg \
 	testtok.prg \
+	testpre.prg \
+	testrdd.prg \
 	testvars.prg \
 	testwarn.prg \
 	tstcolor.prg \
+	transdef.prg \
 	transfrm.prg \
 	val.prg \
 	version.prg \
 	while.prg \
+
+PRG_HEADERS=\
+	cgi.ch \
+	keywords.ch \
+	test.ch \
 
 BAD_PRG_SOURCES=\
 	dupvars.prg \
@@ -126,6 +137,10 @@ BAD_PRG_SOURCES=\
 	spawn2.prg \
 	test10.prg \
 	testid.prg \
+
+C_SOURCES=\
+
+C_HEADERS=\
 
 BAD_C_SOURCES=\
 	extend2.c \

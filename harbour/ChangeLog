@@ -1,3 +1,10 @@
+Mon Jul 26 11:42:11 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* include/Makefile: 
+	* source/rdd/Makefile: 
+	* tests/working/Makefile: 
+	Updated file lists.
+
 19990726-13:20 CET Victor Szel <info@szelvesz.hu>
    + source/rtl/gtapi.c
      Some minor fixes and corrections mainly to gtBox()

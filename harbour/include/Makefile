@@ -35,6 +35,7 @@ PRG_HEADERS=\
 	error.ch \
 	fileio.ch \
 	inkey.ch \
+	rddsys.ch \
 	set.ch \
 	setcurs.ch \
 
