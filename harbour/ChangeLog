@@ -1,3 +1,6 @@
+19990530-00:25 EST Les. Griffith
+   * add logic for _fslock in files.c
+
 19990529-23:46 Alexander Kresin
   Preprocessor: implementation of #command almost complete
   Updated:
