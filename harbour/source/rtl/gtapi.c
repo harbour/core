@@ -64,6 +64,7 @@
  *                             changed to allow unlimited color pairs.
  */
 
+#include <ctype.h>
 #include "set.h"
 #include "gtapi.h"
 
@@ -332,7 +333,7 @@ int hb_gtGetColorStr( char * fpColorString )
 
       do
       {
-         if( ( s_Color[ i ] & ( j ? 0x8000 : 0x800 ) ) != 0 )
+         if( ( s_Color[ i ] & ( j ? 0x8000 : 0x0800 ) ) != 0 )
             sColors[ k++ ] = 'U';
          else
          {
@@ -407,8 +408,7 @@ int hb_gtSetColorStr( char * fpColorString )
    do
    {
       c = *fpColorString++;
-      if( c > 'A' )
-         c &= 0x5f;                  /* convert to upper case */
+      c = toupper( c );
 
       while( c <= '9' && c >= '0' && i < 6 )
       {
@@ -429,7 +429,7 @@ int hb_gtSetColorStr( char * fpColorString )
             if( buff[ i ] != '\0')
                nColor += ( ( buff[ i ] - '0' ) * y );
          }
-         nColor &= 0xf;
+         nColor &= 0x0F;
          i = 0;
          ++nCount;
       }
@@ -471,7 +471,7 @@ int hb_gtSetColorStr( char * fpColorString )
             if( bHasU )
             {
                bHasU = FALSE;
-               nFore |= 0x800;  /* foreground underline bit */
+               nFore |= 0x0800;  /* foreground underline bit */
             }
             else if( bHasX )
             {
@@ -502,24 +502,24 @@ int hb_gtSetColorStr( char * fpColorString )
                nFore &= 0x88F8;
 
             if( bHasU ) /* background if slash, else foreground */
-               nColor |= 0x800;
+               nColor |= 0x0800;
 
             if( bHasI )
             {
                if( bSlash )
                {
-                  nColor &= 0x88F;
-                  nColor |= 0x007;
+                  nColor &= 0x088F;
+                  nColor |= 0x0007;
                   nFore &= 0x88F8;
                }
                else
                {
-                  nColor &= 0x8F8;
-                  nColor |= 0x070;
+                  nColor &= 0x08F8;
+                  nColor |= 0x0070;
                   nFore &= 0x888F;
                }
             }
-            if( ( nFore & 0x8800 ) != 0 && ( ( nFore | nColor ) & 0x77 ) == 0)
+            if( ( nFore & 0x8800 ) != 0 && ( ( nFore | nColor ) & 0x0077 ) == 0)
                nFore |= 1;
 
             if( bSlash )
@@ -699,8 +699,8 @@ int hb_gtWrite( char * fpStr, ULONG length )
 {
    int iRow, iCol, iMaxCol, iMaxRow;
    ULONG size = length;
-   char attr = s_Color[ s_uiColorIndex ] & 0xff,
-        *fpPointer = fpStr;
+   char attr = s_Color[ s_uiColorIndex ] & 0xFF;
+   char *fpPointer = fpStr;
 
   /* TODO: this is doing more work than needed */
 

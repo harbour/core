@@ -1,3 +1,33 @@
+19990910-11:10 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/working/rtl_test.prg
+    + Enabled some alias tests which fail. (Ryszard, could you take a look
+      at it ?)
+  * source/vm/hvm.c
+    ! hb_vmSwapAlias() - Fixed mistyped variable name, pItem was accessed 
+      instead of pWorkarea. (Is this OK, Ryszard ?)
+  * source/rtl/itemapi.c
+    ! hb_itemStrCmp() - Fixed a bug, when the character were compared as a
+      signed value instead of unsigned. ( BYTE ) casts added where needed.
+      This caused four regr.tests to fail.
+  * source/rtl/gtapi.c
+    ! hb_gtSetColorStr() is now using toupper instead of a platform
+      dependent bit operation.
+  * tests/working/rtl_test.prg
+    + Code added to test the :Args feature of error handling, this is commented
+      out, since Harbour doesn't support it yet.
+  * include/error.api
+    ! Zero bytes (!) removed from some places, so now the comptaibility header
+      files are working fine.
+  * source/compiler/harbour.y
+    source/rtl/dir.c
+    source/memvars.c
+    * Some formatting corrections.
+  * include/ctoharb.h
+    * Opcode functions grouped by type. Later on the same thing should be
+      done in HVM.C. If similar code fragments are close to each other, bugs are easier to spot.
+  * include/pcode.h
+    * Comments aligned.
+
 19990910-11:05 GMT+2 Ryszard Glab <rglab@imim.med.pl>
 
     *source/compiler/harbour.y
@@ -162,7 +192,7 @@
     * hb_arrayFill(), hb_arrayScan(), hb_arrayEval(), hb_arrayCopy() changed
       to parameter to implement the previous change.
   * source/rtl/environ.c
-    ! __RUN() now checks for the parameter type, not the number,
+    ! __RUN() now checks for the parameter type, not the number.
     + __RUN() funtionality enabled for __CYGWIN__
     + __RUN() will now throw an "operation not supported" runtime error on
       platforms where it's not supported, this is IMO better than silently

@@ -578,9 +578,14 @@ STATIC FUNCTION Main_HVM()
    TEST_CALL( '(.T.)->(Eof())'      , {|| (.T.)->(Eof()) }      , .T.                                            )
    TEST_CALL( '(.F.)->(Eof())'      , {|| (.F.)->(Eof()) }      , .T.                                            )
    TEST_CALL( '(NIL)->(Eof())'      , {|| (NIL)->(Eof()) }      , .T.                                            )
-#ifndef __HARBOUR__
    TEST_LINE( NOTHERE->NOFIELD                , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
-#endif
+   TEST_LINE( NOTHERE->("NOFIELD")            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( NOTHERE->(NIL)                  , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( NOTHERE->(1)                    , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( NOTHERE->(1.5)                  , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( NOTHERE->({})                   , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( NOTHERE->({|| NIL })            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
+   TEST_LINE( NOTHERE->(.T.)                  , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
    TEST_LINE( 200->NOFIELD                    , "E BASE 1003 Variable does not exist NOFIELD F:R" )
    TEST_LINE( 200->("NOFIELD")                , "NOFIELD"                                         )
    TEST_LINE( 200->(NIL)                      , NIL                                               )
@@ -2138,6 +2143,7 @@ STATIC FUNCTION XToStr( xValue )
 
 STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage := ""
+   LOCAL tmp
 
    IF ValType( oError:severity ) == "N"
       DO CASE
@@ -2162,6 +2168,20 @@ STATIC FUNCTION ErrorMessage( oError )
    IF !Empty( oError:filename )
       cMessage += oError:filename + " "
    ENDIF
+
+#ifdef _COMMENT_
+   IF ValType( oError:Args ) == "A"
+      cMessage += "A:"
+      FOR tmp := 1 TO Len( oError:Args )
+         cMessage += ValType( oError:Args[ tmp ] )
+//       cMessage += XToStr( oError:Args[ tmp ] )
+//       IF tmp < Len( oError:Args )
+//          cMessage += ";"
+//       ENDIF
+      NEXT
+      cMessage += " "
+   ENDIF
+#endif
 
    IF oError:canDefault .OR. ;
       oError:canRetry .OR. ;

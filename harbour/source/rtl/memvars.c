@@ -735,7 +735,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
          char * szName = ( char * ) hb_xgrab( ulLen + 1 );
          char * szArg  = pName->item.asString.value;
 
-         szName[ ulLen ] = '\x0';
+         szName[ ulLen ] = '\0';
          do
          {
             --ulLen;

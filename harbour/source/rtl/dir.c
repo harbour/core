@@ -265,11 +265,11 @@ HARBOUR HB_DIRECTORY( void )
    #if defined(__WATCOMC__)
    /* opendir in Watcom doesn't like the path delimiter at the end of a string */
      dirname[ iDirnameLen   ] = '.';
-     dirname[ iDirnameLen+1 ] = '\x0';
+     dirname[ iDirnameLen+1 ] = '\0';
    #endif
    dir = opendir( dirname );
    #if defined(__WATCOMC__)
-     dirname[ iDirnameLen ] = '\x0';
+     dirname[ iDirnameLen ] = '\0';
    #endif
    if( NULL == dir )
    {

@@ -899,7 +899,7 @@ void hb_vmDec( void )
 
 /* This function creates an array item using 'wDimension' as an index
  * to retrieve the number of elements from the stack
- */ 
+ */
 static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
 {
    ULONG ulElements;
@@ -921,7 +921,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
          break;
 
       default:
-         /* NOTE: Clipper creates empty array if non-numeric value is 
+         /* NOTE: Clipper creates empty array if non-numeric value is
           * specified as dimension and stops further processing.
           * There is no runtime error generated.
           */
@@ -934,7 +934,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, WORD wDimension )
 
    if( --wDimension )
    {
-      /* call self recursively to create next dimensions 
+      /* call self recursively to create next dimensions
        */
       while( ulElements )
          hb_vmArrayNew( hb_arrayGetItemPointer( pArray, ulElements-- ), wDimension );
@@ -2700,7 +2700,7 @@ static void hb_vmSwapAlias( void )
       case IT_SYMBOL:
          /* Alias was specified using alias identifier, for example: al->field
           */
-         hb_rddSelectWorkAreaSymbol( pItem->item.asSymbol.value );
+         hb_rddSelectWorkAreaSymbol( pWorkArea->item.asSymbol.value );
          break;
 
       case IT_STRING:

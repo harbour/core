@@ -819,7 +819,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact )
       {
          /* Difference found */
          if( *szFirst != *szSecond )
-            iRet = ( *szFirst < *szSecond ) ? -1 : 1;
+            iRet = ( ( BYTE ) *szFirst < ( BYTE ) *szSecond ) ? -1 : 1;
          else /* TODO : #define some constants */
          {
             szFirst++;
