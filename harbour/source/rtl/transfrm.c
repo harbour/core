@@ -3,7 +3,7 @@
  */
 
 #include <extend.h>
-#include <CToHarb.h>
+#include <ctoharb.h>
 #include <ctype.h>
 
 /*                                                                          */
