@@ -1,3 +1,11 @@
+19990918-14:59 GMT+1 Victor Szel <info@szelvesz.hu>
+
+  * source/rtl/browdb.prg
+    + _lastrec() -> lastrec()
+    + _recno() -> recno()
+  * source/rtl/transfrm.c
+    * Small modification.
+
 19990918-14:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/vm/hvm.c

@@ -33,15 +33,13 @@
  *
  */
 
-/* TODO: replace calls to _LastRec() and _Recno() with real versions. */
-
 function TBrowseDb( nTop, nLeft, nBott, nRight )
 
    local oTb := TBrowseNew( nTop, nLeft, nBott, nRight )
 
    oTb:SkipBlock     := { | n | TBSkip( n ) }
    oTb:GoTopBlock    := { || DbGoTop() }
-   oTb:GoBottomBlock := {|| DbGoBottom() }
+   oTb:GoBottomBlock := { || DbGoBottom() }
 
 Return oTb
 
@@ -49,10 +47,10 @@ static function TbSkip( nRecs )
 
    local nSkipped := 0
 
-   if _LastRec() != 0
+   if LastRec() != 0
       if nRecs == 0
          DbSkip( 0 )
-      elseif nRecs > 0 .and. _Recno() != _LastRec() + 1
+      elseif nRecs > 0 .and. Recno() != LastRec() + 1
          while nSkipped < nRecs
             DbSkip( 1 )
             if Eof()
@@ -74,10 +72,3 @@ static function TbSkip( nRecs )
 
 return nSkipped
 
-static function _LastRec()  // Waiting for those function to become available
-
-return 0
-
-static function _RecNo()  // Waiting for those function to become available
-
-return 0

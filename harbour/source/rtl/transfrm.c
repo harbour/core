@@ -222,7 +222,12 @@ static char * NumPicture( char * szPic, ULONG ulPic, USHORT uiPicFlags, double d
    pNumber = hb_itemPutNDLen( NULL, dPush, -1, iDec );
    pWidth = hb_itemPutNI( NULL, iWidth );
    pDec = hb_itemPutNI( NULL, iDec );
+
    szStr = hb_itemStr( pNumber, pWidth, pDec );
+
+   hb_itemRelease( pNumber );
+   hb_itemRelease( pWidth );
+   hb_itemRelease( pDec );
 
    if( szStr )
    {
@@ -352,10 +357,6 @@ static char * NumPicture( char * szPic, ULONG ulPic, USHORT uiPicFlags, double d
 
       hb_xfree( szStr );
    }
-
-   hb_itemRelease( pNumber );
-   hb_itemRelease( pWidth );
-   hb_itemRelease( pDec );
 
    return szRet;
 }
