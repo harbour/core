@@ -1,3 +1,52 @@
+19990909-16:35 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/memvarbl.prg
+    ! MEMVARBLOCK() now returns NIL if the passed parameter was not a string,
+      or the MEMVAR name is not declared.
+  * source/rtl/arrays.c
+    include/extend.h
+    ! hb_arraySize() - Fixed a memory related bug. Now when an array is
+      resized to zero length, it will free (and not reallocate) the memory 
+      allocated for the item pointer table. ASIZE({ "A", "B" }, 0) could 
+      show the problem.
+    + ARRAY() now supprt multiple dimensions. Code based on hb_vmArrayNew().
+    ! Array functions error handling behaviour made completely CA-Clipper
+      compatible.
+    ! ARRAY() could GPF on an error condition.
+    ! AADD() checks if the second parameter is not NULL.
+    ! AFILL() could GPF when second param was omitted.
+    ! AADD() now throws a substitutable error.
+    ! AFILL(), ASCAN(), AEVAL(), ACOPY() - Made completely compatible the
+      ulStart/ulCount/ulTarget parameter handling. Please note that
+      ASCAN()/AEVAL()/ACOPY() has not yet been regression tested.
+    * hb_arrayFill(), hb_arrayScan(), hb_arrayEval(), hb_arrayCopy() changed
+      to parameter to implement the previous change.
+  * source/rtl/environ.c
+    ! __RUN() now checks for the parameter type, not the number,
+    + __RUN() funtionality enabled for __CYGWIN__
+    + __RUN() will now throw an "operation not supported" runtime error on
+      platforms where it's not supported, this is IMO better than silently 
+      doing nothing. The error has a Default case, so the use can continue 
+      running the program.
+    ! __RUN() Standardized the doc header.
+  * source/rtl/copyfile.c
+    + Made completely compatible in order to pass the tests. A small file 
+      name forming difference is still there.
+  * tests/working/rtl_test.prg
+    + __COPYFILE() tests added.
+    + __RUN() tests added.
+    + Array function error condition tests.
+    + MEMVARBLOCK() tests added.
+    + AFILL() tests added.
+  * source/rtl/memvars.c
+    + Added Clipper compatibility functions:
+      __MCLEAR(), __MRELEASE(), __MXRELEASE(), __MSAVE(), __MRESTORE()
+      They are simple wrappers to the corresponding Harbour versions.
+  * funclist.txt
+    + Added all internal functions (beginning with __) from Clipper/STD.CH.
+    + Marked MEMVARBLOCK() "Ready".
+  * source/compiler/harbour.y
+    * Small indentation fix in the generated code.
+
 19990909-16:05 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memvarbl.prg
@@ -79,8 +128,8 @@
     source/rtl/filesys.c
     source/compiler/harbour.y
     * MKLONG() and MKINT() moved to hbdefs.h
-    * LOBYTE(), HIBYTE(), LOWORD() moved outside the 
-      HB_DONT_DEFINE_BASIC_TYPES guard, since they are guarded one-by-one 
+    * LOBYTE(), HIBYTE(), LOWORD() moved outside the
+      HB_DONT_DEFINE_BASIC_TYPES guard, since they are guarded one-by-one
       anyway. (all this in hbdefs.h)
   * include/hbdefs.h
     include/hbsetup.h
@@ -108,7 +157,7 @@
 
     *source/vm/hvm.c
         + added code that creates multi-dimensioned arrays
-        (arrays declared by LOCAL arr[ 3, 5, getDim() ] - it 
+        (arrays declared by LOCAL arr[ 3, 5, getDim() ] - it
         supports PRIVATE and PUBLIC declaration too)
 
     *source/rtl/arrays.c

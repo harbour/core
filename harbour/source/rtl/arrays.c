@@ -110,7 +110,7 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
    if( IS_ARRAY( pArray ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG      ulPos;
+      ULONG ulPos;
 
       if( ! pBaseArray->ulLen )
       {
@@ -134,7 +134,13 @@ BOOL hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
             for( ulPos = ulLen; ulPos < pBaseArray->ulLen; ulPos++ )
                hb_itemClear( pBaseArray->pItems + ulPos );
 
-            pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
+            if( ulLen == 0 )
+            {
+               hb_xfree( pBaseArray->pItems );
+               pBaseArray->pItems = NULL;
+            }
+            else
+               pBaseArray->pItems = ( PHB_ITEM ) hb_xrealloc( pBaseArray->pItems, sizeof( HB_ITEM ) * ulLen );
          }
       }
       pBaseArray->ulLen = ulLen;
@@ -378,24 +384,33 @@ BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
    return FALSE;
 }
 
-BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
+BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount )
 {
    if( IS_ARRAY( pArray ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG      ulLen = pBaseArray->ulLen;
+      ULONG ulLen = pBaseArray->ulLen;
+      ULONG ulStart;
+      ULONG ulCount;
 
-      if( ulStart == 0 )                          /* if parameter is missing */
+      if( pulStart != NULL && ( *pulStart >= 1 ) )
+         ulStart = *pulStart;
+      else
          ulStart = 1;
 
-      if( ulCount == 0 )                          /* if parameter is missing */
-         ulCount = ulLen - ulStart + 1;
+      if( ulStart <= ulLen )
+      {
+         if( pulCount != NULL && ( *pulCount <= ulLen - ulStart ) )
+            ulCount = *pulCount;
+         else
+            ulCount = ulLen - ulStart + 1;
 
-      if( ulStart + ulCount > ulLen )             /* check range */
-         ulCount = ulLen - ulStart + 1;
+         if( ulStart + ulCount > ulLen )             /* check range */
+            ulCount = ulLen - ulStart + 1;
 
-      for( ; ulCount > 0; ulCount--, ulStart++ )     /* set value items */
-         hb_itemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
+         for( ; ulCount > 0; ulCount--, ulStart++ )     /* set value items */
+            hb_itemCopy( pBaseArray->pItems + ( ulStart - 1 ), pValue );
+      }
 
       return TRUE;
    }
@@ -403,93 +418,102 @@ BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCoun
       return FALSE;
 }
 
-ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCount )
+ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount )
 {
    if( IS_ARRAY( pArray ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG      ulLen = pBaseArray->ulLen;
+      ULONG ulLen = pBaseArray->ulLen;
+      ULONG ulStart;
+      ULONG ulCount;
 
-      if( ulStart == 0 )                       /* if parameter is missing */
+      if( pulStart != NULL && ( *pulStart >= 1 ) )
+         ulStart = *pulStart;
+      else
          ulStart = 1;
 
-      if( ulCount == 0 )                       /* if parameter is missing */
-         ulCount = ulLen - ulStart + 1;
-
-      if( ulStart + ulCount > ulLen )          /* check range */
-         ulCount = ulLen - ulStart + 1;
-
-      /* Make separate search loops for different types to find, so that
-         the loop can be faster. */
-
-      if( IS_BLOCK( pValue ) )
+      if( ulStart <= ulLen )
       {
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
-         {
-            hb_vmPushSymbol( &symEval );
-            hb_vmPush( pValue );
-            hb_vmPush( pBaseArray->pItems + ulStart );
-            hb_vmDo( 1 );
+         if( pulCount != NULL && ( *pulCount <= ulLen - ulStart ) )
+            ulCount = *pulCount;
+         else
+            ulCount = ulLen - ulStart + 1;
 
-            if( IS_LOGICAL( &stack.Return ) && stack.Return.item.asLogical.value )
-               return ulStart + 1;                  /* arrays start from 1 */
+         if( ulStart + ulCount > ulLen )             /* check range */
+            ulCount = ulLen - ulStart + 1;
+
+         /* Make separate search loops for different types to find, so that
+            the loop can be faster. */
+
+         if( IS_BLOCK( pValue ) )
+         {
+            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            {
+               hb_vmPushSymbol( &symEval );
+               hb_vmPush( pValue );
+               hb_vmPush( pBaseArray->pItems + ulStart );
+               hb_vmDo( 1 );
+
+               if( IS_LOGICAL( &stack.Return ) && stack.Return.item.asLogical.value )
+                  return ulStart + 1;                  /* arrays start from 1 */
+            }
          }
-      }
-      else if( IS_STRING( pValue ) )
-      {
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         else if( IS_STRING( pValue ) )
          {
-            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            {
+               PHB_ITEM pItem = pBaseArray->pItems + ulStart;
 
-            /* NOTE: The order of the pItem and pValue parameters passed to
-                     hb_itemStrCmp() is significant, please don't change it. */
-            if( IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, FALSE ) == 0 )
-               return ulStart + 1;
+               /* NOTE: The order of the pItem and pValue parameters passed to
+                        hb_itemStrCmp() is significant, please don't change it. */
+               if( IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, FALSE ) == 0 )
+                  return ulStart + 1;
+            }
          }
-      }
-      else if( IS_NUMERIC( pValue ) )
-      {
-         double dValue = hb_itemGetND( pValue );
-
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         else if( IS_NUMERIC( pValue ) )
          {
-            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+            double dValue = hb_itemGetND( pValue );
 
-            if( IS_NUMERIC( pItem ) && hb_itemGetND( pItem ) == dValue )
-               return ulStart + 1;
+            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            {
+               PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+               if( IS_NUMERIC( pItem ) && hb_itemGetND( pItem ) == dValue )
+                  return ulStart + 1;
+            }
          }
-      }
-      else if( IS_DATE( pValue ) )
-      {
-         /* NOTE: This is correct: Get the date as a long value. */
-         LONG lValue = hb_itemGetNL( pValue );
-
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         else if( IS_DATE( pValue ) )
          {
-            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+            /* NOTE: This is correct: Get the date as a long value. */
+            LONG lValue = hb_itemGetNL( pValue );
 
-            if( IS_DATE( pItem ) && hb_itemGetNL( pItem ) == lValue )
-               return ulStart + 1;
+            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            {
+               PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+               if( IS_DATE( pItem ) && hb_itemGetNL( pItem ) == lValue )
+                  return ulStart + 1;
+            }
          }
-      }
-      else if( IS_LOGICAL( pValue ) )
-      {
-         BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. */
-
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         else if( IS_LOGICAL( pValue ) )
          {
-            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+            BOOL bValue = hb_itemGetL( pValue ); /* NOTE: This is correct: Get the date as a long value. */
 
-            if( IS_LOGICAL( pItem ) && hb_itemGetL( pItem ) == bValue )
-               return ulStart + 1;
+            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            {
+               PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+               if( IS_LOGICAL( pItem ) && hb_itemGetL( pItem ) == bValue )
+                  return ulStart + 1;
+            }
          }
-      }
-      else if( IS_NIL( pValue ) )
-      {
-         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         else if( IS_NIL( pValue ) )
          {
-            if( IS_NIL( pBaseArray->pItems + ulStart ) )
-               return ulStart + 1;
+            for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+            {
+               if( IS_NIL( pBaseArray->pItems + ulStart ) )
+                  return ulStart + 1;
+            }
          }
       }
    }
@@ -497,31 +521,40 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG ulStart, ULONG ulCou
    return 0;
 }
 
-BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCount )
+BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount )
 {
    if( IS_ARRAY( pArray ) && IS_BLOCK( bBlock ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG      ulLen = pBaseArray->ulLen;
+      ULONG ulLen = pBaseArray->ulLen;
+      ULONG ulStart;
+      ULONG ulCount;
 
-      if( ulStart == 0 )                          /* if parameter is missing */
+      if( pulStart != NULL && ( *pulStart >= 1 ) )
+         ulStart = *pulStart;
+      else
          ulStart = 1;
 
-      if( ulCount == 0 )                          /* if parameter is missing */
-         ulCount = ulLen - ulStart + 1;
-
-      if( ulStart + ulCount > ulLen )             /* check range */
-         ulCount = ulLen - ulStart + 1;
-
-      for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+      if( ulStart <= ulLen )
       {
-         PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+         if( pulCount != NULL && ( *pulCount <= ulLen - ulStart ) )
+            ulCount = *pulCount;
+         else
+            ulCount = ulLen - ulStart + 1;
 
-         hb_vmPushSymbol( &symEval );
-         hb_vmPush( bBlock );
-         hb_vmPush( pItem );
-         hb_vmPushNumber( ( double ) ( ulStart + 1 ), 0 );
-         hb_vmDo( 2 );
+         if( ulStart + ulCount > ulLen )             /* check range */
+            ulCount = ulLen - ulStart + 1;
+
+         for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
+         {
+            PHB_ITEM pItem = pBaseArray->pItems + ulStart;
+
+            hb_vmPushSymbol( &symEval );
+            hb_vmPush( bBlock );
+            hb_vmPush( pItem );
+            hb_vmPushNumber( ( double ) ( ulStart + 1 ), 0 );
+            hb_vmDo( 2 );
+         }
       }
 
       return TRUE;
@@ -535,8 +568,8 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
    if( IS_ARRAY( pArray ) )
    {
       PBASEARRAY pBaseArray = pArray->item.asArray.value;
-      ULONG      ulLen = pBaseArray->ulLen;
-      ULONG      ulPos;
+      ULONG ulLen = pBaseArray->ulLen;
+      ULONG ulPos;
 
       if( !pBaseArray->bSuperCast )
       {
@@ -557,33 +590,45 @@ BOOL hb_arrayRelease( PHB_ITEM pArray )
       return FALSE;
 }
 
-BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG ulStart,
-                   ULONG ulCount, ULONG ulTarget )
+BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
+                   ULONG * pulCount, ULONG * pulTarget )
 {
    if( IS_ARRAY( pSrcArray ) && IS_ARRAY( pDstArray ) )
    {
       PBASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
       PBASEARRAY pDstBaseArray = pDstArray->item.asArray.value;
-      ULONG      ulSrcLen = pSrcBaseArray->ulLen;
-      ULONG      ulDstLen = pDstBaseArray->ulLen;
+      ULONG ulSrcLen = pSrcBaseArray->ulLen;
+      ULONG ulDstLen = pDstBaseArray->ulLen;
+      ULONG ulStart;
+      ULONG ulCount;
+      ULONG ulTarget;
 
-      if( ulStart == 0 )                          /* if parameter is missing */
+      if( pulStart != NULL && ( *pulStart >= 1 ) )
+         ulStart = *pulStart;
+      else
          ulStart = 1;
 
-      if( ulTarget == 0 )                         /* if parameter is missing */
+      if( pulTarget != NULL && ( *pulTarget >= 1 ) )
+         ulTarget = *pulTarget;
+      else
          ulTarget = 1;
 
-      if( ulCount == 0 )                          /* if parameter is missing */
-         ulCount = ulSrcLen - ulStart + 1;
+      if( ulStart <= ulSrcLen )
+      {
+         if( pulCount != NULL && ( *pulCount <= ulSrcLen - ulStart ) )
+            ulCount = *pulCount;
+         else
+            ulCount = ulSrcLen - ulStart + 1;
 
-      if( ulStart + ulCount > ulSrcLen )          /* check range */
-         ulCount = ulSrcLen - ulStart + 1;
+         if( ulTarget <= ulDstLen )
+         {
+            if( ulCount > ulDstLen - ulTarget )
+               ulCount = ulDstLen - ulTarget;
 
-      if( ulCount > ulDstLen )
-         ulCount = ulDstLen;
-
-      for( ulTarget--, ulStart--; ulCount > 0; ulCount--, ulStart++ )
-         hb_itemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
+            for( ulTarget--, ulStart--; ulCount > 0; ulCount--, ulStart++ )
+               hb_itemCopy( pDstBaseArray->pItems + ( ulTarget + ulStart ), pSrcBaseArray->pItems + ulStart );
+         }
+      }
 
       return TRUE;
    }
@@ -599,8 +644,8 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
    {
       PBASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
       PBASEARRAY pDstBaseArray;
-      ULONG      ulSrcLen = pSrcBaseArray->ulLen;
-      ULONG      ulCount;
+      ULONG ulSrcLen = pSrcBaseArray->ulLen;
+      ULONG ulCount;
 
       hb_arrayNew( pDstArray, ulSrcLen );
 
@@ -630,20 +675,35 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
  * HARBOUR
  */
 
-/* TOFIX: Clipper will not work with OBJECT type in these functions. */
+/* This function creates an array item using 'iDimension' as an index
+ * to retrieve the number of elements from the parameter list.
+ */
+static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
+{
+   ULONG ulElements = ( ULONG ) hb_parnl( iDimension );
 
-/* TODO: Support multiple dimensions */
+   /* create an array */
+   hb_arrayNew( pArray, ulElements );
+
+   if( --iDimension )
+   {
+      /* call self recursively to create next dimensions
+       */
+      while( ulElements )
+         hb_arrayNewRagged( hb_arrayGetItemPointer( pArray, ulElements-- ), iDimension );
+   }
+}
 
 HARBOUR HB_ARRAY( void )
 {
-   int iParCount = hb_pcount();
+   int iPCount = ( USHORT ) hb_pcount();
 
-   if( iParCount > 0 )
+   if( iPCount > 0 )
    {
       int tmp;
       BOOL bError = FALSE;
 
-      for( tmp = 1; tmp <= iParCount; tmp++ )
+      for( tmp = 1; tmp <= iPCount; tmp++ )
       {
          if( ! ISNUM( tmp ) )
          {
@@ -652,11 +712,14 @@ HARBOUR HB_ARRAY( void )
          }
 
          if( hb_parnl( tmp ) < 0 )
+         {
+            bError = TRUE;
             hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ) );
+         }
       }
 
       if( ! bError )
-         hb_arrayNew( &stack.Return, hb_parnl( 1 ) );
+         hb_arrayNewRagged( &stack.Return, iPCount );
    }
 }
 
@@ -670,13 +733,21 @@ HARBOUR HB_AADD( void )
       {
          PHB_ITEM pValue = hb_param( 2, IT_ANY );
 
-         if( hb_arrayAdd( pArray, pValue ) )
+         if( pValue && hb_arrayAdd( pArray, pValue ) )
             hb_itemReturn( pValue );
          else
             hb_errRT_BASE( EG_BOUND, 1187, NULL, "AADD" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1123, NULL, "AADD" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1123, NULL, "AADD" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "AADD" ); /* NOTE: Clipper catches this at compile time! */
@@ -730,20 +801,28 @@ HARBOUR HB_ADEL( void )
    }
 }
 
-/* TOFIX: nCount parameter == zero is incompatible. */
-
 HARBOUR HB_AFILL( void )
 {
    PHB_ITEM pArray = hb_param( 1, IT_ARRAY );
 
    if( pArray )
    {
-      hb_arrayFill( pArray, hb_param( 2, IT_ANY ), hb_parnl( 3 ), hb_parnl( 4 ) );
+      PHB_ITEM pValue = hb_param( 2, IT_ANY );
+
+      if( pValue )
+      {
+         ULONG ulStart = hb_parnl( 3 );
+         ULONG ulCount = hb_parnl( 4 );
+
+         hb_arrayFill( pArray,
+                       pValue,
+                       ISNUM( 3 ) ? &ulStart : NULL,
+                       ISNUM( 4 ) ? &ulCount : NULL );
+      }
+
       hb_itemReturn( pArray ); /* AFill() returns the array itself */
    }
 }
-
-/* TOFIX: nCount parameter == zero is incompatible. */
 
 HARBOUR HB_ASCAN( void )
 {
@@ -751,12 +830,18 @@ HARBOUR HB_ASCAN( void )
    PHB_ITEM pValue = hb_param( 2, IT_ANY );
 
    if( pArray && pValue )
-      hb_retnl( hb_arrayScan( pArray, pValue, hb_parnl( 3 ), hb_parnl( 4 ) ) );
+   {
+      ULONG ulStart = hb_parnl( 3 );
+      ULONG ulCount = hb_parnl( 4 );
+
+      hb_retnl( hb_arrayScan( pArray,
+                              pValue,
+                              ISNUM( 3 ) ? &ulStart : NULL,
+                              ISNUM( 4 ) ? &ulCount : NULL ) );
+   }
    else
       hb_retnl( 0 );
 }
-
-/* TOFIX: nCount parameter == zero is incompatible. */
 
 HARBOUR HB_AEVAL( void )
 {
@@ -765,14 +850,19 @@ HARBOUR HB_AEVAL( void )
 
    if( pArray && pBlock )
    {
-      hb_arrayEval( pArray, pBlock, hb_parnl( 3 ), hb_parnl( 4 ) );
+      ULONG ulStart = hb_parnl( 3 );
+      ULONG ulCount = hb_parnl( 4 );
+
+      hb_arrayEval( pArray,
+                    pBlock,
+                    ISNUM( 3 ) ? &ulStart : NULL,
+                    ISNUM( 4 ) ? &ulCount : NULL );
+
       hb_itemReturn( pArray ); /* AEval() returns the array itself */
    }
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL" );
 }
-
-/* TOFIX: nCount parameter == zero is incompatible. */
 
 HARBOUR HB_ACOPY( void )
 {
@@ -781,7 +871,20 @@ HARBOUR HB_ACOPY( void )
 
    if( pSrcArray && pDstArray )
    {
-      hb_arrayCopy( pSrcArray, pDstArray, hb_parnl( 3 ), hb_parnl( 4 ), hb_parnl( 5 ) );
+      /* CA-Cl*pper works that way. */
+      if( ! hb_arrayIsObject( pSrcArray ) && ! hb_arrayIsObject( pDstArray ) )
+      {
+         ULONG ulStart = hb_parnl( 3 );
+         ULONG ulCount = hb_parnl( 4 );
+         ULONG ulTarget = hb_parnl( 5 );
+
+         hb_arrayCopy( pSrcArray,
+                       pDstArray,
+                       ISNUM( 3 ) ? &ulStart : NULL,
+                       ISNUM( 4 ) ? &ulCount : NULL,
+                       ISNUM( 5 ) ? &ulTarget : NULL );
+      }
+
       hb_itemReturn( pDstArray ); /* ACopy() returns the target array */
    }
 }
@@ -792,7 +895,7 @@ HARBOUR HB_ACLONE( void )
 {
    PHB_ITEM pSrcArray = hb_param( 1, IT_ARRAY );
 
-   if( pSrcArray )
+   if( pSrcArray && ! hb_arrayIsObject( pSrcArray ) )
    {
       PHB_ITEM pDstArray = hb_arrayClone( pSrcArray );
       hb_itemReturn( pDstArray ); /* AClone() returns the new array */

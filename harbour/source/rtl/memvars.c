@@ -726,11 +726,11 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
 
    if( pName )
    {
-      ULONG ulLen   = pName->item.asString.length;
+      ULONG ulLen = pName->item.asString.length;
 
       if( ulLen )
       {
-         char * szName = (char *) hb_xgrab( ulLen + 1 );
+         char * szName = ( char * ) hb_xgrab( ulLen + 1 );
          char * szArg  = pName->item.asString.value;
 
          szName[ ulLen ] = '\x0';
@@ -1477,4 +1477,41 @@ HARBOUR HB___MVPUT( void )
          hb_itemRelease( pRetValue );
       hb_itemReturn( pValue );
    }
+}
+
+HARBOUR HB___MVSAVE( void )
+{
+   /* TODO: */
+}
+
+HARBOUR HB___MVRESTORE( void )
+{
+   /* TODO: */
+}
+
+/* CA-Clipper 5.2e compatibility functions. */
+
+HARBOUR HB___MCLEAR( void )
+{
+   HB___MVCLEAR();
+}
+
+HARBOUR HB___MRELEASE( void )
+{
+   HB___MVRELEASE();
+}
+
+HARBOUR HB___MXRELEASE( void )
+{
+   HB___MVXRELEASE();
+}
+
+HARBOUR HB___MSAVE( void )
+{
+   HB___MVSAVE();
+}
+
+HARBOUR HB___MRESTORE( void )
+{
+   HB___MVRESTORE();
 }

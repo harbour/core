@@ -225,7 +225,7 @@ HARBOUR HB_OS( void )
 
 #endif /* __GNUC__ */
 #endif /* __IBMCPP__ */
-   
+
    if( ! hb_os ) strcpy( version, "Unknown" );
    else if( hb_osmajor == -1 ) strcpy( version, hb_os );
    else if( hb_osmajor == -2 ) { /* NOP */ }
@@ -273,33 +273,35 @@ HARBOUR HB_GETENV( void )
       hb_retc( "" );
 }
 
-/*
- * $FunctionName$
- *    __RUN
- * $Syntax$
- *    __RUN( <cCommand> )
- * $Argument$
- *    <cCommand> Command to execute
- * $Description$
- *    This command runs an external program. Please make sure that you have
- *    enough free memory to be able to run the external program.
- *    Do not use it to run Terminate and Stay Resident programs (in case of DOS)
- *    since it cause several problems
- * $Examples$
- *    __Run( "edit " + cMyTextFile )    // Runs an external editor
- *    __Run( "command" )                // Gives a DOS shell (DOS only)
- * $Files$
- *    source/rtl/environ.c
- *    Run an external program
- * $See also$
- *    ErrorLevel() ??   // TO DO : Is this correct ?
+/*  $DOC$
+ *  $FUNCNAME$
+ *      __RUN
+ *  $SYNTAX$
+ *      __RUN( <cCommand> )
+ *  $ARGUMENTS$
+ *      <cCommand> Command to execute
+ *  $DESCRIPTION$
+ *      This command runs an external program. Please make sure that you have
+ *      enough free memory to be able to run the external program.
+ *      Do not use it to run Terminate and Stay Resident programs (in case of DOS)
+ *      since it cause several problems
+ *  $EXAMPLES$
+ *      __Run( "edit " + cMyTextFile )    // Runs an external editor
+ *      __Run( "command" )                // Gives a DOS shell (DOS only)
+ *  $FILES$
+ *      source/rtl/environ.c
+ *      Run an external program
+ *  $SEEALSO$
+ *  $END$
  */
+
 HARBOUR HB___RUN( void )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(__MSC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
-   if( hb_pcount() == 1 )                         /* Parameter passed         */
-   {
+#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(__DJGPP__) || defined(__MSC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2) || defined(__CYGWIN__)
+   if( ISCHAR( 1 ) )
       system( hb_parc( 1 ) );
-   }
+#else
+   hb_errRT_BASE_Ext1( EG_UNSUPPORTED, 9999, NULL, "__RUN", 0, EF_CANDEFAULT );
 #endif
 }
+

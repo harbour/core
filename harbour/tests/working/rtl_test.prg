@@ -5,8 +5,7 @@
 /*
    Harbour Project source code
 
-   Runtime library regression tests, currently for some of the
-   string manipulating functions.
+   Runtime library regression tests.
 
    Copyright (C) 1999  Victor Szel <info@szelvesz.hu>
    www - http://www.harbour-project.org
@@ -321,6 +320,12 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( SToD("")         >  SToD("")         , .F.                                               )
    TEST_LINE( SToD("")         >  SToD("19800101") , .F.                                               )
    TEST_LINE( SToD("19800101") >  SToD("")         , .T.                                               )
+
+   TEST_LINE( NIL + 1                         , "E BASE 1081 Argument error + F:S" )
+   TEST_LINE( NIL - 1                         , "E BASE 1082 Argument error - F:S" )
+
+   TEST_LINE( scString + NIL                  , "E BASE 1081 Argument error + F:S" )
+   TEST_LINE( scString - NIL                  , "E BASE 1082 Argument error - F:S" )
 
    TEST_LINE( 1 + NIL                         , "E BASE 1081 Argument error + F:S" )
    TEST_LINE( 1 - NIL                         , "E BASE 1082 Argument error - F:S" )
@@ -1387,44 +1392,6 @@ STATIC FUNCTION Main_STRINGS()
 
 STATIC FUNCTION Main_MISC()
 
-   /* ASCAN() */
-
-   TEST_LINE( aScan()                         , 0           )
-   TEST_LINE( aScan( NIL )                    , 0           )
-   TEST_LINE( aScan( "A" )                    , 0           )
-   TEST_LINE( aScan( "A", "A" )               , 0           )
-   TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
-   TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
-   TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
-#ifdef __HARBOUR__
-   TEST_LINE( aScan( @saAllTypes, scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
-   TEST_LINE( aScan( saAllTypes, @scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
-#endif
-   TEST_LINE( aScan( saAllTypes, scStringE  ) , 1           )
-   TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
-   TEST_LINE( aScan( saAllTypes, snIntZ     ) , 4           )
-   TEST_LINE( aScan( saAllTypes, snDoubleZ  ) , 4           )
-   TEST_LINE( aScan( saAllTypes, snIntP     ) , 6           )
-   TEST_LINE( aScan( saAllTypes, snLongP    ) , 7           )
-   TEST_LINE( aScan( saAllTypes, snDoubleP  ) , 8           )
-   TEST_LINE( aScan( saAllTypes, snIntN     ) , 9           )
-   TEST_LINE( aScan( saAllTypes, snLongN    ) , 10          )
-   TEST_LINE( aScan( saAllTypes, snDoubleN  ) , 11          )
-   TEST_LINE( aScan( saAllTypes, snDoubleI  ) , 12          )
-   TEST_LINE( aScan( saAllTypes, sdDateE    ) , 13          )
-   TEST_LINE( aScan( saAllTypes, slFalse    ) , 14          )
-   TEST_LINE( aScan( saAllTypes, slTrue     ) , 15          )
-   TEST_LINE( aScan( saAllTypes, soObject   ) , 0           )
-   TEST_LINE( aScan( saAllTypes, suNIL      ) , 17          )
-   TEST_LINE( aScan( saAllTypes, sbBlock    ) , 0           )
-   TEST_LINE( aScan( saAllTypes, sbBlockC   ) , 0           )
-   TEST_LINE( aScan( saAllTypes, saArray    ) , 0           )
-   SET EXACT ON
-   TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
-   TEST_LINE( aScan( saAllTypes, scStringE  ) , 2           )
-   TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
-   SET EXACT OFF
-
    /* EVAL(), :EVAL */
 
    TEST_LINE( Eval( NIL )                     , "E BASE 1004 No exported method EVAL F:S" )
@@ -1578,6 +1545,206 @@ STATIC FUNCTION Main_MISC()
    TEST_LINE( FKLabel( 25 )                   , "F25"            )
    TEST_LINE( FKLabel( 40 )                   , "F40"            )
    TEST_LINE( FKLabel( 41 )                   , ""               )
+
+   /* __COPYFILE() */
+
+   FClose(FCreate("$$COPYFR.TMP"))
+
+   /* NOTE: Cannot yet test the return value of the function on a DEFAULT-ed
+            failure. */
+
+   TEST_LINE( __copyfile("$$COPYFR.TMP")                 , "E BASE 2010 Argument error __COPYFILE "   )
+   TEST_LINE( __copyfile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
+   TEST_LINE( __copyfile("_NOTHERE.$$$", "$$COPYTO.TMP") , "E BASE 2012 Open error _NOTHERE.$$$ F:DR" )
+   TEST_LINE( __copyfile("$$COPYFR.TMP", "*INVALID*")    , "E BASE 2012 Create error *INVALID*. F:DR" )
+
+   FErase("$$COPYFR.TMP")
+   FErase("$$COPYTO.TMP")
+
+   /* __RUN() */
+
+   /* NOTE: Only error cases are tested. */
+
+   TEST_LINE( __RUN()                         , NIL              )
+   TEST_LINE( __RUN( NIL )                    , NIL              )
+   TEST_LINE( __RUN( 10 )                     , NIL              )
+
+   /* ARRAY function error conditions. */
+
+   TEST_LINE( aCopy()                         , NIL                                        )
+   TEST_LINE( aCopy({}, "C")                  , NIL                                        )
+   TEST_LINE( aCopy("C", {})                  , NIL                                        )
+   TEST_LINE( aCopy({}, {})                   , "{.[0].}"                                  )
+   TEST_LINE( aCopy({}, ErrorNew())           , "ERROR Object"                             )
+   TEST_LINE( aCopy(ErrorNew(), {})           , "{.[0].}"                                  )
+   TEST_LINE( aClone()                        , NIL                                        )
+   TEST_LINE( aClone( NIL )                   , NIL                                        )
+   TEST_LINE( aClone( {} )                    , "{.[0].}"                                  )
+   TEST_LINE( aClone( ErrorNew() )            , NIL                                        )
+   TEST_LINE( aEval()                         , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aEval( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aEval( {} )                     , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aEval( {}, NIL )                , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aEval( {}, {|| NIL } )          , "{.[0].}"                                  )
+   TEST_LINE( aEval( ErrorNew(), {|| NIL } )  , "ERROR Object"                             )
+   TEST_LINE( aScan()                         , 0                                          )
+   TEST_LINE( aScan( NIL )                    , 0                                          )
+   TEST_LINE( aScan( "A" )                    , 0                                          )
+   TEST_LINE( aScan( {} )                     , 0                                          )
+   TEST_LINE( aScan( {}, "" )                 , 0                                          )
+   TEST_LINE( aScan( ErrorNew(), "NOT_FOUND") , 0                                          )
+   TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aFill( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aFill( {} )                     , "{.[0].}"                                  )
+   TEST_LINE( aFill( {}, 1 )                  , "{.[0].}"                                  )
+   TEST_LINE( aFill( ErrorNew() )             , "ERROR Object"                             )
+   TEST_LINE( aFill( ErrorNew(), 1 )          , "ERROR Object"                             )
+   TEST_LINE( aDel()                          , NIL                                        )
+   TEST_LINE( aDel( NIL )                     , NIL                                        )
+   TEST_LINE( aDel( { 1 } )                   , "{.[1].}"                                  )
+   TEST_LINE( aDel( { 1 }, 0 )                , "{.[1].}"                                  )
+   TEST_LINE( aDel( { 1 }, 100 )              , "{.[1].}"                                  )
+   TEST_LINE( aDel( { 1 }, 1 )                , "{.[1].}"                                  )
+   TEST_LINE( aDel( { 1 }, -1 )               , "{.[1].}"                                  )
+   TEST_LINE( aDel( { 1 }, 0 )                , "{.[1].}"                                  )
+   TEST_LINE( aDel( { 1 }, NIL )              , "{.[1].}"                                  )
+   TEST_LINE( aDel( ErrorNew() )              , "ERROR Object"                             )
+   TEST_LINE( aDel( ErrorNew(), 0 )           , "ERROR Object"                             )
+   TEST_LINE( aDel( ErrorNew(), 100 )         , "ERROR Object"                             )
+   TEST_LINE( aDel( ErrorNew(), 1 )           , "ERROR Object"                             )
+   TEST_LINE( aDel( ErrorNew(), -1 )          , "ERROR Object"                             )
+   TEST_LINE( aDel( ErrorNew(), 0 )           , "ERROR Object"                             )
+   TEST_LINE( aDel( ErrorNew(), NIL )         , "ERROR Object"                             )
+   TEST_LINE( aIns()                          , NIL                                        )
+   TEST_LINE( aIns( NIL )                     , NIL                                        )
+   TEST_LINE( aIns( { 1 } )                   , "{.[1].}"                                  )
+   TEST_LINE( aIns( { 1 }, 0 )                , "{.[1].}"                                  )
+   TEST_LINE( aIns( { 1 }, 100 )              , "{.[1].}"                                  )
+   TEST_LINE( aIns( { 1 }, 1 )                , "{.[1].}"                                  )
+   TEST_LINE( aIns( { 1 }, -1 )               , "{.[1].}"                                  )
+   TEST_LINE( aIns( { 1 }, 0 )                , "{.[1].}"                                  )
+   TEST_LINE( aIns( { 1 }, NIL )              , "{.[1].}"                                  )
+   TEST_LINE( aIns( ErrorNew() )              , "ERROR Object"                             )
+   TEST_LINE( aIns( ErrorNew(), 0 )           , "ERROR Object"                             )
+   TEST_LINE( aIns( ErrorNew(), 100 )         , "ERROR Object"                             )
+   TEST_LINE( aIns( ErrorNew(), 1 )           , "ERROR Object"                             )
+   TEST_LINE( aIns( ErrorNew(), -1 )          , "ERROR Object"                             )
+   TEST_LINE( aIns( ErrorNew(), 0 )           , "ERROR Object"                             )
+   TEST_LINE( aIns( ErrorNew(), NIL )         , "ERROR Object"                             )
+   TEST_LINE( aTail()                         , NIL                                        )
+   TEST_LINE( aTail( NIL )                    , NIL                                        )
+   TEST_LINE( aTail( "" )                     , NIL                                        )
+   TEST_LINE( aTail( {} )                     , NIL                                        )
+   TEST_LINE( aTail( { 1, 2 } )               , 2                                          )
+   TEST_LINE( aTail( ErrorNew() )             , NIL                                        )
+   TEST_LINE( aSize()                         , NIL                                        )
+   TEST_LINE( aSize( NIL )                    , NIL                                        )
+   TEST_LINE( aSize( {} )                     , NIL                                        )
+   TEST_LINE( aSize( ErrorNew() )             , NIL                                        )
+   TEST_LINE( aSize( NIL, 0 )                 , NIL                                        )
+   TEST_LINE( aSize( {}, 0 )                  , "{.[0].}"                                  )
+   TEST_LINE( aSize( ErrorNew(), 0 )          , "ERROR Object"                             )
+   TEST_LINE( aSize( NIL, 1 )                 , NIL                                        )
+   TEST_LINE( aSize( {}, 1 )                  , "{.[1].}"                                  )
+   TEST_LINE( aSize( { 1, 2 }, 1 )            , "{.[1].}"                                  )
+   TEST_LINE( aSize( { 1, "AAAA" }, 1 )       , "{.[1].}"                                  )
+   TEST_LINE( aSize( { "BBB", "AAAA" }, 0 )   , "{.[0].}"                                  )
+   TEST_LINE( aSize( ErrorNew(), 1 )          , "ERROR Object"                             )
+   TEST_LINE( aSize( NIL, -1 )                , NIL                                        )
+   TEST_LINE( aSize( {}, -1 )                 , "{.[0].}"                                  )
+   TEST_LINE( aSize( { 1 }, -1 )              , "{.[0].}"                                  )
+   TEST_LINE( aSize( ErrorNew(), -1 )         , "ERROR Object"                             )
+   TEST_LINE( aSize( ErrorNew(), 100 )        , "ERROR Object"                             )
+   TEST_LINE( aAdd( NIL, NIL )                , "E BASE 1123 Argument error AADD F:S"      )
+   TEST_LINE( aAdd( {}, NIL )                 , NIL                                        )
+   TEST_LINE( aAdd( {}, "A" )                 , "A"                                        )
+   TEST_LINE( aAdd( ErrorNew(), NIL )         , NIL                                        )
+   TEST_LINE( aAdd( ErrorNew(), "A" )         , "A"                                        )
+   TEST_LINE( Array()                         , NIL                                        )
+   TEST_LINE( Array( 1 )                      , "{.[1].}"                                  )
+   TEST_LINE( Array( -1 )                     , "E BASE 1131 Bound error array dimension " )
+   TEST_LINE( Array( 1, 0, -10 )              , "E BASE 1131 Bound error array dimension " )
+   TEST_LINE( Array( 1, 0, "A" )              , NIL                                        )
+   TEST_LINE( Array( 1, 0, 2 )                , "{.[1].}"                                  )
+
+   /* AFILL() */
+
+   TEST_LINE( TAStr(aFill(TANew(),"X")       ) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",NIL,-2)) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",NIL, 0)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",NIL, 3)) , "XXX......."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",NIL,20)) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  0)   ) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  0,-2)) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  0, 0)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  0, 3)) , "XXX......."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  0,20)) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  1)   ) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  1,-2)) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  1, 0)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  1, 3)) , "XXX......."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  1,20)) , "XXXXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  3)   ) , "..XXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  3,-2)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  3, 0)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  3, 3)) , "..XXX....."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X",  3,20)) , "..XXXXXXXX"     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", -1)   ) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", -1,-2)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", -1, 0)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", -1, 3)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", -1,20)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", 21)   ) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", 21,-2)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", 21, 0)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", 21, 3)) , ".........."     )
+   TEST_LINE( TAStr(aFill(TANew(),"X", 21,20)) , ".........."     )
+
+   /* ASCAN() */
+
+   TEST_LINE( aScan()                         , 0           )
+   TEST_LINE( aScan( NIL )                    , 0           )
+   TEST_LINE( aScan( "A" )                    , 0           )
+   TEST_LINE( aScan( "A", "A" )               , 0           )
+   TEST_LINE( aScan( "A", {|| .F. } )         , 0           )
+   TEST_LINE( aScan( {1,2,3}, {|x| NIL } )    , 0           )
+   TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
+#ifdef __HARBOUR__
+   TEST_LINE( aScan( @saAllTypes, scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
+   TEST_LINE( aScan( saAllTypes, @scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
+#endif
+   TEST_LINE( aScan( saAllTypes, scStringE  ) , 1           )
+   TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
+   TEST_LINE( aScan( saAllTypes, snIntZ     ) , 4           )
+   TEST_LINE( aScan( saAllTypes, snDoubleZ  ) , 4           )
+   TEST_LINE( aScan( saAllTypes, snIntP     ) , 6           )
+   TEST_LINE( aScan( saAllTypes, snLongP    ) , 7           )
+   TEST_LINE( aScan( saAllTypes, snDoubleP  ) , 8           )
+   TEST_LINE( aScan( saAllTypes, snIntN     ) , 9           )
+   TEST_LINE( aScan( saAllTypes, snLongN    ) , 10          )
+   TEST_LINE( aScan( saAllTypes, snDoubleN  ) , 11          )
+   TEST_LINE( aScan( saAllTypes, snDoubleI  ) , 12          )
+   TEST_LINE( aScan( saAllTypes, sdDateE    ) , 13          )
+   TEST_LINE( aScan( saAllTypes, slFalse    ) , 14          )
+   TEST_LINE( aScan( saAllTypes, slTrue     ) , 15          )
+   TEST_LINE( aScan( saAllTypes, soObject   ) , 0           )
+   TEST_LINE( aScan( saAllTypes, suNIL      ) , 17          )
+   TEST_LINE( aScan( saAllTypes, sbBlock    ) , 0           )
+   TEST_LINE( aScan( saAllTypes, sbBlockC   ) , 0           )
+   TEST_LINE( aScan( saAllTypes, saArray    ) , 0           )
+   SET EXACT ON
+   TEST_LINE( aScan( saAllTypes, scString   ) , 1           )
+   TEST_LINE( aScan( saAllTypes, scStringE  ) , 2           )
+   TEST_LINE( aScan( saAllTypes, scStringZ  ) , 3           )
+   SET EXACT OFF
+
+   /* MEMVARBLOCK() */
+
+   TEST_LINE( MEMVARBLOCK()                   , NIL             )
+   TEST_LINE( MEMVARBLOCK( NIL )              , NIL             )
+   TEST_LINE( MEMVARBLOCK( 100 )              , NIL             )
+   TEST_LINE( MEMVARBLOCK( "mxNotHere" )      , NIL             )
+   TEST_LINE( MEMVARBLOCK( "mcString" )       , "{||...}"       )
 
    RETURN NIL
 
@@ -1759,7 +1926,7 @@ STATIC FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
       ErrorBlock( bOldError )
 
       IF !( ValType( xResult ) == ValType( xResultExpected ) )
-         IF ValType( xResultExpected) == "C" .AND. ValType( xResult ) $ "ABM"
+         IF ValType( xResultExpected) == "C" .AND. ValType( xResult ) $ "ABMO"
             lFailed := !( XToStr( xResult ) == xResultExpected )
          ELSE
             lFailed := .T.
@@ -1894,6 +2061,38 @@ STATIC FUNCTION ListToNArray( cString )
    ENDIF
 
    RETURN aArray
+
+STATIC FUNCTION TANew( nLen, cChar )
+   LOCAL aArray
+   LOCAL tmp
+
+   IF nLen == NIL
+      nLen := 10
+   ENDIF
+
+   IF cChar == NIL
+      cChar := "."
+   ENDIF
+
+   aArray := Array( nLen )
+
+   /* Intentionally not using aFill() here, since this function is
+      involved in testing aFill() itself. */
+   FOR tmp := 1 TO nLen
+      aArray[ tmp ] := "."
+   NEXT
+
+   RETURN aArray
+
+STATIC FUNCTION TAStr( aArray )
+   LOCAL cString := ""
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( aArray )
+      cString += aArray[ tmp ]
+   NEXT
+
+   RETURN cString
 
 STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
    LOCAL tmp, tmp1

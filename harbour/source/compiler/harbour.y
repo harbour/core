@@ -2572,7 +2572,7 @@ void GenCCode( char * szFileName, char * szName )       /* generates the C langu
       pSym = pSym->pNext;
    }
    fprintf( yyc, "\nHB_INIT_SYMBOLS_END( hb_vm_SymbolInit_%s_%08lX )\n", _pFileName->szName, dwDateTime );
-   fprintf( yyc, "#if ! defined(__GNUC__)\n#pragma startup hb_vm_SymbolInit_%s_%08lX\n#endif\n\n\n", _pFileName->szName, dwDateTime );
+   fprintf( yyc, "#if ! defined(__GNUC__)\n   #pragma startup hb_vm_SymbolInit_%s_%08lX\n#endif\n\n\n", _pFileName->szName, dwDateTime );
 
    /* Generate functions data
     */

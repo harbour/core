@@ -34,6 +34,8 @@
 
 */
 
+#include "memvars.ch"
+
 /*  $DOC$
  *  $FUNCNAME$
  *	MEMVARBLOCK
@@ -77,4 +79,9 @@
  */
 
 FUNCTION MEMVARBLOCK( cMemvar )
-RETURN { |x| IIF( PCOUNT()==0, __mvGET(cMemvar), __mvPUT(cMemvar,x) ) }
+
+   IF ( ValType( cMemvar ) == "C" ) .AND. __mvSCOPE( cMemvar ) > MV_ERROR
+      RETURN {| x | IIF( PCOUNT() == 0, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
+   ENDIF
+
+   RETURN NIL

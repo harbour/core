@@ -33,10 +33,9 @@
 
 #define BUFFER_SIZE 8192
 
-static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
+static BOOL hb_fsCopy( char * szSource, char * szDest )
 {
    BOOL bRetVal = FALSE;
-   ULONG ulWrittenTotal = 0L;
 
    FHANDLE fhndSource;
    FHANDLE fhndDest;
@@ -46,10 +45,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
       WORD wResult = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
       if( wResult == E_DEFAULT || wResult == E_BREAK )
-      {
-         ulWrittenTotal = ( ULONG ) -1L;
          break;
-      }
    }
 
    if( fhndSource != FS_ERROR )
@@ -59,10 +55,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
          WORD wResult = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
 
          if( wResult == E_DEFAULT || wResult == E_BREAK )
-         {
-            ulWrittenTotal = ( ULONG ) -2L;
             break;
-         }
       }
 
       if( fhndDest != FS_ERROR )
@@ -91,8 +84,6 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
                   break;
                }
             }
-
-            ulWrittenTotal += ( ULONG ) usWritten;
          }
 
          hb_xfree( buffer );
@@ -108,9 +99,6 @@ static BOOL hb_fsCopy( char * szSource, char * szDest, ULONG * pulWrittenTotal )
       hb_fsClose( fhndSource );
    }
 
-   if( pulWrittenTotal != NULL )
-      *pulWrittenTotal = ulWrittenTotal;
-
    return bRetVal;
 }
 
@@ -120,14 +108,8 @@ HARBOUR HB___COPYFILE( void )
 {
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {
-#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-      if( ! hb_fsCopy( hb_parc( 1 ), hb_parc( 2 ), NULL ) )
+      if( ! hb_fsCopy( hb_parc( 1 ), hb_parc( 2 ) ) )
          hb_retl( FALSE );
-#else
-      ULONG ulWrittenTotal;
-      hb_fsCopy( hb_parc( 1 ), hb_parc( 2 ), &ulWrittenTotal );
-      hb_retnl( ulWrittenTotal );
-#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, "__COPYFILE" ); /* NOTE: Undocumented but existing Clipper Run-time error */
