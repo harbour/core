@@ -1,3 +1,7 @@
+19990726-20:32 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/rdd/dbfntx1.c
+     Fixed bug under msvc
+
 19990726-20:20 CET Eddie Runia <eddie@runia.com>
   * tests/working/hscript/bldguest.bat
     Better version added. (Old version was meant for working directory)
