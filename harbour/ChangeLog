@@ -1,3 +1,8 @@
+2001-11-07 11:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/libct/files.c
+  	! Exclude Cygwin from the WIN32 build paths.
+
 2001-11-07 14:55 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/lang/Makefile

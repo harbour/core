@@ -78,7 +78,7 @@ static struct ffblk fsOldFiles;
       #include "dos.h"
       #include <dir.h>
 #endif
-#if defined(HB_OS_WIN_32) || defined(__MINGW32__) && !defined(__CYGWIN__)
+#if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__)
 static       HANDLE hLastFind;
 static       WIN32_FIND_DATA  Lastff32;
 LPTSTR GetDate(FILETIME *rTime);
@@ -251,7 +251,7 @@ hb_retnl(-1);
      HB_FUNC(FILESEEK)
 {
 
-   #if defined(HB_OS_WIN_32)
+   #if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
    {
       LPCTSTR szFile;
       DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
@@ -327,7 +327,7 @@ hb_retc("");
 HB_FUNC(FILESIZE)
 {
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
    {
    DWORD dwFileSize=0;
    LPCTSTR szFile;
@@ -411,7 +411,7 @@ hb_retl(-1);
 HB_FUNC(FILEDATE)
 {
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
 {
    LPCTSTR szFile;
    DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
@@ -488,7 +488,7 @@ HB_FUNC(FILEDATE)
 HB_FUNC(FILETIME)
 {
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
 {
    LPTSTR szDateString;
    LPCTSTR szFile;
@@ -572,7 +572,7 @@ HB_FUNC(FILETIME)
 
 }
 
-#if defined(HB_OS_WIN_32) || defined(__MINGW32__)
+#if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__)
 
 #include <tchar.h>
 
