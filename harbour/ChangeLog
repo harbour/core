@@ -1,3 +1,18 @@
+19990604-11:50 CET Eddie Runia
+  * source/compiler/harbour.y
+    support for the following syntax added :
+    <object>:<data>[<index>] <assignment> <value>
+    <object>:<method>(<param>)[<index>] <assignment> <value>
+
+    and increment / decrement for <function>(<param>)[<index>],
+      <object>:<data>[<index>] and <object>:<method>(<param>)[<index>]
+  * source/rtl/natmsg/msgdut.c
+      Sunday is the first day ofcourse
+  + tests/working/objarr.prg
+      tests for object array syntax
+  * tests/working/funcarr.prg
+      tests for function array syntax (inc/dec added)
+
 19990604-23:15 EDT David G. Holm <dholm@jsd-llc.com>
   + include/version.h
     - New file to specify version info. A future revision will be

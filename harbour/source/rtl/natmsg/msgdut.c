@@ -8,5 +8,5 @@ char *hb_monthsname[ 12 ] = {
    "november", "december" };
 
 char *hb_daysname[ 7 ] = {
-   "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag",
-   "zondag" };
+   "zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag",
+   "zaterdag" };

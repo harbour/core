@@ -637,14 +637,14 @@ VarUnary   : IDENTIFIER IncDec %prec POST    { PushId( $1 ); Duplicate(); $2 ? I
            | IncDec IDENTIFIER %prec PRE     { PushId( $2 ); $1 ? Inc(): Dec(); Duplicate(); PopId( $2 ); }
            | VarId ArrayIndex IncDec %prec POST { DupPCode( $1 ); GenPCode1( _ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $3 ? Dec(): Inc(); }
            | IncDec VarId ArrayIndex %prec PRE  { DupPCode( $2 ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
-           | FunArrayCall IncDec %prec POST {}
-           | IncDec FunArrayCall %prec PRE  {}
+           | FunArrayCall IncDec %prec POST { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $2 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $2 ? Dec(): Inc(); }
+           | IncDec FunArrayCall %prec PRE  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
            | ObjectData IncDec %prec POST         {}
            | IncDec ObjectData %prec PRE          {}
-           | ObjectData ArrayIndex IncDec %prec POST {}
-           | IncDec ObjectData ArrayIndex %prec PRE  {}
-           | ObjectMethod ArrayIndex IncDec %prec POST {}
-           | IncDec ObjectMethod ArrayIndex %prec PRE {}
+           | ObjectData ArrayIndex IncDec %prec POST { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $3 ? Dec(): Inc(); }
+           | IncDec ObjectData ArrayIndex %prec PRE  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
+           | ObjectMethod ArrayIndex IncDec %prec POST { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $3 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); $3 ? Dec(): Inc(); }
+           | IncDec ObjectMethod ArrayIndex %prec PRE  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); $1 ? Inc(): Dec(); GenPCode1( _ARRAYPUT ); }
            ;
 
 IncDec     : INC                             { $$ = 1; }
@@ -698,19 +698,19 @@ VarAssign  : IDENTIFIER INASSIGN Expression { PopId( $1 ); PushId( $1 ); }
            | ObjectData EXPEQ    Expression                 {}
            | ObjectData MODEQ    Expression                 {}
            | ObjectData ArrayIndex INASSIGN Expression      { GenPCode1( _ARRAYPUT ); }
-           | ObjectData ArrayIndex PLUSEQ   Expression      {}
-           | ObjectData ArrayIndex MINUSEQ  Expression      {}
-           | ObjectData ArrayIndex MULTEQ   Expression      {}
-           | ObjectData ArrayIndex DIVEQ    Expression      {}
-           | ObjectData ArrayIndex EXPEQ    Expression      {}
-           | ObjectData ArrayIndex MODEQ    Expression      {}
+           | ObjectData ArrayIndex PLUSEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _PLUS    ); GenPCode1( _ARRAYPUT ); }
+           | ObjectData ArrayIndex MINUSEQ  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MINUS   ); GenPCode1( _ARRAYPUT ); }
+           | ObjectData ArrayIndex MULTEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MULT    ); GenPCode1( _ARRAYPUT ); }
+           | ObjectData ArrayIndex DIVEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
+           | ObjectData ArrayIndex EXPEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
+           | ObjectData ArrayIndex MODEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
            | ObjectMethod ArrayIndex INASSIGN Expression    { GenPCode1( _ARRAYPUT ); }
-           | ObjectMethod ArrayIndex PLUSEQ   Expression    {}
-           | ObjectMethod ArrayIndex MINUSEQ  Expression    {}
-           | ObjectMethod ArrayIndex MULTEQ   Expression    {}
-           | ObjectMethod ArrayIndex DIVEQ    Expression    {}
-           | ObjectMethod ArrayIndex EXPEQ    Expression    {}
-           | ObjectMethod ArrayIndex MODEQ    Expression    {}
+           | ObjectMethod ArrayIndex PLUSEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _PLUS    ); GenPCode1( _ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MINUSEQ  { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MINUS   ); GenPCode1( _ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MULTEQ   { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MULT    ); GenPCode1( _ARRAYPUT ); }
+           | ObjectMethod ArrayIndex DIVEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _DIVIDE  ); GenPCode1( _ARRAYPUT ); }
+           | ObjectMethod ArrayIndex EXPEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _POWER   ); GenPCode1( _ARRAYPUT ); }
+           | ObjectMethod ArrayIndex MODEQ    { GenPCode1( _DUPLTWO ); GenPCode1( _ARRAYAT ); } Expression { GenPCode1( _MODULUS ); GenPCode1( _ARRAYPUT ); }
            | AliasExp INASSIGN Expression                 {}
            ;
 
