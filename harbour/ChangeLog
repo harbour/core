@@ -1,3 +1,11 @@
+19990523-16:15 CET Patrick Mast (upload by Eddie Runia)
+  * tests/working/test_all.prg, tests/working/test_all.lnl
+    Testbank added.
+  * tests/working/*.prg
+    So programs not qualified for testing.
+  * tests/working/rtl_test.prg
+    function Main() added
+
 19990523-14:30 CET Eddie Runia
   * tools.b16, tools.b32, bldtls32, bldtools.bat
     send to heaven

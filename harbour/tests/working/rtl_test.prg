@@ -4,6 +4,8 @@
 /* TODO: Incorporate tests from TEST\WORKING\STRING*.PRG
 /* QUESTION: Can Harbour compile and run this (PadR(), Chr(), fWrite(), StrTran()) ? */
 
+function Main()
+
 #define NUL                             Chr(0)
 
 SHOW_TEST('At("", "")'                , Str(At("", ""))             ) // 1
@@ -100,6 +102,8 @@ SHOW_LINE()
 SHOW_TEST('SubStr("ab" + NUL + "def", 2, 3)', SubStr("ab" + NUL + "def", 2, 3) )
 SHOW_TEST('Left("ab" + NUL + "def", 5)', Left("ab" + NUL + "def", 5) )
 SHOW_TEST('Right("ab" + NUL + "def", 5)', Right("ab" + NUL + "def", 5) )
+
+return nil
 
 STATIC FUNCTION SHOW_TEST(cExpr, cResult)
      RETURN fWrite(1, PadR(StrTran(cExpr, Chr(0), "."), 40) + " -> " + '"' + StrTran(cResult, Chr(0), ".") + '"' + Chr(13) + Chr(10))

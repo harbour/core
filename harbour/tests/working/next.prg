@@ -1,3 +1,4 @@
+//NOTEST
 // Using nExt variable name
 
 //DO NOT RUN THIS PROGRAM - ITS PURPOSE IS ONLY TO CHECK THE SYNTAX!
