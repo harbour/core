@@ -403,6 +403,12 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 
       uiPcol += hb_set.HB_SET_MARGIN;
 
+      if( ( uiProw == s_uiPRow ) && ( uiPcol < s_uiPCol ) )
+      {
+         hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) "\x0D", 1 );
+         s_uiPCol = 0;
+      }
+
       for( uiCount = s_uiPCol; uiCount < uiPcol; uiCount++ )
          hb_fsWrite( hb_set.hb_set_printhan, ( BYTE * ) " ", 1 );
 
