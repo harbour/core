@@ -450,7 +450,7 @@ HARBOUR FREAD()
         if( arg1_it && arg2_it && arg3_it )
         {
             last_error = 0;
-            bytes = _fsRead(_parni(1),_parc(2),_parnl(3));
+            bytes = _fsRead(_parni(1),arg2_it->value.szText,_parnl(3));
             last_error = errno;
         }
 

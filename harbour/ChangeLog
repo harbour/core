@@ -1,3 +1,9 @@
+19990526-16:10 Eddie Runia
+  * source/rtl/files.c
+    Pass reference error removed.
+  * source/rtl/extend.c
+    par* commands now work correctly with reference variables.
+
 19990525-23:25 Les Griffith
   * source/rtl/files.c
     added logic to readstr for lasterror

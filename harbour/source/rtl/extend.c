@@ -17,13 +17,20 @@ ULONG ulMemoryConsumed = 0;
 PITEM _param( WORD wParam, WORD wMask )
 {
    WORD wType;
+   PITEM pLocal;
 
    if( wParam <= _pcount() )
    {
       wType = ( stack.pBase + 1 + wParam )->wType;
 
       if( ( wType & wMask ) || ( wType == IT_NIL && wMask == IT_ANY ) )
-         return stack.pBase + 1 + wParam;
+      {
+         pLocal = stack.pBase + 1 + wParam;
+         if( wType & IT_BYREF )
+            return stack.pItems + pLocal->value.wItem;
+         else
+            return pLocal;
+      }
       else
          return 0;
    }
@@ -43,6 +50,8 @@ char * _parc( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) )
       {
@@ -73,6 +82,8 @@ ULONG _parclen( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) )
       {
@@ -104,6 +115,8 @@ char * _pards( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
@@ -146,6 +159,8 @@ int _parl( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
@@ -173,6 +188,8 @@ double _parnd( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
@@ -206,6 +223,8 @@ int _parni( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
@@ -239,6 +258,8 @@ long _parnl( WORD wParam, ... )
    if( wParam <= _pcount() )
    {
       pItem = stack.pBase + 1 + wParam;
+      if( pItem->wType & IT_BYREF )
+         pItem = stack.pItems + pItem->value.wItem;
 
       if( IS_ARRAY( pItem ) && wArrayIndex )
          /* TODO: implement wArrayIndex use when retrieving an array element */
