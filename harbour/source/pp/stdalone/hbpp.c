@@ -53,8 +53,10 @@
 #include "hbver.h"
 #include "compiler.h"
 
+static int hb_pp_Parse( FILE * handl_o );
 static void AddSearchPath( char * szPath, PATHNAMES * * pSearchList );
 static void OutTable( DEFINES * endDefine, COMMANDS * endCommand );
+static BOOL hb_pp_fopen( char * szFileName );
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
@@ -63,7 +65,7 @@ static int  s_iWarnings = 0;
 PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME hb_comp_pFileName = NULL;
 FILES       hb_comp_files;
-int hb_comp_iLine = 0;       /* currently parsed file line number */
+int hb_comp_iLine = 1;       /* currently parsed file line number */
 
 /* These are need for the PP #pragma support */
 BOOL hb_comp_bPPO = FALSE;                      /* flag indicating, is ppo output needed */
@@ -78,9 +80,9 @@ int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warnin
 
 int main( int argc, char * argv[] )
 {
-  FILE * handl_i;
   FILE * handl_o;
   char szFileName[ _POSIX_PATH_MAX ];
+  char szPpoName[ _POSIX_PATH_MAX ];
   char * szDefText;
   int iArg = 1;
   unsigned int i;
@@ -155,7 +157,7 @@ int main( int argc, char * argv[] )
 
       hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
-      if( ( handl_i = fopen( szFileName, "r" ) ) == NULL )
+      if( !hb_pp_fopen( szFileName ) )
         {
           printf("\nCan't open %s\n", szFileName );
           return 1;
@@ -182,11 +184,11 @@ int main( int argc, char * argv[] )
     }
 
   hb_comp_pFileName->szExtension = ".ppo";
-  hb_fsFNameMerge( szFileName, hb_comp_pFileName );
+  hb_fsFNameMerge( szPpoName, hb_comp_pFileName );
 
-  if( ( handl_o = fopen( szFileName, "wt" ) ) == NULL )
+  if( ( handl_o = fopen( szPpoName, "wt" ) ) == NULL )
     {
-      printf("\nCan't open %s\n", szFileName );
+      printf("\nCan't open %s\n", szPpoName );
       return 1;
     }
 
@@ -208,11 +210,12 @@ int main( int argc, char * argv[] )
         AddSearchPath( pPath, &hb_comp_pIncludePath );
       }
   }
-
   hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
-  hb_pp_Parse( handl_i, handl_o, NULL );
-  fclose( handl_i );
+  hb_pp_Parse( handl_o );
+  fclose( hb_comp_files.pLast->handle );
+  hb_xfree( hb_comp_files.pLast->pBuffer );
+  hb_xfree( hb_comp_files.pLast );
   fclose( handl_o );
 
   if( bOutTable )
@@ -225,22 +228,20 @@ int main( int argc, char * argv[] )
   return 0;
 }
 
-int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
+int hb_pp_Parse( FILE * handl_o )
 {
-  char sBuffer[ HB_PP_BUFF_SIZE ];           /* File read buffer */
+  char *sBuffer = (char*) hb_comp_files.pLast->pBuffer;           /* File read buffer */
+  FILE * handl_i = hb_comp_files.pLast->handle;
   char * ptr;
   int lContinue = 0;
   int iBuffer = 10, lenBuffer = 10;
   int lens = 0, rdlen;
 
-  HB_SYMBOL_UNUSED( szSource );
-
-  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p, %s)", handl_i, handl_o, szSource));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p, %p, %s)", handl_o ));
 
   while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE - lens, lContinue,
                                 sBuffer, &lenBuffer, &iBuffer ) ) >= 0 )
     {
-      if( hb_comp_files.iFiles == 1 ) hb_comp_iLine++;
       lens += rdlen;
 
       if( s_szLine[ lens - 1 ] == ';' )
@@ -265,8 +266,26 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
           HB_SKIPTABSPACES( ptr );
           if( *ptr == '#' )
             {
-              if( hb_pp_ParseDirective( ptr + 1 ) == 0 )
-                *s_szLine = '\0';
+              hb_pp_ParseDirective( ptr + 1 );
+              if( sBuffer != hb_comp_files.pLast->pBuffer )
+                {
+                  PFILE pFile;
+                  sprintf( s_szLine, "#line 1 \"%s\"",
+                          hb_comp_files.pLast->szFileName );
+                  hb_pp_WrStr( handl_o, s_szLine );
+                  hb_pp_Parse( handl_o );
+                  fclose( hb_comp_files.pLast->handle );
+                  hb_xfree( hb_comp_files.pLast->pBuffer );
+                  hb_xfree( hb_comp_files.pLast->szFileName );
+                  pFile = ( PFILE ) ( ( PFILE ) hb_comp_files.pLast )->pPrev;
+                  hb_xfree( hb_comp_files.pLast );
+                  hb_comp_files.pLast = pFile;
+                  hb_comp_iLine = hb_comp_files.pLast->iLine;
+                  hb_comp_files.iFiles--;
+                  sprintf( s_szLine, "#line %d \"%s\"",hb_comp_iLine+1,hb_comp_files.pLast->szFileName );
+                }
+              else
+                 *s_szLine = '\0';
             }
           else
             {
@@ -277,11 +296,12 @@ int hb_pp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
             }
         }
 
-      if( hb_comp_files.iFiles == 1 )
-        {
+//      if( hb_comp_files.iFiles == 1 )
+//        {
           if( lContinue ) hb_pp_WrStr( handl_o, "\n" );
           else hb_pp_WrStr( handl_o, s_szLine );
-        }
+//        }
+      hb_comp_iLine++;
     }
 
   return 0;
@@ -529,4 +549,25 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
     free( pMem );
   else
     hb_compGenError( hb_pp_szErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
+}
+
+BOOL hb_pp_fopen( char * szFileName )
+{
+   PFILE pFile;
+   FILE * handl_i = fopen( szFileName, "r" );
+
+   if( !handl_i )
+      return FALSE;
+
+   pFile = ( PFILE ) hb_xgrab( sizeof( _FILE ) );
+   pFile->handle = handl_i;
+   pFile->pBuffer = hb_xgrab( HB_PP_BUFF_SIZE );
+   pFile->iBuffer = pFile->lenBuffer = 10;
+   pFile->szFileName = szFileName;
+   pFile->pPrev = NULL;
+
+   hb_comp_files.pLast = pFile;
+   hb_comp_files.iFiles = 1;
+
+   return TRUE;
 }

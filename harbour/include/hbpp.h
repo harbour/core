@@ -43,7 +43,7 @@
 #include "hbver.h"
 
 /* the list of pathnames to search with #include */
-typedef struct _PATHNAMES 
+typedef struct _PATHNAMES
 {
    char * szPath;
    struct _PATHNAMES *pNext;
@@ -76,7 +76,6 @@ typedef struct _COMMANDS
 
 /* HBPP.C exported functions */
 
-extern int    hb_pp_Parse( FILE *, FILE *, char * );
 extern int    hb_pp_ParseDirective( char * ); /* Parsing preprocessor directives ( #... ) */
 extern int    hb_pp_ParseExpression( char *, char * ); /* Parsing a line ( without preprocessor directive ) */
 extern int    hb_pp_WrStr( FILE *, char * );

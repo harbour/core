@@ -1,3 +1,9 @@
+20000218-21:32 GMT+3 Alexander Kresin
+   * source/pp/stdalone/hbpp.c
+     * corrected accordingly last changes
+   * source/pp/hbppint.c
+     * call of HB_TRACE fixed
+
 20000218-15:23 GMT+3 Alexander Kresin
    * source/pp/hbpp.c
    * source/pp/hbppint.c

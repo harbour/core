@@ -70,7 +70,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   int lens = 0, rdlen;
   FILE * handl_i = hb_comp_files.pLast->handle;
 
-  HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_i, handl_o, sOut));
+  HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
 
      while( ( rdlen = hb_pp_RdStr( handl_i, s_szLine + lens, HB_PP_STR_SIZE -
                   lens, lContinue, sBuffer, &(hb_comp_files.pLast->lenBuffer),
