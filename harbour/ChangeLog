@@ -1,3 +1,7 @@
+2001-09-04 16:06 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/source/rtl/persist.prg
+     oNew use fixed. Some formating fixes implemented also.
+
 2001-09-04 11:50 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/contrib/hgf/win32/win32.c
      events routing implemented
