@@ -122,9 +122,9 @@ static void    hb_vmSwapAlias( void );           /* swaps items on the eval stac
 static HARBOUR hb_vmDoBlock( void );             /* executes a codeblock */
 static void    hb_vmLocalName( USHORT uiLocal, char * szLocalName ); /* locals and parameters index and name information for the debugger */
 static void    hb_vmModuleName( char * szModuleName ); /* PRG and function name information for the debugger */
-static void    hb_vmFrame( BYTE bLocals, BYTE bParams ); /* increases the stack pointer for the amount of locals and params suplied */
+static void    hb_vmFrame( BYTE bLocals, BYTE bParams );  /* increases the stack pointer for the amount of locals and params suplied */
 static void    hb_vmSFrame( PHB_SYMB pSym );     /* sets the statics frame for a function */
-static void    hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ); /* increases the the global statics array to hold a PRG statics */
+static void    hb_vmStatics( PHB_SYMB pSym );    /* increases the the global statics array to hold a PRG statics */
 static void    hb_vmEndBlock( void );            /* copies the last codeblock pushed value into the return value */
 static void    hb_vmRetValue( void );            /* pops the latest stack value into stack.Return */
 static void    hb_vmDebuggerShowLine( USHORT uiLine ); /* makes the debugger shows a specific source code line */
@@ -557,8 +557,8 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_STATICS:
             uiParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
-            hb_vmStatics( pSymbols + uiParams, pCode[ w + 3 ] + ( pCode[ w + 4 ] * 256 ) );
-            w += 5;
+            hb_vmStatics( pSymbols + uiParams );
+            w += 3;
             break;
 
          case HB_P_RETVALUE:
@@ -959,7 +959,6 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_NOOP:
             /* Intentionally do nothing */
-            w += 1;
             break;
 
          default:
@@ -1060,6 +1059,7 @@ static void hb_vmPlus( void )
             pItem2->item.asString.value = NULL;
          }
          hb_stackPop();
+         return;
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+" );
@@ -1160,6 +1160,7 @@ static void hb_vmMinus( void )
             pItem2->item.asString.value = NULL;
          }
          hb_stackPop();
+         return;
       }
       else
          hb_errRT_BASE( EG_STROVERFLOW, 1210, NULL, "-" );
@@ -2152,6 +2153,7 @@ void hb_vmDo( USHORT uiParams )
    LONG wStackBase = hb_stack.pBase - hb_stack.pItems; /* as the stack memory block could change */
    LONG wItemIndex = pItem - hb_stack.pItems;
    PHB_ITEM pSelf = hb_stack.pPos - uiParams - 1;   /* NIL, OBJECT or BLOCK */
+   PBASEARRAY pSelfBase;
    PHB_FUNC pFunc;
    int iStatics = hb_stack.iStatics;              /* Return iStatics position */
    BOOL bDebugPrevState = s_bDebugging;
@@ -2186,7 +2188,19 @@ void hb_vmDo( USHORT uiParams )
       if( pSym == &( hb_symEval ) && IS_BLOCK( pSelf ) )
          pFunc = pSym->pFunPtr;                 /* __EVAL method = function */
       else
+      {
          pFunc = hb_objGetMethod( pSelf, pSym );
+         if( IS_OBJECT( pSelf ) )               /* Object passed            */
+         {
+            pSelfBase = pSelf->item.asArray.value;
+            if( pSelfBase->bSuperCast )
+            {
+              pSelfBase->bSuperCast = FALSE;
+              pSelfBase->uiClass    = pSelfBase->uiPrevCls;
+              pSelfBase->uiHolders  = pSelfBase->uiPrevHolders;
+            }
+         }
+      }
 
       if( pFunc )
          pFunc();
@@ -2305,8 +2319,10 @@ static void hb_vmSFrame( PHB_SYMB pSym )      /* sets the statics frame for a fu
    HB_DEBUG( "SFrame\n" );
 }
 
-static void hb_vmStatics( PHB_SYMB pSym, USHORT uiStatics ) /* initializes the global aStatics array or redimensionates it */
+static void hb_vmStatics( PHB_SYMB pSym ) /* initializes the global aStatics array or redimensionates it */
 {
+   USHORT uiStatics = hb_vmPopNumber();
+
    if( IS_NIL( &s_aStatics ) )
    {
       pSym->pFunPtr = NULL;         /* statics frame for this PRG */
