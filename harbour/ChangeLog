@@ -1,3 +1,30 @@
+2000-11-27 08:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * include/hbapi.h
+   * source/rtl/idle.c
+     + Added hb_idleReset()
+   * source/rtl/inkey.c
+     * Replaced direct idle flags reeset with call to hb_idleReset()
+   * tests/testidle.prg
+     + Added 2nd block test.
+
+   + tests/testget.prg
+     + Added test for plain gets, array gets, macro gets, and object data gets.
+
+   * hb_slex.bc
+   * include/hbver.h
+   * source/common/hbver.c
+   * source/compiler/genc.c
+   * source/compiler/genjava.c
+   * source/compiler/genobj32.c
+   * source/compiler/hbusage.c
+     + Added HB_VER_LEX macro and added to Build Info.
+
+   * config/dos/djgpp.cf
+   * config/linux/gcc.cf
+   * config/w32/bcc32.cf
+   * config/w32/gcc.cf
+     + Added -DSIMPLEX to C[LIB]FLAGS of SimpLex build
+
 2000-11-27 18:55 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
     *source/rtl/idle.c
     *source/rtl/inkey.c

@@ -13,7 +13,11 @@ CC = gcc
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+ifeq ($(HB_LEX),SIMPLEX)
+CFLAGS = -Wall -g -DSIMPLEX
+else
 CFLAGS = -Wall -g
+endif
 
 LD = gcc
 LD_OUT = -o

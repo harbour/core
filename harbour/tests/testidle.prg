@@ -2,11 +2,7 @@
 
 PROCEDURE MAIN()
 
-   LOCAL bIdle := {|| QOut( "Idle Block" ) }
-
    CLS
-
-   ? _SET_IDLEREPEAT
 
    ? "DEFAULT IDLEREPEAT =", SET( _SET_IDLEREPEAT )
    ?
@@ -15,18 +11,20 @@ PROCEDURE MAIN()
    ?
    Inkey(0)
 
-   HB_IDLEADD( bIdle )
+   HB_IDLEADD( {|| QOut( "Idle Block" ) } )
    Inkey( 2 )
 
    SET( _SET_IDLEREPEAT, .F. )
 
+   HB_IDLEADD( {|| QOut( "Idle Block2" ) } )
+
    CLS
-   ? "Idle Block should display ONCE! while waitning for key or 10 seconds elapsed!"
+   ? "Idle Block & Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
    ?
    Inkey( 2 )
 
    ?
-   ? "Again - Idle Block should display ONCE! while waitning for key or 10 seconds elapsed!"
+   ? "Again - Idle Block & Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
    ?
    Inkey( 2 )
    ?

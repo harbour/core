@@ -134,8 +134,8 @@ void hb_compPrintCredits( void )
  */
 void hb_compPrintLogo( void )
 {
-   printf( "Harbour Compiler %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
+   printf( "Harbour Compiler %d.%d%s (Build %d) (%04d.%02d.%02d) (%s)\n",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY, HB_VER_LEX );
    printf( "Copyright 1999-2000, http://www.harbour-project.org\n" );
 }
 

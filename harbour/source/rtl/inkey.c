@@ -69,13 +69,6 @@ static BOOL   s_inkeyPoll;       /* Flag to override no polling when TYPEAHEAD i
 static int    s_inkeyForce;      /* Variable to hold keyboard input when TYPEAHEAD is 0 */
 static HB_inkey_enum s_eventmask;
 
-/* current task to be executed */
-extern USHORT hb_vm_uiIdleTask;
-/* number of tasks in the list */
-extern USHORT hb_vm_uiIdleMaxTask;
-/* flag to indicate GarbageCollection should be done in idle state. */
-extern BOOL hb_vm_bCollectGarbage;
-
 int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
 {
    int key;
@@ -97,12 +90,7 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
             {
                hb_idleState();
             }
-
-            if( hb_vm_uiIdleTask == hb_vm_uiIdleMaxTask )
-            {
-               hb_vm_uiIdleTask = 0;
-               hb_vm_bCollectGarbage = TRUE;
-            }
+            hb_idleReset();
          }
       }
       else
@@ -124,12 +112,7 @@ int hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask )
          {
             hb_idleState();
          }
-
-         if( hb_vm_uiIdleTask == hb_vm_uiIdleMaxTask )
-         {
-            hb_vm_uiIdleTask = 0;
-            hb_vm_bCollectGarbage = TRUE;
-         }
+         hb_idleReset();
       }
    }
 

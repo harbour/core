@@ -538,6 +538,7 @@ extern HB_GARBAGE_FUNC( hb_arrayReleaseGarbage ); /* clear an array before relea
 
 /* idle states */
 extern void   hb_idleState( void ); /* services a single idle state */
+extern void   hb_idleReset( void ); /* services a single idle state */
 extern void   hb_idleShutDown( void ); /* closes all background tasks */
 
 /* misc */

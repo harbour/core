@@ -95,7 +95,7 @@ HBPDF_DIR   = contrib\pdflib
 #
 
 CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
-CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS) -DSIMPLEX
 CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 !if $d(PDF)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF
@@ -705,7 +705,7 @@ $(OBJ_DIR)\pplib.obj : $(PP_DIR)\pplib.c
    tlib $(PP_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
-   $(CC) $(CLIBFLAGS) -DSIMPLEX -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(PP_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\pragma.obj : $(PP_DIR)\pragma.c
@@ -791,7 +791,7 @@ $(OBJ_DIR)\genhrb.obj : $(COMPILER_DIR)\genhrb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\expropta.obj : $(COMPILER_DIR)\expropta.c
-   $(CC) $(CLIBFLAGS) -DSIMPLEX -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\exproptb.obj : $(COMPILER_DIR)\exproptb.c
    $(CC) $(CLIBFLAGS) -o$@ $**
@@ -1894,7 +1894,7 @@ $(OBJ_DIR)\macroslx.obj : $(MACRO_DIR)\macroslx.c
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\macroa.obj : $(MACRO_DIR)\macroa.c
-   $(CC) $(CLIBFLAGS) -DSIMPLEX -o$@ $**
+   $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(MACRO_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\macrob.obj : $(MACRO_DIR)\macrob.c

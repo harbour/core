@@ -388,7 +388,7 @@ char * hb_verCompiler( void )
 
    {
       char szSub[ 32 ];
-      /* QUESTION: Is there any better, safer, more official way to detect 
+      /* QUESTION: Is there any better, safer, more official way to detect
                    the bit depth of the C compiler ? [vszakats] */
       sprintf( szSub, " (%i bit)", ( int ) ( sizeof( int ) * 8 ) );
       strcat( pszCompiler, szSub );
@@ -409,8 +409,8 @@ char * hb_verHarbour( void )
 
    pszVersion = ( char * ) hb_xgrab( 80 );
 
-   sprintf( pszVersion, "Harbour %d.%d%s Intl. (Build %d)  (%04d.%02d.%02d)",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
+   sprintf( pszVersion, "Harbour %d.%d%s Intl. (Build %d) (%04d.%02d.%02d) (%s)",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY, HB_VER_LEX );
 
    return pszVersion;
 }

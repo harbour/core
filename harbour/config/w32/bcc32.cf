@@ -1,4 +1,4 @@
-# 
+#
 # $Id$
 #
 # The Harbour Project
@@ -24,7 +24,11 @@ CC = bcc32
 CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I$(GRANDP) -I$(HB_INC_COMPILE)
+ifeq ($(HB_LEX),SIMPLEX)
+CFLAGS = -O2 -d -DSIMPLEX
+else
 CFLAGS = -O2 -d
+endif
 
 LD = bcc32
 LDFLAGS = -O2

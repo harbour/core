@@ -70,8 +70,8 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
       fflush( stdout );
    }
 
-   fprintf( yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d)\n",
-      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY );
+   fprintf( yyc, "/*\n * Harbour Compiler, %d.%d%s (Build %d) (%04d.%02d.%02d) (%s)\n",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION, HB_VER_BUILD, HB_VER_YEAR, HB_VER_MONTH, HB_VER_DAY, HB_VER_LEX );
    fprintf( yyc, " * Generated C source code\n */\n\n" );
 
    if( hb_comp_iFunctionCnt )

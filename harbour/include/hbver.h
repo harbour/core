@@ -36,6 +36,11 @@
 #ifndef HB_VER_H_
 #define HB_VER_H_
 
+#if defined(SIMPLEX)
+   #define HB_VER_LEX "SimpLex"
+#else
+   #define HB_VER_LEX "Flex"
+#endif
 #define HB_VER_MAJOR    0       /* Major version number */
 #define HB_VER_MINOR    35      /* Minor version number */
 #define HB_VER_REVISION "i"     /* Revision letter */
