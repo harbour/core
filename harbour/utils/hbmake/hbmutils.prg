@@ -136,7 +136,7 @@ Static Function GetDirsl( cPattern )
      Local aDir   := {}
      Aeval( Directory( cPattern + "*.", "D" ), ;
             { | xItem | If( xItem[ 5 ] = "D" , ;
-            ( Aadd( aDir, cPattern + xItem[ 1 ] + "/" ), "" ) } )
+            Aadd( aDir, cPattern + xItem[ 1 ] + "/" ), "" ) } )
 
 Return ( aDir )
 

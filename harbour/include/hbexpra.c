@@ -956,10 +956,10 @@ HB_EXPR_PTR hb_compExprSetGetBlock( HB_EXPR_PTR pExpr )
    pIIF = hb_compExprAddListExpr( pIIF, pExpr );
    /* create HB_PCOUNT(1) */
 #ifdef HB_MACRO_SUPPORT
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ),
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ),
               hb_compExprNewArgList( hb_compExprNewLong( 1 ) ), HB_MACRO_PARAM );
 #else
-   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("__PVALUE") ),
+   pSet = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strdup("HB_PVALUE") ),
               hb_compExprNewArgList( hb_compExprNewLong( 1 ) ) );
 #endif
    /* create <pExpr>:=HB_PCOUNT(1) */
