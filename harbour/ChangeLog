@@ -1,3 +1,7 @@
+2001-12-09 19:46 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     * A minor fix required for Harbour DLLs
+
 2001-12-09 19:31 GMT+1 Antonio Linares <alinares@fivetech.com>
    * makefile.bc
      + added hbgete.c file
