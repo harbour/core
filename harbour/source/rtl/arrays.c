@@ -96,18 +96,12 @@ void hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         ItemCopy( pItem, ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ( ulIndex - 1 ) );
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, szBoundError );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
         }
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
     }
 }
 
@@ -126,18 +120,12 @@ char *hb_arrayGetString( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, szBoundError );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
         }
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
     }
   return "";
 }
@@ -157,18 +145,12 @@ ULONG hb_arrayGetStringLen( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, szBoundError );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
         }
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
     }
   return 0;
 }
@@ -184,11 +166,12 @@ int hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex )
         }
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, "Bound error: Array access" );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_ARG, 1132, "Bound error", "array access");
         }
+    }
+  else
+    {
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
     }
   return 0;
 }
@@ -208,10 +191,7 @@ ULONG hb_arrayLen( PHB_ITEM pArray )
     return ( ( PBASEARRAY ) pArray->value.pBaseArray )->ulLen;
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1068, "Argument error", "array access");
     }
   return 0;
 }
@@ -224,18 +204,12 @@ void hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem )
         ItemCopy( ( ( PBASEARRAY ) pArray->value.pBaseArray )->pItems + ( ulIndex - 1 ), pItem );
       else
         {
-          PHB_ITEM pError = hb_errNew();
-          hb_errPutDescription( pError, szBoundError );
-          hb_errLaunch( pError );
-          hb_errRelease( pError );
+          hb_errorRT_BASE(EG_ARG, 1133, "Bound error", "array assign");
         }
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1069, "Argument error", "array assign");
     }
 }
 
@@ -272,13 +246,6 @@ void hb_arraySize( PHB_ITEM pArray, ULONG ulLen )
             }
         }
       pBaseArray->ulLen = ulLen;
-    }
-  else
-    {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
     }
 }
 
@@ -488,10 +455,7 @@ void hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG ulStart, ULONG ulCoun
     }
   else
     {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, szArgumentError );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 2017, "Argument error", "AEVAL");
     }
 }
 

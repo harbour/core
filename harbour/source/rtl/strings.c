@@ -165,19 +165,13 @@ HARBOUR HB_LTRIM( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: LTRIM");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1101, "Argument error", "LTRIM");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: LTRIM");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1101, "Incorrect number of arguments", "LTRIM");
    }
 }
 
@@ -211,23 +205,43 @@ HARBOUR HB_RTRIM( void )
          hb_retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength, bAnySpace));
       }
       else
-         /* Clipper doesn't error */
+      {
+#ifdef HB_STRICT_CLIPPER_COMPATIBILITY
+         /* Clipper doesn't error, but only in RTRIM. TRIM() throws an error, though */
          hb_retc("");
+#else
+         hb_errorRT_BASE(EG_ARG, 1100, "Argument error", "RTRIM");
+#endif
+      }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: RTRIM");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1100, "Incorrect number of arguments", "RTRIM");
    }
 }
 
-/* synonymn for RTRIM */
+/* synonymn for RTRIM, with different error handling */
 HARBOUR HB_TRIM( void )
 {
-   HB_RTRIM();
+   if( hb_pcount() > 0 )
+   {
+      PHB_ITEM pText = hb_param(1, IT_STRING);
+      if( pText )
+      {
+         BOOL bAnySpace = (hb_pcount() > 1? hb_parl(2): 0);
+         hb_retclen(pText->value.szText, hb_strRTrimLen(pText->value.szText, pText->wLength, bAnySpace));
+      }
+      else
+      {
+         hb_errorRT_BASE(EG_ARG, 1100, "Argument error", "TRIM");
+      }
+   }
+   else
+   {
+      /* QUESTION: Clipper catches this at compile time! */
+      hb_errorRT_BASE(EG_ARG, 1100, "Incorrect number of arguments", "TRIM");
+   }
 }
 
 /* trims leading and trailing spaces from a string */
@@ -470,19 +484,13 @@ HARBOUR HB_AT( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: AT");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1108, "Argument error", "AT");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: AT");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1108, "Incorrect number of arguments", "AT");
    }
 }
 
@@ -535,19 +543,13 @@ HARBOUR HB_CHR( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: CHR");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1104, "Argument error", "CHR");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: CHR");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1104, "Incorrect number of arguments", "CHR");
    }
 }
 
@@ -567,19 +569,13 @@ HARBOUR HB_ASC(void)
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: ASC");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1107, "Argument error", "ASC");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: ASC");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1107, "Incorrect number of arguments", "ASC");
    }
 }
 
@@ -608,27 +604,18 @@ HARBOUR HB_LEFT( void )
          }
          else
          {
-            PHB_ITEM pError = hb_errNew();
-            hb_errPutDescription(pError, "Argument error: LEFT");
-            hb_errLaunch(pError);
-            hb_errRelease(pError);
+            hb_errorRT_BASE(EG_ARG, 1124, "Argument error", "LEFT");
          }
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: LEFT");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1124, "Argument error", "LEFT");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: LEFT");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1124, "Incorrect number of arguments", "LEFT");
    }
 }
 
@@ -657,27 +644,20 @@ HARBOUR HB_RIGHT( void )
          }
          else
          {
-            PHB_ITEM pError = hb_errNew();
-            hb_errPutDescription(pError, "Argument error: RIGHT");
-            hb_errLaunch(pError);
-            hb_errRelease(pError);
+            /* Clipper doesn't error */
+            hb_retc("");
          }
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: RIGHT");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         /* Clipper doesn't error */
+         hb_retc("");
       }
    }
    else
    {
-      /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: RIGHT");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      /* Clipper doesn't error */
+      hb_retc("");
    }
 }
 
@@ -729,19 +709,13 @@ HARBOUR HB_SUBSTR( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: SUBSTR");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1110, "Argument error", "SUBSTR");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: SUBSTR");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1110, "Incorrect number of arguments", "SUBSTR");
    }
 }
 
@@ -769,19 +743,13 @@ HARBOUR HB_LOWER( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: LOWER");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1103, "Argument error", "LOWER");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: LOWER");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1103, "Incorrect number of arguments", "LOWER");
    }
 }
 
@@ -809,19 +777,13 @@ HARBOUR HB_UPPER( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: LOWER");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1102, "Argument error", "UPPER");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: LOWER");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1102, "Incorrect number of arguments", "UPPER");
    }
 }
 
@@ -851,6 +813,10 @@ HARBOUR HB_REPLICATE( void )
                memcpy(szPtr, szText, lLen);
                szPtr += lLen;
             }
+
+            /* TODO: Check for string overflow */
+            /* hb_errorRT_BASE(EG_ARG, 1234, "String overflow", "REPLICATE"); */
+
             hb_retclen(szResult, lLen * lTimes);
             hb_xfree(szResult);
          }
@@ -859,19 +825,13 @@ HARBOUR HB_REPLICATE( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: REPLICATE");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1106, "Argument error", "REPLICATE");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: REPLICATE");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1106, "Incorrect number of arguments", "REPLICATE");
    }
 }
 
@@ -891,6 +851,9 @@ HARBOUR HB_SPACE( void )
          {
             char *szResult = (char *)hb_xgrab(lLen + 1);
 
+            /* TODO: Check for string overflow */
+            /* hb_errorRT_BASE(EG_ARG, 1233, "String overflow", "SPACE"); */
+
             memset(szResult, ' ', lLen);
             hb_retclen(szResult, lLen);
             hb_xfree(szResult);
@@ -900,19 +863,13 @@ HARBOUR HB_SPACE( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: SPACE");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1105, "Argument error", "SPACE");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: SPACE");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1105, "Incorrect number of arguments", "SPACE");
    }
 }
 
@@ -1138,19 +1095,13 @@ HARBOUR HB_VAL( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: VAL");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1098, "Argument error", "VAL");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: VAL");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1098, "Incorrect number of arguments", "VAL");
    }
 }
 
@@ -1313,18 +1264,12 @@ HARBOUR HB_STR( void )
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-         hb_errPutDescription(pError, "Argument error: STR");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
+         hb_errorRT_BASE(EG_ARG, 1099, "Argument error", "STR");
       }
    }
    else
    {
       /* QUESTION: Clipper catches this at compile time! */
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription(pError, "Incorrect number of arguments: STR");
-      hb_errLaunch(pError);
-      hb_errRelease(pError);
+      hb_errorRT_BASE(EG_ARG, 1099, "Incorrect number of arguments", "STR");
    }
 }

@@ -263,12 +263,5 @@ HARBOUR HB___RUN( void )
    {
       system( hb_parc( 1 ) );
    }
-   else
-   {
-      PHB_ITEM pError = hb_errNew();
-      hb_errPutDescription( pError, "RUN: Incorrect number of arguments" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
-   }
 #endif
 }

@@ -158,6 +158,7 @@ static int open_handle (char * file_name, BOOL bMode, char * def_ext)
                   S_IWRITE );
    if (handle < 0)
    {
+      /* TOFIX: Make this error message Clipper compatible */
       char error_message [32];
       PHB_ITEM pError = hb_errNew();
       sprintf( error_message, "create error %d: SET", errno );
@@ -549,7 +550,17 @@ HARBOUR HB_SET (void)
          break;
       case HB_SET_DECIMALS   :
          hb_retni (hb_set.HB_SET_DECIMALS);
-         if (args > 1) hb_set.HB_SET_DECIMALS = set_number (pArg2, hb_set.HB_SET_DECIMALS);
+         if (args > 1)
+         {
+            if (set_number (pArg2, hb_set.HB_SET_DECIMALS) < 0)
+            {
+               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+            }
+            else
+            {
+               hb_set.HB_SET_DECIMALS = set_number (pArg2, hb_set.HB_SET_DECIMALS);
+            }
+         }
          break;
       case HB_SET_DEFAULT    :
          if (hb_set.HB_SET_DEFAULT) hb_retc (hb_set.HB_SET_DEFAULT);
@@ -583,7 +594,17 @@ HARBOUR HB_SET (void)
          break;
       case HB_SET_EPOCH      :
          hb_retni (hb_set.HB_SET_EPOCH);
-         if (args > 1) hb_set.HB_SET_EPOCH = set_number (pArg2, hb_set.HB_SET_EPOCH);
+         if (args > 1)
+         {
+            if (set_number (pArg2, hb_set.HB_SET_EPOCH) < 0)
+            {
+               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+            }
+            else
+            {
+               hb_set.HB_SET_EPOCH = set_number (pArg2, hb_set.HB_SET_EPOCH);
+            }
+         }
          break;
       case HB_SET_ESCAPE     :
          hb_retl (hb_set.HB_SET_ESCAPE);
@@ -628,7 +649,17 @@ HARBOUR HB_SET (void)
          break;
       case HB_SET_MARGIN     :
          hb_retni (hb_set.HB_SET_MARGIN);
-         if (args > 1) hb_set.HB_SET_MARGIN = set_number (pArg2, hb_set.HB_SET_MARGIN);
+         if (args > 1)
+         {
+            if (set_number (pArg2, hb_set.HB_SET_MARGIN) < 0)
+            {
+               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+            }
+            else
+            {
+               hb_set.HB_SET_MARGIN = set_number (pArg2, hb_set.HB_SET_MARGIN);
+            }
+         }
          break;
       case HB_SET_MCENTER    :
          hb_retl (hb_set.HB_SET_MCENTER);
@@ -636,7 +667,17 @@ HARBOUR HB_SET (void)
          break;
       case HB_SET_MESSAGE    :
          hb_retni (hb_set.HB_SET_MESSAGE);
-         if (args > 1) hb_set.HB_SET_MESSAGE = set_number (pArg2, hb_set.HB_SET_MESSAGE);
+         if (args > 1)
+         {
+            if (set_number (pArg2, hb_set.HB_SET_MESSAGE) < 0)
+            {
+               hb_errorRT_BASE(EG_ARG, 2020, "Argument error", "SET");
+            }
+            else
+            {
+               hb_set.HB_SET_MESSAGE = set_number (pArg2, hb_set.HB_SET_MESSAGE);
+            }
+         }
          break;
       case HB_SET_PATH       :
          if (hb_set.HB_SET_PATH) hb_retc (hb_set.HB_SET_PATH);

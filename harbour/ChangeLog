@@ -1,4 +1,14 @@
 19990627-16:30 CET Victor Szel <info@szelvesz.hu>
+ * source/rtl/strings.c
+   source/rtl/set.c (added four Clipper errors)
+   source/rtl/math.c
+   source/rtl/environ.c
+   source/rtl/transfrm.c
+   source/rtl/dates.c
+   source/rtl/arrays.c (partially)
+   + Using error launcher wrapper
+   + Made launched errors Clipper compatible.
+   ! Some incompatibilities fixed in error handling (RTRIM, TRIM, ...)
  * source/rtl/errorsys.prg
    + Builds error message text like Clipper.
  * source/rtl/copyfile.c

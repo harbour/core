@@ -625,23 +625,13 @@ HARBOUR HB_TRANSFORM( void )
             }
             default:
             {
-               PHB_ITEM pError = hb_errNew();
-
-               hb_errPutDescription(pError, "Argument error: TRANSFORM");
-               hb_errLaunch(pError);
-               hb_errRelease(pError);
-               hb_retc("");
+               hb_errorRT_BASE(EG_ARG, 1122, "Argument error", "TRANSFORM");
             }
          }
       }
       else
       {
-         PHB_ITEM pError = hb_errNew();
-
-         hb_errPutDescription(pError, "Argument error: TRANSFORM");
-         hb_errLaunch(pError);
-         hb_errRelease(pError);
-         hb_retc("");
+         hb_errorRT_BASE(EG_ARG, 1122, "Argument error", "TRANSFORM");
       }
    }
    else                                         /* No picture supplied      */
@@ -688,12 +678,7 @@ HARBOUR HB_TRANSFORM( void )
          }
          default:
          {
-           PHB_ITEM pError = hb_errNew();
-
-           hb_errPutDescription(pError, "Argument error: TRANSFORM");
-           hb_errLaunch(pError);
-           hb_errRelease(pError);
-           hb_retc("");
+           hb_errorRT_BASE(EG_ARG, 1122, "Argument error", "TRANSFORM");
          }
       }
    }
