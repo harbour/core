@@ -3942,6 +3942,9 @@ void hb_vmPushDouble( double dNumber, int iDec )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDouble(%lf, %d)", dNumber, iDec));
 
+   if( dNumber == -0.0 )
+      dNumber = 0.0;
+
    pStackTopItem->type = HB_IT_DOUBLE;
    pStackTopItem->item.asDouble.value = dNumber;
    pStackTopItem->item.asDouble.length = ( dNumber >= 10000000000.0 || dNumber <= -1000000000.0 ) ? 20 : 10;
@@ -3970,6 +3973,9 @@ static void hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec )
    PHB_ITEM pStackTopItem = hb_stackTopItem();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushDoubleConst(%lf, %d, %d)", dNumber, iWidth, iDec));
+
+   if( dNumber == -0.0 )
+      dNumber = 0.0;
 
    pStackTopItem->type = HB_IT_DOUBLE;
    pStackTopItem->item.asDouble.value = dNumber;
