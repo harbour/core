@@ -1,3 +1,9 @@
+2000-02-01 20:40 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * bin/bld_tpl.bat
+   * bin/bld_tpl.cmd
+     + Added '-o%1.exe' command line option for w32/gcc and w32/mingw32.
+
 20000201-13:00 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.c

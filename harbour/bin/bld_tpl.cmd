@@ -87,8 +87,8 @@ rem set HB_COMPILER=
 
    if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -lmacro -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "mingw32" gcc %1.c -mno-cygwin -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -lmacro -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -lmacro -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe -mno-cygwin -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -lmacro -ldbfntx -ldbfcdx -lcommon
    if "%HB_COMPILER%" == "msvc"    cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -DHARBOUR_USE_WIN_GTAPI -I..\include %1.c /link /subsystem:CONSOLE ..\lib\harbour.lib ..\lib\terminal.lib ..\lib\macro.lib ..\lib\hbtools.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\debug.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
    goto END
