@@ -152,6 +152,7 @@ HARBOUR HB_DIRECTORY( void )
    char   ttime[9];
    char   aatrib[8];
    int    attrib;
+   long   fsize;
    time_t ftime;
    char * pos;
 
@@ -301,7 +302,8 @@ HARBOUR HB_DIRECTORY( void )
          {
 /* This might be a problem under Novell when the file is a directory */
 /* needs test */
-            sprintf(filesize, "%ld", statbuf.st_size);
+            fsize = statbuf.st_size;
+            sprintf(filesize, "%ld", fsize);
 
             ftime = statbuf.st_mtime;
             ft = localtime(&ftime);
@@ -337,7 +339,11 @@ HARBOUR HB_DIRECTORY( void )
 	 if( S_ISSOCK(statbuf.st_mode) )
 	   strcat( aatrib, "K" );
 #else
+      #ifdef _MSC_VER
          attrib = entry.attrib;
+      #else
+         attrib = _chmod(fullfile,0);
+      #endif
          if (attrib & FA_ARCH)
             strcat(aatrib,"A");
          if (attrib & FA_DIREC)

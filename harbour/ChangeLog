@@ -1,3 +1,11 @@
+19990727-12:35 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/dir.c
+    ! Corrected two errors that the MSC changes introduced for non-MSC
+      non-Unix compilers: 1) The intermediate long variable fsize is now
+      back in place; 2) The use of 'attrib = entry.attrib;' is now #ifdefed
+      for MSC and the use of 'attrib = _chmod(fullfile,0);' is restored for
+      non-MSC non-Unix compilers.
+
 19990727-13:45 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/classes.ch
      + added support for multiple classes definition on the same PRG
