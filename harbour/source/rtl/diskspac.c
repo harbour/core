@@ -37,17 +37,15 @@
          return a (long) value, Harbour may return a (double) for large
          values, the decimal places are always set to zero, though. */
 
+/* NOTE: For OS/2. Must be ahead of any and all #include statements */
+#define INCL_BASE
+#define INCL_DOSERRORS
+
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-
-#if defined(HB_OS_OS2)
-   #define INCL_BASE
-   #define INCL_DOSERRORS
-   #include <os2.h>
-#endif
 
 /* NOTE: The second parameter is a Harbour extension, check fileio.ch for
          the possible values. */

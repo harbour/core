@@ -80,14 +80,14 @@
  *
  */
 
-#if defined(__IBMCPP__)
-   #define INCL_DOSFILEMGR
-   #define INCL_DOSERRORS
-#endif
+/* NOTE: For OS/2. Must be ahead of any and all #include statements */
+#define INCL_DOSFILEMGR
+#define INCL_DOSERRORS
 
 #define HB_OS_WIN_32_USED
 
 #include <ctype.h>
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "directry.ch"
@@ -137,7 +137,7 @@
    #endif
 #endif
 
-#if defined(__IBMCPP__)
+#if defined(HB_OS_OS2)
    #include <sys/stat.h>
    #include <time.h>
 
@@ -231,20 +231,18 @@ static USHORT osToHarbourMask( USHORT usMask )
       usRetMask |= FA_TEMPORARY;   /* F  (T) */
    if( S_ISSOCK( usMask ) )
       usRetMask |= FA_SPARSE;      /* K  (P) */
-#else
-   #if defined(__IBMCPP__)
-      usRetMask = 0;
-      if( usMask & FILE_ARCHIVED )
-         usRetMask |= FA_ARCH;
-      if( usMask & FILE_DIRECTORY )
-         usRetMask |= FA_DIREC;
-      if( usMask & FILE_HIDDEN )
-         usRetMask |= FA_HIDDEN;
-      if( usMask & FILE_READONLY )
-         usRetMask |= FA_RDONLY;
-      if( usMask & FILE_SYSTEM )
-         usRetMask |= FA_SYSTEM;
-   #endif
+#elif defined(HB_OS_OS2)
+   usRetMask = 0;
+   if( usMask & FILE_ARCHIVED )
+      usRetMask |= FA_ARCH;
+   if( usMask & FILE_DIRECTORY )
+      usRetMask |= FA_DIREC;
+   if( usMask & FILE_HIDDEN )
+      usRetMask |= FA_HIDDEN;
+   if( usMask & FILE_READONLY )
+      usRetMask |= FA_RDONLY;
+   if( usMask & FILE_SYSTEM )
+      usRetMask |= FA_SYSTEM;
 #endif
 
    return usRetMask;
@@ -378,7 +376,7 @@ HB_FUNC( DIRECTORY )
 #elif defined(_MSC_VER)
    struct _find_t entry;
    long hFile;
-#elif defined(__IBMCPP__)
+#elif defined(HB_OS_OS2)
    FILEFINDBUF3 entry;
    HDIR         hFind = HDIR_CREATE;
    ULONG        fileTypes = FILE_ARCHIVED | FILE_DIRECTORY | FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY;
@@ -509,7 +507,7 @@ HB_FUNC( DIRECTORY )
       do
       {
          strcpy( string, entry.name );
-#elif defined(__IBMCPP__)
+#elif defined(HB_OS_OS2)
 
    strcpy( string, dirname );
    strcat( string, pattern );
@@ -601,7 +599,7 @@ HB_FUNC( DIRECTORY )
 #elif defined(_MSC_VER)
          strcpy( filename, entry.name );
          strcpy( fullfile, dirname );
-#elif defined(__IBMCPP__)
+#elif defined(HB_OS_OS2)
          strcpy( filename, entry.achName );
          strcpy( fullfile, dirname );
 #else
@@ -619,7 +617,7 @@ HB_FUNC( DIRECTORY )
             #if defined(OS_UNIX_COMPATIBLE)
                /* GNU C on Linux or on other UNIX */
                attrib = statbuf.st_mode;
-            #elif defined(__IBMCPP__)
+            #elif defined(HB_OS_OS2)
                attrib = entry.attrFile;
             #elif defined(__MINGW32__) || defined(_MSC_VER)
                attrib = entry.attrib;
@@ -704,14 +702,14 @@ HB_FUNC( DIRECTORY )
    _findclose( hFile );
 #elif defined(_MSC_VER )
    while( _dos_findnext( &entry ) == 0 );
-#elif defined(__IBMCPP__)
+#elif defined(HB_OS_OS2)
    while( DosFindNext( hFind, &entry, findSize, &findCount ) == NO_ERROR && findCount > 0 );
    DosFindClose( hFind );
 #else
    closedir( dir );
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__IBMCPP__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(HB_OS_OS2)
    }
 #endif
 

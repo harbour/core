@@ -52,13 +52,8 @@
  *
  */
 
-/* NOTE: The following #ifdef block for __IBMCPP__ must
-         be ahead of any and all #include statements!
-*/
-
-#if defined(__IBMCPP__) || defined(HARBOUR_GCC_OS2)
-   #define INCL_DOSMISC
-#endif
+/* NOTE: For OS/2. Must be ahead of any and all #include statements */
+#define INCL_DOSMISC
 
 #define HB_OS_WIN_32_USED
 

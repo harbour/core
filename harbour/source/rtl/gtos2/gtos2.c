@@ -54,12 +54,13 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-
 #define INCL_BASE
 #define INCL_VIO
 #define INCL_DOSPROCESS
 #define INCL_NOPMAPI
-#include <os2.h>
+
+#include "hbapigt.h"
+#include "inkey.ch"
 
 /* convert 16:16 address to 0:32 */
 #define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
@@ -69,14 +70,9 @@
    OS/2 GCC hasn't got ToolKit headers available */
    #include <stdlib.h>
 #else
-   #include <os2.h>
    #include <bsedos.h>
 #endif
 #include <conio.h>
-
-#include "hbapigt.h"
-#include "inkey.ch"
-
 
 static char hb_gt_GetCellSize( void );
 static char * hb_gt_ScreenPtr( USHORT cRow, USHORT cCol );

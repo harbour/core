@@ -1,3 +1,31 @@
+20000411-02:32 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * source/common/hbver.h
+   * source/rtl/gtapi.c
+   * source/rtl/inkey.c
+   * source/rtl/dir.c
+   * source/rtl/diskspac.c
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtos2/mouseos2.c
+     ! Fixed usage of HARBOUR_OS2_GCC before definition.
+     ! Now the INCL_* macros for OS/2 are always defined regardless of the
+       target platform, since at that point we don't know yet what is the
+       target platform. This may fix OS/2 GCC in some places. The only downside
+       in theory is that INCL_* may collide with some non-OS/2 defines.
+       Note that __IBMCPP__ != OS/2, it also has a Win32 version, and 
+       __EMX__&!__RSXNT__ *is* OS/2.
+     * Some minor cleanups.
+     ! Fixed DIRECTORY() for OS/2 GCC and IBMCPP for Win32. Not tested.
+     - Removed explicit declaration for DosSleep().
+     - Some superfluous #include <os2.h> statements removed from GTOS2.
+
+       !! WARNING !! Please check IBMCPP/OS2 and GCC/OS2. I could not test
+       any of these.
+
+   * source/rtl/run.c
+     ! Minor format.
+
 20000410-20:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
    *utils/hbdoc/hrb.rsp
     utils/hbdoc/hrbtools.rsp

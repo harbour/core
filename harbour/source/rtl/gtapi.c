@@ -57,7 +57,7 @@
 
 #if defined(__GNUC__) && ! defined(__MINGW32__)
    #include <unistd.h>
-   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HARBOUR_GCC_OS2)
+   #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(__EMX__)
       #include <io.h>
    #endif
 #else

@@ -44,14 +44,9 @@
  *
  */
 
-/* Note: The following #ifdef block for __IBMCPP__ must be ahead
-         of any and all #include statements and requires that
-         Harbour includes are ahead of platform includes.
-*/
-#if defined(__IBMCPP__)
-   #define INCL_DOSPROCESS
-   #define INCL_NOPMAPI
-#endif
+/* NOTE: For OS/2. Must be ahead of any and all #include statements */
+#define INCL_DOSPROCESS
+#define INCL_NOPMAPI
 
 #include "hbapi.h"
 #include "hbapierr.h"
@@ -62,10 +57,6 @@
 #include "inkey.ch"
 
 #include <time.h>
-
-#if defined(HARBOUR_GCC_OS2)
-   ULONG DosSleep( ULONG ulMilliseconds );
-#endif
 
 static int *  s_inkeyBuffer = 0; /* Harbour keyboard buffer (empty if head == tail)     */
 static int    s_inkeyHead;       /* Harbour keyboard buffer head pointer (next insert)  */

@@ -38,7 +38,7 @@
 
 HB_FUNC( __RUN )
 {
-#if defined(__TURBOC__) || defined(__BORLANDC__)  || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
+#if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__IBMCPP__) || defined(__GNUC__)
    if( ISCHAR( 1 ) )
       system( hb_parc( 1 ) );
 #else

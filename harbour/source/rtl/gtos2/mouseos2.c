@@ -37,7 +37,6 @@
 #define INCL_VIO             /* needed only for VioGetMode/VIOMODEINFO    */
 #define INCL_NOPMAPI         /* exclude Presentation Manager Include File */
 
-#include <os2.h>
 #include "hbapigt.h"
 
 static HMOU s_uMouHandle;                   /* mouse logical handle */
