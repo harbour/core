@@ -51,6 +51,7 @@ static USHORT s_uiMaxCol;
 static USHORT s_uiCursorStyle;
 static BOOL   s_bBlink;
 static int    s_iFilenoStdout;
+static USHORT s_uiDispBegin;
 
 void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 {
@@ -58,6 +59,8 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    HB_SYMBOL_UNUSED( iFilenoStdin );
    HB_SYMBOL_UNUSED( iFilenoStderr );
+
+   s_uiDispBegin = 0;
 
    s_iRow = 0;
    s_iCol = 0;
@@ -304,14 +307,16 @@ void hb_gt_DispBegin( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispBegin()"));
 
-   ; /* Do nothing */
+   ++s_uiDispCount;
+   ; /* Do nothing else */
 }
 
 void hb_gt_DispEnd()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_DispEnd()"));
 
-   ; /* Do nothing */
+   --s_uiDispCount;
+   ; /* Do nothing else */
 }
 
 BOOL hb_gt_SetMode( USHORT uiMaxRow, USHORT uiMaxCol )
@@ -472,4 +477,9 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 char * hb_gt_Version( void )
 {
    return "Harbour Terminal: Standard stream console";
+}
+
+USHORT hb_gt_DispCount()
+{
+   return s_uiDispCount;
 }

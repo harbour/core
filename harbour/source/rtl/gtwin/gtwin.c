@@ -94,6 +94,8 @@ static HANDLE s_HInput;
 static BOOL   s_bOldCursor;
 static BOOL   s_bBreak;
 
+static USHORT s_uiDispCount;
+
 #define INPUT_BUFFER_LEN 128
 
 static DWORD        s_cNumRead;   /* Ok to use DWORD here, because this is specific... */
@@ -143,6 +145,7 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
 
    s_cNumRead = 0;
    s_cNumIndex = 0;
+   s_uiDispCount = 0;
 
    s_bOldCursor = TRUE;
    s_bBreak = FALSE;
@@ -214,9 +217,8 @@ void hb_gt_Done( void )
        */
       /* easy fix ;-) */
 
-      /* TOFIX: Violation of API calling rules! */
-      hb_gtDispBegin();  /* must use these versions ! */
-      hb_gtDispEnd();
+      hb_gt_DispBegin();
+      hb_gt_DispEnd();
    }
 /* NOTE: There's no need to close these explicitly, moreover if we close them
          functions using stdout will not show anything.
@@ -941,8 +943,7 @@ void hb_gt_DispBegin( void )
 
 /* ptucker */
 
-   /* TOFIX: Violation of API calling rules! */
-   if( hb_gtDispCount() == 1 )
+   if( ++s_uiDispCount == 1 )
    {
       COORD coDest = { 0, 0 };
       COORD coBuf;                    /* the size of the buffer to read into */
@@ -992,8 +993,7 @@ void hb_gt_DispEnd( void )
 
 /* ptucker */
 
-   /* TOFIX: Violation of API calling rules! */
-   if( hb_gtDispCount() == 1 )
+   if( --s_uiDispCount == 0 )
    {
       s_HInactive = s_HActive;
       s_HActive = s_HOutput;
@@ -1132,9 +1132,8 @@ static void hb_gt_DebugScreen( BOOL bActivate )
       s_HOsave = s_HOutput;
       s_HOutput = s_HActive = s_HDOutput;
 
-      /* TOFIX: Violation of API calling rules! */
-      hb_gtDispBegin();
-      hb_gtDispEnd();
+      hb_gt_DispBegin();
+      hb_gt_DispEnd();
    }
    else
    {
@@ -1164,4 +1163,9 @@ void hb_gt_Tone( double dFrequency, double dDuration )
 char * hb_gt_Version( void )
 {
    return "Harbour Terminal: Win32 console";
+}
+
+USHORT hb_gt_DispCount()
+{
+   return s_uiDispCount;
 }

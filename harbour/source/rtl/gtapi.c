@@ -71,7 +71,6 @@
 
 static SHORT  s_iCurrentRow;
 static SHORT  s_iCurrentCol;
-static USHORT s_uiDispCount;
 static USHORT s_uiPreCount;
 static USHORT s_uiPreCNest;
 static USHORT s_uiColorIndex;
@@ -103,7 +102,6 @@ void hb_gtInit( int s_iFilenoStdin, int s_iFilenoStdout, int s_iFilenoStderr )
 
    s_iCurrentRow = hb_gt_Row();
    s_iCurrentCol = hb_gt_Col();
-   s_uiDispCount = 0;
    s_uiPreCount = 0;
    s_uiPreCNest = 0;
    s_uiColorIndex = 0;
@@ -120,8 +118,8 @@ void hb_gtExit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtExit()"));
 
-   while( s_uiDispCount )
-      hb_gtDispEnd();
+   while( hb_gt_DispCount() )
+      hb_gt_DispEnd();
 
    hb_gt_Done();
    hb_xfree( s_Color );
@@ -288,10 +286,7 @@ USHORT hb_gtDispBegin( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtDispBegin()"));
 
    if( s_uiPreCount == 0 )
-   {
-      ++s_uiDispCount;
       hb_gt_DispBegin();
-   }
    else
       ++s_uiPreCount;
 
@@ -302,7 +297,7 @@ USHORT hb_gtDispCount( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtDispCount()"));
 
-   return s_uiDispCount;
+   return hb_gt_DispCount();
 }
 
 USHORT hb_gtDispEnd( void )
@@ -310,10 +305,7 @@ USHORT hb_gtDispEnd( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtDispEnd()"));
 
    if( s_uiPreCount == 0 )
-   {
       hb_gt_DispEnd();
-      --s_uiDispCount;
-   }
    else
       --s_uiPreCount;
 
@@ -332,13 +324,10 @@ USHORT hb_gtPreExt( void )
       {
          USHORT uidc;
 
-         uidc = s_uiPreCount = s_uiDispCount;
+         uidc = s_uiPreCount = hb_gt_DispCount();
 
          while( uidc-- )
-         {
             hb_gt_DispEnd();
-            --s_uiDispCount;
-         }
       }
       s_uiPreCNest = 1;
    }
@@ -358,10 +347,8 @@ USHORT hb_gtPostExt( void )
       USHORT uidc = s_uiPreCount;
 
       while( uidc-- )
-      {
-         ++s_uiDispCount;
          hb_gt_DispBegin();
-      }
+
       s_uiPreCount = 0;
       s_uiPreCNest = 0;
    }
