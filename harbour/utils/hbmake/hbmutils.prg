@@ -31,8 +31,9 @@ Function GetSourceFiles( lSubdir )
      Local cdrive
      Local nPos
      Local xItem
+     local ccc,ddd
      Default lSubdir To .t.
-     
+
 
      While ++ nCounter <= Len( aStru )
        If !Empty( adirs := GetDirs( astru[ nCounter ] ) )   // There are elements!
@@ -45,10 +46,12 @@ Function GetSourceFiles( lSubdir )
      nArrayLen := Len( aStru )
 
      For nCounter := 1 To nArrayLen
-
-        If Len( aData := Directory( aStru[ nCounter ] + "*.*" ) ) != 0
-
+         
+             
+        If Len( aData := DIR_MULTI(aStru[ nCounter ]+"*.prg |"+aStru[ nCounter ]+"*.c") ) != 0
+           
            nDataLen := Len( aData )
+           
            For y := 1 To nDataLen
               If At( '.PRG', Upper( adata[ y, 1 ] ) ) > 0 .or. At( '.C', Upper( adata[ y, 1 ] ) ) > 0
                  If lSubdir
@@ -57,7 +60,7 @@ Function GetSourceFiles( lSubdir )
                           Dtoc( aData[ y, 3 ] ) + '  ' + ;
                           aData[ y, 4 ] )
                  Elseif !lsubdir .and. At( If( lLinux, "/", "\" ), Strtran( astru[ nCounter ], cDir, '' ) ) == 0
-                    Aadd( aRet, Pad( aData[ y, 1 ], 13 ) + ;
+                    Aadd( aRet, Pad( aData[ y, 1 ], 18 ) + ;
                           Str( aData[ y, 2 ], 8 ) + '  ' + ;
                           Dtoc( aData[ y, 3 ] ) + '  ' + ;
                           aData[ y, 4 ] )
@@ -66,7 +69,7 @@ Function GetSourceFiles( lSubdir )
            Next
         Endif
      Next
-     
+
      For nCounter := 1 To Len( aret )
 
         xItem := Substr( aret[ nCounter ], Rat( If( llinux, "/", '\' ), aret[ nCounter ] ) + 1 )
@@ -117,6 +120,7 @@ Static Function GetDirs( cPattern )
 
      Local aDir   := {}
      Local lLinux := At( 'linux', lower(Os()) ) > 0
+     
      Aeval( Directory( cPattern + "*.", "D" ), ;
             { | xItem | If( xItem[ 5 ] = "D" .and. ;
             ( xItem[ 1 ] != "." .and. xItem[ 1 ] != ".." ), ;
@@ -363,3 +367,26 @@ Function Getlibs( lgcc ,cDir)
 Return aLibsDesc
 
 *+ EOF: HBMUTILS.PRG
+FUNCTION DIR_MULTI( cFileMaskList, cAttr )
+   LOCAL aList := ListasArray2( cFileMaskList, "|" )
+   AEval( aList, {|tmp, tmp1| aList[ tmp1 ] := DIRECTORY( tmp, cAttr ) })
+   RETURN ArrayAJoin(alist)
+FUNCTION ArrayAJoin( array )
+     LOCAL tmp
+     LOCAL nLenArray := Len( array )
+     LOCAL nLen
+     LOCAL nPos := Len( array[ 1 ] ) + 1
+
+     nLen := 0
+     FOR tmp := 1 TO nLenArray
+          nLen += Len( array[ tmp ] )
+     NEXT
+
+     ASize( array[ 1 ], nLen )
+
+     FOR tmp := 2 TO nLenArray
+          ACopy( array[ tmp ], array[ 1 ], , , nPos )
+          nPos += Len( array[ tmp ] )
+     NEXT
+
+     RETURN array[ 1 ]

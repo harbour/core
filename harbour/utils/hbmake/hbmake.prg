@@ -65,17 +65,17 @@
 #include "hbclip.ch"
 #endif
 #xtranslate timetosec(<x>) => ((val(substr(<x>,1,2))*3600)+(val(substr(<x>,4,2))*60)+(val(substr(<x>,7,2))))
-DECLARE TestforPrg(cFile as String)
+/*DECLARE TestforPrg(cFile as String)
 DECLARE findHarbourcfg(@cCfg AS STRING) AS LOGICAL
 declare listasArray2( cString as String , cSep as String ) as Array
-DECLARE GetGccDir() as String
+DECLARE GetGccDir() as String*/
 #ifdef __HARBOUR__
 #define datediff(<x>,<y>) (<x>-<y>)
 #else
 #translate datediff(<x>,<y>) => (<x>-<y>)
 #endif
-Static lPrint    AS LOGICAL  := .f.
-Static nHandle  AS NUMERIC
+Static lPrint      := .f.
+Static nHandle  
 Static aDefines    := {}
 Static aBuildOrder := {}
 Static aCommands   := {}
@@ -260,6 +260,13 @@ While !leof
   Endif
 
   cTemp := Trim( Substr( ReadLN( @lEof ), 1 ) )
+  if at("//",ctemp)>0
+   while at("//",ctemp)>0
+     ctemp:=strtran(ctemp," //","")
+     cTemp += Trim( Substr( ReadLN( @lEof ), 1 ) )
+   enddo
+   ctemp:=strtran(ctemp," //","")
+  endif
 
   aTemp := listasArray2( Alltrim( cTemp ), "=" )
   If lmacrosec
@@ -938,7 +945,7 @@ local lExternalLib:=.f.
 Local cOldLib:=""
 Local cHtmlLib:=""
 local lLinux:=at('linux',lower(os()))>0
-
+local nWriteFiles:=0
 nLinkHandle := Fcreate( cFile )
 WriteMakeFileHeader()
 
@@ -1248,15 +1255,17 @@ else
 
       Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
    else
-   aeval(aobjs,{|x,i| if((i<> Len( aobjs ) .and. x<>cTopfile), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " + alltrim( x ) +" $(OB) "+ CRLF ))})
+   aeval(aobjs,{|x,i| nWriteFiles++,if((i<> Len( aobjs ) .and. x<>cTopfile), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " + alltrim( x ) +" $(OB) "+ CRLF ))})
    endif
+   nWriteFiles:=0
    Fwrite( nLinkHandle, "PRGFILES ="  )
-
+                                                                                                                                      
    if len(aPrgs)<1
       Fwrite( nLinkHandle,  +" $(PS)"+ CRLF )
    else  
-   aeval(aPrgs,{|x,i| if(i<> Len( aPrgs ) , Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(PS) "+ CRLF ))})
+   aeval(aPrgs,{|x,i| nWriteFiles++,if(i<> Len( aPrgs ) , Fwrite( nLinkHandle, ' '+ alltrim( x )+if(nWriteFiles % 10==0," //"+CRLF,"") ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(PS) "+ CRLF ))})
    endif
+   nWriteFiles:=0
 Fwrite( nLinkHandle, "OBJCFILES =" )
 if len(aObjsc)<1
 
@@ -1264,9 +1273,10 @@ Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
 else
 
 //Fwrite( nLinkHandle, "OBJFILES =" + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".OBJ" ),Strtran( cTopfile, ".prg", ".obj" )))
-aeval(aObjsc,{|x,i| if(i<> Len( aobjsc ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
-endif
+aeval(aObjsc,{|x,i|nWriteFiles++, if(i<> Len( aobjsc ), Fwrite( nLinkHandle, ' '+ alltrim( x )+if(nWriteFiles % 10==0," //"+CRLF,"") ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
 
+endif
+nWriteFiles:=0
    Fwrite( nLinkHandle, "CFILES =" )
    if len(aCs)<1
    Fwrite( nLinkHandle,  +" $(CF)"+ CRLF )
@@ -1274,7 +1284,7 @@ endif
 else
 
 //Fwrite( nLinkHandle, "CFILES =" + if(isupper(cTopfile),Strtran( cTopfile, ".PRG", ".C" ),Strtran( cTopfile, ".prg", ".c" )))
-aeval(aCs,{|x,i| if(i<> Len( aCs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
+aeval(aCs,{|x,i|nWriteFiles++, if(i<> Len( aCs ), Fwrite( nLinkHandle, ' '+ alltrim( x )+if(nWriteFiles % 10==0," //"+CRLF,"") ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
 endif
 
 endif
@@ -1683,6 +1693,7 @@ Local cTest:=""
 local cLast:=''
 Local cUserdef:=space(40)
 Local cUserInclude:=space(40)
+local nWriteFiles:=0
 nLinkHandle := Fcreate( cFile )
 WriteMakeFileHeader()
 
@@ -1892,59 +1903,68 @@ else
     Fwrite( nLinkHandle, "PROJECT = " + alltrim(lower(cfwhpath))+".lib "+CRLF )
 
 endif
+
 if !lextended
-Fwrite( nLinkHandle, "OBJFILES =" )
+nWriteFiles:=0
+fwrite( nLinkHandle, "OBJFILES =" )
 if len(aObjs)<1
 
 Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
 else
-
-aeval(aObjs,{|x,i| if(i<> Len( aobjs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
+ nWriteFiles:=0
+aeval(aObjs,{|x,i| nWriteFiles++,if(i<> Len( aobjs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
+//aeval(aobjs,{|x,i| nWriteFiles++,if((i<> Len( aobjs ) .and. x<>cTopfile), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " + alltrim( x ) +" $(OB) "+ CRLF ))})
 endif
+nWriteFiles:=0
 Fwrite( nLinkHandle, "CFILES =" )
 if len(aCs)<1
 Fwrite( nLinkHandle,  +" $(CF)"+ CRLF )
 //
 else
 
-aeval(aCs,{|x,i| if(i<> Len( aCs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(CF) "+ CRLF ))})
+aeval(aCs,{|x,i| nWriteFiles++,if(i<> Len( aCs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(CF) "+ CRLF ))})
 endif
    Fwrite( nLinkHandle, "PRGFILE ="  )
-
+nWriteFiles:=0
    if len(aPrgs)<1
       Fwrite( nLinkHandle,  +" $(PS)"+ CRLF )
    else  
-      aeval(aPrgs,{|x,i| if(i<> Len( aPrgs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(PS) "+ CRLF ))})
+      aeval(aPrgs,{|x,i|nWriteFiles++, if(i<> Len( aPrgs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(PS) "+ CRLF ))})
    endif
 
 else /****extended moded ****/
    Fwrite( nLinkHandle, "OBJFILES ="    )
+nWriteFiles:=0
+
    if len(aObjs)<1
       Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
    else
-      aeval(aObjs,{|x,i| if(i<> Len( aobjs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
+      aeval(aObjs,{|x,i|nWriteFiles++, if(i<> Len( aobjs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
    endif
-   Fwrite( nLinkHandle, "PRGFILES ="  )
 
+   Fwrite( nLinkHandle, "PRGFILES ="  )
+nWriteFiles:=0
    if len(aPrgs)<1
       Fwrite( nLinkHandle,  +" $(PS)"+ CRLF )
    else  
-      aeval(aPrgs,{|x,i| if(i<> Len( aPrgs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(PS) "+ CRLF ))})
+      aeval(aPrgs,{|x,i|nWriteFiles++, if(i<> Len( aPrgs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(PS) "+ CRLF ))})
    endif
+nWriteFiles:=0
 if Len(aObjsc)>0
    Fwrite( nLinkHandle, "OBJCFILES =" )
    if len(aObjsc)<1
       Fwrite( nLinkHandle,  +" $(OB) "+ CRLF )
    else
-      aeval(aObjsc,{|x,i| if(i<> Len( aobjsc ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
+      aeval(aObjsc,{|x,i|nWriteFiles++, if(i<> Len( aobjsc ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
    endif
 endif
+nWriteFiles:=0
 if len(acs)>0
    Fwrite( nLinkHandle, "CFILES =" )
    if len(aCs)<1
       Fwrite( nLinkHandle,  +" $(CF)"+ CRLF )
    else
-      aeval(aCs,{|x,i| if(i<> Len( aCs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) ),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
+      aeval(aCs,{|x,i|nWriteFiles++, if(i<> Len( aCs ), Fwrite( nLinkHandle, ' '+ alltrim( x ) +if(nWriteFiles %10==0," //"+CRLF,"")),      Fwrite( nLinkHandle," " +  alltrim( x ) +" $(OB) "+ CRLF ))})
    endif
 endif
 endif
