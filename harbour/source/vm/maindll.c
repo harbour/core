@@ -36,7 +36,7 @@
 #include <windows.h>
 #include "ctoharb.h"
 
-int WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
+BOOL WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
                                   PVOID pvReserved )
 {
    HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %p, %d)", hInstance, fdwReason,
