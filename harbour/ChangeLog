@@ -1,3 +1,13 @@
+2000-03-23 20:45 GMT-5 David G. Holm <dholm@jsd-llc.com>
+
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/rddads.h
+     % Made changes for MingW32
+
+   * contrib/rdd_ads/Makefile
+     + Added a Makefile for the GNU Make System
+
 20000322-17:35 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/diskspac.c
      * min() -> HB_MIN

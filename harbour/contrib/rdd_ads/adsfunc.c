@@ -33,7 +33,8 @@
  *
  */
 
-#include "windows.h"
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbapiitm.h"

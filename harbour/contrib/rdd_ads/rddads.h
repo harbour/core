@@ -83,4 +83,4 @@ typedef struct _ADSAREA_
    ADSHANDLE hOrdCurrent;
 } ADSAREA;
 
-typedef ADSAREA far * ADSAREAP;
+typedef ADSAREA * ADSAREAP;

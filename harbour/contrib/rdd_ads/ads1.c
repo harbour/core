@@ -35,9 +35,9 @@
 
 #define SUPERTABLE ( &adsSuper )
 #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        10
+#define HB_OS_WIN_32_USED
 #define MAX_STR_LEN 255
 
-#include "windows.h"
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
@@ -47,8 +47,8 @@
 #include "hbapierr.h"
 #include "rddads.h"
 
-ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount );
-ERRCODE adsReadDBHeader( ADSAREAP pArea );
+static ERRCODE adsRecCount( ADSAREAP pArea, ULONG * pRecCount );
+static ERRCODE adsReadDBHeader( ADSAREAP pArea );
 
 HB_FUNC( _ADS );
 HB_FUNC( ADS_GETFUNCTABLE );
