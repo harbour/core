@@ -169,9 +169,10 @@ USHORT hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_ATTRIBUTE_NORMAL )    uiAttr |= HB_FA_NORMAL;
 
 #ifdef HB_EXTENSION
-   /* NOTE: Literals used since there are errors in certain versions
+   /* NOTE: Literals used since there are errors in early versions
       of MS header files which define extended FILE_ATTRIBUTE's */
-   if( raw_attr & 0x00000040 )                   uiAttr |= HB_FA_DEVICE;
+      Note that FILE_ATTRIBUTE_NORMAL is not needed */
+   if( raw_attr & 0x00000040 )                   uiAttr |= HB_FA_ENCRYPTED;
    if( raw_attr & FILE_ATTRIBUTE_TEMPORARY )     uiAttr |= HB_FA_TEMPORARY;
    if( raw_attr & FILE_ATTRIBUTE_SPARSE_FILE )   uiAttr |= HB_FA_SPARSE;
    if( raw_attr & FILE_ATTRIBUTE_REPARSE_POINT ) uiAttr |= HB_FA_REPARSE;
@@ -179,7 +180,7 @@ USHORT hb_fsAttrFromRaw( ULONG raw_attr )
    if( raw_attr & FILE_ATTRIBUTE_OFFLINE )       uiAttr |= HB_FA_OFFLINE;
    if( raw_attr & FILE_ATTRIBUTE_NOT_CONTENT_INDEXED )
                                                  uiAttr |= HB_FA_NOTINDEXED;
-   if( raw_attr & 0x00004000 )                   uiAttr |= HB_FA_ENCRYPTED;
+   if( raw_attr & 0x00004000 )                   uiAttr |= HB_FA_DEVICE;
    if( raw_attr & 0x00008000 )                   uiAttr |= HB_FA_VOLCOMP;
 #endif
 
@@ -241,16 +242,17 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
    if( uiAttr & HB_FA_NORMAL )    raw_attr |= FILE_ATTRIBUTE_NORMAL;
 
 #ifdef HB_EXTENSION
-   /* NOTE: Literals used since there are errors in certain versions
-      of MS header files which define extended FILE_ATTRIBUTE's */
-   if( uiAttr & HB_FA_DEVICE )     raw_attr |= 0x00000040;
+   /* NOTE: Literals used since there are errors in early versions
+      of MS header files which define extended FILE_ATTRIBUTE's.
+      Note that FILE_ATTRIBUTE_NORMAL is not needed */
+   if( uiAttr & HB_FA_ENCRYPTED )  raw_attr |= 0x00000040;
    if( uiAttr & HB_FA_TEMPORARY )  raw_attr |= FILE_ATTRIBUTE_TEMPORARY;
    if( uiAttr & HB_FA_SPARSE )     raw_attr |= FILE_ATTRIBUTE_SPARSE_FILE;
    if( uiAttr & HB_FA_REPARSE )    raw_attr |= FILE_ATTRIBUTE_REPARSE_POINT;
    if( uiAttr & HB_FA_COMPRESSED ) raw_attr |= FILE_ATTRIBUTE_COMPRESSED;
    if( uiAttr & HB_FA_OFFLINE )    raw_attr |= FILE_ATTRIBUTE_OFFLINE;
    if( uiAttr & HB_FA_NOTINDEXED ) raw_attr |= FILE_ATTRIBUTE_NOT_CONTENT_INDEXED;
-   if( uiAttr & HB_FA_ENCRYPTED )  raw_attr |= 0x00004000;
+   if( uiAttr & HB_FA_DEVICE )     raw_attr |= 0x00004000;
    if( uiAttr & HB_FA_VOLCOMP )    raw_attr |= 0x00008000;
 #endif
 
@@ -297,14 +299,14 @@ USHORT hb_fsAttrEncode( const char * szAttr )
          case 'D': uiAttr |= HB_FA_DIRECTORY;  break;
          case 'A': uiAttr |= HB_FA_ARCHIVE;    break;
 #ifdef HB_EXTENSION
-         case 'I': uiAttr |= HB_FA_DEVICE;     break;
+         case 'E': uiAttr |= HB_FA_ENCRYPTED;  break;
          case 'T': uiAttr |= HB_FA_TEMPORARY;  break;
          case 'P': uiAttr |= HB_FA_SPARSE;     break;
          case 'L': uiAttr |= HB_FA_REPARSE;    break;
          case 'C': uiAttr |= HB_FA_COMPRESSED; break;
          case 'O': uiAttr |= HB_FA_OFFLINE;    break;
          case 'X': uiAttr |= HB_FA_NOTINDEXED; break;
-         case 'E': uiAttr |= HB_FA_ENCRYPTED;  break;
+         case 'I': uiAttr |= HB_FA_DEVICE;     break;
          case 'M': uiAttr |= HB_FA_VOLCOMP;    break;
 #endif
       }

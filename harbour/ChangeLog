@@ -7,6 +7,17 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     + #ifdef __XHARBOUR__ to protect xHarbour fastitem reliance.
+
+2002-01-23 23:00 UTC+0100 Antonio Linares <alinares@fivetech.com>
+   * source/vm/hvm.c
+     + Added support for opcodes profiling
+     + New functions __OPCOUNT() and __OPGETPRF()
+       Syntax:
+          __OpCount() --> <nOpcodes>
+          __OpGetPrf( <nOpcode> ) --> { <nCalledTimes>, <nConsumedTime> }
+
+2002-01-23 09:40 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source\common\hbffind.c
     * Since I had used an undocumented 0x04000 as an attribute check.
     * it was causing trouble. Fixed.
