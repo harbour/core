@@ -1,6 +1,7 @@
 19991118-05:29 GMT+1 Victor Szel <info@szelvesz.hu>
-  - bin\buildexe*.bat
-  + bin\bld_tpl.*
+  - bin\buildexe*.*
+  + bin\bld_tpl.bat
+  + bin\bld_tpl.cmd
     * New style build batch file templates added instead of the long-named
       ones.
   * make_tpl.*
