@@ -407,7 +407,7 @@ long  HB_EXPORT hb_parnl( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GCC_
+#ifdef __GNUC__
          return ( long ) ( unsigned long ) pItem->item.asDouble.value;
 #else
          return ( long ) pItem->item.asDouble.value;
@@ -447,7 +447,7 @@ LONGLONG  HB_EXPORT hb_parnll( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#ifdef __GCC_
+#ifdef __GNUC__
          return ( LONGLONG ) ( ULONGLONG ) pItem->item.asDouble.value;
 #else
          return ( LONGLONG ) pItem->item.asDouble.value;
@@ -470,6 +470,45 @@ LONGLONG  HB_EXPORT hb_parnll( int iParam, ... )
    return 0;
 }
 #endif
+
+LONGLONG  HB_EXPORT hb_parnint( int iParam, ... )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d, ...)", iParam));
+
+   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   {
+      PHB_ITEM pItem = ( iParam == -1 ) ? &hb_stack.Return : hb_stackItemFromBase( iParam );
+
+      if( HB_IS_BYREF( pItem ) )
+         pItem = hb_itemUnRef( pItem );
+
+      if( HB_IS_LONG( pItem ) )
+         return ( HB_LONG ) pItem->item.asLong.value;
+      else if( HB_IS_INTEGER( pItem ) )
+         return ( HB_LONG ) pItem->item.asInteger.value;
+      else if( HB_IS_DOUBLE( pItem ) )
+#ifdef __GNUC__
+         return ( HB_LONG ) ( HB_ULONG ) pItem->item.asDouble.value;
+#else
+         return ( HB_LONG ) pItem->item.asDouble.value;
+#endif
+      else if( HB_IS_DATE( pItem ) )
+         return ( HB_LONG ) pItem->item.asDate.value;
+      else if( HB_IS_ARRAY( pItem ) )
+      {
+         va_list va;
+         ULONG ulArrayIndex;
+
+         va_start( va, iParam );
+         ulArrayIndex = va_arg( va, ULONG );
+         va_end( va );
+
+         return hb_arrayGetNInt( pItem, ulArrayIndex );
+      }
+   }
+
+   return 0;
+}
 
 void HB_EXPORT * hb_parptr( int iParam, ... )
 {

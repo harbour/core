@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-12-14 01:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/itemapi.c
+    * fixed some minor typos in GCC hack
+    + added missing hb_parnint()
+
 2004-12-12 22:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gnu.sh
     + added platform autodetection if HB_ARCHITECTURE not set
