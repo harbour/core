@@ -37,6 +37,7 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.83   19991006   ptucker   Enable dispbegin/end calls in gtBox
  * 1.81   19991005   dholm     Made the hb_gtWrite(), hb_gtWriteAt(), and
  *                             hb_gtWriteCon() functions and the cursor
  *                             positioning more compatible with Clipper.
@@ -197,7 +198,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
    /* Draw the box or line as specified */
    height = uiBottom - uiTop + 1;
    width  = uiRight - uiLeft + 1;
-/* hb_gtDispBegin(); */
+   hb_gtDispBegin();
 
    if( height > 1 && width > 1 )
    {
@@ -236,8 +237,7 @@ USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, B
       }
    }
 
-/* speed issue for now */
-/* hb_gtDispEnd(); */
+   hb_gtDispEnd();
 
    hb_gtSetPos( uiTopBak + 1, uiLeftBak + 1 );
 

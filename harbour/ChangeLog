@@ -1,3 +1,7 @@
+19991006-17:05 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/gtapi.c
+     * enable dispbegin/end calls in gtBox
+
 19991006-21:08 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/classes.c
      * Fixed bug for CLASSDATAs INIT clause on inherited classes.
