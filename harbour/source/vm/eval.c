@@ -343,29 +343,3 @@ void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
 
    hb_vmFunction( uiParams );
 }
-
-/* Executes a Harbour pcode dynamically loaded DLL function or procedure
- * Syntax: HB_DllDo( <cFuncName> [,<params...>] ) --> [<uResult>]
- */
-
-HB_FUNC( HB_DLLDO )
-{
-   PHB_DYNS pDynSym = hb_dynsymFind( hb_strupr( hb_parc( 1 ) ) );
-
-   if( pDynSym )
-   {
-      USHORT uiPCount = hb_pcount();
-      USHORT uiParam;
-
-      hb_vmPushSymbol( pDynSym->pSymbol );
-      hb_vmPushNil();
-
-      /* same logic here as from HB_FUNC( EVAL ) */
-      for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-      {
-         hb_vmPush( hb_stackItemFromBase( uiParam ) );
-      }
-
-      hb_vmDo( uiPCount - 1 );
-   }
-}
