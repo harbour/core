@@ -104,7 +104,8 @@ HARBOUR HB_DBFNTX_GETFUNCTABLE( void )
 {
    USHORT * uiCount;
    RDDFUNCS * pTable;
-   *uiCount = RDDFUNCSCOUNT;
+
+/*    *uiCount = RDDFUNCSCOUNT; */
 
    uiCount = ( USHORT * ) hb_parnl( 1 );
    pTable = ( RDDFUNCS * ) hb_parnl( 2 );

@@ -145,7 +145,7 @@ static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
 	 return 0;
    }
 
-   szGetFuncTable = hb_xgrab( strlen( szDriver ) + 14 );
+   szGetFuncTable = (char *)hb_xgrab( strlen( szDriver ) + 14 );
    strcpy( szGetFuncTable, szDriver );
    strcat( szGetFuncTable, "_GETFUNCTABLE" );
    pGetFuncTable = hb_FindDynSym( szGetFuncTable );
@@ -154,9 +154,9 @@ static BOOL hb_rddRegister( char * szDriver, USHORT uiType )
    if( !pGetFuncTable )
       return 0;
    if( !pRDDList )
-      pRDDList = hb_xgrab( sizeof( RDDNODE ) );
+      pRDDList = (PRDDNODE)hb_xgrab( sizeof( RDDNODE ) );
    else
-      pRDDList = hb_xrealloc( pRDDList, sizeof( RDDNODE ) * ( uiRDDCount + 1 ) );
+      pRDDList = (PRDDNODE)hb_xrealloc( pRDDList, sizeof( RDDNODE ) * ( uiRDDCount + 1 ) );
 
    pList = pRDDList + ( sizeof( RDDNODE ) * uiRDDCount );
    strcpy( pList->szName, szDriver );
@@ -375,8 +375,8 @@ HARBOUR HB_DBUSEAREA( void )
    szAlias = ISCHAR( 4 ) ? hb_parc( 4 ) : szFileName;
 
    pInfo.uiArea = uiCurrArea;
-   pInfo.abName = szFileName;
-   pInfo.atomAlias = szAlias;
+   pInfo.abName = (PBYTE)szFileName;
+   pInfo.atomAlias = (PBYTE)szAlias;
    pInfo.fShared = ISLOG( 5 ) ? hb_parl( 5 ) : !hb_set.HB_SET_EXCLUSIVE;
    pInfo.fReadonly = ISLOG( 6 ) ? hb_parl( 6 ) : FALSE;
    ( * pFunction )( &pWorkAreas[ uiCurrArea - 1 ], &pInfo );

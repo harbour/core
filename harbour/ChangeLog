@@ -1,3 +1,12 @@
+19990724-21:20 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rdd/dbcmd.c
+     * added type casts mostly on xgrab calls
+   * source/rdd/dbfntx0.c
+     * commented out 1 assignment, as uiCount
+       is not pointing at anything.
+   * makefile.vc
+     + added additional rdd support
+
 19990725-19:47 GMT+1 Bruno Cantero <bruno@issnet.net>
    + include/rddsys.ch, source/rdd/dbfntx0.prg, source/rdd/dbfntx1.c
      Skeleton for DBFNTX functions
