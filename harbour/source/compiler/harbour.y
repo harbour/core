@@ -1384,6 +1384,7 @@ RecoverUsing : RECOVER USING IDENTIFIER
  */
 DoName     : IDENTIFIER       { $$ = hb_compExprNewFunName( $1 ); }
            | MacroVar         { $$ = $1; }
+	   | MacroExpr		{ $$ = $1; }
            ;
 
 DoProc     : DO DoName

@@ -583,22 +583,22 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
       szString = hb_macroTextSubst( pItem->item.asString.value, &ulLength );
       bNewBuffer = ( szString != pItem->item.asString.value );
 
-      hb_stackPop();    /* remove compiled string */
       if( hb_macroIsIdent( szString ) )
       {
-         HB_DYNS_PTR pDynSym;
-
-         pDynSym = hb_dynsymGet( szString );
+         HB_DYNS_PTR pDynSym =  hb_dynsymGet( szString );
+	 
+         hb_stackPop();    /* remove compiled string */
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
           */
-         hb_vmPushSymbol( pDynSym->pSymbol );
+         hb_vmPushSymbol( pDynSym->pSymbol );	/* push compiled symbol instead of a string */
 
          if( bNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
       }
       else
       {
+         hb_stackPop();    /* remove compiled string */
          if( bNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSubst */
          hb_macroSyntaxError( NULL );
