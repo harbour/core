@@ -2,10 +2,13 @@
  * $Id$
  */
 
+/* CA-Cl*pper API Compatibility Header File */
+/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
+
 #ifndef HB_VM_API_
 #define HB_VM_API_
 
-#define HANDLE void*
+typedef void*   HANDLE;
 
 /* Standard */
 #define _xvalloc(size, flags)        hb_xalloc(size)

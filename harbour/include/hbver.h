@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    Defines the version information that can be queried via HB_VERSION()

@@ -1,7 +1,32 @@
+19990731-06:50 CET Victor Szel <info@szelvesz.hu>
+   * include/extend.h
+     include/hbdefs.h
+     include/errorapi.h
+     More small cleanups, additions.
+   + include/clipdefs.h
+     Added Clipper compatible header file. (not tested)
+   + include/*.api - Added a file description line.
+     Added a line which warns users not to use these
+     files for new Harbour code.
+   + include/caundoc.api - Contains undocumented API declarations
+     (only wrappers as of now).
+     Original idea by Bruno Cantero <bruno@issnet.net>.
+   * include/rdd.api most of the content moved to include/rddapi.h
+     source\rdd\dbfntx\dbfntx1.c
+     source\rdd\dbcmd.c
+     source\rdd\dbf1.c
+     source\rdd\delim1.c
+     source\rdd\sdf1.c
+     *.api files are for compatibility only, not for
+     new harbour code.
+   + doc/hdr_tpl.txt - Small modification RCS ID and licenc part
+     of the header separated.
+   * include/*.* - Standardized (again) RCS ID and licenc headers.
+     
 19990731-06:40 GMT+2 Ryszard Glaaab <rglab@imid.med.pl>
     *source/compiler/harbour.y
 	* PUBLIC and PRIVATE variables referenced inside a codeblock 
-	 can be used to initiialize a staatic variables
+	 can be used to initialize a static variables
 
 19990731-06:00 CET Victor Szel <info@szelvesz.hu>
    + include/achoice.ch

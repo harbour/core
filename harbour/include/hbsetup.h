@@ -1,10 +1,11 @@
 /*
  * $Id$
-*/
-/*
-    Harbour Project source code
+ */
 
-    Harbour compiler and runtime configuration file
+/*
+   Harbour Project source code
+
+   Harbour compiler and runtime configuration file
 
    Copyright 1999  Ryszard Glab
    www - http://www.harbour-project.org

@@ -24,8 +24,8 @@
 
 #include "extend.h"
 #include "init.h"
+#include "rddapi.h"
 #include "rddsys.ch"
-#include "rdd.api"
 
 HARBOUR HB__DELIM( void );
 HARBOUR HB_DELIM_GETFUNCTABLE( void );

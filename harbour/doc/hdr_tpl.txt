@@ -4,8 +4,11 @@
 FILE HEADER TEMPLATE
 ====================
 
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    (one/two-liner description about the purpose of this source file)
@@ -35,6 +38,8 @@ FILE HEADER TEMPLATE
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.6    Victor Szel                 RCS Id section separated from
+                                        Licenc text.
    V 1.5    Victor Szel                 Small name correction.
    V 1.4    David G. Holm               Removed "(C)" from Copyright notice
                                         Put author's name rather than date

@@ -1,6 +1,8 @@
-/*
+/* 
  * $Id$
+ */
 
+/*
    Copyright(C) 1999 by Antonio Linares.
 
    This program is free software; you can redistribute it and/or modify
@@ -20,7 +22,7 @@
    675 Mass Ave, Cambridge, MA 02139, USA.
 
    You can contact me at: alinares@fivetech.com
- */
+*/
 
 #ifndef HB_EXTEND_H_
 #define HB_EXTEND_H_
@@ -31,6 +33,12 @@
 #include <string.h>
 #include "hbdefs.h"
 #include "hbsetup.h"
+
+#ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
+   /* Clipper includes these from its extend.h */
+   #include "extend.api"
+   #include "fm.api"
+#endif
 
 struct _DYNSYM;         /* forward declaration */
 
@@ -84,101 +92,101 @@ struct _HB_VALUE;
 /* Internal structures that holds data */
 struct hb_struArray
 {
-  struct _HB_BASEARRAY * value;
+   struct _HB_BASEARRAY * value;
 };
 
 struct hb_struBlock
 {
-  LONG statics;
-  WORD lineno;
-  WORD paramcnt;
-  struct _HB_CODEBLOCK * value;
+   LONG statics;
+   WORD lineno;
+   WORD paramcnt;
+   struct _HB_CODEBLOCK * value;
 };
 
 struct hb_struDate
 {
-  WORD length;
-  LONG value;
+   WORD length;
+   LONG value;
 };
 
 struct hb_struDouble
 {
-  WORD length;
-  WORD decimal;
-  double value;
+   WORD length;
+   WORD decimal;
+   double value;
 };
 
 struct hb_struInteger
 {
-  WORD length;
-  WORD decimal;
-  int value;
+   WORD length;
+   WORD decimal;
+   int value;
 };
 
 struct hb_struLogical
 {
-  WORD length;
-  WORD value;
+   WORD length;
+   WORD value;
 };
 
 struct hb_struLong
 {
-  WORD length;
-  WORD decimal;
-  long value;
+   WORD length;
+   WORD decimal;
+   long value;
 };
 
 struct hb_struMemvar
 {
-  struct _HB_VALUE * *itemsbase;
-  LONG offset;
-  LONG value;
+   struct _HB_VALUE * *itemsbase;
+   LONG offset;
+   LONG value;
 };
 
 struct hb_struPointer
 {
-  PVOID value;
+   PVOID value;
 };
 
 struct hb_struRefer
 {
-  struct _HB_ITEM * *itemsbase;
-  LONG offset;
-  LONG value;
+   struct _HB_ITEM * *itemsbase;
+   LONG offset;
+   LONG value;
 };
 
 struct hb_struString
 {
-  ULONG length;
-  char *value;
+   ULONG length;
+   char *value;
 };
 
 struct hb_struSymbol
 {
-  LONG stackbase;
-  WORD lineno;
-  WORD paramcnt;
-  PSYMBOL value;
+   LONG stackbase;
+   WORD lineno;
+   WORD paramcnt;
+   PSYMBOL value;
 };
 
 typedef struct _HB_ITEM       /* items hold at the virtual machine stack */
 {
-  WORD type;
-  union
-  {
-        struct hb_struArray   asArray;
-        struct hb_struBlock   asBlock;
-        struct hb_struDate    asDate;
-        struct hb_struDouble  asDouble;
-        struct hb_struInteger asInteger;
-        struct hb_struLogical asLogical;
-        struct hb_struLong    asLong;
-        struct hb_struMemvar  asMemvar;
-        struct hb_struPointer asPointer;
-        struct hb_struRefer   asRefer;
-        struct hb_struString  asString;
-        struct hb_struSymbol  asSymbol;
-  } item;
+   WORD type;
+   union
+   {
+      struct hb_struArray   asArray;
+      struct hb_struBlock   asBlock;
+      struct hb_struDate    asDate;
+      struct hb_struDouble  asDouble;
+      struct hb_struInteger asInteger;
+      struct hb_struLogical asLogical;
+      struct hb_struLong    asLong;
+      struct hb_struMemvar  asMemvar;
+      struct hb_struPointer asPointer;
+      struct hb_struRefer   asRefer;
+      struct hb_struString  asString;
+      struct hb_struSymbol  asSymbol;
+   } item;
 }
 HB_ITEM, *PHB_ITEM;
 typedef PHB_ITEM HB_ITEM_PTR;

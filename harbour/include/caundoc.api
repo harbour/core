@@ -1,0 +1,28 @@
+/*
+ * $Id$
+ */
+
+/* CA-Cl*pper API Compatibility Header File */
+/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
+
+/* This file contains widely used but undocumented APIs */
+
+#ifndef HB_CAUNDOC_API_
+#define HB_CAUNDOC_API_
+
+/* Undocumented TSUPPORT API */
+
+#include "filesys.h"
+
+#define _tcreat         hb_fsCreate
+#define _tunlink        hb_fsDelete
+#define _topen          hb_fsOpen
+#define _tclose         hb_fsClose
+#define _tread          hb_fsRead
+#define _twrite         hb_fsWrite
+#define _tlseek         hb_fsSeek
+#define _trename        hb_fsRename
+#define _tlock          hb_fsLock
+#define _tcommit        hb_fsCommit
+
+#endif /* HB_CAUNDOC_API_ */

@@ -24,8 +24,8 @@
 
 #include "extend.h"
 #include "init.h"
+#include "rddapi.h"
 #include "rddsys.ch"
-#include "rdd.api"
 
 HARBOUR HB__DBF( void );
 HARBOUR HB_DBF_GETFUNCTABLE( void );

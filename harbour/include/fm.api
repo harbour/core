@@ -2,6 +2,9 @@
  * $Id$
  */
 
+/* CA-Cl*pper API Compatibility Header File */
+/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
+
 #ifndef HB_FM_API_
 #define HB_FM_API_
 

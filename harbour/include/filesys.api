@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour Project source code
 
    This module contains Clipper to Harbour conversions for FILE management.
@@ -38,6 +41,9 @@
    V 1.1    David G. Holm               Committed to CVS.
    V 1.0    David G. Holm               Initial version.
 */
+
+/* CA-Cl*pper API Compatibility Header File */
+/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
 #ifndef HB_FILESYS_API_
 #define HB_FILESYS_API_

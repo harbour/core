@@ -32,6 +32,9 @@
 
 #if ! defined(HB_DONT_DEFINE_BASIC_TYPES)
 
+#undef PVOID
+typedef void * PVOID;
+
 #undef BYTE
 typedef unsigned char BYTE, * PBYTE;   /* 1 byte unsigned */
 
@@ -46,19 +49,20 @@ typedef unsigned short int USHORT;
 
 #undef LONG                            /* 4 bytes signed */
 typedef long LONG;
+
+#undef ULONG                           /* 4 bytes signed */
 typedef unsigned long ULONG;
 
 #undef DWORD                           /* 4 bytes unsigned */
 typedef unsigned long DWORD;
 
+#undef BOOL                            /* boolean */
+typedef int BOOL;
+
 #undef FALSE
 #undef TRUE
 #define FALSE  0
 #define TRUE   1
-typedef int BOOL;
-
-#undef PVOID
-typedef void * PVOID;
 
 #ifndef MAX
 #define MAX(a,b)                (((a) > (b)) ? (a) : (b))

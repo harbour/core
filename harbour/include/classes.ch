@@ -1,5 +1,8 @@
-/* $Id$
+/* 
+ * $Id$
+ */
 
+/*
    Harbour classes commands
 
    Copyright(C) 1999 by Antonio Linares.
