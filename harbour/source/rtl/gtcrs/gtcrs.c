@@ -628,6 +628,8 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
    SHORT Col;
    SHORT Height;
    SHORT Width;
+   
+   int l_alternate_char_set = s_alternate_char_set;
 
    if( Left >= 0 || Left < hb_gt_GetScreenWidth()
    || Right >= 0 || Right < hb_gt_GetScreenWidth()
@@ -686,7 +688,22 @@ USHORT hb_gt_Box( SHORT Top, SHORT Left, SHORT Bottom, SHORT Right,
                   Col = 0; /* The width was corrected earlier. */
                else
                   hb_gt_xPutch( Row, Col++, byAttr, szBox[ 7 ] ); /* Left side */
+               
+               /* before displaying fill, we have to switch to normal char set, because
+               fill char as defined with s_xTermBox (space) is not part of alternate
+               charset (defined in curses.h). 
+               */
+               if( s_under_xterm )
+               {
+                  s_alternate_char_set = 0;
+               }
                hb_gt_Replicate( Row, Col, byAttr, szBox[ 8 ], Width - 2 ); /* Fill */
+               /* switch back to whatever charset was used before displaying fill  */
+               if( s_under_xterm )
+               {
+                  s_alternate_char_set = l_alternate_char_set;
+               }
+               
                if( Right < hb_gt_GetScreenWidth() )
                   hb_gt_xPutch( Row, Right, byAttr, szBox[ 3 ] ); /* Right side */
             }

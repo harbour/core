@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-07 13:58 UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
+   * source/rtl/gtcrs/gtcrs.c
+     ! fixed displaying of boxes in xterm
+   * source/rtl/alert.prg
+     ! changed BoxString parameter while displaying box to NIL. It 
+       is needed to corectly display alert box in xterm.
+     
 2003-08-29 07:03 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * source/vm/hvm.c
      ! Fix implemented for -0.0 on hb_vmPushDouble() as proposed by

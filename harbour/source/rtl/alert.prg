@@ -278,7 +278,8 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       cOldScreen := SaveScreen( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1 )
 
       /* draw box */
-      DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, B_SINGLE + ' ', cColorNorm )
+      /* 5th parameter should be NIL, because it defaults to single box - important for xterm */
+      DispBox( nInitRow, nInitCol, nInitRow + Len( aSay ) + 3, nInitCol + nWidth + 1, NIL, cColorNorm )
 
       FOR nEval := 1 TO Len( aSay )
          DispOutAt( nInitRow + nEval, nInitCol + 1 + Int( ( ( nWidth - Len( aSay[ nEval ] ) ) / 2 ) + .5 ), aSay[ nEval ], cColorNorm )
