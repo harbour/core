@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * source/rtl/console.c
+    + Added HB_EOL_CRLF to allow the EOL string to be forced to CRLF.
+      Defaults to commented out, so that the EOL string that is used
+      will be detected based on platform considerations. To force CRLF,
       just include -DHB_EOL_CRLF in the C_USR environment variable and
       rebuild Harbour.
 
