@@ -1,3 +1,10 @@
+2000-05-28 02:15 UTC-500 Paul Tucker <ptucker@sympatico.ca>
+   * makefile.bc
+     * move eval from rtl.lib to vm.lib
+     * (Already built that way, but the dependancy was wrong)
+   * makefile.vc
+     * bring up to date
+
 2000-05-22 10:40 UTC-800 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbvmpub.h
