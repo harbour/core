@@ -1,3 +1,10 @@
+19991021-19:40 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     % Updated, so that the platform dependent variable declarations got moved
+       inside the block where they are used, instead of declaring them globally
+       for all platform branches. HB_UNUSED_VARIABLE() lines could be then 
+       removed.
+
 Thu Oct 21 14:09:07 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* source/rtl/gt/gtlin.c: 

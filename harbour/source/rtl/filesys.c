@@ -333,7 +333,6 @@ static void convert_create_flags( USHORT uiFlags, int * result_flags, unsigned *
 FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 {
    FHANDLE hFileHandle;
-   int iShare;
 
    HB_TRACE(("hb_fsOpen(%p, %hu)", pFilename, uiFlags));
 
@@ -342,11 +341,11 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    errno = 0;
    hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
    s_uiErrorLast = errno;
-   HB_SYMBOL_UNUSED( iShare );
 
 #elif defined(_MSC_VER)
 
-      iShare = _SH_DENYNO;
+   {
+      int iShare = _SH_DENYNO;
 
       if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
          iShare = _SH_DENYRD;
@@ -363,10 +362,12 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
       else
          hFileHandle = _open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
       s_uiErrorLast = errno;
+   }
 
 #elif defined(__MINGW32__) || defined(__IBMCPP__)
 
-      iShare = SH_DENYNO;
+   {
+      int iShare = SH_DENYNO;
 
       if( ( uiFlags & FO_DENYREAD ) == FO_DENYREAD )
          iShare = SH_DENYRD;
@@ -383,12 +384,12 @@ FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
       else
          hFileHandle = open( ( char * ) pFilename, convert_open_flags( uiFlags ) );
       s_uiErrorLast = errno;
+   }
 
 #else
 
-      hFileHandle = FS_ERROR;
-      s_uiErrorLast = FS_ERROR;
-      HB_SYMBOL_UNUSED( iShare );
+   hFileHandle = FS_ERROR;
+   s_uiErrorLast = FS_ERROR;
 
 #endif
 
@@ -856,27 +857,27 @@ BOOL    hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
 
 void    hb_fsCommit( FHANDLE hFileHandle )
 {
-   int dup_handle;
-
    HB_TRACE(("hb_fsCommit(%p)", hFileHandle));
 
 #if defined(HAVE_POSIX_IO) || defined(_MSC_VER) || defined(__MINGW32__)
 
-   errno = 0;
-   dup_handle = dup( hFileHandle );
-   s_uiErrorLast = errno;
-
-   if( dup_handle != -1 )
    {
-      close( dup_handle );
+      int dup_handle;
+
+      errno = 0;
+      dup_handle = dup( hFileHandle );
       s_uiErrorLast = errno;
+
+      if( dup_handle != -1 )
+      {
+         close( dup_handle );
+         s_uiErrorLast = errno;
+      }
    }
 
 #else
 
    s_uiErrorLast = FS_ERROR;
-
-   HB_SYMBOL_UNUSED( dup_handle );
 
 #endif
 }
@@ -986,59 +987,59 @@ BYTE *  hb_fsCurDir( USHORT uiDrive )
 USHORT  hb_fsChDrv( BYTE nDrive )
 {
    USHORT uiResult;
-   USHORT uiSave;
-   USHORT uiTotal;
 
    HB_TRACE(("hb_fsChDrv(%d)", (int) nDrive));
 
 #if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
 
-   uiSave = _getdrive();
-
-   errno = 0;
-   _chdrive( nDrive + 1 );
-   if( ( nDrive + 1 ) == _getdrive() )
    {
-      uiResult = 0;
-      s_uiErrorLast = errno;
-   }
-   else
-   {
-      _chdrive( uiSave );
-      uiResult = FS_ERROR;
-      s_uiErrorLast = FS_ERROR;
-   }
+      USHORT uiSave = _getdrive();
 
-   HB_SYMBOL_UNUSED( uiTotal );
+      errno = 0;
+      _chdrive( nDrive + 1 );
+      if( ( nDrive + 1 ) == _getdrive() )
+      {
+         uiResult = 0;
+         s_uiErrorLast = errno;
+      }
+      else
+      {
+         _chdrive( uiSave );
+         uiResult = FS_ERROR;
+         s_uiErrorLast = FS_ERROR;
+      }
+   }
 
 #elif defined( __WATCOMC__ )
 
-   /* 1=  A:, 2 = B:, 3 = C:, etc
-    * _dos_*() functions don't set 'errno'
-    */
-   _dos_getdrive( &uiSave );
+   {
+      USHORT uiSave = _getdrive();
+      USHORT uiTotal;
 
-   _dos_setdrive( nDrive + 1, &uiTotal );
-   _dos_getdrive( &uiTotal );
-   if( ( nDrive + 1 ) == uiTotal )
-   {
-      uiResult = 0;
-      s_uiErrorLast = 0;
-   }
-   else
-   {
-      _dos_setdrive( uiSave, &uiTotal );
-      uiResult = FS_ERROR;
-      s_uiErrorLast = FS_ERROR;
+      /* 1=  A:, 2 = B:, 3 = C:, etc
+       * _dos_*() functions don't set 'errno'
+       */
+      _dos_getdrive( &uiSave );
+
+      _dos_setdrive( nDrive + 1, &uiTotal );
+      _dos_getdrive( &uiTotal );
+      if( ( nDrive + 1 ) == uiTotal )
+      {
+         uiResult = 0;
+         s_uiErrorLast = 0;
+      }
+      else
+      {
+         _dos_setdrive( uiSave, &uiTotal );
+         uiResult = FS_ERROR;
+         s_uiErrorLast = FS_ERROR;
+      }
    }
 
 #else
 
    uiResult = FS_ERROR;
    s_uiErrorLast = FS_ERROR;
-
-   HB_SYMBOL_UNUSED( uiSave );
-   HB_SYMBOL_UNUSED( uiTotal );
 
 #endif
 
@@ -1048,64 +1049,64 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 /* TODO: add documentation */
 
-/* TOFIX: This isn't fully compliant because Cl*pper doesn't access 
-          the drive before checking. hb_fsIsDrv only returns TRUE 
+/* TOFIX: This isn't fully compliant because Cl*pper doesn't access
+          the drive before checking. hb_fsIsDrv only returns TRUE
           if there is a disk in the drive. */
 
 USHORT  hb_fsIsDrv( BYTE nDrive )
 {
    USHORT uiResult;
-   USHORT uiSave;
-   USHORT uiTotal;
 
    HB_TRACE(("hb_fsIsDrv(%d)", (int) nDrive));
 
 #if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
 
-   uiSave = _getdrive();
-
-   errno = 0;
-   _chdrive( nDrive + 1 );
-   if( ( nDrive + 1 ) == _getdrive() )
    {
-      uiResult = 0;
-      s_uiErrorLast = errno;
-   }
-   else
-   {
-      uiResult = FS_ERROR;
-      s_uiErrorLast = FS_ERROR;
-   }
+      USHORT uiSave = _getdrive();
 
-   _chdrive( uiSave );
+      errno = 0;
+      _chdrive( nDrive + 1 );
+      if( ( nDrive + 1 ) == _getdrive() )
+      {
+         uiResult = 0;
+         s_uiErrorLast = errno;
+      }
+      else
+      {
+         uiResult = FS_ERROR;
+         s_uiErrorLast = FS_ERROR;
+      }
 
-   HB_SYMBOL_UNUSED( uiTotal );
+      _chdrive( uiSave );
+   }
 
 #elif defined( __WATCOMC__ )
 
-   /* 1=  A:, 2 = B:, 3 = C:, etc
-    * _dos_*() functions don't set 'errno'
-    */
-   _dos_getdrive( &uiSave );
-
-   s_uiErrorLast = 0;
-   uiResult = 0;
-   _dos_setdrive( nDrive + 1, &uiTotal );
-   _dos_getdrive( &uiTotal );
-   if( ( nDrive + 1 ) != uiTotal )
    {
-      s_uiErrorLast = FS_ERROR;
-      uiResult = FS_ERROR;
+      USHORT uiSave;
+      USHORT uiTotal;
+
+      /* 1=  A:, 2 = B:, 3 = C:, etc
+       * _dos_*() functions don't set 'errno'
+       */
+      _dos_getdrive( &uiSave );
+
+      s_uiErrorLast = 0;
+      uiResult = 0;
+      _dos_setdrive( nDrive + 1, &uiTotal );
+      _dos_getdrive( &uiTotal );
+      if( ( nDrive + 1 ) != uiTotal )
+      {
+         s_uiErrorLast = FS_ERROR;
+         uiResult = FS_ERROR;
+      }
+      _dos_setdrive( uiSave, &uiTotal );
    }
-   _dos_setdrive( uiSave, &uiTotal );
 
 #else
 
    uiResult = FS_ERROR;
    s_uiErrorLast = FS_ERROR;
-
-   HB_SYMBOL_UNUSED( uiSave );
-   HB_SYMBOL_UNUSED( uiTotal );
 
 #endif
 
@@ -1140,33 +1141,34 @@ BOOL    hb_fsIsDevice( FHANDLE hFileHandle )
 BYTE    hb_fsCurDrv( void )
 {
    USHORT uiResult;
-   USHORT uiDrive;
 
    HB_TRACE(("hb_fsCurDrv()"));
 
 #if defined(HAVE_POSIX_IO) && ( defined(OS2) || defined(DOS) || defined(_Windows) || defined(__MINGW32__) ) && ! defined(__CYGWIN__)
 
-   errno = 0;
-   uiResult = _getdrive();
-   s_uiErrorLast = errno;
-
-   HB_SYMBOL_UNUSED( uiDrive );
+   {
+      errno = 0;
+      uiResult = _getdrive();
+      s_uiErrorLast = errno;
+   }
 
 #elif defined( __WATCOMC__ )
 
-   /* 1=  A:, 2 = B:, 3 = C:, etc
-    * _dos_*() functions don't set 'errno'
-    */
-   _dos_getdrive( &uiDrive );
-   s_uiErrorLast = 0;
-   uiResult = ( USHORT ) uiDrive;
+   {
+      USHORT uiDrive;
+
+      /* 1=  A:, 2 = B:, 3 = C:, etc
+       * _dos_*() functions don't set 'errno'
+       */
+      _dos_getdrive( &uiDrive );
+      s_uiErrorLast = 0;
+      uiResult = ( USHORT ) uiDrive;
+   }
 
 #else
 
    uiResult = 0;
    s_uiErrorLast = FS_ERROR;
-
-   HB_SYMBOL_UNUSED( uiDrive );
 
 #endif
 
@@ -1487,6 +1489,7 @@ HARBOUR HB_DISKSPACE( void )
                      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0;
 
 #if defined( DOS ) || defined( __WATCOMC__ )
+
    struct diskfree_t disk;
    unsigned uiResult;
 
@@ -1502,6 +1505,7 @@ HARBOUR HB_DISKSPACE( void )
       ulSpaceFree = ( ( ULONG ) disk.avail_clusters *
                       ( ULONG ) disk.sectors_per_cluster *
                       ( ULONG ) disk.bytes_per_sector );
+
 #else
 
    HB_SYMBOL_UNUSED( uiDrive );
