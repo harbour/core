@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * profiler
  *
- * Copyright 2001 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001 Antonio Linares <alinares@fivetech.com> and
+ *                Patrick Mast <email@patrickmast.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,23 +51,34 @@
  *
  */
 
+/*
+ * Copyright 2001 Patrick Mast <email@patrickmast.com>
+ *    Added: Added the <lOnlyUsed> parameter. If profiler is used like
+ *           this Profiler(.t.), the profiler.txt will only be filled
+ *           with used classes and/or functions.
+ */
+
 #define CRLF HB_OsNewLine()
 
-function Profiler()
+Function Profiler(lOnlyUsed)
+LOCAL n, m, cClass, aFunProcInfo, aInfo, aMethodInfo
+LOCAL cText := "          *** Harbour profiler report ***" + CRLF + CRLF + ;
+               "   FUNCTIONS/PROCEDURES      CALLS      CONSUMED TIME" + CRLF + ;
+               "=====================================================" + CRLF
 
-   local cText := "          *** Harbour profiler report ***" + CRLF + CRLF + ;
-                  "   FUNCTIONS/PROCEDURES      CALLS      CONSUMED TIME" + CRLF + ;
-                  "=====================================================" + CRLF
-   local n, m
-   local cClass, aFunProcInfo, aInfo, aMethodInfo
+   if ValType(lOnlyUsed)#"L" // Put ONLY USED classes/functions in profiler report?
+      lOnlyUsed:=.f.
+   endif
 
    for n = __DynSCount() to 1 step - 1 // Number of dynamic symbols on the global
                                        // symbol table. Their names are ordered
                                        // in reverse order.
       if __DynSIsFun( n )              // Is this symbol a function or a procedure ?
          aFunProcInfo = __DynSGetPrf( n ) // We get its profiler info
-         cText += "      " + PadR( __DynSGetName( n ), 20 ) + ;
-                  Str( aFunProcInfo[ 1 ], 7 ) + Str( aFunProcInfo[ 2 ], 17 ) + CRLF
+         IF !lOnlyUsed .or. aFunProcInfo[ 1 ]>0
+            cText += "      " + PadR( __DynSGetName( n ), 20 ) + ;
+                     Str( aFunProcInfo[ 1 ], 7 ) + Str( aFunProcInfo[ 2 ], 17 ) + CRLF
+         ENDIF
       endif
    next
 
@@ -79,10 +91,11 @@ function Profiler()
       cText += CRLF + "   CLASS " + cClass + CRLF
       aInfo = ASort( __ClassSel( n ) ) // Retrieves all Class datas and methods names
       for m = 1 to Len( aInfo )
-         if ! Empty( aInfo[ m ] ) // why __ClassSel() returns empty strings ?
+         if !Empty( aInfo[ m ] )  // why __ClassSel() returns empty strings ?
             aMethodInfo = __GetMsgPrf( n, aInfo[ m ] ) // We get its profiler info
-            cText += "      " + PadR( aInfo[ m ], 20 ) + ;
-                     Str( aMethodInfo[ 1 ], 7 ) + Str( aMethodInfo[ 2 ], 17 ) + CRLF
+            if !lOnlyUsed .or. aMethodInfo[ 1 ]>0
+               cText += "      " + PadR( aInfo[ m ], 20 ) + Str( aMethodInfo[ 1 ], 7 ) + Str( aMethodInfo[ 2 ], 17 ) + CRLF
+            endif
          endif
       next
       n++
@@ -90,4 +103,4 @@ function Profiler()
 
    MemoWrit( "profiler.txt", cText )
 
-return nil
+RETURN NIL

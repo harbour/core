@@ -1,9 +1,14 @@
+2001-07-15 16:23 GMT+1 Patrick Mast <harbour@PatrickMast.com>
+   * source/rtl/profiler.prg
+     + Added the <lOnlyUsed> parameter. If profiler is used like
+       this Profiler(.t.), the profiler.txt will only be filled
+       with used classes and/or functions.
+
 2001-07-14 18:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rtl/teditor.prg
     ! Minor fix for K_END key implementation
 
 2001-07-13 19:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
-
   * source\rtl\gtwin\gtwin.c
     * Fix for extended cursor keys on international keyboards.
 
