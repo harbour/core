@@ -1,3 +1,12 @@
+Fri Aug 06 20:04:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/rules.cf: 
+	Added the removal of *.core to the clean target.
+	
+	* source/hbpp/hbpp.c: 
+	* source/hbpp/stdalone/hbpp.c: 
+	Fixed two unused variable warnings.
+
 199908.06-22:12 GMT+3 Alexander Kresin
   * include/hbpp.h
   * source/hbpp/hbpp.c

@@ -376,7 +376,7 @@ void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
    char cmdname[MAX_NAME];
    COMMANDS *stcmd;
    int mlen,rlen;
-   int ipos, rez;
+   int ipos;
 
    NextWord( &sLine, cmdname, FALSE );
    stroupper( cmdname );

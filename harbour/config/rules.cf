@@ -71,4 +71,4 @@ endif
 
 # Generic rule to clean up.
 clean::
-	-$(RM) *.bak *.obj core *~ *.o
+	-$(RM) *.bak *.obj core *.core *~ *.o

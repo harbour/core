@@ -221,7 +221,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
 void OutTable( DEFINES* endDefine, COMMANDS* endCommand )
 {
    FILE *handl_o;
-   int i, ipos, len_mpatt, len_value;
+   int ipos, len_mpatt, len_value;
    int num;
    DEFINES *stdef1 = topDefine, *stdef2 = NULL, *stdef3;
    COMMANDS *stcmd1 = topCommand, *stcmd2 = NULL, *stcmd3;
