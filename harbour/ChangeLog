@@ -1,3 +1,7 @@
+2001-10-26 13:15 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     * Re-disabled temporally SUPER call to ignore unsupported ordinfo items
+
 2001-10-26 00:10 GMT Dave Pearson <davep@davep.org>
    * source/compiler/harbour.c
       * Tidied up the indentation of the functions towards the end of the
