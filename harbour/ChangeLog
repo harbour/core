@@ -1,18 +1,22 @@
+2001-04-17 10:35 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/arrays.c
+     ! Fixed GPF when aCloning an Array with circular refrences to itself.
+
 2001-04-17 18:40 CET Martin Vogel <vogel@inttec.de>
    * contrib/libct/readme.txt
      + Added paragraph for enhancements over original CT3 library
-   
+
    + contrib/libct/addascii.c
-   
+
    * contrib/libct/Makefile
      + added addascii.c
-   
+
    * contrib/libct/makefile.vc
      + added addascii.c
-   
+
    * contrib/libct/makefile.bc
      + added addascii.c
-   
+
    + contrib/libct/tests
    + contrib/libct/tests/Makefile
    + contrib/libct/tests/csetref.prg

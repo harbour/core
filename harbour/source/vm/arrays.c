@@ -724,10 +724,18 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
 
          if( pSrcItem->type == HB_IT_ARRAY )
          {
-            PHB_ITEM pClone = hb_arrayClone( pSrcItem );
+            /* Circular. */
+            if( pSrcItem == pSrcArray )
+            {
+               hb_itemArrayPut( pDstArray, ulCount + 1, pDstArray );
+            }
+            else
+            {
+               PHB_ITEM pClone = hb_arrayClone( pSrcItem );
 
-            hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
-            hb_itemRelease( pClone );
+               hb_itemArrayPut( pDstArray, ulCount + 1, pClone );
+               hb_itemRelease( pClone );
+            }
          }
          else
             hb_itemArrayPut( pDstArray, ulCount + 1, pSrcItem );
