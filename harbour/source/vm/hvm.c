@@ -130,6 +130,7 @@ static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an
 static void    hb_vmPushAlias( void );            /* pushes the current workarea number */
 static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on the eval stack */
 static void    hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a codeblock */
+static void    hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushLocal( SHORT iLocal );    /* pushes the containts of a local onto the stack */
 static void    hb_vmPushLocalByRef( SHORT iLocal );    /* pushes a local by refrence onto the stack */
 static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
@@ -910,7 +911,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MACROPOP:
             /* compile and run - pop a value from the stack */
-            hb_macroSetValue( hb_stack.pPos - 1, pSymbols );
+            hb_macroSetValue( hb_stack.pPos - 1 );
             w++;
             break;
 
@@ -923,7 +924,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             /* the topmost element on the stack contains a macro
              * string for compilation
              */
-            hb_macroGetValue( hb_stack.pPos - 1, pSymbols );
+            hb_macroGetValue( hb_stack.pPos - 1 );
             w++;
             break;
 
@@ -994,14 +995,20 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_MPUSHBLOCK:
-	    {
-		/*NOTE: the pcode is stored in damically allocated memory
-		 * We need to handle it with more care than compile-time
-		 * codeblocks
-		 */
-        	w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
-	    }
-	    break;
+            {
+               /*NOTE: the pcode is stored in dynamically allocated memory
+               * We need to handle it with more care than compile-time
+               * codeblocks
+               */
+                  /* +0    -> _pushblock
+                  * +1 +2 -> size of codeblock
+                  * +3 +4 -> number of expected parameters
+                  * +5    -> pcode bytes
+                  */
+               hb_vmPushMacroBlock( pCode + w, pSymbols );
+               w += ( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+            }
+            break;
 
          case HB_P_MPUSHFIELD:
             {
@@ -2794,6 +2801,8 @@ void hb_vmPushSymbol( PHB_SYMB pSym )
  * +3 +4 -> number of expected parameters
  * +5 +6 -> number of referenced local variables
  * +7    -> start of table with referenced local variables
+ *
+ * NOTE: pCode points to static memory
  */
 static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
 {
@@ -2809,6 +2818,35 @@ static void hb_vmPushBlock( BYTE * pCode, PHB_SYMB pSymbols )
          uiLocals,                                  /* number of referenced local variables */
          ( USHORT * ) ( pCode + 7 ),                /* table with referenced local variables */
          pSymbols );
+
+   /* store the statics base of function where the codeblock was defined
+    */
+   hb_stack.pPos->item.asBlock.statics = hb_stack.iStatics;
+   /* store the number of expected parameters
+    */
+   hb_stack.pPos->item.asBlock.paramcnt = pCode[ 3 ] + ( pCode[ 4 ] * 256 );
+   /* store the line number where the codeblock was defined
+    */
+   hb_stack.pPos->item.asBlock.lineno = hb_stack.pBase->item.asSymbol.lineno;
+   hb_stackPush();
+}
+
+/* +0    -> HB_P_MPUSHBLOCK
+ * +1 +2 -> size of codeblock
+ * +3 +4 -> number of expected parameters
+ * +5    -> start of pcode
+ *
+ * NOTE: pCode points to dynamically allocated memory
+ */
+static void hb_vmPushMacroBlock( BYTE * pCode, PHB_SYMB pSymbols )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushMacroBlock(%p, %p)", pCode, pSymbols));
+
+   HB_SYMBOL_UNUSED( pSymbols ); /* TODO: remove pSymbols */
+
+   hb_stack.pPos->type = IT_BLOCK;
+
+   hb_stack.pPos->item.asBlock.value = hb_codeblockMacroNew( pCode + 5, pCode[ 1 ] + pCode[ 2 ] * 256 - 5 );
 
    /* store the statics base of function where the codeblock was defined
     */

@@ -1,3 +1,33 @@
+19991211-15:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *include/hbexpr.c
+        * this is expropt.c moved from source/compiler and renamed
+
+    *source/compiler/expropt.c
+        * dummy file that includes hbexpr.c file
+
+    *source/macro/macro.c
+        * includes "hbexpr.c" now instead of "../source/compiler/expropt.c"
+        * added hb_macroCompile( char * ) function for compilation of
+        passed string. It can be used together with hb_macroRun() in
+        database index key evaluation
+        * added support for macro-compiled codeblocks
+        * added tracing headers
+
+    *source/macro/macro.y
+    *source/vm/hvm.c
+    *source/rtl/codebloc.c
+        * added support for macro-compiled codeblocks
+	* restored %pure_parser option :)
+	
+    *source/macro/macro.l
+        * added tracing headers
+
+    *include/extend.h
+        * changed declaration of hb_macroGetValue/hb_macroSetValue - there
+        is no need to pass a local symbol table pointer - macro compiled
+        code uses dynamic symbol table only.
+
 19991211-14:51 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/harbour.y
     + Missing #include <malloc.h> added.

@@ -49,12 +49,14 @@ static BOOL hb_comp_bUseName10 = FALSE;  /* names limited to 10 characters */
 
 /* Compile passes string into a pcode buffer
  */
-static int hb_macroCompile( HB_MACRO_PTR pMacro, char * szString, int iFlag )
+static int hb_macroParse( HB_MACRO_PTR pMacro, char * szString, int iFlag )
 {
    /* initialize the input buffer - it will be scanned by lex */
    pMacro->string = szString;
    pMacro->length = strlen( szString );
    pMacro->pos    = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroParse(%p, %s, %i)", pMacro, szString, iFlag));
 
    /* initialize the output (pcode) buffer - it will be filled by yacc */
    pMacro->pCodeInfo = (HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
@@ -62,6 +64,7 @@ static int hb_macroCompile( HB_MACRO_PTR pMacro, char * szString, int iFlag )
    pMacro->pCodeInfo->lPCodePos  = 0;
    pMacro->pCodeInfo->pLocals    = NULL;
    pMacro->pCodeInfo->pPrev      = NULL;
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroParse.(%p, %s, %i)", pMacro, szString, iFlag));
    pMacro->pCodeInfo->pCode      = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
 
    /* We have to specify if we want a push or pop operation because
@@ -74,6 +77,8 @@ static int hb_macroCompile( HB_MACRO_PTR pMacro, char * szString, int iFlag )
 
 static void hb_macroDelete( HB_MACRO_PTR pMacro )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
+
    hb_xfree( (void *) pMacro->pCodeInfo->pCode );
    hb_xfree( (void *) pMacro->pCodeInfo );
 }
@@ -81,6 +86,8 @@ static void hb_macroDelete( HB_MACRO_PTR pMacro )
 static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 {
    BOOL bValid = TRUE;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroCheckParam(%p)", pItem));
 
    if( ! IS_STRING(pItem) )
    {
@@ -100,19 +107,26 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 
 static void hb_macroRun( HB_MACRO_PTR pMacro )
 {
-   hb_vmExecute( pMacro->pCodeInfo->pCode, pMacro->pSymbols );
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroRun(%p)", pMacro));
+
+   hb_vmExecute( pMacro->pCodeInfo->pCode, NULL );
 }
 
 static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
 {
-   HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&" );
+   HB_ITEM_PTR pResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError(%p)", pMacro));
+
+   hb_macroDelete( pMacro );   /* TODO: use pMacro->status for more detailed error messagess */
+
+   pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&" );
 
    if( pResult )
    {
       hb_vmPush( pResult );
       hb_itemRelease( pResult );
    }
-   HB_SYMBOL_UNUSED( pMacro );   /* TODO: better error messagess */
 }
 
 
@@ -121,8 +135,10 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
  * placed on the right side of the assignment or when it is used as
  * a parameter.
  */
-void hb_macroGetValue( HB_ITEM_PTR pItem, PHB_SYMB pTable )
+void hb_macroGetValue( HB_ITEM_PTR pItem )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroGetValue(%p)", pItem));
+
    if( hb_macroCheckParam( pItem ) )
    {
       HB_MACRO struMacro;
@@ -131,15 +147,16 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, PHB_SYMB pTable )
 
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      struMacro.pSymbols   = pTable;
-      iStatus = hb_macroCompile( &struMacro, szString, HB_P_MACROPUSH );
+      iStatus = hb_macroParse( &struMacro, szString, HB_P_MACROPUSH );
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      {
          hb_macroRun( &struMacro );
+         hb_macroDelete( &struMacro );
+      }
       else
          hb_macroSyntaxError( &struMacro );
-      hb_macroDelete( &struMacro );
    }
 }
 
@@ -147,8 +164,10 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, PHB_SYMB pTable )
  *   This will be called when macro variable or macro expression is
  * placed on the left side of the assignment
  */
-void hb_macroSetValue( HB_ITEM_PTR pItem, PHB_SYMB pTable )
+void hb_macroSetValue( HB_ITEM_PTR pItem )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroSetValue(%p)", pItem));
+
    if( hb_macroCheckParam( pItem ) )
    {
       HB_MACRO struMacro;
@@ -157,17 +176,44 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, PHB_SYMB pTable )
 
       struMacro.bShortCuts = hb_comp_bShortCuts;
       struMacro.bName10    = hb_comp_bUseName10;
-      struMacro.pSymbols   = pTable;
-      iStatus = hb_macroCompile( &struMacro, szString, HB_P_MACROPOP );
+      iStatus = hb_macroParse( &struMacro, szString, HB_P_MACROPOP );
 
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && struMacro.status == HB_MACRO_OK )
+      {
          hb_macroRun( &struMacro );
+         hb_macroDelete( &struMacro );
+      }
       else
          hb_macroSyntaxError( &struMacro );
-      hb_macroDelete( &struMacro );
    }
 }
+
+/* compile a string and return a pcode to push a value of expression
+ * NOTE: it can be called to implement an index key evaluation
+ * use hb_macroRun() to evaluate a compiled pcode
+ */
+HB_MACRO_PTR hb_macroCompile( char * szString )
+{
+   HB_MACRO_PTR pMacro;
+   int iStatus;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroCompile(%s)", szString));
+
+   pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
+   pMacro->bShortCuts = hb_comp_bShortCuts;
+   pMacro->bName10    = hb_comp_bUseName10;
+   iStatus = hb_macroParse( pMacro, szString, HB_P_MACROPUSH );
+   if( ! ( iStatus == HB_MACRO_OK && pMacro->status == HB_MACRO_OK ) )
+   {
+      hb_macroDelete( pMacro );
+      hb_xfree( pMacro );
+      pMacro = NULL;
+   }
+
+   return pMacro;
+}
+
 
 /* ************************************************************************* */
 
@@ -279,10 +325,12 @@ void hb_compGenPushSymbol( char * szSymbolName, int iIsFunction, HB_MACRO_DECL )
        * (pName points to static data)
        */
       if( pName )
-         szSymbolName[ strlen( pName ) ] ='\0';
+         pSym = hb_dynsymGet( pName );
+      else
+         pSym = hb_dynsymGet( szSymbolName );
    }
-
-   pSym = hb_dynsymGet( szSymbolName );
+   else
+      pSym = hb_dynsymGet( szSymbolName );
    hb_compGenPCode1( HB_P_MPUSHSYM, HB_MACRO_PARAM );
    hb_compGenPCodeN( ( BYTE * ) &pSym, sizeof( pSym ), HB_MACRO_PARAM );
 }
@@ -317,7 +365,11 @@ void hb_compGenMessage( char * szMsgName, HB_MACRO_DECL )
 /* generates an underscore-symbol name for a data assignment */
 void hb_compGenMessageData( char * szMsg, HB_MACRO_DECL )
 {
-   char * szResult = ( char * ) hb_xgrab( strlen( szMsg ) + 2 );
+   char * szResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_compGenMessageData(%s)", szMsg));
+
+   szResult = ( char * ) hb_xgrab( strlen( szMsg ) + 2 );
 
    strcpy( szResult, "_" );
    strcat( szResult, szMsg );
@@ -582,13 +634,18 @@ void hb_macroError( int iError, HB_MACRO_DECL )
 */
 void hb_compCodeBlockStart( HB_MACRO_DECL )
 {
-   HB_PCODE_INFO_PTR pCB = ( HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
+   HB_PCODE_INFO_PTR pCB;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroCodeBlockStart(%p)", HB_MACRO_PARAM));
+
+   pCB = ( HB_PCODE_INFO_PTR ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
 
    /* replace current pcode buffer with the new one
     */
    pCB->pPrev = HB_PCODE_DATA;
    HB_PCODE_DATA = pCB;
 
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroCodeBlockStart.(%p)", HB_MACRO_PARAM));
    pCB->pCode = ( BYTE * ) hb_xgrab( HB_PCODE_SIZE );
    pCB->lPCodeSize = HB_PCODE_SIZE;
    pCB->lPCodePos  = 0;
@@ -600,7 +657,9 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
    HB_PCODE_INFO_PTR pCodeblock;   /* pointer to the current codeblock */
    USHORT wSize;
    USHORT wParms = 0;   /* number of codeblock parameters */
-   HB_CBVAR_PTR pVar, pFree;
+   HB_CBVAR_PTR pVar;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroCodeBlockEnd(%p)", HB_MACRO_PARAM));
 
    /* a currently processed codeblock */
    pCodeblock = HB_PCODE_DATA;
@@ -625,11 +684,11 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
       ++wParms;
    }
 
-   /*NOTE:  8 = HB_P_MPUSHBLOCK + USHORT( size ) + USHORT( wParams ) + USHORT( 0 ) + _ENDBLOCK
+   /*NOTE:  6 = HB_P_MPUSHBLOCK + USHORT( size ) + USHORT( wParams ) + _ENDBLOCK
     * runtime compiled codeblock cannot reference local variables defined in a
     * function
     */
-   wSize = ( USHORT ) pCodeblock->lPCodePos + 8;
+   wSize = ( USHORT ) pCodeblock->lPCodePos + 6;
 
    /*NOTE: HB_P_MPUSHBLOCK differs from HB_P_PUSHBLOCK - the pcode
     * is stored in dynamic memory pool instead of static memory
@@ -637,8 +696,6 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
    hb_compGenPCode3( HB_P_MPUSHBLOCK, HB_LOBYTE( wSize ), HB_HIBYTE( wSize ), HB_MACRO_PARAM );
    hb_compGenPCode1( HB_LOBYTE( wParms ), HB_MACRO_PARAM );
    hb_compGenPCode1( HB_HIBYTE( wParms ), HB_MACRO_PARAM );
-   hb_compGenPCode1( 0, HB_MACRO_PARAM );
-   hb_compGenPCode1( 0, HB_MACRO_PARAM );
 
    /* copy a codeblock pcode buffer */
    hb_compGenPCodeN( pCodeblock->pCode, pCodeblock->lPCodePos, HB_MACRO_PARAM );
@@ -646,15 +703,6 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
 
    /* free memory allocated for a codeblock */
    hb_xfree( ( void * ) pCodeblock->pCode );
-   pVar = pCodeblock->pLocals;
-   while( pVar )
-   {
-      /* free used variables */
-      pFree = pVar;
-      hb_xfree( ( void * ) pFree->szName );
-      pVar = pVar->pNext;
-      hb_xfree( ( void * ) pFree );
-   }
    hb_xfree( ( void * ) pCodeblock );
 }
 
@@ -665,5 +713,5 @@ void hb_compCodeBlockEnd( HB_MACRO_DECL )
  * required for macro compiler differs a little - we are passing additional
  * parameter that holds macro compiler internal data
  */
-#include "../compiler/expropt.c"
+#include "hbexpr.c"
 

@@ -63,6 +63,9 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 #define alloca  hb_xgrab
 #undef malloc
 #define malloc  hb_xgrab
+#undef free
+#define free hb_xfree
+
 
 /* declaration of yylex function
  * NOTE: yylval is paassed automaticaly by bison if %pure_parser is used
@@ -74,8 +77,6 @@ NOTE: -C  controls the speed/size ratio of generated scanner
 /* code that fills input buffer
  */
 #define YY_INPUT( buf, result, max_size ) result = 0;
-
-
 
 
 #define LOOKUP          0       /* scan from the begining of line */
@@ -330,6 +331,7 @@ Separator     {SpaceTab}
               }
 
 {Array}     {
+               HB_TRACE(HB_TR_DEBUG, ("{Array}(%s)", yytext));
                if( ! i_INDEX_STATE )
                {
                   BEGIN INDEX;
@@ -397,6 +399,7 @@ Separator     {SpaceTab}
             }
 
 {MacroVar}     {
+                   HB_TRACE(HB_TR_DEBUG, ("{MacroVar}(%s)", yytext));
                   if( yytext[ yyleng-1 ] == '.' )
                      yytext[ yyleng-1 ] = '\0';
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext+1 ) );
@@ -405,24 +408,28 @@ Separator     {SpaceTab}
                }
 
 {MacroEnd}     {
+                   HB_TRACE(HB_TR_DEBUG, ("{MacroEnd}(%s)", yytext));
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroId}      {
+                   HB_TRACE(HB_TR_DEBUG, ("{MacroId}(%s)", yytext));
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {MacroTxt}     {
+                   HB_TRACE(HB_TR_DEBUG, ("{MacroTxt}(%s)", yytext));
                   yylval_ptr->string = hb_strupr( hb_strdup( yytext ) );
                   hb_comp_iState = MACROTEXT;
                   return MACROTEXT;
                }
 
 {Identifier}    {
+                   HB_TRACE(HB_TR_DEBUG, ("{Identifier}(%s)", yytext));
                    if( YYLEX_PARAM->bName10 && strlen( yytext ) > 10 )
                    {
                         yytext[ 10 ] = 0;
@@ -448,6 +455,7 @@ void * hb_compFlexNew( HB_MACRO_PTR pMacro )
     * NOTE: It must be used in macro.l because yy_scan_bytes is not
     * visible in macro.y
     */
+   HB_TRACE(HB_TR_DEBUG, ("hb_compFlexNew(%s, %i)", pMacro->string, pMacro->length));
    return (void *) yy_scan_bytes( pMacro->string, pMacro->length );
 }
 

@@ -1,3 +1,4 @@
+%pure_parser
 %{
 /*
  * $Id$
@@ -54,6 +55,8 @@
 #define alloca  hb_xgrab
 #undef malloc
 #define malloc  hb_xgrab
+#undef free
+#define free hb_xfree
 
 /* yacc/lex related definitions
  */

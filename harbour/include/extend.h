@@ -227,6 +227,7 @@ typedef struct _HB_CODEBLOCK
    USHORT   uiLocals;     /* number of referenced local variables */
    PHB_SYMB pSymbols;     /* codeblocks symbols */
    ULONG    ulCounter;    /* numer of references to this codeblock */
+   BOOL     dynBuffer;    /* is pcode buffer allocated dynamically */
 } HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
 typedef struct _HB_VALUE
@@ -382,6 +383,7 @@ extern PHB_SYMB hb_symbolNew( char * szName );
 
 /* Codeblock management */
 extern HB_CODEBLOCK_PTR hb_codeblockNew( BYTE *, USHORT, USHORT *, PHB_SYMB );
+extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE *, USHORT );
 extern void     hb_codeblockDelete( PHB_ITEM );
 extern PHB_ITEM hb_codeblockGetVar( PHB_ITEM, LONG );
 extern PHB_ITEM hb_codeblockGetRef( PHB_ITEM, PHB_ITEM );
@@ -417,8 +419,8 @@ extern char *   hb_setColor( char * );
 extern char * hb_compReservedName( char * );
 
 /* macro compiler */
-extern void hb_macroGetValue( HB_ITEM_PTR, PHB_SYMB );
-extern void hb_macroSetValue( HB_ITEM_PTR, PHB_SYMB );
+extern void hb_macroGetValue( HB_ITEM_PTR );
+extern void hb_macroSetValue( HB_ITEM_PTR );
 
 /* misc */
 extern char *   hb_version( USHORT uiMode );
