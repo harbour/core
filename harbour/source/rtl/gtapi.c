@@ -6,6 +6,8 @@
  *  GTAPI.C: Generic Terminal for Harbour
  *
  * Latest mods:
+ * 1.31   19990719   ptucker   Implimented color selection in gtWrite and
+ *                             gtScroll
  * 1.30   19990719   ptucker   Removed temp init hack
  *                             call gtDone from hb_gtExit
  * 1.29   19990719   ptucker   Minor change to catch last color parameter
@@ -287,6 +289,9 @@ int hb_gtSetColorStr(char * fpColorString)
     }
     while( c );
 
+    if( nPos && nPos < 4 )
+       _Color[4] = _Color[1];
+
     return(0);
 }
 
@@ -495,12 +500,9 @@ int hb_gtSetSnowFlag(BOOL bNoSnow)
 
 int hb_gtWrite(char * fpStr, ULONG length)
 {
-    /* TODO: need to get current color setting from s_szColorString and
-             s_uiColorIndex
-    */
     int iRow, iCol, iMaxCol, iMaxRow, iTemp;
     ULONG size;
-    char attr=7, *fpPointer = fpStr;
+    char attr=_Color[s_uiColorIndex], *fpPointer = fpStr;
 
     /* Determine where the cursor is going to end up */
     iRow = s_uiCurrentRow;
@@ -650,11 +652,8 @@ int hb_gtScroll(USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SH
               (iRows >= 0 ? iCount <= uiBottom : iCount >= uiTop);
               (iRows >= 0 ? iCount++ : iCount--))
          {
-             /* TODO: need to get current color setting from s_szColorString and
-                      s_uiColorIndex
-             */
             int iRowPos = iCount + iRows;
-            char attr=7;
+            char attr=_Color[s_uiColorIndex];
             /* Blank the scroll region in the current row */
             gtPuts (uiLeft, iCount, attr, fpBlank, iLength);
 

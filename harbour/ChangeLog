@@ -1,3 +1,8 @@
+19990720-13:30 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/gtapi.c
+    * implimented color attribute in gtWrite and gtScroll.
+      This is the last selected color set via gt_ColorSelect()
+
 19990721-16:35 CET David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.y
     ! Correct _StdFunc entty for INKEY to allow no parameters
