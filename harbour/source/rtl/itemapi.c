@@ -94,7 +94,7 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 }
 
 /* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
-         added than the maximum (9) .*/
+         added than the maximum (9). */
 
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
@@ -470,6 +470,8 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
 
    return pItem;
 }
+
+/* NOTE: The caller should free the pointer if it's not NULL */
 
 char * hb_itemGetC( PHB_ITEM pItem )
 {
@@ -1193,69 +1195,90 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
    return szResult;
 }
 
-char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen )
-{
-   static char buffer[ 32 ]; /* NOTE: Not re-entrant. Probably not thread safe. */
-   char * pointer;
+/* NOTE: The caller must free the pointer if the bFreeReq param gets set to
+         TRUE, this trick is required to stay thread safe, while minimize
+         memory allocation and buffer copying.
+         As a side effect the caller should never modify the returned buffer
+         since it may point to a constant value. [vszel] */
 
-   HB_TRACE(("hb_itemString(%p, %p)", pItem, ulLen));
+char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
+{
+   char * buffer;
+
+   HB_TRACE(("hb_itemString(%p, %p, %p)", pItem, ulLen, bFreeReq));
 
    switch( pItem->type )
    {
       case IT_STRING:
-         pointer = hb_itemGetCPtr( pItem );
+         buffer = hb_itemGetCPtr( pItem );
          * ulLen = hb_itemGetCLen( pItem );
+         * bFreeReq = FALSE;
          break;
+
       case IT_DATE:
          {
             char szDate[ 9 ];
+
             hb_dateDecStr( szDate, pItem->item.asDate.value );
+
+            buffer = ( char * ) hb_xgrab( 11 );
             hb_dtoc( szDate, buffer, hb_set.HB_SET_DATEFORMAT );
-            pointer = buffer;
             * ulLen = strlen( buffer );
+            * bFreeReq = TRUE;
          }
          break;
+
       case IT_DOUBLE:
       case IT_INTEGER:
       case IT_LONG:
-         pointer = hb_itemStr( pItem, NULL, NULL );
-         if( pointer )
+         buffer = hb_itemStr( pItem, NULL, NULL );
+         if( buffer )
          {
-            strncpy( buffer, pointer, sizeof( buffer ) );
-            buffer[ sizeof( buffer ) - 1 ] = '\0';
-            hb_xfree( pointer );
-            pointer = buffer;
             * ulLen = strlen( buffer );
+            * bFreeReq = TRUE;
+         }
+         else
+         {
+            buffer = "";
+            * ulLen = 0;
+            * bFreeReq = FALSE;
          }
          break;
+
       case IT_NIL:
-         strcpy( buffer, "NIL" );
-         pointer = buffer;
+         buffer = "NIL";
          * ulLen = 3;
+         * bFreeReq = FALSE;
          break;
+
       case IT_LOGICAL:
-         if( hb_itemGetL( pItem ) )
-            strcpy( buffer, ".T." );
-         else
-            strcpy( buffer, ".F." );
-         pointer = buffer;
+         buffer = ( hb_itemGetL( pItem ) ? ".T." : ".F." );
          * ulLen = 3;
+         * bFreeReq = FALSE;
          break;
+
       default:
-         buffer[ 0 ] = '\0';
-         pointer = buffer;
+         buffer = "";
          * ulLen = 0;
+         * bFreeReq = FALSE;
    }
-   return pointer;
+
+   return buffer;
 }
 
 PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
 {
+   PHB_ITEM pResult;
+   char * buffer;
    ULONG ulLen;
-   char * pointer;
+   BOOL bFreeReq;
 
    HB_TRACE(("hb_itemValToStr(%p)", pItem));
 
-   pointer = hb_itemString( pItem, &ulLen );
-   return hb_itemPutCL( NULL, pointer, ulLen );
+   buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
+   pResult = hb_itemPutCL( NULL, buffer, ulLen );
+   if( bFreeReq )
+      hb_xfree( buffer );
+
+   return pResult;
 }

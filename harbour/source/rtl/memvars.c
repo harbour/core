@@ -550,7 +550,7 @@ static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
 {
    PHB_DYNS pDynVar;
 
-   HB_TRACE(("hb_memvarCreateFromItem(%p, %c, %p)", pMemvar, bScope, pValue));
+   HB_TRACE(("hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, bScope, pValue));
 
    /* find dynamic symbol or creeate one */
    if( IS_SYMBOL( pMemvar ) )
@@ -566,7 +566,7 @@ static void hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pVa
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITEM pValue )
 {
-   HB_TRACE(("hb_memvarCreateFromDynSymbol(%p, %c, %p)", pDynVar, bScope, pValue));
+   HB_TRACE(("hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, bScope, pValue));
 
    if( bScope & VS_PUBLIC )
    {

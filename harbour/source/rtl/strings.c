@@ -410,7 +410,7 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 {
    char * szText;
 
-   HB_TRACE(("hb_itemPadCond(%p, %s, %p)", pItem, buffer, pulSize));
+   HB_TRACE(("hb_itemPadCond(%p, %p, %p)", pItem, buffer, pulSize));
 
    if( pItem )
    {
@@ -948,7 +948,7 @@ char * hb_strncpyUpper( char * pDest, char * pSource, ULONG ulLen )
 {
    char * pStart = pDest;
 
-   HB_TRACE(("hb_strncpyUpper(%s, %s, %lu)", pDest, pSource, ulLen));
+   HB_TRACE(("hb_strncpyUpper(%p, %s, %lu)", pDest, pSource, ulLen));
 
    pDest[ ulLen ] ='\0';
    while( ulLen-- )
@@ -1673,6 +1673,11 @@ int hb_strgreater( char * szText1, char * szText2 )
 HARBOUR HB_HB_VALTOSTR( void )
 {
    ULONG ulLen;
-   char * pointer = hb_itemString( hb_param( 1, IT_ANY ), &ulLen );
-   hb_retclen( pointer, ulLen );
+   BOOL bFreeReq;
+   char * buffer = hb_itemString( hb_param( 1, IT_ANY ), &ulLen, &bFreeReq );
+
+   hb_retclen( buffer, ulLen );
+
+   if( bFreeReq )
+      hb_xfree( buffer );
 }

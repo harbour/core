@@ -300,15 +300,19 @@ typedef void hb_out_func_typedef( char *, ULONG );
 static void hb_out( USHORT uiParam, hb_out_func_typedef * hb_out_func )
 {
    ULONG ulLen;
+   BOOL bFreeReq;
    PHB_ITEM pItem;
    char * pString;
 
    HB_TRACE(("hb_out(%hu, %p)", uiParam, hb_out_func));
 
    pItem = hb_param( uiParam, IT_ANY );
-   pString = hb_itemString( pItem, &ulLen );
+   pString = hb_itemString( pItem, &ulLen, &bFreeReq );
 
    hb_out_func( pString, ulLen );
+
+   if( bFreeReq )
+      hb_xfree( pString );
 }
 
 /* Output an item to STDOUT */

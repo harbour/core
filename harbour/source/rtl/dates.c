@@ -341,6 +341,8 @@ HARBOUR HB_CTOD( void )
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "CTOD" ); /* NOTE: Clipper catches this at compile time! */
 }
 
+/* NOTE: szFormattedDate must be an at least 11 chars wide buffer */
+
 char * hb_dtoc( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
    /*

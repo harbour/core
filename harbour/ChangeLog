@@ -1,3 +1,20 @@
+19991026-14:07 GMT+1 Victor Szel <info@szelvesz.hu>
+  * include/itemapi.h
+    source/rtl/itemapi.c
+    source/rtl/strings.c
+    source/rtl/console.c
+    + hb_itemString() made thread safe, while keeping the speed of previous
+      non-thread safe version for most cases.
+  * source/rtl/dates.c
+    + NOTE added about the buffer size requirements of hb_dtoc()
+  * source/vm/hvm.c
+    + HB_TRACE() call added to the HB_P_LINE opcode.
+  * source/rtl/strings.c
+    ! hb_strncpyUpper() and hb_itemPadConv() HB_TRACE() calls now print the 
+      address of a buffer instead of the (uninitialized) content.
+  * source/rtl/memvars.c
+    ! bScope is now showed as a number instead of a char in HB_TRACE() call.
+
 19991026-12:49 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbf1.c
     tests/testdbf.prg
