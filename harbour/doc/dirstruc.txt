@@ -74,6 +74,10 @@ in order to remove empty directories)
 |   |   |                library to work with ZIP files.
 |   |   |
 |   |   +---doc        - Documents for the ZIP functions.
+|   |   |
+|   |   +---include    - Include files used by the library.
+|   |   |
+|   |   +---Linux      - Some source files for the Linux platform.
 |   |
 |   +---hb_struc       - Base Class for internal handling of class creation
 |   |                    as structures.
@@ -223,6 +227,9 @@ in order to remove empty directories)
 |                        functions.
 |
 +---tests              - Test programs.
+|   |
+|   +---bldtest        - Simple C program to check if Harbour can be compiled
+|                        on the current machine, system and C compiler.
 |
 +---utils              - Utilities and tools that are part of Harbour.
     |

@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-22 10:57 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/dirstruc.txt
+    + Add oneliner description for: contrib/hbzlib/include,
+                                    contrib/hbzlib/Linux,
+                                    tests/bldtest
+
 2004-04-21 16:35 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/en/rddord.txt
     - Remove docs for: ORDKEY() $DESCRIPTION$ section, ORDLISTADD(),
