@@ -8,8 +8,6 @@ PRG_EXES = $(PRG_SOURCES:.prg=$(EXE_EXT))
 
 ALL_PRG_OBJS = $(PRG_OBJS)
 
-$(PRG_EXES) : %$(EXE_EXT) : %$(OBJ_EXT)
-
 $(PRG_OBJS) : %$(OBJ_EXT) : %.c
 
 $(PRG_C_SOURCES) : %.c : $(GRANDP)%.prg

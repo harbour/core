@@ -1,3 +1,9 @@
+19990622-00:22 Ryszard Glab <rglab@imid.med.pl>
+    * config/prg.cf
+    * config/test.cf
+	* corrected to support creation of  executables that don't contain
+	extension
+	
 19990621-19:00 CET Ad Franse
   + source/rdd/rdd.api
   + include/compat.h; include/super.h; include/compat.h
