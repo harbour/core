@@ -53,7 +53,7 @@
 
 /* Language name: Polish */
 /* ISO language code (2 chars): PL */
-/* Codepage: ISO */
+/* Codepage: ISO-8859-2 */
 
 #include <ctype.h>
 #include "hbapi.h"

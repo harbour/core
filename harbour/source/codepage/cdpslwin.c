@@ -53,7 +53,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: 1250 */
+/* Codepage: Windows-1250 */
 
 #include <ctype.h>
 #include "hbapi.h"

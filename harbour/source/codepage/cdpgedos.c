@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: German MS-DOS*/
-/* ISO language code (2 chars): DE (please look it up in /doc/lang_id.txt) */
-/* Codepage: DE */
+/* Language name: German */
+/* ISO language code (2 chars): DE */
+/* Codepage: 850 */
 
 #include <ctype.h>
 #include "hbapi.h"

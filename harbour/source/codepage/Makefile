@@ -9,11 +9,12 @@ C_SOURCES=\
 	cdpeswin.c    \
 	cdpgedos.c    \
 	cdpgewin.c    \
-	cdpla850.c    \
 	cdppl852.c    \
 	cdppliso.c    \
 	cdpplmaz.c    \
 	cdpplwin.c    \
+	cdppt850.c    \
+	cdpptiso.c    \
 	cdpru866.c    \
 	cdprukoi.c    \
 	cdpruwin.c    \

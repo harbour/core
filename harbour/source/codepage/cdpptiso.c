@@ -4,10 +4,12 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Latin 850 )
+ * National Collation Support Module ( PTISO )
  *
- * Copyright 2002 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
+ * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
+ * Portuguese collating sequence (PTISO) done
+ * by Przemyslaw Czerpak <druzus@polbox.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +52,9 @@
  *
  */
 
-/* Language name: <Your language> */
-/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
-/* Codepage: <Your codepage> */
+/* Language name: Portuguese
+/* ISO language code (2 chars): PT
+/* Codepage: iso-8859-1 */
 
 #include <ctype.h>
 #include "hbapi.h"
@@ -74,7 +76,7 @@
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-      a~€
+      a~Ç
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -83,16 +85,15 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "PT",NUMBER_OF_CHARACTERS,
-    "Aµ·¶ÇBC€DEÔÒFGHIÖŞ×ØJKLMN¥Oàãâå™PQRSTUéëêšVWXYZ","a …ƒÆ„bc‡de‚Šˆfghi¡Œ‹jklmn¤o¢•“ä”pqrstu£—–vwxyz",
+static HB_CODEPAGE s_codepage = { "PTISO",NUMBER_OF_CHARACTERS,
+    "AÁÀÂÃÄBCÇDEÉÈÊFGHIÍÌÎÏJKLMNÑOÓÒÔÕÖPQRSTUÚÙÛÜVWXYZ","aáàâãäbcçdeéèêfghiíìîïjklmnñoóòôõöpqrstuúùûüvwxyz",
     IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( PT );
+HB_CODEPAGE_ANNOUNCE( PTISO );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PT )
+HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PTISO )
    hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_PT )
+HB_CALL_ON_STARTUP_END( hb_codepage_Init_PTISO )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_PT
+   #pragma startup hb_codepage_Init_PTISO
 #endif
-

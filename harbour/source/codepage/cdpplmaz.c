@@ -53,7 +53,7 @@
 
 /* Language name: Polish */
 /* ISO language code (2 chars): PL */
-/* Codepage: MAZ */
+/* Codepage: Mazovia */
 
 #include <ctype.h>
 #include "hbapi.h"

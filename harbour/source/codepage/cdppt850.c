@@ -4,11 +4,12 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Spanish MS-DOS )
+ * National Collation Support Module ( Latin 850 )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
- * Spanish MS-DOS support by Antonio Linares <alinares@fivetechsoft.com>
+ * Portuguese collating sequence (PT850) done
+ * by Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,31 +52,31 @@
  *
  */
 
-/* Language name: Spanish */
-/* ISO language code (2 chars): ES */
+/* Language name: Portuguese
+/* ISO language code (2 chars): PT
 /* Codepage: 850 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  49    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
+#define ACCENTED_EQUAL         0    /* Should be 1, if accented character 
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
+                                       only if the unaccented versions of all 
+                                       characters being compared are the same 
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-    a~Ä
+      a~Ä
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -84,15 +85,15 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "ES", NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
-    IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0,NULL, NULL,NULL,NULL,0,NULL };
+static HB_CODEPAGE s_codepage = { "PT850",NUMBER_OF_CHARACTERS,
+    "Aµ∑∂«éBCÄDEê‘“FGHI÷ﬁ◊ÿJKLMN•O‡„‚ÂôPQRSTUÈÎÍöVWXYZ","a†ÖÉ∆ÑbcádeÇäàfghi°çåãjklmn§o¢ïì‰îpqrstu£óñÅvwxyz",
+    IS_LATIN,ACCENTED_EQUAL,ACCENTED_INTERLEAVED,0,NULL,NULL,NULL,NULL,0,NULL };
 
-HB_CODEPAGE_ANNOUNCE( ES );
+HB_CODEPAGE_ANNOUNCE( PT850 );
 
-HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_ES )
+HB_CALL_ON_STARTUP_BEGIN( hb_codepage_Init_PT850 )
    hb_cdpRegister( &s_codepage );
-HB_CALL_ON_STARTUP_END( hb_codepage_Init_ES )
+HB_CALL_ON_STARTUP_END( hb_codepage_Init_PT850 )
 #if ! defined(__GNUC__) && ! defined(_MSC_VER)
-   #pragma startup hb_codepage_Init_ES
+   #pragma startup hb_codepage_Init_PT850
 #endif
