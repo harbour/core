@@ -50,7 +50,7 @@
  *
  */
 /*
- * The following functions are added Feb 01,2002 by
+ * The following functions are added Feb 01,2002 by 
  *       Alexander Kresin <alex@belacy.belgorod.su>
  *
  *  __HRBLOAD()
@@ -90,7 +90,6 @@ static BYTE prgFunction[] =
 /* #elseif MOTOROLA */
 /* #elseif ... */
 /* #endif */
-
 
 typedef union
 {
@@ -257,7 +256,7 @@ HB_FUNC( __HRBDOFU )
       hb_vmPushNil();
       for( i = 0; i < argc-1; i++ ) /* Push other  params  */
          hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );
-
+                                  
       hb_vmSend( argc-1 );          /* Run function        */
    }
    else
@@ -320,14 +319,15 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
          pSymRead[ ul ].pFunPtr = ( PHB_FUNC ) ( ULONG ) hb_hrbFileReadByte( file, szFileName );
          pSymRead[ ul ].pDynSym = NULL;
 
-         if ( pHrbBody->ulSymStart == -1 &&
-                    pSymRead[ ul ].cScope & HB_FS_FIRST &&
+         if ( pHrbBody->ulSymStart == -1 && 
+                    pSymRead[ ul ].cScope & HB_FS_FIRST && 
                     ! ( pSymRead[ ul ].cScope & HB_FS_INITEXIT ) )
              pHrbBody->ulSymStart = ul;
       }
 
       pHrbBody->ulFuncs = hb_hrbFileReadLong( file, szFileName );  /* Read number of functions */
       pDynFunc = ( PHB_DYNF ) hb_xgrab( pHrbBody->ulFuncs * sizeof( HB_DYNF ) );
+      memset( pDynFunc, 0, pHrbBody->ulFuncs * sizeof( HB_DYNF ) );
       for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )         /* Read symbols in .HRB     */
       {
          pDynFunc[ ul ].szName = hb_hrbFileReadId( file, szFileName );
@@ -342,6 +342,8 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
                                              /* function                 */
       }
 
+      pHrbBody->pSymRead = pSymRead;
+      pHrbBody->pDynFunc = pDynFunc;
       s_ulSymEntry = 0;
       for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Linker                   */
       {
@@ -369,8 +371,10 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
             pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
             if( !pDynSym )
             {
+               char szName[21];
+               strncpy( szName,pSymRead[ ul ].szName,20 );
                hb_hrbUnLoad( pHrbBody );
-               hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", pSymRead[ ul ].szName, 0 );
+               hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", szName, 0 );
                bError = TRUE;
                break;
             }
@@ -381,11 +385,6 @@ PHRB_BODY hb_hrbLoad( char* szHrb )
       {
          hb_hrbUnLoad( pHrbBody );
          pHrbBody = NULL;
-      }
-      else
-      {
-         pHrbBody->pSymRead = pSymRead;
-         pHrbBody->pDynFunc = pDynFunc;
       }
 
       hb_hrbFileClose( file );
@@ -423,7 +422,7 @@ void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
          hb_vmPushNil();
          for( i = 0; i < argc; i++ ) /* Push other cmdline params*/
             hb_vmPushString( argv[i],strlen(argv[i]) );
-
+                                     
          hb_vmSend( argc );          /* Run init function        */
       }
    }
@@ -465,9 +464,9 @@ void hb_hrbUnLoad( PHRB_BODY pHrbBody )
    for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
    {
       hb_xfree( pHrbBody->pDynFunc[ ul ].pAsmCall->pAsmData );
-      hb_xfree( pHrbBody->pDynFunc[ ul ].pAsmCall           );
-      hb_xfree( pHrbBody->pDynFunc[ ul ].pCode              );
-      hb_xfree( pHrbBody->pDynFunc[ ul ].szName             );
+      hb_xfree( pHrbBody->pDynFunc[ ul ].pAsmCall );
+      hb_xfree( pHrbBody->pDynFunc[ ul ].pCode );
+      hb_xfree( pHrbBody->pDynFunc[ ul ].szName );
    }
 
    for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
@@ -512,8 +511,8 @@ static int hb_hrbFileReadHead( FILE * file, char * szFileName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hrbFileReadHead(%p)", file ));
 
-   hb_hrbFileRead( file, szFileName, (char *) szBuf, 1, 4 );
-   if( strncmp( (char *) szHead, (char *) szBuf, 4 ) )
+   hb_hrbFileRead( file, szFileName, szBuf, 1, 4 );
+   if( strncmp( szHead,szBuf,4 ) )
    {
       hb_errRT_BASE_Ext1( EG_CORRUPTION, 9999, NULL, szFileName, 0, EF_CANDEFAULT, 1, hb_paramError( 1 ) );
       return 0;
