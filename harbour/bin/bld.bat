@@ -99,7 +99,7 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
 :COMPILE
 
-   harbour %1.prg -n -i..\include
+   harbour %1.prg -n -i..\include %2 %3 %HARBOURFLAGS%
 
 :A_DOS
 
@@ -107,11 +107,31 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
    if "%HB_GT_LIB%" == "" set HB_GT_LIB=gtdos
 
-   if "%HB_COMPILER%" == "bcc16"   bcc -O2 -mh -I..\include -L..\lib %1.c tools.lib debug.lib vm.lib rtl.lib %HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
+   if not "%HB_COMPILER%" == "bcc16" goto A_DOS_BCC16_NOT
 
-   if not "%HB_COMPILER%" == "djgpp" goto A_DOS_NOTDJGPP
+      echo -O2 -mh %CFLAGS% -I..\include -L..\lib > build.tmp
+      echo -e%1.exe %1.c >> build.tmp
+      echo tools.lib >> build.tmp
+      echo debug.lib >> build.tmp
+      echo vm.lib >> build.tmp
+      echo rtl.lib >> build.tmp
+      echo gtdos.lib >> build.tmp
+      echo lang.lib >> build.tmp
+      echo rdd.lib >> build.tmp
+      echo macro.lib >> build.tmp
+      echo pp.lib >> build.tmp
+      echo dbfntx.lib >> build.tmp
+      echo dbfcdx.lib >> build.tmp
+      echo common.lib >> build.tmp
+      bcc @build.tmp
+      del build.tmp
+      goto END
 
-      echo %1.c -o%1.exe -I..\include -L..\lib > build.tmp
+:A_DOS_BCC16_NOT
+                                          
+   if not "%HB_COMPILER%" == "djgpp" goto A_DOS_DJGPP_NOT
+
+      echo %1.c -o%1.exe %CFLAGS% -I..\include -L..\lib > build.tmp
       echo -ltools >> build.tmp
       echo -ldebug >> build.tmp
       echo -lvm >> build.tmp
@@ -130,9 +150,9 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
       del build.tmp
       goto END
 
-:A_DOS_NOTDJGPP
+:A_DOS_DJGPP_NOT
 
-   if "%HB_COMPILER%" == "rsx32"   gcc %1.c -Zrsx32 -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "rsx32"   gcc %1.c -Zrsx32 %CFLAGS% -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
    goto END
 
 :A_W32
@@ -141,11 +161,11 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
    if "%HB_GT_LIB%" == "" set HB_GT_LIB=gtwin
 
-   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -I..\include -L..\lib %1.c tools.lib debug.lib vm.lib rtl.lib %HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe -mno-cygwin -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "msvc"    cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -I..\include %1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\%HB_GT_LIB%.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib user32.lib
+   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 %CFLAGS% -I..\include -L..\lib %1.c tools.lib debug.lib vm.lib rtl.lib %HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %CFLAGS% -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe %CFLAGS% -mno-cygwin -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "msvc"    cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA %CFLAGS% -I..\include %1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\%HB_GT_LIB%.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib user32.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
    goto END
 
@@ -155,8 +175,8 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
    if "%HB_GT_LIB%" == "" set HB_GT_LIB=gtos2
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ -I..\include /C- /Tp %1.c ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\%HB_GT_LIB%.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\vm.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %CFLAGS% -I..\include %1.c ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\%HB_GT_LIB%.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\vm.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib
    goto END
 
 :A_LINUX
@@ -165,7 +185,7 @@ rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
    if "%HB_GT_LIB%" == "" set HB_GT_LIB=gtstd
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -I../include -L../lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I../include -L../lib -ltools -ldebug -lvm -lrtl -l%HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
    goto END
 
 :CLEANUP

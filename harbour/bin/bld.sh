@@ -79,18 +79,18 @@ if [ -z "$1" ] || [ -z "$HB_ARCHITECTURE" ] || [ -z "$HB_COMPILER" ]; then
 
 else
 
-   harbour $1.prg -n -i../include
+   harbour $1.prg -n -i../include $2 $3 $HARBOURFLAGS
 
    if [ "$HB_ARCHITECTURE" == "dos" ]; then
 
       if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtdos; fi
 
       if [ "$HB_COMPILER" == "bcc16" ]; then
-         bcc -O2 -mh -I..\include -L..\lib $1.c tools.lib debug.lib vm.lib rtl.lib $HB_GT_LIB.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
+         bcc -O2 -mh $CFLAGS -I..\include -L..\lib $1.c tools.lib debug.lib vm.lib rtl.lib $HB_GT_LIB.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
       elif [ "$HB_COMPILER" == "djgpp" ]; then
-         gcc $1.c -o$1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommo
+         gcc $1.c -o$1.exe $CFLAGS -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfnt -ldbfcd -lcommo
       elif [ "$HB_COMPILER" == "rsx32" ]; then
-         gcc $1.c -Zrsx32 -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c -Zrsx32 $CFLAGS -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
@@ -100,15 +100,15 @@ else
       if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtwin; fi
 
       if [ "$HB_COMPILER" == "bcc32" ]; then
-         bcc32 -O2 -I..\include -L..\lib $1.c tools.lib debug.lib vm.lib rtl.lib $HB_GT_LIB.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
+         bcc32 -O2 $CFLAGS -I..\include -L..\lib $1.c tools.lib debug.lib vm.lib rtl.lib $HB_GT_LIB.lib lang.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib common.lib
       elif [ "$HB_COMPILER" == "gcc" ]; then
-         gcc $1.c -o$1.exe -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c -o$1.exe $CFLAGS -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       elif [ "$HB_COMPILER" == "mingw32" ]; then
-         gcc $1.c -o$1.exe -mno-cygwin -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c -o$1.exe $CFLAGS -mno-cygwin -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       elif [ "$HB_COMPILER" == "rsxnt" ]; then
-         gcc $1.c -Zwin32 -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c -Zwin32 $CFLAGS -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       elif [ "$HB_COMPILER" == "msvc" ]; then
-         cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA -I..\include $1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\$HB_GT_LIB.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.
+         cl -Fd..\bin\harbour -w -Zi -TP -GZ -GA $CFLAGS -I..\include $1.c /link /subsystem:CONSOLE ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\$HB_GT_LIB.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib
          echo Ignore LNK4033 warning
       else
          echo Error: HB_COMPILER value is unsupported.
@@ -119,9 +119,9 @@ else
       if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtos2; fi
 
       if [ "$HB_COMPILER" == "gcc" ]; then
-         gcc $1.c -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c $CFLAGS -I..\include -L..\lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       elif [ "$HB_COMPILER" == "icc" ]; then
-         icc /Gs+ /W2 /Se /Sd+ /Ti+ -I..\include /C- /Tp $1.c ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\$HB_GT_LIB.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\vm.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.l
+         icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp $CFLAGS -I..\include $1.c ..\lib\tools.lib ..\lib\debug.lib ..\lib\vm.lib ..\lib\rtl.lib ..\lib\$HB_GT_LIB.lib ..\lib\lang.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\vm.lib ..\lib\macro.lib ..\lib\pp.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.l
       else
          echo Error: HB_COMPILER value is unsupported.
       fi
@@ -131,7 +131,7 @@ else
       if [ -z "$HB_GT_LIB" ]; then export HB_GT_LIB=gtstd; fi
 
       if [ "$HB_COMPILER" == "gcc" ]; then
-         gcc $1.c -I../include -L../lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
+         gcc $1.c $CFLAGS -I../include -L../lib -ltools -ldebug -lvm -lrtl -l$HB_GT_LIB -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -lcommon
       else
          echo Error: HB_COMPILER value is unsupported.
       fi

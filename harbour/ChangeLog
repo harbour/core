@@ -1,3 +1,22 @@
+20000415-13:01 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * bin/bld.bat
+     ! djgpp and bcc uses build scripts to avoid long command lines.
+
+   * bin/bld_b16.bat
+   * bin/bld_b32.bat
+   * bin/bld_vc.bat
+     + Now calls bld.bat to do the real work.
+
+   * bin/bld.*
+     + Now use HARBOURFLAGS and CFLAGS
+
+   - bin/bld_b32o.bat
+   - bin/bld_b32w.bat
+     - Removed. Use SET CFLAGS=-tW and call bld_b32.bat for the bld_b32w.bat
+       functionality, if you need it. 
+       bld_b32o.bat was specific and not working anyway.
+
 20000415-12:38 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/net.c
