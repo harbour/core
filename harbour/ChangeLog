@@ -1,3 +1,24 @@
+2000-08-01-21:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+*contrib/hbzlib/zipfile2.c
+    %some enhacements and fixed a bug inside hb___GetFilesNamesFromZip
+*contrib/hbzlib/zipfile.c
+ contrib/hbzlib/zlibapi1.c
+    *Fixed a Bug reported by Patrick Mast    
+-doc/idle.txt
++doc/en/idle.txt
+    *Moved to the en/ directory
+    *Description of IDLE stated became a topic also
+*doc/genhtm.rsp
+   +en/idle.txt
+   -en/hb*.txt Removed all api entries file names
+*doc/en/garbage.txt
+   *small formating 
+*utils/hbdoc/genng.prg
+   *Fixed an small bug
+*makefile.bc
+ hb_slex.bc
+  + .autodepend macro added
+
 20000801-21:55 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * config/os2/global.cf
      ! fixed removing of nested subdir (HB_ARCHITECTURE/HB_COMPILER) that under OS/2 you need to

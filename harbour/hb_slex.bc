@@ -30,7 +30,7 @@
 #
 # NOTE: BCC_NOSTARTUP must be defined for Borland C++ 5.3 to make it work.
 #
-
+.autodepend
 !if $d(B16)
 
 BCC_NOSTARTUP = ""
