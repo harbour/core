@@ -1,3 +1,8 @@
+2000-11-09 11:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/pp/ppcore.c
+     * Added parameter BOOL bRule to md_strAt() to differentiate between searching a Rule Text or an Expression.
+       /* [...] should be searched within Rule, but _not_ within an Expression. */
+
 2000-11-09 09:00 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/pp/ppcore.c
      * Fixed typo in NextName()

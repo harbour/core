@@ -102,7 +102,7 @@ static void   SkipOptional( char ** );
 static void   SearnRep( char *, char *, int, char *, int * );
 static int    ReplacePattern( char, char *, int, char *, int );
 static void   pp_rQuotes( char *, char * );
-static int    md_strAt( char *, int, char *, BOOL, BOOL );
+static int    md_strAt( char *, int, char *, BOOL, BOOL, BOOL );
 static char * PrevSquare( char * , char *, int * );
 static int    IsInStr( char, char * );
 static int    stroncpy( char *, char *, int );
@@ -906,7 +906,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
      {
         ptro = sOutLine;
         ptri = sLine + isdvig;
-        ipos = md_strAt( ";", 1, ptri, TRUE, FALSE );
+        ipos = md_strAt( ";", 1, ptri, TRUE, FALSE, FALSE );
 
         if( ipos > 0 )
         {
@@ -975,7 +975,7 @@ int hb_pp_ParseExpression( char * sLine, char * sOutLine )
                  printf( "Line: >%s<\n", ptri );
               #endif
 
-              while( ( ifou = md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE )) > 0 )
+              while( ( ifou = md_strAt( stcmd->name, lenToken, ptri, TRUE, FALSE, FALSE )) > 0 )
               {
                  ptri += ifou -1;
 
@@ -1279,7 +1279,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
             ptrmp = strtopti;
             ptr = ptri;
             ipos = NextName( &ptr, tmpname );
-            ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE );
+            ipos = md_strAt( tmpname, ipos, strtopti, TRUE, TRUE, TRUE );
             if( ipos && TestOptional( strtopti, strtopti+ipos-2 ) )
               {
                 ptr = strtopti+ipos-2;
@@ -1308,7 +1308,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                     {
                       ptr = ptri;
                       ipos = NextName( &ptr, tmpname );
-                      ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE );
+                      ipos = md_strAt( tmpname, ipos, ptrmp, TRUE, TRUE, TRUE );
                       if( ipos && TestOptional( ptrmp+1, ptrmp+ipos-2 ) )
                         {
                          ptr = PrevSquare( ptrmp+ipos-2, ptrmp+1, NULL );
@@ -1515,7 +1515,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
        *ptrtemp != '[' && *ptrtemp != ']' && *ptrtemp != '\0' )
     {
       lenreal = strincpy( expreal, ptrtemp );
-      if( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE )) > 0 )
+      if( (ipos = md_strAt( expreal, lenreal, *ptri, TRUE, TRUE, FALSE )) > 0 )
         {
           if( ptrtemp > *ptrmp )
             {
@@ -2238,7 +2238,7 @@ static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, 
   HB_TRACE(HB_TR_DEBUG, ("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));
 
   if( *(exppatt+1) == '\0' ) *( ptro + *lenres ) = '\0';
-  while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE )) > 0 )
+  while( (ifou = md_strAt( exppatt, (*(exppatt+1))? 2:1, ptrOut, FALSE, FALSE, TRUE )) > 0 ) /* ??? */
     {
       /*
       printf( "Found: >%s< At: %i In: >%s<\n", exppatt, ifou, ptrOut );
@@ -2360,7 +2360,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         rmlen = 0;
         do
           {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE );
+            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
@@ -2392,7 +2392,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         rmlen = 0;
         do
           {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE );
+            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
@@ -2448,7 +2448,7 @@ static int ReplacePattern( char patttype, char * expreal, int lenreal, char * pt
         rmlen = 0;
         do
           {
-            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE );
+            ifou = md_strAt( ",", 1, expreal, FALSE, TRUE, FALSE );
             lenitem = (ifou)? ifou-1:lenreal;
             if( *expreal != '\0' )
               {
@@ -2657,7 +2657,7 @@ int hb_pp_WrStr( FILE * handl_o, char * buffer )
   return 0;
 }
 
-static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, BOOL checkPrth )
+static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, BOOL checkPrth, BOOL bRule )
 {
   int State = STATE_NORMAL;
   long lPos = 0, lSubPos = 0;
@@ -2731,7 +2731,7 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
               lPos++;
               continue;
            }
-           else if( lCase && *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) && cLastChar != ')' && cLastChar != ']' && cLastChar != '}' && ! ISNAME( cLastChar ) )
+           else if( bRule == FALSE && *(szText+lPos) == '[' && ( lPos == 0 || *(szText+lPos-1) != '\\' ) && cLastChar != ')' && cLastChar != ']' && cLastChar != '}' && ! ISNAME( cLastChar ) )
            {
               State = STATE_QUOTE3;
               lPos++;
@@ -2798,6 +2798,11 @@ static int md_strAt( char * szSub, int lSubLen, char * szText, BOOL checkword, B
 
      cLastChar = *(szText+lPos);
   }
+
+  #if 0
+     printf( "In: >%s<\n", szText );
+     printf( "Pos: %i Len: %i Str: >%s< At: >%s<\n", lSubPos, lSubLen, szSub, (szText+lPos-lSubLen+1) );
+  #endif
 
   return (lSubPos < lSubLen? 0: lPos - lSubLen + 1);
 }
@@ -3166,6 +3171,7 @@ static int NextName( char ** sSource, char * sDest )
 
   #if 0
      printf( "NextName: >%s<\n", sDest - lenName );
+     printf( "Rest: >%s<\n", *sSource );
   #endif
 
   return lenName;
