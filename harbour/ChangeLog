@@ -7,6 +7,15 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+   + contrib/libct/alt/ctcolton.c
+     original implementation of COLORTON() in C by Viktor Szakats <viktor.szakats@syenar.hu>
+
+   + contrib/libct/strdiff.c
+   + contrib/libct/tests/strdiff.prg
+     + STRDIFF() function and small test program
+
+   * contrib/libct/Makefile
    * contrib/libct/makefile.bc
    * contrib/libct/makefile.vc
    * contrib/libct/ctflist.txt
