@@ -274,8 +274,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          FT_MKDIR( "rtf" )
       ENDIF
    ELSEIF lWww
-      IF EMPTY( DIRECTORY( "www.*", "D" ) )
-         FT_MKDIR( "www" )
+      IF EMPTY( DIRECTORY( "htm.*", "D" ) )
+         FT_MKDIR( "htm" )
       ENDIF
    ELSEIF lNgi
       IF EMPTY( DIRECTORY( "ngi.*", "D" ) )
@@ -432,7 +432,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'REPORT=Yes' + CRLF )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
       FWRITE( nHpj, 'TITLE=Harbour Winhelp' + CRLF )
-      FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.Harbour-project.org' + CRLF )
+      FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
       FWRITE( nHpj, 'HLP=.\harbour.hlp' + CRLF )
       FWRITE( nHpj, 'ROOT=' + CURDIR() + "\RTF" + CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
@@ -468,7 +468,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
       NEXT
    ELSEIF lWWW
-      oHtm := THTML():New( "www\harbour.htm" )
+      oHtm := THTML():New( "htm\harbour.htm" )
       oHtm:WriteTitle( "Harbour Reference Guide" )
       oHtm:WriteText('<center><img src="http://www.flexsys-ci.com/harbour-project/images/bannerhrblt.gif" ALIGN="MIDDLE"></IMG></center>')
       oHtm:WritePar( "HARBOUR" )
@@ -2886,7 +2886,7 @@ STATIC FUNCTION ProcessWww
 
                cFileName := LEFT( cFileName, 21 ) + ".htm"
 
-               oHTM := THTML():new( "www\" + LOWER( cFileName ) )
+               oHTM := THTML():new( "htm\" + LOWER( cFileName ) )
                IF oHtm:nHandle < 1
                   ? "Error creating", cFileName, ".htm"
                   write_error( "Error creating",,,, cFileName + ".htm" )

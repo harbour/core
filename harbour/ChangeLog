@@ -1,3 +1,30 @@
+20000209-10:43 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * utils/hbdoc/hbdoc.prg
+     ! Misc small fixes.
+   * make_b*.bat
+     * Small change regarding make.err deletion.
+   * source/rtl/strings.c
+     % Small optimization in HB_ISSPACE()
+     ! "compilant" changed to "compliant"
+     * Three NOTEs changed to TOFIXes (in RAT() and STRTRAN())
+     ! Small formatting fixes. (NG doc moved before any misc notes and
+       comments related to the function)
+   * source/rtl/environ.c
+     source/rtl/filesys.c
+     source/rdd/dbcmd.c
+     ! "compilant" and "compilante" changed to "compliant"
+     ! Other misc doc/comment fixes.
+   * source/rtl/dir.c
+     * Minor formatting change (comment related only).
+   * source/rtl/tgetlist.prg
+     ! oGetListActive renamed to s_oGetListActive
+   * source/rtl/tget.prg
+     ! Missing CVS header added (again).
+   * source/rtl/objfunc.prg
+     source/rtl/alert.prg
+     source/rtl/dbedit.prg
+     ! "an Harbour" changed to "a Harbour"
+
 20000209-04:15 EST Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/inkey.c
      + Added support to exist Win mouse code to detect Mouse Button UP and
@@ -60,7 +87,7 @@
    * makefile.b32
      Makefile
      ngdoc/* -> utils/hbdoc/*
-     * NGDOC directory renamed a moved to the right place.
+     * NGDOC directory renamed and moved to the right place.
    * utils/hbdoc/hbdoc.prg
      * Help screen formatted and corrected to be in sync with other Harbour
        command-line utilities.
@@ -106,7 +133,7 @@
    * source/rtl/inkey.c
      source/rtl/mouse/mousewin.c
      * Win32 mouse related variables renamed and moved to mousewin.c
-       inkey.c is now accessing it as an extern.
+       inkey.c is now accessing them as an externs.
 
 20000207-16:39 GMT+1 Victor Szakats <info@szelvesz.hu>
    * include/hbextern.ch
@@ -159,11 +186,11 @@
      ! Fixed.
    * ngdoc/bldfthe.bat
      ngdoc/ft_helpc.prg
-     ! NANFOR is always defined if __HARBOUR__, so that it now links OK with
+     ! NANFOR is always defined if __HARBOUR__ is, so that it now links OK with
        the GNU make system. Explicit /DNANFOR switch removed from the Borland
        make .BAT file.
 
-20000206-20:35 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+20000206-20:35 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
     *Makefile
         *Added ngdoc dir to the normal build
     +ngdoc/makefile

@@ -35,13 +35,11 @@
 
 /* TOFIX: Filename/path splitting and merging should be rewritten to use
           hb_FName*() functions, instead of repeating the functionality
-          in the current partially buggy way. */
+          in the current partially buggy way. [vszakats] */
 
 /*
- *  DIR.C: Returns a Harbour array of specified directory contents filtered
- *         by the optional file and attribute mask.
+ * ChangeLog:
  *
- * Latest mods:
  * 1.53   19990917   dholm     Moved normal hb_itemReturn() and ...Release()
  *                             calls out of the MSC, IBM & MingW32 #if block.
  * 1.49   19990915   dholm     Added __MINGW32__ support

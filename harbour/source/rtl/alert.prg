@@ -15,7 +15,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    Changes for higher Clipper compatibility, console mode, extensions
  *    __NONOALERT()
  *
@@ -33,15 +33,15 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-// ; TOFIX: Clipper defines a clipped window for Alert()
+// ; TOFIX: Clipper defines a clipped window for Alert() [vszakats]
 // ; Clipper will return NIL if the first parameter is not a string, but
 //   this is not documented. This implementation converts the first parameter
 //   to a string if another type was passed. You can switch back to
 //   Clipper compatible mode by defining constant
-//   HARBOUR_STRICT_CLIPPER_COMPATIBILITY.
+//   HARBOUR_STRICT_CLIPPER_COMPATIBILITY. [vszakats]
 // ; Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
-//   This is fixed.
-// ; nDelay parameter is a Harbour addition.
+//   This is fixed. [vszakats]
+// ; nDelay parameter is a Harbour extension.
 
 STATIC s_lNoAlert := NIL
 
@@ -129,10 +129,10 @@ STATIC s_lNoAlert := NIL
  *      ON:  Only the first four valid <aOptions> are taken.
  *      OFF: <aOptions> could contain as many as needed options.
  *
- *      <cColorNorm> is an Harbour extension, or at least un-documented
+ *      <cColorNorm> is a Harbour extension, or at least un-documented
  *      in Clipper 5.2 NG.
  *
- *      <nDelay> is an Harbour extension.
+ *      <nDelay> is a Harbour extension.
  *  $SEEALSO$
  *       @...PROMPT,MENU TO, STDOUT(),__NONOALERT()
  *  $END$
@@ -155,7 +155,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL nMRow, nMCol
 
    /* TOFIX: Clipper decides at runtime, whether the GT is linked in, */
-   /*        if it is not, the console mode is choosen here */
+   /*        if it is not, the console mode is choosen here. [vszakats] */
    LOCAL lConsole := .F.
 
    DEFAULT s_lNoAlert TO __argCheck( "NOALERT" )
@@ -245,7 +245,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { 'Ok' }
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-   // ; Clipper allows only four options
+   // ; Clipper allows only four options [vszakats]
    ELSEIF Len( aOptionsOK ) > 4
       aSize( aOptionsOK, 4 )
 #endif
@@ -442,7 +442,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __NONOALERT() is an Undocumented CA-Clipper function
+ *      __NONOALERT() is an undocumented CA-Clipper function
  *  $SEEALSO$
  *  $END$
  */

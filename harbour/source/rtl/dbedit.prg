@@ -59,14 +59,16 @@
          COPY the NG text) I suggest later some one should add to this
          text. [chkedem] */
 
-/* NOTE: Extension: Harbour supports codeblocks as the xUserFunc parameter */
+/* NOTE: Extension: Harbour supports codeblocks as the xUserFunc parameter 
+         [vszakats] */
 /* NOTE: Clipper is buggy and will throw an error if the number of
-         columns is zero. (Check: dbEdit(0,0,20,20,{})) */
-/* NOTE: Clipper will throw an error if there's no database open */
-/* NOTE: The NG says that the return value is NIL, but it's not. */
+         columns is zero. (Check: dbEdit(0,0,20,20,{})) [vszakats] */
+/* NOTE: Clipper will throw an error if there's no database open [vszakats] */
+/* NOTE: The NG says that the return value is NIL, but it's not. [vszakats] */
 /* NOTE: There's an undocumented result code in Clipper (3), which is not
-         supported in Harbour */
-/* NOTE: Harbour is multithreading ready/reentrant, Clipper is not */
+         supported in Harbour. [vszakats] */
+/* NOTE: Harbour is multithreading ready/reentrant, Clipper is not. 
+         [vszakats] */
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -220,7 +222,7 @@
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      <xUserFunc> can take a code block value, this is an Harbour
+ *      <xUserFunc> can take a code block value, this is a Harbour
  *      extension.
  *
  *      CA-Clipper will throw an error if there's no database open, Harbour

@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_fsSetError()
  *    hb_fsSetDevMode()
  *    hb_fsReadLarge()
@@ -50,7 +50,7 @@
  *    HB_ISDISK()
  *    HB_DISKCHANGE()
  *    HB_DISKNAME()
- *    HB_DISKSPACE() (parts by Luiz Rafael Culik <Culik@sl.conex.net>)
+ *    HB_DISKSPACE() (parts by Luiz Rafael Culik <culik@sl.conex.net>)
  *    HB_HB_FNAMESPLIT()
  *    HB_HB_FNAMEMERGE()
  *
@@ -82,7 +82,7 @@
          set the file pointer to the passed negative value, and the subsequent
          hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
          the pointer will not be moved, and thus the hb_fsWrite() call will
-         successfully write the buffer to the current file position. [vszel]
+         successfully write the buffer to the current file position. [vszakats]
 
    This has been corrected by ptucker
  */
@@ -1172,7 +1172,7 @@ USHORT  hb_fsChDrv( BYTE nDrive )
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 /* TODO: add documentation */
 
-/* TOFIX: This isn't fully compliant because Cl*pper doesn't access
+/* TOFIX: This isn't fully compliant because CA-Cl*pper doesn't access
           the drive before checking. hb_fsIsDrv only returns TRUE
           if there is a disk in the drive. */
 
@@ -1324,6 +1324,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 /*
  * -- HARBOUR FUNCTIONS --
  */
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FOPEN()
@@ -1411,7 +1412,7 @@ FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     FOPEN() is CA-CLIPPER compilant
+ *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     FCREATE(),FERROR(),FCLOSE()
  *  $INCLUDE$
@@ -1427,6 +1428,7 @@ HARBOUR HB_FOPEN( void )
    else
       hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FCREATE()
@@ -1484,7 +1486,7 @@ HARBOUR HB_FOPEN( void )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-CLIPPER compilant
+ *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
  *  $INCLUDE$
@@ -1500,6 +1502,7 @@ HARBOUR HB_FCREATE( void )
    else
       hb_retni( FS_ERROR );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FREAD()
@@ -1565,7 +1568,7 @@ HARBOUR HB_FCREATE( void )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compilant
+ *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
  *  $INCLUDE$
@@ -1581,14 +1584,14 @@ HARBOUR HB_FREAD( void )
    {
       ulRead = hb_parnl( 3 );
 
-      /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz() */
-      /*       instead of hb_parclen(), this means that the maximum read length */
-      /*       will be one more then the length of the passed buffer, because */
-      /*       the terminating zero could be used if needed. [vszel] */
+      /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz()
+               instead of _parclen(), this means that the maximum read length
+               will be one more than the length of the passed buffer, because
+               the terminating zero could be used if needed. [vszakats] */
 
       if( ulRead <= hb_parcsiz( 2 ) )
          /* NOTE: Warning, the read buffer will be directly modified,
-                  this is normal here ! [vszel] */
+                  this is normal here ! [vszakats] */
          ulRead = hb_fsReadLarge( hb_parni( 1 ),
                                   ( BYTE * ) hb_parc( 2 ),
                                   ulRead );
@@ -1600,6 +1603,7 @@ HARBOUR HB_FREAD( void )
 
    hb_retnl( ulRead );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FWRITE()
@@ -1683,6 +1687,7 @@ HARBOUR HB_FWRITE( void )
    else
       hb_retnl( 0 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FERROR()
@@ -1773,6 +1778,7 @@ HARBOUR HB_FERROR( void )
 {
    hb_retni( hb_fsError() );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FCLOSE()
@@ -1798,7 +1804,7 @@ HARBOUR HB_FERROR( void )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compilant
+ *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
  *  $INCLUDE$
@@ -1818,6 +1824,7 @@ HARBOUR HB_FCLOSE( void )
    else
       hb_retl( FALSE );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FERASE()
@@ -1882,6 +1889,7 @@ HARBOUR HB_FERASE( void )
    else
       hb_retni( -1 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FRENAME()
@@ -1932,7 +1940,7 @@ HARBOUR HB_FERASE( void )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compilant
+ *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     ERASE,FERASE(),FERROR(),FILE(),RENAME
  *  $INCLUDE$
@@ -1949,6 +1957,7 @@ HARBOUR HB_FRENAME( void )
    else
       hb_retni( -1 );
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FSEEK()
@@ -2037,7 +2046,7 @@ HARBOUR HB_FRENAME( void )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compilant
+ *     This function is CA-Clipper compliant
  *  $SEEALSO$
  *     FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
  *  $INCLUDE$
@@ -2086,6 +2095,7 @@ BOOL hb_fsFile( BYTE * pFilename )
 
    return bIsFile;
 }
+
 /*  $DOC$
  *  $FUNCNAME$
  *     FILE()
@@ -2195,8 +2205,8 @@ HARBOUR HB_FILE( void )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is not CA-Clipper compilant since can read
- *    strings greather the 65K
+ *     This function is not CA-Clipper compliant since can read
+ *     strings greather the 65K
  *  $SEEALSO$
  *     BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
  *  $INCLUDE$
@@ -2417,7 +2427,7 @@ HARBOUR HB_CURDRIVE( void )
    {
       if( hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
       {
-         /* TODO: Throw some XBase++ like runtime error. */
+         /* TODO: Throw some XBase++ like runtime error. [vszakats] */
       }
    }
 
@@ -2466,7 +2476,7 @@ HARBOUR HB_FSETDEVMOD( void )
 
 #endif
 
-/* HARBOUR COMMANDS THAT ARE PREPROCESSED INTO FUNCTIONS */
+/* HARBOUR COMMANDS */
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -2583,5 +2593,4 @@ HARBOUR HB_FSETDEVMOD( void )
  *     
  *  $END$
  */
-
 

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Harbour Project source code:
  * Get Class
  *
@@ -1076,3 +1080,4 @@ function _GET_( uVar, cVarName, cPicture, bValid, bWhen, bSetGet )
    oGet:PostBlock := bValid
 
 return oGet
+

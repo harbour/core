@@ -2347,7 +2347,7 @@ HARBOUR HB___DBCONTINUE()
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Not CA-Clipper compilant
+ *      This function is Not CA-Clipper compliant
  *  $SEEALSO$
  *      AFIELDS(),DBSTRUCT()
  *  $INCLUDE$
@@ -3990,7 +3990,7 @@ HARBOUR HB_DBUNLOCKALL( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compilante
+ *      This function is CA-Clipper compliant
  *  $SEEALSO$
  *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *  $INCLUDE$
@@ -5624,7 +5624,7 @@ HARBOUR HB_ORDBAGNAME( void )
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      ORDCONDSET() is CA-CLIPPER 5.3 Compilant
+ *      ORDCONDSET() is CA-Clipper compliant
  *  $SEEALSO$
  *      
  *  $INCLUDE$

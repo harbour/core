@@ -78,7 +78,7 @@
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objHasData() is an Harbour extension.
+ *      __objHasData() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -123,7 +123,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objHasMethod() is an Harbour extension.
+ *      __objHasMethod() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -180,7 +180,7 @@ return __objHasMsg( oObject, cSymbol ) .and. ;
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objGetMsgList() is an Harbour extension.
+ *      __objGetMsgList() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -256,7 +256,7 @@ return aData
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objGetMethodList() is an Harbour extension.
+ *      __objGetMethodList() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -307,7 +307,7 @@ return __objGetMsgList( oObject, .F. )
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objGetValueList() is an Harbour extension.
+ *      __objGetValueList() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *      Header file is hboo.ch
@@ -387,7 +387,7 @@ return aData
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __ObjSetValueList() is an Harbour extension.
+ *      __ObjSetValueList() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *      Header file is hboo.ch
@@ -453,7 +453,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objAddMethod() is an Harbour extension.
+ *      __objAddMethod() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -510,7 +510,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objAddInline() is an Harbour extension.
+ *      __objAddInline() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -565,7 +565,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objAddData() is an Harbour extension.
+ *      __objAddData() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -654,7 +654,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objModMethod() is an Harbour extension.
+ *      __objModMethod() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -716,7 +716,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objModInline() is an Harbour extension.
+ *      __objModInline() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -785,7 +785,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objDelMethod() is an Harbour extension.
+ *      __objDelMethod() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -807,6 +807,7 @@ function __objDelMethod( oObject, cSymbol )
    endif
 
 return oObject
+
 /*  $DOC$
  *  $FUNCNAME$
  *      __objDelInline()
@@ -850,7 +851,7 @@ return oObject
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objDelMethod() is an Harbour extension.
+ *      __objDelMethod() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -892,7 +893,7 @@ return __objDelMethod( oObject, cSymbol )              // Same story
  *  $TESTS$
  *  $STATUS$
  *  $COMPLIANCE$
- *      __objDelData() is an Harbour extension.
+ *      __objDelData() is a Harbour extension.
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$

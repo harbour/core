@@ -40,10 +40,10 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_stricmp() and HB_HB_VALTOSTR().
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_strEmpty()
  *    hb_strMatchDOS()
- *    hb_STRZERO()
+ *    HB_STRZERO()
  *    hb_strnicmp()
  *
  * See doc/license.txt for licensing terms.
@@ -58,10 +58,10 @@
 #include "errorapi.h"
 #include "set.h"
 
-#define HB_ISSPACE( c ) ( ( c ) == HB_CHAR_HT || \
+#define HB_ISSPACE( c ) ( ( c ) == ' ' || \
+                          ( c ) == HB_CHAR_HT || \
                           ( c ) == HB_CHAR_LF || \
-                          ( c ) == HB_CHAR_CR || \
-                          ( c ) == ' ' )
+                          ( c ) == HB_CHAR_CR )
 
 BOOL hb_strEmpty( const char * szText, ULONG ulLen )
 {
@@ -194,11 +194,6 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
    return hb_strMatchDOS( szString, szMask );
 }
 
-
-/* determines if first char of string is letter */
-/* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
-/* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
-
 /*  $DOC$
  *  $FUNCNAME$
  *      ISALPHA()
@@ -223,7 +218,7 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compilant
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -231,14 +226,14 @@ BOOL hb_strMatchRegExp( const char * szString, const char * szMask )
  *  $END$
  */
 
+/* determines if first char of string is letter */
+/* TEST: QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) ) */
+/* TEST: QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) ) */
+
 HARBOUR HB_ISALPHA( void )
 {
    hb_retl( isalpha( *hb_parc( 1 ) ) );
 }
-
-/* determines if first char of string is digit */
-/* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
-/* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -265,7 +260,7 @@ HARBOUR HB_ISALPHA( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compilant
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -273,14 +268,14 @@ HARBOUR HB_ISALPHA( void )
  *  $END$
  */
 
+/* determines if first char of string is digit */
+/* TEST: QOUT( "isdigit( '12345' ) = ", isdigit( '12345' ) ) */
+/* TEST: QOUT( "isdigit( 'abcde' ) = ", isdigit( 'abcde' ) ) */
+
 HARBOUR HB_ISDIGIT( void )
 {
    hb_retl( isdigit( *hb_parc( 1 ) ) );
 }
-
-/* determines if first char of string is upper-case */
-/* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
-/* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -307,7 +302,7 @@ HARBOUR HB_ISDIGIT( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compilant
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
@@ -315,14 +310,14 @@ HARBOUR HB_ISDIGIT( void )
  *  $END$
  */
 
+/* determines if first char of string is upper-case */
+/* TEST: QOUT( "isupper( 'Abcde' ) = ", isupper( 'Abcde' ) ) */
+/* TEST: QOUT( "isupper( 'abcde' ) = ", isupper( 'abcde' ) ) */
+
 HARBOUR HB_ISUPPER( void )
 {
    hb_retl( isupper( *hb_parc( 1 ) ) );
 }
-
-/* determines if first char of string is lower-case */
-/* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
-/* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -349,13 +344,17 @@ HARBOUR HB_ISUPPER( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compilant
+ *      This function is CA-Clipper compliant
  *  $PLATFORMS$
  *  $FILES$
  *  $SEEALSO$
  *      ISALPHA(),ISDIGIT(),ISUPPER(),LOWER(),UPPER()
  *  $END$
  */
+
+/* determines if first char of string is lower-case */
+/* TEST: QOUT( "islower( 'abcde' ) = ", islower( 'abcde' ) ) */
+/* TEST: QOUT( "islower( 'Abcde' ) = ", islower( 'Abcde' ) ) */
 
 HARBOUR HB_ISLOWER( void )
 {
@@ -377,8 +376,6 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
    return ( char * ) szText;
 }
 
-/* trims leading spaces from a string */
-/* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
 /*  $DOC$
  *  $FUNCNAME$
  *      LTRIM()
@@ -410,6 +407,9 @@ char * hb_strLTrim( const char * szText, ULONG * ulLen )
  *      TRIM(),RTRIM(),ALLTRIM()
  *  $END$
  */
+
+/* trims leading spaces from a string */
+/* TEST: QOUT( "ltrim( '  hello world  ' ) = '" + ltrim( '  hello world  ' ) + "'" ) */
 
 HARBOUR HB_LTRIM( void )
 {
@@ -453,7 +453,7 @@ ULONG hb_strRTrimLen( const char * szText, ULONG ulLen, BOOL bAnySpace )
    return ulLen;
 }
 
-/* NOTE: The second parameter is a Harbour extension */
+/* NOTE: The second parameter is a Harbour extension [vszakats] */
 
 /* trims trailing spaces from a string */
 /* TEST: QOUT( "rtrim( '  hello world  ' ) = '" + rtrim( '  hello world  ' ) + "'" ) */
@@ -468,7 +468,7 @@ HARBOUR HB_RTRIM( void )
    }
    else
    {
-      /* NOTE: "TRIM" is right here */
+      /* NOTE: "TRIM" is right here [vszakats] */
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1100, NULL, "TRIM" );
 
       if( pResult )
@@ -479,7 +479,7 @@ HARBOUR HB_RTRIM( void )
    }
 }
 
-/* NOTE: The second parameter is a Harbour extension */
+/* NOTE: The second parameter is a Harbour extension [vszakats] */
 
 /* synonymn for RTRIM */
 HARBOUR HB_TRIM( void )
@@ -487,7 +487,7 @@ HARBOUR HB_TRIM( void )
    HB_RTRIM();
 }
 
-/* NOTE: The second parameter is a Harbour extension */
+/* NOTE: The second parameter is a Harbour extension [vszakats] */
 
 /* trims leading and trailing spaces from a string */
 /* TEST: QOUT( "alltrim( '  hello world  ' ) = '" + alltrim( '  hello world  ' ) + "'" ) */
@@ -506,7 +506,7 @@ HARBOUR HB_ALLTRIM( void )
    else
 #ifdef HB_COMPAT_C53
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 2022, NULL, "ALLTRIM" ); /* NOTE: This appeared in CA-Cl*pper 5.3 */
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 2022, NULL, "ALLTRIM" ); /* NOTE: This appeared in CA-Cl*pper 5.3 [vszakats] */
 
       if( pResult )
       {
@@ -522,6 +522,7 @@ HARBOUR HB_ALLTRIM( void )
 /* This function is used by all of the PAD functions to prepare the argument
    being padded. If date, convert to string using hb_dtoc(). If numeric,
    convert to unpadded string. Return pointer to string and set string length */
+
 static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
 {
    char * szText;
@@ -702,8 +703,6 @@ HARBOUR HB_PADC( void )
       hb_retc( "" );
 }
 
-/* locates a substring in a string */
-/* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
 /*  $DOC$
  *  $FUNCNAME$
  *      AT()
@@ -737,6 +736,9 @@ HARBOUR HB_PADC( void )
  *  $END$
  */
 
+/* locates a substring in a string */
+/* TEST: QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" + at( 'cde', 'abcsefgfedcba' ) + "'" ) */
+
 HARBOUR HB_AT( void )
 {
    PHB_ITEM pSub = hb_param( 1, IT_STRING );
@@ -759,9 +761,6 @@ HARBOUR HB_AT( void )
    }
 }
 
-/* locates a substring in a string starting at the end */
-/* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
-/* NOTE: Will not work with a search string > 64 KB on some platforms */
 /*  $DOC$
  *  $FUNCNAME$
  *      RAT()
@@ -795,6 +794,10 @@ HARBOUR HB_AT( void )
  *      AT(),SUBSTR(),RIGHT()
  *  $END$
  */
+
+/* locates a substring in a string starting at the end */
+/* TEST: QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" + rat( 'cde', 'abcdefgfedcba' ) + "'" ) */
+/* TOFIX: Will not work with a search string > 64 KB on some platforms */
 
 HARBOUR HB_RAT( void )
 {
@@ -837,7 +840,7 @@ HARBOUR HB_CHR( void )
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
                CHR() cases where the passed parameter is a constant which
                can be divided by 256 but it's not zero, in this case it
-               will return an empty string instead of a Chr(0). [vszel] */
+               will return an empty string instead of a Chr(0). [vszakats] */
 
       /* Believe it or not, clipper does this! */
       szChar[ 0 ] = hb_parnl( 1 ) % 256;
@@ -881,7 +884,6 @@ HARBOUR HB_ASC( void )
    }
 }
 
-/* returns the left-most n characters in string */
 /*  $DOC$
  *  $FUNCNAME$
  *      LEFT()
@@ -917,6 +919,8 @@ HARBOUR HB_ASC( void )
  *  $END$
  */
 
+/* returns the left-most n characters in string */
+
 HARBOUR HB_LEFT( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
@@ -945,7 +949,6 @@ HARBOUR HB_LEFT( void )
    }
 }
 
-/* returns the right-most n characters in string */
 /*  $DOC$
  *  $FUNCNAME$
  *      RIGHT()
@@ -980,6 +983,8 @@ HARBOUR HB_LEFT( void )
  *  $END$
  */
 
+/* returns the right-most n characters in string */
+
 HARBOUR HB_RIGHT( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
@@ -1003,7 +1008,6 @@ HARBOUR HB_RIGHT( void )
    }
 }
 
-/* returns l characters from n characters into string */
 /*  $DOC$
  *  $FUNCNAME$
  *      SUBSTR()
@@ -1027,8 +1031,6 @@ HARBOUR HB_RIGHT( void )
  *      The value of <nStart> may be negative. If it is, the direction of
  *      operation is reversed from a default of left-to-right to right-to-left
  *      for the number of characters specified in <nStart>.
- *     
- *
  *  $EXAMPLES$
  *      FUNCTION MAIN()
  *      LOCAL X:=REPLICATE('ABCD',70000)
@@ -1052,6 +1054,8 @@ HARBOUR HB_RIGHT( void )
  *     LEFT(),AT(),RIGHT()
  *  $END$
  */
+
+/* returns l characters from n characters into string */
 
 HARBOUR HB_SUBSTR( void )
 {
@@ -1095,7 +1099,7 @@ HARBOUR HB_SUBSTR( void )
                   hb_itemRelease( pResult );
                }
 
-               /* NOTE: Exit from inside */
+               /* NOTE: Exit from inside [vszakats] */
                return;
             }
          }
@@ -1282,9 +1286,9 @@ HARBOUR HB_SPACE( void )
       {
          char * szResult = ( char * ) hb_xgrab( lLen + 1 );
 
-         /* NOTE: String overflow could never occure since a string can */
-         /*       be as large as ULONG_MAX, and the maximum length that */
-         /*       can be specified is LONG_MAX here.                    */
+         /* NOTE: String overflow could never occure since a string can
+                  be as large as ULONG_MAX, and the maximum length that
+                  can be specified is LONG_MAX here. [vszakats] */
          /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, "SPACE" ); */
 
          hb_xmemset( szResult, ' ', lLen );
@@ -1347,12 +1351,12 @@ HARBOUR HB_STUFF( void )
       hb_retc( "" );
 }
 
-/* TODO: Check for string overflow, Clipper can crash if the resulting
-         string is too large. Example:
-         StrTran( "...", ".", Replicate( "A", 32000 ) ) */
+/* TOFIX: Check for string overflow, Clipper can crash if the resulting
+          string is too large. Example:
+          StrTran( "...", ".", Replicate( "A", 32000 ) ) [vszakats] */
 
 /* replaces lots of characters in a string */
-/* NOTE: Will not work with a search string of > 64 KB on some platforms */
+/* TOFIX: Will not work with a search string of > 64 KB on some platforms */
 HARBOUR HB_STRTRAN( void )
 {
    PHB_ITEM pText = hb_param( 1, IT_STRING );
@@ -1482,7 +1486,7 @@ HARBOUR HB_STRTRAN( void )
       }
       else
       {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */
 
          if( pResult )
          {
@@ -1493,7 +1497,7 @@ HARBOUR HB_STRTRAN( void )
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error */
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1126, NULL, "STRTRAN" ); /* NOTE: Undocumented but existing Clipper Run-time error [vszakats] */
 
       if( pResult )
       {
@@ -1662,10 +1666,6 @@ HARBOUR HB_STR( void )
    }
 }
 
-/* ------------------------------------------------- */
-/* Copyright (C) 1999 Victor Szel <info@szelvesz.hu> */
-/* ------------------------------------------------- */
-
 /*  $DOC$
  *  $FUNCNAME$
  *      STRZERO()
@@ -1801,9 +1801,9 @@ HARBOUR HB_STRZERO( void )
       else
       {
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-         /* NOTE: In CA-Cl*pper STRZERO() is writtin in Clipper, and will call
+         /* NOTE: In CA-Cl*pper STRZERO() is written in Clipper, and will call
                   STR() to do the job, the error (if any) will also be thrown
-                  by STR(). */
+                  by STR().  [vszakats] */
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1099, NULL, "STR" );
 #else
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 9999, NULL, "STRZERO" );

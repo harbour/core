@@ -45,7 +45,7 @@
 
 #define K_UNDO   K_CTRL_U
 
-static oGetListActive
+static s_oGetListActive
 
 function ReadModal( GetList, nPos )
 
@@ -112,7 +112,7 @@ CLASS TGetList
    METHOD ReadVar( cNewVarName )
    METHOD ReadExit( lNew ) INLINE Set( _SET_EXIT, lNew )
 
-   METHOD SetFocus() INLINE oGetListActive := Self,;
+   METHOD SetFocus() INLINE s_oGetListActive := Self,;
                             ::aGetList[ ::nPos ]:SetFocus()
 
    METHOD Updated() INLINE ::lUpdated
@@ -304,10 +304,10 @@ return lWhen
 function GetPreValidate( oGet )
 
    if oGet != nil
-      oGetListActive:oGet = oGet
+      s_oGetListActive:oGet = oGet
    endif
 
-return oGetListActive:GetPreValidate()
+return s_oGetListActive:GetPreValidate()
 
 METHOD GetPostValidate() CLASS TGetList
 
@@ -353,10 +353,10 @@ return lValid
 function GetPostValidate( oGet )
 
    if oGet != nil
-      oGetListActive:oGet = oGet
+      s_oGetListActive:oGet = oGet
    endif
 
-return oGetListActive:GetPostValidate()
+return s_oGetListActive:GetPostValidate()
 
 METHOD GetDoSetKey( bKeyBlock ) CLASS TGetList
 
@@ -384,12 +384,12 @@ return nil
 
 PROCEDURE GetDoSetKey( keyBlock, oGet )
 
-   if oGet != nil .and. oGetListActive != nil
-      oGetListActive:oGet = oGet
+   if oGet != nil .and. s_oGetListActive != nil
+      s_oGetListActive:oGet = oGet
    endif
 
-   if oGetListActive != nil
-      oGetListActive:GetDoSetKey( keyBlock )
+   if s_oGetListActive != nil
+      s_oGetListActive:GetDoSetKey( keyBlock )
    endif
 
 return
@@ -491,9 +491,9 @@ return cName
 function ReadFormat( bFormat )
 
    if PCount() > 0
-      return oGetListActive:SetFormat( bFormat )
+      return s_oGetListActive:SetFormat( bFormat )
    else
-      return oGetListActive:SetFormat()
+      return s_oGetListActive:SetFormat()
    endif
 
 return nil
@@ -521,9 +521,9 @@ return lSavKill
 function ReadKill( lKill )
 
    if PCount() > 0
-      return oGetListActive:KillRead( lKill )
+      return s_oGetListActive:KillRead( lKill )
    else
-      return oGetListActive:KillRead()
+      return s_oGetListActive:KillRead()
    endif
 
 return nil
@@ -540,11 +540,11 @@ return oOldGet
 
 function GetActive( oGet )
 
-   if oGetListActive != nil
+   if s_oGetListActive != nil
       if PCount() > 0
-         return oGetListActive:GetActive( oGet )
+         return s_oGetListActive:GetActive( oGet )
       else
-         return oGetListActive:GetActive()
+         return s_oGetListActive:GetActive()
       endif
    endif
 
@@ -617,17 +617,17 @@ return lSavUpdated
 function ReadUpdated( lUpdated )
 
    if PCount() > 0
-      return oGetListActive:ReadUpdated( lUpdated )
+      return s_oGetListActive:ReadUpdated( lUpdated )
    else
-      return oGetListActive:ReadUpdate()
+      return s_oGetListActive:ReadUpdate()
    endif
 
 return nil
 
 function Updated()
 
-   if oGetListActive != nil
-      return oGetListActive:lUpdated
+   if s_oGetListActive != nil
+      return s_oGetListActive:lUpdated
    endif
 
 return .f.

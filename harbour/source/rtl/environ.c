@@ -40,7 +40,7 @@
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    HB___RUN()
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB_GETE()
  *
  * See doc/license.txt for licensing terms.
@@ -169,11 +169,11 @@ HARBOUR HB_OS( void )
 #if defined(_WINDOWS_) || defined(__MINGW32__)
 
 /* NOTE:
-    Support for determining the window version by Luiz Rafael Culik
-    Culik@sl.conex.net
+    Support for determining the window version by
+    Luiz Rafael Culik <culik@sl.conex.net>
 
-    Support for determining many windows flavours by Jose Lalin
-    dezac@corevia.com
+    Support for determining many windows flavours by 
+    Jose Lalin <dezac@corevia.com>
 */
 
    OSVERSIONINFO osVer; /* for GetVersionEx() */
@@ -602,7 +602,7 @@ HARBOUR HB_VERSION( void )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA-CLIPPER compilant
+ *      This functions is CA-CLIPPER compliant
  *  $PLATFORMS$
  *
  *  $FILES$
@@ -639,7 +639,7 @@ HARBOUR HB_GETENV( void )
       hb_retc( "" );
 }
 
-/* NOTE: Undocumented Clipper function */
+/* NOTE: Undocumented Clipper function. [vszakats] */
 
 HARBOUR HB_GETE( void )
 {
