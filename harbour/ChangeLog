@@ -1,3 +1,11 @@
+2001-08-28 21:10 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   + contrib/libct/files.c
+     * CT3 compatible functions for Fileattr,fileseek,filedate,filetime,setfattr
+   + contrib/libct/temper.c
+     * CT3 compatible functions Celcius e Fahrenheit
+   *contrib/libct/Makefile
+      Added temper.c and files.c
+
 2001-08-28 19:21 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * contrib/os2pm/*.*
      * changes to every file to add menu creation capabilities

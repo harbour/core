@@ -31,6 +31,7 @@ C_SOURCES = \
         ctcrypt.c \
         finan.c \
 	justify.c \
+   files.c \
 	math.c \
 	num1.c \
 	numat.c \
@@ -45,6 +46,7 @@ C_SOURCES = \
 	strswap.c \
         token1.c \
 	trig.c \
+   temper.c \
 	wordrepl.c \
 	wordtoch.c \
 
