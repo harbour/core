@@ -1204,14 +1204,11 @@ HB_FUNC( __DBCONTINUE )
       return;
 
    ( ( AREAP ) s_pCurrArea->pArea )->fFound = FALSE;
-   SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
-   if( ( ( AREAP ) s_pCurrArea->pArea )->fEof )
-      return;
-
-   ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( hb_vmEvalBlock( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor ) );
-   while( !( ( AREAP ) s_pCurrArea->pArea )->fEof && !( ( AREAP ) s_pCurrArea->pArea )->fFound )
+   while( !( ( AREAP ) s_pCurrArea->pArea )->fFound )
    {
       SELF_SKIP( ( AREAP ) s_pCurrArea->pArea, 1 );
+      if( ( ( AREAP ) s_pCurrArea->pArea )->fEof )
+         return;
       ( ( AREAP ) s_pCurrArea->pArea )->fFound = hb_itemGetL( hb_vmEvalBlock( ( ( AREAP ) s_pCurrArea->pArea )->dbsi.itmCobFor ) );
    }
 }

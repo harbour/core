@@ -96,6 +96,13 @@ HB_FUNC( MAX )
          hb_retni( i1 >= i2 ? i1 : i2 );
       }
    }
+   else if( HB_IS_LOGICAL( p1 ) && HB_IS_LOGICAL( p2 ) )
+   {
+      BOOL b1 = hb_itemGetL( p1 );
+      BOOL b2 = hb_itemGetL( p2 );
+
+      hb_retl( b1 >= b2 ? b1 : b2 );
+   }
    else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
    {
       char szDate[ 9 ];
@@ -147,6 +154,13 @@ HB_FUNC( MIN )
 
          hb_retni( i1 <= i2 ? i1 : i2 );
       }
+   }
+   else if( HB_IS_LOGICAL( p1 ) && HB_IS_LOGICAL( p2 ) )
+   {
+      BOOL b1 = hb_itemGetL( p1 );
+      BOOL b2 = hb_itemGetL( p2 );
+
+      hb_retl( b1 <= b2 ? b1 : b2 );
    }
    else if( HB_IS_DATE( p1 ) && HB_IS_DATE( p2 ) )
    {

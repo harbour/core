@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-07-12 17:19 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
+   * source/rdd/dbcmd.c
+     ! fixed Clipper compatibility bug reported by Serge Jakimoff
+   * source/rtl/minmax.c
+    ! Fixed r/t error when Min() and Max() received logical values
+      to have Clipper compatibility
+
 2004-07-09 12:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * source/vm/codebloc.c
