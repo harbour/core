@@ -10,6 +10,7 @@ C_SOURCES=\
 	cdpplmaz.c    \
 	cdpru866.c    \
 	cdprukoi.c    \
+    cdpla850.c    \
 	cdpruwin.c
 	
 LIBNAME=codepage

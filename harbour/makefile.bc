@@ -421,6 +421,7 @@ LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgzhb5.obj
 
 CODEPAGE_LIB_OBJS = \
+   $(OBJ_DIR)\cdpla850.obj \
    $(OBJ_DIR)\cdppl852.obj \
    $(OBJ_DIR)\cdppliso.obj \
    $(OBJ_DIR)\cdpplmaz.obj \
