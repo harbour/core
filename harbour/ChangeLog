@@ -1,3 +1,7 @@
+2001-11-01 08:16 GMT Dave Pearson <davep@davep.org>
+   * tests/multiarg.prg
+      * __PValue() --> HB_PValue().
+	
 2001-10-30 00:20 GMT +0700 Andi Jahja <harbour@cb.net.id>
    * include/hbexpra.c
      ! rename __PVALUE to HB_PVALUE
