@@ -44,15 +44,15 @@ static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%s, %lu)", pszTime, ulTime));
 
-   uiValue = ( ulTime / 3600 ) % 24;
+   uiValue = ( USHORT ) ( ( ulTime / 3600 ) % 24 );
    pszTime[ 0 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 1 ] = ( char ) ( uiValue % 10 ) + '0';
    pszTime[ 2 ] = ':';
-   uiValue = ( ulTime / 60 ) % 60;
+   uiValue = ( USHORT ) ( ( ulTime / 60 ) % 60 );
    pszTime[ 3 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 4 ] = ( char ) ( uiValue % 10 ) + '0';
    pszTime[ 5 ] = ':';
-   uiValue = ulTime % 60;
+   uiValue = ( USHORT ) ( ulTime % 60 );
    pszTime[ 6 ] = ( char ) ( uiValue / 10 ) + '0';
    pszTime[ 7 ] = ( char ) ( uiValue % 10 ) + '0';
    pszTime[ 8 ] = '\0';

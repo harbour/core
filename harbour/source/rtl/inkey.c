@@ -245,7 +245,7 @@ int hb_inkey( double seconds, HB_inkey_enum event_mask, BOOL wait, BOOL forever 
 
    s_eventmask = event_mask;                   /* Set current input event mask */
    /* Check or wait for input events */
-   if( wait ) end_clock = clock() + seconds * CLOCKS_PER_SEC;
+   if( wait ) end_clock = clock() + ( clock_t ) ( seconds * CLOCKS_PER_SEC );
    s_inkeyPoll = TRUE;                         /* Force polling */
 
    while( wait && hb_inkeyNext() == 0 )
@@ -974,18 +974,20 @@ HARBOUR HB___KEYBOARD( void )
 
    if( ISCHAR( 1 ) )
    {
-      long size = hb_parclen( 1 );
+      ULONG size = hb_parclen( 1 );
 
       if( size != 0 )
       {
          /* Stuff the string */
          BYTE * fPtr = ( BYTE * ) hb_parc( 1 );
 
-         if( size >= hb_set.HB_SET_TYPEAHEAD )
+         if( size >= ( ULONG ) hb_set.HB_SET_TYPEAHEAD )
          {
             /* Have to allow for a zero size typehead buffer */
-            if( hb_set.HB_SET_TYPEAHEAD ) size = hb_set.HB_SET_TYPEAHEAD - 1;
-            else size = 0;
+            if( hb_set.HB_SET_TYPEAHEAD )
+               size = ( ULONG ) ( hb_set.HB_SET_TYPEAHEAD - 1 );
+            else
+               size = 0;
          }
 
          while( size-- )

@@ -1451,7 +1451,7 @@ HARBOUR HB_FREADSTR( void )
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
-      ULONG ulToRead = hb_parnl( 2 );
+      ULONG ulToRead = ( ULONG ) hb_parnl( 2 );
 
       if( ulToRead > 0 )
       {
@@ -1597,7 +1597,7 @@ HARBOUR HB_DISKSPACE( void )
 
 #endif
 
-   hb_retnl( ( LONG ) ulSpaceFree );
+   hb_retnl( ( long ) ulSpaceFree );
 }
 
 #ifdef HB_COMPAT_C53
@@ -1609,7 +1609,7 @@ HARBOUR HB_ISDISK()
    USHORT uiErrorOld = s_uiErrorLast;
 
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsIsDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
+            hb_fsIsDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
             FALSE );
 
    s_uiErrorLast = uiErrorOld;
@@ -1622,7 +1622,7 @@ HARBOUR HB_DISKCHANGE( void )
    USHORT uiErrorOld = s_uiErrorLast;
 
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-            hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
+            hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) == 0 :
             FALSE );
 
    s_uiErrorLast = uiErrorOld;
@@ -1658,7 +1658,7 @@ HARBOUR HB_CURDRIVE( void )
 
    if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
    {
-      if( hb_fsChDrv( ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
+      if( hb_fsChDrv( ( BYTE )( toupper( *hb_parc( 1 ) ) - 'A' ) ) != 0 )
       {
          /* TODO: Throw some XBase++ like runtime error. [vszakats] */
       }

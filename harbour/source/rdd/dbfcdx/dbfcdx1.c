@@ -194,7 +194,7 @@ static void hb_cdxReadMemo( AREAP pArea, LPDBFMEMO pMemo, ULONG lMemoBlock )
          pMemo->pData = ( BYTE * ) hb_xrealloc( pMemo->pData, ulSpaceUsed + 1 );
       else
          pMemo->pData = ( BYTE * ) hb_xgrab( ulSpaceUsed + 1 );
-      pMemo->uiLen = ulSpaceUsed;
+      pMemo->uiLen = ( USHORT ) ulSpaceUsed;
    }
    hb_fsRead( pArea->lpDataInfo->pNext->hFile, pMemo->pData, pMemo->uiLen );
 }
@@ -532,8 +532,8 @@ static ERRCODE cdxOrderCreate( AREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
          break;
 
       case IT_STRING:
-         uiLen = hb_itemGetCLen( pResult ) > CDX_MAX_KEY ? CDX_MAX_KEY :
-                 hb_itemGetCLen( pResult );
+         uiLen = ( hb_itemGetCLen( pResult ) > CDX_MAX_KEY ) ? CDX_MAX_KEY :
+                 ( USHORT ) hb_itemGetCLen( pResult );
          break;
    }
 
@@ -807,7 +807,7 @@ static ERRCODE cdxWriteDBHeader( AREAP pArea )
       memset( &pDBField, 0, sizeof( DBFFIELD ) );
       strncpy( ( char * ) pDBField.bName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
                sizeof( pDBField.bName ) );
-      pDBField.bType = pField->uiType;
+      pDBField.bType = ( BYTE ) pField->uiType;
       switch( pDBField.bType )
       {
          case 'C':
@@ -831,8 +831,8 @@ static ERRCODE cdxWriteDBHeader( AREAP pArea )
             break;
 
          case 'N':
-            pDBField.bLen = pField->uiLen;
-            pDBField.bDec = pField->uiDec;
+            pDBField.bLen = ( BYTE ) pField->uiLen;
+            pDBField.bDec = ( BYTE ) pField->uiDec;
             break;
       }
       if( hb_fsWrite( pArea->lpDataInfo->hFile, ( BYTE * ) &pDBField,

@@ -151,7 +151,7 @@ HARBOUR HB_I2BIN( void )
    {
       SHORT iValue = hb_parni( 1 );
 
-      szString[ 0 ] =   iValue & 0x00FF;
+      szString[ 0 ] = ( iValue & 0x00FF );
       szString[ 1 ] = ( iValue & 0xFF00 ) >> 8;
    }
    else
@@ -175,7 +175,7 @@ HARBOUR HB_W2BIN( void )
    {
       USHORT uiValue = ( USHORT ) hb_parni( 1 );
 
-      szString[ 0 ] =   uiValue & 0x00FF;
+      szString[ 0 ] = ( uiValue & 0x00FF );
       szString[ 1 ] = ( uiValue & 0xFF00 ) >> 8;
    }
    else
@@ -195,9 +195,9 @@ HARBOUR HB_L2BIN( void )
 
    if( ISNUM( 1 ) )
    {
-      LONG lValue = hb_parnl( 1 );
+      long lValue = hb_parnl( 1 );
 
-      szString[ 0 ] =   lValue & 0x000000FF;
+      szString[ 0 ] = ( lValue & 0x000000FF );
       szString[ 1 ] = ( lValue & 0x0000FF00 ) >> 8;
       szString[ 2 ] = ( lValue & 0x00FF0000 ) >> 16;
       szString[ 3 ] = ( lValue & 0xFF000000 ) >> 24;
@@ -225,10 +225,10 @@ HARBOUR HB_U2BIN( void )
    {
       ULONG ulValue = ( ULONG ) hb_parnl( 1 );
 
-      szString[ 0 ] =   ulValue & 0x000000FF;
-      szString[ 1 ] = ( ulValue & 0x0000FF00 ) >> 8;
-      szString[ 2 ] = ( ulValue & 0x00FF0000 ) >> 16;
-      szString[ 3 ] = ( ulValue & 0xFF000000 ) >> 24;
+      szString[ 0 ] = ( char ) ( ulValue & 0x000000FF );
+      szString[ 1 ] = ( char ) ( ulValue & 0x0000FF00 ) >> 8;
+      szString[ 2 ] = ( char ) ( ulValue & 0x00FF0000 ) >> 16;
+      szString[ 3 ] = ( char ) ( ulValue & 0xFF000000 ) >> 24;
    }
    else
    {

@@ -1513,7 +1513,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case 'C':
          if( IS_STRING( pItem ) )
          {
-            uiCount = hb_itemGetCLen( pItem );
+            uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiCount > pField->uiLen )
                uiCount = pField->uiLen;
             memcpy( szText, hb_itemGetCPtr( pItem ), uiCount );
@@ -1566,7 +1566,7 @@ static ERRCODE dbfPutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case 'M':
          if( IS_STRING( pItem ) )
          {
-            uiCount = hb_itemGetCLen( pItem );
+            uiCount = ( USHORT ) hb_itemGetCLen( pItem );
             if( ( ( LPDBFMEMO ) pField->memo )->uiLen < uiCount )
             {
                if( ( ( LPDBFMEMO ) pField->memo )->pData )
@@ -1929,7 +1929,7 @@ static ERRCODE dbfWriteDBHeader( AREAP pArea )
       memset( &pDBField, 0, sizeof( DBFFIELD ) );
       strncpy( ( char * ) pDBField.bName, ( ( PHB_DYNS ) pField->sym )->pSymbol->szName,
                sizeof( pDBField.bName ) );
-      pDBField.bType = pField->uiType;
+      pDBField.bType = ( BYTE ) pField->uiType;
       switch( pDBField.bType )
       {
          case 'C':
@@ -1953,8 +1953,8 @@ static ERRCODE dbfWriteDBHeader( AREAP pArea )
             break;
 
          case 'N':
-            pDBField.bLen = pField->uiLen;
-            pDBField.bDec = pField->uiDec;
+            pDBField.bLen = ( BYTE ) pField->uiLen;
+            pDBField.bDec = ( BYTE ) pField->uiDec;
             break;
       }
       if( hb_fsWrite( pArea->lpDataInfo->hFile, ( BYTE * ) &pDBField,

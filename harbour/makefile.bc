@@ -7,15 +7,11 @@
 # NOTE: "echo." intentionally used instead of "echo", to avoid conflicts
 #       with external commands named echo.
 
-# Merge duplicate strings
-CFLAGS = $(CFLAGS) -d
-
 !if $d(B16)
 
 # Borland C/C++ (DOS 16 bits)
-CC = bcc
 CFLAGS = $(CFLAGS) -DHB_GT_DOS -mh
-AS = tasm
+
 BIN_DIR = bin\b16
 OBJ_DIR = obj\b16
 LIB_DIR = lib\b16
@@ -23,9 +19,8 @@ LIB_DIR = lib\b16
 !else
 
 # Borland C/C++ (Windows 32 bits)
-CC = bcc32
 CFLAGS = $(CFLAGS) -DHB_GT_WIN
-AS = tasm32
+
 BIN_DIR = bin\b32
 OBJ_DIR = obj\b32
 LIB_DIR = lib\b32
@@ -58,8 +53,9 @@ HBDOC_DIR    = utils\hbdoc
 # C compiler definition and C flags. These should never have to change.
 #
 
-CFLAGS = $(CFLAGS) -I$(INCLUDE_DIR)
+CFLAGS = $(CFLAGS) -d -I$(INCLUDE_DIR)
 CLIBFLAGS = $(CFLAGS) -c
+CLIBFLAGSDEBUG = $(CLIBFLAGS) -v
 
 HARBOURFLAGS = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
 
@@ -81,8 +77,8 @@ TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
-PP_EXE       = $(BIN_DIR)\hbpp.exe
-RUNNER_EXE   = $(BIN_DIR)\hbrun.exe
+HBPP_EXE     = $(BIN_DIR)\hbpp.exe
+HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
 
@@ -234,27 +230,30 @@ MACRO_LIB_OBJS = \
 
 RDD_LIB_OBJS = \
    $(OBJ_DIR)\dbcmd.obj \
-   $(OBJ_DIR)\dbf0.obj \
    $(OBJ_DIR)\dbf1.obj \
    $(OBJ_DIR)\dbnubs.obj \
-   $(OBJ_DIR)\dbstrux.obj \
-   $(OBJ_DIR)\sdf0.obj \
-   $(OBJ_DIR)\sdf1.obj \
-   $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\delim1.obj \
+   $(OBJ_DIR)\sdf1.obj \
+   \
+   $(OBJ_DIR)\dbf0.obj \
+   $(OBJ_DIR)\dbstrux.obj \
+   $(OBJ_DIR)\delim0.obj \
    $(OBJ_DIR)\rddord.obj \
-   $(OBJ_DIR)\rddsys.obj
+   $(OBJ_DIR)\rddsys.obj \
+   $(OBJ_DIR)\sdf0.obj
 
 NULSYS_LIB_OBJS = \
    $(OBJ_DIR)\nulsys.obj
 
 DBFNTX_LIB_OBJS = \
-   $(OBJ_DIR)\dbfntx0.obj \
-   $(OBJ_DIR)\dbfntx1.obj
+   $(OBJ_DIR)\dbfntx1.obj \
+   \
+   $(OBJ_DIR)\dbfntx0.obj
 
 DBFCDX_LIB_OBJS = \
-   $(OBJ_DIR)\dbfcdx0.obj \
-   $(OBJ_DIR)\dbfcdx1.obj
+   $(OBJ_DIR)\dbfcdx1.obj \
+   \
+   $(OBJ_DIR)\dbfcdx0.obj
 
 #
 # RUNNER.LIB rules
@@ -390,8 +389,8 @@ all: \
    $(DBFNTX_LIB) \
    $(DBFCDX_LIB) \
    $(RUNNER_LIB) \
-   $(RUNNER_EXE) \
-   $(PP_EXE) \
+   $(HBRUN_EXE) \
+   $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE)
 
@@ -1380,14 +1379,14 @@ $(OBJ_DIR)\tbrwtext.obj : $(OBJ_DIR)\tbrwtext.c
 #
 # HBPP.EXE dependencies
 #
-$(PP_EXE) : \
+$(HBPP_EXE) : \
    $(PP_DIR)\stdalone\hbpp.c \
    $(PP_LIB_OBJS) \
    $(COMMON_LIB_OBJS)
 
    $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbpp.obj $(PP_DIR)\stdalone\hbpp.c
    echo. $(CFLAGS) > make.tmp
-   echo. -e$(PP_EXE) >> make.tmp
+   echo. -e$(HBPP_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbpp.obj >> make.tmp
    echo. $(COMMON_LIB) $(PP_LIB) >> make.tmp
@@ -1397,7 +1396,7 @@ $(PP_EXE) : \
 #
 # HBRUN.EXE dependencies
 #
-$(RUNNER_EXE) : \
+$(HBRUN_EXE) : \
    $(RUNNER_DIR)\stdalone\hbrun.prg \
    $(RUNNER_LIB)
 
@@ -1405,7 +1404,7 @@ $(RUNNER_EXE) : \
    $(CC) $(CLIBFLAGS) -o$(OBJ_DIR)\hbrun.obj $(OBJ_DIR)\hbrun.c
 
    echo. $(CFLAGS) > make.tmp
-   echo. -e$(RUNNER_EXE) >> make.tmp
+   echo. -e$(HBRUN_EXE) >> make.tmp
    echo. -I$(INCLUDE_DIR) >> make.tmp
    echo. $(OBJ_DIR)\hbrun.obj >> make.tmp
    echo. $(PP_LIB) >> make.tmp

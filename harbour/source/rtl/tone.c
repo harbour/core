@@ -131,9 +131,9 @@ void hb_tone( double dFrequency, double dDuration )
    while( dDuration > 0.0 )
    {
 #if defined(HARBOUR_GCC_OS2) || defined(_Windows) || defined(_WIN32) || defined(__CYGWIN__) || defined(WINNT)
-      temp = HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
+      temp = ( ULONG ) HB_MIN_( HB_MAX_( 0, dDuration ), ULONG_MAX );
 #elif defined(OS2) || defined(__BORLANDC__) || defined(__DJGPP__) || defined(__MINGW32__) || defined(__WATCOMC__)
-      temp = HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
+      temp = ( USHORT ) HB_MIN_( HB_MAX_( 0, dDuration ), USHRT_MAX );
 #else
       temp = 0;
 #endif

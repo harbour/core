@@ -1299,7 +1299,7 @@ HARBOUR HB___MVSAVE( void )
                   if( IS_STRING( pItem ) && ( hb_itemGetCLen( pItem ) + 1 ) <= SHRT_MAX )
                   {
                      /* Store the closing zero byte, too */
-                     USHORT uiLength = hb_itemGetCLen( pItem ) + 1;
+                     USHORT uiLength = ( USHORT ) ( hb_itemGetCLen( pItem ) + 1 );
 
                      buffer[ 11 ] = 'C' + 128;
                      buffer[ 16 ] = HB_LOBYTE( uiLength );

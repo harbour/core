@@ -422,22 +422,22 @@ HARBOUR HB_PADR( void )
 
    if( szText && ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 );
+      long lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) ulSize )
+      if( lLen > ( long ) ulSize )
       {
          char * szResult = ( char * ) hb_xgrab( lLen + 1 );
-         LONG lPos;
+         long lPos;
          char cPad;
 
-         hb_xmemcpy( szResult, szText, ( LONG ) ulSize );
+         hb_xmemcpy( szResult, szText, ( long ) ulSize );
 
          cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
 
-         for( lPos = ( LONG ) ulSize; lPos < lLen; lPos++ )
+         for( lPos = ( long ) ulSize; lPos < lLen; lPos++ )
             szResult[ lPos ] = cPad;
 
-         hb_retclen( szResult , lLen );
+         hb_retclen( szResult, ( ULONG ) lLen );
          hb_xfree( szResult );
       }
       else
@@ -468,15 +468,15 @@ HARBOUR HB_PADL( void )
 
    if( szText && ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 );
+      long lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) ulSize )
+      if( lLen > ( long ) ulSize )
       {
          char * szResult = ( char * ) hb_xgrab( lLen + 1 );
-         LONG lPos = lLen - ( LONG ) ulSize;
+         long lPos = lLen - ( long ) ulSize;
          char cPad;
 
-         hb_xmemcpy( szResult + lPos, szText, ( LONG ) ulSize );
+         hb_xmemcpy( szResult + lPos, szText, ( long ) ulSize );
 
          cPad = ( ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ');
 
@@ -510,22 +510,22 @@ HARBOUR HB_PADC( void )
 
    if( szText && ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 );
+      long lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) ulSize )
+      if( lLen > ( long ) ulSize )
       {
          char * szResult = ( char * ) hb_xgrab( lLen + 1 );
          char cPad;
-         LONG w, lPos = ( lLen - ( LONG ) ulSize ) / 2;
+         long w, lPos = ( lLen - ( long ) ulSize ) / 2;
 
-         hb_xmemcpy( szResult + lPos, szText, ( LONG ) ulSize + 1 );
+         hb_xmemcpy( szResult + lPos, szText, ( long ) ulSize + 1 );
 
          cPad = ( ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ' );
 
          for( w = 0; w < lPos; w++ )
             szResult[ w ] = cPad;
 
-         for( w = ( LONG ) ulSize + lPos; w < lLen; w++ )
+         for( w = ( long ) ulSize + lPos; w < lLen; w++ )
             szResult[ w ] = cPad;
 
          szResult[ lLen ] = '\0';
@@ -667,10 +667,10 @@ HARBOUR HB_LEFT( void )
 
    if( pText && ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 );
+      long lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) hb_itemGetCLen( pText ) )
-         lLen = ( LONG ) hb_itemGetCLen( pText );
+      if( lLen > ( long ) hb_itemGetCLen( pText ) )
+         lLen = ( long ) hb_itemGetCLen( pText );
 
       else if( lLen < 0 )
          lLen = 0;
@@ -697,10 +697,10 @@ HARBOUR HB_RIGHT( void )
 
    if( pText && ISNUM( 2 ) )
    {
-      LONG lLen = hb_parnl( 2 );
+      long lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) hb_itemGetCLen( pText ) )
-         lLen = ( LONG ) hb_itemGetCLen( pText );
+      if( lLen > ( long ) hb_itemGetCLen( pText ) )
+         lLen = ( long ) hb_itemGetCLen( pText );
 
       else if( lLen < 0 )
          lLen = 0;
@@ -722,11 +722,11 @@ HARBOUR HB_SUBSTR( void )
 
    if( pText && ISNUM( 2 ) )
    {
-      LONG lPos = hb_parnl( 2 );
+      long lPos = hb_parnl( 2 );
 
       if( lPos < 0 )
       {
-         lPos += ( LONG ) hb_itemGetCLen( pText );
+         lPos += ( long ) hb_itemGetCLen( pText );
          if( lPos < 0 )
             lPos = 0;
       }
@@ -735,9 +735,9 @@ HARBOUR HB_SUBSTR( void )
          lPos--;
       }
 
-      if( lPos < ( LONG ) hb_itemGetCLen( pText ) )
+      if( lPos < ( long ) hb_itemGetCLen( pText ) )
       {
-         LONG lLen;
+         long lLen;
 
          if( hb_pcount() >= 3 )
          {
@@ -745,8 +745,8 @@ HARBOUR HB_SUBSTR( void )
             {
                lLen = hb_parnl( 3 );
 
-               if( lLen > ( LONG ) hb_itemGetCLen( pText ) - lPos )
-                  lLen = ( LONG ) hb_itemGetCLen( pText ) - lPos;
+               if( lLen > ( long ) hb_itemGetCLen( pText ) - lPos )
+                  lLen = ( long ) hb_itemGetCLen( pText ) - lPos;
             }
             else
             {
@@ -763,7 +763,7 @@ HARBOUR HB_SUBSTR( void )
             }
          }
          else
-            lLen = ( LONG ) hb_itemGetCLen( pText ) - lPos;
+            lLen = ( long ) hb_itemGetCLen( pText ) - lPos;
 
          if( lLen > 0 )
             hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );
@@ -885,7 +885,7 @@ HARBOUR HB_REPLICATE( void )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
-      LONG lTimes = hb_parnl( 2 );
+      long lTimes = hb_parnl( 2 );
 
       if( lTimes > 0 )
       {
@@ -896,7 +896,7 @@ HARBOUR HB_REPLICATE( void )
             char * szText = hb_parc( 1 );
             char * szResult = ( char * ) hb_xgrab( ( ulLen * lTimes ) + 1 );
             char * szPtr = szResult;
-            LONG i;
+            long i;
 
             for( i = 0; i < lTimes; i++ )
             {
@@ -939,7 +939,7 @@ HARBOUR HB_SPACE( void )
 {
    if( ISNUM( 1 ) )
    {
-      LONG lLen = hb_parnl( 1 );
+      long lLen = hb_parnl( 1 );
 
       if( lLen > 0 )
       {
@@ -1075,13 +1075,13 @@ HARBOUR HB_STRTRAN( void )
                if( bAll || ulCount > 0 )
                {
                   ULONG ulFound = 0;
-                  LONG lReplaced = 0;
+                  long lReplaced = 0;
                   ULONG i = 0;
                   ULONG ulLength = ulText;
 
                   while( i < ulText )
                   {
-                     if( ( bAll || lReplaced < ( LONG ) ulCount ) && ! memcmp( szText + i, szSeek, ulSeek ) )
+                     if( ( bAll || lReplaced < ( long ) ulCount ) && ! memcmp( szText + i, szSeek, ulSeek ) )
                      {
                         ulFound++;
                         if( ulFound >= ulStart )

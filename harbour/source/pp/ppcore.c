@@ -184,6 +184,21 @@ void hb_pp_Init( void )
    hb_pp_aCondCompile = ( int * ) hb_xgrab( sizeof( int ) * 5 );
 
    {
+      char szResult[ 5 ];
+      USHORT usHarbour = ( 256 * HB_VER_MAJOR ) + HB_VER_MINOR;
+
+      /*
+        This updates __HARBOUR__ on every change of HB_VER_MAJOR / HB_VER_MINOR
+        HIBYTE is the HB_VER_MAJOR value and the LOBYTE is the HB_VER_MINOR value.
+
+        The check below is to ensure that __HARBOUR__ gets the
+        value of 1 by default
+      */
+      sprintf( szResult, "%4d", ( usHarbour ? usHarbour : 1 ) );
+      hb_pp_AddDefine( "__HARBOUR__", szResult );
+   }
+
+   {
       char szResult[ 11 ];
       time_t t;
       struct tm * oTime;

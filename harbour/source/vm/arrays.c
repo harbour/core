@@ -559,7 +559,7 @@ ULONG hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * 
          }
          else if( IS_DATE( pValue ) )
          {
-            LONG lValue = hb_itemGetDL( pValue );
+            long lValue = hb_itemGetDL( pValue );
 
             for( ulStart--; ulCount > 0; ulCount--, ulStart++ )
             {
@@ -862,7 +862,7 @@ HARBOUR HB_ASIZE( void )
 
    if( pArray && ISNUM( 2 ) )
    {
-      LONG lSize = hb_parnl( 2 );
+      long lSize = hb_parnl( 2 );
 
       hb_arraySize( pArray, HB_MAX_( lSize, 0 ) );
 

@@ -234,7 +234,7 @@ static ERRCODE defCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
    HB_TRACE(HB_TR_DEBUG, ("defCreateFields(%p, %p)", pArea, pStruct));
 
-   uiItems = hb_arrayLen( pStruct );
+   uiItems = ( USHORT ) hb_arrayLen( pStruct );
    SELF_SETFIELDEXTENT( pArea, uiItems );
    pFieldInfo.typeExtended = 0;
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
@@ -423,7 +423,7 @@ static ERRCODE defFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_ITE
          break;
 
       case DBS_TYPE:
-         szType[ 0 ] = pField->uiType;
+         szType[ 0 ] = ( char ) pField->uiType;
          szType[ 1 ] = '\0';
          hb_itemPutC( pItem, szType );
          break;
@@ -990,7 +990,7 @@ static USHORT hb_rddSelect( char * szAlias )
 
    pSymAlias = hb_dynsymFindName( szAlias );
    if( pSymAlias && pSymAlias->hArea )
-      return pSymAlias->hArea;
+      return ( USHORT ) pSymAlias->hArea;
    else
       return 0;
 }
@@ -1360,7 +1360,7 @@ HARBOUR HB_AFIELDS( void )
    SELF_FIELDCOUNT( ( AREAP ) s_pCurrArea->pArea, &uiFields );
    if( pName )
    {
-      uiArrayLen = hb_arrayLen( pName );
+      uiArrayLen = ( USHORT ) hb_arrayLen( pName );
       if( uiArrayLen > uiFields )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
@@ -1371,7 +1371,7 @@ HARBOUR HB_AFIELDS( void )
    }
    if( pType )
    {
-      uiArrayLen = hb_arrayLen( pType );
+      uiArrayLen = ( USHORT ) hb_arrayLen( pType );
       if( uiArrayLen > uiFields )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
@@ -1382,7 +1382,7 @@ HARBOUR HB_AFIELDS( void )
    }
    if( pLen )
    {
-      uiArrayLen = hb_arrayLen( pLen );
+      uiArrayLen = ( USHORT ) hb_arrayLen( pLen );
       if( uiArrayLen > uiFields )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
@@ -1393,7 +1393,7 @@ HARBOUR HB_AFIELDS( void )
    }
    if( pDec )
    {
-      uiArrayLen = hb_arrayLen( pDec );
+      uiArrayLen = ( USHORT ) hb_arrayLen( pDec );
       if( uiArrayLen > uiFields )
          uiArrayLen = uiFields;
       for( uiCount = 1; uiCount <= uiArrayLen; uiCount++ )
@@ -1657,7 +1657,7 @@ HARBOUR HB_DBCREATE( void )
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
-   uiLen = hb_arrayLen( pStruct );
+   uiLen = ( USHORT ) hb_arrayLen( pStruct );
 
    if( ( strlen( szFileName ) == 0 ) || !pStruct || uiLen == 0 )
    {
@@ -1686,7 +1686,7 @@ HARBOUR HB_DBCREATE( void )
    }
 
    hb_rddCheck();
-   uiLen = hb_parclen( 3 );
+   uiLen = ( USHORT ) hb_parclen( 3 );
    if( uiLen > 0 )
    {
       if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
@@ -2523,7 +2523,7 @@ HARBOUR HB_DBUSEAREA( void )
    }
 
    hb_rddCheck();
-   uiLen = hb_parclen( 2 );
+   uiLen = ( USHORT ) hb_parclen( 2 );
    if( uiLen > 0 )
    {
       if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
@@ -3277,7 +3277,7 @@ HARBOUR HB_RDDREGISTER( void )
 
    hb_rddCheck();
 
-   uiLen = hb_parclen( 1 );
+   uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
       char szDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
@@ -3393,7 +3393,7 @@ HARBOUR HB___RDDSETDEFAULT( void )
    hb_rddCheck();
    hb_retc( s_szDefDriver );
 
-   uiLen = hb_parclen( 1 );
+   uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
       if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
@@ -3411,7 +3411,7 @@ HARBOUR HB_RDDSETDEFAULT( void )
    hb_rddCheck();
    hb_retc( s_szDefDriver );
 
-   uiLen = hb_parclen( 1 );
+   uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
       char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];
@@ -3439,7 +3439,7 @@ HARBOUR HB_DBSETDRIVER( void )
    hb_rddCheck();
    hb_retc( s_szDefDriver );
 
-   uiLen = hb_parclen( 1 );
+   uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
       char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH ];

@@ -2290,7 +2290,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   if( pIdx->value.asNum.NumType == HB_ET_LONG )
                      lIndex = pIdx->value.asNum.lVal;
                   else
-                     lIndex = pIdx->value.asNum.dVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.dVal;
 
                   if( lIndex > 0 )
                   {
@@ -2328,7 +2328,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   if( pIdx->value.asNum.NumType == HB_ET_LONG )
                      lIndex = pIdx->value.asNum.lVal;
                   else
-                     lIndex = pIdx->value.asNum.dVal;
+                     lIndex = ( LONG ) pIdx->value.asNum.dVal;
 
                   if( lIndex > 0 )
                      HB_EXPR_USE( pExpr, HB_EA_ARRAY_AT );
@@ -2515,7 +2515,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                /* NOTE: pParms will be NULL in 'DO procname' (if there is
                 * no WITH keyword)
                 */
-               usCount = hb_compExprListLen( pSelf->value.asFunCall.pParms );
+               usCount = ( USHORT ) hb_compExprListLen( pSelf->value.asFunCall.pParms );
                if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
                   --usCount;
                if( usCount )
@@ -2523,7 +2523,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
             }
             else
                usCount = 0;
-            hb_compGenPCode3( HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount  ) );
+            hb_compGenPCode3( HB_P_FUNCTION, HB_LOBYTE( usCount ), HB_HIBYTE( usCount ) );
          }
          break;
 
@@ -2540,7 +2540,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
 
             if( pSelf->value.asFunCall.pParms )
             {
-               usCount = hb_compExprListLen( pSelf->value.asFunCall.pParms );
+               usCount = ( USHORT ) hb_compExprListLen( pSelf->value.asFunCall.pParms );
                if( usCount == 1 && pSelf->value.asFunCall.pParms->value.asList.pExprList->ExprType == HB_ET_NONE )
                   --usCount;
                if( usCount )

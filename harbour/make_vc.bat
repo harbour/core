@@ -29,6 +29,7 @@ if "%1" == "CLEAN" goto CLEAN
    if exist obj\vc\*.obj del obj\vc\*.obj
    if exist obj\vc\*.c   del obj\vc\*.c
    if exist obj\vc\*.h   del obj\vc\*.h
+   if exist obj\vc\*.pch del obj\vc\*.pch
    if exist make_vc.log  del make_vc.log
    goto EXIT
 

@@ -356,7 +356,7 @@ static void hb_altout( char * pStr, ULONG ulLen )
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      s_uiPCol += ulLen;
+      s_uiPCol += ( USHORT ) ulLen;
    }
 }
 
@@ -371,7 +371,7 @@ static void hb_devout( char * pStr, ULONG ulLen )
       USHORT user_ferror = hb_fsError(); /* Save current user file error code */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
       hb_fsSetError( user_ferror ); /* Restore last user file error code */
-      s_uiPCol += ulLen;
+      s_uiPCol += ( USHORT ) ulLen;
    }
    else
    {

@@ -1,3 +1,60 @@
+20000315-08:08 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/filesys.c
+     source/rtl/console.c
+     source/rtl/binnum.c
+     source/rtl/errorapi.c
+     source/rtl/samples.c
+     source/rtl/tone.c
+     source/rtl/inkey.c
+     source/vm/memvars.c
+     source/vm/classes.c
+     source/vm/hvm.c
+     include/hbexpr.c
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     source/rdd/dbfcdx/dbfcdx1.c
+     ! Fixed MSVC /W3 warnings
+     % In HVM.C hb_vmPopNumber() and hb_vmPopDouble() synchronized.
+     % In HVM.C several hb_vmPopDouble() calls changed to hb_vmPopNumber()
+       which is faster.
+     % hb_vmNegate() optimized.
+     * hb_vmPlus() and hb_vmMinus() synchronized.
+     * hb_vmAnd() and hb_vmOr() synchronized.
+     ! Two static variables prefixed with "s_".
+   * makefile.vc
+     + /W1 changed to /W3 to raise the code quality.
+   * source/pp/pptable.c
+     - removed declaration of __HARBOUR__
+     % changed chain of static DEFINES accordingly
+     (Provided by Jose Lalin)
+   * source/pp/ppinit.c
+     + added declaration of __HARBOUR__
+     ! Now __HARBOUR__ gets the value from HB_VER_MAJOR/MINOR
+       like others compilers. If HB_VER_MAJOR/MINOR is equal to
+       zero (as they are now) then __HARBOUR__ is equal to 1 by default.
+     (Provided by Jose Lalin)
+   * source/rtl/environ.c
+     * long -> ULONG (in GETENV())
+   * source/rtl/inkey.c
+     * long -> ULONG (in __KEYBOARD())
+   * include/hbvm.h
+     source/vm/hvm.c
+     * hb_vmPushDate( LONG ) -> hb_vmPushDate( long )
+     * LONG -> long for hb_vmPopDate()
+   * source/vm/dynsym.c
+     source/vm/arrays.c
+     source/rtl/binnum.c
+     source/rtl/strings.c
+     source/rtl/filesys.c
+     ! LONG -> long
+       All this to be consistent with the current API. The next step will be
+       to clear up the long vs. LONG question in the ITEM related things.
+   * makefile.bc
+     - Removed explicit BCC32/BCC, TASM/TASM32 selection, the MAKE.EXE is
+       used from now on (from BUILTINS.MAK)
+   * make_vc.bat
+     + Deletes the .PCH file in the OBJ dir.
+
 20000314-13:35 EST Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      * added a few additional comments on recurrsion.

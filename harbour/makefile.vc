@@ -60,8 +60,8 @@ HBDOC_DIR    = utils\hbdoc
 # C compiler definition and C flags. These should never have to change.
 #
 
-AS = masm
-CFLAGS         = -TP -W1 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN
+AS             = masm
+CFLAGS         = -TP -W3 -nologo -I$(INCLUDE_DIR) -DHB_GT_WIN
 CLIBFLAGS      = $(CFLAGS) -c
 CLIBFLAGSDEBUG = $(CLIBFLAGS) -Zi
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0
@@ -84,11 +84,11 @@ TOOLS_LIB    = $(LIB_DIR)\tools.lib
 VM_LIB       = $(LIB_DIR)\vm.lib
 
 HARBOUR_EXE  = $(BIN_DIR)\harbour.exe
-PP_EXE       = $(BIN_DIR)\hbpp.exe
-RUNNER_EXE   = $(BIN_DIR)\hbrun.exe
+HBPP_EXE     = $(BIN_DIR)\hbpp.exe
+HBRUN_EXE    = $(BIN_DIR)\hbrun.exe
 HBTEST_EXE   = $(BIN_DIR)\hbtest.exe
 HBDOC_EXE    = $(BIN_DIR)\hbdoc.exe
-RUNNER_DLL   = $(BIN_DIR)\runjava.dll
+HBRUNJAV_DLL = $(BIN_DIR)\hbrunjav.dll
 
 #
 # Rules
@@ -483,21 +483,23 @@ all: zot \
    $(COMMON_LIB) \
    $(PP_LIB) \
    $(HARBOUR_EXE) \
-   $(RTL_LIB) \
-   $(DEBUG_LIB) \
-   $(MACRO_LIB) \
-   $(RDD_LIB) \
-   $(DBFCDX_LIB) \
-   $(DBFNTX_LIB) \
-   $(NULSYS_LIB) \
-   $(RUNNER_LIB) \
-   $(TOOLS_LIB) \
    $(VM_LIB) \
-   $(PP_EXE) \
-   $(RUNNER_EXE) \
+   $(RTL_LIB) \
+   $(TOOLS_LIB) \
+   $(MACRO_LIB) \
+   $(DEBUG_LIB) \
+   $(RDD_LIB) \
+   $(NULSYS_LIB) \
+   $(DBFNTX_LIB) \
+   $(DBFCDX_LIB) \
+   $(RUNNER_LIB) \
+   $(HBRUN_EXE) \
+   $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
-#  $(RUNNER_DLL)
+!ifdef DO_HBRUNJAV
+   $(HBRUNJAV_DLL)
+!endif
 
 MK_FLAGS = $(MK_FLAGS:A=)
 
@@ -512,44 +514,50 @@ all: \
    $(COMMON_LIB) \
    $(PP_LIB) \
    $(HARBOUR_EXE) \
-   $(RTL_LIB) \
-   $(DEBUG_LIB) \
-   $(MACRO_LIB) \
-   $(RDD_LIB) \
-   $(DBFCDX_LIB) \
-   $(DBFNTX_LIB) \
-   $(NULSYS_LIB) \
-   $(RUNNER_LIB) \
-   $(TOOLS_LIB) \
    $(VM_LIB) \
-   $(PP_EXE) \
-   $(RUNNER_EXE) \
+   $(RTL_LIB) \
+   $(TOOLS_LIB) \
+   $(MACRO_LIB) \
+   $(DEBUG_LIB) \
+   $(RDD_LIB) \
+   $(NULSYS_LIB) \
+   $(DBFNTX_LIB) \
+   $(DBFCDX_LIB) \
+   $(RUNNER_LIB) \
+   $(HBRUN_EXE) \
+   $(HBPP_EXE) \
    $(HBTEST_EXE) \
    $(HBDOC_EXE) \
-#  $(RUNNER_DLL)
+!ifdef DO_HBRUNJAV
+   $(HBRUNJAV_DLL)
+!endif
 
 !endif
 
-$(PP_EXE) : \
+$(HBPP_EXE) : \
    $(PP_DIR)\stdalone\hbpp.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(PP_EXE) /link $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(HBPP_EXE) /link $(PP_LIB) $(COMMON_LIB)
 
 #
 # Runner
 #
 
-$(RUNNER_EXE) : \
+$(HBRUN_EXE) : \
    $(RUNNER_DIR)\stdalone\hbrun.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
    $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c -o $(BIN_DIR)\hbrun /link $(LIBS2)
 
+!ifdef DO_HBRUNJAV
+
 #
 # To compile this you must have a JDK installed
 #
-#$(RUNNER_DLL) : $(RUNNER_DIR)\runjava.c
-#   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(RUNNER_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
-#    -del $(BIN_DIR)\runjava.exp
-#    -del $(BIN_DIR)\runjava.lib
+$(HBRUNJAV_DLL) : $(RUNNER_DIR)\runjava.c
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(RUNNER_DIR)\runjava.c -o $(BIN_DIR)\runjava.dll /link-dll $(LIBS)
+    -del $(BIN_DIR)\runjava.exp
+    -del $(BIN_DIR)\runjava.lib
+
+!endif
 
 #
 # HBTEST.EXE rules

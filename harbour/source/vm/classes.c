@@ -432,7 +432,7 @@ HARBOUR HB___CLSADDMSG( void )
               break;
 
          case HB_OO_MSG_DATA:
-              pNewMeth->uiData = hb_parnl( 3 );
+              pNewMeth->uiData = ( USHORT ) hb_parnl( 3 );
               if( pMessage->pSymbol->szName[ 0 ] == '_' )
                  pNewMeth->pFunction = hb___msgSetData;
               else
@@ -455,7 +455,7 @@ HARBOUR HB___CLSADDMSG( void )
               break;
 
          case HB_OO_MSG_CLASSDATA:
-              pNewMeth->uiData = hb_parnl( 3 );
+              pNewMeth->uiData = ( USHORT ) hb_parnl( 3 );
 
               if( ( USHORT ) hb_arrayLen( pClass->pClassDatas ) < pNewMeth->uiData )
                  hb_arraySize( pClass->pClassDatas, pNewMeth->uiData );
@@ -482,7 +482,7 @@ HARBOUR HB___CLSADDMSG( void )
               break;
 
          case HB_OO_MSG_INLINE:
-              pNewMeth->uiData = hb_arrayLen( pClass->pInlines ) + 1;
+              pNewMeth->uiData = ( USHORT ) ( hb_arrayLen( pClass->pInlines ) + 1 );
               hb_arraySize( pClass->pInlines, pNewMeth->uiData );
               hb_arraySet(  pClass->pInlines, pNewMeth->uiData,
                             hb_param( 3, IT_BLOCK ) );
@@ -494,7 +494,7 @@ HARBOUR HB___CLSADDMSG( void )
               break;
 
          case HB_OO_MSG_SUPER:
-              pNewMeth->uiData    = hb_parnl( 3 );
+              pNewMeth->uiData    = ( USHORT ) hb_parnl( 3 );
               pNewMeth->pFunction = hb___msgSuper;
               break;
 

@@ -507,15 +507,16 @@ HARBOUR HB_GETENV( void )
    if( hb_pcount() == 1 )
    {
       char * szName = hb_parc( 1 );
-      long lName = hb_parclen( 1 );
+      ULONG ulName = hb_parclen( 1 );
 
-      while( lName && szName[ lName - 1 ] == '=' )
+      while( ulName && szName[ ulName - 1 ] == '=' )
       {
          /* strip the '=' or else it will clear the variable! */
-         szName[ lName - 1 ] = '\0';
-         lName--;
+         szName[ ulName - 1 ] = '\0';
+         ulName--;
       }
-      if( lName )
+
+      if( ulName )
       {
          char * szValue = getenv( szName );
          char * szDefault = hb_parc( 2 ) ? hb_parc( 2 ) : "";

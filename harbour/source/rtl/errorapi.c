@@ -663,8 +663,8 @@ PHB_ITEM hb_errRT_New(
 
    hb_errPutSeverity( pError, uiSeverity );
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
+   hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
+   hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
@@ -687,8 +687,8 @@ PHB_ITEM hb_errRT_New_Subst(
 
    hb_errPutSeverity( pError, uiSeverity );
    hb_errPutSubSystem( pError, szSubSystem ? szSubSystem : HB_ERR_SS_BASE );
-   hb_errPutGenCode( pError, ulGenCode );
-   hb_errPutSubCode( pError, ulSubCode );
+   hb_errPutGenCode( pError, ( USHORT ) ulGenCode );
+   hb_errPutSubCode( pError, ( USHORT ) ulSubCode );
    hb_errPutDescription( pError, szDescription ? szDescription : hb_langDGetErrorDesc( ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
