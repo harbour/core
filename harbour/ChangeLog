@@ -1,3 +1,7 @@
+2001-11-06 09:50 GMT Dave Pearson <davep@davep.org>
+   * tests/Makefile
+      * testprof.prg was missing. Added.
+	
 2001-11-06 06:20 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * source/debug/dbgtarr.prg
       * Some enhacementes . Now you can use Page up/Page Down keys for movement

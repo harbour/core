@@ -135,6 +135,7 @@ PRG_SOURCES=\
 	testmem.prg \
 	testntx.prg \
 	testpre.prg \
+	testprof.prg \
 	testrdd.prg \
 	testread.prg \
 	teststr.prg \
