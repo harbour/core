@@ -766,6 +766,10 @@ static void hb_ntxPageSave( LPPAGEINFO pPage )
             i * ( pPage->TagParent->KeyLength + 8 );
    item=(NTXITEM *)(buffer+itemlist->item_offset[i]);
    item->page = pKey[i].Tag;
+   i++;
+   for( ; i < pPage->TagParent->MaxKeys + 1; i++ )
+      itemlist->item_offset[i] = 2 + 2 * ( pPage->TagParent->MaxKeys + 1 ) +
+            i * ( pPage->TagParent->KeyLength + 8 );
    hb_fsSeek( pPage->TagParent->Owner->DiskFile, pPage->Page, FS_SET );
    hb_fsWrite( pPage->TagParent->Owner->DiskFile, (BYTE *) buffer, NTXBLOCKSIZE );
    pPage->Changed = FALSE;

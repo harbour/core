@@ -1,5 +1,9 @@
 2001-02-23 21:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
+     * bug fixed, reported by Maurilio Longo
+
+2001-02-23 21:40 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/source/rdd/dbfntx/dbfntx1.c
      * building of indexes optimized
 2001-02-13 hh:mm GMT+1 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
   * source/rtl/filesys.c
