@@ -22,7 +22,7 @@ harbour.lib : arrays.obj asort.obj classes.obj codebloc.obj copyfile.c \
               math.obj mtran.obj objfunc.obj \
               set.obj strings.obj strcmp.obj symbols.obj tclass.obj transfrm.obj
 
-hbtools.lib : datesx.obj debug.obj genobj.obj io.obj mathx.obj \
+hbtools.lib : datesx.obj debug.obj io.obj mathx.obj \
               stringp.obj stringsx.obj \
               asciisum.obj ascpos.obj atdiff.obj \
               chareven.obj charmix.obj charodd.obj \
@@ -74,7 +74,6 @@ initsymb.obj : source\vm\initsymb.c extend.h types.h
 
 datesx.obj   : source\tools\datesx.c    extend.h types.h
 debug.obj    : source\tools\debug.c     extend.h types.h ctoharb.h itemapi.h
-genobj.obj   : source\contrib\genobj.c    extend.h types.h
 io.obj       : source\tools\io.c        extend.h types.h
 mathx.obj    : source\tools\mathx.c     extend.h types.h
 stringp.obj  : source\tools\stringp.prg extend.h types.h init.h pcode.h harbour.exe
@@ -107,10 +106,6 @@ strright.obj : source\tools\strright.c  extend.h types.h
   bin\harbour $< /n /osource\rtl
   bcc -c $(c_opt) -o$@ $*.c
   tlib .\libs\b16\harbour.lib -+$@,,
-
-{source\contrib}.c{obj}.obj:
-  bcc -c $(c_opt) -o$@ $<
-  tlib .\libs\b16\hbtools.lib -+$@,,
 
 {source\vm}.c{obj}.obj:
   bcc -c $(c_opt) -o$@ $<

@@ -13,6 +13,7 @@ PRG_SOURCES=\
 	arrindex.prg \
 	asctest.prg \
 	atest.prg \
+	box.prg \
 	byref.prg \
 	calling.prg \
 	cdow.prg \

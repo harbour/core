@@ -1,3 +1,28 @@
+19990624-15:15 EDT David G. Holm <dholm@jsd-llc.com>
+  * makefile.b31
+    - Removed genobj
+  * makefile.icc
+    - removed genobj
+  * source/rtl/copyfile.c
+    - Added type override to hb_xgrab() call
+  * source/rtl/files.c
+    - Removed test printf() calls that I forgot to remove from
+      hb_fsWrite() after debugging hb_fsCreate() last night
+  * source/rtl/set.c
+    - Minor change in last if block in HB___SETCENTURY() to avoid
+      a signed/unsigned comparison complaint by some compilers.
+  * source/tools/hb_f.c
+    - In hb_hbfskip(), made x the same type as read_len to avoid
+      a signed/unsigned comparison complaint by some compilers.
+  * tests/working/Makefile
+    - Added box.prg
+  * tests/working/test_all.prg
+    - Added optional second command line parameter. If not used,
+      testall.bat uses call, otherwise it uses the command shell
+      specified and automatically adds /c. Examples:
+         test_all hbdos ==> call hbdos ainstest
+         test_all hbdos command ==> command /c hbdos ainstest
+
 19990624-13:40 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/gt/gtwin.c
     - New functions for gtWhereX() and gtWhereY() contributed by Paul Tucker

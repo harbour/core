@@ -299,9 +299,7 @@ USHORT  hb_fsWrite  ( FHANDLE handle, BYTEP buff, USHORT count )
         USHORT bytes;
 #if defined(HAVE_POSIX_IO)
         errno = 0;
-printf("\nhb_fsWrite: handle = %d", handle);
         bytes = write(handle,buff,count);
-printf(", bytes = %u", bytes);
         last_error = errno;
 #else
         bytes = 0;

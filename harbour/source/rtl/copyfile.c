@@ -55,7 +55,7 @@ static long hb_fsCopy(BYTEP source,BYTEP dest)
       hb_errRelease(pError);
       return( -2L) ;
    }
-   buffer  = hb_xgrab( BUFFER_SIZE );
+   buffer  = (char *)hb_xgrab( BUFFER_SIZE );
    usCount = hb_fsRead(sHANDLE,buffer,BUFFER_SIZE);
    while( TRUE )
    {

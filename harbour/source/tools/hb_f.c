@@ -101,9 +101,8 @@ long hb_hbfskip( int recs )
 
 {
 
-   int x;
    long read_pos;
-   size_t read_len;
+   size_t x, read_len;
    long y;
 
 

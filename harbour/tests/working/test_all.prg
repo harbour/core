@@ -7,7 +7,7 @@
 // The TESTALL.BAT batch file has restart capability. For example, if there is an error
 // in testgt.prg, find and fix the problem, then restart by running "TESTALL TESTGT".
 
-Function Main( cOption )
+Function Main( cOption, cCmd )
 LOCAL aDir,f,n,o,p,cRead
 
    aDir:=Directory("*.PRG")
@@ -16,6 +16,11 @@ LOCAL aDir,f,n,o,p,cRead
       cOption:="HB32"
    ELSEIF Upper( cOption ) == "HRB"
       fWrite(o,"del test_all.out"+chr(13)+chr(10))
+   ENDIF
+   IF Empty( cCmd )
+      cCmd := "call "
+   ELSE
+      cCmd += " /c "
    ENDIF
 
    fWrite(o,"if not .%1==. goto %1" + Chr(13) + Chr(10))
@@ -32,7 +37,7 @@ LOCAL aDir,f,n,o,p,cRead
                   "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
                   "runner "+Left(aDir[f][1],Len(aDir[f][1])-4)+".hrb >> test_all.out"+Chr(13)+Chr(10) )
             ELSE
-               fWrite(o,"call " + cOption + " " + n + Chr(13) + Chr(10);
+               fWrite(o,cCmd + cOption + " " + n + Chr(13) + Chr(10);
                 + "if errorlevel 1 goto end" + Chr(13) + Chr(10) + Chr(13) + Chr(10))
             ENDIF
          ENDIF

@@ -242,11 +242,13 @@ HARBOUR HB___SETCENTURY (void)
       szNewFormat = (char*)hb_xgrab (size + 1);
       if (szNewFormat)
       {
+         int format_len;
          if (y_start > 0) memcpy (szNewFormat, szDateFormat, y_start);
          szNewFormat [y_start] = 0;
          strcat (szNewFormat, "YY");
          if (hb_set_century) strcat (szNewFormat, "YY");
-         if (y_stop < strlen (szDateFormat)) strcat (szNewFormat, szDateFormat + y_stop);
+         format_len = strlen (szDateFormat);
+         if (y_stop < format_len) strcat (szNewFormat, szDateFormat + y_stop);
          hb_xfree (szDateFormat);
          hb_set.HB_SET_DATEFORMAT = szNewFormat;
       }
