@@ -1916,6 +1916,7 @@ static ERRCODE adsOrderListClear( ADSAREAP pArea )
    HB_TRACE(HB_TR_DEBUG, ("adsOrderListClear(%p)", pArea));
 
    AdsCloseAllIndexes  ( pArea->hTable );
+   pArea->hOrdCurrent = 0;
 
    return SUCCESS;
 }

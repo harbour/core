@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-05-06 12:45 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * contrib/rdd_ads/ads1.c
+    ! Bug fixed in adsOrderListClear() - the current order is set to 0 now
+
 2003-05-06 10:45 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * include/hbapicdp.h
   * source/rtl/cdpapi.c
