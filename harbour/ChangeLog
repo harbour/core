@@ -1,3 +1,21 @@
+20000425-11:36 GMT+1 Antonio Linares <alinares@fivetech.com>
+   + source/vm/startup.asm
+       Harbour startup for Win32 when not using any C compiler startup
+
+   + source/vm/borsym.asm
+       Borland _INIT_ segment bounds when not using Borland startup
+
+   +- source/vm/borinit.c
+      (added and removed, as it has to be placed inside hvm.c)
+
+   * makefile.bc updated
+      + startup.asm
+      + borsym.asm
+
+   * source/vm/hvm.c
+     + static hb_vmProcessBorlandInitSegment() added
+       process Borland _INIT_ segment (if linked) functions
+
 20000424-11:42 GMT-8 Brian Hays <bhays@abacuslaw.com>
    * doc/en/datetime.txt
    * doc/en/dbstrux.txt
