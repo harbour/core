@@ -1,3 +1,8 @@
+20000507-09:40 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   * tests/gnu_test.bat
+     ! Fixed envvar references.
+
 20000506-22:45 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * include/hbcomp.h
