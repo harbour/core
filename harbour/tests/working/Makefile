@@ -60,6 +60,7 @@ PRG_SOURCES=\
 	longstr2.prg \
 	mankala.prg \
 	mathtest.prg \
+	memvar.prg \
 	mtran.prg \
 	multiarg.prg \
 	nums.prg \

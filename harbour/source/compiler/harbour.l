@@ -116,6 +116,7 @@ Separator     {SpaceTab}
 %x            STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
+%x            PARAM_ PRIVATE_ PUBLIC_
 %s            INDEX
 
 %%
@@ -295,7 +296,7 @@ Separator     {SpaceTab}
                unput( yytext[ yyleng-2 ] );
                _iState =CASE;
                return CASE;
-             }	     
+             }
 <CASE_>{Separator}*(\n|.) { /* not operator */
                if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                unput( yytext[ yyleng-1 ] );
@@ -711,25 +712,26 @@ Separator     {SpaceTab}
 /* ************************************************************************ */
 %}
 "#"{Separator}*"line"  return LINE;
-"local"        BEGIN LOCAL_;
+"loca"|"local"  { BEGIN LOCAL_;
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                }
 <LOCAL_>{Separator}+[_a-zA-Z]   { /* an identifier after LOCAL */
                  unput( yytext[ yyleng-1 ] );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  { /* it is first item in the line */
+                   OurFree( (void *) yylval.string );
                    _iState =LOCAL;
                    return LOCAL;
                  }
                  else
                  { /* there is another item in line already */
-                   yylval.string = yy_strdup( "LOCAL" );
                    _iState =IDENTIFIER;
                    return IDENTIFIER;
                  }
                }
 <LOCAL_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after LOCAL */
                  unput( yytext[ yyleng-1 ] );
-                 yylval.string = yy_strdup( "LOCAL" );
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  _iState =IDENTIFIER;
                  return IDENTIFIER;
@@ -838,10 +840,97 @@ Separator     {SpaceTab}
 %}
 "nil"          _iState =LITERAL; return NIL;
 "otherwise"    return OTHERWISE;
-"parameters"   _iState =PARAMETERS; return PARAMETERS;
-"private"      _iState =PRIVATE; return PRIVATE;
+%{
+/* ************************************************************************ */
+%}
+"para"|"param"|"parame"|"paramet"|"paramete"|"parameter"|"parameters"   {
+                  BEGIN PARAM_;
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                }
+<PARAM_>{Separator}+[_a-zA-Z]   { /* an identifier after PARAMETERS */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 { /* it is first item in the line */
+                   OurFree( (void *) yylval.string );
+                   _iState =PARAMETERS;
+                   return PARAMETERS;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<PARAM_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PARAMETERS */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+%{
+/* ************************************************************************ */
+%}
+"priv"|"priva"|"privat"|"private" { BEGIN PRIVATE_;
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                }
+<PRIVATE_>{Separator}+[_a-zA-Z]   { /* an identifier after PRIVATE */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 { /* it is first item in the line */
+                   OurFree( (void *) yylval.string );
+                   _iState =PRIVATE;
+                   return PRIVATE;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<PRIVATE_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PRIVATE */
+                /* TODO: add support for macro operator */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+%{
+/* ************************************************************************ */
+%}
 "proc"|"procedure" return PROCEDURE;
-"public"       _iState =PUBLIC; return PUBLIC;
+%{
+/* ************************************************************************ */
+%}
+"publ"|"publi"|"public" { BEGIN PUBLIC_;
+                  yylval.string = yy_strupr( yy_strdup( yytext ) );
+                }
+<PUBLIC_>{Separator}+[_a-zA-Z]   { /* an identifier after PUBLIC */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 if( _iState == LOOKUP )
+                 { /* it is first item in the line */
+                   OurFree( (void *) yylval.string );
+                   _iState =PUBLIC;
+                   return PUBLIC;
+                 }
+                 else
+                 { /* there is another item in line already */
+                   _iState =IDENTIFIER;
+                   return IDENTIFIER;
+                 }
+               }
+<PUBLIC_>{Separator}*[^a-zA-Z] { /* any character (not identifier) after PUBLIC */
+                /* TODO: add support for macro operator */
+                 unput( yytext[ yyleng-1 ] );
+                 if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
+                 _iState =IDENTIFIER;
+                 return IDENTIFIER;
+               }
+%{
+/* ************************************************************************ */
+%}
 "qself"{SpaceTab}*[(]{SpaceTab}*[)] return SELF;
 "recover"      _iState =RECOVER; return RECOVER;
 "retu"|"retur"|"return"  _iState =RETURN; return RETURN;

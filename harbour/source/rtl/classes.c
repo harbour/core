@@ -201,7 +201,7 @@ HARBOUR HB_CLASSADD(void)
    if( wClass && wClass <= wClasses )
    {
       pClass   = &pClasses[ wClass - 1 ];
-      pMessage = GetDynSym( hb_parc( 2 ) );
+      pMessage = hb_GetDynSym( hb_parc( 2 ) );
       wAt      = ( ( ( unsigned ) pMessage ) % pClass->wHashKey ) * BUCKET;
       wMask    = pClass->wHashKey * BUCKET;
 
@@ -350,7 +350,7 @@ HARBOUR HB_CLASSCREATE(void)
 HARBOUR HB_CLASSDEL(void)
 {
    PHB_ITEM pString  = hb_param( 2, IT_STRING );
-   PSYMBOL  pMessage = GetDynSym( pString->item.asString.value )->pSymbol;
+   PSYMBOL  pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
    PDYNSYM  pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS   pClass;
 
@@ -451,7 +451,7 @@ HARBOUR HB_CLASSINSTANCE(void)
 HARBOUR HB_CLASSMOD(void)
 {
    PHB_ITEM    pString  = hb_param( 2, IT_STRING );
-   PSYMBOL     pMessage = GetDynSym( pString->item.asString.value )->pSymbol;
+   PSYMBOL     pMessage = hb_GetDynSym( pString->item.asString.value )->pSymbol;
    PDYNSYM     pMsg     = ( PDYNSYM ) pMessage->pDynSym;
    PCLASS      pClass;
 
@@ -744,10 +744,10 @@ HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
 
    if( ! msgClassName )
    {
-      msgClassName = GetDynSym( "CLASSNAME" );  /* Standard messages        */
-      msgClassH    = GetDynSym( "CLASSH" );     /* Not present in classdef. */
-      msgClassSel  = GetDynSym( "CLASSSEL" );
-      msgEval      = GetDynSym( "EVAL" );
+      msgClassName = hb_GetDynSym( "CLASSNAME" );  /* Standard messages        */
+      msgClassH    = hb_GetDynSym( "CLASSH" );     /* Not present in classdef. */
+      msgClassSel  = hb_GetDynSym( "CLASSSEL" );
+      msgEval      = hb_GetDynSym( "EVAL" );
    }
 
    if( wClass && wClass <= wClasses )
@@ -796,7 +796,7 @@ HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pMessage )
  */
 ULONG hb_isMessage( PHB_ITEM pObject, char *szString )
 {
-   PSYMBOL pMessage = GetDynSym( szString )->pSymbol;
+   PSYMBOL pMessage = hb_GetDynSym( szString )->pSymbol;
    return( (ULONG) GetMethod( pObject, pMessage ) );
 }                                                /* Get funcptr of message   */
 
@@ -863,7 +863,7 @@ HARBOUR HB_OSEND(void)
    if( pMessage && pObject )                /* Object & message passed      */
    {
       Push( pObject );                      /* Push object                  */
-      Message( GetDynSym( pMessage->item.asString.value )->pSymbol );
+      Message( hb_GetDynSym( pMessage->item.asString.value )->pSymbol );
                                             /* Push char symbol as message  */
       for( w = 3; w <= hb_pcount(); w++ )   /* Push arguments on stack      */
          Push( hb_param( w, IT_ANY ) );
@@ -1007,7 +1007,7 @@ HARBOUR HB___INSTSUPER( void )
 
    if( pString )
    {
-      pDynSym = FindDynSym( pString->item.asString.value );
+      pDynSym = hb_FindDynSym( pString->item.asString.value );
       if( pDynSym )                             /* Find function            */
       {
          PushSymbol( pDynSym->pSymbol );        /* Push function name       */

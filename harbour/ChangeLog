@@ -1,3 +1,72 @@
+19990722-03:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/rtl/classes.c
+    *source/rtl/console.c
+    *source/rtl/errorapi.c
+    *source/rtl/itemapi.c
+    *source/rtl/transfrm.c
+        * changed GetDynSym to hb_GetDynSym
+        * changed FindDynSym to hb_FindDynSym
+
+    *source/runner/runner.c
+        * changed FindDynSym to hb_FindDynSym
+
+    *source/vm/dynsym.c
+        * changed GetDynSym to hb_GetDynSym
+        * changed NewDynSym to hb_NewDynSym
+        * changed FindDynSym to hb_FindDynSym
+	+ added initialization of hMemvar and hArea
+
+    *source/vm/hvm.c
+        * changed GetDynSym to hb_GetDynSym
+        * changed NewDynSym to hb_NewDynSym
+        * changed FindDynSym to hb_FindDynSym
+        + added support for PUBLIC and PRIVATE variables and PARAMETERS
+	  (not finished yet)
+
+    *include/extend.h
+	* changed definition of DYNSYM
+        + added definition of VS_MEMVAR, VS_PUBLIC, VS_PRIVATE
+
+    *include/init.h
+        + added again 'static' declaration (only for WATCOM compiler
+          at this moment)
+
+    *config/dos/watcom.cf
+	* changed to not link and lib in no case exact mode
+	
+    *include/pcode.h
+        - removed unused opcode HB_P_DEFSTATIC
+        + added HB_P_PARAMETER to create memvar variables that store
+         function/procedure parameters
+
+    *source/rtl/codebloc.c
+        *updated to support current memvars implementation
+
+    *source/rtl/memvars.c
+        + added support for PUBLIC and PRIVATE statements
+        + new __PUBLIC and __PRIVATE functions that can be accessed
+          from PRG code to create memvar variables
+	+ support for PARAMETERS statement
+
+	NOTE: It is still in development! There is something wrong with
+	reference counting (see tests/working/memvar.prg)
+
+    *source/compiler/harbour.y
+        + added support for PUBLIC and PRIVATE variables
+	+ added support for PARAMETERS statement
+
+    *source/compiler/harbour.l
+	+ added full support for PUBLIC, PRIVATE and PARAMETERS
+	* LOCAL can now be used in abbreviated form
+
+    +tests/working/memvar.prg
+        + tests memvar variables
+	 (NOTE: it can show unreleased memory blocks)
+
+    *tests/working/Makefile
+        + added memvar.prg
+
 Wed Jul 21 17:39:35 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/hbsetup.h: 

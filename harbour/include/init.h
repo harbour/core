@@ -105,7 +105,7 @@ void ProcessSymbols( SYMBOL * pSymbols, WORD wSymbols );
   static SYMBOL symbols[] = {
 
 #define HB_INIT_SYMBOLS_END( func ) }; \
-  int func( void ) \
+  static int func( void ) \
   { \
      ProcessSymbols( symbols, sizeof( symbols ) / sizeof( SYMBOL ) ); \
      return 1; \

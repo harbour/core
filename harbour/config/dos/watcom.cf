@@ -40,7 +40,7 @@ $(foreach lib, $(LINKLIBS), $(link_lib))
 endef
 
 LD = wlink
-LDFLAGS = debug all OP osn=DOS4G OP stack=65536
+LDFLAGS = debug all OP osn=DOS4G OP stack=65536 OP CASEEXACT
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS := $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(ARCH)/$(lib)))
 else
@@ -57,11 +57,11 @@ endef
 define create_library
 $(COMSPEC) /E:2048 /Cecho $@ > __lib__.tmp
 $(foreach file, $^, $(lib_object))
-$(AR) @__lib__.tmp
+$(AR) $(ARFLAGS) @__lib__.tmp
 endef
 
 AR = wlib
-ARFLAGS =
+ARFLAGS = -c
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf

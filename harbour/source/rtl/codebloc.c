@@ -43,6 +43,13 @@ extern STACK stack;
 #define FALSE   0
 #define TRUE    1
 
+/* functions for memvar variables
+ */
+HB_HANDLE hb_MemvarValueNew( PHB_ITEM );
+void hb_MemvarValueIncRef( HB_HANDLE );
+void hb_MemvarValueDecRef( HB_HANDLE );
+HB_VALUE_PTR * hb_MemvarValueBaseAddress( void );
+
 /* Uncomment this to trace codeblocks activity
 #define CODEBLOCKDEBUG
 */
@@ -76,7 +83,7 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
      */
     WORD w = 0;
     PHB_ITEM pLocal;
-    HB_HANDLE hGlobal;
+    HB_HANDLE hMemvar;
 
     /* Create a table that will store the values of local variables
      * accessed in a codeblock
@@ -100,14 +107,14 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
           * pool so it can be shared by codeblocks
           */
 
-         hGlobal =hb_GlobalValueNew( pLocal );
+         hMemvar =hb_MemvarValueNew( pLocal );
 
          pLocal->type =IT_BYREF | IT_MEMVAR;
-         pLocal->item.asMemvar.itemsbase =hb_GlobalValueBaseAddress();
+         pLocal->item.asMemvar.itemsbase =hb_MemvarValueBaseAddress();
          pLocal->item.asMemvar.offset    =0;
-         pLocal->item.asMemvar.value     =hGlobal;
+         pLocal->item.asMemvar.value     =hMemvar;
 
-         hb_GlobalValueIncRef( pLocal->item.asMemvar.value );
+         hb_MemvarValueIncRef( pLocal->item.asMemvar.value );
          memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
       }
       else
@@ -118,7 +125,7 @@ HB_CODEBLOCK_PTR hb_CodeblockNew( BYTE * pBuffer,
          /* Increment the reference counter so this value will not be
           * released if other codeblock will be deleted
           */
-         hb_GlobalValueIncRef( pLocal->item.asMemvar.value );
+         hb_MemvarValueIncRef( pLocal->item.asMemvar.value );
          memcpy( pCBlock->pLocals + w, pLocal, sizeof(HB_ITEM) );
 
       }
@@ -162,7 +169,7 @@ void  hb_CodeblockDelete( HB_ITEM_PTR pItem )
          WORD w = 0;
          while( w < pCBlock->wLocals )
          {
-            hb_GlobalValueDecRef( pCBlock->pLocals[ w ].item.asMemvar.value );
+            hb_MemvarValueDecRef( pCBlock->pLocals[ w ].item.asMemvar.value );
             ++w;
          }
          hb_xfree( pCBlock->pLocals );

@@ -67,9 +67,9 @@ typedef enum
    HB_P_NOT,            /* logically negates the latest value on the stack */
    HB_P_NOTEQUAL,       /* checks if the latest two stack values are equal, leaves just the result */
    HB_P_OR,             /* peforms the logical OR of two latest stack values, removes them and places result */
+   HB_P_PARAMETER,      /* creates PRIVATE variables and assigns values to functions paramaters */
    HB_P_PLUS,           /* adds the latest two values on the stack, removing them and leaving there the result */
    HB_P_POP,            /* removes the latest value from the stack */
-   HB_P_POPDEFSTAT,     /* pops a default value to a static variable */
    HB_P_POPLOCAL,       /* pops the contains of the virtual machine stack onto a local variable */
    HB_P_POPMEMVAR,      /* pops the contains of a memvar variable to the virtual machine stack */
    HB_P_POPSTATIC,      /* pops the contains of the virtual machine stack onto a static variable */

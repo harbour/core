@@ -99,7 +99,9 @@ void PopDefStat( WORD wStatic ); /* pops the stack latest value onto a static as
 double PopDouble( WORD * );   /* pops the stack latest value and returns its double numeric format value */
 void PopLocal( SHORT wLocal );      /* pops the stack latest value onto a local */
 int  PopLogical( void );           /* pops the stack latest value and returns its logical value */
+void PopMemvar( PSYMBOL );     /* pops a value of memvar variable */
 double PopNumber( void );          /* pops the stack latest value and returns its numeric value */
+void PopParameter( PSYMBOL, BYTE );  /* creates a PRIVATE variable and sets it with parameter's value */
 void PopStatic( WORD wStatic );    /* pops the stack latest value onto a static */
 void Power( void );            /* power the latest two values on the stack, removes them and leaves the result */
 void Push( PHB_ITEM pItem );     /* pushes a generic item onto the stack */
@@ -110,6 +112,8 @@ void PushLocal( SHORT iLocal );     /* pushes the containts of a local onto the 
 void PushLocalByRef( SHORT iLocal ); /* pushes a local by refrence onto the stack */
 void PushLogical( int iTrueFalse ); /* pushes a logical value onto the stack */
 void PushLong( long lNumber ); /* pushes a long number onto the stack */
+void PushMemvar( PSYMBOL );     /* pushes a value of memvar variable */
+void PushMemvarByRef( PSYMBOL ); /* pushes a reference to a memvar variable */
 void PushNil( void );            /* in this case it places nil at self */
 void PushNumber( double dNumber, WORD wDec ); /* pushes a number on to the stack and decides if it is integer, long or double */
 void PushStatic( WORD wStatic );   /* pushes the containts of a static onto the stack */
@@ -134,7 +138,7 @@ void DoExitFunctions( void ); /* executes all defined PRGs EXIT functions */
 void LogSymbols( void );         /* displays all dynamic symbols */
 void ReleaseClasses( void );       /* releases all defined classes */
 void ReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
-void ReleaseDynamicSymbols( void ); /* releases the memory of the dynamic symbol table */
+void hb_ReleaseDynamicSymbols( void ); /* releases the memory of the dynamic symbol table */
 
 /* stack management functions */
 void StackPop( void );        /* pops an item from the stack */
@@ -151,8 +155,16 @@ void hb_CodeblockEvaluate( PHB_ITEM );
 void hb_CodeblockCopy( PHB_ITEM, PHB_ITEM );
 
 /* Initialisation and closing memvars subsystem */
-void hb_MemvarInit( void );
-void hb_MemvarRelease( void );
+void hb_MemvarsInit( void );
+void hb_MemvarsRelease( void );
+void hb_MemvarValueIncRef( HB_HANDLE );
+void hb_MemvarValueDecRef( HB_HANDLE );
+void hb_MemvarSetValue( PSYMBOL, HB_ITEM_PTR );
+void hb_MemvarGetValue( HB_ITEM_PTR, PSYMBOL );
+void hb_MemvarGetRefer( HB_ITEM_PTR, PSYMBOL );
+void hb_MemvarNewSymbol( PSYMBOL );
+ULONG hb_MemvarGetPrivatesBase( void );
+void hb_MemvarSetPrivatesBase( ULONG );
 
 void InitSymbolTable( void );   /* initialization of runtime support symbols */
 
@@ -222,10 +234,10 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    errorBlock.type   = IT_NIL;
    stack.Return.type = IT_NIL;
    StackInit();
-   NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
+   hb_NewDynSym( &symEval );  /* initialize dynamic symbol for evaluating codeblocks */
    hb_setInitialize();     /* initialize Sets */
    hb_consoleInitialize(); /* initialize Console */
-   hb_MemvarInit();
+   hb_MemvarsInit();
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif
@@ -237,7 +249,7 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
 
 #ifdef HARBOUR_START_PROCEDURE
    {
-     PDYNSYM pDynSym =FindDynSym( HARBOUR_START_PROCEDURE );
+     PDYNSYM pDynSym =hb_FindDynSym( HARBOUR_START_PROCEDURE );
      if( pDynSym )
        pSymStart =pDynSym->pSymbol;
      else
@@ -264,10 +276,10 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    ItemRelease( &errorBlock );
    ReleaseClasses();
    ReleaseLocalSymbols();       /* releases the local modules linked list */
-   ReleaseDynamicSymbols();     /* releases the dynamic symbol table */
+   hb_ReleaseDynamicSymbols();  /* releases the dynamic symbol table */
    hb_consoleRelease();         /* releases Console */
    hb_setRelease();             /* releases Sets */
-   hb_MemvarRelease();
+   hb_MemvarsRelease();
    StackFree();
    /* LogSymbols(); */
    HB_DEBUG( "Done!\n" );
@@ -477,6 +489,12 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
               w++;
               break;
 
+         case HB_P_PARAMETER:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PopParameter( pSymbols + wParams, pCode[ w+3 ] );
+              w +=4;
+              break;
+
          case HB_P_PLUS:
               Plus();
               w++;
@@ -489,6 +507,12 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
 
          case HB_P_POPLOCAL:
               PopLocal( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
+              w += 3;
+              break;
+
+         case HB_P_POPMEMVAR:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PopMemvar( pSymbols + wParams );
               w += 3;
               break;
 
@@ -536,6 +560,18 @@ void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols )
          case HB_P_PUSHLONG:
               PushLong( * ( long * ) ( &pCode[ w + 1 ] ) );
               w += 5;
+              break;
+
+         case HB_P_PUSHMEMVAR:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PushMemvar( pSymbols + wParams );
+              w += 3;
+              break;
+
+         case HB_P_PUSHMEMVARREF:
+              wParams = pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 );
+              PushMemvarByRef( pSymbols + wParams );
+              w += 3;
               break;
 
          case HB_P_PUSHNIL:
@@ -708,6 +744,7 @@ void Do( WORD wParams )
    PHB_ITEM pSelf = stack.pPos - wParams - 1;   /* NIL, OBJECT or BLOCK */
    HARBOURFUNC pFunc;
    int iStatics = stack.iStatics;              /* Return iStatics position */
+   ULONG ulPrivateBase = hb_MemvarGetPrivatesBase();
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -761,6 +798,7 @@ void Do( WORD wParams )
 
    stack.pBase = stack.pItems + wStackBase;
    stack.iStatics = iStatics;
+   hb_MemvarSetPrivatesBase( ulPrivateBase );
 }
 
 HARBOUR DoBlock( void )
@@ -1104,7 +1142,7 @@ void ItemRelease( PHB_ITEM pItem )
       hb_CodeblockDelete( pItem );
    }
    else if( IS_MEMVAR( pItem ) )
-      hb_GlobalValueDecRef( pItem->item.asMemvar.value );
+      hb_MemvarValueDecRef( pItem->item.asMemvar.value );
 
    pItem->type = IT_NIL;
 }
@@ -1157,7 +1195,7 @@ void ItemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
    }
    else if( IS_MEMVAR( pSource ) )
    {
-      hb_GlobalValueIncRef( pSource->item.asMemvar.value );
+      hb_MemvarValueIncRef( pSource->item.asMemvar.value );
    }
 }
 
@@ -1461,7 +1499,7 @@ void Mult( void )
 void OperatorCall( PHB_ITEM pItem1, PHB_ITEM pItem2, char *szSymbol )
 {
    Push( pItem1 );                             /* Push object              */
-   Message( GetDynSym( szSymbol )->pSymbol );  /* Push operation           */
+   Message( hb_GetDynSym( szSymbol )->pSymbol );  /* Push operation           */
    Push( pItem2 );                             /* Push argument            */
    Function( 1 );
 }
@@ -1631,6 +1669,14 @@ int PopLogical( void )
    }
 }
 
+void PopMemvar( PSYMBOL pSym )
+{
+   StackPop();
+   hb_MemvarSetValue( pSym, stack.pPos );
+   ItemRelease( stack.pPos );
+   HB_DEBUG( "PopMemvar\n" );
+}
+
 double PopNumber( void )
 {
    PHB_ITEM pItem = stack.pPos - 1;
@@ -1658,6 +1704,12 @@ double PopNumber( void )
            break;
    }
    return dNumber;
+}
+
+void PopParameter( PSYMBOL pSym, BYTE bParam )
+{
+   hb_MemvarSetValue( pSym, hb_param( bParam, IT_ANY ) );
+   HB_DEBUG( "PopParameter\n" );
 }
 
 void PopStatic( WORD wStatic )
@@ -1728,6 +1780,22 @@ void PushLocalByRef( SHORT iLocal )
 
    StackPush();
    HB_DEBUG2( "PushLocalByRef %i\n", iLocal );
+}
+
+void PushMemvar( PSYMBOL pSym )
+{
+   ItemRelease( stack.pPos );
+   hb_MemvarGetValue( stack.pPos, pSym );
+   StackPush();
+   HB_DEBUG( "PushMemvar\n" );
+}
+
+void PushMemvarByRef( PSYMBOL pSym )
+{
+   ItemRelease( stack.pPos );
+   hb_MemvarGetRefer( stack.pPos, pSym );
+   StackPush();
+   HB_DEBUG( "PushMemvar\n" );
 }
 
 void PushNil( void )
@@ -2071,8 +2139,8 @@ void ProcessSymbols( PSYMBOL pModuleSymbols, WORD wModuleSymbols ) /* module sym
          pSymStart = pModuleSymbols + w;  /* first public defined symbol to start execution */
 
       if( ( ( pModuleSymbols + w )->cScope == FS_PUBLIC ) ||
-          ( ( pModuleSymbols + w )->cScope & FS_MESSAGE ) )
-         NewDynSym( pModuleSymbols + w );
+          ( ( pModuleSymbols + w )->cScope & ( FS_MESSAGE | VS_MEMVAR ) ) )
+         hb_NewDynSym( pModuleSymbols + w );
    }
 }
 

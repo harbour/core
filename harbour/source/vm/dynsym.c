@@ -36,13 +36,13 @@ typedef struct
 
 #define SYM_ALLOCATED   -1
 
-PSYMBOL  NewSymbol( char * szName );
-PDYNSYM  FindDynSym( char * szName );
+PSYMBOL  hb_NewSymbol( char * szName );
+PDYNSYM  hb_FindDynSym( char * szName );
 
 static PDYNHB_ITEM pDynItems = 0;              /* Pointer to dynamic items */
 static WORD     wDynSymbols = 0;     /* Number of symbols present */
 static WORD     wClosestDynSym = 0;
-              /* Closest symbol for match. FindDynSym will search for the name. */
+              /* Closest symbol for match. hb_FindDynSym will search for the name. */
               /* If it cannot find the name, it positions itself to the */
               /* closest symbol.  */
 
@@ -77,7 +77,7 @@ static WORD hb_strgreater( char * sz1, char * sz2 )
    return SYM_EQUAL;
 }
 
-PSYMBOL NewSymbol( char * szName )      /* Create a new symbol */
+PSYMBOL hb_NewSymbol( char * szName )      /* Create a new symbol */
 {
    PSYMBOL pSymbol = ( PSYMBOL ) hb_xgrab( sizeof( SYMBOL ) );
 
@@ -90,9 +90,9 @@ PSYMBOL NewSymbol( char * szName )      /* Create a new symbol */
    return pSymbol;
 }
 
-PDYNSYM NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
+PDYNSYM hb_NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
 {
-   PDYNSYM pDynSym = FindDynSym( pSymbol->szName ); /* Find position */
+   PDYNSYM pDynSym = hb_FindDynSym( pSymbol->szName ); /* Find position */
    WORD w;
 
    if( pDynSym )            /* If name exists */
@@ -125,6 +125,8 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol )    /* creates a new dynamic symbol */
 
    wDynSymbols++;                   /* Got one more symbol */
    pDynSym->pSymbol = pSymbol;
+   pDynSym->hMemvar = 0;
+   pDynSym->hArea   = 0;
 
    if( ! ( pSymbol->cScope & ( FS_STATIC | FS_INIT | FS_EXIT ) ) ) /* only for FS_PUBLIC */
    {
@@ -144,7 +146,7 @@ static void hb_strupr( char * szText )
       *p = toupper( *p );
 }
 
-PDYNSYM GetDynSym( char * szName )  /* finds and creates a symbol if not found */
+PDYNSYM hb_GetDynSym( char * szName )  /* finds and creates a symbol if not found */
 {
    PDYNSYM pDynSym;
    char * szUprName = ( char * ) hb_xgrab( strlen( szName ) + 1 );
@@ -155,16 +157,16 @@ PDYNSYM GetDynSym( char * szName )  /* finds and creates a symbol if not found *
    /* if( strlen( szUprName ) > 10 )
       szUprName[ 10 ] = 0; keeps this here for 10 chars /c compatibility mode */
 
-   pDynSym = FindDynSym( szUprName );
+   pDynSym = hb_FindDynSym( szUprName );
    if( ! pDynSym )       /* Does it exists ? */
-      pDynSym = NewDynSym( NewSymbol( szUprName ) );   /* Make new symbol */
+      pDynSym = hb_NewDynSym( hb_NewSymbol( szUprName ) );   /* Make new symbol */
 
    hb_xfree( szUprName );                                /* release memory */
 
    return pDynSym;
 }
 
-PDYNSYM FindDynSym( char * szName )
+PDYNSYM hb_FindDynSym( char * szName )
 {
    WORD wFirst = 0, wLast = wDynSymbols, wMiddle = wLast / 2;
 
@@ -173,7 +175,7 @@ PDYNSYM FindDynSym( char * szName )
       pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
       pDynItems->pDynSym = ( PDYNSYM ) hb_xgrab( sizeof( DYNSYM ) );
                 /* Always grab a first symbol. Never an empty bucket. *<1>* */
-      pDynItems->pDynSym->wMemvar = 0;
+      pDynItems->pDynSym->hMemvar = 0;
       pDynItems->pDynSym->pSymbol = 0;
       pDynItems->pDynSym->pFunPtr = 0;
       return 0;
@@ -221,7 +223,7 @@ PDYNSYM FindDynSym( char * szName )
    return 0;
 }
 
-void ReleaseDynamicSymbols( void )
+void hb_ReleaseDynamicSymbols( void )
 {
    WORD w;
 
@@ -251,8 +253,8 @@ HARBOUR HB_DYNSYMBOLS(void)            /* How much symbols do we have */
 }
 
 HARBOUR HB_GETDYNSYM(void)         /* Gimme index number of symbol */
-                            /* dsIndex = GetDynSym( cSymbol ) */
+                            /* dsIndex = hb_GetDynSym( cSymbol ) */
 {
-   hb_retnl( ( LONG ) GetDynSym( hb_parc( 1 ) ) );
+   hb_retnl( ( LONG ) hb_GetDynSym( hb_parc( 1 ) ) );
 }
 

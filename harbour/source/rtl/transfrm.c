@@ -218,7 +218,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 
    bEmpty = !dPush && ( iPicFlags & PF_EMPTY ); /* Suppress 0               */
 
-   PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
+   PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
    PushNil    ();                               /* Function call. No object */
 
    PushDouble ( dPush, iDecimals );             /* Push value to transform  */
@@ -348,7 +348,7 @@ char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
 */
 PHB_ITEM NumDefault( double dValue )
 {                                               /* Default number           */
-   PushSymbol ( GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
+   PushSymbol ( hb_GetDynSym( "STR" )->pSymbol );  /* Push STR function        */
    PushNil    ();                               /* Function call. No object */
 
    PushDouble ( dValue, hb_set.HB_SET_DECIMALS );

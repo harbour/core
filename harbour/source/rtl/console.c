@@ -221,7 +221,7 @@ HARBOUR HB___ACCEPT( void ) /* Internal Clipper function used in ACCEPT command 
 
    if( hb_pcount() == 1 )          /* cPrompt passed                         */
    {
-      PushSymbol( GetDynSym( "QOUT" )->pSymbol );  /* push the symbol pointer to the Harbour stack */
+      PushSymbol( hb_GetDynSym( "QOUT" )->pSymbol );  /* push the symbol pointer to the Harbour stack */
       PushNil();                 /* places nil at self, as we are not sending a msg */
       PushString( szPrompt, len ); /* places parameters on to the stack */
       Do( 1 );                   /* 1 parameter supplied. Invoke the virtual machine */

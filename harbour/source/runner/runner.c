@@ -169,7 +169,7 @@ HARBOUR HB_HB_RUN( void )
                ulPos = FindSymbol( pSymRead[ ul ].szName, pDynFunc, ulFuncs );
                if( ulPos != SYM_NOT_FOUND )
                {
-/*                  if(    FindDynSym( pSymRead[ ul ].szName ) &&
+/*                  if(    hb_FindDynSym( pSymRead[ ul ].szName ) &&
                       !( pSymRead[ ul ].cScope & FS_STATIC ) )
                   {                           */  /* Exists and NOT static ?  */
 /*                     printf( "\nDuplicate identifier '%s' %i.",
@@ -183,7 +183,7 @@ HARBOUR HB_HB_RUN( void )
             }
             if( ( (ULONG) pSymRead[ ul ].pFunPtr ) == SYM_EXTERN )
             {                                   /* External function        */
-               pDynSym = FindDynSym( pSymRead[ ul ].szName );
+               pDynSym = hb_FindDynSym( pSymRead[ ul ].szName );
                if( !pDynSym )
                {
                   printf( "\nUnknown or unregistered function '%s'.",

@@ -275,8 +275,7 @@ typedef enum
 #define VS_LOCAL      1
 #define VS_STATIC     2
 #define VS_FIELD      4
-#define VS_MEMVAR     8
-#define VS_PARAMETER  16
+#define VS_PARAMETER  8
 int iVarScope = VS_LOCAL;   /* holds the scope for next variables to be defined */
                             /* different values for iVarScope */
 
@@ -590,9 +589,9 @@ Statement  : ExecFlow Crlf        {}
            | BREAK Expression Crlf
            | RETURN Crlf              { GenReturn( Jump( 0 ) ); }
            | RETURN Expression Crlf   { GenPCode1( HB_P_RETVALUE ); GenReturn( Jump ( 0 ) ); }
-           | PUBLIC { iVarScope = VS_MEMVAR; } VarList Crlf
-           | PRIVATE { iVarScope = VS_MEMVAR; } VarList Crlf
-           | PARAMETERS { iVarScope = VS_MEMVAR; } IdentList Crlf
+           | PUBLIC { iVarScope = VS_PUBLIC; } VarList Crlf
+           | PRIVATE { iVarScope = VS_PRIVATE; } VarList Crlf
+           | PARAMETERS { iVarScope = (VS_PRIVATE | VS_PARAMETER); } MemvarList Crlf
            | EXITLOOP Crlf            { LoopExit(); }
            | LOOP Crlf                { LoopLoop(); }
            | DoProc Crlf
@@ -952,10 +951,6 @@ MemvarDef  : MEMVAR { iVarScope = VS_MEMVAR; } MemvarList Crlf
 
 MemvarList : IDENTIFIER                            { AddVar( $1 ); }
            | MemvarList ',' IDENTIFIER             { AddVar( $3 ); }
-           ;
-
-IdentList  : IDENTIFIER                              {}
-           | IdentList ',' IDENTIFIER                {}
            ;
 
 ExecFlow   : IfEndif
@@ -1698,7 +1693,7 @@ void AddVar( char * szVarName )
     * executable statements
     * Note: FIELD and MEMVAR are executable statements
     */
-   if( (functions.pLast->bFlags & FUN_STATEMENTS) && !(iVarScope == VS_FIELD || iVarScope == VS_MEMVAR) )
+   if( (functions.pLast->bFlags & FUN_STATEMENTS) && !(iVarScope == VS_FIELD || (iVarScope & VS_MEMVAR)) )
    {
       --iLine;
       GenError( _szCErrors, 'E', ERR_FOLLOWS_EXEC, (iVarScope==VS_LOCAL?"LOCAL":"STATIC"), NULL );
@@ -1737,58 +1732,104 @@ void AddVar( char * szVarName )
    pVar->iUsed = 0;
    pVar->pNext = NULL;
 
-   switch( iVarScope )
+   if( iVarScope & VS_MEMVAR )
    {
-      case VS_LOCAL:
-      case VS_PARAMETER:
-           if( ! pFunc->pLocals )
-              pFunc->pLocals = pVar;
-           else
-           {
-              pLastVar = pFunc->pLocals;
-              while( pLastVar->pNext )
-                 pLastVar = pLastVar->pNext;
-              pLastVar->pNext = pVar;
-           }
-           if( iVarScope == VS_PARAMETER )
-              ++functions.pLast->wParamCount;
-           break;
+      if( ! pFunc->pMemvars )
+          pFunc->pMemvars = pVar;
+      else
+      {
+          pLastVar = pFunc->pMemvars;
+          while( pLastVar->pNext )
+            pLastVar = pLastVar->pNext;
+          pLastVar->pNext = pVar;
+      }
+      AddSymbol( szVarName );
 
-      case VS_STATIC:
-            if( ! pFunc->pStatics )
-                pFunc->pStatics = pVar;
-            else
+      switch( iVarScope )
+      {
+          case VS_MEMVAR:
+            /* variable declared in MEMVAR statement */
+            break;
+          case (VS_PARAMETER | VS_PRIVATE):
             {
-                pLastVar = pFunc->pStatics;
-                while( pLastVar->pNext )
-                  pLastVar = pLastVar->pNext;
-                pLastVar->pNext = pVar;
-            }
-           break;
+                WORD wPos;
 
-      case VS_FIELD:
-            if( ! pFunc->pFields )
-                pFunc->pFields = pVar;
-            else
-            {
-                pLastVar = pFunc->pFields;
-                while( pLastVar->pNext )
-                  pLastVar = pLastVar->pNext;
-                pLastVar->pNext = pVar;
-            }
-           break;
+                ++functions.pLast->wParamCount;
+                symbols.pLast->cScope = VS_MEMVAR;
+                wPos =GetSymbolPos( szVarName );
+                if( ! wPos )
+                {
+                  PCOMSYMBOL pSym;
 
-      case VS_MEMVAR:
-            if( ! pFunc->pMemvars )
-                pFunc->pMemvars = pVar;
-            else
-            {
-                pLastVar = pFunc->pMemvars;
-                while( pLastVar->pNext )
-                  pLastVar = pLastVar->pNext;
-                pLastVar->pNext = pVar;
+                  pSym =AddSymbol( szVarName );
+                  pSym->cScope =VS_MEMVAR;
+                  wPos =GetSymbolPos( szVarName );
+                }
+                wPos -=( _iStartProc ? 1: 2 );
+                GenPCode3( HB_P_PARAMETER, LOBYTE(wPos), HIBYTE(wPos) );
+                GenPCode1( LOBYTE(functions.pLast->wParamCount) );
             }
-           break;
+            break;
+          case VS_PRIVATE:
+            symbols.pLast->cScope = VS_MEMVAR;
+            PushSymbol(yy_strdup("__PRIVATE"), 1);
+            PushNil();
+            PushSymbol( szVarName, 0 );
+            Do( 1 );
+            break;
+          case VS_PUBLIC:
+            symbols.pLast->cScope = VS_MEMVAR;
+            PushSymbol(yy_strdup("__PUBLIC"), 1);
+            PushNil();
+            PushSymbol( szVarName, 0 );
+            Do( 1 );
+            break;
+      }
+   }
+   else
+   {
+      switch( iVarScope )
+      {
+          case VS_LOCAL:
+          case VS_PARAMETER:
+              if( ! pFunc->pLocals )
+                  pFunc->pLocals = pVar;
+              else
+              {
+                  pLastVar = pFunc->pLocals;
+                  while( pLastVar->pNext )
+                    pLastVar = pLastVar->pNext;
+                  pLastVar->pNext = pVar;
+              }
+              if( iVarScope == VS_PARAMETER )
+                  ++functions.pLast->wParamCount;
+              break;
+
+          case VS_STATIC:
+                if( ! pFunc->pStatics )
+                    pFunc->pStatics = pVar;
+                else
+                {
+                    pLastVar = pFunc->pStatics;
+                    while( pLastVar->pNext )
+                      pLastVar = pLastVar->pNext;
+                    pLastVar->pNext = pVar;
+                }
+              break;
+
+          case VS_FIELD:
+                if( ! pFunc->pFields )
+                    pFunc->pFields = pVar;
+                else
+                {
+                    pLastVar = pFunc->pFields;
+                    while( pLastVar->pNext )
+                      pLastVar = pLastVar->pNext;
+                    pLastVar->pNext = pVar;
+                }
+              break;
+      }
+
    }
 }
 
@@ -2115,6 +2156,9 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
       else if( pSym->cScope & FS_EXIT )
          fprintf( yyc, "FS_EXIT" );
 
+      else if( pSym->cScope & VS_MEMVAR )
+         fprintf( yyc, "VS_MEMVAR" );
+
       else
          fprintf( yyc, "FS_PUBLIC" );
 
@@ -2374,6 +2418,16 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
             case HB_P_OR:
                  fprintf( yyc, "                HB_P_OR,\n" );
                  lPCodePos++;
+                 break;
+
+            case HB_P_PARAMETER:
+                 wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
+                 fprintf( yyc, "                HB_P_PARAMETER, %i, %i, %i,\t/* %s */\n",
+                          pFunc->pCode[ lPCodePos + 1 ],
+                          pFunc->pCode[ lPCodePos + 2 ],
+                          pFunc->pCode[ lPCodePos + 3 ],
+                          GetSymbolOrd( wVar + ! _iStartProc )->szName );
+                 lPCodePos += 4;
                  break;
 
             case HB_P_PLUS:
@@ -3283,6 +3337,7 @@ void MemvarPCode( BYTE bPCode, char * szVarName )
     else
     {
         AddSymbol( szVarName );
+        symbols.pLast->cScope =VS_MEMVAR;
         wVar = GetSymbolPos( szVarName ) - (_iStartProc ? 1: 2);
         GenPCode3( bPCode, LOBYTE( wVar ), HIBYTE( wVar ) );
     }
@@ -3566,7 +3621,7 @@ void PushDouble( double dNumber, BYTE bDec )
 void PushFunCall( char *szFunName )
 {
    char * *pFunction;
-   
+
    pFunction = (char * *)RESERVED_FUNC( szFunName );
    if( pFunction )
    {
@@ -3683,10 +3738,10 @@ void PushSymbol( char * szSymbolName, int iIsFunction )
          AddFunCall( szSymbolName );
    }
    wSym -= _iStartProc ? 1: 2;
-
+/*
    if( ! iIsFunction )
       GetSymbolOrd( wSym )->cScope |= FS_MESSAGE;
-
+*/
    GenPCode3( HB_P_PUSHSYM, LOBYTE( wSym ), HIBYTE( wSym ) );
 
    if( _iWarnings )
@@ -4860,6 +4915,13 @@ void GenPortObj( char *szFileName, char *szName )
                  }
                  break;
 
+            case HB_P_PARAMETER:
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 fputc( pFunc->pCode[ lPCodePos++ ], yyc );
+                 break;
+
             case HB_P_PUSHBLOCK:
                  wVar = * ( ( WORD *) &( pFunc->pCode [ lPCodePos + 5 ] ) );
                  fputc(   pFunc->pCode[ lPCodePos++ ], yyc );
@@ -4959,7 +5021,7 @@ typedef struct
 
 static FUNCINFO _StdFun[] = {
 { "AADD"      , 2, 2 },
-{ "ABS"       , 1, 1 }, 
+{ "ABS"       , 1, 1 },
 { "ASC"       , 1, 1 },
 { "AT"        , 2, 2 },
 { "BOF"       , 0, 0 },
@@ -5043,7 +5105,7 @@ void CheckArgs( char *cFuncCall, int iArgs )
      else
          ++i;
    }
-   
+
    if( iPos >= 0 && ( f[iPos].iMinParam != -1 ) )
      if( iArgs < f[iPos].iMinParam || iArgs > f[iPos].iMaxParam )
      {
@@ -5052,7 +5114,7 @@ void CheckArgs( char *cFuncCall, int iArgs )
         sprintf( szMsg, " Passed: %i Expected: %i", iArgs, f[iPos].iMinParam );
         GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, szMsg );
 
-        //Clipper way 
+        //Clipper way
         // GenError( _szCErrors, 'E', ERR_CHECKING_ARGS, cFuncCall, NULL );
      }
 }

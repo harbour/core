@@ -35,8 +35,13 @@
 
 #include <extend.h>
 #include <string.h>
+#include <errorapi.h>
+#include <error.ch>
 
-/* static HB_VALUE_PTR _privateTable = NULL; */
+static PDYNSYM *_privateStack = NULL;
+static ULONG _privateStackSize = 0;
+static ULONG _privateStackCnt  = 0;
+static int _privateReleaseIgnore = FALSE;
 
 static ULONG _globalTableSize = 0;
 static ULONG _globalFirstFree = 0;
@@ -44,27 +49,59 @@ static ULONG _globalLastFree  = 0;
 static ULONG _globalFreeCnt   = 0;
 static HB_VALUE_PTR _globalTable = NULL;
 
-#define TABLE_INITHB_VALUE   10
-#define TABLE_EXPANDHB_VALUE  5
+#define TABLE_INITHB_VALUE   100
+#define TABLE_EXPANDHB_VALUE  50
 
-/* Uncomment this to trace codeblocks activity
+/* Uncomment this to trace memvars activity
 #define MEMVARDEBUG
 */
 
+static void hb_MemvarCreateFromItem( PHB_ITEM, BYTE, PHB_ITEM );
+static void hb_MemvarCreateFromDynSymbol( PDYNSYM, BYTE, PHB_ITEM );
+static void hb_MemvarAddPrivate( PDYNSYM );
+void hb_MemvarValueIncRef( HB_HANDLE );
+void hb_MemvarValueDecRef( HB_HANDLE );
 
-void hb_MemvarInit( void )
+void hb_MemvarsInit( void )
 {
+   _globalTable = (HB_VALUE_PTR) hb_xgrab( sizeof(HB_VALUE) * TABLE_INITHB_VALUE );
+   _globalTableSize = TABLE_INITHB_VALUE;
+   _globalFreeCnt   = 0;
+   _globalFirstFree = _globalLastFree = 1;
+
+   _privateStack = (PDYNSYM *) hb_xgrab( sizeof(PDYNSYM) * TABLE_INITHB_VALUE );
+   _privateStackSize = TABLE_INITHB_VALUE;
+   _privateStackCnt  = 0;
 }
 
 
-void hb_MemvarRelease( void )
+void hb_MemvarsRelease( void )
 {
+   ULONG ulCnt = _globalLastFree;
+
    if( _globalTable )
+   {
+      while( ulCnt )
+      {
+         if( _globalTable[ ulCnt ].counter )
+         {
+            ItemRelease( &_globalTable[ ulCnt ].item );
+            _globalTable[ ulCnt ].counter =0;
+         }
+         --ulCnt;
+      }
+
       hb_xfree( _globalTable );
+   }
+
+   if( _privateStack )
+      hb_xfree( _privateStack );
 }
 
-
-HB_VALUE_PTR *hb_GlobalValueBaseAddress( void )
+/*
+ * This function base address of values table
+ */
+HB_VALUE_PTR *hb_MemvarValueBaseAddress( void )
 {
    return &_globalTable;
 }
@@ -74,66 +111,56 @@ HB_VALUE_PTR *hb_GlobalValueBaseAddress( void )
  * This function creates new global value.
  *
  * pSource = item value that have to be stored or NULL
- * pOwner = the name of PUBLIC variable or NULL
  *
  * Returns:
  *  handle to variable memory or fails
  *
 */
-HB_HANDLE hb_GlobalValueNew( HB_ITEM_PTR pSource )
+HB_HANDLE hb_MemvarValueNew( HB_ITEM_PTR pSource )
 {
    HB_VALUE_PTR pValue;
-   HB_HANDLE hValue;
+   HB_HANDLE hValue = 1;   /* handle 0 is reserved */
 
-   if( ! _globalTable )
+   if( _globalFreeCnt )
    {
-      _globalTable = (HB_VALUE_PTR) hb_xgrab( sizeof(HB_VALUE) * TABLE_INITHB_VALUE );
-      _globalTableSize = TABLE_INITHB_VALUE;
-      _globalFreeCnt   = 0;
-      _globalFirstFree = _globalLastFree = 1;
-      hValue = 0;
+      /* There are holes in the table
+         * Get a first available hole
+         */
+      hValue =_globalFirstFree;
+      --_globalFreeCnt;
+
+      /* Now find the next hole
+         */
+      if( _globalFreeCnt )
+      {
+         ++_globalFirstFree;
+         while( _globalTable[ _globalFirstFree ].counter )
+            ++_globalFirstFree;
+      }
+      else
+         /* No more holes
+            */
+         _globalFirstFree =_globalLastFree;
    }
    else
    {
-      if( _globalFreeCnt )
+      /* Allocate the value from the end of table
+         */
+      if( _globalFirstFree < _globalTableSize )
       {
-         /* There are holes in the table
-          * Get a first available hole
-          */
          hValue =_globalFirstFree;
-         --_globalFreeCnt;
-
-         /* Now find the next hole
-          */
-         if( _globalFreeCnt )
-         {
-            while( _globalTable[ ++_globalFirstFree ].counter );
-         }
-         else
-            /* No more holes
-             */
-            _globalFirstFree =_globalLastFree;
+         _globalFirstFree = ++_globalLastFree;
       }
       else
       {
-         /* Allocate the value from the end of table
-          */
-         if( _globalFirstFree < _globalTableSize )
-         {
-            hValue =_globalFirstFree;
-            _globalFirstFree = ++_globalLastFree;
-         }
-         else
-         {
-            /* No more free values in the table - expand the table
-             */
-            hValue = _globalTableSize;
-            _globalFirstFree =_globalLastFree = _globalTableSize +1;
-            _globalTableSize += TABLE_EXPANDHB_VALUE;
-            _globalTable =(HB_VALUE_PTR) hb_xrealloc( _globalTable, sizeof(HB_VALUE) * _globalTableSize );
-         }
-
+         /* No more free values in the table - expand the table
+            */
+         hValue = _globalTableSize;
+         _globalFirstFree =_globalLastFree = _globalTableSize +1;
+         _globalTableSize += TABLE_EXPANDHB_VALUE;
+         _globalTable =(HB_VALUE_PTR) hb_xrealloc( _globalTable, sizeof(HB_VALUE) * _globalTableSize );
       }
+
    }
 
    pValue =_globalTable + hValue;
@@ -144,30 +171,89 @@ HB_HANDLE hb_GlobalValueNew( HB_ITEM_PTR pSource )
    pValue->counter =1;
 
    #ifdef MEMVARDEBUG
-      printf( "\n>>>>>Global item created with handle =%i", hValue );
+      printf( "\n>>>>>Memvar item created with handle =%i", hValue );
    #endif
 
    return hValue;
 }
 
+
+/*
+ * This function pushes passed dynamic symbol that belongs to PRIVATE variable
+ * into the stack. The value will be popped from it if the variable falls
+ * outside the scope (either by using RELEASE, CLEAR ALL, CLEAR MEMORY or by
+ * an exit from the function/procedure)
+ *
+ */
+static void hb_MemvarAddPrivate( PDYNSYM pDynSym )
+{
+   /* Allocate the value from the end of table
+    */
+   if( _privateStackCnt == _privateStackSize )
+   {
+      /* No more free values in the table - expand the table
+       */
+      _privateStackSize += TABLE_EXPANDHB_VALUE;
+      _privateStack =(PDYNSYM *) hb_xrealloc( _privateStack, sizeof(PDYNSYM) * _privateStackSize );
+   }
+
+   _privateStack[ _privateStackCnt++ ] =pDynSym;
+}
+
+/*
+ * This function returns current PRIVATE variables stack base
+ */
+ULONG hb_MemvarGetPrivatesBase( void )
+{
+   return _privateStackCnt;
+}
+
+/*
+ * This function releases PRIVATE variables created after passed base
+ *
+ */
+void hb_MemvarSetPrivatesBase( ULONG ulBase )
+{
+   HB_HANDLE hVar, hOldValue;
+
+   /* Ignore it if it is requested after __PRIVATE function call
+    */
+   if( !_privateReleaseIgnore )
+      while( _privateStackCnt > ulBase )
+      {
+         --_privateStackCnt;
+         hVar =_privateStack[ _privateStackCnt ]->hMemvar;
+         hOldValue =_globalTable[ hVar ].hPrevMemvar;
+         hb_MemvarValueDecRef( hVar );
+         /*
+         * Restore previous value for variables that were overridden
+         */
+         _privateStack[ _privateStackCnt ]->hMemvar =hOldValue;
+      }
+   _privateReleaseIgnore =FALSE;
+}
+
+
 /*
  * This function increases the number of references to passed global value
  *
  */
-void hb_GlobalValueIncRef( HB_HANDLE hValue )
+void hb_MemvarValueIncRef( HB_HANDLE hValue )
 {
    #ifdef MEMVARDEBUG
-   if( hValue < 0 || hValue > _globalTableSize )
+   if( hValue < 1 || hValue > _globalTableSize )
    {
       printf( "\nInvalid MEMVAR handle %i (max %li)\n", hValue, _globalTableSize );
       exit( 1 );
    }
    #endif
 
+   if( _globalTable[ hValue ].counter == 0 )
+      printf( "\n Attempt to access released item " );
    _globalTable[ hValue ].counter++;
 
    #ifdef MEMVARDEBUG
-      printf( "\n+++Global item (%i) increment refCounter=%li", hValue, _globalTable[ hValue ].counter );
+      printf( "\n+++Memvar item (%i) increment refCounter=%li", hValue, _globalTable[ hValue ].counter );
    #endif
 }
 
@@ -176,12 +262,12 @@ void hb_GlobalValueIncRef( HB_HANDLE hValue )
  * If it is the last reference then this value is deleted.
  *
  */
-void hb_GlobalValueDecRef( HB_HANDLE hValue )
+void hb_MemvarValueDecRef( HB_HANDLE hValue )
 {
    HB_VALUE_PTR pValue;
 
    #ifdef MEMVARDEBUG
-   if( hValue < 0 || hValue > _globalTableSize )
+   if( hValue < 1 || hValue > _globalTableSize )
    {
       printf( "\nInvalid MEMVAR handle %i (max %li)\n", hValue, _globalTableSize );
       exit( 1 );
@@ -190,20 +276,271 @@ void hb_GlobalValueDecRef( HB_HANDLE hValue )
 
    pValue =_globalTable + hValue;
    #ifdef MEMVARDEBUG
-      printf( "\n---Global item (%i) decrement refCounter=%li", hValue, pValue->counter-1 );
+      printf( "\n---Memvar item (%i) decrement refCounter=%li", hValue, pValue->counter-1 );
    #endif
-   if( --pValue->counter == 0 )
+   if( pValue->counter > 0 )
    {
-      ItemRelease( &pValue->item );
-      if( _globalFirstFree > hValue )
-         _globalFirstFree = hValue;
-      if( (_globalLastFree - hValue) == 1 )
-         _globalLastFree =hValue;
-      if( _globalFirstFree != _globalLastFree )
-         ++_globalFreeCnt;
+      if( --pValue->counter == 0 )
+      {
+         ItemRelease( &pValue->item );
+         if( _globalFirstFree > hValue )
+         {
+            if( (_globalLastFree - hValue) == 1 )
+               _globalFirstFree = _globalLastFree =hValue;     /* last item */
+            else
+            {
+               _globalFirstFree =hValue;
+               ++_globalFreeCnt;             /* middle item */
+            }
+         }
+         else if( (_globalLastFree - hValue) == 1 )
+            _globalLastFree =hValue;         /* last item */
 
-   #ifdef MEMVARDEBUG
-      printf( "\n<<<<<Global item (%i) deleted", hValue );
-   #endif
+         else
+            ++_globalFreeCnt;
+
+      #ifdef MEMVARDEBUG
+         printf( "\n<<<<<Memvar item (%i) deleted", hValue );
+      #endif
+      }
+   }
+   else
+      printf( "\n Attempt to release released item " );
+}
+
+/*
+ * This functions copies passed item value into the memvar pointed
+ * by symbol
+ *
+ * pMemvar - symbol associated with a variable
+ * pItem   - value to store in memvar
+ *
+ */
+void hb_MemvarSetValue( PSYMBOL pMemvarSymb, HB_ITEM_PTR pItem )
+{
+   PDYNSYM pDyn;
+
+   pDyn = (PDYNSYM) pMemvarSymb->pDynSym;
+
+   if( pDyn )
+   {
+      if( pDyn->hMemvar )
+      {
+         /* value is already created */
+         ItemCopy( &_globalTable[ pDyn->hMemvar ].item, pItem );
+      }
+      else
+      {
+         /* assignment to undeclared memvar - PRIVATE is assumed
+          */
+         hb_MemvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
+      }
+   }
+   else
+      hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+}
+
+void hb_MemvarGetValue( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
+{
+   PDYNSYM pDyn;
+
+   pDyn = (PDYNSYM) pMemvarSymb->pDynSym;
+
+   if( pDyn )
+   {
+      if( pDyn->hMemvar )
+      {
+         /* value is already created */
+         ItemCopy( pItem, &_globalTable[ pDyn->hMemvar ].item );
+      }
+      else /* variable is not initialized */
+         hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+   }
+   else
+      hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+}
+
+void hb_MemvarGetRefer( HB_ITEM_PTR pItem, PSYMBOL pMemvarSymb )
+{
+   PDYNSYM pDyn;
+
+   pDyn = (PDYNSYM) pMemvarSymb->pDynSym;
+
+   if( pDyn )
+   {
+      if( pDyn->hMemvar )
+      {
+         pItem->type = IT_BYREF | IT_MEMVAR;
+         pItem->item.asMemvar.offset = 0;
+         pItem->item.asMemvar.value = pDyn->hMemvar;
+         /* value is already created */
+         pItem->item.asMemvar.itemsbase = &_globalTable;
+      }
+      else
+         hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+   }
+   else
+      hb_errorRT_BASE( EG_NOVAR, 1003, "Variable does not exist: ", pMemvarSymb->szName );
+}
+
+/*
+ *
+ * This function adds a passed symbol to the sorted list of memvar variables
+ *
+ */
+void hb_MemvarNewSymbol( PSYMBOL pSymbol )
+{
+   PDYNSYM pVar = hb_NewDynSym( pSymbol );
+   pVar->hMemvar = 0;
+   pVar->hArea   = 0;
+}
+
+/*
+ * This function creates a value for memvar variable
+ *
+ * pMemvar - an item that stores the name of variable - it can be either
+ *          the IT_SYMBOL (if created by PUBLIC statement) or IT_STRING
+ *          (if created by direct call to __PUBLIC function)
+ * bScope - the scope of created variable - if a variable with the same name
+ *          exists already then it's value is hidden by new variable with
+ *          passed scope
+ * pValue - optinal item used to initialize the value of created variable
+ *          or NULL
+ *
+ */
+static void hb_MemvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
+{
+   PDYNSYM pDynVar;
+
+   if( IS_SYMBOL( pMemvar ) )
+      pDynVar =hb_GetDynSym( pMemvar->item.asSymbol.value->szName );
+   else if( IS_STRING( pMemvar ) )
+      pDynVar =hb_GetDynSym( pMemvar->item.asString.value );
+   else
+      hb_errorRT_BASE( EG_ARG, 3000, "Argument error: ", "&" );
+
+   if( pDynVar )
+      hb_MemvarCreateFromDynSymbol( pDynVar, bScope, pValue );
+}
+
+static void hb_MemvarCreateFromDynSymbol( PDYNSYM pDynVar, BYTE bScope, PHB_ITEM pValue )
+{
+   if( bScope & VS_PUBLIC )
+   {
+      /* If the variable with the same name exists already
+         * then the current value have to be unchanged
+         */
+      if( ! pDynVar->hMemvar )
+      {
+         pDynVar->hMemvar = hb_MemvarValueNew( pValue );
+         if( !pValue )
+         {
+            _globalTable[ pDynVar->hMemvar ].item.type =IT_LOGICAL;
+            _globalTable[ pDynVar->hMemvar ].item.item.asLogical.value =0;
+         }
+      }
+   }
+   else
+   {
+      /* We need to store the handle to the value of variable that is
+         * visible at this moment so later we can restore this value when
+         * the new variable will be released
+         */
+      HB_HANDLE hCurrentValue =pDynVar->hMemvar;
+
+      pDynVar->hMemvar = hb_MemvarValueNew( pValue );
+      _globalTable[ pDynVar->hMemvar ].hPrevMemvar =hCurrentValue;
+      hb_MemvarAddPrivate( pDynVar );
+   }
+   pDynVar->pSymbol->cScope =bScope;
+}
+
+/*
+ * This function creates PUBLIC variable
+ *
+ * This function can be called either by the harbour compiler or by user.
+ * The compiler always passes the item of IT_SYMBOL type that stores the
+ * name of variable.
+ * If user calls this function then the passed argument/arguments can be:
+ *  -a string with the name of variable to be created
+ *  -an one-dimensional array with strings
+ */
+HARBOUR HB___PUBLIC( void )
+{
+   int i, iCount = hb_pcount();
+   PHB_ITEM pMemvar;
+
+   if( iCount )
+   {
+      for( i=1; i<=iCount; i++ )
+      {
+         pMemvar =hb_param( i, IT_ANY );
+         if( pMemvar )
+         {
+            if( IS_ARRAY( pMemvar ) )
+            {
+               /* we are accepting an one-dimensional array of strings only
+                */
+               ULONG j, ulLen = hb_arrayLen( pMemvar );
+               PHB_ITEM pItem;
+
+               for( j=1; j<=ulLen; j++ )
+               {
+                  hb_arrayGet( pMemvar, j, pItem );
+                  hb_MemvarCreateFromItem( pItem, VS_PUBLIC, NULL );
+               }
+            }
+            else
+               hb_MemvarCreateFromItem( pMemvar, VS_PUBLIC, NULL );
+         }
+      }
+   }
+}
+
+/*
+ * This function creates PRIVATE variable
+ *
+ * This function can be called either by the harbour compiler or by user.
+ * The compiler always passes the item of IT_SYMBOL type that stores the
+ * name of variable.
+ * If user calls this function then the passed argument/arguments can be:
+ *  -a string with the name of variable to be created
+ *  -an one-dimensional array with strings
+ */
+HARBOUR HB___PRIVATE( void )
+{
+   int i, iCount = hb_pcount();
+   PHB_ITEM pMemvar;
+
+   if( iCount )
+   {
+      /* We will create PRIVATE variables here then do not release then
+       * on exit from this function
+       */
+      _privateReleaseIgnore =TRUE;
+
+      for( i=1; i<=iCount; i++ )
+      {
+         pMemvar =hb_param( i, IT_ANY );
+         if( pMemvar )
+         {
+            if( IS_ARRAY( pMemvar ) )
+            {
+               /* we are accepting an one-dimensional array of strings only
+                */
+               ULONG j, ulLen = hb_arrayLen( pMemvar );
+               PHB_ITEM pItem;
+
+               for( j=1; j<=ulLen; j++ )
+               {
+                  hb_arrayGet( pMemvar, j, pItem );
+                  hb_MemvarCreateFromItem( pItem, VS_PRIVATE, NULL );
+               }
+               ItemRelease( pItem );
+            }
+            else
+               hb_MemvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
+         }
+      }
    }
 }

@@ -47,6 +47,10 @@ typedef struct          /* symbol support structure */
 #define FS_EXIT        16
 #define FS_MESSAGE     32
 
+#define VS_PRIVATE     64
+#define VS_PUBLIC     128
+#define VS_MEMVAR     (VS_PRIVATE | VS_PUBLIC)
+
 void VirtualMachine( PBYTE pCode, PSYMBOL pSymbols );  /* invokes the virtual machine */
 void ProcessSymbols( SYMBOL *, WORD );
 
@@ -203,11 +207,11 @@ typedef struct     /* stack managed by the virtual machine */
 
 typedef struct
 {
-   WORD     wArea;      /* Workarea number */
-   WORD     wMemvar;    /* Index number into memvars ( publics & privates ) array */
-   PSYMBOL  pSymbol;    /* pointer to its relative local symbol */
-   HARBOURFUNC pFunPtr; /* Pointer to the function address */
-} DYNSYM, * PDYNSYM;    /* dynamic symbol structure */
+   HB_HANDLE hArea;      /* Workarea number */
+   HB_HANDLE hMemvar;    /* Index number into memvars ( publics & privates ) array */
+   PSYMBOL  pSymbol;     /* pointer to its relative local symbol */
+   HARBOURFUNC pFunPtr;  /* Pointer to the function address */
+} DYNSYM, * PDYNSYM;     /* dynamic symbol structure */
 
 /* internal structure for codeblocks */
 typedef struct _HB_CODEBLOCK
@@ -223,7 +227,7 @@ typedef struct _HB_VALUE
 {
   HB_ITEM item;
   ULONG counter;
-  PDYNSYM symbol;
+  HB_HANDLE hPrevMemvar;
 } HB_VALUE, * HB_VALUE_PTR;
 
 
@@ -288,14 +292,9 @@ HARBOURFUNC GetMethod( PHB_ITEM pObject, PSYMBOL pSymMsg ); /* returns the metho
 char *   hb_GetClassName( PHB_ITEM pObject ); /* retrieves an object class name */
 
 /* dynamic symbol table management */
-PDYNSYM  GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */
-PDYNSYM  NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
-PDYNSYM  FindDynSym( char * szName );  /* finds a dynamic symbol */
+PDYNSYM  hb_GetDynSym( char * szName );   /* finds and creates a dynamic symbol if not found */
+PDYNSYM  hb_NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a local one */
+PDYNSYM  hb_FindDynSym( char * szName );  /* finds a dynamic symbol */
 
-/* functions for memvar variables */
-HB_HANDLE hb_GlobalValueNew( PHB_ITEM );
-void hb_GlobalValueIncRef( HB_HANDLE );
-void hb_GlobalValueDecRef( HB_HANDLE );
-HB_VALUE_PTR * hb_GlobalValueBaseAddress( void );
 
 #endif /* HB_EXTEND_H_ */
