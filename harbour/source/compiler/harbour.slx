@@ -28,7 +28,7 @@
  * their web site at http://www.gnu.org/).
  */
 
-#define SHOW_LEX_TOKENS
+//#define SHOW_LEX_TOKENS
 /*
 #define DEBUG_LEX
 */
