@@ -782,7 +782,7 @@ METHOD MoveCursor(nKey) CLASS TEditor
 
       case nKey == K_END
          // Empty lines have 0 len
-         ::nCol := Max(::LineLen(::nRow), 1)
+         ::nCol := Max(::LineLen(::nRow)+1, 1)
          ::nFirstCol := Max(::nCol - ::nNumCols + 1, 1)
          ::SetPos(::Row(), Min(::nLeft + ::nCol - 1, ::nRight))
          ::RefreshWindow()

@@ -1,3 +1,7 @@
+2001-07-14 18:55 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rtl/teditor.prg
+    ! Minor fix for K_END key implementation
+
 2001-07-13 19:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source\rtl\gtwin\gtwin.c
