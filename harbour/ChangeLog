@@ -1,3 +1,9 @@
+2000-12-01 01:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.sly
+     ! Minor optimization.
+   * source/rtl/tgetint.prg
+     * Corrected typo
+
 2000-11-30 18:25 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * include/hbmacro.h
    * source/macro/macro.y

@@ -119,7 +119,7 @@ static HB_RTVAR_PTR hb_comp_rtvars = NULL;
 
 static HB_EXPR_PTR pArrayIndexAsList = NULL, pGetArgList = NULL, pBaseArrayName = NULL;
 
-static BOOL bTrancuateBaseArray = FALSE, s_bBlock = FALSE, s_bBlockMacro = FALSE, s_bBlockDeclared = FALSE;
+static BOOL bTrancuateBaseArray = FALSE, s_bBlock = FALSE, s_bBlockMacro = FALSE, s_bBlockDeclared = FALSE, s_bSetGet;
 static HB_EXPR_PTR pBlockSimple;
 
 extern int hb_compLocalGetPos( char * szVarName );   /* returns the order + 1 of a local variable */
@@ -241,7 +241,7 @@ static void hb_compDebugStart( void ) { };
 %type <asExpr>  DimIndex DimList
 %type <asExpr>  FieldAlias FieldVarAlias
 %type <asExpr>  PostOp
-%type <asExpr>  Get GetA GetArgList
+%type <asExpr>  Get GetVar GetA GetArgList
 
 %%
 
@@ -1002,12 +1002,9 @@ ElemList   : Argument                { $$ = hb_compExprNewList( $1 ); }
            | ElemList ',' Argument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
-Get        : GET Variable ','
+Get        : GET GetVar ','
 	     {
-		if( hb_compLocalGetPos( $2->value.asSymbol ) ||
-                    hb_compStaticGetPos( $2->value.asSymbol, hb_comp_functions.pLast ) ||
-		    hb_compMemvarGetPos( $2->value.asSymbol, hb_comp_functions.pLast ) ||
-		    hb_compFieldGetPos( $2->value.asSymbol, hb_comp_functions.pLast ) )
+		if( s_bSetGet )
 		{
 		   HB_EXPR_PTR pSetGetBlock, pGetVar = $2, pIsNil, pIfList, pIIF;
 
@@ -1035,87 +1032,6 @@ Get        : GET Variable ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
              EmptyExpression { hb_compExprAddListExpr( pGetArgList, $14 ); /* WhenBlock  */ }
-	     GetAExt ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-
-           | GET AliasVar ','
-		{
-		   HB_EXPR_PTR pSetGetBlock, pGetVar = $2, pIsNil, pIfList, pIIF;
-
-                   pIsNil       = hb_compExprSetOperand( hb_compExprNewEQ( hb_compExprNewVar( "_1" ) ), hb_compExprNewNil() );
-
-		   pIfList      = hb_compExprNewList( pIsNil );
-		   pIfList      = hb_compExprAddListExpr( pIfList, pGetVar );
-		   pIfList      = hb_compExprAddListExpr( pIfList, hb_compExprAssign( pGetVar, hb_compExprNewVar( "_1" ) ) );
-
-		   pIIF         = hb_compExprNewIIF( pIfList );
-
-		   pSetGetBlock = hb_compExprNewCodeBlock();
-		   pSetGetBlock = hb_compExprCBVarAdd( pSetGetBlock, "_1", ' ' );
-
-		   hb_compExprAddListExpr( pSetGetBlock, pIIF );
-
-                   pGetArgList  = hb_compExprNewArgList( pSetGetBlock );
-                }
-
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $5 ) ; /* Var Name   */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $14 ); /* WhenBlock  */ }
-	     GetAExt ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-
-           | GET ObjectData ','
-		{
-		   HB_EXPR_PTR pSetGetBlock, pGetVar = $2, pIsNil, pIfList, pIIF;
-
-                   pIsNil       = hb_compExprSetOperand( hb_compExprNewEQ( hb_compExprNewVar( "_1" ) ), hb_compExprNewNil() );
-
-		   pIfList      = hb_compExprNewList( pIsNil );
-		   pIfList      = hb_compExprAddListExpr( pIfList, pGetVar );
-		   pIfList      = hb_compExprAddListExpr( pIfList, hb_compExprAssign( pGetVar, hb_compExprNewVar( "_1" ) ) );
-
-		   pIIF         = hb_compExprNewIIF( pIfList );
-
-		   pSetGetBlock = hb_compExprNewCodeBlock();
-		   pSetGetBlock = hb_compExprCBVarAdd( pSetGetBlock, "_1", ' ' );
-
-		   hb_compExprAddListExpr( pSetGetBlock, pIIF );
-
-                   pGetArgList  = hb_compExprNewArgList( pSetGetBlock );
-                }
-
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $5 ) ; /* Var Name   */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $8 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $11 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $14 ); /* WhenBlock  */ }
-	     GetAExt ')'
-             { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
-
-           | GET ObjectData ArrayIndex ','
-		{
-		   HB_EXPR_PTR pSetGetBlock, pGetVar = $3, pIsNil, pIfList, pIIF;
-
-                   pIsNil       = hb_compExprSetOperand( hb_compExprNewEQ( hb_compExprNewVar( "_1" ) ), hb_compExprNewNil() );
-
-		   pIfList      = hb_compExprNewList( pIsNil );
-		   pIfList      = hb_compExprAddListExpr( pIfList, pGetVar );
-		   pIfList      = hb_compExprAddListExpr( pIfList, hb_compExprAssign( pGetVar, hb_compExprNewVar( "_1" ) ) );
-
-		   pIIF         = hb_compExprNewIIF( pIfList );
-
-		   pSetGetBlock = hb_compExprNewCodeBlock();
-		   pSetGetBlock = hb_compExprCBVarAdd( pSetGetBlock, "_1", ' ' );
-
-		   hb_compExprAddListExpr( pSetGetBlock, pIIF );
-
-                   pGetArgList  = hb_compExprNewArgList( pSetGetBlock );
-                }
-
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $6 ) ; /* Var Name   */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $9 ) ; /* Picture    */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $12 ); /* ValidBlock */ } ','
-             EmptyExpression { hb_compExprAddListExpr( pGetArgList, $15 ); /* WhenBlock  */ }
 	     GetAExt ')'
              { $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL; }
 
@@ -1147,6 +1063,19 @@ Get        : GET Variable ','
                 hb_compGenError( hb_comp_szErrors, 'E', HB_COMP_ERR_GET_COMPLEX_MACRO, NULL, NULL );
                 $$ = hb_compExprNewFunCall( hb_compExprNewFunName( "__GET"), pGetArgList ); pGetArgList = NULL;
              }
+	   ;
+
+GetVar     : Variable
+             {
+		s_bSetGet = ( hb_compLocalGetPos( $1->value.asSymbol ) ||
+                              hb_compStaticGetPos( $1->value.asSymbol, hb_comp_functions.pLast ) ||
+		              hb_compMemvarGetPos( $1->value.asSymbol, hb_comp_functions.pLast ) ||
+		              hb_compFieldGetPos( $1->value.asSymbol, hb_comp_functions.pLast ) );
+	        $$ = $1;
+	     }
+	   | AliasVar              { s_bSetGet = TRUE; $$ = $1; }
+	   | ObjectData            { s_bSetGet = TRUE; $$ = $1; }
+	   | ObjectData ArrayIndex { s_bSetGet = TRUE; $$ = $2; }
 	   ;
 
 GetArgList : Argument                     { $$ = hb_compExprAddListExpr( pGetArgList, $1 ); }
