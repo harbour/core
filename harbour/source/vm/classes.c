@@ -131,6 +131,7 @@ typedef struct
    ULONG    ulCalls;             /* profiler support */
    ULONG    ulTime;              /* profiler support */
    ULONG    ulRecurse;           /* profiler support */
+   BOOL     bIsPersistent;       /* persistence support */
 } METHOD, * PMETHOD;
 
 typedef struct
@@ -879,7 +880,7 @@ ULONG hb_objHasMsg( PHB_ITEM pObject, char *szString )
 /* ================================================ */
 
 /*
- * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit], <uiScope> )
+ * __clsAddMsg( <hClass>, <cMessage>, <pFunction>, <nType>, [xInit], <uiScope>, <lPersistent> )
  *
  * Add a message to the class.
  *
@@ -910,6 +911,7 @@ HB_FUNC( __CLSADDMSG )
 {
    USHORT uiClass = ( USHORT ) hb_parni( 1 );
    USHORT uiScope = ( USHORT ) ( ISNUM( 6 ) ? hb_parni( 6 ) : HB_OO_CLSTP_EXPORTED );
+   BOOL   bPersistent = hb_parl( 7 );
 
    if( uiClass && uiClass <= s_uiClasses )
    {
@@ -960,6 +962,7 @@ HB_FUNC( __CLSADDMSG )
       pNewMeth->ulCalls = 0;
       pNewMeth->ulTime = 0;
       pNewMeth->ulRecurse = 0;
+      pNewMeth->bIsPersistent = bPersistent;
 
       /* in cas eof re-used message */
       if ( pNewMeth->pInitValue )
