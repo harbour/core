@@ -1,3 +1,7 @@
+20000521-00:37 DST Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/setkey.c
+     + include "hbgtapi.h" - needed for proper c++ support
+
 20000520-10:07 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.l

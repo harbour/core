@@ -43,6 +43,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbapigt.h"
 
 #define SK_NO_RETURN FALSE
 
