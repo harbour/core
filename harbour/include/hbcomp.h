@@ -466,7 +466,9 @@ extern BOOL          hb_comp_bAutoOpen;
 extern BOOL          hb_comp_bError;
 extern char          hb_comp_cInlineID;
 
-extern INLINES     hb_comp_inlines;
+extern INLINES       hb_comp_inlines;
+extern int           hb_comp_iLineINLINE;
+extern int           hb_comp_iLinePRG;
 
 /* /GC command line setting types */
 #define HB_COMPGENC_COMPACT     0

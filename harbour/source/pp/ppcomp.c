@@ -53,7 +53,7 @@ BOOL hb_pp_bInline = FALSE;
 
 static char s_szLine[ HB_PP_STR_SIZE ];
 static char s_szOutLine[ HB_PP_STR_SIZE ];
-static int hb_pp_LastOutLine = 1;
+int hb_pp_LastOutLine = 1;
 
 /*
 BOOL bDebug = FALSE;
@@ -147,10 +147,12 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
                  {
                     if( hb_pp_nCondCompile == 0 || hb_pp_aCondCompile[ hb_pp_nCondCompile - 1 ] )
                     {
+                       /* Ron Pinkas removed 2001-01-20
                        if( ( hb_pp_LastOutLine < hb_comp_iLine - 1 ) && hb_comp_files.iFiles == 1 && handl_o )
                           for( ; hb_pp_LastOutLine < hb_comp_iLine-1; hb_pp_LastOutLine++ )
                              hb_pp_WrStr( handl_o, "\n" );
                        hb_pp_LastOutLine = hb_comp_iLine;
+                       */
                        hb_pp_ParseExpression( ptr, s_szOutLine );
                     }
                     else
@@ -207,10 +209,14 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   {
      /* Ron Pinkas added 2000-06-13 */
         /* Ignore empty lines in #included files. */
+     /* Ron Pinkas removed 2001-01-20 */
+     #if 0
      if( ( hb_pp_LastOutLine != hb_comp_iLine ) && hb_comp_files.iFiles == 1 && handl_o )
      /* Ron Pinkas end 2000-06-13 */
         for( ; hb_pp_LastOutLine < hb_comp_iLine; hb_pp_LastOutLine++ )
             hb_pp_WrStr( handl_o, "\n" );
+    #endif
+    /* END Ron Pinkas removed 2001-01-20 */
   }
 
   lens = hb_pp_strocpy( ptrOut, s_szLine ) + ( ptrOut - sOut );
@@ -218,8 +224,19 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   *( sOut + lens++ ) = '\n';
   *( sOut + lens ) = '\0';
 
+  if( hb_comp_iLineINLINE && hb_pp_bInline == 0 )
+  {
+     hb_comp_iLine = hb_comp_iLinePRG + ( hb_comp_iLine - hb_comp_iLineINLINE );
+     #ifndef SIMPLEX
+        hb_comp_iLine++;
+     #endif
+     hb_comp_iLineINLINE = 0;
+  }
+
   if( handl_o )
+  {
      hb_pp_WrStr( handl_o, sOut );
+  }
 
   #if 0
      printf( "%d : %s\n", hb_comp_iLine, sOut );

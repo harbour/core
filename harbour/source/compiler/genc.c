@@ -232,7 +232,7 @@ void hb_compGenCCode( PHB_FNAME pFileName )       /* generates the C language ou
 
       /* Generate codeblocks data
        */
-      if( hb_comp_cInlineID )
+      if( hb_comp_cInlineID > '0' )
       {
          fprintf( yyc, "#include \"hbapi.h\"\n" );
       }

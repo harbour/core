@@ -1,3 +1,26 @@
+2001-01-20 17:20 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * hb_slex.vc
+     + Added -DSIMPLEX to CLIBFLAGS
+
+   * source/compiler/genc.c
+     * Minor correction.
+
+   * utils/hbpp/hbpp.c
+   * source/pp/pplib.c
+   * include/hbcomp.h
+   * source/compiler/harbour.c
+     + Added hb_comp_iLinePRG and hb_comp_iLineINLINE
+
+   * source/compiler/harbour.l
+   * source/compiler/harbour.slx
+   * source/compiler/hbgenerr.c
+     + Added logic to disallow multiple HB_INLINE() per source line.
+
+   * source/pp/ppcomp.c
+   * source/pp/ppcore.c
+   * source/pp/pragma.c
+     * Corrected double spacing in PPO generation, and added #pragma BEGINDUMP to PPO.
+
 2001-01-19 22:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    *utils/hbmake/hbmake.prg
       *Added code to allow Old style -D switch
@@ -11,21 +34,21 @@
 
 2001-01-18 22:41 GMT+1 JFL (Mafact) <jfl@mafact.com>
    *harbour/hb_slex.vc
-    * added HBMAKE 
+    * added HBMAKE
    harbour/makefile.vc
-    * added HBMAKE 
+    * added HBMAKE
 
 2001-01-18 00:18 GMT+1 JFL (Mafact) <jfl@mafact.com>
    *harbour/makefile.vc
     * minor form adjustement
    *harbour/include/hbclass.ch
-    * Clean the ::Class reference wich does'nt work 
+    * Clean the ::Class reference wich does'nt work
    *harbour/source/debug/dbgtmenu.prg
     * Adding a blank line at the end of file to test Simplex and VC++
    *harbour/source/rtl/tclass.prg
-    * Clean the ::Class reference wich does'nt work 
+    * Clean the ::Class reference wich does'nt work
    *harbour/source/rtl/tobject.prg
-    * Clean the ::Class reference wich does'nt work 
+    * Clean the ::Class reference wich does'nt work
 
 
 
@@ -52,7 +75,7 @@
 
     *include/hbapi.h
         *modified union in 'asRefer' structure
-        
+
     *source/vm/codebloc.c
     *source/vm/hvm.c
     *source/vm/itemapi.c

@@ -80,6 +80,9 @@ BOOL hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger re
 int  hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 FILE *hb_comp_yyppo = NULL;
 
+int  hb_comp_iLinePRG;
+int  hb_comp_iLineINLINE = 0;
+
 int main( int argc, char * argv[] )
 {
   FILE * handl_o;

@@ -2852,13 +2852,29 @@ int hb_pp_RdStr( FILE * handl_i, char * buffer, int maxlen, BOOL lDropSpaces, ch
 
 int hb_pp_WrStr( FILE * handl_o, char * buffer )
 {
+  extern int hb_pp_LastOutLine;
   int lens = strlen(buffer);
 
   HB_TRACE(HB_TR_DEBUG, ("hb_pp_WrStr(%p, %s)", handl_o, buffer));
 
+  /* Ron Pinkas added 2001-01-20 */
+  if( hb_comp_files.iFiles == 1 )
+  {
+    for( ; hb_pp_LastOutLine < hb_comp_iLine - 1; hb_pp_LastOutLine++ )
+    {
+      fwrite("\n",1,1,handl_o);
+    }
+    hb_pp_LastOutLine = hb_comp_iLine;
+  }
+  /* END Ron Pinkas added 2001-01-20 */
+
   fwrite(buffer,lens,1,handl_o);
+
   if( *(buffer+lens-1) != '\n' )
+  {
     fwrite("\n",1,1,handl_o);
+  }
+
   return 0;
 }
 

@@ -85,7 +85,7 @@ HBPDF_DIR   = contrib\pdflib
 
 AS             = masm
 CFLAGS         = -I$(INCLUDE_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)
-CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
+CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS) -DSIMPLEX
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 !ifdef PDF
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS) -dPDF

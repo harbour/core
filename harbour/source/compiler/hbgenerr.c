@@ -89,7 +89,7 @@ char * hb_comp_szErrors[] =
    "Code block contains both macro and declared symbol references",
    "GET contains complex macro",
    "Unterminated inline block in function: \'%s\'",
-   "Too many inline blocks",
+   "Too many inline blocks %s",
    "Inline C requires C output generation, use -gc[n]"
 };
 

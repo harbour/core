@@ -761,6 +761,16 @@ Separator     {SpaceTab}
 %}
 
 "hb_inline" {
+
+	 /* NOTE: hb_compiLineINLINE is being RESET in ppcomp.c - hb_pp_Internal() */
+
+	 if( hb_comp_iLineINLINE )
+	 {
+            hb_compGenError( hb_comp_szErrors, 'F', HB_COMP_ERR_TOOMANY_INLINE, "on the same line", NULL );
+	    return IDENTIFIER;
+	 }
+	 else
+	 {
 	    #define INLINE_NORMAL 0
 	    #define INLINE_SINGLE_QUOT 1
 	    #define INLINE_DOUBLE_QUOT 2
@@ -771,6 +781,7 @@ Separator     {SpaceTab}
 	    extern BOOL hb_pp_bInline;
             PINLINE pInline;
 
+	    hb_comp_iLineINLINE = hb_comp_iLine;
             hb_pp_bInline = TRUE;
 
 	    sInlineSym[10] = hb_comp_cInlineID++;
@@ -898,11 +909,14 @@ Separator     {SpaceTab}
                   hb_xfree( ( void * ) pInline );  /* NOTE: szName will be released by hb_compSymbolKill() */
 	       }
 
+	       hb_comp_iLinePRG = hb_comp_iLine - 1;
+	       hb_comp_iLine = hb_comp_iLineINLINE;
+
                yylval.string = hb_compIdentifierNew( sInlineSym, TRUE );
                return IDENTIFIER;
 	    }
-         }
-
+	 }
+	    }
 %{
 /* ************************************************************************ */
 %}

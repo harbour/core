@@ -132,6 +132,8 @@ BOOL          hb_comp_bAutoOpen = TRUE;
 BOOL          hb_comp_bError = FALSE;
 char          hb_comp_cInlineID = '0';
 
+int           hb_comp_iLineINLINE = 0;
+int           hb_comp_iLinePRG;
 INLINES       hb_comp_inlines;
 
 /* EXTERNAL statement can be placed into any place in a function - this flag is

@@ -176,6 +176,11 @@ void hb_pp_ParsePragma( char * szLine )
          extern BOOL hb_pp_bInline;
          PINLINE pInline;
 
+         if( hb_comp_bPPO )
+         {
+            hb_pp_WrStr( hb_comp_yyppo, "#pragma BEGINDUMP" );
+         }
+
          hb_pp_bInline = TRUE;
 
          pInline = hb_compInlineAdd( NULL );
