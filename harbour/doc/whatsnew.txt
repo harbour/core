@@ -1,3 +1,21 @@
+Build #28 18 July 1999
+
+- Added support for MS Visual C++
+- Almost complete preprocessor
+- Error handling improved
+- Extend Library complete
+- First version of OOPS syntax added.
+- First version of RDD added
+- MEMVAR support
+- Pre processor available as a run-time function
+- Rich Text Format Class added
+- Many Terminal functions created
+- Many national modules added
+- Many new functions
+- Many bug fixes
+
+----------------------------------------------------------------------
+
 Build #27 18 June 1999
 
 - Added new directory with GNU MAKE files for GCC on Linux
