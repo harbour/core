@@ -35,7 +35,7 @@ harbour.lib : achoice.obj adir.obj alert.obj arrays.obj \
               initsymb.obj inkey.obj input.obj isprint.obj itemapi.obj \
               langapi.obj mainstd.obj mainwin.obj math.obj \
               mathx.obj memofile.obj memoline.obj memvars.obj \
-              memvarbl.obj menuto.obj mlcount.obj mtran.obj msges.obj \
+              memvarbl.obj menuto.obj mlcount.obj mtran.obj msgen.obj \
               natmsg.obj net.obj objfunc.obj oldbox.obj oldclear.obj \
               readvar.obj readkey.obj \
               samples.obj set.obj setta.obj setcolor.obj \

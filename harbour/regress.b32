@@ -6,6 +6,7 @@
 
 .path.h   = include
 .path.lib = lib\b32
+.path.obj = tests\regress
 .path.c   = tests\regress
 .path.prg = tests\regress
 
@@ -19,6 +20,7 @@ rt_hvm.obj   : rt_hvm.c
 rt_math.obj  : rt_math.c
 rt_misc.obj  : rt_misc.c
 rt_str.obj   : rt_str.c
+rt_trans.obj : rt_trans.c
 
 rt_main.c    : rt_main.prg
 rt_array.c   : rt_array.prg
@@ -28,20 +30,24 @@ rt_hvm.c     : rt_hvm.prg
 rt_math.c    : rt_math.prg
 rt_misc.c    : rt_misc.prg
 rt_str.c     : rt_str.prg
+rt_trans.c   : rt_trans.prg
 
 .prg.c:
-  bin\harbour $< /n /iinclude
+  bin\harbour $< /n /otests\regress\ /iinclude
 
 .c.obj:
   bcc32 -c -O2 -Iinclude -v -o$@ -DHARBOUR_USE_WIN_GTAPI $<
 
 rt_main.exe : rt_main.obj rt_array.obj rt_date.obj rt_file.obj \
-              rt_hvm.obj rt_math.obj rt_misc.obj rt_str.obj
+              rt_hvm.obj rt_math.obj rt_misc.obj rt_str.obj rt_trans.obj
    echo -v -O2 > temp.32
-   echo -ert_main.exe >> temp.32
+   echo -etests\regress\rt_main.exe >> temp.32
    echo -Iinclude >> temp.32
-   echo rt_main.obj rt_array.obj rt_date.obj rt_file.obj >> temp.32
-   echo rt_hvm.obj rt_math.obj rt_misc.obj rt_str.obj >> temp.32
+   echo tests\regress\rt_main.obj tests\regress\rt_array.obj >> temp.32
+   echo tests\regress\rt_date.obj tests\regress\rt_file.obj >> temp.32
+   echo tests\regress\rt_hvm.obj tests\regress\rt_math.obj >> temp.32
+   echo tests\regress\rt_misc.obj tests\regress\rt_str.obj >> temp.32
+   echo tests\regress\rt_trans.obj >> temp.32
    echo lib\b32\harbour.lib >> temp.32
    echo lib\b32\terminal.lib >> temp.32
    echo lib\b32\hbpp.lib >> temp.32

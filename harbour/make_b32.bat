@@ -3,8 +3,7 @@ rem
 rem $Id$
 rem 
 
-del make.err
-make -fhbpp.b32 >> make.err
+make -fhbpp.b32 > make.err
 make -fmakefile.b32 >> make.err
 make -fterminal.b32 >> make.err
 make -fgt.b32 >> make.err

@@ -13,6 +13,7 @@ PRG_SOURCES=\
         rt_math.prg  \
         rt_misc.prg  \
         rt_str.prg   \
+        rt_trans.prg \
 
 PRG_MAIN=rt_main.prg
 

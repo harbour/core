@@ -1,3 +1,14 @@
+19991123-00:29 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/*
+    + Split rt_str into rt_str + rt_trans.
+    ! Typo fixed in Clipper batch file.
+    ! Fixed another long function name (Main_STRINGS() -> Main_STR())
+  * make_b32.bat
+    make_b40.bat
+    makefile.b32
+    regress.b32
+    * Updates by Jose Lalin.
+
 19991122-23:43 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/regress/rt_hvm.prg
     tests/regress/rt_misc.prg

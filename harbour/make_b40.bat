@@ -3,7 +3,7 @@ rem
 rem $Id$
 rem 
 
-make -DB40 -fhbpp.b32 >> make.err
+make -DB40 -fhbpp.b32 > make.err
 make -DB40 -fmakefile.b32 >> make.err
 make -DB40 -fterminal.b32 >> make.err
 make -DB40 -fgt.b32 >> make.err
