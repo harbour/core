@@ -83,9 +83,6 @@ extern void    hb_vmRequestQuit( void );
 
 /* Public PCode functions */
 
-/* Object */
-extern void    hb_vmMessage( PHB_SYMB pSymMsg ); /* sends a message to an object */
-
 /* Execution */
 extern void    hb_vmDo( USHORT uiParams );      /* invoke the virtual machine */
 extern void    hb_vmFunction( USHORT uiParams ); /* executes a function saving its result */
