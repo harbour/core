@@ -763,6 +763,9 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
      /* Ron Pinkas added 2000-01-24 */
      if( ! ISNAME( *sLine ) )
      {
+        if( *sLine == '[' && ipos )
+           break;
+
         if( IS_2CHAR_OPERATOR( sLine ) )
         {
            *(cmdname+ipos++) = *sLine++;
@@ -990,7 +993,7 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
               {
                  ptr += rmlen++;
                  while( *ptr != '\0' && *ptr != '>'  && *(ptr-1) != '\\' )
-                 {               
+                 {
                     if( *ptr != ' ' && *ptr != '\t' && *ptr != '\"' && *ptr != ')' && *ptr != '}' && *ptr != '.' && *ptr != '-' )
                     {
                        ifou = -1;
