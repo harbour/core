@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * Compiler SimpLex rules
+ * Pre-Processor/Dot prompt environment
  *
  * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>
  * www - http://www.harbour-project.org
@@ -42,9 +42,13 @@ STATIC bDbgMatch := .F., bDbgExp := .F., bDbgPPO := .F., bLoadRules := .T., bCou
 
 STATIC nIfDef := 0, abIfDef := {}
 
-STATIC hPP := NIL, sIncludeFile := NIL
+STATIC hPP := NIL
 
 STATIC asPaths := {}
+
+STATIC s_cLastChar := ' '
+
+STATIC s_sIncludeFile := NIL
 
 PROCEDURE Main( sSource, sSwitch )
 
@@ -162,7 +166,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
    LOCAL hSource, sBuffer, sLine, nPosition, nNewLineAt
    LOCAL nLen, nMaxPos, cChar, nClose, nBase, nNext, nLine := 0
-   LOCAL sLeft, sRight, nPath, nPaths := Len( asPaths )
+   LOCAL sRight, nPath, nPaths := Len( asPaths ), nNewLine, bBlanks := .T.
 
    IF At( '.', sSource ) == 0
      sSource += ".PRG"
@@ -201,10 +205,12 @@ FUNCTION ProcessFile( sSource, sSwitch )
       IF "-DP" $ sSwitch
          bDbgPPO := .T.
       ENDIF
+   ELSE
+      FWrite( hPP, '#line 1 "' + Upper( sSource ) + '"' )
+      bBlanks := .F.
    ENDIF
 
    sBuffer   := Space( 16384 )
-   nPosition := 1
    sLine     := ''
 
    WHILE ( nLen := FRead( hSource, @sBuffer, 16384 ) ) > 2
@@ -219,8 +225,9 @@ FUNCTION ProcessFile( sSource, sSwitch )
           DO CASE
              CASE ( cChar == '/' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '*' )
 
+                nPosition++
                 WHILE .T.
-                   nClose := At( "*/", SubStr( sBuffer, nPosition + 2 ) )
+                   nClose := At( "*/", SubStr( sBuffer, nPosition + 1 ) )
 
                    IF nClose == 0
                       nBase := nPosition + 2
@@ -231,30 +238,34 @@ FUNCTION ProcessFile( sSource, sSwitch )
                             @ Row(), 0 SAY nLine
                          ENDIF
 
-                         FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         IF bBlanks
+                            FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         ENDIF
                          nBase += ( nNext + 1 )
                       ENDDO
 
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, 16384 )
-                      IF nLen < 3
+                      IF nLen < 2
                          Alert( "ERROR! Unterminated '/**/'")
                       ENDIF
                       nMaxPos   := nLen - 1
-                      nPosition := 1
+                      nPosition := 0
                       LOOP
                    ELSE
-                      nBase := nPosition + 2
+                      nBase := nPosition + 1
                       WHILE ( nNext := At( Chr(10), SubStr( sBuffer, nBase ) ) ) > 0 .AND. ( nBase + nNext - nPosition ) <= nClose + 1
                          nLine++
                          IF bCount
                             @ Row(), 0 SAY nLine
                          ENDIF
-                         FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         IF bBlanks
+                            FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         ENDIF
                          nBase += ( nNext + 1 )
                       ENDDO
 
-                      nPosition += ( nClose + 2 )
+                      nPosition += ( nClose + 1 )
                       cChar := ''
                       EXIT
                    ENDIF
@@ -262,27 +273,34 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
              CASE ( cChar == '/' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '/' )
 
+                nPosition++
                 WHILE .T.
-                   nClose := At( Chr(10), SubStr( sBuffer, nPosition + 2 ) )
+                   nClose := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
 
                    IF nClose == 0
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, 16384 )
-                      IF nLen < 3
+                      IF nLen < 2
                          nPosition := nLen
                          cChar := ''
                          EXIT
                       ENDIF
                       nMaxPos   := nLen - 1
-                      nPosition := 1
+                      nPosition := 0
                       LOOP
                    ELSE
                       nLine++
                       IF bCount
                          @ Row(), 0 SAY nLine
                       ENDIF
-                      FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-                      nPosition += ( nClose + 1 )
+                      IF LTrim( sLine ) == ''
+                         IF bBlanks
+                            FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         ENDIF
+                      ELSE
+                         FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                      ENDIF
+                      nPosition += ( nClose )
                       sLine := ''
                       cChar := ''
                       EXIT
@@ -291,14 +309,94 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
              CASE ( cChar == '&' .AND. SubStr( sBuffer, nPosition + 1, 1 ) == '&' )
 
+                nPosition++
                 WHILE .T.
-                   nClose := At( Chr(10), SubStr( sBuffer, nPosition + 2 ) )
+                   nClose := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
 
                    IF nClose == 0
                       FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, 16384 )
-                      IF nLen < 3
+                      IF nLen < 2
                          nPosition := nLen
+                         cChar := ''
+                         EXIT
+                      ENDIF
+                      nMaxPos   := nLen - 1
+                      nPosition := 0
+                      LOOP
+                   ELSE
+                      nLine++
+                      IF bCount
+                         @ Row(), 0 SAY nLine
+                      ENDIF
+                      IF LTrim( sLine ) == ''
+                         IF bBlanks
+                            FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         ENDIF
+                      ELSE
+                         FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                      ENDIF
+                      nPosition += ( nClose )
+                      sLine := ''
+                      cChar := ''
+                      EXIT
+                   ENDIF
+                ENDDO
+
+             CASE ( cChar == '*' )
+
+                IF LTrim( sLine ) == ''
+                   WHILE .T.
+                      nClose := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
+
+                      IF nClose == 0
+                         FSeek( hSource, -1, 1 )
+                         nLen := FRead( hSource, @sBuffer, 16384 )
+                         IF nLen < 2
+                            nPosition := nLen
+                            cChar := ''
+                            EXIT
+                         ENDIF
+                         nMaxPos   := nLen - 1
+                         nPosition := 1
+                         LOOP
+                      ELSE
+                         nLine++
+                         IF bCount
+                            @ Row(), 0 SAY nLine
+                         ENDIF
+                         IF bBlanks
+                            FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                         ENDIF
+                         nPosition += ( nClose )
+                         sLine := ''
+                         cChar := ''
+                         EXIT
+                      ENDIF
+                   ENDDO
+                ENDIF
+
+             CASE ( cChar == '"' )
+
+                WHILE .T.
+                   nClose := At( '"', SubStr( sBuffer, nPosition + 1 ) )
+                   nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
+
+                   IF nNewLine > 0 .AND. ( nClose == 0 .OR. nClose > nNewLine )
+                      ? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
+                      Alert( [ERROR! Unterminated '"'] )
+                      sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
+                      nPosition += ( nNewLine - 1 )
+                      cChar     := ''
+                      EXIT
+                   ENDIF
+
+                   IF nClose == 0
+                      sLine += SubStr( sBuffer, nPosition )
+                      FSeek( hSource, -1, 1 )
+                      nLen := FRead( hSource, @sBuffer, 16384 )
+                      IF nLen < 2
+                         Alert( 'ERROR! Unterminated ["]' )
                          cChar := ''
                          EXIT
                       ENDIF
@@ -306,35 +404,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       nPosition := 1
                       LOOP
                    ELSE
-                      nLine++
-                      IF bCount
-                         @ Row(), 0 SAY nLine
-                      ENDIF
-                      FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-                      nPosition += ( nClose + 1 )
-                      sLine := ''
-                      cChar := ''
-                      EXIT
-                   ENDIF
-                ENDDO
-
-             CASE ( cChar == '"' )
-
-                WHILE .T.
-                   nClose := At( '"', SubStr( sBuffer, nPosition + 1 ) )
-
-                   IF nClose == 0
-                      sLine += SubStr( sBuffer, nPosition )
-                      nLen := FRead( hSource, @sBuffer, 16384 )
-                      IF nLen < 3
-                         Alert( "ERROR! Unterminated string" )
-                         RETURN .F.
-                      ENDIF
-                      nMaxPos   := nLen - 1
-                      nPosition := 1
-                      LOOP
-                   ELSE
-                      sLine += SubStr( sBuffer, nPosition, nClose )
+                      sLine     += SubStr( sBuffer, nPosition, nClose )
                       nPosition += ( nClose )
                       EXIT
                    ENDIF
@@ -343,20 +413,31 @@ FUNCTION ProcessFile( sSource, sSwitch )
              CASE ( cChar == "'" )
 
                 WHILE .T.
-                   nClose := At( "'", SubStr( sBuffer, nPosition + 1 ) )
+                   nClose   := At( "'", SubStr( sBuffer, nPosition + 1 ) )
+                   nNewLine := At( Chr(10), SubStr( sBuffer, nPosition + 1 ) )
+
+                   IF nNewLine > 0 .AND. ( nClose == 0 .OR. nClose > nNewLine )
+                      ? nNewLine, nClose, SubStr( sBuffer, nPosition + 1, 78 )
+                      Alert( "ERROR! Unterminated [']" )
+                      sLine     += SubStr( sBuffer, nPosition, nNewLine - 1 )
+                      nPosition += ( nNewLine - 1 )
+                      cChar     := ''
+                      EXIT
+                   ENDIF
 
                    IF nClose == 0
                       sLine += SubStr( sBuffer, nPosition )
+                      FSeek( hSource, -1, 1 )
                       nLen := FRead( hSource, @sBuffer, 16384 )
-                      IF nLen < 3
-                         Alert( "ERROR! Unterminated string" )
+                      IF nLen < 2
+                         Alert( "ERROR! Unterminated '''" )
                          RETURN .F.
                       ENDIF
                       nMaxPos   := nLen - 1
                       nPosition := 1
                       LOOP
                    ELSE
-                      sLine += SubStr( sBuffer, nPosition, nClose )
+                      sLine     += SubStr( sBuffer, nPosition, nClose )
                       nPosition += ( nClose )
                       EXIT
                    ENDIF
@@ -377,7 +458,9 @@ FUNCTION ProcessFile( sSource, sSwitch )
                    IF bCount
                       @ Row(), 0 SAY nLine
                    ENDIF
-                   FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                   IF bBlanks
+                      FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                   ENDIF
 
                    /* Skip leading spaces in continued next line. */
                    nPosition++
@@ -385,26 +468,23 @@ FUNCTION ProcessFile( sSource, sSwitch )
                       nPosition++
                    ENDDO
                    nPosition--
-
                    //sLine += sRight
-
                    cChar := ' '
                 ELSE
-                   sLeft := ExtractLeadingWS( @sLine )
                    nLine++
                    IF bCount
                       @ Row(), 0 SAY nLine
                    ENDIF
-                   IF Left( sLine, 1 ) == '*'
-                      FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-                      sLine := ''
-                      cChar := ''
+                   IF LTrim( sLine ) == ''
+                      IF bBlanks
+                         FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                      ENDIF
                    ELSE
-                      sLine += sRight
-                      FWrite( hPP, ProcessLine( sLeft + sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-                      sLine := ''
-                      cChar := ''
+                      //sLine += sRight
+                      FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
                    ENDIF
+                   sLine := ''
+                   cChar := ''
                 ENDIF
 
              CASE cChar == Chr(13)
@@ -416,17 +496,15 @@ FUNCTION ProcessFile( sSource, sSwitch )
                 IF bCount
                    @ Row(), 0 SAY nLine
                 ENDIF
-                sLeft := ExtractLeadingWS( @sLine )
-                IF Left( sLine, 1 ) == '*'
-                   FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-                   sLine := ''
-                   cChar := ''
+                IF LTrim( sLine ) == ''
+                   IF bBlanks
+                      FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+                   ENDIF
                 ELSE
-                   FWrite( hPP, ProcessLine( sLeft + sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-                   sLine := ''
-                   cChar := ''
+                   FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
                 ENDIF
-
+                sLine := ''
+                cChar := ''
           ENDCASE
 
           sLine += cChar
@@ -434,7 +512,7 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
       ENDDO
 
-      FSeek( hSource, -2, 1 )
+      FSeek( hSource, -2 + ( nPosition - nMaxPos ), 1 )
 
    ENDDO
 
@@ -442,20 +520,17 @@ FUNCTION ProcessFile( sSource, sSwitch )
 
    FClose( hSource )
 
-   sLeft := ExtractLeadingWS( @sLine )
-
    nLine++
    IF bCount
       @ Row(), 0 SAY nLine
    ENDIF
-   IF Left( sLine, 1 ) == '*'
-      FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-      sLine := ''
-      cChar := ''
+   IF LTrim( sLine ) == ''
+      IF bBlanks
+         FWrite( hPP, ProcessLine( '', {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
+      ENDIF
    ELSE
-      FWrite( hPP, ProcessLine( sLeft + sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
-      sLine := ''
-      cChar := ''
+      //sLine += sRight
+      FWrite( hPP, ProcessLine( sLine, {}, {}, {}, nLine, sSource ) + Chr(13) + Chr(10) )
    ENDIF
 
    IF ProcName(1) == 'MAIN'
@@ -478,7 +553,8 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
 
    WHILE .T.
 
-      //? "Raw Processing: '", sLine, "'", nPendingLines, nOffset
+      //? "Raw Processing: '", sLine, "'"
+      //? nPendingLines, nOffset, nIfDef, IIF( nIfDef > 0, abIfDef[nIfDef] , )
 
       IF ! sPassed == ''
          aAdd( asOutLines, ( sLeft + DropTrailingWS( sPassed ) ) )
@@ -505,9 +581,9 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
          EXIT
       ENDIF
 
-      IF sIncludeFile != NIL
+      IF s_sIncludeFile != NIL
          aAdd( asOutLines, "#line " + LTrim( Str( nLine ) ) + ' "' + Upper( sSource ) + '"' )
-         sIncludeFile := NIL
+         s_sIncludeFile := NIL
       ENDIF
 
       //? "Processing: '" + sLine +"'"
@@ -555,6 +631,12 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
             LOOP
          ENDIF
 
+         IF nIfDef > 0 .AND. ! abIfDef[nIfDef]
+            //? "Ignored: " + sLine
+            sLine := ''
+            LOOP
+         ENDIF
+
          ExtractLeadingWS( @sLine )
 
          IF sDirective == Left( "DEFINE", nLen )
@@ -585,11 +667,12 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
 
             sLine := SubStr( sLine, 2 )
             DropTrailingWS( @sLine )
-            sIncludeFile := Left( sLine, Len( sLine ) - 1 )
-            ProcessFile( sIncludeFile )
+            sTemp := Left( sLine, Len( sLine ) - 1 )
 
-            /* Thread safety! Might have changed in recursion. */
-            sIncludeFile := Left( sLine, Len( sLine ) - 1 )
+            ProcessFile( sTemp ) // Intentionally not using s_sIncludeFile
+
+            /* Thread safety - don't use the Static might be modified. */
+            s_sIncludeFile := sTemp
 
             sLine := ''
             LOOP
@@ -633,6 +716,7 @@ FUNCTION ProcessLine( sLine, aDefined, aTranslated, aCommanded, nLine, sSource )
       WHILE .T.
 
          IF nIfDef > 0 .AND. ! abIfDef[nIfDef]
+            //? "Ignored: " + sLine
             sLine := ''
             EXIT
          ENDIF
@@ -968,7 +1052,7 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
          /* "Used" non repeatable! */
          IF nMarkerID > 0 .AND. nMarkerID < 1000
-            IF aMarkers[nMarkerID] != NIL
+            IF aMarkers != NIL .AND. aMarkers[nMarkerID] != NIL
                IF bDbgMatch
                   ? "Used:", nMatch, nMarkerId, aMarkers[nMarkerId]
                   WAIT
@@ -1301,6 +1385,15 @@ FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
          ENDIF
 
          LOOP
+      ELSE
+         IF bStatement .AND. ! ( sWorkLine == '' )
+            IF bDbgMatch
+               ? "Statement failed, try next rule..."
+               WAIT
+            ENDIF
+
+            LOOP
+         ENDIF
       ENDIF
 
       IF bDbgMatch
@@ -1369,7 +1462,7 @@ RETURN 0
 
 FUNCTION NextToken( sLine, bCheckRules )
 
-  LOCAL  sReturn := NIL, cChar, Counter, nLen, sPad
+  LOCAL  sReturn := NIL, cChar, Counter, nLen, sPad, nClose
 
   //? "Called from: " + ProcName(1) + " Line: " + Str( ProcLine(1) ) + " Scaning: " + sLine
 
@@ -1429,10 +1522,6 @@ FUNCTION NextToken( sLine, bCheckRules )
 
      sReturn := Left( sLine, 2 )
 
-  ELSEIF Left( sLine, 2 ) == "[["
-
-     sReturn := Left( sLine, 2 )
-
   ELSEIF Upper( Left( sLine, 3 ) ) == ".T."
 
      sReturn := ".T."
@@ -1441,7 +1530,72 @@ FUNCTION NextToken( sLine, bCheckRules )
 
      sReturn := ".F."
 
-  ELSEIF Left( sLine, 1 ) $ "?+-*/:=^!&()[]&@,'" + '"'
+  ELSEIF Left( sLine, 2 ) == "[["
+
+     nClose := AT( ']]', sLine )
+     IF nClose == 0
+        Alert( [ERROR! Unterminated '"'] )
+        RETURN NIL
+     ELSE
+        sReturn := Left( sLine, nClose + 1 )
+     ENDIF
+
+  ELSEIF Left( sLine, 1 ) == '"'
+
+     nClose := AT( '"', SubStr( sLine, 2 ) )
+     IF nClose == 0
+        Alert( [ERROR! Unterminated '"'] )
+        RETURN NIL
+     ELSE
+        sReturn := Left( sLine, nClose + 1 )
+     ENDIF
+
+  ELSEIF Left( sLine, 1 ) == "'"
+
+     nClose := AT( "'", SubStr( sLine, 2 ) )
+     IF nClose == 0
+        Alert( "ERROR! Unterminated [']" )
+        RETURN NIL
+     ELSE
+        sReturn := SubStr( sLine, 2, nClose - 1 )
+
+        IF ! ( '"' $ sReturn )
+           sReturn := '"' + sReturn + '"'
+        ELSE
+           sReturn := "'" + sReturn + "'"
+        ENDIF
+     ENDIF
+
+  ELSEIF Left( sLine, 1 ) == '['
+
+     IF s_cLastChar >= 'a' .OR. s_cLastChar <= 'z' .OR. ;
+        s_cLastChar >= 'A' .OR. s_cLastChar <= 'Z' .OR. ;
+        s_cLastChar >= '0' .OR. s_cLastChar <= '9' .OR. ;
+        s_cLastChar == '_' .OR. s_cLastChar $ ")}]"
+
+        sReturn := '['
+
+     ELSE
+
+        nClose := AT( ']', sLine )
+        IF nClose == 0
+           Alert( "ERROR! Unterminated ']'" )
+           RETURN NIL
+        ELSE
+           sReturn := SubStr( sLine, 2, nClose - 2 )
+
+           IF ! ( '"' $ sReturn )
+              sReturn := '"' + sReturn + '"'
+           ELSEIF ! ( "'" $ sReturn )
+              sReturn := "'" + sReturn + "'"
+           ELSE
+              sReturn := "[" + sReturn + "]"
+           ENDIF
+        ENDIF
+
+     ENDIF
+
+  ELSEIF Left( sLine, 1 ) $ "?+-*/:=^!&()[]&{}@,"
 
      sReturn := Left( sLine, 1 )
 
@@ -1467,7 +1621,7 @@ FUNCTION NextToken( sLine, bCheckRules )
      FOR Counter := 1 TO nLen
         cChar := SubStr( sLine, Counter, 1 )
 
-        IF cChar $ "+-*/:=^!&()[]&@,"
+        IF cChar $ "+-*/:=^!&()[]&{}@,"
 
            sReturn := Left( sLine, Counter - 1 )
            EXIT
@@ -1507,8 +1661,9 @@ FUNCTION NextToken( sLine, bCheckRules )
 //? "TOKEN = 'NIL' AT: ", sLine
   ELSE
 //? "TOKEN = '" + sReturn + "' Len: ", Len( sReturn ), "AT: ", sLine
-     sLine := SubStr( sLine, Len( sReturn ) + 1 )
-     sReturn += ExtractLeadingWS( @sLine )
+     sLine       := SubStr( sLine, Len( sReturn ) + 1 )
+     s_cLastChar := Right( sReturn, 1 )
+     sReturn     += ExtractLeadingWS( @sLine )
   ENDIF
 
   IF bCheckRules
@@ -1576,7 +1731,35 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
      RETURN NIL
   ENDIF
 
-  IF Left( sToken, 1 ) == '('
+  IF sToken == '->'
+
+     sExp  := sToken
+     sExp  += ExtractLeadingWS( @sLine )
+
+     IF sNextAnchor != '->'
+        sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan '->'" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
+  ELSEIF sToken == ':='
+
+     sExp  := sToken
+     sExp  += ExtractLeadingWS( @sLine )
+
+     IF sNextAnchor != ':='
+        sTemp := NextExp( @sLine, ',', NIL, NIL, sNextAnchor )
+        IF sTemp == NIL
+           Alert( "ERROR! orphan ':='" )
+        ELSE
+           sExp +=  sTemp
+        ENDIF
+     ENDIF
+
+  ELSEIF Left( sToken, 1 ) == '('
 
      sExp  := sToken
      sExp  += ExtractLeadingWS( @sLine )
@@ -1615,84 +1798,6 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
            Alert( "ERROR! Unbalanced '{'" )
         ELSE
            sExp += sToken
-        ENDIF
-     ENDIF
-
-  ELSEIF Left( sToken, 1 ) == '"'
-
-     nClose := AT( '"', sLine )
-     IF nClose == 0
-        Alert( [ERROR! Unterminated '"'] )
-        RETURN NIL
-     ELSE
-        /* Might have a trailing WS that belongs to the string. */
-        DropTrailingWS( @sToken, @Stemp )
-
-        sExp  := sTemp + Left( sLine, nClose - 1 )
-        sExp  := '"' + sExp + '"'
-        sLine := SubStr( sLine, nClose + 1 )
-        sExp  += ExtractLeadingWS( @sLine )
-     ENDIF
-
-  ELSEIF Left( sToken, 1 ) == "'"
-
-     nClose := AT( "'", sLine )
-     IF nClose == 0
-        Alert( "ERROR! Unterminated [']" )
-        RETURN NIL
-     ELSE
-        /* Might have a trailing WS that belongs to the string. */
-        DropTrailingWS( @sToken, @Stemp )
-
-        sExp  := sTemp + Left( sLine, nClose - 1 )
-        IF ! ( '"' $ sExp )
-           sExp := '"' + sExp + '"'
-        ELSE
-           sExp := "'" + sExp + "'"
-        ENDIF
-        sLine := SubStr( sLine, nClose + 1 )
-        sExp  += ExtractLeadingWS( @sLine )
-     ENDIF
-
-  ELSEIF Left( sToken, 2 ) == "[["
-     nClose := AT( ']]', sLine )
-     IF nClose == 0
-        Alert( "ERROR! Unterminated '[['" )
-        RETURN NIL
-     ELSE
-        sExp  := sToken + Left( sLine, nClose + 1 )
-
-        sLine := SubStr( sLine, nClose + 2 )
-        sExp  += ExtractLeadingWS( @sLine )
-     ENDIF
-
-  ELSEIF Left( sToken, 1 ) == "["
-     IF bDbgExp
-        ? "Open String: " + sToken
-     ENDIF
-
-     nClose := AT( ']', sLine )
-     IF nClose == 0
-        Alert( "ERROR! Unterminated '['" )
-        RETURN NIL
-     ELSE
-        /* Might have a trailing WS that belongs to the string. */
-        DropTrailingWS( @sToken, @Stemp )
-
-        sExp  := sTemp + Left( sLine, nClose - 1 )
-        IF ! ( '"' $ sExp )
-           sExp := '"' + sExp + '"'
-        ELSEIF ! ( "'" $ sExp )
-           sExp := "'" + sExp + "'"
-        ELSE
-           sExp := "[" + sExp + "]"
-        ENDIF
-        sLine := SubStr( sLine, nClose + 1 )
-        sExp  += ExtractLeadingWS( @sLine )
-
-        IF bDbgExp
-           ? "String = " + sExp, "Next: " + sLine
-           WAIT
         ENDIF
      ENDIF
 
@@ -1839,6 +1944,64 @@ FUNCTION NextExp( sLine, cType, aWords, aExp, sNextAnchor )
          ENDIF
 
          EXIT
+
+      ELSEIF Left( sLine, 2 ) == "->" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == "->" ) ) )
+
+         sExp  += Left( sLine, 2 )
+
+         IF bDbgExp
+            ? "Grabber: '" + sExp + "'"
+         ENDIF
+
+         sLine := SubStr( sLine, 3 )
+         sExp  += ExtractLeadingWS( @sLine )
+
+         IF bDbgExp
+            ? "Next : '" + sLine + "'"
+            WAIT
+         ENDIF
+
+         IF cType == 'A'
+            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+         ELSE
+            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
+            IF sTemp == NIL
+               Alert( "ERROR! Unbalanced: '->'" )
+            ELSE
+               sExp +=  sTemp
+            ENDIF
+         ENDIF
+
+         LOOP
+
+      ELSEIF Left( sLine, 2 ) == ":=" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor == ":=" ) ) )
+
+         sExp  += Left( sLine, 2 )
+
+         IF bDbgExp
+            ? "Grabber: '" + sExp + "'"
+         ENDIF
+
+         sLine := SubStr( sLine, 3 )
+         sExp  += ExtractLeadingWS( @sLine )
+
+         IF bDbgExp
+            ? "Next : '" + sLine + "'"
+            WAIT
+         ENDIF
+
+         IF cType == 'A'
+            sExp  += NextExp( @sLine, '<', NIL, NIL, sNextAnchor )
+         ELSE
+            sTemp := NextExp( @sLine, cType, NIL, NIL, sNextAnchor )
+            IF sTemp == NIL
+               Alert( "ERROR! Unbalanced: ':='" )
+            ELSE
+               sExp +=  sTemp
+            ENDIF
+         ENDIF
+
+         LOOP
 
       ELSEIF Left( sLine, 1 ) $ "+-*/:=^!" .AND. ( sNextAnchor == NIL .OR. ( ! ( sNextAnchor $ "+-*/:=^!<>" ) ) )
 
@@ -2026,7 +2189,7 @@ FUNCTION PPOut( aResults, aMarkers )
               ENDIF
               xValue := aMarkers[ aResults[1][Counter][2] ][1]
               aDel( aMarkers[ aResults[1][Counter][2] ], 1 )
-              aSize( aMarkers[ nDependee ], nRepeats - 1 )
+              aSize( aMarkers[ aResults[1][Counter][2] ], nRepeats - 1 )
            ELSE
               sResult += aResults[1][Counter][2]
               LOOP
@@ -3267,7 +3430,7 @@ FUNCTION ExtractLeadingWS( sLine, sWS )
    sWS := ''
    FOR Counter := 1 TO nLen
       cChar := SubStr( sLine, Counter, 1 )
-      IF cChar $ ( ' ' + Chr(9) )
+      IF cChar == ' ' //$ ( ' ' + Chr(9) )
          sWS += cChar
       ELSE
          EXIT
@@ -3286,11 +3449,13 @@ FUNCTION DropTrailingWS( sLine, sWS )
 
    LOCAL nLen := Len( sLine ), cChar
 
+   /* Tabs are converted to spaces at ProcessFile() */
+
    sWS := ''
 
    //? "Before Drop: '" + sLine + "'"
 
-   WHILE nLen > 0 .AND. ( cChar := SubStr( sLine, nLen, 1 ) ) $ ( ' ' + Chr(9) )
+   WHILE nLen > 0 .AND. ( cChar := SubStr( sLine, nLen, 1 ) ) == ' ' //$ ( ' ' + Chr(9) )
       sWS := cChar + sWs
       nLen--
    ENDDO
@@ -3305,15 +3470,17 @@ FUNCTION DropExtraTrailingWS( sLine )
 
    LOCAL nLen := Len( sLine )
 
-//? "Before Extra: '" + sLine + "'"
+   /* Tabs are converted to spaces at ProcessFile() */
 
-   WHILE nLen > 2 .AND. ( SubStr( sLine, nLen, 1 ) $ ( ' ' + Chr(9) ) ) .AND. ( SubStr( sLine, nLen - 1, 1 ) $ ( ' ' + Chr(9) ) )
+   //? "Before Extra: '" + sLine + "'"
+
+   WHILE nLen > 2 .AND. ( SubStr( sLine, nLen, 1 ) == ' ' /* $ ( ' ' + Chr(9) ) */ ) .AND. ( SubStr( sLine, nLen - 1, 1 ) == ' ' ) //$ ( ' ' + Chr(9) ) )
       nLen--
    ENDDO
 
    sLine := Left( sLine, nLen )
 
-//? "After Extra: '" + sLine + "'"
+   //? "After Extra: '" + sLine + "'"
 
 RETURN sLine
 
@@ -3327,7 +3494,6 @@ FUNCTION SetIfDef( sDefine, bExist )
    DropTrailingWS( @sDefine )
 
    nId := aScan( aDefRules, {|aDefine| aDefine[1] == sDefine } )
-
    IF bExist
       abIfDef[nIfDef] := ( nId > 0 )
    ELSE

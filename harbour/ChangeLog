@@ -1,3 +1,12 @@
+2000-10-17 00:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
+    * contrib/dot
+      ! contrib/dot/pp.prg
+	! Fixed bug with processing of #include within #ifdef
+	! Fixed handling of unterminated strings crossing file read buffer boundaries.
+	! Fixed association of := and -> within NextExp()
+	  /* I'm now able to PP my largest prg without any difference from Clipper (other then minor spacing
+             differences). */
+
 2000-10-16 20:22 GMT+1 Victor Szakats <vector@matavnet.hu>
    * source/rtl/run.c
      ! __RUN() fixed.
