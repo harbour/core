@@ -7,17 +7,26 @@
  * $End$ */
 function Main()
 
-   local oForm := TForm():New()
+   local oForm   := TForm():New()
+   local nNumber := 15
 
    QOut( oForm:ClassName() )
    oForm:Show()
 
-   QOut( "-DEBUG-" )
+   QOut()
+   QOut( "-DEBUG Functions-")
+   QOut()
 
-   QOut( "Statics        = ", ToChar ( __aStatic(), ", ", .T. ) )
-   QOut( "Type static[1] = ", ValType( __Static(1) ) )
-   QOut( "Stack length   = ", __StackLen() )
-   QOut( "Stack          = ", ToChar ( __Stack(), ", ", .T. ) )
+   QOut( "-Statics- Type[1]=", ValType( __Static(1) ) )
+   QOut( ToChar ( __aStatic(), ", ", .T. ) )
+   QOut()
+
+   QOut( "-Global Stack- Len=", __GlobalStackLen() )
+   QOut( ToChar ( __aGlobalStack(), ", ", .T. ) )
+   QOut()
+
+   QOut( "-Local Stack- Len=", __StackLen() )
+   QOut( ToChar ( __aStack(), ", ", .T. ) )
 
 return nil
 
