@@ -71,9 +71,9 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
       fflush( stdout );
    }
 
-/* 
+/*
  * Harbour Compiler, Build 30 (1999.09.30)
- * Generated C source code 
+ * Generated C source code
  */
 
    fprintf( yyc, "/*\n * Harbour Compiler, Build %i%s (%04d.%02d.%02d)\n",
@@ -624,7 +624,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
 
                   wVar = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
-                  fprintf( yyc, "\t\tHB_P_POPVARIABLE, %i, %i,",
+                  fprintf( yyc, "\tHB_P_POPVARIABLE, %i, %i,",
                            LOBYTE( wFixPos ),
                            HIBYTE( wFixPos ) );
                   if( _bComments ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName  );
@@ -938,7 +938,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wSym = pFunc->pCode[ lPCodePos + 1 ] +
                           pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wSym );
-                  fprintf( yyc, "\t\tHB_P_PUSHSYM, %i, %i,",
+                  fprintf( yyc, "\tHB_P_PUSHSYM, %i, %i,",
                            LOBYTE( wFixPos ),
                            HIBYTE( wFixPos ) );
                   if( _bComments ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wSym )->szName );
@@ -954,7 +954,7 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                   wVar = pFunc->pCode[ lPCodePos + 1 ] +
                          pFunc->pCode[ lPCodePos + 2 ] * 256;
                   wFixPos = FixSymbolPos( wVar );
-                  fprintf( yyc, "\t\tHB_P_PUSHVARIABLE, %i, %i,",
+                  fprintf( yyc, "\tHB_P_PUSHVARIABLE, %i, %i,",
                            LOBYTE( wFixPos ),
                            HIBYTE( wFixPos ) );
                   if( _bComments ) fprintf( yyc, "\t/* %s */", GetSymbolOrd( wVar )->szName );

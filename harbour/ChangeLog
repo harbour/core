@@ -1,3 +1,7 @@
+19991005-00:13 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/compiler/genc.c
+    ! Cosmetic: Some double tabs changed to single ones.
+
 19991004-22:34 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/db_brows.prg
     - READEXIT() removed since it's now part of the RTL.
