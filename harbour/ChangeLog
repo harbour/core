@@ -1,3 +1,10 @@
+2001-12-10 12:00 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * harbour/makefile.bc
+     * removed -v -y flags, letf there by mistake
+
+   * harbour/source/common/hbgete.c
+     * type cast required
+
 2001-12-09 21:06 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/vm/maindll.c
      * HBENTRY() generic DLLs entry point implemented
