@@ -1,5 +1,5 @@
 /*
- * $Id:
+ * $Id
  */
 
 /*
@@ -59,7 +59,7 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  33    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
 #define IS_LATIN               1    /* Should be 1, if the national alphabet
@@ -85,7 +85,7 @@
  */
 
 static HB_CODEPAGE s_codepage = { "ES", NUMBER_OF_CHARACTERS,
-    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈVWXYZ", "a†bcdeÇfghi°jklmn§o¢pqrstu£vwxyz",
+    "AµBCDEêFGHI÷JKLMN•O‡PQRSTUÈöVWXYZ", "a†bcdeÇfghi°jklmn§o¢pqrstu£Åvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0,NULL, NULL,NULL,NULL,0,NULL };
 
 HB_CODEPAGE_ANNOUNCE( ES );
