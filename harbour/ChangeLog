@@ -1,3 +1,13 @@
+19990908-10:30 EDT David G. Holm <dholm@jsd-llc.com>
+  * source/rtl/environ.c
+    ! I restored the Windows #ifdef #include block from the 1.43 version,
+      but kept the #define WIN32_LEAN_AND_MEAN from the 1.45 version.
+  * source/rtl/set.c
+    ! For _SET_COLOR case, only pass an argument to hb_setColor() if
+      the 2nd SET argument is a string. Otherwise pass (char *) NULL.
+  * source/vm/hvm.c
+    * Moved hb_inkeyPoll() to the HB_P_DO case to enhance performance.
+
 19990908-12:36 GMT+1 Antonio Linares <alinares@fivetech.com>
   * source/tools/debug.c
     + Added new function HB___GETLOCAL() to retrieve local variable containts.

@@ -8,7 +8,7 @@
  *      __RUN()
  */
 
-/* Note: The following #ifdef block for __IBMCPP__ must
+/* NOTE: The following #ifdef block for __IBMCPP__ must
          be ahead of any and all #include statements!
 */
 
@@ -16,9 +16,14 @@
    #define INCL_DOSMISC
 #endif
 
-#if defined(_MSC_VER) && (defined(_Windows) || defined(_WIN32))
-   #define WIN32_LEAN_AND_MEAN
-   #include "windows.h"
+/* NOTE: The following #ifdef block #including <windows.h> must
+         be ahead of any and all #include statements! */
+
+#if defined(_Windows) || defined(_WIN32)
+   #if !defined(__CYGWIN__)
+      #define WIN32_LEAN_AND_MEAN
+      #include <windows.h>
+   #endif
 #endif
 
 #include "extend.h"

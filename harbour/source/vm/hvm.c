@@ -214,8 +214,6 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
    while( ( bCode = pCode[ w ] ) != HB_P_ENDPROC )
    {
-      hb_inkeyPoll();                   /* Poll the console keyboard */
-
       switch( bCode )
       {
          case HB_P_AND:
@@ -249,6 +247,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
               break;
 
          case HB_P_DO:
+              hb_inkeyPoll();           /* Poll the console keyboard */
               hb_vmDo( pCode[ w + 1 ] + ( pCode[ w + 2 ] * 256 ) );
               w += 3;
               break;

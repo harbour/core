@@ -29,6 +29,9 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
    their web site at http://www.gnu.org/).
 
+   V 1.70   David G. Holm               Corrected _SET_COLOR case to only use
+                                        '.asString' if 'IS_STRING', otherwise
+                                        use "" instead of only if 'IS_NIL'.
    V 1.69   Paul Tucker                 Added a cast in open_handle to fsRead.
    V 1.68   David G. Holm               Added user file error code safeguards.
                                         When opening a "text" file is append
@@ -712,7 +715,7 @@ HARBOUR HB_SET( void )
          if( args > 1 ) hb_set.HB_SET_CANCEL = set_logical( pArg2 );
          break;
       case HB_SET_COLOR      :
-         hb_retc( hb_setColor( args > 1 ? ( IS_NIL( pArg2 ) ? "" : pArg2->item.asString.value ) : ( char * ) NULL ) );
+         hb_retc( hb_setColor( args >= 2 && IS_STRING( pArg2 ) ? pArg2->item.asString.value : ( char * ) NULL ) );
          break;
       case HB_SET_CONFIRM    :
          hb_retl( hb_set.HB_SET_CONFIRM );
