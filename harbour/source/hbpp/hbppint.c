@@ -179,7 +179,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
       *sLine = '\0';
      }
      else
-      printf ( "\nNon directive in include file\n");
+      printf ( "\nWarning, non directive in include file\n");
    }
   }
  }

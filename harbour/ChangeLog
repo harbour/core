@@ -1,3 +1,9 @@
+19990730-05:55 CET Victor Szel <info@szelvesz.hu>
+   + source/hbpp/hbppint.c - Added "Warning" to the
+     message "non directive in include file"
+   + tests/broken/vec2.prg - Added a failing command:
+     STATIC bBlock2 := {|| cMyPubVar }
+
 19990730-05:00 CET Victor Szel <info@szelvesz.hu>
    ! source/rtl/inkey.c -
      #elif defined(__GNUC__) -> #elif defined(__CYGNUS__)
