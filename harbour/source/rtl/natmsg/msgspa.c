@@ -10,6 +10,6 @@ char *hb_monthsname[ 12 ] = {
 
 char *hb_daysname[ 7 ] = {
    "Domingo", "Lunes", "Martes",
-   "Mi‚rcoles", "Jueves", "Vi‚rnes",
+   "Mi‚rcoles", "Jueves", "Viernes",
    "S bado" };
 
