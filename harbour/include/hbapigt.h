@@ -43,6 +43,7 @@
  *
  * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    Mouse related declarations
+ *    Undocumented GT API declarations
  *
  * See doc/license.txt for licensing terms.
  *
@@ -79,10 +80,10 @@ extern "C" {
 #define _B_DOUBLE              "ÉÍ»º¼ÍÈº"
 #define _B_SINGLE_DOUBLE       "ÖÄ·º½ÄÓº"
 #define _B_DOUBLE_SINGLE       "ÕÍ¸³¾ÍÔ³"
-#define _B_SINGLE_V           '³'
-#define _B_SINGLE_H           'Ä'
-#define _B_DOUBLE_V           'º'
-#define _B_DOUBLE_H           'Í'
+#define HB_B_SINGLE_V          '³'
+#define HB_B_SINGLE_H          'Ä'
+#define HB_B_DOUBLE_V          'º'
+#define HB_B_DOUBLE_H          'Í'
 
 /* Keyboard filters */
 
@@ -114,7 +115,7 @@ typedef enum
 extern void   hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gtExit( void );
 extern void   hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen );
-extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBoxString );
+extern USHORT hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame );
 extern USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight );
 extern USHORT hb_gtColorSelect( USHORT uiColorIndex );
@@ -179,9 +180,9 @@ extern USHORT hb_gtSetBorder( HB_GT_RGB * color );
 extern void   hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr );
 extern void   hb_gt_Exit( void );
 extern BOOL   hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen );
-extern USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBox, BYTE attrib );
-extern USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBox, BYTE attrib );
-extern USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyBox, BYTE attrib );
+extern USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
+extern USHORT hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
+extern USHORT hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr );
 extern SHORT  hb_gt_Col( void );
 extern void   hb_gt_DispBegin( void );
 extern USHORT hb_gt_DispCount( void );
@@ -265,13 +266,12 @@ extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int
 
 /* Public interface. These should never change, only be added to. */
 
-extern void hb_setkeyInit( void );
-extern void hb_setkeyExit( void );
+extern void   hb_setkeyInit( void );
+extern void   hb_setkeyExit( void );
 
 /* Private interface listed below. these are common to all platforms */
 
 /* none as of yet */
-
 
 #if defined(HB_EXTERN_C)
 }

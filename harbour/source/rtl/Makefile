@@ -25,6 +25,7 @@ C_SOURCES=\
 	dir.c        \
 	dirdrive.c   \
 	diskspac.c   \
+	disksphb.c   \
 	do.c         \
 	empty.c      \
 	errorapi.c   \

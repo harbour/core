@@ -1,3 +1,75 @@
+2000-06-21 14:19 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * include/hbextern.ch
+   * include/fileio.ch
+   + source/rtl/disksphb.c
+   * source/rtl/Makefile
+   * makefile.bc
+   * makefile.vc
+     * DISKSPACE() made 100% CA-Clipper compatible, so that the second optional
+       extension parameter was removed. The UNIX support has been removed 
+       since the first parameter should always be a numeric value.
+     + HB_DISKSPACE() extension function added, with the optional second 
+       parameter. This function will always need a string as the first 
+       parameter, you can also query space data for a specific directory 
+       on the systems where this is supported (Unix, Win32).
+       This version will also support the Retry operation on error.
+
+     Please test it on your platform.
+     WARNING! Please update the docs.
+
+   * include/fileio.ch
+     - Removed non-Clipper compatible macros.
+
+       Add these to your local headers if you need them, as I've already 
+       noted here: 20000322-16:33 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+       #define CD( d )       DIRCHANGE( d )
+       #define MD( d )       MAKEDIR( d )
+       #define RD( d )       DIRREMOVE( d )
+       #define DISKUSED( d ) HB_DISKSPACE( d, HB_DISK_USED )
+       #define DISKFREE( d ) HB_DISKSPACE( d, HB_DISK_FREE )
+       #define DISKFULL( d ) HB_DISKSPACE( d, HB_DISK_TOTAL )
+
+       (Note that this change had no trace in the ChangeLogs)
+
+   * source/rtl/gt_tpl/gt_tpl.c
+     ! Fixed several bugs.
+
+   * source/rtl/filesys.c
+     ! Rearranged the OS/2 hb_fsSeek() support, to not contain redundant 
+       code, and use the Harbour standard for multiplatform code.
+
+   * source/vm/extend.c
+     ! Fixed hb_stornl() (storing an int instead of long).
+     ! Fixed some formatting.
+     % Minor optimization for arrays in hb_parni().
+
+   * include/hbapigt.h
+   * source/rtl/gtapiu.c
+     * Minor fixes.
+
+   * source/rtl/gtwin/gtwin.c
+     * ...
+
+   * include/hbapigt.h
+   * source/rtl/gtapi.c
+     ! Renamed some Harbour constants to avoid name collision:
+       _B_SINGLE_V -> HB_B_SINGLE_V
+       _B_SINGLE_H -> HB_B_SINGLE_H
+       _B_DOUBLE_V -> HB_B_DOUBLE_V
+       _B_DOUBLE_H -> HB_B_DOUBLE_H
+
+   * source/lang/msgit.c
+     ! Fixed missing commas.
+
+   * doc/whatsnew.txt
+     ! Someone has overwritten the file with a previous version. Fixed.
+       (Note that this change had no trace in the ChangeLogs)
+
+   * include/hbclass.ch
+     - Documentation copyright removed.
+
 2000-06-20 08:45 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
    * source/pp/ppcore.c
      * Removed some /* reported as nested comments

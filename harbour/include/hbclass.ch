@@ -44,9 +44,6 @@
  *    Delegating, DATA Shared
  *    Support of 10 Chars limits
  *
- * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
- *    Documentation for the commands
- *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -340,3 +337,4 @@
 #endif /* HB_SHORTNAMES */
 
 #endif /* HB_CLASS_CH_ */
+

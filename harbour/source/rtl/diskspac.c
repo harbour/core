@@ -47,321 +47,152 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_UNIX )
-  #include <sys/vfs.h>
-#endif
-
-/* NOTE: The second parameter is a Harbour extension, check fileio.ch for
-         the possible values. */
-
 HB_FUNC( DISKSPACE )
 {
    USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-   USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
-
-   if( uiType > HB_DISK_TOTAL )
-      uiType = HB_DISK_TOTAL;
+   BOOL bError = FALSE;
 
 #if defined(HB_OS_DOS)
 
    {
-      while( TRUE )
-      {
-         union REGS regs;
+      union REGS regs;
 
-         regs.HB_XREGS.dx = uiDrive;
-         regs.h.ah = 0x36;
-         HB_DOS_INT86( 0x21, &regs, &regs );
+      regs.HB_XREGS.dx = uiDrive;
+      regs.h.ah = 0x36;
+      HB_DOS_INT86( 0x21, &regs, &regs );
 
-         if( regs.HB_XREGS.ax != 0xFFFF )
-         {
-            USHORT uiClusterTotal  = regs.HB_XREGS.dx;
-            USHORT uiClusterFree   = regs.HB_XREGS.bx;
-            USHORT uiSecPerCluster = regs.HB_XREGS.ax;
-            USHORT uiSectorSize    = regs.HB_XREGS.cx;
-
-            switch( uiType )
-            {
-               case HB_DISK_AVAIL:
-               case HB_DISK_FREE:
-                  dSpace = ( double ) uiClusterFree *
-                           ( double ) uiSecPerCluster *
-                           ( double ) uiSectorSize;
-                  break;
-
-               case HB_DISK_USED:
-               case HB_DISK_TOTAL:
-                  dSpace = ( double ) uiClusterTotal *
-                           ( double ) uiSecPerCluster *
-                           ( double ) uiSectorSize;
-
-                  if( uiType == HB_DISK_USED )
-                     dSpace -= ( double ) uiClusterFree *
-                               ( double ) uiSecPerCluster *
-                               ( double ) uiSectorSize;
-                  break;
-            }
-         }
-         else
-         {
-            USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
-
-            /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
-                     but if you should wish to make it so, then or EF_CANRETRY
-                     with EF_CANDEFAULT above)
-            */
-
-            if( uiAction == E_RETRY )
-               continue;
-         }
-         break;
-      }
+      if( regs.HB_XREGS.ax != 0xFFFF )
+         dSpace = ( double ) regs.HB_XREGS.bx *
+                  ( double ) regs.HB_XREGS.ax *
+                  ( double ) regs.HB_XREGS.cx;
+      else
+         bError = TRUE;
    }
 
 #elif defined(HB_OS_WIN_32)
 
    {
-      while( TRUE )
+      typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
+                                         PULARGE_INTEGER, PULARGE_INTEGER );
+
+      char szPath[ 4 ];
+      P_GDFSE pGetDiskFreeSpaceEx;
+      UINT uiErrMode;
+
+      /* Get the default drive */
+
+      if( uiDrive == 0 )
       {
-         typedef BOOL (WINAPI *P_GDFSE)(LPCTSTR, PULARGE_INTEGER,
-                                        PULARGE_INTEGER, PULARGE_INTEGER);
+         USHORT uiErrorOld = hb_fsError();
 
-         char szPath[ 4 ];
-         P_GDFSE pGetDiskFreeSpaceEx;
-         UINT uiErrMode;
+         uiDrive = hb_fsCurDrv() + 1;
 
-         /* Get the default drive */
+         hb_fsSetError( uiErrorOld );
+      }
 
-         if( uiDrive == 0 )
+      szPath[ 0 ] = uiDrive + 'A' - 1;
+      szPath[ 1 ] = ':';
+      szPath[ 2 ] = '\\';
+      szPath[ 3 ] = '\0';
+
+      uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+
+      SetLastError( 0 );
+
+      pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
+                                                        "GetDiskFreeSpaceExA");
+
+      if( pGetDiskFreeSpaceEx )
+      {
+         ULARGE_INTEGER i64FreeBytesToCaller,
+                        i64TotalBytes,
+                        i64FreeBytes,
+                        i64RetVal;
+
+         if( pGetDiskFreeSpaceEx( szPath,
+                                  ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                  ( PULARGE_INTEGER ) &i64TotalBytes,
+                                  ( PULARGE_INTEGER ) &i64FreeBytes ) )
          {
-            USHORT uiErrorOld = hb_fsError();
+            memcpy( &i64RetVal, &i64FreeBytesToCaller, sizeof( ULARGE_INTEGER ) );
 
-            uiDrive = hb_fsCurDrv() + 1;
+            #if (defined(__GNUC__) || defined(_MSC_VER)) && !defined(__RSXNT__)
 
-            hb_fsSetError( uiErrorOld );
+               dSpace  = ( double ) i64RetVal.LowPart +
+                         ( double ) i64RetVal.HighPart +
+                         ( double ) i64RetVal.HighPart *
+                         ( double ) 0xFFFFFFFF;
+
+            #else
+
+               /* NOTE: Borland doesn't seem to deal with the un-named
+                        struct that is part of ULARGE_INTEGER
+                        [pt] */
+
+               dSpace  = ( double ) i64RetVal.u.LowPart +
+                         ( double ) i64RetVal.u.HighPart +
+                         ( double ) i64RetVal.u.HighPart *
+                         ( double ) 0xFFFFFFFF;
+
+            #endif
          }
-
-         szPath[ 0 ] = uiDrive + 'A' - 1;
-         szPath[ 1 ] = ':';
-         szPath[ 2 ] = '\\';
-         szPath[ 3 ] = '\0';
-
-         uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+      }
+      else
+      {
+         DWORD dwSectorsPerCluster;
+         DWORD dwBytesPerSector;
+         DWORD dwNumberOfFreeClusters;
+         DWORD dwTotalNumberOfClusters;
 
          SetLastError( 0 );
 
-         pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
-                                                           "GetDiskFreeSpaceExA");
-
-         if( pGetDiskFreeSpaceEx )
-         {
-            ULARGE_INTEGER i64FreeBytesToCaller,
-                           i64TotalBytes,
-                           i64FreeBytes,
-                           i64RetVal;
-
-            if( pGetDiskFreeSpaceEx( szPath,
-                                     ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                     ( PULARGE_INTEGER ) &i64TotalBytes,
-                                     ( PULARGE_INTEGER ) &i64FreeBytes ) )
-            {
-               switch( uiType )
-               {
-                  case HB_DISK_AVAIL:
-                     memcpy( &i64RetVal, &i64FreeBytesToCaller, sizeof( ULARGE_INTEGER ) );
-                     break;
-
-                  case HB_DISK_FREE:
-                     memcpy( &i64RetVal, &i64FreeBytes, sizeof( ULARGE_INTEGER ) );
-                     break;
-
-                  case HB_DISK_USED:
-                  case HB_DISK_TOTAL:
-                     memcpy( &i64RetVal, &i64TotalBytes, sizeof( ULARGE_INTEGER ) );
-               }
-
-               #if (defined(__GNUC__) || defined(_MSC_VER)) && !defined(__RSXNT__)
-
-                  dSpace  = ( double ) i64RetVal.LowPart +
-                            ( double ) i64RetVal.HighPart +
-                            ( double ) i64RetVal.HighPart *
-                            ( double ) 0xFFFFFFFF;
-
-                  if( uiType == HB_DISK_USED )
-                  {
-                     dSpace -= ( double ) i64FreeBytes.LowPart +
-                               ( double ) i64FreeBytes.HighPart +
-                               ( double ) i64FreeBytes.HighPart *
-                               ( double ) 0xFFFFFFFF;
-                  }
-
-               #else
-
-                  /* NOTE: Borland doesn't seem to deal with the un-named
-                           struct that is part of ULARGE_INTEGER
-                           [pt] */
-
-                  dSpace  = ( double ) i64RetVal.u.LowPart +
-                            ( double ) i64RetVal.u.HighPart +
-                            ( double ) i64RetVal.u.HighPart *
-                            ( double ) 0xFFFFFFFF;
-
-                  if( uiType == HB_DISK_USED )
-                  {
-                     dSpace -= ( double ) i64FreeBytes.u.LowPart +
-                               ( double ) i64FreeBytes.u.HighPart +
-                               ( double ) i64FreeBytes.u.HighPart *
-                               ( double ) 0xFFFFFFFF;
-                  }
-
-               #endif
-            }
-         }
-         else
-         {
-            DWORD dwSectorsPerCluster;
-            DWORD dwBytesPerSector;
-            DWORD dwNumberOfFreeClusters;
-            DWORD dwTotalNumberOfClusters;
-
-            SetLastError( 0 );
-
-            if( GetDiskFreeSpace( szPath,
-                                  &dwSectorsPerCluster,
-                                  &dwBytesPerSector,
-                                  &dwNumberOfFreeClusters,
-                                  &dwTotalNumberOfClusters ) )
-            {
-               switch( uiType )
-               {
-                  case HB_DISK_AVAIL:
-                  case HB_DISK_FREE:
-                     dSpace = ( double ) dwNumberOfFreeClusters *
-                              ( double ) dwSectorsPerCluster *
-                              ( double ) dwBytesPerSector;
-                     break;
-
-                  case HB_DISK_USED:
-                  case HB_DISK_TOTAL:
-                     dSpace  = ( double ) dwTotalNumberOfClusters *
-                               ( double ) dwSectorsPerCluster *
-                               ( double ) dwBytesPerSector;
-
-                     if( uiType == HB_DISK_USED )
-                        dSpace -= ( double ) dwNumberOfFreeClusters *
-                                  ( double ) dwSectorsPerCluster *
-                                  ( double ) dwBytesPerSector;
-                     break;
-
-               }
-            }
-         }
-
-         SetErrorMode( uiErrMode );
-
-         if( GetLastError() != 0 )
-         {
-            USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
-
-            /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
-                     but if you should wish to make it so, then or EF_CANRETRY
-                     with EF_CANDEFAULT above)
-            */
-
-            if( uiAction == E_RETRY )
-               continue;
-         }
-         break;
+         if( GetDiskFreeSpace( szPath,
+                               &dwSectorsPerCluster,
+                               &dwBytesPerSector,
+                               &dwNumberOfFreeClusters,
+                               &dwTotalNumberOfClusters ) )
+            dSpace = ( double ) dwNumberOfFreeClusters *
+                     ( double ) dwSectorsPerCluster *
+                     ( double ) dwBytesPerSector;
       }
+
+      SetErrorMode( uiErrMode );
+
+      if( GetLastError() != 0 )
+         bError = TRUE;
    }
 
 #elif defined(HB_OS_OS2)
 
    {
       struct _FSALLOCATE fsa;
-      USHORT rc;
 
       /* Query level 1 info from filesystem */
-      while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != 0 )
-      {
-         USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
-
-         /* NOTE: Under 'Standard' behaviour, this error does not allow 'retry'
-                  but if you should wish to make it so, then or EF_CANRETRY with
-                  EF_CANDEFAULT above)
-         */
-
-         if( uiAction != E_RETRY )
-            break;
-      }
-
-      if( rc == 0 )
-      {
-         switch( uiType )
-         {
-            case HB_DISK_AVAIL:
-            case HB_DISK_FREE:
-               dSpace = ( double ) fsa.cUnitAvail *
-                        ( double ) fsa.cSectorUnit *
-                        ( double ) fsa.cbSector;
-               break;
-
-            case HB_DISK_USED:
-            case HB_DISK_TOTAL:
-               dSpace = ( double ) fsa.cUnit *
-                        ( double ) fsa.cSectorUnit *
-                        ( double ) fsa.cbSector;
-
-               if( uiType == HB_DISK_USED )
-                  dSpace -= ( double ) fsa.cUnitAvail *
-                            ( double ) fsa.cSectorUnit *
-                            ( double ) fsa.cbSector;
-               break;
-         }
-      }
+      if( DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) == 0 )
+         dSpace = ( double ) fsa.cUnitAvail *
+                  ( double ) fsa.cSectorUnit *
+                  ( double ) fsa.cbSector;
+      else
+         bError = TRUE;
    }
 
 #elif defined(HB_OS_UNIX)
-  {
-    /* NOTE: U*ix like file systems don't use drive letters */
-    HB_SYMBOL_UNUSED( uiDrive );
-    if( ISCHAR( 1 ) )
-    {
-      struct statfs sf;
-    
-      statfs( hb_parc( 1 ), &sf );
-      
-      switch( uiType )
-      {
-         case HB_DISK_AVAIL:
-            dSpace = ( double ) sf.f_bavail * ( double ) sf.f_bsize;
-            break;
 
-         case HB_DISK_FREE:
-            dSpace = ( double ) sf.f_bfree * ( double ) sf.f_bsize;
-            break;
-
-         case HB_DISK_USED:
-             dSpace = ( double ) ( sf.f_blocks -  sf.f_bfree ) * 
-                     ( double ) sf.f_bsize;
-             break;
-             
-         case HB_DISK_TOTAL:
-            dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;
-            break;
-      }
-    }
-  }
+   {
+      HB_SYMBOL_UNUSED( uiDrive );
+   }
 
 #else
 
    {
       HB_SYMBOL_UNUSED( uiDrive );
-      HB_SYMBOL_UNUSED( uiType );
    }
 
 #endif
+
+   if( bError )
+      hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, EF_CANDEFAULT );
 
    hb_retnlen( dSpace, -1, 0 );
 }

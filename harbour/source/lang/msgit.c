@@ -53,7 +53,6 @@ static HB_LANG s_lang =
 
       /* Month names */
 
-
       "Gennaio",
       "Febbraio",
       "Marzo",
@@ -65,7 +64,7 @@ static HB_LANG s_lang =
       "Settembre",
       "Ottobre",
       "Novembre",
-      "Dicembre"
+      "Dicembre",
 
       /* Day names */
 
@@ -75,7 +74,7 @@ static HB_LANG s_lang =
       "Mercoledç",
       "Giovedç",
       "Venerdç",
-      "Sabato"
+      "Sabato",
 
       /* CA-Cl*pper compatible natmsg items */
 

@@ -70,15 +70,15 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
 
 BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
 {
-   USHORT row = s_usRow;
-   USHORT col = s_usCol;
+   USHORT row = hb_gt_Row();
+   USHORT col = hb_gt_Col();
    ULONG ulCount;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_AdjustPos(%s, %lu)", pStr, ulLen ));
 
    for( ulCount = 0; ulCount < ulLen; ulCount++ )
    {
-      switch( *pStr++  )
+      switch( *pStr++ )
       {
          case HB_CHAR_BEL:
             break;
@@ -88,14 +88,14 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
                col--;
             else
             {
-               col = s_usMaxCol;
+               col = hb_gt_GetScreenWidth();
                if( row )
                   row--;
             }
             break;
 
          case HB_CHAR_LF:
-            if( row < s_usMaxRow )
+            if( row < hb_gt_GetScreenHeight() )
                row++;
             break;
 
@@ -104,12 +104,12 @@ BOOL hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen )
             break;
 
          default:
-            if( col < s_usMaxCol )
+            if( col < hb_gt_GetScreenWidth() )
                col++;
             else
             {
                col = 0;
-               if( row < s_usMaxRow )
+               if( row < hb_gt_GetScreenHeight() )
                   row++;
             }
       }
@@ -172,31 +172,29 @@ SHORT hb_gt_Row( void )
 
 USHORT hb_gt_GetCursorStyle( void )
 {
-   /* TODO: What shape is the cursor? */
-   USHORT uiStyle = 0;
+   USHORT uiStyle;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_GetCursorStyle()"));
 
-      /* example from the dos driver */
-/*
-      hb_gt_GetCursorSize( &start, &end )
+   /* TODO: What shape is the cursor? */
 
-      if( start == 32 && end == 32 )
-         uiStyle = SC_NONE;
+   /* example from the dos driver */
 
-      else if( start == 6 && end == 7 )
-         uiStyle = SC_NORMAL;
+   hb_gt_GetCursorSize( &start, &end )
 
-      else if( start == 4 && end == 7 )
-         uiStyle = SC_INSERT;
-
-      else if( start == 0 && end == 7 )
-         uiStyle = SC_SPECIAL1;
-
-      else if( start == 0 && end == 3 )
-         uiStyle = SC_SPECIAL2;
-   }
-*/
+   if( start == 32 && end == 32 )
+      uiStyle = SC_NONE;
+   else if( start == 6 && end == 7 )
+      uiStyle = SC_NORMAL;
+   else if( start == 4 && end == 7 )
+      uiStyle = SC_INSERT;
+   else if( start == 0 && end == 7 )
+      uiStyle = SC_SPECIAL1;
+   else if( start == 0 && end == 3 )
+      uiStyle = SC_SPECIAL2;
+   else
+      uiStyle = 0;
+   
    return uiStyle;
 }
 
@@ -382,21 +380,20 @@ USHORT hb_gt_DispCount()
 void hb_gt_Replicate( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE byChar, ULONG nLength )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Replicate(%hu, %hu, %i, %i, %lu)", uiRow, uiCol, byAttr, byChar, nLength));
-   {
-      /* TODO: replace it with native (optimized) version */
-      while( nLength-- )
-         hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
-   }
+
+   /* TODO: replace it with native (optimized) version */
+   while( nLength-- )
+      hb_gt_xPutch( uiRow, uiCol++, byAttr, byChar );
 }
 
 USHORT hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight,
-                  BYTE * szBox, BYTE byAttr )
+                  BYTE * pbyFrame, BYTE byAttr )
 {
    HB_SYMBOL_UNUSED( uiTop );
    HB_SYMBOL_UNUSED( uiLeft );
    HB_SYMBOL_UNUSED( uiBottom );
    HB_SYMBOL_UNUSED( uiRight );
-   HB_SYMBOL_UNUSED( szBox );
+   HB_SYMBOL_UNUSED( pbyFrame );
    HB_SYMBOL_UNUSED( byAttr );
 
    return 0;

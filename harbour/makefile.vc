@@ -210,6 +210,7 @@ RTL_LIB_OBJS = \
    $(OBJ_DIR)\dir.obj \
    $(OBJ_DIR)\dirdrive.obj \
    $(OBJ_DIR)\diskspac.obj \
+   $(OBJ_DIR)\disksphb.obj \
    $(OBJ_DIR)\do.obj \
    $(OBJ_DIR)\empty.obj \
    $(OBJ_DIR)\errorapi.obj \

@@ -72,18 +72,11 @@
 /* File system error codes */
 #define F_ERROR       ( -1 )   /* Unspecified error */
 
-/* DISKSPACE() types */
+/* HB_DISKSPACE() types */
 #define HB_DISK_AVAIL 0
 #define HB_DISK_FREE  1
 #define HB_DISK_USED  2
 #define HB_DISK_TOTAL 3
-
-#define CD( d )       DIRCHANGE( d )
-#define MD( d )       MAKEDIR( d )
-#define RD( d )       DIRREMOVE( d )
-#define DISKUSED( d ) DISKSPACE( d, HB_DISK_USED )
-#define DISKFREE( d ) DISKSPACE( d, HB_DISK_FREE )
-#define DISKFULL( d ) DISKSPACE( d, HB_DISK_TOTAL )
 
 #endif /* _FILEIO_CH */
 

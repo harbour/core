@@ -43,8 +43,6 @@
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_ReadKey()
  *
  * See doc/license.txt for licensing terms.

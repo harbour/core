@@ -336,7 +336,7 @@ int hb_parni( int iParam, ... )
          ulArrayIndex = va_arg( va, ULONG );
          va_end( va );
 
-         return ( int ) hb_arrayGetNL( pItem, ulArrayIndex );
+         return hb_arrayGetNI( pItem, ulArrayIndex );
       }
    }
 
@@ -559,7 +559,7 @@ void hb_storc( char * szText, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-      else if( HB_IS_BYREF( pItem ) || iParam == -1  )
+      else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutC( hb_itemUnRef( pItem ), szText );
    }
 }
@@ -581,7 +581,7 @@ void hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-      else if( HB_IS_BYREF( pItem ) || iParam == -1  )
+      else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutCL( hb_itemUnRef( pItem ), szText, ulLen );
    }
 }
@@ -605,7 +605,7 @@ void hb_stords( char * szDate, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-      else if( HB_IS_BYREF( pItem ) || iParam == -1  )
+      else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutDS( hb_itemUnRef( pItem ), szDate );
    }
 }
@@ -627,7 +627,7 @@ void hb_storl( int iLogical, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-      else if( HB_IS_BYREF( pItem ) || iParam == -1  )
+      else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutL( hb_itemUnRef( pItem ), iLogical ? TRUE : FALSE );
    }
 }
@@ -649,7 +649,7 @@ void hb_storni( int iValue, int iParam, ... )
          va_end( va );
          hb_itemRelease( pItemNew );
       }
-      else if( HB_IS_BYREF( pItem ) || iParam == -1  )
+      else if( HB_IS_BYREF( pItem ) || iParam == -1 )
          hb_itemPutNI( hb_itemUnRef( pItem ), iValue );
    }
 }
@@ -672,7 +672,7 @@ void hb_stornl( long lValue, int iParam, ... )
          hb_itemRelease( pItemNew );
       }
       else if( HB_IS_BYREF( pItem ) || iParam == -1 )
-         hb_itemPutNI( hb_itemUnRef( pItem ), lValue );
+         hb_itemPutNL( hb_itemUnRef( pItem ), lValue );
    }
 }
 

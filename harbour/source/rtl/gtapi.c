@@ -215,10 +215,10 @@ USHORT hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
          if( uiLeft != uiRight )
             hb_gt_BoxD( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_DOUBLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
          else
-            hb_gt_VertLine( uiLeft, uiTop, uiBottom, _B_DOUBLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+            hb_gt_VertLine( uiLeft, uiTop, uiBottom, HB_B_DOUBLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
       }
       else
-         hb_gt_HorizLine( uiTop, uiLeft, uiRight, _B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+         hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_DOUBLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
 
       hb_gtSetPos( uiTop + 1, uiLeft + 1 );
 
@@ -244,10 +244,10 @@ USHORT hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight )
          if( uiLeft != uiRight )
             hb_gt_BoxS( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) _B_SINGLE, ( BYTE ) s_pColor[ s_uiColorIndex ] );
          else
-            hb_gt_VertLine( uiLeft, uiTop, uiBottom, _B_SINGLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+            hb_gt_VertLine( uiLeft, uiTop, uiBottom, HB_B_SINGLE_V, ( BYTE ) s_pColor[ s_uiColorIndex ] );
       }
       else
-         hb_gt_HorizLine( uiTop, uiLeft, uiRight, _B_SINGLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
+         hb_gt_HorizLine( uiTop, uiLeft, uiRight, HB_B_SINGLE_H, ( BYTE ) s_pColor[ s_uiColorIndex ] );
 
       hb_gtSetPos( uiTop + 1, uiLeft + 1 );
 
