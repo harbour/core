@@ -822,7 +822,36 @@ static void hb_vmAliasSwap( void )
    HB_ITEM_PTR pItem = stack.pPos -1;
    HB_ITEM_PTR pWorkArea = stack.pPos -2;
 
-   hb_rddSelectWorkAreaNumber( pWorkArea->item.asInteger.value );
+   switch( pWorkArea->type & ~IT_BYREF )
+   {
+      case IT_INTEGER:
+         /* Alias was used as integer value, for example: 4->field
+          * or it was saved on the stack using hb_vmAliasPush()
+          * or was evaluated from an expression, (nWorkArea)->field
+          */
+         hb_rddSelectWorkAreaNumber( pWorkArea->item.asInteger.value );
+         break;
+
+      case IT_SYMBOL:
+         /* Alias was specified using alias identifier, for example: al->field
+          */
+         hb_rddSelectWorkAreaNumber( pWorkArea->item.asSymbol.value->pDynSym->hArea );
+         break;
+
+      case IT_STRING:
+         /* Alias was evaluated from an expression, for example: (cVar)->field
+          */
+         /* TODO: synchronize it with RDD API
+         hb_rddSelectWorkAreaAlias( pWorkArea->item.asString.value );
+         */
+         hb_itemClear( pWorkArea );
+         break;
+
+      default:
+         hb_itemClear( pWorkArea );
+         hb_errRT_BASE( EG_BADALIAS, 1000, NULL, NULL );
+         break;
+   }
    memcpy( pWorkArea, pItem, sizeof( HB_ITEM ) );
    pItem->type =IT_NIL;
    hb_stackDec();
@@ -2400,6 +2429,10 @@ static void hb_vmDoExitFunctions( void )
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + w );
                hb_vmPushNil();
                hb_vmDo( 0 );
+	       if( wActionRequest )
+	          /* QUIT or BREAK was issued - stop processing
+		  */
+	          return;
             }
          }
       }
