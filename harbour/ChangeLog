@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-06-30 10:50 UTC-0300 Antonio Carlos Pantaglione <toninho@fwi.com.br>
+  * source/contrib/rdd_ads/ads1.c
+    ! Fixed problem on adsGoTo() method when using ADT files. Borrow from xHarbour.
+
 2003-06-30 18:33 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/compiler/gencli.c
     + Added support for multidimensional arrays for Harbour.NET
