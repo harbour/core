@@ -1,4 +1,11 @@
 2001-10-20 07:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
+   *contrib/hbzlib/zipnew.cpp
+   contrib/hbzlib/zipcomp.cpp
+   contrib/hbzlib/zip.c
+   contrib/hbzlib/hbzip2.h
+     * Fixed an small bug on hb_setzipcommet()
+
+2001-10-20 07:30 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
 *source/compiler/harbour.c
    *Fixed some warings reported by Dave Person
 
