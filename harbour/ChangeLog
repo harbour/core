@@ -1,3 +1,10 @@
+19991018-09:36 GMT+1 Antonio Linares <alinares@fivetech.com>
+  * source/rtl/gt/gtwin.c
+    + Added support for Windows apps without console.
+    (Now Harbour Windows apps may use the standard Harbour
+     debugger and whatever console output is generated -for
+     any reason- will be seen so it may be corrected!).
+
 19991018-03:35 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
      + source/rdd/rddord.prg
@@ -30,7 +37,7 @@
        WARNING ! Please add new file to non-GNU make systems.
    - source/rtl/afields.prg (removed)
      source/rtl/Makefile
-     - AFIELDS() removed from the RTL, since it was already implemented in 
+     - AFIELDS() removed from the RTL, since it was already implemented in
        the RDD.
 
 19991018-08:55 GMT+1 Bruno Cantero <bruno@issnet.net>
