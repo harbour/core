@@ -16,10 +16,10 @@ LIBS=\
         vm \
         rdd \
         rtl \
-	macro \
+        macro \
         pp \
         runner \
-	common \
+        common \
 
 ifeq ($(PM),)
   PM := $(pm)
@@ -144,7 +144,6 @@ PRG_SOURCES=\
         testwarn.prg \
         tstalias.prg \
         tstcolor.prg \
-        tstprag.prg \
         version.prg \
         while.prg \
 
@@ -170,6 +169,7 @@ BAD_PRG_SOURCES=\
         statics2.prg \
         test10.prg \
         testid.prg \
+        tstprag.prg \
         vec1.prg \
 
 C_SOURCES=\

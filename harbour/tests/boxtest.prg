@@ -2,7 +2,7 @@
  * $Id$
  */
 
-function test()
+function main()
 
    CLS
 

@@ -1,3 +1,26 @@
+1999-12-29 19:00 EDT David G. Holm <dholm@jsd-llc.com>
+
+   * doc/gmake.txt
+     + Added mention of -DHARBOUR_USE_CRS_GTAPI and
+       -DHARBOUR_USE_SLN_GTAPI for os2/gcc and linux/gcc.
+
+   * tests/boxtest.prg
+     ! Changed function name from test() to main(), because of
+       limitations with some versions of Harbour, such as MingW32.
+
+   * tests/Makefile
+     ! Moved tstprag.prg from PRG_SOURCES to BAD_PRG_SOURCES.
+
+   * tests/readhrb.prg
+     ! Added error checking after attempting to open the source HRB
+       file, because otherwise the program attempts to display a very
+       large random number of bytes from a file handle that doesn't
+       exist, resulting in what appears to be an infinite loop.
+
+   * tests/tstprag.prg
+     ! Added // NOTEST as first line in this test program that
+       won't compile.
+
 19991227-08:30 GMT+2 Chen Kedem <niki@actcom.co.il>
   * source/rtl/readvar.prg
     + doc for READVAR()

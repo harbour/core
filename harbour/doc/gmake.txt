@@ -160,12 +160,20 @@ For MSVC on Win95/WinNT:
 For GCC on Linux:
   HB_ARCHITECTURE   linux
   HB_COMPILER       gcc
+  Note: If you have an ncurses library or a slang library, you may
+        want to try one of the following two values for C_USR:
+              -DHARBOUR_USE_CRS_GTAPI
+              -DHARBOUR_USE_SLN_GTAPI
 
 For GCC on OS/2:
   Note: You must point C_INCLUDE_PATH to the EMX include directory and
         you must also point LIBRARY_PATH to the EMX library directory.
   HB_ARCHITECTURE   os2
   HB_COMPILER       gcc
+  Note: If you have an ncurses library or a slang library, you may
+        want to try one of the following two values for C_USR:
+              -DHARBOUR_USE_CRS_GTAPI
+              -DHARBOUR_USE_SLN_GTAPI
 
 For IBM Visual Age C++ on OS/2:
   Note: You must create an empty unistd.h in the IBMCPP\INCLUDE directory.
