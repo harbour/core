@@ -8,6 +8,31 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-12-28 09:05 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbfcdx/dbfcdx2.h
+        ! fixed bug (search path related),
+          reported by Jacek Potempa <Jacek.Potempa@otc.pl>
+        ! fixed GPF bug reported by Alex Schaft <alexs@quicksoftware.co.za>
+        + added support for DBOI_KEYCOUNTRAW, DBOI_KEYNORAW == DBOI_RECNO,
+          DBOI_KEYTYPE, DBOI_KEYSIZE, DBOI_FULLPATH
+        ! fixed: DBOI_BAGNAME
+        ! fix return value when there's no active order to: DBOI_FILEHANDLE,
+          DBOI_ISCOND, DBOI_ISDESC, DBOI_UNIQUE, DBOI_POSITION, DBOI_RECNO,
+          DBOI_KEYNORAW, DBOI_KEYCOUNT, DBOI_KEYCOUNTRAW.
+          This makes ordKeyNo() = recno() and ordKeyCount() = lastrec()
+          in such case. Reported by Hernán Diego Ceccarelli
+          <hceccarelli@cesotech.com.ar>
+        + added helper function hb_cdxOrdListClear
+        ! structural index isn't closed anymore
+        ! fixed ordKeyNo() and ordKeyCount() to respect filters, they also
+          respect the set deleted but only when there is a filter (as C53)
+        ! fixed ordScope(0/1, ""), reported by Jean-Christophe AVARGUES and
+          Blue Face
+
+   * source/rdd/workarea.c
+        ! fix to fieldname, reported by Luiz Rafael Culik
+
 2002-12-27 16:40 UTC-0800 Brian Hays <bhays@abacuslaw.com>
   + added doc/windll.txt as an introduction to Windows
       32-bit dll creation with Harbour.
