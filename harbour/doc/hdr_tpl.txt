@@ -49,7 +49,7 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
  * Copyright 1999 {name} <{e-mail address}>
  *    {function or subsystem name}
  *
- * See doc/licence.txt for licensing terms.
+ * See doc/license.txt for licensing terms.
  *
  */
 
@@ -136,6 +136,7 @@ FUNCTION HEADER EXAMPLE
  * History of this file
  * ====================
  *
+ * V 1.8    Victor Szel                 licence -> license
  * V 1.7    Victor Szel                 History separated from the file header
  *                                      template. Slight changes in the format
  *                                      of the header. Removed "(proposal)"
