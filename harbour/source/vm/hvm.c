@@ -606,6 +606,7 @@ void Do( WORD wParams )
    WORD wItemIndex = pItem - stack.pItems;
    PITEM pSelf = stack.pPos - wParams - 1;
    HARBOURFUNC pFunc;
+   WORD iStatics = stack.iStatics;              /* Return iStatics position */
 
    if( ! IS_SYMBOL( pItem ) )
    {
@@ -654,6 +655,7 @@ void Do( WORD wParams )
       StackPop();
 
    stack.pBase = stack.pItems + wStackBase;
+   stack.iStatics = iStatics;
 }
 
 HARBOUR DoBlock( void )
