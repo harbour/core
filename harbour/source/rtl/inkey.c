@@ -777,7 +777,7 @@ printf("\nhb_inkeyPoll: wKey is %d", wKey);
          case 396:  /* Alt + F12 */
             ch = 349 - ch;
       }
-#elif defined(OS_UNIX_COMPATIBLE)
+#elif defined(HARBOUR_USE_CRS_GTAPI)
 #if 1
       ch = hb_gtReadKey();
 #else

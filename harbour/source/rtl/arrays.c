@@ -757,7 +757,11 @@ PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
  */
 static void hb_arrayNewRagged( PHB_ITEM pArray, int iDimension )
 {
-   ULONG ulElements = ( ULONG ) hb_parnl( iDimension );
+   ULONG ulElements;
+
+   HB_TRACE(("hb_arrayNewRagged(%p, %d)", pArray, iDimension));
+
+   ulElements = ( ULONG ) hb_parnl( iDimension );
 
    /* create an array */
    hb_arrayNew( pArray, ulElements );

@@ -36,7 +36,7 @@
 #ifndef HB_TRACE_H_
 #define HB_TRACE_H_
 
-#if defined(HB_DO_TRACE)
+#if (defined(HB_TRACE_LEVEL) && (HB_TRACE_LEVEL > 0))
 
 extern char * hb_tr_file_;
 extern int    hb_tr_line_;
@@ -54,6 +54,6 @@ do { \
 
 #define HB_TRACE( x )
 
-#endif /* #if defined(HB_DO_TRACE) */
+#endif /* #if (defined(HB_TRACE_LEVEL) && (HB_TRACE_LEVEL > 0)) */
 
 #endif /* HB_TRACE_H_ */

@@ -283,6 +283,8 @@ ULONG hb_xquery( USHORT uiMode )
 {
    ULONG ulResult;
 
+   HB_TRACE(("hb_xquery(%hu)", uiMode));
+
    /* TODO: Return the correct values instead of 9999 [vszel] */
 
    switch( uiMode )

@@ -36,9 +36,9 @@
 /*
  * Avoid tracing in preprocessor/compiler.
  */
-#if ! defined(HB_REALLY_DO_TRACE)
-#if defined(HB_DO_TRACE)
-#undef HB_DO_TRACE
+#if ! defined(HB_TRACE_UTILS)
+#if defined(HB_TRACE_LEVEL)
+#undef HB_TRACE_LEVEL)
 #endif
 #endif
 

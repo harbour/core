@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Video subsystem for Linux (based on ncurses).
+ * Video subsystem based on ncurses.
  *
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  *

@@ -33,7 +33,7 @@
  *
  */
 
-#if defined(HB_DO_TRACE)
+#if (defined(HB_TRACE_LEVEL) && (HB_TRACE_LEVEL > 0))
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -93,5 +93,4 @@ void hb_tr_trace( char * fmt, ... )
   hb_tr_line_ = 0;
 }
 
-#endif /* #if defined(HB_DO_TRACE) */
-
+#endif /* #if (defined(HB_TRACE_LEVEL) && (HB_TRACE_LEVEL > 0)) */

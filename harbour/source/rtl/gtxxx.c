@@ -43,8 +43,8 @@
    #include "gt/gtos2.c"
 #elif defined(HARBOUR_USE_WIN_GTAPI)
    #include "gt/gtwin.c"
-#elif defined(HARBOUR_USE_LIN_GTAPI)
-   #include "gt/gtlin.c"
+#elif defined(HARBOUR_USE_CRS_GTAPI)
+   #include "gt/gtcrs.c"
 #else
    #include "gt/gtstd.c"
 #endif

@@ -751,6 +751,8 @@ USHORT hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount )
 
 USHORT hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
 {
+   HB_TRACE(("hb_gtRest(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff));
+
    hb_gt_PutText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) vlpScrBuff );
 
    return 0;
@@ -758,6 +760,8 @@ USHORT hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, 
 
 USHORT hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * vlpScrBuff )
 {
+   HB_TRACE(("hb_gtSave(%hu, %hu, %hu, %hu, %p)", uiTop, uiLeft, uiBottom, uiRight, vlpScrBuff));
+
    hb_gt_GetText( uiTop, uiLeft, uiBottom, uiRight, ( BYTE * ) vlpScrBuff );
 
    return 0;
@@ -967,8 +971,13 @@ USHORT hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight
 
 USHORT hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
 {
-   USHORT uiMaxRow = hb_gtMaxRow();
-   USHORT uiMaxCol = hb_gtMaxCol();
+   USHORT uiMaxRow;
+   USHORT uiMaxCol;
+
+   HB_TRACE(("hb_gtDrawShadow(%hu, %hu, %hu, %hu, %d)", uiTop, uiLeft, uiBottom, uiRight, (int) byAttr));
+
+   uiMaxRow = hb_gtMaxRow();
+   uiMaxCol = hb_gtMaxCol();
 
    uiLeft += 2;
    uiBottom++;

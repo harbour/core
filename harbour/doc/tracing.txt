@@ -1,0 +1,45 @@
+#
+# $Id$
+#
+
+INTRODUCTION
+============
+
+This file explains how to enable tracing in Harbour.
+
+
+TRACING
+=======
+
+You can enable tracing in Harbour by setting the following environment
+variable to any number greater than zero and then recompiling Harbour:
+
+  HB_TRACE_LEVEL
+
+The value is of no importance right now, just the fact that the
+variable is defined to a value greater than zero is taken into
+account.  In the future, it may be possible to enable different
+tracing levels by setting the variable to different values.
+
+When Harbour is compiled with the variable is set as described above,
+and then used to compile a regular Harbour application, the app will
+output LOTS of tracing information to stderr.  If you are using a
+sensible command shell (such as bash) you can redirect stderr to a
+file like this:
+
+  my_app 2>trace.txt
+
+
+TRACING THE PREPROCESSOR AND COMPILER
+=====================================
+
+Usually, you will not want tracing enabled in the preprocessor and
+compiler; otherwise, you will see the trace output while compiling
+Harbour itself.  If you REALLY want to enable tracing in the
+preprocessor and/or compiler, you must define, in addition to
+HB_TRACE_LEVEL as described above, the following variable, and then
+recompile the preprocessor/compiler:
+
+  HB_TRACE_UTILS
+
+The value is of no importance.

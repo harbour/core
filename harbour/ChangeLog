@@ -1,3 +1,30 @@
+Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* doc/tracing.txt: 
+	* include/hbtrace.h: 
+	* source/common/hbtrace.c: 
+	* source/pp/hbpp.c: 
+	* source/pp/hbppint.c: 
+	* source/pp/hbpplib.c: 
+	* source/pp/table.c: 
+	* source/pp/stdalone/hbpp.c: 
+	Changed the environment variables that enable tracing in Harbour,
+	and added a document explaining how to do tracing.
+	
+	* include/hbsetup.h: 
+	* source/rtl/gt/gtcrs.c: 
+	* source/rtl/gt/gtlin.c: 
+	* source/rtl/gtxxx.c: 
+	Changed the name for the curses-based GT implementation file to
+	gtcrs.c, leaving room for other linux-oriented implementations
+	such as s-lang, etc.
+	
+	* source/rtl/arrays.c: 
+	* source/rtl/fm.c: 
+	* source/rtl/gtapi.c: 
+	* source/rtl/inkey.c: 
+	Added/corrected a few calls to HB_TRACE().
+
 19991025-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/memory.prg
      + Using hbmemory.ch
