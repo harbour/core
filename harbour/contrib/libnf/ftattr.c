@@ -180,7 +180,7 @@ HB_FUNC( FT_SAVEATT )
    USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
    USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-   USHORT uiSize;
+   UINT   uiSize;
    USHORT uiFor;
    char * pBuffer;
    char * pAttrib;
@@ -378,7 +378,7 @@ HB_FUNC( FT_RESTATT )
       USHORT uiBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
       USHORT uiRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-      USHORT uiSize;
+      UINT   uiSize;
       USHORT uiFor;
       char * pBuffer;
       char * pAttrib;
