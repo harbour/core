@@ -298,7 +298,7 @@ LANGUAGE_RULES_ARE {
                     IF_SEQUENCE_IS( '!'         , 0           , 0      , 0          ) REDUCE_TO( NOT               , 0             ),
 
 		    /* Return only last CR in a sequence.  */
-                    IF_SEQUENCE_IS( '\n'        , '\n'        , 0      , 0          ) REDUCE_TO( '\n'              , 0             ),
+                 /* IF_SEQUENCE_IS( '\n'        , '\n'        , 0      , 0          ) REDUCE_TO( '\n'              , 0             ), */
 
 		    /* Strong Types */
                     IF_SEQUENCE_IS( _AS_        , _ARRAY_     , 0      , 0          ) REDUCE_TO( AS_ARRAY          , 0             ),

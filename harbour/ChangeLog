@@ -1,3 +1,7 @@
+2000-07-27 03:50 UTC+0800 Ron Pinkas <ron@profit-master.com>
+   * source/compiler/harbour.slx
+     * Removed rule for ignoring empty lines, to fix incorrect line numbers in warnigs and errors.
+
 2000-07-27 01:45 UTC+0800 Ron Pinkas <ron@profit-master.com>
    * source/compiler/harbour.c
      ! Corrected pVar->iDeclLine line number
