@@ -1,3 +1,7 @@
+19990712-19:10 Eddie Runia <eddie@runia.com>
+  * tests/working/*.prg
+    Little inconsistency corrected
+
 19990712-16:52 Antonio Linares <alinares@fivetech.com>
   * include\classes.ch
     * Inheritance class creation command support

@@ -4,7 +4,7 @@
 // Date : 16/05/1999
 // Time : 21:00
 //
-// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// Writte by Eddie Runia <eddie@runia.com>
 // www - http://www.harbour-project.org
 //
 // Placed in the public domain

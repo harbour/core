@@ -4,7 +4,7 @@
 *  multiply.hs
 *  HarbourScript Test
 *
-* Copyright (C) 1999  Felipe Coury <fcoury@flexsys-ci.com>
+* Written by Felipe Coury <fcoury@flexsys-ci.com>
 * www - http://www.harbour-project.org
 *
 */

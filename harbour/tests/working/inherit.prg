@@ -9,7 +9,7 @@
 //
 
 /*
- * Copyright (C) 1999  Eddie Runia <eddie@runia.comu>
+ * Written by Eddie Runia <eddie@runia.comu>
  * www - http://www.harbour-project.org
  *
  * Placed in the public domain

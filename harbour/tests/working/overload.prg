@@ -11,7 +11,7 @@
 //
 // Date : 1999/05/15
 //
-// Copyright (C) 1999  Eddie Runia <eddie@runia.com>
+// Written by Eddie Runia <eddie@runia.com>
 // www - http://www.harbour-project.org
 //
 // Placed in the public domain
