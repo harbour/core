@@ -1,3 +1,25 @@
+2000-07-28 00:18 UTC+0500 April White <awhite@user.rose.com>
+
+   * include/hbapi.h
+     * fixed comment for hb_xgrab() declaration (was 'exists' now 'exits')
+
+   * doc/en
+     + hbapi.txt
+     + hbapierr.txt
+     + hbapifs.txt
+     + hbapigt.txt
+     + hbapiitm.txt
+     + hbapilng.txt
+     + hbapirdd.txt
+     + hbdate.txt
+     + hbmacro.txt
+     + hbset.txt
+     + hbvm.txt
+     + hbcompatability.txt
+
+   * doc/genhtm.rsp
+     + entries for above
+
 2000-07-27 18:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * source/rtl/gtstd/gtstd.c
