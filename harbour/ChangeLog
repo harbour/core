@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-17 02:42 UTC+0500 April White <awhite@mail.rosecom.ca>
+  * source/vm/itemapi.c
+    + add conditional code if !(__DJGPP__) around #include <math.h>
+
 2002-07-16 02:14 UTC+0500 April White <awhite@mail.rosecom.ca>
   * source/rtl/strings.c
   * include/hbapi.h

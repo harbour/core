@@ -83,7 +83,9 @@
  *
  */
 
+#if !defined(__DJGPP__)
 #include <math.h> /* For log() */
+#endif
 #if defined(__BORLANDC__)
 #include <float.h>  /* for _finite() and _isnan() */
 #endif
