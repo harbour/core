@@ -1,3 +1,8 @@
+2000-09-01 13:55 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! fixed hilighting and dehilighting of cells if field is logical; that is logical cells value
+       is centered on cell width so cursor position needs to be centered too.
+
 2000-08-30 00:19 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * makefile.vc
@@ -26,24 +31,24 @@
    * bin/bld.sh
      ! == changed to =
 
-   * include/Makefile 
+   * include/Makefile
      + Added new header files.
 
-   * source/compiler/hbusage.c 
+   * source/compiler/hbusage.c
      ! Made even more CA-Clipper like.
 
    * source/rdd/dbsort.prg
      % Minor opt.
 
-   * source/rtl/filesys.c 
+   * source/rtl/filesys.c
      ! Fixed hb_fsLock() for DJGPP
 
-   * utils/hbtest/rt_main.ch 
+   * utils/hbtest/rt_main.ch
      ! Fixed pp macro for FlagShip
 
-   * source/rdd/dbstrux.prg 
-   * source/rtl/objfunc.prg 
-   * source/rtl/tobject.prg 
+   * source/rdd/dbstrux.prg
+   * source/rtl/objfunc.prg
+   * source/rtl/tobject.prg
      * Formatting.
 
    * source/rtl/console.c

@@ -462,7 +462,13 @@ METHOD DeHilite() CLASS TBrowse
 
    SetPos( nRow, nCol )
    ::DispCell( ::ColPos, cColor )
-   SetPos( nRow, nCol )
+
+   // Logical fields are centered on column width
+   if ValType(Eval(::aColumns[::ColPos]:Block)) == "L"
+      SetPos( nRow, nCol + ::aColumns[::ColPos]:Width / 2)
+   else
+      SetPos( nRow, nCol )
+   endif
 
 return Self
 
@@ -491,7 +497,13 @@ METHOD Hilite() CLASS TBrowse
 
       SetPos( nRow, nCol )
       ::DispCell( ::ColPos, cColor )
-      SetPos( nRow, nCol )
+
+      if ValType(Eval(::aColumns[::ColPos]:Block)) == "L"
+         SetPos( nRow, nCol + ::aColumns[::ColPos]:Width / 2)
+      else
+         SetPos( nRow, nCol )
+      endif
+
    endif
 
 return Self
