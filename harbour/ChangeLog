@@ -1,3 +1,13 @@
+2000-05-22 18:15 GMT-4 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/filesys.c
+    % The return value from _getdrive() needs to be processed
+      differently on some platforms.
+
+  * source/rtl/net.c
+    + Added RSX32 to the list of protected mode DOS compilers
+      that are unable to generate an INT 21h, AX=5E00h call.
+
 20000522-09:40 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * contrib/hbclip.ch

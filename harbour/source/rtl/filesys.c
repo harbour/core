@@ -1360,7 +1360,21 @@ BYTE    hb_fsCurDrv( void )
 
    {
       errno = 0;
-      uiResult = _getdrive() - 1;
+      uiResult = _getdrive();
+      #if defined(__DJGPP__)
+         /* _getdrive() returned a drive number, base 0. */
+      #else
+      if( uiResult < 65 )
+      {
+         /* _getdrive() returned a drive number, base 1. */
+         uiResult--;
+      }
+      else
+      {
+         /* _getdrive() returned a drive letter. */
+         uiResult -= 65;
+      }
+      #endif
       s_uiErrorLast = errno;
    }
 
@@ -1386,7 +1400,7 @@ BYTE    hb_fsCurDrv( void )
 
 #endif
 
-   return ( BYTE ) uiResult;
+   return ( BYTE ) uiResult; /* Return the drive number, base 0. */
 }
 
 /* TODO: Implement hb_fsExtOpen */

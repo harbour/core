@@ -53,7 +53,7 @@ HB_FUNC( NETNAME )
 
       regs.HB_XREGS.ax = 0x5E00;
 
-      #if defined(__DJGPP__)
+      #if defined(__DJGPP__) || defined(__RSX32__)
       {
          /* TODO: Add support for protected mode */
          szValue[ 0 ] = '\0';
