@@ -133,7 +133,7 @@ HB_VALUE_PTR *hb_memvarValueBaseAddress( void )
  * This function creates new global value.
  *
  * pSource = item value that have to be stored or NULL
- * iTrueMemvar = TRUE | FALSE
+ * bTrueMemvar = TRUE | FALSE
  *    FALSE if function is called to create memvar variable for a codeblock
  *       (to store detached local variable) - in this case we have to do
  *       exact copy of passed item (without duplicating its value and
@@ -145,7 +145,7 @@ HB_VALUE_PTR *hb_memvarValueBaseAddress( void )
  *  handle to variable memory or fails
  *
 */
-HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
+HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, BOOL bTrueMemvar )
 {
    HB_VALUE_PTR pValue;
    HB_HANDLE hValue = 1;   /* handle 0 is reserved */
@@ -196,7 +196,7 @@ HB_HANDLE hb_memvarValueNew( HB_ITEM_PTR pSource, int iTrueMemvar )
    pValue->counter =1;
    if( pSource )
    {
-      if( iTrueMemvar )
+      if( bTrueMemvar )
          hb_itemCopy( &pValue->item, pSource );
       else
          memcpy( &pValue->item, pSource, sizeof(HB_ITEM) );
@@ -483,8 +483,17 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
          {
             /* new PUBLIC variable - initialize it to .F.
              */
-            _globalTable[ pDynVar->hMemvar ].item.type =IT_LOGICAL;
-            _globalTable[ pDynVar->hMemvar ].item.item.asLogical.value =0;
+
+            _globalTable[ pDynVar->hMemvar ].item.type = IT_LOGICAL;
+
+            /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized */
+            /*       to .T., this is normal Clipper behaviour */
+
+            if ( strcmp( pDynVar->pSymbol->szName, "HARBOUR" ) == 0 ||
+                 strcmp( pDynVar->pSymbol->szName, "CLIPPER" ) == 0 )
+               _globalTable[ pDynVar->hMemvar ].item.item.asLogical.value = TRUE;
+            else
+               _globalTable[ pDynVar->hMemvar ].item.item.asLogical.value = FALSE;
          }
       }
    }

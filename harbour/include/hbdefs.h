@@ -120,6 +120,7 @@ typedef char SYMBOLSCOPE;   /* stores symbol's scope */
 #define IS_SYMBOL( p )     IS_OF_TYPE( p, IT_SYMBOL )
 #define IS_MEMVAR( p )     IS_OF_TYPE( p, IT_MEMVAR )
 
+#define ISNIL( n )         ( hb_param( n, IT_NIL ) != NULL )
 #define ISCHAR( n )        ( hb_param( n, IT_STRING ) != NULL )
 #define ISNUM( n )         ( hb_param( n, IT_NUMERIC ) != NULL )
 #define ISLOG( n )         ( hb_param( n, IT_LOGICAL ) != NULL )

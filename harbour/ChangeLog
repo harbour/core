@@ -1,3 +1,40 @@
+19990819-04:44 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/memvars.c
+    include/extend.h
+    * int -> BOOL (hb_memvarValueNew())
+    + PUBLIC CLIPPER and PUBLIC HARBOUR will initialize those variables with
+      .T. instead of .F., to be compatible with Clipper, and to be able to
+      detect Harbour.
+  * include/extend.h
+    source/rtl/extend.c
+    source/rtl/itemapi.c
+    source/vm/hvm.c
+    source/rtl/transfrm.c
+    - Removed HB_ITEM/asLogical.length variable, since it was never
+      used, and has no sense anyway.   
+    - Removed HB_ITEM/asDate.length variable, since it was never
+      used, and has no sense anyway.
+    - Removed HB_ITEM/asInteger.decimal variable, since it was never
+      used, and has no sense anyway, it's always zero.
+    - Removed HB_ITEM/asLong.decimal variable, since it was never
+      used, and has no sense anyway, it's always zero.
+  * source/rtl/arrays.c
+    source/rtl/extend.c
+    source/rtl/memvars.c
+    source/vm/hvm.c
+    include/extend.h
+    * HB_ITEM/asLogical.value type changed to BOOL
+  * include/hbdefs.h
+    + ISNIL() macro added.
+  * source/tools/dates2.c
+    * Some optimalizations, simplifications.
+  * source/rtl/transfrm.c
+    ! Fixed handling of the case, when the second parameter was not a 
+      string.
+    * Some optimalizations, simplifications.
+    ! Reenabled symbol registration, to avoid an empty initialization list.
+      This is only a temporary workaround.
+
 19990819-02:15 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/hbpp/hbpplib.c
     ! OurMalloc -> _xgrab

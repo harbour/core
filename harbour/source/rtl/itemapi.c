@@ -320,7 +320,6 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, char *szDate )
 
    hb_itemClear( pItem );
    pItem->type   = IT_DATE;
-   pItem->item.asDate.length = 8;
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
@@ -337,7 +336,6 @@ PHB_ITEM hb_itemPutL( PHB_ITEM pItem, BOOL bValue )
       pItem = hb_itemNew(0);
 
    pItem->type = IT_LOGICAL;
-   pItem->item.asLogical.length = 3;
    pItem->item.asLogical.value = bValue;
    return pItem;
 }

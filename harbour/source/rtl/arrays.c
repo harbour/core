@@ -113,7 +113,7 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
           if( IS_LOGICAL( pItem ) )
             return pItem->item.asLogical.value;
           else
-            return 0;
+            return FALSE;
         }
       else
         {
@@ -124,7 +124,7 @@ BOOL hb_arrayGetBool( PHB_ITEM pArray, ULONG ulIndex )
     {
       hb_errRT_BASE(EG_ARG, 1068, NULL, hb_langDGetErrorDesc(EG_ARRACCESS));
     }
-  return 0;
+  return FALSE;
 }
 
 double hb_arrayGetDouble( PHB_ITEM pArray, ULONG ulIndex )

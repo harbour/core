@@ -253,13 +253,13 @@ int hb_parl( int iParam, ... )
       if( IS_ARRAY( pItem ) )
       {
          if( wArrayIndex )
-            return hb_arrayGetBool( pItem, wArrayIndex );
+            return hb_arrayGetBool( pItem, wArrayIndex ) ? 1 : 0;
          else
             return 0;
       }
 
       else if( IS_LOGICAL( pItem ) )
-         return pItem->item.asLogical.value;
+         return pItem->item.asLogical.value ? 1 : 0;
 
       else
          return 0;
@@ -484,7 +484,6 @@ void hb_retds( char * szDate ) /* szDate must have yyyymmdd format */
    hb_itemClear( &stack.Return );
 
    stack.Return.type   = IT_DATE;
-   stack.Return.item.asDate.length = 8;
    /* QUESTION: Is this ok ? we are going to use a long to store the date */
    /* QUESTION: What happens if we use sizeof( LONG ) instead ? */
    /* QUESTION: Would it break Clipper language code ? */
@@ -508,16 +507,14 @@ void hb_retni( int iNumber )
    hb_itemClear( &stack.Return );
    stack.Return.type                   = IT_INTEGER;
    stack.Return.item.asInteger.length  = 10;
-   stack.Return.item.asInteger.decimal = 0;
    stack.Return.item.asInteger.value   = iNumber;
 }
 
-void hb_retl( int iTrueFalse )
+void hb_retl( int iLogical )
 {
    hb_itemClear( &stack.Return );
-   stack.Return.type                  = IT_LOGICAL;
-   stack.Return.item.asLogical.length = 3;
-   stack.Return.item.asLogical.value  = iTrueFalse;
+   stack.Return.type                 = IT_LOGICAL;
+   stack.Return.item.asLogical.value = iLogical ? TRUE : FALSE;
 }
 
 void hb_retnl( long lNumber )
@@ -525,7 +522,6 @@ void hb_retnl( long lNumber )
    hb_itemClear( &stack.Return );
    stack.Return.type                = IT_LONG;
    stack.Return.item.asLong.length  = 10;
-   stack.Return.item.asLong.decimal = 0;
    stack.Return.item.asLong.value   = lNumber;
 }
 
@@ -653,7 +649,6 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
          pItem = &stack.Return;
          hb_itemClear( pItem );
          pItem->type               = IT_DATE;
-         pItem->item.asDate.length = 8;
          pItem->item.asDate.value  = hb_dateEncode( lDay, lMonth, lYear );
       }
       else if( iParam < -1 )
@@ -665,7 +660,6 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
       {
          pItemRef = hb_itemNew( NULL );
          pItemRef->type = IT_DATE;
-         pItemRef->item.asDate.length = 8;
          pItemRef->item.asDate.value = hb_dateEncode( lDay, lMonth, lYear );
          hb_arraySet( pItem, wArrayIndex, pItemRef );
          hb_itemRelease( pItemRef );
@@ -675,7 +669,6 @@ void hb_stords( char * szDate, int iParam, ... ) /* szDate must have yyyymmdd fo
          pItemRef = hb_itemUnRef( pItem );
          hb_itemClear( pItemRef );
          pItemRef->type               = IT_DATE;
-         pItemRef->item.asDate.length = 8;
          pItemRef->item.asDate.value  = hb_dateEncode( lDay, lMonth, lYear );
       }
    }
@@ -698,8 +691,7 @@ void hb_storl( int iLogical, int iParam, ... )
          pItem = &stack.Return;
          hb_itemClear( pItem );
          pItem->type                  = IT_LOGICAL;
-         pItem->item.asLogical.length = 3;
-         pItem->item.asLogical.value  = iLogical;
+         pItem->item.asLogical.value  = iLogical ? TRUE : FALSE;
       }
       else if( iParam < -1 )
          return;
@@ -709,9 +701,8 @@ void hb_storl( int iLogical, int iParam, ... )
       if( IS_ARRAY( pItem ) && wArrayIndex )
       {
          pItemRef = hb_itemNew( NULL );
-         pItemRef->type = IT_LOGICAL;
-         pItemRef->item.asLogical.length = 3;
-         pItemRef->item.asLogical.value  = iLogical;
+         pItemRef->type                  = IT_LOGICAL;
+         pItemRef->item.asLogical.value  = iLogical ? TRUE : FALSE;
          hb_arraySet( pItem, wArrayIndex, pItemRef );
          hb_itemRelease( pItemRef );
       }
@@ -720,8 +711,7 @@ void hb_storl( int iLogical, int iParam, ... )
          pItemRef = hb_itemUnRef( pItem );
          hb_itemClear( pItemRef );
          pItemRef->type                  = IT_LOGICAL;
-         pItemRef->item.asLogical.length = 3;
-         pItemRef->item.asLogical.value  = iLogical;
+         pItemRef->item.asLogical.value  = iLogical ? TRUE : FALSE;
       }
    }
 }
@@ -744,7 +734,6 @@ void hb_storni( int iValue, int iParam, ... )
          hb_itemClear( pItem );
          pItem->type                   = IT_INTEGER;
          pItem->item.asInteger.length  = 10;
-         pItem->item.asInteger.decimal = 0;
          pItem->item.asInteger.value   = iValue;
       }
       else if( iParam < -1 )
@@ -757,7 +746,6 @@ void hb_storni( int iValue, int iParam, ... )
          pItemRef = hb_itemNew( NULL );
          pItemRef->type                   = IT_INTEGER;
          pItemRef->item.asInteger.length  = 10;
-         pItemRef->item.asInteger.decimal = 0;
          pItemRef->item.asInteger.value   = iValue;
          hb_arraySet( pItem, wArrayIndex, pItemRef );
          hb_itemRelease( pItemRef );
@@ -768,7 +756,6 @@ void hb_storni( int iValue, int iParam, ... )
          hb_itemClear( pItemRef );
          pItemRef->type                   = IT_INTEGER;
          pItemRef->item.asInteger.length  = 10;
-         pItemRef->item.asInteger.decimal = 0;
          pItemRef->item.asInteger.value   = iValue;
       }
    }
@@ -792,7 +779,6 @@ void hb_stornl( long lValue, int iParam, ... )
          hb_itemClear( pItem );
          pItem->type                = IT_LONG;
          pItem->item.asLong.length  = 10;
-         pItem->item.asLong.decimal = 0;
          pItem->item.asLong.value   = lValue;
       }
       else if( iParam < -1 )
@@ -805,7 +791,6 @@ void hb_stornl( long lValue, int iParam, ... )
          pItemRef = hb_itemNew( NULL );
          pItemRef->type                = IT_LONG;
          pItemRef->item.asLong.length  = 10;
-         pItemRef->item.asLong.decimal = 0;
          pItemRef->item.asLong.value   = lValue;
          hb_arraySet( pItem, wArrayIndex, pItemRef );
          hb_itemRelease( pItemRef );
@@ -816,7 +801,6 @@ void hb_stornl( long lValue, int iParam, ... )
          hb_itemClear( pItemRef );
          pItemRef->type                = IT_LONG;
          pItemRef->item.asLong.length  = 10;
-         pItemRef->item.asLong.decimal = 0;
          pItemRef->item.asLong.value   = lValue;
       }
    }

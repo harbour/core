@@ -683,7 +683,6 @@ static void hb_vmAliasPush( void )
     */
    stack.pPos->item.asInteger.value   = 0; /* hb_GetCurrentWorkAreaNumber(); */
    stack.pPos->item.asInteger.length  = 10;
-   stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
    HB_DEBUG( "hb_vmAliasPush\n" );
 }
@@ -1746,7 +1745,6 @@ static void hb_vmPushAliasedField( PHB_SYMB pSym )
    stack.pPos->type   = IT_INTEGER;
    stack.pPos->item.asInteger.value = 0;
    stack.pPos->item.asInteger.length  = 10;
-   stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
    HB_DEBUG( "hb_vmPushAliasedField\n" );
 }
@@ -1766,7 +1764,6 @@ static void hb_vmPushField( PHB_SYMB pSym )
    stack.pPos->type   = IT_INTEGER;
    stack.pPos->item.asInteger.value = 0;
    stack.pPos->item.asInteger.length  = 10;
-   stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
    HB_DEBUG( "hb_vmPushField\n" );
 }
@@ -1953,7 +1950,6 @@ void hb_vmPushInteger( int iNumber )
    stack.pPos->type = IT_INTEGER;
    stack.pPos->item.asInteger.value   = iNumber;
    stack.pPos->item.asInteger.length  = 10;
-   stack.pPos->item.asInteger.decimal = 0;
    hb_stackPush();
    HB_DEBUG( "hb_vmPushInteger\n" );
 }
@@ -1963,7 +1959,6 @@ void hb_vmPushLong( long lNumber )
    stack.pPos->type   = IT_LONG;
    stack.pPos->item.asLong.value   = lNumber;
    stack.pPos->item.asLong.length  = 10;
-   stack.pPos->item.asLong.decimal = 0;
    hb_stackPush();
    HB_DEBUG( "hb_vmPushLong\n" );
 }
@@ -2074,7 +2069,7 @@ void hb_stackShow( void )
               break;
 
          case IT_LOGICAL:
-              printf( "LOGICAL[%i] ", p->item.asLogical.value );
+              printf( "LOGICAL[%i] ", (int) p->item.asLogical.value );
               break;
 
          case IT_LONG:

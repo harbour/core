@@ -84,7 +84,6 @@ struct hb_struBlock
 
 struct hb_struDate
 {
-   WORD length;
    LONG value;
 };
 
@@ -98,20 +97,17 @@ struct hb_struDouble
 struct hb_struInteger
 {
    WORD length;
-   WORD decimal;
    int value;
 };
 
 struct hb_struLogical
 {
-   WORD length;
-   WORD value;
+   BOOL value;
 };
 
 struct hb_struLong
 {
    WORD length;
-   WORD decimal;
    long value;
 };
 
@@ -318,7 +314,7 @@ extern void     hb_codeblockEvaluate( PHB_ITEM );
 extern void     hb_codeblockCopy( PHB_ITEM, PHB_ITEM );
 
 /* memvars subsystem */
-extern HB_HANDLE hb_memvarValueNew( PHB_ITEM, int );
+extern HB_HANDLE hb_memvarValueNew( PHB_ITEM, BOOL );
 extern HB_VALUE_PTR * hb_memvarValueBaseAddress( void );
 extern void     hb_memvarsInit( void );
 extern void     hb_memvarsRelease( void );

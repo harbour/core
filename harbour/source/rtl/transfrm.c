@@ -56,9 +56,7 @@ HARBOUR HB_TRANSFORM( void );
 
 
 HB_INIT_SYMBOLS_BEGIN( Transfrm__InitSymbols )
-#if 0
 { "TRANSFORM" , FS_PUBLIC, HB_TRANSFORM  , 0 }
-#endif
 HB_INIT_SYMBOLS_END( Transfrm__InitSymbols )
 #if ! defined(__GNUC__)
 #pragma startup Transfrm__InitSymbols
@@ -360,45 +358,40 @@ static char *NumPicture( char *szPic, long lPic, int iPicFlags, double dValue,
     szResult    : Buffer of at least size 11 to hold formatted date
     lRetSize    : The size of the returned string is passed here !
 */
-static char *DatePicture( char * szDate, int iPicFlags, char * szResult, long *lRetSize )
+static char *DatePicture( char * szDate, int iPicFlags, char * szResult )
 {
-   char * szDateFormat;
-
    if( iPicFlags & PF_BRITISH )
-   {
-      szDateFormat = szBritish[ ( hb_set_century ? 1 : 0 ) ];
-   }
+      hb_dtoc( szDate, szResult, szBritish[ ( hb_set_century ? 1 : 0 ) ] );
    else
-      szDateFormat = hb_set.HB_SET_DATEFORMAT;
+      hb_dtoc( szDate, szResult, hb_set.HB_SET_DATEFORMAT );
 
-   *lRetSize = strlen( hb_dtoc( szDate, szResult, szDateFormat ) );
    return( szResult );
 }
 
 
 HARBOUR HB_TRANSFORM( void )
 {
-   PHB_ITEM pPic      = hb_param( 2, IT_STRING);/* Picture string           */
-   PHB_ITEM pExp      = hb_param( 1, IT_ANY );  /* Input parameter          */
+   PHB_ITEM pExp      = hb_param( 1, IT_ANY ); /* Input parameter          */
 
-   char    *szPic     = pPic->item.asString.value;
-   char    *szTemp;
-   char    *szResult;
-   char    *szExp;
+   BOOL     bDone     = FALSE;
 
-
-   long    lPic       = pPic->item.asString.length;
-   long    lPicStart  = 0;                      /* Start of template        */
-   long    lExpPos    = 0;
-   long    lResultPos = 0;
-
-   int     iPicFlags  = 0;                      /* Function flags           */
-   int     n;
-
-   BOOL    bDone      = FALSE;
-
-   if( lPic )
+   if( ISCHAR( 2 ) && hb_parclen( 2 ) > 0 )
    {
+      PHB_ITEM pPic      = hb_param( 2, IT_STRING ); /* Picture string           */
+
+      char    *szPic     = pPic->item.asString.value;
+      char    *szTemp;
+      char    *szResult;
+      char    *szExp;
+
+      long    lPic       = pPic->item.asString.length;
+      long    lPicStart  = 0;                      /* Start of template        */
+      long    lExpPos    = 0;
+      long    lResultPos = 0;
+
+      int     iPicFlags  = 0;                      /* Function flags           */
+      int     n;
+
       if( *szPic == '@' )                       /* Function marker found    */
       {
          iPicFlags = PictFunc( &szPic, &lPic ); /* Get length of function   */
@@ -536,7 +529,7 @@ HARBOUR HB_TRANSFORM( void )
          {
             szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
                     (double) pExp->item.asInteger.value, &lResultPos,
-                     pExp->item.asInteger.length, pExp->item.asInteger.decimal );
+                     pExp->item.asInteger.length, 0 );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
             break;
@@ -545,7 +538,7 @@ HARBOUR HB_TRANSFORM( void )
          {
             szResult = NumPicture( szPic + lPicStart, lPic, iPicFlags,
                     (double) pExp->item.asLong.value, &lResultPos,
-                     pExp->item.asLong.length, pExp->item.asLong.decimal );
+                     pExp->item.asLong.length, 0 );
             hb_retclen( szResult, lResultPos );
             hb_xfree( szResult );
             break;
@@ -562,8 +555,8 @@ HARBOUR HB_TRANSFORM( void )
          case IT_DATE:
          {
             char szResult[ 11 ];
-            DatePicture( hb_pards( 1 ), iPicFlags, szResult, &lResultPos );
-            hb_retclen( szResult, lResultPos );
+            DatePicture( hb_pards( 1 ), iPicFlags, szResult );
+            hb_retc( szResult );
             break;
          }
          default:
@@ -572,7 +565,7 @@ HARBOUR HB_TRANSFORM( void )
          }
       }
    }
-   else                                         /* No picture supplied      */
+   else if ( ISCHAR( 2 ) || ISNIL( 2 ) )        /* No picture supplied      */
    {
       switch( pExp->type & ~IT_BYREF )          /* Default behaviour        */
       {
@@ -583,7 +576,7 @@ HARBOUR HB_TRANSFORM( void )
          }
          case IT_LOGICAL:
          {
-            hb_retclen( pExp->item.asLogical.value ? "T" : "F", 1);
+            hb_retc( pExp->item.asLogical.value ? "T" : "F" );
             break;
          }
          case IT_INTEGER:
@@ -605,16 +598,18 @@ HARBOUR HB_TRANSFORM( void )
          case IT_DATE:
          {
             char szResult[ 11 ];
-            DatePicture( hb_pards( 1 ), iPicFlags, szResult, &lResultPos );
-            hb_retclen( szResult, lResultPos );
+            DatePicture( hb_pards( 1 ), 0, szResult );
+            hb_retc( szResult );
             break;
          }
          default:
          {
-           hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
+            hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
          }
       }
    }
+   else
+   {
+      hb_errRT_BASE(EG_ARG, 1122, NULL, "TRANSFORM");
+   }
 }
-
-
