@@ -195,7 +195,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nAtTop := Max( 1, nItems - nNumrows + 1 )
       ENDIF
 
-      DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+      DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
 
    ENDIF
 
@@ -228,7 +228,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             nMode := AC_HITTOP
             IF nAtTop > Max( 1, nPos - nNumRows + 1 )
                nAtTop := Max( 1, nPos - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             nNewPos := nPos - 1
@@ -261,7 +261,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             nMode := AC_HITBOTTOM
             IF nAtTop < Min( nPos, nItems - nNumRows + 1 )
                nAtTop := Min( nPos, nItems - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
 
@@ -298,12 +298,12 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nMode := AC_HITTOP
             ELSE
                nAtTop := Max( 1, nPos - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             nPos   := nFrstItem
             nAtTop := nPos
-            DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+            DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
          ENDIF
 
       CASE nKey == K_CTRL_PGDN .OR. ( nKey == K_END .AND. !lUserFunc )
@@ -313,7 +313,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nLastItem, nItems - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             IF INRANGE( nAtTop, nLastItem, nAtTop + nNumRows - 1 )
@@ -323,7 +323,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ELSE
                nPos   := nLastItem
                nAtTop := Max( 1, nPos - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ENDIF
 
@@ -334,7 +334,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nMode := AC_HITTOP
             ELSE
                nAtTop := Max( 1, nPos - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             nNewPos := nAtTop
@@ -355,7 +355,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nPos, nItems - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             nNewPos := nAtTop + nNumRows - 1
@@ -375,14 +375,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             nMode := AC_HITTOP
             IF nAtTop > Max( 1, nPos - nNumRows + 1 )
                nAtTop := Max( 1, nPos - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             IF INRANGE( nAtTop, nFrstItem, nAtTop + nNumRows - 1 )
                // On same page as nFrstItem
                nPos   := nFrstItem
                nAtTop := Max( nPos - nNumRows + 1, 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
             ELSE
                IF ( nPos - nNumRows + 1 ) < nFrstItem
                   nPos   := nFrstItem
@@ -396,8 +395,8 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                   ENDDO
                   nAtTop := Max( 1, nAtTop )
                ENDIF
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
             ENDIF
+            DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
          ENDIF
 
       CASE nKey == K_PGDN
@@ -406,7 +405,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             nMode := AC_HITBOTTOM
             IF nAtTop < Min( nPos, nItems - nNumRows + 1 )
                nAtTop := Min( nPos, nItems - nNumRows + 1 )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ELSE
             IF INRANGE( nAtTop, nLastItem, nAtTop + nNumRows - 1 )
@@ -434,7 +433,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                DO WHILE ( nAtTop + nNumRows - 1 ) > nItems
                   nAtTop--
                ENDDO
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ENDIF
 
@@ -481,7 +480,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                // On different page
                nPos   := nNewPos
                nAtTop := BETWEEN( 1, nPos - nNumRows + 1, nItems )
-               DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+               DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
             ENDIF
          ENDIF
 
@@ -529,7 +528,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    RETURN nPos
 
-STATIC PROCEDURE DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop )
+STATIC PROCEDURE DispPage( acCopy, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop )
 
    LOCAL nCntr
    LOCAL nRow                              // Screen row
@@ -549,7 +548,7 @@ STATIC PROCEDURE DispPage( acCopy, alSelect, nTop, nLeft, nNumRows, nPos, nAtTop
          DispLine( acCopy[ nIndex ], nRow, nLeft, alSelect[ nIndex ], nIndex == nPos )
       ELSE
          ColorSelect( CLR_STANDARD )
-         DispOutAt( nRow, nLeft, Space( Len( acCopy[ 1 ] ) ) )
+         DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ) )
       ENDIF
    NEXT
 

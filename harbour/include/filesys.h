@@ -91,6 +91,7 @@ extern void     hb_fsClose      ( FHANDLE hFileHandle );
 extern void     hb_fsCommit     ( FHANDLE hFileHandle );
 extern FHANDLE  hb_fsCreate     ( BYTE * pFilename, USHORT uiAttribute );
 extern BYTE *   hb_fsCurDir     ( USHORT uiDrive );
+extern USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen );
 extern BYTE     hb_fsCurDrv     ( void );
 extern int      hb_fsDelete     ( BYTE * pFilename );
 extern USHORT   hb_fsError      ( void );

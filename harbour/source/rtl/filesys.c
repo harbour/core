@@ -960,31 +960,65 @@ BOOL    hb_fsRmDir( BYTE * pDirname )
    return ( iResult ? FALSE : TRUE );
 }
 
-/* TODO: Make it thread safe */
+/* NOTE: This is not thread safe function, it's there for compatibility. */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
 BYTE *  hb_fsCurDir( USHORT uiDrive )
 {
-   static char cwd_buff[ PATH_MAX + 1 ];
+   static BYTE s_byDirBuffer[ PATH_MAX + 1 ];
 
    HB_TRACE(("hb_fsCurDir(%hu)", uiDrive));
 
+   hb_fsCurDirBuff( uiDrive, s_byDirBuffer, PATH_MAX + 1 );
+
+   return ( BYTE * ) s_byDirBuffer;
+}
+
+/* NOTE: Thread safe version of hb_fsCurDir() */
+/* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
+
+USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
+{
+   HB_TRACE(("hb_fsCurDirBuff(%hu)", uiDrive));
+
    HB_SYMBOL_UNUSED( uiDrive );
 
-#if defined(HAVE_POSIX_IO) || defined(__MINGW32__)
+   pbyBuffer[ 0 ] = '\0';
+
+#if defined(HAVE_POSIX_IO)
 
    errno = 0;
-   getcwd( cwd_buff, PATH_MAX );
+   getcwd( pbyBuffer, ulLen );
    s_uiErrorLast = errno;
+
+#elif defined(__MINGW32__)
+
+   {
+      BYTE * pbyStart = pbyBuffer;
+
+      errno = 0;
+      _getdcwd( uiDrive, pbyBuffer, ulLen );
+      s_uiErrorLast = errno;
+
+      /* Strip the leading drive spec, and leading underscore. */
+      /* NOTE: The trailing underscore is not returned on this platform */
+
+      if( pbyStart[ 1 ] == ':' )
+         pbyStart += 2;
+      if( pbyStart[ 0 ] == '\\' )
+         pbyStart++;
+
+      if( pbyBuffer != pbyStart )
+         memmove( pbyBuffer, pbyStart, ulLen );
+   }
 
 #else
 
-   cwd_buff[ 0 ] = '\0';
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
-   return ( BYTE * ) cwd_buff;
+   return s_uiErrorLast;
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
@@ -1405,22 +1439,24 @@ HARBOUR HB_FREADSTR( void )
       hb_retc( "" );
 }
 
-#ifdef HB_COMPAT_C53
-
 /* NOTE: This function should not return the leading and trailing */
 /*       (back)slashes. */
-
-/* NOTE: Clipper 5.3 only */
 
 HARBOUR HB_CURDIR( void )
 {
    USHORT uiErrorOld = s_uiErrorLast;
+   BYTE * pbyBuffer = hb_xgrab( PATH_MAX + 1 );
 
-   hb_retc( ( char * ) hb_fsCurDir( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
-      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0 ) );
+   hb_fsCurDirBuff( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
+      ( USHORT )( toupper( *hb_parc( 1 ) ) - 'A' + 1 ) : 0, pbyBuffer, PATH_MAX + 1 );
+
+   hb_retc( pbyBuffer );
+   hb_xfree( pbyBuffer );
 
    s_uiErrorLast = uiErrorOld;
 }
+
+#ifdef HB_COMPAT_C53
 
 /* NOTE: Clipper 5.3 only */
 

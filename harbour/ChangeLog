@@ -1,3 +1,21 @@
+19991025-23:12 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/rtl/achoice.prg
+    ! Fixed bound error on empty array.
+    % Small optimalization.
+  * source/rtl/filesys.c
+    include/filesys.h
+    ! CURDIR() was mistakenly marked a C53 function, but it was already there
+      in CA-Cl*pper 5.2e.
+    + hb_fsCurDirBuff() function added, which is thread safe.
+    * hb_fsCurDir() is now calling hb_fsCurDirBuff().
+    + CURDIR() is now using the thread safe hb_fsCurDirBuff() instead of
+      hb_fsCurDir().
+    + hb_fsCurDirBuff() now supports the "drive" parameter in WIN32/MINGW32.
+    + hb_fsCurDirBuff() now strips the leading and trailing slashes from the
+      directory, to be Clipper compatible.
+  * source/tools/ctchksum.c
+    * Small formatting.
+
 19991025-12:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/tools/ctchksum.c
      * added a cast
