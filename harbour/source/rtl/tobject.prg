@@ -124,6 +124,7 @@ FUNCTION TObject()
       s_oClass:Create()
 
    ENDIF
+
    oInstance := s_oClass:Instance()
    oInstance:class := s_oClass
 
@@ -156,3 +157,5 @@ static function TObject_Error( cDesc, cClass, cMsg, nCode )
    ENDIF
 
    RETURN __errRT_SBASE( EG_NOMETHOD, nCode, cDesc, cClass + ":" + cMsg )
+
+

@@ -222,7 +222,7 @@ static void GenerateSymbolsSegment( FILE * hObjFile )
   GroupDef( hObjFile, 12, groupSymGroup ); /* "SYMGROUP" localNames position - 1 */
   GroupDef( hObjFile, 17, groupInitData ); /* "BORLAND" localNames position - 1 */
 
-  * ( USHORT * ) symbolsData = GetSymbolsAmount();
+  * ( USHORT * ) symbolsData = (USHORT) GetSymbolsAmount();
 
   EnumeratedData( hObjFile, 6, symbolsData, sizeof( symbolsData ), 0 ); /* HB_SYMBOLS defined order segment */
 
@@ -254,7 +254,7 @@ static void GenerateDataSegment( FILE * hObjFile )
                             0 ); /* segment length */
   DefineSegment( hObjFile, 5, /* "_DATA" position + 1 into localNames */
                            6, /* "DATA" position + 1 into localNames */
-                    ulSize ); /* segment length */
+                    (USHORT) ulSize ); /* segment length */
 
   memset( &symbol, 0, sizeof( symbol ) );
   DataSegment( hObjFile, (BYTE *) &symbol,
@@ -263,18 +263,18 @@ static void GenerateDataSegment( FILE * hObjFile )
   pSymbol = GetFirstSymbol();
   for( ul = 0; ul < ulSymbols; ul++ )
     {
-      Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ), 0x54, 4 ); /* 4 = Data symbol name location */
+      Fixup( hObjFile, 0xE4, (USHORT) ( ul * sizeof( HB_SYMB ) ), 0x54, 4 ); /* 4 = Data symbol name location */
 
       if( IsExternal( ul ) )
         {
           if( ! ( pSymbol->cScope & HB_FS_MESSAGE ) )
-            Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 8, 0x56,
+            Fixup( hObjFile, 0xE4, (USHORT) ( ul * sizeof( HB_SYMB ) ) + 8, 0x56,
                    GetExternalPos( GetSymbolName( ul ) ) + 1 );
         }
       else
         {
           /* if( ! ( pSymbol->cScope & HB_FS_MESSAGE ) ) */
-          Fixup( hObjFile, 0xE4, ( ul * sizeof( HB_SYMB ) ) + 8, 0x54, 1 ); /* function address location */
+          Fixup( hObjFile, 0xE4, (USHORT) ( ul * sizeof( HB_SYMB ) ) + 8, 0x54, 1 ); /* function address location */
         }
       pSymbol = pSymbol->pNext;
     }
@@ -289,7 +289,7 @@ static void GenerateCodeSegment( FILE * hObjFile )
 
   DefineSegment( hObjFile, 2, /* "_TEXT" position + 1 into localNames */
                  3, /* "CODE" position + 1 into localNames */
-                 ulSize ); /* segment length */
+                 (USHORT) ulSize ); /* segment length */
 
   while( pFunc )
     {
@@ -466,7 +466,7 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
 {
   BYTE bChk = 0;
   USHORT y;
-  USHORT wTotalLen = ( ulPrgLen * wFunctions ) + 4;
+  USHORT wTotalLen = (USHORT) ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
   PFUNCTION pFunction = hb_comp_functions.pFirst;
   ULONG ulPCodeOffset = hb_comp_symbols.iCount * sizeof( HB_SYMB );
@@ -496,7 +496,7 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, ULONG wSymLen, ULONG wS
 {
   BYTE bChk = 0;
   ULONG w, y;
-  USHORT wTotalLen = 4 + ulSize;
+  USHORT wTotalLen = 4 + (USHORT) ulSize;
   PCOMSYMBOL pSymbol = GetFirstSymbol();
   PFUNCTION pFunction = hb_comp_functions.pFirst;
   ULONG ulSymbolNameOffset = GetSymbolsSize() + GetPCodesSize();

@@ -127,8 +127,8 @@ HB_GT_LIB = $(LIB_DIR)\$(HB_GT_LIB).lib
 
 # override builtin
 
-.c.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+.c.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 #
 #
@@ -183,10 +183,10 @@ LIBS2 = \
 #    is cause make to evaluate the obj list of dependants which then
 #    causes the .c.obj rule above to fire. (by inference)
 
-{$(RTL_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RTL_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj::
+{$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RTL_LIB)2
 
@@ -343,8 +343,8 @@ RTL_LIB_OBJS = \
 # LANG.LIB rules
 #
 
-{$(LANG_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(LANG_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 LANG_LIB_OBJS = \
    $(OBJ_DIR)\msgca.obj \
@@ -381,8 +381,8 @@ LANG_LIB_OBJS = \
 # MACRO.LIB rules
 #
 
-{$(MACRO_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(MACRO_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 MACRO_LIB_OBJS = \
    $(OBJ_DIR)\macrol.obj \
@@ -395,10 +395,10 @@ MACRO_LIB_OBJS = \
 # RDD.LIB rules
 #
 
-{$(RDD_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RDD_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj::
+{$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(RDD_LIB)2
 
@@ -426,10 +426,10 @@ RDD_LIB_OBJS = \
 # NULSYS.LIB rules
 #
 
-{$(RDD_DIR)\nulsys}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RDD_DIR)\nulsys}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj::
+{$(RDD_DIR)\nulsys}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(NULSYS_LIB)2
 
@@ -441,10 +441,10 @@ NULSYS_LIB_OBJS = \
 # DBFNTX.LIB rules
 #
 
-{$(RDD_DIR)\dbfntx}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RDD_DIR)\dbfntx}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj::
+{$(RDD_DIR)\dbfntx}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFNTX_LIB)2
 
@@ -459,10 +459,10 @@ DBFNTX_LIB_OBJS = \
 # DBFCDX.LIB rules
 #
 
-{$(RDD_DIR)\dbfcdx}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RDD_DIR)\dbfcdx}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj::
+{$(RDD_DIR)\dbfcdx}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DBFCDX_LIB)2
 
@@ -475,8 +475,8 @@ DBFCDX_LIB_OBJS = \
 # PP.LIB rules
 #
 
-{$(PP_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(PP_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 PP_LIB_OBJS = \
    $(OBJ_DIR)\ppcore.obj \
@@ -489,10 +489,10 @@ PP_LIB_OBJS = \
 # DEBUG.LIB rules
 #
 
-{$(DEBUG_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(DEBUG_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj::
+{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(DEBUG_LIB)2
 
@@ -508,8 +508,8 @@ DEBUG_LIB_OBJS = \
 # COMMON.LIB rules
 #
 
-{$(COMMON_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(COMMON_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 COMMON_LIB_OBJS = \
    $(OBJ_DIR)\hbfsapi.obj \
@@ -526,12 +526,13 @@ COMMON_LIB_OBJS = \
 #
 
 {$(VM_DIR)}.asm{$(OBJ_DIR)}.obj:
+   rem lib /extract:$(OBJ_DIR)\symbols.obj /out:$(OBJ_DIR)\symbols.obj \harb35\lib\vm.lib
    $(AS) $< $@ nul nul
 
-{$(VM_DIR)}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(VM_DIR)}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
-{$(VM_DIR)}.prg{$(OBJ_DIR)}.obj::
+{$(VM_DIR)}.prg{$(OBJ_DIR)}.obj:
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
    $(MAKE) -nologo /$(MK_FLAGS) /f$(MK_FILE) $(VM_LIB)2
 
@@ -573,8 +574,8 @@ VM_LIB_OBJS = \
 # GTCGI.LIB rules
 #
 
-{$(RTL_DIR)\gtcgi}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RTL_DIR)\gtcgi}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 GTCGI_LIB_OBJS = \
    $(OBJ_DIR)\gtcgi.obj \
@@ -584,8 +585,8 @@ GTCGI_LIB_OBJS = \
 # GTPCA.LIB rules
 #
 
-{$(RTL_DIR)\gtpca}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RTL_DIR)\gtpca}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 GTPCA_LIB_OBJS = \
    $(OBJ_DIR)\gtpca.obj \
@@ -595,8 +596,8 @@ GTPCA_LIB_OBJS = \
 # GTSTD.LIB rules
 #
 
-{$(RTL_DIR)\gtstd}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RTL_DIR)\gtstd}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 GTSTD_LIB_OBJS = \
    $(OBJ_DIR)\gtstd.obj \
@@ -606,8 +607,8 @@ GTSTD_LIB_OBJS = \
 # GTWIN.LIB rules
 #
 
-{$(RTL_DIR)\gtwin}.c{$(OBJ_DIR)}.obj::
-   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RTL_DIR)\gtwin}.c{$(OBJ_DIR)}.obj:
+   $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\  $<
 
 GTWIN_LIB_OBJS = \
    $(OBJ_DIR)\gtwin.obj \
@@ -679,7 +680,7 @@ all: \
 
 $(HBPP_EXE) : \
    $(HBPP_DIR)\hbpp.c
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $** -o $(HBPP_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $** -o $(HBPP_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
 
 #
 # HBRUN.EXE rules
@@ -689,7 +690,7 @@ $(HBRUN_EXE) : \
    $(HBRUN_DIR)\hbrun.prg \
    $(HBRUN_DIR)\external.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbrun.c $(OBJ_DIR)\external.c -o $(HBRUN_EXE) /link $(LDFLAGS) $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbrun.c  $(OBJ_DIR)\external.c -o $(HBRUN_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
 # HBTEST.EXE rules
@@ -708,7 +709,18 @@ $(HBTEST_EXE) : \
    $(HBTEST_DIR)\rt_stra.prg \
    $(HBTEST_DIR)\rt_trans.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbtest.c $(OBJ_DIR)\rt_array.c $(OBJ_DIR)\rt_date.c $(OBJ_DIR)\rt_file.c $(OBJ_DIR)\rt_hvm.c $(OBJ_DIR)\rt_hvma.c $(OBJ_DIR)\rt_math.c $(OBJ_DIR)\rt_misc.c $(OBJ_DIR)\rt_str.c $(OBJ_DIR)\rt_stra.c $(OBJ_DIR)\rt_trans.c -o $(HBTEST_EXE) /link $(LDFLAGS) $(LIBS)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbtest.c \
+                                   $(OBJ_DIR)\rt_array.c \
+                                   $(OBJ_DIR)\rt_date.c \
+                                   $(OBJ_DIR)\rt_file.c \
+                                   $(OBJ_DIR)\rt_hvm.c \
+                                   $(OBJ_DIR)\rt_hvma.c \
+                                   $(OBJ_DIR)\rt_math.c \
+                                   $(OBJ_DIR)\rt_misc.c \
+                                   $(OBJ_DIR)\rt_str.c \
+                                   $(OBJ_DIR)\rt_stra.c \
+                                   $(OBJ_DIR)\rt_trans.c \
+                   -o $(HBTEST_EXE) /link $(LDFLAGS) $(LIBS)
 
 #
 # HBDOC.EXE rules
@@ -733,22 +745,59 @@ $(HBDOC_EXE) : \
    $(HBDOC_DIR)\ffile1.prg \
    $(HBDOC_DIR)\ft_funcs.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\hbdoc.c $(OBJ_DIR)\genchm.c $(OBJ_DIR)\genos2.c $(OBJ_DIR)\gentrf.c $(OBJ_DIR)\genng.c $(OBJ_DIR)\genhtm.c $(OBJ_DIR)\genrtf.c $(OBJ_DIR)\genhpc.c $(OBJ_DIR)\genasc.c $(OBJ_DIR)\html.c $(OBJ_DIR)\ng.c $(OBJ_DIR)\os2.c $(OBJ_DIR)\rtf.c $(OBJ_DIR)\troff.c $(OBJ_DIR)\fclass1.c $(OBJ_DIR)\ffile1.c $(OBJ_DIR)\ft_funcs.c -o $(HBDOC_EXE) /link $(LDFLAGS) $(LIBS2)
+   $(CC) $(CFLAGS) -Fo$(OBJ_DIR)\  $(OBJ_DIR)\hbdoc.c \
+                                   $(OBJ_DIR)\genchm.c \
+                                   $(OBJ_DIR)\genos2.c \
+                                   $(OBJ_DIR)\gentrf.c \
+                                   $(OBJ_DIR)\genng.c \
+                                   $(OBJ_DIR)\genhtm.c \
+                                   $(OBJ_DIR)\genrtf.c \
+                                   $(OBJ_DIR)\genhpc.c \
+                                   $(OBJ_DIR)\genasc.c \
+                                   $(OBJ_DIR)\html.c \
+                                   $(OBJ_DIR)\ng.c \
+                                   $(OBJ_DIR)\os2.c \
+                                   $(OBJ_DIR)\rtf.c \
+                                   $(OBJ_DIR)\troff.c \
+                                   $(OBJ_DIR)\fclass1.c \
+                                   $(OBJ_DIR)\ffile1.c \
+                                   $(OBJ_DIR)\ft_funcs.c \
+                   -o $(HBDOC_EXE) /link $(LDFLAGS) $(LIBS2)
 
 #
 # HARBOUR.EXE rules
 #
 
+HARBOUR_EXE_OBJ = \
+   $(OBJ_DIR)\harbour.obj \
+   $(OBJ_DIR)\harboury.obj \
+   $(OBJ_DIR)\hbslex.obj \
+   $(OBJ_DIR)\cmdcheck.obj \
+   $(OBJ_DIR)\hbusage.obj \
+   $(OBJ_DIR)\hbident.obj \
+   $(OBJ_DIR)\hbpcode.obj \
+   $(OBJ_DIR)\hbfix.obj \
+   $(OBJ_DIR)\hbfunchk.obj \
+   $(OBJ_DIR)\hbgenerr.obj \
+   $(OBJ_DIR)\genobj32.obj \
+   $(OBJ_DIR)\genc.obj \
+   $(OBJ_DIR)\genhrb.obj \
+   $(OBJ_DIR)\genjava.obj \
+   $(OBJ_DIR)\expropta.obj \
+   $(OBJ_DIR)\exproptb.obj \
+   $(OBJ_DIR)\exproptc.obj
+
+#$(HARBOUR_EXE) : $(HARBOUR_EXE_OBJ) \
 $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\harbour.c \
    $(OBJ_DIR)\harboury.c \
    $(OBJ_DIR)\harbourl.c \
+   $(COMPILER_DIR)\cmdcheck.c \
    $(COMPILER_DIR)\hbusage.c \
    $(COMPILER_DIR)\hbident.c \
    $(COMPILER_DIR)\hbpcode.c \
    $(COMPILER_DIR)\hbfix.c \
    $(COMPILER_DIR)\hbfunchk.c \
-   $(COMPILER_DIR)\cmdcheck.c \
    $(COMPILER_DIR)\hbgenerr.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
@@ -760,6 +809,13 @@ $(HARBOUR_EXE) : \
    -echo. > $(OBJ_DIR)\unistd.h
    $(CC) $(CFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ -w $** -o $(HARBOUR_EXE) /link $(LDFLAGS) $(PP_LIB) $(COMMON_LIB)
    -del $(OBJ_DIR)\unistd.h
+
+
+
+
+
+
+
 
 
 #
@@ -832,11 +888,11 @@ $(OBJ_DIR)\macrol.c : $(OBJ_DIR)\macroy.c $(MACRO_DIR)\macro.l
    flex -i -8 -Phb_comp -o$(OBJ_DIR)\macrol.c $(MACRO_DIR)\macro.l
 
 $(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-   $(CC) $(CLIBFLAGS) -w -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -w -Fo$@  $**
 
 $(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
    -echo. > $(OBJ_DIR)\unistd.h
-   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@ $**
+   $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -w -Fo$@  $**
    -del $(OBJ_DIR)\unistd.h
 
 

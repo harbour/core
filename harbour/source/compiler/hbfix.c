@@ -90,7 +90,7 @@ static HB_FIX_FUNC( hb_p_pushblock )
       *pLocal += pFunc->wParamCount;
       lPCodePos +=2;
    }
-   return lPCodePos - ulStart;
+   return (USHORT) (lPCodePos - ulStart);
 }
 
 static HB_FIX_FUNC( hb_p_pushblockshort )
@@ -112,7 +112,7 @@ static HB_FIX_FUNC( hb_p_localname )
    while( pFunc->pCode[ lPCodePos ] )
       ++lPCodePos;
 
-   return lPCodePos - ulStart + 1;
+   return (USHORT) (lPCodePos - ulStart + 1) ;
 }
 
 static HB_FIX_FUNC( hb_p_modulename )
@@ -124,7 +124,7 @@ static HB_FIX_FUNC( hb_p_modulename )
    while( pFunc->pCode[ lPCodePos ] )
       ++lPCodePos;
 
-   return lPCodePos - ulStart + 1;
+   return (USHORT) (lPCodePos - ulStart + 1);
 }
 
 static HB_FIX_FUNC( hb_p_poplocal )
@@ -138,7 +138,7 @@ static HB_FIX_FUNC( hb_p_poplocal )
       *pVar += pFunc->wParamCount;
    }
 
-   return 3;
+   return (USHORT) 3;
 }
 
 static HB_FIX_FUNC( hb_p_pushlocal )
@@ -152,7 +152,7 @@ static HB_FIX_FUNC( hb_p_pushlocal )
       *pVar += pFunc->wParamCount;
    }
 
-   return 3;
+   return (USHORT) 3;
 }
 
 static HB_FIX_FUNC( hb_p_pushlocalref )
@@ -166,7 +166,7 @@ static HB_FIX_FUNC( hb_p_pushlocalref )
       *pVar += pFunc->wParamCount;
    }
 
-   return 3;
+   return (USHORT) 3;
 }
 
 static HB_FIX_FUNC( hb_p_poplocalnear )
@@ -182,7 +182,7 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
       {
          pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, lPCodePos + 2 );
-      }   
+      }
       else
       {
          /* After fixing this variable cannot be accessed using near code
@@ -191,7 +191,7 @@ static HB_FIX_FUNC( hb_p_poplocalnear )
       }
    }
 
-   return 3;
+   return (USHORT) 3;
 }
 
 static HB_FIX_FUNC( hb_p_pushlocalnear )
@@ -207,7 +207,7 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
       {
          pFunc->pCode[ lPCodePos + 2 ] = HB_P_NOOP;
          hb_compNOOPadd( pFunc, lPCodePos + 2 );
-      }   
+      }
       else
       {
          /* After fixing this variable cannot be accessed using near code
@@ -216,7 +216,7 @@ static HB_FIX_FUNC( hb_p_pushlocalnear )
       }
    }
 
-   return 3;
+   return (USHORT) 3;
 }
 
 /* NOTE: The  order of functions have to match the order of opcodes
