@@ -1,3 +1,7 @@
+2001-11-05 15:38 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  * source/rdd/workarea.c
+    * hb_waEval() method fixed ( NEXT n clause implementation )
+
 2001-11-05 03:59 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * utils/hbtest/hbtest.prg

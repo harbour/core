@@ -608,7 +608,9 @@ ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
       return SUCCESS;
    }
 
-   if( !pEvalInfo->dbsci.itmCobWhile && (!pEvalInfo->dbsci.fRest || !hb_itemGetL( pEvalInfo->dbsci.fRest ) ) )
+   if( !pEvalInfo->dbsci.itmCobWhile && 
+         (!pEvalInfo->dbsci.fRest || !hb_itemGetL( pEvalInfo->dbsci.fRest ) ) &&
+         !pEvalInfo->dbsci.lNext )
       SELF_GOTOP( pArea );
 
    if( pEvalInfo->dbsci.lNext )
