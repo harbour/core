@@ -923,7 +923,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    else
    {
       szSuperName = ( char * ) hb_xgrab( uiCount + 1 );
-      hb_strncpyUpper( szSuperName, (char *)szDrvName, uiCount );
+      hb_strncpyUpper( szSuperName, ( char * ) szDrvName, uiCount );
       pRddNode = hb_rddFindNode( szSuperName, 0 );
       hb_xfree( szSuperName );
       if( !pRddNode )
@@ -1617,6 +1617,8 @@ HARBOUR HB_DBCREATE( void )
             pAreaNode->pPrev = pCurrArea;
             if( pCurrArea->pPrev )
                pCurrArea->pPrev->pNext = pCurrArea;
+            else
+               pWorkAreas = pCurrArea;
             break;
          }
          if( pAreaNode->pNext )
@@ -2279,11 +2281,12 @@ HARBOUR HB_DBUSEAREA( void )
    LPRDDNODE pRddNode;
    LPAREANODE pAreaNode;
    USHORT uiSize, uiRddID, uiLen;
+   ULONG ulLen;
    DBOPENINFO pInfo;
    PHB_FNAME pFileName;
    PHB_ITEM pFileExt;
    char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
-   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1];
+   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
 
    bNetError = FALSE;
 
@@ -2342,8 +2345,19 @@ HARBOUR HB_DBUSEAREA( void )
 
    pFileName = hb_fsFNameSplit( szFileName );
    strncpy( szAlias, hb_parc( 4 ), HARBOUR_MAX_RDD_ALIAS_LENGTH );
-   if( strlen( szAlias ) == 0 )
+   ulLen = strlen( szAlias );
+   if( ulLen == 0 )
       strncpy( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
+   else if( ulLen == 1 )
+   {
+      /* Alias with a single letter. Only are valid 'L' and > 'M' */
+      if( toupper( szAlias[ 0 ] ) < 'N' && toupper( szAlias[ 0 ] ) != 'L' )
+      {
+         hb_xfree( pFileName );
+         hb_errRT_DBCMD( EG_DUPALIAS, 1011, NULL, "DBUSEAREA" );
+         return;
+      }
+   }
 
    /* Create a new WorkArea node */
 
@@ -2412,6 +2426,8 @@ HARBOUR HB_DBUSEAREA( void )
             pAreaNode->pPrev = pCurrArea;
             if( pCurrArea->pPrev )
                pCurrArea->pPrev->pNext = pCurrArea;
+            else
+               pWorkAreas = pCurrArea;
             break;
          }
          if( pAreaNode->pNext )

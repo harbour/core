@@ -1,3 +1,7 @@
+19991121-01:20 GMT+1 Bruno Cantero <bruno@issnet.net>
+  * source/rdd/dbcmd.c
+    * dbUseArea(), fixed two bugs mentioned by Victor.
+
 19991120-17:28 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
    - hbfsapi for harbour.exe
