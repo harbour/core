@@ -38,10 +38,10 @@
 
 #define HB_VER_MAJOR    0       /* Major version number */
 #define HB_VER_MINOR    35      /* Minor version number */
-#define HB_VER_REVISION "e"     /* Revision letter */
+#define HB_VER_REVISION "f"     /* Revision letter */
 #define HB_VER_BUILD    35      /* Build number */
 #define HB_VER_YEAR     2000    /* Build year */
 #define HB_VER_MONTH    9       /* Build month */
-#define HB_VER_DAY      26      /* Build day */
+#define HB_VER_DAY      28      /* Build day */
 
 #endif /* HB_VER_H_ */
