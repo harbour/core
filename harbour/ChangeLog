@@ -1,3 +1,20 @@
+2000-06-07 22:50 UTC-0800 Ron Pinkas <Ron@Profit-Master.com>
+
+  * include/hbpp.h
+  * source/compiler/harbour.c
+  * source/pp/ppcore.c
+    * Modified hb_pp_SetRules() to receive 2nd parameter BOOL hb_comp_bQuiet, since ppcore is part of PP.lib which is linked
+      into HBRUN.exe which does not include harbour.c where hb_comp_bQuiet is defined.
+
+  * source/compiler/harbour.l
+    ! Fixed parse error on IF [...]
+
+  * source/vm/classes.c
+    Posted patch provided by JF
+
+  * source/rtl/tobject.prg
+    Posted missing file provided by JF
+
 2000-06-09 08:15 UTC+0100 Lubos Janica <janica@fornax.sk>
     * source/rdd/dbfntx1.c
     	After this change we can create indexes. And they working with Clipper !

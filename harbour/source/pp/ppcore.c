@@ -199,7 +199,7 @@ char * hb_pp_szWarnings[] =
    "1No directives in command definitions file"
 };
 
-void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ) )
+void hb_pp_SetRules( BOOL (*hb_compInclude)(char *, PATHNAMES * ), BOOL hb_comp_bQuiet )
 {
    if( hb_pp_STD_CH )
    {

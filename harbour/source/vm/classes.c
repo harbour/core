@@ -1,6 +1,5 @@
 /*
  * $Id$
-=======
  */
 
 /*
@@ -78,13 +77,13 @@
  *    Now, Each object instance will hold one object instance of all its parents
  *    The first one has the same pointer as SUPER and __SUPER msgs.
  *    See hb___msgSuper()
- *    Each inherited data will now has a pointer linked to it's original object's position
+ *    Each inherited data will now has a pointer linked to it's original object's position 
  *
  *    hb___msgGetShrData()
  *    hb___msgSetShrData()
  *    hb___msgClsParent()
  *    __CLS_PARAM() (Now, all class inherit automaticly from TObject Class)
- *    __CLSPARENT()
+ *    __CLSPARENT() 
  *    __SENDER()
  *    __CLSINST() (Call to hb__clsinst())
  *    hb_cls_MsgToNum() (New Hashing method to allow a better use of buckets)
@@ -139,7 +138,7 @@ typedef struct
 
 #define BASE_METHODS    255  /* starting maximum number of message */
 #define BUCKET          5
-#define HASH_KEY        ( BASE_METHODS / BUCKET )
+#define HASH_KEY        ( BASE_METHODS / BUCKET ) /* Idealy, here we want a "nombre premier" */
 
 static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
@@ -625,9 +624,12 @@ HB_FUNC( __CLSADDMSG )
 
       /* Find either the existing message or an open spot for a new message */
 
-      while(   pClass->pMethods[ uiAt ].pMessage &&
-             ( pClass->pMethods[ uiAt ].pMessage != pMessage ) )
-         uiAt = ( USHORT ) ( ( uiAt == uiMask ) ? 0 : uiAt + 1 );
+      while( 
+             pClass->pMethods[ uiAt ].pMessage 
+             &&
+             ( strcmp( pClass->pMethods[ uiAt ].pMessage->pSymbol->szName, pMessage->pSymbol->szName ) != 0 )
+           )
+             uiAt = ( USHORT ) ( ( uiAt == uiMask ) ? 0 : uiAt + 1 );
 
       pNewMeth = pClass->pMethods + uiAt;
 
@@ -644,6 +646,7 @@ HB_FUNC( __CLSADDMSG )
          case HB_OO_MSG_METHOD:
               pNewMeth->pFunction = ( PHB_FUNC ) hb_parnl( 3 );
               pNewMeth->uiScope = uiScope;
+              pNewMeth->uiData = 0;
               break;
 
          case HB_OO_MSG_DATA:
@@ -937,7 +940,6 @@ HB_FUNC( __CLSNEW )
 
                 for( uiBucket = 0; uiBucket < BUCKET; uiBucket++ )
                 {
-
 #ifdef HB_CLS_MASKHIDDEN /* no hidden methods allowed by the inheritence. */
                    if( ( pSprCls->pMethods[ ui ].uiScope & HB_OO_CLSTP_HIDDEN ) == HB_OO_CLSTP_HIDDEN )
                       break;
@@ -949,7 +951,7 @@ HB_FUNC( __CLSNEW )
                       pNewCls->uiMethods++;
 
                       memcpy(pNewCls->pMethods + ( uiAt+uiBucket ), pSprCls->pMethods + ui, sizeof( METHOD ) );
-
+                      
                       if(
                           pNewCls->pMethods[ uiAt+uiBucket ].pFunction ==  hb___msgSetClsData
                           ||
@@ -975,7 +977,7 @@ HB_FUNC( __CLSNEW )
                          pNewCls->pMethods[ uiAt+uiBucket ].uiScope = ( USHORT ) ( pSprCls->pMethods[ ui ].uiScope + HB_OO_CLSTP_SUPER );
                       else
                          pNewCls->pMethods[ uiAt+uiBucket ].uiScope = pSprCls->pMethods[ ui ].uiScope;
-
+                      
                       if( pSprCls->pMethods[ ui ].pInitValue )
                       {
                          PHB_ITEM pInitValue;
@@ -992,7 +994,7 @@ HB_FUNC( __CLSNEW )
                       }
                       break;
                    }
-                   else if( pNewCls->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName == pMsg->pSymbol->szName )
+                   else if( strcmp( pNewCls->pMethods[ uiAt+uiBucket ].pMessage->pSymbol->szName, pMsg->pSymbol->szName ) == 0 )
                       break;
                 }
              }
@@ -1116,14 +1118,14 @@ PHB_ITEM hb__clsinst( USHORT uiClass )
 
       pSelf->item.asArray.value->uiClass   = uiClass;
       pSelf->item.asArray.value->uiPrevCls = 0;
-
+      
       for( uiAt = 0; uiAt < uiLimit; uiAt++, pMeth++ )
-      {
-          if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS
+      {   
+          if( ( pMeth->uiScope & HB_OO_CLSTP_CLASS ) == HB_OO_CLSTP_CLASS 
               &&
               ( pMeth->uiScope & HB_OO_CLSTP_SUPER ) != HB_OO_CLSTP_SUPER
             )
-          {
+          {  
              pSprObj = hb__clsinst( pMeth->uiSprClass );  /*instance super object*/
              hb_arraySet( pSelf, pMeth->uiData, pSprObj );
              uiSize ++ ;
@@ -1557,7 +1559,7 @@ HB_FUNC( __CLS_PARAM )
    USHORT n;
 
    if( uiParam >= 1 )
-   {
+   {  
       array = hb_itemArrayNew( uiParam );
       for( n = 1; n <= uiParam; n++ )
       {
@@ -1940,7 +1942,7 @@ static HARBOUR hb___msgSetData( void )
    USHORT uiIndex = s_pMethod->uiData;
 
    // If it's an herited data, the data reside within it's original Super object
-   // So we use the know pointer saved as an item long !!!!!!!!!!
+   // So we use the know pointer
    if ( ( s_pMethod->uiScope & HB_OO_CLSTP_SUPER ) == HB_OO_CLSTP_SUPER )
    {
       PHB_ITEM pPtrNum;

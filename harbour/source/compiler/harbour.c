@@ -143,20 +143,20 @@ static void hb_compSaveVars( PHARBVARS, int );
 static void hb_compRestoreVars( PHARBVARS, int );
 
 /* In Harbour.l */
-void * hb_compGet_YY_CURRENT_BUFFER( void );
-void hb_compSet_YY_CURRENT_BUFFER( void * );
-int hb_compGet_yy_init( void );
-void hb_compSet_yy_init( int i );
-int hb_compGet_yy_start( void );
-void hb_compSet_yy_start( int i );
-int hb_compGet_yy_did_buffer_switch_on_eof( void );
-void hb_compSet_yy_did_buffer_switch_on_eof( int );
+extern void * hb_compGet_YY_CURRENT_BUFFER( void );
+extern void hb_compSet_YY_CURRENT_BUFFER( void * );
+extern int hb_compGet_yy_init( void );
+extern void hb_compSet_yy_init( int i );
+extern int hb_compGet_yy_start( void );
+extern void hb_compSet_yy_start( int i );
+extern int hb_compGet_yy_did_buffer_switch_on_eof( void );
+extern void hb_compSet_yy_did_buffer_switch_on_eof( int );
 
 /* In Harbour.y */
-void * hb_compGet_pLoops( void );
-void hb_compSet_pLoops( void * pLoops );
-void * hb_compGet_rtvars( void );
-void hb_compSet_rtvars( void * rtvars );
+extern void * hb_compGet_pLoops( void );
+extern void hb_compSet_pLoops( void * pLoops );
+extern void * hb_compGet_rtvars( void );
+extern void hb_compSet_rtvars( void * rtvars );
 
 extern int yyparse( void );    /* main yacc parsing function */
 
@@ -213,7 +213,7 @@ int main( int argc, char * argv[] )
    hb_compChkPaths();
 
    /* Set standard rules */
-   hb_pp_SetRules( hb_compInclude );
+   hb_pp_SetRules( hb_compInclude, hb_comp_bQuiet );
 
    /* Process all files passed via the command line. */
 
