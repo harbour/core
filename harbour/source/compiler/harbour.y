@@ -1483,6 +1483,7 @@ void PrintUsage( char * szSelf )
 {
   printf( "Syntax: %s <file.prg> [options]\n"
           "\nOptions: \n"
+          "\t/a\t\tautomatic memvar declaration\n"
           "\t/d<id>[=<val>]\t#define <id>\n"
 #ifdef HARBOUR_OBJ_GENERATION
           "\t/f\t\tgenerated object file\n"
@@ -1498,14 +1499,14 @@ void PrintUsage( char * szSelf )
           "\t/l\t\tsuppress line number information\n"
           "\t/n\t\tno implicit starting procedure\n"
           "\t/o<path>\tobject file drive and/or path\n"
-          "\t/p\t\tgenerate pre-processed output ( .ppo ) file\n"
+          "\t/p\t\tgenerate pre-processed output (.ppo) file\n"
           "\t/q\t\tquiet\n"
           "\t/s\t\tsyntax check only\n"
-          "\t/t\t\talternative method of symbol table initialization\n"
-          "\t/y\t\ttrace lex & yacc activity\n"
-          "\t/z\t\tsupress .and. & .or. shortcutting\n"
-          "\t/10\t\trestrict symbol length to 10 characters\n"
+          "\t/v\t\tvariables are assumed M->\n"
           "\t/w\t\tenable warnings\n"
+          "\t/y\t\ttrace lex & yacc activity\n"
+          "\t/z\t\tsuppress shortcutting (.and. & .or.)\n"
+          "\t/10\t\trestrict symbol length to 10 characters\n"
           , szSelf );
 }
 
