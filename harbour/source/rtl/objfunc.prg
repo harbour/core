@@ -2,6 +2,14 @@
  * $Id$
  */
 
+/*
+ * OBJFUNC
+ *
+ * Contains additional object oriented functions
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 #define MET_METHOD    0
 #define MET_DATA      1
 #define MET_CLASSDATA 2

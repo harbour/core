@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/*
+ * STRINGP - Misc. string functions
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 #define DATA_SYMBOL 1
 #define DATA_VAL    2
 

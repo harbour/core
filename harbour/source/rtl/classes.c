@@ -2,6 +2,24 @@
  * $Id$
  */
 
+/*
+ * Classes.C contains the base-routines for OOPS system
+ *
+ * Partial Copyright (C) 1999 Eddie Runia ( eddie@runia.com )
+ *   partial copyright regarding the following functions :
+ *      CLASSDEL
+ *      CLASSMOD
+ *      :CLASSSEL()
+ *      ISMESSAGE
+ *      OCLONE
+ *      OSEND
+ *      SELECTSUPER
+ *      __INSTSUPER
+ *      __WDATAS
+ *      __WDATADEC
+ *      __WDATAINC
+ */
+
 #include <extend.h>
 #include <errorapi.h>
 #include <itemapi.h>

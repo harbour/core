@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/*
+ * Debug - Contains debugging functions
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 /* $Doc$
  * $Description$  Debug functions.
  * $Requirement$  source\rtl\itemapi.c (1999/05/04)

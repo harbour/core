@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/*
+ * TransForm. Clipper transformation function
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 #include <extend.h>
 #include <init.h>
 #include <errorapi.h>

@@ -1,3 +1,9 @@
+/*
+ * Runner - Dynamic Library load routine
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 
 #define FILE _FILE
 #include <stdio.h>

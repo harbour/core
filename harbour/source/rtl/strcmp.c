@@ -2,6 +2,13 @@
  * $Id$
  */
 
+/*
+ * StrCmp. String comparision functions
+ *
+ * stricmp       : Copyright (C) 1999 David Holm (...)
+ * hb_itemStrCmp : Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 #include <hbsetup.h>
 #include <ctype.h>
 #include <extend.h>

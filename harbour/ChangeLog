@@ -1,3 +1,10 @@
+19990706-16:30 Eddie Runia
+  * source/rtl/asort.prg; source/rtl/objfunc.prg; source/runner/runner.c;
+    source/tools/debug.c; source/tools/stringp.prg; source/rtl/transfrm.c
+    Copyright assertions made.
+  * source/rtl/strcmp.c; source/rtl/classes.c
+    Partial copyright assertion made
+
 19990706-20:15 Bruno Cantero <bruno@issnet.net>
 CVSed by Andi Jahja <andij@aonlippo.co.id>
 

@@ -2,6 +2,12 @@
  * $Id$
  */
 
+/*
+ * ASORT - Sort an array
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
 //
 // <aSorted> aSort( <aUnsorted>, [nStart], [nCount], [bBlock] )
 //

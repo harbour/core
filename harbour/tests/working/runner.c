@@ -1,3 +1,10 @@
+/*
+ * Runner - Dynamic object load routine
+ *
+ * Copyright (C) 1999 Eddie Runia (eddie@runia.com)
+ */
+
+
 #include <errorapi.h>
 #include <stdio.h>
 
