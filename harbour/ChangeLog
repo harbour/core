@@ -1,3 +1,7 @@
+20000522-01:51 DST Paul Tucker <ptucker@sympatico.ca>
+   * include/hbcomp.h
+     * adjust declaration of COMCLASS and COMDECLARE
+
 20000521-21:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
    * source/compiler/harbour.y

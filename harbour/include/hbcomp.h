@@ -91,22 +91,20 @@ typedef struct _COMDECLARED
    BYTE   cType;
    BYTE * cParamTypes;
    USHORT iParamCount;
-   struct _COMCLASS { char * szName; struct _COMDECLARED * pMethod; struct _COMCLASS * pNext; struct _COMDECLARED * pLast; } * pClass;
+   struct _COMCLASS * pClass;
    struct _COMCLASS * ( * pParamClasses );
    struct _COMDECLARED * pNext;   /* pointer to the next declared function */
 } COMDECLARED, * PCOMDECLARED;
 
-/*
+
+/* Declared Class support structure */
 typedef struct _COMCLASS
 {
    char * szName;
    PCOMDECLARED pMethod;
    struct _COMCLASS * pNext;
+   PCOMDECLARED pLast;
 } COMCLASS, * PCOMCLASS;
-*/
-
-/* Declared Class support structure */
-typedef struct _COMCLASS COMCLASS, * PCOMCLASS;
 
 /* locals, static, public variables support */
 typedef struct _VAR
