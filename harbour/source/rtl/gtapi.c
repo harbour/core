@@ -37,6 +37,8 @@ int _gtMaxCol( void )
       gettextinfo( &ti );
 
       return ti.screenwidth;
+   #else
+      return 0;
    #endif
 }
 
@@ -47,6 +49,8 @@ int _gtMaxRow( void )
       gettextinfo( &ti );
 
       return ti.screenheight;
+   #else
+      return 0;
    #endif
 }
 

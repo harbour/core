@@ -6,6 +6,12 @@
 
 HARBOUR OS()
 {
+#ifdef __GNUC__
+
+  _retc("UNKNOWN");
+
+#else
+
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__)
 
@@ -57,6 +63,8 @@ HARBOUR OS()
      _retc("OS/2");
   }
 
+#endif /* WATCOMC */
+
   /* TODO: get Windows version (major, minor) */
   /* detect Windows */
   regs.w.ax = 0x160A;
@@ -90,6 +98,8 @@ HARBOUR OS()
   /* TODO: detect other OSes */
   /* TODO: detect MS-DOS version */
   _retc("MS-DOS");
+
+#endif /* __GNUC__ */
 }
 
 HARBOUR VERSION()

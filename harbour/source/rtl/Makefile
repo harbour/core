@@ -14,6 +14,7 @@ C_SOURCES=\
 	errorapi.c \
 	extend.c \
 	files.c \
+	gtapi.c \
 	itemapi.c \
 	math.c \
 	set.c \

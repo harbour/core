@@ -107,7 +107,7 @@ void StackPop( void );        /* pops an item from the stack */
 void StackFree( void );       /* releases all memory used by the stack */
 void StackPush( void );       /* pushes an item on to the stack */
 void StackInit( void );       /* initializes the stack */
-void StackShow( void );       /* show the types of the items on the stack for HBDEBUGging purposes */
+void StackShow( void );       /* show the types of the items on the stack for debugging purposes */
 
 PCODEBLOCK CodeblockNew( BYTE *, WORD, PSYMBOL, int, WORD );
 void CodeblockDelete( PCODEBLOCK );
