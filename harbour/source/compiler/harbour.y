@@ -198,7 +198,7 @@ void AddVar( char * szVarName ); /* add a new param, local, static variable to a
 PCOMSYMBOL AddSymbol( char *, USHORT * );
 void CheckDuplVars( PVAR pVars, char * szVarName, int iVarScope ); /*checks for duplicate variables definitions */
 void Dec( void );                  /* generates the pcode to decrement the latest value on the virtual machine stack */
-void DimArray( int iDimensions ); /* instructs the virtual machine to build an array with wDimensions */
+void ArrayDim( int iDimensions ); /* instructs the virtual machine to build an array with wDimensions */
 void Do( BYTE bParams );      /* generates the pcode to execute a Clipper function discarding its result */
 void Duplicate( void ); /* duplicates the virtual machine latest stack latest value and places it on the stack */
 void DupPCode( ULONG ulStart ); /* duplicates the current generated pcode from an offset */
@@ -1044,8 +1044,8 @@ VarDef     : IDENTIFIER                                   { cVarType = ' '; AddV
            | IDENTIFIER AS_ARRAY     INASSIGN { cVarType = 'A'; AddVar( $1 ); } Expression  { PopId( $1 ); }
            | IDENTIFIER AS_BLOCK     INASSIGN { cVarType = 'B'; AddVar( $1 ); } Expression  { PopId( $1 ); }
            | IDENTIFIER AS_OBJECT    INASSIGN { cVarType = 'O'; AddVar( $1 ); } Expression  { PopId( $1 ); }
-           | IDENTIFIER ArrExpList ']'                { cVarType = ' '; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
-           | IDENTIFIER ArrExpList ']' AS_ARRAY       { cVarType = 'A'; AddVar( $1 ); DimArray( $2 ); PopId( $1 ); }
+           | IDENTIFIER ArrExpList ']'                { cVarType = ' '; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
+           | IDENTIFIER ArrExpList ']' AS_ARRAY       { cVarType = 'A'; AddVar( $1 ); ArrayDim( $2 ); PopId( $1 ); }
            ;
 
 ArrExpList : '[' Expression                { $$ = 1; }
@@ -4070,9 +4070,9 @@ void Dec( void )
    }
 }
 
-void DimArray( int iDimensions )
+void ArrayDim( int iDimensions )
 {
-   GenPCode3( HB_P_DIMARRAY, LOBYTE( iDimensions ), HIBYTE( iDimensions ) );
+   GenPCode3( HB_P_ARRAYDIM, LOBYTE( iDimensions ), HIBYTE( iDimensions ) );
 }
 
 void Do( BYTE bParams )
@@ -4245,14 +4245,14 @@ void Function( BYTE bParams )
 
 void GenArray( int iElements )
 {
-   GenPCode3( HB_P_GENARRAY, LOBYTE( iElements ), HIBYTE( iElements ) );
+   GenPCode3( HB_P_ARRAYGEN, LOBYTE( iElements ), HIBYTE( iElements ) );
 
    if( _iWarnings )
    {
       PSTACK_VAL_TYPE pFree;
       int iIndex;
 
-      /* Releasing the stack items used by the _GENARRAY (other than the 1st element). */
+      /* Releasing the stack items used by the HB_P_ARRAYGEN (other than the 1st element). */
       for( iIndex = iElements; iIndex > 1; iIndex-- )
       {
          pFree = pStackValType;

@@ -210,9 +210,9 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                lPCodePos++;
                break;
 
-            case HB_P_DIMARRAY:
+            case HB_P_ARRAYDIM:
                w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( yyc, "\tHB_P_DIMARRAY, %i, %i,",
+               fprintf( yyc, "\tHB_P_ARRAYDIM, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
                         pFunc->pCode[ lPCodePos + 2 ] );
                if( _bComments ) fprintf( yyc, "\t/* %i */", w );
@@ -315,9 +315,9 @@ void GenCCode( PHB_FNAME pFileName )       /* generates the C language output */
                lPCodePos += 3;
                break;
 
-            case HB_P_GENARRAY:
+            case HB_P_ARRAYGEN:
                w = pFunc->pCode[ lPCodePos + 1 ] + pFunc->pCode[ lPCodePos + 2 ] * 256;
-               fprintf( yyc, "\tHB_P_GENARRAY, %i, %i,",
+               fprintf( yyc, "\tHB_P_ARRAYGEN, %i, %i,",
                         pFunc->pCode[ lPCodePos + 1 ],
                         pFunc->pCode[ lPCodePos + 2 ] );
                if( _bComments ) fprintf( yyc, "\t/* %i */", w );

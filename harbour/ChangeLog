@@ -1,3 +1,31 @@
+19991005-18:02 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/rtl_test.prg
+    + Added more complete tests for <,>,<=,>=,!= operators.
+  * source/vm/hvm.c
+    % hb_vmPopDate() is no more checking the type of the popped value, and
+      the related unrecoverable error is also removed, since the callers
+      do this check before each call.
+    * Some more function grouping, small corrections.
+    ! hb_vmLess(), hb_vmLessEqual(), hb_vmGreater(), hb_vmGreaterEqual()
+      some cases were not handled, so stack corruption could occure, when
+      two ARRAY/BLOCK/OBJECT were compared. Fixed.
+    ! hb_vmNotEqual() fixed for ARRAY/OBJECT/BLOCK types.
+  * source/vm/hvm.c
+    include/pcode.h
+    source/compiler/genc.c
+    source/compiler/genhrb.c
+    source/compiler/harbour.y
+    * HB_P_GENARRAY -> HB_P_ARRAYGEN
+    * HB_P_DIMARRAY -> HB_P_ARRAYDIM
+      !! WARNING !! Please rebuild all .PRG files, since the pcode values have 
+      changed.
+  * include/hbver.h
+    + Revision set to "a"
+  * source/compiler/harbour.c
+    + isatty.c put back in order.
+  * source/compiler/main*.c
+    + Some small cleanups.
+
 19991005-14:41 GMT+1 Victor Szel <info@szelvesz.hu>
   * tests/run_tsta.bat
     tests/test_all.prg

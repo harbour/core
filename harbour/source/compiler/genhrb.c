@@ -206,10 +206,10 @@ void GenPortObj( PHB_FNAME pFileName )
                fputc( pFunc->pCode[ lPCodePos++ ], yyc );
                break;
 
-            case HB_P_DIMARRAY:
+            case HB_P_ARRAYDIM:
             case HB_P_DO:
             case HB_P_FUNCTION:
-            case HB_P_GENARRAY:
+            case HB_P_ARRAYGEN:
             case HB_P_JUMP:
             case HB_P_JUMPFALSE:
             case HB_P_JUMPTRUE:

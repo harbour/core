@@ -33,10 +33,6 @@
  *
  */
 
-void hb_cmdargInit( int argc, char * argv[] );
-void hb_vmInit( void );
-void hb_vmQuit( void );
-
 #include "extend.h"
 #include "ctoharb.h"
 
@@ -45,6 +41,9 @@ int main( int argc, char * argv[] )
    hb_cmdargInit( argc, argv );
    hb_vmInit();
    hb_vmQuit();
+
+   /* NOTE: The exit value is set by _exit() */
+   /* NOTE: This point is never reached */
 
    return 0;
 }

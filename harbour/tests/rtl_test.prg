@@ -298,6 +298,8 @@ STATIC FUNCTION Main_HVM()
 
    /* (operators) */
 
+   /* <= */
+
    TEST_LINE( 2                <= 1                , .F.                                               )
    TEST_LINE( 1                <= 2                , .T.                                               )
    TEST_LINE( 2.0              <= 2                , .T.                                               )
@@ -319,6 +321,9 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              <= "Z"              , .T.                                               )
    TEST_LINE( "Z"              <= " "              , .F.                                               )
    TEST_LINE( Chr(0)           <= " "              , .T.                                               )
+
+   /* < */
+
    TEST_LINE( 2                <  1                , .F.                                               )
    TEST_LINE( 1                <  2                , .T.                                               )
    TEST_LINE( 2.0              <  2                , .F.                                               )
@@ -340,6 +345,9 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              <  "Z"              , .T.                                               )
    TEST_LINE( "Z"              <  "A"              , .F.                                               )
    TEST_LINE( Chr(0)           <  " "              , .T.                                               )
+
+   /* >= */
+
    TEST_LINE( 2                >= 1                , .T.                                               )
    TEST_LINE( 1                >= 2                , .F.                                               )
    TEST_LINE( 2.0              >= 2                , .T.                                               )
@@ -361,6 +369,9 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              >= "Z"              , .F.                                               )
    TEST_LINE( "Z"              >= "A"              , .T.                                               )
    TEST_LINE( Chr(0)           >= " "              , .F.                                               )
+
+   /* > */
+
    TEST_LINE( 2                >  1                , .T.                                               )
    TEST_LINE( 1                >  2                , .F.                                               )
    TEST_LINE( 2.0              >  2                , .F.                                               )
@@ -382,6 +393,174 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A"              >  "Z"              , .F.                                               )
    TEST_LINE( "Z"              >  "A"              , .T.                                               )
    TEST_LINE( Chr(0)           >  " "              , .F.                                               )
+
+   /* =, == */
+
+   SET EXACT ON
+   TEST_LINE( "123" = "123  "                 , .T.                                               )
+   TEST_LINE( " 123" = "123"                  , .F.                                               )
+   TEST_LINE( "123" = "12345"                 , .F.                                               )
+   TEST_LINE( "12345" = "123"                 , .F.                                               )
+   TEST_LINE( "123" = ""                      , .F.                                               )
+   TEST_LINE( "" = "123"                      , .F.                                               )
+   TEST_LINE( "A" == "A"                      , .T.                                               )
+   TEST_LINE( "Z" == "A"                      , .F.                                               )
+   TEST_LINE( "A" == "A "                     , .F.                                               )
+   TEST_LINE( "AA" == "A"                     , .F.                                               )
+   SET EXACT OFF
+   TEST_LINE( "123" = "123  "                 , .F.                                               )
+   TEST_LINE( " 123" = "123"                  , .F.                                               )
+   TEST_LINE( "123" = "12345"                 , .F.                                               )
+   TEST_LINE( "12345" = "123"                 , .T.                                               )
+   TEST_LINE( "123" = ""                      , .T.                                               )
+   TEST_LINE( "" = "123"                      , .F.                                               )
+   TEST_LINE( "A" == "A"                      , .T.                                               )
+   TEST_LINE( "Z" == "A"                      , .F.                                               )
+   TEST_LINE( "A" == "A "                     , .F.                                               )
+   TEST_LINE( "AA" == "A"                     , .F.                                               )
+
+   TEST_LINE( scString  = scString            , .T.                                               )
+   TEST_LINE( scString  = scStringE           , .T.                                               )
+   TEST_LINE( scString  = scStringZ           , .F.                                               )
+   TEST_LINE( scStringE = scString            , .F.                                               )
+   TEST_LINE( scStringE = scStringE           , .T.                                               )
+   TEST_LINE( scStringE = scStringZ           , .F.                                               )
+   TEST_LINE( scStringZ = scString            , .F.                                               )
+   TEST_LINE( scStringZ = scStringE           , .T.                                               )
+   TEST_LINE( scStringZ = scStringZ           , .T.                                               )
+
+   /* != */
+
+   SET EXACT ON
+   TEST_LINE( "123" != "123  "                , .F.                                               )
+   TEST_LINE( " 123" != "123"                 , .T.                                               )
+   TEST_LINE( "123" != "12345"                , .T.                                               )
+   TEST_LINE( "12345" != "123"                , .T.                                               )
+   TEST_LINE( "123" != ""                     , .T.                                               )
+   TEST_LINE( "" != "123"                     , .T.                                               )
+   TEST_LINE( "A" != "A"                      , .F.                                               )
+   TEST_LINE( "Z" != "A"                      , .T.                                               )
+   TEST_LINE( "A" != "A "                     , .F.                                               )
+   TEST_LINE( "AA" != "A"                     , .T.                                               )
+   SET EXACT OFF
+   TEST_LINE( "123" != "123  "                , .T.                                               )
+   TEST_LINE( " 123" != "123"                 , .T.                                               )
+   TEST_LINE( "123" != "12345"                , .T.                                               )
+   TEST_LINE( "12345" != "123"                , .F.                                               )
+   TEST_LINE( "123" != ""                     , .F.                                               )
+   TEST_LINE( "" != "123"                     , .T.                                               )
+   TEST_LINE( "A" != "A"                      , .F.                                               )
+   TEST_LINE( "Z" != "A"                      , .T.                                               )
+   TEST_LINE( "A" != "A "                     , .T.                                               )
+   TEST_LINE( "AA" != "A"                     , .F.                                               )
+
+   TEST_LINE( scString  != scString           , .F.                                               )
+   TEST_LINE( scString  != scStringE          , .F.                                               )
+   TEST_LINE( scString  != scStringZ          , .T.                                               )
+   TEST_LINE( scStringE != scString           , .T.                                               )
+   TEST_LINE( scStringE != scStringE          , .F.                                               )
+   TEST_LINE( scStringE != scStringZ          , .T.                                               )
+   TEST_LINE( scStringZ != scString           , .T.                                               )
+   TEST_LINE( scStringZ != scStringE          , .F.                                               )
+   TEST_LINE( scStringZ != scStringZ          , .F.                                               )
+
+   /* == special */
+
+   TEST_LINE( NIL == NIL                      , .T.                                               )
+   TEST_LINE( scString == NIL                 , .F.                                               )
+   TEST_LINE( scString == 1                   , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( soObject == ""                  , "E BASE 1070 Argument error == F:S"               )
+   TEST_LINE( soObject == soObject            , .T.                                               )
+   TEST_LINE( soObject == ErrorNew()          , .F.                                               )
+   TEST_LINE( ErrorNew() == ErrorNew()        , .F.                                               )
+   TEST_LINE( soObject == TBColumnNew()       , .F.                                               )
+   TEST_LINE( saArray == saArray              , .T.                                               )
+   TEST_LINE( {} == {}                        , .F.                                               )
+   TEST_LINE( {|| NIL } == {|| NIL }          , "E BASE 1070 Argument error == F:S"               )
+
+   /* = special */
+
+   TEST_LINE( NIL = NIL                       , .T.                                               )
+   TEST_LINE( scString = NIL                  , .F.                                               )
+   TEST_LINE( scString = 1                    , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( soObject = ""                   , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( soObject = soObject             , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( soObject = ErrorNew()           , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( ErrorNew() = ErrorNew()         , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( soObject = TBColumnNew()        , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( saArray = saArray               , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( {} = {}                         , "E BASE 1071 Argument error = F:S"                )
+   TEST_LINE( {|| NIL } = {|| NIL }           , "E BASE 1071 Argument error = F:S"                )
+
+   /* != special */
+
+   TEST_LINE( NIL != NIL                      , .F.                                               )
+   TEST_LINE( scString != NIL                 , .T.                                               )
+   TEST_LINE( scString != 1                   , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( soObject != ""                  , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( soObject != soObject            , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( soObject != ErrorNew()          , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( ErrorNew() != ErrorNew()        , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( soObject != TBColumnNew()       , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( saArray != saArray              , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( {} != {}                        , "E BASE 1072 Argument error <> F:S"               )
+   TEST_LINE( {|| NIL } != {|| NIL }          , "E BASE 1072 Argument error <> F:S"               )
+
+   /* < special */
+
+   TEST_LINE( NIL < NIL                       , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( scString < NIL                  , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( scString < 1                    , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( soObject < ""                   , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( soObject < soObject             , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( soObject < ErrorNew()           , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( ErrorNew() < ErrorNew()         , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( soObject < TBColumnNew()        , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( saArray < saArray               , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( {} < {}                         , "E BASE 1073 Argument error < F:S"                )
+   TEST_LINE( {|| NIL } < {|| NIL }           , "E BASE 1073 Argument error < F:S"                )
+
+   /* <= special */
+
+   TEST_LINE( NIL <= NIL                      , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( scString <= NIL                 , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( scString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( soObject <= ""                  , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( soObject <= soObject            , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( soObject <= ErrorNew()          , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( ErrorNew() <= ErrorNew()        , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( soObject <= TBColumnNew()       , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( saArray <= saArray              , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( {} <= {}                        , "E BASE 1074 Argument error <= F:S"               )
+   TEST_LINE( {|| NIL } <= {|| NIL }          , "E BASE 1074 Argument error <= F:S"               )
+
+   /* > special */
+
+   TEST_LINE( NIL > NIL                       , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( scString > NIL                  , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( scString > 1                    , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( soObject > ""                   , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( soObject > soObject             , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( soObject > ErrorNew()           , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( ErrorNew() > ErrorNew()         , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( soObject > TBColumnNew()        , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( saArray > saArray               , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( {} > {}                         , "E BASE 1075 Argument error > F:S"                )
+   TEST_LINE( {|| NIL } > {|| NIL }           , "E BASE 1075 Argument error > F:S"                )
+
+   /* >= special */
+
+   TEST_LINE( NIL >= NIL                      , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( scString >= NIL                 , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( scString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( soObject >= ""                  , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( soObject >= soObject            , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( soObject >= ErrorNew()          , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( ErrorNew() >= ErrorNew()        , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( soObject >= TBColumnNew()       , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( saArray >= saArray              , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( {} >= {}                        , "E BASE 1076 Argument error >= F:S"               )
+   TEST_LINE( {|| NIL } >= {|| NIL }          , "E BASE 1076 Argument error >= F:S"               )
 
    //NOTE: These expressions have to be written with no separators!
    TEST_LINE( mnIntP==10.or.mnIntP=0               , .T.                                               )
@@ -526,60 +705,7 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( saArray[ "1" ]                  , "E BASE 1068 Argument error array access F:S"     )
    TEST_LINE( saArray[ "1" ] := 1             , "E BASE 1069 Argument error array assign "        )
 
-   TEST_LINE( scString > 1                    , "E BASE 1075 Argument error > F:S"                )
-   TEST_LINE( scString >= 1                   , "E BASE 1076 Argument error >= F:S"               )
-   TEST_LINE( scString <> 1                   , "E BASE 1072 Argument error <> F:S"               )
-
-   SET EXACT ON
-   TEST_LINE( "123" = "123  "                 , .T.                                               )
-   TEST_LINE( " 123" = "123"                  , .F.                                               )
-   TEST_LINE( "123" = "12345"                 , .F.                                               )
-   TEST_LINE( "12345" = "123"                 , .F.                                               )
-   TEST_LINE( "123" = ""                      , .F.                                               )
-   TEST_LINE( "" = "123"                      , .F.                                               )
-   TEST_LINE( "A" == "A"                      , .T.                                               )
-   TEST_LINE( "Z" == "A"                      , .F.                                               )
-   TEST_LINE( "A" == "A "                     , .F.                                               )
-   TEST_LINE( "AA" == "A"                     , .F.                                               )
-   SET EXACT OFF
-   TEST_LINE( "123" = "123  "                 , .F.                                               )
-   TEST_LINE( " 123" = "123"                  , .F.                                               )
-   TEST_LINE( "123" = "12345"                 , .F.                                               )
-   TEST_LINE( "12345" = "123"                 , .T.                                               )
-   TEST_LINE( "123" = ""                      , .T.                                               )
-   TEST_LINE( "" = "123"                      , .F.                                               )
-   TEST_LINE( "A" == "A"                      , .T.                                               )
-   TEST_LINE( "Z" == "A"                      , .F.                                               )
-   TEST_LINE( "A" == "A "                     , .F.                                               )
-   TEST_LINE( "AA" == "A"                     , .F.                                               )
-   TEST_LINE( scString  = scString            , .T.                                               )
-   TEST_LINE( scString  = scStringE           , .T.                                               )
-   TEST_LINE( scString  = scStringZ           , .F.                                               )
-   TEST_LINE( scStringE = scString            , .F.                                               )
-   TEST_LINE( scStringE = scStringE           , .T.                                               )
-   TEST_LINE( scStringE = scStringZ           , .F.                                               )
-   TEST_LINE( scStringZ = scString            , .F.                                               )
-   TEST_LINE( scStringZ = scStringE           , .T.                                               )
-   TEST_LINE( scStringZ = scStringZ           , .T.                                               )
-
-   TEST_LINE( scString == 1                   , "E BASE 1070 Argument error == F:S"               )
-   TEST_LINE( soObject == soObject            , .T.                                               )
-   TEST_LINE( soObject = soObject             , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( soObject == ErrorNew()          , .F.                                               )
-   TEST_LINE( soObject = ErrorNew()           , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( ErrorNew() == ErrorNew()        , .F.                                               )
-   TEST_LINE( ErrorNew() = ErrorNew()         , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( soObject == TBColumnNew()       , .F.                                               )
-   TEST_LINE( soObject = TBColumnNew()        , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( saArray == saArray              , .T.                                               )
-   TEST_LINE( saArray = saArray               , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( {} == {}                        , .F.                                               )
-   TEST_LINE( {} = {}                         , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( {|| NIL } == {|| NIL }          , "E BASE 1070 Argument error == F:S"               )
-   TEST_LINE( {|| NIL } = {|| NIL }           , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( scString = 1                    , "E BASE 1071 Argument error = F:S"                )
-   TEST_LINE( scString < 1                    , "E BASE 1073 Argument error < F:S"                )
-   TEST_LINE( scString <= 1                   , "E BASE 1074 Argument error <= F:S"               )
+   /* Alias */
 
    TEST_LINE( ("NOTHERE")->NOFIELD            , "E BASE 1002 Alias does not exist NOTHERE F:R"    )
    TEST_LINE( (mcString)->NOFIELD             , "E BASE 1002 Alias does not exist HELLO F:R"      )

@@ -41,6 +41,8 @@ typedef enum
    HB_P_AND,               /* peforms the logical AND of two latest stack values, removes them and places result */
    HB_P_ARRAYAT,           /* places on the virtual machine stack an array element */
    HB_P_ARRAYPUT,          /* sets array element, the array and the index are both on the stack */
+   HB_P_ARRAYDIM,          /* instructs the virtual machine to build an array with some specific dimensions */
+   HB_P_ARRAYGEN,          /* instructs the virtual machine to build an array and load elemnst from the stack */
    HB_P_EQUAL,             /* check if the latest two values on the stack are equal, removing them and leaving there the result */
    HB_P_ENDBLOCK,          /* end of a codeblock definition */
    HB_P_ENDPROC,           /* instructs the virtual machine to end execution */
@@ -50,11 +52,9 @@ typedef enum
    HB_P_FUNCTION,          /* instructs the virtual machine to execute a function saving its result */
    HB_P_FRAME,             /* instructs the virtual machine about how many parameters and locals a function uses */
    HB_P_FUNCPTR,           /* returns a function address pointer */
-   HB_P_GENARRAY,          /* instructs the virtual machine to build an array and load elemnst from the stack */
    HB_P_GREATER,           /* checks if the second latest value on the stack is greater that the lastest one */
    HB_P_GREATEREQUAL,      /* checks if the second latest value on the stack is greater equal that the latest one, leaves the result only */
    HB_P_DEC,               /* decrements the latest value on the virtual machine stack */
-   HB_P_DIMARRAY,          /* instructs the virtual machine to build an array with some specific dimensions */
    HB_P_DIVIDE,            /* divides the latest two values on the stack, removing them and leaving there the result */
    HB_P_DO,                /* instructs the virtual machine to execute a function discarding its result */
    HB_P_DUPLICATE,         /* places a copy of the latest virtual machine stack value on to the stack */
