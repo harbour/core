@@ -197,6 +197,12 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
 
 return Self
 
+METHOD Invalidate() CLASS TBrowse
+
+   AFill(::aRedraw, .F. )
+   ::Stable := .F.
+
+return Self
 
 METHOD Configure(nMode) CLASS TBrowse
 
@@ -221,6 +227,17 @@ METHOD Configure(nMode) CLASS TBrowse
          exit
       endif
    next
+
+   // 20/nov/2000 - maurilio.longo@libero.it
+   // If I add (or remove) header or footer separator I have to change number
+   // of available rows
+   ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
+                  iif( ::lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
+                  iif( Empty( ::FootSep ), 0, 1 )
+
+   if Len(::aRedraw) <> ::RowCount
+      ::aRedraw := Array(::RowCount)
+   endif
 
    ::Invalidate()
 
@@ -265,8 +282,8 @@ METHOD Down() CLASS TBrowse
       if Eval( ::SkipBlock, 1 ) != 0
          if ::RowPos < ::RowCount
             ::RowPos++
-            ::Hilite()
             ::RelativePos++
+            ::Hilite()
          else
             n := ::nTop + iif( ::lHeaders, 1, 0 ) + iif( Empty( ::HeadSep ), 0, 1 )
             Scroll( n, ::nLeft, n + ::RowCount - 1, ::nRight, 1 )
@@ -331,19 +348,6 @@ METHOD Home() CLASS TBrowse
       ::lRedrawFrame := .T.
       ::RefreshCurrent()
    endif
-
-return Self
-
-METHOD Invalidate() CLASS TBrowse
-
-   local n
-
-   ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
-               iif( ::lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - ;
-               iif( Empty( ::FootSep ), 0, 1 )
-
-   AFill(::aRedraw, .F. )
-   ::Stable := .F.
 
 return Self
 
@@ -428,15 +432,17 @@ METHOD PageDown() CLASS TBrowse
    ::HitTop := .F.
    if !::HitBottom
       if ( nDown := Eval( ::SkipBlock, ::RowCount )  ) != 0
-         if nDown < ::RowCount
-            ::RefreshAll()
+         if ::RowPos + nDown < ::RowCount
             ::RowPos += nDown
             ::RelativePos += nDown
+            ::RefreshAll()
          else
+            ::RowPos := ::RowCount
+            ::RelativePos := ::RowCount
             ::RefreshAll()
          endif
       else
-         ::HitBottom := .t.
+         ::HitBottom := .T.
       endif
    endif
 
@@ -450,9 +456,9 @@ METHOD PageUp() CLASS TBrowse
    if !::HitTop
       if ( nUp := Abs( Eval( ::SkipBlock, - ::RowCount )  ) ) != 0
          if nUp < ::RowCount
-            ::RefreshAll()
             ::RowPos := 1
             ::RelativePos := 1
+            ::RefreshAll()
          else
             ::RefreshAll()
          endif
@@ -648,13 +654,6 @@ METHOD Stabilize() CLASS TBrowse
       enddo
 
       ::rightVisible := nColsVisible
-
-      if Empty(::aRedraw)
-         ::RowCount := ::nBottom - ::nTop + 1 - iif( ::lHeaders, 1, 0 ) - ;
-               iif( ::lFooters, 1, 0 ) - iif( Empty( ::HeadSep ), 0, 1 ) - iif( Empty( ::FootSep ), 0, 1 )
-         ::aRedraw := Array( ::RowCount )
-         AFill( ::aRedraw, .F. )
-      endif
 
    else
       oCol := ::aColumns[ iif( ::rightVisible != 0, ::rightVisible, 1 ) ]

@@ -1,3 +1,13 @@
+2000-11-20 17:38 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+      ! ::aRedraw[] can change its size if header/footer separators are added/removed
+        during object life. ::Configure() can now handle this.
+      ! ::PageDown() could set ::RowPos past ::RowCount. Fixed.
+   * contrib/mysql/tmysql.prg
+      ! fixed ::Skip() error when at eof().
+   * contrib/mysql/tsqlbrw.prg
+      ! missing ::Configure() call
+
 2000-11-18 11:11 GMT+1 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
       * drawing headers and footers is not needed if columns on screen don't change,

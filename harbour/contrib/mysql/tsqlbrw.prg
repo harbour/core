@@ -390,4 +390,5 @@ return Self
 // Empty method to be subclassed
 METHOD KeyboardHook(nKey) CLASS TBrowseSQL
 
+
 return Self

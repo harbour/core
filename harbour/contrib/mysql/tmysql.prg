@@ -378,7 +378,7 @@ METHOD Skip(nRows) CLASS TMySQLQuery
 
    else
       // positive movement
-      ::nCurRow := Min(::nCurRow + nRows, ::nNumRows + 1)
+      ::nCurRow := Min(::nCurRow + nRows, ::nNumRows)
 
    endif
 
