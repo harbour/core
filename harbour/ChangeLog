@@ -1,3 +1,14 @@
+2001-08-23 23:13 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/vm/Makefile
+     + if HB_GT_LIB == os2pm then compiles mainpm.c instead of main.c
+   * source/vm/mainpm.c
+     * little changes to make it work.
+
+   NOTE: after gcc creates an executable file you need to issue an:
+            emxbind -ep filename.exe
+         to mark it as a PM executable, failing to do so the executable file is a
+         VIO one and all calls to WinXxx() functions will fail
+
 2001-08-23 16:43 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    + source/vm/mainpm.c
      + added mainpm.c entry point for OS/2 Presentation Manager applications

@@ -7,7 +7,11 @@ ROOT = ../../
 ifeq ($(HB_ARCHITECTURE),w32)
 	C_MAIN := mainstd.c mainwin.c
 else
-	C_MAIN := main.c
+	ifeq ($(HB_GT_LIB),os2pm)
+		C_MAIN := mainpm.c
+	else
+		C_MAIN := main.c
+	endif
 endif
 
 C_SOURCES=\
