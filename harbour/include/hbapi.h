@@ -301,6 +301,8 @@ extern BOOL     HB_EXPORT hb_extIsArray( int iParam );
 #define hb_ret()                             hb_itemClear( &hb_stack.Return )
 #define hb_reta( ulLen )                     hb_arrayNew( &hb_stack.Return, ulLen )
 #define hb_retc( szText )                    hb_itemPutC( &hb_stack.Return, szText )
+#define hb_retcbuffer( szText, ulLen )       hb_itemPutCPtr( &hb_stack.Return, szText, ulLen )
+#define hb_retcconst( szText )               hb_itemPutCConst( &hb_stack.Return, szText )
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( &hb_stack.Return, szText, ulLen )
 #define hb_retds( szDate )                   hb_itemPutDS( &hb_stack.Return, szDate )
 #define hb_retd( lYear, lMonth, lDay )       hb_itemPutD( &hb_stack.Return, lYear, lMonth, lDay )
@@ -320,6 +322,8 @@ extern int   HB_EXPORT  hb_pcount( void );          /* returns the number of sup
 
 extern void  HB_EXPORT  hb_ret( void );             /* post a NIL return value */
 extern void  HB_EXPORT  hb_retc( char * szText );   /* returns a string */
+extern void  HB_EXPORT  hb_retcbuffer( char * szText, ULONG ulLen ); /* returns a string without duplicating it */
+extern void  HB_EXPORT  hb_retcconst( char * szText ); /* returns a string as a pcode based string */
 extern void  HB_EXPORT  hb_retclen( char * szText, ULONG ulLen ); /* returns a string with a specific length */
 extern void  HB_EXPORT  hb_retds( char * szDate );  /* returns a date, must use yyyymmdd format */
 extern void  HB_EXPORT  hb_retd( long lYear, long lMonth, long lDay ); /* returns a date */
