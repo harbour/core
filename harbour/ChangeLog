@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-09-29 11:47 UTC+0300 Chen Kedem <niki@actcom.co.il>
+  * doc/whatsnew.txt
+    + Added information about builds 10..25, 43 based on information
+      found on the Harbour site and the mail list.
+
 2003-09-29 11:25 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbfntx/dbfntx1.c
      * Signature byte for ntx files is changed to be Clipper compatible.
@@ -56,13 +61,13 @@
     ! fixed bug on hb_strncpyUpper() use from DbUseArea()
 
 2003-09-17 10:54 UTC-0800 Luis Krause Mantilla <lkrausem@shaw.ca>
-  * harbour/source/rtl/tget.prg
+  * source/rtl/tget.prg
     ! Fixed bug in unTransform() method that truncated
       trailing spaces in variable when using "@R" template
   Borrowed from xharbour by Andi Jahja:
-  * harbour/source/common/reserved.c
-  * harbour/utils/hbdoc/genrtf.prg
-  * harbour/utils/hbdoc/genng.prg
+  * source/common/reserved.c
+  * utils/hbdoc/genrtf.prg
+  * utils/hbdoc/genng.prg
      + Add option to omit reserved words by adding -DHB_RESERVED_OFF (default is ON)
 
      /*
@@ -80,28 +85,28 @@
      ! Bug fixed with scoping, reported by Giovi Verrua.
 
 2003-09-11 11:30 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/harbour.spec
+  * harbour.spec
     * small fix in auto platform detection (thanks to Tomaz Zupan)
-  * harbour/make_tgz.sh
+  * make_tgz.sh
     * added auto platform detection
 
 2003-09-11 01:00  UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
-  * harbour/harbour.spec
+  * harbour.spec
     * swiched back to gtcrs
 
 2003-09-11 00:47  UTC+0200 Tomaz Zupan <tomaz.zupan@orpo.si>
-  * harbour/harbour.spec
+  * harbour.spec
     * Added automatic platform resolution (borrowed from courier-imap project)
-  * harbour/make_rpm.sh
+  * make_rpm.sh
     * small fix needed to work with Mandrake Linux
 
 2003-09-10 23:27 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/harbour.spec
-  * harbour/make_tgz.sh
+  * harbour.spec
+  * make_tgz.sh
     * small fix
 
 2003-09-10 21:37 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/harbour.spec
+  * harbour.spec
     + new spec file. It creates four binary RPMs with shared and
       static libs core harbour compiler and tools and with Ron's PP
       which allow to run xBase files as scripts on *nix platform
@@ -110,39 +115,39 @@
       Please remember that PP has poor GPL license. It is noticed in RPM
       headers.
 
-  + harbour/hbgtmk.sh
+  + hbgtmk.sh
     + simple script which connect to SourceForge CVS takes sources and
       build RPMs from them.
 
-  + harbour/make_rpm.sh
+  + make_rpm.sh
     + script for checking dependences and making RPMs
 
-  + harbour/make_tgz.sh
+  + make_tgz.sh
     + script for making binary package for this Linux distro which don't
       support RPM
 
-  + harbour/bin/hb-mkslib.sh
+  + bin/hb-mkslib.sh
     + script for building shared libs from static ones and/or object files
 
-  + harbour/bin/pack_src.sh
+  + bin/pack_src.sh
     + script for packing harbour sources
 
-  * harbour/Makefile
-  * harbour/source/compiler/harbour.c
-  * harbour/source/common/hbver.c
-  * harbour/source/vm/cmdarg.c
-  * harbour/source/vm/fm.c
-  * harbour/source/vm/hvm.c
+  * Makefile
+  * source/compiler/harbour.c
+  * source/common/hbver.c
+  * source/vm/cmdarg.c
+  * source/vm/fm.c
+  * source/vm/hvm.c
     * changes for some new futures in hb{cmp,lnk,mk} tools
 
-  * harbour/contrib/libct/datetime.prg
+  * contrib/libct/datetime.prg
     - redundant STOD removed (this function is part of RTL)
 
-  * harbour/contrib/dot/pp.prg
-  * harbour/contrib/dot/pp.txt
-  * harbour/contrib/dot/pp_harb.ch
-  * harbour/contrib/dot/rp_dot.ch
-  * harbour/contrib/dot/rp_run.ch
+  * contrib/dot/pp.prg
+  * contrib/dot/pp.txt
+  * contrib/dot/pp_harb.ch
+  * contrib/dot/rp_dot.ch
+  * contrib/dot/rp_run.ch
     * upadting for runing xBase files as scripts.
 
 All this changes (except Ron's PP) are my work borrowed from xHarbour.
@@ -795,76 +800,76 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
     ! add missings commas
 
 2003-06-18 02:05 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/source/codepage/Makefile
-  * harbour/source/codepage/cdpesdos.c
-  * harbour/source/codepage/cdpeswin.c
-  * harbour/source/codepage/cdpgedos.c
-  * harbour/source/codepage/cdppliso.c
-  * harbour/source/codepage/cdpplmaz.c
-  * harbour/source/codepage/cdpplwin.c
-  * harbour/source/codepage/cdpslwin.c
-  - harbour/source/codepage/cdpla850.c
-  + harbour/source/codepage/cdppt850.c
-  + harbour/source/codepage/cdpptiso.c
-  * xharbour/makefile.bc
-  * xharbour/makefile.nt
-  * xharbour/makefile.vc
+  * source/codepage/Makefile
+  * source/codepage/cdpesdos.c
+  * source/codepage/cdpeswin.c
+  * source/codepage/cdpgedos.c
+  * source/codepage/cdppliso.c
+  * source/codepage/cdpplmaz.c
+  * source/codepage/cdpplwin.c
+  * source/codepage/cdpslwin.c
+  - source/codepage/cdpla850.c
+  + source/codepage/cdppt850.c
+  + source/codepage/cdpptiso.c
+  * makefile.bc
+  * makefile.nt
+  * makefile.vc
     * corrections in code page description.
     - removed cdpla850.c ("PT" codepage)
     + PT850 and PTISO codepages added.
     * makefiles updated - Sorry, I cannot test all of them.
 
 2003-06-18 00:10 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/include/hbapilng.h
-  * harbour/include/hblang.ch
-  * harbour/source/lang/Makefile
-  * harbour/source/lang/msg_tpl.c
-  * harbour/source/lang/msgca.c
-  * harbour/source/lang/msgcs852.c
-  * harbour/source/lang/msgcsiso.c
-  * harbour/source/lang/msgcskam.c
-  * harbour/source/lang/msgcswin.c
-  * harbour/source/lang/msgde.c
-  * harbour/source/lang/msgdewin.c
-  * harbour/source/lang/msgen.c
-  * harbour/source/lang/msgeo.c
-  * harbour/source/lang/msges.c
-  * harbour/source/lang/msgeswin.c
-  * harbour/source/lang/msgeu.c
-  * harbour/source/lang/msgfr.c
-  * harbour/source/lang/msggl.c
-  * harbour/source/lang/msghe862.c
-  * harbour/source/lang/msghewin.c
-  * harbour/source/lang/msghr852.c
-  * harbour/source/lang/msghriso.c
-  * harbour/source/lang/msghu852.c
-  * harbour/source/lang/msghucwi.c
-  * harbour/source/lang/msghuwin.c
-  * harbour/source/lang/msgid.c
-  * harbour/source/lang/msgis850.c
-  * harbour/source/lang/msgit.c
-  * harbour/source/lang/msgko.c
-  * harbour/source/lang/msgpl852.c
-  * harbour/source/lang/msgpliso.c
-  * harbour/source/lang/msgplmaz.c
-  * harbour/source/lang/msgplwin.c
-  * harbour/source/lang/msgpt.c
-  * harbour/source/lang/msgro.c
-  * harbour/source/lang/msgru866.c
-  * harbour/source/lang/msgrukoi.c
-  * harbour/source/lang/msgruwin.c
-  * harbour/source/lang/msgsl852.c
-  * harbour/source/lang/msgsliso.c
-  * harbour/source/lang/msgslwin.c
-  * harbour/source/lang/msgsr852.c
-  * harbour/source/lang/msgsriso.c
-  * harbour/source/lang/msgzhb5.c
-  * harbour/source/lang/msgzhgb.c
-  + harbour/source/lang/msgsrwin.c
+  * include/hbapilng.h
+  * include/hblang.ch
+  * source/lang/Makefile
+  * source/lang/msg_tpl.c
+  * source/lang/msgca.c
+  * source/lang/msgcs852.c
+  * source/lang/msgcsiso.c
+  * source/lang/msgcskam.c
+  * source/lang/msgcswin.c
+  * source/lang/msgde.c
+  * source/lang/msgdewin.c
+  * source/lang/msgen.c
+  * source/lang/msgeo.c
+  * source/lang/msges.c
+  * source/lang/msgeswin.c
+  * source/lang/msgeu.c
+  * source/lang/msgfr.c
+  * source/lang/msggl.c
+  * source/lang/msghe862.c
+  * source/lang/msghewin.c
+  * source/lang/msghr852.c
+  * source/lang/msghriso.c
+  * source/lang/msghu852.c
+  * source/lang/msghucwi.c
+  * source/lang/msghuwin.c
+  * source/lang/msgid.c
+  * source/lang/msgis850.c
+  * source/lang/msgit.c
+  * source/lang/msgko.c
+  * source/lang/msgpl852.c
+  * source/lang/msgpliso.c
+  * source/lang/msgplmaz.c
+  * source/lang/msgplwin.c
+  * source/lang/msgpt.c
+  * source/lang/msgro.c
+  * source/lang/msgru866.c
+  * source/lang/msgrukoi.c
+  * source/lang/msgruwin.c
+  * source/lang/msgsl852.c
+  * source/lang/msgsliso.c
+  * source/lang/msgslwin.c
+  * source/lang/msgsr852.c
+  * source/lang/msgsriso.c
+  * source/lang/msgzhb5.c
+  * source/lang/msgzhgb.c
+  + source/lang/msgsrwin.c
     ! bug fixed in national msg system and new localization added
       (borrowed from xHarbour)
 
-  + harbour/tests/langmsg.prg
+  + tests/langmsg.prg
     * simple test program for national messages
       I have to ask developpers to run it and check their national messages
 
@@ -940,15 +945,15 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
     * Makefiles are changed to compile new lang and codepage files.
 
 2003-06-15 14:20 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/source/lang/msgen.c
-  * harbour/source/lang/msgpl852.c
-  * harbour/source/lang/msgpliso.c
-  * harbour/source/lang/msgplmaz.c
+  * source/lang/msgen.c
+  * source/lang/msgpl852.c
+  * source/lang/msgpliso.c
+  * source/lang/msgplmaz.c
     ! the bug reported by Alexander in msgru* fixed.
-  + harbour/source/lang/msgplwin.c
+  + source/lang/msgplwin.c
     + added msgplwin (cp1250)
 
-  * harbour/source/rtl/inkey.c
+  * source/rtl/inkey.c
     * removed dirty hack which degrease performance of inkey() on *nix
       platforms.
 
@@ -1103,17 +1108,17 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
       (first parameter is path name, if omitted "/" is checked)
 
 2003-05-26 15:50 UTC+0200 Przemyslaw Czerpak <druzus@polbox.com>
-  * harbour/source/rtl/cdpapi.c
+  * source/rtl/cdpapi.c
     * small correction in s_en_codepage = { ... }
 
-  + harbour/source/codepage/cdpplwin.c
-  * harbour/source/codepage/Makefile
+  + source/codepage/cdpplwin.c
+  * source/codepage/Makefile
     + new Polish codepage PLWIN - CP1250 based
 
-  * harbour/source/rtl/gt.c
+  * source/rtl/gt.c
     + new .prg function HB_GT_VERSION() which returns GT name.
 
-  * harbour/source/rtl/seconds.c
+  * source/rtl/seconds.c
     + new function added SECONDSCPU(n) which reports how many CPU and/or
       system seconds have elapsed since the beginning of the program execution.
       n == 1  utime  -> user CPU time of the current process
@@ -2738,17 +2743,17 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
              alread has file lock.
 
 2002-09-04 17:56 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
-   * harbour/source/rtl/tbrowse.prg
+   * source/rtl/tbrowse.prg
      ! Fixed cell padding inside ::DispCell(). Character or memo fields have to be
        padded right. Number fields have to be padded left.
 
 2002-09-03 19:10 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
-   * harbour/source/rtl/teditor.prg
+   * source/rtl/teditor.prg
      ! fixed line splitting when a character is deleted from a line and there is a
        word wrapping limit. Please note that lines of text are treated differently
        from the way clipper 5.x treats them, in particular when past EOL there is no
        deletion from current line
-   * harbour/source/rtl/memoedit.prg
+   * source/rtl/memoedit.prg
      ! fixed cursor positiong and shaping when calling an user function
 
 2002-09-02 19:25 UTC-0400 David G. Holm <dholm@jsd-llc.com>

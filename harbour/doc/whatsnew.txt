@@ -3,6 +3,14 @@
  */
 
 ----------------------------------------------------------------------
+Version 0.43 Alpha Build 43 (2003-09-??)
+
+- DBFCDX is significantly improved
+- New national codepages are added
+- .NET support started
+- A lot of fixes in all subsystems
+
+----------------------------------------------------------------------
 Version 0.42 Alpha Build 42 (2003-04-08)
 
 - Further speed improvements
@@ -46,7 +54,7 @@ Version 0.39 Alpha Build 39 (2002-04-08)
 - Enhacements to hbmake,hbzlib
 - Great speed improvement
 - New enhancements and bug fixes in the debugger
-- Many bug fixes and enhancements.
+- Many bug fixes and enhancements
 - Strings sharing and statics strings implementation (thanks to Ron Pinkas)
 - RTL strings management functions optimization thanks to new function
   hb_retclen_buffer() and optimized use for hb_retc( NULL )
@@ -67,7 +75,7 @@ Version 0.38 Alpha Build 38 (2001-12-15)
   previous fix. Waiting after Alpha build 38 to fix and re-enable it
 - HGF (Harbour GUI multiplatform Framework) started
 - Class HBPersistent added to RTL to provide Harbour objects persistence
-- New PROPERTY | PERSISTENT clause added as a DATA feature.
+- New PROPERTY | PERSISTENT clause added as a DATA feature
 - New function __ClsGetProperties() added. Syntax:
   __ClsGetProperties( <nClassHandle> ) --> <aPropertiesNames>
 - Harbour Profiler foundation functions added
@@ -78,7 +86,7 @@ Version 0.38 Alpha Build 38 (2001-12-15)
 - HB_FM_STATISTICS can be turned off by defining
   HB_FM_STATISTICS_OFF in your make or bat files.
   Rebuilding Harbour this way yields a faster program,
-  but it loses the ability to report on memory usage and leaks.
+  but it loses the ability to report on memory usage and leaks
 - adssetServerType now returns any error numbers
 - Added AdsRefreshRecord, AdsIsTableLocked, AdsIsRecordLocked
 - Dave Pearson's bitflags.c, which I ported to Harbour.
@@ -90,7 +98,7 @@ Version 0.38 Alpha Build 38 (2001-12-15)
   Dumps symbol name just before it's called. This is very useful when
   debugging GPFs as it will trace all PRG-level calls up until the crash.
   Uses HB_TRACE so traces are in line with any C-level traces
-- Martin and Walter added a bunch of functions to libct.
+- Martin and Walter added a bunch of functions to libct
 - David added the Path stuff so file() and other functions can work right
 - Platform support for FreeBSD 4.4, which requires installation
   of the gmake (GNU make) port (instead of using FreeBSD's make)
@@ -156,11 +164,11 @@ Version 0.35 Alpha Build 35 (2000-08-15)
   HBTEST (for Xbase++ and Linux), Documentation, Class engine
 - HBZLIB enhancements
 - MySQL database access contribution started
-- ADS RDD encryption/decryption functions added.
+- ADS RDD encryption/decryption functions added
 - New GTCGI driver
 - Improved command line parsing
 - Alternate Lexer (SimpLex), utilizes less memory, smaller Harbour.exe
-  as well as smaller compiled applications (due to smaller macro compiler).
+  as well as smaller compiled applications (due to smaller macro compiler)
 
 ----------------------------------------------------------------------
 Version 0.34 Alpha Build 34 (2000-06-02)
@@ -177,9 +185,9 @@ Version 0.34 Alpha Build 34 (2000-06-02)
   other tricks)
 - Far jump pcode support
 - Double number size support in pcode
-- Pcode finalized in the compiler, instead of the output generation modules.
+- Pcode finalized in the compiler, instead of the output generation modules
 - OS/2 support improved (DISKSPACE(), MEMORY(), locks, etc...)
-- Linux/Unix support for file locks and commit.
+- Linux/Unix support for file locks and commit
 - DBFCDX index creation support (started)
 - Strong Typing support
 - OBJ generation support for BCC5x + Blinker5
@@ -189,9 +197,9 @@ Version 0.34 Alpha Build 34 (2000-06-02)
 - RSX32 and RSXNT compiler support
 - SETKEY functions, ASORT(), SAVESCREEN/RESTSCREEN rewritten in C
 - Extensions (XPP, C53, Harbour) are easier to switch of and better separated
-  from Harbour.
-- Some fixes for 10 chars support.
-- New most compact and fast -gc0 (C language) output method added.
+  from Harbour
+- Some fixes for 10 chars support
+- New most compact and fast -gc0 (C language) output method added
 - -gf switch renamed to -go
 - Compiler /BUILD switch added
 - Crew list added to /CREDIT compiler switch
@@ -208,20 +216,20 @@ Version 0.34 Alpha Build 34 (2000-06-02)
 ----------------------------------------------------------------------
 Version 0.33 Alpha Build 33 (2000-04-07)
 
-- Final cleanups on global macro and symbol names.
+- Final cleanups on global macro and symbol names
   (date*(), console*(), HB_FUNC())
 - DISKSPACE() enhancements
 - Microsoft C++ 8.x compiler support started
 - 10 character symbol support finalized
 - VAL() made fully compatible
 - New functions HB_COMPILER(), HB_FSIZE(), HB_FTEMPNAME(), HB_FTEMPCREATE()
-- PP bug fixes.
-- More functions documented.
-- Fixed to compile with Borland C++ in C++ mode.
+- PP bug fixes
+- More functions documented
+- Fixed to compile with Borland C++ in C++ mode
 - Handling of double/long number widths and decimals made completely CA-Cl*pper
-  compatible.
-- Some new CA-Tools compatible functions added.
-- MEMO type support.
+  compatible
+- Some new CA-Tools compatible functions added
+- MEMO type support
 - OS/2 DispBegin()/DispEnd() support
 - #pragma fixes and enhancements. (better XPP compatibility)
 - Source files split to several smaller files
@@ -238,14 +246,14 @@ Version 0.33 Alpha Build 33 (2000-04-07)
   <b></b> for bold, <i></i> for italic, <em></em> for bold italic font
   <color:></color> for color <fixed></fixed> for fixed text
   <table></table> for tables <insertfile:> to insert the content of another
-  file.
+  file
 
 ----------------------------------------------------------------------
 Version 0.32 Alpha Build 32 (2000-03-07)
 
 - New Borland make files
-- Many make and build processes fixes, enhancements, warning fixes.
-- Borland, MSVC and GNU-make processes don't collide anymore.
+- Many make and build processes fixes, enhancements, warning fixes
+- Borland, MSVC and GNU-make processes don't collide anymore
 - PP now supports code in header files
 - Docs separated from the source
 - Docs enhanced
@@ -253,10 +261,10 @@ Version 0.32 Alpha Build 32 (2000-03-07)
 - FRM and LBL support
 - TBrowse fixes
 - HBDOC improvments
-- Some mouse support added.
+- Some mouse support added
 - New C include file names
-- Many other small fixes and changes.
-- PP __DATE__ and __TIME__ support.
+- Many other small fixes and changes
+- PP __DATE__ and __TIME__ support
 - __TYPEFILE() added
 
 ----------------------------------------------------------------------
@@ -279,12 +287,12 @@ Version 0.31 Alpha Build 31 (2000-01-27)
    '-w' or '-w1' - Clipper compatible warnings
    '-w2'         - some useful warnings missed in Clipper
    '-w3'         - warnings generated for Harbour language extensions
-- The 'libs' directory is now named 'lib'.
-- The 'runner' program is now named 'hbrun'.
-- Some include files now have an 'hb' prefix in the name.
-- db_brows significantly enhanced.
+- The 'libs' directory is now named 'lib'
+- The 'runner' program is now named 'hbrun'
+- Some include files now have an 'hb' prefix in the name
+- db_brows significantly enhanced
 - Regression testing enhanced and expanded, replacing several standalone
-  test modules. Now in tests/regress directory.
+  test modules. Now in tests/regress directory
 - Added FSETDEVMOD()
 - Added READINSERT()
 - Added MEMOLINE()
@@ -322,7 +330,7 @@ Version 0.31 Alpha Build 31 (2000-01-27)
 - Many changes, fixes, and enhancements to documentation
 - Program added to extract documentation from source code and create NG,
   HLP, OS2, IPF and TROFF output files
-- Compile time expression optimizer.
+- Compile time expression optimizer
 - Some preprocessor fixes
 - Added ADS RDD
 - Added TYPE() function
@@ -355,7 +363,7 @@ Version 0.30 Alpha Build 30 (1999-09-30)
 - Rudimentary Unix keyboard support added
 - Tone support added
 - SET KEY support was added
-- Extensive regression test suite added (RTL_TEST).
+- Extensive regression test suite added (RTL_TEST)
 - Array handling fixed and made Clipper compatible
 - Ragged array declaration and initialization support added
 - FileSys API extensions, more C5.3 compatible functions added
@@ -394,7 +402,7 @@ Version 0.28 Alpha Build 28 (1999-07-18)
 - Almost complete preprocessor
 - Error handling improved
 - Extend Library complete
-- First version of OOPS syntax added.
+- First version of OOPS syntax added
 - MEMVAR support started
 - Pre processor available as a run-time function
 - Rich Text Format Class added
@@ -404,17 +412,25 @@ Version 0.28 Alpha Build 28 (1999-07-18)
 - Many bug fixes
 
 ----------------------------------------------------------------------
+Version 0.27a Alpha Build 27a (1999-06-19)
+
+- Corrected build numbers in Harbour.exe
+- Corrected a little bug in HScript.prg
+
+----------------------------------------------------------------------
 Version 0.27 Alpha Build 27 (1999-06-18)
 
 - Added new directory with GNU MAKE files for GCC on Linux
 - Added support for Watcom C/C++ compiler
-- Harbour compiles fine on Linux now.
+- Harbour compiles fine on Linux now
 - Optional Strong Typed Variables
 - New DosShell function for DOS, OS/2 & Windows
 - First release of hScript added. Internet Scripting Samples!
 - Integrated preprocessor into compiler
 - Check on non used variables in codeblocks
 - Extended syntax for AllTrim and RTrim
+- Many resolved bugs
+- Many new functions
 
 ----------------------------------------------------------------------
 Version 0.26 Alpha Build 26 (1999-06-12)
@@ -432,4 +448,105 @@ Version 0.26 Alpha Build 26 (1999-06-12)
 - <object>:<data> := <value> can now be used inside expressions (codeblocks)
 
 ----------------------------------------------------------------------
+Version 0.25 Alpha Build 25 (1999-06-05)
 
+- Almost complete Clipper syntax
+- Better makefiles
+- gtApi included
+- Preprocessor included
+- Files* functions working
+- Many fixes, enhancements and new functions
+- HTML and CGI examples included
+- Inheritance
+- Even more test PRG's!
+
+----------------------------------------------------------------------
+Version 0.24 Alpha Build 24 (1999-06-03)
+
+----------------------------------------------------------------------
+Version 0.23 Alpha Build 23 (1999-05-19)
+
+- Harbour.exe for DOS/Windows is included now
+- The Windows libs are also included (HBW.BAT to build Windows EXE's)
+- HRB files! These files can be run with the Runner.exe (Source included)
+- No need for a C compiler anymore to run Harbour source!
+- New MAKE and BUILD files for IBM C++ 3.0 for OS/2
+- Many fixes, Many enhancements (See ChangeLog in the Harbour directory)
+- Added support for '-i' option (#include file search path)
+- Even more test PRG's
+
+----------------------------------------------------------------------
+Version 0.21-2 Alpha Build 21-2 (1999-05-13)
+
+- 32 bits OBJ's generation
+- More Clipper language compatibility
+- New object oriented features
+
+----------------------------------------------------------------------
+Version 0.20-2 Alpha Build 20-2 (1999-05-01)
+
+- It is not required to name Main() as the starting function.
+  You may use any function name there
+- Logical AND shortcutting
+- New compiler /z to suppress shortcutting (see tests\working\and_or.prg)
+- Memory unreleased blocks improved
+- Many latest diffs implemented
+
+----------------------------------------------------------------------
+Version 0.18 Alpha Build 18 (1999-04-23)
+
+- Statics support
+- Classes creation: just a very very brief
+- Most important changes are related to the Harbour object oriented
+  capabilities
+- Dynamic symbol table implementation
+
+----------------------------------------------------------------------
+Version 0.17 Alpha Build 17 (1999-04-20)
+
+- Multidimensional arrays support!!!
+- Spitted files
+- We have started the runtime library implementation (source\rtl)
+- The harbour.lib gets built from the make file
+- Dates support
+- Dynamic stack is properly working
+- Much improved extend system
+- More tests for dates, strings
+- Dates support including adding and subtracting!
+- Variables by reference support
+- Labeled C pcode output
+- Many diffs implemented
+
+----------------------------------------------------------------------
+Version 0.16 Alpha Build 16 (1999-04-17)
+
+- New project directories structure
+- Added support for command line parameters
+- Compiler /o options changed to /g
+- /gc added (default option)
+- Changes on types.h
+- Extend system functions enhanced
+- Do case support
+- _POWER support on hvm
+- _MODULUS support on hvm
+- Latest proposed diffs implemented
+
+----------------------------------------------------------------------
+Version 0.15 Alpha Build 15 (1999-04-14)
+
+----------------------------------------------------------------------
+Version 0.14 Alpha Build 14 (1999-04-13)
+
+----------------------------------------------------------------------
+Version 0.13 Alpha Build 13 (1999-04-10)
+
+----------------------------------------------------------------------
+Version 0.12 Alpha Build 12 (1999-08-08)
+
+----------------------------------------------------------------------
+Version 0.11 Alpha Build 11 (1999-04-07)
+
+----------------------------------------------------------------------
+Version 0.10 Alpha Build 10 (1999-04-03)
+
+----------------------------------------------------------------------
