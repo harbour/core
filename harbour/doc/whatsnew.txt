@@ -4,6 +4,8 @@
 
 ----------------------------------------------------------------------
 
+Version 0.35 Build 35 (2000-08-15)
+
 - Added HB_IDLE*() idle state handling functions.
 - Watcom C++ fixes.
 - SET RELATION support for RDDADS
@@ -20,6 +22,10 @@
   TRANSFORM(), DISKSPACE(), CURDIR(), __GET()), HBDOC, 
   HBTEST (for Xbase++ and Linux), Documentation, Class engine
 - HBZLIB enhancements
+- MySQL database access contribution started
+- ADS RDD encryption/decryption functions added.
+- New GTCGI driver
+- Improved command line parsing
 
 Version 0.34 Build 34 (2000-06-02)
 

@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*  $DOC$
  *  $FUNCNAME$
  *      Command line Utility
@@ -88,6 +89,18 @@
  *      - The CLIPPER, HARBOUR and Harbour application command line parsing
  *      is a different beast, see CMDARG.C for a NOTE.
  *
+ *      Notes:
+ *      
+ *      - All occurences where a path is accepted, 
+ *        Harbour should handle the quote char to specify 
+ *        path containing space, negative sign, slash, or
+ *        any other chars with special meaning.
+ *      
+ *        /i"c:/hello/"
+ *        -i"c:/hello-n"
+ *        /i"c:/program files/"
+ *        -i"c:/program files/"
+ *      
  *      <fixed>
  *        Just some examples for the various accepted forms:
  *        //F20 == /F20 == F20 == F:20 == F20X

@@ -92,7 +92,7 @@ static HB_LANG s_lang =
       "Y/N",
       "잘못된 표현식",
 
-	  /* Error description names */
+      /* Error description names */
 
       "Unknown error",
       "Argument error",

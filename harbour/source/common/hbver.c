@@ -160,19 +160,21 @@ char * hb_verPlatform( void )
 
       rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
 
-      if( rc == 0 ) {
+      if( rc == 0 )
+      {
          /* is this OS/2 2.x ? */
-         if (aulQSV[ QSV_VERSION_MINOR -1 ] < 30) {
+         if( aulQSV[ QSV_VERSION_MINOR - 1 ] < 30 )
+         {
             sprintf( pszPlatform, "OS/2 %ld.%02ld",
-               aulQSV[ QSV_VERSION_MAJOR -1 ] / 10,
-               aulQSV[ QSV_VERSION_MINOR -1 ] );
-         } else {
-            sprintf( pszPlatform, "OS/2 %2.2f",
-               (float) aulQSV[ QSV_VERSION_MINOR -1 ] / 10);
+               aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
+               aulQSV[ QSV_VERSION_MINOR - 1 ] );
          }
-      } else {
-         sprintf( pszPlatform, "OS/2" );
+         else
+            sprintf( pszPlatform, "OS/2 %2.2f",
+               ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );
       }
+      else
+         sprintf( pszPlatform, "OS/2" );
    }
 
 #elif defined(HB_OS_WIN_32)
@@ -386,6 +388,8 @@ char * hb_verCompiler( void )
 
    {
       char szSub[ 32 ];
+      /* QUESTION: Is there any better, safer, more official way to detect 
+                   the bit depth of the C compiler ? [vszakats] */
       sprintf( szSub, " (%i bit)", ( int ) ( sizeof( int ) * 8 ) );
       strcat( pszCompiler, szSub );
    }

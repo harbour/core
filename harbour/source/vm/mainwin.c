@@ -51,8 +51,8 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     LPSTR lpCmdLine,          /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
-   LPSTR pArgs = LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
-   BYTE  bAppName[ 250 ];
+   LPSTR pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 ), pArg = pArgs;
+   char szAppName[ 250 ];
 
    strcpy( pArgs, lpCmdLine );
 
@@ -61,23 +61,23 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( iCmdShow );
 
-   GetModuleFileName( hInstance, bAppName, 249 );
-   argv[ 0 ] = bAppName;
+   GetModuleFileName( hInstance, szAppName, 249 );
+   argv[ 0 ] = szAppName;
 
    if( * pArgs != 0 )
       argv[ ++argc ] = pArgs;
 
-   while( * pArg != 0 )
+   while( *pArg != 0 )
    {
-      if( * pArg == ' ' )
+      if( *pArg == ' ' )
       {
-         * pArg++ = 0;
+         *pArg++ = 0;
          argc++;
 
-         while( * pArg == ' ' )
-           pArg++;
+         while( *pArg == ' ' )
+            pArg++;
 
-         if( * pArg != 0 )
+         if( *pArg != 0 )
             argv[ argc ] = pArg++;
          else
             argc--;

@@ -439,7 +439,7 @@ HB_FUNC( ADSENABLEENCRYPTION )
 {
    ADSAREAP pArea;
    UNSIGNED32 ulRetVal;
-   char *pucPassword = hb_parc( 1 );
+   char * pucPassword = hb_parc( 1 );
 
    if( strlen( pucPassword ) == 0 )
    {
@@ -449,7 +449,7 @@ HB_FUNC( ADSENABLEENCRYPTION )
    pArea = (ADSAREAP) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
    {
-      ulRetVal = AdsEnableEncryption( pArea->hTable,pucPassword );
+      ulRetVal = AdsEnableEncryption( pArea->hTable, ( BYTE * ) pucPassword );
       hb_retni( ulRetVal );
    }
    else

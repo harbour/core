@@ -24,13 +24,13 @@ Function Main()
 //
 //
 
-//   NEXT(nExt)	//in Clipper: NEXT does not match FOR
+//   NEXT(nExt) //in Clipper: NEXT does not match FOR
 //   BEGIN( bEgin +';' + ;;   //////Clipper doesn't like more then one ';'
 //          ";" ; /* ;;;;;Clipper doesn't like this comment after ';' ;;;;;;; */
 //        )
    BREAK_(bReak)
-//   CASE(case)	//it is not possible to call case() in this context
-   case :=CASE( CASE )	//this is valid
+//   CASE(case) //it is not possible to call case() in this context
+   case :=CASE( CASE ) //this is valid
 
    //DO is reserved function name in Clipper!
    DO( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
@@ -100,9 +100,9 @@ Local nExt, nExt7, nExtNEXT
 
    //nExt++  // TODO: PP steals the ++ in Clipper: NEXT does not match FOR
    nExt :=nExt++
-   --nExt	/*next*/
+   --nExt     /*next*/
    nExt7 :=7
-   nExtNEXT := nExt	//next
+   nExtNEXT := nExt   //next
 
    //nExt[ 1 ] :=nExt   // TODO: PP steals the [... in Clipper: NEXT does not match FOR
    //nExt[ nExt ] := next[ next ]
@@ -169,7 +169,7 @@ LOCAL bReak:=0
   IF( bReak = 0 )
     Break /*break*/ ( nil )
     BREAK   /* break to beggining */
-    Break(0)	//in Clipper: syntax error: ')'
+    Break(0)   //in Clipper: syntax error: ')'
   ENDIF
 
   Break /*** break ***/ ;
@@ -191,7 +191,7 @@ LOCAL bReak:=0
 ; //it
 ; //often?
 ;///////////////////////////////////////////////////
-  (0)	//in Clipper: incomplete statement or unbalanced delimiters
+  (0)  //in Clipper: incomplete statement or unbalanced delimiters
 
 begin sequence
   FOR bReak:=1 To 10
@@ -483,7 +483,7 @@ EXIT FUNCTION EXIT( exit )
   exit()
   exit( exit )
 
-//  EXIT	//EXIT statement with no loop in sight
+//  EXIT    //EXIT statement with no loop in sight
 
   FOR exit:=1 TO 10
     exit++
@@ -498,7 +498,7 @@ EXIT FUNCTION EXIT( exit )
 
   DO CASE
   CASE exit
-//    EXIT	//EXIT statement with no loop in sight
+//    EXIT     //EXIT statement with no loop in sight
   CASE !exit
     exit()
   ENDCASE

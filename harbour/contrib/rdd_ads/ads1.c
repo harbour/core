@@ -206,7 +206,7 @@ static ERRCODE hb_adsCheckBofEof( ADSAREAP pArea )
    return SUPER_SKIPFILTER( (AREAP)pArea, 1 );
 }
 
-static BOOL strcmpNoCase( char* s1, char* s2, int n )
+static BOOL strcmpNoCase( char * s1, char * s2, int n )
 {
    int i = 0;
    while( *s1 && *s2 && ( !n || i++ < n ) )
@@ -1012,9 +1012,9 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    else
    {
       int slen = strlen( pArea->lpDataInfo->szFileName );
-      char *ptr = pArea->lpDataInfo->szFileName + slen - 4;
-      if( strcmpNoCase( pOrderInfo->abBagName, pArea->lpDataInfo->szFileName,
-            ( slen >= 4 && strcmpNoCase( ".dbf",ptr,0 ) )? slen-4:0 ) )
+      char * ptr = pArea->lpDataInfo->szFileName + slen - 4;
+      if( strcmpNoCase( ( char * ) pOrderInfo->abBagName, ( char * ) pArea->lpDataInfo->szFileName,
+            ( slen >= 4 && strcmpNoCase( ".dbf", ptr, 0 ) ) ? slen-4:0 ) )
          ulOptions = ADS_COMPOUND;
    }
 

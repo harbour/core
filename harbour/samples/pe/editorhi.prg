@@ -46,7 +46,7 @@
 STATIC nESize:=4096         // default buffer size
 STATIC oEditor              // static variable used to speed access to the editor
 STATIC aEdit:={ }           // the stack of used editors
-STATIC lInsert		   //current Insert state
+STATIC lInsert    //current Insert state
 
 //
 **
@@ -409,9 +409,9 @@ LOCAL lSaveAllowed, lSaved:=.F.
     ED_Config( oEditor[E_EDIT], nTop, nLeft, nBottom, nRight, 0, 0 )
 
     DO WHILE .T.
-        nRow =ED_Stabilize()	//displays all visible lines
-	// It don't uses incremantal stabilization for performance reasons
-	
+        nRow =ED_Stabilize()    //displays all visible lines
+        // It don't uses incremantal stabilization for performance reasons
+
         IF( nRow != ED_Row() )
             nRow =ED_Row()
             @ oEditor[E_TOP], nState SAY STRZERO( nRow,4 )
@@ -423,7 +423,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
         SETPOS( nTop+ED_WinRow(), nLeft+ED_WinCol() )
 
 //        nKey =WaitForKey()
-	nKey =INKEY(0)
+        nKey =INKEY(0)
 
         DO CASE
         CASE( nKey>=32 .AND. nKey<256 )
@@ -432,7 +432,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
             ENDIF
 
         CASE( nKey == K_F2 .AND. lSaveAllowed )
-            lSaved :=EditorSave( oEditor )	//save the copy of edited buffer
+            lSaved :=EditorSave( oEditor )     //save the copy of edited buffer
 
         CASE( EditorMove( nKey ) )
 
@@ -461,7 +461,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
         ENDCASE
     ENDDO
 
-    EditorPop()		//restore the proviously used editor
+    EditorPop()      //restore the proviously used editor
 
     SetCursor( nCursor )
     RESTBOX( oBox )
@@ -553,7 +553,7 @@ LOCAL lMoved:=.T.
         ED_End()
 
     CASE( nKey == K_CTRL_RIGHT )
-//        ED_NWord()		//there are some problems with it
+//        ED_NWord()        //there are some problems with it
 
     CASE( nKey == K_CTRL_LEFT )
         ED_PWord()
@@ -598,7 +598,7 @@ LOCAL nHandle, cFile, cNew
 
     cFile =EditorCargo(oEdit)
     IF( EMPTY(cFile) )
-        cFile ='TESTFILE.TXT'	//GetFileName( 10, 10 )
+        cFile ='TESTFILE.TXT'     //GetFileName( 10, 10 )
     ENDIF
 
     IF( EMPTY(cFile) )

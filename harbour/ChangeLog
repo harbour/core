@@ -1,3 +1,29 @@
+2000-08-15 02:48 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   ; Waiting for some minor patches before the new release.
+
+   * source/common/hbver.c
+     + QUESTION: added about bit depth detection.
+
+   * doc/whatsnew.txt
+     + Few new items added.
+
+   * doc/en/cmdline.txt
+     + Missing part added.
+
+   * source/lang/msgko.c
+   * tests/keywords.prg
+   * samples/pe/editorhi.prg
+     ! Tabs removed.
+
+   * source/vm/mainwin.c
+     * Some formatting.
+     * Fixed form MSVC
+
+   * contrib/rdd_ads/ads1.c
+   * contrib/rdd_ads/adsfunc.c
+     ! Fixed for MSVC
+
 2000-08-14 14:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
    * contrib/rdd_ads/ace.h
