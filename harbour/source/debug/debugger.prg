@@ -193,6 +193,7 @@ CLASS TDebugger
    METHOD CodeWindowProcessKey( nKey )
    METHOD Colors()
    METHOD CommandWindowProcessKey( nKey )
+   METHOD EditColor( nColor, oBrwColors )
    METHOD EditVar( nVar )
    METHOD EndProc()
    METHOD Exit() INLINE ::lEnd := .t.
@@ -372,7 +373,7 @@ return nil
 METHOD Colors() CLASS TDebugger
 
    local oWndColors := TDbWindow():New( 4, 5, 16, MaxCol() - 5,;
-                                        "Debugger Colors[1..11]", "N/W" )
+                                        "Debugger Colors[1..11]", ::ClrModal() )
    local aColors := { "Border", "Text", "Text High", "Text PPO", "Text Selected",;
                       "Text High Sel.", "Text PPO Sel.", "Menu", "Menu High",;
                       "Menu Selected", "Menu High Sel." }
@@ -405,9 +406,20 @@ METHOD Colors() CLASS TDebugger
 
 
    oWndColors:bPainted    := { || oBrwColors:ForceStable() }
+
    oWndColors:bKeyPressed := { | nKey | SetsKeyPressed( nKey, oBrwColors,;
-                               Len( aColors ), oWndColors, "Debugger Colors" ) }
+                               Len( aColors ), oWndColors, "Debugger Colors",;
+                               { || ::EditColor( n, oBrwColors ) } ) }
    oWndColors:ShowModal()
+
+   ::oPullDown:LoadColors()
+   ::oPullDown:Refresh()
+   ::BarDisplay()
+
+   for n = 1 to Len( ::aWindows )
+      ::aWindows[ n ]:LoadColors()
+      ::aWindows[ n ]:Refresh()
+   next
 
 return nil
 
@@ -480,6 +492,36 @@ METHOD CommandWindowProcessKey( nKey ) CLASS TDebugger
       otherwise
           ::oGetListCommand:GetApplyKey( nKey )
    endcase
+
+return nil
+
+METHOD EditColor( nColor, oBrwColors ) CLASS TDebugger
+
+   local GetList    := {}
+   local lPrevScore := Set( _SET_SCOREBOARD, .f. )
+   local lPrevExit  := Set( _SET_EXIT, .t. )
+   local cColor     := PadR( '"' + ::aColors[ nColor ] + '"',;
+                             oBrwColors:aColumns[ 2 ]:Width )
+
+   oBrwColors:RefreshCurrent()
+   oBrwColors:ForceStable()
+
+   SetCursor( SC_NORMAL )
+   @ Row(), Col() GET cColor COLOR SubStr( ::ClrModal(), 5 ) ;
+      VALID If( ValType( &cColor ) != "C", ( Alert( "Must be string" ), .f. ), .t. )
+
+   READ
+   SetCursor( SC_NONE )
+
+   Set( _SET_SCOREBOARD, lPrevScore )
+   Set( _SET_EXIT, lPrevExit )
+
+   if LastKey() != K_ESC
+      ::aColors[ nColor ] = &cColor
+   endif
+
+   oBrwColors:RefreshCurrent()
+   oBrwColors:ForceStable()
 
 return nil
 
@@ -1130,7 +1172,7 @@ METHOD WndVarsLButtonDown( nMRow, nMCol ) CLASS TDebugger
 
 return nil
 
-static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption )
+static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
    local nSet := oBrwSets:Cargo
 
@@ -1165,8 +1207,10 @@ static procedure SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption )
               oBrwSets:ForceStable()
            endif
 
-/*      case nKey == K_ENTER
-          ::doGet(*/
+      case nKey == K_ENTER
+           if bEdit != nil
+              Eval( bEdit )
+           endif
 
    endcase
 
