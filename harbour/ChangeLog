@@ -1,4 +1,34 @@
+20000508-22:50 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.l
+     - Removed un used token DECLARE_
+
+   * source/compiler/harbour.y
+     ! Fixed warning about conflict
+     ! Verified all calls to hb_compVariableAdd() to use hb_comp_cVarType (and VT_OFFSET_* constants) as 2nd parameter
+     + Added rules to support syntax of declartion of variable by reference parameter.
+
+   * include/hbcomp.h
+     + Added :
+	#define VT_OFFSET_BYREF             60
+	#define VT_OFFSET_VARIANT           90
+	#define VT_OFFSET_OPTIONAL          90
+
+   * source/compiler/harbour.c
+     * Minor cleanup in hb_compVariableAdd()
+
+   * source/compiler/hbpcode.c
+     * Modified hb_compStrongType() to use VT_OFFSET_* constants.
+
+   * source/compiler/hbgenerr.c
+     * Changed "number" to "#" in HB_COMP_WARN_PARAM_TYPE message.
+
+   * tests/testwarn.prg
+     + Added code to demonstrate new "Declared Refernced Paramater" syntax:
+         DECLARE FRead( nHandle As Num, @cBufferVar As Char, nBytes As Num ) AS Num
+
 20000508-22:50 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+
 *doc/genhtm.rsp
     +Added lang.txt to HBDOC response file
 *doc/en/compiler.txt

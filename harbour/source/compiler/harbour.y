@@ -195,7 +195,7 @@ char * hb_comp_szAnnounce = NULL;    /* ANNOUNCEd procedure */
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
 %type <iNumber> FunScope AsType AsArray
-%type <iNumber> Params ParamList DecParams DecParamList OptParams
+%type <iNumber> Params ParamList DecParams DecList FormalList OptList Optional
 %type <iNumber> IfBegin VarList ExtVarList
 %type <iNumber> FieldList
 %type <lNumber> WhileBegin
@@ -261,10 +261,10 @@ Line       : LINE NUM_INTEGER LITERAL Crlf
 
 Function   : FunScope FUNCTION  IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Params Crlf {}
            | FunScope PROCEDURE IdentName { hb_comp_cVarType = ' '; hb_compFunctionAdd( $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Params Crlf {}
-           | FunScope DECLARE_FUN IdentName { hb_compDeclaredAdd( $3 ); hb_comp_szDeclaredFun = $3 ; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
-                                                                                                                              hb_comp_pLastDeclared->cType = hb_comp_cVarType;
-                                                                                                                              hb_comp_szDeclaredFun = NULL;
-                                                                                                                              hb_comp_cVarType = ' '; }
+           | DECLARE_FUN IdentName { hb_compDeclaredAdd( $2 ); hb_comp_szDeclaredFun = $2; } DecParams AsType Crlf { if( hb_comp_pLastDeclared )
+                                                                                                                       hb_comp_pLastDeclared->cType = hb_comp_cVarType;
+                                                                                                                     hb_comp_szDeclaredFun = NULL;
+                                                                                                                     hb_comp_cVarType = ' '; }
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
@@ -273,24 +273,32 @@ FunScope   :                  { $$ = HB_FS_PUBLIC; }
            | EXIT             { $$ = HB_FS_EXIT; }
            ;
 
-DecParams  :                                               { $$ = 0; }
-           | '(' ')'                                       { $$ = 0; }
-           | '(' { hb_comp_iVarScope = VS_PARAMETER; } DecParamList ')'   { $$ = $3; }
+Params     :                                                         { $$ = 0; }
+           | '(' ')'                                                 { $$ = 0; }
+           | '(' { hb_comp_iVarScope = VS_PARAMETER; } ParamList ')' { $$ = $3; }
            ;
 
-DecParamList  : IdentName AsType                { hb_compVariableAdd( $1, ' ' ); $$ = 1; }
-              | DecParamList ',' IdentName AsType  { hb_compVariableAdd( $3, $4 ); $$++; }
-              | DecParamList OptParams
-              ;
+DecParams  :                  { $$ = 0; }
+           | '(' DecList ')'  { $$ = $2; }
+           ;
 
-OptParams  : ',' OPTIONAL IdentName AsType { hb_compVariableAdd( $3, '-' ); $$ = 3; }
-	   | OptParams ',' OPTIONAL IdentName AsType { hb_compVariableAdd( $4, '-' ); $$++; }
+DecList    :                  { $$ = 0; }
+           | FormalList
+	   | FormalList OptList
 	   ;
 
-Params     :                                               { $$ = 0; }
-           | '(' ')'                                       { $$ = 0; }
-           | '(' { hb_comp_iVarScope = VS_PARAMETER; } ParamList ')'   { $$ = $3; }
+FormalList : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
+	   | '@' IdentName AsType            { hb_compVariableAdd( $2, hb_comp_cVarType + VT_OFFSET_BYREF ); $$ = 2; }
+           | FormalList ',' IdentName AsType { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
            ;
+
+OptList    : Optional
+	   | OptList Optional
+	   ;
+
+Optional   : ',' OPTIONAL IdentName AsType     { hb_compVariableAdd( $3, hb_comp_cVarType + VT_OFFSET_OPTIONAL ); $$ = 3; }
+	   | ',' OPTIONAL '@' IdentName AsType { hb_compVariableAdd( $4, hb_comp_cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); $$ = 4; }
+	   ;
 
 AsType     : /* not specified */           { hb_comp_cVarType = ' '; }
            | AS_NUMERIC                    { hb_comp_cVarType = 'N'; }
@@ -322,8 +330,8 @@ AsArray    : AS_ARRAY                      { hb_comp_cVarType = 'A'; }
            | AS_VARIANT_ARRAY              { hb_comp_cVarType = 'A'; }
            ;
 
-ParamList  : IdentName AsType                { hb_compVariableAdd( $1, ' ' ); $$ = 1; }
-           | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, $4 ); $$++; }
+ParamList  : IdentName AsType                { hb_compVariableAdd( $1, hb_comp_cVarType ); $$ = 1; }
+           | ParamList ',' IdentName AsType  { hb_compVariableAdd( $3, hb_comp_cVarType ); $$++; }
            ;
 
 /* NOTE: This alllows the use of Expression as a statement.
@@ -1085,7 +1093,7 @@ ExtVarDef  : VarDef
                }
            ;
 
-VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
+VarDef     : IdentName AsType { hb_compVariableAdd( $1, hb_comp_cVarType ); }
                {
                   if( hb_comp_iVarScope == VS_STATIC )
                   {
@@ -1099,7 +1107,7 @@ VarDef     : IdentName AsType { hb_compVariableAdd( $1, $2 ); }
                }
 
            | IdentName AsType { $<iNumber>$ = hb_comp_iVarScope;
-                                hb_compVariableAdd( $1, $2 );
+                                hb_compVariableAdd( $1, hb_comp_cVarType );
                               }
              INASSIGN Expression
                {
@@ -1141,16 +1149,16 @@ DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2 ); }
 FieldsDef  : FIELD { hb_comp_iVarScope = VS_FIELD; } FieldList Crlf
            ;
 
-FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVariableAdd( $1, $2 ); }
-           | FieldList ',' IdentName AsType { hb_compVariableAdd( $3, $4 ); }
+FieldList  : IdentName AsType               { $$=hb_compFieldsCount(); hb_compVariableAdd( $1, hb_comp_cVarType ); }
+           | FieldList ',' IdentName AsType { hb_compVariableAdd( $3, hb_comp_cVarType ); }
            | FieldList IN IdentName { hb_compFieldSetAlias( $3, $<iNumber>1 ); }
            ;
 
 MemvarDef  : MEMVAR { hb_comp_iVarScope = VS_MEMVAR; } MemvarList Crlf
            ;
 
-MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, ' ' ); }
-           | MemvarList ',' IdentName             { hb_compVariableAdd( $3, ' ' ); }
+MemvarList : IdentName AsType                     { hb_compVariableAdd( $1, hb_comp_cVarType ); }
+           | MemvarList ',' IdentName AsType      { hb_compVariableAdd( $3, hb_comp_cVarType ); }
            ;
 
 ExecFlow   : IfEndif

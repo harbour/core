@@ -106,7 +106,7 @@ char * hb_comp_szWarnings[] =
    "3Can\'t use array index with non-array",
    "3Incompatible return type: \'%s\' expected: \'%s\'",
    "3Invalid number of parameters: %s expected: %s",
-   "3Incompatible parameter number %s expected: \'%s\'",
+   "3Incompatible parameter # %s expected: \'%s\'",
    "3Duplicate Declaration of Function %s",
    "3Function \'%s\' conflicting with its declaration",
    "3Variable \'%s\' used but never initialized",

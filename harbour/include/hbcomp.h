@@ -181,6 +181,10 @@ void hb_compPCodeEval( PFUNCTION, HB_PCODE_FUNC_PTR *, void * );
 #define VU_INITIALIZED 1
 #define VU_USED        2
 
+#define VT_OFFSET_BYREF             60
+#define VT_OFFSET_VARIANT           90
+#define VT_OFFSET_OPTIONAL          90
+
 /*
  * flags for bFlags member
 */
