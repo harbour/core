@@ -282,7 +282,7 @@ static int hb_ntxTagFindCurrentKey( LPPAGEINFO pPage, LONG lBlock, LPKEYINFO pKe
             pPage->TagParent->CurKeyInfo->Xtra = pKey->Xtra;
             pPage->TagParent->CurKeyInfo->Tag = pPage->Page;
          }
-         if( p->Tag && (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo )
+         if( p->Tag && ( k < 0 || ( (ULONG)p->Xtra != pPage->TagParent->Owner->Owner->ulRecNo ) ) )
          {
                LONG       blockPrev, blockNext;
                SHORT      keyPrev, keyNext;
@@ -333,7 +333,7 @@ static BOOL ntxIsDeleted( NTXAREAP pArea, LONG ulRecNo )
 
    BOOL lDeleted;
 
-   if( SELF_GOTO( ( AREAP ) pArea,ulRecNo ) == SUCCESS && 
+   if( SELF_GOTO( ( AREAP ) pArea,ulRecNo ) == SUCCESS &&
                      SUPER_DELETED( ( AREAP ) pArea,&lDeleted ) == SUCCESS )
       return lDeleted;
    else
@@ -414,8 +414,8 @@ static BOOL hb_ntxFindNextKey( LPTAGINFO pTag, BOOL lContinue )
    {
       hb_itemCopy( pKey->pItem,pTag->CurKeyInfo->pItem );
       pTag->Owner->Owner->ulRecNo = pTag->CurKeyInfo->Xtra;
-   }      
-   else      
+   }
+   else
       hb_ntxGetCurrentKey( pTag,pKey );
    pKey->Tag = NTX_IGNORE_REC_NUM;
    pTag->blockNext = 0; pTag->keyNext = 0;
@@ -457,7 +457,7 @@ static BOOL hb_ntxFindNextKey( LPTAGINFO pTag, BOOL lContinue )
                   pPage->CurKey = 0;
                }
             */
-               hb_itemCopy( pTag->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );	    
+               hb_itemCopy( pTag->CurKeyInfo->pItem, ( pPage->pKeys+pPage->CurKey )->pItem );
                pTag->CurKeyInfo->Xtra = ( pPage->pKeys+pPage->CurKey )->Xtra;
                pTag->CurKeyInfo->Tag = pPage->Page;
                hb_ntxPageRelease( pPage );
@@ -530,7 +530,7 @@ static BOOL hb_ntxFindPrevKey( LPTAGINFO pTag, BOOL lContinue )
       hb_itemCopy( pKey->pItem,pTag->CurKeyInfo->pItem );
       pTag->Owner->Owner->ulRecNo = pTag->CurKeyInfo->Xtra;
    }
-   else         
+   else
       hb_ntxGetCurrentKey( pTag, pKey );
    pKey->Tag = NTX_IGNORE_REC_NUM;
    pTag->blockPrev = 0; pTag->keyPrev = 0;
@@ -2012,7 +2012,7 @@ static ERRCODE ntxGoBottom( NTXAREAP pArea )
    else
    {
      LPTAGINFO pTag;
-     BOOL lContinue = FALSE;     
+     BOOL lContinue = FALSE;
 
      pTag = pArea->lpCurIndex->CompoundTag;
      hb_ntxTagKeyRead( pTag, BTTM_RECORD, &lContinue );
@@ -2134,17 +2134,17 @@ static ERRCODE ntxSeek( NTXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
      }
      else
      {
-       pArea->fFound = FALSE;    
+       pArea->fFound = FALSE;
        if ( lRecno > 0 && !result && bSoftSeek && !pTag->TagEOF )
        {
          return SELF_GOTO( ( AREAP ) pArea, lRecno );
        }
        else
-       {       
+       {
          lpCurIndex = pArea->lpCurIndex;
          pArea->lpCurIndex = NULL;
          SELF_GOBOTTOM( ( AREAP ) pArea );
-         retvalue = SELF_SKIPRAW( ( AREAP ) pArea, 1 );
+         retvalue = SELF_SKIP( ( AREAP ) pArea, 1 );
          pArea->fBof = FALSE;
          pArea->lpCurIndex = lpCurIndex;
          return retvalue;
@@ -2178,7 +2178,7 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
        {
           while ( !pTag->TagEOF && lToSkip-- > 0 )
             hb_ntxTagKeyRead( pTag, NEXT_RECORD, &lContinue );
-          pArea->ulRecNo = ulRecNo;	    
+          pArea->ulRecNo = ulRecNo;
           if ( !pTag->TagEOF )
             SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
           else
@@ -2199,7 +2199,7 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip )
        pTag->TagBOF = FALSE;
        while ( !pTag->TagBOF && lToSkip++ < 0 )
          hb_ntxTagKeyRead( pTag, PREV_RECORD, &lContinue );
-       pArea->ulRecNo = ulRecNo;	 
+       pArea->ulRecNo = ulRecNo;
        if ( !pTag->TagBOF )
          SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Xtra );
        else
