@@ -201,6 +201,8 @@ extern POBJSYMBOLS HB_FIRSTSYMBOL, HB_LASTSYMBOL;
 HB_STACK hb_stack;
 HB_SYMB  hb_symEval = { "__EVAL", FS_PUBLIC, hb_vmDoBlock, 0 }; /* symbol to evaluate codeblocks */
 
+BOOL hb_DebuggerIsWorking = FALSE; /* to know when __DBGENTRY is beeing invoked */
+
 static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
 static BOOL     s_bDebugging = FALSE;
 static BOOL     s_bDebugShowLines = FALSE; /* update source code line on the debugger display */
@@ -1140,7 +1142,7 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
             break;
          else if( s_uiActionRequest & HB_ENDPROC_REQUESTED )
 	 {
-	     /* request to stop current procedure was issued 
+	     /* request to stop current procedure was issued
 	      * (from macro evaluation)
 	      */
 	     s_uiActionRequest = 0;
@@ -2639,7 +2641,9 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushString( szModuleName, strlen( szModuleName ) );
+   hb_DebuggerIsWorking = TRUE;
    hb_vmDo( 1 );
+   hb_DebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
 
@@ -2712,7 +2716,9 @@ static void hb_vmDebuggerEndProc( void )
    s_bDebugShowLines = FALSE;
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
+   hb_DebuggerIsWorking = TRUE;
    hb_vmDo( 0 );
+   hb_DebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 
    hb_itemCopy( &hb_stack.Return, &item ); /* restores the previous returned value */
@@ -2727,7 +2733,9 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
    hb_vmPushSymbol( hb_dynsymFind( "__DBGENTRY" )->pSymbol );
    hb_vmPushNil();
    hb_vmPushInteger( uiLine );
+   hb_DebuggerIsWorking = TRUE;
    hb_vmDo( 1 );
+   hb_DebuggerIsWorking = FALSE;
    s_bDebugShowLines = TRUE;
 }
 
