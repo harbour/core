@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     ! fixed infinite loop
+
+2002-05-01 11:12 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
    * source/rdd/dbfcdx/dbfcdx2.h
      ! fixed gpf reported by Lorenzo Fiorini
      + added helper function hb_cdxGoEof

@@ -2563,6 +2563,7 @@ HB_FUNC( ORDLISTADD )
       */
       pOrderInfo.atomBagName = NULL;
       pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
+      pOrderInfo.itmOrder = NULL;
       SELF_ORDINFO( ( AREAP ) s_pCurrArea->pArea, DBOI_ORDERCOUNT, &pOrderInfo );
       bFirst = ( pOrderInfo.itmResult->type & HB_IT_NUMERIC ) &&
                   hb_itemGetNI( pOrderInfo.itmResult ) == 0;
