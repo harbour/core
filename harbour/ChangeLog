@@ -1,3 +1,7 @@
+2001-02-09 09:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+   * harbour/include/hbrddntx.h
+     + ntxPutValue declaration
+
 2001-02-09 05:33 GMT+1 Antonio Linares <alinares@fivetech.com>
    * harbour/source/debug/dbgmenu.prg
      + Some new options added.

@@ -315,7 +315,7 @@ static ERRCODE ntxSkipRaw( NTXAREAP pArea, LONG lToSkip );
 #define ntxGoCold                NULL
 #define ntxGoHot                 NULL
 #define ntxPutRec                NULL
-#define ntxPutValue              NULL
+static ERRCODE ntxPutValue( NTXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem );
 #define ntxRecall                NULL
 #define ntxRecCount              NULL
 #define ntxRecInfo               NULL
