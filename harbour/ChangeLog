@@ -1,3 +1,7 @@
+19990514-20:15 CET Eddie Runia
+  * source/rtl/gtapi.c
+    A lot of #ifdef #endif added or else it couldn't build out of the box.
+
 19990514-19:50 CET Eddie Runia
   * source/rtl/codebloc.c
     Codeblock patch from Ryszard applied
