@@ -12,7 +12,7 @@ LEX_FLAGS = -i
 
 # How to run Harbour.
 HB = harbour$(EXE_EXT)
-HB_FLAGS = -n -q -I$(TOP) -I$(INC_DIR)
+HB_FLAGS = -n -q -I$(TOP) -I$(HB_INC_DIR)
 
 # The rule to link an executable.
 LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $^ $(LDFLAGS) $(LINKLIBS)

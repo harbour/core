@@ -5,4 +5,4 @@
 RM = rm -f
 CP = cp -f
 MV = mv -f
-MD = mkdir -p
+MD = mkdir

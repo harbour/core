@@ -1,3 +1,19 @@
+Mon Jun 07 20:20:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/bin.cf: 
+	* config/c.cf: 
+	* config/dir.cf: 
+	* config/global.cf: 
+	* config/install.cf: 
+	* config/lib.cf: 
+	* config/test.cf: 
+	* config/win32/gcc.cf: 
+	* config/win32/global.cf: 
+	* config/win32/msvc.cf: 
+	* config/win32/rules.cf: 
+	Updated rules so they work under WinNT CMD.EXE without any Unix
+	utilities installed.
+	
 19990607-19:45 EDT David G. Holm <dholm@jsd-llc.com>
   * include/extend.h
     - Moved "#include <limits.h>" to include/types.h

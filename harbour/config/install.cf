@@ -3,6 +3,9 @@
 #
 
 install:: first
+ifeq (Windows,$(findstring Windows,$(OS)))
+	@cmd /c FOR %f IN ($(INSTALL_OBJS)) DO @COPY %f $(INSTALL_DIR)
+else  # ! Windows
 	@if [ ! -d $(INSTALL_DIR) ]; \
 	then \
 	  echo "! Can't install, path not found:" $(INSTALL_DIR); \
@@ -18,3 +21,4 @@ install:: first
 	    fi \
 	  done \
 	fi
+endif # ! Windows     

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-include $(TOP)$(ROOT)config/$(ARCHITECTURE)/global.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 
 OBJ_EXT = .o
 EXE_EXT = .exe
@@ -11,13 +11,13 @@ LIB_EXT = .a
 
 CC = gcc
 CC_OUT = -o
-CPPFLAGS = -DDEBUG -I. -I$(INC_DIR)
+CPPFLAGS = -DDEBUG -I. -I$(HB_INC_DIR)
 CFLAGS = -Wall -g
 
 LD = gcc
 LD_OUT = -o
-ifdef LIB_DIR
-LDFLAGS = -L$(LIB_DIR)
+ifdef HB_LIB_DIR
+LDFLAGS = -L$(HB_LIB_DIR)
 endif
 LINKLIBS = $(foreach lib, $(LIBS), -l$(lib))
 # LINKLIBS += -lm
@@ -26,4 +26,4 @@ AR = ar
 ARFLAGS =
 AR_RULE = $(AR) $(ARFLAGS) r $@ $^ || $(RM) $@
 
-include $(TOP)$(ROOT)config/$(ARCHITECTURE)/rules.cf
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/rules.cf

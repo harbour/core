@@ -5,8 +5,12 @@
 all : first
 
 first clean install ::
+ifeq (Windows,$(findstring Windows,$(OS)))
+	@cmd /c FOR /D %d IN ($(DIRS)) DO @$(MAKE) -C %d $@
+else  # ! Windows
 	@for d in $(DIRS); do \
 	  if [ -d $$d ]; then \
 	    $(MAKE) -C $$d $@; \
 	  fi \
 	done
+endif # ! Windows     
