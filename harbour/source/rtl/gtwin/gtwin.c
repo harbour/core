@@ -86,7 +86,7 @@
 #endif
 
 #if 0
-static HANDLE s_HOsave;   /* work in progress */
+static HANDLE s_HOsave;      /* work in progress */
 static HANDLE s_HDOutput;
 #endif
 static HANDLE s_HOriginal;
@@ -98,6 +98,7 @@ static BOOL   s_bOldCursor;
 static BOOL   s_bBreak;
 
 static USHORT s_uiDispCount;
+static CONSOLE_SCREEN_BUFFER_INFO s_csbi; /* to restore screen mode on exit */
 
 #define INPUT_BUFFER_LEN 128
 
@@ -186,10 +187,16 @@ void hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
       CONSOLE_SCREEN_BUFFER_INFO csbi;
 
       GetConsoleScreenBufferInfo( s_HOriginal, &csbi );
+
+      /* save screen info to restore on exit */
+      memcpy( &s_csbi, &csbi, sizeof( csbi ) );
+
       csbi.dwSize.X = min( csbi.dwSize.X, 80 );
       csbi.dwSize.Y = min( csbi.dwSize.Y, 50 );
+
       csbi.srWindow.Right = min( csbi.srWindow.Right, 79 );
       csbi.srWindow.Bottom = min( csbi.srWindow.Bottom, 49 );
+      csbi.srWindow.Top = csbi.srWindow.Left = 0;
 
       SetConsoleWindowInfo( s_HOriginal, TRUE,  &csbi.srWindow );
       SetConsoleScreenBufferSize( s_HOriginal, csbi.dwSize );
@@ -235,6 +242,9 @@ void hb_gt_Done( void )
    CloseHandle( s_HOutput );
    s_HOutput = INVALID_HANDLE_VALUE;
 */
+   SetConsoleScreenBufferSize( s_HOriginal, s_csbi.dwSize );
+   SetConsoleWindowInfo( s_HOriginal, FALSE, &s_csbi.srWindow );
+
    /* detected using NuMega BoundsChecker */
    CloseHandle( s_HOriginal );
    s_HOriginal = INVALID_HANDLE_VALUE;
@@ -244,6 +254,7 @@ void hb_gt_Done( void )
 
    /* Remove Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, FALSE );
+
 }
 
 int hb_gt_ReadKey( HB_inkey_enum eventmask )
