@@ -310,7 +310,7 @@ HARBOUR AT( void )
 
    if( pText && pSub )
    {
-      if( pText->wType == IT_STRING && pSub->wType == IT_STRING )
+      if( IS_STRING( pText ) && IS_STRING( pSub ) )
       {
          _retnl( hb_strAt(pSub->value.szText, pSub->wLength, pText->value.szText, pText->wLength) );
       }
@@ -1046,7 +1046,7 @@ char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
          /* Be paranoid and use a large amount of padding */
          szResult = (char *)_xgrab( iWidth + iDec + 64 );
 
-         if( pNumber->wType == IT_DOUBLE || iDec != 0 )
+         if( IS_DOUBLE( pNumber ) || iDec != 0 )
          {
             double dNumber = _parnd( 1 );
             if( iDec > 0 )
@@ -1054,7 +1054,7 @@ char * hb_str( PITEM pNumber, PITEM pWidth, PITEM pDec )
             else
                iBytes = sprintf( szResult, "%*ld", iWidth, (long)dNumber );
          }
-         else switch( pNumber->wType )
+         else switch( pNumber->wType & ~IT_BYREF )
          {
             case IT_LONG:
                  iBytes = sprintf( szResult, "%*li", iWidth, pNumber->value.lNumber );

@@ -1,3 +1,12 @@
+19990523-12:20 CET Eddie Runia
+  * include/types.h
+    modified the IS_* to work for reference passed variables
+  * source/vm/hvm.c
+    Changed ->wType to IS_* if possible else added & ~IT_BYREF
+  * source/rtl/strings.c
+    Strings also modified
+
+
 19990523-11:36 CET Manuel Ruiz
   * source/rtl/files.c
     Add HAVE_POSIX_IO for Borland and GCC compilers

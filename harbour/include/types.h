@@ -69,9 +69,9 @@ typedef HARBOUR ( * HARBOURFUNC )( void );
    #define _POSIX_PATH_MAX    255
 #endif
 
-#define IS_OF_TYPE( p, t ) ( ( p )->wType == t )
+#define IS_BYREF( p )      ( ( p )->wType & IT_BYREF )
+#define IS_OF_TYPE( p, t ) ( ( ( p )->wType & ~IT_BYREF ) == t )
 #define IS_ARRAY( p )      IS_OF_TYPE( p, IT_ARRAY )
-#define IS_BYREF( p )      IS_OF_TYPE( p, IT_BYREF )
 #define IS_NIL( p )        IS_OF_TYPE( p, IT_NIL )
 #define IS_BLOCK( p )      IS_OF_TYPE( p, IT_BLOCK )
 #define IS_DATE( p )       IS_OF_TYPE( p, IT_DATE )

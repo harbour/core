@@ -1058,11 +1058,13 @@ void Instring( void )
    PITEM pItem1 = stack.pPos - 2;
    PITEM pItem2 = stack.pPos - 1;
    int   iResult;
+   ULONG ul;
 
    if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
    {
-      iResult = hb_strAt( pItem1->value.szText, pItem1->wLength,
-                          pItem2->value.szText, pItem2->wLength );
+      for( iResult = 0, ul = 0; !iResult && ul < (ULONG) pItem1->wLength; ul++ )
+         iResult = hb_strAt( pItem1->value.szText + ul, 1,
+                             pItem2->value.szText, pItem2->wLength );
       StackPop();
       StackPop();
       PushLogical( iResult == 0 ? 0 : 1 );
@@ -1464,7 +1466,7 @@ double PopDouble( void )
 
    StackPop();
 
-   switch( stack.pPos->wType )
+   switch( stack.pPos->wType & ~IT_BYREF )
    {
       case IT_INTEGER:
            d = stack.pPos->value.iNumber;
@@ -1535,7 +1537,7 @@ double PopNumber( void )
 
    StackPop();
 
-   switch( pItem->wType )
+   switch( pItem->wType & ~IT_BYREF )
    {
       case IT_INTEGER:
            dNumber = ( double ) pItem->value.iNumber;
@@ -1593,9 +1595,17 @@ void PushLogical( int iTrueFalse )
 
 void PushLocal( SHORT iLocal )
 {
+   PITEM pLocal;
+
    if( iLocal >= 0 )
+   {
       /* local variable or local parameter */
-     ItemCopy( stack.pPos, stack.pBase + 1 + iLocal );
+      pLocal = stack.pBase + 1 + iLocal;
+      if( IS_BYREF( pLocal ) )
+         ItemCopy( stack.pPos, stack.pItems + pLocal->value.wItem );
+      else
+         ItemCopy( stack.pPos, pLocal );
+   }
    else
       /* local variable referenced in a codeblock */
      ItemCopy( stack.pPos, CodeblockGetVar( stack.pBase + 1, iLocal ) );
@@ -2039,7 +2049,7 @@ HARBOUR EMPTY()
 
    if( pItem )
    {
-      switch( pItem->wType )
+      switch( pItem->wType & ~IT_BYREF )
       {
          case IT_ARRAY:
               _retl( ( ( PBASEARRAY ) pItem->value.pBaseArray )->ulLen == 0 );
@@ -2091,7 +2101,7 @@ HARBOUR VALTYPE( void )
    {
       pItem = _param( 1, IT_ANY );
 
-      switch( pItem->wType )
+      switch( pItem->wType & ~IT_BYREF )
       {
          case IT_ARRAY:
               if( ( ( PBASEARRAY ) pItem->value.pBaseArray )->wClass )
