@@ -1052,6 +1052,5 @@ Function CaptionLength( cCaption )
 return ( if( At( "&", cCaption ) ==0,Len( cCaption ),if( At( "&", cCaption )>Len(cCaption),Len(cCaption)-1, )))
 #endif
 
-#endif
 
 *+ EOF: LISTBOX.PRG
