@@ -8,6 +8,11 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-10-12 19:00 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
+   * contrib/mysql/mysql.c
+        ! Fixed Buffer sizes on DATATOSQL() and FILETOSQLBINARY() It was leading to GPF due buffer underflow.
+        Many thanks to Peter Rees
+
 2002-10-11 21:35 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
    * source/rdd/dbfcdx/dbfcdx1.h
    * source/rdd/dbfcdx/dbfcdx2.h

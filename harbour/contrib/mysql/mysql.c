@@ -367,14 +367,13 @@ HB_FUNC(DATATOSQL)
 {
    const char *from;
    int iSize;
-   int iLen;
    char *buffer;
    from=hb_parc(1);
-   iLen=hb_parclen(1)*2;
-   iSize=strlen(from);
-   buffer=(char*)hb_xgrab(iLen);
-   mysql_escape_string(buffer,from,iSize);
-   hb_retc((char*)buffer);
+   iSize= hb_parclen(1) ; 
+
+   buffer=(char*)hb_xgrab((iSize*2)+1);
+   iSize = mysql_escape_string(buffer,from,iSize); 
+   hb_retclen((char*)buffer,iSize) ;               
    hb_xfree(buffer);
 }
 
@@ -389,13 +388,13 @@ HB_FUNC(FILETOSQLBINARY)
    char *FromBuffer;
    fh=hb_fsOpen((BYTE*)szFile,2);
    iSize=filelength(fh);
-   iLen=iSize*2;
+   iLen=(iSize*2);
    FromBuffer=(char*)hb_xgrab(iSize+1);
    hb_fsClose(fh);
    from=(char*)filetoBuff(FromBuffer,szFile);
-   buffer=(char*)hb_xgrab(iLen);
-   mysql_escape_string(buffer,from,iSize);
-   hb_retc((char*)buffer);
+   buffer=(char*)hb_xgrab(iLen+1);
+   iSize = mysql_escape_string(buffer,from,iSize);  
+   hb_retclen((char*)buffer, iSize);                
    hb_xfree(buffer);
    hb_xfree(FromBuffer);
 }
