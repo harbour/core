@@ -1,3 +1,8 @@
+2001-10-08 23:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
+  ! source/rdd/dbf1.c
+  ! source/rdd/workarea.c
+    * relations implemented for RDD's, inherited from DBF ( DBFNTX AND DBFCDX )
+
 2001-10-06 15:28 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   ! source/rdd/dbfntx/dbfntx1.c
     ! Few fixes

@@ -2229,6 +2229,7 @@ ERRCODE hb_dbfForceRel( DBFAREAP pArea )
       lpdbPendingRel = pArea->lpdbPendingRel;
       pArea->lpdbPendingRel = NULL;
       uiError = SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
+/*
       if( uiError == SUCCESS && !lpdbPendingRel->lpaParent->fEof &&
           HB_IS_NUMERIC( pArea->valResult ) )
          ulRecNo = hb_itemGetNL( pArea->valResult );
@@ -2237,6 +2238,7 @@ ERRCODE hb_dbfForceRel( DBFAREAP pArea )
       uiError = SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       pArea->fFound = pArea->fPositioned;
       pArea->fBof = FALSE;
+*/
       return uiError;
    }
    return SUCCESS;

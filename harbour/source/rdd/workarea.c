@@ -696,10 +696,17 @@ ERRCODE hb_waChildStart( AREAP pArea, LPDBRELINFO pRelInfo )
  */
 ERRCODE hb_waSyncChildren( AREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_waSyncChildren(%p)", pArea));
-   HB_SYMBOL_UNUSED( pArea );
 
-   printf( "\nTODO: hb_waSyncChildren()\n" );
+   LPDBRELINFO lpdbRelation;
+   HB_TRACE(HB_TR_DEBUG, ("hb_waSyncChildren(%p)", pArea));
+
+   lpdbRelation = pArea->lpdbRelations;
+   while( lpdbRelation )
+   {
+      SELF_CHILDSYNC( lpdbRelation->lpaChild, lpdbRelation );
+      lpdbRelation = lpdbRelation->lpdbriNext;
+   }
+
    return SUCCESS;
 }
 
@@ -765,12 +772,18 @@ ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
  */
 ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 {
+   int iChildArea, iCurrArea;
+   PHB_ITEM pResult;
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelEval(%p, %p)", pArea, pRelInfo));
-   HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( pRelInfo );
 
-   printf( "\nTODO: hb_waRelEval()\n" );
-   return SUCCESS;
+   iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   hb_rddSelectWorkAreaNumber( pRelInfo->lpaParent->uiArea );
+   pResult = hb_vmEvalBlock( pRelInfo->itmCobExpr );
+   hb_rddSelectWorkAreaNumber( iCurrArea );
+   if( SELF_SEEK( pArea, 0, pResult, 0 ) == SUCCESS )
+      return SUCCESS;
+   else
+      return FAILURE;
 }
 
 /*
@@ -822,6 +835,7 @@ ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
       lpdbRelations->lpdbriNext = ( LPDBRELINFO ) hb_xgrab( sizeof( DBRELINFO ) );
       lpdbRelations = lpdbRelations->lpdbriNext;
    }
+   lpdbRelations->lpaParent = pArea;
    lpdbRelations->lpaChild = lpdbRelInf->lpaChild;
    lpdbRelations->itmCobExpr = lpdbRelInf->itmCobExpr;
    lpdbRelations->abKey = lpdbRelInf->abKey;
