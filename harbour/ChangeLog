@@ -28,8 +28,8 @@
     * Symbol table added
     * Bug as reported by Andi resolved
     * Casts added to eliminate warnings produced by DJGPP
-  * source/rtl/makefile
-    dates.c added
+  * source/tools/makefile
+    dates2.c added
   * include/initsymb.h; source/runner/runner.c; source/vm/initsymb.c
     Dates2 added to file list.
   + tests/working/dates4.prg
