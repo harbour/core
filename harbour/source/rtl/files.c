@@ -610,9 +610,11 @@ HARBOUR HB_FILE()
 
         if( arg1_it )
         {
-                /* TODO: I'm thinking about this :( */
+           last_error = 0;
+           access(_parc(1), 0);
+           last_error = errno;
         }
-        _retl(0);
+        _retl(last_error==0?1:0);
         return;
 }
 
