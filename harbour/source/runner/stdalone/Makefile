@@ -5,10 +5,10 @@
 ROOT = ../../../
 
 PRG_SOURCES=\
-	runner.prg \
+	hbrun.prg \
         external.prg \
 	
-PRG_MAIN=runner.prg
+PRG_MAIN=hbrun.prg
 
 LIBS=\
         runner \

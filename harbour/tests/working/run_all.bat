@@ -4,5 +4,5 @@ rem $Id$
 rem 
 
 ..\..\bin\harbour test_all.prg /n /gHBR /i..\..\include
-runner test_all.hrb hrb
+hbrun test_all
 call testall.bat

@@ -53,7 +53,7 @@ DBFNTX_LIB=$(LIB_DIR)\dbfntx.lib
 RUNNER_LIB=$(LIB_DIR)\runner.lib
 HARBOUR_EXE=$(BIN_DIR)\harbour.exe
 PP_EXE=$(BIN_DIR)\hbpp.exe
-RUNNER_EXE=$(BIN_DIR)\runner.exe
+RUNNER_EXE=$(BIN_DIR)\hbrun.exe
 HARBOURFLAGS=-iinclude -n -q
 
 LIBS=$(HARBOUR_LIB) $(TERMINAL_LIB) $(TOOLS_LIB) $(DEBUG_LIB) $(PP_LIB) $(DBFNTX_LIB) $(RUNNER_LIB)
@@ -237,10 +237,10 @@ $(PP_EXE) : \
 
 $(RUNNER_EXE) : \
     $(RUNNER_DIR)\stdalone\external.prg \
-    $(RUNNER_DIR)\stdalone\runner.prg
+    $(RUNNER_DIR)\stdalone\hbrun.prg
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\external.prg 
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\runner.prg 
-    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\runner.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runner /link  $(LIBS)
+    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(RUNNER_DIR)\stdalone\ -i$(RUNNER_DIR)\stdalone\ $(RUNNER_DIR)\stdalone\hbrun.prg 
+    $(CC) -TP $(CFLAGS) $(RUNNER_DIR)\stdalone\hbrun.c $(RUNNER_DIR)\stdalone\external.c -o $(BIN_DIR)\runner /link  $(LIBS)
     -del external.obj
     -del runner.obj
 

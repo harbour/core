@@ -17,7 +17,7 @@ runner.lib : runlib.obj
 
 runlib.obj   : runlib.c
 
-runner.c     : runner.prg
+hbrun.c      : hbrun.prg
 external.c   : external.prg
 
 .prg.c:
@@ -27,11 +27,11 @@ external.c   : external.prg
   bcc32 -c -O2 -I.\include -v -o$@ -DHARBOUR_USE_WIN_GTAPI $<
   tlib .\lib\b32\runner.lib -+$@,,
 
-runner.exe : runner.c external.c runlib.c
+hbrun.exe : hbrun.c external.c runlib.c
    echo -v -O2 > bld.32
    echo -ebin\runner.exe >> bld.32
    echo -Iinclude >> bld.32
-   echo source\runner\stdalone\runner.c >> bld.32
+   echo source\runner\stdalone\hbrun.c >> bld.32
    echo source\runner\stdalone\external.c >> bld.32
    echo lib\b32\harbour.lib >> bld.32
    echo lib\b32\terminal.lib >> bld.32

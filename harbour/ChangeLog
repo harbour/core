@@ -1,3 +1,14 @@
+19991004-16:25 GMT+1 Victor Szel <info@szelvesz.hu>
+  * source/runner/stdalone/runner.c -> hbrun.c
+    source/runner/stdalone/Makefile
+    runner.b32
+    makefile.vc
+    tests/working/hbrun.bat -> hbrunprg.bat
+    tests/working/run_all.bat
+    tests/working/test_all.prg
+    * runner.exe renamed to hbrun.exe to better fit into the final
+      executable naming style (harbour/hbpp/hbrun)
+
 19991004-15:15 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/hbpp -> source/pp
     source/Makefile

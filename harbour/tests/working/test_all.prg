@@ -39,7 +39,7 @@ LOCAL aDir,f,n,o,p,cRead
                fWrite(o,;
                   "..\..\bin\harbour "+aDir[f][1]+" /n /gHRB /i..\..\include >> test_all.out"+Chr(13)+Chr(10)+;
                   "if errorlevel 1 goto end"+Chr(13)+Chr(10)+;
-                  "runner "+Left(aDir[f][1],Len(aDir[f][1])-4)+".hrb >> test_all.out"+Chr(13)+Chr(10) )
+                  "hbrun "+Left(aDir[f][1],Len(aDir[f][1])-4)+".hrb >> test_all.out"+Chr(13)+Chr(10) )
             ELSE
                fWrite(o,cCmd + cOption + " " + n + Chr(13) + Chr(10);
                 + "if errorlevel 1 goto end" + Chr(13) + Chr(10) + Chr(13) + Chr(10))
