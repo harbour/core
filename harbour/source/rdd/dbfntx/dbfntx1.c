@@ -3395,7 +3395,7 @@ static ERRCODE ntxZap( NTXAREAP pArea )
       {
          hb_ntxPageFree( pTag,TRUE );
          pTag->RootBlock = pTag->TagBlock = NTXBLOCKSIZE;
-         pTag->keyCount = 0;
+         pTag->keyCount = pTag->Owner->NextAvail = 0;
          hb_ntxHeaderSave( pTag->Owner, FALSE );
 
          memset( buffer, 0, NTXBLOCKSIZE );
