@@ -102,6 +102,13 @@ typedef struct _HB_MEMINFO
    struct _HB_MEMINFO * pNextBlock;
 } HB_MEMINFO, * PHB_MEMINFO;
 
+#ifdef HB_ALLOC_ALIGNMENT
+#  define HB_MEMINFO_SIZE     ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
+                                ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT )
+#else
+#  define HB_MEMINFO_SIZE     sizeof( HB_MEMINFO )
+#endif
+
 static LONG s_lMemoryBlocks = 0;      /* memory blocks used */
 static LONG s_lMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
 static LONG s_lMemoryMaxConsumed = 0; /* memory size consumed */
@@ -127,7 +134,7 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
-   pMem = malloc( ulSize + sizeof( HB_MEMINFO ) + sizeof( ULONG ) );
+   pMem = malloc( ulSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
 
    if( ! pMem )
       return pMem;
@@ -146,7 +153,7 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
 
    ( ( PHB_MEMINFO ) pMem )->pNextBlock = NULL;
    ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
-   HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulSize + sizeof(HB_MEMINFO), HB_MEMINFO_SIGNATURE );
+   HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulSize + HB_MEMINFO_SIZE, HB_MEMINFO_SIGNATURE );
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
 
    if( hb_tr_level() >= HB_TR_DEBUG )
@@ -181,7 +188,7 @@ void HB_EXPORT * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, re
    if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 
-   return ( char * ) pMem + sizeof( HB_MEMINFO );
+   return ( void * ) ( ( BYTE * ) pMem + HB_MEMINFO_SIZE );
 
 #else
 
@@ -209,7 +216,7 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
 
 #ifdef HB_FM_STATISTICS
 
-   pMem = malloc( ulSize + sizeof( HB_MEMINFO ) + sizeof( ULONG ) );
+   pMem = malloc( ulSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
 
    if( ! pMem )
       hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );
@@ -228,7 +235,7 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
 
    ( ( PHB_MEMINFO ) pMem )->pNextBlock = NULL;
    ( ( PHB_MEMINFO ) pMem )->ulSignature = HB_MEMINFO_SIGNATURE;
-   HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulSize + sizeof(HB_MEMINFO), HB_MEMINFO_SIGNATURE );
+   HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulSize + HB_MEMINFO_SIZE, HB_MEMINFO_SIGNATURE );
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
 
    if( hb_tr_level() >= HB_TR_DEBUG )
@@ -263,7 +270,7 @@ void HB_EXPORT * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exi
    if( s_lMemoryMaxBlocks < s_lMemoryBlocks )
       s_lMemoryMaxBlocks = s_lMemoryBlocks;
 
-   return ( char * ) pMem + sizeof( HB_MEMINFO );
+   return ( void * ) ( ( BYTE * ) pMem + HB_MEMINFO_SIZE );
 
 #else
 
@@ -292,7 +299,7 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
 
-   pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
+   pMemBlock = ( PHB_MEMINFO ) ( ( BYTE * ) pMem - HB_MEMINFO_SIZE );
 
    if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
       hb_errInternal( HB_EI_XREALLOCINV, NULL, NULL, NULL );
@@ -304,7 +311,7 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 
    HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulMemSize, 0 );
 
-   pMem = realloc( pMemBlock, ulSize + sizeof( HB_MEMINFO ) + sizeof( ULONG ) );
+   pMem = realloc( pMemBlock, ulSize + HB_MEMINFO_SIZE + sizeof( ULONG ) );
 
    s_lMemoryConsumed += ( ulSize - ulMemSize );
    if( s_lMemoryMaxConsumed < s_lMemoryConsumed )
@@ -314,7 +321,7 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
       hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
 
    ( ( PHB_MEMINFO ) pMem )->ulSize = ulSize;  /* size of the memory block */
-   HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulSize + sizeof(HB_MEMINFO), HB_MEMINFO_SIGNATURE );
+   HB_PUT_LONG( ( ( BYTE * ) pMem ) + ulSize + HB_MEMINFO_SIZE, HB_MEMINFO_SIGNATURE );
    if( ( ( PHB_MEMINFO ) pMem )->pPrevBlock )
       ( ( PHB_MEMINFO ) pMem )->pPrevBlock->pNextBlock = ( PHB_MEMINFO ) pMem;
    if( ( ( PHB_MEMINFO ) pMem )->pNextBlock )
@@ -325,7 +332,7 @@ void HB_EXPORT * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
    if( s_pLastBlock == pMemBlock )
       s_pLastBlock = ( PHB_MEMINFO ) pMem;
 
-   return ( char * ) pMem + sizeof( HB_MEMINFO );
+   return ( void * ) ( ( BYTE * ) pMem + HB_MEMINFO_SIZE );
 
 #else
 
@@ -355,7 +362,7 @@ void HB_EXPORT hb_xfree( void * pMem )            /* frees fixed memory */
 
    if( pMem )
    {
-      PHB_MEMINFO pMemBlock = ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) );
+      PHB_MEMINFO pMemBlock = ( PHB_MEMINFO ) ( ( BYTE * ) pMem - HB_MEMINFO_SIZE );
 
       if( pMemBlock->ulSignature != HB_MEMINFO_SIGNATURE )
          hb_errInternal( HB_EI_XFREEINV, NULL, NULL, NULL );
@@ -404,7 +411,7 @@ ULONG HB_EXPORT  hb_xsize( void * pMem ) /* returns the size of an allocated mem
    HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
 
 #ifdef HB_FM_STATISTICS
-   return ( ( PHB_MEMINFO ) ( ( char * ) pMem - sizeof( HB_MEMINFO ) ) )->ulSize;
+   return ( ( PHB_MEMINFO ) ( ( BYTE * ) pMem - HB_MEMINFO_SIZE ) )->ulSize;
 #else
    HB_SYMBOL_UNUSED( pMem );
 

@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-10-24 20:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/bsd/global.cf
+    + added suppot for HB_COMMERCE and HB_WITHOUT_GTSLN env vars
+
+  * harbour/source/compiler/Makefile
+    * formating
+
+  * harbour/include/hbdefs.h
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/garbage.c
+    + added macro HB_ALLOC_ALIGNMENT which forces allocated memory
+      alignment in FM and GC modules to given value - by default used
+      only when set HB_OS_SUNOS with 8 bytes alignment
+
 2004-10-23 02:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/postinst.sh
    * changed install command syntax for Solaris compatibility

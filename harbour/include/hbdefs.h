@@ -545,7 +545,12 @@ typedef long HB_PTRDIFF;
  * different architectures - SPARC + LINUX, ALPHA + LINUX
  */
 #if defined( HB_OS_SUNOS )
-#  define HB_STRICT_ALIGNMENT
+#  if !defined( HB_STRICT_ALIGNMENT )
+#     define HB_STRICT_ALIGNMENT
+#  endif
+#  if !defined( HB_ALLOC_ALIGNMENT ) || ( HB_ALLOC_ALIGNMENT + 1 == 1 )
+#     define HB_ALLOC_ALIGNMENT     8
+#  endif
 #endif
 
 /*

@@ -70,6 +70,13 @@ typedef struct HB_GARBAGE_
   USHORT used;                /* used/unused block */
 } HB_GARBAGE, *HB_GARBAGE_PTR;
 
+#ifdef HB_ALLOC_ALIGNMENT
+#  define HB_GARBAGE_SIZE     ( ( sizeof( HB_GARBAGE ) + HB_ALLOC_ALIGNMENT - 1 ) - \
+                                ( sizeof( HB_GARBAGE ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT )
+#else
+#  define HB_GARBAGE_SIZE     sizeof( HB_GARBAGE )
+#endif
+
 /* status of memory block */
 #define HB_GC_UNLOCKED     0
 #define HB_GC_LOCKED       1  /* do not collect a memory block */
@@ -92,8 +99,8 @@ static BOOL s_bCollecting = FALSE;
 static USHORT s_uUsedFlag = HB_GC_USED_FLAG;
 
 /* we may use a cache later */
-#define HB_GARBAGE_NEW( ulSize )   ( HB_GARBAGE_PTR )hb_xgrab( ulSize )
-#define HB_GARBAGE_FREE( pAlloc )    hb_xfree( (void *)(pAlloc) )
+#define HB_GARBAGE_NEW( ulSize )    ( ( HB_GARBAGE_PTR ) hb_xgrab( ulSize ) )
+#define HB_GARBAGE_FREE( pAlloc )   hb_xfree( ( void * ) ( pAlloc ) )
 
 static void hb_gcLink( HB_GARBAGE_PTR *pList, HB_GARBAGE_PTR pAlloc )
 {
@@ -126,14 +133,14 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
 {
    HB_GARBAGE_PTR pAlloc;
 
-   pAlloc = HB_GARBAGE_NEW( ulSize + sizeof( HB_GARBAGE ) );
+   pAlloc = HB_GARBAGE_NEW( HB_GARBAGE_SIZE + ulSize );
    if( pAlloc )
    {
       hb_gcLink( &s_pCurrBlock, pAlloc );
       pAlloc->pFunc  = pCleanupFunc;
       pAlloc->locked = 0;
       pAlloc->used   = s_uUsedFlag;
-      return (void *)( pAlloc + 1 );   /* hide the internal data */
+      return ( void * ) ( ( BYTE * ) pAlloc + HB_GARBAGE_SIZE );   /* hide the internal data */
    }
    else
       return NULL;
@@ -144,8 +151,7 @@ void hb_gcFree( void *pBlock )
 {
    if( pBlock )
    {
-      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
-      --pAlloc;
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pBlock - HB_GARBAGE_SIZE );
 
       if( !( pAlloc->used & HB_GC_DELETE ) )
       {
@@ -175,10 +181,10 @@ HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
 {
    HB_GARBAGE_PTR pAlloc;
 
-   pAlloc = HB_GARBAGE_NEW( sizeof( HB_ITEM ) + sizeof( HB_GARBAGE ) );
+   pAlloc = HB_GARBAGE_NEW( HB_GARBAGE_SIZE + sizeof( HB_ITEM ) );
    if( pAlloc )
    {
-      HB_ITEM_PTR pItem = ( HB_ITEM_PTR )( pAlloc + 1 );
+      HB_ITEM_PTR pItem = ( HB_ITEM_PTR ) ( ( BYTE * ) pAlloc + HB_GARBAGE_SIZE );
 
       hb_gcLink( &s_pLockedBlock, pAlloc );
       pAlloc->pFunc  = hb_gcGripRelease;
@@ -205,13 +211,12 @@ void hb_gcGripDrop( HB_ITEM_PTR pItem )
 {
    if( pItem )
    {
-       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem;
-       --pAlloc;
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pItem - HB_GARBAGE_SIZE );
 
-       hb_itemClear( pItem );    /* clear value stored in this item */
+      hb_itemClear( pItem );    /* clear value stored in this item */
 
-       hb_gcUnlink( &s_pLockedBlock, pAlloc );
-       HB_GARBAGE_FREE( pAlloc );
+      hb_gcUnlink( &s_pLockedBlock, pAlloc );
+      HB_GARBAGE_FREE( pAlloc );
    }
 }
 
@@ -222,8 +227,7 @@ void * hb_gcLock( void * pBlock )
 {
    if( pBlock )
    {
-      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
-      --pAlloc;
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pBlock - HB_GARBAGE_SIZE );
 
       if( ! pAlloc->locked )
       {
@@ -243,8 +247,7 @@ void *hb_gcUnlock( void *pBlock )
 {
    if( pBlock )
    {
-      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pBlock;
-      --pAlloc;
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pBlock - HB_GARBAGE_SIZE );
 
       if( pAlloc->locked )
       {
@@ -268,8 +271,7 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
 
    if( HB_IS_ARRAY( pItem ) )
    {
-      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asArray.value;
-      --pAlloc;
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pItem->item.asArray.value - HB_GARBAGE_SIZE );
 
       /* Check this array only if it was not checked yet */
       if( pAlloc->used == s_uUsedFlag )
@@ -291,8 +293,7 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
    }
    else if( HB_IS_BLOCK( pItem ) )
    {
-      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem->item.asBlock.value;
-      --pAlloc;
+      HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) ( ( BYTE * ) pItem->item.asBlock.value - HB_GARBAGE_SIZE );
 
       if( pAlloc->used == s_uUsedFlag )
       {
@@ -352,7 +353,7 @@ void hb_gcCollectAll( void )
          {  /* it is not very elegant method but it works well */
             if( pAlloc->pFunc == hb_gcGripRelease )
             {
-               hb_gcItemRef( ( HB_ITEM_PTR ) ( pAlloc + 1 ) );
+               hb_gcItemRef( ( HB_ITEM_PTR ) ( ( BYTE * ) pAlloc + HB_GARBAGE_SIZE ) );
             }
             pAlloc = pAlloc->pNext;
          } while ( s_pLockedBlock != pAlloc );
@@ -369,7 +370,7 @@ void hb_gcCollectAll( void )
            s_pCurrBlock->used |= HB_GC_DELETE;
            if( s_pCurrBlock->pFunc )
            {
-              ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
+              ( s_pCurrBlock->pFunc )( ( void *) ( ( BYTE * ) s_pCurrBlock + HB_GARBAGE_SIZE ) );
            }
          }
 
@@ -442,7 +443,7 @@ void hb_gcReleaseAll( void )
          if( s_pCurrBlock->pFunc )
          {
             HB_TRACE( HB_TR_INFO, ( "Cleanup, %p", s_pCurrBlock ) );
-            ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
+            ( s_pCurrBlock->pFunc )( ( void *) ( ( BYTE * ) s_pCurrBlock + HB_GARBAGE_SIZE ) );
          }
 
          s_pCurrBlock = s_pCurrBlock->pNext;
