@@ -8,7 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2002-05-22 17:40 UTC+0200 Martin Vopgel <vogel@inttec.de>
+2002-05-22 18:26 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+ * source/rtl/tget.prg
+    ! Fix, it was always written in the position 1 the first number
+      of a numeric field although the cursor was moved to write in
+      another position.
+
+2002-05-22 17:40 UTC+0200 Martin Vogel <vogel@inttec.de>
   * contrib/libct/datetime.prg
       ! corrections supplied by Marek Horodyski <homar@altkom.com.pl>
 
