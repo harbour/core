@@ -61,7 +61,7 @@ HB_FUNC( SX_VERSION )
 {
    char *szVersion=(char*)sx_Version();
    hb_retc(szVersion);
-   hb_xfree(szVersion);
+   /*hb_xfree(szVersion);*/
 }
 
 

@@ -7,6 +7,14 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+     + Added function sx_Close()
+   * contrib/apollo/test
+     * Added functions in a test application.
+
+2001-12-29 20:35 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * include/extend.api
+     ! Same fix applied to extend.api.
 
 2001-12-29 19:44 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
