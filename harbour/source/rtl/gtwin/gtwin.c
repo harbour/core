@@ -371,6 +371,7 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
             WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
             #ifdef HB_DEBUG_KEYBOARD
+               /* if( dwState & ENHANCED_KEY ) ch = -32; */
                fprintf( stdout, "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch );
                if( dwState & CAPSLOCK_ON ) fprintf( stdout, " CL" );
                if( dwState & ENHANCED_KEY ) fprintf( stdout, " EK" );
@@ -399,10 +400,11 @@ int hb_gt_ReadKey( HB_inkey_enum eventmask )
                   fprintf( stdout, "+" );
                #endif
             }
-            else if( ch < 0 )
+            else if( ch < 0 && ch != -32 && ch != -16 )
             {
                /* Ignore any negative character codes that didn't get handled
-                  by the international keyboard processing */
+                  by the international keyboard processing and don't signify
+                  extended key codes */
                ch = 0;
             }
             else
