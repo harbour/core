@@ -531,6 +531,7 @@ extern BOOL   hb_gcItemRef( HB_ITEM_PTR pItem, void *pAlloc ); /* checks if pass
 extern BOOL   hb_vmIsLocalRef( void *pAlloc ); /* hvm.c - checks all local variables if they are refering a memory block */ 
 extern BOOL   hb_vmIsStaticRef( void *pAlloc ); /* hvm.c - checks all static variables if they are refering a memory block */
 extern BOOL   hb_memvarsIsMemvarRef( void *pAlloc ); /* memvars.c - checks all memvar variables if they are refering a memory block */
+extern BOOL   hb_clsIsClassRef( void *pAlloc ); /* classes.c - checks all classes if they are refering a memory block */
 
 /* idle states */
 extern void   hb_idleState( void ); /* services a single idle state */

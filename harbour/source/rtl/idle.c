@@ -162,7 +162,7 @@ HB_FUNC( HB_IDLEADD )
       /* prevent releasing if this block if it is no longer stored inside of
        * a harbour variable
        */
-      hb_gcLock( pBlock->item.asBlock.value );   
+      hb_gcLockItem( pBlock );   
       
       hb_retnl( ( ULONG ) pBlock->item.asBlock.value );    /* TODO: access to pointers from harbour code */
    }
@@ -186,7 +186,7 @@ HB_FUNC( HB_IDLEDEL )
       {
          if( ulID == ( ULONG ) pItem->item.asBlock.value )
          {
-             hb_gcUnlock( pItem->item.asBlock.value );
+             hb_gcUnlockItem( pItem );
              hb_itemReturn( pItem );    /* return a codeblock */
              hb_itemClear( pItem );
           

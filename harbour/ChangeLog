@@ -1,3 +1,14 @@
+2000-06-27 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+    
+    *include/hbapi.h
+    *source/rtl/errorapi.c
+    *source/rtl/idle.c
+    *source/vm/classes.c
+    *source/vm/garbage.c
+        *the garbage collector is now aware of all items stored internally 
+        in class related structures
+
+
 2000-06-27-22:45 Luiz Rafael Culik <culik@sl.conex.net>
   *Changelog
      *Renamed to ChangeLog.008 and Started a new one

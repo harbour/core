@@ -96,6 +96,7 @@ void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pCleanupFunc )
       return NULL;
 }
 
+/* release a memory block allocated with hb_gcAlloc() */
 void hb_gcFree( void *pBlock )
 {
    if( pBlock )
@@ -121,6 +122,9 @@ void hb_gcFree( void *pBlock )
    }
 }
 
+/* Lock a memory pointer so it will not be released if stored
+   outside of harbour variables
+*/
 void *hb_gcLock( void *pBlock )
 {
    if( pBlock )
@@ -133,6 +137,9 @@ void *hb_gcLock( void *pBlock )
    return pBlock;
 }
 
+/* Unlock a memory pointer so it can be released if there is no
+   references inside of harbour variables
+*/
 void *hb_gcUnlock( void *pBlock )
 {
    if( pBlock )
@@ -145,6 +152,10 @@ void *hb_gcUnlock( void *pBlock )
    return pBlock;
 }
 
+
+/* Lock an item so it will not be released if stored
+   outside of harbour variables
+*/
 void hb_gcLockItem( HB_ITEM_PTR pItem )
 {
    if( HB_IS_ARRAY( pItem ) )
@@ -153,6 +164,9 @@ void hb_gcLockItem( HB_ITEM_PTR pItem )
       hb_gcLock( pItem->item.asBlock.value );
 }
 
+/* Unlock an item so it can be released if there is no
+   references inside of harbour variables
+*/
 void hb_gcUnlockItem( HB_ITEM_PTR pItem )
 {
    if( HB_IS_ARRAY( pItem ) )
@@ -161,6 +175,11 @@ void hb_gcUnlockItem( HB_ITEM_PTR pItem )
       hb_gcUnlock( pItem->item.asBlock.value );
 }
 
+/* Check a single memory block if it can be released
+ * The block will be released if it is not locked and there is no
+ * references for this block inside some harbour variable (local,
+ * memvar or static)
+*/
 void hb_gcCollect( void )
 {
    if( s_pCurrBlock && !s_bCollecting )
@@ -176,20 +195,23 @@ void hb_gcCollect( void )
             {
                if( !hb_vmIsStaticRef( pBlock ) )
                {
-                  /* It is possible that s_pCurrBlock will be requested to release
-                     from a cleanup function - to prevent it we have to use some 
-                     flag.
-                   */
-                  s_bCollecting = TRUE;
-                  if( s_pCurrBlock->pFunc )
-                     ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
-                  s_pCurrBlock->pPrev->pNext = s_pCurrBlock->pNext;
-                  s_pCurrBlock->pNext->pPrev = s_pCurrBlock->pPrev;
-                  pNext = s_pCurrBlock->pNext;
-                  HB_GARBAGE_FREE( s_pCurrBlock );
-                  if( s_pCurrBlock == pNext && pNext->pPrev == pNext->pNext )
-                     pNext = NULL;    /* this was the last block */
-                  s_bCollecting = FALSE;
+                  if( !hb_clsIsClassRef( pBlock ) )
+                  {
+                     /* It is possible that s_pCurrBlock will be requested 
+                      * to release from a cleanup function - to prevent it 
+                      * we have to use some flag.
+                      */
+                     s_bCollecting = TRUE;
+                     if( s_pCurrBlock->pFunc )
+                        ( s_pCurrBlock->pFunc )( ( void *)( s_pCurrBlock + 1 ) );
+                     s_pCurrBlock->pPrev->pNext = s_pCurrBlock->pNext;
+                     s_pCurrBlock->pNext->pPrev = s_pCurrBlock->pPrev;
+                     pNext = s_pCurrBlock->pNext;
+                     HB_GARBAGE_FREE( s_pCurrBlock );
+                     if( s_pCurrBlock == pNext && pNext->pPrev == pNext->pNext )
+                        pNext = NULL;    /* this was the last block */
+                     s_bCollecting = FALSE;
+                  }
                }
             }
          }
@@ -198,6 +220,8 @@ void hb_gcCollect( void )
    }
 }
 
+/* Check all memory block if they can be released
+*/
 void hb_gcCollectAll( void )
 {
    HB_GARBAGE_PTR pStart = s_pCurrBlock;
@@ -208,6 +232,12 @@ void hb_gcCollectAll( void )
    } while( s_pCurrBlock && (pStart != s_pCurrBlock) );
 }
 
+/* Check if passed item <pItem> contains a reference to passed
+ * memory pointer <pBlock>
+ * Returns TRUE if there is a reference (the pointer cannot be released)
+ * or returns FALSE if the item doesn't refer the pointer.
+ * Arrays are scanned recursively.
+*/
 BOOL hb_gcItemRef( HB_ITEM_PTR pItem, void *pBlock )
 {
    if( HB_IS_BYREF( pItem ) )

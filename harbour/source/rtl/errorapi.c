@@ -108,9 +108,9 @@ HB_FUNC( ERRORBLOCK )
    if( pNewErrorBlock )
    {
       if( HB_IS_BLOCK( &oldError ) )      
-         hb_gcUnlock( (&oldError)->item.asBlock.value ); /* allow release for garbage collector */
+         hb_gcUnlockItem( &oldError ); /* allow release for garbage collector */
       hb_itemCopy( &s_errorBlock, pNewErrorBlock );
-      hb_gcLock( pNewErrorBlock->item.asBlock.value ); /* lock it in case it is not stored inside of harbour variable */
+      hb_gcLockItem( pNewErrorBlock ); /* lock it in case it is not stored inside of harbour variable */
    }
 
    hb_itemReturn( &oldError );
