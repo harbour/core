@@ -1,3 +1,26 @@
+20000214-03:21 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * *.bat
+     + Added CLEAN command to batch files.
+       Use: MAKE_VC.BAT CLEAN to cleanup all the generated files
+       (EXE,LIB,OBJ,...)
+     + Added optional parameter forwarding to the make process.
+   * source/rtl/mainwin.c
+     source/rtl/maindll.c
+     ! Fixed to compile only for 32bit Windows platform.
+   * makefile.bc
+     % INCLUDE_DIR simplified.
+     % Merge duplicate strings option added as a default.
+     ! main -> mainstd
+     + dbgmenu.prg added.
+   + source/debug/dbgmenu.prg (added)
+     source/debug/debugger.prg
+     source/debug/Makefile
+     makefile.vc
+     * BuildMenu() function moved to a separate source file, so that it
+       now compiles fine with Harbour Borland 16bit.
+   * source/vm/cmdarg.c
+     ! Too small buffer fixed. (GPF-ed with B16)
+
 20000213-23:59 GMT+1 Victor Szakats <info@szelvesz.hu>
    ! makefile.bc
      ! Fixed again.

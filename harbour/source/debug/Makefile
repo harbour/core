@@ -5,6 +5,7 @@
 ROOT = ../../
 
 PRG_SOURCES=\
+        dbgmenu.prg \
         debugger.prg \
         tbrwtext.prg
 

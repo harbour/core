@@ -4,37 +4,37 @@
 
 # makefile for Borland C/C++ compilers
 
+# Merge duplicate strings
+BCC_OPT = $(BCC_OPT) -d
+
+HARBOUR_OPT = $(HARBOUR_OPT) -q
+
 !if $d(B16)
 
 # Borland C/C++ (DOS 16 bits)
-# Don't indent these.
-BCC_OPT = -mh -DHARBOUR_USE_DOS_GTAPI
 BCC_EXE = bcc
+BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_DOS_GTAPI -mh
 TASM_EXE = tasm
 OBJ_DIR = obj\b16
 LIB_DIR = lib\b16
+BCC_OPT = $(BCC_OPT) -O2
 
 !else
 
 # Borland C/C++ (Windows 32 bits)
 BCC_EXE = bcc32
+BCC_OPT = $(BCC_OPT) -DHARBOUR_USE_WIN_GTAPI
 TASM_EXE = tasm32
 OBJ_DIR = obj\b32
 LIB_DIR = lib\b32
 
-!if $d(B40)
-# Borland C/C++ 4.x (Avoid optimizer bug)
-BCC_OPT = -DHARBOUR_USE_WIN_GTAPI
-!else
-# Borland C/C++ 5.x
-BCC_OPT = -O2 -DHARBOUR_USE_WIN_GTAPI
+!if !$d(B40)
+BCC_OPT = $(BCC_OPT) -O2
 !endif
 
 !endif
 
-HARBOUR_OPT = -q
-
-INCLUDE_DIR       = include;source\compiler;source\vm
+INCLUDE_DIR       = include
 COMPILER_DIR      = source\compiler
 COMMON_DIR        = source\common
 PP_DIR            = source\pp
@@ -144,8 +144,8 @@ HARBOUR_LIB_OBJS  = $(OBJ_DIR)\achoice.obj \
                     $(OBJ_DIR)\itemapi.obj \
                     $(OBJ_DIR)\langapi.obj \
                     $(OBJ_DIR)\len.obj \
-                    $(OBJ_DIR)\main.obj \
                     $(OBJ_DIR)\maindll.obj \
+                    $(OBJ_DIR)\mainstd.obj \
                     $(OBJ_DIR)\mainwin.obj \
                     $(OBJ_DIR)\math.obj \
                     $(OBJ_DIR)\memofile.obj \
@@ -253,7 +253,8 @@ RUNNER_LIB_OBJS   = $(OBJ_DIR)\runlib.obj
 RUNNER_EXE        = $(BIN_DIR)\hbrun.exe
 
 DEBUG_LIB         = $(LIB_DIR)\debug.lib
-DEBUG_LIB_OBJS    = $(OBJ_DIR)\debugger.obj \
+DEBUG_LIB_OBJS    = $(OBJ_DIR)\dbgmenu.obj \
+                    $(OBJ_DIR)\debugger.obj \
                     $(OBJ_DIR)\tbrwtext.obj
 
 REGRESS_EXE       = $(BIN_DIR)\rt_main.exe
@@ -656,11 +657,11 @@ $(OBJ_DIR)\len.obj : $(RTL_DIR)\len.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\main.obj : $(VM_DIR)\main.c
+$(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
+$(OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -1268,6 +1269,13 @@ $(RUNNER_EXE) : $(RUNNER_DIR)\stdalone\external.prg \
 #
 $(DEBUG_LIB) : $(DEBUG_LIB_OBJS)
 
+$(OBJ_DIR)\dbgmenu.c : $(DEBUG_DIR)\dbgmenu.prg
+   $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
+
+$(OBJ_DIR)\dbgmenu.obj : $(OBJ_DIR)\dbgmenu.c
+   $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+   tlib $(DEBUG_LIB) -+$@,,
+
 $(OBJ_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
@@ -1438,3 +1446,4 @@ $(OBJ_DIR)\gentrf.c : $(HBDOC_DIR)\gentrf.prg
 
 $(OBJ_DIR)\gentrf.obj : $(OBJ_DIR)\gentrf.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
+

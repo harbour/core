@@ -371,11 +371,12 @@ void hb_cmdargProcessVM( void )
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       {
-         char buffer[ 20 ];
-
+         char buffer[ 64 ];
+                           
          sprintf( buffer, "Maximum symbol name length: %i", HB_SYMBOL_NAME_LEN );
          hb_outerr( buffer, 0 );
          hb_outerr( hb_consoleGetNewLine(), 0 );
       }
    }
 }
+

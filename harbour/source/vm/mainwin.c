@@ -33,6 +33,8 @@
  *
  */
 
+#ifdef _Windows
+
 #include <windows.h>
 #include "extend.h"
 #include "ctoharb.h"
@@ -65,3 +67,6 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    return 0;
 }
+
+#endif
+

@@ -285,6 +285,7 @@ PP_LIB_OBJS = \
 #
 
 DEBUG_LIB_OBJS = \
+    $(OBJ_DIR)\dbgmenu.obj \
     $(OBJ_DIR)\debugger.obj \
     $(OBJ_DIR)\tbrwtext.obj
 
@@ -891,6 +892,12 @@ $(OBJ_DIR)\xsavescr.obj : $(OBJ_DIR)\xsavescr.c
 #
 # Debugger source dependencies below. Add as needed
 #
+
+$(OBJ_DIR)\dbgmenu.c : $(DEBUG_DIR)\dbgmenu.prg
+    $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
+
+$(OBJ_DIR)\dbgmenu.obj : $(OBJ_DIR)\dbgmenu.c
+    $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\debugger.c : $(DEBUG_DIR)\debugger.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@

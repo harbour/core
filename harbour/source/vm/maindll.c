@@ -33,6 +33,8 @@
  *
  */
 
+#ifdef _Windows
+
 #include <windows.h>
 #include "ctoharb.h"
 
@@ -50,4 +52,6 @@ BOOL WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
 
    return TRUE;
 }
+
+#endif
 
