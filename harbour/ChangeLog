@@ -1,5 +1,11 @@
+19990729-13:26 GMT+1 Antonio Linares <alinares@fivetech.com>
+   * source/rtl/gt/gtwin.c
+      * Fixed gtGetCursorStyle when cci.bVisible returning SC_NORMAL
+   * source/rtl/console.c
+      * high level C source code implemented for SAVESCREEN, RESTSCREEN anb SETCURSOR
+
 19990729-12:13 CET Victor Szel <info@szelvesz.hu>
-  + include/extend.h - 
+  + include/extend.h -
     hb_strLower(), hb_strUpper() declarations added.
     extern STACK stack; added
     extern SYMBOL symEval; added
@@ -23,11 +29,11 @@
     source/hbpp/preproc.c
     source/tools/debug.c
     Removed explicit references to above added externs.
-  + include/dates.h - 
+  + include/dates.h -
     extern char *hb_monthsname[]; added
     extern char *hb_daysname[]; added
   - source/rtl/dates.c
-    source/tools/dates2.c  
+    source/tools/dates2.c
     Removed explicit references to above added externs.
   - source/rtl/classes.c - Removed reference to DoBlock()
   - source/rtl/codebloc.c - Redefinition of TRUE/FALSE removed.
@@ -78,7 +84,7 @@
     source/rtl/itemapi.c
     source/rtl/memvars.c
     source/rtl/transfrm.c
-    source/tools/debug.c 
+    source/tools/debug.c
     source/vm/hvm.c
     ItemCopy()      -> hb_itemCopy()
     ItemRelease()   -> hb_itemClear()
@@ -103,7 +109,7 @@
   - makefile.icc removed (superseded by GNU Make System)
   + tests/working/rtl_test.prg - Further improved, it's
     now fully automatic.
-  ! source/rtl/strings.c - LEFT(),RIGHT(),SUBSTR() bugs fixed with 
+  ! source/rtl/strings.c - LEFT(),RIGHT(),SUBSTR() bugs fixed with
     some LONG casts for asstring.length.
     UPPER(),LOWER() LONG -> ULONG
   * source/compiler/harbour.y
