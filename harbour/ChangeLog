@@ -1,3 +1,7 @@
+19990719-00:55 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/rtl/set.c
+    * Trap for NIL param in Set( _SET_SETCOLOR, NIL )
+
 19990719-00:12 EDT Paul Tucker <ptucker@sympatico.ca>
   * corrected new parameter check
     added {"SET",1,3}

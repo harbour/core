@@ -672,7 +672,7 @@ HARBOUR HB_SET (void)
          if (args > 1) hb_set.HB_SET_COLOR = set_string (pArg2, hb_set.HB_SET_COLOR);
 */
          if (hb_set.HB_SET_COLOR) hb_xfree(hb_set.HB_SET_COLOR );
-         hb_retc( hb_set.HB_SET_COLOR = hb_SetColor( args>1 ? pArg2->item.asString.value : (char *)0));
+         hb_retc( hb_set.HB_SET_COLOR = hb_SetColor( args>1 ? IS_NIL(pArg2) ? "" : pArg2->item.asString.value : (char *)0));
          break;
       case HB_SET_CONFIRM    :
          hb_retl (hb_set.HB_SET_CONFIRM);
