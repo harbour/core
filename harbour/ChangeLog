@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2004-04-03 01:46 UTC-0300 Luiz Rafael Culik(culikr@brturbo.com>
+   * contrib/hbzlib/*
+     ! updated to use the same core as xharbour do
+       to compile on linux run ./lincompile.sh
+       This was done in respect to users that want to use harbour
+
 
 2004-04-02 16:25 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/gencli.c
