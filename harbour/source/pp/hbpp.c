@@ -184,7 +184,7 @@ int ParseDirective( char* sLine )
   if ( i == 4 && memcmp ( sDirective, "ELSE", 4 ) == 0 )
     {     /* ---  #else  --- */
       if ( nCondCompile == 0 )
-        GenError( _szPErrors, 'P', ERR_DIRECTIVE_ELSE, NULL, NULL );
+        hb_compGenError( _szPErrors, 'P', ERR_DIRECTIVE_ELSE, NULL, NULL );
       else if ( nCondCompile == 1 || aCondCompile[nCondCompile-2] )
         aCondCompile[nCondCompile-1] = 1 - aCondCompile[nCondCompile-1];
     }
@@ -192,7 +192,7 @@ int ParseDirective( char* sLine )
   else if ( i == 5 && memcmp ( sDirective, "ENDIF", 5 ) == 0 )
     {     /* --- #endif  --- */
       if ( nCondCompile == 0 )
-        GenError( _szPErrors, 'P', ERR_DIRECTIVE_ENDIF, NULL, NULL );
+        hb_compGenError( _szPErrors, 'P', ERR_DIRECTIVE_ENDIF, NULL, NULL );
       else nCondCompile--;
     }
 
@@ -209,7 +209,7 @@ int ParseDirective( char* sLine )
           char cDelimChar;
 
           if ( *sLine != '\"' && *sLine != '\'' && *sLine != '<' )
-            GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
 
           cDelimChar = *sLine;
           if (cDelimChar == '<')
@@ -218,12 +218,12 @@ int ParseDirective( char* sLine )
           sLine++; i = 0;
           while ( *(sLine+i) != '\0' && *(sLine+i) != cDelimChar ) i++;
           if ( *(sLine+i) != cDelimChar )
-            GenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
+            hb_compGenError( _szPErrors, 'P', ERR_WRONG_NAME, NULL, NULL );
           *(sLine+i) = '\0';
 
           /*   if ((handl_i = fopen(sLine, "r")) == NULL) */
-          if ( !OpenInclude( sLine, _pIncludePath, &handl_i, (cDelimChar == '>'), szInclude ) )
-            GenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
+          if ( !OpenInclude( sLine, hb_comp_pIncludePath, &handl_i, (cDelimChar == '>'), szInclude ) )
+            hb_compGenError( _szPErrors, 'P', ERR_CANNOT_OPEN, sLine, NULL );
           lInclude++;
           Hp_Parse(handl_i, 0, szInclude );
           lInclude--;
@@ -251,12 +251,12 @@ int ParseDirective( char* sLine )
 
       else if ( i == 5 && memcmp ( sDirective, "ERROR", 5 ) == 0 )
         /* --- #error  --- */
-        GenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
+        hb_compGenError( _szPErrors, 'P', ERR_EXPLICIT, sLine, NULL );
 
       else if ( i == 4 && memcmp ( sDirective, "LINE", 4 ) == 0 )
         return -1;
       else
-        GenError( _szPErrors, 'P', ERR_WRONG_DIRECTIVE, sDirective, NULL );
+        hb_compGenError( _szPErrors, 'P', ERR_WRONG_DIRECTIVE, sDirective, NULL );
     }
   return 0;
 }
@@ -295,7 +295,7 @@ int ParseDefine( char* sLine)
       lastdef->pars = ( npars <= 0 )? NULL : strodup ( pars );
     }
   else
-    GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
+    hb_compGenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
   return 0;
 }
 
@@ -360,7 +360,7 @@ int ParseIfdef( char* sLine, int usl)
     {
       NextWord( &sLine, defname, FALSE );
       if ( *defname == '\0' )
-        GenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
+        hb_compGenError( _szPErrors, 'P', ERR_DEFINE_ABSENT, NULL, NULL );
     }
   if ( nCondCompile == maxCondCompile )
     {
@@ -463,7 +463,7 @@ void ParseCommand( char* sLine, int com_or_xcom, int com_or_tra )
   if ( (ipos = pp_strAt( "=>", 2, sLine, strolen(sLine) )) > 0 )
     stroncpy( mpatt, sLine, ipos-1 );
   else
-    GenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
+    hb_compGenError( _szPErrors, 'P', ERR_COMMAND_DEFINITION, NULL, NULL );
   RemoveSlash( mpatt );
   mlen = strotrim( mpatt );
 
@@ -530,13 +530,13 @@ void ConvertPatterns ( char *mpatt, int mlen, char *rpatt, int rlen )
             {
               if ( *(exppatt+explen-1) == '*' ) explen--;
               else
-                GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+                hb_compGenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
             }
           else if ( exptype == '4' )
             {
               if ( *(exppatt+explen-1) == ')' ) explen--;
               else
-                GenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
+                hb_compGenError( _szPErrors, 'P', ERR_PATTERN_DEFINITION, NULL, NULL );
             }
           rmlen = i - ipos + 1;
           /* Convert match marker into inner format */
@@ -751,7 +751,7 @@ int ParseExpression( char* sLine, char* sOutLine )
       while ( ipos != 0 );
       kolpass++;
       if( kolpass > 20 && rezDef )
-        GenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
+        hb_compGenError( _szPErrors, 'P', ERR_RECURSE, NULL, NULL );
     }
   while ( rezDef || rezTra || rezCom );
 
@@ -2291,7 +2291,7 @@ BOOL OpenInclude( char * szFileName, PATHNAMES *pSearch, FILE** fptr, BOOL bStan
   else
     {
       pFileName = hb_fsFNameSplit( szFileName );
-      pFileName->szPath = _pFileName->szPath;
+      pFileName->szPath = hb_comp_pFileName->szPath;
       hb_fsFNameMerge( szInclude, pFileName );
       *fptr = fopen( szInclude, "r" );
       hb_xfree( pFileName );

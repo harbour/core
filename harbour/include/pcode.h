@@ -39,8 +39,8 @@
 typedef enum
 {
    HB_P_AND,               /* peforms the logical AND of two latest stack values, removes them and places result */
-   HB_P_ARRAYAT,           /* places on the virtual machine stack an array element */
-   HB_P_ARRAYPUT,          /* sets array element, the array and the index are both on the stack */
+   HB_P_ARRAYPUSH,         /* places on the virtual machine stack an array element */
+   HB_P_ARRAYPOP,          /* pops a value from the eval stack into an array element */
    HB_P_ARRAYDIM,          /* instructs the virtual machine to build an array with some specific dimensions */
    HB_P_ARRAYGEN,          /* instructs the virtual machine to build an array and load elemnst from the stack */
    HB_P_EQUAL,             /* check if the latest two values on the stack are equal, removing them and leaving there the result */

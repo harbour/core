@@ -1,3 +1,58 @@
+19991116-21:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    * source/compiler/harbour.y
+    * source/compiler/harbour.l
+    * source/compiler/harbour.c
+    * source/compiler/expropt.c
+    * source/compiler/genc.c
+    * source/compiler/genhrb.c
+    * source/compiler/genobj32.c
+    * source/compiler/genjava.c
+        * new implementation of grammar rules - many new syntax supported
+        * new expression optimizer
+	* start of introducing new functions' naming scheme 'hb_comp'
+        * nonprintable characters (CR/LF/TAB, etc.) are inserted into
+        generated C code using hexdecimal numbers instead of quoted char
+	(they can appear as a result of expression optimization)
+       
+    * source/pp/hbpp.c
+    * source/pp/hbppint.c
+    * source/pp/hblib.c
+    * source/pp/stdalone/hbpp.c
+	* changes to support new functions' naming scheme 'hb_comp'
+	
+    *include/pcode.h
+        *HB_P_ARRAYAAT  -> HB_P_ARRAYPUSH
+         HB_P_ARRAYAPUT -> HB_P_ARRAYPOP - it removes value from the stack
+	 This is compatible with the handling of usual variables
+
+     *source/debug/debugger.prg
+        * corrected the following syntax:
+                something <operator> other := another
+        for example:
+        ? 2 + a:=5 -1
+        This syntax is not allowed in Clipper and in new Harbour rules too
+        It should be used:
+        ? 2 + (a:=5) -1
+
+    * doc/compiler.txt
+	* added description of incompatibility with Clipper in object
+	handling
+	
+    * include/compiler.h
+	* new structures related to expression optimizer
+	
+    * include/hberrors.h
+	* new errors: Invalid type, invalid syntax, invalid alias
+	* new warning: meaningless expression
+	
+    * source/vm/hvm.c
+	* change in handling of HB_P_FORTEST opcode used in FOR/NEXT loop
+	* Renamed ArrayAt -> ArrayPush
+	* Renamed ArrayPut -> ArrayPop - it removes the value from the 
+	    eval stack now
+
+   
 19991116-15:05 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/memvars.c
     ! __MSAVE() Modified to save MEMVARs with names longer than 10 chars, the

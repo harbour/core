@@ -52,8 +52,8 @@ static int _nChar = 0;
 void GenJava( PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX ];
-   PFUNCTION pFunc /*= functions.pFirst */;
-   PCOMSYMBOL pSym = symbols.pFirst;
+   PFUNCTION pFunc /*= hb_comp_functions.pFirst */;
+   PCOMSYMBOL pSym = hb_comp_symbols.pFirst;
    USHORT w, wLen, wVar;
    LONG lPCodePos;
    LONG lPad;
@@ -69,11 +69,11 @@ void GenJava( PHB_FNAME pFileName )
    yyc = fopen( szFileName, "wb" );
    if( ! yyc )
    {
-      GenError( _szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
    }
 
-   if( ! _bQuiet )
+   if( ! hb_comp_bQuiet )
    {
       printf( "\nGenerating Java source output to \'%s\'... ", szFileName );
       fflush( stdout );
@@ -93,7 +93,7 @@ void GenJava( PHB_FNAME pFileName )
 
    /* writes the symbol table */
 
-   if( ! _bStartProc )
+   if( ! hb_comp_bStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
 
    lSymbols = 0;                /* Count number of symbols */
@@ -107,8 +107,8 @@ void GenJava( PHB_FNAME pFileName )
    hb_fputc( ( BYTE ) ( ( lSymbols >> 16 ) & 255 ), yyc );
    hb_fputc( ( BYTE ) ( ( lSymbols >> 24 ) & 255 ), yyc );
 
-   pSym = symbols.pFirst;
-   if( ! _bStartProc )
+   pSym = hb_comp_symbols.pFirst;
+   if( ! hb_comp_bStartProc )
       pSym = pSym->pNext; /* starting procedure is always the first symbol */
 
    while( pSym )
@@ -140,8 +140,8 @@ void GenJava( PHB_FNAME pFileName )
       pSym = pSym->pNext;
    }
 
-   pFunc = functions.pFirst;
-   if( ! _bStartProc )
+   pFunc = hb_comp_functions.pFirst;
+   if( ! hb_comp_bStartProc )
       pFunc = pFunc->pNext;
 
    lSymbols = 0;                /* Count number of symbols */
@@ -157,8 +157,8 @@ void GenJava( PHB_FNAME pFileName )
 
    /* Generate functions data
     */
-   pFunc = functions.pFirst;
-   if( ! _bStartProc )
+   pFunc = hb_comp_functions.pFirst;
+   if( ! hb_comp_bStartProc )
       pFunc = pFunc->pNext; /* No implicit starting procedure */
 
    while( pFunc )
@@ -185,8 +185,8 @@ void GenJava( PHB_FNAME pFileName )
          switch( pFunc->pCode[ lPCodePos ] )
          {
             case HB_P_AND:
-            case HB_P_ARRAYAT:
-            case HB_P_ARRAYPUT:
+            case HB_P_ARRAYPUSH:
+            case HB_P_ARRAYPOP:
             case HB_P_DEC:
             case HB_P_DIVIDE:
             case HB_P_DUPLICATE:
@@ -358,7 +358,7 @@ void GenJava( PHB_FNAME pFileName )
                /* we only generate it if there are statics used in this function */
                if( pFunc->bFlags & FUN_USES_STATICS )
                {
-                  GetSymbol( _pInitFunc->szName, &w );
+                  hb_compGetSymbol( hb_comp_pInitFunc->szName, &w );
                   w = FixSymbolPos( w );
                   hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
                   hb_fputc( HB_LOBYTE( w ), yyc );
@@ -370,7 +370,7 @@ void GenJava( PHB_FNAME pFileName )
                break;
 
             case HB_P_STATICS:
-               GetSymbol( _pInitFunc->szName, &w );
+               hb_compGetSymbol( hb_comp_pInitFunc->szName, &w );
                w = FixSymbolPos( w );
                hb_fputc( pFunc->pCode[ lPCodePos ], yyc );
                hb_fputc( HB_LOBYTE( w ), yyc );
@@ -415,7 +415,7 @@ void GenJava( PHB_FNAME pFileName )
 
    fclose( yyc );
 
-   if( ! _bQuiet )
+   if( ! hb_comp_bQuiet )
       printf( "Done.\n" );
 }
 

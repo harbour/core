@@ -50,8 +50,8 @@
 #include "itemapi.h"
 #include "hberrors.h"
 
-PATHNAMES * _pIncludePath = NULL;
-PHB_FNAME _pFileName = NULL;
+PATHNAMES * hb_comp_pIncludePath = NULL;
+PHB_FNAME hb_comp_pFileName = NULL;
 
 jmp_buf s_env;
 
@@ -103,7 +103,7 @@ HARBOUR HB___PREPROCESS( void )
     hb_retc( "" );
 }
 
-void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
+void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
   HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
@@ -118,7 +118,7 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
   longjmp( s_env, iError );
 }
 
-void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
   HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 

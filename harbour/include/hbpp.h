@@ -111,10 +111,10 @@ extern void     hb_xfree( void * pMem );    /* frees memory */
 
 /* Needed support variables, but not contained in HBPP.C */
 
-extern PATHNAMES * _pIncludePath;
-extern PHB_FNAME _pFileName;
 extern DEFINES * topDefine;
 extern COMMANDS * topCommand;
 extern COMMANDS * topTranslate;
+
+#include "compiler.h"
 
 #endif /* HB_PP_H_ */

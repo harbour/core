@@ -195,7 +195,7 @@ int Hp_Parse( FILE * handl_i, FILE * handl_o, char * szSource )
               else
               {
                 sprintf( szLine, "%d", iLine );
-                GenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, szSource, szLine );
+                hb_compGenWarning( _szPWarnings, 'I', WARN_NONDIRECTIVE, szSource, szLine );
               }
             }
         }

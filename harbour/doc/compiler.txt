@@ -151,7 +151,7 @@ Compilation in batch mode.
 Known incompatibilities between harbour and clipper compilers
 =============================================================
 
-NOTE: 
+NOTE:
   If you want 100% compatible compiler and runtime libraries then
 you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY option. This
 option should be defined in include/hbsetup.h file (in fact this
@@ -160,10 +160,10 @@ characters only). This change have to be done before invoking
 the make utility.
 
 
-Handling of undeclared variables 
+Handling of undeclared variables
 --------------------------------
   When a value is assigned to an undeclared variable and '-v' command
-line option is not used then the Clipper compiler assumes that the variable 
+line option is not used then the Clipper compiler assumes that the variable
 is a PRIVATE or a PUBLIC variable and generates POPM (pop memvar) opcode.
   When a value of undeclared variable is accessed and '-v' command line
 option is not used the Clipper compiler generates PUSHV (push variable)
@@ -171,8 +171,8 @@ opcode that determines the type of variable at runtime. If the field with
 requested name exists in a current workarea then its value is used. If there
 is no field then a PRIVATE or a PUBLIC variable is used (if exists).
 
-  The Harbour compiler generates an opcode to determine the type of variable 
-at runtime (POPVARIABLE or PUSHVARIABLE) in both cases (assignment and access). 
+  The Harbour compiler generates an opcode to determine the type of variable
+at runtime (POPVARIABLE or PUSHVARIABLE) in both cases (assignment and access).
 
 The difference can be checked by the following code:
 
@@ -208,3 +208,33 @@ why the Harbour compiler uses the usual PUSHMEMVARREF opcode in such
 cases. Notice that the runtime behavior is the same in Clipper and
 in Harbour - the generated opcodes are different only.
 
+
+Handling of object messages
+---------------------------
+  The HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
+the way the chained send messages are handled.
+
+For example, the following code:
+
+a:b( COUNT() ):c += 1
+
+will be handled as:
+
+a:b( COUNT() ):c := a:b( COUNT() ):c + 1
+
+in strict Clipper compatibility mode and
+
+temp := a:b( COUNT() ), temp:c += 1
+
+in non-strict mode.
+
+  In practice in Clipper it will call COUNT() function two times: the 
+first time before addition and the second one after addition - in Harbour, 
+COUNT() function will be called only once, before addition.
+
+  The Harbour (non-strict) method is:
+1) faster
+2) it guarantees that the same instance variable of the same object will
+  be changed
+
+(See also: source/compiler/expropt.c)

@@ -106,8 +106,8 @@ static void    hb_vmAnd( void );             /* performs the logical AND on the 
 static void    hb_vmOr( void );              /* performs the logical OR on the latest two values, removes them and leaves result on the stack */
 
 /* Array */
-static void    hb_vmArrayAt( void );         /* pushes an array element to the stack, removing the array and the index from the stack */
-static void    hb_vmArrayPut( void );        /* sets an array value and pushes the value on to the stack */
+static void    hb_vmArrayPush( void );       /* pushes an array element to the stack, removing the array and the index from the stack */
+static void    hb_vmArrayPop( void );        /* pops a value from the stack */
 static void    hb_vmArrayDim( USHORT uiDimensions ); /* generates an uiDimensions Array and initialize those dimensions from the stack values */
 static void    hb_vmArrayGen( ULONG ulElements ); /* generates an ulElements Array and fills it from the stack values */
 static void    hb_vmArrayNew( HB_ITEM_PTR, USHORT ); /* creates array */
@@ -479,13 +479,13 @@ void hb_vmExecute( BYTE * pCode, PHB_SYMB pSymbols )
 
          /* Array */
 
-         case HB_P_ARRAYAT:
-            hb_vmArrayAt();
+         case HB_P_ARRAYPUSH:
+            hb_vmArrayPush();
             w++;
             break;
 
-         case HB_P_ARRAYPUT:
-            hb_vmArrayPut();
+         case HB_P_ARRAYPOP:
+            hb_vmArrayPop();
             w++;
             break;
 
@@ -1816,41 +1816,41 @@ static void hb_vmInstring( void )
    }
 }
 
+/* At this moment the eval stack should store:
+ * -3 -> <step value>
+ * -2 -> <current counter value>
+ * -1 -> <end value>
+ */
 static void hb_vmForTest( void )        /* Test to check the end point of the FOR */
 {
-   int iDec;
-   double dStep;
-   BOOL bEqual;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_vmForTest()"));
-
-   while( ! IS_NUMERIC( hb_stack.pPos - 1 ) )
+   
+   if( IS_NUMERIC( hb_stack.pPos - 1 ) )
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1073, NULL, "<" );
+      int iDec;
+      double dCurrent, dEnd, dStep;
 
-      if( pResult )
+      dEnd = hb_vmPopDouble( &iDec );
+      if( IS_NUMERIC( hb_stack.pPos - 1 ) )
       {
-         hb_stackPop();
-         hb_vmPush( pResult );
-         hb_itemRelease( pResult );
+         dCurrent = hb_vmPopDouble( &iDec );
+         if( IS_NUMERIC( hb_stack.pPos - 1 ) )
+         {
+            dStep = hb_vmPopDouble( &iDec );
+
+            if( dStep > 0 )           /* Positive loop. Use LESS */
+               hb_vmPushLogical( dCurrent <= dEnd );
+            else if( dStep < 0 )      /* Negative loop. Use GREATER */
+               hb_vmPushLogical( dCurrent >= dEnd );
+         }
+         else
+            hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
       }
       else
-         /* NOTE: Return from the inside. */
-         return;
+         hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
    }
-
-   dStep = hb_vmPopDouble( &iDec );
-
-   /* NOTE: step of zero will cause endless loop, as in Clipper */
-
-   if( dStep > 0 )           /* Positive loop. Use LESS */
-      hb_vmLess();
-   else if( dStep < 0 )      /* Negative loop. Use GREATER */
-      hb_vmGreater();
-
-   bEqual = hb_vmPopLogical();    /* Logical should be on top of stack */
-   hb_vmPushNumber( dStep, iDec );   /* Push the step expression back on the stack */
-   hb_vmPushLogical( bEqual );
+   else
+      hb_errRT_BASE( EG_ARG, 1073, NULL, "<" );
 }
 
 /* ------------------------------- */
@@ -1958,7 +1958,7 @@ static void hb_vmOr( void )
 /* Array                           */
 /* ------------------------------- */
 
-static void hb_vmArrayAt( void )
+static void hb_vmArrayPush( void )
 {
    PHB_ITEM pIndex;
    PHB_ITEM pArray;
@@ -2006,7 +2006,7 @@ static void hb_vmArrayAt( void )
    }
 }
 
-static void hb_vmArrayPut( void )
+static void hb_vmArrayPop( void )
 {
    PHB_ITEM pValue;
    PHB_ITEM pIndex;
@@ -2015,9 +2015,9 @@ static void hb_vmArrayPut( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPut()"));
 
-   pValue = hb_stack.pPos - 1;
-   pIndex = hb_stack.pPos - 2;
-   pArray = hb_stack.pPos - 3;
+   pValue = hb_stack.pPos - 3;
+   pArray = hb_stack.pPos - 2;
+   pIndex = hb_stack.pPos - 1;
 
    if( IS_INTEGER( pIndex ) )
       ulIndex = pIndex->item.asInteger.value;
@@ -2040,6 +2040,7 @@ static void hb_vmArrayPut( void )
       hb_itemCopy( pArray, pValue );  /* places pValue at pArray position */
       hb_stackPop();
       hb_stackPop();
+      hb_stackPop();	/* remove the value from the stack just like other POP operations */
    }
 }
 
@@ -2346,7 +2347,7 @@ void hb_vmDo( USHORT uiParams )
             if( pSelfBase->uiPrevCls ) /* Is is a Super cast ? */
             {
               pSelfBase->uiClass   = pSelfBase->uiPrevCls;
-              pSelfBase->uiPrevCls = NULL;
+              pSelfBase->uiPrevCls = 0;
             }
          }
       }

@@ -82,11 +82,11 @@ void GenObj32( PHB_FNAME pFileName )
 
   if( ! ( hObjFile = fopen( szFileName, "wb" ) ) )
     {
-      GenError( _szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
+      hb_compGenError( hb_comp_szCErrors, 'E', ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
     }
 
-  if( ! _bQuiet )
+  if( ! hb_comp_bQuiet )
   {
     printf( "\nGenerating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
     fflush( stdout );
@@ -103,20 +103,20 @@ void GenObj32( PHB_FNAME pFileName )
 
   fclose( hObjFile );
 
-  if( ! _bQuiet )
+  if( ! hb_comp_bQuiet )
     printf( "Done.\n" );
 }
 
 static ULONG GetSymbolsSize( void )
 {
-  return ( symbols.iCount - ( _bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
+  return ( hb_comp_symbols.iCount - ( hb_comp_bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
 }
 
 static PCOMSYMBOL GetFirstSymbol( void )
 {
-  PCOMSYMBOL pSymbol = symbols.pFirst;
+  PCOMSYMBOL pSymbol = hb_comp_symbols.pFirst;
 
-  if( ! _bStartProc )
+  if( ! hb_comp_bStartProc )
     pSymbol = pSymbol->pNext;
 
   return pSymbol;
@@ -136,9 +136,9 @@ static char * GetSymbolName( ULONG ulPos )
 static ULONG GetPCodesSize( void )
 {
   ULONG ulTotal = 0;
-  PFUNCTION pFunction = functions.pFirst;
+  PFUNCTION pFunction = hb_comp_functions.pFirst;
 
-  if( ! _bStartProc )
+  if( ! hb_comp_bStartProc )
     pFunction = pFunction->pNext;
 
   while( pFunction )
@@ -260,9 +260,9 @@ static void GenerateDataSegment( FILE * hObjFile )
 
 static void GenerateCodeSegment( FILE * hObjFile )
 {
-  USHORT wFunctions = functions.iCount - ( _bStartProc ? 0: 1 );
+  USHORT wFunctions = hb_comp_functions.iCount - ( hb_comp_bStartProc ? 0: 1 );
   ULONG ulSize    = wFunctions * sizeof( prgFunction );
-  PFUNCTION pFunc = ( _bStartProc ? functions.pFirst: functions.pFirst->pNext );
+  PFUNCTION pFunc = ( hb_comp_bStartProc ? hb_comp_functions.pFirst: hb_comp_functions.pFirst->pNext );
   USHORT w = 0;
 
   DefineSegment( hObjFile, 2, /* "_TEXT" position + 1 into localNames */
@@ -299,10 +299,10 @@ static void GenerateExternals( FILE * hObjFile )
   PFUNCTION pFunc, pFTemp;
 
   /* calculate amount of externals */
-  pFunc = funcalls.pFirst;
+  pFunc = hb_comp_funcalls.pFirst;
   while( pFunc )
     {
-      if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == functions.pFirst )
+      if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
         wExternals++;
       pFunc = pFunc->pNext;
     }
@@ -312,10 +312,10 @@ static void GenerateExternals( FILE * hObjFile )
       w = 1;
       externNames[ 0 ] = "_hb_vmExecute";
 
-      pFunc = funcalls.pFirst;
+      pFunc = hb_comp_funcalls.pFirst;
       while( pFunc )
         {
-          if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == functions.pFirst )
+          if( ! ( pFTemp = GetFunction( pFunc->szName ) ) || pFTemp == hb_comp_functions.pFirst )
             externNames[ w++ ] = pFunc->szName;
           pFunc = pFunc->pNext;
         }
@@ -463,10 +463,10 @@ static void CodeSegment( FILE * hObjFile, BYTE * prgCode, ULONG ulPrgLen, USHORT
   USHORT y;
   USHORT wTotalLen = ( ulPrgLen * wFunctions ) + 4;
   ULONG ul;
-  PFUNCTION pFunction = functions.pFirst;
-  ULONG ulPCodeOffset = ( symbols.iCount - ( _bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
+  PFUNCTION pFunction = hb_comp_functions.pFirst;
+  ULONG ulPCodeOffset = ( hb_comp_symbols.iCount - ( hb_comp_bStartProc ? 0: 1 ) ) * sizeof( HB_SYMB );
 
-  if( ! _bStartProc )
+  if( ! hb_comp_bStartProc )
     pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile );
@@ -503,11 +503,11 @@ static void DataSegment( FILE * hObjFile, BYTE * symbol, USHORT wSymLen, USHORT 
   USHORT w, y;
   USHORT wTotalLen = 4 + ulSize;
   PCOMSYMBOL pSymbol = GetFirstSymbol();
-  PFUNCTION pFunction = functions.pFirst;
+  PFUNCTION pFunction = hb_comp_functions.pFirst;
   ULONG ulSymbolNameOffset = GetSymbolsSize() + GetPCodesSize();
   ULONG ulFunctionOffset;
 
-  if( ! _bStartProc )
+  if( ! hb_comp_bStartProc )
     pFunction = pFunction->pNext;
 
   putbyte( 0xA0, hObjFile );

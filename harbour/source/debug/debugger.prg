@@ -793,7 +793,7 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
       DispOutAt( 0, ::aItems[ nPopup ]:nCol,;
          StrTran( ::aItems[ nPopup ]:cPrompt, "~", "" ), ::cClrPopup )
 
-      DispOutAt( 0, ::aItems[ nPopup ]:nCol + nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) - 1,;
+      DispOutAt( 0, ::aItems[ nPopup ]:nCol + ( nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) ) - 1,;
          SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
    endif
    // dispend()
@@ -832,8 +832,8 @@ METHOD Display() CLASS TDbMenu
          DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol,;
             StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
 
-         DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol + nAt := ;
-            At( "~", ::aItems[ n ]:cPrompt ) - 1 ,;
+         DispOutAt( ::aItems[ n ]:nRow, ::aItems[ n ]:nCol + ;
+	    ( nAt := At( "~", ::aItems[ n ]:cPrompt ) ) - 1 ,;
             SubStr( ::aItems[ n ]:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
       endif
    next
@@ -896,8 +896,8 @@ METHOD GoLeft() CLASS TDbMenu
          DispOutAt( oMenuItem:nRow, oMenuItem:nCol,;
             StrTran( oMenuItem:cPrompt, "~", "" ) )
 
-         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + nAt := ;
-            At( "~", oMenuItem:cPrompt ) - 1 ,;
+         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + ;
+	    ( nAt := At( "~", oMenuItem:cPrompt ) ) - 1 ,;
             SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
       endif
       if ::nOpenPopup > 1
@@ -929,8 +929,8 @@ METHOD GoRight() CLASS TDbMenu
          DispOutAt( oMenuItem:nRow, oMenuItem:nCol ,;
             StrTran( oMenuItem:cPrompt, "~", "" ) )
 
-         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + nAt := ;
-            At( "~", oMenuItem:cPrompt ) - 1 ,;
+         DispOutAt( oMenuItem:nRow, oMenuItem:nCol + ;
+	    ( nAt := At( "~", oMenuItem:cPrompt ) ) - 1 ,;
             SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotKey )
       endif
       if ::nOpenPopup < Len( ::aItems )
@@ -968,15 +968,16 @@ METHOD ShowPopup( nPopup ) CLASS TDbMenu
       DispOutAt( 0, ::aItems[ nPopup ]:nCol ,;
         StrTran( ::aItems[ nPopup ]:cPrompt, "~", "" ), ::cClrHilite )
 
-      DispOutAt( 0, ::aItems[ nPopup ]:nCol + nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) - 1 ,;
+      DispOutAt( 0, ::aItems[ nPopup ]:nCol + ;
+        ( nAt := At( "~", ::aItems[ nPopup ]:cPrompt ) ) - 1 ,;
         SubStr( ::aItems[ nPopup ]:cPrompt, nAt + 2, 1 ), ::cClrHotFocus )
    else
       oMenuItem = ::aItems[ nPopup ]
       DispOutAt( oMenuItem:nRow, oMenuItem:nCol ,;
         StrTran( oMenuItem:cPrompt, "~", "" ), ::cClrHilite )
 
-      DispOutAt( oMenuItem:nRow, oMenuItem:nCol + nAt := ;
-        At( "~", oMenuItem:cPrompt ) - 1 ,;
+      DispOutAt( oMenuItem:nRow, oMenuItem:nCol + ;
+        ( nAt := At( "~", oMenuItem:cPrompt ) ) - 1 ,;
         SubStr( oMenuItem:cPrompt, nAt + 2, 1 ), ::cClrHotFocus )
    endif
 
@@ -1052,8 +1053,8 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
    DispOutAt(  ::nRow, ::nCol ,;
       StrTran( ::cPrompt, "~", "" ), cClrText )
 
-   DispOutAt( ::nRow, ::nCol + nAt := ;
-      At( "~", ::cPrompt ) - 1 ,;
+   DispOutAt( ::nRow, ::nCol + ;
+      ( nAt := At( "~", ::cPrompt ) ) - 1 ,;
       SubStr( ::cPrompt, nAt + 2, 1 ), cClrHotKey )
 
 return nil

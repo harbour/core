@@ -68,8 +68,8 @@ void AddSearchPath( char *, PATHNAMES * * ); /* add pathname to a search list */
 
 char sLine[ STR_SIZE ], sOutLine[ STR_SIZE ];
 
-PATHNAMES *_pIncludePath = NULL;
-PHB_FNAME _pFileName = NULL;
+PATHNAMES *hb_comp_pIncludePath = NULL;
+PHB_FNAME hb_comp_pFileName = NULL;
 int _iWarnings = 0;
 
 int main( int argc, char * argv[] )
@@ -115,7 +115,7 @@ int main( int argc, char * argv[] )
               break;
             case 'i':
             case 'I':
-              AddSearchPath( argv[ iArg ]+2, &_pIncludePath );
+              AddSearchPath( argv[ iArg ]+2, &hb_comp_pIncludePath );
               break;
             case 'o':
             case 'O':
@@ -140,15 +140,15 @@ int main( int argc, char * argv[] )
               break;
             }
         }
-      else  _pFileName = hb_fsFNameSplit( argv[ iArg ] );
+      else  hb_comp_pFileName = hb_fsFNameSplit( argv[ iArg ] );
       iArg++;
     }
-  if( _pFileName )
+  if( hb_comp_pFileName )
     {
-      if( ! _pFileName->szExtension )
-        _pFileName->szExtension =".prg";
+      if( ! hb_comp_pFileName->szExtension )
+        hb_comp_pFileName->szExtension =".prg";
 
-      hb_fsFNameMerge( szFileName, _pFileName );
+      hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
       if( ( handl_i = fopen( szFileName, "r" ) ) == NULL )
         {
@@ -176,8 +176,8 @@ int main( int argc, char * argv[] )
       return 1;
     }
 
-  _pFileName->szExtension = ".ppo";
-  hb_fsFNameMerge( szFileName, _pFileName );
+  hb_comp_pFileName->szExtension = ".ppo";
+  hb_fsFNameMerge( szFileName, hb_comp_pFileName );
 
   if( ( handl_o = fopen( szFileName, "wt" ) ) == NULL )
     {
@@ -197,10 +197,10 @@ int main( int argc, char * argv[] )
         while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
           {
             *pDelim = '\0';
-            AddSearchPath( pPath, &_pIncludePath );
+            AddSearchPath( pPath, &hb_comp_pIncludePath );
             pPath = pDelim + 1;
           }
-        AddSearchPath( pPath, &_pIncludePath );
+        AddSearchPath( pPath, &hb_comp_pIncludePath );
       }
   }
 
@@ -460,9 +460,9 @@ void AddSearchPath( char * szPath, PATHNAMES * * pSearchList )
   pPath->szPath = szPath;
 }
 
-void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
+void hb_compGenError( char * _szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
 {
-  HB_TRACE(HB_TR_DEBUG, ("GenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
+  HB_TRACE(HB_TR_DEBUG, ("hb_compGenError(%p, %c, %d, %s, %s)", _szErrors, cPrefix, iError, szError1, szError2));
 
   printf( "\r(%i) ", nline );
   printf( "Error %c%04i  ", cPrefix, iError );
@@ -472,9 +472,9 @@ void GenError( char * _szErrors[], char cPrefix, int iError, char * szError1, ch
   exit( EXIT_FAILURE );
 }
 
-void GenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
+void hb_compGenWarning( char* _szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2)
 {
-  HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
+  HB_TRACE(HB_TR_DEBUG, ("hb_compGenWarning(%p, %c, %d, %s, %s)", _szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
   if( _iWarnings )
     {
@@ -654,7 +654,7 @@ void * hb_xgrab( ULONG ulSize )         /* allocates fixed memory, exits on fail
   HB_TRACE(HB_TR_DEBUG, ("hb_xgrab(%lu)", ulSize));
 
   if( ! pMem )
-    GenError( _szPErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
+    hb_compGenError( _szPErrors, 'P', ERR_PPMEMALLOC, NULL, NULL );
 
   return pMem;
 }
@@ -666,7 +666,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates memory */
   HB_TRACE(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
   if( ! pResult )
-    GenError( _szPErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
+    hb_compGenError( _szPErrors, 'P', ERR_PPMEMREALLOC, NULL, NULL );
 
   return pResult;
 }
@@ -678,5 +678,5 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
   if( pMem )
     free( pMem );
   else
-    GenError( _szPErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
+    hb_compGenError( _szPErrors, 'P', ERR_PPMEMFREE, NULL, NULL );
 }
