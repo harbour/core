@@ -164,7 +164,7 @@ PDYNSYM NewDynSym( PSYMBOL pSymbol ); /* creates a new dynamic symbol based on a
 
 /* error API */
 PITEM _errNew( void );
-void _errPutDescription( PITEM pError, char * szDescription );
+PITEM _errPutDescription( PITEM pError, char * szDescription );
 WORD _errLaunch( PITEM pError );
 void _errRelease( PITEM pError );
 
