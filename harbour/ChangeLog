@@ -1,3 +1,11 @@
+Wed May 05 18:28:28 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* makefile.b16: 
+	* makefile.b32: 
+	Added explicit rules to compile harbour.o from harbour.c.
+	Don' know why these were necessary, but it seems people had
+	problems without them.
+
 Wed May 05 16:29:19 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 	* include/pcode.h: 

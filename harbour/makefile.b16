@@ -71,3 +71,7 @@ y_tab.c : harbour.y
 
 lexyy.c : harbour.l
    flex -i -8 -osource\compiler\lexyy.c source\compiler\harbour.l
+
+harbour.obj : harbour.c
+   bcc -c -ml -O2 -I.\include -osource\compiler\harbour.obj \
+	source\compiler\harbour.c
