@@ -2505,6 +2505,24 @@ static LPCDXTAG hb_cdxGetActiveTag( LPCDXINDEX PIF )
    return pTag;
 }
 
+static LPCDXTAG hb_cdxGetTagByNumber(CDXAREAP pArea,  USHORT uiTag )
+{
+   LPCDXTAG pTag;
+
+   if ( ! uiTag )
+      return NULL;
+
+   pTag = pArea->lpIndexes->TagList;
+   --uiTag;
+   while( uiTag && pTag )
+   {
+      pTag = pTag->pNext;
+      --uiTag;
+   }
+
+   return pTag;
+}
+
 
 
 /* end hb_cdxTagxxx */
@@ -4068,6 +4086,7 @@ ERRCODE hb_cdxOrderCreate( CDXAREAP pAreaCdx, LPDBORDERCREATEINFO pOrderInfo )
    return SELF_GOTOP( ( AREAP ) pArea );
 }
 
+
 ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
 {
    USHORT uiFlags;
@@ -4185,7 +4204,8 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
          {
             pTagTmp = TagList;
             TagList = pTag1->pNext;
-            pTag1->pNext = pTagTmp;
+            pTag1->pNext = pTag1->pNext->pNext;
+            TagList->pNext = pTagTmp;
          }
          else
          {
@@ -4194,7 +4214,8 @@ ERRCODE hb_cdxOrderListAdd( CDXAREAP pAreaCdx, LPDBORDERINFO pOrderInfo )
                pTag2 = pTag2->pNext;
             pTagTmp = pTag2->pNext;
             pTag2->pNext = pTag1->pNext;
-            pTag1->pNext = pTagTmp;
+            pTag1->pNext = pTag1->pNext->pNext;
+            pTag2->pNext->pNext = pTagTmp;
          }
       }
    }

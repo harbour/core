@@ -135,3 +135,4 @@ static void hb_cdxSortAddInternal( LPSORTINFO pSort, USHORT Lvl, LONG Tag, LONG 
                                    LPKEYINFO Value );
 static LPCDXTAG hb_cdxGetActiveTag( LPCDXINDEX PIF );
 static USHORT hb_cdxFindTag( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
+static LPCDXTAG hb_cdxGetTagByNumber(CDXAREAP pArea,  USHORT uiTag );
