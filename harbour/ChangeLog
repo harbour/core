@@ -1,3 +1,8 @@
+19990921-00:07 EDT Paul Tucker <ptucker@sympatico.ca>
+  * source/vm/hvm.c
+    source/rtl/fm.c
+    - removed a few casts for outerr calls
+
 19990919-21:40 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/console.c

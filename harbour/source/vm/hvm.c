@@ -183,7 +183,7 @@ int main( int argc, char * argv[] )
    {
       char * pszVersion = hb_version( 1 );
 
-      hb_outerr( ( BYTE * ) pszVersion, 0 );
+      hb_outerr( pszVersion, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       hb_xfree( pszVersion );
@@ -2649,7 +2649,7 @@ void hb_stackDispCall( void )
                  pBase->item.asSymbol.value->szName,
                  pBase->item.asSymbol.lineno );
 
-      hb_outerr( ( BYTE * ) buffer, 0 );
+      hb_outerr( buffer, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
    }
 }
@@ -3241,7 +3241,7 @@ void hb_vmRequestCancel( void )
 
       hb_outerr( hb_consoleGetNewLine(), 0 );
       sprintf( buffer, "Cancelled at: %s (%i)", stack.pBase->item.asSymbol.value->szName, stack.pBase->item.asSymbol.lineno );
-      hb_outerr( ( BYTE * ) buffer, 0 );
+      hb_outerr( buffer, 0 );
       hb_outerr( hb_consoleGetNewLine(), 0 );
 
       s_uiActionRequest = HB_QUIT_REQUESTED;
