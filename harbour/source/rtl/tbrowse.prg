@@ -54,7 +54,7 @@ CLASS TBrowse
    DATA StabLevel     // Stabilize() progressive level
 
    METHOD New()                    // Constructor
-   METHOD Down()           VIRTUAL // Moves the cursor down one row
+   METHOD Down()           // Moves the cursor down one row
    METHOD End()            VIRTUAL // Moves the cursor to the rightmost visible data column
    METHOD GoBottom()       VIRTUAL // Repositions the data source to the bottom of file
    METHOD GoTop()          VIRTUAL // Repositions the data source to the top of file
@@ -67,7 +67,7 @@ CLASS TBrowse
    METHOD PanLeft()        VIRTUAL // Pans left without changing the cursor position
    METHOD PanRight()       VIRTUAL // Pans right without changing the cursor position
    METHOD Right()          VIRTUAL // Moves the cursor right one column
-   METHOD Up()             VIRTUAL // Moves the cursor up one row
+   METHOD Up()             // Moves the cursor up one row
 
    METHOD AddColumn( oCol ) INLINE ;
       AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
@@ -80,7 +80,7 @@ CLASS TBrowse
 
    METHOD DelColumn( nPos )        // Delete a column object from a browse
 
-   METHOD ForceStable()    VIRTUAL // Performs a full stabilization                             ê
+   METHOD ForceStable()    // Performs a full stabilization                             ê
 
    METHOD GetColumn( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ], nil ) // Gets a specific TBColumn object
@@ -134,7 +134,23 @@ METHOD DelColumn( nPos ) CLASS TBrowse
 
 return oCol
 
+METHOD Down() CLASS TBrowse
+
+   ::RowPos++
+
+return Self
+
+METHOD ForceStable() CLASS TBrowse
+
+   while ! ::Stabilize()
+   end
+
+return nil
+
 METHOD Stabilize() CLASS TBrowse
+
+   // Actually we are just trying to make it work. Once it is working
+   // ok, we will turn it incremental
 
    local n, nRow, lDisplay := .t.
    local nWidth := ::nRight - ::nLeft + 1  // Visible width of the browse
@@ -168,6 +184,7 @@ METHOD Stabilize() CLASS TBrowse
       DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
    endif
 
+   Eval( ::SkipBlock, -( ::nBottom - ::nTop - If( lHeaders, 1, 0 ) + ::RowPos - 1 ) )
    for nRow := If( lHeaders, 1, 0 ) to ::nBottom - ::nTop
       SetPos( ::nTop + nRow, ::nLeft )
       DevOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
@@ -189,14 +206,31 @@ METHOD Stabilize() CLASS TBrowse
       lDisplay = Eval( ::SkipBlock, 1 ) != 0
    next
 
-   Eval( ::SkipBlock, -( ::nBottom - ::nTop + If( lHeaders, 1, 0 ) ) )
+   lDisplay = Eval( ::SkipBlock, -( ::nBottom - ::nTop - If( lHeaders, 1, 0 ) - ;
+                    ::RowPos - 1 ) ) != 0
    if ::AutoLite
-      @ ::nTop + ::RowPos - If( lHeaders, 0, 1 ), ::aColumns[ ::ColPos ]:ColPos ;
-        SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
-        COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
+      if lDisplay
+         @ ::nTop + ::RowPos - If( lHeaders, 0, 1 ), ::aColumns[ ::ColPos ]:ColPos ;
+           SAY PadR( Eval( ::aColumns[ ::ColPos ]:block ), ::aColumns[ ::ColPos ]:Width ) ;
+           COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
+      else
+         @ ::nTop + ::RowPos - If( lHeaders, 0, 1 ), ::aColumns[ ::ColPos ]:ColPos ;
+           SAY Space( ::aColumns[ ::ColPos ]:Width ) ;
+           COLOR __ColorIndex( ::ColorSpec, CLR_ENHANCED )
+      endif
    endif
 
 return .t.
+
+METHOD Up() CLASS TBrowse
+
+   if ::RowPos > 1
+      ::RowPos--
+   else
+      ::HitTop = .t.
+   endif
+
+return Self
 
 function TBrowseNew( nTop, nLeft, nBottom, nRight )
 
