@@ -1844,9 +1844,9 @@ FUNCTION NextToken( sLine, bCheckRules )
 
   ELSEIF Left( sLine, 1 ) == '['
 
-     IF s_cLastChar >= 'a' .OR. s_cLastChar <= 'z' .OR. ;
-        s_cLastChar >= 'A' .OR. s_cLastChar <= 'Z' .OR. ;
-        s_cLastChar >= '0' .OR. s_cLastChar <= '9' .OR. ;
+     IF ( s_cLastChar >= 'a' .AND. s_cLastChar <= 'z' ) .OR. ;
+        ( s_cLastChar >= 'A' .AND. s_cLastChar <= 'Z' ) .OR. ;
+        ( s_cLastChar >= '0' .AND. s_cLastChar <= '9' ) .OR. ;
         s_cLastChar == '_' .OR. s_cLastChar $ ")}]"
 
         sReturn := '['
