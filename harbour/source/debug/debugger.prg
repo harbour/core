@@ -336,10 +336,12 @@ METHOD New() CLASS TDebugger
                               SetPos( ::oWndCode:Cargo[1],::oWndCode:Cargo[2] ) }
    ::oWndCode:bLostFocus  := { || ::oWndCode:Cargo[1] := Row(), ::oWndCode:Cargo[2] := Col(), ;
                               SetCursor( SC_NONE ) }
+   /*
    ::oWndCode:bPainted := { || ::oBrwText:SetColor( __DbgColors()[ 2 ] + "," + ;
                                __DbgColors()[ 5 ] + "," + __DbgColors()[ 3 ] + "," + ;
                                __DbgColors()[ 6 ] ),;
                                iif( ::oBrwText != nil, ::oBrwText:RefreshWindow(), nil ) }
+   */
 
    AAdd( ::aWindows, ::oWndCode )
 
@@ -1128,13 +1130,13 @@ METHOD ShowVars() CLASS TDebugger
                                ::oWndStack:nWidth(), 0 ) - 1 )
       ::oBrwVars:Cargo :={ 1,{}} // Actual highligthed row
       ::oBrwVars:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
-      ::oBrwVars:GOTOPBLOCK := { || ::oBrwVars:cargo[ 1 ]:= 1 }
-      ::oBrwVars:GoBottomBlock := { || ::oBrwVars:cargo[ 1 ]:= Len(::oBrwVars:cargo[ 2 ][ 1 ])}
+      ::oBrwVars:GOTOPBLOCK := { || ::oBrwVars:cargo[ 1 ] := Min( 1, Len( ::aVars ) ) }
+      ::oBrwVars:GoBottomBlock := { || ::oBrwVars:cargo[ 1 ] := Len( ::aVars ) }
       ::oBrwVars:SkipBlock = { | nSkip, nOld | nOld := ::oBrwVars:Cargo[ 1 ],;
                                ::oBrwVars:Cargo[ 1 ] += nSkip,;
                                ::oBrwVars:Cargo[ 1 ] := Min( Max( ::oBrwVars:Cargo[ 1 ], 1 ),;
                                                              Len( ::aVars ) ),;
-                               ::oBrwVars:Cargo[ 1 ] - nOld }
+                               If( Len( ::aVars ) > 0, ::oBrwVars:Cargo[ 1 ] - nOld, 0 ) }
 
 
       ::oWndVars:bKeyPressed := { | nKey | ( iif( nKey == K_DOWN ;
@@ -1146,11 +1148,11 @@ METHOD ShowVars() CLASS TDebugger
       , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[1] ), nil ), ::oBrwVars:ForceStable() ) }
 
       nWidth := ::oWndVars:nWidth() - 1
-      ::oBrwVars:AddColumn( oCol:=TBColumnNew( "",  { || AllTrim( Str( ::oBrwVars:Cargo[1] -1 ) ) + ") " + ;
-         iif( Len( ::aVars ) > 0, PadR( GetVarInfo( ::aVars[ ::oBrwVars:Cargo[1] ] ),;
+      ::oBrwVars:AddColumn( oCol:=TBColumnNew( "",  { || If( Len( ::aVars ) > 0, AllTrim( Str( ::oBrwVars:Cargo[1] -1 ) ) + ") " + ;
+         PadR( GetVarInfo( ::aVars[ Max( ::oBrwVars:Cargo[1], 1 ) ] ),;
          ::oWndVars:nWidth() - 5 ), "" ) } ) )
-   aadd(::oBrwVars:Cargo[2],::avars)
-   oCol:DefColor:={2,1}
+      AAdd(::oBrwVars:Cargo[2],::avars)
+      oCol:DefColor:={2,1}
       if Len( ::aVars ) > 0
          ::oBrwVars:ForceStable()
       endif
@@ -1159,7 +1161,8 @@ METHOD ShowVars() CLASS TDebugger
 
       ::oWndVars:cCaption := "Monitor:" + ;
       iif( ::lShowLocals, " Local", "" ) + ;
-      iif( ::lShowStatics, " Static", "" ) + iif( ::lShowPrivates, " Private", "" ) + ;
+      iif( ::lShowStatics, " Static", "" ) + ;
+      iif( ::lShowPrivates, " Private", "" ) + ;
       iif( ::lShowPublics, " Public", "" )
 
       if Len( ::aVars ) == 0
@@ -1171,6 +1174,13 @@ METHOD ShowVars() CLASS TDebugger
       if Len( ::aVars ) > ::oWndVars:nBottom - ::oWndVars:nTop - 1
          ::oWndVars:nBottom := ::oWndVars:nTop + Min( Len( ::aVars ) + 1, 7 )
          ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
+         ::oBrwVars:Configure()
+         lRepaint := .t.
+      endif
+      if Len( ::aVars ) < ::oWndVars:nBottom - ::oWndVars:nTop - 1
+         ::oWndVars:nBottom := ::oWndVars:nTop + Len( ::aVars ) + 1
+         ::oBrwVars:nBottom := ::oWndVars:nBottom - 1
+         ::oBrwVars:Configure()
          lRepaint := .t.
       endif
       if ! ::oWndVars:lVisible
@@ -1180,10 +1190,10 @@ METHOD ShowVars() CLASS TDebugger
       else
          if lRepaint
             ::oWndCode:nTop := ::oWndVars:nBottom + 1
+            ::oBrwText:Resize( ::oWndCode:nTop + 1 )
             ::oWndCode:Refresh()
-            ::oBrwText:Resize( ::oWndVars:nBottom + 2 )
+            ::oWndVars:Refresh()
          endif
-         ::oWndVars:Refresh()
       endif
       if Len( ::aVars ) > 0
          ::oBrwVars:RefreshAll()
@@ -1348,12 +1358,11 @@ return AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == nLine } ) != 0
 
 METHOD GotoLine( nLine ) CLASS TDebugger
 
-   ::oBrwText:GotoLine( nLine )
-
    if ::oBrwVars != nil
-      ::oBrwVars:RefreshAll()
-      ::oBrwVars:ForceStable()
+      ::ShowVars()
    endif
+
+   ::oBrwText:GotoLine( nLine )
 
    if ::oBrwStack != nil .and. ! ::oBrwStack:Stable
       ::oBrwStack:ForceStable()
