@@ -59,14 +59,14 @@
    #define HB_VER_LEX "Flex"
 #endif
 #define HB_VER_MAJOR    0       /* Major version number */
-#define HB_VER_MINOR    42      /* Minor version number */
+#define HB_VER_MINOR    43      /* Minor version number */
 #define HB_VER_REVISION 0       /* Revision number */
 
 /* TOFIX: Ideally these should be generated dynamically, until 
           then, they should be updated by the builder. [vszakats] */
 
-#define HB_VER_LENTRY   "2003-04-04 11:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>"
-#define HB_VER_CHLCVS   "ChangeLog,v 1.4337 2003/04/04 07:17:58 alkresin"
+#define HB_VER_LENTRY   "2003-09-26 09:18 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>"
+#define HB_VER_CHLCVS   "ChangeLog,v 1.4484 2003/09/26 05:15:49 alkresin"
 #define HB_VER_C_USR    ""
 #define HB_VER_L_USR    ""
 #define HB_VER_PRG_USR  ""
