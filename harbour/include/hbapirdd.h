@@ -395,7 +395,7 @@ typedef DBSCOPEINFO * LPDBSCOPEINFO;
 typedef struct
 {
    USHORT nScope;        /* scope operation: TOPSCOPE/ENDSCOPE */
-   BYTE * scopeValue;
+   PHB_ITEM scopeValue;
 } DBORDSCOPEINFO;
 
 typedef DBORDSCOPEINFO * LPDBORDSCOPEINFO;

@@ -1,3 +1,16 @@
+2001-11-11 23:35 UTC-0800 Brian Hays <bhays@abacuslaw.com>
+   * include/hbapirdd.h
+      * DBORDSCOPEINFO.scopeValue was changed from BYTE* to PHB_ITEM
+
+   * source/rdd/dbcmd.c
+      * ordScope(): changed to pass an item pointer to rdd
+
+   * contrib/rdd_ads/ads1.c
+      * adsScopeInfo and adsSetScope: fixed to handle all indexkey types
+        This is a work in progress. Character and Numeric scopes
+        should work fine. Some more needs to be done for Date and Logical
+
+
 2001-11-11 20:10 GMT -3 Luiz Rafael Culik<culik@sl.conex.net>
    * utils/hbmake/hbmake.prg
      * Fixed an small bug on FileisNewer() function

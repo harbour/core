@@ -2839,7 +2839,7 @@ HB_FUNC( DBSETDRIVER )
 
 HB_FUNC( ORDSCOPE )
 {
-   PHB_ITEM pScopeValue;
+   PHB_ITEM pScopeValue = hb_itemNew( NULL );
    DBORDSCOPEINFO sInfo;
 
    if( s_pCurrArea )
@@ -2850,23 +2850,20 @@ HB_FUNC( ORDSCOPE )
          return;
       }
       sInfo.nScope = hb_parni( 1 );
-      pScopeValue = hb_itemPutC( NULL, "" );
 
       SELF_SCOPEINFO( ( AREAP ) s_pCurrArea->pArea, sInfo.nScope, pScopeValue );
-      hb_retc( hb_itemGetCPtr( pScopeValue ) );
-      hb_itemRelease( pScopeValue );
+      hb_itemRelease( hb_itemReturn( pScopeValue ) );
 
       if( hb_pcount() > 1 )
       {
          if ( ISNIL( 2 ) )                /* explicitly passed NIL, clear it */
             sInfo.scopeValue = NULL;
          else
-            sInfo.scopeValue = (BYTE*) (ISCHAR( 2 ) ? hb_parc( 2 ) :
-                                       (ISDATE( 2 ) ? hb_pards( 2 ) : hb_parc( 2 ) ) ) ;
-         /* this is a temp fix until we decide if the item should be passed down or "parsed" here */
+            sInfo.scopeValue = hb_param( 2, HB_IT_ANY) ;
 
-
+         /* rdd must not alter the scopeValue item -- it's not a copy */
          SELF_SETSCOPE( ( AREAP ) s_pCurrArea->pArea, (LPDBORDSCOPEINFO) &sInfo );
+
       }else
          sInfo.scopeValue = NULL;
    }
