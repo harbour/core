@@ -87,7 +87,7 @@ PCOMDECLARED  hb_comp_pLastDeclared;
 PCOMCLASS     hb_comp_pFirstClass;
 PCOMCLASS     hb_comp_pLastClass;
 char *        hb_comp_szClass;
-PCOMMETHOD    hb_comp_pLastMethod;
+PCOMDECLARED  hb_comp_pLastMethod;
 
 int           hb_comp_iLine;                             /* currently processed line number */
 PFUNCTION     hb_comp_pInitFunc;
@@ -491,7 +491,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       if ( hb_comp_iWarnings < 3 )
          return;
 
-      //printf( "\nAdding parameter: %s Type: %c\n", szVarName, cValueType );
+      /*printf( "\nAdding parameter: %s Type: %c\n", szVarName, cValueType );*/
 
       hb_comp_pLastMethod->iParamCount++;
 
@@ -552,7 +552,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
    if ( cValueType == '+' )
    {
-      //printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szClass );
+      /*printf( "\nVariable %s is of Class: %s\n", szVarName, hb_comp_szClass );*/
 
       pVar->pClass = hb_compClassFind( hb_comp_szClass );
       if( ! pVar->pClass )
@@ -570,7 +570,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
       PCOMSYMBOL pSym;
       USHORT wPos;
 
-      //printf( "\nAdding: %s in Function: %s\n", pVar->szName, pFunc->szName );
+      /*printf( "\nAdding: %s in Function: %s\n", pVar->szName, pFunc->szName );*/
 
       if( hb_comp_bAutoMemvarAssume || hb_comp_iVarScope == VS_MEMVAR )
       {
@@ -606,7 +606,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
                pSym->cScope |= VS_MEMVAR;
 
-               //printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );
+               /*printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );*/
 
                hb_compGenPCode4( HB_P_PARAMETER, HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_LOBYTE( hb_comp_functions.pLast->wParamNum ), ( BOOL ) 0 );
             }
@@ -636,7 +636,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
                      pLastVar->pNext = pVar;
                   }
-                  //printf( "\nAdded Private: %s Type %c\n", pVar->szName, pVar->cType );
+                  /*printf( "\nAdded Private: %s Type %c\n", pVar->szName, pVar->cType );*/
                }
             }
 
@@ -650,7 +650,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
                pSym->cScope |= VS_MEMVAR;
 
-               //printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );
+               /*printf( "\nAdded Symbol: %s Pos: %i\n", pSym->szName, wPos );*/
             }
 
             if ( hb_comp_iWarnings >= 3 )
@@ -678,7 +678,7 @@ void hb_compVariableAdd( char * szVarName, BYTE cValueType )
 
                      pLastVar->pNext = pVar;
                   }
-                  //printf( "\nAdded Private: %s Type %c\n", pVar->szName, pVar->cType );
+                  /*printf( "\nAdded Private: %s Type %c\n", pVar->szName, pVar->cType );*/
                }
             }
 
@@ -807,7 +807,7 @@ PCOMCLASS hb_compClassAdd( char * szClassName )
 {
    PCOMCLASS pClass;
 
-   //printf( "\nDeclaring Class: %s\n", szClassName );
+   /*printf( "\nDeclaring Class: %s\n", szClassName );*/
 
    if ( hb_comp_iWarnings < 3 )
       return NULL;
@@ -856,11 +856,11 @@ PCOMCLASS hb_compClassFind( char * szClassName )
    return NULL;
 }
 
-PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
+PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
 {
-   PCOMMETHOD pMethod;
+   PCOMDECLARED pMethod;
 
-   //printf( "\nDeclaring Method: %s of Class: %s\n", szMethodName, pClass->szName );
+   /*printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );*/
 
    if ( hb_comp_iWarnings < 3 )
       return NULL;
@@ -868,10 +868,15 @@ PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    if ( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {
       hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Method", szMethodName );
+
+      /* Last Declaration override previous declarations */
+      pMethod->cParamTypes = NULL;
+      pMethod->iParamCount = 0;
+
       return pMethod;
    }
 
-   pMethod = ( PCOMMETHOD ) hb_xgrab( sizeof( COMMETHOD ) );
+   pMethod = ( PCOMDECLARED ) hb_xgrab( sizeof( COMDECLARED ) );
 
    pMethod->szName = szMethodName;
    pMethod->cType = ' '; // Not known yet
@@ -882,16 +887,21 @@ PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * szMethodName )
    if ( pClass->pMethod == NULL )
       pClass->pMethod = pMethod;
    else
-      pClass->pMethod->pNext = pMethod;
+      pClass->pLast->pNext = pMethod;
+
+   pClass->pLast = pMethod;
 
    hb_comp_pLastMethod = pMethod;
 
    return pMethod;
 }
 
-PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
+PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
 {
-   PCOMMETHOD pMethod = pClass->pMethod;
+   PCOMDECLARED pMethod = NULL;
+
+   if ( pClass )
+     pMethod = pClass->pMethod;
 
    while( pMethod )
    {
@@ -915,7 +925,7 @@ PCOMDECLARED hb_compDeclaredAdd( char * szDeclaredName )
    if ( hb_comp_iWarnings < 3 )
       return NULL;
 
-   //printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );
+   /*printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );*/
 
    if ( ( pDeclared = hb_compDeclaredFind( szDeclaredName ) ) != NULL )
    {
@@ -994,29 +1004,31 @@ static PFUNCTION hb_compFunctionNew( char * szName, HB_SYMBOLSCOPE cScope )
    PFUNCTION pFunc;
 
    pFunc = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
-   pFunc->szName         = szName;
-   pFunc->cScope         = cScope;
-   pFunc->pLocals        = NULL;
-   pFunc->pStatics       = NULL;
-   pFunc->pFields        = NULL;
-   pFunc->pMemvars       = NULL;
-   pFunc->pPrivates      = NULL;
-   pFunc->pCode          = NULL;
-   pFunc->lPCodeSize     = 0;
-   pFunc->lPCodePos      = 0;
-   pFunc->pNext          = NULL;
-   pFunc->wParamCount    = 0;
-   pFunc->wParamNum      = 0;
-   pFunc->iStaticsBase   = hb_comp_iStaticCnt;
-   pFunc->pOwner         = NULL;
-   pFunc->bFlags         = 0;
-   pFunc->iNOOPs         = 0;
-   pFunc->iJumps         = 0;
-   pFunc->pNOOPs         = NULL;
-   pFunc->pJumps         = NULL;
-   pFunc->pStack         = NULL;
-   pFunc->iStackSize     = 0;
-   pFunc->iStackIndex    = 0;
+   pFunc->szName          = szName;
+   pFunc->cScope          = cScope;
+   pFunc->pLocals         = NULL;
+   pFunc->pStatics        = NULL;
+   pFunc->pFields         = NULL;
+   pFunc->pMemvars        = NULL;
+   pFunc->pPrivates       = NULL;
+   pFunc->pCode           = NULL;
+   pFunc->lPCodeSize      = 0;
+   pFunc->lPCodePos       = 0;
+   pFunc->pNext           = NULL;
+   pFunc->wParamCount     = 0;
+   pFunc->wParamNum       = 0;
+   pFunc->iStaticsBase    = hb_comp_iStaticCnt;
+   pFunc->pOwner          = NULL;
+   pFunc->bFlags          = 0;
+   pFunc->iNOOPs          = 0;
+   pFunc->iJumps          = 0;
+   pFunc->pNOOPs          = NULL;
+   pFunc->pJumps          = NULL;
+   pFunc->pStack          = NULL;
+   pFunc->iStackSize      = 0;
+   pFunc->iStackIndex     = 0;
+   pFunc->iStackFunctions = 0;
+   pFunc->iStackClasses   = 0;
 
    return pFunc;
 }
@@ -1992,6 +2004,8 @@ void hb_compLinePush( void ) /* generates the pcode with the currently compiled 
 
    /* Resting Compile Time Stack */
    hb_comp_functions.pLast->iStackIndex = 0;
+   hb_comp_functions.pLast->iStackFunctions = 0;
+   hb_comp_functions.pLast->iStackClasses = 0;
 }
 
 /* Generates the pcode with the currently compiled source code line
@@ -2775,6 +2789,8 @@ void hb_compFinalizeFunction( void ) /* fixes all last defined function returns 
 
          pFunc->iStackSize = 0;
          pFunc->iStackIndex = 0;
+         pFunc->iStackFunctions = 0;
+         pFunc->iStackClasses = 0;
       }
    }
 }
@@ -2816,7 +2832,7 @@ static void hb_compOptimizeFrames( PFUNCTION pFunc )
 
             while( pVar )
             {
-               //printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );
+               /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
 
                if ( ( ! pVar->iUsed & VU_USED ) && pVar->iUsed & VU_INITIALIZED )
                   hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
@@ -3301,6 +3317,8 @@ void hb_compCodeBlockEnd( void )
 
    pCodeblock->iStackSize = 0;
    pCodeblock->iStackIndex = 0;
+   pCodeblock->iStackFunctions = 0;
+   pCodeblock->iStackClasses = 0;
 
    hb_xfree( ( void * ) pCodeblock );
 }

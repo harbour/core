@@ -113,7 +113,8 @@ char * hb_comp_szWarnings[] =
    "3Value of Variable \'%s\' never used",
    "3Incompatible type in assignment to declared array element expected: \'%s\'",
    "4Suspicious type in assignment to declared array element expected: \'%s\'",
-   "3Class \'%s\' not known in declaration of variable \'%s\'",
+   "3Class \'%s\' not known in declaration of \'%s\'",
+   "3Message \'%s\' not known in Class \'%s\'",
    "0Meaningless use of expression: \'%s\'",
    "2Unreachable code",
    "1Redundant \'ANNOUNCE %s\' statement ignored"

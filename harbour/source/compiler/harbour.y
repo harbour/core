@@ -1153,14 +1153,36 @@ ClassInfo  : DecMethod
 	   ;
 
 DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } DecList ')' AsType { if ( hb_comp_pLastMethod )
-                                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
+														      {
+                                                                                                                        hb_comp_pLastMethod->cType = hb_comp_cVarType;
+															if ( hb_comp_cVarType == '+' )
+															{
+      															  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szClass );
+      															  if( ! hb_comp_pLastMethod->pClass )
+      															  {
+         														    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szClass, hb_comp_pLastMethod->szName );
+         														    hb_comp_pLastMethod->cType = 'O';
+															  }
+      															}
+														      }
                                                                                                                       hb_comp_pLastMethod = NULL;
                                                                                                                       hb_comp_cVarType = ' ';
                                                                                                                     }
 	   ;
 
 DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType { if ( hb_comp_pLastMethod )
-                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
+												      {
+                                                                                                        hb_comp_pLastMethod->cType = hb_comp_cVarType;
+													if ( hb_comp_cVarType == '+' )
+													{
+      													  hb_comp_pLastMethod->pClass = hb_compClassFind( hb_comp_szClass );
+      													  if( ! hb_comp_pLastMethod->pClass )
+      													  {
+         												    hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, hb_comp_szClass, hb_comp_pLastMethod->szName );
+         												    hb_comp_pLastMethod->cType = 'O';
+													  }
+      													}
+												      }
                                                                                                       hb_comp_pLastMethod = NULL;
                                                                                                       hb_comp_cVarType = ' ';
                                                                                                     }

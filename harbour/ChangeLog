@@ -1,3 +1,28 @@
+20000519-02:05 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * include/hbcomp.h
+     ! Consoldated COMDECLARED and COMMETHOD into COMDECLARED
+     + Added member pClass to COMDECLARED
+     + Added member pLast to COMCLASS
+
+   * source/compiler/harbour.y
+     + Added support for Methods/Datas of type Object of a declared Class.
+
+   * source/compiler/harbour.c
+     ! Fixed bug in hb_compMethodAdd()
+
+   * source/compiler/hbpcode.c
+     + Added Strong Type Checking to Objects syntax.
+
+   * include/hberrors.h
+     + Added : "HB_COMP_WARN_MESSAGE_NOT_FOUND"
+
+   * source/compiler/hbgenerr.c
+     + Added : "3Message \'%s\' not known in Class \'%s\'"
+
+   * tests/testwarn.prg
+     + Added code to demonstrate syntax and warnings for OO Strong Type Checking.
+
 20000516-22:48 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
 
    * source/rtl/memoedit.prg

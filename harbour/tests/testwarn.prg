@@ -53,9 +53,9 @@
 
 DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
-DECLARE cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
-
 DECLARE cOtherFunc( ) AS CHAR
+
+DECLARE cOtherFunc( @cVar as char, optional nVar as num, optional other as variant ) AS CHAR
 
 DECLARE seconds() AS NUM
 
@@ -64,13 +64,13 @@ DECLARE int( n AS NUMERIC ) AS NUMERIC
 DECLARE TEST() AS NUMERIC
 
 DECLARE MyClass                              ;
+        nMyFunc( nVal As Num ) As Num
+
+DECLARE MyClass                              ;
         nMyFunc( nVal As Num ) As Num ;
         nMyFunc( nVal As Num ) As Num ;
         cMyData    ;
-        FinalMethod
-
-DECLARE MyClass                              ;
-        nMyFunc( nVal As Num ) As Num
+        oNext() As Object FROM CLASS MyClass
 
 FIELD a AS CHAR
 FIELD b AS CHAR
@@ -84,7 +84,7 @@ PROCEDURE THEMAIN( optional )
   STATIC lStatic := 0, oMyObj As Object From CLASS WrongClass
   LOCAL cVar AS CHAR := [declare function]
 
-  oMyObj:MyMethod( 2, 3, 4 )
+  LOCAL a As Char, b AS Object FROM CLASS MyClass
 
   FIELD b AS NUM
   USE TEMP
@@ -93,6 +93,16 @@ PROCEDURE THEMAIN( optional )
   MEMVAR Var1 AS NUM
 
   PRIVATE TEST AS CHAR
+
+  oMyObj:MyMethod( 2, 3, 4 )
+
+  a := b:nMyFunc(2,3)
+  a := b:nMyFunc(2)
+
+  a := b:oNext:cMyData
+
+  a := b:oNext:cMyData2
+
 
   DO Optional WITH Var1
   DO Optional WITH 1

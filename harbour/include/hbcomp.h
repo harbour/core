@@ -84,23 +84,28 @@ typedef struct
    int   iFiles;                /* number of files currently opened */
 } FILES;
 
-/* Declared Method support structure */
-typedef struct _COMMETHOD
+/* Declared Function/Method support structure */
+typedef struct _COMDECLARED
 {
    char * szName;               /* the name of the symbol */
    BYTE   cType;
    BYTE * cParamTypes;
    USHORT iParamCount;
-   struct _COMMETHOD * pNext;   /* pointer to the next declared function */
-} COMMETHOD, * PCOMMETHOD;
+   struct _COMCLASS { char * szName; struct _COMDECLARED * pMethod; struct _COMCLASS * pNext; struct _COMDECLARED * pLast; } * pClass;
+   struct _COMDECLARED * pNext;   /* pointer to the next declared function */
+} COMDECLARED, * PCOMDECLARED;
 
-/* Declared Class support structure */
+/*
 typedef struct _COMCLASS
 {
-   char * szName;                  /* the name of the symbol */
-   PCOMMETHOD pMethod;             /* Pointer to linked list of methods */
-   struct _COMCLASS * pNext;   /* pointer to the next declared function */
+   char * szName;
+   PCOMDECLARED pMethod;
+   struct _COMCLASS * pNext;
 } COMCLASS, * PCOMCLASS;
+*/
+
+/* Declared Class support structure */
+typedef struct _COMCLASS COMCLASS, * PCOMCLASS;
 
 /* locals, static, public variables support */
 typedef struct _VAR
@@ -120,29 +125,33 @@ typedef struct _VAR
 /* structure to hold a Clipper defined function */
 typedef struct __FUNC
 {
-   char * szName;                   /* name of a defined Clipper function */
-   char   cScope;                   /* scope of a defined Clipper function */
-   BYTE   bFlags;                   /* some flags we may need */
-   USHORT wParamCount;              /* number of declared parameters */
-   USHORT wParamNum;                /* current parameter number */
-   PVAR   pLocals;                  /* pointer to local variables list */
-   PVAR   pStatics;                 /* pointer to static variables list */
-   PVAR   pFields;                  /* pointer to fields variables list */
-   PVAR   pMemvars;                 /* pointer to memvar variables list */
-   PVAR   pPrivates;                /* pointer to private variables list */
-   BYTE * pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG  lPCodeSize;               /* total memory size for pcode */
-   ULONG  lPCodePos;                /* actual pcode offset */
-   int    iStaticsBase;             /* base for this function statics */
-   ULONG * pNOOPs;                  /* pointer to the NOOP array */
-   ULONG * pJumps;                  /* pointer to the Jumps array */
-   ULONG  iNOOPs;                   /* NOOPs Counter */
-   ULONG  iJumps;                   /* Jumps Counter */
-   BYTE * pStack;                   /* Compile Time Stack */
-   USHORT iStackSize;               /* Compile Time Stack size */
-   int    iStackIndex;              /* Compile Time Stack index */
-   struct __FUNC * pOwner;          /* pointer to the function/procedure that owns the codeblock */
-   struct __FUNC * pNext;           /* pointer to the next defined function */
+   char *       szName;                   /* name of a defined Clipper function */
+   char         cScope;                   /* scope of a defined Clipper function */
+   BYTE         bFlags;                   /* some flags we may need */
+   USHORT       wParamCount;              /* number of declared parameters */
+   USHORT       wParamNum;                /* current parameter number */
+   PVAR         pLocals;                  /* pointer to local variables list */
+   PVAR         pStatics;                 /* pointer to static variables list */
+   PVAR         pFields;                  /* pointer to fields variables list */
+   PVAR         pMemvars;                 /* pointer to memvar variables list */
+   PVAR         pPrivates;                /* pointer to private variables list */
+   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
+   ULONG        lPCodeSize;               /* total memory size for pcode */
+   ULONG        lPCodePos;                /* actual pcode offset */
+   int          iStaticsBase;             /* base for this function statics */
+   ULONG *       pNOOPs;                  /* pointer to the NOOP array */
+   ULONG *       pJumps;                  /* pointer to the Jumps array */
+   ULONG        iNOOPs;                   /* NOOPs Counter */
+   ULONG        iJumps;                   /* Jumps Counter */
+   BYTE *       pStack;                   /* Compile Time Stack */
+   USHORT       iStackSize;               /* Compile Time Stack size */
+   int          iStackIndex;              /* Compile Time Stack index */
+   PCOMDECLARED pStackFunctions[8];       /* Declared Functions on the Compile Time Stack */
+   int          iStackFunctions;          /* Index into DEclared Functions on Compile Time Stack */
+   PCOMCLASS    pStackClasses[8];         /* Declared Classes on the Compile Time Stack */
+   int          iStackClasses;            /* Index into Declared Classes on Compile Time Stack */
+   struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
+   struct __FUNC * pNext;                 /* pointer to the next defined function */
 } _FUNC, * PFUNCTION;
 
 /* structure to control all Clipper defined functions */
@@ -161,16 +170,6 @@ typedef struct _COMSYMBOL
    BYTE   cType;
    struct _COMSYMBOL * pNext;   /* pointer to the next defined symbol */
 } COMSYMBOL, * PCOMSYMBOL;
-
-/* Declared Function support structure */
-typedef struct _COMDECLARED
-{
-   char * szName;               /* the name of the symbol */
-   BYTE   cType;
-   BYTE * cParamTypes;
-   USHORT iParamCount;
-   struct _COMDECLARED * pNext;   /* pointer to the next declared function */
-} COMDECLARED, * PCOMDECLARED;
 
 /* symbol table support structures */
 typedef struct
@@ -240,8 +239,8 @@ extern PCOMDECLARED hb_compDeclaredFind( char * );
 
 extern PCOMCLASS hb_compClassAdd( char * );
 extern PCOMCLASS hb_compClassFind( char * );
-extern PCOMMETHOD hb_compMethodAdd( PCOMCLASS pClass, char * );
-extern PCOMMETHOD hb_compMethodFind( PCOMCLASS pClass, char * );
+extern PCOMDECLARED hb_compMethodAdd( PCOMCLASS pClass, char * );
+extern PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * );
 
 extern void hb_compGenBreak( void );  /* generate code for BREAK statement */
 
@@ -363,7 +362,7 @@ extern PCOMDECLARED  hb_comp_pLastDeclared;
 extern PCOMCLASS     hb_comp_pFirstClass;
 extern PCOMCLASS     hb_comp_pLastClass;
 extern char *        hb_comp_szClass;
-extern PCOMMETHOD    hb_comp_pLastMethod;
+extern PCOMDECLARED  hb_comp_pLastMethod;
 extern PATHNAMES *   hb_comp_pIncludePath;
 extern PFUNCTION     hb_comp_pInitFunc;
 extern PHB_FNAME     hb_comp_pFileName;
