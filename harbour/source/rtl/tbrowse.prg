@@ -64,20 +64,28 @@ CLASS TBrowse
    METHOD Right()          VIRTUAL // Moves the cursor right one column
    METHOD Up()             VIRTUAL // Moves the cursor up one row
 
-   METHOD AddColumn( oCol ) INLINE AAdd( ::aColumns, oCol ) // Adds a TBColumn object to the TBrowse object
+   METHOD AddColumn( oCol ) INLINE ;
+      AAdd( ::aColumns, oCol ), ::Configure( 2 ), Self // Adds a TBColumn object to the TBrowse object
 
    METHOD ColorRect()      VIRTUAL // Alters the color of a rectangular group of cells
    METHOD ColWidth()       VIRTUAL // Returns the display width of a particular column
    METHOD Configure()      VIRTUAL // Reconfigures the internal settings of the TBrowse object
    METHOD DeHilite()       VIRTUAL // Dehighlights the current cell
-   METHOD DelColumn()      VIRTUAL // Delete a column object from a browse
+
+   METHOD DelColumn( nPos )        // Delete a column object from a browse
+
    METHOD ForceStable()    VIRTUAL // Performs a full stabilization                             ê
 
    METHOD GetColumn( nColumn ) INLINE If( 0 < nColumn .and. nColumn <= Len( ::aColumns ),;
                                           ::aColumns[ nColumn ], nil ) // Gets a specific TBColumn object
 
    METHOD Hilite()         VIRTUAL // Highlights the current cell
-   METHOD InsColumn()      VIRTUAL // Insert a column object in a browse
+
+   METHOD InsColumn( nPos, oCol ) INLINE ASize( ::aColumns, Len( ::aColumns + 1 ) ),;
+                                  AIns( ::aColumns, nPos ),;
+                                  ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
+                                  // Insert a column object in a browse
+
    METHOD Invalidate()     VIRTUAL // Forces redraw during next stabilization
    METHOD RefreshAll()     VIRTUAL // Causes all data to be refreshed during the next stabilize
    METHOD RefreshCurrent() VIRTUAL // Causes the current row to be refreshed on next stabilize
@@ -107,6 +115,16 @@ METHOD New() CLASS TBrowse
    ::HeadSep   = ""
 
 return Self
+
+METHOD DelColumn( nPos ) CLASS TBrowse
+
+   local oCol := ::aColumns[ nPos ]
+
+   ADel( ::aColumns, nPos )
+   ASize( ::aColumns, Len( ::aColumns ) - 1 )
+   ::Configure( 2 )
+
+return oCol
 
 function TBrowseNew( nTop, nLeft, nBottom, nRight )
 
