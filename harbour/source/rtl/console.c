@@ -166,7 +166,8 @@ static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
 
    pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-   pOutFunc( pszString, ulLen );
+   if ( ulLen )
+      pOutFunc( pszString, ulLen );
 
    if( bFreeReq )
       hb_xfree( pszString );

@@ -1,3 +1,11 @@
+2001-02-24 18:10 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
+   * harbour/source/rtl/console.c
+     ! Fixed bug STDOUT(..,"",..) on Watcom C 11.0
+
+   * harbour/source/pp/ppcore.c
+   * harbour/source/pp/pragma.c
+     ! Fixed extern declaration for Watcom C 11.0
+
 2001-02-24 12:45 UTC+0300 Alex Shashkov <shashkov@ostu.ru>
    * harbour/source/vm/dynsym.c
      ! Fixed
