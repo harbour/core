@@ -546,6 +546,7 @@ VM_LIB_OBJS = \
    $(OBJ_DIR)\itemapi.obj \
    $(OBJ_DIR)\macro.obj \
    $(OBJ_DIR)\maindll.obj \
+   $(OBJ_DIR)\maindllp.obj \
    $(OBJ_DIR)\mainstd.obj \
    $(OBJ_DIR)\mainwin.obj \
    $(OBJ_DIR)\memvars.obj \
@@ -1139,6 +1140,9 @@ $(OBJ_DIR)\macro.obj : $(VM_DIR)\macro.c
 $(OBJ_DIR)\maindll.obj : $(VM_DIR)\maindll.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\maindllp.obj : $(VM_DIR)\maindllp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
    $(CC) $(CLIBFLAGS) -o$@ $**
