@@ -46,7 +46,7 @@ int WINAPI _export DllEntryPoint( HINSTANCE hInstance, DWORD fdwReason,
    HB_SYMBOL_UNUSED( fdwReason );
    HB_SYMBOL_UNUSED( pvReserved );
 
-   hb_vmInit( NULL );  /* Don't execute first linked symbol */
+   hb_vmInit( FALSE );  /* Don't execute first linked symbol */
 
    return TRUE;
 }
