@@ -1,3 +1,8 @@
+19991021-00:50 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/environ.c
+     changed defined(_Windows) to defined(_WINDOWS_) since this is
+     what gets created in Windows.h
+
 19991021-01:48 GMT+1 Victor Szel <info@szelvesz.hu>
    * include/hbtrace.h
      ! TRACE() fixed to HB_TRACE() (that was a bit late :)

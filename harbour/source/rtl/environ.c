@@ -59,7 +59,7 @@
          be ahead of any other #include statements! */
 #include "hbwinapi.h"
 
-#if defined(__BORLANDC__) && defined(_Windows) && ! defined(VER_PLATFORM_WIN32_WINDOWS)
+#if defined(__BORLANDC__) && defined(_WINDOWS_) && ! defined(VER_PLATFORM_WIN32_WINDOWS)
    #define VER_PLATFORM_WIN32_WINDOWS 1
 #endif
 
@@ -136,7 +136,7 @@ HARBOUR HB_OS( void )
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__) || defined(_MSC_VER) || defined(__MINGW32__)
 
-#if defined(_Windows) || defined(WINNT)
+#if defined(_WINDOWS_) || defined(WINNT)
 
 /* NOTE: Support for determining the window version by Luiz Rafael Culik
    Culik@sl.conex.net
@@ -202,7 +202,7 @@ HARBOUR HB_OS( void )
          hb_osletter = 0;
       }
 
-#endif /* defined(_Windows) */
+#endif /* defined(_WINDOWS_) */
 
 #else
 
