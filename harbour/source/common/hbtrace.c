@@ -42,7 +42,7 @@
 char * hb_tr_file_ = "";
 int    hb_tr_line_ = 0;
 
-void hb_tr_trace( char * fmt, ...)
+void hb_tr_trace( char * fmt, ... )
 {
    char buf[ 1024 ];
    char file[ 256 ];
