@@ -58,10 +58,10 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aClone( ErrorNew() )            , NIL                                        )
 #ifndef __XPP__
    TEST_LINE( aEval()                         , "E BASE 2017 Argument error AEVAL "        )
-   TEST_LINE( aEval( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
-   TEST_LINE( aEval( {} )                     , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aEval( NIL )                    , "E BASE 2017 Argument error AEVAL A:1:U:NIL "     )
+   TEST_LINE( aEval( {} )                     , "E BASE 2017 Argument error AEVAL A:1:A:{.[0].} " )
 #endif
-   TEST_LINE( aEval( {}, NIL )                , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aEval( {}, NIL )                , "E BASE 2017 Argument error AEVAL A:2:A:{.[0].};U:NIL " )
    TEST_LINE( aEval( {}, {|| NIL } )          , "{.[0].}"                                  )
    TEST_LINE( aEval( ErrorNew(), {|| NIL } )  , "ERROR Object"                             )
 #ifndef __XPP__
@@ -80,9 +80,9 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aSort(ErrorNew())               , NIL                                        )
 #ifdef HB_C52_STRICT
 #ifndef __XPP__
-   TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aFill()                         , "E BASE 2017 Argument error AEVAL A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
 #endif
-   TEST_LINE( aFill( NIL )                    , "E BASE 2017 Argument error AEVAL "        )
+   TEST_LINE( aFill( NIL )                    , "E BASE 2017 Argument error AEVAL A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
 #else
 #ifndef __XPP__
    TEST_LINE( aFill()                         , "E BASE 9999 Argument error AFILL "        )
@@ -170,7 +170,7 @@ FUNCTION Main_ARRAY()
 #endif
    TEST_LINE( aSize( ErrorNew(), -1 )         , "ERROR Object"                             )
    TEST_LINE( aSize( ErrorNew(), 100 )        , "ERROR Object"                             )
-   TEST_LINE( aAdd( NIL, NIL )                , "E BASE 1123 Argument error AADD F:S"      )
+   TEST_LINE( aAdd( NIL, NIL )                , "E BASE 1123 Argument error AADD A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( aAdd( {}, NIL )                 , NIL                                        )
    TEST_LINE( aAdd( {}, "A" )                 , "A"                                        )
    TEST_LINE( aAdd( ErrorNew(), NIL )         , NIL                                        )

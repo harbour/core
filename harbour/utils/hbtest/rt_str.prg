@@ -42,8 +42,8 @@ FUNCTION Main_STR()
 
    /* VAL() */
 
-   TEST_LINE( Val( NIL )                      , "E BASE 1098 Argument error VAL F:S"   )
-   TEST_LINE( Val( 10 )                       , "E BASE 1098 Argument error VAL F:S"   )
+   TEST_LINE( Val( NIL )                      , "E BASE 1098 Argument error VAL A:1:U:NIL F:S" )
+   TEST_LINE( Val( 10 )                       , "E BASE 1098 Argument error VAL A:1:N:10 F:S"  )
 
    TEST_LINE( Str(Val(""))                    , "         0"                           )
    TEST_LINE( Str(Val(" "))                   , "0"                                    )
@@ -116,9 +116,9 @@ FUNCTION Main_STR()
 
    /* CHR() */
 
-   TEST_LINE( Chr( NIL )                      , "E BASE 1104 Argument error CHR F:S"   )
-   TEST_LINE( Chr( "A" )                      , "E BASE 1104 Argument error CHR F:S"   )
-   TEST_LINE( Chr( "ADDDDDD" )                , "E BASE 1104 Argument error CHR F:S"   )
+   TEST_LINE( Chr( NIL )                      , "E BASE 1104 Argument error CHR A:1:U:NIL F:S"     )
+   TEST_LINE( Chr( "A" )                      , "E BASE 1104 Argument error CHR A:1:C:A F:S"       )
+   TEST_LINE( Chr( "ADDDDDD" )                , "E BASE 1104 Argument error CHR A:1:C:ADDDDDD F:S" )
    TEST_LINE( Chr( -10000000.0 )              , "€"                                    )
    TEST_LINE( Chr( -100000 )                  , "`"                                    )
    TEST_LINE( Chr( -65 )                      , "¿"                                    )
@@ -149,9 +149,9 @@ FUNCTION Main_STR()
 
    /* ASC() */
 
-   TEST_LINE( Asc( NIL )                      , "E BASE 1107 Argument error ASC F:S" )
-   TEST_LINE( Asc( 100 )                      , "E BASE 1107 Argument error ASC F:S" )
-   TEST_LINE( Asc( 20000 )                    , "E BASE 1107 Argument error ASC F:S" )
+   TEST_LINE( Asc( NIL )                      , "E BASE 1107 Argument error ASC A:1:U:NIL F:S"   )
+   TEST_LINE( Asc( 100 )                      , "E BASE 1107 Argument error ASC A:1:N:100 F:S"   )
+   TEST_LINE( Asc( 20000 )                    , "E BASE 1107 Argument error ASC A:1:N:20000 F:S" )
    TEST_LINE( Asc( "HELLO" )                  , 72                                   )
    TEST_LINE( Asc( Chr(0) )                   , 0                                    )
    TEST_LINE( Asc( "a" )                      , 97                                   )
@@ -279,8 +279,8 @@ FUNCTION Main_STR()
 
    /* TRIM() */
 
-   TEST_LINE( Trim( 100 )                     , "E BASE 1100 Argument error TRIM F:S" )
-   TEST_LINE( Trim( NIL )                     , "E BASE 1100 Argument error TRIM F:S" )
+   TEST_LINE( Trim( 100 )                     , "E BASE 1100 Argument error TRIM A:1:N:100 F:S" )
+   TEST_LINE( Trim( NIL )                     , "E BASE 1100 Argument error TRIM A:1:U:NIL F:S" )
 #ifdef __HARBOUR__
    TEST_LINE( Trim(@scString)                 , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
 #endif
@@ -302,8 +302,8 @@ FUNCTION Main_STR()
 
    /* RTRIM() */
 
-   TEST_LINE( RTrim( 100 )                    , "E BASE 1100 Argument error TRIM F:S" )
-   TEST_LINE( RTrim( NIL )                    , "E BASE 1100 Argument error TRIM F:S" )
+   TEST_LINE( RTrim( 100 )                    , "E BASE 1100 Argument error TRIM A:1:N:100 F:S" )
+   TEST_LINE( RTrim( NIL )                    , "E BASE 1100 Argument error TRIM A:1:U:NIL F:S" )
 #ifdef __HARBOUR__
    TEST_LINE( RTrim(@scString)                , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
 #endif
@@ -325,8 +325,8 @@ FUNCTION Main_STR()
 
    /* LTRIM() */
 
-   TEST_LINE( LTrim( 100 )                    , "E BASE 1101 Argument error LTRIM F:S" )
-   TEST_LINE( LTrim( NIL )                    , "E BASE 1101 Argument error LTRIM F:S" )
+   TEST_LINE( LTrim( 100 )                    , "E BASE 1101 Argument error LTRIM A:1:N:100 F:S" )
+   TEST_LINE( LTrim( NIL )                    , "E BASE 1101 Argument error LTRIM A:1:U:NIL F:S" )
 #ifdef __HARBOUR__
    TEST_LINE( LTrim(@scString)                , "HELLO"                   ) /* CA-Cl*pper bug, it will throw an error here. */
 #endif
@@ -371,7 +371,7 @@ FUNCTION Main_STR()
 #ifdef __HARBOUR__
    TEST_LINE( Upper( @scString )              , "HELLO"                                ) /* Bug in CA-Cl*pper, it will return argument error */
 #endif
-   TEST_LINE( Upper( 100 )                    , "E BASE 1102 Argument error UPPER F:S" )
+   TEST_LINE( Upper( 100 )                    , "E BASE 1102 Argument error UPPER A:1:N:100 F:S" )
    TEST_LINE( Upper( "" )                     , ""                                     )
    TEST_LINE( Upper( " " )                    , " "                                    )
    TEST_LINE( Upper( "2" )                    , "2"                                    )
@@ -390,7 +390,7 @@ FUNCTION Main_STR()
 #ifdef __HARBOUR__
    TEST_LINE( Lower( @scString )              , "hello"                                ) /* Bug in CA-Cl*pper, it will return argument error */
 #endif
-   TEST_LINE( Lower( 100 )                    , "E BASE 1103 Argument error LOWER F:S" )
+   TEST_LINE( Lower( 100 )                    , "E BASE 1103 Argument error LOWER A:1:N:100 F:S" )
    TEST_LINE( Lower( "" )                     , ""                                     )
    TEST_LINE( Lower( " " )                    , " "                                    )
    TEST_LINE( Lower( "2" )                    , "2"                                    )
@@ -405,9 +405,9 @@ FUNCTION Main_STR()
 
    /* AT() */
 
-   TEST_LINE( At(90, 100)                     , "E BASE 1108 Argument error AT F:S" )
-   TEST_LINE( At("", 100)                     , "E BASE 1108 Argument error AT F:S" )
-   TEST_LINE( At(100, "")                     , "E BASE 1108 Argument error AT F:S" )
+   TEST_LINE( At(90, 100)                     , "E BASE 1108 Argument error AT A:2:N:90;N:100 F:S" )
+   TEST_LINE( At("", 100)                     , "E BASE 1108 Argument error AT A:2:C:;N:100 F:S"   )
+   TEST_LINE( At(100, "")                     , "E BASE 1108 Argument error AT A:2:N:100;C: F:S"   )
    TEST_LINE( At("", "")                      , 1                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
    TEST_LINE( At("", "ABCDEF")                , 1                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
    TEST_LINE( At(scStringE, "ABCDEF")         , 0                )
@@ -455,14 +455,14 @@ FUNCTION Main_STR()
    /* REPLICATE() */
 
 #ifdef __HARBOUR__
-   TEST_LINE( Replicate("XXX", 2000000000)    , "E BASE 1234 String overflow REPLICATE F:S" )
+   TEST_LINE( Replicate("XXX", 2000000000)    , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:2000000000 F:S" )
 #else
-   TEST_LINE( Replicate("XXX", 30000)         , "E BASE 1234 String overflow REPLICATE F:S" )
+   TEST_LINE( Replicate("XXX", 30000)         , "E BASE 1234 String overflow REPLICATE A:2:C:XXX;N:30000 F:S" )
 #endif
-   TEST_LINE( Replicate(200  , 0 )            , "E BASE 1106 Argument error REPLICATE F:S" )
+   TEST_LINE( Replicate(200  , 0 )            , "E BASE 1106 Argument error REPLICATE A:2:N:200;N:0 F:S" )
    TEST_LINE( Replicate(""   , 10 )           , "" )
    TEST_LINE( Replicate(""   , 0 )            , "" )
-   TEST_LINE( Replicate("A"  , "B" )          , "E BASE 1106 Argument error REPLICATE F:S" )
+   TEST_LINE( Replicate("A"  , "B" )          , "E BASE 1106 Argument error REPLICATE A:2:C:A;C:B F:S" )
    TEST_LINE( Replicate("A"  , 1 )            , "A"                                        )
    TEST_LINE( Replicate("A"  , 2 )            , "AA"                                       )
    TEST_LINE( Replicate("HE", 3 )             , "HEHEHE"                                   )
@@ -474,7 +474,7 @@ FUNCTION Main_STR()
 
    /* SPACE() */
 
-   TEST_LINE( Space( "A" )                    , "E BASE 1105 Argument error SPACE F:S" )
+   TEST_LINE( Space( "A" )                    , "E BASE 1105 Argument error SPACE A:1:C:A F:S" )
    TEST_LINE( Space( 0 )                      , "" )
    TEST_LINE( Space( -10 )                    , "" )
    TEST_LINE( Space( 10 )                     , "          " )
@@ -484,10 +484,10 @@ FUNCTION Main_STR()
 
    /* SUBSTR() */
 
-   TEST_LINE( SubStr(100     , 0, -1)         , "E BASE 1110 Argument error SUBSTR F:S" )
-   TEST_LINE( SubStr("abcdef", 1, "a")        , "E BASE 1110 Argument error SUBSTR F:S" )
-   TEST_LINE( SubStr("abcdef", "a")           , "E BASE 1110 Argument error SUBSTR F:S" )
-   TEST_LINE( SubStr("abcdef", "a", 1)        , "E BASE 1110 Argument error SUBSTR F:S" )
+   TEST_LINE( SubStr(100     , 0, -1)         , "E BASE 1110 Argument error SUBSTR A:3:N:100;N:0;N:-1 F:S"   )
+   TEST_LINE( SubStr("abcdef", 1, "a")        , "E BASE 1110 Argument error SUBSTR A:3:C:abcdef;N:1;C:a F:S" )
+   TEST_LINE( SubStr("abcdef", "a")           , "E BASE 1110 Argument error SUBSTR A:2:C:abcdef;C:a F:S"     )
+   TEST_LINE( SubStr("abcdef", "a", 1)        , "E BASE 1110 Argument error SUBSTR A:3:C:abcdef;C:a;N:1 F:S" )
    TEST_LINE( SubStr("abcdef", 0, -1)         , ""               )
    TEST_LINE( SubStr("abcdef", 0, 0)          , ""               )
    TEST_LINE( SubStr("abcdef", 0, 1)          , "a"              )
@@ -525,8 +525,8 @@ FUNCTION Main_STR()
 
    /* LEFT() */
 
-   TEST_LINE( Left(100     , -10)                , "E BASE 1124 Argument error LEFT F:S" )
-   TEST_LINE( Left("abcdef", "A")                , "E BASE 1124 Argument error LEFT F:S" )
+   TEST_LINE( Left(100     , -10)                , "E BASE 1124 Argument error LEFT A:2:N:100;N:-10 F:S"  )
+   TEST_LINE( Left("abcdef", "A")                , "E BASE 1124 Argument error LEFT A:2:C:abcdef;C:A F:S" )
    TEST_LINE( Left("abcdef", -10)                , ""               )
    TEST_LINE( Left("abcdef", -2)                 , ""               )
    TEST_LINE( Left("abcdef", 0)                  , ""               )

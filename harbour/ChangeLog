@@ -1,3 +1,10 @@
+2000-07-29 17:34 UTC+0100 Victor Szakats <info@szelvesz.hu>
+
+   * makefile.vc
+   * makefile.bc
+   * source/lang/Makefile
+     + Polish Lang modules added.
+
 2000-07-29 17:25 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * utils/hbtest/*

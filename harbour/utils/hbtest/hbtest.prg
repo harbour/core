@@ -318,7 +318,7 @@ FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
       lPPError := .F.
    ENDIF
 
-   lSkipped := aScan( s_aSkipList, s_nCount ) > 0
+   lSkipped := AScan( s_aSkipList, s_nCount ) > 0
 
    IF lSkipped
 
@@ -431,6 +431,32 @@ FUNCTION XToStr( xValue )
 
    RETURN ""
 
+FUNCTION XToStrE( xValue )
+   LOCAL cType := ValType( xValue )
+
+   DO CASE
+   CASE cType == "C"
+
+      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
+      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
+      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
+      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
+      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+
+      RETURN xValue
+
+   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "D" ; RETURN DToS( xValue )
+   CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
+   CASE cType == "O" ; RETURN xValue:className() + " Object"
+   CASE cType == "U" ; RETURN "NIL"
+   CASE cType == "B" ; RETURN '{||...}'
+   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
+   CASE cType == "M" ; RETURN 'M:' + xValue
+   ENDCASE
+
+   RETURN ""
+
 STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage := ""
    LOCAL tmp
@@ -459,19 +485,16 @@ STATIC FUNCTION ErrorMessage( oError )
       cMessage += oError:filename + " "
    ENDIF
 
-#ifdef _COMMENT_
    IF ValType( oError:Args ) == "A"
-      cMessage += "A:"
+      cMessage += "A:" + LTrim( Str( Len( oError:Args ) ) ) + ":"
       FOR tmp := 1 TO Len( oError:Args )
-         cMessage += ValType( oError:Args[ tmp ] )
-//       cMessage += XToStr( oError:Args[ tmp ] )
-//       IF tmp < Len( oError:Args )
-//          cMessage += ";"
-//       ENDIF
+         cMessage += ValType( oError:Args[ tmp ] ) + ":" + XToStrE( oError:Args[ tmp ] )
+         IF tmp < Len( oError:Args )
+            cMessage += ";"
+         ENDIF
       NEXT
       cMessage += " "
    ENDIF
-#endif
 
    IF oError:canDefault .OR. ;
       oError:canRetry .OR. ;
@@ -497,11 +520,11 @@ STATIC FUNCTION ListToNArray( cString )
 
    IF !Empty( cString )
       DO WHILE ( nPos := At( ",", cString ) ) > 0
-         aAdd( aArray, Val( AllTrim( Left( cString, nPos - 1 ) ) ) )
+         AAdd( aArray, Val( AllTrim( Left( cString, nPos - 1 ) ) ) )
          cString := SubStr( cString, nPos + 1 )
       ENDDO
 
-      aAdd( aArray, Val( AllTrim( cString ) ) )
+      AAdd( aArray, Val( AllTrim( cString ) ) )
    ENDIF
 
    RETURN aArray

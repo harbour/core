@@ -42,7 +42,7 @@ FUNCTION Main_MATH()
 
    /* LOG() */
 
-   TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG F:S"   )
+   TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG A:1:C:A F:S" )
    TEST_LINE( Str(Log(-1))                    , "***********************"              )
 // TEST_LINE( Str(Log(0))                     , "***********************"              )
    TEST_LINE( Str(Log(1))                     , "         0.00"                        )
@@ -54,7 +54,7 @@ FUNCTION Main_MATH()
 
    /* SQRT() */
 
-   TEST_LINE( Sqrt("A")                       , "E BASE 1097 Argument error SQRT F:S"  )
+   TEST_LINE( Sqrt("A")                       , "E BASE 1097 Argument error SQRT A:1:C:A F:S" )
    TEST_LINE( Sqrt(-1)                        , 0                                      )
    TEST_LINE( Sqrt(0)                         , 0                                      )
    TEST_LINE( Sqrt(4)                         , 2                                      )
@@ -67,7 +67,7 @@ FUNCTION Main_MATH()
 
    /* ABS() */
 
-   TEST_LINE( Abs("A")                        , "E BASE 1089 Argument error ABS F:S"   )
+   TEST_LINE( Abs("A")                        , "E BASE 1089 Argument error ABS A:1:C:A F:S" )
    TEST_LINE( Abs(0)                          , 0                                      )
    TEST_LINE( Abs(10)                         , 10                                     )
    TEST_LINE( Abs(-10)                        , 10                                     )
@@ -106,7 +106,7 @@ FUNCTION Main_MATH()
 
    /* EXP() */
 
-   TEST_LINE( Exp("A")                        , "E BASE 1096 Argument error EXP F:S"   )
+   TEST_LINE( Exp("A")                        , "E BASE 1096 Argument error EXP A:1:C:A F:S" )
    TEST_LINE( Exp(0)                          , 1.00                                   )
    TEST_LINE( Str(Exp(15))                    , "   3269017.37"                        )
    TEST_LINE( Str(Exp(snIntZ))                , "         1.00"                        )
@@ -124,8 +124,8 @@ FUNCTION Main_MATH()
 #ifdef __HARBOUR__
    TEST_LINE( Round(@snDoubleP, @snIntZ)      , 11                                     ) /* Bug in CA-Cl*pper, it returns: "E BASE 1094 Argument error ROUND F:S" */
 #endif
-   TEST_LINE( Round(NIL, 0)                   , "E BASE 1094 Argument error ROUND F:S" )
-   TEST_LINE( Round(0, NIL)                   , "E BASE 1094 Argument error ROUND F:S" )
+   TEST_LINE( Round(NIL, 0)                   , "E BASE 1094 Argument error ROUND A:2:U:NIL;N:0 F:S" )
+   TEST_LINE( Round(0, NIL)                   , "E BASE 1094 Argument error ROUND A:2:N:0;U:NIL F:S" )
    TEST_LINE( Round(0, 0)                     , 0                )
    TEST_LINE( Round(0, 2)                     , 0.00             )
    TEST_LINE( Round(0, -2)                    , 0                )
@@ -222,9 +222,9 @@ FUNCTION Main_MATH()
 
    /* INT() */
 
-   TEST_LINE( Int( NIL )                      , "E BASE 1090 Argument error INT F:S"  )
-   TEST_LINE( Int( "A" )                      , "E BASE 1090 Argument error INT F:S" )
-   TEST_LINE( Int( {} )                       , "E BASE 1090 Argument error INT F:S" )
+   TEST_LINE( Int( NIL )                      , "E BASE 1090 Argument error INT A:1:U:NIL F:S"     )
+   TEST_LINE( Int( "A" )                      , "E BASE 1090 Argument error INT A:1:C:A F:S"       )
+   TEST_LINE( Int( {} )                       , "E BASE 1090 Argument error INT A:1:A:{.[0].} F:S" )
    TEST_LINE( Int( 0 )                        , 0                                    )
    TEST_LINE( Int( 0.0 )                      , 0                                    )
    TEST_LINE( Int( 10 )                       , 10                                   )
@@ -249,9 +249,9 @@ FUNCTION Main_MATH()
 
    /* MIN()/MAX() */
 
-   TEST_LINE( Max(NIL, NIL)                                 , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(10, NIL)                                  , "E BASE 1093 Argument error MAX F:S" )
-   TEST_LINE( Max(HB_SToD("19800101"), 10)                  , "E BASE 1093 Argument error MAX F:S" )
+   TEST_LINE( Max(NIL, NIL)                                 , "E BASE 1093 Argument error MAX A:2:U:NIL;U:NIL F:S"     )
+   TEST_LINE( Max(10, NIL)                                  , "E BASE 1093 Argument error MAX A:2:N:10;U:NIL F:S"      )
+   TEST_LINE( Max(HB_SToD("19800101"), 10)                  , "E BASE 1093 Argument error MAX A:2:D:19800101;N:10 F:S" )
    TEST_LINE( Max(HB_SToD("19800101"), HB_SToD("19800101")) , HB_SToD("19800101")                  )
    TEST_LINE( Max(HB_SToD("19800102"), HB_SToD("19800101")) , HB_SToD("19800102")                  )
    TEST_LINE( Max(HB_SToD("19800101"), HB_SToD("19800102")) , HB_SToD("19800102")                  )
@@ -259,9 +259,9 @@ FUNCTION Main_MATH()
 #ifdef __HARBOUR__                                          
    TEST_LINE( Max(@snIntP, @snLongP)                        , 100000                               ) /* Bug in CA-Cl*pper, it will return: "E BASE 1093 Argument error MAX F:S" */
 #endif                                                      
-   TEST_LINE( Min(NIL, NIL)                                 , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(10, NIL)                                  , "E BASE 1092 Argument error MIN F:S" )
-   TEST_LINE( Min(HB_SToD("19800101"), 10)                  , "E BASE 1092 Argument error MIN F:S" )
+   TEST_LINE( Min(NIL, NIL)                                 , "E BASE 1092 Argument error MIN A:2:U:NIL;U:NIL F:S"     )
+   TEST_LINE( Min(10, NIL)                                  , "E BASE 1092 Argument error MIN A:2:N:10;U:NIL F:S"      )
+   TEST_LINE( Min(HB_SToD("19800101"), 10)                  , "E BASE 1092 Argument error MIN A:2:D:19800101;N:10 F:S" )
    TEST_LINE( Min(HB_SToD("19800101"), HB_SToD("19800101")) , HB_SToD("19800101")                  )
    TEST_LINE( Min(HB_SToD("19800102"), HB_SToD("19800101")) , HB_SToD("19800101")                  )
    TEST_LINE( Min(HB_SToD("19800101"), HB_SToD("19800102")) , HB_SToD("19800101")                  )
@@ -339,16 +339,16 @@ FUNCTION Main_MATH()
 
    /* MOD() */
 
-   TEST_LINE( MOD()                           , "E BASE 1085 Argument error % F:S" )
-   TEST_LINE( MOD( "A", "B" )                 , "E BASE 1085 Argument error % F:S" )
-   TEST_LINE( MOD( "A", 100 )                 , "E BASE 1085 Argument error % F:S" )
-   TEST_LINE( MOD( 100, "B" )                 , "E BASE 1085 Argument error % F:S" )
-   TEST_LINE( MOD( NIL, NIL )                 , "E BASE 1085 Argument error % F:S" )
+   TEST_LINE( MOD()                           , "E BASE 1085 Argument error % A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( MOD( "A", "B" )                 , "E BASE 1085 Argument error % A:2:C:A;C:B F:S"     )
+   TEST_LINE( MOD( "A", 100 )                 , "E BASE 1085 Argument error % A:2:C:A;N:100 F:S"   )
+   TEST_LINE( MOD( 100, "B" )                 , "E BASE 1085 Argument error % A:2:N:100;C:B F:S"   )
+   TEST_LINE( MOD( NIL, NIL )                 , "E BASE 1085 Argument error % A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( MOD( 100, 60, "A" )             , 40.00                              )
 
-   TEST_LINE( MOD( 1, 0 )                     , "E BASE 1341 Zero divisor % F:S"   )
-   TEST_LINE( MOD( 1, NIL )                   , "E BASE 1085 Argument error % F:S" )
-   TEST_LINE( Str( MOD( 1, 0   ) )            , "E BASE 1341 Zero divisor % F:S"   )
+   TEST_LINE( MOD( 1, 0 )                     , "E BASE 1341 Zero divisor % A:2:N:1;N:0 F:S"     )
+   TEST_LINE( MOD( 1, NIL )                   , "E BASE 1085 Argument error % A:2:N:1;U:NIL F:S" )
+   TEST_LINE( Str( MOD( 1, 0   ) )            , "E BASE 1341 Zero divisor % A:2:N:1;N:0 F:S"     )
    TEST_LINE( Str( MOD( 2, 4   ) )            , "         2.00"                    )
    TEST_LINE( Str( MOD( 4, 2   ) )            , "         0.00"                    )
    TEST_LINE( Str( MOD( 4, 2.0 ) )            , "         0.00"                    )
@@ -358,14 +358,14 @@ FUNCTION Main_MATH()
    TEST_LINE( Str( MOD(  3,  3 ) )            , "         0.00"                    )
    TEST_LINE( Str( MOD(  3,  2 ) )            , "         1.00"                    )
    TEST_LINE( Str( MOD(  3,  1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  3,  0 ) )            , "E BASE 1341 Zero divisor % F:S"   )
+   TEST_LINE( Str( MOD(  3,  0 ) )            , "E BASE 1341 Zero divisor % A:2:N:3;N:0 F:S" )
    TEST_LINE( Str( MOD(  3, -1 ) )            , "         0.00"                    )
    TEST_LINE( Str( MOD(  3, -2 ) )            , "        -1.00"                    )
    TEST_LINE( Str( MOD(  3, -3 ) )            , "         0.00"                    )
    TEST_LINE( Str( MOD( -3,  3 ) )            , "         0.00"                    )
    TEST_LINE( Str( MOD( -3,  2 ) )            , "         1.00"                    )
    TEST_LINE( Str( MOD( -3,  1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -3,  0 ) )            , "E BASE 1341 Zero divisor % F:S"   )
+   TEST_LINE( Str( MOD( -3,  0 ) )            , "E BASE 1341 Zero divisor % A:2:N:-3;N:0 F:S" )
    TEST_LINE( Str( MOD( -3, -1 ) )            , "         0.00"                    )
    TEST_LINE( Str( MOD( -3, -2 ) )            , "        -1.00"                    )
    TEST_LINE( Str( MOD( -3, -3 ) )            , "         0.00"                    )
