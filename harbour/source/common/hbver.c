@@ -556,7 +556,7 @@ void hb_verBuildInfo( void )
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "Multisoft Flagship compatible extensions: ", 0 );
-#if defined( HB_FLAGSHIP_VO )
+#if defined( HB_COMPAT_FLAGSHIP )
    hb_conOutErr( "Yes", 0 );
 #else
    hb_conOutErr( "No", 0 );
@@ -564,7 +564,7 @@ void hb_verBuildInfo( void )
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "Microsoft FoxPro compatible extensions: ", 0 );
-#if defined( HB_FOXPRO_VO )
+#if defined( HB_COMPAT_FOXPRO )
    hb_conOutErr( "Yes", 0 );
 #else
    hb_conOutErr( "No", 0 );
@@ -572,7 +572,7 @@ void hb_verBuildInfo( void )
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "dBase compatible extensions: ", 0 );
-#if defined( HB_DBASE_VO )
+#if defined( HB_COMPAT_DBASE )
    hb_conOutErr( "Yes", 0 );
 #else
    hb_conOutErr( "No", 0 );

@@ -8,6 +8,33 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-02-13 23:36 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/vm/hvm.c
+     ! hb_vmPopAliasedVar() - Fixed to be case-insensitive.
+     % hb_vmPushAliasedVar() - Case-insensitive handling speed up.
+     * unsigned long -> ULONG
+
+   * source/rtl/idle.c
+   * include/hbapi.h
+     + Made hb_releaseCPU() public.
+
+   * source/rtl/filesys.c
+   * include/hbapifs.h
+     + Added return value to hb_fsSetDevMode(), this way it's 
+       fully compatible with the CA-Clipper _tdevraw() call.
+
+   * source/rtl/philes53.c
+     ! FSETDEVMOD() now returns a numeric instead of NIL. The 
+       returned value is always 0 now. Note added about this 
+       incompatibility with C53.
+
+   * source/common/hbver.c
+     ! Mistyped defines related to compatibilty fixed.
+
+   * source/rtl/strcase.c
+     ! Incorrect assigment warnings fixed.
+
 2004-02-13 21:56 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * souce/rtl/gtapi.c

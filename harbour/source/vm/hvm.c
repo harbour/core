@@ -4298,30 +4298,26 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
 
    if( HB_IS_STRING( pAlias ) )
    {
-      /* We make a copy of the string as it may be a pcode string! */
-      char * szAlias = ( char * ) hb_xgrab( pAlias->item.asString.length + 1 );
+      char * szAlias = pAlias->item.asString.value;
 
-      hb_xmemcpy( szAlias, pAlias->item.asString.value, pAlias->item.asString.length + 1 );
-      hb_strUpper( szAlias, pAlias->item.asString.length );
-
-      if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+      if( ( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' ) && szAlias[ 1 ] == '\0' )
       {  /* M->variable */
          hb_memvarGetValue( pAlias, pSym );
       }
       else
       {
-         int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+         int iCmp = hb_strnicmp( szAlias, "MEMVAR", 4 );
          if( iCmp == 0 )
-               iCmp = strncmp( szAlias, "MEMVAR", pAlias->item.asString.length );
+               iCmp = hb_strnicmp( szAlias, "MEMVAR", pAlias->item.asString.length );
          if( iCmp == 0 )
          {  /* MEMVAR-> or MEMVA-> or MEMV-> */
             hb_memvarGetValue( pAlias, pSym );
          }
          else
          {  /* field variable */
-            iCmp = strncmp( szAlias, "FIELD", 4 );
+            iCmp = hb_strnicmp( szAlias, "FIELD", 4 );
             if( iCmp == 0 )
-               iCmp = strncmp( szAlias, "FIELD", pAlias->item.asString.length );
+               iCmp = hb_strnicmp( szAlias, "FIELD", pAlias->item.asString.length );
             if( iCmp == 0 )
             {  /* FIELD-> */
                hb_rddGetFieldValue( pAlias, pSym );
@@ -4332,7 +4328,6 @@ static void hb_vmPushAliasedVar( PHB_SYMB pSym )
             }
          }
       }
-      hb_xfree( ( void * ) szAlias );
    }
    else
       hb_vmPushAliasedField( pSym );
@@ -4629,7 +4624,7 @@ static void hb_vmPopAliasedVar( PHB_SYMB pSym )
    {
       char * szAlias = pAlias->item.asString.value;
 
-      if( szAlias[ 0 ] == 'M' && szAlias[ 1 ] == '\0' )
+      if( ( szAlias[ 0 ] == 'M' || szAlias[ 0 ] == 'm' ) && szAlias[ 1 ] == '\0' )
       {  /* M->variable */
          hb_memvarSetValue( pSym, hb_stackItemFromTop( -2 ) );
          hb_stackPop();    /* alias */
@@ -4637,9 +4632,9 @@ static void hb_vmPopAliasedVar( PHB_SYMB pSym )
       }
       else
       {
-         int iCmp = strncmp( szAlias, "MEMVAR", 4 );
+         int iCmp = hb_strnicmp( szAlias, "MEMVAR", 4 );
          if( iCmp == 0 )
-            iCmp = strncmp( szAlias, "MEMVAR", pAlias->item.asString.length );
+            iCmp = hb_strnicmp( szAlias, "MEMVAR", pAlias->item.asString.length );
          if( iCmp == 0 )
          {  /* MEMVAR-> or MEMVA-> or MEMV-> */
             hb_memvarSetValue( pSym, hb_stackItemFromTop( -2 ) );
@@ -4648,9 +4643,9 @@ static void hb_vmPopAliasedVar( PHB_SYMB pSym )
          }
          else
          {  /* field variable */
-            iCmp = strncmp( szAlias, "FIELD", 4 );
+            iCmp = hb_strnicmp( szAlias, "FIELD", 4 );
             if( iCmp == 0 )
-               iCmp = strncmp( szAlias, "FIELD", pAlias->item.asString.length );
+               iCmp = hb_strnicmp( szAlias, "FIELD", pAlias->item.asString.length );
             if( iCmp == 0 )
             {  /* FIELD-> */
                hb_rddPutFieldValue( hb_stackItemFromTop( -2 ), pSym );
@@ -4976,7 +4971,7 @@ void hb_vmRequestCancel( void )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
       int i = 1, i2;
-      unsigned long ulLine;
+      ULONG ulLine;
       PHB_ITEM * pBase;
 
       hb_conOutErr( hb_conNewLine(), 0 );

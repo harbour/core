@@ -784,8 +784,10 @@ void    hb_fsClose( FHANDLE hFileHandle )
       s_uiErrorLast = 6;
 }
 
-void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
+BOOL    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 {
+   BOOL bResult;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %hu)", hFileHandle, uiDevMode));
 
 #if defined(__BORLANDC__) || defined(__IBMCPP__) || defined(__DJGPP__) || defined(__CYGWIN__) || defined(__WATCOMC__)
@@ -794,12 +796,15 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    switch( uiDevMode )
    {
       case FD_BINARY:
-         setmode( hFileHandle, O_BINARY );
+         bResult = ( setmode( hFileHandle, O_BINARY ) != -1 );
          break;
 
       case FD_TEXT:
-         setmode( hFileHandle, O_TEXT );
+         bResult = ( setmode( hFileHandle, O_TEXT ) != -1 );
          break;
+
+      default:
+         bResult = FALSE;
    }
    s_uiErrorLast = errno;
 
@@ -809,21 +814,26 @@ void    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    switch( uiDevMode )
    {
       case FD_BINARY:
-         _setmode( hFileHandle, _O_BINARY );
+         bResult = ( _setmode( hFileHandle, _O_BINARY ) != -1 );
          break;
 
       case FD_TEXT:
-         _setmode( hFileHandle, _O_TEXT );
+         bResult = ( _setmode( hFileHandle, _O_TEXT ) != -1 );
          break;
+
+      default:
+         bResult = FALSE;
    }
    s_uiErrorLast = errno;
 
 #else
 
+   bResult = FALSE;
    s_uiErrorLast = FS_ERROR;
 
 #endif
 
+   return bResult;
 }
 
 USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )

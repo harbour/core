@@ -590,6 +590,7 @@ extern HB_GARBAGE_FUNC( hb_codeblockDeleteGarbage ); /* clear a codeblock before
 extern HB_GARBAGE_FUNC( hb_arrayReleaseGarbage ); /* clear an array before releasing by the GC */
 
 /* idle states */
+extern void   hb_releaseCPU( void );
 extern void   hb_idleState( void ); /* services a single idle state */
 extern void   hb_idleReset( void ); /* services a single idle state */
 extern void   hb_idleShutDown( void ); /* closes all background tasks */

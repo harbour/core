@@ -105,7 +105,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen )
 
     /* some compilers implements toupper as a macro, and this has side effects! */
     /* *pDest++ = toupper( *pSource++ ); */
-    while( ulLen && (*pDest++ = toupper( *pSource )))
+    while( ulLen && (*pDest++ = toupper( *pSource )) != '\0' )
     {
        ulLen--;
        pSource++;
@@ -138,7 +138,7 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG ulLen )
 
    /* some compilers implements toupper as a macro, and this has side effects! */
    /* *pDest++ = toupper( *pSource++ ); */
-   while( ulLen && ulSLen && (*pDest++ = toupper( *pSource )))
+   while( ulLen && ulSLen && (*pDest++ = toupper( *pSource ) ) != '\0' )
    {
       ulSLen--;
       ulLen--;

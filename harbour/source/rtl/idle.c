@@ -92,9 +92,9 @@ static USHORT s_uiIdleMaxTask = 0;
 /* flag to indicate GarbageCollection should be done in idle state. */
 BOOL hb_vm_bCollectGarbage = TRUE;
 
-static void hb_releaseCPU( void )
+void hb_releaseCPU( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("releaseCPU()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_releaseCPU()"));
 
    /* TODO: Add code to release time slices on all platforms */
 
