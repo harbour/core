@@ -1,3 +1,7 @@
+19990729-01:40 EDT Paul Tucker <ptucker@sympatico.ca>
+   * source/rtl/dir.c
+     + #if !defined(FA_ENCRYPTED)
+
 19990728-20:35 CET Victor Szel <info@szelvesz.hu>
   * Changed all #include <x> to #include "x", where
     x is a Harbour header file.

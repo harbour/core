@@ -7,6 +7,7 @@
  *         by the optional file and attribute mask.
  *
  * Latest mods:
+ * 1.28   19990722   ptucker   Corrected? NT Extended modes
  * 1.21   19990722   ptucker   Implimented directory for MSVC
  *                             Includes new attributes
  * 1.20   19990722   ptucker   Corrected hang when attribute types have
@@ -114,7 +115,9 @@
     #define FA_LABEL        8
     #define FA_DIREC        16
     #define FA_ARCH         32
+#endif
 /* this may not work, but lets find out (only implimented for msvc) */
+#if !defined(FA_ENCRYPTED)
     #define FA_ENCRYPTED    64
     #define FA_NORMAL       128
     #define FA_TEMPORARY    256
