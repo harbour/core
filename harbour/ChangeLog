@@ -1,3 +1,14 @@
+2001-05-18 13:20 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * source/rtl/dbdelim.prg
+  * source/rtl/dbsdf.prg
+    ! Fixed bug where using a WHILE condition failed to test
+      for BOF or EOF, resulting in incorrect or blank records.
+
+  * tests/delimtst.prg
+  * tests/sdf_test.prg
+    * Added a new test (4a) to demonstrate the fix.
+
 2001-05-18 09:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbfntx/dbfntx1.c
      * indexes now are opened with FO_READWRITE regardless of

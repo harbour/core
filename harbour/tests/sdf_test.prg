@@ -10,6 +10,7 @@
 */
 
 procedure main()
+   local ncount := 0
    use test new
    // Copy all records and fields.
    copy to test1 SDF
@@ -22,6 +23,11 @@ procedure main()
 
    // Copy records 4 through 7.
    copy next 4 to test4 SDF
+
+   // Try to copy 10 records, starting 5 records from EOF, using WHILE
+   go bottom
+   skip -4
+   copy while ncount++ < 9 to test4a SDF
 
    // Copy the last 10 records.
    go bottom

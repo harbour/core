@@ -199,12 +199,13 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
          END IF
          IF EMPTY( bWhile )
             // This simplifies the looping logic.
-            bWhile := {||!BOF().AND.!EOF()}
+            bWhile := {||.T.}
          END IF
          // Set up for the start of the first record.
          lWriteSep := .F.
          // Process the records to copy delimited.
-         WHILE EVAL( bWhile ) .AND. ( nCount == -1 .OR. nCount > 0 )
+         WHILE EVAL( bWhile ) .AND. ( nCount == -1 .OR. nCount > 0 ) ;
+         .AND. !BOF() .AND. !EOF()
             IF EVAL( bFor )
                IF EMPTY( aFields )
                   // Process all fields.
