@@ -544,7 +544,7 @@ $(OBJ_DIR)\alert.c : $(RTL_DIR)\alert.prg
 $(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
+$(OBJ_DIR)\arrays.obj : $(VM_DIR)\arrays.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\asort.c : $(RTL_DIR)\asort.prg
@@ -556,7 +556,7 @@ $(OBJ_DIR)\asort.obj : $(OBJ_DIR)\asort.c
 $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\break.obj : $(RTL_DIR)\break.c
+$(OBJ_DIR)\break.obj : $(VM_DIR)\break.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\browdb.c : $(RTL_DIR)\browdb.prg
@@ -571,10 +571,10 @@ $(OBJ_DIR)\browse.c : $(RTL_DIR)\browse.prg
 $(OBJ_DIR)\browse.obj : $(OBJ_DIR)\browse.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
+$(OBJ_DIR)\classes.obj : $(VM_DIR)\classes.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\codebloc.obj : $(RTL_DIR)\codebloc.c
+$(OBJ_DIR)\codebloc.obj : $(VM_DIR)\codebloc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\console.obj : $(RTL_DIR)\console.c
@@ -634,7 +634,7 @@ $(OBJ_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
 $(OBJ_DIR)\errorsys.obj : $(OBJ_DIR)\errorsys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
+$(OBJ_DIR)\extend.obj : $(VM_DIR)\extend.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\fieldbl.c : $(RTL_DIR)\fieldbl.prg
@@ -646,7 +646,7 @@ $(OBJ_DIR)\fieldbl.obj : $(OBJ_DIR)\fieldbl.c
 $(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\fm.obj    : $(RTL_DIR)\fm.c
+$(OBJ_DIR)\fm.obj    : $(VM_DIR)\fm.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
@@ -655,7 +655,7 @@ $(OBJ_DIR)\gtapi.obj : $(RTL_DIR)\gtapi.c
 $(OBJ_DIR)\gtxxx.obj : $(RTL_DIR)\gtxxx.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
+$(OBJ_DIR)\harbinit.c : $(VM_DIR)\harbinit.prg
     $(HARBOUR_EXE) $** $(HARBOURFLAGS) -o$@
 
 $(OBJ_DIR)\harbinit.obj : $(OBJ_DIR)\harbinit.c
@@ -673,7 +673,7 @@ $(OBJ_DIR)\hbfsapi.obj : $(COMMON_DIR)\hbfsapi.c
 $(OBJ_DIR)\hbstr.obj : $(COMMON_DIR)\hbstr.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\initexit.obj : $(RTL_DIR)\initexit.c
+$(OBJ_DIR)\initexit.obj : $(VM_DIR)\initexit.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\inkey.obj : $(RTL_DIR)\inkey.c
@@ -688,7 +688,7 @@ $(OBJ_DIR)\input.obj : $(OBJ_DIR)\input.c
 $(OBJ_DIR)\isprint.obj : $(RTL_DIR)\isprint.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
+$(OBJ_DIR)\itemapi.obj : $(VM_DIR)\itemapi.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\langapi.obj : $(RTL_DIR)\langapi.c
@@ -712,7 +712,7 @@ $(OBJ_DIR)\memvarbl.c : $(RTL_DIR)\memvarbl.prg
 $(OBJ_DIR)\memvarbl.obj : $(OBJ_DIR)\memvarbl.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
+$(OBJ_DIR)\memvars.obj : $(VM_DIR)\memvars.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\menuto.c : $(RTL_DIR)\menuto.prg
@@ -760,13 +760,13 @@ $(OBJ_DIR)\oldbox.obj : $(RTL_DIR)\oldbox.c
 $(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\pcount.obj : $(RTL_DIR)\pcount.c
+$(OBJ_DIR)\pcount.obj : $(VM_DIR)\pcount.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\proc.obj : $(RTL_DIR)\proc.c
+$(OBJ_DIR)\proc.obj : $(VM_DIR)\proc.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
-$(OBJ_DIR)\pvalue.obj : $(RTL_DIR)\pvalue.c
+$(OBJ_DIR)\pvalue.obj : $(VM_DIR)\pvalue.c
     $(CC) $(CLIBFLAGS) -Fo$@ $**
 
 $(OBJ_DIR)\readkey.c : $(RTL_DIR)\readkey.prg

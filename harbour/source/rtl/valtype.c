@@ -34,61 +34,41 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 
 char * hb_valtypeGet( HB_ITEM_PTR pItem )
 {
-   char * szType;
-
-   switch( pItem->type & ~IT_BYREF )
+   switch( hb_itemType( pItem ) & ~IT_BYREF )
    {
       case IT_ARRAY:
-         szType = ( hb_arrayIsObject( pItem ) ? "O" : "A" );
-         break;
+         return ( hb_arrayIsObject( pItem ) ? "O" : "A" );
 
       case IT_BLOCK:
-         szType = "B";
-         break;
+         return "B";
 
       case IT_DATE:
-         szType = "D";
-         break;
+         return "D";
 
       case IT_LOGICAL:
-         szType = "L";
-         break;
+         return "L";
 
       case IT_INTEGER:
       case IT_LONG:
       case IT_DOUBLE:
-         szType = "N";
-         break;
+         return "N";
 
       case IT_STRING:
-         szType = "C";
-         break;
+         return "C";
 
       case IT_MEMO:
-         szType = "M";
-         break;
-
-      default:
-         szType = "U";
-         break;
+         return "M";
    }
-   return szType;
+
+   return "U";
 }
 
 HARBOUR HB_VALTYPE( void )
 {
-   PHB_ITEM pItem = hb_param( 1, IT_ANY );
-
-   /* NOTE: Double safety to ensure that a parameter was really passed,
-            compiler checks this, but a direct hb_vmDo() call
-            may not do so. [vszakats] */
-
-   if( pItem )
-      hb_retc( hb_valtypeGet( pItem ) );
-   else
-      hb_retc( "U" );
+   hb_retc( hb_valtypeGet( hb_param( 1, IT_ANY ) ) );
 }
 

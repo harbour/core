@@ -1,3 +1,32 @@
+20000305-13:47 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/empty.c
+     source/rtl/valtype.c
+     ! Item->type access change to API call.
+     % Optimized. Some variables and branches removed.
+   * source/rtl/strings.c
+     ! All direct item accesses changed to Item API calls.
+     % Some calls eliminated by using local variables.
+   * source/rtl/arrays.c
+     source/rtl/break.c
+     source/rtl/classes.c
+     source/rtl/codebloc.c
+     source/rtl/extend.c
+     source/rtl/fm.c
+     source/rtl/harbinit.prg
+     source/rtl/initexit.c
+     source/rtl/itemapi.c
+     source/rtl/memvars.c
+     source/rtl/pcount.c
+     source/rtl/proc.c
+     source/rtl/pvalue.c
+     + All these files moved to source/vm/*
+       Now only the functions in VM are using low-level Harbour structures.
+   * makefile.bc
+     makefile.vc (not tested)
+     source/rtl/Makefile
+     source/vm/Makefile
+     * Make files changed according to the RTL->VM moves.
+
 20000304-08:20 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   *utils/hbdoc/genrtf.prg
   *source/tools/rtf.prg

@@ -5,11 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
-        arrays.c     \
         binnum.c     \
-        break.c      \
-        classes.c    \
-        codebloc.c   \
         console.c    \
         copyfile.c   \
         dates.c      \
@@ -19,21 +15,16 @@ C_SOURCES=\
         empty.c      \
         environ.c    \
         errorapi.c   \
-        extend.c     \
         filesys.c    \
-        fm.c         \
         gtapi.c      \
         hardcr.c     \
-        initexit.c   \
         inkey.c      \
         isprint.c    \
-        itemapi.c    \
         langapi.c    \
         len.c        \
         math.c       \
         memofile.c   \
         memoline.c   \
-        memvars.c    \
         mlcount.c    \
         mlpos.c      \
         mouseapi.c   \
@@ -43,9 +34,6 @@ C_SOURCES=\
         oemansi.c    \
         oldbox.c     \
         oldclear.c   \
-        pcount.c     \
-        proc.c       \
-        pvalue.c     \
         samples.c    \
         set.c        \
         setcolor.c   \
@@ -76,7 +64,6 @@ PRG_SOURCES=\
         dummy.prg    \
         errorsys.prg \
         fieldbl.prg  \
-        harbinit.prg \
         input.prg    \
         memvarbl.prg \
         menuto.prg   \

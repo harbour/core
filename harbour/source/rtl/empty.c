@@ -40,53 +40,44 @@ HARBOUR HB_EMPTY( void )
 {
    PHB_ITEM pItem = hb_param( 1, IT_ANY );
 
-   /* NOTE: Double safety to ensure that a parameter was really passed,
-            compiler checks this, but a direct hb_vmDo() call
-            may not do so. [vszakats] */
-
-   if( pItem )
+   switch( hb_itemType( pItem ) & ~IT_BYREF )
    {
-      switch( pItem->type & ~IT_BYREF )
-      {
-         case IT_ARRAY:
-            hb_retl( hb_arrayLen( pItem ) == 0 );
-            break;
+      case IT_ARRAY:
+         hb_retl( hb_arrayLen( pItem ) == 0 );
+         break;
 
-         case IT_STRING:
-         case IT_MEMO:
-            hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
-            break;
+      case IT_STRING:
+      case IT_MEMO:
+         hb_retl( hb_strEmpty( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) ) );
+         break;
 
-         case IT_INTEGER:
-            hb_retl( hb_itemGetNI( pItem ) == 0 );
-            break;
+      case IT_INTEGER:
+         hb_retl( hb_itemGetNI( pItem ) == 0 );
+         break;
 
-         case IT_LONG:
-            hb_retl( hb_itemGetNL( pItem ) == 0 );
-            break;
+      case IT_LONG:
+         hb_retl( hb_itemGetNL( pItem ) == 0 );
+         break;
 
-         case IT_DOUBLE:
-            hb_retl( hb_itemGetND( pItem ) == 0.0 );
-            break;
+      case IT_DOUBLE:
+         hb_retl( hb_itemGetND( pItem ) == 0.0 );
+         break;
 
-         case IT_DATE:
-            hb_retl( hb_itemGetDL( pItem ) == 0 );
-            break;
+      case IT_DATE:
+         hb_retl( hb_itemGetDL( pItem ) == 0 );
+         break;
 
-         case IT_LOGICAL:
-            hb_retl( ! hb_itemGetL( pItem ) );
-            break;
+      case IT_LOGICAL:
+         hb_retl( ! hb_itemGetL( pItem ) );
+         break;
 
-         case IT_BLOCK:
-            hb_retl( FALSE );
-            break;
+      case IT_BLOCK:
+         hb_retl( FALSE );
+         break;
 
-         default:
-            hb_retl( TRUE );
-            break;
-      }
+      default:
+         hb_retl( TRUE );
+         break;
    }
-   else
-      hb_retl( TRUE );
 }
 

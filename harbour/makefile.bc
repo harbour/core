@@ -458,7 +458,7 @@ $(OBJ_DIR)\alert.obj : $(OBJ_DIR)\alert.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\arrays.obj : $(RTL_DIR)\arrays.c
+$(OBJ_DIR)\arrays.obj : $(VM_DIR)\arrays.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -473,7 +473,7 @@ $(OBJ_DIR)\binnum.obj : $(RTL_DIR)\binnum.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\break.obj : $(RTL_DIR)\break.c
+$(OBJ_DIR)\break.obj : $(VM_DIR)\break.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -491,7 +491,7 @@ $(OBJ_DIR)\browse.obj : $(OBJ_DIR)\browse.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\classes.obj : $(RTL_DIR)\classes.c
+$(OBJ_DIR)\classes.obj : $(VM_DIR)\classes.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -499,7 +499,7 @@ $(OBJ_DIR)\cmdarg.obj : $(VM_DIR)\cmdarg.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\codebloc.obj : $(RTL_DIR)\codebloc.c
+$(OBJ_DIR)\codebloc.obj : $(VM_DIR)\codebloc.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -594,7 +594,7 @@ $(OBJ_DIR)\errorsys.obj : $(OBJ_DIR)\errorsys.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\extend.obj : $(RTL_DIR)\extend.c
+$(OBJ_DIR)\extend.obj : $(VM_DIR)\extend.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -609,11 +609,11 @@ $(OBJ_DIR)\filesys.obj : $(RTL_DIR)\filesys.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\fm.obj : $(RTL_DIR)\fm.c
+$(OBJ_DIR)\fm.obj : $(VM_DIR)\fm.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\harbinit.c : $(RTL_DIR)\harbinit.prg
+$(OBJ_DIR)\harbinit.c : $(VM_DIR)\harbinit.prg
    $(HARBOUR_EXE) $** -i$(INCLUDE_DIR) -n $(HARBOUR_OPT) -o$@
 
 $(OBJ_DIR)\harbinit.obj : $(OBJ_DIR)\harbinit.c
@@ -628,7 +628,7 @@ $(OBJ_DIR)\hvm.obj : $(VM_DIR)\hvm.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\initexit.obj : $(RTL_DIR)\initexit.c
+$(OBJ_DIR)\initexit.obj : $(VM_DIR)\initexit.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -651,7 +651,7 @@ $(OBJ_DIR)\isprint.obj : $(RTL_DIR)\isprint.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\itemapi.obj : $(RTL_DIR)\itemapi.c
+$(OBJ_DIR)\itemapi.obj : $(VM_DIR)\itemapi.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -694,7 +694,7 @@ $(OBJ_DIR)\memvarbl.obj : $(OBJ_DIR)\memvarbl.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\memvars.obj : $(RTL_DIR)\memvars.c
+$(OBJ_DIR)\memvars.obj : $(VM_DIR)\memvars.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
@@ -748,15 +748,15 @@ $(OBJ_DIR)\oldclear.obj : $(RTL_DIR)\oldclear.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\pcount.obj : $(RTL_DIR)\pcount.c
+$(OBJ_DIR)\pcount.obj : $(VM_DIR)\pcount.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\proc.obj : $(RTL_DIR)\proc.c
+$(OBJ_DIR)\proc.obj : $(VM_DIR)\proc.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 
-$(OBJ_DIR)\pvalue.obj : $(RTL_DIR)\pvalue.c
+$(OBJ_DIR)\pvalue.obj : $(VM_DIR)\pvalue.c
    $(BCC_EXE) $(BCC_OPT) -c -I$(INCLUDE_DIR) -o$@ $**
    tlib $(HARBOUR_LIB) -+$@,,
 

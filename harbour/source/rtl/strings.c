@@ -254,8 +254,8 @@ HARBOUR HB_LTRIM( void )
 
    if( pText )
    {
-      ULONG ulLen = pText->item.asString.length;
-      char * szText = hb_strLTrim( pText->item.asString.value, &ulLen );
+      ULONG ulLen = hb_itemGetCLen( pText );
+      char * szText = hb_strLTrim( hb_itemGetCPtr( pText ), &ulLen );
 
       hb_retclen( szText, ulLen );
    }
@@ -300,8 +300,10 @@ HARBOUR HB_RTRIM( void )
 
    if( pText )
    {
+      char * pszText = hb_itemGetCPtr( pText );
       BOOL bAnySpace = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
-      hb_retclen( pText->item.asString.value, hb_strRTrimLen( pText->item.asString.value, pText->item.asString.length, bAnySpace ) );
+
+      hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ), bAnySpace ) );
    }
    else
    {
@@ -394,7 +396,10 @@ static char * hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize )
       }
       else if( IS_DOUBLE( pItem ) )
       {
-         sprintf( buffer, "%.*f", pItem->item.asDouble.decimal, hb_itemGetND( pItem ) );
+         int iDecimal;
+
+         hb_itemGetNLen( pItem, NULL, &iDecimal );
+         sprintf( buffer, "%.*f", iDecimal, hb_itemGetND( pItem ) );
          szText = buffer;
          *pulSize = strlen( szText );
       }
@@ -550,8 +555,8 @@ HARBOUR HB_AT( void )
 
    if( pText && pSub )
    {
-      hb_retnl( hb_strAt( pSub->item.asString.value, pSub->item.asString.length,
-                          pText->item.asString.value, pText->item.asString.length ) );
+      hb_retnl( hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                          hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
    }
    else
    {
@@ -637,8 +642,8 @@ HARBOUR HB_ASC( void )
 
    if( pText )
    {
-      if( pText->item.asString.length > 0 )
-         hb_retni( ( BYTE ) * ( pText->item.asString.value ) );
+      if( hb_itemGetCLen( pText ) > 0 )
+         hb_retni( ( BYTE ) * ( hb_itemGetCPtr( pText ) ) );
       else
          hb_retni( 0 );
    }
@@ -664,13 +669,13 @@ HARBOUR HB_LEFT( void )
    {
       LONG lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) pText->item.asString.length )
-         lLen = ( LONG ) pText->item.asString.length;
+      if( lLen > ( LONG ) hb_itemGetCLen( pText ) )
+         lLen = ( LONG ) hb_itemGetCLen( pText );
 
       else if( lLen < 0 )
          lLen = 0;
 
-      hb_retclen( pText->item.asString.value, lLen );
+      hb_retclen( hb_itemGetCPtr( pText ), lLen );
    }
    else
    {
@@ -694,13 +699,13 @@ HARBOUR HB_RIGHT( void )
    {
       LONG lLen = hb_parnl( 2 );
 
-      if( lLen > ( LONG ) pText->item.asString.length )
-         lLen = ( LONG ) pText->item.asString.length;
+      if( lLen > ( LONG ) hb_itemGetCLen( pText ) )
+         lLen = ( LONG ) hb_itemGetCLen( pText );
 
       else if( lLen < 0 )
          lLen = 0;
 
-      hb_retclen( pText->item.asString.value + pText->item.asString.length - lLen, lLen );
+      hb_retclen( hb_itemGetCPtr( pText ) + hb_itemGetCLen( pText ) - lLen, lLen );
    }
    else
    {
@@ -721,7 +726,7 @@ HARBOUR HB_SUBSTR( void )
 
       if( lPos < 0 )
       {
-         lPos += ( LONG ) pText->item.asString.length;
+         lPos += ( LONG ) hb_itemGetCLen( pText );
          if( lPos < 0 )
             lPos = 0;
       }
@@ -730,7 +735,7 @@ HARBOUR HB_SUBSTR( void )
          lPos--;
       }
 
-      if( lPos < ( LONG ) pText->item.asString.length )
+      if( lPos < ( LONG ) hb_itemGetCLen( pText ) )
       {
          LONG lLen;
 
@@ -740,8 +745,8 @@ HARBOUR HB_SUBSTR( void )
             {
                lLen = hb_parnl( 3 );
 
-               if( lLen > ( LONG ) pText->item.asString.length - lPos )
-                  lLen = ( LONG ) pText->item.asString.length - lPos;
+               if( lLen > ( LONG ) hb_itemGetCLen( pText ) - lPos )
+                  lLen = ( LONG ) hb_itemGetCLen( pText ) - lPos;
             }
             else
             {
@@ -758,10 +763,10 @@ HARBOUR HB_SUBSTR( void )
             }
          }
          else
-            lLen = ( LONG ) pText->item.asString.length - lPos;
+            lLen = ( LONG ) hb_itemGetCLen( pText ) - lPos;
 
          if( lLen > 0 )
-            hb_retclen( pText->item.asString.value + lPos, lLen );
+            hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );
          else
             hb_retc( "" );
       }
@@ -1021,11 +1026,13 @@ HARBOUR HB_STRTRAN( void )
 
       if( pSeek )
       {
-         char * szText = pText->item.asString.value;
+         char * szText = hb_itemGetCPtr( pText );
+         ULONG ulText = hb_itemGetCLen( pText );
+         ULONG ulSeek = hb_itemGetCLen( pSeek );
 
-         if( pSeek->item.asString.length && pSeek->item.asString.length <= pText->item.asString.length )
+         if( ulSeek && ulSeek <= ulText )
          {
-            char * szSeek = pSeek->item.asString.value;
+            char * szSeek = hb_itemGetCPtr( pSeek );
             char * szReplace;
             ULONG ulStart;
 
@@ -1045,8 +1052,8 @@ HARBOUR HB_STRTRAN( void )
 
                if( pReplace )
                {
-                  szReplace = pReplace->item.asString.value;
-                  ulReplace = pReplace->item.asString.length;
+                  szReplace = hb_itemGetCPtr( pReplace );
+                  ulReplace = hb_itemGetCLen( pReplace );
                }
                else
                {
@@ -1070,18 +1077,18 @@ HARBOUR HB_STRTRAN( void )
                   ULONG ulFound = 0;
                   LONG lReplaced = 0;
                   ULONG i = 0;
-                  ULONG ulLength = pText->item.asString.length;
+                  ULONG ulLength = ulText;
 
-                  while( i < pText->item.asString.length )
+                  while( i < ulText )
                   {
-                     if( ( bAll || lReplaced < ( LONG ) ulCount ) && ! memcmp( szText + i, szSeek, pSeek->item.asString.length ) )
+                     if( ( bAll || lReplaced < ( LONG ) ulCount ) && ! memcmp( szText + i, szSeek, ulSeek ) )
                      {
                         ulFound++;
                         if( ulFound >= ulStart )
                         {
                            lReplaced++;
-                           ulLength = ulLength - pSeek->item.asString.length + ulReplace;
-                           i += pSeek->item.asString.length;
+                           ulLength = ulLength - ulSeek + ulReplace;
+                           i += ulSeek;
                         }
                         else
                            i++;
@@ -1097,9 +1104,9 @@ HARBOUR HB_STRTRAN( void )
 
                      ulFound = 0;
                      i = 0;
-                     while( i < pText->item.asString.length )
+                     while( i < ulText )
                      {
-                        if( lReplaced && ! memcmp( szText + i, szSeek, pSeek->item.asString.length ) )
+                        if( lReplaced && ! memcmp( szText + i, szSeek, ulSeek ) )
                         {
                            ulFound++;
                            if( ulFound >= ulStart )
@@ -1107,7 +1114,7 @@ HARBOUR HB_STRTRAN( void )
                               lReplaced--;
                               memcpy( szPtr, szReplace, ulReplace );
                               szPtr += ulReplace;
-                              i += pSeek->item.asString.length;
+                              i += ulSeek;
                            }
                            else
                            {
@@ -1127,16 +1134,16 @@ HARBOUR HB_STRTRAN( void )
                      hb_xfree( szResult );
                   }
                   else
-                     hb_retclen( szText, pText->item.asString.length );
-               }
+                     hb_retclen( szText, ulText );
+                }
                 else
-                  hb_retclen( szText, pText->item.asString.length );
+                  hb_retclen( szText, ulText );
             }
             else
-               hb_retclen( szText, pText->item.asString.length );
+               hb_retclen( szText, ulText );
          }
          else
-            hb_retclen( szText, pText->item.asString.length );
+            hb_retclen( szText, ulText );
       }
       else
       {
@@ -1178,20 +1185,20 @@ HARBOUR HB_VAL( void )
    {
       int iWidth;
       int iDec;
-      char * ptr = strchr( pText->item.asString.value, '.' );
+      char * ptr = strchr( hb_itemGetCPtr( pText ), '.' );
 
       if( ptr )
       {
-         iWidth = ptr - pText->item.asString.value;
+         iWidth = ptr - hb_itemGetCPtr( pText );
          iDec = strlen( ptr + 1 );
       }
       else
       {
-         iWidth = strlen( pText->item.asString.value );
+         iWidth = strlen( hb_itemGetCPtr( pText ) );
          iDec = 0;
       }
 
-      hb_retndlen( hb_strVal( pText->item.asString.value ), iWidth, iDec );
+      hb_retndlen( hb_strVal( hb_itemGetCPtr( pText ) ), iWidth, iDec );
    }
    else
    {
