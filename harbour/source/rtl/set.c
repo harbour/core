@@ -8,6 +8,7 @@
 #include <io.h>
 #include <sys/stat.h>
 #include <set.h>
+#include <errno.h>
 
 HB_set_struct hb_set;
 
