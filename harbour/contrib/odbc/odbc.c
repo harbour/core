@@ -55,7 +55,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Felipe G. Coury <fcoury@flexsys-ci.com>
+ * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
  *    HB_SQLNUMRES()
  *    HB_SQLDESCRIB()
  *    HB_SQLEXTENDE()

@@ -1,3 +1,13 @@
+2001-05-30 14:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * contrib/odbc/odbc.c
+  * contrib/odbc/todbc.prg
+  * samples/guestbk/guestbk.prg
+  * samples/hscript/hscript.prg
+  * source/pp/pplib.c
+    * Corrected Felipe G. Coury's email address and/or changed to the new
+      Harbour License, with permission from Felipe.
+
 2001-05-30 13:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/gtsln/gtsln.c
