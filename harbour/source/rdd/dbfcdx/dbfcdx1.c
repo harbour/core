@@ -4520,6 +4520,9 @@ ERRCODE hb_cdxGoTo( CDXAREAP pArea, ULONG ulRecNo )
    if( SUPER_GOTO( ( AREAP ) pArea, ulRecNo ) == FAILURE )
       return FAILURE;
 
+   if ( pArea->fEof )
+      return FAILURE;
+
    pTag = hb_cdxGetActiveTag( pArea->lpIndexes );
    if ( ! pTag )
       return SUCCESS;
