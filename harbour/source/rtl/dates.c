@@ -65,6 +65,10 @@
  *
  */
 
+#ifdef HARBOUR_USE_WIN_GTAPI
+   #include <windows.h>
+#endif
+
 #include "extend.h"
 #include "errorapi.h"
 #include "itemapi.h"
@@ -599,13 +603,21 @@ HARBOUR HB_TIME( void )
 {
    if( hb_pcount() == 0 )
    {
-      time_t t;
-      struct tm * oTime;
       char szResult[ 9 ];
 
-      time( &t );
-      oTime = localtime( &t );
-      sprintf( szResult, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      #ifdef HARBOUR_USE_WIN_GTAPI
+         SYSTEMTIME st;
+         GetLocalTime( &st );
+         sprintf( szResult, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
+      #else
+         time_t t;
+         struct tm * oTime;
+
+         time( &t );
+         oTime = localtime( &t );
+         sprintf( szResult, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      #endif
+
       hb_retclen( szResult, 8 );
    }
    else
@@ -616,13 +628,20 @@ HARBOUR HB_DATE( void )
 {
    if( hb_pcount() == 0 )
    {
-      time_t t;
-      struct tm * oTime;
       char szResult[ 9 ];
 
-      time( &t );
-      oTime = localtime( &t );
-      sprintf( szResult, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      #ifdef HARBOUR_USE_WIN_GTAPI
+         SYSTEMTIME st;
+         GetLocalTime( &st );
+         sprintf( szResult, "%04d%02d%02d", st.wYear, st.wMonth, st.wDay );
+      #else
+         time_t t;
+         struct tm * oTime;
+
+         time( &t );
+         oTime = localtime( &t );
+         sprintf( szResult, "%04d%02d%02d", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      #endif
       hb_retds( szResult );
    }
    else

@@ -83,6 +83,10 @@
    oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() ) ;;
    oClass:AddMethod( "_" + <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
+#xcommand METHOD <MethodName>( [<param>] ) OPERATOR <op> => ;
+   oClass:AddMethod( <(MethodName)>, CLSMETH _CLASS_NAME_ <MethodName>() ) ;;
+   oClass:AddInline( <(op)>, {|Self [,<param>] | ::<MethodName>( [<param>] ) } )
+
 #xcommand MESSAGE <MessageName> METHOD <MethodName>( [<params,...>] ) => ;
    oClass:AddMethod( <(MessageName)>, CLSMETH _CLASS_NAME_ <MethodName>() )
 
