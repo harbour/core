@@ -1,3 +1,9 @@
+2000-09-02 11:00 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
+   * source/rtl/tbrowse.prg
+     ! fixed right most header, footer and column painting. In particular if (space available - space occupied by
+       columns) gives an odd number a char was left "dirty" on screen. I don't know if column separators suffer
+       from same bug.
+
 2000-09-02 10:19 GMT+1 Bruno Cantero <bruno@issnet.net>
    * include/hbset.h
    * source/rtl/set.c
@@ -28,7 +34,7 @@
    * source/rdd/rddsys.prg
       + Added DBFCDX files to makefiles and reactivate it.
         By now is the default driver (rddsys.prg).
- 
+
    * include/hbrdddbf.h
    * source/rdd/dbcmd.c
    * source/rdd/workarea.c

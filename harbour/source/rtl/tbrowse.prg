@@ -327,7 +327,7 @@ METHOD LeftDetermine() CLASS TBrowse
             Len( ::aColumns[ nCol ]:ColSep ),;
             Len( ::ColSep ) )
 
-      if nWidth > nWidthMax
+      if nWidth >= nWidthMax
          exit
       endif
 
@@ -615,7 +615,11 @@ METHOD Stabilize() CLASS TBrowse
                  Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
             endif
          next
-         DispOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+
+         // Every time there is some space to fill up and this space is an odd number of chars we need to
+         // round it up to next value here since first DispOutAt() does round it down because it uses a simple
+         // division (ie Space(7/2) gives 3 on first call and 4 here).
+         DispOut(Space(Int(Round((nWidth - nColsWidth) / 2, 0))), ::ColorSpec)
       endif
       if ! Empty( ::HeadSep )  //Drawing heading separator
          DispOutAt( ::nTop + iif( ::lHeaders, 1, 0 ), ::nLeft, Replicate( Right( ::HeadSep, 1 ), ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
@@ -669,7 +673,7 @@ METHOD Stabilize() CLASS TBrowse
                  Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::ColSep ) ) ), ::ColorSpec )
             endif
          next
-         DispOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+         DispOut(Space(Int(Round((nWidth - nColsWidth) / 2, 0))), ::ColorSpec)
       endif
    endif
 
@@ -740,7 +744,7 @@ METHOD Stabilize() CLASS TBrowse
          endif
       next
 
-      DispOut( Space( ( nWidth - nColsWidth ) / 2 ), ::ColorSpec )
+      DispOut(Space(Int(Round((nWidth - nColsWidth) / 2, 0))), ::ColorSpec)
 
    endif
 
