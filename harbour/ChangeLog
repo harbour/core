@@ -1,3 +1,12 @@
+19990622-00:35 Ryszard Glab <rglab@imid.med.pl>
+* source/compiler/harbour.y
+* source/compiler/harbour.l
+    * removed some unnecessary rules
+    * added the very begginning of MEMVAR support
+    
+* include/compiler.h
+    + added pMemvars member to _FUNC structure    
+
 19990622-14:00 CET Victor Szel <info@szelvesz.hu>
   * source/rdd/rdd.api moved to /include
 

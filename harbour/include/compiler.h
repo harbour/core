@@ -25,6 +25,7 @@ typedef struct __FUNC      /* functions definition support */
    PVAR   pLocals;         /* pointer to local variables list */
    PVAR   pStatics;        /* pointer to static variables list */
    PVAR   pFields;         /* pointer to fields variables list */
+   PVAR   pMemvars;        /* pointer to memvar variables list */
    BYTE * pCode;           /* pointer to a memory block where pcode is stored */
    LONG   lPCodeSize;      /* total memory size for pcode */
    LONG   lPCodePos;       /* actual pcode offset */
@@ -66,6 +67,6 @@ WORD GetFunctionPos( char * szSymbolName ); /* returns the index + 1 of a functi
 
 void * OurMalloc( LONG lSize ); /* our malloc with error control */
 void * OurRealloc( void * p, LONG lSize ); /* our malloc with error control */
-#define OurFree( p )    free( (p) );    /* just for symetry -we can expand it later */
+void OurFree( void * p ); /* releases allocated memory */
 
 #endif  /* COMPILER_H_ */

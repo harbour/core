@@ -19,9 +19,13 @@
 #include "hberrors.h"
 #include "types.h"
 
-void yyerror( char * );
+/* Functions defined in harbour.y */
 char *yy_strupr( char * );
 char * yy_strdup( char *p );
+void OurFree( void * );
+
+/* YACC functions */
+void yyerror( char * );
 static void yyunput( int, char * );
 #undef yywrap        /* to implement our own yywrap() funtion to handle EOFs */
 #ifdef __cplusplus
@@ -31,7 +35,8 @@ int yywrap( void );
 #endif
 #undef YY_INPUT      /* to implement our own YY_INPUT function to manage PRGs without \n at the end */
 extern FILE * yyin;  /* currently yacc parsed file */
-  /* Following three lines added for preprocessor */
+
+/* Following three lines added for preprocessor */
 extern FILE *yyppo;  /* output .ppo file */
 extern int lPpo;     /* flag indicating, is ppo output needed */
 extern int PreProcess( FILE*, FILE*, char *);
@@ -97,7 +102,7 @@ SubArray      "]"[ \t]*"["
 
 Separator     {SpaceTab}
 
-%x            DEFINE STRING1 STRING2 STRING3
+%x            STRING1 STRING2 STRING3
 %x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ EXIT_ EXTERNAL_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_ LOCAL_ LOOP_
 %x            LINECONT_
@@ -195,8 +200,6 @@ Separator     {SpaceTab}
                 return yytext[ 0 ];
              }
 
-<DEFINE>{Identifier}/{SpaceTab}*\n  BEGIN 0;
-
 {SpaceTab}     ;
 
 \n.*           _iState=LOOKUP; yyless( 1 ); ++iLine; if( ! _iQuiet ) printf( "\rline: %i", iLine ); return '\n';
@@ -279,7 +282,6 @@ Separator     {SpaceTab}
                  return IDENTIFIER;
                }
              }
-<BREAK_>.    { if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0; unput( yytext[ yyleng-1 ] ); }
 %{
 /* ************************************************************************ */
 %}
@@ -477,7 +479,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  {
-                   free( yylval.string );
+                   OurFree( (void *) yylval.string );
                    _iState =EXTERN;
                    return EXTERN;
                  }
@@ -510,7 +512,7 @@ Separator     {SpaceTab}
                  if( i_INDEX_STATE ) BEGIN INDEX; else BEGIN 0;
                  if( _iState == LOOKUP )
                  {
-                   free( yylval.string );
+                   OurFree( (void *) yylval.string );
                    _iState =FIELD;
                    return FIELD;
                  }
@@ -1172,6 +1174,10 @@ Separator     {SpaceTab}
 
 int yy_lex_input( char *buffer, int iBufferSize )
 {
+#ifdef __WATCOMC__
+   iBufferSize =iBufferSize;
+#else
    if( 0 && iBufferSize ) printf( "/* compiler warning */" );
+#endif
    return PreProcess( yyin, (lPpo)? yyppo:NULL, buffer );
 }
