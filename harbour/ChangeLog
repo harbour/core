@@ -7,6 +7,12 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+  * include/hbapiitm.h
+    + Add definition for hb_itemUnRefOnce().
+  * source/vm/itemapi.c
+    * Subdivision of the function hb_itemUnRef() in
+      hb_itemUnRef() and hb_itemUnRefOnce().
+  * source/rtl/valtype.c
     + Add function: IS_VARBYREF().
       This function allows in PRGs to know if a parameter has been passed
       by value or by reference.

@@ -276,7 +276,7 @@ CLEARBIT      ;S;
 CTOBIT        ;S; 
 CTOF          ;S; 
 CTON          ;S; 
-EXPONENT      ;N; 
+EXPONENT      ;S; 
 FAHRENHEIT    ;R; 
 FTOC          ;S; 
 INFINITY      ;R; 
@@ -284,7 +284,7 @@ INTNEG        ;N;
 INTPOS        ;N; 
 ISBIT         ;S; 
 LTON          ;N; 
-MANTISSA      ;N; 
+MANTISSA      ;S; 
 NTOC          ;S; 
 NUMAND        ;S; 
 NUMANDX       ;S;   !NEW!

@@ -32,6 +32,7 @@ C_SOURCES = \
 	ctchksum.c \
 	ctcolton.c \
 	ctcrypt.c \
+	exponent.c \
 	files.c \
 	finan.c \
 	ftoc.c \

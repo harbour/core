@@ -66,6 +66,7 @@ PRG_SOURCES=\
 	csetatmu.prg \
 	csetarge.prg \
 	csetref.prg \
+	expomant.prg \
 	finan.prg \
 	math.prg \
 	num1.prg \
@@ -84,7 +85,7 @@ PRG_SOURCES=\
 	wordrepl.prg \
 	wordrem.prg \
 	wordswap.prg \
-	
+
 
 PRG_HEADERS=\
 
