@@ -421,8 +421,8 @@ FUNCTION __ObjSetValueList( oObject, aData )
  *      __objAddMethod() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objAddMethod() is a low level class support function that add a
- *      new METHOD to an object. If a symbol with the name <cMethodName>
- *      already exist in <oObject> a run time error will occur.
+ *      new METHOD to an object. <oObject> is unchanged if a symbol with the
+ *      name <cMethodName> already exist in <oObject>.
  *
  *      Note that <nFuncPtr> is a special pointer to a function that was
  *      created using the @ operator, see example below.
@@ -485,9 +485,8 @@ FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
  *      __objAddInline() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objAddInline() is a low level class support function that add a
- *      new INLINE method to an object. If a symbol with the name
- *      <cInlineName> already exist in <oObject> a run time error will
- *      occur.
+ *      new INLINE method to an object. <oObject> is unchanged if a symbol
+ *      with the name <cInlineName> already exist in <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
  *      oHappy  := TClass():New( "THappy" )
@@ -534,8 +533,8 @@ FUNCTION __objAddInline( oObject, cSymbol, bInline )
  *      __objAddData() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objAddData() is a low level class support function that add a new
- *      DATA to an object. If a symbol with the name <cDataName> already
- *      exist in <oObject> a run time error will occur.
+ *      DATA to an object. <oObject> is unchanged if a symbol with the name
+ *      <cDataName> already exist in <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a lHappy DATA
  *      oHappy  := TClass():New( "THappy" )
@@ -592,10 +591,9 @@ FUNCTION __objAddData( oObject, cSymbol )
  *      __objModMethod() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objModMethod() is a low level class support function that modify
- *      a METHOD in an object and replace it with a new function. If a
- *      symbol with the name <cMethodName> does not exist in <oObject> a run
- *      time error will occur. __objModMethod() is used in inheritance
- *      mechanism.
+ *      a METHOD in an object and replace it with a new function. <oObject>
+ *      is unchanged if a symbol with the name <cMethodName> does not exist
+ *      in <oObject>. __objModMethod() is used in inheritance mechanism.
  *
  *      Note that <nFuncPtr> is a special pointer to a function that was
  *      created using the @ operator, see example below.
@@ -670,8 +668,8 @@ FUNCTION __objModMethod( oObject, cSymbol, nFuncPtr )
  *  $DESCRIPTION$
  *      __objModInline() is a low level class support function that modify
  *      an INLINE method in an object and replace it with a new code block.
- *      If a symbol with the name <cInlineName> does not exist in <oObject>
- *      a run time error will occur. __objModInline() is used in inheritance
+ *      <oObject> is unchanged if a symbol with the name <cInlineName> does
+ *      not exist in <oObject>. __objModInline() is used in inheritance
  *      mechanism.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
@@ -708,14 +706,13 @@ FUNCTION __objModInline( oObject, cSymbol, bInline )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __objDelMethod() 
+ *      __objDelMethod()
  *  $CATEGORY$
  *      Object manipulation
  *  $ONELINER$
  *      Delete a METHOD  from class
  *  $SYNTAX$
  *      __objDelMethod( <oObject>, <cSymbol> ) --> oObject
- *
  *  $ARGUMENTS$
  *      <oObject> is the object to work on.
  *
@@ -725,9 +722,9 @@ FUNCTION __objModInline( oObject, cSymbol, bInline )
  *      __objDelMethod() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objDelMethod() is a low level class support function that delete
- *      (remove) a METHOD or an INLINE method from an object. If a symbol
- *      with the name <cSymbol> does not exist in <oObject> a run time error
- *      will occur.
+ *      (remove) a METHOD or an INLINE method from an object. <oObject> is
+ *      unchanged if a symbol with the name <cSymbol> does not exist in
+ *      <oObject>.
  *
  *      __objDelInline() is exactly the same as __objDelMethod().
  *  $EXAMPLES$
@@ -787,10 +784,9 @@ FUNCTION __objDelMethod( oObject, cSymbol )
  *      __objDelInMethod() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objDelInMethod() is a low level class support function that delete
- *      (remove) a METHOD or an INLINE method from an object. If a symbol
- *      with the name <cSymbol> does not exist in <oObject> a run time error
- *      will occur.
- *
+ *      (remove) a METHOD or an INLINE method from an object. <oObject> is
+ *      unchanged if a symbol with the name <cSymbol> does not exist in
+ *      <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile method
  *      oHappy := TClass():New( "THappy" )
@@ -841,8 +837,8 @@ FUNCTION __objDelInline( oObject, cSymbol )
  *      __objDelData() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objDelData() is a low level class support function that delete
- *      (remove) a DATA from an object. If a symbol with the name
- *      <cDataName> does not exist in <oObject> a run time error will occur.
+ *      (remove) a DATA from an object. <oObject> is unchanged if a symbol
+ *      with the name <cDataName> does not exist in <oObject>.
  *  $EXAMPLES$
  *      // create a new THappy class and add a lHappy DATA
  *      oHappy  := TClass():New( "THappy" )
@@ -873,4 +869,3 @@ FUNCTION __objDelData( oObject, cSymbol )
    ENDIF
 
    RETURN oObject
-
