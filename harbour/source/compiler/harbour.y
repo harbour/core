@@ -1177,7 +1177,7 @@ DecMethod  : IdentName '(' { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLa
 DecData    : IdentName { hb_comp_pLastMethod = hb_compMethodAdd( hb_comp_pLastClass, $1 ); } AsType { if ( hb_comp_pLastMethod )
 												      {
 													PCOMCLASS pClass;
-													char * szSetData = hb_xgrab( strlen( $1 ) + 2 );
+													char * szSetData = ( char * ) hb_xgrab( strlen( $1 ) + 2 );
 
                                                                                                         hb_comp_pLastMethod->cType = hb_comp_cVarType;
 													if ( toupper( hb_comp_cVarType ) == 'S' )
