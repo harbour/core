@@ -1,3 +1,20 @@
+19991022-16:21 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/strings.c
+     ! REPLICATE(), SPACE() error value substitution support added.
+   * tests/rtl_test.prg
+   * tests/mathtest.prg
+   - tests/strings.prg (removed)
+   - tests/strings2.prg (removed)
+     tests/Makefile
+     + REPLICATE(), SPACE(), LOG(), EXP() regression tests added.
+       Two bugs showed up somewhere around LOG().
+     + STUFF() tests extended.
+     + ISDIGIT(), ISALPHA(), ISLOWER(), ISUPPER() regression tests added.
+     + MATHTEST.PRG moved to RTL_TEST
+     + STRINGS.PRG moved to RTL_TEST (mostly)
+     + STRINGS2.PRG moved to RTL_TEST (mostly)
+     - Removed those lines which got moved to RTL_TEST.
+
 19991022-15:16 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/rtl_test.prg
    - tests/filexist.prg (removed)

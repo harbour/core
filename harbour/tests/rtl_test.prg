@@ -635,10 +635,12 @@ STATIC FUNCTION Main_HVM()
    TEST_LINE( "A  " - " B"                    , "A B  "                            )
    TEST_LINE( "   " - "B "                    , "B    "                            )
 
+   TEST_LINE( 1 / 0                           , "E BASE 1340 Zero divisor / F:S"   )
    TEST_LINE( 1 / NIL                         , "E BASE 1084 Argument error / F:S" )
    TEST_LINE( 1 * NIL                         , "E BASE 1083 Argument error * F:S" )
    TEST_LINE( 1 ** NIL                        , "E BASE 1088 Argument error ^ F:S" )
    TEST_LINE( 1 ^ NIL                         , "E BASE 1088 Argument error ^ F:S" )
+   TEST_LINE( 1 % 0                           , "E BASE 1341 Zero divisor % F:S"   )
    TEST_LINE( 1 % NIL                         , "E BASE 1085 Argument error % F:S" )
 
    /* The order of these tests is relevant, don't change it */
@@ -927,6 +929,10 @@ STATIC FUNCTION Main_MATH()
    /* LOG() */
 
    TEST_LINE( Log("A")                        , "E BASE 1095 Argument error LOG F:S"   )
+   TEST_LINE( Str(Log(-1))                    , "***********************"              )
+   TEST_LINE( Str(Log(0))                     , "***********************"              )
+   TEST_LINE( Str(Log(1))                     , "         0.00"                        )
+   TEST_LINE( Str(Log(12))                    , "         2.48"                        )
    TEST_LINE( Str(Log(snIntP))                , "         2.30"                        )
 #ifdef __HARBOUR__
    TEST_LINE( Str(Log(@snIntP))               , "         2.30"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1095 Argument error LOG F:S" */
@@ -977,6 +983,7 @@ STATIC FUNCTION Main_MATH()
 
    TEST_LINE( Exp("A")                        , "E BASE 1096 Argument error EXP F:S"   )
    TEST_LINE( Exp(0)                          , 1.00                                   )
+   TEST_LINE( Str(Exp(15))                    , "   3269017.37"                        )
    TEST_LINE( Str(Exp(snIntZ))                , "         1.00"                        )
 #ifdef __HARBOUR__
    TEST_LINE( Str(Exp(@snIntZ))               , "         1.00"                        ) /* Bug in CA-Cl*pper, it returns: "E BASE 1096 Argument error EXP F:S" */
@@ -1262,6 +1269,92 @@ STATIC FUNCTION Main_STRINGS()
    TEST_LINE( AllTrim(@scString)              , "HELLO"          ) /* CA-Cl*pper bug, it will terminate the program on this line. */
 #endif
 
+   /* ISDIGIT() */
+
+   TEST_LINE( IsDigit()                       , .F.              )
+   TEST_LINE( IsDigit( 100 )                  , .F.              )
+   TEST_LINE( IsDigit( @scString )            , .F.              )
+   TEST_LINE( IsDigit( "" )                   , .F.              )
+   TEST_LINE( IsDigit( "A" )                  , .F.              )
+   TEST_LINE( IsDigit( "-" )                  , .F.              )
+   TEST_LINE( IsDigit( "." )                  , .F.              )
+   TEST_LINE( IsDigit( "0" )                  , .T.              )
+   TEST_LINE( IsDigit( "9" )                  , .T.              )
+   TEST_LINE( IsDigit( "123" )                , .T.              )
+   TEST_LINE( IsDigit( "1" )                  , .T.              )
+   TEST_LINE( IsDigit( "A1" )                 , .F.              )
+   TEST_LINE( IsDigit( "1A" )                 , .T.              )
+
+   /* ISALPHA() */
+
+   TEST_LINE( IsAlpha()                       , .F.              )
+   TEST_LINE( IsAlpha( 100 )                  , .F.              )
+#ifdef __HARBOUR__
+   TEST_LINE( IsAlpha( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will return .F. */
+#endif
+   TEST_LINE( IsAlpha( "" )                   , .F.              )
+   TEST_LINE( IsAlpha( "A" )                  , .T.              )
+   TEST_LINE( IsAlpha( "-" )                  , .F.              )
+   TEST_LINE( IsAlpha( "." )                  , .F.              )
+   TEST_LINE( IsAlpha( "0" )                  , .F.              )
+   TEST_LINE( IsAlpha( "9" )                  , .F.              )
+   TEST_LINE( IsAlpha( "123" )                , .F.              )
+   TEST_LINE( IsAlpha( "1" )                  , .F.              )
+   TEST_LINE( IsAlpha( "A" )                  , .T.              )
+   TEST_LINE( IsAlpha( "A1" )                 , .T.              )
+   TEST_LINE( IsAlpha( "aa" )                 , .T.              )
+   TEST_LINE( IsAlpha( "za" )                 , .T.              )
+   TEST_LINE( IsAlpha( "Aa" )                 , .T.              )
+   TEST_LINE( IsAlpha( "Za" )                 , .T.              )
+   TEST_LINE( IsAlpha( "@"  )                 , .F.              )
+/* TOFIX: Commented out due to Harbour bug */
+#ifndef __HARBOUR__
+   TEST_LINE( IsAlpha( "["  )                 , .F.              )
+#endif
+   TEST_LINE( IsAlpha( "`"  )                 , .F.              )
+   TEST_LINE( IsAlpha( "{"  )                 , .F.              )
+
+   /* ISUPPER() */
+
+   TEST_LINE( IsUpper()                       , .F.              )
+   TEST_LINE( IsUpper( 100 )                  , .F.              )
+#ifdef __HARBOUR__
+   TEST_LINE( IsUpper( @scString )            , .T.              ) /* Bug in CA-Cl*pper, it will return .F. */
+#endif
+   TEST_LINE( IsUpper( "" )                   , .F.              )
+   TEST_LINE( IsUpper( "6" )                  , .F.              )
+   TEST_LINE( IsUpper( "A" )                  , .T.              )
+   TEST_LINE( IsUpper( "a" )                  , .F.              )
+   TEST_LINE( IsUpper( "K" )                  , .T.              )
+   TEST_LINE( IsUpper( "Z" )                  , .T.              )
+   TEST_LINE( IsUpper( "z" )                  , .F.              )
+   TEST_LINE( IsUpper( "™" )                  , .F.              )
+   TEST_LINE( IsUpper( "”" )                  , .F.              )
+
+   /* ISLOWER() */
+
+   TEST_LINE( IsLower()                       , .F.              )
+   TEST_LINE( IsLower( 100 )                  , .F.              )
+   TEST_LINE( IsLower( @scString )            , .F.              )
+   TEST_LINE( IsLower( "" )                   , .F.              )
+   TEST_LINE( IsLower( "6" )                  , .F.              )
+   TEST_LINE( IsLower( "A" )                  , .F.              )
+   TEST_LINE( IsLower( "a" )                  , .T.              )
+   TEST_LINE( IsLower( "K" )                  , .F.              )
+   TEST_LINE( IsLower( "Z" )                  , .F.              )
+   TEST_LINE( IsLower( "z" )                  , .T.              )
+   TEST_LINE( IsLower( "™" )                  , .F.              )
+   TEST_LINE( IsLower( "”" )                  , .F.              )
+
+   /* TODO: Add these: */
+
+   /* TRIM() */
+   /* RTRIM() */
+   /* LTRIM() */
+   /* UPPER() */
+   /* LOWER() */
+   /* STRTRAN() */
+
    /* AT() */
 
    TEST_LINE( At("", "")                      , 1                )
@@ -1311,6 +1404,28 @@ STATIC FUNCTION Main_STRINGS()
 #else
    TEST_LINE( Replicate("XXX", 30000)         , "E BASE 1234 String overflow REPLICATE F:S" )
 #endif
+   TEST_LINE( Replicate(200  , 0 )            , "E BASE 1106 Argument error REPLICATE F:S" )
+   TEST_LINE( Replicate(""   , 10 )           , "" )
+   TEST_LINE( Replicate(""   , 0 )            , "" )
+   TEST_LINE( Replicate("A"  , "B" )          , "E BASE 1106 Argument error REPLICATE F:S" )
+   TEST_LINE( Replicate("A"  , 1 )            , "A"                                        )
+   TEST_LINE( Replicate("A"  , 2 )            , "AA"                                       )
+   TEST_LINE( Replicate("HE", 3 )             , "HEHEHE"                                   )
+   TEST_LINE( Replicate("HE", 3.1 )           , "HEHEHE"                                   )
+   TEST_LINE( Replicate("HE", 3.5 )           , "HEHEHE"                                   )
+   TEST_LINE( Replicate("HE", 3.7 )           , "HEHEHE"                                   )
+   TEST_LINE( Replicate("HE", -3 )            , "" )
+   TEST_LINE( Replicate("H"+Chr(0), 2 )       , "H"+Chr(0)+"H"+Chr(0)+"" )
+
+   /* SPACE() */
+
+   TEST_LINE( Space( "A" )                    , "E BASE 1105 Argument error SPACE F:S" )
+   TEST_LINE( Space( 0 )                      , "" )
+   TEST_LINE( Space( -10 )                    , "" )
+   TEST_LINE( Space( 10 )                     , "          " )
+   TEST_LINE( Space( 10.2 )                   , "          " )
+   TEST_LINE( Space( 10.5 )                   , "          " )
+   TEST_LINE( Space( 10.7 )                   , "          " )
 
    /* SUBSTR() */
 
@@ -1456,15 +1571,47 @@ STATIC FUNCTION Main_STRINGS()
 
    /* STUFF() */
 
-   TEST_LINE( Stuff("ABCDEF", 0, 0, NIL)      , ""               )
-   TEST_LINE( Stuff("ABCDEF", 0, 0, "xyz")    , "xyzABCDEF"      )
-   TEST_LINE( Stuff("ABCDEF", 1, 0, "xyz")    , "xyzABCDEF"      )
-   TEST_LINE( Stuff("ABCDEF", 2, 0, "xyz")    , "AxyzBCDEF"      )
-   TEST_LINE( Stuff("ABCDEF", 2, 3, "xyz")    , "AxyzEF"         )
-   TEST_LINE( Stuff("ABCDEF", 2, 2, "")       , "ADEF"           )
-   TEST_LINE( Stuff("ABCDEF", 2, 1, "xyz")    , "AxyzCDEF"       )
-   TEST_LINE( Stuff("ABCDEF", 2, 4, "xyz")    , "AxyzF"          )
-   TEST_LINE( Stuff("ABCDEF", 2, 10, "xyz")   , "Axyz"           )
+   TEST_LINE( Stuff()                                          , ""                        )
+   TEST_LINE( Stuff( 100 )                                     , ""                        )
+   TEST_LINE( Stuff("ABCDEF", -6, -5, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -6, -2, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -6,  0, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -6, 10, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -6, 30, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -2, -5, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -2, -2, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -2,  0, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -2, 10, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", -2, 30, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF",  0, -5, NIL)                     , ""                        )
+   TEST_LINE( Stuff("ABCDEF",  0, -2, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  0,  0, "xyz")                   , "xyzABCDEF"               )
+   TEST_LINE( Stuff("ABCDEF",  0, 10, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  0, 30, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  1, -5, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  1, -2, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  1,  0, "xyz")                   , "xyzABCDEF"               )
+   TEST_LINE( Stuff("ABCDEF",  1, 10, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  1, 30, "xyz")                   , "xyz"                     )
+   TEST_LINE( Stuff("ABCDEF",  2,  0, "xyz")                   , "AxyzBCDEF"               )
+   TEST_LINE( Stuff("ABCDEF",  2,  3, ""   )                   , "AEF"                     )
+   TEST_LINE( Stuff("ABCDEF",  2,  3, "xyz")                   , "AxyzEF"                  )
+   TEST_LINE( Stuff("ABCDEF",  2,  2, "")                      , "ADEF"                    )
+   TEST_LINE( Stuff("ABCDEF",  2, -5, "xyz")                   , "Axyz"                    )
+   TEST_LINE( Stuff("ABCDEF",  2, -2, "xyz")                   , "Axyz"                    )
+   TEST_LINE( Stuff("ABCDEF",  2,  1, "xyz")                   , "AxyzCDEF"                )
+   TEST_LINE( Stuff("ABCDEF",  2,  4, "xyz")                   , "AxyzF"                   )
+   TEST_LINE( Stuff("ABCDEF",  2, 10, "xyz")                   , "Axyz"                    )
+   TEST_LINE( Stuff("ABCDEF",  2, 30, "xyz")                   , "Axyz"                    )
+   TEST_LINE( Stuff("ABCDEF", 30, -5, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", 30, -2, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", 30,  0, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", 30, 10, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff("ABCDEF", 30, 30, "xyz")                   , "ABCDEFxyz"               )
+   TEST_LINE( Stuff(@scString        ,  2,  3, "xyz")          , "HxyzO"                   )
+   TEST_LINE( Stuff("ABC"+Chr(0)+"EF",  2,  3, "xyz")          , "AxyzEF"                  )
+   TEST_LINE( Stuff("ABCE"+Chr(0)+"F",  2,  3, "xyz")          , "Axyz"+Chr(0)+"F"         )
+   TEST_LINE( Stuff("ABC"+Chr(0)+"EF",  2,  3, "x"+Chr(0)+"z") , "Ax"+Chr(0)+"zEF"         )
 
    /* STR() */
 

@@ -969,7 +969,15 @@ HARBOUR HB_REPLICATE( void )
             hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1106, NULL, "REPLICATE" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1106, NULL, "REPLICATE" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "REPLICATE" ); /* NOTE: Clipper catches this at compile time! */
@@ -1002,7 +1010,15 @@ HARBOUR HB_SPACE( void )
             hb_retc( "" );
       }
       else
-         hb_errRT_BASE( EG_ARG, 1105, NULL, "SPACE" );
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1105, NULL, "SPACE" );
+
+         if( pResult )
+         {
+            hb_itemReturn( pResult );
+            hb_itemRelease( pResult );
+         }
+      }
    }
    else
       hb_errRT_BASE( EG_ARGCOUNT, 3000, NULL, "SPACE" ); /* NOTE: Clipper catches this at compile time! */
