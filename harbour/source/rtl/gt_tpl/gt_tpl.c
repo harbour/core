@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Video subsystem template
+ * {Video subsystem template}
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org

@@ -133,7 +133,7 @@ PRG_SOURCES=\
 	getlist.prg  \
 	getsys.prg   \
 	input.prg    \
-   listbox.prg  \
+	listbox.prg  \
 	memoedit.prg \
 	memvarbl.prg \
 	menuto.prg   \
@@ -146,7 +146,7 @@ PRG_SOURCES=\
 	radiogrp.prg \
 	readkey.prg  \
 	readvar.prg  \
-   scrollbr.prg \
+	scrollbr.prg \
 	setfunc.prg  \
 	setta.prg    \
 	tclass.prg   \

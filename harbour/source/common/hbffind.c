@@ -66,6 +66,8 @@
 
 /* ------------------------------------------------------------- */
 
+#include <ctype.h>
+
 #if defined(HB_OS_DOS)
 
    #if defined(__DJGPP__) || defined(__RSX32__)
@@ -241,9 +243,9 @@ ULONG hb_fsAttrToRaw( USHORT uiAttr )
 /* Converts a CA-Cl*pper compatible file attribute string 
    to the internal reprensentation. */
 
-USHORT hb_fsAttrEncode( char * szAttr )
+USHORT hb_fsAttrEncode( const char * szAttr )
 {
-   char * pos = szAttr;
+   const char * pos = szAttr;
    char ch;
    USHORT uiAttr = 0;
 
@@ -281,6 +283,8 @@ USHORT hb_fsAttrEncode( char * szAttr )
 /* Converts a file attribute (ffind->attr) to the CA-Cl*pper 
    compatible file attribute string format. */
 
+/* NOTE: szAttr buffer must be at least 16 chars long */
+
 char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
 {
    char * ptr = szAttr;
@@ -313,7 +317,7 @@ char * hb_fsAttrDecode( USHORT uiAttr, char * szAttr )
 
 static void hb_fsFindFill( PHB_FFIND ffind )
 {
-   PHB_FFIND_INFO info = ffind->info;
+   PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
    USHORT nYear;
    USHORT nMonth;
@@ -396,7 +400,8 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    {
       strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
 
-      /* TOFIX: nFileSizeHigh is not yet used. */
+/* TOFIX: Use the complete value, to get around the 4GB limit */
+/*    ffind->size = ( info->pFindFileData.nFileSizeHigh * MAXDWORD ) + info->pFindFileData.nFileSizeLow; */
       ffind->size = info->pFindFileData.nFileSizeLow;
    
       raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
@@ -483,7 +488,6 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    /* Do the conversions common for all platforms */
 
    ffind->szName[ _POSIX_PATH_MAX ] = '\0';
-   ffind->szName[ 8 + 1 + 3 ] = '\0';
 
    ffind->attr = hb_fsAttrFromRaw( raw_attr );
 
@@ -493,7 +497,7 @@ static void hb_fsFindFill( PHB_FFIND ffind )
    sprintf( ffind->szTime, "%02d:%02d:%02d", nHour, nMin, nSec );
 }
 
-PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
+PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr )
 {
    PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
    BOOL bFound;
@@ -507,7 +511,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
 #if defined(HB_OS_DOS)
 
    {
-      PHB_FFIND_INFO info = ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
 
       bFound = ( findfirst( pszFileName, &info->entry, ( USHORT ) hb_fsAttrToRaw( uiAttr ) ) == 0 );
    }
@@ -515,7 +519,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
 #elif defined(HB_OS_OS2)
 
    {
-      PHB_FFIND_INFO info = ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
 
       info->hFindFile = HDIR_CREATE;
 
@@ -531,7 +535,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
 #elif defined(HB_OS_WIN_32)
 
    {
-      PHB_FFIND_INFO info = ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
 
       info->hFindFile = FindFirstFile( pszFileName, &info->pFindFileData );
       info->dwAttr    = ( DWORD ) hb_fsAttrToRaw( uiAttr );
@@ -563,7 +567,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
 #elif defined(HB_OS_UNIX)
 
    {
-      PHB_FFIND_INFO info = ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+      PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
 
       info->dir = opendir( pszFileName );
 
@@ -613,7 +617,7 @@ PHB_FFIND hb_fsFindFirst( char * pszFileName, USHORT uiAttr )
 
 BOOL hb_fsFindNext( PHB_FFIND ffind )
 {
-   PHB_FFIND_INFO info = ffind->info;
+   PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
    BOOL bFound;
 
    /* Do platform dependant search */
@@ -686,7 +690,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
       if( ffind->info != NULL )
       {
-         PHB_FFIND_INFO info = ffind->info;
+         PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
 #if defined(HB_OS_DOS)
 

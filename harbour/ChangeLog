@@ -8,6 +8,24 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2001-12-18 01:03 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+
+   * source/common/hbffind.c
+   * include/hbapifs.h
+     ! Some fixes (MSVC, Win32, misc).
+
+   * source/rtl/Makefile
+     ! Fixed indentation in Makefile.
+
+   * source/compiler/gencobj.c
+     ! Fix provided by Jose Lalin
+       bDelTemp was initialized to TRUE by default and this was
+       causing that MAKE utilities rebuilds all the files in a 
+       project since the intermediate C file was deleted.
+
+   * source/rtl/gt_tpl/gt_tpl.c
+     ! Minor change.
+
 2001-12-17 17:02 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg

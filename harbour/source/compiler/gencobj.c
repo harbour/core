@@ -55,7 +55,7 @@ void hb_compGenCObj( PHB_FNAME pFileName )
    char * pszCfg;
    char * pszEnv;
    BOOL bVerbose = FALSE;   /* Don't show C compiler messages (default). */
-   BOOL bDelTmp = TRUE;     /* Delete intermediate C file (default). */
+   BOOL bDelTmp = FALSE;    /* Delete intermediate C file (default). */
    int iSuccess;
 
    /* First pass: build the C output */
