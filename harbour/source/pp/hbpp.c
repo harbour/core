@@ -441,8 +441,10 @@ static COMMANDS * TraSearch( char * cmdname, COMMANDS * sttraStart )
 
 static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
 {
-  static char mpatt[PATTERN_SIZE], rpatt[PATTERN_SIZE];
-  char cmdname[MAX_NAME];
+  static char mpatt[ PATTERN_SIZE ];
+  static char rpatt[ PATTERN_SIZE ];
+
+  char cmdname[ MAX_NAME ];
   COMMANDS * stcmd;
   int mlen,rlen;
   int ipos;
@@ -1101,8 +1103,9 @@ static int RemoveSlash( char * stroka )
 
 static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, BOOL com_or_xcom )
 {
-  static char expreal[MAX_EXP];
-  char exppatt[MAX_NAME];
+  static char expreal[ MAX_EXP ];
+
+  char exppatt[ MAX_NAME ];
   int lenreal = 0, maxlenreal = HB_PP_STR_SIZE, lenpatt;
   int rezrestr, ipos;
   char * ptr, * ptrtemp;
@@ -1530,12 +1533,13 @@ static void SkipOptional( char ** ptri )
 
 static void SearnRep( char * exppatt, char * expreal, int lenreal, char * ptro, int * lenres )
 {
+  static char expnew[ MAX_EXP ];
+
   int ifou, isdvig = 0;
   BOOL rezs;
   int kolmarkers;
   int lennew, i;
   char lastchar = '0';
-  static char expnew[MAX_EXP];
   char *ptr, *ptr2, *ptrOut = ptro;
 
   HB_TRACE(HB_TR_DEBUG, ("SearnRep(%s, %s, %d, %s, %p)", exppatt, expreal, lenreal, ptro, lenres));

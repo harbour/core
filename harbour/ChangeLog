@@ -1,3 +1,11 @@
+19991122-23:43 GMT+1 Victor Szel <info@szelvesz.hu>
+  * tests/regress/rt_hvm.prg
+    tests/regress/rt_misc.prg
+    + Enabled some tests which will make the VM die. (NIL:Classname)
+    ! Disabled some tests for Clipper which return trash.
+  * source/pp/hbpp.c
+    * Minor formatting (static declaration moved first).
+
 19991122-17:10 EDT David G. Holm <dholm@jsd-llc.com>
 
    * rt_misc.prg
@@ -26,7 +34,6 @@
   * source/compiler/harbour.y
       * fixed incorrect error generation if empty lines were placed between
       DO CASE statement and the first CASE statement
-      
       
 19991122-16:12 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/common/hbstr.c

@@ -222,11 +222,11 @@ FUNCTION Main_MISC()
    TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
    TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
    TEST_LINE( NationMsg(14)                   , "" )
-#ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.3b) */
+#ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e, 5.3b) */
    TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif
 
-/* These will cause a GPF in CA-Cl*pper (5.3b) */
+/* These will cause a GPF in CA-Cl*pper (5.2e, 5.3b) */
 #ifndef __CLIPPER__
    TEST_LINE( IsAffirm()                      , .F.    )
    TEST_LINE( IsAffirm(.F.)                   , .F.    )
@@ -245,7 +245,7 @@ FUNCTION Main_MISC()
    TEST_LINE( IsAffirm("no")                  , .F.    )
    TEST_LINE( IsAffirm("NO")                  , .F.    )
 
-/* These will cause a GPF in CA-Cl*pper (5.3b) */
+/* These will cause a GPF in CA-Cl*pper (5.2e, 5.3b) */
 #ifndef __CLIPPER__
    TEST_LINE( IsNegative()                    , .F.    )
    TEST_LINE( IsNegative(.F.)                 , .F.    )
@@ -370,7 +370,9 @@ FUNCTION Main_MISC()
 
    /* DESCEND() */
 
+#ifndef __CLIPPER__
    TEST_LINE( Descend()                       , NIL                                                 ) /* Bug in CA-Cl*pper, it returns undefined trash */
+#endif
    TEST_LINE( Descend( NIL )                  , NIL                                                 )
    TEST_LINE( Descend( { "A", "B" } )         , NIL                                                 )
 #ifdef __HARBOUR__
@@ -469,8 +471,8 @@ FUNCTION Main_MISC()
 #ifndef __CLIPPER__
    TEST_LINE( BIN2I()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
    TEST_LINE( BIN2I(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( BIN2I("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2I("")                       , 0                )
    TEST_LINE( BIN2I("AB")                     , 16961            )
    TEST_LINE( BIN2I("BA")                     , 16706            )
    TEST_LINE( BIN2I(Chr(255))                 , 255              )
@@ -485,8 +487,8 @@ FUNCTION Main_MISC()
 #ifndef __CLIPPER__
    TEST_LINE( BIN2W()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
    TEST_LINE( BIN2W(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( BIN2W("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2W("")                       , 0                )
    TEST_LINE( BIN2W("AB")                     , 16961            )
    TEST_LINE( BIN2W("BA")                     , 16706            )
    TEST_LINE( BIN2W(Chr(255))                 , 255              )
@@ -501,11 +503,13 @@ FUNCTION Main_MISC()
 #ifndef __CLIPPER__
    TEST_LINE( BIN2L()                                    , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
    TEST_LINE( BIN2L(100)                                 , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( BIN2L("")                                  , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2L("")                                  , 0                )
    TEST_LINE( BIN2L("ABCD")                              , 1145258561       )
    TEST_LINE( BIN2L("DCBA")                              , 1094861636       )
-   TEST_LINE( BIN2L(Chr(255))                            , 255              )
+#ifndef __CLIPPER__
+   TEST_LINE( BIN2L(Chr(255))                            , 255              ) /* Bug in CA-Cl*pper, it will return trash */
+#endif
    TEST_LINE( BIN2L(Chr(255)+Chr(255)+Chr(255))          , 16777215         )
    TEST_LINE( BIN2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) , -1               )
    TEST_LINE( BIN2L(Chr(0)+Chr(0)+Chr(0))                , 0                )
