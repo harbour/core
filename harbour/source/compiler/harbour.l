@@ -120,7 +120,7 @@ FalseValue    "."[f|n]"."
 Separator     {SpaceTab}
 
 %x            STRING1 STRING2 STRING3 STRING4START STRING4 STRING5
-%x            NEXT_ BREAK_ CASE_ DO_ WHILE_ WITH_ END_ FIELD_
+%x            NEXT_ BREAK_ CASE_ DO_ DOIDENT_ WHILE_ WITH_ END_ FIELD_
 %x            FOR_ FUNCTION_ IIF_ IF_ IN_ INIT_
 %x            RETURN_ RECOVER_
 %x            INVALIDNUM_ OTHERWISE_ PROCEDURE_
@@ -572,7 +572,7 @@ Separator     {SpaceTab}
                 hb_comp_iState =DO;
                 yyless( yyleng-4 );
               }
-<DO_>{Separator}+[_a-zA-Z\&]   { /* an identifier 'DO id WITH' or 'DO &id WITH' */
+<DO_>{Separator}+[\&]   { /* 'DO &id WITH' */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
                 if( hb_comp_iState == LOOKUP )
@@ -587,6 +587,20 @@ Separator     {SpaceTab}
                   return IDENTIFIER;
                 }
               }
+<DO_>{Separator}+[_a-zA-Z]   { /* an identifier 'DO id WITH' */
+                unput( yytext[ yyleng-1 ] );
+                if( hb_comp_iState == LOOKUP )
+                { /* it is first item in the line */
+                  BEGIN DOIDENT_;
+                }
+                else
+                { /* there is another item in line already */
+                  yylval.string = hb_compIdentifierNew( "DO", TRUE );
+                  hb_comp_iState =IDENTIFIER;
+                  BEGIN 0;
+                  return IDENTIFIER;
+                }
+              }
 <DO_>{Separator}*(.|\n)         { /* end of line or any operator */
                 BEGIN 0;
                 unput( yytext[ yyleng-1 ] );
@@ -594,6 +608,12 @@ Separator     {SpaceTab}
                 hb_comp_iState =IDENTIFIER;
                 return IDENTIFIER;
               }
+<DOIDENT_>{Identifier}			{ /* DO identifier WITH */
+                BEGIN 0;
+                yylval.string = hb_compIdentifierNew( yytext, TRUE );
+                hb_comp_iState =IDENTIFIER;
+                return DOIDENT;
+					}
 %{
 /* ************************************************************************ */
 %}
@@ -1340,19 +1360,25 @@ Separator     {SpaceTab}
 %{
 /* ************************************************************************ */
 %}
-"while"|"whil"  BEGIN WHILE_;
+"while"|"whil"  { BEGIN WHILE_; 
+						/* store it for later use */
+						yylval.string = hb_compIdentifierNew( yytext, TRUE ); 
+					 }
 <WHILE_>{Separator}*        ;
 <WHILE_>\n      { /* end of line */
                 BEGIN 0;
                 unput( '\n' );
                 if( hb_comp_iState == DO )
-                { /* we have DO while - replace it with while() */
-                  unput( ')' ); unput( '(' );
+                { /* we have DO while */
+                  return DOIDENT;
                 }
-                yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
-                return IDENTIFIER;
+					 else
+					 {
+                	yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
+                	return IDENTIFIER;
+					 }
               }
-<WHILE_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "case" */
+<WHILE_>[\:\=\|\$\%\*\,\/\]\)\}\^] { /* there is an operator after "while" */
                BEGIN 0;
                yylval.string = hb_compIdentifierNew( "WHILE", TRUE );
                unput( yytext[ yyleng-1 ] );

@@ -8,6 +8,16 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2003-10-30 19:50 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+	* source/compiler/harbour.l
+	* source/compiler/harbour.y
+		*Fixed support for DO <procname> [WITH ...] command
+		The procedure name is not "uppercased"
+		For example:
+			DO MyProc
+		The compiler look for MyProc.prg file now 
+		(instead of MYPROC.prg)
+		
 2003-10-30 10:45 UTC+0100 Tomaz Zupan <tomaz.zupan@orpo.si>
    * source/rtl/alert.prg
      ! Reverted changes from 2003-09-07

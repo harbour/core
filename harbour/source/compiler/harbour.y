@@ -178,7 +178,7 @@ static void hb_compDebugStart( void ) { };
 %token AS_ARRAY AS_BLOCK AS_CHARACTER AS_CLASS AS_DATE AS_LOGICAL AS_NUMERIC AS_OBJECT AS_VARIANT DECLARE OPTIONAL DECLARE_CLASS DECLARE_MEMBER
 %token AS_ARRAY_ARRAY AS_BLOCK_ARRAY AS_CHARACTER_ARRAY AS_CLASS_ARRAY AS_DATE_ARRAY AS_LOGICAL_ARRAY AS_NUMERIC_ARRAY AS_OBJECT_ARRAY
 %token PROCREQ GET
-%token CBSTART
+%token CBSTART DOIDENT
 
 /*the lowest precedence*/
 /*postincrement and postdecrement*/
@@ -207,6 +207,7 @@ static void hb_compDebugStart( void ) { };
 /*the highest precedence*/
 
 %type <string>  IdentName IDENTIFIER LITERAL SendId MACROVAR MACROTEXT CompTimeStr
+%type <string>	DOIDENT WHILE
 %type <valDouble>  NUM_DOUBLE
 %type <valInteger> NUM_INTEGER
 %type <valLong>    NUM_LONG
@@ -1664,8 +1665,11 @@ DoProc     : DO DoName
                { $$ = hb_compExprNewFunCall( $2, NULL ); }
            | DO DoName WITH DoArgList
                { $$ = hb_compExprNewFunCall( $2, $4 ); }
+			  | DOIDENT { hb_compAutoOpenAdd( $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_strupr($1) ), NULL ); }
+           | DOIDENT WITH DoArgList
+               { hb_compAutoOpenAdd( $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName(hb_strupr($1)), $3 ); }
            | WHILE WITH DoArgList
-               { hb_compAutoOpenAdd( "WHILE" ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew("WHILE", TRUE) ), $3 ); }
+               { hb_compAutoOpenAdd( $1 ); $$ = hb_compExprNewFunCall( hb_compExprNewFunName( hb_compIdentifierNew(hb_strupr($1), TRUE) ), $3 ); }
            ;
 
 DoArgList  : ','                       { $$ = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil() ), hb_compExprNewNil() ); }
