@@ -925,8 +925,8 @@ IndexList  : '[' Expression               { $$ = hb_compExprNewArrayAt( $<asExpr
            | IndexList ']' '[' Expression { $$ = hb_compExprNewArrayAt( $1, $4 ); }
            ;
 
-ElemList   : EmptyExpression                 { $$ = hb_compExprNewList( $1 ); }
-           | ElemList ',' EmptyExpression    { $$ = hb_compExprAddListExpr( $1, $3 ); }
+ElemList   : Argument                { $$ = hb_compExprNewList( $1 ); }
+           | ElemList ',' Argument   { $$ = hb_compExprAddListExpr( $1, $3 ); }
            ;
 
 CodeBlock  : '{' '|' { $<asExpr>$ = hb_compExprNewCodeBlock(); } BlockNoVar

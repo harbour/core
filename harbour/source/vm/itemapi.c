@@ -1033,6 +1033,9 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopy(%p, %p)", pDest, pSource));
 
+   if( HB_IS_BYREF( pDest ) )
+      pDest = hb_itemUnRef( pDest );
+      
    if( pDest->type )
       hb_itemClear( pDest );
 

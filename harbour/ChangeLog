@@ -1,3 +1,26 @@
+20000423-19:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *source/compiler/harbour.y
+	*added support for using references as an array element
+	{ 1, @var }
+
+    *source/vm/itemapi.c
+	*added support for handling of references in arrays
+	Example:
+	    a := 1
+	    CallProc( { @a } )
+	    ? a		//prints: 2
+	    
+	    PROC CallProc( x )
+	    LOCAL y:=x[ 1 ]
+		y++
+
+    NOTE: references in arrays cannot be used with usual operators
+    For example (using the above code)
+	? y + x[ 1 ]
+    will cause 'argument error: +' because hb_vmPlus() (and others)
+    doesn't dereference arguments.
+
 20000423-18:18 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
