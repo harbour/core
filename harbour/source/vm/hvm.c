@@ -92,6 +92,9 @@
   #include "hbpp.h"
 #endif
 
+/* DEBUG only*/
+/*#include <windows.h>*/
+
 typedef struct _SYMBOLS
 {
    PHB_SYMB pModuleSymbols;  /* pointer to a one module own symbol table */
@@ -1309,7 +1312,7 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
 
             if( hb_vm_iExtraIndex )
             {
-               HB_ITEM *aExtraItems = hb_xgrab( sizeof( HB_ITEM ) * hb_vm_iExtraIndex );
+               HB_ITEM *aExtraItems = (HB_ITEM *) hb_xgrab( sizeof( HB_ITEM ) * hb_vm_iExtraIndex );
                int i;
 
                /* Storing and removing the extra indexes. */
@@ -3343,7 +3346,9 @@ HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, ULONG ulArgCount, ... )
       hb_vmPush( va_arg( va, PHB_ITEM ) );
    va_end( va );
 
-   hb_vmDo( ulArgCount );
+   /* take care here, possible loss of data long to short ... */
+   /* added an explicit casting here for VC++ JFL */
+   hb_vmDo( (USHORT) ulArgCount );
 
    return &hb_stack.Return;
 }
@@ -4543,7 +4548,7 @@ void hb_vmRequestCancel( void )
       while ( buffer[0] )
       {
          i2 = i;
-         hb_procname( i++, buffer );
+         hb_procname( i++, buffer, FALSE );
 
          if( buffer[0] == 0 )
             break;

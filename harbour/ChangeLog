@@ -1,3 +1,22 @@
+2001-07-26 22:50 UTC+1 JFL (mafact) <jfl@mafact.com>
+   * MAKEFILE. VC
+   * HB_SLEX.VC
+     Minor typing error with genobj.c, .obj ...
+   * include\hbapi.h
+     hb_procname( int iLevel, char * szName, BOOL bskipBlock );
+     added boolean param to know if called from procname or
+     methodname...
+   * source/vm/proc.c
+     Special treatment for inline method to display class:(b)methodname
+   * source/vm/classes.c
+     hb_msgSuper() changed behaviour, creating a fake object
+     to be treated by hb_vmDdo() and hb_vmSend()
+   * source/vm/hvm.c
+     changed hb_vmDo() hb_vmSend() to work with the new fake objects
+     Minor type casting needed by VC++
+     source\vm\hvm.c(1315) : 'void *' to 'struct _HB_ITEM *'
+     source\vm\hvm.c(3359) : 'unsigned long' to 'unsigned short
+
 2001-07-26 14:35 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/rtl/gtsln/gtsln.c

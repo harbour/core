@@ -868,7 +868,7 @@ $(HARBOUR_EXE) : \
    $(COMPILER_DIR)\hbgenerr.c \
    $(COMPILER_DIR)\genobj32.c \
    $(COMPILER_DIR)\genc.c \
-   $(OBJ_DIR)\gencobj.obj \
+   $(COMPILER_DIR)\gencobj.c \
    $(COMPILER_DIR)\genhrb.c \
    $(COMPILER_DIR)\genjava.c \
    $(COMPILER_DIR)\expropta.c \

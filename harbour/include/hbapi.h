@@ -491,7 +491,7 @@ extern void     hb_conXSaveRestRelease( void ); /* release the save/restore API 
 extern char *   hb_compReservedName( char * szName ); /* determines if a string contains a reserve word */
 
 /* misc */
-extern char *   hb_procname( int iLevel, char * szName ); /* retrieve a procedure name into a buffer */
+extern char *   hb_procname( int iLevel, char * szName, BOOL bskipBlock ); /* retrieve a procedure name into a buffer */
 
 /* macro compiler */
 

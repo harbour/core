@@ -57,6 +57,13 @@
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    PROCFILE()
  *
+ * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
+ *    Adding the MethodName() just calling Procname()
+ *    call to hb_objGetRealClsName in case of object
+ *    Special treatment in case of Object and __Eval (only for methodname)
+ *    skipping block and adding (b) before the method name
+ *
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -68,14 +75,14 @@ HB_FUNC( METHODNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
 
-   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName ) );
+   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, TRUE ) );
 }
 
 HB_FUNC( PROCNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
 
-   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName ) );
+   hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, FALSE ) );
 }
 
 HB_FUNC( PROCLINE )
@@ -86,7 +93,7 @@ HB_FUNC( PROCLINE )
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-   if( iLevel == -1 )
+   if( iLevel < 0 )
       hb_retni( ( *pBase )->item.asSymbol.lineno );
    else
       hb_retni( 0 );
@@ -107,23 +114,49 @@ HB_FUNC( PROCFILE )
 /* NOTE: szName size must be an at least:
          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 [vszakats] */
 
-char * hb_procname( int iLevel, char * szName )
+char * hb_procname( int iLevel, char * szName, BOOL bskipBlock  )
 {
    PHB_ITEM * pBase = hb_stack.pBase;
+   char * szTstName ;
+   BOOL lcb = FALSE ;
+   int iLev = iLevel;
 
    while( ( iLevel-- > 0 ) && pBase != hb_stack.pItems )
       pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
 
-   if( iLevel == -1 )
+      szTstName = ( *pBase )->item.asSymbol.value->szName ;
+
+      if (bskipBlock)
+      {
+       /* Is it an inline method ? if so back one more ... */
+       if ( ( strcmp( szTstName, "__EVAL" ) == 0 ) &&  pBase != hb_stack.pItems)
+        {
+         pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+         lcb = TRUE ;
+        }
+      }
+
+   if( iLevel < 0 )
    {
       if( ( *( pBase + 1 ) )->type == HB_IT_ARRAY )  /* it is a method name */
       {
          strcpy( szName, hb_objGetRealClsName( *( pBase + 1 ), ( *pBase )->item.asSymbol.value->szName ) );
-         strcat( szName, ":" );
+         if (lcb)
+          strcat( szName, ":(b)" );
+         else
+          strcat( szName, ":" );
          strcat( szName, ( *pBase )->item.asSymbol.value->szName );
       }
       else
+       {
+        if (lcb)  /* Back to standart code block */
+         {
+          pBase = hb_stack.pBase;
+          while( ( iLev-- > 0 ) && pBase != hb_stack.pItems )
+           pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackbase;
+         }
          strcpy( szName, ( *pBase )->item.asSymbol.value->szName );
+       }
    }
    else
       strcpy( szName, "" );
