@@ -513,11 +513,11 @@ HB_FUNC( TRANSFORM )
       {
          BOOL bDone = FALSE;
 
-         szResult = ( char * ) hb_xgrab( ulPicLen + 1 );
          ulResultPos = 1;
 
          if( ulPicLen )                      /* Template string          */
          {
+            szResult = ( char * ) hb_xgrab( ulPicLen + 1 );
             switch( *szPic )
             {
                case 'y':                     /* Yes/No                   */
@@ -549,7 +549,10 @@ HB_FUNC( TRANSFORM )
             }
          }
          else
+         {
+            szResult = ( char * ) hb_xgrab( 2 );
             *szResult = hb_itemGetL( pValue ) ? 'T' : 'F';
+         }
 
          /* Any chars left */
          if( ( uiPicFlags & PF_REMAIN ) && ulPicLen )
@@ -560,7 +563,7 @@ HB_FUNC( TRANSFORM )
 
             /* Logical written ? */
             if( ! bDone )
-               szResult[ ulResultPos++ ] = hb_itemGetL( pValue ) ? 'T' : 'F';
+               szResult[ ulResultPos - 1 ] = hb_itemGetL( pValue ) ? 'T' : 'F';
          }
       }
       else
@@ -604,7 +607,10 @@ HB_FUNC( TRANSFORM )
          char * szStr = hb_itemStr( pValue, NULL, NULL );
 
          if( szStr )
-            hb_retc_buffer( szStr );
+         {
+            hb_retc( szStr );
+            hb_xfree( szStr );
+         }
          else
             hb_retc( NULL );
       }
@@ -630,4 +636,3 @@ HB_FUNC( TRANSFORM )
    if( bError )
       hb_errRT_BASE_SubstR( EG_ARG, 1122, NULL, "TRANSFORM", 2, pValue, hb_paramError( 2 ) );
 }
-
