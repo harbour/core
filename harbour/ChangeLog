@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2005-02-16 13:52 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
+  * source/vm/classes.c
+    hb_objGetpMethod() compiled as extern "C" for MSVC compatibility with xHarbour
+
 2005-02-01 21:05 UTC+0100 Tomaz Zupan <tomaz/at/orpo.si>
   * harbour.spec
     Returned optimization to O3. Problems with Mandrake/gcc 
