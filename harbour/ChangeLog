@@ -8,6 +8,12 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-03 18:37 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/dates.c
+    * More compliant for certain strange formats. eg: DD/MMM/YYYY
+  * source/rtl/transfrm.c
+    * More compliant, resolve several hbtest errors.
+
 2002-07-02 01:14 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * contrib/rdd_ads/adsfunc.c
       * Fixed issues reported by Alex Schaft:
