@@ -3342,11 +3342,15 @@ STATIC FUNCTION MatchRule( sKey, sLine, aRules, aResults, bStatement, bUpper )
 
          ENDIF
 
-         IF nMatch < nMatches .AND. aRules[Counter][2][nMatch + 1][2] == 0 // Non Optional ONLY!
-            sNextAnchor := aRules[Counter][2][nMatch + 1][3]
-         ELSE
-            sNextAnchor := NIL
-         ENDIF
+         sNextAnchor := NIL
+         nTemp       := 1
+         WHILE nMatch + nTemp <= nMatches
+            IF aRules[Counter][2][nMatch + nTemp][2] == 0 // Non Optional ONLY!
+               sNextAnchor := aRules[Counter][2][nMatch + nTemp][3]
+               EXIT
+            ENDIF
+            nTemp++
+         ENDDO
 
          IF bDbgMatch
             IF sAnchor == NIL

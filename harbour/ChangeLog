@@ -1,3 +1,7 @@
+2001-06-21 10:50 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * contrib/dot/pp.prg
+     ! Changed MatchRule() to set sNextAnchor (for NextExp()) by skipping to next NON optional Anchor.
+
 2001-06-21 10:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.prg
      ! Changed MatchRule() to set sNextAnchor (for NextExp()) ONLY for NON optional Anchor.
