@@ -30,8 +30,8 @@
  *      <lTrueOrFalse> True if passed char is an affirmation char,otherwise
  *      false   </par>
  *  $DESCRIPTION$
- *      This function it is used to check if a user input is true or not
- *      regarding of the msgxxx module used.   </par>
+ *      This function is used to check if a user's input is true or not
+ *      according to the msgxxx module used.   </par>
  *  $EXAMPLES$
  *      // Wait until user enters Y
  *      DO WHILE !ISAFFIRM( cYesNo )
@@ -55,17 +55,17 @@
  *  $CATEGORY$
  *      NATION
  *  $ONELINER$
- *      Checks if passed char is a negation char
+ *      Checks if passed char is a negation char.
  *  $SYNTAX$
  *      ISNEGATIVE( <cChar> ) --> <lTrueOrFalse>
  *  $ARGUMENTS$
  *      <cChar> is a char or string of chars   </par>
  *  $RETURNS$
- *      <lTrueOrFalse> True if passed char is a negation char,otherwise
- *      false   </par>
+ *      <lTrueOrFalse> True if passed char is a negation char, otherwise
+ *      false.   </par>
  *  $DESCRIPTION$
- *      This function it is used to check if a user input is true or not
- *      regarding of the msgxxx module used.   </par>
+ *      This function is used to check if a user's input is true or not
+ *      according to the msgxxx module used.   </par>
  *  $EXAMPLES$
  *      // Wait until user enters N
  *      DO WHILE !ISNEGATIVE( cYesNo )
@@ -93,13 +93,13 @@
  *  $SYNTAX$
  *      NATIONMSG( <nMsg> ) --> <cMessage>
  *  $ARGUMENTS$
- *      <nMsg> is the message number you want to get   </par>
+ *      <nMsg> is the message number you want to get.   </par>
  *  $RETURNS$
- *      <cMessage> If <nMsg> is a valid message selector return the message,
- *      if <nMsg> is nil returns "Invalid Argument" and if <nMsg> is any
- *      other type it returns an empty string.   </par>   </par>
+ *      <cMessage> If <nMsg> is a valid message selector, returns the message.
+ *      If <nMsg> is nil returns "Invalid Argument", and if <nMsg> is any
+ *      other type it returns an empty string.   </par>
  *  $DESCRIPTION$
- *      This functions returns international message descriptions.   </par>
+ *      NATIONMSG() returns international message descriptions.   </par>
  *  $EXAMPLES$
  *      // Displays "Sure Y/N: "  and waits until user enters Y
  *      // Y/N is the string for NATIONMSG( 12 ) with default natmsg module.

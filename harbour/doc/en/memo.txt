@@ -20,22 +20,22 @@
  *  $CATEGORY$
  *      Strings
  *  $ONELINER$
- *      Converts hard and soft carriages within strings.
+ *      Converts hard and soft carriage returns within strings.
  *  $SYNTAX$
  *      MEMOTRAN( <cString>, <cHard>, <cSoft> ) --> <cConvertedString>
  *  $ARGUMENTS$
- *      <cString> is a string of chars to convert.   
+ *      <cString> is a string of chars to convert.
 
- *      <cHard> is the character to replace hard carriages with. If not
- *      specified defaults to semicolon.   
+ *      <cHard> is the character to replace hard returns with. If not
+ *      specified defaults to semicolon.
 
- *      <cSoft> is the character to replace soft carriages with. If not
- *      specified defaults to single space.   
+ *      <cSoft> is the character to replace soft returns with. If not
+ *      specified defaults to single space.
  *  $RETURNS$
- *      <cConvertedString> Trasformed string.   
+ *      <cConvertedString> Trasformed string.
  *  $DESCRIPTION$
- *      Returns a string/memo with carriage chars converted to specified
- *      chars.   
+ *      Returns a string/memo with carriage return chars converted to
+ *      specified chars.
  *  $EXAMPLES$
  *      ? MEMOTRAN( DATA->CNOTES )
  *  </fixed>
@@ -47,7 +47,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOTRAN() is fully CA-Clipper compliant.   
+ *      MEMOTRAN() is fully CA-Clipper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -59,18 +59,18 @@
  *  $FUNCNAME$
  *      HARDCR()
  *  $CATEGORY$
- *      STRINGS
+ *      Strings
  *  $ONELINER$
- *      Replace all soft cariages returns with hard cariages returs
+ *      Replace all soft carriage returns with hard carriages returns.
  *  $SYNTAX$
  *      HARDCR( <cString> ) --> <cConvertedString>
  *  $ARGUMENTS$
- *      <cString> is a string of chars to convert.   
+ *      <cString> is a string of chars to convert.
  *  $RETURNS$
- *      <cConvertedString> Trasformed string.   
+ *      <cConvertedString> Trasformed string.
  *  $DESCRIPTION$
- *      Returns a string/memo with soft carriages chars converted to
- *      hard carraige char.   
+ *      Returns a string/memo with soft carriage return chars converted to
+ *      hard carriage return chars.
  *  $EXAMPLES$
  *      ? HARDCR( Data->CNOTES )
  *  </fixed>
@@ -82,7 +82,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HARDCR() is fully CA-Clipper compliant.   
+ *      HARDCR() is fully CA-Clipper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

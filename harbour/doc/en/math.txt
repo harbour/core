@@ -23,12 +23,12 @@
  *  $SYNTAX$
  *      ABS(<nNumber>) --> <nAbsNumber>
  *  $ARGUMENTS$
- *      <nNumber> Any number   
+ *      <nNumber> Any number.
  *  $RETURNS$
- *      <nAbsNumber> The absolute numeric value    
+ *      <nAbsNumber> The absolute numeric value.
  *  $DESCRIPTION$
- *      This function yeilds the absolute value of the numeric value or
- *      expression <nNumber>   
+ *      This function yields the absolute value of the numeric value or
+ *      expression <nNumber>.
  *  $EXAMPLES$
  *      Proc Main()
  *
@@ -45,7 +45,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant       
+ *      This function is CA-Clipper compliant.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -61,25 +61,25 @@
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
- *      Calculates the exponential of a real number
+ *      Calculates the value of e raised to the passed power.
  *  $SYNTAX$
- *      EXP( <nNumber> ) --> <nExpoent>
+ *      EXP( <nNumber> ) --> <nValue>
  *  $ARGUMENTS$
- *      <nNumber> Any  real number   
+ *      <nNumber> Any  real number.
  *  $RETURNS$
- *      <nExpoent> The expoent number of <nNumber>   
+ *      <nValue>  The anti-logarithm of <nNumber>
  *  $DESCRIPTION$
- *      This function returns the exponential of any given real number
- *      <nNumber>          
+ *      This function returns the value of e raised to the power of
+ *      <nNumber>.  It is the inverse of LOG().
  *  $EXAMPLES$
- *      ? EXP(632512)
+ *      ? EXP(45)
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   
+ *      This function is CA-Clipper compliant.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -93,28 +93,28 @@
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
- *      Return the integer port of a numeric value
+ *      Return the integer port of a numeric value.
  *  $SYNTAX$
  *      INT( <nNumber> ) --> <nIntNumber>
  *  $ARGUMENTS$
- *      <nNumber> Any  numeric value 
+ *      <nNumber> Any  numeric value.
  *  $RETURNS$
- *      <nIntNumber> The integer portion of the numeric value   
+ *      <nIntNumber> The integer portion of the numeric value.
  *  $DESCRIPTION$
- *      This function convert a numeric expression to an integer. all decimals
- *      digit are truncated.This function does not round a value upward or
- *      downward;it merely truncated a numeric expression.  
+ *      This function converts a numeric expression to an integer. All
+ *      decimal digits are truncated. This function does not round a value
+ *      upward or downward; it merely truncates a number at the decimal point.
  *  $EXAMPLES$
- *      SET Decimal to 5   
+ *      SET Decimal to 5
  *      ? INT(632512.62541)
  *      ? INT(845414111.91440)
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   
+ *      This function is CA-Clipper compliant.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -128,27 +128,27 @@
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
- *      Returns the natural logarithm of a number
+ *      Returns the natural logarithm of a number.
  *  $SYNTAX$
  *      LOG( <nNumber> ) --> <nLog>
  *  $ARGUMENTS$
- *      <nNumber> Any numeric expression  
+ *      <nNumber> Any numeric expression.
  *  $RETURNS$
- *      <nExpoent> The natural logaritmh of <nNumber>   
+ *      <nExponent> The natural logarithm of <nNumber>.
  *  $DESCRIPTION$
- *      This function will return the natural logarithm of the number <nNumber>.  
- *      If <nNumber> is 0 or is less them 0,a numeric overflow condition exist,
- *      witch is depicted on the display device as a series of asterisks.   
- *      This functions is the inverse of EXP() function.   
+ *      This function returns the natural logarithm of the number <nNumber>.
+ *      If <nNumber> is 0 or less than 0, a numeric overflow occurs,
+ *      which is depicted on the display device as a series of asterisks.
+ *      This function is the inverse of EXP().
  *  $EXAMPLES$
  *      ? LOG(632512)
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   
+ *      This function is CA-Clipper compliant.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -163,32 +163,32 @@
  *  $CATEGORY$
  *      MATH
  *  $ONELINER$
- *      Returns the maximum of either two number or two dates.
+ *      Returns the maximum of two numbers or dates.
  *  $SYNTAX$
  *      MAX(<xValue>,<xValue1>)  --> <xMax>
  *  $ARGUMENTS$
- *      <xValue> Any date or numeric value.   
+ *      <xValue>  Any date or numeric value.
  *
- *      <xValue1> Any date or numeric value.   
+ *      <xValue1> Any date or numeric value (same type as <xValue>).
  *  $RETURNS$
- *      <xMax> Eighter a numeric or date value   
+ *      <xMax> The larger numeric (or later date) value.
  *  $DESCRIPTION$
  *      This function returns the larger of the two passed espressions. If
- *      <xValue> and <xValue1> are numeric data types,the value returned by
+ *      <xValue> and <xValue1> are numeric data types, the value returned by
  *      this function will be a numeric data type as well and will be the
- *      larger of the two numbers passed to it.If <xValue> and <xValue1> are
- *      date data types,the return value for this function will be a date
- *      data type as well;it will be the latest of the two dates passed to it.  
+ *      larger of the two numbers passed to it. If <xValue> and <xValue1> are
+ *      date data types, the return value will be a date data
+ *      type as well. It will be the later of the two dates passed to it.
  *  $EXAMPLES$
  *      ? MAX(214514214,6251242142)
- *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')  
+ *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant   
+ *      This function is Ca-Clipper compliant.
  *  $PLATFORMS$
- *      All    
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -202,30 +202,29 @@
  *  $CATEGORY$
  *      MATH
  *  $ONELINER$
- *      Determines a minumum value or dates.
+ *      Determines the minumum of two numbers or dates.
  *  $SYNTAX$
  *      MIN(<xValue>,<xValue1>)  --> <xMin>
  *  $ARGUMENTS$
- *      <xValue> Any date or numeric value.   
+ *      <xValue>  Any date or numeric value.
  *
- *      <xValue1> Any date or numeric value.   
+ *      <xValue1> Any date or numeric value.
  *  $RETURNS$
- *      <xMin> Eighter a numeric or date value   
+ *      <xMin>  The smaller numeric (or earlier date) value.
  *  $DESCRIPTION$
- *      This function returns the smaller of the two passed espressions. The
- *      value of this function will be the result of this comparasion.If <xValue>
- *      is a numeric data type,<xValue1> must so be a numeric data type.The
- *      same may be said if <xValue> is a date data type.   
+ *      This function returns the smaller of the two passed espressions.
+ *      <xValue> and <xValue1> must be the same data type. If numeric, the
+ *      smaller number is returned. If dates, the earlier date is returned.
  *  $EXAMPLES$
  *      ? MIN(214514214,6251242142)
- *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')  
+ *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant   
+ *      This function is Ca-Clipper compliant.
  *  $PLATFORMS$
- *      All    
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -239,18 +238,17 @@
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
- *      Return the modulus of two numbers
+ *      Return the modulus of two numbers.
  *  $SYNTAX$
- *      MOD( <nNumber>,<nNumber1>) -->  <nReturn>
+ *      MOD( <nNumber>,<nNumber1>) -->  <nRemainder>
  *  $ARGUMENTS$
- *      <nNumber>  Numerator in a divisional expression   
+ *      <nNumber>  Numerator in a divisional expression.
  *
- *      <nNumber1> Denominator in a divisional expression     
+ *      <nNumber1> Denominator in a divisional expression.
  *  $RETURNS$
- *      <nReturn>  Remind from the division   
+ *      <nRemainder>  The remainder after the division operation.
  *  $DESCRIPTION$
- *      This functuion will return a value that is correspondent to the
- *      reminder of one number divided by another   
+ *      This functuion returns the remainder of one number divided by another.
  *  $EXAMPLES$
  *      ? MOD(12,8.521)
  *      ? Mod(12,0)
@@ -259,9 +257,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Function is Ca-Clipper compliant   
+ *      This Function is Ca-Clipper compliant.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -275,27 +273,27 @@
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
- *      Calculates the square root of a number
+ *      Calculates the square root of a number.
  *  $SYNTAX$
  *      SQRT( <nNumber> ) --> <nSqrt>
  *  $ARGUMENTS$
- *      <nNumber> Any  numeric value
+ *      <nNumber> Any  numeric value.
  *  $RETURNS$
- *      <nSqrt> Square root of <number>
+ *      <nSqrt>   The square root of <number>.
  *  $DESCRIPTION$
- *      This function returns the square rot of <nNumber>. The precsion of
- *      this evaluation is based solly on the settings of the SET DECIMAL TO
- *      command.Any negative number passed as <nNumber> will always return a 0.
+ *      This function returns the square root of <nNumber>. The precision of
+ *      this evaluation is based solely on the settings of the SET DECIMAL TO
+ *      command. Any negative number passed as <nNumber> will always return a 0.
  *  $EXAMPLES$
- *      SET Decimal to 5   
+ *      SET Decimal to 5
  *      ? SQRT(632512.62541)
- *      ? SQRT(845414111.91440)     
+ *      ? SQRT(845414111.91440)
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   
+ *      This function is CA-Clipper compliant.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -309,30 +307,30 @@
  *  $CATEGORY$
  *      Math
  *  $ONELINER$
- *      Rounds off a numeric expression
+ *      Rounds off a numeric expression.
  *  $SYNTAX$
  *      ROUND( <nNumber>,<nPlace> ) --> <nResult>
  *  $ARGUMENTS$
- *      <nNumber> Any numeric value
+ *      <nNumber> Any numeric value.
  *
- *      <nPlace>  The number of places to round to
+ *      <nPlace>  The number of places to round to.
  *  $RETURNS$
- *      <nResult> Rounded number
+ *      <nResult> The rounded number.
  *  $DESCRIPTION$
  *      This function rounds off the value of <nNumber> to the number of
- *      decimal places specified by <nPlace>.If the value of <nPlace> is a
- *      negative number,the function will atempt to round <nNumber> in whole
- *      numbers;numbers from 5 through 9 will be rounded up, all others will
+ *      decimal places specified by <nPlace>. If the value of <nPlace> is a
+ *      negative number, the function will attempt to round <nNumber> in whole
+ *      numbers. Numbers from 5 through 9 will be rounded up, all others will
  *      be rounded down.
  *  $EXAMPLES$
  *      ? ROUND(632512.62541,5)
- *      ? ROUND(845414111.91440,3)     
+ *      ? ROUND(845414111.91440,3)
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.   
+ *      This function is CA-Clipper compliant.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
