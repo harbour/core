@@ -22,6 +22,8 @@
    You can contact me at: bruno@issnet.net
  */
 
+#define SUPERTABLE ( &dbfSuper )
+
 #include <time.h>
 #include <ctype.h>
 #include "extend.h"
@@ -77,9 +79,38 @@ HB_INIT_SYMBOLS_END( dbf1__InitSymbols )
 
 static ERRCODE ReadBuffer( AREAP pArea, LONG lRecNo );
 
+static RDDFUNCS dbfSuper = { 0 };
+
 /*
  * -- DBF METHODS --
  */
+
+static ERRCODE Close( AREAP pArea )
+{
+   if( pArea->lpFileInfo->hFile != FS_ERROR )
+      hb_fsClose( pArea->lpFileInfo->hFile );
+   pArea->lpFileInfo->hFile = FS_ERROR;
+
+   return SUPER_CLOSE( pArea );
+}
+
+static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
+{
+   pArea->lpFileInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
+   if( pArea->lpFileInfo->hFile == FS_ERROR )
+      return FAILURE;
+
+   if( SELF_WRITEDBHEADER( pArea ) == FAILURE )
+   {
+      hb_fsClose( pArea->lpFileInfo->hFile );
+      pArea->lpFileInfo->hFile = FS_ERROR;
+      return FAILURE;
+   }
+
+   hb_fsClose( pArea->lpFileInfo->hFile );
+   pArea->lpFileInfo->hFile = FS_ERROR;
+   return SUCCESS;
+}
 
 static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
 {
@@ -215,6 +246,7 @@ static ERRCODE GoTop( AREAP pArea )
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
    HB_SYMBOL_UNUSED( pArea );
+
    switch( uiIndex )
    {
       case DBI_TABLEEXT:
@@ -230,7 +262,35 @@ static ERRCODE Lock( AREAP pArea, LPDBLOCKINFO pLockInfo )
       pLockInfo->fResult = TRUE;
    else
       pLockInfo->fResult = FALSE;
+
    return SUCCESS;
+}
+
+static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
+{
+   USHORT uiFlags;
+
+   if( SUPER_OPEN( pArea, pOpenInfo ) == FAILURE )
+      return FAILURE;
+   
+   uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
+   uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
+   pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
+   
+   if( pArea->lpFileInfo->hFile == FS_ERROR )
+   {
+      SELF_CLOSE( pArea );
+      return FAILURE;
+   }
+
+   if( SELF_READDBHEADER( pArea ) == FAILURE )
+   {
+      SELF_CLOSE( pArea );
+      return FAILURE;
+   }
+   pArea->lpExtendInfo->fExclusive = !pOpenInfo->fShared;
+
+   return SELF_GOTOP( pArea );
 }
 
 static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
@@ -346,6 +406,9 @@ static ERRCODE PutValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
 static ERRCODE RawLock( AREAP pArea, USHORT uiAction, LONG lRecNo )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( lRecNo );
+
    switch( uiAction )
    {
    }
@@ -564,8 +627,6 @@ static ERRCODE WriteDBHeader( AREAP pArea )
    return SUCCESS;
 }
 
-static RDDFUNCS dbfSuper = { 0 };
-
 static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              0,               /* Super Eof */
                              0,               /* Super Found */
@@ -589,11 +650,11 @@ static RDDFUNCS dbfTable = { 0,               /* Super Bof */
                              RecCount,
                              RecNo,
                              0,               /* Super SetFieldsExtent */
-                             0,               /* Super Close */
-                             0,               /* Super Create */
+                             Close,
+                             Create,
                              Info,
                              0,               /* Super NewArea */
-                             0,               /* Super Open */
+                             Open,
                              0,               /* Super Release */
                              0,               /* Super StructSize */
                              0,               /* Super SysName */

@@ -22,6 +22,8 @@
    You can contact me at: bruno@issnet.net
  */
 
+#define SUPERTABLE ( &ntxSuper )
+
 #include "extend.h"
 #include "init.h"
 #include "itemapi.h"
@@ -40,6 +42,10 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 #endif
 
 static RDDFUNCS ntxSuper = { 0 };
+
+/*
+ * -- NTX METHODS --
+ */
 
 static RDDFUNCS ntxTable = { 0 };
 

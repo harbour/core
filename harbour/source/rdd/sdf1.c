@@ -22,6 +22,8 @@
    You can contact me at: bruno@issnet.net
  */
 
+#define SUPERTABLE ( &sdfSuper )
+
 #include "extend.h"
 #include "init.h"
 #include "rddapi.h"
@@ -39,6 +41,10 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 #endif
 
 static RDDFUNCS sdfSuper = { 0 };
+
+/*
+ * -- SDF METHODS --
+ */
 
 static RDDFUNCS sdfTable = { 0 };
 

@@ -32,6 +32,7 @@
 #include "ctoharb.h"
 #include "rddsys.ch"
 #include "set.ch"
+#include "langapi.h"
 
 #define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH       32
 #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32
@@ -41,7 +42,6 @@ typedef struct _RDDNODE
    char     szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
    USHORT   uiType;            /* Type of RDD */
    RDDFUNCS pTable;            /* Table of functions */
-   USHORT   uiFunctions;       /* Number of functions in the table */
    USHORT   uiAreaSize;        /* Size of the WorkArea */
    struct _RDDNODE * pNext;    /* Next RDD in the list */
 } RDDNODE;
@@ -178,28 +178,8 @@ static ERRCODE Bof( AREAP pArea, BOOL * pBof )
 
 static ERRCODE Close( AREAP pArea )
 {
-   if( pArea->lpFileInfo->hFile != FS_ERROR )
-      hb_fsClose( pArea->lpFileInfo->hFile );
-   pArea->lpFileInfo->hFile = FS_ERROR;
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
-   return SUCCESS;
-}
 
-static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
-{
-   pArea->lpFileInfo->hFile = hb_fsCreate( pCreateInfo->abName, FC_NORMAL );
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
-      return FAILURE;
-
-   if( SELF_WRITEDBHEADER( pArea ) == FAILURE )
-   {
-      hb_fsClose( pArea->lpFileInfo->hFile );
-      pArea->lpFileInfo->hFile = FS_ERROR;
-      return FAILURE;
-   }
-
-   hb_fsClose( pArea->lpFileInfo->hFile );
-   pArea->lpFileInfo->hFile = FS_ERROR;
    return SUCCESS;
 }
 
@@ -316,26 +296,7 @@ static ERRCODE Open( AREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->atomAlias = hb_dynsymGet( ( char * ) pOpenInfo->atomAlias );
    ( ( PHB_DYNS ) pArea->atomAlias )->hArea = pOpenInfo->uiArea;
    
-   uiFlags = pOpenInfo->fReadonly ? FO_READ : FO_READWRITE;
-   uiFlags |= pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
-   pArea->lpFileInfo->hFile = hb_fsOpen( pOpenInfo->abName, uiFlags );
-   
-   if( pArea->lpFileInfo->hFile == FS_ERROR )
-   {
-      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
-      return FAILURE;
-   }
-
-   if( SELF_READDBHEADER( pArea ) == FAILURE )
-   {
-      hb_fsClose( pArea->lpFileInfo->hFile );
-      pArea->lpFileInfo->hFile = FS_ERROR;
-      ( ( PHB_DYNS ) pArea->atomAlias )->hArea = 0;
-      return FAILURE;
-   }
-   pArea->lpExtendInfo->fExclusive = !pOpenInfo->fShared;
-
-   return SELF_GOTOP( pArea );
+   return SUCCESS;
 }
 
 static ERRCODE Release( AREAP pArea )
@@ -420,10 +381,16 @@ static ERRCODE SysName( AREAP pArea, BYTE * pBuffer )
 
 static ERRCODE UnSupported( AREAP pArea )
 {
+   PHB_ITEM pError;
+
    HB_SYMBOL_UNUSED( pArea );
 
-   printf( "Calling default: UnSupported()\n" );
-   return SUCCESS;
+   pError = hb_errNew();
+   hb_errPutGenCode( pError, EG_UNSUPPORTED );
+   hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_UNSUPPORTED ) );
+   SELF_ERROR( pArea, pError );
+   hb_errRelease( pError );
+   return FAILURE;
 }
 
 static RDDFUNCS defTable = { Bof,
@@ -450,7 +417,7 @@ static RDDFUNCS defTable = { Bof,
                              ( DBENTRYP_I ) UnSupported,
                              SetFieldExtent,
                              Close,
-                             Create,
+                             ( DBENTRYP_VP ) UnSupported,
                              Info,
                              NewArea,
                              Open,
@@ -526,6 +493,7 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    LPRDDNODE pRddNode, pRddNewNode;
    PHB_DYNS pGetFuncTable;
    char * szGetFuncTable;
+   USHORT uiFunctions;
 
    if( hb_rddFindNode( szDriver, 0 ) )    /* Duplicated RDD */
       return 1;
@@ -549,7 +517,7 @@ static int hb_rddRegister( char * szDriver, USHORT uiType )
    /* Call <szDriver>_GETFUNCTABLE() */
    hb_vmPushSymbol( pGetFuncTable->pSymbol );
    hb_vmPushNil();
-   hb_vmPushLong( ( long ) &pRddNewNode->uiFunctions );
+   hb_vmPushLong( ( long ) &uiFunctions );
    hb_vmPushLong( ( long ) &pRddNewNode->pTable );
    hb_vmDo( 2 );
    if ( hb_parni( -1 ) != SUCCESS )
@@ -605,14 +573,15 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
 
-   HB_SYMBOL_UNUSED( pSuperTable );
-
    if( !pTable )
       return FAILURE;
 
    /* Copy the pSuperTable into pTable */
    if( !szDrvName || !( uiCount = strlen( ( const char * ) szDrvName ) ) )
+   {
       memcpy( pTable, &defTable, sizeof( RDDFUNCS ) );
+      memcpy( pSuperTable, &defTable, sizeof( RDDFUNCS ) );
+   }
    else
    {
       szSuperName = ( char * ) hb_xgrab( uiCount + 1 );
@@ -625,6 +594,7 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
          return FAILURE;
       }
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
+      memcpy( pSuperTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
    }
 
    /* Copy the non NULL entries from pSubTable into pTable */

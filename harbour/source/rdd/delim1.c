@@ -22,6 +22,8 @@
    You can contact me at: bruno@issnet.net
  */
 
+#define SUPERTABLE ( &delimSuper )
+
 #include "extend.h"
 #include "init.h"
 #include "rddapi.h"
@@ -39,6 +41,10 @@ HB_INIT_SYMBOLS_END( delim1__InitSymbols )
 #endif
 
 static RDDFUNCS delimSuper = { 0 };
+
+/*
+ * -- DELIM METHODS --
+ */
 
 static RDDFUNCS delimTable = { 0 };
 

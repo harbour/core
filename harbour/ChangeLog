@@ -1,3 +1,12 @@
+19990823-10:45 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * include/rddapi.h
+     source/rdd/dbcmd.c
+     source/rdd/dbf1.c
+     source/rdd/sdf1.c
+     source/rdd/delim1.c
+     source/rdd/dbfntx/dbfntx1.c
+     + Added support for SUPER methods.
+
 19990823-02:00 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/debug/tbrwtext.prg
     * GotoLine() only forceStable once after loop is done.

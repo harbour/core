@@ -898,7 +898,6 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 /*--------------------* SUPER Methods *------------------------*/
 
-#if 0
 
 /* Movement and positioning methods */
 
@@ -1050,7 +1049,6 @@ typedef RDDFUNCS * PRDDFUNCS;
 #define SUPER_GETDELIM(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_GETDELIMITER, fp))
 #define SUPER_TABLEEXT(w, fp)         ((*(SUPERTABLE)->info)(w, DBI_TABLEEXT, fp))
 
-#endif
 
 /*
 *  PROTOTYPES
