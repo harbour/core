@@ -273,7 +273,7 @@ HARBOUR HB_ROUND( void )
             dResult = floor( dResult * dAdjust + 0.5 );
             dResult = dResult / dAdjust;
          }
-         szResult = ( char * ) hb_xgrab( iSize + iDec );
+         szResult = ( char * ) hb_xgrab( iSize + iDec + 1 );
          if( szResult )
          {
             sprintf( szResult, "%*.*f", iSize, iDec, dResult );

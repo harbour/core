@@ -7,6 +7,7 @@
 #include <errorapi.h>
 #include <ctoharb.h>
 #include <filesys.h>
+#include <init.h>
 
 #ifdef OS_UNIX_COMPATIBLE
    #include <sys/stat.h>
@@ -14,6 +15,15 @@
 #endif
 
 #define BUFFER_SIZE 8192
+
+HARBOUR HB___COPYFILE(void);
+
+HB_INIT_SYMBOLS_BEGIN( CopyFile__InitSymbols )
+{ "__COPYFILE", FS_PUBLIC, HB___COPYFILE, 0 }
+HB_INIT_SYMBOLS_END( CopyFile__InitSymbols );
+#if ! defined(__GNUC__)
+   #pragma CopyFile__InitSymbols
+#endif
 
 static BOOL hb_fsCopy(char* szSource, char* szDest, ULONG* ulWrittenTotal);
 

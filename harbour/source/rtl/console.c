@@ -73,6 +73,7 @@
 HARBOUR HB___ACCEPT(void);
 HARBOUR HB_COL( void );
 HARBOUR HB_DEVOUT( void );
+HARBOUR HB_DEVOUTPICT( void );
 HARBOUR HB_DEVPOS( void );
 HARBOUR HB_DISPBEGIN( void );
 HARBOUR HB_DISPBOX( void );
@@ -96,25 +97,26 @@ HARBOUR HB_QOUT( void );
 HARBOUR HB_QQOUT( void );
 
 HB_INIT_SYMBOLS_BEGIN( Console__InitSymbols )
-{ "__ACCEPT" , FS_PUBLIC, HB___ACCEPT , 0 },
-{ "__EJECT"  , FS_PUBLIC, HB___EJECT  , 0 },
-{ "DEVOUT"   , FS_PUBLIC, HB_DEVOUT   , 0 },
-{ "DISPBEGIN", FS_PUBLIC, HB_DISPBEGIN, 0 },
-{ "DISPBOX"  , FS_PUBLIC, HB_DISPBOX  , 0 },
-{ "DISPCOUNT", FS_PUBLIC, HB_DISPCOUNT, 0 },
-{ "DISPEND"  , FS_PUBLIC, HB_DISPEND  , 0 },
-{ "DISPOUT"  , FS_PUBLIC, HB_DISPOUT  , 0 },
-{ "ISCOLOR"  , FS_PUBLIC, HB_ISCOLOR  , 0 },
-{ "MAXCOL"   , FS_PUBLIC, HB_MAXCOL   , 0 },
-{ "MAXROW"   , FS_PUBLIC, HB_MAXROW   , 0 },
-{ "OUTERR"   , FS_PUBLIC, HB_OUTERR   , 0 },
-{ "OUTSTD"   , FS_PUBLIC, HB_OUTSTD   , 0 },
-{ "NOSNOW"   , FS_PUBLIC, HB_NOSNOW   , 0 },
-{ "SCROLL"   , FS_PUBLIC, HB_SCROLL   , 0 },
-{ "SETPOS"   , FS_PUBLIC, HB_SETPOS   , 0 },
-{ "SETPRC"   , FS_PUBLIC, HB_SETPRC   , 0 },
-{ "QOUT"     , FS_PUBLIC, HB_QOUT     , 0 },
-{ "QQOUT"    , FS_PUBLIC, HB_QQOUT    , 0 }
+{ "__ACCEPT"  , FS_PUBLIC, HB___ACCEPT  , 0 },
+{ "__EJECT"   , FS_PUBLIC, HB___EJECT   , 0 },
+{ "DEVOUT"    , FS_PUBLIC, HB_DEVOUT    , 0 },
+{ "DEVOUTPICT", FS_PUBLIC, HB_DEVOUTPICT, 0 },
+{ "DISPBEGIN" , FS_PUBLIC, HB_DISPBEGIN , 0 },
+{ "DISPBOX"   , FS_PUBLIC, HB_DISPBOX   , 0 },
+{ "DISPCOUNT" , FS_PUBLIC, HB_DISPCOUNT , 0 },
+{ "DISPEND"   , FS_PUBLIC, HB_DISPEND   , 0 },
+{ "DISPOUT"   , FS_PUBLIC, HB_DISPOUT   , 0 },
+{ "ISCOLOR"   , FS_PUBLIC, HB_ISCOLOR   , 0 },
+{ "MAXCOL"    , FS_PUBLIC, HB_MAXCOL    , 0 },
+{ "MAXROW"    , FS_PUBLIC, HB_MAXROW    , 0 },
+{ "OUTERR"    , FS_PUBLIC, HB_OUTERR    , 0 },
+{ "OUTSTD"    , FS_PUBLIC, HB_OUTSTD    , 0 },
+{ "NOSNOW"    , FS_PUBLIC, HB_NOSNOW    , 0 },
+{ "SCROLL"    , FS_PUBLIC, HB_SCROLL    , 0 },
+{ "SETPOS"    , FS_PUBLIC, HB_SETPOS    , 0 },
+{ "SETPRC"    , FS_PUBLIC, HB_SETPRC    , 0 },
+{ "QOUT"      , FS_PUBLIC, HB_QOUT      , 0 },
+{ "QQOUT"     , FS_PUBLIC, HB_QQOUT     , 0 }
 HB_INIT_SYMBOLS_END( Console__InitSymbols );
 #if ! defined(__GNUC__)
 #pragma startup Console__InitSymbols

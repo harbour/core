@@ -7,6 +7,7 @@
   Arrays__InitSymbols();
   Classes__InitSymbols();
   Console__InitSymbols();
+  CopyFile__InitSymbols();
   Dates__InitSymbols();
   Descend__InitSymbols();
   Dir__InitSymbols();

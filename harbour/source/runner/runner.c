@@ -74,6 +74,7 @@ static FILE     *HRB_FileOpen ( char * );
 extern void Arrays__InitSymbols( void );
 extern void Classes__InitSymbols( void );
 extern void Console__InitSymbols( void );
+extern void CopyFile__InitSymbols( void );
 extern void Dates__InitSymbols( void );
 extern void Descend__InitSymbols( void );
 extern void Dir__InitSymbols( void );

@@ -1,3 +1,12 @@
+19990716-15:00 CET Eddie Runia <eddie@runia.com>
+  * source/rtl/math.c
+    Round() : One byte more should be allocated
+  * source/rtl/copyfile.c; source/runner/runner.c; source/vm/initsymb.c;
+    include/initsymb.h
+    __CopyFile added as symbol
+  * source/rtl/console.c
+    DevOutPict() added as symbol
+
 19990716-14:30 CET Eddie Runia <eddie@runia.com>
   * source/runner/runner.c
     Typo corrected
