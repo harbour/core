@@ -615,8 +615,7 @@ void And( void )
 {
    PHB_ITEM pItem2 = stack.pPos - 1;
    PHB_ITEM pItem1 = stack.pPos - 2;
-   PHB_ITEM pError;
-   int   iResult;
+   int      iResult;
 
    HB_DEBUG( "And\n" );
 
@@ -629,10 +628,7 @@ void And( void )
    }
    else
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Argument error: conditional" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1066, "Argument error", "conditional");
    }
 }
 
@@ -882,8 +878,7 @@ void Equal( BOOL bExact )
 
    else if( pItem1->type != pItem2->type )
    {
-      printf( "types do not match on equal operation\n" );
-      exit( 1 );
+      hb_errorRT_BASE(EG_ARG, 1070, "Argument error", "==");
    }
 
    else
@@ -1016,8 +1011,7 @@ void Greater( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types do not match on greater operation %d, %d\n", (stack.pPos - 2)->type, (stack.pPos - 1)->type );
-      exit( 1 );
+      hb_errorRT_BASE(EG_ARG, 1075, "Argument error", ">");
    }
 }
 
@@ -1063,8 +1057,7 @@ void GreaterEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types do not match on greaterequal operation\n" );
-      exit( 1 );
+      hb_errorRT_BASE(EG_ARG, 1076, "Argument error", ">=");
    }
 }
 
@@ -1087,10 +1080,7 @@ void Inc( void )
    }
    else
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Error BASE/1086  Argument error: ++" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1086, "Argument error", "++");
    }
 }
 
@@ -1136,11 +1126,7 @@ void Instring( void )
    }
    else
    {
-      PHB_ITEM pError = hb_errNew();
-
-      hb_errPutDescription( pError, "Error BASE/1109  Argument error: $" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1109, "Argument error", "$");
    }
 }
 
@@ -1252,8 +1238,7 @@ void Less( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types do not match on less operation\n" );
-      exit( 1 );
+      hb_errorRT_BASE(EG_ARG, 1073, "Argument error", "<");
    }
 }
 
@@ -1299,8 +1284,7 @@ void LessEqual( void )
 
    else if( ( stack.pPos - 2 )->type != ( stack.pPos - 1 )->type )
    {
-      printf( "types do not match on lessequal operation\n" );
-      exit( 1 );
+      hb_errorRT_BASE(EG_ARG, 1074, "Argument error", "<=");
    }
 }
 
@@ -1340,7 +1324,7 @@ void Not( void )
    if( IS_LOGICAL( pItem ) )
       pItem->item.asLogical.value = ! pItem->item.asLogical.value;
    else
-      ; /* TODO: Raise an error here ? */
+      hb_errorRT_BASE(EG_ARG, 1077, "Argument error", ".NOT.");
 }
 
 void NotEqual( void )
@@ -1383,8 +1367,7 @@ void NotEqual( void )
 
    else if( pItem1->type != pItem2->type )
    {
-      printf( "types do not match on equal operation\n" );
-      exit( 1 );
+      hb_errorRT_BASE(EG_ARG, 1072, "Argument error", "<>");
    }
 
    else
@@ -1415,11 +1398,45 @@ void Minus( void )
       lDate1 = PopDate();
       PushDate( lDate1 - dNumber2 );
    }
+   else if( IS_STRING( pItem1 ) && IS_STRING( pItem2 ) )
+   {
+      ULONG lLen = pItem1->item.asString.length;
+      ULONG lInc = 0;
+      ULONG i;
+
+      pItem1->item.asString.value = (char*)hb_xrealloc( pItem1->item.asString.value, pItem1->item.asString.length + pItem2->item.asString.length + 1 );
+
+      while( lLen && pItem1->item.asString.value[lLen - 1] == ' ' )
+      {
+         lLen--;
+         lInc++;
+      }
+
+      pItem1->item.asString.length = lLen;
+      lLen = pItem2->item.asString.length;
+      pItem2->item.asString.length += lInc;
+
+      for( i = 0; i < lInc; i++)
+         pItem2->item.asString.value[lLen + i] = ' ';
+
+      memcpy( pItem1->item.asString.value+ pItem1->item.asString.length,
+              pItem2->item.asString.value, pItem2->item.asString.length );
+
+      pItem1->item.asString.length += pItem2->item.asString.length;
+      pItem1->item.asString.value[ pItem1->item.asString.length ] = 0;
+      if( pItem2->item.asString.value )
+      {
+         hb_xfree( pItem2->item.asString.value );
+         pItem2->item.asString.value = NULL;
+      }
+      StackPop();
+      return;
+   }
    else if( IS_OBJECT( stack.pPos - 2 ) && hb_isMessage( stack.pPos - 2, "-" ) )
       OperatorCall( stack.pPos - 2, stack.pPos - 1, "-" );
+   else
+      hb_errorRT_BASE(EG_ARG, 1082, "Argument error", "-");
 
-   /* TODO: We should substract strings also ? and generate an error it types
-      don't match */
 }
 
 void Modulus( void )
@@ -1464,10 +1481,7 @@ void Or( void )
    }
    else
    {
-      pError = hb_errNew();
-      hb_errPutDescription( pError, "Argument error: conditional" );
-      hb_errLaunch( pError );
-      hb_errRelease( pError );
+      hb_errorRT_BASE(EG_ARG, 1066, "Argument error", "conditional");
    }
 }
 
@@ -1522,9 +1536,8 @@ void Plus( void )
       OperatorCall( pItem1, pItem2, "+" );
 
    else
-      hb_errorRT_BASE( 1081, 1081, "Types of arguments do not match", "+" );
+      hb_errorRT_BASE( EG_ARG, 1081, "Types of arguments do not match", "+" );
 
-   /* TODO: Generate an error if types don't match */
    HB_DEBUG( "Plus\n" );
 }
 
@@ -2157,7 +2170,7 @@ HARBOUR HB_LEN( void )
               break;
 
          default:
-              hb_retni( 0 );  /* QUESTION: Should we raise an error here ? */
+              hb_errorRT_BASE(EG_ARG, 1111, "Argument error", "LEN");
               break;
       }
    }

@@ -1,3 +1,17 @@
+19990721-09:00 CET Jose Lalin
+  * source/vm/hvm.c
+    + added support for concatenation operator "-"
+    + added support to generate correct runtime errors in functions:
+    And(), Equal(), Greater(), GreaterEqual(),
+    Inc(), Instring(), Less(), LessEqual(), Not(),
+    NotEqual(), Minus(), Or(), Plus(), HB_LEN()
+  + tests/working/strsub.prg
+    tests for operator "-" on strings
+
+19990721-09:00 CET Matthew Hamilton
+  * tests/working/inifiles.prg
+    * Case sensitive & Speed improvement
+
 19990720-09:38 Alexander Kresin
   * source\hbpp\hbpp.c
     * Fixed bugs related to nested #ifdef, #ifndef
