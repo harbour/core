@@ -511,12 +511,15 @@ extern char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an 
 typedef HB_GARBAGE_FUNC( HB_GARBAGE_FUNC_ );
 typedef HB_GARBAGE_FUNC_ *HB_GARBAGE_FUNC_PTR;
 
+extern HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pItem );
+extern void hb_gcGripDrop( HB_ITEM_PTR pItem );
+#define _getGrip hb_gcGripGet
+#define _getDrop hb_gcGripDrop
+
 extern void * hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ); /* allocates a memory controlled by the garbage collector */
 extern void   hb_gcFree( void *pAlloc ); /* deallocates a memory allocated by the garbage collector */
 extern void * hb_gcLock( void *pAlloc ); /* do not release passed memory block */
 extern void * hb_gcUnlock( void *pAlloc ); /* passed block is allowed to be released */
-extern void   hb_gcLockItem( HB_ITEM_PTR pItem ); /* do not release a memory block stored inside an item */
-extern void   hb_gcUnlockItem( HB_ITEM_PTR pItem ); /* allow to release the item */
 extern void   hb_gcCollect( void ); /* checks if a single memory block can be released */
 extern void   hb_gcCollectAll( void ); /* checks if all memory blocks can be released */
 extern void   hb_gcItemRef( HB_ITEM_PTR pItem ); /* checks if passed item refers passed memory block pointer */

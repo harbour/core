@@ -58,8 +58,10 @@
   #include <time.h>
 #endif
 
-/* list of background tasks */
-static HB_ITEM_PTR s_pIdleTasks = NULL;
+/* list of background tasks 
+ * A pointer into an array of pointers to items with a codeblock
+*/
+static HB_ITEM_PTR * s_pIdleTasks = NULL;
 
 /* flag to prevent recursive calls of hb_idleState() */
 static BOOL s_bIamIdle = FALSE;
@@ -141,7 +143,7 @@ void hb_idleState( void )
 
       if( s_pIdleTasks && s_uiIdleTask < s_uiIdleMaxTask )
       {
-         hb_vmEvalBlock( s_pIdleTasks + s_uiIdleTask );
+         hb_vmEvalBlock( s_pIdleTasks[ s_uiIdleTask ] );
          ++s_uiIdleTask;
          s_bIamIdle = FALSE;
          return;
@@ -177,13 +179,11 @@ void hb_idleShutDown( void )
 {
    if( s_pIdleTasks )
    {
-      HB_ITEM_PTR pItem = s_pIdleTasks;
-      while( s_uiIdleMaxTask-- )
+      do
       {
-         hb_gcUnlock( pItem->item.asBlock.value );
-         hb_itemClear( pItem );
-         ++pItem;
+         hb_itemRelease( s_pIdleTasks[ --s_uiIdleMaxTask ] );
       }
+      while( s_uiIdleMaxTask );
       hb_xfree( s_pIdleTasks );
       s_pIdleTasks = NULL;
    }
@@ -211,18 +211,18 @@ HB_FUNC( HB_IDLEADD )
       ++s_uiIdleMaxTask;
       if( !s_pIdleTasks )
       {
-         s_pIdleTasks = ( HB_ITEM_PTR ) hb_xgrab( sizeof( HB_ITEM ) );
+         s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) );
       }
       else
       {
-         s_pIdleTasks = ( HB_ITEM_PTR ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM ) * s_uiIdleMaxTask );
+         s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM_PTR ) * s_uiIdleMaxTask );
       }
-      hb_itemCopy( s_pIdleTasks + s_uiIdleMaxTask - 1, pBlock );
-      /* prevent releasing if this block if it is no longer stored inside of
-       * a harbour variable
-       */
-      hb_gcLockItem( pBlock );
+      /* store a copy of passed codeblock
+      */
+      s_pIdleTasks[ s_uiIdleMaxTask - 1 ] = hb_itemNew( pBlock );
 
+      /* return a pointer as a handle to this idle task
+      */
       hb_retnl( ( ULONG ) pBlock->item.asBlock.value );    /* TODO: access to pointers from harbour code */
    }
    else
@@ -238,14 +238,14 @@ HB_FUNC( HB_IDLEDEL )
    {
       SHORT iTask;
       ULONG ulID = hb_parnl( 1 );   /* TODO: access to pointers from harbour code */
-      HB_ITEM_PTR pItem = s_pIdleTasks;
+      HB_ITEM_PTR pItem;
 
       iTask = 0;
       while( iTask < s_uiIdleMaxTask && !bFound )
       {
+         pItem = s_pIdleTasks[ iTask ];
          if( ulID == ( ULONG ) pItem->item.asBlock.value )
          {
-             hb_gcUnlockItem( pItem );
              hb_itemClear( hb_itemReturn( pItem ) ); /* return a codeblock */
 
              --s_uiIdleMaxTask;
@@ -253,8 +253,8 @@ HB_FUNC( HB_IDLEDEL )
              {
                 if( iTask != s_uiIdleMaxTask )
                    memcpy( &s_pIdleTasks[ iTask ], &s_pIdleTasks[ iTask + 1 ],
-                           sizeof( HB_ITEM ) * (s_uiIdleMaxTask - iTask) );
-                s_pIdleTasks = ( HB_ITEM_PTR ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM ) * s_uiIdleMaxTask );
+                           sizeof( HB_ITEM_PTR ) * (s_uiIdleMaxTask - iTask) );
+                s_pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( s_pIdleTasks, sizeof( HB_ITEM_PTR ) * s_uiIdleMaxTask );
              }
              else
              {
@@ -263,7 +263,6 @@ HB_FUNC( HB_IDLEDEL )
              }
              bFound = TRUE;
          }
-         ++pItem;
          ++iTask;
       }
    }

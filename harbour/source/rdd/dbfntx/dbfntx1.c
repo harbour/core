@@ -1730,11 +1730,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX PIF, char * ITN, char *szKeyExpr, PHB_
       strcpy( pTag->ForExpr, szForExp );
    }
    pTag->pKeyItem = pKeyExpr;
-   if( pTag->pKeyItem )
-      hb_gcLockItem( pTag->pKeyItem );
    pTag->pForItem = pForExp;
-   if( pTag->pForItem )
-      hb_gcLockItem( pTag->pForItem );
    pTag->AscendKey = fAscendKey;
    pTag->UniqueKey = fUnique;
    pTag->KeyType = bKeyType;
@@ -1777,14 +1773,12 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
       hb_xfree( pTag->ForExpr );
    if( pTag->pKeyItem != NULL )
    {
-      hb_gcUnlockItem( pTag->pKeyItem );
       if( hb_itemType( pTag->pKeyItem ) != HB_IT_BLOCK )
          hb_macroDelete( ( HB_MACRO_PTR ) hb_itemGetPtr( pTag->pKeyItem ) );
       hb_itemRelease( pTag->pKeyItem );
    }
    if( pTag->pForItem != NULL )
    {
-      hb_gcUnlockItem( pTag->pForItem );
       hb_itemRelease( pTag->pForItem );
    }
    hb_ntxKeyFree( pTag->CurKeyInfo );
@@ -1821,7 +1815,6 @@ static ERRCODE hb_ntxHeaderLoad( LPNTXINDEX pIndex , char *ITN)
    pTag->KeyExpr = (char *) hb_xgrab( NTX_MAX_KEY );
    strcpy( pTag->KeyExpr, Header.key_expr );
    pTag->pKeyItem = pKeyExp;
-   hb_gcLockItem( pTag->pKeyItem );
    pTag->AscendKey = 1; /* fAscendKey; */
    pTag->UniqueKey = Header.unique;
    pTag->KeyType = 'C'; /* bKeyType; */

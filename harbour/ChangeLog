@@ -1,3 +1,29 @@
+2001-03-16 16:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
+
+    *doc/en/garbage.txt
+    *include/hbapi.h
+    *source/vm/garbage.c
+    *source/vm/itemapi.c
+        * new functions: hb_gcGripGet() and hb_gcGripDrop() for dynamic
+        allocation/deallocation of items
+        * added redefinition of _getGrip/_dropGrip to use 
+        hb_gcGripGet/hb_gcGripDrop
+        * items allocated with hb_itemNew() or direct _getGrip() calls are
+        maintained properly by the Garbage Collector - there is no need
+        to locking/unlocking such items.
+        * removed no longer needed hb_gcLockItem/hb_gcUnlockItem    
+
+    *source/rdd/dbcmd.c
+    *source/rdd/workarea.c
+    *source/rdd/dbfntx/dbfntx1.c
+    *source/rtl/errorapi.c
+    *source/rtl/idle.c
+    *source/rtl/setkey.c
+        * removed no longer needed calls for hb_gcLockItem/hb_gcUnlockItem    
+        
+NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
+    calls for these functions from your code.
+        
 2001-03-15 17:00 UTC-0500 David G. Holm <dholm@jsd-llc.com>
 
   * contrib/libmisc/Makefile

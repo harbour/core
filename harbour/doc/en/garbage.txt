@@ -29,24 +29,16 @@
  *      and are stored in class shared variables.
  *
  *      In special cases when the value of a harbour variable is stored internally
- *      in some static area (at C or assembler level), for example SETKEY()
- *      stores codeblocks that will be evaluated when a key is pressed,
- *      the garbage collector will be not able to scan such values since it
- *      doesn't know their location. This could cause some memory blocks to be
- *      released prematurely. To prevent the premature deallocation of such memory
- *      blocks they have to be locked for the garbage collector. The memory block
- *      can be locked with hb_gcLockItem() (recommended method) if
- *      harbour item structure is used or hb_gcLock() function if a direct memory
- *      pointer is used. The memory block can be unlocked by hb_gcUnlockItem() or
- *      hb_gcUnlock().
+ *      in some static area (at C or assembler level), the garbage collector will
+ *      be not able to scan such values since it doesn't know their location. This 
+ *      could cause some memory blocks to be released prematurely. To prevent the 
+ *      premature deallocation of such memory blocks the static data have to store
+ *      a pointer to the value created with hb_itemNew() function.
+ *      Example:
+ *        static HB_ITEM s_item; // this item can be released by the GC 
  *
- *      Notice however that all variables passed to a low level function are
- *      passed via the eval stack, so they don't require locking during the
- *      function call. The locking will be required if a passed value is copied
- *      into some static area to make it available for other low-level functions
- *      called after the exit from function that stored the value. This is required
- *      because the value is removed from the eval stack after the function call and
- *      it can be no longer be referenced by other variables.
+ *        static HB_ITEM_PTR pItem; // this item will be maintained correctly
+ *        pItem = hb_itemNew( hb_param(1, IT_BLOCK) ); 
  *
  *      However, scanning of all variables can be a time consuming operation. It
  *      requires that all allocated arrays have to be traversed through all their
@@ -67,15 +59,6 @@
  *      The garbage collector collects memory blocks allocated with hb_gcAlloc()
  *      function calls. Memory allocated by hb_gcAlloc() should be released with
  *      hb_gcFree() function.
- *
- *      Locking memory   </par>
- *      --------------
- *
- *      The memory allocated with hb_gcAlloc() should be locked to prevent
- *      automatic releasing if such a memory pointer is not stored within a
- *      harbour level variable. All harbour values (items) stored internally
- *      in static C area have to be locked.
- *      See hb_gcLockItem() and hb_gcUnlockItem() for more information.
  *
  *      The garbage collecting   </par>
  *      ----------------------
@@ -110,7 +93,7 @@
  *      See HB_GCALL() for explanation of how to call this function from your
  *      harbour code.
  *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem(),hb_gcCollectAll(),hb_gcItemRef(),HB_GCALL(),HB_IDLESTATE()
+ *      hb_gcAlloc(),hb_gcFree(),hb_gcCollectAll(),hb_gcItemRef(),HB_GCALL(),HB_IDLESTATE()
  *  $END$
  */
 
@@ -157,7 +140,7 @@
  *  $FILES$
  *      source/vm/garbage.c
  *  $SEEALSO$
- *      hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem()
+ *      hb_gcFree()
  *  $END$
  */
 
@@ -189,87 +172,7 @@
  *  $FILES$
  *      source/vm/garbage.c
  *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcLockItem(),hb_gcUnlockItem()
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_gcLockItem()
- *  $CATEGORY$
- *      The garbage collector
- *  $ONELINER$
- *      Locks the memory to prevent deallocation by the garbage collector.
- *  $SYNTAX$
- *      void hb_gcLockItem( HB_ITEM_PTR pItem );
- *  $ARGUMENTS$
- *      <pItem> The pointer to item structure that will be locked. The
- *      passed item can be of any datatype although arrays, objects
- *      and codeblocks are locked only. Other datatypes don't require
- *      locking so they are simply ignored.
- *  $RETURNS$
- *      Nothing.
- *  $DESCRIPTION$
- *      hb_gcLockItem() is used to lock the memory pointer stored in
- *      the passed item structure. It suppres the memory releasing
- *      if the garbage collector will not find any reference to this
- *      pointer. The garbage collector is storing the lock counter -
- *      every call of this function increases the counter. The item is
- *      locked if this counter is greather then 0.
- *  $EXAMPLES$
- *      See source/rtl/setkey.c
- *  $STATUS$
- *      C
- *  $COMPLIANCE$
- *      This function is a Harbour extension
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      source/vm/garbage.c
- *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcFree(),hb_gcUnlockItem()
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      hb_gcUnlockItem()
- *  $CATEGORY$
- *      The garbage collector
- *  $ONELINER$
- *      Unlocks the memory to prevent deallocation by the garbage collector.
- *  $SYNTAX$
- *      void hb_gcUnlockItem( HB_ITEM_PTR pItem );
- *  $ARGUMENTS$
- *      <pItem> The pointer to item structure that will be unlocked. The
- *      passed item can be of any datatype although arrays, objects
- *      and codeblocks are unlocked only. Other datatypes don't require
- *      locking so they are simply ignored.
- *  $RETURNS$
- *      Nothing.
- *  $DESCRIPTION$
- *      hb_gcUnlockItem() is used to unlock the memory pointer stored in
- *      the passed item structure that was previously locked with
- *      hb_gcLockItem() call. It allows to release the memory during
- *      garbage collecting if the garbage collector will not find any
- *      reference to this pointer. The garbage collector is storing the
- *      lock counter - every call of this function decreases the counter.
- *      This function doesn't deallocate memory stored inside the item -
- *      the memory can be deallocated however during the closest garbage
- *      collecting if the lock counter is equal to 0 and the memory pointer
- *      is not referenced by any harbour level variable.
- *  $EXAMPLES$
- *      See source/rtl/setkey.c
- *  $STATUS$
- *      C
- *  $COMPLIANCE$
- *      This function is a Harbour extension
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      source/vm/garbage.c
- *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem()
+ *      hb_gcAlloc()
  *  $END$
  */
 
@@ -300,7 +203,7 @@
  *  $FILES$
  *      source/vm/garbage.c
  *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem()
+ *      hb_gcAlloc(),hb_gcFree()
  *  $END$
  */
 
@@ -340,7 +243,7 @@
  *  $FILES$
  *      source/vm/garbage.c
  *  $SEEALSO$
- *      hb_gcAlloc(),hb_gcFree(),hb_gcLockItem(),hb_gcUnlockItem()
+ *      hb_gcAlloc(),hb_gcFree()
  *  $END$
  */
 

@@ -322,24 +322,9 @@ PHB_ITEM hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... )
 
 PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 {
-   PHB_ITEM pItem;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_itemNew(%p)", pNull));
 
-   pItem = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) );
-
-   if( pNull )
-   {
-      pItem->type = HB_IT_NIL;
-      hb_itemCopy( pItem, pNull );
-   }
-   else
-   {
-      memset( pItem, 0, sizeof( HB_ITEM ) );
-      pItem->type = HB_IT_NIL;
-   }
-
-   return pItem;
+   return hb_gcGripGet( pNull );
 }
 
 PHB_ITEM hb_itemParam( USHORT uiParam )
@@ -380,9 +365,7 @@ BOOL hb_itemRelease( PHB_ITEM pItem )
 
    if( pItem )
    {
-      hb_itemClear( pItem );
-      hb_xfree( pItem );
-
+      hb_gcGripDrop( pItem );
       return TRUE;
    }
    else

@@ -65,11 +65,9 @@ void hb_setkeyExit( void )
    {
       PHB_SETKEY sk_list_tmp;
 
-      hb_gcUnlockItem( s_sk_list->pAction );
       hb_itemRelease( s_sk_list->pAction );
       if( s_sk_list->pIsActive )
       {
-         hb_gcUnlockItem( s_sk_list->pIsActive );
          hb_itemRelease( s_sk_list->pIsActive );
       }
       sk_list_tmp = s_sk_list->next;
@@ -109,10 +107,6 @@ static void sk_add( BOOL bReturn, SHORT iKeyCode, PHB_ITEM pAction, PHB_ITEM pIs
             sk_list_tmp->iKeyCode = iKeyCode;
             sk_list_tmp->pAction = hb_itemNew( pAction );
             sk_list_tmp->pIsActive = pIsActive ? hb_itemNew( pIsActive ) : NULL;
-            /* lock codeblock to prevent deallocation by the GC */
-            hb_gcLockItem( sk_list_tmp->pAction );
-            if( sk_list_tmp->pIsActive )
-               hb_gcLockItem( sk_list_tmp->pIsActive );
 
             if( sk_list_end == NULL )
                s_sk_list = sk_list_tmp;
@@ -129,11 +123,9 @@ static void sk_add( BOOL bReturn, SHORT iKeyCode, PHB_ITEM pAction, PHB_ITEM pIs
 
          /* Free the previous values */
 
-         hb_gcUnlockItem( sk_list_tmp->pAction );
          hb_itemRelease( sk_list_tmp->pAction );
          if( sk_list_tmp->pIsActive )
          {
-            hb_gcUnlockItem( sk_list_tmp->pIsActive );
             hb_itemRelease( sk_list_tmp->pIsActive );
          }
          /* Set the new values or free the entry */
@@ -142,10 +134,6 @@ static void sk_add( BOOL bReturn, SHORT iKeyCode, PHB_ITEM pAction, PHB_ITEM pIs
          {
             sk_list_tmp->pAction = hb_itemNew( pAction );
             sk_list_tmp->pIsActive = pIsActive ? hb_itemNew( pIsActive ) : NULL;
-            /* lock codeblock to prevent deallocation by the GC */
-            hb_gcLockItem( sk_list_tmp->pAction );
-            if( sk_list_tmp->pIsActive )
-               hb_gcLockItem( sk_list_tmp->pIsActive );
          }
          else
          {

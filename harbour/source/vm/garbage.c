@@ -146,6 +146,58 @@ void hb_gcFree( void *pBlock )
    }
 }
 
+static HB_GARBAGE_FUNC( hb_gcGripRelease )
+{
+    /* Item was already released in hb_gcGripDrop() - then we have nothing
+     * to do here
+     */
+    HB_SYMBOL_UNUSED( Cargo );
+}
+
+HB_ITEM_PTR hb_gcGripGet( HB_ITEM_PTR pOrigin )
+{
+   HB_GARBAGE_PTR pAlloc;
+
+   pAlloc = HB_GARBAGE_NEW( sizeof( HB_ITEM ) + sizeof( HB_GARBAGE ) );
+   if( pAlloc )
+   {
+      HB_ITEM_PTR pItem = ( HB_ITEM_PTR )( pAlloc + 1 );
+      
+      hb_gcLink( &s_pLockedBlock, pAlloc );
+      pAlloc->pFunc  = hb_gcGripRelease;
+      pAlloc->locked = 1;
+      pAlloc->used   = s_uUsedFlag;
+      if( pOrigin )
+      {
+         pItem->type = HB_IT_NIL;
+         hb_itemCopy( pItem, pOrigin );
+      }
+      else
+      {
+         memset( pItem, 0, sizeof( HB_ITEM ) );
+         pItem->type = HB_IT_NIL;
+      }
+
+      return pItem;
+   }
+   else
+      return NULL;
+}
+
+void hb_gcGripDrop( HB_ITEM_PTR pItem )
+{
+   if( pItem )
+   {
+       HB_GARBAGE_PTR pAlloc = ( HB_GARBAGE_PTR ) pItem;
+       --pAlloc;
+
+       hb_itemClear( pItem );    /* clear value stored in this item */
+          
+       hb_gcUnlink( &s_pLockedBlock, pAlloc );
+       HB_GARBAGE_FREE( pAlloc );
+   }
+}
+
 /* Lock a memory pointer so it will not be released if stored
    outside of harbour variables
 */
@@ -188,29 +240,6 @@ void *hb_gcUnlock( void *pBlock )
       }
    }
    return pBlock;
-}
-
-
-/* Lock an item so it will not be released if stored
-   outside of harbour variables
-*/
-void hb_gcLockItem( HB_ITEM_PTR pItem )
-{
-   if( HB_IS_ARRAY( pItem ) )
-      hb_gcLock( pItem->item.asArray.value );
-   else if( HB_IS_BLOCK( pItem ) )
-      hb_gcLock( pItem->item.asBlock.value );
-}
-
-/* Unlock an item so it can be released if there is no
-   references inside of harbour variables
-*/
-void hb_gcUnlockItem( HB_ITEM_PTR pItem )
-{
-   if( HB_IS_ARRAY( pItem ) )
-      hb_gcUnlock( pItem->item.asArray.value );
-   else if( HB_IS_BLOCK( pItem ) )
-      hb_gcUnlock( pItem->item.asBlock.value );
 }
 
 /* Mark a passed item as used so it will be not released by the GC
@@ -304,31 +333,9 @@ void hb_gcCollectAll( void )
          pAlloc = s_pLockedBlock;
          do
          {  /* it is not very elegant method but it works well */
-            if( pAlloc->pFunc == hb_arrayReleaseGarbage )
+            if( pAlloc->pFunc == hb_gcGripRelease )
             {
-               HB_BASEARRAY_PTR pArray = ( HB_BASEARRAY_PTR ) ( pAlloc + 1 );
-               ULONG ulSize = pArray->ulLen;
-               HB_ITEM_PTR pItem;
-
-               /* mark as used all elements in locked array */
-               pItem = pArray->pItems;
-               while( ulSize )
-               {
-                  hb_gcItemRef( pItem++ );
-                  --ulSize;
-               }
-            }    /* it is not very elegant method but it works well */
-            else if( pAlloc->pFunc == hb_codeblockDeleteGarbage )
-            {
-               HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) ( pAlloc + 1 );
-               USHORT ui = 1;
-
-               /* mark as used all detached variables in locked codeblock */
-               while( ui <= pCBlock->uiLocals )
-               {
-                  hb_gcItemRef( &pCBlock->pLocals[ ui ] );
-                  ++ui;
-               }
+               hb_gcItemRef( ( HB_ITEM_PTR ) ( pAlloc + 1 ) );
             }
             pAlloc = pAlloc->pNext;
          } while ( s_pLockedBlock != pAlloc );

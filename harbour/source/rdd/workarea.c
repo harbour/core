@@ -500,17 +500,14 @@ ERRCODE hb_waOrderCondition( AREAP pArea, LPDBORDERCONDINFO param )
          hb_xfree( pArea->lpdbOrdCondInfo->abFor );
       if( pArea->lpdbOrdCondInfo->itmCobFor )
       {
-         hb_gcUnlockItem( pArea->lpdbOrdCondInfo->itmCobFor );
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobFor );
       }
       if( pArea->lpdbOrdCondInfo->itmCobWhile )
       {
-         hb_gcUnlockItem( pArea->lpdbOrdCondInfo->itmCobWhile );
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobWhile );
       }
       if( pArea->lpdbOrdCondInfo->itmCobEval )
       {
-         hb_gcUnlockItem( pArea->lpdbOrdCondInfo->itmCobEval );
          hb_itemRelease( pArea->lpdbOrdCondInfo->itmCobEval );
       }
       hb_xfree( pArea->lpdbOrdCondInfo );
@@ -706,7 +703,6 @@ ERRCODE hb_waClearRel( AREAP pArea )
 
       if( lpdbRelation->itmCobExpr )
       {
-         hb_gcUnlockItem( lpdbRelation->itmCobExpr );
          hb_itemRelease( lpdbRelation->itmCobExpr );
       }
       if( lpdbRelation->abKey )
@@ -829,7 +825,6 @@ ERRCODE hb_waClearFilter( AREAP pArea )
    /* Free all items */
    if( pArea->dbfi.itmCobExpr )
    {
-      hb_gcUnlockItem(pArea->dbfi.itmCobExpr);
       hb_itemRelease( pArea->dbfi.itmCobExpr );
       pArea->dbfi.itmCobExpr = NULL;
    }
@@ -852,7 +847,6 @@ ERRCODE hb_waClearLocate( AREAP pArea )
    /* Free all items */
    if( pArea->dbsi.itmCobFor )
    {
-      hb_gcUnlockItem( pArea->dbsi.itmCobFor );
       hb_itemRelease( pArea->dbsi.itmCobFor );
       pArea->dbsi.itmCobFor = NULL;
    }
@@ -863,7 +857,6 @@ ERRCODE hb_waClearLocate( AREAP pArea )
    }
    if( pArea->dbsi.itmCobWhile )
    {
-      hb_gcUnlockItem( pArea->dbsi.itmCobWhile );
       hb_itemRelease( pArea->dbsi.itmCobWhile );
       pArea->dbsi.itmCobWhile = NULL;
    }
@@ -917,7 +910,6 @@ ERRCODE hb_waSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
    if( pFilterInfo->itmCobExpr )
    {
       pArea->dbfi.itmCobExpr = hb_itemNew( pFilterInfo->itmCobExpr );
-      hb_gcLockItem(pArea->dbfi.itmCobExpr);
    }
 
    if( pFilterInfo->abFilterText )
@@ -939,7 +931,6 @@ ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
    if( pScopeInfo->itmCobFor )
    {
       pArea->dbsi.itmCobFor = hb_itemNew( pScopeInfo->itmCobFor );
-      hb_gcLockItem( pArea->dbsi.itmCobFor );
    }
 
    if( pScopeInfo->lpstrFor )
@@ -948,7 +939,6 @@ ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
    if( pScopeInfo->itmCobWhile )
    {
       pArea->dbsi.itmCobWhile = hb_itemNew( pScopeInfo->itmCobWhile );
-      hb_gcLockItem( pArea->dbsi.itmCobWhile );
    }
 
    if( pScopeInfo->lpstrWhile )

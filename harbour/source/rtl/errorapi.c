@@ -109,10 +109,7 @@ HB_FUNC( ERRORBLOCK )
 
    if( pNewErrorBlock )
    {
-      if( HB_IS_BLOCK( &oldError ) )      
-         hb_gcUnlockItem( &oldError ); /* allow release for garbage collector */
       hb_itemCopy( &s_errorBlock, pNewErrorBlock );
-      hb_gcLockItem( pNewErrorBlock ); /* lock it in case it is not stored inside of harbour variable */
    }
 
    hb_itemReturn( &oldError );
@@ -199,11 +196,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
-      /* Lock an item to prevent deallocation by the GC - the error object
-       * can be not assigned to any harbour level variable
-      */
-      hb_gcLockItem( pError );
-
       /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
 
       s_iLaunchCount++;
@@ -221,7 +213,6 @@ USHORT hb_errLaunch( PHB_ITEM pError )
       else
          pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
-      hb_gcUnlockItem( pError );
       s_iLaunchCount--;
 
       /* Check results */
@@ -308,11 +299,6 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( s_iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
-      /* Lock an item to prevent deallocation by the GC - the error object
-       * can be not assigned to any harbour level variable
-      */
-      hb_gcLockItem( pError );
-      
       /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
 
       s_iLaunchCount++;
@@ -330,7 +316,6 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       else
          pResult = hb_itemDo( &s_errorBlock, 1, pError );
 
-      hb_gcUnlockItem( pError );
       s_iLaunchCount--;
 
       /* Check results */

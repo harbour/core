@@ -2222,7 +2222,6 @@ HB_FUNC( ORDCONDSET )
       {
          lpdbOrdCondInfo->itmCobFor = hb_itemNew( NULL );
          hb_itemCopy( lpdbOrdCondInfo->itmCobFor, pItem );
-         hb_gcLockItem( lpdbOrdCondInfo->itmCobFor );
       }
       else
          lpdbOrdCondInfo->itmCobFor = NULL;
@@ -2236,7 +2235,6 @@ HB_FUNC( ORDCONDSET )
       {
          lpdbOrdCondInfo->itmCobWhile = hb_itemNew( NULL );
          hb_itemCopy( lpdbOrdCondInfo->itmCobWhile, pItem );
-         hb_gcLockItem( lpdbOrdCondInfo->itmCobWhile );
       }
       else
          lpdbOrdCondInfo->itmCobWhile = NULL;
@@ -2246,7 +2244,6 @@ HB_FUNC( ORDCONDSET )
       {
          lpdbOrdCondInfo->itmCobEval = hb_itemNew( NULL );
          hb_itemCopy( lpdbOrdCondInfo->itmCobEval, pItem );
-         hb_gcLockItem( lpdbOrdCondInfo->itmCobEval );
       }
       else
          lpdbOrdCondInfo->itmCobEval = NULL;
@@ -2834,7 +2831,6 @@ HB_FUNC( DBSETRELATION )
 
       dbRelations.lpaChild = ( AREAP ) s_pArea->pArea;
       dbRelations.itmCobExpr = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
-      hb_gcLockItem( dbRelations.itmCobExpr );
       dbRelations.abKey = hb_itemNew( hb_param( 3, HB_IT_STRING ) );
       dbRelations.isScoped = ( hb_pcount() > 3 )? hb_parl( 4 ):0;
       dbRelations.lpdbriNext = NULL;
