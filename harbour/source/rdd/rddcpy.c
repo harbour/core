@@ -33,7 +33,7 @@
  *
  */
 
-// as we are in C, the code is upside down, 
+// as we are in C, the code is upside down,
 //  find __SBAPP & __DBCOPY at the bottom
 
 // create a new AREANODE and open it's Area
@@ -89,7 +89,7 @@ static BOOL IsFieldIn( char * fieldName, PHB_ITEM pFields )
   return FALSE;
 }
 
-// move the Field Data between areas by name 
+// move the Field Data between areas by name
 static void rddMoveFields( AREAP pAreaFrom, AREAP pAreaTo, PHB_ITEM pFields )
 {
   USHORT   i;
@@ -146,19 +146,19 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   if ( cAreaTo ) // it's a COPY TO
   {
     pAreaRelease = GetTheOtherArea( szDriver, cAreaTo );
-    pAreaTo = pAreaRelease->pArea;
+    pAreaTo = (AREAP) pAreaRelease->pArea;
   }
   else
-    pAreaTo = s_pCurrArea->pArea;
+    pAreaTo = (AREAP) s_pCurrArea->pArea;
 
 
   if ( cAreaFrom ) // it's an APPEND FROM
   {                // make it current
     pAreaRelease = s_pCurrArea = GetTheOtherArea( szDriver, cAreaFrom );
-    pAreaFrom =  pAreaRelease->pArea; 
+    pAreaFrom =  (AREAP) pAreaRelease->pArea;
   }
   else
-    pAreaFrom = s_pCurrArea->pArea;
+    pAreaFrom = (AREAP) s_pCurrArea->pArea;
 
   // or one or the other but necer none
   if ( !pAreaRelease )  // We need another Area to APPEND TO
@@ -173,7 +173,7 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   // move those records assuming we are positioned on one.
   while( keepGoing )
   {
-    keepGoing = FALSE; 
+    keepGoing = FALSE;
     if( !pAreaFrom->fEof ) // until eof or an evaluation failed
     {
        if( pWhile )
@@ -208,7 +208,7 @@ static ERRCODE rddMoveRecords( char *cAreaFrom, char *cAreaTo, PHB_ITEM pFields,
   SELF_RELEASE( ( AREAP ) pAreaRelease->pArea );
   hb_xfree( pAreaRelease );
 
-/* should the following be released? 
+/* should the following be released?
   if ( pFields )
     hb_itemRelease( pFields );
   if ( pFor )
