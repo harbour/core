@@ -1265,8 +1265,8 @@ void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             /* Pops a value from the eval stack and uses it to set
             * a new value of the given field
             */
+            hb_rddPutFieldValue( ( hb_stackItemFromTop(-1) ), ( *pDynSym )->pSymbol );
             hb_stackDec();
-            hb_rddPutFieldValue( ( hb_stackTopItem() ), ( *pDynSym )->pSymbol );
             hb_itemClear( ( hb_stackTopItem() ) );
             HB_TRACE(HB_TR_INFO, ("(hb_vmMPopField)"));
             w += sizeof( HB_DYNS_PTR ) + 1;

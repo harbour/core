@@ -1,3 +1,7 @@
+2001-06-07 18:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
+   * source/vm/hvm.c
+     ! Fixed HB_P_MPOPFIELD was poping assgined value pre-maturely, causing "data type error" from RDD when replacing a field using macro.
+
 2001-06-07 20:39 GMT+1 Patrick Mast <harbour@PatrickMast.com>
    * contrib/tprepro/tprepro.prg
      + Added TestPrePro tes test preprocessor output
@@ -50,7 +54,7 @@
      + __PP_INIT() added
      + __PP_FREE() added
      + __PPADDRULE() added
-       * __PPADDRULE( cString ) can be called to preprocess a directive 
+       * __PPADDRULE( cString ) can be called to preprocess a directive
          ( #include, #command, etc. )
          __PP_FREE() should be called if __PPADDRULE() or __PP_INIT() was used
          to free memory, allocated for pp tables.
