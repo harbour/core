@@ -1077,7 +1077,7 @@ static ERRCODE adsSetScope( ADSAREAP pArea, LPDBORDSCOPEINFO sInfo )
       {
          ulRetVal = AdsSetScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope,
               (UNSIGNED8*) sInfo->scopeValue,
-              (UNSIGNED16) strlen( sInfo->scopeValue), ADS_STRINGKEY );
+              (UNSIGNED16) strlen( (const char *)sInfo->scopeValue), ADS_STRINGKEY );
       }
       else
          AdsClearScope( pArea->hOrdCurrent, (UNSIGNED16) sInfo->nScope );
