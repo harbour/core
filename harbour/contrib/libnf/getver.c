@@ -156,7 +156,8 @@ HB_FUNC(_FT_TEMPFIL)
    int nax;
    int iflags;
    char *cPath;
-#if defined(HB_OS_DOS)
+
+#if defined(HB_OS_DOS) && !defined(HB_OS_DOS_32)
    {
 
       int iMode=hb_parni(2);
