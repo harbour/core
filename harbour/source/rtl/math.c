@@ -120,6 +120,7 @@ int hb_mathIsMathErr (void)
 }
 
 /* route C math lib errors to Harbour error handling */
+#if defined(HB_MATH_HANDLER)
 int matherr (struct exception * err)
 {
    int retval;
@@ -187,7 +188,7 @@ int matherr (struct exception * err)
    return (retval);  
 
 }
-
+#endif
 
 /*
  * ************************************************************

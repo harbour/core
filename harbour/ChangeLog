@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-08 17:20 UTC+0100 Martin Vogel <vogel@inttec.de>
+   * source/rtl/math.c
+     * #ifdef'ed matherr() definition to hide it from compilers not supporting it 
+	
 2002-07-08 10:15 UTC-0300 Luiz Rafael Culik <culikr@uol.com.br>
    * contrib/rdd_ads/ads1.c
       * Fixed bug on adsGetValue() function when numeric data to be putted are more the 10 number
