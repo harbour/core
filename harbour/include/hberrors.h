@@ -146,8 +146,8 @@ extern "C" {
 #define HB_PP_WARN_DEFINE_REDEF                 1
 #define HB_PP_WARN_NO_DIRECTIVES                2
 
-extern void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 ); /* generic parsing error management function */
-extern void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2); /* generic parsing warning management function */
+extern void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
+extern void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
 
 #if defined(HB_EXTERN_C)
 }

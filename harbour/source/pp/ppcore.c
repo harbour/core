@@ -63,6 +63,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <errno.h>
 
 #include "hbpp.h"
 #include "hbcomp.h"
@@ -158,7 +159,7 @@ char *     hb_pp_STD_CH = NULL;
 /* Table with parse errors */
 char * hb_pp_szErrors[] =
 {
-   "Can\'t open #include file: \'%s\'",
+   "Can\'t open #include file: \'%s\'; %s",
    "#else does not match #ifdef",
    "#endif does not match #ifdef",
    "Bad filename in #include",
@@ -437,9 +438,13 @@ int hb_pp_ParseDirective( char * sLine )
             hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_WRONG_NAME, NULL, NULL );
           *(sLine+i) = '\0';
 
-          /*   if((handl_i = fopen(sLine, "r")) == NULL) */
           if( !OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, ( cDelimChar == '>' ), szInclude ) )
-             hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, NULL );
+          {
+            if( errno == 0 || errno == EMFILE )
+              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
+            else
+              hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, sys_errlist[ errno ] );
+          }
         }
 
       else if( i >= 4 && i <= 6 && memcmp( sDirective, "DEFINE", i ) == 0 )
@@ -2942,9 +2947,7 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
 
   HB_TRACE(HB_TR_DEBUG, ("OpenInclude(%s, %p, %p, %p, %d)", szFileName, pSearch, pMainFileName, fptr, (int) bStandardOnly));
 
-  if( hb_comp_files.iFiles > HB_PP_MAX_INCLUDES )
-     hb_compGenError( hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, szFileName, NULL );
-
+  errno = 0;
   if( bStandardOnly )
   {
      fptr = 0;
@@ -2963,7 +2966,7 @@ static BOOL OpenInclude( char * szFileName, PATHNAMES * pSearch, PHB_FNAME pMain
      hb_xfree( pFileName );
   }
 
-  if( !fptr && pSearch )
+  if( !fptr && pSearch && errno != EMFILE )
   {
       pFileName = hb_fsFNameSplit( szFileName );
       pFileName->szName = szFileName;

@@ -1,3 +1,17 @@
+2000-10-10 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+   * include/hberrors.h
+   * source/pp/pplib.c
+     % Changed the two char * parameters for hb_compGenError()
+       and hb_compGenWarning() to const char *.
+   * source/pp/ppcore.c
+     % Removed the artificial nested include file limit test and
+       replaced it with a test for errno == EMFILE after returning
+       from the OpenInclude() function, which starts by clearing
+       errno and does not try to search the path if the standard
+       open attempt results in errno being set to EMFILE.
+     % Added displaying the C RTL error message corresponding to
+       errno if OpenInclude() returns an error that isn't EMFILE.
+
 2000-10-10 16:12 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    *contrib/rdd_ads/ads1.c
      * fixed bug with creating compound indexes, reported by Antonio Linares

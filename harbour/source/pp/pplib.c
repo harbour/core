@@ -121,7 +121,7 @@ HB_FUNC( __PREPROCESS )
       hb_retc( "" );
 }
 
-void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szError1, char * szError2 )
+void hb_compGenError( char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
    PHB_ITEM pError;
    char buffer[ 128 ];
@@ -141,7 +141,7 @@ void hb_compGenError( char * szErrors[], char cPrefix, int iError, char * szErro
    longjmp( s_env, iError == 0 ? -1 : iError );
 }
 
-void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, char * szWarning1, char * szWarning2 )
+void hb_compGenWarning( char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("GenWarning(%p, %c, %d, %s, %s)", szWarnings, cPrefix, iWarning, szWarning1, szWarning2));
 
