@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Some dbf structure related functions
  *
- * Copyright 2000 Alexander Kresin  <alex@belacy.belgorod.su>
+ * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,17 +33,8 @@
  *
  */
 
-#include "windows.h"
 #include "extend.h"
-#include "init.h"
-#include "itemapi.h"
-#include "rddsys.ch"
-#include "langapi.h"
-#include "dates.h"
-#include "errorapi.h"
 #include "rddapi.h"
-
-extern void* hb_rddGetCurrentWorkAreaPointer( void );
 
 HARBOUR HB_FIELDTYPE( void )
 {
@@ -52,9 +43,10 @@ HARBOUR HB_FIELDTYPE( void )
    AREAP pArea;
 
    uiField = hb_parni( 1 );
-   pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
+   pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    pField = pArea->lpFields + uiField - 1;
-   hb_retc( (char*) &(pField->uiType) );
+
+   hb_retc( ( char * ) &( pField->uiType ) );
 }
 
 HARBOUR HB_FIELDSIZE( void )
@@ -64,8 +56,9 @@ HARBOUR HB_FIELDSIZE( void )
    AREAP pArea;
 
    uiField = hb_parni( 1 );
-   pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
+   pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    pField = pArea->lpFields + uiField - 1;
+
    hb_retni( pField->uiLen );
 }
 
@@ -76,7 +69,8 @@ HARBOUR HB_FIELDDECI( void )
    AREAP pArea;
 
    uiField = hb_parni( 1 );
-   pArea = (AREAP) hb_rddGetCurrentWorkAreaPointer();
+   pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    pField = pArea->lpFields + uiField - 1;
+
    hb_retni( pField->uiDec );
 }

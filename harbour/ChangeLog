@@ -1,3 +1,14 @@
+20000205-13:06 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * tests/db_brows.prg
+     ! UPDATED() removed, since it's now defined in the RTL.
+   * include/rddapi.h
+     source/tools/dbftools.c
+     * hb_rdd*() function declration moved to rddapi.h
+   * source/tools/dbftools.c
+     ! Removed #includes not needed. Especially windows.h.
+   * source/compiler/hbusage.c
+     + Note added about switch character.
+
 20000205-00:32 GMT+1 Victor Szakats <info@szelvesz.hu>
    * source/tools/Makefile
      + dbftools.c added.

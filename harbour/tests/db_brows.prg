@@ -896,14 +896,4 @@ FUNC NUM_STR( NOM, KOLZN )
    NOM := INT( NOM )
 RETURN ( REPLICATE( "0", KOLZN - LEN( LTRIM( STR( NOM ) ) ) ) + LTRIM( STR( NOM ) ) )
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Function updated()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-FUNCTION updated
-
-RETURN .t.
-
 *+ EOF: SAMPLE.PRG

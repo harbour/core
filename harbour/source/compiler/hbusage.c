@@ -78,6 +78,8 @@ void hb_compPrintUsage( char * szSelf )
            "\n          /10              restrict symbol length to 10 significant characters"
 /* TODO:   "\n           @<file>         compile list of modules in <file>" */
            "\n"
+           "\nNotes:  Use the specific option character for your platform"
+           "\n        instead of \'/\'."
            , szSelf );
 }
 

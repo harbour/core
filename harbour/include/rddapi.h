@@ -41,6 +41,7 @@
 /* RDD virtual machine integration functions */
 
 extern int     hb_rddGetCurrentWorkAreaNumber( void );
+extern void *  hb_rddGetCurrentWorkAreaPointer( void );
 extern ERRCODE hb_rddSelectWorkAreaAlias( char * szAlias );
 extern ERRCODE hb_rddSelectWorkAreaNumber( int iArea );
 extern ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias );
