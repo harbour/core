@@ -81,7 +81,7 @@ HB_FUNC( CTOD )
       if( szDate )
       {
          int d_pos = 0, m_pos = 0, y_pos = 0;
-         int count, digit, size = strlen( hb_set.HB_SET_DATEFORMAT );
+         int count, digit, non_digit, size = strlen( hb_set.HB_SET_DATEFORMAT );
 
          for( count = 0; count < size; count++ )
          {
@@ -116,25 +116,36 @@ HB_FUNC( CTOD )
             }
          }
 
+         /* If there are non-digits at the start of the date field,
+            they are not to be treated as date field separators */
+         non_digit = 1;
          size = strlen( szDate );
-
          for( count = 0; count < size; count++ )
          {
             digit = szDate[ count ];
             if( isdigit( digit ) )
             {
+               /* Process the digit for the current date field */
                if( d_pos == 1 )
                   d_value = ( d_value * 10 ) + digit - '0';
                else if( m_pos == 1 )
                   m_value = ( m_value * 10 ) + digit - '0';
                else if( y_pos == 1 )
                   y_value = ( y_value * 10 ) + digit - '0';
+               /* Treat the next non-digit as a date field separator */
+               non_digit = 0;
             }
             else if( digit != ' ' )
             {
-               d_pos--;
-               m_pos--;
-               y_pos--;
+               /* Process the non-digit */
+               if( non_digit++ == 0 )
+               {
+                  /* Only move to the next date field on the first
+                     consecutive non-digit that is encountered */
+                  d_pos--;
+                  m_pos--;
+                  y_pos--;
+               }
             }
          }
 

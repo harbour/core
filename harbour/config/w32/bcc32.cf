@@ -61,6 +61,16 @@ ifneq ($(HB_SCREEN_LIB),)
 LINKLIBS += $(HB_SCREEN_LIB)
 endif
 
+# Add the optional user path(s)
+ifneq ($(LNK_USR_PATH),)
+LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
+endif
+
+# Add the optional user libarary (or libraries)
+ifneq ($(LNK_USR_LIB),)
+LINKLIBS += $(foreach lib, $(LNK_USR_LIB), $(lib)$(LIB_EXT))
+endif
+
 LDFLAGS = $(LINKPATHS)
 
 AR = tlib
