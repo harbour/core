@@ -4070,7 +4070,7 @@ static ERRCODE ntxOrderListRebuild( NTXAREAP pArea )
          hb_fsWrite( pTag->Owner->DiskFile, NULL, 0 );
       }
       pTag->RootBlock = 0;
-      pTag->keyCount = 0;
+      pTag->keyCount = pTag->Owner->NextAvail = 0;
       hb_ntxIndexCreate( pTag->Owner );
 
       if( !pTag->Memory )
