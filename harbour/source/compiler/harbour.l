@@ -52,7 +52,7 @@ extern WORD _wIfCounter;
 extern WORD _wWhileCounter;
 extern WORD _wCaseCounter;
 
-int iLine = 0;
+int iLine = 1;
 long lNumber = 0;
 
 #define LOOKUP          0       /* scan from the begining of line */

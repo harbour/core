@@ -243,8 +243,6 @@ typedef enum
    LANG_PORT_OBJ            /* Portable objects <file.hrb> */
 } LANGUAGES;                /* supported Harbour output languages */
 
-extern int iLine;           /* currently compiled source code line */
-
 #define VS_LOCAL      1
 #define VS_STATIC     2
 #define VS_FIELD      4
@@ -537,13 +535,13 @@ Params     :                                               { $$ = 0; }
            ;
 
 ParamList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
            | ParamList ',' IDENTIFIER              { AddVar( $3 ); $$++; }
            ;
 
@@ -865,13 +863,13 @@ BlockExpList : Expression                            { $$ = 1; }
            ;
 
 BlockList  : IDENTIFIER                            { cVarType = ' '; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
-	   | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_DATE                    { cVarType = 'D'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; AddVar( $1 ); $$ = 1; }
+           | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; AddVar( $1 ); $$ = 1; }
            | BlockList ',' IDENTIFIER             { AddVar( $3 ); $$++; }
            ;
 
@@ -888,13 +886,13 @@ VarList    : VarDef                                  { $$ = 1; }
            ;
 
 VarDef     : IDENTIFIER                                   { cVarType = ' '; AddVar( $1 ); }
-	   | IDENTIFIER AS_NUMERIC                        { cVarType = 'N'; AddVar( $1 ); }
-	   | IDENTIFIER AS_CHARACTER                      { cVarType = 'C'; AddVar( $1 ); }
-	   | IDENTIFIER AS_LOGICAL                        { cVarType = 'L'; AddVar( $1 ); }
-	   | IDENTIFIER AS_DATE                           { cVarType = 'D'; AddVar( $1 ); }
-	   | IDENTIFIER AS_ARRAY                          { cVarType = 'A'; AddVar( $1 ); }
-	   | IDENTIFIER AS_BLOCK                          { cVarType = 'B'; AddVar( $1 ); }
-	   | IDENTIFIER AS_OBJECT                         { cVarType = 'O'; AddVar( $1 ); }
+           | IDENTIFIER AS_NUMERIC                        { cVarType = 'N'; AddVar( $1 ); }
+           | IDENTIFIER AS_CHARACTER                      { cVarType = 'C'; AddVar( $1 ); }
+           | IDENTIFIER AS_LOGICAL                        { cVarType = 'L'; AddVar( $1 ); }
+           | IDENTIFIER AS_DATE                           { cVarType = 'D'; AddVar( $1 ); }
+           | IDENTIFIER AS_ARRAY                          { cVarType = 'A'; AddVar( $1 ); }
+           | IDENTIFIER AS_BLOCK                          { cVarType = 'B'; AddVar( $1 ); }
+           | IDENTIFIER AS_OBJECT                         { cVarType = 'O'; AddVar( $1 ); }
            | IDENTIFIER INASSIGN Expression               { cVarType = ' '; AddVar( $1 ); PopId( $1 ); }
            | IDENTIFIER AS_NUMERIC   INASSIGN Expression  { cVarType = 'N'; AddVar( $1 ); PopId( $1 ); }
            | IDENTIFIER AS_CHARACTER INASSIGN Expression  { cVarType = 'C'; AddVar( $1 ); PopId( $1 ); }
@@ -911,13 +909,13 @@ FieldsDef  : FIELD { iVarScope =VS_FIELD; } FieldList Crlf { LineBody(); }
            ;
 
 FieldList  : IDENTIFIER                            { cVarType = ' '; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_DATE                    { cVarType = 'D'; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; $$=FieldsCount(); AddVar( $1 ); }
-	   | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_NUMERIC                 { cVarType = 'N'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_CHARACTER               { cVarType = 'C'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_DATE                    { cVarType = 'D'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_LOGICAL                 { cVarType = 'L'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_ARRAY                   { cVarType = 'A'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_BLOCK                   { cVarType = 'B'; $$=FieldsCount(); AddVar( $1 ); }
+           | IDENTIFIER AS_OBJECT                  { cVarType = 'O'; $$=FieldsCount(); AddVar( $1 ); }
            | FieldList ',' IDENTIFIER                { AddVar( $3 ); }
            | FieldList IN IDENTIFIER { SetAlias( $3, $<iNumber>1 ); }
            ;
@@ -1812,7 +1810,7 @@ int Include( char * szFileName, PATHNAMES *pSearch )
       {
         pFileName->path =pSearch->szPath;
         MakeFilename( szFName, pFileName );
-	yyin = fopen( szFName, "r" );
+        yyin = fopen( szFName, "r" );
         if( ! yyin )
         {
             pSearch = pSearch->pNext;
@@ -2097,7 +2095,7 @@ void GenCCode( char *szFileName, char *szName )       /* generates the C languag
         fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
       else
       {
-	 pFTemp = GetFuncall( pSym->szName );
+         pFTemp = GetFuncall( pSym->szName );
          if( pFTemp )
             fprintf( yyc, ", HB_%s, 0 }", pFTemp->szName );
          else
@@ -3144,9 +3142,9 @@ WORD JumpFalse( int iOffset )
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
-   	 GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
+         GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
       else if( pStackValType && pStackValType->cType != 'L')
-   	 GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
+         GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
 
       /* compile time assignment value has to be released */
       pFree = pStackValType;
@@ -3198,9 +3196,9 @@ WORD JumpTrue( int iOffset )
 
       /* compile time Operand value */
       if( pStackValType && pStackValType->cType == ' ' )
-   	 GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
+         GenWarning( WARN_LOGICAL_SUSPECT, NULL, NULL );
       else if( pStackValType && pStackValType->cType != 'L')
-   	 GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
+         GenWarning( WARN_LOGICAL_TYPE, sType, NULL );
 
       /* compile time assignment value has to be released */
       pFree = pStackValType;
@@ -3364,16 +3362,16 @@ void PopId( char * szVarName ) /* generates the pcode to pop a value from the vi
          sType[0] = pVarType->cType;
          sType[1] = 0;
 
-      	 /* skip back to the assigned value */
-      	 pStackValType = pStackValType->pPrev;
+         /* skip back to the assigned value */
+         pStackValType = pStackValType->pPrev;
       }
       else
         debug_msg( "\n***PopId() Compile time stack overflow\n", NULL );
 
       if( pVarType && pStackValType && pVarType->cType != ' ' && pStackValType->cType == ' ' )
-   	 GenWarning( WARN_ASSIGN_SUSPECT, szVarName, sType );
+         GenWarning( WARN_ASSIGN_SUSPECT, szVarName, sType );
       else if( pVarType && pStackValType && pVarType->cType != ' ' && pVarType->cType != pStackValType->cType )
-   	 GenWarning( WARN_ASSIGN_TYPE, szVarName, sType );
+         GenWarning( WARN_ASSIGN_TYPE, szVarName, sType );
 
       /* compile time variable has to be released */
       if( pVarType )
@@ -3718,7 +3716,7 @@ void Do( BYTE bParams )
          else
             debug_msg( "\n***Do() Compile time stack overflow\n", NULL );
 
-      	 if( pFree )
+         if( pFree )
          {
             OurFree( (void *) pFree );
          }
@@ -3855,7 +3853,7 @@ void Function( BYTE bParams )
          else
           debug_msg( "\n***Function() parameter %i Compile time stack overflow\n", i );
 
-      	 if( pFree )
+         if( pFree )
          {
             OurFree( (void *) pFree );
          }
@@ -3945,13 +3943,13 @@ void GenPCode1( BYTE byte )
       {
          PSTACK_VAL_TYPE pFree;
 
-	 /* Releasing compile time assignment value */
+         /* Releasing compile time assignment value */
          pFree = pStackValType;
          debug_msg( "\n***---ArrayPut()\n", NULL );
 
          if( pStackValType )
             pStackValType = pStackValType->pPrev;
-	 else
+         else
             debug_msg( "\n***HB_P_ARRAYPUT Compile time stack overflow\n", NULL );
 
          if( pFree )
@@ -3959,7 +3957,7 @@ void GenPCode1( BYTE byte )
             OurFree( (void *) pFree );
          }
 
-	 /* Releasing compile time array element index value */
+         /* Releasing compile time array element index value */
          pFree = pStackValType;
          debug_msg( "\n***---HB_P_ARRAYPUT\n", NULL );
 
@@ -4324,8 +4322,8 @@ void CodeBlockEnd()
   if( _iWarnings )
   {
      if( pStackValType )
-     	/* reusing the place holder of the result value */
-     	pStackValType->cType = 'B';
+        /* reusing the place holder of the result value */
+        pStackValType->cType = 'B';
      else
         debug_msg( "\n***CodeBlockEnd() Compile time stack overflow\n", NULL );
   }

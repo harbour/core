@@ -1,3 +1,9 @@
+19990627-23:50 CET Victor Szel <info@szelvesz.hu>
+ * source/compiler/harbour.l
+   ! Fixed line number bug. (LINE opcode, PROCLINE(), error messages)
+ * tests/working/procline.prg
+   + Added.
+
 19990627-16:30 CET Victor Szel <info@szelvesz.hu>
  * source/rtl/strings.c
    source/rtl/set.c (added four Clipper errors)
