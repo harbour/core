@@ -1,3 +1,32 @@
+20000522-06:15 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
+
+   * source/compiler/harbour.l
+     + Added "as structure", "as stru", "as array of structure", "as array of stru"
+
+   * source/compiler/hbpcode.c
+     * Improved some logic in hb_StrongType()
+
+   * source/vm/hvm.c
+     ! Corrected startup symbol when having to use Main() as per Ryszard.
+
+   * source/pp/pptable.c
+     + Added the equivalent of:
+        #COMMANDS STRUCTURE <StruName> <Var1> AS <Type1> [, <VarN> AS <TypeN> ] => ;
+                  STATIC __<StruName> := {|| IF( __<StruName> == NIL, , ) , HB_Structure( <"StruName">, { <"Var1"> [, <"VarN">] } )} ;;
+                  DECLARE <StruName> <Var1> AS <Type1> [ <VarN> AS <TypeN> ] ;;
+                  #TRANSLATE AS NEW <ClassName> => AS CLASS <StruName> := ( Eval( __<StruName> ), HB_Structure( <StruName> ) )
+
+	#TRANSLATE AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
+
+   * source/rtl/tclass.prg
+     + Added Function HB_Structure() ( Fully Declared! ) This function is used internally, but may be freely called from Clipper level.
+       It Aceepts Parameter 1 Structure Name, and optional parameter 2, as array of structure variable names.
+       If called with 2nd parameter, returns NIL (just creates the new Structure), if called with just parameter 1, it returns
+       new instance of defined structure.
+
+   + tests\teststru.prg
+     + Added demo for new structure syntax
+
 20000522-01:51 DST Paul Tucker <ptucker@sympatico.ca>
    * include/hbcomp.h
      * adjust declaration of COMCLASS and COMDECLARE

@@ -1439,6 +1439,8 @@ Separator     {SpaceTab}
 "as character"       { return AS_CHARACTER; }
 "as string"          { return AS_CHARACTER; }
 "as class"           { return AS_CLASS; }
+"as stru"            { return AS_CLASS; }
+"as structure"       { return AS_CLASS; }
 "as date"            { return AS_DATE; }
 "as logical"         { return AS_LOGICAL; }
 "as bool"            { return AS_LOGICAL; }
@@ -1458,6 +1460,8 @@ Separator     {SpaceTab}
 "as array of character" { return AS_CHARACTER_ARRAY; }
 "as array of string"    { return AS_CHARACTER_ARRAY; }
 "as array of class"     { return AS_CLASS_ARRAY; }
+"as array of stru"      { return AS_CLASS_ARRAY; }
+"as array of structure" { return AS_CLASS_ARRAY; }
 "as array of date"      { return AS_DATE_ARRAY; }
 "as array of logical"   { return AS_LOGICAL_ARRAY; }
 "as array of bool"      { return AS_LOGICAL_ARRAY; }

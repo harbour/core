@@ -444,7 +444,10 @@ void hb_compStrongType( int iSize )
            /*printf( "\nMethod: %s of Class: %s Parameters: %i\n", pSym->szName, pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName, pFunc->pStackFunctions[ pFunc->iStackFunctions - 1 ]->iParamCount );*/
 
            if ( pFunc->pStackFunctions[ pFunc->iStackFunctions - 1 ] == NULL )
-             hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MESSAGE_NOT_FOUND, pSym->szName, pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName );
+             if ( pSym->szName[0] == '_' )
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MESSAGE_NOT_FOUND, &( pSym->szName[1] ), pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName );
+             else
+                hb_compGenWarning( hb_comp_szWarnings, 'W', HB_COMP_WARN_MESSAGE_NOT_FOUND, pSym->szName, pFunc->pStackClasses[ pFunc->iStackClasses - 1 ]->szName );
          }
          else
          {
@@ -1250,9 +1253,14 @@ void hb_compStrongType( int iSize )
 
        pVar = hb_compVariableFind( pTmp->pStatics, wVar - pTmp->iStaticsBase );
 
+       /* Will be pushed shortly. */
+       pFunc->iStackIndex++;
+
        if ( pVar )
        {
-          /*printf( "\nStatic: %s Function: %s Found in: %s\n", pVar->szName, pFunc->szName, pTmp->szName );*/
+          /*
+          printf( "\nStatic: %s Type: %c Function: %s Found in: %s\n", pVar->szName, pVar->cType, pFunc->szName, pTmp->szName );
+          */
 
           /* Only if "private" static, since global static may be intialized elsewhere. */
           /* May have been initialized in previous execution of the function.
@@ -1264,23 +1272,22 @@ void hb_compStrongType( int iSize )
           /* Mark as used */
           pVar->iUsed |= VU_USED;
 
-          if ( pVar->cType == 'S' && pFunc->iStackClasses < 8 )
+          if ( toupper( pVar->cType ) == 'S' && pFunc->iStackClasses < 8 )
           {
             /* Object of declared class */
             pFunc->pStackClasses[ pFunc->iStackClasses++ ] = pVar->pClass;
-            pFunc->pStack[ pFunc->iStackIndex++ ] = 'S';
           }
 
           if ( pFunc->pCode[ ulPos ] == HB_P_PUSHSTATICREF )
-             pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType + VT_OFFSET_BYREF;
+             pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType + VT_OFFSET_BYREF;
           else
-             pFunc->pStack[ pFunc->iStackIndex++ ] = pVar->cType;
+             pFunc->pStack[ pFunc->iStackIndex - 1 ] = pVar->cType;
        }
        else
           if ( pFunc->pCode[ ulPos ] == HB_P_PUSHSTATICREF )
-             pFunc->pStack[ pFunc->iStackIndex++ ] = '@';
+             pFunc->pStack[ pFunc->iStackIndex - 1 ] = '@';
           else
-             pFunc->pStack[ pFunc->iStackIndex++ ] = ' ';
+             pFunc->pStack[ pFunc->iStackIndex - 1 ] = ' ';
 
        break;
 
@@ -1438,6 +1445,10 @@ void hb_compStrongType( int iSize )
 
        {
           BYTE cVarType = pFunc->pStack[ pFunc->iStackIndex - 1 ];
+
+          /*
+          printf( "\n Base Type: %c\n", cVarType );
+          */
 
           if ( cVarType  >= ( 'A' + VT_OFFSET_VARIANT ) )
              cVarType -= VT_OFFSET_VARIANT;

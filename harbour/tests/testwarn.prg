@@ -6,7 +6,6 @@
 #ifdef __HARBOUR__
    #pragma -es0
 #else
-
    #TRANSLATE AS ARRAY [OF <type>] =>
 
    #TRANSLATE AS CHAR =>

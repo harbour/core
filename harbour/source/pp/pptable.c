@@ -389,6 +389,9 @@ static COMMANDS sC___236 = {0,"SET","INDEX TO [ \1A40 [, \1B40]] [\1C20 ADDITIVE
 static COMMANDS sC___237 = {0,"SET","ORDER TO \1A00 [IN \1B40]","ordSetFocus( \1A00 [, \1B30] )",&sC___236 };
 static COMMANDS sC___238 = {0,"SET","ORDER TO TAG \1A40 [IN \1B40]","ordSetFocus( \1A30 [, \1B30] )",&sC___237 };
 static COMMANDS sC___239 = {0,"SET","ORDER TO","ordSetFocus(0)",&sC___238 };
+static COMMANDS sC___240 = {0,"STRUCTURE","\1A00 \1B00 AS \1C00 [, \1D00 AS \1E00 ]","STATIC __\1A00 := {|| IF(__\1A00 == NIL, , ) ,hb_structure( \1A20, { \1B20 [, \1D20] } )} ; DECLARE \1A00 \1B00 AS \1C00 [ \1D00 AS \1E00] ; #translate AS NEW \1A00 => AS CLASS \1A00 := ( Eval(__\1A00), hb_Structure( \1A20 ) )",&sC___239 };
 
-COMMANDS * hb_pp_topCommand = &sC___239;
-COMMANDS * hb_pp_topTranslate = NULL;
+static COMMANDS sT___1 = {0,"AS","NEW \1A00","AS CLASS \1A00 := \1A00():New()",NULL };
+
+COMMANDS * hb_pp_topCommand = &sC___240;
+COMMANDS * hb_pp_topTranslate = &sT___1;

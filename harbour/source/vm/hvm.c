@@ -4070,7 +4070,7 @@ void hb_vmProcessSymbols( PHB_SYMB pModuleSymbols, USHORT uiModuleSymbols ) /* m
       if( ( ! s_pSymStart ) && ( hSymScope & HB_FS_FIRST ) )
          s_pSymStart = pModuleSymbols + ui;  /* first public defined symbol to start execution */
 
-      if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR ) ) )
+      if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR | HB_FS_FIRST ) ) )
          hb_dynsymNew( pModuleSymbols + ui );
    }
 }
