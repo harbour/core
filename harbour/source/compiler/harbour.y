@@ -3028,6 +3028,9 @@ void GenExterns( void ) /* generates the symbols for the EXTERN names */
 {
   PEXTERN pDelete;
 
+  if( _bDebugInfo )
+     AddExtern( yy_strdup( "DEBUGGER" ) );
+
   while( pExterns )
   {
     if( GetSymbol( pExterns->szName, NULL ) )
