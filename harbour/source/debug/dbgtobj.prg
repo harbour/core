@@ -86,7 +86,7 @@ Method addWindows(aArray,nRow) class tdbgObject
 local oBrwSets,nSize:=Len(AArray)
 //local n:=1
 Local owndsets
-   local nWidth  
+   local nWidth
    local oCol
    if (nsize<maxrow()-2)
       if nRow <> nil
@@ -100,12 +100,12 @@ Local owndsets
                   ::nCurWindow++
    oWndSets:lFocused:=.t.
    aadd(::aWindows,owndsets)
-   
+
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
 
    oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, owndsets:nRight-1)
    ::ArrayReference:=aarray
-   
+
    oBrwSets:ColorSpec := "N/W, R/W, N/bg"
    oBrwSets:GoTopBlock := { || ::Arrayindex := 1 }
    oBrwSets:GoBottomBlock := { || ::arrayindex := Len( ::ArrayReference) }
@@ -129,7 +129,7 @@ Local owndsets
    ::aWindows[::nCurWindow]:ShowModal()
 
 return self
- 
+
 method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class tdbgObject
 
    local nSet := oBrwSets:Cargo
@@ -174,13 +174,13 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
                      TDBGArray():New(aArray[nSet,2],::pitems[nSet,1])
                   endif
                elseif valtype(aArray[nSet,2])=="O"
-                  tdbgObject():New(aArray[nSet,2],::pitems[nSet,1])              
+                  tdbgObject():New(aArray[nSet,2],::pitems[nSet,1])
 /*               elseif __objHasMethod(::theObj,aArray[nSet,2])
                   Alert("Value cannot be edited")*/
                elseif valtype(aArray[nSet,2])=="B"
                   Alert("Value cannot be edited")
 
-              else 
+              else
                  oBrwSets:RefreshCurrent()
                  cTemp:=::doget(oBrwsets,::arrayreference,nSet)
                  oBrwSets:RefreshCurrent()
@@ -219,7 +219,7 @@ static procedure SetsUp( oBrw )
    if nRow != oBrw:Cargo
       oBrw:aReDraw[ nRow ] := .f.
       oBrw:Up()
-   endif 
+   endif
    oBrw:ForceStable()
    myColors(oBrw,{1,2})
 return
@@ -259,7 +259,7 @@ static function ValToStr( uVal )
    do case
       case uVal == nil
            cResult := "NIL"
-      
+
       case cType == "A"
            cResult := "{ ... }"
 
@@ -325,13 +325,13 @@ METHOD doGet(oBro,pItem,nSet) class tdbgObject
     IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
         KEYBOARD CHR( nKey )
     END
-RETURN 
+RETURN
 static function myColors( oBrowse, aColColors )
    local i
    local nColPos := oBrowse:colpos
 
    for i := 1 to len( aColColors )
-      oBrowse:colpos := aColColors[i]  
+      oBrowse:colpos := aColColors[i]
       oBrowse:hilite()
 if  oBrowse:colPos==1
      oBrowse:dehilite()
@@ -357,3 +357,6 @@ FUNC maxelem( a )
    NEXT
 
 RETURN max
+
+function __DbgObject(aArray,pArName)
+return TDBGObject():New(aArray,pArName)
