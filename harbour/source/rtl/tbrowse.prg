@@ -133,19 +133,11 @@ CLASS TBrowse
 
    METHOD AddColumn( oCol )
    METHOD DelColumn( nPos )                                 // Delete a column object from a browse
-   METHOD InsColumn( nPos, oCol ) INLINE;                   // Insert a column object in a browse
-          ASize( ::aColumns, ++::nColumns), AIns( ::aColumns, nPos ),;
-          ::aColumns[ nPos ] := oCol, ::Configure( 2 ), oCol
-   METHOD GetColumn( nColumn ) INLINE;                      // Gets a specific TBColumn object
-          iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL )
-   // NOTE: Shouldn't I return a copy of replaced column?
-   METHOD SetColumn( nColumn, oCol ) INLINE;                // Replaces one TBColumn object with another
-          iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ] := oCol, NIL ),;
-          ::Configure( 2 ), oCol
-   METHOD ColWidth( nColumn ) INLINE;                       // Returns the display width of a particular column
-          iif( 0 < nColumn .and. nColumn <= ::nColumns, ::aColumns[ nColumn ]:Width, NIL )
+   METHOD InsColumn( nPos, oCol )                           // Insert a column object in a browse
+   METHOD GetColumn( nColumn )                              // Gets a specific TBColumn object
+   METHOD SetColumn( nColumn, oCol )                        // Replaces one TBColumn object with another
+   METHOD ColWidth( nColumn )                               // Returns the display width of a particular column
    METHOD ColCount() INLINE ::nColumns
-
    METHOD ColorRect()                                       // Alters the color of a rectangular group of cells
    METHOD Configure( nMode )                                // Reconfigures the internal settings of the TBrowse object
                                                             // nMode is an undocumented parameter in CA-Cl*pper
@@ -183,11 +175,12 @@ CLASS TBrowse
    METHOD WriteMLineText(cStr, nPadLen, lHeader, cColor) // Writes a multi-line text where ";" is a line break, lHeader
                                                          // is .T. if it is a header and not a footer
    METHOD SetFrozenCols(nHowMany)         // Handles freezing of columns
-   METHOD SetColumnWidth(oCol)            // Sets ::Width property of given column
+   METHOD SetColumnWidth(oCol)            // Calcs width of given column
 
    DATA aRect                             // The rectangle specified with ColorRect()
    DATA aRectColor                        // The color positions to use in the rectangle specified with ColorRect()
    DATA aRedraw                           // Array of logical items indicating, is appropriate row need to be redraw
+   DATA aColsWidth                        // Array with width of TBrowse's columns
    DATA lHeaders                          // Internal variable which indicates whether there are column footers to paint
    DATA lFooters                          // Internal variable which indicates whether there are column footers to paint
    DATA lRedrawFrame                      // True if I need to redraw Headers/Footers
@@ -218,6 +211,7 @@ METHOD New(nTop, nLeft, nBottom, nRight) CLASS TBrowse
    default  nRight  to MaxCol()
 
    ::aColumns        := {}
+   ::aColsWidth      := {}
    ::AutoLite        := .T.
    ::leftVisible     := 1
    ::ColPos          := 1
@@ -349,10 +343,53 @@ return Self
 METHOD AddColumn( oCol ) CLASS TBrowse
 
    AAdd( ::aColumns, oCol )
+   AAdd( ::aColsWidth, ::SetColumnWidth(oCol))
    ::nColumns++
    ::Configure( 2 )
 
 return Self
+
+
+// Insert a column object in a browse
+METHOD InsColumn( nPos, oCol )                           
+   
+   ASize( ::aColumns, ++::nColumns)
+   AIns( ::aColumns, nPos )
+   ASize( ::aColsWidth, ::nColumns)
+   AIns( ::aColsWidth, nPos )
+   
+   ::aColumns[ nPos ] := oCol
+   ::aColsWidth[ nPos ] := ::SetColumnWidth(oCol)   
+   ::Configure( 2 )
+
+return oCol
+
+
+// Gets a specific TBColumn object
+METHOD GetColumn( nColumn ) 
+          
+return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL )
+          
+
+// Replaces one TBColumn object with another
+METHOD SetColumn( nColumn, oCol )
+
+   LOCAL oOldCol  
+          
+   if  0 < nColumn .AND. nColumn <= ::nColumns
+       oOldCol := ::aColumns[ nColumn ] 
+       ::aColumns[ nColumn ] := oCol
+       ::aColsWidth[nColumn] := ::SetColumnWidth(oCol)    
+       ::Configure( 2 )
+   endif       
+                             
+return oOldCol          
+
+
+// Returns the display width of a particular column          
+METHOD ColWidth( nColumn ) 
+
+return iif( 0 < nColumn .AND. nColumn <= ::nColumns, ::aColsWidth[ nColumn ], NIL )
 
 
 METHOD DelColumn( nPos ) CLASS TBrowse
@@ -361,7 +398,10 @@ METHOD DelColumn( nPos ) CLASS TBrowse
    local n
 
    ADel( ::aColumns, nPos )
+   ADel( ::aColsWidth, nPos)
    ASize( ::aColumns, --::nColumns)
+   ASize( ::aColsWidth, ::nColumns)
+   
    ::Configure( 2 )
 
 return oCol
@@ -382,7 +422,7 @@ METHOD SetFrozenCols(nHowMany) CLASS TBrowse
 
       if nHowMany > 0
          for nCol := 1 TO nHowMany
-            ::nFrozenWidth += ::aColumns[ nCol ]:Width
+            ::nFrozenWidth += ::aColsWidth[ nCol ]
             if nCol < ::nColumns
                ::nFrozenWidth += iif( ::aColumns[ nCol + 1 ]:ColSep != NIL,;
                                       Len( ::aColumns[ nCol + 1 ]:ColSep ),;
@@ -395,13 +435,13 @@ METHOD SetFrozenCols(nHowMany) CLASS TBrowse
          if nHowMany > 0
             // If there are columns which are larger than TBrowse display width minus
             // frozen columns reserved space, shrihnk them to fit
-            if ::nFrozenWidth + ::aColumns[ nCol ]:Width > nWidth
-               ::aColumns[ nCol ]:Width := nWidth - ::nFrozenWidth
+            if ::nFrozenWidth + ::aColsWidth[ nCol ] > nWidth
+               ::aColsWidth[ nCol ] := nWidth - ::nFrozenWidth
             endif
 
          else
             // Reset column widths
-            ::SetColumnWidth(::aColumns[ nCol ])
+            ::aColsWidth[ nCol ] := ::SetColumnWidth(::aColumns[ nCol ])           
          endif
       next
    endif
@@ -413,46 +453,50 @@ METHOD SetColumnWidth( oCol ) CLASS TBrowse
 
    LOCAL xRes, cType, nTokenPos := 0, nL, cHeading
    LOCAL nWidthMax := ::nRight - ::nLeft + 1   // Visible width of TBrowse
+   LOCAL nWidth := 0
 
-   if ISBLOCK( oCol:block )
-
-      cType := Valtype(xRes := Eval( oCol:block ) )
-
-      do case
-         case cType == "N"
-            oCol:Width := Len( Str( xRes ) )
-
-         case cType == "L"
-            oCol:Width := 1
-
-         case cType == "C"
-            oCol:Width := Len( xRes )
-
-         case cType == "D"
-            oCol:Width := Len( DToC( xRes ) )
-
-         otherwise
-            oCol:Width := 0
-      endcase
-
-      cHeading := oCol:Heading + ";"
-      while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
-         if nL > oCol:Width
-            oCol:Width := nL
-         endif
-      enddo
-
-      if oCol:Width > nWidthMax
-         // with values lower than -4 it SIGSEVs here and there :-(
-         oCol:Width := nWidthMax - 4
-      endif
-
+   // if oCol has :Width property set I use it
+   if oCol:Width <> nil .AND. oCol:Width < (nWidthMax - 4)
+      nWidth := oCol:Width
+   
    else
-      // Needed !
-      oCol:Width := 0
+      if ISBLOCK( oCol:block )
+
+         cType := Valtype(xRes := Eval( oCol:block ) )
+
+         do case
+            case cType == "N"
+               nWidth := Len( Str( xRes ) )
+
+            case cType == "L"
+               nWidth := 1
+
+            case cType == "C"
+               nWidth := Len( xRes )
+
+            case cType == "D"
+               nWidth := Len( DToC( xRes ) )
+
+            otherwise
+               nWidth := 0
+         endcase
+
+         cHeading := oCol:Heading + ";"
+         while (nL := Len(__StrTkPtr(@cHeading, @nTokenPos, ";"))) > 0
+            if nL > nWidth
+               nWidth := nL
+            endif
+         enddo
+
+         if nWidth > nWidthMax
+            // with values lower than -4 it SIGSEVs here and there :-(
+            nWidth := nWidthMax - 4
+         endif
+
+      endif
    endif
 
-return Self
+return nWidth
 
 
 METHOD Down() CLASS TBrowse
@@ -579,7 +623,7 @@ METHOD LeftDetermine() CLASS TBrowse
    nCol := ::rightVisible
    while nWidth < nWidthMax .and. nCol > ::nFrozenCols
 
-      nWidth += ::aColumns[ nCol ]:Width +;
+      nWidth += ::aColsWidth[ nCol ] +;
                 iif( ::aColumns[ nCol ]:ColSep != NIL,;
                      Len( ::aColumns[ nCol ]:ColSep ),;
                      Len( ::ColSep ) )
@@ -695,7 +739,7 @@ METHOD DeHilite() CLASS TBrowse
 
    cType := ::DispCell(::ColPos, CLR_STANDARD)
 
-   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
+   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
 
 return Self
 
@@ -721,7 +765,7 @@ METHOD Hilite() CLASS TBrowse
    cType := ::DispCell(::ColPos, CLR_ENHANCED)
 
    // Put cursor back on first char of cell value
-   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
+   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
 
 return Self
 
@@ -732,7 +776,7 @@ METHOD PosCursor() CLASS TBrowse
    local cType := ValType( Eval( ::aColumns[ ::ColPos ]:block ) )
 
    // Put cursor on first char of cell value
-   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColumns[::ColPos]:Width / 2, 0 ))
+   SetPos(nRow, ::aColumns[ ::ColPos ]:ColPos + iif(cType == "L", ::aColsWidth[::ColPos] / 2, 0 ))
 
 return Self
 
@@ -754,7 +798,7 @@ METHOD HowManyCol(nWidth) CLASS TBrowse
       ::nColsVisible := 0
       while ::nColsVisible < ::nFrozenCols
 
-         nToAdd := ::aColumns[ ::nColsVisible + 1 ]:Width
+         nToAdd := ::aColsWidth[ ::nColsVisible + 1 ]
 
          if ::nColsVisible >= 1 .and. ::nColsVisible < ::nColumns
             nToAdd += iif( ::aColumns[ ::nColsVisible + 1 ]:ColSep != NIL,;
@@ -782,7 +826,7 @@ METHOD HowManyCol(nWidth) CLASS TBrowse
 
    while ::nColsVisible < ::nColumns
 
-      nToAdd := ::aColumns[ ::nColsVisible + 1 ]:Width
+      nToAdd := ::aColsWidth[ ::nColsVisible + 1 ]
 
       if ::nColsVisible >= ::leftVisible .or. ::nFrozenCols > 0
          nToAdd += iif( ::aColumns[ ::nColsVisible + 1 ]:ColSep != NIL,;
@@ -824,7 +868,7 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
             n := ::leftVisible
          endif
 
-         ::WriteMLineText(::aColumns[ n ]:Heading, ::aColumns[ n ]:Width, .T., ::ColorSpec)
+         ::WriteMLineText(::aColumns[ n ]:Heading, ::aColsWidth[ n ], .T., ::ColorSpec)
 
          if n < ::rightVisible
             // Set cursor at start of next field description
@@ -856,12 +900,12 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
          nLCS := iif(::aColumns[n + 1]:ColSep != NIL, Len(::aColumns[n + 1]:ColSep), Len(::ColSep))
 
          if ! Empty( ::HeadSep )
-            DispOutAT(nScreenRowT, (nTPos += ::aColumns[ n ]:Width), ::HeadSep, ::ColorSpec )
+            DispOutAT(nScreenRowT, (nTPos += ::aColsWidth[ n ]), ::HeadSep, ::ColorSpec )
             nTPos += Len(::HeadSep) + (nLCS - Len(::HeadSep))
          endif
 
          if ! Empty( ::FootSep )
-            DispOutAT(nScreenRowB, (nBPos += ::aColumns[ n ]:Width), ::FootSep, ::ColorSpec )
+            DispOutAT(nScreenRowB, (nBPos += ::aColsWidth[ n ]), ::FootSep, ::ColorSpec )
             nBPos += Len(::FootSep) + (nLCS - Len(::FootSep))
          endif
 
@@ -881,7 +925,7 @@ METHOD RedrawHeaders(nWidth) CLASS TBrowse
             n := ::leftVisible
          endif
 
-         ::WriteMLineText(::aColumns[ n ]:Footing, ::aColumns[ n ]:Width, .F., ::ColorSpec)
+         ::WriteMLineText(::aColumns[ n ]:Footing, ::aColsWidth[ n ], .F., ::ColorSpec)
 
          if n < ::rightVisible
             // Set cursor at start of next field description
@@ -908,7 +952,7 @@ METHOD Stabilize() CLASS TBrowse
 
    // I need to set columns width If TBrowse was never displayed before
    if ::lNeverDisplayed
-      AEVal(::aColumns, {|oCol| ::SetColumnWidth(oCol)} )
+      //AEVal(::aColumns, {|oCol| ::SetColumnWidth(oCol)} )
 
       // NOTE: It must be before call to ::SetFrozenCols() since this call
       //       tests this iVar value, and I set it to .F. since I'm going to display TBrowse
@@ -937,7 +981,7 @@ METHOD Stabilize() CLASS TBrowse
       oStartCol := ::aColumns[ iif( ::rightVisible != 0, ::rightVisible, 1 ) ]
       oEndCol := ::aColumns[ iif( ::nFrozenCols > 0, 1, ::leftVisible ) ]
       ::nColsWidth := iif( oStartCol != NIL, oStartCol:ColPos, 0 ) + ;
-        iif( oStartCol != NIL, oStartCol:Width, 0 ) - oEndCol:ColPos
+        iif( oStartCol != NIL, ::aColsWidth[ iif( ::rightVisible != 0, ::rightVisible, 1 ) ], 0 ) - oEndCol:ColPos
 
    endif
 
@@ -1094,7 +1138,7 @@ METHOD Stabilize() CLASS TBrowse
 
                else
                   // Clear cell
-                  DispOut( Space( ::aColumns[ n ]:Width ), ::ColorSpec )
+                  DispOut( Space( ::aColsWidth[ n ] ), ::ColorSpec )
 
                endif
 
@@ -1199,6 +1243,7 @@ return Self
 METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    LOCAL oCol   := ::aColumns[nColumn]
+   LOCAL nWidth := ::aColsWidth[nColumn]
    LOCAL ftmp   := Eval(oCol:block)
    LOCAL cType  := ValType( ftmp )
    LOCAL cPict  := iif(Empty(oCol:Picture), "", oCol:Picture)
@@ -1212,23 +1257,23 @@ METHOD DispCell( nColumn, nColor ) CLASS TBrowse
 
    do case
    case cType $ "CM"
-      DispOut( PadL(Transform(ftmp, cPict), oCol:Width ), cColor )
+      DispOut( PadL(Transform(ftmp, cPict), nWidth ), cColor )
 
    case cType == "N"
-      DispOut( PadR(Transform(ftmp, cPict), oCol:Width ), cColor )
+      DispOut( PadR(Transform(ftmp, cPict), nWidth ), cColor )
 
    case cType == "D"
       cPict := iif(cPict == "", "@D", cPict)
-      DispOut( PadR(Transform(ftmp, cPict), oCol:Width ), cColor )
+      DispOut( PadR(Transform(ftmp, cPict), nWidth ), cColor )
 
    case cType == "L"
-      tmp := PadC( "X", oCol:Width )
+      tmp := PadC( "X", nWidth )
       DispOut( Space( Len( tmp ) - Len( LTrim( tmp ) ) ) )
       DispOut( iif(ftmp, "T", "F"), cColor )
       DispOut( Space( Len( tmp ) - Len( RTrim( tmp ) ) ) )
 
    otherwise
-      DispOut( Space(oCol:Width), cColor )
+      DispOut( Space(nWidth), cColor )
 
    endcase
 
@@ -1341,7 +1386,7 @@ METHOD MGotoYX(nRow, nCol) CLASS TBrowse
 
       while nColsLen < nCol .AND. nI < ::rightVisible
 
-         nColsLen += ::aColumns[nI]:Width
+         nColsLen += ::aColsWidth[nI]
          if nI >= 1 .AND. nI < ::nColumns
             nColsLen += iif(::aColumns[nI]:ColSep != NIL, Len(::aColumns[nI]:ColSep), Len(::ColSep))
          endif

@@ -7,6 +7,10 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-03-01 15:00 UTC-0500 Jorge A. Giraldo <jorgeagiraldo@emtelsa.multi.net.co>
+  * contrib\delphi\hbdll\bld_sdll.bat
+    * -b option ommited, people expect a DLL without DOS debugger
+	  ! fixed columns' width calc (quick and not very much tested)  
     * some absolute paths changed to relative paths
   + contrib\delphi\hbdll\main.dfm
     + Delphi's main form, as a binary file, because it's a D3 form it will be
