@@ -847,11 +847,11 @@ ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* If SET_AUTOPEN open index */
    if( pArea->fHasTags && hb_set.HB_SET_AUTOPEN )
    {
-      /* printf("TODO: hb_cdxOpen()\n"); */
       pFileName = hb_fsFNameSplit( pArea->szDataFileName );
       szFileName = ( char * ) hb_xgrab( _POSIX_PATH_MAX + 3 );
       szFileName[ 0 ] = '\0';
-      strcpy ( szFileName, pFileName->szPath );
+      if ( pFileName->szPath )
+         strcpy ( szFileName, pFileName->szPath );
       strncat( szFileName, pFileName->szName, _POSIX_PATH_MAX -
                strlen( szFileName ) );
 
@@ -861,8 +861,6 @@ ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
                strlen( szFileName ) );
       hb_itemRelease( pExtInfo.itmResult );
       hb_xfree( pFileName );
-
-      /* ---------- */
 
       uiFlags =  pArea->fReadonly  ? FO_READ : FO_READWRITE;
       uiFlags |= pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE;
@@ -4579,6 +4577,26 @@ ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLas
      pArea->fEof = pTag->TagEOF;
      pArea->fBof = pTag->TagBOF;
      hb_cdxKeyFree( pKey2 );
+     if ( lRecno > 0 )
+     {
+         switch ( pTag->uiType )
+         {
+            case 'C':
+               /* fix for key trimming*/
+               if ( (USHORT) pKey->item.asString.length > pTag->uiLen)
+               {
+                  lRecno = 0;
+                  pTag->TagEOF = 1;
+               }
+               else if ( strncmp( pKey->item.asString.value, pTag->CurKeyInfo->Value,
+                  (pKey->item.asString.length < pTag->CurKeyInfo->length ?
+                   pKey->item.asString.length : pTag->CurKeyInfo->length) ) != 0)
+               {
+                  lRecno = 0;
+               }
+               break;
+         }
+     }
      if ( lRecno > 0 )
      {
        retvalue = SELF_GOTO( ( AREAP ) pArea, pTag->CurKeyInfo->Tag );
