@@ -1,3 +1,16 @@
+2000-05-29 03:25 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
+   * contrib\libct\makefile.vc
+   * contrib\libgt\makefile.vc
+   * contrib\libmisc\makefile.vc
+   * contrib\libnf\makefile.vc
+   * contrib\rdd_ads\makefile.vc
+   * contrib\libct\make_vc.bat
+   * contrib\libgt\make_vc.bat
+   * contrib\libmisc\make_vc.bat
+   * contrib\libnf\make_vc.bat
+   * contrib\rdd_ads\make_vc.bat
+    * proper parameters are now 'clean' and 'all' (/a can still be used as all)
+
 2000-05-29 08:29 UTC+0100 Victor Szakats <info@szelvesz.hu>
 
    * source/rtl/xsavescr.c
