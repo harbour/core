@@ -116,7 +116,7 @@ HB_FUNC(FT_GETE)
    {
    
     extern char **_environ;
-    char *buffer;
+    char *buffer = NULL;
     int x;
     int buffsize = 0;
     int rettype  = NORETURN;
