@@ -1,3 +1,9 @@
+2000-02-03 16:10 GMT-5 David G. Holm <dholm@ sd-llc.com>
+
+   * bin/bld_tpl.bat
+   * bin/bld_tpl.cmd
+     + Added ..\lib\main.obj to command line for os2/icc builds
+
 20000203-17:05 GMT-3  Luiz Rafael Culik <culik@sl.conex.net>
     *Source/rdd/dbcmd.c
         * Change some functions docs

@@ -98,7 +98,7 @@ rem set HB_COMPILER=
    if not "%HB_ARCHITECTURE%" == "os2" goto A_LINUX
 
    if "%HB_COMPILER%" == "gcc"     gcc %1.c -I..\include -L..\lib -lrtl -lrdd -lvm -lrdd -lrtl -lmacro -ldbfntx -ldbfcdx -lcommon
-   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ -I..\include /C- /Tp %1.c ..\lib\rtl.lib ..\lib\rdd.lib ..\lib\vm.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\macro.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib
+   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ -I..\include /C- /Tp %1.c ..\lib\main.obj ..\lib\rtl.lib ..\lib\rdd.lib ..\lib\vm.lib ..\lib\rdd.lib ..\lib\rtl.lib ..\lib\macro.lib ..\lib\dbfntx.lib ..\lib\dbfcdx.lib ..\lib\common.lib
    goto END
 
 :A_LINUX
