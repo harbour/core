@@ -4641,3 +4641,65 @@ HB_FUNC( __TRACEPRGCALLS )
 
    hb_retl( bOldValue );
 }
+
+/* hvm support for pcode DLLs */
+
+#if defined(__BORLANDC__)
+   void _export hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols,
+                                        USHORT uiModuleSymbols )
+#else
+   void hb_vmProcessDllSymbols( PHB_SYMB pModuleSymbols,
+                                USHORT uiModuleSymbols )
+#endif
+{
+   PSYMBOLS pNewSymbols;
+   USHORT ui;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmProcessDllSymbols(%p, %hu)", pModuleSymbols, uiModuleSymbols));
+
+   pNewSymbols = ( PSYMBOLS ) hb_xgrab( sizeof( SYMBOLS ) );
+   pNewSymbols->pModuleSymbols = pModuleSymbols;
+   pNewSymbols->uiModuleSymbols = uiModuleSymbols;
+   pNewSymbols->pNext = NULL;
+   pNewSymbols->hScope = 0;
+
+   if( s_pSymbols == NULL )
+      s_pSymbols = pNewSymbols;
+   else
+   {
+      PSYMBOLS pLastSymbols;
+
+      pLastSymbols = s_pSymbols;
+      while( pLastSymbols->pNext ) /* locates the latest processed group of symbols */
+         pLastSymbols = pLastSymbols->pNext;
+
+      pLastSymbols->pNext = pNewSymbols;
+   }
+
+   for( ui = 0; ui < uiModuleSymbols; ui++ ) /* register each public symbol on the dynamic symbol table */
+   {
+      HB_SYMBOLSCOPE hSymScope;
+
+      hSymScope = ( pModuleSymbols + ui )->cScope;
+      pNewSymbols->hScope |= hSymScope;
+
+      if( ( hSymScope == HB_FS_PUBLIC ) || ( hSymScope & ( HB_FS_MESSAGE | HB_FS_MEMVAR | HB_FS_FIRST ) ) )
+      {
+         PHB_DYNS pDynSym = hb_dynsymFind( ( pModuleSymbols + ui )->szName );
+
+         if( pDynSym && pDynSym->pFunPtr && ( pModuleSymbols + ui )->pFunPtr )
+            ( pModuleSymbols + ui )->pFunPtr = pDynSym->pFunPtr;
+         else
+             hb_dynsymNew( ( pModuleSymbols + ui ) );
+      }
+   }
+}
+
+#if defined(__BORLANDC__)
+   void _export hb_vmDllExecute( const BYTE * pCode, PHB_SYMB pSymbols )
+#else
+   void hb_vmDllExecute( const BYTE * pCode, PHB_SYMB pSymbols )
+#endif
+{
+   hb_vmExecute( pCode, pSymbols );
+}
