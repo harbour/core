@@ -1,3 +1,25 @@
+19991017-12:57 GMT+1 Victor Szel <info@szelvesz.hu>
+   * source/rtl/environ.c
+     + GETE() undocumented Clipper function added.
+   * source/rtl/memvars.c
+     + __QQPUB() function added.
+     % Some variable scopes adjusted.
+   * source/rtl/dummy.prg
+     - __QQPUB() removed.
+   * source/rtl/classes.c
+     + HB___CLASSNEW()
+     + HB___CLASSINSTANCE()
+     + HB___CLASSADD()
+     + HB___CLASSNAME()
+     + HB___CLASSSEL()
+       Clipper compatibility functions added.
+   + source/rtl/oldclear.c
+     source/rtl/Makefile
+     + __CLEAR()
+     + __ATCLEAR()
+       Undocumented Clipper functions added.
+       Please add oldclear.c to non-GNU make systems.
+
 19991017-08:51 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/Makefile
      + tstalias.prg added
@@ -6,23 +28,23 @@
 
 19991016-22:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
-	  + added support for _FIELD->Expression and _FIELD->ALIAS->Expression
+          + added support for _FIELD->Expression and _FIELD->ALIAS->Expression
             "REPLACE Field WITH Exp" and "REPLACE ALIAS->Field WITH Exp" are supported
             "REPLACE 1->Field WITH Exp" will compile but requires some more work by Ryszard.
-	  + added support for Aliased Variables in Push/Pop support.
-	  + added "Invalid alias expression" error to _szCERRORS.
-	  - Removed Todo # 9 support for _FIELD->Alias->Field.
+          + added support for Aliased Variables in Push/Pop support.
+          + added "Invalid alias expression" error to _szCERRORS.
+          - Removed Todo # 9 support for _FIELD->Alias->Field.
 
    * harbour.l
           + added {Integer} definition - used by _Field->Area#-> rule
-	  + added MEMV->& and MEMVA&-> to MACROOP defeinition.
-	  + added rules for _FIELD->"{Integer}"->", _FIELD->"{Number}"->" (Error condition), _FIELD->"{Integer}"->" and _FIELD->"{Identifier}"->"
+          + added MEMV->& and MEMVA&-> to MACROOP defeinition.
+          + added rules for _FIELD->"{Integer}"->", _FIELD->"{Number}"->" (Error condition), _FIELD->"{Integer}"->" and _FIELD->"{Identifier}"->"
 
    * Hberror.h
           + added #define ERR_ALIASEXP               38
 
    + /Tests/TstAlias.prg
-	  added new test to demonstrate support for aliased expression.
+          added new test to demonstrate support for aliased expression.
 
 19991016-18:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
@@ -30,11 +52,11 @@
 
 19991016-14:40 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * compiler.h
-	  + added lLstPushPos to PFUNCTION structure to support nesting (like in blocks ).
+          + added lLstPushPos to PFUNCTION structure to support nesting (like in blocks ).
 
    * harbour.y
           * Corrected bug with Push/Pop optimizer when var assignment in CodeBlock used.
-	  + added Push/Pop Optimizer support to CodeBlock expressions list.
+          + added Push/Pop Optimizer support to CodeBlock expressions list.
 
 19991016-20:46 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/test.dbf
@@ -145,22 +167,22 @@
 
 Fri Oct 15 16:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* config/lib.cf:
-	* source/debug/Makefile:
-	* source/pp/Makefile:
-	* source/rdd/Makefile:
-	* source/rdd/dbfcdx/Makefile:
-	* source/rdd/dbfntx/Makefile:
-	* source/rdd/nulsys/Makefile:
-	* source/rtl/Makefile:
-	* source/runner/Makefile:
-	* source/tools/Makefile:
-	* source/vm/Makefile:
-	Now Makefiles that will create a library use LIBNAME for the
-	library's name; the LIB variable is not used anymore, so it will
-	not conflict with the widely used environment variable with that
-	name. Thanks to Paul Tucker <ptucker@sympatico.ca> for pointing
-	this out.
+        * config/lib.cf:
+        * source/debug/Makefile:
+        * source/pp/Makefile:
+        * source/rdd/Makefile:
+        * source/rdd/dbfcdx/Makefile:
+        * source/rdd/dbfntx/Makefile:
+        * source/rdd/nulsys/Makefile:
+        * source/rtl/Makefile:
+        * source/runner/Makefile:
+        * source/tools/Makefile:
+        * source/vm/Makefile:
+        Now Makefiles that will create a library use LIBNAME for the
+        library's name; the LIB variable is not used anymore, so it will
+        not conflict with the widely used environment variable with that
+        name. Thanks to Paul Tucker <ptucker@sympatico.ca> for pointing
+        this out.
 
 19991015-18:45 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbcmd.c
@@ -183,9 +205,9 @@ Fri Oct 15 16:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/dates.c:
-	Fixed an include guard so that HB_DONT_DEFINE_BASIC_TYPES is
-	defined for both gcc and mingw32.
+        * source/rtl/dates.c:
+        Fixed an include guard so that HB_DONT_DEFINE_BASIC_TYPES is
+        defined for both gcc and mingw32.
 
 19991014-18:17 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/compiler/genc.c
@@ -206,12 +228,12 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 19991013-20:10 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
-	  + added rules to allow inline assignment to RIVATE/PUBLIC &cVar (as in PRIVATE &cVar := 'Hello').
-	  + added extern char *yytext to have acces to the original string form of numbers.
+          + added rules to allow inline assignment to RIVATE/PUBLIC &cVar (as in PRIVATE &cVar := 'Hello').
+          + added extern char *yytext to have acces to the original string form of numbers.
    * harbour.l
           + added rules to support new TOKEN MACROOP and completed support for macro in MODES PRIVATE and PUBLIC_ (Ryszard TODO removed).
    * tests/tstmacro.prg
-	  added more tests to demonstrate working capabilities of macro.
+          added more tests to demonstrate working capabilities of macro.
 
 19991013-01:40 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/rtl/dates.c
@@ -257,11 +279,11 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991013-13:46 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
           + added MACROOP (last session also added MACROALIAS)
-	  + added rules to complete support for PRIVATE/PUBLIC &cVar - it now supports any mix of variables and macros.
+          + added rules to complete support for PRIVATE/PUBLIC &cVar - it now supports any mix of variables and macros.
    * harbour.l
           + added rules to support new TOKEN MACROOP and completed support for macro in MODES PRIVATE and PUBLIC_ (Ryszard TODO removed).
    * tests/tstmacro.prg
-	  added even more tests to demonstrate working capabilities of macro.
+          added even more tests to demonstrate working capabilities of macro.
 
 19991013-17:45 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/oldbox.c
@@ -289,11 +311,11 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991013-11:00 GMT+8 Ron Pinkas <Ron@Profit-Master.com>
    * harbour.y
           + added TOKEN DOT and rules to support concatenation of Var and constant in macro variables assignments (like &cVar.PlusFix).
-	  + added rules to support PRIVATE/PUBLIC &cVar
+          + added rules to support PRIVATE/PUBLIC &cVar
    * harbour.l
           + added rules to support new TOKEN DOT and yylval.string to have the string value when parsing DOUBLE.
    * tests/tstmacro.prg
-	  added many tests to demonstrate working capabilities of macro.
+          added many tests to demonstrate working capabilities of macro.
 
 19991013-13:52 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/inkey.c
@@ -316,7 +338,7 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * harbour.l
           + added rules to support new TOKEN MACROALIAS
    +tests/tstmacro.prg
-	  sample program to demonstarte new macro assigments support.
+          sample program to demonstarte new macro assigments support.
 
 19991012-20:41 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/rtl_test.prg
@@ -350,8 +372,8 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991012-10:38 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *samples/pe
-	* new directory with a sample editor that can be used as a base for
-  	  MEMOEDIT and TEditor class
+        * new directory with a sample editor that can be used as a base for
+          MEMOEDIT and TEditor class
 
 19991012-00:52 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
@@ -527,17 +549,17 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991010-13:25 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/console.c
-	* replaced USHORT for SHORT in adjust_pos
+        * replaced USHORT for SHORT in adjust_pos
 
     *source/rtl/filesys.c
-	* added WATCOMC branch for drive related functions
-	We really need documentation here !
-	QUESTION: Does drive numbering start from 0 or 1 ?
-	Is a A: drive numbered as 0 or 1 ?
+        * added WATCOMC branch for drive related functions
+        We really need documentation here !
+        QUESTION: Does drive numbering start from 0 or 1 ?
+        Is a A: drive numbered as 0 or 1 ?
 
     *source/compiler/harbour.l
     *source/compiler/harbour.y
-	* { 1, 2, 3 }[ 2 ] syntax is supported now
+        * { 1, 2, 3 }[ 2 ] syntax is supported now
 
 19991010-12:22 GMT+1 Victor Szel <info@szelvesz.hu>
    * source/compiler/genc.c
@@ -639,8 +661,8 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991008-15:42 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rdd/dbcmd.c
-	* removed all direct modifications of memory buffers returned
-	by hb_parc() function
+        * removed all direct modifications of memory buffers returned
+        by hb_parc() function
 
 19991008-06:31 EDT Paul Tucker <ptucker@sympatico.ca>
    * source\compiler\genc.c
@@ -671,9 +693,9 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991007-17:55 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/coompiler/expropt.c
-	* added RCS Id header
-	* added Ron Pinkas as copyright holder because he is the
-	initial creator of this code
+        * added RCS Id header
+        * added Ron Pinkas as copyright holder because he is the
+        initial creator of this code
 
 19991007-11:30 EDT Paul Tucker <ptucker@sympatico.ca>
    * makefile.vc
@@ -685,26 +707,26 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     *source/compiler/harbour.y
     *source/coompiler/expropt.c
     *include/compiler.h
-	* moved all code related to checking of expressions value type
-	into th enew expropt.c file - it should be a good starting
-	point for the expressions optimalizer
-	* many coorections (rtl_test.prg doesn't GPF now when compiled
-	with -w option) - however this type checking didn't worked correctly
-	and it still doesn't work
-	* moved PSTACK_VAL_TYPE stucture into expropt.c
+        * moved all code related to checking of expressions value type
+        into th enew expropt.c file - it should be a good starting
+        point for the expressions optimalizer
+        * many coorections (rtl_test.prg doesn't GPF now when compiled
+        with -w option) - however this type checking didn't worked correctly
+        and it still doesn't work
+        * moved PSTACK_VAL_TYPE stucture into expropt.c
 
     *source/compiler/harbour.y
-	* applied changes posted by Eddie Runia to correct compile
-	a:b[ 1 ]:c syntax
+        * applied changes posted by Eddie Runia to correct compile
+        a:b[ 1 ]:c syntax
 
     *source/compiler/Makefile
     *makefile.b32
     *makefile.vc
-	* added expropt.c (not tested)
+        * added expropt.c (not tested)
 
     *source/rtl/dates.c
-	* change in #include (error in Linux)
-	<sys\timeb.h> -> <sys/timeb.h>
+        * change in #include (error in Linux)
+        <sys\timeb.h> -> <sys/timeb.h>
 
 19991007-09:16 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/rtl/tclass.prg
@@ -1028,9 +1050,9 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* source/rtl/filesys.c (hb_fsTell):
-	Replaced use of tell() with an equivalent call to lseek(), so that
-	this is supported under gcc.
+        * source/rtl/filesys.c (hb_fsTell):
+        Replaced use of tell() with an equivalent call to lseek(), so that
+        this is supported under gcc.
 
 19991005-20:34 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/hbextern.ch
@@ -1132,11 +1154,11 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991005-12:30 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* changed some rules to correctly handle the following syntax:
-	LOCAL cbVar:={|| cbVar}
-	(the cbVar inside a codeblock is correctly considered a local
-	variable instead of memvar variable)
-	* corrected usage info to print LF at the end of message
+        * changed some rules to correctly handle the following syntax:
+        LOCAL cbVar:={|| cbVar}
+        (the cbVar inside a codeblock is correctly considered a local
+        variable instead of memvar variable)
+        * corrected usage info to print LF at the end of message
 
 19991005-08:36 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/main*.c
@@ -1229,9 +1251,9 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* tests/working/Makefile:
-	Added missing '\' after db_brows.ch.
-	Changed spaces to tabs.
+        * tests/working/Makefile:
+        Added missing '\' after db_brows.ch.
+        Changed spaces to tabs.
 
 19991004-18:42 GMT+1 Victor Szel <info@szelvesz.hu>
   * include/classes.ch -> include/hbclass.ch

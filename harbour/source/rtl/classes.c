@@ -52,6 +52,11 @@
  *
  * Copyright 1999 Victor Szel <info@szelvesz.hu>
  *    hb___msgEval()
+ *    HB___CLASSNEW()
+ *    HB___CLASSINSTANCE()
+ *    HB___CLASSADD()
+ *    HB___CLASSNAME()
+ *    HB___CLASSSEL() (based on hb___msgClsSel())
  *
  * Copyright 1999 Janica Lubos <janica@fornax.elf.stuba.sk>
  *    hb_clsDictRealloc()
@@ -890,6 +895,68 @@ HARBOUR HB___CLS_INCDATA( void )
       hb_retni( ++s_pClasses[ uiClass - 1 ].uiDatas );
 }
 
+/* NOTE: Undocumented Clipper function */
+
+HARBOUR HB___CLASSNEW( void )
+{
+   HB___CLSNEW();
+}
+
+/* NOTE: Undocumented Clipper function */
+
+HARBOUR HB___CLASSINSTANCE( void )
+{
+   HB___CLSINST();
+}
+
+/* NOTE: Undocumented Clipper function */
+
+HARBOUR HB___CLASSADD( void )
+{
+   HB___CLSADDMSG();
+}
+
+/* NOTE: Undocumented Clipper function */
+
+HARBOUR HB___CLASSNAME( void )
+{
+   HB___OBJGETCLSNAME();
+}
+
+/* NOTE: Undocumented Clipper function */
+/* NOTE: Based on hb___msgClsSel() */
+
+HARBOUR HB___CLASSSEL( void )
+{
+   USHORT uiClass = hb_parni( 1 );
+   PHB_ITEM pReturn = hb_itemNew( NULL );
+
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PCLASS pClass = &s_pClasses[ uiClass - 1 ];
+      USHORT uiLimit = pClass->uiHashKey * BUCKET; /* Number of Hash keys      */
+      USHORT uiPos = 0;
+      USHORT uiAt;
+
+      hb_itemRelease( pReturn );
+      pReturn = hb_itemArrayNew( pClass->uiMethods );
+                                                /* Create a transfer array  */
+      for( uiAt = 0; uiAt < uiLimit ; uiAt++ )
+      {
+         PHB_DYNS pMessage = ( PHB_DYNS ) pClass->pMethods[ uiAt ].pMessage;
+         if( pMessage )                         /* Hash Entry used ?        */
+         {
+            PHB_ITEM pItem = hb_itemPutC( NULL, pMessage->pSymbol->szName );
+                                                /* Add to array             */
+            hb_itemArrayPut( pReturn, ++uiPos, pItem );
+            hb_itemRelease( pItem );
+         }
+      }
+   }
+
+   hb_itemReturn( pReturn );
+   hb_itemRelease( pReturn );
+}
 
 /* ================================================ */
 
@@ -1129,6 +1196,7 @@ static HARBOUR hb___msgSetData( void )
 /* No comment :-) */
 static HARBOUR hb___msgVirtual( void )
 {
-   hb_ret();
+   /* hb_ret(); */ /* NOTE: It's safe to comment this out */
+   ;
 }
 

@@ -40,6 +40,9 @@
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    HB___RUN()
  *
+ * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ *    HB_GETE()
+ *
  * See doc/license.txt for licensing terms.
  *
  */
@@ -447,6 +450,13 @@ HARBOUR HB_GETENV( void )
    }
    else
       hb_retc( "" );
+}
+
+/* NOTE: Undocumented Clipper function */
+
+HARBOUR HB_GETE( void )
+{
+   HB_GETENV();
 }
 
 /*  $DOC$

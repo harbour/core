@@ -43,6 +43,7 @@
  *                      Clipper function (FReadMem()) to read .MEM files)
  *    HB___MSAVE()
  *    HB___MRESTORE()
+ *    HB___QQPUB()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -578,18 +579,20 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
  */
 static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
 {
-   ULONG ulBase = s_privateStackCnt;
-   PHB_DYNS pDynVar;
-
    if( IS_STRING( pMemvar ) )
    {
+      ULONG ulBase = s_privateStackCnt;
+
       /* Find the variable with a requested name that is currently visible
        * Start from the top of the stack.
        */
       while( ulBase > 0 )
       {
+         PHB_DYNS pDynVar;
+
          --ulBase;
          pDynVar = s_privateStack[ ulBase ];
+
          /* reset current value to NIL - the overriden variables will be
          * visible after exit from current procedure
          */
@@ -865,14 +868,16 @@ static HB_DYNS_PTR hb_memvarFindSymbol( HB_ITEM_PTR pName )
  */
 HARBOUR HB___MVPUBLIC( void )
 {
-   int i, iCount = hb_pcount();
-   PHB_ITEM pMemvar;
+   int iCount = hb_pcount();
 
    if( iCount )
    {
+      int i;
+
       for( i = 1; i <= iCount; i++ )
       {
-         pMemvar = hb_param( i, IT_ANY );
+         PHB_ITEM pMemvar = hb_param( i, IT_ANY );
+
          if( pMemvar )
          {
             if( IS_ARRAY( pMemvar ) )
@@ -894,6 +899,16 @@ HARBOUR HB___MVPUBLIC( void )
          }
       }
    }
+}
+
+/* NOTE: Undocumented Clipper internal function */
+
+HARBOUR HB___QQPUB( void )
+{
+   PHB_ITEM pItem = hb_param( 1, IT_STRING );
+
+   if( pItem )
+      hb_memvarCreateFromItem( pItem, VS_PUBLIC, NULL );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -934,14 +949,16 @@ HARBOUR HB___MVPUBLIC( void )
  */
 HARBOUR HB___MVPRIVATE( void )
 {
-   int i, iCount = hb_pcount();
-   PHB_ITEM pMemvar;
+   int iCount = hb_pcount();
 
    if( iCount )
    {
+      int i;
+
       for( i = 1; i <= iCount; i++ )
       {
-         pMemvar = hb_param( i, IT_ANY );
+         PHB_ITEM pMemvar = hb_param( i, IT_ANY );
+
          if( pMemvar )
          {
             if( IS_ARRAY( pMemvar ) )
@@ -1028,14 +1045,16 @@ HARBOUR HB___MVPRIVATE( void )
  */
 HARBOUR HB___MVXRELEASE( void )
 {
-   int i, iCount = hb_pcount();
-   PHB_ITEM pMemvar;
+   int iCount = hb_pcount();
 
    if( iCount )
    {
+      int i;
+
       for( i = 1; i <= iCount; i++ )
       {
-         pMemvar = hb_param( i, IT_ANY );
+         PHB_ITEM pMemvar = hb_param( i, IT_ANY );
+
          if( pMemvar )
          {
             if( IS_ARRAY( pMemvar ) )
@@ -1102,11 +1121,11 @@ HARBOUR HB___MVXRELEASE( void )
 HARBOUR HB___MVRELEASE( void )
 {
    int iCount = hb_pcount();
-   PHB_ITEM pMask;
 
    if( iCount )
    {
-      pMask = hb_param( 1, IT_STRING );
+      PHB_ITEM pMask = hb_param( 1, IT_STRING );
+
       if( pMask )
       {
          BOOL bIncludeVar;
@@ -1188,14 +1207,12 @@ HARBOUR HB___MVSCOPE( void )
 
    if( hb_pcount() )
    {
-      PHB_ITEM pVarName;
+      PHB_ITEM pVarName = hb_param( 1, IT_STRING );
 
-      pVarName = hb_param( 1, IT_STRING );
       if( pVarName )
-      {
          iMemvar = hb_memvarScope( pVarName->item.asString.value, pVarName->item.asString.length + 1 );
-      }
    }
+
    hb_retni( iMemvar );
 }
 

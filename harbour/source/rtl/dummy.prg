@@ -80,7 +80,6 @@ FUNCTION __dbZap()         ; RETURN NIL
 FUNCTION dbEdit()          ; RETURN NIL
 FUNCTION IsPrinter()       ; RETURN .T.
 FUNCTION NetName()         ; RETURN ""
-FUNCTION __qqPub()         ; RETURN NIL
 FUNCTION __TypeFile()      ; RETURN NIL
 FUNCTION __LabelForm()     ; RETURN NIL
 FUNCTION __ReportForm()    ; RETURN NIL

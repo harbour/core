@@ -32,6 +32,7 @@ C_SOURCES=\
         mouseapi.c \
         mtran.c \
         oldbox.c \
+        oldclear.c \
         set.c \
         setcolor.c \
         strings.c \
