@@ -491,16 +491,18 @@ STATIC function GetParagraph(oSelf, nRow)
 
    LOCAL cLine := ""
 
-   while oSelf:aText[nRow]:lSoftCR
+   while nRow <= Len(oSelf:aText) .and. oSelf:aText[nRow]:lSoftCR
       cLine += oSelf:aText[nRow]:cText
       // I don't need to increment nRow since I'm removing lines, ie line n is
       // a different line each time I add it to cLine
       oSelf:RemoveLine(nRow)
    enddo
 
-   // Last line, or only one line
-   cLine += oSelf:aText[nRow]:cText
-   oSelf:RemoveLine(nRow)
+   if nRow <= Len(oSelf:aText)
+      // Last line, or only one line
+      cLine += oSelf:aText[nRow]:cText
+      oSelf:RemoveLine(nRow)
+   endif
 
 return cLine
 
