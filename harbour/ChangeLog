@@ -1,7 +1,10 @@
-19990514-13:55 CET Eddie Runia
+19990515-15:15 CET Eddie Runia
+  * source/rtl/environ.c
+    Crash from geninterrupt resolved
+
+19990515-13:55 CET Eddie Runia
   * source/rtl/classes.c
     Unreleased memory block in inline resolved. AGAIN !
-
 
 19990515-13:40 CET Eddie Runia
   * source/rtl/classes.c

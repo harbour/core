@@ -15,6 +15,9 @@ HARBOUR OS()
 /* TODO: add MSVC support but MSVC cannot detect any OS except Windows! */
 #if defined(__TURBOC__) || defined(__BORLANDC__)
 
+#if defined(_Windows)
+  _retc( "Windows" );
+#else
   /* detect OS/2 */
   _AX = 0x2B01;
   _CX = 0x4445;
@@ -34,6 +37,7 @@ HARBOUR OS()
   {
      _retc("Windows");
   }
+#endif
 
 #else
 
@@ -61,6 +65,7 @@ HARBOUR OS()
   if(regs.h.al >= 10)
   {
      _retc("OS/2");
+     return();
   }
 
 #endif /* WATCOMC */
@@ -88,6 +93,7 @@ HARBOUR OS()
   if(regs.x.ax == 0)
   {
      _retc("Windows");
+     return();
   }
 
 #endif /* WATCOMC */
