@@ -132,34 +132,73 @@ typedef MEMOROOT * LPMEMOROOT;
 typedef struct _CDXTAG
 {
    char * szName;                     /* Name of tag */
-   PHB_ITEM pKeyExp;
-   PHB_ITEM pForExp;
+   PHB_ITEM pKeyItem;
+   PHB_ITEM pForItem;
+   char *     KeyExpr;
+   char *     ForExpr;
    USHORT uiType;
    USHORT uiLen;
    struct _CDXINDEX * pIndex;
+   // review this ...
+   struct    _CDXTAG * pNext;
+   BOOL       AscendKey;
+   BOOL       UniqueKey;
+   BOOL       TagChanged;
+   BOOL       TagBOF;
+   BOOL       TagEOF;
+   //BYTE       KeyType;
+   BYTE       OptFlags;
+   LONG       TagBlock;
+   LONG       RootBlock;
+   //USHORT     KeyLength;
+   USHORT     MaxKeys;
+   LPKEYINFO  CurKeyInfo;
+   LPPAGEINFO RootPage;
 } CDXTAG;
-
 typedef CDXTAG * LPCDXTAG;
-
-
 
 typedef struct _CDXINDEX
 {
-   char * szFileName;                 /* Name of index file */
-   FHANDLE hFile;                     /* Index file handle */
+   char *    szFileName;                 /* Name of index file */
+   FHANDLE   hFile;                     /* Index file handle */
    struct _CDXAREA * pArea;           /* Parent WorkArea */
-   LPCDXTAG pCompound;
+   LPCDXTAG  pCompound;
+   LONG      NextAvail;
+   // review this...
+   LPCDXTAG  TagList;
+   struct   _INDEXINFO * pNext;   /* The next index in the list */
 } CDXINDEX;
-
 typedef CDXINDEX * LPCDXINDEX;
 
+#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+   #pragma option -a1 /* byte alignment */
+#endif
 
+/* ----
+typedef struct _CDXHEADER
+{ ...
+   LONG   Root;
+   LONG   FreePtr;
+   LONG   ChgFlag;
+   USHORT Key_Lgth;
+   BYTE   IndexOpts;
+   BYTE   IndexSig;
+   BYTE   Reserve3[ 486 ];
+   USHORT AscDesc;
+   USHORT Reserve4;
+   USHORT ForExpLen;
+   USHORT Reserve5;
+   USHORT KeyExpLen;
+   BYTE   KeyPool[ CDX_BLOCK_SIZE ];
+} CDXHEADER;
 
+typedef CDXHEADER * LPCDXHEADER;
+----- */
 typedef struct _CDXTAGHEADER
 {
    LONG lRoot;
    LONG lFreeList;
-   LONG lLength;
+   LONG lChgFlag; //lLength;
    USHORT uiKeySize;
    BYTE bType;
    BYTE bSignature;
@@ -169,11 +208,9 @@ typedef struct _CDXTAGHEADER
    USHORT iFilterLen;
    USHORT iExprPos;
    USHORT iExprLen;
+   BYTE   KeyPool[ CDX_PAGELEN ];
 } CDXTAGHEADER;
-
-typedef CDXTAGHEADER * LPCDXTAGHEADERP;
-
-
+typedef CDXTAGHEADER * LPCDXTAGHEADER;
 
 typedef struct _CDXLEAFHEADER
 {
@@ -191,9 +228,10 @@ typedef struct _CDXLEAFHEADER
    BYTE bInfo;
    BYTE bData[ CDX_LEAFFREESPACE ];
 } CDXLEAFHEADER;
-
-typedef CDXLEAFHEADER * LPCDXLEAFHEADERP;
-
+typedef CDXLEAFHEADER * LPCDXLEAFHEADER;
+#if (__BORLANDC__ > 1040) /* Use this only above Borland C++ 3.1 */
+   #pragma option -a /* default alignment */
+#endif
 
 
 /*
@@ -273,7 +311,8 @@ typedef struct _CDXAREA
 
    USHORT uiMemoBlockSize;       /* Size of memo block */
    LPMEMOROOT pMemoRoot;         /* Array of free memo blocks */
-   LPCDXTAG * lpIndexes;         /* Pointer to indexes array */
+   //LPCDXTAG * lpIndexes;         /* Pointer to indexes array */
+   LPCDXINDEX lpIndexes;         /* Pointer to indexes array */
 
 } CDXAREA;
 
@@ -293,14 +332,14 @@ typedef CDXAREA * LPCDXAREA;
 #define hb_cdxBof                                  NULL
 #define hb_cdxEof                                  NULL
 #define hb_cdxFound                                NULL
-#define hb_cdxGoBottom                             NULL
+extern ERRCODE hb_cdxGoBottom( CDXAREAP pArea );
 #define hb_cdxGoTo                                 NULL
 #define hb_cdxGoToId                               NULL
-#define hb_cdxGoTop                                NULL
-#define hb_cdxSeek                                 NULL
+extern ERRCODE hb_cdxGoTop( CDXAREAP pArea );
+extern ERRCODE hb_cdxSeek( CDXAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFindLast );
 #define hb_cdxSkip                                 NULL
 #define hb_cdxSkipFilter                           NULL
-#define hb_cdxSkipRaw                              NULL
+extern ERRCODE hb_cdxSkipRaw( CDXAREAP pArea, LONG lToSkip );
 #define hb_cdxAddField                             NULL
 #define hb_cdxAppend                               NULL
 #define hb_cdxCreateFields                         NULL
@@ -349,10 +388,10 @@ extern ERRCODE hb_cdxSysName( CDXAREAP pArea, BYTE * pBuffer );
 #define hb_cdxRelEval                              NULL
 #define hb_cdxRelText                              NULL
 #define hb_cdxSetRel                               NULL
-#define hb_cdxOrderListAdd                         NULL
+extern ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 extern ERRCODE hb_cdxOrderListClear( CDXAREAP pArea );
 #define hb_cdxOrderListDelete                      NULL
-#define hb_cdxOrderListFocus                       NULL
+extern ERRCODE hb_cdxOrderListFocus( CDXAREAP pArea, LPDBORDERINFO pOrderInfo );
 #define hb_cdxOrderListRebuild                     NULL
 #define hb_cdxOrderCondition                       NULL
 extern ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo );
