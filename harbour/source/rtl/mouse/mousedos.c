@@ -47,11 +47,11 @@
 
 /* C callable low-level interface */
 
-BOOL s_bPresent = FALSE;          /* Is there a mouse ? */
-int  s_iButtons = 0;              /* Mouse buttons */
-int  s_iCursorVisible = 0;        /* Is mouse cursor visible ? */
-int  s_iInitCol = 0;              /* Init mouse pos */
-int  s_iInitRow = 0;              /* Init mouse pos */
+static BOOL s_bPresent = FALSE;          /* Is there a mouse ? */
+static int  s_iButtons = 0;              /* Mouse buttons */
+static int  s_iCursorVisible = 0;        /* Is mouse cursor visible ? */
+static int  s_iInitCol = 0;              /* Init mouse pos */
+static int  s_iInitRow = 0;              /* Init mouse pos */
 
 void hb_mouse_Init( void )
 {

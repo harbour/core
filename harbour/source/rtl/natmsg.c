@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB__NATSORTVER()
  *    HB__NATMSGVER()
  *
@@ -52,7 +52,8 @@
 
 /* TODO: Use the Language API to retrieve these strings. */
 /* NOTE: Ad-hoc names mostly taken from various Clipper source files. 
-         These should be named properly if exported outside this file. */
+         These should be named properly if exported outside this file. 
+         [vszakats] */
 
 #define _DIR_HEADER             1       /* "Database Files    # Records    Last Update     Size" */
 #define _LF_SAMPLES             2       /* "Do you want more samples?" */
@@ -65,7 +66,7 @@
 #define _GET_INVD_DATE          9       /* "Invalid Date" */
 #define _GET_RANGE_FROM         10      /* "Range: " */
 #define _GET_RANGE_TO           11      /* " - " */
-#define _LF_YN                  12      /* "Y/N" */ /* NOTE: This should be in uppercase. */
+#define _LF_YN                  12      /* "Y/N" */ /* NOTE: This must be in uppercase. [vszakats] */
 #define _INVALID_EXPR           13      /* "INVALID EXPRESSION" */
 
 static char * s_szMessages[] =
@@ -209,7 +210,8 @@ HARBOUR HB_NATIONMSG( void )
       hb_retc( "" );
 }
 
-/* NOTE: Intentionally using one leading underscore, like in Clipper */
+/* NOTE: Intentionally using one leading underscore, like in Clipper. 
+         [vszakats] */
 
 HARBOUR HB__NATSORTVER( void )
 {
@@ -219,7 +221,8 @@ HARBOUR HB__NATSORTVER( void )
    hb_retc( "NATSORT (Harbour)" );
 }
 
-/* NOTE: Intentionally using one leading underscore, like in Clipper */
+/* NOTE: Intentionally using one leading underscore, like in Clipper. 
+         [vszakats] */
 
 HARBOUR HB__NATMSGVER( void )
 {

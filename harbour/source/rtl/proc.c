@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB_PROCFILE()
  *
  * See doc/license.txt for licensing terms.
@@ -194,7 +194,7 @@ HARBOUR HB_PROCLINE( void )
  */
 
 /* NOTE: Clipper undocumented function, which always returns an empty
-         string. */
+         string. [vszakats] */
 
 HARBOUR HB_PROCFILE( void )
 {

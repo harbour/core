@@ -136,7 +136,7 @@ PHB_DYNS hb_dynsymGet( char * szName )  /* finds and creates a symbol if not fou
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymGet(%s)", szName));
 
    /* make a copy as we may get a const string, then turn it to uppercase */
-   /* NOTE: This block is optimized for speed [vszel] */
+   /* NOTE: This block is optimized for speed [vszakats] */
    {
       int iLen = strlen( szName );
       char * pDest = szUprName;
@@ -166,7 +166,7 @@ PHB_DYNS hb_dynsymFindName( char * szName )  /* finds a symbol */
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymFindName(%s)", szName));
 
    /* make a copy as we may get a const string, then turn it to uppercase */
-   /* NOTE: This block is optimized for speed [vszel] */
+   /* NOTE: This block is optimized for speed [vszakats] */
    {
       int iLen = strlen( szName );
       char * pDest = szUprName;

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* ; Donated to the public domain by Victor Szel <info@szelvesz.hu> */
+// ; Donated to the public domain by Victor Szakats <info@szelvesz.hu>
 
 MEMVAR mcLongerNameThen10Chars
 #ifdef __HARBOUR__

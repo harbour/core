@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * __ATCLEAR(), __CLEAR() undocumented functions
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

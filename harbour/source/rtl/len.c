@@ -79,7 +79,7 @@ HARBOUR HB_LEN( void )
 
    /* NOTE: Double safety to ensure that a parameter was really passed,
             compiler checks this, but a direct hb_vmDo() call
-            may not do so. [vszel] */
+            may not do so. [vszakats] */
 
    if( pItem )
    {

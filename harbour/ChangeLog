@@ -1,3 +1,20 @@
+20000214-07:50 GMT+1 Victor Szakats <info@szelvesz.hu>
+   * source/rtl/mouse/mousedos.c
+     ! static variables marked as static.
+   * source/rtl/dates.c
+     - QUESTION removed.
+   * source/rtl/*
+     source/rtl/mouse/*
+     source/rtl/gt/*
+     source/common/*
+     source/compiler/*
+     source/rdd/*
+     source/vm/*
+     source/tools/*
+     tests/*
+     tests/regress/*
+     * Name change.
+
 20000214-06:32 GMT+1 Victor Szakats <info@szelvesz.hu>
    * *.bat
      + .LOG file is only shown when there was some error.

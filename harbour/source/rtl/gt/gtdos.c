@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_gt_CtrlBrkHandler()
  *    hb_gt_CtrlBrkRestore()
  *
@@ -141,7 +141,7 @@ void hb_gt_Init( void )
    __djgpp_set_sigquit_key( 0 ); /* Disable Ctrl+\ */
 
 #else
-   /* Set the Ctrl+Break handler [vszel] */
+   /* Set the Ctrl+Break handler [vszakats] */
 
    #if defined(__WATCOMC__)
       signal( SIGBREAK, hb_gt_Watcom_CtrlBreak_Handler );

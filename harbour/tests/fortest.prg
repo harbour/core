@@ -3,12 +3,8 @@
 //
 
 // Testing Harbour For Next loops for Clipper compatibility
-//
-// Written by Victor Szel <info@szelvesz.hu>
-// www - http://www.harbour-project.org
-//
-// Placed in the public domain
-//
+
+// ; Donated to the public domain by Victor Szakats <info@szelvesz.hu>
 
 // TODO: add test for "step 0"
 

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * SOUNDEX() function
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,7 @@ HARBOUR HB_SOUNDEX( void )
    char szResult[ SOUNDEX_LEN_MAX + 1 ];
 
    /* NOTE: The result will always be a zero terminated string without any
-            embedded zeros and special characters. */
+            embedded zeros and special characters. [vszakats] */
 
    memset( szResult, '0', SOUNDEX_LEN_MAX );
    szResult[ SOUNDEX_LEN_MAX ] = '\0';
@@ -66,7 +66,7 @@ HARBOUR HB_SOUNDEX( void )
          /* NOTE: Intentionally not using toupper()/isalpha() to be 100%
                   Clipper compatible here, these ANSI C functions may behave
                   differently for accented and national characters. It's also
-                  faster this way. */
+                  faster this way. [vszakats] */
 
          /* Convert to uppercase: toupper() */
          if( cChar >= 'a' && cChar <= 'z' )

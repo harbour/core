@@ -68,7 +68,7 @@
 /* NOTE: This function should normally have a parameter count check. But
          since in Harbour we cannot distinguish between BREAK() function and
          the BREAK statement, because both generate a BREAK() function
-         call on the pcode level, we should drop the checking. [vszel] */
+         call on the pcode level, we should drop the checking. [vszakats] */
 
 HARBOUR HB_BREAK( void )
 {

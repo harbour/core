@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * MEMOWRIT()/MEMOREAD() functions
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,8 @@
 #include "filesys.h"
 
 /* NOTE: CA-Clipper has 64K (65516 bytes exactly) limit on read, in Harbour
-         this limit is extended, so we are not *stricly* compatible here. */
+         this limit is extended, so we are not *stricly* compatible here. 
+         [vszakats] */
 
 HARBOUR HB_MEMOREAD( void )
 {
@@ -98,8 +99,8 @@ HARBOUR HB_MEMOWRIT( void )
 
          bRetVal = ( hb_fsWriteLarge( fhnd, ( BYTE * ) hb_itemGetCPtr( pString ), ulSize ) == ulSize );
 
-         /* NOTE: CA-Clipper will add the EOF even if the write failed. */
-         /* NOTE: CA-Clipper will not return .F. when the EOF could not be written. */
+         /* NOTE: CA-Clipper will add the EOF even if the write failed. [vszakats] */
+         /* NOTE: CA-Clipper will not return .F. when the EOF could not be written. [vszakats] */
          #if ! defined(HB_OS_UNIX_COMPATIBLE)
          {
             BYTE byEOF = HB_CHAR_EOF;
@@ -114,5 +115,4 @@ HARBOUR HB_MEMOWRIT( void )
 
    hb_retl( bRetVal );
 }
-
 

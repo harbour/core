@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB___ERRINHANDLER()
  *    HB_DOSERROR()
  *    hb_errLaunch()
@@ -75,8 +75,9 @@ static USHORT  s_uiErrorDOS = 0; /* The value of DOSERROR() */
 
 extern HARBOUR HB_ERRORNEW( void );
 
-/* NOTE: This is called via its symbol name, so we should make sure */
-/*       that it gets linked. WARNING ! DON'T make this function static. */
+/* NOTE: This is called via its symbol name, so we should make sure
+         that it gets linked. WARNING ! DON'T make this function static. 
+         [vszakats] */
 void hb_errForceLink()
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errForceLink()"));
@@ -85,7 +86,7 @@ void hb_errForceLink()
 }
 
 /* There's a similar undocumented, internal functions in CA-Cl*pper named
-   ErrorInHandler(). */
+   ErrorInHandler(). [vszakats] */
 
 HARBOUR HB___ERRINHANDLER( void )
 {
@@ -121,7 +122,7 @@ HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
    return pOld;
 }
 
-/* TOFIX: Make it Clipper compatible */
+/* TOFIX: Make it Clipper compatible. [vszakats] */
 
 HARBOUR HB_DOSERROR( void )
 {
@@ -262,9 +263,10 @@ USHORT hb_errLaunch( PHB_ITEM pError )
 
 /* NOTE: This should only be called when the EF_CANSUBSTITUE flag was set
          Since it this case the error handler will return the value
-         to be substituted */
+         to be substituted. [vszakats] */
+
 /* NOTE: The item pointer returned should be hb_itemRelease()-d by the
-         caller if it was not NULL. */
+         caller if it was not NULL. [vszakats] */
 
 PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
 {
@@ -339,7 +341,7 @@ void hb_errRelease( PHB_ITEM pError )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errRelease(%p)", pError));
 
-   /* NOTE: NULL pointer is checked by hb_itemRelease() */
+   /* NOTE: NULL pointer is checked by hb_itemRelease() [vszakats] */
    hb_itemRelease( pError );
 }
 
@@ -782,7 +784,7 @@ USHORT hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, c
 }
 
 /* NOTE: Use as minimal calls from here, as possible. */
-/*       Don't allocate memory from this function. */
+/*       Don't allocate memory from this function. [vszakats] */
 
 void hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
 {

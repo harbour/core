@@ -41,7 +41,7 @@
  *    hb_xmemcpy()
  *    hb_xmemset()
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_xquery()
  *    HB_MEMORY()
  *
@@ -52,7 +52,8 @@
 /* NOTE: If you turn this on, the memory subsystem will collect information
          about several statistical data about memory management, it will show
          these on exit if memory seem to have leaked.
-         This should be normally turned off in a final release */
+         This should be normally turned off in a final release 
+         [vszakats] */
 #define HB_FM_STATISTICS
 
 /* NOTE: The following #include "hbwinapi.h" must
@@ -357,7 +358,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 }
 
 /* NOTE: Debug function, it will always return 0 when HB_FM_STATISTICS is
-         not defined, don't use it for final code [vszel] */
+         not defined, don't use it for final code [vszakats] */
 
 ULONG hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
@@ -487,7 +488,7 @@ ULONG hb_xquery( USHORT uiMode )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%hu)", uiMode));
 
-   /* TODO: Return the correct values instead of 9999 [vszel] */
+   /* TODO: Return the correct values instead of 9999 [vszakats] */
 
    switch( uiMode )
    {

@@ -38,7 +38,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_gt_CtrlHandler()
  *
  * See doc/license.txt for licensing terms.
@@ -128,7 +128,7 @@ void hb_gt_Init( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Init()"));
 
-   /* Add Ctrl+Break handler [vszel] */
+   /* Add Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, TRUE );
 
    if( ( hb_gtHInput = GetStdHandle( STD_INPUT_HANDLE ) ) == INVALID_HANDLE_VALUE )
@@ -211,7 +211,7 @@ void hb_gt_Done( void )
    CloseHandle( s_HInactive );
    s_HInactive = INVALID_HANDLE_VALUE;
 
-   /* Remove Ctrl+Break handler [vszel] */
+   /* Remove Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_CtrlHandler, FALSE );
 }
 

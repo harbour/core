@@ -4,7 +4,7 @@
 //
 
 // ; Pushing Harbour to the line length limit.
-// ; Donated to the public domain by Victor Szel <info@szelvesz.hu>
+// ; Donated to the public domain by Victor Szakats <info@szelvesz.hu>
 
 FUNCTION Main()
 

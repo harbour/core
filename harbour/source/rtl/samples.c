@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Compatibility functions from the SAMPLES directory of Clipper.
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@
 #include "extend.h"
 #include "itemapi.h"
 
-/* NOTE: szTime must be 9 chars large */
+/* NOTE: szTime must be 9 chars large. */
 
 static char * hb_SecToTimeStr( char * pszTime, ULONG ulTime )
 {

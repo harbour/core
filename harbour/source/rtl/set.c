@@ -65,12 +65,12 @@
  *                                      character from the end of the file.
  * V 1.67   David G. Holm               Corrected file open/create logic
  *                                      in open_handle() function.
- * V 1.64   Victor Szel                 Converted to use the FS API.
+ * V 1.64   Victor Szakats              Converted to use the FS API.
  *                                      hb_err*() handles E_BREAK.
  *                                      extrahan closing mode on exit fixed.
  * V 1.62   Paul Tucker                 Converted HB_SET_DEBUG back to Logical.
  *                                      Clipper 5.3 docs are incorrect on this.
- * V 1.51   Victor Szel                 #include <x> changed to #include "x".
+ * V 1.51   Victor Szakats              #include <x> changed to #include "x".
  * V 1.49   Paul Tucker                 Changed parameter passing checks
  *                                      in call to hb_setColor() to account
  *                                      for no or NIL parameters.
@@ -108,9 +108,9 @@
  * V 1.35   Ryszard Glab                Changed to use the new HB_ITEM.
  *                                      Changed to automatically register
  *                                      symbol table.
- * V 1.34   Victor Szel                 Added four Clipper-compatible error
+ * V 1.34   Victor Szakats              Added four Clipper-compatible error
  *                                      reports.
- * V 1.33   Victor Szel                 InitializeSets() changed to
+ * V 1.33   Victor Szakats              InitializeSets() changed to
  *                                      hb_setInitialize() and ReleaseSets()
  *                                      changed to hb_setRelease().
  * V 1.32   David G. Holm               Minor change in last if block in
@@ -318,7 +318,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    /* Open the file either in append (bAppend) or truncate mode (!bAppend), but
       always use binary mode */
 
-   /* QUESTION: What sharing mode does Clipper use ? [vszel] */
+   /* QUESTION: What sharing mode does Clipper use ? [vszakats] */
 
    handle = FS_ERROR;
    while( handle == FS_ERROR )
@@ -364,7 +364,8 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
       {
          USHORT uiAction;
 
-         /* NOTE: using switch() here will result in a compiler warning */
+         /* NOTE: using switch() here will result in a compiler warning. 
+                  [vszakats] */
          if( set_specifier == HB_SET_ALTFILE )
             uiAction = hb_errRT_TERM( EG_CREATE, 2013, NULL, path, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY );
          else if( set_specifier == HB_SET_PRINTFILE )

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * NETNAME() function
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -40,7 +40,8 @@
 #include "extend.h"
 
 /* TODO: Implement NETNAME() for other platforms */
-/* NOTE: Clipper will only return a maximum of 15 bytes from this function. */
+/* NOTE: Clipper will only return a maximum of 15 bytes from this function.
+         [vszakats] */
 
 /* NOTE: DOS instructions:
 

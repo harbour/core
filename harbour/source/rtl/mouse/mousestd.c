@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Mouse subsystem for plain ANSI C stream IO (stub)
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@
 #include "mouseapi.h"
 
 /* NOTE: This file is a simple stub for those platforms which don't have
-         any kind of mouse support. */
+         any kind of mouse support. [vszakats] */
 
 /* C callable low-level interface */
 

@@ -2507,7 +2507,7 @@ void hb_vmDo( USHORT uiParams )
 
    if( ! IS_SYMBOL( pItem ) )
    {
-      /* QUESTION: Is this call needed ? [vszel] */
+      /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
       hb_errInternal( 9999, "Symbol item expected as a base from hb_vmDo()", NULL, NULL );
    }
@@ -2515,7 +2515,7 @@ void hb_vmDo( USHORT uiParams )
 #if 0
    if( ! IS_NIL( pSelf ) )
    {
-      /* QUESTION: Is this call needed ? [vszel] */
+      /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
       hb_errInternal( 9999, "Invalid symbol type for self from hb_vmDo()", NULL, NULL );
    }
@@ -3754,7 +3754,7 @@ HARBOUR HB_ERRORLEVEL( void )
    hb_retni( s_byErrorLevel );
 
    /* NOTE: This should be ISNUM( 1 ), but it's sort of a Clipper bug that it
-            accepts other types also and consider them zero. [vszel] */
+            accepts other types also and consider them zero. [vszakats] */
 
    if( hb_pcount() >= 1 )
       /* Only replace the error level if a parameter was passed */

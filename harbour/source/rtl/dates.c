@@ -55,7 +55,7 @@
  *    HB_DATE()
  *    hb_dtoc()
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_dateEncStr()
  *    hb_dateDecStr()
  *    hb_dateStrPut()
@@ -536,10 +536,6 @@ HARBOUR HB_DTOC( void )
    }
 }
 
-/* QUESTION: Should we drop error checkings to make it faster ? */
-/*           This function may be called many times in a real world */
-/*           application, for example in index creation. */
-/*           Clipper does these checks, anyway. */
 HARBOUR HB_DTOS( void )
 {
    if( ISDATE( 1 ) )

@@ -56,7 +56,7 @@
 #define PF_LEFT    0x0001   /* @B */
 #define PF_CREDIT  0x0002   /* @C */
 #define PF_DEBIT   0x0004   /* @X */
-#define PF_ZERO    0x0008   /* @0 */ /* NOTE: This is a Harbour extension [vszel] */
+#define PF_ZERO    0x0008   /* @0 */ /* NOTE: This is a Harbour extension [vszakats] */
 #define PF_PARNEG  0x0010   /* @( */
 #define PF_REMAIN  0x0020   /* @R */
 #define PF_UPPER   0x0040   /* @! */

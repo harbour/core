@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * ISPRINTER() function
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -66,7 +66,7 @@
 #endif
 
 /* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
-         by XBase++ */
+         by XBase++. [vszakats] */
 
 HARBOUR HB_ISPRINTER( void )
 {
@@ -105,7 +105,8 @@ HARBOUR HB_ISPRINTER( void )
             on any platform, but the result may not be the expected one,
             since Unix/Linux doesn't support LPT/COM by nature, other OSs
             may not reflect the actual physical presence of the printer when
-            trying to open it, since we are talking to the spooler. */
+            trying to open it, since we are talking to the spooler. 
+            [vszakats] */
 
    if( ( hb_strnicmp( pszDOSPort, "LPT", 3 ) == 0 ||
          hb_strnicmp( pszDOSPort, "COM", 3 ) == 0 ) && uiPort > 0 )

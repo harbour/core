@@ -114,7 +114,7 @@
  *    hb_gtSetColorStr()
  *    hb_gtSetMode()
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_gtDrawShadow()
  *
  * See doc/license.txt for licensing terms.

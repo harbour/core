@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    hb_retnlen()
  *    hb_retnilen()
  *    hb_retnllen()
@@ -81,7 +81,8 @@ PHB_ITEM hb_param( int iParam, int iMask )
    return NULL;
 }
 
-/* NOTE: Caller should not modify the buffer returned by this function */
+/* NOTE: Caller should not modify the buffer returned by this function.
+         [vszakats] */
 
 char * hb_parc( int iParam, ... )
 {
@@ -155,7 +156,7 @@ ULONG hb_parclen( int iParam, ... )
 
 /* NOTE: Similar to _parclen() but returns the length including the
          terminating zero byte, and it only works for parameters passed by
-         reference. */
+         reference. [vszakats] */
 
 ULONG hb_parcsiz( int iParam, ... )
 {
@@ -171,7 +172,7 @@ ULONG hb_parcsiz( int iParam, ... )
          pItem = hb_stack.pBase + 1 + iParam;
 
       /* NOTE: hb_parcsiz() will only work for strings passed by reference.
-               CA-Cl*pper works like this. */
+               CA-Cl*pper works like this. [vszakats] */
 
       if( IS_BYREF( pItem ) )
       {
@@ -235,7 +236,7 @@ char * hb_pards( int iParam, ... )
    return hb_dateDecStr( hb_stack.szDate, 0 );
 }
 
-/* NOTE: szDate must be a 9 chars wide buffer. */
+/* NOTE: szDate must be a 9 chars wide buffer. [vszakats] */
 
 char * hb_pardsbuff( char * szDate, int iParam, ... )
 {

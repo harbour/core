@@ -76,7 +76,7 @@ HARBOUR HB_EMPTY( void )
 
    /* NOTE: Double safety to ensure that a parameter was really passed,
             compiler checks this, but a direct hb_vmDo() call
-            may not do so. [vszel] */
+            may not do so. [vszakats] */
 
    if( pItem )
    {
@@ -104,7 +104,7 @@ HARBOUR HB_EMPTY( void )
             break;
 
          case IT_DATE:
-            /* NOTE: This is correct ! Get the date as long value. */
+            /* NOTE: This is correct ! Get the date as long value. [vszakats] */
             hb_retl( hb_itemGetNL( pItem ) == 0 );
             break;
 

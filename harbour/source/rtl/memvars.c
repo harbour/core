@@ -37,7 +37,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999 Victor Szel <info@szelvesz.hu>
+ * Copyright 1999 Victor Szakats <info@szelvesz.hu>
  *    HB___MVSAVE()
  *    HB___MVRESTORE() (Thanks to Dave Pearson and Jo French for the original
  *                      Clipper function (FReadMem()) to read .MEM files)
@@ -609,7 +609,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
             s_globalTable[ pDynVar->hMemvar ].item.type = IT_LOGICAL;
 
             /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized */
-            /*       to .T., this is normal Clipper behaviour */
+            /*       to .T., this is normal Clipper behaviour. [vszakats] */
 
             if( strcmp( pDynVar->pSymbol->szName, "HARBOUR" ) == 0 ||
                  strcmp( pDynVar->pSymbol->szName, "CLIPPER" ) == 0 )
@@ -1719,7 +1719,8 @@ HARBOUR HB___MVSAVE( void )
             pDynVar = s_privateStack[ ulBase ];
 
             /* NOTE: Harbour name lengths are not limited, but the .MEM file
-                     structure is not flexible enough to allow for it. */
+                     structure is not flexible enough to allow for it. 
+                     [vszakats] */
             if( pDynVar->hMemvar )
             {
                BOOL bMatch = ( pszMask[ 0 ] == '*' || hb_strMatchRegExp( pDynVar->pSymbol->szName, pszMask ) );
@@ -1730,7 +1731,7 @@ HARBOUR HB___MVSAVE( void )
                   PHB_ITEM pItem = &s_globalTable[ pDynVar->hMemvar ].item;
 
                   /* NOTE: Clipper will not initialize the record buffer with
-                           zeros, so they will look trashed. [vszel] */
+                           zeros, so they will look trashed. [vszakats] */
                   memset( buffer, 0, HB_MEM_REC_LEN );
 
                   /* NOTE: Save only the first 10 characters of the name */
@@ -1759,10 +1760,10 @@ HARBOUR HB___MVSAVE( void )
 
                      buffer[ 11 ] = 'N' + 128;
 #ifdef HARBOUR_STRICT_CLIPPER_COMPATIBILITY
-/* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. */
+/* NOTE: This is the buggy, but fully CA-Cl*pper compatible method. [vszakats] */
                      buffer[ 16 ] = ( BYTE ) iWidth + ( IS_DOUBLE( pItem ) ? iDec + 1 : 0 );
 #else
-/* NOTE: This would be the correct method, but Clipper is buggy here. */
+/* NOTE: This would be the correct method, but Clipper is buggy here. [vszakats] */
                      buffer[ 16 ] = ( BYTE ) iWidth + ( iDec == 0 ? 0 : iDec + 1 );
 #endif
                      buffer[ 17 ] = ( BYTE ) iDec;
@@ -1809,7 +1810,8 @@ HARBOUR HB___MVSAVE( void )
 }
 
 /* NOTE: There's an extension in Harbour, which makes it possible to only
-         load (or not load) variable names with a specific name mask. */
+         load (or not load) variable names with a specific name mask.
+         [vszakats] */
 
 HARBOUR HB___MVRESTORE( void )
 {

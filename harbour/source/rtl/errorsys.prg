@@ -172,7 +172,7 @@ STATIC FUNCTION DefError( oError )
 
    RETURN .F.
 
-// [vszel]
+// [vszakats]
 
 STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage
