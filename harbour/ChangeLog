@@ -1,3 +1,9 @@
+2001-12-08 08:40 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
+  * source/rtl/checkbox.prg
+    * fixed an smallbug on __guicolor() function
+  * source/rtl/listbox.prg
+    * fixed an smallbug the class constructor
+
 2001-12-07 22:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
     * Added support for Deleted() function in index adn condition expressions
