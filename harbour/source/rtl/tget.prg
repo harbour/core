@@ -1148,6 +1148,8 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       for nFor := 1 to ::nMaxLen
          if !::IsEditable( nFor )
             nNoEditable++
+         else
+            nNoEditable := 0
          endif
       next
       cBuffer += SubStr( ::Original, ::nMaxLen - nNoEditable + 1 )
