@@ -33,8 +33,8 @@ extern int lInclude;
 extern int *aCondCompile, nCondCompile;
 extern int nline;
 
-#define BUFF_SIZE 2048
-#define STR_SIZE 2048
+#define BUFF_SIZE 8192
+#define STR_SIZE 8192
 #define INITIAL_ACOM_SIZE 200
 
 extern DEFINES *aDefnew ;
@@ -91,7 +91,7 @@ int PreProcess( FILE* handl_i, FILE* handl_o, char *sOut )
        if ( !lInclude )
          printf ( "\nError number %u in line %u\n", rezParse, nline );
       }
-      *sLine = '\0';
+      else if ( rezParse == 0 ) *sLine = '\0';
      }
      else
      {

@@ -27,8 +27,8 @@ extern int *aCondCompile, nCondCompile;
 extern int nline;
 extern DEFINES *aDefnew ;
 
-#define BUFF_SIZE 2048
-#define STR_SIZE 2048
+#define BUFF_SIZE 8192
+#define STR_SIZE 8192
 
 #define INITIAL_ACOM_SIZE 200
 extern COMMANDS *aCommnew ;
@@ -173,7 +173,7 @@ int Hp_Parse( FILE* handl_i, FILE* handl_o )
        printf ( "\nError number %u in line %u\n", rezParse, nline );
      return rezParse;
     }
-    *sLine = '\0';
+    else if ( rezParse == 0 ) *sLine = '\0';
    }
    else
    {

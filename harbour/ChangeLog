@@ -1,3 +1,10 @@
+19990702-09:08 Alexander Kresin
+  * source\hbpp\hbpp.c
+    * Changed logic for fixing some problems
+  * source\hbpp\hbppint.c
+  * source\hbpp\hbppmain.c
+    * changed code for accepting #line sentences
+
 19990702-00:30 EDT David G. Holm <dholm@jsd-llc.com>
   * makefile.b31
     * Changed -DUSE_GTAPI to -DHARBOUR_USE_GTAPI

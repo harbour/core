@@ -41,7 +41,7 @@ int WorkTranslate ( char*, char**, char*, int);
 int WorkMarkers( char**, char**, char*, int*, int );
 int getExpReal ( char *, char **, int );
 int isExpres ( char* );
-void SkipOptional( char**, char*, int*);
+void SkipOptional( char**, char*, int*, int*);
 
 DEFINES* DefSearch(char *);
 int ComSearch(char *,int);
@@ -69,8 +69,8 @@ int OpenInclude( char *, PATHNAMES *, FILE** );
 #define isname(c)  (isalnum(c) || c=='_' || (c) > 0x7e)
 #define SKIPTABSPACES(sptr) while ( *sptr == ' ' || *sptr == '\t' ) (sptr)++
 #define MAX_NAME 255
-#define BUFF_SIZE 2048
-#define STR_SIZE 2048
+#define BUFF_SIZE 8192
+#define STR_SIZE 8192
 #define FALSE               0
 #define TRUE                1
 
@@ -181,6 +181,8 @@ int ParseDirective( char* sLine )
    printf ( "\n#error: %s\n", sLine );
    return 2000;
   }
+  else if ( i == 4 && memcmp ( sDirective, "line", 4 ) == 0 )
+    return -1;
   else return 1;
  }
  return 0;
@@ -701,7 +703,7 @@ int WorkTranslate ( char* sToken, char** ptri, char* ptro, int ndef )
 
 int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int com_or_tra )
 {
- int nbr = 0, endTranslation = FALSE;
+ int nbr = 0, endTranslation = FALSE, rez;
  char *lastopti[2];
  char *ptri = inputLine, *ptr;
 
@@ -715,24 +717,31 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
      switch ( *ptrmp ) {
       case '[':
        nbr++;
+       lastopti[Repeate++] = ptrmp;
        ptrmp++;
-       lastopti[Repeate] = ptrmp;
        break;
       case ']':
-        if ( Repeate ) { Repeate--; ptrmp = lastopti[Repeate]; }
+        if ( Repeate ) { Repeate--; ptrmp = lastopti[Repeate]; nbr--; }
         else { nbr--; ptrmp++; }
         break;
       case ',':
        if ( *ptri == ',' ) { ptrmp++; ptri++; }
        else
        {
-        if ( nbr ) { SkipOptional( &ptrmp, ptro, lenres); }
+        if ( nbr )
+        {
+          SkipOptional( &ptrmp, ptro, lenres, &nbr);
+        }
         else return 0;
        }
        break;
       case '\1':  /*  Match marker */
-       if ( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr ) )
+       if ( (rez = WorkMarkers( &ptrmp, &ptri, ptro, lenres, nbr )) ==0 )
         return 0;
+       else if ( rez == 2 )
+       {
+         SkipOptional( &ptrmp, ptro, lenres, &nbr);
+       }
        break;
       case '\0':
        if ( com_or_tra ) return 0; else endTranslation = TRUE;
@@ -740,7 +749,10 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
        ptr = ptrmp;
        if ( *ptri == ',' || strincmp(ptri, &ptrmp ) )
        {
-        if ( nbr ) { SkipOptional( &ptrmp, ptro, lenres); }
+        if ( nbr )
+        {
+           SkipOptional( &ptrmp, ptro, lenres, &nbr);
+        }
         else return 0;
        }
        else if ( *ptri != ',' ) ptri += (ptrmp - ptr);
@@ -749,7 +761,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
 
   if ( *ptrmp != '\0' )
   {
-   if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0] - 1; }
+   if ( Repeate ) { Repeate = 0; ptrmp = lastopti[0]; }
    do
    {
     SKIPTABSPACES( ptrmp );
@@ -757,7 +769,7 @@ int CommandStuff ( char *ptrmp, char *inputLine, char * ptro, int *lenres, int c
      switch ( *ptrmp ) {
       case '[':
        ptrmp++;
-       SkipOptional( &ptrmp, ptro, lenres);
+       SkipOptional( &ptrmp, ptro, lenres, NULL);
        ptrmp++;
        break;
       case ']': ptrmp++; break;
@@ -851,7 +863,11 @@ int WorkMarkers( char **ptrmp, char **ptri, char *ptro, int *lenres, int nbr )
    }
    if ( rezrestr == 0 )
    {  /* If restricted match marker doesn't correspond to real parameter */
-      if ( nbr ) SearnRep( exppatt,"",0,ptro,lenres);
+      if ( nbr )
+      {
+        SearnRep( exppatt,"",0,ptro,lenres);
+        return 2;
+      }
       else return 0;
    }
   }
@@ -972,7 +988,7 @@ int isExpres ( char* stroka )
   return 1;
 }
 
-void SkipOptional( char** ptri, char *ptro, int* lenres)
+void SkipOptional( char** ptri, char *ptro, int* lenres, int* pnbr)
 {
  int nbr = 0;
  char exppatt[MAX_NAME];
@@ -986,85 +1002,102 @@ void SkipOptional( char** ptri, char *ptro, int* lenres)
    case '[':  nbr++; break;
    case ']':  nbr--; break;
    case '\1':
-     for ( lenpatt=0; lenpatt<4; lenpatt++ ) *(exppatt+lenpatt) = *((*ptri)++);
-     (*ptri)--;
-     if ( exppatt[2] == '2' )
-     while ( **ptri != '>' ) (*ptri)++;
-     SearnRep( exppatt,"",0,ptro,lenres);
+     if ( pnbr == NULL || *pnbr < 2 )
+     {
+       for ( lenpatt=0; lenpatt<4; lenpatt++ ) *(exppatt+lenpatt) = *((*ptri)++);
+       (*ptri)--;
+       if ( exppatt[2] == '2' )
+         while ( **ptri != '>' ) (*ptri)++;
+       SearnRep( exppatt,"",0,ptro,lenres);
+     }
      break;
   }
   (*ptri)++;
  }
+   if ( **ptri == ']' && pnbr != NULL )
+   {
+     if ( Repeate ) Repeate--;
+     (*pnbr)--; (*ptri)++;
+   }
 }
 
 void SearnRep( char *exppatt,char *expreal,int lenreal,char *ptro, int *lenres)
 {
- int ifou, isdvig = 0, rezs;
- int kolmarkers;
- int lennew, i;
- char lastchar = '0';
- char expnew[MAX_NAME];
- char *ptr, *ptr2;
+   int ifou, isdvig = 0, rezs;
+   int kolmarkers;
+   int lennew, i;
+   char lastchar = '0';
+   char expnew[MAX_NAME];
+   char *ptr, *ptr2;
+
    while ( (ifou = hb_strAt( exppatt, 2, ptro+isdvig, *lenres-isdvig )) > 0 )
    {
-    rezs = 0;
-    ptr = ptro+isdvig+ifou-2;
-    kolmarkers = 0;
-    while ( ptr >= ptro+isdvig )
-    {
-     if ( *ptr == '[' || *ptr == ']' ) break;
-     if  ( *ptr == '\1' ) kolmarkers++;
-     ptr--;
-    }
-    if ( *ptr == '[' )
-    {
-     ptr2 = ptro+isdvig+ifou+3;
-     while ( *ptr2 != ']' ) { if ( *ptr2 == '\1' ) kolmarkers++; ptr2++; }
-     if ( Repeate && lenreal && kolmarkers) return;
-     if ( lenreal == 0 )
+     rezs = 0;
+     ptr = ptro+isdvig+ifou-2;
+     kolmarkers = 0;
+     while ( ptr >= ptro+isdvig )
      {
-      Stuff ( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
-      *lenres -= ptr2-ptr+1;
-      isdvig = ptr - ptro;
-      rezs = 1;
+       if ( *ptr == '[' || *ptr == ']' ) break;
+       if  ( *ptr == '\1' ) kolmarkers++;
+       ptr--;
      }
-     else
+     if ( *ptr == '[' )
      {
-      lennew = ptr2-ptr-1;
+       ptr2 = ptro+isdvig+ifou+3;
+       while ( *ptr2 != ']' ) { if ( *ptr2 == '\1' ) kolmarkers++; ptr2++; }
+       if ( Repeate && lenreal && kolmarkers && lastchar != '0' &&
+                                             *(ptro+isdvig+ifou+2) == '0' )
+       {
+         isdvig += ifou;
+         rezs = 1;
+       }
+       else
+       {
+         if ( lenreal == 0 )
+         {
+           Stuff ( "", ptr, 0, ptr2-ptr+1, *lenres-(ptr-ptro) );
+           *lenres -= ptr2-ptr+1;
+           isdvig = ptr - ptro;
+           rezs = 1;
+         }
+         else
+         {
+           lennew = ptr2-ptr-1;
 
-      memcpy ( expnew, ptr+1, lennew );
-      *(expnew + lennew) = '\0';
-      while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
-       lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
-      if ( kolmarkers )
-      {
-       groupchar = (char) ( (unsigned int)groupchar + 1 );
-       for ( i=0; i<lennew; i++ )
-        if ( *(expnew+i) == '\1' )
-        {
-         *(expnew+i+3) = groupchar;
-         i += 4;
-        }
-      }
-      Stuff ( expnew, ptr, lennew, 0, *lenres-(ptr-ptro)+1 );
-      *lenres += lennew;
-      isdvig = ptr - ptro + (ptr2-ptr-1) + lennew;
-      rezs = 1;
-      Repeate++;
+           memcpy ( expnew, ptr+1, lennew );
+           *(expnew + lennew) = '\0';
+           while ( (i = hb_strAt( exppatt, 2, expnew, lennew )) > 0 )
+             lennew += ReplacePattern ( exppatt[2], expreal, lenreal, expnew+i-1, lennew );
+           if ( kolmarkers )
+           {
+             groupchar = (char) ( (unsigned int)groupchar + 1 );
+             for ( i=0; i<lennew; i++ )
+               if ( *(expnew+i) == '\1' )
+               {
+                 *(expnew+i+3) = groupchar;
+                 i += 4;
+               }
+           }
+           Stuff ( expnew, ptr, lennew, 0, *lenres-(ptr-ptro)+1 );
+           *lenres += lennew;
+           isdvig = ptr - ptro + (ptr2-ptr-1) + lennew;
+           rezs = 1;
+ /*           Repeate++;     */
+         }
+       }
      }
-    }
-    if ( !rezs )
-    {
-     if ( *(ptro+isdvig+ifou+2) != '0' )
+     if ( !rezs )
      {
-      if ( lastchar == '0' ) lastchar = *(ptro+isdvig+ifou+2);
-      if ( lastchar != *(ptro+isdvig+ifou+2) )
-       { isdvig += ifou + 3; continue; }
-     }
-     *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
+       if ( *(ptro+isdvig+ifou+2) != '0' )
+       {
+         if ( lastchar == '0' ) lastchar = *(ptro+isdvig+ifou+2);
+         if ( lastchar != *(ptro+isdvig+ifou+2) )
+         { isdvig += ifou + 3; continue; }
+       }
+       *lenres += ReplacePattern ( exppatt[2], expreal, lenreal,
                              ptro+isdvig+ifou-1, *lenres-isdvig-ifou+1 );
-     isdvig += ifou;
-    }
+       isdvig += ifou;
+     }
    }
 }
 
