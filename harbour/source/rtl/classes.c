@@ -218,7 +218,6 @@ HARBOUR HB_CLASSADD(void)
       {
          case MET_METHOD:
               pNewMeth->pFunction = ( HARBOURFUNC ) hb_parnl( 3 );
-              printf("\nPointer=%li\n",hb_parnl( 3 ));
               break;
 
          case MET_DATA:

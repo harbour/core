@@ -1,7 +1,12 @@
+19990711-21:30 Eddie Runia <eddie@runia.com>
+   * source/rtl/classes.c
+     Debug text removed
+
+
 19990711-21:15 Eddie Runia <eddie@runia.com>
-* include/hbdefs.h; include/extend.h; source/rtl/codebloc.c;
-  source/rtl/memvars.c
-  HANDLE changed to HB_HANDLE
+   * include/hbdefs.h; include/extend.h; source/rtl/codebloc.c;
+     source/rtl/memvars.c
+     HANDLE changed to HB_HANDLE
 
 19990711-20:25 Ryszard Glab <rglab@imid.med.pl>
 * include/init.h
