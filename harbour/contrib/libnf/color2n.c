@@ -13,6 +13,10 @@
  * Modification history:
  * ---------------------
  *
+ *    Rev 1.1   22 Apr 2004 15:44:00   DGH
+ * Fixed compiler warnings about pointer vs. integer by changing NULL to 0.
+ * Commented out #ifdef and #endif lines, because there is nothing that is
+ * even remotely DOS- or Windows-specific in the code.
  *    Rev 1.0   01 Jan 1995 03:01:00   TED
  * Initial release
  *
@@ -55,8 +59,8 @@ static char * _ftStripIt( char * cColor );
 
 HB_FUNC(FT_COLOR2N)
 {
-#if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
-   {
+/* #if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
+   { */
 
        int iRet = 0;
 
@@ -68,8 +72,8 @@ HB_FUNC(FT_COLOR2N)
        hb_retni( iRet );
 
        return;
-   }
-#endif
+/*   }
+#endif */
 }
 
 
@@ -88,7 +92,7 @@ static int _ftColor2I( char * cColor )
     // copy the Clipper string to buffer, check for attributes, and
     // make lower case
 
-    while ( ( cFore[ i ] = cColor[ i ] ) != NULL )
+    while ( ( cFore[ i ] = cColor[ i ] ) != 0 )
     {
        // check for a blink attrib
 
@@ -107,12 +111,12 @@ static int _ftColor2I( char * cColor )
 
     // check for the background color
 
-    while ( cColor[ iBack++ ] != '/' && cColor[ iBack ] != NULL );
+    while ( cColor[ iBack++ ] != '/' && cColor[ iBack ] != 0 );
 
     if ( cColor[--iBack ] == '/' )
     {
        cBack = cFore + iBack + 1;
-       cFore[ iBack ] = NULL;
+       cFore[ iBack ] = 0;
     }
 
     // calculate and return the value

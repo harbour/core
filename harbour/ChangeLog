@@ -8,6 +8,15 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2004-04-22 17:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
+  * contrib/libct/files.c
+  * contrib/libnf/color2n.c
+  * contrib/libnf/dispc.c
+  * contrib/libnf/n2color.c
+  * contrib/rdd_ads/ads1.c
+  * source/vm/memvars.c
+    ! Eliminated most warnings issued by MinGW GCC compiler.
+
 2004-04-22 10:57 UTC+0300 Chen Kedem <niki@actcom.co.il>
   * doc/dirstruc.txt
     + Add oneliner description for: contrib/hbzlib/include,

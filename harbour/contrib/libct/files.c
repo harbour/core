@@ -190,20 +190,20 @@ HB_FUNC(FILEATTR)
                iAttri =  _chmod( szFile, 0 );
             #endif
       hb_retni(iAttri);
-     #endif
-}
+   #endif
+   }
 
 #elif defined(HB_OS_WIN_32)
-     {
+   {
       DWORD dAttr;
 
       LPCTSTR cFile=hb_parc(1);
       dAttr=GetFileAttributes(cFile);
       hb_retnl(dAttr);
-      }
+   }
 #else
 {
-hb_retnl(-1);
+   hb_retnl(-1);
 }
 #endif
 
@@ -269,10 +269,10 @@ HB_FUNC(SETFATTR)
       case  (FA_RDONLY|FA_ARCH|FA_HIDDEN|FA_SYSTEM) :
          iReturn=_chmod(szFile,1,FA_RDONLY|FA_ARCH|FA_HIDDEN|FA_SYSTEM);
          break;
-}      
+      }      
 
       hb_retni(iReturn);
-      }
+   }
    #endif
 
 #elif defined(HB_OS_WIN_32)
@@ -297,9 +297,11 @@ HB_FUNC(SETFATTR)
       lSuccess=SetFileAttributes(cFile,dwFlags);
       if (lSuccess)
          hb_retni(dwLastError);
-      else {
+      else
+      {
          dwLastError=GetLastError();
-         switch (dwLastError) {
+         switch (dwLastError)
+         {
             case ERROR_FILE_NOT_FOUND :
                 hb_retni(-2);
                 break;
@@ -309,58 +311,63 @@ HB_FUNC(SETFATTR)
             case ERROR_ACCESS_DENIED:
                hb_retni(-5);
                break;
-              }
          }
-}
+      }
+   }
 
 #else
 {
-hb_retnl(-1);
+   hb_retnl(-1);
 }
 #endif
 }
 
-     HB_FUNC(FILESEEK)
+HB_FUNC(FILESEEK)
 {
-
    #if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
    {
       LPCTSTR szFile;
       DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
       int iAttr;
-      if (hb_pcount() >=1){
+      if (hb_pcount() >=1)
+      {
          szFile=hb_parc(1);
-         if (ISNUM(2))      {
-         iAttr=hb_parnl(2);}
-         else{
-         iAttr=63;
+         if (ISNUM(2))
+         {
+            iAttr=hb_parnl(2);
          }
-            if( iAttr & FA_RDONLY )
-               dwFlags |= FILE_ATTRIBUTE_READONLY;
+         else
+         {
+            iAttr=63;
+         }
+         if( iAttr & FA_RDONLY )
+            dwFlags |= FILE_ATTRIBUTE_READONLY;
 
-            if( iAttr & FA_HIDDEN )
-               dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+         if( iAttr & FA_HIDDEN )
+            dwFlags |= FILE_ATTRIBUTE_HIDDEN;
    
-            if( iAttr & FA_SYSTEM )
-               dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-            if( iAttr & FA_NORMAL )
-               dwFlags |=    FILE_ATTRIBUTE_NORMAL;
+         if( iAttr & FA_SYSTEM )
+            dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+         if( iAttr & FA_NORMAL )
+            dwFlags |=    FILE_ATTRIBUTE_NORMAL;
 
-            hLastFind = FindFirstFile(szFile,&Lastff32);
-                  if (hLastFind != INVALID_HANDLE_VALUE){
-                     hb_retc(Lastff32.cFileName);
-                     }
-
+         hLastFind = FindFirstFile(szFile,&Lastff32);
+         if (hLastFind != INVALID_HANDLE_VALUE)
+         {
+            hb_retc(Lastff32.cFileName);
          }
-         else {
-            if (FindNextFile(hLastFind,&Lastff32))
-               hb_retc(Lastff32.cFileName);
-            else {
-         FindClose(hLastFind);
-         hLastFind=NULL;
+      }
+      else
+      {
+         if (FindNextFile(hLastFind,&Lastff32))
+            hb_retc(Lastff32.cFileName);
+         else
+         {
+            FindClose(hLastFind);
+            hLastFind=NULL;
          }
-}
-} 
+      }
+   } 
 #elif defined(HB_OS_DOS)
    {
       int iFind;
@@ -369,30 +376,34 @@ hb_retnl(-1);
       if (hb_pcount()>=1)
       {
          szFiles=hb_parc(1);
-            if(ISNUM(2)){
+         if(ISNUM(2))
+         {
             iAttr=hb_parnl(2);
-            }
-         else{
+         }
+         else
+         {
              iAttr=32;
-             }
+          }
           iFind=findfirst(szFiles,&fsOldFiles,iAttr);
-          if (!iFind){
+          if (!iFind)
+          {
               hb_retc(fsOldFiles.ff_name);
           }
       }
-      else {
-            iFind=findnext(&fsOldFiles);
-            if (!iFind)
-               hb_retc(fsOldFiles.ff_name);
-            #if !defined (__DJGPP__) 
-            else
-               findclose(&fsOldFiles);
-           #endif
+      else
+      {
+         iFind=findnext(&fsOldFiles);
+         if (!iFind)
+            hb_retc(fsOldFiles.ff_name);
+         #if !defined (__DJGPP__) 
+         else
+            findclose(&fsOldFiles);
+         #endif
       }
    }
 #else
 {
-hb_retc("");
+   hb_retc("");
 }
 #endif
 }
@@ -401,77 +412,90 @@ HB_FUNC(FILESIZE)
 
 #if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
    {
-   DWORD dwFileSize=0;
-   LPCTSTR szFile;
-   DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
-   HANDLE hFind;
-   WIN32_FIND_DATA  hFilesFind;
+      DWORD dwFileSize=0;
+      LPCTSTR szFile;
+      DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
+      HANDLE hFind;
+      WIN32_FIND_DATA  hFilesFind;
 
       int iAttr;
-      if (hb_pcount() >=1){
+      if (hb_pcount() >=1)
+      {
          szFile=hb_parc(1);
-         if (ISNUM(2))      {
+         if (ISNUM(2))
+         {
             iAttr=hb_parnl(2);
          }
-         else{
-         iAttr=63;
+         else
+         {
+            iAttr=63;
          }
-            if( iAttr & FA_RDONLY )
-               dwFlags |= FILE_ATTRIBUTE_READONLY;
+         if( iAttr & FA_RDONLY )
+            dwFlags |= FILE_ATTRIBUTE_READONLY;
 
-            if( iAttr & FA_HIDDEN )
-               dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+         if( iAttr & FA_HIDDEN )
+            dwFlags |= FILE_ATTRIBUTE_HIDDEN;
    
-            if( iAttr & FA_SYSTEM )
-               dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-            if( iAttr & FA_NORMAL )
-               dwFlags |=    FILE_ATTRIBUTE_NORMAL;
+         if( iAttr & FA_SYSTEM )
+            dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+         if( iAttr & FA_NORMAL )
+            dwFlags |=    FILE_ATTRIBUTE_NORMAL;
 
-            hFind = FindFirstFile(szFile,&hFilesFind);
-                  if (hFind != INVALID_HANDLE_VALUE){
-                      if (dwFlags & hFilesFind.dwFileAttributes) {
-                         if(hFilesFind.nFileSizeHigh>0)
-                              hb_retnl((hFilesFind.nFileSizeHigh*MAXDWORD)+hFilesFind.nFileSizeLow);    
-                         else
-                              hb_retnl(hFilesFind.nFileSizeLow);
-                       }
-                   else
-                           hb_retnl(-1);
-                     }
-
+         hFind = FindFirstFile(szFile,&hFilesFind);
+         if (hFind != INVALID_HANDLE_VALUE)
+         {
+            if (dwFlags & hFilesFind.dwFileAttributes)
+            {
+               if(hFilesFind.nFileSizeHigh>0)
+               {
+                  hb_retnl((hFilesFind.nFileSizeHigh*MAXDWORD)+hFilesFind.nFileSizeLow);    
+               }
+               else
+               {
+                  hb_retnl(hFilesFind.nFileSizeLow);
+               }
+	    }
+            else
+            {
+               hb_retnl(-1);
+            }
          }
-        
-   else
-   {
-    if(Lastff32.nFileSizeHigh>0)
-      dwFileSize=(Lastff32.nFileSizeHigh*MAXDWORD)+Lastff32.nFileSizeLow;    
-     else
-      dwFileSize=Lastff32.nFileSizeLow;
-   hb_retnl(dwFileSize);
+      }
+      else
+      {
+         if(Lastff32.nFileSizeHigh>0)
+            dwFileSize=(Lastff32.nFileSizeHigh*MAXDWORD)+Lastff32.nFileSizeLow;    
+         else
+            dwFileSize=Lastff32.nFileSizeLow;
+         hb_retnl(dwFileSize);
+      }
    }
-}
 #elif defined(HB_OS_DOS)
-{
+   {
    int iFind;
-   if (hb_pcount() >0) {
+   if (hb_pcount() >0)
+   {
       char *szFiles=hb_parc(1);
       int iAttr=0 ;
       struct ffblk fsFiles;
       
       if (ISNUM(2))
+      {
          iAttr=hb_parni(2);
-         iFind=findfirst(szFiles,&fsFiles,iAttr);
-         if (!iFind)
-             if ((iAttr>0) & (iAttr&fsFiles.ff_attrib))
-                     hb_retnl(fsFiles.ff_fsize);
-             else
-                    hb_retnl(fsFiles.ff_fsize);
-         else
-             hb_retnl(-1);
+      }
+      iFind=findfirst(szFiles,&fsFiles,iAttr);
+      if (!iFind)
+      {
+         /* if ((iAttr>0) & (iAttr&fsFiles.ff_attrib))
+            hb_retnl(fsFiles.ff_fsize);
+         else */
+         hb_retnl(fsFiles.ff_fsize);
+      }
+      else hb_retnl(-1);
    }
-  else
-  {
-   hb_retnl(fsOldFiles.ff_fsize);
+   else
+   {
+      hb_retnl(fsOldFiles.ff_fsize);
    }
 }
 #elif defined(OS_UNIX_COMPATIBLE)
@@ -482,99 +506,111 @@ HB_FUNC(FILESIZE)
    USHORT   usFileAttr;
    struct stat sStat;
    if (ISNUM(2))
+   {
       ushbMask=hb_parni(2);
-   if (stat(szFile,&sStat )!=-1){
-       usFileAttr=osToHarbourMask(sStat.st_mode);
-       if ((ushbMask>0) & (ushbMask&usFileAttr))
-           hb_retnl(sStat.st_size);
-       else
-           hb_retnl(sStat.st_size);
-           }
+   }
+   if (stat(szFile,&sStat )!=-1)
+   {
+      usFileAttr=osToHarbourMask(sStat.st_mode);
+      /* if ((ushbMask>0) & (ushbMask&usFileAttr))
+         hb_retnl(sStat.st_size);
+      else */
+      hb_retnl(sStat.st_size);
+   }
    else
-        hb_retnl(-1);
-}
+      hb_retnl(-1);
+   }
 }
 #else
 {
-hb_retl(-1);
+   hb_retl(-1);
 }
 #endif
 }
 
 HB_FUNC(FILEDATE)
 {
-
 #if defined(HB_OS_WIN_32) && !defined(__CYGWIN__)
 {
    LPCTSTR szFile;
+   LPTSTR szDateString;
    DWORD dwFlags=FILE_ATTRIBUTE_ARCHIVE;
    HANDLE hFind;
    WIN32_FIND_DATA  hFilesFind;
 
-      int iAttr;
-      if (hb_pcount() >=1){
-         szFile=hb_parc(1);
-         if (ISNUM(2))      {
+   int iAttr;
+   if (hb_pcount() >=1)
+   {
+      szFile=hb_parc(1);
+      if (ISNUM(2))
+      {
          iAttr=hb_parnl(2);
-         }
-         else{
+      }
+      else
+      {
          iAttr=63;
-         }
-            if( iAttr & FA_RDONLY )
-               dwFlags |= FILE_ATTRIBUTE_READONLY;
+      }
+      if( iAttr & FA_RDONLY )
+         dwFlags |= FILE_ATTRIBUTE_READONLY;
 
-            if( iAttr & FA_HIDDEN )
-               dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+      if( iAttr & FA_HIDDEN )
+         dwFlags |= FILE_ATTRIBUTE_HIDDEN;
    
-            if( iAttr & FA_SYSTEM )
-               dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-            if( iAttr & FA_NORMAL )
-               dwFlags |=    FILE_ATTRIBUTE_NORMAL;
+      if( iAttr & FA_SYSTEM )
+         dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+      if( iAttr & FA_NORMAL )
+         dwFlags |=    FILE_ATTRIBUTE_NORMAL;
 
-            hFind = FindFirstFile(szFile,&hFilesFind);
-                  if (hFind != INVALID_HANDLE_VALUE)
-                      if (dwFlags & hFilesFind.dwFileAttributes) 
-                             hb_retds(GetDate(&hFilesFind.ftLastWriteTime));
-                      else
-                             hb_retds(GetDate(&hFilesFind.ftLastWriteTime));
-                       
-                   else
-                           hb_retds("        ");
-                     
-
-         }
-
- else    {
-     LPTSTR szDateString;
-     szDateString=GetDate(&Lastff32.ftLastWriteTime);
-     hb_retds(szDateString);
-
- }
+      hFind = FindFirstFile(szFile,&hFilesFind);
+      if (hFind != INVALID_HANDLE_VALUE)
+      {
+         szDateString = GetDate(&hFilesFind.ftLastWriteTime);
+         /* if (dwFlags & hFilesFind.dwFileAttributes) 
+            hb_retds(GetDate(&hFilesFind.ftLastWriteTime));
+         else */
+         hb_retds(szDateString);
+         hb_xfree(szDateString);
+      }
+      else
+         hb_retds("        ");
+   }
+   else
+   {
+      szDateString=GetDate(&Lastff32.ftLastWriteTime);
+      hb_retds(szDateString);
+      hb_xfree(szDateString);
+   }
 }
 #elif defined(HB_OS_DOS)
 {
    int iFind;
-   if (hb_pcount() >0) {
+   if (hb_pcount() >0)
+   {
       char *szFiles=hb_parc(1);
       int iAttr=0 ;   
       struct ffblk fsFiles;
       if (ISNUM(2))
+      {
          iAttr=hb_parni(2);
-         iFind=findfirst(szFiles,&fsFiles,iAttr);
-         if (!iFind)
-             if ((iAttr>0) & (iAttr&fsFiles.ff_attrib))
-                    hb_retd( (long) (fsFiles.ff_fdate >> 9) +1980 ,     (long)  ((fsFiles.ff_fdate & ~0xFE00) >> 5) ,(long)fsFiles.ff_fdate & ~0xFFE0);
-             else
-                    hb_retd( (long) (fsFiles.ff_fdate >> 9) +1980 ,     (long)  ((fsFiles.ff_fdate & ~0xFE00) >> 5) ,(long)fsFiles.ff_fdate & ~0xFFE0);
-            else
-                  hb_retds("        ");
+      }
+      iFind=findfirst(szFiles,&fsFiles,iAttr);
+      if (!iFind)
+      {
+         /* if ((iAttr>0) & (iAttr&fsFiles.ff_attrib))
+            hb_retd( (long) (fsFiles.ff_fdate >> 9) +1980 , (long) ((fsFiles.ff_fdate & ~0xFE00) >> 5), (long)fsFiles.ff_fdate & ~0xFFE0);
+         else */
+         hb_retd( (long) (fsFiles.ff_fdate >> 9) +1980 , (long) ((fsFiles.ff_fdate & ~0xFE00) >> 5), (long)fsFiles.ff_fdate & ~0xFFE0);
+      }
+      else
+         hb_retds("        ");
+   }
+   else
+      hb_retd( (long) (fsOldFiles.ff_fdate >> 9) +1980, (long) ((fsOldFiles.ff_fdate & ~0xFE00) >> 5), (long)fsOldFiles.ff_fdate & ~0xFFE0);
 }
-  else
-   hb_retd( (long) (fsOldFiles.ff_fdate >> 9) +1980 ,     (long)  ((fsOldFiles.ff_fdate & ~0xFE00) >> 5) ,(long)fsOldFiles.ff_fdate & ~0xFFE0); 
- }
 #elif defined(OS_UNIX_COMPATIBLE)
 {
-   if (hb_pcount() >0) {
+   if (hb_pcount() >0)
+   {
       const char *szFile=hb_parc(1);
       struct stat sStat;
       time_t tm_t=0;
@@ -583,24 +619,27 @@ HB_FUNC(FILEDATE)
       USHORT   ushbMask = FA_ARCH;
       USHORT   usFileAttr;
       if (ISNUM(2))
+      {
          ushbMask=hb_parni(2);
-      if (stat(szFile,&sStat) != -1) {
+      }
+      if (stat(szFile,&sStat) != -1)
+      {
          tm_t = sStat.st_mtime;
          filedate = localtime(&tm_t);
          sprintf(szDate,"%04d%02d%02d",filedate->tm_year+1900,filedate->tm_mon+1,filedate->tm_mday);
          usFileAttr=osToHarbourMask(sStat.st_mode);
-      if ((ushbMask>0) & (ushbMask&usFileAttr))
+         /* if ((ushbMask>0) & (ushbMask&usFileAttr))
+            hb_retds(szDate);
+         else */
          hb_retds(szDate);
+      }
       else
-         hb_retds(szDate);
-           }
-   else
-        hb_retds("        ");
+         hb_retds("        ");
    }
 }
 #else
 {
-                          hb_retds("        ");
+   hb_retds("        ");
 }
 #endif
 }
@@ -615,72 +654,77 @@ HB_FUNC(FILETIME)
    HANDLE hFind;
    WIN32_FIND_DATA  hFilesFind;
 
-      int iAttr;
-      if (hb_pcount() >=1){
-         szFile=hb_parc(1);
-         if (ISNUM(2))      {
+   int iAttr;
+   if (hb_pcount() >=1)
+   {
+      szFile=hb_parc(1);
+      if (ISNUM(2))
+      {
          iAttr=hb_parnl(2);
-         }
-         else{
+      }
+      else
+      {
          iAttr=63;
-         }
-            if( iAttr & FA_RDONLY )
-               dwFlags |= FILE_ATTRIBUTE_READONLY;
+      }
+      if( iAttr & FA_RDONLY )
+         dwFlags |= FILE_ATTRIBUTE_READONLY;
 
-            if( iAttr & FA_HIDDEN )
-               dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+      if( iAttr & FA_HIDDEN )
+         dwFlags |= FILE_ATTRIBUTE_HIDDEN;
    
-            if( iAttr & FA_SYSTEM )
-               dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-            if( iAttr & FA_NORMAL )
-               dwFlags |=    FILE_ATTRIBUTE_NORMAL;
+      if( iAttr & FA_SYSTEM )
+         dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+      if( iAttr & FA_NORMAL )
+         dwFlags |=    FILE_ATTRIBUTE_NORMAL;
 
-            hFind = FindFirstFile(szFile,&hFilesFind);
-                  if (hFind != INVALID_HANDLE_VALUE)
-                      if (dwFlags & hFilesFind.dwFileAttributes) 
-                             hb_retc(GetTime(&hFilesFind.ftLastWriteTime));
-                      else
-                             hb_retc(GetTime(&hFilesFind.ftLastWriteTime));
-                       
-                   else
-                           hb_retc("  :  ");
-                     
-
-         }
-
-   else {
-   szDateString=GetTime(&Lastff32.ftLastWriteTime);
-
-   hb_retc(szDateString);
+      hFind = FindFirstFile(szFile,&hFilesFind);
+      if (hFind != INVALID_HANDLE_VALUE)
+      {
+         /* if (dwFlags & hFilesFind.dwFileAttributes) 
+            hb_retc(GetTime(&hFilesFind.ftLastWriteTime));
+         else */
+         szDateString = GetTime(&hFilesFind.ftLastWriteTime);
+         hb_retc(szDateString);
+         hb_xfree(szDateString);
+      }
+      else
+         hb_retc("  :  ");
+   }
+   else
+   {
+      szDateString=GetTime(&Lastff32.ftLastWriteTime);
+      hb_retc(szDateString);
+      hb_xfree(szDateString);
+   }
 }
- }
- 
 #elif defined(HB_OS_DOS)
 {
-   
    char szTime[7];
    int iFind;
-   if (hb_pcount() >0) {
+   if (hb_pcount() >0)
+   {
       char *szFiles=hb_parc(1);
       int iAttr=0 ;   
       struct ffblk fsFiles;
       if (ISNUM(2))
+      {
          iAttr=hb_parni(2);
-         iFind=findfirst(szFiles,&fsFiles,iAttr);
-         if (!iFind){
-             if ((iAttr>0) & (iAttr&fsFiles.ff_attrib))
-                    sprintf(szTime,"%2.2u:%2.2u",(fsFiles.ff_ftime >> 11) & 0x1f,(fsFiles.ff_ftime>> 5) & 0x3f);
-             else
-                    sprintf(szTime,"%2.2u:%2.2u",(fsFiles.ff_ftime >> 11) & 0x1f,(fsFiles.ff_ftime>> 5) & 0x3f);
-                         hb_retc(szTime);
-             }
-
-         else
-            hb_retc("  :  ");
+      }
+      iFind=findfirst(szFiles,&fsFiles,iAttr);
+      if (!iFind)
+      {
+         /* if ((iAttr>0) & (iAttr&fsFiles.ff_attrib))
+            sprintf(szTime,"%2.2u:%2.2u",(fsFiles.ff_ftime >> 11) & 0x1f,(fsFiles.ff_ftime>> 5) & 0x3f);
+         else */
+         sprintf(szTime,"%2.2u:%2.2u",(fsFiles.ff_ftime >> 11) & 0x1f,(fsFiles.ff_ftime>> 5) & 0x3f);
+         hb_retc(szTime);
+      }
+      else
+         hb_retc("  :  ");
    }
    else {
-   sprintf(szTime,"%2.2u:%2.2u",(fsOldFiles.ff_ftime >> 11) & 0x1f,(fsOldFiles.ff_ftime>> 5) & 0x3f);
-   hb_retc(szTime);
+      sprintf(szTime,"%2.2u:%2.2u",(fsOldFiles.ff_ftime >> 11) & 0x1f,(fsOldFiles.ff_ftime>> 5) & 0x3f);
+      hb_retc(szTime);
    }
 }
 #elif defined(OS_UNIX_COMPATIBLE)
@@ -696,73 +740,65 @@ HB_FUNC(FILETIME)
    sprintf( szTime, "%02d:%02d:%02d",ft->tm_hour, ft->tm_min, ft->tm_sec );
    hb_retc(szTime);
 }
-
 #else
 {
             hb_retc("  :  ");
 }
 #endif
-
 }
 
 #if (defined(HB_OS_WIN_32) || defined(__MINGW32__)) && !defined(__CYGWIN__) && !defined(__RSXNT__)
 
 #include <tchar.h>
 
-    LPTSTR GetDate(FILETIME *rTime)
-    {
-        static const LPTSTR tszFormat = "yyyyMMdd"; 
-        FILETIME ft;
-        int iSize;        
-        if (FileTimeToLocalFileTime(rTime, &ft))
-        {
-            SYSTEMTIME time;
-            if (FileTimeToSystemTime(&ft, &time))
+LPTSTR GetDate(FILETIME *rTime)
+{
+   static const LPTSTR tszFormat = "yyyyMMdd"; 
+   FILETIME ft;
+   if (FileTimeToLocalFileTime(rTime, &ft))
+   {
+      SYSTEMTIME time;
+      if (FileTimeToSystemTime(&ft, &time))
+      {
+         int iSize = GetDateFormat(0, 0, &time, tszFormat, NULL, 0);
+         if ( iSize )
+         {
+            LPTSTR tszDateString = (LPTSTR)hb_xgrab(iSize+sizeof(TCHAR));
+            if ( tszDateString )
             {
-                
-                if ( iSize = GetDateFormat(NULL, 0, &time, tszFormat, NULL, 0))
-                {
-                     LPTSTR tszDateString;
-                    if ( tszDateString = (LPTSTR)malloc(iSize+sizeof(TCHAR)))
-                    {
-                        if (GetDateFormat(NULL, 0, &time, tszFormat, tszDateString, iSize))
-                            return tszDateString;
-                        free(tszDateString);
-                    }
-                }
+               if (GetDateFormat(0, 0, &time, tszFormat, tszDateString, iSize))
+                  return tszDateString;
+               free(tszDateString);
             }
-        }
-        
-        return NULL;
-    }
+         }
+      }
+   }
+   return NULL;
+}
 
-    LPTSTR GetTime(FILETIME *rTime)
-    {
-        static const LPTSTR tszFormat = "HH':'mm";/*_T("MM'\\'dd'\\'yyyy");*/
-        FILETIME ft;
+LPTSTR GetTime(FILETIME *rTime)
+{
+   static const LPTSTR tszFormat = "HH':'mm";/*_T("MM'\\'dd'\\'yyyy");*/
+   FILETIME ft;
         
-        if (FileTimeToLocalFileTime(rTime, &ft))
-        {
-            SYSTEMTIME time;
-            if (FileTimeToSystemTime(&ft, &time))
+   if (FileTimeToLocalFileTime(rTime, &ft))
+   {
+      SYSTEMTIME time;
+      if (FileTimeToSystemTime(&ft, &time))
+      {
+         int iSize = GetTimeFormat(0, 0, &time, tszFormat, NULL, 0);
+         if ( iSize )
+         {
+            LPTSTR tszDateString = (LPTSTR)hb_xgrab(iSize+sizeof(TCHAR));
+            if ( tszDateString )
             {
-                int iSize;
-                if ( iSize = GetTimeFormat(NULL, 0, &time, tszFormat, NULL, 0))
-                {
-                     LPTSTR tszDateString;
-                    if ( tszDateString = (LPTSTR)malloc(iSize+sizeof(TCHAR)))
-                    {
-                        if (GetTimeFormat(NULL, 0, &time, tszFormat, tszDateString, iSize))
-                            return tszDateString;
-                        free(tszDateString);
-                    }
-                }
+               if (GetTimeFormat(0, 0, &time, tszFormat, tszDateString, iSize))
+                  return tszDateString;
+               free(tszDateString);
             }
-        }
-        
-        return NULL;
-    }
-
-
-
+         }
+      }
+   }
+   return NULL;
+}
 #endif

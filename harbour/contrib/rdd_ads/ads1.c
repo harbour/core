@@ -688,7 +688,7 @@ static ERRCODE adsSkip( ADSAREAP pArea, LONG lToSkip )
       return SUCCESS;    /*bh: dbskip(0) created infinite loop; this should never move the record pointer via skipfilter */
    }
    else
-	{
+   {
       if ( lToSkip < 0 )
       {
          lCount = ( 0 - lToSkip);    /* abs(lToSkip) for   the for loop */
@@ -2384,8 +2384,14 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
                            pus16++;            /* skip past the minus */
 
                         while ( pus16 < pusLen )
-                           aucBuffer[pus16] = (SIGNED8) 0x5C - aucBuffer[pus16++];
-
+                        {
+                           aucBuffer[pus16] = (SIGNED8) 0x5C - aucBuffer[pus16];
+                           pus16++; // Moved the auto-increment off of prvious
+                                    // line, because the behaviour of doing it
+                                    // on a variable that is used on both sides
+                                    // of an assignment is undefined and may
+                                    // have unintended side-effects.
+                        }
                      }
 
                      hb_itemPutND( pOrderInfo->itmResult, hb_strVal((char*)aucBuffer, pusLen));

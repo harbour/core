@@ -13,6 +13,12 @@
  * Modification history:
  * ---------------------
  *
+ *    Rev 2.1   22 Apr 2004 15:47:00   DGH
+ * Made definitions of _ftI2Color and _ftGetColorStr static to match
+ * their forward declarations. Commented out the extremely useless
+ * #if defined(HB_OS_DOS) line and corresponding #endif line. (There
+ * is nothing that is even remotely DOS-specific in the code!) And
+ * converted tabs to spaces.
  *    Rev 2.0   03 Mar 1997 03:05:01   JO  / Phil Barnett
  *              commented out : if ( iColor > 15 ) in _ftI2Color()
  *    Rev 1.0   01 Jan 1995 03:01:00   TED
@@ -52,23 +58,21 @@ static int _ftGetColorStr( int iColor, char * cColor );
 
 HB_FUNC(FT_N2COLOR )
 {
-#if defined(HB_OS_DOS)
-   {
-
+/* #if defined(HB_OS_DOS)
+   { */
    char * cColor = "       ";
 
    // make sure parameter is a numeric type
-
    if ( ISNUM(1))
       _ftI2Color( hb_parni( 1 ), cColor );
-	else
-		cColor = NULL;
+   else
+      cColor = NULL;
 
-    hb_retc( cColor );
+   hb_retc( cColor );
 
    return;
-   }
-#endif
+/*   }
+#endif */
 }
 
 
@@ -81,7 +85,7 @@ HB_FUNC(FT_N2COLOR )
 // Returns   :  void (string is modified directly)
 // 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 
-void _ftI2Color( int iColor, char * cColor )
+static void _ftI2Color( int iColor, char * cColor )
 {
    unsigned int iBack = 0, iFore = 0, i = 0;
 
@@ -141,7 +145,7 @@ void _ftI2Color( int iColor, char * cColor )
 // Returns   :  length of added color string
 // 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 
-int _ftGetColorStr( int iColor, char * cColor )
+static int _ftGetColorStr( int iColor, char * cColor )
 {
     int iLen = 0;
 

@@ -13,6 +13,12 @@
  * Modification history:
  * ---------------------
  *
+ *    Rev 1.10  22 Apr 2004 15:32:00   David G. Holm <dholm@jsd-llc.com>
+ * Corrected all hb_fsSeek calls to use FS_ defines instead of using
+ * redefined SEEK_ ones that conflict with the C-level SEEK_ defines.
+ *    Rev 1.9   ? ?
+ * An unknown number of changes were made between Rev 1.8 and Rev 1.10.
+ *
  *    Rev 1.8   24 May 2002 19:25:00   David G. Holm <dholm@jsd-llc.com>
  * Fixed some problems that caused C++ compiles to fail.
  *
@@ -69,10 +75,6 @@
 #define CR   ((char) 13)
 #define LF   ((char) 10)
 #define FEOF ((char) 26)
-
-#define SEEK_END 2              /* file seek directions */
-#define SEEK_CUR 1
-#define SEEK_SET 0
 
 #define READONLY  0             /* open file modes */
 #define WRITEONLY 1
@@ -171,7 +173,7 @@ static long getblock(long offset)
           the beginning of the file.
       */
 
-    hb_fsSeek( infile, offset, SEEK_SET );
+    hb_fsSeek( infile, offset, FS_SET );
 
         /* read in the file and set the buffer bottom variable equal */
         /*  to the number of bytes actually read in.                 */
@@ -183,16 +185,16 @@ static long getblock(long offset)
     if (( buffbot != buffsize ) && ( fsize > buffsize ))
     {
         if ( offset > 0 )
-            hb_fsSeek( infile, (long) -buffsize, SEEK_END );
+            hb_fsSeek( infile, (long) -buffsize, FS_END );
         else
-            hb_fsSeek( infile, (long) buffsize, SEEK_SET );
+            hb_fsSeek( infile, (long) buffsize, FS_SET );
 
         buffbot = hb_fsReadLarge( infile, buffer, buffsize );
     }
 
         /* return the actual file position */
 
-    return( hb_fsSeek( infile, 0L, SEEK_CUR ) - buffbot);
+    return( hb_fsSeek( infile, 0L, FS_RELATIVE ) - buffbot);
 }
 
 
@@ -623,11 +625,11 @@ HB_FUNC( _FT_DFINIT )
 
             /* get file size */
 
-        fsize = hb_fsSeek( infile, 0L, SEEK_END ) - 1;
+        fsize = hb_fsSeek( infile, 0L, FS_END ) - 1;
 
             /* get the first block */
 
-        hb_fsSeek( infile, 0L, SEEK_SET );
+        hb_fsSeek( infile, 0L, FS_SET );
 
             /* if block less than buffsize */
 
