@@ -340,7 +340,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; hb_comp_bDontGenLineNum = TRUE; }
            ;
 
 Statements : LineStat                  { $<lNumber>$ = $<lNumber>1; }
-           | Statements LineStat       { $<lNumber>$ += $<lNumber>3; }
+           | Statements LineStat       { $<lNumber>$ += $<lNumber>1; }
            ;
 
 ExtList    : IDENTIFIER                      { hb_compExternAdd( $1 ); }
