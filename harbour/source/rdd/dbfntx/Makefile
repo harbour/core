@@ -10,6 +10,6 @@ C_SOURCES=\
 PRG_SOURCES=\
 	dbfntx0.prg \
 
-LIB=dbfntx
+LIBNAME=dbfntx
 
 include $(TOP)$(ROOT)config/lib.cf

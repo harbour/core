@@ -16,7 +16,7 @@ PRG_SOURCES=\
         delim0.prg \
 	rddsys.prg \
 
-LIB=rdd
+LIBNAME=rdd
 
 # The list of all valid DB drivers is defined in config/global.cf.
 DIRS=$(HB_DB_DRIVERS)

@@ -12,6 +12,6 @@ C_SOURCES=\
 	initsymb.c \
         main.c \
 
-LIB=vm
+LIBNAME=vm
 
 include $(TOP)$(ROOT)config/lib.cf

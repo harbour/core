@@ -74,6 +74,6 @@ PRG_SOURCES=\
         wait.prg \
         xsavescr.prg \
 
-LIB=rtl
+LIBNAME=rtl
 
 include $(TOP)$(ROOT)config/lib.cf

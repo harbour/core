@@ -6,7 +6,7 @@ include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
-LIB_NAME := $(LIB_PREF)$(LIB)$(LIB_EXT)
+LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 
 LIB_ARCH := $(notdir $(ARCH_DIR))
 ifeq ($(LIB_ARCH),)

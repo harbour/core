@@ -9,6 +9,6 @@ C_SOURCES=\
 PRG_SOURCES=\
 	nulsys.prg \
 
-LIB=nulsys
+LIBNAME=nulsys
 
 include $(TOP)$(ROOT)config/lib.cf

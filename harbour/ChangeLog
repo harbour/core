@@ -1,3 +1,22 @@
+Fri Oct 15 16:42:30 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/lib.cf: 
+	* source/debug/Makefile: 
+	* source/pp/Makefile: 
+	* source/rdd/Makefile: 
+	* source/rdd/dbfcdx/Makefile: 
+	* source/rdd/dbfntx/Makefile: 
+	* source/rdd/nulsys/Makefile: 
+	* source/rtl/Makefile: 
+	* source/runner/Makefile: 
+	* source/tools/Makefile: 
+	* source/vm/Makefile: 
+	Now Makefiles that will create a library use LIBNAME for the
+	library's name; the LIB variable is not used anymore, so it will
+	not conflict with the widely used environment variable with that
+	name. Thanks to Paul Tucker <ptucker@sympatico.ca> for pointing
+	this out.
+
 19991015-18:45 GMT+1 Bruno Cantero <bruno@issnet.net>
   * source/rdd/dbcmd.c
     * Bug removed, default alias work if not alias and extension is specified.

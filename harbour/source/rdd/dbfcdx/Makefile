@@ -10,6 +10,6 @@ C_SOURCES=\
 PRG_SOURCES=\
 	dbfcdx0.prg \
 
-LIB=dbfcdx
+LIBNAME=dbfcdx
 
 include $(TOP)$(ROOT)config/lib.cf

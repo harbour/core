@@ -37,6 +37,6 @@ PRG_SOURCES=\
         numtxten.prg \
 	stringp.prg \
 
-LIB=tools
+LIBNAME=tools
 
 include $(TOP)$(ROOT)config/lib.cf

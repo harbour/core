@@ -8,6 +8,6 @@ PRG_SOURCES=\
         debugger.prg \
         tbrwtext.prg
 
-LIB=debug
+LIBNAME=debug
 
 include $(TOP)$(ROOT)config/lib.cf

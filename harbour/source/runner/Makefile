@@ -7,7 +7,7 @@ ROOT = ../../
 C_SOURCES=\
         runlib.c \
 
-LIB=runner
+LIBNAME=runner
 
 DIRS=\
 	stdalone \
