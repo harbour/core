@@ -119,7 +119,7 @@ typedef struct _LEX_PAIR
 
 /* Overidables. */
 #define LEX_CUSTOM_ACTION    -65
-#define ERR_TOO_COMPLEX_RULE -66
+#define SUSPEND_WORDS 8192
 #define YY_BUF_SIZE 16384
 #define YY_INPUT( a, b, c )
 
@@ -244,12 +244,12 @@ static void GenTrees( void );
                         DEBUG_INFO( printf("Now Holding %i Tokens: %i %i %i %i\n", iHold, aiHold[0], aiHold[1], aiHold[2], aiHold[3] ) ); \
                       }
 
-#define RETURN_TOKEN(x, y) \
+#define RETURN_TOKEN(x) \
            \
            iRet = (x); \
            if( (iRet) ) \
            { \
-               LEX_RETURN(iRet, y); \
+               LEX_RETURN(iRet); \
            } \
            else \
            { \
@@ -419,7 +419,7 @@ static void GenTrees( void );
                            iRet = CUSTOM_ACTION( iRet ); \
                            if( iRet ) \
                            { \
-                              RETURN_TOKEN( REDUCE( iRet ), (char*) sSelf  ); \
+                              RETURN_TOKEN( REDUCE( iRet ) ); \
                            } \
                            else \
                            { \
@@ -428,7 +428,7 @@ static void GenTrees( void );
                         } \
                         else \
                         { \
-                           RETURN_TOKEN( REDUCE( aSelfs[iSelf].iToken ), (char*) sSelf ); \
+                           RETURN_TOKEN( REDUCE( aSelfs[iSelf].iToken ) ); \
                         } \
                      } \
                   } \
@@ -495,7 +495,7 @@ static void GenTrees( void );
             \
             DEBUG_INFO( printf(  "Returning Ready: %i\n", iRet ) ); \
             \
-            LEX_RETURN(iRet, NULL);
+            LEX_RETURN(iRet);
 
 #define RELEASE_TOKEN() \
             \
@@ -539,9 +539,9 @@ static void GenTrees( void );
             \
             DEBUG_INFO( printf(  "Reducing Held: %i Pos: %i\n", iRet, iHold ) ); \
             \
-            RETURN_TOKEN( REDUCE( iRet ), sToken );
+            RETURN_TOKEN( REDUCE( iRet ) );
 
-#define LEX_RETURN(x, y) \
+#define LEX_RETURN(x) \
         \
         if( x < LEX_CUSTOM_ACTION ) \
         { \
@@ -1015,7 +1015,7 @@ YY_DECL
                   {
                      DEBUG_INFO( printf(  "Reducing Left '%c'\n", chr ) );
                      iPairToken = 0;
-                     RETURN_TOKEN( REDUCE( (int) chr ), NULL );
+                     RETURN_TOKEN( REDUCE( (int) chr ) );
                   }
                }
 
@@ -1078,7 +1078,7 @@ YY_DECL
                               iRet = CUSTOM_ACTION( iRet );
                               if( iRet )
                               {
-                                 RETURN_TOKEN( REDUCE( iRet ), NULL );
+                                 RETURN_TOKEN( REDUCE( iRet ) );
                               }
                               else
                               {
@@ -1087,7 +1087,7 @@ YY_DECL
                            }
                            else
                            {
-                              RETURN_TOKEN( REDUCE( iRet ), NULL );
+                              RETURN_TOKEN( REDUCE( iRet ) );
                            }
                         }
                      }
@@ -1143,7 +1143,7 @@ YY_DECL
                     DEBUG_INFO( printf(  "Reducing NewLine '%c'\n", chr ) );
                     bIgnoreWords = FALSE;
                     bNewLine = TRUE;
-                    RETURN_TOKEN( REDUCE( (int) chr ), NULL );
+                    RETURN_TOKEN( REDUCE( (int) chr ) );
                 }
             }
 
@@ -1184,7 +1184,7 @@ YY_DECL
                        NEW_LINE_ACTION();
                     }
 
-                    RETURN_TOKEN( REDUCE( (int) chr ), NULL );
+                    RETURN_TOKEN( REDUCE( (int) chr ) );
                 }
             }
 
@@ -1265,7 +1265,7 @@ YY_DECL
                         iRet = CUSTOM_ACTION( iRet );
                         if( iRet )
                         {
-                           RETURN_TOKEN( REDUCE( iRet ), (char*) sToken  );
+                           RETURN_TOKEN( REDUCE( iRet ) );
                         }
                         else
                         {
@@ -1274,7 +1274,14 @@ YY_DECL
                      }
                      else
                      {
-                        RETURN_TOKEN( REDUCE( aKeys[ i - 1 ].iToken ), (char*) sToken );
+                        iRet = aKeys[ i - 1 ].iToken;
+                        if( iRet > SUSPEND_WORDS )
+                        {
+                           iRet -= SUSPEND_WORDS;
+                           bIgnoreWords = TRUE;
+                        }
+
+                        RETURN_TOKEN( REDUCE( iRet ) );
                      }
                   }
                }
@@ -1324,7 +1331,7 @@ YY_DECL
                         iRet = CUSTOM_ACTION( iRet );
                         if( iRet )
                         {
-                           RETURN_TOKEN( REDUCE( iRet ), (char*) sToken );
+                           RETURN_TOKEN( REDUCE( iRet ) );
                         }
                         else
                         {
@@ -1333,7 +1340,14 @@ YY_DECL
                      }
                      else
                      {
-                       RETURN_TOKEN( REDUCE( aWords[ i - 1 ].iToken ), (char*) sToken );
+                        iRet = aWords[ i - 1 ].iToken;
+                        if( iRet > SUSPEND_WORDS )
+                        {
+                           iRet -= SUSPEND_WORDS;
+                           bIgnoreWords = TRUE;
+                        }
+
+                        RETURN_TOKEN( REDUCE( iRet ) );
                      }
                   }
                }
@@ -1344,7 +1358,7 @@ YY_DECL
             /* "Returns" the Token as iRet. */
             ELEMENT_TOKEN( sToken )
 
-            RETURN_TOKEN( REDUCE( iRet ), sToken );
+            RETURN_TOKEN( REDUCE( iRet ) );
         }
     }
 }
