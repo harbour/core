@@ -7,6 +7,11 @@
    For example:
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2002-03-21 19:22 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
+  * include/hbrddntx.h
+  * source/rdd/dbfntx/dbfntx1.c
+    * Added virtual method ntxSysName() - now Rddname() for DBFNTX works
+      properly.
   * contrib/rdd_ads/ads1.c
     * adsSysName() changed - it returns now "ADSNTX", "ADSCDX" or "ADSADT".
 
