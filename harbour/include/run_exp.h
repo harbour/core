@@ -132,6 +132,8 @@ HB_INIT_SYMBOLS_BEGIN( RUNNER )
 { "TOCHAR",         FS_PUBLIC, HB_TOCHAR        , 0 },
 { "VALTYPE",        FS_PUBLIC, HB_VALTYPE       , 0 }
 HB_INIT_SYMBOLS_END( RUNNER );
+#if ! defined(__GNUC__)
 #pragma startup RUNNER
+#endif
 
 #endif /* HB_RUN_EXP_H_ */

@@ -4,8 +4,21 @@
 
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
+include $(TOP)$(ROOT)config/prg.cf
 
+EXE_NAME=
+
+ifneq ($(C_MAIN),)
+ifeq ($(EXE_NAME),)
 EXE_NAME = $(C_MAIN:.c=$(EXE_EXT))
+endif
+endif
+
+ifneq ($(PRG_MAIN),)
+ifeq ($(EXE_NAME),)
+EXE_NAME = $(PRG_MAIN:.prg=$(EXE_EXT))
+endif
+endif
 
 _EXE_ARCH = $(notdir $(ARCH_DIR))
 ifeq ($(_EXE_ARCH),)

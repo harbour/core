@@ -4,7 +4,7 @@
 
 C_OBJS = $(C_SOURCES:.c=$(OBJ_EXT))
 
-MAIN_OBJ = $(C_MAIN:.c=$(OBJ_EXT))
+C_MAIN_OBJ = $(C_MAIN:.c=$(OBJ_EXT))
 
 ifdef YACC_SOURCE
 YACC_BASE = $(YACC_SOURCE:.y=)
@@ -23,7 +23,7 @@ LEX_OBJ = $(LEX_C:.c=$(OBJ_EXT))
 LEX_HB_H := $(foreach h, $(LEX_HEADERS), $(HB_INC_COMPILE)/$(h))
 endif
 
-ALL_C_OBJS = $(C_OBJS) $(MAIN_OBJ) $(YACC_OBJ) $(LEX_OBJ)
+ALL_C_OBJS = $(C_OBJS) $(C_MAIN_OBJ) $(YACC_OBJ) $(LEX_OBJ)
 
 $(YACC_OBJ) : $(YACC_C)
 

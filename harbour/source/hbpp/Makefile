@@ -12,7 +12,11 @@ C_SOURCES=\
 
 LIB=hbpp
 
+DIRS=\
+	stdalone \
+
 include $(TOP)$(ROOT)config/lib.cf
+include $(TOP)$(ROOT)config/dir.cf
 
 #
 # This is for building the stand-alone preprocessor.

@@ -183,7 +183,7 @@ int gtGetCursorStyle(void)
 
 void gtPuts(char cRow, char cCol, char attr, char *str, int len)
 {
-  DWORD i, dwlen;
+  DWORD dwlen;
   COORD coord;
 
   LOG("Puts");

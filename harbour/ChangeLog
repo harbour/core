@@ -1,3 +1,37 @@
+Fri Jul 30 14:44:00 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
+
+	* config/bin.cf: 
+	* config/c.cf: 
+	* config/prg.cf: 
+	Added support for recursing into subdirectories in addition to
+	creating a target (library or executable).
+	Added support for executables whose main function is defined in a
+	PRG file.
+
+	* config/header.cf: 
+	Temporarily got rid of two definitions that look buggy.
+	
+	* include/run_exp.h: 
+	Got rid of warning regarding pragma.
+	
+	* source/hbpp/Makefile: 
+	* source/hbpp/hbppmain.c: 
+	* source/hbpp/stdalone/Makefile: 
+	* source/hbpp/stdalone/hbpp.c: 
+	Support for recursing into stdalone.
+	Moved hbpp/hbppmain.c tp hbpp/stdalone/hbpp.c.
+	
+	* source/odbc/Makefile: 
+	* source/runner/Makefile: 
+	Added GNU-makefiles for these two directories (but they don'
+	compile ok under gcc/Win32).
+	
+	* source/rtl/files.c: 
+	Changed defined(__GNUC__) for defined(__CYGWIN__).
+
+	* source/rtl/gt/gtwin.c: 
+	Got rid of a warning.
+
 19990730-20:24 CET Victor Szel <info@szelvesz.hu>
    - buildicc.cmd - Removed.
    - tests/working/list.txt - Removed, since it was
