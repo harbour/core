@@ -1,0 +1,12 @@
+# Tell emacs that this is a -*- makefile -*-
+
+include ../tests.mk
+
+PRGS:=	$(wildcard *.PRG)
+
+OBJS=	$(PRGS:.PRG=.o)
+EXES=	$(PRGS:.PRG=.exe)
+
+all: $(EXES)
+
+	
