@@ -1,3 +1,7 @@
+19990915-02:20 GMT+1 Victor Szel <info@szelvesz.hu>
+  * .cvspass
+    - File removed, since it was probably added by incident.
+
 19990915-01:22 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/compiler/gen*.c
     + some fflush() calls added to see a better feedback about the progress
