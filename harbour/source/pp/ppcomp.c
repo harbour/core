@@ -60,7 +60,7 @@ int hb_pp_Internal( FILE * handl_o, char * sOut )
   int lens, rdlen;
   int lLine = 0, i;
 
-  HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Internal(%p, %s)", handl_o, sOut));
 
   hb_pp_nEmptyStrings = 0;
   while( TRUE )

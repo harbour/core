@@ -126,16 +126,14 @@ PROCEDURE ProcessLine( nOut, cLine )
 
    nPos =AT( "HB_FUNC(", cLine )
    IF nPos > 0
-      cLine = LTRIM( SUBSTR( cLine, nPos+7 ) )
-      IF AT( "HB_", cLine ) == 1
-         nPos =AT( ")", cLine )
-         IF nPos > 0
-            cLine :=ALLTRIM( SUBSTR( cLine, 4, nPos-4 ) )
-            ? cLine
-            IF (ISALPHA(cLine) .OR. cLine="_") .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
-               AADD( aNames, cLine )
-               FWRITE( nOut, "EXTERNAL " +cLine + hb_OSNewLine() )
-            ENDIF
+      cLine = LTRIM( SUBSTR( cLine, nPos + Len("HB_FUNC(") ) )
+      nPos =AT( ")", cLine )
+      IF nPos > 0
+         cLine :=ALLTRIM( Left( cLine, nPos - 1 ) )
+         ? cLine
+         IF (ISALPHA(cLine) .OR. cLine="_") .AND. ASCAN( aNames, {|c|c==cLine} ) == 0
+            AADD( aNames, cLine )
+            FWRITE( nOut, "EXTERNAL " +cLine + hb_OSNewLine() )
          ENDIF
       ENDIF
    ELSE

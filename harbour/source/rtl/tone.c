@@ -33,30 +33,6 @@
  *
  */
 
-/*
- * ChangeLog:
- *
- * V 1.10   David G. Holm               Added __MINGW32__ support
- * V 1.8    David G. Holm               Added '&& ! defined(_Windows)'
- *                                      check to all __BORLANDC__ checks.
- * V 1.6    David G. Holm               Added Win32 Beep(), thanks to
- *                                      Chen Kedem.
- * V 1.4    David G. Holm               Upper limit for frequency for OS/2
- *                                      DosBeep() is 32767. The CA-Clipper
- *                                      Tone() function does not have an
- *                                      upper limit on the duration, so I
- *                                      had to add an inner loop to deal
- *                                      with very long durations. There are
- *                                      actually 18.2 Clipper (PC) timer
- *                                      ticks per second.
- * V 1.2    David G. Holm               Added OS/2 GCC/EMX support.
- * V 1.1    David G. Holm               Split machine dependent code into
- *                                      hb_tone() function for internal use
- *                                      by other Harbour C functions.
- * V 1.0    Chen Kedem                  Initial version (only OS/2 support).
- *
- */
-
 #include "hbapi.h"
 #include "hbapigt.h"
 

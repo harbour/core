@@ -580,7 +580,7 @@ static void ParseCommand( char * sLine, BOOL com_or_xcom, BOOL com_or_tra )
   int mlen,rlen;
   int ipos;
 
-  HB_TRACE(HB_TR_DEBUG, ("ParseCommand(%s, $d, $d)", sLine, com_or_xcom, com_or_tra));
+  HB_TRACE(HB_TR_DEBUG, ("ParseCommand(%s, %d, %d)", sLine, com_or_xcom, com_or_tra));
 
   NextWord( &sLine, cmdname, FALSE );
   hb_strupr( cmdname );
@@ -625,7 +625,7 @@ static void ConvertPatterns( char * mpatt, int mlen, char * rpatt, int rlen )
   char lastchar = '@', exptype;
   char * ptr;
 
-  HB_TRACE(HB_TR_DEBUG, ("ConvertPatterns(%s, $d, %s, $d)", mpatt, mlen, rpatt, rlen));
+  HB_TRACE(HB_TR_DEBUG, ("ConvertPatterns(%s, %d, %s, %d)", mpatt, mlen, rpatt, rlen));
 
   while( *(mpatt+i) != '\0' )
     {

@@ -1,3 +1,29 @@
+20000327-21:35 GMT+1 Victor Szakats <info@szelvesz.hu>
+
+   ! Trash in harbour CVS root directory removed by SourceForge staff.
+   ! File permission error corrected for CONTRIB/RDD_ADS/ dir 
+     by SourceForge staff.
+
+   * utils/hbextern/hbextern.prg
+     ! Fixed handling of HB_FUNC().
+   * source/rtl/console.c
+     ! hb_consoleRelease() now calls hb_mouseExit().
+   * source/vm/debug.c
+     ! Oops, one StackLen() converted to hb_stackLen()
+   * source/rtl/natmsg/msgru866.c
+     ! Fixed country.
+   * source/rtl/tone.c
+     - Removed local ChangeLog
+
+   * source/pp/stdalone/hbpp.c
+   * source/pp/ppcore.c
+   * source/pp/ppcomp.c
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/setcolor.c
+     ! TRACE call fixes. Thanks go to Tom Sobota.
+     + #include "inkey.ch" added for gtcrs.c
+
 20000327-01:24 GMT+1 Victor Szakats <info@szelvesz.hu>
 
    - doc/cvshowto.txt

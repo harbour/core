@@ -236,7 +236,7 @@ int hb_pp_Parse( FILE * handl_o )
   int lens, rdlen;
   int lLine = 0, i;
 
-  HB_TRACE(HB_TR_DEBUG, ("PreProcess(%p, %p, %s)", handl_o, sOut));
+  HB_TRACE(HB_TR_DEBUG, ("hb_pp_Parse(%p)", handl_o));
 
   hb_pp_nEmptyStrings = 0;
   while( TRUE )

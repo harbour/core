@@ -133,6 +133,7 @@ void hb_consoleRelease( void )
    s_szCrLf[ 1 ] = '\0';
 
    hb_gtExit();
+   hb_mouseExit();
 
    s_bInit = FALSE;
 }

@@ -144,7 +144,7 @@ HB_FUNC( __VMSTKLLIST )
    PHB_ITEM pItem;
    PHB_ITEM pBase = hb_stack.pItems + hb_stack.pBase->item.asSymbol.stackbase;
 
-   USHORT uiLen = StackLen();
+   USHORT uiLen = hb_stackLen();
    USHORT uiPos = 1;
 
    pReturn = hb_itemArrayNew( uiLen );           /* Create a transfer array  */

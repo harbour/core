@@ -4,8 +4,8 @@
 
 /* Language Support Module */
 
-/* Language name: Portugese */
-/* ISO language code (2 chars): PT */
+/* Language name: Russian */
+/* ISO language code (2 chars): RU */
 /* Codepage: 866 */
 
 #include "hbdefs.h"

@@ -39,7 +39,7 @@
 
 char * hb_setColor( char * szColor )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_setColor(%s)", sColor));
+   HB_TRACE(HB_TR_DEBUG, ("hb_setColor(%s)", szColor));
 
    hb_gtGetColorStr( hb_set.HB_SET_COLOR );
 
