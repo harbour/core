@@ -1,3 +1,22 @@
+2001-04-12 15:15 UTC-0400 David G. Holm <dholm@jsd-llc.com>
+
+  * include/fileio.ch
+  * include/filesys.api
+  * include/hbapifs.h
+  * include/hbset.h
+  * include/hbver.h
+  * include/set.ch
+  * source/compiler/fixflex.c
+  * source/rtl/gtpca/kbdos2.gcc
+    * Replaced the old license with the new license in more files
+      where I was listed as the primary or only copyright holder.
+
+  * source/vm/borsym.asm
+  * source/vm/startup.asm
+  * source/vm/symbols.asm
+    * Replaced the old license with the new license with permission
+      from Antonio Linares <alinares@fivetech.com>
+
 2001-04-12 15:00 UTC-0400 David G. Holm <dholm@jsd-llc.com>
 
   * source/compiler/genc.c
