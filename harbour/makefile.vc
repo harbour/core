@@ -185,7 +185,8 @@ LIBS = \
 
 LIBS2 = \
    $(LIBS) \
-   user32.lib
+   user32.lib \
+   winspool.lib
 
 #
 # RTL.LIB rules

@@ -1,3 +1,8 @@
+2001-09-06 21:20 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
+   *makefile.vc
+    hb_slex.vc
+      * Renable build of hbrun by adding winspool.lib to LIB2 macro
+
 2001-09-06 22:55 GMT +1 JFL (mafact) <jfl@mafact.com>
    * harbour/source/vm/classes.c
       __ObjSendMsg( Object, Message, xpar1, xparN )
