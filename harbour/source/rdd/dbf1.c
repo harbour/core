@@ -131,6 +131,8 @@ static ERRCODE GoTo( AREAP pArea, LONG lRecNo )
 
 static ERRCODE GoToId( AREAP pArea, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pItem );
    printf( "Calling DBF: GoToId()\n" );
    return SUCCESS;
 }
@@ -183,6 +185,7 @@ static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
 
 static ERRCODE DeleteRec( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling DBF: DeleteRec()\n" );
    return SUCCESS;
 }
@@ -268,6 +271,7 @@ static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
 
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
    switch( uiIndex )
    {
       case DBI_TABLEEXT:

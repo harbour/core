@@ -1,3 +1,11 @@
+19990820-13:27 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source\rdd\dbcmd.c
+     source\rdd\dbf1.c
+     source\rdd\delim1.c
+     source\rdd\sdf1.c
+     source\rdd\dbfntx\dbfntx1.c
+     Fixed some warnings (unused variables)
+
 19990820-12:50 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rdd/dbcmd.c
     ! SELF_DELETE -> SELF_DELETED (missed from the previous ChangeLog entry)

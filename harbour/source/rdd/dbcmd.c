@@ -275,12 +275,15 @@ static void hb_SelectFirstAvailable( void )
 
 static ERRCODE UnSupported_V( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling default: UnSupported()\n" );
    return SUCCESS;
 }
 
 static ERRCODE UnSupported_L( AREAP pArea, LONG lLong )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( lLong );
    printf( "Calling default: UnSupported()\n" );
    return SUCCESS;
 }
@@ -305,12 +308,16 @@ static ERRCODE Found( AREAP pArea, BOOL * pFound )
 
 static ERRCODE GoToId( AREAP pArea, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pItem );
    printf( "Calling default: GoToId()\n" );
    return SUCCESS;
 }
 
 static ERRCODE Skip( AREAP pArea, LONG lToSkip )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( lToSkip );
    printf( "Calling default: Skip()\n" );
    return SUCCESS;
 }
@@ -363,48 +370,62 @@ static ERRCODE FieldName( AREAP pArea, USHORT uiIndex, void * szName )
 
 static ERRCODE Flush( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling default: Flush()\n" );
    return SUCCESS;
 }
 
 static ERRCODE CreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pStruct );
    printf( "Calling default: CreateFields()\n" );
    return SUCCESS;
 }
 
 static ERRCODE DeleteRec( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling default: DeleteRec()\n" );
    return SUCCESS;
 }
 
 static ERRCODE Deleted( AREAP pArea, BOOL * pDeleted )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pDeleted );
    printf( "Calling default: Deleted()\n" );
    return SUCCESS;
 }
 
 static ERRCODE GetValue( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiIndex );
+   HB_SYMBOL_UNUSED( pItem );
    printf( "Calling default: GetValue()\n" );
    return SUCCESS;
 }
 
 static ERRCODE Recall( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling default: Recall()\n" );
    return SUCCESS;
 }
 
 static ERRCODE RecCount( AREAP pArea, LONG * pRecCount )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pRecCount );
    printf( "Calling default: RecCount()\n" );
    return SUCCESS;
 }
 
 static ERRCODE RecNo( AREAP pArea, PHB_ITEM pRecNo )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( pRecNo );
    return SUCCESS;
 }
 
@@ -446,6 +467,9 @@ static ERRCODE Create( AREAP pArea, LPDBOPENINFO pCreateInfo )
 
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiIndex );
+   HB_SYMBOL_UNUSED( pItem );
    printf( "Calling default: Info()\n" );
    return SUCCESS;
 }
@@ -587,6 +611,8 @@ ERRCODE hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTa
    USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
 
+   HB_SYMBOL_UNUSED( pSuperTable );
+
    if( !pTable )
       return FAILURE;
 
@@ -722,11 +748,11 @@ HARBOUR HB_DBCREATE( void )
 {
    char * szFileName, * szDriver;
    PHB_ITEM pStruct, pFieldDesc;
-   WORD wLen;
    LPRDDNODE pRddNode;
    AREAP pTempArea;
    USHORT uiSize, uiRddID;
    DBOPENINFO pInfo;
+   WORD wLen;
 
    szFileName = hb_parc( 1 );
    pStruct = hb_param( 2 , IT_ARRAY );
@@ -755,7 +781,7 @@ HARBOUR HB_DBCREATE( void )
    hb_CheckRdd();
    szDriver = hb_parc( 3 );
    if( ( wLen = strlen( szDriver ) ) > 0 )
-      szDriver = hb_strUpper( szDriver, strlen( szDriver ) );
+      szDriver = hb_strUpper( szDriver, wLen );
    else
       szDriver = szDefDriver;
 
@@ -992,7 +1018,7 @@ HARBOUR HB_DBUSEAREA( void )
    hb_CheckRdd();
    szDriver = hb_parc( 2 );
    if( ( wLen = strlen( szDriver ) ) > 0 )
-      szDriver = hb_strUpper( szDriver, strlen( szDriver ) );
+      szDriver = hb_strUpper( szDriver, wLen );
    else
       szDriver = szDefDriver;
 

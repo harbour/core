@@ -41,6 +41,7 @@ HB_INIT_SYMBOLS_END( dbfntx1__InitSymbols )
 
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
    switch( uiIndex )
    {
       case DBI_TABLEEXT:

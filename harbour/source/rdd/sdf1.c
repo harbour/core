@@ -40,18 +40,23 @@ HB_INIT_SYMBOLS_END( sdf1__InitSymbols )
 
 static ERRCODE Info( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 {
+   HB_SYMBOL_UNUSED( pArea );
+   HB_SYMBOL_UNUSED( uiIndex );
+   HB_SYMBOL_UNUSED( pItem );
    printf( "Calling SDF: Info()\n" );
    return SUCCESS;
 }
 
 static ERRCODE ReadDBHeader( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling SDF: ReadDBHeader()\n" );
    return SUCCESS;
 }
 
 static ERRCODE WriteDBHeader( AREAP pArea )
 {
+   HB_SYMBOL_UNUSED( pArea );
    printf( "Calling SDF: WriteDBHeader()\n" );
    return SUCCESS;
 }
