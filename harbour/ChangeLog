@@ -2,6 +2,7 @@
   * source/debug/debugger.prg
     * ::Activate - fix for trashed screens
       Escape key will now exit the debugger, but the app will continue to run
+      Altd() will reactivate the debugger (maybe not imediately)
 
 19990823-01:11 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/alert.prg

@@ -863,4 +863,5 @@ function BuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
 return oMenu
 
-
+Function AltD()
+lExit := .F.
