@@ -6,7 +6,7 @@
  *  $FUNCNAME$
  *      CD()
  *  $CATEGORY$
- *      DOS
+ *      Dos Tools
  *  $ONELINER$
  *      Change the Current Directory
  *  $SYNTAX$
@@ -34,7 +34,7 @@
  *  $FUNCNAME$
  *      MD()
  *  $CATEGORY$
- *      DOS
+ *      Dos Tools
  *  $ONELINER$
  *      Creates a Directory
  *  $SYNTAX$
@@ -62,7 +62,7 @@
  *  $FUNCNAME$
  *      RD()
  *  $CATEGORY$
- *      DOS
+ *      Dos Tools
  *  $ONELINER$
  *      Remove a Directory
  *  $SYNTAX$

@@ -19,7 +19,7 @@
  *  $CATEGORY$
  *      String
  *  $ONELINER$
- *      ...
+ *      Format a string
  *  $SYNTAX$
  *      StrFormat(<cMask>[, <cPar1>[, <cParn>[, ...]]) --> cString
  *  $ARGUMENTS$
@@ -57,7 +57,7 @@
  *  $COMPLIANCE$
  *      All platforms   </par>
  *  $FILES$
- *      Library is Tools.lib
+ *      Library is Tools
  *  $END$
  */
 
