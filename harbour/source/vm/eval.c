@@ -49,8 +49,12 @@ HB_FUNC( EVAL )
 
       hb_vmPushSymbol( &hb_symEval );
       hb_vmPush( pItem );
+      /* NOTE: hb_param(0 function cannot be used for parameter access
+       * because we need to pass the references too.
+       * hb_param() is dereferencing the passed parameters
+      */
       for( uiParam = 2; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+	hb_vmPush( hb_stack.pBase + 1 + uiParam );
       hb_vmDo( uiPCount - 1 );
    }
    else

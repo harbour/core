@@ -14,6 +14,7 @@ C_SOURCES=\
 	debug.c      \
 	dynsym.c     \
 	codebloc.c   \
+	eval.c       \
 	extend.c     \
 	fm.c         \
 	hvm.c        \

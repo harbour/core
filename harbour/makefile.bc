@@ -817,6 +817,10 @@ $(OBJ_DIR)\dynsym.obj : $(VM_DIR)\dynsym.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\eval.obj : $(VM_DIR)\eval.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(VM_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\extend.obj : $(VM_DIR)\extend.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(VM_LIB) $(ARFLAGS) -+$@,,
@@ -1074,10 +1078,6 @@ $(OBJ_DIR)\errorsys.c : $(RTL_DIR)\errorsys.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\errorsys.obj : $(OBJ_DIR)\errorsys.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\eval.obj : $(RTL_DIR)\eval.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(RTL_LIB) $(ARFLAGS) -+$@,,
 

@@ -1,3 +1,17 @@
+20000502-17:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
+
+    *makefile.bc
+    *source/rtl/Makefile
+    *source/vm/Makefile
+    -source/rtl/eval.c
+    +source/vm/eval.c
+	* fixed bug in EVAL function when a parameter was passed using
+	the reference
+	* since the EVAL function is using a direct stack access instead
+	of hb_param() function the file eval.c is now moved into 
+	VM directory
+	
+
 20000502-16:22 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
