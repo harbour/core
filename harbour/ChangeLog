@@ -8,6 +8,29 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-07-01 20:10 UTC-0300 Walter Negro <anegro@overnet.com.ar>
+  * source/rtl/transfrm.c
+    + Add @0 function.
+
+    ! Fix minor bug introduce with previous changelog.
+      See hbtest: 2044, 2052, 2054.
+      eg: Transform( -12, "@( 99" ) Bug: "(2)"  Now: "(*)"
+
+    ! More compliant with Clipper.
+      See hbtest: 1898, 1902, 1906, 1971, 2006, 2064, 2070.
+      eg: Transform( 100.2, "@" )
+              Before: "     100.2"
+                 Now: "       100.2"
+      eg: Transform(.T. ,"@R X!" )
+              Before: "XT"
+                 Now: "X!T"
+      eg: Transform(1.0 ,"@B" )
+              Before: "1.0       "
+                 Now: "1.0         "
+      eg: Transform("Hello","@S-1")
+              Before: ""
+                 Now: "Hello"
+
 2002-07-01 16:30 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * doc/howtocvs.txt
     * Corrected references to cvs_ssh.txt to refer to section 1.7.
