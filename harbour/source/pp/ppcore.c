@@ -1273,7 +1273,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           }
         switch( *ptrmp ) {
         case '[':
-          isWordInside = 0;
+          if( !s_numBrackets ) isWordInside = 0;
           s_numBrackets++;
           s_aIsRepeate[ s_Repeate ] = 0;
           lastopti[s_Repeate++] = ptrmp;
@@ -1321,14 +1321,14 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
                 }
               s_numBrackets--;
             }
-          else 
+          else
             {
              if( !isWordInside ) strtopti = NULL;
              s_numBrackets--; ptrmp++;
             }
           break;
         case ',':
-          isWordInside = 1;
+          if( s_numBrackets == 1 ) isWordInside = 1;
           if( !s_numBrackets ) strtopti = NULL;
           if( *ptri == ',' ) { ptrmp++; ptri++; }
           else
@@ -1342,7 +1342,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           break;
         case '\1':  /*  Match marker */
           if( !s_numBrackets ) strtopti = NULL;
-          if( *(ptrmp+2) == '2' ) isWordInside = 1; /*  restricted match marker  */
+          if( s_numBrackets == 1 && *(ptrmp+2) == '2' ) isWordInside = 1; /*  restricted match marker  */
           if( !WorkMarkers( &ptrmp, &ptri, ptro, lenres, com_or_xcom ) )
             {
               if( s_numBrackets )
@@ -1358,7 +1358,7 @@ static int CommandStuff( char * ptrmp, char * inputLine, char * ptro, int * lenr
           else endTranslation = TRUE;
           break;
         default:    /*   Key word    */
-          isWordInside = 1;
+          if( s_numBrackets == 1 ) isWordInside = 1;
           if( !s_numBrackets ) strtopti = NULL;
           ptr = ptri;
           if( *ptri == ',' || truncmp( &ptri, &ptrmp, !com_or_xcom ) )
@@ -1463,7 +1463,7 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
 
   char exppatt[ MAX_NAME ];
   int lenreal = 0, maxlenreal = HB_PP_STR_SIZE, lenpatt;
-  int rezrestr, ipos;
+  int rezrestr, ipos, nBra;
   char * ptr, * ptrtemp;
 
   HB_TRACE(HB_TR_DEBUG, ("WorkMarkers(%p, %p, %s, %p)", ptrmp, ptri, ptro, lenres));
@@ -1486,7 +1486,14 @@ static int WorkMarkers( char ** ptrmp, char ** ptri, char * ptro, int * lenres, 
       HB_SKIPTABSPACES( ptrtemp );
       while( *ptrtemp == '[' )
       {
-         while( *ptrtemp != ']' ) ptrtemp++;
+         nBra = 0;
+         ptrtemp++;
+         while( ( *ptrtemp != ']' || nBra ) && *ptrtemp != '\0')
+         {
+            if( *ptrtemp == '[' ) nBra++;
+            else if( *ptrtemp == ']' ) nBra --;
+            ptrtemp++;
+         }
          ptrtemp++;
          HB_SKIPTABSPACES( ptrtemp );
       }
