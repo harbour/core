@@ -8,6 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2002-06-08 16:15 UTC-0300 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * include/hbrddcdx.h
+   * source/rdd/dbfcdx/dbfcdx2.h
+   * source/rdd/dbfcdx/dbfcdx1.c
+     + added hb_cdxOrderDestroy, hb_cdxIndexDelTag functions,
+       ordDestroy() is working now for dbfcdx rdd.
+
 2002-06-07 11:50 UTC-0300 Walter Negro <anegro@overnet.com.ar>
   * source/rtl/tgetlist.prg
   * source/rtl/getsys.prg
