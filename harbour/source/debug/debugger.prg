@@ -883,7 +883,7 @@ METHOD OSShell() CLASS TDebugger
 
    begin sequence
       if At("WINDOWS", cOs) != 0 .OR. At("DOS", cOs) != 0 .OR. At("OS/2", cOs) != 0
-         RUN cShell
+         RUN ( cShell )
 
       else
          Alert( "Not implemented yet!" )
