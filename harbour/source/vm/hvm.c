@@ -55,7 +55,6 @@
 HARBOUR HB_ERRORSYS( void );
 HARBOUR HB_ERRORNEW( void );
 HARBOUR HB_EVAL( void );         /* Evaluates a codeblock from Harbour */
-HARBOUR HB_RDDSYS( void );
 HARBOUR HB_MAIN( void );         /* fixed entry point by now */
 HARBOUR HB_VALTYPE( void );      /* returns a string description of a value */
 
@@ -219,7 +218,6 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
    hb_setInitialize();        /* initialize Sets */
    hb_consoleInitialize();    /* initialize Console */
    hb_MemvarsInit();
-   hb_rddInitialize();        /* initialize RDD */
 #ifdef HARBOUR_OBJ_GENERATION
    ProcessObjSymbols(); /* initialize Harbour generated OBJs symbols */
 #endif
@@ -258,7 +256,6 @@ BYTE bErrorLevel = 0;  /* application exit errorlevel */
 
    DoExitFunctions();       /* process defined EXIT functions */
 
-   hb_rddRelease();         /* release RDD */
    hb_itemClear( &stack.Return );
    hb_arrayRelease( &aStatics );
    hb_itemClear( &errorBlock );
@@ -916,7 +913,6 @@ static void ForceLink( void )  /* To force the link of some functions */
 {
    HB_ERRORSYS();
    HB_ERRORNEW();
-   HB_RDDSYS();
 }
 
 void ForTest( void )        /* Test to check the end point of the FOR */

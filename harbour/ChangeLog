@@ -1,3 +1,7 @@
+19990729-18:40 GMT+1 Bruno Cantero <bruno@issnet.net>
+   * source/vm/hvm.c
+     Remove all RDD references. Now it isn't necesary.
+
 19990729-11:35 EDT Paul Tucker <ptucker@sympatico.ca>
    * source/rtl/console.c
      * hb_setCursor - account for optional param. #ifdef .. GTAPI
