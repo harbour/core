@@ -364,6 +364,11 @@ static void hb_cdxGetMemo( CDXAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemSetCMemo( pItem );
       }
    }
+   else
+   {
+      hb_itemPutC( pItem, "");
+      hb_itemSetCMemo( pItem );
+   }
 }
 
 /*

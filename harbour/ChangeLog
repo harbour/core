@@ -1,3 +1,8 @@
+2001-11-15 14:06 GMT-3 Horacio Roldan <harbour_ar@yahoo.com.ar>
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! fixed bug: value of empty memo was NIL instead of ""
+       reported by Andi Jahja
+
 2001-11-15 13:55 GMT+1 Antonio Linares <alinares@fivetech.com>
    * include/hbapi.h
      Enhanced HB_IS_OBJECT( PHB_ITEM )
